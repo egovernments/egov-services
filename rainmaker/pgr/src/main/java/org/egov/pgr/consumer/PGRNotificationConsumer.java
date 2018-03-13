@@ -51,6 +51,24 @@ public class PGRNotificationConsumer {
 	@Value("${text.for.subject.email.notif}")
 	private String subjectForEmail;
 	
+	@Value("${register.complaint.enabled}")
+	private Boolean isRegisterNotifEnabled;
+	
+	@Value("${assign.complaint.enabled}")
+	private Boolean isAssignNotifEnabled;
+	
+	@Value("${reassign.complaint.enabled}")
+	private Boolean isReassignNotifEnabled;
+	
+	@Value("${reject.complaint.enabled}")
+	private Boolean isRejectedNotifEnabled;
+	
+	@Value("${resolve.complaint.enabled}")
+	private Boolean isResolveNotificationEnabled;
+	
+	@Value("${reopen.complaint.enabled}")
+	private Boolean isReopenNotifEnabled;
+	
 	@Autowired
 	private ServiceRequestRepository serviceRequestRepository;
 		
@@ -73,20 +91,22 @@ public class PGRNotificationConsumer {
     
     public void process(ServiceReqRequest serviceReqRequest) {
     	for(ServiceReq serviceReq: serviceReqRequest.getServiceReq()) {
-    		SMSRequest smsRequest = prepareSMSRequest(serviceReq, serviceReqRequest.getRequestInfo());
-        	log.info("SMS: "+smsRequest.getMessage()+" | MOBILE: "+smsRequest.getMobileNumber());
-        	try {
-        		pGRProducer.push(smsNotifTopic, smsRequest);
-        	}catch(Exception e) {}
-			if(null != serviceReq.getEmail() && !serviceReq.getEmail().isEmpty()) {
-				EmailRequest emailRequest = prepareEmailRequest(serviceReq);
-	        	log.info("EMAIL: "+emailRequest.getBody()
-	        	+"| SUBJECT: "+emailRequest.getSubject()
-	        	+"| ID: "+emailRequest.getEmail());
+    		if(isNotificationEnabled(serviceReq)) {
+	    		SMSRequest smsRequest = prepareSMSRequest(serviceReq, serviceReqRequest.getRequestInfo());
+	        	log.info("SMS: "+smsRequest.getMessage()+" | MOBILE: "+smsRequest.getMobileNumber());
 	        	try {
-	        		pGRProducer.push(emailNotifTopic, emailRequest);
+	        		pGRProducer.push(smsNotifTopic, smsRequest);
 	        	}catch(Exception e) {}
-			}
+				if(null != serviceReq.getEmail() && !serviceReq.getEmail().isEmpty()) {
+					EmailRequest emailRequest = prepareEmailRequest(serviceReq);
+		        	log.info("EMAIL: "+emailRequest.getBody()
+		        	+"| SUBJECT: "+emailRequest.getSubject()
+		        	+"| ID: "+emailRequest.getEmail());
+		        	try {
+		        		pGRProducer.push(emailNotifTopic, emailRequest);
+		        	}catch(Exception e) {}
+				}
+    		}
 		}
     }
     
@@ -191,6 +211,41 @@ public class PGRNotificationConsumer {
 		}
 		
     	return serviceTypes.get(0);
+    }
+    
+    public boolean isNotificationEnabled(ServiceReq serviceReq) {
+    	boolean isNotifEnabled = false;
+		switch(serviceReq.getStatus()) {
+		case NEW:{
+			if(isRegisterNotifEnabled) {
+				isNotifEnabled = true;
+			}
+			break;
+		}case INPROGRESS:{
+			if(isAssignNotifEnabled) {
+				isNotifEnabled = true;
+			}
+			break;
+		}case CANCELLED:{
+			if(isReassignNotifEnabled) {
+				isNotifEnabled = true;
+			}
+			break;
+		}case REJECTED:{
+			if(isRejectedNotifEnabled) {
+				isNotifEnabled = true;
+			}
+			break;
+		}case CLOSED:{
+			if(isResolveNotificationEnabled) {
+				isNotifEnabled = true;
+			}
+			break;
+		}default:
+			break;
+		}
+		
+		return isNotifEnabled;
     }
     
 }

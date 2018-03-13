@@ -42,43 +42,11 @@ package org.egov.eis.service;
 
 import java.util.List;
 
+import org.egov.eis.config.PropertiesManager;
 import org.egov.eis.model.Movement;
 import org.egov.eis.service.helper.EmployeeSearchURLHelper;
 import org.egov.eis.service.helper.HRStatusSearchURLHelper;
-import org.egov.eis.web.contract.BankBranchContract;
-import org.egov.eis.web.contract.BankBranchContractResponse;
-import org.egov.eis.web.contract.BankContract;
-import org.egov.eis.web.contract.BankContractResponse;
-import org.egov.eis.web.contract.Category;
-import org.egov.eis.web.contract.CategoryResponse;
-import org.egov.eis.web.contract.Community;
-import org.egov.eis.web.contract.CommunityResponse;
-import org.egov.eis.web.contract.Designation;
-import org.egov.eis.web.contract.DesignationResponse;
-import org.egov.eis.web.contract.Employee;
-import org.egov.eis.web.contract.EmployeeInfo;
-import org.egov.eis.web.contract.EmployeeInfoResponse;
-import org.egov.eis.web.contract.EmployeeRequest;
-import org.egov.eis.web.contract.EmployeeResponse;
-import org.egov.eis.web.contract.EmployeeType;
-import org.egov.eis.web.contract.EmployeeTypeResponse;
-import org.egov.eis.web.contract.Group;
-import org.egov.eis.web.contract.GroupResponse;
-import org.egov.eis.web.contract.HRStatus;
-import org.egov.eis.web.contract.HRStatusResponse;
-import org.egov.eis.web.contract.Language;
-import org.egov.eis.web.contract.LanguageResponse;
-import org.egov.eis.web.contract.MovementRequest;
-import org.egov.eis.web.contract.RecruitmentMode;
-import org.egov.eis.web.contract.RecruitmentModeResponse;
-import org.egov.eis.web.contract.RecruitmentQuota;
-import org.egov.eis.web.contract.RecruitmentQuotaResponse;
-import org.egov.eis.web.contract.RecruitmentType;
-import org.egov.eis.web.contract.RecruitmentTypeResponse;
-import org.egov.eis.web.contract.Religion;
-import org.egov.eis.web.contract.ReligionResponse;
-import org.egov.eis.web.contract.RequestInfo;
-import org.egov.eis.web.contract.RequestInfoWrapper;
+import org.egov.eis.web.contract.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -94,6 +62,9 @@ public class EmployeeService {
 
     @Autowired
     private HRStatusSearchURLHelper hrStatusSearchURLHelper;
+
+    @Autowired
+    private PropertiesManager propertiesManager;
 
     public EmployeeInfo getEmployee(final MovementRequest movementRequest) {
         final String url = employeeSearchURLHelper.searchURL(movementRequest.getMovement().get(0).getEmployeeId(),
@@ -113,6 +84,26 @@ public class EmployeeService {
             return employeeResponse.getEmployees().get(0);
         else
             return new EmployeeInfo();
+    }
+
+    public Employee getEmployeeById(final MovementRequest movementRequest) {
+        final String url = propertiesManager.getHrEmployeeServiceHostName()
+                + propertiesManager.getHrEmployeeServiceEmployeesBasePath() + "/"+movementRequest.getMovement().get(0).getEmployeeId()+"/_search?tenantId="+movementRequest.getMovement().get(0).getTenantId();
+
+        final RestTemplate restTemplate = new RestTemplate();
+        final RequestInfoWrapper wrapper = new RequestInfoWrapper();
+        wrapper.setRequestInfo(movementRequest.getRequestInfo());
+        restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
+
+        final HttpEntity<RequestInfoWrapper> request = new HttpEntity<>(wrapper);
+
+        final EmployeeResponse employeeResponse = restTemplate.postForObject(url, request,
+                EmployeeResponse.class);
+
+        if( employeeResponse.getEmployee() != null )
+            return employeeResponse.getEmployee();
+        else
+            return new Employee();
     }
 
     public Employee updateEmployee(final Employee employee, final String tenantId, final RequestInfo requestInfo) {

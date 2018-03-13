@@ -284,9 +284,10 @@ public class MovementRepository {
 	}
 
 	private void transferEmployee(final MovementRequest movementRequest) throws ParseException {
-		final EmployeeInfo employeeInfo = employeeService.getEmployee(movementRequest);
-		Employee employee = new Employee();
+		final Employee employee = employeeService.getEmployeeById(movementRequest);
+
 		final Movement movement = movementRequest.getMovement().get(0);
+
 		final SimpleDateFormat inputDOB = new SimpleDateFormat("yyyy-MM-dd");
 		final SimpleDateFormat output = new SimpleDateFormat("dd/MM/yyyy");
 		final String source = movement.getTenantId();
@@ -296,6 +297,7 @@ public class MovementRepository {
 		destinationRequestInfo.getUserInfo().setTenantId(destination);
 		final Date effectiveFromDate = movement.getEffectiveFrom();
 		employee.setId(null);
+		employee.setTenantId(destination);
 		employee.getUser().setId(null);
 		employee.getUser().setTenantId(destination);
 		if (employee.getUser().getDob() != null)
@@ -339,6 +341,17 @@ public class MovementRepository {
 			departmentalTest.setTenantId(destination);
 		}
 		employee.getAssignments().clear();
+		Date dor ;
+		if(employee.getDateOfRetirement()!=null){
+			dor = employee.getDateOfRetirement();
+		}else{
+			String dob = employee.getUser().getDob();
+			dor = output.parse(dob);
+			Calendar cal = Calendar.getInstance();
+			cal.setTime(dor);
+			cal.add(Calendar.YEAR,60);
+			dor = cal.getTime();
+		}
 		final Assignment assignment = new Assignment();
 		assignment.setPosition(movement.getPositionAssigned());
 		assignment.setFund(movement.getFundAssigned());
@@ -347,7 +360,7 @@ public class MovementRepository {
 		assignment.setDesignation(movement.getDesignationAssigned());
 		assignment.setIsPrimary(true);
 		assignment.setFromDate(effectiveFromDate);
-		assignment.setToDate(employee.getDateOfRetirement());
+		assignment.setToDate(dor);
 		assignment.setTenantId(destination);
 		employee.getAssignments().add(assignment);
 

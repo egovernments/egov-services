@@ -60,6 +60,7 @@ public class DisciplinaryService {
 
     public Disciplinary create(DisciplinaryRequest disciplinaryRequest) {
         log.debug("DisciplinaryRequest::" + disciplinaryRequest);
+        disciplinaryRequest.getDisciplinary().setId(disciplinaryRepository.generateSequences());
         disciplinaryRepository.create(disciplinaryRequest);
         return disciplinaryRequest.getDisciplinary();
 

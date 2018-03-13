@@ -166,7 +166,7 @@ public class DisciplinaryQueryBuilder {
 
                 + "createdBy,createdDate,lastModifiedBy,lastModifiedDate,tenantId,courtOrderType,presentingOfficerDesignation,enquiryOfficerDesignation) values "
 
-                + "(nextval('seq_egeis_disciplinary'),?,?,?,?,?,?,?,"
+                + "(?,?,?,?,?,?,?,?,"
                 + "?,?,?,?,?,"
                 + "?,?,?,?,"
                 + "?,?,?,"
@@ -191,6 +191,7 @@ public class DisciplinaryQueryBuilder {
     public static final String DISCIPLINARY_EXISTENCE_CHECK_QUERY = "SELECT exists(SELECT id FROM egeis_disciplinary"
             + " WHERE id = ? AND tenantId = ?)";
     
+    public static final String GENERATE_SEQUENCES_QUERY = "SELECT nextval('seq_egeis_disciplinary') AS id" ;
   
 
 }

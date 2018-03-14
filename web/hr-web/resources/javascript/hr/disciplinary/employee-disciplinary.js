@@ -40,50 +40,44 @@ const hasValues = function (files) {
 
 const uploadFiles = function (body, cb) {
 
-    if (body.Disciplinary
-        && body.Disciplinary.memoDocuments
-        && body.Disciplinary.courtDocuments
-        && body.Disciplinary.showCauseDocuments
-        && body.Disciplinary.enquiryDocuments) {
+    var files = [];
 
-        var files = [];
+    files = files.concat(body.Disciplinary.memoDocuments);
+    files = files.concat(body.Disciplinary.courtDocuments);
+    files = files.concat(body.Disciplinary.showCauseDocuments);
+    files = files.concat(body.Disciplinary.enquiryDocuments);
 
-        files = files.concat(body.Disciplinary.memoDocuments);
-        files = files.concat(body.Disciplinary.courtDocuments);
-        files = files.concat(body.Disciplinary.showCauseDocuments);
-        files = files.concat(body.Disciplinary.enquiryDocuments);
+    console.log(files);
+    if (files.length) {
+        console.log(files, body.Disciplinary.memoDocuments)
 
-        if (files.length) {
-            console.log(files, body.Disciplinary.memoDocuments)
+        var breakout = 0;
+        var docs = [];
+        let counter = files.length;
+        for (let j = 0; j < files.length; j++) {
+            if (files[j] instanceof File) {
+                makeAjaxUpload(files[j], function (err, res) {
+                    if (breakout == 1)
+                        return;
+                    else if (err) {
+                        cb(err);
+                        breakout = 1;
+                    } else {
+                        counter--;
+                        docs.push({ fileStore: res.files[0].fileStoreId });
+                        if (counter == 0) {
+                            body.Disciplinary.documents = body.Disciplinary.documents.concat(docs);
+                            delete body.Disciplinary.memoDocuments;
+                            delete body.Disciplinary.courtDocuments;
+                            delete body.Disciplinary.showCauseDocuments;
+                            delete body.Disciplinary.enquiryDocuments;
 
-            var breakout = 0;
-            var docs = [];
-            let counter = files.length;
-            for (let j = 0; j < files.length; j++) {
-                if (files[j] instanceof File) {
-                    makeAjaxUpload(files[j], function (err, res) {
-                        if (breakout == 1)
-                            return;
-                        else if (err) {
-                            cb(err);
-                            breakout = 1;
-                        } else {
-                            counter--;
-                            docs.push({ fileStore: res.files[0].fileStoreId });
-                            if (counter == 0) {
-                                body.Disciplinary.documents = body.Disciplinary.documents.concat(docs);
-                                delete body.Disciplinary.memoDocuments;
-                                delete body.Disciplinary.courtDocuments;
-                                delete body.Disciplinary.showCauseDocuments;
-                                delete body.Disciplinary.enquiryDocuments;
-
-                                cb(null, body);
-                            }
+                            cb(null, body);
                         }
-                    })
-                } else {
-                    cb(new Error("Not a File"));
-                }
+                    }
+                })
+            } else {
+                cb(new Error("Not a File"));
             }
         }
     } else {
@@ -180,11 +174,11 @@ class EmployeeDisciplinary extends React.Component {
         var disciplinary = Object.assign({}, _this.state.disciplinarySet);
 
         if (disciplinary.courtCase) {
-            if (disciplinary.courtOrderType)
+            if (!disciplinary.courtOrderType)
                 return showError("Please fill Court Order Type");
-            if (disciplinary.courtOrderNo)
+            if (!disciplinary.courtOrderNo)
                 return showError("Please fill Court Order Number");
-            if (disciplinary.courtOrderDate)
+            if (!disciplinary.courtOrderDate)
                 return showError("Please fill Court Order Date");
         }
 
@@ -291,7 +285,7 @@ class EmployeeDisciplinary extends React.Component {
 
         var _this = this;
 
-        if (name === "memoDocuments" || name === "courtDocuments" ||  name === "showCauseDocuments" ||  name === "enquiryDocuments") {
+        if (name === "memoDocuments" || name === "courtDocuments" || name === "showCauseDocuments" || name === "enquiryDocuments") {
 
             var fileTypes = ["application/msword", "application/vnd.openxmlformats-officedocument.wordprocessingml.document", "application/vnd.ms-excel", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "application/pdf", "image/png", "image/jpeg"];
 
@@ -320,7 +314,7 @@ class EmployeeDisciplinary extends React.Component {
                 this.setState({
                     disciplinarySet: {
                         ...this.state.disciplinarySet,
-                        [name]:[]
+                        [name]: []
                     }
                 })
             }

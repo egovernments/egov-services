@@ -64,7 +64,7 @@ const uploadFiles = function (body, cb) {
                         breakout = 1;
                     } else {
                         counter--;
-                        docs.push({ fileStore: res.files[0].fileStoreId });
+                        docs.push({ fileStoreId: res.files[0].fileStoreId });
                         if (counter == 0) {
                             body.Disciplinary.documents = body.Disciplinary.documents.concat(docs);
                             delete body.Disciplinary.memoDocuments;

@@ -1,5 +1,5 @@
 var flag = 0;
-class SearchLeaveApplication extends React.Component {
+class SearchDisciplinaryAction extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -18,7 +18,7 @@ class SearchLeaveApplication extends React.Component {
     this.search = this.search.bind(this);
     this.handleBlur = this.handleBlur.bind(this);
     this.setInitialState = this.setInitialState.bind(this);
-    this.handleClick = this.handleClick.bind(this);
+    //this.handleClick = this.handleClick.bind(this);
   }
 
 
@@ -33,7 +33,7 @@ class SearchLeaveApplication extends React.Component {
         document.getElementsByClassName("homepage_logo")[0].src = window.location.origin + logo_ele[0].getAttribute("src");
       }
     }
-    if (getUrlVars()["type"]) $('#hp-citizen-title').text(titleCase(getUrlVars()["type"]) + " Leave Application");
+    if (getUrlVars()["type"]) $('#hp-citizen-title').text(titleCase(getUrlVars()["type"]) + " Disciplinary Action");
 
     var count = 2, _this = this, _state = {};
     var checkCountNCall = function (key, res) {
@@ -155,13 +155,13 @@ class SearchLeaveApplication extends React.Component {
     open(location, '_self').close();
   }
 
-  handleClick(type, id) {
-    if (type === "create") {
-      window.open(`app/hr/leavemaster/apply-leave.html?id=${id}&type=${type}`, '_blank', 'location=yes, height=760, width=800, scrollbars=yes, status=yes');
-    } else {
-      window.open(`app/hr/leavemaster/view-apply.html?id=${id}&type=${type}`, '_blank', 'location=yes, height=760, width=800, scrollbars=yes, status=yes');
-    }
-  }
+  // handleClick(type, id) {
+  //   if (type === "create") {
+  //     window.open(`app/hr/leavemaster/apply-leave.html?id=${id}&type=${type}`, '_blank', 'location=yes, height=760, width=800, scrollbars=yes, status=yes');
+  //   } else {
+  //     window.open(`app/hr/leavemaster/view-apply.html?id=${id}&type=${type}`, '_blank', 'location=yes, height=760, width=800, scrollbars=yes, status=yes');
+  //   }
+  // }
 
 
   componentDidUpdate(prevProps, prevState) {
@@ -181,7 +181,7 @@ class SearchLeaveApplication extends React.Component {
   }
 
   render() {
-    let { handleChange, search, handleBlur, handleClick } = this;
+    let { handleChange, search, handleBlur } = this;
     let { isSearchClicked, employees, assignments_designation, assignments_department } = this.state;
     let { name,
       code,
@@ -244,7 +244,7 @@ class SearchLeaveApplication extends React.Component {
     }
     return (
       <div>
-        <h3>Search employee to {getUrlVars()["type"]} a leave application</h3>
+        <h3>Search employee to {getUrlVars()["type"]} a Disciplinary Action</h3>
         <form onSubmit={(e) => { search(e) }}>
           <fieldset>
             <div className="row">
@@ -385,6 +385,6 @@ class SearchLeaveApplication extends React.Component {
 
 
 ReactDOM.render(
-  <SearchLeaveApplication />,
+  <SearchDisciplinaryAction/>,
   document.getElementById('root')
 );

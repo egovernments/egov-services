@@ -416,7 +416,7 @@ class EmployeeTransfer extends React.Component {
     vacantPositionFun(departmentId, designationId, effectiveFrom, ulb) {
       var _this = this;
       commonApiPost("hr-masters", "vacantpositions", "_search", {
-        tenantId: ulb ? "ap."+ulb.toLowerCase() : tenantId,
+        tenantId: ulb ? ulb : tenantId,
         departmentId: departmentId,
         designationId: designationId,
         asOnDate: effectiveFrom
@@ -436,7 +436,7 @@ class EmployeeTransfer extends React.Component {
     getUlbDetails(ulb){
       var _this = this;
       commonApiPost("egov-common-masters", "departments", "_search", {
-        tenantId: ulb ? "ap."+ulb.toLowerCase() : tenantId,
+        tenantId: ulb ? ulb : tenantId,
         pageSize: 500
       }, function(err, res) {
         if (res) {
@@ -448,7 +448,7 @@ class EmployeeTransfer extends React.Component {
       });
 
       commonApiPost("hr-masters", "designations", "_search", {
-        tenantId: ulb ? "ap."+ulb.toLowerCase() : tenantId,
+        tenantId: ulb ? ulb : tenantId,
         pageSize: 500
       }, function(err, res) {
         if (res) {

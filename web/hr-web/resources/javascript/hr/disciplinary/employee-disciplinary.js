@@ -66,7 +66,7 @@ const uploadFiles = function (body, cb) {
                         counter--;
                         docs.push({ fileStoreId: res.files[0].fileStoreId });
                         if (counter == 0) {
-                            body.Disciplinary.documents = body.Disciplinary.documents.concat(docs);
+                            body.Disciplinary.disciplinaryDocuments = body.Disciplinary.documents.concat(docs);
                             delete body.Disciplinary.memoDocuments;
                             delete body.Disciplinary.courtDocuments;
                             delete body.Disciplinary.showCauseDocuments;

@@ -54,10 +54,11 @@ class SearchDisciplinaryAction extends React.Component {
 
   search(e) {
     let {
-    name,
+      name,
       code,
       departmentId,
       designationId } = this.state.searchSet, _this = this;
+    let type = getUrlVars()["type"];
     e.preventDefault();
     //call api call
     var employees = [];
@@ -89,18 +90,40 @@ class SearchDisciplinaryAction extends React.Component {
     }, function (err, res) {
       if (res) {
         employees = res["Employee"];
+        var tempEmployees = [];
         flag = 1;
-        _this.setState({
-          isSearchClicked: true,
-          employees,
-          modified: true
-        });
+
+        if (type !== "create") {
+          for (let i = 0; i < employees.length; i++) {
+            commonApiPost("hr-employee", "disciplinary", "_search", { tenantId, employeeId: employees[i].id }, function (err, res1) {
+              if (res1 && res1["Disciplinary"] && res1["Disciplinary"]["length"]) {
+                for (let j = 0; j < res1.Disciplinary.length; j++) {
+                  let employee = Object.assign({}, employees[i]);
+                  console.log(res1.Disciplinary[j], j);
+                  employee.disciplinary = res1.Disciplinary[j];
+                  tempEmployees.push(employee);
+                }
+                console.log(tempEmployees);
+              }
+            });
+            if (i == employees.length - 1) {
+              _this.setState({
+                isSearchClicked: true,
+                employees: type === "create" ? employees : tempEmployees,
+                modified: true
+              });
+            }
+
+          }
+        }
+
+
       }
       setTimeout(function () {
         _this.setState({
           modified: false
         })
-      }, 1200);
+      }, 5000);
     });
   }
 
@@ -165,19 +188,22 @@ class SearchDisciplinaryAction extends React.Component {
 
 
   componentDidUpdate(prevProps, prevState) {
-    if (this.state.modified) {
-      $('#employeeTable').DataTable({
-        dom: 'Bfrtip',
-        buttons: [
-          'copy', 'csv', 'excel', 'pdf', 'print'
-        ],
-        ordering: false,
-        bDestroy: true,
-        language: {
-          "emptyTable": "No Records"
-        }
-      });
-    }
+    setTimeout(function(){
+      if (this.state &&this.state.modified) {
+        $('#employeeTable').DataTable({
+          dom: 'Bfrtip',
+          buttons: [
+            'copy', 'csv', 'excel', 'pdf', 'print'
+          ],
+          ordering: false,
+          bDestroy: true,
+          language: {
+            "emptyTable": "No Records"
+          }
+        });
+      }
+    },1200);
+
   }
 
   render() {
@@ -187,6 +213,9 @@ class SearchDisciplinaryAction extends React.Component {
       code,
       departmentId,
       designationId } = this.state.searchSet;
+
+    let type = getUrlVars()["type"];
+
     const renderOption = function (list) {
       if (list) {
         return list.map((item) => {
@@ -200,46 +229,88 @@ class SearchDisciplinaryAction extends React.Component {
 
     const showTable = function () {
       if (isSearchClicked) {
-        return (
-          <table id="employeeTable" className="table table-bordered">
-            <thead>
-              <tr>
-                <th>Employee Code</th>
-                <th>Employee Name</th>
-                <th>Employee Designation</th>
-                <th>Employee Department</th>
-                <th>Action</th>
+        if (type === "create") {
+          return (
+            <table id="employeeTable" className="table table-bordered">
+              <thead>
+                <tr>
+                  <th>Employee Code</th>
+                  <th>Employee Name</th>
+                  <th>Employee Designation</th>
+                  <th>Employee Department</th>
+                  <th>Action</th>
 
-              </tr>
-            </thead>
+                </tr>
+              </thead>
 
-            <tbody id="employeeSearchResultTableBody">
-              {
-                renderBody()
-              }
-            </tbody>
+              <tbody id="employeeSearchResultTableBody">
+                {
+                  renderBody()
+                }
+              </tbody>
 
-          </table>
+            </table>
 
-        )
+          )
 
+        } else {
+          return (
+            <table id="employeeTable" className="table table-bordered">
+              <thead>
+                <tr>
+                  <th>Employee Code</th>
+                  <th>Employee Name</th>
+                  <th>Employee Designation</th>
+                  <th>Employee Department</th>
+                  <th>Disciplinary Order Date of Suspension </th>
+                  <th>Action</th>
 
+                </tr>
+              </thead>
+
+              <tbody id="employeeSearchResultTableBody">
+                {
+                  renderBody()
+                }
+              </tbody>
+
+            </table>
+
+          )
+        }
       }
 
     }
     const renderBody = function () {
-      if (employees.length > 0) {
-        return employees.map((item, index, id) => {
-          return (<tr key={index} >
+      if (type === "create") {
+        if (employees.length > 0) {
+          return employees.map((item, index, id) => {
+            return (<tr key={index} >
 
-            <td data-label="code">{item.code}</td>
-            <td data-label="name">{item.name}</td>
-            <td data-label="designation">{getNameById(assignments_designation, item.assignments[0].designation)}</td>
-            <td data-label="department">{getNameById(assignments_department, item.assignments[0].department)}</td>
-            <td data-label="action"><a href={`app/hr/disciplinary/employee-disciplinary.html?id=${item.id}&type=${getUrlVars()["type"]}`}>Initiate</a></td>
-          </tr>
-          );
-        })
+              <td data-label="code">{item.code}</td>
+              <td data-label="name">{item.name}</td>
+              <td data-label="designation">{getNameById(assignments_designation, item.assignments[0].designation)}</td>
+              <td data-label="department">{getNameById(assignments_department, item.assignments[0].department)}</td>
+              <td data-label="action"><a href={`app/hr/disciplinary/employee-disciplinary.html?id=${item.id}&type=${type}`}>Initiate</a></td>
+            </tr>
+            );
+          })
+        }
+      } else {
+        if (employees.length > 0) {
+          return employees.map((item, index, id) => {
+            return (<tr key={index} >
+
+              <td data-label="code">{item.code}</td>
+              <td data-label="name">{item.name}</td>
+              <td data-label="designation">{getNameById(assignments_designation, item.assignments[0].designation)}</td>
+              <td data-label="department">{getNameById(assignments_department, item.assignments[0].department)}</td>
+              <td data-label="disciplinary">{item.disciplinary.orderDate}</td>
+              <td data-label="action"><a href={`app/hr/disciplinary/employee-disciplinary.html?id=${item.disciplinary.id}&type=${type}`}>{type}</a></td>
+            </tr>
+            );
+          })
+        }
       }
     }
     return (
@@ -251,7 +322,7 @@ class SearchDisciplinaryAction extends React.Component {
               <div className="col-sm-6">
                 <div className="row">
                   <div className="col-sm-6 label-text">
-                    <label for="">Designation  </label>
+                    <label htmlFor="">Designation  </label>
                   </div>
                   <div className="col-sm-6">
                     <div className="styled-select">
@@ -268,7 +339,7 @@ class SearchDisciplinaryAction extends React.Component {
               <div className="col-sm-6">
                 <div className="row">
                   <div className="col-sm-6 label-text">
-                    <label for="">Department  </label>
+                    <label htmlFor="">Department  </label>
                   </div>
                   <div className="col-sm-6">
                     <div className="styled-select">
@@ -288,7 +359,7 @@ class SearchDisciplinaryAction extends React.Component {
               <div className="col-sm-6">
                 <div className="row">
                   <div className="col-sm-6 label-text">
-                    <label for="">Employee Code</label>
+                    <label htmlFor="">Employee Code</label>
                   </div>
                   <div className="col-sm-6">
                     <input type="text" id="code" name="code" value={code}
@@ -299,7 +370,7 @@ class SearchDisciplinaryAction extends React.Component {
               <div className="col-sm-6">
                 <div className="row">
                   <div className="col-sm-6 label-text">
-                    <label for="">Employee Name</label>
+                    <label htmlFor="">Employee Name</label>
                   </div>
                   <div className="col-sm-6">
                     <input type="text" id="name" name="name" value={name}
@@ -313,7 +384,7 @@ class SearchDisciplinaryAction extends React.Component {
                       <div className="col-sm-6">
                           <div className="row">
                               <div className="col-sm-6 label-text">
-                                <label for=""> Status</label>
+                                <label htmlFor=""> Status</label>
                               </div>
                               <div className="col-sm-6">
                               <div className="styled-select">
@@ -330,7 +401,7 @@ class SearchDisciplinaryAction extends React.Component {
                         <div className="col-sm-6">
                             <div className="row">
                                 <div className="col-sm-6 label-text">
-                                  <label for="">Functionary  </label>
+                                  <label htmlFor="">Functionary  </label>
                                 </div>
                                 <div className="col-sm-6">
                                 <div className="styled-select">
@@ -350,7 +421,7 @@ class SearchDisciplinaryAction extends React.Component {
                   <div className="col-sm-6">
                       <div className="row">
                           <div className="col-sm-6 label-text">
-                            <label for="">Type  </label>
+                            <label htmlFor="">Type  </label>
                           </div>
                           <div className="col-sm-6">
                             <div className="styled-select">
@@ -385,6 +456,6 @@ class SearchDisciplinaryAction extends React.Component {
 
 
 ReactDOM.render(
-  <SearchDisciplinaryAction/>,
+  <SearchDisciplinaryAction />,
   document.getElementById('root')
 );

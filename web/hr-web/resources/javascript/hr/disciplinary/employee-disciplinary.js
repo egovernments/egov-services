@@ -172,6 +172,7 @@ class EmployeeDisciplinary extends React.Component {
 
         var _this = this;
         var disciplinary = Object.assign({}, _this.state.disciplinarySet);
+        let type = getUrlVars()["type"];
 
         if (disciplinary.courtCase) {
             if (!disciplinary.courtOrderType)
@@ -193,7 +194,7 @@ class EmployeeDisciplinary extends React.Component {
             } else {
 
                 $.ajax({
-                    url: baseUrl + "/hr-employee/disciplinary/_create?tenantId=" + tenantId,
+                    url: baseUrl + "/hr-employee/disciplinary/"+type==="create"?"_create":"_update"+"?tenantId=" + tenantId,
                     type: 'POST',
                     dataType: 'json',
                     data: JSON.stringify(_body),
@@ -326,7 +327,7 @@ class EmployeeDisciplinary extends React.Component {
                 ..._this.state,
                 disciplinarySet: {
                     ..._this.state.disciplinarySet,
-                    [name]: e.target.value
+                    [name]: e.target.type === 'checkbox' ? e.target.checked : e.target.value
                 }
             })
         }
@@ -375,38 +376,7 @@ class EmployeeDisciplinary extends React.Component {
 
     }
 
-
-    makeAjaxUpload(file, cb) {
-        if (file.constructor == File) {
-            let formData = new FormData();
-            formData.append("jurisdictionId", tenantId);
-            formData.append("module", "LAMS");
-            formData.append("file", file);
-            $.ajax({
-                url: baseUrl + "/filestore/v1/files?tenantId=" + tenantId,
-                data: formData,
-                cache: false,
-                contentType: false,
-                processData: false,
-                type: 'POST',
-                success: function (res) {
-                    cb(null, res);
-                },
-                error: function (jqXHR, exception) {
-                    cb(jqXHR.responseText || jqXHR.statusText);
-                }
-            });
-        } else {
-            cb(null, {
-                files: [{
-                    fileStoreId: file
-                }]
-            });
-        }
-    }
-
-
-    componentWillMount() {
+    componentDidMount() {
 
         if (window.opener && window.opener.document) {
             var logo_ele = window.opener.document.getElementsByClassName("homepage_logo");
@@ -417,6 +387,7 @@ class EmployeeDisciplinary extends React.Component {
         $('#hp-citizen-title').text("Employee Disciplinary");
         let _this = this;
         let id = getUrlVars()["id"];
+        let type = getUrlVars()["type"];
 
         getDropdown("assignments_designation", function (res) {
             _this.setState({
@@ -435,42 +406,100 @@ class EmployeeDisciplinary extends React.Component {
             }
         });
 
-        getCommonMasterById("hr-employee", "employees", id, function (err, res) {
-            if (res && res.Employee) {
-                var obj = res.Employee[0];
-                var ind = 0;
-                if (obj.length > 0) {
-                    obj.map((item, index) => {
-                        for (var i = 0; i < item.assignments.length; i++) {
-                            if ([true, "true"].indexOf(item.assignments[i].isPrimary) > -1) {
-                                ind = i;
-                                break;
+        if (type === "create") {
+            getCommonMasterById("hr-employee", "employees", id, function (err, res) {
+                if (res && res.Employee) {
+                    var obj = res.Employee[0];
+                    var ind = 0;
+                    if (obj.length > 0) {
+                        obj.map((item, index) => {
+                            for (var i = 0; i < item.assignments.length; i++) {
+                                if ([true, "true"].indexOf(item.assignments[i].isPrimary) > -1) {
+                                    ind = i;
+                                    break;
+                                }
                             }
+                        });
+                    }
+                    _this.setState({
+                        ..._this.state,
+                        employee: {
+                            name: obj.name,
+                            code: obj.code,
+                            designation: getNameById(_this.state.designationList, obj.assignments[ind].designation),
+                        },
+                        disciplinarySet: {
+                            ..._this.state.disciplinarySet,
+                            employeeId: obj.id
+                        }
+
+                    })
+                }
+            });
+        } else {
+
+            getCommonMasterById("hr-employee", "disciplinary", id, function (err, res1) {
+                if (res1 && res1["Disciplinary"] && res1["Disciplinary"]["0"]) {
+                    getCommonMasterById("hr-employee", "employees", res1["Disciplinary"]["0"].employeeId, function (err, res) {
+                        if (res && res.Employee) {
+                            var obj = res.Employee[0];
+                            var ind = 0;
+                            if (obj.length > 0) {
+                                obj.map((item, index) => {
+                                    for (var i = 0; i < item.assignments.length; i++) {
+                                        if ([true, "true"].indexOf(item.assignments[i].isPrimary) > -1) {
+                                            ind = i;
+                                            break;
+                                        }
+                                    }
+                                });
+                            }
+
+                            if (res1["Disciplinary"]["0"]["enquiryOfficerName"]) {
+                                var enquiry = true
+                                $('#enquiry, #showcause').prop("disabled", false);
+                            }
+                            if (res1["Disciplinary"]["0"]["showCauseNoticeNo"]) {
+                                var showcause = true
+                                $('#showcause, #courtorder').prop("disabled", false);
+                            }
+                            if (res1["Disciplinary"]["0"]["courtOrderNo"]) {
+                                var courtorder = true
+                                $('#courtorder').prop("disabled", false);
+                            }
+
+
+                            _this.setState({
+                                ..._this.state,
+                                employee: {
+                                    name: obj.name,
+                                    code: obj.code,
+                                    designation: getNameById(_this.state.designationList, obj.assignments[ind].designation),
+                                },
+                                disciplinarySet: res1["Disciplinary"]["0"],
+                                memo: true,
+                                enquiry,
+                                showcause,
+                                courtorder
+                            })
                         }
                     });
-                }
-                _this.setState({
-                    ..._this.state,
-                    employee: {
-                        name: obj.name,
-                        code: obj.code,
-                        designation: getNameById(_this.state.designationList, obj.assignments[ind].designation),
-                    },
-                    disciplinarySet: {
-                        ..._this.state.disciplinarySet,
-                        employeeId: obj.id
-                    }
 
-                })
-            }
-        });
+                }
+            })
+        }
 
     }
 
     componentDidUpdate() {
 
         var _this = this;
+        let type = getUrlVars()["type"];
 
+        if (type === "view") {
+            $("input,select,textarea").prop("disabled", true);
+
+        }
 
         $('#orderDate').datepicker({
             format: 'dd/mm/yyyy',
@@ -879,7 +908,7 @@ class EmployeeDisciplinary extends React.Component {
         const renderSection = function () {
             return (
                 <div className="form-section" id="allotteeDetailsBlock">
-                    <h3>Memo Phase </h3>
+
                     <div className="form-section-inner">
                         <div className="row">
                             <div className="col-sm-3">
@@ -888,7 +917,7 @@ class EmployeeDisciplinary extends React.Component {
                                         <label htmlFor="allotteeName"> Memo </label>
                                     </div>
                                     <div className="col-sm-6 label-view-text">
-                                        <input type="checkbox" name="memo" id="memo" value={""} maxLength="15"
+                                        <input type="checkbox" name="memo" id="memo" value={memo} checked={memo} maxLength="200"
                                             onChange={(e) => { handleSectionChange(e, "memo") }} />
                                     </div>
                                 </div>
@@ -899,8 +928,8 @@ class EmployeeDisciplinary extends React.Component {
                                         <label htmlFor="mobileNumber">Enquiry </label>
                                     </div>
                                     <div className="col-sm-6 label-view-text">
-                                        <input type="checkbox" name="enquiry" id="enquiry" value={""} maxLength="15"
-                                            onChange={(e) => { handleSectionChange(e, "enquiry") }} disabled />
+                                        <input type="checkbox" name="enquiry" id="enquiry" value={enquiry} checked={enquiry} maxLength="200"
+                                            onChange={(e) => { handleSectionChange(e, "enquiry") }} />
                                     </div>
                                 </div>
                             </div>
@@ -910,7 +939,7 @@ class EmployeeDisciplinary extends React.Component {
                                         <label htmlFor="allotteeName"> Show Cause Notice </label>
                                     </div>
                                     <div className="col-sm-6 label-view-text">
-                                        <input type="checkbox" name="showcause" id="showcause" value={""} maxLength="15"
+                                        <input type="checkbox" name="showcause" id="showcause" value={showcause} checked={showcause} maxLength="200"
                                             onChange={(e) => { handleSectionChange(e, "showcause") }} disabled />
                                     </div>
                                 </div>
@@ -921,7 +950,7 @@ class EmployeeDisciplinary extends React.Component {
                                         <label htmlFor="mobileNumber">Court Order </label>
                                     </div>
                                     <div className="col-sm-6 label-view-text">
-                                        <input type="checkbox" name="courtorder" id="courtorder" value={""} maxLength="15"
+                                        <input type="checkbox" name="courtorder" id="courtorder" value={courtorder} checked={courtorder} maxLength="200"
                                             onChange={(e) => { handleSectionChange(e, "courtorder") }} disabled />
                                     </div>
                                 </div>
@@ -945,7 +974,7 @@ class EmployeeDisciplinary extends React.Component {
                                             <label htmlFor="code"> Code </label>
                                         </div>
                                         <div className="col-sm-6 label-view-text">
-                                            <input type="text" name="code" id="code" value={employee.code} maxLength="15"
+                                            <input type="text" name="code" id="code" value={employee.code} maxLength="200"
                                                 onChange={(e) => { handleChangeTwoLevel(e, "employee", "code") }} disabled />
                                         </div>
                                     </div>
@@ -956,7 +985,7 @@ class EmployeeDisciplinary extends React.Component {
                                             <label htmlFor="Name">Name </label>
                                         </div>
                                         <div className="col-sm-6 label-view-text">
-                                            <input type="text" name="name" id="name" value={employee.name} maxLength="15"
+                                            <input type="text" name="name" id="name" value={employee.name} maxLength="200"
                                                 onChange={(e) => { handleChangeTwoLevel(e, "employee", "name") }} disabled />
                                         </div>
                                     </div>
@@ -969,7 +998,7 @@ class EmployeeDisciplinary extends React.Component {
                                             <label htmlFor="designation">Designation </label>
                                         </div>
                                         <div className="col-sm-6 label-view-text">
-                                            <input type="text" name="designation" id="designation" value={employee.designation} maxLength="15"
+                                            <input type="text" name="designation" id="designation" value={employee.designation} maxLength="200"
                                                 onChange={(e) => { handleChangeTwoLevel(e, "employee", "designation") }} disabled />
 
                                         </div>
@@ -981,7 +1010,7 @@ class EmployeeDisciplinary extends React.Component {
                                             <label htmlFor="gistCase">Gist of the Case <span>*</span></label>
                                         </div>
                                         <div className="col-sm-6 label-view-text">
-                                            <input type="text" name="gistCase" id="gistCase" value={gistCase} maxLength="15"
+                                            <textarea type="text" name="gistCase" id="gistCase" value={gistCase} maxLength="1000"
                                                 onChange={(e) => { handleChange(e, "gistCase") }} required />
 
                                         </div>
@@ -995,7 +1024,7 @@ class EmployeeDisciplinary extends React.Component {
                                             <label htmlFor="disciplinaryAuthority">Disciplinary Authority <span>*</span></label>
                                         </div>
                                         <div className="col-sm-6 label-view-text">
-                                            <input type="text" name="disciplinaryAuthority" id="disciplinaryAuthority" value={disciplinaryAuthority} maxLength="15"
+                                            <input type="text" name="disciplinaryAuthority" id="disciplinaryAuthority" value={disciplinaryAuthority} maxLength="200"
                                                 onChange={(e) => { handleChange(e, "disciplinaryAuthority") }} required />
 
                                         </div>
@@ -1007,7 +1036,7 @@ class EmployeeDisciplinary extends React.Component {
                                             <label htmlFor="orderNo">Order No <span>*</span></label>
                                         </div>
                                         <div className="col-sm-6 label-view-text">
-                                            <input type="text" name="orderNo" id="orderNo" value={orderNo} maxLength="15"
+                                            <input type="text" name="orderNo" id="orderNo" value={orderNo} maxLength="200"
                                                 onChange={(e) => { handleChange(e, "orderNo") }} required />
 
                                         </div>
@@ -1021,7 +1050,7 @@ class EmployeeDisciplinary extends React.Component {
                                             <label htmlFor="orderDate">Order Date of Suspension <span>*</span></label>
                                         </div>
                                         <div className="col-sm-6 label-view-text">
-                                            <input type="text" name="orderDate" id="orderDate" value={orderDate} required />
+                                            <input type="text" name="orderDate" id="orderDate" defaultValue={orderDate} required />
 
                                         </div>
                                     </div>
@@ -1032,7 +1061,7 @@ class EmployeeDisciplinary extends React.Component {
                                             <label htmlFor="memoNo">Memo No <span>*</span></label>
                                         </div>
                                         <div className="col-sm-6 label-view-text">
-                                            <input type="text" name="memoNo" id="memoNo" value={memoNo} maxLength="15"
+                                            <input type="text" name="memoNo" id="memoNo" value={memoNo} maxLength="200"
                                                 onChange={(e) => { handleChange(e, "memoNo") }} required />
 
                                         </div>
@@ -1046,7 +1075,7 @@ class EmployeeDisciplinary extends React.Component {
                                             <label htmlFor="memoDate">Memo Date <span>*</span></label>
                                         </div>
                                         <div className="col-sm-6 label-view-text">
-                                            <input type="text" name="memoDate" id="memoDate" value={memoDate} required />
+                                            <input type="text" name="memoDate" id="memoDate" defaultValue={memoDate} required />
                                         </div>
                                     </div>
                                 </div>
@@ -1056,7 +1085,7 @@ class EmployeeDisciplinary extends React.Component {
                                             <label htmlFor="memoServingDate">Memo serving Date</label>
                                         </div>
                                         <div className="col-sm-6 label-view-text">
-                                            <input type="text" name="memoServingDate" id="memoServingDate" value={memoServingDate} />
+                                            <input type="text" name="memoServingDate" id="memoServingDate" defaultValue={memoServingDate} />
 
                                         </div>
                                     </div>
@@ -1069,8 +1098,7 @@ class EmployeeDisciplinary extends React.Component {
                                             <label htmlFor="dateOfReceiptMemoDate">Date of Receipt of Explanation to memo</label>
                                         </div>
                                         <div className="col-sm-6 label-view-text">
-                                            <input type="text" name="dateOfReceiptMemoDate" id="dateOfReceiptMemoDate" value={dateOfReceiptMemoDate}
-                                            />
+                                            <input type="text" name="dateOfReceiptMemoDate" id="dateOfReceiptMemoDate" defaultValue={dateOfReceiptMemoDate} />
 
                                         </div>
                                     </div>
@@ -1081,7 +1109,7 @@ class EmployeeDisciplinary extends React.Component {
                                             <label htmlFor="explanationAccepted">Explanation Accepted Y/N</label>
                                         </div>
                                         <div className="col-sm-6 label-view-text">
-                                            <input type="checkbox" name="explanationAccepted" id="explanationAccepted" value={""} maxLength="15"
+                                            <input type="checkbox" name="explanationAccepted" id="explanationAccepted" value={explanationAccepted} checked={explanationAccepted} maxLength="200"
                                                 onChange={(e) => { handleChange(e, "explanationAccepted") }} />
 
                                         </div>
@@ -1095,7 +1123,7 @@ class EmployeeDisciplinary extends React.Component {
                                             <label htmlFor="chargeMemoNo">Charge Memo No</label>
                                         </div>
                                         <div className="col-sm-6 label-view-text">
-                                            <input type="text" name="chargeMemoNo" id="chargeMemoNo" value={chargeMemoNo} maxLength="15"
+                                            <input type="text" name="chargeMemoNo" id="chargeMemoNo" value={chargeMemoNo} maxLength="200"
                                                 onChange={(e) => { handleChange(e, "chargeMemoNo") }} />
 
                                         </div>
@@ -1107,8 +1135,7 @@ class EmployeeDisciplinary extends React.Component {
                                             <label htmlFor="chargeMemoDate">Charge Memo Date</label>
                                         </div>
                                         <div className="col-sm-6 label-view-text">
-                                            <input type="text" name="chargeMemoDate" id="chargeMemoDate" value={chargeMemoDate} maxLength="15"
-                                            />
+                                            <input type="text" name="chargeMemoDate" id="chargeMemoDate" defaultValue={chargeMemoDate} />
 
                                         </div>
                                     </div>
@@ -1121,8 +1148,7 @@ class EmployeeDisciplinary extends React.Component {
                                             <label htmlFor="dateOfReceiptToChargeMemoDate">Date of Receipt of written statement to charge memo</label>
                                         </div>
                                         <div className="col-sm-6 label-view-text">
-                                            <input type="text" name="dateOfReceiptToChargeMemoDate" id="dateOfReceiptToChargeMemoDate" value={dateOfReceiptToChargeMemoDate} maxLength="15"
-                                            />
+                                            <input type="text" name="dateOfReceiptToChargeMemoDate" id="dateOfReceiptToChargeMemoDate" defaultValue={dateOfReceiptToChargeMemoDate} />
 
                                         </div>
                                     </div>
@@ -1133,7 +1159,7 @@ class EmployeeDisciplinary extends React.Component {
                                             <label htmlFor="accepted">Accepted Y/N</label>
                                         </div>
                                         <div className="col-sm-6 label-view-text">
-                                            <input type="checkbox" name="accepted" id="accepted" value={accepted} maxLength="15"
+                                            <input type="checkbox" name="accepted" id="accepted" value={accepted} checked={accepted} maxLength="200"
                                                 onChange={(e) => { handleChange(e, "accepted") }} />
 
                                         </div>
@@ -1147,7 +1173,7 @@ class EmployeeDisciplinary extends React.Component {
                                             <label htmlFor="memoDocuments">Attachments</label>
                                         </div>
                                         <div className="col-sm-6 label-view-text">
-                                            <input type="file" name="memoDocuments" id="memoDocuments" maxLength="15"
+                                            <input type="file" name="memoDocuments" id="memoDocuments" maxLength="200"
                                                 onChange={(e) => { handleChange(e, "memoDocuments") }} multiple />
 
                                         </div>
@@ -1173,7 +1199,7 @@ class EmployeeDisciplinary extends React.Component {
                                             <label htmlFor="dateOfAppointmentOfEnquiryOfficerDate"> Date of Appointment of Enquiry officer <span>*</span></label>
                                         </div>
                                         <div className="col-sm-6 label-view-text">
-                                            <input type="text" name="dateOfAppointmentOfEnquiryOfficerDate" id="dateOfAppointmentOfEnquiryOfficerDate" value={dateOfAppointmentOfEnquiryOfficerDate} maxLength="15" required />
+                                            <input type="text" name="dateOfAppointmentOfEnquiryOfficerDate" id="dateOfAppointmentOfEnquiryOfficerDate" defaultValue={dateOfAppointmentOfEnquiryOfficerDate} required />
                                         </div>
                                     </div>
                                 </div>
@@ -1183,7 +1209,7 @@ class EmployeeDisciplinary extends React.Component {
                                             <label htmlFor="enquiryOfficerName">Enquiry officer Name <span>*</span></label>
                                         </div>
                                         <div className="col-sm-6 label-view-text">
-                                            <input type="text" name="enquiryOfficerName" id="enquiryOfficerName" value={enquiryOfficerName} maxLength="15"
+                                            <input type="text" name="enquiryOfficerName" id="enquiryOfficerName" value={enquiryOfficerName} maxLength="200"
                                                 onChange={(e) => { handleChange(e, "enquiryOfficerName") }} required />
                                         </div>
                                     </div>
@@ -1196,7 +1222,7 @@ class EmployeeDisciplinary extends React.Component {
                                             <label htmlFor="enquiryOfficerDesignation">Enquiry officer Designation <span>*</span></label>
                                         </div>
                                         <div className="col-sm-6 label-view-text">
-                                            <input type="text" name="enquiryOfficerDesignation" id="enquiryOfficerDesignation" value={enquiryOfficerDesignation} maxLength="15"
+                                            <input type="text" name="enquiryOfficerDesignation" id="enquiryOfficerDesignation" value={enquiryOfficerDesignation} maxLength="200"
                                                 onChange={(e) => { handleChange(e, "enquiryOfficerDesignation") }} required />
                                         </div>
                                     </div>
@@ -1207,8 +1233,7 @@ class EmployeeDisciplinary extends React.Component {
                                             <label htmlFor="dateOfAppointmentOfPresentingOfficer">Date of Appointment of Presenting Officer </label>
                                         </div>
                                         <div className="col-sm-6 label-view-text">
-                                            <input type="text" name="dateOfAppointmentOfPresentingOfficer" id="dateOfAppointmentOfPresentingOfficer" value={dateOfAppointmentOfPresentingOfficer} maxLength="15"
-                                            />
+                                            <input type="text" name="dateOfAppointmentOfPresentingOfficer" id="dateOfAppointmentOfPresentingOfficer" defaultValue={dateOfAppointmentOfPresentingOfficer} />
 
                                         </div>
                                     </div>
@@ -1221,7 +1246,7 @@ class EmployeeDisciplinary extends React.Component {
                                             <label htmlFor="presentingOfficerName">Presenting Officer Name </label>
                                         </div>
                                         <div className="col-sm-6 label-view-text">
-                                            <input type="text" name="presentingOfficerName" id="presentingOfficerName" value={presentingOfficerName} maxLength="15"
+                                            <input type="text" name="presentingOfficerName" id="presentingOfficerName" value={presentingOfficerName} maxLength="200"
                                                 onChange={(e) => { handleChange(e, "presentingOfficerName") }} />
 
                                         </div>
@@ -1233,7 +1258,7 @@ class EmployeeDisciplinary extends React.Component {
                                             <label htmlFor="presentingOfficerDesignation">Presenting Officer Designation</label>
                                         </div>
                                         <div className="col-sm-6 label-view-text">
-                                            <input type="text" name="presentingOfficerDesignation" id="presentingOfficerDesignation" value={presentingOfficerDesignation} maxLength="15"
+                                            <input type="text" name="presentingOfficerDesignation" id="presentingOfficerDesignation" value={presentingOfficerDesignation} maxLength="200"
                                                 onChange={(e) => { handleChange(e, "presentingOfficerDesignation") }} />
 
                                         </div>
@@ -1247,7 +1272,7 @@ class EmployeeDisciplinary extends React.Component {
                                             <label htmlFor="findingsOfEO">Findings of EO</label>
                                         </div>
                                         <div className="col-sm-6 label-view-text">
-                                            <input type="text" name="findingsOfEO" id="findingsOfEO" value={findingsOfEO} maxLength="15"
+                                            <textarea type="text" name="findingsOfEO" id="findingsOfEO" value={findingsOfEO} maxLength="1000"
                                                 onChange={(e) => { handleChange(e, "findingsOfEO") }} />
 
                                         </div>
@@ -1259,8 +1284,7 @@ class EmployeeDisciplinary extends React.Component {
                                             <label htmlFor="enquiryReportSubmittedDate">Enquiry Report submitted Date</label>
                                         </div>
                                         <div className="col-sm-6 label-view-text">
-                                            <input type="text" name="enquiryReportSubmittedDate" id="enquiryReportSubmittedDate" value={enquiryReportSubmittedDate} maxLength="15"
-                                            />
+                                            <input type="text" name="enquiryReportSubmittedDate" id="enquiryReportSubmittedDate" defaultValue={enquiryReportSubmittedDate} />
 
                                         </div>
                                     </div>
@@ -1273,8 +1297,7 @@ class EmployeeDisciplinary extends React.Component {
                                             <label htmlFor="dateOfCommunicationOfER">Date of Communication of ER to delinquent officer</label>
                                         </div>
                                         <div className="col-sm-6 label-view-text">
-                                            <input type="text" name="dateOfCommunicationOfER" id="dateOfCommunicationOfER" value={dateOfCommunicationOfER} maxLength="15"
-                                            />
+                                            <input type="text" name="dateOfCommunicationOfER" id="dateOfCommunicationOfER" defaultValue={dateOfCommunicationOfER} />
 
                                         </div>
                                     </div>
@@ -1285,8 +1308,7 @@ class EmployeeDisciplinary extends React.Component {
                                             <label htmlFor="dateOfSubmissionOfExplanationByCO">Date of submission of explanation by CO</label>
                                         </div>
                                         <div className="col-sm-6 label-view-text">
-                                            <input type="text" name="dateOfSubmissionOfExplanationByCO" id="dateOfSubmissionOfExplanationByCO" value={dateOfSubmissionOfExplanationByCO} maxLength="15"
-                                            />
+                                            <input type="text" name="dateOfSubmissionOfExplanationByCO" id="dateOfSubmissionOfExplanationByCO" defaultValue={dateOfSubmissionOfExplanationByCO} />
 
                                         </div>
                                     </div>
@@ -1299,7 +1321,7 @@ class EmployeeDisciplinary extends React.Component {
                                             <label htmlFor="acceptanceOfExplanation">Acceptance of explanation Y/N</label>
                                         </div>
                                         <div className="col-sm-6 label-view-text">
-                                            <input type="checkbox" name="acceptanceOfExplanation" id="acceptanceOfExplanation" value={acceptanceOfExplanation} maxLength="15"
+                                            <input type="checkbox" name="acceptanceOfExplanation" id="acceptanceOfExplanation" value={acceptanceOfExplanation} checked={acceptanceOfExplanation} maxLength="200"
                                                 onChange={(e) => { handleChange(e, "acceptanceOfExplanation") }} />
 
                                         </div>
@@ -1311,7 +1333,7 @@ class EmployeeDisciplinary extends React.Component {
                                             <label htmlFor="enquiryDocuments">Attachments</label>
                                         </div>
                                         <div className="col-sm-6 label-view-text">
-                                            <input type="file" name="enquiryDocuments" id="enquiryDocuments" maxLength="15"
+                                            <input type="file" name="enquiryDocuments" id="enquiryDocuments" maxLength="200"
                                                 onChange={(e) => { handleChange(e, "enquiryDocuments") }} multiple />
 
                                         </div>
@@ -1338,8 +1360,7 @@ class EmployeeDisciplinary extends React.Component {
                                             <label htmlFor="proposedPunishmentByDA">Proposed Punishment by DA <span>*</span></label>
                                         </div>
                                         <div className="col-sm-6 label-view-text">
-                                            <input type="text" name="proposedPunishmentByDA" id="proposedPunishmentByDA" value={proposedPunishmentByDA} maxLength="15"
-                                                onChange={(e) => { handleChange(e, "proposedPunishmentByDA") }} required />
+                                            <textarea type="text" name="proposedPunishmentByDA" id="proposedPunishmentByDA" value={proposedPunishmentByDA} maxLength="1000"                                                onChange={(e) => { handleChange(e, "proposedPunishmentByDA") }} required />
                                         </div>
                                     </div>
                                 </div>
@@ -1349,7 +1370,7 @@ class EmployeeDisciplinary extends React.Component {
                                             <label htmlFor="showCauseNoticeNo">Show cause notice No <span>*</span></label>
                                         </div>
                                         <div className="col-sm-6 label-view-text">
-                                            <input type="text" name="showCauseNoticeNo" id="showCauseNoticeNo" value={showCauseNoticeNo} maxLength="15"
+                                            <input type="text" name="showCauseNoticeNo" id="showCauseNoticeNo" value={showCauseNoticeNo} maxLength="200"
                                                 onChange={(e) => { handleChange(e, "showCauseNoticeNo") }} required />
                                         </div>
                                     </div>
@@ -1362,7 +1383,7 @@ class EmployeeDisciplinary extends React.Component {
                                             <label htmlFor="showCauseNoticeDate">Show cause notice Date <span>*</span></label>
                                         </div>
                                         <div className="col-sm-6 label-view-text">
-                                            <input type="text" name="showCauseNoticeDate" id="showCauseNoticeDate" value={showCauseNoticeDate} maxLength="15" required />
+                                            <input type="text" name="showCauseNoticeDate" id="showCauseNoticeDate" defaultValue={showCauseNoticeDate} required />
                                         </div>
                                     </div>
                                 </div>
@@ -1372,7 +1393,7 @@ class EmployeeDisciplinary extends React.Component {
                                             <label htmlFor="showCauseNoticeServingDate">Show cause Notice serving Date <span>*</span></label>
                                         </div>
                                         <div className="col-sm-6 label-view-text">
-                                            <input type="text" name="showCauseNoticeServingDate" id="showCauseNoticeServingDate" value={showCauseNoticeServingDate} maxLength="15" required />
+                                            <input type="text" name="showCauseNoticeServingDate" id="showCauseNoticeServingDate" defaultValue={showCauseNoticeServingDate} required />
 
                                         </div>
                                     </div>
@@ -1386,7 +1407,7 @@ class EmployeeDisciplinary extends React.Component {
                                             <label htmlFor="explanationToShowCauseNotice">Explanation to Show cause notice <span>*</span></label>
                                         </div>
                                         <div className="col-sm-6 label-view-text">
-                                            <input type="text" name="explanationToShowCauseNotice" id="explanationToShowCauseNotice" value={explanationToShowCauseNotice} maxLength="15"
+                                            <textarea type="text" name="explanationToShowCauseNotice" id="explanationToShowCauseNotice" value={explanationToShowCauseNotice} maxLength="1000"
                                                 onChange={(e) => { handleChange(e, "explanationToShowCauseNotice") }} required />
 
                                         </div>
@@ -1398,7 +1419,7 @@ class EmployeeDisciplinary extends React.Component {
                                             <label htmlFor="explanationToShowCauseNoticeAccepted">Explanation to Show cause notice Accepted Y/N <span>*</span></label>
                                         </div>
                                         <div className="col-sm-6 label-view-text">
-                                            <input type="checkbox" name="explanationToShowCauseNoticeAccepted" id="explanationToShowCauseNoticeAccepted" value={explanationToShowCauseNoticeAccepted} maxLength="15"
+                                            <input type="checkbox" name="explanationToShowCauseNoticeAccepted" id="explanationToShowCauseNoticeAccepted" value={explanationToShowCauseNoticeAccepted} checked={explanationToShowCauseNoticeAccepted} maxLength="200"
                                                 onChange={(e) => { handleChange(e, "explanationToShowCauseNoticeAccepted") }} required />
 
                                         </div>
@@ -1412,7 +1433,7 @@ class EmployeeDisciplinary extends React.Component {
                                             <label htmlFor="punishmentAwarded">Punishment Awarded <span>*</span></label>
                                         </div>
                                         <div className="col-sm-6 label-view-text">
-                                            <input type="text" name="punishmentAwarded" id="punishmentAwarded" value={punishmentAwarded} maxLength="15"
+                                            <input type="text" name="punishmentAwarded" id="punishmentAwarded" value={punishmentAwarded} maxLength="200"
                                                 onChange={(e) => { handleChange(e, "punishmentAwarded") }} required />
 
                                         </div>
@@ -1424,7 +1445,7 @@ class EmployeeDisciplinary extends React.Component {
                                             <label htmlFor="proceedingsNumber">Proceedings Number </label>
                                         </div>
                                         <div className="col-sm-6 label-view-text">
-                                            <input type="text" name="proceedingsNumber" id="proceedingsNumber" value={proceedingsNumber} maxLength="15"
+                                            <input type="text" name="proceedingsNumber" id="proceedingsNumber" value={proceedingsNumber} maxLength="200"
                                                 onChange={(e) => { handleChange(e, "proceedingsNumber") }} />
 
                                         </div>
@@ -1438,7 +1459,7 @@ class EmployeeDisciplinary extends React.Component {
                                             <label htmlFor="proceedingsDate">Proceedings Date </label>
                                         </div>
                                         <div className="col-sm-6 label-view-text">
-                                            <input type="text" name="proceedingsDate" id="proceedingsDate" value={proceedingsDate} maxLength="15"
+                                            <input type="text" name="proceedingsDate" id="proceedingsDate" defaultValue={proceedingsDate}
                                             />
 
                                         </div>
@@ -1450,8 +1471,7 @@ class EmployeeDisciplinary extends React.Component {
                                             <label htmlFor="proceedingsServingDate">Proceedings Serving Date </label>
                                         </div>
                                         <div className="col-sm-6 label-view-text">
-                                            <input type="text" name="proceedingsServingDate" id="proceedingsServingDate" value={proceedingsServingDate} maxLength="15"
-                                            />
+                                            <input type="text" name="proceedingsServingDate" id="proceedingsServingDate" defaultValue={proceedingsServingDate} />
 
                                         </div>
                                     </div>
@@ -1464,7 +1484,7 @@ class EmployeeDisciplinary extends React.Component {
                                             <label htmlFor="showCauseDocuments">Attachments</label>
                                         </div>
                                         <div className="col-sm-6 label-view-text">
-                                            <input type="file" name="showCauseDocuments" id="showCauseDocuments" maxLength="15"
+                                            <input type="file" name="showCauseDocuments" id="showCauseDocuments" maxLength="200"
                                                 onChange={(e) => { handleChange(e, "showCauseDocuments") }} multiple />
 
                                         </div>
@@ -1493,7 +1513,7 @@ class EmployeeDisciplinary extends React.Component {
                                         <label htmlFor="courtCase">Court case filed if any Y/N </label>
                                     </div>
                                     <div className="col-sm-6 label-view-text">
-                                        <input type="checkbox" name="courtCase" id="courtCase" value={courtCase} maxLength="15"
+                                        <input type="checkbox" name="courtCase" id="courtCase" value={courtCase} checked={courtCase} maxLength="200"
                                             onChange={(e) => { handleChange(e, "courtCase") }} />
 
                                     </div>
@@ -1505,7 +1525,7 @@ class EmployeeDisciplinary extends React.Component {
                                         <label htmlFor="courtOrderType">Order Type </label>
                                     </div>
                                     <div className="col-sm-6 label-view-text">
-                                        <select type="select" name="courtOrderType" id="courtOrderType" value={courtOrderType} maxLength="15"
+                                        <select type="select" name="courtOrderType" id="courtOrderType" value={courtOrderType} maxLength="200"
                                             onChange={(e) => { handleChange(e, "courtOrderType") }}  >
                                             <option value="">Select Court order type</option>
                                             {renderOption(_this.state.courtOrderTypeList)}
@@ -1522,7 +1542,7 @@ class EmployeeDisciplinary extends React.Component {
                                         <label htmlFor="courtOrderNo">Order No </label>
                                     </div>
                                     <div className="col-sm-6 label-view-text">
-                                        <input type="text" name="courtOrderNo" id="courtOrderNo" value={courtOrderNo} maxLength="15"
+                                        <input type="text" name="courtOrderNo" id="courtOrderNo" value={courtOrderNo} maxLength="200"
                                             onChange={(e) => { handleChange(e, "courtOrderNo") }} />
 
                                     </div>
@@ -1534,8 +1554,7 @@ class EmployeeDisciplinary extends React.Component {
                                         <label htmlFor="courtOrderDate">Order Date </label>
                                     </div>
                                     <div className="col-sm-6 label-view-text">
-                                        <input type="text" name="courtOrderDate" id="courtOrderDate" value={courtOrderDate} maxLength="15"
-                                        />
+                                        <input type="text" name="courtOrderDate" id="courtOrderDate" defaultValue={courtOrderDate} />
 
                                     </div>
                                 </div>
@@ -1548,7 +1567,7 @@ class EmployeeDisciplinary extends React.Component {
                                         <label htmlFor="gistOfDirectionIssuedByCourt">Gist of Direction Issued by Court </label>
                                     </div>
                                     <div className="col-sm-6 label-view-text">
-                                        <input type="text" name="gistOfDirectionIssuedByCourt" id="gistOfDirectionIssuedByCourt" value={gistOfDirectionIssuedByCourt} maxLength="15"
+                                        <textarea type="text" name="gistOfDirectionIssuedByCourt" id="gistOfDirectionIssuedByCourt" value={gistOfDirectionIssuedByCourt} maxLength="1000"
                                             onChange={(e) => { handleChange(e, "gistOfDirectionIssuedByCourt") }} />
 
                                     </div>
@@ -1560,7 +1579,7 @@ class EmployeeDisciplinary extends React.Component {
                                         <label htmlFor="courtDocuments">Attachments</label>
                                     </div>
                                     <div className="col-sm-6 label-view-text">
-                                        <input type="file" name="courtDocuments" id="courtDocuments" maxLength="15"
+                                        <input type="file" name="courtDocuments" id="courtDocuments" maxLength="200"
                                             onChange={(e) => { handleChange(e, "courtDocuments") }} multiple />
 
                                     </div>

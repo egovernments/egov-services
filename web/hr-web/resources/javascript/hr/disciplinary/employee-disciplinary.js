@@ -29,15 +29,6 @@ const makeAjaxUpload = function (file, cb) {
     }
 }
 
-const hasValues = function (files) {
-    for (var i = 0; i < files.length; i++) {
-        if (files[i] && files[i].value && files[i].value.constructor == Array && files[i].value.length)
-            return true;
-    }
-
-    return false;
-}
-
 const uploadFiles = function (body, cb) {
 
     var files = [];
@@ -135,7 +126,7 @@ class EmployeeDisciplinary extends React.Component {
                 "enquiryDocuments": [],
                 "showCauseDocuments": [],
                 "courtDocuments": [],
-                "documents": []
+                "disciplinaryDocuments": []
             },
             employee: {
                 code: "",
@@ -146,7 +137,8 @@ class EmployeeDisciplinary extends React.Component {
             enquiry: false,
             showcause: false,
             courtorder: false,
-            courtOrderTypeList: []
+            courtOrderTypeList: [],
+            removedFiles: []
 
         }
         this.handleChangeTwoLevel = this.handleChangeTwoLevel.bind(this);
@@ -154,7 +146,7 @@ class EmployeeDisciplinary extends React.Component {
         this.handleChange = this.handleChange.bind(this);
         this.addOrUpdate = this.addOrUpdate.bind(this);
         this.setInitialState = this.setInitialState.bind(this);
-        this.getUsersFun = this.getUsersFun.bind(this);
+        this.addToRemovedFiles = this.addToRemovedFiles.bind(this);
     }
 
 
@@ -183,6 +175,17 @@ class EmployeeDisciplinary extends React.Component {
                 return showError("Please fill Court Order Date");
         }
 
+        if (removedFiles.length) {
+            let docs = [];
+
+            for (let i = 0; i < disciplinary.disciplinaryDocuments.length; i++) {
+                if (removedFiles.indexOf(disciplinary.disciplinaryDocuments[i].fileStoreId) === -1)
+                    docs.push(disciplinary.disciplinaryDocuments[i]);
+            }
+
+            disciplinary.disciplinaryDocuments = docs;
+        }
+
         var body = {
             "RequestInfo": requestInfo,
             "Disciplinary": disciplinary
@@ -194,7 +197,7 @@ class EmployeeDisciplinary extends React.Component {
             } else {
 
                 $.ajax({
-                    url: baseUrl + "/hr-employee/disciplinary/"+type==="create"?"_create":"_update"+"?tenantId=" + tenantId,
+                    url: baseUrl + "/hr-employee/disciplinary/" + type === "create" ? "_create" : "_update" + "?tenantId=" + tenantId,
                     type: 'POST',
                     dataType: 'json',
                     data: JSON.stringify(_body),
@@ -343,34 +346,6 @@ class EmployeeDisciplinary extends React.Component {
                 ..._this.state[pName],
                 [name]: e.target.value
             }
-
-        })
-
-    }
-
-
-    getUsersFun(departmentId, designationId) {
-        var _this = this;
-        $.ajax({
-            url: baseUrl + "/hr-employee/employees/_search?tenantId=" + tenantId + "&departmentId=" + departmentId + "&designationId=" + designationId,
-            type: 'POST',
-            dataType: 'json',
-            data: JSON.stringify({
-                RequestInfo: requestInfo
-            }),
-            contentType: 'application/json',
-            headers: {
-                'auth-token': authToken
-            },
-            success: function (res) {
-
-                _this.setState({
-                    ..._this.state,
-                    userList: res.Employee
-                })
-
-            },
-            error: function (err) { }
 
         })
 
@@ -826,11 +801,24 @@ class EmployeeDisciplinary extends React.Component {
 
     }
 
+    addToRemovedFiles(fileId, addBack) {
+        var removedFiles = Object.assign({}, this.state.removedFiles);
+        if (addBack) {
+            removedFiles.splice(removedFiles.indexOf(fileId), 1);
+        } else {
+            removedFiles.push(fileId);
+        }
+        this.setState({
+            removedFiles: Object.assign({}, removedFiles)
+        })
+    }
+
 
     render() {
         var _this = this;
+        let mode = getUrlVars()["type"];
         let { handleChange, handleSectionChange, handleChangeTwoLevel, addOrUpdate } = this;
-        let { disciplinarySet, memo, enquiry, showcause, courtorder, employee, courtOrderTypeList } = this.state;
+        let { disciplinarySet, memo, enquiry, showcause, courtorder, employee, courtOrderTypeList, removedFiles } = this.state;
         let {
             gistCase,
             disciplinaryAuthority,
@@ -874,7 +862,8 @@ class EmployeeDisciplinary extends React.Component {
             memoDocuments,
             enquiryDocuments,
             showCauseDocuments,
-            courtDocuments
+            courtDocuments,
+            disciplinaryDocuments
 
         } = this.state.disciplinarySet;
 
@@ -888,22 +877,62 @@ class EmployeeDisciplinary extends React.Component {
             }
         }
 
-        const renderOptionForUser = function (list) {
-            if (list) {
-                return list.map((item, ind) => {
-                    var positionId;
-                    item.assignments.forEach(function (item) {
-                        if (item.isPrimary) {
-                            positionId = item.position;
-                        }
-                    });
+        const renderFileDelBtn = function (fileId) {
+            if (removedFiles.indexOf(fileId) === -1)
+                return (
+                    <button type="button" className="btn btn-close" style={{ "color": "#000000" }} onClick={() => addToRemovedFiles(fileId)}>Delete</button>
+                )
+            else
+                return (
+                    <button type="button" className="btn btn-close" style={{ "color": "#000000" }} onClick={() => addToRemovedFiles(fileId, true)}>Undo</button>
+                )
+        }
 
-                    return (<option key={ind} value={positionId}>
-                        {item.name}
-                    </option>)
-                })
+        const renderFileBody = function (fles) {
+            return fles.map(function (file, ind) {
+                return (
+                    <tr key={ind2}>
+                        <td>{ind2 + 1}</td>
+                        <td>{v.key}</td>
+                        <td>
+                            <a href={window.location.origin + CONST_API_GET_FILE + file.fileStoreId} target="_blank">
+                                Download
+                      </a>
+                        </td>
+                        <td>{getUrlVars()["type"] == "update" ? renderFileDelBtn(file.fileStoreId) : ""}</td>
+                    </tr>
+                )
+            })
+        }
+
+        const showAttachedFiles = function () {
+            if (disciplinaryDocuments.length) {
+                return (
+                    <table id="fileTable" className="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Sr. No.</th>
+                                <th>Name</th>
+                                <th>File</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="agreementSearchResultTableBody">
+                            {
+                                renderFileBody(disciplinaryDocuments)
+                            }
+                        </tbody>
+
+                    </table>
+                )
             }
         }
+
+        const showActionButton = function () {
+            if (mode === "create" || mode === "update") {
+                return (<button type="submit" className="btn btn-submit">{mode === "update" ? "Update" : "Create"}</button>);
+            }
+        };
 
         const renderSection = function () {
             return (
@@ -1360,7 +1389,7 @@ class EmployeeDisciplinary extends React.Component {
                                             <label htmlFor="proposedPunishmentByDA">Proposed Punishment by DA <span>*</span></label>
                                         </div>
                                         <div className="col-sm-6 label-view-text">
-                                            <textarea type="text" name="proposedPunishmentByDA" id="proposedPunishmentByDA" value={proposedPunishmentByDA} maxLength="1000"                                                onChange={(e) => { handleChange(e, "proposedPunishmentByDA") }} required />
+                                            <textarea type="text" name="proposedPunishmentByDA" id="proposedPunishmentByDA" value={proposedPunishmentByDA} maxLength="1000" onChange={(e) => { handleChange(e, "proposedPunishmentByDA") }} required />
                                         </div>
                                     </div>
                                 </div>
@@ -1607,8 +1636,10 @@ class EmployeeDisciplinary extends React.Component {
                         <br />
                         {renderCourtOrder()}
                         <br />
+                        {showAttachedFiles()}
+                        <br />
                         <div className="text-center">
-                            <button id="sub" type="submit" className="btn btn-submit">Submit</button>&nbsp;&nbsp;
+                            {showActionButton()}&nbsp;&nbsp;
                             <button type="button" className="btn btn-close" onClick={(e) => { this.close() }}>Close</button>
                         </div>
 

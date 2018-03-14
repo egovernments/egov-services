@@ -44,6 +44,7 @@ import java.util.Date;
 import java.util.List;
 
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -66,6 +67,7 @@ public class Disciplinary {
 
     private Long id;
     @NotNull
+    @Size(max=1000)
     private String gistCase;
     @NotNull
     private String disciplinaryAuthority;
@@ -106,6 +108,7 @@ public class Disciplinary {
     private Date dateOfAppointmentOfPresentingOfficer;
     private String presentingOfficerName;
     private String presentingOfficerDesignation;
+    @Size(max=1000)
     private String findingsOfEO;
     @DateTimeFormat(pattern = "dd/MM/yyyy")
     @JsonFormat(pattern = "dd/MM/yyyy")
@@ -117,7 +120,7 @@ public class Disciplinary {
     @JsonFormat(pattern = "dd/MM/yyyy")
     private Date dateOfSubmissionOfExplanationByCO;
     private Boolean acceptanceOfExplanation;
-
+    @Size(max=1000)
     private String proposedPunishmentByDA;
     private String showCauseNoticeNo;
     @DateTimeFormat(pattern = "dd/MM/yyyy")
@@ -126,6 +129,7 @@ public class Disciplinary {
     @DateTimeFormat(pattern = "dd/MM/yyyy")
     @JsonFormat(pattern = "dd/MM/yyyy")
     private Date showCauseNoticeServingDate;
+    @Size(max=1000)
     private String explanationToShowCauseNotice;
     private Boolean explanationToShowCauseNoticeAccepted;
     private String punishmentAwarded;
@@ -143,6 +147,7 @@ public class Disciplinary {
     @DateTimeFormat(pattern = "dd/MM/yyyy")
     @JsonFormat(pattern = "dd/MM/yyyy")
     private Date courtOrderDate;
+    @Size(max=1000)
     private String gistOfDirectionIssuedByCourt;
     private List<DisciplinaryDocuments> disciplinaryDocuments;
     @NotNull

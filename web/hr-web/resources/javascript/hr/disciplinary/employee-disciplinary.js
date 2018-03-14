@@ -175,6 +175,8 @@ class EmployeeDisciplinary extends React.Component {
                 return showError("Please fill Court Order Date");
         }
 
+        let removedFiles = _this.state.removedFiles;
+
         if (removedFiles.length) {
             let docs = [];
 
@@ -443,6 +445,10 @@ class EmployeeDisciplinary extends React.Component {
                                 $('#courtorder').prop("disabled", false);
                             }
 
+                            res1["Disciplinary"]["0"].memoDocuments= [];
+                            res1["Disciplinary"]["0"].enquiryDocuments= [];
+                            res1["Disciplinary"]["0"].showCauseDocuments= [];
+                            res1["Disciplinary"]["0"].courtDocuments= [];
 
                             _this.setState({
                                 ..._this.state,
@@ -802,14 +808,14 @@ class EmployeeDisciplinary extends React.Component {
     }
 
     addToRemovedFiles(fileId, addBack) {
-        var removedFiles = Object.assign({}, this.state.removedFiles);
+        var removedFiles = Object.assign([], this.state.removedFiles);
         if (addBack) {
             removedFiles.splice(removedFiles.indexOf(fileId), 1);
         } else {
             removedFiles.push(fileId);
         }
         this.setState({
-            removedFiles: Object.assign({}, removedFiles)
+            removedFiles: Object.assign([], removedFiles)
         })
     }
 
@@ -817,7 +823,7 @@ class EmployeeDisciplinary extends React.Component {
     render() {
         var _this = this;
         let mode = getUrlVars()["type"];
-        let { handleChange, handleSectionChange, handleChangeTwoLevel, addOrUpdate } = this;
+        let { handleChange, handleSectionChange, handleChangeTwoLevel, addOrUpdate, addToRemovedFiles } = this;
         let { disciplinarySet, memo, enquiry, showcause, courtorder, employee, courtOrderTypeList, removedFiles } = this.state;
         let {
             gistCase,
@@ -891,9 +897,9 @@ class EmployeeDisciplinary extends React.Component {
         const renderFileBody = function (fles) {
             return fles.map(function (file, ind) {
                 return (
-                    <tr key={ind2}>
-                        <td>{ind2 + 1}</td>
-                        <td>{v.key}</td>
+                    <tr key={ind}>
+                        <td>{ind + 1}</td>
+                        <td>{file.documentType}</td>
                         <td>
                             <a href={window.location.origin + CONST_API_GET_FILE + file.fileStoreId} target="_blank">
                                 Download

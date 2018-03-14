@@ -64,6 +64,8 @@ import lombok.ToString;
 public class DisciplinaryGetRequest {
 
     private List<Long> id;
+    
+    private List<Long> employeeId;
 
     @NotNull
     private String tenantId;

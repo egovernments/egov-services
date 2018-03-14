@@ -93,6 +93,11 @@ public class DisciplinaryQueryBuilder {
             isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
             selectQuery.append(" disciplinary.id IN " + getIdQuery(disciplinaryGetRequest.getId()));
         }
+        
+        if (disciplinaryGetRequest.getEmployeeId() != null) {
+            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+            selectQuery.append(" disciplinary.employeeid IN " + getIdQuery(disciplinaryGetRequest.getEmployeeId()));
+        }
 
     }
 

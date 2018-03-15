@@ -113,6 +113,8 @@ class EmployeeDisciplinary extends React.Component {
                 "explanationToShowCauseNotice": "",
                 "explanationToShowCauseNoticeAccepted": false,
                 "punishmentAwarded": "",
+                "punishmentImplemented": "",
+                "endDateOfPunishment": "",
                 "proceedingsNumber": "",
                 "proceedingsDate": "",
                 "proceedingsServingDate": "",
@@ -445,10 +447,10 @@ class EmployeeDisciplinary extends React.Component {
                                 $('#courtorder').prop("disabled", false);
                             }
 
-                            res1["Disciplinary"]["0"].memoDocuments= [];
-                            res1["Disciplinary"]["0"].enquiryDocuments= [];
-                            res1["Disciplinary"]["0"].showCauseDocuments= [];
-                            res1["Disciplinary"]["0"].courtDocuments= [];
+                            res1["Disciplinary"]["0"].memoDocuments = [];
+                            res1["Disciplinary"]["0"].enquiryDocuments = [];
+                            res1["Disciplinary"]["0"].showCauseDocuments = [];
+                            res1["Disciplinary"]["0"].courtDocuments = [];
 
                             _this.setState({
                                 ..._this.state,
@@ -805,6 +807,28 @@ class EmployeeDisciplinary extends React.Component {
                 });
         });
 
+
+
+        $('#endDateOfPunishment').datepicker({
+            format: 'dd/mm/yyyy',
+            //startDate: new Date(),
+            autoclose: true,
+
+        });
+
+        $('#endDateOfPunishment').on('changeDate', function (e) {
+            if (_this.state.disciplinarySet.endDateOfPunishment != e.target.value)
+                _this.setState({
+
+                    disciplinarySet: {
+                        ..._this.state.disciplinarySet,
+                        "endDateOfPunishment": $("#endDateOfPunishment").val()
+
+                    }
+                });
+        });
+
+
     }
 
     addToRemovedFiles(fileId, addBack) {
@@ -857,6 +881,8 @@ class EmployeeDisciplinary extends React.Component {
             explanationToShowCauseNotice,
             explanationToShowCauseNoticeAccepted,
             punishmentAwarded,
+            punishmentImplemented,
+            endDateOfPunishment,
             proceedingsNumber,
             proceedingsDate,
             proceedingsServingDate,
@@ -1059,13 +1085,25 @@ class EmployeeDisciplinary extends React.Component {
                                             <label htmlFor="disciplinaryAuthority">Disciplinary Authority <span>*</span></label>
                                         </div>
                                         <div className="col-sm-6 label-view-text">
-                                            <input type="text" name="disciplinaryAuthority" id="disciplinaryAuthority" value={disciplinaryAuthority} maxLength="200"
-                                                onChange={(e) => { handleChange(e, "disciplinaryAuthority") }} required />
+                                            <select type="text" name="disciplinaryAuthority" id="disciplinaryAuthority" value={disciplinaryAuthority} maxLength="200"
+                                                onChange={(e) => { handleChange(e, "disciplinaryAuthority") }} required >
+                                                <option value="">Select department</option>
+                                                <option value="1">Government of AP, AP Secretariat, Velagapudi</option>
+                                                <option value="2">Commissioner & Director of Municipal Administration</option>
+                                                <option value="3">Engineer-in-Chief (PH)</option>
+                                                <option value="4">Director of Town & Country Planning</option>
+                                                <option value="5">Regional Director-cum-Appellate Commissioner of Municipal Administration concerned</option>
+                                                <option value="6">Regional Deputy Director of Town & Country Planning concerned</option>
+                                                <option value="7">Superintending Engineer (PH) concerned</option>
+                                                <option value="8">Chairperson/Mayor of Municipal Council concerned</option>
+                                                <option value="9">Municipal Commissioner concerned</option>
+                                                <option value="10">Others, if any</option>
+                                            </select>
 
                                         </div>
                                     </div>
                                 </div>
-                                <div className="col-sm-6">
+                                {/* <div className="col-sm-6">
                                     <div className="row">
                                         <div className="col-sm-6 label-text">
                                             <label htmlFor="orderNo">Order No <span>*</span></label>
@@ -1089,7 +1127,7 @@ class EmployeeDisciplinary extends React.Component {
 
                                         </div>
                                     </div>
-                                </div>
+                                </div> */}
                                 <div className="col-sm-6">
                                     <div className="row">
                                         <div className="col-sm-6 label-text">
@@ -1482,6 +1520,31 @@ class EmployeeDisciplinary extends React.Component {
                                         <div className="col-sm-6 label-view-text">
                                             <input type="text" name="proceedingsNumber" id="proceedingsNumber" value={proceedingsNumber} maxLength="200"
                                                 onChange={(e) => { handleChange(e, "proceedingsNumber") }} />
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="row">
+                                <div className="col-sm-6">
+                                    <div className="row">
+                                        <div className="col-sm-6 label-text">
+                                            <label htmlFor="punishmentImplemented">Punishment implemented Y/N </label>
+                                        </div>
+                                        <div className="col-sm-6 label-view-text">
+                                            <input type="checkbox" name="punishmentImplemented" id="punishmentImplemented" value={punishmentImplemented} checked={punishmentImplemented}
+                                                onChange={(e) => { handleChange(e, "punishmentImplemented") }} required />
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="col-sm-6">
+                                    <div className="row">
+                                        <div className="col-sm-6 label-text">
+                                            <label htmlFor="endDateOfPunishment">End date of Punishment operation period </label>
+                                        </div>
+                                        <div className="col-sm-6 label-view-text">
+                                            <input type="text" name="endDateOfPunishment" id="endDateOfPunishment" defaultValue={endDateOfPunishment} maxLength="200" required />
 
                                         </div>
                                     </div>

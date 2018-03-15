@@ -493,6 +493,11 @@ class EmployeeTransfer extends React.Component {
 
     handleChange(e, name) {
       var _this = this;
+
+      if(!this.state.movement.transferType && name !== "transferType"){
+        return showError("Please select Transfer type");
+      }
+
       switch (name) {
         case "designationAssigned":
           if (this.state.movement.departmentAssigned && this.state.movement.effectiveFrom) {

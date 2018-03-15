@@ -100,7 +100,7 @@ public class DisciplinaryRepository {
         }
 
         final Object[] obj = new Object[] { disciplinary.getId(), disciplinary.getEmployeeId(), disciplinary.getGistCase(),
-                disciplinary.getDisciplinaryAuthority(), disciplinary.getOrderNo(), disciplinary.getOrderDate(),
+                disciplinary.getDisciplinaryAuthority(),
                 disciplinary.getMemoNo(), disciplinary.getMemoDate(),
                 disciplinary.getMemoServingDate(), disciplinary.getDateOfReceiptMemoDate(), disciplinary.getExplanationAccepted(),
                 disciplinary.getChargeMemoNo(), disciplinary.getChargeMemoDate(),
@@ -122,7 +122,7 @@ public class DisciplinaryRepository {
                 disciplinaryRequest.getRequestInfo().getUserInfo().getId(), new Date(),
                 disciplinaryRequest.getRequestInfo().getUserInfo().getId(), new Date(), disciplinary.getTenantId(),
                 disciplinary.getCourtOrderType(),
-                disciplinary.getPresentingOfficerDesignation(), disciplinary.getEnquiryOfficerDesignation() };
+                disciplinary.getPresentingOfficerDesignation(), disciplinary.getEnquiryOfficerDesignation(),disciplinary.getPunishmentImplemented(),disciplinary.getEndDateOfPunishment() };
         jdbcTemplate.update(disciplinaryInsert, obj);
         return disciplinaryRequest;
     }
@@ -134,7 +134,7 @@ public class DisciplinaryRepository {
         final String disciplinaryUpdate = DisciplinaryQueryBuilder.updateDisciplinaryQuery();
         final Disciplinary disciplinary = disciplinaryRequest.getDisciplinary();
         final Object[] obj = new Object[] { disciplinary.getEmployeeId(), disciplinary.getGistCase(),
-                disciplinary.getDisciplinaryAuthority(), disciplinary.getOrderNo(), disciplinary.getOrderDate(),
+                disciplinary.getDisciplinaryAuthority(),
                 disciplinary.getMemoNo(), disciplinary.getMemoDate(),
                 disciplinary.getMemoServingDate(), disciplinary.getDateOfReceiptMemoDate(), disciplinary.getExplanationAccepted(),
                 disciplinary.getChargeMemoNo(), disciplinary.getChargeMemoDate(), disciplinary.getDateOfReceiptToChargeMemoDate(),
@@ -154,6 +154,7 @@ public class DisciplinaryRepository {
                 disciplinary.getGistOfDirectionIssuedByCourt(),
                 disciplinary.getLastModifiedBy(), new Date(), disciplinary.getCourtOrderType(),
                 disciplinary.getPresentingOfficerDesignation(), disciplinary.getEnquiryOfficerDesignation(),
+                disciplinary.getPunishmentImplemented(),disciplinary.getEndDateOfPunishment(),
                 disciplinary.getId(), disciplinary.getTenantId() };
         jdbcTemplate.update(disciplinaryUpdate, obj);
         return disciplinaryRequest;

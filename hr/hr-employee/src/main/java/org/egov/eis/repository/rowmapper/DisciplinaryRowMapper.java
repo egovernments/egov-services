@@ -82,7 +82,6 @@ public class DisciplinaryRowMapper implements RowMapper<Disciplinary> {
         disciplinary.setFindingsOfEO(rs.getString("findingsOfEO"));
         disciplinary.setGistOfDirectionIssuedByCourt(rs.getString("gistOfDirectionIssuedByCourt"));
         disciplinary.setLastModifiedBy((Long) rs.getObject("lastModifiedBy"));
-        disciplinary.setOrderNo(rs.getString("orderNo"));
         disciplinary.setPresentingOfficerName(rs.getString("presentingOfficerName"));
         disciplinary.setProceedingsNumber(rs.getString("proceedingsNumber"));
         disciplinary.setProposedPunishmentByDA(rs.getString("proposedPunishmentByDA"));
@@ -92,6 +91,7 @@ public class DisciplinaryRowMapper implements RowMapper<Disciplinary> {
         disciplinary.setCourtOrderType(rs.getString("courtOrderType"));
         disciplinary.setEnquiryOfficerDesignation(rs.getString("enquiryOfficerDesignation"));
         disciplinary.setPresentingOfficerDesignation(rs.getString("presentingOfficerDesignation"));
+        disciplinary.setPunishmentImplemented(rs.getBoolean("punishmentImplemented"));
 
         try {
             Date date = isEmpty(rs.getDate("memoDate")) ? null
@@ -140,10 +140,6 @@ public class DisciplinaryRowMapper implements RowMapper<Disciplinary> {
                     : sdf.parse(sdf.format(rs.getDate("proceedingsDate")));
             disciplinary.setProceedingsDate(date);
 
-            date = isEmpty(rs.getDate("orderDate")) ? null
-                    : sdf.parse(sdf.format(rs.getDate("orderDate")));
-            disciplinary.setOrderDate(date);
-
             date = isEmpty(rs.getDate("proceedingsServingDate")) ? null
                     : sdf.parse(sdf.format(rs.getDate("proceedingsServingDate")));
             disciplinary.setProceedingsServingDate(date);
@@ -164,6 +160,12 @@ public class DisciplinaryRowMapper implements RowMapper<Disciplinary> {
             date = isEmpty(rs.getDate("lastModifiedDate")) ? null
                     : sdf.parse(sdf.format(rs.getDate("lastModifiedDate")));
             disciplinary.setLastModifiedDate(date);
+
+            date = isEmpty(rs.getDate("endDateOfPunishment")) ? null
+                    : sdf.parse(sdf.format(rs.getDate("endDateOfPunishment")));
+
+            disciplinary.setEndDateOfPunishment(date);
+
         } catch (final ParseException e) {
             e.printStackTrace();
             throw new SQLException("Parse exception while parsing date");

@@ -153,7 +153,7 @@ public class DisciplinaryQueryBuilder {
     }
 
     public static String insertDisciplinaryQuery() {
-        return "INSERT INTO egeis_disciplinary(id,employeeId,gistCase,disciplinaryAuthority,orderNo,orderDate,memoNo,memoDate,"
+        return "INSERT INTO egeis_disciplinary(id,employeeId,gistCase,disciplinaryAuthority,memoNo,memoDate,"
 
                 + " memoServingDate,dateOfReceiptMemoDate,explanationAccepted,chargeMemoNo,chargeMemoDate,"
 
@@ -169,7 +169,7 @@ public class DisciplinaryQueryBuilder {
 
                 + ",proceedingsDate,proceedingsServingDate,courtCase,courtOrderNo,courtOrderDate,gistOfDirectionIssuedByCourt,"
 
-                + "createdBy,createdDate,lastModifiedBy,lastModifiedDate,tenantId,courtOrderType,presentingOfficerDesignation,enquiryOfficerDesignation) values "
+                + "createdBy,createdDate,lastModifiedBy,lastModifiedDate,tenantId,courtOrderType,presentingOfficerDesignation,enquiryOfficerDesignation,punishmentimplemented,enddateofpunishment) values "
 
                 + "(?,?,?,?,?,?,?,?,"
                 + "?,?,?,?,?,"
@@ -182,7 +182,7 @@ public class DisciplinaryQueryBuilder {
     }
 
     public static String updateDisciplinaryQuery() {
-        return "UPDATE egeis_disciplinary SET employeeId=?,gistCase=?,disciplinaryAuthority=?,orderNo=?,orderDate=?,memoNo=?,"
+        return "UPDATE egeis_disciplinary SET employeeId=?,gistCase=?,disciplinaryAuthority=?,memoNo=?,"
                 + "memoDate=?,memoServingDate=?,dateOfReceiptMemoDate=?,explanationAccepted=?,chargeMemoNo=?,chargeMemoDate=?"
                 + ",dateOfReceiptToChargeMemoDate=?,accepted=?,dateOfAppointmentOfEnquiryOfficerDate=?,enquiryOfficerName=?,"
                 + "dateOfAppointmentOfPresentingOfficer=?,presentingOfficerName=?,findingsOfEO=?,enquiryReportSubmittedDate=?,"
@@ -190,7 +190,7 @@ public class DisciplinaryQueryBuilder {
                 + "proposedPunishmentByDA=?,showCauseNoticeNo=?,showCauseNoticeDate=?,showCauseNoticeServingDate=?,"
                 + "explanationToShowCauseNotice=?,explanationToShowCauseNoticeAccepted=?,punishmentAwarded=?,proceedingsNumber=?,"
                 + "proceedingsDate=?,proceedingsServingDate=?,courtCase=?,courtOrderNo=?,courtOrderDate=?,gistOfDirectionIssuedByCourt=?,"
-                + " lastModifiedBy=?,lastModifiedDate=?,courtOrderType=?,presentingOfficerDesignation=?,enquiryOfficerDesignation=? where id = ? and tenantid = ? ";
+                + " lastModifiedBy=?,lastModifiedDate=?,courtOrderType=?,presentingOfficerDesignation=?,enquiryOfficerDesignation=?,punishmentimplemented=?,enddateofpunishment=? where id = ? and tenantid = ? ";
     }
     
     public static final String DISCIPLINARY_EXISTENCE_CHECK_QUERY = "SELECT exists(SELECT id FROM egeis_disciplinary"

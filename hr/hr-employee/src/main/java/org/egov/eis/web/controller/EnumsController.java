@@ -49,11 +49,13 @@ import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ResponseInfo;
 import org.egov.eis.model.enums.BloodGroup;
 import org.egov.eis.model.enums.CourtOrderType;
+import org.egov.eis.model.enums.DisciplianryAuthority;
 import org.egov.eis.model.enums.DisciplinaryActions;
 import org.egov.eis.model.enums.MaritalStatus;
 import org.egov.eis.web.contract.BloodGroupResponse;
 import org.egov.eis.web.contract.CourtOrderTypeResponse;
 import org.egov.eis.web.contract.DisciplinaryActionsResponse;
+import org.egov.eis.web.contract.DisciplinaryAuthorityResponse;
 import org.egov.eis.web.contract.MaritalStatusResponse;
 import org.egov.eis.web.contract.RequestInfoWrapper;
 import org.egov.eis.web.contract.factory.ResponseInfoFactory;
@@ -64,6 +66,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -259,5 +262,41 @@ public class EnumsController {
         responseInfo.setStatus(HttpStatus.OK.toString());
         courtOrderRes.setResponseInfo(responseInfo);
         return new ResponseEntity<CourtOrderTypeResponse>(courtOrderRes, HttpStatus.OK);
+    }
+
+    @PostMapping("/disciplianryauthority/_search")
+    @ResponseBody
+    public ResponseEntity<?> search(@ModelAttribute @Valid final DisciplinaryAuthorityResponse disciplinaryAuthorityResponse,
+            final BindingResult modelAttributeBindingResult, @RequestBody @Valid final RequestInfoWrapper requestInfoWrapper,
+            final BindingResult requestBodyBindingResult) {
+        final RequestInfo requestInfo = requestInfoWrapper.getRequestInfo();
+
+        final ResponseEntity<?> errorResponseEntity = requestValidator.validateSearchRequest(requestInfo, null,
+                requestBodyBindingResult);
+
+        if (errorResponseEntity != null)
+            return errorResponseEntity;
+        // Call service
+        List<Map<String, String>> disciplinaryAuthorities = DisciplianryAuthority.getDisciplianryAuthority();
+
+        return getSuccessResponse(disciplinaryAuthorities, requestInfo);
+    }
+
+    /**
+     * Populate MaritalStatusResponse object & returns ResponseEntity of type MaritalStatusResponse containing ResponseInfo & List
+     * of MaritalStatus
+     *
+     * @param transferTypes
+     * @param requestInfo
+     * @return ResponseEntity<?>
+     */
+    private ResponseEntity<?> getSuccessResponse(final List<Map<String, String>> disciplinaryAuthorities,
+            final RequestInfo requestInfo) {
+        final DisciplinaryAuthorityResponse disciplinaryAuthoritiesRes = new DisciplinaryAuthorityResponse();
+        disciplinaryAuthoritiesRes.setDisciplinaryAuthorities(disciplinaryAuthorities);
+        final ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
+        responseInfo.setStatus(HttpStatus.OK.toString());
+        disciplinaryAuthoritiesRes.setResponseInfo(responseInfo);
+        return new ResponseEntity<DisciplinaryAuthorityResponse>(disciplinaryAuthoritiesRes, HttpStatus.OK);
     }
 }

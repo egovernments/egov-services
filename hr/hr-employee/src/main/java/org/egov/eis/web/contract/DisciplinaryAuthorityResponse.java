@@ -38,41 +38,29 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.eis.model.enums;
+package org.egov.eis.web.contract;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonValue;
+import org.egov.common.contract.response.ResponseInfo;
 
-public enum CourtOrderType {
-    STAY("STAY"), INTERIMORDERS("INTERIMORDERS"), FINALORDERS("FINALORDERS");
-    private String value;
+@AllArgsConstructor
+@EqualsAndHashCode
+@Getter
+@NoArgsConstructor
+@Setter
+@ToString
+public class DisciplinaryAuthorityResponse {
 
-    CourtOrderType(final String value) {
-        this.value = value;
-    }
+    @JsonProperty("ResponseInfo")
+    private ResponseInfo responseInfo;
 
-    @Override
-    @JsonValue
-    public String toString() {
-        return name();
-    }
+    @JsonProperty("DisciplinaryAuthority")
+    private List<Map<String, String>> disciplinaryAuthorities = new ArrayList<>();
 
-    @JsonCreator
-    public static List<String> getAllObjectValues() {
-        final List<String> allObjectValues = new ArrayList<>();
-        for (final CourtOrderType obj : CourtOrderType.values())
-            allObjectValues.add(obj.value);
-        return allObjectValues;
-    }
-
-    @JsonCreator
-    public static CourtOrderType fromValue(final String passedValue) {
-        for (final CourtOrderType obj : CourtOrderType.values())
-            if (String.valueOf(obj.value).equals(passedValue.toUpperCase()))
-                return obj;
-        return null;
-    }
 }

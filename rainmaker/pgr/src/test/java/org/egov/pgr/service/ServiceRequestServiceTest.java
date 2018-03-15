@@ -198,7 +198,7 @@ public class ServiceRequestServiceTest {
 		
 	}
 	
-	@Test(expected = Exception.class)
+/*	@Test(expected = Exception.class)
 	public void testGetServiceRequestsException() {
 		RequestInfo requestInfo = Mockito.mock(RequestInfo.class);
 		ServiceReqSearchCriteria serviceReqSearchCriteria = new ServiceReqSearchCriteria();
@@ -213,7 +213,7 @@ public class ServiceRequestServiceTest {
 		
 		service.getServiceRequests(requestInfo, serviceReqSearchCriteria);
 				
-	}
+	}*/
 	
 	@Test
 	public void testGetCountSuccess() {

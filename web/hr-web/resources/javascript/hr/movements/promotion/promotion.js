@@ -776,7 +776,7 @@ class EmployeePromotion extends React.Component {
                     </div>
                 </div>
             <div className="row">
-              <div className="col-sm-6">
+              {/* <div className="col-sm-6">
                   <div className="row">
                       <div className="col-sm-6 label-text">
                         <label htmlFor="">Enquiry passed Date</label>
@@ -790,7 +790,7 @@ class EmployeePromotion extends React.Component {
                       </div>
                   </div>
                 </div>
-            </div>
+            </div> */}
               <div className="col-sm-6">
                   <div className="row">
                       <div className="col-sm-6 label-text">

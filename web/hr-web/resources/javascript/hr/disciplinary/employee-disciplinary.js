@@ -190,6 +190,10 @@ class EmployeeDisciplinary extends React.Component {
             disciplinary.disciplinaryDocuments = docs;
         }
 
+        delete disciplinary.orderDate;
+        delete disciplinary.orderNo;
+
+
         var body = {
             "RequestInfo": requestInfo,
             "Disciplinary": disciplinary
@@ -199,9 +203,12 @@ class EmployeeDisciplinary extends React.Component {
             if (err1) {
                 showError(err1);
             } else {
-
+                delete disciplinary.memoDocuments;
+                delete disciplinary.courtDocuments;
+                delete disciplinary.showCauseDocuments;
+                delete disciplinary.enquiryDocuments;
                 $.ajax({
-                    url: baseUrl + "/hr-employee/disciplinary/" + type === "create" ? "_create" : "_update" + "?tenantId=" + tenantId,
+                    url: baseUrl + "/hr-employee/disciplinary/_create?tenantId=" + tenantId,
                     type: 'POST',
                     dataType: 'json',
                     data: JSON.stringify(_body),
@@ -1088,16 +1095,16 @@ class EmployeeDisciplinary extends React.Component {
                                             <select type="text" name="disciplinaryAuthority" id="disciplinaryAuthority" value={disciplinaryAuthority} maxLength="200"
                                                 onChange={(e) => { handleChange(e, "disciplinaryAuthority") }} required >
                                                 <option value="">Select department</option>
-                                                <option value="1">Government of AP, AP Secretariat, Velagapudi</option>
-                                                <option value="2">Commissioner & Director of Municipal Administration</option>
-                                                <option value="3">Engineer-in-Chief (PH)</option>
-                                                <option value="4">Director of Town & Country Planning</option>
-                                                <option value="5">Regional Director-cum-Appellate Commissioner of Municipal Administration concerned</option>
-                                                <option value="6">Regional Deputy Director of Town & Country Planning concerned</option>
-                                                <option value="7">Superintending Engineer (PH) concerned</option>
-                                                <option value="8">Chairperson/Mayor of Municipal Council concerned</option>
-                                                <option value="9">Municipal Commissioner concerned</option>
-                                                <option value="10">Others, if any</option>
+                                                <option value="GOVERNMENTOFAP_APSECRETARIAT_VELAGAPUDI">Government of AP, AP Secretariat, Velagapudi</option>
+                                                <option value="GOVERNMENTOFAP_APSECRETARIAT_VELAGAPUDI">Commissioner & Director of Municipal Administration</option>
+                                                <option value="GOVERNMENTOFAP_APSECRETARIAT_VELAGAPUDI">Engineer-in-Chief (PH)</option>
+                                                <option value="GOVERNMENTOFAP_APSECRETARIAT_VELAGAPUDI">Director of Town & Country Planning</option>
+                                                <option value="GOVERNMENTOFAP_APSECRETARIAT_VELAGAPUDI">Regional Director-cum-Appellate Commissioner of Municipal Administration concerned</option>
+                                                <option value="GOVERNMENTOFAP_APSECRETARIAT_VELAGAPUDI">Regional Deputy Director of Town & Country Planning concerned</option>
+                                                <option value="GOVERNMENTOFAP_APSECRETARIAT_VELAGAPUDI">Superintending Engineer (PH) concerned</option>
+                                                <option value="GOVERNMENTOFAP_APSECRETARIAT_VELAGAPUDI">Chairperson/Mayor of Municipal Council concerned</option>
+                                                <option value="GOVERNMENTOFAP_APSECRETARIAT_VELAGAPUDI">Municipal Commissioner concerned</option>
+                                                <option value="GOVERNMENTOFAP_APSECRETARIAT_VELAGAPUDI">Others, if any</option>
                                             </select>
 
                                         </div>

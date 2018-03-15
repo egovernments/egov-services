@@ -1,5 +1,6 @@
 package org.egov.pgr.contract;
 
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -7,14 +8,19 @@ import java.util.Objects;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
+import org.egov.common.contract.request.RequestInfo;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-/**
- * Request object to fetch the report data
- */
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2018-02-20T05:39:55.235Z")
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
 
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class ServiceReqRequest   {
+	
   @JsonProperty("requestInfo")
   private RequestInfo requestInfo = null;
 

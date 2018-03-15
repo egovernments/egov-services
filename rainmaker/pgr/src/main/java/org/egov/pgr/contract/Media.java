@@ -4,13 +4,22 @@ import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
 
 /**
  * Media object to encapsulate uploaded media (photo, doc, video)
  */
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2018-02-20T05:39:55.235Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2018-03-01T09:34:47.978Z")
 
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Media   {
+  @JsonProperty("id")
+  private String id = null;
+
   @JsonProperty("by")
   private String by = null;
 
@@ -20,16 +29,32 @@ public class Media   {
   @JsonProperty("url")
   private String url = null;
 
+  public Media id(String id) {
+    this.id = id;
+    return this;
+  }
+
+   /**
+   * GUID for the comment table.
+   * @return id
+  **/
+  public String getId() {
+    return id;
+  }
+
+  public void setId(String id) {
+    this.id = id;
+  }
+
   public Media by(String by) {
     this.by = by;
     return this;
   }
 
    /**
-   * who uploaded/attached this media
+   * who uploaded/attached this media(combination of userId and role separated by -).
    * @return by
   **/
-
 
   public String getBy() {
     return by;
@@ -49,7 +74,6 @@ public class Media   {
    * @return when
   **/
 
-
   public Long getWhen() {
     return when;
   }
@@ -67,7 +91,6 @@ public class Media   {
    * URL for the media
    * @return url
   **/
-
 
   public String getUrl() {
     return url;
@@ -87,14 +110,15 @@ public class Media   {
       return false;
     }
     Media media = (Media) o;
-    return Objects.equals(this.by, media.by) &&
+    return Objects.equals(this.id, media.id) &&
+        Objects.equals(this.by, media.by) &&
         Objects.equals(this.when, media.when) &&
         Objects.equals(this.url, media.url);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(by, when, url);
+    return Objects.hash(id, by, when, url);
   }
 
   @Override
@@ -102,6 +126,7 @@ public class Media   {
     StringBuilder sb = new StringBuilder();
     sb.append("class Media {\n");
     
+    sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    by: ").append(toIndentedString(by)).append("\n");
     sb.append("    when: ").append(toIndentedString(when)).append("\n");
     sb.append("    url: ").append(toIndentedString(url)).append("\n");

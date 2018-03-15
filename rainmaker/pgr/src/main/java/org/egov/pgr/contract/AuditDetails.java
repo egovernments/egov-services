@@ -4,12 +4,18 @@ import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
 
 /**
  * Collection of audit related fields used by most models
  */
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2018-02-20T05:39:55.235Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2018-02-23T09:30:28.401Z")
 
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class AuditDetails   {
   @JsonProperty("createdBy")
   private String createdBy = null;
@@ -32,6 +38,7 @@ public class AuditDetails   {
    * username (preferred) or userid of the user that created the object
    * @return createdBy
   **/
+
 
   public String getCreatedBy() {
     return createdBy;

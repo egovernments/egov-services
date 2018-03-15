@@ -1,14 +1,25 @@
 package org.egov.search.utils;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+import org.egov.search.model.Definition;
 import org.egov.search.model.Params;
 import org.egov.search.model.Query;
+import org.egov.search.model.SearchDefinition;
 import org.egov.search.model.SearchParams;
 import org.egov.search.model.SearchRequest;
 import org.egov.tracer.model.CustomException;
+import org.postgresql.util.PGobject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
+
+import org.json.JSONArray;
+
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.JsonPath;
@@ -22,30 +33,17 @@ public class SearchUtils {
 		StringBuilder queryString = new StringBuilder();
 		StringBuilder where = new StringBuilder();
 		queryString.append(query.getBaseQuery());
-		String whereClause = null;
-		try{
-			whereClause = buildWhereClause(searchRequest, searchParam);
-		}catch(CustomException e){
-			throw e;
-		}
+		String whereClause = buildWhereClause(searchRequest, searchParam);
 		if(null == whereClause){
 			return whereClause;
 		}
-		where.append(" where ( ")
-		           .append(whereClause.toString()+ " ) ");	
-		
+		where.append(" where ( ").append(whereClause.toString()+ " ) ");	
 		if(null != query.getGroupBy()){
-			queryString.append(" group by ")
-						.append(query.getGroupBy());
+			queryString.append(" group by ").append(query.getGroupBy());
 		}
-		
 		if(null != query.getOrderBy()){
-			where.append(" order by ")
-						.append(query.getOrderBy().split(",")[0])
-						.append(" ")
-						.append(query.getOrderBy().split(",")[1]);
+			where.append(" order by ").append(query.getOrderBy().split(",")[0]).append(" ").append(query.getOrderBy().split(",")[1]);
 		}
-		
 		if(null != query.getSort()){
 			queryString.append(" "+query.getSort());
 		}
@@ -59,48 +57,90 @@ public class SearchUtils {
 	public 	String buildWhereClause(SearchRequest searchRequest, SearchParams searchParam){
 		StringBuilder whereClause = new StringBuilder();
 		ObjectMapper mapper = new ObjectMapper();
-		if(null != searchParam){
-			String condition = searchParam.getCondition();
-			for(Params param: searchParam.getParams()){
+		String condition = searchParam.getCondition();
+		for(Params param: searchParam.getParams()){
 				Object paramValue = null ;
-				try{
+				try {
 					paramValue = JsonPath.read(mapper.writeValueAsString(searchRequest), param.getJsonPath());
-				}catch(Exception e){
-					logger.error("param: "+param.getName()+" is not provided");
-					logger.error("Exception: ",e);
-					if(param.getIsMandatory()){
-						throw new CustomException(HttpStatus.BAD_REQUEST.toString(), 
-								"Mandatory param for search not provided. Param: "+param.getName());					
-					}else
-						continue;
-				}
-				if(null == paramValue){
-					if(param.getIsMandatory()){
-						logger.error("param: "+param.getName()+" is not provided");
-						throw new CustomException(HttpStatus.BAD_REQUEST.toString(), 
-								"Mandatory param for search not provided. Param: "+param.getName());	
-					}else{
+					if(null == paramValue) {
 						continue;
 					}
-				}else if(paramValue instanceof net.minidev.json.JSONArray){
-					whereClause.append(param.getName())
-					  .append(" IN ")
-					  .append(paramValue.toString().replace("[", "(")
-					  .replace("]", ")")
-					  .replace("\"", "\'"));
-				}else{
-					whereClause.append(param.getName())
-					   .append(" = ")
-					   .append("'"+paramValue.toString()+"'");
+				}catch(Exception e) {
+					continue;
 				}
-			    whereClause.append(" "+condition+" ");
-			}
+                if(paramValue instanceof net.minidev.json.JSONArray){ //TODO: might need to add some more types
+                	net.minidev.json.JSONArray array = (net.minidev.json.JSONArray)paramValue;
+					StringBuilder paramBuilder = new StringBuilder();
+					for(int i = 0; i < array.size(); i++) {
+						paramBuilder.append("'"+array.get(i)+"'");
+						if(i < array.size() - 1)
+							paramBuilder.append(",");
+					}
+					whereClause.append(param.getName()).append(" IN ").append("(")
+					  .append(paramBuilder.toString()).append(")");
+				}else{
+					logger.info("param: "+param.getName());
+					String operator = " = ";
+					if(param.getJsonPath().contains("startDate") || param.getJsonPath().contains("fromDate")) {
+						operator = " >= ";
+					}else if(param.getJsonPath().contains("endDate") || param.getJsonPath().contains("toDate")) {
+						operator = " <= ";
+					}
+					whereClause.append(param.getName()).append(operator).append("'"+paramValue+"'");
+				}
+                whereClause.append(" "+condition+" ");
 		}
 		Integer index = whereClause.toString().lastIndexOf(searchParam.getCondition());
 		String where = whereClause.toString().substring(0, index);
-
 		logger.info("WHERE clause: "+where);
 		return where;
+	}
+	
+	public Definition getSearchDefinition(Map<String, SearchDefinition> searchDefinitionMap,
+			String moduleName, String searchName){
+		logger.info("Fetching Definitions for module: "+moduleName+" and search feature: "+searchName);
+		List<Definition> definitions = null;
+		try{
+			definitions = searchDefinitionMap.get(moduleName).getDefinitions().parallelStream()
+											.filter(def -> (def.getName().equals(searchName)))
+		                                 .collect(Collectors.toList());
+		}catch(Exception e){
+			logger.error("There's no Search Definition provided for this search feature");
+			throw new CustomException(HttpStatus.BAD_REQUEST.toString(), 
+					"There's no Search Definition provided for this search feature");
+		}
+		if(0 == definitions.size()){
+			logger.error("There's no Search Definition provided for this search feature");
+			throw new CustomException(HttpStatus.BAD_REQUEST.toString(), 
+					"There's no Search Definition provided for this search feature");
+		}
+		return definitions.get(0);
+		
+	}
+	
+	public List<String> convertPGOBjects(List<PGobject> maps){
+		List<String> result = new ArrayList<>();
+		if(null != maps || !maps.isEmpty()) {
+			for(PGobject obj: maps){
+				if(null == obj.getValue())
+					break;
+				String tuple = obj.toString();
+				if(tuple.startsWith("[") && tuple.endsWith("]")){
+					JSONArray jsonArray = new JSONArray(tuple);
+					for(int i = 0; i < jsonArray.length();  i++){
+						result.add(jsonArray.get(i).toString());
+					}
+				}else{
+					try{
+						result.add(obj.getValue());
+					}catch(Exception e){
+						throw e;
+					}
+				}
+			}
+		}
+		
+		return result;
 	}
 	
 	

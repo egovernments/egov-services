@@ -4,10 +4,12 @@ package org.egov.search.repository;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
 import org.egov.search.model.Definition;
 import org.egov.search.model.SearchRequest;
 import org.egov.search.utils.SearchUtils;
 import org.egov.tracer.model.CustomException;
+import org.json.JSONArray;
 import org.postgresql.util.PGobject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,10 +18,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import org.json.JSONArray;
 
 
 
@@ -47,7 +45,7 @@ public class SearchRepository {
 		}
 		Long startTime = new Date().getTime();
 		List<PGobject> maps = jdbcTemplate.queryForList(query,PGobject.class);
-		LOGGER.info("query result: "+maps.get(0));
+		LOGGER.info("query result: "+maps);
 		Long endTime = new Date().getTime();
 		Long totalExecutionTime = endTime - startTime;
 		LOGGER.info("Query execution time in millisec: "+totalExecutionTime);
@@ -56,28 +54,7 @@ public class SearchRepository {
 			throw new CustomException(HttpStatus.INTERNAL_SERVER_ERROR.toString(), 
 					"Query Execution Timeout! Json query is taking more time than the max exec time, query: "+query);
 		}
-		if(null != maps || !maps.isEmpty()) {
-			for(PGobject obj: maps){
-				if(null == obj.getValue())
-					break;
-				LOGGER.info("obj: "+obj.getValue());
-				String tuple = obj.toString();
-				if(tuple.startsWith("[") && tuple.endsWith("]")){
-					JSONArray jsonArray = new JSONArray(tuple);
-					for(int i = 0; i < jsonArray.length();  i++){
-						result.add(jsonArray.get(i).toString());
-					}
-				}else{
-					try{
-						result.add(obj.getValue());
-					}catch(Exception e){
-						throw e;
-					}
-				}
-			}
-		}
-		LOGGER.info("DB response: "+result);
-		
+		result = searchUtils.convertPGOBjects(maps);
 		return result;
 	}
 

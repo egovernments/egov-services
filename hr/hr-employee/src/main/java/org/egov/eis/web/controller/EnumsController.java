@@ -264,7 +264,7 @@ public class EnumsController {
         return new ResponseEntity<CourtOrderTypeResponse>(courtOrderRes, HttpStatus.OK);
     }
 
-    @PostMapping("/disciplinaryauthority/_search")
+    @PostMapping("/disciplianryauthority/_search")
     @ResponseBody
     public ResponseEntity<?> search(@ModelAttribute @Valid final DisciplinaryAuthorityResponse disciplinaryAuthorityResponse,
             final BindingResult modelAttributeBindingResult, @RequestBody @Valid final RequestInfoWrapper requestInfoWrapper,

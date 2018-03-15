@@ -13,6 +13,7 @@ import org.egov.search.model.SearchDefinition;
 import org.egov.search.model.SearchRequest;
 import org.egov.search.repository.SearchRepository;
 import org.egov.search.utils.ResponseInfoFactory;
+import org.egov.search.utils.SearchUtils;
 import org.egov.tracer.model.CustomException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,6 +38,9 @@ public class SearchService {
 	@Autowired
 	private ResponseInfoFactory responseInfoFactory;
 	
+	@Autowired
+	private SearchUtils searchUtils;
+	
 	public static final Logger logger = LoggerFactory.getLogger(SearchService.class);
 
 
@@ -44,11 +48,10 @@ public class SearchService {
 		Map<String, SearchDefinition> searchDefinitionMap = runner.getSearchDefinitionMap();
 		Definition searchDefinition = null;
 		try{
-			searchDefinition = getSearchDefinition(searchDefinitionMap, moduleName, searchName);
+			searchDefinition = searchUtils.getSearchDefinition(searchDefinitionMap, moduleName, searchName);
 		}catch(CustomException e){
 			throw e;
 		}
-		logger.info("Definition being used for process: "+searchDefinition);
 		List<String> maps = new ArrayList<>();
 		try{
 			maps = searchRepository.searchData(searchRequest, searchDefinition);
@@ -71,27 +74,6 @@ public class SearchService {
 		return data;
 	}
 	
-	private Definition getSearchDefinition(Map<String, SearchDefinition> searchDefinitionMap,
-			String moduleName, String searchName){
-		logger.info("Fetching Definitions for module: "+moduleName+" and search feature: "+searchName);
-		List<Definition> definitions = null;
-		try{
-			definitions = searchDefinitionMap.get(moduleName).getDefinitions().parallelStream()
-											.filter(def -> (def.getName().equals(searchName)))
-		                                 .collect(Collectors.toList());
-		}catch(Exception e){
-			logger.error("There's no Search Definition provided for this search feature");
-			throw new CustomException(HttpStatus.BAD_REQUEST.toString(), 
-					"There's no Search Definition provided for this search feature");
-		}
-		if(0 == definitions.size()){
-			logger.error("There's no Search Definition provided for this search feature");
-			throw new CustomException(HttpStatus.BAD_REQUEST.toString(), 
-					"There's no Search Definition provided for this search feature");
-		}
-		return definitions.get(0);
-		
-	}
 	
 	private String formatResult(List<String> maps, Definition searchDefinition, SearchRequest searchRequest){
 		String result = null;
@@ -120,7 +102,7 @@ public class SearchService {
 		documentContext.put(resInfoExp.toString(), resInfoExpArray[resInfoExpArray.length - 1], responseInfo);
 		
 		result = documentContext.jsonString().toString();
-		logger.info("Final Result: "+result);
+		//logger.info("Final Result: "+result);
 		return result;
 		
 	}

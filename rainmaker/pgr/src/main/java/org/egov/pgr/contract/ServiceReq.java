@@ -6,16 +6,24 @@ import java.util.Objects;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
 
-/**
- * Instance of Service request raised for a particular service. As per extension propsed in the Service definition \&quot;attributes\&quot; carry the input values requried by metadata definition in the structure as described by the corresponding schema. 
- */
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2018-02-20T05:39:55.235Z")
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
 
+/**
+ * Instance of Service request raised for a particular service. As per extension proposed in the Service definition \&quot;attributes\&quot; carry the input values requried by metadata definition in the structure as described by the corresponding schema. 
+ */
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2018-03-01T09:20:49.304Z")
+
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class ServiceReq   {
   @JsonProperty("tenantId")
   private String tenantId = null;
@@ -30,10 +38,10 @@ public class ServiceReq   {
   private String description = null;
 
   @JsonProperty("lat")
-  private Integer lat = null;
+  private Double lat = null;
 
   @JsonProperty("long")
-  private Integer _long = null;
+  private Double _long = null;
 
   @JsonProperty("address")
   private String address = null;
@@ -108,6 +116,9 @@ public class ServiceReq   {
   @JsonProperty("media")
   private List<Media> media = null;
 
+  @JsonProperty("comments")
+  private List<Comment> comments = null;
+
   /**
    * source of the complaint - Text, Mobile app, Phone, CSC, WhatsApp
    */
@@ -166,8 +177,6 @@ public class ServiceReq   {
    * @return tenantId
   **/
   @NotNull
-
-
   public String getTenantId() {
     return tenantId;
   }
@@ -186,8 +195,6 @@ public class ServiceReq   {
    * @return serviceCode
   **/
   @NotNull
-
-
   public String getServiceCode() {
     return serviceCode;
   }
@@ -205,7 +212,6 @@ public class ServiceReq   {
    * The server generated unique ID of the service request created.
    * @return serviceRequestId
   **/
-
 
   public String getServiceRequestId() {
     return serviceRequestId;
@@ -225,8 +231,6 @@ public class ServiceReq   {
    * @return description
   **/
   @NotNull
-
-
   public String getDescription() {
     return description;
   }
@@ -235,7 +239,7 @@ public class ServiceReq   {
     this.description = description;
   }
 
-  public ServiceReq lat(Integer lat) {
+  public ServiceReq lat(Double lat) {
     this.lat = lat;
     return this;
   }
@@ -245,16 +249,15 @@ public class ServiceReq   {
    * @return lat
   **/
 
-
-  public Integer getLat() {
+  public Double getLat() {
     return lat;
   }
 
-  public void setLat(Integer lat) {
+  public void setLat(Double lat) {
     this.lat = lat;
   }
 
-  public ServiceReq _long(Integer _long) {
+  public ServiceReq _long(Double _long) {
     this._long = _long;
     return this;
   }
@@ -263,13 +266,11 @@ public class ServiceReq   {
    * Longitude of location.
    * @return _long
   **/
-
-
-  public Integer getLong() {
+  public Double getLong() {
     return _long;
   }
 
-  public void setLong(Integer _long) {
+  public void setLong(Double _long) {
     this._long = _long;
   }
 
@@ -282,7 +283,6 @@ public class ServiceReq   {
    * Human readable address or description of location.
    * @return address
   **/
-
 
   public String getAddress() {
     return address;
@@ -302,7 +302,6 @@ public class ServiceReq   {
    * @return addressId
   **/
 
-
   public String getAddressId() {
     return addressId;
   }
@@ -320,7 +319,6 @@ public class ServiceReq   {
    * The email address of the person submitting the request.
    * @return email
   **/
-
 
   public String getEmail() {
     return email;
@@ -340,7 +338,6 @@ public class ServiceReq   {
    * @return deviceId
   **/
 
-
   public String getDeviceId() {
     return deviceId;
   }
@@ -358,7 +355,6 @@ public class ServiceReq   {
    * userid of the user requesting the srervice - in our case it may be same as phone as we are using mobile number as the userid
    * @return accountId
   **/
-
 
   public String getAccountId() {
     return accountId;
@@ -378,7 +374,6 @@ public class ServiceReq   {
    * @return firstName
   **/
 
-
   public String getFirstName() {
     return firstName;
   }
@@ -396,7 +391,6 @@ public class ServiceReq   {
    * The family name of the person submitting the request.
    * @return lastName
   **/
-
 
   public String getLastName() {
     return lastName;
@@ -417,7 +411,7 @@ public class ServiceReq   {
   **/
   @NotNull
 
-
+ @Size(min=4,max=64)
   public String getPhone() {
     return phone;
   }
@@ -435,7 +429,6 @@ public class ServiceReq   {
    * This is the json object that will carry the actual input (whereever the metadata requries input). Structure should be same as the schema definition provided in the metadata of the service (schema compliance check to be performed at client/server)
    * @return attributes
   **/
-
 
   public Object getAttributes() {
     return attributes;
@@ -455,7 +448,6 @@ public class ServiceReq   {
    * @return status
   **/
 
-
   public StatusEnum getStatus() {
     return status;
   }
@@ -473,7 +465,6 @@ public class ServiceReq   {
    * Either of employee/designation/agency/authority this request is assigned to
    * @return assignedTo
   **/
-
 
   public String getAssignedTo() {
     return assignedTo;
@@ -511,6 +502,34 @@ public class ServiceReq   {
     this.media = media;
   }
 
+  public ServiceReq comments(List<Comment> comments) {
+    this.comments = comments;
+    return this;
+  }
+
+  public ServiceReq addCommentsItem(Comment commentsItem) {
+    if (this.comments == null) {
+      this.comments = new ArrayList<Comment>();
+    }
+    this.comments.add(commentsItem);
+    return this;
+  }
+
+   /**
+   * List of comment associated with this service request sorted by attachment date 
+   * @return comments
+  **/
+
+  @Valid
+
+  public List<Comment> getComments() {
+    return comments;
+  }
+
+  public void setComments(List<Comment> comments) {
+    this.comments = comments;
+  }
+
   public ServiceReq source(SourceEnum source) {
     this.source = source;
     return this;
@@ -520,7 +539,6 @@ public class ServiceReq   {
    * source of the complaint - Text, Mobile app, Phone, CSC, WhatsApp
    * @return source
   **/
-
 
   public SourceEnum getSource() {
     return source;
@@ -539,7 +557,6 @@ public class ServiceReq   {
    * epoch of the time object is last modified
    * @return expectedTime
   **/
-
 
   public Long getExpectedTime() {
     return expectedTime;
@@ -597,6 +614,7 @@ public class ServiceReq   {
         Objects.equals(this.status, serviceReq.status) &&
         Objects.equals(this.assignedTo, serviceReq.assignedTo) &&
         Objects.equals(this.media, serviceReq.media) &&
+        Objects.equals(this.comments, serviceReq.comments) &&
         Objects.equals(this.source, serviceReq.source) &&
         Objects.equals(this.expectedTime, serviceReq.expectedTime) &&
         Objects.equals(this.auditDetails, serviceReq.auditDetails);
@@ -604,7 +622,7 @@ public class ServiceReq   {
 
   @Override
   public int hashCode() {
-    return Objects.hash(tenantId, serviceCode, serviceRequestId, description, lat, _long, address, addressId, email, deviceId, accountId, firstName, lastName, phone, attributes, status, assignedTo, media, source, expectedTime, auditDetails);
+    return Objects.hash(tenantId, serviceCode, serviceRequestId, description, lat, _long, address, addressId, email, deviceId, accountId, firstName, lastName, phone, attributes, status, assignedTo, media, comments, source, expectedTime, auditDetails);
   }
 
   @Override
@@ -630,6 +648,7 @@ public class ServiceReq   {
     sb.append("    status: ").append(toIndentedString(status)).append("\n");
     sb.append("    assignedTo: ").append(toIndentedString(assignedTo)).append("\n");
     sb.append("    media: ").append(toIndentedString(media)).append("\n");
+    sb.append("    comments: ").append(toIndentedString(comments)).append("\n");
     sb.append("    source: ").append(toIndentedString(source)).append("\n");
     sb.append("    expectedTime: ").append(toIndentedString(expectedTime)).append("\n");
     sb.append("    auditDetails: ").append(toIndentedString(auditDetails)).append("\n");

@@ -72,12 +72,6 @@ public class Disciplinary {
     @NotNull
     private String disciplinaryAuthority;
     @NotNull
-    private String orderNo;
-    @NotNull
-    @DateTimeFormat(pattern = "dd/MM/yyyy")
-    @JsonFormat(pattern = "dd/MM/yyyy")
-    private Date orderDate;
-    @NotNull
     private String memoNo;
     @NotNull
     @DateTimeFormat(pattern = "dd/MM/yyyy")
@@ -166,4 +160,9 @@ public class Disciplinary {
     private Date lastModifiedDate;
 
     private String courtOrderType;
+    
+    private Boolean punishmentImplemented;
+    @DateTimeFormat(pattern = "dd/MM/yyyy")
+    @JsonFormat(pattern = "dd/MM/yyyy")
+    private Date endDateOfPunishment;
 }

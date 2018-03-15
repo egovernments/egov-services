@@ -37,7 +37,7 @@ public class ServiceRequestRepository {
 			log.info("Request: "+mapper.writeValueAsString(request));
 			response = restTemplate.postForObject(uri.toString(), request, Map.class);
 		}catch(HttpClientErrorException e) {
-			log.error("Searcher threw aN Exception: ",e);
+			log.error("External Service threw an Exception: ",e);
 			throw new ServiceCallException(e.getResponseBodyAsString());
 		}catch(Exception e) {
 			log.error("Exception while fetching from searcher: ",e);

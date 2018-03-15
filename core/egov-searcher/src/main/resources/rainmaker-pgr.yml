@@ -35,12 +35,9 @@ SearchDefinitions:
     - name: lastmodifiedtime
       isMandatory: false
       jsonPath: $.searchCriteria.lastUpdatedSince
-    - name: serviceCodes
+    - name: serviceCode
       isMandatory: false
       jsonPath: $.searchCriteria.serviceCodes
-    - name: group
-      isMandatory: false
-      jsonPath: $.searchCriteria.group
     - name: phone
       isMandatory: false
       jsonPath: $.searchCriteria.phone

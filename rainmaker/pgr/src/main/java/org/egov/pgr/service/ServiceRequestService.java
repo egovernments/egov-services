@@ -197,9 +197,16 @@ public class ServiceRequestService {
 		ServiceReqResponse serviceReqResponse = null;
 		if(null != serviceReqSearchCriteria.getGroup() && !serviceReqSearchCriteria.getGroup().isEmpty()){
 				Object response = fetchServiceCodes(requestInfo, serviceReqSearchCriteria.getTenantId(), serviceReqSearchCriteria.getGroup());
+				List<String> serviceCodes = null;
 				if(null == response)
-					return new ServiceReqResponse();
-				List<String> serviceCodes = (List<String>) JsonPath.read(response, PGRConstants.JSONPATH_SERVICE_CODES);
+					return new ServiceReqResponse(factory.createResponseInfoFromRequestInfo(requestInfo, false),
+							new ArrayList<ServiceReq>());
+				try {
+					serviceCodes = (List<String>) JsonPath.read(response, PGRConstants.JSONPATH_SERVICE_CODES);
+				}catch(Exception e) {
+					return new ServiceReqResponse(factory.createResponseInfoFromRequestInfo(requestInfo, false),
+							new ArrayList<ServiceReq>());
+				}
 				serviceReqSearchCriteria.setServiceCodes(serviceCodes);
 		}
 		StringBuilder uri = new StringBuilder();

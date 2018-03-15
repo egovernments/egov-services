@@ -79,6 +79,10 @@ class SearchDisciplinaryAction extends React.Component {
     today = dd + '/' + mm + '/' + yyyy;
 
 
+    if(!(departmentId ||designationId||code)) {
+      return(showError("Any one of the search criteria is mandatory."));
+    }
+
     commonApiPost("hr-employee", "employees", "_search", {
       ..._this.state.searchSet, tenantId,
       isPrimary: true,
@@ -106,24 +110,22 @@ class SearchDisciplinaryAction extends React.Component {
                 console.log(tempEmployees);
               }
             });
-            if (i == employees.length - 1) {
-              _this.setState({
-                isSearchClicked: true,
-                employees: type === "create" ? employees : tempEmployees,
-                modified: true
-              });
-            }
-
+                        
           }
         }
 
+        _this.setState({
+          isSearchClicked: true,
+          employees: type === "create" ? employees : tempEmployees,
+          modified: true
+        });
 
       }
       setTimeout(function () {
         _this.setState({
           modified: false
         })
-      }, 5000);
+      }, 1200);
     });
   }
 
@@ -188,7 +190,6 @@ class SearchDisciplinaryAction extends React.Component {
 
 
   componentDidUpdate(prevProps, prevState) {
-    setTimeout(function(){
       if (this.state &&this.state.modified) {
         $('#employeeTable').DataTable({
           dom: 'Bfrtip',
@@ -202,7 +203,7 @@ class SearchDisciplinaryAction extends React.Component {
           }
         });
       }
-    },1200);
+    
 
   }
 
@@ -436,7 +437,9 @@ class SearchDisciplinaryAction extends React.Component {
                     </div>
                 </div>*/}
 
-
+          <div className="text-right text-danger">
+                          Note: Any one of the search criteria is mandatory.
+                    </div>
             <div className="text-center">
               <button id="sub" type="submit" className="btn btn-submit">Search</button> &nbsp;&nbsp;
                 <button type="button" className="btn btn-close" onClick={(e) => { this.close() }}>Close</button>

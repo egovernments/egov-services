@@ -1094,7 +1094,7 @@ class EmployeeDisciplinary extends React.Component {
                                         <div className="col-sm-6 label-view-text">
                                             <select type="text" name="disciplinaryAuthority" id="disciplinaryAuthority" value={disciplinaryAuthority} maxLength="200"
                                                 onChange={(e) => { handleChange(e, "disciplinaryAuthority") }} required >
-                                                <option value="">Select department</option>
+                                                <option value="">Select Disciplinary Authority</option>
                                                 <option value="GOVERNMENTOFAP_APSECRETARIAT_VELAGAPUDI">Government of AP, AP Secretariat, Velagapudi</option>
                                                 <option value="GOVERNMENTOFAP_APSECRETARIAT_VELAGAPUDI">Commissioner & Director of Municipal Administration</option>
                                                 <option value="GOVERNMENTOFAP_APSECRETARIAT_VELAGAPUDI">Engineer-in-Chief (PH)</option>

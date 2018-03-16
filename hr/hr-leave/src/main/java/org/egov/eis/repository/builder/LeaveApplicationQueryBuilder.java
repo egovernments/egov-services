@@ -125,7 +125,7 @@ public class LeaveApplicationQueryBuilder {
                 + " la.employeeId AS la_employeeId, la.fromDate AS la_fromDate, la.toDate AS la_toDate,"
                 + " la.compensatoryForDate AS la_compensatoryForDate, la.leaveDays AS la_leaveDays,"
                 + " la.availableDays AS la_availableDays, la.halfdays AS la_halfdays, la.firstHalfleave AS la_firstHalfleave,"
-                + " la.reason AS la_reason, la.status AS la_status, la.stateId AS la_stateId, la.createdBy AS la_createdBy,"
+                + " la.reason AS la_reason, la.status AS la_status,la.leaveGround AS la_leaveGround, la.stateId AS la_stateId, la.createdBy AS la_createdBy,"
                 + " la.createdDate AS la_createdDate, la.lastModifiedBy AS la_lastModifiedBy,"
                 + " la.lastModifiedDate AS la_lastModifiedDate, la.tenantId AS la_tenantId,"
                 + " lt.id AS lt_id, lt.name AS lt_name, lt.description AS lt_description, lt.halfdayAllowed AS lt_halfdayAllowed,"

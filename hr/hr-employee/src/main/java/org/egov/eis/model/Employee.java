@@ -125,6 +125,8 @@ public class Employee {
 
     private Boolean medicalReportProduced;
 
+    private Boolean transferredEmployee = false;
+
     private List<Long> languagesKnown = new ArrayList<>();
 
     @Valid

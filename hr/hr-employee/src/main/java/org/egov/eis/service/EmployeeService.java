@@ -196,20 +196,20 @@ public class EmployeeService {
     public List<EmployeeInfo> getEmployees(EmployeeCriteria empCriteria, RequestInfo requestInfo) throws CloneNotSupportedException {
         List<User> usersList = null;
         List<Long> ids = null;
-        Set<Long> departments=new HashSet<>();
+        Set<Long> departments = new HashSet<>();
         List<Long> idSearchCriteria = isEmpty(empCriteria.getId()) ? null : empCriteria.getId();
-        List<String> departmentCodeList=empCriteria.getDepartmentCode();
-        if(departmentCodeList!=null && !departmentCodeList.isEmpty()) {
-        for (String code : departmentCodeList) {
-        	Department department = departmentService.getDepartment(code, empCriteria.getTenantId(), new RequestInfoWrapper());
-        	if(department.getId()!=null)
-        		departments.add(department.getId());
-		}
+        List<String> departmentCodeList = empCriteria.getDepartmentCode();
+        if (departmentCodeList != null && !departmentCodeList.isEmpty()) {
+            for (String code : departmentCodeList) {
+                Department department = departmentService.getDepartment(code, empCriteria.getTenantId(), new RequestInfoWrapper());
+                if (department.getId() != null)
+                    departments.add(department.getId());
+            }
         }
-        System.err.println("set of departmentids"+departments);
-        
+        System.err.println("set of departmentids" + departments);
+
         empCriteria.setDepartments(departments);
-        
+
 
         // If roleCodes or userName is present, get users first, as there will be very limited results
         if (!isEmpty(empCriteria.getRoleCodes()) || !isEmpty(empCriteria.getUserName())) {
@@ -371,9 +371,9 @@ public class EmployeeService {
         // FIXME : Setting ts as null in RequestInfo as hr is following common-contracts with ts as Date
         // & ID Generation Service is following ts as epoch
         requestInfo.setTs(null);
-      RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper(requestInfo);
-      System.err.println("createAsync  requestInfoWrapper"+requestInfoWrapper);
-      //  RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
+        RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper(requestInfo);
+        System.err.println("createAsync  requestInfoWrapper" + requestInfoWrapper);
+        //  RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
 
         Map<String, List<String>> hrConfigurations = hrMastersService.getHRConfigurations(employee.getTenantId(), requestInfoWrapper);
 
@@ -397,8 +397,6 @@ public class EmployeeService {
 
         employeeHelper.populateDefaultDataForCreate(employeeRequest);
 
-        //log.info("employeeRequest before sending to kafka :: " + employeeRequest);
-        //kafkaTemplate.send(propertiesManager.getSaveEmployeeTopic(), employeeRequest);
         create(employeeRequest);
         return employee;
     }
@@ -479,39 +477,34 @@ public class EmployeeService {
         boolean isAssignmentDeleted = assignments.size() != employeeRequest.getEmployee().getAssignments().size();
 
         if (isPositionModified || isFromDateModified || isToDateModified || isAssignmentDeleted) {
-            //log.info("employeeRequest before sending to kafka for updating assignments :: " + employeeRequest);
-            //kafkaTemplate.send(propertiesManager.getUpdateAssignmentTopic(), employeeRequest);
             update(employeeRequest);
         }
 
-        //log.info("employeeRequest before sending to kafka for updating employee :: " + employeeRequest);
-        //kafkaTemplate.send(propertiesManager.getUpdateEmployeeTopic(), employeeRequest);
         update(employeeRequest);
         return employee;
     }
 
     public Employee updateEmployee(EmployeeRequest employeeRequest) throws UserException, JsonProcessingException {
-    	Employee employee = getEmployee(employeeRequest.getEmployee().getId(),employeeRequest.getEmployee().getTenantId(), employeeRequest.getRequestInfo());
-    	Employee employeeReq = employeeRequest.getEmployee();
-		RequestInfo requestInfo = employeeRequest.getRequestInfo();
-		Long requesterId = requestInfo.getUserInfo().getId();
-		String tenantId = employeeRequest.getEmployee().getTenantId();
-    	employeeRequest.getEmployee().getAssignments().forEach((assignment) -> {
-			if (isEmpty(assignment.getId()))
-				employeeHelper.populateDefaultDataForNewAssignment(assignment, requesterId, tenantId);
-			else
-				employeeHelper.populateDefaultDataForUpdateAssignment(assignment, requesterId, tenantId);
-		});
-    	employee.getAssignments().clear();
-    	employee.getAssignments().addAll(employeeReq.getAssignments());
+        Employee employee = getEmployee(employeeRequest.getEmployee().getId(), employeeRequest.getEmployee().getTenantId(), employeeRequest.getRequestInfo());
+        Employee employeeReq = employeeRequest.getEmployee();
+        RequestInfo requestInfo = employeeRequest.getRequestInfo();
+        Long requesterId = requestInfo.getUserInfo().getId();
+        String tenantId = employeeRequest.getEmployee().getTenantId();
+        employeeRequest.getEmployee().getAssignments().forEach((assignment) -> {
+            if (isEmpty(assignment.getId()))
+                employeeHelper.populateDefaultDataForNewAssignment(assignment, requesterId, tenantId);
+            else
+                employeeHelper.populateDefaultDataForUpdateAssignment(assignment, requesterId, tenantId);
+        });
+        employee.getAssignments().clear();
+        employee.getAssignments().addAll(employeeReq.getAssignments());
         EmployeeRequest employeeRequestForUpdate = new EmployeeRequest();
         employeeRequestForUpdate.setEmployee(employee);
         employeeRequestForUpdate.setRequestInfo(requestInfo);
-        //kafkaTemplate.send(propertiesManager.getUpdateEmployeeTopic(), employeeRequestForUpdate);
         update(employeeRequestForUpdate);
         return employee;
     }
-    
+
     @Transactional
     public void update(EmployeeRequest employeeRequest) {
         Employee employee = employeeRequest.getEmployee();
@@ -608,5 +601,114 @@ public class EmployeeService {
                 .employees(employees).responseInfo(responseInfo).build();
         return new ResponseEntity<>(employeeBulkResponse, HttpStatus.OK);
     }
+
+    public void setServiceHistoryDetails(EmployeeRequest employeeRequest, Boolean isUpdate) {
+
+        List<ServiceHistory> serviceHistories = employeeRequest.getEmployee().getServiceHistory();
+        RequestInfoWrapper requestInfoWrapper = RequestInfoWrapper.builder().requestInfo(employeeRequest.getRequestInfo()).build();
+        String[] tenant = employeeRequest.getEmployee().getTenantId().split("\\.");
+        String tenantId = tenant.length > 1 ? tenant[tenant.length - 1] : tenant[0];
+        ServiceHistory serviceHistory = new ServiceHistory();
+        List<Assignment> assignmentList = new ArrayList<>();
+        List<Assignment> removedAssignment = new ArrayList<>();
+
+        List<Assignment> empAssignment;
+
+        assignmentList.addAll(employeeRequest.getEmployee().getAssignments());
+        if (isUpdate && !serviceHistories.isEmpty()) {
+
+                empAssignment = assignmentList.stream().filter(assignment -> assignment.getIsPrimary().equals(true)).collect(Collectors.toList());
+
+                empAssignment.stream().forEach(assign -> {
+                    List<Department> departments = departmentService.getDepartments(Arrays.asList(assign.getDepartment()), employeeRequest.getEmployee().getTenantId(),
+                            requestInfoWrapper);
+                    DesignationGetRequest designationGetRequest = DesignationGetRequest.builder()
+                            .id(Arrays.asList(assign.getDesignation())).tenantId(employeeRequest.getEmployee().getTenantId()).build();
+                    List<org.egov.eis.model.bulk.Designation> designations = designationService
+                            .getDesignations(designationGetRequest, employeeRequest.getEmployee().getTenantId(), requestInfoWrapper);
+
+                    serviceHistories.stream().filter(history -> history.getIsAssignmentBased().equals(true) && history.getAssignmentId()!=null && !history.getAssignmentId().equals("")).forEach(srvcHstry -> {
+                        if ((assign.getId() != null && !assign.getId().equals("")) && assign.getId().equals(srvcHstry.getAssignmentId())) {
+                            srvcHstry.setDepartment(departments.get(0).getCode());
+                            srvcHstry.setDesignation(designations.get(0).getCode());
+                            srvcHstry.setPosition(assign.getPosition());
+                            srvcHstry.setCity(tenantId);
+                            srvcHstry.setServiceFrom(assign.getFromDate());
+                            srvcHstry.setServiceTo(assign.getToDate());
+                            srvcHstry.setIsAssignmentBased(true);
+                            removedAssignment.add(assign);
+                        }
+                    });
+                });
+
+                assignmentList.removeAll(removedAssignment);
+                empAssignment = assignmentList.stream().filter(assignment -> assignment.getIsPrimary().equals(true)).collect(Collectors.toList());
+
+                empAssignment.stream().forEach(assign -> {
+                    List<Department> departments = departmentService.getDepartments(Arrays.asList(assign.getDepartment()), employeeRequest.getEmployee().getTenantId(),
+                            requestInfoWrapper);
+                    DesignationGetRequest designationGetRequest = DesignationGetRequest.builder()
+                            .id(Arrays.asList(assign.getDesignation())).tenantId(employeeRequest.getEmployee().getTenantId()).build();
+                    List<org.egov.eis.model.bulk.Designation> designations = designationService
+                            .getDesignations(designationGetRequest, employeeRequest.getEmployee().getTenantId(), requestInfoWrapper);
+                    if (assign.getId() != null && !assign.getId().equals("")) {
+                        serviceHistory.setAssignmentId(assign.getId());
+                    }
+                    serviceHistory.setServiceInfo("Sevice entry changes for assignment");
+                    serviceHistory.setCity(tenantId);
+                    serviceHistory.setServiceFrom(assign.getFromDate());
+                    serviceHistory.setServiceTo(assign.getToDate());
+                    serviceHistory.setDepartment(departments.get(0).getCode());
+                    serviceHistory.setDesignation(designations.get(0).getCode());
+                    serviceHistory.setPosition(assign.getPosition());
+                    serviceHistory.setIsAssignmentBased(true);
+                    serviceHistory.setTenantId(employeeRequest.getEmployee().getTenantId());
+                    serviceHistories.add(serviceHistory);
+                });
+            employeeRequest.getEmployee().setServiceHistory(serviceHistories);
+            }
+            else{
+            setServiceHistoryFromAssignment(employeeRequest,assignmentList);
+        }
+        }
+
+
+
+    public void setServiceHistoryFromAssignment(EmployeeRequest employeeRequest, List<Assignment> assignmentList) {
+        List<ServiceHistory> serviceHistories = employeeRequest.getEmployee().getServiceHistory();
+        List<Assignment> empAssignment = assignmentList.stream().filter(assignment -> assignment.getIsPrimary().equals(true)).collect(Collectors.toList());
+
+        RequestInfoWrapper requestInfoWrapper = RequestInfoWrapper.builder().requestInfo(employeeRequest.getRequestInfo()).build();
+        ServiceHistory serviceHistory = new ServiceHistory();
+        String[] tenant = employeeRequest.getEmployee().getTenantId().split("\\.");
+        String tenantId = tenant.length > 1 ? tenant[tenant.length - 1] : tenant[0];
+        List<Assignment> removedAssignment = new ArrayList<>() ;
+        empAssignment.stream().forEach(assign -> {
+            List<Department> departments = departmentService.getDepartments(Arrays.asList(assign.getDepartment()), employeeRequest.getEmployee().getTenantId(),
+                    requestInfoWrapper);
+            DesignationGetRequest designationGetRequest = DesignationGetRequest.builder()
+                    .id(Arrays.asList(assign.getDesignation())).tenantId(employeeRequest.getEmployee().getTenantId()).build();
+            List<org.egov.eis.model.bulk.Designation> designations = designationService
+                    .getDesignations(designationGetRequest, employeeRequest.getEmployee().getTenantId(), requestInfoWrapper);
+
+            if (assign.getId() != null && !assign.getId().equals("")) {
+                serviceHistory.setAssignmentId(assign.getId());
+            }
+            serviceHistory.setServiceInfo("Sevice entry changes for assignment");
+            serviceHistory.setCity(tenantId);
+            serviceHistory.setServiceFrom(assign.getFromDate());
+            serviceHistory.setServiceTo(assign.getToDate());
+            serviceHistory.setDepartment(departments.get(0).getCode());
+            serviceHistory.setDesignation(designations.get(0).getCode());
+            serviceHistory.setPosition(assign.getPosition());
+            serviceHistory.setIsAssignmentBased(true);
+            serviceHistory.setTenantId(employeeRequest.getEmployee().getTenantId());
+            serviceHistories.add(serviceHistory);
+            removedAssignment.add(assign);
+        });
+        assignmentList.removeAll(removedAssignment);
+        employeeRequest.getEmployee().setServiceHistory(serviceHistories);
+    }
+
 
 }

@@ -75,6 +75,23 @@ public class ServiceHistory {
     @JsonFormat(pattern = "dd/MM/yyyy")
     private Date serviceFrom;
 
+    @NotNull
+    @DateTimeFormat(pattern = "dd/MM/yyyy")
+    @JsonFormat(pattern = "dd/MM/yyyy")
+    private Date serviceTo;
+
+    private String department;
+
+    private String designation;
+
+    private Long position;
+
+    private Boolean isAssignmentBased;
+
+    private Long assignmentId;
+
+    private String city;
+
     private String remarks;
 
     private String orderNo;

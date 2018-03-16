@@ -46,32 +46,35 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(EmployeeController.class)
 @Import(TestConfiguration.class)
 public class EmployeeControllerTest {
-	
-	@Autowired
-    private MockMvc mockMvc;
 
-    @MockBean
-    private EmployeeService employeeService;
-    
-    @MockBean
-    private RequestValidator requestValidator;
-    
-    @MockBean
+	@Autowired
+	private MockMvc mockMvc;
+
+	@MockBean
+	private EmployeeService employeeService;
+
+	@MockBean
+	private RequestValidator requestValidator;
+
+	@MockBean
 	private ErrorHandler errorHandler;
 
-    @MockBean
+	@MockBean
 	private ResponseInfoFactory responseInfoFactory;
 
-    @MockBean
+	@MockBean
 	private ResponseEntityFactory responseEntityFactory;
 
-    @MockBean
+	@MockBean
 	private EmployeeAssignmentValidator employeeAssignmentValidator;
 
-    @MockBean
+	@MockBean
+	private ServiceHistoryValidator serviceHistoryValidator;
+
+	@MockBean
 	private DataIntegrityValidatorForCreateEmployee dataIntegrityValidatorForCreate;
 
-    @MockBean
+	@MockBean
 	private DataIntegrityValidatorForUpdateEmployee dataIntegrityValidatorForUpdate;
 
 	@Test
@@ -85,17 +88,17 @@ public class EmployeeControllerTest {
 		ResponseEntity<?> responseEntity = new ResponseEntity<>(empMap, HttpStatus.OK);
 
 		when(employeeService.getEmployees(any(EmployeeCriteria.class), any(RequestInfo.class)))
-        .thenReturn(expectedEmployeesList);
+				.thenReturn(expectedEmployeesList);
 		when(responseInfoFactory.createResponseInfoFromRequestInfo(any(RequestInfo.class), any(Boolean.class)))
-		.thenReturn(expectedResponseInfo);
+				.thenReturn(expectedResponseInfo);
 		doReturn(responseEntity).when(responseEntityFactory).getSuccessResponse(anyMapOf(String.class, Object.class), any(RequestInfo.class));
 
 		mockMvc.perform(post("/employees/_search").param("tenantId", "1").param("id", "100")
 				.content(getFileContents("RequestInfo.json")).contentType(MediaType.APPLICATION_JSON_UTF8))
-		.andExpect(status().isOk())
-        .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
-        .andExpect(content().json(
-        		getFileContents("employeeSearchResponse1.json")));
+				.andExpect(status().isOk())
+				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+				.andExpect(content().json(
+						getFileContents("employeeSearchResponse1.json")));
 	}
 
 	@Test
@@ -103,15 +106,15 @@ public class EmployeeControllerTest {
 		Employee expectedEmployee = getExpectedEmployeeForGet();
 		ResponseInfo expectedResponseInfo = new ResponseInfo("emp", "1.0", "2017-01-18T07:18:23.130Z", "uief87324", "20170310130900", "200");
 		when(employeeService.getEmployee(any(Long.class), any(String.class), any(RequestInfo.class)))
-        .thenReturn(expectedEmployee);
+				.thenReturn(expectedEmployee);
 		when(responseInfoFactory.createResponseInfoFromRequestInfo(any(RequestInfo.class), any(Boolean.class)))
-		.thenReturn(expectedResponseInfo);
+				.thenReturn(expectedResponseInfo);
 		mockMvc.perform(post("/employees/100/_search")
 				.content(getFileContents("RequestInfo.json")).contentType(MediaType.APPLICATION_JSON_UTF8))
-		.andExpect(status().isOk())
-        .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
-        .andExpect(content().json(
-        		getFileContents("employeeGetResponse1.json")));
+				.andExpect(status().isOk())
+				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+				.andExpect(content().json(
+						getFileContents("employeeGetResponse1.json")));
 	}
 
 	private List<EmployeeInfo> getExpectedEmployeesForSearch() {
@@ -123,7 +126,7 @@ public class EmployeeControllerTest {
 		employeeInfos.add(employeeInfo1);
 		return employeeInfos;
 	}
-	
+
 	private Employee getExpectedEmployeeForGet() {
 		Assignment assignment1 = Assignment.builder().id(10L).build();
 		List<Assignment> assignments = new ArrayList<>();
@@ -131,41 +134,26 @@ public class EmployeeControllerTest {
 		Employee employee = Employee.builder().id(100L).code("00100").assignments(assignments).build();
 		return employee;
 	}
-	
+
 	private Employee getExpectedEmployeeForCreate() {
 		return getExpectedEmployeeForGet();
 	}
 
-	@Test
-	public void testCreate() throws IOException, Exception {
-		Employee expectedEmployee = getExpectedEmployeeForCreate();
-		ResponseInfo expectedResponseInfo = new ResponseInfo("emp", "1.0", "2017-01-18T07:18:23.130Z", "uief87324", "20170310130900", "200");
-		when(employeeService.createAsync(any(EmployeeRequest.class)))
-        .thenReturn(expectedEmployee);
-		when(responseInfoFactory.createResponseInfoFromRequestInfo(any(RequestInfo.class), any(Boolean.class)))
-		.thenReturn(expectedResponseInfo);
-		mockMvc.perform(post("/employees/_create")
-				.content(getFileContents("RequestInfo.json")).contentType(MediaType.APPLICATION_JSON_UTF8))
-		.andExpect(status().isOk())
-        .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
-        .andExpect(content().json(
-        		getFileContents("employeeGetResponse1.json"))); // test json is same as that of GET in this test case
-	}
-	
+
 	@Test
 	public void testUpdate() throws IOException, Exception {
 		Employee expectedEmployee = getExpectedEmployeeForCreate();
 		ResponseInfo expectedResponseInfo = new ResponseInfo("emp", "1.0", "2017-01-18T07:18:23.130Z", "uief87324", "20170310130900", "200");
 		when(employeeService.updateAsync(any(EmployeeRequest.class)))
-        .thenReturn(expectedEmployee);
+				.thenReturn(expectedEmployee);
 		when(responseInfoFactory.createResponseInfoFromRequestInfo(any(RequestInfo.class), any(Boolean.class)))
-		.thenReturn(expectedResponseInfo);
+				.thenReturn(expectedResponseInfo);
 		mockMvc.perform(post("/employees/_update")
 				.content(getFileContents("RequestInfo.json")).contentType(MediaType.APPLICATION_JSON_UTF8))
-		.andExpect(status().isOk())
-        .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
-        .andExpect(content().json(
-        		getFileContents("employeeGetResponse1.json"))); // test json is same as that of GET in this test case
+				.andExpect(status().isOk())
+				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+				.andExpect(content().json(
+						getFileContents("employeeGetResponse1.json"))); // test json is same as that of GET in this test case
 	}
 
 	private String getFileContents(String filePath) throws IOException {

@@ -66,16 +66,20 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 			throw new OAuth2Exception("Invalid login credentials");
 		}
 
+		if (user.getActive() == null || !user.getActive()) {
+			throw new OAuth2Exception("Please activate your account");
+		}
+
 		System.out.println("tenantId in authenticate------->" + user.getTenantId());
 
 		List<Role> roles = user.getRoles();
-		boolean isCitien = false;
+		boolean isCitizen = true;
 		for (Role role : roles) {
-			if (role.getCode().toString().equals("CITIZEN"))
-				isCitien = true;
+			if (role.getCode().toString().equals("EMPLOYEE"))
+				isCitizen = false;
 		}
 		Boolean isPasswordMatch;
-		if (isCitien) {
+		if (isCitizen) {
 			isPasswordMatch = LoginPasswordProcess(citizenLoginPasswordOtpEnabled, password, user);
 		} else {
 			isPasswordMatch = LoginPasswordProcess(employeeLoginPasswordOtpEnabled, password, user);
@@ -83,9 +87,6 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 
 		if (isPasswordMatch) {
 
-			if (user.getActive() == null || !user.getActive()) {
-				throw new OAuth2Exception("Please activate your account");
-			}
 			/**
 			 * We assume that there will be only one type. If it is multiple
 			 * then we have change below code Separate by comma or other and

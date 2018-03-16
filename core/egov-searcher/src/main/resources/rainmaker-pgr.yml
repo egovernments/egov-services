@@ -135,3 +135,23 @@ SearchDefinitions:
     jsonFormat: {"ResponseInfo": {},"serviceReq": []}
     outJsonPath: $.serviceReq
     responseInfoPath: $.ResponseInfo
+    
+ - name: history
+   query: 
+    baseQuery: (select array_to_json(array_agg(row_to_json(serviceRequests)))from (select status, assignedto, createdtime from eg_pgr_servicereq_audit $where limit 200) serviceRequests)
+    groupBy:    
+    orderBy: auditcreatedtime, DESC
+   searchParams:
+    condition: AND
+    params:
+    - name: tenantid
+      isMandatory: true
+      jsonPath: $.searchCriteria.tenantId
+    - name: servicerequestid
+      isMandatory: true
+      jsonPath: $.searchCriteria.serviceRequestId
+
+   output:
+    jsonFormat: {"ResponseInfo": {},"serviceReq": []}
+    outJsonPath: $.serviceReq
+    responseInfoPath: $.ResponseInfo

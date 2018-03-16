@@ -1,8 +1,5 @@
 package org.egov.user.persistence.repository;
 
-import java.util.Date;
-
-import org.egov.common.contract.request.RequestInfo;
 import org.egov.user.domain.model.OtpValidationRequest;
 import org.egov.user.persistence.dto.Otp;
 import org.egov.user.persistence.dto.OtpRequest;
@@ -37,13 +34,11 @@ public class OtpRepository {
 		return otpResponse.isValidationComplete(request.getMobileNumber());
 	}
 
-	public boolean validateOtp(org.egov.user.web.contract.Otp otp) throws Exception{
+	public boolean validateOtp(OtpValidateRequest request) throws Exception{
 		// TODO Auto-generated method stub
-		RequestInfo requestInfo = RequestInfo.builder().action("validate").ts(new Date()).build();
-		OtpValidateRequest otpValidationRequest = OtpValidateRequest.builder().requestInfo(requestInfo).otp(otp).build();
 		OtpResponse otpResponse = null;
 		try {
-		 otpResponse = restTemplate.postForObject(otpValidateEndpoint, otpValidationRequest, OtpResponse.class);
+		 otpResponse = restTemplate.postForObject(otpValidateEndpoint, request, OtpResponse.class);
 		}catch(HttpClientErrorException e){
 			System.out.println(" the body : "+ e.getResponseBodyAsString());
 			throw new Exception(e.getResponseBodyAsString());

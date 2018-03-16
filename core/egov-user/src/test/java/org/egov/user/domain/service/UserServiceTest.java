@@ -14,6 +14,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import org.egov.common.contract.request.RequestInfo;
 import org.egov.user.domain.exception.AtleastOneRoleCodeException;
 import org.egov.user.domain.exception.DuplicateUserNameException;
 import org.egov.user.domain.exception.InvalidUserCreateException;
@@ -32,6 +33,8 @@ import org.egov.user.domain.model.enums.Gender;
 import org.egov.user.domain.model.enums.UserType;
 import org.egov.user.persistence.repository.OtpRepository;
 import org.egov.user.persistence.repository.UserRepository;
+import org.egov.user.web.contract.Otp;
+import org.egov.user.web.contract.OtpValidateRequest;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -352,17 +355,6 @@ public class UserServiceTest {
 		verify(request).validate();
 	}
 
-	@Test(expected = OtpValidationPendingException.class)
-	public void
-	test_should_throw_exception_when_otp_validation_is_incomplete_when_updating_password_for_non_logged_in_user() {
-		final NonLoggedInUserUpdatePasswordRequest request = mock(NonLoggedInUserUpdatePasswordRequest.class);
-		when(otpRepository.isOtpValidationComplete(any())).thenReturn(false);
-		final User domainUser = mock(User.class);
-		when(userRepository.findByUsername(anyString(), anyString())).thenReturn(domainUser);
-
-		userService.updatePasswordForNonLoggedInUser(request);
-	}
-
 	@Test(expected = UserNotFoundException.class)
 	public void test_should_throw_exception_when_user_does_not_exist_when_updating_password_for_non_logged_in_user() {
 		final NonLoggedInUserUpdatePasswordRequest request = mock(NonLoggedInUserUpdatePasswordRequest.class);
@@ -383,6 +375,59 @@ public class UserServiceTest {
 		userService.updatePasswordForNonLoggedInUser(request);
 
 		verify(domainUser).updatePassword("newPassword");
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Test(expected = Exception.class)
+	public void test_notshould_update_existing_password_for_non_logged_in_user() throws Exception {
+		final NonLoggedInUserUpdatePasswordRequest request = mock(NonLoggedInUserUpdatePasswordRequest.class);
+		when(request.getNewPassword()).thenReturn("newPassword");
+		when(otpRepository.validateOtp(any())).thenThrow(Exception.class);
+		final User domainUser = mock(User.class);
+		when(userRepository.findByUsername(anyString(), anyString())).thenReturn(domainUser);
+
+		userService.updatePasswordForNonLoggedInUser(request);
+
+		verify(domainUser).updatePassword("newPassword");
+	}
+	
+	@Test
+	public void test_should_create_a_valid_citizen_WithOtp() throws Exception {
+		org.egov.user.domain.model.User domainUser = mock(User.class);
+		when((domainUser.getOtpValidationRequest())).thenReturn(getExpectedRequest());
+		// when(otpRepository.isOtpValidationComplete(getExpectedRequest())).thenReturn(true);
+		when(otpRepository.validateOtp((getOtpValidationRequest()))).thenReturn(true);
+		final User expectedUser = User.builder().build();
+		when(userRepository.create(domainUser)).thenReturn(expectedUser);
+
+		User returnedUser = userService.createCitizen(domainUser);
+
+		assertEquals(expectedUser, returnedUser);
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Test(expected = Exception.class)
+	public void test_should_Notcreate_a_valid_citizen_WithOtp() throws Exception {
+		org.egov.user.domain.model.User domainUser = mock(User.class);
+		when((domainUser.getOtpValidationRequest())).thenReturn(getExpectedRequest());
+		// when(otpRepository.isOtpValidationComplete(getExpectedRequest())).thenReturn(true);
+		when(otpRepository.validateOtp(any())).thenThrow(Exception.class);
+		final User expectedUser = User.builder().build();
+		when(userRepository.create(domainUser)).thenReturn(expectedUser);
+
+		User returnedUser = userService.createCitizen(domainUser);
+
+		assertEquals(expectedUser, returnedUser);
+	}
+	
+	private OtpValidateRequest getOtpValidationRequest(){
+		
+		RequestInfo requestInfo = RequestInfo.builder().build();
+		
+		Otp otp = Otp.builder().identity("12121212").otp("23456").tenantId("default").build();
+		
+		return OtpValidateRequest.builder().requestInfo(requestInfo).otp(otp).build();
+
 	}
 	
 	@Test

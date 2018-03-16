@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.egov.user.domain.exception.InvalidRoleCodeException;
@@ -124,7 +125,10 @@ public class UserRepository {
 
 	public User create(User user) {
 		setEnrichedRolesToUser(user);
-		encryptPassword(user);
+		if (null != user.getPassword())
+			encryptPassword(user);
+		else
+			user.setPassword(UUID.randomUUID().toString());
 		final Long newId = getNextSequence();
 		user.setId(newId);
 		user.setCreatedDate(new Date());
@@ -162,6 +166,7 @@ public class UserRepository {
 		Map<String, Object> userInputs = new HashMap<String, Object>();
 
 		userInputs.put("id", entityUser.getId());
+		userInputs.put("uuid", entityUser.getUuid());
 		userInputs.put("tenantid", entityUser.getTenantId());
 		userInputs.put("salutation", entityUser.getSalutation());
 		userInputs.put("dob", entityUser.getDob());
@@ -351,7 +356,7 @@ public class UserRepository {
 			} else {
 				updateuserInputs.put("BloodGroup", "");
 			}
-		} else if(oldUser.getBloodGroup() !=null) {
+		} else if (oldUser.getBloodGroup() != null) {
 			if (BloodGroup.A_NEGATIVE.toString().equals(oldUser.getBloodGroup().toString())) {
 				updateuserInputs.put("BloodGroup", oldUser.getBloodGroup().toString());
 			} else if (BloodGroup.A_POSITIVE.toString().equals(oldUser.getBloodGroup().toString())) {
@@ -484,3 +489,4 @@ public class UserRepository {
 		return entityUser;
 	}
 }
+

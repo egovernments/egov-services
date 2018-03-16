@@ -1,14 +1,29 @@
 package org.egov.user.domain.service;
 
-import org.egov.user.domain.exception.*;
-import org.egov.user.domain.model.*;
+import java.util.List;
+import java.util.UUID;
+
+import org.egov.user.domain.exception.AtleastOneRoleCodeException;
+import org.egov.user.domain.exception.DuplicateUserNameException;
+import org.egov.user.domain.exception.InvalidOtpException;
+import org.egov.user.domain.exception.OtpValidationPendingException;
+import org.egov.user.domain.exception.PasswordMismatchException;
+import org.egov.user.domain.exception.UserIdMandatoryException;
+import org.egov.user.domain.exception.UserNotFoundException;
+import org.egov.user.domain.exception.UserProfileUpdateDeniedException;
+import org.egov.user.domain.model.LoggedInUserUpdatePasswordRequest;
+import org.egov.user.domain.model.NonLoggedInUserUpdatePasswordRequest;
+import org.egov.user.domain.model.OtpValidationRequest;
+import org.egov.user.domain.model.User;
+import org.egov.user.domain.model.UserSearchCriteria;
 import org.egov.user.persistence.repository.OtpRepository;
 import org.egov.user.persistence.repository.UserRepository;
+import org.egov.user.web.contract.Otp;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import com.jayway.jsonpath.JsonPath;
 
 @Service
 public class UserService {
@@ -35,6 +50,7 @@ public class UserService {
 	}
 
 	public User createUser(User user) {
+		user.setUuid(UUID.randomUUID().toString());
 		user.validateNewUser();
 		conditionallyValidateOtp(user);
 		validateDuplicateUserName(user);
@@ -43,11 +59,21 @@ public class UserService {
 	}
 
 	public User createCitizen(User user) {
+		user.setUuid(UUID.randomUUID().toString());
 		user.setRoleToCitizen();
 		user.setActive(true);
 		user.validateNewUser();
-		validateOtp(user.getOtpValidationRequest());
 		validateDuplicateUserName(user);
+		// validateOtp(user.getOtpValidationRequest());
+		Otp otp = Otp.builder().otp(user.getOtpReference()).identity(user.getUsername()).tenantId(user.getTenantId())
+				.build();
+		try {
+			validateOtp(otp);
+		} catch (Exception e) {
+			String errorMessage = JsonPath.read(e.getMessage(), "$.error.message");
+			System.out.println("message " + errorMessage);
+			throw new InvalidOtpException(errorMessage);
+		}
 		user.setDefaultPasswordExpiry(defaultPasswordExpiryInDays);
 		return persistNewUser(user);
 	}
@@ -69,7 +95,7 @@ public class UserService {
 			throw new AtleastOneRoleCodeException();
 		}
 	}
-	
+
 	public User partialUpdate(final User user) {
 		validateUserId(user);
 		validateProfileUpdateIsDoneByTheSameLoggedInUser(user);
@@ -160,6 +186,14 @@ public class UserService {
 
 	private User updateExistingUser(final User user) {
 		return userRepository.update(user);
+	}
+
+	public boolean validateOtp(Otp otp) throws Exception {
+		// TODO Auto-generated method stub
+		if (otpRepository.validateOtp(otp))
+			return true;
+		return false;
+
 	}
 
 }

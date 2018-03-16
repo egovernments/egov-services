@@ -48,45 +48,57 @@ import java.util.Map;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
-public enum CourtOrderType {
-    INTERIMORDERS("Interim orders"), STAY("Stay"), FINALORDERS("Final Orders");
+public enum DisciplinaryAuthority {
+
+    GOVERNMENTOFAP_APSECRETARIAT_VELAGAPUDI(
+            "Government of AP, AP Secretariat, Velagapudi"), COMMISSIONER_DIRECTOR_OF_MUNICIPAL_ADMINISTRATION(
+                    "Commissioner & Director of Municipal Administration"), ENGINEER_IN_CHIEF(
+                            "Engineer-in-Chief (PH)"), DIRECTOR_OF_TOWN_COUNTRY_PLANNING(
+                                    "Director of Town & Country Planning"), REGIONAL_DIRECTOR_CUM_APPELLATE_COMMISSIONER_OF_MUNICIPAL_ADMINISTRATION(
+                                            " Regional Director-cum-Appellate Commissioner of Municipal Administration concerned"), REGIONAL_DEPUTY_DIRECTOR_OF_TOWN_COUNTRY_PLANNING(
+                                                    "Regional Deputy Director of Town & Country Planning concerned"), SUPERINTENDING_ENGINEER(
+                                                            "Superintending Engineer (PH)  concerned"), CHAIRPERSON_MAYOR_OF_MUNICIPAL_COUNCIL(
+                                                                    "Chairperson/Mayor of Municipal Council concerned"), MUNICIPAL_COMMISSIONER(
+                                                                            "Municipal Commissioner concerned"), OTHERS(
+                                                                                    "Others");
+
     private String value;
 
-    CourtOrderType(final String value) {
+    DisciplinaryAuthority(final String value) {
         this.value = value;
+    }
+
+    @JsonCreator
+    public static List<String> getAllObjectValues() {
+        final List<String> allObjectValues = new ArrayList<>();
+        for (final DisciplinaryAuthority obj : DisciplinaryAuthority.values())
+            allObjectValues.add(obj.value);
+        return allObjectValues;
+    }
+
+    public static List<Map<String, String>> getDisciplinaryAuthority() {
+        final List<Map<String, String>> disciplinaryAuthes = new ArrayList<>();
+        for (final DisciplinaryAuthority obj : DisciplinaryAuthority.values()) {
+            final Map<String, String> disciplinaryAuth = new HashMap<>();
+            disciplinaryAuth.put("id", obj.toString());
+            disciplinaryAuth.put("name", obj.value);
+            disciplinaryAuthes.add(disciplinaryAuth);
+        }
+        return disciplinaryAuthes;
+    }
+
+    @JsonCreator
+    public static DisciplinaryAuthority fromValue(final String passedValue) {
+        for (final DisciplinaryAuthority obj : DisciplinaryAuthority.values())
+            if (String.valueOf(obj).equals(passedValue.toUpperCase()))
+                return obj;
+        return null;
     }
 
     @Override
     @JsonValue
     public String toString() {
         return name();
-    }
-
-    @JsonCreator
-    public static List<String> getAllObjectValues() {
-        final List<String> allObjectValues = new ArrayList<>();
-        for (final CourtOrderType obj : CourtOrderType.values())
-            allObjectValues.add(obj.value);
-        return allObjectValues;
-    }
-
-    @JsonCreator
-    public static CourtOrderType fromValue(final String passedValue) {
-        for (final CourtOrderType obj : CourtOrderType.values())
-            if (String.valueOf(obj.value).equals(passedValue.toUpperCase()))
-                return obj;
-        return null;
-    }
-
-    public static List<Map<String, String>> getCourtOrderTypes() {
-        final List<Map<String, String>> courtOrderTypes = new ArrayList<>();
-        for (final CourtOrderType obj : CourtOrderType.values()) {
-            final Map<String, String> courtOrderType = new HashMap<>();
-            courtOrderType.put("id", obj.toString());
-            courtOrderType.put("name", obj.value);
-            courtOrderTypes.add(courtOrderType);
-        }
-        return courtOrderTypes;
     }
 
 }

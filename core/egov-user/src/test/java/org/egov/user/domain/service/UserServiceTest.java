@@ -58,10 +58,11 @@ public class UserServiceTest {
 	private final String EMAIL = "email@gmail.com";
 	private final String USER_NAME = "userName";
 	private final String TENANT_ID = "tenantId";
+	private final boolean isCitizenLoginOtpBased = false;
 
 	@Before
 	public void before() {
-		userService = new UserService(userRepository, otpRepository, passwordEncoder, DEFAULT_PASSWORD_EXPIRY_IN_DAYS);
+		userService = new UserService(userRepository, otpRepository, passwordEncoder, DEFAULT_PASSWORD_EXPIRY_IN_DAYS,isCitizenLoginOtpBased);
 	}
 
 	@Test

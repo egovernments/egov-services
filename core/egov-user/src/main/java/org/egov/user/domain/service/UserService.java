@@ -1,9 +1,11 @@
 package org.egov.user.domain.service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
 import org.apache.commons.lang3.StringUtils;
+import org.egov.common.contract.request.RequestInfo;
 import org.egov.user.domain.exception.AtleastOneRoleCodeException;
 import org.egov.user.domain.exception.DuplicateUserNameException;
 import org.egov.user.domain.exception.InvalidOtpException;
@@ -21,6 +23,7 @@ import org.egov.user.domain.model.UserSearchCriteria;
 import org.egov.user.persistence.repository.OtpRepository;
 import org.egov.user.persistence.repository.UserRepository;
 import org.egov.user.web.contract.Otp;
+import org.egov.user.web.contract.OtpValidateRequest;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -65,10 +68,9 @@ public class UserService {
 
 	public User createCitizen(User user) {
 		user.setUuid(UUID.randomUUID().toString());
-		if (IsCitizenLoginOtpBased)
-			if (!StringUtils.isNumeric(user.getUsername()))
-				throw new UserNameNotValidException();
-
+		if (IsCitizenLoginOtpBased && !StringUtils.isNumeric(user.getUsername())) {
+			throw new UserNameNotValidException();
+		}
 		user.setRoleToCitizen();
 		user.validateNewUser();
 		validateDuplicateUserName(user);
@@ -76,7 +78,9 @@ public class UserService {
 		Otp otp = Otp.builder().otp(user.getOtpReference()).identity(user.getUsername()).tenantId(user.getTenantId())
 				.build();
 		try {
-			validateOtp(otp);
+			RequestInfo requestInfo = RequestInfo.builder().action("validate").ts(new Date()).build();
+			OtpValidateRequest otpValidationRequest = OtpValidateRequest.builder().requestInfo(requestInfo).otp(otp).build();
+			otpRepository.validateOtp(otpValidationRequest);
 		} catch (Exception e) {
 			String errorMessage = JsonPath.read(e.getMessage(), "$.error.message");
 			System.out.println("message " + errorMessage);
@@ -128,7 +132,9 @@ public class UserService {
 		Otp otp = Otp.builder().otp(request.getOtpReference()).identity(request.getUserName())
 				.tenantId(request.getTenantId()).build();
 		try {
-			validateOtp(otp);
+			RequestInfo requestInfo = RequestInfo.builder().action("validate").ts(new Date()).build();
+			OtpValidateRequest otpValidationRequest = OtpValidateRequest.builder().requestInfo(requestInfo).otp(otp).build();
+			otpRepository.validateOtp(otpValidationRequest);
 		} catch (Exception e) {
 			String errorMessage = JsonPath.read(e.getMessage(), "$.error.message");
 			System.out.println("message " + errorMessage);
@@ -208,7 +214,9 @@ public class UserService {
 
 	public boolean validateOtp(Otp otp) throws Exception {
 		// TODO Auto-generated method stub
-		if (otpRepository.validateOtp(otp))
+		RequestInfo requestInfo = RequestInfo.builder().action("validate").ts(new Date()).build();
+		OtpValidateRequest otpValidationRequest = OtpValidateRequest.builder().requestInfo(requestInfo).otp(otp).build();
+		if (otpRepository.validateOtp(otpValidationRequest))
 			return true;
 		return false;
 

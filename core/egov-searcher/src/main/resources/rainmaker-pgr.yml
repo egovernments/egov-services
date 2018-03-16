@@ -138,7 +138,7 @@ SearchDefinitions:
     
  - name: history
    query: 
-    baseQuery: (select array_to_json(array_agg(row_to_json(serviceRequests)))from (select status, assignedto, createdtime from eg_pgr_servicereq_audit $where limit 200) serviceRequests)
+    baseQuery: select row_to_json(serviceRequests) from (select status, assignedto, (select (select row_to_json(auditDetails) from (select createdtime from eg_pgr_serviceReq_audit audit where audit.id=eg_pgr_serviceReq_audit.id) auditDetails) as auditDetails) from eg_pgr_serviceReq_audit $where limit 200) serviceRequests;
     groupBy:    
     orderBy: auditcreatedtime, DESC
    searchParams:

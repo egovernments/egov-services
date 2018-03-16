@@ -310,15 +310,17 @@ public class ServiceRequestService {
 		mapper.configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true);
 		mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
+        //mapper.configure(SerializationFeature.WRITE_NULL_MAP_VALUES, false);
 		ServiceReqResponse serviceReqResponse = null;
 		StringBuilder uri = new StringBuilder();
 		SearcherRequest searcherRequest = pGRUtils.prepareHistoryRequest(uri, serviceReqSearchCriteria, requestInfo);
 		Object response = serviceRequestRepository.fetchResult(uri, searcherRequest);
-		log.info("Searcher response: ", response);
 		if (null == response) {
 			return new ServiceReqResponse(factory.createResponseInfoFromRequestInfo(requestInfo, false),
 					new ArrayList<ServiceReq>());
 		}
+		log.info("Searcher response: "+response.toString());
+		
 		serviceReqResponse = mapper.convertValue(response, ServiceReqResponse.class);
 		return serviceReqResponse;
 	}

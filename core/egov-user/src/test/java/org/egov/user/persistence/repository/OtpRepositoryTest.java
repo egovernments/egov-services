@@ -28,8 +28,9 @@ public class OtpRepositoryTest {
         RestTemplate restTemplate = new RestTemplate();
         server = MockRestServiceServer.bindTo(restTemplate).build();
         final String otpSearchContext = "otp/_search";
+        final String otpValidateContext = "otp/_validate";
         final String otpHost = "http://otp-host.com/";
-        this.otpRepository = new OtpRepository(otpHost, otpSearchContext, restTemplate);
+        this.otpRepository = new OtpRepository(otpHost, otpSearchContext,otpValidateContext,restTemplate);
     }
 
     @Test

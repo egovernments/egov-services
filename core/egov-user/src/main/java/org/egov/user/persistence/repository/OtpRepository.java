@@ -1,25 +1,33 @@
 package org.egov.user.persistence.repository;
 
+import java.util.Date;
+
+import org.egov.common.contract.request.RequestInfo;
 import org.egov.user.domain.model.OtpValidationRequest;
 import org.egov.user.persistence.dto.Otp;
 import org.egov.user.persistence.dto.OtpRequest;
 import org.egov.user.persistence.dto.OtpResponse;
+import org.egov.user.web.contract.OtpValidateRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 @Repository
 public class OtpRepository {
     private final RestTemplate restTemplate;
     private final String otpSearchEndpoint;
+    private final String otpValidateEndpoint;
 
     @Autowired
     public OtpRepository(@Value("${core.otp.service.url}") String otpServiceHost,
                          @Value("${egov.services.otp.search_otp}") String otpSearchContextEndpoint,
+                         @Value("${egov.services.otp.validate_otp}") String otpValidateEndpoint,
                          RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
         this.otpSearchEndpoint = otpServiceHost + otpSearchContextEndpoint;
+        this.otpValidateEndpoint = otpServiceHost + otpValidateEndpoint;
     }
 
 	public boolean isOtpValidationComplete(OtpValidationRequest request) {
@@ -28,4 +36,21 @@ public class OtpRepository {
 		OtpResponse otpResponse = restTemplate.postForObject(otpSearchEndpoint, otpRequest, OtpResponse.class);
 		return otpResponse.isValidationComplete(request.getMobileNumber());
 	}
+
+	public boolean validateOtp(org.egov.user.web.contract.Otp otp) throws Exception{
+		// TODO Auto-generated method stub
+		RequestInfo requestInfo = RequestInfo.builder().action("validate").ts(new Date()).build();
+		OtpValidateRequest otpValidationRequest = OtpValidateRequest.builder().requestInfo(requestInfo).otp(otp).build();
+		OtpResponse otpResponse = null;
+		try {
+		 otpResponse = restTemplate.postForObject(otpValidateEndpoint, otpValidationRequest, OtpResponse.class);
+		}catch(HttpClientErrorException e){
+			System.out.println(" the body : "+ e.getResponseBodyAsString());
+			throw new Exception(e.getResponseBodyAsString());
+		}
+		if(null!=otpResponse && null!=otpResponse.getOtp())
+		return otpResponse.getOtp().isValidationSuccessful();
+		return false;
+	}
 }
+

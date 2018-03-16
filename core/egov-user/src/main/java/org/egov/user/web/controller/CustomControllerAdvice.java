@@ -6,6 +6,7 @@ import org.egov.user.domain.exception.DuplicateUserNameException;
 import org.egov.user.domain.exception.InvalidAccessTokenException;
 import org.egov.user.domain.exception.InvalidLoggedInUserUpdatePasswordRequestException;
 import org.egov.user.domain.exception.InvalidNonLoggedInUserUpdatePasswordRequestException;
+import org.egov.user.domain.exception.InvalidOtpException;
 import org.egov.user.domain.exception.InvalidRoleCodeException;
 import org.egov.user.domain.exception.InvalidUserCreateException;
 import org.egov.user.domain.exception.InvalidUserSearchCriteriaException;
@@ -18,6 +19,7 @@ import org.egov.user.domain.exception.UserNotFoundException;
 import org.egov.user.domain.exception.UserProfileUpdateDeniedException;
 import org.egov.user.web.adapters.errors.AtleastOneRoleCodeErrorHandler;
 import org.egov.user.web.adapters.errors.DuplicateUserNameErrorHandler;
+import org.egov.user.web.adapters.errors.InvalidOtpErrorHandler;
 import org.egov.user.web.adapters.errors.InvalidAccessTokenErrorHandler;
 import org.egov.user.web.adapters.errors.InvalidLoggedInUserUpdatePasswordRequestErrorHandler;
 import org.egov.user.web.adapters.errors.InvalidNonLoggedInUserUpdatePasswordRequestErrorHandler;
@@ -94,7 +96,7 @@ public class CustomControllerAdvice {
 	public ErrorResponse handleInvalidRoleCodeException(InvalidRoleCodeException ex) {
 		return new InvalidRoleCodeErrorHandler().adapt(ex.getRoleCode());
 	}
-	
+
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	@ExceptionHandler(AtleastOneRoleCodeException.class)
 	public ErrorResponse handleAtleastOneRoleCodeException(AtleastOneRoleCodeException ex) {
@@ -132,6 +134,12 @@ public class CustomControllerAdvice {
 	public ErrorResponse handleInvalidNonLoggedInUserUpdatePasswordRequestException(
 			InvalidUserSearchCriteriaException ex) {
 		return new InvalidUserSearchRequestErrorHandler().adapt(ex.getSearchCriteria());
+	}
+
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	@ExceptionHandler(InvalidOtpException.class)
+	public ErrorResponse handleInvalidOtpException(InvalidOtpException ex) {
+		return new InvalidOtpErrorHandler().adapt(ex.getErrorMessage());
 	}
 
 }

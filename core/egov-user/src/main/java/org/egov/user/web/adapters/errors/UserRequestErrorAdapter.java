@@ -33,9 +33,9 @@ public class UserRequestErrorAdapter implements ErrorAdapter<User> {
 	private static final String TENANT_FIELD = "tenantId";
 	private static final String TENANT_MISSING_MESSAGE = "Tenant is required";
 	
-	private static final String PASSWORD_MISSING_CODE = "core-user.PASSWORD_MANDATORY";
+/*	private static final String PASSWORD_MISSING_CODE = "core-user.PASSWORD_MANDATORY";
 	private static final String PASSWORD_FIELD = "password";
-	private static final String PASSWORD_MISSING_MESSAGE = "Password is required";
+	private static final String PASSWORD_MISSING_MESSAGE = "Password is required";*/
 
 	private static final String ROLES_MISSING_CODE = "core-user.ROLES_MANDATORY";
 	private static final String ROLES_FIELD = "roles";
@@ -76,7 +76,7 @@ public class UserRequestErrorAdapter implements ErrorAdapter<User> {
 		addUsernameMissingError(user, errorFields);
 		addNameMissingError(user, errorFields);
 		addTenantMissingError(user, errorFields);
-		addPasswordMissingError(user, errorFields);
+		//addPasswordMissingError(user, errorFields);
 		addRolesMissingError(user, errorFields);
 		addOtpReferenceMissingError(user, errorFields);
 		addCorrespondenceAddressError(user, errorFields);
@@ -135,12 +135,12 @@ public class UserRequestErrorAdapter implements ErrorAdapter<User> {
 		}
 	}
 	
-	private void addPasswordMissingError(User user, List<ErrorField> errorFields) {
+/*	private void addPasswordMissingError(User user, List<ErrorField> errorFields) {
 		if (user.isPasswordAbsent()) {
 			errorFields.add(ErrorField.builder()
 					.code(PASSWORD_MISSING_CODE).field(PASSWORD_FIELD).message(PASSWORD_MISSING_MESSAGE).build());
 		}
-	}
+	}*/
 
 	private void addUsernameMissingError(User user, List<ErrorField> errorFields) {
 		if (user.isUsernameAbsent()) {
@@ -163,4 +163,5 @@ public class UserRequestErrorAdapter implements ErrorAdapter<User> {
 		}
 	}
 }
+
 

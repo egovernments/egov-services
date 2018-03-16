@@ -3,12 +3,14 @@ package org.egov.user.domain.service;
 import java.util.List;
 import java.util.UUID;
 
+import org.apache.commons.lang3.StringUtils;
 import org.egov.user.domain.exception.AtleastOneRoleCodeException;
 import org.egov.user.domain.exception.DuplicateUserNameException;
 import org.egov.user.domain.exception.InvalidOtpException;
 import org.egov.user.domain.exception.OtpValidationPendingException;
 import org.egov.user.domain.exception.PasswordMismatchException;
 import org.egov.user.domain.exception.UserIdMandatoryException;
+import org.egov.user.domain.exception.UserNameNotValidException;
 import org.egov.user.domain.exception.UserNotFoundException;
 import org.egov.user.domain.exception.UserProfileUpdateDeniedException;
 import org.egov.user.domain.model.LoggedInUserUpdatePasswordRequest;
@@ -32,13 +34,16 @@ public class UserService {
 	private OtpRepository otpRepository;
 	private PasswordEncoder passwordEncoder;
 	private int defaultPasswordExpiryInDays;
+	private boolean IsCitizenLoginOtpBased;
 
 	public UserService(UserRepository userRepository, OtpRepository otpRepository, PasswordEncoder passwordEncoder,
-			@Value("${default.password.expiry.in.days}") int defaultPasswordExpiryInDays) {
+			@Value("${default.password.expiry.in.days}") int defaultPasswordExpiryInDays,
+			@Value("${citizen.login.password.otp.enabled}") boolean IsCitizenLoginOtpBased) {
 		this.userRepository = userRepository;
 		this.otpRepository = otpRepository;
 		this.passwordEncoder = passwordEncoder;
 		this.defaultPasswordExpiryInDays = defaultPasswordExpiryInDays;
+		this.IsCitizenLoginOtpBased = IsCitizenLoginOtpBased;
 	}
 
 	public User getUserByUsername(final String userName, String tenantId) {
@@ -60,8 +65,11 @@ public class UserService {
 
 	public User createCitizen(User user) {
 		user.setUuid(UUID.randomUUID().toString());
+		if(IsCitizenLoginOtpBased)
+			 if(!StringUtils.isNumeric(user.getUsername()))
+				 throw new UserNameNotValidException(); 
+		
 		user.setRoleToCitizen();
-		user.setActive(true);
 		user.validateNewUser();
 		validateDuplicateUserName(user);
 		// validateOtp(user.getOtpValidationRequest());
@@ -75,6 +83,7 @@ public class UserService {
 			throw new InvalidOtpException(errorMessage);
 		}
 		user.setDefaultPasswordExpiry(defaultPasswordExpiryInDays);
+		user.setActive(true);
 		return persistNewUser(user);
 	}
 

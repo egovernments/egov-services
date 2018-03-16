@@ -65,10 +65,10 @@ public class UserService {
 
 	public User createCitizen(User user) {
 		user.setUuid(UUID.randomUUID().toString());
-		if(IsCitizenLoginOtpBased)
-			 if(!StringUtils.isNumeric(user.getUsername()))
-				 throw new UserNameNotValidException(); 
-		
+		if (IsCitizenLoginOtpBased)
+			if (!StringUtils.isNumeric(user.getUsername()))
+				throw new UserNameNotValidException();
+
 		user.setRoleToCitizen();
 		user.validateNewUser();
 		validateDuplicateUserName(user);
@@ -124,7 +124,16 @@ public class UserService {
 
 	public void updatePasswordForNonLoggedInUser(NonLoggedInUserUpdatePasswordRequest request) {
 		request.validate();
-		validateOtp(request.getOtpValidationRequest());
+		// validateOtp(request.getOtpValidationRequest());
+		Otp otp = Otp.builder().otp(request.getOtpReference()).identity(request.getUserName())
+				.tenantId(request.getTenantId()).build();
+		try {
+			validateOtp(otp);
+		} catch (Exception e) {
+			String errorMessage = JsonPath.read(e.getMessage(), "$.error.message");
+			System.out.println("message " + errorMessage);
+			throw new InvalidOtpException(errorMessage);
+		}
 		final User user = fetchUserByUserName(request.getUserName(), request.getTenantId());
 		validateUserPresent(user);
 		user.updatePassword(request.getNewPassword());

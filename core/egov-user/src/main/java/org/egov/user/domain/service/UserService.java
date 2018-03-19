@@ -68,9 +68,11 @@ public class UserService {
 
 	public User createCitizen(User user) {
 		user.setUuid(UUID.randomUUID().toString());
-		if (IsCitizenLoginOtpBased && !StringUtils.isNumeric(user.getUsername())) {
+		if (IsCitizenLoginOtpBased && !StringUtils.isNumeric(user.getUsername()))
 			throw new UserNameNotValidException();
-		}
+		else if (IsCitizenLoginOtpBased)
+			user.setMobileNumber(user.getUsername());
+
 		user.setRoleToCitizen();
 		user.validateNewUser();
 		validateDuplicateUserName(user);
@@ -211,7 +213,8 @@ public class UserService {
 	public Boolean validateOtp(Otp otp) throws Exception {
 		// TODO Auto-generated method stub
 		RequestInfo requestInfo = RequestInfo.builder().action("validate").ts(new Date()).build();
-		OtpValidateRequest otpValidationRequest = OtpValidateRequest.builder().requestInfo(requestInfo).otp(otp).build();
+		OtpValidateRequest otpValidationRequest = OtpValidateRequest.builder().requestInfo(requestInfo).otp(otp)
+				.build();
 		return otpRepository.validateOtp(otpValidationRequest);
 
 	}

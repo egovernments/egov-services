@@ -148,11 +148,19 @@ public class UserServiceTest {
 		assertEquals(expectedUser, returnedUser);
 	}
 
+	@Test(expected = UserNameNotValidException.class)
+	public void test_should_not_create_citizenWithWrongUserName() {
+		userService = new UserService(userRepository, otpRepository, passwordEncoder, DEFAULT_PASSWORD_EXPIRY_IN_DAYS,
+				true);
+		org.egov.user.domain.model.User domainUser = User.builder().username("TestUser").name("Test").active(true)
+				.tenantId("default").mobileNumber("123456789").type(UserType.CITIZEN).build();
+		userService.createCitizen(domainUser);
+	}
+
 	@Test
 	public void test_should_create_a_valid_citizen_withotp() throws Exception {
 		org.egov.user.domain.model.User domainUser = mock(User.class);
 		when((domainUser.getOtpValidationRequest())).thenReturn(getExpectedRequest());
-		when(otpRepository.isOtpValidationComplete(getExpectedRequest())).thenReturn(true);
 		when(otpRepository.validateOtp(buildOtpValidationRequest())).thenReturn(true);
 		final User expectedUser = User.builder().build();
 		when(userRepository.create(domainUser)).thenReturn(expectedUser);

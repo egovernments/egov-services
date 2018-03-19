@@ -78,9 +78,7 @@ public class UserService {
 		Otp otp = Otp.builder().otp(user.getOtpReference()).identity(user.getUsername()).tenantId(user.getTenantId())
 				.build();
 		try {
-			RequestInfo requestInfo = RequestInfo.builder().action("validate").ts(new Date()).build();
-			OtpValidateRequest otpValidationRequest = OtpValidateRequest.builder().requestInfo(requestInfo).otp(otp).build();
-			otpRepository.validateOtp(otpValidationRequest);
+			validateOtp(otp);
 		} catch (Exception e) {
 			String errorMessage = JsonPath.read(e.getMessage(), "$.error.message");
 			System.out.println("message " + errorMessage);
@@ -132,9 +130,7 @@ public class UserService {
 		Otp otp = Otp.builder().otp(request.getOtpReference()).identity(request.getUserName())
 				.tenantId(request.getTenantId()).build();
 		try {
-			RequestInfo requestInfo = RequestInfo.builder().action("validate").ts(new Date()).build();
-			OtpValidateRequest otpValidationRequest = OtpValidateRequest.builder().requestInfo(requestInfo).otp(otp).build();
-			otpRepository.validateOtp(otpValidationRequest);
+			validateOtp(otp);
 		} catch (Exception e) {
 			String errorMessage = JsonPath.read(e.getMessage(), "$.error.message");
 			System.out.println("message " + errorMessage);
@@ -212,13 +208,11 @@ public class UserService {
 		return userRepository.update(user);
 	}
 
-	public boolean validateOtp(Otp otp) throws Exception {
+	public Boolean validateOtp(Otp otp) throws Exception {
 		// TODO Auto-generated method stub
 		RequestInfo requestInfo = RequestInfo.builder().action("validate").ts(new Date()).build();
 		OtpValidateRequest otpValidationRequest = OtpValidateRequest.builder().requestInfo(requestInfo).otp(otp).build();
-		if (otpRepository.validateOtp(otpValidationRequest))
-			return true;
-		return false;
+		return otpRepository.validateOtp(otpValidationRequest);
 
 	}
 

@@ -12,6 +12,7 @@ import static org.mockito.Mockito.when;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 import org.egov.common.contract.request.RequestInfo;
@@ -21,6 +22,7 @@ import org.egov.user.domain.exception.InvalidUserCreateException;
 import org.egov.user.domain.exception.OtpValidationPendingException;
 import org.egov.user.domain.exception.PasswordMismatchException;
 import org.egov.user.domain.exception.UserIdMandatoryException;
+import org.egov.user.domain.exception.UserNameNotValidException;
 import org.egov.user.domain.exception.UserNotFoundException;
 import org.egov.user.domain.exception.UserProfileUpdateDeniedException;
 import org.egov.user.domain.model.LoggedInUserUpdatePasswordRequest;
@@ -65,7 +67,8 @@ public class UserServiceTest {
 
 	@Before
 	public void before() {
-		userService = new UserService(userRepository, otpRepository, passwordEncoder, DEFAULT_PASSWORD_EXPIRY_IN_DAYS,isCitizenLoginOtpBased);
+		userService = new UserService(userRepository, otpRepository, passwordEncoder, DEFAULT_PASSWORD_EXPIRY_IN_DAYS,
+				isCitizenLoginOtpBased);
 	}
 
 	@Test
@@ -146,6 +149,29 @@ public class UserServiceTest {
 	}
 
 	@Test
+	public void test_should_create_a_valid_citizen_withotp() throws Exception {
+		org.egov.user.domain.model.User domainUser = mock(User.class);
+		when((domainUser.getOtpValidationRequest())).thenReturn(getExpectedRequest());
+		when(otpRepository.isOtpValidationComplete(getExpectedRequest())).thenReturn(true);
+		when(otpRepository.validateOtp(buildOtpValidationRequest())).thenReturn(true);
+		final User expectedUser = User.builder().build();
+		when(userRepository.create(domainUser)).thenReturn(expectedUser);
+
+		User returnedUser = userService.createCitizen(domainUser);
+
+		assertEquals(expectedUser, returnedUser);
+	}
+
+	private org.egov.user.web.contract.OtpValidateRequest buildOtpValidationRequest() {
+		// TODO Auto-generated method stub
+		RequestInfo requestInfo = RequestInfo.builder().action("validate").ts(new Date()).build();
+		Otp otp = Otp.builder().build();
+		org.egov.user.web.contract.OtpValidateRequest otpValidationRequest = org.egov.user.web.contract.OtpValidateRequest
+				.builder().requestInfo(requestInfo).otp(otp).build();
+		return otpValidationRequest;
+	}
+
+	@Test
 	public void test_should_set_pre_defined_expiry_on_creating_citizen() {
 		org.egov.user.domain.model.User domainUser = mock(User.class);
 		when((domainUser.getOtpValidationRequest())).thenReturn(getExpectedRequest());
@@ -212,8 +238,7 @@ public class UserServiceTest {
 		User domainUser = validDomainUser(false);
 		User user = User.builder().build();
 		final User expectedUser = User.builder().build();
-		when(userRepository.update(any(org.egov.user.domain.model.User.class)))
-				.thenReturn(expectedUser);
+		when(userRepository.update(any(org.egov.user.domain.model.User.class))).thenReturn(expectedUser);
 		when(userRepository.getUserById(any(Long.class), anyString())).thenReturn(user);
 		when(userRepository.isUserPresent(any(String.class), any(Long.class), any(String.class))).thenReturn(false);
 
@@ -222,7 +247,7 @@ public class UserServiceTest {
 		assertEquals(expectedUser, returnedUser);
 	}
 
-	@Test(expected= AtleastOneRoleCodeException.class)
+	@Test(expected = AtleastOneRoleCodeException.class)
 	public void test_should_validate_user_on_update() {
 		User domainUser = mock(User.class);
 		Role role = Role.builder().code("EMPLOYEE").build();
@@ -232,11 +257,10 @@ public class UserServiceTest {
 		User user = User.builder().build();
 		final User expectedUser = User.builder().build();
 		expectedUser.setRoles(roles);
-		when(userRepository.update(any(org.egov.user.domain.model.User.class)))
-				.thenReturn(expectedUser);
+		when(userRepository.update(any(org.egov.user.domain.model.User.class))).thenReturn(expectedUser);
 		when(userRepository.getUserById(any(Long.class), anyString())).thenReturn(user);
 		when(userRepository.isUserPresent(any(String.class), any(Long.class), any(String.class))).thenReturn(false);
-	    userService.updateWithoutOtpValidation(1L, domainUser);
+		userService.updateWithoutOtpValidation(1L, domainUser);
 		verify(domainUser).validateUserModification();
 	}
 
@@ -259,9 +283,7 @@ public class UserServiceTest {
 
 	@Test(expected = UserIdMandatoryException.class)
 	public void test_should_throw_exception_on_partial_update_when_id_is_not_present() {
-		final User user = User.builder()
-				.id(null)
-				.build();
+		final User user = User.builder().id(null).build();
 
 		userService.partialUpdate(user);
 	}
@@ -376,7 +398,7 @@ public class UserServiceTest {
 
 		verify(domainUser).updatePassword("newPassword");
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	@Test(expected = Exception.class)
 	public void test_notshould_update_existing_password_for_non_logged_in_user() throws Exception {
@@ -390,7 +412,7 @@ public class UserServiceTest {
 
 		verify(domainUser).updatePassword("newPassword");
 	}
-	
+
 	@Test
 	public void test_should_create_a_valid_citizen_WithOtp() throws Exception {
 		org.egov.user.domain.model.User domainUser = mock(User.class);
@@ -404,7 +426,7 @@ public class UserServiceTest {
 
 		assertEquals(expectedUser, returnedUser);
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	@Test(expected = Exception.class)
 	public void test_should_Notcreate_a_valid_citizen_WithOtp() throws Exception {
@@ -419,30 +441,24 @@ public class UserServiceTest {
 
 		assertEquals(expectedUser, returnedUser);
 	}
-	
-	private OtpValidateRequest getOtpValidationRequest(){
-		
+
+	private OtpValidateRequest getOtpValidationRequest() {
+
 		RequestInfo requestInfo = RequestInfo.builder().build();
-		
+
 		Otp otp = Otp.builder().identity("12121212").otp("23456").tenantId("default").build();
-		
+
 		return OtpValidateRequest.builder().requestInfo(requestInfo).otp(otp).build();
 
 	}
-	
+
 	@Test
 	public void test_should_persist_changes_on_updating_password_for_non_logged_in_user() {
 		final NonLoggedInUserUpdatePasswordRequest request = NonLoggedInUserUpdatePasswordRequest.builder()
-				.userName("mobileNumber")
-				.tenantId("tenant")
-				.otpReference("otpReference")
-				.newPassword("newPassword")
+				.userName("mobileNumber").tenantId("tenant").otpReference("otpReference").newPassword("newPassword")
 				.build();
-		final OtpValidationRequest expectedRequest = OtpValidationRequest.builder()
-				.otpReference("otpReference")
-				.mobileNumber("mobileNumber")
-				.tenantId("tenant")
-				.build();
+		final OtpValidationRequest expectedRequest = OtpValidationRequest.builder().otpReference("otpReference")
+				.mobileNumber("mobileNumber").tenantId("tenant").build();
 		when(otpRepository.isOtpValidationComplete(expectedRequest)).thenReturn(true);
 		final User domainUser = mock(User.class);
 		when(userRepository.findByUsername("mobileNumber", "tenant")).thenReturn(domainUser);
@@ -453,27 +469,14 @@ public class UserServiceTest {
 	}
 
 	private org.egov.user.domain.model.User validDomainUser(boolean otpValidationMandatory) {
-		return User.builder()
-				.username("supandi_rocks")
-				.name("Supandi")
-				.gender(Gender.MALE)
-				.type(UserType.CITIZEN)
-				.active(Boolean.TRUE)
-				.mobileNumber("9988776655")
-				.tenantId("tenantId")
-				.otpReference("12312")
-				.password("password")
-				.roles(Collections.singletonList(Role.builder().code("roleCode1").build()))
-				.accountLocked(false)
-				.otpValidationMandatory(otpValidationMandatory)
-				.build();
+		return User.builder().username("supandi_rocks").name("Supandi").gender(Gender.MALE).type(UserType.CITIZEN)
+				.active(Boolean.TRUE).mobileNumber("9988776655").tenantId("tenantId").otpReference("12312")
+				.password("password").roles(Collections.singletonList(Role.builder().code("roleCode1").build()))
+				.accountLocked(false).otpValidationMandatory(otpValidationMandatory).build();
 	}
 
 	private OtpValidationRequest getExpectedRequest() {
-		return OtpValidationRequest.builder()
-				.otpReference("12312")
-				.tenantId("tenantId")
-				.mobileNumber("9988776655")
+		return OtpValidationRequest.builder().otpReference("12312").tenantId("tenantId").mobileNumber("9988776655")
 				.build();
 	}
 

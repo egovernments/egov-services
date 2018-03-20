@@ -413,7 +413,7 @@ class RemissionAgreement extends React.Component {
             defaultDate: ""
         });
 
-        $('#remissionDate').on('changeDate', function (e) {
+        $('#remissionDate').on('change blur', function (e) {
             _this.setState({
                 agreement: {
                     ..._this.state.agreement,
@@ -432,7 +432,7 @@ class RemissionAgreement extends React.Component {
             defaultDate: ""
         });
 
-        $('#remissionFromDate').on('changeDate', function (e) {
+        $('#remissionFromDate').on('change blur', function (e) {
             _this.setState({
                 agreement: {
                     ..._this.state.agreement,
@@ -451,7 +451,7 @@ class RemissionAgreement extends React.Component {
             defaultDate: ""
         });
 
-        $('#remissionToDate').on('changeDate', function (e) {
+        $('#remissionToDate').on('change blur', function (e) {
             _this.setState({
                 agreement: {
                     ..._this.state.agreement,

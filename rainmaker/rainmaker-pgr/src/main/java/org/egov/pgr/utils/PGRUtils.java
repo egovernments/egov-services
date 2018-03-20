@@ -160,5 +160,72 @@ public class PGRUtils {
 		return searcherRequest;
 	}
 	
+	
+	
+/*................................V2 Utils.........................................................................*/
+	
+	/**
+	 * Prepares request and uri for service request search
+	 * 
+	 * @param uri
+	 * @param serviceReqSearchCriteria
+	 * @param requestInfo
+	 * @return SearcherRequest
+	 * @author vishal
+	 */
+	public SearcherRequest prepareSearchRequestSpecific(StringBuilder uri, ServiceReqSearchCriteria serviceReqSearchCriteria, 
+			RequestInfo requestInfo) {
+		uri.append(searcherHost);
+		String endPoint = searcherEndpoint.replace("{moduleName}", PGRConstants.V2_SEARCHER_PGR_MOD_NAME)
+				.replace("{searchName}", PGRConstants.V2_SEARCHER_SRSEARCH_SPECIFIC_DEF_NAME);
+		uri.append(endPoint);
+		SearcherRequest searcherRequest = SearcherRequest.builder().
+				requestInfo(requestInfo).searchCriteria(serviceReqSearchCriteria).build();
+		
+		return searcherRequest;
+	}
+	
+	/**
+	 * Prepares request and uri for service request search
+	 * 
+	 * @param uri
+	 * @param serviceReqSearchCriteria
+	 * @param requestInfo
+	 * @return SearcherRequest
+	 * @author vishal
+	 */
+	public SearcherRequest prepareSearchRequestGeneral(StringBuilder uri, ServiceReqSearchCriteria serviceReqSearchCriteria, 
+			RequestInfo requestInfo) {
+		uri.append(searcherHost);
+		String endPoint = searcherEndpoint.replace("{moduleName}", PGRConstants.V2_SEARCHER_PGR_MOD_NAME)
+				.replace("{searchName}", PGRConstants.V2_SEARCHER_SRSEARCH_GENERAL_DEF_NAME);
+		uri.append(endPoint);
+		SearcherRequest searcherRequest = SearcherRequest.builder().
+				requestInfo(requestInfo).searchCriteria(serviceReqSearchCriteria).build();
+		
+		return searcherRequest;
+	}
+	
+	/**
+	 * Prepares request and uri for service request search
+	 * 
+	 * @param uri
+	 * @param serviceReqSearchCriteria
+	 * @param requestInfo
+	 * @return SearcherRequest
+	 * @author vishal
+	 */
+	public SearcherRequest prepareSearchRequestAssignedTo(StringBuilder uri, ServiceReqSearchCriteria serviceReqSearchCriteria, 
+			RequestInfo requestInfo) {
+		uri.append(searcherHost);
+		String endPoint = searcherEndpoint.replace("{moduleName}", PGRConstants.V2_SEARCHER_PGR_MOD_NAME)
+				.replace("{searchName}", PGRConstants.V2_SEARCHER_SRSEARCH_ASSIGNEDTO_DEF_NAME);
+		uri.append(endPoint);
+		SearcherRequest searcherRequest = SearcherRequest.builder().
+				requestInfo(requestInfo).searchCriteria(serviceReqSearchCriteria).build();
+		
+		return searcherRequest;
+	}
+	
 
 }

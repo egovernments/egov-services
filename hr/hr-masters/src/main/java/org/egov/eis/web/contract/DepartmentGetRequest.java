@@ -38,38 +38,48 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.eis.repository;
+package org.egov.eis.web.contract;
 
-import org.egov.eis.model.Position;
-import org.egov.eis.repository.builder.VacantPositionsQueryBuilder;
-import org.egov.eis.repository.rowmapper.PositionRowMapper;
-import org.egov.eis.web.contract.VacantPositionsGetRequest;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.stereotype.Repository;
+import lombok.*;
 
-import java.util.ArrayList;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.util.List;
 
-@Repository
-public class VacantPositionsRepository {
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@ToString
+@EqualsAndHashCode
+@Builder
+public class DepartmentGetRequest {
 
-	@Autowired
-	private JdbcTemplate jdbcTemplate;
+	private List<Long> id;
 
-	@Autowired
-	private PositionRowMapper positionRowMapper;
+	@Size(min=8, max=64)
+	private String name;
 
-	@Autowired
-	private VacantPositionsQueryBuilder vacantPositionsQueryBuilder;
+	@Size(min=1, max=10)
+	private String code;
 
-	public List<Position> findForCriteria(VacantPositionsGetRequest vacantPositionsGetRequest) {
-		List<Object> preparedStatementValues = new ArrayList<Object>();
-		if(vacantPositionsGetRequest.getDestinationTenant()!=null && !vacantPositionsGetRequest.getDestinationTenant().equals(""))
-			vacantPositionsGetRequest.setTenantId(vacantPositionsGetRequest.getDestinationTenant());
+	private Boolean active;
 
-		String queryStr = vacantPositionsQueryBuilder.getQuery(vacantPositionsGetRequest, preparedStatementValues);
-		List<Position> positions = jdbcTemplate.query(queryStr, preparedStatementValues.toArray(), positionRowMapper);
-		return positions;
-	}
+	private String destinationTenant;
+
+	@NotNull
+	private String tenantId;
+
+    private String sortBy;
+
+	private String sortOrder;
+
+	@Min(1)
+	@Max(500)
+	private Short pageSize;
+
+	private Short pageNumber;
+
 }

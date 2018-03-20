@@ -61,4 +61,24 @@ public class OtpRequestTest {
 
 		assertEquals(OtpRequestType.PASSWORD_RESET, domainOtpRequest.getType());
 	}
+	
+	@Test
+	public void test_should_set_request_type_login_when_type_is_login() {
+		final Otp otp = new Otp("mobileNumber", "tenantId", "LOGIN");
+		final OtpRequest request = new OtpRequest(null, otp);
+
+		final org.egov.domain.model.OtpRequest domainOtpRequest = request.toDomain();
+
+		assertEquals(OtpRequestType.LOGIN, domainOtpRequest.getType());
+	}
+	
+	@Test
+	public void test_should_set_request_type_to_login_when_type_is_login() {
+		final Otp otp = new Otp("mobileNumber", "tenantId", "logiN");
+		final OtpRequest request = new OtpRequest(null, otp);
+
+		final org.egov.domain.model.OtpRequest domainOtpRequest = request.toDomain();
+
+		assertEquals(OtpRequestType.LOGIN, domainOtpRequest.getType());
+	}
 }

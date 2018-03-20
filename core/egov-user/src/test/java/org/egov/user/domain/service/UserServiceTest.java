@@ -18,6 +18,7 @@ import java.util.List;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.user.domain.exception.AtleastOneRoleCodeException;
 import org.egov.user.domain.exception.DuplicateUserNameException;
+import org.egov.user.domain.exception.InvalidUpdatePasswordRequestException;
 import org.egov.user.domain.exception.InvalidUserCreateException;
 import org.egov.user.domain.exception.OtpValidationPendingException;
 import org.egov.user.domain.exception.PasswordMismatchException;
@@ -64,11 +65,12 @@ public class UserServiceTest {
 	private final String USER_NAME = "userName";
 	private final String TENANT_ID = "tenantId";
 	private final boolean isCitizenLoginOtpBased = false;
+	private final boolean isEmployeeLoginOtpBased = false;
 
 	@Before
 	public void before() {
 		userService = new UserService(userRepository, otpRepository, passwordEncoder, DEFAULT_PASSWORD_EXPIRY_IN_DAYS,
-				isCitizenLoginOtpBased);
+				isCitizenLoginOtpBased,isEmployeeLoginOtpBased);
 	}
 
 	@Test
@@ -151,7 +153,7 @@ public class UserServiceTest {
 	@Test(expected = UserNameNotValidException.class)
 	public void test_should_not_create_citizenWithWrongUserName() {
 		userService = new UserService(userRepository, otpRepository, passwordEncoder, DEFAULT_PASSWORD_EXPIRY_IN_DAYS,
-				true);
+				true,false);
 		org.egov.user.domain.model.User domainUser = User.builder().username("TestUser").name("Test").active(true)
 				.tenantId("default").mobileNumber("123456789").type(UserType.CITIZEN).build();
 		userService.createCitizen(domainUser);
@@ -377,7 +379,7 @@ public class UserServiceTest {
 	public void test_should_validate_request_when_updating_password_for_non_logged_in_user() {
 		final NonLoggedInUserUpdatePasswordRequest request = mock(NonLoggedInUserUpdatePasswordRequest.class);
 		when(otpRepository.isOtpValidationComplete(any())).thenReturn(true);
-		final User domainUser = mock(User.class);
+		final User domainUser = User.builder().type(UserType.SYSTEM).build();
 		when(userRepository.findByUsername(anyString(), anyString())).thenReturn(domainUser);
 
 		userService.updatePasswordForNonLoggedInUser(request);
@@ -395,11 +397,13 @@ public class UserServiceTest {
 	}
 
 	@Test
-	public void test_should_update_existing_password_for_non_logged_in_user() {
+	public void test_should_update_existing_password_for_non_logged_in_user() throws Exception {
 		final NonLoggedInUserUpdatePasswordRequest request = mock(NonLoggedInUserUpdatePasswordRequest.class);
 		when(request.getNewPassword()).thenReturn("newPassword");
-		when(otpRepository.isOtpValidationComplete(any())).thenReturn(true);
+		when(otpRepository.validateOtp(any())).thenReturn(true);
 		final User domainUser = mock(User.class);
+		when(domainUser.getPassword()).thenReturn("newPassword");
+		when(domainUser.getType()).thenReturn(UserType.SYSTEM);
 		when(userRepository.findByUsername(anyString(), anyString())).thenReturn(domainUser);
 
 		userService.updatePasswordForNonLoggedInUser(request);
@@ -421,6 +425,35 @@ public class UserServiceTest {
 		verify(domainUser).updatePassword("newPassword");
 	}
 
+	@SuppressWarnings("unchecked")
+	@Test(expected = InvalidUpdatePasswordRequestException.class)
+	public void test_notshould_update_password_whenCitizenotpconfigured_istrue() throws Exception {
+		userService = new UserService(userRepository, otpRepository, passwordEncoder, DEFAULT_PASSWORD_EXPIRY_IN_DAYS,
+				true,false);
+		final NonLoggedInUserUpdatePasswordRequest request = mock(NonLoggedInUserUpdatePasswordRequest.class);
+		when(request.getNewPassword()).thenReturn("newPassword");
+		when(otpRepository.validateOtp(any())).thenThrow(Exception.class);
+		final User domainUser = mock(User.class);
+		when(domainUser.getType()).thenReturn(UserType.CITIZEN); 
+		when(userRepository.findByUsername(anyString(), anyString())).thenReturn(domainUser);
+		userService.updatePasswordForNonLoggedInUser(request);
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Test(expected = InvalidUpdatePasswordRequestException.class)
+	public void test_notshould_update_password_whenEmployeeotpconfigured_istrue() throws Exception {
+		userService = new UserService(userRepository, otpRepository, passwordEncoder, DEFAULT_PASSWORD_EXPIRY_IN_DAYS,
+				false,true);
+		final NonLoggedInUserUpdatePasswordRequest request = mock(NonLoggedInUserUpdatePasswordRequest.class);
+		when(request.getNewPassword()).thenReturn("newPassword");
+		when(otpRepository.validateOtp(any())).thenThrow(Exception.class);
+		final User domainUser = mock(User.class);
+		when(domainUser.getType()).thenReturn(UserType.EMPLOYEE); 
+		when(userRepository.findByUsername(anyString(), anyString())).thenReturn(domainUser);
+		userService.updatePasswordForNonLoggedInUser(request);
+	}
+	
+	
 	@Test
 	public void test_should_create_a_valid_citizen_WithOtp() throws Exception {
 		org.egov.user.domain.model.User domainUser = mock(User.class);
@@ -434,22 +467,7 @@ public class UserServiceTest {
 
 		assertEquals(expectedUser, returnedUser);
 	}
-
-	@SuppressWarnings("unchecked")
-	@Test(expected = Exception.class)
-	public void test_should_Notcreate_a_valid_citizen_WithOtp() throws Exception {
-		org.egov.user.domain.model.User domainUser = mock(User.class);
-		when((domainUser.getOtpValidationRequest())).thenReturn(getExpectedRequest());
-		// when(otpRepository.isOtpValidationComplete(getExpectedRequest())).thenReturn(true);
-		when(otpRepository.validateOtp(any())).thenThrow(Exception.class);
-		final User expectedUser = User.builder().build();
-		when(userRepository.create(domainUser)).thenReturn(expectedUser);
-
-		User returnedUser = userService.createCitizen(domainUser);
-
-		assertEquals(expectedUser, returnedUser);
-	}
-
+	
 	private OtpValidateRequest getOtpValidationRequest() {
 
 		RequestInfo requestInfo = RequestInfo.builder().build();
@@ -468,7 +486,7 @@ public class UserServiceTest {
 		final OtpValidationRequest expectedRequest = OtpValidationRequest.builder().otpReference("otpReference")
 				.mobileNumber("mobileNumber").tenantId("tenant").build();
 		when(otpRepository.isOtpValidationComplete(expectedRequest)).thenReturn(true);
-		final User domainUser = mock(User.class);
+		final User domainUser =User.builder().type(UserType.SYSTEM).build();
 		when(userRepository.findByUsername("mobileNumber", "tenant")).thenReturn(domainUser);
 
 		userService.updatePasswordForNonLoggedInUser(request);

@@ -9,6 +9,7 @@ import org.egov.common.contract.request.RequestInfo;
 import org.egov.user.domain.exception.AtleastOneRoleCodeException;
 import org.egov.user.domain.exception.DuplicateUserNameException;
 import org.egov.user.domain.exception.InvalidOtpException;
+import org.egov.user.domain.exception.InvalidUpdatePasswordRequestException;
 import org.egov.user.domain.exception.OtpValidationPendingException;
 import org.egov.user.domain.exception.PasswordMismatchException;
 import org.egov.user.domain.exception.UserIdMandatoryException;
@@ -20,6 +21,7 @@ import org.egov.user.domain.model.NonLoggedInUserUpdatePasswordRequest;
 import org.egov.user.domain.model.OtpValidationRequest;
 import org.egov.user.domain.model.User;
 import org.egov.user.domain.model.UserSearchCriteria;
+import org.egov.user.domain.model.enums.UserType;
 import org.egov.user.persistence.repository.OtpRepository;
 import org.egov.user.persistence.repository.UserRepository;
 import org.egov.user.web.contract.Otp;
@@ -37,16 +39,19 @@ public class UserService {
 	private OtpRepository otpRepository;
 	private PasswordEncoder passwordEncoder;
 	private int defaultPasswordExpiryInDays;
-	private boolean IsCitizenLoginOtpBased;
+	private boolean isCitizenLoginOtpBased;
+	private boolean isEmployeeLoginOtpBased;
 
 	public UserService(UserRepository userRepository, OtpRepository otpRepository, PasswordEncoder passwordEncoder,
 			@Value("${default.password.expiry.in.days}") int defaultPasswordExpiryInDays,
-			@Value("${citizen.login.password.otp.enabled}") boolean IsCitizenLoginOtpBased) {
+			@Value("${citizen.login.password.otp.enabled}") boolean isCitizenLoginOtpBased,
+			@Value("${employee.login.password.otp.enabled}") boolean isEmployeeLoginOtpBased) {
 		this.userRepository = userRepository;
 		this.otpRepository = otpRepository;
 		this.passwordEncoder = passwordEncoder;
 		this.defaultPasswordExpiryInDays = defaultPasswordExpiryInDays;
-		this.IsCitizenLoginOtpBased = IsCitizenLoginOtpBased;
+		this.isCitizenLoginOtpBased = isCitizenLoginOtpBased;
+		this.isEmployeeLoginOtpBased = isEmployeeLoginOtpBased;
 	}
 
 	public User getUserByUsername(final String userName, String tenantId) {
@@ -68,9 +73,9 @@ public class UserService {
 
 	public User createCitizen(User user) {
 		user.setUuid(UUID.randomUUID().toString());
-		if (IsCitizenLoginOtpBased && !StringUtils.isNumeric(user.getUsername()))
+		if (isCitizenLoginOtpBased && !StringUtils.isNumeric(user.getUsername()))
 			throw new UserNameNotValidException();
-		else if (IsCitizenLoginOtpBased)
+		else if (isCitizenLoginOtpBased)
 			user.setMobileNumber(user.getUsername());
 
 		user.setRoleToCitizen();
@@ -120,6 +125,11 @@ public class UserService {
 		updatePasswordRequest.validate();
 		final User user = userRepository.getUserById(updatePasswordRequest.getUserId(),
 				updatePasswordRequest.getTenantId());
+		if (user.getType().toString().equals(UserType.CITIZEN.toString()) && isCitizenLoginOtpBased)
+			throw new InvalidUpdatePasswordRequestException();
+		if (user.getType().toString().equals(UserType.EMPLOYEE.toString()) && isEmployeeLoginOtpBased)
+			throw new InvalidUpdatePasswordRequestException();
+
 		validateUserPresent(user);
 		validateExistingPassword(user, updatePasswordRequest.getExistingPassword());
 		user.updatePassword(updatePasswordRequest.getNewPassword());
@@ -131,6 +141,13 @@ public class UserService {
 		// validateOtp(request.getOtpValidationRequest());
 		Otp otp = Otp.builder().otp(request.getOtpReference()).identity(request.getUserName())
 				.tenantId(request.getTenantId()).build();
+		final User user = fetchUserByUserName(request.getUserName(), request.getTenantId());
+		validateUserPresent(user);
+		if (user.getType().toString().equals(UserType.CITIZEN.toString()) && isCitizenLoginOtpBased)
+			throw new InvalidUpdatePasswordRequestException();
+		if (user.getType().toString().equals(UserType.EMPLOYEE.toString()) && isEmployeeLoginOtpBased)
+			throw new InvalidUpdatePasswordRequestException();
+
 		try {
 			validateOtp(otp);
 		} catch (Exception e) {
@@ -138,8 +155,6 @@ public class UserService {
 			System.out.println("message " + errorMessage);
 			throw new InvalidOtpException(errorMessage);
 		}
-		final User user = fetchUserByUserName(request.getUserName(), request.getTenantId());
-		validateUserPresent(user);
 		user.updatePassword(request.getNewPassword());
 		userRepository.update(user);
 	}

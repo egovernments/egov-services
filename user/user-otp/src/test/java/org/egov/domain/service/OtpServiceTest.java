@@ -44,6 +44,16 @@ public class OtpServiceTest {
 
         verify(otpRequest).validate();
     }
+    
+    @Test
+    public void test_should_validate_otp_request_for_user_login() {
+        final OtpRequest otpRequest = mock(OtpRequest.class);
+        when(otpRequest.isLoginRequestType()).thenReturn(true);
+
+        otpService.sendOtp(otpRequest);
+
+        verify(otpRequest).validate();
+    }
 
 	@Test
 	public void test_should_validate_otp_request_for_password_reset() {

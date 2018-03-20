@@ -30,7 +30,7 @@ public class OtpService {
 
     public void sendOtp(OtpRequest otpRequest) {
         otpRequest.validate();
-        if(otpRequest.isRegistrationRequestType()) {
+        if(otpRequest.isRegistrationRequestType() || otpRequest.isLoginRequestType()) {
 			sendOtpForUserRegistration(otpRequest);
 		} else {
         	sendOtpForPasswordReset(otpRequest);

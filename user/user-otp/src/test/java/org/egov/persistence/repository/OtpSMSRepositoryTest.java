@@ -46,7 +46,7 @@ public class OtpSMSRepositoryTest {
 
         verify(kafkaTemplate).send(eq(SMS_TOPIC), argThat(new SmsRequestMatcher(expectedSmsRequest)));
     }
-
+    
 	@Test
 	public void test_should_send_password_reset_sms_request_to_topic() {
 		final String mobileNumber = "mobileNumber";

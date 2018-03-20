@@ -28,6 +28,10 @@ public class OtpRequest {
 	public boolean isRegistrationRequestType() {
     	return OtpRequestType.REGISTER.equals(getType());
 	}
+	
+	public boolean isLoginRequestType() {
+    	return OtpRequestType.LOGIN.equals(getType());
+	}
 
 	public boolean isInvalidType() {
     	return isEmpty(type);

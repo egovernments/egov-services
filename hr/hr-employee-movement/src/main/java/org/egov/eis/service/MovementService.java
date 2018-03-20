@@ -52,14 +52,7 @@ import org.egov.eis.model.enums.TransferType;
 import org.egov.eis.model.enums.TypeOfMovement;
 import org.egov.eis.repository.MovementRepository;
 import org.egov.eis.util.ApplicationConstants;
-import org.egov.eis.web.contract.Assignment;
-import org.egov.eis.web.contract.EmployeeInfo;
-import org.egov.eis.web.contract.MovementRequest;
-import org.egov.eis.web.contract.MovementResponse;
-import org.egov.eis.web.contract.MovementSearchRequest;
-import org.egov.eis.web.contract.MovementUploadResponse;
-import org.egov.eis.web.contract.RequestInfo;
-import org.egov.eis.web.contract.ResponseInfo;
+import org.egov.eis.web.contract.*;
 import org.egov.eis.web.contract.factory.ResponseInfoFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -332,10 +325,13 @@ public class MovementService {
 	private List<Movement> validateUpdate(final MovementRequest movementRequest) {
 		for (final Movement movement : movementRequest.getMovement()) {
 			String errorMsg = "";
-			if (movement.getId() != null && movement.getTypeOfMovement().equals(TypeOfMovement.PROMOTION)
+            String message = "";
+
+            if (movement.getId() != null && ( movement.getTypeOfMovement().equals(TypeOfMovement.PROMOTION) ||
+                    (movement.getTypeOfMovement().equals(TypeOfMovement.TRANSFER) &&
+                            movement.getTransferType().equals(TransferType.TRANSFER_WITHIN_DEPARTMENT_OR_CORPORATION_OR_ULB)))
 					&& "Approve".equalsIgnoreCase(movement.getWorkflowDetails().getAction())) {
 				final EmployeeInfo employee = employeeService.getEmployee(movement, movementRequest.getRequestInfo());
-				String message = "";
 				if (movement.getEffectiveFrom().before(new Date())) {
 					message = applicationConstants
 							.getErrorMessage(ApplicationConstants.ERR_MOVEMENT_EFFECTIVEFROM_VALIDATE) + ", ";
@@ -366,12 +362,20 @@ public class MovementService {
 				}
 
 				setErrorMessage(movement, message);
-
-				movement.setErrorMsg(errorMsg.replace(", ", ","));
+				//movement.setErrorMsg(errorMsg.replace(", ", ","));
 			}
+			else if  (movement.getId() != null && movement.getTypeOfMovement().equals(TypeOfMovement.TRANSFER) &&
+                            movement.getTransferType().equals(TransferType.TRANSFER_OUTSIDE_CORPORATION_OR_ULB)
+                    && "Approve".equalsIgnoreCase(movement.getWorkflowDetails().getAction())){
+                final Employee employee = employeeService.getEmployeeById(movementRequest);
+                EmployeeInfo employeeInfo = employeeService.getEmployee(null, employee.getCode(), movementRequest.getMovement().get(0).getTenantId(), movementRequest.getRequestInfo());
+                if(employeeInfo!=null  && !employeeInfo.equals(""))
+                    message = message + ApplicationConstants.ERR_MOVEMENT_EMPLOYEE_EXISTS + ", ";
 
-		}
-
+                setErrorMessage(movement, message);
+            }
+            movement.setErrorMsg(errorMsg.replace(", ", ","));
+        }
 		return movementRequest.getMovement();
 	}
 

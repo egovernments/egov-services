@@ -213,7 +213,7 @@ public class MovementRepository {
 	}
 
 	private void promoteEmployee(final MovementRequest movementRequest) throws ParseException {
-		final EmployeeInfo employeeInfo = employeeService.getEmployee(movementRequest);
+		final EmployeeInfo employeeInfo = employeeService.getEmployee(movementRequest.getMovement().get(0).getEmployeeId(), null, movementRequest.getMovement().get(0).getTenantId(),movementRequest.getRequestInfo());
 		final Movement movement = movementRequest.getMovement().get(0);
 		final Date effectiveFromDate = movement.getEffectiveFrom();
 		LOGGER.debug("effectiveFromDate:" + effectiveFromDate);

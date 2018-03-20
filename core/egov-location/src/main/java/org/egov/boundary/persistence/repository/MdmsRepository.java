@@ -39,21 +39,27 @@
  */
 package org.egov.boundary.persistence.repository;
 
-import org.egov.boundary.web.contract.MasterDetails;
-import org.egov.boundary.web.contract.MdmsCriteria;
-import org.egov.boundary.web.contract.MdmsRequest;
-import org.egov.boundary.web.contract.MdmsResponse;
-import org.egov.boundary.web.contract.ModuleDetails;
+import net.minidev.json.JSONArray;
+import org.egov.boundary.util.BoundaryConstants;
+import org.egov.boundary.web.contract.*;
 import org.egov.common.contract.request.RequestInfo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Repository;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
-import net.minidev.json.JSONArray;
+import java.util.Optional;
 
-@Service
+/**
+ * Fetches data from MDMS service
+ */
+@Repository
 public class MdmsRepository {
+
+    private static final Logger LOG = LoggerFactory.getLogger(MdmsRepository.class);
 
 	private final RestTemplate restTemplate;
 
@@ -79,12 +85,12 @@ public class MdmsRepository {
 		
 		MasterDetails[] masterDetails;
 		ModuleDetails[] moduleDetails;
-		MdmsRequest request = null;
+        MdmsRequest request;
 		MdmsResponse response = null;
 		masterDetails = new MasterDetails[1];
 		moduleDetails = new ModuleDetails[1];
 		String filter = null;
-		if(hierarchyTypeCode!=null && hierarchyTypeCode!=""){
+        if (hierarchyTypeCode != null && !hierarchyTypeCode.isEmpty()) {
 			filter = "[?(@." + "hierarchyType.code" + " in [" + hierarchyTypeCode.toUpperCase() + "])]";
 		}
 		masterDetails[0] = MasterDetails.builder().name(masterName)
@@ -110,4 +116,45 @@ public class MdmsRepository {
 
 		}
 	}
+
+    /**
+     * Retrieve data from MDMS service
+     *
+     * @param tenantId    State or District, formatted tenant id
+     * @param requestInfo Request Info object detailing the request
+     * @return Optional JSONArray if MDMS service provides data, if not empty.
+     * @throws RestClientException when there is an issue with MDMS service call
+     */
+    public Optional<JSONArray> getGeographicalDataByCriteria(String tenantId, String filter, RequestInfo requestInfo)
+            throws
+            RestClientException {
+        final String moduleName = BoundaryConstants.GEO_MODULE_NAME;
+        final String masterName = BoundaryConstants.GEO_MASTER_NAME;
+
+        MasterDetails[] masterDetails = {MasterDetails.builder().name(masterName)
+                .filter(filter).build()};
+        ModuleDetails[] moduleDetails = {ModuleDetails.builder().moduleName(moduleName).masterDetails
+                (masterDetails)
+                .build()};
+
+        MdmsRequest request = MdmsRequest.builder()
+                .mdmsCriteria(MdmsCriteria.builder().moduleDetails(moduleDetails).tenantId(tenantId).build())
+                .requestInfo(requestInfo).build();
+
+        MdmsResponse response = restTemplate.postForObject(mdmsBySearchCriteriaUrl, request, MdmsResponse.class);
+        if (response == null || response.getMdmsRes() == null || !response.getMdmsRes().containsKey(moduleName)
+                || response.getMdmsRes().get(moduleName) == null
+                || !response.getMdmsRes().get(moduleName).containsKey(masterName)
+                || response.getMdmsRes().get(moduleName).get(masterName) == null) {
+
+            LOG.info("No data received from MDMS service for requested module, master, filter combination");
+            return Optional.empty();
+
+        } else {
+
+            LOG.info("Received requested data from MDMS Service");
+            return Optional.of(response.getMdmsRes().get(moduleName).get(masterName));
+
+        }
+    }
 }

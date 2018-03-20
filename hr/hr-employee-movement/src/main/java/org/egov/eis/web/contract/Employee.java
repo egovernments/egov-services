@@ -99,6 +99,8 @@ public class Employee {
 
     private Long recruitmentQuota;
 
+    private Boolean transferredEmployee = false;
+
     @Max(100)
     private Short retirementAge;
 
@@ -152,6 +154,8 @@ public class Employee {
     private String bankAccount;
 
     private Long group;
+
+    private String dob;
 
     @Size(max = 200)
     private String placeOfBirth;

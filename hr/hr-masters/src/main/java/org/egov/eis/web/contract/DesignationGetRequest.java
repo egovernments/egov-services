@@ -78,6 +78,8 @@ public class DesignationGetRequest {
 
     private String sortOrder;
 
+    private String destinationTenant;
+
     @NotNull
     private String tenantId;
 

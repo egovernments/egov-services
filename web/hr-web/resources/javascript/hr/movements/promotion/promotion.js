@@ -15,7 +15,7 @@ class EmployeePromotion extends React.Component {
             id: ""
           },
           effectiveFrom: "",
-          enquiryPassedDate: "",
+          //enquiryPassedDate: "",
           transferedLocation: "",
           departmentAssigned: "",
           designationAssigned: "",
@@ -266,13 +266,6 @@ class EmployeePromotion extends React.Component {
       getDropdown("transferType", function(res) {
         checkCountAndCall("transferList", res);
       });
-
-
-      $('#enquiryPassedDate').datepicker({
-        format: 'dd/mm/yyyy',
-        autoclose: true,
-        defaultDate: ""
-      });
       
       $('#effectiveFrom').datepicker({
         format: 'dd/mm/yyyy',
@@ -281,15 +274,14 @@ class EmployeePromotion extends React.Component {
         defaultDate: ""
       });
 
-      $('#enquiryPassedDate').val("");
+     
       $('#effectiveFrom').val("");
-      $('#enquiryPassedDate,#effectiveFrom ').on('changeDate', function(e) {
+      $('#effectiveFrom ').on('changeDate', function(e) {
 
 
         _this.setState({
           movement: {
             ..._this.state.movement,
-            "enquiryPassedDate": $("#enquiryPassedDate").val(),
             "effectiveFrom": $("#effectiveFrom").val()
           }
         });
@@ -559,7 +551,7 @@ class EmployeePromotion extends React.Component {
     let {handleChange,addOrUpdate}=this;
     let _this = this;
 
-    let {employeeId, typeOfMovement, currentAssignment, transferType, promotionBasis, remarks, reason, effectiveFrom, enquiryPassedDate, transferedLocation,
+    let {employeeId, typeOfMovement, currentAssignment, transferType, promotionBasis, remarks, reason, effectiveFrom, transferedLocation,
           departmentAssigned, designationAssigned, positionAssigned, fundAssigned, functionAssigned, employeeAcceptance, workflowDetails, tenantId} = this.state.movement
     let {isSearchClicked,employee,assignments_designation,assignments_department,assignments_position,accepted}=this.state;
 

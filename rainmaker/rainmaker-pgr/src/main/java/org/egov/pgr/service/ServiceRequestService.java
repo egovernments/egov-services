@@ -294,5 +294,35 @@ public class ServiceRequestService {
 		}
 	}
 */
+	
+	/**
+	 * Method to return history of service request received from the repo to the controller in
+	 * the reqd format
+	 * 
+	 * @param requestInfo
+	 * @param serviceReqSearchCriteria
+	 * @return ServiceReqResponse
+	 * @author vishal
+	 */
+	public ServiceReqResponse getHistory(RequestInfo requestInfo,
+			ServiceReqSearchCriteria serviceReqSearchCriteria) {
+		ObjectMapper mapper = new ObjectMapper();
+		mapper.configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true);
+		mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
+        //mapper.configure(SerializationFeature.WRITE_NULL_MAP_VALUES, false);
+		ServiceReqResponse serviceReqResponse = null;
+		StringBuilder uri = new StringBuilder();
+		SearcherRequest searcherRequest = pGRUtils.prepareHistoryRequest(uri, serviceReqSearchCriteria, requestInfo);
+		Object response = serviceRequestRepository.fetchResult(uri, searcherRequest);
+		if (null == response) {
+			return new ServiceReqResponse(factory.createResponseInfoFromRequestInfo(requestInfo, false),
+					new ArrayList<ServiceReq>());
+		}
+		log.info("Searcher response: "+response.toString());
+		
+		serviceReqResponse = mapper.convertValue(response, ServiceReqResponse.class);
+		return serviceReqResponse;
+	}
 
 }

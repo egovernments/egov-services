@@ -49,8 +49,8 @@ import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ResponseInfo;
 import org.egov.eis.model.enums.BloodGroup;
 import org.egov.eis.model.enums.CourtOrderType;
-import org.egov.eis.model.enums.DisciplianryAuthority;
 import org.egov.eis.model.enums.DisciplinaryActions;
+import org.egov.eis.model.enums.DisciplinaryAuthority;
 import org.egov.eis.model.enums.MaritalStatus;
 import org.egov.eis.web.contract.BloodGroupResponse;
 import org.egov.eis.web.contract.CourtOrderTypeResponse;
@@ -157,7 +157,7 @@ public class EnumsController {
             return errorResponseEntity;
 
         // Call service
-        final List<String> disciplinaryActions = DisciplinaryActions.getAllObjectValues();
+        final List<Map<String, String>> disciplinaryActions = DisciplinaryActions.getDisciplinaryActions();
         LOGGER.debug("disciplinaryActions : " + disciplinaryActions);
 
         return getSuccessResponseForDisciplinaryActions(disciplinaryActions, requestInfo);
@@ -184,10 +184,10 @@ public class EnumsController {
             return errorResponseEntity;
 
         // Call service
-        final List<String> courtOrderType = CourtOrderType.getAllObjectValues();
-        LOGGER.debug("courtOrderType : " + courtOrderType);
+        final List<Map<String, String>> courtOrderTypes = CourtOrderType.getCourtOrderTypes();
+        LOGGER.debug("courtOrderTypes : " + courtOrderTypes);
 
-        return getSuccessResponseForCourtOrderType(courtOrderType, requestInfo);
+        return getSuccessResponseForCourtOrderType(courtOrderTypes, requestInfo);
     }
 
     /**
@@ -235,7 +235,7 @@ public class EnumsController {
      * @return ResponseEntity<?>
      */
 
-    private ResponseEntity<?> getSuccessResponseForDisciplinaryActions(final List<String> disciplinaryActions,
+    private ResponseEntity<?> getSuccessResponseForDisciplinaryActions(final List<Map<String, String>> disciplinaryActions,
             final RequestInfo requestInfo) {
         final DisciplinaryActionsResponse disciplinaryActionsResponse = new DisciplinaryActionsResponse();
         disciplinaryActionsResponse.setDisciplinaryActions(disciplinaryActions);
@@ -254,7 +254,7 @@ public class EnumsController {
      * @return ResponseEntity<?>
      */
 
-    private ResponseEntity<?> getSuccessResponseForCourtOrderType(final List<String> courtOrderTypes,
+    private ResponseEntity<?> getSuccessResponseForCourtOrderType(final List<Map<String, String>> courtOrderTypes,
             final RequestInfo requestInfo) {
         final CourtOrderTypeResponse courtOrderRes = new CourtOrderTypeResponse();
         courtOrderRes.setCourtOrderType(courtOrderTypes);
@@ -264,7 +264,7 @@ public class EnumsController {
         return new ResponseEntity<CourtOrderTypeResponse>(courtOrderRes, HttpStatus.OK);
     }
 
-    @PostMapping("/disciplianryauthority/_search")
+    @PostMapping("/disciplinaryauthority/_search")
     @ResponseBody
     public ResponseEntity<?> search(@ModelAttribute @Valid final DisciplinaryAuthorityResponse disciplinaryAuthorityResponse,
             final BindingResult modelAttributeBindingResult, @RequestBody @Valid final RequestInfoWrapper requestInfoWrapper,
@@ -277,23 +277,23 @@ public class EnumsController {
         if (errorResponseEntity != null)
             return errorResponseEntity;
         // Call service
-        List<Map<String, String>> disciplinaryAuthorities = DisciplianryAuthority.getDisciplianryAuthority();
+        final List<Map<String, String>> disciplinaryAuthorities = DisciplinaryAuthority.getDisciplinaryAuthority();
 
-        return getSuccessResponse(disciplinaryAuthorities, requestInfo);
+        return getDisciplianryAuthorityResponse(disciplinaryAuthorities, requestInfo);
     }
 
     /**
-     * Populate MaritalStatusResponse object & returns ResponseEntity of type MaritalStatusResponse containing ResponseInfo & List
-     * of MaritalStatus
+     * Populate DisciplinaryAuthorityResponse object & returns ResponseEntity of type DisciplinaryAuthorityResponse containing
+     * ResponseInfo & List of DisciplinaryAuthority
      *
-     * @param transferTypes
+     * @param DisciplinaryAuthorities
      * @param requestInfo
      * @return ResponseEntity<?>
      */
-    private ResponseEntity<?> getSuccessResponse(final List<Map<String, String>> disciplinaryAuthorities,
+    private ResponseEntity<?> getDisciplianryAuthorityResponse(final List<Map<String, String>> disciplinaryAuthorities,
             final RequestInfo requestInfo) {
         final DisciplinaryAuthorityResponse disciplinaryAuthoritiesRes = new DisciplinaryAuthorityResponse();
-        disciplinaryAuthoritiesRes.setDisciplinaryAuthorities(disciplinaryAuthorities);
+        disciplinaryAuthoritiesRes.setDisciplinaryAuthority(disciplinaryAuthorities);
         final ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
         responseInfo.setStatus(HttpStatus.OK.toString());
         disciplinaryAuthoritiesRes.setResponseInfo(responseInfo);

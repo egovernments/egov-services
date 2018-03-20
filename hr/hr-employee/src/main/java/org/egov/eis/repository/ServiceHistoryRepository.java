@@ -60,6 +60,8 @@ import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 
 @Component
 public class ServiceHistoryRepository {
@@ -67,16 +69,16 @@ public class ServiceHistoryRepository {
 	public static final Logger LOGGER = LoggerFactory.getLogger(ServiceHistoryRepository.class);
 
 	public static final String INSERT_SERVICE_HISTORY_QUERY = "INSERT INTO egeis_serviceHistory"
-			+ " (id, employeeId, serviceInfo, serviceFrom, remarks, orderNo,"
-			+ " createdBy, createdDate, lastModifiedBy, lastModifiedDate, tenantId)"
-			+ " VALUES (?,?,?,?,?,?,?,?,?,?,?)";
+			+ " (id, employeeId, serviceInfo, serviceFrom, serviceTo, remarks, orderNo, city, department, designation, positionId,"
+			+ " assignmentId, isAssignmentBased, createdBy, createdDate, lastModifiedBy, lastModifiedDate, tenantId)"
+			+ " VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 
 	public static final String UPDATE_SERVICE_HISTORY_QUERY = "UPDATE egeis_serviceHistory"
-			+ " SET (serviceInfo, serviceFrom, remarks, orderNo, lastModifiedBy, lastModifiedDate)"
-			+ " = (?,?,?,?,?,?) where id = ? and tenantId=?";
+			+ " SET (serviceInfo, serviceFrom, serviceTo, remarks, orderNo, city, department, designation, positionId, assignmentId, isAssignmentBased, lastModifiedBy, lastModifiedDate)"
+			+ " = (?,?,?,?,?,?,?,?,?,?,?,?,?) where id = ? and tenantId=?";
 
 	public static final String SELECT_BY_EMPLOYEEID_QUERY = "SELECT"
-			+ " id, serviceinfo, servicefrom, remarks, orderno, createdby, createddate,"
+			+ " id, serviceinfo, servicefrom, serviceto, remarks, orderno, city, department, designation, positionId, assignmentId, isAssignmentBased, createdby, createddate,"
 			+ " lastmodifiedby, lastmodifieddate, tenantid" + " FROM egeis_servicehistory"
 			+ " WHERE employeeId = ? AND tenantId = ? ";
 
@@ -114,13 +116,20 @@ public class ServiceHistoryRepository {
 				ps.setLong(2, employeeRequest.getEmployee().getId());
 				ps.setString(3, serviceHistory.getServiceInfo());
 				ps.setDate(4, new Date(serviceHistory.getServiceFrom().getTime()));
-				ps.setString(5, serviceHistory.getRemarks());
-				ps.setString(6, serviceHistory.getOrderNo());
-				ps.setLong(7, employeeRequest.getRequestInfo().getUserInfo().getId());
-				ps.setTimestamp(8, new Timestamp(new java.util.Date().getTime()));
-				ps.setLong(9, employeeRequest.getRequestInfo().getUserInfo().getId());
-				ps.setTimestamp(10, new Timestamp(new java.util.Date().getTime()));
-				ps.setString(11, serviceHistory.getTenantId());
+				ps.setDate(5, new Date(serviceHistory.getServiceTo().getTime()));
+				ps.setString(6, serviceHistory.getRemarks());
+				ps.setString(7, serviceHistory.getOrderNo());
+				ps.setString(8, serviceHistory.getCity());
+				ps.setString(9, serviceHistory.getDepartment());
+				ps.setString(10, serviceHistory.getDesignation());
+				ps.setLong(11,serviceHistory.getPosition() == null ? 0L : serviceHistory.getPosition());
+				ps.setLong(12,serviceHistory.getAssignmentId() == null ? 0L : serviceHistory.getAssignmentId());
+				ps.setBoolean(13, serviceHistory.getIsAssignmentBased());
+				ps.setLong(14, employeeRequest.getRequestInfo().getUserInfo().getId());
+				ps.setTimestamp(15, new Timestamp(new java.util.Date().getTime()));
+				ps.setLong(16, employeeRequest.getRequestInfo().getUserInfo().getId());
+				ps.setTimestamp(17, new Timestamp(new java.util.Date().getTime()));
+				ps.setString(18, serviceHistory.getTenantId());
 
 				if (serviceHistory.getDocuments() != null && !serviceHistory.getDocuments().isEmpty()) {
 					documentsRepository.save(employeeRequest.getEmployee().getId(), serviceHistory.getDocuments(),
@@ -137,9 +146,10 @@ public class ServiceHistoryRepository {
 	}
 
 	public void update(ServiceHistory service) {
-		Object[] obj = new Object[] { service.getServiceInfo(), service.getServiceFrom(), service.getRemarks(),
-				service.getOrderNo(), service.getLastModifiedBy(), service.getLastModifiedDate(), service.getId(),
-				service.getTenantId() };
+		Object[] obj = new Object[] { service.getServiceInfo(), service.getServiceFrom(), service.getServiceTo(), service.getRemarks(),
+				service.getOrderNo(), service.getCity(), service.getDepartment(), service.getDesignation(), service.getPosition(),
+				service.getAssignmentId(), service.getIsAssignmentBased(),
+				service.getLastModifiedBy(), service.getLastModifiedDate(), service.getId(), service.getTenantId() };
 
 		jdbcTemplate.update(UPDATE_SERVICE_HISTORY_QUERY, obj);
 
@@ -148,9 +158,10 @@ public class ServiceHistoryRepository {
 	public void insert(ServiceHistory service, Long empId) {
 		Object[] obj = new Object[] {
 
-				service.getId(), empId, service.getServiceInfo(), service.getServiceFrom(), service.getRemarks(),
-				service.getOrderNo(), service.getCreatedBy(), service.getCreatedDate(), service.getLastModifiedBy(),
-				service.getLastModifiedDate(), service.getTenantId() };
+				service.getId(), empId, service.getServiceInfo(), service.getServiceFrom(), service.getServiceTo(), service.getRemarks(),
+				service.getOrderNo(), service.getCity(), service.getDepartment(), service.getDesignation(), service.getPosition(),
+				service.getAssignmentId(), service.getIsAssignmentBased(),service.getCreatedBy(), service.getCreatedDate(),
+				service.getLastModifiedBy(), service.getLastModifiedDate(), service.getTenantId() };
 
 		jdbcTemplate.update(INSERT_SERVICE_HISTORY_QUERY, obj);
 	}

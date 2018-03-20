@@ -114,13 +114,13 @@ public class AssetCategoryQueryBuilderTest {
         final AssetCategoryCriteria assetCategorySearchWithTenantId = AssetCategoryCriteria.builder()
                 .tenantId("ap.kurnool").name("Land").build();
         final String queryWithTenantId = "SELECT * FROM egasset_assetcategory assetcategory  WHERE assetcategory.tenantId = ? AND "
-                + "assetcategory.name ilike ? ORDER BY assetcategory.name LIMIT ? OFFSET ?";
+                + "assetcategory.name = ? ORDER BY assetcategory.name LIMIT ? OFFSET ?";
         assertEquals(queryWithTenantId,
                 assetCategoryQueryBuilder.getQuery(assetCategorySearchWithTenantId, preparedStatementValues));
 
         final List<Object> expectedPreparedStatementValues = new ArrayList<>();
         expectedPreparedStatementValues.add("ap.kurnool");
-        expectedPreparedStatementValues.add("%Land%");
+        expectedPreparedStatementValues.add("Land");
         expectedPreparedStatementValues.add(500);
         expectedPreparedStatementValues.add(Long.valueOf(0));
         assertTrue(preparedStatementValues.equals(expectedPreparedStatementValues));
@@ -175,7 +175,7 @@ public class AssetCategoryQueryBuilderTest {
                 .tenantId("ap.kurnool").id(Long.valueOf(20)).name("Land").code("560042")
                 .assetCategoryType(assetCategorytype).build();
         final String queryWithTenantId = "SELECT * FROM egasset_assetcategory assetcategory  WHERE assetcategory.tenantId = ? AND "
-                + "assetcategory.id = ? AND assetcategory.name ilike ? AND assetcategory.code = ? AND assetcategory.assetcategorytype IN "
+                + "assetcategory.id = ? AND assetcategory.name = ? AND assetcategory.code = ? AND assetcategory.assetcategorytype IN "
                 + "('LAND') ORDER BY assetcategory.name LIMIT ? OFFSET ?";
         assertEquals(queryWithTenantId,
                 assetCategoryQueryBuilder.getQuery(assetCategorySearchWithTenantId, preparedStatementValues));
@@ -183,7 +183,7 @@ public class AssetCategoryQueryBuilderTest {
         final List<Object> expectedPreparedStatementValues = new ArrayList<>();
         expectedPreparedStatementValues.add("ap.kurnool");
         expectedPreparedStatementValues.add(20L);
-        expectedPreparedStatementValues.add("%Land%");
+        expectedPreparedStatementValues.add("Land");
         expectedPreparedStatementValues.add("560042");
         expectedPreparedStatementValues.add(500);
         expectedPreparedStatementValues.add(Long.valueOf(0));

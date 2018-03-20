@@ -84,8 +84,6 @@ public class ServiceRequestController {
 		
 		pgrRequestValidator.validateSearch(serviceReqSearchCriteria, requestInfoWrapper.getRequestInfo());
 		long startTime = new Date().getTime();
-		log.debug("RequestInfo: ",requestInfoWrapper.toString());
-		log.debug("ServiceReqSearchCriteria: ",serviceReqSearchCriteria.toString());
 		ServiceReqResponse serviceReqResponse = service.getServiceRequests(requestInfoWrapper.getRequestInfo(), serviceReqSearchCriteria);
 		long endTime = new Date().getTime();
 		log.debug(" the time taken for search in ms: {}",endTime-startTime);
@@ -103,16 +101,36 @@ public class ServiceRequestController {
 	@PostMapping("_count")
 	@ResponseBody
 	private ResponseEntity<?> count(@RequestBody @Valid RequestInfoWrapper requestInfoWrapper, 
-			@ModelAttribute ServiceReqSearchCriteria serviceReqSearchCriteria) {
+			@ModelAttribute @Valid ServiceReqSearchCriteria serviceReqSearchCriteria) {
 		
 		pgrRequestValidator.validateSearch(serviceReqSearchCriteria, requestInfoWrapper.getRequestInfo());
 		long startTime = new Date().getTime();
-		log.debug("RequestInfo: ",requestInfoWrapper.toString());
-		log.debug("CountCriteria: ",serviceReqSearchCriteria.toString());
 		Object countResponse = service.getCount(requestInfoWrapper.getRequestInfo(), serviceReqSearchCriteria);
 		long endTime = new Date().getTime();
 		log.debug(" the time taken for count in ms: {}",endTime-startTime);
 		return new ResponseEntity<>(countResponse, HttpStatus.OK);	
+	}
+	
+
+	/**
+	 * Controller endpoint to fetch history data for a given service request
+	 * 
+	 * @param requestInfoWrapper
+	 * @param serviceReqSearchCriteria
+	 * @return ResponseEntity<?>
+	 * @author vishal
+	 */
+	@PostMapping("_history")
+	@ResponseBody
+	private ResponseEntity<?> history(@RequestBody @Valid RequestInfoWrapper requestInfoWrapper, 
+			@ModelAttribute @Valid ServiceReqSearchCriteria serviceReqSearchCriteria) {
+		
+		pgrRequestValidator.validateHistoryRequest(serviceReqSearchCriteria, requestInfoWrapper.getRequestInfo());
+		long startTime = new Date().getTime();
+		ServiceReqResponse serviceReqResponse = service.getHistory(requestInfoWrapper.getRequestInfo(), serviceReqSearchCriteria);
+		long endTime = new Date().getTime();
+		log.debug(" the time taken for search in ms: {}",endTime-startTime);
+		return new ResponseEntity<>(serviceReqResponse, HttpStatus.OK);	
 	}
 
 

@@ -44,6 +44,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.extern.slf4j.Slf4j;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ResponseInfo;
+import org.egov.eis.model.Assignment;
 import org.egov.eis.model.Employee;
 import org.egov.eis.model.EmployeeInfo;
 import org.egov.eis.model.Position;
@@ -57,10 +58,7 @@ import org.egov.eis.web.contract.factory.ResponseEntityFactory;
 import org.egov.eis.web.contract.factory.ResponseInfoFactory;
 import org.egov.eis.web.errorhandler.ErrorHandler;
 import org.egov.eis.web.errorhandler.InvalidDataException;
-import org.egov.eis.web.validator.DataIntegrityValidatorForCreateEmployee;
-import org.egov.eis.web.validator.DataIntegrityValidatorForUpdateEmployee;
-import org.egov.eis.web.validator.EmployeeAssignmentValidator;
-import org.egov.eis.web.validator.RequestValidator;
+import org.egov.eis.web.validator.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -72,6 +70,7 @@ import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import static org.springframework.util.ObjectUtils.isEmpty;
 
@@ -97,6 +96,9 @@ public class EmployeeController {
 
     @Autowired
     private EmployeeAssignmentValidator employeeAssignmentValidator;
+
+    @Autowired
+    private ServiceHistoryValidator serviceHistoryValidator;
 
     @Autowired
     private DataIntegrityValidatorForCreateEmployee dataIntegrityValidatorForCreate;
@@ -179,6 +181,7 @@ public class EmployeeController {
             return errorResponseEntity;
 
         // Call service
+
         List<EmployeeInfo> employeesList;
         try {
             employeesList = employeeService.getEmployeeWithoutAssignmentInfo(employeeCriteria, requestInfo);
@@ -276,6 +279,9 @@ public class EmployeeController {
 
         Employee employee = null;
         try {
+            if(!employeeRequest.getEmployee().getTransferredEmployee()) {
+                employeeService.setServiceHistoryDetails(employeeRequest, false);
+            }
             ResponseEntity<?> errorResponseEntity = validateEmployeeRequest(employeeRequest, bindingResult, false);
             if (errorResponseEntity != null)
                 return errorResponseEntity;
@@ -388,7 +394,7 @@ public class EmployeeController {
     @ResponseBody
     public ResponseEntity<?> update(@RequestBody @Valid EmployeeRequest employeeRequest, BindingResult bindingResult) {
         log.debug("employeeRequest::" + employeeRequest);
-
+        employeeService.setServiceHistoryDetails(employeeRequest,true);
         Employee employee = null;
         try {
             ResponseEntity<?> errorResponseEntity = validateEmployeeRequest(employeeRequest, bindingResult, true);
@@ -405,7 +411,7 @@ public class EmployeeController {
         }
         return getSuccessResponseForUpdate(employee, employeeRequest.getRequestInfo());
     }
-    
+
     @PostMapping(value = "/_updateemployee")
     @ResponseBody
     public ResponseEntity<?> updateEmployee(@RequestBody @Valid EmployeeRequest employeeRequest, BindingResult bindingResult) {
@@ -416,7 +422,7 @@ public class EmployeeController {
             ResponseEntity<?> errorResponseEntity = validateEmployeeRequest(employeeRequest, bindingResult, true);
             if (errorResponseEntity != null)
                 return errorResponseEntity;
-            log.info("employeeRequest::" + employeeRequest);
+
             employee = employeeService.updateEmployee(employeeRequest);
         } catch (UserException ue) {
             log.error("Error while processing request ", ue);
@@ -443,16 +449,18 @@ public class EmployeeController {
         if (bindingResult.hasErrors()) {
             return errorHandler.getErrorResponseEntityForInvalidRequest(bindingResult, employeeRequest.getRequestInfo());
         }
-
         // validate input params that can't be handled by annotations
         ValidationUtils.invokeValidator(employeeAssignmentValidator, employeeRequest.getEmployee(), bindingResult);
+        if(!employeeRequest.getEmployee().getTransferredEmployee()) {
+            ValidationUtils.invokeValidator(serviceHistoryValidator, employeeRequest.getEmployee(), bindingResult);
+        }
+
         if (isUpdate)
             ValidationUtils.invokeValidator(dataIntegrityValidatorForUpdate, employeeRequest, bindingResult);
         else
             ValidationUtils.invokeValidator(dataIntegrityValidatorForCreate, employeeRequest, bindingResult);
 
         if (bindingResult.hasErrors()) {
-            log.error("Error while processing request ", bindingResult);
             return errorHandler.getErrorResponseEntityForInvalidRequest(bindingResult, employeeRequest.getRequestInfo());
         }
         return null;

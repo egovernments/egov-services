@@ -14,14 +14,26 @@ public class EmployeeSearchURLHelper {
     @Autowired
     private PropertiesManager propertiesManager;
 
-    public String searchURL(final Long id, final String tenantId) {
+    public String searchURL(final Long id, final String code, final String tenantId) {
         final String baseUrl = propertiesManager.getHrEmployeeServiceHostName()
                 + propertiesManager.getHrEmployeeServiceEmployeesBasePath()
                 + propertiesManager.getHrEmployeeServiceEmployeesSearchPath();
         final StringBuilder searchURL = new StringBuilder(baseUrl + "?");
 
-        return appendRequestParams(null, id, tenantId, searchURL);
-    }
+        if (tenantId == null)
+            return searchURL.toString();
+        else
+            searchURL.append("tenantId=" + tenantId);
+
+        if (id != null)
+            searchURL.append("&id=" + id);
+
+        if (code != null)
+            searchURL.append("&code=" + code);
+
+        searchURL.append("&pageSize=" + applicationProperties.employeeMovementSearchPageSizeMax());
+
+        return searchURL.toString();    }
 
     public String updateURL(final String tenantId) {
         final String baseUrl = propertiesManager.getHrEmployeeServiceHostName()

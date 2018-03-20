@@ -98,8 +98,8 @@ public class AssetCategoryQueryBuilder {
 
         if (assetCategoryCriteria.getName() != null) {
             isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-            selectQuery.append(" assetcategory.name ilike ?");
-            preparedStatementValues.add("%" + assetCategoryCriteria.getName() + "%");
+            selectQuery.append(" assetcategory.name = ?");
+            preparedStatementValues.add(assetCategoryCriteria.getName());
         }
 
         if (assetCategoryCriteria.getCode() != null) {

@@ -63,6 +63,12 @@ public class ServiceHistoryTableRowMapper implements RowMapper<ServiceHistory> {
 		ServiceHistory serviceHistory = new ServiceHistory();
 		serviceHistory.setId((Long) rs.getObject("id"));
 		serviceHistory.setServiceInfo(rs.getString("serviceinfo"));
+		serviceHistory.setCity(rs.getString("city"));
+		serviceHistory.setDepartment(rs.getString("department"));
+		serviceHistory.setDesignation(rs.getString("designation"));
+		serviceHistory.setPosition(rs.getLong("positionId"));
+		serviceHistory.setAssignmentId(rs.getLong("assignmentId"));
+		serviceHistory.setIsAssignmentBased(rs.getBoolean("isAssignmentBased"));
 		serviceHistory.setRemarks(rs.getString("remarks"));
 		serviceHistory.setOrderNo(rs.getString("orderno"));
 		serviceHistory.setCreatedBy((Long) rs.getObject("createdby"));
@@ -71,6 +77,8 @@ public class ServiceHistoryTableRowMapper implements RowMapper<ServiceHistory> {
 		try {
 			Date date = isEmpty(rs.getDate("servicefrom")) ? null : sdf.parse(sdf.format(rs.getDate("servicefrom")));
 			serviceHistory.setServiceFrom(date);
+			date = isEmpty(rs.getDate("serviceTo")) ? null : sdf.parse(sdf.format(rs.getDate("serviceTo")));
+			serviceHistory.setServiceTo(date);
 			date = isEmpty(rs.getDate("createdDate")) ? null : sdf.parse(sdf.format(rs.getDate("createdDate")));
 			serviceHistory.setCreatedDate(date);
 			date = isEmpty(rs.getDate("lastmodifieddate")) ? null

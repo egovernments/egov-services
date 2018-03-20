@@ -41,13 +41,15 @@
 package org.egov.eis.model.enums;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
 public enum CourtOrderType {
-    STAY("STAY"), INTERIMORDERS("INTERIMORDERS"), FINALORDERS("FINALORDERS");
+    INTERIMORDERS("Interim orders"), STAY("Stay"), FINALORDERS("Final Orders");
     private String value;
 
     CourtOrderType(final String value) {
@@ -75,4 +77,16 @@ public enum CourtOrderType {
                 return obj;
         return null;
     }
+
+    public static List<Map<String, String>> getCourtOrderTypes() {
+        final List<Map<String, String>> courtOrderTypes = new ArrayList<>();
+        for (final CourtOrderType obj : CourtOrderType.values()) {
+            final Map<String, String> courtOrderType = new HashMap<>();
+            courtOrderType.put("id", obj.toString());
+            courtOrderType.put("name", obj.value);
+            courtOrderTypes.add(courtOrderType);
+        }
+        return courtOrderTypes;
+    }
+
 }

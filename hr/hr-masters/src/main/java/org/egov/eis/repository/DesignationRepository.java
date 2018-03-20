@@ -74,6 +74,9 @@ public class DesignationRepository {
 
 	public List<Designation> findForCriteria(DesignationGetRequest designationGetRequest) {
 		List<Object> preparedStatementValues = new ArrayList<Object>();
+		if(designationGetRequest.getDestinationTenant()!=null && !designationGetRequest.getDestinationTenant().equals(""))
+			designationGetRequest.setTenantId(designationGetRequest.getDestinationTenant());
+
 		String queryStr = designationQueryBuilder.getQuery(designationGetRequest, preparedStatementValues);
 		List<Designation> designations = jdbcTemplate.query(queryStr, preparedStatementValues.toArray(),
 				designationRowMapper);

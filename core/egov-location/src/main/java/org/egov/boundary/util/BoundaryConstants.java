@@ -159,4 +159,11 @@ public class BoundaryConstants {
 	public static final String CROSSHIERARCHY_UPDATE_EXCEPTION_MSG = "CrossHierarchy couldn't be created";
 	public static final String CROSSHIERARCHY_UPDATE_EXCEPTION_DESC = "creation of CrossHierarchy failed!";
 
+    public static final String GEO_MODULE_NAME = "LOCATION-GEO";
+    public static final String GEO_MASTER_NAME = "Geography";
+
+    public static final String GEOGRAPHY_SEARCH_MDMS_SERVICE_UNAVAILABLE_MSG = "GEOGRAPHY_SEARCH_MDMS_SERVICE_UNAVAILABLE";
+    public static final String GEOGRAPHY_SEARCH_MDMS_SERVICE_UNAVAILABLE_DESC =
+            "MDMS Service is unavailable";
+
 }

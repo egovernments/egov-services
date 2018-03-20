@@ -93,6 +93,25 @@ public class DepartmentService {
         return departmentResponse.getDepartment();
     }
 
+    public List<Department> getDepartmentList(String tenantId, RequestInfoWrapper requestInfoWrapper) {
+        URI url = null;
+        DepartmentResponse departmentResponse = null;
+        try {
+            url = new URI(propertiesManager.getCommonMastersServiceHost()
+                    + propertiesManager.getCommonMastersServiceBasePath()
+                    + propertiesManager.getCommonMastersServiceDepartmentsSearch()
+                    + "?tenantId=" + tenantId);
+            log.debug(url.toString());
+            departmentResponse = restTemplate.postForObject(url, getRequestInfoAsHttpEntity(requestInfoWrapper),
+                    DepartmentResponse.class);
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error("Following exception occurred while accessing Department API : " + e.getMessage());
+            return null;
+        }
+        return departmentResponse.getDepartment();
+    }
+
     public Department getDepartmentByCode(String code, String tenantId, RequestInfoWrapper requestInfoWrapper) {
         URI url = null;
         DepartmentResponse departmentResponse = null;

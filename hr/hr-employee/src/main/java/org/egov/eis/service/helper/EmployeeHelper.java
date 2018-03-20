@@ -40,16 +40,14 @@
 
 package org.egov.eis.service.helper;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.eis.model.*;
+import org.egov.eis.model.bulk.Department;
 import org.egov.eis.repository.EmployeeRepository;
+import org.egov.eis.web.contract.DesignationGetRequest;
 import org.egov.eis.web.contract.EmployeeRequest;
 import org.egov.eis.web.contract.UserRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -131,6 +129,7 @@ public class EmployeeHelper {
 			});
 		}
 		if (!isEmpty(employee.getServiceHistory())) {
+			mapAssignmentReferenceToServiceHistory(employeeRequest);
 			employee.getServiceHistory().forEach((serviceHistory) -> {
 				populateDefaultDataForNewServiceHistory(serviceHistory, requesterId, tenantId);
 			});
@@ -204,6 +203,7 @@ public class EmployeeHelper {
 			});
 		}
 		if (!isEmpty(employee.getServiceHistory())) {
+			mapAssignmentReferenceToServiceHistory(employeeRequest);
 			employee.getServiceHistory().forEach((serviceHistory) -> {
 				if (isEmpty(serviceHistory.getId()))
 					populateDefaultDataForNewServiceHistory(serviceHistory, requesterId, tenantId);
@@ -253,7 +253,7 @@ public class EmployeeHelper {
 	}
 
 	private void populateDefaultDataForNewTechnical(TechnicalQualification technical, Long requesterId,
-			String tenantId) {
+													String tenantId) {
 		technical.setId(employeeRepository.generateSequence(Sequences.TECHNICAL_QUALIFICATION.toString()));
 		technical.setTenantId(tenantId);
 		technical.setCreatedBy(requesterId);
@@ -263,7 +263,7 @@ public class EmployeeHelper {
 	}
 
 	private void populateDefaultDataForNewServiceHistory(ServiceHistory serviceHistory, Long requesterId,
-			String tenantId) {
+														 String tenantId) {
 		serviceHistory.setId(employeeRepository.generateSequence(Sequences.SERVICE_HISTORY.toString()));
 		serviceHistory.setTenantId(tenantId);
 		serviceHistory.setCreatedBy(requesterId);
@@ -273,7 +273,7 @@ public class EmployeeHelper {
 	}
 
 	private void populateDefaultDataForNewRegularisation(Regularisation regularisation, Long requesterId,
-			String tenantId) {
+														 String tenantId) {
 		regularisation.setId(employeeRepository.generateSequence(Sequences.REGULARISATION.toString()));
 		regularisation.setTenantId(tenantId);
 		regularisation.setCreatedBy(requesterId);
@@ -301,7 +301,7 @@ public class EmployeeHelper {
 	}
 
 	private void populateDefaultDataForNewEducation(EducationalQualification education, Long requesterId,
-			String tenantId) {
+													String tenantId) {
 		education.setId(employeeRepository.generateSequence(Sequences.EDUCATIONAL_QUALIFICATION.toString()));
 		education.setTenantId(tenantId);
 		education.setCreatedBy(requesterId);
@@ -340,19 +340,19 @@ public class EmployeeHelper {
 			});
 		}
 	}
- 
+
 	public static Date removeTime(Date date) {
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(date);
-        cal.set(Calendar.HOUR_OF_DAY, 0);
-        cal.set(Calendar.MINUTE, 0);
-        cal.set(Calendar.SECOND, 0);
-        cal.set(Calendar.MILLISECOND, 0);
-        return cal.getTime();
-    }
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(date);
+		cal.set(Calendar.HOUR_OF_DAY, 0);
+		cal.set(Calendar.MINUTE, 0);
+		cal.set(Calendar.SECOND, 0);
+		cal.set(Calendar.MILLISECOND, 0);
+		return cal.getTime();
+	}
 
 	public void mapDocumentsWithEmployees(List<EmployeeInfo> employeeInfoList,
-			List<EmployeeDocument> employeeDocuments) {
+										  List<EmployeeDocument> employeeDocuments) {
 		Map<Long, List<String>> employeeIdDocumentsMap = new HashMap<Long, List<String>>();
 
 		for (EmployeeDocument employeeDocument : employeeDocuments) {
@@ -371,5 +371,19 @@ public class EmployeeHelper {
 				employeeInfo.setDocuments(documents);
 			}
 		}
+	}
+
+	public void mapAssignmentReferenceToServiceHistory(EmployeeRequest employeeRequest){
+		List<Assignment> assignments = employeeRequest.getEmployee().getAssignments().stream().filter(assignment -> assignment.getIsPrimary().equals(true)).collect(Collectors.toList());
+
+		assignments.stream().forEach(assign -> {
+			employeeRequest.getEmployee().getServiceHistory().stream().filter(history -> history.getIsAssignmentBased().equals(true)).forEach(srvcHstry -> {
+				if (srvcHstry.getServiceFrom().equals(assign.getFromDate()) && srvcHstry.getServiceTo().equals(assign.getToDate())) {
+					srvcHstry.setAssignmentId(assign.getId());
+				}
+			});
+
+		});
+
 	}
 }

@@ -69,7 +69,24 @@ public class PGRRequestValidator {
 		if ((criteria.getStartDate() != null && criteria.getEndDate() != null)
 				&& criteria.getStartDate().compareTo(criteria.getEndDate()) > 0) {
 			errorMap.put("400", "startDate cannot be greater than endDate");
-
+		}
+		
+		if(!errorMap.isEmpty())
+			throw new CustomException(errorMap);
+		
+		log.info("All Validations passed!");
+	}
+	
+	public void validateHistoryRequest(ServiceReqSearchCriteria criteria, RequestInfo requestInfo) {
+		log.info("Validating history request: "+criteria);
+		Map<String, String> errorMap = new HashMap<>();
+		validateUserRBACProxy(errorMap, criteria, requestInfo);
+		if(null == criteria.getServiceRequestId() || criteria.getServiceRequestId().isEmpty()) {
+			errorMap.put("400", "Service Request Id is missing");	
+			throw new CustomException(errorMap);
+		}
+		if(criteria.getServiceRequestId().size() > 1) {
+			errorMap.put("400", "Multiple ids not supported");					
 		}
 		
 		if(!errorMap.isEmpty())
@@ -99,6 +116,11 @@ public class PGRRequestValidator {
 				errorMap.put("403", "User not authorized, accountId missing");
 			}
 		}
-	}
+		
+		if(requestInfo.getUserInfo().getRoles().get(0).getName().equals("DGRO") && requestInfo.getUserInfo().getRoles().size() == 1) {
+			if(null == criteria.getGroup() || criteria.getGroup().isEmpty())
+				errorMap.put("400", "Department/group of the DGRO is mandatory");
+		}
 
+    }
 }

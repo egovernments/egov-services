@@ -513,7 +513,7 @@ class CancellationAgreement extends React.Component {
       defaultDate: ""
     });
 
-    $('#orderDate').on('changeDate', function (e) {
+    $('#orderDate').on('change blur', function (e) {
       _this.setState({
         agreement: {
           ..._this.state.agreement,
@@ -533,7 +533,7 @@ class CancellationAgreement extends React.Component {
       defaultDate: ""
     });
 
-    $('#terminationDate').on('changeDate', function (e) {
+    $('#terminationDate').on('change blur', function (e) {
       _this.setState({
         agreement: {
           ..._this.state.agreement,

@@ -502,7 +502,7 @@ class ObjectionAgreement extends React.Component {
       defaultDate: ""
     });
 
-    $('#courtCaseDate').on('changeDate', function (e) {
+    $('#courtCaseDate').on('change blur', function (e) {
       _this.setState({
         agreement: {
           ..._this.state.agreement,
@@ -522,7 +522,7 @@ class ObjectionAgreement extends React.Component {
       defaultDate: ""
     });
 
-    $('#effectiveDate').on('changeDate', function (e) {
+    $('#effectiveDate').on('change blur', function (e) {
       _this.setState({
         agreement: {
           ..._this.state.agreement,

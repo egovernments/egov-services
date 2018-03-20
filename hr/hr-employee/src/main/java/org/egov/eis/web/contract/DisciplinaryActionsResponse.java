@@ -40,8 +40,8 @@
 
 package org.egov.eis.web.contract;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.egov.common.contract.response.ResponseInfo;
 
@@ -66,6 +66,6 @@ public class DisciplinaryActionsResponse {
     private ResponseInfo responseInfo;
 
     @JsonProperty("DisciplinaryActions")
-    private List<String> disciplinaryActions = new ArrayList<>();
+    private List<Map<String, String>> disciplinaryActions;
 
 }

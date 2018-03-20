@@ -538,7 +538,7 @@ class RenewalAgreement extends React.Component {
       defaultDate: ""
     });
 
-    $('#renewalOrderDate').on('changeDate', function (e) {
+    $('#renewalOrderDate').on('change blur', function (e) {
       _this.setState({
         agreement: {
           ..._this.state.agreement,
@@ -557,7 +557,7 @@ class RenewalAgreement extends React.Component {
       defaultDate: ""
     });
 
-    $('#securityDepositDate').on('changeDate', function (e) {
+    $('#securityDepositDate').on('change blur', function (e) {
       _this.setState({
         agreement: {
           ..._this.state.agreement,

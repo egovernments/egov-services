@@ -501,7 +501,7 @@ class JudgementAgreement extends React.Component {
       defaultDate: ""
     });
 
-    $('#judgementDate').on('changeDate', function (e) {
+    $('#judgementDate').on('change blur', function (e) {
       _this.setState({
         agreement: {
           ..._this.state.agreement,
@@ -521,7 +521,7 @@ class JudgementAgreement extends React.Component {
       defaultDate: ""
     });
 
-    $('#effectiveDate').on('changeDate', function (e) {
+    $('#effectiveDate').on('change blur', function (e) {
       _this.setState({
         agreement: {
           ..._this.state.agreement,

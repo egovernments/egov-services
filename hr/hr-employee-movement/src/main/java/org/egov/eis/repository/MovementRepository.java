@@ -213,7 +213,7 @@ public class MovementRepository {
 	}
 
 	private void promoteEmployee(final MovementRequest movementRequest) throws ParseException {
-		final EmployeeInfo employeeInfo = employeeService.getEmployee(movementRequest);
+		final EmployeeInfo employeeInfo = employeeService.getEmployee(movementRequest.getMovement().get(0).getEmployeeId(), null, movementRequest.getMovement().get(0).getTenantId(),movementRequest.getRequestInfo());
 		final Movement movement = movementRequest.getMovement().get(0);
 		final Date effectiveFromDate = movement.getEffectiveFrom();
 		LOGGER.debug("effectiveFromDate:" + effectiveFromDate);
@@ -310,6 +310,8 @@ public class MovementRepository {
 			role.setId(null);
 		for (final ServiceHistory history : employee.getServiceHistory()) {
 			history.setTenantId(destination);
+            history.setPosition(null);
+			history.setAssignmentId(null);
 			history.setId(null);
 		}
 		for (final Probation probation : employee.getProbation()) {
@@ -406,7 +408,7 @@ public class MovementRepository {
 			employee.setEmployeeType(employeeService
 					.getEmployeeTypes(employeeTypes.get(0).getName(), null, destination, destinationRequestInfo).get(0)
 					.getId());
-
+        employee.setTransferredEmployee(true);
 		employeeService.createEmployee(employee, destination, destinationRequestInfo);
 	}
 

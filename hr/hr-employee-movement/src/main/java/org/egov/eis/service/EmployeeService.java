@@ -66,13 +66,13 @@ public class EmployeeService {
     @Autowired
     private PropertiesManager propertiesManager;
 
-    public EmployeeInfo getEmployee(final MovementRequest movementRequest) {
-        final String url = employeeSearchURLHelper.searchURL(movementRequest.getMovement().get(0).getEmployeeId(),
-                movementRequest.getMovement().get(0).getTenantId());
+    public EmployeeInfo getEmployee(final Long employeeId, final String code, final String tenantId, RequestInfo requestInfo) {
+        final String url = employeeSearchURLHelper.searchURL(employeeId, code,
+                tenantId);
 
         final RestTemplate restTemplate = new RestTemplate();
         final RequestInfoWrapper wrapper = new RequestInfoWrapper();
-        wrapper.setRequestInfo(movementRequest.getRequestInfo());
+        wrapper.setRequestInfo(requestInfo);
         restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
 
         final HttpEntity<RequestInfoWrapper> request = new HttpEntity<>(wrapper);
@@ -353,7 +353,7 @@ public class EmployeeService {
     }
 
     public EmployeeInfo getEmployee(final Movement movement,final RequestInfo requestInfo) {
-        final String url = employeeSearchURLHelper.searchURL(movement.getEmployeeId(),
+        final String url = employeeSearchURLHelper.searchURL(movement.getEmployeeId(), null,
                 movement.getTenantId());
 
         final RestTemplate restTemplate = new RestTemplate();

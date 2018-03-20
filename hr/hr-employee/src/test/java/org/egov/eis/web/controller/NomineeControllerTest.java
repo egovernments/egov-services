@@ -105,27 +105,6 @@ public class NomineeControllerTest {
     }
 
     @Test
-    public void testSearch_forInvalidRequest() throws Exception {
-        ResponseEntity<?> errorResponseEntity = seedHelper.getErrorResponseEntity();
-
-        doReturn(errorResponseEntity).when(requestValidator)
-                .validateSearchRequest(any(RequestInfo.class), any(BindingResult.class), any(BindingResult.class));
-
-        mockMvc.perform(post("/nominees/_search")
-                .content(getFileContents("RequestInfo.json"))
-                .contentType(MediaType.APPLICATION_JSON_UTF8))
-                .andExpect(status().is4xxClientError())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
-                .andExpect(content().json(getFileContents("errorResponse.json")));
-
-        verify(requestValidator, times(1))
-                .validateSearchRequest(any(RequestInfo.class), any(BindingResult.class), any(BindingResult.class));
-        verify(nomineeService, never()).getNominees(any(NomineeGetRequest.class), any(RequestInfo.class));
-        verify(errorHandler, never()).getResponseEntityForUnexpectedErrors(any(RequestInfo.class));
-        verify(responseInfoFactory, never()).createResponseInfoFromRequestInfo(any(RequestInfo.class), anyBoolean());
-    }
-
-    @Test
     public void testCreate_forValidRequest() throws Exception {
         List<Nominee> expectedNominees = seedHelper.getNominees();
         ResponseInfo expectedResponseInfo = seedHelper.getResponseInfo();
@@ -148,29 +127,6 @@ public class NomineeControllerTest {
         verify(errorHandler, never()).getResponseEntityForUnexpectedErrors(any(RequestInfo.class));
         verify(responseInfoFactory, times(1))
                 .createResponseInfoFromRequestInfo(any(RequestInfo.class), anyBoolean());
-    }
-
-    @Test
-    public void testCreate_forInvalidRequest() throws Exception {
-        ResponseEntity<?> expectedErrorResponse = seedHelper.getErrorResponseEntity();
-
-        doNothing().when(ValidationUtils.class, "invokeValidator", any(), any(), any());
-        doReturn(expectedErrorResponse).when(errorHandler)
-                .getErrorResponseEntityForInvalidRequest(any(BindingResult.class), any(RequestInfo.class));
-
-        mockMvc.perform(post("/nominees/_create")
-                .content(getFileContents("nomineeInvalidRequest.json")).contentType(MediaType.APPLICATION_JSON_UTF8))
-                .andExpect(status().is4xxClientError())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
-                .andExpect(content().json(getFileContents("errorResponse.json")));
-
-        verify(errorHandler, times(1))
-                .getErrorResponseEntityForInvalidRequest(any(BindingResult.class), any(RequestInfo.class));
-        verifyStatic(never());
-        ValidationUtils.invokeValidator(any(), any(), any());
-        verify(nomineeService, never()).createAsync(any(NomineeRequest.class));
-        verify(errorHandler, never()).getResponseEntityForUnexpectedErrors(any(RequestInfo.class));
-        verify(responseInfoFactory, never()).createResponseInfoFromRequestInfo(any(RequestInfo.class), anyBoolean());
     }
 
     @Test
@@ -197,29 +153,6 @@ public class NomineeControllerTest {
         verify(errorHandler, never()).getResponseEntityForUnexpectedErrors(any(RequestInfo.class));
         verify(responseInfoFactory, times(1))
                 .createResponseInfoFromRequestInfo(any(RequestInfo.class), anyBoolean());
-    }
-
-    @Test
-    public void testUpdate_forInvalidRequest() throws Exception {
-        ResponseEntity<?> expectedErrorResponse = seedHelper.getErrorResponseEntity();
-
-        doNothing().when(ValidationUtils.class, "invokeValidator", any(), any(), any());
-        doReturn(expectedErrorResponse).when(errorHandler)
-                .getErrorResponseEntityForInvalidRequest(any(BindingResult.class), any(RequestInfo.class));
-
-        mockMvc.perform(post("/nominees/_update")
-                .content(getFileContents("nomineeInvalidRequest.json")).contentType(MediaType.APPLICATION_JSON_UTF8))
-                .andExpect(status().is4xxClientError())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
-                .andExpect(content().json(getFileContents("errorResponse.json")));
-
-        verify(errorHandler, times(1))
-                .getErrorResponseEntityForInvalidRequest(any(BindingResult.class), any(RequestInfo.class));
-        verifyStatic(never());
-        ValidationUtils.invokeValidator(any(), any(), any());
-        verify(nomineeService, never()).createAsync(any(NomineeRequest.class));
-        verify(errorHandler, never()).getResponseEntityForUnexpectedErrors(any(RequestInfo.class));
-        verify(responseInfoFactory, never()).createResponseInfoFromRequestInfo(any(RequestInfo.class), anyBoolean());
     }
 
     private String getFileContents(String filePath) throws IOException {

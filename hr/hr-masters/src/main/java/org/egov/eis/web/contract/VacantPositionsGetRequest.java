@@ -74,9 +74,11 @@ public class VacantPositionsGetRequest {
 	@DateTimeFormat(pattern = "dd/MM/yyyy")
 	private Date asOnDate;
 
-    private String sortBy;
+	private String sortBy;
 
 	private String sortOrder;
+
+	private String destinationTenant;
 
 	@NotNull
 	private String tenantId;

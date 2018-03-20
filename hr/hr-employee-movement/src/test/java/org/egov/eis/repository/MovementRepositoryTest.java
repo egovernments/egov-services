@@ -215,7 +215,6 @@ public class MovementRepositoryTest {
         when(workFlowService.update(Mockito.any(MovementRequest.class))).thenReturn(task);
         when(userService.findUserByUserNameAndTenantId(Mockito.any(RequestInfo.class))).thenReturn(userResponse);
         when(jdbcTemplate.update(Mockito.anyString(), Mockito.any(Object[].class))).thenReturn(0);
-        when(employeeService.getEmployee(Mockito.any(MovementRequest.class))).thenReturn(employeeInfo);
         when(employeeService.updateEmployee(Mockito.any(Employee.class), Mockito.anyString(), Mockito.any(RequestInfo.class)))
                 .thenReturn(employee);
 

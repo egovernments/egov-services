@@ -41,19 +41,21 @@
 package org.egov.eis.model.enums;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
 public enum DisciplinaryActions {
-    MEMOPHASE("MEMOPHASE"),
+    MEMOPHASE("Memo phase"),
 
-    ENQUIRYPHASE("ENQUIRYPHASE"),
+    ENQUIRYPHASE("Enquiry phase"),
 
-    SHOWCAUSENOTICE("SHOWCAUSENOTICE"),
+    SHOWCAUSENOTICE("Show Cause notice"),
 
-    COURTORDER("COURTORDER");
+    COURTORDER("Court Order");
 
     private String value;
 
@@ -82,4 +84,16 @@ public enum DisciplinaryActions {
                 return obj;
         return null;
     }
+    
+    public static List<Map<String, String>> getDisciplinaryActions() {
+        final List<Map<String, String>> disciplinaryActions = new ArrayList<>();
+        for (final DisciplinaryActions obj : DisciplinaryActions.values()) {
+            final Map<String, String> disciplinaryAction = new HashMap<>();
+            disciplinaryAction.put("id", obj.toString());
+            disciplinaryAction.put("name", obj.value);
+            disciplinaryActions.add(disciplinaryAction);
+        }
+        return disciplinaryActions;
+    }
+
 }

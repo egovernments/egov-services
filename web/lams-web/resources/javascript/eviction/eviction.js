@@ -510,7 +510,7 @@ class EvictionAgreement extends React.Component {
             defaultDate: ""
         });
 
-        $('#evictionProceedingDate').on('changeDate', function (e) {
+        $('#evictionProceedingDate').on('change blur', function (e) {
             _this.setState({
                 agreement: {
                     ..._this.state.agreement,

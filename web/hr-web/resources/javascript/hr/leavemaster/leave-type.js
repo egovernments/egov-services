@@ -75,7 +75,10 @@ class LeaveType extends React.Component {
           window.location.href = 'app/hr/common/show-leave-type.html?type=update';
         },
         error: function (err) {
-          showError("Leave Type already defined");
+          if (err.responseJSON && err.responseJSON["0"] && err.responseJSON["0"].Error && err.responseJSON["0"].Error.description)
+            showError(err.responseJSON["0"].Error.description)
+          else
+            showError("Could not Update Leave Type. Please contact administrator");
         }
       });
     } else {
@@ -112,7 +115,10 @@ class LeaveType extends React.Component {
           })
         },
         error: function (err) {
-          showError("Leave Type already defined.");
+          if (err.responseJSON && err.responseJSON["0"] && err.responseJSON["0"].Error && err.responseJSON["0"].Error.description)
+            showError(err.responseJSON["0"].Error.description)
+          else
+            showError("Could not Create Leave Type. Please contact administrator");
         }
       });
     }

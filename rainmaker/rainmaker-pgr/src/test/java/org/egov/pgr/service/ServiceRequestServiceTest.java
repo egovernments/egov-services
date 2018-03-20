@@ -198,7 +198,7 @@ public class ServiceRequestServiceTest {
 		
 	}
 	
-/*	@Test(expected = Exception.class)
+	@Test(expected = Exception.class)
 	public void testGetServiceRequestsException() {
 		RequestInfo requestInfo = Mockito.mock(RequestInfo.class);
 		ServiceReqSearchCriteria serviceReqSearchCriteria = new ServiceReqSearchCriteria();
@@ -209,11 +209,11 @@ public class ServiceRequestServiceTest {
 		Mockito.when(pGRUtils.prepareSearchRequest(Matchers.any(StringBuilder.class), 
 				Matchers.any(ServiceReqSearchCriteria.class), Matchers.any(RequestInfo.class))).thenReturn(searcherRequest);
 		Mockito.when(serviceRequestRepository.fetchResult(Matchers.any(StringBuilder.class), Matchers.any(SearcherRequest.class)))
-		.thenReturn(Exception.class);
+		.thenThrow(Exception.class);
 		
 		service.getServiceRequests(requestInfo, serviceReqSearchCriteria);
 				
-	}*/
+	}
 	
 	@Test
 	public void testGetCountSuccess() {
@@ -269,6 +269,67 @@ public class ServiceRequestServiceTest {
 		
 		service.getCount(requestInfo, serviceReqSearchCriteria);
 		
+				
+	}
+	
+	@Test
+	public void testGetHistorySuccess() {
+		Object response = null;
+		RequestInfo requestInfo = Mockito.mock(RequestInfo.class);
+		ServiceReqSearchCriteria serviceReqSearchCriteria = new ServiceReqSearchCriteria();
+		serviceReqSearchCriteria.setGroup("group");
+		serviceReqSearchCriteria.setTenantId("tenantId");		
+		ServiceReqResponse serviceReqResponse = new ServiceReqResponse();
+		SearcherRequest searcherRequest = new SearcherRequest();
+		Mockito.when(pGRUtils.prepareHistoryRequest(null, serviceReqSearchCriteria, requestInfo)).thenReturn(searcherRequest);
+		StringBuilder uri = new StringBuilder();
+		uri.append("http://localhost:8093/infra-search/rainmaker-pgr/history/_get");
+		Mockito.when(serviceRequestRepository.fetchResult(uri, searcherRequest))
+		.thenReturn(serviceReqResponse);
+		response = service.getHistory(requestInfo, serviceReqSearchCriteria);
+		
+		assertNotNull(response);
+		
+		
+	}
+	
+	@Test
+	public void testGetHistoryFailure() {
+		ObjectMapper mapper = new ObjectMapper();
+		Object response = new Object();
+		RequestInfo requestInfo = Mockito.mock(RequestInfo.class);
+		ServiceReqSearchCriteria serviceReqSearchCriteria = new ServiceReqSearchCriteria();
+		serviceReqSearchCriteria.setGroup("group");
+		serviceReqSearchCriteria.setTenantId("tenantId");
+		SearcherRequest searcherRequest = new SearcherRequest();
+		Mockito.when(pGRUtils.prepareHistoryRequest(null, serviceReqSearchCriteria, requestInfo)).thenReturn(searcherRequest);
+		StringBuilder uri = new StringBuilder();
+		uri.append("http://localhost:8093/infra-search/rainmaker-pgr/history/_get");
+		Mockito.when(serviceRequestRepository.fetchResult(uri, searcherRequest))
+		.thenReturn(null);
+		
+		response = service.getServiceRequests(requestInfo, serviceReqSearchCriteria);
+		ServiceReqResponse serviceReqResponse = mapper.convertValue(response, ServiceReqResponse.class);
+
+		assertTrue(serviceReqResponse.getServiceReq().isEmpty());
+		
+		
+	}
+	
+	@Test(expected = Exception.class)
+	public void testGetHistoryException() {
+		RequestInfo requestInfo = Mockito.mock(RequestInfo.class);
+		ServiceReqSearchCriteria serviceReqSearchCriteria = new ServiceReqSearchCriteria();
+		serviceReqSearchCriteria.setGroup("group");
+		serviceReqSearchCriteria.setTenantId("tenantId");
+		SearcherRequest searcherRequest = new SearcherRequest();
+		Mockito.when(service.fetchServiceCodes(requestInfo, "tenantId", "group")).thenReturn(new Object());
+		Mockito.when(pGRUtils.prepareHistoryRequest(Matchers.any(StringBuilder.class), 
+				Matchers.any(ServiceReqSearchCriteria.class), Matchers.any(RequestInfo.class))).thenReturn(searcherRequest);
+		Mockito.when(serviceRequestRepository.fetchResult(Matchers.any(StringBuilder.class), Matchers.any(SearcherRequest.class)))
+		.thenThrow(Exception.class);
+		
+		service.getServiceRequests(requestInfo, serviceReqSearchCriteria);
 				
 	}
 

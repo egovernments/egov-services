@@ -116,6 +116,11 @@ public class PGRRequestValidator {
 				errorMap.put("403", "User not authorized, accountId missing");
 			}
 		}
-	}
+		
+		if(requestInfo.getUserInfo().getRoles().get(0).getName().equals("DGRO") && requestInfo.getUserInfo().getRoles().size() == 1) {
+			if(null == criteria.getGroup() || criteria.getGroup().isEmpty())
+				errorMap.put("400", "Department/group of the DGRO is mandatory");
+		}
 
+    }
 }

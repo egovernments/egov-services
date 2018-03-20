@@ -98,7 +98,7 @@ public class AssetCategoryQueryBuilder {
 
         if (assetCategoryCriteria.getName() != null) {
             isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-            selectQuery.append(" assetcategory.name= ?");
+            selectQuery.append(" assetcategory.name = ?");
             preparedStatementValues.add(assetCategoryCriteria.getName());
         }
 

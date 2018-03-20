@@ -15,7 +15,7 @@ class EmployeeTransfer extends React.Component {
             id: ""
           },
           effectiveFrom: "",
-          enquiryPassedDate: "",
+          //enquiryPassedDate: "",
           transferedLocation: "",
           departmentAssigned: "",
           designationAssigned: "",
@@ -80,7 +80,7 @@ class EmployeeTransfer extends React.Component {
         movement.promotionBasis = {
           id: ""
         };
-        movement.enquiryPassedDate = "";
+        //movement.enquiryPassedDate = "";
       }
 
       if (movement.documents && movement.documents.constructor == FileList) {
@@ -244,25 +244,23 @@ class EmployeeTransfer extends React.Component {
 
 
 
-    componentDidUpdate() {
-      var _this = this;
-      $('#enquiryPassedDate').datepicker({
-        format: 'dd/mm/yyyy',
-        autoclose: true,
-        defaultDate: ""
-      });
+    // componentDidUpdate() {
+    //   var _this = this;
+    //   $('#enquiryPassedDate').datepicker({
+    //     format: 'dd/mm/yyyy',
+    //     autoclose: true,
+    //     defaultDate: ""
+    //   });
 
-      $('#enquiryPassedDate').on('changeDate', function(e) {
-        _this.setState({
-          movement: {
-            ..._this.state.movement,
-            "enquiryPassedDate": $("#enquiryPassedDate").val(),
-          }
-        });
-      });
-
-
-    }
+    //   $('#enquiryPassedDate').on('changeDate', function(e) {
+    //     _this.setState({
+    //       movement: {
+    //         ..._this.state.movement,
+    //         "enquiryPassedDate": $("#enquiryPassedDate").val(),
+    //       }
+    //     });
+    //   });
+    // }
 
     componentDidMount() {
       var type = getUrlVars()["type"],
@@ -415,35 +413,21 @@ class EmployeeTransfer extends React.Component {
 
     vacantPositionFun(departmentId, designationId, effectiveFrom, ulb) {
       var _this = this;
-
-      var _baseUrl = baseUrl
-
-      if (ulb) {
-        console.log(baseUrl);
-        _baseUrl = baseUrl.replace(tenantId.split(".")[1], ulb.split(".")[1]);
-        console.log(baseUrl);
-      }
-
-      var _tenantId = ulb ? ulb : tenantId;
-
-      $.ajax({
-        url: _baseUrl + "/hr-masters/vacantpositions/_search?tenantId=" + _tenantId + "&departmentId=" + departmentId + "&designationId=" + designationId + "&asOnDate=" + effectiveFrom,
-        type: 'POST',
-        dataType: 'json',
-        data: JSON.stringify({ RequestInfo: requestInfo }),
-        contentType: 'application/json',
-        headers: {
-          'auth-token': authToken
-        },
-        success: function (res) {
-
+      
+      commonApiPost("hr-masters", "vacantpositions", "_search", {
+        tenantId: tenantId,
+        departmentId: departmentId,
+        designationId: designationId,
+        asOnDate: effectiveFrom,
+        destinationTenant: ulb
+      }, function(err, res) {
+        if (res) {
           _this.setState({
             movement: {
               ..._this.state.movement,
             },
             pNameList: res.Position
           })
-
         }
       });
     }
@@ -451,48 +435,29 @@ class EmployeeTransfer extends React.Component {
     getUlbDetails(ulb) {
 
       var _this = this;
-      var _baseUrl = baseUrl
 
-      if (ulb) {
-        console.log(baseUrl);
-        _baseUrl = baseUrl.replace(tenantId.split(".")[1], ulb.split(".")[1]);
-        console.log(baseUrl);
-      }
-
-      var _tenantId = ulb ? ulb : tenantId;
-
-      $.ajax({
-        url: _baseUrl + "/egov-common-masters/departments/_search?tenantId=" + _tenantId + "&pageSize=500",
-        type: 'POST',
-        dataType: 'json',
-        data: JSON.stringify({ RequestInfo: requestInfo }),
-        contentType: 'application/json',
-        headers: {
-          'auth-token': authToken
-        },
-        success: function (res) {
-
+      commonApiPost("hr-masters", "departments", "_search", {
+        tenantId: tenantId,
+        destinationTenant: ulb,
+        pageSize: 500
+      }, function(err, res) {
+        if (res) {
           _this.setState({
             ..._this.state,
-            ulbDepartmentList: res.Department
+            ulbDepartmentList : res.Department
           })
         }
       });
 
-      $.ajax({
-        url: _baseUrl + "/hr-masters/designations/_search?tenantId=" + _tenantId + "&pageSize=500",
-        type: 'POST',
-        dataType: 'json',
-        data: JSON.stringify({ RequestInfo: requestInfo }),
-        contentType: 'application/json',
-        headers: {
-          'auth-token': authToken
-        },
-        success: function (res) {
-
+      commonApiPost("hr-masters", "designations", "_search", {
+        tenantId: tenantId,
+        destinationTenant: ulb,
+        pageSize: 500
+      }, function(err, res) {
+        if (res) {
           _this.setState({
             ..._this.state,
-            ulbDesignationList: res.Designation
+            ulbDesignationList : res.Designation
           })
         }
       });
@@ -694,7 +659,7 @@ class EmployeeTransfer extends React.Component {
     let {handleChange,addOrUpdate,handleChangeTwoLevel}=this;
     let _this = this;
 
-    let {employeeId, typeOfMovement, currentAssignment, transferType, promotionBasis, remarks, reason, effectiveFrom, enquiryPassedDate, transferedLocation,
+    let {employeeId, typeOfMovement, currentAssignment, transferType, promotionBasis, remarks, reason, effectiveFrom, transferedLocation,
           departmentAssigned, designationAssigned, positionAssigned, fundAssigned, functionAssigned, employeeAcceptance, workflowDetails, tenantId} = this.state.movement
     let {isSearchClicked,employee,transferWithPromotion}=this.state;
 
@@ -757,7 +722,7 @@ class EmployeeTransfer extends React.Component {
     const promotionFunc=function() {
       if(transferWithPromotion=="true"||transferWithPromotion==true){
         return(<div className="row">
-          <div className="col-sm-6">
+          {/* <div className="col-sm-6">
               <div className="row">
                   <div className="col-sm-6 label-text">
                     <label htmlFor="">Enquiry passed Date</label>
@@ -770,7 +735,7 @@ class EmployeeTransfer extends React.Component {
                     </div>
                   </div>
               </div>
-        </div>
+        </div> */}
         <div className="col-sm-6">
             <div className="row">
                 <div className="col-sm-6 label-text">
@@ -1108,14 +1073,11 @@ class EmployeeTransfer extends React.Component {
               </div>
             </div>
 
-
-
-
             <br/>
             <div className="form-section">
                 <div className="row">
                   <div className="col-md-8 col-sm-8">
-                    <h3 className="categoryType">Workflow Details </h3>
+                    <h3 className="categoryType">Approval Details  </h3>
                   </div>
                 </div>
             <div className="row">

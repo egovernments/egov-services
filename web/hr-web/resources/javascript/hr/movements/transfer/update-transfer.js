@@ -1195,7 +1195,7 @@ class UpdateMovement extends React.Component {
                     <div className="styled-select">
                       <select id="functionAssigned" name="functionAssigned" value={functionAssigned}
                         onChange={(e) => { handleChange(e, "functionAssigned") }}>
-                        <option value="">Select functionary</option>
+                        <option value="">Select function</option>
                         {renderOption(this.state.functionaryList)}
                       </select>
                     </div>

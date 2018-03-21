@@ -202,7 +202,6 @@ class UpdateMovement extends React.Component {
     });
 
 
-
     commonApiPost("egov-common-workflows", "process", "_search", {
       tenantId: tenantId,
       id: stateId
@@ -220,16 +219,16 @@ class UpdateMovement extends React.Component {
             }
           }
 
-
           _this.setState({
             ..._this.state,
             buttons: _btns.length ? _btns : [],
             owner: process.owner.id,
+            initiator:process.initiatorPosition,
             status: process.status
           })
         }
       }
-    })
+    });
 
   }
 
@@ -528,10 +527,12 @@ class UpdateMovement extends React.Component {
               
                     asOnDate = dd + '/' + mm + '/' + yyyy;
 
+                    let _positionId = (ID === "Reject") ? _this.state.initiator : res.Movement[0].workflowDetails.assignee;
+                    console.log("res", _positionId );
                     commonApiPost("hr-employee", "employees", "_search", {
                       tenantId,
                       asOnDate,
-                      positionId: res.Movement[0].workflowDetails.assignee
+                      positionId: _positionId
                     }, function (err, res2) {
                       if (res2 && res2.Employee && res2.Employee[0])
                         employee = res2.Employee[0];
@@ -599,11 +600,12 @@ class UpdateMovement extends React.Component {
             }
       
             asOnDate = dd + '/' + mm + '/' + yyyy;
-
+            let _positionId = (ID === "Reject") ? _this.state.initiator : res.Movement[0].workflowDetails.assignee;
+            console.log("res", _positionId );
             commonApiPost("hr-employee", "employees", "_search", {
               tenantId,
               asOnDate,
-              positionId: res.Movement[0].workflowDetails.assignee
+              positionId: _positionId
             }, function (err, res2) {
               if (res2 && res2.Employee && res2.Employee[0])
                 employee = res2.Employee[0];

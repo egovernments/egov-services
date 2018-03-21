@@ -1,0 +1,19 @@
+ServiceMaps:
+ serviceName: PGR - rainmaker
+ version: 1.0.0
+ mappings:
+  - topic: egov.rainmaker.pgr.create
+    indexes:
+    - name: grievancecreate
+      type: grievancecreate
+      id: $.serviceRequestId, $.tenantId
+      isBulk: true
+      jsonPath: $.serviceReq.*
+
+  - topic: egov.rainmaker.pgr.update
+    indexes:
+    - name: grievanceupdate
+      type: grievanceupdate
+      id: $.serviceRequestId, $.tenantId
+      isBulk: true
+      jsonPath: $.serviceReq.*

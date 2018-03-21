@@ -52,6 +52,12 @@ public class GrievanceService {
 		
 		@Value("${kafka.topics.notification.complaint}")
 		private String complaintTopic;
+		
+		@Value("${indexer.grievance.create}")
+		private String indexerCreateTopic;
+		
+		@Value("${indexer.grievance.update}")
+		private String indexerUpdateTopic;
 
 		@Autowired
 		private ResponseInfoFactory factory;
@@ -104,6 +110,8 @@ public class GrievanceService {
 			
 			pGRProducer.push(saveTopic, request);
 			pGRProducer.push(complaintTopic, request);
+			pGRProducer.push(indexerCreateTopic, request);
+
 			return getServiceResponse(request);
 		}
 
@@ -132,6 +140,8 @@ public class GrievanceService {
 
 			pGRProducer.push(updateTopic, request);
 			pGRProducer.push(complaintTopic, request);
+			pGRProducer.push(indexerUpdateTopic, request);
+			
 			return getServiceResponse(request);
 		}
 

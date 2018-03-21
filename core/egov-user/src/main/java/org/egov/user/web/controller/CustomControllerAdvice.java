@@ -6,7 +6,9 @@ import org.egov.user.domain.exception.DuplicateUserNameException;
 import org.egov.user.domain.exception.InvalidAccessTokenException;
 import org.egov.user.domain.exception.InvalidLoggedInUserUpdatePasswordRequestException;
 import org.egov.user.domain.exception.InvalidNonLoggedInUserUpdatePasswordRequestException;
+import org.egov.user.domain.exception.InvalidOtpException;
 import org.egov.user.domain.exception.InvalidRoleCodeException;
+import org.egov.user.domain.exception.InvalidUpdatePasswordRequestException;
 import org.egov.user.domain.exception.InvalidUserCreateException;
 import org.egov.user.domain.exception.InvalidUserSearchCriteriaException;
 import org.egov.user.domain.exception.InvalidUserUpdateException;
@@ -14,6 +16,7 @@ import org.egov.user.domain.exception.OtpValidationPendingException;
 import org.egov.user.domain.exception.PasswordMismatchException;
 import org.egov.user.domain.exception.UserDetailsException;
 import org.egov.user.domain.exception.UserIdMandatoryException;
+import org.egov.user.domain.exception.UserNameNotValidException;
 import org.egov.user.domain.exception.UserNotFoundException;
 import org.egov.user.domain.exception.UserProfileUpdateDeniedException;
 import org.egov.user.web.adapters.errors.AtleastOneRoleCodeErrorHandler;
@@ -21,12 +24,15 @@ import org.egov.user.web.adapters.errors.DuplicateUserNameErrorHandler;
 import org.egov.user.web.adapters.errors.InvalidAccessTokenErrorHandler;
 import org.egov.user.web.adapters.errors.InvalidLoggedInUserUpdatePasswordRequestErrorHandler;
 import org.egov.user.web.adapters.errors.InvalidNonLoggedInUserUpdatePasswordRequestErrorHandler;
+import org.egov.user.web.adapters.errors.InvalidOtpErrorHandler;
 import org.egov.user.web.adapters.errors.InvalidRoleCodeErrorHandler;
 import org.egov.user.web.adapters.errors.InvalidUserSearchRequestErrorHandler;
 import org.egov.user.web.adapters.errors.OtpValidationErrorAdapter;
 import org.egov.user.web.adapters.errors.PasswordMissMatchErrorHandler;
 import org.egov.user.web.adapters.errors.UserDetailsErrorHandler;
 import org.egov.user.web.adapters.errors.UserIdMandatoryErrorHandler;
+import org.egov.user.web.adapters.errors.UserInvalidUpdatePasswordRequest;
+import org.egov.user.web.adapters.errors.UserNameNotValidErrorHandler;
 import org.egov.user.web.adapters.errors.UserNotFoundErrorHandler;
 import org.egov.user.web.adapters.errors.UserProfileUpdateDeniedErrorHandler;
 import org.egov.user.web.adapters.errors.UserRequestErrorAdapter;
@@ -94,7 +100,7 @@ public class CustomControllerAdvice {
 	public ErrorResponse handleInvalidRoleCodeException(InvalidRoleCodeException ex) {
 		return new InvalidRoleCodeErrorHandler().adapt(ex.getRoleCode());
 	}
-	
+
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	@ExceptionHandler(AtleastOneRoleCodeException.class)
 	public ErrorResponse handleAtleastOneRoleCodeException(AtleastOneRoleCodeException ex) {
@@ -132,6 +138,25 @@ public class CustomControllerAdvice {
 	public ErrorResponse handleInvalidNonLoggedInUserUpdatePasswordRequestException(
 			InvalidUserSearchCriteriaException ex) {
 		return new InvalidUserSearchRequestErrorHandler().adapt(ex.getSearchCriteria());
+	}
+
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	@ExceptionHandler(InvalidOtpException.class)
+	public ErrorResponse handleInvalidOtpException(InvalidOtpException ex) {
+		return new InvalidOtpErrorHandler().adapt(ex.getErrorMessage());
+	}
+	
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	@ExceptionHandler(UserNameNotValidException.class)
+	public ErrorResponse handleUserNameIsNumericException() {
+		return new UserNameNotValidErrorHandler().adapt(null);
+	}
+	
+	
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	@ExceptionHandler(InvalidUpdatePasswordRequestException.class)
+	public ErrorResponse handleInvalidUpdatePasswordRequest() {
+		return new UserInvalidUpdatePasswordRequest().adapt(null);
 	}
 
 }

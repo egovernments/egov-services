@@ -1,9 +1,12 @@
 package org.egov.user.domain.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import static org.springframework.util.ObjectUtils.isEmpty;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
+
 import org.apache.commons.lang3.time.DateUtils;
 import org.egov.user.domain.exception.InvalidUserCreateException;
 import org.egov.user.domain.exception.InvalidUserUpdateException;
@@ -13,19 +16,19 @@ import org.egov.user.domain.model.enums.GuardianRelation;
 import org.egov.user.domain.model.enums.UserType;
 import org.springframework.util.CollectionUtils;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-
-import static org.springframework.util.ObjectUtils.isEmpty;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
 
 @AllArgsConstructor
 @Getter
 @Setter
 @Builder
 public class User {
+	
 	private Long id;
+	private String uuid;
 	private String tenantId;
 	private String username;
 	private String title;
@@ -72,8 +75,7 @@ public class User {
 				|| isCorrespondenceAddressInvalid()
 				|| isRolesAbsent()
 				|| isOtpReferenceAbsent()
-				|| isTenantIdAbsent()
-				|| isPasswordAbsent()) {
+				|| isTenantIdAbsent()){
 			throw new InvalidUserCreateException(this);
 		}
 	}
@@ -121,7 +123,7 @@ public class User {
 
 	public boolean isTenantIdAbsent() {
 		return isEmpty(tenantId);
-	}
+	}	
 	
 	public boolean isPasswordAbsent(){
 		return isEmpty(password);
@@ -185,4 +187,5 @@ public class User {
 		active = isActive;
 	}
 }
+
 

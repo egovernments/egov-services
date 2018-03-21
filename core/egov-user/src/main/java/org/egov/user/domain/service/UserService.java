@@ -1,14 +1,36 @@
 package org.egov.user.domain.service;
 
-import org.egov.user.domain.exception.*;
-import org.egov.user.domain.model.*;
+import java.util.Date;
+import java.util.List;
+import java.util.UUID;
+
+import org.apache.commons.lang3.StringUtils;
+import org.egov.common.contract.request.RequestInfo;
+import org.egov.user.domain.exception.AtleastOneRoleCodeException;
+import org.egov.user.domain.exception.DuplicateUserNameException;
+import org.egov.user.domain.exception.InvalidOtpException;
+import org.egov.user.domain.exception.InvalidUpdatePasswordRequestException;
+import org.egov.user.domain.exception.OtpValidationPendingException;
+import org.egov.user.domain.exception.PasswordMismatchException;
+import org.egov.user.domain.exception.UserIdMandatoryException;
+import org.egov.user.domain.exception.UserNameNotValidException;
+import org.egov.user.domain.exception.UserNotFoundException;
+import org.egov.user.domain.exception.UserProfileUpdateDeniedException;
+import org.egov.user.domain.model.LoggedInUserUpdatePasswordRequest;
+import org.egov.user.domain.model.NonLoggedInUserUpdatePasswordRequest;
+import org.egov.user.domain.model.OtpValidationRequest;
+import org.egov.user.domain.model.User;
+import org.egov.user.domain.model.UserSearchCriteria;
+import org.egov.user.domain.model.enums.UserType;
 import org.egov.user.persistence.repository.OtpRepository;
 import org.egov.user.persistence.repository.UserRepository;
+import org.egov.user.web.contract.Otp;
+import org.egov.user.web.contract.OtpValidateRequest;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import com.jayway.jsonpath.JsonPath;
 
 @Service
 public class UserService {
@@ -17,13 +39,19 @@ public class UserService {
 	private OtpRepository otpRepository;
 	private PasswordEncoder passwordEncoder;
 	private int defaultPasswordExpiryInDays;
+	private boolean isCitizenLoginOtpBased;
+	private boolean isEmployeeLoginOtpBased;
 
 	public UserService(UserRepository userRepository, OtpRepository otpRepository, PasswordEncoder passwordEncoder,
-			@Value("${default.password.expiry.in.days}") int defaultPasswordExpiryInDays) {
+			@Value("${default.password.expiry.in.days}") int defaultPasswordExpiryInDays,
+			@Value("${citizen.login.password.otp.enabled}") boolean isCitizenLoginOtpBased,
+			@Value("${employee.login.password.otp.enabled}") boolean isEmployeeLoginOtpBased) {
 		this.userRepository = userRepository;
 		this.otpRepository = otpRepository;
 		this.passwordEncoder = passwordEncoder;
 		this.defaultPasswordExpiryInDays = defaultPasswordExpiryInDays;
+		this.isCitizenLoginOtpBased = isCitizenLoginOtpBased;
+		this.isEmployeeLoginOtpBased = isEmployeeLoginOtpBased;
 	}
 
 	public User getUserByUsername(final String userName, String tenantId) {
@@ -35,6 +63,7 @@ public class UserService {
 	}
 
 	public User createUser(User user) {
+		user.setUuid(UUID.randomUUID().toString());
 		user.validateNewUser();
 		conditionallyValidateOtp(user);
 		validateDuplicateUserName(user);
@@ -43,12 +72,27 @@ public class UserService {
 	}
 
 	public User createCitizen(User user) {
+		user.setUuid(UUID.randomUUID().toString());
+		if (isCitizenLoginOtpBased && !StringUtils.isNumeric(user.getUsername()))
+			throw new UserNameNotValidException();
+		else if (isCitizenLoginOtpBased)
+			user.setMobileNumber(user.getUsername());
+
 		user.setRoleToCitizen();
-		user.setActive(true);
 		user.validateNewUser();
-		validateOtp(user.getOtpValidationRequest());
 		validateDuplicateUserName(user);
+		// validateOtp(user.getOtpValidationRequest());
+		Otp otp = Otp.builder().otp(user.getOtpReference()).identity(user.getUsername()).tenantId(user.getTenantId())
+				.build();
+		try {
+			validateOtp(otp);
+		} catch (Exception e) {
+			String errorMessage = JsonPath.read(e.getMessage(), "$.error.message");
+			System.out.println("message " + errorMessage);
+			throw new InvalidOtpException(errorMessage);
+		}
 		user.setDefaultPasswordExpiry(defaultPasswordExpiryInDays);
+		user.setActive(true);
 		return persistNewUser(user);
 	}
 
@@ -69,7 +113,7 @@ public class UserService {
 			throw new AtleastOneRoleCodeException();
 		}
 	}
-	
+
 	public User partialUpdate(final User user) {
 		validateUserId(user);
 		validateProfileUpdateIsDoneByTheSameLoggedInUser(user);
@@ -82,6 +126,11 @@ public class UserService {
 		final User user = userRepository.getUserById(updatePasswordRequest.getUserId(),
 				updatePasswordRequest.getTenantId());
 		validateUserPresent(user);
+		if (user.getType().toString().equals(UserType.CITIZEN.toString()) && isCitizenLoginOtpBased)
+			throw new InvalidUpdatePasswordRequestException();
+		if (user.getType().toString().equals(UserType.EMPLOYEE.toString()) && isEmployeeLoginOtpBased)
+			throw new InvalidUpdatePasswordRequestException();
+
 		validateExistingPassword(user, updatePasswordRequest.getExistingPassword());
 		user.updatePassword(updatePasswordRequest.getNewPassword());
 		userRepository.update(user);
@@ -89,9 +138,22 @@ public class UserService {
 
 	public void updatePasswordForNonLoggedInUser(NonLoggedInUserUpdatePasswordRequest request) {
 		request.validate();
-		validateOtp(request.getOtpValidationRequest());
+		// validateOtp(request.getOtpValidationRequest());
 		final User user = fetchUserByUserName(request.getUserName(), request.getTenantId());
 		validateUserPresent(user);
+		if (user.getType().toString().equals(UserType.CITIZEN.toString()) && isCitizenLoginOtpBased)
+			throw new InvalidUpdatePasswordRequestException();
+		if (user.getType().toString().equals(UserType.EMPLOYEE.toString()) && isEmployeeLoginOtpBased)
+			throw new InvalidUpdatePasswordRequestException();
+		Otp otp = Otp.builder().otp(request.getOtpReference()).identity(user.getMobileNumber())
+				.tenantId(request.getTenantId()).build();
+		try {
+			validateOtp(otp);
+		} catch (Exception e) {
+			String errorMessage = JsonPath.read(e.getMessage(), "$.error.message");
+			System.out.println("message " + errorMessage);
+			throw new InvalidOtpException(errorMessage);
+		}
 		user.updatePassword(request.getNewPassword());
 		userRepository.update(user);
 	}
@@ -160,6 +222,14 @@ public class UserService {
 
 	private User updateExistingUser(final User user) {
 		return userRepository.update(user);
+	}
+
+	public Boolean validateOtp(Otp otp) throws Exception {
+		RequestInfo requestInfo = RequestInfo.builder().action("validate").ts(new Date()).build();
+		OtpValidateRequest otpValidationRequest = OtpValidateRequest.builder().requestInfo(requestInfo).otp(otp)
+				.build();
+		return otpRepository.validateOtp(otpValidationRequest);
+
 	}
 
 }

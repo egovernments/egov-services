@@ -11,31 +11,36 @@ import static java.lang.String.format;
 
 @Service
 public class OtpSMSRepository {
-    private static final String SMS_REGISTER_OTP_MESSAGE = "Use OTP %s for portal registration.";
-    private static final String SMS_PASSWORD_RESET_OTP_MESSAGE = "Your OTP for recovering password is %s.";
-    private LogAwareKafkaTemplate<String, SMSRequest> kafkaTemplate;
-    private String smsTopic;
+	private static final String SMS_REGISTER_OTP_MESSAGE = "Use OTP %s for portal registration.";
+	private static final String SMS_LOGIN_OTP_MESSAGE = "Use OTP %s for login.";
+	private static final String SMS_PASSWORD_RESET_OTP_MESSAGE = "Your OTP for recovering password is %s.";
+	private LogAwareKafkaTemplate<String, SMSRequest> kafkaTemplate;
+	private String smsTopic;
 
-    @Autowired
-    public OtpSMSRepository(LogAwareKafkaTemplate<String, SMSRequest> kafkaTemplate,
-							@Value("${sms.topic}") String smsTopic) {
-        this.kafkaTemplate = kafkaTemplate;
-        this.smsTopic = smsTopic;
-    }
+	@Autowired
+	public OtpSMSRepository(LogAwareKafkaTemplate<String, SMSRequest> kafkaTemplate,
+			@Value("${sms.topic}") String smsTopic) {
+		this.kafkaTemplate = kafkaTemplate;
+		this.smsTopic = smsTopic;
+	}
 
-    public void send(OtpRequest otpRequest, String otpNumber) {
+	public void send(OtpRequest otpRequest, String otpNumber) {
 		final String message = getMessage(otpNumber, otpRequest);
 		kafkaTemplate.send(smsTopic, new SMSRequest(otpRequest.getMobileNumber(), message));
-    }
+	}
 
-    private String getMessage(String otpNumber, OtpRequest otpRequest) {
+	private String getMessage(String otpNumber, OtpRequest otpRequest) {
 		final String messageFormat = getMessageFormat(otpRequest);
 		return format(messageFormat, otpNumber);
-    }
+	}
 
 	private String getMessageFormat(OtpRequest otpRequest) {
-		return otpRequest.isRegistrationRequestType()
-				? SMS_REGISTER_OTP_MESSAGE
-				: SMS_PASSWORD_RESET_OTP_MESSAGE;
+		if (otpRequest.isRegistrationRequestType()) {
+			return SMS_REGISTER_OTP_MESSAGE;
+		} else if (otpRequest.isLoginRequestType()) {
+			return SMS_LOGIN_OTP_MESSAGE;
+		} else {
+			return SMS_PASSWORD_RESET_OTP_MESSAGE;
+		}
 	}
 }

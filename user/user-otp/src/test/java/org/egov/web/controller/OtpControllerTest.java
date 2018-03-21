@@ -2,6 +2,7 @@ package org.egov.web.controller;
 
 import org.egov.Resources;
 import org.egov.domain.exception.InvalidOtpRequestException;
+import org.egov.domain.exception.UserMobileNumberNotFoundException;
 import org.egov.domain.exception.UserNotFoundException;
 import org.egov.domain.model.OtpRequest;
 import org.egov.domain.model.OtpRequestType;
@@ -48,7 +49,7 @@ public class OtpControllerTest {
 				new OtpRequest("mobileNumber", "tenantId", OtpRequestType.PASSWORD_RESET);
         verify(otpService).sendOtp(expectedOtpRequest);
     }
-
+    
     @Test
     public void test_should_return_error_response_when_mandatory_fields_are_not_present_in_request() throws Exception {
         final OtpRequest expectedOtpRequest = new OtpRequest("", "", null);
@@ -70,6 +71,18 @@ public class OtpControllerTest {
 				.content(resources.getFileContents("otpRequestWithoutMandatoryFields.json")))
 				.andExpect(status().isBadRequest())
 				.andExpect(content().json(resources.getFileContents("unknownMobileNumberErrorResponse.json")));
+	}
+	
+	@Test
+	public void test_should_return_error_response_when_user_mobilenot_found_for_sending_forgot_password_otp()
+			throws Exception {
+		final OtpRequest expectedOtpRequest = new OtpRequest("", "", null);
+		doThrow(new UserMobileNumberNotFoundException()).when(otpService).sendOtp(expectedOtpRequest);
+
+		mockMvc.perform(post("/v1/_send").contentType(MediaType.APPLICATION_JSON_UTF8)
+				.content(resources.getFileContents("otpRequestWithoutMandatoryFields.json")))
+				.andExpect(status().isBadRequest())
+				.andExpect(content().json(resources.getFileContents("invalidMobileNumberErrorResponse.json")));
 	}
 
     @Test

@@ -12,14 +12,18 @@ import static org.mockito.Mockito.when;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
+import org.egov.common.contract.request.RequestInfo;
 import org.egov.user.domain.exception.AtleastOneRoleCodeException;
 import org.egov.user.domain.exception.DuplicateUserNameException;
+import org.egov.user.domain.exception.InvalidUpdatePasswordRequestException;
 import org.egov.user.domain.exception.InvalidUserCreateException;
 import org.egov.user.domain.exception.OtpValidationPendingException;
 import org.egov.user.domain.exception.PasswordMismatchException;
 import org.egov.user.domain.exception.UserIdMandatoryException;
+import org.egov.user.domain.exception.UserNameNotValidException;
 import org.egov.user.domain.exception.UserNotFoundException;
 import org.egov.user.domain.exception.UserProfileUpdateDeniedException;
 import org.egov.user.domain.model.LoggedInUserUpdatePasswordRequest;
@@ -32,6 +36,8 @@ import org.egov.user.domain.model.enums.Gender;
 import org.egov.user.domain.model.enums.UserType;
 import org.egov.user.persistence.repository.OtpRepository;
 import org.egov.user.persistence.repository.UserRepository;
+import org.egov.user.web.contract.Otp;
+import org.egov.user.web.contract.OtpValidateRequest;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -58,10 +64,13 @@ public class UserServiceTest {
 	private final String EMAIL = "email@gmail.com";
 	private final String USER_NAME = "userName";
 	private final String TENANT_ID = "tenantId";
+	private final boolean isCitizenLoginOtpBased = false;
+	private final boolean isEmployeeLoginOtpBased = false;
 
 	@Before
 	public void before() {
-		userService = new UserService(userRepository, otpRepository, passwordEncoder, DEFAULT_PASSWORD_EXPIRY_IN_DAYS);
+		userService = new UserService(userRepository, otpRepository, passwordEncoder, DEFAULT_PASSWORD_EXPIRY_IN_DAYS,
+				isCitizenLoginOtpBased,isEmployeeLoginOtpBased);
 	}
 
 	@Test
@@ -141,6 +150,37 @@ public class UserServiceTest {
 		assertEquals(expectedUser, returnedUser);
 	}
 
+	@Test(expected = UserNameNotValidException.class)
+	public void test_should_not_create_citizenWithWrongUserName() {
+		userService = new UserService(userRepository, otpRepository, passwordEncoder, DEFAULT_PASSWORD_EXPIRY_IN_DAYS,
+				true,false);
+		org.egov.user.domain.model.User domainUser = User.builder().username("TestUser").name("Test").active(true)
+				.tenantId("default").mobileNumber("123456789").type(UserType.CITIZEN).build();
+		userService.createCitizen(domainUser);
+	}
+
+	@Test
+	public void test_should_create_a_valid_citizen_withotp() throws Exception {
+		org.egov.user.domain.model.User domainUser = mock(User.class);
+		when((domainUser.getOtpValidationRequest())).thenReturn(getExpectedRequest());
+		when(otpRepository.validateOtp(buildOtpValidationRequest())).thenReturn(true);
+		final User expectedUser = User.builder().build();
+		when(userRepository.create(domainUser)).thenReturn(expectedUser);
+
+		User returnedUser = userService.createCitizen(domainUser);
+
+		assertEquals(expectedUser, returnedUser);
+	}
+
+	private org.egov.user.web.contract.OtpValidateRequest buildOtpValidationRequest() {
+		// TODO Auto-generated method stub
+		RequestInfo requestInfo = RequestInfo.builder().action("validate").ts(new Date()).build();
+		Otp otp = Otp.builder().build();
+		org.egov.user.web.contract.OtpValidateRequest otpValidationRequest = org.egov.user.web.contract.OtpValidateRequest
+				.builder().requestInfo(requestInfo).otp(otp).build();
+		return otpValidationRequest;
+	}
+
 	@Test
 	public void test_should_set_pre_defined_expiry_on_creating_citizen() {
 		org.egov.user.domain.model.User domainUser = mock(User.class);
@@ -208,8 +248,7 @@ public class UserServiceTest {
 		User domainUser = validDomainUser(false);
 		User user = User.builder().build();
 		final User expectedUser = User.builder().build();
-		when(userRepository.update(any(org.egov.user.domain.model.User.class)))
-				.thenReturn(expectedUser);
+		when(userRepository.update(any(org.egov.user.domain.model.User.class))).thenReturn(expectedUser);
 		when(userRepository.getUserById(any(Long.class), anyString())).thenReturn(user);
 		when(userRepository.isUserPresent(any(String.class), any(Long.class), any(String.class))).thenReturn(false);
 
@@ -218,7 +257,7 @@ public class UserServiceTest {
 		assertEquals(expectedUser, returnedUser);
 	}
 
-	@Test(expected= AtleastOneRoleCodeException.class)
+	@Test(expected = AtleastOneRoleCodeException.class)
 	public void test_should_validate_user_on_update() {
 		User domainUser = mock(User.class);
 		Role role = Role.builder().code("EMPLOYEE").build();
@@ -228,11 +267,10 @@ public class UserServiceTest {
 		User user = User.builder().build();
 		final User expectedUser = User.builder().build();
 		expectedUser.setRoles(roles);
-		when(userRepository.update(any(org.egov.user.domain.model.User.class)))
-				.thenReturn(expectedUser);
+		when(userRepository.update(any(org.egov.user.domain.model.User.class))).thenReturn(expectedUser);
 		when(userRepository.getUserById(any(Long.class), anyString())).thenReturn(user);
 		when(userRepository.isUserPresent(any(String.class), any(Long.class), any(String.class))).thenReturn(false);
-	    userService.updateWithoutOtpValidation(1L, domainUser);
+		userService.updateWithoutOtpValidation(1L, domainUser);
 		verify(domainUser).validateUserModification();
 	}
 
@@ -255,9 +293,7 @@ public class UserServiceTest {
 
 	@Test(expected = UserIdMandatoryException.class)
 	public void test_should_throw_exception_on_partial_update_when_id_is_not_present() {
-		final User user = User.builder()
-				.id(null)
-				.build();
+		final User user = User.builder().id(null).build();
 
 		userService.partialUpdate(user);
 	}
@@ -293,12 +329,36 @@ public class UserServiceTest {
 	@Test
 	public void test_should_validate_update_password_request() {
 		final LoggedInUserUpdatePasswordRequest updatePasswordRequest = mock(LoggedInUserUpdatePasswordRequest.class);
-		when(userRepository.getUserById(any(), anyString())).thenReturn(mock(User.class));
+		User user = mock(User.class);
+		when(user.getType()).thenReturn(UserType.CITIZEN);
+		when(userRepository.getUserById(any(), anyString())).thenReturn(user);
 		when(passwordEncoder.matches(anyString(), anyString())).thenReturn(true);
 
 		userService.updatePasswordForLoggedInUser(updatePasswordRequest);
 
 		verify(updatePasswordRequest).validate();
+	}
+	
+	@Test(expected = InvalidUpdatePasswordRequestException.class)
+	public void test_should_throwexception_incaseofloginotpenabledastrue_forcitizen_update_password_request() {
+		userService = new UserService(userRepository, otpRepository, passwordEncoder, DEFAULT_PASSWORD_EXPIRY_IN_DAYS,
+				true,isEmployeeLoginOtpBased);
+		User user = mock(User.class);
+		when(userRepository.getUserById(any(), anyString())).thenReturn(user);
+		when(user.getType()).thenReturn(UserType.CITIZEN);
+		final LoggedInUserUpdatePasswordRequest updatePasswordRequest = mock(LoggedInUserUpdatePasswordRequest.class);
+		userService.updatePasswordForLoggedInUser(updatePasswordRequest);
+	}
+	
+	@Test(expected = InvalidUpdatePasswordRequestException.class)
+	public void test_should_throwexception_incaseofloginotpenabledastrue_foremployee_update_password_request() {
+		userService = new UserService(userRepository, otpRepository, passwordEncoder, DEFAULT_PASSWORD_EXPIRY_IN_DAYS,
+				false,true);
+		User user = mock(User.class);
+		when(userRepository.getUserById(any(), anyString())).thenReturn(user);
+		when(user.getType()).thenReturn(UserType.EMPLOYEE);
+		final LoggedInUserUpdatePasswordRequest updatePasswordRequest = mock(LoggedInUserUpdatePasswordRequest.class);
+		userService.updatePasswordForLoggedInUser(updatePasswordRequest);
 	}
 
 	@Test(expected = UserNotFoundException.class)
@@ -316,6 +376,7 @@ public class UserServiceTest {
 		final LoggedInUserUpdatePasswordRequest updatePasswordRequest = mock(LoggedInUserUpdatePasswordRequest.class);
 		when(updatePasswordRequest.getExistingPassword()).thenReturn("wrongPassword");
 		final User user = mock(User.class);
+		when(user.getType()).thenReturn(UserType.CITIZEN);
 		when(user.getPassword()).thenReturn("existingPasswordEncoded");
 		when(user.getPassword()).thenReturn("existingPasswordEncoded");
 		when(passwordEncoder.matches("wrongPassword", "existingPasswordEncoded")).thenReturn(false);
@@ -329,6 +390,7 @@ public class UserServiceTest {
 		final LoggedInUserUpdatePasswordRequest updatePasswordRequest = mock(LoggedInUserUpdatePasswordRequest.class);
 		when(updatePasswordRequest.getExistingPassword()).thenReturn("existingPassword");
 		final User domainUser = mock(User.class);
+		when(domainUser.getType()).thenReturn(UserType.CITIZEN);
 		when(domainUser.getPassword()).thenReturn("existingPasswordEncoded");
 		when(passwordEncoder.matches("existingPassword", "existingPasswordEncoded")).thenReturn(true);
 		when(userRepository.getUserById(any(), anyString())).thenReturn(domainUser);
@@ -343,23 +405,12 @@ public class UserServiceTest {
 	public void test_should_validate_request_when_updating_password_for_non_logged_in_user() {
 		final NonLoggedInUserUpdatePasswordRequest request = mock(NonLoggedInUserUpdatePasswordRequest.class);
 		when(otpRepository.isOtpValidationComplete(any())).thenReturn(true);
-		final User domainUser = mock(User.class);
+		final User domainUser = User.builder().type(UserType.SYSTEM).build();
 		when(userRepository.findByUsername(anyString(), anyString())).thenReturn(domainUser);
 
 		userService.updatePasswordForNonLoggedInUser(request);
 
 		verify(request).validate();
-	}
-
-	@Test(expected = OtpValidationPendingException.class)
-	public void
-	test_should_throw_exception_when_otp_validation_is_incomplete_when_updating_password_for_non_logged_in_user() {
-		final NonLoggedInUserUpdatePasswordRequest request = mock(NonLoggedInUserUpdatePasswordRequest.class);
-		when(otpRepository.isOtpValidationComplete(any())).thenReturn(false);
-		final User domainUser = mock(User.class);
-		when(userRepository.findByUsername(anyString(), anyString())).thenReturn(domainUser);
-
-		userService.updatePasswordForNonLoggedInUser(request);
 	}
 
 	@Test(expected = UserNotFoundException.class)
@@ -372,10 +423,26 @@ public class UserServiceTest {
 	}
 
 	@Test
-	public void test_should_update_existing_password_for_non_logged_in_user() {
+	public void test_should_update_existing_password_for_non_logged_in_user() throws Exception {
 		final NonLoggedInUserUpdatePasswordRequest request = mock(NonLoggedInUserUpdatePasswordRequest.class);
 		when(request.getNewPassword()).thenReturn("newPassword");
-		when(otpRepository.isOtpValidationComplete(any())).thenReturn(true);
+		when(otpRepository.validateOtp(any())).thenReturn(true);
+		final User domainUser = mock(User.class);
+		when(domainUser.getPassword()).thenReturn("newPassword");
+		when(domainUser.getType()).thenReturn(UserType.SYSTEM);
+		when(userRepository.findByUsername(anyString(), anyString())).thenReturn(domainUser);
+
+		userService.updatePasswordForNonLoggedInUser(request);
+
+		verify(domainUser).updatePassword("newPassword");
+	}
+
+	@SuppressWarnings("unchecked")
+	@Test(expected = Exception.class)
+	public void test_notshould_update_existing_password_for_non_logged_in_user() throws Exception {
+		final NonLoggedInUserUpdatePasswordRequest request = mock(NonLoggedInUserUpdatePasswordRequest.class);
+		when(request.getNewPassword()).thenReturn("newPassword");
+		when(otpRepository.validateOtp(any())).thenThrow(Exception.class);
 		final User domainUser = mock(User.class);
 		when(userRepository.findByUsername(anyString(), anyString())).thenReturn(domainUser);
 
@@ -383,22 +450,69 @@ public class UserServiceTest {
 
 		verify(domainUser).updatePassword("newPassword");
 	}
+
+	@SuppressWarnings("unchecked")
+	@Test(expected = InvalidUpdatePasswordRequestException.class)
+	public void test_notshould_update_password_whenCitizenotpconfigured_istrue() throws Exception {
+		userService = new UserService(userRepository, otpRepository, passwordEncoder, DEFAULT_PASSWORD_EXPIRY_IN_DAYS,
+				true,false);
+		final NonLoggedInUserUpdatePasswordRequest request = mock(NonLoggedInUserUpdatePasswordRequest.class);
+		when(request.getNewPassword()).thenReturn("newPassword");
+		when(otpRepository.validateOtp(any())).thenThrow(Exception.class);
+		final User domainUser = mock(User.class);
+		when(domainUser.getType()).thenReturn(UserType.CITIZEN); 
+		when(userRepository.findByUsername(anyString(), anyString())).thenReturn(domainUser);
+		userService.updatePasswordForNonLoggedInUser(request);
+	}
 	
+	@SuppressWarnings("unchecked")
+	@Test(expected = InvalidUpdatePasswordRequestException.class)
+	public void test_notshould_update_password_whenEmployeeotpconfigured_istrue() throws Exception {
+		userService = new UserService(userRepository, otpRepository, passwordEncoder, DEFAULT_PASSWORD_EXPIRY_IN_DAYS,
+				false,true);
+		final NonLoggedInUserUpdatePasswordRequest request = mock(NonLoggedInUserUpdatePasswordRequest.class);
+		when(request.getNewPassword()).thenReturn("newPassword");
+		when(otpRepository.validateOtp(any())).thenThrow(Exception.class);
+		final User domainUser = mock(User.class);
+		when(domainUser.getType()).thenReturn(UserType.EMPLOYEE); 
+		when(userRepository.findByUsername(anyString(), anyString())).thenReturn(domainUser);
+		userService.updatePasswordForNonLoggedInUser(request);
+	}
+	
+	
+	@Test
+	public void test_should_create_a_valid_citizen_WithOtp() throws Exception {
+		org.egov.user.domain.model.User domainUser = mock(User.class);
+		when((domainUser.getOtpValidationRequest())).thenReturn(getExpectedRequest());
+		// when(otpRepository.isOtpValidationComplete(getExpectedRequest())).thenReturn(true);
+		when(otpRepository.validateOtp((getOtpValidationRequest()))).thenReturn(true);
+		final User expectedUser = User.builder().build();
+		when(userRepository.create(domainUser)).thenReturn(expectedUser);
+
+		User returnedUser = userService.createCitizen(domainUser);
+
+		assertEquals(expectedUser, returnedUser);
+	}
+	
+	private OtpValidateRequest getOtpValidationRequest() {
+
+		RequestInfo requestInfo = RequestInfo.builder().build();
+
+		Otp otp = Otp.builder().identity("12121212").otp("23456").tenantId("default").build();
+
+		return OtpValidateRequest.builder().requestInfo(requestInfo).otp(otp).build();
+
+	}
+
 	@Test
 	public void test_should_persist_changes_on_updating_password_for_non_logged_in_user() {
 		final NonLoggedInUserUpdatePasswordRequest request = NonLoggedInUserUpdatePasswordRequest.builder()
-				.userName("mobileNumber")
-				.tenantId("tenant")
-				.otpReference("otpReference")
-				.newPassword("newPassword")
+				.userName("mobileNumber").tenantId("tenant").otpReference("otpReference").newPassword("newPassword")
 				.build();
-		final OtpValidationRequest expectedRequest = OtpValidationRequest.builder()
-				.otpReference("otpReference")
-				.mobileNumber("mobileNumber")
-				.tenantId("tenant")
-				.build();
+		final OtpValidationRequest expectedRequest = OtpValidationRequest.builder().otpReference("otpReference")
+				.mobileNumber("mobileNumber").tenantId("tenant").build();
 		when(otpRepository.isOtpValidationComplete(expectedRequest)).thenReturn(true);
-		final User domainUser = mock(User.class);
+		final User domainUser =User.builder().type(UserType.SYSTEM).build();
 		when(userRepository.findByUsername("mobileNumber", "tenant")).thenReturn(domainUser);
 
 		userService.updatePasswordForNonLoggedInUser(request);
@@ -407,27 +521,14 @@ public class UserServiceTest {
 	}
 
 	private org.egov.user.domain.model.User validDomainUser(boolean otpValidationMandatory) {
-		return User.builder()
-				.username("supandi_rocks")
-				.name("Supandi")
-				.gender(Gender.MALE)
-				.type(UserType.CITIZEN)
-				.active(Boolean.TRUE)
-				.mobileNumber("9988776655")
-				.tenantId("tenantId")
-				.otpReference("12312")
-				.password("password")
-				.roles(Collections.singletonList(Role.builder().code("roleCode1").build()))
-				.accountLocked(false)
-				.otpValidationMandatory(otpValidationMandatory)
-				.build();
+		return User.builder().username("supandi_rocks").name("Supandi").gender(Gender.MALE).type(UserType.CITIZEN)
+				.active(Boolean.TRUE).mobileNumber("9988776655").tenantId("tenantId").otpReference("12312")
+				.password("password").roles(Collections.singletonList(Role.builder().code("roleCode1").build()))
+				.accountLocked(false).otpValidationMandatory(otpValidationMandatory).build();
 	}
 
 	private OtpValidationRequest getExpectedRequest() {
-		return OtpValidationRequest.builder()
-				.otpReference("12312")
-				.tenantId("tenantId")
-				.mobileNumber("9988776655")
+		return OtpValidationRequest.builder().otpReference("12312").tenantId("tenantId").mobileNumber("9988776655")
 				.build();
 	}
 

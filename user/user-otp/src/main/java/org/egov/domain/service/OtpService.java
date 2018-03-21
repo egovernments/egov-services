@@ -1,10 +1,11 @@
 package org.egov.domain.service;
 
+import org.egov.domain.exception.UserMobileNumberNotFoundException;
 import org.egov.domain.model.OtpRequest;
 import org.egov.domain.model.User;
 import org.egov.persistence.repository.OtpEmailRepository;
-import org.egov.persistence.repository.OtpSMSRepository;
 import org.egov.persistence.repository.OtpRepository;
+import org.egov.persistence.repository.OtpSMSRepository;
 import org.egov.persistence.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -30,7 +31,7 @@ public class OtpService {
 
     public void sendOtp(OtpRequest otpRequest) {
         otpRequest.validate();
-        if(otpRequest.isRegistrationRequestType()) {
+        if(otpRequest.isRegistrationRequestType() || otpRequest.isLoginRequestType()) {
 			sendOtpForUserRegistration(otpRequest);
 		} else {
         	sendOtpForPasswordReset(otpRequest);
@@ -45,6 +46,11 @@ public class OtpService {
 	private void sendOtpForPasswordReset(OtpRequest otpRequest) {
 		final User matchingUser = userRepository
 				.fetchUser(otpRequest.getMobileNumber(), otpRequest.getTenantId());
+		if(null == matchingUser.getMobileNumber() || matchingUser.getMobileNumber().isEmpty())
+			throw new UserMobileNumberNotFoundException();
+		else
+			otpRequest.setMobileNumber(matchingUser.getMobileNumber());
+			
 		final String otpNumber = otpRepository.fetchOtp(otpRequest);
 		otpSMSSender.send(otpRequest, otpNumber);
 		otpEmailRepository.send(matchingUser.getEmail(), otpNumber);

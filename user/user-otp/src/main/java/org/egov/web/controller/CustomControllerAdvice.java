@@ -1,9 +1,11 @@
 package org.egov.web.controller;
 
 import org.egov.domain.exception.InvalidOtpRequestException;
+import org.egov.domain.exception.UserMobileNumberNotFoundException;
 import org.egov.domain.exception.UserNotFoundException;
 import org.egov.web.contract.ErrorResponse;
 import org.egov.web.error.OtpRequestErrorAdapter;
+import org.egov.web.error.UserMobileNumberNotFoundErrorAdapter;
 import org.egov.web.error.UserNotFoundErrorAdapter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,6 +31,12 @@ public class CustomControllerAdvice {
 	@ExceptionHandler(UserNotFoundException.class)
 	public ErrorResponse handleUserNotFoundException() {
 		return new UserNotFoundErrorAdapter().adapt(null);
+	}
+	
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	@ExceptionHandler(UserMobileNumberNotFoundException.class)
+	public ErrorResponse handleUserMobileNumberNotFoundException() {
+		return new UserMobileNumberNotFoundErrorAdapter().adapt(null);
 	}
 
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)

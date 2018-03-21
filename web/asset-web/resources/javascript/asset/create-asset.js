@@ -515,7 +515,7 @@ class CreateAsset extends React.Component {
   }
 
   handleChange(e, name, pattern) {
-      
+
     if (name == "scheme") {
       commonApiPost("egf-masters", "subschemes", "_search", { tenantId, scheme: val }, function (err, res) {
         if (res) {
@@ -622,14 +622,14 @@ class CreateAsset extends React.Component {
       if(noOfShops && isNaN(Number(noOfShops["value"]))){
         return showError("No of Shops Should be number. Please Check ");
       }
-      
+
       if(noOfFloors && isNaN(Number(noOfFloors["value"]))){
         return showError("No of Floor Should be number. Please Check ");
-      } 
+      }
 
       var totalShops = 0;
       var notANumber = false;
-      
+
       if(floorDetails){
       for(let _i in floorDetails["value"]){
         console.log(Number(floorDetails["value"][_i]["No. of Shops"]));
@@ -639,7 +639,7 @@ class CreateAsset extends React.Component {
         totalShops = totalShops + Number(floorDetails["value"][_i]["No. of Shops"]) ;
       }
     }
-      
+
       if(notANumber){
       return showError("No of Shops in Floor Should be number. Please Check ");
       }
@@ -1073,7 +1073,7 @@ class CreateAsset extends React.Component {
                 _this.setState({"assetCategories":response});
                 // console.log('Global var : ', response);
                 console.log('Asset Category Master from Promise for update / view: ',response);
-                
+
                   console.log('Its capitalized');
                   let ifassetLandIMObj = response && response.find((obj)=>{return obj.name === asset.assetCategory.name});
                   console.log('LANDIMMOV : ',ifassetLandIMObj);
@@ -1081,7 +1081,7 @@ class CreateAsset extends React.Component {
                       capitalized: asset.status == "CAPITALIZED"?true:false,
                       ifassetLandIM: ifassetLandIMObj && (ifassetLandIMObj.assetCategoryType === 'LAND' || ifassetLandIMObj.assetCategoryType === 'IMMOVABLE') ? true : false
                   });
-                
+
               });
 
               if(asset.assetCategory && asset.assetCategory.id) {
@@ -1132,7 +1132,7 @@ class CreateAsset extends React.Component {
         })
       }
     });
-                 
+
   }
 
   removeRow(e, type, name, index, assetIndex) {
@@ -1793,7 +1793,7 @@ class CreateAsset extends React.Component {
       if(["view", "update"].indexOf(type) > -1 && assetAttributes.length) {
         var tableItems = assetAttributes.filter(function(val, ind) {
           return (val.type == "Table" && name == val.key);
-        });      
+        });
         return tableItems.map(function(val, index) {
           return val.value.map(function(itm, ind){
               if(Object.keys(itm).indexOf("new") == -1) {
@@ -2338,7 +2338,7 @@ class CreateAsset extends React.Component {
                         </div>
                       </div>
                     </div>
-                    
+
                     <div className="col-sm-6" style={{ display: this.state.readOnly ? 'none' : 'block' }}>
                       <div className="row">
                         <div className="col-sm-6 label-text">

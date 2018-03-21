@@ -124,12 +124,16 @@ public class AssetCategoryQueryBuilder {
             selectQuery.append(" assetcategory.parentid = ?");
             preparedStatementValues.add(assetCategoryCriteria.getParent());
         }
-
         if (assetCategoryCriteria.getUsedForLease() != null) {
             isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
             selectQuery.append(" assetcategory.usedforlease = ?");
             preparedStatementValues.add(assetCategoryCriteria.getUsedForLease());
         }
+        
+        if (assetCategoryCriteria.getIsParentCategory() != null) {
+            selectQuery.append(
+                    " AND assetcategory.parentid IS NULL");
+            }
 
     }
 

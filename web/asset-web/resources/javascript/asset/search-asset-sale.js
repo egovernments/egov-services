@@ -160,6 +160,7 @@ class SearchAsset extends React.Component {
     }
 
     var count = 2, _this = this, _state = {};
+    let self = this;
     var checkCountNCall = function(key, res) {
       count--;
       _state[key] = res;
@@ -167,8 +168,8 @@ class SearchAsset extends React.Component {
         _this.setInitialState(_state);
     }
 
-    getDropdown("assetCategories", function(res) {
-      checkCountNCall("assetCategories", res);
+    commonApiPost("asset-services", "assetCategories", "_search", { tenantId,isChildCategory:true}, function(err, res) {
+      self.setState({assetCategories:res.AssetCategory})
     });
 
     getDropdown("locality", function(res) {
@@ -266,7 +267,7 @@ class SearchAsset extends React.Component {
                     <td>{item.name}</td>
                     <td>{item.assetCategory.name}</td>
                     <td>{item.locationDetails.locality ? getNameById(locality, item.locationDetails.locality) : ""}</td>
-                    <td>{item.grossValue}</td>
+                    <td>{item.currentValue === null ? (item.grossValue === null ? 0 : item.grossValue) : item.currentValue}</td>
               </tr>  );
         })
       }

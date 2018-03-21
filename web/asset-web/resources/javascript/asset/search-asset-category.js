@@ -50,6 +50,7 @@ class SearchAssetCategory extends React.Component {
     $('#hpCitizenTitle').text(titleCase(getUrlVars()["type"]) + " Asset Category");
 
     var count = 3, _this = this, _state = {};
+      let self = this;
     var checkCountNCall = function(key, res) {
       count--;
       _state[key] = res;
@@ -61,8 +62,8 @@ class SearchAssetCategory extends React.Component {
       checkCountNCall("asset_category_type", res);
     });
 
-    getDropdown("assetCategories", function(res) {
-      checkCountNCall("assetCategories", res);
+    commonApiPost("asset-services", "assetCategories", "_search", { tenantId,isParentCategory:true}, function(err, res) {
+      self.setState({assetCategories:res.AssetCategory})
     });
 
     getDropdown("assignments_unitOfMeasurement", function(res) {

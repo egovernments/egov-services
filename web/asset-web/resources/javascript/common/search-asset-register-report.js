@@ -315,6 +315,7 @@ class SearchAsset extends React.Component {
     }
     $('#hpCitizenTitle').text(titleCase(getUrlVars()["type"]) + " Asset");
     var count = 2, _this = this, _state = {},result=[];
+      let self = this;
     var checkCountNCall = function(key, res) {
       count--;
       _state[key] = res;
@@ -325,8 +326,12 @@ class SearchAsset extends React.Component {
 
 
     //////console.log(this.state.localityList);
-    getDropdown("assetCategories", function(res) {
-      checkCountNCall("assetCategories", res);
+    // getDropdown("assetCategories", function(res) {
+    //   checkCountNCall("assetCategories", res);
+    // });
+
+    commonApiPost("asset-services", "assetCategories", "_search", { tenantId,isChildCategory:true}, function(err, res) {
+      self.setState({assetCategories:res.AssetCategory})
     });
 
     getDropdown("locality", function(res) {

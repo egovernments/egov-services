@@ -221,6 +221,7 @@ class CreateAsset extends React.Component {
     else $('#hpCitizenTitle').text("Create Asset Category")
     var asset_category_type, assetCategories, depreciationMethod, assetAccount, accumulatedDepreciationAccount, revaluationReserveAccount, depreciationExpenseAccount, assignments_unitOfMeasurement;
     var count = 8, _this = this, _state = {};
+      let self = this;
     var checkCountNCall = function(key, res) {
       count--;
       _state[key] = res;
@@ -231,8 +232,13 @@ class CreateAsset extends React.Component {
     getDropdown("asset_category_type", function(res) {
       checkCountNCall("asset_category_type", res);
     });
-    getDropdown("assetCategories", function(res) {
-      checkCountNCall("assetCategories", res);
+
+    //  getDropdown("assetCategories", function(res) {
+    //    checkCountNCall("assetCategories", res);
+    // });
+
+    commonApiPost("asset-services", "assetCategories", "_search", { tenantId,isParentCategory:true}, function(err, res) {
+      self.setState({assetCategories:res.AssetCategory})
     });
     getDropdown("depreciationMethod", function(res) {
       checkCountNCall("depreciationMethod", res);

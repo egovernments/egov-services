@@ -167,7 +167,7 @@ class AssetDepreciation extends React.Component {
      self.setState({assetCategory:res.AssetCategoryType})
    });
 
-   commonApiPost("asset-services", "assetCategories", "_search", { tenantId}, function(err, res) {
+   commonApiPost("asset-services", "assetCategories", "_search", { tenantId,isChildCategory:true}, function(err, res) {
      self.setState({assetCategoryName:res.AssetCategory})
    });
 

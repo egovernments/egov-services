@@ -95,7 +95,7 @@ class SearchAsset extends React.Component {
     else {
       $('#hpCitizenTitle').text(titleCase(getUrlVars()["type"]) + " Asset");
     }
-    var count = 3, _this = this, _state = {};
+    var count = 2, _this = this, _state = {};
       let self = this;
     var checkCountNCall = function(key, res) {
       count--;

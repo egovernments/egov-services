@@ -5,7 +5,6 @@ import java.time.LocalDateTime;
 import org.egov.lams.config.PropertiesManager;
 import org.egov.lams.model.City;
 import org.egov.lams.repository.TenantRepository;
-import org.egov.lams.web.contract.Tenant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,8 +47,7 @@ public class AgreementNumberUtil {
 			logger.info("AcknowledgementNumberService : "+ e.getMessage(),e);
 			throw e;
 		}
-		baseValue.append(String.format("%04d", resultSet));
-		System.err.println(baseValue.toString());
+		baseValue.append(String.format("%06d", resultSet));
 		return baseValue.toString().toUpperCase();
 	}
 

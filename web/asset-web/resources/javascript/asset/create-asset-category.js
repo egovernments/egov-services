@@ -219,9 +219,9 @@ class CreateAsset extends React.Component {
 
     if(getUrlVars()["type"]) $('#hpCitizenTitle').text(titleCase(getUrlVars()["type"]) + " Asset Category")
     else $('#hpCitizenTitle').text("Create Asset Category")
-    var asset_category_type, assetCategories, depreciationMethod, assetAccount, accumulatedDepreciationAccount, revaluationReserveAccount, depreciationExpenseAccount, assignments_unitOfMeasurement;
-    var count = 8, _this = this, _state = {};
-      let self = this;
+    var asset_category_type, depreciationMethod, assetAccount, accumulatedDepreciationAccount, revaluationReserveAccount, depreciationExpenseAccount, assignments_unitOfMeasurement;
+    let self = this;
+    var count = 7, _this = this, _state = {};
     var checkCountNCall = function(key, res) {
       count--;
       _state[key] = res;

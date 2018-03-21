@@ -49,7 +49,7 @@ class SearchAssetCategory extends React.Component {
     }
     $('#hpCitizenTitle').text(titleCase(getUrlVars()["type"]) + " Asset Category");
 
-    var count = 3, _this = this, _state = {};
+    var count = 2, _this = this, _state = {};
       let self = this;
     var checkCountNCall = function(key, res) {
       count--;

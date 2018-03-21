@@ -38,7 +38,7 @@ public class UserRepositoryTest {
 				.andRespond(
 						withSuccess(resources.getFileContents("userSearchSuccessResponse.json"),
 								MediaType.APPLICATION_JSON_UTF8));
-		final User expectedUser = new User(1L, "foo@bar.com");
+		final User expectedUser = new User(1L, "foo@bar.com","123");
 
 		final User actualUser = userRepository.fetchUser("mobileNumber", "tenantId");
 
@@ -53,8 +53,6 @@ public class UserRepositoryTest {
 				.andRespond(
 						withSuccess(resources.getFileContents("userSearchEmptyResponse.json"),
 								MediaType.APPLICATION_JSON_UTF8));
-		final User expectedUser = new User(1L, "foo@bar.com");
-
 		userRepository.fetchUser("mobileNumber", "tenantId");
 	}
 

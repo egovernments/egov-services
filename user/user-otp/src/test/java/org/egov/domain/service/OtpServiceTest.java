@@ -1,22 +1,23 @@
 package org.egov.domain.service;
 
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import org.egov.domain.exception.UserMobileNumberNotFoundException;
 import org.egov.domain.model.OtpRequest;
 import org.egov.domain.model.OtpRequestType;
 import org.egov.domain.model.User;
 import org.egov.persistence.repository.OtpEmailRepository;
-import org.egov.persistence.repository.OtpSMSRepository;
 import org.egov.persistence.repository.OtpRepository;
+import org.egov.persistence.repository.OtpSMSRepository;
 import org.egov.persistence.repository.UserRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class OtpServiceTest {
@@ -59,7 +60,29 @@ public class OtpServiceTest {
 	public void test_should_validate_otp_request_for_password_reset() {
 		final OtpRequest otpRequest = mock(OtpRequest.class);
 		when(otpRequest.isRegistrationRequestType()).thenReturn(false);
-		when(userRepository.fetchUser(anyString(), anyString())).thenReturn(new User(1L, "foo@bar.com"));
+		when(userRepository.fetchUser(anyString(), anyString())).thenReturn(new User(1L, "foo@bar.com","123"));
+
+		otpService.sendOtp(otpRequest);
+
+		verify(otpRequest).validate();
+	}
+	
+	@Test(expected = UserMobileNumberNotFoundException.class)
+	public void test_should_throwException_whenmobilenumber_is_null() {
+		final OtpRequest otpRequest = mock(OtpRequest.class);
+		when(otpRequest.isRegistrationRequestType()).thenReturn(false);
+		when(userRepository.fetchUser(anyString(), anyString())).thenReturn(new User(1L, "foo@bar.com",null));
+
+		otpService.sendOtp(otpRequest);
+
+		verify(otpRequest).validate();
+	}
+	
+	@Test(expected = UserMobileNumberNotFoundException.class)
+	public void test_should_throwException_whenmobilenumber_is_empty() {
+		final OtpRequest otpRequest = mock(OtpRequest.class);
+		when(otpRequest.isRegistrationRequestType()).thenReturn(false);
+		when(userRepository.fetchUser(anyString(), anyString())).thenReturn(new User(1L, "foo@bar.com",""));
 
 		otpService.sendOtp(otpRequest);
 
@@ -88,7 +111,7 @@ public class OtpServiceTest {
 		final String otpNumber = "otpNumber";
 		when(otpRepository.fetchOtp(otpRequest)).thenReturn(otpNumber);
 		when(userRepository.fetchUser("mobileNumber", "tenant"))
-				.thenReturn(new User(1L, "foo@bar.com"));
+				.thenReturn(new User(1L, "foo@bar.com","1234"));
 
 		otpService.sendOtp(otpRequest);
 
@@ -105,7 +128,7 @@ public class OtpServiceTest {
 		final String otpNumber = "otpNumber";
 		when(otpRepository.fetchOtp(otpRequest)).thenReturn(otpNumber);
 		when(userRepository.fetchUser("mobileNumber", "tenant"))
-				.thenReturn(new User(1L, "foo@bar.com"));
+				.thenReturn(new User(1L, "foo@bar.com","123"));
 
 		otpService.sendOtp(otpRequest);
 

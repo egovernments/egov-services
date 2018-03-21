@@ -125,12 +125,12 @@ public class UserService {
 		updatePasswordRequest.validate();
 		final User user = userRepository.getUserById(updatePasswordRequest.getUserId(),
 				updatePasswordRequest.getTenantId());
+		validateUserPresent(user);
 		if (user.getType().toString().equals(UserType.CITIZEN.toString()) && isCitizenLoginOtpBased)
 			throw new InvalidUpdatePasswordRequestException();
 		if (user.getType().toString().equals(UserType.EMPLOYEE.toString()) && isEmployeeLoginOtpBased)
 			throw new InvalidUpdatePasswordRequestException();
 
-		validateUserPresent(user);
 		validateExistingPassword(user, updatePasswordRequest.getExistingPassword());
 		user.updatePassword(updatePasswordRequest.getNewPassword());
 		userRepository.update(user);
@@ -139,15 +139,14 @@ public class UserService {
 	public void updatePasswordForNonLoggedInUser(NonLoggedInUserUpdatePasswordRequest request) {
 		request.validate();
 		// validateOtp(request.getOtpValidationRequest());
-		Otp otp = Otp.builder().otp(request.getOtpReference()).identity(request.getUserName())
-				.tenantId(request.getTenantId()).build();
 		final User user = fetchUserByUserName(request.getUserName(), request.getTenantId());
 		validateUserPresent(user);
 		if (user.getType().toString().equals(UserType.CITIZEN.toString()) && isCitizenLoginOtpBased)
 			throw new InvalidUpdatePasswordRequestException();
 		if (user.getType().toString().equals(UserType.EMPLOYEE.toString()) && isEmployeeLoginOtpBased)
 			throw new InvalidUpdatePasswordRequestException();
-
+		Otp otp = Otp.builder().otp(request.getOtpReference()).identity(user.getMobileNumber())
+				.tenantId(request.getTenantId()).build();
 		try {
 			validateOtp(otp);
 		} catch (Exception e) {
@@ -226,7 +225,6 @@ public class UserService {
 	}
 
 	public Boolean validateOtp(Otp otp) throws Exception {
-		// TODO Auto-generated method stub
 		RequestInfo requestInfo = RequestInfo.builder().action("validate").ts(new Date()).build();
 		OtpValidateRequest otpValidationRequest = OtpValidateRequest.builder().requestInfo(requestInfo).otp(otp)
 				.build();

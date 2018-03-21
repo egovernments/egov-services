@@ -1,18 +1,21 @@
 package org.egov.domain.model;
 
+import static org.springframework.util.StringUtils.isEmpty;
+
+import org.egov.domain.exception.InvalidOtpRequestException;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import org.egov.domain.exception.InvalidOtpRequestException;
-
-import static org.springframework.util.StringUtils.isEmpty;
+import lombok.Setter;
 
 @Getter
 @AllArgsConstructor
 @Builder
 @EqualsAndHashCode
 public class OtpRequest {
+	@Setter
     private String mobileNumber;
     private String tenantId;
     private OtpRequestType type;

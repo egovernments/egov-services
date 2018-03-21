@@ -73,16 +73,16 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 		System.out.println("tenantId in authenticate------->" + user.getTenantId());
 
 		List<Role> roles = user.getRoles();
-		boolean isCitizen = true;
+		boolean isCitizen = false;
 		for (Role role : roles) {
-			if (role.getCode().toString().equals("EMPLOYEE"))
-				isCitizen = false;
+			if (role.getCode().toString().equals("CITIZEN"))
+				isCitizen = true;
 		}
 		Boolean isPasswordMatch;
 		if (isCitizen) {
-			isPasswordMatch = LoginPasswordProcess(citizenLoginPasswordOtpEnabled, password, user);
+			isPasswordMatch = isPasswordMatch(citizenLoginPasswordOtpEnabled, password, user);
 		} else {
-			isPasswordMatch = LoginPasswordProcess(employeeLoginPasswordOtpEnabled, password, user);
+			isPasswordMatch = isPasswordMatch(employeeLoginPasswordOtpEnabled, password, user);
 		}
 
 		if (isPasswordMatch) {
@@ -102,7 +102,7 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 		}
 	}
 
-	private boolean LoginPasswordProcess(Boolean isOtpBased, String password, User user) {
+	private boolean isPasswordMatch(Boolean isOtpBased, String password, User user) {
 		BCryptPasswordEncoder bcrypt = new BCryptPasswordEncoder();
 		if (isOtpBased) {
 			Otp otp = Otp.builder().otp(password).identity(user.getUsername()).tenantId(tenantId).build();

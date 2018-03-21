@@ -329,12 +329,36 @@ public class UserServiceTest {
 	@Test
 	public void test_should_validate_update_password_request() {
 		final LoggedInUserUpdatePasswordRequest updatePasswordRequest = mock(LoggedInUserUpdatePasswordRequest.class);
-		when(userRepository.getUserById(any(), anyString())).thenReturn(mock(User.class));
+		User user = mock(User.class);
+		when(user.getType()).thenReturn(UserType.CITIZEN);
+		when(userRepository.getUserById(any(), anyString())).thenReturn(user);
 		when(passwordEncoder.matches(anyString(), anyString())).thenReturn(true);
 
 		userService.updatePasswordForLoggedInUser(updatePasswordRequest);
 
 		verify(updatePasswordRequest).validate();
+	}
+	
+	@Test(expected = InvalidUpdatePasswordRequestException.class)
+	public void test_should_throwexception_incaseofloginotpenabledastrue_forcitizen_update_password_request() {
+		userService = new UserService(userRepository, otpRepository, passwordEncoder, DEFAULT_PASSWORD_EXPIRY_IN_DAYS,
+				true,isEmployeeLoginOtpBased);
+		User user = mock(User.class);
+		when(userRepository.getUserById(any(), anyString())).thenReturn(user);
+		when(user.getType()).thenReturn(UserType.CITIZEN);
+		final LoggedInUserUpdatePasswordRequest updatePasswordRequest = mock(LoggedInUserUpdatePasswordRequest.class);
+		userService.updatePasswordForLoggedInUser(updatePasswordRequest);
+	}
+	
+	@Test(expected = InvalidUpdatePasswordRequestException.class)
+	public void test_should_throwexception_incaseofloginotpenabledastrue_foremployee_update_password_request() {
+		userService = new UserService(userRepository, otpRepository, passwordEncoder, DEFAULT_PASSWORD_EXPIRY_IN_DAYS,
+				false,true);
+		User user = mock(User.class);
+		when(userRepository.getUserById(any(), anyString())).thenReturn(user);
+		when(user.getType()).thenReturn(UserType.EMPLOYEE);
+		final LoggedInUserUpdatePasswordRequest updatePasswordRequest = mock(LoggedInUserUpdatePasswordRequest.class);
+		userService.updatePasswordForLoggedInUser(updatePasswordRequest);
 	}
 
 	@Test(expected = UserNotFoundException.class)
@@ -352,6 +376,7 @@ public class UserServiceTest {
 		final LoggedInUserUpdatePasswordRequest updatePasswordRequest = mock(LoggedInUserUpdatePasswordRequest.class);
 		when(updatePasswordRequest.getExistingPassword()).thenReturn("wrongPassword");
 		final User user = mock(User.class);
+		when(user.getType()).thenReturn(UserType.CITIZEN);
 		when(user.getPassword()).thenReturn("existingPasswordEncoded");
 		when(user.getPassword()).thenReturn("existingPasswordEncoded");
 		when(passwordEncoder.matches("wrongPassword", "existingPasswordEncoded")).thenReturn(false);
@@ -365,6 +390,7 @@ public class UserServiceTest {
 		final LoggedInUserUpdatePasswordRequest updatePasswordRequest = mock(LoggedInUserUpdatePasswordRequest.class);
 		when(updatePasswordRequest.getExistingPassword()).thenReturn("existingPassword");
 		final User domainUser = mock(User.class);
+		when(domainUser.getType()).thenReturn(UserType.CITIZEN);
 		when(domainUser.getPassword()).thenReturn("existingPasswordEncoded");
 		when(passwordEncoder.matches("existingPassword", "existingPasswordEncoded")).thenReturn(true);
 		when(userRepository.getUserById(any(), anyString())).thenReturn(domainUser);

@@ -46,7 +46,7 @@ SearchDefinitions:
 
  - name: actionSearch
    query: 
-    baseQuery: (select array_to_json(array_agg(row_to_json(actionHistory)))from (select * from eg_pgr_action $where limit 200) services)
+    baseQuery: (select array_to_json(array_agg(row_to_json(actionHistory)))from (select tenantid, by, isinternal, "when", businesskey, status, assignee, comments from eg_pgr_action $where limit 200) actionHistory)
     groupBy:    
     orderBy: 
    searchParams:
@@ -82,7 +82,7 @@ SearchDefinitions:
 
    output:
     jsonFormat: {"ResponseInfo": {}}
-    outJsonPath: $.actionHistory
+    outJsonPath: $.services
     responseInfoPath: $.ResponseInfo
 
 

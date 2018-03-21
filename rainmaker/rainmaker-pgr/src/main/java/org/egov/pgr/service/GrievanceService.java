@@ -14,8 +14,6 @@ import org.egov.pgr.contract.AuditDetails;
 import org.egov.pgr.contract.CountResponse;
 import org.egov.pgr.contract.IdResponse;
 import org.egov.pgr.contract.SearcherRequest;
-import org.egov.pgr.contract.ServiceReq;
-import org.egov.pgr.contract.ServiceReqResponse;
 import org.egov.pgr.contract.ServiceReqSearchCriteria;
 import org.egov.pgr.producer.PGRProducer;
 import org.egov.pgr.repository.IdGenRepo;
@@ -23,13 +21,13 @@ import org.egov.pgr.repository.ServiceRequestRepository;
 import org.egov.pgr.utils.PGRConstants;
 import org.egov.pgr.utils.PGRUtils;
 import org.egov.pgr.utils.ResponseInfoFactory;
-import org.egov.pgr.v2.contract.ActionHistory;
-import org.egov.pgr.v2.contract.ActionInfo;
+import org.egov.pgr.v3.contract.ActionInfo;
 import org.egov.pgr.v2.contract.Comment;
 import org.egov.pgr.v2.contract.Media;
 import org.egov.pgr.v2.contract.Service;
 import org.egov.pgr.v2.contract.ServiceRequest;
-import org.egov.pgr.v2.contract.ServiceResponse;
+import org.egov.pgr.v3.contract.ActionHistory;
+import org.egov.pgr.v3.contract.ServiceResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 
@@ -78,12 +76,12 @@ public class GrievanceService {
 		
 		private static final String MODULE_NAME = "PGR:";
 
-		/***
+/*		*//***
 		 * Asynchronous method performs business logic if any and adds the data to
 		 * persister queue on create topic
 		 * 
 		 * @param request
-		 */
+		 *//*
 		public ServiceResponse create(ServiceRequest request) {
 
 			log.debug(" the incoming request obj in service : {}", request);
@@ -117,12 +115,12 @@ public class GrievanceService {
 			return getServiceResponse(request);
 		}
 
-		/***
+		*//***
 		 * Asynchronous method performs business logic if any and adds the data to
 		 * persister queue on update topic
 		 * 
 		 * @param request
-		 */
+		 *//*
 		public ServiceResponse update(ServiceRequest request) {
 
 			log.debug(" the incoming request obj in service : {}", request);
@@ -147,12 +145,12 @@ public class GrievanceService {
 			return getServiceResponse(request);
 		}
 
-		/**
+		*//**
 		 * to filter the sublist object for idgeneration if they are null
 		 * 
 		 * @param mediaList
 		 * @param commentsList
-		 */
+		 *//*
 		private void setIdsForSubList(List<Media> mediaList, List<Comment> commentsList, Boolean isCreate, RequestInfo requestInfo,Long when) {
 
 			User user = requestInfo.getUserInfo();
@@ -180,7 +178,7 @@ public class GrievanceService {
 		}
 
 
-		/**
+		*//**
 		 * method to parse the IdGenResponse from IdgenRepo to List of String ids
 		 * required by the respective methods
 		 * 
@@ -190,7 +188,7 @@ public class GrievanceService {
 		 * @param idKey
 		 * @param idformat
 		 * 
-		 */
+		 *//*
 		private List<String> getIdList(RequestInfo requestInfo, String tenantId, Integer length, String idKey,
 				String idformat) {
 
@@ -198,18 +196,18 @@ public class GrievanceService {
 					.map(IdResponse::getId).collect(Collectors.toList());
 		}
 
-		/**
+		*//**
 		 * returns ServiceResponse built based on the given ServiceRequest
 		 * 
 		 * @param serviceReqRequest
 		 * @return serviceReqResponse
-		 */
+		 *//*
 		public ServiceResponse getServiceResponse(ServiceRequest serviceReqRequest) {
 
 			return ServiceResponse.builder()
 					.responseInfo(factory.createResponseInfoFromRequestInfo(serviceReqRequest.getRequestInfo(), true))
 					.services(serviceReqRequest.getServices()).build();
-		}
+		}*/
 		
 		/**
 		 * Method to return service requests received from the repo to the controller in
@@ -220,7 +218,7 @@ public class GrievanceService {
 		 * @return ServiceReqResponse
 		 * @author vishal
 		 */
-		public Object getServiceRequests(RequestInfo requestInfo,
+		public Object getServiceRequestsV3(RequestInfo requestInfo,
 				ServiceReqSearchCriteria serviceReqSearchCriteria) {
 			
 			ObjectMapper mapper = new ObjectMapper();
@@ -230,7 +228,7 @@ public class GrievanceService {
 			StringBuilder uri = new StringBuilder();
 			SearcherRequest searcherRequest = null;
 			if(null != serviceReqSearchCriteria.getServiceRequestId() && serviceReqSearchCriteria.getServiceRequestId().size() == 1) {
-				searcherRequest = pGRUtils.prepareSearchRequestSpecific(uri, serviceReqSearchCriteria, requestInfo);
+				return getServiceRequestForOneId(requestInfo, serviceReqSearchCriteria);
 			}
 			searcherRequest = prepareSearcherRequest(requestInfo, serviceReqSearchCriteria, uri);
 			if(null == searcherRequest)
@@ -239,7 +237,7 @@ public class GrievanceService {
 			log.info("Searcher response: "+response);
 			if (null == response) 
 				return pGRUtils.getDefaultServiceResponse(requestInfo);
-			ServiceResponse serviceResponse = pGRUtils.getServiceResponse(response, requestInfo);
+			ServiceResponse serviceResponse = mapper.convertValue(response, ServiceResponse.class);
 			return serviceResponse;
 		}
 		
@@ -274,9 +272,7 @@ public class GrievanceService {
 		public SearcherRequest prepareSearcherRequest(RequestInfo requestInfo,
 				ServiceReqSearchCriteria serviceReqSearchCriteria, StringBuilder uri) {
 			SearcherRequest searcherRequest = null;
-			if(null != serviceReqSearchCriteria.getServiceRequestId() && serviceReqSearchCriteria.getServiceRequestId().size() == 1) {
-				searcherRequest = pGRUtils.prepareSearchRequestSpecific(uri, serviceReqSearchCriteria, requestInfo);
-			}else if(null != serviceReqSearchCriteria.getAssignedTo() && !serviceReqSearchCriteria.getAssignedTo().isEmpty()) {
+            if(null != serviceReqSearchCriteria.getAssignedTo() && !serviceReqSearchCriteria.getAssignedTo().isEmpty()) {
 				searcherRequest = pGRUtils.prepareSearchRequestAssignedTo(uri, serviceReqSearchCriteria, requestInfo);
 			}else {
 				if(null != serviceReqSearchCriteria.getGroup() && !serviceReqSearchCriteria.getGroup().isEmpty()){
@@ -294,7 +290,7 @@ public class GrievanceService {
 						}
 						serviceReqSearchCriteria.setServiceCodes(serviceCodes);
 				}
-				searcherRequest = pGRUtils.prepareSearchRequest(uri, serviceReqSearchCriteria, requestInfo);
+				searcherRequest = pGRUtils.prepareSearchRequestSpecific(uri, serviceReqSearchCriteria, requestInfo);
 			}
 			
 			return searcherRequest;
@@ -330,7 +326,7 @@ public class GrievanceService {
 		}
 		
 		
-		public Object getServiceRequestForOneId(RequestInfo requestInfo,
+		public ServiceResponse getServiceRequestForOneId(RequestInfo requestInfo,
 				ServiceReqSearchCriteria serviceReqSearchCriteria) {
 			
 			ObjectMapper mapper = new ObjectMapper();
@@ -343,17 +339,26 @@ public class GrievanceService {
 			if(null == searcherRequest)
 				return pGRUtils.getDefaultServiceResponse(requestInfo);
 			Object response = serviceRequestRepository.fetchResult(uri, searcherRequest);
+			if(null == response)
+				return pGRUtils.getDefaultServiceResponse(requestInfo);
 			log.info("Service: "+response);
-			searcherRequest = pGRUtils.prepareActionSearchRequest(uri, serviceReqSearchCriteria, requestInfo);
+			StringBuilder url = new StringBuilder();
+			searcherRequest = pGRUtils.prepareActionSearchRequest(url, serviceReqSearchCriteria, requestInfo);
+			List<ActionInfo> actions = null;
 			if(null != searcherRequest) {
-				Object res = serviceRequestRepository.fetchResult(uri, searcherRequest);
+				Object res = serviceRequestRepository.fetchResult(url, searcherRequest);
 				log.info("Actions: "+res);
 				if(null != res) {
-					DocumentContext docContext = JsonPath.parse(response);
-					docContext.put("$", "actionHistory", JsonPath.read(res, "$.actionHistory"));
+					actions = (List<ActionInfo>) JsonPath.read(res, "$.actionHistory");
 				}
 			}
-			ServiceResponse serviceResponse = pGRUtils.getServiceResponse(response, requestInfo);
+			ActionHistory actionHistory = new ActionHistory();
+			actionHistory.setActions(actions);
+			List<ActionHistory> actionHistories = new ArrayList<>();
+			actionHistories.add(actionHistory);
+			log.info("Response: "+response);
+			ServiceResponse serviceResponse = mapper.convertValue(response, ServiceResponse.class);
+			serviceResponse.setActionHistory(actionHistories);
 			return serviceResponse;
 			
 		}

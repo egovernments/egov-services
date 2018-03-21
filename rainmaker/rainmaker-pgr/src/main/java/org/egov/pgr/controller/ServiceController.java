@@ -34,12 +34,12 @@ public class ServiceController {
 	@Autowired
 	private PGRRequestValidator pgrRequestValidator;
 
-	/**
+/*	*//**
 	 * enpoint to create service requests
 	 * 
 	 * @param ServiceReqRequest
 	 * @author kaviyarasan
-	 */
+	 *//*
 	@PostMapping("_create")
 	@ResponseBody
 	private ResponseEntity<?> create(@RequestBody @Valid ServiceRequest serviceRequest) {
@@ -51,12 +51,12 @@ public class ServiceController {
 		return new ResponseEntity<>(response, HttpStatus.CREATED);
 	}
 
-	/**
+	*//**
 	 * enpoint to update service requests
 	 * 
 	 * @param ServiceReqRequest
 	 * @author el rey
-	 */
+	 *//*
 	@PostMapping("_update")
 	@ResponseBody
 	private ResponseEntity<?> update(@RequestBody @Valid ServiceRequest serviceRequest) {
@@ -67,7 +67,7 @@ public class ServiceController {
 		long endTime = new Date().getTime();
 		log.debug(" the time taken for update in ms: {}", endTime - startTime);
 		return new ResponseEntity<>(response, HttpStatus.OK);
-	}
+	}*/
 	
 
 	/**
@@ -85,7 +85,7 @@ public class ServiceController {
 
 		pgrRequestValidator.validateSearch(serviceReqSearchCriteria, requestInfoWrapper.getRequestInfo());
 		long startTime = new Date().getTime();
-		Object serviceReqResponse = service.getServiceRequests(requestInfoWrapper.getRequestInfo(),
+		Object serviceReqResponse = service.getServiceRequestsV3(requestInfoWrapper.getRequestInfo(),
 				serviceReqSearchCriteria);
 		long endTime = new Date().getTime();
 		log.debug(" the time taken for search in ms: {}", endTime - startTime);

@@ -12,6 +12,11 @@ import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 
 /**
  * Response to the metadata request
@@ -19,6 +24,10 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 @Validated
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2018-03-21T12:56:02.365Z")
 
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class ServiceResponse   {
   @JsonProperty("ResponseInfo")
   private ResponseInfo responseInfo = null;

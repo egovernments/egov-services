@@ -820,13 +820,13 @@ class EmployeePromotion extends React.Component {
                       <div className="col-sm-6">
                           <div className="row">
                               <div className="col-sm-6 label-text">
-                                <label htmlFor="">Functionary</label>
+                                <label htmlFor="">Function</label>
                               </div>
                               <div className="col-sm-6">
                                 <div className="styled-select">
                                     <select id="functionAssigned" name="functionAssigned" value={functionAssigned}
                                       onChange={(e)=>{  handleChange(e,"functionAssigned") }}>
-                                    <option value="">Select functionary</option>
+                                    <option value="">Select function</option>
                                     {renderOption(this.state.functionaryList)}
                                    </select>
                               </div>

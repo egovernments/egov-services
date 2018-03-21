@@ -207,6 +207,7 @@ class UpdateMovement extends React.Component {
             ..._this.state,
             buttons: _btns.length ? _btns : [],
             owner: process.owner.id,
+            initiator:process.initiatorPosition,
             status: process.status
           })
         }
@@ -616,7 +617,9 @@ class UpdateMovement extends React.Component {
 
                     asOnDate = dd + '/' + mm + '/' + yyyy;
 
-                    commonApiPost("hr-employee", "employees", "_search", { tenantId, asOnDate, positionId: res.Movement[0].workflowDetails.assignee }, function (err, res2) {
+                    let _positionId = (ID === "Reject") ? _this.state.initiator : res.Movement[0].workflowDetails.assignee;
+                    console.log("res", _positionId );
+                    commonApiPost("hr-employee", "employees", "_search", { tenantId, asOnDate, positionId: _positionId }, function (err, res2) {
                       if (res && res2.Employee && res2.Employee[0])
                         employee = res2.Employee[0];
 
@@ -687,8 +690,10 @@ class UpdateMovement extends React.Component {
 
             asOnDate = dd + '/' + mm + '/' + yyyy;
 
-            console.log("res", res.Movement[0].workflowDetails.assignee);
-            commonApiPost("hr-employee", "employees", "_search", { tenantId, asOnDate, positionId: res.Movement[0].workflowDetails.assignee }, function (err, res2) {
+            let _positionId = (ID === "Reject") ? _this.state.initiator : res.Movement[0].workflowDetails.assignee;
+
+            console.log("res", _positionId );
+            commonApiPost("hr-employee", "employees", "_search", { tenantId, asOnDate, positionId: _positionId }, function (err, res2) {
               if (res && res2.Employee && res2.Employee[0])
                 employee = res2.Employee[0];
 

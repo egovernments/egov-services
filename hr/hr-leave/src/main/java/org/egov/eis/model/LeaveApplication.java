@@ -74,6 +74,14 @@ public class LeaveApplication {
     @JsonFormat(pattern = "dd/MM/yyyy")
     private Date compensatoryForDate;
 
+    @JsonFormat(pattern = "dd/MM/yyyy")
+    private Date prefixDate;
+
+    @JsonFormat(pattern = "dd/MM/yyyy")
+    private Date suffixDate;
+
+    private String holidays;
+
     private Float leaveDays;
 
     private Float availableDays;

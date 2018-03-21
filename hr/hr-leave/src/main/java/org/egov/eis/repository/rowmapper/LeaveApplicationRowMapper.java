@@ -91,6 +91,10 @@ public class LeaveApplicationRowMapper implements RowMapper<LeaveApplication> {
             date = isEmpty(rs.getDate("la_compensatoryForDate")) ? null
                     : sdf.parse(sdf.format(rs.getDate("la_compensatoryForDate")));
             leaveApplication.setCompensatoryForDate(date);
+            date = isEmpty(rs.getDate("la_prefixDate")) ? null : sdf.parse(sdf.format(rs.getDate("la_prefixDate")));
+            leaveApplication.setPrefixDate(date);
+            date = isEmpty(rs.getDate("la_suffixDate")) ? null : sdf.parse(sdf.format(rs.getDate("la_suffixDate")));
+            leaveApplication.setSuffixDate(date);
             date = isEmpty(rs.getDate("la_createdDate")) ? null : sdf.parse(sdf.format(rs.getDate("la_createdDate")));
             leaveApplication.setCreatedDate(date);
             date = isEmpty(rs.getDate("la_lastModifiedDate")) ? null
@@ -102,7 +106,7 @@ public class LeaveApplicationRowMapper implements RowMapper<LeaveApplication> {
         }
 
         leaveApplication.setLeaveType(leaveType);
-
+        leaveApplication.setHolidays(rs.getString("la_holidays"));
         leaveApplication.setLeaveDays((Float) rs.getObject("la_leaveDays"));
         leaveApplication.setAvailableDays((Float) rs.getObject("la_availableDays"));
         leaveApplication.setHalfdays((Integer) rs.getObject("la_halfdays"));

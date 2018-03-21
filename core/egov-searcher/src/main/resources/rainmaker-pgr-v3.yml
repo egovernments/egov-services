@@ -1,29 +1,9 @@
 SearchDefinitions:
- moduleName: rainmaker-pgr-V2
+ moduleName: rainmaker-pgr-V3
  summary: PGR resolver for Rainmaker
  version: 1.0.0
  definitions:
- - name: serviceSearchSpecific
-   query: 
-    baseQuery: select array_to_json(array_agg(row_to_json(serviceRequests))) from (select (select (select (row_to_json(services)) from ( select * from eg_pgr_service $where) services) as services),(select (select array_to_json(array_agg(row_to_json(comments))) from ( select * from eg_pgr_comment where serviceRequestId=eg_pgr_service.serviceRequestId) comments) as comments), (select (select array_to_json(array_agg(row_to_json(media))) from ( select * from eg_pgr_media where serviceRequestId=eg_pgr_service.serviceRequestId) media) as media), (select (select array_to_json(array_agg(row_to_json(assignee))) from ( select * from eg_pgr_assignee where serviceRequestId=eg_pgr_service.serviceRequestId) assignee) as assignee), (select (select array_to_json(array_agg(row_to_json(statuses))) from ( select * from eg_pgr_status where serviceRequestId=eg_pgr_service.serviceRequestId) statuses) as statuses) from eg_pgr_service $where limit 200) serviceRequests
-    groupBy:    
-    orderBy: 
-   searchParams:
-    condition: AND
-    params:
-    - name: tenantid
-      isMandatory: true
-      jsonPath: $.searchCriteria.tenantId
-    - name: servicerequestid
-      isMandatory: false
-      jsonPath: $.searchCriteria.serviceRequestId
-
-   output:
-    jsonFormat: {"ResponseInfo": {}}
-    outJsonPath: $.services
-    responseInfoPath: $.ResponseInfo
-
- - name: serviceSearchGeneral
+ - name: serviceSearch
    query: 
     baseQuery: (select array_to_json(array_agg(row_to_json(services)))from (select * from eg_pgr_service $where limit 200) services)
     groupBy:    
@@ -64,9 +44,9 @@ SearchDefinitions:
     outJsonPath: $.services
     responseInfoPath: $.ResponseInfo
 
- - name: serviceSearchOnAssignedTo
+ - name: actionSearch
    query: 
-    baseQuery: select array_to_json(array_agg(row_to_json(services))) from (select * from eg_pgr_service where servicerequestid IN (select servicerequestid from eg_pgr_assignee where eg_pgr_assignee.when IN (select max("when") from eg_pgr_assignee $where))) services
+    baseQuery: (select array_to_json(array_agg(row_to_json(actionHistory)))from (select * from eg_pgr_action $where limit 200) services)
     groupBy:    
     orderBy: 
    searchParams:
@@ -75,21 +55,42 @@ SearchDefinitions:
     - name: tenantid
       isMandatory: true
       jsonPath: $.searchCriteria.tenantId
-    - name: id
+    - name: businessKey
+      isMandatory: true
+      jsonPath: $.searchCriteria.serviceRequestId
+
+   output:
+    jsonFormat: {"ResponseInfo": {}}
+    outJsonPath: $.actionHistory
+    responseInfoPath: $.ResponseInfo
+
+
+ - name: serviceSearchOnAssignedTo
+   query: 
+    baseQuery: select array_to_json(array_agg(row_to_json(services))) from (select * from eg_pgr_service where servicerequestid IN (select businessKey from eg_pgr_action where eg_pgr_action.when IN (select max("when") from eg_pgr_action $where group by businessKey))) services
+    groupBy: 
+    orderBy: 
+   searchParams:
+    condition: AND
+    params:
+    - name: tenantid
+      isMandatory: true
+      jsonPath: $.searchCriteria.tenantId
+    - name: assignee
       isMandatory: true
       jsonPath: $.searchCriteria.assignedTo
 
    output:
     jsonFormat: {"ResponseInfo": {}}
-    outJsonPath: $.services
+    outJsonPath: $.actionHistory
     responseInfoPath: $.ResponseInfo
 
 
- - name: countGeneral
+ - name: count
    query: 
-    baseQuery: (select row_to_json(services) from (select count(*) from eg_pgr_service $where) services)
+    baseQuery: (select array_to_json(array_agg(row_to_json(services)))from (select count(*) from eg_pgr_service $where limit 200) services)
     groupBy:    
-    orderBy:
+    orderBy: 
    searchParams:
     condition: AND
     params:
@@ -122,27 +123,28 @@ SearchDefinitions:
       jsonPath: $.searchCriteria.phone
 
    output:
-    jsonFormat: {"ResponseInfo": {},"count": {}}
-    outJsonPath: $.count
+    jsonFormat: {"ResponseInfo": {}}
+    outJsonPath: $.services
     responseInfoPath: $.ResponseInfo
+
 
  - name: countOnAssignedTo
    query: 
-    baseQuery: select array_to_json(array_agg(row_to_json(services))) from (select count(*) from eg_pgr_service where servicerequestid IN (select servicerequestid from eg_pgr_assignee where eg_pgr_assignee.when IN (select max("when") from eg_pgr_assignee $where))) services
-    groupBy:    
-    orderBy:
+    baseQuery: select array_to_json(array_agg(row_to_json(services))) from (select * from eg_pgr_service where servicerequestid IN (select businessKey from eg_pgr_action where eg_pgr_action.when IN (select max("when") from eg_pgr_action $where group by businessKey))) services
+    groupBy:
+    orderBy: 
    searchParams:
     condition: AND
     params:
     - name: tenantid
       isMandatory: true
       jsonPath: $.searchCriteria.tenantId
-    - name: id
-      isMandatory: false
+    - name: assignee
+      isMandatory: true
       jsonPath: $.searchCriteria.assignedTo
 
    output:
-    jsonFormat: {"ResponseInfo": {},"count": {}}
-    outJsonPath: $.count
+    jsonFormat: {"ResponseInfo": {}}
+    outJsonPath: $.actionHistory
     responseInfoPath: $.ResponseInfo
 

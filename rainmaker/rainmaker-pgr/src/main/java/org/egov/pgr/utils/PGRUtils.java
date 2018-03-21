@@ -177,7 +177,8 @@ public class PGRUtils {
 	
 	
 	
-/*................................V2 Utils.........................................................................*/
+	
+/*................................V3 Utils.........................................................................*/	
 	
 	/**
 	 * Prepares request and uri for service request search
@@ -192,7 +193,7 @@ public class PGRUtils {
 			RequestInfo requestInfo) {
 		uri.append(searcherHost);
 		String endPoint = searcherEndpoint.replace("{moduleName}", PGRConstants.V2_SEARCHER_PGR_MOD_NAME)
-				.replace("{searchName}", PGRConstants.V2_SEARCHER_SRSEARCH_SPECIFIC_DEF_NAME);
+				.replace("{searchName}", PGRConstants.V3_SEARCHER_SRSEARCH_DEF_NAME);
 		uri.append(endPoint);
 		SearcherRequest searcherRequest = SearcherRequest.builder().
 				requestInfo(requestInfo).searchCriteria(serviceReqSearchCriteria).build();
@@ -209,11 +210,11 @@ public class PGRUtils {
 	 * @return SearcherRequest
 	 * @author vishal
 	 */
-	public SearcherRequest prepareSearchRequestGeneral(StringBuilder uri, ServiceReqSearchCriteria serviceReqSearchCriteria, 
+	public SearcherRequest prepareActionSearchRequest(StringBuilder uri, ServiceReqSearchCriteria serviceReqSearchCriteria, 
 			RequestInfo requestInfo) {
 		uri.append(searcherHost);
 		String endPoint = searcherEndpoint.replace("{moduleName}", PGRConstants.V2_SEARCHER_PGR_MOD_NAME)
-				.replace("{searchName}", PGRConstants.V2_SEARCHER_SRSEARCH_GENERAL_DEF_NAME);
+				.replace("{searchName}", PGRConstants.V3_SEARCHER_ACTIONSEARCH_GENERAL_DEF_NAME);
 		uri.append(endPoint);
 		SearcherRequest searcherRequest = SearcherRequest.builder().
 				requestInfo(requestInfo).searchCriteria(serviceReqSearchCriteria).build();
@@ -234,7 +235,49 @@ public class PGRUtils {
 			RequestInfo requestInfo) {
 		uri.append(searcherHost);
 		String endPoint = searcherEndpoint.replace("{moduleName}", PGRConstants.V2_SEARCHER_PGR_MOD_NAME)
-				.replace("{searchName}", PGRConstants.V2_SEARCHER_SRSEARCH_ASSIGNEDTO_DEF_NAME);
+				.replace("{searchName}", PGRConstants.V3_SEARCHER_SRSEARCH_ASSIGNEDTO_DEF_NAME);
+		uri.append(endPoint);
+		SearcherRequest searcherRequest = SearcherRequest.builder().
+				requestInfo(requestInfo).searchCriteria(serviceReqSearchCriteria).build();
+		
+		return searcherRequest;
+	}
+	
+	/**
+	 * Prepares request and uri for count search for general criteria
+	 * 
+	 * @param uri
+	 * @param serviceReqSearchCriteria
+	 * @param requestInfo
+	 * @return SearcherRequest
+	 * @author vishal
+	 */
+	public SearcherRequest prepareCountRequestGeneral(StringBuilder uri, ServiceReqSearchCriteria serviceReqSearchCriteria, 
+			RequestInfo requestInfo) {
+		uri.append(searcherHost);
+		String endPoint = searcherEndpoint.replace("{moduleName}", PGRConstants.V2_SEARCHER_PGR_MOD_NAME)
+				.replace("{searchName}", PGRConstants.V2_SEARCHER_COUNT_GENERAL_DEF_NAME);
+		uri.append(endPoint);
+		SearcherRequest searcherRequest = SearcherRequest.builder().
+				requestInfo(requestInfo).searchCriteria(serviceReqSearchCriteria).build();
+		
+		return searcherRequest;
+	}
+	
+	/**
+	 * Prepares request and uri for count search on assined to
+	 * 
+	 * @param uri
+	 * @param serviceReqSearchCriteria
+	 * @param requestInfo
+	 * @return SearcherRequest
+	 * @author vishal
+	 */
+	public SearcherRequest prepareCountRequestAssignedTo(StringBuilder uri, ServiceReqSearchCriteria serviceReqSearchCriteria, 
+			RequestInfo requestInfo) {
+		uri.append(searcherHost);
+		String endPoint = searcherEndpoint.replace("{moduleName}", PGRConstants.V2_SEARCHER_PGR_MOD_NAME)
+				.replace("{searchName}", PGRConstants.V2_SEARCHER_COUNT_ASSIGNED_DEF_NAME);
 		uri.append(endPoint);
 		SearcherRequest searcherRequest = SearcherRequest.builder().
 				requestInfo(requestInfo).searchCriteria(serviceReqSearchCriteria).build();
@@ -320,5 +363,197 @@ public class PGRUtils {
 		}
 		return isSecondaryInfoAvailable;
 	}
+	
+	
+	
+	
+	
+	
+	
+/*................................V2 Utils.........................................................................*/
+	
+	/**
+	 * Prepares request and uri for service request search
+	 * 
+	 * @param uri
+	 * @param serviceReqSearchCriteria
+	 * @param requestInfo
+	 * @return SearcherRequest
+	 * @author vishal
+	 *//*
+	public SearcherRequest prepareSearchRequestSpecific(StringBuilder uri, ServiceReqSearchCriteria serviceReqSearchCriteria, 
+			RequestInfo requestInfo) {
+		uri.append(searcherHost);
+		String endPoint = searcherEndpoint.replace("{moduleName}", PGRConstants.V2_SEARCHER_PGR_MOD_NAME)
+				.replace("{searchName}", PGRConstants.V2_SEARCHER_SRSEARCH_SPECIFIC_DEF_NAME);
+		uri.append(endPoint);
+		SearcherRequest searcherRequest = SearcherRequest.builder().
+				requestInfo(requestInfo).searchCriteria(serviceReqSearchCriteria).build();
+		
+		return searcherRequest;
+	}
+	
+	*//**
+	 * Prepares request and uri for service request search
+	 * 
+	 * @param uri
+	 * @param serviceReqSearchCriteria
+	 * @param requestInfo
+	 * @return SearcherRequest
+	 * @author vishal
+	 *//*
+	public SearcherRequest prepareSearchRequestGeneral(StringBuilder uri, ServiceReqSearchCriteria serviceReqSearchCriteria, 
+			RequestInfo requestInfo) {
+		uri.append(searcherHost);
+		String endPoint = searcherEndpoint.replace("{moduleName}", PGRConstants.V2_SEARCHER_PGR_MOD_NAME)
+				.replace("{searchName}", PGRConstants.V2_SEARCHER_SRSEARCH_GENERAL_DEF_NAME);
+		uri.append(endPoint);
+		SearcherRequest searcherRequest = SearcherRequest.builder().
+				requestInfo(requestInfo).searchCriteria(serviceReqSearchCriteria).build();
+		
+		return searcherRequest;
+	}
+	
+	*//**
+	 * Prepares request and uri for service request search
+	 * 
+	 * @param uri
+	 * @param serviceReqSearchCriteria
+	 * @param requestInfo
+	 * @return SearcherRequest
+	 * @author vishal
+	 *//*
+	public SearcherRequest prepareSearchRequestAssignedTo(StringBuilder uri, ServiceReqSearchCriteria serviceReqSearchCriteria, 
+			RequestInfo requestInfo) {
+		uri.append(searcherHost);
+		String endPoint = searcherEndpoint.replace("{moduleName}", PGRConstants.V2_SEARCHER_PGR_MOD_NAME)
+				.replace("{searchName}", PGRConstants.V2_SEARCHER_SRSEARCH_ASSIGNEDTO_DEF_NAME);
+		uri.append(endPoint);
+		SearcherRequest searcherRequest = SearcherRequest.builder().
+				requestInfo(requestInfo).searchCriteria(serviceReqSearchCriteria).build();
+		
+		return searcherRequest;
+	}
+	
+	*//**
+	 * Prepares request and uri for count search for general criteria
+	 * 
+	 * @param uri
+	 * @param serviceReqSearchCriteria
+	 * @param requestInfo
+	 * @return SearcherRequest
+	 * @author vishal
+	 *//*
+	public SearcherRequest prepareCountRequestGeneral(StringBuilder uri, ServiceReqSearchCriteria serviceReqSearchCriteria, 
+			RequestInfo requestInfo) {
+		uri.append(searcherHost);
+		String endPoint = searcherEndpoint.replace("{moduleName}", PGRConstants.V2_SEARCHER_PGR_MOD_NAME)
+				.replace("{searchName}", PGRConstants.V2_SEARCHER_COUNT_GENERAL_DEF_NAME);
+		uri.append(endPoint);
+		SearcherRequest searcherRequest = SearcherRequest.builder().
+				requestInfo(requestInfo).searchCriteria(serviceReqSearchCriteria).build();
+		
+		return searcherRequest;
+	}
+	
+	*//**
+	 * Prepares request and uri for count search on assined to
+	 * 
+	 * @param uri
+	 * @param serviceReqSearchCriteria
+	 * @param requestInfo
+	 * @return SearcherRequest
+	 * @author vishal
+	 *//*
+	public SearcherRequest prepareCountRequestAssignedTo(StringBuilder uri, ServiceReqSearchCriteria serviceReqSearchCriteria, 
+			RequestInfo requestInfo) {
+		uri.append(searcherHost);
+		String endPoint = searcherEndpoint.replace("{moduleName}", PGRConstants.V2_SEARCHER_PGR_MOD_NAME)
+				.replace("{searchName}", PGRConstants.V2_SEARCHER_COUNT_ASSIGNED_DEF_NAME);
+		uri.append(endPoint);
+		SearcherRequest searcherRequest = SearcherRequest.builder().
+				requestInfo(requestInfo).searchCriteria(serviceReqSearchCriteria).build();
+		
+		return searcherRequest;
+	}
+	
+	*//**
+	 * Formats the external service response to ServiceResponse
+	 * 
+	 * @param response
+	 * @param requestInfo
+	 * @return ServiceResponse
+	 *//*
+	public ServiceResponse getServiceResponse(Object response, RequestInfo requestInfo) {
+		ObjectMapper mapper = new ObjectMapper();
+		mapper.configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true);
+		mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);        
+		try {
+			ActionHistory actionHistory = null;
+			Service service = null;
+			List<Service> services = new ArrayList<>();
+			if(isSecondaryInfoAvailable(mapper, response)) {
+				actionHistory = ActionHistory.builder()
+						.media(JsonPath.read(mapper.writeValueAsString(response), PGRConstants.V2_MEDIA_JSONPATH))
+						.comments(JsonPath.read(mapper.writeValueAsString(response), PGRConstants.V2_COMMENT_JSONPATH))
+						.assignees(JsonPath.read(mapper.writeValueAsString(response), PGRConstants.V2_ASSIGNEE_JSONPATH))
+						.statuses(JsonPath.read(mapper.writeValueAsString(response), PGRConstants.V2_STATUS_JSONPATH)).build();
+				
+				service = mapper.convertValue(JsonPath.read(mapper.writeValueAsString(response), PGRConstants.V2_SERVICES_JSONPATH), Service.class);
+				services.add(service);
+			}else {
+				actionHistory = new ActionHistory();
+				services = (List<Service>) JsonPath.read(mapper.writeValueAsString(response), PGRConstants.V2_SERVICES_PARENT_JSONPATH);
+			}
+			List<ActionHistory> actionHistories = new ArrayList<>();
+			actionHistories.add(actionHistory);
+			
+			ServiceResponse serviceResponse = ServiceResponse.builder()
+					.responseInfo(factory.createResponseInfoFromRequestInfo(requestInfo, true))
+					.services(services).actionHistory(actionHistories).build();
+			
+			log.info("Result: "+serviceResponse);
+			
+			return serviceResponse;
 
+		}catch(Exception e) {
+			log.error("Exception while formatting response: ",e);
+		}
+		
+		return new ServiceResponse(factory.createResponseInfoFromRequestInfo(requestInfo, false),
+				new ArrayList<Service>(), new ArrayList<ActionHistory>());
+		
+	}
+	
+	*//**
+	 * Default response is responseInfo with error status and empty lists
+	 * 
+	 * @param requestInfo
+	 * @return ServiceResponse
+	 *//*
+	public ServiceResponse getDefaultServiceResponse(RequestInfo requestInfo) {
+		return new ServiceResponse(factory.createResponseInfoFromRequestInfo(requestInfo, false),
+				new ArrayList<Service>(), new ArrayList<ActionHistory>());
+	}
+	
+	*//**
+	 * Util method to check if the media,comment,assignee,statuses are present in the searcher response
+	 * based on this, the formatting logic is applied. Searcher response is such that, either all of them or none of them is present
+	 * so the check in this method is applied on only media.
+	 * 
+	 * @param mapper
+	 * @param response
+	 * @return
+	 *//*
+	public boolean isSecondaryInfoAvailable(ObjectMapper mapper, Object response) {
+		boolean isSecondaryInfoAvailable = true;
+		try {
+			JsonPath.read(mapper.writeValueAsString(response), PGRConstants.V2_MEDIA_JSONPATH);
+		}catch(Exception e) {
+			isSecondaryInfoAvailable = false;
+		}
+		return isSecondaryInfoAvailable;
+	}
+*/
 }

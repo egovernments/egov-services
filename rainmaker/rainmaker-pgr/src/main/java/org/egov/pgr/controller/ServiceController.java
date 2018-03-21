@@ -92,14 +92,14 @@ public class ServiceController {
 		return new ResponseEntity<>(serviceReqResponse, HttpStatus.OK);
 	}
 
-/*	*//**
+	/**
 	 * Controller to fetch count of service requests based on a given criteria
 	 * 
 	 * @param requestInfoWrapper
 	 * @param serviceReqSearchCriteria
 	 * @return ResponseEntity<?>
 	 * @author vishal
-	 *//*
+	 */
 	@PostMapping("_count")
 	@ResponseBody
 	private ResponseEntity<?> count(@RequestBody @Valid RequestInfoWrapper requestInfoWrapper,
@@ -110,7 +110,7 @@ public class ServiceController {
 		long endTime = new Date().getTime();
 		log.debug(" the time taken for count in ms: {}", endTime - startTime);
 		return new ResponseEntity<>(countResponse, HttpStatus.OK);
-	}*/
+	}
 
 
 }

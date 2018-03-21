@@ -11,6 +11,7 @@ import org.egov.common.contract.request.Role;
 import org.egov.common.contract.request.User;
 import org.egov.mdms.model.MdmsCriteriaReq;
 import org.egov.pgr.contract.AuditDetails;
+import org.egov.pgr.contract.CountResponse;
 import org.egov.pgr.contract.IdResponse;
 import org.egov.pgr.contract.SearcherRequest;
 import org.egov.pgr.contract.ServiceReq;
@@ -36,6 +37,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
 
 import lombok.extern.slf4j.Slf4j;
@@ -226,7 +228,11 @@ public class GrievanceService {
 			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 	        mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
 			StringBuilder uri = new StringBuilder();
-			SearcherRequest searcherRequest = prepareSearcherRequest(requestInfo, serviceReqSearchCriteria, uri);
+			SearcherRequest searcherRequest = null;
+			if(null != serviceReqSearchCriteria.getServiceRequestId() && serviceReqSearchCriteria.getServiceRequestId().size() == 1) {
+				searcherRequest = pGRUtils.prepareSearchRequestSpecific(uri, serviceReqSearchCriteria, requestInfo);
+			}
+			searcherRequest = prepareSearcherRequest(requestInfo, serviceReqSearchCriteria, uri);
 			if(null == searcherRequest)
 				return pGRUtils.getDefaultServiceResponse(requestInfo);
 			Object response = serviceRequestRepository.fetchResult(uri, searcherRequest);
@@ -288,9 +294,190 @@ public class GrievanceService {
 						}
 						serviceReqSearchCriteria.setServiceCodes(serviceCodes);
 				}
+				searcherRequest = pGRUtils.prepareSearchRequest(uri, serviceReqSearchCriteria, requestInfo);
+			}
+			
+			return searcherRequest;
+		}
+		
+		
+		/**
+		 * Fetches count of service requests and returns in the reqd format.
+		 * 
+		 * @param requestInfo
+		 * @param serviceReqSearchCriteria
+		 * @return Object
+		 * @author vishal
+		 */
+		public Object getCount(RequestInfo requestInfo, ServiceReqSearchCriteria serviceReqSearchCriteria) {
+			ObjectMapper mapper = new ObjectMapper();
+			mapper.configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true);
+			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+			StringBuilder uri = new StringBuilder();
+			SearcherRequest searcherRequest = null;
+		    if(null != serviceReqSearchCriteria.getAssignedTo() && !serviceReqSearchCriteria.getAssignedTo().isEmpty()) {
+				searcherRequest = pGRUtils.prepareCountRequestAssignedTo(uri, serviceReqSearchCriteria, requestInfo);
+			}else {
+				searcherRequest = pGRUtils.prepareCountRequestGeneral(uri, serviceReqSearchCriteria, requestInfo);
+			}
+			Object response = serviceRequestRepository.fetchResult(uri, searcherRequest);		
+			log.info("Searcher response: ", response);
+			if (null == response) {
+				return new CountResponse(factory.createResponseInfoFromRequestInfo(requestInfo, false), 0D);
+			}
+			Double count = JsonPath.read(response, PGRConstants.PG_JSONPATH_COUNT);
+			return new CountResponse(factory.createResponseInfoFromRequestInfo(requestInfo, false), count);
+		}
+		
+		
+		public Object getServiceRequestForOneId(RequestInfo requestInfo,
+				ServiceReqSearchCriteria serviceReqSearchCriteria) {
+			
+			ObjectMapper mapper = new ObjectMapper();
+			mapper.configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true);
+			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+	        mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
+			StringBuilder uri = new StringBuilder();
+			SearcherRequest searcherRequest = null;
+			searcherRequest = pGRUtils.prepareSearchRequestSpecific(uri, serviceReqSearchCriteria, requestInfo);
+			if(null == searcherRequest)
+				return pGRUtils.getDefaultServiceResponse(requestInfo);
+			Object response = serviceRequestRepository.fetchResult(uri, searcherRequest);
+			log.info("Service: "+response);
+			searcherRequest = pGRUtils.prepareActionSearchRequest(uri, serviceReqSearchCriteria, requestInfo);
+			if(null != searcherRequest) {
+				Object res = serviceRequestRepository.fetchResult(uri, searcherRequest);
+				log.info("Actions: "+res);
+				if(null != res) {
+					DocumentContext docContext = JsonPath.parse(response);
+					docContext.put("$", "actionHistory", JsonPath.read(res, "$.actionHistory"));
+				}
+			}
+			ServiceResponse serviceResponse = pGRUtils.getServiceResponse(response, requestInfo);
+			return serviceResponse;
+			
+		}
+		
+		
+		
+		
+		
+		
+		
+		
+//V2 Code...................................................		
+		
+/*		*//**
+		 * Method to return service requests received from the repo to the controller in
+		 * the reqd format
+		 * 
+		 * @param requestInfo
+		 * @param serviceReqSearchCriteria
+		 * @return ServiceReqResponse
+		 * @author vishal
+		 *//*
+		public Object getServiceRequests(RequestInfo requestInfo,
+				ServiceReqSearchCriteria serviceReqSearchCriteria) {
+			
+			ObjectMapper mapper = new ObjectMapper();
+			mapper.configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true);
+			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+	        mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
+			StringBuilder uri = new StringBuilder();
+			SearcherRequest searcherRequest = prepareSearcherRequest(requestInfo, serviceReqSearchCriteria, uri);
+			if(null == searcherRequest)
+				return pGRUtils.getDefaultServiceResponse(requestInfo);
+			Object response = serviceRequestRepository.fetchResult(uri, searcherRequest);
+			log.info("Searcher response: "+response);
+			if (null == response) 
+				return pGRUtils.getDefaultServiceResponse(requestInfo);
+			ServiceResponse serviceResponse = pGRUtils.getServiceResponse(response, requestInfo);
+			return serviceResponse;
+		}
+		
+		
+		
+		
+		*//**
+		 * method to fetch service codes from mdms based on dept
+		 * 
+		 * @param requestInfo
+		 * @param tenantId
+		 * @param department
+		 * @return Object
+		 * @author vishal
+		 *//*
+		public Object fetchServiceCodes(RequestInfo requestInfo,
+				String tenantId, String department) {
+			StringBuilder uri = new StringBuilder();
+			MdmsCriteriaReq mdmsCriteriaReq = pGRUtils.prepareSearchRequestForServiceCodes(uri, tenantId, department, requestInfo);
+			return serviceRequestRepository.fetchResult(uri, mdmsCriteriaReq);
+			
+		}
+		
+		*//**
+		 * Prepares request for searcher service based on the criteria
+		 * 
+		 * @param requestInfo
+		 * @param serviceReqSearchCriteria
+		 * @param uri
+		 * @return SearcherRequest
+		 *//*
+		public SearcherRequest prepareSearcherRequest(RequestInfo requestInfo,
+				ServiceReqSearchCriteria serviceReqSearchCriteria, StringBuilder uri) {
+			SearcherRequest searcherRequest = null;
+			if(null != serviceReqSearchCriteria.getServiceRequestId() && serviceReqSearchCriteria.getServiceRequestId().size() == 1) {
+				searcherRequest = pGRUtils.prepareSearchRequestSpecific(uri, serviceReqSearchCriteria, requestInfo);
+			}else if(null != serviceReqSearchCriteria.getAssignedTo() && !serviceReqSearchCriteria.getAssignedTo().isEmpty()) {
+				searcherRequest = pGRUtils.prepareSearchRequestAssignedTo(uri, serviceReqSearchCriteria, requestInfo);
+			}else {
+				if(null != serviceReqSearchCriteria.getGroup() && !serviceReqSearchCriteria.getGroup().isEmpty()){
+						Object response = fetchServiceCodes(requestInfo, serviceReqSearchCriteria.getTenantId(), serviceReqSearchCriteria.getGroup());
+						List<String> serviceCodes = null;
+						if(null == response) {
+							log.info("Searcher returned zero serviceCodes!");
+							return null;
+						}
+						try {
+							serviceCodes = (List<String>) JsonPath.read(response, PGRConstants.JSONPATH_SERVICE_CODES);
+						}catch(Exception e) {
+							log.error("Exception while parsing serviceCodes: ",e);
+							return null;
+						}
+						serviceReqSearchCriteria.setServiceCodes(serviceCodes);
+				}
 				searcherRequest = pGRUtils.prepareSearchRequestGeneral(uri, serviceReqSearchCriteria, requestInfo);
 			}
 			
 			return searcherRequest;
 		}
+		
+		
+		*//**
+		 * Fetches count of service requests and returns in the reqd format.
+		 * 
+		 * @param requestInfo
+		 * @param serviceReqSearchCriteria
+		 * @return Object
+		 * @author vishal
+		 *//*
+		public Object getCount(RequestInfo requestInfo, ServiceReqSearchCriteria serviceReqSearchCriteria) {
+			ObjectMapper mapper = new ObjectMapper();
+			mapper.configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true);
+			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+			StringBuilder uri = new StringBuilder();
+			SearcherRequest searcherRequest = null;
+		    if(null != serviceReqSearchCriteria.getAssignedTo() && !serviceReqSearchCriteria.getAssignedTo().isEmpty()) {
+				searcherRequest = pGRUtils.prepareCountRequestAssignedTo(uri, serviceReqSearchCriteria, requestInfo);
+			}else {
+				searcherRequest = pGRUtils.prepareCountRequestGeneral(uri, serviceReqSearchCriteria, requestInfo);
+			}
+			Object response = serviceRequestRepository.fetchResult(uri, searcherRequest);		
+			log.info("Searcher response: ", response);
+			if (null == response) {
+				return new CountResponse(factory.createResponseInfoFromRequestInfo(requestInfo, false), 0D);
+			}
+			Double count = JsonPath.read(response, PGRConstants.PG_JSONPATH_COUNT);
+			return new CountResponse(factory.createResponseInfoFromRequestInfo(requestInfo, false), count);
+		}*/
 }

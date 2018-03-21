@@ -38,10 +38,10 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class GrievanceService {
 
-	@Value("${kafka.topics.save.servicereq}")
+	@Value("${kafka.topics.save.service}")
 	private String saveTopic;
 
-	@Value("${kafka.topics.update.servicereq}")
+	@Value("${kafka.topics.update.service}")
 	private String updateTopic;
 
 	@Value("${kafka.topics.notification.complaint}")

@@ -43,5 +43,11 @@ public class PGRConstants {
 	public static final String V2_JSONPATH_SERVICE_CODES = "$.MdmsRes.PGR.ServiceDefs";
 	public static final String V2_SERVICE_NAME = "serviceName";
 	public static final String V2_DEFAULT_COMPLAINT_TYPE = "resolution";
+	public static final String V2_MEDIA_JSONPATH = "$.services[0].media";
+	public static final String V2_COMMENT_JSONPATH = "$.services[0].comments";
+	public static final String V2_STATUS_JSONPATH = "$.services[0].assignee";
+	public static final String V2_ASSIGNEE_JSONPATH = "$.services[0].statuses";
+	public static final String V2_SERVICES_JSONPATH = "$.services[0].services";
+
 	
 }

@@ -97,5 +97,7 @@ public class AssetCategoryCriteria {
     private Boolean isAgreementsExists=false;
     
     private String action;
+    
+    private Boolean isParentCategory;
 
 }

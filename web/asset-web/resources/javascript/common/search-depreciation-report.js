@@ -17,14 +17,14 @@ class SearchDepreciationReport extends React.Component {
   handleChange(e, name) {
     var self = this;
       if(name === 'assetCategoryType'){
-        commonApiPost("asset-services", "assetCategories", "_search", {assetCategoryType:e.target.value,tenantId}, function(err, res) {
+        commonApiPost("asset-services", "assetCategories", "_search", {assetCategoryType:e.target.value,tenantId,isParentCategory:true}, function(err, res) {
             let parentCategory = res["AssetCategory"].filter((obj)=>{
               return !obj.parent;//false
             })
             self.setState({parentCategories:parentCategory})
         })
       }else if(name === 'parent'){
-        commonApiPost("asset-services", "assetCategories", "_search", {parent:e.target.value,tenantId}, function(err, res) {
+        commonApiPost("asset-services", "assetCategories", "_search", {parent:e.target.value,tenantId,isChildCategory:true}, function(err, res) {
             // console.log(res["AssetCategory"]);
             let assetCategory = res["AssetCategory"].filter((obj)=>{
               return obj.parent;//false

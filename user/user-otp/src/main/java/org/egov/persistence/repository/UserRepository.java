@@ -13,18 +13,22 @@ public class UserRepository {
 	private final String searchUserUrl;
 	private final RestTemplate restTemplate;
 
-	public UserRepository(RestTemplate restTemplate,
-						  @Value("${user.host}") String userHost,
-						  @Value("${search.user.url}") String searchUserUrl) {
+	public UserRepository(RestTemplate restTemplate, @Value("${user.host}") String userHost,
+			@Value("${search.user.url}") String searchUserUrl) {
 		this.restTemplate = restTemplate;
 		this.searchUserUrl = userHost + searchUserUrl;
 	}
 
 	public User fetchUser(String mobileNumber, String tenantId) {
 		final UserSearchRequest request = new UserSearchRequest(mobileNumber, tenantId);
-		final UserSearchResponse userSearchResponse =
-				restTemplate.postForObject(searchUserUrl, request, UserSearchResponse.class);
-		if (userSearchResponse.isMatchingUserPresent()) {
+
+		UserSearchResponse userSearchResponse = null;
+		try {
+			userSearchResponse = restTemplate.postForObject(searchUserUrl, request, UserSearchResponse.class);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		if (null != userSearchResponse && userSearchResponse.isMatchingUserPresent()) {
 			return userSearchResponse.toDomainUser();
 		} else {
 			throw new UserNotFoundException();

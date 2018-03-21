@@ -13,8 +13,9 @@ import org.egov.domain.model.User;
 public class UserSearchResponseContent {
 	private Long id;
 	private String emailId;
+	private String mobileNumber;
 
 	public User toDomainUser() {
-		return new User(id, emailId);
+		return new User(id, emailId,mobileNumber);
 	}
 }

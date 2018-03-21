@@ -8,8 +8,8 @@ import org.egov.pgr.contract.RequestInfoWrapper;
 import org.egov.pgr.contract.ServiceReqSearchCriteria;
 import org.egov.pgr.service.GrievanceService;
 import org.egov.pgr.utils.PGRRequestValidator;
-import org.egov.pgr.v2.contract.ServiceRequest;
-import org.egov.pgr.v2.contract.ServiceResponse;
+import org.egov.pgr.v3.contract.ServiceRequest;
+import org.egov.pgr.v3.contract.ServiceResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,7 +24,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Controller
 @Slf4j
-@RequestMapping(value = "/services/")
+@RequestMapping(value = "/requests/v2/")
 public class ServiceController {
 
 	@Autowired
@@ -34,12 +34,12 @@ public class ServiceController {
 	@Autowired
 	private PGRRequestValidator pgrRequestValidator;
 
-/*	*//**
+	/**
 	 * enpoint to create service requests
 	 * 
 	 * @param ServiceReqRequest
 	 * @author kaviyarasan
-	 *//*
+	 */
 	@PostMapping("_create")
 	@ResponseBody
 	private ResponseEntity<?> create(@RequestBody @Valid ServiceRequest serviceRequest) {
@@ -51,12 +51,12 @@ public class ServiceController {
 		return new ResponseEntity<>(response, HttpStatus.CREATED);
 	}
 
-	*//**
+	/**
 	 * enpoint to update service requests
 	 * 
 	 * @param ServiceReqRequest
 	 * @author el rey
-	 *//*
+	 */
 	@PostMapping("_update")
 	@ResponseBody
 	private ResponseEntity<?> update(@RequestBody @Valid ServiceRequest serviceRequest) {
@@ -67,7 +67,7 @@ public class ServiceController {
 		long endTime = new Date().getTime();
 		log.debug(" the time taken for update in ms: {}", endTime - startTime);
 		return new ResponseEntity<>(response, HttpStatus.OK);
-	}*/
+	}
 	
 
 	/**

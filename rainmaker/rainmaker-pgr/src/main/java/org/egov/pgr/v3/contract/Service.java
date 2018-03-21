@@ -6,6 +6,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import org.egov.pgr.contract.AuditDetails;
 import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
@@ -32,10 +33,10 @@ public class Service   {
   private String description = null;
 
   @JsonProperty("lat")
-  private Integer lat = null;
+  private Double lat = null;
 
   @JsonProperty("long")
-  private Integer _long = null;
+  private Double _long = null;
 
   @JsonProperty("address")
   private String address = null;
@@ -239,7 +240,7 @@ public class Service   {
     this.description = description;
   }
 
-  public Service lat(Integer lat) {
+  public Service lat(Double lat) {
     this.lat = lat;
     return this;
   }
@@ -250,15 +251,15 @@ public class Service   {
   **/
 
 
-  public Integer getLat() {
+  public Double getLat() {
     return lat;
   }
 
-  public void setLat(Integer lat) {
+  public void setLat(Double lat) {
     this.lat = lat;
   }
 
-  public Service _long(Integer _long) {
+  public Service _long(Double _long) {
     this._long = _long;
     return this;
   }
@@ -269,11 +270,11 @@ public class Service   {
   **/
 
 
-  public Integer getLong() {
+  public Double getLong() {
     return _long;
   }
 
-  public void setLong(Integer _long) {
+  public void setLong(Double _long) {
     this._long = _long;
   }
 

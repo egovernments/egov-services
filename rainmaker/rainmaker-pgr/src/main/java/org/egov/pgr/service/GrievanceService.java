@@ -3,12 +3,9 @@ package org.egov.pgr.service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.egov.common.contract.request.RequestInfo;
-import org.egov.common.contract.request.Role;
-import org.egov.common.contract.request.User;
 import org.egov.mdms.model.MdmsCriteriaReq;
 import org.egov.pgr.contract.AuditDetails;
 import org.egov.pgr.contract.CountResponse;
@@ -21,12 +18,10 @@ import org.egov.pgr.repository.ServiceRequestRepository;
 import org.egov.pgr.utils.PGRConstants;
 import org.egov.pgr.utils.PGRUtils;
 import org.egov.pgr.utils.ResponseInfoFactory;
-import org.egov.pgr.v3.contract.ActionInfo;
-import org.egov.pgr.v2.contract.Comment;
-import org.egov.pgr.v2.contract.Media;
-import org.egov.pgr.v2.contract.Service;
-import org.egov.pgr.v2.contract.ServiceRequest;
 import org.egov.pgr.v3.contract.ActionHistory;
+import org.egov.pgr.v3.contract.ActionInfo;
+import org.egov.pgr.v3.contract.Service;
+import org.egov.pgr.v3.contract.ServiceRequest;
 import org.egov.pgr.v3.contract.ServiceResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -35,7 +30,6 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
 
 import lombok.extern.slf4j.Slf4j;
@@ -44,108 +38,123 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class GrievanceService {
 
-		@Value("${kafka.topics.save.servicereq}")
-		private String saveTopic;
+	@Value("${kafka.topics.save.servicereq}")
+	private String saveTopic;
 
-		@Value("${kafka.topics.update.servicereq}")
-		private String updateTopic;
-		
-		@Value("${kafka.topics.notification.complaint}")
-		private String complaintTopic;
-		
-		@Value("${indexer.grievance.create}")
-		private String indexerCreateTopic;
-		
-		@Value("${indexer.grievance.update}")
-		private String indexerUpdateTopic;
+	@Value("${kafka.topics.update.servicereq}")
+	private String updateTopic;
 
-		@Autowired
-		private ResponseInfoFactory factory;
+	@Value("${kafka.topics.notification.complaint}")
+	private String complaintTopic;
 
-		@Autowired
-		private IdGenRepo idGenRepo;
+	@Value("${indexer.grievance.create}")
+	private String indexerCreateTopic;
 
-		@Autowired
-		private PGRUtils pGRUtils;
-		
-		@Autowired
-		private PGRProducer pGRProducer;
-		
-		@Autowired
-		private ServiceRequestRepository serviceRequestRepository;
-		
-		private static final String MODULE_NAME = "PGR:";
+	@Value("${indexer.grievance.update}")
+	private String indexerUpdateTopic;
 
-/*		*//***
-		 * Asynchronous method performs business logic if any and adds the data to
-		 * persister queue on create topic
-		 * 
-		 * @param request
-		 *//*
-		public ServiceResponse create(ServiceRequest request) {
+	@Autowired
+	private ResponseInfoFactory factory;
 
-			log.debug(" the incoming request obj in service : {}", request);
+	@Autowired
+	private IdGenRepo idGenRepo;
 
-			RequestInfo requestInfo = request.getRequestInfo();
-			List<Service> serviceReqs = request.getServices();
-			List<ActionInfo> actionInfos = request.getActionInfo();
-			String tenantId = serviceReqs.get(0).getTenantId();
-			Integer servReqLen = serviceReqs.size();
+	@Autowired
+	private PGRUtils pGRUtils;
 
-			List<String> servReqIdList = getIdList(requestInfo, tenantId, servReqLen, PGRConstants.SERV_REQ_ID_NAME,
-					PGRConstants.SERV_REQ_ID_FORMAT);
-			AuditDetails auditDetails = pGRUtils.getAuditDetails(String.valueOf(requestInfo.getUserInfo().getId()));
-			
-			for (int servReqCount = 0; servReqCount < servReqLen; servReqCount++) {
+	@Autowired
+	private PGRProducer pGRProducer;
 
-				Service servReq = serviceReqs.get(servReqCount);
-				ActionInfo actionInfo = actionInfos.get(servReqCount);
-				String currentId = servReqIdList.get(servReqCount);
-				servReq.setAuditDetails(auditDetails);
-				servReq.setServiceRequestId(currentId);
-				actionInfo.setServiceRequestId(MODULE_NAME + currentId);
-				setIdsForSubList(actionInfo.getMedia(), actionInfo.getComments(), true, requestInfo,
-						auditDetails.getCreatedTime());
-			}
-			
-			pGRProducer.push(saveTopic, request);
-			pGRProducer.push(complaintTopic, request);
-			pGRProducer.push(indexerCreateTopic, request);
+	@Autowired
+	private ServiceRequestRepository serviceRequestRepository;
 
-			return getServiceResponse(request);
+	private static final String MODULE_NAME = "PGR:";
+
+	/***
+	 * Asynchronous method performs business logic if any and adds the data to
+	 * persister queue on create topic
+	 * 
+	 * @param request
+	 */
+	public ServiceResponse create(ServiceRequest request) {
+
+		log.debug(" the incoming request obj in service : {}", request);
+
+		RequestInfo requestInfo = request.getRequestInfo();
+		List<Service> serviceReqs = request.getServices();
+		List<ActionInfo> actionInfos = request.getActionInfo();
+		String tenantId = serviceReqs.get(0).getTenantId();
+		Integer servReqLen = serviceReqs.size();
+
+		AuditDetails auditDetails = pGRUtils.getAuditDetails(String.valueOf(requestInfo.getUserInfo().getId()));
+
+		String by = auditDetails.getCreatedBy() + ":" + requestInfo.getUserInfo().getRoles().get(0).getName();
+
+		List<String> servReqIdList = getIdList(requestInfo, tenantId, servReqLen, PGRConstants.SERV_REQ_ID_NAME,
+				PGRConstants.SERV_REQ_ID_FORMAT);
+
+		for (int servReqCount = 0; servReqCount < servReqLen; servReqCount++) {
+
+			Service servReq = serviceReqs.get(servReqCount);
+			ActionInfo actionInfo = actionInfos.get(servReqCount);
+			String currentId = servReqIdList.get(servReqCount);
+			servReq.setAuditDetails(auditDetails);
+			servReq.setServiceRequestId(currentId);
+			actionInfo.setBusinessKey(currentId);
+			actionInfo.setBy(by);
+			actionInfo.setWhen(auditDetails.getCreatedTime());
+			actionInfo.setTenantId(tenantId);
+			actionInfo.setStatus(actionInfo.getAction());
+			// FIXME TODO should be module name and currentid in future
 		}
 
-		*//***
-		 * Asynchronous method performs business logic if any and adds the data to
-		 * persister queue on update topic
-		 * 
-		 * @param request
-		 *//*
-		public ServiceResponse update(ServiceRequest request) {
+		pGRProducer.push(saveTopic, request);
+		pGRProducer.push(complaintTopic, request);
+		pGRProducer.push(indexerCreateTopic, request);
 
-			log.debug(" the incoming request obj in service : {}", request);
+		return getServiceResponse(request);
+	}
 
-			List<Service> serviceReqs = request.getServices();
-			List<ActionInfo> actionInfos = request.getActionInfo();
+	/**
+	 * Asynchronous method performs business logic if any and adds the data to
+	 * persister queue on update topic
+	 * 
+	 * @param request
+	 */
+	public ServiceResponse update(ServiceRequest request) {
 
-			final AuditDetails auditDetails = pGRUtils.getAuditDetails(String.valueOf(request.getRequestInfo().getUserInfo().getId()));
-			int serviceLen = serviceReqs.size();
-			for(int index=0;index<serviceLen;index++) {
-				
-				Service servReq = serviceReqs.get(index);
-				ActionInfo actionInfo = actionInfos.get(index);
-				servReq.setAuditDetails(auditDetails);
-				setIdsForSubList(actionInfo.getMedia(), actionInfo.getComments(), false, request.getRequestInfo(),auditDetails.getLastModifiedTime());
-			}
+		log.debug(" the incoming request obj in service : {}", request);
 
-			pGRProducer.push(updateTopic, request);
-			pGRProducer.push(complaintTopic, request);
-			pGRProducer.push(indexerUpdateTopic, request);
-			
-			return getServiceResponse(request);
+		RequestInfo requestInfo = request.getRequestInfo();
+		List<Service> serviceReqs = request.getServices();
+		List<ActionInfo> actionInfos = request.getActionInfo();
+		String tenantId = serviceReqs.get(0).getTenantId();
+
+		final AuditDetails auditDetails = pGRUtils
+				.getAuditDetails(String.valueOf(request.getRequestInfo().getUserInfo().getId()));
+		String by = auditDetails.getCreatedBy() + ":" + requestInfo.getUserInfo().getRoles().get(0).getName();
+
+		int serviceLen = serviceReqs.size();
+		for (int index = 0; index < serviceLen; index++) {
+
+			Service servReq = serviceReqs.get(index);
+			ActionInfo actionInfo = actionInfos.get(index);
+			servReq.setAuditDetails(auditDetails);
+			actionInfo.setBusinessKey(servReq.getServiceRequestId());
+			actionInfo.setBy(by);
+			actionInfo.setWhen(auditDetails.getCreatedTime());
+			actionInfo.setTenantId(tenantId);
+			actionInfo.setStatus(actionInfo.getAction());
 		}
 
-		*//**
+		pGRProducer.push(updateTopic, request);
+		pGRProducer.push(complaintTopic, request);
+		pGRProducer.push(indexerUpdateTopic, request);
+
+		return getServiceResponse(request);
+	}
+
+		/**
 		 * to filter the sublist object for idgeneration if they are null
 		 * 
 		 * @param mediaList
@@ -188,7 +197,7 @@ public class GrievanceService {
 		 * @param idKey
 		 * @param idformat
 		 * 
-		 *//*
+		 */
 		private List<String> getIdList(RequestInfo requestInfo, String tenantId, Integer length, String idKey,
 				String idformat) {
 
@@ -196,18 +205,18 @@ public class GrievanceService {
 					.map(IdResponse::getId).collect(Collectors.toList());
 		}
 
-		*//**
+		/**
 		 * returns ServiceResponse built based on the given ServiceRequest
 		 * 
 		 * @param serviceReqRequest
 		 * @return serviceReqResponse
-		 *//*
+		 */
 		public ServiceResponse getServiceResponse(ServiceRequest serviceReqRequest) {
 
 			return ServiceResponse.builder()
 					.responseInfo(factory.createResponseInfoFromRequestInfo(serviceReqRequest.getRequestInfo(), true))
 					.services(serviceReqRequest.getServices()).build();
-		}*/
+		}
 		
 		/**
 		 * Method to return service requests received from the repo to the controller in

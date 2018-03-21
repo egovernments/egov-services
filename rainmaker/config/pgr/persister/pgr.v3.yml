@@ -1,0 +1,177 @@
+serviceMaps:
+ serviceName: User Service
+ mappings:
+ - version: 1.0
+   name: PGR
+   description: Persists grievance details in service table
+   fromTopic: save-pgr-service
+   isTransaction: true
+   queryMaps:
+    - query: INSERT INTO eg_pgr_service(tenantid, servicecode, servicerequestid, description, lat, "long", address, addressid, email, deviceid, accountid, firstname, lastname, phone, attributes, status, source, expectedtime, rating, feedback,
+            createdby, createdtime, lastmodifiedby, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+
+      basePath: services.*
+      jsonMaps:
+
+
+       - jsonPath: $.services.*.tenantId
+
+       - jsonPath: $.services.*.serviceCode
+
+       - jsonPath: $.services.*.serviceRequestId
+
+       - jsonPath: $.services.*.description
+
+       - jsonPath: $.services.*.lat
+
+       - jsonPath: $.services.*.long
+
+       - jsonPath: $.services.*.address
+
+       - jsonPath: $.services.*.addressId
+
+       - jsonPath: $.services.*.email
+
+       - jsonPath: $.services.*.deviceId
+
+       - jsonPath: $.services.*.accountId
+
+       - jsonPath: $.services.*.firstName
+
+       - jsonPath: $.services.*.lastName
+
+       - jsonPath: $.services.*.phone
+
+       - jsonPath: $.services.*.attributes
+         type: JSON
+         dbType: JSONB
+
+       - jsonPath: $.services.*.status
+
+       - jsonPath: $.services.*.source
+
+       - jsonPath: $.services.*.expectedTime
+       
+       - jsonPath: $.services.*.rating
+              
+       - jsonPath: $.services.*.feedback
+
+       - jsonPath: $.services.*.auditDetails.createdBy
+
+       - jsonPath: $.services.*.auditDetails.createdTime
+
+       - jsonPath: $.services.*.auditDetails.lastModifiedBy
+
+       - jsonPath: $.services.*.auditDetails.lastModifiedTime
+
+
+    - query: INSERT INTO eg_pgr_action(uuid, by, "when", status, comments, media, assignee, isinternal, tenantid, businesskey) VALUES ((SELECT md5(random()::text || clock_timestamp()::text)::uuid), ?, ?, ?, ?, ?, ?, ?, ?, ?);
+
+      basePath: actionInfo.*
+      jsonMaps:
+
+       - jsonPath: $.actionInfo.*.by
+
+       - jsonPath: $.actionInfo.*.when
+
+       - jsonPath: $.actionInfo.*.status
+
+       - jsonPath: $.actionInfo.*.comments
+
+       - jsonPath: $.actionInfo.*.media
+         type: JSON
+         dbType: STRING
+
+       - jsonPath: $.actionInfo.*.assignee
+
+       - jsonPath: $.actionInfo.*.isInternal
+
+       - jsonPath: $.actionInfo.*.tenantId
+
+       - jsonPath: $.actionInfo.*.businessKey
+       
+ - version: 1.0
+   name: Asset
+   description: Persists asset details in eg_asset table
+   fromTopic: update-pgr-service
+   isTransaction: true
+   queryMaps:
+
+    - query: UPDATE eg_pgr_service SET servicecode=?, description=?,lat=?, "long"=?, address=?, addressid=?, email=?, deviceid=?, accountid=?, firstname=?, lastname=?, phone=?, attributes=?,  status=?, source=?, expectedtime=?, feedback=?, rating=?, lastmodifiedby=?, lastmodifiedtime=? WHERE tenantid=? AND servicerequestid=?;
+
+      basePath: services.*
+      jsonMaps:
+
+       - jsonPath: $.services.*.servicecode
+       
+       - jsonPath: $.services.*.description
+
+       - jsonPath: $.services.*.lat
+
+       - jsonPath: $.services.*.long
+
+       - jsonPath: $.services.*.address
+
+       - jsonPath: $.services.*.addressId
+
+       - jsonPath: $.services.*.email
+
+       - jsonPath: $.services.*.deviceId
+
+       - jsonPath: $.services.*.accountId
+
+       - jsonPath: $.services.*.firstName
+
+       - jsonPath: $.services.*.lastName
+
+       - jsonPath: $.services.*.phone
+
+       - jsonPath: $.services.*.attributes
+         type: JSON
+         dbType: JSONB
+
+       - jsonPath: $.services.*.status
+
+       - jsonPath: $.services.*.source
+
+       - jsonPath: $.services.*.expectedTime
+       
+       - jsonPath: $.services.*.feedback
+       
+       - jsonPath: $.services.*.rating
+       
+       - jsonPath: $.services.*.auditDetails.lastModifiedBy
+
+       - jsonPath: $.services.*.auditDetails.lastModifiedTime
+
+       - jsonPath: $.services.*.tenantId
+
+       - jsonPath: $.services.*.serviceRequestId
+
+
+    - query: INSERT INTO eg_pgr_action(uuid, by, "when", status, comments, media, assignee, isinternal, tenantid, businesskey) VALUES ((SELECT md5(random()::text || clock_timestamp()::text)::uuid), ?, ?, ?, ?, ?, ?, ?, ?, ?);
+
+      basePath: actionInfo.*
+      jsonMaps:
+
+       - jsonPath: $.actionInfo.*.by
+
+       - jsonPath: $.actionInfo.*.when
+
+       - jsonPath: $.actionInfo.*.status
+
+       - jsonPath: $.actionInfo.*.comments
+
+       - jsonPath: $.actionInfo.*.media
+         type: JSON
+         dbType: STRING
+
+       - jsonPath: $.actionInfo.*.assignee
+
+       - jsonPath: $.actionInfo.*.isInternal
+
+       - jsonPath: $.actionInfo.*.tenantId
+
+       - jsonPath: $.actionInfo.*.businessKey
+
+

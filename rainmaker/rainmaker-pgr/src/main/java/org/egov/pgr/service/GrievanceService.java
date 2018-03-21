@@ -22,6 +22,7 @@ import org.egov.pgr.repository.ServiceRequestRepository;
 import org.egov.pgr.utils.PGRConstants;
 import org.egov.pgr.utils.PGRUtils;
 import org.egov.pgr.utils.ResponseInfoFactory;
+import org.egov.pgr.v2.contract.ActionHistory;
 import org.egov.pgr.v2.contract.ActionInfo;
 import org.egov.pgr.v2.contract.Comment;
 import org.egov.pgr.v2.contract.Media;
@@ -214,39 +215,20 @@ public class GrievanceService {
 			mapper.configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true);
 			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 	        mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
-			//ServiceReqResponse serviceReqResponse = null;
 			StringBuilder uri = new StringBuilder();
-			SearcherRequest searcherRequest = null;
-			if(null != serviceReqSearchCriteria.getServiceRequestId() && serviceReqSearchCriteria.getServiceRequestId().size() == 1) {
-				searcherRequest = pGRUtils.prepareSearchRequestSpecific(uri, serviceReqSearchCriteria, requestInfo);
-			}else if(null != serviceReqSearchCriteria.getAssignedTo() && !serviceReqSearchCriteria.getAssignedTo().isEmpty()) {
-				searcherRequest = pGRUtils.prepareSearchRequestAssignedTo(uri, serviceReqSearchCriteria, requestInfo);
-			}else {
-				if(null != serviceReqSearchCriteria.getGroup() && !serviceReqSearchCriteria.getGroup().isEmpty()){
-						Object response = fetchServiceCodes(requestInfo, serviceReqSearchCriteria.getTenantId(), serviceReqSearchCriteria.getGroup());
-						List<String> serviceCodes = null;
-						if(null == response)
-							return new ServiceReqResponse(factory.createResponseInfoFromRequestInfo(requestInfo, false),
-									new ArrayList<ServiceReq>());
-						try {
-							serviceCodes = (List<String>) JsonPath.read(response, PGRConstants.JSONPATH_SERVICE_CODES);
-						}catch(Exception e) {
-							return new ServiceReqResponse(factory.createResponseInfoFromRequestInfo(requestInfo, false),
-									new ArrayList<ServiceReq>());
-						}
-						serviceReqSearchCriteria.setServiceCodes(serviceCodes);
-				}
-				searcherRequest = pGRUtils.prepareSearchRequestGeneral(uri, serviceReqSearchCriteria, requestInfo);
-			}
+			SearcherRequest searcherRequest = prepareSearcherRequest(requestInfo, serviceReqSearchCriteria, uri);
+			if(null == searcherRequest)
+				return pGRUtils.getDefaultServiceResponse(requestInfo);
 			Object response = serviceRequestRepository.fetchResult(uri, searcherRequest);
-			log.info("Searcher response: ", response);
-			if (null == response) {
-				return new ServiceReqResponse(factory.createResponseInfoFromRequestInfo(requestInfo, false),
-						new ArrayList<ServiceReq>());
-			}
-			//serviceReqResponse = mapper.convertValue(response, ServiceReqResponse.class);
-			return response;
+			log.info("Searcher response: "+response);
+			if (null == response) 
+				return pGRUtils.getDefaultServiceResponse(requestInfo);
+			ServiceResponse serviceResponse = pGRUtils.getServiceResponse(response, requestInfo);
+			return serviceResponse;
 		}
+		
+		
+		
 		
 		/**
 		 * method to fetch service codes from mdms based on dept
@@ -263,5 +245,42 @@ public class GrievanceService {
 			MdmsCriteriaReq mdmsCriteriaReq = pGRUtils.prepareSearchRequestForServiceCodes(uri, tenantId, department, requestInfo);
 			return serviceRequestRepository.fetchResult(uri, mdmsCriteriaReq);
 			
+		}
+		
+		/**
+		 * Prepares request for searcher service based on the criteria
+		 * 
+		 * @param requestInfo
+		 * @param serviceReqSearchCriteria
+		 * @param uri
+		 * @return SearcherRequest
+		 */
+		public SearcherRequest prepareSearcherRequest(RequestInfo requestInfo,
+				ServiceReqSearchCriteria serviceReqSearchCriteria, StringBuilder uri) {
+			SearcherRequest searcherRequest = null;
+			if(null != serviceReqSearchCriteria.getServiceRequestId() && serviceReqSearchCriteria.getServiceRequestId().size() == 1) {
+				searcherRequest = pGRUtils.prepareSearchRequestSpecific(uri, serviceReqSearchCriteria, requestInfo);
+			}else if(null != serviceReqSearchCriteria.getAssignedTo() && !serviceReqSearchCriteria.getAssignedTo().isEmpty()) {
+				searcherRequest = pGRUtils.prepareSearchRequestAssignedTo(uri, serviceReqSearchCriteria, requestInfo);
+			}else {
+				if(null != serviceReqSearchCriteria.getGroup() && !serviceReqSearchCriteria.getGroup().isEmpty()){
+						Object response = fetchServiceCodes(requestInfo, serviceReqSearchCriteria.getTenantId(), serviceReqSearchCriteria.getGroup());
+						List<String> serviceCodes = null;
+						if(null == response) {
+							log.info("Searcher returned zero serviceCodes!");
+							return null;
+						}
+						try {
+							serviceCodes = (List<String>) JsonPath.read(response, PGRConstants.JSONPATH_SERVICE_CODES);
+						}catch(Exception e) {
+							log.error("Exception while parsing serviceCodes: ",e);
+							return null;
+						}
+						serviceReqSearchCriteria.setServiceCodes(serviceCodes);
+				}
+				searcherRequest = pGRUtils.prepareSearchRequestGeneral(uri, serviceReqSearchCriteria, requestInfo);
+			}
+			
+			return searcherRequest;
 		}
 }

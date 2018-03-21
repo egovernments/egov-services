@@ -11,9 +11,21 @@ import org.egov.mdms.model.MdmsCriteriaReq;
 import org.egov.mdms.model.ModuleDetail;
 import org.egov.pgr.contract.AuditDetails;
 import org.egov.pgr.contract.SearcherRequest;
+import org.egov.pgr.contract.ServiceReq;
+import org.egov.pgr.contract.ServiceReqResponse;
 import org.egov.pgr.contract.ServiceReqSearchCriteria;
+import org.egov.pgr.v2.contract.ActionHistory;
+import org.egov.pgr.v2.contract.Service;
+import org.egov.pgr.v2.contract.ServiceResponse;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.MapperFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.jayway.jsonpath.JsonPath;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -33,6 +45,9 @@ public class PGRUtils {
 	
 	@Value("${egov.mdms.search.endpoint}")
 	private String mdmsEndpoint;
+	
+	@Autowired
+	private ResponseInfoFactory factory;
 
 	/**
 	 * Prepares request and uri for service request search
@@ -227,5 +242,83 @@ public class PGRUtils {
 		return searcherRequest;
 	}
 	
+	/**
+	 * Formats the external service response to ServiceResponse
+	 * 
+	 * @param response
+	 * @param requestInfo
+	 * @return ServiceResponse
+	 */
+	public ServiceResponse getServiceResponse(Object response, RequestInfo requestInfo) {
+		ObjectMapper mapper = new ObjectMapper();
+		mapper.configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true);
+		mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);        
+		try {
+			ActionHistory actionHistory = null;
+			Service service = null;
+			List<Service> services = new ArrayList<>();
+			if(isSecondaryInfoAvailable(mapper, response)) {
+				actionHistory = ActionHistory.builder()
+						.media(JsonPath.read(mapper.writeValueAsString(response), PGRConstants.V2_MEDIA_JSONPATH))
+						.comments(JsonPath.read(mapper.writeValueAsString(response), PGRConstants.V2_COMMENT_JSONPATH))
+						.assignees(JsonPath.read(mapper.writeValueAsString(response), PGRConstants.V2_ASSIGNEE_JSONPATH))
+						.statuses(JsonPath.read(mapper.writeValueAsString(response), PGRConstants.V2_STATUS_JSONPATH)).build();
+				
+				service = mapper.convertValue(JsonPath.read(mapper.writeValueAsString(response), PGRConstants.V2_SERVICES_JSONPATH), Service.class);
+				services.add(service);
+			}else {
+				actionHistory = new ActionHistory();
+				services = (List<Service>) JsonPath.read(mapper.writeValueAsString(response), PGRConstants.V2_SERVICES_PARENT_JSONPATH);
+			}
+			List<ActionHistory> actionHistories = new ArrayList<>();
+			actionHistories.add(actionHistory);
+			
+			ServiceResponse serviceResponse = ServiceResponse.builder()
+					.responseInfo(factory.createResponseInfoFromRequestInfo(requestInfo, true))
+					.services(services).actionHistory(actionHistories).build();
+			
+			log.info("Result: "+serviceResponse);
+			
+			return serviceResponse;
+
+		}catch(Exception e) {
+			log.error("Exception while formatting response: ",e);
+		}
+		
+		return new ServiceResponse(factory.createResponseInfoFromRequestInfo(requestInfo, false),
+				new ArrayList<Service>(), new ArrayList<ActionHistory>());
+		
+	}
+	
+	/**
+	 * Default response is responseInfo with error status and empty lists
+	 * 
+	 * @param requestInfo
+	 * @return ServiceResponse
+	 */
+	public ServiceResponse getDefaultServiceResponse(RequestInfo requestInfo) {
+		return new ServiceResponse(factory.createResponseInfoFromRequestInfo(requestInfo, false),
+				new ArrayList<Service>(), new ArrayList<ActionHistory>());
+	}
+	
+	/**
+	 * Util method to check if the media,comment,assignee,statuses are present in the searcher response
+	 * based on this, the formatting logic is applied. Searcher response is such that, either all of them or none of them is present
+	 * so the check in this method is applied on only media.
+	 * 
+	 * @param mapper
+	 * @param response
+	 * @return
+	 */
+	public boolean isSecondaryInfoAvailable(ObjectMapper mapper, Object response) {
+		boolean isSecondaryInfoAvailable = true;
+		try {
+			JsonPath.read(mapper.writeValueAsString(response), PGRConstants.V2_MEDIA_JSONPATH);
+		}catch(Exception e) {
+			isSecondaryInfoAvailable = false;
+		}
+		return isSecondaryInfoAvailable;
+	}
 
 }

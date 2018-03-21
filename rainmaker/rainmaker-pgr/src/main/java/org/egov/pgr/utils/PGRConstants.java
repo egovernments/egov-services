@@ -48,6 +48,8 @@ public class PGRConstants {
 	public static final String V2_STATUS_JSONPATH = "$.services[0].assignee";
 	public static final String V2_ASSIGNEE_JSONPATH = "$.services[0].statuses";
 	public static final String V2_SERVICES_JSONPATH = "$.services[0].services";
+	public static final String V2_SERVICES_PARENT_JSONPATH = "$.services";
+	public static final String V2_RESPONSEINFO_JSONPATH = "$.ResponseInfo";
 
 	
 }

@@ -117,7 +117,7 @@ public class LeaveApplicationRepository {
         ProcessInstance processInstance = new ProcessInstance();
         Long stateId = null;
         if (StringUtils.isEmpty(leaveApplicationRequest.getType()))
-            processInstance = workFlowService.start(leaveApplicationRequest);
+           processInstance = workFlowService.start(leaveApplicationRequest);
         if (processInstance.getId() != null)
             stateId = Long.valueOf(processInstance.getId());
         final String leaveApplicationInsertQuery = LeaveApplicationQueryBuilder.insertLeaveApplicationQuery();
@@ -131,7 +131,8 @@ public class LeaveApplicationRepository {
                     leaveApplication.getToDate(), leaveApplication.getCompensatoryForDate(),
                     leaveApplication.getLeaveDays(), leaveApplication.getAvailableDays(),
                     leaveApplication.getHalfdays(), leaveApplication.getFirstHalfleave(), leaveApplication.getReason(),
-                    leaveApplication.getStatus(), leaveApplication.getLeaveGround(), leaveApplication.getStateId(), userResponse.getUsers().get(0).getId(),
+                    leaveApplication.getStatus(), leaveApplication.getLeaveGround(),leaveApplication.getStateId() , leaveApplication.getPrefixDate(),
+                    leaveApplication.getSuffixDate(), leaveApplication.getHolidays(),userResponse.getUsers().get(0).getId(),
                     now, userResponse.getUsers().get(0).getId(), now, leaveApplication.getTenantId()};
             jdbcTemplate.update(leaveApplicationInsertQuery, obj);
         }

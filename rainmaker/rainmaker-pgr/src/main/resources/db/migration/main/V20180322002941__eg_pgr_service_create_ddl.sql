@@ -39,7 +39,7 @@ CREATE TABLE IF NOT EXISTS eg_pgr_action
   businesskey character varying(500) NOT NULL,
   status character varying(64),
   assignee character varying(256),
-  media character varying(2408),
+  media JSONB,
   comments character varying(1024),
   CONSTRAINT pk_eg_pgr_action PRIMARY KEY (tenantid, businesskey)
 );

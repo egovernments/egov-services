@@ -2344,7 +2344,7 @@ class CreateAsset extends React.Component {
                         </div>
                         <div className="col-sm-6">
                           <div>
-                            <input type="file" multiple onChange={(e) => handleChange(e, "document")} />
+                            <input type="file" multiple onChange={(e) => handleChange(e, "document")} disabled={readonly || getUrlVars()["type"] == "view"/>
                           </div>
                         </div>
                       </div>

@@ -18,7 +18,7 @@ public class PGRConstants {
 	public static final String SEARCHER_COUNT_DEF_NAME = "count";
 	public static final String SEARCHER_SRHISTORY_DEF_NAME = "history";
 	public static final String SEARCHER_PGR_MOD_NAME = "rainmaker-pgr";
-	public static final String MDMS_PGR_MOD_NAME = "PGR";
+	public static final String MDMS_PGR_MOD_NAME = "RAINMAKER-PGR";
 	public static final String MDMS_SERVICETYPE_MASTER_NAME = "ServiceDefs";
 	public static final String SERVICE_CODES = "serviceCode";
 	public static final String JSONPATH_SERVICE_CODES = "$.MdmsRes.PGR.ServiceDefs";
@@ -37,7 +37,7 @@ public class PGRConstants {
 	public static final String V2_SEARCHER_COUNT_GENERAL_DEF_NAME = "countGeneral";
 	public static final String V2_SEARCHER_COUNT_ASSIGNED_DEF_NAME = "countOnAssignedTo";
 	public static final String V2_SEARCHER_PGR_MOD_NAME = "rainmaker-pgr-V2";
-	public static final String V2_MDMS_PGR_MOD_NAME = "PGR";
+	public static final String V2_MDMS_PGR_MOD_NAME = "RAINMAKER-PGR";
 	public static final String V2_MDMS_SERVICETYPE_MASTER_NAME = "ServiceDefs";
 	public static final String V2_SERVICE_CODES = "serviceCode";
 	public static final String V2_JSONPATH_SERVICE_CODES = "$.MdmsRes.PGR.ServiceDefs";
@@ -63,7 +63,7 @@ public class PGRConstants {
 	public static final String V3_SEARCHER_COUNT_DEF_NAME = "count";
 	public static final String V3_SEARCHER_COUNT_ASSIGNED_DEF_NAME = "countOnAssignedTo";
 	public static final String V3_SEARCHER_PGR_MOD_NAME = "rainmaker-pgr-V3";
-	public static final String V3_MDMS_PGR_MOD_NAME = "PGR";
+	public static final String V3_MDMS_PGR_MOD_NAME = "RAINMAKER-PGR";
 	public static final String V3_MDMS_SERVICETYPE_MASTER_NAME = "ServiceDefs";
 	public static final String V3_SERVICE_CODES = "serviceCode";
 	public static final String V3_JSONPATH_SERVICE_CODES = "$.MdmsRes.PGR.ServiceDefs";

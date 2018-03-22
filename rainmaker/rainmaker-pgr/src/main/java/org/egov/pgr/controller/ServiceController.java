@@ -8,6 +8,7 @@ import org.egov.pgr.contract.RequestInfoWrapper;
 import org.egov.pgr.contract.ServiceReqSearchCriteria;
 import org.egov.pgr.service.GrievanceService;
 import org.egov.pgr.utils.PGRRequestValidator;
+import org.egov.pgr.utils.PgrValidatorV2;
 import org.egov.pgr.v3.contract.ServiceRequest;
 import org.egov.pgr.v3.contract.ServiceResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +34,9 @@ public class ServiceController {
 
 	@Autowired
 	private PGRRequestValidator pgrRequestValidator;
+	
+	@Autowired
+	private PgrValidatorV2 pgrValidatorV2;
 
 	/**
 	 * enpoint to create service requests
@@ -63,6 +67,7 @@ public class ServiceController {
 
 		long startTime = new Date().getTime();
 		//pgrRequestValidator.validateUpdate(serviceRequest);
+		pgrValidatorV2.validateUpdate(serviceRequest);
 		ServiceResponse response = service.update(serviceRequest);
 		long endTime = new Date().getTime();
 		log.debug(" the time taken for update in ms: {}", endTime - startTime);

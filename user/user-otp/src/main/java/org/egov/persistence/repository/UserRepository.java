@@ -6,7 +6,6 @@ import java.util.Map;
 import org.egov.domain.exception.UserNotFoundException;
 import org.egov.domain.model.User;
 import org.egov.persistence.contract.UserSearchRequest;
-import org.egov.persistence.contract.UserSearchResponse;
 import org.egov.persistence.contract.UserSearchResponseContent;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;

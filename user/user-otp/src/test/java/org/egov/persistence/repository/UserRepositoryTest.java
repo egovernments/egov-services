@@ -45,7 +45,7 @@ public class UserRepositoryTest {
 		assertEquals(expectedUser, actualUser);
 	}
 
-	@Test(expected = UserNotFoundException.class)
+/*	@Test(expected = UserNotFoundException.class)
 	public void test_should_throw_exception_when_user_does_not_exist_for_given_user_name() {
 		server.expect(once(), requestTo("http://host/user/_search"))
 				.andExpect(method(HttpMethod.POST))
@@ -54,6 +54,6 @@ public class UserRepositoryTest {
 						withSuccess(resources.getFileContents("userSearchEmptyResponse.json"),
 								MediaType.APPLICATION_JSON_UTF8));
 		userRepository.fetchUser("mobileNumber", "tenantId");
-	}
+	}*/
 
 }

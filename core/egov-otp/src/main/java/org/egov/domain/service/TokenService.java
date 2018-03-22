@@ -20,7 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 public class TokenService {
 
 	private TokenRepository tokenRepository;
-	 private static final int TTL_IN_SECONDS = 60;
+	 private static final int TTL_IN_SECONDS = 300;
 
 	@Autowired
 	public TokenService(TokenRepository tokenRepository) {

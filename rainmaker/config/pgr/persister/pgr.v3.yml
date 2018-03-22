@@ -102,7 +102,7 @@ serviceMaps:
       basePath: services.*
       jsonMaps:
 
-       - jsonPath: $.services.*.servicecode
+       - jsonPath: $.services.*.serviceCode
        
        - jsonPath: $.services.*.description
 

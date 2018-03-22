@@ -80,7 +80,7 @@ serviceMaps:
 
        - jsonPath: $.actionInfo.*.media
          type: JSON
-         dbType: STRING
+         dbType: JSONB
 
        - jsonPath: $.actionInfo.*.assignee
 
@@ -164,7 +164,7 @@ serviceMaps:
 
        - jsonPath: $.actionInfo.*.media
          type: JSON
-         dbType: STRING
+         dbType: JSONB
 
        - jsonPath: $.actionInfo.*.assignee
 

@@ -15,7 +15,6 @@ class UpdateMovement extends React.Component {
           id: ""
         },
         effectiveFrom: "",
-        enquiryPassedDate: "",
         transferedLocation: "",
         departmentAssigned: "",
         designationAssigned: "",
@@ -123,21 +122,19 @@ class UpdateMovement extends React.Component {
     });
 
 
-    $('#enquiryPassedDate, #effectiveFrom').datepicker({
+    $('#effectiveFrom').datepicker({
       format: 'dd/mm/yyyy',
       startDate: new Date(),
       autoclose: true,
       defaultDate: ""
     });
-    $('#enquiryPassedDate').val("");
     $('#effectiveFrom').val("");
-    $('#enquiryPassedDate,#effectiveFrom ').on('changeDate', function (e) {
+    $('#effectiveFrom ').on('changeDate', function (e) {
 
 
       _this.setState({
         movement: {
           ..._this.state.movement,
-          "enquiryPassedDate": $("#enquiryPassedDate").val(),
           "effectiveFrom": $("#effectiveFrom").val()
         }
       });
@@ -159,8 +156,7 @@ class UpdateMovement extends React.Component {
         if (res.Movement[0]) {
           var Movement = res.Movement[0];
 
-          if (!Movement.enquiryPassedDate)
-            Movement.enquiryPassedDate = "";
+        
 
           if (!Movement.workflowDetails) {
             Movement.workflowDetails = {
@@ -644,7 +640,7 @@ class UpdateMovement extends React.Component {
     let { handleChange, handleChangeThreeLevel, handleProcess } = this;
     let _this = this;
 
-    let { employeeId, typeOfMovement, currentAssignment, transferType, promotionBasis, remarks, reason, effectiveFrom, enquiryPassedDate, transferedLocation,
+    let { employeeId, typeOfMovement, currentAssignment, transferType, promotionBasis, remarks, reason, effectiveFrom, transferedLocation,
       departmentAssigned, designationAssigned, positionAssigned, fundAssigned, functionAssigned, employeeAcceptance, workflowDetails, tenantId } = this.state.movement
     let { isSearchClicked, employee, transferWithPromotion, buttons } = this.state;
     let mode = getUrlVars()["type"];
@@ -966,21 +962,6 @@ class UpdateMovement extends React.Component {
               </div>
             </div>
             <div className="row">
-              <div className="col-sm-6">
-                <div className="row">
-                  <div className="col-sm-6 label-text">
-                    <label htmlFor="">Enquiry passed Date</label>
-                  </div>
-                  <div className="col-sm-6">
-                    <div className="text-no-ui">
-                      <span><i className="glyphicon glyphicon-calendar"></i></span>
-                      <input type="text" id="enquiryPassedDate" name="enquiryPassedDate" value="enquiryPassedDate" value={enquiryPassedDate}
-                        onChange={(e) => { handleChange(e, "enquiryPassedDate") }} />
-
-                    </div>
-                  </div>
-                </div>
-              </div>
               <div className="col-sm-6">
                 <div className="row">
                   <div className="col-sm-6 label-text">

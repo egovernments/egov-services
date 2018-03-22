@@ -15,7 +15,6 @@ class UpdateMovement extends React.Component {
           id: ""
         },
         effectiveFrom: "",
-        enquiryPassedDate: "",
         transferedLocation: "",
         departmentAssigned: "",
         designationAssigned: "",
@@ -140,8 +139,7 @@ class UpdateMovement extends React.Component {
           if (Movement.typeOfMovement === "TRANSFER_CUM_PROMOTION") {
             transferWithPromotion = true;
           }
-          if (!Movement.enquiryPassedDate)
-            Movement.enquiryPassedDate = "";
+          
 
           if (!Movement.workflowDetails) {
             Movement.workflowDetails = {
@@ -252,25 +250,6 @@ class UpdateMovement extends React.Component {
     }
 
     $('#effectiveFrom').prop("disabled", false);
-
-    var _this = this;
-
-    $('#enquiryPassedDate').datepicker({
-      format: 'dd/mm/yyyy',
-      autoclose: true,
-      defaultDate: ""
-    });
-
-    $('#enquiryPassedDate').on('changeDate', function (e) {
-      _this.setState({
-        movement: {
-          ..._this.state.movement,
-          "enquiryPassedDate": $("#enquiryPassedDate").val(),
-        }
-      });
-    });
-
-
 
   }
 
@@ -559,7 +538,6 @@ class UpdateMovement extends React.Component {
       } else {
         tempInfo.typeOfMovement = "TRANSFER";
         tempInfo.promotionBasis = { id: "" };
-        tempInfo.enquiryPassedDate = "";
       }
 
 
@@ -729,7 +707,7 @@ class UpdateMovement extends React.Component {
     let { handleChange, handleChangeThreeLevel, handleProcess } = this;
     let _this = this;
 
-    let { employeeId, typeOfMovement, currentAssignment, transferType, promotionBasis, remarks, reason, effectiveFrom, enquiryPassedDate, transferedLocation,
+    let { employeeId, typeOfMovement, currentAssignment, transferType, promotionBasis, remarks, reason, effectiveFrom, transferedLocation,
       departmentAssigned, designationAssigned, positionAssigned, fundAssigned, functionAssigned, employeeAcceptance, workflowDetails, tenantId } = this.state.movement
     let { isSearchClicked, employee, transferWithPromotion, buttons } = this.state;
     let mode = getUrlVars()["type"];
@@ -775,20 +753,6 @@ class UpdateMovement extends React.Component {
     const promotionFunc = function () {
       if (transferWithPromotion == "true" || transferWithPromotion == true) {
         return (<div className="row">
-          <div className="col-sm-6">
-            <div className="row">
-              <div className="col-sm-6 label-text">
-                <label htmlFor="">Enquiry passed Date</label>
-              </div>
-              <div className="col-sm-6">
-                <div className="text-no-ui">
-                  <span><i className="glyphicon glyphicon-calendar"></i></span>
-                  <input type="text" id="enquiryPassedDate" name="enquiryPassedDate" value="enquiryPassedDate" value={enquiryPassedDate}
-                    onChange={(e) => { handleChange(e, "enquiryPassedDate") }} />
-                </div>
-              </div>
-            </div>
-          </div>
           <div className="col-sm-6">
             <div className="row">
               <div className="col-sm-6 label-text">

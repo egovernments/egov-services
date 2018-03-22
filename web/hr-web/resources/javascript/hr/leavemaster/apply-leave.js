@@ -411,6 +411,19 @@ class ApplyLeave extends React.Component {
     var tempInfo = Object.assign({}, this.state.leaveSet), type = getUrlVars()["type"];
     delete tempInfo.name;
     delete tempInfo.code;
+
+    console.log(this.state.perfixSuffix, this.state.encloseHoliday);
+  
+    let holidays = [];
+    if(this.state.encloseHoliday){
+      for(let i=0; i<this.state.encloseHoliday.length; i++)
+      holidays.push(this.state.encloseHoliday[i].applicableOn) 
+    }
+
+    tempInfo.prefixDate = this.state.perfixSuffix ? this.state.perfixSuffix.prefixFromDate : "";
+    tempInfo.suffixDate = this.state.perfixSuffix ? this.state.perfixSuffix.suffixToDate : "";
+    tempInfo.holidays = holidays;
+
     commonApiPost("hr-employee", "hod/employees", "_search", { tenantId, asOnDate, departmentId }, function (err, res) {
       if (res && res["Employee"] && res["Employee"][0]) {
         employee = res["Employee"][0];

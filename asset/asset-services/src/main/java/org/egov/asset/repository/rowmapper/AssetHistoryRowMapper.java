@@ -93,22 +93,23 @@ public class AssetHistoryRowMapper implements ResultSetExtractor<Map<Long, List<
                 valueBeforeTransaction = rs.getBigDecimal("currentcapitalizedvalue");
                 valueAfterTransaction = rs.getBigDecimal("valueafterrevaluation");
 
-            } else if (transactionType.equals(TransactionType.DEPRECIATION)) {
+            }
+            if (transactionType.equals(TransactionType.DEPRECIATION)) {
                 transactionDate = rs.getLong("todate");
                 transactionAmount = rs.getBigDecimal("depreciationvalue");
                 valueBeforeTransaction = rs.getBigDecimal("valuebeforedepreciation");
                 valueAfterTransaction = rs.getBigDecimal("valueafterdepreciation");
 
             }
-            else if (transactionTypeForDp.equals(TransactionType.SALE)) {
+            if (transactionTypeForDp != null && transactionTypeForDp.equals(TransactionType.SALE)) {
                 transactionDate = rs.getLong("disposaldate");
-                transactionType=TransactionType.fromValue(rs.getString("dp_transactiontype"));
+                transactionType = TransactionType.fromValue(rs.getString("dp_transactiontype"));
                 transactionAmount = rs.getBigDecimal("salevalue");
             }
-            else if(transactionTypeForDp.equals(TransactionType.DISPOSAL) ){
+            if (transactionTypeForDp != null && transactionTypeForDp.equals(TransactionType.DISPOSAL)) {
                 transactionDate = rs.getLong("disposaldate");
-                transactionType=TransactionType.fromValue(rs.getString("dp_transactiontype"));
-                
+                transactionType = TransactionType.fromValue(rs.getString("dp_transactiontype"));
+
             }
 
             final TransactionHistory history = TransactionHistory.builder().valueAfterTransaction(valueAfterTransaction)

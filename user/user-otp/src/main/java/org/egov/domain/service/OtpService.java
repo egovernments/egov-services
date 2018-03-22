@@ -1,6 +1,7 @@
 package org.egov.domain.service;
 
 import org.egov.domain.exception.UserMobileNumberNotFoundException;
+import org.egov.domain.exception.UserNotFoundException;
 import org.egov.domain.model.OtpRequest;
 import org.egov.domain.model.User;
 import org.egov.persistence.repository.OtpEmailRepository;
@@ -46,6 +47,9 @@ public class OtpService {
 	private void sendOtpForPasswordReset(OtpRequest otpRequest) {
 		final User matchingUser = userRepository
 				.fetchUser(otpRequest.getMobileNumber(), otpRequest.getTenantId());
+		if(null == matchingUser){
+			throw new UserNotFoundException();
+		}
 		if(null == matchingUser.getMobileNumber() || matchingUser.getMobileNumber().isEmpty())
 			throw new UserMobileNumberNotFoundException();
 		else

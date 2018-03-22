@@ -1,11 +1,13 @@
 package org.egov.persistence.repository;
 
+import java.util.List;
 import java.util.Map;
 
 import org.egov.domain.exception.UserNotFoundException;
 import org.egov.domain.model.User;
 import org.egov.persistence.contract.UserSearchRequest;
 import org.egov.persistence.contract.UserSearchResponse;
+import org.egov.persistence.contract.UserSearchResponseContent;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -15,7 +17,10 @@ import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 
+import lombok.extern.slf4j.Slf4j;
+
 @Service
+@Slf4j
 public class UserRepository {
 	private final String searchUserUrl;
 	private final RestTemplate restTemplate;
@@ -29,21 +34,23 @@ public class UserRepository {
 	public User fetchUser(String mobileNumber, String tenantId) {
 		final UserSearchRequest request = new UserSearchRequest(mobileNumber, tenantId);
 
-		UserSearchResponse userSearchResponse = null;
 		ObjectMapper mapper = new ObjectMapper();
 		mapper.configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true);
 		mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 		mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
 		try {
-			Object response = restTemplate.postForObject(searchUserUrl, request, Map.class);
-			userSearchResponse = mapper.convertValue(response, UserSearchResponse.class);
+			Map<String, Object> response = restTemplate.postForObject(searchUserUrl, request, Map.class);
+			List<UserSearchResponseContent> users = (List<UserSearchResponseContent>) response.get("user");
+			if(!users.isEmpty()){
+				UserSearchResponseContent user = mapper.convertValue(users.get(0), UserSearchResponseContent.class);
+				return new User(user.getId(), user.getEmailId(), user.getMobileNumber());
+			}else{
+				throw new UserNotFoundException();
+			}			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		if (null != userSearchResponse && userSearchResponse.isMatchingUserPresent()) {
-			return userSearchResponse.toDomainUser();
-		} else {
-			throw new UserNotFoundException();
-		}
+		
+		return null;
 	}
 }

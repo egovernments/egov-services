@@ -49,7 +49,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 import static org.springframework.util.ObjectUtils.isEmpty;
 
@@ -106,7 +109,10 @@ public class LeaveApplicationRowMapper implements RowMapper<LeaveApplication> {
         }
 
         leaveApplication.setLeaveType(leaveType);
-        leaveApplication.setHolidays(rs.getString("la_holidays"));
+        if(rs.getString("la_holidays")!=null && !rs.getString("la_holidays").equals("")) {
+            List<String> holidayList = new ArrayList<String>(Arrays.asList(rs.getString("la_holidays").split(",")));
+            leaveApplication.setHolidays(holidayList);
+        }
         leaveApplication.setLeaveDays((Float) rs.getObject("la_leaveDays"));
         leaveApplication.setAvailableDays((Float) rs.getObject("la_availableDays"));
         leaveApplication.setHalfdays((Integer) rs.getObject("la_halfdays"));

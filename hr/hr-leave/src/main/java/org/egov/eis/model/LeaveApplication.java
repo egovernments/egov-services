@@ -46,6 +46,7 @@ import lombok.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.Date;
+import java.util.List;
 
 @AllArgsConstructor
 @EqualsAndHashCode
@@ -80,7 +81,7 @@ public class LeaveApplication {
     @JsonFormat(pattern = "dd/MM/yyyy")
     private Date suffixDate;
 
-    private String holidays;
+    private List<String> holidays;
 
     private Float leaveDays;
 

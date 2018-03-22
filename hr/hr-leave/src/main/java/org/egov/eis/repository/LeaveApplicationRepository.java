@@ -125,6 +125,9 @@ public class LeaveApplicationRepository {
         final UserResponse userResponse = userService
                 .findUserByUserNameAndTenantId(leaveApplicationRequest.getRequestInfo());
         for (LeaveApplication leaveApplication : leaveApplicationRequest.getLeaveApplication()) {
+            String holiday = null;
+            if(!leaveApplication.getHolidays().isEmpty())
+                 holiday = leaveApplication.getHolidays().toString();
             leaveApplication.setStateId(stateId);
             final Object[] obj = new Object[]{leaveApplication.getApplicationNumber(), leaveApplication.getEmployee(),
                     leaveApplication.getLeaveType().getId(), leaveApplication.getFromDate(),
@@ -132,7 +135,7 @@ public class LeaveApplicationRepository {
                     leaveApplication.getLeaveDays(), leaveApplication.getAvailableDays(),
                     leaveApplication.getHalfdays(), leaveApplication.getFirstHalfleave(), leaveApplication.getReason(),
                     leaveApplication.getStatus(), leaveApplication.getLeaveGround(),leaveApplication.getStateId() , leaveApplication.getPrefixDate(),
-                    leaveApplication.getSuffixDate(), leaveApplication.getHolidays(),userResponse.getUsers().get(0).getId(),
+                    leaveApplication.getSuffixDate(), holiday, userResponse.getUsers().get(0).getId(),
                     now, userResponse.getUsers().get(0).getId(), now, leaveApplication.getTenantId()};
             jdbcTemplate.update(leaveApplicationInsertQuery, obj);
         }

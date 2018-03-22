@@ -24,7 +24,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Controller
 @Slf4j
-@RequestMapping(value = "/requests/v2/")
+@RequestMapping(value = "/v2/requests/")
 public class ServiceController {
 
 	@Autowired

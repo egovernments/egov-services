@@ -230,6 +230,10 @@ public class AssetValidator {
     public void validateDisposal(final DisposalRequest disposalRequest) {
         final Disposal disposal = disposalRequest.getDisposal();
         final String tenantId = disposal.getTenantId();
+        TransactionType transactionType = null;
+        final Set<Long> ids = new HashSet<>();
+        ids.add(disposal.getAssetId());
+
         final Asset asset = assetService.getAsset(tenantId, disposal.getAssetId(), disposalRequest.getRequestInfo());
         log.debug("Asset For Disposal :: " + asset);
         validateAssetForCapitalizedStatus(asset);
@@ -247,6 +251,17 @@ public class AssetValidator {
                 throw new RuntimeException(
                         "Asset sale account should be present for asset disposal voucher generation");
         }
+
+        final List<AssetCurrentValue> assetCurrentValues = currentValueService
+                .getCurrentValues(ids, tenantId, disposalRequest.getRequestInfo()).getAssetCurrentValues();
+
+        if (assetCurrentValues != null && !assetCurrentValues.isEmpty())
+            transactionType = assetCurrentValues.get(0).getAssetTranType();
+        if (!(TransactionType.REVALUATION.equals(transactionType) ||
+                TransactionType.DEPRECIATION.equals(transactionType)))
+            throw new RuntimeException(
+                    "Without doing any Revaluation or Depreciation,its should not allow to Sale/Disposal an asset");
+
     }
 
     private void verifyPanCardAndAdhaarCardForAssetSale(final Disposal disposal) {
@@ -318,9 +333,9 @@ public class AssetValidator {
                 .getCurrentValues(ids, tenantId, requestInfo).getAssetCurrentValues();
         if (assetCurrentValues != null && !assetCurrentValues.isEmpty())
             assetCurrentAmount = assetCurrentValues.get(0).getCurrentAmount();
-        else if (asset.getAccumulatedDepreciation() != null) {
+        else if (asset.getAccumulatedDepreciation() != null)
             assetCurrentAmount = asset.getGrossValue().subtract(asset.getAccumulatedDepreciation());
-        } else
+        else
             assetCurrentAmount = asset.getGrossValue();
 
         log.debug("Asset Current Value :: " + assetCurrentAmount);

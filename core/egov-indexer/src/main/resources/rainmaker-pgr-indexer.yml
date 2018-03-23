@@ -8,7 +8,7 @@ ServiceMaps:
       type: grievancecreate
       id: $.serviceRequestId, $.tenantId
       isBulk: true
-      jsonPath: $.serviceReq.*
+      jsonPath: $.services.*
 
   - topic: egov.rainmaker.pgr.update
     indexes:
@@ -16,4 +16,4 @@ ServiceMaps:
       type: grievanceupdate
       id: $.serviceRequestId, $.tenantId
       isBulk: true
-      jsonPath: $.serviceReq.*
+      jsonPath: $.services.*

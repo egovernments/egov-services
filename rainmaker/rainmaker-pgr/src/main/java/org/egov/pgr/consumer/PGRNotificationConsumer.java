@@ -95,7 +95,7 @@ public class PGRNotificationConsumer {
 	        	try {
 	        		pGRProducer.push(smsNotifTopic, smsRequest);
 	        	}catch(Exception e) {}
-				if(null != serviceReq.getEmail() && !serviceReq.getEmail().isEmpty()) {
+/*				if(null != serviceReq.getEmail() && !serviceReq.getEmail().isEmpty()) {
 					EmailRequest emailRequest = prepareEmailRequest(serviceReq);
 		        	log.info("EMAIL: "+emailRequest.getBody()
 		        	+"| SUBJECT: "+emailRequest.getSubject()
@@ -103,7 +103,7 @@ public class PGRNotificationConsumer {
 		        	try {
 		        		pGRProducer.push(emailNotifTopic, emailRequest);
 		        	}catch(Exception e) {}
-				}
+				}*/
     		}
 		}
     }

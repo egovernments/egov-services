@@ -68,7 +68,7 @@ public class LeaveApplicationQueryBuilder {
             + " la.compensatoryForDate AS la_compensatoryForDate, la.leaveDays AS la_leaveDays,"
             + " la.availableDays AS la_availableDays, la.halfdays AS la_halfdays, la.firstHalfleave AS la_firstHalfleave,"
             + " la.reason AS la_reason, la.status AS la_status, la.leaveGround AS la_leaveGround, la.stateId AS la_stateId,"
-            + " la.prefixDate AS la_prefixDate, la.suffixDate AS la_suffixDate, la.holidays AS la_holidays, la.createdBy AS la_createdBy,"
+            + " la.prefixDate AS la_prefixDate, la.suffixDate AS la_suffixDate, la.holidays AS la_holidays, la.encashable AS la_encashable, la.createdBy AS la_createdBy,"
             + " la.createdDate AS la_createdDate, la.lastModifiedBy AS la_lastModifiedBy,"
             + " la.lastModifiedDate AS la_lastModifiedDate, la.tenantId AS la_tenantId,"
             + " lt.id AS lt_id, lt.name AS lt_name, lt.description AS lt_description, lt.halfdayAllowed AS lt_halfdayAllowed,"
@@ -101,9 +101,9 @@ public class LeaveApplicationQueryBuilder {
     public static String insertLeaveApplicationQuery() {
         return "INSERT INTO egeis_leaveapplication(id, applicationnumber, employeeid, "
                 + "leavetypeid, fromdate, todate, compensatoryfordate, leavedays, availabledays,"
-                + " halfdays, firsthalfleave, reason, status, leaveground, stateid, prefixDate, suffixDate, holidays, createdby, createddate, "
+                + " halfdays, firsthalfleave, reason, status, leaveground, stateid, prefixDate, suffixDate, holidays, encashable, createdby, createddate, "
                 + "lastmodifiedby, lastmodifieddate, tenantid) VALUES "
-                + "(nextval('seq_egeis_leaveapplication'), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+                + "(nextval('seq_egeis_leaveapplication'), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
     }
 
     public static String insertCompoffLeaveApplicationQuery() {
@@ -127,7 +127,7 @@ public class LeaveApplicationQueryBuilder {
                 + " la.compensatoryForDate AS la_compensatoryForDate, la.leaveDays AS la_leaveDays,"
                 + " la.availableDays AS la_availableDays, la.halfdays AS la_halfdays, la.firstHalfleave AS la_firstHalfleave,"
                 + " la.reason AS la_reason, la.status AS la_status,la.leaveGround AS la_leaveGround, la.stateId AS la_stateId, "
-                + " la.prefixDate AS la_prefixDate, la.suffixDate AS la_suffixDate, la.holidays AS la_holidays, la.createdBy AS la_createdBy,"
+                + " la.prefixDate AS la_prefixDate, la.suffixDate AS la_suffixDate, la.holidays AS la_holidays, la.encashable AS la_encashable, la.createdBy AS la_createdBy,"
                 + " la.createdDate AS la_createdDate, la.lastModifiedBy AS la_lastModifiedBy,"
                 + " la.lastModifiedDate AS la_lastModifiedDate, la.tenantId AS la_tenantId,"
                 + " lt.id AS lt_id, lt.name AS lt_name, lt.description AS lt_description, lt.halfdayAllowed AS lt_halfdayAllowed,"

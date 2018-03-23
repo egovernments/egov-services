@@ -116,10 +116,10 @@ public class LeaveApplicationRepository {
     public LeaveApplicationRequest saveLeaveApplication(final LeaveApplicationRequest leaveApplicationRequest) {
         ProcessInstance processInstance = new ProcessInstance();
         Long stateId = null;
-        if (StringUtils.isEmpty(leaveApplicationRequest.getType()))
+        /*if (StringUtils.isEmpty(leaveApplicationRequest.getType()))
            processInstance = workFlowService.start(leaveApplicationRequest);
         if (processInstance.getId() != null)
-            stateId = Long.valueOf(processInstance.getId());
+            stateId = Long.valueOf(processInstance.getId());*/
         final String leaveApplicationInsertQuery = LeaveApplicationQueryBuilder.insertLeaveApplicationQuery();
         final Date now = new Date();
         final UserResponse userResponse = userService
@@ -135,8 +135,8 @@ public class LeaveApplicationRepository {
                     leaveApplication.getLeaveDays(), leaveApplication.getAvailableDays(),
                     leaveApplication.getHalfdays(), leaveApplication.getFirstHalfleave(), leaveApplication.getReason(),
                     leaveApplication.getStatus(), leaveApplication.getLeaveGround(),leaveApplication.getStateId() , leaveApplication.getPrefixDate(),
-                    leaveApplication.getSuffixDate(), holiday, userResponse.getUsers().get(0).getId(),
-                    now, userResponse.getUsers().get(0).getId(), now, leaveApplication.getTenantId()};
+                    leaveApplication.getSuffixDate(), holiday, leaveApplication.getEncashable(), 11,
+                    now, 11, now, leaveApplication.getTenantId()};
             jdbcTemplate.update(leaveApplicationInsertQuery, obj);
         }
         return leaveApplicationRequest;

@@ -113,6 +113,7 @@ public class LeaveApplicationRowMapper implements RowMapper<LeaveApplication> {
             List<String> holidayList = new ArrayList<String>(Arrays.asList(rs.getString("la_holidays").split(",")));
             leaveApplication.setHolidays(holidayList);
         }
+        leaveApplication.setEncashable((Boolean) rs.getObject("la_encashable"));
         leaveApplication.setLeaveDays((Float) rs.getObject("la_leaveDays"));
         leaveApplication.setAvailableDays((Float) rs.getObject("la_availableDays"));
         leaveApplication.setHalfdays((Integer) rs.getObject("la_halfdays"));

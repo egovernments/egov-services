@@ -1,19 +1,12 @@
 package org.egov.pgr.utils;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
-import org.apache.commons.collections.CollectionUtils;
 import org.egov.common.contract.request.RequestInfo;
-import org.egov.pgr.contract.ServiceReq;
-import org.egov.pgr.contract.ServiceReqRequest;
 import org.egov.pgr.contract.ServiceReqSearchCriteria;
-import org.egov.pgr.service.ServiceRequestService;
+import org.egov.pgr.service.GrievanceService;
 import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,14 +18,10 @@ import lombok.extern.slf4j.Slf4j;
 public class PGRRequestValidator {
 	
 	@Autowired
-	private ServiceRequestService requestService ;
+	private GrievanceService requestService ;
 	
-	public void validateServiceRequest(ServiceReqRequest serviceReqRequest) {
-		
-		
-	}
 	
-	public void validateUpdate(ServiceReqRequest serviceReqRequest) {
+/*	public void validateUpdate(ServiceReqRequest serviceReqRequest) {
 		
 		Map<String, String> errorMap = new HashMap<>();
 		
@@ -41,7 +30,7 @@ public class PGRRequestValidator {
 						.getServiceReq().stream().map(ServiceReq::getServiceRequestId).collect(Collectors.toList()))
 				.build();
 		
-		Map<String, ServiceReq> map = requestService.getServiceRequests(serviceReqRequest.getRequestInfo(),service).getServiceReq().stream().collect(Collectors.toMap(ServiceReq::getServiceRequestId,Function.identity()));
+		Map<String, ServiceReq> map = requestService.getServiceRequests(serviceReqRequest.getRequestInfo(),service).getServices().stream().collect(Collectors.toMap(ServiceReq::getServiceRequestId,Function.identity()));
 		
 		List<String> errorList = new ArrayList<>();
 		serviceReqRequest.getServiceReq().forEach( a -> {
@@ -56,7 +45,7 @@ public class PGRRequestValidator {
 		if(!errorMap.isEmpty()) {
 			throw new CustomException(errorMap);
 		}
-	}
+	}*/
 	
 	public void validateSearch(ServiceReqSearchCriteria criteria, RequestInfo requestInfo) {
 		log.info("Validating search request...");
@@ -69,24 +58,6 @@ public class PGRRequestValidator {
 		if ((criteria.getStartDate() != null && criteria.getEndDate() != null)
 				&& criteria.getStartDate().compareTo(criteria.getEndDate()) > 0) {
 			errorMap.put("400", "startDate cannot be greater than endDate");
-		}
-		
-		if(!errorMap.isEmpty())
-			throw new CustomException(errorMap);
-		
-		log.info("All Validations passed!");
-	}
-	
-	public void validateHistoryRequest(ServiceReqSearchCriteria criteria, RequestInfo requestInfo) {
-		log.info("Validating history request: "+criteria);
-		Map<String, String> errorMap = new HashMap<>();
-		validateUserRBACProxy(errorMap, criteria, requestInfo);
-		if(null == criteria.getServiceRequestId() || criteria.getServiceRequestId().isEmpty()) {
-			errorMap.put("400", "Service Request Id is missing");	
-			throw new CustomException(errorMap);
-		}
-		if(criteria.getServiceRequestId().size() > 1) {
-			errorMap.put("400", "Multiple ids not supported");					
 		}
 		
 		if(!errorMap.isEmpty())

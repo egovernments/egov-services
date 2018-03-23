@@ -154,40 +154,7 @@ public class GrievanceService {
 		return getServiceResponse(request);
 	}
 
-		/**
-		 * to filter the sublist object for idgeneration if they are null
-		 * 
-		 * @param mediaList
-		 * @param commentsList
-		 *//*
-		private void setIdsForSubList(List<Media> mediaList, List<Comment> commentsList, Boolean isCreate, RequestInfo requestInfo,Long when) {
-
-			User user = requestInfo.getUserInfo();
-			Role role = user.getRoles().get(0);
-
-			String by = user.getId() + "-" + role.getName();
-
-			if (null != mediaList)
-				mediaList.forEach(media -> {
-					if (null == media.getUuid() || isCreate) {
-						media.setUuid(UUID.randomUUID().toString());
-						media.setBy(by);
-						media.setWhen(when);
-					}
-				});
-
-			if (null != commentsList)
-				commentsList.forEach(comment -> {
-					if (null == comment.getUuid() || isCreate) {
-						comment.setUuid(UUID.randomUUID().toString());
-						comment.setBy(by);
-						comment.setWhen(when);
-					}
-				});
-		}
-
-
-		*//**
+       /**
 		 * method to parse the IdGenResponse from IdgenRepo to List of String ids
 		 * required by the respective methods
 		 * 
@@ -227,17 +194,14 @@ public class GrievanceService {
 		 * @return ServiceReqResponse
 		 * @author vishal
 		 */
-		public Object getServiceRequestsV3(RequestInfo requestInfo,
+		public Object getServiceRequests(RequestInfo requestInfo,
 				ServiceReqSearchCriteria serviceReqSearchCriteria) {
 			
-			ObjectMapper mapper = new ObjectMapper();
-			mapper.configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true);
-			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-	        mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
+			ObjectMapper mapper = pGRUtils.getObjectMapper();
 			StringBuilder uri = new StringBuilder();
 			SearcherRequest searcherRequest = null;
 			if(null != serviceReqSearchCriteria.getServiceRequestId() && serviceReqSearchCriteria.getServiceRequestId().size() == 1) {
-				return getServiceRequestForOneId(requestInfo, serviceReqSearchCriteria);
+				return getServiceRequestWithDetails(requestInfo, serviceReqSearchCriteria);
 			}
 			searcherRequest = prepareSearcherRequest(requestInfo, serviceReqSearchCriteria, uri);
 			if(null == searcherRequest)
@@ -249,8 +213,6 @@ public class GrievanceService {
 			ServiceResponse serviceResponse = mapper.convertValue(response, ServiceResponse.class);
 			return serviceResponse;
 		}
-		
-		
 		
 		
 		/**
@@ -299,58 +261,33 @@ public class GrievanceService {
 						}
 						serviceReqSearchCriteria.setServiceCodes(serviceCodes);
 				}
-				searcherRequest = pGRUtils.prepareSearchRequestSpecific(uri, serviceReqSearchCriteria, requestInfo);
+				searcherRequest = pGRUtils.prepareSearchRequest(uri, serviceReqSearchCriteria, requestInfo);
 			}
 			
 			return searcherRequest;
 		}
 		
-		
 		/**
-		 * Fetches count of service requests and returns in the reqd format.
+		 * Prepares search request when the search is on only one service request id.
 		 * 
 		 * @param requestInfo
 		 * @param serviceReqSearchCriteria
-		 * @return Object
-		 * @author vishal
+		 * @return
 		 */
-		public Object getCount(RequestInfo requestInfo, ServiceReqSearchCriteria serviceReqSearchCriteria) {
-			ObjectMapper mapper = new ObjectMapper();
-			mapper.configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true);
-			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-			StringBuilder uri = new StringBuilder();
-			SearcherRequest searcherRequest = null;
-		    if(null != serviceReqSearchCriteria.getAssignedTo() && !serviceReqSearchCriteria.getAssignedTo().isEmpty()) {
-				searcherRequest = pGRUtils.prepareCountRequestAssignedTo(uri, serviceReqSearchCriteria, requestInfo);
-			}else {
-				searcherRequest = pGRUtils.prepareCountRequestGeneral(uri, serviceReqSearchCriteria, requestInfo);
-			}
-			Object response = serviceRequestRepository.fetchResult(uri, searcherRequest);		
-			log.info("Searcher response: ", response);
-			if (null == response) {
-				return new CountResponse(factory.createResponseInfoFromRequestInfo(requestInfo, false), 0D);
-			}
-			Double count = JsonPath.read(response, PGRConstants.PG_JSONPATH_COUNT);
-			return new CountResponse(factory.createResponseInfoFromRequestInfo(requestInfo, false), count);
-		}
-		
-		
-		public ServiceResponse getServiceRequestForOneId(RequestInfo requestInfo,
+		public ServiceResponse getServiceRequestWithDetails(RequestInfo requestInfo,
 				ServiceReqSearchCriteria serviceReqSearchCriteria) {
 			
-			ObjectMapper mapper = new ObjectMapper();
-			mapper.configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true);
-			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-	        mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
+			ObjectMapper mapper = pGRUtils.getObjectMapper();
 			StringBuilder uri = new StringBuilder();
 			SearcherRequest searcherRequest = null;
-			searcherRequest = pGRUtils.prepareSearchRequestSpecific(uri, serviceReqSearchCriteria, requestInfo);
+			searcherRequest = pGRUtils.prepareSearchRequest(uri, serviceReqSearchCriteria, requestInfo);
 			if(null == searcherRequest)
 				return pGRUtils.getDefaultServiceResponse(requestInfo);
 			Object response = serviceRequestRepository.fetchResult(uri, searcherRequest);
 			if(null == response)
 				return pGRUtils.getDefaultServiceResponse(requestInfo);
 			log.info("Service: "+response);
+			
 			StringBuilder url = new StringBuilder();
 			searcherRequest = pGRUtils.prepareActionSearchRequest(url, serviceReqSearchCriteria, requestInfo);
 			List<ActionInfo> actions = null;
@@ -358,14 +295,12 @@ public class GrievanceService {
 				Object res = serviceRequestRepository.fetchResult(url, searcherRequest);
 				log.info("Actions: "+res);
 				if(null != res) {
-					actions = (List<ActionInfo>) JsonPath.read(res, "$.actionHistory");
+					actions = (List<ActionInfo>) JsonPath.read(res, PGRConstants.V3_ACTION_JSONPATH);
 				}
 			}
-			ActionHistory actionHistory = new ActionHistory();
-			actionHistory.setActions(actions);
+			ActionHistory actionHistory = ActionHistory.builder().actions(actions).build();
 			List<ActionHistory> actionHistories = new ArrayList<>();
 			actionHistories.add(actionHistory);
-			log.info("Response: "+response);
 			ServiceResponse serviceResponse = mapper.convertValue(response, ServiceResponse.class);
 			serviceResponse.setActionHistory(actionHistories);
 			return serviceResponse;
@@ -373,101 +308,7 @@ public class GrievanceService {
 		}
 		
 		
-		
-		
-		
-		
-		
-		
-//V2 Code...................................................		
-		
 /*		*//**
-		 * Method to return service requests received from the repo to the controller in
-		 * the reqd format
-		 * 
-		 * @param requestInfo
-		 * @param serviceReqSearchCriteria
-		 * @return ServiceReqResponse
-		 * @author vishal
-		 *//*
-		public Object getServiceRequests(RequestInfo requestInfo,
-				ServiceReqSearchCriteria serviceReqSearchCriteria) {
-			
-			ObjectMapper mapper = new ObjectMapper();
-			mapper.configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true);
-			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-	        mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
-			StringBuilder uri = new StringBuilder();
-			SearcherRequest searcherRequest = prepareSearcherRequest(requestInfo, serviceReqSearchCriteria, uri);
-			if(null == searcherRequest)
-				return pGRUtils.getDefaultServiceResponse(requestInfo);
-			Object response = serviceRequestRepository.fetchResult(uri, searcherRequest);
-			log.info("Searcher response: "+response);
-			if (null == response) 
-				return pGRUtils.getDefaultServiceResponse(requestInfo);
-			ServiceResponse serviceResponse = pGRUtils.getServiceResponse(response, requestInfo);
-			return serviceResponse;
-		}
-		
-		
-		
-		
-		*//**
-		 * method to fetch service codes from mdms based on dept
-		 * 
-		 * @param requestInfo
-		 * @param tenantId
-		 * @param department
-		 * @return Object
-		 * @author vishal
-		 *//*
-		public Object fetchServiceCodes(RequestInfo requestInfo,
-				String tenantId, String department) {
-			StringBuilder uri = new StringBuilder();
-			MdmsCriteriaReq mdmsCriteriaReq = pGRUtils.prepareSearchRequestForServiceCodes(uri, tenantId, department, requestInfo);
-			return serviceRequestRepository.fetchResult(uri, mdmsCriteriaReq);
-			
-		}
-		
-		*//**
-		 * Prepares request for searcher service based on the criteria
-		 * 
-		 * @param requestInfo
-		 * @param serviceReqSearchCriteria
-		 * @param uri
-		 * @return SearcherRequest
-		 *//*
-		public SearcherRequest prepareSearcherRequest(RequestInfo requestInfo,
-				ServiceReqSearchCriteria serviceReqSearchCriteria, StringBuilder uri) {
-			SearcherRequest searcherRequest = null;
-			if(null != serviceReqSearchCriteria.getServiceRequestId() && serviceReqSearchCriteria.getServiceRequestId().size() == 1) {
-				searcherRequest = pGRUtils.prepareSearchRequestSpecific(uri, serviceReqSearchCriteria, requestInfo);
-			}else if(null != serviceReqSearchCriteria.getAssignedTo() && !serviceReqSearchCriteria.getAssignedTo().isEmpty()) {
-				searcherRequest = pGRUtils.prepareSearchRequestAssignedTo(uri, serviceReqSearchCriteria, requestInfo);
-			}else {
-				if(null != serviceReqSearchCriteria.getGroup() && !serviceReqSearchCriteria.getGroup().isEmpty()){
-						Object response = fetchServiceCodes(requestInfo, serviceReqSearchCriteria.getTenantId(), serviceReqSearchCriteria.getGroup());
-						List<String> serviceCodes = null;
-						if(null == response) {
-							log.info("Searcher returned zero serviceCodes!");
-							return null;
-						}
-						try {
-							serviceCodes = (List<String>) JsonPath.read(response, PGRConstants.JSONPATH_SERVICE_CODES);
-						}catch(Exception e) {
-							log.error("Exception while parsing serviceCodes: ",e);
-							return null;
-						}
-						serviceReqSearchCriteria.setServiceCodes(serviceCodes);
-				}
-				searcherRequest = pGRUtils.prepareSearchRequestGeneral(uri, serviceReqSearchCriteria, requestInfo);
-			}
-			
-			return searcherRequest;
-		}
-		
-		
-		*//**
 		 * Fetches count of service requests and returns in the reqd format.
 		 * 
 		 * @param requestInfo
@@ -476,9 +317,7 @@ public class GrievanceService {
 		 * @author vishal
 		 *//*
 		public Object getCount(RequestInfo requestInfo, ServiceReqSearchCriteria serviceReqSearchCriteria) {
-			ObjectMapper mapper = new ObjectMapper();
-			mapper.configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true);
-			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+			ObjectMapper mapper = pGRUtils.getObjectMapper();
 			StringBuilder uri = new StringBuilder();
 			SearcherRequest searcherRequest = null;
 		    if(null != serviceReqSearchCriteria.getAssignedTo() && !serviceReqSearchCriteria.getAssignedTo().isEmpty()) {
@@ -494,4 +333,5 @@ public class GrievanceService {
 			Double count = JsonPath.read(response, PGRConstants.PG_JSONPATH_COUNT);
 			return new CountResponse(factory.createResponseInfoFromRequestInfo(requestInfo, false), count);
 		}*/
+		
 }

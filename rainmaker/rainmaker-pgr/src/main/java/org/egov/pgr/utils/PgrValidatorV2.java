@@ -32,7 +32,7 @@ public class PgrValidatorV2 {
 						.getServices().stream().map(Service::getServiceRequestId).collect(Collectors.toList()))
 				.build();
 		
-		Map<String, Service> map = ((ServiceResponse)grievanceService.getServiceRequestsV3(serviceRequest.getRequestInfo(),service)).getServices().stream().collect(Collectors.toMap(Service::getServiceRequestId,Function.identity()));
+		Map<String, Service> map = ((ServiceResponse)grievanceService.getServiceRequests(serviceRequest.getRequestInfo(),service)).getServices().stream().collect(Collectors.toMap(Service::getServiceRequestId,Function.identity()));
 		
 		System.err.println(" the map : "+map);
 		List<String> errorList = new ArrayList<>();

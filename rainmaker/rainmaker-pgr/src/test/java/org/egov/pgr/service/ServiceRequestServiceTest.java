@@ -42,7 +42,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 
 @RunWith(MockitoJUnitRunner.class)
-public class ServiceRequestServiceTest {
+public class ServiceRequestServiceTest {/*
 	
 	@Mock
 	private ServiceRequestRepository serviceRequestRepository;
@@ -333,4 +333,4 @@ public class ServiceRequestServiceTest {
 				
 	}
 
-}
+*/}

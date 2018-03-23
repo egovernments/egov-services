@@ -82,7 +82,7 @@ public class PGRNotificationConsumer {
 			log.info("Consuming record: "+record);
 			serviceReqRequest = mapper.convertValue(record, ServiceRequest.class);
 		}catch(final Exception e){
-			log.error("Error while listening to value: "+record+" on topic: "+topic+": ", e.getMessage());
+			log.error("Error while listening to value: "+record+" on topic: "+topic+": "+e.getMessage());
 		}
 		process(serviceReqRequest);		
 	}

@@ -366,7 +366,7 @@ public class MovementService {
 			}
 			else if  (movement.getId() != null && movement.getTypeOfMovement().equals(TypeOfMovement.TRANSFER) &&
                             movement.getTransferType().equals(TransferType.TRANSFER_OUTSIDE_CORPORATION_OR_ULB)
-                    && "Approve".equalsIgnoreCase(movement.getWorkflowDetails().getAction())){
+                    && "Approve".equalsIgnoreCase(movement.getWorkflowDetails().getAction()) && movement.getCheckEmployeeExists()){
                 final Employee employee = employeeService.getEmployeeById(movementRequest);
                 EmployeeInfo employeeInfo = employeeService.getEmployee(null, employee.getCode(), movementRequest.getMovement().get(0).getTenantId(), movementRequest.getRequestInfo());
                 if(employeeInfo!=null  && !employeeInfo.equals(""))

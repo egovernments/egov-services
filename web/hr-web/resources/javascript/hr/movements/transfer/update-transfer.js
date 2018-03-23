@@ -289,45 +289,52 @@ class UpdateMovement extends React.Component {
 
   vacantPositionFun(departmentId, designationId, effectiveFrom, ulb) {
     var _this = this;
+    
     commonApiPost("hr-masters", "vacantpositions", "_search", {
-      tenantId: ulb ? "ap." + ulb.toLowerCase() : tenantId,
+      tenantId: tenantId,
       departmentId: departmentId,
       designationId: designationId,
-      asOnDate: effectiveFrom
-    }, function (err, res) {
+      asOnDate: effectiveFrom,
+      destinationTenant: ulb,
+      pageSize: 500
+    }, function(err, res) {
       if (res) {
         _this.setState({
           movement: {
             ..._this.state.movement,
-          }, pNameList: res.Position
+          },
+          pNameList: res.Position
         })
       }
     });
-
   }
 
   getUlbDetails(ulb) {
+
     var _this = this;
-    commonApiPost("egov-common-masters", "departments", "_search", {
-      tenantId: ulb ? "ap." + ulb.toLowerCase() : tenantId,
+
+    commonApiPost("hr-masters", "departments", "_search", {
+      tenantId: tenantId,
+      destinationTenant: ulb,
       pageSize: 500
-    }, function (err, res) {
+    }, function(err, res) {
       if (res) {
         _this.setState({
           ..._this.state,
-          ulbDepartmentList: res.Department
+          ulbDepartmentList : res.Department
         })
       }
     });
 
     commonApiPost("hr-masters", "designations", "_search", {
-      tenantId: ulb ? "ap." + ulb.toLowerCase() : tenantId,
+      tenantId: tenantId,
+      destinationTenant: ulb,
       pageSize: 500
-    }, function (err, res) {
+    }, function(err, res) {
       if (res) {
         _this.setState({
           ..._this.state,
-          ulbDesignationList: res.Designation
+          ulbDesignationList : res.Designation
         })
       }
     });

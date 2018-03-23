@@ -154,7 +154,7 @@ class EmployeeTransfer extends React.Component {
                   error: function(err) {
                     if (err["responseJSON"].message)
                       showError(err["responseJSON"].message);
-                    else if (err["responseJSON"].Movement[0]) {
+                    else if (err["responseJSON"].Movement[0] && err["responseJSON"].Movement[0].errorMsg) {
                       showError(err["responseJSON"].Movement[0].errorMsg)
                     } else {
                       showError("Something went wrong. Please contact Administrator");
@@ -419,7 +419,8 @@ class EmployeeTransfer extends React.Component {
         departmentId: departmentId,
         designationId: designationId,
         asOnDate: effectiveFrom,
-        destinationTenant: ulb
+        destinationTenant: ulb,
+        pageSize: 500
       }, function(err, res) {
         if (res) {
           _this.setState({

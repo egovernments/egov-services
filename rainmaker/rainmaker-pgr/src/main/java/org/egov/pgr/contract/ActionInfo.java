@@ -1,4 +1,4 @@
-package org.egov.pgr.v3.contract;
+package org.egov.pgr.contract;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,20 +9,23 @@ import javax.validation.constraints.Size;
 
 import org.springframework.validation.annotation.Validated;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * Capture work flow details.
+ * Capture the details of action on service request.
  */
 @Validated
-
-@NoArgsConstructor
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2018-03-23T08:00:37.661Z")
 @AllArgsConstructor
+@NoArgsConstructor
 @Builder
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class ActionInfo   {
   @JsonProperty("tenantId")
   private String tenantId = null;
@@ -31,7 +34,7 @@ public class ActionInfo   {
   private String by = null;
 
   @JsonProperty("isInternal")
-  private Boolean isInternal = null;
+  private String isInternal = null;
 
   @JsonProperty("when")
   private Long when = null;
@@ -52,8 +55,8 @@ public class ActionInfo   {
   @Valid
   private List<String> media = null;
 
-  @JsonProperty("comments")
-  private String comments = null;
+  @JsonProperty("comment")
+  private String comment = null;
 
   public ActionInfo tenantId(String tenantId) {
     this.tenantId = tenantId;
@@ -93,22 +96,21 @@ public class ActionInfo   {
     this.by = by;
   }
 
-  public ActionInfo isInternal(Boolean isInternal) {
+  public ActionInfo isInternal(String isInternal) {
     this.isInternal = isInternal;
     return this;
   }
 
   /**
-   * .
+   * If employee is making an action with isInteral as true then server will not return that action info to citizen search result.
    * @return isInternal
   **/
 
-
-  public Boolean getIsInternal() {
+  public String getIsInternal() {
     return isInternal;
   }
 
-  public void setIsInternal(Boolean isInternal) {
+  public void setIsInternal(String isInternal) {
     this.isInternal = isInternal;
   }
 
@@ -121,7 +123,6 @@ public class ActionInfo   {
    * epoch time of when the action made.
    * @return when
   **/
-
 
   public Long getWhen() {
     return when;
@@ -156,10 +157,9 @@ public class ActionInfo   {
   }
 
   /**
-   * Get action
+   * Action will be Reject, Approve, Reassign, Forward.
    * @return action
   **/
-
 
   public String getAction() {
     return action;
@@ -175,10 +175,9 @@ public class ActionInfo   {
   }
 
   /**
-   * Get status
+   * Each action will have a mapping with status at server side.
    * @return status
   **/
-
 
   public String getStatus() {
     return status;
@@ -194,10 +193,9 @@ public class ActionInfo   {
   }
 
   /**
-   * Get assignee
+   * user id of the employee to whom request id need to be assigne.
    * @return assignee
   **/
-
 
   public String getAssignee() {
     return assignee;
@@ -225,7 +223,6 @@ public class ActionInfo   {
    * @return media
   **/
 
-
   public List<String> getMedia() {
     return media;
   }
@@ -234,23 +231,22 @@ public class ActionInfo   {
     this.media = media;
   }
 
-  public ActionInfo comments(String comments) {
-    this.comments = comments;
+  public ActionInfo comment(String comment) {
+    this.comment = comment;
     return this;
   }
 
   /**
-   * Get comments
-   * @return comments
+   * Capture the comments made by Employee/Citizen.
+   * @return comment
   **/
 
-
-  public String getComments() {
-    return comments;
+  public String getComment() {
+    return comment;
   }
 
-  public void setComments(String comments) {
-    this.comments = comments;
+  public void setComment(String comment) {
+    this.comment = comment;
   }
 
 
@@ -272,12 +268,12 @@ public class ActionInfo   {
         Objects.equals(this.status, actionInfo.status) &&
         Objects.equals(this.assignee, actionInfo.assignee) &&
         Objects.equals(this.media, actionInfo.media) &&
-        Objects.equals(this.comments, actionInfo.comments);
+        Objects.equals(this.comment, actionInfo.comment);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(tenantId, by, isInternal, when, businessKey, action, status, assignee, media, comments);
+    return Objects.hash(tenantId, by, isInternal, when, businessKey, action, status, assignee, media, comment);
   }
 
   @Override
@@ -294,7 +290,7 @@ public class ActionInfo   {
     sb.append("    status: ").append(toIndentedString(status)).append("\n");
     sb.append("    assignee: ").append(toIndentedString(assignee)).append("\n");
     sb.append("    media: ").append(toIndentedString(media)).append("\n");
-    sb.append("    comments: ").append(toIndentedString(comments)).append("\n");
+    sb.append("    comment: ").append(toIndentedString(comment)).append("\n");
     sb.append("}");
     return sb.toString();
   }

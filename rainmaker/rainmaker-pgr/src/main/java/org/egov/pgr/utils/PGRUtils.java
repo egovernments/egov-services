@@ -9,13 +9,12 @@ import org.egov.mdms.model.MasterDetail;
 import org.egov.mdms.model.MdmsCriteria;
 import org.egov.mdms.model.MdmsCriteriaReq;
 import org.egov.mdms.model.ModuleDetail;
+import org.egov.pgr.contract.ActionHistory;
 import org.egov.pgr.contract.AuditDetails;
 import org.egov.pgr.contract.SearcherRequest;
+import org.egov.pgr.contract.Service;
 import org.egov.pgr.contract.ServiceReqSearchCriteria;
-import org.egov.pgr.v3.contract.ActionHistory;
-import org.egov.pgr.v3.contract.ActionInfo;
-import org.egov.pgr.v3.contract.Service;
-import org.egov.pgr.v3.contract.ServiceResponse;
+import org.egov.pgr.contract.ServiceResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -24,7 +23,6 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import com.jayway.jsonpath.JsonPath;
 
 import lombok.extern.slf4j.Slf4j;
 

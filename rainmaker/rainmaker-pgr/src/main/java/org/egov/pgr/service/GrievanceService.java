@@ -7,29 +7,25 @@ import java.util.stream.Collectors;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.mdms.model.MdmsCriteriaReq;
+import org.egov.pgr.contract.ActionHistory;
+import org.egov.pgr.contract.ActionInfo;
 import org.egov.pgr.contract.AuditDetails;
-import org.egov.pgr.contract.CountResponse;
 import org.egov.pgr.contract.IdResponse;
 import org.egov.pgr.contract.SearcherRequest;
+import org.egov.pgr.contract.Service;
 import org.egov.pgr.contract.ServiceReqSearchCriteria;
+import org.egov.pgr.contract.ServiceRequest;
+import org.egov.pgr.contract.ServiceResponse;
 import org.egov.pgr.producer.PGRProducer;
 import org.egov.pgr.repository.IdGenRepo;
 import org.egov.pgr.repository.ServiceRequestRepository;
 import org.egov.pgr.utils.PGRConstants;
 import org.egov.pgr.utils.PGRUtils;
 import org.egov.pgr.utils.ResponseInfoFactory;
-import org.egov.pgr.v3.contract.ActionHistory;
-import org.egov.pgr.v3.contract.ActionInfo;
-import org.egov.pgr.v3.contract.Service;
-import org.egov.pgr.v3.contract.ServiceRequest;
-import org.egov.pgr.v3.contract.ServiceResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
 import com.jayway.jsonpath.JsonPath;
 
 import lombok.extern.slf4j.Slf4j;

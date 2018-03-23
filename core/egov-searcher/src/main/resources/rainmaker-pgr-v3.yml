@@ -32,7 +32,7 @@ SearchDefinitions:
     - name: lastmodifiedtime
       isMandatory: false
       jsonPath: $.searchCriteria.lastUpdatedSince
-    - name: serviceCodes
+    - name: serviceCode
       isMandatory: false
       jsonPath: $.searchCriteria.serviceCodes
     - name: phone
@@ -115,7 +115,7 @@ SearchDefinitions:
     - name: lastmodifiedtime
       isMandatory: false
       jsonPath: $.searchCriteria.lastUpdatedSince
-    - name: serviceCodes
+    - name: serviceCode
       isMandatory: false
       jsonPath: $.searchCriteria.serviceCodes
     - name: phone

@@ -8,7 +8,9 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
 import org.egov.common.contract.request.RequestInfo;
+import org.springframework.validation.annotation.Validated;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
@@ -18,24 +20,30 @@ import lombok.NoArgsConstructor;
 /**
  * Request object to fetch the report data
  */
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2018-02-23T09:30:28.401Z")
-
+@Validated
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2018-03-23T08:00:37.661Z")
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class ServiceRequest   {
-  @JsonProperty("requestInfo")
+  @JsonProperty("RequestInfo")
   private RequestInfo requestInfo = null;
 
   @JsonProperty("services")
+  @Valid
   private List<Service> services = new ArrayList<Service>();
+
+  @JsonProperty("actionInfo")
+  @Valid
+  private List<ActionInfo> actionInfo = null;
 
   public ServiceRequest requestInfo(RequestInfo requestInfo) {
     this.requestInfo = requestInfo;
     return this;
   }
 
-   /**
+  /**
    * Get requestInfo
    * @return requestInfo
   **/
@@ -61,7 +69,7 @@ public class ServiceRequest   {
     return this;
   }
 
-   /**
+  /**
    * Get services
    * @return services
   **/
@@ -77,6 +85,33 @@ public class ServiceRequest   {
     this.services = services;
   }
 
+  public ServiceRequest actionInfo(List<ActionInfo> actionInfo) {
+    this.actionInfo = actionInfo;
+    return this;
+  }
+
+  public ServiceRequest addActionInfoItem(ActionInfo actionInfoItem) {
+    if (this.actionInfo == null) {
+      this.actionInfo = new ArrayList<ActionInfo>();
+    }
+    this.actionInfo.add(actionInfoItem);
+    return this;
+  }
+
+  /**
+   * Get actionInfo
+   * @return actionInfo
+  **/
+  @Valid
+
+  public List<ActionInfo> getActionInfo() {
+    return actionInfo;
+  }
+
+  public void setActionInfo(List<ActionInfo> actionInfo) {
+    this.actionInfo = actionInfo;
+  }
+
 
   @Override
   public boolean equals(java.lang.Object o) {
@@ -88,12 +123,13 @@ public class ServiceRequest   {
     }
     ServiceRequest serviceRequest = (ServiceRequest) o;
     return Objects.equals(this.requestInfo, serviceRequest.requestInfo) &&
-        Objects.equals(this.services, serviceRequest.services);
+        Objects.equals(this.services, serviceRequest.services) &&
+        Objects.equals(this.actionInfo, serviceRequest.actionInfo);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(requestInfo, services);
+    return Objects.hash(requestInfo, services, actionInfo);
   }
 
   @Override
@@ -103,6 +139,7 @@ public class ServiceRequest   {
     
     sb.append("    requestInfo: ").append(toIndentedString(requestInfo)).append("\n");
     sb.append("    services: ").append(toIndentedString(services)).append("\n");
+    sb.append("    actionInfo: ").append(toIndentedString(actionInfo)).append("\n");
     sb.append("}");
     return sb.toString();
   }

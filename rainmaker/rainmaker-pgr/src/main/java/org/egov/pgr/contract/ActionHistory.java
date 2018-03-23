@@ -1,4 +1,4 @@
-package org.egov.pgr.v3.contract;
+package org.egov.pgr.contract;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,20 +8,24 @@ import javax.validation.Valid;
 
 import org.springframework.validation.annotation.Validated;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * ActionHistory
+ * Each Object of action History will point to the Service.
  */
 @Validated
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2018-03-23T08:00:37.661Z")
 
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 @Builder
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class ActionHistory   {
   @JsonProperty("actions")
   @Valid
@@ -44,7 +48,6 @@ public class ActionHistory   {
    * Get actions
    * @return actions
   **/
-
   @Valid
 
   public List<ActionInfo> getActions() {

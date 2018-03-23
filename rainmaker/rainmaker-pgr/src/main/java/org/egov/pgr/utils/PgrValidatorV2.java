@@ -8,11 +8,11 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.egov.pgr.contract.Service;
 import org.egov.pgr.contract.ServiceReqSearchCriteria;
+import org.egov.pgr.contract.ServiceRequest;
+import org.egov.pgr.contract.ServiceResponse;
 import org.egov.pgr.service.GrievanceService;
-import org.egov.pgr.v3.contract.Service;
-import org.egov.pgr.v3.contract.ServiceRequest;
-import org.egov.pgr.v3.contract.ServiceResponse;
 import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

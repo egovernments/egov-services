@@ -1,48 +1,20 @@
 package org.egov.pgr.service;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.egov.common.contract.request.RequestInfo;
-import org.egov.common.contract.request.Role;
-import org.egov.common.contract.request.User;
-import org.egov.common.contract.response.ResponseInfo;
-import org.egov.pgr.contract.CountResponse;
-import org.egov.pgr.contract.IdGenerationResponse;
-import org.egov.pgr.contract.IdResponse;
-import org.egov.pgr.contract.SearcherRequest;
-import org.egov.pgr.contract.ServiceReq;
-import org.egov.pgr.contract.ServiceReqRequest;
-import org.egov.pgr.contract.ServiceReqResponse;
-import org.egov.pgr.contract.ServiceReqSearchCriteria;
-import org.egov.pgr.producer.PGRProducer;
-import org.egov.pgr.repository.IdGenRepo;
-import org.egov.pgr.repository.ServiceRequestRepository;
-import org.egov.pgr.utils.PGRConstants;
-import org.egov.pgr.utils.PGRUtils;
-import org.egov.pgr.utils.ResponseInfoFactory;
-import org.egov.tracer.kafka.LogAwareKafkaTemplate;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.Matchers;
-import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.util.ReflectionTestUtils;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 
 @RunWith(MockitoJUnitRunner.class)
-public class ServiceRequestServiceTest {/*
+public class ServiceRequestServiceTest {
+	
+	@Test
+	public void test() {
+		
+	}
+	
+	
+	/*
 	
 	@Mock
 	private ServiceRequestRepository serviceRequestRepository;

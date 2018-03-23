@@ -1,4 +1,4 @@
-package org.egov.pgr.v3.contract;
+package org.egov.pgr.contract;
 
 import java.math.BigDecimal;
 import java.util.Objects;
@@ -10,15 +10,25 @@ import javax.validation.constraints.Size;
 import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  *  This will be the MDMS data.  Defines the structure of a service provided by the administration. This is based on Open311 standard, but extends it in follwoing important ways -  1. metadata is changed from boolean to strign and represents a valid swgger 2.0 definition url of the metadata definition. If this is null then it is assumed taht service does not have any metadata, else the metadata is defined in the OpenAPI definition. This allows for a well structured powerful metadata definition.  2. Due to this ServiceRequest object has been enhanced to include metadata values (aka attribute value in Open311) as an JSON object. 
  */
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2018-03-21T12:56:02.365Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2018-03-23T08:00:37.661Z")
 
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class ServiceDef   {
   @JsonProperty("tenantId")
   private String tenantId = null;
@@ -207,7 +217,6 @@ public class ServiceDef   {
    * @return keywords
   **/
 
-
   public String getKeywords() {
     return keywords;
   }
@@ -226,7 +235,6 @@ public class ServiceDef   {
    * @return group
   **/
 
-
   public String getGroup() {
     return group;
   }
@@ -244,9 +252,7 @@ public class ServiceDef   {
    * Service Level Agreement in hours for Service.
    * @return slaHours
   **/
-
   @Valid
-
   public BigDecimal getSlaHours() {
     return slaHours;
   }

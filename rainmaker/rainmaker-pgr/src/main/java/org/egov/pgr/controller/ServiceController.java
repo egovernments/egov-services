@@ -6,11 +6,11 @@ import javax.validation.Valid;
 
 import org.egov.pgr.contract.RequestInfoWrapper;
 import org.egov.pgr.contract.ServiceReqSearchCriteria;
+import org.egov.pgr.contract.ServiceRequest;
+import org.egov.pgr.contract.ServiceResponse;
 import org.egov.pgr.service.GrievanceService;
 import org.egov.pgr.utils.PGRRequestValidator;
 import org.egov.pgr.utils.PgrValidatorV2;
-import org.egov.pgr.v3.contract.ServiceRequest;
-import org.egov.pgr.v3.contract.ServiceResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

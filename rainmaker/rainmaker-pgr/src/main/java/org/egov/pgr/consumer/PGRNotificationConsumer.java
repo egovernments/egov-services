@@ -13,8 +13,8 @@ import org.egov.common.contract.request.RequestInfo;
 import org.egov.mdms.model.MdmsCriteriaReq;
 import org.egov.pgr.contract.EmailRequest;
 import org.egov.pgr.contract.SMSRequest;
-import org.egov.pgr.contract.ServiceReq;
-import org.egov.pgr.contract.ServiceReqRequest;
+import org.egov.pgr.contract.Service;
+import org.egov.pgr.contract.ServiceRequest;
 import org.egov.pgr.producer.PGRProducer;
 import org.egov.pgr.repository.ServiceRequestRepository;
 import org.egov.pgr.utils.PGRConstants;
@@ -24,14 +24,13 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.support.KafkaHeaders;
 import org.springframework.messaging.handler.annotation.Header;
-import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.JsonPath;
 
 import lombok.extern.slf4j.Slf4j;
 
-@Service
+@org.springframework.stereotype.Service
 @Slf4j
 public class PGRNotificationConsumer {
 	
@@ -78,18 +77,18 @@ public class PGRNotificationConsumer {
     
 	public void listen(final HashMap<String, Object> record, @Header(KafkaHeaders.RECEIVED_TOPIC) String topic) {
 		ObjectMapper mapper = new ObjectMapper();
-		ServiceReqRequest serviceReqRequest = new ServiceReqRequest();
+		ServiceRequest serviceReqRequest = new ServiceRequest();
 		try{
 			log.info("Consuming record: "+record);
-			serviceReqRequest = mapper.convertValue(record, ServiceReqRequest.class);
+			serviceReqRequest = mapper.convertValue(record, ServiceRequest.class);
 		}catch(final Exception e){
 			log.error("Error while listening to value: "+record+" on topic: "+topic+": ", e.getMessage());
 		}
 		process(serviceReqRequest);		
 	}
     
-    public void process(ServiceReqRequest serviceReqRequest) {
-    	for(ServiceReq serviceReq: serviceReqRequest.getServiceReq()) {
+    public void process(ServiceRequest serviceReqRequest) {
+    	for(Service serviceReq: serviceReqRequest.getServices()) {
     		if(isNotificationEnabled(serviceReq)) {
 	    		SMSRequest smsRequest = prepareSMSRequest(serviceReq, serviceReqRequest.getRequestInfo());
 	        	log.info("SMS: "+smsRequest.getMessage()+" | MOBILE: "+smsRequest.getMobileNumber());
@@ -109,7 +108,7 @@ public class PGRNotificationConsumer {
 		}
     }
     
-    public SMSRequest prepareSMSRequest(ServiceReq serviceReq, RequestInfo requestInfo) {
+    public SMSRequest prepareSMSRequest(Service serviceReq, RequestInfo requestInfo) {
 		String phone = serviceReq.getPhone();
 		String message = getMessageForSMS(serviceReq, requestInfo);
 		SMSRequest smsRequest = SMSRequest.builder().mobileNumber(phone).message(message).build();
@@ -117,7 +116,7 @@ public class PGRNotificationConsumer {
 		return smsRequest;
     }
     
-    public EmailRequest prepareEmailRequest(ServiceReq serviceReq) {
+    public EmailRequest prepareEmailRequest(Service serviceReq) {
 		String email = serviceReq.getEmail();
 		StringBuilder subject = new StringBuilder();
 		String body = getBodyAndSubForEmail(serviceReq, subject);
@@ -127,7 +126,7 @@ public class PGRNotificationConsumer {
 		return emailRequest;
     }
     
-    public String getBodyAndSubForEmail(ServiceReq serviceReq, StringBuilder subject) {
+    public String getBodyAndSubForEmail(Service serviceReq, StringBuilder subject) {
     	Map<String, Object> map = new HashMap<>();
         VelocityEngine ve = new VelocityEngine();
         ve.init();
@@ -138,12 +137,12 @@ public class PGRNotificationConsumer {
 		case NEW:{
         	map.put("status", "submitted");
     		break;
-		}case INPROGRESS:{
+/*		}case INPROGRESS:{
         	map.put("status", "assgined to Mr."+serviceReq.getAssignedTo());
     		break;
 		}case CANCELLED:{
         	map.put("status", "re-assgined to Mr."+serviceReq.getAssignedTo());
-    		break;
+    		break;*/
 		}case REJECTED:{
         	map.put("status", "rejected on "+new Date(serviceReq.getAuditDetails().getCreatedTime()).toString());
     		break;
@@ -165,7 +164,7 @@ public class PGRNotificationConsumer {
     	return message;    	
     }
     
-    public String getMessageForSMS(ServiceReq serviceReq, RequestInfo requestInfo) {
+    public String getMessageForSMS(Service serviceReq, RequestInfo requestInfo) {
     	String message = textForNotif;
     	//MessageConstructor msgConstructor = new MessageConstructor();
     	String serviceType = getServiceType(serviceReq, requestInfo);
@@ -175,12 +174,12 @@ public class PGRNotificationConsumer {
 		case NEW:{
     		message = message.replaceAll("<status>", "submitted");
     		break;
-		}case INPROGRESS:{
+/*		}case INPROGRESS:{
     		message = message.replaceAll("<status>", "assgined to Mr."+serviceReq.getAssignedTo());
     		break;
 		}case CANCELLED:{
     		message = message.replaceAll("<status>", "re-assgined to Mr."+serviceReq.getAssignedTo());
-    		break;
+    		break;*/
 		}case REJECTED:{
     		message = message.replaceAll("<status>", "rejected on "+new Date(serviceReq.getAuditDetails().getCreatedTime()).toString());
     		break;
@@ -195,7 +194,7 @@ public class PGRNotificationConsumer {
     	
     }
     
-    public String getServiceType(ServiceReq serviceReq, RequestInfo requestInfo) {
+    public String getServiceType(Service serviceReq, RequestInfo requestInfo) {
 		StringBuilder uri = new StringBuilder();
 		MdmsCriteriaReq mdmsCriteriaReq = pGRUtils.prepareSearchRequestForServiceType(uri, serviceReq.getTenantId(),
 				serviceReq.getServiceCode(), requestInfo);
@@ -213,7 +212,7 @@ public class PGRNotificationConsumer {
     	return serviceTypes.get(0);
     }
     
-    public boolean isNotificationEnabled(ServiceReq serviceReq) {
+    public boolean isNotificationEnabled(Service serviceReq) {
     	boolean isNotifEnabled = false;
 		switch(serviceReq.getStatus()) {
 		case NEW:{

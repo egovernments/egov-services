@@ -1,0 +1,7 @@
+{
+  "otp": {
+    "mobileNumber": "mobileNumber",
+    "tenantId": "tenantId",
+    "type": "login"
+  }
+}

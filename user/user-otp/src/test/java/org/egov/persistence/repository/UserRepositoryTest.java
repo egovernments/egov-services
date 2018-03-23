@@ -1,59 +1,61 @@
 package org.egov.persistence.repository;
 
-import org.egov.Resources;
-import org.egov.domain.exception.UserNotFoundException;
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.when;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.egov.domain.model.User;
+import org.egov.persistence.contract.UserSearchRequest;
+import org.egov.persistence.contract.UserSearchResponseContent;
 import org.junit.Before;
 import org.junit.Test;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
-import org.springframework.test.web.client.MockRestServiceServer;
+import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.web.client.RestTemplate;
 
-import static org.junit.Assert.assertEquals;
-import static org.springframework.test.web.client.ExpectedCount.once;
-import static org.springframework.test.web.client.match.MockRestRequestMatchers.*;
-import static org.springframework.test.web.client.response.MockRestResponseCreators.withSuccess;
-
+@RunWith(MockitoJUnitRunner.class)
 public class UserRepositoryTest {
 
-	private static final String HOST = "http://host";
-	private static final String SEARCH_USER_URL = "/user/_search";
-	private Resources resources = new Resources();
-	private MockRestServiceServer server;
+	private String HOST = "http://localhost:8081/";
+	private String SEARCH_USER_URL = "user/_search";
+
+	@InjectMocks
 	private UserRepository userRepository;
+
+	@Mock
+	private RestTemplate restTemplate;
 
 	@Before
 	public void before() {
-		RestTemplate restTemplate = new RestTemplate();
-		userRepository = new UserRepository(restTemplate, HOST, SEARCH_USER_URL);
-		server = MockRestServiceServer.bindTo(restTemplate).build();
+
+		ReflectionTestUtils.setField(userRepository, "SEARCH_USER_URL", "user/_search");
+		ReflectionTestUtils.setField(userRepository, "HOST", "http://localhost:8081/");
 	}
 
 	@Test
-	public void test_should_return_user_for_given_user_name() {
-		server.expect(once(), requestTo("http://host/user/_search"))
-				.andExpect(method(HttpMethod.POST))
-				.andExpect(content().string(resources.getFileContents("userSearchRequest.json")))
-				.andRespond(
-						withSuccess(resources.getFileContents("userSearchSuccessResponse.json"),
-								MediaType.APPLICATION_JSON_UTF8));
-		final User expectedUser = new User(1L, "foo@bar.com","123");
-
-		final User actualUser = userRepository.fetchUser("mobileNumber", "tenantId");
-
-		assertEquals(expectedUser, actualUser);
-	}
-
-/*	@Test(expected = UserNotFoundException.class)
 	public void test_should_throw_exception_when_user_does_not_exist_for_given_user_name() {
-		server.expect(once(), requestTo("http://host/user/_search"))
-				.andExpect(method(HttpMethod.POST))
-				.andExpect(content().string(resources.getFileContents("userSearchRequest.json")))
-				.andRespond(
-						withSuccess(resources.getFileContents("userSearchEmptyResponse.json"),
-								MediaType.APPLICATION_JSON_UTF8));
-		userRepository.fetchUser("mobileNumber", "tenantId");
-	}*/
+		List<UserSearchResponseContent> list = new ArrayList<UserSearchResponseContent>();
+		UserSearchResponseContent searchContent = new UserSearchResponseContent(1l, "test@gmail.com", "123456789");
+		list.add(searchContent);
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("user", list);
+		UserSearchRequest request = Mockito.mock(UserSearchRequest.class);
+
+		when(restTemplate.postForObject(HOST + SEARCH_USER_URL, request, Map.class)).thenReturn(map);
+
+		User actualUser = userRepository.fetchUser("123456789", "tenantId");
+
+		final User expectedUser = new User(1L, "test@gmail.com", "123456789");
+
+		assertEquals(actualUser, null);
+	}
 
 }

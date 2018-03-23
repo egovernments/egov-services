@@ -82,7 +82,7 @@ public class AssetHistoryRowMapper implements ResultSetExtractor<Map<Long, List<
 
             BigDecimal transactionAmount = BigDecimal.ZERO;
             TransactionType transactionType = TransactionType.fromValue(rs.getString("assetTranType"));
-            final TransactionType transactionTypeForDp = TransactionType.fromValue(rs.getString("dp_transactiontype"));
+            TransactionType transactionTypeForDp = TransactionType.fromValue(rs.getString("dp_transactiontype"));
             BigDecimal valueBeforeTransaction = BigDecimal.ZERO;
             BigDecimal valueAfterTransaction = BigDecimal.ZERO;
             Long transactionDate = null;

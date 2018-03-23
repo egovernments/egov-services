@@ -267,7 +267,7 @@ public class AssetQueryBuilder {
             preparedStatementValues.add(searchAsset.getDateOfDepreciation());
         }
         if(searchAsset.getIsTransactionHistoryRequired()!=null){
-            selectQuery.append( " AND ASSET.status='CAPITALIZED' ");
+            selectQuery.append( " AND ASSET.status IN ('CAPITALIZED','DISPOSED')");
             
         }
 
@@ -300,13 +300,13 @@ public class AssetQueryBuilder {
 
         String assetIdString = null;
         if (assetIds != null && !assetIds.isEmpty())
-            assetIdString = "AND cv.assetid IN (" + getIdQuery(assetIds);
+            assetIdString = "AND asset.id IN (" + getIdQuery(assetIds);
 
         return "select  * ,dp.disposaldate as disposaldate,dp.salevalue as salevalue,dp.transactiontype as dp_transactiontype "
-                + "from egasset_current_value cv  "
-                + "left outer join egasset_revalution  rv on rv.assetid=cv.assetid and rv.valueafterrevaluation=cv.currentamount "
-                + "left outer join egasset_depreciation  dv on dv.assetid=cv.assetid and dv.valueafterdepreciation=cv.currentamount "
-                + "left outer join egasset_disposal  dp on dp.assetid=cv.assetid "
+                + "from egasset_asset asset full outer join egasset_current_value cv on cv.assetid=asset.id "
+                + "full outer join egasset_revalution  rv on rv.assetid=cv.assetid and rv.valueafterrevaluation=cv.currentamount "
+                + "full outer join egasset_depreciation  dv on dv.assetid=cv.assetid and dv.valueafterdepreciation=cv.currentamount "
+                + "full outer join egasset_disposal dp on dp.assetid=asset.id "
                 + "where  cv.assettrantype !='CREATE' AND cv.tenantid='" + tenantid + "' " + assetIdString
                 + " order by cv.assetid,cv.id,cv.createdtime ";
 

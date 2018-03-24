@@ -1,6 +1,5 @@
 package org.egov.pgr.service;
 
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -153,216 +152,250 @@ public class GrievanceService {
 		return getServiceResponse(request);
 	}
 
-       /**
-		 * method to parse the IdGenResponse from IdgenRepo to List of String ids
-		 * required by the respective methods
-		 * 
-		 * @param requestInfo
-		 * @param tenantId
-		 * @param length
-		 * @param idKey
-		 * @param idformat
-		 * 
-		 */
-		private List<String> getIdList(RequestInfo requestInfo, String tenantId, Integer length, String idKey,
-				String idformat) {
+	/**
+	 * method to parse the IdGenResponse from IdgenRepo to List of String ids
+	 * required by the respective methods
+	 * 
+	 * @param requestInfo
+	 * @param tenantId
+	 * @param length
+	 * @param idKey
+	 * @param idformat
+	 * 
+	 */
+	private List<String> getIdList(RequestInfo requestInfo, String tenantId, Integer length, String idKey,
+			String idformat) {
 
-			return idGenRepo.getId(requestInfo, tenantId, length, idKey, idformat).getIdResponses().stream()
-					.map(IdResponse::getId).collect(Collectors.toList());
-		}
+		return idGenRepo.getId(requestInfo, tenantId, length, idKey, idformat).getIdResponses().stream()
+				.map(IdResponse::getId).collect(Collectors.toList());
+	}
 
-		/**
-		 * returns ServiceResponse built based on the given ServiceRequest
-		 * 
-		 * @param serviceReqRequest
-		 * @return serviceReqResponse
-		 */
-		public ServiceResponse getServiceResponse(ServiceRequest serviceReqRequest) {
+	/**
+	 * returns ServiceResponse built based on the given ServiceRequest
+	 * 
+	 * @param serviceReqRequest
+	 * @return serviceReqResponse
+	 */
+	public ServiceResponse getServiceResponse(ServiceRequest serviceReqRequest) {
 
-			return ServiceResponse.builder()
-					.responseInfo(factory.createResponseInfoFromRequestInfo(serviceReqRequest.getRequestInfo(), true))
-					.services(serviceReqRequest.getServices()).build();
+		return ServiceResponse.builder()
+				.responseInfo(factory.createResponseInfoFromRequestInfo(serviceReqRequest.getRequestInfo(), true))
+				.services(serviceReqRequest.getServices()).build();
+	}
+
+	/**
+	 * Method to return service requests received from the repo to the controller in
+	 * the reqd format
+	 * 
+	 * @param requestInfo
+	 * @param serviceReqSearchCriteria
+	 * @return ServiceReqResponse
+	 * @author vishal
+	 */
+	public Object getServiceRequests(RequestInfo requestInfo, ServiceReqSearchCriteria serviceReqSearchCriteria) {
+		ObjectMapper mapper = pGRUtils.getObjectMapper();
+		StringBuilder uri = new StringBuilder();
+		SearcherRequest searcherRequest = null;
+		enrichRequest(requestInfo, serviceReqSearchCriteria);
+		log.info("Enriched request: " + serviceReqSearchCriteria);
+		if (null != serviceReqSearchCriteria.getServiceRequestId()
+				&& serviceReqSearchCriteria.getServiceRequestId().size() == 1) {
+			return getServiceRequestWithDetails(requestInfo, serviceReqSearchCriteria);
 		}
-		
-		/**
-		 * Method to return service requests received from the repo to the controller in
-		 * the reqd format
-		 * 
-		 * @param requestInfo
-		 * @param serviceReqSearchCriteria
-		 * @return ServiceReqResponse
-		 * @author vishal
-		 */
-		public Object getServiceRequests(RequestInfo requestInfo, ServiceReqSearchCriteria serviceReqSearchCriteria) {
-			ObjectMapper mapper = pGRUtils.getObjectMapper();
-			StringBuilder uri = new StringBuilder();
-			SearcherRequest searcherRequest = null;
-			enrichRequest(requestInfo, serviceReqSearchCriteria);
-			log.info("Enriched request: "+serviceReqSearchCriteria);
-			if(null != serviceReqSearchCriteria.getServiceRequestId() && serviceReqSearchCriteria.getServiceRequestId().size() == 1) {
-				return getServiceRequestWithDetails(requestInfo, serviceReqSearchCriteria);
-			}
-			searcherRequest = prepareSearcherRequest(requestInfo, serviceReqSearchCriteria, uri);
-			if(null == searcherRequest)
-				return pGRUtils.getDefaultServiceResponse(requestInfo);
-			Object response = serviceRequestRepository.fetchResult(uri, searcherRequest);
-			log.info("Searcher response: "+response);
-			if (null == response) 
-				return pGRUtils.getDefaultServiceResponse(requestInfo);
-			ServiceResponse serviceResponse = mapper.convertValue(response, ServiceResponse.class);
-			return serviceResponse;
-		}
-		
-		
-		/**
-		 * method to fetch service codes from mdms based on dept
-		 * 
-		 * @param requestInfo
-		 * @param tenantId
-		 * @param department
-		 * @return Object
-		 * @author vishal
-		 */
-		public Object fetchServiceCodes(RequestInfo requestInfo,
-				String tenantId, String department) {
-			StringBuilder uri = new StringBuilder();
-			MdmsCriteriaReq mdmsCriteriaReq = pGRUtils.prepareSearchRequestForServiceCodes(uri, tenantId, department, requestInfo);
-			return serviceRequestRepository.fetchResult(uri, mdmsCriteriaReq);
-			
-		}
-		
-		/**
-		 * Prepares request for searcher service based on the criteria
-		 * 
-		 * @param requestInfo
-		 * @param serviceReqSearchCriteria
-		 * @param uri
-		 * @return SearcherRequest
-		 */
-		public SearcherRequest prepareSearcherRequest(RequestInfo requestInfo,
-				ServiceReqSearchCriteria serviceReqSearchCriteria, StringBuilder uri) {
-			SearcherRequest searcherRequest = null;
-            if(null != serviceReqSearchCriteria.getAssignedTo() && !serviceReqSearchCriteria.getAssignedTo().isEmpty()) {
-				searcherRequest = pGRUtils.prepareSearchRequestAssignedTo(uri, serviceReqSearchCriteria, requestInfo);
-			}else {
-				if(null != serviceReqSearchCriteria.getGroup() && !serviceReqSearchCriteria.getGroup().isEmpty()){
-						Object response = fetchServiceCodes(requestInfo, serviceReqSearchCriteria.getTenantId(), serviceReqSearchCriteria.getGroup());
-						List<String> serviceCodes = null;
-						if(null == response) {
-							log.info("Searcher returned zero serviceCodes!");
-							return null;
-						}
-						try {
-							serviceCodes = (List<String>) JsonPath.read(response, PGRConstants.JSONPATH_SERVICE_CODES);
-						}catch(Exception e) {
-							log.error("Exception while parsing serviceCodes: ",e);
-							return null;
-						}
-						serviceReqSearchCriteria.setServiceCodes(serviceCodes);
+		searcherRequest = prepareSearcherRequest(requestInfo, serviceReqSearchCriteria, uri);
+		if (null == searcherRequest)
+			return pGRUtils.getDefaultServiceResponse(requestInfo);
+		Object response = serviceRequestRepository.fetchResult(uri, searcherRequest);
+		log.info("Searcher response: " + response);
+		if (null == response)
+			return pGRUtils.getDefaultServiceResponse(requestInfo);
+		ServiceResponse serviceResponse = mapper.convertValue(response, ServiceResponse.class);
+		return serviceResponse;
+	}
+
+	/**
+	 * method to fetch service codes from mdms based on dept
+	 * 
+	 * @param requestInfo
+	 * @param tenantId
+	 * @param department
+	 * @return Object
+	 * @author vishal
+	 */
+	public Object fetchServiceCodes(RequestInfo requestInfo, String tenantId, String department) {
+		StringBuilder uri = new StringBuilder();
+		MdmsCriteriaReq mdmsCriteriaReq = pGRUtils.prepareSearchRequestForServiceCodes(uri, tenantId, department,
+				requestInfo);
+		return serviceRequestRepository.fetchResult(uri, mdmsCriteriaReq);
+
+	}
+
+	/**
+	 * Prepares request for searcher service based on the criteria
+	 * 
+	 * @param requestInfo
+	 * @param serviceReqSearchCriteria
+	 * @param uri
+	 * @return SearcherRequest
+	 */
+	public SearcherRequest prepareSearcherRequest(RequestInfo requestInfo,
+			ServiceReqSearchCriteria serviceReqSearchCriteria, StringBuilder uri) {
+		SearcherRequest searcherRequest = null;
+		if (null != serviceReqSearchCriteria.getAssignedTo() && !serviceReqSearchCriteria.getAssignedTo().isEmpty()) {
+			searcherRequest = pGRUtils.prepareSearchRequestAssignedTo(uri, serviceReqSearchCriteria, requestInfo);
+		} else {
+			if (null != serviceReqSearchCriteria.getGroup() && !serviceReqSearchCriteria.getGroup().isEmpty()) {
+				Object response = fetchServiceCodes(requestInfo, serviceReqSearchCriteria.getTenantId(),
+						serviceReqSearchCriteria.getGroup());
+				List<String> serviceCodes = null;
+				if (null == response) {
+					log.info("Searcher returned zero serviceCodes!");
+					return null;
 				}
-				searcherRequest = pGRUtils.prepareSearchRequest(uri, serviceReqSearchCriteria, requestInfo);
-			}
-			
-			return searcherRequest;
-		}
-		
-		/**
-		 * Prepares search request when the search is on only one service request id.
-		 * 
-		 * @param requestInfo
-		 * @param serviceReqSearchCriteria
-		 * @return
-		 */
-		public ServiceResponse getServiceRequestWithDetails(RequestInfo requestInfo,
-				ServiceReqSearchCriteria serviceReqSearchCriteria) {
-			
-			ObjectMapper mapper = pGRUtils.getObjectMapper();
-			StringBuilder uri = new StringBuilder();
-			SearcherRequest searcherRequest = null;
-			searcherRequest = pGRUtils.prepareSearchRequest(uri, serviceReqSearchCriteria, requestInfo);
-			if(null == searcherRequest)
-				return pGRUtils.getDefaultServiceResponse(requestInfo);
-			Object response = serviceRequestRepository.fetchResult(uri, searcherRequest);
-			if(null == response)
-				return pGRUtils.getDefaultServiceResponse(requestInfo);
-			log.info("Service: "+response);
-			
-			StringBuilder url = new StringBuilder();
-			searcherRequest = pGRUtils.prepareActionSearchRequest(url, serviceReqSearchCriteria, requestInfo);
-			List<ActionInfo> actions = null;
-			if(null != searcherRequest) {
-				Object res = serviceRequestRepository.fetchResult(url, searcherRequest);
-				log.info("Actions: "+res);
-				if(null != res) {
-					actions = (List<ActionInfo>) JsonPath.read(res, PGRConstants.V3_ACTION_JSONPATH);
-				}
-			}
-			ActionHistory actionHistory = ActionHistory.builder().actions(actions).build();
-			List<ActionHistory> actionHistories = new ArrayList<>();
-			actionHistories.add(actionHistory);
-			ServiceResponse serviceResponse = mapper.convertValue(response, ServiceResponse.class);
-			serviceResponse.setActionHistory(actionHistories);
-			return serviceResponse;
-			
-		}
-		
-		public void enrichRequest(RequestInfo requestInfo, ServiceReqSearchCriteria serviceReqSearchCriteria) {
-			log.info("Enriching request.........: "+serviceReqSearchCriteria);
-			if(requestInfo.getUserInfo().getRoles().get(0).getName().equals("DGRO") && requestInfo.getUserInfo().getRoles().size() == 1) {
-				StringBuilder uri = new StringBuilder();
-				RequestInfoWrapper requestInfoWrapper = pGRUtils.prepareRequestForEmployeeSearch(uri, requestInfo, serviceReqSearchCriteria);
-				Object response = serviceRequestRepository.fetchResult(uri, requestInfoWrapper);
-				if(null == response) {
-					throw new CustomException("401", "Unauthorized Employee");
-				}
-				log.info("Employee: "+response);
-				Long departmenCode = null;
 				try {
-					departmenCode = JsonPath.read(response, PGRConstants.V3_EMPLOYEE_DEPTCODE_JSONPATH);
-				}catch(Exception e) {
-					log.error("Exception: "+e);
-					throw new CustomException("401", "Unauthorized Employee");
+					serviceCodes = (List<String>) JsonPath.read(response, PGRConstants.JSONPATH_SERVICE_CODES);
+				} catch (Exception e) {
+					log.error("Exception while parsing serviceCodes: ", e);
+					return null;
 				}
-				
-				StringBuilder deptUri = new StringBuilder();
-				requestInfoWrapper = pGRUtils.prepareRequestForDeptSearch(deptUri, requestInfo, departmenCode);
-				response = serviceRequestRepository.fetchResult(deptUri, requestInfoWrapper);
-				if(null == response) {
-					throw new CustomException("401", "Invalid department");
-				}
-				log.info("Department: "+response);
-				String department = JsonPath.read(response, PGRConstants.V3_DEPARTMENTNAME_EMPLOYEE_JSONPATH);
-				serviceReqSearchCriteria.setGroup(department);
-			}else if(requestInfo.getUserInfo().getRoles().get(0).getName().equals("CITIZEN") && requestInfo.getUserInfo().getRoles().size() == 1) {
-				serviceReqSearchCriteria.setAccountId(requestInfo.getUserInfo().getId().toString());
-			}			
+				serviceReqSearchCriteria.setServiceCodes(serviceCodes);
+			}
+			searcherRequest = pGRUtils.prepareSearchRequest(uri, serviceReqSearchCriteria, requestInfo);
 		}
-		
-		
-  		 /**
-		 * Fetches count of service requests and returns in the reqd format.
-		 * 
-		 * @param requestInfo
-		 * @param serviceReqSearchCriteria
-		 * @return Object
-		 * @author vishal
-		 */
-		public Object getCount(RequestInfo requestInfo, ServiceReqSearchCriteria serviceReqSearchCriteria) {
-			ObjectMapper mapper = pGRUtils.getObjectMapper();
+
+		return searcherRequest;
+	}
+
+	/**
+	 * Prepares search request when the search is on only one service request id.
+	 * 
+	 * @param requestInfo
+	 * @param serviceReqSearchCriteria
+	 * @return
+	 */
+	public ServiceResponse getServiceRequestWithDetails(RequestInfo requestInfo,
+			ServiceReqSearchCriteria serviceReqSearchCriteria) {
+
+		ObjectMapper mapper = pGRUtils.getObjectMapper();
+		StringBuilder uri = new StringBuilder();
+		SearcherRequest searcherRequest = null;
+		searcherRequest = pGRUtils.prepareSearchRequest(uri, serviceReqSearchCriteria, requestInfo);
+		if (null == searcherRequest)
+			return pGRUtils.getDefaultServiceResponse(requestInfo);
+		Object response = serviceRequestRepository.fetchResult(uri, searcherRequest);
+		if (null == response)
+			return pGRUtils.getDefaultServiceResponse(requestInfo);
+		log.info("Service: " + response);
+
+		StringBuilder url = new StringBuilder();
+		searcherRequest = pGRUtils.prepareActionSearchRequest(url, serviceReqSearchCriteria, requestInfo);
+		List<ActionInfo> actions = null;
+		if (null != searcherRequest) {
+			Object res = serviceRequestRepository.fetchResult(url, searcherRequest);
+			log.info("Actions: " + res);
+			if (null != res) {
+				actions = (List<ActionInfo>) JsonPath.read(res, PGRConstants.V3_ACTION_JSONPATH);
+			}
+		}
+		ActionHistory actionHistory = ActionHistory.builder().actions(actions).build();
+		List<ActionHistory> actionHistories = new ArrayList<>();
+		actionHistories.add(actionHistory);
+		ServiceResponse serviceResponse = mapper.convertValue(response, ServiceResponse.class);
+		serviceResponse.setActionHistory(actionHistories);
+		return serviceResponse;
+
+	}
+
+	public void enrichRequest(RequestInfo requestInfo, ServiceReqSearchCriteria serviceReqSearchCriteria) {
+		log.info("Enriching request.........: " + serviceReqSearchCriteria);
+		if (requestInfo.getUserInfo().getRoles().get(0).getName().equals("DGRO")
+				&& requestInfo.getUserInfo().getRoles().size() == 1) {
 			StringBuilder uri = new StringBuilder();
-			SearcherRequest searcherRequest = null;
-		    if(null != serviceReqSearchCriteria.getAssignedTo() && !serviceReqSearchCriteria.getAssignedTo().isEmpty()) {
-				searcherRequest = pGRUtils.prepareCountRequestAssignedTo(uri, serviceReqSearchCriteria, requestInfo);
-			}else {
-				searcherRequest = pGRUtils.prepareCountRequest(uri, serviceReqSearchCriteria, requestInfo);
-			}
-			Object response = serviceRequestRepository.fetchResult(uri, searcherRequest);		
-			log.info("Searcher response: ", response);
+			RequestInfoWrapper requestInfoWrapper = pGRUtils.prepareRequestForEmployeeSearch(uri, requestInfo,
+					serviceReqSearchCriteria);
+			Object response = serviceRequestRepository.fetchResult(uri, requestInfoWrapper);
 			if (null == response) {
-				return new CountResponse(factory.createResponseInfoFromRequestInfo(requestInfo, false), 0D);
+				throw new CustomException("401", "Unauthorized Employee");
 			}
-			Double count = JsonPath.read(response, PGRConstants.PG_JSONPATH_COUNT);
-			return new CountResponse(factory.createResponseInfoFromRequestInfo(requestInfo, true), count);
+			log.info("Employee: " + response);
+			Long departmenCode = null;
+			try {
+				departmenCode = JsonPath.read(response, PGRConstants.V3_EMPLOYEE_DEPTCODE_JSONPATH);
+			} catch (Exception e) {
+				log.error("Exception: " + e);
+				throw new CustomException("401", "Unauthorized Employee");
+			}
+
+			StringBuilder deptUri = new StringBuilder();
+			requestInfoWrapper = pGRUtils.prepareRequestForDeptSearch(deptUri, requestInfo, departmenCode);
+			response = serviceRequestRepository.fetchResult(deptUri, requestInfoWrapper);
+			if (null == response) {
+				throw new CustomException("401", "Invalid department");
+			}
+			log.info("Department: " + response);
+			String department = JsonPath.read(response, PGRConstants.V3_DEPARTMENTNAME_EMPLOYEE_JSONPATH);
+			serviceReqSearchCriteria.setGroup(department);
+		} else if (requestInfo.getUserInfo().getRoles().get(0).getName().equals("CITIZEN")
+				&& requestInfo.getUserInfo().getRoles().size() == 1) {
+			serviceReqSearchCriteria.setAccountId(requestInfo.getUserInfo().getId().toString());
 		}
-		
+	}
+
+	/**
+	 * Fetches count of service requests and returns in the reqd format.
+	 * 
+	 * @param requestInfo
+	 * @param serviceReqSearchCriteria
+	 * @return Object
+	 * @author vishal
+	 */
+	public Object getCount(RequestInfo requestInfo, ServiceReqSearchCriteria serviceReqSearchCriteria) {
+		StringBuilder uri = new StringBuilder();
+		SearcherRequest searcherRequest = null;
+		if (null != serviceReqSearchCriteria.getAssignedTo() && !serviceReqSearchCriteria.getAssignedTo().isEmpty()) {
+			searcherRequest = pGRUtils.prepareCountRequestAssignedTo(uri, serviceReqSearchCriteria, requestInfo);
+		} else {
+			searcherRequest = prepareSearcherRequestForCount(requestInfo, serviceReqSearchCriteria, uri);
+		}
+		Object response = serviceRequestRepository.fetchResult(uri, searcherRequest);
+		log.info("Searcher response: ", response);
+		if (null == response) {
+			return new CountResponse(factory.createResponseInfoFromRequestInfo(requestInfo, false), 0D);
+		}
+		Double count = JsonPath.read(response, PGRConstants.PG_JSONPATH_COUNT);
+		return new CountResponse(factory.createResponseInfoFromRequestInfo(requestInfo, true), count);
+	}
+
+	/**
+	 * Prepares request for searcher service based on the criteria
+	 * 
+	 * @param requestInfo
+	 * @param serviceReqSearchCriteria
+	 * @param uri
+	 * @return SearcherRequest
+	 */
+	public SearcherRequest prepareSearcherRequestForCount(RequestInfo requestInfo,
+			ServiceReqSearchCriteria serviceReqSearchCriteria, StringBuilder uri) {
+		SearcherRequest searcherRequest = null;
+		if (null != serviceReqSearchCriteria.getGroup() && !serviceReqSearchCriteria.getGroup().isEmpty()) {
+			Object response = fetchServiceCodes(requestInfo, serviceReqSearchCriteria.getTenantId(),
+					serviceReqSearchCriteria.getGroup());
+			List<String> serviceCodes = null;
+			if (null == response) {
+				log.info("Searcher returned zero serviceCodes!");
+				return null;
+			}
+			try {
+				serviceCodes = (List<String>) JsonPath.read(response, PGRConstants.JSONPATH_SERVICE_CODES);
+			} catch (Exception e) {
+				log.error("Exception while parsing serviceCodes: ", e);
+				return null;
+			}
+			serviceReqSearchCriteria.setServiceCodes(serviceCodes);
+		}
+		searcherRequest = pGRUtils.prepareCountRequest(uri, serviceReqSearchCriteria, requestInfo);
+
+		return searcherRequest;
+	}
+
 }

@@ -49,6 +49,8 @@ public class PGRConstants {
 	public static final String V3_ACTION_JSONPATH = "$.actionHistory";
 	public static final String V3_SERVICES_PARENT_JSONPATH = "$.services";
 	public static final String V3_RESPONSEINFO_JSONPATH = "$.ResponseInfo";
+	public static final String V3_EMPLOYEE_DEPTCODE_JSONPATH = "$.Employee[0].assignments[0].department";
+	public static final String V3_DEPARTMENTNAME_EMPLOYEE_JSONPATH = "$.departmentList[0].name";
 
 	
 }

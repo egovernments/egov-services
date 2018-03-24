@@ -11,6 +11,7 @@ import org.egov.mdms.model.MdmsCriteriaReq;
 import org.egov.mdms.model.ModuleDetail;
 import org.egov.pgr.contract.ActionHistory;
 import org.egov.pgr.contract.AuditDetails;
+import org.egov.pgr.contract.RequestInfoWrapper;
 import org.egov.pgr.contract.SearcherRequest;
 import org.egov.pgr.contract.Service;
 import org.egov.pgr.contract.ServiceReqSearchCriteria;
@@ -42,6 +43,18 @@ public class PGRUtils {
 	
 	@Value("${egov.mdms.search.endpoint}")
 	private String mdmsEndpoint;
+	
+	@Value("${egov.hr.employee.host}")
+	private String hrEmployeeHost;
+	
+	@Value("${egov.hr.employee.search.endpoint}")
+	private String hrEmployeeSearchEndpoint;
+	
+	@Value("${egov.hr.masters.host}")
+	private String hrMaster;
+	
+	@Value("${egov.hr.masters.search.endpoint}")
+	private String hrMasterSearchEndpoint;
 	
 	@Autowired
 	private ResponseInfoFactory factory;
@@ -265,5 +278,23 @@ public class PGRUtils {
         
         return mapper;
 	}
+	
+	
+	public RequestInfoWrapper prepareRequestForEmployeeSearch(StringBuilder uri, RequestInfo requestInfo,
+			ServiceReqSearchCriteria serviceReqSearchCriteria) {
+		RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
+		requestInfoWrapper.setRequestInfo(requestInfo);
+		uri.append(hrEmployeeHost).append(hrEmployeeSearchEndpoint)
+		.append("?id="+requestInfo.getUserInfo().getId()).append("&tenantId=default");
 
+		return requestInfoWrapper;
+	}
+	
+	public RequestInfoWrapper prepareRequestForDeptSearch(StringBuilder uri, RequestInfo requestInfo, long deptId) {
+		RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
+		requestInfoWrapper.setRequestInfo(requestInfo);
+		uri.append(hrMaster).append(hrMasterSearchEndpoint).append("?id="+deptId);
+
+		return requestInfoWrapper;
+	}
 }

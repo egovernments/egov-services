@@ -11,6 +11,7 @@ import org.egov.pgr.contract.ActionHistory;
 import org.egov.pgr.contract.ActionInfo;
 import org.egov.pgr.contract.AuditDetails;
 import org.egov.pgr.contract.IdResponse;
+import org.egov.pgr.contract.RequestInfoWrapper;
 import org.egov.pgr.contract.SearcherRequest;
 import org.egov.pgr.contract.Service;
 import org.egov.pgr.contract.ServiceReqSearchCriteria;
@@ -22,6 +23,7 @@ import org.egov.pgr.repository.ServiceRequestRepository;
 import org.egov.pgr.utils.PGRConstants;
 import org.egov.pgr.utils.PGRUtils;
 import org.egov.pgr.utils.ResponseInfoFactory;
+import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 
@@ -190,12 +192,12 @@ public class GrievanceService {
 		 * @return ServiceReqResponse
 		 * @author vishal
 		 */
-		public Object getServiceRequests(RequestInfo requestInfo,
-				ServiceReqSearchCriteria serviceReqSearchCriteria) {
-			
+		public Object getServiceRequests(RequestInfo requestInfo, ServiceReqSearchCriteria serviceReqSearchCriteria) {
 			ObjectMapper mapper = pGRUtils.getObjectMapper();
 			StringBuilder uri = new StringBuilder();
 			SearcherRequest searcherRequest = null;
+			enrichRequest(requestInfo, serviceReqSearchCriteria);
+			log.info("Enriched request: "+serviceReqSearchCriteria);
 			if(null != serviceReqSearchCriteria.getServiceRequestId() && serviceReqSearchCriteria.getServiceRequestId().size() == 1) {
 				return getServiceRequestWithDetails(requestInfo, serviceReqSearchCriteria);
 			}
@@ -301,6 +303,38 @@ public class GrievanceService {
 			serviceResponse.setActionHistory(actionHistories);
 			return serviceResponse;
 			
+		}
+		
+		public void enrichRequest(RequestInfo requestInfo, ServiceReqSearchCriteria serviceReqSearchCriteria) {
+			log.info("Enriching request.........: "+serviceReqSearchCriteria);
+			if(requestInfo.getUserInfo().getRoles().get(0).getName().equals("DGRO") && requestInfo.getUserInfo().getRoles().size() == 1) {
+				StringBuilder uri = new StringBuilder();
+				RequestInfoWrapper requestInfoWrapper = pGRUtils.prepareRequestForEmployeeSearch(uri, requestInfo, serviceReqSearchCriteria);
+				Object response = serviceRequestRepository.fetchResult(uri, requestInfoWrapper);
+				if(null == response) {
+					throw new CustomException("401", "Unauthorized Employee");
+				}
+				log.info("Employee: "+response);
+				Long departmenCode = null;
+				try {
+					departmenCode = JsonPath.read(response, PGRConstants.V3_EMPLOYEE_DEPTCODE_JSONPATH);
+				}catch(Exception e) {
+					log.error("Exception: "+e);
+					throw new CustomException("401", "Unauthorized Employee");
+				}
+				
+				StringBuilder deptUri = new StringBuilder();
+				requestInfoWrapper = pGRUtils.prepareRequestForDeptSearch(deptUri, requestInfo, departmenCode);
+				response = serviceRequestRepository.fetchResult(deptUri, requestInfoWrapper);
+				if(null == response) {
+					throw new CustomException("401", "Invalid department");
+				}
+				log.info("Department: "+response);
+				String department = JsonPath.read(response, PGRConstants.V3_DEPARTMENTNAME_EMPLOYEE_JSONPATH);
+				serviceReqSearchCriteria.setGroup(department);
+			}else if(requestInfo.getUserInfo().getRoles().get(0).getName().equals("CITIZEN") && requestInfo.getUserInfo().getRoles().size() == 1) {
+				serviceReqSearchCriteria.setAccountId(requestInfo.getUserInfo().getId().toString());
+			}			
 		}
 		
 		

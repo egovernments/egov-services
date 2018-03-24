@@ -149,4 +149,107 @@ public class GrievanceServiceTest {
 		
 		
 	}
+	
+	
+	@Test
+	public void testPrepareSearcherReqAssignedToSuccess() {
+		Object response = null;
+		RequestInfo requestInfo = new RequestInfo();
+		ServiceReqSearchCriteria serviceReqSearchCriteria = new ServiceReqSearchCriteria();	
+		serviceReqSearchCriteria.setAssignedTo("vishal");
+		SearcherRequest searcherRequest = new SearcherRequest();
+		StringBuilder uri = new StringBuilder();
+		
+		Mockito.when(pGRUtils.prepareSearchRequestAssignedTo(uri, serviceReqSearchCriteria, requestInfo))
+		.thenReturn(searcherRequest);
+
+		response = service.prepareSearcherRequest(requestInfo, serviceReqSearchCriteria, uri);
+		
+		assertNotNull(response);
+		
+		
+	}
+	
+	@Test
+	public void testPrepareSearcherReqSuccess() {
+		Object response = null;
+		RequestInfo requestInfo = new RequestInfo();
+		ServiceReqSearchCriteria serviceReqSearchCriteria = new ServiceReqSearchCriteria();	
+		SearcherRequest searcherRequest = new SearcherRequest();
+		StringBuilder uri = new StringBuilder();
+		
+		Mockito.when(pGRUtils.prepareSearchRequest(uri, serviceReqSearchCriteria, requestInfo))
+		.thenReturn(searcherRequest);
+
+		response = service.prepareSearcherRequest(requestInfo, serviceReqSearchCriteria, uri);
+		
+		assertNotNull(response);
+		
+		
+	}
+	
+
+		
+	@Test
+	public void testPrepareSearcherReqFailure() {
+		Object response = null;
+		RequestInfo requestInfo = new RequestInfo();
+		ServiceReqSearchCriteria serviceReqSearchCriteria = new ServiceReqSearchCriteria();	
+		serviceReqSearchCriteria.setGroup("HR");
+		SearcherRequest searcherRequest = new SearcherRequest();
+		StringBuilder uri = new StringBuilder();
+		
+		Mockito.when(pGRUtils.prepareSearchRequest(uri, serviceReqSearchCriteria, requestInfo))
+		.thenReturn(searcherRequest);
+
+		response = service.prepareSearcherRequest(requestInfo, serviceReqSearchCriteria, uri);
+		
+		assertNull(response);
+		
+		
+	}
+	
+	@Test
+	public void testPrepareSearcherReqOneIdSuccess() {
+		Object response = null;
+		RequestInfo requestInfo = new RequestInfo();
+		ServiceReqSearchCriteria serviceReqSearchCriteria = new ServiceReqSearchCriteria();	
+		SearcherRequest searcherRequest = new SearcherRequest();
+		StringBuilder uri = new StringBuilder();
+		ServiceResponse serviceReqResponse = new ServiceResponse();
+		
+		Mockito.when(pGRUtils.prepareSearchRequest(uri, serviceReqSearchCriteria, requestInfo))
+		.thenReturn(searcherRequest);
+		Mockito.when(pGRUtils.getDefaultServiceResponse(requestInfo))
+		.thenReturn(serviceReqResponse);
+		Mockito.when(serviceRequestRepository.fetchResult(uri, searcherRequest))
+		.thenReturn(serviceReqResponse);
+		Mockito.when(pGRUtils.prepareActionSearchRequest(uri, serviceReqSearchCriteria, requestInfo))
+		.thenReturn(searcherRequest);
+
+		response = service.getServiceRequestWithDetails(requestInfo, serviceReqSearchCriteria);
+		
+		assertNotNull(response);
+		
+		
+	}
+	
+
+		
+	@Test
+	public void testPrepareSearcherReqOneIdFailure() {
+		Object response = null;
+		RequestInfo requestInfo = new RequestInfo();
+		ServiceReqSearchCriteria serviceReqSearchCriteria = new ServiceReqSearchCriteria();	
+		StringBuilder uri = new StringBuilder();
+		
+		Mockito.when(pGRUtils.prepareSearchRequest(uri, serviceReqSearchCriteria, requestInfo))
+		.thenReturn(null);
+
+		response = service.getServiceRequestWithDetails(requestInfo, serviceReqSearchCriteria);
+		
+		assertNull(response);
+		
+		
+	}
 }

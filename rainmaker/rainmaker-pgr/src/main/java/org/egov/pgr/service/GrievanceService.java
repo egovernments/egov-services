@@ -10,6 +10,7 @@ import org.egov.mdms.model.MdmsCriteriaReq;
 import org.egov.pgr.contract.ActionHistory;
 import org.egov.pgr.contract.ActionInfo;
 import org.egov.pgr.contract.AuditDetails;
+import org.egov.pgr.contract.CountResponse;
 import org.egov.pgr.contract.IdResponse;
 import org.egov.pgr.contract.RequestInfoWrapper;
 import org.egov.pgr.contract.SearcherRequest;
@@ -338,14 +339,14 @@ public class GrievanceService {
 		}
 		
 		
-/*		*//**
+  		 /**
 		 * Fetches count of service requests and returns in the reqd format.
 		 * 
 		 * @param requestInfo
 		 * @param serviceReqSearchCriteria
 		 * @return Object
 		 * @author vishal
-		 *//*
+		 */
 		public Object getCount(RequestInfo requestInfo, ServiceReqSearchCriteria serviceReqSearchCriteria) {
 			ObjectMapper mapper = pGRUtils.getObjectMapper();
 			StringBuilder uri = new StringBuilder();
@@ -353,7 +354,7 @@ public class GrievanceService {
 		    if(null != serviceReqSearchCriteria.getAssignedTo() && !serviceReqSearchCriteria.getAssignedTo().isEmpty()) {
 				searcherRequest = pGRUtils.prepareCountRequestAssignedTo(uri, serviceReqSearchCriteria, requestInfo);
 			}else {
-				searcherRequest = pGRUtils.prepareCountRequestGeneral(uri, serviceReqSearchCriteria, requestInfo);
+				searcherRequest = pGRUtils.prepareCountRequest(uri, serviceReqSearchCriteria, requestInfo);
 			}
 			Object response = serviceRequestRepository.fetchResult(uri, searcherRequest);		
 			log.info("Searcher response: ", response);
@@ -361,7 +362,7 @@ public class GrievanceService {
 				return new CountResponse(factory.createResponseInfoFromRequestInfo(requestInfo, false), 0D);
 			}
 			Double count = JsonPath.read(response, PGRConstants.PG_JSONPATH_COUNT);
-			return new CountResponse(factory.createResponseInfoFromRequestInfo(requestInfo, false), count);
-		}*/
+			return new CountResponse(factory.createResponseInfoFromRequestInfo(requestInfo, true), count);
+		}
 		
 }

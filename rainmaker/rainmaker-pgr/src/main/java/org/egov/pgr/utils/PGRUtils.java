@@ -61,27 +61,6 @@ public class PGRUtils {
 
 	
 	/**
-	 * Prepares request and uri for count search 
-	 * 
-	 * @param uri
-	 * @param serviceReqSearchCriteria
-	 * @param requestInfo
-	 * @return SearcherRequest
-	 * @author vishal
-	 */
-	public SearcherRequest prepareCountRequest(StringBuilder uri, ServiceReqSearchCriteria serviceReqSearchCriteria, 
-			RequestInfo requestInfo) {
-		uri.append(searcherHost);
-		String endPoint = searcherEndpoint.replace("{moduleName}", PGRConstants.SEARCHER_PGR_MOD_NAME)
-				.replace("{searchName}", PGRConstants.SEARCHER_COUNT_DEF_NAME);
-		uri.append(endPoint);
-		SearcherRequest searcherRequest = SearcherRequest.builder().
-				requestInfo(requestInfo).searchCriteria(serviceReqSearchCriteria).build();
-		
-		return searcherRequest;
-	}
-	
-	/**
 	 * Prepares request and uri for service code search from MDMS
 	 * 
 	 * @param uri
@@ -210,7 +189,7 @@ public class PGRUtils {
 		return searcherRequest;
 	}
 	
-/*	*//**
+	 /**
 	 * Prepares request and uri for count search for general criteria
 	 * 
 	 * @param uri
@@ -218,12 +197,12 @@ public class PGRUtils {
 	 * @param requestInfo
 	 * @return SearcherRequest
 	 * @author vishal
-	 *//*
-	public SearcherRequest prepareCountRequestGeneral(StringBuilder uri, ServiceReqSearchCriteria serviceReqSearchCriteria, 
+	 */
+	public SearcherRequest prepareCountRequest(StringBuilder uri, ServiceReqSearchCriteria serviceReqSearchCriteria, 
 			RequestInfo requestInfo) {
 		uri.append(searcherHost);
 		String endPoint = searcherEndpoint.replace("{moduleName}", PGRConstants.V3_SEARCHER_PGR_MOD_NAME)
-				.replace("{searchName}", PGRConstants.V2_SEARCHER_COUNT_GENERAL_DEF_NAME);
+				.replace("{searchName}", PGRConstants.V3_SEARCHER_COUNT_DEF_NAME);
 		uri.append(endPoint);
 		SearcherRequest searcherRequest = SearcherRequest.builder().
 				requestInfo(requestInfo).searchCriteria(serviceReqSearchCriteria).build();
@@ -231,7 +210,7 @@ public class PGRUtils {
 		return searcherRequest;
 	}
 	
-	*//**
+	/**
 	 * Prepares request and uri for count search on assined to
 	 * 
 	 * @param uri
@@ -239,18 +218,18 @@ public class PGRUtils {
 	 * @param requestInfo
 	 * @return SearcherRequest
 	 * @author vishal
-	 *//*
+	 */
 	public SearcherRequest prepareCountRequestAssignedTo(StringBuilder uri, ServiceReqSearchCriteria serviceReqSearchCriteria, 
 			RequestInfo requestInfo) {
 		uri.append(searcherHost);
 		String endPoint = searcherEndpoint.replace("{moduleName}", PGRConstants.V3_SEARCHER_PGR_MOD_NAME)
-				.replace("{searchName}", PGRConstants.V2_SEARCHER_COUNT_ASSIGNED_DEF_NAME);
+				.replace("{searchName}", PGRConstants.V3_SEARCHER_COUNT_ASSIGNED_DEF_NAME);
 		uri.append(endPoint);
 		SearcherRequest searcherRequest = SearcherRequest.builder().
 				requestInfo(requestInfo).searchCriteria(serviceReqSearchCriteria).build();
 		
 		return searcherRequest;
-	}*/
+	}
 	
 	
 	/**

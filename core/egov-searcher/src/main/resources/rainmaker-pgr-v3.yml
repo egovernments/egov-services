@@ -124,13 +124,13 @@ SearchDefinitions:
 
    output:
     jsonFormat: {"ResponseInfo": {}}
-    outJsonPath: $.services
+    outJsonPath: $.count
     responseInfoPath: $.ResponseInfo
 
 
  - name: countOnAssignedTo
    query: 
-    baseQuery: select array_to_json(array_agg(row_to_json(services))) from (select * from eg_pgr_service where servicerequestid IN (select businessKey from eg_pgr_action where eg_pgr_action.when IN (select max("when") from eg_pgr_action $where group by businessKey))) services
+    baseQuery: select array_to_json(array_agg(row_to_json(services))) from (select count(*) from eg_pgr_service where servicerequestid IN (select businessKey from eg_pgr_action where eg_pgr_action.when IN (select max("when") from eg_pgr_action $where group by businessKey))) services
     groupBy:
     orderBy: 
    searchParams:
@@ -145,6 +145,6 @@ SearchDefinitions:
 
    output:
     jsonFormat: {"ResponseInfo": {}}
-    outJsonPath: $.actionHistory
+    outJsonPath: $.count
     responseInfoPath: $.ResponseInfo
 

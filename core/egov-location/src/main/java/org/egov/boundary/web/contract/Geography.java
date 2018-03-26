@@ -14,5 +14,6 @@ public class Geography {
     private String name;
     private String division;
     private JsonNode geoJson;
+    private JsonNode geoJsonChildren;
     private String tenantId;
 }

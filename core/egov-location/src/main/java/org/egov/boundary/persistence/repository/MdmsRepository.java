@@ -40,7 +40,6 @@
 package org.egov.boundary.persistence.repository;
 
 import net.minidev.json.JSONArray;
-import org.egov.boundary.util.BoundaryConstants;
 import org.egov.boundary.web.contract.*;
 import org.egov.common.contract.request.RequestInfo;
 import org.slf4j.Logger;
@@ -125,11 +124,10 @@ public class MdmsRepository {
      * @return Optional JSONArray if MDMS service provides data, if not empty.
      * @throws RestClientException when there is an issue with MDMS service call
      */
-    public Optional<JSONArray> getGeographicalDataByCriteria(String tenantId, String filter, RequestInfo requestInfo)
+	public Optional<JSONArray> getMdmsDataByCriteria(String tenantId, String filter, RequestInfo requestInfo,
+													 String moduleName, String masterName)
             throws
             RestClientException {
-        final String moduleName = BoundaryConstants.GEO_MODULE_NAME;
-        final String masterName = BoundaryConstants.GEO_MASTER_NAME;
 
         MasterDetails[] masterDetails = {MasterDetails.builder().name(masterName)
                 .filter(filter).build()};

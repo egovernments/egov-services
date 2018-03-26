@@ -32,12 +32,12 @@ public class StorageService {
 
 	private static final String AWS_FILE_STRING="{filename}";
 	
-	@Value("${is.dev.enabled}")
-	private Boolean isDevEnabled;
+	@Value("${is.bucket.fixed}")
+	private Boolean isBucketFixed;
 	
-	@Value("${dev.bucketname}")
-	private String devBucketName;
-
+	@Value("${fixed.bucketname}")
+	private String fixedBucketName;
+	
 	private static final String UPLOAD_MESSAGE = "Received upload request for "
 			+ "jurisdiction: %s, module: %s, tag: %s with file count: %s";
 
@@ -115,8 +115,8 @@ public class StorageService {
 	
 	private String getBucketName(String tenantId, Calendar calendar) {
 		// FIXME TODO add config filter logic to create bucket name for qa
-		if (isDevEnabled)
-			return devBucketName;
+		if (isBucketFixed)
+			return fixedBucketName;
 		else
 			return tenantId.split("\\.")[0] + calendar.get(Calendar.YEAR);
 	}

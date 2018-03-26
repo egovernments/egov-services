@@ -79,7 +79,7 @@ class Sale extends React.Component {
         "disposalDate": "",
         "panCardNumber": "",
         "aadharCardNumber": "",
-        "currentValueOfTheAsset": "",
+        "assetCurrentValue": "",
         "saleValue": "",
         "assetSaleAccount": "",
         "auditDetails": null,
@@ -152,11 +152,11 @@ class Sale extends React.Component {
       if (res && res["Assets"] && res["Assets"][0]) {
         checkCountAndCall("assetSet", res["Assets"] && res["Assets"][0] ? res["Assets"][0] : {});
         commonApiPost("asset-services", "assets", "currentvalue/_search", { tenantId, assetIds: res["Assets"][0].id }, function (er, res) {
-          if (res && res.AssetCurrentValue) {
+          if (res && res.AssetCurrentValues) {
             _this.setState({
+              ..._this.state.disposal,
               disposal: {
-                ..._this.state.disposal,
-                currentValueOfTheAsset: res.AssetCurrentValue.currentAmmount
+                assetCurrentValue: res.AssetCurrentValues[0].currentAmount
               }
             })
           }
@@ -171,7 +171,7 @@ class Sale extends React.Component {
         if (res2 && res2.Disposals && res2.Disposals.length) {
           let disposedAsset = res2.Disposals[0];
 
-          //Changing date format     
+          //Changing date format
           var d = new Date(disposedAsset.disposalDate);
           disposedAsset.disposalDate = d.getDate() + "/" + (d.getMonth() + 1) + "/" + d.getFullYear();
 
@@ -195,11 +195,10 @@ class Sale extends React.Component {
 
           commonApiPost("asset-services", "assets/currentvalue", "_search", { assetIds: id, tenantId }, function (err1, res3) {
             if (res3){
-              console.log(_this.state.disposal, res3);
               _this.setState({
                 disposal:{
                 ..._this.state.disposal,
-                currentValueOfTheAsset: res3["AssetCurrentValues"]["0"]["currentAmount"]
+                assetCurrentValue: res3["AssetCurrentValues"]["0"]["currentAmount"]
               }
               });
             }
@@ -467,15 +466,15 @@ class Sale extends React.Component {
               <div className="col-sm-6">
                 <div className="row">
                   <div className="col-sm-6 label-text">
-                    <label>Current Value Of The Asset <span>*</span></label>
+                    <label>Current Value Of The Asset</label>
                   </div>
-                  <div className="col-sm-6" style={{ display: self.state.readOnly ? 'none' : 'block' }}>
+                  <div className="col-sm-6">
                     <div>
-                      <input type="number" value={disposal.currentValueOfTheAsset} onChange={(e) => handleChange(e, "currentValueOfTheAsset")} required />
+                      <input type="text" disabled value={disposal.assetCurrentValue} style={{ display: self.state.readOnly ? 'none' : 'block' }} />
                     </div>
                   </div>
                   <div className="col-sm-6 label-view-text" style={{ display: self.state.readOnly ? 'block' : 'none' }}>
-                    <label>{disposal.currentValueOfTheAsset}</label>
+                    <label>{disposal.assetCurrentValue}</label>
                   </div>
                 </div>
               </div>
@@ -621,13 +620,13 @@ class Sale extends React.Component {
                   <div className="col-sm-6 label-text">
                     <label>Current Value Of The Asset <span>*</span></label>
                   </div>
-                  <div className="col-sm-6" style={{ display: self.state.readOnly ? 'none' : 'block' }}>
+                  <div className="col-sm-6">
                     <div>
-                      <input type="number" value={disposal.currentValueOfTheAsset} onChange={(e) => handleChange(e, "currentValueOfTheAsset")} required />
+                      <input type="text" disabled value={disposal.assetCurrentValue}  style={{ display: self.state.readOnly ? 'none' : 'block' }} />
                     </div>
                   </div>
                   <div className="col-sm-6 label-view-text" style={{ display: self.state.readOnly ? 'block' : 'none' }}>
-                    <label>{disposal.currentValueOfTheAsset}</label>
+                    <label>{disposal.assetCurrentValue}</label>
                   </div>
                 </div>
               </div>
@@ -674,11 +673,11 @@ class Sale extends React.Component {
                   </div>
                   <div className="col-sm-6" style={{ display: self.state.readOnly ? 'none' : 'block' }}>
                     <div>
-                      <input type="text" disabled value={disposal.currentValueOfTheAsset && disposal.saleValue ? Math.abs(Number(disposal.currentValueOfTheAsset) - Number(disposal.saleValue)) : ""} />
+                      <input type="number" disabled value={disposal.assetCurrentValue && disposal.saleValue ? Math.abs(Number(disposal.assetCurrentValue) - Number(disposal.saleValue)) : ""} />
                     </div>
                   </div>
                   <div className="col-sm-6 label-view-text" style={{ display: self.state.readOnly ? 'block' : 'none' }}>
-                    <label>{disposal.currentValueOfTheAsset && disposal.saleValue ? Math.abs(Number(disposal.currentValueOfTheAsset) - Number(disposal.saleValue)) : ""}</label>
+                    <label>{disposal.assetCurrentValue && disposal.saleValue ? Math.abs(Number(disposal.assetCurrentValue) - Number(disposal.saleValue)) : ""}</label>
                   </div>
                 </div>
               </div>
@@ -795,21 +794,20 @@ class Sale extends React.Component {
 
                 {showOtherDetails()}
 
-                {/* <div className="row" style={{display: this.state.readOnly ? 'block' : 'none' }}>
-                      <div className="col-sm-6">
-                        <div className="row">
-                            <div className="col-sm-6 label-text">
-                              <label>Voucher Reference</label>
-                            </div>
-                            <div className="col-sm-6 label-view-text">
-                              <label>{disposal.profitLossVoucherReference}</label>
-                            </div>
-                        </div>
+                <div className="row" style={{display: this.state.readOnly ? 'block' : 'none' }}>
+                <div className="col-sm-6">
+                  <div className="row">
+                      <div className="col-sm-6 label-text">
+                        <label>Voucher Reference</label>
                       </div>
-                    </div> */}
+                      <div className="col-sm-6 label-view-text">
+                        <label>{disposal.profitLossVoucherReference}</label>
+                      </div>
+                  </div>
+                </div>
               </div>
-            </div>
-            <p className="text-right text-danger">Note: Current value of the asset is not considering the depreciation and improvements done on that asset</p>
+          </div>
+        </div>
           </div>
           <br />
           {showAttachedFiles()}

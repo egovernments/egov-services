@@ -39,7 +39,7 @@ public class StorageService {
 	private String fixedBucketName;
 	
 	@Value("${source.s3}")
-	private String AwsS3Source;
+	private String awsS3Source;
 	
 	private static final String UPLOAD_MESSAGE = "Received upload request for "
 			+ "jurisdiction: %s, module: %s, tag: %s with file count: %s";
@@ -98,7 +98,7 @@ public class StorageService {
 	private Map<String, String> getUrlMap(List<org.egov.filestore.persistence.entity.Artifact> artifactList) {
 		Map<String, String> urlMap = new HashMap<>();
 		artifactList.forEach(a -> {
-			if (a.getFileSource().equals(AwsS3Source))
+			if (null!=a.getFileSource() && a.getFileSource().equals(awsS3Source))
 				urlMap.put(a.getFileStoreId(), getUrlFromName(a.getFileName()));
 		});
 		return urlMap;

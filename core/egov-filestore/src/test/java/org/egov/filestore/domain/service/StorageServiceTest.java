@@ -25,7 +25,9 @@ import org.junit.runner.RunWith;
 import org.mockito.ArgumentMatcher;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -49,6 +51,10 @@ public class StorageServiceTest {
     @Before
     public void setup(){
         storageService = new StorageService(artifactRepository, idGeneratorService);
+        
+        ReflectionTestUtils.setField(storageService, "isBucketFixed", true);
+        ReflectionTestUtils.setField(storageService, "fixedBucketName", "bucketName");
+        ReflectionTestUtils.setField(storageService, "awsS3Source", "awsS3");
     }
 
     @Test

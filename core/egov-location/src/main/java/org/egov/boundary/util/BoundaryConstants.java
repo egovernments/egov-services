@@ -163,7 +163,20 @@ public class BoundaryConstants {
     public static final String GEO_MASTER_NAME = "Geography";
 
     public static final String GEOGRAPHY_SEARCH_MDMS_SERVICE_UNAVAILABLE_MSG = "GEOGRAPHY_SEARCH_MDMS_SERVICE_UNAVAILABLE";
-    public static final String GEOGRAPHY_SEARCH_MDMS_SERVICE_UNAVAILABLE_DESC =
+    public static final String SEARCH_MDMS_SERVICE_UNAVAILABLE_DESC =
             "MDMS Service is unavailable";
+
+    public static final String TENANT_SEARCH_STATE_MISMATCH = "TENANT_SEARCH_STATE_MISMATCH";
+    public static final String TENANT_SEARCH_STATE_MISMATCH_DESC = "Attempting to raise a complaint from a different " +
+            "state module";
+
+    public static final String GMAPS_API_KEY = System.getenv("GMAPS_API_KEY");
+
+    public static final String TENANT_MODULE_NAME = "tenant";
+    public static final String TENANT_MASTER_NAME = "tenants";
+
+    public static final String TENANT_SEARCH_MDMS_SERVICE_UNAVAILABLE_MSG = "TENANT_SEARCH_MDMS_SERVICE_UNAVAILABLE";
+
+
 
 }

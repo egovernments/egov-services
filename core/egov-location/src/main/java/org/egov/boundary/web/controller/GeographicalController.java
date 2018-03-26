@@ -45,7 +45,7 @@ public class GeographicalController {
      *
      * @param tenantId          State or District, formatted tenant id
      * @param filter            Optional json path filters to be applied
-     * @param requestInfoWapper Request Info object detailing the request
+     * @param requestInfoWapper Wrapper containing the Request Info object detailing the request
      * @return Geographical data for requested tenant id, if exists.
      */
     @RequestMapping(value = "/geography/_search", method = RequestMethod.POST)

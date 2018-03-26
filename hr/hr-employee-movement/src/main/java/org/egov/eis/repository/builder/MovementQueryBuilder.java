@@ -58,6 +58,8 @@ public class MovementQueryBuilder {
     @Autowired
     private ApplicationProperties applicationProperties;
 
+    public static final String GENERATE_SEQUENCE_QUERY = "SELECT nextval('seq_egeis_movement') AS id" ;
+
     private static final String BASE_QUERY = "SELECT m.id AS m_id,"
             + " m.employee AS m_employee, m.typeOfMovement AS m_typeOfMovement, m.currentAssignment AS m_currentAssignment,"
             + " m.transferType AS m_transferType, m.remarks AS m_remarks,"
@@ -203,7 +205,7 @@ public class MovementQueryBuilder {
                 + " effectivefrom, enquiryPassedDate, transferedLocation, departmentassigned, designationassigned, positionassigned,"
                 + " fundassigned, functionassigned, employeeacceptance, status,"
                 + " stateid, createdby, createddate, lastmodifiedby, lastmodifieddate, tenantid)"
-                + " VALUES (nextval('seq_egeis_movement'), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,"
+                + " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,"
                 + " ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     }
 

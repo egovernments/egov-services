@@ -150,7 +150,7 @@ public class MovementRepository {
 		final UserResponse userResponse = userService.findUserByUserNameAndTenantId(movementRequest.getRequestInfo());
 		for (final Movement movement : movementRequest.getMovement()) {
 			movement.setStateId(stateId);
-			final Object[] obj = new Object[] { movement.getEmployeeId(), movement.getTypeOfMovement().toString(),
+			final Object[] obj = new Object[] { movement.getId(), movement.getEmployeeId(), movement.getTypeOfMovement().toString(),
 					movement.getCurrentAssignment(), movement.getTransferType().toString(),
 					movement.getPromotionBasis().getId(), movement.getRemarks(), movement.getReason().getId(),
 					movement.getEffectiveFrom(), movement.getEnquiryPassedDate(), movement.getTransferedLocation(),
@@ -450,5 +450,15 @@ public class MovementRepository {
 		final String queryStr = movementQueryBuilder.getQuery(movementSearchRequest, preparedStatementValues,
 				requestInfo);
 		return jdbcTemplate.query(queryStr, preparedStatementValues.toArray(), movementRowMapper);
+	}
+
+	public Long generateSequence() {
+		Integer result = null;
+		try {
+			result = jdbcTemplate.queryForObject(MovementQueryBuilder.GENERATE_SEQUENCE_QUERY, Integer.class);
+			return result.longValue();
+		} catch (final Exception ex) {
+			throw new RuntimeException("Next id is not generated.");
+		}
 	}
 }

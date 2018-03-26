@@ -268,7 +268,8 @@ public class MovementService {
 	}
 
 	public MovementRequest create(final MovementRequest movementRequest) {
-		return movementRepository.saveMovement(movementRequest);
+        movementRequest.getMovement().get(0).setId(movementRepository.generateSequence());
+        return movementRepository.saveMovement(movementRequest);
 	}
 
 	public ResponseEntity<?> updateMovement(final MovementRequest movementRequest) {

@@ -43,6 +43,7 @@ package org.egov.eis.service;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang.StringUtils;
 import org.egov.eis.config.PropertiesManager;
@@ -92,7 +93,7 @@ public class MovementService {
 	private PropertiesManager propertiesManager;
 
 	public List<Movement> getMovements(final MovementSearchRequest movementSearchRequest,
-			final RequestInfo requestInfo) {
+									   final RequestInfo requestInfo) {
 		return movementRepository.findForCriteria(movementSearchRequest, requestInfo);
 	}
 
@@ -242,7 +243,7 @@ public class MovementService {
 	}
 
 	private ResponseEntity<?> getSuccessResponseForCreate(final List<Movement> movementsList,
-			final RequestInfo requestInfo) {
+														  final RequestInfo requestInfo) {
 		final MovementResponse movementRes = new MovementResponse();
 		HttpStatus httpStatus = HttpStatus.OK;
 		if (!StringUtils.isEmpty(movementsList.get(0).getErrorMsg()))
@@ -255,7 +256,7 @@ public class MovementService {
 	}
 
 	private ResponseEntity<?> getSuccessResponseForUpload(final List<Movement> successMovementsList,
-			final List<Movement> errorMovementsList, final RequestInfo requestInfo) {
+														  final List<Movement> errorMovementsList, final RequestInfo requestInfo) {
 		final MovementUploadResponse movementUploadResponse = new MovementUploadResponse();
 		movementUploadResponse.getSuccessList().addAll(successMovementsList);
 		movementUploadResponse.getErrorList().addAll(errorMovementsList);
@@ -325,13 +326,31 @@ public class MovementService {
 	private List<Movement> validateUpdate(final MovementRequest movementRequest) {
 		for (final Movement movement : movementRequest.getMovement()) {
 			String errorMsg = "";
-            String message = "";
+			String message = "";
 
-            if (movement.getId() != null && ( movement.getTypeOfMovement().equals(TypeOfMovement.PROMOTION) ||
-                    (movement.getTypeOfMovement().equals(TypeOfMovement.TRANSFER) &&
-                            movement.getTransferType().equals(TransferType.TRANSFER_WITHIN_DEPARTMENT_OR_CORPORATION_OR_ULB)))
+			if (movement.getId() != null && (movement.getTypeOfMovement().equals(TypeOfMovement.PROMOTION) ||
+					(movement.getTypeOfMovement().equals(TypeOfMovement.TRANSFER) &&
+							movement.getTransferType().equals(TransferType.TRANSFER_WITHIN_DEPARTMENT_OR_CORPORATION_OR_ULB)))
 					&& "Approve".equalsIgnoreCase(movement.getWorkflowDetails().getAction())) {
 				final EmployeeInfo employee = employeeService.getEmployee(movement, movementRequest.getRequestInfo());
+				List<Assignment> assignments = employee.getAssignments().stream().filter(assignment -> assignment.getIsPrimary().equals(true)).collect(Collectors.toList());
+				for (Assignment assign : assignments) {
+					if (assign.getFromDate().after(movement.getEffectiveFrom())) {
+						message = applicationConstants
+								.getErrorMessage(ApplicationConstants.ERR_MOVEMENT_OVERLAP_ASSIGNMENTDATE) + ", ";
+					}
+					setErrorMessage(movement, message);
+				}
+				Date retirementDate = null;
+				if (employee.getDateOfRetirement() != null && !employee.getDateOfRetirement().equals(""))
+					retirementDate = employee.getDateOfRetirement();
+
+				if (retirementDate != null && movement.getEffectiveFrom().after(retirementDate)) {
+					message = applicationConstants
+							.getErrorMessage(ApplicationConstants.ERR_MOVEMENT_RETIREMENTDATE_VALIDATE) + ", ";
+					setErrorMessage(movement, message);
+				}
+
 				if (movement.getEffectiveFrom().before(new Date())) {
 					message = applicationConstants
 							.getErrorMessage(ApplicationConstants.ERR_MOVEMENT_EFFECTIVEFROM_VALIDATE) + ", ";
@@ -351,7 +370,6 @@ public class MovementService {
 								&& movement.getPositionAssigned().equals(assignment.getPosition())) {
 							message = message + applicationConstants.ERR_MOVEMENT_EMPLOYEE_POSITION_VALIDATE + ", ";
 						}
-
 					}
 				}
 
@@ -363,20 +381,29 @@ public class MovementService {
 
 				setErrorMessage(movement, message);
 				//movement.setErrorMsg(errorMsg.replace(", ", ","));
-			}
-			else if  (movement.getId() != null && movement.getTypeOfMovement().equals(TypeOfMovement.TRANSFER) &&
-                            movement.getTransferType().equals(TransferType.TRANSFER_OUTSIDE_CORPORATION_OR_ULB)
-                    && "Approve".equalsIgnoreCase(movement.getWorkflowDetails().getAction()) && movement.getCheckEmployeeExists()){
-                final Employee employee = employeeService.getEmployeeById(movementRequest);
-                EmployeeInfo employeeInfo = employeeService.getEmployee(null, employee.getCode(), movementRequest.getMovement().get(0).getTenantId(), movementRequest.getRequestInfo());
-                if(employeeInfo!=null  && !employeeInfo.equals(""))
-                    message = message + ApplicationConstants.ERR_MOVEMENT_EMPLOYEE_EXISTS + ", ";
+			} else if (movement.getId() != null && movement.getTypeOfMovement().equals(TypeOfMovement.TRANSFER) &&
+					movement.getTransferType().equals(TransferType.TRANSFER_OUTSIDE_CORPORATION_OR_ULB)
+					&& "Approve".equalsIgnoreCase(movement.getWorkflowDetails().getAction()) && movement.getCheckEmployeeExists()) {
+				final Employee employee = employeeService.getEmployeeById(movementRequest);
+				EmployeeInfo employeeInfo = employeeService.getEmployee(null, employee.getCode(), movementRequest.getMovement().get(0).getTenantId(), movementRequest.getRequestInfo());
+				if (employeeInfo != null && !employeeInfo.equals("") && movement.getCheckEmployeeExists())
+					message = message + ApplicationConstants.ERR_MOVEMENT_EMPLOYEE_EXISTS + ", ";
+				setErrorMessage(movement, message);
+				if (!movement.getCheckEmployeeExists()) {
+					List<Assignment> assignments = employee.getAssignments().stream().filter(assignment -> assignment.getIsPrimary().equals(true)).collect(Collectors.toList());
+					for (Assignment assign : assignments) {
+						if (assign.getFromDate().after(movement.getEffectiveFrom())) {
+							message = applicationConstants
+									.getErrorMessage(ApplicationConstants.ERR_MOVEMENT_OVERLAP_ASSIGNMENTDATE) + ", ";
+						}
+						setErrorMessage(movement, message);
+					}
+				}
 
-                setErrorMessage(movement, message);
-            }
-            movement.setErrorMsg(errorMsg.replace(", ", ","));
-        }
+				movement.setErrorMsg(errorMsg.replace(", ", ","));
+			}
+		}
 		return movementRequest.getMovement();
 	}
-
 }
+

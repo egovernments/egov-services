@@ -65,6 +65,8 @@ public class ApplicationConstants {
     public static final String ERR_MOVEMENT_EMPLOYEE_DOB_VALIDATE = "error.movement.employee.dob.validate";
     public static final String ERR_MOVEMENT_EFFECTIVEFROM_VALIDATE = "error.movement.effectivefrom.validate";
     public static final String ERR_MOVEMENT_EMPLOYEE_EXISTS = "error.movement.employee.exists";
+    public static final String ERR_MOVEMENT_RETIREMENTDATE_VALIDATE = "error.movement.effectivefrom.retirementvalidate";
+    public static final String ERR_MOVEMENT_OVERLAP_ASSIGNMENTDATE = "error.movement.overlap.assignmentdate";
 
 
 

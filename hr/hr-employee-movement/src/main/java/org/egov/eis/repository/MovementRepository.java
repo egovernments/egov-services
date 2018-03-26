@@ -218,10 +218,11 @@ public class MovementRepository {
 		final Date effectiveFromDate = movement.getEffectiveFrom();
 		LOGGER.debug("effectiveFromDate:" + effectiveFromDate);
 
-		Date effectiveToDate = new Date();
-		final Calendar calendar = Calendar.getInstance();
 		final SimpleDateFormat inputDOB = new SimpleDateFormat("yyyy-MM-dd");
 		final SimpleDateFormat output = new SimpleDateFormat("dd/MM/yyyy");
+		Date effectiveToDate = inputDOB.parse(employeeInfo.getDob());
+		final Calendar calendar = Calendar.getInstance();
+
 		calendar.setTime(effectiveFromDate);
 		calendar.add(Calendar.DATE, -1);
 		final Date yesterday = calendar.getTime();

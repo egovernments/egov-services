@@ -156,13 +156,14 @@ public class UserService {
 				&& null == searchCriteria.getType()) {
 			User user = userRepository.findByUsername(searchCriteria.getUserName());
 			List<org.egov.user.domain.model.User> list = new ArrayList<org.egov.user.domain.model.User>();
-			if (user.getType().toString().equals("CITIZEN") && user.getTenantId().contains(".")) {
+			if (null != user && null != user.getType() && user.getType().toString().equals("CITIZEN")
+					&& user.getTenantId().contains(".")) {
 				String tenantId = user.getTenantId().split("\\.")[0];
 				if (tenantId.equals(searchCriteria.getTenantId())
 						|| user.getTenantId().equals(searchCriteria.getTenantId()))
 					list.add(user);
 				return list;
-			} else if (user.getType().toString().equals("EMPLOYEE")) {
+			} else if (null != user && null != user.getType() && user.getType().toString().equals("EMPLOYEE")) {
 				if (user.getTenantId().equals(searchCriteria.getTenantId()))
 					list.add(user);
 				return list;

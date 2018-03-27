@@ -50,7 +50,7 @@ class UpdateLeave extends React.Component {
     var stateId = getUrlVars()["stateId"];
     var asOnDate = _this.state.leaveSet.toDate;
     var process = [], employee;
-    var _leaveSet = {};
+    var _leaveSet = {},prefixSuffixDays="", enclosingDays="";
     var hrConfigurations = [], allHolidayList = [];
     $('#availableDays,#leaveDays,#name,#code').prop("disabled", true);
 
@@ -100,7 +100,7 @@ class UpdateLeave extends React.Component {
             _leaveSet.name = employee.name;
             _leaveSet.code = employee.code;
             _leaveSet.leaveGround = _leaveSet.leaveGround ? _leaveSet.leaveGround : "";
-            _leaveSet.totalWorkingDays = _leaveSet.totalWorkingDays ? _leaveSet.totalWorkingDays : "";
+            _leaveSet.totalWorkingDays = _leaveSet.leaveDays;
 
             _this.setState({
               leaveSet: Object.assign({}, _leaveSet),
@@ -150,6 +150,15 @@ class UpdateLeave extends React.Component {
           });
         }
 
+        setTimeout(function () {
+          console.log("prefixSuffixDays ", prefixSuffixDays, " ", enclosingDays);
+          _this.setState({
+            leaveSet: {
+              ..._this.state.leaveSet,
+              leaveDays: _leaveSet.leaveDays-(prefixSuffixDays + enclosingDays)
+            }
+          })
+        }, 500);
 
 
       }
@@ -648,8 +657,13 @@ class UpdateLeave extends React.Component {
 
             },
             error: function (err) {
-              showError(err);
-
+              if (err["responseJSON"]&& err["responseJSON"].message)
+              showError(err["responseJSON"].message);
+              else if (err["responseJSON"]&& err["responseJSON"].LeaveApplication[0] && err["responseJSON"].LeaveApplication[0].errorMsg) {
+                showError(err["responseJSON"].LeaveApplication[0].errorMsg)
+              } else {
+                showError("Something went wrong. Please contact Administrator");
+              }
             }
           });
         }
@@ -742,8 +756,13 @@ class UpdateLeave extends React.Component {
           }
         },
         error: function (err) {
-          showError(err);
-
+          if (err["responseJSON"]&& err["responseJSON"].message)
+            showError(err["responseJSON"].message);
+          else if (err["responseJSON"]&& err["responseJSON"].LeaveApplication[0] && err["responseJSON"].LeaveApplication[0].errorMsg) {
+            showError(err["responseJSON"].LeaveApplication[0].errorMsg)
+          } else {
+            showError("Something went wrong. Please contact Administrator");
+          }
         }
       });
     }

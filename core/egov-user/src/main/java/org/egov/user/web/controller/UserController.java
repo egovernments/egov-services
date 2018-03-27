@@ -26,7 +26,10 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import lombok.extern.slf4j.Slf4j;
+
 @RestController
+@Slf4j
 public class UserController {
 
 	private UserService userService;
@@ -50,6 +53,7 @@ public class UserController {
 	 */
 	@PostMapping("/citizen/_create")
 	public UserDetailResponse createCitizen(@RequestBody CreateUserRequest createUserRequest) {
+		log.info("Received Citizen Registration Request  " + createUserRequest);
 		User user = createUserRequest.toDomain(true);
 		user.setOtpValidationMandatory(true);
 		final User newUser = userService.createCitizen(user);
@@ -139,6 +143,7 @@ public class UserController {
 	 */
 	@PostMapping("/profile/_update")
 	public UserDetailResponse patch(@RequestBody final CreateUserRequest createUserRequest) {
+		log.info("Received Profile Update Request  " + createUserRequest);
 		User user = createUserRequest.toDomain(false);
 		final User updatedUser = userService.partialUpdate(user);
 		return createResponse(updatedUser);

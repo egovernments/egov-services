@@ -139,7 +139,7 @@ class UpdateMovement extends React.Component {
           if (Movement.typeOfMovement === "TRANSFER_CUM_PROMOTION") {
             transferWithPromotion = true;
           }
-          
+
 
           if (!Movement.workflowDetails) {
             Movement.workflowDetails = {
@@ -205,7 +205,7 @@ class UpdateMovement extends React.Component {
             ..._this.state,
             buttons: _btns.length ? _btns : [],
             owner: process.owner.id,
-            initiator:process.initiatorPosition,
+            initiator: process.initiatorPosition,
             status: process.status
           })
         }
@@ -289,7 +289,7 @@ class UpdateMovement extends React.Component {
 
   vacantPositionFun(departmentId, designationId, effectiveFrom, ulb) {
     var _this = this;
-    
+
     commonApiPost("hr-masters", "vacantpositions", "_search", {
       tenantId: tenantId,
       departmentId: departmentId,
@@ -297,7 +297,7 @@ class UpdateMovement extends React.Component {
       asOnDate: effectiveFrom,
       destinationTenant: ulb,
       pageSize: 500
-    }, function(err, res) {
+    }, function (err, res) {
       if (res) {
         _this.setState({
           movement: {
@@ -317,11 +317,11 @@ class UpdateMovement extends React.Component {
       tenantId: tenantId,
       destinationTenant: ulb,
       pageSize: 500
-    }, function(err, res) {
+    }, function (err, res) {
       if (res) {
         _this.setState({
           ..._this.state,
-          ulbDepartmentList : res.Department
+          ulbDepartmentList: res.Department
         })
       }
     });
@@ -330,11 +330,11 @@ class UpdateMovement extends React.Component {
       tenantId: tenantId,
       destinationTenant: ulb,
       pageSize: 500
-    }, function(err, res) {
+    }, function (err, res) {
       if (res) {
         _this.setState({
           ..._this.state,
-          ulbDesignationList : res.Designation
+          ulbDesignationList: res.Designation
         })
       }
     });
@@ -526,11 +526,67 @@ class UpdateMovement extends React.Component {
     open(location, '_self').close();
   }
 
+  confirmEmployee(body) {
+    let userConfirm = confirm("Employee already exist in the given ULB. Do you want to continue?");
+    if (userConfirm) {
+      body.Movement.checkEmployeeExists = false;
+
+      $.ajax({
+        url: baseUrl + "/hr-employee-movement/movements/_create?tenantId=" + tenantId,
+        type: 'POST',
+        dataType: 'json',
+        data: JSON.stringify(body),
+        contentType: 'application/json',
+        headers: {
+          'auth-token': authToken
+        },
+        success: function (res) {
+          var employee, designation;
+
+          var asOnDate = new Date();
+          var dd = asOnDate.getDate();
+          var mm = asOnDate.getMonth() + 1;
+          var yyyy = asOnDate.getFullYear();
+
+          asOnDate = (dd < 10 ? '0' + dd : dd) + '/' + (mm < 10 ? '0' + mm : mm) + '/' + yyyy;
+
+          commonApiPost("hr-employee", "employees", "_search", {
+            "positionId": movement.workflowDetails.assignee,
+            tenantId,
+            asOnDate
+          }, function (err, res) {
+            if (res && res.Employee && res.Employee[0])
+              employee = res.Employee[0];
+
+            employee.assignments.forEach(function (item) {
+              if (item.isPrimary)
+                designation = item.designation;
+            });
+            var ownerDetails = employee.name + " - " + employee.code + " - " + getNameById(_this.state.designationList, designation);
+
+            window.location.href = `app/hr/movements/ack-page.html?type=TransferApply&owner=${ownerDetails}`;
+          });
+        },
+        error: function (err) {
+          if (err["responseJSON"].message)
+            showError(err["responseJSON"].message);
+          else if (err["responseJSON"].Movement[0] && err["responseJSON"].Movement[0].errorMsg) {
+            showError(err["responseJSON"].Movement[0].errorMsg)
+          } else {
+            showError("Something went wrong. Please contact Administrator");
+          }
+        }
+
+      });
+
+    }
+  }
+
   handleProcess(e) {
     e.preventDefault();
 
-    if(e.target.id.toLowerCase() == "cancel"){
-      $('#department, #designation, #assignee').prop('required',false);
+    if (e.target.id.toLowerCase() == "cancel") {
+      $('#department, #designation, #assignee').prop('required', false);
     }
 
     if ($('#update-transfer').valid()) {
@@ -585,6 +641,10 @@ class UpdateMovement extends React.Component {
                   },
                   success: function (res) {
 
+                    if (res.Movement[0].checkEmployeeExists) {
+                      this.confirmEmployee(body);
+                    }
+
                     var employee, designation;
 
                     var asOnDate = new Date();
@@ -603,7 +663,7 @@ class UpdateMovement extends React.Component {
                     asOnDate = dd + '/' + mm + '/' + yyyy;
 
                     let _positionId = (ID === "Reject") ? _this.state.initiator : res.Movement[0].workflowDetails.assignee;
-                    console.log("res", _positionId );
+                    console.log("res", _positionId);
                     commonApiPost("hr-employee", "employees", "_search", { tenantId, asOnDate, positionId: _positionId }, function (err, res2) {
                       if (res && res2.Employee && res2.Employee[0])
                         employee = res2.Employee[0];
@@ -659,6 +719,10 @@ class UpdateMovement extends React.Component {
           },
           success: function (res) {
 
+            if (res.Movement[0].checkEmployeeExists) {
+              this.confirmEmployee(body);
+            }
+
             var employee, designation;
             var asOnDate = new Date();
             var dd = asOnDate.getDate();
@@ -677,7 +741,7 @@ class UpdateMovement extends React.Component {
 
             let _positionId = (ID === "Reject") ? _this.state.initiator : res.Movement[0].workflowDetails.assignee;
 
-            console.log("res", _positionId );
+            console.log("res", _positionId);
             commonApiPost("hr-employee", "employees", "_search", { tenantId, asOnDate, positionId: _positionId }, function (err, res2) {
               if (res && res2.Employee && res2.Employee[0])
                 employee = res2.Employee[0];
@@ -743,7 +807,7 @@ class UpdateMovement extends React.Component {
       if (list) {
         return list.map((item, ind) => {
           return (<option key={ind} value={typeof item == "object" ? item.code : item}>
-            {typeof item == "object" ?  item.city.districtName +" - "+ item.city.name : item}
+            {typeof item == "object" ? item.city.districtName + " - " + item.city.name : item}
           </option>)
         })
       }
@@ -780,25 +844,25 @@ class UpdateMovement extends React.Component {
       }
     };
 
-    const districtFunc=function() {
-      if(transferType!="TRANSFER_WITHIN_DEPARTMENT_OR_CORPORATION_OR_ULB"){
-        return(
+    const districtFunc = function () {
+      if (transferType != "TRANSFER_WITHIN_DEPARTMENT_OR_CORPORATION_OR_ULB") {
+        return (
           <div className="col-sm-6">
-          <div className="row">
+            <div className="row">
               <div className="col-sm-6 label-text">
                 <label htmlFor="">District-ULB <span>*</span></label>
               </div>
               <div className="col-sm-6">
                 <div className="styled-select">
                   <select id="transferedLocation" name="transferedLocation" value={transferedLocation}
-                    onChange={(e)=>{  handleChange(e,"transferedLocation") }}required>
+                    onChange={(e) => { handleChange(e, "transferedLocation") }} required>
                     <option value="">Select District-ULB</option>
                     {renderOptionForDistrict(_this.state.districtList)}
-                 </select>
-                 </div>
+                  </select>
+                </div>
               </div>
+            </div>
           </div>
-        </div>
         );
       }
     };
@@ -1057,7 +1121,7 @@ class UpdateMovement extends React.Component {
               </div>
             </div>
             <div className="row">
-            {districtFunc()}
+              {districtFunc()}
               <div className="col-sm-6">
                 <div className="row">
                   <div className="col-sm-6 label-text">

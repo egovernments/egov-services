@@ -18,6 +18,7 @@ class ApplyLeave extends React.Component {
         "status": "",
         "stateId": "",
         "tenantId": tenantId,
+        "encashable": false,
         "totalWorkingDays": "",
         "workflowDetails": {
           "department": "",
@@ -222,7 +223,7 @@ class ApplyLeave extends React.Component {
     let hrConfigurations = _this.state.hrConfigurations;
     let enclosingDays = 0;
     let prefixSuffixDays = 0;
-    
+
     //Calling enclosing Holiday api
     let enclosingHoliday = getNameById(_this.state.leaveList, _this.state.leaveSet.leaveType.id, "encloseHoliday");
     if (enclosingHoliday || enclosingHoliday == "TRUE" || enclosingHoliday == "true") {
@@ -295,15 +296,16 @@ class ApplyLeave extends React.Component {
     }
 
 
-   setTimeout( function(){
-     console.log("prefixSuffixDays ", prefixSuffixDays," ", enclosingDays );
-    _this.setState({
-      leaveSet: {
-        ..._this.state.leaveSet,
-        leaveDays: _days,
-        totalWorkingDays: _days + prefixSuffixDays +  enclosingDays
-      }
-    })},500);
+    setTimeout(function () {
+      console.log("prefixSuffixDays ", prefixSuffixDays, " ", enclosingDays);
+      _this.setState({
+        leaveSet: {
+          ..._this.state.leaveSet,
+          leaveDays: _days,
+          totalWorkingDays: _days + prefixSuffixDays + enclosingDays
+        }
+      })
+    }, 500);
 
 
     commonApiPost("hr-leave", "eligibleleaves", "_search", {
@@ -366,10 +368,47 @@ class ApplyLeave extends React.Component {
   }
 
   handleChange(e, name) {
+
+    if (name === "encashable") {
+      if (e.target.checked)
+        $('#totalWorkingDays').prop("disabled", false);
+      else
+        $('#totalWorkingDays').prop("disabled", true);
+      let _this = this
+      let asOnDate = new Date().getDate() + "/" + (new Date().getMonth() + 1) + "/" + new Date().getFullYear();
+      let leaveType = this.state.leaveSet.leaveType.id;
+      let employeeid = getUrlVars()["id"];
+
+      commonApiPost("hr-leave", "eligibleleaves", "_search", {
+        leaveType, tenantId, asOnDate, employeeid
+      }, function (err, res) {
+        if (res) {
+          var _day = res && res["EligibleLeave"] && res["EligibleLeave"][0] ? res["EligibleLeave"][0].noOfDays : "";
+          if (_day <= 0 || _day == "") {
+            _this.setState({
+              leaveSet: {
+                ..._this.state.leaveSet,
+                availableDays: ""
+              }
+            });
+            return (showError("You do not have leave for this leave type."));
+          }
+          else {
+            _this.setState({
+              leaveSet: {
+                ..._this.state.leaveSet,
+                availableDays: _day
+              }
+            });
+          }
+        }
+      });
+    }
+
     this.setState({
       leaveSet: {
         ...this.state.leaveSet,
-        [name]: e.target.value
+        [name]: e.target.type === 'checkbox' ? e.target.checked : e.target.value
       }
     })
 
@@ -413,11 +452,11 @@ class ApplyLeave extends React.Component {
     delete tempInfo.code;
 
     console.log(this.state.perfixSuffix, this.state.encloseHoliday);
-  
+
     let holidays = [];
-    if(this.state.encloseHoliday){
-      for(let i=0; i<this.state.encloseHoliday.length; i++)
-      holidays.push(this.state.encloseHoliday[i].applicableOn) 
+    if (this.state.encloseHoliday) {
+      for (let i = 0; i < this.state.encloseHoliday.length; i++)
+        holidays.push(this.state.encloseHoliday[i].applicableOn)
     }
 
     tempInfo.prefixDate = this.state.perfixSuffix ? this.state.perfixSuffix.prefixFromDate : "";
@@ -479,7 +518,7 @@ class ApplyLeave extends React.Component {
   render() {
     let { handleChange, addOrUpdate, handleChangeThreeLevel } = this;
     let { leaveSet, perfixSuffix, encloseHoliday } = this.state;
-    let { name, code, leaveDays, availableDays, fromDate, toDate, leaveGround, reason, leaveType, totalWorkingDays } = leaveSet;
+    let { name, code, leaveDays, availableDays, fromDate, toDate, leaveGround, reason, leaveType, totalWorkingDays, encashable } = leaveSet;
     let mode = getUrlVars()["type"];
 
     const renderOption = function (list) {
@@ -543,7 +582,7 @@ class ApplyLeave extends React.Component {
     }
 
     const showPrefix = () => {
-      if (this.state.perfixSuffix && this.state.perfixSuffix.prefixFromDate && this.state.perfixSuffix.prefixToDate) {
+      if (this.state.perfixSuffix && this.state.perfixSuffix.prefixFromDate && this.state.perfixSuffix.prefixToDate && !(this.state.leaveSet.encashable)) {
         return (
 
           <div className="row">
@@ -576,7 +615,7 @@ class ApplyLeave extends React.Component {
     }
 
     const showSuffix = () => {
-      if (this.state.perfixSuffix && this.state.perfixSuffix.suffixFromDate && this.state.perfixSuffix.suffixToDate) {
+      if (this.state.perfixSuffix && this.state.perfixSuffix.suffixFromDate && this.state.perfixSuffix.suffixToDate && !(this.state.leaveSet.encashable)) {
         return (
 
           <div className="row">
@@ -606,6 +645,98 @@ class ApplyLeave extends React.Component {
 
         )
       }
+    }
+
+    const showEncashable = () => {
+
+      if (this.state.leaveSet.leaveType.id) {
+        let encashableLeaveType = getNameById(this.state.leaveList, this.state.leaveSet.leaveType.id, "encashable");
+        if (encashableLeaveType || encashableLeaveType == "TRUE" || encashableLeaveType == "true") {
+
+          return (
+
+            <div className="row">
+              <div className="col-sm-6">
+                <div className="row">
+                  <div className="col-sm-6 label-text">
+                    <label htmlFor="">En-cashable</label>
+                  </div>
+                  <div className="col-sm-6">
+                    <input type="checkbox" id="encashable" name="encashable" checked={encashable}
+                      onChange={(e) => { handleChange(e, "encashable") }} />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          )
+        }
+      }
+    }
+
+    const showDateRange = () => {
+
+      if (!this.state.leaveSet.encashable) {
+
+        return (
+
+          <div>
+
+            <div className="row">
+              <div className="col-sm-6">
+                <div className="row">
+                  <div className="col-sm-6 label-text">
+                    <label htmlFor="">From Date <span>*</span></label>
+                  </div>
+                  <div className="col-sm-6">
+                    <div className="text-no-ui">
+                      <span><i className="glyphicon glyphicon-calendar"></i></span>
+                      <input type="text" id="fromDate" name="fromDate" value="fromDate" value={fromDate}
+                        onChange={(e) => { handleChange(e, "fromDate") }} required />
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="col-sm-6">
+                <div className="row">
+                  <div className="col-sm-6 label-text">
+                    <label htmlFor="">To Date <span>*</span> </label>
+                  </div>
+                  <div className="col-sm-6">
+                    <div className="text-no-ui">
+                      <span><i className="glyphicon glyphicon-calendar"></i></span>
+                      <input type="text" id="toDate" name="toDate" value={toDate}
+                        onChange={(e) => {
+                          handleChange(e, "toDate")
+                        }} required />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+
+            <div className="row">
+              <div className="col-sm-6">
+                <div className="row">
+                  <div className="col-sm-6 label-text">
+                    <label htmlFor="">Working Days</label>
+                  </div>
+                  <div className="col-sm-6">
+
+                    <input type="number" id="leaveDays" name="leaveDays" value={leaveDays}
+                      onChange={(e) => { handleChange(e, "leaveDays") }} disabled />
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+
+        )
+      }
+
     }
 
     return (
@@ -670,54 +801,10 @@ class ApplyLeave extends React.Component {
               </div>
             </div>
 
+            {showEncashable()}
+            {showDateRange()}
 
             <div className="row">
-              <div className="col-sm-6">
-                <div className="row">
-                  <div className="col-sm-6 label-text">
-                    <label htmlFor="">From Date <span>*</span></label>
-                  </div>
-                  <div className="col-sm-6">
-                    <div className="text-no-ui">
-                      <span><i className="glyphicon glyphicon-calendar"></i></span>
-                      <input type="text" id="fromDate" name="fromDate" value="fromDate" value={fromDate}
-                        onChange={(e) => { handleChange(e, "fromDate") }} required />
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="col-sm-6">
-                <div className="row">
-                  <div className="col-sm-6 label-text">
-                    <label htmlFor="">To Date <span>*</span> </label>
-                  </div>
-                  <div className="col-sm-6">
-                    <div className="text-no-ui">
-                      <span><i className="glyphicon glyphicon-calendar"></i></span>
-                      <input type="text" id="toDate" name="toDate" value={toDate}
-                        onChange={(e) => {
-                          handleChange(e, "toDate")
-                        }} required />
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-
-            <div className="row">
-              <div className="col-sm-6">
-                <div className="row">
-                  <div className="col-sm-6 label-text">
-                    <label htmlFor="">Working Days</label>
-                  </div>
-                  <div className="col-sm-6">
-
-                    <input type="number" id="leaveDays" name="leaveDays" value={leaveDays}
-                      onChange={(e) => { handleChange(e, "leaveDays") }} />
-                  </div>
-                </div>
-              </div>
               <div className="col-sm-6">
                 <div className="row">
                   <div className="col-sm-6 label-text">

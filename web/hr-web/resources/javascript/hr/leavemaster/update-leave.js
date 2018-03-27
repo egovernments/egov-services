@@ -19,6 +19,7 @@ class UpdateLeave extends React.Component {
         "status": "",
         "stateId": "",
         "tenantId": tenantId,
+        "encashable": false,
         "totalWorkingDays": "",
         "workflowDetails": {
           "department": "",
@@ -98,8 +99,8 @@ class UpdateLeave extends React.Component {
             employee = res1.Employee[0];
             _leaveSet.name = employee.name;
             _leaveSet.code = employee.code;
-            _leaveSet.leaveGround = _leaveSet.leaveGround ? _leaveSet.leaveGround: "";
-            _leaveSet.totalWorkingDays = _leaveSet.totalWorkingDays ? _leaveSet.totalWorkingDays: "";
+            _leaveSet.leaveGround = _leaveSet.leaveGround ? _leaveSet.leaveGround : "";
+            _leaveSet.totalWorkingDays = _leaveSet.totalWorkingDays ? _leaveSet.totalWorkingDays : "";
 
             _this.setState({
               leaveSet: Object.assign({}, _leaveSet),
@@ -113,41 +114,41 @@ class UpdateLeave extends React.Component {
         });
 
 
-    //Calling enclosing Holiday api
-    let enclosingHoliday = getNameById(_this.state.leaveList, _leaveSet.leaveType.id, "encloseHoliday");
-    if (enclosingHoliday || enclosingHoliday == "TRUE" || enclosingHoliday == "true") {
-      commonApiPost("egov-common-masters", "holidays", "_search", { tenantId, fromDate, toDate: asOnDate }, function (err, res) {
-        if (res) {
-          console.log("enclosingDays", res.Holiday.length);
-          enclosingDays = res.Holiday.length;
+        //Calling enclosing Holiday api
+        let enclosingHoliday = getNameById(_this.state.leaveList, _leaveSet.leaveType.id, "encloseHoliday");
+        if (enclosingHoliday || enclosingHoliday == "TRUE" || enclosingHoliday == "true") {
+          commonApiPost("egov-common-masters", "holidays", "_search", { tenantId, fromDate, toDate: asOnDate }, function (err, res) {
+            if (res) {
+              console.log("enclosingDays", res.Holiday.length);
+              enclosingDays = res.Holiday.length;
+              _this.setState({
+                encloseHoliday: res.Holiday
+              });
+            }
+          });
+        } else {
           _this.setState({
-            encloseHoliday: res.Holiday
+            encloseHoliday: ""
           });
         }
-      });
-    } else {
-      _this.setState({
-        encloseHoliday: ""
-      });
-    }
 
-    //calling PrefixSuffix api
-    let includePrefixSuffix = getNameById(_this.state.leaveList, _this.state.leaveSet.leaveType.id, "includePrefixSuffix");
-    if (includePrefixSuffix || includePrefixSuffix == "TRUE" || includePrefixSuffix == "true") {
-      commonApiPost("egov-common-masters", "holidays", "_searchprefixsuffix", { tenantId, fromDate, toDate: asOnDate }, function (err, res) {
-        if (res) {
-          console.log("prefixSuffixDays", res.Holiday[0].noOfDays);
-          prefixSuffixDays = res.Holiday[0].noOfDays;
+        //calling PrefixSuffix api
+        let includePrefixSuffix = getNameById(_this.state.leaveList, _this.state.leaveSet.leaveType.id, "includePrefixSuffix");
+        if (includePrefixSuffix || includePrefixSuffix == "TRUE" || includePrefixSuffix == "true") {
+          commonApiPost("egov-common-masters", "holidays", "_searchprefixsuffix", { tenantId, fromDate, toDate: asOnDate }, function (err, res) {
+            if (res) {
+              console.log("prefixSuffixDays", res.Holiday[0].noOfDays);
+              prefixSuffixDays = res.Holiday[0].noOfDays;
+              _this.setState({
+                perfixSuffix: res.Holiday[0]
+              });
+            }
+          });
+        } else {
           _this.setState({
-            perfixSuffix: res.Holiday[0]
+            perfixSuffix: ""
           });
         }
-      });
-    } else {
-      _this.setState({
-        perfixSuffix: ""
-      });
-    }
 
 
 
@@ -227,6 +228,10 @@ class UpdateLeave extends React.Component {
         }
       }
     });
+
+    if (this.state.status != "Rejected") {
+      $("input,select,textarea").prop("disabled", true);
+    }
   }
 
   calculate() {
@@ -368,60 +373,122 @@ class UpdateLeave extends React.Component {
     }
     var today = dd + '.' + mm + '.' + yyyy;
 
+    let financialYear = "";
+    if(new Date().getMonth()>3)
+    financialYear = new Date().getFullYear() + "-" + (new Date().getFullYear() + 1);
+    else
+    financialYear = (new Date().getFullYear() -1) + "-" + new Date().getFullYear() ;
+
     var doc = new jsPDF();
-    
-    doc.setFont('times','normal');
-    doc.setFontSize(12);
-    doc.setFontType("bold");
-    doc.text(105, 20, "PROCEEDINGS OF THE COMMISSIONER", 'center');
-    doc.text(105, 27, tenantId.split(".")[1].toUpperCase() + ' MUNICIPALITY/MUNICIPAL CORPORATION', 'center');
 
-    doc.text(15, 42, 'Roc.No. '+ "noticeData.applicationNumber/2018");
-    doc.setLineWidth(0.5);
-    doc.line(15, 43, 66, 43);
-    doc.text(130, 42, 'Dt. ' + today);
-    doc.setLineWidth(0.5);
-    doc.line(130, 43, 156, 43);
+    let encashable = noticeData.leaveType.encashable;
+    if (encashable || encashable == "TRUE" || encashable == "true") {
 
-    doc.setFontType("bold");
-    doc.text(35, 52, "Sub:");
-    doc.setFontType("normal");
-    doc.text(55, 52, doc.splitTextToSize('Establish -'+tenantId.split(".")[1].charAt(0).toUpperCase() + tenantId.split(".")[1].slice(1)+' Muncipality/Municipal Corporation - '));
-    doc.text(55, 57, doc.splitTextToSize('Sri/Smt'+ noticeData.name + ' - Saction of Earned Leave/HPL for period of ('+ noticeData.totalWorkingDays + ')'));
-    doc.text(55, 62, doc.splitTextToSize('days on' + noticeData.leaveGround + ' grounds - Orders - Issued'));
+      doc.setFont('times', 'normal');
+      doc.setFontSize(12);
+      doc.setFontType("bold");
+      doc.text(105, 20, "PROCEEDINGS OF THE COMMISSIONER", 'center');
+      doc.text(105, 27, tenantId.split(".")[1].toUpperCase() + ' MUNICIPALITY/MUNICIPAL CORPORATION', 'center');
 
-    doc.setFontType("bold");
-    doc.text(35, 72, "Read:");
-    doc.setFontType("normal");
-    doc.text(55, 72, doc.splitTextToSize('Representation of Sri/Smt/Kum '+ noticeData.name + '.'));
+      doc.text(15, 42, 'Roc.No. ' + noticeData.applicationNumber + '/2018');
+      doc.setLineWidth(0.5);
+      doc.line(15, 43, 66, 43);
+      doc.text(130, 42, 'Dt. ' + today);
+      doc.setLineWidth(0.5);
+      doc.line(130, 43, 156, 43);
 
-    doc.setFontType("bold");
-    doc.text(15, 82, 'ORDER:');
-    doc.setLineWidth(0.5);
-    doc.line(15, 83, 32, 83);
-    doc.setFontType("normal");
-    doc.text(15, 92, doc.splitTextToSize('        In view of the circumstances stated in the reference read above Sri/Smt '+ noticeData.name + ','));
-    doc.text(15, 97, doc.splitTextToSize('is hereby sactioned Earned Leave/HPL for a period of ('+ noticeData.totalWorkingDays + ') days on ' + noticeData.leaveGround + ' grounds from '+ noticeData.fromDate + ' to '+ noticeData.toDate + '.'));
-    doc.text(15, 105, doc.splitTextToSize('2.     Certified that necessary entries have been made in the service Register of the individual.'));
-    doc.text(15, 113, doc.splitTextToSize('3.     He/She is informed that, after sanction of the above leave is having ('+ noticeData.availableDays + ') days of Earned Leave/'));
-    doc.text(15, 118, doc.splitTextToSize('       Half Pay Leave at his/her credit.'));
+      doc.setFontType("bold");
+      doc.text(35, 52, "Sub:");
+      doc.setFontType("normal");
+      doc.text(55, 52, doc.splitTextToSize('Establish -' + tenantId.split(".")[1].charAt(0).toUpperCase() + tenantId.split(".")[1].slice(1) + ' Muncipality/Municipal Corporation - '));
+      doc.text(55, 57, doc.splitTextToSize('Sri/Smt' + noticeData.name + ' - Saction of Earned Leave/HPL for period of (' + noticeData.totalWorkingDays + ')'));
+      doc.text(55, 62, doc.splitTextToSize('days on' + noticeData.leaveGround + ' grounds - Orders - Issued'));
 
-    doc.setFontType("bold");
-    doc.text(125, 134, 'COMMISSIONER');
-    doc.text(100, 140, tenantId.split(".")[1].charAt(0).toUpperCase() + tenantId.split(".")[1].slice(1) + ' Municipality/Municipal Corporation');
+      doc.setFontType("bold");
+      doc.text(35, 72, "Read:");
+      doc.setFontType("normal");
+      doc.text(55, 72, doc.splitTextToSize('Representation of Sri/Smt/Kum ' + noticeData.name + '.'));
 
-    doc.setFontType("bold");
-    doc.text(15, 145, doc.splitTextToSize('To'));
-    doc.setFontType("normal");
-    doc.text(15, 150, doc.splitTextToSize('Sri/Smt _______'));
-    doc.text(15, 155, doc.splitTextToSize('Copy to the _________'));
-    doc.text(15, 160, doc.splitTextToSize('Spare'));
+      doc.setFontType("bold");
+      doc.text(15, 82, 'ORDER:');
+      doc.setLineWidth(0.5);
+      doc.line(15, 83, 32, 83);
+      doc.setFontType("normal");
+      doc.text(15, 92, doc.splitTextToSize('        In view of the circumstances stated in the reference read above Sri/Smt ' + noticeData.name + ','));
+      doc.text(15, 97, doc.splitTextToSize('is hereby sactioned Earned Leave/HPL for a period of (' + noticeData.totalWorkingDays + ') days on ' + noticeData.leaveGround + ' grounds from ' + noticeData.fromDate + ' to ' + noticeData.toDate + '.'));
+      doc.text(15, 105, doc.splitTextToSize('2.     Certified that necessary entries have been made in the service Register of the individual.'));
+      doc.text(15, 113, doc.splitTextToSize('3.     He/She is informed that, after sanction of the above leave is having (' + noticeData.availableDays + ') days of Earned Leave/'));
+      doc.text(15, 118, doc.splitTextToSize('       Half Pay Leave at his/her credit.'));
 
-  
-    doc.save('Leave Proceeding' + noticeData.agreementNumber + '.pdf');
-    
+      doc.setFontType("bold");
+      doc.text(125, 134, 'COMMISSIONER');
+      doc.text(100, 140, tenantId.split(".")[1].charAt(0).toUpperCase() + tenantId.split(".")[1].slice(1) + ' Municipality/Municipal Corporation');
+
+      doc.setFontType("bold");
+      doc.text(15, 145, doc.splitTextToSize('To'));
+      doc.setFontType("normal");
+      doc.text(15, 150, doc.splitTextToSize('Sri/Smt _______'));
+      doc.text(15, 155, doc.splitTextToSize('Copy to the _________'));
+      doc.text(15, 160, doc.splitTextToSize('Spare'));
+
+    } else {
+
+      doc.setFont('times', 'normal');
+      doc.setFontSize(12);
+      doc.setFontType("bold");
+      doc.text(105, 20, "PROCEEDINGS OF THE COMMISSIONER", 'center');
+      doc.text(105, 27, tenantId.split(".")[1].toUpperCase() + ' MUNICIPALITY/MUNICIPAL CORPORATION', 'center');
+
+      doc.text(15, 42, 'Roc.No. ' + + noticeData.applicationNumber + '/2018');
+      doc.setLineWidth(0.5);
+      doc.line(15, 43, 66, 43);
+      doc.text(130, 42, 'Dt. ' + today);
+      doc.setLineWidth(0.5);
+      doc.line(130, 43, 156, 43);
+
+      doc.setFontType("bold");
+      doc.text(35, 52, "Sub:");
+      doc.setFontType("normal");
+      doc.text(55, 52, doc.splitTextToSize('Establish -' + tenantId.split(".")[1].charAt(0).toUpperCase() + tenantId.split(".")[1].slice(1) + ' Muncipality/Municipal Corporation - '));
+      doc.text(55, 57, doc.splitTextToSize('Sri/Smt ' + noticeData.name + ' - Saction of Earned Leave/HPL for period of (' + noticeData.totalWorkingDays + ')'));
+      doc.text(55, 62, doc.splitTextToSize('days on ' + noticeData.leaveGround + ' grounds - Orders - Issued'));
+
+      doc.setFontType("bold");
+      doc.text(35, 72, "Read:");
+      doc.setFontType("normal");
+      doc.text(55, 72, doc.splitTextToSize('1) Govt. Circular Memo No. 4338/-A/95/FR-I/13, Dt. 18.02.2013.'));
+      doc.text(55, 77, doc.splitTextToSize('2) Representation of Sri/Smt/Kum ' + noticeData.name + '.'));
+
+      doc.setFontType("bold");
+      doc.text(15, 87, 'ORDER:');
+      doc.setLineWidth(0.5);
+      doc.line(15, 88, 32, 88);
+      doc.setFontType("normal");
+      doc.text(15, 97, doc.splitTextToSize('	In terms of the Govt. Circular Memo issued in the reference read above and'));
+      doc.text(15, 105, doc.splitTextToSize('application of Sri/Smt ' + noticeData.name + ', he/she is hereby permitted to surrender Earned'));
+      doc.text(15, 113, doc.splitTextToSize('Leave (' + noticeData.totalWorkingDays + ') days as on ' + today + ' for encashment purpose during the financial year'));
+      doc.text(15, 121, doc.splitTextToSize(financialYear));
+      doc.text(15, 130, doc.splitTextToSize('2.     Certified that necessary entries have been made in the service Register of the individual.'));
+      doc.text(15, 139, doc.splitTextToSize('3.     He/She is informed that, after sanction of the above leave is having ('+ noticeData.availableDays +') days of Earned Leave/'));
+      doc.text(15, 147, doc.splitTextToSize('       Half Pay Leave at his/her credit.'));
+
+      doc.setFontType("bold");
+      doc.text(125, 157, 'COMMISSIONER');
+      doc.text(100, 165, tenantId.split(".")[1].charAt(0).toUpperCase() + tenantId.split(".")[1].slice(1) + ' Municipality/Municipal Corporation');
+
+      doc.setFontType("bold");
+      doc.text(15, 172, doc.splitTextToSize('To'));
+      doc.setFontType("normal");
+      doc.text(15, 180, doc.splitTextToSize('Sri/Smt _______'));
+      doc.text(15, 188, doc.splitTextToSize('Copy to the _________'));
+      doc.text(15, 196, doc.splitTextToSize('Spare'));
+    }
+
+
+    doc.save('Leave Proceeding' + noticeData.applicationNumber + '.pdf');
+
     var blob = doc.output('blob');
-    
+
   }
 
 
@@ -466,10 +533,47 @@ class UpdateLeave extends React.Component {
   }
 
   handleChange(e, name) {
+
+    if (name === "encashable") {
+      if (e.target.checked)
+        $('#totalWorkingDays').prop("disabled", false);
+      else
+        $('#totalWorkingDays').prop("disabled", true);
+      let _this = this
+      let asOnDate = new Date().getDate() + "/" + (new Date().getMonth() + 1) + "/" + new Date().getFullYear();
+      let leaveType = this.state.leaveSet.leaveType.id;
+      let employeeid = getUrlVars()["id"];
+
+      commonApiPost("hr-leave", "eligibleleaves", "_search", {
+        leaveType, tenantId, asOnDate, employeeid
+      }, function (err, res) {
+        if (res) {
+          var _day = res && res["EligibleLeave"] && res["EligibleLeave"][0] ? res["EligibleLeave"][0].noOfDays : "";
+          if (_day <= 0 || _day == "") {
+            _this.setState({
+              leaveSet: {
+                ..._this.state.leaveSet,
+                availableDays: ""
+              }
+            });
+            return (showError("You do not have leave for this leave type."));
+          }
+          else {
+            _this.setState({
+              leaveSet: {
+                ..._this.state.leaveSet,
+                availableDays: _day
+              }
+            });
+          }
+        }
+      });
+    }
+
     this.setState({
       leaveSet: {
         ...this.state.leaveSet,
-        [name]: e.target.value
+        [name]: e.target.type === 'checkbox' ? e.target.checked : e.target.value
       }
     })
 
@@ -500,6 +604,17 @@ class UpdateLeave extends React.Component {
         type = getUrlVars()["type"];
       delete tempInfo.name;
       delete tempInfo.code;
+
+      let holidays = [];
+      if (this.state.encloseHoliday) {
+        for (let i = 0; i < this.state.encloseHoliday.length; i++)
+          holidays.push(this.state.encloseHoliday[i].applicableOn)
+      }
+
+      tempInfo.prefixDate = this.state.perfixSuffix ? this.state.perfixSuffix.prefixFromDate : "";
+      tempInfo.suffixDate = this.state.perfixSuffix ? this.state.perfixSuffix.suffixToDate : "";
+      tempInfo.holidays = holidays;
+
       commonApiPost("hr-employee", "hod/employees", "_search", { tenantId, asOnDate, departmentId }, function (err, res2) {
         if (res2 && res2["Employee"] && res2["Employee"][0]) {
           employee = res2["Employee"][0];
@@ -546,7 +661,7 @@ class UpdateLeave extends React.Component {
     } else {
       var employee;
       var type;
-      
+
       var asOnDate = _this.state.leaveSet.toDate;
       var departmentId = _this.state.departmentId;
       var leaveNumber = _this.state.leaveNumber;
@@ -554,6 +669,17 @@ class UpdateLeave extends React.Component {
       var _name = tempInfo.name;
       delete tempInfo.name;
       delete tempInfo.code;
+
+      let holidays = [];
+      if (this.state.encloseHoliday) {
+        for (let i = 0; i < this.state.encloseHoliday.length; i++)
+          holidays.push(this.state.encloseHoliday[i].applicableOn)
+      }
+
+      tempInfo.prefixDate = this.state.perfixSuffix ? this.state.perfixSuffix.prefixFromDate : "";
+      tempInfo.suffixDate = this.state.perfixSuffix ? this.state.perfixSuffix.suffixToDate : "";
+      tempInfo.holidays = holidays;
+
       if (!tempInfo.workflowDetails) {
 
         tempInfo.workflowDetails = { action: ID };
@@ -577,14 +703,14 @@ class UpdateLeave extends React.Component {
         },
         success: function (res) {
 
-          if (ID == "Approve"){
+          if (ID == "Approve") {
             tempInfo.name = _name;
             _this.printNotice(tempInfo);
             window.location.href = `app/hr/leavemaster/ack-page.html?type=${ID}&applicationNumber=${leaveNumber}`;
-            
-          } else if( ID == "Cancel") 
+
+          } else if (ID == "Cancel")
             window.location.href = `app/hr/leavemaster/ack-page.html?type=${ID}&applicationNumber=${leaveNumber}`;
-           else {
+          else {
             commonApiPost("egov-common-workflows", "process", "_search", {
               tenantId: tenantId,
               id: stateId
@@ -761,10 +887,103 @@ class UpdateLeave extends React.Component {
       }
     }
 
+    const showEncashable = () => {
+
+      if (this.state.leaveSet.leaveType.id) {
+        let encashableLeaveType = getNameById(this.state.leaveList, this.state.leaveSet.leaveType.id, "encashable");
+        if (encashableLeaveType || encashableLeaveType == "TRUE" || encashableLeaveType == "true") {
+
+          return (
+
+            <div className="row">
+              <div className="col-sm-6">
+                <div className="row">
+                  <div className="col-sm-6 label-text">
+                    <label htmlFor="">En-cashable</label>
+                  </div>
+                  <div className="col-sm-6">
+                    <input type="checkbox" id="encashable" name="encashable" checked={encashable}
+                      onChange={(e) => { handleChange(e, "encashable") }} />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          )
+        }
+      }
+    }
+
+    const showDateRange = () => {
+
+      if (!this.state.leaveSet.encashable) {
+
+        return (
+
+          <div>
+
+            <div className="row">
+              <div className="col-sm-6">
+                <div className="row">
+                  <div className="col-sm-6 label-text">
+                    <label htmlFor="">From Date <span>*</span></label>
+                  </div>
+                  <div className="col-sm-6">
+                    <div className="text-no-ui">
+                      <span><i className="glyphicon glyphicon-calendar"></i></span>
+                      <input type="text" id="fromDate" name="fromDate" value="fromDate" value={fromDate}
+                        onChange={(e) => { handleChange(e, "fromDate") }} required />
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="col-sm-6">
+                <div className="row">
+                  <div className="col-sm-6 label-text">
+                    <label htmlFor="">To Date <span>*</span> </label>
+                  </div>
+                  <div className="col-sm-6">
+                    <div className="text-no-ui">
+                      <span><i className="glyphicon glyphicon-calendar"></i></span>
+                      <input type="text" id="toDate" name="toDate" value={toDate}
+                        onChange={(e) => {
+                          handleChange(e, "toDate")
+                        }} required />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+
+            <div className="row">
+              <div className="col-sm-6">
+                <div className="row">
+                  <div className="col-sm-6 label-text">
+                    <label htmlFor="">Working Days</label>
+                  </div>
+                  <div className="col-sm-6">
+
+                    <input type="number" id="leaveDays" name="leaveDays" value={leaveDays}
+                      onChange={(e) => { handleChange(e, "leaveDays") }} disabled />
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+
+        )
+      }
+
+    }
+
     return (
       <div>
         <form>
           <fieldset>
+
             <div className="row">
               <div className="col-sm-6">
                 <div className="row">
@@ -790,47 +1009,11 @@ class UpdateLeave extends React.Component {
               </div>
             </div>
 
-
             <div className="row">
               <div className="col-sm-6">
                 <div className="row">
                   <div className="col-sm-6 label-text">
-                    <label htmlFor="">From Date </label>
-                  </div>
-                  <div className="col-sm-6">
-                    <div className="text-no-ui">
-                      <span><i className="glyphicon glyphicon-calendar"></i></span>
-                      <input type="text" id="fromDate" name="fromDate" value={fromDate}
-                        onChange={(e) => { handleChange(e, "fromDate") }} required />
-
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="col-sm-6">
-                <div className="row">
-                  <div className="col-sm-6 label-text">
-                    <label htmlFor="">To Date  </label>
-                  </div>
-                  <div className="col-sm-6">
-                    <div className="text-no-ui">
-                      <span><i className="glyphicon glyphicon-calendar"></i></span>
-                      <input type="text" id="toDate" name="toDate" value={toDate}
-                        onChange={(e) => {
-                          handleChange(e, "toDate")
-                        }} required />
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-
-            <div className="row">
-              <div className="col-sm-6">
-                <div className="row">
-                  <div className="col-sm-6 label-text">
-                    <label htmlFor="leaveType">Leave Type </label>
+                    <label htmlFor="leaveType">Leave Type<span>*</span></label>
                   </div>
                   <div className="col-sm-6">
                     <div className="styled-select">
@@ -840,17 +1023,14 @@ class UpdateLeave extends React.Component {
                         <option value=""> Select Leave Type</option>
                         {renderOption(this.state.leaveList)}
                       </select>
-
                     </div>
                   </div>
                 </div>
               </div>
-
-
               <div className="col-sm-6">
                 <div className="row">
                   <div className="col-sm-6 label-text">
-                    <label htmlFor="Reason">Reason </label>
+                    <label htmlFor="Reason">Reason <span>*</span></label>
                   </div>
                   <div className="col-sm-6">
                     <textarea rows="4" cols="50" id="reason" name="reason" value={reason}
@@ -860,20 +1040,10 @@ class UpdateLeave extends React.Component {
               </div>
             </div>
 
+            {showEncashable()}
+            {showDateRange()}
 
             <div className="row">
-              <div className="col-sm-6">
-                <div className="row">
-                  <div className="col-sm-6 label-text">
-                    <label htmlFor="">Working Days</label>
-                  </div>
-                  <div className="col-sm-6">
-
-                    <input type="number" id="leaveDays" name="leaveDays" value={leaveDays}
-                      onChange={(e) => { handleChange(e, "leaveDays") }} />
-                  </div>
-                </div>
-              </div>
               <div className="col-sm-6">
                 <div className="row">
                   <div className="col-sm-6 label-text">
@@ -886,7 +1056,6 @@ class UpdateLeave extends React.Component {
                 </div>
               </div>
             </div>
-
 
             {showPrefix()}
             {showSuffix()}
@@ -910,6 +1079,7 @@ class UpdateLeave extends React.Component {
                     <label htmlFor="">Leave Grounds <span>*</span></label>
                   </div>
                   <div className="col-sm-6">
+
                     <input type="text" id="leaveGround" name="leaveGround" value={leaveGround}
                       onChange={(e) => { handleChange(e, "leaveGround") }} required />
                   </div>
@@ -920,9 +1090,6 @@ class UpdateLeave extends React.Component {
 
 
             {showEnclosingHolidayTable()}
-
-
-
             <div className="text-center">
               {renderProcesedBtns()}
               <button type="button" className="btn btn-close" onClick={(e) => { this.close() }}>Close</button>
@@ -934,11 +1101,6 @@ class UpdateLeave extends React.Component {
 
   }
 }
-
-
-
-
-
 
 
 ReactDOM.render(

@@ -5,8 +5,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import javax.validation.Valid;
-
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.mdms.model.MdmsCriteriaReq;
 import org.egov.pgr.contract.ActionHistory;
@@ -33,7 +31,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.util.CollectionUtils;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.JsonPath;
 
@@ -503,6 +500,8 @@ public class GrievanceService {
 	 */
 	private void replaceIdsWithUrls(List<ActionHistory> historyList) {
 
+		if (CollectionUtils.isEmpty(historyList))
+			return;
 		String tenantId = historyList.get(0).getActions().get(0).getTenantId();
 		List<String> fileStoreIds = new ArrayList<>();
 
@@ -513,14 +512,26 @@ public class GrievanceService {
 		}));
 
 		Map<String, String> urlIdMap = fileStoreRepo.getUrlMaps(tenantId, fileStoreIds);
-		
-		log.info("urlIdMap: "+urlIdMap);
 
-		historyList.forEach(history -> history.getActions().forEach(action -> action.getMedia().forEach(fileStoreId -> {
-			String url = urlIdMap.get(fileStoreId);
-			System.err.println(" the url is : "+url);
-			if (null != url)
-				fileStoreId = url;
-		})));
+		log.info("urlIdMap: " + urlIdMap);
+
+		for (int i = 0; i < historyList.size(); i++) {
+			ActionHistory history = historyList.get(i);
+			for (int j = 0; j < history.getActions().size(); j++) {
+				List<ActionInfo> actionList = history.getActions();
+				ActionInfo info = actionList.get(j);
+				List<String> mediaList = new ArrayList<>();
+				for (int k = 0; k < info.getMedia().size(); k++) {
+					List<String> oldMedia = info.getMedia();
+					String fileStoreId = oldMedia.get(k);
+					String url = urlIdMap.get(fileStoreId);
+					if (null != url)
+						mediaList.add(url);
+					else
+						mediaList.add(fileStoreId);
+				}
+				info.setMedia(mediaList);
+			}
+		}
 	}
 }

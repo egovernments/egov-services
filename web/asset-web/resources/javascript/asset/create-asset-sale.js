@@ -154,8 +154,8 @@ class Sale extends React.Component {
         commonApiPost("asset-services", "assets", "currentvalue/_search", { tenantId, assetIds: res["Assets"][0].id }, function (er, res) {
           if (res && res.AssetCurrentValues) {
             _this.setState({
-              ..._this.state.disposal,
               disposal: {
+                  ..._this.state.disposal,
                 assetCurrentValue: res.AssetCurrentValues[0].currentAmount
               }
             })
@@ -193,16 +193,16 @@ class Sale extends React.Component {
             });
           }
 
-          commonApiPost("asset-services", "assets/currentvalue", "_search", { assetIds: id, tenantId }, function (err1, res3) {
-            if (res3){
-              _this.setState({
-                disposal:{
-                ..._this.state.disposal,
-                assetCurrentValue: res3["AssetCurrentValues"]["0"]["currentAmount"]
-              }
-              });
-            }
-          });
+          // commonApiPost("asset-services", "assets/currentvalue", "_search", { assetIds: id, tenantId }, function (err1, res3) {
+          //   if (res3){
+          //     _this.setState({
+          //       disposal:{
+          //       ..._this.state.disposal,
+          //       assetCurrentValue: res3["AssetCurrentValues"]["0"]["currentAmount"]
+          //     }
+          //     });
+          //   }
+          // });
 
         }
       })

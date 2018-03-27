@@ -23,4 +23,7 @@ public class Params {
 	
 	@JsonProperty("jsonPath")
 	private String jsonPath;
+	
+	@JsonProperty("operator")
+	private String operator;
 }

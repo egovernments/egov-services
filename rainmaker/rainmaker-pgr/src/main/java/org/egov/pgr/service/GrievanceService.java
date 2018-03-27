@@ -65,7 +65,7 @@ public class GrievanceService {
 
 	@Autowired
 	private PGRProducer pGRProducer;
-	
+
 	@Autowired
 	private FileStoreRepo fileStoreRepo;
 
@@ -210,8 +210,6 @@ public class GrievanceService {
 			return getServiceRequestWithDetails(requestInfo, serviceReqSearchCriteria);
 		}
 		searcherRequest = prepareSearcherRequest(requestInfo, serviceReqSearchCriteria, uri);
-		if (null == searcherRequest)
-			return pGRUtils.getDefaultServiceResponse(requestInfo);
 		Object response = serviceRequestRepository.fetchResult(uri, searcherRequest);
 		log.info("Searcher response: " + response);
 		if (null == response)
@@ -295,17 +293,16 @@ public class GrievanceService {
 		StringBuilder url = new StringBuilder();
 		searcherRequest = pGRUtils.prepareActionSearchRequest(url, serviceReqSearchCriteria, requestInfo);
 		List<ActionInfo> actions = null;
-		if (null != searcherRequest) {
-			Object res = serviceRequestRepository.fetchResult(url, searcherRequest);
-			log.info("Actions: " + res);
-			if (null != res) {
-				actions = (List<ActionInfo>) JsonPath.read(res, PGRConstants.V3_ACTION_JSONPATH);
-			}
+		Object res = serviceRequestRepository.fetchResult(url, searcherRequest);
+		log.info("Actions: " + res);
+		if (null != res) {
+			actions = (List<ActionInfo>) JsonPath.read(res, PGRConstants.V3_ACTION_JSONPATH);
 		}
 		ActionHistory actionHistory = ActionHistory.builder().actions(actions).build();
 		List<ActionHistory> actionHistories = new ArrayList<>();
 		actionHistories.add(actionHistory);
 		replaceIdsWithUrls(actionHistories);
+		
 		ServiceResponse serviceResponse = mapper.convertValue(response, ServiceResponse.class);
 		serviceResponse.setActionHistory(actionHistories);
 		return serviceResponse;
@@ -334,7 +331,13 @@ public class GrievanceService {
 
 			StringBuilder deptUri = new StringBuilder();
 			requestInfoWrapper = pGRUtils.prepareRequestForDeptSearch(deptUri, requestInfo, departmenCode);
-			response = serviceRequestRepository.fetchResult(deptUri, requestInfoWrapper);
+			try {
+				response = serviceRequestRepository.fetchResult(deptUri, requestInfoWrapper);
+			}catch(Exception e) {
+				log.error("Exception: "+e);
+				throw new CustomException("401", "Invalid department");
+			}
+			
 			if (null == response) {
 				throw new CustomException("401", "Invalid department");
 			}
@@ -344,6 +347,9 @@ public class GrievanceService {
 		} else if (requestInfo.getUserInfo().getRoles().get(0).getName().equals("CITIZEN")
 				&& requestInfo.getUserInfo().getRoles().size() == 1) {
 			serviceReqSearchCriteria.setAccountId(requestInfo.getUserInfo().getId().toString());
+			String[] tenant = serviceReqSearchCriteria.getTenantId().split("[.]");
+			if(tenant.length > 1)
+				serviceReqSearchCriteria.setTenantId(tenant[0]);
 		}
 	}
 
@@ -403,7 +409,7 @@ public class GrievanceService {
 
 		return searcherRequest;
 	}
-	
+
 	/**
 	 * method to replace the fileStoreIds with the respective urls acquired from
 	 * filestore service
@@ -415,21 +421,18 @@ public class GrievanceService {
 		String tenantId = historyList.get(0).getActions().get(0).getTenantId();
 		List<String> fileStoreIds = new ArrayList<>();
 
-		historyList.forEach(history -> 
-			history.getActions().forEach(action -> {
-				List<String> media = action.getMedia();
-				if (!CollectionUtils.isEmpty(media))
-					fileStoreIds.addAll(media);
+		historyList.forEach(history -> history.getActions().forEach(action -> {
+			List<String> media = action.getMedia();
+			if (!CollectionUtils.isEmpty(media))
+				fileStoreIds.addAll(media);
 		}));
 
 		Map<String, String> urlIdMap = fileStoreRepo.getUrlMaps(tenantId, fileStoreIds);
-		
-		historyList.forEach(history -> 
-			history.getActions().forEach(action -> 
-				action.getMedia().forEach(media -> {
-					String url = urlIdMap.get(media);
-					if (null != url)
-						media = url;
-				})));
+
+		historyList.forEach(history -> history.getActions().forEach(action -> action.getMedia().forEach(media -> {
+			String url = urlIdMap.get(media);
+			if (null != url)
+				media = url;
+		})));
 	}
 }

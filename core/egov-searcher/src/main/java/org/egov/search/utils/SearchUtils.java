@@ -80,13 +80,12 @@ public class SearchUtils {
 					  .append(paramBuilder.toString()).append(")");
 				}else{
 					logger.info("param: "+param.getName());
-					String operator = " = ";
-					if(param.getJsonPath().contains("startDate") || param.getJsonPath().contains("fromDate")) {
-						operator = " >= ";
-					}else if(param.getJsonPath().contains("endDate") || param.getJsonPath().contains("toDate")) {
-						operator = " <= ";
-					}
-					whereClause.append(param.getName()).append(operator).append("'"+paramValue+"'");
+					String operator = (null != param.getOperator() && !param.getOperator().isEmpty()) ? param.getOperator() : "=";
+					if(operator.equals("GE"))
+						operator = ">=";
+					if(operator.equals("LE"))
+						operator = "<=";
+					whereClause.append(param.getName()).append(" "+operator+" ").append("'"+paramValue+"'");
 				}
                 whereClause.append(" "+condition+" ");
 		}

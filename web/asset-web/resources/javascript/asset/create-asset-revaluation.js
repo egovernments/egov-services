@@ -127,7 +127,7 @@ class Revaluation extends React.Component {
         if (res2 && res2.Revaluations && res2.Revaluations.length) {
           let revalAsset = res2.Revaluations[0];
 
-          //Changing date format     
+          //Changing date format
           var d = new Date(revalAsset.revaluationDate);
           revalAsset.revaluationDate = d.getDate() + "/" + (d.getMonth() + 1) + "/" + d.getFullYear();
 
@@ -400,7 +400,7 @@ class Revaluation extends React.Component {
                 <div className="col-sm-6">
                   <div className="row">
                     <div className="col-sm-6 label-text">
-                      <label>Asset Category Type </label>
+                      <label>Asset Category Name </label>
                     </div>
                     <div className="col-sm-6 label-view-text">
                       <label>{assetSet.assetCategory && assetSet.assetCategory.name}</label>
@@ -502,16 +502,18 @@ class Revaluation extends React.Component {
                     </div>
                   </div>
                 </div>
-                <div className="col-sm-6">
-                  <div className="row">
-                    <div className="col-sm-6 label-text">
-                      <label>Re-evaluated By </label>
-                    </div>
-                    <div className="col-sm-6 label-view-text">
-                      <label>{revaluationSet.reevaluatedBy}</label>
+                  {getUrlVars()["type"] == "view" && <div className="row">
+                  <div className="col-sm-6">
+                    <div className="row">
+                      <div className="col-sm-6 label-text">
+                        <label>Re-evaluated By </label>
+                      </div>
+                      <div className="col-sm-6 label-view-text">
+                        <label>{revaluationSet.reevaluatedBy}</label>
+                      </div>
                     </div>
                   </div>
-                </div>
+                </div>}
               </div>
               <div className="row">
                 <div className="col-sm-6">

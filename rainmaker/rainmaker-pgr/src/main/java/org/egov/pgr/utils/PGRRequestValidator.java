@@ -1,52 +1,60 @@
 package org.egov.pgr.utils;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.egov.common.contract.request.RequestInfo;
+import org.egov.pgr.contract.Service;
 import org.egov.pgr.contract.ServiceReqSearchCriteria;
+import org.egov.pgr.contract.ServiceRequest;
+import org.egov.pgr.contract.ServiceResponse;
 import org.egov.pgr.service.GrievanceService;
 import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 import lombok.extern.slf4j.Slf4j;
 
-@Service
+@org.springframework.stereotype.Service
 @Slf4j
 public class PGRRequestValidator {
-	
+
 	@Autowired
-	private GrievanceService requestService ;
-	
-	
-/*	public void validateUpdate(ServiceReqRequest serviceReqRequest) {
-		
+	private GrievanceService requestService;
+
+	public void validateUpdate(ServiceRequest serviceReqRequest) {
+
 		Map<String, String> errorMap = new HashMap<>();
-		
-		ServiceReqSearchCriteria service = ServiceReqSearchCriteria
-				.builder().tenantId(serviceReqRequest.getServiceReq().get(0).getTenantId()).serviceRequestId(serviceReqRequest
-						.getServiceReq().stream().map(ServiceReq::getServiceRequestId).collect(Collectors.toList()))
+
+		ServiceReqSearchCriteria service = ServiceReqSearchCriteria.builder()
+				.tenantId(serviceReqRequest.getServices().get(0).getTenantId()).serviceRequestId(serviceReqRequest
+						.getServices().stream().map(Service::getServiceRequestId).collect(Collectors.toList()))
 				.build();
-		
-		Map<String, ServiceReq> map = requestService.getServiceRequests(serviceReqRequest.getRequestInfo(),service).getServices().stream().collect(Collectors.toMap(ServiceReq::getServiceRequestId,Function.identity()));
-		
+
+		Map<String, Service> map = ((ServiceResponse) requestService
+				.getServiceRequests(serviceReqRequest.getRequestInfo(), service)).getServices().stream()
+						.collect(Collectors.toMap(Service::getServiceRequestId, Function.identity()));
+
 		List<String> errorList = new ArrayList<>();
-		serviceReqRequest.getServiceReq().forEach( a -> {
-			
-			if(map.get(a.getServiceRequestId()) == null)
+		serviceReqRequest.getServices().forEach(a -> {
+
+			if (map.get(a.getServiceRequestId()) == null)
 				errorList.add(a.getServiceRequestId());
 		});
-		
-		if(!CollectionUtils.isEmpty(errorList))
-		errorMap.put("EG_PGR_UPDATE_SERVICEREQUESTID","request object does not exist for the given id's : "+ errorList);
-		
-		if(!errorMap.isEmpty()) {
+
+		if (!CollectionUtils.isEmpty(errorList))
+			errorMap.put("EG_PGR_UPDATE_SERVICEREQUESTID",
+					"request object does not exist for the given id's : " + errorList);
+
+		if (!errorMap.isEmpty())
 			throw new CustomException(errorMap);
-		}
-	}*/
-	
+	}
+
 	public void validateSearch(ServiceReqSearchCriteria criteria, RequestInfo requestInfo) {
 		log.info("Validating search request...");
 		Map<String, String> errorMap = new HashMap<>();
@@ -79,7 +87,7 @@ public class PGRRequestValidator {
 			return;
 		}
 		
-/*		if(requestInfo.getUserInfo().getRoles().get(0).getName().equals("CITIZEN") && requestInfo.getUserInfo().getRoles().size() == 1) {
+		if(requestInfo.getUserInfo().getRoles().get(0).getName().equals("CITIZEN") && requestInfo.getUserInfo().getRoles().size() == 1) {
 			if(null != criteria.getAccountId() && !criteria.getAccountId().isEmpty()) {
 				if(!(criteria.getAccountId().equals(requestInfo.getUserInfo().getId().toString())))
 					errorMap.put("403", "User not authorized to access this information");
@@ -88,7 +96,7 @@ public class PGRRequestValidator {
 			}
 		}
 		
-		if(requestInfo.getUserInfo().getRoles().get(0).getName().equals("DGRO") && requestInfo.getUserInfo().getRoles().size() == 1) {
+	/*	if(requestInfo.getUserInfo().getRoles().get(0).getName().equals("DGRO") && requestInfo.getUserInfo().getRoles().size() == 1) {
 			if(null == criteria.getGroup() || criteria.getGroup().isEmpty())
 				errorMap.put("400", "Department/group of the DGRO is mandatory");
 		}*/

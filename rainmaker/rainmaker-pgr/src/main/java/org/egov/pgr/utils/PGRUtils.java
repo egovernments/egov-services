@@ -126,6 +126,10 @@ public class PGRUtils {
 	
 /*................................V3 Utils.........................................................................*/	
 	
+	private static final String MODULE_NAME = "{moduleName}";
+	
+	private static final String SEARCH_NAME = "{searchName}";
+	
 	/**
 	 * Prepares request and uri for service request search
 	 * 
@@ -135,16 +139,14 @@ public class PGRUtils {
 	 * @return SearcherRequest
 	 * @author vishal
 	 */
-	public SearcherRequest prepareSearchRequest(StringBuilder uri, ServiceReqSearchCriteria serviceReqSearchCriteria, 
+	public SearcherRequest prepareSearchRequest(StringBuilder uri, ServiceReqSearchCriteria serviceReqSearchCriteria,
 			RequestInfo requestInfo) {
-		uri.append(searcherHost);
-		String endPoint = searcherEndpoint.replace("{moduleName}", PGRConstants.V3_SEARCHER_PGR_MOD_NAME)
-				.replace("{searchName}", PGRConstants.V3_SEARCHER_SRSEARCH_DEF_NAME);
-		uri.append(endPoint);
-		SearcherRequest searcherRequest = SearcherRequest.builder().
-				requestInfo(requestInfo).searchCriteria(serviceReqSearchCriteria).build();
 		
-		return searcherRequest;
+		uri.append(searcherHost);
+		String endPoint = searcherEndpoint.replace(MODULE_NAME, PGRConstants.V3_SEARCHER_PGR_MOD_NAME)
+				.replace(SEARCH_NAME, PGRConstants.V3_SEARCHER_SRSEARCH_DEF_NAME);
+		uri.append(endPoint);
+		return SearcherRequest.builder().requestInfo(requestInfo).searchCriteria(serviceReqSearchCriteria).build();
 	}
 	
 	/**
@@ -156,16 +158,13 @@ public class PGRUtils {
 	 * @return SearcherRequest
 	 * @author vishal
 	 */
-	public SearcherRequest prepareActionSearchRequest(StringBuilder uri, ServiceReqSearchCriteria serviceReqSearchCriteria, 
-			RequestInfo requestInfo) {
+	public SearcherRequest prepareActionSearchRequest(StringBuilder uri,
+			ServiceReqSearchCriteria serviceReqSearchCriteria, RequestInfo requestInfo) {
 		uri.append(searcherHost);
-		String endPoint = searcherEndpoint.replace("{moduleName}", PGRConstants.V3_SEARCHER_PGR_MOD_NAME)
-				.replace("{searchName}", PGRConstants.V3_SEARCHER_ACTIONSEARCH_GENERAL_DEF_NAME);
+		String endPoint = searcherEndpoint.replace(MODULE_NAME, PGRConstants.V3_SEARCHER_PGR_MOD_NAME)
+				.replace(SEARCH_NAME, PGRConstants.V3_SEARCHER_ACTIONSEARCH_GENERAL_DEF_NAME);
 		uri.append(endPoint);
-		SearcherRequest searcherRequest = SearcherRequest.builder().
-				requestInfo(requestInfo).searchCriteria(serviceReqSearchCriteria).build();
-		
-		return searcherRequest;
+		return SearcherRequest.builder().requestInfo(requestInfo).searchCriteria(serviceReqSearchCriteria).build();
 	}
 	
 	/**
@@ -177,19 +176,16 @@ public class PGRUtils {
 	 * @return SearcherRequest
 	 * @author vishal
 	 */
-	public SearcherRequest prepareSearchRequestAssignedTo(StringBuilder uri, ServiceReqSearchCriteria serviceReqSearchCriteria, 
-			RequestInfo requestInfo) {
+	public SearcherRequest prepareSearchRequestAssignedTo(StringBuilder uri,
+			ServiceReqSearchCriteria serviceReqSearchCriteria, RequestInfo requestInfo) {
 		uri.append(searcherHost);
-		String endPoint = searcherEndpoint.replace("{moduleName}", PGRConstants.V3_SEARCHER_PGR_MOD_NAME)
-				.replace("{searchName}", PGRConstants.V3_SEARCHER_SRSEARCH_ASSIGNEDTO_DEF_NAME);
+		String endPoint = searcherEndpoint.replace(MODULE_NAME, PGRConstants.V3_SEARCHER_PGR_MOD_NAME)
+				.replace(SEARCH_NAME, PGRConstants.V3_SEARCHER_SRSEARCH_ASSIGNEDTO_DEF_NAME);
 		uri.append(endPoint);
-		SearcherRequest searcherRequest = SearcherRequest.builder().
-				requestInfo(requestInfo).searchCriteria(serviceReqSearchCriteria).build();
-		
-		return searcherRequest;
+		return SearcherRequest.builder().requestInfo(requestInfo).searchCriteria(serviceReqSearchCriteria).build();
 	}
-	
-	 /**
+
+	/**
 	 * Prepares request and uri for count search for general criteria
 	 * 
 	 * @param uri
@@ -198,18 +194,15 @@ public class PGRUtils {
 	 * @return SearcherRequest
 	 * @author vishal
 	 */
-	public SearcherRequest prepareCountRequest(StringBuilder uri, ServiceReqSearchCriteria serviceReqSearchCriteria, 
+	public SearcherRequest prepareCountRequest(StringBuilder uri, ServiceReqSearchCriteria serviceReqSearchCriteria,
 			RequestInfo requestInfo) {
 		uri.append(searcherHost);
-		String endPoint = searcherEndpoint.replace("{moduleName}", PGRConstants.V3_SEARCHER_PGR_MOD_NAME)
-				.replace("{searchName}", PGRConstants.V3_SEARCHER_COUNT_DEF_NAME);
+		String endPoint = searcherEndpoint.replace(MODULE_NAME, PGRConstants.V3_SEARCHER_PGR_MOD_NAME)
+				.replace(SEARCH_NAME, PGRConstants.V3_SEARCHER_COUNT_DEF_NAME);
 		uri.append(endPoint);
-		SearcherRequest searcherRequest = SearcherRequest.builder().
-				requestInfo(requestInfo).searchCriteria(serviceReqSearchCriteria).build();
-		
-		return searcherRequest;
+		return SearcherRequest.builder().requestInfo(requestInfo).searchCriteria(serviceReqSearchCriteria).build();
 	}
-	
+
 	/**
 	 * Prepares request and uri for count search on assined to
 	 * 
@@ -219,18 +212,14 @@ public class PGRUtils {
 	 * @return SearcherRequest
 	 * @author vishal
 	 */
-	public SearcherRequest prepareCountRequestAssignedTo(StringBuilder uri, ServiceReqSearchCriteria serviceReqSearchCriteria, 
-			RequestInfo requestInfo) {
+	public SearcherRequest prepareCountRequestAssignedTo(StringBuilder uri,
+			ServiceReqSearchCriteria serviceReqSearchCriteria, RequestInfo requestInfo) {
 		uri.append(searcherHost);
-		String endPoint = searcherEndpoint.replace("{moduleName}", PGRConstants.V3_SEARCHER_PGR_MOD_NAME)
-				.replace("{searchName}", PGRConstants.V3_SEARCHER_COUNT_ASSIGNED_DEF_NAME);
+		String endPoint = searcherEndpoint.replace(MODULE_NAME, PGRConstants.V3_SEARCHER_PGR_MOD_NAME)
+				.replace(SEARCH_NAME, PGRConstants.V3_SEARCHER_COUNT_ASSIGNED_DEF_NAME);
 		uri.append(endPoint);
-		SearcherRequest searcherRequest = SearcherRequest.builder().
-				requestInfo(requestInfo).searchCriteria(serviceReqSearchCriteria).build();
-		
-		return searcherRequest;
+		return SearcherRequest.builder().requestInfo(requestInfo).searchCriteria(serviceReqSearchCriteria).build();
 	}
-	
 	
 	/**
 	 * Default response is responseInfo with error status and empty lists

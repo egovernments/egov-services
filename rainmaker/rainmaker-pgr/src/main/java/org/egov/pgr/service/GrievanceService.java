@@ -2,6 +2,7 @@ package org.egov.pgr.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.egov.common.contract.request.RequestInfo;
@@ -18,6 +19,7 @@ import org.egov.pgr.contract.ServiceReqSearchCriteria;
 import org.egov.pgr.contract.ServiceRequest;
 import org.egov.pgr.contract.ServiceResponse;
 import org.egov.pgr.producer.PGRProducer;
+import org.egov.pgr.repository.FileStoreRepo;
 import org.egov.pgr.repository.IdGenRepo;
 import org.egov.pgr.repository.ServiceRequestRepository;
 import org.egov.pgr.utils.PGRConstants;
@@ -26,6 +28,7 @@ import org.egov.pgr.utils.ResponseInfoFactory;
 import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.util.CollectionUtils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.JsonPath;
@@ -62,6 +65,9 @@ public class GrievanceService {
 
 	@Autowired
 	private PGRProducer pGRProducer;
+	
+	@Autowired
+	private FileStoreRepo fileStoreRepo;
 
 	@Autowired
 	private ServiceRequestRepository serviceRequestRepository;
@@ -98,12 +104,12 @@ public class GrievanceService {
 			String currentId = servReqIdList.get(servReqCount);
 			servReq.setAuditDetails(auditDetails);
 			servReq.setServiceRequestId(currentId);
+			// FIXME TODO business key should be module name and currentid in future
 			actionInfo.setBusinessKey(currentId);
 			actionInfo.setBy(by);
 			actionInfo.setWhen(auditDetails.getCreatedTime());
 			actionInfo.setTenantId(tenantId);
 			actionInfo.setStatus(actionInfo.getAction());
-			// FIXME TODO should be module name and currentid in future
 		}
 
 		pGRProducer.push(saveTopic, request);
@@ -138,6 +144,7 @@ public class GrievanceService {
 			Service servReq = serviceReqs.get(index);
 			ActionInfo actionInfo = actionInfos.get(index);
 			servReq.setAuditDetails(auditDetails);
+			// FIXME TODO business key should be module name and currentid in future
 			actionInfo.setBusinessKey(servReq.getServiceRequestId());
 			actionInfo.setBy(by);
 			actionInfo.setWhen(auditDetails.getCreatedTime());
@@ -198,7 +205,7 @@ public class GrievanceService {
 		SearcherRequest searcherRequest = null;
 		enrichRequest(requestInfo, serviceReqSearchCriteria);
 		log.info("Enriched request: " + serviceReqSearchCriteria);
-		if (null != serviceReqSearchCriteria.getServiceRequestId()
+		if (!CollectionUtils.isEmpty(serviceReqSearchCriteria.getServiceRequestId())
 				&& serviceReqSearchCriteria.getServiceRequestId().size() == 1) {
 			return getServiceRequestWithDetails(requestInfo, serviceReqSearchCriteria);
 		}
@@ -280,8 +287,6 @@ public class GrievanceService {
 		StringBuilder uri = new StringBuilder();
 		SearcherRequest searcherRequest = null;
 		searcherRequest = pGRUtils.prepareSearchRequest(uri, serviceReqSearchCriteria, requestInfo);
-		if (null == searcherRequest)
-			return pGRUtils.getDefaultServiceResponse(requestInfo);
 		Object response = serviceRequestRepository.fetchResult(uri, searcherRequest);
 		if (null == response)
 			return pGRUtils.getDefaultServiceResponse(requestInfo);
@@ -397,5 +402,33 @@ public class GrievanceService {
 
 		return searcherRequest;
 	}
+	
+	/**
+	 * method to replace the fileStoreIds with the respective urls acquired from
+	 * filestore service
+	 * 
+	 * @param historyList
+	 */
+	private void replaceIdsWithUrls(List<ActionHistory> historyList) {
 
+		String tenantId = historyList.get(0).getActions().get(0).getTenantId();
+		List<String> fileStoreIds = new ArrayList<>();
+
+		historyList.forEach(history -> 
+			history.getActions().forEach(action -> {
+				List<String> media = action.getMedia();
+				if (!CollectionUtils.isEmpty(media))
+					fileStoreIds.addAll(media);
+		}));
+
+		Map<String, String> urlIdMap = fileStoreRepo.getUrlMaps(tenantId, fileStoreIds);
+		
+		historyList.forEach(history -> 
+			history.getActions().forEach(action -> 
+				action.getMedia().forEach(media -> {
+					String url = urlIdMap.get(media);
+					if (null != url)
+						media = url;
+				})));
+	}
 }

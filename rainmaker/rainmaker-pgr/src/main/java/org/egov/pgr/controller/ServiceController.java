@@ -10,7 +10,6 @@ import org.egov.pgr.contract.ServiceRequest;
 import org.egov.pgr.contract.ServiceResponse;
 import org.egov.pgr.service.GrievanceService;
 import org.egov.pgr.utils.PGRRequestValidator;
-import org.egov.pgr.utils.PgrValidatorV2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,7 +24,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Controller
 @Slf4j
-@RequestMapping(value = "/v2/requests/")
+@RequestMapping(value = "/v1/requests/")
 public class ServiceController {
 
 	@Autowired
@@ -35,14 +34,11 @@ public class ServiceController {
 	@Autowired
 	private PGRRequestValidator pgrRequestValidator;
 	
-	@Autowired
-	private PgrValidatorV2 pgrValidatorV2;
-
 	/**
 	 * enpoint to create service requests
 	 * 
 	 * @param ServiceReqRequest
-	 * @author kaviyarasan
+	 * @author kaviyarasan1993
 	 */
 	@PostMapping("_create")
 	@ResponseBody
@@ -59,15 +55,14 @@ public class ServiceController {
 	 * enpoint to update service requests
 	 * 
 	 * @param ServiceReqRequest
-	 * @author el rey
+	 * @author kaviyarasan1993
 	 */
 	@PostMapping("_update")
 	@ResponseBody
 	private ResponseEntity<?> update(@RequestBody @Valid ServiceRequest serviceRequest) {
 
 		long startTime = new Date().getTime();
-		//pgrRequestValidator.validateUpdate(serviceRequest);
-		pgrValidatorV2.validateUpdate(serviceRequest);
+		pgrRequestValidator.validateUpdate(serviceRequest);
 		ServiceResponse response = service.update(serviceRequest);
 		long endTime = new Date().getTime();
 		log.debug(" the time taken for update in ms: {}", endTime - startTime);

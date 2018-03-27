@@ -305,6 +305,7 @@ public class GrievanceService {
 		ActionHistory actionHistory = ActionHistory.builder().actions(actions).build();
 		List<ActionHistory> actionHistories = new ArrayList<>();
 		actionHistories.add(actionHistory);
+		replaceIdsWithUrls(actionHistories);
 		ServiceResponse serviceResponse = mapper.convertValue(response, ServiceResponse.class);
 		serviceResponse.setActionHistory(actionHistories);
 		return serviceResponse;
@@ -323,7 +324,7 @@ public class GrievanceService {
 				throw new CustomException("401", "Unauthorized Employee");
 			}
 			log.info("Employee: " + response);
-			Long departmenCode = null;
+			Integer departmenCode = null;
 			try {
 				departmenCode = JsonPath.read(response, PGRConstants.V3_EMPLOYEE_DEPTCODE_JSONPATH);
 			} catch (Exception e) {

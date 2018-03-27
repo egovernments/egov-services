@@ -1,3 +1,7 @@
+delete from eg_userrole where tenantid='pb.Amritsar';
+delete from eg_user where tenantid='pb.Amritsar'; 
+
+
 delete from eg_role where tenantid='pb.Amritsar';
 delete from eg_role where tenantid='pb.Patiala';
 delete from eg_role where tenantid='pb.Jalandhar';

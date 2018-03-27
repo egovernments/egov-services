@@ -25,6 +25,12 @@ public class ActionRestRepository {
 		this.url = accessControlHost + url;
 	}
 
+	/**
+	 * get the list of Actions based on RoleCodes and tenantId from access-control
+	 * @param roleCodes
+	 * @param tenantId
+	 * @return
+	 */
 	public List<Action> getActionByRoleCodes(final List<String> roleCodes, String tenantId) {
 		String actionFileName = "";
 		actionFileName = actionFile;

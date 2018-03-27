@@ -41,7 +41,9 @@ public class UserRepository {
 		mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
 		try {
 			Map<String, Object> response = restTemplate.postForObject(HOST + SEARCH_USER_URL, request, Map.class);
+			
 			List<UserSearchResponseContent> users = (List<UserSearchResponseContent>) response.get("user");
+			
 			if (!users.isEmpty()) {
 				UserSearchResponseContent user = mapper.convertValue(users.get(0), UserSearchResponseContent.class);
 				return new User(user.getId(), user.getEmailId(), user.getMobileNumber());

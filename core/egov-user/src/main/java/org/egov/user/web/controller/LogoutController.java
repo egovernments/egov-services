@@ -23,6 +23,13 @@ public class LogoutController {
 		this.tokenStore = tokenStore;
 	}
 
+	/**
+	 * End-point to logout the session.
+	 * 
+	 * @param accessToken
+	 * @return
+	 * @throws Exception
+	 */
 	@PostMapping("/_logout")
 	public ResponseInfo deleteToken(@RequestParam("access_token") String accessToken) throws Exception {
 		OAuth2AccessToken redisToken = tokenStore.readAccessToken(accessToken);

@@ -53,6 +53,13 @@ public class UserRepository {
 		this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
 	}
 
+	/**
+	 * Get User By UserName And tenantId
+	 * 
+	 * @param userName
+	 * @param tenantId
+	 * @return
+	 */
 	public User findByUsername(String userName, String tenantId) {
 		Map<String, Object> userInputs = new HashMap<String, Object>();
 		userInputs.put("userName", userName);
@@ -69,7 +76,31 @@ public class UserRepository {
 		}
 		return entityUser;
 	}
+	
+	public User findByUsername(String userName) {
+		Map<String, Object> userInputs = new HashMap<String, Object>();
+		userInputs.put("userName", userName);
+		User entityUser = null;
+		UserRowMapper userRowMapper = new UserRowMapper();
+		namedParameterJdbcTemplate.query(userTypeQueryBuilder.getUserByUserName(), userInputs,
+				userRowMapper);
+		List<User> userList = userRowMapper.userList;
+		if (userList != null && !userList.isEmpty()) {
+			entityUser = userList.get(0);
+			getRolesAndMap(entityUser);
 
+		}
+		return entityUser;
+	}
+
+	/**
+	 * api will check user is present or not with userName and id And tenantId
+	 * 
+	 * @param userName
+	 * @param id
+	 * @param tenantId
+	 * @return
+	 */
 	public boolean isUserPresent(String userName, Long id, String tenantId) {
 
 		String Query = userTypeQueryBuilder.getUserPresentByIdAndUserNameAndTenant();
@@ -90,6 +121,13 @@ public class UserRepository {
 
 	}
 
+	/**
+	 * pi will check user is present or not with userName And tenantId
+	 * 
+	 * @param userName
+	 * @param tenantId
+	 * @return
+	 */
 	public boolean isUserPresent(String userName, String tenantId) {
 
 		String Query = userTypeQueryBuilder.getUserPresentByUserNameAndTenant();
@@ -108,6 +146,13 @@ public class UserRepository {
 		return false;
 	}
 
+	/**
+	 * api will fetch the user by emailId and TenantId
+	 * 
+	 * @param emailId
+	 * @param tenantId
+	 * @return
+	 */
 	public User findByEmailId(String emailId, String tenantId) {
 		User entityUser = null;
 		Map<String, Object> userInputs = new HashMap<String, Object>();
@@ -123,6 +168,12 @@ public class UserRepository {
 		return entityUser;
 	}
 
+	/**
+	 * this api will create the user.
+	 * 
+	 * @param user
+	 * @return
+	 */
 	public User create(User user) {
 		setEnrichedRolesToUser(user);
 		if (null != user.getPassword())
@@ -148,6 +199,11 @@ public class UserRepository {
 		return savedUser;
 	}
 
+	/**
+	 * api will do the mapping between user and role.
+	 * 
+	 * @param entityUser
+	 */
 	private void saveUserRoles(User entityUser) {
 		List<Map<String, Object>> batchValues = new ArrayList<>(entityUser.getRoles().size());
 
@@ -161,6 +217,12 @@ public class UserRepository {
 				batchValues.toArray(new Map[entityUser.getRoles().size()]));
 	}
 
+	/**
+	 * api will persist the user.
+	 * 
+	 * @param entityUser
+	 * @return
+	 */
 	private User save(User entityUser) {
 
 		Map<String, Object> userInputs = new HashMap<String, Object>();
@@ -243,11 +305,24 @@ public class UserRepository {
 		return entityUser;
 	}
 
+	/**
+	 * This api will return the next generate sequence of eg_user
+	 * 
+	 * @return
+	 */
 	private Long getNextSequence() {
 		Long id = jdbcTemplate.queryForObject(SELECT_NEXT_SEQUENCE, Long.class);
 		return id;
 	}
 
+	/**
+	 * This api will save addresses for particular user.
+	 * 
+	 * @param address
+	 * @param userId
+	 * @param tenantId
+	 * @return
+	 */
 	private Address saveAddress(Address address, Long userId, String tenantId) {
 		if (address != null) {
 			addressRepository.create(address, userId, tenantId);
@@ -256,18 +331,37 @@ public class UserRepository {
 		return null;
 	}
 
+	/**
+	 * api will get the all users by userSearchCriteria.After that roles and
+	 * address are set in to the user object.
+	 * 
+	 * @param userSearch
+	 * @return
+	 */
 	public List<User> findAll(UserSearchCriteria userSearch) {
 		List<User> userEntities = findAllUsers(userSearch);
 		userEntities.stream().map(this::getRolesAndMap).collect(Collectors.toList());
 		return userEntities.stream().map(this::getAddressAndMapToDomain).collect(Collectors.toList());
 	}
 
+	/**
+	 * api will get the user roles and set it to the user.
+	 * 
+	 * @param user
+	 * @return
+	 */
 	private User getRolesAndMap(User user) {
 		List<Role> roles = roleRepository.getUserRoles(user.getId(), user.getTenantId());
 		user.setRoles(roles);
 		return user;
 	}
 
+	/**
+	 * api will fetch all users based on userSearch criteria.
+	 * 
+	 * @param userSearch
+	 * @return
+	 */
 	private List<User> findAllUsers(UserSearchCriteria userSearch) {
 		final List<Object> preparedStatementValues = new ArrayList<>();
 		String queryStr = userTypeQueryBuilder.getQuery(userSearch, preparedStatementValues);
@@ -277,6 +371,12 @@ public class UserRepository {
 		return userList;
 	}
 
+	/**
+	 * api will get the addresses and map into the user object.
+	 * 
+	 * @param user
+	 * @return
+	 */
 	private User getAddressAndMapToDomain(User user) {
 		final List<Address> addresses = addressRepository.find(user.getId(), user.getTenantId());
 		final Address correspondenceAddress = filter(addresses, AddressType.CORRESPONDENCE);
@@ -286,6 +386,14 @@ public class UserRepository {
 		return user;
 	}
 
+	/**
+	 * api will filter the address by address type (Address Type can be
+	 * PERMANANT , CORROSPONDANCE)
+	 * 
+	 * @param addresses
+	 * @param addressType
+	 * @return
+	 */
 	private Address filter(List<Address> addresses, AddressType addressType) {
 		if (addresses == null) {
 			return null;
@@ -294,15 +402,33 @@ public class UserRepository {
 				.orElse(null);
 	}
 
+	/**
+	 * api will encode the password.
+	 * 
+	 * @param entityUser
+	 */
 	private void encryptPassword(User entityUser) {
 		final String encodedPassword = passwordEncoder.encode(entityUser.getPassword());
 		entityUser.setPassword(encodedPassword);
 	}
 
+	/**
+	 * Get the list of roles by user role code.
+	 * 
+	 * @param user
+	 * @return
+	 */
 	private List<Role> fetchRolesByCode(User user) {
 		return user.getRoles().stream().map((role) -> fetchRole(user, role)).collect(Collectors.toList());
 	}
 
+	/**
+	 * Get the role based on user role code and tenantId.
+	 * 
+	 * @param user
+	 * @param role
+	 * @return
+	 */
 	private Role fetchRole(User user, Role role) {
 		final Role enrichedRole = roleRepository.findByTenantIdAndCode(user.getTenantId(), role.getCode());
 		if (enrichedRole == null) {
@@ -311,10 +437,23 @@ public class UserRepository {
 		return enrichedRole;
 	}
 
+	/**
+	 * api will get the roles by user role codes and roles set it back to user
+	 * object.
+	 * 
+	 * @param user
+	 */
 	private void setEnrichedRolesToUser(User user) {
 		user.setRoles(fetchRolesByCode(user));
 	}
 
+	/**
+	 * api will get the user Details by id And tenantId
+	 * 
+	 * @param id
+	 * @param tenantId
+	 * @return
+	 */
 	public User getUserById(final Long id, String tenantId) {
 		User entityUser = getUserByIdAndTenantId(id, tenantId);
 		if (entityUser != null) {
@@ -323,6 +462,12 @@ public class UserRepository {
 		return entityUser != null ? entityUser : null;
 	}
 
+	/**
+	 * api will update the user details.
+	 * 
+	 * @param user
+	 * @return
+	 */
 	public User update(final User user) {
 
 		User oldUser = getUserByIdAndTenantId(user.getId(), user.getTenantId());
@@ -419,17 +564,23 @@ public class UserRepository {
 		}
 		updateuserInputs.put("IdentificationMark", user.getIdentificationMark());
 		updateuserInputs.put("Locale", user.getLocale());
-		updateuserInputs.put("MobileNumber", user.getMobileNumber());
+		if (null != user.getMobileNumber())
+			updateuserInputs.put("MobileNumber", user.getMobileNumber());
+		else
+			updateuserInputs.put("MobileNumber", oldUser.getMobileNumber());
 		updateuserInputs.put("Name", user.getName());
 		updateuserInputs.put("Pan", user.getPan());
 
-		if (!isEmpty(user.getPassword())) {
+		if (!isEmpty(user.getPassword()))
 			updateuserInputs.put("Password", passwordEncoder.encode(user.getPassword()));
-		} else {
+		else
 			updateuserInputs.put("Password", oldUser.getPassword());
-		}
+
 		updateuserInputs.put("Photo", user.getPhoto());
-		updateuserInputs.put("PasswordExpiryDate", user.getPasswordExpiryDate());
+		if (null != user.getPasswordExpiryDate())
+			updateuserInputs.put("PasswordExpiryDate", user.getPasswordExpiryDate());
+		else
+			updateuserInputs.put("PasswordExpiryDate", oldUser.getPasswordExpiryDate());
 		updateuserInputs.put("Salutation", user.getSalutation());
 		updateuserInputs.put("Signature", user.getSignature());
 		updateuserInputs.put("Title", user.getTitle());
@@ -447,7 +598,7 @@ public class UserRepository {
 				updateuserInputs.put("Type", "");
 			}
 		} else {
-			updateuserInputs.put("Type", "");
+			updateuserInputs.put("Type", oldUser.getType().toString());
 		}
 		updateuserInputs.put("LastModifiedDate", new Date());
 		updateuserInputs.put("LastModifiedBy", 1);
@@ -464,6 +615,11 @@ public class UserRepository {
 		return getAddressAndMapToDomain(updateduser);
 	}
 
+	/**
+	 * api will update the user Roles.
+	 * 
+	 * @param user
+	 */
 	private void updateRoles(User user) {
 		Map<String, Object> roleInputs = new HashMap<String, Object>();
 		roleInputs.put("userId", user.getId());
@@ -472,6 +628,13 @@ public class UserRepository {
 		saveUserRoles(user);
 	}
 
+	/**
+	 * Get the user By userId and tenantId
+	 * 
+	 * @param id
+	 * @param tenantId
+	 * @return
+	 */
 	public User getUserByIdAndTenantId(Long id, String tenantId) {
 
 		User entityUser = null;
@@ -489,4 +652,3 @@ public class UserRepository {
 		return entityUser;
 	}
 }
-

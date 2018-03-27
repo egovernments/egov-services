@@ -21,6 +21,12 @@ public class RoleRepository {
 		this.namedParameterJdbcTemplat = namedParameterJdbcTemplat;
 	}
 
+	/**
+	 * Get UserRoles By UserId And TenantId
+	 * @param userId
+	 * @param tenantId
+	 * @return
+	 */
 	public List<Role> getUserRoles(final long userId, final String tenantId) {
 
 		final Map<String, Object> parametersMap = new HashMap<String, Object>();
@@ -49,6 +55,12 @@ public class RoleRepository {
 		return roles;
 	}
 
+	/**
+	 * Get Role By role code and tenantId
+	 * @param tenantId
+	 * @param code
+	 * @return
+	 */
 	public Role findByTenantIdAndCode(String tenantId, String code) {
 
 		final Map<String, Object> parametersMap = new HashMap<String, Object>();

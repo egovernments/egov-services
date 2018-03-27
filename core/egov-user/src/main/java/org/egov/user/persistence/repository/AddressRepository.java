@@ -34,6 +34,13 @@ public class AddressRepository {
 		this.jdbcTemplate = jdbcTemplate;
 	}
 
+	/**
+	 * api will create the address for particular userId and tenantId.
+	 * @param address
+	 * @param userId
+	 * @param tenantId
+	 * @return
+	 */
 	public Address create(Address address, Long userId, String tenantId) {
 		Map<String, Object> addressInputs = new HashMap<String, Object>();
 
@@ -53,10 +60,20 @@ public class AddressRepository {
 		return address;
 	}
 
+	/**
+	 * api will give the next sequence generator for user-address.
+	 * @return
+	 */
 	private Long getNextSequence() {
 		return jdbcTemplate.queryForObject(SELECT_NEXT_SEQUENCE, Long.class);
 	}
 
+	/**
+	 * api will update the address based on userId and tenantId
+	 * @param domainAddresses
+	 * @param userId
+	 * @param tenantId
+	 */
 	public void update(List<Address> domainAddresses, Long userId, String tenantId) {
 
 		final Map<String, Object> Map = new HashMap<String, Object>();
@@ -76,6 +93,12 @@ public class AddressRepository {
 		updateAddresses(domainAddresses, entityAddresses, userId);
 	}
 
+	/**
+	 * api will fetch the user address by userId And tenantId
+	 * @param userId
+	 * @param tenantId
+	 * @return
+	 */
 	public List<Address> find(Long userId, String tenantId) {
 
 		final Map<String, Object> Map = new HashMap<String, Object>();
@@ -87,11 +110,24 @@ public class AddressRepository {
 		return addressList;
 	}
 
+	/**
+	 * api will update the user addresses.
+	 * @param domainAddresses
+	 * @param entityAddresses
+	 * @param userId
+	 */
 	private void updateAddresses(List<Address> domainAddresses, List<Address> entityAddresses, Long userId) {
 		Map<String, Address> typeToEntityAddressMap = toMap(entityAddresses);
 		domainAddresses.forEach(address -> updateAddress(typeToEntityAddressMap, address, userId));
 	}
 
+	
+	/**
+	 * update the address for particular userId
+	 * @param typeToEntityAddressMap
+	 * @param address
+	 * @param userId
+	 */
 	private void updateAddress(Map<String, Address> typeToEntityAddressMap, Address address, Long userId) {
 		final Address matchingEntityAddress = typeToEntityAddressMap.getOrDefault(address.getType().name(), null);
 

@@ -19,12 +19,24 @@ public class PasswordController {
 		this.userService = userService;
 	}
 
+	/**
+	 * end-point to update the password for loggedInUser
+	 * 
+	 * @param request
+	 * @return
+	 */
 	@PostMapping("/_update")
 	public UpdatePasswordResponse updatePassword(@RequestBody LoggedInUserUpdatePasswordRequest request) {
 		userService.updatePasswordForLoggedInUser(request.toDomain());
 		return new UpdatePasswordResponse(null);
 	}
 
+	/**
+	 * end-point to update the password for non logged in user
+	 * 
+	 * @param request
+	 * @return
+	 */
 	@PostMapping("/nologin/_update")
 	public UpdatePasswordResponse updatePasswordForNonLoggedInUser(
 			@RequestBody NonLoggedInUserUpdatePasswordRequest request) {

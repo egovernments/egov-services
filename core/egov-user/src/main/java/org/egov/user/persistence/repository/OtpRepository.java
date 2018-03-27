@@ -27,6 +27,11 @@ public class OtpRepository {
         this.otpValidateEndpoint = otpServiceHost + otpValidateEndpoint;
     }
 
+    /**
+     * rest-call to egov-otp to check otp validation is complete or not.
+     * @param request
+     * @return
+     */
 	public boolean isOtpValidationComplete(OtpValidationRequest request) {
 		Otp otp = Otp.builder().tenantId(request.getTenantId()).uuid(request.getOtpReference()).build();
 		OtpRequest otpRequest = new OtpRequest(otp);
@@ -34,6 +39,13 @@ public class OtpRepository {
 		return otpResponse.isValidationComplete(request.getMobileNumber());
 	}
 
+	
+	/**
+	 * rest call to egov-otp to validate the otp.
+	 * @param request
+	 * @return
+	 * @throws Exception
+	 */
 	public boolean validateOtp(OtpValidateRequest request) throws Exception{
 		// TODO Auto-generated method stub
 		OtpResponse otpResponse = null;

@@ -26,8 +26,6 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-
-
 @RestController
 public class UserController {
 
@@ -43,6 +41,13 @@ public class UserController {
 		this.tokenService = tokenService;
 	}
 
+	/**
+	 * end-point to create the citizen with otp.Here otp is mandatory to create
+	 * citizen.
+	 * 
+	 * @param createUserRequest
+	 * @return
+	 */
 	@PostMapping("/citizen/_create")
 	public UserDetailResponse createCitizen(@RequestBody CreateUserRequest createUserRequest) {
 		User user = createUserRequest.toDomain(true);
@@ -51,9 +56,16 @@ public class UserController {
 		return createResponse(newUser);
 	}
 
+	/**
+	 * end-point to create the user without otp validation.
+	 * 
+	 * @param createUserRequest
+	 * @param headers
+	 * @return
+	 */
 	@PostMapping("/users/_createnovalidate")
 	public UserDetailResponse createUserWithoutValidation(@RequestBody CreateUserRequest createUserRequest,
-														  @RequestHeader HttpHeaders headers) {
+			@RequestHeader HttpHeaders headers) {
 		User user = createUserRequest.toDomain(true);
 		user.setMobileValidationMandatory(isMobileValidationRequired(headers));
 		user.setOtpValidationMandatory(false);
@@ -61,30 +73,57 @@ public class UserController {
 		return createResponse(newUser);
 	}
 
+	/**
+	 * end-point to search the users by providing userSearchRequest. In Request
+	 * if there is no active filed value, it will fetch only active users
+	 * 
+	 * @param request
+	 * @return
+	 */
 	@PostMapping("/_search")
 	public UserSearchResponse get(@RequestBody UserSearchRequest request) {
-		if(request.getActive() == null) {
+		if (request.getActive() == null) {
 			request.setActive(true);
 		}
 		return searchUsers(request);
 	}
 
-
+	/**
+	 * end-point to search the users by providing userSearchRequest. In Request
+	 * if there is no active filed value, it will fetch all(active & inactive)
+	 * users.
+	 * 
+	 * @param request
+	 * @return
+	 */
 	@PostMapping("/v1/_search")
 	public UserSearchResponse getV1(@RequestBody UserSearchRequest request) {
 		return searchUsers(request);
 	}
 
+	/**
+	 * end-point to fetch the user details by access-token
+	 * 
+	 * @param accessToken
+	 * @return
+	 */
 	@PostMapping("/_details")
 	public CustomUserDetails getUser(@RequestParam(value = "access_token") String accessToken) {
 		final UserDetail userDetail = tokenService.getUser(accessToken);
 		return new CustomUserDetails(userDetail);
 	}
 
+	/**
+	 * end-point to update the user details without otp validations.
+	 * 
+	 * @param id
+	 * @param createUserRequest
+	 * @param headers
+	 * @return
+	 */
 	@PostMapping("/users/{id}/_updatenovalidate")
 	public UserDetailResponse updateUserWithoutValidation(@PathVariable final Long id,
-														  @RequestBody final CreateUserRequest createUserRequest,
-														  @RequestHeader HttpHeaders headers) {
+			@RequestBody final CreateUserRequest createUserRequest, @RequestHeader HttpHeaders headers) {
 		User user = createUserRequest.toDomain(false);
 		user.setMobileValidationMandatory(isMobileValidationRequired(headers));
 		user.setId(id);
@@ -92,6 +131,12 @@ public class UserController {
 		return createResponse(updatedUser);
 	}
 
+	/**
+	 * end-point to update user profile.
+	 * 
+	 * @param createUserRequest
+	 * @return
+	 */
 	@PostMapping("/profile/_update")
 	public UserDetailResponse patch(@RequestBody final CreateUserRequest createUserRequest) {
 		User user = createUserRequest.toDomain(false);
@@ -101,18 +146,14 @@ public class UserController {
 
 	private UserDetailResponse createResponse(User newUser) {
 		UserRequest userRequest = new UserRequest(newUser);
-		ResponseInfo responseInfo = ResponseInfo.builder()
-				.status(String.valueOf(HttpStatus.OK.value()))
-				.build();
+		ResponseInfo responseInfo = ResponseInfo.builder().status(String.valueOf(HttpStatus.OK.value())).build();
 		return new UserDetailResponse(responseInfo, Collections.singletonList(userRequest));
 	}
-
 
 	private UserSearchResponse searchUsers(@RequestBody UserSearchRequest request) {
 		List<User> userModels = userService.searchUsers(request.toDomain());
 
-		List<UserSearchResponseContent> userContracts = userModels.stream()
-				.map(UserSearchResponseContent::new)
+		List<UserSearchResponseContent> userContracts = userModels.stream().map(UserSearchResponseContent::new)
 				.collect(Collectors.toList());
 		ResponseInfo responseInfo = ResponseInfo.builder().status(String.valueOf(HttpStatus.OK.value())).build();
 		return new UserSearchResponse(responseInfo, userContracts);
@@ -130,4 +171,4 @@ public class UserController {
 		}
 		return true;
 	}
-}	
+}

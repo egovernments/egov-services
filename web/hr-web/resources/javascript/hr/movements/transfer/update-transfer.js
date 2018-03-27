@@ -204,7 +204,7 @@ class UpdateMovement extends React.Component {
           _this.setState({
             ..._this.state,
             buttons: _btns.length ? _btns : [],
-            owner: process.owner.id,
+            owner: process.owner ? process.owner.id : "",
             initiator: process.initiatorPosition,
             status: process.status
           })
@@ -685,8 +685,13 @@ class UpdateMovement extends React.Component {
                     });
                   },
                   error: function (err) {
-                    showError(err);
-
+                    if (err["responseJSON"].message)
+                      showError(err["responseJSON"].message);
+                    else if (err["responseJSON"].Movement[0] && err["responseJSON"].Movement[0].errorMsg) {
+                      showError(err["responseJSON"].Movement[0].errorMsg)
+                    } else {
+                      showError("Something went wrong. Please contact Administrator");
+                    }
                   }
                 });
 
@@ -763,8 +768,13 @@ class UpdateMovement extends React.Component {
             });
           },
           error: function (err) {
-            showError(err);
-
+            if (err["responseJSON"].message)
+              showError(err["responseJSON"].message);
+            else if (err["responseJSON"].Movement[0] && err["responseJSON"].Movement[0].errorMsg) {
+              showError(err["responseJSON"].Movement[0].errorMsg)
+            } else {
+              showError("Something went wrong. Please contact Administrator");
+            }
           }
         });
       }

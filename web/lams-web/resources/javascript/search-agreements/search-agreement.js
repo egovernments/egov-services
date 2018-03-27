@@ -461,7 +461,7 @@ class AgreementSearch extends React.Component {
         }*/
 
         const getDemandListing = function (agreement) {
-            if (agreement.source == "DATA_ENTRY") {
+            if (agreement.source === "DATA_ENTRY" && agreement.status === "ACTIVE") {
                 return (<option value="addeditdemand">Add / Edit Demand </option>);
             }
         }

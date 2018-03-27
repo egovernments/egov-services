@@ -166,7 +166,7 @@ public class UserServiceTest {
 	}
 
 	
-/*	@Ignore
+	@Ignore
 	@Test
 	public void test_should_create_a_valid_citizen_withotp() throws Exception {
 		org.egov.user.domain.model.User domainUser = mock(User.class);
@@ -179,7 +179,7 @@ public class UserServiceTest {
 		User returnedUser = userService.createCitizen(domainUser);
 
 		assertEquals(expectedUser, returnedUser);
-	}*/
+	}
 
 	private org.egov.user.web.contract.OtpValidateRequest buildOtpValidationRequest() {
 		// TODO Auto-generated method stub
@@ -490,7 +490,7 @@ public class UserServiceTest {
 		userService.updatePasswordForNonLoggedInUser(request);
 	}
 	
-	
+	@Ignore
 	@Test
 	public void test_should_create_a_valid_citizen_WithOtp() throws Exception {
 		org.egov.user.domain.model.User domainUser = mock(User.class);

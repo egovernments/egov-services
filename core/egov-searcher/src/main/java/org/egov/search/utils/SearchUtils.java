@@ -85,7 +85,12 @@ public class SearchUtils {
 						operator = ">=";
 					if(operator.equals("LE"))
 						operator = "<=";
-					whereClause.append(param.getName()).append(" "+operator+" ").append("'"+paramValue+"'");
+					if(operator.equals("LIKE")) {
+						paramValue = "%" + paramValue + "%";
+						whereClause.append(param.getName()).append(" "+operator+" ").append("'"+paramValue+"'");
+					}else {
+						whereClause.append(param.getName()).append(" "+operator+" ").append("'"+paramValue+"'");
+					}
 				}
                 whereClause.append(" "+condition+" ");
 		}

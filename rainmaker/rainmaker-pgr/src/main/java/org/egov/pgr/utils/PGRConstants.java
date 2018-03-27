@@ -30,6 +30,14 @@ public class PGRConstants {
 	
 	
 	
+	
+	//V2
+	public static final String V2_SEARCHER_PGR_MOD_NAME = "rainmaker-pgr-V2";
+	public static final String V2_SEARCHER_DEF_NAME = "serviceSearchWithDetails";
+
+	
+	
+	
 	//V3 Constants
 	public static final String V3_MDMS_JSONPATH_SERVICECODES = "$.*.serviceCodes";
 	public static final String V3_PG_JSONPATH_COUNT = "$.count[0].count";

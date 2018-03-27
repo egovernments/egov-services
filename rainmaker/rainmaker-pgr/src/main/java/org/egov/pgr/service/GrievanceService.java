@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import javax.validation.Valid;
+
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.mdms.model.MdmsCriteriaReq;
 import org.egov.pgr.contract.ActionHistory;
@@ -17,6 +19,7 @@ import org.egov.pgr.contract.SearcherRequest;
 import org.egov.pgr.contract.Service;
 import org.egov.pgr.contract.ServiceReqSearchCriteria;
 import org.egov.pgr.contract.ServiceRequest;
+import org.egov.pgr.contract.ServiceRequestDetails;
 import org.egov.pgr.contract.ServiceResponse;
 import org.egov.pgr.producer.PGRProducer;
 import org.egov.pgr.repository.FileStoreRepo;
@@ -30,6 +33,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.util.CollectionUtils;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.JsonPath;
 
@@ -217,6 +221,87 @@ public class GrievanceService {
 		ServiceResponse serviceResponse = mapper.convertValue(response, ServiceResponse.class);
 		return serviceResponse;
 	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	/**
+	 * Method to return service requests along with details acc to V5 design received from the repo to the controller in
+	 * the reqd format
+	 * 
+	 * @param requestInfo
+	 * @param serviceReqSearchCriteria
+	 * @return ServiceReqResponse
+	 * @author vishal
+	 */
+	public Object getServiceRequestDetails(RequestInfo requestInfo, ServiceReqSearchCriteria serviceReqSearchCriteria) {
+		StringBuilder uri = new StringBuilder();
+		SearcherRequest searcherRequest = null;
+		searcherRequest = pGRUtils.prepareSearchRequestWithDetails(uri, serviceReqSearchCriteria, requestInfo);
+		Object response = serviceRequestRepository.fetchResult(uri, searcherRequest);
+		log.info("Searcher response: " + response);
+		if (null == response)
+			return pGRUtils.getDefaultServiceResponse(requestInfo);
+		return prepareResult(response, requestInfo);
+
+	}
+	
+	
+	public ServiceResponse prepareResult(Object response, RequestInfo requestInfo) {
+		ObjectMapper mapper = pGRUtils.getObjectMapper();
+		List<Service> services = new ArrayList<Service>();
+		List<ActionHistory> actionHistory = new ArrayList<ActionHistory>();
+		  
+		  
+		List<ServiceRequestDetails> result = new ArrayList<>();
+		List<Object> list = (List<Object>) JsonPath.read(response, "$.services");
+		log.info("Objects: "+list);
+		for(Object entry: list) {
+			ServiceRequestDetails object = mapper.convertValue(entry, ServiceRequestDetails.class);
+			result.add(object);
+			log.info("Object: "+object);
+		}
+		
+		for(ServiceRequestDetails obj: result) {
+			List<ActionInfo> action = obj.getActionhistory();
+			ActionHistory actionHis = new ActionHistory();
+			actionHis.setActions(action);
+			actionHistory.add(actionHis);
+			
+			obj.setActionhistory(null);
+			services.add(obj.getServices());
+			
+		}
+		
+		replaceIdsWithUrls(actionHistory);
+		
+		ServiceResponse serviceResponse = ServiceResponse.builder()
+				.responseInfo(factory.createResponseInfoFromRequestInfo(requestInfo, true))
+				.services(services)
+				.actionHistory(actionHistory)
+				.build();
+		
+		return serviceResponse;
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 
 	/**
 	 * method to fetch service codes from mdms based on dept
@@ -428,11 +513,14 @@ public class GrievanceService {
 		}));
 
 		Map<String, String> urlIdMap = fileStoreRepo.getUrlMaps(tenantId, fileStoreIds);
+		
+		log.info("urlIdMap: "+urlIdMap);
 
-		historyList.forEach(history -> history.getActions().forEach(action -> action.getMedia().forEach(media -> {
-			String url = urlIdMap.get(media);
+		historyList.forEach(history -> history.getActions().forEach(action -> action.getMedia().forEach(fileStoreId -> {
+			String url = urlIdMap.get(fileStoreId);
+			System.err.println(" the url is : "+url);
 			if (null != url)
-				media = url;
+				fileStoreId = url;
 		})));
 	}
 }

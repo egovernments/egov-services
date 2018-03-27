@@ -149,6 +149,47 @@ public class PGRUtils {
 		return SearcherRequest.builder().requestInfo(requestInfo).searchCriteria(serviceReqSearchCriteria).build();
 	}
 	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	/**
+	 * Prepares request and uri for service request search
+	 * 
+	 * @param uri
+	 * @param serviceReqSearchCriteria
+	 * @param requestInfo
+	 * @return SearcherRequest
+	 * @author vishal
+	 */
+	public SearcherRequest prepareSearchRequestWithDetails(StringBuilder uri, ServiceReqSearchCriteria serviceReqSearchCriteria,
+			RequestInfo requestInfo) {
+		
+		uri.append(searcherHost);
+		String endPoint = searcherEndpoint.replace(MODULE_NAME, PGRConstants.V2_SEARCHER_PGR_MOD_NAME)
+				.replace(SEARCH_NAME, PGRConstants.V2_SEARCHER_DEF_NAME);
+		uri.append(endPoint);
+		return SearcherRequest.builder().requestInfo(requestInfo).searchCriteria(serviceReqSearchCriteria).build();
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	/**
 	 * Prepares request and uri for service request search
 	 * 

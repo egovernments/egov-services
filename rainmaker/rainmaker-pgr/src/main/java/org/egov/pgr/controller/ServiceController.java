@@ -85,7 +85,7 @@ public class ServiceController {
 
 		pgrRequestValidator.validateSearch(serviceReqSearchCriteria, requestInfoWrapper.getRequestInfo());
 		long startTime = new Date().getTime();
-		Object serviceReqResponse = service.getServiceRequests(requestInfoWrapper.getRequestInfo(),
+		Object serviceReqResponse = service.getServiceRequestDetails(requestInfoWrapper.getRequestInfo(),
 				serviceReqSearchCriteria);
 		long endTime = new Date().getTime();
 		log.debug(" the time taken for search in ms: {}", endTime - startTime);

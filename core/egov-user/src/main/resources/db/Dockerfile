@@ -8,6 +8,8 @@ COPY ./migration/dev /flyway/dev
 
 COPY ./migration/qa /flyway/qa
 
+COPY ./migration/test /flyway/test
+
 COPY migrate.sh /usr/bin/migrate.sh
 
 RUN chmod +x /usr/bin/migrate.sh

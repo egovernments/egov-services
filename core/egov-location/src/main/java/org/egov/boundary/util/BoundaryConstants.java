@@ -170,6 +170,13 @@ public class BoundaryConstants {
     public static final String TENANT_SEARCH_STATE_MISMATCH_DESC = "Attempting to raise a complaint from a different " +
             "state module";
 
+    public static final String TENANT_SEARCH_TENANT_MAPPING_NOT_FOUND = "TENANT_SEARCH_TENANT_MAPPING_NOT_FOUND";
+    public static final String TENANT_SEARCH_TENANT_MAPPING_NOT_FOUND_DESC = "Unable to find mapping in MDMS " +
+            "for provided lat / lng ";
+
+    public static final String TENANT_SEARCH_GMAPS_NO_RESP = "TENANT_SEARCH_GMAPS_NO_RESP";
+    public static final String TENANT_SEARCH_GMAPS_NO_RESP_DESC = "GMAPS could not resolve provided lat / lng";
+
     public static final String GMAPS_API_KEY = System.getenv("GMAPS_API_KEY");
 
     public static final String TENANT_MODULE_NAME = "tenant";

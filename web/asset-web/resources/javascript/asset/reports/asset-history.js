@@ -209,7 +209,7 @@ class AssetHistory extends React.Component {
         <tr key={idx}>
           <td>{idx+1}</td>
           <td>{moment(history.transactionDate).format('DD/MM/YYYY')}</td>
-          <td>{ grossValue}</td>
+          <td>{ currentValue === null ? 0 : currentValue}</td>
           <td>{history.transactionType}</td>
           <td>{history.transactionAmount}</td>
           <td>{history.valueAfterTransaction || 0}</td>
@@ -283,7 +283,7 @@ class AssetHistory extends React.Component {
                         <td>{getName(department,item.department.id)}</td>
                         <td><a href='javascript:;' onClick={(e)=>linkHistoryTable(item.code)}>{item.code}</a></td>
                         <td>{item.name}</td>
-                        <td>{item.grossValue || 0}</td>
+                        <td>{item.currentValue === null ? 0 : item.currentValue}</td>
                 </tr>);
         })
       }

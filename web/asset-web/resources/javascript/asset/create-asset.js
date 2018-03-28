@@ -2410,7 +2410,7 @@ class CreateAsset extends React.Component {
                   </div>
                 </div>
                 {/* {showYearWiseDep()} */}
-                {showAssetAttachedFiles()}
+                {showAttachedFiles()}
             </div>
 						  </div>
             <div className="form-section" id="allotteeDetailsBlock">

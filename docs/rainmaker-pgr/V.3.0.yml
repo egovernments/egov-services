@@ -15,7 +15,7 @@ info:
 host: phoenix-qa.egovernments.org
 schemes:
   - https
-basePath: '/rainmaker-pg/v1'
+basePath: '/rainmaker-pgr/v1'
 
 paths:
   /requests/_search:

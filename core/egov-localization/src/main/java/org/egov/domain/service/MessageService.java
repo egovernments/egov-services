@@ -70,8 +70,11 @@ public class MessageService {
     public List<Message> getFilteredMessages(MessageSearchCriteria searchCriteria) {
         final List<Message> messages = getMessages(searchCriteria);
         if (searchCriteria.isModuleAbsent()) {
-            return messages;
-        }
+			return messages.parallelStream()
+					.filter(e -> e.getLocale().equals(searchCriteria.getLocale())
+							&& e.getTenant().equals(searchCriteria.getTenantId().getTenantId()))
+					.collect(Collectors.toList());
+		}
         return messages.stream()
             .filter(message -> searchCriteria.getModule().equals(message.getModule()))
             .collect(Collectors.toList());

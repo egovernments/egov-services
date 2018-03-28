@@ -208,8 +208,9 @@ public class UserService {
 		validateUserId(user);
 		validateProfileUpdateIsDoneByTheSameLoggedInUser(user);
 		user.nullifySensitiveFields();
-		setFileStoreUrlByFileStoreId(user);
-		return updateExistingUser(user);
+	    User updatedUser = updateExistingUser(user);
+		setFileStoreUrlByFileStoreId(updatedUser);
+		return updatedUser;
 	}
 
 	/**

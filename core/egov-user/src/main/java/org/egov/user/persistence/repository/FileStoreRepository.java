@@ -38,7 +38,7 @@ public class FileStoreRepository {
 
 		List<String> fileStoreIds = new ArrayList<String>();
 		fileStoreIds.add(fileStoreId);
-		String Url = fileStoreHost + fileStorePath + "?tenantId=" + tenantId + "&fileStoreIds=" + fileStoreIds;
+		String Url = fileStoreHost + fileStorePath + "?tenantId=" + tenantId + "&fileStoreIds=" + fileStoreIds.get(0);
 
 		try {
 			fileStoreUrls = restTemplate.getForObject(Url, Map.class);

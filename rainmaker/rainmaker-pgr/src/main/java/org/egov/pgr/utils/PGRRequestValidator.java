@@ -26,22 +26,36 @@ public class PGRRequestValidator {
 
 	@Autowired
 	private GrievanceService requestService;
-
-	public void validateUpdate(ServiceRequest serviceReqRequest) {
+	
+	public void validateCreate(ServiceRequest serviceRequest) {
 
 		Map<String, String> errorMap = new HashMap<>();
+		userInfoCheck(serviceRequest, errorMap);
 
+		if (!errorMap.isEmpty())
+			throw new CustomException(errorMap);
+	}
+
+	public void validateUpdate(ServiceRequest serviceRequest) {
+
+		Map<String, String> errorMap = new HashMap<>();
+		
+		userInfoCheck(serviceRequest, errorMap);
+
+		if (!errorMap.isEmpty())
+			throw new CustomException(errorMap);
+		
 		ServiceReqSearchCriteria service = ServiceReqSearchCriteria.builder()
-				.tenantId(serviceReqRequest.getServices().get(0).getTenantId()).serviceRequestId(serviceReqRequest
+				.tenantId(serviceRequest.getServices().get(0).getTenantId()).serviceRequestId(serviceRequest
 						.getServices().stream().map(Service::getServiceRequestId).collect(Collectors.toList()))
 				.build();
 
 		Map<String, Service> map = ((ServiceResponse) requestService
-				.getServiceRequests(serviceReqRequest.getRequestInfo(), service)).getServices().stream()
+				.getServiceRequests(serviceRequest.getRequestInfo(), service)).getServices().stream()
 						.collect(Collectors.toMap(Service::getServiceRequestId, Function.identity()));
 
 		List<String> errorList = new ArrayList<>();
-		serviceReqRequest.getServices().forEach(a -> {
+		serviceRequest.getServices().forEach(a -> {
 
 			if (map.get(a.getServiceRequestId()) == null)
 				errorList.add(a.getServiceRequestId());
@@ -53,6 +67,24 @@ public class PGRRequestValidator {
 
 		if (!errorMap.isEmpty())
 			throw new CustomException(errorMap);
+	}
+	
+	public void userInfoCheck(ServiceRequest serviceRequest, Map<String, String> errorMap) {
+
+		if (null == serviceRequest.getRequestInfo()) {
+			errorMap.put("EG_PGR_REQUESTINFO", "Request info is mandatory for serviceRequest");
+			return;
+		}
+
+		if (null == serviceRequest.getRequestInfo().getUserInfo()) {
+			errorMap.put("EG_PGR_REQUESTINFO_USERINFO", "UserInfo info is mandatory for serviceRequest");
+			return;
+		}
+		
+		if (CollectionUtils.isEmpty(serviceRequest.getRequestInfo().getUserInfo().getRoles())) {
+			errorMap.put("EG_PGR_REQUESTINFO_USERINFO_ROLES", "Roles cannot be empty for serviceRequest");
+			return;
+		}
 	}
 
 	public void validateSearch(ServiceReqSearchCriteria criteria, RequestInfo requestInfo) {

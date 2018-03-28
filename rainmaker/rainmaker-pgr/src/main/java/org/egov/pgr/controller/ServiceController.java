@@ -44,6 +44,7 @@ public class ServiceController {
 	@ResponseBody
 	private ResponseEntity<?> create(@RequestBody @Valid ServiceRequest serviceRequest) {
 
+		pgrRequestValidator.validateCreate(serviceRequest);
 		long startTime = new Date().getTime();
 		ServiceResponse response = service.create(serviceRequest);
 		long endTime = new Date().getTime();

@@ -1,12 +1,16 @@
 package org.egov.pgr.repository;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.pgr.contract.IdGenerationRequest;
 import org.egov.pgr.contract.IdGenerationResponse;
 import org.egov.pgr.contract.IdRequest;
+import org.egov.tracer.model.CustomException;
 import org.egov.tracer.model.ServiceCallException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -47,6 +51,10 @@ public class IdGenRepo {
 			response = restTemplate.postForObject(idGenHost + idGenPath, req, IdGenerationResponse.class);
 		} catch (HttpClientErrorException e) {
 			throw new ServiceCallException(e.getResponseBodyAsString());
+		} catch (Exception e) {
+			Map<String, String> map = new HashMap<>();
+			map.put(e.getCause().getClass().getName(),e.getMessage());
+			throw new CustomException(map);
 		}
 		return response;
 	}

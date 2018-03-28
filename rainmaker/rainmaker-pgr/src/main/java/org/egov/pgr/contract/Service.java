@@ -523,6 +523,7 @@ public class Service   {
    * Rating about service from 1 to 5.
    * @return rating
   **/
+  @Size(min=1,max=5) 
   public String getRating() {
     return rating;
   }

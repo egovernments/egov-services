@@ -47,3 +47,49 @@ SearchDefinitions:
     outJsonPath: $.services
     responseInfoPath: $.ResponseInfo
 
+ - name: getServiceRequestsOnAssignedTo
+   query: 
+    baseQuery: select array_to_json(array_agg(row_to_json(servicesRequestIds))) from (select businessKey from eg_pgr_action where eg_pgr_action.when IN (select max("when") from eg_pgr_action $where group by businessKey)) servicesRequestIds
+    groupBy:    
+    orderBy: 
+   searchParams:
+    condition: AND
+    params:
+    - name: tenantid
+      isMandatory: true
+      jsonPath: $.searchCriteria.tenantId
+    - name: assignee
+      isMandatory: true
+      jsonPath: $.searchCriteria.assignedTo
+
+   output:
+    jsonFormat: {"ResponseInfo": {}}
+    outJsonPath: $.servicesRequestIds
+    responseInfoPath: $.ResponseInfo
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

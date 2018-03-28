@@ -50,11 +50,11 @@ public class PGRUtils {
 	@Value("${egov.hr.employee.search.endpoint}")
 	private String hrEmployeeSearchEndpoint;
 	
-	@Value("${egov.hr.masters.host}")
-	private String hrMaster;
+	@Value("${egov.common.masters.host}")
+	private String commonMasterHost;
 	
-	@Value("${egov.hr.masters.search.endpoint}")
-	private String hrMasterSearchEndpoint;
+	@Value("${egov.common.masters.search.endpoint}")
+	private String commonMasterSearchEndpoint;
 	
 	@Autowired
 	private ResponseInfoFactory factory;
@@ -154,7 +154,7 @@ public class PGRUtils {
 	
 	
 	
-	
+/*................................................V5..............................................................*/	
 	
 	
 	
@@ -179,7 +179,51 @@ public class PGRUtils {
 	}
 	
 	
+	/**
+	 * Prepares request and uri for service request search
+	 * 
+	 * @param uri
+	 * @param serviceReqSearchCriteria
+	 * @param requestInfo
+	 * @return SearcherRequest
+	 * @author vishal
+	 */
+	public SearcherRequest prepareSearchRequestForAssignedTo(StringBuilder uri, ServiceReqSearchCriteria serviceReqSearchCriteria,
+			RequestInfo requestInfo) {
+		
+		uri.append(searcherHost);
+		String endPoint = searcherEndpoint.replace(MODULE_NAME, PGRConstants.V2_SEARCHER_PGR_MOD_NAME)
+				.replace(SEARCH_NAME, PGRConstants.V2_SEARCHER_SRID_ASSIGNEDTO_DEF_NAME);
+		uri.append(endPoint);
+		return SearcherRequest.builder().requestInfo(requestInfo).searchCriteria(serviceReqSearchCriteria).build();
+	}
 	
+	
+	public RequestInfoWrapper prepareRequestForEmployeeSearch(StringBuilder uri, RequestInfo requestInfo,
+			ServiceReqSearchCriteria serviceReqSearchCriteria) {
+		RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
+		requestInfoWrapper.setRequestInfo(requestInfo);
+		uri.append(hrEmployeeHost).append(hrEmployeeSearchEndpoint)
+		.append("?id="+requestInfo.getUserInfo().getId()).append("&tenantId="+serviceReqSearchCriteria.getTenantId());
+
+		return requestInfoWrapper;
+	}
+	
+	public RequestInfoWrapper prepareRequestForDeptSearch(StringBuilder uri, RequestInfo requestInfo, long deptId, String tenantId) {
+		RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
+		requestInfoWrapper.setRequestInfo(requestInfo);
+		uri.append(commonMasterHost).append(commonMasterSearchEndpoint).append("?id="+deptId).append("&tenantId="+tenantId);
+
+		return requestInfoWrapper;
+	}
+	
+	
+	
+	
+	
+	
+/*................................................V5..............................................................*/	
+
 	
 	
 	
@@ -289,21 +333,5 @@ public class PGRUtils {
 	}
 	
 	
-	public RequestInfoWrapper prepareRequestForEmployeeSearch(StringBuilder uri, RequestInfo requestInfo,
-			ServiceReqSearchCriteria serviceReqSearchCriteria) {
-		RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
-		requestInfoWrapper.setRequestInfo(requestInfo);
-		uri.append(hrEmployeeHost).append(hrEmployeeSearchEndpoint)
-		.append("?id="+requestInfo.getUserInfo().getId()).append("&tenantId=default");
 
-		return requestInfoWrapper;
-	}
-	
-	public RequestInfoWrapper prepareRequestForDeptSearch(StringBuilder uri, RequestInfo requestInfo, long deptId) {
-		RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
-		requestInfoWrapper.setRequestInfo(requestInfo);
-		uri.append(hrMaster).append(hrMasterSearchEndpoint).append("?id="+deptId);
-
-		return requestInfoWrapper;
-	}
 }

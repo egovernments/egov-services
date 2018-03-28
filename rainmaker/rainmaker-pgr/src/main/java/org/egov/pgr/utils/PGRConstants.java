@@ -34,6 +34,9 @@ public class PGRConstants {
 	//V2
 	public static final String V2_SEARCHER_PGR_MOD_NAME = "rainmaker-pgr-V2";
 	public static final String V2_SEARCHER_DEF_NAME = "serviceSearchWithDetails";
+	public static final String V2_SEARCHER_SRID_ASSIGNEDTO_DEF_NAME = "getServiceRequestsOnAssignedTo";
+	public static final String V2_SRID_ASSIGNEDTO_JSONPATH = "$.servicesRequestIds.*.businesskey";
+
 
 	
 	
@@ -58,7 +61,7 @@ public class PGRConstants {
 	public static final String V3_SERVICES_PARENT_JSONPATH = "$.services";
 	public static final String V3_RESPONSEINFO_JSONPATH = "$.ResponseInfo";
 	public static final String V3_EMPLOYEE_DEPTCODE_JSONPATH = "$.Employee[0].assignments[0].department";
-	public static final String V3_DEPARTMENTNAME_EMPLOYEE_JSONPATH = "$.departmentList[0].name";
+	public static final String V3_DEPARTMENTNAME_EMPLOYEE_JSONPATH = "$.Department[0].name";
 
 	
 }

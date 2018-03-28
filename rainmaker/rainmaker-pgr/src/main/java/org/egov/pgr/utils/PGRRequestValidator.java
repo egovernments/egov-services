@@ -45,13 +45,13 @@ public class PGRRequestValidator {
 		if (!errorMap.isEmpty())
 			throw new CustomException(errorMap);
 		
-		ServiceReqSearchCriteria service = ServiceReqSearchCriteria.builder()
+		ServiceReqSearchCriteria serviceReqSearchCriteria = ServiceReqSearchCriteria.builder()
 				.tenantId(serviceRequest.getServices().get(0).getTenantId()).serviceRequestId(serviceRequest
 						.getServices().stream().map(Service::getServiceRequestId).collect(Collectors.toList()))
 				.build();
 
-		Map<String, Service> map = ((ServiceResponse) requestService
-				.getServiceRequests(serviceRequest.getRequestInfo(), service)).getServices().stream()
+		Map<String, Service> map = ((ServiceResponse) requestService.
+				getServiceRequestDetails(serviceRequest.getRequestInfo(), serviceReqSearchCriteria)).getServices().stream()
 						.collect(Collectors.toMap(Service::getServiceRequestId, Function.identity()));
 
 		List<String> errorList = new ArrayList<>();

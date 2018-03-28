@@ -118,20 +118,6 @@ public class PGRRequestValidator {
 			errorMap.put("401","Unauthenticated user, userInfo missing in the request.");
 			return;
 		}
-		
-	/*	if(requestInfo.getUserInfo().getRoles().get(0).getName().equals("CITIZEN") && requestInfo.getUserInfo().getRoles().size() == 1) {
-			if(null != criteria.getAccountId() && !criteria.getAccountId().isEmpty()) {
-				if(!(criteria.getAccountId().equals(requestInfo.getUserInfo().getId().toString())))
-					errorMap.put("403", "User not authorized to access this information");
-			}else {
-				errorMap.put("403", "User not authorized, accountId missing");
-			}
-		}
-*/		
-	/*	if(requestInfo.getUserInfo().getRoles().get(0).getName().equals("DGRO") && requestInfo.getUserInfo().getRoles().size() == 1) {
-			if(null == criteria.getGroup() || criteria.getGroup().isEmpty())
-				errorMap.put("400", "Department/group of the DGRO is mandatory");
-		}*/
 
     }
 }

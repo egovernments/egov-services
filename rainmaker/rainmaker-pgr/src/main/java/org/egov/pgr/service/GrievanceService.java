@@ -218,18 +218,12 @@ public class GrievanceService {
 		ServiceResponse serviceResponse = mapper.convertValue(response, ServiceResponse.class);
 		return serviceResponse;
 	}
-	
-	
-	
-	
-	
-	
-/*...................................................V5................................................................*/	
-	
-	
+
+	/* ...................................................V5-START................................................................*/
+
 	/**
-	 * Method to return service requests along with details acc to V5 design received from the repo to the controller in
-	 * the reqd format
+	 * Method to return service requests along with details acc to V5 design
+	 * received from the repo to the controller in the reqd format
 	 * 
 	 * @param requestInfo
 	 * @param serviceReqSearchCriteria
@@ -241,8 +235,8 @@ public class GrievanceService {
 		SearcherRequest searcherRequest = null;
 		try {
 			enrichRequest(requestInfo, serviceReqSearchCriteria);
-		}catch(CustomException e) {
-			if(e.getMessage().equals("No Data"))
+		} catch (CustomException e) {
+			if (e.getMessage().equals("No Data"))
 				return pGRUtils.getDefaultServiceResponse(requestInfo);
 			else
 				throw e;
@@ -255,9 +249,7 @@ public class GrievanceService {
 		return prepareResult(response, requestInfo);
 
 	}
-	
-	
-	
+
 	/**
 	 * Method to return service requests ids based on the assignedTo
 	 * 
@@ -266,67 +258,63 @@ public class GrievanceService {
 	 * @return List<String>
 	 * @author vishal
 	 */
-	public List<String> getServiceRequestIdsOnAssignedTo(RequestInfo requestInfo, ServiceReqSearchCriteria serviceReqSearchCriteria) {
+	public List<String> getServiceRequestIdsOnAssignedTo(RequestInfo requestInfo,
+			ServiceReqSearchCriteria serviceReqSearchCriteria) {
 		StringBuilder uri = new StringBuilder();
 		List<String> serviceRequestIds = new ArrayList<>();
-		SearcherRequest searcherRequest = pGRUtils.prepareSearchRequestForAssignedTo(uri, serviceReqSearchCriteria, requestInfo);
+		SearcherRequest searcherRequest = pGRUtils.prepareSearchRequestForAssignedTo(uri, serviceReqSearchCriteria,
+				requestInfo);
 		try {
 			Object response = serviceRequestRepository.fetchResult(uri, searcherRequest);
 			log.info("Searcher response: " + response);
 			if (null == response)
 				return serviceRequestIds;
 			serviceRequestIds = (List<String>) JsonPath.read(response, PGRConstants.V2_SRID_ASSIGNEDTO_JSONPATH);
-		}catch(Exception e) {
-			log.error("Exception while parsing SRid search on AssignedTo result: "+e);
+		} catch (Exception e) {
+			log.error("Exception while parsing SRid search on AssignedTo result: " + e);
 			return serviceRequestIds;
 		}
-		
+
 		log.info("serviceRequestIds: " + serviceRequestIds);
-		
+
 		return serviceRequestIds;
-		
-		
+
 	}
-	
+
 	public ServiceResponse prepareResult(Object response, RequestInfo requestInfo) {
 		ObjectMapper mapper = pGRUtils.getObjectMapper();
 		List<Service> services = new ArrayList<Service>();
 		List<ActionHistory> actionHistory = new ArrayList<ActionHistory>();
-		  
-		  
+
 		List<ServiceRequestDetails> result = new ArrayList<>();
 		List<Object> list = (List<Object>) JsonPath.read(response, "$.services");
-		log.info("Objects: "+list);
-		for(Object entry: list) {
+		log.info("Objects: " + list);
+		for (Object entry : list) {
 			ServiceRequestDetails object = mapper.convertValue(entry, ServiceRequestDetails.class);
 			result.add(object);
-			log.info("Object: "+object);
+			log.info("Object: " + object);
 		}
-		
-		for(ServiceRequestDetails obj: result) {
+
+		for (ServiceRequestDetails obj : result) {
 			List<ActionInfo> action = obj.getActionhistory();
 			ActionHistory actionHis = new ActionHistory();
 			actionHis.setActions(action);
 			actionHistory.add(actionHis);
-			
+
 			obj.setActionhistory(null);
 			services.add(obj.getServices());
-			
+
 		}
-		
+
 		replaceIdsWithUrls(actionHistory);
-		
+
 		ServiceResponse serviceResponse = ServiceResponse.builder()
-				.responseInfo(factory.createResponseInfoFromRequestInfo(requestInfo, true))
-				.services(services)
-				.actionHistory(actionHistory)
-				.build();
-		
+				.responseInfo(factory.createResponseInfoFromRequestInfo(requestInfo, true)).services(services)
+				.actionHistory(actionHistory).build();
+
 		return serviceResponse;
 	}
-	
-	
-	
+
 	/**
 	 * method to fetch service codes from mdms based on dept
 	 * 
@@ -343,14 +331,13 @@ public class GrievanceService {
 		Object response = null;
 		try {
 			response = serviceRequestRepository.fetchResult(uri, mdmsCriteriaReq);
-		}catch(Exception e) {
-			log.error("Exception while fetching serviceCodes: "+e);
+		} catch (Exception e) {
+			log.error("Exception while fetching serviceCodes: " + e);
 		}
 		return response;
 
 	}
-	
-	
+
 	public void enrichRequest(RequestInfo requestInfo, ServiceReqSearchCriteria serviceReqSearchCriteria) {
 		log.info("Enriching request.........: " + serviceReqSearchCriteria);
 		if (requestInfo.getUserInfo().getRoles().get(0).getName().equals("DGRO")
@@ -359,12 +346,12 @@ public class GrievanceService {
 			String department = getDepartment(serviceReqSearchCriteria, requestInfo, departmenCode);
 			Object response = fetchServiceCodes(requestInfo, serviceReqSearchCriteria.getTenantId(), department);
 			if (null == response) {
-				log.info("Searcher returned zero serviceCodes for dept: "+department);
+				log.info("Searcher returned zero serviceCodes for dept: " + department);
 				throw new CustomException("400", "No Data");
 			}
 			try {
 				List<String> serviceCodes = (List<String>) JsonPath.read(response, PGRConstants.JSONPATH_SERVICE_CODES);
-				serviceReqSearchCriteria.setServiceCodes(serviceCodes);	
+				serviceReqSearchCriteria.setServiceCodes(serviceCodes);
 			} catch (Exception e) {
 				log.error("Exception while parsing serviceCodes: ", e);
 				throw new CustomException("400", "No Data");
@@ -373,20 +360,24 @@ public class GrievanceService {
 				&& requestInfo.getUserInfo().getRoles().size() == 1) {
 			serviceReqSearchCriteria.setAccountId(requestInfo.getUserInfo().getId().toString());
 			String[] tenant = serviceReqSearchCriteria.getTenantId().split("[.]");
-			if(tenant.length > 1)
+			if (tenant.length > 1)
 				serviceReqSearchCriteria.setTenantId(tenant[0]);
 		}
-		if(null != serviceReqSearchCriteria.getAssignedTo() && !serviceReqSearchCriteria.getAssignedTo().isEmpty()) {
+		if (requestInfo.getUserInfo().getRoles().get(0).getName().equals("EMPLOYEE")
+				&& requestInfo.getUserInfo().getRoles().size() == 1) {
+			serviceReqSearchCriteria.setAssignedTo(requestInfo.getUserInfo().getId().toString());
+		}
+		if (null != serviceReqSearchCriteria.getAssignedTo() && !serviceReqSearchCriteria.getAssignedTo().isEmpty()) {
 			List<String> serviceRequestIds = getServiceRequestIdsOnAssignedTo(requestInfo, serviceReqSearchCriteria);
-			if(serviceRequestIds.isEmpty())
+			if (serviceRequestIds.isEmpty())
 				throw new CustomException("400", "No Data");
 			serviceReqSearchCriteria.setServiceRequestId(serviceRequestIds);
 		}
+		
+		log.info("Enriched request: " + serviceReqSearchCriteria);
+
 	}
-	
-	
-	
-	
+
 	public Integer getDepartmentCode(ServiceReqSearchCriteria serviceReqSearchCriteria, RequestInfo requestInfo) {
 		StringBuilder uri = new StringBuilder();
 		RequestInfoWrapper requestInfoWrapper = pGRUtils.prepareRequestForEmployeeSearch(uri, requestInfo,
@@ -405,47 +396,32 @@ public class GrievanceService {
 			log.error("Exception: " + e);
 			throw new CustomException("401", "Unauthorized Employee for this tenant");
 		}
-		
+
 		return departmenCode;
 	}
-	
-	
-	public String getDepartment(ServiceReqSearchCriteria serviceReqSearchCriteria, RequestInfo requestInfo, Integer departmentCode) {
+
+	public String getDepartment(ServiceReqSearchCriteria serviceReqSearchCriteria, RequestInfo requestInfo,
+			Integer departmentCode) {
 		StringBuilder deptUri = new StringBuilder();
 		String department = null;
 		Object response = null;
-		RequestInfoWrapper requestInfoWrapper = pGRUtils.prepareRequestForDeptSearch(deptUri, 
-				requestInfo, departmentCode, serviceReqSearchCriteria.getTenantId());
+		RequestInfoWrapper requestInfoWrapper = pGRUtils.prepareRequestForDeptSearch(deptUri, requestInfo,
+				departmentCode, serviceReqSearchCriteria.getTenantId());
 		try {
 			response = serviceRequestRepository.fetchResult(deptUri, requestInfoWrapper);
 			if (null == response) {
 				throw new CustomException("401", "Invalid department for this tenant");
 			}
 			department = JsonPath.read(response, PGRConstants.V3_DEPARTMENTNAME_EMPLOYEE_JSONPATH);
-		}catch(Exception e) {
-			log.error("Exception: "+e);
+		} catch (Exception e) {
+			log.error("Exception: " + e);
 			throw new CustomException("401", "Invalid department for this tenant");
 		}
-		
+
 		return department;
 	}
-	
-	
-	
-	
-/*...................................................V5................................................................*/	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 
+/*...................................................V5-END.....................................................*/
 
 
 	/**
@@ -515,14 +491,12 @@ public class GrievanceService {
 		List<ActionHistory> actionHistories = new ArrayList<>();
 		actionHistories.add(actionHistory);
 		replaceIdsWithUrls(actionHistories);
-		
+
 		ServiceResponse serviceResponse = mapper.convertValue(response, ServiceResponse.class);
 		serviceResponse.setActionHistory(actionHistories);
 		return serviceResponse;
 
 	}
-
-
 
 	/**
 	 * Fetches count of service requests and returns in the reqd format.

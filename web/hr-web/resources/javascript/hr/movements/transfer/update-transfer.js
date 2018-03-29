@@ -408,6 +408,18 @@ class UpdateMovement extends React.Component {
         _this.getUlbDetails(e.target.value);
         break;
 
+      case "transferType":
+        if (e.target.value == "TRANSFER_WITHIN_DEPARTMENT_OR_CORPORATION_OR_ULB") {
+          let ulbDepartmentList = _this.state.departmentList;
+          let ulbDesignationList = _this.state.designationList;
+          _this.setState({
+            ..._this.state,
+            ulbDepartmentList,
+            ulbDesignationList
+          })
+        }
+        break;
+
     }
 
 
@@ -987,7 +999,7 @@ class UpdateMovement extends React.Component {
     const renderFile = function (status) {
       if (_this.state.movement && _this.state.movement.documents) {
         return (
-          <table className="table table-bordered" id="fileTable" style={{ "display": "none" }}>
+          <table className="table table-bordered" id="fileTable">
             <thead>
               <tr>
                 <th>Sr. No.</th>
@@ -998,7 +1010,7 @@ class UpdateMovement extends React.Component {
             <tbody>
               {renderFileTr()}
             </tbody>
-          </table>
+          </table>       
         );
       }
     }
@@ -1269,7 +1281,6 @@ class UpdateMovement extends React.Component {
                     <div className="styled-file">
                       <input id="documents" name="documents" type="file"
                         onChange={(e) => { handleChange(e, "documents") }} multiple />
-                      {renderFile()}
                     </div>
                   </div>
                 </div>
@@ -1294,6 +1305,7 @@ class UpdateMovement extends React.Component {
                 </div>
               </div>
             </div>
+            {renderFile()}
           </div>
 
 

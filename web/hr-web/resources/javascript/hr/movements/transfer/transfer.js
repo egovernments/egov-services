@@ -600,6 +600,18 @@ class EmployeeTransfer extends React.Component {
         _this.getUlbDetails(e.target.value);
         break;
 
+      case "transferType":
+        if (e.target.value == "TRANSFER_WITHIN_DEPARTMENT_OR_CORPORATION_OR_ULB") {
+          let ulbDepartmentList = _this.state.departmentList;
+          let ulbDesignationList = _this.state.designationList;
+          _this.setState({
+            ..._this.state,
+            ulbDepartmentList,
+            ulbDesignationList
+          })
+        }
+        break;
+
     }
 
 

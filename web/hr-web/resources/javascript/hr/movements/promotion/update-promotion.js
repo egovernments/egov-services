@@ -798,7 +798,7 @@ class UpdateMovement extends React.Component {
     const renderFile = function (status) {
       if (_this.state.movement && _this.state.movement.documents) {
         return (
-          <table className="table table-bordered" id="fileTable" style={{ "display": "none" }}>
+          <table className="table table-bordered" id="fileTable">
             <thead>
               <tr>
                 <th>Sr. No.</th>
@@ -1051,7 +1051,6 @@ class UpdateMovement extends React.Component {
                     <div className="styled-file">
                       <input id="documents" name="documents" type="file"
                         onChange={(e) => { handleChange(e, "documents") }} multiple />
-                      {renderFile()}
                     </div>
                   </div>
                 </div>
@@ -1076,6 +1075,7 @@ class UpdateMovement extends React.Component {
                 </div>
               </div>
             </div>
+            {renderFile()}
           </div>
 
           {renderWorkflowDetails(this.state.status)}

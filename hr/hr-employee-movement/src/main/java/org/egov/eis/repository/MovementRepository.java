@@ -129,13 +129,6 @@ public class MovementRepository {
 		final List<Object> preparedStatementValues = new ArrayList<>();
 		final String queryStr = movementQueryBuilder.getQuery(movementSearchRequest, preparedStatementValues,
 				requestInfo);
-		final List<Movement> movements = new ArrayList<>();
-		for (final Movement movement : movements) {
-			final List<Document> documents = documentsRepository.findByMovementId(movement.getId(),
-					movement.getTenantId());
-			for (final Document document : documents)
-				movement.getDocuments().add(document.getDocument());
-		}
 		return jdbcTemplate.query(queryStr, preparedStatementValues.toArray(), movementRowMapper);
 	}
 

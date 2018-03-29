@@ -47,10 +47,12 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.lang.StringUtils;
 import org.egov.eis.config.PropertiesManager;
+import org.egov.eis.model.Document;
 import org.egov.eis.model.Movement;
 import org.egov.eis.model.enums.MovementStatus;
 import org.egov.eis.model.enums.TransferType;
 import org.egov.eis.model.enums.TypeOfMovement;
+import org.egov.eis.repository.MovementDocumentsRepository;
 import org.egov.eis.repository.MovementRepository;
 import org.egov.eis.util.ApplicationConstants;
 import org.egov.eis.web.contract.*;
@@ -92,9 +94,19 @@ public class MovementService {
 	@Autowired
 	private PropertiesManager propertiesManager;
 
+	@Autowired
+	private MovementDocumentsRepository documentsRepository;
+
 	public List<Movement> getMovements(final MovementSearchRequest movementSearchRequest,
 									   final RequestInfo requestInfo) {
-		return movementRepository.findForCriteria(movementSearchRequest, requestInfo);
+		List<Movement> movements = movementRepository.findForCriteria(movementSearchRequest, requestInfo);
+		for (final Movement movement : movements) {
+			final List<Document> documents = documentsRepository.findByMovementId(movement.getId(),
+					movement.getTenantId());
+			for (final Document document : documents)
+				movement.getDocuments().add(document.getDocument());
+		}
+		return movements;
 	}
 
 	public ResponseEntity<?> createMovements(final MovementRequest movementRequest, final String type) {

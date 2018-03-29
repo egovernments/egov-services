@@ -8,10 +8,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.egov.eis.config.PropertiesManager;
+import org.egov.eis.model.Document;
 import org.egov.eis.model.Movement;
 import org.egov.eis.model.PromotionBasis;
 import org.egov.eis.model.WorkFlowDetails;
 import org.egov.eis.model.enums.TypeOfMovement;
+import org.egov.eis.repository.MovementDocumentsRepository;
 import org.egov.eis.repository.MovementRepository;
 import org.egov.eis.util.ApplicationConstants;
 import org.egov.eis.web.contract.*;
@@ -23,6 +25,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -54,6 +57,9 @@ public class MovementServiceTest {
 
     @Mock
     private PropertiesManager propertiesManager;
+
+    @Mock
+    private MovementDocumentsRepository documentsRepository;
 
     private List<Movement> movements;
 
@@ -114,10 +120,20 @@ public class MovementServiceTest {
         movements = new ArrayList<>();
         movements.add(movement1);
         movements.add(movement2);
+
+        List<Document> documents = new ArrayList<>();
+        Document document = new Document();
+        document.setId(1L);
+        document.setMovementId(1L);
+        documents.add(document);
+
+        
         when(movementRepository.findForCriteria(Mockito.any(MovementSearchRequest.class), Mockito.any(RequestInfo.class)))
                 .thenReturn(movements);
         final MovementSearchRequest movementSearchRequest = new MovementSearchRequest();
         final RequestInfo requestInfo = new RequestInfo();
+        when(documentsRepository.findByMovementId(Mockito.anyLong(), Mockito.anyString()))
+                .thenReturn(documents);
         final List<Movement> response = movementService.getMovements(movementSearchRequest, requestInfo);
 
         assertEquals(movements.size(), response.size());

@@ -228,8 +228,9 @@ class UpdateJudgement extends React.Component {
 
     getUsersFun(departmentId, designationId) {
         var _this = this;
+        var date = moment(new Date()).format("DD/MM/YYYY");
         $.ajax({
-            url: baseUrl + "/hr-employee/employees/_search?tenantId=" + tenantId + "&departmentId=" + departmentId + "&designationId=" + designationId,
+            url: baseUrl + "/hr-employee/employees/_search?tenantId=" + tenantId + "&departmentId=" + departmentId + "&designationId=" + designationId + "&active=true&asOnDate="+date,
             type: 'POST',
             dataType: 'json',
             data: JSON.stringify({ RequestInfo: requestInfo }),
@@ -935,14 +936,7 @@ class UpdateJudgement extends React.Component {
         const renderOptionForUser = function (list) {
             if (list) {
                 return list.map((item, ind) => {
-                    var positionId;
-                    item.assignments.forEach(function (item) {
-                        if (item.isPrimary) {
-                            positionId = item.position;
-                        }
-                    });
-
-                    return (<option key={ind} value={positionId}>
+                    return (<option key={ind} value={item.assignments[0].position}>
                         {item.name}
                     </option>)
                 })

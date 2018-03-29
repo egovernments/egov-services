@@ -655,8 +655,8 @@ class UpdateMovement extends React.Component {
                   },
                   success: function (res) {
 
-                    if (res.Movement[0].checkEmployeeExists) {
-                      this.confirmEmployee(body);
+                    if (ID === "Approve" && res.Movement[0].checkEmployeeExists) {
+                      confirmEmployee(body);
                     }
 
                     var employee, designation;
@@ -738,8 +738,8 @@ class UpdateMovement extends React.Component {
           },
           success: function (res) {
 
-            if (res.Movement[0].checkEmployeeExists) {
-              this.confirmEmployee(body);
+            if (ID === "Approve" && res.Movement[0].checkEmployeeExists) {
+              confirmEmployee(body);
             }
 
             var employee, designation;

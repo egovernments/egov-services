@@ -10,6 +10,8 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.egov.common.contract.request.RequestInfo;
+import org.egov.common.contract.request.Role;
+import org.egov.common.contract.request.User;
 import org.egov.pgr.contract.Service;
 import org.egov.pgr.contract.ServiceReqSearchCriteria;
 import org.egov.pgr.contract.ServiceRequest;
@@ -31,25 +33,38 @@ public class PGRRequestValidator {
 
 		Map<String, String> errorMap = new HashMap<>();
 		userInfoCheck(serviceRequest, errorMap);
+		employeeCreateCheck(serviceRequest.getRequestInfo(),errorMap);
+		overRideCitizenAccountId(serviceRequest);
+	}
 
-		if (!errorMap.isEmpty())
+	private void overRideCitizenAccountId(ServiceRequest serviceRequest) {
+		
+		User user = serviceRequest.getRequestInfo().getUserInfo();
+		boolean isUserCitizen = user.getRoles().parallelStream().map(Role::getName).collect(Collectors.toList()).contains("CITIZEN");
+		if(isUserCitizen)
+			serviceRequest.getServices().forEach(service -> service.setAccountId(String.valueOf(user.getId())));
+	}
+
+	private void employeeCreateCheck(RequestInfo requestInfo, Map<String, String> errorMap) {
+
+			List<String> roleNames = requestInfo.getUserInfo().getRoles().parallelStream().map(Role::getName).collect(Collectors.toList());
+			if(roleNames.contains("EMPLOYEE"))
+				errorMap.put("EG_PGR_EMPLOYEE_ERROR", " An Employee cannot register a grievance");
+			if(!org.springframework.util.CollectionUtils.isEmpty(errorMap))
 			throw new CustomException(errorMap);
 	}
 
 	public void validateUpdate(ServiceRequest serviceRequest) {
 
 		Map<String, String> errorMap = new HashMap<>();
-		
 		userInfoCheck(serviceRequest, errorMap);
-
-		if (!errorMap.isEmpty())
-			throw new CustomException(errorMap);
+		overRideCitizenAccountId(serviceRequest); //TODO remove the accid field from persiter and remove this method following that action FIXME
 		
 		ServiceReqSearchCriteria serviceReqSearchCriteria = ServiceReqSearchCriteria.builder()
 				.tenantId(serviceRequest.getServices().get(0).getTenantId()).serviceRequestId(serviceRequest
 						.getServices().stream().map(Service::getServiceRequestId).collect(Collectors.toList()))
 				.build();
-
+		
 		Map<String, Service> map = ((ServiceResponse) requestService.
 				getServiceRequestDetails(serviceRequest.getRequestInfo(), serviceReqSearchCriteria)).getServices().stream()
 						.collect(Collectors.toMap(Service::getServiceRequestId, Function.identity()));
@@ -61,7 +76,7 @@ public class PGRRequestValidator {
 				errorList.add(a.getServiceRequestId());
 		});
 
-		if (!CollectionUtils.isEmpty(errorList))
+		if (!errorList.isEmpty())
 			errorMap.put("EG_PGR_UPDATE_SERVICEREQUESTID",
 					"request object does not exist for the given id's : " + errorList);
 
@@ -85,6 +100,9 @@ public class PGRRequestValidator {
 			errorMap.put("EG_PGR_REQUESTINFO_USERINFO_ROLES", "Roles cannot be empty for serviceRequest");
 			return;
 		}
+		
+		if (!errorMap.isEmpty())
+			throw new CustomException(errorMap);
 	}
 
 	public void validateSearch(ServiceReqSearchCriteria criteria, RequestInfo requestInfo) {

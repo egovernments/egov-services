@@ -1,12 +1,16 @@
 package org.egov.pgr.service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.mdms.model.MdmsCriteriaReq;
+import org.egov.pgr.PGRApp;
 import org.egov.pgr.contract.ActionHistory;
 import org.egov.pgr.contract.ActionInfo;
 import org.egov.pgr.contract.AuditDetails;
@@ -15,6 +19,7 @@ import org.egov.pgr.contract.IdResponse;
 import org.egov.pgr.contract.RequestInfoWrapper;
 import org.egov.pgr.contract.SearcherRequest;
 import org.egov.pgr.contract.Service;
+import org.egov.pgr.contract.Service.StatusEnum;
 import org.egov.pgr.contract.ServiceReqSearchCriteria;
 import org.egov.pgr.contract.ServiceRequest;
 import org.egov.pgr.contract.ServiceRequestDetails;
@@ -72,6 +77,8 @@ public class GrievanceService {
 
 	@Autowired
 	private ServiceRequestRepository serviceRequestRepository;
+	
+	private static final String UPDATE_ERROR_KEY = "EG_PGR_INVALID_ACTION_UPDATE"; 
 
 	private static final String MODULE_NAME = "PGR:";
 
@@ -82,6 +89,8 @@ public class GrievanceService {
 	 * @param request
 	 */
 	public ServiceResponse create(ServiceRequest request) {
+
+		Map<String, String> actionStatusMap = PGRApp.getActionStatusMap();
 
 		log.debug(" the incoming request obj in service : {}", request);
 
@@ -102,15 +111,18 @@ public class GrievanceService {
 
 			Service servReq = serviceReqs.get(servReqCount);
 			ActionInfo actionInfo = actionInfos.get(servReqCount);
+			if (null == actionInfo)
+				actionInfo = new ActionInfo();
 			String currentId = servReqIdList.get(servReqCount);
 			servReq.setAuditDetails(auditDetails);
 			servReq.setServiceRequestId(currentId);
+			servReq.setStatus(StatusEnum.OPEN);
 			// FIXME TODO business key should be module name and currentid in future
 			actionInfo.setBusinessKey(currentId);
 			actionInfo.setBy(by);
 			actionInfo.setWhen(auditDetails.getCreatedTime());
 			actionInfo.setTenantId(tenantId);
-			actionInfo.setStatus(actionInfo.getAction());
+			actionInfo.setStatus(actionStatusMap.get("open"));
 		}
 
 		pGRProducer.push(saveTopic, request);
@@ -130,6 +142,10 @@ public class GrievanceService {
 
 		log.debug(" the incoming request obj in service : {}", request);
 
+		Map<String, List<String>> actioncurrentStatusMap = PGRApp.getActionCurrentStatusMap();
+		Map<String, String> actionStatusMap = PGRApp.getActionStatusMap();
+		Map<String, List<String>> errorMap = new HashMap<>();
+
 		RequestInfo requestInfo = request.getRequestInfo();
 		List<Service> serviceReqs = request.getServices();
 		List<ActionInfo> actionInfos = request.getActionInfo();
@@ -143,14 +159,40 @@ public class GrievanceService {
 		for (int index = 0; index < serviceLen; index++) {
 
 			Service servReq = serviceReqs.get(index);
-			ActionInfo actionInfo = actionInfos.get(index);
+			ActionInfo actionInfo = null;
+			if (!CollectionUtils.isEmpty(actionInfos))
+				actionInfo = actionInfos.get(index);
 			servReq.setAuditDetails(auditDetails);
+			System.err.println(" teh action info : "+ actionInfo);
 			// FIXME TODO business key should be module name and currentid in future
-			actionInfo.setBusinessKey(servReq.getServiceRequestId());
-			actionInfo.setBy(by);
-			actionInfo.setWhen(auditDetails.getCreatedTime());
-			actionInfo.setTenantId(tenantId);
-			actionInfo.setStatus(actionInfo.getAction());
+			if (null != actionInfo) {
+				actionInfo.setBusinessKey(servReq.getServiceRequestId());
+				actionInfo.setBy(by);
+				actionInfo.setWhen(auditDetails.getCreatedTime());
+				actionInfo.setTenantId(tenantId);
+				actionInfo.setStatus(actionInfo.getAction());
+				if (null != actionInfo.getAction()
+						&& isUpdateValid(requestInfo, actionInfo, actioncurrentStatusMap.get(actionInfo.getAction())))
+					actionInfo.setStatus(actionStatusMap.get(actionInfo.getAction()));
+				else {
+
+					String errorMsg = " The Given Action " + actionInfo.getAction()
+							+ "cannot be applied for the Current status of the Grievance with ServiceRequestId "
+							+ servReq.getServiceRequestId();
+					List<String> errors = errorMap.get(UPDATE_ERROR_KEY);
+					if (null == errors) {
+						errors = Arrays.asList(errorMsg);
+						errorMap.put(UPDATE_ERROR_KEY, errors);
+					} else
+						errors.add(errorMsg);
+				}
+
+			}
+		}
+		if(!errorMap.isEmpty()) {
+			Map<String, String> newMap = new HashMap<>();
+			newMap.put(UPDATE_ERROR_KEY, errorMap.get(UPDATE_ERROR_KEY).toString());
+			throw new CustomException(newMap);
 		}
 
 		pGRProducer.push(updateTopic, request);
@@ -159,6 +201,32 @@ public class GrievanceService {
 
 		return getServiceResponse(request);
 	}
+
+	private boolean isUpdateValid(RequestInfo requestInfo, ActionInfo actionInfo, List<String> currentStatusList) {
+
+		System.err.println(" the current list possible : "+ currentStatusList);
+		ServiceReqSearchCriteria serviceReqSearchCriteria = ServiceReqSearchCriteria.builder()
+				.tenantId(actionInfo.getTenantId()).serviceRequestId(Arrays.asList(actionInfo.getBusinessKey()))
+				.build();
+
+		List<ActionInfo> infos = ((ServiceResponse) getServiceRequestDetails(requestInfo, serviceReqSearchCriteria))
+				.getActionHistory().get(0).getActions();
+		
+		
+		for (int i = infos.size() - 1; i >= 0; i--) {
+				String status = infos.get(i).getStatus();
+				System.err.println(" the status is : "+ status);
+				if (null != status) {
+					System.err.println(" is it true : "+currentStatusList.contains(status));
+					if (currentStatusList.contains(status))
+						return true;
+					else
+						return false;
+				}
+			}
+		return false;
+	}
+
 
 	/**
 	 * method to parse the IdGenResponse from IdgenRepo to List of String ids
@@ -574,26 +642,32 @@ public class GrievanceService {
 				fileStoreIds.addAll(media);
 		}));
 
-		Map<String, String> urlIdMap = fileStoreRepo.getUrlMaps(tenantId, fileStoreIds);
+		Map<String, String> urlIdMap = null;
+		try {
+		urlIdMap = fileStoreRepo.getUrlMaps(tenantId, fileStoreIds);
+		}catch (Exception e) {
+			log.error(" exception while connecting to filestore : "+e);
+		}
 
 		log.info("urlIdMap: " + urlIdMap);
-
-		for (int i = 0; i < historyList.size(); i++) {
-			ActionHistory history = historyList.get(i);
-			for (int j = 0; j < history.getActions().size(); j++) {
-				List<ActionInfo> actionList = history.getActions();
-				ActionInfo info = actionList.get(j);
-				List<String> mediaList = new ArrayList<>();
-				for (int k = 0; k < info.getMedia().size(); k++) {
-					List<String> oldMedia = info.getMedia();
-					String fileStoreId = oldMedia.get(k);
-					String url = urlIdMap.get(fileStoreId);
-					if (null != url)
-						mediaList.add(url);
-					else
-						mediaList.add(fileStoreId);
+		if (null != urlIdMap) {
+			for (int i = 0; i < historyList.size(); i++) {
+				ActionHistory history = historyList.get(i);
+				for (int j = 0; j < history.getActions().size(); j++) {
+					List<ActionInfo> actionList = history.getActions();
+					ActionInfo info = actionList.get(j);
+					List<String> mediaList = new ArrayList<>();
+					for (int k = 0; k < info.getMedia().size(); k++) {
+						List<String> oldMedia = info.getMedia();
+						String fileStoreId = oldMedia.get(k);
+						String url = urlIdMap.get(fileStoreId);
+						if (null != url)
+							mediaList.add(url);
+						else
+							mediaList.add(fileStoreId);
+					}
+					info.setMedia(mediaList);
 				}
-				info.setMedia(mediaList);
 			}
 		}
 	}

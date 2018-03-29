@@ -77,6 +77,11 @@ public class Service   {
    * The current status of the service request.
    */
   public enum StatusEnum {
+	  
+	OPEN("open"),
+	
+	ASSIGNED("assigned"),
+	
     NEW("New"),
     
     INPROGRESS("InProgress"),
@@ -102,7 +107,7 @@ public class Service   {
     @JsonCreator
     public static StatusEnum fromValue(String text) {
       for (StatusEnum b : StatusEnum.values()) {
-        if (String.valueOf(b.value).equals(text)) {
+        if (String.valueOf(b.value).equalsIgnoreCase(text)) {
           return b;
         }
       }

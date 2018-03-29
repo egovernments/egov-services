@@ -2,7 +2,6 @@ package org.egov.pgr.service;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -12,7 +11,7 @@ import org.egov.common.contract.request.RequestInfo;
 import org.egov.mdms.model.MdmsCriteriaReq;
 import org.egov.pgr.PGRApp;
 import org.egov.pgr.contract.ActionHistory;
-import org.egov.pgr.contract.ActionInfo;
+import org.egov.pgr.contract.ActionInfo;	
 import org.egov.pgr.contract.AuditDetails;
 import org.egov.pgr.contract.CountResponse;
 import org.egov.pgr.contract.IdResponse;

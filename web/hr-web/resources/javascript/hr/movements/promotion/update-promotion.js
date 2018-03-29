@@ -783,7 +783,7 @@ class UpdateMovement extends React.Component {
 
       for (var i = 0; i < _this.state.movement.documents.length; i++) {
         return (<tr>
-          <td>${i + 1}</td>
+          <td>{i + 1}</td>
           <td>Document</td>
           <td>
             <a href={window.location.origin + CONST_API_GET_FILE + _this.state.movement.documents[i]} target="_blank">

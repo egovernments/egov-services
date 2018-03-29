@@ -45,8 +45,8 @@ public class PGRRequestValidator {
 	private void overRideCitizenAccountId(ServiceRequest serviceRequest) {
 
 		User user = serviceRequest.getRequestInfo().getUserInfo();
-		boolean isUserCitizen = user.getRoles().parallelStream().map(Role::getName).collect(Collectors.toList())
-				.contains("CITIZEN");
+		List<String> names = user.getRoles().parallelStream().map(Role::getName).collect(Collectors.toList());
+		boolean isUserCitizen = names.contains("CITIZEN") || names.contains("Citizen");
 		if (isUserCitizen)
 			serviceRequest.getServices().forEach(service -> service.setAccountId(String.valueOf(user.getId())));
 	}

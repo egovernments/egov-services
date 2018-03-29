@@ -1,6 +1,7 @@
 package org.egov.pgr.utils;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -30,10 +31,8 @@ public class PGRRequestValidator {
 	private GrievanceService requestService;
 
 	public void validateCreate(ServiceRequest serviceRequest) {
-		List<String> serviceCodeList = new ArrayList<>();
-		serviceCodeList.add("ADDGC");serviceCodeList.add("AOS");serviceCodeList.add("AC");
-		serviceCodeList.add("DC");serviceCodeList.add("MC");serviceCodeList.add("BG");
-		serviceCodeList.add("BPS");serviceCodeList.add("BB");serviceCodeList.add("BMW");
+		
+		List<String> serviceCodeList = Arrays.asList("ADDGC","AOS","AC","DC","MC","BG","BPS","BB","BMW");
 		
 		Map<String, String> errorMap = new HashMap<>();
 		userInfoCheck(serviceRequest, errorMap);
@@ -56,7 +55,8 @@ public class PGRRequestValidator {
 
 		List<String> roleNames = requestInfo.getUserInfo().getRoles().parallelStream().map(Role::getName)
 				.collect(Collectors.toList());
-		if (roleNames.contains("EMPLOYEE"))
+
+		if (roleNames.contains("EMPLOYEE") || roleNames.contains("Employee"))
 			errorMap.put("EG_PGR_EMPLOYEE_ERROR", " An Employee cannot register a grievance");
 		if (!org.springframework.util.CollectionUtils.isEmpty(errorMap))
 			throw new CustomException(errorMap);

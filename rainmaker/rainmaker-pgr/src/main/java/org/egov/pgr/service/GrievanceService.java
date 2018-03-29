@@ -170,24 +170,23 @@ public class GrievanceService {
 				actionInfo.setWhen(auditDetails.getCreatedTime());
 				actionInfo.setTenantId(tenantId);
 				actionInfo.setStatus(actionInfo.getAction());
-				if (null != actionInfo.getAction()
-						&& isUpdateValid(requestInfo, actionInfo, actioncurrentStatusMap.get(actionInfo.getAction())))
-					actionInfo.setStatus(actionStatusMap.get(actionInfo.getAction()));
-				else {
+				if (null != actionInfo.getAction() && actionStatusMap.get(actionInfo.getAction()) != null) {
+					if (isUpdateValid(requestInfo, actionInfo, actioncurrentStatusMap.get(actionInfo.getAction())))
+						actionInfo.setStatus(actionStatusMap.get(actionInfo.getAction()));
+					else {
 
-					String errorMsg = " The Given Action " + actionInfo.getAction()
-							+ "cannot be applied for the Current status of the Grievance with ServiceRequestId "
-							+ servReq.getServiceRequestId();
-					List<String> errors = errorMap.get(UPDATE_ERROR_KEY);
-					if (null == errors) {
-						errors = Arrays.asList(errorMsg);
-						errorMap.put(UPDATE_ERROR_KEY, errors);
-					} else
-						errors.add(errorMsg);
+						String errorMsg = " The Given Action " + actionInfo.getAction()
+								+ "cannot be applied for the Current status of the Grievance with ServiceRequestId "
+								+ servReq.getServiceRequestId();
+						addError(errorMsg, errorMap);
+					}
+				} else {
+					String errorMsg = " The Given Action " + actionInfo.getAction() + " is invalid ";
+					addError(errorMsg, errorMap);
 				}
-
 			}
 		}
+		
 		if(!errorMap.isEmpty()) {
 			Map<String, String> newMap = new HashMap<>();
 			newMap.put(UPDATE_ERROR_KEY, errorMap.get(UPDATE_ERROR_KEY).toString());
@@ -199,6 +198,16 @@ public class GrievanceService {
 		pGRProducer.push(indexerUpdateTopic, request);
 
 		return getServiceResponse(request);
+	}
+
+	private void addError(String errorMsg, Map<String, List<String>> errorMap) {
+
+		List<String> errors = errorMap.get(UPDATE_ERROR_KEY);
+		if (null == errors) {
+			errors = Arrays.asList(errorMsg);
+			errorMap.put(UPDATE_ERROR_KEY, errors);
+		} else
+			errors.add(errorMsg);
 	}
 
 	private boolean isUpdateValid(RequestInfo requestInfo, ActionInfo actionInfo, List<String> currentStatusList) {
@@ -216,7 +225,7 @@ public class GrievanceService {
 				String status = infos.get(i).getStatus();
 				System.err.println(" the status is : "+ status);
 				if (null != status) {
-					System.err.println(" is it true : "+currentStatusList.contains(status));
+					System.err.println(" is it true : "+ currentStatusList.contains(status));
 					if (currentStatusList.contains(status))
 						return true;
 					else

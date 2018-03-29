@@ -433,9 +433,9 @@ public class GrievanceService {
 			}
 		} else if (requestInfo.getUserInfo().getRoles().get(0).getName().equalsIgnoreCase("CITIZEN")) {
 			serviceReqSearchCriteria.setAccountId(requestInfo.getUserInfo().getId().toString());
-			String[] tenant = serviceReqSearchCriteria.getTenantId().split("[.]");
+			/*String[] tenant = serviceReqSearchCriteria.getTenantId().split("[.]");
 			if (tenant.length > 1)
-				serviceReqSearchCriteria.setTenantId(tenant[0]);
+				serviceReqSearchCriteria.setTenantId(tenant[0]); */
 		}
 		if (requestInfo.getUserInfo().getRoles().get(0).getName().equalsIgnoreCase("EMPLOYEE")) {
 			serviceReqSearchCriteria.setAssignedTo(requestInfo.getUserInfo().getId().toString());

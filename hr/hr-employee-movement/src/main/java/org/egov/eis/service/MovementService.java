@@ -396,13 +396,13 @@ public class MovementService {
 				//movement.setErrorMsg(errorMsg.replace(", ", ","));
 			} else if (movement.getId() != null && movement.getTypeOfMovement().equals(TypeOfMovement.TRANSFER) &&
 					movement.getTransferType().equals(TransferType.TRANSFER_OUTSIDE_CORPORATION_OR_ULB)
-					&& "Approve".equalsIgnoreCase(movement.getWorkflowDetails().getAction()) && movement.getCheckEmployeeExists()) {
+					&& "Approve".equalsIgnoreCase(movement.getWorkflowDetails().getAction())) {
 				final Employee employee = employeeService.getEmployeeById(movementRequest);
 				EmployeeInfo employeeInfo = employeeService.getEmployee(null, employee.getCode(), movementRequest.getMovement().get(0).getTenantId(), movementRequest.getRequestInfo());
 				if (employeeInfo != null && !employeeInfo.equals("") && movement.getCheckEmployeeExists())
 					message = message + ApplicationConstants.ERR_MOVEMENT_EMPLOYEE_EXISTS + ", ";
 				setErrorMessage(movement, message);
-				if (!movement.getCheckEmployeeExists()) {
+				if (!movement.getCheckEmployeeExists() && employeeInfo != null && !employeeInfo.equals("")) {
 					List<Assignment> assignments = employee.getAssignments().stream().filter(assignment -> assignment.getIsPrimary().equals(true)).collect(Collectors.toList());
 					for (Assignment assign : assignments) {
 						if (assign.getFromDate().after(movement.getEffectiveFrom())) {

@@ -1,28 +1,53 @@
 package org.egov.lams.service;
 
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.time.DateUtils;
-import org.egov.lams.model.*;
-import org.egov.lams.model.enums.Action;
-import org.egov.lams.model.enums.PaymentCycle;
-import org.egov.lams.model.enums.Source;
-import org.egov.lams.model.enums.Status;
-import org.egov.lams.repository.*;
-import org.egov.lams.util.AcknowledgementNumberUtil;
-import org.egov.lams.util.AgreementNumberUtil;
-import org.egov.lams.web.contract.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
+
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.time.DateUtils;
+import org.egov.lams.model.Agreement;
+import org.egov.lams.model.AgreementCriteria;
+import org.egov.lams.model.Allottee;
+import org.egov.lams.model.Demand;
+import org.egov.lams.model.DemandDetails;
+import org.egov.lams.model.WorkflowDetails;
+import org.egov.lams.model.enums.Action;
+import org.egov.lams.model.enums.PaymentCycle;
+import org.egov.lams.model.enums.Source;
+import org.egov.lams.model.enums.Status;
+import org.egov.lams.repository.AgreementMessageQueueRepository;
+import org.egov.lams.repository.AgreementRepository;
+import org.egov.lams.repository.AllotteeRepository;
+import org.egov.lams.repository.DemandRepository;
+import org.egov.lams.repository.PositionRestRepository;
+import org.egov.lams.util.AcknowledgementNumberUtil;
+import org.egov.lams.util.AgreementNumberUtil;
+import org.egov.lams.web.contract.AgreementRequest;
+import org.egov.lams.web.contract.AllotteeResponse;
+import org.egov.lams.web.contract.DemandResponse;
+import org.egov.lams.web.contract.DemandSearchCriteria;
+import org.egov.lams.web.contract.LamsConfigurationGetRequest;
+import org.egov.lams.web.contract.Position;
+import org.egov.lams.web.contract.PositionResponse;
+import org.egov.lams.web.contract.RequestInfo;
+import org.egov.lams.web.contract.RequestInfoWrapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
 
 @Service
 public class AgreementService {
@@ -36,6 +61,7 @@ public class AgreementService {
 	public static final String SAVE = "SAVE";
 	public static final String UPDATE = "UPDATE";
 	public static final String LAMS_WORKFLOW_INITIATOR_DESIGNATION = "lams_workflow_initiator_designation";
+	private static final List<String> AUCTION_CATEGORIES = Arrays.asList("Market", "Fish Tanks", "Slaughter House", "Community Toilet Complex");
 
 	private AgreementRepository agreementRepository;
 	private LamsConfigurationService lamsConfigurationService;
@@ -116,6 +142,7 @@ public class AgreementService {
 
 			agreement.setExpiryDate(getExpiryDate(agreement));
 			agreement.setAdjustmentStartDate(getAdjustmentDate(agreement));
+			setDetailsByAssetCategory(agreement);
 			logger.info("The closeDate calculated is " + agreement.getExpiryDate() + "from commencementDate of "
 					+ agreement.getCommencementDate() + "by adding with no of years " + agreement.getTimePeriod());
 			agreement.setId(agreementRepository.getAgreementID());
@@ -131,7 +158,7 @@ public class AgreementService {
 				agreement.setDemands(demandList);
 				agreement.setAgreementNumber(agreementNumberService.generateAgrementNumber(agreement.getTenantId()));
 				agreement.setAgreementDate(agreement.getCommencementDate());
-				agreementMessageQueueRepository.save(agreementRequest, SAVE);
+				agreementRepository.saveAgreement(agreementRequest);
 			} else {
 				agreement.setStatus(Status.WORKFLOW);
 				agreement.setIsUnderWorkflow(Boolean.TRUE);
@@ -640,4 +667,42 @@ public class AgreementService {
 		Agreement agreement = agreementRequest.getAgreement();
 		return agreementRepository.getObjectionStatus(agreement.getAgreementNumber(), agreement.getTenantId());
 	}
+	
+	public void setDetailsByAssetCategory(Agreement agreement) {
+		Boolean validCategory;
+		String assetCategory = agreement.getAsset().getCategory().getName();
+		validCategory = AUCTION_CATEGORIES.stream().anyMatch(category -> category.equalsIgnoreCase(assetCategory));
+
+		if (validCategory) {
+			agreement.setExpiryDate(getEffectiveFinYearToDate());
+			Calendar cal = Calendar.getInstance();
+			cal.setTime(agreement.getExpiryDate());
+			cal.add(Calendar.MONTH, -3);
+			cal.add(Calendar.MINUTE, 1);
+			Date adjustmentDate = cal.getTime();
+			agreement.setAdjustmentStartDate(adjustmentDate);
+			if (PaymentCycle.ANNUAL.equals(agreement.getPaymentCycle())) {
+				agreement.setRent(agreement.getAuctionAmount());
+			}
+
+		}
+
+	}
+
+	private Date getEffectiveFinYearToDate() {
+		Calendar cal = Calendar.getInstance();
+		int month = cal.get(Calendar.MONTH);
+		if (month < 3) {
+			cal.set(Calendar.MONTH, 2);
+		} else {
+			cal.set(Calendar.MONTH, 2);
+			cal.add(Calendar.YEAR, 1);
+		}
+		cal.set(Calendar.DATE, cal.getActualMaximum(Calendar.DATE));
+		cal.set(Calendar.HOUR,23);
+		cal.set(Calendar.MINUTE,59);
+		return cal.getTime();
+	}
+		
+	
 }

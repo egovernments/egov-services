@@ -1060,17 +1060,32 @@ class AgreementDetails extends React.Component {
               </tr>)
           }
         }
+        const renederDetails = function(){
+          if(agreement.showDetails){
+          return (<div>
+            {renderAssetDetails()}
+            {renderAllottee()}
+            {renderAgreementDetails()}
+            {renderDocuments()}
+            {renderHistoryDetails()}
+            {renderSubSeqRenewals()}
+          </div>)
+          }else{
+            return (<div>
+              {renderAssetDetails()}
+              {renderAllottee()}
+              {renderAgreementDetails()}
+              {renderDocuments()}
+            </div>)
+          }
+        }
+
         return (
             <div>
                 <h3>Agreement Details</h3>
                 <form onSubmit={(e) => { viewDCB(e) }} >
                     <fieldset>
-                        {renderAssetDetails()}
-                        {renderAllottee()}
-                        {renderAgreementDetails()}
-                        {renderDocuments()}
-                        {renderHistoryDetails()}
-                        {renderSubSeqRenewals()}
+                         {renederDetails()}
                         <br />
                         <div className="text-center">
                            <button id="sub" type="submit" className="btn btn-submit">View DCB</button>&nbsp;&nbsp;

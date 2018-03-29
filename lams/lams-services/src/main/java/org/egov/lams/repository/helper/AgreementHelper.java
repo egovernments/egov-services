@@ -1,6 +1,7 @@
 package org.egov.lams.repository.helper;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,6 +15,8 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class AgreementHelper {
+	
+	private static final List<String> AUCTION_CATEGORIES = Arrays.asList("Market", "Fish Tanks", "Slaughter House", "Community Toilet Complex");
 
 	/**
 	 * The given list of agreements is filtered for given allottees and assets.
@@ -23,6 +26,7 @@ public class AgreementHelper {
 	 * @param assets
 	 * @return
 	 */
+		
 	public List<Agreement> filterAndEnrichAgreements(List<Agreement> agreements, List<Allottee> allottees,
 			List<Asset> assets) {
 		
@@ -49,10 +53,14 @@ public class AgreementHelper {
 		}
 		return newAgreements;
 	}
-
+    /*
+     * setting showDetails flag based on auction asset categories 
+     * this value is used in UI to show/hide some agreement details
+     */
 	public List<Agreement> enrichAgreementsWithSubSeqRenewals(List<Agreement> agreements,
 			Map<Long, List<SubSeqRenewal>> subSeqRenewalMap, Map<Long, List<Document>> documentsMap) {
 		List<Agreement> newAgreements = new ArrayList<>();
+		Boolean isAuctionAsset;
 
 		for (Agreement agreement : agreements) {
 			if (subSeqRenewalMap.containsKey(agreement.getId())) {
@@ -61,6 +69,13 @@ public class AgreementHelper {
 			if (documentsMap.containsKey(agreement.getId())) {
 				agreement.setDocuments(documentsMap.get(agreement.getId()));
 			}
+
+			final String assetCategory = agreement.getAsset().getCategory().getName();
+
+			isAuctionAsset = AUCTION_CATEGORIES.stream().anyMatch(category -> category.equalsIgnoreCase(assetCategory));
+			if (isAuctionAsset)
+				agreement.setShowDetails(Boolean.FALSE);
+
 			newAgreements.add(agreement);
 		}
 		return newAgreements;

@@ -416,8 +416,7 @@ public class GrievanceService {
 
 	public void enrichRequest(RequestInfo requestInfo, ServiceReqSearchCriteria serviceReqSearchCriteria) {
 		log.info("Enriching request.........: " + serviceReqSearchCriteria);
-		if (requestInfo.getUserInfo().getRoles().get(0).getName().equals("DGRO")
-				&& requestInfo.getUserInfo().getRoles().size() == 1) {
+		if (requestInfo.getUserInfo().getRoles().get(0).getName().equals("DGRO")) {
 			Integer departmenCode = getDepartmentCode(serviceReqSearchCriteria, requestInfo);
 			String department = getDepartment(serviceReqSearchCriteria, requestInfo, departmenCode);
 			Object response = fetchServiceCodes(requestInfo, serviceReqSearchCriteria.getTenantId(), department);
@@ -432,15 +431,13 @@ public class GrievanceService {
 				log.error("Exception while parsing serviceCodes: ", e);
 				throw new CustomException("400", "No Data");
 			}
-		} else if (requestInfo.getUserInfo().getRoles().get(0).getName().equals("CITIZEN")
-				&& requestInfo.getUserInfo().getRoles().size() == 1) {
+		} else if (requestInfo.getUserInfo().getRoles().get(0).getName().equalsIgnoreCase("CITIZEN")) {
 			serviceReqSearchCriteria.setAccountId(requestInfo.getUserInfo().getId().toString());
 			String[] tenant = serviceReqSearchCriteria.getTenantId().split("[.]");
 			if (tenant.length > 1)
 				serviceReqSearchCriteria.setTenantId(tenant[0]);
 		}
-		if (requestInfo.getUserInfo().getRoles().get(0).getName().equals("EMPLOYEE")
-				&& requestInfo.getUserInfo().getRoles().size() == 1) {
+		if (requestInfo.getUserInfo().getRoles().get(0).getName().equalsIgnoreCase("EMPLOYEE")) {
 			serviceReqSearchCriteria.setAssignedTo(requestInfo.getUserInfo().getId().toString());
 		}
 		if (null != serviceReqSearchCriteria.getAssignedTo() && !serviceReqSearchCriteria.getAssignedTo().isEmpty()) {

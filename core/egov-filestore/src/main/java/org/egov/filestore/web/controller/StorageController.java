@@ -7,10 +7,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.egov.common.contract.request.RequestInfo;
 import org.egov.filestore.domain.model.FileInfo;
 import org.egov.filestore.domain.service.StorageService;
 import org.egov.filestore.web.contract.File;
 import org.egov.filestore.web.contract.GetFilesByTagResponse;
+import org.egov.filestore.web.contract.RequestInfoWrapper;
 import org.egov.filestore.web.contract.ResponseFactory;
 import org.egov.filestore.web.contract.StorageResponse;
 import org.springframework.core.io.Resource;
@@ -20,6 +22,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -96,9 +99,10 @@ public class StorageController {
 		return new StorageResponse(files);
 	}
 	
-	@GetMapping("/url")
+	@PostMapping("/url")
 	@ResponseBody
-	public ResponseEntity<Map<String, String>> getUrls(@RequestParam(value = "tenantId") String tenantId,
+	public ResponseEntity<Map<String, String>> getUrls(@RequestBody RequestInfoWrapper requestInfoWrapper,
+			@RequestParam(value = "tenantId") String tenantId,
 			@RequestParam("fileStoreIds") List<String> fileStoreIds) {
 		return new ResponseEntity<>(storageService.getUrls(tenantId, fileStoreIds), HttpStatus.OK);
 	}

@@ -8,6 +8,7 @@ import java.nio.file.Path;
 import javax.imageio.ImageIO;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.poi.ss.formula.functions.Replace;
 import org.imgscalr.Scalr;
 import org.imgscalr.Scalr.Method;
 import org.imgscalr.Scalr.Mode;
@@ -51,15 +52,32 @@ public class FileRepository {
 
 		try {
 			BufferedImage originalImage = ImageIO.read(file.getInputStream());
-			BufferedImage thumbImg = Scalr.resize(originalImage, Method.QUALITY, Mode.AUTOMATIC, 50, 50,
+			BufferedImage mediumImg = Scalr.resize(originalImage, Method.QUALITY, Mode.AUTOMATIC, 50, 50,
 					Scalr.OP_ANTIALIAS);
+			BufferedImage smallImg = Scalr.resize(originalImage, Method.QUALITY, Mode.AUTOMATIC, 50, 50,
+					Scalr.OP_ANTIALIAS);
+			
+			String originalPath = path.toFile().toString();
+			int lastIndex = originalPath.length();
+			String replaceString = originalPath.substring(lastIndex-4,lastIndex);
+			String extension = originalPath.substring(lastIndex-3,lastIndex);
+			String mediumPath = path.toFile().toString().replace(replaceString, "_medium"+replaceString);
+			String smallPath = path.toFile().toString().replace(replaceString, "_small"+replaceString);
 
-			// or write to a file
+			// or write to a file 
 			File f2 = new File(path.toFile().toString());
-			//ImageIO.write(thumbImg, "jpg", f2);
-			ImageIO.write(originalImage, "jpg", f2);
+			ImageIO.write(originalImage, extension, f2);
+			
+			System.err.println(" the medium path : "+ mediumPath);
+			File f3 = new File(mediumPath);
+			ImageIO.write(mediumImg, extension, f3);
+			
+			System.err.println(" the small path : "+ smallPath);
+			File f = new File(smallPath);
+			ImageIO.write(smallImg, extension, f);
+			
 		} catch (IOException ioe) {
-			log.debug("IO exception occurred while trying to read image.");
+			log.error("IO exception occurred while trying to read image.");
 			throw new RuntimeException(ioe);
 		}
 	}

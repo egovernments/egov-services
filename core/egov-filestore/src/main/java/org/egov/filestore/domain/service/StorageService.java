@@ -14,6 +14,7 @@ import org.egov.filestore.domain.model.FileInfo;
 import org.egov.filestore.domain.model.FileLocation;
 import org.egov.filestore.domain.model.Resource;
 import org.egov.filestore.persistence.repository.ArtifactRepository;
+import org.egov.filestore.persistence.repository.AwsS3Repository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -40,6 +41,9 @@ public class StorageService {
 	
 	@Value("${source.s3}")
 	private String awsS3Source;
+	
+	@Autowired
+	private AwsS3Repository awsS3Repository;
 	
 	private static final String UPLOAD_MESSAGE = "Received upload request for "
 			+ "jurisdiction: %s, module: %s, tag: %s with file count: %s";
@@ -96,12 +100,12 @@ public class StorageService {
 	}
 
 	private Map<String, String> getUrlMap(List<org.egov.filestore.persistence.entity.Artifact> artifactList) {
-		Map<String, String> urlMap = new HashMap<>();
+		Map<String, String> nameMap = new HashMap<>();
 		artifactList.forEach(a -> {
 			if (null!=a.getFileSource() && a.getFileSource().equals(awsS3Source))
-				urlMap.put(a.getFileStoreId(), getUrlFromName(a.getFileName()));
+				nameMap.put(a.getFileStoreId(), a.getFileName());
 		});
-		return urlMap;
+		return awsS3Repository.getUrlMap(nameMap);
 	}
 
 	private String getUrlFromName(String completeName) {

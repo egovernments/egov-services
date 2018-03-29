@@ -99,10 +99,9 @@ public class StorageController {
 		return new StorageResponse(files);
 	}
 	
-	@PostMapping("/url")
+	@GetMapping("/url")
 	@ResponseBody
-	public ResponseEntity<Map<String, String>> getUrls(@RequestBody RequestInfoWrapper requestInfoWrapper,
-			@RequestParam(value = "tenantId") String tenantId,
+	public ResponseEntity<Map<String, String>> getUrls(@RequestParam(value = "tenantId") String tenantId,
 			@RequestParam("fileStoreIds") List<String> fileStoreIds) {
 		return new ResponseEntity<>(storageService.getUrls(tenantId, fileStoreIds), HttpStatus.OK);
 	}

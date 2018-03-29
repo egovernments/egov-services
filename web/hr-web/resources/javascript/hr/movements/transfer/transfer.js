@@ -120,9 +120,6 @@ class EmployeeTransfer extends React.Component {
                 },
                 success: function (res) {
 
-                  if (res.Movement[0].checkEmployeeExists) {
-                    this.confirmEmployee(body);
-                  }
                   var employee, designation;
 
                   var asOnDate = new Date();
@@ -194,9 +191,7 @@ class EmployeeTransfer extends React.Component {
           'auth-token': authToken
         },
         success: function (res) {
-          if (res.Movement[0].checkEmployeeExists) {
-            confirmEmployee(body);
-          }
+
           var employee, designation;
 
           var asOnDate = new Date();

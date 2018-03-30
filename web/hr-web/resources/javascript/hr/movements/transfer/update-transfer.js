@@ -84,7 +84,7 @@ class UpdateMovement extends React.Component {
           designation: ""
         },
         tenantId: tenantId,
-        checkEmployeeExists:true
+        checkEmployeeExists: false
       },
       employee: {
         id: "",
@@ -197,6 +197,7 @@ class UpdateMovement extends React.Component {
             transferWithPromotion = true;
           }
 
+            Movement.checkEmployeeExists = false;
 
           if (!Movement.workflowDetails) {
             Movement.workflowDetails = {
@@ -271,9 +272,6 @@ class UpdateMovement extends React.Component {
 
 
 
-
-
-
     $('#effectiveFrom').datepicker({
       format: 'dd/mm/yyyy',
       startDate: new Date(),
@@ -315,7 +313,7 @@ class UpdateMovement extends React.Component {
     var _this = this;
     var asOnDate = new Date();
     var dd = asOnDate.getDate();
-    var mm = asOnDate.getMonth() + 1; //January is 0!
+    var mm = asOnDate.getMonth() + 1;
     var yyyy = asOnDate.getFullYear();
 
     if (dd < 10) {
@@ -603,6 +601,8 @@ class UpdateMovement extends React.Component {
       $('#department, #designation, #assignee').prop('required', false);
     }
 
+
+
     if ($('#update-transfer').valid()) {
       var ID = e.target.id, _this = this;
       var stateId = getUrlVars()["stateId"];
@@ -617,6 +617,9 @@ class UpdateMovement extends React.Component {
         tempInfo.promotionBasis = { id: "" };
       }
 
+      if(ID === "Approve" && tempInfo.transferType != "TRANSFER_WITHIN_DEPARTMENT_OR_CORPORATION_OR_ULB"){
+        tempInfo.checkEmployeeExists = true;
+      }
 
 
       if (tempInfo.documents && tempInfo.documents.constructor == FileList) {
@@ -1012,7 +1015,7 @@ class UpdateMovement extends React.Component {
             <tbody>
               {renderFileTr()}
             </tbody>
-          </table>       
+          </table>
         );
       }
     }

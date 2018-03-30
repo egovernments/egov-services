@@ -29,7 +29,7 @@ class EmployeeTransfer extends React.Component {
           designation: ""
         },
         tenantId: tenantId,
-        checkEmployeeExists:true
+        checkEmployeeExists:false
       },
       employee: {
         id: "",

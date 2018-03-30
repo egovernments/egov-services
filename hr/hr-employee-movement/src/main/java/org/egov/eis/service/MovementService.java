@@ -230,6 +230,7 @@ public class MovementService {
 			}
 			List<Movement> existingMovements = movementRepository.findForExistingMovement(movement,
 					movementRequest.getRequestInfo());
+
 			if (!existingMovements.isEmpty()) {
 				message = message + applicationConstants
 						.getErrorMessage(ApplicationConstants.ERR_MOVEMENT_EXISTING_EMPLOYEE_VALIDATE) + ", ";
@@ -254,7 +255,7 @@ public class MovementService {
 			movement.setErrorMsg(message);
 	}
 
-	private ResponseEntity<?> getSuccessResponseForCreate(final List<Movement> movementsList,
+	public ResponseEntity<?> getSuccessResponseForCreate(final List<Movement> movementsList,
 														  final RequestInfo requestInfo) {
 		final MovementResponse movementRes = new MovementResponse();
 		HttpStatus httpStatus = HttpStatus.OK;
@@ -280,8 +281,8 @@ public class MovementService {
 	}
 
 	public MovementRequest create(final MovementRequest movementRequest) {
-        movementRequest.getMovement().get(0).setId(movementRepository.generateSequence());
-        return movementRepository.saveMovement(movementRequest);
+		movementRequest.getMovement().get(0).setId(movementRepository.generateSequence());
+		return movementRepository.saveMovement(movementRequest);
 	}
 
 	public ResponseEntity<?> updateMovement(final MovementRequest movementRequest) {
@@ -402,7 +403,7 @@ public class MovementService {
 				if (employeeInfo != null && !employeeInfo.equals("") && movement.getCheckEmployeeExists())
 					message = message + ApplicationConstants.ERR_MOVEMENT_EMPLOYEE_EXISTS + ", ";
 				setErrorMessage(movement, message);
-				if (employeeInfo == null || (employeeInfo!=null && employeeInfo.equals("")))
+				if (employeeInfo == null || (employeeInfo != null && employeeInfo.equals("")))
 					movement.setCheckEmployeeExists(false);
 				if (!movement.getCheckEmployeeExists() && employeeInfo != null && !employeeInfo.equals("")) {
 					List<Assignment> assignments = employee.getAssignments().stream().filter(assignment -> assignment.getIsPrimary().equals(true)).collect(Collectors.toList());
@@ -416,6 +417,25 @@ public class MovementService {
 				}
 
 				movement.setErrorMsg(errorMsg.replace(", ", ","));
+			}
+		}
+		return movementRequest.getMovement();
+	}
+
+	public List<Movement> checkEmployeeExists(final MovementRequest movementRequest) {
+		for (final Movement movement : movementRequest.getMovement()) {
+			if (movement.getId() != null && movement.getTypeOfMovement().equals(TypeOfMovement.TRANSFER) &&
+					movement.getTransferType().equals(TransferType.TRANSFER_OUTSIDE_CORPORATION_OR_ULB)
+					&& "Approve".equalsIgnoreCase(movement.getWorkflowDetails().getAction())) {
+				final Employee employee = employeeService.getEmployeeById(movementRequest);
+				EmployeeInfo employeeInfo = employeeService.getEmployee(null, employee.getCode(), movementRequest.getMovement().get(0).getTenantId(), movementRequest.getRequestInfo());
+				if (employeeInfo != null && !employeeInfo.equals(""))
+					movement.setCheckEmployeeExists(true);
+				else
+					movement.setCheckEmployeeExists(false);
+			}
+			else{
+				movement.setCheckEmployeeExists(false);
 			}
 		}
 		return movementRequest.getMovement();

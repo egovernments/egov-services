@@ -45,6 +45,7 @@ import java.util.List;
 import javax.validation.Valid;
 
 import org.egov.eis.model.Movement;
+import org.egov.eis.model.enums.TransferType;
 import org.egov.eis.service.MovementService;
 import org.egov.eis.web.contract.MovementRequest;
 import org.egov.eis.web.contract.MovementResponse;
@@ -141,6 +142,12 @@ public class MovementController {
                 bindingResult);
         if (errorResponseEntity != null)
             return errorResponseEntity;
+
+        Movement movement = movementRequest.getMovement().get(0);
+        if(movement.getCheckEmployeeExists()) {
+            movementService.checkEmployeeExists(movementRequest);
+            return movementService.getSuccessResponseForCreate(movementRequest.getMovement(), movementRequest.getRequestInfo());
+        }
 
         movementRequest.getMovement().get(0).setId(movementId);
 

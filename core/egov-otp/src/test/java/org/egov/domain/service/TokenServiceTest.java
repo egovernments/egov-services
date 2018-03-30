@@ -74,6 +74,7 @@ public class TokenServiceTest {
 		final Tokens tokens = mock(Tokens.class);
 		when(tokens.hasSingleNonExpiredToken(now)).thenReturn(false);
 		when(tokenRepository.findByNumberAndIdentityAndTenantId(validateRequest)).thenReturn(tokens);
+		when(tokenRepository.findByNumberAndIdentityAndTenantIdLike(validateRequest)).thenReturn(tokens);
 
 		tokenService.validate(validateRequest);
 	}

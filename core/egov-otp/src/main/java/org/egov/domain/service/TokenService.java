@@ -20,7 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 public class TokenService {
 
 	private TokenRepository tokenRepository;
-	 private static final int TTL_IN_SECONDS = 300;
+	private static final int TTL_IN_SECONDS = 300;
 
 	@Autowired
 	public TokenService(TokenRepository tokenRepository) {
@@ -37,17 +37,20 @@ public class TokenService {
 
 	public Token validate(ValidateRequest validateRequest) {
 		validateRequest.validate();
-		final Tokens tokens = tokenRepository.findByNumberAndIdentityAndTenantId(validateRequest);
+		Tokens tokens = tokenRepository.findByNumberAndIdentityAndTenantId(validateRequest);
+
+		if (tokens != null && tokens.getTokens().isEmpty())
+			tokens = tokenRepository.findByNumberAndIdentityAndTenantIdLike(validateRequest);
 
 		Long currentTime = System.currentTimeMillis() / 1000;
 		Long createdTime = 0l;
 
 		if (tokens != null && tokens.getTokens() != null && !tokens.getTokens().isEmpty()) {
 			Token token = tokens.getTokens().get(0);
-			if(token.isValidated()){
+			if (token.isValidated()) {
 				throw new TokenAlreadyUsedException();
 			}
-			createdTime = token.getCreatedTime() / 1000;
+			createdTime = token.getCreatedTime() / 1000;	
 		} else if (tokens.getTokens().isEmpty()) {
 			throw new TokenValidationFailureException();
 		}

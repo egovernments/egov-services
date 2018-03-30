@@ -21,7 +21,7 @@ public class TokenRepository {
 	private static final int UPDATED_ROWS_COUNT = 1;
 	private static final String NO = "N";
 	private static final String INSERT_TOKEN = "insert into eg_token(id,tenantid,tokennumber,tokenidentity,validated,ttlsecs,createddate,createdby,version,createddatenew) values (:id,:tenantId,:tokenNumber,:tokenIdentity,:validated,:ttlSecs,:createdDate,:createdBy,:version,:createddatenew);";
-	private static final String GETTOKENS_BY_NUMBER_IDENTITY_TENANT = "select * from eg_token where tokennumber=:tokenNumber and tokenidentity=:tokenIdentity and tenantid=:tenantId;";
+	private static final String GETTOKENS_BY_NUMBER_IDENTITY_TENANT = "select * from eg_token where tokennumber=:tokenNumber and tokenidentity=:tokenIdentity and tenantid=:tenantId";
 	private static final String UPDATE_TOKEN = "update eg_token set validated = 'Y' where id = :id";
 	private static final String GETTOKEN_BYID = "select * from eg_token where id=:id";
 
@@ -46,7 +46,7 @@ public class TokenRepository {
 		tokenInputs.put("createdBy", 0l);
 		tokenInputs.put("version", 0l);
 		tokenInputs.put("createddatenew", System.currentTimeMillis());
-		
+
 		namedParameterJdbcTemplate.update(INSERT_TOKEN, tokenInputs);
 		return token;
 	}
@@ -78,15 +78,33 @@ public class TokenRepository {
 		return new Tokens(domainTokens);
 	}
 
+	public Tokens findByNumberAndIdentityAndTenantIdLike(ValidateRequest request) {
+
+		final Map<String, Object> tokenInputs = new HashMap<String, Object>();
+		tokenInputs.put("tokenNumber", request.getOtp());
+		tokenInputs.put("tokenIdentity", request.getIdentity());
+		List<Token> domainTokens = namedParameterJdbcTemplate.query(getQuery(request.getTenantId()), tokenInputs,
+				new TokenRowMapper());
+		return new Tokens(domainTokens);
+	}
+
+	private String getQuery(String tenantId) {
+		if (tenantId != null && tenantId.contains("."))
+			tenantId = tenantId.split("\\.")[0];
+
+		String GETTOKENS_BY_NUMBER_IDENTITY_TENANT = "select * from eg_token where tokennumber=:tokenNumber and tokenidentity=:tokenIdentity and tenantid like "
+				+ "'" + tenantId + "%'";
+		return GETTOKENS_BY_NUMBER_IDENTITY_TENANT;
+	}
+
 	public Token findBy(TokenSearchCriteria searchCriteria) {
 
 		Token token = null;
 		final Map<String, Object> tokenInputs = new HashMap<String, Object>();
 		tokenInputs.put("id", searchCriteria.getUuid());
-		List<Token> domainTokens = namedParameterJdbcTemplate.query(GETTOKEN_BYID, tokenInputs,
-				new TokenRowMapper());
-		if(domainTokens !=null && !domainTokens.isEmpty()){
-		token = domainTokens.get(0);
+		List<Token> domainTokens = namedParameterJdbcTemplate.query(GETTOKEN_BYID, tokenInputs, new TokenRowMapper());
+		if (domainTokens != null && !domainTokens.isEmpty()) {
+			token = domainTokens.get(0);
 		}
 		return token;
 	}

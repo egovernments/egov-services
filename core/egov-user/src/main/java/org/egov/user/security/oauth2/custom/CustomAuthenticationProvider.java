@@ -63,20 +63,16 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 		 * userService.getUserByUsername(userName, tenantId); }
 		 */
 
-		user = userService.getUserByUsername(userName);
+		user = userService.getUserByUsername(userName, tenantId);
 		if (user == null) {
+			String tenant = tenantId;
+			if (tenant.contains("."))
+				tenant = tenant.split("\\.")[0];
+			user = userService.getUserByUsernameAndTenantId(userName, tenant);
+		}
+
+		if (user == null)
 			throw new OAuth2Exception("Invalid login credentials");
-		}
-
-		if (user.getType().toString().equals("CITIZEN") && user.getTenantId().contains(".")) {
-			String[] tenant = user.getTenantId().split("\\.");
-			String tenantid = tenant[0];
-			if (!tenantid.equals(tenantId))
-				throw new OAuth2Exception("Invalid tenantId");
-
-		} else if (user.getType().toString().equals("EMPLOYEE") && !user.getTenantId().equals(tenantId)) {
-			throw new OAuth2Exception("Invalid tenantId");
-		}
 
 		if (user.getActive() == null || !user.getActive()) {
 			throw new OAuth2Exception("Please activate your account");

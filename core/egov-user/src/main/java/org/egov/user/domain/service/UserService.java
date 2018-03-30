@@ -73,9 +73,9 @@ public class UserService {
 		return userRepository.findByUsername(userName, tenantId);
 	}
 
-	public User getUserByUsername(String userName) {
+	public User getUserByUsernameAndTenantId(String userName, String tenantid) {
 		// TODO Auto-generated method stub
-		return userRepository.findByUsername(userName);
+		return userRepository.findByUsernameAndTenantId(userName, tenantid);
 	}
 
 	/**
@@ -154,17 +154,17 @@ public class UserService {
 				&& null == searchCriteria.getPan() && null == searchCriteria.getRoleCodes()
 				&& null == searchCriteria.getId() && 0 == searchCriteria.getPageNumber()
 				&& null == searchCriteria.getType()) {
-			User user = userRepository.findByUsername(searchCriteria.getUserName());
-			List<org.egov.user.domain.model.User> list = new ArrayList<org.egov.user.domain.model.User>();
-			if (null != user && null != user.getType() && user.getType().toString().equals("CITIZEN")
-					&& user.getTenantId().contains(".")) {
-				String tenantId = user.getTenantId().split("\\.")[0];
-				if (tenantId.equals(searchCriteria.getTenantId())
-						|| user.getTenantId().equals(searchCriteria.getTenantId()))
-					list.add(user);
-				return list;
-			} else if (null != user && null != user.getType() && user.getType().toString().equals("EMPLOYEE")) {
-				if (user.getTenantId().equals(searchCriteria.getTenantId()))
+			User user = null;
+			user = userRepository.findByUsername(searchCriteria.getUserName(), searchCriteria.getTenantId());
+			if (user == null) {
+				String tenant = null;
+				if (searchCriteria.getTenantId() != null && searchCriteria.getTenantId().contains("."))
+					tenant = searchCriteria.getTenantId().split("\\.")[0];
+				else
+					tenant = searchCriteria.getTenantId();
+				user = userRepository.findByUsernameAndTenantId(searchCriteria.getUserName(), tenant);
+				List<org.egov.user.domain.model.User> list = new ArrayList<org.egov.user.domain.model.User>();
+				if (user != null)
 					list.add(user);
 				return list;
 			}
@@ -208,7 +208,7 @@ public class UserService {
 		validateUserId(user);
 		validateProfileUpdateIsDoneByTheSameLoggedInUser(user);
 		user.nullifySensitiveFields();
-	    User updatedUser = updateExistingUser(user);
+		User updatedUser = updateExistingUser(user);
 		setFileStoreUrlByFileStoreId(updatedUser);
 		return updatedUser;
 	}

@@ -196,6 +196,7 @@ class EvictionAgreement extends React.Component {
                                         type: 'POST',
                                         dataType: 'json',
                                         contentType: 'application/json',
+                                        data: JSON.stringify({ RequestInfo: requestInfo }),
                                         headers: {
                                             'auth-token': authToken
                                         },
@@ -254,6 +255,7 @@ class EvictionAgreement extends React.Component {
                         type: 'POST',
                         dataType: 'json',
                         contentType: 'application/json',
+                        data: JSON.stringify({ RequestInfo: requestInfo }),
                         headers: {
                             'auth-token': authToken
                         },

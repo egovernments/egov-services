@@ -789,11 +789,11 @@ class AgreementDetails extends React.Component {
                             <div className="col-sm-6">
                                 <div className="row">
                                     <div className="col-sm-6 label-text">
-                                        <label htmlFor="commencementDate"> Security Deposit Received Date  :</label>
+                                        <label htmlFor="securityDepositDate"> Security Deposit Received Date  :</label>
                                     </div>
                                     <div className="col-sm-6 label-view-text">
-                                        <label id="commencementDate" name="commencementDate">
-                                            {agreement.commencementDate ? agreement.commencementDate : "N/A"}
+                                        <label id="securityDepositDate" name="securityDepositDate">
+                                            {agreement.securityDepositDate ? agreement.securityDepositDate : "N/A"}
                                         </label>
                                     </div>
                                 </div>
@@ -929,6 +929,338 @@ class AgreementDetails extends React.Component {
                             </div>
                         </div>
                         </div>
+                    </div>
+                </div>
+            );
+
+        }
+
+        const renderMinimalAgreementDetails = function () {
+            return (
+                <div className="form-section" id="agreementDetailsBlock">
+                    <h3>Agreement Details </h3>
+                    <div className="form-section-inner">
+                        <div className="row">
+                            <div className="col-sm-6">
+                                <div className="row">
+                                    <div className="col-sm-6 label-text">
+                                        <label htmlFor="agreementNumber"> Agreement Number :</label>
+                                    </div>
+                                    <div className="col-sm-6 label-view-text">
+                                        <label id="agreementNumber" name="agreementNumber">
+                                            {agreement.agreementNumber ? agreement.agreementNumber : "N/A"}
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="col-sm-6">
+                                <div className="row">
+                                    <div className="col-sm-6 label-text">
+                                        <label htmlFor="oldAgreementNumber"> Old Agreement Number :</label>
+                                    </div>
+                                    <div className="col-sm-6 label-view-text">
+                                        <label id="oldAgreementNumber" name="oldAgreementNumber">
+                                            {agreement.oldAgreementNumber ? agreement.oldAgreementNumber : "N/A"}
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="row">
+                            <div className="col-sm-6">
+                                <div className="row">
+                                    <div className="col-sm-6 label-text">
+                                        <label htmlFor="councilNumber"> Council/standing committee Resolution Number :</label>
+                                    </div>
+                                    <div className="col-sm-6 label-view-text">
+                                        <label id="councilNumber" name="councilNumber">
+                                            {agreement.councilNumber ? agreement.councilNumber : "N/A"}
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="col-sm-6">
+                                <div className="row">
+                                    <div className="col-sm-6 label-text">
+                                        <label htmlFor="councilDate">Council/standing committee Resolution date :</label>
+                                    </div>
+                                    <div className="col-sm-6 label-view-text">
+                                        <label id="councilDate" name="councilDate">
+                                            {agreement.councilDate ? agreement.councilDate : "N/A"}
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="row">
+                            <div className="col-sm-6">
+                                <div className="row">
+                                    <div className="col-sm-6 label-text">
+                                        <label htmlFor="tenderNumber"> Tender/Auction No. :</label>
+                                    </div>
+                                    <div className="col-sm-6 label-view-text">
+                                        <label id="tenderNumber" name="tenderNumber">
+                                            {agreement.tenderNumber ? agreement.tenderNumber : "N/A"}
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="col-sm-6">
+                                <div className="row">
+                                    <div className="col-sm-6 label-text">
+                                        <label htmlFor="tenderDate">Tender/Auction Date :</label>
+                                    </div>
+                                    <div className="col-sm-6 label-view-text">
+                                        <label id="tenderDate" name="tenderDate">
+                                            {agreement.tenderDate ? agreement.tenderDate : "N/A"}
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="row">
+                        <div className="col-sm-6">
+                            <div className="row">
+                                <div className="col-sm-6 label-text">
+                                    <label htmlFor="tenderOpeningDate">Tender Opening Date/Auction Date :</label>
+                                </div>
+                                <div className="col-sm-6 label-view-text">
+                                    <label id="tenderOpeningDate" name="tenderOpeningDate">
+                                        {agreement.tenderOpeningDate ? agreement.tenderOpeningDate : "N/A"}
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                            <div className="col-sm-6">
+                                <div className="row">
+                                    <div className="col-sm-6 label-text">
+                                        <label htmlFor="natureOfAllotment">Nature of allotment :</label>
+                                    </div>
+                                    <div className="col-sm-6 label-view-text">
+                                        <label id="natureOfAllotment" name="natureOfAllotment">
+                                            {agreement.natureOfAllotment ? agreement.natureOfAllotment : "N/A"}
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div className="row">
+                          <div className="col-sm-6">
+                              <div className="row">
+                                  <div className="col-sm-6 label-text">
+                                      <label htmlFor="auctionAmount">Auction Amount :</label>
+                                  </div>
+                                  <div className="col-sm-6 label-view-text">
+                                      <label id="auctionAmount" name="auctionAmount">
+                                          &#8377; {String(agreement.auctionAmount) || 'N/A'}
+                                      </label>
+                                  </div>
+                              </div>
+                          </div>
+                          <div className="col-sm-6">
+                              <div className="row">
+                                  <div className="col-sm-6 label-text">
+                                      <label htmlFor="paymentCycle">Payment Cycle :</label>
+                                  </div>
+                                  <div className="col-sm-6 label-view-text">
+                                      <label id="paymentCycle" name="paymentCycle">
+                                          {agreement.paymentCycle ? agreement.paymentCycle : "N/A"}
+                                      </label>
+                                  </div>
+                              </div>
+                          </div>
+                        </div>
+                        <div className="row">
+                          <div className="col-sm-6">
+                              <div className="row">
+                                  <div className="col-sm-6 label-text">
+                                      <label htmlFor="bankGuaranteeAmount">Bank Guarantee Amount :</label>
+                                  </div>
+                                  <div className="col-sm-6 label-view-text">
+                                      <label id="bankGuaranteeAmount" name="bankGuaranteeAmount">
+                                          &#8377; {String(agreement.bankGuaranteeAmount) || 'N/A'}
+                                      </label>
+                                  </div>
+                              </div>
+                          </div>
+                          <div className="col-sm-6">
+                              <div className="row">
+                                  <div className="col-sm-6 label-text">
+                                      <label htmlFor="bankGuaranteeDate">Bank Guarantee Date :</label>
+                                  </div>
+                                  <div className="col-sm-6 label-view-text">
+                                      <label id="bankGuaranteeDate" name="bankGuaranteeDate">
+                                          {agreement.bankGuaranteeDate ? agreement.bankGuaranteeDate : "N/A"}
+                                      </label>
+                                  </div>
+                              </div>
+                          </div>
+                        </div>
+                        <div className="row">
+                          <div className="col-sm-6">
+                              <div className="row">
+                                  <div className="col-sm-6 label-text">
+                                      <label htmlFor="solvencyCertificateNo">Solvency Certificate No :</label>
+                                  </div>
+                                  <div className="col-sm-6 label-view-text">
+                                      <label id="solvencyCertificateNo" name="solvencyCertificateNo">
+                                          {agreement.solvencyCertificateNo ? agreement.solvencyCertificateNo : "N/A"}
+                                      </label>
+                                  </div>
+                              </div>
+                          </div>
+                          <div className="col-sm-6">
+                              <div className="row">
+                                  <div className="col-sm-6 label-text">
+                                      <label htmlFor="solvencyCertificateDate">Solvency Certificate Date :</label>
+                                  </div>
+                                  <div className="col-sm-6 label-view-text">
+                                      <label id="solvencyCertificateDate" name="solvencyCertificateDate">
+                                          {agreement.solvencyCertificateDate ? agreement.solvencyCertificateDate : "N/A"}
+                                      </label>
+                                  </div>
+                              </div>
+                          </div>
+                        </div>
+                        <div className="row">
+                          <div className="col-sm-6">
+                              <div className="row">
+                                  <div className="col-sm-6 label-text">
+                                      <label htmlFor="solvencyAmount">Solvency Amount :</label>
+                                  </div>
+                                  <div className="col-sm-6 label-view-text">
+                                      <label id="solvencyAmount" name="solvencyAmount">
+                                          &#8377; {String(agreement.solvencyAmount) || 'N/A'}
+                                      </label>
+                                  </div>
+                              </div>
+                          </div>
+                          <div className="col-sm-6">
+                              <div className="row">
+                                  <div className="col-sm-6 label-text">
+                                      <label htmlFor="securityDepositDate"> Security Deposit Received Date  :</label>
+                                  </div>
+                                  <div className="col-sm-6 label-view-text">
+                                      <label id="securityDepositDate" name="securityDepositDate">
+                                          {agreement.securityDepositDate ? agreement.securityDepositDate : "N/A"}
+                                      </label>
+                                  </div>
+                              </div>
+                          </div>
+                        </div>
+                        <div className="row">
+                          <div className="col-sm-6">
+                              <div className="row">
+                                  <div className="col-sm-6 label-text">
+                                      <label htmlFor="securityDeposit">Security Deposit :</label>
+                                  </div>
+                                  <div className="col-sm-6 label-view-text">
+                                      <label id="securityDeposit" name="securityDeposit">
+                                          &#8377; {String(agreement.securityDeposit) || 'N/A'}
+                                      </label>
+                                  </div>
+                              </div>
+                          </div>
+                          <div className="col-sm-6">
+                              <div className="row">
+                                  <div className="col-sm-6 label-text">
+                                      <label htmlFor="collectedSecurityDeposit">Collected Security Deposit :</label>
+                                  </div>
+                                  <div className="col-sm-6 label-view-text">
+                                      <label id="collectedSecurityDeposit" name="collectedSecurityDeposit">
+                                          &#8377; {String(agreement.collectedSecurityDeposit) || 'N/A'}
+                                      </label>
+                                  </div>
+                              </div>
+                          </div>
+                        </div>
+                        <div className="row">
+                        <div className="col-sm-6">
+                            <div className="row">
+                                <div className="col-sm-6 label-text">
+                                    <label htmlFor="timePeriod">Time Period :</label>
+                                </div>
+                                <div className="col-sm-6 label-view-text">
+                                    <label id="timePeriod" name="timePeriod">
+                                        {agreement.timePeriod ? agreement.timePeriod : "N/A"}
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                            <div className="col-sm-6">
+                                <div className="row">
+                                    <div className="col-sm-6 label-text">
+                                        <label htmlFor="commencementDate"> Date of Allotment :</label>
+                                    </div>
+                                    <div className="col-sm-6 label-view-text">
+                                        <label id="commencementDate" name="commencementDate">
+                                            {agreement.commencementDate ? agreement.commencementDate : "N/A"}
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="row">
+
+                          <div className="col-sm-6">
+                              <div className="row">
+                                  <div className="col-sm-6 label-text">
+                                      <label htmlFor="status">GSTIN :</label>
+                                  </div>
+                                  <div className="col-sm-6 label-view-text">
+                                      <label id="status" name="status">
+                                          {agreement.gstin ? agreement.gstin : "N/A"}
+                                      </label>
+                                  </div>
+                              </div>
+                          </div>
+                          <div className="col-sm-6">
+                              <div className="row">
+                                  <div className="col-sm-6 label-text">
+                                      <label htmlFor="expiryDate">Expiry Date:</label>
+                                  </div>
+                                  <div className="col-sm-6 label-view-text">
+                                      <label id="expiryDate" name="expiryDate">
+                                          {agreement.expiryDate ? agreement.expiryDate : "N/A"}
+                                      </label>
+                                  </div>
+                              </div>
+                          </div>
+                        </div>
+
+                        <div className="row">
+                          <div className="col-sm-6">
+                              <div className="row">
+                                  <div className="col-sm-6 label-text">
+                                      <label htmlFor="status">Current Status :</label>
+                                  </div>
+                                  <div className="col-sm-6 label-view-text">
+                                      <label id="status" name="status">
+                                          {agreement.status ? agreement.status : "N/A"}
+                                      </label>
+                                  </div>
+                              </div>
+                          </div>
+                          <div className="col-sm-6">
+                              <div className="row">
+                                  <div className="col-sm-6 label-text">
+                                      <label htmlFor="remarks">Remarks :</label>
+                                  </div>
+                                  <div className="col-sm-6 label-view-text">
+                                      <label id="remarks" name="remarks">
+                                          {agreement.remarks || 'N/A'}
+                                      </label>
+                                  </div>
+                              </div>
+                          </div>
+
+                        </div>
+
                     </div>
                 </div>
             );
@@ -1074,7 +1406,7 @@ class AgreementDetails extends React.Component {
             return (<div>
               {renderAssetDetails()}
               {renderAllottee()}
-              {renderAgreementDetails()}
+              {renderMinimalAgreementDetails()}
               {renderDocuments()}
             </div>)
           }

@@ -1,10 +1,11 @@
 function confirmEmployee(body) {
   let userConfirm = confirm("Employee already exist in the given ULB. Do you want to continue?");
+  console.log("userConfirm: ", userConfirm);
   if (userConfirm) {
     body.Movement.checkEmployeeExists = false;
 
     $.ajax({
-      url: baseUrl + "/hr-employee-movement/movements/_create?tenantId=" + tenantId,
+      url: baseUrl + "/hr-employee-movement/movements/" + _this.state.movement.id + "/" + "_update?tenantId=" + tenantId,
       type: 'POST',
       dataType: 'json',
       data: JSON.stringify(body),
@@ -13,31 +14,7 @@ function confirmEmployee(body) {
         'auth-token': authToken
       },
       success: function (res) {
-        var employee, designation;
-
-        var asOnDate = new Date();
-        var dd = asOnDate.getDate();
-        var mm = asOnDate.getMonth() + 1;
-        var yyyy = asOnDate.getFullYear();
-
-        asOnDate = (dd < 10 ? '0' + dd : dd) + '/' + (mm < 10 ? '0' + mm : mm) + '/' + yyyy;
-
-        commonApiPost("hr-employee", "employees", "_search", {
-          "positionId": movement.workflowDetails.assignee,
-          tenantId,
-          asOnDate
-        }, function (err, res) {
-          if (res && res.Employee && res.Employee[0])
-            employee = res.Employee[0];
-
-          employee.assignments.forEach(function (item) {
-            if (item.isPrimary)
-              designation = item.designation;
-          });
-          var ownerDetails = employee.name + " - " + employee.code + " - " + getNameById(_this.state.designationList, designation);
-
-          window.location.href = `app/hr/movements/ack-page.html?type=TransferApply&owner=${ownerDetails}`;
-        });
+        window.location.href = `app/hr/movements/ack-page.html?type=TransferApprove`;
       },
       error: function (err) {
         if (err["responseJSON"].message)
@@ -48,7 +25,6 @@ function confirmEmployee(body) {
           showError("Something went wrong. Please contact Administrator");
         }
       }
-
     });
 
   }
@@ -1002,7 +978,7 @@ class UpdateMovement extends React.Component {
     }
 
     const renderFile = function (status) {
-      if (_this.state.movement && _this.state.movement.documents) {
+      if (_this.state.movement && _this.state.movement.documents && _this.state.movement.documents.length) {
         return (
           <table className="table table-bordered" id="fileTable">
             <thead>

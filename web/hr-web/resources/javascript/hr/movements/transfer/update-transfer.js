@@ -2,10 +2,11 @@ function confirmEmployee(body) {
   let userConfirm = confirm("Employee already exist in the given ULB. Do you want to continue?");
   console.log("userConfirm: ", userConfirm);
   if (userConfirm) {
-    body.Movement.checkEmployeeExists = false;
+    console.log(body.Movement);
+    body.Movement[0].checkEmployeeExists = false;
 
     $.ajax({
-      url: baseUrl + "/hr-employee-movement/movements/" + body.Movement.id + "/" + "_update?tenantId=" + tenantId,
+      url: baseUrl + "/hr-employee-movement/movements/" + body.Movement[0].id + "/" + "_update?tenantId=" + tenantId,
       type: 'POST',
       dataType: 'json',
       data: JSON.stringify(body),
@@ -28,7 +29,7 @@ function confirmEmployee(body) {
     });
 
   }else{
-    return showError("You cancelled the application. Please select other options");
+    return userConfirm;
   }
 }
 
@@ -639,7 +640,8 @@ class UpdateMovement extends React.Component {
                     console.log( res.Movement[0].checkEmployeeExists);
 
                     if (ID === "Approve" && res.Movement[0].checkEmployeeExists) {
-                      confirmEmployee(body);
+                      if(!confirmEmployee(body))
+                       return showError("You cancelled the application. Please select other options");
                     }
 
                     var employee, designation;
@@ -724,7 +726,9 @@ class UpdateMovement extends React.Component {
             console.log( res.Movement[0].checkEmployeeExists);
 
             if (ID === "Approve" && res.Movement[0].checkEmployeeExists) {
-              confirmEmployee(body);
+              if(!confirmEmployee(body))
+                return showError("You cancelled the application. Please select other options");
+
             }
 
             var employee, designation;

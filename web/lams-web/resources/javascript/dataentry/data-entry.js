@@ -238,14 +238,30 @@ $(document).ready(function() {
     }
   })
 
-  $('#paymentCycle').on('change',function(){
+  $('#agreementDetailsBlockForAuctionAssets select').on('change',function(){
+    var allotmentDate = $('#commencementDate').val();
+    if(this.id==='paymentCycle'){
        var auctionAmt = $("#auctionAmount").val();
-      if(auctionAmt && this.value === "ANNUAL"){
-        alert(auctionAmt)
+      if(auctionAmt&&this.value === "ANNUAL"){
+        //alert(auctionAmt)
         agreement["rent"] = auctionAmt;
+      }else if(allotmentDate && (this.value === "QUARTER" || this.value === "HALFYEAR")){
+        allotmentDate = moment(allotmentDate,"DD/MM/YYYY");
+        validatePaymentCycle(allotmentDate,this.value);
       }
-
+    }
   })
+
+  $('#agreementDetailsBlockForAuctionAssets .datepicker').on('changeDate',function(){
+    var paymentCycle = $('#paymentCycle').val();
+    if(this.id==='commencementDate'){
+       if(paymentCycle){
+        allotmentDate = moment(this.value,"DD/MM/YYYY");
+        validatePaymentCycle(allotmentDate,paymentCycle);
+      }
+    }
+  })
+
 
 
   if (decodeURIComponent(getUrlVars()["type"]) != "Shopping Complex"){
@@ -854,9 +870,13 @@ $(".datepicker").on("changeDate", function() {
 
     if(this.id ==='commencementDate'){
       var auctionAmt = $('#auctionAmount').val();
+      var paymentCycle = $('#paymentCycle').val();
         if(auctionAmt){
-       var fromDate = moment(this.value,"DD/MM/YYYY");
-        adjustSecurityDeposit(fromDate,auctionAmt);
+         var fromDate = moment(this.value,"DD/MM/YYYY");
+         if(paymentCycle){
+         validatePaymentCycle(fromDate,this.value);
+       }
+         adjustSecurityDeposit(fromDate,auctionAmt);
     }
   }
     fillValueToObject(this);
@@ -887,12 +907,45 @@ function adjustSecurityDeposit(fromDate,auctionAmount){
   var paymentCycle = $('#paymentCycle').val();
   if(paymentCycle ==='ANNUAL'){
     agreement["rent"] = auctionAmt;
-  }else{
-      agreement["rent"] = monthlyRent;
-  }
-  agreement["securityDeposit"] = securityDeposit;
+  }else if(paymentCycle ==='QUARTER'){
+    var noOfQuarters = totalMonths/3;
+      agreement["rent"] = Math.round(auctionAmt/noOfQuarters);
+  }else if(paymentCycle ==='HALFYEAR'){
+    var noOfHalfs = totalMonths/6;
+    agreement["rent"] = Math.round(auctionAmt/noOfHalfs);
+
+ }else{
+   agreement["rent"] = Math.round(monthlyRent);
+ }
+  agreement["securityDeposit"] = Math.round(securityDeposit);
 
 }
+
+function validatePaymentCycle(fromDate,paymentCycle) {
+  var year = Number(fromDate.format('YYYY'));
+  var month = Number(fromDate.format('MM'));
+  if(month > 3){
+     year = year + 1;
+  }
+  var fisYear = new Date(year,2,31);
+  fisYear = moment(fisYear).format("DD/MM/YYYY");
+  let totalMonths = getAbsoulteMonths(moment(fisYear,"DD/MM/YYYY"))-getAbsoulteMonths(moment(fromDate),"DD/MM/YYYY");
+  totalMonths = totalMonths + 1;
+  if(paymentCycle==="QUARTER"){
+     if(totalMonths%3!=0){
+       alert('Allotment date is not falling in appropriate quarterly period,please change the allotmentdate/payment cycle ');
+       $('#commencementDate').val('');
+       return false;
+     }
+  }else if(paymentCycle==="HALFYEAR"){
+    if(totalMonths%6!=0){
+      alert('Allotment date is not falling in appropriate half year period,please change the allotment date/payment cycle ');
+      $('#commencementDate').val('');
+      return false;
+    }
+  }
+}
+
 
 // printValue("",assetDetails)
 //

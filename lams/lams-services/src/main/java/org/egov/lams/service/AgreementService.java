@@ -699,8 +699,8 @@ public class AgreementService {
 			cal.add(Calendar.YEAR, 1);
 		}
 		cal.set(Calendar.DATE, cal.getActualMaximum(Calendar.DATE));
-		cal.set(Calendar.HOUR,23);
-		cal.set(Calendar.MINUTE,59);
+		cal.set(Calendar.HOUR, 0);
+		cal.set(Calendar.MINUTE, 0);
 		return cal.getTime();
 	}
 		

@@ -402,6 +402,8 @@ public class MovementService {
 				if (employeeInfo != null && !employeeInfo.equals("") && movement.getCheckEmployeeExists())
 					message = message + ApplicationConstants.ERR_MOVEMENT_EMPLOYEE_EXISTS + ", ";
 				setErrorMessage(movement, message);
+				if (employeeInfo == null || (employeeInfo!=null && employeeInfo.equals("")))
+					movement.setCheckEmployeeExists(false);
 				if (!movement.getCheckEmployeeExists() && employeeInfo != null && !employeeInfo.equals("")) {
 					List<Assignment> assignments = employee.getAssignments().stream().filter(assignment -> assignment.getIsPrimary().equals(true)).collect(Collectors.toList());
 					for (Assignment assign : assignments) {

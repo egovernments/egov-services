@@ -36,7 +36,7 @@ public class PGRRequestValidator {
 		
 		Map<String, String> errorMap = new HashMap<>();
 		userInfoCheck(serviceRequest, errorMap);
-		employeeCreateCheck(serviceRequest.getRequestInfo(),errorMap);
+		//employeeCreateCheck(serviceRequest.getRequestInfo(),errorMap);
 		overRideCitizenAccountId(serviceRequest);
 		vaidateServiceCodes(serviceRequest, errorMap, serviceCodeList);
 		

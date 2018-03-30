@@ -27,6 +27,8 @@ function confirmEmployee(body) {
       }
     });
 
+  }else{
+    showError("You cancelled the application. Please select other options");
   }
 }
 

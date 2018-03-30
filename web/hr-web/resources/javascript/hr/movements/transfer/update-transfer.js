@@ -5,7 +5,7 @@ function confirmEmployee(body) {
     body.Movement.checkEmployeeExists = false;
 
     $.ajax({
-      url: baseUrl + "/hr-employee-movement/movements/" + _this.state.movement.id + "/" + "_update?tenantId=" + tenantId,
+      url: baseUrl + "/hr-employee-movement/movements/" + body.Movement.id + "/" + "_update?tenantId=" + tenantId,
       type: 'POST',
       dataType: 'json',
       data: JSON.stringify(body),
@@ -28,7 +28,7 @@ function confirmEmployee(body) {
     });
 
   }else{
-    showError("You cancelled the application. Please select other options");
+    return showError("You cancelled the application. Please select other options");
   }
 }
 
@@ -636,6 +636,8 @@ class UpdateMovement extends React.Component {
                   },
                   success: function (res) {
 
+                    console.log( res.Movement[0].checkEmployeeExists);
+
                     if (ID === "Approve" && res.Movement[0].checkEmployeeExists) {
                       confirmEmployee(body);
                     }
@@ -718,6 +720,8 @@ class UpdateMovement extends React.Component {
             'auth-token': authToken
           },
           success: function (res) {
+
+            console.log( res.Movement[0].checkEmployeeExists);
 
             if (ID === "Approve" && res.Movement[0].checkEmployeeExists) {
               confirmEmployee(body);

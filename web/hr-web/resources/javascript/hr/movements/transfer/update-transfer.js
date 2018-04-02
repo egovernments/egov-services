@@ -309,6 +309,7 @@ class UpdateMovement extends React.Component {
         tenantId,
         departmentId,
         designationId,
+        isPrimary:true,
         asOnDate,
         active: true
       }, function (err, res) {

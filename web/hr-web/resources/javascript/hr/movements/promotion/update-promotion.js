@@ -475,9 +475,8 @@ class UpdateMovement extends React.Component {
         _this = this;
       var stateId = getUrlVars()["stateId"];
       var tempInfo = Object.assign({}, _this.state.movement);
-      tempInfo.workflowDetails = {
-        "action": ID
-      };
+      if(tempInfo.workflowDetails)
+      tempInfo.workflowDetails.action =  ID;
 
       if (tempInfo.documents && tempInfo.documents.constructor == FileList) {
         let counter = tempInfo.documents.length,

@@ -587,7 +587,8 @@ class UpdateMovement extends React.Component {
       var ID = e.target.id, _this = this;
       var stateId = getUrlVars()["stateId"];
       var tempInfo = Object.assign({}, _this.state.movement);
-      tempInfo.workflowDetails = { "action": ID };
+      if(tempInfo.workflowDetails)
+      tempInfo.workflowDetails.action =  ID;
 
 
       if (_this.state.transferWithPromotion) {

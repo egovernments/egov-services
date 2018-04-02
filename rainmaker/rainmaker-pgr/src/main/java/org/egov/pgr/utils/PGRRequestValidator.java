@@ -32,7 +32,14 @@ public class PGRRequestValidator {
 
 	public void validateCreate(ServiceRequest serviceRequest) {
 		
-		List<String> serviceCodeList = Arrays.asList("ADDGC","AOS","AC","DC","MC","BG","BPS","BB","BMW");
+		List<String> serviceCodeList = Arrays.asList("DM", "SP", "DOSA", "SC", "DSOD", "UGDO", "SOW", "WPL", "OOWF",
+				"DM", "RTEF", "ROMC", "ROD", "ROG", "AGC", "AS", "BG", "IS", "BB", "BMW", "IDOSSWD", "POGB", "OOGB",
+				"SOGB", "SC", "SOG", "TSS", "CROPT", "EOPP", "UIC", "IRVL", "ROSOF", "NPTF", "TOTOP", "EIDN", "VODBL",
+				"NVLTF", "RPOPT", "DA", "PTB", "PI", "MOP", "CRBG", "CRD", "MOP", "RFH", "MOCH", "MM", "FDM", "RPT",
+				"CT", "OD", "CRR", "FARE", "RFAO", "UCSH", "PMOPTAFS", "USMP", "IS", "UITOML", "PI", "CRIOAL",
+				"IDOCOVL", "CRVL", "CRSL", "SOGC", "NSOBLTTG", "PQOW", "SOCW", "IRTAB", "UTC", "UAB", "DORSOTR",
+				"PHRDS", "SBTSOD", "UCOTR", "RTFBC", "OORBB", "URC", "ROCM", "ROTI", "NBOS", "HSW", "ESDTS", "NS",
+				"OCH", "IRTDW", "ROBW", "CODW", "TR");
 		
 		Map<String, String> errorMap = new HashMap<>();
 		userInfoCheck(serviceRequest, errorMap);

@@ -27,7 +27,8 @@ class UpdateMovement extends React.Component {
           department: "",
           designation: ""
         },
-        tenantId: tenantId
+        tenantId: tenantId,
+        checkEmployeeExists:false
       },
       employee: {
         id: "",
@@ -155,6 +156,7 @@ class UpdateMovement extends React.Component {
       if (res) {
         if (res.Movement[0]) {
           var Movement = res.Movement[0];
+          Movement.checkEmployeeExists = false;
 
         
 

@@ -26,7 +26,8 @@ class EmployeePromotion extends React.Component {
           workflowDetails: {
             assignee: ""
           },
-          tenantId: tenantId
+          tenantId: tenantId,
+          checkEmployeeExists:false
         },
         employee: {
           id: "",

@@ -8,12 +8,14 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @AllArgsConstructor
 @Builder
 @EqualsAndHashCode
+@NoArgsConstructor
 public class OtpRequest {
 	@Setter
     private String mobileNumber;

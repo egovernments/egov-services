@@ -54,7 +54,7 @@ public class ActionInfo   {
   @Valid
   private List<String> media = null;
 
-  @JsonProperty("comment")
+  @JsonProperty("comments")
   private String comment = null;
 
   public ActionInfo tenantId(String tenantId) {

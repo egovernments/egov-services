@@ -352,6 +352,8 @@ class EmployeePromotion extends React.Component {
         tenantId,
         departmentId,
         designationId,
+        isPrimary:true,
+        active: true,
         asOnDate
       }, function(err, res) {
         if (res) {

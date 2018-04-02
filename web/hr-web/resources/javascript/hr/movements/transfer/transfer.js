@@ -404,6 +404,7 @@ class EmployeeTransfer extends React.Component {
       departmentId,
       designationId,
       asOnDate,
+      isPrimary:true,
       active: true
     }, function (err, res) {
       if (res) {

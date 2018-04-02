@@ -19,6 +19,7 @@ import org.egov.user.web.contract.auth.CustomUserDetails;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -52,10 +53,14 @@ public class UserController {
 	 * @return
 	 */
 	@PostMapping("/citizen/_create")
-	public UserDetailResponse createCitizen(@RequestBody CreateUserRequest createUserRequest) {
+	public Object createCitizen(@RequestBody CreateUserRequest createUserRequest) {
 		log.info("Received Citizen Registration Request  " + createUserRequest);
 		User user = createUserRequest.toDomain(true);
 		user.setOtpValidationMandatory(true);
+		if(createUserRequest.getUser().getTenantId().contains("pb")) {
+			Object object = userService.regosterWithLogin(user);
+			return new ResponseEntity<>(object, HttpStatus.OK);
+		}
 		final User newUser = userService.createCitizen(user);
 		return createResponse(newUser);
 	}

@@ -28,9 +28,13 @@ import org.egov.user.persistence.repository.OtpRepository;
 import org.egov.user.persistence.repository.UserRepository;
 import org.egov.user.web.contract.Otp;
 import org.egov.user.web.contract.OtpValidateRequest;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import com.jayway.jsonpath.JsonPath;
 
@@ -47,6 +51,9 @@ public class UserService {
 	private boolean isCitizenLoginOtpBased;
 	private boolean isEmployeeLoginOtpBased;
 	private FileStoreRepository fileRepository;
+
+	@Autowired
+	private RestTemplate restTemplate;
 
 	public UserService(UserRepository userRepository, OtpRepository otpRepository, FileStoreRepository fileRepository,
 			PasswordEncoder passwordEncoder,
@@ -120,7 +127,7 @@ public class UserService {
 		user.setRoleToCitizen();
 		validateDuplicateUserName(user);
 		user.validateNewUser();
-		//validateOtp(user.getOtpValidationRequest());
+		// validateOtp(user.getOtpValidationRequest());
 		String tenantId = null;
 		if (user.getTenantId().contains("."))
 			tenantId = user.getTenantId().split("\\.")[0];
@@ -137,7 +144,59 @@ public class UserService {
 		}
 		user.setDefaultPasswordExpiry(defaultPasswordExpiryInDays);
 		user.setActive(true);
+
 		return persistNewUser(user);
+	}
+
+	/**
+	 * api will create the citizen with otp
+	 * 
+	 * @param user
+	 * @return
+	 */
+	public Object regosterWithLogin(User user) {
+		log.info("Into register with login method......");
+		user.setUuid(UUID.randomUUID().toString());
+		if (isCitizenLoginOtpBased && !StringUtils.isNumeric(user.getUsername()))
+			throw new UserNameNotValidException();
+		else if (isCitizenLoginOtpBased)
+			user.setMobileNumber(user.getUsername());
+
+		user.setRoleToCitizen();
+		validateDuplicateUserName(user);
+		user.validateNewUser();
+		// validateOtp(user.getOtpValidationRequest());
+		log.info("User validated successfully");
+		String tenantId = null;
+		if (user.getTenantId().contains("."))
+			tenantId = user.getTenantId().split("\\.")[0];
+		else
+			tenantId = user.getTenantId();
+
+		Otp otp = Otp.builder().otp(user.getOtpReference()).identity(user.getUsername()).tenantId(tenantId).build();
+		try {
+			validateOtp(otp);
+		} catch (Exception e) {
+			log.error("Exception while validating otp: "+e);
+			String errorMessage = JsonPath.read(e.getMessage(), "$.error.message");
+			System.out.println("message " + errorMessage);
+			throw new InvalidOtpException(errorMessage);
+		}
+		user.setDefaultPasswordExpiry(defaultPasswordExpiryInDays);
+		user.setActive(true);
+		User registrationResult = null;
+		try {
+			registrationResult = persistNewUser(user);
+			StringBuilder uri = new StringBuilder();
+			uri.append("http://egov-micro-dev.egovernments.org").append("/user/oauth/token")
+					.append("?username=" + user.getUsername()).append("&password=" + otp.getOtp())
+					.append("&grant_type=password&scope=read").append("&tenantId=" + user.getTenantId());
+
+			return restTemplate.postForObject(uri.toString(), "", UsernamePasswordAuthenticationToken.class);
+		} catch (Exception e) {
+			log.info("Exception while fecting authtoken: " + e);
+			return registrationResult;
+		}
 	}
 
 	/**
@@ -272,8 +331,7 @@ public class UserService {
 	}
 
 	/**
-	 * This api will validate existing password and current password matching or
-	 * not
+	 * This api will validate existing password and current password matching or not
 	 * 
 	 * @param user
 	 * @param existingRawPassword
@@ -297,8 +355,7 @@ public class UserService {
 	}
 
 	/**
-	 * this api will validate, updating the profile for same logged-in user or
-	 * not
+	 * this api will validate, updating the profile for same logged-in user or not
 	 * 
 	 * @param user
 	 */
@@ -391,7 +448,7 @@ public class UserService {
 	 * @param user
 	 */
 	private void validateUser(final Long id, final User user) {
-		//validateDuplicateUserName(id, user);
+		// validateDuplicateUserName(id, user);
 		if (userRepository.getUserById(id, user.getTenantId()) == null) {
 			throw new UserNotFoundException(user);
 		}

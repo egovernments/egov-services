@@ -57,7 +57,6 @@ public class Service   {
 
   @JsonProperty("email")
   @Email
-  @NotEmpty
   private String email = null;
 
   @JsonProperty("deviceId")
@@ -73,6 +72,7 @@ public class Service   {
   private String lastName = null;
 
   @JsonProperty("phone")
+  @NotEmpty
   @Pattern(regexp="(^$|[0-9]{10})")
   private String phone = null;
 

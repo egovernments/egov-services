@@ -14,6 +14,7 @@ SearchDefinitions:
     - name: tenantid
       isMandatory: true
       jsonPath: $.searchCriteria.tenantId
+      operator: LIKE
     - name: servicerequestid
       isMandatory: false
       jsonPath: $.searchCriteria.serviceRequestId

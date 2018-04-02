@@ -276,7 +276,8 @@ class UpdateMovement extends React.Component {
       tenantId,
       departmentId: departmentId,
       designationId: designationId,
-      asOnDate: effectiveFrom
+      asOnDate: effectiveFrom,
+      pageSize: 500
     }, function (err, res) {
       if (res) {
         _this.setState({

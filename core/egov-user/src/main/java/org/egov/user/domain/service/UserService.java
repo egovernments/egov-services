@@ -118,9 +118,9 @@ public class UserService {
 			user.setMobileNumber(user.getUsername());
 
 		user.setRoleToCitizen();
-		user.validateNewUser();
 		validateDuplicateUserName(user);
-		// validateOtp(user.getOtpValidationRequest());
+		user.validateNewUser();
+		//validateOtp(user.getOtpValidationRequest());
 		String tenantId = null;
 		if (user.getTenantId().contains("."))
 			tenantId = user.getTenantId().split("\\.")[0];
@@ -391,7 +391,7 @@ public class UserService {
 	 * @param user
 	 */
 	private void validateUser(final Long id, final User user) {
-		validateDuplicateUserName(id, user);
+		//validateDuplicateUserName(id, user);
 		if (userRepository.getUserById(id, user.getTenantId()) == null) {
 			throw new UserNotFoundException(user);
 		}

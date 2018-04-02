@@ -76,7 +76,7 @@ serviceMaps:
 
        - jsonPath: $.actionInfo.*.status
 
-       - jsonPath: $.actionInfo.*.comments
+       - jsonPath: $.actionInfo.*.comment
 
        - jsonPath: $.actionInfo.*.media
          type: JSON
@@ -160,7 +160,7 @@ serviceMaps:
 
        - jsonPath: $.actionInfo.*.status
 
-       - jsonPath: $.actionInfo.*.comments
+       - jsonPath: $.actionInfo.*.comment
 
        - jsonPath: $.actionInfo.*.media
          type: JSON

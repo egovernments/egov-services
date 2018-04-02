@@ -11,7 +11,7 @@ import org.egov.common.contract.request.RequestInfo;
 import org.egov.mdms.model.MdmsCriteriaReq;
 import org.egov.pgr.PGRApp;
 import org.egov.pgr.contract.ActionHistory;
-import org.egov.pgr.contract.ActionInfo;	
+import org.egov.pgr.contract.ActionInfo;
 import org.egov.pgr.contract.AuditDetails;
 import org.egov.pgr.contract.CountResponse;
 import org.egov.pgr.contract.IdResponse;
@@ -216,7 +216,7 @@ public class GrievanceService {
 
 	private boolean isUpdateValid(RequestInfo requestInfo, ActionInfo actionInfo, List<String> currentStatusList) {
 
-		System.err.println(" the current list possible : "+ currentStatusList);
+		log.info(" the current list possible : "+ currentStatusList);
 		ServiceReqSearchCriteria serviceReqSearchCriteria = ServiceReqSearchCriteria.builder()
 				.tenantId(actionInfo.getTenantId()).serviceRequestId(Arrays.asList(actionInfo.getBusinessKey()))
 				.build();
@@ -225,11 +225,11 @@ public class GrievanceService {
 				.getActionHistory().get(0).getActions();
 		
 		
-		for (int i = infos.size() - 1; i >= 0; i--) {
+		for (int i = 0;i <= infos.size()-1; i++) {
 				String status = infos.get(i).getStatus();
-				System.err.println(" the status is : "+ status);
+				log.info(" the status is : "+ status);
 				if (null != status) {
-					System.err.println(" is it true : "+ currentStatusList.contains(status));
+					log.info(" is it true : "+ currentStatusList.contains(status));
 					if (currentStatusList.contains(status))
 						return true;
 					else

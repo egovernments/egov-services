@@ -13,6 +13,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.request.Role;
 import org.egov.common.contract.request.User;
+import org.egov.pgr.contract.ActionInfo;
 import org.egov.pgr.contract.Service;
 import org.egov.pgr.contract.ServiceReqSearchCriteria;
 import org.egov.pgr.contract.ServiceRequest;
@@ -73,8 +74,10 @@ public class PGRRequestValidator {
 
 		Map<String, String> errorMap = new HashMap<>();
 		userInfoCheck(serviceRequest, errorMap);
-		overRideCitizenAccountId(serviceRequest); // TODO remove the accid field from persiter and remove this method
-													// following that action FIXME
+		overRideCitizenAccountId(serviceRequest);
+		validateAssignments(serviceRequest, errorMap);
+		
+		// TODO remove the accid field from persiter and remove this method following that action FIXME
 
 		ServiceReqSearchCriteria serviceReqSearchCriteria = ServiceReqSearchCriteria.builder()
 				.tenantId(serviceRequest.getServices().get(0).getTenantId()).serviceRequestId(serviceRequest
@@ -98,6 +101,24 @@ public class PGRRequestValidator {
 
 		if (!errorMap.isEmpty())
 			throw new CustomException(errorMap);
+	}
+
+	private void validateAssignments(ServiceRequest serviceRequest, Map<String, String> errorMap) {
+		
+		final String errorCode = "EG_PGR_UPDATE_ASSIGN";
+		List<String> errorMsg = new ArrayList<>();
+		List<Service> services = serviceRequest.getServices();
+
+		List<ActionInfo> infos = serviceRequest.getActionInfo();
+		
+		for (int i = 0; i <= infos.size() - 1; i++) {
+			ActionInfo info = infos.get(i);
+			if (info.getAction() != null && info.getAction().equalsIgnoreCase("assign") && info.getAssignee() == null)
+				errorMsg.add(services.get(i).getServiceRequestId());
+		}
+		
+		if(!errorMsg.isEmpty())
+			errorMap.put(errorCode, " The assignees are missing for the assign actions of services with ids : "+errorMsg);
 	}
 
 	public void userInfoCheck(ServiceRequest serviceRequest, Map<String, String> errorMap) {

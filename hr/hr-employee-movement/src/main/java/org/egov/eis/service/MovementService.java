@@ -431,9 +431,9 @@ public class MovementService {
 					&& "Approve".equalsIgnoreCase(movement.getWorkflowDetails().getAction())) {
 				final Employee employee = employeeService.getEmployeeById(movementRequest);
 				EmployeeInfo employeeInfo = employeeService.getEmployee(null, employee.getCode(), movementRequest.getMovement().get(0).getTransferedLocation(), movementRequest.getRequestInfo());
-				LOGGER.info("Employee Info:"+employeeInfo);
+                LOGGER.info("Employee Info:"+employeeInfo.getCode());
 
-				if (employeeInfo != null && !employeeInfo.equals(""))
+                if (employeeInfo.getCode() != null && !employeeInfo.getCode().equals(""))
 					movement.setCheckEmployeeExists(true);
 				else
 					movement.setCheckEmployeeExists(false);

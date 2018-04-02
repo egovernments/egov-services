@@ -424,11 +424,15 @@ public class MovementService {
 
 	public List<Movement> checkEmployeeExists(final MovementRequest movementRequest) {
 		for (final Movement movement : movementRequest.getMovement()) {
+			LOGGER.info("Employee exists:"+movement.getCheckEmployeeExists());
+
 			if (movement.getId() != null && movement.getTypeOfMovement().equals(TypeOfMovement.TRANSFER) &&
 					movement.getTransferType().equals(TransferType.TRANSFER_OUTSIDE_CORPORATION_OR_ULB)
 					&& "Approve".equalsIgnoreCase(movement.getWorkflowDetails().getAction())) {
 				final Employee employee = employeeService.getEmployeeById(movementRequest);
-				EmployeeInfo employeeInfo = employeeService.getEmployee(null, employee.getCode(), movementRequest.getMovement().get(0).getTenantId(), movementRequest.getRequestInfo());
+				EmployeeInfo employeeInfo = employeeService.getEmployee(null, employee.getCode(), movementRequest.getMovement().get(0).getTransferedLocation(), movementRequest.getRequestInfo());
+				LOGGER.info("Employee Info:"+employeeInfo);
+
 				if (employeeInfo != null && !employeeInfo.equals(""))
 					movement.setCheckEmployeeExists(true);
 				else
@@ -437,7 +441,9 @@ public class MovementService {
 			else{
 				movement.setCheckEmployeeExists(false);
 			}
+
 		}
+
 		return movementRequest.getMovement();
 	}
 }

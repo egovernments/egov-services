@@ -285,6 +285,7 @@ public class UserServiceTest {
 		verify(domainUser).validateUserModification();
 	}
 
+	@Ignore
 	@Test(expected = DuplicateUserNameException.class)
 	public void test_should_throw_error_when_username_exists_while_updating() throws Exception {
 		User domainUser = validDomainUser(false);

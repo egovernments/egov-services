@@ -4,8 +4,11 @@ import java.util.Objects;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
+import org.hibernate.validator.constraints.Email;
+import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
@@ -53,6 +56,8 @@ public class Service   {
   private String addressId = null;
 
   @JsonProperty("email")
+  @Email
+  @NotEmpty
   private String email = null;
 
   @JsonProperty("deviceId")
@@ -68,6 +73,7 @@ public class Service   {
   private String lastName = null;
 
   @JsonProperty("phone")
+  @Pattern(regexp="(^$|[0-9]{10})")
   private String phone = null;
 
   @JsonProperty("attributes")
@@ -90,7 +96,9 @@ public class Service   {
     
     CANCELLED("Cancelled"),
     
-    REJECTED("Rejected");
+    REJECTED("Rejected"),
+    
+    RESOLVED("Resolved");    
 
     private String value;
 

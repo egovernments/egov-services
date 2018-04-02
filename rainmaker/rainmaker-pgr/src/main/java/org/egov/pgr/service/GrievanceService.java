@@ -171,8 +171,12 @@ public class GrievanceService {
 				actionInfo.setTenantId(tenantId);
 				actionInfo.setStatus(actionInfo.getAction());
 				if (null != actionInfo.getAction() && actionStatusMap.get(actionInfo.getAction()) != null) {
-					if (isUpdateValid(requestInfo, actionInfo, actioncurrentStatusMap.get(actionInfo.getAction())))
-						actionInfo.setStatus(actionStatusMap.get(actionInfo.getAction()));
+					
+					if (isUpdateValid(requestInfo, actionInfo, actioncurrentStatusMap.get(actionInfo.getAction()))) {
+						String resultStatus = actionStatusMap.get(actionInfo.getAction());
+						actionInfo.setStatus(resultStatus);
+						servReq.setStatus(StatusEnum.fromValue(resultStatus));
+					}
 					else {
 
 						String errorMsg = " The Given Action " + actionInfo.getAction()
@@ -180,7 +184,7 @@ public class GrievanceService {
 								+ servReq.getServiceRequestId();
 						addError(errorMsg, errorMap);
 					}
-				} else {
+				} else if(null != actionInfo.getAction()) {
 					String errorMsg = " The Given Action " + actionInfo.getAction() + " is invalid ";
 					addError(errorMsg, errorMap);
 				}

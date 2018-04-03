@@ -23,6 +23,7 @@ import org.egov.user.domain.model.enums.UserType;
 import org.egov.user.repository.builder.RoleQueryBuilder;
 import org.egov.user.repository.builder.UserTypeQueryBuilder;
 import org.egov.user.repository.rowmapper.UserRowMapper;
+import org.egov.user.web.adapters.errors.UserNotFoundErrorHandler;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -471,6 +472,9 @@ public class UserRepository {
 	public User update(final User user) {
 
 		User oldUser = getUserByIdAndTenantId(user.getId(), user.getTenantId());
+		
+/*		if(oldUser ==null)
+			throw new UserNotFound*/
 
 		Map<String, Object> updateuserInputs = new HashMap<String, Object>();
 
@@ -575,9 +579,12 @@ public class UserRepository {
 			updateuserInputs.put("Password", passwordEncoder.encode(user.getPassword()));
 		else
 			updateuserInputs.put("Password", oldUser.getPassword());
+		
        if(oldUser!=null && user.getPhoto()!=null && user.getPhoto().contains("http"))
     	   updateuserInputs.put("Photo", oldUser.getPhoto());
-		updateuserInputs.put("Photo", user.getPhoto());
+       else
+    	   updateuserInputs.put("Photo", user.getPhoto());
+		
 		if (null != user.getPasswordExpiryDate())
 			updateuserInputs.put("PasswordExpiryDate", user.getPasswordExpiryDate());
 		else

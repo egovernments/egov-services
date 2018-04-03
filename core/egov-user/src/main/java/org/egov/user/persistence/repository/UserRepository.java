@@ -501,7 +501,7 @@ public class UserRepository {
 			} else {
 				updateuserInputs.put("BloodGroup", "");
 			}
-		} else if (oldUser.getBloodGroup() != null) {
+		} else if (oldUser!=null && oldUser.getBloodGroup() != null) {
 			if (BloodGroup.A_NEGATIVE.toString().equals(oldUser.getBloodGroup().toString())) {
 				updateuserInputs.put("BloodGroup", oldUser.getBloodGroup().toString());
 			} else if (BloodGroup.A_POSITIVE.toString().equals(oldUser.getBloodGroup().toString())) {
@@ -575,7 +575,8 @@ public class UserRepository {
 			updateuserInputs.put("Password", passwordEncoder.encode(user.getPassword()));
 		else
 			updateuserInputs.put("Password", oldUser.getPassword());
-
+       if(oldUser!=null && user.getPhoto()!=null && user.getPhoto().contains("http"))
+    	   updateuserInputs.put("Photo", oldUser.getPhoto());
 		updateuserInputs.put("Photo", user.getPhoto());
 		if (null != user.getPasswordExpiryDate())
 			updateuserInputs.put("PasswordExpiryDate", user.getPasswordExpiryDate());

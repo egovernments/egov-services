@@ -4,6 +4,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -103,6 +104,8 @@ public class StorageController {
 	@ResponseBody
 	public ResponseEntity<Map<String, String>> getUrls(@RequestParam(value = "tenantId") String tenantId,
 			@RequestParam("fileStoreIds") List<String> fileStoreIds) {
+		if (fileStoreIds.isEmpty())
+			return new ResponseEntity<>(new HashMap<>(), HttpStatus.OK);
 		return new ResponseEntity<>(storageService.getUrls(tenantId, fileStoreIds), HttpStatus.OK);
 	}
 	

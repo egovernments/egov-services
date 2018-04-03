@@ -33,12 +33,12 @@ public class FileStoreRepository {
 	 * @return
 	 * @throws Exception
 	 */
-	public String getUrlByFileStoreId(String tenantId, String fileStoreId) throws Exception {
+	public Map<String, String> getUrlByFileStoreId(String tenantId, List<String> fileStoreIds) throws Exception {
 		Map<String, String> fileStoreUrls = null;
 
-		List<String> fileStoreIds = new ArrayList<String>();
-		fileStoreIds.add(fileStoreId);
-		String Url = fileStoreHost + fileStorePath + "?tenantId=" + tenantId + "&fileStoreIds=" + fileStoreIds.get(0);
+		String idLIst = fileStoreIds.toString().substring(1, fileStoreIds.toString().length() - 1).replace(", ", ",");
+		log.info("idLIst: " + idLIst);
+		String Url = fileStoreHost + fileStorePath + "?tenantId=" + tenantId + "&fileStoreIds=" + idLIst;
 
 		try {
 			fileStoreUrls = restTemplate.getForObject(Url, Map.class);
@@ -47,7 +47,7 @@ public class FileStoreRepository {
 		}
 		log.info("filrStoreUrls " + fileStoreUrls);
 		if (null != fileStoreUrls && !fileStoreUrls.isEmpty())
-			return fileStoreUrls.get(fileStoreId);
+			return fileStoreUrls;
 		return null;
 	}
 

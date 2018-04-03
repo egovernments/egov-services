@@ -2,8 +2,11 @@ package org.egov.user.domain.service;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.egov.common.contract.request.RequestInfo;
@@ -31,7 +34,6 @@ import org.egov.user.web.contract.OtpValidateRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -177,7 +179,7 @@ public class UserService {
 		try {
 			validateOtp(otp);
 		} catch (Exception e) {
-			log.error("Exception while validating otp: "+e);
+			log.error("Exception while validating otp: " + e);
 			String errorMessage = JsonPath.read(e.getMessage(), "$.error.message");
 			System.out.println("message " + errorMessage);
 			throw new InvalidOtpException(errorMessage);
@@ -223,12 +225,17 @@ public class UserService {
 					tenant = searchCriteria.getTenantId();
 				user = userRepository.findByUsernameAndTenantId(searchCriteria.getUserName(), tenant);
 				List<org.egov.user.domain.model.User> list = new ArrayList<org.egov.user.domain.model.User>();
-				if (user != null)
+				if (user != null) {
 					list.add(user);
+					setFileStoreUrlsByFileStoreIds(list);
+				}
 				return list;
 			}
 		}
-		return userRepository.findAll(searchCriteria);
+
+		List<org.egov.user.domain.model.User> list = userRepository.findAll(searchCriteria);
+		setFileStoreUrlsByFileStoreIds(list);
+		return list;
 	}
 
 	/**
@@ -268,7 +275,9 @@ public class UserService {
 		validateProfileUpdateIsDoneByTheSameLoggedInUser(user);
 		user.nullifySensitiveFields();
 		User updatedUser = updateExistingUser(user);
-		setFileStoreUrlByFileStoreId(updatedUser);
+		List<User> list = new ArrayList<User>();
+		list.add(updatedUser);
+		setFileStoreUrlsByFileStoreIds(list);
 		return updatedUser;
 	}
 
@@ -331,7 +340,8 @@ public class UserService {
 	}
 
 	/**
-	 * This api will validate existing password and current password matching or not
+	 * This api will validate existing password and current password matching or
+	 * not
 	 * 
 	 * @param user
 	 * @param existingRawPassword
@@ -355,7 +365,8 @@ public class UserService {
 	}
 
 	/**
-	 * this api will validate, updating the profile for same logged-in user or not
+	 * this api will validate, updating the profile for same logged-in user or
+	 * not
 	 * 
 	 * @param user
 	 */
@@ -414,19 +425,24 @@ public class UserService {
 	 * This api will fetch the fileStoreUrl By fileStoreId
 	 * 
 	 * @param user
+	 * @throws Exception
 	 */
-	private void setFileStoreUrlByFileStoreId(User user) {
-		String fileStoreUrl = null;
-		if (null != user.getPhoto() && null != user.getTenantId()) {
+	private void setFileStoreUrlsByFileStoreIds(List<User> userList) {
+		List<String> fileStoreIds = userList.parallelStream().map(p -> p.getPhoto()).collect(Collectors.toList());
+		if (fileStoreIds != null && fileStoreIds.size() > 0) {
+			Map<String, String> fileStoreUrlList = null;
 			try {
-				fileStoreUrl = fileRepository.getUrlByFileStoreId(user.getTenantId(), user.getPhoto());
+				fileStoreUrlList = fileRepository.getUrlByFileStoreId(userList.get(0).getTenantId(), fileStoreIds);
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
-				log.info("Exception while fetching FileStore URl");
+				e.printStackTrace();
 			}
 
-			if (null != fileStoreUrl)
-				user.setPhoto(fileStoreUrl);
+			if (fileStoreUrlList != null && !fileStoreUrlList.isEmpty()) {
+				for (User user : userList) {
+					user.setPhoto(fileStoreUrlList.get(user.getPhoto()));
+				}
+			}
 		}
 	}
 

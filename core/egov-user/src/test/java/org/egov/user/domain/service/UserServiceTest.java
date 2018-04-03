@@ -99,9 +99,8 @@ public class UserServiceTest {
 	@Test
 	public void test_should_search_for_users() {
 		UserSearchCriteria userSearch = mock(UserSearchCriteria.class);
-		List<org.egov.user.domain.model.User> expectedListOfUsers = mock(List.class);
+		List<org.egov.user.domain.model.User> expectedListOfUsers = new ArrayList<org.egov.user.domain.model.User>();
 		when(userRepository.findAll(userSearch)).thenReturn(expectedListOfUsers);
-
 		List<org.egov.user.domain.model.User> actualResult = userService.searchUsers(userSearch);
 
 		assertThat(expectedListOfUsers).isEqualTo(actualResult);
@@ -110,7 +109,7 @@ public class UserServiceTest {
 	@Test
 	public void test_should_validate_search_critieria() {
 		UserSearchCriteria userSearch = mock(UserSearchCriteria.class);
-		List<org.egov.user.domain.model.User> expectedListOfUsers = mock(List.class);
+		List<org.egov.user.domain.model.User> expectedListOfUsers = new ArrayList<org.egov.user.domain.model.User>();
 		when(userRepository.findAll(userSearch)).thenReturn(expectedListOfUsers);
 
 		userService.searchUsers(userSearch);

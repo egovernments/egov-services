@@ -114,7 +114,7 @@ public class PGRRequestValidator {
 		
 		for (int i = 0; i <= infos.size() - 1; i++) {
 			ActionInfo info = infos.get(i);
-			if (info.getAction() != null && info.getAction().equalsIgnoreCase("assign") && info.getAssignee() == null)
+			if (info.getAction() != null && (info.getAction().equalsIgnoreCase("assign") || info.getAction().equalsIgnoreCase("reassign")) && info.getAssignee() == null)
 				errorMsg.add(services.get(i).getServiceRequestId());
 		}
 		

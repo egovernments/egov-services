@@ -64,7 +64,9 @@ public class PGRApp
 		map.put("CITIZEN", Arrays.asList("open", "close", "reopen"));
 		map.put("GRO", Arrays.asList("assign", "reject", "reassign"));
 		map.put("DGRO", Arrays.asList("assign", "reject", "reassign"));
-		
+		map.put("Grievance Routing Officer", Arrays.asList("assign", "reject", "reassign"));
+		map.put("Department Grievance Routing Officer", Arrays.asList("assign", "reject", "reassign"));
+		//TODO remove the name map when roles object strucutre is fixed
 		roleActionMap = map;
 	}
 	

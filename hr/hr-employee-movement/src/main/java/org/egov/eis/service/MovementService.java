@@ -47,10 +47,12 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.lang.StringUtils;
 import org.egov.eis.config.PropertiesManager;
+import org.egov.eis.model.Document;
 import org.egov.eis.model.Movement;
 import org.egov.eis.model.enums.MovementStatus;
 import org.egov.eis.model.enums.TransferType;
 import org.egov.eis.model.enums.TypeOfMovement;
+import org.egov.eis.repository.MovementDocumentsRepository;
 import org.egov.eis.repository.MovementRepository;
 import org.egov.eis.util.ApplicationConstants;
 import org.egov.eis.web.contract.*;
@@ -92,9 +94,19 @@ public class MovementService {
 	@Autowired
 	private PropertiesManager propertiesManager;
 
+	@Autowired
+	private MovementDocumentsRepository documentsRepository;
+
 	public List<Movement> getMovements(final MovementSearchRequest movementSearchRequest,
 									   final RequestInfo requestInfo) {
-		return movementRepository.findForCriteria(movementSearchRequest, requestInfo);
+		List<Movement> movements = movementRepository.findForCriteria(movementSearchRequest, requestInfo);
+		for (final Movement movement : movements) {
+			final List<Document> documents = documentsRepository.findByMovementId(movement.getId(),
+					movement.getTenantId());
+			for (final Document document : documents)
+				movement.getDocuments().add(document.getDocument());
+		}
+		return movements;
 	}
 
 	public ResponseEntity<?> createMovements(final MovementRequest movementRequest, final String type) {
@@ -218,6 +230,7 @@ public class MovementService {
 			}
 			List<Movement> existingMovements = movementRepository.findForExistingMovement(movement,
 					movementRequest.getRequestInfo());
+
 			if (!existingMovements.isEmpty()) {
 				message = message + applicationConstants
 						.getErrorMessage(ApplicationConstants.ERR_MOVEMENT_EXISTING_EMPLOYEE_VALIDATE) + ", ";
@@ -242,7 +255,7 @@ public class MovementService {
 			movement.setErrorMsg(message);
 	}
 
-	private ResponseEntity<?> getSuccessResponseForCreate(final List<Movement> movementsList,
+	public ResponseEntity<?> getSuccessResponseForCreate(final List<Movement> movementsList,
 														  final RequestInfo requestInfo) {
 		final MovementResponse movementRes = new MovementResponse();
 		HttpStatus httpStatus = HttpStatus.OK;
@@ -268,8 +281,8 @@ public class MovementService {
 	}
 
 	public MovementRequest create(final MovementRequest movementRequest) {
-        movementRequest.getMovement().get(0).setId(movementRepository.generateSequence());
-        return movementRepository.saveMovement(movementRequest);
+		movementRequest.getMovement().get(0).setId(movementRepository.generateSequence());
+		return movementRepository.saveMovement(movementRequest);
 	}
 
 	public ResponseEntity<?> updateMovement(final MovementRequest movementRequest) {
@@ -384,13 +397,15 @@ public class MovementService {
 				//movement.setErrorMsg(errorMsg.replace(", ", ","));
 			} else if (movement.getId() != null && movement.getTypeOfMovement().equals(TypeOfMovement.TRANSFER) &&
 					movement.getTransferType().equals(TransferType.TRANSFER_OUTSIDE_CORPORATION_OR_ULB)
-					&& "Approve".equalsIgnoreCase(movement.getWorkflowDetails().getAction()) && movement.getCheckEmployeeExists()) {
+					&& "Approve".equalsIgnoreCase(movement.getWorkflowDetails().getAction())) {
 				final Employee employee = employeeService.getEmployeeById(movementRequest);
 				EmployeeInfo employeeInfo = employeeService.getEmployee(null, employee.getCode(), movementRequest.getMovement().get(0).getTenantId(), movementRequest.getRequestInfo());
 				if (employeeInfo != null && !employeeInfo.equals("") && movement.getCheckEmployeeExists())
 					message = message + ApplicationConstants.ERR_MOVEMENT_EMPLOYEE_EXISTS + ", ";
 				setErrorMessage(movement, message);
-				if (!movement.getCheckEmployeeExists()) {
+				if (employeeInfo == null || (employeeInfo != null && employeeInfo.equals("")))
+					movement.setCheckEmployeeExists(false);
+				if (!movement.getCheckEmployeeExists() && employeeInfo != null && !employeeInfo.equals("")) {
 					List<Assignment> assignments = employee.getAssignments().stream().filter(assignment -> assignment.getIsPrimary().equals(true)).collect(Collectors.toList());
 					for (Assignment assign : assignments) {
 						if (assign.getFromDate().after(movement.getEffectiveFrom())) {
@@ -404,6 +419,31 @@ public class MovementService {
 				movement.setErrorMsg(errorMsg.replace(", ", ","));
 			}
 		}
+		return movementRequest.getMovement();
+	}
+
+	public List<Movement> checkEmployeeExists(final MovementRequest movementRequest) {
+		for (final Movement movement : movementRequest.getMovement()) {
+			LOGGER.info("Employee exists:"+movement.getCheckEmployeeExists());
+
+			if (movement.getId() != null && movement.getTypeOfMovement().equals(TypeOfMovement.TRANSFER) &&
+					movement.getTransferType().equals(TransferType.TRANSFER_OUTSIDE_CORPORATION_OR_ULB)
+					&& "Approve".equalsIgnoreCase(movement.getWorkflowDetails().getAction())) {
+				final Employee employee = employeeService.getEmployeeById(movementRequest);
+				EmployeeInfo employeeInfo = employeeService.getEmployee(null, employee.getCode(), movementRequest.getMovement().get(0).getTransferedLocation(), movementRequest.getRequestInfo());
+                LOGGER.info("Employee Info:"+employeeInfo.getCode());
+
+                if (employeeInfo.getCode() != null && !employeeInfo.getCode().equals(""))
+					movement.setCheckEmployeeExists(true);
+				else
+					movement.setCheckEmployeeExists(false);
+			}
+			else{
+				movement.setCheckEmployeeExists(false);
+			}
+
+		}
+
 		return movementRequest.getMovement();
 	}
 }

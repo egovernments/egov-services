@@ -74,7 +74,6 @@ public class Agreement {
 	private Date securityDepositDate;
 	private Status status;
 
-	@NotNull
 	private BasisOfAllotment basisOfAllotment;
 	private NatureOfAllotment natureOfAllotment;
 	@Min(0)
@@ -157,12 +156,16 @@ public class Agreement {
 	@JsonFormat(pattern = "dd/MM/yyyy")
 	private Date renewalDate;
 
-	@NotNull
 	private Long reservationCategory;
 	
 	private String oldAgreementNumber;
 	private String referenceNumber;
 	private String floorNumber;
 	private Long parent;
+	@JsonFormat(pattern = "dd/MM/yyyy")
+	private Date tenderOpeningDate;
+	private Double auctionAmount;
+	private Double solvencyAmount;
+	private Boolean showDetails=Boolean.TRUE;
 
 }

@@ -125,11 +125,11 @@ public class OtpServiceTest {
 
 	@Test
 	public void test_should_send_sms_otp_for_password_reset() {
-		final OtpRequest otpRequest = OtpRequest.builder().tenantId("tenant").mobileNumber("mobileNumber")
+		final OtpRequest otpRequest = OtpRequest.builder().tenantId("tenant").mobileNumber("1234567890")
 				.type(OtpRequestType.PASSWORD_RESET).build();
 		final String otpNumber = "otpNumber";
 		when(otpRepository.fetchOtp(otpRequest)).thenReturn(otpNumber);
-		when(userRepository.fetchUser("mobileNumber", "tenant")).thenReturn(new User(1L, "foo@bar.com", "1234"));
+		when(userRepository.fetchUser("1234567890", "tenant")).thenReturn(new User(1L, "foo@bar.com", "1234"));
 
 		otpService.sendOtp(otpRequest);
 
@@ -138,11 +138,11 @@ public class OtpServiceTest {
 
 	@Test
 	public void test_should_send_email_otp_for_password_reset() {
-		final OtpRequest otpRequest = OtpRequest.builder().tenantId("tenant").mobileNumber("mobileNumber")
+		final OtpRequest otpRequest = OtpRequest.builder().tenantId("tenant").mobileNumber("1234567890")
 				.type(OtpRequestType.PASSWORD_RESET).build();
 		final String otpNumber = "otpNumber";
 		when(otpRepository.fetchOtp(otpRequest)).thenReturn(otpNumber);
-		when(userRepository.fetchUser("mobileNumber", "tenant")).thenReturn(new User(1L, "foo@bar.com", "123"));
+		when(userRepository.fetchUser("1234567890", "tenant")).thenReturn(new User(1L, "foo@bar.com", "123"));
 
 		otpService.sendOtp(otpRequest);
 

@@ -149,7 +149,7 @@ class CancellationAgreement extends React.Component {
 
     var asOnDate = new Date();
     var dd = asOnDate.getDate();
-    var mm = asOnDate.getMonth() + 1; 
+    var mm = asOnDate.getMonth() + 1;
     var yyyy = asOnDate.getFullYear();
 
     if (dd < 10) {
@@ -202,6 +202,7 @@ class CancellationAgreement extends React.Component {
                     type: 'POST',
                     dataType: 'json',
                     contentType: 'application/json',
+                    data: JSON.stringify({ RequestInfo: requestInfo }),
                     headers: {
                       'auth-token': authToken
                     },
@@ -260,6 +261,7 @@ class CancellationAgreement extends React.Component {
             type: 'POST',
             dataType: 'json',
             contentType: 'application/json',
+            data: JSON.stringify({ RequestInfo: requestInfo }),
             headers: {
               'auth-token': authToken
             },

@@ -1,6 +1,7 @@
 package org.egov.boundary.domain.service;
 
 import org.egov.boundary.domain.model.Location;
+import org.egov.boundary.util.BoundaryConstants;
 import org.egov.boundary.web.contract.tenant.model.Tenant;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.tracer.model.CustomException;
@@ -12,8 +13,7 @@ import org.springframework.stereotype.Service;
 import java.util.HashMap;
 import java.util.Optional;
 
-import static org.egov.boundary.util.BoundaryConstants.TENANT_SEARCH_STATE_MISMATCH;
-import static org.egov.boundary.util.BoundaryConstants.TENANT_SEARCH_STATE_MISMATCH_DESC;
+import static org.egov.boundary.util.BoundaryConstants.*;
 
 @Service
 public class TenantService {
@@ -55,18 +55,27 @@ public class TenantService {
         Optional<Location> location = locationService.reverseGeoCode(lat, lng);
         if (location.isPresent()) {
             Location loc = location.get();
+            LOG.debug(loc.toString());
+
+            //Check if provided tenant matches, resolved tenant
 
             if (state.equalsIgnoreCase(STATE_CODES.get(loc.getState()))) {
                 String filter = "$.[?(@.name == '" + loc.getCity() + "')]";
 
                 Optional<Tenant> tenant = mdmsService.fetchTenant(state, filter, requestInfo);
+
+                // If tenant is not found by mdms, throw error
+
                 if (tenant.isPresent()) return tenant.get();
+                else
+                    throw new CustomException(BoundaryConstants.TENANT_SEARCH_TENANT_MAPPING_NOT_FOUND, BoundaryConstants
+                            .TENANT_SEARCH_TENANT_MAPPING_NOT_FOUND_DESC);
             } else {
                 LOG.error("Expected state: {} , received {} ", STATE_CODES.get(loc.getState()), state);
                 throw new CustomException(TENANT_SEARCH_STATE_MISMATCH, TENANT_SEARCH_STATE_MISMATCH_DESC);
             }
-        }
-        return null;
+        } else
+            throw new CustomException(TENANT_SEARCH_GMAPS_NO_RESP, TENANT_SEARCH_GMAPS_NO_RESP_DESC);
     }
 
 }

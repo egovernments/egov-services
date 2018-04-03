@@ -1,12 +1,15 @@
 package org.egov.pgr.service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.mdms.model.MdmsCriteriaReq;
+import org.egov.pgr.PGRApp;
 import org.egov.pgr.contract.ActionHistory;
 import org.egov.pgr.contract.ActionInfo;
 import org.egov.pgr.contract.AuditDetails;
@@ -15,6 +18,7 @@ import org.egov.pgr.contract.IdResponse;
 import org.egov.pgr.contract.RequestInfoWrapper;
 import org.egov.pgr.contract.SearcherRequest;
 import org.egov.pgr.contract.Service;
+import org.egov.pgr.contract.Service.StatusEnum;
 import org.egov.pgr.contract.ServiceReqSearchCriteria;
 import org.egov.pgr.contract.ServiceRequest;
 import org.egov.pgr.contract.ServiceRequestDetails;
@@ -72,6 +76,8 @@ public class GrievanceService {
 
 	@Autowired
 	private ServiceRequestRepository serviceRequestRepository;
+	
+	private static final String UPDATE_ERROR_KEY = "EG_PGR_INVALID_ACTION_UPDATE"; 
 
 	private static final String MODULE_NAME = "PGR:";
 
@@ -82,6 +88,8 @@ public class GrievanceService {
 	 * @param request
 	 */
 	public ServiceResponse create(ServiceRequest request) {
+
+		Map<String, String> actionStatusMap = PGRApp.getActionStatusMap();
 
 		log.debug(" the incoming request obj in service : {}", request);
 
@@ -102,15 +110,18 @@ public class GrievanceService {
 
 			Service servReq = serviceReqs.get(servReqCount);
 			ActionInfo actionInfo = actionInfos.get(servReqCount);
+			if (null == actionInfo)
+				actionInfo = new ActionInfo();
 			String currentId = servReqIdList.get(servReqCount);
 			servReq.setAuditDetails(auditDetails);
 			servReq.setServiceRequestId(currentId);
+			servReq.setStatus(StatusEnum.OPEN);
 			// FIXME TODO business key should be module name and currentid in future
 			actionInfo.setBusinessKey(currentId);
 			actionInfo.setBy(by);
 			actionInfo.setWhen(auditDetails.getCreatedTime());
 			actionInfo.setTenantId(tenantId);
-			actionInfo.setStatus(actionInfo.getAction());
+			actionInfo.setStatus(actionStatusMap.get("open"));
 		}
 
 		pGRProducer.push(saveTopic, request);
@@ -130,6 +141,10 @@ public class GrievanceService {
 
 		log.debug(" the incoming request obj in service : {}", request);
 
+		Map<String, List<String>> actioncurrentStatusMap = PGRApp.getActionCurrentStatusMap();
+		Map<String, String> actionStatusMap = PGRApp.getActionStatusMap();
+		Map<String, List<String>> errorMap = new HashMap<>();
+
 		RequestInfo requestInfo = request.getRequestInfo();
 		List<Service> serviceReqs = request.getServices();
 		List<ActionInfo> actionInfos = request.getActionInfo();
@@ -143,14 +158,43 @@ public class GrievanceService {
 		for (int index = 0; index < serviceLen; index++) {
 
 			Service servReq = serviceReqs.get(index);
-			ActionInfo actionInfo = actionInfos.get(index);
+			ActionInfo actionInfo = null;
+			if (!CollectionUtils.isEmpty(actionInfos))
+				actionInfo = actionInfos.get(index);
 			servReq.setAuditDetails(auditDetails);
+			System.err.println(" teh action info : "+ actionInfo);
 			// FIXME TODO business key should be module name and currentid in future
-			actionInfo.setBusinessKey(servReq.getServiceRequestId());
-			actionInfo.setBy(by);
-			actionInfo.setWhen(auditDetails.getCreatedTime());
-			actionInfo.setTenantId(tenantId);
-			actionInfo.setStatus(actionInfo.getAction());
+			if (null != actionInfo) {
+				actionInfo.setBusinessKey(servReq.getServiceRequestId());
+				actionInfo.setBy(by);
+				actionInfo.setWhen(auditDetails.getCreatedTime());
+				actionInfo.setTenantId(tenantId);
+				actionInfo.setStatus(actionInfo.getAction());
+				if (null != actionInfo.getAction() && actionStatusMap.get(actionInfo.getAction()) != null) {
+					
+					if (isUpdateValid(requestInfo, actionInfo, actioncurrentStatusMap.get(actionInfo.getAction()))) {
+						String resultStatus = actionStatusMap.get(actionInfo.getAction());
+						actionInfo.setStatus(resultStatus);
+						servReq.setStatus(StatusEnum.fromValue(resultStatus));
+					}
+					else {
+
+						String errorMsg = " The Given Action " + actionInfo.getAction()
+								+ "cannot be applied for the Current status of the Grievance with ServiceRequestId "
+								+ servReq.getServiceRequestId();
+						addError(errorMsg, errorMap);
+					}
+				} else if(null != actionInfo.getAction()) {
+					String errorMsg = " The Given Action " + actionInfo.getAction() + " is invalid ";
+					addError(errorMsg, errorMap);
+				}
+			}
+		}
+		
+		if(!errorMap.isEmpty()) {
+			Map<String, String> newMap = new HashMap<>();
+			newMap.put(UPDATE_ERROR_KEY, errorMap.get(UPDATE_ERROR_KEY).toString());
+			throw new CustomException(newMap);
 		}
 
 		pGRProducer.push(updateTopic, request);
@@ -159,6 +203,42 @@ public class GrievanceService {
 
 		return getServiceResponse(request);
 	}
+
+	private void addError(String errorMsg, Map<String, List<String>> errorMap) {
+
+		List<String> errors = errorMap.get(UPDATE_ERROR_KEY);
+		if (null == errors) {
+			errors = Arrays.asList(errorMsg);
+			errorMap.put(UPDATE_ERROR_KEY, errors);
+		} else
+			errors.add(errorMsg);
+	}
+
+	private boolean isUpdateValid(RequestInfo requestInfo, ActionInfo actionInfo, List<String> currentStatusList) {
+
+		log.info(" the current list possible : "+ currentStatusList);
+		ServiceReqSearchCriteria serviceReqSearchCriteria = ServiceReqSearchCriteria.builder()
+				.tenantId(actionInfo.getTenantId()).serviceRequestId(Arrays.asList(actionInfo.getBusinessKey()))
+				.build();
+
+		List<ActionInfo> infos = ((ServiceResponse) getServiceRequestDetails(requestInfo, serviceReqSearchCriteria))
+				.getActionHistory().get(0).getActions();
+		
+		
+		for (int i = 0;i <= infos.size()-1; i++) {
+				String status = infos.get(i).getStatus();
+				log.info(" the status is : "+ status);
+				if (null != status) {
+					log.info(" is it true : "+ currentStatusList.contains(status));
+					if (currentStatusList.contains(status))
+						return true;
+					else
+						return false;
+				}
+			}
+		return false;
+	}
+
 
 	/**
 	 * method to parse the IdGenResponse from IdgenRepo to List of String ids
@@ -218,18 +298,12 @@ public class GrievanceService {
 		ServiceResponse serviceResponse = mapper.convertValue(response, ServiceResponse.class);
 		return serviceResponse;
 	}
-	
-	
-	
-	
-	
-	
-/*...................................................V5................................................................*/	
-	
-	
+
+	/* ...................................................V5-START................................................................*/
+
 	/**
-	 * Method to return service requests along with details acc to V5 design received from the repo to the controller in
-	 * the reqd format
+	 * Method to return service requests along with details acc to V5 design
+	 * received from the repo to the controller in the reqd format
 	 * 
 	 * @param requestInfo
 	 * @param serviceReqSearchCriteria
@@ -241,8 +315,8 @@ public class GrievanceService {
 		SearcherRequest searcherRequest = null;
 		try {
 			enrichRequest(requestInfo, serviceReqSearchCriteria);
-		}catch(CustomException e) {
-			if(e.getMessage().equals("No Data"))
+		} catch (CustomException e) {
+			if (e.getMessage().equals("No Data"))
 				return pGRUtils.getDefaultServiceResponse(requestInfo);
 			else
 				throw e;
@@ -255,9 +329,7 @@ public class GrievanceService {
 		return prepareResult(response, requestInfo);
 
 	}
-	
-	
-	
+
 	/**
 	 * Method to return service requests ids based on the assignedTo
 	 * 
@@ -266,67 +338,63 @@ public class GrievanceService {
 	 * @return List<String>
 	 * @author vishal
 	 */
-	public List<String> getServiceRequestIdsOnAssignedTo(RequestInfo requestInfo, ServiceReqSearchCriteria serviceReqSearchCriteria) {
+	public List<String> getServiceRequestIdsOnAssignedTo(RequestInfo requestInfo,
+			ServiceReqSearchCriteria serviceReqSearchCriteria) {
 		StringBuilder uri = new StringBuilder();
 		List<String> serviceRequestIds = new ArrayList<>();
-		SearcherRequest searcherRequest = pGRUtils.prepareSearchRequestForAssignedTo(uri, serviceReqSearchCriteria, requestInfo);
+		SearcherRequest searcherRequest = pGRUtils.prepareSearchRequestForAssignedTo(uri, serviceReqSearchCriteria,
+				requestInfo);
 		try {
 			Object response = serviceRequestRepository.fetchResult(uri, searcherRequest);
 			log.info("Searcher response: " + response);
 			if (null == response)
 				return serviceRequestIds;
 			serviceRequestIds = (List<String>) JsonPath.read(response, PGRConstants.V2_SRID_ASSIGNEDTO_JSONPATH);
-		}catch(Exception e) {
-			log.error("Exception while parsing SRid search on AssignedTo result: "+e);
+		} catch (Exception e) {
+			log.error("Exception while parsing SRid search on AssignedTo result: " + e);
 			return serviceRequestIds;
 		}
-		
+
 		log.info("serviceRequestIds: " + serviceRequestIds);
-		
+
 		return serviceRequestIds;
-		
-		
+
 	}
-	
+
 	public ServiceResponse prepareResult(Object response, RequestInfo requestInfo) {
 		ObjectMapper mapper = pGRUtils.getObjectMapper();
 		List<Service> services = new ArrayList<Service>();
 		List<ActionHistory> actionHistory = new ArrayList<ActionHistory>();
-		  
-		  
+
 		List<ServiceRequestDetails> result = new ArrayList<>();
 		List<Object> list = (List<Object>) JsonPath.read(response, "$.services");
-		log.info("Objects: "+list);
-		for(Object entry: list) {
+		log.info("Objects: " + list);
+		for (Object entry : list) {
 			ServiceRequestDetails object = mapper.convertValue(entry, ServiceRequestDetails.class);
 			result.add(object);
-			log.info("Object: "+object);
+			log.info("Object: " + object);
 		}
-		
-		for(ServiceRequestDetails obj: result) {
+
+		for (ServiceRequestDetails obj : result) {
 			List<ActionInfo> action = obj.getActionhistory();
 			ActionHistory actionHis = new ActionHistory();
 			actionHis.setActions(action);
 			actionHistory.add(actionHis);
-			
+
 			obj.setActionhistory(null);
 			services.add(obj.getServices());
-			
+
 		}
-		
+
 		replaceIdsWithUrls(actionHistory);
-		
+
 		ServiceResponse serviceResponse = ServiceResponse.builder()
-				.responseInfo(factory.createResponseInfoFromRequestInfo(requestInfo, true))
-				.services(services)
-				.actionHistory(actionHistory)
-				.build();
-		
+				.responseInfo(factory.createResponseInfoFromRequestInfo(requestInfo, true)).services(services)
+				.actionHistory(actionHistory).build();
+
 		return serviceResponse;
 	}
-	
-	
-	
+
 	/**
 	 * method to fetch service codes from mdms based on dept
 	 * 
@@ -343,50 +411,50 @@ public class GrievanceService {
 		Object response = null;
 		try {
 			response = serviceRequestRepository.fetchResult(uri, mdmsCriteriaReq);
-		}catch(Exception e) {
-			log.error("Exception while fetching serviceCodes: "+e);
+		} catch (Exception e) {
+			log.error("Exception while fetching serviceCodes: " + e);
 		}
 		return response;
 
 	}
-	
-	
+
 	public void enrichRequest(RequestInfo requestInfo, ServiceReqSearchCriteria serviceReqSearchCriteria) {
 		log.info("Enriching request.........: " + serviceReqSearchCriteria);
-		if (requestInfo.getUserInfo().getRoles().get(0).getName().equals("DGRO")
-				&& requestInfo.getUserInfo().getRoles().size() == 1) {
+		if (requestInfo.getUserInfo().getRoles().get(0).getName().equals("DGRO")) {
 			Integer departmenCode = getDepartmentCode(serviceReqSearchCriteria, requestInfo);
 			String department = getDepartment(serviceReqSearchCriteria, requestInfo, departmenCode);
 			Object response = fetchServiceCodes(requestInfo, serviceReqSearchCriteria.getTenantId(), department);
 			if (null == response) {
-				log.info("Searcher returned zero serviceCodes for dept: "+department);
+				log.info("Searcher returned zero serviceCodes for dept: " + department);
 				throw new CustomException("400", "No Data");
 			}
 			try {
 				List<String> serviceCodes = (List<String>) JsonPath.read(response, PGRConstants.JSONPATH_SERVICE_CODES);
-				serviceReqSearchCriteria.setServiceCodes(serviceCodes);	
+				serviceReqSearchCriteria.setServiceCodes(serviceCodes);
 			} catch (Exception e) {
 				log.error("Exception while parsing serviceCodes: ", e);
 				throw new CustomException("400", "No Data");
 			}
-		} else if (requestInfo.getUserInfo().getRoles().get(0).getName().equals("CITIZEN")
-				&& requestInfo.getUserInfo().getRoles().size() == 1) {
+		} else if (requestInfo.getUserInfo().getRoles().get(0).getName().equalsIgnoreCase("CITIZEN")) {
 			serviceReqSearchCriteria.setAccountId(requestInfo.getUserInfo().getId().toString());
 			String[] tenant = serviceReqSearchCriteria.getTenantId().split("[.]");
-			if(tenant.length > 1)
+			if (tenant.length > 1)
 				serviceReqSearchCriteria.setTenantId(tenant[0]);
 		}
-		if(null != serviceReqSearchCriteria.getAssignedTo() && !serviceReqSearchCriteria.getAssignedTo().isEmpty()) {
+		if (requestInfo.getUserInfo().getRoles().get(0).getName().equalsIgnoreCase("EMPLOYEE")) {
+			serviceReqSearchCriteria.setAssignedTo(requestInfo.getUserInfo().getId().toString());
+		}
+		if (null != serviceReqSearchCriteria.getAssignedTo() && !serviceReqSearchCriteria.getAssignedTo().isEmpty()) {
 			List<String> serviceRequestIds = getServiceRequestIdsOnAssignedTo(requestInfo, serviceReqSearchCriteria);
-			if(serviceRequestIds.isEmpty())
+			if (serviceRequestIds.isEmpty())
 				throw new CustomException("400", "No Data");
 			serviceReqSearchCriteria.setServiceRequestId(serviceRequestIds);
 		}
+		
+		log.info("Enriched request: " + serviceReqSearchCriteria);
+
 	}
-	
-	
-	
-	
+
 	public Integer getDepartmentCode(ServiceReqSearchCriteria serviceReqSearchCriteria, RequestInfo requestInfo) {
 		StringBuilder uri = new StringBuilder();
 		RequestInfoWrapper requestInfoWrapper = pGRUtils.prepareRequestForEmployeeSearch(uri, requestInfo,
@@ -405,47 +473,32 @@ public class GrievanceService {
 			log.error("Exception: " + e);
 			throw new CustomException("401", "Unauthorized Employee for this tenant");
 		}
-		
+
 		return departmenCode;
 	}
-	
-	
-	public String getDepartment(ServiceReqSearchCriteria serviceReqSearchCriteria, RequestInfo requestInfo, Integer departmentCode) {
+
+	public String getDepartment(ServiceReqSearchCriteria serviceReqSearchCriteria, RequestInfo requestInfo,
+			Integer departmentCode) {
 		StringBuilder deptUri = new StringBuilder();
 		String department = null;
 		Object response = null;
-		RequestInfoWrapper requestInfoWrapper = pGRUtils.prepareRequestForDeptSearch(deptUri, 
-				requestInfo, departmentCode, serviceReqSearchCriteria.getTenantId());
+		RequestInfoWrapper requestInfoWrapper = pGRUtils.prepareRequestForDeptSearch(deptUri, requestInfo,
+				departmentCode, serviceReqSearchCriteria.getTenantId());
 		try {
 			response = serviceRequestRepository.fetchResult(deptUri, requestInfoWrapper);
 			if (null == response) {
 				throw new CustomException("401", "Invalid department for this tenant");
 			}
 			department = JsonPath.read(response, PGRConstants.V3_DEPARTMENTNAME_EMPLOYEE_JSONPATH);
-		}catch(Exception e) {
-			log.error("Exception: "+e);
+		} catch (Exception e) {
+			log.error("Exception: " + e);
 			throw new CustomException("401", "Invalid department for this tenant");
 		}
-		
+
 		return department;
 	}
-	
-	
-	
-	
-/*...................................................V5................................................................*/	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 
+/*...................................................V5-END.....................................................*/
 
 
 	/**
@@ -515,14 +568,12 @@ public class GrievanceService {
 		List<ActionHistory> actionHistories = new ArrayList<>();
 		actionHistories.add(actionHistory);
 		replaceIdsWithUrls(actionHistories);
-		
+
 		ServiceResponse serviceResponse = mapper.convertValue(response, ServiceResponse.class);
 		serviceResponse.setActionHistory(actionHistories);
 		return serviceResponse;
 
 	}
-
-
 
 	/**
 	 * Fetches count of service requests and returns in the reqd format.
@@ -591,36 +642,48 @@ public class GrievanceService {
 
 		if (CollectionUtils.isEmpty(historyList))
 			return;
-		String tenantId = historyList.get(0).getActions().get(0).getTenantId();
-		List<String> fileStoreIds = new ArrayList<>();
-
-		historyList.forEach(history -> history.getActions().forEach(action -> {
-			List<String> media = action.getMedia();
-			if (!CollectionUtils.isEmpty(media))
-				fileStoreIds.addAll(media);
-		}));
-
-		Map<String, String> urlIdMap = fileStoreRepo.getUrlMaps(tenantId, fileStoreIds);
-
-		log.info("urlIdMap: " + urlIdMap);
-
-		for (int i = 0; i < historyList.size(); i++) {
-			ActionHistory history = historyList.get(i);
-			for (int j = 0; j < history.getActions().size(); j++) {
-				List<ActionInfo> actionList = history.getActions();
-				ActionInfo info = actionList.get(j);
-				List<String> mediaList = new ArrayList<>();
-				for (int k = 0; k < info.getMedia().size(); k++) {
-					List<String> oldMedia = info.getMedia();
-					String fileStoreId = oldMedia.get(k);
-					String url = urlIdMap.get(fileStoreId);
-					if (null != url)
-						mediaList.add(url);
-					else
-						mediaList.add(fileStoreId);
-				}
-				info.setMedia(mediaList);
+		try {
+			String tenantId = historyList.get(0).getActions().get(0).getTenantId();
+			List<String> fileStoreIds = new ArrayList<>();
+	
+			historyList.forEach(history -> history.getActions().forEach(action -> {
+				List<String> media = action.getMedia();
+				if (!CollectionUtils.isEmpty(media))
+					fileStoreIds.addAll(media);
+			}));
+	
+			Map<String, String> urlIdMap = null;
+			try {
+			urlIdMap = fileStoreRepo.getUrlMaps(tenantId, fileStoreIds);
+			}catch (Exception e) {
+				log.error(" exception while connecting to filestore : "+e);
 			}
+	
+			log.info("urlIdMap: " + urlIdMap);
+			if (null != urlIdMap) {
+				for (int i = 0; i < historyList.size(); i++) {
+					ActionHistory history = historyList.get(i);
+					for (int j = 0; j < history.getActions().size(); j++) {
+						List<ActionInfo> actionList = history.getActions();
+						ActionInfo info = actionList.get(j);
+						if(null == info.getMedia())
+							break;
+						List<String> mediaList = new ArrayList<>();
+						for (int k = 0; k < info.getMedia().size(); k++) {
+							List<String> oldMedia = info.getMedia();
+							String fileStoreId = oldMedia.get(k);
+							String url = urlIdMap.get(fileStoreId);
+							if (null != url)
+								mediaList.add(url);
+							else
+								mediaList.add(fileStoreId);
+						}
+						info.setMedia(mediaList);
+					}
+				}
+			}
+		}catch(Exception e) {
+			log.error("Exception while replacing s3 links: "+e);
 		}
 	}
 }

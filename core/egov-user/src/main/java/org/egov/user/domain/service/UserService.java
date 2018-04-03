@@ -2,8 +2,11 @@ package org.egov.user.domain.service;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.egov.common.contract.request.RequestInfo;
@@ -28,9 +31,12 @@ import org.egov.user.persistence.repository.OtpRepository;
 import org.egov.user.persistence.repository.UserRepository;
 import org.egov.user.web.contract.Otp;
 import org.egov.user.web.contract.OtpValidateRequest;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import com.jayway.jsonpath.JsonPath;
 
@@ -47,6 +53,9 @@ public class UserService {
 	private boolean isCitizenLoginOtpBased;
 	private boolean isEmployeeLoginOtpBased;
 	private FileStoreRepository fileRepository;
+
+	@Autowired
+	private RestTemplate restTemplate;
 
 	public UserService(UserRepository userRepository, OtpRepository otpRepository, FileStoreRepository fileRepository,
 			PasswordEncoder passwordEncoder,
@@ -73,9 +82,9 @@ public class UserService {
 		return userRepository.findByUsername(userName, tenantId);
 	}
 
-	public User getUserByUsername(String userName) {
+	public User getUserByUsernameAndTenantId(String userName, String tenantid) {
 		// TODO Auto-generated method stub
-		return userRepository.findByUsername(userName);
+		return userRepository.findByUsernameAndTenantId(userName, tenantid);
 	}
 
 	/**
@@ -118,8 +127,8 @@ public class UserService {
 			user.setMobileNumber(user.getUsername());
 
 		user.setRoleToCitizen();
-		user.validateNewUser();
 		validateDuplicateUserName(user);
+		user.validateNewUser();
 		// validateOtp(user.getOtpValidationRequest());
 		String tenantId = null;
 		if (null!=user.getTenantId() && user.getTenantId().contains("."))
@@ -137,7 +146,59 @@ public class UserService {
 		}
 		user.setDefaultPasswordExpiry(defaultPasswordExpiryInDays);
 		user.setActive(true);
+
 		return persistNewUser(user);
+	}
+
+	/**
+	 * api will create the citizen with otp
+	 * 
+	 * @param user
+	 * @return
+	 */
+	public Object regosterWithLogin(User user) {
+		log.info("Into register with login method......");
+		user.setUuid(UUID.randomUUID().toString());
+		if (isCitizenLoginOtpBased && !StringUtils.isNumeric(user.getUsername()))
+			throw new UserNameNotValidException();
+		else if (isCitizenLoginOtpBased)
+			user.setMobileNumber(user.getUsername());
+
+		user.setRoleToCitizen();
+		validateDuplicateUserName(user);
+		user.validateNewUser();
+		// validateOtp(user.getOtpValidationRequest());
+		log.info("User validated successfully");
+		String tenantId = null;
+		if (user.getTenantId().contains("."))
+			tenantId = user.getTenantId().split("\\.")[0];
+		else
+			tenantId = user.getTenantId();
+
+		Otp otp = Otp.builder().otp(user.getOtpReference()).identity(user.getUsername()).tenantId(tenantId).build();
+		try {
+			validateOtp(otp);
+		} catch (Exception e) {
+			log.error("Exception while validating otp: " + e);
+			String errorMessage = JsonPath.read(e.getMessage(), "$.error.message");
+			System.out.println("message " + errorMessage);
+			throw new InvalidOtpException(errorMessage);
+		}
+		user.setDefaultPasswordExpiry(defaultPasswordExpiryInDays);
+		user.setActive(true);
+		User registrationResult = null;
+		try {
+			registrationResult = persistNewUser(user);
+			StringBuilder uri = new StringBuilder();
+			uri.append("http://egov-micro-dev.egovernments.org").append("/user/oauth/token")
+					.append("?username=" + user.getUsername()).append("&password=" + otp.getOtp())
+					.append("&grant_type=password&scope=read").append("&tenantId=" + user.getTenantId());
+
+			return restTemplate.postForObject(uri.toString(), "", UsernamePasswordAuthenticationToken.class);
+		} catch (Exception e) {
+			log.info("Exception while fecting authtoken: " + e);
+			return registrationResult;
+		}
 	}
 
 	/**
@@ -154,22 +215,27 @@ public class UserService {
 				&& null == searchCriteria.getPan() && null == searchCriteria.getRoleCodes()
 				&& null == searchCriteria.getId() && 0 == searchCriteria.getPageNumber()
 				&& null == searchCriteria.getType()) {
-			User user = userRepository.findByUsername(searchCriteria.getUserName());
-			List<org.egov.user.domain.model.User> list = new ArrayList<org.egov.user.domain.model.User>();
-			if (null != user && null != user.getType() && user.getType().toString().equals("CITIZEN")
-					&& user.getTenantId().contains(".")) {
-				String tenantId = user.getTenantId().split("\\.")[0];
-				if (tenantId.equals(searchCriteria.getTenantId())
-						|| user.getTenantId().equals(searchCriteria.getTenantId()))
+			User user = null;
+			user = userRepository.findByUsername(searchCriteria.getUserName(), searchCriteria.getTenantId());
+			if (user == null) {
+				String tenant = null;
+				if (searchCriteria.getTenantId() != null && searchCriteria.getTenantId().contains("."))
+					tenant = searchCriteria.getTenantId().split("\\.")[0];
+				else
+					tenant = searchCriteria.getTenantId();
+				user = userRepository.findByUsernameAndTenantId(searchCriteria.getUserName(), tenant);
+				List<org.egov.user.domain.model.User> list = new ArrayList<org.egov.user.domain.model.User>();
+				if (user != null) {
 					list.add(user);
-				return list;
-			} else if (null != user && null != user.getType() && user.getType().toString().equals("EMPLOYEE")) {
-				if (user.getTenantId().equals(searchCriteria.getTenantId()))
-					list.add(user);
+					setFileStoreUrlsByFileStoreIds(list);
+				}
 				return list;
 			}
 		}
-		return userRepository.findAll(searchCriteria);
+
+		List<org.egov.user.domain.model.User> list = userRepository.findAll(searchCriteria);
+		setFileStoreUrlsByFileStoreIds(list);
+		return list;
 	}
 
 	/**
@@ -208,8 +274,10 @@ public class UserService {
 		validateUserId(user);
 		validateProfileUpdateIsDoneByTheSameLoggedInUser(user);
 		user.nullifySensitiveFields();
-	    User updatedUser = updateExistingUser(user);
-		setFileStoreUrlByFileStoreId(updatedUser);
+		User updatedUser = updateExistingUser(user);
+		List<User> list = new ArrayList<User>();
+		list.add(updatedUser);
+		setFileStoreUrlsByFileStoreIds(list);
 		return updatedUser;
 	}
 
@@ -357,19 +425,24 @@ public class UserService {
 	 * This api will fetch the fileStoreUrl By fileStoreId
 	 * 
 	 * @param user
+	 * @throws Exception
 	 */
-	private void setFileStoreUrlByFileStoreId(User user) {
-		String fileStoreUrl = null;
-		if (null != user.getPhoto() && null != user.getTenantId()) {
+	private void setFileStoreUrlsByFileStoreIds(List<User> userList) {
+		List<String> fileStoreIds = userList.parallelStream().map(p -> p.getPhoto()).collect(Collectors.toList());
+		if (fileStoreIds != null && fileStoreIds.size() > 0) {
+			Map<String, String> fileStoreUrlList = null;
 			try {
-				fileStoreUrl = fileRepository.getUrlByFileStoreId(user.getTenantId(), user.getPhoto());
+				fileStoreUrlList = fileRepository.getUrlByFileStoreId(userList.get(0).getTenantId(), fileStoreIds);
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
-				log.info("Exception while fetching FileStore URl");
+				e.printStackTrace();
 			}
 
-			if (null != fileStoreUrl)
-				user.setPhoto(fileStoreUrl);
+			if (fileStoreUrlList != null && !fileStoreUrlList.isEmpty()) {
+				for (User user : userList) {
+					user.setPhoto(fileStoreUrlList.get(user.getPhoto()));
+				}
+			}
 		}
 	}
 
@@ -391,7 +464,7 @@ public class UserService {
 	 * @param user
 	 */
 	private void validateUser(final Long id, final User user) {
-		validateDuplicateUserName(id, user);
+		// validateDuplicateUserName(id, user);
 		if (userRepository.getUserById(id, user.getTenantId()) == null) {
 			throw new UserNotFoundException(user);
 		}

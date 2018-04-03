@@ -6,7 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-    <title>Lease & Agreement</title>
+    <title>Leases & Agreement</title>
     <base href="/lams-web/">
     <!-- Bootstrap -->
     <link rel="stylesheet" type="text/css" href="resources/stylesheet/bootstrap.min.css">
@@ -114,7 +114,7 @@
                 </div>
 
                 <div class="navbar-brand">
-                    <h3 class="horizontal-page-title homepage hidden-xs" id="hpCitizenTitle">Data-Entry</h3>
+                    <h3 class="horizontal-page-title homepage hidden-xs" id="hpCitizenTitle">Create Data-Entry Agreement</h3>
                 </div>
 
                 <!-- notifications and other links -->
@@ -1937,6 +1937,101 @@
                                           </div>
                                         </div>
 
+                                        <div class="form-section" id="allotteeDetailsBlockTwo">
+                                            <h3 class="categoryType">Allottee Details </h3>
+                                            <div class="form-section-inner">
+                                                <!-- Row 1 -->
+                                                <div class="row">
+                                                  <div class="col-sm-6">
+                                                      <div class="row">
+                                                          <div class="col-sm-6 label-text">
+                                                                <label for="allottee.aadhaarNumber">Aadhar No </label>
+                                                          </div>
+                                                          <div class="col-sm-6">
+                                                              <input type="text" class="onlyNumber" maxlength="12"   name="allottee.aadhaarNumber" id="allottee.aadhaarNumber">
+                                                          </div>
+                                                      </div>
+                                                  </div>
+
+                                                  <div class="col-sm-6">
+                                                      <div class="row">
+                                                          <div class="col-sm-6 label-text">
+                                                              <label for="allottee.mobileNumber">Contact No </label>
+                                                          </div>
+                                                          <div class="col-sm-6">
+                                                              <div class="text-no-ui">
+                                                                  <span>+91</span>
+                                                                  <input type="text"  name="allottee.mobileNumber" id="allottee.mobileNumber" maxlength="10">
+                                                              </div>
+                                                          </div>
+                                                      </div>
+                                                  </div>
+                                                </div>
+                                                <div class="row">
+                                                  <div class="col-sm-6">
+                                                      <div class="row">
+                                                          <div class="col-sm-6 label-text">
+                                                              <label for="allottee.name">Name of the Allottee</label>
+                                                          </div>
+                                                          <div class="col-sm-6">
+                                                              <input type="text" name="allottee.name" id="allottee.name" maxlength="96">
+                                                          </div>
+                                                      </div>
+                                                  </div>
+
+                                                  <div class="col-sm-6">
+                                                      <div class="row">
+                                                          <div class="col-sm-6 label-text">
+                                                              <label for="allottee.emailId">Email Id  </label>
+                                                          </div>
+                                                          <div class="col-sm-6">
+                                                              <input class="form-control" name="allottee.emailId" id="allottee.emailId" type="email" ></input>
+                                                          </div>
+                                                      </div>
+                                                  </div>
+                                              </div>
+                                                <div class="row">
+                                                    <div class="col-sm-6">
+                                                        <div class="row">
+                                                            <div class="col-sm-6 label-text">
+                                                                <label for="allottee.pan">PAN </label>
+                                                            </div>
+                                                            <div class="col-sm-6">
+                                                                <input type="text"  name="allottee.pan" id="allottee.pan" maxlength="10">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                <div class="col-sm-6">
+                                                  <div class="row">
+                                                      <div class="col-sm-6 label-text">
+                                                          <label for="gstin">GSTIN  </label>
+                                                      </div>
+                                                      <div class="col-sm-6">
+                                                          <input type="text" name="gstin" id="gstin" maxlength="15">
+                                                      </div>
+                                                  </div>
+                                                </div>
+                                              </div>
+
+                                                <div class="row">
+                                                    <div class="col-sm-6">
+
+                                                    </div>
+                                                    <div class="col-sm-6">
+                                                        <div class="row">
+                                                            <div class="col-sm-6 label-text">
+                                                                <label for="allottee.permanentAddress">Residential Address of the Allottee</label>
+                                                            </div>
+                                                            <div class="col-sm-6">
+                                                                <textarea name="allottee.permanentAddress" id="allottee.permanentAddress" maxlength="128"></textarea>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                              </div>
+                                            </div>
+
                                     <!-- /Allottee Details -->
 
                                     <!-- Argeement Details -->
@@ -1989,7 +2084,7 @@
                                                         <div class="col-sm-6">
                                                           <div class="text-no-ui">
                                                               <span class="glyphicon glyphicon-calendar"></span>
-                                                            <input type="text" class="datepicker" id="councilDate" name="councilDate">
+                                                            <input type="text" class="datepicker"  id="councilDate" name="councilDate">
                                                           </div>
                                                         </div>
                                                     </div>
@@ -2014,7 +2109,7 @@
                                                         <div class="col-sm-6">
                                                           <div class="text-no-ui">
                                                               <span class="glyphicon glyphicon-calendar"></span>
-                                                            <input type="text" class="datepicker" name="tenderDate" id="tenderDate">
+                                                            <input type="text" data-class="datepicker" class="datepicker" name="tenderDate" id="tenderDate">
                                                           </div>
                                                         </div>
                                                     </div>
@@ -2172,7 +2267,7 @@
                                                         <div class="col-sm-6">
                                                           <div class="text-no-ui">
                                                               <span class="glyphicon glyphicon-calendar"></span>
-                                                            <input type="text" class="datepicker" id="bankGuaranteeDate" name="bankGuaranteeDate">
+                                                            <input type="text" data-class="datepicker" class="datepicker" id="bankGuaranteeDate" name="bankGuaranteeDate">
                                                           </div>
                                                         </div>
                                                     </div>
@@ -2198,7 +2293,7 @@
                                                         <div class="col-sm-6">
                                                           <div class="text-no-ui">
                                                               <span class="glyphicon glyphicon-calendar"></span>
-                                                            <input type="text" class="datepicker" id="solvencyCertificateDate" name="solvencyCertificateDate">
+                                                            <input type="text" data-class="datepicker" class="datepicker" id="solvencyCertificateDate" name="solvencyCertificateDate">
                                                         </div>
                                                       </div>
                                                     </div>
@@ -2237,7 +2332,7 @@
                                                         <div class="col-sm-6">
                                                           <div class="text-no-ui">
                                                               <span class="glyphicon glyphicon-calendar"></span>
-                                                            <input type="text" class="datepicker" id="securityDepositDate" name="securityDepositDate" >
+                                                            <input type="text" data-class="datepicker" class="datepicker" id="securityDepositDate" name="securityDepositDate" >
                                                         </div>
                                                       </div>
                                                     </div>
@@ -2252,7 +2347,7 @@
                                                         <div class="col-sm-6">
                                                           <div class="text-no-ui">
                                                               <span class="glyphicon glyphicon-calendar"></span>
-                                                            <input type="text" class="datepicker" name="commencementDate" id="commencementDate">
+                                                            <input type="text" data-class="datepicker" class="datepicker" name="commencementDate" id="commencementDate">
                                                         </div>
                                                       </div>
                                                     </div>
@@ -2340,7 +2435,7 @@
                                                         <div class="col-sm-6">
                                                           <div class="text-no-ui">
                                                               <span class="glyphicon glyphicon-calendar"></span>
-                                                            <input type="text" class="datepicker" name="municipalOrderDate" id="municipalOrderDate">
+                                                            <input type="text" data-class="datepicker" class="datepicker" name="municipalOrderDate" id="municipalOrderDate">
                                                         </div>
                                                       </div>
                                                     </div>
@@ -2367,7 +2462,7 @@
                                                         <div class="col-sm-6">
                                                           <div class="text-no-ui">
                                                               <span class="glyphicon glyphicon-calendar"></span>
-                                                            <input type="text" class="datepicker" name="governmentOrderDate" id="governmentOrderDate">
+                                                            <input type="text" data-class="datepicker" class="datepicker" name="governmentOrderDate" id="governmentOrderDate">
                                                         </div>
                                                       </div>
                                                     </div>
@@ -2468,7 +2563,7 @@
                                                       <div class="col-sm-6">
                                                         <div class="text-no-ui">
                                                             <span class="glyphicon glyphicon-calendar"></span>
-                                                          <input type="text" class="datepicker" id="councilDate" name="councilDate">
+                                                          <input type="text"  class="datepicker" id="councilDate" name="councilDate">
                                                         </div>
                                                       </div>
                                                   </div>
@@ -2493,7 +2588,7 @@
                                                       <div class="col-sm-6">
                                                         <div class="text-no-ui">
                                                             <span class="glyphicon glyphicon-calendar"></span>
-                                                          <input type="text" class="datepicker" name="tenderDate" id="tenderDate">
+                                                          <input type="text" data-class="datepicker" class="datepicker" name="tenderDate" id="tenderDate">
                                                         </div>
                                                       </div>
                                                   </div>
@@ -2650,7 +2745,7 @@
                                                       <div class="col-sm-6">
                                                         <div class="text-no-ui">
                                                             <span class="glyphicon glyphicon-calendar"></span>
-                                                          <input type="text" class="datepicker" id="bankGuaranteeDate" name="bankGuaranteeDate">
+                                                          <input type="text" data-class="datepicker" class="datepicker" id="bankGuaranteeDate" name="bankGuaranteeDate">
                                                         </div>
                                                       </div>
                                                   </div>
@@ -2676,7 +2771,7 @@
                                                       <div class="col-sm-6">
                                                         <div class="text-no-ui">
                                                             <span class="glyphicon glyphicon-calendar"></span>
-                                                          <input type="text" class="datepicker" id="solvencyCertificateDate" name="solvencyCertificateDate">
+                                                          <input type="text" data-class="datepicker" class="datepicker" id="solvencyCertificateDate" name="solvencyCertificateDate">
                                                       </div>
                                                     </div>
                                                   </div>
@@ -2714,7 +2809,7 @@
                                                       <div class="col-sm-6">
                                                         <div class="text-no-ui">
                                                             <span class="glyphicon glyphicon-calendar"></span>
-                                                          <input type="text" class="datepicker" id="securityDepositDate" name="securityDepositDate" >
+                                                          <input type="text" data-class="datepicker" class="datepicker" id="securityDepositDate" name="securityDepositDate" >
                                                       </div>
                                                     </div>
                                                   </div>
@@ -2728,7 +2823,7 @@
                                                       <div class="col-sm-6">
                                                         <div class="text-no-ui">
                                                             <span class="glyphicon glyphicon-calendar"></span>
-                                                          <input type="text" class="datepicker" name="commencementDate" id="commencementDate">
+                                                          <input type="text" data-class="datepicker" class="datepicker" name="commencementDate" id="commencementDate">
                                                       </div>
                                                     </div>
                                                   </div>
@@ -2814,7 +2909,7 @@
                                                     <div class="col-sm-6">
                                                       <div class="text-no-ui">
                                                           <span class="glyphicon glyphicon-calendar"></span>
-                                                        <input type="text" class="datepicker" name="municipalOrderDate" id="municipalOrderDate">
+                                                        <input type="text" data-class="datepicker" class="datepicker" name="municipalOrderDate" id="municipalOrderDate">
                                                     </div>
                                                   </div>
                                                 </div>
@@ -2841,7 +2936,7 @@
                                                     <div class="col-sm-6">
                                                       <div class="text-no-ui">
                                                           <span class="glyphicon glyphicon-calendar"></span>
-                                                        <input type="text" class="datepicker" name="governmentOrderDate" id="governmentOrderDate">
+                                                        <input type="text" data-class="datepicker" class="datepicker" name="governmentOrderDate" id="governmentOrderDate">
                                                     </div>
                                                   </div>
                                                 </div>
@@ -2942,7 +3037,7 @@
                                                       <div class="col-sm-6">
                                                         <div class="text-no-ui">
                                                             <span class="glyphicon glyphicon-calendar"></span>
-                                                          <input type="text" class="datepicker" id="councilDate" name="councilDate">
+                                                          <input type="text"  class="datepicker" id="councilDate" name="councilDate">
                                                         </div>
                                                       </div>
                                                   </div>
@@ -2967,7 +3062,7 @@
                                                       <div class="col-sm-6">
                                                         <div class="text-no-ui">
                                                             <span class="glyphicon glyphicon-calendar"></span>
-                                                          <input type="text" class="datepicker" name="tenderDate" id="tenderDate">
+                                                          <input type="text" data-class="datepicker" class="datepicker" name="tenderDate" id="tenderDate">
                                                         </div>
                                                       </div>
                                                   </div>
@@ -3123,7 +3218,7 @@
                                                       <div class="col-sm-6">
                                                         <div class="text-no-ui">
                                                             <span class="glyphicon glyphicon-calendar"></span>
-                                                          <input type="text" class="datepicker" id="bankGuaranteeDate" name="bankGuaranteeDate">
+                                                          <input type="text" data-class="datepicker" class="datepicker" id="bankGuaranteeDate" name="bankGuaranteeDate">
                                                         </div>
                                                       </div>
                                                   </div>
@@ -3149,7 +3244,7 @@
                                                       <div class="col-sm-6">
                                                         <div class="text-no-ui">
                                                             <span class="glyphicon glyphicon-calendar"></span>
-                                                          <input type="text" class="datepicker" id="solvencyCertificateDate" name="solvencyCertificateDate">
+                                                          <input type="text" data-class="datepicker" class="datepicker" id="solvencyCertificateDate" name="solvencyCertificateDate">
                                                       </div>
                                                     </div>
                                                   </div>
@@ -3188,7 +3283,7 @@
                                                       <div class="col-sm-6">
                                                         <div class="text-no-ui">
                                                             <span class="glyphicon glyphicon-calendar"></span>
-                                                          <input type="text" class="datepicker" id="securityDepositDate" name="securityDepositDate" >
+                                                          <input type="text" data-class="datepicker" class="datepicker" id="securityDepositDate" name="securityDepositDate" >
                                                       </div>
                                                     </div>
                                                   </div>
@@ -3203,7 +3298,7 @@
                                                       <div class="col-sm-6">
                                                         <div class="text-no-ui">
                                                             <span class="glyphicon glyphicon-calendar"></span>
-                                                          <input type="text" class="datepicker" name="commencementDate" id="commencementDate">
+                                                          <input type="text" data-class="datepicker" class="datepicker" name="commencementDate" id="commencementDate">
                                                       </div>
                                                     </div>
                                                   </div>
@@ -3288,7 +3383,7 @@
                                                       <div class="col-sm-6">
                                                         <div class="text-no-ui">
                                                             <span class="glyphicon glyphicon-calendar"></span>
-                                                          <input type="text" class="datepicker" name="municipalOrderDate" id="municipalOrderDate">
+                                                          <input type="text" data-class="datepicker" class="datepicker" name="municipalOrderDate" id="municipalOrderDate">
                                                       </div>
                                                     </div>
                                                   </div>
@@ -3315,7 +3410,7 @@
                                                       <div class="col-sm-6">
                                                         <div class="text-no-ui">
                                                             <span class="glyphicon glyphicon-calendar"></span>
-                                                          <input type="text" class="datepicker" name="governmentOrderDate" id="governmentOrderDate">
+                                                          <input type="text" data-class="datepicker" class="datepicker" name="governmentOrderDate" id="governmentOrderDate">
                                                       </div>
                                                     </div>
                                                   </div>
@@ -3367,7 +3462,374 @@
                                           <!-- /Row 15 -->
                                       </div>
                                     </div>
+                                    <div class="form-section" id="agreementDetailsBlockForAuctionAssets">
+                                      <h3 class="categoryType">Agreement Details </h3>
+                                      <div class="form-section-inner">
+                                          <!-- Row 1 -->
+                                          <div class="row">
+                                              <div class="col-sm-6">
+                                                  <div class="row">
+                                                      <div class="col-sm-6 label-text">
+                                                          <label for="oldAgreementNumber">Old Agreement Number  </label>
+                                                      </div>
+                                                      <div class="col-sm-6">
+                                                          <div class="">
+                                                              <input type="text" name="oldAgreementNumber" id="oldAgreementNumber" maxlength="64">
+                                                          </div>
+                                                      </div>
+                                                  </div>
+                                              </div>
+                                              <div class="col-sm-6">
 
+                                              </div>
+                                          </div>
+                                          <div class="row">
+                                              <div class="col-sm-6">
+                                                  <div class="row">
+                                                      <div class="col-sm-6 label-text">
+                                                          <label for="councilNumber">Council/Standing Committee Resolution Number  </label>
+                                                      </div>
+                                                      <div class="col-sm-6">
+                                                          <input type="text" name="councilNumber" id="councilNumber" maxlength="48">
+                                                      </div>
+                                                  </div>
+                                              </div>
+                                              <div class="col-sm-6">
+                                                  <div class="row">
+                                                      <div class="col-sm-6 label-text">
+                                                          <label for="councilDate">Council/Standing Committee Resolution Date  </label>
+                                                      </div>
+                                                      <div class="col-sm-6">
+                                                        <div class="text-no-ui">
+                                                            <span class="glyphicon glyphicon-calendar"></span>
+                                                          <input type="text"  class="datepicker" id="councilDate" name="councilDate">
+                                                        </div>
+                                                      </div>
+                                                  </div>
+                                              </div>
+                                          </div>
+                                          <div class="row">
+                                              <div class="col-sm-6">
+                                                  <div class="row">
+                                                      <div class="col-sm-6 label-text">
+                                                          <label for="tenderNumber">Tender/Auction Notification No.</label>
+                                                      </div>
+                                                      <div class="col-sm-6">
+                                                          <input type="text" name="tenderNumber" id="tenderNumber" maxlength="48">
+                                                      </div>
+                                                  </div>
+                                              </div>
+                                              <div class="col-sm-6">
+                                                  <div class="row">
+                                                      <div class="col-sm-6 label-text">
+                                                          <label for="tenderDate">Tender/Auction Notification Date </label>
+                                                      </div>
+                                                      <div class="col-sm-6">
+                                                        <div class="text-no-ui">
+                                                            <span class="glyphicon glyphicon-calendar"></span>
+                                                          <input type="text" data-class="datepicker" class="datepicker" name="tenderDate" id="tenderDate">
+                                                        </div>
+                                                      </div>
+                                                  </div>
+                                              </div>
+                                          </div>
+
+                                          <div class="row">
+                                              <div class="col-sm-6">
+                                                <div class="row">
+                                                    <div class="col-sm-6 label-text">
+                                                        <label for="tenderOpeningDate">Tender Opening Date/Auction Date </label>
+                                                    </div>
+                                                    <div class="col-sm-6">
+                                                      <div class="text-no-ui">
+                                                          <span class="glyphicon glyphicon-calendar"></span>
+                                                        <input type="text" data-class="datepicker" class="datepicker" name="tenderOpeningDate" id="tenderOpeningDate">
+                                                      </div>
+                                                    </div>
+                                                </div>
+                                              </div>
+                                              <div class="col-sm-6">
+
+                                                  <div class="row">
+                                                      <div class="col-sm-6 label-text">
+                                                          <label for="natureOfAllotment">Nature of Allotment </label>
+                                                      </div>
+                                                      <div class="col-sm-6">
+                                                          <div class="styled-select">
+                                                              <select name="natureOfAllotment" id="natureOfAllotment">
+                                                                  <option>Select</option>
+                                                              </select>
+                                                          </div>
+                                                      </div>
+                                                  </div>
+                                              </div>
+                                          </div>
+
+                                          <div class="row">
+                                              <div class="col-sm-6">
+                                                  <div class="row">
+                                                      <div class="col-sm-6 label-text">
+
+                                                          <label for="auctionAmount" class="categoryType">Auction Amount  </label>
+                                                      </div>
+                                                      <div class="col-sm-6">
+                                                        <div class="text-no-ui">
+                                                            <span>₹</span>
+                                                          <input type="number" min="0" name="auctionAmount" id="auctionAmount" maxlength="10">
+                                                        </div>
+                                                      </div>
+                                                  </div>
+                                              </div>
+                                              <div class="col-sm-6">
+                                                  <div class="row">
+                                                      <div class="col-sm-6 label-text">
+                                                          <label for="paymentCycle">Payment Cycle  </label>
+                                                      </div>
+                                                      <div class="col-sm-6">
+                                                        <div class="styled-select">
+                                                          <select name="paymentCycle" id="paymentCycle">
+                                                            <option value="">Select Payment Cycle</option>
+                                                          </select>
+                                                      </div>
+                                                      </div>
+                                                  </div>
+                                              </div>
+
+                                          </div>
+                                          <div class="row">
+                                            <div class="col-sm-6">
+                                                <div class="row">
+                                                    <div class="col-sm-6 label-text">
+                                                        <label for="bankGuaranteeAmount">Bank Guarantee Amount  </label>
+                                                    </div>
+                                                    <div class="col-sm-6">
+                                                        <div class="text-no-ui">
+                                                            <span>₹</span>
+                                                            <input type="number" name="bankGuaranteeAmount" id="bankGuaranteeAmount" maxlength="10">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                              <div class="col-sm-6">
+                                                  <div class="row">
+                                                      <div class="col-sm-6 label-text">
+                                                          <label for="bankGuaranteeDate">Bank Guarantee Date  </label>
+                                                      </div>
+                                                      <div class="col-sm-6">
+                                                        <div class="text-no-ui">
+                                                            <span class="glyphicon glyphicon-calendar"></span>
+                                                          <input type="text" data-class="datepicker" class="datepicker" id="bankGuaranteeDate" name="bankGuaranteeDate">
+                                                        </div>
+                                                      </div>
+                                                  </div>
+                                              </div>
+
+                                          </div>
+                                          <div class="row">
+                                            <div class="col-sm-6">
+                                                <div class="row">
+                                                    <div class="col-sm-6 label-text">
+                                                        <label for="solvencyCertificateNo">Solvency Certificate No  </label>
+                                                    </div>
+                                                    <div class="col-sm-6">
+                                                        <input type="text" name="solvencyCertificateNo" id="solvencyCertificateNo" maxlength="48">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                              <div class="col-sm-6">
+                                                  <div class="row">
+                                                      <div class="col-sm-6 label-text">
+                                                          <label for="solvencyCertificateDate">Solvency Certificate date  </label>
+                                                      </div>
+                                                      <div class="col-sm-6">
+                                                        <div class="text-no-ui">
+                                                            <span class="glyphicon glyphicon-calendar"></span>
+                                                          <input type="text" data-class="datepicker" class="datepicker" id="solvencyCertificateDate" name="solvencyCertificateDate">
+                                                      </div>
+                                                    </div>
+                                                  </div>
+                                              </div>
+
+                                          </div>
+                                          <div class="row">
+                                            <div class="col-sm-6">
+                                                <div class="row">
+                                                    <div class="col-sm-6 label-text">
+                                                        <label for="solvencyAmount">Solvency Amount  </label>
+                                                    </div>
+                                                    <div class="col-sm-6">
+                                                        <input type="number" min="0" id="solvencyAmount" name="solvencyAmount" maxlength="8">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-6">
+                                              <div class="row">
+                                                  <div class="col-sm-6 label-text">
+                                                      <label for="securityDepositDate">Security Deposit Received Date (DD/MM/YYYY)  </label>
+                                                  </div>
+                                                  <div class="col-sm-6">
+                                                    <div class="text-no-ui">
+                                                        <span class="glyphicon glyphicon-calendar"></span>
+                                                      <input type="text" data-class="datepicker" class="datepicker" id="securityDepositDate" name="securityDepositDate" >
+                                                  </div>
+                                                </div>
+                                              </div>
+                                            </div>
+                                          </div>
+                                          <div class="row">
+                                            <div class="col-sm-6">
+                                                <div class="row">
+                                                    <div class="col-sm-6 label-text">
+                                                        <label for="securityDeposit">Security Deposit  </label>
+                                                    </div>
+                                                    <div class="col-sm-6">
+                                                        <input type="number" min="0" id="securityDeposit" name="securityDeposit" maxlength="10">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <div class="row">
+                                                    <div class="col-sm-6 label-text">
+                                                        <label for="collectedSecurityDeposit">Collected Security Deposit  </label>
+                                                    </div>
+                                                    <div class="col-sm-6">
+                                                        <input type="number" min="0" id="collectedSecurityDeposit" name="collectedSecurityDeposit" maxlength="10">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                          </div>
+
+                                          <div class="row">
+                                            <div class="col-sm-6">
+                                              <div class="row">
+                                                  <div class="col-sm-6 label-text">
+                                                      <label for="timePeriod">Agreement Period  </label>
+                                                  </div>
+                                                  <div class="col-sm-6">
+                                                    <div class="styled-select">
+                                                      <select name="timePeriod" id="timePeriod">
+                                                      </select>
+                                                  </div>
+                                                </div>
+                                              </div>
+                                              </div>
+
+
+                                              <div class="col-sm-6">
+                                                  <div class="row">
+                                                      <div class="col-sm-6 label-text">
+                                                          <label for="commencementDate">Date of Allotment  </label>
+                                                      </div>
+                                                      <div class="col-sm-6">
+                                                        <div class="text-no-ui">
+                                                            <span class="glyphicon glyphicon-calendar"></span>
+                                                          <input type="text" data-class="datepicker" class="datepicker" name="commencementDate" id="commencementDate">
+                                                      </div>
+                                                    </div>
+                                                  </div>
+                                              </div>
+                                          </div>
+
+                                          <div class="row" id="municipalOrder">
+                                            <div class="col-sm-6">
+                                                  <div class="row">
+                                                      <div class="col-sm-6 label-text">
+                                                          <label for="municipalOrderNumber">Municipal Order Number</label>
+                                                      </div>
+                                                      <div class="col-sm-6">
+                                                        <div>
+                                                          <input type="text" id="municipalOrderNumber" name="municipalOrderNumber" maxlength="48">
+                                                      </div>
+                                                    </div>
+                                                  </div>
+                                              </div>
+                                              <div class="col-sm-6">
+                                                  <div class="row">
+                                                      <div class="col-sm-6 label-text">
+                                                          <label for="municipalOrderDate">Municipal Order Date</label>
+                                                      </div>
+                                                      <div class="col-sm-6">
+                                                        <div class="text-no-ui">
+                                                            <span class="glyphicon glyphicon-calendar"></span>
+                                                          <input type="text" data-class="datepicker" class="datepicker" name="municipalOrderDate" id="municipalOrderDate">
+                                                      </div>
+                                                    </div>
+                                                  </div>
+                                              </div>
+                                          </div>
+                                          <div class="row" id="governmentOrder">
+                                            <div class="col-sm-6">
+                                                  <div class="row">
+                                                      <div class="col-sm-6 label-text">
+                                                          <label for="governmentOrderNumber">Government Order Number</label>
+                                                      </div>
+                                                      <div class="col-sm-6">
+                                                        <div>
+                                                          <input type="text" id="governmentOrderNumber" name="governmentOrderNumber" maxlength="48">
+                                                      </div>
+                                                    </div>
+                                                  </div>
+                                              </div>
+                                              <div class="col-sm-6">
+                                                  <div class="row">
+                                                      <div class="col-sm-6 label-text">
+                                                          <label for="governmentOrderDate">Government Order Date</label>
+                                                      </div>
+                                                      <div class="col-sm-6">
+                                                        <div class="text-no-ui">
+                                                            <span class="glyphicon glyphicon-calendar"></span>
+                                                          <input type="text" data-class="datepicker" class="datepicker" name="governmentOrderDate" id="governmentOrderDate">
+                                                      </div>
+                                                    </div>
+                                                  </div>
+                                              </div>
+                                          </div>
+                                          <div class="row">
+
+                                              <div class="col-sm-6">
+                                                  <!-- <div class="row">
+                                                      <div class="col-sm-6 label-text">
+                                                          <label for="rentIncrementMethod">Method for Renewal of Rent  </label>
+                                                      </div>
+                                                      <div class="col-sm-6">
+                                                          <div class="styled-select">
+                                                              <select name="rentIncrementMethod" id="rentIncrementMethod">
+                                                                <option value="">Choose Percentage</option>
+                                                              </select>
+                                                          </div>
+                                                      </div>
+                                                  </div> -->
+                                              </div>
+
+                                          </div>
+                                          <div class="row">
+                                            <div class="col-sm-6">
+                                                <div class="row">
+                                                    <div class="col-sm-6 label-text">
+                                                        <label>Attach Document </label>
+                                                    </div>
+                                                    <div class="col-sm-6">
+                                                        <div class="styled-file">
+                                                            <input type="file" multiple id="documents">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                              <div class="col-sm-6">
+                                                  <div class="row">
+                                                      <div class="col-sm-6 label-text">
+                                                          <label for="remarks">Remarks </label>
+                                                      </div>
+                                                      <div class="col-sm-6">
+                                                          <textarea name="remarks" id="remarks" maxlength="256"></textarea>
+                                                      </div>
+                                                  </div>
+                                              </div>
+
+                                          </div>
+                                          <!-- /Row 15 -->
+                                      </div>
+                                    </div>
                                     <div class="form-section" id="historyDetails">
                                       <h3 class="categoryType">History Details </h3>
                                       <div class="form-section-inner">

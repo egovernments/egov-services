@@ -33,7 +33,7 @@ public class ActionInfo   {
   private String by = null;
 
   @JsonProperty("isInternal")
-  private String isInternal = null;
+  private Boolean isInternal = null;
 
   @JsonProperty("when")
   private Long when = null;
@@ -54,7 +54,7 @@ public class ActionInfo   {
   @Valid
   private List<String> media = null;
 
-  @JsonProperty("comment")
+  @JsonProperty("comments")
   private String comment = null;
 
   public ActionInfo tenantId(String tenantId) {
@@ -95,7 +95,7 @@ public class ActionInfo   {
     this.by = by;
   }
 
-  public ActionInfo isInternal(String isInternal) {
+  public ActionInfo isInternal(Boolean isInternal) {
     this.isInternal = isInternal;
     return this;
   }
@@ -105,11 +105,11 @@ public class ActionInfo   {
    * @return isInternal
   **/
 
-  public String getIsInternal() {
+  public Boolean getIsInternal() {
     return isInternal;
   }
 
-  public void setIsInternal(String isInternal) {
+  public void setIsInternal(Boolean isInternal) {
     this.isInternal = isInternal;
   }
 

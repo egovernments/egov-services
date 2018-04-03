@@ -35,7 +35,7 @@ public class OtpRequestTest {
 
 	@Test
 	public void test_validate_should_not_throw_exception_for_a_valid_request() {
-		final OtpRequest otpRequest = OtpRequest.builder().tenantId("tenantId").mobileNumber("mobileNumber")
+		final OtpRequest otpRequest = OtpRequest.builder().tenantId("tenantId").mobileNumber("1234567890")
 				.type(OtpRequestType.REGISTER).build();
 
 		otpRequest.validate();
@@ -43,19 +43,28 @@ public class OtpRequestTest {
 
 	@Test
 	public void test_should_not_throw_exception_for_a_valid_request() {
-		final OtpRequest otpRequest = OtpRequest.builder().tenantId("tenantId").mobileNumber("mobileNumber")
+		final OtpRequest otpRequest = OtpRequest.builder().tenantId("tenantId").mobileNumber("1234567890")
 				.type(OtpRequestType.LOGIN).build();
 
 		otpRequest.validate();
 	}
 
 	@Test
-	public void test_should_returntrue_when_requesttype_login () {
+	public void test_should_returntrue_when_requesttype_login() {
 		final OtpRequest otpRequest = OtpRequest.builder().tenantId("tenantId").mobileNumber("mobileNumber")
 				.type(OtpRequestType.LOGIN).build();
 
 		assertTrue(otpRequest.isLoginRequestType());
 		assertFalse(otpRequest.isRegistrationRequestType());
+	}
+
+	@Test(expected = InvalidOtpRequestException.class)
+	public void test_should_throw_validation_exception_when_mobilenumber_is_not_valid() {
+		final OtpRequest otpRequest = OtpRequest.builder().tenantId("tenantId").mobileNumber("mobileNumber").type(null)
+				.build();
+
+		assertTrue(otpRequest.isInvalidType());
+		otpRequest.validate();
 	}
 
 }

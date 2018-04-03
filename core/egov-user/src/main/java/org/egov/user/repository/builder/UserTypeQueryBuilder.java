@@ -240,8 +240,8 @@ public class UserTypeQueryBuilder {
 		return "select * from eg_user where username=:userName and tenantid =:tenantId ";
 	}
 	
-	public String getUserByUserName() {
-		return "select * from eg_user where username=:userName";
+	public String getUserByUserNameAndTenantId(String tenantId) {
+		return "select * from eg_user where username=:userName and tenantid like"  + "'" + tenantId + "%'";
 	}
 
 	public String getUserPresentByIdAndUserNameAndTenant() {

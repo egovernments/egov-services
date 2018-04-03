@@ -84,6 +84,7 @@ public class ServiceController {
 	private ResponseEntity<?> search(@RequestBody @Valid RequestInfoWrapper requestInfoWrapper,
 			@ModelAttribute @Valid ServiceReqSearchCriteria serviceReqSearchCriteria) {
 
+		System.err.println(" service req search : "+serviceReqSearchCriteria);
 		pgrRequestValidator.validateSearch(serviceReqSearchCriteria, requestInfoWrapper.getRequestInfo());
 		long startTime = new Date().getTime();
 		Object serviceReqResponse = service.getServiceRequestDetails(requestInfoWrapper.getRequestInfo(),

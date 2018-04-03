@@ -87,6 +87,18 @@ public class MovementQueryBuilder {
         return selectQuery.toString();
     }
 
+    public String getMovementExistQuery(final MovementSearchRequest movementSearchRequest, String status,
+                           final List preparedStatementValues, final RequestInfo requestInfo) {
+        final StringBuilder selectQuery = new StringBuilder(BASE_QUERY);
+
+        addWhereClauseForMovementExists(selectQuery, status, preparedStatementValues, movementSearchRequest);
+        addOrderByClause(selectQuery, movementSearchRequest);
+        addPagingClause(selectQuery, preparedStatementValues, movementSearchRequest);
+
+        logger.debug("Query : " + selectQuery);
+        return selectQuery.toString();
+    }
+
     @SuppressWarnings({ "unchecked", "rawtypes" })
     private void addWhereClause(final StringBuilder selectQuery, final List preparedStatementValues,
             final MovementSearchRequest movementSearchRequest) {
@@ -142,6 +154,55 @@ public class MovementQueryBuilder {
         if (movementSearchRequest.getStatus() != null) {
             isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
             selectQuery.append(" m.status IN( " + movementSearchRequest.getStatus() + ")");
+        }
+
+    }
+
+
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+    private void addWhereClauseForMovementExists(final StringBuilder selectQuery, String status, final List preparedStatementValues,
+                                final MovementSearchRequest movementSearchRequest) {
+
+        if (movementSearchRequest.getId() == null && movementSearchRequest.getEmployeeId() == null
+                && movementSearchRequest.getTypeOfmovement() == null && movementSearchRequest.getEffectiveFromDate() == null
+                && movementSearchRequest.getEffectiveToDate() == null && movementSearchRequest.getStateId() == null
+                && movementSearchRequest.getTenantId() == null)
+            return;
+
+        selectQuery.append(" WHERE");
+        boolean isAppendAndClause = false;
+
+        if (movementSearchRequest.getTenantId() != null) {
+            isAppendAndClause = true;
+            selectQuery.append(" m.tenantId = ?");
+            preparedStatementValues.add(movementSearchRequest.getTenantId());
+        }
+
+        if (movementSearchRequest.getId() != null && !movementSearchRequest.getId().isEmpty()) {
+            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+            selectQuery.append(" m.id IN " + getIdQuery(movementSearchRequest.getId()));
+        }
+
+        if (movementSearchRequest.getEmployeeId() != null) {
+            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+            selectQuery.append(" m.employee = ?");
+            preparedStatementValues.add(movementSearchRequest.getEmployeeId());
+        }
+
+        if (movementSearchRequest.getTypeOfmovement() != null) {
+            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+            selectQuery.append(" m.typeOfMovement = ?");
+            preparedStatementValues.add(movementSearchRequest.getTypeOfmovement());
+        }
+
+        if (movementSearchRequest.getStateId() != null) {
+            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+            selectQuery.append(" m.stateId = ?");
+            preparedStatementValues.add(movementSearchRequest.getStateId());
+        }
+        if (status != null) {
+            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+            selectQuery.append(" m.status NOT IN( " + status + ")");
         }
 
     }

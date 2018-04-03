@@ -172,7 +172,7 @@ class LeaveType extends React.Component {
                   <label htmlFor="">Leave Type Name <span> * </span></label>
                 </div>
                 <div className="col-sm-6">
-                  <input type="text" name="name" id="name" value={name}
+                  <input type="text" name="name" id="name" value={name} maxLength="50"
                     onChange={(e) => { handleChange(e, "name") }} required />
 
                 </div>

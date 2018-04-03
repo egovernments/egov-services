@@ -27,7 +27,8 @@ class UpdateMovement extends React.Component {
           department: "",
           designation: ""
         },
-        tenantId: tenantId
+        tenantId: tenantId,
+        checkEmployeeExists:false
       },
       employee: {
         id: "",
@@ -155,6 +156,7 @@ class UpdateMovement extends React.Component {
       if (res) {
         if (res.Movement[0]) {
           var Movement = res.Movement[0];
+          Movement.checkEmployeeExists = false;
 
         
 
@@ -259,6 +261,8 @@ class UpdateMovement extends React.Component {
       tenantId,
       departmentId,
       designationId,
+      isPrimary:true,
+      active: true,
       asOnDate
     }, function (err, res) {
       if (res) {
@@ -276,7 +280,8 @@ class UpdateMovement extends React.Component {
       tenantId,
       departmentId: departmentId,
       designationId: designationId,
-      asOnDate: effectiveFrom
+      asOnDate: effectiveFrom,
+      pageSize: 500
     }, function (err, res) {
       if (res) {
         _this.setState({
@@ -470,9 +475,8 @@ class UpdateMovement extends React.Component {
         _this = this;
       var stateId = getUrlVars()["stateId"];
       var tempInfo = Object.assign({}, _this.state.movement);
-      tempInfo.workflowDetails = {
-        "action": ID
-      };
+      if(tempInfo.workflowDetails)
+      tempInfo.workflowDetails.action =  ID;
 
       if (tempInfo.documents && tempInfo.documents.constructor == FileList) {
         let counter = tempInfo.documents.length,
@@ -783,7 +787,7 @@ class UpdateMovement extends React.Component {
 
       for (var i = 0; i < _this.state.movement.documents.length; i++) {
         return (<tr>
-          <td>${i + 1}</td>
+          <td>{i + 1}</td>
           <td>Document</td>
           <td>
             <a href={window.location.origin + CONST_API_GET_FILE + _this.state.movement.documents[i]} target="_blank">
@@ -798,7 +802,7 @@ class UpdateMovement extends React.Component {
     const renderFile = function (status) {
       if (_this.state.movement && _this.state.movement.documents) {
         return (
-          <table className="table table-bordered" id="fileTable" style={{ "display": "none" }}>
+          <table className="table table-bordered" id="fileTable">
             <thead>
               <tr>
                 <th>Sr. No.</th>
@@ -1051,7 +1055,6 @@ class UpdateMovement extends React.Component {
                     <div className="styled-file">
                       <input id="documents" name="documents" type="file"
                         onChange={(e) => { handleChange(e, "documents") }} multiple />
-                      {renderFile()}
                     </div>
                   </div>
                 </div>
@@ -1076,6 +1079,7 @@ class UpdateMovement extends React.Component {
                 </div>
               </div>
             </div>
+            {renderFile()}
           </div>
 
           {renderWorkflowDetails(this.state.status)}

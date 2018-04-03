@@ -64,6 +64,28 @@ $(document).on("keyup","input", function() {
     }
 });
 
+$(document).on("keyup","input", function() {
+    //fillValueToObject(this);
+    if (this.id === "auctionAmount") {
+        if($('#commencementDate').val()!=''){
+            var fromDate = $('#commencementDate').val();
+            fromDate = moment(fromDate,"DD/MM/YYYY");
+          adjustSecurityDeposit(fromDate,this.val);
+
+    }else{
+      $('#securityDeposit').val(this.value * 0.25);
+      $("#securityDeposit").attr({
+          "min": this.value * 0.25
+      });
+      agreement["securityDeposit"] = Math.round(this.value * 0.25);
+    }
+  }
+});
+$(document).on("blur",".datepicker", function() {
+    fillValueToObject(this);
+});
+
+
 var index=1;
 var create = true;
 var shopsMap = {};
@@ -75,9 +97,13 @@ $(document).ready(function() {
   $('#municipalOrder, #governmentOrder').hide();
 
   $('#timePeriod').append($("<option/>").val('').text('Select Time Period'));
+  if (decodeURIComponent(getUrlVars()["type"]) == "Shopping Complex"){
   for(var i=0;i<25;i++){
     $('#timePeriod').append($("<option/>").val(i+1).text(i+1));
   }
+} else{
+  $('#timePeriod').append($("<option/>").val(1).text("1"));
+}
 
   onLoadAsset();
 
@@ -199,6 +225,7 @@ $(document).ready(function() {
       });
     }
 
+
     $('#rentIncrementMethod').find('option').remove().end().append('<option value="">Choose Percentage</option>');
 
     loadRenewalRent(this.value);
@@ -210,6 +237,37 @@ $(document).ready(function() {
       dependentonBasisTime($('#basisOfAllotment').val(), this.value);
     }
   })
+
+  $('#agreementDetailsBlockForAuctionAssets select').on('change',function(){
+    var allotmentDate = $('#commencementDate').val();
+    if(this.id==='paymentCycle'){
+       var auctionAmt = $("#auctionAmount").val();
+      if(auctionAmt&&this.value === "ANNUAL"){
+        //alert(auctionAmt)
+        agreement["rent"] = auctionAmt;
+      }else if(allotmentDate && (this.value === "QUARTER" || this.value === "HALFYEAR")){
+        allotmentDate = moment(allotmentDate,"DD/MM/YYYY");
+        validatePaymentCycle(allotmentDate,this.value);
+      }
+    }
+  })
+
+  $('#agreementDetailsBlockForAuctionAssets .datepicker').on('changeDate',function(){
+    var paymentCycle = $('#paymentCycle').val();
+    if(this.id==='commencementDate'){
+       if(paymentCycle){
+        allotmentDate = moment(this.value,"DD/MM/YYYY");
+        validatePaymentCycle(allotmentDate,paymentCycle);
+      }
+    }
+  })
+
+
+
+  if (decodeURIComponent(getUrlVars()["type"]) != "Shopping Complex"){
+    $("#natureOfAllotment option[value='DIRECT']").remove();
+
+  }
 
   if(window.opener && window.opener.document) {
      var logo_ele = window.opener.document.getElementsByClassName("homepage_logo");
@@ -505,7 +563,7 @@ var commomFieldsRules = {
         alphaNumer: true
     },
     oldAgreementNumber:{
-      required: true,
+      required: decodeURIComponent(getUrlVars()["type"]).toLowerCase() == "shopping complex"  ? true : false,
       alphaNumersh: true
     },
     referenceNumber:{
@@ -537,6 +595,9 @@ var commomFieldsRules = {
       'mm/yyyy' : true
     },
     floorNumber :{
+      required :true
+    },
+    auctionAmount:{
       required :true
     }
 
@@ -806,8 +867,85 @@ $('.datepicker').datepicker({
 
 $(".datepicker").on("changeDate", function() {
     // alert('hey');
+
+    if(this.id ==='commencementDate'){
+      var auctionAmt = $('#auctionAmount').val();
+      var paymentCycle = $('#paymentCycle').val();
+        if(auctionAmt){
+         var fromDate = moment(this.value,"DD/MM/YYYY");
+         if(paymentCycle){
+         validatePaymentCycle(fromDate,this.value);
+       }
+         adjustSecurityDeposit(fromDate,auctionAmt);
+    }
+  }
     fillValueToObject(this);
+
 });
+
+function adjustSecurityDeposit(fromDate,auctionAmount){
+  var year = Number(fromDate.format('YYYY'));
+  var month = Number(fromDate.format('MM'));
+  if(month > 3){
+     year = year + 1;
+  }
+  var fisYear = new Date(year,2,31); //month number starts from 0(Jan) to 11(Dec)
+  fisYear = moment(fisYear).format("DD/MM/YYYY");
+  //var month = fromDate.getMonth();
+  let totalMonths = getAbsoulteMonths(moment(fisYear,"DD/MM/YYYY"))-getAbsoulteMonths(moment(fromDate),"DD/MM/YYYY");
+  totalMonths = totalMonths + 1;
+  var auctionAmt = $('#auctionAmount').val();
+  var monthlyRent = auctionAmt/totalMonths ;
+  var securityDeposit = monthlyRent;
+  if(totalMonths >3){
+    securityDeposit = Math.round(monthlyRent * 3);
+  }else {
+    securityDeposit = Math.round(monthlyRent);
+  }
+
+  $('#securityDeposit').val(securityDeposit);
+  var paymentCycle = $('#paymentCycle').val();
+  if(paymentCycle ==='ANNUAL'){
+    agreement["rent"] = auctionAmt;
+  }else if(paymentCycle ==='QUARTER'){
+    var noOfQuarters = totalMonths/3;
+      agreement["rent"] = Math.round(auctionAmt/noOfQuarters);
+  }else if(paymentCycle ==='HALFYEAR'){
+    var noOfHalfs = totalMonths/6;
+    agreement["rent"] = Math.round(auctionAmt/noOfHalfs);
+
+ }else{
+   agreement["rent"] = Math.round(monthlyRent);
+ }
+  agreement["securityDeposit"] = Math.round(securityDeposit);
+
+}
+
+function validatePaymentCycle(fromDate,paymentCycle) {
+  var year = Number(fromDate.format('YYYY'));
+  var month = Number(fromDate.format('MM'));
+  if(month > 3){
+     year = year + 1;
+  }
+  var fisYear = new Date(year,2,31);
+  fisYear = moment(fisYear).format("DD/MM/YYYY");
+  let totalMonths = getAbsoulteMonths(moment(fisYear,"DD/MM/YYYY"))-getAbsoulteMonths(moment(fromDate),"DD/MM/YYYY");
+  totalMonths = totalMonths + 1;
+  if(paymentCycle==="QUARTER"){
+     if(totalMonths%3!=0){
+       alert('Allotment date is not falling in appropriate quarterly period,please change the allotmentdate/payment cycle ');
+       $('#commencementDate').val('');
+       return false;
+     }
+  }else if(paymentCycle==="HALFYEAR"){
+    if(totalMonths%6!=0){
+      alert('Allotment date is not falling in appropriate half year period,please change the allotment date/payment cycle ');
+      $('#commencementDate').val('');
+      return false;
+    }
+  }
+}
+
 
 // printValue("",assetDetails)
 //
@@ -878,7 +1016,12 @@ $("#createAgreementForm").validate({
     }
 
     showLoading();
-
+        var fromDate = $('#commencementDate').val();
+            fromDate = moment(fromDate,"DD/MM/YYYY");
+        var auctionAmt = $('#auctionAmount').val();
+        if(auctionAmt){
+         adjustSecurityDeposit(fromDate,auctionAmount);
+       }
         // form.submit();
         // form.preventDefault();
 
@@ -1086,6 +1229,7 @@ function initDatepicker(){
     });
 }
 
+
 function getAbsoulteMonths(momentDate) {
   var months = Number(momentDate.format("MM"));
   var years = Number(momentDate.format("YYYY"));
@@ -1165,7 +1309,9 @@ function basedOnType(){
           // remove all other Asset Details block from DOM except land asset related fields
       $("#shopAssetDetailsBlock,#shoppingComplexAssetDetailsBlock, #marketAssetDetailsBlock, #kalyanamandapamAssetDetailsBlock, #parkingSpaceAssetDetailsBlock, #slaughterHousesAssetDetailsBlock, #usfructsAssetDetailsBlock, #communityAssetDetailsBlock, #fishTankAssetDetailsBlock, #parkAssetDetailsBlock").remove();
       //remove agreement template two and three from screen
-      $("#agreementDetailsBlockTemplateTwo,#agreementDetailsBlockTemplateThree").remove();
+      $("#agreementDetailsBlockTemplateTwo,#agreementDetailsBlockTemplateThree,#agreementDetailsBlockForAuctionAssets").remove();
+     //disabling allotee details block
+      $("#allotteeDetailsBlock").remove();
       //disabling input tag of asset details
       $("#landAssetDetailsBlock input").attr("disabled", true);
       //disabling text tag of asset details
@@ -1230,7 +1376,9 @@ function basedOnType(){
       // remove all other Asset Details block from DOM except shop asset related fields
       $("#landAssetDetailsBlock,#shoppingComplexAssetDetailsBlock, #marketAssetDetailsBlock, #kalyanamandapamAssetDetailsBlock, #parkingSpaceAssetDetailsBlock, #slaughterHousesAssetDetailsBlock, #usfructsAssetDetailsBlock, #communityAssetDetailsBlock, #fishTankAssetDetailsBlock, #parkAssetDetailsBlock").remove();
       //remove agreement template two and three from screen
-      $("#agreementDetailsBlockTemplateOne,#agreementDetailsBlockTemplateThree").remove();
+      $("#agreementDetailsBlockTemplateOne,#agreementDetailsBlockTemplateThree,#agreementDetailsBlockForAuctionAssets").remove();
+      //disabling allotee details block
+       $("#allotteeDetailsBlockTwo").remove();
       //disabling input tag of asset details
       $("#shopAssetDetailsBlock input").attr("disabled", true);
       //disabling textarea tag of asset details
@@ -1244,7 +1392,9 @@ function basedOnType(){
       // remove all other Asset Details block from DOM except shop asset related fields
       $("#shopAssetDetailsBlock,#landAssetDetailsBlock, #marketAssetDetailsBlock, #kalyanamandapamAssetDetailsBlock, #parkingSpaceAssetDetailsBlock, #slaughterHousesAssetDetailsBlock, #usfructsAssetDetailsBlock, #communityAssetDetailsBlock, #fishTankAssetDetailsBlock, #parkAssetDetailsBlock").remove();
       //remove agreement template two and three from screen
-      $("#agreementDetailsBlockTemplateOne,#agreementDetailsBlockTemplateThree").remove();
+      $("#agreementDetailsBlockTemplateOne,#agreementDetailsBlockTemplateThree,#agreementDetailsBlockForAuctionAssets").remove();
+      //remove allotee details block(old details)
+       $("#allotteeDetailsBlockTwo").remove();
       //disabling input tag of asset details
       $("#shoppingComplexAssetDetailsBlock input").attr("disabled", true);
       //disabling textarea tag of asset details
@@ -1297,8 +1447,11 @@ function basedOnType(){
       // remove all other Asset Details block from DOM except shop asset related fields
       $("#rendCalculatedMethod,#shopAssetDetailsBlock,#shoppingComplexAssetDetailsBlock, #landAssetDetailsBlock, #kalyanamandapamAssetDetailsBlock, #parkingSpaceAssetDetailsBlock, #slaughterHousesAssetDetailsBlock, #usfructsAssetDetailsBlock, #communityAssetDetailsBlock, #fishTankAssetDetailsBlock, #parkAssetDetailsBlock").remove();
       //remove agreement template two and three from screen
-      $("#agreementDetailsBlockTemplateOne,#agreementDetailsBlockTemplateTwo").remove();
+      $("#agreementDetailsBlockTemplateOne,#agreementDetailsBlockTemplateTwo,#agreementDetailsBlockTemplateThree").remove();
+      //removing allotee details block
+       $("#allotteeDetailsBlock").remove();
       //disabling input tag of asset details
+      $("#historyDetails,#subesquentrenewals").remove();
       $("#marketAssetDetailsBlock input").attr("disabled", true);
       $("#marketAssetDetailsBlock textarea").attr("disabled", true);
       //append category text
@@ -1344,7 +1497,9 @@ function basedOnType(){
       // remove all other Asset Details block from DOM except shop asset related fields
       $("#rendCalculatedMethod,#shopAssetDetailsBlock,#shoppingComplexAssetDetailsBlock, #landAssetDetailsBlock, #marketAssetDetailsBlock, #parkingSpaceAssetDetailsBlock, #slaughterHousesAssetDetailsBlock, #usfructsAssetDetailsBlock, #communityAssetDetailsBlock, #fishTankAssetDetailsBlock, #parkAssetDetailsBlock").remove();
       //remove agreement template two and three from screen
-      $("#agreementDetailsBlockTemplateOne,#agreementDetailsBlockTemplateTwo").remove();
+      $("#agreementDetailsBlockTemplateOne,#agreementDetailsBlockTemplateTwo,#agreementDetailsBlockForAuctionAssets").remove();
+      //remove allotee details block
+       $("#allotteeDetailsBlockTwo").remove();
       //disabling input tag of asset details
       $("#kalyanamandapamAssetDetailsBlock input").attr("disabled", true);
       $("#kalyanamandapamAssetDetailsBlock textarea").attr("disabled", true);
@@ -1394,7 +1549,9 @@ function basedOnType(){
       // remove all other Asset Details block from DOM except shop asset related fields
       $("#rendCalculatedMethod,#shopAssetDetailsBlock,#shoppingComplexAssetDetailsBlock, #landAssetDetailsBlock, #marketAssetDetailsBlock, #kalyanamandapamAssetDetailsBlock, #slaughterHousesAssetDetailsBlock, #usfructsAssetDetailsBlock, #communityAssetDetailsBlock, #fishTankAssetDetailsBlock, #parkAssetDetailsBlock").remove();
       //remove agreement template two and three from screen
-      $("#agreementDetailsBlockTemplateOne,#agreementDetailsBlockTemplateTwo").remove();
+      $("#agreementDetailsBlockTemplateOne,#agreementDetailsBlockTemplateTwo,#agreementDetailsBlockForAuctionAssets").remove();
+      //remove allotee details block
+       $("#allotteeDetailsBlockTwo").remove();
       //disabling input tag of asset details
       $("#parkingSpaceAssetDetailsBlock input").attr("disabled", true);
       $("#parkingSpaceAssetDetailsBlock textarea").attr("disabled", true);
@@ -1443,7 +1600,10 @@ function basedOnType(){
       // remove all other Asset Details block from DOM except shop asset related fields
       $("#rendCalculatedMethod,#shopAssetDetailsBlock,#shoppingComplexAssetDetailsBlock, #landAssetDetailsBlock, #marketAssetDetailsBlock, #kalyanamandapamAssetDetailsBlock, #parkingSpaceAssetDetailsBlock, #usfructsAssetDetailsBlock, #communityAssetDetailsBlock, #fishTankAssetDetailsBlock, #parkAssetDetailsBlock").remove();
       //remove agreement template two and three from screen
-      $("#agreementDetailsBlockTemplateOne,#agreementDetailsBlockTemplateTwo").remove();
+      $("#agreementDetailsBlockTemplateOne,#agreementDetailsBlockTemplateTwo,#agreementDetailsBlockTemplateThree").remove();
+      //remove allotee details block
+       $("#allotteeDetailsBlock").remove();
+       $("#historyDetails,#subesquentrenewals").remove();
       //disabling input tag of asset details
       $("#slaughterHousesAssetDetailsBlock input").attr("disabled", true);
       $("#slaughterHousesAssetDetailsBlock textarea").attr("disabled", true);
@@ -1490,7 +1650,9 @@ function basedOnType(){
       // remove all other Asset Details block from DOM except shop asset related fields
       $("#rendCalculatedMethod,#shopAssetDetailsBlock,#shoppingComplexAssetDetailsBlock, #landAssetDetailsBlock, #marketAssetDetailsBlock, #kalyanamandapamAssetDetailsBlock, #parkingSpaceAssetDetailsBlock, #slaughterHousesAssetDetailsBlock, #communityAssetDetailsBlock, #fishTankAssetDetailsBlock, #parkAssetDetailsBlock").remove();
       //remove agreement template two and three from screen
-      $("#agreementDetailsBlockTemplateOne,#agreementDetailsBlockTemplateTwo").remove();
+      $("#agreementDetailsBlockTemplateOne,#agreementDetailsBlockTemplateTwo,#agreementDetailsBlockTemplateThree").remove();
+      //remove allotee details block
+       $("#allotteeDetailsBlockTwo").remove();
       //disabling input tag of asset details
       $("#usfructsAssetDetailsBlock input").attr("disabled", true);
       $("#usfructsAssetDetailsBlock textarea").attr("disabled", true);
@@ -1538,7 +1700,10 @@ function basedOnType(){
       // remove all other Asset Details block from DOM except shop asset related fields
       $("#rendCalculatedMethod,#shopAssetDetailsBlock,#shoppingComplexAssetDetailsBlock, #landAssetDetailsBlock, #marketAssetDetailsBlock, #kalyanamandapamAssetDetailsBlock, #parkingSpaceAssetDetailsBlock, #slaughterHousesAssetDetailsBlock, #usfructsAssetDetailsBlock, #fishTankAssetDetailsBlock, #parkAssetDetailsBlock").remove();
       //remove agreement template two and three from screen
-      $("#agreementDetailsBlockTemplateOne,#agreementDetailsBlockTemplateTwo").remove();
+      $("#agreementDetailsBlockTemplateOne,#agreementDetailsBlockTemplateTwo,#agreementDetailsBlockTemplateThree").remove();
+      //remove allotee details block
+       $("#allotteeDetailsBlock").remove();
+       $("#historyDetails,#subesquentrenewals").remove();
       //disabling input tag of asset details
       $("#communityAssetDetailsBlock input").attr("disabled", true);
       $("#communityAssetDetailsBlock textarea").attr("disabled", true);
@@ -1585,7 +1750,10 @@ function basedOnType(){
       // remove all other Asset Details block from DOM except shop asset related fields
       $("#rendCalculatedMethod,#shopAssetDetailsBlock,#shoppingComplexAssetDetailsBlock, #landAssetDetailsBlock, #marketAssetDetailsBlock, #kalyanamandapamAssetDetailsBlock, #parkingSpaceAssetDetailsBlock, #slaughterHousesAssetDetailsBlock, #usfructsAssetDetailsBlock, #communityAssetDetailsBlock, #parkAssetDetailsBlock").remove();
       //remove agreement template two and three from screen
-      $("#agreementDetailsBlockTemplateOne,#agreementDetailsBlockTemplateTwo").remove();
+      $("#agreementDetailsBlockTemplateOne,#agreementDetailsBlockTemplateTwo,#agreementDetailsBlockTemplateThree").remove();
+      //remove allotee details block
+       $("#allotteeDetailsBlock").remove();
+       $("#historyDetails,#subesquentrenewals").remove();
       //disabling input tag of asset details
       $("#fishTankAssetDetailsBlock input").attr("disabled", true);
       $("#fishTankAssetDetailsBlock textarea").attr("disabled", true);
@@ -1632,10 +1800,12 @@ function basedOnType(){
       // remove all other Asset Details block from DOM except shop asset related fields
       $("#rendCalculatedMethod,#shopAssetDetailsBlock,#shoppingComplexAssetDetailsBlock, #landAssetDetailsBlock, #marketAssetDetailsBlock, #kalyanamandapamAssetDetailsBlock, #parkingSpaceAssetDetailsBlock, #slaughterHousesAssetDetailsBlock, #usfructsAssetDetailsBlock, #communityAssetDetailsBlock, #fishTankAssetDetailsBlock").remove();
       //remove agreement template two and three from screen
-      $("#agreementDetailsBlockTemplateOne,#agreementDetailsBlockTemplateTwo").remove();
+      $("#agreementDetailsBlockTemplateOne,#agreementDetailsBlockTemplateTwo,#agreementDetailsBlockForAuctionAssets").remove();
+      //remove allotee details block
+       $("#allotteeDetailsBlockTwo").remove();
       //disabling input tag of asset details
-      $("#parkingSpaceAssetDetailsBlock input").attr("disabled", true);
-      $("#parkingSpaceAssetDetailsBlock textarea").attr("disabled", true);
+      $("#parkAssetDetailsBlock input").attr("disabled", true);
+      $("#parkAssetDetailsBlock textarea").attr("disabled", true);
       //append category text
       $(".categoryType").prepend("Park ");
   } else {

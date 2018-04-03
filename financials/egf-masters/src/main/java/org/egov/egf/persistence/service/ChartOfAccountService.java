@@ -183,6 +183,7 @@ public class ChartOfAccountService {
 				chartOfAccountSet.add(coa);
 				chartOfAccountContractRequest.setChartOfAccount(new ChartOfAccountContract());
 				chartOfAccountContractRequest.getChartOfAccount().setGlcode(coa.getGlcode() + "%");
+				chartOfAccountContractRequest.getChartOfAccount().setTenantId(coa.getTenantId());
 				final ChartOfAccountSpecification specification1 = new ChartOfAccountSpecification(
 						chartOfAccountContractRequest.getChartOfAccount());
 				final Pageable page1 = new PageRequest(chartOfAccountContractRequest.getPage().getOffSet(),

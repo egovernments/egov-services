@@ -170,6 +170,7 @@
                                         <exclude>org.egov.web.contract.*</exclude>
                                         <exclude>org.egov.domain.service.LocalDateTimeFactory</exclude>
                                          <exclude>org.egov.domain.model.Token</exclude>
+                                         <exclude>org.egov.persistence.repository.TokenRepository</exclude>
                                     </excludes>
                                     <limits>
                                         <limit>

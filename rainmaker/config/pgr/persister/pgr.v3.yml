@@ -51,9 +51,9 @@ serviceMaps:
        - jsonPath: $.services.*.source
 
        - jsonPath: $.services.*.expectedTime
-       
+
        - jsonPath: $.services.*.rating
-              
+
        - jsonPath: $.services.*.feedback
 
        - jsonPath: $.services.*.auditDetails.createdBy
@@ -89,7 +89,7 @@ serviceMaps:
        - jsonPath: $.actionInfo.*.tenantId
 
        - jsonPath: $.actionInfo.*.businessKey
-       
+
  - version: 1.0
    name: Asset
    description: Persists asset details in eg_asset table
@@ -103,7 +103,7 @@ serviceMaps:
       jsonMaps:
 
        - jsonPath: $.services.*.serviceCode
-       
+
        - jsonPath: $.services.*.description
 
        - jsonPath: $.services.*.lat
@@ -135,11 +135,11 @@ serviceMaps:
        - jsonPath: $.services.*.source
 
        - jsonPath: $.services.*.expectedTime
-       
+
        - jsonPath: $.services.*.feedback
-       
+
        - jsonPath: $.services.*.rating
-       
+
        - jsonPath: $.services.*.auditDetails.lastModifiedBy
 
        - jsonPath: $.services.*.auditDetails.lastModifiedTime
@@ -173,5 +173,3 @@ serviceMaps:
        - jsonPath: $.actionInfo.*.tenantId
 
        - jsonPath: $.actionInfo.*.businessKey
-
-

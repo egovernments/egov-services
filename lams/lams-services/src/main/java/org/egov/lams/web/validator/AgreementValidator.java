@@ -1,6 +1,7 @@
 package org.egov.lams.web.validator;
 
 import java.math.BigDecimal;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -48,6 +49,7 @@ public class AgreementValidator {
 	public static final String ERROR_MSG_UNDER_WORKFLOW = "Agreement is already under going in some workflow.";
 	public static final String ACTION_MODIFY ="Modify";
 	public static final String SHOPPING_COMPLEX = "Shopping Complex";
+	private static final List<String> AUCTION_CATEGORIES = Arrays.asList("Market", "Fish Tanks", "Slaughter House", "Community Toilet Complex");
 	@Autowired
 	private AssetRepository assetService;
 
@@ -72,27 +74,29 @@ public class AgreementValidator {
 	public void validateCreate(AgreementRequest agreementRequest, Errors errors) {
 
 		Agreement agreement = agreementRequest.getAgreement();
-
+		Boolean allowedAssetCategory;
 		Double rent = agreement.getRent();
 		Double securityDeposit = agreement.getSecurityDeposit();
 		Date solvencyCertificateDate = agreement.getSolvencyCertificateDate();
 		Date bankGuaranteeDate = agreement.getBankGuaranteeDate();
 		Date expiryDate = agreementService.getExpiryDate(agreement);
 		Date currentDate = new Date();
-
 		String securityDepositFactor = getConfigurations(propertiesManager.getSecurityDepositFactor(),
 				agreement.getTenantId()).get(0);
-		if (securityDeposit < rent * Integer.valueOf(securityDepositFactor))
+		allowedAssetCategory = isValidAuctionAssetCategory(agreement);
+         
+		if (securityDeposit < rent * Integer.valueOf(securityDepositFactor) && !allowedAssetCategory){
 			errors.rejectValue("Agreement.securityDeposit", "",
-					"security deposit value should be greater than or equal to thrice rent value");
-		if (Source.SYSTEM.equals(agreement.getSource())) {
+					"security deposit value should be greater than or equal to thrice rent value");}
+		 if (Source.SYSTEM.equals(agreement.getSource())) {
 			if (solvencyCertificateDate.compareTo(new Date()) >= 0)
 			errors.rejectValue("Agreement.solvencyCertificateDate", "",
 					"solvency certificate date should be lesser than current date");
 
-		if (bankGuaranteeDate.compareTo(new Date()) >= 0)
+			else if (bankGuaranteeDate.compareTo(new Date()) >= 0)
 			errors.rejectValue("Agreement.bankGuaranteeDate", "",
 						"bank Guarantee Date date should be lesser than current date");
+		validateWorkflowDetails(agreement.getWorkflowDetails(), errors);
 		}
 		else {
 
@@ -101,10 +105,13 @@ public class AgreementValidator {
 				errors.rejectValue("Agreement.CollectedSecurotyDeposit", "",
 						"collectedSecurityDeposit should not be greater than security deposit");
 
-			if (agreement.getCollectedGoodWillAmount() != null
+			else if (agreement.getCollectedGoodWillAmount() != null
 					&& (agreement.getGoodWillAmount().compareTo(agreement.getCollectedGoodWillAmount()) < 0))
 				errors.rejectValue("Agreement.CollectedGoodWillAmount", "",
 						"CollectedGoodWillAmount should not be greater than GoodWillAmount");
+			else if (!allowedAssetCategory && StringUtils.isBlank(agreement.getOldAgreementNumber()))
+				errors.rejectValue("Agreement.oldAgreementNumber", "",
+						"Old agreement number is mandatory for Data Entry");
 
 		}
 		if(currentDate.after(expiryDate)){
@@ -113,12 +120,7 @@ public class AgreementValidator {
 		}
 		validateAsset(agreementRequest, errors);
 		validateAllottee(agreementRequest, errors);
-		if (agreement.getSource().equals(Source.SYSTEM)) {
-			validateWorkflowDetails(agreement.getWorkflowDetails(), errors);
-		}
-		if(Source.DATA_ENTRY.equals(agreement.getSource()) && StringUtils.isBlank(agreement.getOldAgreementNumber()))
-			errors.rejectValue("Agreement.oldAgreementNumber", "",
-					"Old agreement number is mandatory for Data Entry");
+				
 	}
 
 	public void validateModifiedData(AgreementRequest agreementRequest, Errors errors) {
@@ -127,15 +129,15 @@ public class AgreementValidator {
 		Date expiryDate = agreementService.getExpiryDate(agreement);
 		Date currentDate = new Date();
 		if (agreement.getCollectedSecurityDeposit() != null
-				&& (agreement.getSecurityDeposit().compareTo(agreement.getCollectedSecurityDeposit()) < 0))
+				&& (agreement.getSecurityDeposit().compareTo(agreement.getCollectedSecurityDeposit()) < 0)) {
 			errors.reject("Agreement.CollectedSecurotyDeposit",
 					"collectedSecurityDeposit should not be greater than security deposit");
 
-		if (agreement.getCollectedGoodWillAmount() != null
-				&& (agreement.getGoodWillAmount().compareTo(agreement.getCollectedGoodWillAmount()) < 0))
+		} else if (agreement.getCollectedGoodWillAmount() != null
+				&& (agreement.getGoodWillAmount().compareTo(agreement.getCollectedGoodWillAmount()) < 0)) {
 			errors.reject("Agreement.CollectedGoodWillAmount",
 					"CollectedGoodWillAmount should not be greater than GoodWillAmount");
-		if (currentDate.after(expiryDate)) {
+		} else if (currentDate.after(expiryDate)) {
 			errors.reject("Agreement.TimePeriod",
 					"Can not create history agreement,please change Timeperiod/CommencementDate");
 		}
@@ -396,6 +398,14 @@ public class AgreementValidator {
 		lamsConfigurationGetRequest.setTenantId(tenantId);
 		logger.info("the asset category names found ::: " + lamsConfigurationGetRequest);
 		return lamsConfigurationService.getLamsConfigurations(lamsConfigurationGetRequest).get(keyName);
+	}
+	
+	
+	private Boolean isValidAuctionAssetCategory(Agreement agreement) {
+		String assetCategory = agreement.getAsset().getCategory().getName();
+
+		return AUCTION_CATEGORIES.stream().anyMatch(category -> category.equalsIgnoreCase(assetCategory));
+
 	}
 
 	private Boolean checkCollection(List<DemandDetails> demandDetails, Date fromDate, Date toDate) {

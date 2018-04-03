@@ -55,12 +55,10 @@ public class MdmsService {
     public Optional<List<Geography>> fetchGeography(String tenantId, String filter, RequestInfo requestInfo) {
         Optional<JSONArray> geographiesCheck;
         List<Geography> geographies;
-        final String moduleName = BoundaryConstants.GEO_MODULE_NAME;
-        final String masterName = BoundaryConstants.GEO_MASTER_NAME;
 
         try {
             geographiesCheck = mdmsRepository.getMdmsDataByCriteria(tenantId, filter, requestInfo,
-                    moduleName, masterName);
+                    BoundaryConstants.GEO_MODULE_NAME, BoundaryConstants.GEO_MASTER_NAME);
         } catch (HttpClientErrorException e) {
             throw new ServiceCallException(e.getResponseBodyAsString());
         } catch (RestClientException e) {
@@ -93,12 +91,10 @@ public class MdmsService {
      */
     public Optional<Tenant> fetchTenant(String tenantId, String filter, RequestInfo requestInfo) {
         Optional<JSONArray> tenantCheck;
-        final String moduleName = BoundaryConstants.TENANT_MODULE_NAME;
-        final String masterName = BoundaryConstants.TENANT_MASTER_NAME;
 
         try {
             tenantCheck = mdmsRepository.getMdmsDataByCriteria(tenantId, filter, requestInfo,
-                    moduleName, masterName);
+                    BoundaryConstants.TENANT_MODULE_NAME, BoundaryConstants.TENANT_MASTER_NAME);
         } catch (HttpClientErrorException e) {
             throw new ServiceCallException(e.getResponseBodyAsString());
         } catch (RestClientException e) {
@@ -109,8 +105,9 @@ public class MdmsService {
             List<Tenant> tenants = OBJECT_MAPPER.convertValue(tenantCheck.get(), new
                     TypeReference<List<Tenant>>() {
                     });
-            return Optional.of(tenants.get(0));
-        } else
+            if (!tenants.isEmpty())
+                return Optional.of(tenants.get(0));
+        }
             return Optional.empty();
 
     }

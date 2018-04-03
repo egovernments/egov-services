@@ -26,7 +26,8 @@ class EmployeePromotion extends React.Component {
           workflowDetails: {
             assignee: ""
           },
-          tenantId: tenantId
+          tenantId: tenantId,
+          checkEmployeeExists:false
         },
         employee: {
           id: "",
@@ -351,6 +352,8 @@ class EmployeePromotion extends React.Component {
         tenantId,
         departmentId,
         designationId,
+        isPrimary:true,
+        active: true,
         asOnDate
       }, function(err, res) {
         if (res) {
@@ -368,7 +371,8 @@ class EmployeePromotion extends React.Component {
         tenantId,
         departmentId: departmentId,
         designationId: designationId,
-        asOnDate: effectiveFrom
+        asOnDate: effectiveFrom,
+        pageSize: 500
       }, function(err, res) {
         if (res) {
           _this.setState({

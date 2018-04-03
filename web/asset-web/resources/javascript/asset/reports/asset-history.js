@@ -169,7 +169,7 @@ class AssetHistory extends React.Component {
     commonApiPost("asset-services", "assets", "_search", { tenantId, isTransactionHistoryRequired:true, code:assetCode}, function(err, res) {
       let result = res && res.Assets[0] && res.Assets[0].transactionHistory || []
       self.setState({
-        grossValue : res && res.Assets[0] && res.Assets[0].grossValue || 0,
+        currentValue : res && res.Assets[0] && res.Assets[0].currentValue || 0,
         historyResult:result,
         showHistory : true,
         referredAssetCode:assetCode
@@ -203,13 +203,13 @@ class AssetHistory extends React.Component {
   }
 
   renderHistoryBody(){
-    let {historyResult, grossValue} = this.state;
+    let {historyResult, currentValue} = this.state;
     return historyResult && historyResult.map((history,idx)=>{
       return(
         <tr key={idx}>
           <td>{idx+1}</td>
           <td>{moment(history.transactionDate).format('DD/MM/YYYY')}</td>
-          <td>{ grossValue}</td>
+          <td>{currentValue === null ? 0 :currentValue}</td>
           <td>{history.transactionType}</td>
           <td>{history.transactionAmount}</td>
           <td>{history.valueAfterTransaction || 0}</td>
@@ -283,7 +283,7 @@ class AssetHistory extends React.Component {
                         <td>{getName(department,item.department.id)}</td>
                         <td><a href='javascript:;' onClick={(e)=>linkHistoryTable(item.code)}>{item.code}</a></td>
                         <td>{item.name}</td>
-                        <td>{item.grossValue || 0}</td>
+                        <td>{item.currentValue === null ? 0 : item.currentValue}</td>
                 </tr>);
         })
       }

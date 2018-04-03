@@ -28,7 +28,8 @@ class EmployeeTransfer extends React.Component {
           department: "",
           designation: ""
         },
-        tenantId: tenantId
+        tenantId: tenantId,
+        checkEmployeeExists:false
       },
       employee: {
         id: "",
@@ -65,61 +66,6 @@ class EmployeeTransfer extends React.Component {
 
   }
 
-  confirmEmployee(body) {
-    let userConfirm = confirm("Employee already exist in the given ULB. Do you want to continue?");
-    if (userConfirm) {
-      body.Movement.checkEmployeeExists = false;
-
-      $.ajax({
-        url: baseUrl + "/hr-employee-movement/movements/_create?tenantId=" + tenantId,
-        type: 'POST',
-        dataType: 'json',
-        data: JSON.stringify(body),
-        contentType: 'application/json',
-        headers: {
-          'auth-token': authToken
-        },
-        success: function (res) {
-          var employee, designation;
-
-          var asOnDate = new Date();
-          var dd = asOnDate.getDate();
-          var mm = asOnDate.getMonth() + 1;
-          var yyyy = asOnDate.getFullYear();
-
-          asOnDate = (dd < 10 ? '0' + dd : dd) + '/' + (mm < 10 ? '0' + mm : mm) + '/' + yyyy;
-
-          commonApiPost("hr-employee", "employees", "_search", {
-            "positionId": movement.workflowDetails.assignee,
-            tenantId,
-            asOnDate
-          }, function (err, res) {
-            if (res && res.Employee && res.Employee[0])
-              employee = res.Employee[0];
-
-            employee.assignments.forEach(function (item) {
-              if (item.isPrimary)
-                designation = item.designation;
-            });
-            var ownerDetails = employee.name + " - " + employee.code + " - " + getNameById(_this.state.designationList, designation);
-
-            window.location.href = `app/hr/movements/ack-page.html?type=TransferApply&owner=${ownerDetails}`;
-          });
-        },
-        error: function (err) {
-          if (err["responseJSON"].message)
-            showError(err["responseJSON"].message);
-          else if (err["responseJSON"].Movement[0] && err["responseJSON"].Movement[0].errorMsg) {
-            showError(err["responseJSON"].Movement[0].errorMsg)
-          } else {
-            showError("Something went wrong. Please contact Administrator");
-          }
-        }
-
-      });
-
-    }
-  }
 
   addOrUpdate(e) {
 
@@ -174,9 +120,6 @@ class EmployeeTransfer extends React.Component {
                 },
                 success: function (res) {
 
-                  if (res.Movement[0].checkEmployeeExists) {
-                    this.confirmEmployee(body);
-                  }
                   var employee, designation;
 
                   var asOnDate = new Date();
@@ -248,9 +191,7 @@ class EmployeeTransfer extends React.Component {
           'auth-token': authToken
         },
         success: function (res) {
-          if (res.Movement[0].checkEmployeeExists) {
-            this.confirmEmployee(body);
-          }
+
           var employee, designation;
 
           var asOnDate = new Date();
@@ -463,6 +404,7 @@ class EmployeeTransfer extends React.Component {
       departmentId,
       designationId,
       asOnDate,
+      isPrimary:true,
       active: true
     }, function (err, res) {
       if (res) {
@@ -598,6 +540,18 @@ class EmployeeTransfer extends React.Component {
         break;
       case "transferedLocation":
         _this.getUlbDetails(e.target.value);
+        break;
+
+      case "transferType":
+        if (e.target.value == "TRANSFER_WITHIN_DEPARTMENT_OR_CORPORATION_OR_ULB") {
+          let ulbDepartmentList = _this.state.departmentList;
+          let ulbDesignationList = _this.state.designationList;
+          _this.setState({
+            ..._this.state,
+            ulbDepartmentList,
+            ulbDesignationList
+          })
+        }
         break;
 
     }

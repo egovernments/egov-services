@@ -77,12 +77,12 @@ public class UserRepository {
 		return entityUser;
 	}
 	
-	public User findByUsername(String userName) {
+	public User findByUsernameAndTenantId(String userName,String tenantId) {
 		Map<String, Object> userInputs = new HashMap<String, Object>();
 		userInputs.put("userName", userName);
 		User entityUser = null;
 		UserRowMapper userRowMapper = new UserRowMapper();
-		namedParameterJdbcTemplate.query(userTypeQueryBuilder.getUserByUserName(), userInputs,
+		namedParameterJdbcTemplate.query(userTypeQueryBuilder.getUserByUserNameAndTenantId(tenantId), userInputs,
 				userRowMapper);
 		List<User> userList = userRowMapper.userList;
 		if (userList != null && !userList.isEmpty()) {

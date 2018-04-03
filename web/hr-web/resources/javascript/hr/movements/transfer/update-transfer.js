@@ -1,3 +1,38 @@
+function confirmEmployee(body) {
+  let userConfirm = confirm("Employee already exist in the given ULB. Do you want to continue?");
+  console.log("userConfirm: ", userConfirm);
+  if (userConfirm) {
+    console.log(body.Movement);
+    body.Movement[0].checkEmployeeExists = false;
+
+    $.ajax({
+      url: baseUrl + "/hr-employee-movement/movements/" + body.Movement[0].id + "/" + "_update?tenantId=" + tenantId,
+      type: 'POST',
+      dataType: 'json',
+      data: JSON.stringify(body),
+      contentType: 'application/json',
+      headers: {
+        'auth-token': authToken
+      },
+      success: function (res) {
+        window.location.href = `app/hr/movements/ack-page.html?type=TransferApprove`;
+      },
+      error: function (err) {
+        if (err["responseJSON"].message)
+          showError(err["responseJSON"].message);
+        else if (err["responseJSON"].Movement[0] && err["responseJSON"].Movement[0].errorMsg) {
+          showError(err["responseJSON"].Movement[0].errorMsg)
+        } else {
+          showError("Something went wrong. Please contact Administrator");
+        }
+      }
+    });
+
+  }else{
+    return userConfirm;
+  }
+}
+
 class UpdateMovement extends React.Component {
   constructor(props) {
     super(props);
@@ -27,7 +62,8 @@ class UpdateMovement extends React.Component {
           department: "",
           designation: ""
         },
-        tenantId: tenantId
+        tenantId: tenantId,
+        checkEmployeeExists: false
       },
       employee: {
         id: "",
@@ -140,6 +176,7 @@ class UpdateMovement extends React.Component {
             transferWithPromotion = true;
           }
 
+            Movement.checkEmployeeExists = false;
 
           if (!Movement.workflowDetails) {
             Movement.workflowDetails = {
@@ -214,9 +251,6 @@ class UpdateMovement extends React.Component {
 
 
 
-
-
-
     $('#effectiveFrom').datepicker({
       format: 'dd/mm/yyyy',
       startDate: new Date(),
@@ -258,7 +292,7 @@ class UpdateMovement extends React.Component {
     var _this = this;
     var asOnDate = new Date();
     var dd = asOnDate.getDate();
-    var mm = asOnDate.getMonth() + 1; //January is 0!
+    var mm = asOnDate.getMonth() + 1;
     var yyyy = asOnDate.getFullYear();
 
     if (dd < 10) {
@@ -275,6 +309,7 @@ class UpdateMovement extends React.Component {
         tenantId,
         departmentId,
         designationId,
+        isPrimary:true,
         asOnDate,
         active: true
       }, function (err, res) {
@@ -408,6 +443,18 @@ class UpdateMovement extends React.Component {
         _this.getUlbDetails(e.target.value);
         break;
 
+      case "transferType":
+        if (e.target.value == "TRANSFER_WITHIN_DEPARTMENT_OR_CORPORATION_OR_ULB") {
+          let ulbDepartmentList = _this.state.departmentList;
+          let ulbDesignationList = _this.state.designationList;
+          _this.setState({
+            ..._this.state,
+            ulbDepartmentList,
+            ulbDesignationList
+          })
+        }
+        break;
+
     }
 
 
@@ -526,61 +573,6 @@ class UpdateMovement extends React.Component {
     open(location, '_self').close();
   }
 
-  confirmEmployee(body) {
-    let userConfirm = confirm("Employee already exist in the given ULB. Do you want to continue?");
-    if (userConfirm) {
-      body.Movement.checkEmployeeExists = false;
-
-      $.ajax({
-        url: baseUrl + "/hr-employee-movement/movements/_create?tenantId=" + tenantId,
-        type: 'POST',
-        dataType: 'json',
-        data: JSON.stringify(body),
-        contentType: 'application/json',
-        headers: {
-          'auth-token': authToken
-        },
-        success: function (res) {
-          var employee, designation;
-
-          var asOnDate = new Date();
-          var dd = asOnDate.getDate();
-          var mm = asOnDate.getMonth() + 1;
-          var yyyy = asOnDate.getFullYear();
-
-          asOnDate = (dd < 10 ? '0' + dd : dd) + '/' + (mm < 10 ? '0' + mm : mm) + '/' + yyyy;
-
-          commonApiPost("hr-employee", "employees", "_search", {
-            "positionId": movement.workflowDetails.assignee,
-            tenantId,
-            asOnDate
-          }, function (err, res) {
-            if (res && res.Employee && res.Employee[0])
-              employee = res.Employee[0];
-
-            employee.assignments.forEach(function (item) {
-              if (item.isPrimary)
-                designation = item.designation;
-            });
-            var ownerDetails = employee.name + " - " + employee.code + " - " + getNameById(_this.state.designationList, designation);
-
-            window.location.href = `app/hr/movements/ack-page.html?type=TransferApply&owner=${ownerDetails}`;
-          });
-        },
-        error: function (err) {
-          if (err["responseJSON"].message)
-            showError(err["responseJSON"].message);
-          else if (err["responseJSON"].Movement[0] && err["responseJSON"].Movement[0].errorMsg) {
-            showError(err["responseJSON"].Movement[0].errorMsg)
-          } else {
-            showError("Something went wrong. Please contact Administrator");
-          }
-        }
-
-      });
-
-    }
-  }
 
   handleProcess(e) {
     e.preventDefault();
@@ -589,11 +581,14 @@ class UpdateMovement extends React.Component {
       $('#department, #designation, #assignee').prop('required', false);
     }
 
+
+
     if ($('#update-transfer').valid()) {
       var ID = e.target.id, _this = this;
       var stateId = getUrlVars()["stateId"];
       var tempInfo = Object.assign({}, _this.state.movement);
-      tempInfo.workflowDetails = { "action": ID };
+      if(tempInfo.workflowDetails)
+      tempInfo.workflowDetails.action =  ID;
 
 
       if (_this.state.transferWithPromotion) {
@@ -603,6 +598,9 @@ class UpdateMovement extends React.Component {
         tempInfo.promotionBasis = { id: "" };
       }
 
+      if(ID === "Approve" && tempInfo.transferType != "TRANSFER_WITHIN_DEPARTMENT_OR_CORPORATION_OR_ULB"){
+        tempInfo.checkEmployeeExists = true;
+      }
 
 
       if (tempInfo.documents && tempInfo.documents.constructor == FileList) {
@@ -641,8 +639,11 @@ class UpdateMovement extends React.Component {
                   },
                   success: function (res) {
 
-                    if (res.Movement[0].checkEmployeeExists) {
-                      this.confirmEmployee(body);
+                    console.log( res.Movement[0].checkEmployeeExists);
+
+                    if (ID === "Approve" && res.Movement[0].checkEmployeeExists) {
+                      if(!confirmEmployee(body))
+                       return showError("You cancelled the application. Please select other options");
                     }
 
                     var employee, designation;
@@ -724,8 +725,12 @@ class UpdateMovement extends React.Component {
           },
           success: function (res) {
 
-            if (res.Movement[0].checkEmployeeExists) {
-              this.confirmEmployee(body);
+            console.log( res.Movement[0].checkEmployeeExists);
+
+            if (ID === "Approve" && res.Movement[0].checkEmployeeExists) {
+              if(!confirmEmployee(body))
+                return showError("You cancelled the application. Please select other options");
+
             }
 
             var employee, designation;
@@ -972,7 +977,7 @@ class UpdateMovement extends React.Component {
 
       for (var i = 0; i < _this.state.movement.documents.length; i++) {
         return (<tr>
-          <td>${i + 1}</td>
+          <td>{i + 1}</td>
           <td>Document</td>
           <td>
             <a href={window.location.origin + CONST_API_GET_FILE + _this.state.movement.documents[i]} target="_blank">
@@ -985,9 +990,9 @@ class UpdateMovement extends React.Component {
     }
 
     const renderFile = function (status) {
-      if (_this.state.movement && _this.state.movement.documents) {
+      if (_this.state.movement && _this.state.movement.documents && _this.state.movement.documents.length) {
         return (
-          <table className="table table-bordered" id="fileTable" style={{ "display": "none" }}>
+          <table className="table table-bordered" id="fileTable">
             <thead>
               <tr>
                 <th>Sr. No.</th>
@@ -1269,7 +1274,6 @@ class UpdateMovement extends React.Component {
                     <div className="styled-file">
                       <input id="documents" name="documents" type="file"
                         onChange={(e) => { handleChange(e, "documents") }} multiple />
-                      {renderFile()}
                     </div>
                   </div>
                 </div>
@@ -1294,6 +1298,7 @@ class UpdateMovement extends React.Component {
                 </div>
               </div>
             </div>
+            {renderFile()}
           </div>
 
 

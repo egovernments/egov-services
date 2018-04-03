@@ -3,7 +3,6 @@ package org.egov.persistence.repository;
 import java.util.List;
 import java.util.Map;
 
-import org.egov.domain.exception.UserNotFoundException;
 import org.egov.domain.model.User;
 import org.egov.persistence.contract.UserSearchRequest;
 import org.egov.persistence.contract.UserSearchResponseContent;
@@ -48,7 +47,7 @@ public class UserRepository {
 				UserSearchResponseContent user = mapper.convertValue(users.get(0), UserSearchResponseContent.class);
 				return new User(user.getId(), user.getEmailId(), user.getMobileNumber());
 			} else {
-				throw new UserNotFoundException();
+				return null;
 			}
 		} catch (Exception e) {
 			log.info("Excpetion WhileFetching User from user : " + e.getMessage());

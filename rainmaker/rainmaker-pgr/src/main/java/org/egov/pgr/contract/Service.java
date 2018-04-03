@@ -4,8 +4,11 @@ import java.util.Objects;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
+import org.hibernate.validator.constraints.Email;
+import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
@@ -53,6 +56,7 @@ public class Service   {
   private String addressId = null;
 
   @JsonProperty("email")
+  @Email
   private String email = null;
 
   @JsonProperty("deviceId")
@@ -68,6 +72,8 @@ public class Service   {
   private String lastName = null;
 
   @JsonProperty("phone")
+  @NotEmpty
+  @Pattern(regexp="(^$|[0-9]{10})")
   private String phone = null;
 
   @JsonProperty("attributes")
@@ -77,6 +83,11 @@ public class Service   {
    * The current status of the service request.
    */
   public enum StatusEnum {
+	  
+	OPEN("open"),
+	
+	ASSIGNED("assigned"),
+	
     NEW("New"),
     
     INPROGRESS("InProgress"),
@@ -85,7 +96,9 @@ public class Service   {
     
     CANCELLED("Cancelled"),
     
-    REJECTED("Rejected");
+    REJECTED("Rejected"),
+    
+    RESOLVED("Resolved");    
 
     private String value;
 
@@ -102,7 +115,7 @@ public class Service   {
     @JsonCreator
     public static StatusEnum fromValue(String text) {
       for (StatusEnum b : StatusEnum.values()) {
-        if (String.valueOf(b.value).equals(text)) {
+        if (String.valueOf(b.value).equalsIgnoreCase(text)) {
           return b;
         }
       }

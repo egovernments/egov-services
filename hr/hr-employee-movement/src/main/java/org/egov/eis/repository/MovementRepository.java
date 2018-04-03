@@ -129,13 +129,6 @@ public class MovementRepository {
 		final List<Object> preparedStatementValues = new ArrayList<>();
 		final String queryStr = movementQueryBuilder.getQuery(movementSearchRequest, preparedStatementValues,
 				requestInfo);
-		final List<Movement> movements = new ArrayList<>();
-		for (final Movement movement : movements) {
-			final List<Document> documents = documentsRepository.findByMovementId(movement.getId(),
-					movement.getTenantId());
-			for (final Document document : documents)
-				movement.getDocuments().add(document.getDocument());
-		}
 		return jdbcTemplate.query(queryStr, preparedStatementValues.toArray(), movementRowMapper);
 	}
 
@@ -447,7 +440,7 @@ public class MovementRepository {
 		movementSearchRequest.setTenantId(movement.getTenantId());
 		movementSearchRequest.setEmployeeId(movement.getEmployeeId());
 		movementSearchRequest.setTypeOfmovement(movement.getTypeOfMovement().toString());
-		final String queryStr = movementQueryBuilder.getQuery(movementSearchRequest, preparedStatementValues,
+		final String queryStr = movementQueryBuilder.getMovementExistQuery(movementSearchRequest, status, preparedStatementValues,
 				requestInfo);
 		return jdbcTemplate.query(queryStr, preparedStatementValues.toArray(), movementRowMapper);
 	}

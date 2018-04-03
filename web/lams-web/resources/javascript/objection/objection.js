@@ -192,6 +192,7 @@ class ObjectionAgreement extends React.Component {
                     type: 'POST',
                     dataType: 'json',
                     contentType: 'application/json',
+                    data: JSON.stringify({ RequestInfo: requestInfo }),
                     headers: {
                       'auth-token': authToken
                     },
@@ -249,6 +250,7 @@ class ObjectionAgreement extends React.Component {
             type: 'POST',
             dataType: 'json',
             contentType: 'application/json',
+            data: JSON.stringify({ RequestInfo: requestInfo }),
             headers: {
               'auth-token': authToken
             },

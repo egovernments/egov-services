@@ -26,6 +26,9 @@ public class PGRApp
 	
 	private static Map<String, List<String>> actionCurrentStatusMap = new HashMap<>();
 	
+	private static Map<String, List<String>> roleActionMap = new HashMap<>();
+
+	
 	@PostConstruct
 	private void prepareStatusMap(){
 		
@@ -36,6 +39,8 @@ public class PGRApp
 		map.put("reject","rejected");
 		map.put("resolve", "resolved");
 		map.put("reopen","open");
+		map.put("reassign", "assigned");
+
 		actionStatusMap = map;
 	}
 	
@@ -51,11 +56,27 @@ public class PGRApp
 		actionCurrentStatusMap = map;
 	}
 	
+	@PostConstruct
+	private void prepareRoleActionMap(){
+		
+		Map<String, List<String>> map = new HashMap<>();
+		map.put("EMPLOYEE", Arrays.asList("resolve", "requestforreassign"));
+		map.put("CITIZEN", Arrays.asList("open", "close", "reopen"));
+		map.put("GRO", Arrays.asList("assign", "reject", "reassign"));
+		map.put("DGRO", Arrays.asList("assign", "reject", "reassign"));
+		
+		roleActionMap = map;
+	}
+	
 	public static Map<String, String> getActionStatusMap(){
 		return actionStatusMap;
 	}
 	
 	public static Map<String, List<String>> getActionCurrentStatusMap(){
 		return actionCurrentStatusMap;
+	}
+	
+	public static Map<String, List<String>> getRoleActionMap(){
+		return roleActionMap;
 	}
 }

@@ -13,6 +13,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.request.Role;
 import org.egov.common.contract.request.User;
+import org.egov.pgr.PGRApp;
 import org.egov.pgr.contract.ActionInfo;
 import org.egov.pgr.contract.Service;
 import org.egov.pgr.contract.ServiceReqSearchCriteria;
@@ -76,9 +77,9 @@ public class PGRRequestValidator {
 		userInfoCheck(serviceRequest, errorMap);
 		overRideCitizenAccountId(serviceRequest);
 		validateAssignments(serviceRequest, errorMap);
+		validateAction(serviceRequest, errorMap);
 		
-		// TODO remove the accid field from persiter and remove this method following that action FIXME
-
+		
 		ServiceReqSearchCriteria serviceReqSearchCriteria = ServiceReqSearchCriteria.builder()
 				.tenantId(serviceRequest.getServices().get(0).getTenantId()).serviceRequestId(serviceRequest
 						.getServices().stream().map(Service::getServiceRequestId).collect(Collectors.toList()))
@@ -122,25 +123,22 @@ public class PGRRequestValidator {
 	}
 
 	public void userInfoCheck(ServiceRequest serviceRequest, Map<String, String> errorMap) {
+		log.info("Validating userInfo......."+serviceRequest.getRequestInfo().getUserInfo());
 
 		if (null == serviceRequest.getRequestInfo()) {
 			errorMap.put("EG_PGR_REQUESTINFO", "Request info is mandatory for serviceRequest");
-			return;
-		}
-
-		if (null == serviceRequest.getRequestInfo().getUserInfo()) {
+			
+		}else if (null == serviceRequest.getRequestInfo().getUserInfo()) {
 			errorMap.put("EG_PGR_REQUESTINFO_USERINFO", "UserInfo info is mandatory for serviceRequest");
-			return;
-		}
-
-		if (CollectionUtils.isEmpty(serviceRequest.getRequestInfo().getUserInfo().getRoles())) {
+			
+		}else if (CollectionUtils.isEmpty(serviceRequest.getRequestInfo().getUserInfo().getRoles())) {
 			errorMap.put("EG_PGR_REQUESTINFO_USERINFO_ROLES", "Roles cannot be empty for serviceRequest");
-			return;
 		}
-
+		
 		if (!errorMap.isEmpty())
 			throw new CustomException(errorMap);
 	}
+	
 	
 	public void vaidateServiceCodes(ServiceRequest serviceRequest, Map<String, String> errorMap, List<String> serviceCodes) {
 
@@ -194,5 +192,30 @@ public class PGRRequestValidator {
 			return;
 		}
 
+	}
+	
+	public void validateAction(ServiceRequest serviceRequest, Map<String, String> errorMap) {
+		Map<String, List<String>> roleActionMap = PGRApp.getRoleActionMap();
+		final String errorCode = "EG_PGR_UPDATE_INVALID_ACTION";
+		List<String> actions = new ArrayList<>();
+		actions = roleActionMap.get(serviceRequest.getRequestInfo().getUserInfo().getRoles().get(0).getName().toUpperCase());
+		log.info("actions: "+actions);
+		if(null != actions && !actions.isEmpty()) {
+			List<ActionInfo> infos = serviceRequest.getActionInfo();
+			for (int i = 0; i <= infos.size() - 1; i++) {
+				ActionInfo info = infos.get(i);
+				if(null != info.getAction() && !info.getAction().isEmpty()) {
+					if(!actions.contains(info.getAction())) {
+						errorMap.put(errorCode, "Invalid Action: "+info.getAction()+" "
+								+ "for Role: "+serviceRequest.getRequestInfo().getUserInfo().getRoles().get(0).getName().toUpperCase());
+					}	
+				}
+			}
+		} else {
+			errorMap.put("401", "Invalid Role: "+serviceRequest.getRequestInfo().getUserInfo().getRoles().get(0).getName().toUpperCase());
+		}
+		
+		if (!errorMap.isEmpty())
+			throw new CustomException(errorMap);
 	}
 }

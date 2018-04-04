@@ -390,7 +390,7 @@ class UpdateLeave extends React.Component {
 
     var doc = new jsPDF();
 
-    let encashable = noticeData.leaveType.encashable;
+    let encashable = noticeData.encashable;
     if (encashable || encashable == "TRUE" || encashable == "true") {
 
       doc.setFont('times', 'normal');
@@ -410,7 +410,7 @@ class UpdateLeave extends React.Component {
       doc.text(35, 52, "Sub:");
       doc.setFontType("normal");
       doc.text(55, 52, doc.splitTextToSize('Establish -' + tenantId.split(".")[1].charAt(0).toUpperCase() + tenantId.split(".")[1].slice(1) + ' Muncipality/Municipal Corporation - '));
-      doc.text(55, 57, doc.splitTextToSize('Sri/Smt' + noticeData.name + ' - Saction of Earned Leave/HPL for period of (' + noticeData.totalWorkingDays + ')'));
+      doc.text(55, 57, doc.splitTextToSize('Sri/Smt' + noticeData.name + ' - Saction of ' + noticeData.leaveTypeName + ' for period of (' + noticeData.totalWorkingDays + ')'));
       doc.text(55, 62, doc.splitTextToSize('days on' + noticeData.leaveGround + ' grounds - Orders - Issued'));
 
       doc.setFontType("bold");
@@ -448,7 +448,7 @@ class UpdateLeave extends React.Component {
       doc.text(105, 20, "PROCEEDINGS OF THE COMMISSIONER", 'center');
       doc.text(105, 27, tenantId.split(".")[1].toUpperCase() + ' MUNICIPALITY/MUNICIPAL CORPORATION', 'center');
 
-      doc.text(15, 42, 'Roc.No. ' + + noticeData.applicationNumber + '/2018');
+      doc.text(15, 42, 'Roc.No. ' +  noticeData.applicationNumber + '/2018');
       doc.setLineWidth(0.5);
       doc.line(15, 43, 66, 43);
       doc.text(130, 42, 'Dt. ' + today);
@@ -459,7 +459,7 @@ class UpdateLeave extends React.Component {
       doc.text(35, 52, "Sub:");
       doc.setFontType("normal");
       doc.text(55, 52, doc.splitTextToSize('Establish -' + tenantId.split(".")[1].charAt(0).toUpperCase() + tenantId.split(".")[1].slice(1) + ' Muncipality/Municipal Corporation - '));
-      doc.text(55, 57, doc.splitTextToSize('Sri/Smt ' + noticeData.name + ' - Saction of Earned Leave/HPL for period of (' + noticeData.totalWorkingDays + ')'));
+      doc.text(55, 57, doc.splitTextToSize('Sri/Smt ' + noticeData.name + ' - Saction of ' + noticeData.leaveTypeName + ' for period of (' + noticeData.totalWorkingDays + ')'));
       doc.text(55, 62, doc.splitTextToSize('days on ' + noticeData.leaveGround + ' grounds - Orders - Issued'));
 
       doc.setFontType("bold");
@@ -719,6 +719,7 @@ class UpdateLeave extends React.Component {
 
           if (ID == "Approve") {
             tempInfo.name = _name;
+            tempInfo.leaveTypeName = getNameById(_this.state.leaveList, _this.state.leaveSet.leaveType.id);
             _this.printNotice(tempInfo);
             window.location.href = `app/hr/leavemaster/ack-page.html?type=${ID}&applicationNumber=${leaveNumber}`;
 

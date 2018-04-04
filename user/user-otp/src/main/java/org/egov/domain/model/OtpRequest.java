@@ -34,12 +34,16 @@ public class OtpRequest {
 
 	public boolean isMobileNumberNumeric() {
 		// TODO Auto-generated method stub
+		if(!(type!=null && type.toString().equalsIgnoreCase(OtpRequestType.PASSWORD_RESET.toString())))
 		return !StringUtils.isNumeric(mobileNumber);
+		return false;
 	}
 
 	public boolean isMobileNumberValidLength() {
 		// TODO Auto-generated method stub
+		if(!(type!=null && type.toString().equalsIgnoreCase(OtpRequestType.PASSWORD_RESET.toString())))
 		return !(mobileNumber != null && mobileNumber.matches("^[0-9]{10,13}$"));
+		return false;
 	}
     
 	public boolean isRegistrationRequestType() {

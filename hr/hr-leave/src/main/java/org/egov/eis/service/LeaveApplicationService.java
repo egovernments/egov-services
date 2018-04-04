@@ -542,6 +542,10 @@ public class LeaveApplicationService {
             leaveApplication.setStatus(hrStatusService
                     .getHRStatuses(LeaveStatus.RESUBMITTED.toString(), leaveApplication.getTenantId(), requestInfo)
                     .get(0).getId());
+        else if ("Forward".equalsIgnoreCase(workFlowAction))
+            leaveApplication.setStatus(hrStatusService
+                    .getHRStatuses(LeaveStatus.FORWARDED.toString(), leaveApplication.getTenantId(), requestInfo)
+                    .get(0).getId());
     }
 
     public LeaveApplication update(final LeaveApplicationSingleRequest leaveApplicationRequest) {

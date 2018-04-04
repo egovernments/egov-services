@@ -800,7 +800,7 @@ class UpdateMovement extends React.Component {
     }
 
     const renderFile = function (status) {
-      if (_this.state.movement && _this.state.movement.documents) {
+      if (_this.state.movement && _this.state.movement.documents && _this.state.movement.documents.length) {
         return (
           <table className="table table-bordered" id="fileTable">
             <thead>

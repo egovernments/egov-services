@@ -375,7 +375,17 @@ class ApplyLeave extends React.Component {
       else
         $('#totalWorkingDays').prop("disabled", true);
       let _this = this
-      let asOnDate = new Date().getDate() + "/" + (new Date().getMonth() + 1) + "/" + new Date().getFullYear();
+      var today = new Date();
+      var dd = today.getDate();
+      var mm = today.getMonth() + 1;
+      var yyyy = today.getFullYear();
+      if (dd < 10) {
+        dd = '0' + dd;
+      }
+      if (mm < 10) {
+        mm = '0' + mm;
+      }
+      var asOnDate = dd + '/' + mm + '/' + yyyy;
       let leaveType = this.state.leaveSet.leaveType.id;
       let employeeid = getUrlVars()["id"];
 
@@ -431,14 +441,14 @@ class ApplyLeave extends React.Component {
     e.preventDefault();
     var _this = this;
 
-    // if (_this.state.leaveSet.availableDays <= 0 && _this.state.leaveSet.availableDays == "") {
-    //   return (showError("You do not have leave for this leave type."));
-    // }
+    if (_this.state.leaveSet.availableDays <= 0 && _this.state.leaveSet.availableDays == "") {
+      return (showError("You do not have leave for this leave type."));
+    }
 
-    // let maxDays = getNameById(_this.state.leaveList, _this.state.leaveSet.leaveType.id, "maxDays");
-    // if (maxDays < _this.state.leaveSet.leaveDays) {
-    //   return (showError("Number of Leaves applied exceeds Maximum leaves permitted"));
-    // }
+    let maxDays = getNameById(_this.state.leaveList, _this.state.leaveSet.leaveType.id, "maxDays");
+    if (maxDays && maxDays < _this.state.leaveSet.leaveDays) {
+      return (showError("Number of Leaves applied exceeds Maximum leaves permitted"));
+    }
 
 
     var employee;

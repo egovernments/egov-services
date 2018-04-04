@@ -785,17 +785,19 @@ class UpdateMovement extends React.Component {
     const renderFileTr = function (status) {
       var CONST_API_GET_FILE = "/filestore/v1/files/id?tenantId=" + tenantId + "&fileStoreId=";
 
-      for (var i = 0; i < _this.state.movement.documents.length; i++) {
-        return (<tr>
-          <td>{i + 1}</td>
-          <td>Document</td>
-          <td>
-            <a href={window.location.origin + CONST_API_GET_FILE + _this.state.movement.documents[i]} target="_blank">
-              Download
-                          </a>
-          </td>
-        </tr>);
-      }
+      return _this.state.movement.documents.map(function (file, ind) {
+        return (
+            <tr key={ind}>
+                <td>{ind + 1}</td>
+                <td>{"Document "+ (ind + 1)}</td>
+                <td>
+                    <a href={window.location.origin + CONST_API_GET_FILE + file} target="_blank">
+                        Download
+              </a>
+                </td>
+            </tr>
+        )
+    })
 
     }
 

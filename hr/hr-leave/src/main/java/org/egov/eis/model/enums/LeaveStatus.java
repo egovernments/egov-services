@@ -45,7 +45,7 @@ import com.fasterxml.jackson.annotation.JsonValue;
 import org.apache.commons.lang3.StringUtils;
 
 public enum LeaveStatus {
-	APPLIED("APPLIED"), APPROVED("APPROVED"), REJECTED("REJECTED"), CANCELLED("CANCELLED"), RESUBMITTED("RESUBMITTED");
+	APPLIED("APPLIED"), APPROVED("APPROVED"), REJECTED("REJECTED"), CANCELLED("CANCELLED"), RESUBMITTED("RESUBMITTED"), FORWARDED("FORWARDED");
 
 	private String value;
 

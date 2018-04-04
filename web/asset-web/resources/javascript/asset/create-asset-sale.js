@@ -152,7 +152,7 @@ class Sale extends React.Component {
       if (res && res["Assets"] && res["Assets"][0]) {
         checkCountAndCall("assetSet", res["Assets"] && res["Assets"][0] ? res["Assets"][0] : {});
         commonApiPost("asset-services", "assets", "currentvalue/_search", { tenantId, assetIds: res["Assets"][0].id }, function (er, res) {
-          if (res && res.AssetCurrentValues) {
+          if (res && res.AssetCurrentValues && res["AssetCurrentValues"][0]) {
             _this.setState({
               disposal: {
                   ..._this.state.disposal,
@@ -481,7 +481,7 @@ class Sale extends React.Component {
               <div className="col-sm-6">
                 <div className="row">
                   <div className="col-sm-6 label-text">
-                    <label>Asset Sale Account Code <span>*</span></label>
+                    <label>Asset Sale/Disposal Account Code <span>*</span></label>
                   </div>
                   <div className="col-sm-6" style={{ display: self.state.readOnly ? 'none' : 'block' }}>
                     <div>
@@ -633,7 +633,7 @@ class Sale extends React.Component {
               <div className="col-sm-6">
                 <div className="row">
                   <div className="col-sm-6 label-text">
-                    <label>Asset Sale Account Code <span>*</span></label>
+                    <label>Asset Sale/Disposal Account Code <span>*</span></label>
                   </div>
                   <div className="col-sm-6" style={{ display: self.state.readOnly ? 'none' : 'block' }}>
                     <div>
@@ -751,7 +751,7 @@ class Sale extends React.Component {
                 <div className="col-sm-6">
                   <div className="row">
                     <div className="col-sm-6 label-text">
-                      <label>Asset Category Type </label>
+                      <label>Asset Category Name </label>
                     </div>
                     <div className="col-sm-6 label-view-text">
                       <label>{assetSet.assetCategory && assetSet.assetCategory.name}</label>

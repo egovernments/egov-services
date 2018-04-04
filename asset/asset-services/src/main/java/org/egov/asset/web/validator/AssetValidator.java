@@ -260,7 +260,7 @@ public class AssetValidator {
         if (!(TransactionType.REVALUATION.equals(transactionType) ||
                 TransactionType.DEPRECIATION.equals(transactionType)))
             throw new RuntimeException(
-                    "Without doing any Revaluation or Depreciation,its should not allow to Sale/Disposal an asset");
+                    "Without doing any Revaluation or Depreciation,system should not allow to Sale/Dispose an asset");
 
     }
 

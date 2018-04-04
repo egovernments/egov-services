@@ -48,11 +48,13 @@
 
 package org.egov.asset.service;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 import org.egov.asset.config.ApplicationProperties;
+import org.egov.asset.contract.AssetCurrentValueRequest;
 import org.egov.asset.contract.AssetRequest;
 import org.egov.asset.contract.DisposalRequest;
 import org.egov.asset.contract.DisposalResponse;
@@ -60,6 +62,7 @@ import org.egov.asset.contract.VoucherRequest;
 import org.egov.asset.model.Asset;
 import org.egov.asset.model.AssetCategory;
 import org.egov.asset.model.AssetCriteria;
+import org.egov.asset.model.AssetCurrentValue;
 import org.egov.asset.model.AssetStatus;
 import org.egov.asset.model.ChartOfAccountDetailContract;
 import org.egov.asset.model.Disposal;
@@ -115,6 +118,9 @@ public class DisposalService {
     @Autowired
     private ResponseInfoFactory responseInfoFactory;
 
+    @Autowired
+    private CurrentValueService currentValueService;
+
     public DisposalResponse search(final DisposalCriteria disposalCriteria, final RequestInfo requestInfo) {
         List<Disposal> disposals = null;
 
@@ -165,7 +171,19 @@ public class DisposalService {
         logAwareKafkaTemplate.send(applicationProperties.getCreateAssetDisposalTopicName(),
                 KafkaTopicName.SAVEDISPOSAL.toString(), disposalRequest);
 
-        final List<Disposal> disposals = new ArrayList<Disposal>();
+        final List<AssetCurrentValue> assetCurrentValues = new ArrayList<>();
+        final AssetCurrentValue assetCurrentValue = new AssetCurrentValue();
+        assetCurrentValue.setAssetId(disposal.getAssetId());
+        assetCurrentValue.setAssetTranType(disposal.getTransactionType());
+        assetCurrentValue.setCurrentAmount(disposal.getSaleValue() != null ? disposal.getSaleValue() : BigDecimal.ZERO);
+        assetCurrentValue.setTenantId(disposal.getTenantId());
+        assetCurrentValues.add(assetCurrentValue);
+        final AssetCurrentValueRequest assetCurrentValueRequest = new AssetCurrentValueRequest();
+        assetCurrentValueRequest.setRequestInfo(disposalRequest.getRequestInfo());
+        assetCurrentValueRequest.setAssetCurrentValues(assetCurrentValues);
+        currentValueService.createCurrentValueAsync(assetCurrentValueRequest);
+
+        final List<Disposal> disposals = new ArrayList<>();
         disposals.add(disposal);
         return getResponse(disposals, disposalRequest.getRequestInfo());
     }
@@ -192,7 +210,7 @@ public class DisposalService {
         log.debug("Voucher Create Account Code Details :: " + accountCodeDetails);
 
         final VoucherRequest voucherRequest = voucherService.createDisposalVoucherRequest(disposal, asset.getId(),
-                asset.getDepartment().getId(), accountCodeDetails, asset.getFunction(),headers);
+                asset.getDepartment().getId(), accountCodeDetails, asset.getFunction(), headers);
 
         log.debug("Voucher Request for Disposal :: " + voucherRequest);
 

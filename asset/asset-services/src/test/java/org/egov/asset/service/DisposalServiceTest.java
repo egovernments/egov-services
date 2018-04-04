@@ -151,6 +151,9 @@ public class DisposalServiceTest {
 
     @Mock
     private ResponseInfoFactory responseInfoFactory;
+    
+    @Mock
+    private CurrentValueService currentValueService;
 
     @Test
     public void testSearch() {

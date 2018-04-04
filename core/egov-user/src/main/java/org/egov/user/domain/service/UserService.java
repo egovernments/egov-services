@@ -130,6 +130,15 @@ public class UserService {
 		validateDuplicateUserName(user);
 		user.validateNewUser();
 		// validateOtp(user.getOtpValidationRequest());
+		if (user.isOtpValidationMandatory())
+			validateOtp(user);
+		user.setDefaultPasswordExpiry(defaultPasswordExpiryInDays);
+		user.setActive(true);
+
+		return persistNewUser(user);
+	}
+
+	private void validateOtp(User user) {
 		String tenantId = null;
 		if (user.getTenantId().contains("."))
 			tenantId = user.getTenantId().split("\\.")[0];
@@ -144,10 +153,6 @@ public class UserService {
 			System.out.println("message " + errorMessage);
 			throw new InvalidOtpException(errorMessage);
 		}
-		user.setDefaultPasswordExpiry(defaultPasswordExpiryInDays);
-		user.setActive(true);
-
-		return persistNewUser(user);
 	}
 
 	/**

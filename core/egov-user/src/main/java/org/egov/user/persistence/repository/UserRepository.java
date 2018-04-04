@@ -11,6 +11,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.egov.user.domain.exception.InvalidRoleCodeException;
+import org.egov.user.domain.exception.UserNotFoundException;
 import org.egov.user.domain.model.Address;
 import org.egov.user.domain.model.Role;
 import org.egov.user.domain.model.User;
@@ -473,8 +474,8 @@ public class UserRepository {
 
 		User oldUser = getUserByIdAndTenantId(user.getId(), user.getTenantId());
 		
-/*		if(oldUser ==null)
-			throw new UserNotFound*/
+		if(oldUser ==null)
+			throw new UserNotFoundException(null);
 
 		Map<String, Object> updateuserInputs = new HashMap<String, Object>();
 

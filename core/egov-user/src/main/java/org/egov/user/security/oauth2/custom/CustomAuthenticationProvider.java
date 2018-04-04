@@ -80,12 +80,10 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 
 		System.out.println("tenantId in authenticate------->" + user.getTenantId());
 
-		List<Role> roles = user.getRoles();
 		boolean isCitizen = false;
-		for (Role role : roles) {
-			if (role.getCode().toString().equals("CITIZEN"))
-				isCitizen = true;
-		}
+		if (user.getType() != null && user.getType().toString().equals("CITIZEN"))
+			isCitizen = true;
+
 		Boolean isPasswordMatch;
 		if (isCitizen) {
 			isPasswordMatch = isPasswordMatch(citizenLoginPasswordOtpEnabled, password, user);

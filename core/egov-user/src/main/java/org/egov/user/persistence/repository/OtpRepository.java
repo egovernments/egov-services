@@ -11,7 +11,12 @@ import org.springframework.stereotype.Repository;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import lombok.extern.slf4j.Slf4j;
+
 @Repository
+@Slf4j
 public class OtpRepository {
     private final RestTemplate restTemplate;
     private final String otpSearchEndpoint;
@@ -48,15 +53,17 @@ public class OtpRepository {
 	 */
 	public boolean validateOtp(OtpValidateRequest request) throws Exception{
 		// TODO Auto-generated method stub
+		ObjectMapper mapper = new ObjectMapper();
+		log.info("otpValidationRequest: "+mapper.writeValueAsString(request));
 		OtpResponse otpResponse = null;
 		try {
 		 otpResponse = restTemplate.postForObject(otpValidateEndpoint, request, OtpResponse.class);
 		}catch(HttpClientErrorException e){
-			System.out.println(" the body : "+ e.getResponseBodyAsString());
+			System.out.println("exception body: "+ e.getResponseBodyAsString());
 			throw new Exception(e.getResponseBodyAsString());
 		}
 		if(null!=otpResponse && null!=otpResponse.getOtp())
-		return otpResponse.getOtp().isValidationSuccessful();
+			return otpResponse.getOtp().isValidationSuccessful();
 		return false;
 	}
 }

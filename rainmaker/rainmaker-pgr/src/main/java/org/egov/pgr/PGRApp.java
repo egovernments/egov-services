@@ -54,6 +54,8 @@ public class PGRApp
 		map.put("resolve",Arrays.asList("assigned"));
 		map.put("reopen",Arrays.asList("rejected","resolved"));
 		map.put("reassign", Arrays.asList("open","assigned"));
+		map.put("requestforreassign", Arrays.asList("assigned"));
+
 		actionCurrentStatusMap = map;
 	}
 	

@@ -13,8 +13,8 @@ import org.egov.common.contract.request.RequestInfo;
 import org.egov.mdms.model.MdmsCriteriaReq;
 import org.egov.pgr.contract.EmailRequest;
 import org.egov.pgr.contract.SMSRequest;
-import org.egov.pgr.contract.Service;
 import org.egov.pgr.contract.ServiceRequest;
+import org.egov.pgr.model.Service;
 import org.egov.pgr.producer.PGRProducer;
 import org.egov.pgr.repository.ServiceRequestRepository;
 import org.egov.pgr.utils.PGRConstants;
@@ -202,7 +202,7 @@ public class PGRNotificationConsumer {
 		try {
 			Object result = serviceRequestRepository.fetchResult(uri, mdmsCriteriaReq);
 			log.info("service definition name result: "+result);
-			serviceTypes = (List<String>) JsonPath.read(result, PGRConstants.JSONPATH_SERVICE_CODES);
+			serviceTypes = JsonPath.read(result, PGRConstants.JSONPATH_SERVICE_CODES);
 			if(null == serviceTypes || serviceTypes.isEmpty())
 				return PGRConstants.DEFAULT_COMPLAINT_TYPE;
 		}catch(Exception e) {

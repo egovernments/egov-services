@@ -40,19 +40,13 @@
 
 package org.egov.eis.web.contract;
 
-import java.util.List;
-import java.util.Map;
-
-import org.egov.common.contract.response.ResponseInfo;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.*;
+import org.egov.common.contract.response.ResponseInfo;
+import org.egov.eis.model.CourtOrderType;
 
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import java.util.ArrayList;
+import java.util.List;
 
 @AllArgsConstructor
 @EqualsAndHashCode
@@ -66,6 +60,5 @@ public class CourtOrderTypeResponse {
     private ResponseInfo responseInfo;
 
     @JsonProperty("CourtOrderType")
-    private List<Map<String, String>> courtOrderType;
-
+    private List<CourtOrderType> courtOrderType = new ArrayList<>();
 }

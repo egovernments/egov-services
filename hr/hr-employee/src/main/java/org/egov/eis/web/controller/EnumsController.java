@@ -40,22 +40,13 @@
 
 package org.egov.eis.web.controller;
 
-import java.util.List;
-import java.util.Map;
-
-import javax.validation.Valid;
-
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ResponseInfo;
 import org.egov.eis.model.enums.BloodGroup;
-import org.egov.eis.model.enums.CourtOrderType;
 import org.egov.eis.model.enums.DisciplinaryActions;
-import org.egov.eis.model.enums.DisciplinaryAuthority;
 import org.egov.eis.model.enums.MaritalStatus;
 import org.egov.eis.web.contract.BloodGroupResponse;
-import org.egov.eis.web.contract.CourtOrderTypeResponse;
 import org.egov.eis.web.contract.DisciplinaryActionsResponse;
-import org.egov.eis.web.contract.DisciplinaryAuthorityResponse;
 import org.egov.eis.web.contract.MaritalStatusResponse;
 import org.egov.eis.web.contract.RequestInfoWrapper;
 import org.egov.eis.web.contract.factory.ResponseInfoFactory;
@@ -66,11 +57,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+
+import javax.validation.Valid;
+import java.util.List;
+import java.util.Map;
 
 @RestController
 public class EnumsController {
@@ -93,7 +87,7 @@ public class EnumsController {
     @PostMapping("/bloodgroups/_search")
     @ResponseBody
     public ResponseEntity<?> searchBloodGroup(@RequestBody @Valid final RequestInfoWrapper requestInfoWrapper,
-            final BindingResult bindingResult) {
+                                              final BindingResult bindingResult) {
         final RequestInfo requestInfo = requestInfoWrapper.getRequestInfo();
 
         final ResponseEntity<?> errorResponseEntity = requestValidator.validateSearchRequest(requestInfo, null,
@@ -119,7 +113,7 @@ public class EnumsController {
     @PostMapping("/maritalstatuses/_search")
     @ResponseBody
     public ResponseEntity<?> searchMaritalStatus(@RequestBody @Valid final RequestInfoWrapper requestInfoWrapper,
-            final BindingResult bindingResult) {
+                                                 final BindingResult bindingResult) {
         final RequestInfo requestInfo = requestInfoWrapper.getRequestInfo();
 
         final ResponseEntity<?> errorResponseEntity = requestValidator.validateSearchRequest(requestInfo, null,
@@ -147,7 +141,7 @@ public class EnumsController {
     @PostMapping("/disciplinaryactions/_search")
     @ResponseBody
     public ResponseEntity<?> searchDisciplinaryActions(@RequestBody @Valid final RequestInfoWrapper requestInfoWrapper,
-            final BindingResult bindingResult) {
+                                                       final BindingResult bindingResult) {
         final RequestInfo requestInfo = requestInfoWrapper.getRequestInfo();
 
         final ResponseEntity<?> errorResponseEntity = requestValidator.validateSearchRequest(requestInfo, null,
@@ -164,33 +158,6 @@ public class EnumsController {
     }
 
     /**
-     * Maps Post Requests for _search & returns ResponseEntity of either CourtOrderTypeResponse type or ErrorResponse type
-     *
-     * @param requestInfoWrapper
-     * @param bindingResult
-     * @return ResponseEntity<?>
-     */
-
-    @PostMapping("/courtordertype/_search")
-    @ResponseBody
-    public ResponseEntity<?> searchCourtOrderType(@RequestBody @Valid final RequestInfoWrapper requestInfoWrapper,
-            final BindingResult bindingResult) {
-        final RequestInfo requestInfo = requestInfoWrapper.getRequestInfo();
-
-        final ResponseEntity<?> errorResponseEntity = requestValidator.validateSearchRequest(requestInfo, null,
-                bindingResult);
-
-        if (errorResponseEntity != null)
-            return errorResponseEntity;
-
-        // Call service
-        final List<Map<String, String>> courtOrderTypes = CourtOrderType.getCourtOrderTypes();
-        LOGGER.debug("courtOrderTypes : " + courtOrderTypes);
-
-        return getSuccessResponseForCourtOrderType(courtOrderTypes, requestInfo);
-    }
-
-    /**
      * Populate BloodGroupResponse object & returns ResponseEntity of type BloodGroupResponse containing ResponseInfo & List of
      * BloodGroup
      *
@@ -199,7 +166,7 @@ public class EnumsController {
      * @return ResponseEntity<?>
      */
     private ResponseEntity<?> getSuccessResponseForSearchBloodGroup(final List<Map<String, String>> bloodGroups,
-            final RequestInfo requestInfo) {
+                                                                    final RequestInfo requestInfo) {
         final BloodGroupResponse bloodGroupResponse = new BloodGroupResponse();
         bloodGroupResponse.setBloodGroup(bloodGroups);
         final ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
@@ -217,7 +184,7 @@ public class EnumsController {
      * @return ResponseEntity<?>
      */
     private ResponseEntity<?> getSuccessResponseForSearchMaritalStatus(final List<String> maritalStatuses,
-            final RequestInfo requestInfo) {
+                                                                       final RequestInfo requestInfo) {
         final MaritalStatusResponse maritalStatusResponse = new MaritalStatusResponse();
         maritalStatusResponse.setMaritalStatus(maritalStatuses);
         final ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
@@ -236,7 +203,7 @@ public class EnumsController {
      */
 
     private ResponseEntity<?> getSuccessResponseForDisciplinaryActions(final List<Map<String, String>> disciplinaryActions,
-            final RequestInfo requestInfo) {
+                                                                       final RequestInfo requestInfo) {
         final DisciplinaryActionsResponse disciplinaryActionsResponse = new DisciplinaryActionsResponse();
         disciplinaryActionsResponse.setDisciplinaryActions(disciplinaryActions);
         final ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
@@ -245,58 +212,4 @@ public class EnumsController {
         return new ResponseEntity<DisciplinaryActionsResponse>(disciplinaryActionsResponse, HttpStatus.OK);
     }
 
-    /**
-     * Populate CourtOrderTypeResponse object & returns ResponseEntity of type CourtOrderTypeResponse containing ResponseInfo &
-     * List of CourtOrderType
-     *
-     * @param courtOrderType
-     * @param requestInfo
-     * @return ResponseEntity<?>
-     */
-
-    private ResponseEntity<?> getSuccessResponseForCourtOrderType(final List<Map<String, String>> courtOrderTypes,
-            final RequestInfo requestInfo) {
-        final CourtOrderTypeResponse courtOrderRes = new CourtOrderTypeResponse();
-        courtOrderRes.setCourtOrderType(courtOrderTypes);
-        final ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
-        responseInfo.setStatus(HttpStatus.OK.toString());
-        courtOrderRes.setResponseInfo(responseInfo);
-        return new ResponseEntity<CourtOrderTypeResponse>(courtOrderRes, HttpStatus.OK);
-    }
-
-    @PostMapping("/disciplinaryauthority/_search")
-    @ResponseBody
-    public ResponseEntity<?> search(@ModelAttribute @Valid final DisciplinaryAuthorityResponse disciplinaryAuthorityResponse,
-            final BindingResult modelAttributeBindingResult, @RequestBody @Valid final RequestInfoWrapper requestInfoWrapper,
-            final BindingResult requestBodyBindingResult) {
-        final RequestInfo requestInfo = requestInfoWrapper.getRequestInfo();
-
-        final ResponseEntity<?> errorResponseEntity = requestValidator.validateSearchRequest(requestInfo, null,
-                requestBodyBindingResult);
-
-        if (errorResponseEntity != null)
-            return errorResponseEntity;
-        // Call service
-        final List<Map<String, String>> disciplinaryAuthorities = DisciplinaryAuthority.getDisciplinaryAuthority();
-
-        return getDisciplianryAuthorityResponse(disciplinaryAuthorities, requestInfo);
-    }
-
-    /**
-     * Populate DisciplinaryAuthorityResponse object & returns ResponseEntity of type DisciplinaryAuthorityResponse containing
-     * ResponseInfo & List of DisciplinaryAuthority
-     *
-     * @param DisciplinaryAuthorities
-     * @param requestInfo
-     * @return ResponseEntity<?>
-     */
-    private ResponseEntity<?> getDisciplianryAuthorityResponse(final List<Map<String, String>> disciplinaryAuthorities,
-            final RequestInfo requestInfo) {
-        final DisciplinaryAuthorityResponse disciplinaryAuthoritiesRes = new DisciplinaryAuthorityResponse();
-        disciplinaryAuthoritiesRes.setDisciplinaryAuthority(disciplinaryAuthorities);
-        final ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
-        responseInfo.setStatus(HttpStatus.OK.toString());
-        disciplinaryAuthoritiesRes.setResponseInfo(responseInfo);
-        return new ResponseEntity<DisciplinaryAuthorityResponse>(disciplinaryAuthoritiesRes, HttpStatus.OK);
-    }
 }

@@ -65,11 +65,13 @@ serviceMaps:
        - jsonPath: $.services.*.auditDetails.lastModifiedTime
 
 
-    - query: INSERT INTO eg_pgr_action(uuid, by, "when", status, comments, media, assignee, isinternal, tenantid, businesskey) VALUES ((SELECT md5(random()::text || clock_timestamp()::text)::uuid), ?, ?, ?, ?, ?, ?, ?, ?, ?);
+    - query: INSERT INTO eg_pgr_action(uuid, by, "when", status, comments, media, assignee, isinternal, tenantid, businesskey) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
 
       basePath: actionInfo.*
       jsonMaps:
 
+       - jsonPath: $.actionInfo.*.uuid
+       
        - jsonPath: $.actionInfo.*.by
 
        - jsonPath: $.actionInfo.*.when
@@ -149,11 +151,13 @@ serviceMaps:
        - jsonPath: $.services.*.serviceRequestId
 
 
-    - query: INSERT INTO eg_pgr_action(uuid, by, "when", status, comments, media, assignee, isinternal, tenantid, businesskey) VALUES ((SELECT md5(random()::text || clock_timestamp()::text)::uuid), ?, ?, ?, ?, ?, ?, ?, ?, ?);
+    - query: INSERT INTO eg_pgr_action(uuid, by, "when", status, comments, media, assignee, isinternal, tenantid, businesskey) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
 
       basePath: actionInfo.*
       jsonMaps:
 
+       - jsonPath: $.actionInfo.*.uuid
+       
        - jsonPath: $.actionInfo.*.by
 
        - jsonPath: $.actionInfo.*.when

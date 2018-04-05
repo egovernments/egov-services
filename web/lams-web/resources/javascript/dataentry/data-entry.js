@@ -1038,9 +1038,9 @@ $("#createAgreementForm").validate({
                         if(window.opener)
                             window.opener.location.reload();
                         if(create)
-                          window.location.href = "app/search-assets/create-agreement-ack.html?name=" + getNameById(employees, agreement["approverName"]) +"&asset=" + response.responseJSON["Agreements"][0]["asset"]["name"]+ "&ackNo=" + response.responseJSON["Agreements"][0]["agreementNumber"] +"&from=dataEntry";
+                          window.location.href = "app/search-assets/create-agreement-ack.html?name=" + getNameById(employees, agreement["approverName"]) +"&asset=" + response.responseJSON["Agreements"][0]["asset"]["name"]+ "&ackNo=" + response.responseJSON["Agreements"][0]["agreementNumber"] + "&status=" + response.responseJSON["Agreements"][0]["status"]+"&from=dataEntry";
                         else
-                          window.location.href = "app/search-assets/create-agreement-ack.html?name=" + getNameById(employees, agreement["approverName"]) + "&ackNo=" + response.responseJSON["Agreements"][0]["agreementNumber"] +"&from=dataEntry&action=modify";
+                          window.location.href = "app/search-assets/create-agreement-ack.html?name=" + getNameById(employees, agreement["approverName"]) + "&ackNo=" + response.responseJSON["Agreements"][0]["agreementNumber"]+"&status=" + response.responseJSON["Agreements"][0]["status"] +"&from=dataEntry&action=modify";
                     }
 
                 } else if(response["responseJSON"] && response["responseJSON"].Error) {

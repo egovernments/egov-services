@@ -2,6 +2,7 @@ package org.egov.pgr.service;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -97,7 +98,7 @@ public class GrievanceService {
 		List<Service> serviceReqs = request.getServices();
 		List<ActionInfo> actionInfos = request.getActionInfo();
 		if(null==actionInfos)
-			actionInfos = new ArrayList<>(serviceReqs.size());
+			actionInfos = new ArrayList<>(Arrays.asList(new ActionInfo[serviceReqs.size()]));
 		String tenantId = serviceReqs.get(0).getTenantId();
 		Integer servReqLen = serviceReqs.size();
 
@@ -127,8 +128,10 @@ public class GrievanceService {
 			actionInfo.setWhen(auditDetails.getCreatedTime());
 			actionInfo.setTenantId(tenantId);
 			actionInfo.setStatus(actionStatusMap.get(WorkFlowConfigs.ACTION_OPEN));
+			actionInfos.add(actionInfo);
 		}
-
+		request.setActionInfo(actionInfos);
+		
 		pGRProducer.push(saveTopic, request);
 		return getServiceResponse(request);
 	}
@@ -173,13 +176,14 @@ public class GrievanceService {
 				actionInfo.setTenantId(tenantId);
 				actionInfo.setStatus(actionInfo.getAction());
 				if (null != actionInfo.getAction() && actionStatusMap.get(actionInfo.getAction()) != null) {
-
-					if (!WorkFlowConfigs.ACTION_CLOSE.equals(actionInfo.getAction()))
+					System.err.println(" the is blaock : "+(WorkFlowConfigs.ACTION_CLOSE.equals(actionInfo.getAction()) && (null!=servReq.getFeedback()||null!=servReq.getRating())));
+					if (WorkFlowConfigs.ACTION_CLOSE.equals(actionInfo.getAction()) && (null!=servReq.getFeedback()||null!=servReq.getRating()))
 						addError(ErrorConstants.UPDATE_FEEDBACK_ERROR_MSG + actionInfo.getAction() + ", with service Id : "+servReq.getServiceRequestId(),
 								ErrorConstants.UPDATE_FEEDBACK_ERROR_KEY, errorMap);
 					if (isUpdateValid(requestInfo, actionInfo, actioncurrentStatusMap.get(actionInfo.getAction()))) {
 						String resultStatus = actionStatusMap.get(actionInfo.getAction());
 						actionInfo.setStatus(resultStatus);
+						servReq.setStatus(StatusEnum.valueOf(resultStatus));
 						servReq.setStatus(StatusEnum.fromValue(resultStatus));
 					} else {
 
@@ -192,10 +196,10 @@ public class GrievanceService {
 					String errorMsg = " The Given Action " + actionInfo.getAction() + " is invalid ";
 					addError(errorMsg, ErrorConstants.UPDATE_ERROR_KEY, errorMap);
 				}
-			} else {
+			}/* else {
 				addError(ErrorConstants.UPDATE_FEEDBACK_ERROR_MSG_NO_ACTION + ", with service Id : "
 						+ servReq.getServiceRequestId(), ErrorConstants.UPDATE_FEEDBACK_ERROR_KEY, errorMap);
-			}
+			}*/
 		}
 		
 		if(!errorMap.isEmpty()) {
@@ -267,17 +271,36 @@ public class GrievanceService {
 	 */
 	public ServiceResponse getServiceResponse(ServiceRequest serviceReqRequest) {
 
-		return ServiceResponse.builder()
-				.responseInfo(factory.createResponseInfoFromRequestInfo(serviceReqRequest.getRequestInfo(), true))
-				.services(serviceReqRequest.getServices()).build();
-	}
-	
-	
-	public List<ActionHistory> getHistory(String tenantId, List<String> serviceRequestIds){
-		
-		return null;
-	}
+		long startTime = new Date().getTime();
+		// for loop is to produce lag for fetching data
+		for (int i = 0; i <= 100000; i++) {
+			i++;
+			i--;
+		}
+		System.err.println(" the for loop runtime is : " + (new Date().getTime() - startTime));
+		ObjectMapper mapper = pGRUtils.getObjectMapper();
+		List<Service> services = serviceReqRequest.getServices();
+		String tenantId = services.get(0).getTenantId();
+		List<String> serviceRequestIds = services.parallelStream().map(Service::getServiceRequestId)
+				.collect(Collectors.toList());
 
+		ServiceReqSearchCriteria serviceReqSearchCriteria = ServiceReqSearchCriteria.builder()
+				.serviceRequestId(serviceRequestIds).tenantId(tenantId).build();
+
+		ServiceResponse serviceResponse = null;
+		int i = 3;
+		do {
+			Object response = getServiceRequestDetails(serviceReqRequest.getRequestInfo(), serviceReqSearchCriteria);
+			serviceResponse = mapper.convertValue(response, ServiceResponse.class);
+		} while (null == serviceResponse || CollectionUtils.isEmpty(serviceResponse.getActionHistory()) && i-- > 0);
+
+		if (CollectionUtils.isEmpty(serviceResponse.getActionHistory()))
+			return ServiceResponse.builder()
+					.responseInfo(factory.createResponseInfoFromRequestInfo(serviceReqRequest.getRequestInfo(), true))
+					.services(serviceReqRequest.getServices()).build();
+		return serviceResponse;
+	}
+	
 	/**
 	 * Method to return service requests along with details acc to V5 design
 	 * received from the repo to the controller in the reqd format

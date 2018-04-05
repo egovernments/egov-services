@@ -245,24 +245,10 @@ $(document).ready(function() {
       if(auctionAmt&&this.value === "ANNUAL"){
         //alert(auctionAmt)
         agreement["rent"] = auctionAmt;
-      }else if(allotmentDate && (this.value === "QUARTER" || this.value === "HALFYEAR")){
-        allotmentDate = moment(allotmentDate,"DD/MM/YYYY");
-        validatePaymentCycle(allotmentDate,this.value);
       }
     }
+
   })
-
-  $('#agreementDetailsBlockForAuctionAssets .datepicker').on('changeDate',function(){
-    var paymentCycle = $('#paymentCycle').val();
-    if(this.id==='commencementDate'){
-       if(paymentCycle){
-        allotmentDate = moment(this.value,"DD/MM/YYYY");
-        validatePaymentCycle(allotmentDate,paymentCycle);
-      }
-    }
-  })
-
-
 
   if (decodeURIComponent(getUrlVars()["type"]) != "Shopping Complex"){
     $("#natureOfAllotment option[value='DIRECT']").remove();
@@ -870,12 +856,8 @@ $(".datepicker").on("changeDate", function() {
 
     if(this.id ==='commencementDate'){
       var auctionAmt = $('#auctionAmount').val();
-      var paymentCycle = $('#paymentCycle').val();
         if(auctionAmt){
          var fromDate = moment(this.value,"DD/MM/YYYY");
-         if(paymentCycle){
-         validatePaymentCycle(fromDate,this.value);
-       }
          adjustSecurityDeposit(fromDate,auctionAmt);
     }
   }
@@ -908,42 +890,14 @@ function adjustSecurityDeposit(fromDate,auctionAmount){
   if(paymentCycle ==='ANNUAL'){
     agreement["rent"] = auctionAmt;
   }else if(paymentCycle ==='QUARTER'){
-    var noOfQuarters = totalMonths/3;
-      agreement["rent"] = Math.round(auctionAmt/noOfQuarters);
+    agreement["rent"] = Math.round(auctionAmt/4);
   }else if(paymentCycle ==='HALFYEAR'){
-    var noOfHalfs = totalMonths/6;
-    agreement["rent"] = Math.round(auctionAmt/noOfHalfs);
-
+    agreement["rent"] = Math.round(auctionAmt/2);
  }else{
-   agreement["rent"] = Math.round(monthlyRent);
+    agreement["rent"] = Math.round(monthlyRent);
  }
-  agreement["securityDeposit"] = Math.round(securityDeposit);
+    agreement["securityDeposit"] = Math.round(securityDeposit);
 
-}
-
-function validatePaymentCycle(fromDate,paymentCycle) {
-  var year = Number(fromDate.format('YYYY'));
-  var month = Number(fromDate.format('MM'));
-  if(month > 3){
-     year = year + 1;
-  }
-  var fisYear = new Date(year,2,31);
-  fisYear = moment(fisYear).format("DD/MM/YYYY");
-  let totalMonths = getAbsoulteMonths(moment(fisYear,"DD/MM/YYYY"))-getAbsoulteMonths(moment(fromDate),"DD/MM/YYYY");
-  totalMonths = totalMonths + 1;
-  if(paymentCycle==="QUARTER"){
-     if(totalMonths%3!=0){
-       alert('Allotment date is not falling in appropriate quarterly period,please change the allotmentdate/payment cycle ');
-       $('#commencementDate').val('');
-       return false;
-     }
-  }else if(paymentCycle==="HALFYEAR"){
-    if(totalMonths%6!=0){
-      alert('Allotment date is not falling in appropriate half year period,please change the allotment date/payment cycle ');
-      $('#commencementDate').val('');
-      return false;
-    }
-  }
 }
 
 

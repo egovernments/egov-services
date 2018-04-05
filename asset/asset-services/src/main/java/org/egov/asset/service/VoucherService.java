@@ -204,7 +204,7 @@ public class VoucherService {
             final Long accountId) {
         final String url = applicationProperties.getEgfMastersHost()
                 + applicationProperties.getEgfServiceChartOfAccountsDetailsSearchPath() + "?tenantId=" + tenantId
-                + "&id=" + accountId;
+                + "&chartOfAccount=" + accountId;
         log.debug("subledger details check URL :: " + url);
         log.debug("subledger details request info :: " + requestInfo);
         final ChartOfAccountDetailContractResponse coAccountDetailContractResponse = restTemplate.postForObject(url,

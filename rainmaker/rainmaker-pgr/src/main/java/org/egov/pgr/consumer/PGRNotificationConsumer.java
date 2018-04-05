@@ -11,10 +11,10 @@ import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.mdms.model.MdmsCriteriaReq;
-import org.egov.pgr.model.ActionInfo;
 import org.egov.pgr.contract.EmailRequest;
 import org.egov.pgr.contract.SMSRequest;
 import org.egov.pgr.contract.ServiceRequest;
+import org.egov.pgr.model.ActionInfo;
 import org.egov.pgr.model.Service;
 import org.egov.pgr.producer.PGRProducer;
 import org.egov.pgr.repository.ServiceRequestRepository;
@@ -50,10 +50,10 @@ public class PGRNotificationConsumer {
 	@Value("${text.for.subject.email.notif}")
 	private String subjectForEmail;
 	
-	@Value("${notification.sms.emabled}")
+	@Value("${notification.sms.enabled}")
 	private Boolean isSMSNotificationEnabled;
 	
-	@Value("${notification.email.emabled}")
+	@Value("${notification.email.enabled}")
 	private Boolean isEmailNotificationEnabled;
 	
 	@Value("${open.complaint.enabled}")

@@ -2,10 +2,10 @@ package org.egov.pgr.service;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.egov.common.contract.request.RequestInfo;
@@ -98,7 +98,7 @@ public class GrievanceService {
 		List<Service> serviceReqs = request.getServices();
 		List<ActionInfo> actionInfos = request.getActionInfo();
 		if(null==actionInfos)
-			actionInfos = new ArrayList<>(Arrays.asList(new ActionInfo[serviceReqs.size()]));
+			actionInfos = Arrays.asList(new ActionInfo[serviceReqs.size()]);
 		String tenantId = serviceReqs.get(0).getTenantId();
 		Integer servReqLen = serviceReqs.size();
 
@@ -113,8 +113,10 @@ public class GrievanceService {
 
 			Service servReq = serviceReqs.get(servReqCount);
 			ActionInfo actionInfo = actionInfos.get(servReqCount);
-			if (null == actionInfo)
+			if (null == actionInfo) {
 				actionInfo = new ActionInfo();
+				actionInfos.add(actionInfo);
+			}
 			String currentId = servReqIdList.get(servReqCount);
 			servReq.setAuditDetails(auditDetails);
 			servReq.setServiceRequestId(currentId);
@@ -123,12 +125,13 @@ public class GrievanceService {
 			servReq.setRating(null);
 			
 			// FIXME TODO business key should be module name and currentid in future
+			actionInfo.setUuid(UUID.randomUUID().toString());
 			actionInfo.setBusinessKey(currentId);
 			actionInfo.setBy(by);
 			actionInfo.setWhen(auditDetails.getCreatedTime());
 			actionInfo.setTenantId(tenantId);
 			actionInfo.setStatus(actionStatusMap.get(WorkFlowConfigs.ACTION_OPEN));
-			actionInfos.add(actionInfo);
+			
 		}
 		request.setActionInfo(actionInfos);
 		
@@ -170,6 +173,7 @@ public class GrievanceService {
 			log.debug(" the action info : " + actionInfo);
 			// FIXME TODO business key should be module name and currentid in future
 			if (null != actionInfo) {
+				actionInfo.setUuid(UUID.randomUUID().toString());
 				actionInfo.setBusinessKey(servReq.getServiceRequestId());
 				actionInfo.setBy(by);
 				actionInfo.setWhen(auditDetails.getCreatedTime());
@@ -271,13 +275,6 @@ public class GrievanceService {
 	 */
 	public ServiceResponse getServiceResponse(ServiceRequest serviceReqRequest) {
 
-		long startTime = new Date().getTime();
-		// for loop is to produce lag for fetching data
-		for (int i = 0; i <= 100000; i++) {
-			i++;
-			i--;
-		}
-		System.err.println(" the for loop runtime is : " + (new Date().getTime() - startTime));
 		ObjectMapper mapper = pGRUtils.getObjectMapper();
 		List<Service> services = serviceReqRequest.getServices();
 		String tenantId = services.get(0).getTenantId();
@@ -288,19 +285,39 @@ public class GrievanceService {
 				.serviceRequestId(serviceRequestIds).tenantId(tenantId).build();
 
 		ServiceResponse serviceResponse = null;
-		int i = 3;
-		do {
+		/*
+		 * 	for loop is to produce lag for fetching data.
+		 *  since there might be a lag in kafka and persiter to persist
+		 *  to get the best result we are inducing this lag
+		 */
+			for (int i = 0; i <= 100000; i++) {
+				i++;
+				i--;
+			}
 			Object response = getServiceRequestDetails(serviceReqRequest.getRequestInfo(), serviceReqSearchCriteria);
 			serviceResponse = mapper.convertValue(response, ServiceResponse.class);
-		} while (null == serviceResponse || CollectionUtils.isEmpty(serviceResponse.getActionHistory()) && i-- > 0);
 
 		if (CollectionUtils.isEmpty(serviceResponse.getActionHistory()))
 			return ServiceResponse.builder()
 					.responseInfo(factory.createResponseInfoFromRequestInfo(serviceReqRequest.getRequestInfo(), true))
-					.services(serviceReqRequest.getServices()).build();
+					.services(serviceReqRequest.getServices())
+					.actionHistory(convertActionInfosToHistorys(serviceReqRequest.getActionInfo())).build();
+		
 		return serviceResponse;
 	}
 	
+	private List<ActionHistory> convertActionInfosToHistorys(List<ActionInfo> actionInfos) {
+
+		List<ActionHistory> historys = new ArrayList<>();
+
+		actionInfos.forEach(a -> {
+			List<ActionInfo> infos = new ArrayList<>();
+			infos.add(a);
+			historys.add(new ActionHistory(infos));
+		});
+		return historys;
+	}
+
 	/**
 	 * Method to return service requests along with details acc to V5 design
 	 * received from the repo to the controller in the reqd format

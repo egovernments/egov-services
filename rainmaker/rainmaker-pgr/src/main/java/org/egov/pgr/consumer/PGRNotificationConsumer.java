@@ -11,7 +11,7 @@ import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.mdms.model.MdmsCriteriaReq;
-import org.egov.pgr.contract.ActionInfo;
+import org.egov.pgr.model.ActionInfo;
 import org.egov.pgr.contract.EmailRequest;
 import org.egov.pgr.contract.SMSRequest;
 import org.egov.pgr.contract.ServiceRequest;

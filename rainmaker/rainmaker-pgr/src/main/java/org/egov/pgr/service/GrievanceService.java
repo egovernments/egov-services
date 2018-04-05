@@ -273,8 +273,12 @@ public class GrievanceService {
 	 * @param serviceReqRequest
 	 * @return serviceReqResponse
 	 */
-	public ServiceResponse getServiceResponse(ServiceRequest serviceReqRequest) {
-
+	public ServiceResponse getServiceResponse(ServiceRequest serviceReqRequest) {		
+		// for loop is to produce lag for fetching data
+		for (int i = 0; i <= 100000; i++) {
+			i++;
+			i--;
+		}
 		ObjectMapper mapper = pGRUtils.getObjectMapper();
 		List<Service> services = serviceReqRequest.getServices();
 		String tenantId = services.get(0).getTenantId();

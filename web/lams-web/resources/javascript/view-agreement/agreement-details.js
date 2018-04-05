@@ -493,6 +493,106 @@ class AgreementDetails extends React.Component {
                 </div>
             );
         }
+        const renderMinimalAllottee = function () {
+            return (
+                <div className="form-section" id="allotteeDetailsBlock">
+                    <h3>Allottee Details </h3>
+                    <div className="form-section-inner">
+                        <div className="row">
+                            <div className="col-sm-6">
+                                <div className="row">
+                                    <div className="col-sm-6 label-text">
+                                        <label htmlFor="allotteeName"> Name :</label>
+                                    </div>
+                                    <div className="col-sm-6 label-view-text">
+                                        <label id="allotteeName" name="allotteeName">
+                                            {allottee.name ? allottee.name : "N/A"}
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="col-sm-6">
+                                <div className="row">
+                                    <div className="col-sm-6 label-text">
+                                        <label htmlFor="mobileNumber">Mobile Number:</label>
+                                    </div>
+                                    <div className="col-sm-6 label-view-text">
+                                        <label id="mobileNumber" name="mobileNumber">
+                                            {allottee.mobileNumber ? allottee.mobileNumber : "N/A"}
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="row">
+                            <div className="col-sm-6">
+                                <div className="row">
+                                    <div className="col-sm-6 label-text">
+                                        <label htmlFor="aadhaarNumber">AadhaarNumber :</label>
+                                    </div>
+                                    <div className="col-sm-6 label-view-text">
+                                        <label id="aadhaarNumber" name="aadhaarNumber">
+                                            {allottee.aadhaarNumber ? allottee.aadhaarNumber : "N/A"}
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="col-sm-6">
+                                <div className="row">
+                                    <div className="col-sm-6 label-text">
+                                        <label htmlFor="panNo">PAN No:</label>
+                                    </div>
+                                    <div className="col-sm-6 label-view-text">
+                                        <label id="panNo" name="panNo" >
+                                            {allottee.pan ? allottee.pan : "N/A"}   </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="row">
+                            <div className="col-sm-6">
+                                <div className="row">
+                                    <div className="col-sm-6 label-text">
+                                        <label htmlFor="emailId">EmailId :</label>
+                                    </div>
+                                    <div className="col-sm-6 label-view-text">
+                                        <label id="emailId" name="emailId">
+                                            {allottee.emailId ? allottee.emailId : "N/A"}
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="col-sm-6">
+                                <div className="row">
+                                    <div className="col-sm-6 label-text">
+                                        <label htmlFor="status">GSTIN :</label>
+                                    </div>
+                                    <div className="col-sm-6 label-view-text">
+                                        <label id="status" name="status">
+                                            {agreement.gstin ? agreement.gstin : "N/A"}
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="row">
+                        <div className="col-sm-6">
+                            <div className="row">
+                                <div className="col-sm-6 label-text">
+                                    <label htmlFor="address">Address :</label>
+                                </div>
+                                <div className="col-sm-6 label-view-text">
+                                    <label id="address" name="address">
+                                        {allottee.permanentAddress ? allottee.permanentAddress : "N/A"}
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+                </div>
+            );
+        }
 
         const renderAgreementDetails = function () {
             return (
@@ -1207,18 +1307,18 @@ class AgreementDetails extends React.Component {
 
                         <div className="row">
 
-                          <div className="col-sm-6">
-                              <div className="row">
-                                  <div className="col-sm-6 label-text">
-                                      <label htmlFor="status">GSTIN :</label>
-                                  </div>
-                                  <div className="col-sm-6 label-view-text">
-                                      <label id="status" name="status">
-                                          {agreement.gstin ? agreement.gstin : "N/A"}
-                                      </label>
-                                  </div>
-                              </div>
-                          </div>
+                        <div className="col-sm-6">
+                            <div className="row">
+                                <div className="col-sm-6 label-text">
+                                    <label htmlFor="status">Current Status :</label>
+                                </div>
+                                <div className="col-sm-6 label-view-text">
+                                    <label id="status" name="status">
+                                        {agreement.status ? agreement.status : "N/A"}
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
                           <div className="col-sm-6">
                               <div className="row">
                                   <div className="col-sm-6 label-text">
@@ -1234,18 +1334,6 @@ class AgreementDetails extends React.Component {
                         </div>
 
                         <div className="row">
-                          <div className="col-sm-6">
-                              <div className="row">
-                                  <div className="col-sm-6 label-text">
-                                      <label htmlFor="status">Current Status :</label>
-                                  </div>
-                                  <div className="col-sm-6 label-view-text">
-                                      <label id="status" name="status">
-                                          {agreement.status ? agreement.status : "N/A"}
-                                      </label>
-                                  </div>
-                              </div>
-                          </div>
                           <div className="col-sm-6">
                               <div className="row">
                                   <div className="col-sm-6 label-text">
@@ -1405,7 +1493,7 @@ class AgreementDetails extends React.Component {
           }else{
             return (<div>
               {renderAssetDetails()}
-              {renderAllottee()}
+              {renderMinimalAllottee()}
               {renderMinimalAgreementDetails()}
               {renderDocuments()}
             </div>)

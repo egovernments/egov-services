@@ -115,8 +115,8 @@ public class MovementController {
     /**
      * Maps Post Requests for _create & returns ResponseEntity of either MovementResponse type or ErrorResponse type
      *
-     * @param MovementRequest
-     * @param BindingResult
+     * @param movementRequest
+     * @param bindingResult
      * @return ResponseEntity<?>
      */
 
@@ -144,8 +144,7 @@ public class MovementController {
             return errorResponseEntity;
 
         Movement movement = movementRequest.getMovement().get(0);
-        if(movement.getCheckEmployeeExists()) {
-            movementService.checkEmployeeExists(movementRequest);
+        if(movement.getCheckEmployeeExists() && movementService.checkEmployeeExists(movementRequest)) {
             return movementService.getSuccessResponseForCreate(movementRequest.getMovement(), movementRequest.getRequestInfo());
         }
         logger.info("Employee exists:"+movement.getCheckEmployeeExists());
@@ -157,7 +156,7 @@ public class MovementController {
     /**
      * Populate Response object and return movementList
      *
-     * @param movementList
+     * @param movements
      * @return
      */
     private ResponseEntity<?> getSuccessResponse(final List<Movement> movements,
@@ -173,7 +172,7 @@ public class MovementController {
     /**
      * Validate MovementRequests object & returns ErrorResponseEntity if there are any errors or else returns null
      *
-     * @param MovementRequest
+     * @param movementRequest
      * @param bindingResult
      * @return ResponseEntity<?>
      */

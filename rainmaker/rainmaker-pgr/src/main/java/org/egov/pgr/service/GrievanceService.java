@@ -98,7 +98,7 @@ public class GrievanceService {
 		List<Service> serviceReqs = request.getServices();
 		List<ActionInfo> actionInfos = request.getActionInfo();
 		if(null==actionInfos)
-			actionInfos = Arrays.asList(new ActionInfo[serviceReqs.size()]);
+			actionInfos = new ArrayList<>(Arrays.asList(new ActionInfo[serviceReqs.size()]));
 		String tenantId = serviceReqs.get(0).getTenantId();
 		Integer servReqLen = serviceReqs.size();
 
@@ -115,7 +115,7 @@ public class GrievanceService {
 			ActionInfo actionInfo = actionInfos.get(servReqCount);
 			if (null == actionInfo) {
 				actionInfo = new ActionInfo();
-				actionInfos.add(actionInfo);
+				actionInfos.set(servReqCount,actionInfo);
 			}
 			String currentId = servReqIdList.get(servReqCount);
 			servReq.setAuditDetails(auditDetails);

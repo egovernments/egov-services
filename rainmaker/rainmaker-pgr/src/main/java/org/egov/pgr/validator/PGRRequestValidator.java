@@ -54,11 +54,15 @@ public class PGRRequestValidator {
 
 	public void validateCreate(ServiceRequest serviceRequest) {
 		
+		Map<String, String> errorMap = new HashMap<>();
+		
+		if(null!=serviceRequest.getActionInfo() && serviceRequest.getServices().size() != serviceRequest.getActionInfo().size())
+			errorMap.put(ErrorConstants.UNEQUAL_REQUEST_SIZE_KEY, ErrorConstants.UNEQUAL_REQUEST_SIZE_MSG);
+		
 		String tenantId = serviceRequest.getServices().get(0).getTenantId();
 		List<String> serviceCodeList = getServiceCodes(tenantId,
 				serviceRequest.getServices().parallelStream().map(Service::getServiceCode).collect(Collectors.toSet()), serviceRequest.getRequestInfo());
 					
-		Map<String, String> errorMap = new HashMap<>();
 		userInfoCheck(serviceRequest, errorMap);
 		//employeeCreateCheck(serviceRequest.getRequestInfo(),errorMap); //FIXME not needed as of now
 		overRideCitizenAccountId(serviceRequest);
@@ -96,8 +100,8 @@ public class PGRRequestValidator {
 	private void overRideCitizenAccountId(ServiceRequest serviceRequest) {
 
 		User user = serviceRequest.getRequestInfo().getUserInfo();
-		List<String> names = user.getRoles().parallelStream().map(Role::getName).collect(Collectors.toList());
-		boolean isUserCitizen = names.contains("CITIZEN") || names.contains("Citizen");
+		List<String> codes = user.getRoles().parallelStream().map(Role::getName).collect(Collectors.toList());
+		boolean isUserCitizen = codes.contains("CITIZEN") || codes.contains("Citizen");
 		if (isUserCitizen)
 			serviceRequest.getServices().forEach(service -> service.setAccountId(String.valueOf(user.getId())));
 	}
@@ -116,6 +120,10 @@ public class PGRRequestValidator {
 	public void validateUpdate(ServiceRequest serviceRequest) {
 
 		Map<String, String> errorMap = new HashMap<>();
+		
+		if(null!=serviceRequest.getActionInfo() && serviceRequest.getServices().size() != serviceRequest.getActionInfo().size())
+			errorMap.put(ErrorConstants.UNEQUAL_REQUEST_SIZE_KEY, ErrorConstants.UNEQUAL_REQUEST_SIZE_MSG);
+		
 		userInfoCheck(serviceRequest, errorMap);
 		overRideCitizenAccountId(serviceRequest);
 		validateAssignments(serviceRequest, errorMap);

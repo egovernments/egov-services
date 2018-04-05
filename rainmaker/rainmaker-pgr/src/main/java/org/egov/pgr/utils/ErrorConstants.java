@@ -30,6 +30,10 @@ public class ErrorConstants {
 	
 	public static final String UPDATE_FEEDBACK_ERROR_KEY = "EG_PGR_UPDATE_RATING_FEEDBACK_NOT_APPLICABLE";
 	
+	public static final String UNEQUAL_REQUEST_SIZE_KEY = "EG_PGR_REQUEST_UNEQUAL_SIZES";
+	
+	public static final String UNEQUAL_REQUEST_SIZE_MSG = "Services and ActionInfo must be of same size";
+	
 	
 	public static final String CREATE_ADDRESS_COMBO_ERROR_KEY = "EG_PGR_CREATE_ADDRESS_ERROR";
 	

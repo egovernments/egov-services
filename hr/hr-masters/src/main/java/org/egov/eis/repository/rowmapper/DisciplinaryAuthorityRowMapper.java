@@ -1,3 +1,4 @@
+
 /*
  * eGov suite of products aim to improve the internal efficiency,transparency,
  * accountability and the service delivery of the government  organizations.
@@ -38,34 +39,24 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.eis.web.contract;
+package org.egov.eis.repository.rowmapper;
 
-import java.util.List;
-import java.util.Map;
+import org.egov.eis.model.DisciplinaryAuthority;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Component;
 
-import org.egov.common.contract.response.ResponseInfo;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+@Component
+public class DisciplinaryAuthorityRowMapper implements RowMapper<DisciplinaryAuthority> {
 
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
-
-@AllArgsConstructor
-@EqualsAndHashCode
-@Getter
-@NoArgsConstructor
-@Setter
-@ToString
-public class DisciplinaryAuthorityResponse {
-
-    @JsonProperty("ResponseInfo")
-    private ResponseInfo responseInfo;
-
-    @JsonProperty("DisciplinaryAuthority")
-    private List<Map<String, String>> disciplinaryAuthority;
-
+    @Override
+    public DisciplinaryAuthority mapRow(ResultSet rs, int rowNum) throws SQLException {
+        DisciplinaryAuthority disciplinaryAuthority = new DisciplinaryAuthority();
+        disciplinaryAuthority.setId(rs.getLong("id"));
+        disciplinaryAuthority.setName(rs.getString("name"));
+        disciplinaryAuthority.setTenantId(rs.getString("tenantId"));
+        return disciplinaryAuthority;
+    }
 }

@@ -97,14 +97,14 @@ public class DesignationService {
 	public ResponseEntity<?> createDesignation(DesignationRequest designationRequest) {
 		Designation designation = designationRequest.getDesignation();
 		designation.setId(commonIdGenerationService.getNextId(Sequence.DESIGNATIONSEQUENCS));
-		kafkaTemplate.send(designationCreateTopic, designationRequest);
-		return getSuccessResponseForCreate(Collections.singletonList(designation), designationRequest.getRequestInfo());
+        create(designationRequest);
+ 		return getSuccessResponseForCreate(Collections.singletonList(designation), designationRequest.getRequestInfo());
 	}
 	
 	public ResponseEntity<?> updateDesignation(DesignationRequest designationRequest) {
 		Designation designation = designationRequest.getDesignation();
-		kafkaTemplate.send(designationUpdateTopic, designationRequest);
-		return getSuccessResponseForCreate(Collections.singletonList(designation), designationRequest.getRequestInfo());
+        update(designationRequest);
+   		return getSuccessResponseForCreate(Collections.singletonList(designation), designationRequest.getRequestInfo());
 	}
 	
 	/**

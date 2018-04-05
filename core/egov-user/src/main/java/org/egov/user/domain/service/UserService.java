@@ -57,7 +57,7 @@ public class UserService {
 	private boolean isEmployeeLoginOtpBased;
 	private FileStoreRepository fileRepository;
 	
-	@Value("${user.service.host}")
+	@Value("${egov.user.host}")
 	private String userHost;
 
 	@Autowired

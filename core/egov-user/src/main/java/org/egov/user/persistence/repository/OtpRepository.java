@@ -23,7 +23,7 @@ public class OtpRepository {
     private final String otpValidateEndpoint;
 
     @Autowired
-    public OtpRepository(@Value("${core.otp.service.url}") String otpServiceHost,
+    public OtpRepository(@Value("${egov.otp.host}") String otpServiceHost,
                          @Value("${egov.services.otp.search_otp}") String otpSearchContextEndpoint,
                          @Value("${egov.services.otp.validate_otp}") String otpValidateEndpoint,
                          RestTemplate restTemplate) {

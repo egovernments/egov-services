@@ -102,7 +102,7 @@ serviceMaps:
    isTransaction: true
    queryMaps:
 
-    - query: UPDATE eg_pgr_service SET servicecode=?, description=?,lat=?, "long"=?, address=?, addressid=?, email=?, deviceid=? firstname=?, lastname=?, phone=?, attributes=?,  status=?, source=?, expectedtime=?, feedback=?, rating=?, landmark=?, lastmodifiedby=?, lastmodifiedtime=? WHERE tenantid=? AND servicerequestid=?;
+    - query: UPDATE eg_pgr_service SET servicecode=?, description=?,lat=?, "long"=?, address=?, addressid=?, email=?, deviceid=?, firstname=?, lastname=?, phone=?, attributes=?,  status=?, source=?, expectedtime=?, feedback=?, rating=?, landmark=?, lastmodifiedby=?, lastmodifiedtime=? WHERE tenantid=? AND servicerequestid=?;
 
       basePath: services.*
       jsonMaps:

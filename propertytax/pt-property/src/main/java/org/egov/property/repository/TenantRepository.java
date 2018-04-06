@@ -4,6 +4,7 @@ import org.egov.models.RequestInfo;
 import org.egov.property.config.PropertiesManager;
 import org.egov.property.exception.InvalidCodeException;
 import org.egov.property.exception.ValidationUrlNotFoundException;
+import org.egov.property.model.SearchTenantRequest;
 import org.egov.property.utility.UpicNoGeneration;
 import org.egov.tracer.http.LogAwareRestTemplate;
 import org.slf4j.Logger;
@@ -45,9 +46,10 @@ public class TenantRepository {
 				// Add query parameter
 				.queryParam("code", tenantId);
 		String response = null;
+		SearchTenantRequest request = new SearchTenantRequest(requestInfo);
 		try {
 			logger.info("calling tennat service url :" + tenantCodeUrl.toString() + " request is " + requestInfo);
-			response = restTemplate.postForObject(builder.buildAndExpand().toUri(), requestInfo, String.class);
+			response = restTemplate.postForObject(builder.buildAndExpand().toUri(), request, String.class);
 			logger.info("after calling tennat service response :" + response);
 			if (response == null && response.isEmpty()) {
 				throw new InvalidCodeException(propertiesManager.getInvalidTenent(), requestInfo);

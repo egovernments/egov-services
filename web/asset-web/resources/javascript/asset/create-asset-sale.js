@@ -167,6 +167,7 @@ class Sale extends React.Component {
     })
 
     if (getUrlVars()["type"] == "view") {
+      setTimeout(function(){
       commonApiPost("asset-services", "assets/dispose", "_search", { assetId: id, tenantId, pageSize: 500 }, function (err, res2) {
         if (res2 && res2.Disposals && res2.Disposals.length) {
           let disposedAsset = res2.Disposals[0];
@@ -175,6 +176,8 @@ class Sale extends React.Component {
           var d = new Date(disposedAsset.disposalDate);
           disposedAsset.disposalDate = d.getDate() + "/" + (d.getMonth() + 1) + "/" + d.getFullYear();
 
+          let profitloss = disposedAsset.assetCurrentValue - disposedAsset.saleValue;
+
           if (disposedAsset.documents && disposedAsset.documents.length) {
             var _files = [];
             for (var i = 0; i < disposedAsset.documents.length; i++) {
@@ -182,12 +185,14 @@ class Sale extends React.Component {
             }
 
             _this.setState({
+              profitloss,
               disposal: disposedAsset,
               typeToDisplay: disposedAsset.transactionType,
               disposedFiles: JSON.parse(JSON.stringify(_files))
             })
           } else {
             _this.setState({
+              profitloss,
               disposal: disposedAsset,
               typeToDisplay: disposedAsset.transactionType
             });
@@ -206,6 +211,7 @@ class Sale extends React.Component {
 
         }
       })
+    },200);
     }
 
     getDropdown("assignments_department", function (res) {
@@ -474,7 +480,7 @@ class Sale extends React.Component {
                     </div>
                   </div>
                   <div className="col-sm-6 label-view-text" style={{ display: self.state.readOnly ? 'block' : 'none' }}>
-                    <label>{disposal.assetCurrentValue}</label>
+                    <label>{disposal.assetCurrentValue===null ?(item.grossValue === null ? 0 : item.grossValue) : disposal.assetCurrentValue}</label>
                   </div>
                 </div>
               </div>
@@ -677,7 +683,7 @@ class Sale extends React.Component {
                     </div>
                   </div>
                   <div className="col-sm-6 label-view-text" style={{ display: self.state.readOnly ? 'block' : 'none' }}>
-                    <label>{disposal.assetCurrentValue && disposal.saleValue ? Math.abs(Number(disposal.assetCurrentValue) - Number(disposal.saleValue)) : ""}</label>
+                    <label>{self.state.profitloss}</label>
                   </div>
                 </div>
               </div>

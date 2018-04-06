@@ -103,6 +103,7 @@ public class AssetHistoryRowMapper implements ResultSetExtractor<Map<Long, List<
             if (transactionType.equals(TransactionType.SALE)) {
                 transactionDate = rs.getLong("disposaldate");
                 transactionType = TransactionType.fromValue(rs.getString("transactiontype"));
+                valueBeforeTransaction=rs.getBigDecimal("assetcurrentvalue");
                 transactionAmount = rs.getBigDecimal("salevalue");
             }
             if ( transactionType.equals(TransactionType.DISPOSAL)) {

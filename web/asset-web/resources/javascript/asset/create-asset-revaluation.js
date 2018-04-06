@@ -548,6 +548,24 @@ class Revaluation extends React.Component {
                 </div>
 
               </div>
+
+              <div className="row">
+                <div className="col-sm-6">
+                  <div className="row">
+                    <div className="col-sm-6 label-text">
+                      <label>Current Value Of The Asset</label>
+                    </div>
+                    <div className="col-sm-6">
+                      <div>
+                        <input type="text" disabled value={revaluationSet.currentCapitalizedValue} style={{ display: this.state.readOnly  ? 'none' : 'block' }} />
+                      </div>
+                    </div>
+                    <div className="col-sm-6 label-view-text" style={{ display: this.state.readOnly  ? 'block' : 'none' }}>
+                      <label>{revaluationSet.currentCapitalizedValue===null ?(assetSet.grossValue === null ? 0 : assetSet.grossValue) : revaluationSet.currentCapitalizedValue}</label>
+                    </div>
+                  </div>
+                </div>
+                </div>
               <div className="row" style={{ display: this.state.readOnly ? 'block' : 'none' }}>
                 <div className="col-sm-6">
                   <div className="row">
@@ -562,6 +580,7 @@ class Revaluation extends React.Component {
               </div>
             </div>
           </div>
+
           <div className="form-section">
             <div className="row">
               <div className="col-md-8 col-sm-8">

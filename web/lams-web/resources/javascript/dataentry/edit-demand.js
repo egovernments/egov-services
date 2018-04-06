@@ -123,6 +123,10 @@ class EditDemand extends React.Component {
       console.log(e);
     }
 
+    if(agreementDetail.source!='DATA_ENTRY' || agreementDetail.action!='CREATE' || agreementDetail.status!='ACTIVE' ){
+        $("#shopAssetDetailsBlock").remove();
+      return showError("This is not a valid agreement number");
+    }
     agreementDetail["legacyDemands"][0]["demandDetails"].forEach((variable) => {
       if (variable.taxReason.toLowerCase() == "rent") {
         rentDemands.push(variable);

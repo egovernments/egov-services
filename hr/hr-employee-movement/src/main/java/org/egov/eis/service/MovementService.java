@@ -422,7 +422,7 @@ public class MovementService {
 		return movementRequest.getMovement();
 	}
 
-	public List<Movement> checkEmployeeExists(final MovementRequest movementRequest) {
+	public Boolean checkEmployeeExists(final MovementRequest movementRequest) {
 		for (final Movement movement : movementRequest.getMovement()) {
 			LOGGER.info("Employee exists:"+movement.getCheckEmployeeExists());
 
@@ -434,17 +434,16 @@ public class MovementService {
                 LOGGER.info("Employee Info:"+employeeInfo.getCode());
 
                 if (employeeInfo.getCode() != null && !employeeInfo.getCode().equals(""))
-					movement.setCheckEmployeeExists(true);
-				else
-					movement.setCheckEmployeeExists(false);
+                	return true;
+ 				else
+					return false;
 			}
 			else{
-				movement.setCheckEmployeeExists(false);
+				return false;
 			}
 
 		}
-
-		return movementRequest.getMovement();
+		return false;
 	}
 }
 

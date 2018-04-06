@@ -7,8 +7,7 @@ serviceMaps:
    fromTopic: save-pgr-service
    isTransaction: true
    queryMaps:
-    - query: INSERT INTO eg_pgr_service(tenantid, servicecode, servicerequestid, description, lat, "long", address, addressid, email, deviceid, accountid, firstname, lastname, phone, attributes, status, source, expectedtime, rating, feedback,
-            createdby, createdtime, lastmodifiedby, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+    - query: INSERT INTO eg_pgr_service(tenantid, servicecode, servicerequestid, description, lat, "long", address, addressid, email, deviceid, accountid, firstname, lastname, phone, attributes, status, source, expectedtime, rating, feedback, landmark, createdby, createdtime, lastmodifiedby, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
 
       basePath: services.*
       jsonMaps:
@@ -55,6 +54,8 @@ serviceMaps:
        - jsonPath: $.services.*.rating
 
        - jsonPath: $.services.*.feedback
+       
+       - jsonPath: $.services.*.landmark
 
        - jsonPath: $.services.*.auditDetails.createdBy
 
@@ -65,14 +66,18 @@ serviceMaps:
        - jsonPath: $.services.*.auditDetails.lastModifiedTime
 
 
-    - query: INSERT INTO eg_pgr_action(uuid, by, "when", status, comments, media, assignee, isinternal, tenantid, businesskey) VALUES ((SELECT md5(random()::text || clock_timestamp()::text)::uuid), ?, ?, ?, ?, ?, ?, ?, ?, ?);
+    - query: INSERT INTO eg_pgr_action(uuid, by, "when", action, status, comments, media, assignee, isinternal, tenantid, businesskey) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
 
       basePath: actionInfo.*
       jsonMaps:
 
+       - jsonPath: $.actionInfo.*.uuid
+       
        - jsonPath: $.actionInfo.*.by
 
        - jsonPath: $.actionInfo.*.when
+       
+       - jsonPath: $.actionInfo.*.action
 
        - jsonPath: $.actionInfo.*.status
 
@@ -97,7 +102,7 @@ serviceMaps:
    isTransaction: true
    queryMaps:
 
-    - query: UPDATE eg_pgr_service SET servicecode=?, description=?,lat=?, "long"=?, address=?, addressid=?, email=?, deviceid=?, accountid=?, firstname=?, lastname=?, phone=?, attributes=?,  status=?, source=?, expectedtime=?, feedback=?, rating=?, lastmodifiedby=?, lastmodifiedtime=? WHERE tenantid=? AND servicerequestid=?;
+    - query: UPDATE eg_pgr_service SET servicecode=?, description=?,lat=?, "long"=?, address=?, addressid=?, email=?, deviceid=?, firstname=?, lastname=?, phone=?, attributes=?,  status=?, source=?, expectedtime=?, feedback=?, rating=?, landmark=?, lastmodifiedby=?, lastmodifiedtime=? WHERE tenantid=? AND servicerequestid=?;
 
       basePath: services.*
       jsonMaps:
@@ -118,8 +123,6 @@ serviceMaps:
 
        - jsonPath: $.services.*.deviceId
 
-       - jsonPath: $.services.*.accountId
-
        - jsonPath: $.services.*.firstName
 
        - jsonPath: $.services.*.lastName
@@ -137,6 +140,8 @@ serviceMaps:
        - jsonPath: $.services.*.expectedTime
 
        - jsonPath: $.services.*.feedback
+       
+       - jsonPath: $.services.*.landmark
 
        - jsonPath: $.services.*.rating
 
@@ -149,14 +154,18 @@ serviceMaps:
        - jsonPath: $.services.*.serviceRequestId
 
 
-    - query: INSERT INTO eg_pgr_action(uuid, by, "when", status, comments, media, assignee, isinternal, tenantid, businesskey) VALUES ((SELECT md5(random()::text || clock_timestamp()::text)::uuid), ?, ?, ?, ?, ?, ?, ?, ?, ?);
+    - query: INSERT INTO eg_pgr_action(uuid, by, "when", action, status, comments, media, assignee, isinternal, tenantid, businesskey) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
 
       basePath: actionInfo.*
       jsonMaps:
 
+       - jsonPath: $.actionInfo.*.uuid
+       
        - jsonPath: $.actionInfo.*.by
 
        - jsonPath: $.actionInfo.*.when
+       
+       - jsonPath: $.actionInfo.*.action
 
        - jsonPath: $.actionInfo.*.status
 

@@ -2,7 +2,7 @@ package org.egov.property.model;
 
 import java.util.List;
 
-import org.egov.models.ResponseInfo;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -15,8 +15,8 @@ import lombok.ToString;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class SearchTenantResponse {
 
-	private ResponseInfo responseInfo;
 	private List<Tenant> tenant;
 }

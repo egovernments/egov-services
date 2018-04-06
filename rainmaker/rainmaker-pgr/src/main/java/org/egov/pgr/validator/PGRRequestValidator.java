@@ -278,12 +278,12 @@ public class PGRRequestValidator {
 		validateUserRBACProxy(errorMap, requestInfo);
 		if ((criteria.getStartDate() != null && criteria.getStartDate() > new Date().getTime())
 				|| (criteria.getEndDate() != null && criteria.getEndDate() > new Date().getTime())) {
-			errorMap.put("400", "startDate or endDate cannot be greater than currentDate");
+			errorMap.put("EG_PGR_INVALID_START_END_DATE", "startDate or endDate cannot be greater than currentDate");
 			throw new CustomException("400", "startDate or endDate cannot be greater than currentDate");
 		}
 		if ((criteria.getStartDate() != null && criteria.getEndDate() != null)
 				&& criteria.getStartDate().compareTo(criteria.getEndDate()) > 0) {
-			errorMap.put("400", "startDate cannot be greater than endDate");
+			errorMap.put("EG_PGR_START_DATE", "startDate cannot be greater than endDate");
 		}
 
 		if (!errorMap.isEmpty())
@@ -295,13 +295,17 @@ public class PGRRequestValidator {
 	public void validateUserRBACProxy(Map<String, String> errorMap, RequestInfo requestInfo) {
 
 		if (null != requestInfo.getUserInfo()) {
+			if (null == requestInfo.getUserInfo().getType() || requestInfo.getUserInfo().getType().isEmpty()) {
+				errorMap.put("EG_PGR_REQUESTINFO_USERTYPE_MISSING", "Unauthenticated user, user type is missing in the request.");
+				return;
+			}
 			if (null == requestInfo.getUserInfo().getId() || (null == requestInfo.getUserInfo().getRoles()
 					|| requestInfo.getUserInfo().getRoles().isEmpty())) {
-				errorMap.put("401", "Unauthenticated user, userId and Roles missing in the request.");
+				errorMap.put("EG_PGR_REQUESTINFO_ROLES_USERID_MISSING", "Unauthenticated user, userId and Roles missing in the request.");
 				return;
 			}
 		} else {
-			errorMap.put("401", "Unauthenticated user, userInfo missing in the request.");
+			errorMap.put("EG_PGR_REQUESTINFO_USERINFO_MISSING", "Unauthenticated user, userInfo missing in the request.");
 			return;
 		}
 

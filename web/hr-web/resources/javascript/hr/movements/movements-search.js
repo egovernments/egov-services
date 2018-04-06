@@ -34,10 +34,15 @@ class EmployeeSearch extends React.Component {
     var _this = this;
     e.preventDefault();
     //call api call
+    _this.state.employeeStatusList.forEach(element => {
+      if(element.code === "EMPLOYED")
+      employeeStatus = element.id;
+    }); 
+
     var employees = [];
     if(departmentId ||designationId||code||employeeType) {
       commonApiPost("hr-employee","employees","_search", {
-          tenantId, code, departmentId, designationId, name, employeeType, employeeStatus:7,pageSize:500
+          tenantId, code, departmentId, designationId, name, employeeType, employeeStatus,pageSize:500
         }, function(err, res) {
           if(res) {
             employees = res.Employee;

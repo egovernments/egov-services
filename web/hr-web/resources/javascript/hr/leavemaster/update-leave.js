@@ -773,7 +773,7 @@ class UpdateLeave extends React.Component {
   render() {
     let { handleChange, handleChangeThreeLevel, handleProcess } = this;
     let { leaveSet, buttons } = this.state;
-    let { name, code, leaveDays, availableDays, fromDate, toDate, leaveGround, reason, leaveType, totalWorkingDays } = leaveSet;
+    let { name, code, leaveDays, availableDays, fromDate, toDate, leaveGround, reason, leaveType, encashable, totalWorkingDays } = leaveSet;
     let mode = getUrlVars()["type"];
 
     const renderProcesedBtns = function () {

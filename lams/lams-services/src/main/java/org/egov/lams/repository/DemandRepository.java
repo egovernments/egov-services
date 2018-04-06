@@ -74,10 +74,13 @@ public class DemandRepository {
 		Date date = calendar.getTime();
 		String taxReason = null;
 		LOGGER.info("month plus start date is : " + date);
-		if (agreement.getSource().equals(Source.DATA_ENTRY)) {
+		if (Source.DATA_ENTRY.equals(agreement.getSource())) {
 			taxReason = propertiesManager.getTaxReasonAdvanceTax();
 			demandReasons.addAll(getDemandReasonsForTaxReason(agreementRequest, date, taxReason));
 			taxReason = propertiesManager.getTaxReasonGoodWillAmount();
+			demandReasons.addAll(getDemandReasonsForTaxReason(agreementRequest, date, taxReason));
+			taxReason = propertiesManager.getTaxReasonRent();
+			date = agreementRequest.getAgreement().getExpiryDate();
 			demandReasons.addAll(getDemandReasonsForTaxReason(agreementRequest, date, taxReason));
 			return demandReasons;
 		}
@@ -106,11 +109,14 @@ public class DemandRepository {
 		List<DemandReason> demandReasons = new ArrayList<>();
 		Agreement agreement = agreementRequest.getAgreement();
 		String taxReason;
-		Date effectiveTodate = getEfectiveTodate(agreement);
+		Date effectiveToDate = getEfectiveToDate(agreement);
+		if(effectiveToDate.compareTo(agreement.getExpiryDate())>0){
+            effectiveToDate = agreement.getExpiryDate();
+		}
 		taxReason = propertiesManager.getTaxReasonRent();
-		demandReasons.addAll(getDemandReasonsForTaxReason(agreementRequest, effectiveTodate, taxReason));
+		demandReasons.addAll(getDemandReasonsForTaxReason(agreementRequest, effectiveToDate, taxReason));
 		taxReason = propertiesManager.getTaxReasonPenalty();
-		demandReasons.addAll(getDemandReasonsForTaxReason(agreementRequest, effectiveTodate, taxReason));
+		demandReasons.addAll(getDemandReasonsForTaxReason(agreementRequest, effectiveToDate, taxReason));
 		return demandReasons;
 
 	}
@@ -119,7 +125,7 @@ public class DemandRepository {
 	 * API to fetch current installment end date based on agreement payment
 	 * cycle and current date
 	 */
-	private Date getEfectiveTodate(Agreement agreement) {
+	private Date getEfectiveToDate(Agreement agreement) {
 		Calendar cal = Calendar.getInstance();
 		if (agreement.getPaymentCycle().equals(PaymentCycle.QUARTER)) {
 			cal = getEffectiveQuarterToDate();

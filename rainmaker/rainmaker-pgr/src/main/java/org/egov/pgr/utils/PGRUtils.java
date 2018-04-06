@@ -81,7 +81,7 @@ public class PGRUtils {
 		uri.append(mdmsHost).append(mdmsEndpoint);
 		MasterDetail masterDetail = org.egov.mdms.model.MasterDetail.builder()
 				.name(PGRConstants.MDMS_SERVICETYPE_MASTER_NAME).
-				filter("[?(@.group=='"+department+"')]."+PGRConstants.SERVICE_CODES).build();
+				filter("[?(@.department=='"+department+"')]."+PGRConstants.SERVICE_CODES).build();
 		List<MasterDetail> masterDetails = new ArrayList<>();
 		masterDetails.add(masterDetail);
 		ModuleDetail moduleDetail = ModuleDetail.builder()
@@ -113,7 +113,7 @@ public class PGRUtils {
 		uri.append(mdmsHost).append(mdmsEndpoint);
 		MasterDetail masterDetail = org.egov.mdms.model.MasterDetail.builder()
 				.name(PGRConstants.MDMS_SERVICETYPE_MASTER_NAME).
-				filter("[?(@.serviceCode=='"+serviceCode+"')]."+PGRConstants.SERVICE_NAME).build();
+				filter("[?(@.serviceCode=='"+serviceCode+"')]."+PGRConstants.SERVICE_CODES).build();
 		List<MasterDetail> masterDetails = new ArrayList<>();
 		masterDetails.add(masterDetail);
 		ModuleDetail moduleDetail = ModuleDetail.builder()

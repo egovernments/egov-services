@@ -56,7 +56,7 @@ public class UserService {
 	private boolean isCitizenLoginOtpBased;
 	private boolean isEmployeeLoginOtpBased;
 	private FileStoreRepository fileRepository;
-	
+
 	@Value("${egov.user.host}")
 	private String userHost;
 
@@ -176,7 +176,7 @@ public class UserService {
 		user.setActive(true);
 		return getAccess(user, otp);
 	}
-	
+
 	public void validateUser(User user) {
 		log.info("Validating User........");
 		if (isCitizenLoginOtpBased && !StringUtils.isNumeric(user.getUsername()))
@@ -189,7 +189,7 @@ public class UserService {
 		user.validateNewUser();
 		log.info("User validated successfully");
 	}
-	
+
 	public Otp validateCredentials(User user) {
 		log.info("Validating Credentials........");
 		String tenantId = null;
@@ -199,33 +199,33 @@ public class UserService {
 			tenantId = user.getTenantId();
 
 		Otp otp = Otp.builder().otp(user.getOtpReference()).identity(user.getUsername()).tenantId(tenantId).build();
-		log.info("OTP: "+otp);
+		log.info("OTP: " + otp);
 		try {
 			validateOtp(otp);
 		} catch (Exception e) {
 			log.error("Exception while validating otp: " + e);
 			String errorMessage = JsonPath.read(e.getMessage(), "$.error.message");
-			if(null != errorMessage && !errorMessage.isEmpty())
+			if (null != errorMessage && !errorMessage.isEmpty())
 				throw new InvalidOtpException(errorMessage);
 			throw new InvalidOtpException("Exception while validating OTP");
 		}
 		log.info("Credentials validated successfully");
 
 		return otp;
-		
+
 	}
-	
+
 	public Object getAccess(User user, Otp otp) {
 		log.info("fetching access token........");
 		User registrationResult = null;
 		registrationResult = persistNewUser(user);
 		try {
 			StringBuilder uri = new StringBuilder();
-			uri.append(userHost).append("/user/oauth/token");			
+			uri.append(userHost).append("/user/oauth/token");
 			HttpHeaders headers = new HttpHeaders();
 			headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-	        headers.set( "Authorization", "Basic ZWdvdi11c2VyLWNsaWVudDplZ292LXVzZXItc2VjcmV0");
-			MultiValueMap<String, String> map= new LinkedMultiValueMap<String, String>();
+			headers.set("Authorization", "Basic ZWdvdi11c2VyLWNsaWVudDplZ292LXVzZXItc2VjcmV0");
+			MultiValueMap<String, String> map = new LinkedMultiValueMap<String, String>();
 			map.add("username", user.getUsername());
 			map.add("password", otp.getOtp());
 			map.add("grant_type", "password");
@@ -233,12 +233,13 @@ public class UserService {
 			map.add("tenantId", user.getTenantId());
 			map.add("isInternal", "true");
 
-			HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<MultiValueMap<String, String>>(map, headers);
-			return restTemplate.postForEntity(uri.toString(), request , Map.class ).getBody();
-			
+			HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<MultiValueMap<String, String>>(map,
+					headers);
+			return restTemplate.postForEntity(uri.toString(), request, Map.class).getBody();
+
 		} catch (Exception e) {
 			log.info("Exception while fecting authtoken: " + e);
-			if(null == registrationResult) {
+			if (null == registrationResult) {
 				throw new DuplicateUserNameException(user);
 			}
 			return registrationResult;
@@ -472,7 +473,8 @@ public class UserService {
 	 * @throws Exception
 	 */
 	private void setFileStoreUrlsByFileStoreIds(List<User> userList) {
-		List<String> fileStoreIds = userList.parallelStream().map(p -> p.getPhoto()).collect(Collectors.toList());
+		List<String> fileStoreIds = userList.parallelStream().filter(p -> p.getPhoto() != null).map(p -> p.getPhoto())
+				.collect(Collectors.toList());
 		if (fileStoreIds != null && fileStoreIds.size() > 0) {
 			Map<String, String> fileStoreUrlList = null;
 			try {
@@ -540,4 +542,3 @@ public class UserService {
 	}
 
 }
-

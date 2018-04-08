@@ -609,6 +609,7 @@ public class AgreementRepository {
 		agreementParameters.put("tenderOpeningDate", agreement.getTenderOpeningDate());
 		agreementParameters.put("auctionAmount", agreement.getAuctionAmount());
 		agreementParameters.put("solvencyAmount", agreement.getSolvencyAmount());
+		agreementParameters.put("isHistory", agreement.getIsHistory());
 				
 		return agreementParameters;
     }

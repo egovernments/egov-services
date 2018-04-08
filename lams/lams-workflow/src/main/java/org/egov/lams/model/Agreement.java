@@ -163,6 +163,7 @@ public class Agreement {
 	private Date tenderOpeningDate;
 	private Double auctionAmount;
 	private Double solvencyAmount;
-	private Boolean showDetails=Boolean.TRUE;
+	private Boolean showDetails = Boolean.TRUE;
+	private Boolean isHistory;
 
 }

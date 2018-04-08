@@ -138,7 +138,11 @@ public class AgreementService {
 		logger.info("createAgreement service::" + agreement);
 		setAuditDetails(agreement, agreementRequest.getRequestInfo());
 
-		if (agreement.getAction().equals(Action.CREATE)) {
+		if (agreement.getIsHistory()) {
+			agreement.setStatus(Status.HISTORY);
+			agreement.setId(agreementRepository.getAgreementID());
+			agreementRepository.saveAgreement(agreementRequest);
+		} else if (agreement.getAction().equals(Action.CREATE)) {
 
 			agreement.setExpiryDate(getExpiryDate(agreement));
 			agreement.setAdjustmentStartDate(getAdjustmentDate(agreement));
@@ -689,7 +693,7 @@ public class AgreementService {
 
 	}
 
-	private Date getEffectiveFinYearToDate() {
+	public Date getEffectiveFinYearToDate() {
 		Calendar cal = Calendar.getInstance();
 		int month = cal.get(Calendar.MONTH);
 		if (month < 3) {

@@ -122,7 +122,8 @@ public class AgreementRowMapper implements ResultSetExtractor<List<Agreement>> {
 					agreement.setParent((Long) rs.getObject("parent"));
 					agreement.setTenderOpeningDate(rs.getTimestamp("tenderopeningdate"));
 					agreement.setAuctionAmount(rs.getDouble("auctionamount"));
-					agreement.setSolvencyAmount(rs.getDouble("solvencyamount"));	
+					agreement.setSolvencyAmount(rs.getDouble("solvencyamount"));
+					agreement.setIsHistory(rs.getBoolean("ishistory"));
 					
 					String baseAllotment = rs.getString("base_allotment");
 					agreement.setBasisOfAllotment(BasisOfAllotment.fromValue(baseAllotment));

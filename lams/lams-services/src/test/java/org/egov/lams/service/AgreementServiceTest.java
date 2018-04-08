@@ -524,6 +524,7 @@ public class AgreementServiceTest {
                 .demands(getDemandList())
                 .legacyDemands(getDemands())
                 .expiryDate(new Date())
+                .isHistory(false)
                 .build();
     }
 

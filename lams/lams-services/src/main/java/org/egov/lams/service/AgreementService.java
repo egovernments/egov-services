@@ -140,6 +140,7 @@ public class AgreementService {
 
 		if (agreement.getIsHistory()) {
 			agreement.setStatus(Status.HISTORY);
+			agreement.setExpiryDate(getExpiryDate(agreement));
 			agreement.setId(agreementRepository.getAgreementID());
 			agreementRepository.saveAgreement(agreementRequest);
 		} else if (agreement.getAction().equals(Action.CREATE)) {

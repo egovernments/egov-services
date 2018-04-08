@@ -123,8 +123,9 @@ public class AgreementValidator {
 					"Can not create history agreement,please change Timeperiod/CommencementDate");
 		}
 		validateAsset(agreementRequest, errors);
-		validateAllottee(agreementRequest, errors);
+		
 	    }
+	    validateAllottee(agreementRequest, errors);
 				
 	}
 

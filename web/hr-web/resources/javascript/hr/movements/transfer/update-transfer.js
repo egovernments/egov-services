@@ -176,6 +176,8 @@ class UpdateMovement extends React.Component {
             transferWithPromotion = true;
           }
 
+          let docs = Object.assign([], Movement.documents);
+
             Movement.checkEmployeeExists = false;
 
           if (!Movement.workflowDetails) {
@@ -186,8 +188,10 @@ class UpdateMovement extends React.Component {
             };
           }
           if (Movement.transferType === "TRANSFER_OUTSIDE_CORPORATION_OR_ULB") {
-            _this.vacantPositionFun(Movement.departmentAssigned, Movement.designationAssigned, Movement.effectiveFrom, Movement.transferedLocation);
             _this.getUlbDetails(Movement.transferedLocation);
+            setTimeout(function () {
+              _this.vacantPositionFun(Movement.departmentAssigned, Movement.designationAssigned, Movement.effectiveFrom, Movement.transferedLocation);
+            }, 200);
           }
 
           getCommonMasterById("hr-employee", "employees", res.Movement[0].employeeId, function (err, res) {
@@ -207,6 +211,7 @@ class UpdateMovement extends React.Component {
               _this.setState({
                 ..._this.state,
                 transferWithPromotion: transferWithPromotion,
+                docs:docs,
                 movement: Movement,
                 employee: {
                   name: obj.name,
@@ -624,7 +629,7 @@ class UpdateMovement extends React.Component {
               docs.push(res.files[0].fileStoreId);
               console.log("docs", docs);
               if (counter == 0 && breakout == 0) {
-                tempInfo.documents = docs;
+                tempInfo.documents = docs.concat(_this.state.docs);
 
                 var body = {
                   "RequestInfo": requestInfo,
@@ -979,7 +984,7 @@ class UpdateMovement extends React.Component {
     const renderFileTr = function (status) {
       var CONST_API_GET_FILE = "/filestore/v1/files/id?tenantId=" + tenantId + "&fileStoreId=";
 
-      return _this.state.movement.documents.map(function (file, ind) {
+      return _this.state.docs.map(function (file, ind) {
         return (
             <tr key={ind}>
                 <td>{ind + 1}</td>
@@ -996,7 +1001,7 @@ class UpdateMovement extends React.Component {
     }
 
     const renderFile = function (status) {
-      if (_this.state.movement && _this.state.movement.documents && _this.state.movement.documents.length) {
+      if (_this.state.docs && _this.state.docs.length) {
         return (
           <table className="table table-bordered" id="fileTable">
             <thead>

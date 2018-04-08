@@ -11,8 +11,7 @@ class SearchDisciplinaryAction extends React.Component {
       },
       isSearchClicked: false,
       assignments_department: [],
-      assignments_designation: [],
-      modified: false
+      assignments_designation: []
     }
     this.handleChange = this.handleChange.bind(this);
     this.search = this.search.bind(this);
@@ -60,6 +59,8 @@ class SearchDisciplinaryAction extends React.Component {
       designationId } = this.state.searchSet, _this = this;
     let type = getUrlVars()["type"];
     e.preventDefault();
+
+    $('#employeeTable').dataTable().fnDestroy();
     //call api call
     var employees = [];
 
@@ -79,8 +80,8 @@ class SearchDisciplinaryAction extends React.Component {
     today = dd + '/' + mm + '/' + yyyy;
 
 
-    if(!(departmentId ||designationId||code)) {
-      return(showError("Any one of the search criteria is mandatory."));
+    if (!(departmentId || designationId || code)) {
+      return (showError("Any one of the search criteria is mandatory."));
     }
 
     commonApiPost("hr-employee", "employees", "_search", {
@@ -95,7 +96,7 @@ class SearchDisciplinaryAction extends React.Component {
       if (res) {
         employees = res["Employee"];
         var tempEmployees = [];
-        flag = 1;
+       
 
         if (type !== "create") {
           for (let i = 0; i < employees.length; i++) {
@@ -107,25 +108,28 @@ class SearchDisciplinaryAction extends React.Component {
                   employee.disciplinary = res1.Disciplinary[j];
                   tempEmployees.push(employee);
                 }
-                console.log(tempEmployees);
               }
             });
-                        
+
           }
+
+          setTimeout(function(){ _this.setState({
+            isSearchClicked: true,
+            employees: tempEmployees
+          });
+          console.log("employee are set in state for update");
+          flag = 1;},500);
+
+        }else{
+          _this.setState({
+            isSearchClicked: true,
+            employees: employees
+          });
+          console.log("employee are set in state for create");
+
+          flag = 1;
         }
-
-        _this.setState({
-          isSearchClicked: true,
-          employees: type === "create" ? employees : tempEmployees,
-          modified: true
-        });
-
       }
-      setTimeout(function () {
-        _this.setState({
-          modified: false
-        })
-      }, 1200);
     });
   }
 
@@ -138,12 +142,6 @@ class SearchDisciplinaryAction extends React.Component {
     })
   }
 
-  componentWillUpdate() {
-    if (flag == 1) {
-      flag = 0;
-      $('#employeeTable').dataTable().fnDestroy();
-    }
-  }
 
   handleBlur(e) {
     setTimeout(function () {
@@ -180,30 +178,21 @@ class SearchDisciplinaryAction extends React.Component {
     open(location, '_self').close();
   }
 
-  // handleClick(type, id) {
-  //   if (type === "create") {
-  //     window.open(`app/hr/leavemaster/apply-leave.html?id=${id}&type=${type}`, '_blank', 'location=yes, height=760, width=800, scrollbars=yes, status=yes');
-  //   } else {
-  //     window.open(`app/hr/leavemaster/view-apply.html?id=${id}&type=${type}`, '_blank', 'location=yes, height=760, width=800, scrollbars=yes, status=yes');
-  //   }
-  // }
-
-
   componentDidUpdate(prevProps, prevState) {
-      if (this.state &&this.state.modified) {
-        $('#employeeTable').DataTable({
-          dom: 'Bfrtip',
-          buttons: [
-            'copy', 'csv', 'excel', 'pdf', 'print'
-          ],
-          ordering: false,
-          bDestroy: true,
-          language: {
-            "emptyTable": "No Records"
-          }
-        });
-      }
-    
+    if(flag == 1){
+      $('#employeeTable').DataTable({
+        dom: 'Bfrtip',
+        buttons: [
+          'copy', 'csv', 'excel', 'pdf', 'print'
+        ],
+        ordering: false,
+        bDestroy: true,
+        language: {
+          "emptyTable": "No Records"
+        }
+      });
+    }
+
 
   }
 
@@ -306,7 +295,7 @@ class SearchDisciplinaryAction extends React.Component {
               <td data-label="name">{item.name}</td>
               <td data-label="designation">{getNameById(assignments_designation, item.assignments[0].designation)}</td>
               <td data-label="department">{getNameById(assignments_department, item.assignments[0].department)}</td>
-              <td data-label="disciplinary">{item.disciplinary.orderDate}</td>
+              <td data-label="disciplinary">{item.disciplinary.memoDate}</td>
               <td data-label="action"><a href={`app/hr/disciplinary/employee-disciplinary.html?id=${item.disciplinary.id}&type=${type}`}>{type}</a></td>
             </tr>
             );
@@ -323,6 +312,22 @@ class SearchDisciplinaryAction extends React.Component {
               <div className="col-sm-6">
                 <div className="row">
                   <div className="col-sm-6 label-text">
+                    <label htmlFor="">Department  </label>
+                  </div>
+                  <div className="col-sm-6">
+                    <div className="styled-select">
+                      <select id="departmentId" name="departmentId" value={departmentId}
+                        onChange={(e) => { handleChange(e, "departmentId") }}>
+                        <option value="">Select Department</option>
+                        {renderOption(this.state.assignments_department)}
+                      </select>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="col-sm-6">
+                <div className="row">
+                  <div className="col-sm-6 label-text">
                     <label htmlFor="">Designation  </label>
                   </div>
                   <div className="col-sm-6">
@@ -332,22 +337,6 @@ class SearchDisciplinaryAction extends React.Component {
                       }}>
                         <option value="">Select Designation</option>
                         {renderOption(this.state.assignments_designation)}
-                      </select>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="col-sm-6">
-                <div className="row">
-                  <div className="col-sm-6 label-text">
-                    <label htmlFor="">Department  </label>
-                  </div>
-                  <div className="col-sm-6">
-                    <div className="styled-select">
-                      <select id="departmentId" name="departmentId" value={departmentId}
-                        onChange={(e) => { handleChange(e, "departmentId") }}>
-                        <option value="">Select Department</option>
-                        {renderOption(this.state.assignments_department)}
                       </select>
                     </div>
                   </div>
@@ -437,8 +426,8 @@ class SearchDisciplinaryAction extends React.Component {
                     </div>
                 </div>*/}
 
-          <div className="text-right text-danger">
-                          Note: Any one of the search criteria is mandatory.
+            <div className="text-right text-danger">
+              Note: Any one of the search criteria is mandatory.
                     </div>
             <div className="text-center">
               <button id="sub" type="submit" className="btn btn-submit">Search</button> &nbsp;&nbsp;

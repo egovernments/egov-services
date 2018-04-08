@@ -109,7 +109,7 @@ class EditDemand extends React.Component {
     var penaltyDemands = [];
     var restOfDemands = [];
     var agreementDetail = {};
-    //api call
+    var currentDate =  new Date();
 
     try {
       if (getUrlVars()["agreementNumber"]) {
@@ -127,21 +127,26 @@ class EditDemand extends React.Component {
         $("#shopAssetDetailsBlock").remove();
       return showError("This is not a valid agreement number");
     }
-    agreementDetail["legacyDemands"][0]["demandDetails"].forEach((variable) => {
-      if (variable.taxReason.toLowerCase() == "rent") {
-        rentDemands.push(variable);
+    agreementDetail["legacyDemands"][0]["demandDetails"].forEach((demand) => {
+
+      if (demand.taxReason.toLowerCase() === "rent") {
+        var installmentDate= moment(moment(new Date(demand.periodStartDate)).format("YYYY-DD-MM"));
+            installmentDate = new Date(installmentDate.format("YYYY"),installmentDate.format("MM")-1,installmentDate.format("DD"));
+        if(installmentDate.getTime() <= currentDate.getTime() ){
+        rentDemands.push(demand);
+      }
+        }
+    });
+
+    agreementDetail["legacyDemands"][0]["demandDetails"].forEach((demand) => {
+      if (demand.taxReason.toLowerCase() === "penalty") {
+        penaltyDemands.push(demand);
       }
     });
 
-    agreementDetail["legacyDemands"][0]["demandDetails"].forEach((variable) => {
-      if (variable.taxReason.toLowerCase() == "penalty") {
-        penaltyDemands.push(variable);
-      }
-    });
-
-    agreementDetail["legacyDemands"][0]["demandDetails"].forEach((variable) => {
-      if (variable.taxReason.toLowerCase() != "rent" && variable.taxReason.toLowerCase() != "penalty") {
-        restOfDemands.push(variable);
+    agreementDetail["legacyDemands"][0]["demandDetails"].forEach((demand) => {
+      if (demand.taxReason.toLowerCase() != "rent" && demand.taxReason.toLowerCase() != "penalty") {
+        restOfDemands.push(demand);
       }
     });
 

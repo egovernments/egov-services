@@ -641,7 +641,7 @@ $.validator.addMethod('aadhar', function(value) {
 }, 'Please enter a valid aadhar.');
 
 $.validator.addMethod('panNo', function(value) {
-    return value.length > 0 ? /^(?:[0-9]+[a-z]|[a-z]+[0-9])[a-z0-9]*$/i.test(value) && value.length === 10 : true;
+    return value.length > 0 ? /^([a-zA-Z]){5}([0-9]){4}([a-zA-Z]){1}?$/i.test(value) && value.length === 10 : true;
 }, 'Please enter a valid pan.');
 
 $.validator.addMethod('alloName', function(value) {

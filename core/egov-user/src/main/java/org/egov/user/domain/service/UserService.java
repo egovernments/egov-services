@@ -18,7 +18,6 @@ import org.egov.user.domain.exception.PasswordMismatchException;
 import org.egov.user.domain.exception.UserIdMandatoryException;
 import org.egov.user.domain.exception.UserNameNotValidException;
 import org.egov.user.domain.exception.UserNotFoundException;
-import org.egov.user.domain.exception.UserPasswordMissingException;
 import org.egov.user.domain.exception.UserProfileUpdateDeniedException;
 import org.egov.user.domain.model.LoggedInUserUpdatePasswordRequest;
 import org.egov.user.domain.model.NonLoggedInUserUpdatePasswordRequest;
@@ -133,9 +132,6 @@ public class UserService {
 			throw new UserNameNotValidException();
 		else if (isCitizenLoginOtpBased)
 			user.setMobileNumber(user.getUsername());
-		else if (!isCitizenLoginOtpBased
-				&& (user.getPassword() == null || (user.getPassword() != null && user.getPassword().isEmpty())))
-			throw new UserPasswordMissingException();
 
 		user.setRoleToCitizen();
 		validateDuplicateUserName(user);
@@ -190,9 +186,6 @@ public class UserService {
 			throw new UserNameNotValidException();
 		else if (isCitizenLoginOtpBased)
 			user.setMobileNumber(user.getUsername());
-		else if (!isCitizenLoginOtpBased
-				&& (user.getPassword() == null || (user.getPassword() != null && user.getPassword().isEmpty())))
-			throw new UserPasswordMissingException();
 
 		user.setRoleToCitizen();
 		validateDuplicateUserName(user);

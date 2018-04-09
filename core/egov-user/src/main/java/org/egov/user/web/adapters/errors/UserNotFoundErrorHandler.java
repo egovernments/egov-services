@@ -11,7 +11,7 @@ import java.util.List;
 public class UserNotFoundErrorHandler implements ErrorAdapter<Void> {
 
     private static final String USER_NOT_FOUND_CODE = "USER.USER_NOT_FOUND";
-    private static final String USER_NOT_FOUND_MESSAGE = "User not found, Please check userId And tenantId";
+    private static final String USER_NOT_FOUND_MESSAGE = "User not found";
     private static final String USER_ID_FIELD = "User.id";
 
     public ErrorResponse adapt(Void model) {

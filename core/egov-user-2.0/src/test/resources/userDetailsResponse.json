@@ -1,0 +1,28 @@
+{
+  "id": 18,
+  "userName": "narasappa",
+  "name": "narasappa",
+  "mobileNumber": "123456789",
+  "emailId": "abc@gmail.com",
+  "locale": "en_IN",
+  "type": "EMPLOYEE",
+  "roles": [
+    {
+      "id": 15,
+      "name": "Employee"
+    }
+  ],
+  "active": true,
+  "tenantId": "default",
+  "actions": [
+    {
+      "name": "ReceivingMode",
+      "url": "/pgr/receivingmode",
+      "displayName": "ReceivingMode",
+      "orderNumber": 0,
+      "queryParams": "tenantId=",
+      "parentModule": "1",
+      "serviceCode": "PGR"
+    }
+  ]
+}

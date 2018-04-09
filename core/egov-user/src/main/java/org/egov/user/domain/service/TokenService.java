@@ -1,12 +1,12 @@
 package org.egov.user.domain.service;
 
+
 import org.apache.commons.lang3.StringUtils;
 import org.egov.user.domain.exception.InvalidAccessTokenException;
 import org.egov.user.domain.model.Action;
-import org.egov.user.domain.model.SecureUser;
 import org.egov.user.domain.model.UserDetail;
 import org.egov.user.persistence.repository.ActionRestRepository;
-import org.springframework.beans.factory.annotation.Value;
+import org.egov.user.domain.model.SecureUser;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.stereotype.Service;
@@ -20,20 +20,11 @@ public class TokenService {
 
 	private ActionRestRepository actionRestRepository;
 
-	@Value("${roles.state.level.enabled}")
-	private boolean isRoleStateLevel;
-
 	private TokenService(TokenStore tokenStore, ActionRestRepository actionRestRepository) {
 		this.tokenStore = tokenStore;
 		this.actionRestRepository = actionRestRepository;
 	}
 
-	/**
-	 * Get UserDetails By AccessToken
-	 * 
-	 * @param accessToken
-	 * @return
-	 */
 	public UserDetail getUser(String accessToken) {
 		if (StringUtils.isEmpty(accessToken)) {
 			throw new InvalidAccessTokenException();
@@ -46,13 +37,8 @@ public class TokenService {
 		}
 
 		SecureUser secureUser = ((SecureUser) authentication.getPrincipal());
-		String tenantId = null;
-		if (isRoleStateLevel && (secureUser.getTenantId() != null && secureUser.getTenantId().contains(".")))
-			tenantId = secureUser.getTenantId().split("\\.")[0];
-		else
-			tenantId = secureUser.getTenantId();
-
-		List<Action> actions = actionRestRepository.getActionByRoleCodes(secureUser.getRoleCodes(), tenantId);
+		List<Action> actions = actionRestRepository
+				.getActionByRoleCodes(secureUser.getRoleCodes(), secureUser.getTenantId());
 		return new UserDetail(secureUser, actions);
 	}
 }

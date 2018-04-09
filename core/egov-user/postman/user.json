@@ -1,0 +1,71 @@
+{
+	"variables": [],
+	"info": {
+		"name": "user",
+		"_postman_id": "2acd337b-fa69-459b-804b-bff3e7eac77a",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "http://localhost:8081/user/_createnovalidate",
+			"request": {
+				"url": "http://localhost:8081/user/users/_createnovalidate",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"RequestInfo\": {\n    \"api_id\": \"1\",\n    \"ver\": \"1\",\n    \"ts\": null,\n    \"action\": \"create\",\n    \"did\": \"\",\n    \"key\": \"\",\n    \"msg_id\": \"\",\n    \"requester_id\": \"\",\n    \"auth_token\": null\n  },\n  \"User\": {\n  \t\"userName\": \"ajay\",\n  \t\"name\": \"ajay\",\n  \t\"gender\": \"male\",\n  \t\"mobileNumber\": \"12312312\",\n  \t\"active\": true,\n  \t\"type\": \"CITIZEN\",\n  \t\"password\": \"password\"\n  }\n}"
+				},
+				"description": "user create with no OTP validation"
+			},
+			"response": []
+		},
+		{
+			"name": "Search user by id",
+			"request": {
+				"url": "http://localhost:8081/user/_search",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": " {\n    \"RequestInfo\": {\n    \"api_id\": \"org.egov.pgr\",\n    \"ver\": \"1.0\",\n    \"ts\": \"28-03-2016 10:22:33\",\n    \"res_msg_id\": \"uief87324\",\n    \"msg_id\": \"654654\",\n    \"status\": \"successful\",\n    \"auth_token\": \"cdaaa28a-f88a-429e-a710-b401097a165c\"\n     },\n     \"id\":[67]\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "http://egov-micro-dev.egovernments.org/user/users/_createnovalidate",
+			"request": {
+				"url": "http://egov-micro-dev.egovernments.org/user/users/_createnovalidate",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"RequestInfo\": {\n    \"api_id\": \"1\",\n    \"ver\": \"1\",\n    \"ts\": null,\n    \"action\": \"create\",\n    \"did\": \"\",\n    \"key\": \"\",\n    \"msg_id\": \"\",\n    \"requester_id\": \"\",\n    \"auth_token\": null\n  },\n  \"User\": {\n  \t\"userName\": \"ajay\",\n  \t\"name\": \"ajay\",\n  \t\"gender\": \"male\",\n  \t\"mobileNumber\": \"12312312\",\n  \t\"active\": true,\n  \t\"type\": \"CITIZEN\",\n  \t\"password\": \"password\"\n  }\n}"
+				},
+				"description": "Create user with no validation"
+			},
+			"response": []
+		}
+	]
+}

@@ -41,9 +41,6 @@
     "photo": null,
     "otpReference": null,
     "tenantId": null,
-    "roles": [
-    {"code" : "EMPLOYEE"}
-    
-    ]
+    "roles": []
   }
 }

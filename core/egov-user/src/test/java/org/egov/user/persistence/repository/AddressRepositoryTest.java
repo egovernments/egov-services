@@ -1,101 +1,135 @@
 package org.egov.user.persistence.repository;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.mockito.Matchers.argThat;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import org.egov.user.domain.model.Address;
+import org.egov.user.domain.model.enums.AddressType;
+import org.hamcrest.CustomMatcher;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
-import org.egov.user.domain.model.Address;
-import org.egov.user.domain.model.enums.AddressType;
-import org.egov.user.domain.service.UserService;
-import org.hamcrest.CustomMatcher;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
-import org.springframework.test.context.jdbc.Sql;
-import org.springframework.test.context.junit4.SpringRunner;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.mockito.Matchers.argThat;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
+@RunWith(MockitoJUnitRunner.class)
 public class AddressRepositoryTest {
 
-	@Autowired
-	private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
-
-	@Autowired
-	private JdbcTemplate jdbcTemplate;
+	@Mock
+	private AddressJpaRepository addressJpaRepository;
 
 	@InjectMocks
 	private AddressRepository addressRepository;
-	
-	@Before
-	public void before() {
-		addressRepository = new AddressRepository(namedParameterJdbcTemplate, jdbcTemplate);
-	}
 
 	@Test
-	@Sql(scripts = { "/sql/clearAddresses.sql","/sql/clearUserRoles.sql","/sql/clearUsers.sql","/sql/createUsers.sql"})
 	public void test_should_save_new_address() {
 		final Address domainAddress = Address.builder()
 				.city("city")
-				.userId(1l)
-				.tenantId("ap.public")
 				.address("address")
 				.pinCode("pinCode")
 				.type(AddressType.CORRESPONDENCE)
 				.build();
 
-		final Address createdAddress = addressRepository.create(domainAddress, 1L, "ap.public");
+		final Address createdAddress = addressRepository.create(domainAddress, 1L, "tenant");
+
+		final org.egov.user.persistence.entity.Address expectedAddress =
+				org.egov.user.persistence.entity.Address.builder()
+						.city("city")
+						.address("address")
+						.pinCode("pinCode")
+						.type("CORRESPONDENCE")
+						.userId(1L)
+						.tenantId("tenant")
+						.build();
+		expectedAddress.setCreatedBy(1L);
 
 		assertNotNull(createdAddress);
 		assertEquals("address", createdAddress.getAddress());
 		assertEquals("city", createdAddress.getCity());
 		assertEquals("pinCode", createdAddress.getPinCode());
 		assertEquals(AddressType.CORRESPONDENCE, createdAddress.getType());
+		verify(addressJpaRepository).save(argThat(new AddressMatcher(expectedAddress, true)));
 	}
-	
+
 	@Test
-	@Sql(scripts = { "/sql/clearAddresses.sql","/sql/clearUserRoles.sql","/sql/clearUsers.sql","/sql/createUsers.sql","/sql/createAddresses.sql"})
 	public void test_should_return_addresses_for_given_user_id_and_tenant() {
-		final List<Address> actualAddresses = addressRepository.find(1L, "ap.public");
+		final org.egov.user.persistence.entity.Address address1 =
+				org.egov.user.persistence.entity.Address.builder()
+						.type("PERMANENT")
+						.build();
+		final org.egov.user.persistence.entity.Address address2 =
+				org.egov.user.persistence.entity.Address.builder()
+						.type("CORRESPONDENCE")
+						.build();
+		when(addressJpaRepository.findByUserIdAndTenantId(1L, "tenant"))
+				.thenReturn(Arrays.asList(address1, address2));
+
+		final List<Address> actualAddresses = addressRepository.find(1L, "tenant");
 
 		assertNotNull(actualAddresses);
 		assertEquals(2, actualAddresses.size());
 	}
-	
+
 	@Test
-	@Sql(scripts = { "/sql/clearAddresses.sql","/sql/clearUserRoles.sql","/sql/clearUsers.sql","/sql/createUsers.sql","/sql/createAddresses.sql"})
 	public void test_should_delete_all_associated_addresses() {
+		final org.egov.user.persistence.entity.Address entityAddress1 =
+				org.egov.user.persistence.entity.Address.builder()
+						.type("PERMANENT")
+						.build();
+		final org.egov.user.persistence.entity.Address entityAddress2 =
+				org.egov.user.persistence.entity.Address.builder()
+						.type("CORRESPONDENCE")
+						.build();
+		final Address domainAddress1 = Address.builder().build();
+		final Address domainAddress2 = Address.builder().build();
 		final List<Address> domainAddresses = Collections.emptyList();
-		addressRepository.update(domainAddresses, 1L, "ap.public");
+		final List<org.egov.user.persistence.entity.Address> entityAddresses =
+				Arrays.asList(entityAddress1, entityAddress2);
+		when(addressJpaRepository.findByUserIdAndTenantId(1L, "tenant")).thenReturn(entityAddresses);
+
+		addressRepository.update(domainAddresses, 1L, "tenant");
+
+		verify(addressJpaRepository).delete(entityAddress1);
+		verify(addressJpaRepository).delete(entityAddress2);
 	}
-	
+
 	@Test
-	@Sql(scripts = { "/sql/clearAddresses.sql","/sql/clearUserRoles.sql","/sql/clearUsers.sql","/sql/createUsers.sql","/sql/createAddresses.sql"})
 	public void test_should_delete_addresses_that_are_not_specified() {
+		final org.egov.user.persistence.entity.Address entityAddress1 =
+				org.egov.user.persistence.entity.Address.builder()
+						.type("PERMANENT")
+						.build();
+		final org.egov.user.persistence.entity.Address entityAddress2 =
+				org.egov.user.persistence.entity.Address.builder()
+						.type("CORRESPONDENCE")
+						.build();
 		final Address domainAddress1 = Address.builder()
 				.type(AddressType.CORRESPONDENCE)
 				.build();
 		final List<Address> domainAddresses = Collections.singletonList(domainAddress1);
-		addressRepository.update(domainAddresses, 1L, "ap.public");
+		final List<org.egov.user.persistence.entity.Address> entityAddresses =
+				Arrays.asList(entityAddress1, entityAddress2);
+		when(addressJpaRepository.findByUserIdAndTenantId(1L, "tenant")).thenReturn(entityAddresses);
+
+		addressRepository.update(domainAddresses, 1L, "tenant");
+
+		verify(addressJpaRepository).delete(entityAddress1);
 	}
-	
+
 	@Test
-	@Sql(scripts = { "/sql/clearAddresses.sql","/sql/clearUserRoles.sql","/sql/clearUsers.sql","/sql/createUsers.sql","/sql/createAddresses.sql"})
 	public void test_should_save_new_addresses() {
+		final org.egov.user.persistence.entity.Address entityAddress1 =
+				org.egov.user.persistence.entity.Address.builder()
+						.type("PERMANENT")
+						.build();
 		final Address domainAddress1 = Address.builder()
 				.type(AddressType.CORRESPONDENCE)
 				.pinCode("pinCode")
@@ -104,27 +138,103 @@ public class AddressRepositoryTest {
 				.build();
 		final Address domainAddress2 = Address.builder()
 				.type(AddressType.PERMANENT)
-				.address("address1")
-				.city("city1")
-				.pinCode("pin1")
 				.build();
 		final List<Address> domainAddresses = Arrays.asList(domainAddress1, domainAddress2);
-		addressRepository.update(domainAddresses, 1L, "ap.public");
+		final List<org.egov.user.persistence.entity.Address> entityAddresses =
+				Collections.singletonList(entityAddress1);
+		when(addressJpaRepository.findByUserIdAndTenantId(1L, "tenant")).thenReturn(entityAddresses);
 
+		addressRepository.update(domainAddresses, 1L, "tenant");
+
+		final org.egov.user.persistence.entity.Address expectedAddress =
+				org.egov.user.persistence.entity.Address.builder()
+						.type("CORRESPONDENCE")
+						.userId(1L)
+						.tenantId("tenant")
+						.pinCode("pinCode")
+						.city("city")
+						.address("address")
+						.build();
+		expectedAddress.setCreatedBy(1L);
+		verify(addressJpaRepository).save(argThat(new AddressMatcher(expectedAddress, true)));
 	}
 
 	@Test
-	@Sql(scripts = { "/sql/clearAddresses.sql","/sql/clearUserRoles.sql","/sql/clearUsers.sql","/sql/createUsers.sql","/sql/createAddresses.sql"})
 	public void test_should_update_existing_addresses() {
+		final org.egov.user.persistence.entity.Address entityAddress1 =
+				org.egov.user.persistence.entity.Address.builder()
+						.type("PERMANENT")
+						.tenantId("tenant")
+						.userId(1L)
+						.build();
+		entityAddress1.setCreatedBy(1L);
+		entityAddress1.setCreatedDate(new Date());
 		final Address domainAddress1 = Address.builder()
 				.type(AddressType.PERMANENT)
-				.pinCode("pin2")
+				.pinCode("new pinCode")
 				.city("new city")
 				.address("new address")
 				.build();
 		final List<Address> domainAddresses = Collections.singletonList(domainAddress1);
-		addressRepository.update(domainAddresses, 1L, "ap.public");
+		final List<org.egov.user.persistence.entity.Address> entityAddresses =
+				Collections.singletonList(entityAddress1);
+		when(addressJpaRepository.findByUserIdAndTenantId(1L, "tenant")).thenReturn(entityAddresses);
+
+		addressRepository.update(domainAddresses, 1L, "tenant");
+
+		final org.egov.user.persistence.entity.Address expectedAddress =
+				org.egov.user.persistence.entity.Address.builder()
+						.type("PERMANENT")
+						.userId(1L)
+						.tenantId("tenant")
+						.pinCode("new pinCode")
+						.city("new city")
+						.address("new address")
+						.build();
+		expectedAddress.setCreatedBy(1L);
+		verify(addressJpaRepository).save(argThat(new AddressMatcher(expectedAddress, true)));
 	}
 
+	private class AddressMatcher extends CustomMatcher<org.egov.user.persistence.entity.Address> {
+
+		private org.egov.user.persistence.entity.Address expectedAddress;
+		private boolean isNewAddress;
+
+		AddressMatcher(org.egov.user.persistence.entity.Address expectedAddress, boolean isNewAddress) {
+			super("Address matcher");
+			this.expectedAddress = expectedAddress;
+			this.isNewAddress = isNewAddress;
+		}
+
+		@Override
+		public boolean matches(Object o) {
+			final org.egov.user.persistence.entity.Address actualAddress = (org.egov.user.persistence.entity
+					.Address) o;
+			return expectedAddress.getAddress().equals(actualAddress.getAddress())
+					&& expectedAddress.getCity().equals(actualAddress.getCity())
+					&& expectedAddress.getPinCode().equals(actualAddress.getPinCode())
+					&& expectedAddress.getTenantId().equals(actualAddress.getTenantId())
+					&& expectedAddress.getUserId().equals(actualAddress.getUserId())
+					&& expectedAddress.getCreatedBy().equals(actualAddress.getCreatedBy())
+					&& isNewAddressFieldValid(actualAddress)
+					&& isUpdateAddressFieldValid(actualAddress);
+		}
+
+		private boolean isUpdateAddressFieldValid(org.egov.user.persistence.entity.Address actualAddress) {
+			if (isNewAddress) {
+				return true;
+			}
+			return actualAddress.getLastModifiedDate() != null
+					&& actualAddress.getCreatedDate() != null
+					&& actualAddress.getLastModifiedBy() != null;
+		}
+
+		private boolean isNewAddressFieldValid(org.egov.user.persistence.entity.Address actualAddress) {
+			if (!isNewAddress) {
+				return true;
+			}
+			return actualAddress.getCreatedDate() != null;
+		}
+	}
 
 }

@@ -1,331 +1,99 @@
 package org.egov.user.persistence.repository;
 
-import static org.springframework.util.StringUtils.isEmpty;
-
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-import java.util.stream.Collectors;
-
 import org.egov.user.domain.exception.InvalidRoleCodeException;
-import org.egov.user.domain.exception.UserNotFoundException;
-import org.egov.user.domain.model.Address;
-import org.egov.user.domain.model.Role;
-import org.egov.user.domain.model.User;
 import org.egov.user.domain.model.UserSearchCriteria;
-import org.egov.user.domain.model.enums.AddressType;
-import org.egov.user.domain.model.enums.BloodGroup;
-import org.egov.user.domain.model.enums.Gender;
-import org.egov.user.domain.model.enums.GuardianRelation;
-import org.egov.user.domain.model.enums.UserType;
-import org.egov.user.repository.builder.RoleQueryBuilder;
-import org.egov.user.repository.builder.UserTypeQueryBuilder;
-import org.egov.user.repository.rowmapper.UserRowMapper;
-import org.egov.user.web.adapters.errors.UserNotFoundErrorHandler;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
-import org.springframework.jdbc.support.rowset.SqlRowSet;
+import org.egov.user.persistence.entity.Role;
+import org.egov.user.persistence.entity.User;
+import org.egov.user.persistence.enums.BloodGroup;
+import org.egov.user.persistence.enums.Gender;
+import org.egov.user.persistence.enums.GuardianRelation;
+import org.egov.user.persistence.enums.UserType;
+import org.egov.user.persistence.specification.UserSearchSpecificationFactory;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
-@Repository
+import javax.persistence.EntityManager;
+import javax.persistence.Query;
+import java.math.BigInteger;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+import static org.egov.user.persistence.entity.EnumConverter.toEnumType;
+import static org.springframework.util.StringUtils.isEmpty;
+
+@Service
 public class UserRepository {
 	private static final String SELECT_NEXT_SEQUENCE = "select nextval('seq_eg_user')";
-
+	private UserJpaRepository userJpaRepository;
+	private UserSearchSpecificationFactory userSearchSpecificationFactory;
+	private RoleJpaRepository roleJpaRepository;
 	private PasswordEncoder passwordEncoder;
 	private AddressRepository addressRepository;
-	private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
-	private JdbcTemplate jdbcTemplate;
-	private UserTypeQueryBuilder userTypeQueryBuilder;
-	private RoleRepository roleRepository;
+	private EntityManager entityManager;
 
-	public UserRepository(RoleRepository roleRepository, UserTypeQueryBuilder userTypeQueryBuilder,
-			PasswordEncoder passwordEncoder, AddressRepository addressRepository, JdbcTemplate jdbcTemplate,
-			NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
+	public UserRepository(UserJpaRepository userJpaRepository,
+						  UserSearchSpecificationFactory userSearchSpecificationFactory,
+						  RoleJpaRepository roleJpaRepository,
+						  PasswordEncoder passwordEncoder,
+						  AddressRepository addressRepository, EntityManager entityManager) {
+		this.userJpaRepository = userJpaRepository;
+		this.userSearchSpecificationFactory = userSearchSpecificationFactory;
+		this.roleJpaRepository = roleJpaRepository;
 		this.passwordEncoder = passwordEncoder;
 		this.addressRepository = addressRepository;
-		this.roleRepository = roleRepository;
-		this.userTypeQueryBuilder = userTypeQueryBuilder;
-		this.jdbcTemplate = jdbcTemplate;
-		this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
+		this.entityManager = entityManager;
 	}
 
-	/**
-	 * Get User By UserName And tenantId
-	 * 
-	 * @param userName
-	 * @param tenantId
-	 * @return
-	 */
-	public User findByUsername(String userName, String tenantId) {
-		Map<String, Object> userInputs = new HashMap<String, Object>();
-		userInputs.put("userName", userName);
-		userInputs.put("tenantId", tenantId);
-		User entityUser = null;
-		UserRowMapper userRowMapper = new UserRowMapper();
-		namedParameterJdbcTemplate.query(userTypeQueryBuilder.getFindUserByUserNameAndTenantId(), userInputs,
-				userRowMapper);
-		List<User> userList = userRowMapper.userList;
-		if (userList != null && !userList.isEmpty()) {
-			entityUser = userList.get(0);
-			getRolesAndMap(entityUser);
-
-		}
-		return entityUser;
-	}
-	
-	public User findByUsernameAndTenantId(String userName,String tenantId) {
-		Map<String, Object> userInputs = new HashMap<String, Object>();
-		userInputs.put("userName", userName);
-		User entityUser = null;
-		UserRowMapper userRowMapper = new UserRowMapper();
-		namedParameterJdbcTemplate.query(userTypeQueryBuilder.getUserByUserNameAndTenantId(tenantId), userInputs,
-				userRowMapper);
-		List<User> userList = userRowMapper.userList;
-		if (userList != null && !userList.isEmpty()) {
-			entityUser = userList.get(0);
-			getRolesAndMap(entityUser);
-
-		}
-		return entityUser;
+	public org.egov.user.domain.model.User findByUsername(String userName, String tenantId) {
+		final User entityUser = userJpaRepository.findByUsernameAndUserKeyTenantId(userName, tenantId);
+		return entityUser != null ? entityUser.toDomain(null, null) : null;
 	}
 
-	/**
-	 * api will check user is present or not with userName and id And tenantId
-	 * 
-	 * @param userName
-	 * @param id
-	 * @param tenantId
-	 * @return
-	 */
 	public boolean isUserPresent(String userName, Long id, String tenantId) {
-
-		String Query = userTypeQueryBuilder.getUserPresentByIdAndUserNameAndTenant();
-
-		final Map<String, Object> parametersMap = new HashMap<String, Object>();
-		parametersMap.put("userName", userName);
-		parametersMap.put("tenantId", tenantId);
-		parametersMap.put("id", id);
-
-		SqlRowSet sqlRowSet = namedParameterJdbcTemplate.queryForRowSet(Query, parametersMap);
-
-		if (sqlRowSet.next() && sqlRowSet.getLong("id") > 0) {
-
-			return true;
-		}
-
-		return false;
-
+		return userJpaRepository.isUserPresent(userName, id, tenantId) > 0;
 	}
 
-	/**
-	 * pi will check user is present or not with userName And tenantId
-	 * 
-	 * @param userName
-	 * @param tenantId
-	 * @return
-	 */
 	public boolean isUserPresent(String userName, String tenantId) {
-
-		String Query = userTypeQueryBuilder.getUserPresentByUserNameAndTenant();
-
-		final Map<String, Object> parametersMap = new HashMap<String, Object>();
-		parametersMap.put("userName", userName);
-		parametersMap.put("tenantId", tenantId);
-
-		SqlRowSet sqlRowSet = namedParameterJdbcTemplate.queryForRowSet(Query, parametersMap);
-
-		if (sqlRowSet.next() && sqlRowSet.getLong("id") > 0) {
-
-			return true;
-		}
-
-		return false;
+		return userJpaRepository.isUserPresent(userName, tenantId) > 0;
 	}
 
-	/**
-	 * api will fetch the user by emailId and TenantId
-	 * 
-	 * @param emailId
-	 * @param tenantId
-	 * @return
-	 */
-	public User findByEmailId(String emailId, String tenantId) {
-		User entityUser = null;
-		Map<String, Object> userInputs = new HashMap<String, Object>();
-		userInputs.put("emailId", emailId);
-		userInputs.put("tenantId", tenantId);
-		UserRowMapper userRowMapper = new UserRowMapper();
-		namedParameterJdbcTemplate.query(userTypeQueryBuilder.getUserByEmailAntTenant(), userInputs, userRowMapper);
-		List<User> userList = userRowMapper.userList;
-		if (userList != null && !userList.isEmpty()) {
-			entityUser = userList.get(0);
-			getRolesAndMap(entityUser);
-		}
-		return entityUser;
+	public org.egov.user.domain.model.User findByEmailId(String emailId, String tenantId) {
+		final User entityUser = userJpaRepository.findByEmailIdAndUserKeyTenantId(emailId, tenantId);
+		return entityUser != null ? entityUser.toDomain(null, null) : null;
 	}
 
-	/**
-	 * this api will create the user.
-	 * 
-	 * @param user
-	 * @return
-	 */
-	public User create(User user) {
-		setEnrichedRolesToUser(user);
-		if (null != user.getPassword())
-			encryptPassword(user);
-		else
-			user.setPassword(UUID.randomUUID().toString());
+	public org.egov.user.domain.model.User create(org.egov.user.domain.model.User domainUser) {
+		User entityUser = new User(domainUser);
+		setEnrichedRolesToUser(entityUser);
+		encryptPassword(entityUser);
+		entityUser.setCreatedDate(new Date());
+		entityUser.setLastModifiedDate(new Date());
 		final Long newId = getNextSequence();
-		user.setId(newId);
-		user.setCreatedDate(new Date());
-		user.setLastModifiedDate(new Date());
-		user.setCreatedBy(user.getLoggedInUserId());
-		user.setLastModifiedBy(user.getLoggedInUserId());
-		final User savedUser = save(user);
-		if (user.getRoles().size() > 0) {
-			saveUserRoles(user);
-		}
-		final Address savedCorrespondenceAddress = saveAddress(user.getCorrespondenceAddress(), savedUser.getId(),
-				savedUser.getTenantId());
-		final Address savedPermanentAddress = saveAddress(user.getPermanentAddress(), savedUser.getId(),
-				savedUser.getTenantId());
-		savedUser.setPermanentAddress(savedPermanentAddress);
-		savedUser.setCorrespondenceAddress(savedCorrespondenceAddress);
-		return savedUser;
+		entityUser.getUserKey().setId(newId);
+		final User savedUser = userJpaRepository.save(entityUser);
+		final org.egov.user.domain.model.Address savedCorrespondenceAddress =
+				saveAddress(domainUser.getCorrespondenceAddress(), savedUser.getId().getId(),
+						savedUser.getId().getTenantId());
+		final org.egov.user.domain.model.Address savedPermanentAddress =
+				saveAddress(domainUser.getPermanentAddress(), savedUser.getId().getId(), savedUser.getId().getTenantId());
+		return savedUser.toDomain(savedCorrespondenceAddress, savedPermanentAddress);
 	}
 
-	/**
-	 * api will do the mapping between user and role.
-	 * 
-	 * @param entityUser
-	 */
-	private void saveUserRoles(User entityUser) {
-		List<Map<String, Object>> batchValues = new ArrayList<>(entityUser.getRoles().size());
-
-		for (Role role : entityUser.getRoles()) {
-			batchValues.add(
-					new MapSqlParameterSource("roleid", role.getId()).addValue("roleidtenantid", role.getTenantId())
-							.addValue("userid", entityUser.getId()).addValue("tenantid", entityUser.getTenantId())
-							.addValue("lastmodifieddate", new Date()).getValues());
-		}
-		namedParameterJdbcTemplate.batchUpdate(RoleQueryBuilder.INSERT_USER_ROLES,
-				batchValues.toArray(new Map[entityUser.getRoles().size()]));
+	private long getNextSequence() {
+		final Query query = entityManager.createNativeQuery(SELECT_NEXT_SEQUENCE);
+		return ((BigInteger) query.getSingleResult()).longValue();
 	}
 
-	/**
-	 * api will persist the user.
-	 * 
-	 * @param entityUser
-	 * @return
-	 */
-	private User save(User entityUser) {
-
-		Map<String, Object> userInputs = new HashMap<String, Object>();
-
-		userInputs.put("id", entityUser.getId());
-		userInputs.put("uuid", entityUser.getUuid());
-		userInputs.put("tenantid", entityUser.getTenantId());
-		userInputs.put("salutation", entityUser.getSalutation());
-		userInputs.put("dob", entityUser.getDob());
-		userInputs.put("locale", entityUser.getLocale());
-		userInputs.put("username", entityUser.getUsername());
-		userInputs.put("password", entityUser.getPassword());
-		userInputs.put("pwdexpirydate", entityUser.getPasswordExpiryDate());
-		userInputs.put("mobilenumber", entityUser.getMobileNumber());
-		userInputs.put("altcontactnumber", entityUser.getAltContactNumber());
-		userInputs.put("emailid", entityUser.getEmailId());
-		userInputs.put("active", entityUser.getActive());
-		userInputs.put("name", entityUser.getName());
-		if (Gender.FEMALE.equals(entityUser.getGender())) {
-			userInputs.put("gender", 1);
-		} else if (Gender.MALE.equals(entityUser.getGender())) {
-			userInputs.put("gender", 2);
-		} else if (Gender.OTHERS.equals(entityUser.getGender())) {
-			userInputs.put("gender", 3);
-		} else {
-			userInputs.put("gender", 0);
-		}
-
-		userInputs.put("pan", entityUser.getPan());
-		userInputs.put("aadhaarnumber", entityUser.getAadhaarNumber());
-		if (UserType.BUSINESS.equals(entityUser.getType())) {
-			userInputs.put("type", entityUser.getType().toString());
-		} else if (UserType.CITIZEN.equals(entityUser.getType())) {
-			userInputs.put("type", entityUser.getType().toString());
-		} else if (UserType.EMPLOYEE.equals(entityUser.getType())) {
-			userInputs.put("type", entityUser.getType().toString());
-		} else if (UserType.SYSTEM.equals(entityUser.getType())) {
-			userInputs.put("type", entityUser.getType().toString());
-		} else {
-			userInputs.put("type", "");
-		}
-
-		userInputs.put("guardian", entityUser.getGuardian());
-		if (GuardianRelation.Father.equals(entityUser.getGuardianRelation())) {
-			userInputs.put("guardianrelation", entityUser.getGuardianRelation().toString());
-		} else if (GuardianRelation.Mother.equals(entityUser.getGuardianRelation())) {
-			userInputs.put("guardianrelation", entityUser.getGuardianRelation().toString());
-		} else if (GuardianRelation.Husband.equals(entityUser.getGuardianRelation())) {
-			userInputs.put("guardianrelation", entityUser.getGuardianRelation().toString());
-		} else if (GuardianRelation.Other.equals(entityUser.getGuardianRelation())) {
-			userInputs.put("guardianrelation", entityUser.getGuardianRelation().toString());
-		} else {
-			userInputs.put("guardianrelation", "");
-		}
-		userInputs.put("signature", entityUser.getSignature());
-		userInputs.put("accountlocked", entityUser.getAccountLocked());
-		if (BloodGroup.A_NEGATIVE.equals(entityUser.getBloodGroup())) {
-			userInputs.put("bloodgroup", entityUser.getBloodGroup().toString());
-		} else if (BloodGroup.A_POSITIVE.equals(entityUser.getBloodGroup())) {
-			userInputs.put("bloodgroup", entityUser.getBloodGroup().toString());
-		} else if (BloodGroup.AB_NEGATIVE.equals(entityUser.getBloodGroup())) {
-			userInputs.put("bloodgroup", entityUser.getBloodGroup().toString());
-		} else if (BloodGroup.AB_POSITIVE.equals(entityUser.getBloodGroup())) {
-			userInputs.put("bloodgroup", entityUser.getBloodGroup().toString());
-		} else if (BloodGroup.O_NEGATIVE.equals(entityUser.getBloodGroup())) {
-			userInputs.put("bloodgroup", entityUser.getBloodGroup().toString());
-		} else if (BloodGroup.O_POSITIVE.equals(entityUser.getBloodGroup())) {
-			userInputs.put("bloodgroup", entityUser.getBloodGroup().toString());
-		} else {
-			userInputs.put("bloodgroup", "");
-		}
-		userInputs.put("photo", entityUser.getPhoto());
-		userInputs.put("identificationmark", entityUser.getIdentificationMark());
-		userInputs.put("createddate", entityUser.getCreatedDate());
-		userInputs.put("lastmodifieddate", entityUser.getLastModifiedDate());
-		userInputs.put("createdby", entityUser.getLoggedInUserId());
-		userInputs.put("lastmodifiedby", entityUser.getLoggedInUserId());
-
-		namedParameterJdbcTemplate.update(userTypeQueryBuilder.getInsertUserQuery(), userInputs);
-		return entityUser;
-	}
-
-	/**
-	 * This api will return the next generate sequence of eg_user
-	 * 
-	 * @return
-	 */
-	private Long getNextSequence() {
-		Long id = jdbcTemplate.queryForObject(SELECT_NEXT_SEQUENCE, Long.class);
-		return id;
-	}
-
-	/**
-	 * This api will save addresses for particular user.
-	 * 
-	 * @param address
-	 * @param userId
-	 * @param tenantId
-	 * @return
-	 */
-	private Address saveAddress(Address address, Long userId, String tenantId) {
+	private org.egov.user.domain.model.Address saveAddress(org.egov.user.domain.model.Address address,
+														   Long userId,
+														   String tenantId) {
 		if (address != null) {
 			addressRepository.create(address, userId, tenantId);
 			return address;
@@ -333,331 +101,125 @@ public class UserRepository {
 		return null;
 	}
 
-	/**
-	 * api will get the all users by userSearchCriteria.After that roles and
-	 * address are set in to the user object.
-	 * 
-	 * @param userSearch
-	 * @return
-	 */
-	public List<User> findAll(UserSearchCriteria userSearch) {
-		List<User> userEntities = findAllUsers(userSearch);
-		userEntities.stream().map(this::getRolesAndMap).collect(Collectors.toList());
+	public List<org.egov.user.domain.model.User> findAll(UserSearchCriteria userSearch) {
+		Specification<User> specification = userSearchSpecificationFactory.getSpecification(userSearch);
+		PageRequest pageRequest = createPageRequest(userSearch);
+		List<User> userEntities = userJpaRepository.findAll(specification, pageRequest).getContent();
 		return userEntities.stream().map(this::getAddressAndMapToDomain).collect(Collectors.toList());
 	}
 
-	/**
-	 * api will get the user roles and set it to the user.
-	 * 
-	 * @param user
-	 * @return
-	 */
-	private User getRolesAndMap(User user) {
-		List<Role> roles = roleRepository.getUserRoles(user.getId(), user.getTenantId());
-		user.setRoles(roles);
-		return user;
+	private org.egov.user.domain.model.User getAddressAndMapToDomain(User user) {
+		final List<org.egov.user.domain.model.Address> addresses = addressRepository.
+				find(user.getId().getId(), user.getId().getTenantId());
+		final org.egov.user.domain.model.Address correspondenceAddress = filter(addresses,
+				org.egov.user.domain.model.enums.AddressType.CORRESPONDENCE);
+		final org.egov.user.domain.model.Address permanentAddress =
+				filter(addresses, org.egov.user.domain.model.enums.AddressType.PERMANENT);
+		return user.toDomain(correspondenceAddress, permanentAddress);
 	}
 
-	/**
-	 * api will fetch all users based on userSearch criteria.
-	 * 
-	 * @param userSearch
-	 * @return
-	 */
-	private List<User> findAllUsers(UserSearchCriteria userSearch) {
-		final List<Object> preparedStatementValues = new ArrayList<>();
-		String queryStr = userTypeQueryBuilder.getQuery(userSearch, preparedStatementValues);
-		UserRowMapper rowMapper = new UserRowMapper();
-		jdbcTemplate.query(queryStr, preparedStatementValues.toArray(), rowMapper);
-		final List<User> userList = rowMapper.userList;
-		return userList;
-	}
-
-	/**
-	 * api will get the addresses and map into the user object.
-	 * 
-	 * @param user
-	 * @return
-	 */
-	private User getAddressAndMapToDomain(User user) {
-		final List<Address> addresses = addressRepository.find(user.getId(), user.getTenantId());
-		final Address correspondenceAddress = filter(addresses, AddressType.CORRESPONDENCE);
-		final Address permanentAddress = filter(addresses, AddressType.PERMANENT);
-		user.setCorrespondenceAddress(correspondenceAddress);
-		user.setPermanentAddress(permanentAddress);
-		return user;
-	}
-
-	/**
-	 * api will filter the address by address type (Address Type can be
-	 * PERMANANT , CORROSPONDANCE)
-	 * 
-	 * @param addresses
-	 * @param addressType
-	 * @return
-	 */
-	private Address filter(List<Address> addresses, AddressType addressType) {
+	private org.egov.user.domain.model.Address filter(List<org.egov.user.domain.model.Address> addresses,
+													  org.egov.user.domain.model.enums.AddressType addressType) {
 		if (addresses == null) {
 			return null;
 		}
-		return addresses.stream().filter(address -> addressType.toString().equals(address.getAddressType())).findFirst()
+		return addresses.stream()
+				.filter(address -> addressType.equals(address.getType()))
+				.findFirst()
 				.orElse(null);
 	}
 
-	/**
-	 * api will encode the password.
-	 * 
-	 * @param entityUser
-	 */
 	private void encryptPassword(User entityUser) {
 		final String encodedPassword = passwordEncoder.encode(entityUser.getPassword());
 		entityUser.setPassword(encodedPassword);
 	}
 
-	/**
-	 * Get the list of roles by user role code.
-	 * 
-	 * @param user
-	 * @return
-	 */
-	private List<Role> fetchRolesByCode(User user) {
-		return user.getRoles().stream().map((role) -> fetchRole(user, role)).collect(Collectors.toList());
+	private PageRequest createPageRequest(UserSearchCriteria userSearch) {
+		Sort sort = createSort(userSearch);
+		return new PageRequest(userSearch.getPageNumber(), userSearch.getPageSize(), sort);
 	}
 
-	/**
-	 * Get the role based on user role code and tenantId.
-	 * 
-	 * @param user
-	 * @param role
-	 * @return
-	 */
+	private Sort createSort(UserSearchCriteria userSearch) {
+		List<String> sortFields = Arrays.asList("username", "name", "gender");
+		List<Sort.Order> orders = userSearch.getSort()
+				.stream()
+				.limit(3)
+				.map(String::toLowerCase)
+				.filter(sortFields::contains)
+				.map(property -> new Sort.Order(Sort.Direction.ASC, property))
+				.collect(Collectors.toList());
+		return new Sort(orders);
+	}
+
+	private Set<Role> fetchRolesByCode(User user) {
+		return user.getRoles()
+				.stream()
+				.map((role) -> fetchRole(user, role))
+				.collect(Collectors.toSet());
+	}
+
 	private Role fetchRole(User user, Role role) {
-		final Role enrichedRole = roleRepository.findByTenantIdAndCode(user.getTenantId(), role.getCode());
+		final Role enrichedRole = roleJpaRepository
+				.findByRoleKeyTenantIdAndCodeIgnoreCase(user.getId().getTenantId(), role.getCode());
 		if (enrichedRole == null) {
 			throw new InvalidRoleCodeException(role.getCode());
 		}
 		return enrichedRole;
 	}
 
-	/**
-	 * api will get the roles by user role codes and roles set it back to user
-	 * object.
-	 * 
-	 * @param user
-	 */
 	private void setEnrichedRolesToUser(User user) {
-		user.setRoles(fetchRolesByCode(user));
+		final Set<Role> roles = fetchRolesByCode(user);
+		user.setRoles(roles);
 	}
 
-	/**
-	 * api will get the user Details by id And tenantId
-	 * 
-	 * @param id
-	 * @param tenantId
-	 * @return
-	 */
-	public User getUserById(final Long id, String tenantId) {
-		User entityUser = getUserByIdAndTenantId(id, tenantId);
-		if (entityUser != null) {
-			getAddressAndMapToDomain(entityUser);
-		}
-		return entityUser != null ? entityUser : null;
+	public org.egov.user.domain.model.User getUserById(final Long id, String tenantId) {
+		final User entityUser = userJpaRepository.findByUserKeyIdAndUserKeyTenantId(id, tenantId);
+		return entityUser != null ? entityUser.toDomain(null, null) : null;
 	}
 
-	/**
-	 * api will update the user details.
-	 * 
-	 * @param user
-	 * @return
-	 */
-	public User update(final User user) {
-
-		User oldUser = getUserByIdAndTenantId(user.getId(), user.getTenantId());
-		
-		if(oldUser ==null)
-			throw new UserNotFoundException(null);
-
-		Map<String, Object> updateuserInputs = new HashMap<String, Object>();
-
-		updateuserInputs.put("id", user.getId());
-		updateuserInputs.put("tenantid", user.getTenantId());
-		updateuserInputs.put("AadhaarNumber", user.getAadhaarNumber());
-		updateuserInputs.put("AccountLocked", user.getAccountLocked());
-		updateuserInputs.put("Active", user.getActive());
-		updateuserInputs.put("AltContactNumber", user.getAltContactNumber());
-
-		if (user.getBloodGroup() != null) {
-			if (BloodGroup.A_NEGATIVE.toString().equals(user.getBloodGroup().toString())) {
-				updateuserInputs.put("BloodGroup", user.getBloodGroup().toString());
-			} else if (BloodGroup.A_POSITIVE.toString().equals(user.getBloodGroup().toString())) {
-				updateuserInputs.put("BloodGroup", user.getBloodGroup().toString());
-			} else if (BloodGroup.AB_NEGATIVE.toString().equals(user.getBloodGroup().toString())) {
-				updateuserInputs.put("BloodGroup", user.getBloodGroup().toString());
-			} else if (BloodGroup.AB_POSITIVE.toString().equals(user.getBloodGroup().toString())) {
-				updateuserInputs.put("BloodGroup", user.getBloodGroup().toString());
-			} else if (BloodGroup.O_NEGATIVE.toString().equals(user.getBloodGroup().toString())) {
-				updateuserInputs.put("BloodGroup", user.getBloodGroup().toString());
-			} else if (BloodGroup.O_POSITIVE.toString().equals(user.getBloodGroup().toString())) {
-				updateuserInputs.put("BloodGroup", user.getBloodGroup().toString());
-			} else if (BloodGroup.B_POSITIVE.toString().equals(user.getBloodGroup().toString())) {
-				updateuserInputs.put("BloodGroup", user.getBloodGroup().toString());
-			} else if (BloodGroup.B_NEGATIVE.toString().equals(user.getBloodGroup().toString())) {
-				updateuserInputs.put("BloodGroup", user.getBloodGroup().toString());
-			} else {
-				updateuserInputs.put("BloodGroup", "");
-			}
-		} else if (oldUser!=null && oldUser.getBloodGroup() != null) {
-			if (BloodGroup.A_NEGATIVE.toString().equals(oldUser.getBloodGroup().toString())) {
-				updateuserInputs.put("BloodGroup", oldUser.getBloodGroup().toString());
-			} else if (BloodGroup.A_POSITIVE.toString().equals(oldUser.getBloodGroup().toString())) {
-				updateuserInputs.put("BloodGroup", oldUser.getBloodGroup().toString());
-			} else if (BloodGroup.AB_NEGATIVE.toString().equals(oldUser.getBloodGroup().toString())) {
-				updateuserInputs.put("BloodGroup", oldUser.getBloodGroup().toString());
-			} else if (BloodGroup.AB_POSITIVE.toString().equals(oldUser.getBloodGroup().toString())) {
-				updateuserInputs.put("BloodGroup", oldUser.getBloodGroup().toString());
-			} else if (BloodGroup.O_NEGATIVE.toString().equals(oldUser.getBloodGroup().toString())) {
-				updateuserInputs.put("BloodGroup", oldUser.getBloodGroup().toString());
-			} else if (BloodGroup.O_POSITIVE.toString().equals(oldUser.getBloodGroup().toString())) {
-				updateuserInputs.put("BloodGroup", oldUser.getBloodGroup().toString());
-			} else if (BloodGroup.B_POSITIVE.toString().equals(oldUser.getBloodGroup().toString())) {
-				updateuserInputs.put("BloodGroup", oldUser.getBloodGroup().toString());
-			} else if (BloodGroup.B_NEGATIVE.toString().equals(oldUser.getBloodGroup().toString())) {
-				updateuserInputs.put("BloodGroup", oldUser.getBloodGroup().toString());
-			} else {
-				updateuserInputs.put("BloodGroup", "");
-			}
-		} else {
-			updateuserInputs.put("BloodGroup", "");
+	public org.egov.user.domain.model.User update(final org.egov.user.domain.model.User user) {
+		User oldUser = userJpaRepository.findByUserKeyIdAndUserKeyTenantId(user.getId(), user.getTenantId());
+		oldUser.setAadhaarNumber(user.getAadhaarNumber());
+		if(user.getAccountLocked() != null) {
+			oldUser.setAccountLocked(user.getAccountLocked());
 		}
-
-		if (user.getDob() != null) {
-			updateuserInputs.put("Dob", user.getDob());
-		} else {
-			updateuserInputs.put("Dob", oldUser.getDob());
+		if(user.getActive() != null) {
+			oldUser.setActive(user.getActive());
 		}
-		updateuserInputs.put("EmailId", user.getEmailId());
-
-		if (user.getGender() != null) {
-			if (Gender.FEMALE.toString().equals(user.getGender().toString())) {
-				updateuserInputs.put("Gender", 1);
-			} else if (Gender.MALE.toString().equals(user.getGender().toString())) {
-				updateuserInputs.put("Gender", 2);
-			} else if (Gender.OTHERS.toString().equals(user.getGender().toString())) {
-				updateuserInputs.put("Gender", 3);
-			} else {
-				updateuserInputs.put("Gender", 0);
-			}
-		} else {
-			updateuserInputs.put("Gender", 0);
+		oldUser.setAltContactNumber(user.getAltContactNumber());
+		oldUser.setBloodGroup(toEnumType(BloodGroup.class, user.getBloodGroup()));
+		oldUser.setDob(user.getDob());
+		oldUser.setEmailId(user.getEmailId());
+		oldUser.setGender(toEnumType(Gender.class, user.getGender()));
+		oldUser.setGuardian(user.getGuardian());
+		oldUser.setGuardianRelation(toEnumType(GuardianRelation.class, user.getGuardianRelation()));
+		oldUser.setIdentificationMark(user.getIdentificationMark());
+		oldUser.setLocale(user.getLocale());
+		if(!isEmpty(user.getMobileNumber())) {
+			oldUser.setMobileNumber(user.getMobileNumber());
 		}
-		updateuserInputs.put("Guardian", user.getGuardian());
-
-		if (user.getGuardianRelation() != null) {
-			if (GuardianRelation.Father.toString().equals(user.getGuardianRelation().toString())) {
-				updateuserInputs.put("GuardianRelation", user.getGuardianRelation().toString());
-			} else if (GuardianRelation.Mother.toString().equals(user.getGuardianRelation().toString())) {
-				updateuserInputs.put("GuardianRelation", user.getGuardianRelation().toString());
-			} else if (GuardianRelation.Husband.toString().equals(user.getGuardianRelation().toString())) {
-				updateuserInputs.put("GuardianRelation", user.getGuardianRelation().toString());
-			} else if (GuardianRelation.Other.toString().equals(user.getGuardianRelation().toString())) {
-				updateuserInputs.put("GuardianRelation", user.getGuardianRelation().toString());
-			} else {
-				updateuserInputs.put("GuardianRelation", "");
-			}
-		} else {
-			updateuserInputs.put("GuardianRelation", "");
+		oldUser.setName(user.getName());
+		oldUser.setPan(user.getPan());
+		if(!isEmpty(user.getPassword())) {
+			oldUser.setPassword(user.getPassword());
+			encryptPassword(oldUser);
 		}
-		updateuserInputs.put("IdentificationMark", user.getIdentificationMark());
-		updateuserInputs.put("Locale", user.getLocale());
-		if (null != user.getMobileNumber())
-			updateuserInputs.put("MobileNumber", user.getMobileNumber());
-		else
-			updateuserInputs.put("MobileNumber", oldUser.getMobileNumber());
-		updateuserInputs.put("Name", user.getName());
-		updateuserInputs.put("Pan", user.getPan());
-
-		if (!isEmpty(user.getPassword()))
-			updateuserInputs.put("Password", passwordEncoder.encode(user.getPassword()));
-		else
-			updateuserInputs.put("Password", oldUser.getPassword());
-		
-       if(oldUser!=null && user.getPhoto()!=null && user.getPhoto().contains("http"))
-    	   updateuserInputs.put("Photo", oldUser.getPhoto());
-       else
-    	   updateuserInputs.put("Photo", user.getPhoto());
-		
-		if (null != user.getPasswordExpiryDate())
-			updateuserInputs.put("PasswordExpiryDate", user.getPasswordExpiryDate());
-		else
-			updateuserInputs.put("PasswordExpiryDate", oldUser.getPasswordExpiryDate());
-		updateuserInputs.put("Salutation", user.getSalutation());
-		updateuserInputs.put("Signature", user.getSignature());
-		updateuserInputs.put("Title", user.getTitle());
-
-		if (user.getType() != null) {
-			if (UserType.BUSINESS.toString().equals(user.getType().toString())) {
-				updateuserInputs.put("Type", user.getType().toString());
-			} else if (UserType.CITIZEN.toString().equals(user.getType().toString())) {
-				updateuserInputs.put("Type", user.getType().toString());
-			} else if (UserType.EMPLOYEE.toString().equals(user.getType().toString())) {
-				updateuserInputs.put("Type", user.getType().toString());
-			} else if (UserType.SYSTEM.toString().equals(user.getType().toString())) {
-				updateuserInputs.put("Type", user.getType().toString());
-			} else {
-				updateuserInputs.put("Type", "");
-			}
-		} else {
-			updateuserInputs.put("Type", oldUser.getType().toString());
+		oldUser.setPhoto(user.getPhoto());
+		if(user.getPasswordExpiryDate() != null) {
+			oldUser.setPwdExpiryDate(user.getPasswordExpiryDate());
 		}
-		updateuserInputs.put("LastModifiedDate", new Date());
-		updateuserInputs.put("LastModifiedBy", 1);
-
-		namedParameterJdbcTemplate.update(userTypeQueryBuilder.getUpdateUserQuery(), updateuserInputs);
-		if (user.getRoles() != null && !CollectionUtils.isEmpty(user.getRoles())) {
-			setEnrichedRolesToUser(user);
-			updateRoles(user);
+		if(!CollectionUtils.isEmpty(user.getRoles())) {
+			oldUser.setRoles(user.getRoles().stream().map(Role::new).collect(Collectors.toSet()));
 		}
-		if (user.getAddresses() != null) {
-			addressRepository.update(user.getAddresses(), user.getId(), user.getTenantId());
+		oldUser.setSalutation(user.getSalutation());
+		oldUser.setSignature(user.getSignature());
+		oldUser.setTitle(user.getTitle());
+		if(user.getType() != null) {
+			oldUser.setType(toEnumType(UserType.class, user.getType()));
 		}
-		User updateduser = getUserByIdAndTenantId(user.getId(), user.getTenantId());
-		return getAddressAndMapToDomain(updateduser);
-	}
-
-	/**
-	 * api will update the user Roles.
-	 * 
-	 * @param user
-	 */
-	private void updateRoles(User user) {
-		Map<String, Object> roleInputs = new HashMap<String, Object>();
-		roleInputs.put("userId", user.getId());
-		roleInputs.put("tenantId", user.getTenantId());
-		namedParameterJdbcTemplate.update(RoleQueryBuilder.DELETE_USER_ROLES, roleInputs);
-		saveUserRoles(user);
-	}
-
-	/**
-	 * Get the user By userId and tenantId
-	 * 
-	 * @param id
-	 * @param tenantId
-	 * @return
-	 */
-	public User getUserByIdAndTenantId(Long id, String tenantId) {
-
-		User entityUser = null;
-		Map<String, Object> userInputs = new HashMap<String, Object>();
-		userInputs.put("id", id);
-		userInputs.put("tenantId", tenantId);
-		UserRowMapper userRowMapper = new UserRowMapper();
-		namedParameterJdbcTemplate.query(userTypeQueryBuilder.getFindUserByIdAndTenantId(), userInputs, userRowMapper);
-		List<User> userList = userRowMapper.userList;
-		if (userList != null && !userList.isEmpty()) {
-			entityUser = userList.get(0);
-			entityUser.setRoles(roleRepository.getUserRoles(id, tenantId));
-		}
-
-		return entityUser;
+		setEnrichedRolesToUser(oldUser);
+		oldUser.setLastModifiedDate(new Date());
+		addressRepository.update(user.getAddresses(), user.getId(), user.getTenantId());
+		return userJpaRepository.save(oldUser).toDomain(user.getCorrespondenceAddress(), user.getPermanentAddress());
 	}
 }

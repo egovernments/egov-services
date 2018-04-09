@@ -18,6 +18,4 @@ public class ActionRequest {
     private List<String> roleCodes;
     @JsonProperty("tenantId")
     private String tenantId;
-    @JsonProperty("actionMaster")
-    private String actionMaster;
 }

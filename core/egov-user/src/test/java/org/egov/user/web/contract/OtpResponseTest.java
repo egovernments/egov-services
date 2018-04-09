@@ -4,8 +4,7 @@ import org.egov.user.persistence.dto.Otp;
 import org.egov.user.persistence.dto.OtpResponse;
 import org.junit.Test;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class OtpResponseTest {
 

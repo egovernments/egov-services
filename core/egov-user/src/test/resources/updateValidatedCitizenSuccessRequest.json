@@ -11,7 +11,6 @@
     "authToken": "96a70a9a-03bd-11e7-93ae-92361f002671"
   },
   "User": {
-    "name": "Jamaal Bhai",
-    "roles":[{"code" : "EMPLOYEE"}] 
+    "name": "Jamaal Bhai"
   }
 }

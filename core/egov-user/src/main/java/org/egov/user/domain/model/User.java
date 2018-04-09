@@ -1,12 +1,9 @@
 package org.egov.user.domain.model;
 
-import static org.springframework.util.ObjectUtils.isEmpty;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
 import org.apache.commons.lang3.time.DateUtils;
 import org.egov.user.domain.exception.InvalidUserCreateException;
 import org.egov.user.domain.exception.InvalidUserUpdateException;
@@ -16,19 +13,19 @@ import org.egov.user.domain.model.enums.GuardianRelation;
 import org.egov.user.domain.model.enums.UserType;
 import org.springframework.util.CollectionUtils;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
+
+import static org.springframework.util.ObjectUtils.isEmpty;
 
 @AllArgsConstructor
 @Getter
-@Setter
 @Builder
 public class User {
-	
+	@Setter
 	private Long id;
-	private String uuid;
 	private String tenantId;
 	private String username;
 	private String title;
@@ -62,8 +59,8 @@ public class User {
 	private Long createdBy;
 	private Long lastModifiedBy;
 	private Long loggedInUserId;
+	@Setter
 	private boolean otpValidationMandatory;
-	private boolean mobileValidationMandatory = true;
 
 	public void validateNewUser() {
 		if (isUsernameAbsent()
@@ -75,7 +72,7 @@ public class User {
 				|| isCorrespondenceAddressInvalid()
 				|| isRolesAbsent()
 				|| isOtpReferenceAbsent()
-				|| isTenantIdAbsent()){
+				|| isTenantIdAbsent()) {
 			throw new InvalidUserCreateException(this);
 		}
 	}
@@ -110,7 +107,7 @@ public class User {
 	}
 
 	public boolean isMobileNumberAbsent() {
-		return mobileValidationMandatory && isEmpty(mobileNumber);
+		return isEmpty(mobileNumber);
 	}
 
 	public boolean isNameAbsent() {
@@ -123,10 +120,6 @@ public class User {
 
 	public boolean isTenantIdAbsent() {
 		return isEmpty(tenantId);
-	}	
-	
-	public boolean isPasswordAbsent(){
-		return isEmpty(password);
 	}
 
 	public boolean isRolesAbsent() {
@@ -187,5 +180,4 @@ public class User {
 		active = isActive;
 	}
 }
-
 

@@ -54,6 +54,8 @@ serviceMaps:
          type: INT
        
        - jsonPath: $.properties.*.demandsJsonObject
+         type: JSON
+         dbType: JSONB
 
        - jsonPath: $.properties.*.oldestUpicNumber
 

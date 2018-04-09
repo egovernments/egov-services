@@ -225,7 +225,11 @@ class EmployeeDisciplinary extends React.Component {
                         'auth-token': authToken
                     },
                     success: function (res) {
-                        showSuccess("Created successfully Created");
+                        if (type === "create")
+                            showSuccess("Disciplinary action Created successfully");
+                        else
+                            showSuccess("Disciplinary action Updated successfully");
+
                         window.location.href = `app/hr/disciplinary/search-disciplinary.html?type=create`;
                     },
                     error: function (err) {

@@ -293,7 +293,7 @@ class UpdateObjection extends React.Component {
         }).responseJSON["tasks"] || {};
 
         if (workflow) {
-
+            workflow.sort((record1, record2) => record1.lastupdatedSince > record2.lastupdatedSince);
             workflow.forEach(function (item, index, theArray) {
 
                 var employeeName = commonApiPost("hr-employee", "employees", "_search", {
@@ -506,6 +506,8 @@ class UpdateObjection extends React.Component {
             $("#effectiveDate").prop("disabled", false)
             $("#documents").prop("disabled", false)
             $("#remarks").prop("disabled", false)
+        }else{
+          $("#documentSection").remove();
         }
 
         if (this.state.wfStatus === "Commissioner Approved") {
@@ -1195,7 +1197,7 @@ class UpdateObjection extends React.Component {
                         </div>
                         <div className="row">
                             <div className="col-sm-6">
-                                <div className="row">
+                                <div className="row" id="documentSection">
                                     <div className="col-sm-6 label-text">
                                         <label>Attach Document </label>
                                     </div>

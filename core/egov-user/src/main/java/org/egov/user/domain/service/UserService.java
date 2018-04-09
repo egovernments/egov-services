@@ -243,13 +243,12 @@ public class UserService {
 					headers);
 			return restTemplate.postForEntity(uri.toString(), request, Map.class).getBody();
 
-		} catch (OAuth2Exception e) {
+		} catch (Exception e) {
 			log.info("Exception while fecting authtoken: " + e);
 			if (null == registrationResult) {
 				throw new DuplicateUserNameException(user);
 			}
-			throw new OAuth2Exception("Invalid login credentials");
-			// return registrationResult;
+			return registrationResult;
 		}
 	}
 

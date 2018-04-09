@@ -18,6 +18,7 @@ import org.egov.user.domain.exception.PasswordMismatchException;
 import org.egov.user.domain.exception.UserIdMandatoryException;
 import org.egov.user.domain.exception.UserNameNotValidException;
 import org.egov.user.domain.exception.UserNotFoundException;
+import org.egov.user.domain.exception.UserPasswordMissingException;
 import org.egov.user.domain.exception.UserProfileUpdateDeniedException;
 import org.egov.user.domain.model.LoggedInUserUpdatePasswordRequest;
 import org.egov.user.domain.model.NonLoggedInUserUpdatePasswordRequest;
@@ -36,6 +37,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.common.exceptions.OAuth2Exception;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -131,6 +133,9 @@ public class UserService {
 			throw new UserNameNotValidException();
 		else if (isCitizenLoginOtpBased)
 			user.setMobileNumber(user.getUsername());
+		else if (!isCitizenLoginOtpBased
+				&& (user.getPassword() == null || (user.getPassword() != null && user.getPassword().isEmpty())))
+			throw new UserPasswordMissingException();
 
 		user.setRoleToCitizen();
 		validateDuplicateUserName(user);
@@ -171,7 +176,9 @@ public class UserService {
 		log.info("Into register with login method......");
 		user.setUuid(UUID.randomUUID().toString());
 		validateUser(user);
-		Otp otp = validateCredentials(user);
+		Otp otp = null;
+		if (user.isOtpValidationMandatory())
+			otp = validateCredentials(user);
 		user.setDefaultPasswordExpiry(defaultPasswordExpiryInDays);
 		user.setActive(true);
 		return getAccess(user, otp);
@@ -183,6 +190,9 @@ public class UserService {
 			throw new UserNameNotValidException();
 		else if (isCitizenLoginOtpBased)
 			user.setMobileNumber(user.getUsername());
+		else if (!isCitizenLoginOtpBased
+				&& (user.getPassword() == null || (user.getPassword() != null && user.getPassword().isEmpty())))
+			throw new UserPasswordMissingException();
 
 		user.setRoleToCitizen();
 		validateDuplicateUserName(user);
@@ -227,7 +237,10 @@ public class UserService {
 			headers.set("Authorization", "Basic ZWdvdi11c2VyLWNsaWVudDplZ292LXVzZXItc2VjcmV0");
 			MultiValueMap<String, String> map = new LinkedMultiValueMap<String, String>();
 			map.add("username", user.getUsername());
-			map.add("password", otp.getOtp());
+			if (otp != null && otp.getOtp() != null)
+				map.add("password", otp.getOtp());
+			else
+				map.add("password", user.getPassword());
 			map.add("grant_type", "password");
 			map.add("scope", "read");
 			map.add("tenantId", user.getTenantId());
@@ -237,12 +250,13 @@ public class UserService {
 					headers);
 			return restTemplate.postForEntity(uri.toString(), request, Map.class).getBody();
 
-		} catch (Exception e) {
+		} catch (OAuth2Exception e) {
 			log.info("Exception while fecting authtoken: " + e);
 			if (null == registrationResult) {
 				throw new DuplicateUserNameException(user);
 			}
-			return registrationResult;
+			throw new OAuth2Exception("Invalid login credentials");
+			// return registrationResult;
 		}
 	}
 

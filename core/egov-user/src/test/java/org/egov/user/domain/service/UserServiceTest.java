@@ -148,6 +148,7 @@ public class UserServiceTest {
 		when(otpRepository.isOtpValidationComplete(getExpectedRequest())).thenReturn(true);
 		final User expectedUser = User.builder().build();
 		when(domainUser.getTenantId()).thenReturn("default");
+		when(domainUser.getPassword()).thenReturn("demo");
 		when(userRepository.create(domainUser)).thenReturn(expectedUser);
 
 		User returnedUser = userService.createCitizen(domainUser);
@@ -193,6 +194,7 @@ public class UserServiceTest {
 	public void test_should_set_pre_defined_expiry_on_creating_citizen() {
 		org.egov.user.domain.model.User domainUser = mock(User.class);
 		when(domainUser.getTenantId()).thenReturn("default");
+		when(domainUser.getPassword()).thenReturn("demo");
 		when((domainUser.getOtpValidationRequest())).thenReturn(getExpectedRequest());
 		when(otpRepository.isOtpValidationComplete(getExpectedRequest())).thenReturn(true);
 		final User expectedUser = User.builder().build();
@@ -207,6 +209,7 @@ public class UserServiceTest {
 	public void test_should_set_role_to_citizen_when_creating_a_citizen() {
 		org.egov.user.domain.model.User domainUser = mock(User.class);
 		when(domainUser.getTenantId()).thenReturn("default");
+		when(domainUser.getPassword()).thenReturn("demo");
 		when(domainUser.getOtpValidationRequest()).thenReturn(getExpectedRequest());
 		when(otpRepository.isOtpValidationComplete(getExpectedRequest())).thenReturn(true);
 		final User expectedEntityUser = User.builder().build();

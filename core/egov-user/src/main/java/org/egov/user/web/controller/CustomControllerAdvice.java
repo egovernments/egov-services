@@ -18,6 +18,7 @@ import org.egov.user.domain.exception.UserDetailsException;
 import org.egov.user.domain.exception.UserIdMandatoryException;
 import org.egov.user.domain.exception.UserNameNotValidException;
 import org.egov.user.domain.exception.UserNotFoundException;
+import org.egov.user.domain.exception.UserPasswordMissingException;
 import org.egov.user.domain.exception.UserProfileUpdateDeniedException;
 import org.egov.user.web.adapters.errors.AtleastOneRoleCodeErrorHandler;
 import org.egov.user.web.adapters.errors.DuplicateUserNameErrorHandler;
@@ -29,6 +30,7 @@ import org.egov.user.web.adapters.errors.InvalidRoleCodeErrorHandler;
 import org.egov.user.web.adapters.errors.InvalidUserSearchRequestErrorHandler;
 import org.egov.user.web.adapters.errors.OtpValidationErrorAdapter;
 import org.egov.user.web.adapters.errors.PasswordMissMatchErrorHandler;
+import org.egov.user.web.adapters.errors.PasswordMissingErrorHandler;
 import org.egov.user.web.adapters.errors.UserDetailsErrorHandler;
 import org.egov.user.web.adapters.errors.UserIdMandatoryErrorHandler;
 import org.egov.user.web.adapters.errors.UserInvalidUpdatePasswordRequest;
@@ -157,6 +159,12 @@ public class CustomControllerAdvice {
 	@ExceptionHandler(InvalidUpdatePasswordRequestException.class)
 	public ErrorResponse handleInvalidUpdatePasswordRequest() {
 		return new UserInvalidUpdatePasswordRequest().adapt(null);
+	}
+	
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	@ExceptionHandler(UserPasswordMissingException.class)
+	public ErrorResponse handleUserPasswordMandatoryRequest() {
+		return new PasswordMissingErrorHandler().adapt(null);
 	}
 
 }

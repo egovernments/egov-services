@@ -214,7 +214,7 @@ class EmployeeDisciplinary extends React.Component {
                 if (type === "create")
                     url = baseUrl + "/hr-employee/disciplinary/_create?tenantId=" + tenantId;
                 else
-                    url = baseUrl + "/hr-employee/disciplinary/+_update?tenantId=" + tenantId + "&id=" + id;
+                    url = baseUrl + "/hr-employee/disciplinary/_update?tenantId=" + tenantId + "&id=" + id;
                 $.ajax({
                     url: url,
                     type: 'POST',

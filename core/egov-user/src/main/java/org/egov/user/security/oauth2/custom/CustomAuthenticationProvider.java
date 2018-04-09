@@ -128,6 +128,10 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 				throw new OAuth2Exception(JsonPath.read(e.getMessage(), "$.error.message"));
 			}
 		} else {
+			if(null != isCallInternal && isCallInternal.equals("true")) {
+				log.info("Skipping password validation during login.........");
+				return true;
+			}
 			return bcrypt.matches(password, user.getPassword());
 		}
 	}

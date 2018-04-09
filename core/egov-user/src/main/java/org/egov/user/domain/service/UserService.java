@@ -36,6 +36,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.common.exceptions.OAuth2Exception;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -171,7 +172,9 @@ public class UserService {
 		log.info("Into register with login method......");
 		user.setUuid(UUID.randomUUID().toString());
 		validateUser(user);
-		Otp otp = validateCredentials(user);
+		Otp otp = null;
+		if (user.isOtpValidationMandatory())
+			otp = validateCredentials(user);
 		user.setDefaultPasswordExpiry(defaultPasswordExpiryInDays);
 		user.setActive(true);
 		return getAccess(user, otp);
@@ -227,7 +230,10 @@ public class UserService {
 			headers.set("Authorization", "Basic ZWdvdi11c2VyLWNsaWVudDplZ292LXVzZXItc2VjcmV0");
 			MultiValueMap<String, String> map = new LinkedMultiValueMap<String, String>();
 			map.add("username", user.getUsername());
-			map.add("password", otp.getOtp());
+			if (otp != null && otp.getOtp() != null)
+				map.add("password", otp.getOtp());
+			else
+				map.add("password", user.getPassword());
 			map.add("grant_type", "password");
 			map.add("scope", "read");
 			map.add("tenantId", user.getTenantId());

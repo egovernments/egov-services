@@ -17,6 +17,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.postgresql.util.PGobject;
 
 /**
  * A Object holds the basic data for a property
@@ -117,9 +118,7 @@ public class Property {
 	@JsonProperty("propertyOwner")
 	private String propertyOwner = null;
 	
-	/*
-	 * @JsonProperty("demandsJsonObject") private PGobject demandsJsonObject=
-	 * null;
-	 */
+	@JsonProperty("demandsJsonObject")
+	private PGobject demandsJsonObject= null;
 
 }

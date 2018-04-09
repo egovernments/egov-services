@@ -140,10 +140,10 @@ serviceMaps:
        - jsonPath: $.services.*.expectedTime
 
        - jsonPath: $.services.*.feedback
-       
-       - jsonPath: $.services.*.landmark
 
        - jsonPath: $.services.*.rating
+       
+       - jsonPath: $.services.*.landmark
 
        - jsonPath: $.services.*.auditDetails.lastModifiedBy
 

@@ -140,7 +140,7 @@ class EmployeeDisciplinary extends React.Component {
             showcause: false,
             courtorder: false,
             courtOrderTypeList: [],
-            disciplianryAuthorityList:[],
+            disciplianryAuthorityList: [],
             removedFiles: []
 
         }
@@ -168,6 +168,7 @@ class EmployeeDisciplinary extends React.Component {
         var _this = this;
         var disciplinary = Object.assign({}, _this.state.disciplinarySet);
         let type = getUrlVars()["type"];
+        let id = getUrlVars()["id"];
 
         if (disciplinary.courtCase) {
             if (!disciplinary.courtOrderType)
@@ -208,8 +209,14 @@ class EmployeeDisciplinary extends React.Component {
                 delete disciplinary.courtDocuments;
                 delete disciplinary.showCauseDocuments;
                 delete disciplinary.enquiryDocuments;
+
+                let url = "";
+                if (type === "create")
+                    url = baseUrl + "/hr-employee/disciplinary/_create?tenantId=" + tenantId;
+                else
+                    url = baseUrl + "/hr-employee/disciplinary/+_update?tenantId=" + tenantId + "&id=" + id;
                 $.ajax({
-                    url: baseUrl + "/hr-employee/disciplinary/_create?tenantId=" + tenantId,
+                    url: url,
                     type: 'POST',
                     dataType: 'json',
                     data: JSON.stringify(_body),
@@ -384,7 +391,7 @@ class EmployeeDisciplinary extends React.Component {
             })
         });
 
-        getCommonMaster("hr-employee", "courtordertype", function (err, res) {
+        getCommonMaster("hr-masters", "courtordertype", function (err, res) {
             if (res && res["CourtOrderType"]) {
                 console.log(res);
                 _this.setState({
@@ -394,8 +401,8 @@ class EmployeeDisciplinary extends React.Component {
             }
         });
 
-        
-        getCommonMaster("hr-employee", "disciplinaryauthority", function (err, res) {
+
+        getCommonMaster("hr-masters", "disciplinaryauthority", function (err, res) {
             if (res && res["DisciplinaryAuthority"]) {
                 console.log(res);
                 _this.setState({
@@ -431,7 +438,7 @@ class EmployeeDisciplinary extends React.Component {
                             ..._this.state.disciplinarySet,
                             employeeId: obj.id
                         },
-                        memo : true
+                        memo: true
                     })
                 }
             });
@@ -1410,7 +1417,7 @@ class EmployeeDisciplinary extends React.Component {
                                             <label htmlFor="acceptanceOfExplanation">Acceptance of explanation Y/N</label>
                                         </div>
                                         <div className="col-sm-6 label-view-text">
-                                            <input type="checkbox" name="acceptanceOfExplanation" id="acceptanceOfExplanation"  checked={acceptanceOfExplanation} maxLength="200"
+                                            <input type="checkbox" name="acceptanceOfExplanation" id="acceptanceOfExplanation" checked={acceptanceOfExplanation} maxLength="200"
                                                 onChange={(e) => { handleChange(e, "acceptanceOfExplanation") }} />
 
                                         </div>
@@ -1548,8 +1555,8 @@ class EmployeeDisciplinary extends React.Component {
                                             <label htmlFor="punishmentImplemented">Punishment implemented Y/N </label>
                                         </div>
                                         <div className="col-sm-6 label-view-text">
-                                            <input type="checkbox" name="punishmentImplemented" id="punishmentImplemented"  checked={punishmentImplemented}
-                                                onChange={(e) => { handleChange(e, "punishmentImplemented") }}  />
+                                            <input type="checkbox" name="punishmentImplemented" id="punishmentImplemented" checked={punishmentImplemented}
+                                                onChange={(e) => { handleChange(e, "punishmentImplemented") }} />
 
                                         </div>
                                     </div>
@@ -1560,7 +1567,7 @@ class EmployeeDisciplinary extends React.Component {
                                             <label htmlFor="endDateOfPunishment">End date of Punishment operation period </label>
                                         </div>
                                         <div className="col-sm-6 label-view-text">
-                                            <input type="text" name="endDateOfPunishment" id="endDateOfPunishment" defaultValue={endDateOfPunishment} maxLength="200"  />
+                                            <input type="text" name="endDateOfPunishment" id="endDateOfPunishment" defaultValue={endDateOfPunishment} maxLength="200" />
 
                                         </div>
                                     </div>

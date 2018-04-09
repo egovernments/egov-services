@@ -72,10 +72,10 @@ public class AgreementValidator {
 	private AgreementService agreementService;
 
 	public void validateCreate(AgreementRequest agreementRequest, Errors errors) {
-
-		Agreement agreement = agreementRequest.getAgreement();
 		Boolean allowedAssetCategory;
-		Double rent = agreement.getRent();
+		Agreement agreement = agreementRequest.getAgreement();
+	    if(!agreement.getIsHistory()){
+ 		Double rent = agreement.getRent();
 		Double securityDeposit = agreement.getSecurityDeposit();
 		Date solvencyCertificateDate = agreement.getSolvencyCertificateDate();
 		Date bankGuaranteeDate = agreement.getBankGuaranteeDate();
@@ -84,6 +84,10 @@ public class AgreementValidator {
 		String securityDepositFactor = getConfigurations(propertiesManager.getSecurityDepositFactor(),
 				agreement.getTenantId()).get(0);
 		allowedAssetCategory = isValidAuctionAssetCategory(agreement);
+
+		if(allowedAssetCategory){
+			agreement.setExpiryDate(agreementService.getEffectiveFinYearToDate());
+		}
          
 		if (securityDeposit < rent * Integer.valueOf(securityDepositFactor) && !allowedAssetCategory){
 			errors.rejectValue("Agreement.securityDeposit", "",
@@ -119,7 +123,9 @@ public class AgreementValidator {
 					"Can not create history agreement,please change Timeperiod/CommencementDate");
 		}
 		validateAsset(agreementRequest, errors);
-		validateAllottee(agreementRequest, errors);
+		
+	    }
+	    validateAllottee(agreementRequest, errors);
 				
 	}
 

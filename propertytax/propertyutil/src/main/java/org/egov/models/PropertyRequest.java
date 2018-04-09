@@ -22,7 +22,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class PropertyRequest {
-	@JsonProperty("RequestInfo")
+	@JsonProperty("requestInfo")
 	private RequestInfo requestInfo = null;
 
 	@JsonProperty("properties")

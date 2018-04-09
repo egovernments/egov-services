@@ -15,7 +15,7 @@ info:
 host: phoenix-qa.egovernments.org
 schemes:
   - https
-basePath: '/rainmaker-pgr/v1'
+basePath: '/rainmaker-pg/v2'
 
 paths:
   /requests/_search:
@@ -209,15 +209,13 @@ definitions:
         type: string
         description: A full description of the request provided by the user
         minLength: 2
-        maxLength: 500
+        maxLength: 250
 
       lat:
-        type: number
-        format: double
+        type: integer
         description: Latitude of the location.
       long:
-        type: number
-        format: double
+        type: integer
         description: Longitude of location.
       address:
         type: string
@@ -296,6 +294,11 @@ definitions:
       rating:
         type: string
         description: Rating about service from 1 to 5.
+      landmark:
+        type: string
+        description: land mark close to the adress
+        minLength: 2
+        maxLength: 50
       
       auditDetails:
         $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-1-0.yml#/definitions/AuditDetails"
@@ -353,7 +356,6 @@ definitions:
       comment:
         type: string
         description: Capture the comments made by Employee/Citizen.
-       
   
 ###########################################################################
 

@@ -109,7 +109,7 @@ public class DemandRepository {
 		List<DemandReason> demandReasons = new ArrayList<>();
 		Agreement agreement = agreementRequest.getAgreement();
 		String taxReason;
-		Date effectiveToDate = getEfectiveToDate(agreement);
+		Date effectiveToDate = getEffectiveToDate(agreement);
 		if(effectiveToDate.compareTo(agreement.getExpiryDate())>0){
             effectiveToDate = agreement.getExpiryDate();
 		}
@@ -125,7 +125,7 @@ public class DemandRepository {
 	 * API to fetch current installment end date based on agreement payment
 	 * cycle and current date
 	 */
-	private Date getEfectiveToDate(Agreement agreement) {
+	private Date getEffectiveToDate(Agreement agreement) {
 		Calendar cal = Calendar.getInstance();
 		if (agreement.getPaymentCycle().equals(PaymentCycle.QUARTER)) {
 			cal = getEffectiveQuarterToDate();

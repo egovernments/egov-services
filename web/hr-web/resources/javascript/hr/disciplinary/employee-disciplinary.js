@@ -140,6 +140,7 @@ class EmployeeDisciplinary extends React.Component {
             showcause: false,
             courtorder: false,
             courtOrderTypeList: [],
+            disciplianryAuthorityList: [],
             removedFiles: []
 
         }
@@ -167,6 +168,7 @@ class EmployeeDisciplinary extends React.Component {
         var _this = this;
         var disciplinary = Object.assign({}, _this.state.disciplinarySet);
         let type = getUrlVars()["type"];
+        let id = getUrlVars()["id"];
 
         if (disciplinary.courtCase) {
             if (!disciplinary.courtOrderType)
@@ -207,8 +209,14 @@ class EmployeeDisciplinary extends React.Component {
                 delete disciplinary.courtDocuments;
                 delete disciplinary.showCauseDocuments;
                 delete disciplinary.enquiryDocuments;
+
+                let url = "";
+                if (type === "create")
+                    url = baseUrl + "/hr-employee/disciplinary/_create?tenantId=" + tenantId;
+                else
+                    url = baseUrl + "/hr-employee/disciplinary/_update?tenantId=" + tenantId + "&id=" + id;
                 $.ajax({
-                    url: baseUrl + "/hr-employee/disciplinary/_create?tenantId=" + tenantId,
+                    url: url,
                     type: 'POST',
                     dataType: 'json',
                     data: JSON.stringify(_body),
@@ -217,7 +225,12 @@ class EmployeeDisciplinary extends React.Component {
                         'auth-token': authToken
                     },
                     success: function (res) {
-                        showSuccess("Created successfully Created");
+                        if (type === "create")
+                            showSuccess("Disciplinary action Created successfully");
+                        else
+                            showSuccess("Disciplinary action Updated successfully");
+
+                        window.location.href = `app/hr/disciplinary/search-disciplinary.html?type=create`;
                     },
                     error: function (err) {
                         console.log(err);
@@ -362,7 +375,7 @@ class EmployeeDisciplinary extends React.Component {
 
     }
 
-    componentDidMount() {
+    componentWillMount() {
 
         if (window.opener && window.opener.document) {
             var logo_ele = window.opener.document.getElementsByClassName("homepage_logo");
@@ -382,12 +395,23 @@ class EmployeeDisciplinary extends React.Component {
             })
         });
 
-        getCommonMasterById("hr-employee", "courtordertype", id, function (err, res) {
+        getCommonMaster("hr-masters", "courtordertype", function (err, res) {
             if (res && res["CourtOrderType"]) {
                 console.log(res);
                 _this.setState({
                     ..._this.state,
                     courtOrderTypeList: res["CourtOrderType"]
+                })
+            }
+        });
+
+
+        getCommonMaster("hr-masters", "disciplinaryauthority", function (err, res) {
+            if (res && res["DisciplinaryAuthority"]) {
+                console.log(res);
+                _this.setState({
+                    ..._this.state,
+                    disciplianryAuthorityList: res["DisciplinaryAuthority"]
                 })
             }
         });
@@ -417,8 +441,8 @@ class EmployeeDisciplinary extends React.Component {
                         disciplinarySet: {
                             ..._this.state.disciplinarySet,
                             employeeId: obj.id
-                        }
-
+                        },
+                        memo: true
                     })
                 }
             });
@@ -441,16 +465,21 @@ class EmployeeDisciplinary extends React.Component {
                                 });
                             }
 
+                            let enquiry = false;
+                            let showcause = false;
+                            let courtorder = false;
+
+
                             if (res1["Disciplinary"]["0"]["enquiryOfficerName"]) {
-                                var enquiry = true
+                                enquiry = true
                                 $('#enquiry, #showcause').prop("disabled", false);
                             }
                             if (res1["Disciplinary"]["0"]["showCauseNoticeNo"]) {
-                                var showcause = true
+                                showcause = true
                                 $('#showcause, #courtorder').prop("disabled", false);
                             }
                             if (res1["Disciplinary"]["0"]["courtOrderNo"]) {
-                                var courtorder = true
+                                courtorder = true
                                 $('#courtorder').prop("disabled", false);
                             }
 
@@ -985,7 +1014,7 @@ class EmployeeDisciplinary extends React.Component {
                                         <label htmlFor="allotteeName"> Memo </label>
                                     </div>
                                     <div className="col-sm-6 label-view-text">
-                                        <input type="checkbox" name="memo" id="memo" value={memo} checked={memo} maxLength="200"
+                                        <input type="checkbox" name="memo" id="memo" checked={memo} maxLength="200"
                                             onChange={(e) => { handleSectionChange(e, "memo") }} />
                                     </div>
                                 </div>
@@ -996,7 +1025,7 @@ class EmployeeDisciplinary extends React.Component {
                                         <label htmlFor="mobileNumber">Enquiry </label>
                                     </div>
                                     <div className="col-sm-6 label-view-text">
-                                        <input type="checkbox" name="enquiry" id="enquiry" value={enquiry} checked={enquiry} maxLength="200"
+                                        <input type="checkbox" name="enquiry" id="enquiry" checked={enquiry} maxLength="200"
                                             onChange={(e) => { handleSectionChange(e, "enquiry") }} />
                                     </div>
                                 </div>
@@ -1007,7 +1036,7 @@ class EmployeeDisciplinary extends React.Component {
                                         <label htmlFor="allotteeName"> Show Cause Notice </label>
                                     </div>
                                     <div className="col-sm-6 label-view-text">
-                                        <input type="checkbox" name="showcause" id="showcause" value={showcause} checked={showcause} maxLength="200"
+                                        <input type="checkbox" name="showcause" id="showcause" checked={showcause} maxLength="200"
                                             onChange={(e) => { handleSectionChange(e, "showcause") }} disabled />
                                     </div>
                                 </div>
@@ -1018,7 +1047,7 @@ class EmployeeDisciplinary extends React.Component {
                                         <label htmlFor="mobileNumber">Court Order </label>
                                     </div>
                                     <div className="col-sm-6 label-view-text">
-                                        <input type="checkbox" name="courtorder" id="courtorder" value={courtorder} checked={courtorder} maxLength="200"
+                                        <input type="checkbox" name="courtorder" id="courtorder" checked={courtorder} maxLength="200"
                                             onChange={(e) => { handleSectionChange(e, "courtorder") }} disabled />
                                     </div>
                                 </div>
@@ -1095,16 +1124,7 @@ class EmployeeDisciplinary extends React.Component {
                                             <select type="text" name="disciplinaryAuthority" id="disciplinaryAuthority" value={disciplinaryAuthority} maxLength="200"
                                                 onChange={(e) => { handleChange(e, "disciplinaryAuthority") }} required >
                                                 <option value="">Select Disciplinary Authority</option>
-                                                <option value="GOVERNMENTOFAP_APSECRETARIAT_VELAGAPUDI">Government of AP, AP Secretariat, Velagapudi</option>
-                                                <option value="GOVERNMENTOFAP_APSECRETARIAT_VELAGAPUDI">Commissioner & Director of Municipal Administration</option>
-                                                <option value="GOVERNMENTOFAP_APSECRETARIAT_VELAGAPUDI">Engineer-in-Chief (PH)</option>
-                                                <option value="GOVERNMENTOFAP_APSECRETARIAT_VELAGAPUDI">Director of Town & Country Planning</option>
-                                                <option value="GOVERNMENTOFAP_APSECRETARIAT_VELAGAPUDI">Regional Director-cum-Appellate Commissioner of Municipal Administration concerned</option>
-                                                <option value="GOVERNMENTOFAP_APSECRETARIAT_VELAGAPUDI">Regional Deputy Director of Town & Country Planning concerned</option>
-                                                <option value="GOVERNMENTOFAP_APSECRETARIAT_VELAGAPUDI">Superintending Engineer (PH) concerned</option>
-                                                <option value="GOVERNMENTOFAP_APSECRETARIAT_VELAGAPUDI">Chairperson/Mayor of Municipal Council concerned</option>
-                                                <option value="GOVERNMENTOFAP_APSECRETARIAT_VELAGAPUDI">Municipal Commissioner concerned</option>
-                                                <option value="GOVERNMENTOFAP_APSECRETARIAT_VELAGAPUDI">Others, if any</option>
+                                                {renderOption(_this.state.disciplianryAuthorityList)}
                                             </select>
 
                                         </div>
@@ -1189,7 +1209,7 @@ class EmployeeDisciplinary extends React.Component {
                                             <label htmlFor="explanationAccepted">Explanation Accepted Y/N</label>
                                         </div>
                                         <div className="col-sm-6 label-view-text">
-                                            <input type="checkbox" name="explanationAccepted" id="explanationAccepted" value={explanationAccepted} checked={explanationAccepted} maxLength="200"
+                                            <input type="checkbox" name="explanationAccepted" id="explanationAccepted" checked={explanationAccepted} maxLength="200"
                                                 onChange={(e) => { handleChange(e, "explanationAccepted") }} />
 
                                         </div>
@@ -1239,7 +1259,7 @@ class EmployeeDisciplinary extends React.Component {
                                             <label htmlFor="accepted">Accepted Y/N</label>
                                         </div>
                                         <div className="col-sm-6 label-view-text">
-                                            <input type="checkbox" name="accepted" id="accepted" value={accepted} checked={accepted} maxLength="200"
+                                            <input type="checkbox" name="accepted" id="accepted" checked={accepted} maxLength="200"
                                                 onChange={(e) => { handleChange(e, "accepted") }} />
 
                                         </div>
@@ -1401,7 +1421,7 @@ class EmployeeDisciplinary extends React.Component {
                                             <label htmlFor="acceptanceOfExplanation">Acceptance of explanation Y/N</label>
                                         </div>
                                         <div className="col-sm-6 label-view-text">
-                                            <input type="checkbox" name="acceptanceOfExplanation" id="acceptanceOfExplanation" value={acceptanceOfExplanation} checked={acceptanceOfExplanation} maxLength="200"
+                                            <input type="checkbox" name="acceptanceOfExplanation" id="acceptanceOfExplanation" checked={acceptanceOfExplanation} maxLength="200"
                                                 onChange={(e) => { handleChange(e, "acceptanceOfExplanation") }} />
 
                                         </div>
@@ -1499,7 +1519,7 @@ class EmployeeDisciplinary extends React.Component {
                                             <label htmlFor="explanationToShowCauseNoticeAccepted">Explanation to Show cause notice Accepted Y/N <span>*</span></label>
                                         </div>
                                         <div className="col-sm-6 label-view-text">
-                                            <input type="checkbox" name="explanationToShowCauseNoticeAccepted" id="explanationToShowCauseNoticeAccepted" value={explanationToShowCauseNoticeAccepted} checked={explanationToShowCauseNoticeAccepted} maxLength="200"
+                                            <input type="checkbox" name="explanationToShowCauseNoticeAccepted" id="explanationToShowCauseNoticeAccepted" checked={explanationToShowCauseNoticeAccepted} maxLength="200"
                                                 onChange={(e) => { handleChange(e, "explanationToShowCauseNoticeAccepted") }} required />
 
                                         </div>
@@ -1539,8 +1559,8 @@ class EmployeeDisciplinary extends React.Component {
                                             <label htmlFor="punishmentImplemented">Punishment implemented Y/N </label>
                                         </div>
                                         <div className="col-sm-6 label-view-text">
-                                            <input type="checkbox" name="punishmentImplemented" id="punishmentImplemented" value={punishmentImplemented} checked={punishmentImplemented}
-                                                onChange={(e) => { handleChange(e, "punishmentImplemented") }} required />
+                                            <input type="checkbox" name="punishmentImplemented" id="punishmentImplemented" checked={punishmentImplemented}
+                                                onChange={(e) => { handleChange(e, "punishmentImplemented") }} />
 
                                         </div>
                                     </div>
@@ -1551,7 +1571,7 @@ class EmployeeDisciplinary extends React.Component {
                                             <label htmlFor="endDateOfPunishment">End date of Punishment operation period </label>
                                         </div>
                                         <div className="col-sm-6 label-view-text">
-                                            <input type="text" name="endDateOfPunishment" id="endDateOfPunishment" defaultValue={endDateOfPunishment} maxLength="200" required />
+                                            <input type="text" name="endDateOfPunishment" id="endDateOfPunishment" defaultValue={endDateOfPunishment} maxLength="200" />
 
                                         </div>
                                     </div>
@@ -1618,7 +1638,7 @@ class EmployeeDisciplinary extends React.Component {
                                         <label htmlFor="courtCase">Court case filed if any Y/N </label>
                                     </div>
                                     <div className="col-sm-6 label-view-text">
-                                        <input type="checkbox" name="courtCase" id="courtCase" value={courtCase} checked={courtCase} maxLength="200"
+                                        <input type="checkbox" name="courtCase" id="courtCase" checked={courtCase} maxLength="200"
                                             onChange={(e) => { handleChange(e, "courtCase") }} />
 
                                     </div>

@@ -174,5 +174,6 @@ public class Agreement {
 	private Double auctionAmount;
 	private Double solvencyAmount;
 	private Boolean showDetails=Boolean.TRUE;
+	private Boolean isHistory;
 
 }

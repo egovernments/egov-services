@@ -21,12 +21,12 @@ class AssetHistory extends React.Component {
     let {handleChange} = this;
     let self = this;
 
-    if(window.opener && window.opener.document) {
-      var logo_ele = window.opener.document.getElementsByClassName("homepage_logo");
-      if(logo_ele && logo_ele[0]) {
-        document.getElementsByClassName("homepage_logo")[0].src = window.location.origin + logo_ele[0].getAttribute("src");
-      }
-    }
+    // if(window.opener && window.opener.document) {
+    //   var logo_ele = window.opener.document.getElementsByClassName("homepage_logo");
+    //   if(logo_ele && logo_ele[0]) {
+    //     document.getElementsByClassName("homepage_logo")[0].src = window.location.origin + logo_ele[0].getAttribute("src");
+    //   }
+    // }
 
    let assetCode = [];
    let assetName = [];
@@ -108,10 +108,12 @@ class AssetHistory extends React.Component {
 
     commonApiPost("asset-services","assets","_search", searchSet, function(err, res) {
       // console.log(res['Assets']);
+      if(res['Assets']){
       self.setState({
         resultSet:res['Assets'],
         isSearchClicked:true
       });
+    }
     });
 
   }
@@ -168,6 +170,16 @@ class AssetHistory extends React.Component {
     let self = this;
     commonApiPost("asset-services", "assets", "_search", { tenantId, isTransactionHistoryRequired:true, code:assetCode}, function(err, res) {
       let result = res && res.Assets[0] && res.Assets[0].transactionHistory || []
+
+      if(res && res["Assets"] && res["Assets"][0]){
+      commonApiPost("asset-services", "assets", "currentvalue/_search", { tenantId, assetIds: res["Assets"][0].id }, function (er, res) {
+        if (res && res.AssetCurrentValues && res["AssetCurrentValues"][0]) {
+          self.setState({
+              assetCurrentValue: res.AssetCurrentValues[0].currentAmount
+          })
+        }
+      });
+    }
       self.setState({
         currentValue : res && res.Assets[0] && res.Assets[0].currentValue || 0,
         historyResult:result,
@@ -185,7 +197,7 @@ class AssetHistory extends React.Component {
         <tr>
             <th>Sr. No.</th>
             <th>Transaction Date</th>
-            <th>Current Gross Value(Rs.)</th>
+            <th>Gross Value before Transaction(Rs.)</th>
             <th>Transaction Type</th>
             <th>Transaction Amount(Rs.)</th>
             <th>Gross Value after Transaction(Rs.)</th>
@@ -203,13 +215,13 @@ class AssetHistory extends React.Component {
   }
 
   renderHistoryBody(){
-    let {historyResult, currentValue} = this.state;
+    let {historyResult, currentValue, assetCurrentValue} = this.state;
     return historyResult && historyResult.map((history,idx)=>{
       return(
         <tr key={idx}>
           <td>{idx+1}</td>
           <td>{moment(history.transactionDate).format('DD/MM/YYYY')}</td>
-          <td>{currentValue === null ? 0 :currentValue}</td>
+          <td>{history.valueBeforeTransaction}</td>
           <td>{history.transactionType}</td>
           <td>{history.transactionAmount}</td>
           <td>{history.valueAfterTransaction || 0}</td>
@@ -220,7 +232,7 @@ class AssetHistory extends React.Component {
 
   render(){
     let {handleChange, search, closeWindow, getName, linkHistoryTable}=this;
-    let {assetCategory, assetCategoryName, department, isSearchClicked, resultSet}=this.state;
+    let {assetCurrentValue, assetCategory, assetCategoryName, department, isSearchClicked, resultSet}=this.state;
     // console.log(this.state.historyResult, this.state.grossValue);
     // console.log(this.state.searchSet);
 

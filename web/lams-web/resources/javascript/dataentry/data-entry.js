@@ -124,7 +124,8 @@ $(document).ready(function() {
     //modify - autopopulate the fields
     commonApiPost('lams-services/agreements/_search', '','',{tenantId:tenantId,action:"Modify",agreementNumber:getUrlVars()["agreementNumber"]}).then(function(response){
       if(response.Agreements[0].source === 'DATA_ENTRY' ){
-        $('#pageTitle').html('Modify Agreement-- Data Entry');
+        $('#pageTitle').html('Modify Agreement');
+        $('#hpCitizenTitle').html("Modify Data Entry Agreement");
         create=false;
         let modifyAgreements = response.Agreements[0];
         // console.log(modifyAgreements);
@@ -142,6 +143,7 @@ $(document).ready(function() {
         $("#referenceNumber").val(agreement.referenceNumber);
         }
 
+       $("#historySection").remove();
         dependentonBasisTime(agreement.basisOfAllotment, agreement.timePeriod);
         // #createAgreementForm select, #createAgreementForm textarea
         $("input, select, textarea").not('div[id*=AssetDetailsBlock] input, div[id*=AssetDetailsBlock] select, div[id*=AssetDetailsBlock] textarea').each(function(index, elm){
@@ -248,6 +250,28 @@ $(document).ready(function() {
       }
     }
 
+  })
+
+  $('#isHistory').on('change',function(){
+    if(this.value==='YES'){
+      agreement["isHistory"]=true;
+        $('#timePeriod option').remove();
+        $('#timePeriod').append($("<option/>").val("").text("Select Time Period"));
+      for(var i=0;i<5 ;i++){
+      $('#timePeriod').append($("<option/>").val(i+1).text(i+1));
+      }
+    }else{
+          agreement["isHistory"]=false;
+          $('#timePeriod option').remove();
+          $('#timePeriod').append($("<option/>").val("").text("Select Time Period"));
+          if (decodeURIComponent(getUrlVars()["type"]) == "Shopping Complex"){
+          for(var i=0;i<25;i++){
+            $('#timePeriod').append($("<option/>").val(i+1).text(i+1));
+           }
+          } else{
+          $('#timePeriod').append($("<option/>").val(1).text("1"));
+         }
+       }
   })
 
   if (decodeURIComponent(getUrlVars()["type"]) != "Shopping Complex"){
@@ -585,6 +609,9 @@ var commomFieldsRules = {
     },
     auctionAmount:{
       required :true
+    },
+    isHistory:{
+      required: true
     }
 
 };
@@ -731,6 +758,9 @@ finalValidatinRules["messages"] = {
     },
     solvencyCertificateDate: {
         required: "Enter Solvency certificate date"
+    },
+    isHistory:{
+      required: "Required"
     }
 }
 
@@ -946,6 +976,20 @@ $("#createAgreement").on("click", function(e) {
     // switchValidation("final_validatin_rules");
 })
 
+function validateHistoryDate(fromDate,timePeriod){
+  var currentDate = new Date();
+  var allotmentDate = moment(fromDate,"DD/MM/YYYY");
+  var day = Number(allotmentDate.format("DD"));
+  var month = Number(allotmentDate.format("MM"));
+  var year = Number(allotmentDate.format("YYYY"))+ Number(timePeriod);
+console.log("day"+day+"Month:"+month);
+  var expiryDate = new Date(year,month-1,day);
+  if(expiryDate > currentDate){
+    return false;
+  }else{
+     return true;
+  }
+  }
 
 
 // Adding Jquery validation dynamically
@@ -953,6 +997,19 @@ $("#createAgreementForm").validate({
     rules: finalValidatinRules,
     messages: finalValidatinRules["messages"],
     submitHandler: function(form) {
+
+      var fromDate = $('#commencementDate').val();
+      var timePeriod = $('#timePeriod').val();
+      var isHistory = $('#isHistory').val();
+      var isValid;
+      if(isHistory==="YES"){
+        isValid = validateHistoryDate(fromDate,timePeriod);
+        if(!isValid){
+          showError("Agreement is not an expired agreement, please check date of allotment and timeperiod");
+          return false;
+        }
+
+      }
 
     var id1 = $('#collectedGoodWillAmount').val();
     var id2 = $('#goodWillAmount').val();

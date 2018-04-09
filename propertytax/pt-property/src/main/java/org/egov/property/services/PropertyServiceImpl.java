@@ -4,6 +4,7 @@ import static org.springframework.util.StringUtils.isEmpty;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -12,6 +13,7 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.TimeZone;
 import java.util.stream.Collectors;
 
@@ -21,8 +23,10 @@ import org.egov.models.Address;
 import org.egov.models.AppConfigurationResponse;
 import org.egov.models.AppConfigurationSearchCriteria;
 import org.egov.models.AttributeNotFoundException;
+import org.egov.models.AuditDetails;
 import org.egov.models.Demand;
 import org.egov.models.DemandDetail;
+import org.egov.models.DemandId;
 import org.egov.models.DemandRequest;
 import org.egov.models.DemandResponse;
 import org.egov.models.Demolition;
@@ -107,6 +111,7 @@ import org.egov.property.utility.UpicNoGeneration;
 import org.egov.property.utility.UserUtil;
 import org.egov.property.utility.ValidatorUtil;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
+import org.postgresql.util.PGobject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -181,7 +186,7 @@ public class PropertyServiceImpl implements PropertyService {
 
 	@Autowired
 	ValidatorUtil validatorUtil;
-	
+
 	@Autowired
 	VacancyRemissionRepository vacancyRemissionRepository;
 
@@ -189,15 +194,14 @@ public class PropertyServiceImpl implements PropertyService {
 	public PropertyResponse createProperty(PropertyRequest propertyRequest) throws Exception {
 
 		for (Property property : propertyRequest.getProperties()) {
+
 			propertyValidator.validatePropertyMasterData(property, propertyRequest.getRequestInfo());
 			propertyValidator.validatePropertyBoundary(property, propertyRequest.getRequestInfo());
+
 			String acknowldgementNumber = generateAcknowledegeMentNumber(property.getTenantId(),
 					propertyRequest.getRequestInfo());
 			property.getPropertyDetail().setApplicationNo(acknowldgementNumber);
 			property.getPropertyDetail().setStatus(StatusEnum.WORKFLOW);
-
-			PropertyRequest updatedPropertyRequest = new PropertyRequest(propertyRequest.getRequestInfo(),
-					Collections.singletonList(property));
 
 			if (property.getChannel().toString().equalsIgnoreCase(propertiesManager.getChannelType())) {
 
@@ -211,13 +215,138 @@ public class PropertyServiceImpl implements PropertyService {
 			List<User> users = property.getOwners();
 			createUsers(users, propertyRequest.getRequestInfo());
 
-			if (property.getChannel().toString().equalsIgnoreCase(propertiesManager.getChannelType())) {
-				kafkaTemplate.send(propertiesManager.getCreateWorkflow(), propertyRequest);
-			} else {
-				kafkaTemplate.send(propertiesManager.getCreatePropertyUserValidator(), updatedPropertyRequest);
-			}
+			prepareToSave(property, propertyRequest.getRequestInfo());
+
+			kafkaTemplate.send(propertiesManager.getCreateValidatedProperty(), propertyRequest);
 		}
 		return getResponseInfo(propertyRequest);
+	}
+
+	private void prepareToSave(Property property, RequestInfo requestInfo) {
+
+		property.setId(new Random().nextLong());
+		property.getAddress().setId(new Random().nextLong());
+		property.getPropertyDetail().setId(new Random().nextLong());
+
+		if (property.getIsUnderWorkflow() == null) {
+			property.setIsUnderWorkflow(false);
+		}
+		if (property.getIsAuthorised() == null) {
+			property.setIsAuthorised(true);
+		}
+		if (property.getActive() == null) {
+			property.setActive(true);
+		}
+		if (property.getPropertyDetail().getIsVerified() == null) {
+			property.getPropertyDetail().setIsVerified(false);
+		}
+		if (property.getPropertyDetail().getIsExempted() == null) {
+			property.getPropertyDetail().setIsExempted(false);
+		}
+		if (property.getPropertyDetail().getIsSuperStructure() == null) {
+			property.getPropertyDetail().setIsSuperStructure(false);
+		}
+
+		AuditDetails auditDetails = getAuditDetail(requestInfo);
+
+		property.setAuditDetails(auditDetails);
+		property.getAddress().setAuditDetails(auditDetails);
+		property.getPropertyDetail().setAuditDetails(auditDetails);
+		property.getBoundary().setId(new Random().nextLong());
+		property.getBoundary().setAuditDetails(auditDetails);
+
+		if (property.getVacantLand() != null) {
+			property.getVacantLand().setId(new Random().nextLong());
+			property.getVacantLand().setAuditDetails(auditDetails);
+		}
+
+		if (!property.getPropertyDetail().getPropertyType().equalsIgnoreCase(propertiesManager.getVacantLand())) {
+
+			if (property.getPropertyDetail().getNoOfFloors() == null) {
+				if (property.getPropertyDetail().getFloors() != null) {
+					int floorCount = property.getPropertyDetail().getFloors().size();
+					property.getPropertyDetail().setNoOfFloors((long) floorCount);
+				}
+
+			}
+
+			for (Floor floor : property.getPropertyDetail().getFloors()) {
+				floor.setId(new Random().nextLong());
+				floor.setAuditDetails(auditDetails);
+				for (Unit unit : floor.getUnits()) {
+					if (unit.getIsAuthorised() == null) {
+						unit.setIsAuthorised(true);
+					}
+					if (unit.getIsStructured() == null) {
+						unit.setIsStructured(true);
+					}
+					unit.setId(new Random().nextLong());
+					unit.setAuditDetails(auditDetails);
+					if (unit.getUnitType().toString().equalsIgnoreCase(propertiesManager.getUnitType())
+							&& unit.getUnits() != null) {
+
+						for (Unit room : unit.getUnits()) {
+							room.setId(new Random().nextLong());
+							room.setAuditDetails(auditDetails);
+						}
+					}
+				}
+			}
+
+			if (property.getPropertyDetail().getDocuments() != null) {
+				for (Document document : property.getPropertyDetail().getDocuments()) {
+					document.setId(new Random().nextLong());
+					document.setAuditDetails(auditDetails);
+				}
+			}
+		}
+
+		for (User owner : property.getOwners()) {
+			if (owner.getIsPrimaryOwner() == null) {
+				owner.setIsPrimaryOwner(false);
+			}
+			if (owner.getIsSecondaryOwner() == null) {
+				owner.setIsSecondaryOwner(false);
+			}
+			if (owner.getAccountLocked() == null) {
+				owner.setAccountLocked(false);
+			}
+			owner.setId(new Random().nextLong());
+			owner.setAuditDetails(auditDetails);
+		}
+
+		List<DemandId> demandIdList = new ArrayList<DemandId>();
+
+		if (property.getDemands() != null) {
+			for (Demand demand : property.getDemands()) {
+				DemandId id = new DemandId();
+				id.setId(demand.getId());
+				demandIdList.add(id);
+			}
+		}
+
+		Gson gson = new Gson();
+		PGobject jsonObject = new PGobject();
+		jsonObject.setType("jsonb");
+		try {
+			jsonObject.setValue(gson.toJson(demandIdList));
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		property.setDemandsJsonObject(jsonObject);
+
+	}
+
+	private AuditDetails getAuditDetail(RequestInfo requestInfo) {
+		String userId = requestInfo.getUserInfo().getId().toString();
+		Long currEpochDate = new Date().getTime();
+		AuditDetails auditDetail = new AuditDetails();
+		auditDetail.setCreatedBy(userId);
+		auditDetail.setCreatedTime(currEpochDate);
+		auditDetail.setLastModifiedBy(userId);
+		auditDetail.setLastModifiedTime(currEpochDate);
+		return auditDetail;
 	}
 
 	private PropertyResponse getResponseInfo(PropertyRequest propertyRequest) {
@@ -1482,7 +1611,7 @@ public class PropertyServiceImpl implements PropertyService {
 
 		kafkaTemplate.send(propertiesManager.getCreateValidatedTaxExemption(), taxExemptionRequest);
 		propertyRepository.updateIsPropertyUnderWorkflow(taxExemptionRequest.getTaxExemption().getUpicNumber());
-		
+
 		taxExemptionResponse = new TaxExemptionResponse();
 		taxExemptionResponse.setResponseInfo(
 				responseInfoFactory.createResponseInfoFromRequestInfo(taxExemptionRequest.getRequestInfo(), true));
@@ -1562,11 +1691,11 @@ public class PropertyServiceImpl implements PropertyService {
 
 		validatorUtil.isDemandCollected(vacancyRemissionRequest.getVacancyRemission().getUpicNo(),
 				vacancyRemissionRequest.getVacancyRemission().getTenantId(), requestInfo);
-		
+
 		propertyRepository.updateIsPropertyUnderWorkflow(vacancyRemissionRequest.getVacancyRemission().getUpicNo());
-		
+
 		kafkaTemplate.send(propertiesManager.getCreateValidatedVacancyRemission(), vacancyRemissionRequest);
-		
+
 		ResponseInfo responseInfo = responseInfoFactory
 				.createResponseInfoFromRequestInfo(vacancyRemissionRequest.getRequestInfo(), true);
 		VacancyRemissionResponse vacancyRemissionResponse = new VacancyRemissionResponse();

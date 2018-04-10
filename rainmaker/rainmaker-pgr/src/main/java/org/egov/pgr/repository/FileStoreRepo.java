@@ -53,11 +53,13 @@ public class FileStoreRepo {
 				else
 					x = size;
 
-				String idLIst = fileStoreIds.subList(i, x).toString().substring(1, fileStoreIds.toString().length() - 1)
+				String subList = fileStoreIds.subList(i, x).toString();
+				
+				String subIdLIst = subList.substring(1, subList.length() - 1)
 						.replace(", ", ",");
-				log.info("idLIst: " + idLIst);
+				log.info("subIdLIst : " + subIdLIst);
 				result.putAll(restTemplate.getForObject(URI.create(fileStoreHost + urlEndPoint + "?" + TENANTID_PARAM
-						+ tenantId + FILESTORE_ID_LIST_PARAM + idLIst), Map.class));
+						+ tenantId + FILESTORE_ID_LIST_PARAM + subIdLIst), Map.class));
 			}
 			return result;
 		}

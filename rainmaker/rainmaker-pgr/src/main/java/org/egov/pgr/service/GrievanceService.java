@@ -302,36 +302,10 @@ public class GrievanceService {
 	 */
 	public ServiceResponse getServiceResponse(ServiceRequest serviceReqRequest) {
 
-		ObjectMapper mapper = pGRUtils.getObjectMapper();
-		List<Service> services = serviceReqRequest.getServices();
-		String tenantId = services.get(0).getTenantId();
-		List<String> serviceRequestIds = services.parallelStream().map(Service::getServiceRequestId)
-				.collect(Collectors.toList());
-
-		ServiceReqSearchCriteria serviceReqSearchCriteria = ServiceReqSearchCriteria.builder()
-				.serviceRequestId(serviceRequestIds).tenantId(tenantId).build();
-
-		ServiceResponse serviceResponse = null;
-		/*
-		 * for loop is to produce lag for fetching data to match the lad endured by
-		 * kafka
-		 */
-		Long start = new Date().getTime();
-		for (int i = 0; i <= 100000000; i++) {
-			i++;
-			i--;
-		}
-		log.info("Update/Search time lag: " + (new Date().getTime() - start));
-		Object response = getServiceRequestDetails(serviceReqRequest.getRequestInfo(), serviceReqSearchCriteria);
-		serviceResponse = mapper.convertValue(response, ServiceResponse.class);
-
-		if (CollectionUtils.isEmpty(serviceResponse.getActionHistory()))
 			return ServiceResponse.builder()
 					.responseInfo(factory.createResponseInfoFromRequestInfo(serviceReqRequest.getRequestInfo(), true))
 					.services(serviceReqRequest.getServices())
 					.actionHistory(convertActionInfosToHistorys(serviceReqRequest.getActionInfo())).build();
-
-		return serviceResponse;
 	}
 
 	/**

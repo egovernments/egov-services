@@ -3,6 +3,8 @@ package org.egov.pgr.model;
 import java.util.Objects;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
@@ -177,6 +179,8 @@ public class Service   {
   private String feedback = null;
 
   @JsonProperty("rating")
+  @Max(5)
+  @Min(0)
   private String rating = null;
 
   @JsonProperty("auditDetails")

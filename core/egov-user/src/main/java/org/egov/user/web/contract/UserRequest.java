@@ -6,7 +6,10 @@ import lombok.*;
 import org.egov.user.domain.model.Address;
 import org.egov.user.domain.model.Role;
 import org.egov.user.domain.model.User;
-import org.egov.user.domain.model.enums.*;
+import org.egov.user.domain.model.enums.AddressType;
+import org.egov.user.domain.model.enums.BloodGroup;
+import org.egov.user.domain.model.enums.Gender;
+import org.egov.user.domain.model.enums.UserType;
 
 import java.util.ArrayList;
 import java.util.Date;

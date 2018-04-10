@@ -54,6 +54,7 @@ public class UserTest {
 				.active(Boolean.TRUE)
 				.gender(Gender.FEMALE)
 				.type(UserType.CITIZEN)
+				.mobileValidationMandatory(true)
 				.build();
 
 		assertTrue(user.isMobileNumberAbsent());
@@ -252,13 +253,12 @@ public class UserTest {
 				.username("foolan_devi")
 				.name("foolan")
 				.mobileNumber("9988776655")
+				.password("password")
 				.active(Boolean.TRUE)
 				.gender(Gender.FEMALE)
 				.type(UserType.CITIZEN)
 				.tenantId("default")
 				.roles(Collections.singletonList(role1))
-				.permanentAddress(new Address("pinCode1", "city1", "address1", AddressType.PERMANENT))
-				.permanentAddress(new Address("pinCode1", "city1", "address1", AddressType.CORRESPONDENCE))
 				.build();
 
 		user.validateNewUser();
@@ -270,33 +270,10 @@ public class UserTest {
 		assertFalse(user.isUsernameAbsent());
 		assertFalse(user.isTenantIdAbsent());
 		assertFalse(user.isRolesAbsent());
-		assertFalse(user.isCorrespondenceAddressInvalid());
-		assertFalse(user.isPermanentAddressInvalid());
+
 	}
 
-	@Test
-	public void test_should_not_throw_exception_on_user_update_with_all_mandatory_fields() {
-		final Role role1 = Role.builder().code("roleCode1").build();
-		User user = User.builder()
-				.username("foolan_devi")
-				.name("foolan")
-				.mobileNumber("9988776655")
-				.active(Boolean.TRUE)
-				.gender(Gender.FEMALE)
-				.type(UserType.CITIZEN)
-				.tenantId("default")
-				.roles(Collections.singletonList(role1))
-				.permanentAddress(new Address("pinCode1", "city1", "address1", AddressType.PERMANENT))
-				.permanentAddress(new Address("pinCode1", "city1", "address1", AddressType.CORRESPONDENCE))
-				.build();
-
-		user.validateUserModification();
-
-		assertFalse(user.isCorrespondenceAddressInvalid());
-		assertFalse(user.isPermanentAddressInvalid());
-	}
-
-	@Test
+    @Test
 	public void test_should_return_false_when_logged_in_user_is_same_as_user_being_updated() {
 		User user = User.builder()
 				.id(1L)

@@ -36,18 +36,15 @@
       "identificationMark": "identification mark",
       "createdBy": 1,
       "lastModifiedBy": 1,
-      "tenantId": null,
+      "tenantId": "",
       "roles": [
         {
           "id": 1,
           "code": "roleCode",
           "name": "name of the role 1"
         }
-      ],
-      "createdDate": "01-07-1990 16:41:11",
-      "lastModifiedDate": "01-07-1990 16:41:11",
-      "dob": "04-08-1986",
-      "pwdExpiryDate": "01-07-1990 16:41:11"
+      ]
+      
     }
   ]
 }

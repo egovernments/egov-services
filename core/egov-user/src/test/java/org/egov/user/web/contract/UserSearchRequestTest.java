@@ -37,7 +37,7 @@ public class UserSearchRequestTest {
         assertThat(userSearch.getPan()).isEqualTo("pan");
         assertThat(userSearch.isFuzzyLogic()).isFalse();
         assertThat(userSearch.getActive()).isTrue();
-        assertThat(userSearch.getPageSize()).isEqualTo(20);
+        assertThat(userSearch.getPageSize()).isEqualTo(0);
         assertThat(userSearch.getPageNumber()).isEqualTo(0);
         assertThat(userSearch.getSort()).isEqualTo(Collections.singletonList("name"));
         assertThat(userSearch.getType()).isEqualTo("CITIZEN");

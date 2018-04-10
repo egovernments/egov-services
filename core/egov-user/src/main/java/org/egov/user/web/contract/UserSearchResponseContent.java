@@ -85,6 +85,7 @@ public class UserSearchResponseContent {
         this.createdDate = user.getCreatedDate();
         this.lastModifiedBy = user.getLastModifiedBy();
         this.lastModifiedDate = user.getLastModifiedDate();
+        this.tenantId = user.getTenantId();
         this.roles = convertDomainRolesToContract(user.getRoles());
 		this.fatherOrHusbandName = user.getGuardian();
 		mapPermanentAddress(user);

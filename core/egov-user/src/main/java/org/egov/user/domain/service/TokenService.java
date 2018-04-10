@@ -6,18 +6,25 @@ import org.egov.user.domain.model.Action;
 import org.egov.user.domain.model.SecureUser;
 import org.egov.user.domain.model.UserDetail;
 import org.egov.user.persistence.repository.ActionRestRepository;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.stereotype.Service;
 
+import lombok.extern.slf4j.Slf4j;
+
 import java.util.List;
 
 @Service
+@Slf4j
 public class TokenService {
 
 	private TokenStore tokenStore;
 
 	private ActionRestRepository actionRestRepository;
+
+	@Value("${roles.state.level.enabled}")
+	private boolean isRoleStateLevel;
 
 	private TokenService(TokenStore tokenStore, ActionRestRepository actionRestRepository) {
 		this.tokenStore = tokenStore;
@@ -42,8 +49,14 @@ public class TokenService {
 		}
 
 		SecureUser secureUser = ((SecureUser) authentication.getPrincipal());
-		List<Action> actions = actionRestRepository.getActionByRoleCodes(secureUser.getRoleCodes(),
-				secureUser.getTenantId());
+		String tenantId = null;
+		if (isRoleStateLevel && (secureUser.getTenantId() != null && secureUser.getTenantId().contains(".")))
+			tenantId = secureUser.getTenantId().split("\\.")[0];
+		else
+			tenantId = secureUser.getTenantId();
+		
+		List<Action> actions = actionRestRepository.getActionByRoleCodes(secureUser.getRoleCodes(), tenantId);
+		log.info("returning STATE-LEVEL roleactions for tenant: "+tenantId);
 		return new UserDetail(secureUser, actions);
 	}
 }

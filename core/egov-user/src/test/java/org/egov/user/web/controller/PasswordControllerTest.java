@@ -10,6 +10,7 @@ import org.egov.user.TestConfiguration;
 import org.egov.user.domain.model.LoggedInUserUpdatePasswordRequest;
 import org.egov.user.domain.model.NonLoggedInUserUpdatePasswordRequest;
 import org.egov.user.domain.service.UserService;
+import org.egov.user.security.CustomAuthenticationKeyGenerator;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +40,9 @@ public class PasswordControllerTest {
 	
 	@MockBean
 	private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+	
+	@MockBean
+    private CustomAuthenticationKeyGenerator authenticationKeyGenerator;
 
 	private Resources resources = new Resources();
 

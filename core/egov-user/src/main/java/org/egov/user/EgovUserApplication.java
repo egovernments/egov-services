@@ -1,10 +1,15 @@
 package org.egov.user;
 
 
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.MapperFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import java.text.SimpleDateFormat;
+import java.util.Locale;
+import java.util.TimeZone;
+
+import javax.annotation.PostConstruct;
+
 import org.egov.tracer.config.TracerConfiguration;
+import org.egov.user.security.CustomAuthenticationKeyGenerator;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -19,12 +24,12 @@ import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.redis.RedisTokenStore;
 import org.springframework.web.servlet.config.annotation.ContentNegotiationConfigurer;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
-import redis.clients.jedis.JedisShardInfo;
 
-import javax.annotation.PostConstruct;
-import java.text.SimpleDateFormat;
-import java.util.Locale;
-import java.util.TimeZone;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.MapperFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import redis.clients.jedis.JedisShardInfo;
 
 @SpringBootApplication
 @Import(TracerConfiguration.class)
@@ -37,6 +42,9 @@ public class EgovUserApplication {
 
 	@Value("${spring.redis.host}")
 	private String host;
+	
+	@Autowired
+	private CustomAuthenticationKeyGenerator customAuthenticationKeyGenerator;
 
 
 	@PostConstruct
@@ -82,7 +90,9 @@ public class EgovUserApplication {
 
 	@Bean
 	public TokenStore tokenStore() {
-		return new RedisTokenStore(connectionFactory());
+	RedisTokenStore redisTokenStore =  new RedisTokenStore(connectionFactory());
+	redisTokenStore.setAuthenticationKeyGenerator(customAuthenticationKeyGenerator);
+	return redisTokenStore;
 	}
 
 	@Bean

@@ -145,18 +145,16 @@ public class CustomControllerAdvice {
 	public ErrorResponse handleInvalidOtpException(InvalidOtpException ex) {
 		return new InvalidOtpErrorHandler().adapt(ex.getErrorMessage());
 	}
-	
+
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	@ExceptionHandler(UserNameNotValidException.class)
 	public ErrorResponse handleUserNameIsNumericException() {
 		return new UserNameNotValidErrorHandler().adapt(null);
 	}
-	
-	
+
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	@ExceptionHandler(InvalidUpdatePasswordRequestException.class)
 	public ErrorResponse handleInvalidUpdatePasswordRequest() {
 		return new UserInvalidUpdatePasswordRequest().adapt(null);
 	}
-
 }

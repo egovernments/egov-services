@@ -39,6 +39,7 @@ import org.egov.user.domain.model.enums.GuardianRelation;
 import org.egov.user.domain.model.enums.UserType;
 import org.egov.user.domain.service.TokenService;
 import org.egov.user.domain.service.UserService;
+import org.egov.user.security.CustomAuthenticationKeyGenerator;
 import org.egov.user.web.contract.auth.Role;
 import org.egov.user.web.contract.auth.User;
 import org.junit.Ignore;
@@ -69,6 +70,9 @@ public class UserControllerTest {
 
 	@MockBean
 	private TokenService tokenService;
+	
+	@MockBean
+    private CustomAuthenticationKeyGenerator authenticationKeyGenerator;
 
 	@Test
 	@WithMockUser

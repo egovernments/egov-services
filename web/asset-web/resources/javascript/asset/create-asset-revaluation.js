@@ -7,6 +7,8 @@ class Revaluation extends React.Component {
       functions: [],
       funds: [],
       fixedAssetAccount: [],
+      assetAccountToDisp:"",
+      revaluationReserveAccountToDisp:"",
       "revaluationSet": {
         "tenantId": tenantId,
         "id": "",
@@ -107,6 +109,26 @@ class Revaluation extends React.Component {
     getCommonMasterById("asset-services", "assets", id, function (err, res) {
       if (res) {
         checkCountAndCall("assetSet", res["Assets"] && res["Assets"][0] ? res["Assets"][0] : {});
+        commonApiPost("egf-masters","chartofaccounts","_search",{"tenantId":tenantId,"classification":"4", "id":res["Assets"][0].assetCategory.assetAccount}, function (AccErr, AccRes) {
+          if(AccRes){
+            _this.setState({
+                ..._this.state,
+                assetAccountToDisp: AccRes.chartOfAccounts[0].glcode +"-"+ AccRes.chartOfAccounts[0].name
+            })
+          }
+        });
+
+        commonApiPost("egf-masters","chartofaccounts","_search",{"tenantId":tenantId,"classification":"4", "id":res["Assets"][0].assetCategory.revaluationReserveAccount}, function (AccErr, AccRes) {
+          if(AccRes){
+            _this.setState({
+                ..._this.state,
+                revaluationReserveAccountToDisp: AccRes.chartOfAccounts[0].glcode +"-"+ AccRes.chartOfAccounts[0].name
+            })
+          }
+        });
+
+
+
         commonApiPost("asset-services", "assets", "currentvalue/_search", { tenantId, assetIds: res["Assets"][0].id }, function (er, res) {
           if (res && res.AssetCurrentValues.length > 0) {
             _this.setState({
@@ -158,7 +180,7 @@ class Revaluation extends React.Component {
     getDropdown("assignments_function", function (res) {
       checkCountAndCall("functions", res);
     });
-
+    
     commonApiPost("egf-masters", "accountcodepurposes", "_search", { tenantId, name: "Fixed Assets Written off" }, function (err, res2) {
       if (res2) {
         getDropdown("fixedAssetAccount", function (res) {
@@ -311,7 +333,7 @@ class Revaluation extends React.Component {
 
   render() {
     let { handleChange, close, createRevaluation, viewAssetDetails } = this;
-    let { assetSet, functions, funds, revaluationSet, fixedAssetAccount } = this.state;
+    let { assetSet, functions, funds, revaluationSet, fixedAssetAccount, assetAccountToDisp, revaluationReserveAccountToDisp } = this.state;
     const renderOptions = function (list) {
       if (list) {
         if (list.constructor == Array) {
@@ -598,7 +620,7 @@ class Revaluation extends React.Component {
                       <label>Asset Account Code </label>
                     </div>
                     <div className="col-sm-6 label-view-text">
-                      <label>{assetSet.assetCategory && assetSet.assetCategory.assetAccount}</label>
+                      <label>{ assetAccountToDisp}</label>
                     </div>
                   </div>
                 </div>
@@ -608,7 +630,7 @@ class Revaluation extends React.Component {
                       <label>Revaluation Reserve Account Code </label>
                     </div>
                     <div className="col-sm-6 display-span">
-                      <span>{assetSet.assetCategory && assetSet.assetCategory.revaluationReserveAccount}</span>
+                      <span>{revaluationReserveAccountToDisp }</span>
                     </div>
                   </div>
                 </div>

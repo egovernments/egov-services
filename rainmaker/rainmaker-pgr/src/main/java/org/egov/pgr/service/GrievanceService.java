@@ -209,7 +209,7 @@ public class GrievanceService {
 		actionInfo.setTenantId(servReq.getTenantId());
 		actionInfo.setStatus(actionInfo.getAction());
 		if (null != actionInfo.getAction() && actionStatusMap.get(actionInfo.getAction()) != null) {
-			if (WorkFlowConfigs.ACTION_CLOSE.equals(actionInfo.getAction())
+			if (!WorkFlowConfigs.ACTION_CLOSE.equals(actionInfo.getAction())
 					&& (null != servReq.getFeedback() || null != servReq.getRating()))
 				addError(ErrorConstants.UPDATE_FEEDBACK_ERROR_MSG + actionInfo.getAction() + ", with service Id : "
 						+ servReq.getServiceRequestId(), ErrorConstants.UPDATE_FEEDBACK_ERROR_KEY, errorMap);

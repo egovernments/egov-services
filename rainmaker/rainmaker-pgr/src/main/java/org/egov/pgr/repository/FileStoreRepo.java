@@ -1,6 +1,7 @@
 package org.egov.pgr.repository;
 
 import java.net.URI;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -30,11 +31,35 @@ public class FileStoreRepo {
 
 	@SuppressWarnings("unchecked")
 	public Map<String, String> getUrlMaps(String tenantId, List<String> fileStoreIds) {
-		
-		log.info("fileStoreIds: "+fileStoreIds);
-		String idLIst = fileStoreIds.toString().substring(1, fileStoreIds.toString().length() - 1).replace(", ", ",");
-		log.info("idLIst: "+idLIst);
-		return restTemplate.getForObject(URI.create(fileStoreHost + urlEndPoint + "?" + TENANTID_PARAM + tenantId + FILESTORE_ID_LIST_PARAM + idLIst),
-				Map.class);
+
+		int size = fileStoreIds.size();
+
+		if (size < 50) {
+
+			String idLIst = fileStoreIds.toString().substring(1, fileStoreIds.toString().length() - 1).replace(", ",
+					",");
+			log.info("idLIst: " + idLIst);
+			return restTemplate.getForObject(URI.create(
+					fileStoreHost + urlEndPoint + "?" + TENANTID_PARAM + tenantId + FILESTORE_ID_LIST_PARAM + idLIst),
+					Map.class);
+		} else {
+
+			Map<String, String> result = new HashMap<>();
+			int x;
+			for (int i = 0; i < size; i += 50) {
+
+				if (i + 50 < size)
+					x = i + 50;
+				else
+					x = size;
+
+				String idLIst = fileStoreIds.subList(i, x).toString().substring(1, fileStoreIds.toString().length() - 1)
+						.replace(", ", ",");
+				log.info("idLIst: " + idLIst);
+				result.putAll(restTemplate.getForObject(URI.create(fileStoreHost + urlEndPoint + "?" + TENANTID_PARAM
+						+ tenantId + FILESTORE_ID_LIST_PARAM + idLIst), Map.class));
+			}
+			return result;
+		}
 	}
 }

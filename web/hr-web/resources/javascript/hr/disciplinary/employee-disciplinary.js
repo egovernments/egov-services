@@ -256,7 +256,57 @@ class EmployeeDisciplinary extends React.Component {
         if (name == "memo") {
             if (_this.state.memo) {
                 _this.setState({
-                    ..._this.state, memo: false, enquiry: false, showcause: false, courtorder: false
+                    ..._this.state, memo: false, enquiry: false, showcause: false, courtorder: false,
+                    "disciplinarySet": {
+                        ..._this.state.disciplinarySet,
+                        "gistCase": "",
+                        "disciplinaryAuthority": "",
+                        "orderNo": "",
+                        "orderDate": "",
+                        "memoNo": "",
+                        "memoDate": "",
+                        "memoServingDate": "",
+                        "dateOfReceiptMemoDate": "",
+                        "explanationAccepted": false,
+                        "chargeMemoNo": "",
+                        "chargeMemoDate": "",
+                        "dateOfReceiptToChargeMemoDate": "",
+                        "accepted": false,
+                        "dateOfAppointmentOfEnquiryOfficerDate": "",
+                        "enquiryOfficerName": "",
+                        "enquiryOfficerDesignation": "",
+                        "dateOfAppointmentOfPresentingOfficer": "",
+                        "presentingOfficerName": "",
+                        "presentingOfficerDesignation": "",
+                        "findingsOfEO": "",
+                        "enquiryReportSubmittedDate": "",
+                        "dateOfCommunicationOfER": "",
+                        "dateOfSubmissionOfExplanationByCO": "",
+                        "acceptanceOfExplanation": false,
+                        "proposedPunishmentByDA": "",
+                        "showCauseNoticeNo": "",
+                        "showCauseNoticeDate": "",
+                        "showCauseNoticeServingDate": "",
+                        "explanationToShowCauseNotice": "",
+                        "explanationToShowCauseNoticeAccepted": false,
+                        "punishmentAwarded": "",
+                        "punishmentImplemented": "",
+                        "endDateOfPunishment": "",
+                        "proceedingsNumber": "",
+                        "proceedingsDate": "",
+                        "proceedingsServingDate": "",
+                        "courtCase": false,
+                        "courtOrderType": "",
+                        "courtOrderNo": "",
+                        "courtOrderDate": "",
+                        "gistOfDirectionIssuedByCourt": "",
+                        "tenantId": tenantId,
+                        "memoDocuments": [],
+                        "enquiryDocuments": [],
+                        "showCauseDocuments": [],
+                        "courtDocuments": [],
+                        "disciplinaryDocuments": []
+                    }
                 });
                 $('#enquiry, #showcause, #courtorder').prop("disabled", true);
                 $('#enquiry, #showcause, #courtorder').prop("checked", false);
@@ -266,13 +316,54 @@ class EmployeeDisciplinary extends React.Component {
                     ..._this.state, memo: true
                 });
                 $('#enquiry').prop("disabled", false);
+
+                //Clearing the Variables
+
+
             }
 
         } else if (name == "enquiry") {
 
             if (_this.state.enquiry) {
                 _this.setState({
-                    ..._this.state, memo: true, enquiry: false, showcause: false, courtorder: false
+                    ..._this.state, memo: true, enquiry: false, showcause: false, courtorder: false,
+                    "disciplinarySet": {
+                        ..._this.state.disciplinarySet,
+                        "dateOfAppointmentOfEnquiryOfficerDate": "",
+                        "enquiryOfficerName": "",
+                        "enquiryOfficerDesignation": "",
+                        "dateOfAppointmentOfPresentingOfficer": "",
+                        "presentingOfficerName": "",
+                        "presentingOfficerDesignation": "",
+                        "findingsOfEO": "",
+                        "enquiryReportSubmittedDate": "",
+                        "dateOfCommunicationOfER": "",
+                        "dateOfSubmissionOfExplanationByCO": "",
+                        "acceptanceOfExplanation": false,
+                        "proposedPunishmentByDA": "",
+                        "showCauseNoticeNo": "",
+                        "showCauseNoticeDate": "",
+                        "showCauseNoticeServingDate": "",
+                        "explanationToShowCauseNotice": "",
+                        "explanationToShowCauseNoticeAccepted": false,
+                        "punishmentAwarded": "",
+                        "punishmentImplemented": "",
+                        "endDateOfPunishment": "",
+                        "proceedingsNumber": "",
+                        "proceedingsDate": "",
+                        "proceedingsServingDate": "",
+                        "courtCase": false,
+                        "courtOrderType": "",
+                        "courtOrderNo": "",
+                        "courtOrderDate": "",
+                        "gistOfDirectionIssuedByCourt": "",
+                        "tenantId": tenantId,
+                        "enquiryDocuments": [],
+                        "showCauseDocuments": [],
+                        "courtDocuments": [],
+                        "disciplinaryDocuments": []
+
+                    }
                 });
                 $('#showcause, #courtorder').prop("disabled", true);
                 $('#showcause, #courtorder').prop("checked", false);
@@ -288,7 +379,32 @@ class EmployeeDisciplinary extends React.Component {
 
             if (_this.state.showcause) {
                 _this.setState({
-                    ..._this.state, memo: true, enquiry: true, showcause: false, courtorder: false
+                    ..._this.state, memo: true, enquiry: true, showcause: false, courtorder: false,
+                    "disciplinarySet": {
+                        ..._this.state.disciplinarySet,
+                        "proposedPunishmentByDA": "",
+                        "showCauseNoticeNo": "",
+                        "showCauseNoticeDate": "",
+                        "showCauseNoticeServingDate": "",
+                        "explanationToShowCauseNotice": "",
+                        "explanationToShowCauseNoticeAccepted": false,
+                        "punishmentAwarded": "",
+                        "punishmentImplemented": "",
+                        "endDateOfPunishment": "",
+                        "proceedingsNumber": "",
+                        "proceedingsDate": "",
+                        "proceedingsServingDate": "",
+                        "courtCase": false,
+                        "courtOrderType": "",
+                        "courtOrderNo": "",
+                        "courtOrderDate": "",
+                        "gistOfDirectionIssuedByCourt": "",
+                        "tenantId": tenantId,
+                        "showCauseDocuments": [],
+                        "courtDocuments": [],
+                        "disciplinaryDocuments": []
+
+                    }
                 });
                 $('#courtorder').prop("disabled", true);
                 $('#courtorder').prop("checked", false);
@@ -300,10 +416,31 @@ class EmployeeDisciplinary extends React.Component {
             }
         } else if (name == "courtorder") {
 
-            _this.setState({
-                ..._this.state,
-                courtorder: _this.state.courtorder ? false : true
-            });
+            if (_this.state.courtorder) {
+
+                _this.setState({
+                    ..._this.state,
+                    courtorder: false,
+                    "disciplinarySet": {
+                        ..._this.state.disciplinarySet,
+                        "courtCase": false,
+                        "courtOrderType": "",
+                        "courtOrderNo": "",
+                        "courtOrderDate": "",
+                        "gistOfDirectionIssuedByCourt": "",
+                        "tenantId": tenantId,
+                        "courtDocuments": [],
+                        "disciplinaryDocuments": []
+                    }
+                });
+
+            }else{
+                _this.setState({
+                    ..._this.state,
+                    courtorder: true,
+                })
+            }
+
 
         }
 
@@ -1172,20 +1309,20 @@ class EmployeeDisciplinary extends React.Component {
                                 <div className="col-sm-6">
                                     <div className="row">
                                         <div className="col-sm-6 label-text">
-                                            <label htmlFor="memoDate">Memo Date <span>*</span></label>
+                                            <label htmlFor="memoDateLabel">Memo Date <span>*</span></label>
                                         </div>
                                         <div className="col-sm-6 label-view-text">
-                                            <input type="text" name="memoDate" id="memoDate" defaultValue={memoDate} required />
+                                            <input type="text" name="memoDate" id="memoDate" defaultValue={memoDate} pattern="\d{1,2}/\d{1,2}/\d{4}" required />
                                         </div>
                                     </div>
                                 </div>
                                 <div className="col-sm-6">
                                     <div className="row">
                                         <div className="col-sm-6 label-text">
-                                            <label htmlFor="memoServingDate">Memo serving Date</label>
+                                            <label htmlFor="memoServingDateLabel">Memo serving Date</label>
                                         </div>
                                         <div className="col-sm-6 label-view-text">
-                                            <input type="text" name="memoServingDate" id="memoServingDate" defaultValue={memoServingDate} />
+                                            <input type="text" name="memoServingDate" id="memoServingDate" pattern="\d{1,2}/\d{1,2}/\d{4}" defaultValue={memoServingDate} />
 
                                         </div>
                                     </div>
@@ -1195,10 +1332,10 @@ class EmployeeDisciplinary extends React.Component {
                                 <div className="col-sm-6">
                                     <div className="row">
                                         <div className="col-sm-6 label-text">
-                                            <label htmlFor="dateOfReceiptMemoDate">Date of Receipt of Explanation to memo</label>
+                                            <label htmlFor="dateOfReceiptMemoDateLabel">Date of Receipt of Explanation to memo</label>
                                         </div>
                                         <div className="col-sm-6 label-view-text">
-                                            <input type="text" name="dateOfReceiptMemoDate" id="dateOfReceiptMemoDate" defaultValue={dateOfReceiptMemoDate} />
+                                            <input type="text" name="dateOfReceiptMemoDate" id="dateOfReceiptMemoDate" pattern="\d{1,2}/\d{1,2}/\d{4}" defaultValue={dateOfReceiptMemoDate} />
 
                                         </div>
                                     </div>
@@ -1232,10 +1369,10 @@ class EmployeeDisciplinary extends React.Component {
                                 <div className="col-sm-6">
                                     <div className="row">
                                         <div className="col-sm-6 label-text">
-                                            <label htmlFor="chargeMemoDate">Charge Memo Date</label>
+                                            <label htmlFor="chargeMemoDateLabel">Charge Memo Date</label>
                                         </div>
                                         <div className="col-sm-6 label-view-text">
-                                            <input type="text" name="chargeMemoDate" id="chargeMemoDate" defaultValue={chargeMemoDate} />
+                                            <input type="text" name="chargeMemoDate" id="chargeMemoDate" pattern="\d{1,2}/\d{1,2}/\d{4}" defaultValue={chargeMemoDate} />
 
                                         </div>
                                     </div>
@@ -1245,10 +1382,10 @@ class EmployeeDisciplinary extends React.Component {
                                 <div className="col-sm-6">
                                     <div className="row">
                                         <div className="col-sm-6 label-text">
-                                            <label htmlFor="dateOfReceiptToChargeMemoDate">Date of Receipt of written statement to charge memo</label>
+                                            <label htmlFor="dateOfReceiptToChargeMemoDateLabel">Date of Receipt of written statement to charge memo</label>
                                         </div>
                                         <div className="col-sm-6 label-view-text">
-                                            <input type="text" name="dateOfReceiptToChargeMemoDate" id="dateOfReceiptToChargeMemoDate" defaultValue={dateOfReceiptToChargeMemoDate} />
+                                            <input type="text" name="dateOfReceiptToChargeMemoDate" id="dateOfReceiptToChargeMemoDate" pattern="\d{1,2}/\d{1,2}/\d{4}" defaultValue={dateOfReceiptToChargeMemoDate} />
 
                                         </div>
                                     </div>
@@ -1296,10 +1433,10 @@ class EmployeeDisciplinary extends React.Component {
                                 <div className="col-sm-6">
                                     <div className="row">
                                         <div className="col-sm-6 label-text">
-                                            <label htmlFor="dateOfAppointmentOfEnquiryOfficerDate"> Date of Appointment of Enquiry officer <span>*</span></label>
+                                            <label htmlFor="dateOfAppointmentOfEnquiryOfficerDateLabel"> Date of Appointment of Enquiry officer <span>*</span></label>
                                         </div>
                                         <div className="col-sm-6 label-view-text">
-                                            <input type="text" name="dateOfAppointmentOfEnquiryOfficerDate" id="dateOfAppointmentOfEnquiryOfficerDate" defaultValue={dateOfAppointmentOfEnquiryOfficerDate} required />
+                                            <input type="text" name="dateOfAppointmentOfEnquiryOfficerDate" id="dateOfAppointmentOfEnquiryOfficerDate" pattern="\d{1,2}/\d{1,2}/\d{4}" defaultValue={dateOfAppointmentOfEnquiryOfficerDate} required />
                                         </div>
                                     </div>
                                 </div>
@@ -1330,10 +1467,10 @@ class EmployeeDisciplinary extends React.Component {
                                 <div className="col-sm-6">
                                     <div className="row">
                                         <div className="col-sm-6 label-text">
-                                            <label htmlFor="dateOfAppointmentOfPresentingOfficer">Date of Appointment of Presenting Officer </label>
+                                            <label htmlFor="dateOfAppointmentOfPresentingOfficerLabel">Date of Appointment of Presenting Officer </label>
                                         </div>
                                         <div className="col-sm-6 label-view-text">
-                                            <input type="text" name="dateOfAppointmentOfPresentingOfficer" id="dateOfAppointmentOfPresentingOfficer" defaultValue={dateOfAppointmentOfPresentingOfficer} />
+                                            <input type="text" name="dateOfAppointmentOfPresentingOfficer" id="dateOfAppointmentOfPresentingOfficer" pattern="\d{1,2}/\d{1,2}/\d{4}" defaultValue={dateOfAppointmentOfPresentingOfficer} />
 
                                         </div>
                                     </div>
@@ -1381,10 +1518,10 @@ class EmployeeDisciplinary extends React.Component {
                                 <div className="col-sm-6">
                                     <div className="row">
                                         <div className="col-sm-6 label-text">
-                                            <label htmlFor="enquiryReportSubmittedDate">Enquiry Report submitted Date</label>
+                                            <label htmlFor="enquiryReportSubmittedDateLabel">Enquiry Report submitted Date</label>
                                         </div>
                                         <div className="col-sm-6 label-view-text">
-                                            <input type="text" name="enquiryReportSubmittedDate" id="enquiryReportSubmittedDate" defaultValue={enquiryReportSubmittedDate} />
+                                            <input type="text" name="enquiryReportSubmittedDate" id="enquiryReportSubmittedDate" pattern="\d{1,2}/\d{1,2}/\d{4}" defaultValue={enquiryReportSubmittedDate} />
 
                                         </div>
                                     </div>
@@ -1394,10 +1531,10 @@ class EmployeeDisciplinary extends React.Component {
                                 <div className="col-sm-6">
                                     <div className="row">
                                         <div className="col-sm-6 label-text">
-                                            <label htmlFor="dateOfCommunicationOfER">Date of Communication of ER to delinquent officer</label>
+                                            <label htmlFor="dateOfCommunicationOfERLabel">Date of Communication of ER to delinquent officer</label>
                                         </div>
                                         <div className="col-sm-6 label-view-text">
-                                            <input type="text" name="dateOfCommunicationOfER" id="dateOfCommunicationOfER" defaultValue={dateOfCommunicationOfER} />
+                                            <input type="text" name="dateOfCommunicationOfER" id="dateOfCommunicationOfER" pattern="\d{1,2}/\d{1,2}/\d{4}" defaultValue={dateOfCommunicationOfER} />
 
                                         </div>
                                     </div>
@@ -1405,10 +1542,10 @@ class EmployeeDisciplinary extends React.Component {
                                 <div className="col-sm-6">
                                     <div className="row">
                                         <div className="col-sm-6 label-text">
-                                            <label htmlFor="dateOfSubmissionOfExplanationByCO">Date of submission of explanation by CO</label>
+                                            <label htmlFor="dateOfSubmissionOfExplanationByCOLabel">Date of submission of explanation by CO</label>
                                         </div>
                                         <div className="col-sm-6 label-view-text">
-                                            <input type="text" name="dateOfSubmissionOfExplanationByCO" id="dateOfSubmissionOfExplanationByCO" defaultValue={dateOfSubmissionOfExplanationByCO} />
+                                            <input type="text" name="dateOfSubmissionOfExplanationByCO" id="dateOfSubmissionOfExplanationByCO" pattern="\d{1,2}/\d{1,2}/\d{4}" defaultValue={dateOfSubmissionOfExplanationByCO} />
 
                                         </div>
                                     </div>
@@ -1480,20 +1617,20 @@ class EmployeeDisciplinary extends React.Component {
                                 <div className="col-sm-6">
                                     <div className="row">
                                         <div className="col-sm-6 label-text">
-                                            <label htmlFor="showCauseNoticeDate">Show cause notice Date <span>*</span></label>
+                                            <label htmlFor="showCauseNoticeDateLabel">Show cause notice Date <span>*</span></label>
                                         </div>
                                         <div className="col-sm-6 label-view-text">
-                                            <input type="text" name="showCauseNoticeDate" id="showCauseNoticeDate" defaultValue={showCauseNoticeDate} required />
+                                            <input type="text" name="showCauseNoticeDate" id="showCauseNoticeDate" pattern="\d{1,2}/\d{1,2}/\d{4}" defaultValue={showCauseNoticeDate} required />
                                         </div>
                                     </div>
                                 </div>
                                 <div className="col-sm-6">
                                     <div className="row">
                                         <div className="col-sm-6 label-text">
-                                            <label htmlFor="showCauseNoticeServingDate">Show cause Notice serving Date <span>*</span></label>
+                                            <label htmlFor="showCauseNoticeServingDateLabel">Show cause Notice serving Date <span>*</span></label>
                                         </div>
                                         <div className="col-sm-6 label-view-text">
-                                            <input type="text" name="showCauseNoticeServingDate" id="showCauseNoticeServingDate" defaultValue={showCauseNoticeServingDate} required />
+                                            <input type="text" name="showCauseNoticeServingDate" id="showCauseNoticeServingDate" pattern="\d{1,2}/\d{1,2}/\d{4}" defaultValue={showCauseNoticeServingDate} required />
 
                                         </div>
                                     </div>
@@ -1568,10 +1705,10 @@ class EmployeeDisciplinary extends React.Component {
                                 <div className="col-sm-6">
                                     <div className="row">
                                         <div className="col-sm-6 label-text">
-                                            <label htmlFor="endDateOfPunishment">End date of Punishment operation period </label>
+                                            <label htmlFor="endDateOfPunishmentLabel">End date of Punishment operation period </label>
                                         </div>
                                         <div className="col-sm-6 label-view-text">
-                                            <input type="text" name="endDateOfPunishment" id="endDateOfPunishment" defaultValue={endDateOfPunishment} maxLength="200" />
+                                            <input type="text" name="endDateOfPunishment" id="endDateOfPunishment" pattern="\d{1,2}/\d{1,2}/\d{4}" defaultValue={endDateOfPunishment} maxLength="200" />
 
                                         </div>
                                     </div>
@@ -1581,10 +1718,10 @@ class EmployeeDisciplinary extends React.Component {
                                 <div className="col-sm-6">
                                     <div className="row">
                                         <div className="col-sm-6 label-text">
-                                            <label htmlFor="proceedingsDate">Proceedings Date </label>
+                                            <label htmlFor="proceedingsDateLabel">Proceedings Date </label>
                                         </div>
                                         <div className="col-sm-6 label-view-text">
-                                            <input type="text" name="proceedingsDate" id="proceedingsDate" defaultValue={proceedingsDate}
+                                            <input type="text" name="proceedingsDate" id="proceedingsDate" pattern="\d{1,2}/\d{1,2}/\d{4}" defaultValue={proceedingsDate}
                                             />
 
                                         </div>
@@ -1593,10 +1730,10 @@ class EmployeeDisciplinary extends React.Component {
                                 <div className="col-sm-6">
                                     <div className="row">
                                         <div className="col-sm-6 label-text">
-                                            <label htmlFor="proceedingsServingDate">Proceedings Serving Date </label>
+                                            <label htmlFor="proceedingsServingDateLabel">Proceedings Serving Date </label>
                                         </div>
                                         <div className="col-sm-6 label-view-text">
-                                            <input type="text" name="proceedingsServingDate" id="proceedingsServingDate" defaultValue={proceedingsServingDate} />
+                                            <input type="text" name="proceedingsServingDate" id="proceedingsServingDate" pattern="\d{1,2}/\d{1,2}/\d{4}" defaultValue={proceedingsServingDate} />
 
                                         </div>
                                     </div>
@@ -1676,10 +1813,10 @@ class EmployeeDisciplinary extends React.Component {
                             <div className="col-sm-6">
                                 <div className="row">
                                     <div className="col-sm-6 label-text">
-                                        <label htmlFor="courtOrderDate">Order Date </label>
+                                        <label htmlFor="courtOrderDateLabel">Order Date </label>
                                     </div>
                                     <div className="col-sm-6 label-view-text">
-                                        <input type="text" name="courtOrderDate" id="courtOrderDate" defaultValue={courtOrderDate} />
+                                        <input type="text" name="courtOrderDate" id="courtOrderDate" pattern="\d{1,2}/\d{1,2}/\d{4}" defaultValue={courtOrderDate} />
 
                                     </div>
                                 </div>

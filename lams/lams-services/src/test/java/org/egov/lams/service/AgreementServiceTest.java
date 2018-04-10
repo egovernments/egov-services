@@ -238,7 +238,7 @@ public class AgreementServiceTest {
 
         when(demandService.updateDemandOnRemission(any(), any())).thenReturn(getDemands());
         when(demandRepository.createDemand(any(), any())).thenReturn(getDemandResponse());
-        when(agreementNumberService.generateAgrementNumber(any())).thenReturn("LFHY454DWQ");
+        when(agreementNumberService.generateAgrementNumber(any(),any())).thenReturn("LFHY454DWQ");
 
         Agreement agreement = agreementService.createAgreement(agreementRequest);
 

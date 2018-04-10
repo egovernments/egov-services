@@ -28,8 +28,10 @@ class CreateAgreement extends React.Component {
         if(getUrlVars()["from"] === "dataEntry" && getUrlVars()["status"]==="HISTORY"){
         return  ( [<h3> Acknowledgement of History Agreement </h3>,
           <h3> <center>
-          <font color="ass"> History Agreement is saved successfully in the system.
-          </font> </center></h3>
+          <font color="ass"> History Agreement for asset {decodeURIComponent(getUrlVars()["asset"])} is saved successfully in the system.
+          </font> </center></h3>,
+          <h4> <center><font color="ass"><strong>Agreement Number:  {decodeURIComponent(getUrlVars()["ackNo"])}</strong>  </font> </center></h4>
+
        ] );
 
            }else{

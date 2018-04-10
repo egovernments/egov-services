@@ -142,6 +142,7 @@ public class AgreementService {
 			agreement.setStatus(Status.HISTORY);
 			agreement.setExpiryDate(getExpiryDate(agreement));
 			agreement.setId(agreementRepository.getAgreementID());
+			agreement.setAgreementNumber(agreementNumberService.generateAgrementNumber(agreement.getCommencementDate(),agreement.getTenantId()));
 			agreementRepository.saveAgreement(agreementRequest);
 		} else if (agreement.getAction().equals(Action.CREATE)) {
 
@@ -161,7 +162,7 @@ public class AgreementService {
 				List<String> demandList = demandResponse.getDemands().stream().map(Demand::getId)
 						.collect(Collectors.toList());
 				agreement.setDemands(demandList);
-				agreement.setAgreementNumber(agreementNumberService.generateAgrementNumber(agreement.getTenantId()));
+				agreement.setAgreementNumber(agreementNumberService.generateAgrementNumber(agreement.getCommencementDate(),agreement.getTenantId()));
 				agreement.setAgreementDate(agreement.getCommencementDate());
 				agreementRepository.saveAgreement(agreementRequest);
 			} else {
@@ -347,7 +348,7 @@ public class AgreementService {
 					agreement.setAgreementDate(new Date());
 					if (agreement.getAgreementNumber() == null) {
 						agreement.setAgreementNumber(
-								agreementNumberService.generateAgrementNumber(agreement.getTenantId()));
+								agreementNumberService.generateAgrementNumber(agreement.getCommencementDate(),agreement.getTenantId()));
 					}
 					List<Demand> demands =demandService.prepareDemands(agreementRequest);
 					updateDemand(agreement.getDemands(),demands,
@@ -441,7 +442,7 @@ public class AgreementService {
 		if (workFlowDetails != null) {
 			if (WF_ACTION_APPROVE.equalsIgnoreCase(workFlowDetails.getAction())) {
 				agreementRepository.updateExistingAgreementAsHistory(agreement, userId);
-				agreement.setAgreementNumber(agreementNumberService.generateAgrementNumber(agreement.getTenantId()));
+				agreement.setAgreementNumber(agreementNumberService.generateAgrementNumber(agreement.getCommencementDate(),agreement.getTenantId()));
 				agreement.setStatus(Status.ACTIVE);
 				agreement.setAgreementDate(new Date());
 				agreement.setAdjustmentStartDate(getAdjustmentDate(agreement));

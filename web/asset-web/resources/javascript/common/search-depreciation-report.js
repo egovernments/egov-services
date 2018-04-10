@@ -284,7 +284,7 @@ close() {
                         <td>{getNameById(departments,item.department)}</td>
                         <td>{item.assetCategoryType}</td>
                         <td>{item.depreciationRate}</td>
-                        <td>{item.grossValue}</td>
+                        <td>{item.currentValue === null ? (item.grossValue === null ? 0 : item.grossValue) : item.currentValue}</td>
                         <td>{item.depreciationValue}</td>
                         <td>{item.valueAfterDepreciation}</td>
                     </tr>  );

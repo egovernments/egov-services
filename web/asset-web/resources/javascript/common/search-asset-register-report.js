@@ -458,7 +458,7 @@ class SearchAsset extends React.Component {
                         <td>{item.status}</td>
                         <td>{item.assetCategory.name}</td>
                         <td>{getNameById(localityList,item.locationDetails.locality)}</td>
-                        <td>{item.grossValue}</td>
+                        <td>{item.currentValue === null ? (item.grossValue === null ? 0 : item.grossValue) : item.currentValue}</td>
 
 
                   </tr>  );

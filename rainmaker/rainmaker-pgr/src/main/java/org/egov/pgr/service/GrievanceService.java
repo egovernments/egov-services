@@ -595,7 +595,7 @@ public class GrievanceService {
 						List<ActionInfo> actionList = history.getActions();
 						ActionInfo info = actionList.get(j);
 						if (null == info.getMedia())
-							break;
+							continue;
 						List<String> mediaList = new ArrayList<>();
 						for (int k = 0; k < info.getMedia().size(); k++) {
 							List<String> oldMedia = info.getMedia();

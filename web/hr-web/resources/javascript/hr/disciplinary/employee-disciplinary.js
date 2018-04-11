@@ -528,7 +528,7 @@ class EmployeeDisciplinary extends React.Component {
                 document.getElementsByClassName("homepage_logo")[0].src = window.location.origin + logo_ele[0].getAttribute("src");
             }
         }
-        $('#hp-citizen-title').text("Employee Disciplinary");
+        $('#hp-citizen-title').text(titleCase(getUrlVars()["type"]) + "Employee Disciplinary");
         let _this = this;
         let id = getUrlVars()["id"];
         let type = getUrlVars()["type"];

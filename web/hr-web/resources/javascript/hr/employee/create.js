@@ -1,7 +1,7 @@
 var CONST_API_GET_FILE = "/filestore/v1/files/id?tenantId=" + tenantId + "&fileStoreId=";
 var filesToBeDeleted = {};
 var employeeType, employeeStatus, group, motherTongue, religion, community, category, bank, recruitmentMode, recruitmentType, recruitmentQuota, assignments_grade, assignments_designation, assignments_department, assignments_fund, assignments_functionary, assignments_function, assignments_position, maritalStatus, user_bloodGroup;
-var count = 21;
+var count = 22;
 var tempListBox = [];
 var commonObject, hrConfigurations, startDate;
 var yearOfPassing = [];
@@ -106,8 +106,13 @@ var employeeSubObject = {
         boundary: ""
     },
     serviceHistory: {
+        city:"",
         serviceInfo: "",
         serviceFrom: "",
+        serviceTo:"",
+        department:"",
+        designation:"",
+        position:"",
         remarks: "",
         orderNo: "",
         documents: null
@@ -393,10 +398,22 @@ var commom_fields_rules = {
     "serviceHistory.id": {
         required: false
     },
+    "serviceHistory.city": {
+        required: true
+    },
     "serviceHistory.serviceInfo": {
         required: true
     },
     "serviceHistory.serviceFrom": {
+        required: true
+    },
+    "serviceHistory.serviceTo": {
+        required: true
+    },
+    "serviceHistory.department": {
+        required: true
+    },
+    "serviceHistory.designation": {
         required: true
     },
     "serviceHistory.remarks": {
@@ -530,12 +547,27 @@ var jurisdictions = {
 };
 
 var serviceHistory = {
-
+    
+    city: {
+        required: true
+    },
     serviceInfo: {
         required: true
     },
     serviceFrom: {
         required: true
+    },
+    serviceTo: {
+        required: true
+    },
+    department: {
+        required: true
+    },
+    designation: {
+        required: true
+    },
+    position: {
+        required: false
     },
     remarks: {
         required: false
@@ -1919,6 +1951,7 @@ function loadUI() {
                     assignments_position: [],
                     assignments_department,
                     jurisdictions_jurisdictionsType,
+                    districtList,
                     jurisdictions_boundary: [],
                     yearOfPassing,
                     juridictionTypeForCity: [],
@@ -1934,10 +1967,26 @@ function loadUI() {
                 commonObject["education_yearOfPassing"] = commonObject["yearOfPassing"];
                 commonObject["technical_yearOfPassing"] = commonObject["yearOfPassing"];
                 commonObject["test_yearOfPassing"] = commonObject["yearOfPassing"];
+                commonObject["serviceHistory_department"] = commonObject["assignments_department"];
+                commonObject["serviceHistory_designation"] = commonObject["assignments_designation"];
+                commonObject["serviceHistory_city"] = commonObject["districtList"];
+
 
                 for (var key in commonObject) {
                     var splitObject = key.split("_");
-                    if (splitObject.length < 2) {
+                    if(key == "serviceHistory_department"){
+                        for (let i = 0; i < commonObject[key].length; i++) 
+                        $(`#serviceHistory\\.department`).append(`<option value='${commonObject[key][i]['code']}'>${commonObject[key][i]['name']}</option>`)
+
+                    } else if(key == "serviceHistory_designation"){
+                        for (let i = 0; i < commonObject[key].length; i++) 
+                        $(`#serviceHistory\\.designation`).append(`<option value='${commonObject[key][i]['code']}'>${commonObject[key][i]['name']}</option>`)
+
+                    } else if(key == "serviceHistory_city"){
+                        for (let i = 0; i < commonObject[key].length; i++) 
+                        $(`#serviceHistory\\.city`).append(`<option value='${commonObject[key][i]['city']['localName']}'>${commonObject[key][i]['city']['localName']}</option>`)
+
+                    } else if (splitObject.length < 2) {
                         for (var i = 0; i < commonObject[key].length; i++) {
                             if (typeof(commonObject[key][i]) === "object")
                                 $(`#${key}`).append(`<option value='${commonObject[key][i]['id']}'>${typeof(commonObject[key][i]['name'])=="undefined"?commonObject[key][i]['code']:commonObject[key][i]['name']}</option>`)
@@ -2283,7 +2332,6 @@ function loadUI() {
 
 
 
-
                 $("input[name='serviceHistory.serviceFrom']").datepicker({
                     format: 'dd/mm/yyyy',
                     autoclose: true
@@ -2384,6 +2432,36 @@ function loadUI() {
                                 }
                             }
                         });
+                    }
+                    if(_this.id == "serviceHistory.city"){
+                        commonApiPost("hr-masters", "designations", "_search", {
+                            tenantId: tenantId,
+                            destinationTenant: "ap."+_this.value.toLowerCase(),
+                            pageSize: 500
+                        }, function(err, res) {
+                            if (res) {
+                                commonObject["serviceHistory_designation"] = res["Designation"];
+                                $(`#serviceHistory\\.designation`).html(`<option value=''>Select Designation</option>`)
+                                for (var i = 0; i < commonObject["serviceHistory_designation"].length; i++) {
+                                    $(`#serviceHistory\\.designation`).append(`<option value='${commonObject["serviceHistory_designation"][i]['code']}'>${commonObject["serviceHistory_designation"][i]['name']}</option>`)
+                                }
+                            }
+                        });
+
+                        commonApiPost("hr-masters", "departments", "_search", {
+                            tenantId: tenantId,
+                            destinationTenant: "ap."+_this.value.toLowerCase(),
+                            pageSize: 500
+                        }, function(err, res) {
+                            if (res) {
+                                commonObject["serviceHistory_department"] = res["Department"];
+                                $(`#serviceHistory\\.department`).html(`<option value=''>Select Department</option>`)
+                                for (var i = 0; i < commonObject["serviceHistory_department"].length; i++) {
+                                    $(`#serviceHistory\\.department`).append(`<option value='${commonObject["serviceHistory_department"][i]['code']}'>${commonObject["serviceHistory_department"][i]['name']}</option>`)
+                                }
+                            }
+                        });
+
                     }
                     getPositions(_this);
                     fillValueToObject(_this);
@@ -2653,6 +2731,7 @@ function loadUI() {
                                 if (err) {
                                     //Handle error
                                 } else {
+                                    emp.transferredEmployee = false;
                                     $.ajax({
                                         url: baseUrl + "/hr-employee/employees/" + ((getUrlVars()["type"] == "update") ? "_update" : "_create") + "?tenantId=" + tenantId,
                                         type: 'POST',
@@ -2809,6 +2888,10 @@ function loadUI() {
             })
             getDropdown("jurisdictions_jurisdictionsType", function(res) {
                 jurisdictions_jurisdictionsType = res;
+                checkCount();
+            })
+            getDropdown("districtList", function(res) {
+                districtList = res;
                 checkCount();
             })
 

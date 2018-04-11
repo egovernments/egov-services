@@ -1251,18 +1251,18 @@
                                                                 </div>
                                                                 <div class="modal-body">
                                                                     <div class="row">
-                                                                        <!-- <div class="col-sm-6">
-                                      <div class="row">
-                                        <div class="col-sm-6 label-text">
-                                          <label for="serviceHistory.id">Serial No</label>
-                                        </div>
-                                        <div class="col-sm-6">
-                                          <input id="serviceHistory.id" name="serviceHistory.id" type="number" min="1" value="1" readonly="true" class="disabled">
-
-
-                                        </div>
-                                      </div>
-                                    </div> -->
+                                                                        <div class="col-sm-6">
+                                                                            <div class="row">
+                                                                                <div class="col-sm-6 label-text">
+                                                                                    <label for="serviceHistory.city">ULB/City</label>
+                                                                                </div>
+                                                                                <div class="col-sm-6">
+                                                                                    <select id="serviceHistory.city" name="serviceHistory.city" type="text">
+                                                                                        <option value="">Select ULB/City</option>
+                                                                                    </select>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
                                                                         <div class="col-sm-6">
                                                                             <div class="row">
                                                                                 <div class="col-sm-6 label-text">
@@ -1273,13 +1273,52 @@
                                                                                 </div>
                                                                             </div>
                                                                         </div>
+                                                                
+                                                                    </div>
+                                                                    <div class="row">
                                                                         <div class="col-sm-6">
                                                                             <div class="row">
                                                                                 <div class="col-sm-6 label-text">
-                                                                                    <label for="serviceHistory.serviceFrom">Date</label>
+                                                                                    <label for="serviceHistory.serviceFrom">From Date</label>
                                                                                 </div>
                                                                                 <div class="col-sm-6">
                                                                                     <input id="serviceHistory.serviceFrom" name="serviceHistory.serviceFrom" type="text" class="datetimepicker">
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-sm-6">
+                                                                            <div class="row">
+                                                                                <div class="col-sm-6 label-text">
+                                                                                    <label for="serviceHistory.serviceTo">To Date</label>
+                                                                                </div>
+                                                                                <div class="col-sm-6">
+                                                                                    <input id="serviceHistory.serviceTo" name="serviceHistory.serviceTo" type="text" class="datetimepicker">
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="row">
+                                                                        <div class="col-sm-6">
+                                                                            <div class="row">
+                                                                                <div class="col-sm-6 label-text">
+                                                                                    <label for="serviceHistory.department">Department</label>
+                                                                                </div>
+                                                                                <div class="col-sm-6">
+                                                                                    <select id="serviceHistory.department" name="serviceHistory.department" type="text">
+                                                                                        <option value="">Select Department</option>
+                                                                                    </select>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-sm-6">
+                                                                            <div class="row">
+                                                                                <div class="col-sm-6 label-text">
+                                                                                    <label for="serviceHistory.designation">Designation</label>
+                                                                                </div>
+                                                                                <div class="col-sm-6">
+                                                                                    <select id="serviceHistory.designation" name="serviceHistory.designation" type="text">
+                                                                                        <option value="">Select Designation</option>
+                                                                                    </select>
                                                                                 </div>
                                                                             </div>
                                                                         </div>
@@ -1295,6 +1334,8 @@
                                                                                 </div>
                                                                             </div>
                                                                         </div>
+                                                                    </div>
+                                                                    <div class="row">
                                                                         <div class="col-sm-6">
                                                                             <div class="row">
                                                                                 <div class="col-sm-6 label-text">
@@ -1318,6 +1359,7 @@
                                                                             </div>
                                                                         </div>
                                                                     </div>
+                                                                
                                                                     <p class="text-danger error-p" style="display:none">Duplicate entry not allowed.</p>
                                                                 </div>
                                                                 <div class="modal-footer">

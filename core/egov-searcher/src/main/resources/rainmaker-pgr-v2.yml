@@ -5,7 +5,7 @@ SearchDefinitions:
  definitions:
  - name: serviceSearchWithDetails
    query: 
-    baseQuery: select array_to_json(array_agg(row_to_json(serviceRequests))) from (select (select (select (row_to_json(services)) from ( select *, (select (select row_to_json(auditDetails) from (select createdtime from eg_pgr_service where svc.serviceRequestId=eg_pgr_service.serviceRequestId) auditDetails) as auditDetails) from eg_pgr_service svc where svc.serviceRequestId=eg_pgr_service.serviceRequestId) services) as services),(select (select array_to_json(array_agg(row_to_json(actionHistory))) from ( select * from eg_pgr_action where businessKey=eg_pgr_service.serviceRequestId order by "when" desc) actionHistory) as actionHistory) from eg_pgr_service $where) serviceRequests
+    baseQuery: select array_to_json(array_agg(row_to_json(serviceRequests))) from (select (select (select (row_to_json(services)) from ( select *, (select (select row_to_json(auditDetails) from (select createdtime from eg_pgr_service where svc.serviceRequestId=eg_pgr_service.serviceRequestId) auditDetails) as auditDetails) from eg_pgr_service svc where svc.serviceRequestId=eg_pgr_service.serviceRequestId order by createdtime desc) services) as services),(select (select array_to_json(array_agg(row_to_json(actionHistory))) from ( select * from eg_pgr_action where businessKey=eg_pgr_service.serviceRequestId order by "when" desc) actionHistory) as actionHistory) from eg_pgr_service $where) serviceRequests
     groupBy:    
     orderBy: 
    searchParams:

@@ -41,6 +41,7 @@ var employee = {
     ifscCode:"",
     group: "",
     placeOfBirth: "",
+    transferredEmployee:false,
     documents: [],
     serviceHistory: [],
     probation: [],
@@ -112,10 +113,10 @@ var employeeSubObject = {
         serviceTo:"",
         department:"",
         designation:"",
-        position:"",
         remarks: "",
         orderNo: "",
-        documents: null
+        documents: null,
+        isAssignmentBased:false
     },
     probation: {
         designation: "",
@@ -1346,19 +1347,30 @@ function updateTable(tableName, modalName, object) {
             });
         } else if (object == "serviceHistory") {
             $(tableName).append(`<tr>`);
+            $(tableName).append(`<td data-label=${"serviceCity"}>
+                                  ${employee[object][i]["city"] || ""}
+                            </td>`)
             $(tableName).append(`<td data-label=${"serviceInfo"}>
                                   ${employee[object][i]["serviceInfo"] || ""}
                             </td>`)
             $(tableName).append(`<td data-label=${"serviceFrom"}>
                                   ${employee[object][i]["serviceFrom"] || ""}
-                                </td>`)
+                            </td>`)
+            $(tableName).append(`<td data-label=${"serviceTo"}>
+                                ${employee[object][i]["serviceTo"] || ""}
+                            </td>`)
+            $(tableName).append(`<td data-label=${"department"}>
+                            ${employee[object][i]["department"] || ""}
+                            </td>`)
+            $(tableName).append(`<td data-label=${"designation"}>
+                          ${employee[object][i]["designation"] || ""}
+                            </td>`)
             $(tableName).append(`<td data-label=${"remarks"}>
                                     ${employee[object][i]["remarks"]}
                                 </td>`)
             $(tableName).append(`<td data-label=${"orderNo"}>
                                     ${employee[object][i]["orderNo"] || ""}
                                 </td>`)
-
             $(tableName).append(`<td data-label=${"documents"}>
                                     ${employee[object][i]["documents"]?employee[object][i]["documents"].length:""}
                                 </td>`);
@@ -2337,6 +2349,10 @@ function loadUI() {
                     autoclose: true
                 });
 
+                $("input[name='serviceHistory.serviceTo']").datepicker({
+                    format: 'dd/mm/yyyy',
+                    autoclose: true
+                });
 
                 $("input[name='probation.orderDate']").datepicker({
                     format: 'dd/mm/yyyy',
@@ -2512,12 +2528,16 @@ function loadUI() {
                     $('.error-p').hide();
                     editIndex = -1;
                     employeeSubObject["serviceHistory"] = {
-
+                        city:"",
                         serviceInfo: "",
                         serviceFrom: "",
+                        serviceTo:"",
+                        department:"",
+                        designation:"",
                         remarks: "",
                         orderNo: "",
-                        documents: null
+                        documents: null,
+                        isAssignmentBased:false
                     }
                     clearModalInput("serviceHistory", employeeSubObject["serviceHistory"]);
                 })
@@ -2731,7 +2751,6 @@ function loadUI() {
                                 if (err) {
                                     //Handle error
                                 } else {
-                                    emp.transferredEmployee = false;
                                     $.ajax({
                                         url: baseUrl + "/hr-employee/employees/" + ((getUrlVars()["type"] == "update") ? "_update" : "_create") + "?tenantId=" + tenantId,
                                         type: 'POST',

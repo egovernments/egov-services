@@ -89,18 +89,16 @@ public class Service   {
 	OPEN("open"),
 	
 	ASSIGNED("assigned"),
-	
-    NEW("New"),
+	        
+    CLOSED("closed"),
     
-    INPROGRESS("InProgress"),
+    CANCELLED("cancelled"),
     
-    CLOSED("Closed"),
+    REJECTED("rejected"),
     
-    CANCELLED("Cancelled"),
+    REASSIGNREQUESTED("reassignrequested"),
     
-    REJECTED("Rejected"),
-    
-    RESOLVED("Resolved");    
+    RESOLVED("resolved");    
 
     private String value;
 

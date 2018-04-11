@@ -141,10 +141,7 @@ public class PGRNotificationConsumer {
     	map.put("name", serviceReq.getFirstName());
     	map.put("id", serviceReq.getServiceRequestId());
 		switch(serviceReq.getStatus()) {
-		case NEW:{
-        	map.put("status", "registered");
-    		break;
-		}case OPEN:{
+	    case OPEN:{
         	map.put("status", "registered");
     		break;
 		}case ASSIGNED:{
@@ -180,10 +177,7 @@ public class PGRNotificationConsumer {
 		message = message.replace("<complaint_type>", serviceType)
 				.replace("<id>", serviceReq.getServiceRequestId()).replace("date", new Date(serviceReq.getAuditDetails().getCreatedTime()).toString());
 		switch(serviceReq.getStatus()) {
-		case NEW:{
-    		message = message.replaceAll("<status>", "registered");
-    		break;
-		}case OPEN:{
+		case OPEN:{
     		message = message.replaceAll("<status>", "registered");
     		break;
 		}case ASSIGNED:{
@@ -227,12 +221,7 @@ public class PGRNotificationConsumer {
     public boolean isNotificationEnabled(Service serviceReq) {
     	boolean isNotifEnabled = false;
 		switch(serviceReq.getStatus()) {
-		case NEW:{
-			if(isNewComplaintNotifEnabled) {
-				isNotifEnabled = true;
-			}
-			break;
-		}case OPEN:{
+		case OPEN:{
 			if(isOpenComplaintNotifEnabled) {
 				isNotifEnabled = true;
 			}

@@ -50,19 +50,27 @@ package org.egov.asset.repository;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
+import org.egov.asset.contract.AssetCategoryRequest;
+import org.egov.asset.model.AssetCategory;
 import org.egov.asset.model.AssetCurrentValue;
 import org.egov.asset.model.AuditDetails;
 import org.egov.asset.model.enums.AssetConfigurationKeys;
 import org.egov.asset.repository.builder.CurrentValueQueryBuilder;
 import org.egov.asset.repository.rowmapper.CurrentValueRowMapper;
 import org.egov.asset.service.AssetConfigurationService;
+import org.egov.common.contract.request.RequestInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
+
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.core.JsonProcessingException;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -129,4 +137,43 @@ public class CurrentValueRepository {
             });
         }
     }
+    
+    public void update(final List<AssetCurrentValue> assetCurrentValues) {
+
+        final String sql = currentValueQueryBuilder.getUpdateQuery();
+        final String tenantId = assetCurrentValues.get(0).getTenantId();
+        final int batchSize = Integer.parseInt(assetConfigurationService
+                .getAssetConfigValueByKeyAndTenantId(AssetConfigurationKeys.ASSETBATCHSIZE, tenantId));
+        
+        log.debug("Batch Size :: " + batchSize);
+
+        for (int j = 0; j < assetCurrentValues.size(); j += batchSize) {
+
+            final List<AssetCurrentValue> batchList = assetCurrentValues.subList(j,
+                    j + batchSize > assetCurrentValues.size() ? assetCurrentValues.size() : j + batchSize);
+
+            jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
+
+                @Override
+                public void setValues(final PreparedStatement ps, final int rowNum) throws SQLException {
+
+                    final AssetCurrentValue assetCurrentValue = assetCurrentValues.get(rowNum);
+                    final AuditDetails auditDetails = assetCurrentValue.getAuditDetails();
+                    ps.setLong(1, assetCurrentValue.getAssetId());
+                    ps.setBigDecimal(2, assetCurrentValue.getCurrentAmount());
+                    ps.setString(3, auditDetails.getLastModifiedBy());
+                    ps.setLong(4, auditDetails.getLastModifiedDate());
+                    ps.setLong(5, assetCurrentValue.getId());
+                    ps.setString(6, assetCurrentValue.getTenantId());
+                }
+
+                @Override
+                public int getBatchSize() {
+                    return batchList.size();
+                }
+            });
+        }
+    }
+    
+  
 }

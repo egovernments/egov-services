@@ -111,8 +111,11 @@ public class CurrentValueService {
     }
 
     public void saveCurrentValue(final AssetCurrentValueRequest assetCurrentValueRequest) {
-
         currentValueRepository.create(assetCurrentValueRequest.getAssetCurrentValues());
+    }
+
+    public void saveUpdatedCurrentValue(final AssetCurrentValueRequest assetCurrentValueRequest) {
+        currentValueRepository.update(assetCurrentValueRequest.getAssetCurrentValues());
     }
 
 }

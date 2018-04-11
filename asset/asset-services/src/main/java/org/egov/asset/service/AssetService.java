@@ -46,13 +46,14 @@
  *
  */
 
-
 package org.egov.asset.service;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.egov.asset.config.ApplicationProperties;
@@ -168,6 +169,25 @@ public class AssetService {
 
         logAwareKafkaTemplate.send(applicationProperties.getUpdateAssetTopicName(),
                 KafkaTopicName.UPDATEASSET.toString(), assetRequest);
+        Set<Long> assetIds = new HashSet<>();
+        assetIds.add(asset.getId());
+
+        final List<AssetCurrentValue> assetCurrentValues = currentValueService
+                .getCurrentValues(assetIds, asset.getTenantId(), assetRequest.getRequestInfo()).getAssetCurrentValues();
+        if (assetCurrentValues != null && !assetCurrentValues.isEmpty()) {
+             BigDecimal grossValue = asset.getGrossValue();
+             BigDecimal accumulatedDepreciation = asset.getAccumulatedDepreciation();
+
+            if (grossValue != null && accumulatedDepreciation != null)
+                assetCurrentValues.get(0).setCurrentAmount(grossValue.subtract(accumulatedDepreciation));
+            else if (grossValue != null)
+                assetCurrentValues.get(0).setCurrentAmount(grossValue);
+
+            if (grossValue != null || accumulatedDepreciation != null)
+                currentValueService.saveUpdatedCurrentValue(AssetCurrentValueRequest.builder()
+                        .assetCurrentValues(assetCurrentValues).requestInfo(assetRequest.getRequestInfo()).build());
+
+        }
 
         final List<Asset> assets = new ArrayList<>();
         assets.add(asset);

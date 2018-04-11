@@ -74,14 +74,18 @@ public class CurrentValueQueryBuilder {
                         "assetid", "ungroupedvalue.assetid");
     }
 
-    private static String getIdQueryForList(Set<Long> idList) {
+    private static String getIdQueryForList(final Set<Long> idList) {
 
-        StringBuilder query = new StringBuilder("(");
-        Long[] list = idList.toArray(new Long[idList.size()]);
+        final StringBuilder query = new StringBuilder("(");
+        final Long[] list = idList.toArray(new Long[idList.size()]);
         query.append(list[0]);
-        for (int i = 1; i < idList.size(); i++) {
+        for (int i = 1; i < idList.size(); i++)
             query.append("," + list[i]);
-        }
         return query.append(")").toString();
+    }
+
+    public String getUpdateQuery() {
+        return "UPDATE egasset_current_value SET assetid=?,currentamount=? ,lastmodifiedby=?,lastModifiedtime=?"
+                + " WHERE id=? and tenantid=?";
     }
 }

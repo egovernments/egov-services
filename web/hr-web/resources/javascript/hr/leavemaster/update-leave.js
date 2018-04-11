@@ -426,8 +426,8 @@ class UpdateLeave extends React.Component {
       doc.text(15, 92, doc.splitTextToSize('        In view of the circumstances stated in the reference read above Sri/Smt ' + noticeData.name + ','));
       doc.text(15, 97, doc.splitTextToSize('is hereby sactioned Earned Leave/HPL for a period of (' + noticeData.totalWorkingDays + ') days on ' + noticeData.leaveGround + ' grounds from ' + noticeData.fromDate + ' to ' + noticeData.toDate + '.'));
       doc.text(15, 105, doc.splitTextToSize('2.     Certified that necessary entries have been made in the service Register of the individual.'));
-      doc.text(15, 113, doc.splitTextToSize('3.     He/She is informed that, after sanction of the above leave is having (' + noticeData.availableDays + ') days of Earned Leave/'));
-      doc.text(15, 118, doc.splitTextToSize('       Half Pay Leave at his/her credit.'));
+      doc.text(15, 113, doc.splitTextToSize('3.     He/She is informed that, after sanction of the above leave is having (' + noticeData.availableDays + ') days of '));
+      doc.text(15, 118, doc.splitTextToSize('       '+ noticeData.leaveTypeName + ' at his/her credit.'));
 
       doc.setFontType("bold");
       doc.text(125, 134, 'COMMISSIONER');
@@ -478,8 +478,8 @@ class UpdateLeave extends React.Component {
       doc.text(15, 113, doc.splitTextToSize('Leave (' + noticeData.totalWorkingDays + ') days as on ' + today + ' for encashment purpose during the financial year'));
       doc.text(15, 121, doc.splitTextToSize(financialYear));
       doc.text(15, 130, doc.splitTextToSize('2.     Certified that necessary entries have been made in the service Register of the individual.'));
-      doc.text(15, 139, doc.splitTextToSize('3.     He/She is informed that, after sanction of the above leave is having ('+ noticeData.availableDays +') days of Earned Leave/'));
-      doc.text(15, 147, doc.splitTextToSize('       Half Pay Leave at his/her credit.'));
+      doc.text(15, 139, doc.splitTextToSize('3.     He/She is informed that, after sanction of the above leave is having ('+ noticeData.availableDays +') days of '));
+      doc.text(15, 147, doc.splitTextToSize('       '+ noticeData.leaveTypeName + ' at his/her credit.'));
 
       doc.setFontType("bold");
       doc.text(125, 157, 'COMMISSIONER');
@@ -494,7 +494,7 @@ class UpdateLeave extends React.Component {
     }
 
 
-    doc.save('Leave Proceeding' + noticeData.applicationNumber + '.pdf');
+    doc.save('Leave Proceeding-' + noticeData.applicationNumber + '.pdf');
 
     var blob = doc.output('blob');
 

@@ -528,7 +528,7 @@ class EmployeeDisciplinary extends React.Component {
                 document.getElementsByClassName("homepage_logo")[0].src = window.location.origin + logo_ele[0].getAttribute("src");
             }
         }
-        $('#hp-citizen-title').text(titleCase(getUrlVars()["type"]) + "Employee Disciplinary");
+        $('#hp-citizen-title').text(titleCase(getUrlVars()["type"]) + " Employee Disciplinary");
         let _this = this;
         let id = getUrlVars()["id"];
         let type = getUrlVars()["type"];
@@ -1125,7 +1125,7 @@ class EmployeeDisciplinary extends React.Component {
                         <thead>
                             <tr>
                                 <th>Sr. No.</th>
-                                <th>Name</th>
+                                <th>Document type</th>
                                 <th>File</th>
                                 <th>Action</th>
                             </tr>
@@ -1864,7 +1864,7 @@ class EmployeeDisciplinary extends React.Component {
 
         return (
             <div>
-                <h3>Employee Disciplinary </h3>
+                <h3>{titleCase(getUrlVars()["type"])} Employee Disciplinary </h3>
                 <form onSubmit={(e) => { addOrUpdate(e) }} >
                     <fieldset>
                         {renderSection()}

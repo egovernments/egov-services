@@ -1,10 +1,10 @@
 var CONST_API_GET_FILE = "/filestore/v1/files/id?tenantId=" + tenantId + "&fileStoreId=";
 
-const makeAjaxUpload = function (file, cb) {
+const makeAjaxUpload = function (file, docType, cb) {
     if (file.constructor == File) {
         let formData = new FormData();
         formData.append("jurisdictionId", tenantId);
-        formData.append("module", "ASSET");
+        formData.append("module", "EIS");
         formData.append("file", file);
         $.ajax({
             url: baseUrl + "/filestore/v1/files?tenantId=" + tenantId,
@@ -14,6 +14,7 @@ const makeAjaxUpload = function (file, cb) {
             processData: false,
             type: 'POST',
             success: function (res) {
+                res.docType = docType;
                 cb(null, res);
             },
             error: function (jqXHR, exception) {
@@ -38,16 +39,15 @@ const uploadFiles = function (body, cb) {
     files = files.concat(body.Disciplinary.showCauseDocuments);
     files = files.concat(body.Disciplinary.enquiryDocuments);
 
-    console.log(files);
     if (files.length) {
-        console.log(files, body.Disciplinary.memoDocuments)
+        console.log(files)
 
         var breakout = 0;
         var docs = [];
         let counter = files.length;
         for (let j = 0; j < files.length; j++) {
-            if (files[j] instanceof File) {
-                makeAjaxUpload(files[j], function (err, res) {
+            if (files[j].file instanceof File) {
+                makeAjaxUpload(files[j].file, files[j].docType, function (err, res) {
                     if (breakout == 1)
                         return;
                     else if (err) {
@@ -55,7 +55,7 @@ const uploadFiles = function (body, cb) {
                         breakout = 1;
                     } else {
                         counter--;
-                        docs.push({ fileStoreId: res.files[0].fileStoreId });
+                        docs.push({ fileStoreId: res.files[0].fileStoreId, documentType: res.docType });
                         if (counter == 0) {
                             body.Disciplinary.disciplinaryDocuments = body.Disciplinary.disciplinaryDocuments.concat(docs);
                             delete body.Disciplinary.memoDocuments;
@@ -469,10 +469,18 @@ class EmployeeDisciplinary extends React.Component {
                     }
                 }
 
+                console.log(e.currentTarget.files);
+
+                let files = e.currentTarget.files;
+                let docs = [];
+                for(let i = 0; i < e.currentTarget.files.length; i++ ){
+                    docs.push({docType:name, file: e.currentTarget.files[i] });
+                }
+
                 this.setState({
                     disciplinarySet: {
                         ...this.state.disciplinarySet,
-                        [name]: [e.currentTarget.files[0]]
+                        [name]: docs
                     }
                 })
             } else {

@@ -34,10 +34,8 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.GeneratePresignedUrlRequest;
 import com.amazonaws.services.s3.model.GetObjectRequest;
-import com.amazonaws.services.s3.model.ObjectListing;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
-import com.amazonaws.services.s3.model.S3ObjectSummary;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -49,29 +47,48 @@ import lombok.extern.slf4j.Slf4j;
  *
  */
 public class AwsS3Repository {
-	
+
 	@Value("${aws.key}")
 	private String key;
-	
+
 	@Value("${aws.secretkey}")
 	private String secretKey;
-	
+
 	@Value("${aws.region}")
 	private String awsRegion;
-	
+
+	@Value("${image.small}")
+	private String _small;
+
+	@Value("${image.medium}")
+	private String _medium;
+
+	@Value("${image.large}")
+	private String _large;
+
+	@Value("${image.small.width}")
+	private Integer smallWidth;
+
+	@Value("${image.medium.width}")
+	private Integer mediumWidth;
+
+	@Value("${image.large.width}")
+	private Integer largeWidth;
+
 	@Value("${is.bucket.fixed}")
 	private Boolean isBucketFixed;
-	
+
 	@Value("${presigned.url.expiry.time}")
 	private Long presignedUrlExpirytime;
-	
+
 	private AmazonS3 s3Client;
-	
+
 	private static final String TEMP_FILE_PATH_NAME = "TempFolder/localFile";
 
 	public void writeToS3(MultipartFile file, FileLocation fileLocation) {
 
-		if(null == s3Client) getS3Client();
+		if (null == s3Client)
+			getS3Client();
 		String completeName = fileLocation.getFileName();
 		int index = completeName.indexOf('/');
 		String bucketName = completeName.substring(0, index);
@@ -106,25 +123,34 @@ public class AwsS3Repository {
 	private void writeImage(MultipartFile file, String bucketName, String fileName) {
 
 		try {
-			
+
 			BufferedImage originalImage = ImageIO.read(file.getInputStream());
-			BufferedImage mediumImg = Scalr.resize(originalImage, Method.QUALITY, Mode.AUTOMATIC, 75, 75,
+
+			BufferedImage largeImage = Scalr.resize(originalImage, Method.QUALITY, Mode.AUTOMATIC, mediumWidth, null,
 					Scalr.OP_ANTIALIAS);
-			BufferedImage smallImg = Scalr.resize(originalImage, Method.QUALITY, Mode.AUTOMATIC, 50, 50,
+			BufferedImage mediumImg = Scalr.resize(originalImage, Method.QUALITY, Mode.AUTOMATIC, mediumWidth, null,
+					Scalr.OP_ANTIALIAS);
+			BufferedImage smallImg = Scalr.resize(originalImage, Method.QUALITY, Mode.AUTOMATIC, smallWidth, null,
 					Scalr.OP_ANTIALIAS);
 
 			int lastIndex = fileName.length();
 			String replaceString = fileName.substring(fileName.lastIndexOf('.'), lastIndex);
 			String extension = FilenameUtils.getExtension(file.getOriginalFilename());
-			String mediumPath = fileName.replace(replaceString, "_medium" + replaceString);
-			String smallPath = fileName.replace(replaceString, "_small" + replaceString);
+			String largePath = fileName.replace(replaceString, _large + replaceString);
+			String mediumPath = fileName.replace(replaceString, _medium + replaceString);
+			String smallPath = fileName.replace(replaceString, _small + replaceString);
 
 			s3Client.putObject(getPutObjectRequest(bucketName, fileName, originalImage, extension));
+			s3Client.putObject(getPutObjectRequest(bucketName, largePath, largeImage, extension));
 			s3Client.putObject(getPutObjectRequest(bucketName, mediumPath, mediumImg, extension));
 			s3Client.putObject(getPutObjectRequest(bucketName, smallPath, smallImg, extension));
 
+			smallImg.flush();
+			mediumImg.flush();
+			originalImage.flush();
+
 		} catch (IOException ioe) {
-			log.error("IO exception occurred while trying to read image. {}",ioe);
+			log.error("IO exception occurred while trying to read image. {}", ioe);
 			throw new RuntimeException(ioe);
 		}
 	}
@@ -132,66 +158,72 @@ public class AwsS3Repository {
 	public Resource getObject(String completeName) {
 
 		long startTime = new Date().getTime();
-		if(null == s3Client) getS3Client();
-		
+		if (null == s3Client)
+			getS3Client();
+
 		int index = completeName.indexOf('/');
-		String bucketName = completeName.substring(0,index);
-		String fileNameWithPath = completeName.substring(index+1,completeName.length());
-		
+		String bucketName = completeName.substring(0, index);
+		String fileNameWithPath = completeName.substring(index + 1, completeName.length());
+
 		GetObjectRequest getObjectRequest = new GetObjectRequest(bucketName, fileNameWithPath);
 
 		long beforeCalling = new Date().getTime();
-		
+
 		File localFile = new File(TEMP_FILE_PATH_NAME);
 		s3Client.getObject(getObjectRequest, localFile);
 
 		long afterAws = new Date().getTime();
-		
+
 		FileSystemResource fileSystemResource = new FileSystemResource(Paths.get(TEMP_FILE_PATH_NAME).toFile());
-		
+
 		long generateResource = new Date().getTime();
-		
-		log.info(" the time to prep Obj : "+(beforeCalling-startTime));
-		log.info(" the time to get object from aws "+(afterAws-beforeCalling));
-		log.info(" the time for creating resource form file : "+(generateResource-afterAws));
+
+		log.info(" the time to prep Obj : " + (beforeCalling - startTime));
+		log.info(" the time to get object from aws " + (afterAws - beforeCalling));
+		log.info(" the time for creating resource form file : " + (generateResource - afterAws));
 		return fileSystemResource;
 	}
-	
-	public Map<String, String> getUrlMap(Map<String, Artifact> fileMap){
-		
+
+	public Map<String, String> getUrlMap(Map<String, Artifact> fileMap) {
+
 		Map<String, String> urlMap = new HashMap<>();
-		if(null == s3Client) getS3Client();
-		
-		fileMap.keySet().forEach( fileStoreId -> {
-			
+		if (null == s3Client)
+			getS3Client();
+
+		fileMap.keySet().forEach(fileStoreId -> {
+
 			Artifact artifact = fileMap.get(fileStoreId);
 			String completeName = artifact.getFileName();
 			int index = completeName.indexOf('/');
 			String bucketName = completeName.substring(0, index);
 			String fileNameWithPath = completeName.substring(index + 1, completeName.length());
-			String replaceString = fileNameWithPath.substring(fileNameWithPath.lastIndexOf('.'), fileNameWithPath.length());
-			
+			String replaceString = fileNameWithPath.substring(fileNameWithPath.lastIndexOf('.'),
+					fileNameWithPath.length());
+
 			Date time = new Date();
 			long msec = time.getTime();
 			msec += presignedUrlExpirytime;
 			time.setTime(msec);
-			
+
 			if (artifact.getContentType().startsWith("image/")) {
 
 				List<String> urlList = new ArrayList<>();
-				for (int i = 0; i < 3; i++) {
+				for (int i = 0; i < 4; i++) {
 					String currentname = fileNameWithPath;
 					if (1 == i)
-						currentname = fileNameWithPath.replace(replaceString, "_medium" + replaceString);
+						currentname = fileNameWithPath.replace(replaceString, _large + replaceString);
 					else if (2 == i)
-						currentname = fileNameWithPath.replace(replaceString, "_small" + replaceString);
+						currentname = fileNameWithPath.replace(replaceString, _medium + replaceString);
+					else if (3 == i)
+						currentname = fileNameWithPath.replace(replaceString, _small + replaceString);
 
 					GeneratePresignedUrlRequest generatePresignedUrlRequest = new GeneratePresignedUrlRequest(
 							bucketName, currentname);
 					generatePresignedUrlRequest.setExpiration(time);
 					urlList.add(s3Client.generatePresignedUrl(generatePresignedUrlRequest).toString());
 				}
-				urlMap.put(fileStoreId, urlList.toString().replaceFirst("\\[", "").replaceFirst("\\]","").replaceAll(", ",","));
+				urlMap.put(fileStoreId,
+						urlList.toString().replaceFirst("\\[", "").replaceFirst("\\]", "").replaceAll(", ", ","));
 			} else {
 				GeneratePresignedUrlRequest generatePresignedUrlRequest = new GeneratePresignedUrlRequest(bucketName,
 						fileNameWithPath);
@@ -201,11 +233,12 @@ public class AwsS3Repository {
 		});
 		return urlMap;
 	}
-	
+
 	private AmazonS3 getS3Client() {
 		if (null == s3Client)
-			s3Client = AmazonS3ClientBuilder.standard().withCredentials(new AWSStaticCredentialsProvider(
-					new BasicAWSCredentials(key, secretKey))).withRegion(Regions.valueOf(awsRegion)).build();
+			s3Client = AmazonS3ClientBuilder.standard()
+					.withCredentials(new AWSStaticCredentialsProvider(new BasicAWSCredentials(key, secretKey)))
+					.withRegion(Regions.valueOf(awsRegion)).build();
 		return s3Client;
 	}
 

@@ -38,37 +38,32 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.eis.model;
+package org.egov.eis.repository.rowmapper;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import org.egov.eis.model.DisciplinaryDocuments;
+import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Component;
 
-@Setter
-@Getter
-@NoArgsConstructor
-@AllArgsConstructor
-@ToString
-@EqualsAndHashCode
-public class DisciplinaryDocuments {
+@Component
+public class DisciplinaryDocumentsRowMapper implements RowMapper<DisciplinaryDocuments> {
 
-    @JsonProperty("id")
-    private Long id;
+    @Override
+    public DisciplinaryDocuments mapRow(final ResultSet rs, final int rowNum) throws SQLException, DataAccessException {
 
-    @JsonProperty("documentType")
-    private String documentType;
+        final DisciplinaryDocuments document = new DisciplinaryDocuments();
 
-    @JsonProperty("disciplinaryId")
-    private Long disciplinaryId;
+        document.setId((Long) rs.getObject("id"));
+        document.setDisciplinaryId((Long) rs.getObject("disciplinaryId"));
+        document.setDocumentType(rs.getString("documentType"));
+        document.setFileStoreId(rs.getString("filestoreId"));
+        document.setTenantId(rs.getString("tenantId"));
 
-    @JsonProperty("fileStoreId")
-    private String fileStoreId;
+        return document;
 
-    private String tenantId;
+    }
 
 }

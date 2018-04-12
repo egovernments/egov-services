@@ -171,18 +171,7 @@ public class DisciplinaryRowMapper implements RowMapper<Disciplinary> {
             throw new SQLException("Parse exception while parsing date");
         }
 
-        List<DisciplinaryDocuments> docList = new ArrayList<>();
-        DisciplinaryDocuments documents = new DisciplinaryDocuments();
-        documents.setDisciplinaryId((Long) rs.getObject("disciplinaryId"));
-        documents.setFileStoreId(rs.getString("filestoreId"));
-        documents.setDocumentType(rs.getString("documenttype"));
-        documents.setId((Long) rs.getObject("documentsId"));
-        if (documents.getId() == null)
-            disciplinary.setDisciplinaryDocuments(new ArrayList<>());
-        else
-            docList.add(documents);
-        disciplinary.setDisciplinaryDocuments(docList);
-        return disciplinary;
+       return disciplinary;
     }
 
 }

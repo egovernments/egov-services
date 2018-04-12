@@ -8,7 +8,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -94,7 +93,7 @@ public class AwsS3Repository {
 		try {
 			is = file.getInputStream();
 		} catch (IOException e) {
-			log.error(" exception occured while reading input stream from file ", e);
+			log.error(" exception occured while reading input stream from file {}", e);
 			throw new RuntimeException(e);
 		}
 		ObjectMetadata objMd = new ObjectMetadata();
@@ -128,7 +127,7 @@ public class AwsS3Repository {
 			}
 			
 		} catch (IOException ioe) {
-			log.error("IO exception occurred while trying to read image.");
+			log.error("IO exception occurred while trying to read image. {}",ioe);
 			throw new RuntimeException(ioe);
 		}
 	}
@@ -175,7 +174,7 @@ public class AwsS3Repository {
 			String fileNameWithPath = completeName.substring(index + 1, completeName.length());
 			String replaceString = fileNameWithPath.substring(fileNameWithPath.lastIndexOf('.'), fileNameWithPath.length());
 			
-			java.util.Date time = new java.util.Date();
+			Date time = new Date();
 			long msec = time.getTime();
 			msec += presignedUrlExpirytime;
 			time.setTime(msec);
@@ -220,7 +219,7 @@ public class AwsS3Repository {
 		try {
 			ImageIO.write(originalImage, extension, os);
 		} catch (IOException e) {
-			log.error(" error while writing image to stream : ", e);
+			log.error(" error while writing image to stream : {}", e);
 			throw new RuntimeException(e);
 		}
 		ObjectMetadata metadata = new ObjectMetadata();

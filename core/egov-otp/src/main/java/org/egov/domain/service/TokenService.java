@@ -1,5 +1,7 @@
 package org.egov.domain.service;
 
+import static org.apache.commons.lang3.RandomStringUtils.randomNumeric;
+
 import java.util.UUID;
 
 import org.egov.domain.exception.TokenAlreadyUsedException;
@@ -11,6 +13,7 @@ import org.egov.domain.model.Tokens;
 import org.egov.domain.model.ValidateRequest;
 import org.egov.persistence.repository.TokenRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import lombok.extern.slf4j.Slf4j;
@@ -22,6 +25,9 @@ public class TokenService {
 	private TokenRepository tokenRepository;
 	private static final int TTL_IN_SECONDS = 300;
 
+	@Value("${egov.otp.length}")
+	private int otpLength;
+
 	@Autowired
 	public TokenService(TokenRepository tokenRepository) {
 		this.tokenRepository = tokenRepository;
@@ -30,7 +36,7 @@ public class TokenService {
 	public Token create(TokenRequest tokenRequest) {
 		tokenRequest.validate();
 		Token token = Token.builder().uuid(UUID.randomUUID().toString()).tenantId(tokenRequest.getTenantId())
-				.identity(tokenRequest.getIdentity()).number(tokenRequest.generateToken())
+				.identity(tokenRequest.getIdentity()).number(randomNumeric(otpLength))
 				.timeToLiveInSeconds(tokenRequest.getTimeToLive()).build();
 		return tokenRepository.save(token);
 	}
@@ -50,7 +56,7 @@ public class TokenService {
 			if (token.isValidated()) {
 				throw new TokenAlreadyUsedException();
 			}
-			createdTime = token.getCreatedTime() / 1000;	
+			createdTime = token.getCreatedTime() / 1000;
 		} else if (tokens.getTokens().isEmpty()) {
 			throw new TokenValidationFailureException();
 		}

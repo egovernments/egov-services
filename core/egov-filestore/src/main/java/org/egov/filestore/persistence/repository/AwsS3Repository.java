@@ -15,6 +15,7 @@ import java.util.Map;
 
 import javax.imageio.ImageIO;
 
+import org.apache.commons.io.FilenameUtils;
 import org.egov.filestore.domain.model.FileLocation;
 import org.egov.filestore.persistence.entity.Artifact;
 import org.imgscalr.Scalr;
@@ -105,6 +106,7 @@ public class AwsS3Repository {
 	private void writeImage(MultipartFile file, String bucketName, String fileName) {
 
 		try {
+			
 			BufferedImage originalImage = ImageIO.read(file.getInputStream());
 			BufferedImage mediumImg = Scalr.resize(originalImage, Method.QUALITY, Mode.AUTOMATIC, 75, 75,
 					Scalr.OP_ANTIALIAS);
@@ -113,7 +115,7 @@ public class AwsS3Repository {
 
 			int lastIndex = fileName.length();
 			String replaceString = fileName.substring(fileName.lastIndexOf('.'), lastIndex);
-			String extension = fileName.substring(lastIndex - 3, lastIndex);
+			String extension = FilenameUtils.getExtension(file.getOriginalFilename());
 			String mediumPath = fileName.replace(replaceString, "_medium" + replaceString);
 			String smallPath = fileName.replace(replaceString, "_small" + replaceString);
 
@@ -121,11 +123,6 @@ public class AwsS3Repository {
 			s3Client.putObject(getPutObjectRequest(bucketName, mediumPath, mediumImg, extension));
 			s3Client.putObject(getPutObjectRequest(bucketName, smallPath, smallImg, extension));
 
-			ObjectListing objectListing = s3Client.listObjects("egov-rainmaker");
-			for (S3ObjectSummary os : objectListing.getObjectSummaries()) {
-				log.info(" the key is : "+os.getKey());
-			}
-			
 		} catch (IOException ioe) {
 			log.error("IO exception occurred while trying to read image. {}",ioe);
 			throw new RuntimeException(ioe);
@@ -194,7 +191,7 @@ public class AwsS3Repository {
 					generatePresignedUrlRequest.setExpiration(time);
 					urlList.add(s3Client.generatePresignedUrl(generatePresignedUrlRequest).toString());
 				}
-				urlMap.put(fileStoreId, urlList.toString().replaceFirst("\\[", "").replaceFirst("\\]",""));
+				urlMap.put(fileStoreId, urlList.toString().replaceFirst("\\[", "").replaceFirst("\\]","").replaceAll(", ",","));
 			} else {
 				GeneratePresignedUrlRequest generatePresignedUrlRequest = new GeneratePresignedUrlRequest(bucketName,
 						fileNameWithPath);

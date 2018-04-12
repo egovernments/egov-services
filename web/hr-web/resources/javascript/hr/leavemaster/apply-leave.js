@@ -459,7 +459,6 @@ class ApplyLeave extends React.Component {
 
 
     var employee;
-    var today = new Date();
     var asOnDate = today();
     var departmentId = this.state.departmentId;
     var leaveNumber = this.state.leaveNumber;

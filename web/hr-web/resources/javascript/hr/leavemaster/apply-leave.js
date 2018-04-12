@@ -1,3 +1,19 @@
+function today() {
+  var today = new Date();
+  var dd = today.getDate();
+  var mm = today.getMonth() + 1; 
+  var yyyy = today.getFullYear();
+  if (dd < 10) {
+    dd = '0' + dd;
+  }
+  if (mm < 10) {
+    mm = '0' + mm;
+  }
+  var today = dd + '/' + mm + '/' + yyyy;
+
+  return today;
+}
+
 class ApplyLeave extends React.Component {
   constructor(props) {
     super(props);
@@ -375,17 +391,8 @@ class ApplyLeave extends React.Component {
       else
         $('#totalWorkingDays').prop("disabled", true);
       let _this = this
-      var today = new Date();
-      var dd = today.getDate();
-      var mm = today.getMonth() + 1;
-      var yyyy = today.getFullYear();
-      if (dd < 10) {
-        dd = '0' + dd;
-      }
-      if (mm < 10) {
-        mm = '0' + mm;
-      }
-      var asOnDate = dd + '/' + mm + '/' + yyyy;
+      
+      var asOnDate = today();
       let leaveType = this.state.leaveSet.leaveType.id;
       let employeeid = getUrlVars()["id"];
 
@@ -453,7 +460,7 @@ class ApplyLeave extends React.Component {
 
     var employee;
     var today = new Date();
-    var asOnDate = today.getDate() + "/" + (today.getMonth() + 1) + "/" + today.getFullYear();
+    var asOnDate = today();
     var departmentId = this.state.departmentId;
     var leaveNumber = this.state.leaveNumber;
     var owner = this.state.owner;
@@ -835,7 +842,7 @@ class ApplyLeave extends React.Component {
               <div className="col-sm-6">
                 <div className="row">
                   <div className="col-sm-6 label-text">
-                    <label htmlFor="">Total Working Days</label>
+                    <label htmlFor="">Total Leave Days</label>
                   </div>
                   <div className="col-sm-6">
 

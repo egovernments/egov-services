@@ -1,3 +1,19 @@
+function today() {
+  var today = new Date();
+  var dd = today.getDate();
+  var mm = today.getMonth() + 1; 
+  var yyyy = today.getFullYear();
+  if (dd < 10) {
+    dd = '0' + dd;
+  }
+  if (mm < 10) {
+    mm = '0' + mm;
+  }
+  var today = dd + '/' + mm + '/' + yyyy;
+
+  return today;
+}
+
 class UpdateLeave extends React.Component {
   constructor(props) {
     super(props);
@@ -50,7 +66,7 @@ class UpdateLeave extends React.Component {
     var stateId = getUrlVars()["stateId"];
     var asOnDate = _this.state.leaveSet.toDate;
     var process = [], employee;
-    var _leaveSet = {},prefixSuffixDays="", enclosingDays="";
+    var _leaveSet = {}, prefixSuffixDays = "", enclosingDays = "";
     var hrConfigurations = [], allHolidayList = [];
     $('#availableDays,#leaveDays,#name,#code').prop("disabled", true);
 
@@ -155,7 +171,7 @@ class UpdateLeave extends React.Component {
           _this.setState({
             leaveSet: {
               ..._this.state.leaveSet,
-              leaveDays: _leaveSet.leaveDays-(prefixSuffixDays + enclosingDays)
+              leaveDays: _leaveSet.leaveDays - (prefixSuffixDays + enclosingDays)
             }
           })
         }, 500);
@@ -383,15 +399,15 @@ class UpdateLeave extends React.Component {
     var today = dd + '.' + mm + '.' + yyyy;
 
     let financialYear = "";
-    if(new Date().getMonth()>3)
-    financialYear = new Date().getFullYear() + "-" + (new Date().getFullYear() + 1);
+    if (new Date().getMonth() > 3)
+      financialYear = new Date().getFullYear() + "-" + (new Date().getFullYear() + 1);
     else
-    financialYear = (new Date().getFullYear() -1) + "-" + new Date().getFullYear() ;
+      financialYear = (new Date().getFullYear() - 1) + "-" + new Date().getFullYear();
 
     var doc = new jsPDF();
 
     let encashable = noticeData.encashable;
-    if (encashable || encashable == "TRUE" || encashable == "true") {
+    if (!(encashable || encashable == "TRUE" || encashable == "true")) {
 
       doc.setFont('times', 'normal');
       doc.setFontSize(12);
@@ -427,7 +443,7 @@ class UpdateLeave extends React.Component {
       doc.text(15, 97, doc.splitTextToSize('is hereby sactioned Earned Leave/HPL for a period of (' + noticeData.totalWorkingDays + ') days on ' + noticeData.leaveGround + ' grounds from ' + noticeData.fromDate + ' to ' + noticeData.toDate + '.'));
       doc.text(15, 105, doc.splitTextToSize('2.     Certified that necessary entries have been made in the service Register of the individual.'));
       doc.text(15, 113, doc.splitTextToSize('3.     He/She is informed that, after sanction of the above leave is having (' + noticeData.availableDays + ') days of '));
-      doc.text(15, 118, doc.splitTextToSize('       '+ noticeData.leaveTypeName + ' at his/her credit.'));
+      doc.text(15, 118, doc.splitTextToSize('       ' + noticeData.leaveTypeName + ' at his/her credit.'));
 
       doc.setFontType("bold");
       doc.text(125, 134, 'COMMISSIONER');
@@ -448,7 +464,7 @@ class UpdateLeave extends React.Component {
       doc.text(105, 20, "PROCEEDINGS OF THE COMMISSIONER", 'center');
       doc.text(105, 27, tenantId.split(".")[1].toUpperCase() + ' MUNICIPALITY/MUNICIPAL CORPORATION', 'center');
 
-      doc.text(15, 42, 'Roc.No. ' +  noticeData.applicationNumber + '/2018');
+      doc.text(15, 42, 'Roc.No. ' + noticeData.applicationNumber + '/2018');
       doc.setLineWidth(0.5);
       doc.line(15, 43, 66, 43);
       doc.text(130, 42, 'Dt. ' + today);
@@ -478,8 +494,8 @@ class UpdateLeave extends React.Component {
       doc.text(15, 113, doc.splitTextToSize('Leave (' + noticeData.totalWorkingDays + ') days as on ' + today + ' for encashment purpose during the financial year'));
       doc.text(15, 121, doc.splitTextToSize(financialYear));
       doc.text(15, 130, doc.splitTextToSize('2.     Certified that necessary entries have been made in the service Register of the individual.'));
-      doc.text(15, 139, doc.splitTextToSize('3.     He/She is informed that, after sanction of the above leave is having ('+ noticeData.availableDays +') days of '));
-      doc.text(15, 147, doc.splitTextToSize('       '+ noticeData.leaveTypeName + ' at his/her credit.'));
+      doc.text(15, 139, doc.splitTextToSize('3.     He/She is informed that, after sanction of the above leave is having (' + noticeData.availableDays + ') days of '));
+      doc.text(15, 147, doc.splitTextToSize('       ' + noticeData.leaveTypeName + ' at his/her credit.'));
 
       doc.setFontType("bold");
       doc.text(125, 157, 'COMMISSIONER');
@@ -549,7 +565,7 @@ class UpdateLeave extends React.Component {
       else
         $('#totalWorkingDays').prop("disabled", true);
       let _this = this
-      let asOnDate = new Date().getDate() + "/" + (new Date().getMonth() + 1) + "/" + new Date().getFullYear();
+      let asOnDate = today();
       let leaveType = this.state.leaveSet.leaveType.id;
       let employeeid = getUrlVars()["id"];
 
@@ -606,7 +622,7 @@ class UpdateLeave extends React.Component {
     if (ID === "Submit") {
       var employee;
       var today = new Date();
-      var asOnDate = today.getDate() + "/" + (today.getMonth() + 1) + "/" + today.getFullYear();
+      var asOnDate = today();
       var departmentId = _this.state.departmentId;
       var leaveNumber = _this.state.leaveNumber;
       var tempInfo = Object.assign({}, _this.state.leaveSet),
@@ -657,9 +673,9 @@ class UpdateLeave extends React.Component {
 
             },
             error: function (err) {
-              if (err["responseJSON"]&& err["responseJSON"].message)
-              showError(err["responseJSON"].message);
-              else if (err["responseJSON"]&& err["responseJSON"].LeaveApplication[0] && err["responseJSON"].LeaveApplication[0].errorMsg) {
+              if (err["responseJSON"] && err["responseJSON"].message)
+                showError(err["responseJSON"].message);
+              else if (err["responseJSON"] && err["responseJSON"].LeaveApplication[0] && err["responseJSON"].LeaveApplication[0].errorMsg) {
                 showError(err["responseJSON"].LeaveApplication[0].errorMsg)
               } else {
                 showError("Something went wrong. Please contact Administrator");
@@ -757,9 +773,9 @@ class UpdateLeave extends React.Component {
           }
         },
         error: function (err) {
-          if (err["responseJSON"]&& err["responseJSON"].message)
+          if (err["responseJSON"] && err["responseJSON"].message)
             showError(err["responseJSON"].message);
-          else if (err["responseJSON"]&& err["responseJSON"].LeaveApplication[0] && err["responseJSON"].LeaveApplication[0].errorMsg) {
+          else if (err["responseJSON"] && err["responseJSON"].LeaveApplication[0] && err["responseJSON"].LeaveApplication[0].errorMsg) {
             showError(err["responseJSON"].LeaveApplication[0].errorMsg)
           } else {
             showError("Something went wrong. Please contact Administrator");
@@ -1084,7 +1100,7 @@ class UpdateLeave extends React.Component {
               <div className="col-sm-6">
                 <div className="row">
                   <div className="col-sm-6 label-text">
-                    <label htmlFor="">Total Working Days</label>
+                    <label htmlFor="">Total Leave Days</label>
                   </div>
                   <div className="col-sm-6">
 

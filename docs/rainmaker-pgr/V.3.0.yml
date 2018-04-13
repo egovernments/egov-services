@@ -305,7 +305,6 @@ definitions:
     required:
       - tenantId
       - serviceCode
-      - description
       - phone
       
 ###########################################################################

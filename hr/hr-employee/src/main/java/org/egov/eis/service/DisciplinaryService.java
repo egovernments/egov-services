@@ -85,10 +85,10 @@ public class DisciplinaryService {
 
         for (final Disciplinary disciplinary : disciplinaries) {
             List<DisciplinaryDocuments> disciplinaryDocuments = new ArrayList<>();
-            DisciplinaryDocuments disciplinaryDocs= new DisciplinaryDocuments();
             final List<DisciplinaryDocuments> documents = disciplinaryDocumentsRepository.findByDisciplinaryId(disciplinary.getId(),
                     disciplinary.getTenantId());
             for (final DisciplinaryDocuments document : documents) {
+                DisciplinaryDocuments disciplinaryDocs= new DisciplinaryDocuments();
                 disciplinaryDocs.setDocumentType(document.getDocumentType());
                 disciplinaryDocs.setFileStoreId(document.getFileStoreId());
                 disciplinaryDocs.setTenantId(document.getTenantId());

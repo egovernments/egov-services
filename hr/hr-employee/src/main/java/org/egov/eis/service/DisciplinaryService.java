@@ -89,6 +89,8 @@ public class DisciplinaryService {
                     disciplinary.getTenantId());
             for (final DisciplinaryDocuments document : documents) {
                 DisciplinaryDocuments disciplinaryDocs= new DisciplinaryDocuments();
+                disciplinaryDocs.setId(document.getId());
+                disciplinaryDocs.setDisciplinaryId(disciplinary.getId());
                 disciplinaryDocs.setDocumentType(document.getDocumentType());
                 disciplinaryDocs.setFileStoreId(document.getFileStoreId());
                 disciplinaryDocs.setTenantId(document.getTenantId());

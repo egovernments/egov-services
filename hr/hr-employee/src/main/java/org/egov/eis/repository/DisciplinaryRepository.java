@@ -43,6 +43,7 @@ package org.egov.eis.repository;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.egov.eis.model.Disciplinary;
 import org.egov.eis.model.DisciplinaryDocuments;
@@ -69,6 +70,9 @@ public class DisciplinaryRepository {
 
     @Autowired
     private DisciplinaryQueryBuilder disciplinaryQueryBuilder;
+
+    @Autowired
+    private DisciplinaryDocumentsRepository disciplinaryDocumentsRepository;
 
     public DisciplinaryRequest create(final DisciplinaryRequest disciplinaryRequest) {
 
@@ -157,6 +161,9 @@ public class DisciplinaryRepository {
                 disciplinary.getPunishmentImplemented(),disciplinary.getEndDateOfPunishment(),
                 disciplinary.getId(), disciplinary.getTenantId() };
         jdbcTemplate.update(disciplinaryUpdate, obj);
+        updateDisciplinaryDocuments(disciplinary);
+        if(disciplinary.getDisciplinaryDocuments()!=null && !disciplinary.getDisciplinaryDocuments().isEmpty())
+            disciplinaryDocumentsRepository.save(disciplinary.getId(),disciplinary.getDisciplinaryDocuments(),disciplinary.getTenantId());
         return disciplinaryRequest;
 
     }
@@ -184,6 +191,14 @@ public class DisciplinaryRepository {
             return result.longValue();
         } catch (final Exception ex) {
             throw new RuntimeException("Next id is not generated.");
+        }
+    }
+
+
+    private void updateDisciplinaryDocuments(Disciplinary disciplinary){
+        List<DisciplinaryDocuments> documentsFromDB = disciplinaryDocumentsRepository.findByDisciplinaryId(disciplinary.getId(), disciplinary.getTenantId());
+        if (disciplinary.getDisciplinaryDocuments() != null && !disciplinary.getDisciplinaryDocuments().isEmpty()) {
+            disciplinary.getDisciplinaryDocuments().removeAll(documentsFromDB);
         }
     }
 }

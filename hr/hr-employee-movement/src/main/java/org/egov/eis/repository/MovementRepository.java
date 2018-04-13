@@ -46,6 +46,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.egov.eis.config.PropertiesManager;
@@ -94,6 +95,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
+import org.w3c.dom.events.DocumentEvent;
 
 @Repository
 public class MovementRepository {
@@ -174,7 +176,11 @@ public class MovementRepository {
 				movement.getStatus(), movement.getStateId(), userResponse.getUsers().get(0).getId(), now,
 				userResponse.getUsers().get(0).getId(), now, movement.getId(), movement.getTenantId() };
 		jdbcTemplate.update(MovementQueryBuilder.updateMovementQuery(), obj);
-		if (movement.getTypeOfMovement().equals(TypeOfMovement.PROMOTION) || (movement.getTypeOfMovement().equals(TypeOfMovement.TRANSFER) &&
+        updateMovementDocuments(movement);
+        if (movement.getDocuments() != null && !movement.getDocuments().isEmpty())
+            documentsRepository.save(movement.getId(), movement.getDocuments(), movement.getTenantId());
+
+        if (movement.getTypeOfMovement().equals(TypeOfMovement.PROMOTION) || (movement.getTypeOfMovement().equals(TypeOfMovement.TRANSFER) &&
 				movement.getTransferType().equals(TransferType.TRANSFER_WITHIN_DEPARTMENT_OR_CORPORATION_OR_ULB))
 				&& movement.getStatus()
 						.equals(employeeService.getHRStatuses(propertiesManager.getHrMastersServiceStatusesKey(),
@@ -204,6 +210,14 @@ public class MovementRepository {
 			}
 		return movement;
 	}
+
+	private void updateMovementDocuments(Movement movement){
+        List<Document> documentsFromDB = documentsRepository.findByMovementId(movement.getId(), movement.getTenantId());
+        List<String> documents = documentsFromDB.stream().map(doc -> doc.getDocument()).collect(Collectors.toList());
+        if (movement.getDocuments() != null && !movement.getDocuments().isEmpty()) {
+            movement.getDocuments().removeAll(documents);
+        }
+    }
 
 	private void promoteEmployee(final MovementRequest movementRequest) throws ParseException {
 		final EmployeeInfo employeeInfo = employeeService.getEmployee(movementRequest.getMovement().get(0).getEmployeeId(), null, movementRequest.getMovement().get(0).getTenantId(),movementRequest.getRequestInfo());
@@ -381,6 +395,7 @@ public class MovementRepository {
 			employee.setRecruitmentMode(employeeService
 					.getRecruitmentModes(recruitmentModes.get(0).getName(), null, destination, destinationRequestInfo)
 					.get(0).getId());
+
 
 		final List<RecruitmentType> recruitmentTypes = employeeService.getRecruitmentTypes(null,
 				employee.getRecruitmentType(), destination, sourceRequestInfo);

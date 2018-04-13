@@ -63,6 +63,10 @@ public class DisciplinaryDocumentsRepository {
     public static final String SELECT_BY_DISCIPLINARYID_QUERY = "SELECT id, disciplinaryId, documentType, filestoreId, tenantId"
             + " FROM egeis_disciplinarydocuments WHERE disciplinaryId = ? AND tenantId = ? ";
 
+
+    public static final String INSERT_DISCIPLINARY_DOCUMENTS_QUERY = "INSERT INTO egeis_disciplinaryDocuments (id,disciplinaryId,documentType,filestoreId,tenantid) values "
+            + "(nextval('seq_egeis_disciplinaryDocument'),?,?,?,?)";
+
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
@@ -76,5 +80,22 @@ public class DisciplinaryDocumentsRepository {
         } catch (final EmptyResultDataAccessException e) {
             return null;
         }
+    }
+
+    public void save(final Long disciplinaryId, final List<DisciplinaryDocuments> documents, final String tenantId) {
+        jdbcTemplate.batchUpdate(INSERT_DISCIPLINARY_DOCUMENTS_QUERY, new BatchPreparedStatementSetter() {
+            @Override
+            public void setValues(final PreparedStatement ps, final int i) throws SQLException {
+                ps.setLong(1, disciplinaryId);
+                ps.setString(2, documents.get(i).getDocumentType());
+                ps.setString(2, documents.get(i).getFileStoreId());
+                ps.setString(3, tenantId);
+            }
+
+            @Override
+            public int getBatchSize() {
+                return documents.size();
+            }
+        });
     }
 }

@@ -481,7 +481,7 @@ class ApplyLeave extends React.Component {
     tempInfo.suffixDate = this.state.perfixSuffix ? this.state.perfixSuffix.suffixToDate : "";
     tempInfo.holidays = holidays;
 
-    commonApiPost("hr-employee", "hod/employees", "_search", { tenantId, asOnDate, departmentId }, function (err, res) {
+    commonApiPost("hr-employee", "hod/employees", "_search", { tenantId, asOnDate, departmentId, active:true }, function (err, res) {
       if (res && res["Employee"] && res["Employee"][0]) {
         employee = res["Employee"][0];
       }

@@ -40,10 +40,14 @@
 
 package org.egov.eis.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.egov.eis.model.Disciplinary;
+import org.egov.eis.model.DisciplinaryDocuments;
+import org.egov.eis.repository.DisciplinaryDocumentsRepository;
 import org.egov.eis.repository.DisciplinaryRepository;
+import org.egov.eis.repository.rowmapper.DisciplinaryDocumentsRowMapper;
 import org.egov.eis.web.contract.DisciplinaryGetRequest;
 import org.egov.eis.web.contract.DisciplinaryRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,6 +61,9 @@ public class DisciplinaryService {
 
     @Autowired
     private DisciplinaryRepository disciplinaryRepository;
+
+    @Autowired
+    private DisciplinaryDocumentsRepository disciplinaryDocumentsRepository;
 
     public Disciplinary create(DisciplinaryRequest disciplinaryRequest) {
         log.debug("DisciplinaryRequest::" + disciplinaryRequest);
@@ -74,7 +81,23 @@ public class DisciplinaryService {
     }
 
     public List<Disciplinary> getDisciplinarys(final DisciplinaryGetRequest disciplinaryGetRequest) {
-        return disciplinaryRepository.findForCriteria(disciplinaryGetRequest);
+        List<Disciplinary> disciplinaries = disciplinaryRepository.findForCriteria(disciplinaryGetRequest);
+
+        for (final Disciplinary disciplinary : disciplinaries) {
+            List<DisciplinaryDocuments> disciplinaryDocuments = new ArrayList<>();
+            DisciplinaryDocuments disciplinaryDocs= new DisciplinaryDocuments();
+            final List<DisciplinaryDocuments> documents = disciplinaryDocumentsRepository.findByDisciplinaryId(disciplinary.getId(),
+                    disciplinary.getTenantId());
+            for (final DisciplinaryDocuments document : documents) {
+                disciplinaryDocs.setDocumentType(document.getDocumentType());
+                disciplinaryDocs.setFileStoreId(document.getFileStoreId());
+                disciplinaryDocs.setTenantId(document.getTenantId());
+                disciplinaryDocuments.add(disciplinaryDocs);
+            }
+            disciplinary.getDisciplinaryDocuments().addAll(disciplinaryDocuments);
+
+        }
+        return disciplinaries;
     }
 
 }

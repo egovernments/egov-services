@@ -40,6 +40,7 @@
 
 package org.egov.eis.model;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -143,7 +144,7 @@ public class Disciplinary {
     private Date courtOrderDate;
     @Size(max=1000)
     private String gistOfDirectionIssuedByCourt;
-    private List<DisciplinaryDocuments> disciplinaryDocuments;
+    private List<DisciplinaryDocuments> disciplinaryDocuments = new ArrayList<>();
     @NotNull
     private String tenantId;
     @NotNull

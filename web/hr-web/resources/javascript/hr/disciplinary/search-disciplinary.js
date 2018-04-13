@@ -99,6 +99,15 @@ class SearchDisciplinaryAction extends React.Component {
        
 
         if (type !== "create") {
+          let callCount = employees.length;
+
+          var checkNCall = function (tempEmployees) {
+            callCount--;
+            console.log(callCount);
+            if (callCount == 0)
+            _this.setState({isSearchClicked: true, employees: tempEmployees});
+            }
+
           for (let i = 0; i < employees.length; i++) {
             commonApiPost("hr-employee", "disciplinary", "_search", { tenantId, employeeId: employees[i].id }, function (err, res1) {
               if (res1 && res1["Disciplinary"] && res1["Disciplinary"]["length"]) {
@@ -109,16 +118,9 @@ class SearchDisciplinaryAction extends React.Component {
                   tempEmployees.push(employee);
                 }
               }
+              checkNCall(tempEmployees);
             });
-
           }
-
-          setTimeout(function(){ _this.setState({
-            isSearchClicked: true,
-            employees: tempEmployees
-          });
-          console.log("employee are set in state for update");
-          flag = 1;},500);
 
         }else{
           _this.setState({

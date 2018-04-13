@@ -40,107 +40,24 @@
 
 package org.egov.eis.repository.builder;
 
-import java.util.List;
-
+import lombok.extern.slf4j.Slf4j;
 import org.egov.eis.config.ApplicationProperties;
 import org.egov.eis.web.contract.DisciplinaryGetRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import lombok.extern.slf4j.Slf4j;
+import java.util.List;
 
 @Slf4j
 @Component
 public class DisciplinaryQueryBuilder {
 
+    public static final String DISCIPLINARY_EXISTENCE_CHECK_QUERY = "SELECT exists(SELECT id FROM egeis_disciplinary"
+            + " WHERE id = ? AND tenantId = ?)";
+    public static final String GENERATE_SEQUENCES_QUERY = "SELECT nextval('seq_egeis_disciplinary') AS id";
+    public String BASE_QUERY = "SELECT * FROM  egeis_disciplinary as disciplinary ";
     @Autowired
     private ApplicationProperties applicationProperties;
-
-    public String BASE_QUERY = "SELECT *,documents.id as documentsId,documents.disciplinaryId as disciplinaryId,documents.filestoreId as filestoreId"
-            + ",documents.documenttype as documenttype FROM  egeis_disciplinary as disciplinary LEFT OUTER JOIN egeis_disciplinaryDocuments  documents "
-            + "ON disciplinary.id = documents.disciplinaryId ";
-
-    @SuppressWarnings("rawtypes")
-    public String getQuery(final DisciplinaryGetRequest disciplinaryGetRequest, final List preparedStatementValues) {
-        final StringBuilder selectQuery = new StringBuilder(BASE_QUERY);
-
-        addWhereClause(selectQuery, preparedStatementValues, disciplinaryGetRequest);
-        addOrderByClause(selectQuery, disciplinaryGetRequest);
-        addPagingClause(selectQuery, preparedStatementValues, disciplinaryGetRequest);
-
-        log.debug("Query : " + selectQuery);
-        return selectQuery.toString();
-    }
-
-    @SuppressWarnings({ "unchecked", "rawtypes" })
-    private void addWhereClause(final StringBuilder selectQuery, final List preparedStatementValues,
-            final DisciplinaryGetRequest disciplinaryGetRequest) {
-
-        if (disciplinaryGetRequest.getId() == null &&
-                disciplinaryGetRequest.getTenantId() == null)
-            return;
-
-        selectQuery.append(" WHERE");
-        boolean isAppendAndClause = false;
-
-        if (disciplinaryGetRequest.getTenantId() != null) {
-            isAppendAndClause = true;
-            selectQuery.append(" disciplinary.tenantId = ?");
-            preparedStatementValues.add(disciplinaryGetRequest.getTenantId());
-        }
-
-        if (disciplinaryGetRequest.getId() != null) {
-            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-            selectQuery.append(" disciplinary.id IN " + getIdQuery(disciplinaryGetRequest.getId()));
-        }
-        
-        if (disciplinaryGetRequest.getEmployeeId() != null) {
-            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-            selectQuery.append(" disciplinary.employeeid IN " + getIdQuery(disciplinaryGetRequest.getEmployeeId()));
-        }
-
-    }
-
-    private void addOrderByClause(final StringBuilder selectQuery, final DisciplinaryGetRequest disciplinaryGetRequest) {
-        final String sortBy = disciplinaryGetRequest.getSortBy() == null ? "disciplinary.id" : disciplinaryGetRequest.getSortBy();
-        final String sortOrder = disciplinaryGetRequest.getSortOrder() == null ? "DESC"
-                : disciplinaryGetRequest.getSortOrder();
-        selectQuery.append(" ORDER BY " + sortBy + " " + sortOrder);
-    }
-
-    @SuppressWarnings({ "unchecked", "rawtypes" })
-    private void addPagingClause(final StringBuilder selectQuery, final List preparedStatementValues,
-            final DisciplinaryGetRequest disciplinaryGetRequest) {
-        // handle limit(also called pageSize) here
-        selectQuery.append(" LIMIT ?");
-        long pageSize = Integer.parseInt(applicationProperties.empSearchPageSizeDefault());
-        if (disciplinaryGetRequest.getPageSize() != null)
-            pageSize = disciplinaryGetRequest.getPageSize();
-        preparedStatementValues.add(pageSize); // Set limit to pageSize
-
-        // handle offset here
-        selectQuery.append(" OFFSET ?");
-        int pageNumber = 0; // Default pageNo is zero meaning first page
-        if (disciplinaryGetRequest.getPageNumber() != null)
-            pageNumber = disciplinaryGetRequest.getPageNumber() - 1;
-        preparedStatementValues.add(pageNumber * pageSize); // Set offset to
-                                                            // pageNo * pageSize
-    }
-
-    /**
-     * This method is always called at the beginning of the method so that and is prepended before the field's predicate is
-     * handled.
-     *
-     * @param appendAndClauseFlag
-     * @param queryString
-     * @return boolean indicates if the next predicate should append an "AND"
-     */
-    private boolean addAndClauseIfRequired(final boolean appendAndClauseFlag, final StringBuilder queryString) {
-        if (appendAndClauseFlag)
-            queryString.append(" AND");
-
-        return true;
-    }
 
     private static String getIdQuery(final List<Long> idList) {
         final StringBuilder query = new StringBuilder("(");
@@ -192,11 +109,88 @@ public class DisciplinaryQueryBuilder {
                 + "proceedingsDate=?,proceedingsServingDate=?,courtCase=?,courtOrderNo=?,courtOrderDate=?,gistOfDirectionIssuedByCourt=?,"
                 + " lastModifiedBy=?,lastModifiedDate=?,courtOrderType=?,presentingOfficerDesignation=?,enquiryOfficerDesignation=?,punishmentimplemented=?,enddateofpunishment=? where id = ? and tenantid = ? ";
     }
-    
-    public static final String DISCIPLINARY_EXISTENCE_CHECK_QUERY = "SELECT exists(SELECT id FROM egeis_disciplinary"
-            + " WHERE id = ? AND tenantId = ?)";
-    
-    public static final String GENERATE_SEQUENCES_QUERY = "SELECT nextval('seq_egeis_disciplinary') AS id" ;
-  
+
+    @SuppressWarnings("rawtypes")
+    public String getQuery(final DisciplinaryGetRequest disciplinaryGetRequest, final List preparedStatementValues) {
+        final StringBuilder selectQuery = new StringBuilder(BASE_QUERY);
+
+        addWhereClause(selectQuery, preparedStatementValues, disciplinaryGetRequest);
+        addOrderByClause(selectQuery, disciplinaryGetRequest);
+        addPagingClause(selectQuery, preparedStatementValues, disciplinaryGetRequest);
+
+        log.debug("Query : " + selectQuery);
+        return selectQuery.toString();
+    }
+
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    private void addWhereClause(final StringBuilder selectQuery, final List preparedStatementValues,
+                                final DisciplinaryGetRequest disciplinaryGetRequest) {
+
+        if (disciplinaryGetRequest.getId() == null &&
+                disciplinaryGetRequest.getTenantId() == null)
+            return;
+
+        selectQuery.append(" WHERE");
+        boolean isAppendAndClause = false;
+
+        if (disciplinaryGetRequest.getTenantId() != null) {
+            isAppendAndClause = true;
+            selectQuery.append(" disciplinary.tenantId = ?");
+            preparedStatementValues.add(disciplinaryGetRequest.getTenantId());
+        }
+
+        if (disciplinaryGetRequest.getId() != null) {
+            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+            selectQuery.append(" disciplinary.id IN " + getIdQuery(disciplinaryGetRequest.getId()));
+        }
+
+        if (disciplinaryGetRequest.getEmployeeId() != null) {
+            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+            selectQuery.append(" disciplinary.employeeid IN " + getIdQuery(disciplinaryGetRequest.getEmployeeId()));
+        }
+
+    }
+
+    private void addOrderByClause(final StringBuilder selectQuery, final DisciplinaryGetRequest disciplinaryGetRequest) {
+        final String sortBy = disciplinaryGetRequest.getSortBy() == null ? "disciplinary.id" : disciplinaryGetRequest.getSortBy();
+        final String sortOrder = disciplinaryGetRequest.getSortOrder() == null ? "DESC"
+                : disciplinaryGetRequest.getSortOrder();
+        selectQuery.append(" ORDER BY " + sortBy + " " + sortOrder);
+    }
+
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    private void addPagingClause(final StringBuilder selectQuery, final List preparedStatementValues,
+                                 final DisciplinaryGetRequest disciplinaryGetRequest) {
+        // handle limit(also called pageSize) here
+        selectQuery.append(" LIMIT ?");
+        long pageSize = Integer.parseInt(applicationProperties.empSearchPageSizeDefault());
+        if (disciplinaryGetRequest.getPageSize() != null)
+            pageSize = disciplinaryGetRequest.getPageSize();
+        preparedStatementValues.add(pageSize); // Set limit to pageSize
+
+        // handle offset here
+        selectQuery.append(" OFFSET ?");
+        int pageNumber = 0; // Default pageNo is zero meaning first page
+        if (disciplinaryGetRequest.getPageNumber() != null)
+            pageNumber = disciplinaryGetRequest.getPageNumber() - 1;
+        preparedStatementValues.add(pageNumber * pageSize); // Set offset to
+        // pageNo * pageSize
+    }
+
+    /**
+     * This method is always called at the beginning of the method so that and is prepended before the field's predicate is
+     * handled.
+     *
+     * @param appendAndClauseFlag
+     * @param queryString
+     * @return boolean indicates if the next predicate should append an "AND"
+     */
+    private boolean addAndClauseIfRequired(final boolean appendAndClauseFlag, final StringBuilder queryString) {
+        if (appendAndClauseFlag)
+            queryString.append(" AND");
+
+        return true;
+    }
+
 
 }

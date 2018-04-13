@@ -38,37 +38,43 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.eis.model;
+package org.egov.eis.repository;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.util.List;
 
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import org.egov.eis.model.DisciplinaryDocuments;
+import org.egov.eis.repository.rowmapper.DisciplinaryDocumentsRowMapper;
+import org.egov.eis.repository.rowmapper.DisciplinaryRowMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.jdbc.core.BatchPreparedStatementSetter;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Component;
 
-@Setter
-@Getter
-@NoArgsConstructor
-@AllArgsConstructor
-@ToString
-@EqualsAndHashCode
-public class DisciplinaryDocuments {
+@Component
+public class DisciplinaryDocumentsRepository {
 
-    @JsonProperty("id")
-    private Long id;
+    public static final Logger LOGGER = LoggerFactory.getLogger(DisciplinaryDocumentsRepository.class);
 
-    @JsonProperty("documentType")
-    private String documentType;
+    public static final String SELECT_BY_DISCIPLINARYID_QUERY = "SELECT id, disciplinaryId, documentType, filestoreId, tenantId"
+            + " FROM egeis_disciplinarydocuments WHERE disciplinaryId = ? AND tenantId = ? ";
 
-    @JsonProperty("disciplinaryId")
-    private Long disciplinaryId;
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
 
-    @JsonProperty("fileStoreId")
-    private String fileStoreId;
+    @Autowired
+    private DisciplinaryDocumentsRowMapper disciplinaryDocumentsRowMapperRowMapper;
 
-    private String tenantId;
-
+    public List<DisciplinaryDocuments> findByDisciplinaryId(final Long id, final String tenantId) {
+        try {
+            return jdbcTemplate.query(SELECT_BY_DISCIPLINARYID_QUERY, new Object[] { id, tenantId },
+                    disciplinaryDocumentsRowMapperRowMapper);
+        } catch (final EmptyResultDataAccessException e) {
+            return null;
+        }
+    }
 }

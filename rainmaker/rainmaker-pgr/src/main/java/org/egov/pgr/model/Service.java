@@ -263,9 +263,8 @@ public class Service   {
    * A full description of the request provided by the user
    * @return description
   **/
-  @NotNull
-
-@Size(min=2,max=500) 
+  
+  @Size(min=2,max=500) 
   public String getDescription() {
     return description;
   }

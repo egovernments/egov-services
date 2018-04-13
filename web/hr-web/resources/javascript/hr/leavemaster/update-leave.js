@@ -1,7 +1,7 @@
 function today() {
   var today = new Date();
   var dd = today.getDate();
-  var mm = today.getMonth() + 1; 
+  var mm = today.getMonth() + 1;
   var yyyy = today.getFullYear();
   if (dd < 10) {
     dd = '0' + dd;
@@ -46,14 +46,24 @@ class UpdateLeave extends React.Component {
         }
       }, leaveNumber: "", employeeid: "", positionId: "",
       leaveList: [],
+      positionList: [],
+      departmentList: [],
+      designationList: [],
+      userList: [],
       buttons: []
     }
     this.handleChange = this.handleChange.bind(this);
     this.handleChangeThreeLevel = this.handleChangeThreeLevel.bind(this);
     this.getPrimaryAssigmentDep = this.getPrimaryAssigmentDep.bind(this);
     this.handleProcess = this.handleProcess.bind(this);
+    this.getUsersFun = this.getUsersFun.bind(this);
+    this.setInitialState = this.setInitialState.bind(this);
+
   }
 
+  setInitialState(initState) {
+    this.setState(initState);
+  }
 
   componentDidMount() {
     if (window.opener && window.opener.document) {
@@ -69,6 +79,33 @@ class UpdateLeave extends React.Component {
     var _leaveSet = {}, prefixSuffixDays = "", enclosingDays = "";
     var hrConfigurations = [], allHolidayList = [];
     $('#availableDays,#leaveDays,#name,#code').prop("disabled", true);
+
+    var _state = {}, count = 3;
+    const checkCountAndCall = function (key, res) {
+      _state[key] = res;
+      count--;
+      if (count == 0) {
+        _this.setInitialState(_state);
+      }
+    }
+
+    getDropdown("assignments_designation", function (res) {
+      checkCountAndCall("designationList", res);
+    });
+    getDropdown("assignments_department", function (res) {
+      checkCountAndCall("departmentList", res);
+    });
+    getDropdown("assignments_position", function (res) {
+      checkCountAndCall("positionList", res);
+    });
+
+    commonApiPost("hr-masters", "hrstatuses", "_search", { tenantId, objectName: "LeaveApplication" }, function (err, res) {
+      if (res && res.HRStatus) {
+        _this.setState({
+          statusList: res.HRStatus
+        })
+      }
+    });
 
     commonApiPost("hr-masters", "hrconfigurations", "_search", {
       tenantId,
@@ -96,16 +133,8 @@ class UpdateLeave extends React.Component {
       if (res && res.LeaveApplication && res.LeaveApplication[0]) {
         _leaveSet = res.LeaveApplication[0];
 
-        commonApiPost("hr-masters", "hrstatuses", "_search", { tenantId, id: _leaveSet.status }, function (err, res2) {
-          if (res2 && res2.HRStatus && res2.HRStatus[0]) {
-            var _status = res2.HRStatus[0];
-            if (_status.code != "REJECTED") {
-              $("input,select,textarea").prop("disabled", true);
-            }
-          } else {
-            showError("Something went wrong please contact Administrator");
-          }
-        });
+        if (!_leaveSet.workflowDetails)
+          _leaveSet.workflowDetails = {};
 
         commonApiPost("hr-employee", "employees", "_search", {
           tenantId,
@@ -234,7 +263,32 @@ class UpdateLeave extends React.Component {
       id: stateId
     }, function (err, res) {
       if (res) {
+
         process = res["processInstance"];
+
+
+
+        $.ajax({
+          url: baseUrl + "/egov-common-workflows/designations/_search?businessKey=" + process.businessKey + "&approvalDepartmentName=&departmentRule=&currentStatus=" + process.status + "&tenantId=" + tenantId + "&additionalRule=&pendingAction=&designation=&amountRule=",
+          type: 'POST',
+          dataType: 'json',
+          data: JSON.stringify({ RequestInfo: requestInfo }),
+          headers: {
+            'auth-token': authToken
+          },
+          contentType: 'application/json',
+          success: function (result) {
+            if (result) {
+              _this.setState({
+                designationList: result
+              })
+            }
+          },
+          error: function (error) {
+            console.log(error);
+          }
+        });
+
         if (process && process.attributes && process.attributes.validActions && process.attributes.validActions.values && process.attributes.validActions.values.length) {
           var _btns = [];
           for (var i = 0; i < process.attributes.validActions.values.length; i++) {
@@ -248,15 +302,27 @@ class UpdateLeave extends React.Component {
 
           _this.setState({
             positionId: process.owner.id,
-            buttons: _btns.length ? _btns : []
+            buttons: _btns.length ? _btns : [],
           })
         }
       }
     });
 
-    if (this.state.status != "Rejected") {
+
+  }
+
+  componentDidUpdate() {
+
+    let status = getNameById(this.state.statusList, this.state.leaveSet.status, "code");
+
+    if (status != "REJECTED") {
       $("input,select,textarea").prop("disabled", true);
     }
+
+    if (status == "APPLIED") {
+      $("#department, #designation, #assignee").prop("disabled", false);
+    }
+
   }
 
   calculate() {
@@ -516,6 +582,39 @@ class UpdateLeave extends React.Component {
 
   }
 
+  getUsersFun(departmentId, designationId) {
+    var _this = this;
+    var asOnDate = new Date();
+    var dd = asOnDate.getDate();
+    var mm = asOnDate.getMonth() + 1;
+    var yyyy = asOnDate.getFullYear();
+
+    if (dd < 10) {
+      dd = '0' + dd
+    }
+
+    if (mm < 10) {
+      mm = '0' + mm
+    }
+
+    asOnDate = dd + '/' + mm + '/' + yyyy;
+    commonApiPost("hr-employee", "employees", "_search",
+      {
+        tenantId,
+        departmentId,
+        designationId,
+        isPrimary: true,
+        asOnDate,
+        active: true
+      }, function (err, res) {
+        if (res) {
+          _this.setState({
+            ..._this.state,
+            userList: res.Employee
+          })
+        }
+      })
+  }
 
   getPrimaryAssigmentDep(obj, type) {
     for (var i = 0; i < obj.assignments.length; i++) {
@@ -559,6 +658,28 @@ class UpdateLeave extends React.Component {
 
   handleChange(e, name) {
 
+    let _this = this;
+
+    switch (name) {
+      case "department":
+
+        _this.state.leaveSet.workflowDetails.assignee = "";
+        if (_this.state.leaveSet.workflowDetails.designation) {
+          var _designation = this.state.leaveSet.workflowDetails.designation;
+          _this.getUsersFun(e.target.value, _designation);
+        }
+        break;
+      case "designation":
+
+        _this.state.leaveSet.workflowDetails.assignee = "";
+        if (_this.state.leaveSet.workflowDetails.department) {
+          var _department = this.state.leaveSet.workflowDetails.department;
+          _this.getUsersFun(_department, e.target.value);
+        }
+        break;
+
+    }
+
     if (name === "encashable") {
       if (e.target.checked)
         $('#totalWorkingDays').prop("disabled", false);
@@ -578,7 +699,8 @@ class UpdateLeave extends React.Component {
             _this.setState({
               leaveSet: {
                 ..._this.state.leaveSet,
-                availableDays: ""
+                availableDays: "",
+                encashable: e.target.checked
               }
             });
             return (showError("You do not have leave for this leave type."));
@@ -587,20 +709,55 @@ class UpdateLeave extends React.Component {
             _this.setState({
               leaveSet: {
                 ..._this.state.leaveSet,
-                availableDays: _day
+                availableDays: _day,
+                encashable: e.target.checked
               }
             });
           }
         }
       });
-    }
+    } else if (name === "department") {
 
-    this.setState({
-      leaveSet: {
-        ...this.state.leaveSet,
-        [name]: e.target.type === 'checkbox' ? e.target.checked : e.target.value
-      }
-    })
+      this.setState({
+        leaveSet: {
+          ...this.state.leaveSet,
+          workflowDetails: {
+            ...this.state.leaveSet.workflowDetails,
+            department: e.target.value
+          }
+        }
+      })
+
+    } else if (name === "designation") {
+      this.setState({
+        leaveSet: {
+          ...this.state.leaveSet,
+          workflowDetails: {
+            ...this.state.leaveSet.workflowDetails,
+            designation: e.target.value
+          }
+        }
+      })
+
+    } else if (name === "assignee") {
+      this.setState({
+        leaveSet: {
+          ...this.state.leaveSet,
+          workflowDetails: {
+            ...this.state.leaveSet.workflowDetails,
+            assignee: e.target.value
+          }
+        }
+      })
+    } else {
+
+      this.setState({
+        leaveSet: {
+          ...this.state.leaveSet,
+          [name]: e.target.type === 'checkbox' ? e.target.checked : e.target.value
+        }
+      })
+    }
 
   }
 
@@ -640,7 +797,7 @@ class UpdateLeave extends React.Component {
       tempInfo.suffixDate = this.state.perfixSuffix ? this.state.perfixSuffix.suffixToDate : "";
       tempInfo.holidays = holidays;
 
-      commonApiPost("hr-employee", "hod/employees", "_search", { tenantId, asOnDate, departmentId }, function (err, res2) {
+      commonApiPost("hr-employee", "hod/employees", "_search", { tenantId, asOnDate, departmentId, active: true }, function (err, res2) {
         if (res2 && res2["Employee"] && res2["Employee"][0]) {
           employee = res2["Employee"][0];
           var hodname = employee.name;
@@ -789,9 +946,9 @@ class UpdateLeave extends React.Component {
   render() {
     let { handleChange, handleChangeThreeLevel, handleProcess } = this;
     let { leaveSet, buttons } = this.state;
-    let { name, code, leaveDays, availableDays, fromDate, toDate, leaveGround, reason, leaveType, encashable, totalWorkingDays } = leaveSet;
+    let { name, code, leaveDays, availableDays, fromDate, toDate, leaveGround, reason, leaveType, encashable, totalWorkingDays, workflowDetails } = leaveSet;
     let mode = getUrlVars()["type"];
-
+    let _this = this;
     const renderProcesedBtns = function () {
       if (buttons.length) {
         return buttons.map(function (btn, ind) {
@@ -1015,6 +1172,98 @@ class UpdateLeave extends React.Component {
 
     }
 
+    const renderOptionForUser = function (list) {
+      if (list) {
+        return list.map((item, ind) => {
+          var positionId;
+          item.assignments.forEach(function (item) {
+            if (item.isPrimary) {
+              positionId = item.position;
+            }
+          });
+
+          return (<option key={ind} value={positionId}>
+            {item.name}
+          </option>)
+        })
+      }
+    }
+
+    const renderWorkflowDetails = function (status) {
+      status = getNameById(_this.state.statusList, status, "code");
+
+      if (status === "APPLIED") {
+        return (
+          <div>
+            <br />
+            <div className="form-section">
+              <div className="row">
+                <div className="col-md-8 col-sm-8">
+                  <h3 className="categoryType">Workflow Details </h3>
+                </div>
+              </div>
+              <div className="row">
+                <div className="col-sm-6">
+                  <div className="row">
+                    <div className="col-sm-6 label-text">
+                      <label htmlFor="">Department <span>*</span></label>
+                    </div>
+                    <div className="col-sm-6">
+                      <div className="styled-select">
+                        <select id="department" name="department" value={workflowDetails.department}
+                          onChange={(e) => { handleChange(e, "department") }} required >
+                          <option value="">Select Department</option>
+                          {renderOption(_this.state.departmentList)}
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div className="col-sm-6">
+                  <div className="row">
+                    <div className="col-sm-6 label-text">
+                      <label htmlFor="">Designation <span>*</span></label>
+                    </div>
+                    <div className="col-sm-6">
+                      <div className="styled-select">
+                        <select id="designation" name="designation" value={workflowDetails.designation}
+                          onChange={(e) => { handleChange(e, "designation") }} required >
+                          <option value="">Select Designation</option>
+                          {renderOption(_this.state.designationList)}//TODO: get designation based on departments
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="row">
+                <div className="col-sm-6">
+                  <div className="row">
+                    <div className="col-sm-6 label-text">
+                      <label htmlFor="">User Name <span>*</span></label>
+                    </div>
+                    <div className="col-sm-6">
+                      <div className="styled-select">
+                        <select id="assignee" name="assignee" value={workflowDetails.assignee}
+                          onChange={(e) => { handleChange(e, "assignee") }} required>
+                          <option value="">Select User</option>
+                          {renderOptionForUser(_this.state.userList)}
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+
+      }
+
+
+    }
+
+
     return (
       <div>
         <form>
@@ -1126,6 +1375,9 @@ class UpdateLeave extends React.Component {
 
 
             {showEnclosingHolidayTable()}
+
+            {renderWorkflowDetails(this.state.leaveSet.status)}
+            <br/>
             <div className="text-center">
               {renderProcesedBtns()}
               <button type="button" className="btn btn-close" onClick={(e) => { this.close() }}>Close</button>

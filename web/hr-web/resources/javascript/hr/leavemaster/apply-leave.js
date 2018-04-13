@@ -127,50 +127,6 @@ class ApplyLeave extends React.Component {
 
       });
 
-      $('#fromDate, #toDate').datepicker({
-        format: 'dd/mm/yyyy',
-        autoclose: true
-      });
-
-      $('#fromDate, #toDate').on("change", function (e) {
-        var _from = $('#fromDate').val();
-        var _to = $('#toDate').val();
-        var _triggerId = e.target.id;
-
-        if (_this.state.leaveSet.leaveType.id) {
-
-          _this.setState({
-            leaveSet: {
-              ..._this.state.leaveSet,
-              [_triggerId]: $("#" + _triggerId).val()
-            }
-          });
-
-          if (_from && _to) {
-
-            let dateParts1 = _from.split("/");
-            let newDateStr = dateParts1[1] + "/" + dateParts1[0] + "/ " + dateParts1[2];
-            let date1 = new Date(newDateStr);
-
-            let dateParts2 = _to.split("/");
-            let newDateStr1 = dateParts2[1] + "/" + dateParts2[0] + "/" + dateParts2[2];
-            let date2 = new Date(newDateStr1);
-
-
-            if (date1 > date2) {
-              showError("From date must be before End date.");
-              $('#' + _triggerId).val("");
-            }
-
-
-            _this.calculate();
-          }
-
-        } else {
-          showError("Please select Leave Type before entering from date and to date.");
-          $('#' + _triggerId).val("");
-        }
-      });
 
       if (!id) {
         commonApiPost("hr-employee", "employees", "_loggedinemployee", { tenantId }, function (err, res) {
@@ -206,6 +162,52 @@ class ApplyLeave extends React.Component {
         })
       }
     }
+
+    $('#fromDate, #toDate').datepicker({
+      format: 'dd/mm/yyyy',
+      autoclose: true
+    });
+
+    $('#fromDate, #toDate').on("change", function (e) {
+      var _from = $('#fromDate').val();
+      var _to = $('#toDate').val();
+      var _triggerId = e.target.id;
+
+      if (_this.state.leaveSet.leaveType.id) {
+
+        _this.setState({
+          leaveSet: {
+            ..._this.state.leaveSet,
+            [_triggerId]: $("#" + _triggerId).val()
+          }
+        });
+
+        if (_from && _to) {
+
+          let dateParts1 = _from.split("/");
+          let newDateStr = dateParts1[1] + "/" + dateParts1[0] + "/ " + dateParts1[2];
+          let date1 = new Date(newDateStr);
+
+          let dateParts2 = _to.split("/");
+          let newDateStr1 = dateParts2[1] + "/" + dateParts2[0] + "/" + dateParts2[2];
+          let date2 = new Date(newDateStr1);
+
+
+          if (date1 > date2) {
+            showError("From date must be before End date.");
+            $('#' + _triggerId).val("");
+          }
+
+
+          _this.calculate();
+        }
+
+      } else {
+        showError("Please select Leave Type before entering from date and to date.");
+        $('#' + _triggerId).val("");
+      }
+    });
+    
   }
 
   getPrimaryAssigmentDep(obj, type) {

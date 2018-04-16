@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.request.Role;
 import org.egov.mdms.model.MdmsCriteriaReq;
-import org.egov.pgr.PGRApp;
+import org.egov.pgr.utils.WorkFlowConfigs;
 import org.egov.pgr.contract.CountResponse;
 import org.egov.pgr.contract.IdResponse;
 import org.egov.pgr.contract.RequestInfoWrapper;
@@ -90,7 +90,7 @@ public class GrievanceService {
 	 */
 	public ServiceResponse create(ServiceRequest request) {
 
-		Map<String, String> actionStatusMap = PGRApp.getActionStatusMap();
+		Map<String, String> actionStatusMap = WorkFlowConfigs.getActionStatusMap();
 
 		log.debug(" the incoming request obj in service : {}", request);
 
@@ -138,6 +138,8 @@ public class GrievanceService {
 		request.setActionInfo(actionInfos);
 
 		pGRProducer.push(saveTopic, request);
+		pGRProducer.push(complaintTopic, request);
+
 		return getServiceResponse(request);
 	}
 
@@ -182,6 +184,8 @@ public class GrievanceService {
 		}
 
 		pGRProducer.push(updateTopic, request);
+		pGRProducer.push(complaintTopic, request);
+
 		return getServiceResponse(request);
 	}
 
@@ -198,8 +202,8 @@ public class GrievanceService {
 	private void validateAndEnrichActionInfoForUpdate(Map<String, List<String>> errorMap, RequestInfo requestInfo,
 			final AuditDetails auditDetails, Service servReq, ActionInfo actionInfo) {
 
-		Map<String, List<String>> actioncurrentStatusMap = PGRApp.getActionCurrentStatusMap();
-		Map<String, String> actionStatusMap = PGRApp.getActionStatusMap();
+		Map<String, List<String>> actioncurrentStatusMap = WorkFlowConfigs.getActionCurrentStatusMap();
+		Map<String, String> actionStatusMap = WorkFlowConfigs.getActionStatusMap();
 		String by = auditDetails.getCreatedBy() + ":" + requestInfo.getUserInfo().getRoles().get(0).getName();
 
 		actionInfo.setUuid(UUID.randomUUID().toString());
@@ -225,7 +229,7 @@ public class GrievanceService {
 				addError(errorMsg, ErrorConstants.UPDATE_ERROR_KEY, errorMap);
 			}
 		} else if (null != actionInfo.getAction()) {
-			String errorMsg = " The Given Action " + actionInfo.getAction() + " is invalid ";
+			String errorMsg = "The given action " + actionInfo.getAction() + " is invalid for the current status: "+servReq.getStatus();
 			addError(errorMsg, ErrorConstants.UPDATE_ERROR_KEY, errorMap);
 		}
 	}

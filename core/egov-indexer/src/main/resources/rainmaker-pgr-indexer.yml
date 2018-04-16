@@ -2,7 +2,7 @@ ServiceMaps:
  serviceName: PGR - rainmaker
  version: 1.0.0
  mappings:
-  - topic: egov.rainmaker.pgr.create
+  - topic: save-pgr-service
     indexes:
     - name: grievancecreate
       type: grievancecreate
@@ -10,7 +10,7 @@ ServiceMaps:
       isBulk: true
       jsonPath: $.services.*
 
-  - topic: egov.rainmaker.pgr.update
+  - topic: update-pgr-service
     indexes:
     - name: grievanceupdate
       type: grievanceupdate

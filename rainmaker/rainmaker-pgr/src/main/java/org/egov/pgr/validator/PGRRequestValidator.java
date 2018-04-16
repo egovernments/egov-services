@@ -14,18 +14,18 @@ import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.request.Role;
 import org.egov.common.contract.request.User;
 import org.egov.mdms.model.MdmsCriteriaReq;
-import org.egov.pgr.PGRApp;
+import org.egov.pgr.utils.WorkFlowConfigs;
 import org.egov.pgr.contract.ServiceReqSearchCriteria;
 import org.egov.pgr.contract.ServiceRequest;
 import org.egov.pgr.contract.ServiceResponse;
 import org.egov.pgr.model.ActionInfo;
 import org.egov.pgr.model.Service;
+import org.egov.pgr.model.Service.StatusEnum;
 import org.egov.pgr.repository.ServiceRequestRepository;
 import org.egov.pgr.service.GrievanceService;
 import org.egov.pgr.utils.ErrorConstants;
 import org.egov.pgr.utils.PGRConstants;
 import org.egov.pgr.utils.PGRUtils;
-import org.egov.pgr.utils.WorkFlowConfigs;
 import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -318,7 +318,7 @@ public class PGRRequestValidator {
 	 * @param errorMap
 	 */
 	public void validateAction(ServiceRequest serviceRequest, Map<String, String> errorMap) {
-		Map<String, List<String>> roleActionMap = PGRApp.getRoleActionMap();
+		Map<String, List<String>> roleActionMap = WorkFlowConfigs.getRoleActionMap();
 		final String errorCode = "EG_PGR_UPDATE_INVALID_ACTION";
 		List<String> actions = roleActionMap
 				.get(serviceRequest.getRequestInfo().getUserInfo().getRoles().get(0).getName().toUpperCase());
@@ -336,11 +336,35 @@ public class PGRRequestValidator {
 					}
 				}
 		} else {
-			errorMap.put("401", "Invalid Role: "
+			errorMap.put("EG_PGR_INVALID_ROLE", "Invalid Role: "
 					+ serviceRequest.getRequestInfo().getUserInfo().getRoles().get(0).getName().toUpperCase());
 		}
 
 		if (!errorMap.isEmpty())
 			throw new CustomException(errorMap);
 	}
+	
+/*	public void validateActionsOnStatus(ServiceRequest serviceRequest, Map<String, String> errorMap) {
+		if (null != actionInfo.getAction() && actionStatusMap.get(actionInfo.getAction()) != null) {
+			if (!WorkFlowConfigs.ACTION_CLOSE.equals(actionInfo.getAction())
+					&& (null != servReq.getFeedback() || null != servReq.getRating()))
+				addError(ErrorConstants.UPDATE_FEEDBACK_ERROR_MSG + actionInfo.getAction() + ", with service Id : "
+						+ servReq.getServiceRequestId(), ErrorConstants.UPDATE_FEEDBACK_ERROR_KEY, errorMap);
+			if (isUpdateValid(requestInfo, actionInfo, actioncurrentStatusMap.get(actionInfo.getAction()))) {
+				String resultStatus = actionStatusMap.get(actionInfo.getAction());
+				actionInfo.setStatus(resultStatus);
+				servReq.setStatus(StatusEnum.fromValue(resultStatus));
+			} else {
+
+				String errorMsg = " The Given Action " + actionInfo.getAction()
+						+ "cannot be applied for the Current status of the Grievance with ServiceRequestId "
+						+ servReq.getServiceRequestId();
+				addError(errorMsg, ErrorConstants.UPDATE_ERROR_KEY, errorMap);
+			}
+		} else if (null != actionInfo.getAction()) {
+			String errorMsg = "The given action " + actionInfo.getAction() + " is invalid for the current status: "+servReq.getStatus();
+			addError(errorMsg, ErrorConstants.UPDATE_ERROR_KEY, errorMap);
+		}
+		
+	}*/
 }

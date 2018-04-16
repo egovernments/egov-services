@@ -1,13 +1,12 @@
 FROM egovio/apline-jre:8u121
 
-MAINTAINER Rajat<rajat.kaushal@riflexions.com>
+MAINTAINER Senthil<senthil.kalimuthu@tarento.com>
 
-# copy pre-built JAR into image
-#
+
 # INSTRUCTIONS ON HOW TO BUILD JAR:
 # Move to the location where pom.xml is exist in project and build project using below command
 # "mvn clean package"
-COPY /target/hr-employee-0.0.1-SNAPSHOT.jar /opt/egov/hr-employee.jar
+COPY /target/hr-employee-v2-0.0.1-SNAPSHOT.jar /opt/egov/hr-employee-v2.jar
 
 COPY start.sh /usr/bin/start.sh
 

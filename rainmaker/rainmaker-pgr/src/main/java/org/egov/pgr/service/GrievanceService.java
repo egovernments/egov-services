@@ -617,7 +617,7 @@ public class GrievanceService {
 				log.error(" exception while connecting to filestore : " + e);
 			}
 
-			log.info("urlIdMap: " + urlIdMap);
+			//log.info("urlIdMap: " + urlIdMap);
 			if (null != urlIdMap) {
 				for (int i = 0; i < historyList.size(); i++) {
 					ActionHistory history = historyList.get(i);

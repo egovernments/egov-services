@@ -109,80 +109,6 @@ class UpdateMovement extends React.Component {
     this.setState(initState);
   }
 
-
-  componentWillMount() {
-
-    var type = getUrlVars()["type"],
-      _this = this;
-    var stateId = getUrlVars()["stateId"];
-    var transferWithPromotion;
-
-    commonApiPost("hr-employee-movement", "movements", "_search", { tenantId: tenantId, stateId: stateId }, function (err, res) {
-      if (res) {
-        if (res.Movement[0]) {
-          var Movement = res.Movement[0];
-
-          if (Movement.typeOfMovement === "TRANSFER_CUM_PROMOTION") {
-            transferWithPromotion = true;
-          }
-
-          let docs = Object.assign([], Movement.documents);
-
-          Movement.checkEmployeeExists = false;
-
-          if (!Movement.workflowDetails) {
-            Movement.workflowDetails = {
-              assignee: "",
-              department: "",
-              designation: ""
-            };
-          }
-          if (Movement.transferType === "TRANSFER_OUTSIDE_CORPORATION_OR_ULB") {
-            console.log("DEPT - DESIG - EFFDTE - ULB", Movement.transferedLocation);
-            _this.getUlbDetails(Movement.transferedLocation);
-            setTimeout(function () {
-              console.log("DEPT - DESIG - EFFDTE - ULB", Movement.departmentAssigned, Movement.designationAssigned, Movement.effectiveFrom, Movement.transferedLocation);
-              _this.vacantPositionFun(Movement.departmentAssigned, Movement.designationAssigned, Movement.effectiveFrom, Movement.transferedLocation);
-            }, 200);
-          }
-
-          getCommonMasterById("hr-employee", "employees", res.Movement[0].employeeId, function (err, res) {
-            if (res && res.Employee) {
-              var obj = res.Employee[0];
-              var ind = 0;
-              if (obj.length > 0) {
-                obj.map((item, index) => {
-                  for (var i = 0; i < item.assignments.length; i++) {
-                    if ([true, "true"].indexOf(item.assignments[i].isPrimary) > -1) {
-                      ind = i;
-                      break;
-                    }
-                  }
-                });
-              }
-              _this.setState({
-                ..._this.state,
-                transferWithPromotion: transferWithPromotion,
-                docs: docs,
-                movement: Movement,
-                employee: {
-                  name: obj.name,
-                  code: obj.code,
-                  departmentId: obj.assignments[ind].department,
-                  designationId: obj.assignments[ind].designation,
-                  positionId: obj.assignments[ind].position
-                }
-              })
-            }
-          });
-        }
-      }
-    });
-
-
-  }
-
-
   componentDidMount() {
     if (window.opener && window.opener.document) {
       var logo_ele = window.opener.document.getElementsByClassName("homepage_logo");
@@ -240,6 +166,69 @@ class UpdateMovement extends React.Component {
       checkCountAndCall("districtList", res);
     });
 
+
+
+    commonApiPost("hr-employee-movement", "movements", "_search", { tenantId: tenantId, stateId: stateId }, function (err, res) {
+      if (res) {
+        if (res.Movement[0]) {
+          var Movement = res.Movement[0];
+
+          if (Movement.typeOfMovement === "TRANSFER_CUM_PROMOTION") {
+            transferWithPromotion = true;
+          }
+
+          let docs = Object.assign([], Movement.documents);
+
+          Movement.checkEmployeeExists = false;
+
+          if (!Movement.workflowDetails) {
+            Movement.workflowDetails = {
+              assignee: "",
+              department: "",
+              designation: ""
+            };
+          }
+          if (Movement.transferType === "TRANSFER_OUTSIDE_CORPORATION_OR_ULB") {
+            console.log("DEPT - DESIG - EFFDTE - ULB", Movement.transferedLocation);
+            _this.getUlbDetails(Movement.transferedLocation);
+            setTimeout(function () {
+              console.log("DEPT - DESIG - EFFDTE - ULB", Movement.departmentAssigned, Movement.designationAssigned, Movement.effectiveFrom, Movement.transferedLocation);
+              _this.vacantPositionFun(Movement.departmentAssigned, Movement.designationAssigned, Movement.effectiveFrom, Movement.transferedLocation);
+            }, 400);
+          }
+
+          getCommonMasterById("hr-employee", "employees", res.Movement[0].employeeId, function (err, res) {
+            if (res && res.Employee) {
+              var obj = res.Employee[0];
+              var ind = 0;
+              if (obj.length > 0) {
+                obj.map((item, index) => {
+                  for (var i = 0; i < item.assignments.length; i++) {
+                    if ([true, "true"].indexOf(item.assignments[i].isPrimary) > -1) {
+                      ind = i;
+                      break;
+                    }
+                  }
+                });
+              }
+              _this.setState({
+                ..._this.state,
+                transferWithPromotion: transferWithPromotion,
+                docs: docs,
+                movement: Movement,
+                employee: {
+                  name: obj.name,
+                  code: obj.code,
+                  departmentId: obj.assignments[ind].department,
+                  designationId: obj.assignments[ind].designation,
+                  positionId: obj.assignments[ind].position
+                }
+              })
+            }
+          });
+        }
+      }
+    });
 
 
     commonApiPost("egov-common-workflows", "process", "_search", {
@@ -356,6 +345,7 @@ class UpdateMovement extends React.Component {
       pageSize: 500
     }, function (err, res) {
       if (res) {
+        console.log("PSTNS", res.Position);
         _this.setState({
           movement: {
             ..._this.state.movement,

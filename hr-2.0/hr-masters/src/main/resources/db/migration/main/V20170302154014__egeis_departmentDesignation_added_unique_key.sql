@@ -1,0 +1,2 @@
+ALTER TABLE egeis_departmentDesignation ADD CONSTRAINT uk_egeis_departmentdesignation_departmentID_designationId
+	UNIQUE (departmentId, designationId);

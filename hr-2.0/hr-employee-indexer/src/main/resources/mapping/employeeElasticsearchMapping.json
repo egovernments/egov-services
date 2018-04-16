@@ -1,0 +1,1580 @@
+{
+    "mappings": {
+        "employee": {
+            "properties": {
+                "id": {
+                    "type": "long"
+                },
+                "code": {
+                    "type": "string",
+                    "store": true,
+                    "index": "not_analyzed"
+                },
+                "userName": {
+                    "type": "string",
+                    "store": true,
+                    "index": "not_analyzed"
+                },
+                "salutation": {
+                    "type": "string",
+                    "store": true,
+                    "index": "not_analyzed"
+                },
+                "name": {
+                    "type": "string",
+                    "store": true,
+                    "index": "not_analyzed"
+                },
+                "gender": {
+                    "type": "string",
+                    "store": true,
+                    "index": "not_analyzed"
+                },
+                "mobileNumber": {
+                    "type": "string",
+                    "store": true,
+                    "index": "not_analyzed"
+                },
+                "altContactNumber": {
+                    "type": "string",
+                    "store": true,
+                    "index": "not_analyzed"
+                },
+                "emailId": {
+                    "type": "string",
+                    "store": true,
+                    "index": "not_analyzed"
+                },
+                "pan": {
+                    "type": "string",
+                    "store": true,
+                    "index": "not_analyzed"
+                },
+                "aadhaarNumber": {
+                    "type": "string",
+                    "store": true,
+                    "index": "not_analyzed"
+                },
+                "permanentAddress": {
+                    "type": "string",
+                    "store": true,
+                    "index": "not_analyzed"
+                },
+                "permanentCity": {
+                    "type": "string",
+                    "store": true,
+                    "index": "not_analyzed"
+                },
+                "permanentPincode": {
+                    "type": "string",
+                    "store": true,
+                    "index": "not_analyzed"
+                },
+                "correspondenceAddress": {
+                    "type": "string",
+                    "store": true,
+                    "index": "not_analyzed"
+                },
+                "correspondenceCity": {
+                    "type": "string",
+                    "store": true,
+                    "index": "not_analyzed"
+                },
+                "correspondencePincode": {
+                    "type": "string",
+                    "store": true,
+                    "index": "not_analyzed"
+                },
+                "active": {
+                    "type": "boolean"
+                },
+                "dob": {
+                    "format": "dateOptionalTime",
+                    "type": "date"
+                },
+                "pwdExpiryDate": {
+                    "format": "dateOptionalTime",
+                    "type": "date"
+                },
+                "locale": {
+                    "type": "string",
+                    "store": true,
+                    "index": "not_analyzed"
+                },
+                "type": {
+                    "type": "string",
+                    "store": true,
+                    "index": "not_analyzed"
+                },
+                "accountLocked": {
+                    "type": "boolean"
+                },
+                "bloodGroup": {
+                    "type": "string",
+                    "store": true,
+                    "index": "not_analyzed"
+                },
+                "fatherOrHusbandName": {
+                    "type": "string",
+                    "store": true,
+                    "index": "not_analyzed"
+                },
+                "identificationMark": {
+                    "type": "string",
+                    "store": true,
+                    "index": "not_analyzed"
+                },
+                "photo": {
+                    "type": "string",
+                    "store": true,
+                    "index": "not_analyzed"
+                },
+                "signature": {
+                    "type": "string",
+                    "store": true,
+                    "index": "not_analyzed"
+                },
+                "dateOfAppointment": {
+                    "format": "dateOptionalTime",
+                    "type": "date"
+                },
+                "dateOfJoining": {
+                    "format": "dateOptionalTime",
+                    "type": "date"
+                },
+                "dateOfRetirement": {
+                    "format": "dateOptionalTime",
+                    "type": "date"
+                },
+                "employeeStatus": {
+                    "properties": {
+                        "id": {
+                            "type": "long"
+                        },
+                        "code": {
+                            "type": "string",
+                            "store": true,
+                            "index": "not_analyzed"
+                        }
+                    }
+                },
+                "recruitmentMode": {
+                    "properties": {
+                        "id": {
+                            "type": "long"
+                        },
+                        "name": {
+                            "type": "string",
+                            "store": true,
+                            "index": "not_analyzed"
+                        }
+                    }
+                },
+                "recruitmentType": {
+                    "properties": {
+                        "id": {
+                            "type": "long"
+                        },
+                        "name": {
+                            "type": "string",
+                            "store": true,
+                            "index": "not_analyzed"
+                        }
+                    }
+                },
+                "recruitmentQuota": {
+                    "properties": {
+                        "id": {
+                            "type": "long"
+                        },
+                        "name": {
+                            "type": "string",
+                            "store": true,
+                            "index": "not_analyzed"
+                        }
+                    }
+                },
+                "retirementAge": {
+                    "type": "integer"
+                },
+                "dateOfResignation": {
+                    "format": "dateOptionalTime",
+                    "type": "date"
+                },
+                "dateOfTermination": {
+                    "format": "dateOptionalTime",
+                    "type": "date"
+                },
+                "employeeType": {
+                    "properties": {
+                        "id": {
+                            "type": "long"
+                        },
+                        "name": {
+                            "type": "string",
+                            "store": true,
+                            "index": "not_analyzed"
+                        }
+                    }
+                },
+                "motherTongue": {
+                    "properties": {
+                        "id": {
+                            "type": "long"
+                        },
+                        "name": {
+                            "type": "string",
+                            "store": true,
+                            "index": "not_analyzed"
+                        }
+                    }
+                },
+                "religion": {
+                    "properties": {
+                        "id": {
+                            "type": "long"
+                        },
+                        "name": {
+                            "type": "string",
+                            "store": true,
+                            "index": "not_analyzed"
+                        }
+                    }
+                },
+                "community": {
+                    "properties": {
+                        "id": {
+                            "type": "long"
+                        },
+                        "name": {
+                            "type": "string",
+                            "store": true,
+                            "index": "not_analyzed"
+                        }
+                    }
+                },
+                "category": {
+                    "properties": {
+                        "id": {
+                            "type": "long"
+                        },
+                        "name": {
+                            "type": "string",
+                            "store": true,
+                            "index": "not_analyzed"
+                        }
+                    }
+                },
+                "physicallyDisabled": {
+                    "type": "boolean"
+                },
+                "medicalReportProduced": {
+                    "type": "boolean"
+                },
+                "languagesKnown": {
+                    "type": "nested",
+                    "properties": {
+                        "id": {
+                            "type": "long"
+                        },
+                        "name": {
+                            "type": "string",
+                            "store": true,
+                            "index": "not_analyzed"
+                        }
+                    }
+                },
+                "maritalStatus": {
+                    "type": "string",
+                    "store": true,
+                    "index": "not_analyzed"
+                },
+                "passportNo": {
+                    "type": "string",
+                    "store": true,
+                    "index": "not_analyzed"
+                },
+                "gpfNo": {
+                    "type": "string",
+                    "store": true,
+                    "index": "not_analyzed"
+                },
+                "bank": {
+                    "properties": {
+                        "id": {
+                            "type": "long"
+                        },
+                        "name": {
+                            "type": "string",
+                            "store": true,
+                            "index": "not_analyzed"
+                        },
+                        "code": {
+                            "type": "string",
+                            "store": true,
+                            "index": "not_analyzed"
+                        }
+                    }
+                },
+                "bankBranch": {
+                    "properties": {
+                        "id": {
+                            "type": "long"
+                        },
+                        "name": {
+                            "type": "string",
+                            "store": true,
+                            "index": "not_analyzed"
+                        },
+                        "code": {
+                            "type": "string",
+                            "store": true,
+                            "index": "not_analyzed"
+                        }
+                    }
+                },
+                "bankAccount": {
+                    "type": "string",
+                    "store": true,
+                    "index": "not_analyzed"
+                },
+                "group": {
+                    "properties": {
+                        "id": {
+                            "type": "long"
+                        },
+                        "name": {
+                            "type": "string",
+                            "store": true,
+                            "index": "not_analyzed"
+                        }
+                    }
+                },
+                "placeOfBirth": {
+                    "type": "string",
+                    "store": true,
+                    "index": "not_analyzed"
+                },
+                "jurisdictions": {
+                    "type": "nested",
+                    "properties": {
+                        "id": {
+                            "type": "long"
+                        },
+                        "boundary": {
+                            "properties": {
+                                "id": {
+                                    "type": "long"
+                                },
+                                "name": {
+                                    "type": "string",
+                                    "store": true,
+                                    "index": "not_analyzed"
+                                },
+                                "boundaryType": {
+                                    "properties": {
+                                        "id": {
+                                            "type": "long"
+                                        },
+                                        "name": {
+                                            "type": "string",
+                                            "store": true,
+                                            "index": "not_analyzed"
+                                        },
+                                        "code": {
+                                            "type": "string",
+                                            "store": true,
+                                            "index": "not_analyzed"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "auditDetails": {
+                            "properties": {
+                                "createdBy": {
+                                    "properties": {
+                                        "id": {
+                                            "type": "long"
+                                        },
+                                        "name": {
+                                            "type": "string",
+                                            "store": true,
+                                            "index": "not_analyzed"
+                                        },
+                                        "userName": {
+                                            "type": "string",
+                                            "store": true,
+                                            "index": "not_analyzed"
+                                        }
+                                    }
+                                },
+                                "createdDate": {
+                                    "format": "dateOptionalTime",
+                                    "type": "date"
+                                }
+                            }
+                        },
+                        "tenantDetails": {
+                            "properties": {
+                                "tenantId": {
+                                    "type": "string",
+                                    "store": true,
+                                    "index": "not_analyzed"
+                                },
+                                "ulbName": {
+                                    "type": "string",
+                                    "store": true,
+                                    "index": "not_analyzed"
+                                },
+                                "ulbCode": {
+                                    "type": "string",
+                                    "store": true,
+                                    "index": "not_analyzed"
+                                },
+                                "distName": {
+                                    "type": "string",
+                                    "store": true,
+                                    "index": "not_analyzed"
+                                },
+                                "regName": {
+                                    "type": "string",
+                                    "store": true,
+                                    "index": "not_analyzed"
+                                },
+                                "ulbGrade": {
+                                    "type": "string",
+                                    "store": true,
+                                    "index": "not_analyzed"
+                                }
+                            }
+                        }
+                    }
+                },
+                "assignments": {
+                    "type": "nested",
+                    "properties": {
+                        "id": {
+                            "type": "long"
+                        },
+                        "position": {
+                            "properties": {
+                                "id": {
+                                    "type": "long"
+                                },
+                                "name": {
+                                    "type": "string",
+                                    "store": true,
+                                    "index": "not_analyzed"
+                                }
+                            }
+                        },
+                        "fund": {
+                            "properties": {
+                                "id": {
+                                    "type": "long"
+                                },
+                                "name": {
+                                    "type": "string",
+                                    "store": true,
+                                    "index": "not_analyzed"
+                                }
+                            }
+                        },
+                        "function": {
+                            "properties": {
+                                "id": {
+                                    "type": "long"
+                                },
+                                "name": {
+                                    "type": "string",
+                                    "store": true,
+                                    "index": "not_analyzed"
+                                }
+                            }
+                        },
+                        "functionary": {
+                            "properties": {
+                                "id": {
+                                    "type": "long"
+                                },
+                                "name": {
+                                    "type": "string",
+                                    "store": true,
+                                    "index": "not_analyzed"
+                                }
+                            }
+                        },
+                        "designation": {
+                            "properties": {
+                                "id": {
+                                    "type": "long"
+                                },
+                                "code": {
+                                    "type": "string",
+                                    "store": true,
+                                    "index": "not_analyzed"
+                                },
+                                "name": {
+                                    "type": "string",
+                                    "store": true,
+                                    "index": "not_analyzed"
+                                }
+                            }
+                        },
+                        "department": {
+                            "properties": {
+                                "id": {
+                                    "type": "long"
+                                },
+                                "name": {
+                                    "type": "string",
+                                    "store": true,
+                                    "index": "not_analyzed"
+                                },
+                                "code": {
+                                    "type": "string",
+                                    "store": true,
+                                    "index": "not_analyzed"
+                                }
+                            }
+                        },
+                        "hod": {
+                            "type": "nested",
+                            "properties": {
+                                "id": {
+                                    "type": "long"
+                                },
+                                "department": {
+                                    "properties": {
+                                        "id": {
+                                            "type": "long"
+                                        },
+                                        "code": {
+                                            "type": "string",
+                                            "store": true,
+                                            "index": "not_analyzed"
+                                        },
+                                        "name": {
+                                            "type": "string",
+                                            "store": true,
+                                            "index": "not_analyzed"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "primary": {
+                            "type": "boolean"
+                        },
+                        "fromDate": {
+                            "format": "dateOptionalTime",
+                            "type": "date"
+                        },
+                        "toDate": {
+                            "format": "dateOptionalTime",
+                            "type": "date"
+                        },
+                        "grade": {
+                            "properties": {
+                                "id": {
+                                    "type": "long"
+                                },
+                                "name": {
+                                    "type": "string",
+                                    "store": true,
+                                    "index": "not_analyzed"
+                                }
+                            }
+                        },
+                        "govtOrderNumber": {
+                            "type": "string",
+                            "store": true,
+                            "index": "not_analyzed"
+                        },
+                        "documents": {
+                            "type": "string",
+                            "store": true,
+                            "index": "not_analyzed"
+                        },
+                        "auditDetails": {
+                            "properties": {
+                                "createdBy": {
+                                    "properties": {
+                                        "id": {
+                                            "type": "long"
+                                        },
+                                        "name": {
+                                            "type": "string",
+                                            "store": true,
+                                            "index": "not_analyzed"
+                                        },
+                                        "username": {
+                                            "type": "string",
+                                            "store": true,
+                                            "index": "not_analyzed"
+                                        }
+                                    }
+                                },
+                                "createdDate": {
+                                    "format": "dateOptionalTime",
+                                    "type": "date"
+                                },
+                                "lastModifiedBy": {
+                                    "properties": {
+                                        "id": {
+                                            "type": "long"
+                                        },
+                                        "name": {
+                                            "type": "string",
+                                            "store": true,
+                                            "index": "not_analyzed"
+                                        },
+                                        "username": {
+                                            "type": "string",
+                                            "store": true,
+                                            "index": "not_analyzed"
+                                        }
+                                    }
+                                },
+                                "lastModifiedDate": {
+                                    "format": "dateOptionalTime",
+                                    "type": "date"
+                                }
+                            }
+                        },
+                        "tenantDetails": {
+                            "properties": {
+                                "tenantId": {
+                                    "type": "string",
+                                    "store": true,
+                                    "index": "not_analyzed"
+                                },
+                                "ulbName": {
+                                    "type": "string",
+                                    "store": true,
+                                    "index": "not_analyzed"
+                                },
+                                "ulbCode": {
+                                    "type": "string",
+                                    "store": true,
+                                    "index": "not_analyzed"
+                                },
+                                "distName": {
+                                    "type": "string",
+                                    "store": true,
+                                    "index": "not_analyzed"
+                                },
+                                "regName": {
+                                    "type": "string",
+                                    "store": true,
+                                    "index": "not_analyzed"
+                                },
+                                "ulbGrade": {
+                                    "type": "string",
+                                    "store": true,
+                                    "index": "not_analyzed"
+                                }
+                            }
+                        }
+                    }
+                },
+                "serviceHistory": {
+                    "type": "nested",
+                    "properties": {
+                        "id": {
+                            "type": "long"
+                        },
+                        "serviceInfo": {
+                            "type": "string",
+                            "store": true,
+                            "index": "not_analyzed"
+                        },
+                        "serviceFrom": {
+                            "format": "dateOptionalTime",
+                            "type": "date"
+                        },
+                        "remarks": {
+                            "type": "string",
+                            "store": true,
+                            "index": "not_analyzed"
+                        },
+                        "orderNo": {
+                            "type": "string",
+                            "store": true,
+                            "index": "not_analyzed"
+                        },
+                        "documents": {
+                            "type": "string",
+                            "store": true,
+                            "index": "not_analyzed"
+                        },
+                        "auditDetails": {
+                            "properties": {
+                                "createdBy": {
+                                    "properties": {
+                                        "id": {
+                                            "type": "long"
+                                        },
+                                        "name": {
+                                            "type": "string",
+                                            "store": true,
+                                            "index": "not_analyzed"
+                                        },
+                                        "username": {
+                                            "type": "string",
+                                            "store": true,
+                                            "index": "not_analyzed"
+                                        }
+                                    }
+                                },
+                                "createdDate": {
+                                    "format": "dateOptionalTime",
+                                    "type": "date"
+                                },
+                                "lastModifiedBy": {
+                                    "properties": {
+                                        "id": {
+                                            "type": "long"
+                                        },
+                                        "name": {
+                                            "type": "string",
+                                            "store": true,
+                                            "index": "not_analyzed"
+                                        },
+                                        "username": {
+                                            "type": "string",
+                                            "store": true,
+                                            "index": "not_analyzed"
+                                        }
+                                    }
+                                },
+                                "lastModifiedDate": {
+                                    "format": "dateOptionalTime",
+                                    "type": "date"
+                                }
+                            }
+                        },
+                        "tenantDetails": {
+                            "properties": {
+                                "tenantId": {
+                                    "type": "string",
+                                    "store": true,
+                                    "index": "not_analyzed"
+                                },
+                                "ulbName": {
+                                    "type": "string",
+                                    "store": true,
+                                    "index": "not_analyzed"
+                                },
+                                "ulbCode": {
+                                    "type": "string",
+                                    "store": true,
+                                    "index": "not_analyzed"
+                                },
+                                "distName": {
+                                    "type": "string",
+                                    "store": true,
+                                    "index": "not_analyzed"
+                                },
+                                "regName": {
+                                    "type": "string",
+                                    "store": true,
+                                    "index": "not_analyzed"
+                                },
+                                "ulbGrade": {
+                                    "type": "string",
+                                    "store": true,
+                                    "index": "not_analyzed"
+                                }
+                            }
+                        }
+                    }
+                },
+                "probation": {
+                    "type": "nested",
+                    "properties": {
+                        "id": {
+                            "type": "long"
+                        },
+                        "designation": {
+                            "properties": {
+                                "id": {
+                                    "type": "long"
+                                },
+                                "code": {
+                                    "type": "string",
+                                    "store": true,
+                                    "index": "not_analyzed"
+                                },
+                                "name": {
+                                    "type": "string",
+                                    "store": true,
+                                    "index": "not_analyzed"
+                                }
+                            }
+                        },
+                        "declaredOn": {
+                            "format": "dateOptionalTime",
+                            "type": "date"
+                        },
+                        "orderNo": {
+                            "type": "string",
+                            "store": true,
+                            "index": "not_analyzed"
+                        },
+                        "orderDate": {
+                            "format": "dateOptionalTime",
+                            "type": "date"
+                        },
+                        "remarks": {
+                            "type": "string",
+                            "store": true,
+                            "index": "not_analyzed"
+                        },
+                        "documents": {
+                            "type": "string",
+                            "store": true,
+                            "index": "not_analyzed"
+                        },
+                        "auditDetails": {
+                            "properties": {
+                                "createdBy": {
+                                    "properties": {
+                                        "id": {
+                                            "type": "long"
+                                        },
+                                        "name": {
+                                            "type": "string",
+                                            "store": true,
+                                            "index": "not_analyzed"
+                                        },
+                                        "username": {
+                                            "type": "string",
+                                            "store": true,
+                                            "index": "not_analyzed"
+                                        }
+                                    }
+                                },
+                                "createdDate": {
+                                    "format": "dateOptionalTime",
+                                    "type": "date"
+                                },
+                                "lastModifiedBy": {
+                                    "properties": {
+                                        "id": {
+                                            "type": "long"
+                                        },
+                                        "name": {
+                                            "type": "string",
+                                            "store": true,
+                                            "index": "not_analyzed"
+                                        },
+                                        "username": {
+                                            "type": "string",
+                                            "store": true,
+                                            "index": "not_analyzed"
+                                        }
+                                    }
+                                },
+                                "lastModifiedDate": {
+                                    "format": "dateOptionalTime",
+                                    "type": "date"
+                                }
+                            }
+                        },
+                        "tenantDetails": {
+                            "properties": {
+                                "tenantId": {
+                                    "type": "string",
+                                    "store": true,
+                                    "index": "not_analyzed"
+                                },
+                                "ulbName": {
+                                    "type": "string",
+                                    "store": true,
+                                    "index": "not_analyzed"
+                                },
+                                "ulbCode": {
+                                    "type": "string",
+                                    "store": true,
+                                    "index": "not_analyzed"
+                                },
+                                "distName": {
+                                    "type": "string",
+                                    "store": true,
+                                    "index": "not_analyzed"
+                                },
+                                "regName": {
+                                    "type": "string",
+                                    "store": true,
+                                    "index": "not_analyzed"
+                                },
+                                "ulbGrade": {
+                                    "type": "string",
+                                    "store": true,
+                                    "index": "not_analyzed"
+                                }
+                            }
+                        }
+                    }
+                },
+                "regularisation": {
+                    "type": "nested",
+                    "properties": {
+                        "id": {
+                            "type": "long"
+                        },
+                        "designation": {
+                            "properties": {
+                                "id": {
+                                    "type": "long"
+                                },
+                                "code": {
+                                    "type": "string",
+                                    "store": true,
+                                    "index": "not_analyzed"
+                                },
+                                "name": {
+                                    "type": "string",
+                                    "store": true,
+                                    "index": "not_analyzed"
+                                }
+                            }
+                        },
+                        "declaredOn": {
+                            "format": "dateOptionalTime",
+                            "type": "date"
+                        },
+                        "orderNo": {
+                            "type": "string",
+                            "store": true,
+                            "index": "not_analyzed"
+                        },
+                        "orderDate": {
+                            "format": "dateOptionalTime",
+                            "type": "date"
+                        },
+                        "remarks": {
+                            "type": "string",
+                            "store": true,
+                            "index": "not_analyzed"
+                        },
+                        "documents": {
+                            "type": "string",
+                            "store": true,
+                            "index": "not_analyzed"
+                        },
+                        "auditDetails": {
+                            "properties": {
+                                "createdBy": {
+                                    "properties": {
+                                        "id": {
+                                            "type": "long"
+                                        },
+                                        "name": {
+                                            "type": "string",
+                                            "store": true,
+                                            "index": "not_analyzed"
+                                        },
+                                        "username": {
+                                            "type": "string",
+                                            "store": true,
+                                            "index": "not_analyzed"
+                                        }
+                                    }
+                                },
+                                "createdDate": {
+                                    "format": "dateOptionalTime",
+                                    "type": "date"
+                                },
+                                "lastModifiedBy": {
+                                    "properties": {
+                                        "id": {
+                                            "type": "long"
+                                        },
+                                        "name": {
+                                            "type": "string",
+                                            "store": true,
+                                            "index": "not_analyzed"
+                                        },
+                                        "username": {
+                                            "type": "string",
+                                            "store": true,
+                                            "index": "not_analyzed"
+                                        }
+                                    }
+                                },
+                                "lastModifiedDate": {
+                                    "format": "dateOptionalTime",
+                                    "type": "date"
+                                }
+                            }
+                        },
+                        "tenantDetails": {
+                            "properties": {
+                                "tenantId": {
+                                    "type": "string",
+                                    "store": true,
+                                    "index": "not_analyzed"
+                                },
+                                "ulbName": {
+                                    "type": "string",
+                                    "store": true,
+                                    "index": "not_analyzed"
+                                },
+                                "ulbCode": {
+                                    "type": "string",
+                                    "store": true,
+                                    "index": "not_analyzed"
+                                },
+                                "distName": {
+                                    "type": "string",
+                                    "store": true,
+                                    "index": "not_analyzed"
+                                },
+                                "regName": {
+                                    "type": "string",
+                                    "store": true,
+                                    "index": "not_analyzed"
+                                },
+                                "ulbGrade": {
+                                    "type": "string",
+                                    "store": true,
+                                    "index": "not_analyzed"
+                                }
+                            }
+                        }
+                    }
+                },
+                "technical": {
+                    "type": "nested",
+                    "properties": {
+                        "id": {
+                            "type": "long"
+                        },
+                        "skill": {
+                            "type": "string",
+                            "store": true,
+                            "index": "not_analyzed"
+                        },
+                        "grade": {
+                            "type": "string",
+                            "store": true,
+                            "index": "not_analyzed"
+                        },
+                        "yearOfPassing": {
+                            "type": "string",
+                            "store": true,
+                            "index": "not_analyzed"
+                        },
+                        "remarks": {
+                            "type": "string",
+                            "store": true,
+                            "index": "not_analyzed"
+                        },
+                        "documents": {
+                            "type": "string",
+                            "store": true,
+                            "index": "not_analyzed"
+                        },
+                        "auditDetails": {
+                            "properties": {
+                                "createdBy": {
+                                    "properties": {
+                                        "id": {
+                                            "type": "long"
+                                        },
+                                        "name": {
+                                            "type": "string",
+                                            "store": true,
+                                            "index": "not_analyzed"
+                                        },
+                                        "username": {
+                                            "type": "string",
+                                            "store": true,
+                                            "index": "not_analyzed"
+                                        }
+                                    }
+                                },
+                                "createdDate": {
+                                    "format": "dateOptionalTime",
+                                    "type": "date"
+                                },
+                                "lastModifiedBy": {
+                                    "properties": {
+                                        "id": {
+                                            "type": "long"
+                                        },
+                                        "name": {
+                                            "type": "string",
+                                            "store": true,
+                                            "index": "not_analyzed"
+                                        },
+                                        "username": {
+                                            "type": "string",
+                                            "store": true,
+                                            "index": "not_analyzed"
+                                        }
+                                    }
+                                },
+                                "lastModifiedDate": {
+                                    "format": "dateOptionalTime",
+                                    "type": "date"
+                                }
+                            }
+                        },
+                        "tenantDetails": {
+                            "properties": {
+                                "tenantId": {
+                                    "type": "string",
+                                    "store": true,
+                                    "index": "not_analyzed"
+                                },
+                                "ulbName": {
+                                    "type": "string",
+                                    "store": true,
+                                    "index": "not_analyzed"
+                                },
+                                "ulbCode": {
+                                    "type": "string",
+                                    "store": true,
+                                    "index": "not_analyzed"
+                                },
+                                "distName": {
+                                    "type": "string",
+                                    "store": true,
+                                    "index": "not_analyzed"
+                                },
+                                "regName": {
+                                    "type": "string",
+                                    "store": true,
+                                    "index": "not_analyzed"
+                                },
+                                "ulbGrade": {
+                                    "type": "string",
+                                    "store": true,
+                                    "index": "not_analyzed"
+                                }
+                            }
+                        }
+                    }
+                },
+                "education": {
+                    "type": "nested",
+                    "properties": {
+                        "id": {
+                            "type": "long"
+                        },
+                        "qualification": {
+                            "type": "string",
+                            "store": true,
+                            "index": "not_analyzed"
+                        },
+                        "majorSubject": {
+                            "type": "string",
+                            "store": true,
+                            "index": "not_analyzed"
+                        },
+                        "yearOfPassing": {
+                            "type": "string",
+                            "store": true,
+                            "index": "not_analyzed"
+                        },
+                        "university": {
+                            "type": "string",
+                            "store": true,
+                            "index": "not_analyzed"
+                        },
+                        "documents": {
+                            "type": "string",
+                            "store": true,
+                            "index": "not_analyzed"
+                        },
+                        "auditDetails": {
+                            "properties": {
+                                "createdBy": {
+                                    "properties": {
+                                        "id": {
+                                            "type": "long"
+                                        },
+                                        "name": {
+                                            "type": "string",
+                                            "store": true,
+                                            "index": "not_analyzed"
+                                        },
+                                        "username": {
+                                            "type": "string",
+                                            "store": true,
+                                            "index": "not_analyzed"
+                                        }
+                                    }
+                                },
+                                "createdDate": {
+                                    "format": "dateOptionalTime",
+                                    "type": "date"
+                                },
+                                "lastModifiedBy": {
+                                    "properties": {
+                                        "id": {
+                                            "type": "long"
+                                        },
+                                        "name": {
+                                            "type": "string",
+                                            "store": true,
+                                            "index": "not_analyzed"
+                                        },
+                                        "username": {
+                                            "type": "string",
+                                            "store": true,
+                                            "index": "not_analyzed"
+                                        }
+                                    }
+                                },
+                                "lastModifiedDate": {
+                                    "format": "dateOptionalTime",
+                                    "type": "date"
+                                }
+                            }
+                        },
+                        "tenantDetails": {
+                            "properties": {
+                                "tenantId": {
+                                    "type": "string",
+                                    "store": true,
+                                    "index": "not_analyzed"
+                                },
+                                "ulbName": {
+                                    "type": "string",
+                                    "store": true,
+                                    "index": "not_analyzed"
+                                },
+                                "ulbCode": {
+                                    "type": "string",
+                                    "store": true,
+                                    "index": "not_analyzed"
+                                },
+                                "distName": {
+                                    "type": "string",
+                                    "store": true,
+                                    "index": "not_analyzed"
+                                },
+                                "regName": {
+                                    "type": "string",
+                                    "store": true,
+                                    "index": "not_analyzed"
+                                },
+                                "ulbGrade": {
+                                    "type": "string",
+                                    "store": true,
+                                    "index": "not_analyzed"
+                                }
+                            }
+                        }
+                    }
+                },
+                "test": {
+                    "type": "nested",
+                    "properties": {
+                        "id": {
+                            "type": "long"
+                        },
+                        "test": {
+                            "type": "string",
+                            "store": true,
+                            "index": "not_analyzed"
+                        },
+                        "yearOfPassing": {
+                            "type": "string",
+                            "store": true,
+                            "index": "not_analyzed"
+                        },
+                        "remarks": {
+                            "type": "string",
+                            "store": true,
+                            "index": "not_analyzed"
+                        },
+                        "documents": {
+                            "type": "string",
+                            "store": true,
+                            "index": "not_analyzed"
+                        },
+                        "auditDetails": {
+                            "properties": {
+                                "createdBy": {
+                                    "properties": {
+                                        "id": {
+                                            "type": "long"
+                                        },
+                                        "name": {
+                                            "type": "string",
+                                            "store": true,
+                                            "index": "not_analyzed"
+                                        },
+                                        "username": {
+                                            "type": "string",
+                                            "store": true,
+                                            "index": "not_analyzed"
+                                        }
+                                    }
+                                },
+                                "createdDate": {
+                                    "format": "dateOptionalTime",
+                                    "type": "date"
+                                },
+                                "lastModifiedBy": {
+                                    "properties": {
+                                        "id": {
+                                            "type": "long"
+                                        },
+                                        "name": {
+                                            "type": "string",
+                                            "store": true,
+                                            "index": "not_analyzed"
+                                        },
+                                        "username": {
+                                            "type": "string",
+                                            "store": true,
+                                            "index": "not_analyzed"
+                                        }
+                                    }
+                                },
+                                "lastModifiedDate": {
+                                    "format": "dateOptionalTime",
+                                    "type": "date"
+                                }
+                            }
+                        },
+                        "tenantDetails": {
+                            "properties": {
+                                "tenantId": {
+                                    "type": "string",
+                                    "store": true,
+                                    "index": "not_analyzed"
+                                },
+                                "ulbName": {
+                                    "type": "string",
+                                    "store": true,
+                                    "index": "not_analyzed"
+                                },
+                                "ulbCode": {
+                                    "type": "string",
+                                    "store": true,
+                                    "index": "not_analyzed"
+                                },
+                                "distName": {
+                                    "type": "string",
+                                    "store": true,
+                                    "index": "not_analyzed"
+                                },
+                                "regName": {
+                                    "type": "string",
+                                    "store": true,
+                                    "index": "not_analyzed"
+                                },
+                                "ulbGrade": {
+                                    "type": "string",
+                                    "store": true,
+                                    "index": "not_analyzed"
+                                }
+                            }
+                        }
+                    }
+                },
+                "APRDetails": {
+                    "type": "nested",
+                    "properties": {
+                        "id": {
+                            "type": "long"
+                        },
+                        "yearOfSubmission": {
+                            "type": "integer"
+                        },
+                        "detailsSubmitted": {
+                            "type": "boolean"
+                        },
+                        "dateOfSubmission": {
+                            "format": "dateOptionalTime",
+                            "type": "date"
+                        },
+                        "remarks": {
+                            "type": "string",
+                            "store": true,
+                            "index": "not_analyzed"
+                        },
+                        "documents": {
+                            "type": "string",
+                            "store": true,
+                            "index": "not_analyzed"
+                        },
+                        "auditDetails": {
+                            "properties": {
+                                "createdBy": {
+                                    "properties": {
+                                        "id": {
+                                            "type": "long"
+                                        },
+                                        "name": {
+                                            "type": "string",
+                                            "store": true,
+                                            "index": "not_analyzed"
+                                        },
+                                        "username": {
+                                            "type": "string",
+                                            "store": true,
+                                            "index": "not_analyzed"
+                                        }
+                                    }
+                                },
+                                "createdDate": {
+                                    "format": "dateOptionalTime",
+                                    "type": "date"
+                                },
+                                "lastModifiedBy": {
+                                    "properties": {
+                                        "id": {
+                                            "type": "long"
+                                        },
+                                        "name": {
+                                            "type": "string",
+                                            "store": true,
+                                            "index": "not_analyzed"
+                                        },
+                                        "username": {
+                                            "type": "string",
+                                            "store": true,
+                                            "index": "not_analyzed"
+                                        }
+                                    }
+                                },
+                                "lastModifiedDate": {
+                                    "format": "dateOptionalTime",
+                                    "type": "date"
+                                }
+                            }
+                        },
+                        "tenantDetails": {
+                            "properties": {
+                                "tenantId": {
+                                    "type": "string",
+                                    "store": true,
+                                    "index": "not_analyzed"
+                                },
+                                "ulbName": {
+                                    "type": "string",
+                                    "store": true,
+                                    "index": "not_analyzed"
+                                },
+                                "ulbCode": {
+                                    "type": "string",
+                                    "store": true,
+                                    "index": "not_analyzed"
+                                },
+                                "distName": {
+                                    "type": "string",
+                                    "store": true,
+                                    "index": "not_analyzed"
+                                },
+                                "regName": {
+                                    "type": "string",
+                                    "store": true,
+                                    "index": "not_analyzed"
+                                },
+                                "ulbGrade": {
+                                    "type": "string",
+                                    "store": true,
+                                    "index": "not_analyzed"
+                                }
+                            }
+                        }
+                    }
+                },
+                "documents": {
+                    "type": "string",
+                    "store": true,
+                    "index": "not_analyzed"
+                },
+                "auditDetails": {
+                    "properties": {
+                        "createdBy": {
+                            "properties": {
+                                "id": {
+                                    "type": "long"
+                                },
+                                "name": {
+                                    "type": "string",
+                                    "store": true,
+                                    "index": "not_analyzed"
+                                },
+                                "username": {
+                                    "type": "string",
+                                    "store": true,
+                                    "index": "not_analyzed"
+                                }
+                            }
+                        },
+                        "createdDate": {
+                            "format": "dateOptionalTime",
+                            "type": "date"
+                        },
+                        "lastModifiedBy": {
+                            "properties": {
+                                "id": {
+                                    "type": "long"
+                                },
+                                "name": {
+                                    "type": "string",
+                                    "store": true,
+                                    "index": "not_analyzed"
+                                },
+                                "username": {
+                                    "type": "string",
+                                    "store": true,
+                                    "index": "not_analyzed"
+                                }
+                            }
+                        },
+                        "lastModifiedDate": {
+                            "format": "dateOptionalTime",
+                            "type": "date"
+                        }
+                    }
+                },
+                "tenantDetails": {
+                    "properties": {
+                        "tenantId": {
+                            "type": "string",
+                            "store": true,
+                            "index": "not_analyzed"
+                        },
+                        "ulbName": {
+                            "type": "string",
+                            "store": true,
+                            "index": "not_analyzed"
+                        },
+                        "ulbCode": {
+                            "type": "string",
+                            "store": true,
+                            "index": "not_analyzed"
+                        },
+                        "distName": {
+                            "type": "string",
+                            "store": true,
+                            "index": "not_analyzed"
+                        },
+                        "regName": {
+                            "type": "string",
+                            "store": true,
+                            "index": "not_analyzed"
+                        },
+                        "ulbGrade": {
+                            "type": "string",
+                            "store": true,
+                            "index": "not_analyzed"
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

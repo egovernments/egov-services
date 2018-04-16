@@ -1,0 +1,13 @@
+{
+	"RequestInfo" : {
+		"apiId" : "emp",
+		"ver" : "1.0",
+		"ts": "01-01-2017 01:01:01",
+		"action" : "string",
+		"did" : "1",
+		"key" : "abcdkey",
+		"msgId" : "20170310130900",
+		"requesterId" : "rajesh",
+		"authToken" : "c999067e-b35e-428c-a284-f3fefbf600b5"
+	}
+}

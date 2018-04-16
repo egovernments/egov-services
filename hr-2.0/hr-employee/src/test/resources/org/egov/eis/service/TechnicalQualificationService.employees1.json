@@ -1,0 +1,260 @@
+{
+	"id": 100,
+	"code": "2323",
+	"dateOfAppointment": "20/02/2017",
+	"dateOfJoining": "20/02/2017",
+	"dateOfRetirement": "20/02/2017",
+	"employeeStatus": 1,
+	"recruitmentMode": "3",
+	"recruitmentType": "1",
+	"recruitmentQuota": "1",
+	"retirementAge": "32",
+	"dateOfResignation": "20/02/2017",
+	"dateOfTermination": "20/02/2017",
+	"employeeType": "4",
+	"assignments": 
+	[
+		{
+			"id": 5,
+			"fromDate": "20/02/2017",
+			"toDate": "20/02/2017",
+			"fund": "1",
+			"function": "1",
+			"grade": "2",
+			"designation": "3",
+			"position": "4",
+			"functionary": "1",
+			"department": "1",
+			"hod": 
+			[
+				
+			],
+
+			"govtOrderNumber": "sadsa",
+			"isPrimary": true,
+			"documents": 
+			[
+				"http://www.egov.org/egovservices/employee/100/assgn/1_1.pdf",
+				"http://www.egov.org/egovservices/employee/100/assgn/1_2.pdf"
+			]
+		},
+
+		{
+			"id": 6,
+			"fromDate": "22/02/2017",
+			"toDate": "22/02/2017",
+			"fund": "1",
+			"function": "1",
+			"grade": "2",
+			"designation": "3",
+			"position": "4",
+			"functionary": "1",
+			"department": "1",
+			"hod": 
+			[
+				
+			],
+
+			"govtOrderNumber": "sadsa",
+			"isPrimary": true,
+			"documents": 
+			[
+				"http://www.egov.org/egovservices/employee/100/assgn/2_1.pdf",
+				"http://www.egov.org/egovservices/employee/100/assgn/2_2.pdf"
+			]
+		}
+	],
+
+	"jurisdictions": 
+	[
+		1
+	],
+
+	"motherTongue": "1",
+	"religion": "2",
+	"community": "6",
+	"category": "2",
+	"physicallyDisabled": false,
+	"medicalReportProduced": false,
+	"languagesKnown": 
+	[
+		1,
+		5,
+		3
+	],
+
+	"maritalStatus": "UNMARRIED",
+	"bank": "3",
+	"bankBranch": "5",
+	"bankAccount": "343534",
+	"group": "2",
+	"placeOfBirth": "siravanthe",
+	"documents": 
+	[
+		"http://www.egov.org/egovservices/employee/dob_100.pdf",
+		"http://www.egov.org/egovservices/employee/addr_proof_100.pdf"
+	],
+
+	"serviceHistory": 
+	[
+		{
+			"id": 10,
+			"serviceInfo": "dasd",
+			"serviceFrom": "20/02/2017",
+			"remarks": "",
+			"orderNo": "",
+			"documents": 
+				[
+					"http://www.egov.org/egovservices/employee/100/service/10/relievingLetter.pdf"
+				]
+		}
+	],
+	
+	"probation": 
+	[
+		{
+			"id": 10,
+			"designation": "2",
+			"declaredOn": "20/02/2017",
+			"orderNo": "",
+			"orderDate": null,
+			"remarks": "",
+			"documents": 
+				[
+					"http://www.egov.org/egovservices/employee/100/probation/10/offer_letter.pdf"
+				]
+		}
+	],
+
+	"regularisation": 
+	[
+		{
+			"id": 5,
+			"designation": "3",
+			"declaredOn": "20/02/2017",
+			"orderNo": "",
+			"orderDate": "20/02/2017",
+			"remarks": "",
+			"tenantId": "1",
+			"documents": 
+				[
+					"http://www.egov.org/egovservices/employee/100/reg/5/appointment.pdf",
+					"http://www.egov.org/egovservices/employee/100/reg/5/nda.pdf"
+				]
+		},
+		{
+			"id": 6,
+			"designation": "4",
+			"declaredOn": "21/02/2017",
+			"orderNo": "",
+			"orderDate": "21/02/2017",
+			"remarks": "",
+			"tenantId": "1",
+			"documents": 
+				[
+					"http://www.egov.org/egovservices/employee/100/reg/6/appointment.pdf",
+					"http://www.egov.org/egovservices/employee/100/reg/6/nda.pdf"
+				]
+		},
+		{
+			"id": 7,
+			"designation": "4",
+			"declaredOn": "21/02/2017",
+			"orderNo": "",
+			"orderDate": "21/02/2017",
+			"remarks": "",
+			"tenantId": "1",
+			"documents": 
+				[
+					"http://www.egov.org/egovservices/employee/100/reg/7/appointment.pdf",
+					"http://www.egov.org/egovservices/employee/100/reg/7/nda.pdf"
+				]
+		}
+	],
+
+	"technical": 
+	[
+		{
+			"id": "5",
+			"skill": "sad",
+			"grade": "",
+			"yearOfPassing": "2017",
+			"remarks": "",
+			"documents": 
+				[
+					"http://www.egov.org/egovservices/employee/100/tech/5/java_cert.pdf"
+				]
+		},
+		{
+			"id": "6",
+			"skill": "sad",
+			"grade": "",
+			"yearOfPassing": "2017",
+			"remarks": "",
+			"documents": 
+				[
+					"http://www.egov.org/egovservices/employee/100/tech/6/java_cert.pdf"
+				]
+		}
+	],
+
+	"education": 
+	[
+		{
+			"id": "501",
+			"qualification": "as",
+			"majorSubject": "",
+			"yearOfPassing": "2017",
+			"university": "",
+			"documents": 
+				[
+					"http://www.egov.org/egovservices/employee/100/edu/501/degree_cert.pdf",
+					"http://www.egov.org/egovservices/employee/100/edu/501/degree_marksheet.pdf"
+				]
+		}
+	],
+
+	"test": 
+	[
+		{
+			"id": "1",
+			"test": "asda",
+			"yearOfPassing": "2017",
+			"remarks": "",
+			"documents": 
+				[
+					"http://www.egov.org/egovservices/employee/100/test/1/postgres_test.pdf",
+					"http://www.egov.org/egovservices/employee/100/test/1/java_test.pdf"
+				]
+		}
+	],
+
+	"user": 
+	{
+		"userName": "qwffcsasassadaswfdff1",
+		"name": "Murali Test123",
+		"gender": "Female",
+		"password": "12345",
+		"mobileNumber": "7795929033",
+		"emailId": "muralim4242@gmail.com",
+		"altContactNumber": "4565464564",
+		"pan": "12314",
+		"aadhaarNumber": "34234",
+		"permanentAddress": "dfsfsfs",
+		"permanentCity": "dsdfsdf",
+		"permanentPinCode": "fsfsd",
+		"correspondenceCity": "fsdfsd",
+		"correspondencePinCode": "fsdfs",
+		"correspondenceAddress": "fsdfsf",
+		"active": true,
+		"dob": "01/06/1964",
+		"locale": "3",
+		"fatherOrHusbandName": "tharu",
+		"bloodGroup": "O_POSITIVE",
+		"identificationMark": "eds",
+		"type": "EMPLOYEE",
+		"tenantId": "1"
+	},
+
+	"tenantId": 1
+}

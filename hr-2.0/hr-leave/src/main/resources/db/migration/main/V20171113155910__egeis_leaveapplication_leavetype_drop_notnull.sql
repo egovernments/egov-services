@@ -1,0 +1,1 @@
+alter table egeis_leaveapplication alter  column leavetypeid drop not null ;

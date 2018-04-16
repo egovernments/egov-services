@@ -1,0 +1,1 @@
+alter table egeis_leaveAllotment add constraint egeis_leaveAllotment_desig_lt unique(designationId,leaveTypeId,tenantid);

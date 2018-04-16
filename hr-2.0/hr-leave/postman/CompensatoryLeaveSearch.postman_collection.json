@@ -1,0 +1,52 @@
+{
+	"id": "268a67a6-60fb-dca8-b135-7b7aa311a575",
+	"name": "CompensatoryLeave",
+	"description": "",
+	"order": [
+		"b1f225c4-8737-2a33-7a16-82be621c3708"
+	],
+	"folders": [],
+	"folders_order": [],
+	"timestamp": 1503565557866,
+	"owner": "2532593",
+	"public": false,
+	"requests": [
+		{
+			"id": "b1f225c4-8737-2a33-7a16-82be621c3708",
+			"headers": "Content-Type: application/json\n",
+			"headerData": [
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": "http://localhost:8888/hr-leave/compensatoryleaves/_search?tenantId=default",
+			"queryParams": [
+				{
+					"key": "tenantId",
+					"value": "default",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				}
+			],
+			"preRequestScript": null,
+			"pathVariables": {},
+			"pathVariableData": [],
+			"method": "POST",
+			"data": [],
+			"dataMode": "raw",
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1503565718291,
+			"name": "http://localhost:8888/hr-leave/compensatoryleaves/_search?tenantId=default",
+			"description": "",
+			"collectionId": "268a67a6-60fb-dca8-b135-7b7aa311a575",
+			"responses": [],
+			"rawModeData": "{\n  \"RequestInfo\" : {\n    \"apiId\" : \"emp\",\n    \"ver\" : \"1.0\",\n    \"ts\" : \"10-03-2017 00:00:00\",\n    \"action\" : \"create\",\n    \"did\" : \"1\",\n    \"key\" : \"abcdkey\",\n    \"msgId\" : \"20170310130900\",\n    \"requesterId\" : \"rajesh\",\n    \"authToken\" : \"ed8ed910-0d37-463c-af19-15183934c8a5\",\n    \"userInfo\" : {\n      \"id\" : 1\n    \t\n    }\n  }\n      \n  }\n"
+		}
+	]
+}

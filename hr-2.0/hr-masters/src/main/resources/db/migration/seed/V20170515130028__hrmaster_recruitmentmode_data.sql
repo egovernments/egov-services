@@ -1,0 +1,1 @@
+insert into egeis_recruitmentMode(id,name,description,tenantid) values(nextval('seq_egeis_recruitmentMode'),'Others','Others','default');

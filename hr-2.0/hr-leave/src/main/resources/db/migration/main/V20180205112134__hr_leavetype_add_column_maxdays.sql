@@ -1,0 +1,1 @@
+alter table egeis_leavetype add column maxdays INTEGER ;

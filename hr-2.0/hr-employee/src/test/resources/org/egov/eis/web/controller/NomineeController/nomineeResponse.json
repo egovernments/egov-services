@@ -1,0 +1,36 @@
+{
+    "ResponseInfo": {
+        "apiId": "apiId",
+        "ver": "ver",
+        "ts": "06-01-1964 00:00:00",
+        "resMsgId": "resMsgId",
+        "msgId": "msgId",
+        "status": "200"
+    },
+    "Nominee": [
+        {
+            "id": 5,
+            "employee": {
+                "id": 4,
+                "name": "employee",
+                "code": "EMP04"
+            },
+            "name": "nominee",
+            "gender": "FEMALE",
+            "dateOfBirth": 123456789,
+            "maritalStatus": "UNMARRIED",
+            "relationship": "DAUGHTER",
+            "bank": 1,
+            "bankBranch": 1,
+            "bankAccount": "123456789",
+            "nominated": true,
+            "employed": true,
+            "documents": ["doc1", "doc2"],
+            "createdBy": 1,
+            "createdDate": 12345,
+            "lastModifiedBy": 1,
+            "lastModifiedDate": 12345,
+            "tenantId": "default"
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+ALTER TABLE egeis_position
+	RENAME CONSTRAINT fk_egeis_position_deptdesigid TO fk_egeis_position_deptdesigid_tenantId;
+
+ALTER TABLE egeis_positionhierarchy
+	RENAME CONSTRAINT fk_egeis_positionhierarchy_frompositionid TO fk_egeis_positionhierarchy_frompositionid_tenantId;
+
+ALTER TABLE egeis_positionhierarchy
+	RENAME CONSTRAINT fk_egeis_positionhierarchy_topositionid TO fk_egeis_positionhierarchy_topositionid_tenantId;
+
+ALTER TABLE egeis_positionhierarchy
+	RENAME CONSTRAINT fk_egeis_positionhierarchy_objecttypeid TO fk_egeis_positionhierarchy_objecttypeid_tenantId;
+
+ALTER TABLE egeis_departmentdesignation
+	RENAME CONSTRAINT fk_egeis_departmentdesignation_designationid TO fk_egeis_departmentdesignation_designationid_tenantId;

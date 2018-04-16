@@ -1,0 +1,1 @@
+update egeis_hrconfiguration set keyname='Compensatory_leave_validity' where keyname='Compensatory leave validity';

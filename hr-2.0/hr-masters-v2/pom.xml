@@ -2,9 +2,9 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.egov</groupId>
-	<artifactId>hr-masters</artifactId>
+	<artifactId>hr-masters-v2</artifactId>
 	<packaging>jar</packaging>
-	<name>hr-masters</name>
+	<name>hr-masters-v2</name>
 	<version>0.0.1-SNAPSHOT</version>
 	<description>eGov project</description>
 

@@ -14,18 +14,17 @@ import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.request.Role;
 import org.egov.common.contract.request.User;
 import org.egov.mdms.model.MdmsCriteriaReq;
-import org.egov.pgr.utils.WorkFlowConfigs;
 import org.egov.pgr.contract.ServiceReqSearchCriteria;
 import org.egov.pgr.contract.ServiceRequest;
 import org.egov.pgr.contract.ServiceResponse;
 import org.egov.pgr.model.ActionInfo;
 import org.egov.pgr.model.Service;
-import org.egov.pgr.model.Service.StatusEnum;
 import org.egov.pgr.repository.ServiceRequestRepository;
 import org.egov.pgr.service.GrievanceService;
 import org.egov.pgr.utils.ErrorConstants;
 import org.egov.pgr.utils.PGRConstants;
 import org.egov.pgr.utils.PGRUtils;
+import org.egov.pgr.utils.WorkFlowConfigs;
 import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -63,7 +62,6 @@ public class PGRRequestValidator {
 		Map<String, String> errorMap = new HashMap<>();
 
 		validateIfArraysEqual(serviceRequest, errorMap);
-		userInfoCheck(serviceRequest, errorMap);
 		overRideCitizenAccountId(serviceRequest);
 		vaidateServiceCodes(serviceRequest, errorMap);
 		validateAddressCombo(serviceRequest, errorMap);
@@ -82,7 +80,6 @@ public class PGRRequestValidator {
 		Map<String, String> errorMap = new HashMap<>();
 
 		validateIfArraysEqual(serviceRequest, errorMap);
-		userInfoCheck(serviceRequest, errorMap);
 		vaidateServiceCodes(serviceRequest, errorMap);
 		overRideCitizenAccountId(serviceRequest);
 		validateAssignments(serviceRequest, errorMap);
@@ -222,7 +219,6 @@ public class PGRRequestValidator {
 	private void validateAssignments(ServiceRequest serviceRequest, Map<String, String> errorMap) {
 
 		List<String> errorMsgForActionAssign = new ArrayList<>();
-		List<String> errorMsgForActionNotAssign = new ArrayList<>();
 		List<Service> services = serviceRequest.getServices();
 
 		List<ActionInfo> infos = serviceRequest.getActionInfo();
@@ -233,24 +229,20 @@ public class PGRRequestValidator {
 				if (null != info && null != info.getAction())
 					if ((WorkFlowConfigs.ACTION_ASSIGN.equalsIgnoreCase(info.getAction())
 							|| WorkFlowConfigs.ACTION_REASSIGN.equalsIgnoreCase(info.getAction()))
-									&& info.getAssignee() == null)
+							&& info.getAssignee() == null)
 						errorMsgForActionAssign.add(services.get(i).getServiceRequestId());
 					else if (!WorkFlowConfigs.ACTION_ASSIGN.equalsIgnoreCase(info.getAction())
 							&& !WorkFlowConfigs.ACTION_REASSIGN.equalsIgnoreCase(info.getAction())
 							&& null != info.getAssignee())
-						errorMsgForActionNotAssign.add(services.get(i).getServiceRequestId());
+						info.setAssignee(null);
 			}
 
 		if (!errorMsgForActionAssign.isEmpty())
 			errorMap.put(ErrorConstants.ASSIGNEE_MISSING_FOR_ACTION_ASSIGN_REASSIGN_KEY,
 					ErrorConstants.ASSIGNEE_MISSING_FOR_ACTION_ASSIGN_REASSIGN_MSG + errorMsgForActionAssign);
-		if (!errorMsgForActionNotAssign.isEmpty())
-			errorMap.put(ErrorConstants.ASSIGNEE_NOT_ALLOWED_KEY,
-					ErrorConstants.ASSIGNEE_NOT_ALLOWED_MSG + errorMsgForActionNotAssign);
 	}
 
 	public void userInfoCheck(ServiceRequest serviceRequest, Map<String, String> errorMap) {
-		log.info("Validating userInfo......." + serviceRequest.getRequestInfo().getUserInfo());
 
 		if (null == serviceRequest.getRequestInfo()) {
 			errorMap.put("EG_PGR_REQUESTINFO", "Request info is mandatory for serviceRequest");

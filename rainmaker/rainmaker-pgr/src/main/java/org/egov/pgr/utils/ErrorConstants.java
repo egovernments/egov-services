@@ -34,10 +34,6 @@ public class ErrorConstants {
 	public static final String ASSIGNEE_MISSING_FOR_ACTION_ASSIGN_REASSIGN_KEY = "EG_PGR_UPDATE_ASSIGN_REASSIGN";
 	public static final String ASSIGNEE_MISSING_FOR_ACTION_ASSIGN_REASSIGN_MSG = "The assignees are missing for the assign actions of services with ids : ";
 	
-	public static final String ASSIGNEE_NOT_ALLOWED_KEY = "EG_PGR_UPDATE_ASSIGNEE_NOT_ALLOWED";
-	public static final String ASSIGNEE_NOT_ALLOWED_MSG = "The assignees are not applicable for the following services due to the nature of their actions : ";
-	
-	
 	//public static final String UPDATE_NO_ACTIONS_ERROR_KEY = "EG_PGR_UPDATE_ACTIONINFO";
 	
 	//public static final String UPDATE_NO_ACTIONS_ERROR_MSG = "Update cannot be performed without";

@@ -28,6 +28,7 @@ public class PGRConstants {
 	public static final String SERVICE_NAME = "serviceName";
 	public static final String DEFAULT_COMPLAINT_TYPE = "resolution";
 	public static final String EMPLOYEE_DEPTCODE_JSONPATH = "$.Employee[0].assignments[0].department";
+	public static final String EMPLOYEE_NAME_JSONPATH = "$.Employee[0].name";
 	public static final String DEPARTMENTNAME_EMPLOYEE_JSONPATH = "$.Department[0].name";
 	
 	public static final String SEARCHER_RESPONSE_TEXT = "Searcher response : ";

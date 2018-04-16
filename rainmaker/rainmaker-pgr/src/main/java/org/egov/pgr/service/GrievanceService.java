@@ -61,6 +61,12 @@ public class GrievanceService {
 
 	@Value("${indexer.grievance.update}")
 	private String indexerUpdateTopic;
+	
+	@Value("${egov.hr.employee.host}")
+	private String hrEmployeeHost;
+	
+	@Value("${egov.hr.employee.search.endpoint}")
+	private String hrEmployeeSearchEndpoint;
 
 	@Autowired
 	private ResponseInfoFactory factory;
@@ -426,6 +432,28 @@ public class GrievanceService {
 		}
 		return departmenCode;
 	}
+	
+	public String getEmployeeName(String tenantId, String id, RequestInfo requestInfo) {
+		StringBuilder uri = new StringBuilder();
+		RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
+		requestInfoWrapper.setRequestInfo(requestInfo);
+		uri.append(hrEmployeeHost).append(hrEmployeeSearchEndpoint).append("?id="+id).append("&tenantId="+tenantId);
+		Object response = null;
+		log.debug("Employee: " + response);
+		String name = null;
+		try {
+			response = serviceRequestRepository.fetchResult(uri, requestInfoWrapper);
+			if (null == response) {
+				return name;
+			}
+			log.debug("Employee: " + response);
+			name = JsonPath.read(response, PGRConstants.EMPLOYEE_NAME_JSONPATH);
+		} catch (Exception e) {
+			log.error("Exception: " + e);
+		}
+		return name;
+	}
+	
 
 	public String getDepartment(ServiceReqSearchCriteria serviceReqSearchCriteria, RequestInfo requestInfo,
 			Integer departmentCode) {

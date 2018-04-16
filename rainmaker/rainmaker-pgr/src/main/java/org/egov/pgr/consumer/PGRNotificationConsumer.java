@@ -18,6 +18,7 @@ import org.egov.pgr.model.ActionInfo;
 import org.egov.pgr.model.Service;
 import org.egov.pgr.producer.PGRProducer;
 import org.egov.pgr.repository.ServiceRequestRepository;
+import org.egov.pgr.service.GrievanceService;
 import org.egov.pgr.utils.PGRConstants;
 import org.egov.pgr.utils.PGRUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -82,6 +83,9 @@ public class PGRNotificationConsumer {
 		
 	@Autowired
 	private PGRUtils pGRUtils;
+	
+	@Autowired
+	private GrievanceService grievanceService;
 		
     @KafkaListener(topics = {"${kafka.topics.notification.complaint}"})
     
@@ -181,7 +185,11 @@ public class PGRNotificationConsumer {
     		message = message.replaceAll("<status>", "registered");
     		break;
 		}case ASSIGNED:{
-    		message = message.replaceAll("<status>", "assgined to Mr."+actionInfo.getAssignee());
+			String employee = grievanceService.getEmployeeName(serviceReq.getTenantId(), actionInfo.getAssignee(), requestInfo);
+			if(null != employee && !employee.isEmpty())
+				message = message.replaceAll("<status>", "assgined to Mr."+ employee);
+			else
+				message = message.replaceAll("<status>", "assgined to to the respective employee");
     		break;
 		}case REJECTED:{
     		message = message.replaceAll("<status>", "rejected on "+new Date(serviceReq.getAuditDetails().getCreatedTime()).toString());

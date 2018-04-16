@@ -382,15 +382,15 @@
         "$.code",
         "$.tenantId"
       ]
-    },
-    "RAINMAKER-PGR": {
-      "ServiceDefs": {
-        "masterName": "ServiceDefs",
-        "isStateLevel": true,
-        "uniqueKeys": [
-          "$.code"
-        ]
-      }
+    }
+  },
+  "RAINMAKER-PGR": {
+    "ServiceDefs": {
+      "masterName": "ServiceDefs",
+      "isStateLevel": true,
+      "uniqueKeys": [
+        "$.code"
+      ]
     }
   }
 }

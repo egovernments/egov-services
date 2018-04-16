@@ -28,7 +28,7 @@ function confirmEmployee(body) {
       }
     });
 
-  }else{
+  } else {
     return userConfirm;
   }
 }
@@ -109,6 +109,80 @@ class UpdateMovement extends React.Component {
     this.setState(initState);
   }
 
+
+  componentWillMount() {
+
+    var type = getUrlVars()["type"],
+      _this = this;
+    var stateId = getUrlVars()["stateId"];
+    var transferWithPromotion;
+
+    commonApiPost("hr-employee-movement", "movements", "_search", { tenantId: tenantId, stateId: stateId }, function (err, res) {
+      if (res) {
+        if (res.Movement[0]) {
+          var Movement = res.Movement[0];
+
+          if (Movement.typeOfMovement === "TRANSFER_CUM_PROMOTION") {
+            transferWithPromotion = true;
+          }
+
+          let docs = Object.assign([], Movement.documents);
+
+          Movement.checkEmployeeExists = false;
+
+          if (!Movement.workflowDetails) {
+            Movement.workflowDetails = {
+              assignee: "",
+              department: "",
+              designation: ""
+            };
+          }
+          if (Movement.transferType === "TRANSFER_OUTSIDE_CORPORATION_OR_ULB") {
+            console.log("DEPT - DESIG - EFFDTE - ULB", Movement.transferedLocation);
+            _this.getUlbDetails(Movement.transferedLocation);
+            setTimeout(function () {
+              console.log("DEPT - DESIG - EFFDTE - ULB", Movement.departmentAssigned, Movement.designationAssigned, Movement.effectiveFrom, Movement.transferedLocation);
+              _this.vacantPositionFun(Movement.departmentAssigned, Movement.designationAssigned, Movement.effectiveFrom, Movement.transferedLocation);
+            }, 200);
+          }
+
+          getCommonMasterById("hr-employee", "employees", res.Movement[0].employeeId, function (err, res) {
+            if (res && res.Employee) {
+              var obj = res.Employee[0];
+              var ind = 0;
+              if (obj.length > 0) {
+                obj.map((item, index) => {
+                  for (var i = 0; i < item.assignments.length; i++) {
+                    if ([true, "true"].indexOf(item.assignments[i].isPrimary) > -1) {
+                      ind = i;
+                      break;
+                    }
+                  }
+                });
+              }
+              _this.setState({
+                ..._this.state,
+                transferWithPromotion: transferWithPromotion,
+                docs: docs,
+                movement: Movement,
+                employee: {
+                  name: obj.name,
+                  code: obj.code,
+                  departmentId: obj.assignments[ind].department,
+                  designationId: obj.assignments[ind].designation,
+                  positionId: obj.assignments[ind].position
+                }
+              })
+            }
+          });
+        }
+      }
+    });
+
+
+  }
+
+
   componentDidMount() {
     if (window.opener && window.opener.document) {
       var logo_ele = window.opener.document.getElementsByClassName("homepage_logo");
@@ -164,67 +238,6 @@ class UpdateMovement extends React.Component {
     });
     getDropdown("districtList", function (res) {
       checkCountAndCall("districtList", res);
-    });
-
-
-    commonApiPost("hr-employee-movement", "movements", "_search", { tenantId: tenantId, stateId: stateId }, function (err, res) {
-      if (res) {
-        if (res.Movement[0]) {
-          var Movement = res.Movement[0];
-
-          if (Movement.typeOfMovement === "TRANSFER_CUM_PROMOTION") {
-            transferWithPromotion = true;
-          }
-
-          let docs = Object.assign([], Movement.documents);
-
-            Movement.checkEmployeeExists = false;
-
-          if (!Movement.workflowDetails) {
-            Movement.workflowDetails = {
-              assignee: "",
-              department: "",
-              designation: ""
-            };
-          }
-          if (Movement.transferType === "TRANSFER_OUTSIDE_CORPORATION_OR_ULB") {
-            _this.getUlbDetails(Movement.transferedLocation);
-            setTimeout(function () {
-              _this.vacantPositionFun(Movement.departmentAssigned, Movement.designationAssigned, Movement.effectiveFrom, Movement.transferedLocation);
-            }, 200);
-          }
-
-          getCommonMasterById("hr-employee", "employees", res.Movement[0].employeeId, function (err, res) {
-            if (res && res.Employee) {
-              var obj = res.Employee[0];
-              var ind = 0;
-              if (obj.length > 0) {
-                obj.map((item, index) => {
-                  for (var i = 0; i < item.assignments.length; i++) {
-                    if ([true, "true"].indexOf(item.assignments[i].isPrimary) > -1) {
-                      ind = i;
-                      break;
-                    }
-                  }
-                });
-              }
-              _this.setState({
-                ..._this.state,
-                transferWithPromotion: transferWithPromotion,
-                docs:docs,
-                movement: Movement,
-                employee: {
-                  name: obj.name,
-                  code: obj.code,
-                  departmentId: obj.assignments[ind].department,
-                  designationId: obj.assignments[ind].designation,
-                  positionId: obj.assignments[ind].position
-                }
-              })
-            }
-          });
-        }
-      }
     });
 
 
@@ -318,7 +331,7 @@ class UpdateMovement extends React.Component {
         tenantId,
         departmentId,
         designationId,
-        isPrimary:true,
+        isPrimary: true,
         asOnDate,
         active: true
       }, function (err, res) {
@@ -596,8 +609,8 @@ class UpdateMovement extends React.Component {
       var ID = e.target.id, _this = this;
       var stateId = getUrlVars()["stateId"];
       var tempInfo = Object.assign({}, _this.state.movement);
-      if(tempInfo.workflowDetails)
-      tempInfo.workflowDetails.action =  ID;
+      if (tempInfo.workflowDetails)
+        tempInfo.workflowDetails.action = ID;
 
 
       if (_this.state.transferWithPromotion) {
@@ -607,7 +620,7 @@ class UpdateMovement extends React.Component {
         tempInfo.promotionBasis = { id: "" };
       }
 
-      if(ID === "Approve" && tempInfo.transferType != "TRANSFER_WITHIN_DEPARTMENT_OR_CORPORATION_OR_ULB"){
+      if (ID === "Approve" && tempInfo.transferType != "TRANSFER_WITHIN_DEPARTMENT_OR_CORPORATION_OR_ULB") {
         tempInfo.checkEmployeeExists = true;
       }
 
@@ -648,11 +661,11 @@ class UpdateMovement extends React.Component {
                   },
                   success: function (res) {
 
-                    console.log( res.Movement[0].checkEmployeeExists);
+                    console.log(res.Movement[0].checkEmployeeExists);
 
                     if (ID === "Approve" && res.Movement[0].checkEmployeeExists) {
-                      if(!confirmEmployee(body))
-                       return showError("You cancelled the application. Please select other options");
+                      if (!confirmEmployee(body))
+                        return showError("You cancelled the application. Please select other options");
                     }
 
                     var employee, designation;
@@ -734,10 +747,10 @@ class UpdateMovement extends React.Component {
           },
           success: function (res) {
 
-            console.log( res.Movement[0].checkEmployeeExists);
+            console.log(res.Movement[0].checkEmployeeExists);
 
             if (ID === "Approve" && res.Movement[0].checkEmployeeExists) {
-              if(!confirmEmployee(body))
+              if (!confirmEmployee(body))
                 return showError("You cancelled the application. Please select other options");
 
             }
@@ -986,17 +999,17 @@ class UpdateMovement extends React.Component {
 
       return _this.state.docs.map(function (file, ind) {
         return (
-            <tr key={ind}>
-                <td>{ind + 1}</td>
-                <td>{"Document "+ (ind + 1)}</td>
-                <td>
-                    <a href={window.location.origin + CONST_API_GET_FILE + file} target="_blank">
-                        Download
+          <tr key={ind}>
+            <td>{ind + 1}</td>
+            <td>{"Document " + (ind + 1)}</td>
+            <td>
+              <a href={window.location.origin + CONST_API_GET_FILE + file} target="_blank">
+                Download
               </a>
-                </td>
-            </tr>
+            </td>
+          </tr>
         )
-    })
+      })
 
     }
 

@@ -536,7 +536,7 @@ class PersonalInform extends React.Component {
                             <div className="col-sm-6">
                                 <div className="row">
                                     <div className="col-sm-6 label-text">
-                                        <label for="">Leave Type  </label> <span className="text-danger">*</span>
+                                        <label for="">Leave Type  </label> <span>*</span>
                                     </div>
                                     <div className="col-sm-6">
                                         <div className="styled-select">
@@ -554,7 +554,7 @@ class PersonalInform extends React.Component {
                             <div className="col-sm-6">
                                 <div className="row">
                                     <div className="col-sm-6 label-text">
-                                        <label for=""> Calendar Year</label> <span className="text-danger">*</span>
+                                        <label for=""> Calendar Year</label> <span>*</span>
                                     </div>
                                     <div className="col-sm-6">
                                         <div className="styled-select">

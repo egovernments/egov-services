@@ -83,7 +83,7 @@
         "$.tenantId"
       ]
     },
-   "CensusYear": {
+    "CensusYear": {
       "masterName": "CensusYear",
       "moduleDefinition": null,
       "isStateLevel": true,
@@ -260,7 +260,7 @@
         "$.tenantId"
       ]
     },
-   "ToiletType": {
+    "ToiletType": {
       "masterName": "ToiletType",
       "isStateLevel": true,
       "moduleDefinition": null,
@@ -382,6 +382,15 @@
         "$.code",
         "$.tenantId"
       ]
+    },
+    "RAINMAKER-PGR": {
+      "ServiceDefs": {
+        "masterName": "ServiceDefs",
+        "isStateLevel": true,
+        "uniqueKeys": [
+          "$.code"
+        ]
+      }
     }
   }
 }

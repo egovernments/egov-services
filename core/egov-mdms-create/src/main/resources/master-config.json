@@ -91,6 +91,14 @@
         "$.code",
         "$.tenantId"
       ]
+    },
+    "Designation": {
+      "masterName": "Designation",
+      "moduleDefinition": null,
+      "isStateLevel": true,
+      "uniqueKeys": [
+        "$.code"
+      ]
     }
   },
   "egf-master": {

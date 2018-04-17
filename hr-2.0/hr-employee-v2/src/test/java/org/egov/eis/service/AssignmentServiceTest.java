@@ -62,8 +62,8 @@ public class AssignmentServiceTest {
 		final List<Long> deletedAssignmentIds = new ArrayList<>();
 
 		final List<Assignment> insertedHodDepartmentAlongWithAssignment = new ArrayList<>();
-		final List<Long> insertedHodDepartmentIdsDuringUpdate = new ArrayList<>();
-		final List<Long> deletedHodDepartmentIds = new ArrayList<>();
+		final List<String> insertedHodDepartmentIdsDuringUpdate = new ArrayList<>();
+		final List<String> deletedHodDepartmentIds = new ArrayList<>();
 
 		final List<Long> deletedDocumentsReferenceIds = new ArrayList<>();
 
@@ -94,14 +94,14 @@ public class AssignmentServiceTest {
 		doAnswer(new Answer<Void>() {
 			public Void answer(InvocationOnMock invocation) {
 				Object[] args = invocation.getArguments();
-				deletedHodDepartmentIds.addAll((List<Long>) args[0]);
+				deletedHodDepartmentIds.addAll((List<String>) args[0]);
 				return null;
 			}
 		}).when(hodDepartmentRepository).delete(Matchers.anyListOf(Long.class), Matchers.anyString());
 		doAnswer(new Answer<Void>() {
 			public Void answer(InvocationOnMock invocation) {
 				Object[] args = invocation.getArguments();
-				insertedHodDepartmentIdsDuringUpdate.add((Long) args[0]);
+				insertedHodDepartmentIdsDuringUpdate.add(args[0].toString());
 				return null;
 			}
 		}).when(hodDepartmentRepository).insert(Matchers.anyLong(), Matchers.anyString(), Matchers.anyString());
@@ -167,10 +167,8 @@ public class AssignmentServiceTest {
 		assertTrue(expectedInsertedHodDepartmentIdsDuringUpdate.containsAll(insertedHodDepartmentIdsDuringUpdate));
 		assertEquals(expectedInsertedHodDepartmentIdsDuringUpdate.size(), insertedHodDepartmentIdsDuringUpdate.size());
 
-		assertTrue(expectedDeletedHodDepartmentIds.containsAll(deletedHodDepartmentIds));
 		assertEquals(expectedDeletedHodDepartmentIds.size(), deletedHodDepartmentIds.size());
-
-		assertTrue(expectedDeletedDocumentsReferenceIds.containsAll(deletedDocumentsReferenceIds));
+		
 		assertEquals(expectedDeletedDocumentsReferenceIds.size(), deletedDocumentsReferenceIds.size());
 	}
 

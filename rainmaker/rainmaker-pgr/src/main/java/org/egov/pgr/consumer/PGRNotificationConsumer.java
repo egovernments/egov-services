@@ -147,7 +147,7 @@ public class PGRNotificationConsumer {
 			for(ActionInfo actionInfo: serviceReqRequest.getActionInfo()) {
 				if(null != actionInfo && (null != actionInfo.getStatus() || null != actionInfo.getComment())) {
 					Service service = serviceReqRequest.getServices().get(serviceReqRequest.getActionInfo().indexOf(actionInfo));
-					if(isNotificationEnabled(actionInfo.getStatus(), serviceReqRequest.getRequestInfo().getUserInfo().getType(), actionInfo.getAction())) {
+					if(isNotificationEnabled(actionInfo.getStatus(), serviceReqRequest.getRequestInfo().getUserInfo().getType(), actionInfo.getComment(), actionInfo.getAction())) {
 		    			if(isSMSNotificationEnabled) {
 		    	    		SMSRequest smsRequest = prepareSMSRequest(service, actionInfo, serviceReqRequest.getRequestInfo());
 		    	        	log.info("SMS: "+smsRequest.getMessage()+" | MOBILE: "+smsRequest.getMobileNumber());
@@ -403,7 +403,7 @@ public class PGRNotificationConsumer {
     	return designations.get(0);
     }
     
-    public boolean isNotificationEnabled(String status, String comment, String action) {
+    public boolean isNotificationEnabled(String status, String userType, String comment, String action) {
     	boolean isNotifEnabled = false;
     	if(!StringUtils.isEmpty(status)) {
 			switch(status) {
@@ -449,7 +449,7 @@ public class PGRNotificationConsumer {
 			}
     	}
 				
-    	if((null != comment && !comment.isEmpty()) && isCommentByEmpNotifEnaled) {
+    	if((null != comment && !comment.isEmpty()) && isCommentByEmpNotifEnaled && userType.equalsIgnoreCase("EMPLOYEE")) {
 			isNotifEnabled = true;
     	}
 		

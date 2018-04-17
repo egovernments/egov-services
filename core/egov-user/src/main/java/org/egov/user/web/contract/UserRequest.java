@@ -120,6 +120,16 @@ public class UserRequest {
 
 	@JsonIgnore
 	public User toDomain(Long loggedInUserId, boolean isCreate) {
+		BloodGroup bloodGroup = null;
+		try {
+			if (this.bloodGroup != null)
+				bloodGroup = BloodGroup.valueOf(this.bloodGroup.toUpperCase());
+		} catch (Exception e) {
+			for (BloodGroup bloodgroup : BloodGroup.values()) {
+				if (bloodgroup.getValue().equals(this.bloodGroup))
+					bloodGroup = bloodgroup;
+			}
+		}
 		return User.builder()
 				.id(this.id)
 				.name(this.name)
@@ -140,7 +150,7 @@ public class UserRequest {
 				.photo(this.photo)
 				.identificationMark(this.identificationMark)
 				.gender(this.gender != null ? Gender.valueOf(this.gender.toUpperCase()) : null)
-				.bloodGroup(this.bloodGroup != null ? BloodGroup.valueOf(this.bloodGroup.toUpperCase()) : null)
+				.bloodGroup(bloodGroup)
 				.lastModifiedDate(new Date())
 				.createdDate(new Date())
 				.otpReference(this.otpReference)

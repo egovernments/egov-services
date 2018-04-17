@@ -469,6 +469,10 @@ class ApplyLeave extends React.Component {
     delete tempInfo.name;
     delete tempInfo.code;
 
+    if(tempInfo.encashable){
+      tempInfo.leaveDays = tempInfo.totalWorkingDays;
+    }
+
     console.log(this.state.perfixSuffix, this.state.encloseHoliday);
 
     let holidays = [];

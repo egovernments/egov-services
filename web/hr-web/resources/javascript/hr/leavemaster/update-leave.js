@@ -506,7 +506,7 @@ class UpdateLeave extends React.Component {
       doc.line(15, 83, 32, 83);
       doc.setFontType("normal");
       doc.text(15, 92, doc.splitTextToSize('        In view of the circumstances stated in the reference read above Sri/Smt ' + noticeData.name + ','));
-      doc.text(15, 97, doc.splitTextToSize('is hereby sactioned ' + noticeData.leaveTypeName + ' for a period of (' + noticeData.totalWorkingDays + ') days on ' + noticeData.leaveGround + ' grounds from ' + noticeData.fromDate + ' to ' + noticeData.toDate + '.'));
+      doc.text(15, 97, doc.splitTextToSize('is hereby sactioned ' + noticeData.leaveTypeName + ' for a period of (' + noticeData.totalWorkingDays + ') days on ' + noticeData.leaveGround + ' grounds '));
       doc.text(15, 102, doc.splitTextToSize('from ' + noticeData.fromDate + ' to ' + noticeData.toDate + '.'));
       doc.text(15, 110, doc.splitTextToSize('2.     Certified that necessary entries have been made in the service Register of the individual.'));
       doc.text(15, 118, doc.splitTextToSize('3.     He/She is informed that, after sanction of the above leave is having (' + noticeData.availableDays + ') days of '));

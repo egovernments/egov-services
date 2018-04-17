@@ -492,8 +492,8 @@ class UpdateLeave extends React.Component {
       doc.text(35, 52, "Sub:");
       doc.setFontType("normal");
       doc.text(55, 52, doc.splitTextToSize('Establish -' + tenantId.split(".")[1].charAt(0).toUpperCase() + tenantId.split(".")[1].slice(1) + ' Muncipality/Municipal Corporation - '));
-      doc.text(55, 57, doc.splitTextToSize('Sri/Smt' + noticeData.name + ' - Saction of ' + noticeData.leaveTypeName + ' for period of (' + noticeData.totalWorkingDays + ')'));
-      doc.text(55, 62, doc.splitTextToSize('days on' + noticeData.leaveGround + ' grounds - Orders - Issued'));
+      doc.text(55, 57, doc.splitTextToSize('Sri/Smt ' + noticeData.name + ' - Saction of ' + noticeData.leaveTypeName + ' for period of (' + noticeData.totalWorkingDays + ')'));
+      doc.text(55, 62, doc.splitTextToSize('days on ' + noticeData.leaveGround + ' grounds - Orders - Issued'));
 
       doc.setFontType("bold");
       doc.text(35, 72, "Read:");
@@ -506,21 +506,22 @@ class UpdateLeave extends React.Component {
       doc.line(15, 83, 32, 83);
       doc.setFontType("normal");
       doc.text(15, 92, doc.splitTextToSize('        In view of the circumstances stated in the reference read above Sri/Smt ' + noticeData.name + ','));
-      doc.text(15, 97, doc.splitTextToSize('is hereby sactioned Earned Leave/HPL for a period of (' + noticeData.totalWorkingDays + ') days on ' + noticeData.leaveGround + ' grounds from ' + noticeData.fromDate + ' to ' + noticeData.toDate + '.'));
-      doc.text(15, 105, doc.splitTextToSize('2.     Certified that necessary entries have been made in the service Register of the individual.'));
-      doc.text(15, 113, doc.splitTextToSize('3.     He/She is informed that, after sanction of the above leave is having (' + noticeData.availableDays + ') days of '));
-      doc.text(15, 118, doc.splitTextToSize('       ' + noticeData.leaveTypeName + ' at his/her credit.'));
+      doc.text(15, 97, doc.splitTextToSize('is hereby sactioned ' + noticeData.leaveTypeName + ' for a period of (' + noticeData.totalWorkingDays + ') days on ' + noticeData.leaveGround + ' grounds from ' + noticeData.fromDate + ' to ' + noticeData.toDate + '.'));
+      doc.text(15, 102, doc.splitTextToSize('from ' + noticeData.fromDate + ' to ' + noticeData.toDate + '.'));
+      doc.text(15, 110, doc.splitTextToSize('2.     Certified that necessary entries have been made in the service Register of the individual.'));
+      doc.text(15, 118, doc.splitTextToSize('3.     He/She is informed that, after sanction of the above leave is having (' + noticeData.availableDays + ') days of '));
+      doc.text(15, 123, doc.splitTextToSize('       ' + noticeData.leaveTypeName + ' at his/her credit.'));
 
       doc.setFontType("bold");
-      doc.text(125, 134, 'COMMISSIONER');
-      doc.text(100, 140, tenantId.split(".")[1].charAt(0).toUpperCase() + tenantId.split(".")[1].slice(1) + ' Municipality/Municipal Corporation');
+      doc.text(125, 139, 'COMMISSIONER');
+      doc.text(100, 145, tenantId.split(".")[1].charAt(0).toUpperCase() + tenantId.split(".")[1].slice(1) + ' Municipality/Municipal Corporation');
 
       doc.setFontType("bold");
-      doc.text(15, 145, doc.splitTextToSize('To'));
+      doc.text(15, 150, doc.splitTextToSize('To'));
       doc.setFontType("normal");
-      doc.text(15, 150, doc.splitTextToSize('Sri/Smt _______'));
-      doc.text(15, 155, doc.splitTextToSize('Copy to the _________'));
-      doc.text(15, 160, doc.splitTextToSize('Spare'));
+      doc.text(15, 155, doc.splitTextToSize('Sri/Smt _______'));
+      doc.text(15, 160, doc.splitTextToSize('Copy to the _________'));
+      doc.text(15, 165, doc.splitTextToSize('Spare'));
 
     } else {
 

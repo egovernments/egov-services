@@ -268,10 +268,10 @@ public class PGRNotificationConsumer {
 		}
 		if(null != actionInfo.getAction() && actionInfo.getAction().equals(WorkFlowConfigs.ACTION_REOPEN)) {
 			text = smsTextOnReopen;
-			text = text.replace("<complaint type>", serviceType).replace("<date>", date);
+			text = text.replace("<complaint_type>", serviceType).replace("<date>", date);
 		}else {
 			text = smsTextOnSubmission;
-			text = text.replace("<complaint type>", serviceType)
+			text = text.replace("<complaint_type>", serviceType)
 					.replace("<id>", serviceReq.getServiceRequestId()).replace("<date>", date);
 		}
 		return text;

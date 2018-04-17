@@ -16,7 +16,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class AgreementHelper {
 	
-	private static final List<String> AUCTION_CATEGORIES = Arrays.asList("Market", "Fish Tanks", "Slaughter House", "Community Toilet Complex");
+	private static final List<String> AUCTION_CATEGORIES = Arrays.asList("Market", "Fish Tanks", "Slaughter House", "Community Toilet Complex", "Community Hall");
 
 	/**
 	 * The given list of agreements is filtered for given allottees and assets.

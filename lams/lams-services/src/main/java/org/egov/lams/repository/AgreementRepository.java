@@ -105,6 +105,20 @@ public class AgreementRepository {
         return (agreementId != null && agreementId != 0);
     }
 
+	public List<Agreement> getHistoryAgreementsByAsset(Agreement agreement) {
+
+		List<Agreement> agreements = null;
+		Map<String, Object> params = new HashMap<>();
+		String sql = AgreementQueryBuilder.getHistoryAgreementSearchQuery(agreement, params);
+		try {
+			agreements = namedParameterJdbcTemplate.query(sql, params, new AgreementRowMapper());
+		} catch (DataAccessException e) {
+			logger.info("exception in getagreement :: " + e);
+			throw new RuntimeException(e.getMessage());
+		}
+		return agreements;
+	}
+
     public List<Agreement> getAgreementForCriteria(AgreementCriteria agreementsModel) {
 
         List<Agreement> agreements = null;

@@ -1,6 +1,7 @@
 package org.egov.lams.repository.builder;
 
 import org.apache.commons.lang3.StringUtils;
+import org.egov.lams.model.Agreement;
 import org.egov.lams.model.AgreementCriteria;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -161,5 +162,18 @@ public class AgreementQueryBuilder {
         }
         return query.append(")").toString();
     }
+
+	public static String getHistoryAgreementSearchQuery(Agreement agreement, Map<String, Object> params) {
+		StringBuilder selectQuery = new StringBuilder(AGREEMENT_BY_ASSET_QUERY);
+
+		selectQuery.append(" AND agreement.ishistory=true");
+		params.put("assetId", agreement.getAsset().getId());
+		if (agreement.getTenantId() != null) {
+			selectQuery.append(" AND agreement.tenant_id = :tenantId");
+			params.put("tenantId", agreement.getTenantId());
+		}
+
+		return selectQuery.toString();
+	}
 
 }

@@ -1467,6 +1467,21 @@ function basedOnType(){
       $("#marketAssetDetailsBlock textarea").attr("disabled", true);
       //append category text
       $(".categoryType").prepend("Market ");
+  }else if (decodeURIComponent(getUrlVars()["type"]) == "Community Hall") {
+
+      // remove all other Asset Details block from DOM except shop asset related fields
+      $("#rendCalculatedMethod,#shopAssetDetailsBlock,#shoppingComplexAssetDetailsBlock, #landAssetDetailsBlock, #kalyanamandapamAssetDetailsBlock, #parkingSpaceAssetDetailsBlock, #slaughterHousesAssetDetailsBlock, #usfructsAssetDetailsBlock, #communityAssetDetailsBlock, #fishTankAssetDetailsBlock, #parkAssetDetailsBlock").remove();
+      //remove agreement template two and three from screen
+      $("#agreementDetailsBlockTemplateOne,#agreementDetailsBlockTemplateTwo,#agreementDetailsBlockTemplateThree").remove();
+      //removing allotee details block
+       $("#allotteeDetailsBlock").remove();
+      //disabling input tag of asset details
+      $("#historyDetails,#subesquentrenewals").remove();
+      $("#marketAssetDetailsBlock input").attr("disabled", true);
+      $("#marketAssetDetailsBlock textarea").attr("disabled", true);
+      //append category text
+      $('#assetDetails-title').text("Community Hall Asset Details");
+      $(".categoryType").prepend("Community Hall ");
   } else if (decodeURIComponent(getUrlVars()["type"]) == "Kalyana Mandapam") {
       // validation rules for shop agreement
       validationRules = {

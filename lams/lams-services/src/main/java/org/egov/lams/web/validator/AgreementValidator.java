@@ -49,7 +49,7 @@ public class AgreementValidator {
 	public static final String ERROR_MSG_UNDER_WORKFLOW = "Agreement is already under going in some workflow.";
 	public static final String ACTION_MODIFY ="Modify";
 	public static final String SHOPPING_COMPLEX = "Shopping Complex";
-	private static final List<String> AUCTION_CATEGORIES = Arrays.asList("Market", "Fish Tanks", "Slaughter House", "Community Toilet Complex");
+	private static final List<String> AUCTION_CATEGORIES = Arrays.asList("Market", "Fish Tanks", "Slaughter House", "Community Toilet Complex", "Community Hall");
 	@Autowired
 	private AssetRepository assetService;
 
@@ -74,7 +74,9 @@ public class AgreementValidator {
 	public void validateCreate(AgreementRequest agreementRequest, Errors errors) {
 		Boolean allowedAssetCategory;
 		Agreement agreement = agreementRequest.getAgreement();
-	    if(!agreement.getIsHistory()){
+		if (agreement.getIsHistory()) {
+			validateHistoryAgreementsForAsset(agreement, errors);
+		} else {
  		Double rent = agreement.getRent();
 		Double securityDeposit = agreement.getSecurityDeposit();
 		Date solvencyCertificateDate = agreement.getSolvencyCertificateDate();
@@ -487,6 +489,16 @@ public class AgreementValidator {
 							+ demandDetails.getTaxReason() + " of " + demandDetails.getTaxPeriod());
 			}
 		}
+	}
+
+	private void validateHistoryAgreementsForAsset(Agreement agreement, Errors errors) {
+
+		List<Agreement> agreements = null;
+		agreements = agreementService.getAllHistoryAgreementsForAsset(agreement);
+		if (!agreements.isEmpty()) {
+			errors.rejectValue("Duplicate History Agreement", "History agreement is already created for this asset.");
+		}
+
 	}
 
 }

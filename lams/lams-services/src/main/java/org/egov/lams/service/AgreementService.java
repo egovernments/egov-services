@@ -61,7 +61,7 @@ public class AgreementService {
 	public static final String SAVE = "SAVE";
 	public static final String UPDATE = "UPDATE";
 	public static final String LAMS_WORKFLOW_INITIATOR_DESIGNATION = "lams_workflow_initiator_designation";
-	private static final List<String> AUCTION_CATEGORIES = Arrays.asList("Market", "Fish Tanks", "Slaughter House", "Community Toilet Complex");
+	private static final List<String> AUCTION_CATEGORIES = Arrays.asList("Market", "Fish Tanks", "Slaughter House", "Community Toilet Complex", "Community Hall");
 
 	private AgreementRepository agreementRepository;
 	private LamsConfigurationService lamsConfigurationService;
@@ -121,6 +121,12 @@ public class AgreementService {
 			agreementCriteria.setFloorNumber(agreement.getFloorNumber());
 		}
 		return agreementRepository.getAgreementForCriteria(agreementCriteria);
+	}
+
+	public List<Agreement> getAllHistoryAgreementsForAsset(Agreement agreement) {
+
+		return agreementRepository.getHistoryAgreementsByAsset(agreement);
+
 	}
 
 	/**

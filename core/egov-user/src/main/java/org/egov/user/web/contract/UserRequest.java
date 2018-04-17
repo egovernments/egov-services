@@ -125,10 +125,7 @@ public class UserRequest {
 			if (this.bloodGroup != null)
 				bloodGroup = BloodGroup.valueOf(this.bloodGroup.toUpperCase());
 		} catch (Exception e) {
-			for (BloodGroup bloodgroup : BloodGroup.values()) {
-				if (bloodgroup.getValue().equals(this.bloodGroup))
-					bloodGroup = bloodgroup;
-			}
+			bloodGroup = BloodGroup.fromValue(this.bloodGroup);
 		}
 		return User.builder()
 				.id(this.id)

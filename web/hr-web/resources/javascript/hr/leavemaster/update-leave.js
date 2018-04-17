@@ -344,7 +344,7 @@ class UpdateLeave extends React.Component {
       $('#availableDays,#leaveDays,#name,#code').prop("disabled", true);
     }
 
-    if (status == "APPLIED") {
+    if (status == "APPLIED" || status == "RESUBMITTED" ) {
       $("#department, #designation, #assignee").prop("disabled", false);
     }
 
@@ -852,7 +852,7 @@ class UpdateLeave extends React.Component {
             };
           } else {
             tempInfo.workflowDetails.action = ID,
-              tempInfo.workflowDetailsassignee = employee.assignments && employee.assignments[0] ? employee.assignments[0].position : ""
+              tempInfo.workflowDetails.assignee = employee.assignments && employee.assignments[0] ? employee.assignments[0].position : ""
           }
           var body = {
             "RequestInfo": requestInfo,
@@ -1236,7 +1236,7 @@ class UpdateLeave extends React.Component {
     const renderWorkflowDetails = function (status) {
       status = getNameById(_this.state.statusList, status, "code");
 
-      if (status === "APPLIED") {
+      if (status === "APPLIED" || status === "RESUBMITTED" ) {
         return (
           <div>
             <br />

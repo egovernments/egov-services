@@ -219,52 +219,6 @@ class UpdateLeave extends React.Component {
       }
     });
 
-    $('#fromDate, #toDate').datepicker({
-      format: 'dd/mm/yyyy',
-      autoclose: true
-
-    });
-
-    $('#fromDate, #toDate').on("change", function (e) {
-      var _from = $('#fromDate').val();
-      var _to = $('#toDate').val();
-      var _triggerId = e.target.id;
-
-      if (_this.state.leaveSet.leaveType.id) {
-
-        _this.setState({
-          leaveSet: {
-            ..._this.state.leaveSet,
-            [_triggerId]: $("#" + _triggerId).val()
-          }
-        });
-
-        if (_from && _to) {
-
-          let dateParts1 = _from.split("/");
-          let newDateStr = dateParts1[1] + "/" + dateParts1[0] + "/ " + dateParts1[2];
-          let date1 = new Date(newDateStr);
-
-          let dateParts2 = _to.split("/");
-          let newDateStr1 = dateParts2[1] + "/" + dateParts2[0] + "/" + dateParts2[2];
-          let date2 = new Date(newDateStr1);
-
-
-          if (date1 > date2) {
-            showError("From date must be before End date.");
-            $('#' + _triggerId).val("");
-          }
-
-
-          _this.calculate();
-        }
-
-      } else {
-        showError("Please select Leave Type before entering from date and to date.");
-        $('#' + _triggerId).val("");
-      }
-    });
-
     commonApiPost("egov-common-workflows", "process", "_search", {
       tenantId: tenantId,
       id: stateId
@@ -272,8 +226,6 @@ class UpdateLeave extends React.Component {
       if (res) {
 
         process = res["processInstance"];
-
-
 
         $.ajax({
           url: baseUrl + "/egov-common-workflows/designations/_search?businessKey=" + process.businessKey + "&approvalDepartmentName=&departmentRule=&currentStatus=" + process.status + "&tenantId=" + tenantId + "&additionalRule=&pendingAction=&designation=&amountRule=",
@@ -319,6 +271,63 @@ class UpdateLeave extends React.Component {
   }
 
   componentDidUpdate() {
+
+
+
+      var type = getUrlVars()["type"], _this = this;
+      var id = getUrlVars()["id"];
+  
+      $('#fromDate, #toDate').datepicker({
+        format: 'dd/mm/yyyy',
+        autoclose: true
+      });
+  
+      $('#fromDate, #toDate').on("change", function (e) {
+  
+        if (!_this.state.leaveSet.leaveType.id) {
+          showError("Please select Leave Type before entering from date and to date.");
+          $('#' + e.target.id).val("");
+        }
+  
+       if(_this.state.leaveSet[e.target.id] != e.target.value){
+  
+        var _from = $('#fromDate').val();
+        var _to = $('#toDate').val();
+        var _triggerId = e.target.id;
+        
+          _this.setState({
+            leaveSet: {
+              ..._this.state.leaveSet,
+              [_triggerId]: $("#" + _triggerId).val()
+            }
+          });
+  
+          if (_from && _to) {
+  
+            let dateParts1 = _from.split("/");
+            let newDateStr = dateParts1[1] + "/" + dateParts1[0] + "/ " + dateParts1[2];
+            let date1 = new Date(newDateStr);
+  
+            let dateParts2 = _to.split("/");
+            let newDateStr1 = dateParts2[1] + "/" + dateParts2[0] + "/" + dateParts2[2];
+            let date2 = new Date(newDateStr1);
+  
+  
+            if (date1 > date2) {
+              showError("From date must be before End date.");
+              $('#' + _triggerId).val("");
+            }
+  
+  
+            _this.calculate();
+          }
+  
+      }
+      });
+  
+    
+
+
 
     let status = getNameById(this.state.statusList, this.state.leaveSet.status, "code");
 
@@ -460,6 +469,8 @@ class UpdateLeave extends React.Component {
             }
           });
         }
+      }else{
+        return (showError("You do not have leave for this leave type."));
       }
     });
 
@@ -719,7 +730,9 @@ class UpdateLeave extends React.Component {
               leaveSet: {
                 ..._this.state.leaveSet,
                 availableDays: "",
-                encashable
+                encashable,
+                fromDate:"",
+                toDate:""
               }
             });
             return (showError("You do not have leave for this leave type."));
@@ -729,7 +742,9 @@ class UpdateLeave extends React.Component {
               leaveSet: {
                 ..._this.state.leaveSet,
                 availableDays: _day,
-                encashable
+                encashable,
+                fromDate:"",
+                toDate:""
               }
             });
           }
@@ -738,7 +753,9 @@ class UpdateLeave extends React.Component {
           _this.setState({
             leaveSet: {
               ..._this.state.leaveSet,
-              encashable
+              encashable,
+              fromDate:"",
+              toDate:""
             }
           });
 

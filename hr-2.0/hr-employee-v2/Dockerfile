@@ -10,6 +10,10 @@ COPY /target/hr-employee-v2-0.0.1-SNAPSHOT.jar /opt/egov/hr-employee-v2.jar
 
 COPY start.sh /usr/bin/start.sh
 
+COPY /target/newrelic.jar /opt/egov/newrelic.jar
+
+COPY /target/newrelic.yml /opt/egov/newrelic.yml
+
 RUN chmod +x /usr/bin/start.sh
 
 CMD ["/usr/bin/start.sh"]

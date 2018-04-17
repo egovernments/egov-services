@@ -55,7 +55,7 @@ import org.springframework.web.client.RestTemplate;
 @Service
 public class WorkFlowService {
     public static final Logger LOGGER = LoggerFactory.getLogger(WorkFlowService.class);
-    
+
     @Autowired
     private RestTemplate restTemplate;
 
@@ -89,7 +89,7 @@ public class WorkFlowService {
 
         return processInstanceResponse.getProcessInstance();
     }
-    
+
     public Task update(final LeaveApplicationSingleRequest leaveApplicationRequest) {
         final TaskRequest taskRequest = new TaskRequest();
         Task task = new Task();
@@ -100,15 +100,15 @@ public class WorkFlowService {
         task.setComments("updating workflow from Leave Application consumer");
         task.setAction(workFlowAction);
         if ("Approve".equalsIgnoreCase(workFlowAction))
-            task.setStatus(LeaveStatus.APPROVED.toString());
+            task.setStatus("HOD Approved");
         else if ("Reject".equalsIgnoreCase(workFlowAction))
-            task.setStatus(LeaveStatus.REJECTED.toString());
+            task.setStatus("Rejected");
         else if ("Cancel".equalsIgnoreCase(workFlowAction))
             task.setStatus(LeaveStatus.CANCELLED.toString());
         else if ("Submit".equalsIgnoreCase(workFlowAction))
             task.setStatus(LeaveStatus.RESUBMITTED.toString());
         else if ("Forward".equalsIgnoreCase(workFlowAction))
-            task.setStatus(LeaveStatus.FORWARDED.toString());
+            task.setStatus("Applied");
         task.setTenantId(leaveApplicationRequest.getLeaveApplication().getTenantId());
         Position assignee = new Position();
         assignee.setId(leaveApplicationRequest.getLeaveApplication().getWorkflowDetails().getAssignee());

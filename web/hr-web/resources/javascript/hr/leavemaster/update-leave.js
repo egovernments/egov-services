@@ -136,6 +136,13 @@ class UpdateLeave extends React.Component {
         if (!_leaveSet.workflowDetails)
           _leaveSet.workflowDetails = {};
 
+        if(!_leaveSet.fromDate)
+         _leaveSet.fromDate = "";
+
+         if(!_leaveSet.toDate)
+         _leaveSet.toDate = "";
+
+
         commonApiPost("hr-employee", "employees", "_search", {
           tenantId,
           id: _leaveSet.employee
@@ -315,8 +322,17 @@ class UpdateLeave extends React.Component {
 
     let status = getNameById(this.state.statusList, this.state.leaveSet.status, "code");
 
+
     if (status != "REJECTED") {
-      $("input,select,textarea").prop("disabled", true);
+      console.log(status)
+
+      $('input,select,textarea').prop("disabled", true);
+      $('#availableDays,#leaveDays,#name,#code').prop("disabled", true);
+
+    }
+    if(status == "REJECTED"){
+      $('input,select,textarea').prop("disabled", false);
+      $('#availableDays,#leaveDays,#name,#code').prop("disabled", true);
     }
 
     if (status == "APPLIED") {
@@ -632,6 +648,7 @@ class UpdateLeave extends React.Component {
       this.setState({
         leaveSet: {
           ...this.state.leaveSet,
+          encashable:false,
           [pName]: {
             ...this.state.leaveSet[pName],
             [name]: e.target.value
@@ -689,7 +706,8 @@ class UpdateLeave extends React.Component {
       let _this = this
       let asOnDate = today();
       let leaveType = this.state.leaveSet.leaveType.id;
-      let employeeid = getUrlVars()["id"];
+      let employeeid = this.state.leaveSet.employee;
+      let encashable = !(this.state.leaveSet.encashable);
 
       commonApiPost("hr-leave", "eligibleleaves", "_search", {
         leaveType, tenantId, asOnDate, employeeid
@@ -701,7 +719,7 @@ class UpdateLeave extends React.Component {
               leaveSet: {
                 ..._this.state.leaveSet,
                 availableDays: "",
-                encashable: e.target.checked
+                encashable
               }
             });
             return (showError("You do not have leave for this leave type."));
@@ -711,10 +729,19 @@ class UpdateLeave extends React.Component {
               leaveSet: {
                 ..._this.state.leaveSet,
                 availableDays: _day,
-                encashable: e.target.checked
+                encashable
               }
             });
           }
+        }else{
+
+          _this.setState({
+            leaveSet: {
+              ..._this.state.leaveSet,
+              encashable
+            }
+          });
+
         }
       });
     } else if (name === "department") {
@@ -779,7 +806,6 @@ class UpdateLeave extends React.Component {
 
     if (ID === "Submit") {
       var employee;
-      var today = new Date();
       var asOnDate = today();
       var departmentId = _this.state.departmentId;
       var leaveNumber = _this.state.leaveNumber;
@@ -1096,7 +1122,7 @@ class UpdateLeave extends React.Component {
                     <label htmlFor="">En-cashable</label>
                   </div>
                   <div className="col-sm-6">
-                    <input type="checkbox" id="encashable" name="encashable" checked={encashable}
+                    <input type="checkbox" id="encashable" name="encashable" checked={encashable} value = "false"
                       onChange={(e) => { handleChange(e, "encashable") }} />
                   </div>
                 </div>

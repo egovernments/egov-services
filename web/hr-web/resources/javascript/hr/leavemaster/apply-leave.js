@@ -360,6 +360,7 @@ class ApplyLeave extends React.Component {
       this.setState({
         leaveSet: {
           ...this.state.leaveSet,
+          encashable:false,
           [pName]: {
             ...this.state.leaveSet[pName],
             [name]: e.target.value

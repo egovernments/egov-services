@@ -1,6 +1,0 @@
-INSERT INTO egeis_designation (id, name, code, description, chartofaccounts, active, tenantid) VALUES (nextval('seq_egeis_designation'), 'Additional Commissioner', 'ADCOM', null, null, true, 'testtenant.ulb1');
-INSERT INTO egeis_designation (id, name, code, description, chartofaccounts, active, tenantid) VALUES (nextval('seq_egeis_designation'), 'Deputy Chief Engineer', 'DCE', 'Deputy Chief Engineer', null, true, 'testtenant.ulb1');
-INSERT INTO egeis_designation (id, name, code, description, chartofaccounts, active, tenantid) VALUES (nextval('seq_egeis_designation'), 'Technical Officer', 'TO', 'Technical Officer', null, true, 'testtenant.ulb1');
-INSERT INTO egeis_designation (id, name, code, description, chartofaccounts, active, tenantid) VALUES (nextval('seq_egeis_designation'), 'Assistant Technical Officer', 'ATO', 'Assistant Technical Officer', null, true, 'testtenant.ulb1');
-INSERT INTO egeis_designation (id, name, code, description, chartofaccounts, active, tenantid) VALUES (nextval('seq_egeis_designation'), 'Junior Technical Officer', 'JTO', 'Junior Technical Officer', null, true, 'testtenant.ulb1');
-INSERT INTO egeis_designation (id, name, code, description, chartofaccounts, active, tenantid) VALUES (nextval('seq_egeis_designation'), 'Municipal Engineer', 'ME', 'Municipal Engineer', null, true, 'testtenant.ulb1');

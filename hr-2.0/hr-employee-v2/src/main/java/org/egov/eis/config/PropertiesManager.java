@@ -161,4 +161,7 @@ public class PropertiesManager {
     @Value("${egov.services.egov_mdms.searchpath}")
     private String mdmsBySearchCriteriaUrl;
 
+    @Value("${egov.services.hr_employee_service.default.password}")
+    private String employeeDefaultPassword;
+
 }

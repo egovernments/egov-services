@@ -225,7 +225,7 @@ public class PositionService {
 		List<Position> positions = positionRepository.findForCriteria(positionGetRequest);
 		positionRequest.setPosition(positions);
 		kafkaTemplate.send(positionCreateTopic, positionRequest);
-		if (propertiesManager.getDataSyncPositionRequired()) {
+		/*if (propertiesManager.getDataSyncPositionRequired()) {
 			for (Position position : positionRequest.getPosition()) {
 				PositionSync positionSync = PositionSync.builder().name(position.getName())
 						.tenantId(position.getTenantId()).build();
@@ -233,7 +233,7 @@ public class PositionService {
 						.build();
 				kafkaTemplate.send(propertiesManager.getSavePositionTopic(), positionSyncRequest);
 			}
-		}
+		}*/
 
 	}
 

@@ -127,6 +127,7 @@ public class UserRequest {
 		} catch (Exception e) {
 			bloodGroup = BloodGroup.fromValue(this.bloodGroup);
 		}
+		
 		return User.builder()
 				.id(this.id)
 				.name(this.name)

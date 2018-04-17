@@ -76,6 +76,8 @@ public class MdmsRepository {
 				+ propertiesManager.getMdmsBySearchCriteriaUrl();
 		List<MasterDetail> masterDetails;
 		List<ModuleDetail> moduleDetails;
+		//TODO remove this once yaml is updated
+		requestInfo.setTs(null);
 		MdmsCriteriaReq request = null;
 		MdmsResponse response = null;
 		masterDetails = new ArrayList<>();

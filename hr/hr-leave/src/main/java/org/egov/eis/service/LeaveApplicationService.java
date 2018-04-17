@@ -385,7 +385,7 @@ public class LeaveApplicationService {
 
                 List<Date> todate = assignments.stream().map(assign -> assign.getToDate()).collect(Collectors.toList());
 
-                if (max(todate).before(leaveApplication.getToDate())) {
+                if (leaveApplication.getEncashable().equals(false) && max(todate).before(leaveApplication.getToDate())) {
                     errorMsg = errorMsg
                             + applicationConstants.getErrorMessage(ApplicationConstants.MSG_ASSIGNMENT_TODATE);
                 }

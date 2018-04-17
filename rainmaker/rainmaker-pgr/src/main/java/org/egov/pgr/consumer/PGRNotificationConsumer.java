@@ -1,11 +1,14 @@
 package org.egov.pgr.consumer;
 
 import java.io.StringWriter;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
@@ -21,6 +24,7 @@ import org.egov.pgr.repository.ServiceRequestRepository;
 import org.egov.pgr.service.GrievanceService;
 import org.egov.pgr.utils.PGRConstants;
 import org.egov.pgr.utils.PGRUtils;
+import org.egov.pgr.utils.WorkFlowConfigs;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -50,7 +54,7 @@ public class PGRNotificationConsumer {
 	
 	@Value("${text.for.subject.email.notif}")
 	private String subjectForEmail;
-	
+		
 	@Value("${notification.sms.enabled}")
 	private Boolean isSMSNotificationEnabled;
 	
@@ -62,10 +66,7 @@ public class PGRNotificationConsumer {
 	
 	@Value("${assign.complaint.enabled}")
 	private Boolean isAssignNotifEnabled;
-	
-	@Value("${new.complaint.enabled}")
-	private Boolean isNewComplaintNotifEnabled;
-	
+		
 	@Value("${reject.complaint.enabled}")
 	private Boolean isRejectedNotifEnabled;
 	
@@ -75,8 +76,48 @@ public class PGRNotificationConsumer {
 	@Value("${close.complaint.enabled}")
 	private Boolean isCloseNotifEnabled;
 	
+	@Value("${reassign.complaint.enabled}")
+	private Boolean isReassignNotifEnaled;
+	
+	@Value("${reopen.complaint.enabled}")
+	private Boolean isReopenNotifEnaled;
+	
+	@Value("${comment.by.employee.notif.enabled}")
+	private Boolean isCommentByEmpNotifEnaled;
+	
 	@Value("${email.template.path}")
 	private String emailTemplatePath;
+	
+	@Value("${date.format.notification}")
+	private String notificationDateFormat;
+	
+	@Value("${sms.notif.text.on.submission}")
+	private String smsTextOnSubmission;
+		
+	@Value("${sms.notif.text.on.assignment}")
+	private String smsTextOnAssignment;
+	
+	@Value("${sms.notif.text.on.reassignment}")
+	private String smsTextOnReassignment;
+	
+	@Value("${sms.notif.text.on.resolution}")
+	private String smsTextOnResolution;
+	
+	@Value("${sms.notif.text.on.rejection}")
+	private String smsTextOnRejection;
+		
+	@Value("${sms.notif.text.on.reopen}")
+	private String smsTextOnReopen;
+	
+	@Value("${sms.notif.default.text}")
+	private String smsDefaultText;
+	
+	@Value("${sms.notif.text.on.comment}")
+	private String smsTextOnComment;
+	
+	@Value("${sms.notif.default.text.on.comment}")
+	private String smsDefaultTextOnComment;
+		
 		
 	@Autowired
 	private ServiceRequestRepository serviceRequestRepository;
@@ -102,39 +143,46 @@ public class PGRNotificationConsumer {
 	}
     
     public void process(ServiceRequest serviceReqRequest) {
-    	for(Service serviceReq: serviceReqRequest.getServices()) {
-    		if(isNotificationEnabled(serviceReq)) {
-    			ActionInfo actionInfo = serviceReqRequest.getActionInfo().get(serviceReqRequest.getServices().indexOf(serviceReq));
-    			if(isSMSNotificationEnabled) {
-    	    		SMSRequest smsRequest = prepareSMSRequest(serviceReq, actionInfo, serviceReqRequest.getRequestInfo());
-    	        	log.info("SMS: "+smsRequest.getMessage()+" | MOBILE: "+smsRequest.getMobileNumber());
-	        		pGRProducer.push(smsNotifTopic, smsRequest);
-    			}
-    			if(isEmailNotificationEnabled && (null != serviceReq.getEmail() && !serviceReq.getEmail().isEmpty())) {
-    					EmailRequest emailRequest = prepareEmailRequest(serviceReq, actionInfo);
-    		        	log.info("EMAIL: "+emailRequest.getBody()+"| SUBJECT: "+emailRequest.getSubject()+"| ID: "+emailRequest.getEmail());
-		        		pGRProducer.push(emailNotifTopic, emailRequest);
-    			}
-    		}
+		if(!CollectionUtils.isEmpty(serviceReqRequest.getActionInfo())) {
+			for(ActionInfo actionInfo: serviceReqRequest.getActionInfo()) {
+				if(null != actionInfo && (null != actionInfo.getStatus() || null != actionInfo.getComment())) {
+					Service service = serviceReqRequest.getServices().get(serviceReqRequest.getActionInfo().indexOf(actionInfo));
+					if(isNotificationEnabled(actionInfo.getStatus(), serviceReqRequest.getRequestInfo().getUserInfo().getType(), actionInfo.getAction())) {
+		    			if(isSMSNotificationEnabled) {
+		    	    		SMSRequest smsRequest = prepareSMSRequest(service, actionInfo, serviceReqRequest.getRequestInfo());
+		    	        	log.info("SMS: "+smsRequest.getMessage()+" | MOBILE: "+smsRequest.getMobileNumber());
+			        		pGRProducer.push(smsNotifTopic, smsRequest);
+		    			}
+		    			if(isEmailNotificationEnabled && (null != service.getEmail() && !service.getEmail().isEmpty())) {
+		    					EmailRequest emailRequest = prepareEmailRequest(service, actionInfo);
+		    		        	log.info("EMAIL: "+emailRequest.getBody()+"| SUBJECT: "+emailRequest.getSubject()+"| ID: "+emailRequest.getEmail());
+				        		pGRProducer.push(emailNotifTopic, emailRequest);
+		    			}
+		    		}else {
+		    			log.info("Notification disabled for this case!");
+		    			continue;
+		    		}
+				}else {
+					log.info("No Action!");
+					continue;
+				}
+			}
 		}
     }
     
     public SMSRequest prepareSMSRequest(Service serviceReq, ActionInfo actionInfo, RequestInfo requestInfo) {
 		String phone = serviceReq.getPhone();
 		String message = getMessageForSMS(serviceReq, actionInfo, requestInfo);
-		SMSRequest smsRequest = SMSRequest.builder().mobileNumber(phone).message(message).build();
 		
-		return smsRequest;
+		return SMSRequest.builder().mobileNumber(phone).message(message).build();
     }
     
     public EmailRequest prepareEmailRequest(Service serviceReq, ActionInfo actionInfo) {
 		String email = serviceReq.getEmail();
 		StringBuilder subject = new StringBuilder();
 		String body = getBodyAndSubForEmail(serviceReq, actionInfo, subject);
-		EmailRequest emailRequest = EmailRequest.builder().email(email).subject(subject.toString()).body(body)
+		return EmailRequest.builder().email(email).subject(subject.toString()).body(body)
 				.isHTML(true).build();
-		
-		return emailRequest;
     }
     
     public String getBodyAndSubForEmail(Service serviceReq, ActionInfo actionInfo, StringBuilder subject) {
@@ -144,20 +192,20 @@ public class PGRNotificationConsumer {
         VelocityContext context = new VelocityContext();
     	map.put("name", serviceReq.getFirstName());
     	map.put("id", serviceReq.getServiceRequestId());
-		switch(serviceReq.getStatus()) {
-	    case OPEN:{
+		switch(actionInfo.getStatus()) {
+	    case WorkFlowConfigs.STATUS_OPENED:{
         	map.put("status", "registered");
     		break;
-		}case ASSIGNED:{
+		}case WorkFlowConfigs.STATUS_ASSIGNED:{
         	map.put("status", "assigned to Mr."+actionInfo.getAssignee());
     		break;
-		}case RESOLVED:{
+		}case WorkFlowConfigs.STATUS_RESOLVED:{
         	map.put("status", "resolved on "+new Date(serviceReq.getAuditDetails().getCreatedTime()).toString());
     		break;
-		}case REJECTED:{
+		}case WorkFlowConfigs.STATUS_REJECTED:{
         	map.put("status", "rejected on "+new Date(serviceReq.getAuditDetails().getCreatedTime()).toString());
     		break;
-		}case CLOSED:{
+		}case WorkFlowConfigs.STATUS_CLOSED:{
         	map.put("status", "resolved on "+new Date(serviceReq.getAuditDetails().getCreatedTime()).toString());
     		break;
 		}default:
@@ -176,37 +224,132 @@ public class PGRNotificationConsumer {
     }
     
     public String getMessageForSMS(Service serviceReq, ActionInfo actionInfo, RequestInfo requestInfo) {
-    	String message = textForNotif;
+    	SimpleDateFormat dateFormat = new SimpleDateFormat(notificationDateFormat);
+    	String date = dateFormat.format(new Date());
+    	String message = null;
     	String serviceType = getServiceType(serviceReq, requestInfo);
-		message = message.replace("<complaint_type>", serviceType)
-				.replace("<id>", serviceReq.getServiceRequestId()).replace("date", new Date(serviceReq.getAuditDetails().getCreatedTime()).toString());
-		switch(serviceReq.getStatus()) {
-		case OPEN:{
-    		message = message.replaceAll("<status>", "registered");
-    		break;
-		}case ASSIGNED:{
-			String employee = grievanceService.getEmployeeName(serviceReq.getTenantId(), actionInfo.getAssignee(), requestInfo);
-			if(null != employee && !employee.isEmpty())
-				message = message.replaceAll("<status>", "assgined to Mr."+ employee);
-			else
-				message = message.replaceAll("<status>", "assgined to to the respective employee");
-    		break;
-		}case REJECTED:{
-    		message = message.replaceAll("<status>", "rejected on "+new Date(serviceReq.getAuditDetails().getCreatedTime()).toString());
-    		break;
-		}case RESOLVED:{
-    		message = message.replaceAll("<status>", "resolved on "+new Date(serviceReq.getAuditDetails().getCreatedTime()).toString());
-    		break;
-		}case CLOSED:{
-    		message = message.replaceAll("<status>", "resolved on "+new Date(serviceReq.getAuditDetails().getCreatedTime()).toString());
-    		break;
-		}default:
-			break;
+		if(StringUtils.isEmpty(actionInfo.getStatus())) {
+			if(!StringUtils.isEmpty(actionInfo.getComment())) {
+				message = prepareMsgTextOnComment(serviceType, serviceReq, actionInfo, requestInfo);
+			}
 		}
-		
+		else {
+			switch(actionInfo.getStatus()) {
+			case WorkFlowConfigs.STATUS_OPENED:{
+				message = prepareMsgTextOnSubmission(serviceType, serviceReq, actionInfo, date);
+				break;
+			}case WorkFlowConfigs.STATUS_ASSIGNED:{
+				message = prepareMsgTextOnAssignment(serviceType, serviceReq, actionInfo, date, requestInfo);
+				break;
+			}case WorkFlowConfigs.STATUS_REJECTED:{
+				message = prepareMsgTextOnRejection(serviceType, serviceReq, date);
+				break;
+			}case WorkFlowConfigs.STATUS_RESOLVED:{
+				message = prepareMsgTextOnResolution(serviceType, serviceReq, date);
+	    		break;
+			}default:
+				break;
+			}
+		}
     	return message;
     	
     }
+    
+    public String prepareMsgTextOnSubmission(String serviceType, Service serviceReq, ActionInfo actionInfo, String date) {
+    	String text = null;
+		if(null == serviceType) {
+			text = smsDefaultText;
+			if(null != actionInfo.getAction() && actionInfo.getAction().equals(WorkFlowConfigs.ACTION_REOPEN))
+				text = text.replaceAll("<status>", "reopened");
+			else
+				text = text.replaceAll("<status>", "submitted");
+			
+			return text;
+		}
+		if(null != actionInfo.getAction() && actionInfo.getAction().equals(WorkFlowConfigs.ACTION_REOPEN)) {
+			text = smsTextOnReopen;
+			text = text.replace("<complaint type>", serviceType).replace("<date>", date);
+		}else {
+			text = smsTextOnSubmission;
+			text = text.replace("<complaint type>", serviceType)
+					.replace("<id>", serviceReq.getServiceRequestId()).replace("<date>", date);
+		}
+		return text;
+  
+	}
+    
+    public String prepareMsgTextOnAssignment(String serviceType, Service serviceReq, ActionInfo actionInfo, String date, RequestInfo requestInfo) {
+    	String text = null;
+		String employee = grievanceService.getEmployeeName(serviceReq.getTenantId(), actionInfo.getAssignee(), requestInfo);;
+		String department = getDepartment(serviceReq, "code", requestInfo);
+		String designation = getDesignation(serviceReq, "code", requestInfo);
+		if(null == serviceType || null == department || null == employee || null == designation) {
+			text = smsDefaultText;
+			if(null != actionInfo.getAction() && actionInfo.getAction().equals(WorkFlowConfigs.ACTION_REASSIGN))
+				text = text.replaceAll("<status>", "re-assigned");
+			else
+				text = text.replaceAll("<status>", "assigned");
+			
+			return text;
+			
+		}
+		if(null != actionInfo.getAction() && actionInfo.getAction().equals(WorkFlowConfigs.ACTION_REASSIGN))
+			text = smsTextOnAssignment;
+		else
+			text = smsTextOnReassignment;
+		
+		text = text.replace("<complaint_type>", serviceType).replace("<emp_name>", employee)
+    						.replace("<emp_designation>", designation).replace("<emp_department>", department);
+		
+		return text;
+	}
+    
+    public String prepareMsgTextOnRejection(String serviceType, Service serviceReq, String date) {
+		String text = null;
+    	if(null == serviceType) {
+    		text = smsDefaultText;
+    		text = text.replaceAll("<status>", "rejected");
+    		return text;
+		}
+		String[] desc = null;
+		if(null != serviceReq.getDescription()) {
+			desc = serviceReq.getDescription().split("|");
+			if(desc.length < 2) {
+				text = smsDefaultText;
+				text = text.replaceAll("<status>", "rejected");
+	    		return text;
+			}	
+		}
+		text = smsTextOnRejection;
+		text = text.replace("<complaint_type>", serviceType).replace("<date>", date)
+    				.replace("<reason>", desc[0]).replace("<additional_comments> ", desc[1]);
+		return text;
+	}
+    
+    public String prepareMsgTextOnResolution(String serviceType, Service serviceReq, String date) {
+    	String text = null;
+		if(null == serviceType) {
+			text = smsDefaultText;
+			text = text.replaceAll("<status>", "resolved");
+			return text;
+		}
+		text = smsTextOnResolution;
+		text = text.replace("<complaint_type>", serviceType).replace("<date>", date).replace("<app_link>", PGRConstants.WEB_APP_FEEDBACK_PAGE_LINK);
+		return text;
+	}
+    
+    
+    public String prepareMsgTextOnComment(String serviceType, Service serviceReq, ActionInfo actionInfo, RequestInfo requestInfo) {
+    	String text = null;
+		String employee = grievanceService.getEmployeeName(serviceReq.getTenantId(), actionInfo.getAssignee(), requestInfo);;
+		if(null == serviceType || null == employee) {			
+			return smsDefaultTextOnComment;
+		}
+		text = smsTextOnComment;
+		text = text.replace("<complaint_type>", serviceType).replace("<user_name>", employee)
+							.replace("<id>", serviceReq.getServiceRequestId()).replace("<comment>", actionInfo.getComment());		
+		return text;
+	}
     
     public String getServiceType(Service serviceReq, RequestInfo requestInfo) {
 		StringBuilder uri = new StringBuilder();
@@ -218,47 +361,98 @@ public class PGRNotificationConsumer {
 			log.info("service definition name result: "+result);
 			serviceTypes = JsonPath.read(result, PGRConstants.JSONPATH_SERVICE_CODES);
 			if(null == serviceTypes || serviceTypes.isEmpty())
-				return PGRConstants.DEFAULT_COMPLAINT_TYPE;
+				return null;
 		}catch(Exception e) {
-			return PGRConstants.DEFAULT_COMPLAINT_TYPE;
+			return null;
 		}
 		
     	return serviceTypes.get(0);
     }
     
-    public boolean isNotificationEnabled(Service serviceReq) {
-    	boolean isNotifEnabled = false;
-		switch(serviceReq.getStatus()) {
-		case OPEN:{
-			if(isOpenComplaintNotifEnabled) {
-				isNotifEnabled = true;
-			}
-			break;
-		}case ASSIGNED:{
-			if(isAssignNotifEnabled) {
-				isNotifEnabled = true;
-			}
-			break;
-		}case REJECTED:{
-			if(isRejectedNotifEnabled) {
-				isNotifEnabled = true;
-			}
-			break;
-		}case CLOSED:{
-			if(isCloseNotifEnabled) {
-				isNotifEnabled = true;
-			}
-			break;
-		}case RESOLVED:{
-			if(isResolveNotificationEnabled) {
-				isNotifEnabled = true;
-			}
-			break;
-		}default:
-			break;
+    public String getDepartment(Service serviceReq, String code, RequestInfo requestInfo) {
+		StringBuilder uri = new StringBuilder();
+		MdmsCriteriaReq mdmsCriteriaReq = pGRUtils.prepareMdMsRequestForDept(uri, serviceReq.getTenantId(), code, requestInfo);
+		List<String> departmemts = null;
+		try {
+			Object result = serviceRequestRepository.fetchResult(uri, mdmsCriteriaReq);
+			log.info("Dept result: "+result);
+			departmemts = JsonPath.read(result, PGRConstants.JSONPATH_DEPARTMENTS);
+			if(null == departmemts || departmemts.isEmpty())
+				return null;
+		}catch(Exception e) {
+			return null;
 		}
+		
+    	return departmemts.get(0);
+    }
+    
+    public String getDesignation(Service serviceReq, String code, RequestInfo requestInfo) {
+		StringBuilder uri = new StringBuilder();
+		MdmsCriteriaReq mdmsCriteriaReq = pGRUtils.prepareMdMsRequestForDesignation(uri, serviceReq.getTenantId(), code, requestInfo);
+		List<String> designations = null;
+		try {
+			Object result = serviceRequestRepository.fetchResult(uri, mdmsCriteriaReq);
+			log.info("Designation result: "+result);
+			designations = JsonPath.read(result, PGRConstants.JSONPATH_DESIGNATIONS);
+			if(null == designations || designations.isEmpty())
+				return null;
+		}catch(Exception e) {
+			return null;
+		}
+		
+    	return designations.get(0);
+    }
+    
+    public boolean isNotificationEnabled(String status, String comment, String action) {
+    	boolean isNotifEnabled = false;
+    	if(!StringUtils.isEmpty(status)) {
+			switch(status) {
+			case WorkFlowConfigs.STATUS_OPENED:{
+				if(action.equals(WorkFlowConfigs.ACTION_REOPEN)) {
+					if(isReopenNotifEnaled) {
+						isNotifEnabled = true;
+					}
+				}else {
+					if(isOpenComplaintNotifEnabled) {
+						isNotifEnabled = true;
+					} 
+				}
+				break;
+			}case WorkFlowConfigs.STATUS_ASSIGNED:{
+				if(action.equals(WorkFlowConfigs.ACTION_REASSIGN)) {
+					if(isReassignNotifEnaled) {
+						isNotifEnabled = true;
+					}
+				}else {
+					if(isAssignNotifEnabled) {
+						isNotifEnabled = true;
+					}
+				}
+				break;
+			}case WorkFlowConfigs.STATUS_REJECTED:{
+				if(isRejectedNotifEnabled) {
+					isNotifEnabled = true;
+				}
+				break;
+			}case WorkFlowConfigs.STATUS_CLOSED:{
+				if(isCloseNotifEnabled) {
+					isNotifEnabled = true;
+				}
+				break;
+			}case WorkFlowConfigs.STATUS_RESOLVED:{
+				if(isResolveNotificationEnabled) {
+					isNotifEnabled = true;
+				}
+				break;
+			}default:
+				break;
+			}
+    	}
+				
+    	if((null != comment && !comment.isEmpty()) && isCommentByEmpNotifEnaled) {
+			isNotifEnabled = true;
+    	}
 		
 		return isNotifEnabled;
     }
-    
 }

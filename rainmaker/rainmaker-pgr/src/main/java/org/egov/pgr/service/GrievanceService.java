@@ -55,12 +55,6 @@ public class GrievanceService {
 
 	@Value("${kafka.topics.notification.complaint}")
 	private String complaintTopic;
-
-	@Value("${indexer.grievance.create}")
-	private String indexerCreateTopic;
-
-	@Value("${indexer.grievance.update}")
-	private String indexerUpdateTopic;
 	
 	@Value("${egov.hr.employee.host}")
 	private String hrEmployeeHost;
@@ -366,13 +360,13 @@ public class GrievanceService {
 		log.info("Enriching request.........: " + serviceReqSearchCriteria);
 		List<String> roleNames = requestInfo.getUserInfo().getRoles().parallelStream().map(Role::getName)
 				.collect(Collectors.toList());
-		String userTpe = requestInfo.getUserInfo().getType();
-		if (userTpe.equalsIgnoreCase("CITIZEN")) {
+		String userType = requestInfo.getUserInfo().getType();
+		if (userType.equalsIgnoreCase("CITIZEN")) {
 			serviceReqSearchCriteria.setAccountId(requestInfo.getUserInfo().getId().toString());
 			String[] tenant = serviceReqSearchCriteria.getTenantId().split("[.]");
 			if (tenant.length > 1)
 				serviceReqSearchCriteria.setTenantId(tenant[0]);
-		} else if (userTpe.equalsIgnoreCase("EMPLOYEE")) {
+		} else if (userType.equalsIgnoreCase("EMPLOYEE")) {
 			if (roleNames.contains("DGRO")) {
 				Integer departmenCode = getDepartmentCode(serviceReqSearchCriteria, requestInfo);
 				String department = getDepartment(serviceReqSearchCriteria, requestInfo, departmenCode);

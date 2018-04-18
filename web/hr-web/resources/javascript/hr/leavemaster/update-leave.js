@@ -80,7 +80,7 @@ class UpdateLeave extends React.Component {
     var hrConfigurations = [], allHolidayList = [];
     $('#availableDays,#leaveDays,#name,#code').prop("disabled", true);
 
-    var _state = {}, count = 3;
+    var _state = {}, count = 2;
     const checkCountAndCall = function (key, res) {
       _state[key] = res;
       count--;
@@ -89,9 +89,7 @@ class UpdateLeave extends React.Component {
       }
     }
 
-    getDropdown("assignments_designation", function (res) {
-      checkCountAndCall("designationList", res);
-    });
+
     getDropdown("assignments_department", function (res) {
       checkCountAndCall("departmentList", res);
     });

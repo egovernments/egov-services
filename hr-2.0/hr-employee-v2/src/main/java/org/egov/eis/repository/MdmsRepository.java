@@ -39,21 +39,16 @@
  */
 package org.egov.eis.repository;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import net.minidev.json.JSONArray;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.eis.config.PropertiesManager;
-import org.egov.mdms.model.MasterDetail;
-import org.egov.mdms.model.MdmsCriteria;
-import org.egov.mdms.model.MdmsCriteriaReq;
-import org.egov.mdms.model.MdmsResponse;
-import org.egov.mdms.model.ModuleDetail;
+import org.egov.mdms.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import net.minidev.json.JSONArray;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class MdmsRepository {
@@ -70,33 +65,44 @@ public class MdmsRepository {
 	}
 
 	public JSONArray getByCriteria(final String tenantId, final String moduleName, final String masterName,
-			final String filterFieldName, final String filterFieldValue, final RequestInfo requestInfo) {
+                                   final String filterFieldName, final String filterFieldValue, final RequestInfo requestInfo) {
 
-		String mdmsBySearchCriteriaUrl = propertiesManager.getMdmsServiceHostname()
-				+ propertiesManager.getMdmsBySearchCriteriaUrl();
-		List<MasterDetail> masterDetails;
-		List<ModuleDetail> moduleDetails;
-		MdmsCriteriaReq request = null;
-		MdmsResponse response = null;
-		masterDetails = new ArrayList<>();
-		moduleDetails = new ArrayList<>();
+        String filter = "";
 
-		masterDetails.add(MasterDetail.builder().name(masterName).build());
-		if (filterFieldName != null && filterFieldValue != null && !filterFieldName.isEmpty()
-				&& !filterFieldValue.isEmpty())
-			masterDetails.get(0).setFilter("[?(@." + filterFieldName + " == '" + filterFieldValue + "')]");
-		moduleDetails.add(ModuleDetail.builder().moduleName(moduleName).masterDetails(masterDetails).build());
+        if (filterFieldName != null && filterFieldValue != null && !filterFieldName.isEmpty()
+                && !filterFieldValue.isEmpty())
+            filter = "[?(@." + filterFieldName + " == '" + filterFieldValue + "')]";
 
-		request = MdmsCriteriaReq.builder()
-				.mdmsCriteria(MdmsCriteria.builder().moduleDetails(moduleDetails).tenantId(tenantId).build())
-				.requestInfo(requestInfo).build();
-		response = restTemplate.postForObject(mdmsBySearchCriteriaUrl, request, MdmsResponse.class);
-		if (response == null || response.getMdmsRes() == null || !response.getMdmsRes().containsKey(moduleName)
-				|| response.getMdmsRes().get(moduleName) == null
-				|| !response.getMdmsRes().get(moduleName).containsKey(masterName)
-				|| response.getMdmsRes().get(moduleName).get(masterName) == null)
-			return null;
-		else
-			return response.getMdmsRes().get(moduleName).get(masterName);
-	}
+        return getByFilter(tenantId, moduleName, masterName, filter, requestInfo);
+    }
+
+    public JSONArray getByFilter(final String tenantId, final String moduleName, final String masterName, String
+            filter, final RequestInfo requestInfo) {
+
+        String mdmsBySearchCriteriaUrl = propertiesManager.getMdmsServiceHostname()
+                + propertiesManager.getMdmsBySearchCriteriaUrl();
+        List<MasterDetail> masterDetails;
+        List<ModuleDetail> moduleDetails;
+        MdmsCriteriaReq request = null;
+        MdmsResponse response = null;
+        masterDetails = new ArrayList<>();
+        moduleDetails = new ArrayList<>();
+
+        masterDetails.add(MasterDetail.builder().name(masterName).build());
+        if (filter != null && !filter.isEmpty())
+            masterDetails.get(0).setFilter(filter);
+        moduleDetails.add(ModuleDetail.builder().moduleName(moduleName).masterDetails(masterDetails).build());
+
+        request = MdmsCriteriaReq.builder()
+                .mdmsCriteria(MdmsCriteria.builder().moduleDetails(moduleDetails).tenantId(tenantId).build())
+                .requestInfo(requestInfo).build();
+        response = restTemplate.postForObject(mdmsBySearchCriteriaUrl, request, MdmsResponse.class);
+        if (response == null || response.getMdmsRes() == null || !response.getMdmsRes().containsKey(moduleName)
+                || response.getMdmsRes().get(moduleName) == null
+                || !response.getMdmsRes().get(moduleName).containsKey(masterName)
+                || response.getMdmsRes().get(moduleName).get(masterName) == null)
+            return null;
+        else
+            return response.getMdmsRes().get(moduleName).get(masterName);
+    }
 }

@@ -40,7 +40,10 @@
 
 package org.egov.eis.repository.rowmapper;
 
-import static org.springframework.util.ObjectUtils.isEmpty;
+import org.egov.eis.model.Assignment;
+import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Component;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -48,10 +51,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import org.egov.eis.model.Assignment;
-import org.springframework.dao.DataAccessException;
-import org.springframework.jdbc.core.RowMapper;
-import org.springframework.stereotype.Component;
+import static org.springframework.util.ObjectUtils.isEmpty;
 
 @Component
 public class AssignmentTableRowMapper implements RowMapper<Assignment> {
@@ -67,7 +67,7 @@ public class AssignmentTableRowMapper implements RowMapper<Assignment> {
 		assignment.setFunctionary((Long) rs.getObject("functionaryId"));
 		assignment.setFunction((Long) rs.getObject("functionId"));
 		assignment.setDepartment(rs.getString("departmentId"));
-		assignment.setDesignation((Long) rs.getObject("designationId"));
+        assignment.setDesignation(rs.getString("designationId"));
 		assignment.setIsPrimary((Boolean) rs.getObject("isPrimary"));
 		assignment.setGrade((Long) rs.getObject("gradeId"));
 		assignment.setGovtOrderNumber(rs.getString("govtOrderNumber"));

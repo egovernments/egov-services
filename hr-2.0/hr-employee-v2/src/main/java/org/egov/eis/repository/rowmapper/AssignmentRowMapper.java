@@ -40,23 +40,19 @@
 
 package org.egov.eis.repository.rowmapper;
 
-import static org.springframework.util.ObjectUtils.isEmpty;
-
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.egov.eis.model.Assignment;
 import org.egov.eis.model.HODDepartment;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.stereotype.Component;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
+
+import static org.springframework.util.ObjectUtils.isEmpty;
 
 @Component
 public class AssignmentRowMapper implements ResultSetExtractor<List<Assignment>> {
@@ -79,7 +75,7 @@ public class AssignmentRowMapper implements ResultSetExtractor<List<Assignment>>
 				assignment.setFund((Long) rs.getObject("a_fundId"));
 				assignment.setFunctionary((Long) rs.getObject("a_functionaryId"));
 				assignment.setFunction((Long) rs.getObject("a_functionId"));
-				assignment.setDesignation((Long) rs.getObject("a_designationId"));
+                assignment.setDesignation(rs.getString("a_designationId"));
 				assignment.setDepartment(rs.getString("a_departmentId"));
 				assignment.setIsPrimary((Boolean) rs.getObject("a_isPrimary"));
 				assignment.setGrade((Long) rs.getObject("a_gradeId"));
@@ -112,7 +108,7 @@ public class AssignmentRowMapper implements ResultSetExtractor<List<Assignment>>
 				hodDepartmentsList = new ArrayList<>();
 				assignment.setHod(hodDepartmentsList);
 			}
-			if ((Long) rs.getObject("hod_id") != null) {
+            if (rs.getObject("hod_id") != null) {
 				HODDepartment hodDepartment = new HODDepartment();
 				hodDepartment.setId((Long) rs.getObject("hod_id"));
 				hodDepartment.setDepartment(rs.getString("hod_departmentId"));

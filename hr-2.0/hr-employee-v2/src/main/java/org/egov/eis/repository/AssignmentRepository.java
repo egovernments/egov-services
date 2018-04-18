@@ -40,15 +40,6 @@
 
 package org.egov.eis.repository;
 
-import java.sql.Date;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.sql.Timestamp;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.egov.eis.model.Assignment;
 import org.egov.eis.model.enums.EntityType;
 import org.egov.eis.repository.builder.AssignmentQueryBuilder;
@@ -67,6 +58,15 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.sql.Date;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Repository
 @Transactional
@@ -162,7 +162,7 @@ public class AssignmentRepository {
 				psHelper.setLongOrNull(ps, 5, assignment.getFunctionary());
 				psHelper.setLongOrNull(ps, 6, assignment.getFunction());
 				ps.setString(7, assignment.getDepartment());
-				ps.setLong(8, assignment.getDesignation());
+                ps.setString(8, assignment.getDesignation());
 				ps.setBoolean(9, assignment.getIsPrimary());
 				ps.setDate(10, new Date(assignment.getFromDate().getTime()));
 				ps.setDate(11, new Date(assignment.getToDate().getTime()));

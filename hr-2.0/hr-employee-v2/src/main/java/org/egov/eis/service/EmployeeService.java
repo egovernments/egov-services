@@ -40,66 +40,25 @@
 
 package org.egov.eis.service;
 
-import static org.springframework.util.ObjectUtils.isEmpty;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
-
+import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.ArrayUtils;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ResponseInfo;
 import org.egov.eis.config.ApplicationProperties;
 import org.egov.eis.config.PropertiesManager;
-import org.egov.eis.model.Assignment;
-import org.egov.eis.model.Employee;
-import org.egov.eis.model.EmployeeDocument;
-import org.egov.eis.model.EmployeeInfo;
-import org.egov.eis.model.Position;
-import org.egov.eis.model.ServiceHistory;
-import org.egov.eis.model.User;
+import org.egov.eis.model.*;
 import org.egov.eis.model.bulk.Department;
 import org.egov.eis.model.enums.BloodGroup;
-import org.egov.eis.repository.APRDetailRepository;
-import org.egov.eis.repository.AssignmentRepository;
-import org.egov.eis.repository.DepartmentalTestRepository;
-import org.egov.eis.repository.EducationalQualificationRepository;
-import org.egov.eis.repository.EmployeeJurisdictionRepository;
-import org.egov.eis.repository.EmployeeLanguageRepository;
-import org.egov.eis.repository.EmployeeRepository;
-import org.egov.eis.repository.HODDepartmentRepository;
-import org.egov.eis.repository.ProbationRepository;
-import org.egov.eis.repository.RegularisationRepository;
-import org.egov.eis.repository.ServiceHistoryRepository;
-import org.egov.eis.repository.TechnicalQualificationRepository;
+import org.egov.eis.repository.*;
 import org.egov.eis.service.exception.EmployeeIdNotFoundException;
 import org.egov.eis.service.exception.IdGenerationException;
 import org.egov.eis.service.exception.UserException;
 import org.egov.eis.service.helper.EmployeeHelper;
 import org.egov.eis.service.helper.EmployeeUserMapper;
-import org.egov.eis.web.contract.AssignmentGetRequest;
-import org.egov.eis.web.contract.BaseRegisterReportRequest;
-import org.egov.eis.web.contract.DesignationGetRequest;
-import org.egov.eis.web.contract.EmployeeBulkRequest;
-import org.egov.eis.web.contract.EmployeeBulkResponse;
-import org.egov.eis.web.contract.EmployeeCriteria;
-import org.egov.eis.web.contract.EmployeeEntityResponse;
-import org.egov.eis.web.contract.EmployeeRequest;
-import org.egov.eis.web.contract.Pagination;
-import org.egov.eis.web.contract.RequestInfoWrapper;
-import org.egov.eis.web.contract.UserRequest;
-import org.egov.eis.web.contract.UserResponse;
+import org.egov.eis.web.contract.*;
 import org.egov.eis.web.contract.factory.ResponseInfoFactory;
-import org.egov.eis.web.errorhandler.Error;
 import org.egov.eis.web.errorhandler.ErrorHandler;
-import org.egov.eis.web.errorhandler.ErrorResponse;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -107,10 +66,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
+import java.util.*;
+import java.util.stream.Collectors;
 
-import lombok.Data;
-import lombok.extern.slf4j.Slf4j;
+import static org.springframework.util.ObjectUtils.isEmpty;
 
 @Data
 @Slf4j
@@ -231,8 +190,7 @@ public class EmployeeService {
 	@Autowired
 	private ApplicationProperties applicationProperties;
 
-	public List<EmployeeInfo> getEmployees(EmployeeCriteria empCriteria, RequestInfo requestInfo)
-			throws CloneNotSupportedException {
+	public List<EmployeeInfo> getEmployees(EmployeeCriteria empCriteria, RequestInfo requestInfo) {
 		List<User> usersList = null;
 		List<Long> ids = null;
 		List<Long> idSearchCriteria = isEmpty(empCriteria.getId()) ? null : empCriteria.getId();
@@ -275,7 +233,7 @@ public class EmployeeService {
 	}
 
 	public List<EmployeeInfo> getEmployeeWithoutAssignmentInfo(EmployeeCriteria employeeCriteria,
-			RequestInfo requestInfo) throws CloneNotSupportedException {
+															   RequestInfo requestInfo) {
 
 		List<EmployeeInfo> empInfoList = employeeRepository.getEmployeesWithoutAssignment(employeeCriteria);
 
@@ -294,7 +252,7 @@ public class EmployeeService {
 	}
 
 	public List<EmployeeInfo> getEmployeeUserInfo(BaseRegisterReportRequest baseRegisterReportRequest,
-			RequestInfo requestInfo) throws CloneNotSupportedException {
+												  RequestInfo requestInfo) {
 		List<User> usersList = null;
 		List<Long> ids = null;
 		EmployeeCriteria empCriteria = new EmployeeCriteria();
@@ -399,7 +357,7 @@ public class EmployeeService {
 	}
 
 	public Employee createAsync(EmployeeRequest employeeRequest)
-			throws UserException, IdGenerationException, JsonProcessingException {
+			throws UserException, IdGenerationException {
 		Employee employee = employeeRequest.getEmployee();
 		RequestInfo requestInfo = employeeRequest.getRequestInfo();
 		// FIXME : Setting ts as null in RequestInfo as hr is following
@@ -485,7 +443,7 @@ public class EmployeeService {
 		 */
 	}
 
-	public Employee updateAsync(EmployeeRequest employeeRequest) throws UserException, JsonProcessingException {
+	public Employee updateAsync(EmployeeRequest employeeRequest) throws UserException {
 
 		Employee employee = employeeRequest.getEmployee();
 
@@ -531,7 +489,7 @@ public class EmployeeService {
 		return employee;
 	}
 
-	public Employee updateEmployee(EmployeeRequest employeeRequest) throws UserException, JsonProcessingException {
+	public Employee updateEmployee(EmployeeRequest employeeRequest) throws UserException {
 		Employee employee = getEmployee(employeeRequest.getEmployee().getId(),
 				employeeRequest.getEmployee().getTenantId(), employeeRequest.getRequestInfo());
 		Employee employeeReq = employeeRequest.getEmployee();
@@ -594,60 +552,6 @@ public class EmployeeService {
 		return getEmployees(employeeCriteria, requestInfo);
 	}
 
-	public ResponseEntity<?> bulkCreate(EmployeeBulkRequest employeeBulkRequest) {
-		RequestInfo requestInfo = employeeBulkRequest.getRequestInfo();
-		RequestInfoWrapper requestInfoWrapper = RequestInfoWrapper.builder().requestInfo(requestInfo).build();
-		List<org.egov.eis.model.bulk.Employee> bulkEmployees = employeeBulkRequest.getEmployees();
-
-		List<Employee> employees = new ArrayList<>();
-
-		for (int empIndex = 0; empIndex < bulkEmployees.size(); empIndex++) {
-			org.egov.eis.model.bulk.Employee bulkEmployee = bulkEmployees.get(empIndex);
-			List<org.egov.eis.model.bulk.Assignment> assignments = new ArrayList<>();
-			for (int assignIndex = 0; assignIndex < bulkEmployee.getAssignments().size(); assignIndex++) {
-				org.egov.eis.model.bulk.Assignment assignment = bulkEmployee.getAssignments().get(assignIndex);
-				Department department = departmentService.getDepartment(bulkEmployee.getTenantId(),
-						assignment.getDepartment().getCode(), requestInfoWrapper.getRequestInfo());
-				org.egov.eis.model.bulk.Designation designation = designationService.getDesignation(
-						assignment.getDesignation().getCode(), bulkEmployee.getTenantId(), requestInfoWrapper);
-
-				assignment.setDepartment(department);
-				assignment.setDesignation(designation);
-
-				List<Position> position = vacantPositionsService.getVacantPositions(department.getId(),
-						designation.getId(), assignment.getFromDate(), bulkEmployee.getTenantId(), requestInfoWrapper);
-
-				if (isEmpty(position) || (position.size() < assignIndex + 1))
-					return errorHandler.getErrorResponseEntityForNoVacantPositionAvailable(empIndex,
-							department.getCode(), designation.getCode(), requestInfo);
-				assignment.setPosition(position.get(assignIndex).getId());
-
-				assignments.add(assignment);
-			}
-
-			bulkEmployee.setAssignments(assignments);
-
-			Employee employee = bulkEmployee.toDomain();
-			EmployeeRequest employeeRequest = EmployeeRequest.builder().employee(employee).requestInfo(requestInfo)
-					.build();
-
-			EmployeeEntityResponse employeeEntityResponse = employeeCreateService.createEmployee(employeeRequest);
-
-			if (isEmpty(employeeEntityResponse.getEmployee()) && !isEmpty(employeeEntityResponse.getError())) {
-				return getErrorResponseForBulkCreate(employeeEntityResponse);
-			}
-
-			employees.add(employeeEntityResponse.getEmployee());
-		}
-		return getSuccessResponseForBulkCreate(employees, requestInfo);
-	}
-
-	public ResponseEntity<?> getErrorResponseForBulkCreate(EmployeeEntityResponse employeeEntityResponse) {
-		ResponseInfo responseInfo = employeeEntityResponse.getResponseInfo();
-		Error error = employeeEntityResponse.getError();
-		ErrorResponse errorResponse = ErrorResponse.builder().error(error).responseInfo(responseInfo).build();
-		return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
-	}
 
 	public ResponseEntity<?> getSuccessResponseForBulkCreate(List<Employee> employees, RequestInfo requestInfo) {
 		ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
@@ -681,7 +585,7 @@ public class EmployeeService {
 						.singletonList(departmentService.getDepartment(employeeRequest.getEmployee().getTenantId(),
 								assign.getDepartment(), requestInfoWrapper.getRequestInfo()));
 				DesignationGetRequest designationGetRequest = DesignationGetRequest.builder()
-						.id(Arrays.asList(assign.getDesignation()))
+						.codes(Arrays.asList(assign.getDesignation()))
 						.tenantId(employeeRequest.getEmployee().getTenantId()).build();
 				List<org.egov.eis.model.bulk.Designation> designations = designationService.getDesignations(
 						designationGetRequest, employeeRequest.getEmployee().getTenantId(), requestInfoWrapper);
@@ -713,7 +617,7 @@ public class EmployeeService {
 						.singletonList(departmentService.getDepartment(employeeRequest.getEmployee().getTenantId(),
 								assign.getDepartment(), requestInfoWrapper.getRequestInfo()));
 				DesignationGetRequest designationGetRequest = DesignationGetRequest.builder()
-						.id(Arrays.asList(assign.getDesignation()))
+						.codes(Arrays.asList(assign.getDesignation()))
 						.tenantId(employeeRequest.getEmployee().getTenantId()).build();
 				List<org.egov.eis.model.bulk.Designation> designations = designationService.getDesignations(
 						designationGetRequest, employeeRequest.getEmployee().getTenantId(), requestInfoWrapper);
@@ -753,7 +657,7 @@ public class EmployeeService {
 					.singletonList(departmentService.getDepartment(employeeRequest.getEmployee().getTenantId(),
 							assign.getDepartment(), requestInfoWrapper.getRequestInfo()));
 			DesignationGetRequest designationGetRequest = DesignationGetRequest.builder()
-					.id(Arrays.asList(assign.getDesignation())).tenantId(employeeRequest.getEmployee().getTenantId())
+					.codes(Arrays.asList(assign.getDesignation())).tenantId(employeeRequest.getEmployee().getTenantId())
 					.build();
 			List<org.egov.eis.model.bulk.Designation> designations = designationService.getDesignations(
 					designationGetRequest, employeeRequest.getEmployee().getTenantId(), requestInfoWrapper);

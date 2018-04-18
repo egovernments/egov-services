@@ -500,6 +500,9 @@ class ApplyLeave extends React.Component {
     if(tempInfo.encashable && !tempInfo.totalWorkingDays)
     return (showError("Total Leave Days cannot be empty or zero. Please enter Total Leave Days"));
 
+    if (tempInfo.encashable && tempInfo.totalWorkingDays && tempInfo.totalWorkingDays < 1)
+      return (showError("Total Leave Days cannot be negative or zero."));
+
     if(tempInfo.encashable && tempInfo.totalWorkingDays && tempInfo.totalWorkingDays > tempInfo.availableDays)
     return (showError("Total Leave Days cannot be greater than available days"));
 

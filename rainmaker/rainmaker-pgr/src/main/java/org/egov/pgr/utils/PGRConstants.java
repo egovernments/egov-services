@@ -35,12 +35,30 @@ public class PGRConstants {
 	public static final String SERVICE_NAME = "serviceName";
 	public static final String DEFAULT_COMPLAINT_TYPE = "resolution";
 	public static final String EMPLOYEE_DEPTCODE_JSONPATH = "$.Employee[0].assignments[0].department";
+	public static final String EMPLOYEE_DESGCODE_JSONPATH = "$.Employee[0].assignments[0].designation";
 	public static final String EMPLOYEE_NAME_JSONPATH = "$.Employee[0].name";
 	public static final String DEPARTMENTNAME_EMPLOYEE_JSONPATH = "$.Department[0].name";
 	
 	public static final String SEARCHER_RESPONSE_TEXT = "Searcher response : ";
 	
 	public static final String WEB_APP_FEEDBACK_PAGE_LINK = "http://letmegetthelink.org";
+	
+	public static final String SMS_NOTIFICATION_STATUS_KEY = "<status>";
+	public static final String SMS_NOTIFICATION_COMPLAINT_TYPE_KEY = "<complaint_type>";
+	public static final String SMS_NOTIFICATION_DATE_KEY = "<date>";
+	public static final String SMS_NOTIFICATION_ID_KEY = "<id>";
+	public static final String SMS_NOTIFICATION_EMP_NAME_KEY = "<emp_name>";
+	public static final String SMS_NOTIFICATION_EMP_DEPT_KEY = "<emp_department>";
+	public static final String SMS_NOTIFICATION_EMP_DESIGNATION_KEY = "<emp_designation>";
+	public static final String SMS_NOTIFICATION_COMMENT_KEY = "<comment>";
+	public static final String SMS_NOTIFICATION_REASON_FOR_REOPEN_KEY = "<reason>";
+	public static final String SMS_NOTIFICATION_ADDITIONAL_COMMENT_KEY = "<additional_comments>";
+	public static final String SMS_NOTIFICATION_APP_LINK_KEY = "<app_link>";
+
+
+
+
+	
 
 	
 }

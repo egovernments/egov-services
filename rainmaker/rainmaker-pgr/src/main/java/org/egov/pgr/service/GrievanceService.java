@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.StringUtils;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.request.Role;
 import org.egov.mdms.model.MdmsCriteriaReq;
@@ -384,10 +385,7 @@ public class GrievanceService {
 				}
 
 			} else if (roleNames.contains("EMPLOYEE") || roleNames.contains("Employee")) {
-				if ((null != serviceReqSearchCriteria.getAssignedTo()
-						&& !serviceReqSearchCriteria.getAssignedTo().isEmpty())
-						&& (null != serviceReqSearchCriteria.getServiceCodes()
-								&& !serviceReqSearchCriteria.getServiceCodes().isEmpty())) {
+				if (StringUtils.isEmpty(serviceReqSearchCriteria.getAssignedTo()) && CollectionUtils.isEmpty(serviceReqSearchCriteria.getServiceRequestId())) {
 					serviceReqSearchCriteria.setAssignedTo(requestInfo.getUserInfo().getId().toString());
 				}
 			}
@@ -425,29 +423,7 @@ public class GrievanceService {
 					ErrorConstants.UNAUTHORIZED_EMPLOYEE_TENANT_MSG);
 		}
 		return departmenCode;
-	}
-	
-	public String getEmployeeName(String tenantId, String id, RequestInfo requestInfo) {
-		StringBuilder uri = new StringBuilder();
-		RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
-		requestInfoWrapper.setRequestInfo(requestInfo);
-		uri.append(hrEmployeeHost).append(hrEmployeeSearchEndpoint).append("?id="+id).append("&tenantId="+tenantId);
-		Object response = null;
-		log.debug("Employee: " + response);
-		String name = null;
-		try {
-			response = serviceRequestRepository.fetchResult(uri, requestInfoWrapper);
-			if (null == response) {
-				return name;
-			}
-			log.debug("Employee: " + response);
-			name = JsonPath.read(response, PGRConstants.EMPLOYEE_NAME_JSONPATH);
-		} catch (Exception e) {
-			log.error("Exception: " + e);
-		}
-		return name;
-	}
-	
+	}	
 
 	public String getDepartment(ServiceReqSearchCriteria serviceReqSearchCriteria, RequestInfo requestInfo,
 			Integer departmentCode) {

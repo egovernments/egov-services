@@ -15,6 +15,7 @@ import org.apache.velocity.app.VelocityEngine;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.mdms.model.MdmsCriteriaReq;
 import org.egov.pgr.contract.EmailRequest;
+import org.egov.pgr.contract.RequestInfoWrapper;
 import org.egov.pgr.contract.SMSRequest;
 import org.egov.pgr.contract.ServiceRequest;
 import org.egov.pgr.model.ActionInfo;
@@ -42,7 +43,13 @@ public class PGRNotificationConsumer {
 	
 	@Autowired
 	private PGRProducer pGRProducer;
-			
+	
+	@Value("${egov.hr.employee.host}")
+	private String hrEmployeeHost;
+	
+	@Value("${egov.hr.employee.v2.search.endpoint}")
+	private String hrEmployeeV2SearchEndpoint;
+	
 	@Value("${kafka.topics.notification.sms}")
 	private String smsNotifTopic;
 	
@@ -153,6 +160,7 @@ public class PGRNotificationConsumer {
 		    	        	log.info("SMS: "+smsRequest.getMessage()+" | MOBILE: "+smsRequest.getMobileNumber());
 			        		pGRProducer.push(smsNotifTopic, smsRequest);
 		    			}
+		    			//Not enabled for now - email notifications to be part of next version of PGR.
 		    			if(isEmailNotificationEnabled && (null != service.getEmail() && !service.getEmail().isEmpty())) {
 		    					EmailRequest emailRequest = prepareEmailRequest(service, actionInfo);
 		    		        	log.info("EMAIL: "+emailRequest.getBody()+"| SUBJECT: "+emailRequest.getSubject()+"| ID: "+emailRequest.getEmail());
@@ -260,47 +268,54 @@ public class PGRNotificationConsumer {
 		if(null == serviceType) {
 			text = smsDefaultText;
 			if(null != actionInfo.getAction() && actionInfo.getAction().equals(WorkFlowConfigs.ACTION_REOPEN))
-				text = text.replaceAll("<status>", "reopened");
+				text = text.replaceAll(PGRConstants.SMS_NOTIFICATION_STATUS_KEY, "reopened");
 			else
-				text = text.replaceAll("<status>", "submitted");
+				text = text.replaceAll(PGRConstants.SMS_NOTIFICATION_STATUS_KEY, "submitted");
 			
 			return text;
 		}
 		if(null != actionInfo.getAction() && actionInfo.getAction().equals(WorkFlowConfigs.ACTION_REOPEN)) {
 			text = smsTextOnReopen;
-			text = text.replace("<complaint_type>", serviceType).replace("<date>", date);
+			text = text.replace(PGRConstants.SMS_NOTIFICATION_COMPLAINT_TYPE_KEY, serviceType).replace(PGRConstants.SMS_NOTIFICATION_DATE_KEY, date);
 		}else {
 			text = smsTextOnSubmission;
-			text = text.replace("<complaint_type>", serviceType)
-					.replace("<id>", serviceReq.getServiceRequestId()).replace("<date>", date);
+			text = text.replace(PGRConstants.SMS_NOTIFICATION_COMPLAINT_TYPE_KEY, serviceType)
+					.replace(PGRConstants.SMS_NOTIFICATION_ID_KEY, serviceReq.getServiceRequestId()).replace(PGRConstants.SMS_NOTIFICATION_DATE_KEY, date);
 		}
 		return text;
   
 	}
     
     public String prepareMsgTextOnAssignment(String serviceType, Service serviceReq, ActionInfo actionInfo, String date, RequestInfo requestInfo) {
-    	String text = null;
-		String employee = grievanceService.getEmployeeName(serviceReq.getTenantId(), actionInfo.getAssignee(), requestInfo);;
-		String department = getDepartment(serviceReq, "code", requestInfo);
-		String designation = getDesignation(serviceReq, "code", requestInfo);
-		if(null == serviceType || null == department || null == employee || null == designation) {
+    	String text = null; 
+    	Boolean fallingToDefaultCase = false;
+    	Map<String, String> employeeDetails = getEmployeeDetails(serviceReq.getTenantId(), actionInfo.getAssignee(), requestInfo);
+    	if(null == employeeDetails) {
+    		fallingToDefaultCase = true;
+    	}else {
+    		if(null == serviceType || null == employeeDetails.get("name") || 
+    					null == employeeDetails.get("department") || null == employeeDetails.get("designation"))
+        		fallingToDefaultCase = true;
+    	}
+    	if(fallingToDefaultCase) {
 			text = smsDefaultText;
 			if(null != actionInfo.getAction() && actionInfo.getAction().equals(WorkFlowConfigs.ACTION_REASSIGN))
-				text = text.replaceAll("<status>", "re-assigned");
+				text = text.replaceAll(PGRConstants.SMS_NOTIFICATION_STATUS_KEY, "re-assigned");
 			else
-				text = text.replaceAll("<status>", "assigned");
+				text = text.replaceAll(PGRConstants.SMS_NOTIFICATION_STATUS_KEY, "assigned");
 			
 			return text;
-			
-		}
-		if(null != actionInfo.getAction() && actionInfo.getAction().equals(WorkFlowConfigs.ACTION_REASSIGN))
-			text = smsTextOnAssignment;
-		else
-			text = smsTextOnReassignment;
-		
-		text = text.replace("<complaint_type>", serviceType).replace("<emp_name>", employee)
-    						.replace("<emp_designation>", designation).replace("<emp_department>", department);
-		
+    	}
+		String department = getDepartment(serviceReq, employeeDetails.get("department"), requestInfo);
+		String designation = getDesignation(serviceReq, employeeDetails.get("designation"), requestInfo);
+		if((null != department && !department.isEmpty()) && (null != designation && !designation.isEmpty())) {
+			if(null != actionInfo.getAction() && actionInfo.getAction().equals(WorkFlowConfigs.ACTION_REASSIGN))
+				text = smsTextOnAssignment;
+			else
+				text = smsTextOnReassignment;
+			text = text.replace(PGRConstants.SMS_NOTIFICATION_COMPLAINT_TYPE_KEY, serviceType).replace(PGRConstants.SMS_NOTIFICATION_EMP_NAME_KEY, employeeDetails.get("name"))
+	    						.replace(PGRConstants.SMS_NOTIFICATION_EMP_DESIGNATION_KEY, designation).replace(PGRConstants.SMS_NOTIFICATION_EMP_DEPT_KEY, department);
+		}		
 		return text;
 	}
     
@@ -308,21 +323,21 @@ public class PGRNotificationConsumer {
 		String text = null;
     	if(null == serviceType) {
     		text = smsDefaultText;
-    		text = text.replaceAll("<status>", "rejected");
+    		text = text.replaceAll(PGRConstants.SMS_NOTIFICATION_STATUS_KEY, "rejected");
     		return text;
 		}
 		String[] desc = null;
 		if(null != serviceReq.getDescription()) {
-			desc = serviceReq.getDescription().split("|");
+			desc = serviceReq.getDescription().split("[|]");
 			if(desc.length < 2) {
 				text = smsDefaultText;
-				text = text.replaceAll("<status>", "rejected");
+				text = text.replaceAll(PGRConstants.SMS_NOTIFICATION_STATUS_KEY, "rejected");
 	    		return text;
 			}	
 		}
 		text = smsTextOnRejection;
-		text = text.replace("<complaint_type>", serviceType).replace("<date>", date)
-    				.replace("<reason>", desc[0]).replace("<additional_comments> ", desc[1]);
+		text = text.replace(PGRConstants.SMS_NOTIFICATION_COMPLAINT_TYPE_KEY, serviceType).replace(PGRConstants.SMS_NOTIFICATION_DATE_KEY, date)
+    				.replace(PGRConstants.SMS_NOTIFICATION_REASON_FOR_REOPEN_KEY, desc[0]).replace(PGRConstants.SMS_NOTIFICATION_ADDITIONAL_COMMENT_KEY, desc[1]);
 		return text;
 	}
     
@@ -330,24 +345,25 @@ public class PGRNotificationConsumer {
     	String text = null;
 		if(null == serviceType) {
 			text = smsDefaultText;
-			text = text.replaceAll("<status>", "resolved");
+			text = text.replaceAll(PGRConstants.SMS_NOTIFICATION_STATUS_KEY, "resolved");
 			return text;
 		}
 		text = smsTextOnResolution;
-		text = text.replace("<complaint_type>", serviceType).replace("<date>", date).replace("<app_link>", PGRConstants.WEB_APP_FEEDBACK_PAGE_LINK);
+		text = text.replace(PGRConstants.SMS_NOTIFICATION_COMPLAINT_TYPE_KEY, serviceType)
+						.replace(PGRConstants.SMS_NOTIFICATION_DATE_KEY, date).replace(PGRConstants.SMS_NOTIFICATION_APP_LINK_KEY, PGRConstants.WEB_APP_FEEDBACK_PAGE_LINK);
 		return text;
 	}
     
     
     public String prepareMsgTextOnComment(String serviceType, Service serviceReq, ActionInfo actionInfo, RequestInfo requestInfo) {
     	String text = null;
-		String employee = grievanceService.getEmployeeName(serviceReq.getTenantId(), actionInfo.getAssignee(), requestInfo);;
-		if(null == serviceType || null == employee) {			
+    	Map<String, String> employeeDetails = getEmployeeDetails(serviceReq.getTenantId(), actionInfo.getAssignee(), requestInfo);
+		if(null == serviceType || null == employeeDetails.get("name")) {			
 			return smsDefaultTextOnComment;
 		}
 		text = smsTextOnComment;
-		text = text.replace("<complaint_type>", serviceType).replace("<user_name>", employee)
-							.replace("<id>", serviceReq.getServiceRequestId()).replace("<comment>", actionInfo.getComment());		
+		text = text.replace(PGRConstants.SMS_NOTIFICATION_COMPLAINT_TYPE_KEY, serviceType).replace(PGRConstants.SMS_NOTIFICATION_EMP_NAME_KEY, employeeDetails.get("name"))
+							.replace(PGRConstants.SMS_NOTIFICATION_ID_KEY, serviceReq.getServiceRequestId()).replace(PGRConstants.SMS_NOTIFICATION_COMMENT_KEY, actionInfo.getComment());		
 		return text;
 	}
     
@@ -368,6 +384,31 @@ public class PGRNotificationConsumer {
 		
     	return serviceTypes.get(0);
     }
+    
+	public Map<String, String> getEmployeeDetails(String tenantId, String id, RequestInfo requestInfo) {
+		StringBuilder uri = new StringBuilder();
+		RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
+		requestInfoWrapper.setRequestInfo(requestInfo);
+		uri.append(hrEmployeeHost).append(hrEmployeeV2SearchEndpoint).append("?id="+id).append("&tenantId="+tenantId);
+		Object response = null;
+		log.debug("Employee: " + response);
+		Map<String, String> employeeDetails = new HashMap<>();
+		try {
+			response = serviceRequestRepository.fetchResult(uri, requestInfoWrapper);
+			if (null == response) {
+				return null;
+			}
+			log.debug("Employee: " + response);
+			employeeDetails.put("name", JsonPath.read(response, PGRConstants.EMPLOYEE_NAME_JSONPATH));
+			employeeDetails.put("department", JsonPath.read(response, PGRConstants.EMPLOYEE_DEPTCODE_JSONPATH));
+			employeeDetails.put("designation", JsonPath.read(response, PGRConstants.EMPLOYEE_DESGCODE_JSONPATH));
+
+		} catch (Exception e) {
+			log.error("Exception: " + e);
+			return null;
+		}
+		return employeeDetails;
+	}
     
     public String getDepartment(Service serviceReq, String code, RequestInfo requestInfo) {
 		StringBuilder uri = new StringBuilder();

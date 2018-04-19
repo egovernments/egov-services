@@ -223,11 +223,10 @@ public class GrievanceService {
 		final AuditDetails auditDetails = pGRUtils.getAuditDetails(String.valueOf(requestInfo.getUserInfo().getId()),
 				false);
 		service.setAuditDetails(auditDetails);
-
-		if (null == actionInfo) {
-			service.setStatus(StatusEnum.fromValue(getCurrentStatus(history)));
+		String currentStatus = getCurrentStatus(history);
+		service.setStatus(StatusEnum.fromValue(currentStatus));
+		if (null == actionInfo) 
 			return;
-		}
 
 		Map<String, List<String>> actioncurrentStatusMap = WorkFlowConfigs.getActionCurrentStatusMap();
 		Map<String, String> actionStatusMap = WorkFlowConfigs.getActionStatusMap();
@@ -246,7 +245,6 @@ public class GrievanceService {
 				addError(ErrorConstants.UPDATE_FEEDBACK_ERROR_MSG + actionInfo.getAction() + ", with service Id : "
 						+ service.getServiceRequestId(), ErrorConstants.UPDATE_FEEDBACK_ERROR_KEY, errorMap);
 			List<String> validStatusList = actioncurrentStatusMap.get(actionInfo.getAction());
-			String currentStatus = getCurrentStatus(history);
 			if (null != currentStatus && validStatusList.contains(currentStatus)) {
 				String resultStatus = actionStatusMap.get(actionInfo.getAction());
 				actionInfo.setStatus(resultStatus);

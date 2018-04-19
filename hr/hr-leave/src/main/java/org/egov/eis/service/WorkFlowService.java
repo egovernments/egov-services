@@ -106,7 +106,7 @@ public class WorkFlowService {
         else if ("Cancel".equalsIgnoreCase(workFlowAction))
             task.setStatus(LeaveStatus.CANCELLED.toString());
         else if ("Submit".equalsIgnoreCase(workFlowAction))
-            task.setStatus(LeaveStatus.RESUBMITTED.toString());
+            task.setStatus("NEW");
         else if ("Forward".equalsIgnoreCase(workFlowAction))
             task.setStatus("Applied");
         task.setTenantId(leaveApplicationRequest.getLeaveApplication().getTenantId());

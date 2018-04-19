@@ -185,5 +185,7 @@ public class EmployeeInfo {
     private List<String> documents = new ArrayList<String>();
 
     private String tenantId;
+    
+    private String photo;
 
 }

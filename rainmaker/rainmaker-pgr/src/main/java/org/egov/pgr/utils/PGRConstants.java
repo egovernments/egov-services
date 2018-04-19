@@ -23,8 +23,15 @@ public class PGRConstants {
 	public static final String SRID_ASSIGNEDTO_JSONPATH = "$.servicesRequestIds.*.businesskey";
 	public static final String MDMS_PGR_MOD_NAME = "RAINMAKER-PGR";
 	public static final String MDMS_SERVICETYPE_MASTER_NAME = "ServiceDefs";
+	public static final String MDMS_COMMON_MASTERS_MASTER_NAME = "common-masters";
+	public static final String MDMS_DEPT_MASTERS_MODULE_NAME = "Designation";
+	public static final String MDMS_DESIGNATION_MASTERS_MODULE_NAME = "Department";
+
 	public static final String SERVICE_CODES = "serviceCode";
 	public static final String JSONPATH_SERVICE_CODES = "$.MdmsRes.RAINMAKER-PGR.ServiceDefs";
+	public static final String JSONPATH_DEPARTMENTS = "$.MdmsRes.common-masters.Department";
+	public static final String JSONPATH_DESIGNATIONS = "$.MdmsRes.common-masters.Designation";
+
 	public static final String SERVICE_NAME = "serviceName";
 	public static final String DEFAULT_COMPLAINT_TYPE = "resolution";
 	public static final String EMPLOYEE_DEPTCODE_JSONPATH = "$.Employee[0].assignments[0].department";
@@ -32,5 +39,8 @@ public class PGRConstants {
 	public static final String DEPARTMENTNAME_EMPLOYEE_JSONPATH = "$.Department[0].name";
 	
 	public static final String SEARCHER_RESPONSE_TEXT = "Searcher response : ";
+	
+	public static final String WEB_APP_FEEDBACK_PAGE_LINK = "http://letmegetthelink.org";
+
 	
 }

@@ -72,6 +72,7 @@ public class EmployeeUserMapper {
                     employeeInfo.setAadhaarNumber(userInfo.getAadhaarNumber());
                     employeeInfo.setType(userInfo.getType());
                     employeeInfo.setActive(userInfo.getActive());
+                    employeeInfo.setPhoto(userInfo.getPhoto());
                     finalEmployeeList.add(employeeInfo);
                 }
             }

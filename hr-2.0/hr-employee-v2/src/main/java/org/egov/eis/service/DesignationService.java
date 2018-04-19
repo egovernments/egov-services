@@ -60,7 +60,7 @@ import java.util.stream.Collectors;
 @Service
 public class DesignationService {
 
-    private static final String MODULE_NAME = "hr-masters";
+    private static final String MODULE_NAME = "common-masters";
     private static final String MASTER_NAME = "Designation";
 
 	@Autowired

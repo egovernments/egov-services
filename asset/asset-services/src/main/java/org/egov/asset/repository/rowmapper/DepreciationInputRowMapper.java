@@ -62,8 +62,7 @@ public class DepreciationInputRowMapper implements RowMapper<DepreciationInputs>
     @Override
     public DepreciationInputs mapRow(final ResultSet rs, final int rowNum) throws SQLException {
 
-        return DepreciationInputs.builder().lastDepreciationDate(rs.getLong("lastdepreciationdate"))
-                .enableYearwiseDepreciation(rs.getBoolean("enableyearwisedepreciation")).department(rs.getLong("department"))
+        return DepreciationInputs.builder().lastDepreciationDate(rs.getLong("lastdepreciationdate")).department(rs.getLong("department"))
                 .dateOfCreation(rs.getLong("dateofcreation")).currentValue(rs.getBigDecimal("currentvalue"))
                 .assetCategory((Long) rs.getObject("assetcategory")).assetaccount(rs.getString("assetaccount"))
                 .assetCategoryName(rs.getString("assetcategoryname"))
@@ -73,7 +72,6 @@ public class DepreciationInputRowMapper implements RowMapper<DepreciationInputs>
                 .depreciationExpenseAccount(rs.getLong("depreciationexpenseaccount"))
                 .accumulatedDepreciation(rs.getBigDecimal("accumulatedDepreciation")).tenantId(rs.getString("tenantid"))
                 .depreciationRate(rs.getDouble("assetcategory_depreciationrate"))
-                .yearwiseDepreciationRate(rs.getDouble("yearwisedepreciationrate"))
                 .grossValue(rs.getBigDecimal("grossValue")).assetCode(rs.getString("assetcode"))
                 .assetName(rs.getString("assetname")).function(rs.getString("function"))
                 .assetId((Long) rs.getObject("assetid")).depreciationSum(rs.getBigDecimal("depreciationvaluesum")).build();

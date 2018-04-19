@@ -1,28 +1,8 @@
 {
      "RequestInfo": {
-    "apiId": "org.egov.pgr",
-    "ver": "1.0",
-    "ts": "01-04-2017 01:01:01",
-    "action": "asd",
-    "did": "4354648646",
-    "key": "xyz",
-    "msgId": "654654",
-    "authToken": null,
-    "correlationId": null,
-    "userInfo": {
-      "id": 1,
-      "userName": "egovernments",
-      "name": "Admin",
-      "type": "SYSTEM",
-      "mobileNumber": null,
-      "emailId": null,
-      "roles": [
-        {
-          "id": null,
-          "name": "SYSTEM"
-        }
-      ]
-    }
+    "apiId": null,
+    "ver": null,
+    "ts": null
   },
   "Depreciation": {
    "tenantId": "ap.kurnool",

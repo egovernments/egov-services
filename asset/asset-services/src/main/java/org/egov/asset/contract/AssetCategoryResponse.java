@@ -70,10 +70,11 @@ import lombok.ToString;
 @Setter
 @ToString
 public class AssetCategoryResponse {
+
     @JsonProperty("ResponseInfo")
     private ResponseInfo responseInfo = null;
 
     @JsonProperty("AssetCategory")
-    private List<AssetCategory> assetCategory = new ArrayList<AssetCategory>();
+    private List<AssetCategory> assetCategory = new ArrayList<>();
 
 }

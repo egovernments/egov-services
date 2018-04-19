@@ -62,7 +62,6 @@ import org.egov.asset.config.ApplicationProperties;
 import org.egov.asset.contract.AssetCurrentValueRequest;
 import org.egov.asset.contract.DepreciationReportResponse;
 import org.egov.asset.contract.DepreciationRequest;
-import org.egov.asset.contract.DepreciationResponse;
 import org.egov.asset.contract.FinancialYearContract;
 import org.egov.asset.contract.FinancialYearContractResponse;
 import org.egov.asset.contract.RequestInfoWrapper;
@@ -84,7 +83,6 @@ import org.egov.asset.model.enums.TransactionType;
 import org.egov.asset.repository.DepreciationRepository;
 import org.egov.asset.web.wrapperfactory.ResponseInfoFactory;
 import org.egov.common.contract.request.RequestInfo;
-import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
@@ -118,27 +116,21 @@ public class DepreciationService {
     private AssetCommonService assetCommonService;
 
     @Autowired
-    private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
-
-    @Autowired
     private AssetConfigurationService assetConfigurationService;
 
     @Autowired
     private VoucherService voucherService;
 
-    public DepreciationResponse depreciateAsset(final DepreciationRequest depreciationRequest,
+    public Depreciation saveDepreciateAsset(final DepreciationRequest depreciationRequest,
             final HttpHeaders headers) {
 
         final RequestInfo requestInfo = depreciationRequest.getRequestInfo();
         getFinancialYearData(depreciationRequest, requestInfo);
 
         final Depreciation depreciation = depreciateAssets(depreciationRequest, headers);
-
         depreciation.setAuditDetails(assetCommonService.getAuditDetails(requestInfo));
-
-        kafkaTemplate.send(applicationProperties.getSaveDepreciationTopic(), depreciation);
-
-        return DepreciationResponse.builder().depreciation(depreciation).responseInfo(null).build();
+        persistDepreciation(depreciation);
+        return depreciation;
     }
 
     /***
@@ -174,7 +166,7 @@ public class DepreciationService {
         depreciation.setTenantId(depreciationCriteria.getTenantId());
         final String tenantId = depreciationCriteria.getTenantId();
         if (currentValues != null && !currentValues.isEmpty())
-            currentValueService.createCurrentValueAsync(
+            currentValueService.createCurrentValue(
                     AssetCurrentValueRequest.builder().assetCurrentValues(currentValues).requestInfo(requestInfo).build());
         // voucher creation
         validationAndGenerationDepreciationVoucherDetails(depreciationInputsList, depreciationDetailsList, currentValues,
@@ -184,7 +176,8 @@ public class DepreciationService {
     }
 
     public void validationAndGenerationDepreciationVoucherDetails(final List<DepreciationInputs> depreciationInputsList,
-            final List<DepreciationDetail> depreciationDetailsList, final List<AssetCurrentValue> currValList, final String tenantId,
+            final List<DepreciationDetail> depreciationDetailsList, final List<AssetCurrentValue> currValList,
+            final String tenantId,
             final HttpHeaders headers, final RequestInfo requestInfo) {
         if (assetConfigurationService.getEnabledVoucherGeneration(AssetConfigurationKeys.ENABLEVOUCHERGENERATION,
                 tenantId))
@@ -195,11 +188,11 @@ public class DepreciationService {
                 final List<VoucherAccountCodeDetails> accountCodeDetails = new ArrayList<>();
 
                 final Long departmentId = depreciation.getDepartment();
-                final String functionCode=depreciation.getFunction();
+                final String functionCode = depreciation.getFunction();
 
                 log.debug("Asset Department ID :: " + departmentId);
                 for (final DepreciationDetail depreciationDetail : depreciationDetailsList)
-                    if (depreciationDetail!=null && depreciationDetail.getStatus().equals(DepreciationStatus.SUCCESS)) {
+                    if (depreciationDetail != null && depreciationDetail.getStatus().equals(DepreciationStatus.SUCCESS)) {
 
                         final BigDecimal amount = depreciationDetail.getDepreciationValue();
                         log.debug("Depreciation Amount :: " + amount);
@@ -233,7 +226,7 @@ public class DepreciationService {
                         validateDepreciationSubledgerDetails(requestInfo, tenantId, ledgerMap.keySet());
                         if (!accountCodeDetails.isEmpty()) {
                             final VoucherRequest voucherRequest = voucherService.createDepreciationVoucherRequest(
-                                    depreciationInputsList, departmentId, functionCode,accountCodeDetails, tenantId, headers);
+                                    depreciationInputsList, departmentId, functionCode, accountCodeDetails, tenantId, headers);
                             log.debug("Voucher Request for Depreciation :: " + voucherRequest);
 
                             final String voucherNumber = voucherService.createVoucher(voucherRequest, tenantId, headers);
@@ -282,7 +275,7 @@ public class DepreciationService {
         log.debug("Financial Year Search URL :: " + url);
         final List<FinancialYearContract> financialYearContracts = restTemplate
                 .postForObject(url, new RequestInfoWrapper(requestInfo), FinancialYearContractResponse.class)
-               .getFinancialYears();
+                .getFinancialYears();
         log.debug("Financial Year Response :: " + financialYearContracts);
         if (financialYearContracts != null && !financialYearContracts.isEmpty()) {
             final FinancialYearContract financialYearContract = financialYearContracts.get(0);
@@ -293,28 +286,26 @@ public class DepreciationService {
             throw new RuntimeException(" No Financial Found For The Given ToDate:: " + depreciationDate);
     }
 
-    public void saveAsync(final Depreciation depreciation) {
-
-        final List<DepreciationDetail> depreciationDetails = depreciation.getDepreciationDetails();
-        final List<Long> depreciationDetailsId = sequenceGenService.getIds(depreciationDetails.size(),
-                Sequence.DEPRECIATIONSEQUENCE.toString());
-        int depreciationCount = 0;
-        for (final DepreciationDetail depreciationDetail : depreciationDetails)
-            depreciationDetail.setId(depreciationDetailsId.get(depreciationCount++));
-        kafkaTemplate.send(applicationProperties.getSaveDepreciationTopic(), depreciation);
-    }
-
-    public void save(final Depreciation depreciation) {
-        depreciationRepository.saveDepreciation(depreciation);
+    /*
+     * public void saveAsync(final Depreciation depreciation) { final List<DepreciationDetail> depreciationDetails =
+     * depreciation.getDepreciationDetails(); final List<Long> depreciationDetailsId =
+     * sequenceGenService.getIds(depreciationDetails.size(), Sequence.DEPRECIATIONSEQUENCE.toString()); int depreciationCount = 0;
+     * for (final DepreciationDetail depreciationDetail : depreciationDetails)
+     * depreciationDetail.setId(depreciationDetailsId.get(depreciationCount++));
+     * kafkaTemplate.send(applicationProperties.getSaveDepreciationTopic(), depreciation); }
+     */
+    public void persistDepreciation(final Depreciation depreciation) {
+        depreciationRepository.persistDepreciation(depreciation);
     }
 
     public DepreciationReportResponse getDepreciationReport(final RequestInfo requestInfo,
             final DepreciationReportCriteria depreciationReportCriteria) {
-        final List<DepreciationReportCriteria> assets = depreciationRepository.getDepreciatedAsset(depreciationReportCriteria);
-        final DepreciationReportResponse assetResponse = new DepreciationReportResponse();
-        assetResponse.setDepreciationReportCriteria(assets);
-        assetResponse.setResponseInfo(responseInfoFactory.createResponseInfoFromRequestHeaders(requestInfo));
-        return assetResponse;
+        final List<DepreciationReportCriteria> depreciations = depreciationRepository
+                .getDepreciatedAsset(depreciationReportCriteria);
+        final DepreciationReportResponse depreciationsRes = new DepreciationReportResponse();
+        depreciationsRes.setDepreciationReportCriteria(depreciations);
+        depreciationsRes.setResponseInfo(responseInfoFactory.createResponseInfoFromRequestHeaders(requestInfo));
+        return depreciationsRes;
     }
 
     /***
@@ -347,14 +338,10 @@ public class DepreciationService {
 
             // getting the indvidual fromDate
             final Long invidualFromDate = getFromDateForIndvidualAsset(depreciation, fromDate);
-            // checking if its year wise depreciation
-            if (depreciation.getEnableYearwiseDepreciation())
-                depreciationRate = depreciation.getYearwiseDepreciationRate();
-            else
                 depreciationRate = depreciation.getDepreciationRate();
 
-            if (depreciation.getCurrentValue()!=null && depreciation.getCurrentValue().compareTo(BigDecimal.ZERO) != 0)
-                if (depreciationRate==0.0)
+            if (depreciation.getCurrentValue() != null && depreciation.getCurrentValue().compareTo(BigDecimal.ZERO) != 0)
+                if (depreciationRate == 0.0)
                     reason = ReasonForFailure.DEPRECIATION_RATE_NOT_FOUND;
                 else if (depreciation.getCurrentValue().compareTo(minValue) <= 0)
                     reason = ReasonForFailure.ASSET_IS_FULLY_DEPRECIATED_TO_MINIMUN_VALUE;

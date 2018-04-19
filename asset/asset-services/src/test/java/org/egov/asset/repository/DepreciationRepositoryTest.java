@@ -164,7 +164,7 @@ public class DepreciationRepositoryTest {
 
         when(assetConfigurationService.getAssetConfigValueByKeyAndTenantId(AssetConfigurationKeys.ASSETBATCHSIZE,
                 "ap.kurnool")).thenReturn("500");
-        depreciationRepository.saveDepreciation(depreciation);
+        depreciationRepository.persistDepreciation(depreciation);
     }
 
     @Test

@@ -113,8 +113,6 @@ public class DisposalServiceTest {
     @Mock
     private AssetRepository assetRepository;
 
-    @Mock
-    private LogAwareKafkaTemplate<String, Object> logAwareKafkaTemplate;
 
     @Mock
     private ObjectMapper objectMapper;
@@ -164,24 +162,12 @@ public class DisposalServiceTest {
         disposalResponse.setDisposals(disposal);
 
         when(disposalRepository.search(any(DisposalCriteria.class))).thenReturn(disposal);
-        final DisposalResponse expectedDisposalResponse = disposalService.search(Matchers.any(DisposalCriteria.class),
+        final List<Disposal> expectedDisposalResponse = disposalService.search(Matchers.any(DisposalCriteria.class),
                 new RequestInfo());
 
-        assertEquals(disposalResponse.toString(), expectedDisposalResponse.toString());
+        assertEquals(disposal.toString(), expectedDisposalResponse.toString());
     }
 
-    @Test
-    public void testCreateAsync() throws Exception {
-        final DisposalRequest disposalRequest = getDisposalRequest();
-        final HttpHeaders headers = getHttpHeaders();
-        final DisposalResponse expectedDisposalResponse = getDisposalResponse(
-                "disposal/disposalServiceResponse.disposal1.json");
-
-        when(assetCommonService.getNextId(any(Sequence.class))).thenReturn(Long.valueOf("15"));
-        final DisposalResponse actualDisposalResponse = disposalService.createAsync(disposalRequest, headers);
-
-        assertEquals(expectedDisposalResponse.toString(), actualDisposalResponse.toString());
-    }
 
     @SuppressWarnings("unchecked")
     @Test
@@ -341,7 +327,6 @@ public class DisposalServiceTest {
         asset.setName("asset name");
         asset.setStatus(Status.CREATED.toString());
         asset.setModeOfAcquisition(ModeOfAcquisition.ACQUIRED);
-        asset.setEnableYearWiseDepreciation(true);
 
         final Location location = new Location();
         location.setLocality(4l);

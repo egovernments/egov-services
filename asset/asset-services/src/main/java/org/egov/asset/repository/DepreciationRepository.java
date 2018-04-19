@@ -113,7 +113,7 @@ public class DepreciationRepository {
 
     @Autowired
     private AssetConfigurationService assetConfigurationService;
-    
+
     @Autowired
     private DepreciationInputRowMapper depreciationInputRowMapper;
 
@@ -125,7 +125,7 @@ public class DepreciationRepository {
         return jdbcTemplate.query(sql, preparedStatementValues.toArray(), depreciationDetailRowMapper);
     }
 
-    public void saveDepreciation(final Depreciation depreciation) {
+    public void persistDepreciation(final Depreciation depreciation) {
 
         final String tenantId = depreciation.getTenantId();
         final String sql = depreciationQueryBuilder.getInsertQuery();
@@ -215,29 +215,28 @@ public class DepreciationRepository {
     }
 
     public List<DepreciationReportCriteria> getDepreciatedAsset(final DepreciationReportCriteria depreciationReportCriteria) {
-        final List<Object> preparedStatementValues = new ArrayList<Object>();
+        final List<Object> preparedStatementValues = new ArrayList<>();
         final String queryStr = depreciationReportQueryBuilder.getQuery(depreciationReportCriteria,
                 preparedStatementValues);
-        List<DepreciationReportCriteria> assets = new ArrayList<>();
+        List<DepreciationReportCriteria> depreciations = new ArrayList<>();
         try {
             log.debug("queryStr::" + queryStr + "preparedStatementValues::" + preparedStatementValues.toString());
-            assets = jdbcTemplate.query(queryStr, preparedStatementValues.toArray(), depreciationReportRowMapper);
+            depreciations = jdbcTemplate.query(queryStr, preparedStatementValues.toArray(), depreciationReportRowMapper);
             log.debug("DepreciationRepository::" + depreciationReportCriteria);
         } catch (final Exception ex) {
             log.debug("the exception from findforcriteria : " + ex);
+            throw new RuntimeException("the exception from find for depreciated asset criteria");
         }
-        return assets;
+        return depreciations;
     }
-    
-   
-    
-    public List<DepreciationInputs> getDepreciationInputs(DepreciationCriteria depreciationCriteria) {
-    
-            List<Object> preparedStatementValues = new ArrayList<>();
-            String sql = depreciationQueryBuilder.getDepreciationQuery(depreciationCriteria, preparedStatementValues);
-            log.info("the query for depreciation inputs : "+sql);
-            log.info("prepared stsmt values : "+preparedStatementValues);
-            return jdbcTemplate.query(sql, preparedStatementValues.toArray(), depreciationInputRowMapper);
+
+    public List<DepreciationInputs> getDepreciationInputs(final DepreciationCriteria depreciationCriteria) {
+
+        final List<Object> preparedStatementValues = new ArrayList<>();
+        final String sql = depreciationQueryBuilder.getDepreciationQuery(depreciationCriteria, preparedStatementValues);
+        log.info("the query for depreciation inputs : " + sql);
+        log.info("prepared stsmt values : " + preparedStatementValues);
+        return jdbcTemplate.query(sql, preparedStatementValues.toArray(), depreciationInputRowMapper);
     }
 
 }

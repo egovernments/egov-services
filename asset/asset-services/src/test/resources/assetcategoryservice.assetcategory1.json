@@ -1,5 +1,9 @@
 {
-	"ResponseInfo": null,
+	"ResponseInfo": {
+    "apiId": null,
+    "ver": null,
+    "ts": null
+  },
 	"AssetCategory": 
 	[
 		{

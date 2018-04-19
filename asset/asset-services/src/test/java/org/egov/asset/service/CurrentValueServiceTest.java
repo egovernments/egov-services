@@ -116,7 +116,7 @@ public class CurrentValueServiceTest {
         when(sequenceGenService.getIds(any(Integer.class), any(String.class))).thenReturn(idList);
         when(applicationProperties.getSaveCurrentvalueTopic()).thenReturn("save-currentvalue-db");
 
-        currentValueService.createCurrentValueAsync(assetCurrentValueRequest);
+        currentValueService.createCurrentValue(assetCurrentValueRequest);
     }
 
     private List<Long> getAssetIds() {

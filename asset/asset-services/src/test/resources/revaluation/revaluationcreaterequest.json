@@ -1,5 +1,25 @@
-{
-	"RequestInfo": null,
+{"RequestInfo": 
+	{
+		"apiId": null,
+		"ver": null,
+		"ts": null,
+		"action": null,
+		"did": null,
+		"key": null,
+		"msgId": null,
+		"authToken": null,
+		"correlationId": null,
+		"userInfo": 
+		{
+			"id": 2,
+			"userName": null,
+			"name": null,
+			"type": null,
+			"mobileNumber": null,
+			"emailId": null,
+			"roles": null
+		}
+	},
 	"Revaluation": 
 	{
 		"tenantId": "ap.kurnool",

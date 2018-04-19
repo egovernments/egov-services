@@ -56,22 +56,16 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import org.egov.asset.config.ApplicationProperties;
 import org.egov.asset.contract.AssetCurrentValueRequest;
 import org.egov.asset.contract.AssetRequest;
-import org.egov.asset.contract.AssetResponse;
 import org.egov.asset.model.Asset;
 import org.egov.asset.model.AssetCriteria;
 import org.egov.asset.model.AssetCurrentValue;
 import org.egov.asset.model.TransactionHistory;
-import org.egov.asset.model.YearWiseDepreciation;
-import org.egov.asset.model.enums.KafkaTopicName;
 import org.egov.asset.model.enums.Sequence;
 import org.egov.asset.model.enums.TransactionType;
 import org.egov.asset.repository.AssetRepository;
-import org.egov.asset.web.wrapperfactory.ResponseInfoFactory;
 import org.egov.common.contract.request.RequestInfo;
-import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -85,50 +79,36 @@ public class AssetService {
     private AssetRepository assetRepository;
 
     @Autowired
-    private LogAwareKafkaTemplate<String, Object> logAwareKafkaTemplate;
-
-    @Autowired
-    private ApplicationProperties applicationProperties;
-
-    @Autowired
-    private ResponseInfoFactory responseInfoFactory;
-
-    @Autowired
     private AssetCommonService assetCommonService;
 
     @Autowired
     private CurrentValueService currentValueService;
 
-    public AssetResponse getAssets(final AssetCriteria searchAsset, final RequestInfo requestInfo) {
+    public List<Asset> getAssets(final AssetCriteria searchAsset, final RequestInfo requestInfo) {
         log.info("AssetService getAssets");
         final List<Asset> assets = assetRepository.findForCriteria(searchAsset);
         if (searchAsset.getIsTransactionHistoryRequired() == null)
             searchAsset.setIsTransactionHistoryRequired(false);
         else if (searchAsset.getIsTransactionHistoryRequired().equals(true) && !assets.isEmpty())
             getAssetTransactionHistory(assets);
-        return getAssetResponse(assets, requestInfo);
+        return assets;
     }
 
-    public AssetResponse create(final AssetRequest assetRequest) {
-        final Asset asset = assetRepository.create(assetRequest);
-        final List<Asset> assets = new ArrayList<>();
-        assets.add(asset);
-        return getAssetResponse(assets, assetRequest.getRequestInfo());
+    public Asset create(final AssetRequest assetRequest) {
+        return assetRepository.create(assetRequest);
     }
 
-    public AssetResponse createAsync(final AssetRequest assetRequest) {
+    public Asset createAsset(final AssetRequest assetRequest) {
         final Asset asset = assetRequest.getAsset();
 
         asset.setCode(assetCommonService.getCode("%06d", Sequence.ASSETCODESEQUENCE));
 
         asset.setId(assetCommonService.getNextId(Sequence.ASSETSEQUENCE));
 
-        setDepriciationRateAndEnableYearWiseDepreciation(asset);
+        // setDepriciationRateAndEnableYearWiseDepreciation(asset);
 
-        log.debug("assetRequest createAsync::" + assetRequest);
+        log.debug("assetRequest create Asset Request::" + assetRequest);
 
-        logAwareKafkaTemplate.send(applicationProperties.getCreateAssetTopicName(), KafkaTopicName.SAVEASSET.toString(),
-                assetRequest);
         final AssetCurrentValue currentValue = AssetCurrentValue.builder().assetId(asset.getId()).tenantId(asset.getTenantId())
                 .assetTranType(TransactionType.CREATE).build();
 
@@ -144,39 +124,33 @@ public class AssetService {
         if (grossValue != null || accumulatedDepreciation != null) {
             final List<AssetCurrentValue> assetCurrentValueList = new ArrayList<>();
             assetCurrentValueList.add(currentValue);
-            currentValueService.createCurrentValueAsync(AssetCurrentValueRequest.builder()
+            currentValueService.createCurrentValue(AssetCurrentValueRequest.builder()
                     .assetCurrentValues(assetCurrentValueList).requestInfo(assetRequest.getRequestInfo()).build());
         }
 
-        final List<Asset> assets = new ArrayList<>();
-        assets.add(asset);
-        return getAssetResponse(assets, assetRequest.getRequestInfo());
+        create(assetRequest);
+        return asset;
     }
 
-    public AssetResponse update(final AssetRequest assetRequest) {
+    public Asset update(final AssetRequest assetRequest) {
 
-        final Asset asset = assetRepository.update(assetRequest);
-        final List<Asset> assets = new ArrayList<>();
-        assets.add(asset);
-        return getAssetResponse(assets, assetRequest.getRequestInfo());
+        return assetRepository.update(assetRequest);
+
     }
 
-    public AssetResponse updateAsync(final AssetRequest assetRequest) {
+    public Asset updateAsset(final AssetRequest assetRequest) {
         final Asset asset = assetRequest.getAsset();
-        setDepriciationRateAndEnableYearWiseDepreciation(asset);
+        // setDepriciationRateAndEnableYearWiseDepreciation(asset);
 
-        log.debug("assetRequest updateAsync::" + assetRequest);
-
-        logAwareKafkaTemplate.send(applicationProperties.getUpdateAssetTopicName(),
-                KafkaTopicName.UPDATEASSET.toString(), assetRequest);
-        Set<Long> assetIds = new HashSet<>();
+        log.debug("assetRequest update Asset::" + assetRequest);
+        final Set<Long> assetIds = new HashSet<>();
         assetIds.add(asset.getId());
 
         final List<AssetCurrentValue> assetCurrentValues = currentValueService
                 .getCurrentValues(assetIds, asset.getTenantId(), assetRequest.getRequestInfo()).getAssetCurrentValues();
         if (assetCurrentValues != null && !assetCurrentValues.isEmpty()) {
-             BigDecimal grossValue = asset.getGrossValue();
-             BigDecimal accumulatedDepreciation = asset.getAccumulatedDepreciation();
+            final BigDecimal grossValue = asset.getGrossValue();
+            final BigDecimal accumulatedDepreciation = asset.getAccumulatedDepreciation();
 
             if (grossValue != null && accumulatedDepreciation != null)
                 assetCurrentValues.get(0).setCurrentAmount(grossValue.subtract(accumulatedDepreciation));
@@ -188,47 +162,27 @@ public class AssetService {
                         .assetCurrentValues(assetCurrentValues).requestInfo(assetRequest.getRequestInfo()).build());
 
         }
-
-        final List<Asset> assets = new ArrayList<>();
-        assets.add(asset);
-        return getAssetResponse(assets, assetRequest.getRequestInfo());
+        update(assetRequest);
+        return asset;
     }
 
-    private AssetResponse getAssetResponse(final List<Asset> assets, final RequestInfo requestInfo) {
-        final AssetResponse assetResponse = new AssetResponse();
-        assetResponse.setAssets(assets);
-        assetResponse.setResponseInfo(responseInfoFactory.createResponseInfoFromRequestHeaders(requestInfo));
-        return assetResponse;
-    }
-
-    private void setDepriciationRateAndEnableYearWiseDepreciation(final Asset asset) {
-        final List<YearWiseDepreciation> yearWiseDepreciation = asset.getYearWiseDepreciation();
-
-        log.debug("Year wise depreciations from Request :: " + yearWiseDepreciation);
-
-        final Boolean enableYearWiseDepreciation = asset.getEnableYearWiseDepreciation();
-
-        log.debug("Enable year wise depreciaition from Request :: " + enableYearWiseDepreciation);
-
-        log.debug("Asset ID from Request :: " + asset.getId());
-        if (enableYearWiseDepreciation != null && enableYearWiseDepreciation && yearWiseDepreciation != null
-                && !yearWiseDepreciation.isEmpty())
-            for (final YearWiseDepreciation depreciationRate : yearWiseDepreciation)
-                depreciationRate.setAssetId(asset.getId());
-        else if (enableYearWiseDepreciation != null && !enableYearWiseDepreciation) {
-            asset.setEnableYearWiseDepreciation(false);
-            final Double depreciationRate = assetCommonService.getDepreciationRate(asset.getDepreciationRate());
-
-            log.debug("Depreciation rate for asset create :: " + depreciationRate);
-            asset.setDepreciationRate(depreciationRate);
-        }
-    }
-
+    /*
+     * private void setDepriciationRateAndEnableYearWiseDepreciation(final Asset asset) { final List<YearWiseDepreciation>
+     * yearWiseDepreciation = asset.getYearWiseDepreciation(); log.debug("Year wise depreciations from Request :: " +
+     * yearWiseDepreciation); final Boolean enableYearWiseDepreciation = asset.getEnableYearWiseDepreciation(); log.debug(
+     * "Enable year wise depreciaition from Request :: " + enableYearWiseDepreciation); log.debug("Asset ID from Request :: " +
+     * asset.getId()); if (enableYearWiseDepreciation != null && enableYearWiseDepreciation && yearWiseDepreciation != null &&
+     * !yearWiseDepreciation.isEmpty()) for (final YearWiseDepreciation depreciationRate : yearWiseDepreciation)
+     * depreciationRate.setAssetId(asset.getId()); else if (enableYearWiseDepreciation != null && !enableYearWiseDepreciation) {
+     * asset.setEnableYearWiseDepreciation(false); final Double depreciationRate =
+     * assetCommonService.getDepreciationRate(asset.getDepreciationRate()); log.debug("Depreciation rate for asset create :: " +
+     * depreciationRate); asset.setDepreciationRate(depreciationRate); } }
+     */
     public Asset getAsset(final String tenantId, final Long assetId, final RequestInfo requestInfo) {
         final List<Long> assetIds = new ArrayList<>();
         assetIds.add(assetId);
         final AssetCriteria assetCriteria = AssetCriteria.builder().tenantId(tenantId).id(assetIds).build();
-        final List<Asset> assets = getAssets(assetCriteria, requestInfo).getAssets();
+        final List<Asset> assets = getAssets(assetCriteria, requestInfo);
         if (assets != null && !assets.isEmpty())
             return assets.get(0);
         else

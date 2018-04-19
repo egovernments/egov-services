@@ -1,5 +1,9 @@
 {
-	"RequestInfo": null,
+	"RequestInfo": {
+    "apiId": null,
+    "ver": null,
+    "ts": null
+  },
 	"AssetCategory": 
 	{
 		"id": null,

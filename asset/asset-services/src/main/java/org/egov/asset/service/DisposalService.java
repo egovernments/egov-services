@@ -53,11 +53,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
-import org.egov.asset.config.ApplicationProperties;
 import org.egov.asset.contract.AssetCurrentValueRequest;
 import org.egov.asset.contract.AssetRequest;
 import org.egov.asset.contract.DisposalRequest;
-import org.egov.asset.contract.DisposalResponse;
 import org.egov.asset.contract.VoucherRequest;
 import org.egov.asset.model.Asset;
 import org.egov.asset.model.AssetCategory;
@@ -70,14 +68,11 @@ import org.egov.asset.model.DisposalCriteria;
 import org.egov.asset.model.VoucherAccountCodeDetails;
 import org.egov.asset.model.enums.AssetConfigurationKeys;
 import org.egov.asset.model.enums.AssetStatusObjectName;
-import org.egov.asset.model.enums.KafkaTopicName;
 import org.egov.asset.model.enums.Sequence;
 import org.egov.asset.model.enums.Status;
 import org.egov.asset.repository.AssetRepository;
 import org.egov.asset.repository.DisposalRepository;
-import org.egov.asset.web.wrapperfactory.ResponseInfoFactory;
 import org.egov.common.contract.request.RequestInfo;
-import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
@@ -90,12 +85,6 @@ public class DisposalService {
 
     @Autowired
     private DisposalRepository disposalRepository;
-
-    @Autowired
-    private LogAwareKafkaTemplate<String, Object> logAwareKafkaTemplate;
-
-    @Autowired
-    private ApplicationProperties applicationProperties;
 
     @Autowired
     private VoucherService voucherService;
@@ -116,12 +105,9 @@ public class DisposalService {
     private AssetCommonService assetCommonService;
 
     @Autowired
-    private ResponseInfoFactory responseInfoFactory;
-
-    @Autowired
     private CurrentValueService currentValueService;
 
-    public DisposalResponse search(final DisposalCriteria disposalCriteria, final RequestInfo requestInfo) {
+    public List<Disposal> search(final DisposalCriteria disposalCriteria, final RequestInfo requestInfo) {
         List<Disposal> disposals = null;
 
         try {
@@ -130,7 +116,7 @@ public class DisposalService {
             log.info("DisposalService:", ex);
             throw new RuntimeException(ex);
         }
-        return getResponse(disposals, requestInfo);
+        return disposals;
     }
 
     public void create(final DisposalRequest disposalRequest) {
@@ -150,7 +136,7 @@ public class DisposalService {
         assetService.update(assetRequest);
     }
 
-    public DisposalResponse createAsync(final DisposalRequest disposalRequest, final HttpHeaders headers) {
+    public Disposal saveDisposal(final DisposalRequest disposalRequest, final HttpHeaders headers) {
         final Disposal disposal = disposalRequest.getDisposal();
 
         disposal.setId(assetCommonService.getNextId(Sequence.DISPOSALSEQUENCE));
@@ -168,9 +154,6 @@ public class DisposalService {
                 throw new RuntimeException("Voucher Generation is failed due to :" + e.getMessage());
             }
 
-        logAwareKafkaTemplate.send(applicationProperties.getCreateAssetDisposalTopicName(),
-                KafkaTopicName.SAVEDISPOSAL.toString(), disposalRequest);
-
         final List<AssetCurrentValue> assetCurrentValues = new ArrayList<>();
         final AssetCurrentValue assetCurrentValue = new AssetCurrentValue();
         assetCurrentValue.setAssetId(disposal.getAssetId());
@@ -181,11 +164,9 @@ public class DisposalService {
         final AssetCurrentValueRequest assetCurrentValueRequest = new AssetCurrentValueRequest();
         assetCurrentValueRequest.setRequestInfo(disposalRequest.getRequestInfo());
         assetCurrentValueRequest.setAssetCurrentValues(assetCurrentValues);
-        currentValueService.createCurrentValueAsync(assetCurrentValueRequest);
-
-        final List<Disposal> disposals = new ArrayList<>();
-        disposals.add(disposal);
-        return getResponse(disposals, disposalRequest.getRequestInfo());
+        currentValueService.createCurrentValue(assetCurrentValueRequest);
+        create(disposalRequest);
+        return disposal;
     }
 
     public String createVoucherForDisposal(final DisposalRequest disposalRequest, final HttpHeaders headers) {
@@ -227,13 +208,6 @@ public class DisposalService {
         accountCodeDetails.add(voucherService.getGlCodes(requestInfo, tenantId, assetCategory.getAssetAccount(),
                 disposal.getSaleValue(), true, false));
         return accountCodeDetails;
-    }
-
-    public DisposalResponse getResponse(final List<Disposal> disposals, final RequestInfo requestInfo) {
-        final DisposalResponse disposalResponse = new DisposalResponse();
-        disposalResponse.setDisposals(disposals);
-        disposalResponse.setResponseInfo(responseInfoFactory.createResponseInfoFromRequestHeaders(requestInfo));
-        return disposalResponse;
     }
 
 }

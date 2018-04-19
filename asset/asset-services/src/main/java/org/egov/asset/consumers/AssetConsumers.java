@@ -116,8 +116,8 @@ public class AssetConsumers {
         else if (topic.equals(applicationProperties.getCreateAssetCategoryTopicName()))
             assetCategoryService.create(objectMapper.convertValue(consumerRecord, AssetCategoryRequest.class));
         else if (topic.equals(applicationProperties.getUpdateAssetCategoryTopicName()))
-            assetCategoryService.update(objectMapper.convertValue(consumerRecord, AssetCategoryRequest.class));
-        else if (topic.equals(applicationProperties.getCreateAssetRevaluationTopicName()))
+           assetCategoryService.update(objectMapper.convertValue(consumerRecord, AssetCategoryRequest.class));
+       else if (topic.equals(applicationProperties.getCreateAssetRevaluationTopicName()))
             revaluationService.create(objectMapper.convertValue(consumerRecord, RevaluationRequest.class));
         else if (topic.equals(applicationProperties.getCreateAssetDisposalTopicName()))
             disposalService.create(objectMapper.convertValue(consumerRecord, DisposalRequest.class));
@@ -125,7 +125,7 @@ public class AssetConsumers {
             currentValueService
                     .saveCurrentValue(objectMapper.convertValue(consumerRecord, AssetCurrentValueRequest.class));
         else if (topic.equals(applicationProperties.getSaveDepreciationTopic()))
-            depreciationService.save(objectMapper.convertValue(consumerRecord, Depreciation.class));
+            depreciationService.persistDepreciation(objectMapper.convertValue(consumerRecord, Depreciation.class));
 
     }
 }

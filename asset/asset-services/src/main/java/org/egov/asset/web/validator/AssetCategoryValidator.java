@@ -163,7 +163,7 @@ public class AssetCategoryValidator {
             final AssetCriteria assetCriteria = new AssetCriteria();
             assetCriteria.setAssetCategory(assetCategories.get(0).getId());
             assetCriteria.setTenantId(assetCategories.get(0).getTenantId());
-            final List<Asset> assets = assetService.getAssets(assetCriteria, requestInfo).getAssets();
+            final List<Asset> assets = assetService.getAssets(assetCriteria, requestInfo);
             if (assets != null && !assets.isEmpty()) {
                 assetIds.addAll(assets.stream().map(asset -> asset.getId()).collect(Collectors.toList()));
                 agreements = getAggrementsByAsset(assetIds, assets.get(0).getTenantId(), requestInfo);

@@ -102,12 +102,13 @@ public class RevaluationRepository {
                 revaluation.getReasonForRevaluation(), revaluation.getFixedAssetsWrittenOffAccount(),
                 revaluation.getFunction(), revaluation.getFund(),
                 revaluation.getComments(), status, requestInfo.getUserInfo().getId(), new Date().getTime(),
-                requestInfo.getUserInfo().getId(), new Date().getTime(), revaluation.getVoucherReference(),revaluation.getRevaluationOrderNo(),revaluation.getRevaluationOrderDate()};
+                requestInfo.getUserInfo().getId(), new Date().getTime(), revaluation.getVoucherReference(),
+                revaluation.getRevaluationOrderNo(), revaluation.getRevaluationOrderDate() };
         try {
             jdbcTemplate.update(sql, obj);
         } catch (final Exception ex) {
-            ex.printStackTrace();
             log.info("RevaluationRepository create:" + ex.getMessage());
+            throw new RuntimeException("exceptions occured while persisting the revaluation :" + ex.getMessage());
         }
     }
 
@@ -131,6 +132,7 @@ public class RevaluationRepository {
             log.info("RevaluationRepository::" + revaluations);
         } catch (final Exception ex) {
             log.info("the exception from findforcriteria : " + ex);
+            throw new RuntimeException("the exception from find for Revaluation criteria :" + ex.getMessage());
         }
         return revaluations;
     }

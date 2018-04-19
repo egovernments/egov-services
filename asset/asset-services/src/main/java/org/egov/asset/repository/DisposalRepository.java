@@ -87,6 +87,7 @@ public class DisposalRepository {
             log.info("DisposalRepository::" + disposals);
         } catch (final Exception ex) {
             log.info("the exception from findforcriteria : " + ex);
+            throw new RuntimeException("the exception from find for disposal criteria : " + ex.getMessage());
         }
         return disposals;
     }
@@ -108,7 +109,7 @@ public class DisposalRepository {
             jdbcTemplate.update(DisposalQueryBuilder.INSERT_QUERY, values);
         } catch (final Exception ex) {
             log.info("DisposalRepository:", ex);
-            throw new RuntimeException(ex);
+            throw new RuntimeException("exceptions occured while persisting the disposal : " + ex.getMessage());
         }
     }
 

@@ -116,7 +116,7 @@ public class AssetServiceTest {
 
 		final AssetCriteria assetCriteria = AssetCriteria.builder().tenantId("ap.kurnool").build();
 		when(assetRepository.findForCriteria(any(AssetCriteria.class))).thenReturn(assets);
-		assertEquals(assetResponse, assetService.getAssets(assetCriteria, new RequestInfo()));
+		assertEquals(assets, assetService.getAssets(assetCriteria, new RequestInfo()));
 	}
 
 	@Test
@@ -134,7 +134,7 @@ public class AssetServiceTest {
 
 		when(assetRepository.create(any(AssetRequest.class))).thenReturn(asset);
 
-		assertTrue(assetResponse.equals(assetService.create(assetRequest)));
+		assertTrue(asset.equals(assetService.create(assetRequest)));
 	}
 
 	@Test
@@ -152,7 +152,7 @@ public class AssetServiceTest {
 
 		when(assetCommonService.getDepreciationRate(any(Double.class))).thenReturn(Double.valueOf("13.17"));
 
-		assertTrue(assetResponse.equals(assetService.createAsync(assetRequest)));
+		assertTrue(asset.equals(assetService.createAsset(assetRequest)));
 	}
 
 	@Test
@@ -170,7 +170,7 @@ public class AssetServiceTest {
 
 		when(assetRepository.update(any(AssetRequest.class))).thenReturn(asset);
 
-		assertTrue(assetResponse.equals(assetService.update(assetRequest)));
+		assertTrue(asset.equals(assetService.update(assetRequest)));
 	}
 
 	/*@Test
@@ -237,7 +237,7 @@ public class AssetServiceTest {
 		asset.setName("asset name");
 		asset.setStatus(Status.CREATED.toString());
 		asset.setModeOfAcquisition(ModeOfAcquisition.ACQUIRED);
-		asset.setEnableYearWiseDepreciation(false);
+		
 		asset.setDepreciationRate(Double.valueOf("13.17"));
 		asset.setFunction("020");
 

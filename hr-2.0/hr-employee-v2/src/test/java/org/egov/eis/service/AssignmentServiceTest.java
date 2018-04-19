@@ -1,16 +1,6 @@
 package org.egov.eis.service;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
-import static org.mockito.Mockito.doAnswer;
-import static org.mockito.Mockito.when;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.egov.eis.model.Assignment;
 import org.egov.eis.model.Employee;
 import org.egov.eis.model.HODDepartment;
@@ -30,7 +20,14 @@ import org.mockito.invocation.InvocationOnMock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.mockito.stubbing.Answer;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class AssignmentServiceTest {
@@ -48,11 +45,11 @@ public class AssignmentServiceTest {
 	private AssignmentService assignmentService;
 
 	@Before
-	public void setUp() throws Exception {
+	public void setUp() {
 	}
 
 	@After
-	public void tearDown() throws Exception {
+	public void tearDown() {
 	}
 
 	@Test
@@ -186,11 +183,11 @@ public class AssignmentServiceTest {
 
 	private List<Assignment> getAssignmentsInDBForEmployee() {
 		List<Assignment> assignments = new ArrayList<>();
-		assignments.add(Assignment.builder().id(10L).position(5L).department("5").designation(5L).isPrimary(false)
+		assignments.add(Assignment.builder().id(10L).position(5L).department("5").designation("5").isPrimary(false)
 				.fromDate(new Date()).toDate(new Date()).build());
-		assignments.add(Assignment.builder().id(5L).position(5L).department("5").designation(5L).isPrimary(false)
+		assignments.add(Assignment.builder().id(5L).position(5L).department("5").designation("5").isPrimary(false)
 				.fromDate(new Date()).toDate(new Date()).build());
-		assignments.add(Assignment.builder().id(6L).position(6L).department("6").designation(6L).isPrimary(false)
+		assignments.add(Assignment.builder().id(6L).position(6L).department("6").designation("6").isPrimary(false)
 				.fromDate(new Date()).toDate(new Date()).build());
 		return assignments;
 	}

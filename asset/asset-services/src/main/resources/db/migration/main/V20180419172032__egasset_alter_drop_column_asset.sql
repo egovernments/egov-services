@@ -1,0 +1,1 @@
+alter table egasset_asset drop column enableyearwisedepreciation;

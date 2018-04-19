@@ -390,12 +390,14 @@ public class GrievanceService {
 				.collect(Collectors.toList());
 		String userType = requestInfo.getUserInfo().getType();
 		if (userType.equalsIgnoreCase("CITIZEN")) {
+			log.info("Setting tenant for citizen........");
 			serviceReqSearchCriteria.setAccountId(requestInfo.getUserInfo().getId().toString());
 			String[] tenant = serviceReqSearchCriteria.getTenantId().split("[.]");
 			if (tenant.length > 1)
 				serviceReqSearchCriteria.setTenantId(tenant[0]);
 		} else if (userType.equalsIgnoreCase("EMPLOYEE")) {
 			if (roleNames.contains("DGRO")) {
+				log.info("Setting default info for DGRO........");
 				Integer departmenCode = getDepartmentCode(serviceReqSearchCriteria, requestInfo);
 				String department = getDepartment(serviceReqSearchCriteria, requestInfo, departmenCode);
 				Object response = fetchServiceCodes(requestInfo, serviceReqSearchCriteria.getTenantId(), department);
@@ -405,6 +407,8 @@ public class GrievanceService {
 				}
 				try {
 					List<String> serviceCodes = JsonPath.read(response, PGRConstants.JSONPATH_SERVICE_CODES);
+					if(serviceCodes.isEmpty())
+						throw new CustomException(ErrorConstants.NO_DATA_KEY, ErrorConstants.NO_DATA_MSG);
 					serviceReqSearchCriteria.setServiceCodes(serviceCodes);
 				} catch (Exception e) {
 					log.error("Exception while parsing serviceCodes: ", e);
@@ -413,16 +417,36 @@ public class GrievanceService {
 
 			} else if (roleNames.contains("EMPLOYEE") || roleNames.contains("Employee")) {
 				if (StringUtils.isEmpty(serviceReqSearchCriteria.getAssignedTo()) && CollectionUtils.isEmpty(serviceReqSearchCriteria.getServiceRequestId())) {
+					log.info("Setting assignee for employee........");
 					serviceReqSearchCriteria.setAssignedTo(requestInfo.getUserInfo().getId().toString());
 				}
 			}
 
 		}
-		if (null != serviceReqSearchCriteria.getAssignedTo() && !serviceReqSearchCriteria.getAssignedTo().isEmpty()) {
+		if (!StringUtils.isEmpty(serviceReqSearchCriteria.getAssignedTo())) {
+			log.info("Setting SRids based on assignedTo for assignedTo search........");
 			List<String> serviceRequestIds = getServiceRequestIdsOnAssignedTo(requestInfo, serviceReqSearchCriteria);
 			if (serviceRequestIds.isEmpty())
 				throw new CustomException("400", "No Data");
 			serviceReqSearchCriteria.setServiceRequestId(serviceRequestIds);
+		}
+	
+		if(!StringUtils.isEmpty(serviceReqSearchCriteria.getGroup()) && CollectionUtils.isEmpty(serviceReqSearchCriteria.getServiceCodes())) {
+			log.info("Setting Service Codes for group based search........");
+			Object response = fetchServiceCodes(requestInfo, serviceReqSearchCriteria.getTenantId(), serviceReqSearchCriteria.getGroup());
+			if (null == response) {
+				log.error("Searcher returned zero serviceCodes for dept: " + serviceReqSearchCriteria.getGroup());
+				throw new CustomException(ErrorConstants.NO_DATA_KEY, ErrorConstants.NO_DATA_MSG);
+			}
+			try {
+				List<String> serviceCodes = JsonPath.read(response, PGRConstants.JSONPATH_SERVICE_CODES);
+				if(serviceCodes.isEmpty())
+					throw new CustomException(ErrorConstants.NO_DATA_KEY, ErrorConstants.NO_DATA_MSG);
+				serviceReqSearchCriteria.setServiceCodes(serviceCodes);
+			} catch (Exception e) {
+				log.error("Exception while parsing serviceCodes: ", e);
+				throw new CustomException(ErrorConstants.NO_DATA_KEY, ErrorConstants.NO_DATA_MSG);
+			}
 		}
 
 		log.info("Enriched request: " + serviceReqSearchCriteria);

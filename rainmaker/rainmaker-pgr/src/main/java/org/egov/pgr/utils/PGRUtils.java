@@ -92,13 +92,22 @@ public class PGRUtils {
 		return  MdmsCriteriaReq.builder().requestInfo(requestInfo).mdmsCriteria(mdmsCriteria).build();
 	}
 	
-	
-	public AuditDetails getAuditDetails(String by) {
-		
-		Long date = new Date().getTime();
-		return AuditDetails.builder().createdBy(by).createdTime(date).lastModifiedBy(by).lastModifiedTime(date).build();
+	/**
+	 * Util method to return Auditdetails for create and update processes
+	 * 
+	 * @param by
+	 * @param isCreate
+	 * @return
+	 */
+	public AuditDetails getAuditDetails(String by, Boolean isCreate) {
+
+		Long dt = new Date().getTime();
+		if (isCreate)
+			return AuditDetails.builder().createdBy(by).createdTime(dt).lastModifiedBy(by).lastModifiedTime(dt).build();
+		else
+			return AuditDetails.builder().lastModifiedBy(by).lastModifiedTime(dt).build();
 	}
-	
+
 	/**
 	 * Prepares request and uri for service type search from MDMS
 	 * 

@@ -89,26 +89,55 @@ public class GrievanceService {
 	 */
 	public ServiceResponse create(ServiceRequest request) {
 
-		Map<String, String> actionStatusMap = WorkFlowConfigs.getActionStatusMap();
+		log.debug(" the incoming request obj in service : {}", request);
+		enrichserviceRequestForcreate(request);
+		pGRProducer.push(saveTopic, request);
+		pGRProducer.push(complaintTopic, request);
+		return getServiceResponse(request);
+	}
+
+	/**
+	 * Asynchronous method performs business logic if any and adds the data to
+	 * persister queue on update topic
+	 * 
+	 * @param request
+	 */
+	public ServiceResponse update(ServiceRequest request) {
 
 		log.debug(" the incoming request obj in service : {}", request);
+		enrichServiceRequestForUpdate(request);
+		if (null == request.getActionInfo())
+			request.setActionInfo(new ArrayList<ActionInfo>());
+		pGRProducer.push(updateTopic, request);
+		pGRProducer.push(complaintTopic, request);
+		return getServiceResponse(request);
+	}
+	
+	/**
+	 * private method to enrich request with Ids and action infos for create
+	 * 
+	 * @param serviceRequest
+	 */
+	private void enrichserviceRequestForcreate(ServiceRequest serviceRequest) {
 
-		RequestInfo requestInfo = request.getRequestInfo();
-		List<Service> serviceReqs = request.getServices();
-		List<ActionInfo> actionInfos = request.getActionInfo();
-		if (null == actionInfos)
-			actionInfos = new ArrayList<>(Arrays.asList(new ActionInfo[serviceReqs.size()]));
+		Map<String, String> actionStatusMap = WorkFlowConfigs.getActionStatusMap();
+		RequestInfo requestInfo = serviceRequest.getRequestInfo();
+		List<Service> serviceReqs = serviceRequest.getServices();
 		String tenantId = serviceReqs.get(0).getTenantId();
+
 		Integer servReqLen = serviceReqs.size();
-
-		AuditDetails auditDetails = pGRUtils.getAuditDetails(String.valueOf(requestInfo.getUserInfo().getId()));
-
-		String by = auditDetails.getCreatedBy() + ":" + requestInfo.getUserInfo().getRoles().get(0).getName();
-
 		List<String> servReqIdList = getIdList(requestInfo, tenantId, servReqLen, PGRConstants.SERV_REQ_ID_NAME,
 				PGRConstants.SERV_REQ_ID_FORMAT);
 
-		for (int servReqCount = 0; servReqCount < servReqLen; servReqCount++) {
+		List<ActionInfo> actionInfos = serviceRequest.getActionInfo();
+		if (null == actionInfos)
+			actionInfos = new ArrayList<>(Arrays.asList(new ActionInfo[serviceReqs.size()]));
+
+		AuditDetails auditDetails = pGRUtils.getAuditDetails(String.valueOf(requestInfo.getUserInfo().getId()), true);
+
+		String by = auditDetails.getCreatedBy() + ":" + requestInfo.getUserInfo().getRoles().get(0).getName();
+
+		for (int servReqCount = 0; servReqCount < serviceReqs.size(); servReqCount++) {
 
 			Service servReq = serviceReqs.get(servReqCount);
 			ActionInfo actionInfo = actionInfos.get(servReqCount);
@@ -134,46 +163,41 @@ public class GrievanceService {
 			actionInfo.setStatus(actionStatusMap.get(WorkFlowConfigs.ACTION_OPEN));
 
 		}
-		request.setActionInfo(actionInfos);
-
-		pGRProducer.push(saveTopic, request);
-		pGRProducer.push(complaintTopic, request);
-
-		return getServiceResponse(request);
+		serviceRequest.setActionInfo(actionInfos);
 	}
 
 	/**
-	 * Asynchronous method performs business logic if any and adds the data to
-	 * persister queue on update topic
+	 * Util method for the update to enrich the actions in the request 
 	 * 
 	 * @param request
 	 */
-	public ServiceResponse update(ServiceRequest request) {
-
-		log.debug(" the incoming request obj in service : {}", request);
-
+	private void enrichServiceRequestForUpdate(ServiceRequest request) {
 		Map<String, List<String>> errorMap = new HashMap<>();
 
 		RequestInfo requestInfo = request.getRequestInfo();
 		List<Service> serviceReqs = request.getServices();
 		List<ActionInfo> actionInfos = request.getActionInfo();
+		String tenantId = serviceReqs.get(0).getTenantId();
 
-		final AuditDetails auditDetails = pGRUtils
-				.getAuditDetails(String.valueOf(request.getRequestInfo().getUserInfo().getId()));
+		List<String> servicerequestIds = serviceReqs.parallelStream().map(Service::getServiceRequestId)
+				.collect(Collectors.toList());
+		ServiceReqSearchCriteria serviceReqSearchCriteria = ServiceReqSearchCriteria.builder().tenantId(tenantId)
+				.serviceRequestId(servicerequestIds).build();
+
+		List<ActionHistory> historys = ((ServiceResponse) getServiceRequestDetails(requestInfo,
+				serviceReqSearchCriteria)).getActionHistory();
+		Map<String, ActionHistory> historyMap = new HashMap<>();
+		historys.forEach(a -> historyMap.put(a.getActions().get(0).getBusinessKey(), a));
 
 		int serviceLen = serviceReqs.size();
 		for (int index = 0; index < serviceLen; index++) {
 
-			Service servReq = serviceReqs.get(index);
-			ActionInfo actionInfo = null;
-			if (!CollectionUtils.isEmpty(actionInfos))
-				actionInfo = actionInfos.get(index);
-			servReq.setAuditDetails(auditDetails);
-			log.debug(" the action info : " + actionInfo);
-			// FIXME TODO business key should be module name and currentid in future
-			if (null != actionInfo) {
-				validateAndEnrichActionInfoForUpdate(errorMap, requestInfo, auditDetails, servReq, actionInfo);
-			}
+			Service service = serviceReqs.get(index);
+			ActionInfo currentInfo = null;
+			if (null != actionInfos)
+				currentInfo = actionInfos.get(index);
+			ActionHistory history = historyMap.get(service.getServiceRequestId());
+			validateAndEnrichActionInfoForUpdate(errorMap, requestInfo, service, currentInfo, history);
 		}
 
 		if (!errorMap.isEmpty()) {
@@ -181,11 +205,6 @@ public class GrievanceService {
 			errorMap.keySet().forEach(key -> newMap.put(key, errorMap.get(key).toString()));
 			throw new CustomException(newMap);
 		}
-
-		pGRProducer.push(updateTopic, request);
-		pGRProducer.push(complaintTopic, request);
-
-		return getServiceResponse(request);
 	}
 
 	/**
@@ -195,40 +214,53 @@ public class GrievanceService {
 	 * @param errorMap
 	 * @param requestInfo
 	 * @param auditDetails
-	 * @param servReq
+	 * @param service
 	 * @param actionInfo
 	 */
 	private void validateAndEnrichActionInfoForUpdate(Map<String, List<String>> errorMap, RequestInfo requestInfo,
-			final AuditDetails auditDetails, Service servReq, ActionInfo actionInfo) {
+			Service service, ActionInfo actionInfo, ActionHistory history) {
+
+		final AuditDetails auditDetails = pGRUtils.getAuditDetails(String.valueOf(requestInfo.getUserInfo().getId()),
+				false);
+		service.setAuditDetails(auditDetails);
+
+		if (null == actionInfo) {
+			service.setStatus(StatusEnum.fromValue(getCurrentStatus(history)));
+			return;
+		}
 
 		Map<String, List<String>> actioncurrentStatusMap = WorkFlowConfigs.getActionCurrentStatusMap();
 		Map<String, String> actionStatusMap = WorkFlowConfigs.getActionStatusMap();
-		String by = auditDetails.getCreatedBy() + ":" + requestInfo.getUserInfo().getRoles().get(0).getName();
+		String by = auditDetails.getLastModifiedBy() + ":" + requestInfo.getUserInfo().getRoles().get(0).getName();
 
 		actionInfo.setUuid(UUID.randomUUID().toString());
-		actionInfo.setBusinessKey(servReq.getServiceRequestId());
+		// FIXME TODO business key should be module name and currentid in future
+		actionInfo.setBusinessKey(service.getServiceRequestId());
 		actionInfo.setBy(by);
-		actionInfo.setWhen(auditDetails.getCreatedTime());
-		actionInfo.setTenantId(servReq.getTenantId());
+		actionInfo.setWhen(auditDetails.getLastModifiedTime());
+		actionInfo.setTenantId(service.getTenantId());
 		actionInfo.setStatus(actionInfo.getAction());
 		if (null != actionInfo.getAction() && actionStatusMap.get(actionInfo.getAction()) != null) {
 			if (!WorkFlowConfigs.ACTION_CLOSE.equals(actionInfo.getAction())
-					&& (null != servReq.getFeedback() || null != servReq.getRating()))
+					&& (null != service.getFeedback() || null != service.getRating()))
 				addError(ErrorConstants.UPDATE_FEEDBACK_ERROR_MSG + actionInfo.getAction() + ", with service Id : "
-						+ servReq.getServiceRequestId(), ErrorConstants.UPDATE_FEEDBACK_ERROR_KEY, errorMap);
-			if (isUpdateValid(requestInfo, actionInfo, actioncurrentStatusMap.get(actionInfo.getAction()))) {
+						+ service.getServiceRequestId(), ErrorConstants.UPDATE_FEEDBACK_ERROR_KEY, errorMap);
+			List<String> validStatusList = actioncurrentStatusMap.get(actionInfo.getAction());
+			String currentStatus = getCurrentStatus(history);
+			if (null != currentStatus && validStatusList.contains(currentStatus)) {
 				String resultStatus = actionStatusMap.get(actionInfo.getAction());
 				actionInfo.setStatus(resultStatus);
-				servReq.setStatus(StatusEnum.fromValue(resultStatus));
+				service.setStatus(StatusEnum.fromValue(resultStatus));
 			} else {
 
 				String errorMsg = " The Given Action " + actionInfo.getAction()
 						+ "cannot be applied for the Current status of the Grievance with ServiceRequestId "
-						+ servReq.getServiceRequestId();
+						+ service.getServiceRequestId();
 				addError(errorMsg, ErrorConstants.UPDATE_ERROR_KEY, errorMap);
 			}
 		} else if (null != actionInfo.getAction()) {
-			String errorMsg = "The given action " + actionInfo.getAction() + " is invalid for the current status: "+servReq.getStatus();
+			String errorMsg = "The given action " + actionInfo.getAction() + " is invalid for the current status: "
+					+ service.getStatus();
 			addError(errorMsg, ErrorConstants.UPDATE_ERROR_KEY, errorMap);
 		}
 	}
@@ -251,31 +283,25 @@ public class GrievanceService {
 	}
 
 	/**
-	 * validates if the given action can be applied on the current status of the
-	 * service
+	 * returns the current status of the service
 	 * 
 	 * @param requestInfo
 	 * @param actionInfo
 	 * @param currentStatusList
 	 * @return
 	 */
-	private boolean isUpdateValid(RequestInfo requestInfo, ActionInfo actionInfo, List<String> currentStatusList) {
+	private String getCurrentStatus(ActionHistory history) {
 
-		log.info(" the current list possible : " + currentStatusList);
-		ServiceReqSearchCriteria serviceReqSearchCriteria = ServiceReqSearchCriteria.builder()
-				.tenantId(actionInfo.getTenantId()).serviceRequestId(Arrays.asList(actionInfo.getBusinessKey()))
-				.build();
-
-		List<ActionInfo> infos = ((ServiceResponse) getServiceRequestDetails(requestInfo, serviceReqSearchCriteria))
-				.getActionHistory().get(0).getActions();
-
+		List<ActionInfo> infos = history.getActions();
+		//FIXME pickup latest status another way which is not hardocoded, put query to searcher to pick latest status
+		// or use status from service object
 		for (int i = 0; i <= infos.size() - 1; i++) {
 			String status = infos.get(i).getStatus();
 			if (null != status) {
-				return currentStatusList.contains(status);
+				return status;
 			}
 		}
-		return false;
+		return null;
 	}
 
 	/**
@@ -321,11 +347,12 @@ public class GrievanceService {
 
 		List<ActionHistory> historys = new ArrayList<>();
 
-		actionInfos.forEach(a -> {
-			List<ActionInfo> infos = new ArrayList<>();
-			infos.add(a);
-			historys.add(new ActionHistory(infos));
-		});
+		if (!CollectionUtils.isEmpty(actionInfos))
+			actionInfos.forEach(a -> {
+				List<ActionInfo> infos = new ArrayList<>();
+				infos.add(a);
+				historys.add(new ActionHistory(infos));
+			});
 		return historys;
 	}
 

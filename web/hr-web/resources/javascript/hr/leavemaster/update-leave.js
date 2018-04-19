@@ -815,6 +815,12 @@ class UpdateLeave extends React.Component {
     var stateId = getUrlVars()["stateId"];
     var _this = this;
 
+
+    if (!($('#update-transfer').valid())) {
+      showError("Please fill all required fields");
+    }
+
+
     if (_this.state.availableDays <= 0) {
       return (showError("You do not have leave for this leave type."));
     }

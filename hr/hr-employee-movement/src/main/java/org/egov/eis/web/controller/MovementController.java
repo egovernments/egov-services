@@ -147,7 +147,9 @@ public class MovementController {
         if(movement.getCheckEmployeeExists() && movementService.checkEmployeeExists(movementRequest)) {
             return movementService.getSuccessResponseForCreate(movementRequest.getMovement(), movementRequest.getRequestInfo());
         }
+        movement.setCheckEmployeeExists(false);
         logger.info("Employee exists:"+movement.getCheckEmployeeExists());
+
         movementRequest.getMovement().get(0).setId(movementId);
 
         return movementService.updateMovement(movementRequest);

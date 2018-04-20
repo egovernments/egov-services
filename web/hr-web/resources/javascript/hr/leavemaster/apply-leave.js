@@ -903,7 +903,7 @@ class ApplyLeave extends React.Component {
                   </div>
                   <div className="col-sm-6">
 
-                    <input type="text" id="leaveGround" name="leaveGround" value={leaveGround}
+                    <input type="text" id="leaveGround" name="leaveGround" value={leaveGround} pattern="[a-zA-Z][a-zA-Z ]+" maxLength="50"
                       onChange={(e) => { handleChange(e, "leaveGround") }} required />
                   </div>
                 </div>

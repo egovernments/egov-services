@@ -816,8 +816,8 @@ class UpdateLeave extends React.Component {
     var _this = this;
 
 
-    if (!($('#update-transfer').valid())) {
-      showError("Please fill all required fields");
+    if (!($('#update-leave').valid())) {
+      return (showError("Please fill all required fields"));
     }
 
 
@@ -1314,7 +1314,7 @@ class UpdateLeave extends React.Component {
 
     return (
       <div>
-        <form>
+        <form id="update-leave">
           <fieldset>
 
             <div className="row">

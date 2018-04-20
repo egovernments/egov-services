@@ -213,7 +213,7 @@ public class AssetQueryBuilderTest {
                 + "description,dateofcreation,remarks,length,width,totalarea,modeofacquisition,status,tenantid,zone,revenueward"
                 + ",street,electionward,doorno,pincode,locality,block,properties,createdby,createddate,lastmodifiedby,"
                 + "lastmodifieddate,grossvalue,accumulateddepreciation,assetreference,version,"
-                + "depreciationrate,surveynumber,marketvalue,function,scheme,subscheme)values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+                + "depreciationrate,surveynumber,marketvalue,function,scheme,subscheme)values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
         assertEquals(queryWithTenantId, assetQueryBuilder.getInsertQuery());
     }
 

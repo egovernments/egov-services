@@ -26,6 +26,20 @@ public class PGRConstants {
 	public static final String MDMS_COMMON_MASTERS_MASTER_NAME = "common-masters";
 	public static final String MDMS_DEPT_MASTERS_MODULE_NAME = "Designation";
 	public static final String MDMS_DESIGNATION_MASTERS_MODULE_NAME = "Department";
+	public static final String LOCALIZATION_MODULE_NAME = "rainmaker-pgr";
+	
+	public static final String LOCALIZATION_CODE_SUBMIT = "pgr.sms.notification.submit";
+	public static final String LOCALIZATION_CODE_REOPEN = "pgr.sms.notification.reopen";
+	public static final String LOCALIZATION_CODE_ASSIGN = "pgr.sms.notification.assign";
+	public static final String LOCALIZATION_CODE_REASSIGN = "pgr.sms.notification.reassign";
+	public static final String LOCALIZATION_CODE_REJECT = "pgr.sms.notification.reject";
+	public static final String LOCALIZATION_CODE_RESOLVE = "pgr.sms.notification.resolve";
+	public static final String LOCALIZATION_CODE_COMMENT = "pgr.sms.notification.comment";
+	public static final String LOCALIZATION_CODE_DEFAULT = "pgr.sms.notification.default";
+	public static final String LOCALIZATION_CODE_COMMENT_DEFAULT = "pgr.sms.notification.comment.default";
+
+
+
 
 	public static final String SERVICE_CODES = "serviceCode";
 	public static final String JSONPATH_SERVICE_CODES = "$.MdmsRes.RAINMAKER-PGR.ServiceDefs";

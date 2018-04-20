@@ -57,6 +57,12 @@ public class PGRUtils {
 	@Value("${egov.common.masters.search.endpoint}")
 	private String commonMasterSearchEndpoint;
 	
+	@Value("${egov.localization.host}")
+	private String localizationHost;
+	
+	@Value("${egov.localization.search.endpoint}")
+	private String localizationSearchEndpoint;
+	
 	@Autowired
 	private ResponseInfoFactory factory;
 	
@@ -258,6 +264,14 @@ public class PGRUtils {
 		RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
 		requestInfoWrapper.setRequestInfo(requestInfo);
 		uri.append(commonMasterHost).append(commonMasterSearchEndpoint).append("?id="+deptId).append("&tenantId="+tenantId);
+
+		return requestInfoWrapper;
+	}
+	
+	public RequestInfoWrapper prepareRequestForLocalization(StringBuilder uri, RequestInfo requestInfo, String locale, String tenantId, String module) {
+		RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
+		requestInfoWrapper.setRequestInfo(requestInfo);
+		uri.append(localizationHost).append(localizationSearchEndpoint).append("?tenantId="+tenantId).append("&module="+module).append("&locale="+locale);
 
 		return requestInfoWrapper;
 	}

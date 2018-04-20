@@ -85,6 +85,8 @@ public class MdmsRepository {
         List<ModuleDetail> moduleDetails;
         MdmsCriteriaReq request = null;
         MdmsResponse response = null;
+	//TODO remove this once yaml is updated with ts as long
+	requestInfo.setTs(null);
         masterDetails = new ArrayList<>();
         moduleDetails = new ArrayList<>();
 

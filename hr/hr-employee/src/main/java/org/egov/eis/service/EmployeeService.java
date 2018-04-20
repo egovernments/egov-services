@@ -567,7 +567,6 @@ public class EmployeeService {
                     return errorHandler.getErrorResponseEntityForNoVacantPositionAvailable(empIndex, department.getCode(),
                             designation.getCode(), requestInfo);
                 assignment.setPosition(position.get(assignIndex).getId());
-
                 assignments.add(assignment);
             }
 
@@ -581,7 +580,6 @@ public class EmployeeService {
             if (isEmpty(employeeEntityResponse.getEmployee()) && !isEmpty(employeeEntityResponse.getError())) {
                 return getErrorResponseForBulkCreate(employeeEntityResponse);
             }
-
             employees.add(employeeEntityResponse.getEmployee());
         }
         return getSuccessResponseForBulkCreate(employees, requestInfo);
@@ -608,7 +606,6 @@ public class EmployeeService {
         RequestInfoWrapper requestInfoWrapper = RequestInfoWrapper.builder().requestInfo(employeeRequest.getRequestInfo()).build();
         String[] tenant = employeeRequest.getEmployee().getTenantId().split("\\.");
         String tenantId = tenant.length > 1 ? tenant[tenant.length - 1] : tenant[0];
-        ServiceHistory serviceHistory = new ServiceHistory();
         List<Assignment> assignmentList = new ArrayList<>();
         List<Assignment> removedAssignment = new ArrayList<>();
 
@@ -651,6 +648,8 @@ public class EmployeeService {
                             .id(Arrays.asList(assign.getDesignation())).tenantId(employeeRequest.getEmployee().getTenantId()).build();
                     List<org.egov.eis.model.bulk.Designation> designations = designationService
                             .getDesignations(designationGetRequest, employeeRequest.getEmployee().getTenantId(), requestInfoWrapper);
+                    ServiceHistory serviceHistory = new ServiceHistory();
+
                     if (assign.getId() != null && !assign.getId().equals("")) {
                         serviceHistory.setAssignmentId(assign.getId());
                     }
@@ -672,14 +671,11 @@ public class EmployeeService {
         }
         }
 
-
-
     public void setServiceHistoryFromAssignment(EmployeeRequest employeeRequest, List<Assignment> assignmentList) {
         List<ServiceHistory> serviceHistories = employeeRequest.getEmployee().getServiceHistory();
         List<Assignment> empAssignment = assignmentList.stream().filter(assignment -> assignment.getIsPrimary().equals(true)).collect(Collectors.toList());
 
         RequestInfoWrapper requestInfoWrapper = RequestInfoWrapper.builder().requestInfo(employeeRequest.getRequestInfo()).build();
-        ServiceHistory serviceHistory = new ServiceHistory();
         String[] tenant = employeeRequest.getEmployee().getTenantId().split("\\.");
         String tenantId = tenant.length > 1 ? tenant[tenant.length - 1] : tenant[0];
         List<Assignment> removedAssignment = new ArrayList<>() ;
@@ -690,6 +686,7 @@ public class EmployeeService {
                     .id(Arrays.asList(assign.getDesignation())).tenantId(employeeRequest.getEmployee().getTenantId()).build();
             List<org.egov.eis.model.bulk.Designation> designations = designationService
                     .getDesignations(designationGetRequest, employeeRequest.getEmployee().getTenantId(), requestInfoWrapper);
+            ServiceHistory serviceHistory = new ServiceHistory();
 
             if (assign.getId() != null && !assign.getId().equals("")) {
                 serviceHistory.setAssignmentId(assign.getId());
@@ -706,8 +703,9 @@ public class EmployeeService {
             serviceHistories.add(serviceHistory);
             removedAssignment.add(assign);
         });
-        assignmentList.removeAll(removedAssignment);
         employeeRequest.getEmployee().setServiceHistory(serviceHistories);
+        assignmentList.removeAll(removedAssignment);
+
     }
 
 

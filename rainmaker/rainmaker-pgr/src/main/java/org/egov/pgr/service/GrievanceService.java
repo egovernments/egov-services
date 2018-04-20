@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -386,6 +387,7 @@ public class GrievanceService {
 		log.info("Enriching request.........: " + serviceReqSearchCriteria);
 		List<String> roleNames = requestInfo.getUserInfo().getRoles().parallelStream().map(Role::getName)
 				.collect(Collectors.toList());
+		String precedentRole = getPrecedentRole(roleNames);
 		String userType = requestInfo.getUserInfo().getType();
 		if (userType.equalsIgnoreCase("CITIZEN")) {
 			log.info("Setting tenant for citizen........");
@@ -394,7 +396,7 @@ public class GrievanceService {
 			if (tenant.length > 1)
 				serviceReqSearchCriteria.setTenantId(tenant[0]);
 		} else if (userType.equalsIgnoreCase("EMPLOYEE")) {
-			if (roleNames.contains("DGRO")) {
+			if (precedentRole.equalsIgnoreCase(PGRConstants.ROLE_DGRO)) {
 				log.info("Setting default info for DGRO........");
 				Integer departmenCode = getDepartmentCode(serviceReqSearchCriteria, requestInfo);
 				String department = getDepartment(serviceReqSearchCriteria, requestInfo, departmenCode);
@@ -413,7 +415,7 @@ public class GrievanceService {
 					throw new CustomException(ErrorConstants.NO_DATA_KEY, ErrorConstants.NO_DATA_MSG);
 				}
 
-			} else if (roleNames.contains("EMPLOYEE") || roleNames.contains("Employee")) {
+			} else if (precedentRole.equalsIgnoreCase(PGRConstants.ROLE_EMPLOYEE)) {
 				if (StringUtils.isEmpty(serviceReqSearchCriteria.getAssignedTo()) && CollectionUtils.isEmpty(serviceReqSearchCriteria.getServiceRequestId())) {
 					log.info("Setting assignee for employee........");
 					serviceReqSearchCriteria.setAssignedTo(requestInfo.getUserInfo().getId().toString());
@@ -449,6 +451,26 @@ public class GrievanceService {
 
 		log.info("Enriched request: " + serviceReqSearchCriteria);
 
+	}
+
+	/**
+	 * Helper method which returns the precedent role among all the given roles
+	 * 
+	 * The employee precedent map is a tree map which will have the roles ordered based on their keys precedence
+	 * 
+	 * The method will fail if the list of roles is null, so the parameter must be null checked
+	 * 
+	 * If the none of roles in the precedence map has a match in roles object then the method will return null 
+	 */
+	private String getPrecedentRole(List<String> roles) {
+
+		for (Entry<Integer, String> entry : PGRUtils.getEmployeeRolesPrecedenceMap().entrySet()) {
+
+			String currentValue = entry.getValue();
+			if (roles.contains(currentValue))
+				return currentValue;
+		}
+		return null;
 	}
 
 	public Integer getDepartmentCode(ServiceReqSearchCriteria serviceReqSearchCriteria, RequestInfo requestInfo) {

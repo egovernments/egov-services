@@ -1,5 +1,7 @@
 package org.egov.pgr.utils;
 
+import java.util.Arrays;
+
 import org.springframework.stereotype.Component;
 
 
@@ -70,9 +72,11 @@ public class PGRConstants {
 	public static final String SMS_NOTIFICATION_APP_LINK_KEY = "<app_link>";
 
 
-
-
 	
-
+	/*  search on roles constant */
 	
+	public static final String ROLE_EMPLOYEE = "EMPLOYEE";
+	public static final String ROLE_GRO = "GRIEVANCE ROUTING OFFICER";
+	public static final String ROLE_DGRO = "DEPARTMENT GRIEVANCE ROUTING OFFICER";
+		
 }

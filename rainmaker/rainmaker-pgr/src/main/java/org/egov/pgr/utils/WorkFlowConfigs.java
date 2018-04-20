@@ -17,7 +17,6 @@ public class WorkFlowConfigs {
 	public static final String ROLE_GRO = "GRO";
 	public static final String ROLE_DGRO = "DGRO";
 
-
 	public static final String ACTION_OPEN = "open";
 	public static final String ACTION_ASSIGN = "assign";
 	public static final String ACTION_CLOSE = "close";

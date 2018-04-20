@@ -2,7 +2,10 @@ package org.egov.pgr.utils;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.mdms.model.MasterDetail;
@@ -32,6 +35,8 @@ import lombok.extern.slf4j.Slf4j;
 @Component
 @Slf4j
 public class PGRUtils {
+	
+	private static Map<Integer, String> employeeRolesPrecedenceMap = prepareEmployeeRolesPrecedenceMap();
 	
 	@Value("${egov.infra.searcher.host}")
 	private String searcherHost;
@@ -97,7 +102,7 @@ public class PGRUtils {
 		MdmsCriteria mdmsCriteria = MdmsCriteria.builder().tenantId(tenantId).moduleDetails(moduleDetails).build();
 		return  MdmsCriteriaReq.builder().requestInfo(requestInfo).mdmsCriteria(mdmsCriteria).build();
 	}
-	
+
 	/**
 	 * Util method to return Auditdetails for create and update processes
 	 * 
@@ -312,6 +317,24 @@ public class PGRUtils {
         return mapper;
 	}
 	
+	/**
+	 * prepares and returns a map with integer keys starting from zero and values as role codes
+	 * the integer values decides the precedence by which actions should be applied among there roles
+	 */
+	private static Map<Integer, String> prepareEmployeeRolesPrecedenceMap() {
+
+		Map<Integer, String> map = new TreeMap<>();
+		map.put(2, PGRConstants.ROLE_EMPLOYEE);
+		map.put(1, PGRConstants.ROLE_DGRO);
+		map.put(0, PGRConstants.ROLE_GRO);
+		return map;
+	}
 	
+	/**
+	 * @return employeeRolesPrecedenceMap
+	 */
+	public static Map<Integer, String> getEmployeeRolesPrecedenceMap(){
+		return employeeRolesPrecedenceMap;
+	}
 
 }

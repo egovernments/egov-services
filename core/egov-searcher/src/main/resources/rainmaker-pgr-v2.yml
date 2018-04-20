@@ -50,7 +50,7 @@ SearchDefinitions:
 
  - name: getServiceRequestsOnAssignedTo
    query: 
-    baseQuery: select array_to_json(array_agg(row_to_json(servicesRequestIds))) from (select businessKey from eg_pgr_action where eg_pgr_action.when IN (select max("when") from eg_pgr_action $where group by businessKey)) servicesRequestIds
+    baseQuery: select array_to_json(array_agg(row_to_json(servicesRequestIds))) from (select businessKey from eg_pgr_action $where AND eg_pgr_action.when IN (select max("when") from eg_pgr_action group by businessKey)) servicesRequestIds
     groupBy:    
     orderBy: 
    searchParams:

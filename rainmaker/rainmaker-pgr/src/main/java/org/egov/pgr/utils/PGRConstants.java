@@ -75,8 +75,8 @@ public class PGRConstants {
 	
 	/*  search on roles constant */
 	
-	public static final String ROLE_EMPLOYEE = "EMPLOYEE";
-	public static final String ROLE_GRO = "GRIEVANCE ROUTING OFFICER";
-	public static final String ROLE_DGRO = "DEPARTMENT GRIEVANCE ROUTING OFFICER";
+	public static final String ROLE_EMPLOYEE = "Employee";
+	public static final String ROLE_GRO = "Grievance Routing Officer";
+	public static final String ROLE_DGRO = "Department Grievance Routing Officer";
 		
 }

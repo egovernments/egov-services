@@ -98,6 +98,9 @@ public class PGRNotificationConsumer {
 
 	@Value("${date.format.notification}")
 	private String notificationDateFormat;
+	
+	@Value("${egov.ui.app.host}")
+	private String uiAppHost;
 
 	@Autowired
 	private ServiceRequestRepository serviceRequestRepository;
@@ -263,7 +266,7 @@ public class PGRNotificationConsumer {
 				break;
 			}
 			case WorkFlowConfigs.STATUS_RESOLVED: {
-				message = prepareMsgTextOnResolution(serviceType, date, messageMap);
+				message = prepareMsgTextOnResolution(serviceReq, serviceType, date, messageMap);
 				break;
 			}
 			default:
@@ -362,7 +365,7 @@ public class PGRNotificationConsumer {
 		return text;
 	}
 
-	public String prepareMsgTextOnResolution(String serviceType, String date, Map<String, String> messageMap) {
+	public String prepareMsgTextOnResolution(Service service, String serviceType, String date, Map<String, String> messageMap) {
 		String text = null;
 		if (null == serviceType) {
 			text = messageMap.get(PGRConstants.LOCALIZATION_CODE_DEFAULT);
@@ -372,7 +375,7 @@ public class PGRNotificationConsumer {
 		text = messageMap.get(PGRConstants.LOCALIZATION_CODE_RESOLVE);
 		text = text.replace(PGRConstants.SMS_NOTIFICATION_COMPLAINT_TYPE_KEY, serviceType)
 				.replace(PGRConstants.SMS_NOTIFICATION_DATE_KEY, date)
-				.replace(PGRConstants.SMS_NOTIFICATION_APP_LINK_KEY, PGRConstants.WEB_APP_FEEDBACK_PAGE_LINK);
+				.replace(PGRConstants.SMS_NOTIFICATION_APP_LINK_KEY, uiAppHost + PGRConstants.WEB_APP_FEEDBACK_PAGE_LINK + service.getServiceRequestId());
 		return text;
 	}
 

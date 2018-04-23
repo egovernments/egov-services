@@ -992,12 +992,11 @@ function checkNRemoveFile() {
                 employee[key].splice(ind, 1);
             }
         } else if(key == "servicehistory"){
-            key = "serviceHistory";
             for (var i = 0; i < filesToBeDeleted[key].length; i++) {
-                for (var j = 0; j < employee[key].length; j++) {
-                    var ind = employee[key][j]["documents"].indexOf(filesToBeDeleted[key][i]);
+                for (var j = 0; j < employee["serviceHistory"].length; j++) {
+                    var ind = employee["serviceHistory"][j]["documents"].indexOf(filesToBeDeleted[key][i]);
                     if (ind > -1) {
-                        employee[key][j]["documents"].splice(ind, 1);
+                        employee["serviceHistory"][j]["documents"].splice(ind, 1);
                         break;
                     }
                 }

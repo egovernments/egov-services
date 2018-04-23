@@ -1,31 +1,34 @@
 package org.egov.common.contract.response;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-@Getter
 @Setter
+@Getter
+@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@ToString
-@EqualsAndHashCode
 public class ResponseInfo {
+	
+	@JsonProperty("apiId")
+	private String apiId;
 
-    private String apiId;
+	@JsonProperty("ver")
+	private String ver;
 
-    private String ver;
+	@JsonProperty("ts")
+	private Long ts;
 
-    private String ts;
+	@JsonProperty("resMsgId")
+	private String resMsgId;
 
-    private String resMsgId;
-
-    private String msgId;
-
-    private String status;
+	@JsonProperty("msgId")
+	private String msgId;
 }

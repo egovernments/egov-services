@@ -1,4 +1,4 @@
-package org.egov.common.contract.request;
+package org.egov.idgen.model;
 
 import javax.validation.constraints.NotNull;
 
@@ -11,22 +11,23 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-@Setter
 @Getter
+@Setter
 @ToString
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
-public class Role {
+public class IdRequest {
 
-	@JsonProperty("name")
-	private String name;
-
-	@JsonProperty("code")
+	@JsonProperty("idName")
 	@NotNull
-	private String code;
+	private String idName;
 
-	@JsonProperty("description")
-	private String description;
+	@NotNull
+	@JsonProperty("tenantId")
+	private String tenantId;
+
+	@JsonProperty("format")
+	private String format;
 
 }

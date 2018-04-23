@@ -1,43 +1,56 @@
 package org.egov.common.contract.request;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-import java.util.Date;
-
-@Getter
 @Setter
-@Builder
+@Getter
+@ToString
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
-@EqualsAndHashCode
+@Builder
 public class RequestInfo {
+	
+	@JsonProperty("apiId")
+	private String apiId;
 
-    private String apiId;
+	@JsonProperty("ver")
+	private String ver;
 
-    private String ver;
+	@JsonProperty("locale")
+	private String locale;
 
-    @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss", timezone = "IST")
-    private Date ts;
+	@JsonProperty("ts")
+	private Long ts;
 
-    private String action;
+	@JsonProperty("action")
+	private String action;
 
-    private String did;
+	@JsonProperty("did")
+	private String did;
 
-    private String key;
+	@JsonProperty("key")
+	private String key;
 
-    private String msgId;
+	@JsonProperty("msgId")
+	private String msgId;
 
-    private String authToken;
+	@JsonProperty("requesterId")
+	private String requesterId;
 
-    private String correlationId;
+	@JsonProperty("authToken")
+	private String authToken;
 
-    private User userInfo;
+	@JsonProperty("userInfo")
+	private UserInfo userInfo;
+
+	@JsonProperty("correlationId")
+	private String correlationId;
+
 }

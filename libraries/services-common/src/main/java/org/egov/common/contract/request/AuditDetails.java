@@ -1,7 +1,5 @@
 package org.egov.common.contract.request;
 
-import javax.validation.constraints.NotNull;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
@@ -17,16 +15,18 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Role {
+public class AuditDetails {
+	
+	@JsonProperty("createdBy")
+	private String createdBy;
 
-	@JsonProperty("name")
-	private String name;
+	@JsonProperty("lastModifiedBy")
+	private String lastModifiedBy;
 
-	@JsonProperty("code")
-	@NotNull
-	private String code;
+	@JsonProperty("createdTime")
+	private Long createdTime;
 
-	@JsonProperty("description")
-	private String description;
+	@JsonProperty("lastModifiedTime")
+	private Long lastModifiedTime;
 
 }

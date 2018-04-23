@@ -1,6 +1,8 @@
-package org.egov.common.contract.response;
+package org.egov.idgen.model;
 
 import java.util.List;
+
+import org.egov.common.contract.request.RequestInfo;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -11,24 +13,17 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-@Setter
 @Getter
+@Setter
 @ToString
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
-public class Error {
-	
-	@JsonProperty("code")
-	private String code;
+public class IdGenerationRequest {
 
-	@JsonProperty("message")
-	private String message;
+	@JsonProperty("RequestInfo")
+	private RequestInfo requestInfo;
 
-	@JsonProperty("description")
-	private String description;
-
-	@JsonProperty("params")
-	private List<String> params;
+	private List<IdRequest> idRequests;
 
 }

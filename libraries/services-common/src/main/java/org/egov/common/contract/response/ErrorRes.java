@@ -1,6 +1,6 @@
-package org.egov.common.contract.request;
+package org.egov.common.contract.response;
 
-import javax.validation.constraints.NotNull;
+import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -17,16 +17,14 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Role {
+public class ErrorRes   {
+	
+  @JsonProperty("ResponseInfo")
+  private ResponseInfo responseInfo;
 
-	@JsonProperty("name")
-	private String name;
+  @JsonProperty("Errors")
+  private List<Error> errors;
 
-	@JsonProperty("code")
-	@NotNull
-	private String code;
-
-	@JsonProperty("description")
-	private String description;
-
+  
 }
+

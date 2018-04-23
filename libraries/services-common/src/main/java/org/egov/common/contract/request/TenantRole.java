@@ -1,6 +1,6 @@
 package org.egov.common.contract.request;
 
-import javax.validation.constraints.NotNull;
+import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -17,16 +17,12 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Role {
+public class TenantRole {
+	
+	@JsonProperty("tenantId")
+	private String tenantId;
 
-	@JsonProperty("name")
-	private String name;
-
-	@JsonProperty("code")
-	@NotNull
-	private String code;
-
-	@JsonProperty("description")
-	private String description;
+	@JsonProperty("roles")
+	private List<Role> roles;
 
 }

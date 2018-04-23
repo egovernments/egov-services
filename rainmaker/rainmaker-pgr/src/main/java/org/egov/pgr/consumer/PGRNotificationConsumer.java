@@ -217,7 +217,13 @@ public class PGRNotificationConsumer {
     	SimpleDateFormat dateFormat = new SimpleDateFormat(notificationDateFormat);
     	String date = dateFormat.format(new Date());
     	String tenantId = serviceReq.getTenantId().split("[.]")[0]; //localization values are for now state-level.
-    	String locale = requestInfo.getMsgId().split(",")[1]; //Conventionally locale is sent in the first index of msgid.
+    	String locale = null;
+    	try {
+    		locale = requestInfo.getMsgId().split(",")[1]; //Conventionally locale is sent in the first index of msgid.
+    	}catch(Exception e) {
+    		log.info("No locale found in the request, falling back to default locale: en_IN");
+    		locale = "en_IN";
+    	}
     	if(StringUtils.isEmpty(locale)) {
     		log.info("No locale found in the request, falling back to default locale: en_IN");
     		locale = "en_IN";

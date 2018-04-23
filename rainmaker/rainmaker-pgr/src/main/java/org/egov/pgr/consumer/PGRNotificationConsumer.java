@@ -2,12 +2,10 @@ package org.egov.pgr.consumer;
 
 import java.io.StringWriter;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -118,7 +116,7 @@ public class PGRNotificationConsumer {
 
 	private static Map<String, Map<String, String>> localizedMessageMap = new HashMap<>();
 
-	@KafkaListener(topics = { "${kafka.topics.notification.complaint}" })
+	@KafkaListener(topics = {"${kafka.topics.save.servicereq}","${kafka.topics.update.service}"})
 
 	public void listen(final HashMap<String, Object> record, @Header(KafkaHeaders.RECEIVED_TOPIC) String topic) {
 		ObjectMapper mapper = new ObjectMapper();

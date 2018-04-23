@@ -54,9 +54,6 @@ public class GrievanceService {
 
 	@Value("${kafka.topics.update.service}")
 	private String updateTopic;
-
-	@Value("${kafka.topics.notification.complaint}")
-	private String complaintTopic;
 	
 	@Value("${egov.hr.employee.host}")
 	private String hrEmployeeHost;
@@ -93,7 +90,7 @@ public class GrievanceService {
 		log.debug(" the incoming request obj in service : {}", request);
 		enrichserviceRequestForcreate(request);
 		pGRProducer.push(saveTopic, request);
-		pGRProducer.push(complaintTopic, request);
+
 		return getServiceResponse(request);
 	}
 
@@ -110,7 +107,7 @@ public class GrievanceService {
 		if (null == request.getActionInfo())
 			request.setActionInfo(new ArrayList<ActionInfo>());
 		pGRProducer.push(updateTopic, request);
-		pGRProducer.push(complaintTopic, request);
+		
 		return getServiceResponse(request);
 	}
 	
@@ -394,9 +391,6 @@ public class GrievanceService {
 		List<String> roleNames = requestInfo.getUserInfo().getRoles().parallelStream().map(Role::getName)
 				.collect(Collectors.toList());
 		String precedentRole = getPrecedentRole(roleNames);
-		if(null == precedentRole) {
-			throw new CustomException(ErrorConstants.UNAUTHORIZED_USER_KEY, ErrorConstants.UNAUTHORIZED_USER_MSG);
-		}
 		String userType = requestInfo.getUserInfo().getType();
 		if (userType.equalsIgnoreCase("CITIZEN")) {
 			log.info("Setting tenant for citizen........");
@@ -405,6 +399,9 @@ public class GrievanceService {
 			if (tenant.length > 1)
 				serviceReqSearchCriteria.setTenantId(tenant[0]);
 		} else if (userType.equalsIgnoreCase("EMPLOYEE")) {
+			if(null == precedentRole) {
+				throw new CustomException(ErrorConstants.UNAUTHORIZED_USER_KEY, ErrorConstants.UNAUTHORIZED_USER_MSG);
+			}
 			if (precedentRole.equalsIgnoreCase(PGRConstants.ROLE_DGRO)) {
 				log.info("Setting default info for DGRO........");
 				Integer departmenCode = getDepartmentCode(serviceReqSearchCriteria, requestInfo);

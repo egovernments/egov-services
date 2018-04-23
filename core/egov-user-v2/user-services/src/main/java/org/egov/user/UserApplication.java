@@ -1,5 +1,6 @@
 package org.egov.user;
 
+import org.egov.otp.sevice.OtpService;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -30,5 +31,10 @@ public class UserApplication {
 	public ObjectMapper getObjectMapper(){
 		ObjectMapper objectMapper = new ObjectMapper();
 		return objectMapper;
+	}
+	
+	@Bean
+	public OtpService getOtpservice() {
+		return new OtpService();
 	}
 }

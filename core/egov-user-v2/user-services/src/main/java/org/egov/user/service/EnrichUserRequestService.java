@@ -7,6 +7,7 @@ import java.util.UUID;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.request.Role;
 import org.egov.common.contract.request.Type;
+import org.egov.user.contract.Address;
 import org.egov.user.contract.User;
 import org.egov.user.utils.AuditDetailsPopulator;
 import org.springframework.stereotype.Component;
@@ -35,6 +36,7 @@ public class EnrichUserRequestService {
 	// TODO: Null check for userDetails
 	private void setUserDetailUUId(User user) {
 		user.getUserDetails().setUuid(UUID.randomUUID().toString());
+		user.getUserDetails().getAddresses().forEach(address -> address.setUuid(UUID.randomUUID().toString()));
 	}
 	
 	private void setUserRole(User user) {

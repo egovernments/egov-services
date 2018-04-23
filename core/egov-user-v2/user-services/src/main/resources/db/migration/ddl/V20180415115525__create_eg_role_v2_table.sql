@@ -4,7 +4,7 @@ CREATE TABLE eg_user_role_v2 (
     rolecode character varying(50) NOT NULL,
 	createdby character varying(64),
     lastmodifiedby character varying(64),
-    createddate timestamp,
-    lastmodifieddate timestamp,
+    createddate bigint,
+    lastmodifieddate bigint,
     CONSTRAINT eg_user_role_code_key UNIQUE (rolecode, userid)
 );

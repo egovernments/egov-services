@@ -40,9 +40,12 @@ public class UserRequestValidator {
 		List<User> users = userReq.getUsers();
 
 		for (User user : users) {
+			
+			// TODO do we need to throw error back for every item in the list rather than the whole list @once?
 			if (!CollectionUtils.isEmpty(errors))
 				return errors;
 
+			// TODO why different type of user creation is not allowed?
 			validateUserType(user.getType().toString(), userTypes);
 			
 		}

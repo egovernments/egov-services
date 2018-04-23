@@ -1,0 +1,163 @@
+serviceMaps:
+ serviceName: User service version 2
+ mappings:
+ - version: 1.0
+   name: User Create
+   description: create a new user
+   fromTopic: save-user-v2
+   queryMaps:
+    - query: INSERT INTO eg_user_v2 (id, tenantid, username, type, password, locale, mobile, email, active, accountlocked, createdby, lastmodifiedby, createddate, lastmodifieddate) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+      basePath: $.Users.*
+      jsonMaps:
+
+       - jsonPath: $.Users.*.uuid
+
+       - jsonPath: $.Users.*.tenantId
+
+       - jsonPath: $.Users.*.userName
+
+       - jsonPath: $.Users.*.type
+
+       - jsonPath: $.Users.*.password
+
+       - jsonPath: $.Users.*.locale
+
+       - jsonPath: $.Users.*.mobile
+
+       - jsonPath: $.Users.*.email
+
+       - jsonPath: $.Users.*.active
+
+       - jsonPath: $.Users.*.accountLocked
+
+       - jsonPath: $.Users.*.auditDetails.createdBy
+
+       - jsonPath: $.Users.*.auditDetails.lastModifiedBy
+
+       - jsonPath: $.Users.*.auditDetails.createdTime
+
+       - jsonPath: $.Users.*.auditDetails.lastModifiedTime
+
+
+    - query: INSERT INTO eg_user_detail_v2(uuid, userid, salutation, firstname, middlename, lastname, aadhaarnumber, pwdexpirydate, gender, dob, altcontactnumber, fathername, husbandname, pan, signature, identificationmark, photo, createdby, lastmodifiedby, createddate, lastmodifieddate) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+      basePath: $.Users.*.userDetails
+      jsonMaps:
+
+       - jsonPath: $.Users.*.userDetails.uuid
+
+       - jsonPath: $.Users.*.uuid
+
+       - jsonPath: $.Users.*.userDetails.salutation
+
+       - jsonPath: $.Users.*.userDetails.firstName
+
+       - jsonPath: $.Users.*.userDetails.middleName
+
+       - jsonPath: $.Users.*.userDetails.lastName
+
+       - jsonPath: $.Users.*.userDetails.aadhaarNumber
+
+       - jsonPath: $.Users.*.userDetails.pwdExpiryDate
+
+       - jsonPath: $.Users.*.userDetails.gender
+
+       - jsonPath: $.Users.*.userDetails.dob
+
+       - jsonPath: $.Users.*.userDetails.altContactNumber
+
+       - jsonPath: $.Users.*.userDetails.fatherName
+
+       - jsonPath: $.Users.*.userDetails.husbandName
+
+       - jsonPath: $.Users.*.userDetails.pan
+
+       - jsonPath: $.Users.*.userDetails.signature
+
+       - jsonPath: $.Users.*.userDetails.identificationMark
+
+       - jsonPath: $.Users.*.userDetails.photo
+
+       - jsonPath: $.Users.*.auditDetails.createdBy
+
+       - jsonPath: $.Users.*.auditDetails.lastModifiedBy
+
+       - jsonPath: $.Users.*.auditDetails.createdTime
+
+       - jsonPath: $.Users.*.auditDetails.lastModifiedTime
+
+
+    - query: INSERT INTO eg_user_role_v2(uuid, userid, rolecode, createdby, lastmodifiedby, createddate, lastmodifieddate)  VALUES ((SELECT md5(random()::text || clock_timestamp()::text)::uuid), ?, ?, ?, ?, ?, ?);
+      basePath: $.Users.*.primaryrole.*
+      jsonMaps:
+
+       - jsonPath: $.Users[*][?({code} in @.primaryrole[*].code)].uuid
+       
+       - jsonPath: $.Users.*.primaryrole.*.code
+
+       - jsonPath: $.Users[*][?({code} in @.primaryrole[*].code)].auditDetails.createdBy
+
+       - jsonPath: $.Users[*][?({code} in @.primaryrole[*].code)].auditDetails.lastModifiedBy
+
+       - jsonPath: $.Users[*][?({code} in @.primaryrole[*].code)].auditDetails.createdTime
+
+       - jsonPath: $.Users[*][?({code} in @.primaryrole[*].code)].auditDetails.lastModifiedTime
+
+
+
+    - query: INSERT INTO eg_user_role_v2(uuid, userid, rolecode, createdby, lastmodifiedby, createddate, lastmodifieddate)  VALUES ((SELECT md5(random()::text || clock_timestamp()::text)::uuid), ?, ?, ?, ?, ?, ?);
+      basePath: $.Users.*.additionalroles.*.roles.*
+      jsonMaps:
+
+
+       - jsonPath: $.Users[*][?({code} in @.additionalroles.*.roles[*].code)].uuid
+
+       - jsonPath: $.Users.*.additionalroles.*.roles.*.code
+
+       - jsonPath: $.Users[*][?({code} in @.additionalroles.*.roles[*].code)].auditDetails.createdBy
+
+       - jsonPath: $.Users[*][?({code} in @.additionalroles.*.roles[*].code)].auditDetails.lastModifiedBy
+
+       - jsonPath: $.Users[*][?({code} in @.additionalroles.*.roles[*].code)].auditDetails.createdTime
+
+       - jsonPath: $.Users[*][?({code} in @.additionalroles.*.roles[*].code)].auditDetails.lastModifiedTime
+
+
+    - query: INSERT INTO eg_user_address_v2(tenantid, uuid, userid, latitude, longitude, addressid, addressnumber, type, addressline1, addressline2, landmark, city, pincode, detail, createdby, lastmodifiedby, createddate, lastmodifieddate)   VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+      basePath: $.Users.*.userDetails.addresses.*
+      jsonMaps:
+
+       - jsonPath: $.Users[*][?({uuid} in @.userDetails.addresses[*].uuid)].tenantId
+
+       - jsonPath: $.Users.*.userDetails.addresses.*.uuid
+
+       - jsonPath: $.Users[*][?({uuid} in @.userDetails.addresses[*].uuid)].uuid
+
+       - jsonPath: $.Users.*.userDetails.addresses.*.latitude
+
+       - jsonPath: $.Users.*.userDetails.addresses.*.longitude
+
+       - jsonPath: $.Users.*.userDetails.addresses.*.addressid
+
+       - jsonPath: $.Users.*.userDetails.addresses.*.addressnumber
+
+       - jsonPath: $.Users.*.userDetails.addresses.*.type
+
+       - jsonPath: $.Users.*.userDetails.addresses.*.addressline1
+
+       - jsonPath: $.Users.*.userDetails.addresses.*.addressline2
+
+       - jsonPath: $.Users.*.userDetails.addresses.*.landmark
+
+       - jsonPath: $.Users.*.userDetails.addresses.*.city
+
+       - jsonPath: $.Users.*.userDetails.addresses.*.pincode
+
+       - jsonPath: $.Users.*.userDetails.addresses.*.detail
+
+       - jsonPath: $.Users[*][?({uuid} in @.userDetails.addresses[*].uuid)].auditDetails.createdBy
+
+       - jsonPath: $.Users[*][?({uuid} in @.userDetails.addresses[*].uuid)].auditDetails.lastModifiedBy
+
+       - jsonPath: $.Users[*][?({uuid} in @.userDetails.addresses[*].uuid)].auditDetails.createdTime
+
+       - jsonPath: $.Users[*][?({uuid} in @.userDetails.addresses[*].uuid)].auditDetails.lastModifiedTime

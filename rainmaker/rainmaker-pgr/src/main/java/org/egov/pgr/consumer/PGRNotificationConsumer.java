@@ -116,7 +116,7 @@ public class PGRNotificationConsumer {
 
 	private static Map<String, Map<String, String>> localizedMessageMap = new HashMap<>();
 
-	@KafkaListener(topics = {"${kafka.topics.save.servicereq}","${kafka.topics.update.service}"})
+	@KafkaListener(topics = {"${kafka.topics.save.service}","${kafka.topics.update.service}"})
 
 	public void listen(final HashMap<String, Object> record, @Header(KafkaHeaders.RECEIVED_TOPIC) String topic) {
 		ObjectMapper mapper = new ObjectMapper();
@@ -125,7 +125,7 @@ public class PGRNotificationConsumer {
 			log.info("Consuming record: " + record);
 			serviceReqRequest = mapper.convertValue(record, ServiceRequest.class);
 		} catch (final Exception e) {
-			log.error("Error while listening to value: " + record + " on topic: " + topic + ": " + e.getMessage());
+			log.error("Error while listening to value: " + record + " on topic: " + topic + ": " + e);
 		}
 		process(serviceReqRequest);
 	}

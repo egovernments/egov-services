@@ -395,7 +395,7 @@ public class GrievanceService {
 			String[] tenant = serviceReqSearchCriteria.getTenantId().split("[.]");
 			if (tenant.length > 1)
 				serviceReqSearchCriteria.setTenantId(tenant[0]);
-		} else if (userType.equalsIgnoreCase("EMPLOYEE")) {
+		} else if (null != precedentRole && userType.equalsIgnoreCase("EMPLOYEE")) {
 			if (precedentRole.equalsIgnoreCase(PGRConstants.ROLE_DGRO)) {
 				log.info("Setting default info for DGRO........");
 				Integer departmenCode = getDepartmentCode(serviceReqSearchCriteria, requestInfo);

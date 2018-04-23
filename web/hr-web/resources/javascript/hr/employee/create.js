@@ -991,6 +991,17 @@ function checkNRemoveFile() {
                 var ind = employee[key].indexOf(filesToBeDeleted[key][i]);
                 employee[key].splice(ind, 1);
             }
+        } else if(key == "servicehistory"){
+            key = "serviceHistory";
+            for (var i = 0; i < filesToBeDeleted[key].length; i++) {
+                for (var j = 0; j < employee[key].length; j++) {
+                    var ind = employee[key][j]["documents"].indexOf(filesToBeDeleted[key][i]);
+                    if (ind > -1) {
+                        employee[key][j]["documents"].splice(ind, 1);
+                        break;
+                    }
+                }
+            }
         } else {
             for (var i = 0; i < filesToBeDeleted[key].length; i++) {
                 for (var j = 0; j < employee[key].length; j++) {
@@ -1137,6 +1148,28 @@ function returnObject(alies, optional) {
 
 function enableAndDisable(id) {
     $(`#${id}`).toggle();
+}
+
+function getNameByCode(object, code, property = "") {
+    if (code == "" || code == null) {
+        return "";
+    }
+    for (var i = 0; i < object.length; i++) {
+        if (property == "") {
+            if (object[i].code == code) {
+                return object[i].name;
+            }
+        } else {
+            if (object[i].hasOwnProperty(property)) {
+                if (object[i].code == code) {
+                    return object[i][property];
+                }
+            } else {
+                return "";
+            }
+        }
+    }
+    return "";
 }
 
 //common add and update
@@ -1360,10 +1393,10 @@ function updateTable(tableName, modalName, object) {
                                 ${employee[object][i]["serviceTo"] || ""}
                             </td>`)
             $(tableName).append(`<td data-label=${"department"}>
-                            ${employee[object][i]["department"] || ""}
+                            ${getNameByCode(commonObject["serviceHistory_department"],employee[object][i]["department"]) || ""}
                             </td>`)
             $(tableName).append(`<td data-label=${"designation"}>
-                          ${employee[object][i]["designation"] || ""}
+                          ${getNameByCode(commonObject["serviceHistory_designation"],employee[object][i]["designation"]) || ""}
                             </td>`)
             $(tableName).append(`<td data-label=${"remarks"}>
                                     ${employee[object][i]["remarks"]}

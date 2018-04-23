@@ -383,11 +383,20 @@ public class GrievanceService {
 		return prepareResult(response, requestInfo);
 	}
 
+	/**
+	 * Method to enrich the request for search based on roles.
+	 * 
+	 * @param requestInfo
+	 * @param serviceReqSearchCriteria
+	 */
 	public void enrichRequest(RequestInfo requestInfo, ServiceReqSearchCriteria serviceReqSearchCriteria) {
 		log.info("Enriching request.........: " + serviceReqSearchCriteria);
 		List<String> roleNames = requestInfo.getUserInfo().getRoles().parallelStream().map(Role::getName)
 				.collect(Collectors.toList());
 		String precedentRole = getPrecedentRole(roleNames);
+		if(null == precedentRole) {
+			throw new CustomException(ErrorConstants.UNAUTHORIZED_USER_KEY, ErrorConstants.UNAUTHORIZED_USER_MSG);
+		}
 		String userType = requestInfo.getUserInfo().getType();
 		if (userType.equalsIgnoreCase("CITIZEN")) {
 			log.info("Setting tenant for citizen........");
@@ -395,7 +404,7 @@ public class GrievanceService {
 			String[] tenant = serviceReqSearchCriteria.getTenantId().split("[.]");
 			if (tenant.length > 1)
 				serviceReqSearchCriteria.setTenantId(tenant[0]);
-		} else if (null != precedentRole && userType.equalsIgnoreCase("EMPLOYEE")) {
+		} else if (userType.equalsIgnoreCase("EMPLOYEE")) {
 			if (precedentRole.equalsIgnoreCase(PGRConstants.ROLE_DGRO)) {
 				log.info("Setting default info for DGRO........");
 				Integer departmenCode = getDepartmentCode(serviceReqSearchCriteria, requestInfo);
@@ -496,6 +505,14 @@ public class GrievanceService {
 		return departmenCode;
 	}	
 
+	/**
+	 * Get department on department code
+	 * 
+	 * @param serviceReqSearchCriteria
+	 * @param requestInfo
+	 * @param departmentCode
+	 * @return String
+	 */
 	public String getDepartment(ServiceReqSearchCriteria serviceReqSearchCriteria, RequestInfo requestInfo,
 			Integer departmentCode) {
 		StringBuilder deptUri = new StringBuilder();
@@ -565,7 +582,6 @@ public class GrievanceService {
 			log.error("Exception while parsing SRid search on AssignedTo result: " + e);
 			return serviceRequestIds;
 		}
-
 		log.debug("serviceRequestIds: " + serviceRequestIds);
 
 		return serviceRequestIds;
@@ -638,7 +654,6 @@ public class GrievanceService {
 	 * @param historyList
 	 */
 	private void replaceIdsWithUrls(List<ActionHistory> historyList) {
-
 		if (CollectionUtils.isEmpty(historyList))
 			return;
 		try {
@@ -650,15 +665,12 @@ public class GrievanceService {
 				if (!CollectionUtils.isEmpty(media))
 					fileStoreIds.addAll(media);
 			}));
-
 			Map<String, String> urlIdMap = null;
 			try {
 				urlIdMap = fileStoreRepo.getUrlMaps(tenantId, fileStoreIds);
 			} catch (Exception e) {
 				log.error(" exception while connecting to filestore : " + e);
 			}
-
-			//log.info("urlIdMap: " + urlIdMap);
 			if (null != urlIdMap) {
 				for (int i = 0; i < historyList.size(); i++) {
 					ActionHistory history = historyList.get(i);

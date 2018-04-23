@@ -34,6 +34,9 @@ public class ErrorConstants {
 	public static final String ASSIGNEE_MISSING_FOR_ACTION_ASSIGN_REASSIGN_KEY = "EG_PGR_UPDATE_ASSIGN_REASSIGN";
 	public static final String ASSIGNEE_MISSING_FOR_ACTION_ASSIGN_REASSIGN_MSG = "The assignees are missing for the assign actions of services with ids : ";
 	
+	public static final String UNAUTHORIZED_USER_MSG = "This User is not authorized to access this information";
+	public static final String UNAUTHORIZED_USER_KEY = "EG_PGR_INVALID_USER";
+	
 	//public static final String UPDATE_NO_ACTIONS_ERROR_KEY = "EG_PGR_UPDATE_ACTIONINFO";
 	
 	//public static final String UPDATE_NO_ACTIONS_ERROR_MSG = "Update cannot be performed without";

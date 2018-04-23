@@ -2,6 +2,7 @@ package org.egov.pgr.consumer;
 
 import java.io.StringWriter;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -101,6 +102,10 @@ public class PGRNotificationConsumer {
 	
 	@Value("${egov.ui.app.host}")
 	private String uiAppHost;
+	
+	@Value("${notification.allowed.on.status}")
+	private String notificationEnabledStatuses;
+	
 
 	@Autowired
 	private ServiceRequestRepository serviceRequestRepository;
@@ -501,6 +506,24 @@ public class PGRNotificationConsumer {
 
 	public boolean isNotificationEnabled(String status, String userType, String comment, String action) {
 		boolean isNotifEnabled = false;
+/*		List<String> notificationEnabledStatusList = Arrays.asList(notificationEnabledStatuses.split(","));
+		if(notificationEnabledStatusList.contains(status)) {
+			if(status.equalsIgnoreCase(WorkFlowConfigs.STATUS_OPENED)) {
+				if (action.equals(WorkFlowConfigs.ACTION_REOPEN)) {
+					if (isReopenNotifEnaled) {
+						isNotifEnabled = true;
+					}
+				}	
+			}
+			if(status.equalsIgnoreCase(WorkFlowConfigs.STATUS_ASSIGNED)) {
+				if (action.equals(WorkFlowConfigs.ACTION_REASSIGN)) {
+					if (isReassignNotifEnaled) {
+						isNotifEnabled = true;
+					}
+				}	
+			}
+			isNotifEnabled= true;
+		}*/
 		if (!StringUtils.isEmpty(status)) {
 			switch (status) {
 			case WorkFlowConfigs.STATUS_OPENED: {

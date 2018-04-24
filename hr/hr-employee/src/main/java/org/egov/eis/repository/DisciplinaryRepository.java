@@ -40,11 +40,7 @@
 
 package org.egov.eis.repository;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.stream.Collectors;
-
+import lombok.extern.slf4j.Slf4j;
 import org.egov.eis.model.Disciplinary;
 import org.egov.eis.model.DisciplinaryDocuments;
 import org.egov.eis.repository.builder.DisciplinaryQueryBuilder;
@@ -56,9 +52,10 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import lombok.extern.slf4j.Slf4j;
-
-import static com.sun.jmx.snmp.ThreadContext.contains;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Repository
 @Slf4j
@@ -91,9 +88,9 @@ public class DisciplinaryRepository {
             log.info("the insert query for disciplinary docs : " + sql);
             final List<Object[]> documentBatchArgs = new ArrayList<>();
             for (final DisciplinaryDocuments documents : disciplinaryDocuments) {
-                final Object[] documentRecord = { disciplinary.getId(), documents.getDocumentType(),
+                final Object[] documentRecord = {disciplinary.getId(), documents.getDocumentType(),
                         documents.getFileStoreId(),
-                        disciplinary.getTenantId() };
+                        disciplinary.getTenantId()};
                 documentBatchArgs.add(documentRecord);
             }
 
@@ -105,7 +102,7 @@ public class DisciplinaryRepository {
             }
         }
 
-        final Object[] obj = new Object[] { disciplinary.getId(), disciplinary.getEmployeeId(), disciplinary.getGistCase(),
+        final Object[] obj = new Object[]{disciplinary.getId(), disciplinary.getEmployeeId(), disciplinary.getGistCase(),
                 disciplinary.getDisciplinaryAuthority(),
                 disciplinary.getMemoNo(), disciplinary.getMemoDate(),
                 disciplinary.getMemoServingDate(), disciplinary.getDateOfReceiptMemoDate(), disciplinary.getExplanationAccepted(),
@@ -128,7 +125,7 @@ public class DisciplinaryRepository {
                 disciplinaryRequest.getRequestInfo().getUserInfo().getId(), new Date(),
                 disciplinaryRequest.getRequestInfo().getUserInfo().getId(), new Date(), disciplinary.getTenantId(),
                 disciplinary.getCourtOrderType(),
-                disciplinary.getPresentingOfficerDesignation(), disciplinary.getEnquiryOfficerDesignation(),disciplinary.getPunishmentImplemented(),disciplinary.getEndDateOfPunishment() };
+                disciplinary.getPresentingOfficerDesignation(), disciplinary.getEnquiryOfficerDesignation(), disciplinary.getPunishmentImplemented(), disciplinary.getEndDateOfPunishment()};
         jdbcTemplate.update(disciplinaryInsert, obj);
         return disciplinaryRequest;
     }
@@ -139,7 +136,7 @@ public class DisciplinaryRepository {
         log.info("DisciplinaryRequest::" + disciplinaryRequest);
         final String disciplinaryUpdate = DisciplinaryQueryBuilder.updateDisciplinaryQuery();
         final Disciplinary disciplinary = disciplinaryRequest.getDisciplinary();
-        final Object[] obj = new Object[] { disciplinary.getEmployeeId(), disciplinary.getGistCase(),
+        final Object[] obj = new Object[]{disciplinary.getEmployeeId(), disciplinary.getGistCase(),
                 disciplinary.getDisciplinaryAuthority(),
                 disciplinary.getMemoNo(), disciplinary.getMemoDate(),
                 disciplinary.getMemoServingDate(), disciplinary.getDateOfReceiptMemoDate(), disciplinary.getExplanationAccepted(),
@@ -160,12 +157,12 @@ public class DisciplinaryRepository {
                 disciplinary.getGistOfDirectionIssuedByCourt(),
                 disciplinary.getLastModifiedBy(), new Date(), disciplinary.getCourtOrderType(),
                 disciplinary.getPresentingOfficerDesignation(), disciplinary.getEnquiryOfficerDesignation(),
-                disciplinary.getPunishmentImplemented(),disciplinary.getEndDateOfPunishment(),
-                disciplinary.getId(), disciplinary.getTenantId() };
+                disciplinary.getPunishmentImplemented(), disciplinary.getEndDateOfPunishment(),
+                disciplinary.getId(), disciplinary.getTenantId()};
         jdbcTemplate.update(disciplinaryUpdate, obj);
         updateDisciplinaryDocuments(disciplinary);
-        if(disciplinary.getDisciplinaryDocuments()!=null && !disciplinary.getDisciplinaryDocuments().isEmpty())
-            disciplinaryDocumentsRepository.save(disciplinary.getId(),disciplinary.getDisciplinaryDocuments(),disciplinary.getTenantId());
+        if (disciplinary.getDisciplinaryDocuments() != null && !disciplinary.getDisciplinaryDocuments().isEmpty())
+            disciplinaryDocumentsRepository.save(disciplinary.getId(), disciplinary.getDisciplinaryDocuments(), disciplinary.getTenantId());
         return disciplinaryRequest;
 
     }
@@ -180,7 +177,7 @@ public class DisciplinaryRepository {
 
     public boolean checkIfdIDisciplinaryExists(final Long id, final String tenantId) {
         return jdbcTemplate.queryForObject(DisciplinaryQueryBuilder.DISCIPLINARY_EXISTENCE_CHECK_QUERY,
-                new Object[] { id, tenantId },
+                new Object[]{id, tenantId},
                 Boolean.class);
     }
 
@@ -197,7 +194,7 @@ public class DisciplinaryRepository {
     }
 
 
-    private void updateDisciplinaryDocuments(Disciplinary disciplinary){
+    private void updateDisciplinaryDocuments(Disciplinary disciplinary) {
         List<String> documents = disciplinary.getDisciplinaryDocuments().stream().map(doc -> doc.getFileStoreId()).collect(Collectors.toList());
         List<DisciplinaryDocuments> documentsFromDB = disciplinaryDocumentsRepository.findByDisciplinaryId(disciplinary.getId(), disciplinary.getTenantId());
         for (DisciplinaryDocuments documentInDb : documentsFromDB) {

@@ -44,6 +44,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang.StringUtils;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ResponseInfo;
 import org.egov.eis.config.ApplicationProperties;
@@ -606,6 +607,7 @@ public class EmployeeService {
         RequestInfoWrapper requestInfoWrapper = RequestInfoWrapper.builder().requestInfo(employeeRequest.getRequestInfo()).build();
         String[] tenant = employeeRequest.getEmployee().getTenantId().split("\\.");
         String tenantId = tenant.length > 1 ? tenant[tenant.length - 1] : tenant[0];
+        String ulb = tenantId.substring(0, 1).toUpperCase() + tenantId.substring(1);
         List<Assignment> assignmentList = new ArrayList<>();
         List<Assignment> removedAssignment = new ArrayList<>();
 
@@ -654,7 +656,7 @@ public class EmployeeService {
                         serviceHistory.setAssignmentId(assign.getId());
                     }
                     serviceHistory.setServiceInfo("Sevice entry changes for assignment");
-                    serviceHistory.setCity(tenantId);
+                    serviceHistory.setCity(ulb);
                     serviceHistory.setServiceFrom(assign.getFromDate());
                     serviceHistory.setServiceTo(assign.getToDate());
                     serviceHistory.setDepartment(departments.get(0).getCode());
@@ -678,6 +680,8 @@ public class EmployeeService {
         RequestInfoWrapper requestInfoWrapper = RequestInfoWrapper.builder().requestInfo(employeeRequest.getRequestInfo()).build();
         String[] tenant = employeeRequest.getEmployee().getTenantId().split("\\.");
         String tenantId = tenant.length > 1 ? tenant[tenant.length - 1] : tenant[0];
+        String ulb = tenantId.substring(0, 1).toUpperCase() + tenantId.substring(1);
+
         List<Assignment> removedAssignment = new ArrayList<>() ;
         empAssignment.stream().forEach(assign -> {
             List<Department> departments = departmentService.getDepartments(Arrays.asList(assign.getDepartment()), employeeRequest.getEmployee().getTenantId(),
@@ -692,7 +696,7 @@ public class EmployeeService {
                 serviceHistory.setAssignmentId(assign.getId());
             }
             serviceHistory.setServiceInfo("Sevice entry changes for assignment");
-            serviceHistory.setCity(tenantId);
+            serviceHistory.setCity(ulb);
             serviceHistory.setServiceFrom(assign.getFromDate());
             serviceHistory.setServiceTo(assign.getToDate());
             serviceHistory.setDepartment(departments.get(0).getCode());

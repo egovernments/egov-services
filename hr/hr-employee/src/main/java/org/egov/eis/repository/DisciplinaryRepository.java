@@ -58,6 +58,8 @@ import org.springframework.stereotype.Repository;
 
 import lombok.extern.slf4j.Slf4j;
 
+import static com.sun.jmx.snmp.ThreadContext.contains;
+
 @Repository
 @Slf4j
 public class DisciplinaryRepository {
@@ -196,7 +198,14 @@ public class DisciplinaryRepository {
 
 
     private void updateDisciplinaryDocuments(Disciplinary disciplinary){
+        List<String> documents = disciplinary.getDisciplinaryDocuments().stream().map(doc -> doc.getFileStoreId()).collect(Collectors.toList());
         List<DisciplinaryDocuments> documentsFromDB = disciplinaryDocumentsRepository.findByDisciplinaryId(disciplinary.getId(), disciplinary.getTenantId());
+        for (DisciplinaryDocuments documentInDb : documentsFromDB) {
+            if (!documents.contains(documentInDb.getFileStoreId())) {
+                disciplinaryDocumentsRepository.delete(documentInDb.getDisciplinaryId(), documentInDb.getDocumentType(), documentInDb.getFileStoreId(),
+                        disciplinary.getTenantId());
+            }
+        }
         if (disciplinary.getDisciplinaryDocuments() != null && !disciplinary.getDisciplinaryDocuments().isEmpty()) {
             disciplinary.getDisciplinaryDocuments().removeAll(documentsFromDB);
         }

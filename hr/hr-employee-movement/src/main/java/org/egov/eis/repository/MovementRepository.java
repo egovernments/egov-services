@@ -214,7 +214,13 @@ public class MovementRepository {
 	private void updateMovementDocuments(Movement movement){
         List<Document> documentsFromDB = documentsRepository.findByMovementId(movement.getId(), movement.getTenantId());
         List<String> documents = documentsFromDB.stream().map(doc -> doc.getDocument()).collect(Collectors.toList());
-        if (movement.getDocuments() != null && !movement.getDocuments().isEmpty()) {
+		for (Document documentInDb : documentsFromDB) {
+			if (!documents.contains(documentInDb.getDocument())) {
+				documentsRepository.delete(documentInDb.getMovementId(), documentInDb.getDocument(), movement.getTenantId());
+			}
+		}
+
+		if (movement.getDocuments() != null && !movement.getDocuments().isEmpty()) {
             movement.getDocuments().removeAll(documents);
         }
     }

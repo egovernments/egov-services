@@ -1103,6 +1103,7 @@ class EmployeeDisciplinary extends React.Component {
 
         const renderFileBody = function (fles) {
             return fles.map(function (file, ind) {
+                if(getUrlVars()["type"] == "update"){
                 return (
                     <tr key={ind}>
                         <td>{ind + 1}</td>
@@ -1112,14 +1113,30 @@ class EmployeeDisciplinary extends React.Component {
                                 Download
                       </a>
                         </td>
-                        {getUrlVars()["type"] == "update" ? "<td>" + renderFileDelBtn(file.fileStoreId) + "</td>" : ""}
+                         <td>{renderFileDelBtn(file.fileStoreId)}</td>
                     </tr>
                 )
+            }else{
+                return (
+                    <tr key={ind}>
+                        <td>{ind + 1}</td>
+                        <td>{file.documentType}</td>
+                        <td>
+                            <a href={window.location.origin + CONST_API_GET_FILE + file.fileStoreId} target="_blank">
+                                Download
+                      </a>
+                        </td>
+                    </tr>
+                )
+            }
+
             })
         }
 
         const showAttachedFiles = function () {
             if (disciplinaryDocuments.length) {
+                if(getUrlVars()["type"] == "update"){
+
                 return (
                     <table id="fileTable" className="table table-bordered">
                         <thead>
@@ -1127,7 +1144,7 @@ class EmployeeDisciplinary extends React.Component {
                                 <th>Sr. No.</th>
                                 <th>Document type</th>
                                 <th>File</th>
-                                {getUrlVars()["type"] == "update" ? "<th>Action</th>" : ""}
+                               
                             </tr>
                         </thead>
                         <tbody id="agreementSearchResultTableBody">
@@ -1137,7 +1154,27 @@ class EmployeeDisciplinary extends React.Component {
                         </tbody>
 
                     </table>
-                )
+                )}else{
+                    return (
+                        <table id="fileTable" className="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Sr. No.</th>
+                                    <th>Document type</th>
+                                    <th>File</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="agreementSearchResultTableBody">
+                                {
+                                    renderFileBody(disciplinaryDocuments)
+                                }
+                            </tbody>
+    
+                        </table>
+                    )
+
+                }
             }
         }
 

@@ -57,6 +57,9 @@ public class GrievanceService {
 	
 	@Value("${egov.hr.employee.host}")
 	private String hrEmployeeHost;
+
+	@Value("${egov.hr.employee.v2.search.endpoint}")
+	private String hrEmployeeV2SearchEndpoint;
 	
 	@Value("${egov.hr.employee.search.endpoint}")
 	private String hrEmployeeSearchEndpoint;
@@ -694,4 +697,5 @@ public class GrievanceService {
 			log.error("Exception while replacing s3 links: " + e);
 		}
 	}
+
 }

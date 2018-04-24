@@ -172,12 +172,12 @@ public class PGRUtils {
 	public MdmsCriteriaReq prepareMdMsRequestForDept(StringBuilder uri, String tenantId, String code, RequestInfo requestInfo) {
 		uri.append(mdmsHost).append(mdmsEndpoint);
 		MasterDetail masterDetail = org.egov.mdms.model.MasterDetail.builder()
-				.name(PGRConstants.MDMS_COMMON_MASTERS_MASTER_NAME).
+				.name(PGRConstants.MDMS_DEPT_MASTERS_MASTER_NAME).
 				filter("[?(@.code=='"+code+"')].name").build();
 		List<MasterDetail> masterDetails = new ArrayList<>();
 		masterDetails.add(masterDetail);
 		ModuleDetail moduleDetail = ModuleDetail.builder()
-				.moduleName(PGRConstants.MDMS_DEPT_MASTERS_MODULE_NAME).masterDetails(masterDetails).build();
+				.moduleName(PGRConstants.MDMS_COMMON_MASTERS_MODULE_NAME).masterDetails(masterDetails).build();
 		List<ModuleDetail> moduleDetails = new ArrayList<>();
 		moduleDetails.add(moduleDetail);
 		MdmsCriteria mdmsCriteria = MdmsCriteria.builder().tenantId(tenantId).moduleDetails(moduleDetails).build();
@@ -188,12 +188,12 @@ public class PGRUtils {
 	public MdmsCriteriaReq prepareMdMsRequestForDesignation(StringBuilder uri, String tenantId, String code, RequestInfo requestInfo) {
 		uri.append(mdmsHost).append(mdmsEndpoint);
 		MasterDetail masterDetail = org.egov.mdms.model.MasterDetail.builder()
-				.name(PGRConstants.MDMS_SERVICETYPE_MASTER_NAME).
+				.name(PGRConstants.MDMS_DESIGNATION_MASTERS_MASTER_NAME).
 				filter("[?(@.code=='"+code+"')].name").build();
 		List<MasterDetail> masterDetails = new ArrayList<>();
 		masterDetails.add(masterDetail);
 		ModuleDetail moduleDetail = ModuleDetail.builder()
-				.moduleName(PGRConstants.MDMS_PGR_MOD_NAME).masterDetails(masterDetails).build();
+				.moduleName(PGRConstants.MDMS_COMMON_MASTERS_MODULE_NAME).masterDetails(masterDetails).build();
 		List<ModuleDetail> moduleDetails = new ArrayList<>();
 		moduleDetails.add(moduleDetail);
 		MdmsCriteria mdmsCriteria = MdmsCriteria.builder().tenantId(tenantId).moduleDetails(moduleDetails).build();

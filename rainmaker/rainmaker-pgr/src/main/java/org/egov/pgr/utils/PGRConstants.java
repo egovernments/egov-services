@@ -1,6 +1,8 @@
 package org.egov.pgr.utils;
 
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.springframework.stereotype.Component;
 
@@ -25,9 +27,9 @@ public class PGRConstants {
 	public static final String SRID_ASSIGNEDTO_JSONPATH = "$.servicesRequestIds.*.businesskey";
 	public static final String MDMS_PGR_MOD_NAME = "RAINMAKER-PGR";
 	public static final String MDMS_SERVICETYPE_MASTER_NAME = "ServiceDefs";
-	public static final String MDMS_COMMON_MASTERS_MASTER_NAME = "common-masters";
-	public static final String MDMS_DEPT_MASTERS_MODULE_NAME = "Designation";
-	public static final String MDMS_DESIGNATION_MASTERS_MODULE_NAME = "Department";
+	public static final String MDMS_COMMON_MASTERS_MODULE_NAME = "common-masters";
+	public static final String MDMS_DEPT_MASTERS_MASTER_NAME = "Department";
+	public static final String MDMS_DESIGNATION_MASTERS_MASTER_NAME = "Designation";
 	public static final String LOCALIZATION_MODULE_NAME = "rainmaker-pgr";
 	
 	public static final String LOCALIZATION_CODE_SUBMIT = "pgr.sms.notification.submit";
@@ -64,6 +66,7 @@ public class PGRConstants {
 	public static final String SMS_NOTIFICATION_DATE_KEY = "<date>";
 	public static final String SMS_NOTIFICATION_ID_KEY = "<id>";
 	public static final String SMS_NOTIFICATION_EMP_NAME_KEY = "<emp_name>";
+	public static final String SMS_NOTIFICATION_USER_NAME_KEY = "<user_name>";
 	public static final String SMS_NOTIFICATION_EMP_DEPT_KEY = "<emp_department>";
 	public static final String SMS_NOTIFICATION_EMP_DESIGNATION_KEY = "<emp_designation>";
 	public static final String SMS_NOTIFICATION_COMMENT_KEY = "<comment>";
@@ -78,5 +81,70 @@ public class PGRConstants {
 	public static final String ROLE_EMPLOYEE = "Employee";
 	public static final String ROLE_GRO = "Grievance Routing Officer";
 	public static final String ROLE_DGRO = "Department Grievance Routing Officer";
+	
+	private static Map<String, String> statusNotifKeyMap = prepareStatusNotifKeyMap();
+
+	private static Map<String, String> actionNotifKeyMap = prepareActionNotifKeyMap();
+	
+	private static Map<String, String> statusLocalizationKeyMap = prepareStatusLocalizationKeyMap();
+
+	private static Map<String, String> actionLocalizationKeyMap = prepareActionLocalizationKeyMap();
+
+	
+	private static Map<String, String> prepareStatusNotifKeyMap() {
+		
+		Map<String, String> map = new HashMap<>();
+		map.put(WorkFlowConfigs.STATUS_OPENED, "submitted");
+		map.put(WorkFlowConfigs.STATUS_ASSIGNED, "assigned");
+		map.put(WorkFlowConfigs.STATUS_REJECTED, "rejected");
+		map.put(WorkFlowConfigs.STATUS_RESOLVED, "resolved");
+	
+		return map;
+	}
+	
+	private static Map<String, String> prepareActionNotifKeyMap() {
+
+		Map<String, String> map = new HashMap<>();
+		map.put(WorkFlowConfigs.ACTION_REOPEN, "reopened");
+		map.put(WorkFlowConfigs.ACTION_REASSIGN, "reassigned");
+
+		return map;
+	}
+	
+	private static Map<String, String> prepareStatusLocalizationKeyMap() {
+
+		Map<String, String> map = new HashMap<>();
+		map.put(WorkFlowConfigs.STATUS_OPENED, LOCALIZATION_CODE_SUBMIT);
+		map.put(WorkFlowConfigs.STATUS_ASSIGNED, LOCALIZATION_CODE_ASSIGN);
+		map.put(WorkFlowConfigs.STATUS_REJECTED, LOCALIZATION_CODE_REJECT);
+		map.put(WorkFlowConfigs.STATUS_RESOLVED, LOCALIZATION_CODE_RESOLVE);
+	
+		return map;
+	}
+	
+	private static Map<String, String> prepareActionLocalizationKeyMap() {
+
+		Map<String, String> map = new HashMap<>();
+		map.put(WorkFlowConfigs.ACTION_REOPEN, LOCALIZATION_CODE_REOPEN);
+		map.put(WorkFlowConfigs.ACTION_REASSIGN, LOCALIZATION_CODE_REASSIGN);
+	
+		return map;
+	}
+	
+	public static Map<String, String> getStatusNotifKeyMap(){
+		return statusNotifKeyMap;
+	}
+	
+	public static Map<String, String> getActionNotifKeyMap(){
+		return actionNotifKeyMap;
+	}
+	
+	public static Map<String, String> getStatusLocalizationKeyMap(){
+		return statusLocalizationKeyMap;
+	}
+	
+	public static Map<String, String> getActionLocalizationKeyMap(){
+		return actionLocalizationKeyMap;
+	}
 		
 }

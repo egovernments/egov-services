@@ -1112,7 +1112,7 @@ class EmployeeDisciplinary extends React.Component {
                                 Download
                       </a>
                         </td>
-                        <td>{getUrlVars()["type"] == "update" ? renderFileDelBtn(file.fileStoreId) : ""}</td>
+                        {getUrlVars()["type"] == "update" ? "<td>" + renderFileDelBtn(file.fileStoreId) + "</td>" : ""}
                     </tr>
                 )
             })
@@ -1127,7 +1127,7 @@ class EmployeeDisciplinary extends React.Component {
                                 <th>Sr. No.</th>
                                 <th>Document type</th>
                                 <th>File</th>
-                                <th>Action</th>
+                                {getUrlVars()["type"] == "update" ? "<th>Action</th>" : ""}
                             </tr>
                         </thead>
                         <tbody id="agreementSearchResultTableBody">

@@ -95,7 +95,7 @@ public class MovementQueryBuilder {
         addOrderByClause(selectQuery, movementSearchRequest);
         addPagingClause(selectQuery, preparedStatementValues, movementSearchRequest);
 
-        logger.debug("Query : " + selectQuery);
+        logger.debug("MOVEMENT EXISTS Query : " + selectQuery);
         return selectQuery.toString();
     }
 

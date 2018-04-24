@@ -448,7 +448,7 @@ public class MovementRepository {
 				movement.getTenantId(), requestInfo).get(0).getId();
 		if (movementStatusId != null)
 			status = status + "," + movementStatusId.toString();
-
+		LOGGER.debug("STATUS:" + status);
 		final List<Object> preparedStatementValues = new ArrayList<>();
 		MovementSearchRequest movementSearchRequest = new MovementSearchRequest();
 
@@ -457,6 +457,7 @@ public class MovementRepository {
 		movementSearchRequest.setTypeOfmovement(movement.getTypeOfMovement().toString());
 		final String queryStr = movementQueryBuilder.getMovementExistQuery(movementSearchRequest, status, preparedStatementValues,
 				requestInfo);
+		LOGGER.debug("MOVEMENT EXISTS QUERY:" + queryStr);
 		return jdbcTemplate.query(queryStr, preparedStatementValues.toArray(), movementRowMapper);
 	}
 

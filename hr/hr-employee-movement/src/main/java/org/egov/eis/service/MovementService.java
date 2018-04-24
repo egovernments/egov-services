@@ -228,8 +228,12 @@ public class MovementService {
 						.getErrorMessage(ApplicationConstants.ERR_MOVEMENT_TRANSFER_LOCATION_VALIDATE) + ", ";
 				setErrorMessage(movement, message);
 			}
+			LOGGER.info("CHECK MOVEMENT EXIST , MOVEMENT REQUEST::" + movement);
+
 			List<Movement> existingMovements = movementRepository.findForExistingMovement(movement,
 					movementRequest.getRequestInfo());
+
+			LOGGER.info("EXISTING MOVEMENTS::" + existingMovements);
 
 			if (!existingMovements.isEmpty()) {
 				message = message + applicationConstants

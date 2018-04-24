@@ -1144,7 +1144,7 @@ class EmployeeDisciplinary extends React.Component {
                                 <th>Sr. No.</th>
                                 <th>Document type</th>
                                 <th>File</th>
-                               
+                                <th>Action</th>
                             </tr>
                         </thead>
                         <tbody id="agreementSearchResultTableBody">
@@ -1162,7 +1162,7 @@ class EmployeeDisciplinary extends React.Component {
                                     <th>Sr. No.</th>
                                     <th>Document type</th>
                                     <th>File</th>
-                                    <th>Action</th>
+                                    
                                 </tr>
                             </thead>
                             <tbody id="agreementSearchResultTableBody">

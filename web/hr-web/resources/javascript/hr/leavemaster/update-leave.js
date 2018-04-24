@@ -110,13 +110,17 @@ class UpdateLeave extends React.Component {
       asOnDate
     }, function (err, res) {
       if (res) {
-        hrConfigurations = res;
+        _this.setState({
+        hrConfigurations = res
+      })
       }
     })
     commonApiPost("egov-common-masters", "holidays", "_search", {
       tenantId
     }, function (err, res) {
-      allHolidayList = res ? res.Holiday : [];
+      _this.setState({
+      allHolidayList = res ? res.Holiday : []
+    })
     });
 
     getCommonMaster("hr-leave", "leavetypes", function (err, res) {
@@ -815,6 +819,10 @@ class UpdateLeave extends React.Component {
     var stateId = getUrlVars()["stateId"];
     var _this = this;
 
+
+    if (e.target.id.toLowerCase() == "reject") {
+      $('#department, #designation, #assignee').prop('required', false);
+    }
 
     if (!($('#update-leave').valid())) {
       return (showError("Please fill all required fields"));

@@ -1884,7 +1884,7 @@ function displayFiles(employee) {
     $(tBody).html("");
 
     if(getUrlVars()["type"] == "view")
-    $('table tr.fileTableAction').remove();
+    $('.fileTableAction').remove();
 
     if (employee.user && employee.user.signature) {
         appendTr(tBody, count, "Signature", employee.user.signature);

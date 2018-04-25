@@ -111,7 +111,7 @@ class UpdateLeave extends React.Component {
     }, function (err, res) {
       if (res) {
         _this.setState({
-        hrConfigurations = res
+        hrConfigurations : res
       })
       }
     })
@@ -119,7 +119,7 @@ class UpdateLeave extends React.Component {
       tenantId
     }, function (err, res) {
       _this.setState({
-      allHolidayList = res ? res.Holiday : []
+      allHolidayList : res ? res.Holiday : []
     })
     });
 

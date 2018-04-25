@@ -304,8 +304,7 @@ class EmployeeDisciplinary extends React.Component {
                         "memoDocuments": [],
                         "enquiryDocuments": [],
                         "showCauseDocuments": [],
-                        "courtDocuments": [],
-                        "disciplinaryDocuments": []
+                        "courtDocuments": []
                     }
                 });
                 $('#enquiry, #showcause, #courtorder').prop("disabled", true);
@@ -360,8 +359,7 @@ class EmployeeDisciplinary extends React.Component {
                         "tenantId": tenantId,
                         "enquiryDocuments": [],
                         "showCauseDocuments": [],
-                        "courtDocuments": [],
-                        "disciplinaryDocuments": []
+                        "courtDocuments": []
 
                     }
                 });
@@ -401,8 +399,7 @@ class EmployeeDisciplinary extends React.Component {
                         "gistOfDirectionIssuedByCourt": "",
                         "tenantId": tenantId,
                         "showCauseDocuments": [],
-                        "courtDocuments": [],
-                        "disciplinaryDocuments": []
+                        "courtDocuments": []
 
                     }
                 });
@@ -429,8 +426,7 @@ class EmployeeDisciplinary extends React.Component {
                         "courtOrderDate": "",
                         "gistOfDirectionIssuedByCourt": "",
                         "tenantId": tenantId,
-                        "courtDocuments": [],
-                        "disciplinaryDocuments": []
+                        "courtDocuments": []
                     }
                 });
 

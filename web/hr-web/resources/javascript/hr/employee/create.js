@@ -1883,6 +1883,9 @@ function displayFiles(employee) {
         count = 1;
     $(tBody).html("");
 
+    if(getUrlVars()["type"] == "view")
+    $('table tr.fileTableAction').remove();
+
     if (employee.user && employee.user.signature) {
         appendTr(tBody, count, "Signature", employee.user.signature);
         count++;
@@ -1916,27 +1919,45 @@ function displayFiles(employee) {
     }
 }
 
-function appendTr(tBodyName, count, name, fileId) {
-    if ($("#fileTable").css('display') == 'none')
-        $("#fileTable").show();
+    function appendTr(tBodyName, count, name, fileId) {
+        if ($("#fileTable").css('display') == 'none')
+            $("#fileTable").show();
 
-    $(tBodyName).append(`<tr data-key=${count}>
-                            <td>
-                              ${count}
-                            </td>
-                            <td>
-                              ${titleCase(name)}
-                            </td>
-                            <td>
-                              <a href=${window.location.origin + CONST_API_GET_FILE + fileId} target="_blank">
-                                Download
-                              </a>
-                            </td>
-                            <td>
-                              ${getUrlVars()["type"] == "view" ? "" : "<button type='button' class='btn btn-close btn-danger' onclick='deleteFile(event, `" + name + "`, `" + fileId + "`, `" + count + "`)'>Delete</button>"}
-                            </td>
-                          </tr>`);
-              }
+        if (getUrlVars()["type"] == "view") {
+            $(tBodyName).append(`<tr data-key=${count}>
+                <td>
+                ${count}
+                </td>
+                <td>
+                ${titleCase(name)}
+                </td>
+                <td>
+                <a href=${window.location.origin + CONST_API_GET_FILE + fileId} target="_blank">
+                    Download
+                </a>
+                </td>
+            </tr>`);
+        } else {
+            $(tBodyName).append(`<tr data-key=${count}>
+                <td>
+                ${count}
+                </td>
+                <td>
+                ${titleCase(name)}
+                </td>
+                <td>
+                <a href=${window.location.origin + CONST_API_GET_FILE + fileId} target="_blank">
+                    Download
+                </a>
+                </td>
+                <td>
+                ${"<button type='button' class='btn btn-close btn-danger' onclick='deleteFile(event, `" + name + "`, `" + fileId + "`, `" + count + "`)'>Delete</button>"}
+                </td>
+            </tr>`);
+        }
+
+
+    }
 
               function deleteFile(e, name, fileId, count) {
                 e.stopPropagation();

@@ -53,6 +53,9 @@ public class PGRUtils {
 	@Value("${egov.hr.employee.host}")
 	private String hrEmployeeHost;
 	
+	@Value("${egov.hr.employee.v2.host}")
+	private String hrEmployeeV2Host;
+	
 	@Value("${egov.hr.employee.search.endpoint}")
 	private String hrEmployeeSearchEndpoint;
 	
@@ -259,20 +262,12 @@ public class PGRUtils {
 			ServiceReqSearchCriteria serviceReqSearchCriteria) {
 		RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
 		requestInfoWrapper.setRequestInfo(requestInfo);
-		uri.append(hrEmployeeHost).append(hrEmployeeSearchEndpoint)
+		uri.append(hrEmployeeV2Host).append(hrEmployeeSearchEndpoint)
 		.append("?id="+requestInfo.getUserInfo().getId()).append("&tenantId="+serviceReqSearchCriteria.getTenantId());
 
 		return requestInfoWrapper;
 	}
-	
-	public RequestInfoWrapper prepareRequestForDeptSearch(StringBuilder uri, RequestInfo requestInfo, long deptId, String tenantId) {
-		RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
-		requestInfoWrapper.setRequestInfo(requestInfo);
-		uri.append(commonMasterHost).append(commonMasterSearchEndpoint).append("?id="+deptId).append("&tenantId="+tenantId);
-
-		return requestInfoWrapper;
-	}
-	
+		
 	public RequestInfoWrapper prepareRequestForLocalization(StringBuilder uri, RequestInfo requestInfo, String locale, String tenantId, String module) {
 		RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
 		requestInfoWrapper.setRequestInfo(requestInfo);

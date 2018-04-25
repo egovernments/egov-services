@@ -407,7 +407,7 @@ public class GrievanceService {
 			}
 			if (precedentRole.equalsIgnoreCase(PGRConstants.ROLE_DGRO)) {
 				log.info("Setting default info for DGRO........");
-				Integer departmenCode = getDepartmentCode(serviceReqSearchCriteria, requestInfo);
+				String departmenCode = getDepartmentCode(serviceReqSearchCriteria, requestInfo);
 				String department = getDepartment(serviceReqSearchCriteria, requestInfo, departmenCode);
 				Object response = fetchServiceCodes(requestInfo, serviceReqSearchCriteria.getTenantId(), department);
 				if (null == response) {
@@ -482,13 +482,13 @@ public class GrievanceService {
 		return null;
 	}
 
-	public Integer getDepartmentCode(ServiceReqSearchCriteria serviceReqSearchCriteria, RequestInfo requestInfo) {
+	public String getDepartmentCode(ServiceReqSearchCriteria serviceReqSearchCriteria, RequestInfo requestInfo) {
 		StringBuilder uri = new StringBuilder();
 		RequestInfoWrapper requestInfoWrapper = pGRUtils.prepareRequestForEmployeeSearch(uri, requestInfo,
 				serviceReqSearchCriteria);
 		Object response = null;
 		log.debug("Employee: " + response);
-		Integer departmenCode = null;
+		String departmenCode = null;
 		try {
 			response = serviceRequestRepository.fetchResult(uri, requestInfoWrapper);
 			if (null == response) {
@@ -514,19 +514,18 @@ public class GrievanceService {
 	 * @return String
 	 */
 	public String getDepartment(ServiceReqSearchCriteria serviceReqSearchCriteria, RequestInfo requestInfo,
-			Integer departmentCode) {
+			String departmentCode) {
 		StringBuilder deptUri = new StringBuilder();
 		String department = null;
 		Object response = null;
-		RequestInfoWrapper requestInfoWrapper = pGRUtils.prepareRequestForDeptSearch(deptUri, requestInfo,
-				departmentCode, serviceReqSearchCriteria.getTenantId());
+		MdmsCriteriaReq mdmsCriteriaReq = pGRUtils.prepareMdMsRequestForDept(deptUri, serviceReqSearchCriteria.getTenantId(), departmentCode, requestInfo);
 		try {
-			response = serviceRequestRepository.fetchResult(deptUri, requestInfoWrapper);
+			response = serviceRequestRepository.fetchResult(deptUri, mdmsCriteriaReq);
 			if (null == response) {
 				throw new CustomException(ErrorConstants.INVALID_DEPARTMENT_TENANT_KEY,
 						ErrorConstants.INVALID_DEPARTMENT_TENANT_MSG);
 			}
-			department = JsonPath.read(response, PGRConstants.DEPARTMENTNAME_EMPLOYEE_JSONPATH);
+			department = JsonPath.read(response, PGRConstants.JSONPATH_DEPARTMENTS);
 		} catch (Exception e) {
 			log.error("Exception: " + e);
 			throw new CustomException(ErrorConstants.INVALID_DEPARTMENT_TENANT_KEY,

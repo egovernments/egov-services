@@ -1,6 +1,5 @@
 package org.egov.pgr.consumer;
 
-import java.io.StringWriter;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
@@ -10,20 +9,13 @@ import java.util.Map;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.velocity.Template;
-import org.apache.velocity.VelocityContext;
-import org.apache.velocity.app.VelocityEngine;
 import org.egov.common.contract.request.RequestInfo;
-import org.egov.mdms.model.MdmsCriteriaReq;
-import org.egov.pgr.contract.EmailRequest;
-import org.egov.pgr.contract.RequestInfoWrapper;
 import org.egov.pgr.contract.SMSRequest;
 import org.egov.pgr.contract.ServiceRequest;
 import org.egov.pgr.model.ActionInfo;
 import org.egov.pgr.model.Service;
 import org.egov.pgr.producer.PGRProducer;
 import org.egov.pgr.repository.ServiceRequestRepository;
-import org.egov.pgr.service.GrievanceService;
 import org.egov.pgr.service.NotificationService;
 import org.egov.pgr.utils.PGRConstants;
 import org.egov.pgr.utils.PGRUtils;
@@ -35,7 +27,6 @@ import org.springframework.kafka.support.KafkaHeaders;
 import org.springframework.messaging.handler.annotation.Header;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.jayway.jsonpath.JsonPath;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -48,6 +39,9 @@ public class PGRNotificationConsumer {
 
 	@Value("${egov.hr.employee.host}")
 	private String hrEmployeeHost;
+	
+	@Value("${egov.hr.employee.v2.host}")
+	private String hrEmployeeV2Host;
 
 	@Value("${egov.hr.employee.v2.search.endpoint}")
 	private String hrEmployeeV2SearchEndpoint;

@@ -24,6 +24,9 @@ public class NotificationService {
 	
 	@Value("${egov.hr.employee.host}")
 	private String hrEmployeeHost;
+	
+	@Value("${egov.hr.employee.v2.host}")
+	private String hrEmployeeV2Host;
 
 	@Value("${egov.hr.employee.v2.search.endpoint}")
 	private String hrEmployeeV2SearchEndpoint;
@@ -58,7 +61,7 @@ public class NotificationService {
 		StringBuilder uri = new StringBuilder();
 		RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
 		requestInfoWrapper.setRequestInfo(requestInfo);
-		uri.append(hrEmployeeHost).append(hrEmployeeV2SearchEndpoint).append("?id=" + id)
+		uri.append(hrEmployeeV2Host).append(hrEmployeeV2SearchEndpoint).append("?id=" + id)
 				.append("&tenantId=" + tenantId);
 		Object response = null;
 		log.debug("Employee: " + response);

@@ -47,15 +47,17 @@ public class NotificationService {
 				serviceReq.getServiceCode(), requestInfo);
 		String serviceType = null;
 		List<String> serviceTypes = null;
+		String tenantId = serviceReq.getTenantId().split("[.]")[0]; // localization values are for now state-level.
 		try {
 			Object result = serviceRequestRepository.fetchResult(uri, mdmsCriteriaReq);
-			log.info("Category type code: " + result);
 			serviceTypes = JsonPath.read(result, PGRConstants.JSONPATH_SERVICE_CODES);
-			if (!CollectionUtils.isEmpty(serviceTypes))
+			log.info("Category type code: " + serviceTypes);
+			if (CollectionUtils.isEmpty(serviceTypes))
 				return null;
-			if (null == localizedMessageMap.get(locale + "|" + serviceReq.getTenantId())) // static map that saves code-message pair against locale | tenantId.
-				getLocalisedMessages(requestInfo, serviceReq.getTenantId(), locale, PGRConstants.LOCALIZATION_MODULE_NAME);
-			serviceType = localizedMessageMap.get(locale + "|" + serviceReq.getTenantId()).get(PGRConstants.LOCALIZATION_COMP_CATEGORY_PREFIX + serviceTypes.get(0));
+			if (null == localizedMessageMap.get(locale + "|" + tenantId)) // static map that saves code-message pair against locale | tenantId.
+				getLocalisedMessages(requestInfo, tenantId, locale, PGRConstants.LOCALIZATION_MODULE_NAME);
+			serviceType = localizedMessageMap.get(locale + "|" + tenantId).get(PGRConstants.LOCALIZATION_COMP_CATEGORY_PREFIX + serviceTypes.get(0));
+			log.info("Category type: " + serviceType);
 			if(StringUtils.isEmpty(serviceType))
 				serviceType = serviceTypes.get(0);
 		} catch (Exception e) {

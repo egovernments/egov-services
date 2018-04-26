@@ -22,7 +22,7 @@ public enum Type {
 	@JsonCreator
 	public static Type fromValue(String passedValue) {
 		for (Type obj : Type.values()) {
-			if (String.valueOf(obj.value).equals(passedValue.toUpperCase())) {
+			if (String.valueOf(obj.value).equalsIgnoreCase(passedValue)) {
 				return obj;
 			}
 		}

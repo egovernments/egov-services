@@ -15,7 +15,7 @@ CREATE TABLE eg_user_address_v2 (
     detail character varying(256),
     createdby character varying(64),
     lastmodifiedby character varying(64),
-    createddate timestamp,
-    lastmodifieddate timestamp,
+    createddate bigint,
+    lastmodifieddate bigint,
     CONSTRAINT pk_eg_user_address_v2 PRIMARY KEY (uuid,tenantid)
     );

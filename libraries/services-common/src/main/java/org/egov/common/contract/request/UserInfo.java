@@ -25,12 +25,11 @@ public class UserInfo {
 	@NotNull
 	private String tenantId;
 
-	@JsonProperty("id")
+	@JsonProperty("uuid")
 	private String id;
 	
 	@JsonProperty("type")
 	@NotNull
-	@Size(max=20)
 	private Type type;
 
 	@JsonProperty("userName")

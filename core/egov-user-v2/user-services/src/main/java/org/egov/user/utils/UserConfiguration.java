@@ -26,7 +26,7 @@ public class UserConfiguration {
 	@Value("${employee.reg.otp.enable}")
 	private Boolean isEmployeeRegOtpEnable;
 
-	@Value("${employee.reg.login.enable }")
+	@Value("${employee.reg.login.enable}")
 	private Boolean isEmployeeLoginOtpEnable;
 	
 	@Value("${enable.fixed.otp}")

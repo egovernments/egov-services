@@ -11,8 +11,8 @@ CREATE TABLE eg_user_v2 (
     accountLocked boolean,
     createdby character varying(64),
     lastmodifiedby character varying(64),
-    createddate timestamp,
-    lastmodifieddate timestamp,
+    createddate bigint,
+    lastmodifieddate bigint,
     CONSTRAINT pk_eg_user_v2 PRIMARY KEY (id),
     CONSTRAINT unq_eg_user_v2_username UNIQUE(tenantid,username)
  );
@@ -37,7 +37,7 @@ CREATE TABLE eg_user_v2 (
     photo character varying(64),
     createdby character varying(64),
     lastmodifiedby character varying(64),
-    createddate timestamp,
-    lastmodifieddate timestamp,
+    createddate bigint,
+    lastmodifieddate bigint,
     CONSTRAINT pk_eg_user_detail_v2 PRIMARY KEY (uuid)
     );

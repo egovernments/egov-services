@@ -16,7 +16,10 @@ import lombok.ToString;
 @Getter
 @ToString
 public class Address {
-
+	
+	@JsonProperty("uuid")
+	private String uuid;
+	
 	@JsonProperty("tenantId")
 	private String tenantId;
 

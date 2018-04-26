@@ -1,0 +1,1 @@
+update egasset_assetconfigurationvalues set value = true where keyid in (select id from egasset_assetconfiguration where keyname = 'EnableVoucherGeneration');

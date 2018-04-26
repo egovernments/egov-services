@@ -157,7 +157,7 @@ public class DepreciationQueryBuilder {
 
     static private final String BASEDEPRECIATIONQUERY = "select asset.code as assetcode ,asset.name as assetname,asset.id as assetid,asset.tenantid,asset.grossvalue,asset.accumulateddepreciation,"
             + " assetcategory.id as assetcategory,asset.department as department,asset.function as function, assetcategory.name as assetcategoryname,"
-            + " currentval.currentamount as currentvalue,depreciation.maxtodate as lastdepreciationdate,depreciation.depreciationvaluesum,asset.enableyearwisedepreciation as enableyearwisedepreciation ,"
+            + " currentval.currentamount as currentvalue,depreciation.maxtodate as lastdepreciationdate,depreciation.depreciationvaluesum ,"
             + " asset.dateofcreation,assetcategory.depreciationrate as assetcategory_depreciationrate ,assetcategory.depreciationmethod as depreciationmethod,assetcategory.assetaccount as assetaccount ,"
             + " assetcategory.accumulateddepreciationaccount as accumulateddepreciationaccount,"
             + " assetcategory.revaluationreserveaccount as revaluationreserveaccount,assetcategory.depreciationexpenseaccount as depreciationexpenseaccount "

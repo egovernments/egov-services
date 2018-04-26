@@ -1,0 +1,264 @@
+{
+  "RequestInfo": {
+    "apiId": "string",
+    "ver": "string",
+    "ts": 0,
+    "action": "string",
+    "did": "string",
+    "key": "string",
+    "msgId": "string",
+    "authToken": "e3db1099-ac7e-43a8-9af4-c37872a91328",
+    "correlationId": "f47c101a-b384-4d94-abe2-78dc281d58ca",
+    "userInfo": {
+      "id": 79,
+      "userName": null,
+      "name": null,
+      "type": null,
+      "mobileNumber": null,
+      "emailId": null,
+      "roles": [
+        {
+          "id": 2,
+          "name": "Assistant RO"
+        }
+      ]
+    }
+  },
+  "tenantId": "pb",
+  "messages": [
+    {
+      "code": "pgr.complaint.category.StrayDogs",
+      "message": "Stray dogs",
+      "module": "rainmaker-pgr",
+      "locale": "en_IN"
+    },
+    {
+      "code": "pgr.complaint.category.StrayPigs",
+      "message": "Stray pigs",
+      "module": "rainmaker-pgr",
+      "locale": "en_IN"
+    },
+    {
+      "code": "pgr.complaint.category.StrayCattle",
+      "message": "Stray cattle",
+      "module": "rainmaker-pgr",
+      "locale": "en_IN"
+    },
+    {
+      "code": "pgr.complaint.category.DeadAnimals",
+      "message": "Dead animal(s)",
+      "module": "rainmaker-pgr",
+      "locale": "en_IN"
+    },
+    {
+      "code": "pgr.complaint.category.RequestSprayingOrFoggingOperation",
+      "message": "Request spraying/ fogging operations",
+      "module": "rainmaker-pgr",
+      "locale": "en_IN"
+    },
+    {
+      "code": "pgr.complaint.category.StagnantWater",
+      "message": "Stagnant Water",
+      "module": "rainmaker-pgr",
+      "locale": "en_IN"
+    },
+    {
+      "code": "pgr.complaint.category.IllegalConstructions",
+      "message": "Illegal constructions",
+      "module": "rainmaker-pgr",
+      "locale": "en_IN"
+    },
+    {
+      "code": "pgr.complaint.category.EncroachmentOnPublicProperty",
+      "message": "Encroachment on public property",
+      "module": "rainmaker-pgr",
+      "locale": "en_IN"
+    },
+    {
+      "code": "pgr.complaint.category.IllegalParking",
+      "message": "Illegal parking",
+      "module": "rainmaker-pgr",
+      "locale": "en_IN"
+    },
+    {
+      "code": "pgr.complaint.category.GarbageNeedsTobeCleaned",
+      "message": "Garbage needs to be cleaned",
+      "module": "rainmaker-pgr",
+      "locale": "en_IN"
+    },
+    {
+      "code": "pgr.complaint.category.GarbageBinNotEmpty",
+      "message": "Garbage bin not emptied",
+      "module": "rainmaker-pgr",
+      "locale": "en_IN"
+    },
+    {
+      "code": "pgr.complaint.category.GarbageBinNotThere",
+      "message": "Garbage bin not there",
+      "module": "rainmaker-pgr",
+      "locale": "en_IN"
+    },
+    {
+      "code": "pgr.complaint.category.BrokenGarbageBin",
+      "message": "Broken garbage bin",
+      "module": "rainmaker-pgr",
+      "locale": "en_IN"
+    },
+    {
+      "code": "pgr.complaint.category.BurningOfGarbage",
+      "message": "Burning of garbage",
+      "module": "rainmaker-pgr",
+      "locale": "en_IN"
+    },
+    {
+      "code": "pgr.complaint.category.BlockedDrain",
+      "message": "Blocked drain",
+      "module": "rainmaker-pgr",
+      "locale": "en_IN"
+    },
+    {
+      "code": "pgr.complaint.category.OverflowingDrain",
+      "message": "Overflowing drain",
+      "module": "rainmaker-pgr",
+      "locale": "en_IN"
+    },
+    {
+      "code": "pgr.complaint.category.DamagedDrain",
+      "message": "Damaged drain",
+      "module": "rainmaker-pgr",
+      "locale": "en_IN"
+    },
+    {
+      "code": "pgr.complaint.category.ShortageOfWater",
+      "message": "Shortage of water",
+      "module": "rainmaker-pgr",
+      "locale": "en_IN"
+    },
+    {
+      "code": "pgr.complaint.category.NotWaterSupply",
+      "message": "No water supply",
+      "module": "rainmaker-pgr",
+      "locale": "en_IN"
+    },
+    {
+      "code": "pgr.complaint.category.DirtyWaterSupply",
+      "message": "Dirty water supply",
+      "module": "rainmaker-pgr",
+      "locale": "en_IN"
+    },
+    {
+      "code": "pgr.complaint.category.BrokenWaterPipeOrTap",
+      "message": "Broken water pipe/ tap",
+      "module": "rainmaker-pgr",
+      "locale": "en_IN"
+    },
+    {
+      "code": "pgr.complaint.category.PotholesOnTheRoad",
+      "message": "Potholes on the road",
+      "module": "rainmaker-pgr",
+      "locale": "en_IN"
+    },
+    {
+      "code": "pgr.complaint.category.DamagedRoad",
+      "message": "Damaged road",
+      "module": "rainmaker-pgr",
+      "locale": "en_IN"
+    },
+    {
+      "code": "pgr.complaint.category.WaterLoggedRoad",
+      "message": "Water logged road",
+      "module": "rainmaker-pgr",
+      "locale": "en_IN"
+    },
+    {
+      "code": "pgr.complaint.category.ManholeCoverMissingOrDamaged",
+      "message": "Manhole cover is missing/ damaged",
+      "module": "rainmaker-pgr",
+      "locale": "en_IN"
+    },
+    {
+      "code": "pgr.complaint.category.DamagedFootpath",
+      "message": "Damaged footpath",
+      "module": "rainmaker-pgr",
+      "locale": "en_IN"
+    },
+    {
+      "code": "pgr.complaint.category.IllegalShopsOnFootPath",
+      "message": "Illegal shops on the footpath",
+      "module": "rainmaker-pgr",
+      "locale": "en_IN"
+    },
+    {
+      "code": "pgr.complaint.category.DamagedStreetLight",
+      "message": "Damaged streetlight",
+      "module": "rainmaker-pgr",
+      "locale": "en_IN"
+    },
+    {
+      "code": "pgr.complaint.category.StreetLightNotWorking",
+      "message": "Streetlight not working",
+      "module": "rainmaker-pgr",
+      "locale": "en_IN"
+    },
+    {
+      "code": "pgr.complaint.category.IllegalDischargeOfSewage",
+      "message": "Illegal discharge of sewage",
+      "module": "rainmaker-pgr",
+      "locale": "en_IN"
+    },
+    {
+      "code": "pgr.complaint.category.OverflowingSewage",
+      "message": "Overflowing sewage",
+      "module": "rainmaker-pgr",
+      "locale": "en_IN"
+    },
+    {
+      "code": "pgr.complaint.category.BrokenOrLeakingSewagePipe",
+      "message": "Broken/leaking sewage pipe",
+      "module": "rainmaker-pgr",
+      "locale": "en_IN"
+    },
+    {
+      "code": "pgr.complaint.category.DirtyOrSmellyPublicToilets",
+      "message": "Dirty/ smelly public toilet",
+      "module": "rainmaker-pgr",
+      "locale": "en_IN"
+    },
+    {
+      "code": "pgr.complaint.category.PublicToiletIsNotWorkingProperly",
+      "message": "Public toilet is not working properly",
+      "module": "rainmaker-pgr",
+      "locale": "en_IN"
+    },
+    {
+      "code": "pgr.complaint.category.NoWaterOrElectricityinPublicToilet",
+      "message": "No water/ electricity in public toilet",
+      "module": "rainmaker-pgr",
+      "locale": "en_IN"
+    },
+    {
+      "code": "pgr.complaint.category.IllegalCuttingOfTrees",
+      "message": "Illegal Cutting of trees",
+      "module": "rainmaker-pgr",
+      "locale": "en_IN"
+    },
+    {
+      "code": "pgr.complaint.category.CuttingOrTrimmingOfTreeRequired",
+      "message": "Cutting/ trimming of tree required",
+      "module": "rainmaker-pgr",
+      "locale": "en_IN"
+    },
+    {
+      "code": "pgr.complaint.category.OpenDefecation",
+      "message": "Open Defecation",
+      "module": "rainmaker-pgr",
+      "locale": "en_IN"
+    },
+    {
+      "code": "pgr.complaint.category.Others",
+      "message": "others",
+      "module": "rainmaker-pgr",
+      "locale": "en_IN"
+    }
+  ]
+}

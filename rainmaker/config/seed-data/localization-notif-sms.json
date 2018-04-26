@@ -1,0 +1,85 @@
+{
+  "RequestInfo": {
+    "apiId": "string",
+    "ver": "string",
+    "ts": 0,
+    "action": "string",
+    "did": "string",
+    "key": "string",
+    "msgId": "string",
+    "authToken": "b0910d0a-23a8-4986-9438-bbc7449c8c4a",
+    "correlationId": "f47c101a-b384-4d94-abe2-78dc281d58ca",
+    "userInfo": {
+      "id": 79,
+      "userName": null,
+      "name": null,
+      "type": null,
+      "mobileNumber": null,
+      "emailId": null,
+      "roles": [
+        {
+          "id": 2,
+          "name": "Assistant RO"
+        }
+      ]
+    }
+  },
+    "tenantId": "pb",
+    "messages": [
+        {
+            "code": "pgr.sms.notification.submit",
+            "message": "Your complaint for <complaint_type> has been submitted with ID <id> on <date>. You can track your complaint status on the mSeva app or your local government web portal.",
+            "module": "rainmaker-pgr",
+            "locale": "en_IN"
+        },
+        {
+            "code": "pgr.sms.notification.reopen",
+            "message": "Your complaint for <complaint_type> has been re-opened on <date>.",
+            "module": "rainmaker-pgr",
+            "locale": "en_IN"
+        },
+        {
+            "code": "pgr.sms.notification.assign",
+            "message": "Your complaint for <complaint_type> has been assigned to <emp_name>, <emp_designation>, <emp_department>",
+            "module": "rainmaker-pgr",
+            "locale": "en_IN"
+        },
+        {
+            "code": "pgr.sms.notification.reassign",
+            "message": "Your complaint for <complaint_type> has been re-assigned to <emp_name>, <emp_designation>, <emp_department>.",
+            "module": "rainmaker-pgr",
+            "locale": "en_IN"
+        },
+        {
+            "code": "pgr.sms.notification.reject",
+            "message": "Your complaint for <complaint_type> has been rejected on <date>. Reason for Rejection: <reason> Additional Comments: <additional_comments>.",
+            "module": "rainmaker-pgr",
+            "locale": "en_IN"
+        },
+        {
+            "code": "pgr.sms.notification.resolve",
+            "message": "Your complaint for <complaint_type> has been resolved on <date>. Please give us your feedback on the mSeva app, your local government web portal or at this link <app_link>.",
+            "module": "rainmaker-pgr",
+            "locale": "en_IN"
+        },
+        {
+            "code": "pgr.sms.notification.default",
+            "message": "Your complaint has been <status>. You can track your complaint status on the mSeva app or your local government web portal",
+            "module": "rainmaker-pgr",
+            "locale": "en_IN"
+        },
+        {
+            "code": "pgr.sms.notification.comment",
+            "message": "<emp_name> has commented on your complaint for <complaint_type> with complaint ID <id>. Comment - <comment>.",
+            "module": "rainmaker-pgr",
+            "locale": "en_IN"
+        },
+        {
+            "code": "pgr.sms.notification.comment.default",
+            "message": "You have received a comment on your complaint. You can track your complaint status on the  mSeva app or your local government web portal.",
+            "module": "rainmaker-pgr",
+            "locale": "en_IN"
+        }
+    ]
+}
+

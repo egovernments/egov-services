@@ -156,15 +156,9 @@ const defaultAssetSetState = {
     "depreciationRate": "",
     "scheme": "",
     "subScheme": "",
-    "enableYearWiseDepreciation": false,
-    "documents": [],
-    "yearWiseDepreciation": [Object.assign({}, defaultyearWiseDepRateTemp)]
+    "documents": []
 };
 
-const defaultyearWiseDepRateTemp = {
-    "depreciationRate": "",
-    "financialYear": "",
-};
 
 class CreateAsset extends React.Component {
   constructor(props) {
@@ -209,7 +203,6 @@ class CreateAsset extends React.Component {
         modify2: false,
         allFiles: [],
         removedFiles: {},
-        financialYears: [],
         schemes: [],
         subSchemes: []
     }
@@ -229,9 +222,6 @@ class CreateAsset extends React.Component {
     this.removeReference = this.removeReference.bind(this);
     this.openNewRelAssetMdl = this.openNewRelAssetMdl.bind(this);
     this.addToRemovedFiles = this.addToRemovedFiles.bind(this);
-    this.handleAddNewYearRow = this.handleAddNewYearRow.bind(this);
-    this.handleDelYearRow = this.handleDelYearRow.bind(this);
-    this.handleYearChange = this.handleYearChange.bind(this);
   }
 
   handleAddNewYearRow() {

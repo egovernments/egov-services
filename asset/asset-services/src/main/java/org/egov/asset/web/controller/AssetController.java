@@ -48,6 +48,7 @@
 
 package org.egov.asset.web.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -66,9 +67,13 @@ import org.egov.asset.contract.RequestInfoWrapper;
 import org.egov.asset.contract.RevaluationRequest;
 import org.egov.asset.contract.RevaluationResponse;
 import org.egov.asset.exception.ErrorResponse;
+import org.egov.asset.model.Asset;
 import org.egov.asset.model.AssetCriteria;
+import org.egov.asset.model.Depreciation;
 import org.egov.asset.model.DepreciationReportCriteria;
+import org.egov.asset.model.Disposal;
 import org.egov.asset.model.DisposalCriteria;
+import org.egov.asset.model.Revaluation;
 import org.egov.asset.model.RevaluationCriteria;
 import org.egov.asset.model.enums.TransactionType;
 import org.egov.asset.service.AssetCommonService;
@@ -78,6 +83,9 @@ import org.egov.asset.service.DepreciationService;
 import org.egov.asset.service.DisposalService;
 import org.egov.asset.service.RevaluationService;
 import org.egov.asset.web.validator.AssetValidator;
+import org.egov.asset.web.wrapperfactory.ResponseInfoFactory;
+import org.egov.common.contract.request.RequestInfo;
+import org.egov.common.contract.response.ResponseInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -120,6 +128,9 @@ public class AssetController {
     @Autowired
     private DepreciationService depreciationservice;
 
+    @Autowired
+    private ResponseInfoFactory responseInfoFactory;
+
     @PostMapping("_search")
     @ResponseBody
     public ResponseEntity<?> search(@RequestBody @Valid final RequestInfoWrapper requestInfoWrapper,
@@ -129,23 +140,22 @@ public class AssetController {
         if (bindingResult.hasErrors()) {
             final ErrorResponse errorResponse = assetCommonService.populateErrors(bindingResult);
             return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
-            
+
         }
-        if (assetCriteria.getTransaction() != null) {
+        if (assetCriteria.getTransaction() != null)
             if (assetCriteria.getTransaction().toString().equals(TransactionType.DEPRECIATION.toString())) {
-        final List<ErrorResponse> errorResponses = assetValidator.validateSearchAssetDepreciation(assetCriteria);
-        if (!errorResponses.isEmpty())
-            return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
+                final List<ErrorResponse> errorResponses = assetValidator.validateSearchAssetDepreciation(assetCriteria);
+                if (!errorResponses.isEmpty())
+                    return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
             }
-        }
 
         if (assetCriteria.getGrossValue() != null && assetCriteria.getFromCapitalizedValue() != null
                 && assetCriteria.getToCapitalizedValue() != null)
             throw new RuntimeException(
                     "Gross Value should not be present with from capitalized value and to capitalized value");
-        
-       final AssetResponse assetResponse = assetService.getAssets(assetCriteria, requestInfoWrapper.getRequestInfo());
-        return new ResponseEntity<>(assetResponse, HttpStatus.OK);
+
+        final List<Asset> assets = assetService.getAssets(assetCriteria, requestInfoWrapper.getRequestInfo());
+        return getAssetResponse(assets, requestInfoWrapper.getRequestInfo());
     }
 
     @PostMapping("_create")
@@ -158,13 +168,15 @@ public class AssetController {
             return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
         }
 
-        final List<ErrorResponse> errorResponses =  assetValidator.validateAssetRequest(assetRequest);
+        final List<ErrorResponse> errorResponses = assetValidator.validateAssetRequest(assetRequest);
         if (!errorResponses.isEmpty())
-                return new ResponseEntity<List<ErrorResponse>>(errorResponses, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<List<ErrorResponse>>(errorResponses, HttpStatus.BAD_REQUEST);
         assetValidator.validateAsset(assetRequest);
+        final Asset asset = assetService.createAsset(assetRequest);
+        final List<Asset> assets = new ArrayList<>();
+        assets.add(asset);
 
-        final AssetResponse assetResponse = assetService.createAsync(assetRequest);
-        return new ResponseEntity<>(assetResponse, HttpStatus.CREATED);
+        return getAssetResponse(assets, assetRequest.getRequestInfo());
     }
 
     @PostMapping("_update")
@@ -176,8 +188,10 @@ public class AssetController {
             return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
         }
         assetValidator.validateAssetForUpdate(assetRequest);
-        final AssetResponse assetResponse = assetService.updateAsync(assetRequest);
-        return new ResponseEntity<>(assetResponse, HttpStatus.OK);
+        final Asset asset = assetService.updateAsset(assetRequest);
+        final List<Asset> assets = new ArrayList<>();
+        assets.add(asset);
+        return getAssetResponse(assets, assetRequest.getRequestInfo());
     }
 
     @PostMapping("revaluation/_create")
@@ -192,27 +206,30 @@ public class AssetController {
         }
         log.debug("Request Headers :: " + headers);
         assetValidator.validateRevaluation(revaluationRequest);
-        final RevaluationResponse revaluationResponse = revaluationService.createAsync(revaluationRequest, headers);
 
-        return new ResponseEntity<>(revaluationResponse, HttpStatus.CREATED);
+        Revaluation revaluation = revaluationService.saveRevaluation(revaluationRequest, headers);
+         List<Revaluation> revaluations = new ArrayList<>();
+        revaluations.add(revaluation);
+        return getRevaluationResponse(revaluations, revaluationRequest.getRequestInfo());
+
     }
 
     @PostMapping("revaluation/_search")
     @ResponseBody
-    public ResponseEntity<?> reevaluateSearch(@RequestBody @Valid final RequestInfoWrapper requestInfoWrapper,
+    public ResponseEntity<?> revaluateSearch(@RequestBody @Valid final RequestInfoWrapper requestInfoWrapper,
             @ModelAttribute @Valid final RevaluationCriteria revaluationCriteria, final BindingResult bindingResult) {
 
-        log.debug("reevaluateSearch revaluationCriteria:" + revaluationCriteria);
+        log.debug("revaluateSearch revaluationCriteria:" + revaluationCriteria);
         if (bindingResult.hasErrors()) {
             final ErrorResponse errorResponse = assetCommonService.populateErrors(bindingResult);
             return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
         }
         assetValidator.validateRevaluationCriteria(revaluationCriteria);
 
-        final RevaluationResponse revaluationResponse = revaluationService.search(revaluationCriteria,
+        final List<Revaluation> revaluations = revaluationService.search(revaluationCriteria,
                 requestInfoWrapper.getRequestInfo());
 
-        return new ResponseEntity<RevaluationResponse>(revaluationResponse, HttpStatus.OK);
+        return getRevaluationResponse(revaluations, requestInfoWrapper.getRequestInfo());
     }
 
     @PostMapping("dispose/_create")
@@ -229,9 +246,11 @@ public class AssetController {
         log.debug("Request Headers :: " + headers);
         assetValidator.validateDisposal(disposalRequest);
 
-        final DisposalResponse disposalResponse = disposalService.createAsync(disposalRequest, headers);
-        log.debug("dispose disposalResponse:" + disposalResponse);
-        return new ResponseEntity<DisposalResponse>(disposalResponse, HttpStatus.CREATED);
+        final Disposal disposal = disposalService.saveDisposal(disposalRequest, headers);
+        final List<Disposal> disposals = new ArrayList<>();
+        disposals.add(disposal);
+        log.debug("dispose :" + disposals);
+        return getDisposalResponse(disposals, disposalRequest.getRequestInfo());
     }
 
     @PostMapping("dispose/_search")
@@ -246,10 +265,9 @@ public class AssetController {
         }
         assetValidator.validateDisposalCriteria(disposalCriteria);
 
-        final DisposalResponse disposalResponse = disposalService.search(disposalCriteria,
+        final List<Disposal> disposals = disposalService.search(disposalCriteria,
                 requestInfoWrapper.getRequestInfo());
-
-        return new ResponseEntity<>(disposalResponse, HttpStatus.OK);
+        return getDisposalResponse(disposals, requestInfoWrapper.getRequestInfo());
     }
 
     @PostMapping("currentvalue/_search")
@@ -283,7 +301,7 @@ public class AssetController {
             return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
         }
         final AssetCurrentValueResponse assetCurrentValueResponse = currentValueService
-                .createCurrentValueAsync(assetCurrentValueRequest);
+                .createCurrentValue(assetCurrentValueRequest);
         return new ResponseEntity<>(assetCurrentValueResponse, HttpStatus.CREATED);
     }
 
@@ -298,9 +316,11 @@ public class AssetController {
         }
 
         log.debug("Request Headers :: " + headers);
-        final DepreciationResponse depreciationResponse = depreciationservice.depreciateAsset(depreciationRequest,
+        final Depreciation depreciation = depreciationservice.saveDepreciateAsset(depreciationRequest,
                 headers);
-        return new ResponseEntity<>(depreciationResponse, HttpStatus.CREATED);
+
+        log.debug("depreciations :" + depreciation);
+        return getDepreciationResponse(depreciation, depreciationRequest.getRequestInfo());
     }
 
     @PostMapping("depreciations/_search")
@@ -318,5 +338,43 @@ public class AssetController {
                 requestInfoWrapper.getRequestInfo(),
                 depreciationReportCriteria);
         return new ResponseEntity<>(depreciationResponse, HttpStatus.OK);
+    }
+
+    private ResponseEntity<?> getAssetResponse(final List<Asset> assetList,
+            final RequestInfo requestInfo) {
+        final AssetResponse assetRes = new AssetResponse();
+        assetRes.setAssets(assetList);
+        final ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestHeaders(requestInfo);
+        responseInfo.setStatus(HttpStatus.OK.toString());
+        assetRes.setResponseInfo(responseInfoFactory.createResponseInfoFromRequestHeaders(requestInfo));
+        return new ResponseEntity<AssetResponse>(assetRes, HttpStatus.OK);
+    }
+
+    private ResponseEntity<?> getRevaluationResponse(final List<Revaluation> revaluationList,
+            final RequestInfo requestInfo) {
+        final RevaluationResponse revaluationRes = new RevaluationResponse();
+        revaluationRes.setRevaluations(revaluationList);
+        final ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestHeaders(requestInfo);
+        responseInfo.setStatus(HttpStatus.OK.toString());
+        revaluationRes.setResposneInfo(responseInfoFactory.createResponseInfoFromRequestHeaders(requestInfo));
+        return new ResponseEntity<RevaluationResponse>(revaluationRes, HttpStatus.OK);
+    }
+
+    public ResponseEntity<?> getDisposalResponse(final List<Disposal> disposals, final RequestInfo requestInfo) {
+        final DisposalResponse disposalResponse = new DisposalResponse();
+        disposalResponse.setDisposals(disposals);
+        final ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestHeaders(requestInfo);
+        responseInfo.setStatus(HttpStatus.OK.toString());
+        disposalResponse.setResponseInfo(responseInfoFactory.createResponseInfoFromRequestHeaders(requestInfo));
+        return new ResponseEntity<DisposalResponse>(disposalResponse, HttpStatus.OK);
+    }
+
+    public ResponseEntity<?> getDepreciationResponse(final Depreciation depreciations, final RequestInfo requestInfo) {
+        final DepreciationResponse depreciationRes = new DepreciationResponse();
+        depreciationRes.setDepreciation(depreciations);
+        final ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestHeaders(requestInfo);
+        responseInfo.setStatus(HttpStatus.OK.toString());
+        depreciationRes.setResponseInfo(responseInfoFactory.createResponseInfoFromRequestHeaders(requestInfo));
+        return new ResponseEntity<DepreciationResponse>(depreciationRes, HttpStatus.OK);
     }
 }

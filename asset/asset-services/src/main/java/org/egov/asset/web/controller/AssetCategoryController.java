@@ -48,6 +48,7 @@
 
 package org.egov.asset.web.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -61,6 +62,8 @@ import org.egov.asset.model.AssetCategoryCriteria;
 import org.egov.asset.service.AssetCategoryService;
 import org.egov.asset.service.AssetCommonService;
 import org.egov.asset.web.validator.AssetCategoryValidator;
+import org.egov.asset.web.wrapperfactory.ResponseInfoFactory;
+import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ResponseInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -90,6 +93,10 @@ public class AssetCategoryController {
 
     @Autowired
     private AssetCommonService assetCommonService;
+    
+
+    @Autowired
+    private ResponseInfoFactory responseInfoFactory;
 
     @PostMapping("/_search")
     @ResponseBody
@@ -125,25 +132,40 @@ public class AssetCategoryController {
         }
 
         assetCategoryValidator.validateAssetCategory(assetCategoryRequest);
-        final AssetCategoryResponse response = assetCategoryService.createAsync(assetCategoryRequest);
+        final AssetCategory assetCategory = assetCategoryService.createAssetCategory(assetCategoryRequest);
+        List<AssetCategory> assetCategories = new ArrayList<>();
+        assetCategories.add(assetCategory);
+       
+        return getSuccessResponse(assetCategories, assetCategoryRequest.getRequestInfo());
 
-        return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
     @PostMapping("/_update")
-    public ResponseEntity<?> update(@RequestBody @Valid final AssetCategoryRequest assetCategoryRequest,
-            final BindingResult bindingResult) {
+    public ResponseEntity<?> update(@RequestBody @Valid AssetCategoryRequest assetCategoryRequest,
+            BindingResult bindingResult) {
 
         log.debug("AssetCategory update::" + assetCategoryRequest);
         if (bindingResult.hasErrors()) {
-            final ErrorResponse errorResponse = assetCommonService.populateErrors(bindingResult);
+            ErrorResponse errorResponse = assetCommonService.populateErrors(bindingResult);
             return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
         }
 
         assetCategoryValidator.validateAssetCategoryForUpdate(assetCategoryRequest);
-        final AssetCategoryResponse assetCategoryResponse = assetCategoryService.updateAsync(assetCategoryRequest);
-
-        return new ResponseEntity<>(assetCategoryResponse, HttpStatus.OK);
+        AssetCategory assetCategory = assetCategoryService.updateAssetCategory(assetCategoryRequest);
+        List<AssetCategory> assetCategories = new ArrayList<>();
+        assetCategories.add(assetCategory);
+        return getSuccessResponse(assetCategories, assetCategoryRequest.getRequestInfo());
+        
+    }
+    
+    private ResponseEntity<?> getSuccessResponse( List<AssetCategory> assetCategories,
+             RequestInfo requestInfo) {
+         AssetCategoryResponse assetCategoryRes = new AssetCategoryResponse();
+         assetCategoryRes.setAssetCategory(assetCategories);
+        ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestHeaders(requestInfo);
+        assetCategoryRes.setResponseInfo(responseInfoFactory.createResponseInfoFromRequestHeaders(requestInfo));
+        responseInfo.setStatus(HttpStatus.OK.toString());
+       return new ResponseEntity<AssetCategoryResponse>(assetCategoryRes, HttpStatus.OK);
     }
 
 }

@@ -67,6 +67,9 @@ public class DisciplinaryDocumentsRepository {
             + " (id,disciplinaryId,documentType,filestoreId,tenantid)"
             + " VALUES (nextval('seq_egeis_disciplinaryDocument'),?,?,?,?)";
 
+    public static final String DELETE_DISCIPLINARY_DOCUMENTS_QUERY = "Delete from egeis_disciplinaryDocuments"
+            + " where disciplinaryId = ? and documentType = ? and fileStoreId = ? and tenantId = ? " ;
+
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
@@ -97,5 +100,10 @@ public class DisciplinaryDocumentsRepository {
                 return documents.size();
             }
         });
+    }
+
+
+    public int delete(Long disciplinaryId, String documentType, String filestoreId, String tenantId) {
+        return jdbcTemplate.update(DELETE_DISCIPLINARY_DOCUMENTS_QUERY, disciplinaryId, documentType, filestoreId, tenantId);
     }
 }

@@ -135,7 +135,7 @@ public class AssetCategoryServiceTest {
     }
 
     @Test
-    public void testCreateAsync() {
+    public void createAssetCategory() {
 
         final AssetCategory assetCategory = getAssetCategory();
         final AssetCategoryRequest assetCategoryRequest = new AssetCategoryRequest();
@@ -148,7 +148,7 @@ public class AssetCategoryServiceTest {
                 responseInfoFactory.createResponseInfoFromRequestHeaders(assetCategoryRequest.getRequestInfo()));
         assetCategoryResponse.setAssetCategory(assetCategories);
 
-        assertTrue(assetCategoryResponse.equals(assetCategoryService.createAsync(assetCategoryRequest)));
+        assertTrue(assetCategory.equals(assetCategoryService.createAssetCategory(assetCategoryRequest)));
     }
 
     @Test
@@ -172,32 +172,7 @@ public class AssetCategoryServiceTest {
                 assetCategoryRequest.getAssetCategory().toString());
     }
 
-    @Test
-    public void testUpdateAsync() {
-
-        final AssetCategoryRequest assetCategoryRequest = new AssetCategoryRequest();
-        assetCategoryRequest.setAssetCategory(getAssetCategoryForUpdateAsync());
-
-        final List<AssetCategoryRequest> insertedAssetCategoryRequest = new ArrayList<>();
-        insertedAssetCategoryRequest.add(assetCategoryRequest);
-
-        AssetCategoryResponse assetCategoryResponse = null;
-        try {
-            assetCategoryResponse = getAssetCategoryResponse("assetcategoryservice.assetcategory1.json");
-        } catch (final Exception e) {
-            e.printStackTrace();
-            fail();
-        }
-        when(applicationProperties.getUpdateAssetCategoryTopicName()).thenReturn("kafka.topics.update.disposal");
-        when(assetCommonService.getCode(any(String.class), any(Sequence.class))).thenReturn("15");
-        assertTrue(assetCategoryResponse.getAssetCategory().get(0).getId().equals(Long.valueOf("15")));
-
-        assetCategoryService.updateAsync(assetCategoryRequest);
-
-        assertEquals(assetCategoryResponse.getAssetCategory().get(0).toString(),
-                assetCategoryRequest.getAssetCategory().toString());
-    }
-
+   
     private AssetCategory getAssetCategory() {
 
         final AssetCategory assetCategory = new AssetCategory();
@@ -210,7 +185,7 @@ public class AssetCategoryServiceTest {
         assetCategory.setDepreciationMethod(DepreciationMethod.STRAIGHT_LINE_METHOD);
         assetCategory.setIsAssetAllow(true);
         assetCategory.setAssetAccount(2l);
-        assetCategory.setAccumulatedDepreciationAccount(Long.valueOf("1"));
+        assetCategory.setAccumulatedDepreciationAccount(Long.valueOf("2"));
         assetCategory.setRevaluationReserveAccount(Long.valueOf("5"));
         assetCategory.setDepreciationExpenseAccount(Long.valueOf("3"));
         assetCategory.setUnitOfMeasurement(Long.valueOf("10"));
@@ -220,27 +195,7 @@ public class AssetCategoryServiceTest {
         return assetCategory;
     }
 
-    private AssetCategory getAssetCategoryForUpdateAsync() {
-
-        final AssetCategory assetCategory = new AssetCategory();
-        assetCategory.setTenantId("ap.kurnool");
-        assetCategory.setId(Long.valueOf("15"));
-        assetCategory.setName("asset3");
-        assetCategory.setCode("15");
-        assetCategory.setAssetCategoryType(AssetCategoryType.IMMOVABLE);
-        assetCategory.setParent(Long.valueOf("2"));
-        assetCategory.setDepreciationMethod(DepreciationMethod.STRAIGHT_LINE_METHOD);
-        assetCategory.setIsAssetAllow(true);
-        assetCategory.setAssetAccount(2l);
-        assetCategory.setAccumulatedDepreciationAccount(Long.valueOf("1"));
-        assetCategory.setRevaluationReserveAccount(Long.valueOf("5"));
-        assetCategory.setDepreciationExpenseAccount(Long.valueOf("3"));
-        assetCategory.setUnitOfMeasurement(Long.valueOf("10"));
-        assetCategory.setVersion("v1");
-        assetCategory.setDepreciationRate(Double.valueOf("0.0"));
-
-        return assetCategory;
-    }
+   
 
     private AssetCategoryResponse getAssetCategoryResponse(final String filePath) throws IOException {
         final String assetJson = new FileUtils().getFileContents(filePath);

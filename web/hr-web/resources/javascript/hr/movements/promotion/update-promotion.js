@@ -218,6 +218,11 @@ class UpdateMovement extends React.Component {
               });
             }
           }
+          //Disabling all fields if it is not rejected
+          if (process.status != "Rejected") 
+            $("input,select,textarea").prop("disabled", true);
+      
+          $('#effectiveFrom').prop("disabled", false);
 
           _this.setState({
             ..._this.state,
@@ -232,16 +237,6 @@ class UpdateMovement extends React.Component {
 
   }
 
-
-  componentDidUpdate() {
-
-    if (this.state.status != "Rejected") {
-      $("input,select,textarea").prop("disabled", true);
-    }
-
-    $('#effectiveFrom').prop("disabled", false);
-
-  }
 
   getUsersFun(departmentId, designationId) {
     var _this = this;

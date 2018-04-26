@@ -1,26 +1,25 @@
 package org.egov.pgr.consumer;
 
-import java.io.StringWriter;
+import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.velocity.Template;
-import org.apache.velocity.VelocityContext;
-import org.apache.velocity.app.VelocityEngine;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.egov.common.contract.request.RequestInfo;
-import org.egov.mdms.model.MdmsCriteriaReq;
-import org.egov.pgr.contract.EmailRequest;
 import org.egov.pgr.contract.SMSRequest;
 import org.egov.pgr.contract.ServiceRequest;
 import org.egov.pgr.model.ActionInfo;
 import org.egov.pgr.model.Service;
 import org.egov.pgr.producer.PGRProducer;
 import org.egov.pgr.repository.ServiceRequestRepository;
-import org.egov.pgr.service.GrievanceService;
+import org.egov.pgr.service.NotificationService;
 import org.egov.pgr.utils.PGRConstants;
 import org.egov.pgr.utils.PGRUtils;
+import org.egov.pgr.utils.WorkFlowConfigs;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -28,237 +27,243 @@ import org.springframework.kafka.support.KafkaHeaders;
 import org.springframework.messaging.handler.annotation.Header;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.jayway.jsonpath.JsonPath;
 
 import lombok.extern.slf4j.Slf4j;
 
 @org.springframework.stereotype.Service
 @Slf4j
 public class PGRNotificationConsumer {
-	
+
 	@Autowired
 	private PGRProducer pGRProducer;
-			
+
+	@Value("${egov.hr.employee.host}")
+	private String hrEmployeeHost;
+	
+	@Value("${egov.hr.employee.v2.host}")
+	private String hrEmployeeV2Host;
+
+	@Value("${egov.hr.employee.v2.search.endpoint}")
+	private String hrEmployeeV2SearchEndpoint;
+
 	@Value("${kafka.topics.notification.sms}")
 	private String smsNotifTopic;
-	
+
 	@Value("${kafka.topics.notification.email}")
 	private String emailNotifTopic;
-	
-	@Value("${text.for.sms.notification}")
-	private String textForNotif;
-	
-	@Value("${text.for.subject.email.notif}")
-	private String subjectForEmail;
-	
+
 	@Value("${notification.sms.enabled}")
 	private Boolean isSMSNotificationEnabled;
-	
+
 	@Value("${notification.email.enabled}")
 	private Boolean isEmailNotificationEnabled;
-	
-	@Value("${open.complaint.enabled}")
-	private Boolean isOpenComplaintNotifEnabled;
-	
-	@Value("${assign.complaint.enabled}")
-	private Boolean isAssignNotifEnabled;
-	
-	@Value("${new.complaint.enabled}")
-	private Boolean isNewComplaintNotifEnabled;
-	
-	@Value("${reject.complaint.enabled}")
-	private Boolean isRejectedNotifEnabled;
-	
-	@Value("${resolve.complaint.enabled}")
-	private Boolean isResolveNotificationEnabled;
-	
-	@Value("${close.complaint.enabled}")
-	private Boolean isCloseNotifEnabled;
-	
+
+	@Value("${reassign.complaint.enabled}")
+	private Boolean isReassignNotifEnaled;
+
+	@Value("${reopen.complaint.enabled}")
+	private Boolean isReopenNotifEnaled;
+
+	@Value("${comment.by.employee.notif.enabled}")
+	private Boolean isCommentByEmpNotifEnaled;
+
 	@Value("${email.template.path}")
 	private String emailTemplatePath;
-		
+
+	@Value("${date.format.notification}")
+	private String notificationDateFormat;
+	
+	@Value("${egov.ui.app.host}")
+	private String uiAppHost;
+	
+	@Value("${notification.allowed.on.status}")
+	private String notificationEnabledStatuses;
+	
+
 	@Autowired
 	private ServiceRequestRepository serviceRequestRepository;
-		
+
 	@Autowired
 	private PGRUtils pGRUtils;
-	
+
 	@Autowired
-	private GrievanceService grievanceService;
-		
-    @KafkaListener(topics = {"${kafka.topics.notification.complaint}"})
-    
+	private NotificationService notificationService;
+
+	private static Map<String, Map<String, String>> localizedMessageMap = new HashMap<>();
+
+	@KafkaListener(topics = {"${kafka.topics.save.service}","${kafka.topics.update.service}"})
+
 	public void listen(final HashMap<String, Object> record, @Header(KafkaHeaders.RECEIVED_TOPIC) String topic) {
 		ObjectMapper mapper = new ObjectMapper();
 		ServiceRequest serviceReqRequest = new ServiceRequest();
-		try{
-			log.info("Consuming record: "+record);
+		try {
+			log.info("Consuming record: " + record);
 			serviceReqRequest = mapper.convertValue(record, ServiceRequest.class);
-		}catch(final Exception e){
-			log.error("Error while listening to value: "+record+" on topic: "+topic+": "+e.getMessage());
+		} catch (final Exception e) {
+			log.error("Error while listening to value: " + record + " on topic: " + topic + ": " + e);
 		}
-		process(serviceReqRequest);		
+		process(serviceReqRequest);
 	}
-    
-    public void process(ServiceRequest serviceReqRequest) {
-    	for(Service serviceReq: serviceReqRequest.getServices()) {
-    		if(isNotificationEnabled(serviceReq)) {
-    			ActionInfo actionInfo = serviceReqRequest.getActionInfo().get(serviceReqRequest.getServices().indexOf(serviceReq));
-    			if(isSMSNotificationEnabled) {
-    	    		SMSRequest smsRequest = prepareSMSRequest(serviceReq, actionInfo, serviceReqRequest.getRequestInfo());
-    	        	log.info("SMS: "+smsRequest.getMessage()+" | MOBILE: "+smsRequest.getMobileNumber());
-	        		pGRProducer.push(smsNotifTopic, smsRequest);
-    			}
-    			if(isEmailNotificationEnabled && (null != serviceReq.getEmail() && !serviceReq.getEmail().isEmpty())) {
-    					EmailRequest emailRequest = prepareEmailRequest(serviceReq, actionInfo);
-    		        	log.info("EMAIL: "+emailRequest.getBody()+"| SUBJECT: "+emailRequest.getSubject()+"| ID: "+emailRequest.getEmail());
-		        		pGRProducer.push(emailNotifTopic, emailRequest);
-    			}
-    		}
+
+	public void process(ServiceRequest serviceReqRequest) {
+		if (!CollectionUtils.isEmpty(serviceReqRequest.getActionInfo())) {
+			for (ActionInfo actionInfo : serviceReqRequest.getActionInfo()) {
+				if (null != actionInfo && (null != actionInfo.getStatus() || null != actionInfo.getComment())) {
+					Service service = serviceReqRequest.getServices()
+							.get(serviceReqRequest.getActionInfo().indexOf(actionInfo));
+					if (isNotificationEnabled(actionInfo.getStatus(), serviceReqRequest.getRequestInfo().getUserInfo().getType(), actionInfo.getComment(), actionInfo.getAction())) {
+						if (isSMSNotificationEnabled) {
+							SMSRequest smsRequest = prepareSMSRequest(service, actionInfo, serviceReqRequest.getRequestInfo());
+							if (null == smsRequest) {
+								log.info("Messages from localization couldn't be fetched!");
+								continue;
+							}
+							log.info("SMS: " + smsRequest.getMessage() + " | MOBILE: " + smsRequest.getMobileNumber());
+							pGRProducer.push(smsNotifTopic, smsRequest);
+						}
+						// Not enabled for now - email notifications to be part of next version of PGR.
+						if (isEmailNotificationEnabled
+								&& (null != service.getEmail() && !service.getEmail().isEmpty())) {
+							//get code from git using any check-in before 24/04/2018.
+						}
+					} else {
+						log.info("Notification disabled for this case!");
+						continue;
+					}
+				} else {
+					log.info("No Action!");
+					continue;
+				}
+			}
 		}
-    }
-    
-    public SMSRequest prepareSMSRequest(Service serviceReq, ActionInfo actionInfo, RequestInfo requestInfo) {
+	}
+
+	public SMSRequest prepareSMSRequest(Service serviceReq, ActionInfo actionInfo, RequestInfo requestInfo) {
 		String phone = serviceReq.getPhone();
 		String message = getMessageForSMS(serviceReq, actionInfo, requestInfo);
-		SMSRequest smsRequest = SMSRequest.builder().mobileNumber(phone).message(message).build();
-		
-		return smsRequest;
-    }
-    
-    public EmailRequest prepareEmailRequest(Service serviceReq, ActionInfo actionInfo) {
-		String email = serviceReq.getEmail();
-		StringBuilder subject = new StringBuilder();
-		String body = getBodyAndSubForEmail(serviceReq, actionInfo, subject);
-		EmailRequest emailRequest = EmailRequest.builder().email(email).subject(subject.toString()).body(body)
-				.isHTML(true).build();
-		
-		return emailRequest;
-    }
-    
-    public String getBodyAndSubForEmail(Service serviceReq, ActionInfo actionInfo, StringBuilder subject) {
-    	Map<String, Object> map = new HashMap<>();
-        VelocityEngine ve = new VelocityEngine();
-        ve.init();
-        VelocityContext context = new VelocityContext();
-    	map.put("name", serviceReq.getFirstName());
-    	map.put("id", serviceReq.getServiceRequestId());
-		switch(serviceReq.getStatus()) {
-	    case OPEN:{
-        	map.put("status", "registered");
-    		break;
-		}case ASSIGNED:{
-        	map.put("status", "assigned to Mr."+actionInfo.getAssignee());
-    		break;
-		}case RESOLVED:{
-        	map.put("status", "resolved on "+new Date(serviceReq.getAuditDetails().getCreatedTime()).toString());
-    		break;
-		}case REJECTED:{
-        	map.put("status", "rejected on "+new Date(serviceReq.getAuditDetails().getCreatedTime()).toString());
-    		break;
-		}case CLOSED:{
-        	map.put("status", "resolved on "+new Date(serviceReq.getAuditDetails().getCreatedTime()).toString());
-    		break;
-		}default:
-			break;
-		}
-		
-        context.put("params", map);
-        Template t = ve.getTemplate(emailTemplatePath);
-        StringWriter writer = new StringWriter();
-        t.merge(context, writer);
-    	String message = writer.toString();
-    	String subjectText = subjectForEmail;
-    	subject.append(subjectText.replace("<id>", serviceReq.getServiceRequestId()));
-    	
-    	return message;    	
-    }
-    
-    public String getMessageForSMS(Service serviceReq, ActionInfo actionInfo, RequestInfo requestInfo) {
-    	String message = textForNotif;
-    	String serviceType = getServiceType(serviceReq, requestInfo);
-		message = message.replace("<complaint_type>", serviceType)
-				.replace("<id>", serviceReq.getServiceRequestId()).replace("date", new Date(serviceReq.getAuditDetails().getCreatedTime()).toString());
-		switch(serviceReq.getStatus()) {
-		case OPEN:{
-    		message = message.replaceAll("<status>", "registered");
-    		break;
-		}case ASSIGNED:{
-			String employee = grievanceService.getEmployeeName(serviceReq.getTenantId(), actionInfo.getAssignee(), requestInfo);
-			if(null != employee && !employee.isEmpty())
-				message = message.replaceAll("<status>", "assgined to Mr."+ employee);
-			else
-				message = message.replaceAll("<status>", "assgined to to the respective employee");
-    		break;
-		}case REJECTED:{
-    		message = message.replaceAll("<status>", "rejected on "+new Date(serviceReq.getAuditDetails().getCreatedTime()).toString());
-    		break;
-		}case RESOLVED:{
-    		message = message.replaceAll("<status>", "resolved on "+new Date(serviceReq.getAuditDetails().getCreatedTime()).toString());
-    		break;
-		}case CLOSED:{
-    		message = message.replaceAll("<status>", "resolved on "+new Date(serviceReq.getAuditDetails().getCreatedTime()).toString());
-    		break;
-		}default:
-			break;
-		}
-		
-    	return message;
-    	
-    }
-    
-    public String getServiceType(Service serviceReq, RequestInfo requestInfo) {
-		StringBuilder uri = new StringBuilder();
-		MdmsCriteriaReq mdmsCriteriaReq = pGRUtils.prepareSearchRequestForServiceType(uri, serviceReq.getTenantId(),
-				serviceReq.getServiceCode(), requestInfo);
-		List<String> serviceTypes = null;
+		if (null == message)
+			return null;
+		return SMSRequest.builder().mobileNumber(phone).message(message).build();
+	}
+
+	public String getMessageForSMS(Service serviceReq, ActionInfo actionInfo, RequestInfo requestInfo) {
+		SimpleDateFormat dateFormat = new SimpleDateFormat(notificationDateFormat);
+		String date = dateFormat.format(new Date());
+		String tenantId = serviceReq.getTenantId().split("[.]")[0]; // localization values are for now state-level.
+		String locale = null;
 		try {
-			Object result = serviceRequestRepository.fetchResult(uri, mdmsCriteriaReq);
-			log.info("service definition name result: "+result);
-			serviceTypes = JsonPath.read(result, PGRConstants.JSONPATH_SERVICE_CODES);
-			if(null == serviceTypes || serviceTypes.isEmpty())
-				return PGRConstants.DEFAULT_COMPLAINT_TYPE;
-		}catch(Exception e) {
-			return PGRConstants.DEFAULT_COMPLAINT_TYPE;
+			locale = requestInfo.getMsgId().split(",")[1]; // Conventionally locale is sent in the first index of msgid.
+			if (StringUtils.isEmpty(locale)) 
+				locale = "en_IN";
+		} catch (Exception e) {
+			locale = "en_IN";
 		}
-		
-    	return serviceTypes.get(0);
-    }
-    
-    public boolean isNotificationEnabled(Service serviceReq) {
-    	boolean isNotifEnabled = false;
-		switch(serviceReq.getStatus()) {
-		case OPEN:{
-			if(isOpenComplaintNotifEnabled) {
-				isNotifEnabled = true;
-			}
-			break;
-		}case ASSIGNED:{
-			if(isAssignNotifEnabled) {
-				isNotifEnabled = true;
-			}
-			break;
-		}case REJECTED:{
-			if(isRejectedNotifEnabled) {
-				isNotifEnabled = true;
-			}
-			break;
-		}case CLOSED:{
-			if(isCloseNotifEnabled) {
-				isNotifEnabled = true;
-			}
-			break;
-		}case RESOLVED:{
-			if(isResolveNotificationEnabled) {
-				isNotifEnabled = true;
-			}
-			break;
-		}default:
-			break;
+		if (null == NotificationService.localizedMessageMap.get(locale + "|" + tenantId)) // static map that saves code-message pair against locale | tenantId.
+			notificationService.getLocalisedMessages(requestInfo, tenantId, locale, PGRConstants.LOCALIZATION_MODULE_NAME);
+		Map<String, String> messageMap = NotificationService.localizedMessageMap.get(locale + "|" + tenantId);
+		if (null == messageMap)
+			return null;
+		String serviceType = notificationService.getServiceType(serviceReq, requestInfo);
+		return getMessage(serviceType, date, serviceReq, actionInfo, requestInfo, messageMap);
+
+	}
+	
+	public String getMessage(String serviceType, String date, Service serviceReq, ActionInfo actionInfo, RequestInfo requestInfo, Map<String, String> messageMap) {
+		if (null == serviceType) {
+			return getDefaultMessage(messageMap, actionInfo.getStatus(), actionInfo.getAction(), actionInfo.getComment());
 		}
-		
+		String text = null;
+		String[] reasonForRejection = new String[2];
+		Map<String, String> employeeDetails = null;
+		String department = null;
+		String designation = null;
+		if(StringUtils.isEmpty(actionInfo.getStatus()) && !StringUtils.isEmpty(actionInfo.getComment())) {
+			text = messageMap.get(PGRConstants.LOCALIZATION_CODE_COMMENT);
+			text = text.replaceAll(PGRConstants.SMS_NOTIFICATION_COMMENT_KEY, actionInfo.getComment())
+				.replaceAll(PGRConstants.SMS_NOTIFICATION_USER_NAME_KEY, requestInfo.getUserInfo().getName());
+		}else {
+			text = messageMap.get(PGRConstants.getStatusLocalizationKeyMap().get(actionInfo.getStatus()));
+			if(actionInfo.getStatus().equals(WorkFlowConfigs.STATUS_OPENED)) {
+				if (null != actionInfo.getAction() && actionInfo.getAction().equals(WorkFlowConfigs.ACTION_REOPEN))
+					text = messageMap.get(PGRConstants.getActionLocalizationKeyMap().get(WorkFlowConfigs.ACTION_REOPEN));
+			}else if(actionInfo.getStatus().equals(WorkFlowConfigs.STATUS_ASSIGNED)) {
+				if (null != actionInfo.getAction() && actionInfo.getAction().equals(WorkFlowConfigs.ACTION_REASSIGN)) {
+					text = messageMap.get(PGRConstants.getActionLocalizationKeyMap().get(WorkFlowConfigs.ACTION_REASSIGN));
+				}
+				employeeDetails = notificationService.getEmployeeDetails(serviceReq.getTenantId(), actionInfo.getAssignee(), requestInfo);
+				if(null != employeeDetails) {
+					department = notificationService.getDepartment(serviceReq, employeeDetails.get("department"), requestInfo);
+					designation = notificationService.getDesignation(serviceReq, employeeDetails.get("designation"), requestInfo);
+				}else {
+					return getDefaultMessage(messageMap, actionInfo.getStatus(), actionInfo.getAction(), actionInfo.getComment());	
+				}
+				if(null == department || null == designation || null == employeeDetails.get("name"))
+					return getDefaultMessage(messageMap, actionInfo.getStatus(), actionInfo.getAction(), actionInfo.getComment());
+					
+				text = 	text.replaceAll(PGRConstants.SMS_NOTIFICATION_EMP_NAME_KEY, employeeDetails.get("name"))
+							.replaceAll(PGRConstants.SMS_NOTIFICATION_EMP_DESIGNATION_KEY, designation)
+							.replaceAll(PGRConstants.SMS_NOTIFICATION_EMP_DEPT_KEY, department);	
+			}
+			if(actionInfo.getStatus().equals(WorkFlowConfigs.STATUS_REJECTED)) {
+				if(StringUtils.isEmpty(actionInfo.getComment()))
+					return getDefaultMessage(messageMap, actionInfo.getStatus(), actionInfo.getAction(), actionInfo.getComment());
+				reasonForRejection = actionInfo.getComment().split(";");
+				if(reasonForRejection.length < 2)
+					return getDefaultMessage(messageMap, actionInfo.getStatus(), actionInfo.getAction(), actionInfo.getComment());	
+				
+				text = text.replaceAll(PGRConstants.SMS_NOTIFICATION_REASON_FOR_REOPEN_KEY, reasonForRejection[0])
+						.replaceAll(PGRConstants.SMS_NOTIFICATION_ADDITIONAL_COMMENT_KEY, reasonForRejection[1]);
+			}
+		}
+		if(null != text) {
+		return text.replaceAll(PGRConstants.SMS_NOTIFICATION_COMPLAINT_TYPE_KEY, serviceType)
+			.replaceAll(PGRConstants.SMS_NOTIFICATION_ID_KEY, serviceReq.getServiceRequestId())
+			.replaceAll(PGRConstants.SMS_NOTIFICATION_DATE_KEY, date)
+			.replaceAll(PGRConstants.SMS_NOTIFICATION_APP_LINK_KEY, uiAppHost + PGRConstants.WEB_APP_FEEDBACK_PAGE_LINK + serviceReq.getServiceRequestId());	
+		}
+		return text;
+	}
+	
+	public String getDefaultMessage(Map<String, String> messageMap, String status, String action, String comment) {
+		String text = null;
+		if(StringUtils.isEmpty(status) && !StringUtils.isEmpty(comment)) {
+			text = messageMap.get(PGRConstants.LOCALIZATION_CODE_COMMENT_DEFAULT);
+		}else {
+			text = messageMap.get(PGRConstants.LOCALIZATION_CODE_DEFAULT);
+			text = text.replaceAll(PGRConstants.SMS_NOTIFICATION_STATUS_KEY, PGRConstants.getStatusNotifKeyMap().get(status));
+			if(status.equals(WorkFlowConfigs.STATUS_OPENED)) {
+				if (null != action && action.equals(WorkFlowConfigs.ACTION_REOPEN))
+					text = text.replaceAll(PGRConstants.getStatusNotifKeyMap().get(status), PGRConstants.getActionNotifKeyMap().get(WorkFlowConfigs.ACTION_REOPEN));
+			}else if(status.equals(WorkFlowConfigs.STATUS_ASSIGNED)) {
+				if (null != action && action.equals(WorkFlowConfigs.ACTION_REASSIGN))
+					text = text.replaceAll(PGRConstants.getStatusNotifKeyMap().get(status), PGRConstants.getActionNotifKeyMap().get(WorkFlowConfigs.ACTION_REASSIGN));
+			}
+		}
+
+		return text;
+	}
+	
+	public boolean isNotificationEnabled(String status, String userType, String comment, String action) {
+		boolean isNotifEnabled = false;
+		List<String> notificationEnabledStatusList = Arrays.asList(notificationEnabledStatuses.split(","));
+		if(notificationEnabledStatusList.contains(status)) {
+			if(status.equalsIgnoreCase(WorkFlowConfigs.STATUS_OPENED)) {
+				if (action.equals(WorkFlowConfigs.ACTION_REOPEN)) {
+					if (isReopenNotifEnaled)
+						isNotifEnabled = true;
+				}	
+			}
+			if(status.equalsIgnoreCase(WorkFlowConfigs.STATUS_ASSIGNED)) {
+				if (action.equals(WorkFlowConfigs.ACTION_REASSIGN)) {
+					if (isReassignNotifEnaled)
+						isNotifEnabled = true;
+				}	
+			}
+			isNotifEnabled= true;
+		}
+		if ((null != comment && !comment.isEmpty()) && isCommentByEmpNotifEnaled && userType.equalsIgnoreCase("EMPLOYEE")) {
+			isNotifEnabled = true;
+		}
 		return isNotifEnabled;
-    }
-    
+	}
 }

@@ -99,10 +99,6 @@ public class DepreciationInputs {
 
     private String revaluationreserveaccount;
 
-    private Boolean enableYearwiseDepreciation;
-
-    private Double yearwiseDepreciationRate;
-
     private DepreciationMethod depreciationMethod;
     
     private String financialyear;

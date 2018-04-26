@@ -163,17 +163,31 @@ class ApplyLeave extends React.Component {
       }
     }
 
+  }
+
+
+  componentDidUpdate(){
+
+    var type = getUrlVars()["type"], _this = this;
+    var id = getUrlVars()["id"];
+
     $('#fromDate, #toDate').datepicker({
       format: 'dd/mm/yyyy',
       autoclose: true
     });
 
     $('#fromDate, #toDate').on("change", function (e) {
+
+      if (!_this.state.leaveSet.leaveType.id) {
+        showError("Please select Leave Type before entering from date and to date.");
+        $('#' + e.target.id).val("");
+      }
+
+     if(_this.state.leaveSet[e.target.id] != e.target.value){
+
       var _from = $('#fromDate').val();
       var _to = $('#toDate').val();
       var _triggerId = e.target.id;
-
-      if (_this.state.leaveSet.leaveType.id) {
 
         _this.setState({
           leaveSet: {
@@ -202,12 +216,9 @@ class ApplyLeave extends React.Component {
           _this.calculate();
         }
 
-      } else {
-        showError("Please select Leave Type before entering from date and to date.");
-        $('#' + _triggerId).val("");
-      }
+    }
     });
-    
+
   }
 
   getPrimaryAssigmentDep(obj, type) {
@@ -348,6 +359,8 @@ class ApplyLeave extends React.Component {
             }
           });
         }
+      }else{
+        return (showError("You do not have leave for this leave type."));
       }
     });
 
@@ -360,6 +373,7 @@ class ApplyLeave extends React.Component {
       this.setState({
         leaveSet: {
           ...this.state.leaveSet,
+          encashable:false,
           [pName]: {
             ...this.state.leaveSet[pName],
             [name]: e.target.value
@@ -407,7 +421,9 @@ class ApplyLeave extends React.Component {
             _this.setState({
               leaveSet: {
                 ..._this.state.leaveSet,
-                availableDays: ""
+                availableDays: "",
+                fromDate:"",
+                toDate:""
               }
             });
             return (showError("You do not have leave for this leave type."));
@@ -416,10 +432,22 @@ class ApplyLeave extends React.Component {
             _this.setState({
               leaveSet: {
                 ..._this.state.leaveSet,
-                availableDays: _day
+                availableDays: _day,
+                fromDate:"",
+                toDate:""
               }
             });
           }
+        }else{
+
+          _this.setState({
+            leaveSet: {
+              ..._this.state.leaveSet,
+              fromDate:"",
+              toDate:""
+            }
+          });
+
         }
       });
     }
@@ -469,10 +497,22 @@ class ApplyLeave extends React.Component {
     delete tempInfo.name;
     delete tempInfo.code;
 
+    if(tempInfo.encashable && !tempInfo.totalWorkingDays)
+    return (showError("Total Leave Days cannot be empty or zero. Please enter Total Leave Days"));
+
+    if (tempInfo.encashable && tempInfo.totalWorkingDays && tempInfo.totalWorkingDays < 1)
+      return (showError("Total Leave Days cannot be negative or zero."));
+
+    if(tempInfo.encashable && tempInfo.totalWorkingDays && tempInfo.totalWorkingDays > tempInfo.availableDays)
+    return (showError("Total Leave Days cannot be greater than available days"));
+
+
+
     if(tempInfo.encashable){
       tempInfo.leaveDays = tempInfo.totalWorkingDays;
     }
 
+    
     console.log(this.state.perfixSuffix, this.state.encloseHoliday);
 
     let holidays = [];
@@ -863,7 +903,7 @@ class ApplyLeave extends React.Component {
                   </div>
                   <div className="col-sm-6">
 
-                    <input type="text" id="leaveGround" name="leaveGround" value={leaveGround}
+                    <input type="text" id="leaveGround" name="leaveGround" value={leaveGround} pattern="[a-zA-Z][a-zA-Z ]+" maxLength="50"
                       onChange={(e) => { handleChange(e, "leaveGround") }} required />
                   </div>
                 </div>

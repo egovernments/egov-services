@@ -40,21 +40,16 @@
 
 package org.egov.eis.repository.builder;
 
-import static org.springframework.util.ObjectUtils.isEmpty;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
+import lombok.extern.slf4j.Slf4j;
 import org.egov.eis.config.ApplicationProperties;
 import org.egov.eis.web.contract.BaseRegisterReportRequest;
 import org.egov.eis.web.contract.EmployeeCriteria;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import lombok.extern.slf4j.Slf4j;
+import java.util.*;
+
+import static org.springframework.util.ObjectUtils.isEmpty;
 
 @Slf4j
 @Component
@@ -211,7 +206,7 @@ public class EmployeeQueryBuilder {
 		}
 
 		if (!isEmpty(employeeCriteria.getDepartmentCode())) {
-			selectQuery.append(" AND e.departmentId IN (:departmentCodes) ");
+			selectQuery.append(" AND a.departmentId IN (:departmentCodes) ");
 			namedParameters.put("departmentCodes", employeeCriteria.getDepartmentCode());
 
 		}

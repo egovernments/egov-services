@@ -63,7 +63,6 @@ import org.egov.asset.model.AssetCategory;
 import org.egov.asset.model.Department;
 import org.egov.asset.model.Document;
 import org.egov.asset.model.Location;
-import org.egov.asset.model.YearWiseDepreciation;
 import org.egov.asset.model.enums.AssetCategoryType;
 import org.egov.asset.model.enums.DepreciationMethod;
 import org.egov.asset.model.enums.ModeOfAcquisition;
@@ -110,7 +109,6 @@ public class AssetRowMapper implements ResultSetExtractor<List<Asset>> {
                 asset.setLength(rs.getString("length"));
                 asset.setWidth(rs.getString("width"));
                 asset.setTotalArea(rs.getString("totalArea"));
-                asset.setEnableYearWiseDepreciation(rs.getBoolean("enableyearwisedepreciation"));
                 asset.setDepreciationRate(rs.getDouble("depreciationrate"));
                 asset.setSurveyNumber(rs.getString("surveynumber"));
                 asset.setFunction(rs.getString("function"));
@@ -157,8 +155,8 @@ public class AssetRowMapper implements ResultSetExtractor<List<Asset>> {
                 department.setId((Long) rs.getObject("department"));
                 asset.setDepartment(department);
 
-                List<Document> docList = new ArrayList<>();
-                Document documents = new Document();
+                final List<Document> docList = new ArrayList<>();
+                final Document documents = new Document();
                 documents.setAsset((Long) rs.getObject("asset"));
                 documents.setFileStore(rs.getString("filestore"));
                 documents.setId((Long) rs.getObject("documentsId"));
@@ -201,21 +199,18 @@ public class AssetRowMapper implements ResultSetExtractor<List<Asset>> {
                 map.put(assetId, asset);
             }
 
-            final YearWiseDepreciation ywdObject = new YearWiseDepreciation();
-            ywdObject.setId((Long) rs.getObject("ywd_id"));
-            ywdObject.setAssetId((Long) rs.getObject("assetid"));
-            ywdObject.setDepreciationRate(rs.getDouble("ywd_depreciationrate"));
-            ywdObject.setFinancialYear(rs.getString("financialyear"));
-            ywdObject.setUsefulLifeInYears((Long) rs.getObject("usefullifeinyears"));
-            ywdObject.setTenantId(rs.getString("tenantId"));
+            /*
+             * final YearWiseDepreciation ywdObject = new YearWiseDepreciation(); ywdObject.setId((Long) rs.getObject("ywd_id"));
+             * ywdObject.setAssetId((Long) rs.getObject("assetid"));
+             * ywdObject.setDepreciationRate(rs.getDouble("ywd_depreciationrate"));
+             * ywdObject.setFinancialYear(rs.getString("financialyear")); ywdObject.setUsefulLifeInYears((Long)
+             * rs.getObject("usefullifeinyears")); ywdObject.setTenantId(rs.getString("tenantId"));
+             */
 
-            final List<YearWiseDepreciation> ywd = asset.getYearWiseDepreciation();
-            if (ywd == null)
-                asset.setYearWiseDepreciation(new ArrayList<>());
-            else
-                ywd.add(ywdObject);
-
-            asset.setYearWiseDepreciation(ywd);
+            /*
+             * final List<YearWiseDepreciation> ywd = asset.getYearWiseDepreciation(); if (ywd == null)
+             * asset.setYearWiseDepreciation(new ArrayList<>()); else ywd.add(ywdObject); asset.setYearWiseDepreciation(ywd);
+             */
 
         }
 

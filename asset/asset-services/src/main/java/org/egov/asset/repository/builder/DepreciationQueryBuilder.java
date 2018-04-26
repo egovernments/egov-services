@@ -160,12 +160,11 @@ public class DepreciationQueryBuilder {
             + " currentval.currentamount as currentvalue,depreciation.maxtodate as lastdepreciationdate,depreciation.depreciationvaluesum,asset.enableyearwisedepreciation as enableyearwisedepreciation ,"
             + " asset.dateofcreation,assetcategory.depreciationrate as assetcategory_depreciationrate ,assetcategory.depreciationmethod as depreciationmethod,assetcategory.assetaccount as assetaccount ,"
             + " assetcategory.accumulateddepreciationaccount as accumulateddepreciationaccount,"
-            + " assetcategory.revaluationreserveaccount as revaluationreserveaccount,assetcategory.depreciationexpenseaccount as depreciationexpenseaccount ,"
-            + "ywdep.depreciationrate as yearwisedepreciationrate,ywdep.financialyear as financialyear "
+            + " assetcategory.revaluationreserveaccount as revaluationreserveaccount,assetcategory.depreciationexpenseaccount as depreciationexpenseaccount "
+         
 
             + "from egasset_asset asset  INNER JOIN egasset_assetcategory assetcategory "
-            + " ON asset.assetcategory = assetcategory.id  left outer join egasset_yearwisedepreciation ywdep"
-            + " ON asset.id=ywdep.assetid AND ywdep.financialyear=?"
+            + " ON asset.assetcategory = assetcategory.id  "
             + " left outer join (select currval.assetid,currval.createdtime,currval.currentamount,currval.tenantid "
 
             + "from egasset_current_value currval inner join (select assetid,tenantid,max(createdtime) as createdtime from egasset_current_value where tenantid=? "
@@ -194,7 +193,7 @@ public class DepreciationQueryBuilder {
 
     public String getDepreciationQuery(final DepreciationCriteria depreciationCriteria,
             final List<Object> preparedStatementValues) {
-        preparedStatementValues.add(depreciationCriteria.getFinancialYear());
+        //preparedStatementValues.add(depreciationCriteria.getFinancialYear());
         preparedStatementValues.add(depreciationCriteria.getTenantId());
         preparedStatementValues.add(depreciationCriteria.getTenantId());
         preparedStatementValues.add(depreciationCriteria.getToDate());

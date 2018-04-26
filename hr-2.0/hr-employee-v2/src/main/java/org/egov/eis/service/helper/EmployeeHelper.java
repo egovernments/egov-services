@@ -40,18 +40,17 @@
 
 package org.egov.eis.service.helper;
 
-import java.util.*;
-import java.util.stream.Collectors;
-
 import org.egov.common.contract.request.RequestInfo;
+import org.egov.eis.config.PropertiesManager;
 import org.egov.eis.model.*;
-import org.egov.eis.model.bulk.Department;
 import org.egov.eis.repository.EmployeeRepository;
-import org.egov.eis.web.contract.DesignationGetRequest;
 import org.egov.eis.web.contract.EmployeeRequest;
 import org.egov.eis.web.contract.UserRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.util.*;
+import java.util.stream.Collectors;
 
 import static org.springframework.util.ObjectUtils.isEmpty;
 
@@ -60,6 +59,9 @@ public class EmployeeHelper {
 
 	@Autowired
 	private EmployeeRepository employeeRepository;
+
+	@Autowired
+	private PropertiesManager propertiesManager;
 
 	private enum Sequences {
 		ASSIGNMENT("seq_egeis_assignment"),
@@ -90,7 +92,7 @@ public class EmployeeHelper {
 		userRequest.setRequestInfo(requestInfo);
 		User user = employeeRequest.getEmployee().getUser();
 		// FIXME : password hard-coded
-		user.setPassword("12345678");
+		user.setPassword(propertiesManager.getEmployeeDefaultPassword());
 		user.setTenantId(employeeRequest.getEmployee().getTenantId());
 		userRequest.setUser(user);
 

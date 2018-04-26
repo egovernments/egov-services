@@ -304,8 +304,7 @@ class EmployeeDisciplinary extends React.Component {
                         "memoDocuments": [],
                         "enquiryDocuments": [],
                         "showCauseDocuments": [],
-                        "courtDocuments": [],
-                        "disciplinaryDocuments": []
+                        "courtDocuments": []
                     }
                 });
                 $('#enquiry, #showcause, #courtorder').prop("disabled", true);
@@ -360,8 +359,7 @@ class EmployeeDisciplinary extends React.Component {
                         "tenantId": tenantId,
                         "enquiryDocuments": [],
                         "showCauseDocuments": [],
-                        "courtDocuments": [],
-                        "disciplinaryDocuments": []
+                        "courtDocuments": []
 
                     }
                 });
@@ -401,8 +399,7 @@ class EmployeeDisciplinary extends React.Component {
                         "gistOfDirectionIssuedByCourt": "",
                         "tenantId": tenantId,
                         "showCauseDocuments": [],
-                        "courtDocuments": [],
-                        "disciplinaryDocuments": []
+                        "courtDocuments": []
 
                     }
                 });
@@ -429,8 +426,7 @@ class EmployeeDisciplinary extends React.Component {
                         "courtOrderDate": "",
                         "gistOfDirectionIssuedByCourt": "",
                         "tenantId": tenantId,
-                        "courtDocuments": [],
-                        "disciplinaryDocuments": []
+                        "courtDocuments": []
                     }
                 });
 
@@ -1103,6 +1099,7 @@ class EmployeeDisciplinary extends React.Component {
 
         const renderFileBody = function (fles) {
             return fles.map(function (file, ind) {
+                if(getUrlVars()["type"] == "update"){
                 return (
                     <tr key={ind}>
                         <td>{ind + 1}</td>
@@ -1112,14 +1109,30 @@ class EmployeeDisciplinary extends React.Component {
                                 Download
                       </a>
                         </td>
-                        <td>{getUrlVars()["type"] == "update" ? renderFileDelBtn(file.fileStoreId) : ""}</td>
+                         <td>{renderFileDelBtn(file.fileStoreId)}</td>
                     </tr>
                 )
+            }else{
+                return (
+                    <tr key={ind}>
+                        <td>{ind + 1}</td>
+                        <td>{file.documentType}</td>
+                        <td>
+                            <a href={window.location.origin + CONST_API_GET_FILE + file.fileStoreId} target="_blank">
+                                Download
+                      </a>
+                        </td>
+                    </tr>
+                )
+            }
+
             })
         }
 
         const showAttachedFiles = function () {
             if (disciplinaryDocuments.length) {
+                if(getUrlVars()["type"] == "update"){
+
                 return (
                     <table id="fileTable" className="table table-bordered">
                         <thead>
@@ -1137,7 +1150,27 @@ class EmployeeDisciplinary extends React.Component {
                         </tbody>
 
                     </table>
-                )
+                )}else{
+                    return (
+                        <table id="fileTable" className="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Sr. No.</th>
+                                    <th>Document type</th>
+                                    <th>File</th>
+                                    
+                                </tr>
+                            </thead>
+                            <tbody id="agreementSearchResultTableBody">
+                                {
+                                    renderFileBody(disciplinaryDocuments)
+                                }
+                            </tbody>
+    
+                        </table>
+                    )
+
+                }
             }
         }
 

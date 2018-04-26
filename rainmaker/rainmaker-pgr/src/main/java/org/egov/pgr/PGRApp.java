@@ -10,9 +10,8 @@ import org.springframework.context.annotation.Import;
 @Import({ TracerConfiguration.class })
 public class PGRApp
 {
-	
 	public static void main(String[] args) {
 		SpringApplication.run(PGRApp.class, args);
-	}    
+	}
 	
 }

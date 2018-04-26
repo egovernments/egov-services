@@ -991,6 +991,16 @@ function checkNRemoveFile() {
                 var ind = employee[key].indexOf(filesToBeDeleted[key][i]);
                 employee[key].splice(ind, 1);
             }
+        } else if(key == "servicehistory"){
+            for (var i = 0; i < filesToBeDeleted[key].length; i++) {
+                for (var j = 0; j < employee["serviceHistory"].length; j++) {
+                    var ind = employee["serviceHistory"][j]["documents"].indexOf(filesToBeDeleted[key][i]);
+                    if (ind > -1) {
+                        employee["serviceHistory"][j]["documents"].splice(ind, 1);
+                        break;
+                    }
+                }
+            }
         } else {
             for (var i = 0; i < filesToBeDeleted[key].length; i++) {
                 for (var j = 0; j < employee[key].length; j++) {
@@ -1137,6 +1147,28 @@ function returnObject(alies, optional) {
 
 function enableAndDisable(id) {
     $(`#${id}`).toggle();
+}
+
+function getNameByCode(object, code, property = "") {
+    if (code == "" || code == null) {
+        return "";
+    }
+    for (var i = 0; i < object.length; i++) {
+        if (property == "") {
+            if (object[i].code == code) {
+                return object[i].name;
+            }
+        } else {
+            if (object[i].hasOwnProperty(property)) {
+                if (object[i].code == code) {
+                    return object[i][property];
+                }
+            } else {
+                return "";
+            }
+        }
+    }
+    return "";
 }
 
 //common add and update
@@ -1360,10 +1392,10 @@ function updateTable(tableName, modalName, object) {
                                 ${employee[object][i]["serviceTo"] || ""}
                             </td>`)
             $(tableName).append(`<td data-label=${"department"}>
-                            ${employee[object][i]["department"] || ""}
+                            ${getNameByCode(commonObject["serviceHistory_department"],employee[object][i]["department"]) || ""}
                             </td>`)
             $(tableName).append(`<td data-label=${"designation"}>
-                          ${employee[object][i]["designation"] || ""}
+                          ${getNameByCode(commonObject["serviceHistory_designation"],employee[object][i]["designation"]) || ""}
                             </td>`)
             $(tableName).append(`<td data-label=${"remarks"}>
                                     ${employee[object][i]["remarks"]}
@@ -1851,6 +1883,9 @@ function displayFiles(employee) {
         count = 1;
     $(tBody).html("");
 
+    if(getUrlVars()["type"] == "view")
+    $('.fileTableAction').remove();
+
     if (employee.user && employee.user.signature) {
         appendTr(tBody, count, "Signature", employee.user.signature);
         count++;
@@ -1884,27 +1919,45 @@ function displayFiles(employee) {
     }
 }
 
-function appendTr(tBodyName, count, name, fileId) {
-    if ($("#fileTable").css('display') == 'none')
-        $("#fileTable").show();
+    function appendTr(tBodyName, count, name, fileId) {
+        if ($("#fileTable").css('display') == 'none')
+            $("#fileTable").show();
 
-    $(tBodyName).append(`<tr data-key=${count}>
-                            <td>
-                              ${count}
-                            </td>
-                            <td>
-                              ${titleCase(name)}
-                            </td>
-                            <td>
-                              <a href=${window.location.origin + CONST_API_GET_FILE + fileId} target="_blank">
-                                Download
-                              </a>
-                            </td>
-                            <td>
-                              ${getUrlVars()["type"] == "view" ? "" : "<button type='button' class='btn btn-close btn-danger' onclick='deleteFile(event, `" + name + "`, `" + fileId + "`, `" + count + "`)'>Delete</button>"}
-                            </td>
-                          </tr>`);
-              }
+        if (getUrlVars()["type"] == "view") {
+            $(tBodyName).append(`<tr data-key=${count}>
+                <td>
+                ${count}
+                </td>
+                <td>
+                ${titleCase(name)}
+                </td>
+                <td>
+                <a href=${window.location.origin + CONST_API_GET_FILE + fileId} target="_blank">
+                    Download
+                </a>
+                </td>
+            </tr>`);
+        } else {
+            $(tBodyName).append(`<tr data-key=${count}>
+                <td>
+                ${count}
+                </td>
+                <td>
+                ${titleCase(name)}
+                </td>
+                <td>
+                <a href=${window.location.origin + CONST_API_GET_FILE + fileId} target="_blank">
+                    Download
+                </a>
+                </td>
+                <td>
+                ${"<button type='button' class='btn btn-close btn-danger' onclick='deleteFile(event, `" + name + "`, `" + fileId + "`, `" + count + "`)'>Delete</button>"}
+                </td>
+            </tr>`);
+        }
+
+
+    }
 
               function deleteFile(e, name, fileId, count) {
                 e.stopPropagation();

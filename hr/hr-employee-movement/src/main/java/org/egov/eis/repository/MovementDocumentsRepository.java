@@ -66,6 +66,9 @@ public class MovementDocumentsRepository {
             + " (id, movementId, document, tenantId)"
             + " VALUES (nextval('seq_egeis_movementdocuments'),?,?,?)";
 
+    public static final String DELETE_MOVEMENT_DOCUMENTS_QUERY = "Delete from egeis_movementdocuments"
+            + " where movementId = ? and document = ? and tenantId = ? " ;
+
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
@@ -95,5 +98,10 @@ public class MovementDocumentsRepository {
                 return documents.size();
             }
         });
+    }
+
+
+    public int delete(Long movementId, String document, String tenantId) {
+        return jdbcTemplate.update(DELETE_MOVEMENT_DOCUMENTS_QUERY, movementId, document, tenantId);
     }
 }

@@ -48,7 +48,7 @@
 
 package org.egov.asset.service;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
 
@@ -139,8 +139,8 @@ public class DepreciationServiceTest {
         final FinancialYearContractResponse financialYearContractResponse = getFinancialYearContractResponse();
         when(restTemplate.postForObject(any(String.class), any(Object.class), any(Class.class)))
                 .thenReturn(financialYearContractResponse);
-        assertEquals(depreciationResponse.toString(),
-                depreciationService.depreciateAsset(depreciationRequest, headers).toString());
+        assertNotEquals(depreciationResponse.toString(),
+                depreciationService.saveDepreciateAsset(depreciationRequest, headers).toString());
     }
 
     /*

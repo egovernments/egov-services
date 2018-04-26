@@ -80,7 +80,7 @@ class UpdateLeave extends React.Component {
     var hrConfigurations = [], allHolidayList = [];
     $('#availableDays,#leaveDays,#name,#code').prop("disabled", true);
 
-    var _state = {}, count = 3;
+    var _state = {}, count = 2;
     const checkCountAndCall = function (key, res) {
       _state[key] = res;
       count--;
@@ -89,9 +89,7 @@ class UpdateLeave extends React.Component {
       }
     }
 
-    getDropdown("assignments_designation", function (res) {
-      checkCountAndCall("designationList", res);
-    });
+
     getDropdown("assignments_department", function (res) {
       checkCountAndCall("departmentList", res);
     });
@@ -112,13 +110,17 @@ class UpdateLeave extends React.Component {
       asOnDate
     }, function (err, res) {
       if (res) {
-        hrConfigurations = res;
+        _this.setState({
+        hrConfigurations : res
+      })
       }
     })
     commonApiPost("egov-common-masters", "holidays", "_search", {
       tenantId
     }, function (err, res) {
-      allHolidayList = res ? res.Holiday : [];
+      _this.setState({
+      allHolidayList : res ? res.Holiday : []
+    })
     });
 
     getCommonMaster("hr-leave", "leavetypes", function (err, res) {
@@ -135,6 +137,13 @@ class UpdateLeave extends React.Component {
 
         if (!_leaveSet.workflowDetails)
           _leaveSet.workflowDetails = {};
+
+        if(!_leaveSet.fromDate)
+         _leaveSet.fromDate = "";
+
+         if(!_leaveSet.toDate)
+         _leaveSet.toDate = "";
+
 
         commonApiPost("hr-employee", "employees", "_search", {
           tenantId,
@@ -212,52 +221,6 @@ class UpdateLeave extends React.Component {
       }
     });
 
-    $('#fromDate, #toDate').datepicker({
-      format: 'dd/mm/yyyy',
-      autoclose: true
-
-    });
-
-    $('#fromDate, #toDate').on("change", function (e) {
-      var _from = $('#fromDate').val();
-      var _to = $('#toDate').val();
-      var _triggerId = e.target.id;
-
-      if (_this.state.leaveSet.leaveType.id) {
-
-        _this.setState({
-          leaveSet: {
-            ..._this.state.leaveSet,
-            [_triggerId]: $("#" + _triggerId).val()
-          }
-        });
-
-        if (_from && _to) {
-
-          let dateParts1 = _from.split("/");
-          let newDateStr = dateParts1[1] + "/" + dateParts1[0] + "/ " + dateParts1[2];
-          let date1 = new Date(newDateStr);
-
-          let dateParts2 = _to.split("/");
-          let newDateStr1 = dateParts2[1] + "/" + dateParts2[0] + "/" + dateParts2[2];
-          let date2 = new Date(newDateStr1);
-
-
-          if (date1 > date2) {
-            showError("From date must be before End date.");
-            $('#' + _triggerId).val("");
-          }
-
-
-          _this.calculate();
-        }
-
-      } else {
-        showError("Please select Leave Type before entering from date and to date.");
-        $('#' + _triggerId).val("");
-      }
-    });
-
     commonApiPost("egov-common-workflows", "process", "_search", {
       tenantId: tenantId,
       id: stateId
@@ -265,8 +228,6 @@ class UpdateLeave extends React.Component {
       if (res) {
 
         process = res["processInstance"];
-
-
 
         $.ajax({
           url: baseUrl + "/egov-common-workflows/designations/_search?businessKey=" + process.businessKey + "&approvalDepartmentName=&departmentRule=&currentStatus=" + process.status + "&tenantId=" + tenantId + "&additionalRule=&pendingAction=&designation=&amountRule=",
@@ -313,13 +274,79 @@ class UpdateLeave extends React.Component {
 
   componentDidUpdate() {
 
+
+
+      var type = getUrlVars()["type"], _this = this;
+      var id = getUrlVars()["id"];
+  
+      $('#fromDate, #toDate').datepicker({
+        format: 'dd/mm/yyyy',
+        autoclose: true
+      });
+  
+      $('#fromDate, #toDate').on("change", function (e) {
+  
+        if (!_this.state.leaveSet.leaveType.id) {
+          showError("Please select Leave Type before entering from date and to date.");
+          $('#' + e.target.id).val("");
+        }
+  
+       if(_this.state.leaveSet[e.target.id] != e.target.value){
+  
+        var _from = $('#fromDate').val();
+        var _to = $('#toDate').val();
+        var _triggerId = e.target.id;
+        
+          _this.setState({
+            leaveSet: {
+              ..._this.state.leaveSet,
+              [_triggerId]: $("#" + _triggerId).val()
+            }
+          });
+  
+          if (_from && _to) {
+  
+            let dateParts1 = _from.split("/");
+            let newDateStr = dateParts1[1] + "/" + dateParts1[0] + "/ " + dateParts1[2];
+            let date1 = new Date(newDateStr);
+  
+            let dateParts2 = _to.split("/");
+            let newDateStr1 = dateParts2[1] + "/" + dateParts2[0] + "/" + dateParts2[2];
+            let date2 = new Date(newDateStr1);
+  
+  
+            if (date1 > date2) {
+              showError("From date must be before End date.");
+              $('#' + _triggerId).val("");
+            }
+  
+  
+            _this.calculate();
+          }
+  
+      }
+      });
+  
+    
+
+
+
     let status = getNameById(this.state.statusList, this.state.leaveSet.status, "code");
 
+
     if (status != "REJECTED") {
-      $("input,select,textarea").prop("disabled", true);
+      console.log(status)
+
+      $('input,select,textarea').prop("disabled", true);
+      $('#availableDays,#leaveDays,#name,#code').prop("disabled", true);
+
+    }
+    if(status == "REJECTED"){
+      $('input,select,textarea').prop("disabled", false);
+      $('#availableDays,#leaveDays,#name,#code').prop("disabled", true);
     }
 
-    if (status == "APPLIED") {
+    if (status == "APPLIED" || status == "RESUBMITTED" ) {
       $("#department, #designation, #assignee").prop("disabled", false);
     }
 
@@ -444,6 +471,8 @@ class UpdateLeave extends React.Component {
             }
           });
         }
+      }else{
+        return (showError("You do not have leave for this leave type."));
       }
     });
 
@@ -491,8 +520,8 @@ class UpdateLeave extends React.Component {
       doc.setFontType("bold");
       doc.text(35, 52, "Sub:");
       doc.setFontType("normal");
-      doc.text(55, 52, doc.splitTextToSize('Establish -' + tenantId.split(".")[1].charAt(0).toUpperCase() + tenantId.split(".")[1].slice(1) + ' Muncipality/Municipal Corporation - '));
-      doc.text(55, 57, doc.splitTextToSize('Sri/Smt ' + noticeData.name + ' - Saction of ' + noticeData.leaveTypeName + ' for period of (' + noticeData.totalWorkingDays + ')'));
+      doc.text(55, 52, doc.splitTextToSize('Establishment -' + tenantId.split(".")[1].charAt(0).toUpperCase() + tenantId.split(".")[1].slice(1) + ' Muncipality/Municipal Corporation - '));
+      doc.text(55, 57, doc.splitTextToSize('Sri/Smt ' + noticeData.name + ' - Sanction of ' + noticeData.leaveTypeName + ' for period of (' + noticeData.totalWorkingDays + ')'));
       doc.text(55, 62, doc.splitTextToSize('days on ' + noticeData.leaveGround + ' grounds - Orders - Issued'));
 
       doc.setFontType("bold");
@@ -506,7 +535,7 @@ class UpdateLeave extends React.Component {
       doc.line(15, 83, 32, 83);
       doc.setFontType("normal");
       doc.text(15, 92, doc.splitTextToSize('        In view of the circumstances stated in the reference read above Sri/Smt ' + noticeData.name + ','));
-      doc.text(15, 97, doc.splitTextToSize('is hereby sactioned ' + noticeData.leaveTypeName + ' for a period of (' + noticeData.totalWorkingDays + ') days on ' + noticeData.leaveGround + ' grounds '));
+      doc.text(15, 97, doc.splitTextToSize('is hereby sanctioned ' + noticeData.leaveTypeName + ' for a period of (' + noticeData.totalWorkingDays + ') days on ' + noticeData.leaveGround + ' grounds '));
       doc.text(15, 102, doc.splitTextToSize('from ' + noticeData.fromDate + ' to ' + noticeData.toDate + '.'));
       doc.text(15, 110, doc.splitTextToSize('2.     Certified that necessary entries have been made in the service Register of the individual.'));
       doc.text(15, 118, doc.splitTextToSize('3.     He/She is informed that, after sanction of the above leave is having (' + noticeData.availableDays + ') days of '));
@@ -541,8 +570,8 @@ class UpdateLeave extends React.Component {
       doc.setFontType("bold");
       doc.text(35, 52, "Sub:");
       doc.setFontType("normal");
-      doc.text(55, 52, doc.splitTextToSize('Establish -' + tenantId.split(".")[1].charAt(0).toUpperCase() + tenantId.split(".")[1].slice(1) + ' Muncipality/Municipal Corporation - '));
-      doc.text(55, 57, doc.splitTextToSize('Sri/Smt ' + noticeData.name + ' - Saction of ' + noticeData.leaveTypeName + ' for period of (' + noticeData.totalWorkingDays + ')'));
+      doc.text(55, 52, doc.splitTextToSize('Establishment -' + tenantId.split(".")[1].charAt(0).toUpperCase() + tenantId.split(".")[1].slice(1) + ' Muncipality/Municipal Corporation - '));
+      doc.text(55, 57, doc.splitTextToSize('Sri/Smt ' + noticeData.name + ' - Sanction of ' + noticeData.leaveTypeName + ' for period of (' + noticeData.totalWorkingDays + ')'));
       doc.text(55, 62, doc.splitTextToSize('days on ' + noticeData.leaveGround + ' grounds - Orders - Issued'));
 
       doc.setFontType("bold");
@@ -632,6 +661,7 @@ class UpdateLeave extends React.Component {
       this.setState({
         leaveSet: {
           ...this.state.leaveSet,
+          encashable:false,
           [pName]: {
             ...this.state.leaveSet[pName],
             [name]: e.target.value
@@ -689,7 +719,8 @@ class UpdateLeave extends React.Component {
       let _this = this
       let asOnDate = today();
       let leaveType = this.state.leaveSet.leaveType.id;
-      let employeeid = getUrlVars()["id"];
+      let employeeid = this.state.leaveSet.employee;
+      let encashable = !(this.state.leaveSet.encashable);
 
       commonApiPost("hr-leave", "eligibleleaves", "_search", {
         leaveType, tenantId, asOnDate, employeeid
@@ -701,7 +732,9 @@ class UpdateLeave extends React.Component {
               leaveSet: {
                 ..._this.state.leaveSet,
                 availableDays: "",
-                encashable: e.target.checked
+                encashable,
+                fromDate:"",
+                toDate:""
               }
             });
             return (showError("You do not have leave for this leave type."));
@@ -711,10 +744,23 @@ class UpdateLeave extends React.Component {
               leaveSet: {
                 ..._this.state.leaveSet,
                 availableDays: _day,
-                encashable: e.target.checked
+                encashable,
+                fromDate:"",
+                toDate:""
               }
             });
           }
+        }else{
+
+          _this.setState({
+            leaveSet: {
+              ..._this.state.leaveSet,
+              encashable,
+              fromDate:"",
+              toDate:""
+            }
+          });
+
         }
       });
     } else if (name === "department") {
@@ -773,13 +819,22 @@ class UpdateLeave extends React.Component {
     var stateId = getUrlVars()["stateId"];
     var _this = this;
 
+
+    if (e.target.id.toLowerCase() == "reject") {
+      $('#department, #designation, #assignee').prop('required', false);
+    }
+
+    if (!($('#update-leave').valid())) {
+      return (showError("Please fill all required fields"));
+    }
+
+
     if (_this.state.availableDays <= 0) {
       return (showError("You do not have leave for this leave type."));
     }
 
     if (ID === "Submit") {
       var employee;
-      var today = new Date();
       var asOnDate = today();
       var departmentId = _this.state.departmentId;
       var leaveNumber = _this.state.leaveNumber;
@@ -809,7 +864,7 @@ class UpdateLeave extends React.Component {
             };
           } else {
             tempInfo.workflowDetails.action = ID,
-              tempInfo.workflowDetailsassignee = employee.assignments && employee.assignments[0] ? employee.assignments[0].position : ""
+              tempInfo.workflowDetails.assignee = employee.assignments && employee.assignments[0] ? employee.assignments[0].position : ""
           }
           var body = {
             "RequestInfo": requestInfo,
@@ -1096,7 +1151,7 @@ class UpdateLeave extends React.Component {
                     <label htmlFor="">En-cashable</label>
                   </div>
                   <div className="col-sm-6">
-                    <input type="checkbox" id="encashable" name="encashable" checked={encashable}
+                    <input type="checkbox" id="encashable" name="encashable" checked={encashable} value = "false"
                       onChange={(e) => { handleChange(e, "encashable") }} />
                   </div>
                 </div>
@@ -1193,7 +1248,7 @@ class UpdateLeave extends React.Component {
     const renderWorkflowDetails = function (status) {
       status = getNameById(_this.state.statusList, status, "code");
 
-      if (status === "APPLIED") {
+      if (status === "APPLIED" || status === "RESUBMITTED" ) {
         return (
           <div>
             <br />
@@ -1267,7 +1322,7 @@ class UpdateLeave extends React.Component {
 
     return (
       <div>
-        <form>
+        <form id="update-leave">
           <fieldset>
 
             <div className="row">
@@ -1366,7 +1421,7 @@ class UpdateLeave extends React.Component {
                   </div>
                   <div className="col-sm-6">
 
-                    <input type="text" id="leaveGround" name="leaveGround" value={leaveGround}
+                    <input type="text" id="leaveGround" name="leaveGround" value={leaveGround} pattern="[a-zA-Z][a-zA-Z ]+" maxLength="50"
                       onChange={(e) => { handleChange(e, "leaveGround") }} required />
                   </div>
                 </div>

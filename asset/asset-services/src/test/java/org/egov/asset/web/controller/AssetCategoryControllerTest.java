@@ -71,9 +71,12 @@ import org.egov.asset.service.AssetCategoryService;
 import org.egov.asset.service.AssetCommonService;
 import org.egov.asset.util.FileUtils;
 import org.egov.asset.web.validator.AssetCategoryValidator;
+import org.egov.asset.web.wrapperfactory.ResponseInfoFactory;
+import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ResponseInfo;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -92,6 +95,9 @@ public class AssetCategoryControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
+    @InjectMocks
+    private AssetCategoryController AssetCategoryController;
+
     @MockBean
     private AssetCategoryService assetCategoryService;
 
@@ -103,6 +109,9 @@ public class AssetCategoryControllerTest {
 
     @MockBean
     private AssetCommonService assetCommonService;
+
+    @MockBean
+    private ResponseInfoFactory responseInfoFactory;
 
     @Test
     public void test_Should_Search_AssetCategory() throws Exception {
@@ -123,15 +132,14 @@ public class AssetCategoryControllerTest {
 
         final List<AssetCategory> assetCategories = new ArrayList<>();
         assetCategories.add(getAssetCategory());
-        final AssetCategoryResponse assetCategoryResponse = new AssetCategoryResponse();
-        assetCategoryResponse.setAssetCategory(assetCategories);
-        assetCategoryResponse.setResponseInfo(new ResponseInfo());
 
-        when(assetCategoryService.createAsync(any(AssetCategoryRequest.class))).thenReturn(assetCategoryResponse);
-        when(applicationProperties.getAssetCategoryAsync()).thenReturn(true);
+        final ResponseInfo resInfo = new ResponseInfo();
+
+        when(assetCategoryService.createAssetCategory(any(AssetCategoryRequest.class))).thenReturn(getAssetCategory());
+        when(responseInfoFactory.createResponseInfoFromRequestHeaders(any(RequestInfo.class))).thenReturn(resInfo);
 
         mockMvc.perform(post("/assetCategories/_create").contentType(MediaType.APPLICATION_JSON)
-                .content(getFileContents("assetcategorycreaterequest.json"))).andExpect(status().isCreated())
+                .content(getFileContents("assetcategorycreaterequest.json"))).andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(content().json(getFileContents("assetcategorysearchresponse.json")));
     }
@@ -143,10 +151,10 @@ public class AssetCategoryControllerTest {
         assetCategories.add(getUpdateAssetCategory());
         final AssetCategoryResponse assetCategoryResponse = new AssetCategoryResponse();
         assetCategoryResponse.setAssetCategory(assetCategories);
+        final ResponseInfo resInfo = new ResponseInfo();
 
-        when(assetCategoryService.updateAsync(any(AssetCategoryRequest.class))).thenReturn(assetCategoryResponse);
-        // when(applicationProperties.getUpdateAssetCategoryTopicName()).thenReturn("");
-
+        when(assetCategoryService.updateAssetCategory(any(AssetCategoryRequest.class))).thenReturn(getUpdateAssetCategory());
+        when(responseInfoFactory.createResponseInfoFromRequestHeaders(any(RequestInfo.class))).thenReturn(resInfo);
         mockMvc.perform(post("/assetCategories/_update").contentType(MediaType.APPLICATION_JSON)
                 .content(getFileContents("assetcategoryupdaterequest.json"))).andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
@@ -230,9 +238,9 @@ public class AssetCategoryControllerTest {
         assetCategory.setDepreciationMethod(DepreciationMethod.STRAIGHT_LINE_METHOD);
         assetCategory.setIsAssetAllow(true);
         assetCategory.setAssetAccount(2l);
-        assetCategory.setAccumulatedDepreciationAccount(2L);
-        assetCategory.setRevaluationReserveAccount(5L);
-        assetCategory.setDepreciationExpenseAccount(3L);
+        assetCategory.setAccumulatedDepreciationAccount(2l);
+        assetCategory.setRevaluationReserveAccount(5l);
+        assetCategory.setDepreciationExpenseAccount(3l);
         assetCategory.setUnitOfMeasurement(10L);
         assetCategory.setVersion("v1");
         assetCategory.setDepreciationRate(null);

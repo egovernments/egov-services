@@ -40,15 +40,6 @@
 
 package org.egov.eis.web.validator;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-import java.util.stream.Collectors;
-
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.eis.model.Assignment;
 import org.egov.eis.model.Employee;
@@ -62,6 +53,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Component
 public class EmployeeAssignmentValidator implements Validator {
@@ -127,10 +123,10 @@ public class EmployeeAssignmentValidator implements Validator {
 				throw new InvalidDataException("department",
 						"the field {0} should have a valid value which exists in the system", "null");
 			}
-			Long deptDesig = assignments.get(index).getDesignation();
+            String deptDesig = assignments.get(index).getDesignation();
 			if (null != assignments.get(index).getDesignation()) {
 				DesignationGetRequest designationGetRequest = DesignationGetRequest.builder()
-						.id(Arrays.asList(assignments.get(index).getDesignation())).tenantId(tenantId).build();
+                        .codes(Arrays.asList(assignments.get(index).getDesignation())).tenantId(tenantId).build();
 				List<org.egov.eis.model.bulk.Designation> designations = designationService
 						.getDesignations(designationGetRequest, tenantId, requestInfoWrapper);
 
@@ -201,7 +197,6 @@ public class EmployeeAssignmentValidator implements Validator {
 	}
 
 	public boolean isPassportvalid(Employee emp) {
-		return ((emp.getPassportNo() == null || emp.getPassportNo() == "") ? false
-				: !(emp.getPassportNo().matches("^[a-zA-Z][0-9]{7}$")));
+        return ((emp.getPassportNo() != null && emp.getPassportNo() != "") && !(emp.getPassportNo().matches("^[a-zA-Z][0-9]{7}$")));
 	}
 }

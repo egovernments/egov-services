@@ -1,5 +1,9 @@
 {
-	"RequestInfo": null,
+	"RequestInfo": {
+    "apiId": null,
+    "ver": null,
+    "ts": null
+  },
 	"AssetCategory": 
 	{
 		"tenantId": "ap.kurnool",
@@ -11,7 +15,7 @@
 		"depreciationMethod": "STRAIGHT_LINE_METHOD",
 		"isAssetAllow": true,
 		"assetAccount": 2,
-		"accumulatedDepreciationAccount": 1,
+		"accumulatedDepreciationAccount": 2,
 		"revaluationReserveAccount": 5,
 		"depreciationExpenseAccount": 3,
 		"unitOfMeasurement": 10,

@@ -40,25 +40,17 @@
 
 package org.egov.eis.model;
 
-import static org.egov.eis.utils.DateUtils.areDatesEqualWithoutTimePart;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.*;
+import org.springframework.format.annotation.DateTimeFormat;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
-
-import org.springframework.format.annotation.DateTimeFormat;
-
-import com.fasterxml.jackson.annotation.JsonFormat;
-
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import static org.egov.eis.utils.DateUtils.areDatesEqualWithoutTimePart;
 
 @AllArgsConstructor
 @Builder
@@ -83,7 +75,7 @@ public class Assignment {
 	private String department;
 
 	@NotNull
-	private Long designation;
+	private String designation;
 
 	@Valid
 	private List<HODDepartment> hod = new ArrayList<HODDepartment>();
@@ -192,13 +184,8 @@ public class Assignment {
 		} else if (!position.equals(other.position))
 			return false;
 		if (toDate == null) {
-			if (other.toDate != null)
-				return false;
-		} else if (!areDatesEqualWithoutTimePart(toDate, other.fromDate))
-			{
-			return false;
-			}
-		return true;
+			return other.toDate == null;
+		} else return areDatesEqualWithoutTimePart(toDate, other.fromDate);
 	}
 	
   /*@Override

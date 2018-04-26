@@ -1,11 +1,10 @@
 {
     "ResponseInfo": {
         "apiId": null,
-        "ver": "v1",
-        "ts": "Sat Aug 19 16:50:40 IST 2017",
+        "ver": null,
+        "ts": null,
         "resMsgId": null,
-        "msgId": "20170310130900",
-        "status": null
+        "msgId": null
     },
     "Depreciation": {
     	"id": 1,

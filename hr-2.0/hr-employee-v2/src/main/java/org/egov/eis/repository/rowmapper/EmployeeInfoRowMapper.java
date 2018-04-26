@@ -40,18 +40,8 @@
 
 package org.egov.eis.repository.rowmapper;
 
-import static org.springframework.util.ObjectUtils.isEmpty;
-
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-
+import lombok.Getter;
+import lombok.Setter;
 import org.egov.eis.model.Assignment;
 import org.egov.eis.model.EmployeeInfo;
 import org.egov.eis.model.HODDepartment;
@@ -60,8 +50,13 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.stereotype.Component;
 
-import lombok.Getter;
-import lombok.Setter;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
+
+import static org.springframework.util.ObjectUtils.isEmpty;
 
 @Component
 public class EmployeeInfoRowMapper implements ResultSetExtractor<List<EmployeeInfo>> {
@@ -135,7 +130,7 @@ public class EmployeeInfoRowMapper implements ResultSetExtractor<List<EmployeeIn
 				assignmentInfo.setFund((Long) rs.getObject("a_fundId"));
 				assignmentInfo.setFunctionary((Long) rs.getObject("a_functionaryId"));
 				assignmentInfo.setFunction((Long) rs.getObject("a_functionId"));
-				assignmentInfo.setDesignation((Long) rs.getObject("a_designationId"));
+                assignmentInfo.setDesignation(rs.getString("a_designationId"));
 				assignmentInfo.setDepartment(rs.getString("a_departmentId"));
 				assignmentInfo.setIsPrimary((Boolean) rs.getObject("a_isPrimary"));
 				assignmentInfo.setGrade((Long) rs.getObject("a_gradeId"));
@@ -165,7 +160,7 @@ public class EmployeeInfoRowMapper implements ResultSetExtractor<List<EmployeeIn
 			Map<Long, HODDepartment> hodDeptMap = assignmentInfo.getHodDeptMap();
 			Long hodId = (Long) rs.getObject("hod_id");
 
-			if ((Long) rs.getObject("hod_id") != null) {
+            if (rs.getObject("hod_id") != null) {
 				HODDepartment hodDepartment = hodDeptMap.get(hodId);
 				if (hodDepartment == null) {
 					hodDepartment = new HODDepartment();
@@ -270,7 +265,7 @@ public class EmployeeInfoRowMapper implements ResultSetExtractor<List<EmployeeIn
 		private Long functionary;
 		private Long function;
 		private String department;
-		private Long designation;
+        private String designation;
 		private Boolean isPrimary;
 		private Date fromDate;
 		private Date toDate;

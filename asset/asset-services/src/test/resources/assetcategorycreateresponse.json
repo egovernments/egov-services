@@ -1,5 +1,12 @@
 {
-	"ResponseInfo": null,
+	"ResponseInfo": {
+        "apiId": null,
+        "ver": null,
+        "ts": null,
+        "resMsgId": null,
+        "msgId": null,
+        "status": null
+    },
 	"AssetCategory": 
 	[
 		{
@@ -12,7 +19,7 @@
 			"depreciationMethod": "STRAIGHT_LINE_METHOD",
 			"isAssetAllow": true,
 			"assetAccount": 2,
-			"accumulatedDepreciationAccount": 1,
+			"accumulatedDepreciationAccount": 2,
 			"revaluationReserveAccount": 5,
 			"depreciationExpenseAccount": 3,
 			"unitOfMeasurement": 10,

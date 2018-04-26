@@ -296,15 +296,15 @@ class BaseRegister extends React.Component {
                               <label for="">Aadhar Number</label>
                           </div>
                           <div className="col-sm-6">
-                            <input type="text" id="aadharNo" onChange={(e) => { handleChange(e.target.value, "aadharNo") }}/>
+                            <input type="text" id="aadharNo" pattern="[0-9]{12}" maxLength='12' onChange={(e) => { handleChange(e.target.value, "aadharNo") }}/>
                           </div>
                       </div>
                   </div>
               </div>
               <div className="text-center">
                 <button type="submit" className="btn btn-submit">Search</button>  &nbsp;&nbsp;
-                <button type="button" className="btn btn-submit" onClick={(e)=>{this.closeWindow()}}>Close</button> &nbsp;&nbsp;
-                <button type="reset" className="btn btn-submit">Reset</button>
+                <button type="reset" className="btn btn-submit">Reset</button> &nbsp;&nbsp;
+                <button type="button" className="btn btn-submit" onClick={(e)=>{this.closeWindow()}}>Close</button> 
               </div>
             </fieldset>
           </form>

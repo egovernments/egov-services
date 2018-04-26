@@ -209,7 +209,7 @@ public class Employee {
                         .functionary(assignment.getFunctionary())
                         .function(assignment.getFunction())
                         .department(assignment.getDepartment().getCode())
-                        .designation(assignment.getDesignation().getId())
+                        .designation(assignment.getDesignation().getCode())
                         .hod(assignment.getHod())
                         .isPrimary(assignment.getIsPrimary())
                         .fromDate(assignment.getFromDate())

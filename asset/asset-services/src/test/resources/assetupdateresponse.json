@@ -9,7 +9,7 @@
   {
     "tenantId": "ap.kurnool",
     "name": "asset name",
-    "code" : "13",
+    "code" : "000013",
     "department": null,
     "assetCategory": {
       "tenantId": null,

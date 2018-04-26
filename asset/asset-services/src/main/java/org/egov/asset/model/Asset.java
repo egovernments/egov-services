@@ -110,29 +110,25 @@ public class Asset {
     private String version;
     private List<Attributes> assetAttributes = new ArrayList<>();
 
-    private Boolean enableYearWiseDepreciation;
     private Double depreciationRate;
 
-    @Valid
-    private List<YearWiseDepreciation> yearWiseDepreciation = new ArrayList<>();
     private String surveyNumber;
     private BigDecimal marketValue;
 
     @JsonProperty("transactionHistory")
     private List<TransactionHistory> transactionHistory;
-   
-    
+
     @JsonProperty("function")
     @NotNull
     private String function;
-    
+
     private BigDecimal currentValue;
-    
+
     private List<Document> documents;
-    
+
     @JsonProperty("scheme")
-    private String scheme ;
+    private String scheme;
 
     @JsonProperty("subScheme")
-    private String subScheme ;
+    private String subScheme;
 }

@@ -2,7 +2,10 @@ package org.egov.pgr.utils;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.mdms.model.MasterDetail;
@@ -33,6 +36,8 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class PGRUtils {
 	
+	private static Map<Integer, String> employeeRolesPrecedenceMap = prepareEmployeeRolesPrecedenceMap();
+	
 	@Value("${egov.infra.searcher.host}")
 	private String searcherHost;
 	
@@ -48,6 +53,9 @@ public class PGRUtils {
 	@Value("${egov.hr.employee.host}")
 	private String hrEmployeeHost;
 	
+	@Value("${egov.hr.employee.v2.host}")
+	private String hrEmployeeV2Host;
+	
 	@Value("${egov.hr.employee.search.endpoint}")
 	private String hrEmployeeSearchEndpoint;
 	
@@ -56,6 +64,12 @@ public class PGRUtils {
 	
 	@Value("${egov.common.masters.search.endpoint}")
 	private String commonMasterSearchEndpoint;
+	
+	@Value("${egov.localization.host}")
+	private String localizationHost;
+	
+	@Value("${egov.localization.search.endpoint}")
+	private String localizationSearchEndpoint;
 	
 	@Autowired
 	private ResponseInfoFactory factory;
@@ -91,14 +105,23 @@ public class PGRUtils {
 		MdmsCriteria mdmsCriteria = MdmsCriteria.builder().tenantId(tenantId).moduleDetails(moduleDetails).build();
 		return  MdmsCriteriaReq.builder().requestInfo(requestInfo).mdmsCriteria(mdmsCriteria).build();
 	}
-	
-	
-	public AuditDetails getAuditDetails(String by) {
-		
-		Long date = new Date().getTime();
-		return AuditDetails.builder().createdBy(by).createdTime(date).lastModifiedBy(by).lastModifiedTime(date).build();
+
+	/**
+	 * Util method to return Auditdetails for create and update processes
+	 * 
+	 * @param by
+	 * @param isCreate
+	 * @return
+	 */
+	public AuditDetails getAuditDetails(String by, Boolean isCreate) {
+
+		Long dt = new Date().getTime();
+		if (isCreate)
+			return AuditDetails.builder().createdBy(by).createdTime(dt).lastModifiedBy(by).lastModifiedTime(dt).build();
+		else
+			return AuditDetails.builder().lastModifiedBy(by).lastModifiedTime(dt).build();
 	}
-	
+
 	/**
 	 * Prepares request and uri for service type search from MDMS
 	 * 
@@ -143,6 +166,37 @@ public class PGRUtils {
 		masterDetails.add(masterDetail);
 		ModuleDetail moduleDetail = ModuleDetail.builder()
 				.moduleName(PGRConstants.MDMS_PGR_MOD_NAME).masterDetails(masterDetails).build();
+		List<ModuleDetail> moduleDetails = new ArrayList<>();
+		moduleDetails.add(moduleDetail);
+		MdmsCriteria mdmsCriteria = MdmsCriteria.builder().tenantId(tenantId).moduleDetails(moduleDetails).build();
+		return MdmsCriteriaReq.builder().requestInfo(requestInfo).mdmsCriteria(mdmsCriteria).build();
+	}
+	
+	public MdmsCriteriaReq prepareMdMsRequestForDept(StringBuilder uri, String tenantId, String code, RequestInfo requestInfo) {
+		uri.append(mdmsHost).append(mdmsEndpoint);
+		MasterDetail masterDetail = org.egov.mdms.model.MasterDetail.builder()
+				.name(PGRConstants.MDMS_DEPT_MASTERS_MASTER_NAME).
+				filter("[?(@.code=='"+code+"')].name").build();
+		List<MasterDetail> masterDetails = new ArrayList<>();
+		masterDetails.add(masterDetail);
+		ModuleDetail moduleDetail = ModuleDetail.builder()
+				.moduleName(PGRConstants.MDMS_COMMON_MASTERS_MODULE_NAME).masterDetails(masterDetails).build();
+		List<ModuleDetail> moduleDetails = new ArrayList<>();
+		moduleDetails.add(moduleDetail);
+		MdmsCriteria mdmsCriteria = MdmsCriteria.builder().tenantId(tenantId).moduleDetails(moduleDetails).build();
+		return MdmsCriteriaReq.builder().requestInfo(requestInfo).mdmsCriteria(mdmsCriteria).build();
+	}
+	
+	
+	public MdmsCriteriaReq prepareMdMsRequestForDesignation(StringBuilder uri, String tenantId, String code, RequestInfo requestInfo) {
+		uri.append(mdmsHost).append(mdmsEndpoint);
+		MasterDetail masterDetail = org.egov.mdms.model.MasterDetail.builder()
+				.name(PGRConstants.MDMS_DESIGNATION_MASTERS_MASTER_NAME).
+				filter("[?(@.code=='"+code+"')].name").build();
+		List<MasterDetail> masterDetails = new ArrayList<>();
+		masterDetails.add(masterDetail);
+		ModuleDetail moduleDetail = ModuleDetail.builder()
+				.moduleName(PGRConstants.MDMS_COMMON_MASTERS_MODULE_NAME).masterDetails(masterDetails).build();
 		List<ModuleDetail> moduleDetails = new ArrayList<>();
 		moduleDetails.add(moduleDetail);
 		MdmsCriteria mdmsCriteria = MdmsCriteria.builder().tenantId(tenantId).moduleDetails(moduleDetails).build();
@@ -208,16 +262,16 @@ public class PGRUtils {
 			ServiceReqSearchCriteria serviceReqSearchCriteria) {
 		RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
 		requestInfoWrapper.setRequestInfo(requestInfo);
-		uri.append(hrEmployeeHost).append(hrEmployeeSearchEndpoint)
+		uri.append(hrEmployeeV2Host).append(hrEmployeeSearchEndpoint)
 		.append("?id="+requestInfo.getUserInfo().getId()).append("&tenantId="+serviceReqSearchCriteria.getTenantId());
 
 		return requestInfoWrapper;
 	}
-	
-	public RequestInfoWrapper prepareRequestForDeptSearch(StringBuilder uri, RequestInfo requestInfo, long deptId, String tenantId) {
+		
+	public RequestInfoWrapper prepareRequestForLocalization(StringBuilder uri, RequestInfo requestInfo, String locale, String tenantId, String module) {
 		RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
 		requestInfoWrapper.setRequestInfo(requestInfo);
-		uri.append(commonMasterHost).append(commonMasterSearchEndpoint).append("?id="+deptId).append("&tenantId="+tenantId);
+		uri.append(localizationHost).append(localizationSearchEndpoint).append("?tenantId="+tenantId).append("&module="+module).append("&locale="+locale);
 
 		return requestInfoWrapper;
 	}
@@ -258,6 +312,24 @@ public class PGRUtils {
         return mapper;
 	}
 	
+	/**
+	 * prepares and returns a map with integer keys starting from zero and values as role codes
+	 * the integer values decides the precedence by which actions should be applied among there roles
+	 */
+	private static Map<Integer, String> prepareEmployeeRolesPrecedenceMap() {
+
+		Map<Integer, String> map = new TreeMap<>();
+		map.put(2, PGRConstants.ROLE_EMPLOYEE);
+		map.put(1, PGRConstants.ROLE_DGRO);
+		map.put(0, PGRConstants.ROLE_GRO);
+		return map;
+	}
 	
+	/**
+	 * @return employeeRolesPrecedenceMap
+	 */
+	public static Map<Integer, String> getEmployeeRolesPrecedenceMap(){
+		return employeeRolesPrecedenceMap;
+	}
 
 }

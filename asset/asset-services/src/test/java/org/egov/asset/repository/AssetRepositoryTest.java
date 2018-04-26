@@ -177,7 +177,6 @@ public class AssetRepositoryTest {
         asset.setName("asset name");
         asset.setStatus(Status.CREATED.toString());
         asset.setModeOfAcquisition(ModeOfAcquisition.ACQUIRED);
-        asset.setEnableYearWiseDepreciation(Boolean.TRUE);
         asset.setDepreciationRate(Double.valueOf("6.33"));
         asset.setSurveyNumber("123");
         asset.setMarketValue(new BigDecimal("700"));

@@ -57,13 +57,11 @@ import java.util.List;
 @EqualsAndHashCode
 public class DesignationGetRequest {
 
-	private List<Long> id;
+	private List<String> codes;
 
 	@Size(min=3, max=100)
 	private String name;
 
-	@Size(max=20)
-	private String code;
 
 	private Boolean active;
 

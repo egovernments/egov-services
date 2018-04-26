@@ -135,11 +135,8 @@ public class AssetValidator {
     public void validateAsset(final AssetRequest assetRequest) {
         final AssetCategory assetCategory = findAssetCategory(assetRequest);
         final Asset asset = assetRequest.getAsset();
-        if (asset.getEnableYearWiseDepreciation() != null
-                && validateAssetCategoryForLand(assetCategory.getAssetCategoryType()))
+        if ( validateAssetCategoryForLand(assetCategory.getAssetCategoryType()))
             asset.setDepreciationRate(null);
-        else
-            validateYearWiseDepreciationRate(asset);
         if (Status.CAPITALIZED.toString().equals(asset.getStatus())) {
             final BigDecimal grossValue = asset.getGrossValue();
             final BigDecimal accumulatedDepreciationValue = asset.getAccumulatedDepreciation();
@@ -156,7 +153,7 @@ public class AssetValidator {
         }
     }
 
-    public void validateYearWiseDepreciationRate(final Asset asset) {
+   /* public void validateYearWiseDepreciationRate(final Asset asset) {
         if (asset.getEnableYearWiseDepreciation() != null && asset.getEnableYearWiseDepreciation()) {
             final List<String> finacialYears = new ArrayList<String>();
             for (final YearWiseDepreciation ywd : asset.getYearWiseDepreciation()) {
@@ -173,8 +170,8 @@ public class AssetValidator {
         }
 
     }
-
-    private void checkDuplicateFinancialYear(final List<String> finacialYears) {
+*/
+   /* private void checkDuplicateFinancialYear(final List<String> finacialYears) {
         if (!finacialYears.isEmpty()) {
             final Iterator<String> itr = finacialYears.iterator();
             if (itr.hasNext()) {
@@ -186,7 +183,7 @@ public class AssetValidator {
                 }
             }
         }
-    }
+    }*/
 
     public AssetCategory findAssetCategory(final AssetRequest assetRequest) {
         final AssetCategory assetCategory = assetRequest.getAsset().getAssetCategory();
@@ -434,8 +431,7 @@ public class AssetValidator {
                 assetRequest.getRequestInfo());
         if (!assetFromReq.getCode().equalsIgnoreCase(asset.getCode()))
             throw new RuntimeException("Invalid Asset Code for Asset :: " + asset.getName());
-        else
-            validateYearWiseDepreciationRate(assetRequest.getAsset());
+       
     }
 
     public void validateDepreciation(final DepreciationRequest depreciationRequest) {
@@ -520,8 +516,7 @@ public class AssetValidator {
 
         log.debug("Asset Criteria for Asset Search for Depreciation :: " + assetCriteria);
 
-        final List<Asset> assets = assetService.getAssets(assetCriteria, depreciationRequest.getRequestInfo())
-                .getAssets();
+        final List<Asset> assets = assetService.getAssets(assetCriteria, depreciationRequest.getRequestInfo());
         log.debug("Assets For Depreciation :: " + assets);
 
         if (getEnableYearWiseDepreciation(tenantId) && assets != null && !assets.isEmpty())

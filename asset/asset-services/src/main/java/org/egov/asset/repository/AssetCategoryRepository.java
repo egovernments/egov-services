@@ -91,14 +91,15 @@ public class AssetCategoryRepository {
 
     public List<AssetCategory> search(final AssetCategoryCriteria assetCategoryCriteria) {
 
-        final List<Object> preparedStatementValues = new ArrayList<Object>();
+        final List<Object> preparedStatementValues = new ArrayList<>();
         final String queryStr = assetCategoryQueryBuilder.getQuery(assetCategoryCriteria, preparedStatementValues);
 
-        List<AssetCategory> assetCategory = new ArrayList<AssetCategory>();
+        List<AssetCategory> assetCategory = new ArrayList<>();
         try {
             assetCategory = jdbcTemplate.query(queryStr, preparedStatementValues.toArray(), assetCategoryRowMapper);
         } catch (final Exception exception) {
             log.info("the exception in assetcategory search :" + exception);
+            throw new RuntimeException("the exception in assetcategory search");
         }
         return assetCategory;
     }
@@ -129,6 +130,7 @@ public class AssetCategoryRepository {
             log.debug("customFields:::" + customFields);
         } catch (final JsonProcessingException e) {
             log.debug("the exception in assetcategory customfileds mapping :" + e);
+            throw new RuntimeException("the exception in assetcategory customfileds mapping");
         }
 
         final Object[] obj = new Object[] { assetCategory.getId(), assetCategory.getName(), assetCategory.getCode(),
@@ -138,12 +140,14 @@ public class AssetCategoryRepository {
                 assetCategory.getRevaluationReserveAccount(), assetCategory.getDepreciationExpenseAccount(),
                 assetCategory.getUnitOfMeasurement(), customFields, assetCategory.getTenantId(),
                 requestInfo.getUserInfo().getId(), new Date().getTime(), requestInfo.getUserInfo().getId(),
-                new Date().getTime(), assetCategory.getIsAssetAllow(), assetCategory.getVersion() ,assetCategory.getUsedForLease()};
+                new Date().getTime(), assetCategory.getIsAssetAllow(), assetCategory.getVersion(),
+                assetCategory.getUsedForLease() };
 
         try {
             jdbcTemplate.update(queryStr, obj);
-        } catch (final Exception exception) {
-            log.debug("the exception in assetcategory insert :" + exception);
+        } catch (final Exception ex) {
+            log.debug("the exception in assetcategory insert :" + ex);
+            throw new RuntimeException("exceptions occured while persisting the assetcategory insert : " + ex.getMessage());
         }
 
         return assetCategory;
@@ -175,6 +179,7 @@ public class AssetCategoryRepository {
             log.info("customFields:::" + customFields);
         } catch (final JsonProcessingException e) {
             log.info("the exception in assetcategory customfileds mapping :" + e);
+            throw new RuntimeException("the exception in assetcategory customfileds mapping");
         }
 
         final Object[] obj = new Object[] { assetCategory.getParent(), assetCategoryType, depreciationMethod,
@@ -182,7 +187,8 @@ public class AssetCategoryRepository {
                 assetCategory.getAssetAccount(), assetCategory.getAccumulatedDepreciationAccount(),
                 assetCategory.getRevaluationReserveAccount(), assetCategory.getDepreciationExpenseAccount(),
                 assetCategory.getUnitOfMeasurement(), customFields, requestInfo.getUserInfo().getId(),
-                new Date().getTime(), assetCategory.getIsAssetAllow(), assetCategory.getVersion(),assetCategory.getUsedForLease(),
+                new Date().getTime(), assetCategory.getIsAssetAllow(), assetCategory.getVersion(),
+                assetCategory.getUsedForLease(),
                 assetCategory.getCode(), assetCategory.getTenantId() };
 
         try {
@@ -191,6 +197,7 @@ public class AssetCategoryRepository {
             log.info("output of update asset category query : " + i);
         } catch (final Exception exception) {
             log.info("the exception in assetcategory update :" + exception);
+            throw new RuntimeException("exceptions occured while persisting the asset category update ");
         }
 
         return assetCategory;

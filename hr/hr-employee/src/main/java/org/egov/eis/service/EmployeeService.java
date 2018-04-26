@@ -567,7 +567,6 @@ public class EmployeeService {
                     return errorHandler.getErrorResponseEntityForNoVacantPositionAvailable(empIndex, department.getCode(),
                             designation.getCode(), requestInfo);
                 assignment.setPosition(position.get(assignIndex).getId());
-
                 assignments.add(assignment);
             }
 
@@ -581,7 +580,6 @@ public class EmployeeService {
             if (isEmpty(employeeEntityResponse.getEmployee()) && !isEmpty(employeeEntityResponse.getError())) {
                 return getErrorResponseForBulkCreate(employeeEntityResponse);
             }
-
             employees.add(employeeEntityResponse.getEmployee());
         }
         return getSuccessResponseForBulkCreate(employees, requestInfo);
@@ -608,7 +606,7 @@ public class EmployeeService {
         RequestInfoWrapper requestInfoWrapper = RequestInfoWrapper.builder().requestInfo(employeeRequest.getRequestInfo()).build();
         String[] tenant = employeeRequest.getEmployee().getTenantId().split("\\.");
         String tenantId = tenant.length > 1 ? tenant[tenant.length - 1] : tenant[0];
-        ServiceHistory serviceHistory = new ServiceHistory();
+        String ulb = tenantId.substring(0, 1).toUpperCase() + tenantId.substring(1);
         List<Assignment> assignmentList = new ArrayList<>();
         List<Assignment> removedAssignment = new ArrayList<>();
 
@@ -617,72 +615,72 @@ public class EmployeeService {
         assignmentList.addAll(employeeRequest.getEmployee().getAssignments());
         if (isUpdate && !serviceHistories.isEmpty()) {
 
-                empAssignment = assignmentList.stream().filter(assignment -> assignment.getIsPrimary().equals(true)).collect(Collectors.toList());
+            empAssignment = assignmentList.stream().filter(assignment -> assignment.getIsPrimary().equals(true)).collect(Collectors.toList());
 
-                empAssignment.stream().forEach(assign -> {
-                    List<Department> departments = departmentService.getDepartments(Arrays.asList(assign.getDepartment()), employeeRequest.getEmployee().getTenantId(),
-                            requestInfoWrapper);
-                    DesignationGetRequest designationGetRequest = DesignationGetRequest.builder()
-                            .id(Arrays.asList(assign.getDesignation())).tenantId(employeeRequest.getEmployee().getTenantId()).build();
-                    List<org.egov.eis.model.bulk.Designation> designations = designationService
-                            .getDesignations(designationGetRequest, employeeRequest.getEmployee().getTenantId(), requestInfoWrapper);
+            empAssignment.stream().forEach(assign -> {
+                List<Department> departments = departmentService.getDepartments(Arrays.asList(assign.getDepartment()), employeeRequest.getEmployee().getTenantId(),
+                        requestInfoWrapper);
+                DesignationGetRequest designationGetRequest = DesignationGetRequest.builder()
+                        .id(Arrays.asList(assign.getDesignation())).tenantId(employeeRequest.getEmployee().getTenantId()).build();
+                List<org.egov.eis.model.bulk.Designation> designations = designationService
+                        .getDesignations(designationGetRequest, employeeRequest.getEmployee().getTenantId(), requestInfoWrapper);
 
-                    serviceHistories.stream().filter(history -> history.getIsAssignmentBased().equals(true) && history.getAssignmentId()!=null && !history.getAssignmentId().equals("")).forEach(srvcHstry -> {
-                        if ((assign.getId() != null && !assign.getId().equals("")) && assign.getId().equals(srvcHstry.getAssignmentId())) {
-                            srvcHstry.setDepartment(departments.get(0).getCode());
-                            srvcHstry.setDesignation(designations.get(0).getCode());
-                            srvcHstry.setPosition(assign.getPosition());
-                            srvcHstry.setCity(tenantId);
-                            srvcHstry.setServiceFrom(assign.getFromDate());
-                            srvcHstry.setServiceTo(assign.getToDate());
-                            srvcHstry.setIsAssignmentBased(true);
-                            removedAssignment.add(assign);
-                        }
-                    });
-                });
-
-                assignmentList.removeAll(removedAssignment);
-                empAssignment = assignmentList.stream().filter(assignment -> assignment.getIsPrimary().equals(true)).collect(Collectors.toList());
-
-                empAssignment.stream().forEach(assign -> {
-                    List<Department> departments = departmentService.getDepartments(Arrays.asList(assign.getDepartment()), employeeRequest.getEmployee().getTenantId(),
-                            requestInfoWrapper);
-                    DesignationGetRequest designationGetRequest = DesignationGetRequest.builder()
-                            .id(Arrays.asList(assign.getDesignation())).tenantId(employeeRequest.getEmployee().getTenantId()).build();
-                    List<org.egov.eis.model.bulk.Designation> designations = designationService
-                            .getDesignations(designationGetRequest, employeeRequest.getEmployee().getTenantId(), requestInfoWrapper);
-                    if (assign.getId() != null && !assign.getId().equals("")) {
-                        serviceHistory.setAssignmentId(assign.getId());
+                serviceHistories.stream().filter(history -> history.getIsAssignmentBased().equals(true) && history.getAssignmentId() != null && !history.getAssignmentId().equals("")).forEach(srvcHstry -> {
+                    if ((assign.getId() != null && !assign.getId().equals("")) && assign.getId().equals(srvcHstry.getAssignmentId())) {
+                        srvcHstry.setDepartment(departments.get(0).getCode());
+                        srvcHstry.setDesignation(designations.get(0).getCode());
+                        srvcHstry.setPosition(assign.getPosition());
+                        srvcHstry.setCity(ulb);
+                        srvcHstry.setServiceFrom(assign.getFromDate());
+                        srvcHstry.setServiceTo(assign.getToDate());
+                        srvcHstry.setIsAssignmentBased(true);
+                        removedAssignment.add(assign);
                     }
-                    serviceHistory.setServiceInfo("Sevice entry changes for assignment");
-                    serviceHistory.setCity(tenantId);
-                    serviceHistory.setServiceFrom(assign.getFromDate());
-                    serviceHistory.setServiceTo(assign.getToDate());
-                    serviceHistory.setDepartment(departments.get(0).getCode());
-                    serviceHistory.setDesignation(designations.get(0).getCode());
-                    serviceHistory.setPosition(assign.getPosition());
-                    serviceHistory.setIsAssignmentBased(true);
-                    serviceHistory.setTenantId(employeeRequest.getEmployee().getTenantId());
-                    serviceHistories.add(serviceHistory);
                 });
+            });
+
+            assignmentList.removeAll(removedAssignment);
+            empAssignment = assignmentList.stream().filter(assignment -> assignment.getIsPrimary().equals(true)).collect(Collectors.toList());
+
+            empAssignment.stream().forEach(assign -> {
+                List<Department> departments = departmentService.getDepartments(Arrays.asList(assign.getDepartment()), employeeRequest.getEmployee().getTenantId(),
+                        requestInfoWrapper);
+                DesignationGetRequest designationGetRequest = DesignationGetRequest.builder()
+                        .id(Arrays.asList(assign.getDesignation())).tenantId(employeeRequest.getEmployee().getTenantId()).build();
+                List<org.egov.eis.model.bulk.Designation> designations = designationService
+                        .getDesignations(designationGetRequest, employeeRequest.getEmployee().getTenantId(), requestInfoWrapper);
+                ServiceHistory serviceHistory = new ServiceHistory();
+
+                if (assign.getId() != null && !assign.getId().equals("")) {
+                    serviceHistory.setAssignmentId(assign.getId());
+                }
+                serviceHistory.setServiceInfo("Sevice entry changes for assignment");
+                serviceHistory.setCity(ulb);
+                serviceHistory.setServiceFrom(assign.getFromDate());
+                serviceHistory.setServiceTo(assign.getToDate());
+                serviceHistory.setDepartment(departments.get(0).getCode());
+                serviceHistory.setDesignation(designations.get(0).getCode());
+                serviceHistory.setPosition(assign.getPosition());
+                serviceHistory.setIsAssignmentBased(true);
+                serviceHistory.setTenantId(employeeRequest.getEmployee().getTenantId());
+                serviceHistories.add(serviceHistory);
+            });
             employeeRequest.getEmployee().setServiceHistory(serviceHistories);
-            }
-            else{
-            setServiceHistoryFromAssignment(employeeRequest,assignmentList);
+        } else {
+            setServiceHistoryFromAssignment(employeeRequest, assignmentList);
         }
-        }
-
-
+    }
 
     public void setServiceHistoryFromAssignment(EmployeeRequest employeeRequest, List<Assignment> assignmentList) {
         List<ServiceHistory> serviceHistories = employeeRequest.getEmployee().getServiceHistory();
         List<Assignment> empAssignment = assignmentList.stream().filter(assignment -> assignment.getIsPrimary().equals(true)).collect(Collectors.toList());
 
         RequestInfoWrapper requestInfoWrapper = RequestInfoWrapper.builder().requestInfo(employeeRequest.getRequestInfo()).build();
-        ServiceHistory serviceHistory = new ServiceHistory();
         String[] tenant = employeeRequest.getEmployee().getTenantId().split("\\.");
         String tenantId = tenant.length > 1 ? tenant[tenant.length - 1] : tenant[0];
-        List<Assignment> removedAssignment = new ArrayList<>() ;
+        String ulb = tenantId.substring(0, 1).toUpperCase() + tenantId.substring(1);
+
+        List<Assignment> removedAssignment = new ArrayList<>();
         empAssignment.stream().forEach(assign -> {
             List<Department> departments = departmentService.getDepartments(Arrays.asList(assign.getDepartment()), employeeRequest.getEmployee().getTenantId(),
                     requestInfoWrapper);
@@ -690,12 +688,13 @@ public class EmployeeService {
                     .id(Arrays.asList(assign.getDesignation())).tenantId(employeeRequest.getEmployee().getTenantId()).build();
             List<org.egov.eis.model.bulk.Designation> designations = designationService
                     .getDesignations(designationGetRequest, employeeRequest.getEmployee().getTenantId(), requestInfoWrapper);
+            ServiceHistory serviceHistory = new ServiceHistory();
 
             if (assign.getId() != null && !assign.getId().equals("")) {
                 serviceHistory.setAssignmentId(assign.getId());
             }
             serviceHistory.setServiceInfo("Sevice entry changes for assignment");
-            serviceHistory.setCity(tenantId);
+            serviceHistory.setCity(ulb);
             serviceHistory.setServiceFrom(assign.getFromDate());
             serviceHistory.setServiceTo(assign.getToDate());
             serviceHistory.setDepartment(departments.get(0).getCode());
@@ -706,8 +705,9 @@ public class EmployeeService {
             serviceHistories.add(serviceHistory);
             removedAssignment.add(assign);
         });
-        assignmentList.removeAll(removedAssignment);
         employeeRequest.getEmployee().setServiceHistory(serviceHistories);
+        assignmentList.removeAll(removedAssignment);
+
     }
 
 

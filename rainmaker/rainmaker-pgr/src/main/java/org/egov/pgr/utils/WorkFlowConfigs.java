@@ -16,7 +16,8 @@ public class WorkFlowConfigs {
 	public static final String ROLE_CITIZEN = "CITIZEN";
 	public static final String ROLE_GRO = "GRO";
 	public static final String ROLE_DGRO = "DGRO";
-
+	public static final String ROLE_NAME_GRO = "GRIEVANCE ROUTING OFFICER";
+	public static final String ROLE_NAME_DGRO = "DEPARTMENT GRIEVANCE ROUTING OFFICER";
 
 	public static final String ACTION_OPEN = "open";
 	public static final String ACTION_ASSIGN = "assign";
@@ -26,6 +27,7 @@ public class WorkFlowConfigs {
 	public static final String ACTION_REOPEN = "reopen";
 	public static final String ACTION_REASSIGN = "reassign";
 	public static final String ACTION_REQUEST_FOR_REASSIGN = "requestforreassign";
+	
 
 	public static final String STATUS_OPENED = "open";
 	public static final String STATUS_ASSIGNED = "assigned";
@@ -76,8 +78,8 @@ public class WorkFlowConfigs {
 		map.put(ROLE_CITIZEN, Arrays.asList(ACTION_OPEN, ACTION_CLOSE, ACTION_REOPEN));
 		map.put(ROLE_GRO, Arrays.asList(ACTION_ASSIGN, ACTION_REJECT, ACTION_REASSIGN));
 		map.put(ROLE_DGRO, Arrays.asList(ACTION_ASSIGN, ACTION_REJECT, ACTION_REASSIGN));
-		map.put("GRIEVANCE ROUTING OFFICER", Arrays.asList(ACTION_ASSIGN, ACTION_REJECT, ACTION_REASSIGN));
-		map.put("DEPARTMENT GRIEVANCE ROUTING OFFICER", Arrays.asList(ACTION_ASSIGN, ACTION_REJECT, ACTION_REASSIGN));
+		map.put(ROLE_NAME_GRO, Arrays.asList(ACTION_ASSIGN, ACTION_REJECT, ACTION_REASSIGN));
+		map.put(ROLE_NAME_DGRO, Arrays.asList(ACTION_ASSIGN, ACTION_REJECT, ACTION_REASSIGN));
 		return map;
 	}
 	

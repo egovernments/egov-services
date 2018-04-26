@@ -51,7 +51,6 @@ package org.egov.asset.service;
 import java.util.List;
 import java.util.Set;
 
-import org.egov.asset.config.ApplicationProperties;
 import org.egov.asset.contract.AssetCurrentValueRequest;
 import org.egov.asset.contract.AssetCurrentValueResponse;
 import org.egov.asset.model.AssetCurrentValue;
@@ -60,15 +59,11 @@ import org.egov.asset.model.enums.Sequence;
 import org.egov.asset.repository.CurrentValueRepository;
 import org.egov.asset.web.wrapperfactory.ResponseInfoFactory;
 import org.egov.common.contract.request.RequestInfo;
-import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class CurrentValueService {
-
-    @Autowired
-    private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
 
     @Autowired
     private ResponseInfoFactory responseInfoFactory;
@@ -82,9 +77,6 @@ public class CurrentValueService {
     @Autowired
     private AssetCommonService assetCommonService;
 
-    @Autowired
-    private ApplicationProperties applicationProperties;
-
     public AssetCurrentValueResponse getCurrentValues(final Set<Long> assetIds, final String tenantId,
             final RequestInfo requestInfo) {
 
@@ -92,7 +84,7 @@ public class CurrentValueService {
                 currentValueRepository.getCurrentValues(assetIds, tenantId));
     }
 
-    public AssetCurrentValueResponse createCurrentValueAsync(final AssetCurrentValueRequest assetCurrentValueRequest) {
+    public AssetCurrentValueResponse createCurrentValue(final AssetCurrentValueRequest assetCurrentValueRequest) {
 
         final RequestInfo requestInfo = assetCurrentValueRequest.getRequestInfo();
         final List<AssetCurrentValue> assetCurrentValues = assetCurrentValueRequest.getAssetCurrentValues();
@@ -105,7 +97,7 @@ public class CurrentValueService {
             assetCurrentValue.setAuditDetails(auditDetails);
             assetCurrentValue.setId(idList.get(i++));
         }
-        kafkaTemplate.send(applicationProperties.getSaveCurrentvalueTopic(), assetCurrentValueRequest);
+        saveCurrentValue(assetCurrentValueRequest);
         return new AssetCurrentValueResponse(responseInfoFactory.createResponseInfoFromRequestHeaders(requestInfo),
                 assetCurrentValues);
     }

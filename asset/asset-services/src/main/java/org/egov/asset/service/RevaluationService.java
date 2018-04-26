@@ -53,10 +53,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
-import org.egov.asset.config.ApplicationProperties;
 import org.egov.asset.contract.AssetCurrentValueRequest;
 import org.egov.asset.contract.RevaluationRequest;
-import org.egov.asset.contract.RevaluationResponse;
 import org.egov.asset.contract.VoucherRequest;
 import org.egov.asset.model.Asset;
 import org.egov.asset.model.AssetCategory;
@@ -66,14 +64,11 @@ import org.egov.asset.model.Revaluation;
 import org.egov.asset.model.RevaluationCriteria;
 import org.egov.asset.model.VoucherAccountCodeDetails;
 import org.egov.asset.model.enums.AssetConfigurationKeys;
-import org.egov.asset.model.enums.KafkaTopicName;
 import org.egov.asset.model.enums.Sequence;
 import org.egov.asset.model.enums.TransactionType;
 import org.egov.asset.model.enums.TypeOfChangeEnum;
 import org.egov.asset.repository.RevaluationRepository;
-import org.egov.asset.web.wrapperfactory.ResponseInfoFactory;
 import org.egov.common.contract.request.RequestInfo;
-import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
@@ -86,12 +81,6 @@ public class RevaluationService {
 
     @Autowired
     private RevaluationRepository revaluationRepository;
-
-    @Autowired
-    private LogAwareKafkaTemplate<String, Object> logAwareKafkaTemplate;
-
-    @Autowired
-    private ApplicationProperties applicationProperties;
 
     @Autowired
     private AssetService assetService;
@@ -108,13 +97,10 @@ public class RevaluationService {
     @Autowired
     private CurrentValueService currentValueService;
 
-    @Autowired
-    private ResponseInfoFactory responseInfoFactory;
-
-    public RevaluationResponse createAsync(final RevaluationRequest revaluationRequest, final HttpHeaders headers) {
+    public Revaluation saveRevaluation(final RevaluationRequest revaluationRequest, final HttpHeaders headers) {
         final Revaluation revaluation = revaluationRequest.getRevaluation();
         final RequestInfo requestInfo = revaluationRequest.getRequestInfo();
-        log.debug("RevaluationService createAsync revaluationRequest:" + revaluationRequest);
+        log.debug("revaluationRequest:" + revaluationRequest);
 
         revaluation.setId(assetCommonService.getNextId(Sequence.REVALUATIONSEQUENCE));
 
@@ -132,13 +118,8 @@ public class RevaluationService {
             } catch (final Exception e) {
                 throw new RuntimeException("Voucher Generation is failed due to :" + e.getMessage());
             }
-
-        logAwareKafkaTemplate.send(applicationProperties.getCreateAssetRevaluationTopicName(),
-                KafkaTopicName.SAVEREVALUATION.toString(), revaluationRequest);
-
-        final List<Revaluation> revaluations = new ArrayList<Revaluation>();
-        revaluations.add(revaluation);
-        return getRevaluationResponse(revaluations, requestInfo);
+        create(revaluationRequest);
+        return revaluation;
     }
 
     public void create(final RevaluationRequest revaluationRequest) {
@@ -149,7 +130,7 @@ public class RevaluationService {
     public void saveRevaluationAmountToCurrentAmount(final RevaluationRequest revaluationRequest) {
 
         final Revaluation revaluation = revaluationRequest.getRevaluation();
-        final List<AssetCurrentValue> assetCurrentValues = new ArrayList<AssetCurrentValue>();
+        final List<AssetCurrentValue> assetCurrentValues = new ArrayList<>();
         final AssetCurrentValue assetCurrentValue = new AssetCurrentValue();
         assetCurrentValue.setAssetId(revaluation.getAssetId());
         assetCurrentValue.setAssetTranType(TransactionType.REVALUATION);
@@ -159,17 +140,17 @@ public class RevaluationService {
         final AssetCurrentValueRequest assetCurrentValueRequest = new AssetCurrentValueRequest();
         assetCurrentValueRequest.setRequestInfo(revaluationRequest.getRequestInfo());
         assetCurrentValueRequest.setAssetCurrentValues(assetCurrentValues);
-        currentValueService.createCurrentValueAsync(assetCurrentValueRequest);
+        currentValueService.createCurrentValue(assetCurrentValueRequest);
     }
 
-    public RevaluationResponse search(final RevaluationCriteria revaluationCriteria, final RequestInfo requestInfo) {
-        List<Revaluation> revaluations = new ArrayList<Revaluation>();
+    public List<Revaluation> search(final RevaluationCriteria revaluationCriteria, final RequestInfo requestInfo) {
+        List<Revaluation> revaluations = new ArrayList<>();
         try {
             revaluations = revaluationRepository.search(revaluationCriteria);
         } catch (final Exception ex) {
             ex.printStackTrace();
         }
-        return getRevaluationResponse(revaluations, requestInfo);
+        return revaluations;
     }
 
     public String createVoucherForRevaluation(final RevaluationRequest revaluationRequest, final HttpHeaders headers) {
@@ -236,14 +217,6 @@ public class RevaluationService {
 
         }
         return accountCodeDetails;
-    }
-
-    private RevaluationResponse getRevaluationResponse(final List<Revaluation> revaluations,
-            final RequestInfo requestInfo) {
-        final RevaluationResponse revaluationResponse = new RevaluationResponse();
-        revaluationResponse.setRevaluations(revaluations);
-        revaluationResponse.setResposneInfo(responseInfoFactory.createResponseInfoFromRequestHeaders(requestInfo));
-        return revaluationResponse;
     }
 
 }

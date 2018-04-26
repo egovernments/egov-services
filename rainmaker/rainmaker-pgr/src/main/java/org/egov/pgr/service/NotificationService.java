@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.mdms.model.MdmsCriteriaReq;
 import org.egov.pgr.contract.RequestInfoWrapper;
@@ -39,22 +41,28 @@ public class NotificationService {
 	
 	public static Map<String, Map<String, String>> localizedMessageMap = new HashMap<>();
 
-	public String getServiceType(Service serviceReq, RequestInfo requestInfo) {
+	public String getServiceType(Service serviceReq, RequestInfo requestInfo, String locale) {
 		StringBuilder uri = new StringBuilder();
 		MdmsCriteriaReq mdmsCriteriaReq = pGRUtils.prepareSearchRequestForServiceType(uri, serviceReq.getTenantId(),
 				serviceReq.getServiceCode(), requestInfo);
+		String serviceType = null;
 		List<String> serviceTypes = null;
 		try {
 			Object result = serviceRequestRepository.fetchResult(uri, mdmsCriteriaReq);
-			log.info("service definition name result: " + result);
+			log.info("Category type code: " + result);
 			serviceTypes = JsonPath.read(result, PGRConstants.JSONPATH_SERVICE_CODES);
-			if (null == serviceTypes || serviceTypes.isEmpty())
+			if (!CollectionUtils.isEmpty(serviceTypes))
 				return null;
+			if (null == localizedMessageMap.get(locale + "|" + serviceReq.getTenantId())) // static map that saves code-message pair against locale | tenantId.
+				getLocalisedMessages(requestInfo, serviceReq.getTenantId(), locale, PGRConstants.LOCALIZATION_MODULE_NAME);
+			serviceType = localizedMessageMap.get(locale + "|" + serviceReq.getTenantId()).get(PGRConstants.LOCALIZATION_COMP_CATEGORY_PREFIX + serviceTypes.get(0));
+			if(StringUtils.isEmpty(serviceType))
+				serviceType = serviceTypes.get(0);
 		} catch (Exception e) {
 			return null;
 		}
 
-		return serviceTypes.get(0);
+		return serviceType;
 	}
 
 	public Map<String, String> getEmployeeDetails(String tenantId, String id, RequestInfo requestInfo) {

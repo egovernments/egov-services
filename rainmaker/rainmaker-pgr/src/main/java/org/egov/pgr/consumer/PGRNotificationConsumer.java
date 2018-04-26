@@ -89,8 +89,6 @@ public class PGRNotificationConsumer {
 	@Autowired
 	private NotificationService notificationService;
 
-	private static Map<String, Map<String, String>> localizedMessageMap = new HashMap<>();
-
 	@KafkaListener(topics = {"${kafka.topics.save.service}","${kafka.topics.update.service}"})
 
 	public void listen(final HashMap<String, Object> record, @Header(KafkaHeaders.RECEIVED_TOPIC) String topic) {
@@ -163,7 +161,7 @@ public class PGRNotificationConsumer {
 		Map<String, String> messageMap = NotificationService.localizedMessageMap.get(locale + "|" + tenantId);
 		if (null == messageMap)
 			return null;
-		String serviceType = notificationService.getServiceType(serviceReq, requestInfo);
+		String serviceType = notificationService.getServiceType(serviceReq, requestInfo, locale);
 		return getMessage(serviceType, date, serviceReq, actionInfo, requestInfo, messageMap);
 
 	}

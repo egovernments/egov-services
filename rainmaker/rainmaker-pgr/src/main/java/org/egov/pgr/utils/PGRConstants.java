@@ -41,6 +41,8 @@ public class PGRConstants {
 	public static final String LOCALIZATION_CODE_COMMENT = "pgr.sms.notification.comment";
 	public static final String LOCALIZATION_CODE_DEFAULT = "pgr.sms.notification.default";
 	public static final String LOCALIZATION_CODE_COMMENT_DEFAULT = "pgr.sms.notification.comment.default";
+	public static final String LOCALIZATION_COMP_CATEGORY_PREFIX = "pgr.complaint.category.";
+
 
 
 
@@ -66,7 +68,7 @@ public class PGRConstants {
 	public static final String SMS_NOTIFICATION_DATE_KEY = "<date>";
 	public static final String SMS_NOTIFICATION_ID_KEY = "<id>";
 	public static final String SMS_NOTIFICATION_EMP_NAME_KEY = "<emp_name>";
-	public static final String SMS_NOTIFICATION_USER_NAME_KEY = "<user_name>";
+	public static final String SMS_NOTIFICATION_USER_NAME_KEY = "<emp_name>";
 	public static final String SMS_NOTIFICATION_EMP_DEPT_KEY = "<emp_department>";
 	public static final String SMS_NOTIFICATION_EMP_DESIGNATION_KEY = "<emp_designation>";
 	public static final String SMS_NOTIFICATION_COMMENT_KEY = "<comment>";

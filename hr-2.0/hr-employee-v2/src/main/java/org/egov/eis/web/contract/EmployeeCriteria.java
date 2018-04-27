@@ -81,9 +81,9 @@ public class EmployeeCriteria implements Cloneable {
 
 	private Boolean isPrimary;
 
-	private Long designationId;
+	private String designationId;
 	
-	private Long departmentId;
+	private String departmentId;
 
 	private List<String> departmentCode;
 	

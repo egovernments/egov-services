@@ -92,5 +92,7 @@ public class DesignationGetRequest {
     private Short pageNumber;
 
     private List<String> codes;
+    
+    private List<String> names;
 
 }

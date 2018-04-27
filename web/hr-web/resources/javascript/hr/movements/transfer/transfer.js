@@ -267,6 +267,7 @@ class EmployeeTransfer extends React.Component {
   // }
 
   componentDidMount() {
+    $('input:required').css('box-shadow', 'none');
     var type = getUrlVars()["type"],
       _this = this,
       id = getUrlVars()["id"];

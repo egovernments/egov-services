@@ -202,7 +202,7 @@ public class EmployeeQueryBuilder {
 
 		if (!isEmpty(employeeCriteria.getDepartmentId())) {
 			selectQuery.append(" AND a.departmentId = :departmentId");
-			namedParameters.put("departmentId", employeeCriteria.getDepartmentId());
+			namedParameters.put("departmentId", employeeCriteria.getDepartmentId().toString());
 		}
 
 		if (!isEmpty(employeeCriteria.getDepartmentCode())) {
@@ -212,7 +212,7 @@ public class EmployeeQueryBuilder {
 		}
 		if (!isEmpty(employeeCriteria.getDesignationId())) {
 			selectQuery.append(" AND a.designationId = :designationId");
-			namedParameters.put("designationId", employeeCriteria.getDesignationId());
+			namedParameters.put("designationId", employeeCriteria.getDesignationId().toString());
 		}
 
 		if (!isEmpty(employeeCriteria.getPositionId())) {

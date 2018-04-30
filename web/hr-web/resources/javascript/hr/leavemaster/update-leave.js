@@ -1,3 +1,72 @@
+var CONST_API_GET_FILE = "/filestore/v1/files/id?tenantId=" + tenantId + "&fileStoreId=";
+
+const makeAjaxUpload = function (file, docType, cb) {
+  if (file.constructor == File) {
+    let formData = new FormData();
+    formData.append("jurisdictionId", tenantId);
+    formData.append("module", "EIS");
+    formData.append("file", file);
+    $.ajax({
+      url: baseUrl + "/filestore/v1/files?tenantId=" + tenantId,
+      data: formData,
+      cache: false,
+      contentType: false,
+      processData: false,
+      type: 'POST',
+      success: function (res) {
+        res.docType = docType;
+        cb(null, res);
+      },
+      error: function (jqXHR, exception) {
+        cb(jqXHR.responseText || jqXHR.statusText);
+      }
+    });
+  } else {
+    cb(null, {
+      files: [{
+        fileStoreId: file
+      }]
+    });
+  }
+}
+
+const uploadFiles = function (body, cb) {
+
+  var files = body.LeaveApplication[0].docs;
+
+  if (files.length) {
+    console.log(files)
+
+    var breakout = 0;
+    var docs = [];
+    let counter = files.length;
+    for (let j = 0; j < files.length; j++) {
+      if (files[j].file instanceof File) {
+        makeAjaxUpload(files[j].file, files[j].docType, function (err, res) {
+          if (breakout == 1)
+            return;
+          else if (err) {
+            cb(err);
+            breakout = 1;
+          } else {
+            counter--;
+            docs.push({ fileStoreId: res.files[0].fileStoreId });
+            if (counter == 0) {
+              body.LeaveApplication[0].documents = body.LeaveApplication[0].documents.concat(docs);
+              delete body.LeaveApplication[0].docs;
+              cb(null, body);
+            }
+          }
+        })
+      } else {
+        cb(new Error("Not a File"));
+      }
+    }
+  } else {
+    cb(null, body);
+  }
+}
+
 function today() {
   var today = new Date();
   var dd = today.getDate();
@@ -111,16 +180,16 @@ class UpdateLeave extends React.Component {
     }, function (err, res) {
       if (res) {
         _this.setState({
-        hrConfigurations : res
-      })
+          hrConfigurations: res
+        })
       }
     })
     commonApiPost("egov-common-masters", "holidays", "_search", {
       tenantId
     }, function (err, res) {
       _this.setState({
-      allHolidayList : res ? res.Holiday : []
-    })
+        allHolidayList: res ? res.Holiday : []
+      })
     });
 
     getCommonMaster("hr-leave", "leavetypes", function (err, res) {
@@ -138,11 +207,11 @@ class UpdateLeave extends React.Component {
         if (!_leaveSet.workflowDetails)
           _leaveSet.workflowDetails = {};
 
-        if(!_leaveSet.fromDate)
-         _leaveSet.fromDate = "";
+        if (!_leaveSet.fromDate)
+          _leaveSet.fromDate = "";
 
-         if(!_leaveSet.toDate)
-         _leaveSet.toDate = "";
+        if (!_leaveSet.toDate)
+          _leaveSet.toDate = "";
 
 
         commonApiPost("hr-employee", "employees", "_search", {
@@ -274,61 +343,56 @@ class UpdateLeave extends React.Component {
 
   componentDidUpdate() {
 
+    var type = getUrlVars()["type"], _this = this;
+    var id = getUrlVars()["id"];
 
+    $('#fromDate, #toDate').datepicker({
+      format: 'dd/mm/yyyy',
+      autoclose: true
+    });
 
-      var type = getUrlVars()["type"], _this = this;
-      var id = getUrlVars()["id"];
-  
-      $('#fromDate, #toDate').datepicker({
-        format: 'dd/mm/yyyy',
-        autoclose: true
-      });
-  
-      $('#fromDate, #toDate').on("change", function (e) {
-  
-        if (!_this.state.leaveSet.leaveType.id) {
-          showError("Please select Leave Type before entering from date and to date.");
-          $('#' + e.target.id).val("");
-        }
-  
-       if(_this.state.leaveSet[e.target.id] != e.target.value){
-  
+    $('#fromDate, #toDate').on("change", function (e) {
+
+      if (!_this.state.leaveSet.leaveType.id) {
+        showError("Please select Leave Type before entering from date and to date.");
+        $('#' + e.target.id).val("");
+      }
+
+      if (_this.state.leaveSet[e.target.id] != e.target.value) {
+
         var _from = $('#fromDate').val();
         var _to = $('#toDate').val();
         var _triggerId = e.target.id;
-        
-          _this.setState({
-            leaveSet: {
-              ..._this.state.leaveSet,
-              [_triggerId]: $("#" + _triggerId).val()
-            }
-          });
-  
-          if (_from && _to) {
-  
-            let dateParts1 = _from.split("/");
-            let newDateStr = dateParts1[1] + "/" + dateParts1[0] + "/ " + dateParts1[2];
-            let date1 = new Date(newDateStr);
-  
-            let dateParts2 = _to.split("/");
-            let newDateStr1 = dateParts2[1] + "/" + dateParts2[0] + "/" + dateParts2[2];
-            let date2 = new Date(newDateStr1);
-  
-  
-            if (date1 > date2) {
-              showError("From date must be before End date.");
-              $('#' + _triggerId).val("");
-            }
-  
-  
-            _this.calculate();
-          }
-  
-      }
-      });
-  
-    
 
+        _this.setState({
+          leaveSet: {
+            ..._this.state.leaveSet,
+            [_triggerId]: $("#" + _triggerId).val()
+          }
+        });
+
+        if (_from && _to) {
+
+          let dateParts1 = _from.split("/");
+          let newDateStr = dateParts1[1] + "/" + dateParts1[0] + "/ " + dateParts1[2];
+          let date1 = new Date(newDateStr);
+
+          let dateParts2 = _to.split("/");
+          let newDateStr1 = dateParts2[1] + "/" + dateParts2[0] + "/" + dateParts2[2];
+          let date2 = new Date(newDateStr1);
+
+
+          if (date1 > date2) {
+            showError("From date must be before End date.");
+            $('#' + _triggerId).val("");
+          }
+
+
+          _this.calculate();
+        }
+
+      }
+    });
 
 
     let status = getNameById(this.state.statusList, this.state.leaveSet.status, "code");
@@ -341,12 +405,12 @@ class UpdateLeave extends React.Component {
       $('#availableDays,#leaveDays,#name,#code').prop("disabled", true);
 
     }
-    if(status == "REJECTED"){
+    if (status == "REJECTED") {
       $('input,select,textarea').prop("disabled", false);
       $('#availableDays,#leaveDays,#name,#code').prop("disabled", true);
     }
 
-    if (status == "APPLIED" || status == "RESUBMITTED" ) {
+    if (status == "APPLIED" || status == "RESUBMITTED") {
       $("#department, #designation, #assignee").prop("disabled", false);
     }
 
@@ -471,7 +535,7 @@ class UpdateLeave extends React.Component {
             }
           });
         }
-      }else{
+      } else {
         return (showError("You do not have leave for this leave type."));
       }
     });
@@ -608,7 +672,7 @@ class UpdateLeave extends React.Component {
 
     doc.save('Leave Proceeding-' + noticeData.applicationNumber + '.pdf');
 
-    var blob = doc.output('blob');
+    doc.output('dataurlnewwindow');
 
   }
 
@@ -661,7 +725,7 @@ class UpdateLeave extends React.Component {
       this.setState({
         leaveSet: {
           ...this.state.leaveSet,
-          encashable:false,
+          encashable: false,
           [pName]: {
             ...this.state.leaveSet[pName],
             [name]: e.target.value
@@ -733,8 +797,8 @@ class UpdateLeave extends React.Component {
                 ..._this.state.leaveSet,
                 availableDays: "",
                 encashable,
-                fromDate:"",
-                toDate:""
+                fromDate: "",
+                toDate: ""
               }
             });
             return (showError("You do not have leave for this leave type."));
@@ -745,24 +809,64 @@ class UpdateLeave extends React.Component {
                 ..._this.state.leaveSet,
                 availableDays: _day,
                 encashable,
-                fromDate:"",
-                toDate:""
+                fromDate: "",
+                toDate: ""
               }
             });
           }
-        }else{
+        } else {
 
           _this.setState({
             leaveSet: {
               ..._this.state.leaveSet,
               encashable,
-              fromDate:"",
-              toDate:""
+              fromDate: "",
+              toDate: ""
             }
           });
 
         }
       });
+    } else if (name === "documents") {
+
+      var fileTypes = ["application/msword", "application/vnd.openxmlformats-officedocument.wordprocessingml.document", "application/vnd.ms-excel", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "application/pdf", "image/png", "image/jpeg"];
+
+      if (e.currentTarget.files.length != 0) {
+        for (var i = 0; i < e.currentTarget.files.length; i++) {
+          //2097152 = 2mb
+          if (e.currentTarget.files[i].size > 2097152 && fileTypes.indexOf(e.currentTarget.files[i].type) == -1) {
+            $("#documents").val('');
+            return showError("Maximum file size allowed is 2 MB.\n Please upload only DOC, PDF, xls, xlsx, png, jpeg file.");
+          } else if (e.currentTarget.files[i].size > 2097152) {
+            $("#documents").val('');
+            return showError("Maximum file size allowed is 2 MB.");
+          } else if (fileTypes.indexOf(e.currentTarget.files[i].type) == -1) {
+            $("#documents").val('');
+            return showError("Please upload only DOC, PDF, xls, xlsx, png, jpeg file.");
+          }
+        }
+
+        let files = e.currentTarget.files;
+        let docs = [];
+        for (let i = 0; i < e.currentTarget.files.length; i++) {
+          docs.push({ docType: name, file: e.currentTarget.files[i] });
+        }
+
+        this.setState({
+          leaveSet: {
+            ...this.state.leaveSet,
+            docs: docs
+          }
+        })
+      } else {
+        this.setState({
+          disciplinarySet: {
+            ...this.state.disciplinarySet,
+            docs: []
+          }
+        })
+      }
+
     } else if (name === "department") {
 
       this.setState({
@@ -856,7 +960,19 @@ class UpdateLeave extends React.Component {
       commonApiPost("hr-employee", "hod/employees", "_search", { tenantId, asOnDate, departmentId, active: true }, function (err, res2) {
         if (res2 && res2["Employee"] && res2["Employee"][0]) {
           employee = res2["Employee"][0];
-          var hodname = employee.name;
+          var assignments_designation = [];
+          getDropdown("assignments_designation", function (res) {
+            assignments_designation = res;
+          });
+          var designation;
+          employee.assignments.forEach(function (item) {
+            if (item.isPrimary) {
+              designation = item.designation;
+            }
+          });
+          var hodDesignation = getNameById(assignments_designation, designation);
+          var hodDetails = employee.name + " - " + employee.code + " - " + hodDesignation;
+
           if (!tempInfo.workflowDetails) {
             tempInfo.workflowDetails = {
               action: ID,
@@ -871,30 +987,38 @@ class UpdateLeave extends React.Component {
             "LeaveApplication": tempInfo
           };
 
-          $.ajax({
-            url: baseUrl + "/hr-leave/leaveapplications/" + _this.state.leaveSet.id + "/" + "_update?tenantId=" + tenantId,
-            type: 'POST',
-            dataType: 'json',
-            data: JSON.stringify(body),
+          uploadFiles(body, function (err1, _body) {
+            if (err1) {
+              showError(err1);
+            } else {
 
-            contentType: 'application/json',
-            headers: {
-              'auth-token': authToken
-            },
-            success: function (res) {
-              window.location.href = `app/hr/leavemaster/ack-page.html?type=Submit&applicationNumber=${leaveNumber}&owner=${hodname}`;
+              $.ajax({
+                url: baseUrl + "/hr-leave/leaveapplications/" + _this.state.leaveSet.id + "/" + "_update?tenantId=" + tenantId,
+                type: 'POST',
+                dataType: 'json',
+                data: JSON.stringify(_body),
 
-            },
-            error: function (err) {
-              if (err["responseJSON"] && err["responseJSON"].message)
-                showError(err["responseJSON"].message);
-              else if (err["responseJSON"] && err["responseJSON"].LeaveApplication[0] && err["responseJSON"].LeaveApplication[0].errorMsg) {
-                showError(err["responseJSON"].LeaveApplication[0].errorMsg)
-              } else {
-                showError("Something went wrong. Please contact Administrator");
-              }
+                contentType: 'application/json',
+                headers: {
+                  'auth-token': authToken
+                },
+                success: function (res) {
+                  window.location.href = `app/hr/leavemaster/ack-page.html?type=Submit&applicationNumber=${leaveNumber}&owner=${hodDetails}`;
+
+                },
+                error: function (err) {
+                  if (err["responseJSON"] && err["responseJSON"].message)
+                    showError(err["responseJSON"].message);
+                  else if (err["responseJSON"] && err["responseJSON"].LeaveApplication[0] && err["responseJSON"].LeaveApplication[0].errorMsg) {
+                    showError(err["responseJSON"].LeaveApplication[0].errorMsg)
+                  } else {
+                    showError("Something went wrong. Please contact Administrator");
+                  }
+                }
+              });
             }
-          });
+          })
+
         }
         else {
           return (showError("HOD does not exists for given date range Please assign the HOD."))
@@ -934,67 +1058,75 @@ class UpdateLeave extends React.Component {
         "LeaveApplication": tempInfo
       };
 
-      $.ajax({
-        url: baseUrl + "/hr-leave/leaveapplications/" + _this.state.leaveSet.id + "/" + "_update?tenantId=" + tenantId,
-        type: 'POST',
-        dataType: 'json',
-        data: JSON.stringify(body),
+      uploadFiles(body, function (err1, _body) {
+        if (err1) {
+          showError(err1);
+        } else {
 
-        contentType: 'application/json',
-        headers: {
-          'auth-token': authToken
-        },
-        success: function (res) {
+          $.ajax({
+            url: baseUrl + "/hr-leave/leaveapplications/" + _this.state.leaveSet.id + "/" + "_update?tenantId=" + tenantId,
+            type: 'POST',
+            dataType: 'json',
+            data: JSON.stringify(_body),
 
-          if (ID == "Approve") {
-            tempInfo.name = _name;
-            tempInfo.leaveTypeName = getNameById(_this.state.leaveList, _this.state.leaveSet.leaveType.id);
-            _this.printNotice(tempInfo);
-            window.location.href = `app/hr/leavemaster/ack-page.html?type=${ID}&applicationNumber=${leaveNumber}`;
+            contentType: 'application/json',
+            headers: {
+              'auth-token': authToken
+            },
+            success: function (res) {
 
-          } else if (ID == "Cancel")
-            window.location.href = `app/hr/leavemaster/ack-page.html?type=${ID}&applicationNumber=${leaveNumber}`;
-          else {
-            commonApiPost("egov-common-workflows", "process", "_search", {
-              tenantId: tenantId,
-              id: stateId
-            }, function (err, res) {
-              if (res) {
-                var process = res["processInstance"];
-                if (process) {
-                  var positionId = process.owner.id;
-                  console.log(positionId);
-                  commonApiPost("hr-employee", "employees", "_search", {
-                    tenantId,
-                    positionId: positionId
-                  }, function (err, res) {
-                    if (res && res["Employee"] && res["Employee"][0]) {
-                      employee = res["Employee"][0];
-                      owner = employee.name;
-                      window.location.href = `app/hr/leavemaster/ack-page.html?type=Submit&applicationNumber=${leaveNumber}&owner=${owner}`;
+              if (ID == "Approve") {
+                tempInfo.name = _name;
+                tempInfo.leaveTypeName = getNameById(_this.state.leaveList, _this.state.leaveSet.leaveType.id);
+                _this.printNotice(tempInfo);
+                window.location.href = `app/hr/leavemaster/ack-page.html?type=${ID}&applicationNumber=${leaveNumber}`;
+
+              } else if (ID == "Cancel")
+                window.location.href = `app/hr/leavemaster/ack-page.html?type=${ID}&applicationNumber=${leaveNumber}`;
+              else {
+                commonApiPost("egov-common-workflows", "process", "_search", {
+                  tenantId: tenantId,
+                  id: stateId
+                }, function (err, res) {
+                  if (res) {
+                    var process = res["processInstance"];
+                    if (process) {
+                      var positionId = process.owner.id;
+                      console.log(positionId);
+                      commonApiPost("hr-employee", "employees", "_search", {
+                        tenantId,
+                        positionId: positionId
+                      }, function (err, res) {
+                        if (res && res["Employee"] && res["Employee"][0]) {
+                          employee = res["Employee"][0];
+                          owner = employee.name;
+                          window.location.href = `app/hr/leavemaster/ack-page.html?type=Submit&applicationNumber=${leaveNumber}&owner=${owner}`;
+                        }
+                        else {
+                          return (showError("Unable to fetch Employee details after forwarding."))
+                        }
+
+                      });
+
                     }
-                    else {
-                      return (showError("Unable to fetch Employee details after forwarding."))
-                    }
+                  }
+                })
 
-                  });
-
-                }
               }
-            })
+            },
+            error: function (err) {
+              if (err["responseJSON"] && err["responseJSON"].message)
+                showError(err["responseJSON"].message);
+              else if (err["responseJSON"] && err["responseJSON"].LeaveApplication[0] && err["responseJSON"].LeaveApplication[0].errorMsg) {
+                showError(err["responseJSON"].LeaveApplication[0].errorMsg)
+              } else {
+                showError("Something went wrong. Please contact Administrator");
+              }
+            }
+          });
 
-          }
-        },
-        error: function (err) {
-          if (err["responseJSON"] && err["responseJSON"].message)
-            showError(err["responseJSON"].message);
-          else if (err["responseJSON"] && err["responseJSON"].LeaveApplication[0] && err["responseJSON"].LeaveApplication[0].errorMsg) {
-            showError(err["responseJSON"].LeaveApplication[0].errorMsg)
-          } else {
-            showError("Something went wrong. Please contact Administrator");
-          }
         }
-      });
+      })
     }
   }
 
@@ -1002,7 +1134,7 @@ class UpdateLeave extends React.Component {
   render() {
     let { handleChange, handleChangeThreeLevel, handleProcess } = this;
     let { leaveSet, buttons } = this.state;
-    let { name, code, leaveDays, availableDays, fromDate, toDate, leaveGround, reason, leaveType, encashable, totalWorkingDays, workflowDetails } = leaveSet;
+    let { name, code, leaveDays, availableDays, fromDate, toDate, leaveGround, reason, leaveType, encashable, totalWorkingDays, workflowDetails, documents } = leaveSet;
     let mode = getUrlVars()["type"];
     let _this = this;
     const renderProcesedBtns = function () {
@@ -1151,7 +1283,7 @@ class UpdateLeave extends React.Component {
                     <label htmlFor="">En-cashable</label>
                   </div>
                   <div className="col-sm-6">
-                    <input type="checkbox" id="encashable" name="encashable" checked={encashable} value = "false"
+                    <input type="checkbox" id="encashable" name="encashable" checked={encashable} value="false"
                       onChange={(e) => { handleChange(e, "encashable") }} />
                   </div>
                 </div>
@@ -1248,7 +1380,7 @@ class UpdateLeave extends React.Component {
     const renderWorkflowDetails = function (status) {
       status = getNameById(_this.state.statusList, status, "code");
 
-      if (status === "APPLIED" || status === "RESUBMITTED" ) {
+      if (status === "APPLIED" || status === "RESUBMITTED") {
         return (
           <div>
             <br />
@@ -1317,6 +1449,47 @@ class UpdateLeave extends React.Component {
       }
 
 
+    }
+
+    const renderFileBody = function (fles) {
+      return fles.map(function (file, ind) {
+        return (
+          <tr key={ind}>
+            <td>{ind + 1}</td>
+            <td>Document {ind + 1}</td>
+            <td>
+              <a href={window.location.origin + CONST_API_GET_FILE + file.fileStoreId} target="_blank">
+                Download
+                </a>
+            </td>
+          </tr>
+        )
+      })
+    }
+
+    const showAttachedFiles = function () {
+      if (documents.length) {
+        return (
+          <table id="fileTable" className="table table-bordered">
+            <thead>
+              <tr>
+                <th>Sr. No.</th>
+                <th>Document Name</th>
+                <th>File</th>
+
+              </tr>
+            </thead>
+            <tbody id="agreementSearchResultTableBody">
+              {
+                renderFileBody(documents)
+              }
+            </tbody>
+
+          </table>
+        )
+
+
+      }
     }
 
 
@@ -1396,6 +1569,17 @@ class UpdateLeave extends React.Component {
                   </div>
                 </div>
               </div>
+              <div className="col-sm-6">
+                <div className="row">
+                  <div className="col-sm-6 label-text">
+                    <label htmlFor="documents">Attachments</label>
+                  </div>
+                  <div className="col-sm-6 label-view-text">
+                    <input type="file" name="documents" id="documents"
+                      onChange={(e) => { handleChange(e, "documents") }} multiple />
+                  </div>
+                </div>
+              </div>
             </div>
 
             {showPrefix()}
@@ -1431,9 +1615,11 @@ class UpdateLeave extends React.Component {
 
 
             {showEnclosingHolidayTable()}
-
+            <br />
+            {showAttachedFiles()}
+            <br />
             {renderWorkflowDetails(this.state.leaveSet.status)}
-            <br/>
+            <br />
             <div className="text-center">
               {renderProcesedBtns()}
               <button type="button" className="btn btn-close" onClick={(e) => { this.close() }}>Close</button>

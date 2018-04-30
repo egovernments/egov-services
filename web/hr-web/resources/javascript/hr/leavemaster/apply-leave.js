@@ -1,7 +1,76 @@
+var CONST_API_GET_FILE = "/filestore/v1/files/id?tenantId=" + tenantId + "&fileStoreId=";
+
+const makeAjaxUpload = function (file, docType, cb) {
+  if (file.constructor == File) {
+    let formData = new FormData();
+    formData.append("jurisdictionId", tenantId);
+    formData.append("module", "EIS");
+    formData.append("file", file);
+    $.ajax({
+      url: baseUrl + "/filestore/v1/files?tenantId=" + tenantId,
+      data: formData,
+      cache: false,
+      contentType: false,
+      processData: false,
+      type: 'POST',
+      success: function (res) {
+        res.docType = docType;
+        cb(null, res);
+      },
+      error: function (jqXHR, exception) {
+        cb(jqXHR.responseText || jqXHR.statusText);
+      }
+    });
+  } else {
+    cb(null, {
+      files: [{
+        fileStoreId: file
+      }]
+    });
+  }
+}
+
+const uploadFiles = function (body, cb) {
+
+  var files = body.LeaveApplication[0].docs;
+
+  if (files.length) {
+    console.log(files)
+
+    var breakout = 0;
+    var docs = [];
+    let counter = files.length;
+    for (let j = 0; j < files.length; j++) {
+      if (files[j].file instanceof File) {
+        makeAjaxUpload(files[j].file, files[j].docType, function (err, res) {
+          if (breakout == 1)
+            return;
+          else if (err) {
+            cb(err);
+            breakout = 1;
+          } else {
+            counter--;
+            docs.push({ fileStoreId: res.files[0].fileStoreId });
+            if (counter == 0) {
+              body.LeaveApplication[0].documents = body.LeaveApplication[0].documents.concat(docs);
+              delete body.LeaveApplication[0].docs;
+              cb(null, body);
+            }
+          }
+        })
+      } else {
+        cb(new Error("Not a File"));
+      }
+    }
+  } else {
+    cb(null, body);
+  }
+}
+
 function today() {
   var today = new Date();
   var dd = today.getDate();
-  var mm = today.getMonth() + 1; 
+  var mm = today.getMonth() + 1;
   var yyyy = today.getFullYear();
   if (dd < 10) {
     dd = '0' + dd;
@@ -36,6 +105,8 @@ class ApplyLeave extends React.Component {
         "tenantId": tenantId,
         "encashable": false,
         "totalWorkingDays": "",
+        "docs": [],
+        "documents": [],
         "workflowDetails": {
           "department": "",
           "designation": "",
@@ -166,7 +237,7 @@ class ApplyLeave extends React.Component {
   }
 
 
-  componentDidUpdate(){
+  componentDidUpdate() {
 
     var type = getUrlVars()["type"], _this = this;
     var id = getUrlVars()["id"];
@@ -183,11 +254,11 @@ class ApplyLeave extends React.Component {
         $('#' + e.target.id).val("");
       }
 
-     if(_this.state.leaveSet[e.target.id] != e.target.value){
+      if (_this.state.leaveSet[e.target.id] != e.target.value) {
 
-      var _from = $('#fromDate').val();
-      var _to = $('#toDate').val();
-      var _triggerId = e.target.id;
+        var _from = $('#fromDate').val();
+        var _to = $('#toDate').val();
+        var _triggerId = e.target.id;
 
         _this.setState({
           leaveSet: {
@@ -216,7 +287,7 @@ class ApplyLeave extends React.Component {
           _this.calculate();
         }
 
-    }
+      }
     });
 
   }
@@ -359,7 +430,7 @@ class ApplyLeave extends React.Component {
             }
           });
         }
-      }else{
+      } else {
         return (showError("You do not have leave for this leave type."));
       }
     });
@@ -373,7 +444,7 @@ class ApplyLeave extends React.Component {
       this.setState({
         leaveSet: {
           ...this.state.leaveSet,
-          encashable:false,
+          encashable: false,
           [pName]: {
             ...this.state.leaveSet[pName],
             [name]: e.target.value
@@ -407,7 +478,7 @@ class ApplyLeave extends React.Component {
       else
         $('#totalWorkingDays').prop("disabled", true);
       let _this = this
-      
+
       var asOnDate = today();
       let leaveType = this.state.leaveSet.leaveType.id;
       let employeeid = getUrlVars()["id"];
@@ -422,8 +493,8 @@ class ApplyLeave extends React.Component {
               leaveSet: {
                 ..._this.state.leaveSet,
                 availableDays: "",
-                fromDate:"",
-                toDate:""
+                fromDate: "",
+                toDate: ""
               }
             });
             return (showError("You do not have leave for this leave type."));
@@ -433,24 +504,66 @@ class ApplyLeave extends React.Component {
               leaveSet: {
                 ..._this.state.leaveSet,
                 availableDays: _day,
-                fromDate:"",
-                toDate:""
+                encashable,
+                fromDate: "",
+                toDate: ""
               }
             });
           }
-        }else{
+        } else {
 
           _this.setState({
             leaveSet: {
               ..._this.state.leaveSet,
-              fromDate:"",
-              toDate:""
+              encashable,
+              fromDate: "",
+              toDate: ""
             }
           });
 
         }
       });
-    }
+    } else if (name === "documents") {
+
+      var fileTypes = ["application/msword", "application/vnd.openxmlformats-officedocument.wordprocessingml.document", "application/vnd.ms-excel", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "application/pdf", "image/png", "image/jpeg"];
+
+      if (e.currentTarget.files.length != 0) {
+          for (var i = 0; i < e.currentTarget.files.length; i++) {
+              //2097152 = 2mb
+              if (e.currentTarget.files[i].size > 2097152 && fileTypes.indexOf(e.currentTarget.files[i].type) == -1) {
+                  $("#documents").val('');
+                  return showError("Maximum file size allowed is 2 MB.\n Please upload only DOC, PDF, xls, xlsx, png, jpeg file.");
+              } else if (e.currentTarget.files[i].size > 2097152) {
+                  $("#documents").val('');
+                  return showError("Maximum file size allowed is 2 MB.");
+              } else if (fileTypes.indexOf(e.currentTarget.files[i].type) == -1) {
+                  $("#documents").val('');
+                  return showError("Please upload only DOC, PDF, xls, xlsx, png, jpeg file.");
+              }
+          }
+
+          let files = e.currentTarget.files;
+          let docs = [];
+          for(let i = 0; i < e.currentTarget.files.length; i++ ){
+              docs.push({docType:name, file: e.currentTarget.files[i] });
+          }
+
+          this.setState({
+            leaveSet: {
+                  ...this.state.leaveSet,
+                  docs: docs
+              }
+          })
+      } else {
+          this.setState({
+              disciplinarySet: {
+                  ...this.state.disciplinarySet,
+                  docs: []
+              }
+          })
+      }
+
+  } else{
 
     this.setState({
       leaveSet: {
@@ -458,6 +571,7 @@ class ApplyLeave extends React.Component {
         [name]: e.target.type === 'checkbox' ? e.target.checked : e.target.value
       }
     })
+  }
 
   }
 
@@ -497,22 +611,20 @@ class ApplyLeave extends React.Component {
     delete tempInfo.name;
     delete tempInfo.code;
 
-    if(tempInfo.encashable && !tempInfo.totalWorkingDays)
-    return (showError("Total Leave Days cannot be empty or zero. Please enter Total Leave Days"));
+    if (tempInfo.encashable && !tempInfo.totalWorkingDays)
+      return (showError("Total Leave Days cannot be empty or zero. Please enter Total Leave Days"));
 
     if (tempInfo.encashable && tempInfo.totalWorkingDays && tempInfo.totalWorkingDays < 1)
       return (showError("Total Leave Days cannot be negative or zero."));
 
-    if(tempInfo.encashable && tempInfo.totalWorkingDays && tempInfo.totalWorkingDays > tempInfo.availableDays)
-    return (showError("Total Leave Days cannot be greater than available days"));
+    if (tempInfo.encashable && tempInfo.totalWorkingDays && tempInfo.totalWorkingDays > tempInfo.availableDays)
+      return (showError("Total Leave Days cannot be greater than available days"));
 
-
-
-    if(tempInfo.encashable){
+    if (tempInfo.encashable) {
       tempInfo.leaveDays = tempInfo.totalWorkingDays;
     }
 
-    
+
     console.log(this.state.perfixSuffix, this.state.encloseHoliday);
 
     let holidays = [];
@@ -525,7 +637,7 @@ class ApplyLeave extends React.Component {
     tempInfo.suffixDate = this.state.perfixSuffix ? this.state.perfixSuffix.suffixToDate : "";
     tempInfo.holidays = holidays;
 
-    commonApiPost("hr-employee", "hod/employees", "_search", { tenantId, asOnDate, departmentId, active:true }, function (err, res) {
+    commonApiPost("hr-employee", "hod/employees", "_search", { tenantId, asOnDate, departmentId, active: true }, function (err, res) {
       if (res && res["Employee"] && res["Employee"][0]) {
         employee = res["Employee"][0];
       }
@@ -542,7 +654,6 @@ class ApplyLeave extends React.Component {
           designation = item.designation;
         }
       });
-      console.log(designation);
       var hodDesignation = getNameById(assignments_designation, designation);
       var hodDetails = employee.name + " - " + employee.code + " - " + hodDesignation;
       tempInfo.workflowDetails.assignee = employee.assignments && employee.assignments[0] ? employee.assignments[0].position : "";
@@ -550,30 +661,36 @@ class ApplyLeave extends React.Component {
         "RequestInfo": requestInfo,
         "LeaveApplication": [tempInfo]
       }, _this = this;
-      $.ajax({
-        url: baseUrl + "/hr-leave/leaveapplications/_create?tenantId=" + tenantId,
-        type: 'POST',
-        dataType: 'json',
-        data: JSON.stringify(body),
 
-        contentType: 'application/json',
-        headers: {
-          'auth-token': authToken
-        },
-        success: function (res) {
-          var leaveNumber = res.LeaveApplication[0].applicationNumber;
-          window.location.href = `app/hr/leavemaster/ack-page.html?type=Apply&applicationNumber=${leaveNumber}&owner=${hodDetails}`;
-        },
-        error: function (err) {
-          if (err.responseJSON && err.responseJSON.LeaveApplication && err.responseJSON.LeaveApplication[0] && err.responseJSON.LeaveApplication[0].errorMsg) {
-            showError(err.responseJSON.LeaveApplication[0].errorMsg);
-          } else {
-            showError("Something went wrong. Please contact Administrator.");
-          }
+      uploadFiles(body, function (err1, _body) {
+        if (err1) {
+          showError(err1);
+        } else {
+
+          $.ajax({
+            url: baseUrl + "/hr-leave/leaveapplications/_create?tenantId=" + tenantId,
+            type: 'POST',
+            dataType: 'json',
+            data: JSON.stringify(_body),
+            contentType: 'application/json',
+            headers: {
+              'auth-token': authToken
+            },
+            success: function (res) {
+              var leaveNumber = res.LeaveApplication[0].applicationNumber;
+              window.location.href = `app/hr/leavemaster/ack-page.html?type=Apply&applicationNumber=${leaveNumber}&owner=${hodDetails}`;
+            },
+            error: function (err) {
+              if (err.responseJSON && err.responseJSON.LeaveApplication && err.responseJSON.LeaveApplication[0] && err.responseJSON.LeaveApplication[0].errorMsg) {
+                showError(err.responseJSON.LeaveApplication[0].errorMsg);
+              } else {
+                showError("Something went wrong. Please contact Administrator.");
+              }
+            }
+          });
         }
-      });
+      })
     })
-
   }
 
 
@@ -875,6 +992,17 @@ class ApplyLeave extends React.Component {
                   <div className="col-sm-6">
                     <input type="number" id="availableDays" name="availableDays" value={availableDays}
                       onChange={(e) => { handleChange(e, "availableDays") }} />
+                  </div>
+                </div>
+              </div>
+              <div className="col-sm-6">
+                <div className="row">
+                  <div className="col-sm-6 label-text">
+                    <label htmlFor="documents">Attachments</label>
+                  </div>
+                  <div className="col-sm-6 label-view-text">
+                    <input type="file" name="documents" id="documents"
+                      onChange={(e) => { handleChange(e, "documents") }} multiple />
                   </div>
                 </div>
               </div>

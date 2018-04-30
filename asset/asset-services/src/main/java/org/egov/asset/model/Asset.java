@@ -131,4 +131,23 @@ public class Asset {
 
     @JsonProperty("subScheme")
     private String subScheme;
+
+    @JsonProperty("purchaseValue")
+    private BigDecimal purchaseValue;
+    
+    @JsonProperty("purchaseDate")
+    private Long purchaseDate;
+    
+    @JsonProperty("constructionValue")
+    private BigDecimal constructionValue;
+    
+    @JsonProperty("acquisitionValue")
+    private BigDecimal acquisitionValue;
+    
+    @JsonProperty("acquisitionDate")
+    private Long acquisitionDate;
+    
+    @JsonProperty("notApplicableForSaleOrDisposal")
+    private Boolean notApplicableForSaleOrDisposal;
+
 }

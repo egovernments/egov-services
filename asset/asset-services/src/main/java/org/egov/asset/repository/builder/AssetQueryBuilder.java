@@ -72,7 +72,7 @@ public class AssetQueryBuilder {
             + "assetcategory.depreciationrate as assetcategory_depreciationrate ,currentval.currentamount "
             + " FROM egasset_asset asset "
             + "INNER JOIN egasset_assetcategory assetcategory "
-            + "ON asset.assetcategory = assetcategory.id " 
+            + "ON asset.assetcategory = assetcategory.id "
             + "LEFT OUTER JOIN egasset_document documents "
             + "ON asset.id = documents.asset "
             + "left outer join (select current.assetid,current.tenantid,"
@@ -265,11 +265,11 @@ public class AssetQueryBuilder {
             selectQuery.append(" AND asset.dateofcreation IS NOT NULL AND asset.dateofcreation<?");
             preparedStatementValues.add(searchAsset.getDateOfDepreciation());
         }
-        if(searchAsset.getIsTransactionHistoryRequired()!=null){
-            selectQuery.append( " AND ASSET.status IN ('CAPITALIZED','DISPOSED')");
-            
-        }
+        if (searchAsset.getIsTransactionHistoryRequired() != null)
+            selectQuery.append(" AND ASSET.status IN ('CAPITALIZED','DISPOSED')");
 
+        if (searchAsset.getApplicableForSaleOrDisposal() != null)
+            selectQuery.append(" AND ASSET.notapplicableforsaleordisposal IS NOT TRUE");
     }
 
     @SuppressWarnings({ "unchecked", "rawtypes" })
@@ -336,41 +336,43 @@ public class AssetQueryBuilder {
     }
 
     public String getInsertQuery() {
-        return "INSERT into egasset_asset " + "(id,assetcategory,name,code,department,assetdetails,description,"
+        return "INSERT into egasset_asset(id,assetcategory,name,code,department,assetdetails,description,"
                 + "dateofcreation,remarks,length,width,totalarea,modeofacquisition,status,tenantid,"
                 + "zone,revenueward,street,electionward,doorno,pincode,locality,block,properties,createdby,"
                 + "createddate,lastmodifiedby,lastmodifieddate,grossvalue,accumulateddepreciation,assetreference,version,"
-                + "depreciationrate,surveynumber,marketvalue,function,scheme,subscheme)"
-                + "values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+                + "depreciationrate,surveynumber,marketvalue,function,scheme,subscheme,purchaseValue,purchaseDate,constructionValue,"
+                + " acquisitionValue,acquisitionDate,notApplicableForSaleOrDisposal)"
+                + "values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,"
+                + "?,?,?,?,?,?)";
     }
 
     public String getUpdateQuery() {
         return "UPDATE egasset_asset SET assetcategory=?,name=?,department=?,assetdetails=?,description=?,remarks=?,length=?,width=?,"
                 + "totalarea=?,modeofacquisition=?,status=?,zone=?,revenueward=?,street=?,electionward=?,doorno=?,pincode=?,locality=?,"
                 + "block=?,properties=?,lastmodifiedby=?,lastmodifieddate=?,grossvalue=?,accumulateddepreciation=?,assetreference=?,version=?,"
-                + "surveynumber=?,marketvalue=?,function=?,scheme=?,subscheme=?"
+                + "surveynumber=?,marketvalue=?,function=?,scheme=?,subscheme=?,purchaseValue=?,purchaseDate=?,"
+                + "constructionValue=?,acquisitionValue=?,acquisitionDate=?,notApplicableForSaleOrDisposal=?"
                 + "WHERE code=? and tenantid=?";
     }
 
-   /* public final static String BATCHINSERTQUERY = "INSERT INTO egasset_yearwisedepreciation "
-            + "(depreciationrate,financialyear,assetid,usefullifeinyears,tenantid,createdby,createddate,"
-            + "lastmodifiedby,lastmodifieddate) values (?,?,?,?,?,?,?,?,?)";
-
-    public final static String BATCHUPDATEQUERY = "UPDATE egasset_yearwisedepreciation SET"
-            + " depreciationrate=?,usefullifeinyears=?,"
-            + "createdby=?,createddate=?,lastmodifiedby=?,lastmodifieddate=? "
-            + "WHERE  assetid=? AND financialyear=? AND tenantid=?";*/
+    /*
+     * public final static String BATCHINSERTQUERY = "INSERT INTO egasset_yearwisedepreciation " +
+     * "(depreciationrate,financialyear,assetid,usefullifeinyears,tenantid,createdby,createddate," +
+     * "lastmodifiedby,lastmodifieddate) values (?,?,?,?,?,?,?,?,?)"; public final static String BATCHUPDATEQUERY =
+     * "UPDATE egasset_yearwisedepreciation SET" + " depreciationrate=?,usefullifeinyears=?," +
+     * "createdby=?,createddate=?,lastmodifiedby=?,lastmodifieddate=? " + "WHERE  assetid=? AND financialyear=? AND tenantid=?";
+     */
 
     public final static String FINDBYNAMEQUERY = "SELECT asset.name FROM egasset_asset asset WHERE asset.name=? AND asset.tenantid=?";
 
-    /*public final static String GETYEARWISEDEPRECIATIONQUERY = "select id,assetid,depreciationrate,financialyear,usefullifeinyears,tenantid from "
-            + "egasset_yearwisedepreciation where assetid = ? and tenantid = ?";
-
-    public final static String ASSETINCLUDEDEPRECIATIONRATEUPDATEQUERY = "UPDATE egasset_asset SET enableyearwisedepreciation = ?,depreciationrate=?"
-            + " WHERE code = ? and tenantid = ?";
-    public final static String ASSETEXCLUDEDEPRECIATIONRATEUPDATEQUERY = "UPDATE egasset_asset SET enableyearwisedepreciation = ?"
-            + " WHERE code = ? and tenantid = ?";
-
-    public final static String YEARWISEDEPRECIATIONDELETEQUERY = "DELETE FROM egasset_yearwisedepreciation ywd where "
-            + "ywd.financialyear = ? and ywd.assetid = ? and ywd.tenantid = ?";*/
+    /*
+     * public final static String GETYEARWISEDEPRECIATIONQUERY =
+     * "select id,assetid,depreciationrate,financialyear,usefullifeinyears,tenantid from " +
+     * "egasset_yearwisedepreciation where assetid = ? and tenantid = ?"; public final static String
+     * ASSETINCLUDEDEPRECIATIONRATEUPDATEQUERY = "UPDATE egasset_asset SET enableyearwisedepreciation = ?,depreciationrate=?" +
+     * " WHERE code = ? and tenantid = ?"; public final static String ASSETEXCLUDEDEPRECIATIONRATEUPDATEQUERY =
+     * "UPDATE egasset_asset SET enableyearwisedepreciation = ?" + " WHERE code = ? and tenantid = ?"; public final static String
+     * YEARWISEDEPRECIATIONDELETEQUERY = "DELETE FROM egasset_yearwisedepreciation ywd where " +
+     * "ywd.financialyear = ? and ywd.assetid = ? and ywd.tenantid = ?";
+     */
 }

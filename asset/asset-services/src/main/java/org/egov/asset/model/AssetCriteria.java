@@ -103,4 +103,6 @@ public class AssetCriteria {
     private Long dateOfDepreciation;
     private TransactionType transaction;
     private Boolean isTransactionHistoryRequired;
+    private Boolean applicableForSaleOrDisposal;
 }
+

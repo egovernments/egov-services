@@ -209,20 +209,25 @@ public class AssetQueryBuilderTest {
      */
     @Test
     public void getInsertQuery() {
-        final String queryWithTenantId = "INSERT into egasset_asset (id,assetcategory,name,code,department,assetdetails,"
-                + "description,dateofcreation,remarks,length,width,totalarea,modeofacquisition,status,tenantid,zone,revenueward"
-                + ",street,electionward,doorno,pincode,locality,block,properties,createdby,createddate,lastmodifiedby,"
-                + "lastmodifieddate,grossvalue,accumulateddepreciation,assetreference,version,"
-                + "depreciationrate,surveynumber,marketvalue,function,scheme,subscheme)values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+        final String queryWithTenantId = "INSERT into egasset_asset(id,assetcategory,name,code,department,assetdetails,description,"
+                + "dateofcreation,remarks,length,width,totalarea,modeofacquisition,status,tenantid,"
+                + "zone,revenueward,street,electionward,doorno,pincode,locality,block,properties,createdby,"
+                + "createddate,lastmodifiedby,lastmodifieddate,grossvalue,accumulateddepreciation,assetreference,version,"
+                + "depreciationrate,surveynumber,marketvalue,function,scheme,subscheme,purchaseValue,purchaseDate,constructionValue,"
+                + " acquisitionValue,acquisitionDate,notApplicableForSaleOrDisposal)"
+                + "values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,"
+                + "?,?,?,?,?,?)";
         assertEquals(queryWithTenantId, assetQueryBuilder.getInsertQuery());
     }
 
     @Test
     public void getUpdateQuery() {
-        final String queryWithTenantId = "UPDATE egasset_asset SET assetcategory=?,name=?,department=?,assetdetails=?,description=?,"
-                + "remarks=?,length=?,width=?,totalarea=?,modeofacquisition=?,status=?,zone=?,revenueward=?,street=?,electionward=?,"
-                + "doorno=?,pincode=?,locality=?,block=?,properties=?,lastmodifiedby=?,lastmodifieddate=?,grossvalue=?,"
-                + "accumulateddepreciation=?,assetreference=?,version=?,surveynumber=?,marketvalue=?,function=?,scheme=?,subscheme=?WHERE code=? and tenantid=?";
+        final String queryWithTenantId = "UPDATE egasset_asset SET assetcategory=?,name=?,department=?,assetdetails=?,description=?,remarks=?,length=?,width=?,"
+                + "totalarea=?,modeofacquisition=?,status=?,zone=?,revenueward=?,street=?,electionward=?,doorno=?,pincode=?,locality=?,"
+                + "block=?,properties=?,lastmodifiedby=?,lastmodifieddate=?,grossvalue=?,accumulateddepreciation=?,assetreference=?,version=?,"
+                + "surveynumber=?,marketvalue=?,function=?,scheme=?,subscheme=?,purchaseValue=?,purchaseDate=?,"
+                + "constructionValue=?,acquisitionValue=?,acquisitionDate=?,notApplicableForSaleOrDisposal=?"
+                + "WHERE code=? and tenantid=?";
         assertEquals(queryWithTenantId, assetQueryBuilder.getUpdateQuery());
     }
 }

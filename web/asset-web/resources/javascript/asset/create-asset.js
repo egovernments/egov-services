@@ -2040,7 +2040,7 @@ class CreateAsset extends React.Component {
       }
     }
 
-    const renderIfCapitalized = function (modeOfAcquisition, status) {
+    const renderBasedOnMode = function (modeOfAcquisition, status) {
       if (modeOfAcquisition === "PURCHASE" && (status === "CREATED" || status === "CAPITALIZED")) {
         return (
           <div className="row">
@@ -2753,6 +2753,7 @@ class CreateAsset extends React.Component {
                 </div>
               </div>
               {renderIfCapitalized(this.state.capitalized, this.state.ifassetLandIM)}
+              {renderBasedOnMode(this.state.assetSet.modeOfAcquisition, this.state.assetSet.status)}
             </div>
           </div>
           <br />

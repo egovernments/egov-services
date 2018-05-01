@@ -341,9 +341,9 @@ public class AssetQueryBuilder {
                 + "zone,revenueward,street,electionward,doorno,pincode,locality,block,properties,createdby,"
                 + "createddate,lastmodifiedby,lastmodifieddate,grossvalue,accumulateddepreciation,assetreference,version,"
                 + "depreciationrate,surveynumber,marketvalue,function,scheme,subscheme,purchaseValue,purchaseDate,constructionValue,"
-                + " acquisitionValue,acquisitionDate,notApplicableForSaleOrDisposal)"
+                + " acquisitionValue,acquisitionDate,notApplicableForSaleOrDisposal,donationDate,constructionDate)"
                 + "values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,"
-                + "?,?,?,?,?,?)";
+                + "?,?,?,?,?,?,?,?)";
     }
 
     public String getUpdateQuery() {
@@ -351,8 +351,8 @@ public class AssetQueryBuilder {
                 + "totalarea=?,modeofacquisition=?,status=?,zone=?,revenueward=?,street=?,electionward=?,doorno=?,pincode=?,locality=?,"
                 + "block=?,properties=?,lastmodifiedby=?,lastmodifieddate=?,grossvalue=?,accumulateddepreciation=?,assetreference=?,version=?,"
                 + "surveynumber=?,marketvalue=?,function=?,scheme=?,subscheme=?,purchaseValue=?,purchaseDate=?,"
-                + "constructionValue=?,acquisitionValue=?,acquisitionDate=?,notApplicableForSaleOrDisposal=?"
-                + "WHERE code=? and tenantid=?";
+                + "constructionValue=?,acquisitionValue=?,acquisitionDate=?,notApplicableForSaleOrDisposal=?,"
+                + " donationDate=?,constructionDate=? WHERE code=? and tenantid=?";
     }
 
     /*

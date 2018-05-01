@@ -138,6 +138,12 @@ public class Asset {
     @JsonProperty("purchaseDate")
     private Long purchaseDate;
     
+    @JsonProperty("donationDate")
+    private Long donationDate;
+    
+    @JsonProperty("constructionDate")
+    private Long constructionDate;
+    
     @JsonProperty("constructionValue")
     private BigDecimal constructionValue;
     

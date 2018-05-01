@@ -121,6 +121,8 @@ public class AssetRowMapper implements ResultSetExtractor<List<Asset>> {
                 asset.setAcquisitionDate(rs.getLong("acquisitionDate"));
                 asset.setConstructionValue(rs.getBigDecimal("constructionValue"));
                 asset.setNotApplicableForSaleOrDisposal(rs.getBoolean("notApplicableForSaleOrDisposal"));
+                asset.setDonationDate(rs.getLong("donationDate"));
+                asset.setConstructionDate(rs.getLong("constructionDate"));
 
                 final BigDecimal marketValue = rs.getBigDecimal("marketValue");
                 if (marketValue == BigDecimal.ZERO)

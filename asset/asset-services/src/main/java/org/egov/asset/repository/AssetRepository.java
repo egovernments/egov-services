@@ -209,7 +209,8 @@ public class AssetRepository {
                 asset.getVersion(),
                 assetCommonService.getDepreciationRate(asset.getDepreciationRate()), asset.getSurveyNumber(),
                 asset.getMarketValue(), asset.getFunction(), asset.getScheme(), asset.getSubScheme() ,asset.getPurchaseValue(),asset.getPurchaseDate(),
-                asset.getConstructionValue(),asset.getAcquisitionValue(),asset.getAcquisitionDate(),asset.getNotApplicableForSaleOrDisposal()};
+                asset.getConstructionValue(),asset.getAcquisitionValue(),asset.getAcquisitionDate(),asset.getNotApplicableForSaleOrDisposal(),
+                asset.getDonationDate(),asset.getConstructionDate()};
         try {
             jdbcTemplate.update(query, obj);
         } catch (final Exception ex) {
@@ -269,7 +270,7 @@ public class AssetRepository {
                 asset.getAccumulatedDepreciation(), asset.getAssetReference(), asset.getVersion(), asset.getSurveyNumber(),
                 asset.getMarketValue(), asset.getFunction(), asset.getScheme(), asset.getSubScheme(),asset.getPurchaseValue(),asset.getPurchaseDate(),
                 asset.getConstructionValue(),asset.getAcquisitionValue(),asset.getAcquisitionDate(),asset.getNotApplicableForSaleOrDisposal(),
-                asset.getCode(), asset.getTenantId() };
+                asset.getDonationDate(),asset.getConstructionDate(),asset.getCode(), asset.getTenantId() };
         try {
             log.debug("query1::" + query + "," + Arrays.toString(obj));
             final int i = jdbcTemplate.update(query, obj);

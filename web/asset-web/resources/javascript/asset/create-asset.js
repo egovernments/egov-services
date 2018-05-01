@@ -158,6 +158,14 @@ const defaultAssetSetState = {
   "depreciationRate": "",
   "scheme": "",
   "subScheme": "",
+  "notApplicableForSaleOrDisposal":false,
+  "purchaseValue":"",
+  "purchaseDate":"",
+  "constructionValue":"",
+  "constructionDate":"",
+  "acquisitionValue":"",
+  "acquisitionDate":"",
+  "donationDate":"",
   "documents": []
 };
 
@@ -453,6 +461,7 @@ class CreateAsset extends React.Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
+    let _this = this;
     if (this.state.modify2) {
       $('#refTable').DataTable({
         dom: 'Bfrtip',
@@ -474,6 +483,71 @@ class CreateAsset extends React.Component {
         buttons: []
       });
     }
+
+    $('#donationDate').datepicker({
+      format: 'dd/mm/yyyy',
+      autoclose: true,
+
+    });
+
+    $('#donationDate').on('changeDate', function (e) {
+      if (_this.state.assetSet.donationDate != e.target.value)
+        _this.setState({
+          assetSet: {
+            ..._this.state.assetSet,
+            "donationDate": $("#donationDate").val()
+          }
+        });
+    });
+
+    $('#purchaseDate').datepicker({
+      format: 'dd/mm/yyyy',
+      autoclose: true,
+
+    });
+
+    $('#purchaseDate').on('changeDate', function (e) {
+      if (_this.state.assetSet.purchaseDate != e.target.value)
+        _this.setState({
+          assetSet: {
+            ..._this.state.assetSet,
+            "purchaseDate": $("#purchaseDate").val()
+          }
+        });
+    });
+
+    $('#constructionDate').datepicker({
+      format: 'dd/mm/yyyy',
+      autoclose: true,
+
+    });
+
+    $('#constructionDate').on('changeDate', function (e) {
+      if (_this.state.assetSet.constructionDate != e.target.value)
+        _this.setState({
+          assetSet: {
+            ..._this.state.assetSet,
+            "constructionDate": $("#constructionDate").val()
+          }
+        });
+    });
+
+    $('#acquisitionDate').datepicker({
+      format: 'dd/mm/yyyy',
+      autoclose: true,
+
+    });
+
+    $('#acquisitionDate').on('changeDate', function (e) {
+      if (_this.state.assetSet.acquisitionDate != e.target.value)
+        _this.setState({
+          assetSet: {
+            ..._this.state.assetSet,
+            "acquisitionDate": $("#acquisitionDate").val()
+          }
+        });
+    });
+
   }
 
   handleRefSearch(e) {
@@ -551,7 +625,7 @@ class CreateAsset extends React.Component {
       this.setState({
         assetSet: {
           ...this.state.assetSet,
-          [name]: name == "document" ? e.target.files : e.target.value
+          [name]: name == "document" ? e.target.files : e.target.type === 'checkbox' ? e.target.checked : e.target.value
         }
       })
     }
@@ -1966,6 +2040,106 @@ class CreateAsset extends React.Component {
       }
     }
 
+    const renderIfCapitalized = function (modeOfAcquisition, status) {
+      if (modeOfAcquisition === "PURCHASE" && (status === "CREATED" || status === "CAPITALIZED")) {
+        return (
+          <div className="row">
+            <div className="col-sm-6">
+              <div className="row">
+                <div className="col-sm-6 label-text">
+                  <label for="purchaseValue">Purchase Value </label>
+                </div>
+                <div className="col-sm-6">
+                  <input type="number" id="purchaseValue" name="purchaseValue" value={purchaseValue}
+                    onChange={(e) => { handleChange(e, "purchaseValue") }} step="0.01" min="0" max="9999999999.99" disabled={readonly} />
+                </div>
+              </div>
+            </div>
+            <div className="col-sm-6">
+              <div className="row">
+                <div className="col-sm-6 label-text">
+                  <label for="purchaseDate">Purchased Date</label>
+                </div>
+                <div className="col-sm-6">
+                  <input type="text" id="purchaseDate" name="purchaseDate" value={purchaseDate}
+                    onChange={(e) => { handleChange(e, "purchaseDate") }} pattern="\d{1,2}/\d{1,2}/\d{4}" disabled={readonly} />
+                </div>
+              </div>
+            </div>
+          </div>
+        )
+      } else if (modeOfAcquisition === "DONATION" && (status === "CREATED" || status === "CAPITALIZED")) {
+        return (
+          <div className="row">
+            <div className="col-sm-6">
+              <div className="row">
+                <div className="col-sm-6 label-text">
+                  <label for="donationDate">Donation Date</label>
+                </div>
+                <div className="col-sm-6">
+                  <input type="number" id="donationDate" name="donationDate" value={purchaseValue}
+                    onChange={(e) => { handleChange(e, "donationDate") }} step="0.01" min="0" max="9999999999.99" disabled={readonly} />
+                </div>
+              </div>
+            </div>
+          </div>
+        )
+      } else if (modeOfAcquisition === "CONSTRUCTION" && (status === "CREATED" || status === "CAPITALIZED")) {
+        return (
+          <div className="row">
+            <div className="col-sm-6">
+              <div className="row">
+                <div className="col-sm-6 label-text">
+                  <label for="constructionValue">Construction Value </label>
+                </div>
+                <div className="col-sm-6">
+                  <input type="number" id="constructionValue" name="constructionValue" value={constructionValue}
+                    onChange={(e) => { handleChange(e, "constructionValue") }} step="0.01" min="0" max="9999999999.99" disabled={readonly} />
+                </div>
+              </div>
+            </div>
+            <div className="col-sm-6">
+              <div className="row">
+                <div className="col-sm-6 label-text">
+                  <label for="constructionDate">Construction Date</label>
+                </div>
+                <div className="col-sm-6">
+                  <input type="text" id="constructionDate" name="constructionDate" value={constructionDate}
+                    onChange={(e) => { handleChange(e, "constructionDate") }} pattern="\d{1,2}/\d{1,2}/\d{4}" disabled={readonly} />
+                </div>
+              </div>
+            </div>
+          </div>
+        )
+      } else if (modeOfAcquisition === "ACQUIRED" && (status === "CREATED" || status === "CAPITALIZED")) {
+        return (
+          <div className="row">
+            <div className="col-sm-6">
+              <div className="row">
+                <div className="col-sm-6 label-text">
+                  <label for="acquisitionValue">Acquisition Value </label>
+                </div>
+                <div className="col-sm-6">
+                  <input type="number" id="acquisitionValue" name="acquisitionValue" value={acquisitionValue}
+                    onChange={(e) => { handleChange(e, "acquisitionValue") }} step="0.01" min="0" max="9999999999.99" disabled={readonly} />
+                </div>
+              </div>
+            </div>
+            <div className="col-sm-6">
+              <div className="row">
+                <div className="col-sm-6 label-text">
+                  <label for="acquisitionDate">Acquisition Date</label>
+                </div>
+                <div className="col-sm-6">
+                  <input type="text" id="acquisitionDate" name="acquisitionDate" value={acquisitionDate}
+                    onChange={(e) => { handleChange(e, "acquisitionDate") }} pattern="\d{1,2}/\d{1,2}/\d{4}" disabled={readonly} />
+                </div>
+              </div>
+            </div>
+          </div>
+        )
+      }
+    }
 
     const showCodeonUpdate = function () {
 
@@ -2352,6 +2526,17 @@ class CreateAsset extends React.Component {
                           ))}
                         </select>
                       </div>
+                    </div>
+                  </div>
+                </div>
+                <div className="col-sm-6">
+                  <div className="row">
+                    <div className="col-sm-6 label-text">
+                      <label for="notApplicableForSaleOrDisposal">Not Applicable for Sale/Disposal </label>
+                    </div>
+                    <div className="col-sm-6">
+                      <input type="checkbox" id="notApplicableForSaleOrDisposal" name="notApplicableForSaleOrDisposal" checked={notApplicableForSaleOrDisposal}
+                        onChange={(e) => { handleChange(e, "notApplicableForSaleOrDisposal") }} disabled={readonly} />
                     </div>
                   </div>
                 </div>

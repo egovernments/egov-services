@@ -486,8 +486,7 @@ class CreateAsset extends React.Component {
 
     $('#donationDate').datepicker({
       format: 'dd/mm/yyyy',
-      autoclose: true,
-
+      autoclose: true
     });
 
     $('#donationDate').on('changeDate', function (e) {
@@ -502,8 +501,7 @@ class CreateAsset extends React.Component {
 
     $('#purchaseDate').datepicker({
       format: 'dd/mm/yyyy',
-      autoclose: true,
-
+      autoclose: true
     });
 
     $('#purchaseDate').on('changeDate', function (e) {
@@ -518,8 +516,7 @@ class CreateAsset extends React.Component {
 
     $('#constructionDate').datepicker({
       format: 'dd/mm/yyyy',
-      autoclose: true,
-
+      autoclose: true
     });
 
     $('#constructionDate').on('changeDate', function (e) {
@@ -534,8 +531,7 @@ class CreateAsset extends React.Component {
 
     $('#acquisitionDate').datepicker({
       format: 'dd/mm/yyyy',
-      autoclose: true,
-
+      autoclose: true
     });
 
     $('#acquisitionDate').on('changeDate', function (e) {
@@ -607,6 +603,21 @@ class CreateAsset extends React.Component {
       })
     }
 
+    if(name === "modeOfAcquisition"){
+      this.setState({
+        assetSet: {
+          ...this.state.assetSet,
+          "purchaseValue":"",
+          "purchaseDate":"",
+          "constructionValue":"",
+          "constructionDate":"",
+          "acquisitionValue":"",
+          "acquisitionDate":"",
+          "donationDate":""
+        }
+      })
+    }
+
     if (pattern && e.target.value) {
       // console.log('pattern exists');
       var reg = new RegExp(pattern);
@@ -664,6 +675,19 @@ class CreateAsset extends React.Component {
     if (tempInfo.dateOfCreation) {
       tempInfo.dateOfCreation = moment(tempInfo.dateOfCreation, "DD/MM/YYYY").valueOf();
     }
+
+    if(tempInfo.donationDate)
+      tempInfo.donationDate = moment(tempInfo.donationDate, "DD/MM/YYYY").valueOf();
+
+    if(tempInfo.purchaseDate)
+      tempInfo.purchaseDate = moment(tempInfo.purchaseDate, "DD/MM/YYYY").valueOf();
+
+    if(tempInfo.acquisitionDate)
+      tempInfo.acquisitionDate = moment(tempInfo.acquisitionDate, "DD/MM/YYYY").valueOf();
+
+    if(tempInfo.constructionDate)
+      tempInfo.constructionDate = moment(tempInfo.constructionDate, "DD/MM/YYYY").valueOf();
+
 
     if (!tempInfo.enableYearWiseDepreciation) {
       delete tempInfo.yearWiseDepreciation;
@@ -2059,7 +2083,7 @@ class CreateAsset extends React.Component {
                 </div>
                 <div className="col-sm-6">
                   <input type="number" id="purchaseValue" name="purchaseValue" value={purchaseValue}
-                    onChange={(e) => { handleChange(e, "purchaseValue") }} step="0.01" min="0" max="9999999999.99" disabled={readonly} />
+                    onChange={(e) => { handleChange(e, "purchaseValue") }} step="0.01" min="0" maxLength="13" disabled={readonly} />
                 </div>
               </div>
             </div>
@@ -2085,8 +2109,8 @@ class CreateAsset extends React.Component {
                   <label for="donationDate">Donation Date</label>
                 </div>
                 <div className="col-sm-6">
-                  <input type="number" id="donationDate" name="donationDate" value={purchaseValue}
-                    onChange={(e) => { handleChange(e, "donationDate") }} step="0.01" min="0" max="9999999999.99" disabled={readonly} />
+                  <input type="text" id="donationDate" name="donationDate" value={donationDate}
+                    onChange={(e) => { handleChange(e, "donationDate") }} pattern="\d{1,2}/\d{1,2}/\d{4}" disabled={readonly} />
                 </div>
               </div>
             </div>
@@ -2102,7 +2126,7 @@ class CreateAsset extends React.Component {
                 </div>
                 <div className="col-sm-6">
                   <input type="number" id="constructionValue" name="constructionValue" value={constructionValue}
-                    onChange={(e) => { handleChange(e, "constructionValue") }} step="0.01" min="0" max="9999999999.99" disabled={readonly} />
+                    onChange={(e) => { handleChange(e, "constructionValue") }} step="0.01" min="0" maxLength="13" disabled={readonly} />
                 </div>
               </div>
             </div>
@@ -2129,7 +2153,7 @@ class CreateAsset extends React.Component {
                 </div>
                 <div className="col-sm-6">
                   <input type="number" id="acquisitionValue" name="acquisitionValue" value={acquisitionValue}
-                    onChange={(e) => { handleChange(e, "acquisitionValue") }} step="0.01" min="0" max="9999999999.99" disabled={readonly} />
+                    onChange={(e) => { handleChange(e, "acquisitionValue") }} step="0.01" min="0" maxLength="13" disabled={readonly} />
                 </div>
               </div>
             </div>

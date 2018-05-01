@@ -85,7 +85,7 @@ class SearchAsset extends React.Component {
         delete tempInfo.status;
       }
 
-      commonApiPost("asset-services","assets","_search", {...tempInfo, tenantId, pageSize:500}, function(err, res) {
+      commonApiPost("asset-services","assets","_search", {...tempInfo, tenantId, pageSize:500, applicableForSaleOrDisposal:true}, function(err, res) {
         if(res) {
           var assetList = res["Assets"];
           if(getUrlVars()["type"] == "view" && assetList.length) {

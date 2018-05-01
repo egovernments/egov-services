@@ -1379,6 +1379,14 @@ class CreateAsset extends React.Component {
       yearWiseDepreciation,
       subScheme,
       scheme,
+      notApplicableForSaleOrDisposal,
+      purchaseValue,
+      purchaseDate,
+      constructionValue,
+      constructionDate,
+      acquisitionValue,
+      acquisitionDate,
+      donationDate,
       documents
     } = this.state.assetSet;
 

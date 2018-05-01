@@ -158,14 +158,14 @@ const defaultAssetSetState = {
   "depreciationRate": "",
   "scheme": "",
   "subScheme": "",
-  "notApplicableForSaleOrDisposal":false,
-  "purchaseValue":"",
-  "purchaseDate":"",
-  "constructionValue":"",
-  "constructionDate":"",
-  "acquisitionValue":"",
-  "acquisitionDate":"",
-  "donationDate":"",
+  "notApplicableForSaleOrDisposal": false,
+  "purchaseValue": "",
+  "purchaseDate": "",
+  "constructionValue": "",
+  "constructionDate": "",
+  "acquisitionValue": "",
+  "acquisitionDate": "",
+  "donationDate": "",
   "documents": []
 };
 
@@ -603,19 +603,53 @@ class CreateAsset extends React.Component {
       })
     }
 
-    if(name === "modeOfAcquisition"){
-      this.setState({
-        assetSet: {
-          ...this.state.assetSet,
-          "purchaseValue":"",
-          "purchaseDate":"",
-          "constructionValue":"",
-          "constructionDate":"",
-          "acquisitionValue":"",
-          "acquisitionDate":"",
-          "donationDate":""
-        }
-      })
+    if (name === "modeOfAcquisition") {
+      console.log("MOA : "+e.target.value+" "+this.state.status);
+      if(e.target.value === "DONATION" && this.state.status === "CAPITALIZED"){
+        console.log(" MOA updating with gross value ");
+        this.setState({
+          assetSet: {
+            ...this.state.assetSet,
+            "purchaseValue": "",
+            "purchaseDate": "",
+            "constructionValue": "",
+            "constructionDate": "",
+            "acquisitionValue": "",
+            "acquisitionDate": "",
+            "donationDate": "",
+            "grossValue" : 1
+          }
+        });
+
+      }else{
+        console.log(" MOA updating with out gross value ");
+
+        this.setState({
+          assetSet: {
+            ...this.state.assetSet,
+            "purchaseValue": "",
+            "purchaseDate": "",
+            "constructionValue": "",
+            "constructionDate": "",
+            "acquisitionValue": "",
+            "acquisitionDate": "",
+            "donationDate": ""
+          }
+        });
+
+      }
+
+    }
+
+    if(name === "status"){
+      if(this.state.modeOfAcquisition === "DONATION" && e.target.value === "CAPITALIZED"){
+        this.setState({
+          assetSet: {
+            ...this.state.assetSet,
+            "grossValue" : 1
+          }
+        });
+      }
     }
 
     if (pattern && e.target.value) {
@@ -676,16 +710,16 @@ class CreateAsset extends React.Component {
       tempInfo.dateOfCreation = moment(tempInfo.dateOfCreation, "DD/MM/YYYY").valueOf();
     }
 
-    if(tempInfo.donationDate)
+    if (tempInfo.donationDate)
       tempInfo.donationDate = moment(tempInfo.donationDate, "DD/MM/YYYY").valueOf();
 
-    if(tempInfo.purchaseDate)
+    if (tempInfo.purchaseDate)
       tempInfo.purchaseDate = moment(tempInfo.purchaseDate, "DD/MM/YYYY").valueOf();
 
-    if(tempInfo.acquisitionDate)
+    if (tempInfo.acquisitionDate)
       tempInfo.acquisitionDate = moment(tempInfo.acquisitionDate, "DD/MM/YYYY").valueOf();
 
-    if(tempInfo.constructionDate)
+    if (tempInfo.constructionDate)
       tempInfo.constructionDate = moment(tempInfo.constructionDate, "DD/MM/YYYY").valueOf();
 
 
@@ -1135,6 +1169,19 @@ class CreateAsset extends React.Component {
         if (res) {
           let asset = res["Assets"][0];
           var _date = asset.dateOfCreation ? asset.dateOfCreation : "";
+
+          if (asset.donationDate)
+            asset.donationDate = moment(new Date(asset.donationDate)).format("DD/MM/YYYY");
+
+          if (asset.purchaseDate)
+            asset.purchaseDate = moment(new Date(asset.purchaseDate)).format("DD/MM/YYYY");
+
+          if (asset.acquisitionDate)
+            asset.acquisitionDate = moment(new Date(asset.acquisitionDate)).format("DD/MM/YYYY");
+
+          if (asset.constructionDate)
+            asset.constructionDate = moment(new Date(asset.constructionDate)).format("DD/MM/YYYY");
+
           var _files = [];
           if (asset.assetAttributes && asset.assetAttributes.length) {
             for (var i = 0; i < asset.assetAttributes.length; i++) {
@@ -2083,7 +2130,7 @@ class CreateAsset extends React.Component {
                 </div>
                 <div className="col-sm-6">
                   <input type="number" id="purchaseValue" name="purchaseValue" value={purchaseValue}
-                    onChange={(e) => { handleChange(e, "purchaseValue") }} step="0.01" min="0" maxLength="13" disabled={readonly} />
+                    onChange={(e) => { handleChange(e, "purchaseValue") }} step="0.01" min="0" max = "9999999999.99" disabled={readonly} />
                 </div>
               </div>
             </div>
@@ -2126,7 +2173,7 @@ class CreateAsset extends React.Component {
                 </div>
                 <div className="col-sm-6">
                   <input type="number" id="constructionValue" name="constructionValue" value={constructionValue}
-                    onChange={(e) => { handleChange(e, "constructionValue") }} step="0.01" min="0" maxLength="13" disabled={readonly} />
+                    onChange={(e) => { handleChange(e, "constructionValue") }} step="0.01" min="0" max = "9999999999.99" disabled={readonly} />
                 </div>
               </div>
             </div>
@@ -2153,7 +2200,7 @@ class CreateAsset extends React.Component {
                 </div>
                 <div className="col-sm-6">
                   <input type="number" id="acquisitionValue" name="acquisitionValue" value={acquisitionValue}
-                    onChange={(e) => { handleChange(e, "acquisitionValue") }} step="0.01" min="0" maxLength="13" disabled={readonly} />
+                    onChange={(e) => { handleChange(e, "acquisitionValue") }} step="0.01" min="0" max = "9999999999.99" disabled={readonly} />
                 </div>
               </div>
             </div>

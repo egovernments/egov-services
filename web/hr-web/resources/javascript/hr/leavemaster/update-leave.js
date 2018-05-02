@@ -50,7 +50,7 @@ const uploadFiles = function (body, cb) {
             breakout = 1;
           } else {
             counter--;
-            docs.push({ fileStoreId: res.files[0].fileStoreId });
+            docs.push(res.files[0].fileStoreId);
             if (counter == 0) {
               body.LeaveApplication[0].documents = body.LeaveApplication[0].documents.concat(docs);
               delete body.LeaveApplication[0].docs;
@@ -1458,7 +1458,7 @@ class UpdateLeave extends React.Component {
             <td>{ind + 1}</td>
             <td>Document {ind + 1}</td>
             <td>
-              <a href={window.location.origin + CONST_API_GET_FILE + file.fileStoreId} target="_blank">
+              <a href={window.location.origin + CONST_API_GET_FILE + file} target="_blank">
                 Download
                 </a>
             </td>

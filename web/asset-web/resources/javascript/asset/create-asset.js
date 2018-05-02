@@ -578,6 +578,8 @@ class CreateAsset extends React.Component {
 
   handleChange(e, name, pattern) {
 
+    let _this = this;
+
     if (name == "scheme") {
       commonApiPost("egf-masters", "subschemes", "_search", { tenantId, scheme: val }, function (err, res) {
         if (res) {
@@ -607,7 +609,7 @@ class CreateAsset extends React.Component {
       console.log("MOA : "+e.target.value+" "+this.state.status);
       if(e.target.value === "DONATION" && this.state.assetSet.status === "CAPITALIZED"){
         console.log(" MOA updating with gross value ");
-        this.setState({
+        _this.setState({
           assetSet: {
             ...this.state.assetSet,
             purchaseValue: "",
@@ -624,7 +626,7 @@ class CreateAsset extends React.Component {
       }else{
         console.log(" MOA updating with out gross value ");
 
-        this.setState({
+        _this.setState({
           assetSet: {
             ...this.state.assetSet,
             purchaseValue: "",
@@ -643,7 +645,7 @@ class CreateAsset extends React.Component {
 
     if(name === "status"){
       if(this.state.assetSet.modeOfAcquisition === "DONATION" && e.target.value === "CAPITALIZED"){
-        this.setState({
+        _this.setState({
           assetSet: {
             ...this.state.assetSet,
             grossValue : 1

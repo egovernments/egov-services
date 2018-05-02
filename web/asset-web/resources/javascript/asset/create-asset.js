@@ -605,19 +605,19 @@ class CreateAsset extends React.Component {
 
     if (name === "modeOfAcquisition") {
       console.log("MOA : "+e.target.value+" "+this.state.status);
-      if(e.target.value === "DONATION" && this.state.status === "CAPITALIZED"){
+      if(e.target.value === "DONATION" && this.state.assetSet.status === "CAPITALIZED"){
         console.log(" MOA updating with gross value ");
         this.setState({
           assetSet: {
             ...this.state.assetSet,
-            "purchaseValue": "",
-            "purchaseDate": "",
-            "constructionValue": "",
-            "constructionDate": "",
-            "acquisitionValue": "",
-            "acquisitionDate": "",
-            "donationDate": "",
-            "grossValue" : 1
+            purchaseValue: "",
+            purchaseDate: "",
+            constructionValue: "",
+            constructionDate: "",
+            acquisitionValue: "",
+            acquisitionDate: "",
+            donationDate: "",
+            grossValue : 1
           }
         });
 
@@ -627,13 +627,13 @@ class CreateAsset extends React.Component {
         this.setState({
           assetSet: {
             ...this.state.assetSet,
-            "purchaseValue": "",
-            "purchaseDate": "",
-            "constructionValue": "",
-            "constructionDate": "",
-            "acquisitionValue": "",
-            "acquisitionDate": "",
-            "donationDate": ""
+            purchaseValue: "",
+            purchaseDate: "",
+            constructionValue: "",
+            constructionDate: "",
+            acquisitionValue: "",
+            acquisitionDate: "",
+            donationDate: ""
           }
         });
 
@@ -642,11 +642,11 @@ class CreateAsset extends React.Component {
     }
 
     if(name === "status"){
-      if(this.state.modeOfAcquisition === "DONATION" && e.target.value === "CAPITALIZED"){
+      if(this.state.assetSet.modeOfAcquisition === "DONATION" && e.target.value === "CAPITALIZED"){
         this.setState({
           assetSet: {
             ...this.state.assetSet,
-            "grossValue" : 1
+            grossValue : 1
           }
         });
       }

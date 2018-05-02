@@ -594,8 +594,25 @@ class CreateAsset extends React.Component {
         }
       })
     } else if (name === "status") {
-      // console.log(name, e.target.value);
+       console.log(name, e.target.value);
       this.state.capitalized = (e.target.value === "CAPITALIZED");
+      if(this.state.assetSet.modeOfAcquisition === "DONATION" && e.target.value === "CAPITALIZED"){
+        console.log("Saving gross value");
+        _this.setState({
+          assetSet: {
+            ...this.state.assetSet,
+            grossValue : "1",
+            [name]:e.target.value
+          }
+        });
+      }else{
+        _this.setState({
+          assetSet: {
+            ...this.state.assetSet,
+            [name]:e.target.value
+          }
+        });
+      }
     } else if (name == "enableYearWiseDepreciation") {
       return this.setState({
         assetSet: {
@@ -603,9 +620,7 @@ class CreateAsset extends React.Component {
           [name]: e.target.checked
         }
       })
-    }
-
-    if (name === "modeOfAcquisition") {
+    }else if (name === "modeOfAcquisition") {
       console.log("MOA : "+e.target.value+" "+this.state.status);
       if(e.target.value === "DONATION" && this.state.assetSet.status === "CAPITALIZED"){
         console.log(" MOA updating with gross value ");
@@ -619,7 +634,8 @@ class CreateAsset extends React.Component {
             acquisitionValue: "",
             acquisitionDate: "",
             donationDate: "",
-            grossValue : 1
+            grossValue : "1",
+            [name]: e.target.value
           }
         });
 
@@ -635,26 +651,15 @@ class CreateAsset extends React.Component {
             constructionDate: "",
             acquisitionValue: "",
             acquisitionDate: "",
-            donationDate: ""
+            donationDate: "",
+            [name]: e.target.value
+
           }
         });
 
       }
 
-    }
-
-    if(name === "status"){
-      if(this.state.assetSet.modeOfAcquisition === "DONATION" && e.target.value === "CAPITALIZED"){
-        _this.setState({
-          assetSet: {
-            ...this.state.assetSet,
-            grossValue : 1
-          }
-        });
-      }
-    }
-
-    if (pattern && e.target.value) {
+    }else if (pattern && e.target.value) {
       // console.log('pattern exists');
       var reg = new RegExp(pattern);
       if (reg.test(e.target.value)) {

@@ -70,6 +70,7 @@ import org.egov.asset.model.enums.AssetConfigurationKeys;
 import org.egov.asset.model.enums.AssetStatusObjectName;
 import org.egov.asset.model.enums.Sequence;
 import org.egov.asset.model.enums.Status;
+import org.egov.asset.model.enums.TransactionType;
 import org.egov.asset.repository.AssetRepository;
 import org.egov.asset.repository.DisposalRepository;
 import org.egov.common.contract.request.RequestInfo;
@@ -201,12 +202,20 @@ public class DisposalService {
 
     private List<VoucherAccountCodeDetails> getAccountDetails(final Disposal disposal,
             final AssetCategory assetCategory, final RequestInfo requestInfo) {
-        final List<VoucherAccountCodeDetails> accountCodeDetails = new ArrayList<VoucherAccountCodeDetails>();
+        final List<VoucherAccountCodeDetails> accountCodeDetails = new ArrayList<>();
         final String tenantId = disposal.getTenantId();
+        if(disposal.getTransactionType().equals(TransactionType.SALE)) {
         accountCodeDetails.add(voucherService.getGlCodes(requestInfo, tenantId, disposal.getAssetSaleAccount(),
                 disposal.getSaleValue(), false, true));
         accountCodeDetails.add(voucherService.getGlCodes(requestInfo, tenantId, assetCategory.getAssetAccount(),
                 disposal.getSaleValue(), true, false));
+        }else
+            if ( disposal.getTransactionType().equals(TransactionType.DISPOSAL)){
+            accountCodeDetails.add(voucherService.getGlCodes(requestInfo, tenantId, disposal.getAssetSaleAccount(),
+                    disposal.getAssetCurrentValue(), false, true));
+            accountCodeDetails.add(voucherService.getGlCodes(requestInfo, tenantId, assetCategory.getAssetAccount(),
+                    disposal.getAssetCurrentValue(), true, false));
+            }
         return accountCodeDetails;
     }
 

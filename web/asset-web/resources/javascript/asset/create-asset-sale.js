@@ -440,7 +440,7 @@ class Sale extends React.Component {
               <div className="col-sm-6">
                 <div className="row">
                   <div className="col-sm-6 label-text">
-                    <label>Sale or Disposal date <span>*</span></label>
+                    <label>Disposal date <span>*</span></label>
                   </div>
                   <div className="col-sm-6" style={{ display: self.state.readOnly ? 'none' : 'block' }}>
                     <div>
@@ -455,7 +455,7 @@ class Sale extends React.Component {
               <div className="col-sm-6">
                 <div className="row">
                   <div className="col-sm-6 label-text">
-                    <label>Sale or Disposal reason <span>*</span></label>
+                    <label>Disposal reason <span>*</span></label>
                   </div>
                   <div className="col-sm-6" style={{ display: self.state.readOnly ? 'none' : 'block' }}>
                     <div>
@@ -487,7 +487,7 @@ class Sale extends React.Component {
               <div className="col-sm-6">
                 <div className="row">
                   <div className="col-sm-6 label-text">
-                    <label>Asset Sale/Disposal Account Code <span>*</span></label>
+                    <label>Asset Disposal Account Code <span>*</span></label>
                   </div>
                   <div className="col-sm-6" style={{ display: self.state.readOnly ? 'none' : 'block' }}>
                     <div>
@@ -528,7 +528,7 @@ class Sale extends React.Component {
               <div className="col-sm-6">
                 <div className="row">
                   <div className="col-sm-6 label-text">
-                    <label>Sale or Disposal date <span>*</span></label>
+                    <label>Sale date <span>*</span></label>
                   </div>
                   <div className="col-sm-6" style={{ display: self.state.readOnly ? 'none' : 'block' }}>
                     <div>
@@ -543,7 +543,7 @@ class Sale extends React.Component {
               <div className="col-sm-6">
                 <div className="row">
                   <div className="col-sm-6 label-text">
-                    <label>Sale or Disposal reason <span>*</span></label>
+                    <label>Sale reason <span>*</span></label>
                   </div>
                   <div className="col-sm-6" style={{ display: self.state.readOnly ? 'none' : 'block' }}>
                     <div>
@@ -560,7 +560,7 @@ class Sale extends React.Component {
               <div className="col-sm-6">
                 <div className="row">
                   <div className="col-sm-6 label-text">
-                    <label>Sale or Disposal party name <span>*</span> </label>
+                    <label>Sale party name <span>*</span> </label>
                   </div>
                   <div className="col-sm-6" style={{ display: self.state.readOnly ? 'none' : 'block' }}>
                     <div>
@@ -575,7 +575,7 @@ class Sale extends React.Component {
               <div className="col-sm-6">
                 <div className="row">
                   <div className="col-sm-6 label-text">
-                    <label>Sale or Disposal party address <span> *</span> </label>
+                    <label>Sale party address <span> *</span> </label>
                   </div>
                   <div className="col-sm-6" style={{ display: self.state.readOnly ? 'none' : 'block' }}>
                     <div>
@@ -639,7 +639,7 @@ class Sale extends React.Component {
               <div className="col-sm-6">
                 <div className="row">
                   <div className="col-sm-6 label-text">
-                    <label>Asset Sale/Disposal Account Code <span>*</span></label>
+                    <label>Asset Sale Account Code <span>*</span></label>
                   </div>
                   <div className="col-sm-6" style={{ display: self.state.readOnly ? 'none' : 'block' }}>
                     <div>

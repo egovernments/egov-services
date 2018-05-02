@@ -122,13 +122,13 @@ public class LeaveApplicationRepository {
         ProcessInstance processInstance = new ProcessInstance();
         Long stateId = null;
         if (StringUtils.isEmpty(leaveApplicationRequest.getType()))
-          // processInstance = workFlowService.start(leaveApplicationRequest);
+           processInstance = workFlowService.start(leaveApplicationRequest);
         if (processInstance.getId() != null)
             stateId = Long.valueOf(processInstance.getId());
         final String leaveApplicationInsertQuery = LeaveApplicationQueryBuilder.insertLeaveApplicationQuery();
         final Date now = new Date();
-       // final UserResponse userResponse = userService
-            //    .findUserByUserNameAndTenantId(leaveApplicationRequest.getRequestInfo());
+        final UserResponse userResponse = userService
+                .findUserByUserNameAndTenantId(leaveApplicationRequest.getRequestInfo());
         for (LeaveApplication leaveApplication : leaveApplicationRequest.getLeaveApplication()) {
             String holiday = null;
             if(!leaveApplication.getHolidays().isEmpty())
@@ -140,8 +140,8 @@ public class LeaveApplicationRepository {
                     leaveApplication.getLeaveDays(), leaveApplication.getAvailableDays(),
                     leaveApplication.getHalfdays(), leaveApplication.getFirstHalfleave(), leaveApplication.getReason(),
                     leaveApplication.getStatus(), leaveApplication.getLeaveGround(),leaveApplication.getStateId() , leaveApplication.getPrefixDate(),
-                    leaveApplication.getSuffixDate(), holiday, leaveApplication.getEncashable(), 1,
-                    now, 1, now, leaveApplication.getTenantId()};
+                    leaveApplication.getSuffixDate(), holiday, leaveApplication.getEncashable(), userResponse.getUsers().get(0).getId(),
+                    now, userResponse.getUsers().get(0).getId(), now, leaveApplication.getTenantId()};
             if (leaveApplication.getDocuments() != null && !leaveApplication.getDocuments().isEmpty())
                 leaveDocumentsRepository.save(leaveApplication.getId(), leaveApplication.getDocuments(), leaveApplication.getTenantId());
             jdbcTemplate.update(leaveApplicationInsertQuery, obj);
@@ -177,20 +177,20 @@ public class LeaveApplicationRepository {
     }
 
     public LeaveApplication updateLeaveApplication(final LeaveApplicationSingleRequest leaveApplicationRequest) {
-       // final Task task = workFlowService.update(leaveApplicationRequest);
+        final Task task = workFlowService.update(leaveApplicationRequest);
         final String leaveApplicationInsertQuery = LeaveApplicationQueryBuilder.updateLeaveApplicationQuery();
         final Date now = new Date();
         final LeaveApplication leaveApplication = leaveApplicationRequest.getLeaveApplication();
-       // final UserResponse userResponse = userService
-          //      .findUserByUserNameAndTenantId(leaveApplicationRequest.getRequestInfo());
-       // leaveApplication.setStateId(Long.valueOf(task.getId()));
+       final UserResponse userResponse = userService
+               .findUserByUserNameAndTenantId(leaveApplicationRequest.getRequestInfo());
+        leaveApplication.setStateId(Long.valueOf(task.getId()));
         leaveApplicationStatusChange(leaveApplication, leaveApplicationRequest.getRequestInfo());
         final Object[] obj = new Object[]{leaveApplication.getApplicationNumber(), leaveApplication.getEmployee(),
                 leaveApplication.getLeaveType().getId(), leaveApplication.getFromDate(), leaveApplication.getToDate(),
                 leaveApplication.getCompensatoryForDate(), leaveApplication.getLeaveDays(),
                 leaveApplication.getAvailableDays(), leaveApplication.getHalfdays(),
                 leaveApplication.getFirstHalfleave(), leaveApplication.getReason(), leaveApplication.getStatus(),
-                1, 1, now, leaveApplication.getId(),
+                Long.valueOf(task.getId()), userResponse.getUsers().get(0).getId(), now, leaveApplication.getId(),
                 leaveApplication.getTenantId()};
         jdbcTemplate.update(leaveApplicationInsertQuery, obj);
         updateDocuments(leaveApplication);

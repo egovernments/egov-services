@@ -38,94 +38,31 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.eis.model;
+package org.egov.eis.repository.rowmapper;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import lombok.*;
+import org.egov.eis.model.Document;
+import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Component;
 
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
-@AllArgsConstructor
-@EqualsAndHashCode
-@Getter
-@NoArgsConstructor
-@Setter
-@ToString
-public class LeaveApplication {
+@Component
+public class LeaveDocumentsTableRowMapper implements RowMapper<Document> {
 
-    private Long id;
+    @Override
+    public Document mapRow(final ResultSet rs, final int rowNum) throws SQLException, DataAccessException {
 
-    @Size(max = 100)
-    private String applicationNumber;
+        final Document document = new Document();
 
-    @NotNull
-    private Long employee;
+        document.setId((Long) rs.getObject("id"));
+        document.setDocument(rs.getString("document"));
+        document.setTenantId(rs.getString("tenantid"));
+        document.setLeaveApplicationId(rs.getLong("leaveapplicationid"));
 
-    private LeaveType leaveType;
+        return document;
 
-    @JsonFormat(pattern = "dd/MM/yyyy")
-    private Date fromDate;
-
-    @JsonFormat(pattern = "dd/MM/yyyy")
-    private Date toDate;
-
-    @JsonFormat(pattern = "dd/MM/yyyy")
-    private Date compensatoryForDate;
-
-    @JsonFormat(pattern = "dd/MM/yyyy")
-    private Date prefixDate;
-
-    @JsonFormat(pattern = "dd/MM/yyyy")
-    private Date suffixDate;
-
-    private List<String> holidays;
-
-    private Float leaveDays;
-
-    private Float availableDays;
-
-    private Float totalLeavesEligible;
-
-    private Float balance;
-
-    private Float noOfDays;
-
-    private Integer halfdays;
-
-    private String leaveGround;
-
-    private Boolean firstHalfleave;
-
-    private Boolean encashable;
-
-    @Size(min = 5, max = 500)
-    private String reason;
-
-    private Long status;
-
-    private Long stateId;
-
-    private List<String> documents = new ArrayList<>();
-
-    private Long createdBy;
-
-    @JsonFormat(pattern = "dd/MM/yyyy")
-    private Date createdDate;
-
-    private Long lastModifiedBy;
-
-    @JsonFormat(pattern = "dd/MM/yyyy")
-    private Date lastModifiedDate;
-
-    @Size(max = 256)
-    private String tenantId;
-
-    private WorkFlowDetails workflowDetails;
-
-    private String errorMsg;
+    }
 
 }

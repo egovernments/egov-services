@@ -63,6 +63,9 @@ import static org.springframework.util.ObjectUtils.isEmpty;
 public class LeaveApplicationQueryBuilder {
 
     private static final Logger logger = LoggerFactory.getLogger(LeaveApplicationQueryBuilder.class);
+
+    public static final String GENERATE_SEQUENCE_QUERY = "SELECT nextval('seq_egeis_leaveapplication') AS id" ;
+
     private static final String BASE_QUERY = "SELECT la.id AS la_id, la.applicationNumber AS la_applicationNumber,"
             + " la.employeeId AS la_employeeId, la.fromDate AS la_fromDate, la.toDate AS la_toDate,"
             + " la.compensatoryForDate AS la_compensatoryForDate, la.leaveDays AS la_leaveDays,"
@@ -103,7 +106,7 @@ public class LeaveApplicationQueryBuilder {
                 + "leavetypeid, fromdate, todate, compensatoryfordate, leavedays, availabledays,"
                 + " halfdays, firsthalfleave, reason, status, leaveground, stateid, prefixDate, suffixDate, holidays, encashable, createdby, createddate, "
                 + "lastmodifiedby, lastmodifieddate, tenantid) VALUES "
-                + "(nextval('seq_egeis_leaveapplication'), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+                + "(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
     }
 
     public static String insertCompoffLeaveApplicationQuery() {
@@ -111,7 +114,7 @@ public class LeaveApplicationQueryBuilder {
                 + " fromdate, todate, compensatoryfordate, leavedays, availabledays,"
                 + " halfdays, firsthalfleave, reason, status, stateid, createdby, createddate, "
                 + "lastmodifiedby, lastmodifieddate, tenantid) VALUES "
-                + "(nextval('seq_egeis_leaveapplication'), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+                + "(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
     }
 
     public static String updateLeaveApplicationQuery() {

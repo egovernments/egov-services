@@ -40,92 +40,22 @@
 
 package org.egov.eis.model;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
 @AllArgsConstructor
-@EqualsAndHashCode
 @Getter
 @NoArgsConstructor
 @Setter
 @ToString
-public class LeaveApplication {
+@Builder
+public class Document {
 
     private Long id;
 
-    @Size(max = 100)
-    private String applicationNumber;
+    private Long leaveApplicationId;
 
-    @NotNull
-    private Long employee;
+    private String document;
 
-    private LeaveType leaveType;
-
-    @JsonFormat(pattern = "dd/MM/yyyy")
-    private Date fromDate;
-
-    @JsonFormat(pattern = "dd/MM/yyyy")
-    private Date toDate;
-
-    @JsonFormat(pattern = "dd/MM/yyyy")
-    private Date compensatoryForDate;
-
-    @JsonFormat(pattern = "dd/MM/yyyy")
-    private Date prefixDate;
-
-    @JsonFormat(pattern = "dd/MM/yyyy")
-    private Date suffixDate;
-
-    private List<String> holidays;
-
-    private Float leaveDays;
-
-    private Float availableDays;
-
-    private Float totalLeavesEligible;
-
-    private Float balance;
-
-    private Float noOfDays;
-
-    private Integer halfdays;
-
-    private String leaveGround;
-
-    private Boolean firstHalfleave;
-
-    private Boolean encashable;
-
-    @Size(min = 5, max = 500)
-    private String reason;
-
-    private Long status;
-
-    private Long stateId;
-
-    private List<String> documents = new ArrayList<>();
-
-    private Long createdBy;
-
-    @JsonFormat(pattern = "dd/MM/yyyy")
-    private Date createdDate;
-
-    private Long lastModifiedBy;
-
-    @JsonFormat(pattern = "dd/MM/yyyy")
-    private Date lastModifiedDate;
-
-    @Size(max = 256)
     private String tenantId;
-
-    private WorkFlowDetails workflowDetails;
-
-    private String errorMsg;
 
 }

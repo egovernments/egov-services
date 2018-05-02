@@ -44,14 +44,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ResponseInfo;
 import org.egov.eis.config.PropertiesManager;
+import org.egov.eis.model.Document;
 import org.egov.eis.model.LeaveApplication;
 import org.egov.eis.model.LeaveOpeningBalance;
 import org.egov.eis.model.LeaveType;
 import org.egov.eis.model.enums.LeaveStatus;
-import org.egov.eis.repository.CommonMastersRepository;
-import org.egov.eis.repository.EmployeeRepository;
-import org.egov.eis.repository.LeaveAllotmentRepository;
-import org.egov.eis.repository.LeaveApplicationRepository;
+import org.egov.eis.repository.*;
 import org.egov.eis.util.ApplicationConstants;
 import org.egov.eis.web.contract.*;
 import org.egov.eis.web.contract.factory.ResponseInfoFactory;
@@ -114,11 +112,22 @@ public class LeaveApplicationService {
     private LeaveApplicationNumberGeneratorService leaveApplicationNumberGeneratorService;
 
     @Autowired
+    private LeaveDocumentsRepository leaveDocumentsRepository;
+
+    @Autowired
     private ObjectMapper objectMapper;
 
     public List<LeaveApplication> getLeaveApplications(final LeaveApplicationGetRequest leaveApplicationGetRequest,
                                                        final RequestInfo requestInfo) {
-        return leaveApplicationRepository.findForCriteria(leaveApplicationGetRequest, requestInfo);
+
+        List<LeaveApplication> leaveApplications = leaveApplicationRepository.findForCriteria(leaveApplicationGetRequest, requestInfo);
+        for (final LeaveApplication leaveApplication : leaveApplications) {
+            final List<Document> documents = leaveDocumentsRepository.findByLeaveApplication(leaveApplication.getId(),
+                    leaveApplication.getTenantId());
+            for (final Document document : documents)
+                leaveApplication.getDocuments().add(document.getDocument());
+        }
+        return leaveApplications;
     }
 
     public ResponseEntity<?> createLeaveApplication(final LeaveApplicationRequest leaveApplicationRequest,
@@ -400,11 +409,19 @@ public class LeaveApplicationService {
     }
 
     public LeaveApplicationRequest create(final LeaveApplicationRequest leaveApplicationRequest) {
+        LOGGER.debug("LeaveApplication : " + leaveApplicationRequest.getLeaveApplication() + "Leave Application count:" + leaveApplicationRequest.getLeaveApplication().size() + "LeaveType : " + leaveApplicationRequest.getLeaveApplication().get(0).getLeaveType());
+
         if (leaveApplicationRequest.getLeaveApplication().size() > 0
-                && leaveApplicationRequest.getLeaveApplication().get(0).getLeaveType() != null)
+                && leaveApplicationRequest.getLeaveApplication().get(0).getLeaveType() != null) {
+            LOGGER.debug("LeaveApplication : " );
+            leaveApplicationRequest.getLeaveApplication().get(0).setId(leaveApplicationRepository.generateSequence());
             return leaveApplicationRepository.saveLeaveApplication(leaveApplicationRequest);
-        else
+        }
+        else {
+            LOGGER.debug("COMPOFF : " );
+            leaveApplicationRequest.getLeaveApplication().get(0).setId(leaveApplicationRepository.generateSequence());
             return leaveApplicationRepository.saveCompoffLeaveApplication(leaveApplicationRequest);
+        }
     }
 
     public Boolean isSunday(Date fromDate, Date toDate) {

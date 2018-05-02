@@ -213,7 +213,7 @@ public class MovementRepository {
 
 	private void updateMovementDocuments(Movement movement){
         List<Document> documentsFromDB = documentsRepository.findByMovementId(movement.getId(), movement.getTenantId());
-        List<String> documents = documentsFromDB.stream().map(doc -> doc.getDocument()).collect(Collectors.toList());
+        List<String> documents = movement.getDocuments();
 		for (Document documentInDb : documentsFromDB) {
 			if (!documents.contains(documentInDb.getDocument())) {
 				documentsRepository.delete(documentInDb.getMovementId(), documentInDb.getDocument(), movement.getTenantId());

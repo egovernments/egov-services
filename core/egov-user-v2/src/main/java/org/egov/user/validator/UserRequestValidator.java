@@ -12,6 +12,8 @@ import org.egov.common.contract.request.Type;
 import org.egov.common.contract.request.UserInfo;
 import org.egov.user.contract.User;
 import org.egov.user.contract.UserReq;
+import org.egov.user.contract.UserSearchCriteria;
+import org.egov.user.service.UserService;
 import org.egov.user.utils.UserConfiguration;
 import org.egov.user.utils.UserErrorConstant;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +25,9 @@ public class UserRequestValidator {
 	
 	@Autowired
 	private UserConfiguration userConfiguration;
+	
+	@Autowired
+	private UserService userService;
 
 	private Map<String, String> errors = null;
 	//private Set<String> userTypes = null;
@@ -34,13 +39,20 @@ public class UserRequestValidator {
 	 * @return Map<String,String> this will return map of error. 
 	 * */
 	public Map<String, String> validateCreateRequest(UserReq userReq) {
+		System.err.println(" in validator");
 		errors = new HashMap<>();
 		Set<String> userTypes = new HashSet<>();
 		RequestInfo requestInfo = userReq.getRequestInfo();
 		List<User> users = userReq.getUsers();
+		String tenantId = users.get(0).getTenantId();
+		Set<String> ids = new HashSet<>();
 
 		for (User user : users) {
 			
+			if (user.getUserName() != null)
+				ids.add(user.getUserName());
+			else
+				ids.add(user.getMobile());
 			// TODO do we need to throw error back for every item in the list rather than the whole list @once?
 			if (!CollectionUtils.isEmpty(errors))
 				return errors;
@@ -53,7 +65,15 @@ public class UserRequestValidator {
 		if(userTypes.contains(Type.EMPLOYEE.toString())) 
 			validateUserInfoAndRole(requestInfo.getUserInfo());
 		
+		validateUserIntegrityForCitizen(tenantId, ids);
+		
 		return errors;
+	}
+
+	private void validateUserIntegrityForCitizen(String tenantId, Set<String> ids) {
+
+		UserSearchCriteria searchCriteria = UserSearchCriteria.builder().ids(ids).tenantId(tenantId).build();
+		userService.getUsers(searchCriteria, true);
 	}
 
 	/**

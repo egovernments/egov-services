@@ -5,7 +5,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.StringUtils;
 import org.egov.search.model.Definition;
+import org.egov.search.model.Pagination;
 import org.egov.search.model.Params;
 import org.egov.search.model.Query;
 import org.egov.search.model.SearchDefinition;
@@ -15,6 +17,7 @@ import org.egov.tracer.model.CustomException;
 import org.postgresql.util.PGobject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
@@ -28,12 +31,20 @@ import com.jayway.jsonpath.JsonPath;
 public class SearchUtils {
 	
 	public static final Logger logger = LoggerFactory.getLogger(SearchUtils.class);
+	
+	@Value("${pagination.default.page.size}")
+	private String defaultPageSize;
+	
+	@Value("${pagination.default.offset}")
+	private String defaultOffset;
 
 	public String buildQuery(SearchRequest searchRequest, SearchParams searchParam, Query query){
 		StringBuilder queryString = new StringBuilder();
 		StringBuilder where = new StringBuilder();
+		String finalQuery = null;
 		queryString.append(query.getBaseQuery());
 		String whereClause = buildWhereClause(searchRequest, searchParam);
+		String paginationClause = getPaginationClause(searchRequest, searchParam.getPagination());
 		if(null == whereClause){
 			return whereClause;
 		}
@@ -47,8 +58,11 @@ public class SearchUtils {
 		if(null != query.getSort()){
 			queryString.append(" "+query.getSort());
 		}
+		finalQuery = queryString.toString().replace("$where", where.toString());
+		if(null != searchParam.getPagination()) {
+			finalQuery = finalQuery.replace("$pagination", paginationClause);
+		}
 		
-		String finalQuery = queryString.toString().replace("$where", where.toString());
 		logger.info("Final Query: "+finalQuery);
 		
 		return finalQuery;
@@ -98,6 +112,24 @@ public class SearchUtils {
 		String where = whereClause.toString().substring(0, index);
 		logger.info("WHERE clause: "+where);
 		return where;
+	}
+	
+	public String getPaginationClause(SearchRequest searchRequest, Pagination pagination){
+		StringBuilder paginationClause = new StringBuilder();
+		ObjectMapper mapper = new ObjectMapper();
+		Object limit = null;
+		Object offset = null;
+		try {
+			limit = JsonPath.read(mapper.writeValueAsString(searchRequest), pagination.getNoOfRecords());
+			offset = JsonPath.read(mapper.writeValueAsString(searchRequest), pagination.getOffset());
+		}catch(Exception e) {
+			logger.error("Error while fetching limit and offset", e);
+		}
+		
+		paginationClause.append(" LIMIT ").append((!StringUtils.isEmpty((null != limit) ? limit.toString() : null) ? limit.toString() : defaultPageSize))
+		.append(" OFFSET ").append((!StringUtils.isEmpty((null != offset) ? offset.toString() : null) ? offset.toString() : defaultOffset));		
+		
+		return paginationClause.toString();
 	}
 	
 	public Definition getSearchDefinition(Map<String, SearchDefinition> searchDefinitionMap,

@@ -1,29 +1,24 @@
 package org.egov.search.model;
 
-import java.util.List;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import lombok.ToString;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 @Getter
 @Setter
 @ToString
 @AllArgsConstructor
 @NoArgsConstructor
-public class SearchParams {
-
-	@JsonProperty("condition")
-	private String condition;
+public class Pagination {
 	
-	@JsonProperty("params")
-	private List<Params> params;
+	@JsonProperty("noOfRecords")
+	public String noOfRecords;
 	
-	@JsonProperty("pagination")
-	private Pagination pagination;
+	@JsonProperty("offset")
+	public String offset;
 	
 }

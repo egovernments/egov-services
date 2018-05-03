@@ -1,9 +1,9 @@
 SearchDefinitions:
- moduleName: rainmaker-pgr-V2
- summary: PGR resolver for Rainmaker
+ moduleName: wcms-connection
+ summary: Water charge and Sewerage Module
  version: 1.0.0
  definitions:
- - name: serviceSearchWithDetails
+ - name: searchWC
    query: 
     baseQuery: select array_to_json(array_agg(row_to_json(waterConnections))) from (select * from wcms_connection_v2 $where $pagination) waterConnections
    searchParams:

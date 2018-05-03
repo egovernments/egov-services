@@ -2,11 +2,15 @@ package org.egov.user.web.controller;
 
 import javax.validation.Valid;
 
+import org.egov.common.contract.request.RequestInfo;
 import org.egov.user.contract.UserReq;
 import org.egov.user.contract.UserRes;
+import org.egov.user.contract.UserSearchCriteria;
 import org.egov.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -31,9 +35,9 @@ public class UserController {
 	}
 	
 	@PostMapping("_search")
-	public String search(@RequestBody @Valid UserReq userReq) {
-		userService.create(userReq);
-		return null;
+	public ResponseEntity<UserRes> search(@RequestBody @Valid RequestInfo requestInfo, @ModelAttribute UserSearchCriteria userSearchCriteria) {
+		
+		return new ResponseEntity<>(userService.search(userSearchCriteria, requestInfo),HttpStatus.OK);
 	}
 	
 	@PostMapping("_update")

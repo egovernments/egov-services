@@ -31,5 +31,11 @@ public class UserConfiguration {
 	
 	@Value("${enable.fixed.otp}")
 	private Boolean isFixedOtp;
+	
+	@Value("${egov.infra.searcher.host}")
+	private String searcherHost;
+	
+	@Value("${egov.infra.searcher.endpoint}")
+	private String searcherEndpoint;
 
 }

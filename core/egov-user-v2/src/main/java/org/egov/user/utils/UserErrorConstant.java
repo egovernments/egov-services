@@ -11,4 +11,7 @@ public class UserErrorConstant {
 	public static final String USER_CREATE_INVALID_USER_ROLE = "USER_CREATE_INVALID_USER_ROLE";
 	public static final String USER_CREATE_INVALID_USER_ROLE_MSG = "Invalid user role to create user as employee";
 	
+	public static final String USER_CREATE_DUPLICATE_USER_KEY = "USER_CREATE_DUPLICATE_USER";
+	public static final String USER_CREATE_DUPLICATE_USER_MSG = "The following userNames are not available : ";	
+	
 }

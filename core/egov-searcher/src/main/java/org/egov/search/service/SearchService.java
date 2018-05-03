@@ -21,7 +21,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.jayway.jsonpath.DocumentContext;
@@ -81,7 +80,7 @@ public class SearchService {
 		Gson gson = new Gson();
 		List<Map<String, Object>> data = gson.fromJson(maps.toString(), type);
 		
-    	DocumentContext documentContext = JsonPath.parse(searchDefinition.getOutput().getJsonFormat());
+    	DocumentContext documentContext = JsonPath.parse((null != searchDefinition.getOutput().getJsonFormat()) ? searchDefinition.getOutput().getJsonFormat() : "{}");
 		String[] expressionArray = (searchDefinition.getOutput().getOutJsonPath()).split("[.]");
 		StringBuilder expression = new StringBuilder();
 		for(int i = 0; i < (expressionArray.length - 1) ; i++ ){

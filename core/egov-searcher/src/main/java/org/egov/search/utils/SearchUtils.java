@@ -110,7 +110,6 @@ public class SearchUtils {
 		}
 		Integer index = whereClause.toString().lastIndexOf(searchParam.getCondition());
 		String where = whereClause.toString().substring(0, index);
-		logger.info("WHERE clause: "+where);
 		return where;
 	}
 	
@@ -141,12 +140,10 @@ public class SearchUtils {
 											.filter(def -> (def.getName().equals(searchName)))
 		                                 .collect(Collectors.toList());
 		}catch(Exception e){
-			logger.error("There's no Search Definition provided for this search feature");
 			throw new CustomException(HttpStatus.BAD_REQUEST.toString(), 
 					"There's no Search Definition provided for this search feature");
 		}
 		if(0 == definitions.size()){
-			logger.error("There's no Search Definition provided for this search feature");
 			throw new CustomException(HttpStatus.BAD_REQUEST.toString(), 
 					"There's no Search Definition provided for this search feature");
 		}

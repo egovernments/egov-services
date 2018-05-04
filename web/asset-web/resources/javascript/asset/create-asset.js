@@ -484,66 +484,73 @@ class CreateAsset extends React.Component {
       });
     }
 
-    $('#donationDate').datepicker({
-      format: 'dd/mm/yyyy',
-      autoclose: true
-    });
+    if (this.state.assetSet.modeOfAcquisition === "DONATION") {
+      $('#donationDate').datepicker({
+        format: 'dd/mm/yyyy',
+        autoclose: true
+      });
 
-    $('#donationDate').on('changeDate', function (e) {
-      if (_this.state.assetSet.donationDate != e.target.value)
-        _this.setState({
-          assetSet: {
-            ..._this.state.assetSet,
-            "donationDate": $("#donationDate").val()
-          }
-        });
-    });
+      $('#donationDate').on('changeDate', function (e) {
+        if (_this.state.assetSet.donationDate != e.target.value)
+          _this.setState({
+            assetSet: {
+              ..._this.state.assetSet,
+              "donationDate": $("#donationDate").val()
+            }
+          });
+      });
+    }
 
-    $('#purchaseDate').datepicker({
-      format: 'dd/mm/yyyy',
-      autoclose: true
-    });
+    if (this.state.assetSet.modeOfAcquisition === "PURCHASE") {
+      $('#purchaseDate').datepicker({
+        format: 'dd/mm/yyyy',
+        autoclose: true
+      });
 
-    $('#purchaseDate').on('changeDate', function (e) {
-      if (_this.state.assetSet.purchaseDate != e.target.value)
-        _this.setState({
-          assetSet: {
-            ..._this.state.assetSet,
-            "purchaseDate": $("#purchaseDate").val()
-          }
-        });
-    });
+      $('#purchaseDate').on('changeDate', function (e) {
+        if (_this.state.assetSet.purchaseDate != e.target.value)
+          _this.setState({
+            assetSet: {
+              ..._this.state.assetSet,
+              "purchaseDate": $("#purchaseDate").val()
+            }
+          });
+      });
+    }
 
-    $('#constructionDate').datepicker({
-      format: 'dd/mm/yyyy',
-      autoclose: true
-    });
+    if (this.state.assetSet.modeOfAcquisition === "CONSTRUCTION") {
+      $('#constructionDate').datepicker({
+        format: 'dd/mm/yyyy',
+        autoclose: true
+      });
 
-    $('#constructionDate').on('changeDate', function (e) {
-      if (_this.state.assetSet.constructionDate != e.target.value)
-        _this.setState({
-          assetSet: {
-            ..._this.state.assetSet,
-            "constructionDate": $("#constructionDate").val()
-          }
-        });
-    });
+      $('#constructionDate').on('changeDate', function (e) {
+        if (_this.state.assetSet.constructionDate != e.target.value)
+          _this.setState({
+            assetSet: {
+              ..._this.state.assetSet,
+              "constructionDate": $("#constructionDate").val()
+            }
+          });
+      });
+    }
 
-    $('#acquisitionDate').datepicker({
-      format: 'dd/mm/yyyy',
-      autoclose: true
-    });
+    if (this.state.assetSet.modeOfAcquisition === "ACQUIRED") {
+      $('#acquisitionDate').datepicker({
+        format: 'dd/mm/yyyy',
+        autoclose: true
+      });
 
-    $('#acquisitionDate').on('changeDate', function (e) {
-      if (_this.state.assetSet.acquisitionDate != e.target.value)
-        _this.setState({
-          assetSet: {
-            ..._this.state.assetSet,
-            "acquisitionDate": $("#acquisitionDate").val()
-          }
-        });
-    });
-
+      $('#acquisitionDate').on('changeDate', function (e) {
+        if (_this.state.assetSet.acquisitionDate != e.target.value)
+          _this.setState({
+            assetSet: {
+              ..._this.state.assetSet,
+              "acquisitionDate": $("#acquisitionDate").val()
+            }
+          });
+      });
+    }
   }
 
   handleRefSearch(e) {
@@ -594,22 +601,22 @@ class CreateAsset extends React.Component {
         }
       })
     } else if (name === "status") {
-       console.log(name, e.target.value);
+      console.log(name, e.target.value);
       this.state.capitalized = (e.target.value === "CAPITALIZED");
-      if(this.state.assetSet.modeOfAcquisition === "DONATION" && e.target.value === "CAPITALIZED"){
+      if (this.state.assetSet.modeOfAcquisition === "DONATION" && e.target.value === "CAPITALIZED") {
         console.log("Saving gross value");
         _this.setState({
           assetSet: {
             ...this.state.assetSet,
-            grossValue : "1",
-            [name]:e.target.value
+            grossValue: "1",
+            [name]: e.target.value
           }
         });
-      }else{
+      } else {
         _this.setState({
           assetSet: {
             ...this.state.assetSet,
-            [name]:e.target.value
+            [name]: e.target.value
           }
         });
       }
@@ -620,9 +627,9 @@ class CreateAsset extends React.Component {
           [name]: e.target.checked
         }
       })
-    }else if (name === "modeOfAcquisition") {
-      console.log("MOA : "+e.target.value+" "+this.state.status);
-      if(e.target.value === "DONATION" && this.state.assetSet.status === "CAPITALIZED"){
+    } else if (name === "modeOfAcquisition") {
+      console.log("MOA : " + e.target.value + " " + this.state.status);
+      if (e.target.value === "DONATION" && this.state.assetSet.status === "CAPITALIZED") {
         console.log(" MOA updating with gross value ");
         _this.setState({
           assetSet: {
@@ -634,12 +641,12 @@ class CreateAsset extends React.Component {
             acquisitionValue: "",
             acquisitionDate: "",
             donationDate: "",
-            grossValue : "1",
+            grossValue: "1",
             [name]: e.target.value
           }
         });
 
-      }else{
+      } else {
         console.log(" MOA updating with out gross value ");
 
         _this.setState({
@@ -659,7 +666,7 @@ class CreateAsset extends React.Component {
 
       }
 
-    }else if (pattern && e.target.value) {
+    } else if (pattern && e.target.value) {
       // console.log('pattern exists');
       var reg = new RegExp(pattern);
       if (reg.test(e.target.value)) {
@@ -2137,7 +2144,7 @@ class CreateAsset extends React.Component {
                 </div>
                 <div className="col-sm-6">
                   <input type="number" id="purchaseValue" name="purchaseValue" value={purchaseValue}
-                    onChange={(e) => { handleChange(e, "purchaseValue") }} step="0.01" min="0" max = "9999999999.99" disabled={readonly} />
+                    onChange={(e) => { handleChange(e, "purchaseValue") }} step="0.01" min="0" max="9999999999.99" disabled={readonly} />
                 </div>
               </div>
             </div>
@@ -2180,7 +2187,7 @@ class CreateAsset extends React.Component {
                 </div>
                 <div className="col-sm-6">
                   <input type="number" id="constructionValue" name="constructionValue" value={constructionValue}
-                    onChange={(e) => { handleChange(e, "constructionValue") }} step="0.01" min="0" max = "9999999999.99" disabled={readonly} />
+                    onChange={(e) => { handleChange(e, "constructionValue") }} step="0.01" min="0" max="9999999999.99" disabled={readonly} />
                 </div>
               </div>
             </div>
@@ -2207,7 +2214,7 @@ class CreateAsset extends React.Component {
                 </div>
                 <div className="col-sm-6">
                   <input type="number" id="acquisitionValue" name="acquisitionValue" value={acquisitionValue}
-                    onChange={(e) => { handleChange(e, "acquisitionValue") }} step="0.01" min="0" max = "9999999999.99" disabled={readonly} />
+                    onChange={(e) => { handleChange(e, "acquisitionValue") }} step="0.01" min="0" max="9999999999.99" disabled={readonly} />
                 </div>
               </div>
             </div>

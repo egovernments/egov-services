@@ -4,6 +4,7 @@ import org.egov.common.contract.request.RequestInfo;
 import org.egov.wcms.config.MainConfiguration;
 import org.egov.wcms.producer.WaterConnectionProducer;
 import org.egov.wcms.repository.WCRepository;
+import org.egov.wcms.util.ResponseInfoFactory;
 import org.egov.wcms.util.WCServiceUtils;
 import org.egov.wcms.util.WaterConnectionConstants;
 import org.egov.wcms.web.models.Connection;
@@ -34,6 +35,9 @@ public class WaterConnectionService {
 	
 	@Autowired
 	private MainConfiguration mainConfiguration;
+	
+	@Autowired
+	private ResponseInfoFactory responseInfoFactory;
 	
 	/**
 	 * Searches Water Connections based on the criteria in WaterConnectionSearchCriteria.
@@ -68,7 +72,8 @@ public class WaterConnectionService {
 	public WaterConnectionRes createWaterConnections(WaterConnectionReq connections) {
 		enrichCreateRequest(connections);
 		waterConnectionProducer.push(mainConfiguration.getSaveWaterConnectionTopic(), connections);
-		return null;
+		return WaterConnectionRes.builder().connections(connections.getConnections()).
+							responseInfo(responseInfoFactory.createResponseInfoFromRequestInfo(connections.getRequestInfo(), true)).build();
 	}
 	
 	/**
@@ -91,7 +96,8 @@ public class WaterConnectionService {
 	public WaterConnectionRes updateWaterConnections(WaterConnectionReq connections) {
 		enrichUpdateRequest(connections);
 		waterConnectionProducer.push(mainConfiguration.getUpdateWaterConnectionTopic(), connections);
-		return null;
+		return WaterConnectionRes.builder().connections(connections.getConnections()).
+				responseInfo(responseInfoFactory.createResponseInfoFromRequestInfo(connections.getRequestInfo(), true)).build();	
 	}
 
 	/**

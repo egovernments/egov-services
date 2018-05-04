@@ -1,0 +1,20 @@
+ServiceMaps:
+ serviceName: WCMS - V2
+ version: 1.0.0
+ mappings:
+  - topic: save-wcms-connection
+    indexes:
+    - name: waterconnectioncreate
+      type: waterconnectioncreate
+      id: $.connectionNumber, $.tenantId
+      isBulk: true
+      jsonPath: $.connections.*
+
+  - topic: update-wcms-connection
+    indexes:
+    - name: waterconnectionupdate
+      type: waterconnectionupdate
+      id: $.connectionNumber, $.tenantId
+      isBulk: true
+      jsonPath: $.connections.*
+

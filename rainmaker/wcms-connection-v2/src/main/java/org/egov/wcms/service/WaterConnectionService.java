@@ -6,6 +6,7 @@ import org.egov.wcms.producer.WaterConnectionProducer;
 import org.egov.wcms.repository.WCRepository;
 import org.egov.wcms.util.WCServiceUtils;
 import org.egov.wcms.util.WaterConnectionConstants;
+import org.egov.wcms.web.models.Connection;
 import org.egov.wcms.web.models.SearcherRequest;
 import org.egov.wcms.web.models.WaterConnectionReq;
 import org.egov.wcms.web.models.WaterConnectionRes;
@@ -76,7 +77,10 @@ public class WaterConnectionService {
 	 * @param connections
 	 */
 	public void enrichCreateRequest(WaterConnectionReq connections) {
-		
+		// (1)
+		for(Connection connection: connections.getConnections()) {
+			connection.setConnectionNumber(wCServiceUtils.generateConnectonNumber());
+		}
 	}
 	
 	/**

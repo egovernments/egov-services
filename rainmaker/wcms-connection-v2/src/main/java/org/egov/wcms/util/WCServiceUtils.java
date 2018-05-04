@@ -1,6 +1,9 @@
 package org.egov.wcms.util;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Random;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.wcms.config.MainConfiguration;
@@ -25,7 +28,7 @@ public class WCServiceUtils {
 	
 	@Autowired
 	private ResponseInfoFactory responseInfoFactory;
-	
+		
 	private final String searchNamePlaceholder = "{searchName}";
 	
 	public SearcherRequest getSearcherRequest(StringBuilder uri, Object request, RequestInfo requestInfo, String searchDefName) {
@@ -60,5 +63,9 @@ public class WCServiceUtils {
 	public WaterConnectionRes getDefaultWaterConnectionResponse(RequestInfo requestInfo) {
 		return WaterConnectionRes.builder().responseInfo(responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true))
 		.connections(new ArrayList<>()).actionHistory(new ArrayList<>()).build();
+	}
+	
+	public String generateConnectonNumber() {		
+		return new StringBuilder().append("WCMS").append("/").append(new Date().getTime()).append("/").append(new Random().nextInt()).toString();
 	}
 }

@@ -59,6 +59,14 @@ public class MainConfiguration {
     private String egovSearcherEndpoint;
     
     
+    //PERSISTER
+    @Value("${persister.save.waterconnection.topic}")
+    private String saveWaterConnectionTopic;
+     
+    @Value("${persister.update.waterconnection.topic}")
+    private String updateWaterConnectionTopic;
+    
+    
     
     
     //EXTRA-PARAMS

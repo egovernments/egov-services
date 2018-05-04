@@ -1,23 +1,23 @@
 package org.egov.wcms.web.models;
 
-import java.util.Objects;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 import java.util.ArrayList;
 import java.util.List;
-import org.egov.wcms.web.models.ActionInfo;
-import org.egov.wcms.web.models.Connection;
-import org.egov.wcms.web.models.RequestInfo;
-import org.springframework.validation.annotation.Validated;
+
 import javax.validation.Valid;
-import javax.validation.constraints.*;
+import javax.validation.constraints.NotNull;
+
+import org.springframework.validation.annotation.Validated;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.Builder;
+
+import org.egov.common.contract.request.RequestInfo;
+
 
 /**
  * WaterConnectionReq
@@ -36,6 +36,7 @@ public class WaterConnectionReq   {
 
         @JsonProperty("connections")
         @Valid
+        @NotNull
         private List<Connection> connections = new ArrayList<>();
 
         @JsonProperty("actionInfo")

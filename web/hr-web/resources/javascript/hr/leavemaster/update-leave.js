@@ -105,6 +105,7 @@ class UpdateLeave extends React.Component {
         "stateId": "",
         "tenantId": tenantId,
         "encashable": false,
+        "documents":[],
         "totalWorkingDays": "",
         "workflowDetails": {
           "department": "",

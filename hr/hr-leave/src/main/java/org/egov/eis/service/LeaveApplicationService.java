@@ -152,6 +152,11 @@ public class LeaveApplicationService {
                         leaveApplicationRequest.getRequestInfo()).get(0).getId());
             leaveApplication.setApplicationNumber(leaveApplicationNumberGeneratorService.generate());
         }
+        LOGGER.debug("leaveApplicationRequest::" + leaveApplicationRequest.getLeaveApplication() );
+        LOGGER.debug("leaveApplicationRequest size::" + leaveApplicationRequest.getLeaveApplication().size() );
+
+
+        LOGGER.debug("leaveApplication::" + leaveApplicationRequest.getLeaveApplication().get(0) );
         create(leaveApplicationRequest);
         if (isExcelUpload)
             return getSuccessResponseForUpload(successLeaveApplicationsList, errorLeaveApplicationsList,
@@ -409,7 +414,8 @@ public class LeaveApplicationService {
     }
 
     public LeaveApplicationRequest create(final LeaveApplicationRequest leaveApplicationRequest) {
-        LOGGER.debug("LeaveApplication : " + leaveApplicationRequest.getLeaveApplication() + "Leave Application count:" + leaveApplicationRequest.getLeaveApplication().size() + "LeaveType : " + leaveApplicationRequest.getLeaveApplication().get(0).getLeaveType());
+        LOGGER.debug("LeaveApplication :: " + leaveApplicationRequest.getLeaveApplication() + "Leave Application count::" + leaveApplicationRequest.getLeaveApplication().size());
+        LOGGER.debug( "LeaveType : " + leaveApplicationRequest.getLeaveApplication().get(0).getLeaveType());
 
         if (leaveApplicationRequest.getLeaveApplication().size() > 0
                 && leaveApplicationRequest.getLeaveApplication().get(0).getLeaveType() != null) {

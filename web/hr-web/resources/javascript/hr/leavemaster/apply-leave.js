@@ -697,7 +697,7 @@ class ApplyLeave extends React.Component {
   render() {
     let { handleChange, addOrUpdate, handleChangeThreeLevel } = this;
     let { leaveSet, perfixSuffix, encloseHoliday } = this.state;
-    let { name, code, leaveDays, availableDays, fromDate, toDate, leaveGround, reason, leaveType, totalWorkingDays, encashable } = leaveSet;
+    let { name, code, leaveDays, availableDays, fromDate, toDate, leaveGround, reason, leaveType, totalWorkingDays, encashable, documents } = leaveSet;
     let mode = getUrlVars()["type"];
 
     const renderOption = function (list) {

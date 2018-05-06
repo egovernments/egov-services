@@ -8,59 +8,29 @@ serviceMaps:
    isTransaction: true
    queryMaps:
 
-    - query: INSERT INTO public.wcms_connection_address_v2(uuid, tenantid, buildingname, roadname, billingaddress, gisnumber, revenueboundary, locationboundary, adminboundary, createdby, lastmodifiedby, createdtime, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
-      basePath: connections.*.address
-      jsonMaps:
-
-       - jsonPath: $.connections.*.address.uuid
-
-       - jsonPath: $.connections.*.address.tenantid
-
-       - jsonPath: $.connections.*.address.buildingname
-
-       - jsonPath: $.connections.*.address.roadname
-
-       - jsonPath: $.connections.*.address.billingaddress
-
-       - jsonPath: $.connections.*.address.gisnumber
-
-       - jsonPath: $.connections.*.address.revenueboundary
-
-       - jsonPath: $.connections.*.address.locationboundary
-
-       - jsonPath: $.connections.*.address.adminboundary
-
-       - jsonPath: $.connections.*.auditDetails.createdBy
-
-       - jsonPath: $.connections.*.auditDetails.createdTime
-
-       - jsonPath: $.connections.*.auditDetails.lastModifiedBy
-
-       - jsonPath: $.connections.*.auditDetails.lastModifiedTime
-
-    - query: INSERT INTO public.wcms_connection_v2(uuid, tenantid, type, status, oldconnectionnumber, acknowledgmentnumber, connectionnumber, applicationtype, billingtype, pipesize, sourcetype, numberoftaps, numberofpersons, parentconnection, documents, property, address, meter, owner, additionaldetails, createdby, lastmodifiedby, createdtime, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+    - query: INSERT INTO eg_wcms_connection_v2(tenantid, uuid, type, status, acknowledgmentnumber, connectionnumber, oldconnectionnumber, applicationtype, billingtype, pipesize, sourcetype, numberoftaps, numberofpersons, parentconnection, property, location, additionaldetails, createdby, lastmodifiedby, createdtime, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
       basePath: connections.*
       jsonMaps:
 
+       - jsonPath: $.connections.*.tenantId
+       
        - jsonPath: $.connections.*.uuid
-
-       - jsonPath: $.connections.*.tenantid
 
        - jsonPath: $.connections.*.type
 
        - jsonPath: $.connections.*.status
+       
+       - jsonPath: $.connections.*.acknowledgmentNumber
+       
+       - jsonPath: $.connections.*.connectionNumber
 
-       - jsonPath: $.connections.*.oldconnectionnumber
+       - jsonPath: $.connections.*.oldConnectionNumber
 
-       - jsonPath: $.connections.*.acknowledgmentnumber
+       - jsonPath: $.connections.*.applicationType
 
-       - jsonPath: $.connections.*.connectionnumber
+       - jsonPath: $.connections.*.billingType
 
-       - jsonPath: $.connections.*.applicationtype
-
-       - jsonPath: $.connections.*.billingtype
-
-       - jsonPath: $.connections.*.pipesize
+       - jsonPath: $.connections.*.pipeSize
 
        - jsonPath: $.connections.*.sourceType
 
@@ -68,26 +38,123 @@ serviceMaps:
 
        - jsonPath: $.connections.*.numberOfPersons
 
-       - jsonPath: $.connections.*.parentconnection
+       - jsonPath: $.connections.*.parentConnection
 
-       - jsonPath: $.connections.*.documents
+       - jsonPath: $.connections.*.property.propertyId
 
-       - jsonPath: $.connections.*.property
-
-       - jsonPath: $.connections.*.address
-
-       - jsonPath: $.connections.*.meter
-
-       - jsonPath: $.connections.*.owner
+       - jsonPath: $.connections.*.location.id
 
        - jsonPath: $.connections.*.additionalDetails
          type: JSON
          dbType: JSONB
 
        - jsonPath: $.connections.*.auditDetails.createdBy
+       
+       - jsonPath: $.connections.*.auditDetails.lastModifiedBy
 
        - jsonPath: $.connections.*.auditDetails.createdTime
 
+       - jsonPath: $.connections.*.auditDetails.lastModifiedTime
+       
+       
+    - query: INSERT INTO eg_wcms_meter_v2(connectionuuid, uuid, meterowner, metermodel, metercost, meterslno, createdby, lastmodifiedby, createdtime, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+      basePath: connections.*.meter
+      jsonMaps:
+
+       - jsonPath: $.connections.*.uuid
+       
+       - jsonPath: $.connections.*.meter.id
+       
+       - jsonPath: $.connections.*.meter.meterOwner
+       
+       - jsonPath: $.connections.*.meter.meterModel
+       
+       - jsonPath: $.connections.*.meter.meterCost
+       
+       - jsonPath: $.connections.*.meter.meterSlNo
+       
+       - jsonPath: $.connections.*.auditDetails.createdBy
+
        - jsonPath: $.connections.*.auditDetails.lastModifiedBy
+       
+       - jsonPath: $.connections.*.auditDetails.createdTime
 
        - jsonPath: $.connections.*.auditDetails.lastModifiedTime
+
+       
+    - query: INSERT INTO eg_wcms_address_v2(connectionuuid, uuid, latitude, longitude, addressid, addressnumber, addresstype, addressline1, addressline2, landmark, city, pincode, addressdetail, createdby, lastmodifiedby, createdtime, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+      basePath: connections.*.address
+      jsonMaps:
+
+       - jsonPath: $.connections.*.uuid
+       
+       - jsonPath: $.connections.*.address.uuid
+       
+       - jsonPath: $.connections.*.address.latitude
+       
+       - jsonPath: $.connections.*.address.longitude
+       
+       - jsonPath: $.connections.*.address.addressId
+       
+       - jsonPath: $.connections.*.address.addressNumber
+       
+       - jsonPath: $.connections.*.address.addressType
+       
+       - jsonPath: $.connections.*.address.addressLine1
+       
+       - jsonPath: $.connections.*.address.addressLine2
+       
+       - jsonPath: $.connections.*.address.landmark
+       
+       - jsonPath: $.connections.*.address.city
+       
+       - jsonPath: $.connections.*.address.pincode
+       
+       - jsonPath: $.connections.*.address.addressDetail
+       
+       - jsonPath: $.connections.*.auditDetails.createdBy
+
+       - jsonPath: $.connections.*.auditDetails.lastModifiedBy
+       
+       - jsonPath: $.connections.*.auditDetails.createdTime
+
+       - jsonPath: $.connections.*.auditDetails.lastModifiedTime
+       
+    - query: INSERT INTO eg_wcms_document_v2(uuid, connectionuuid, documenttype, isactive, createdby, lastmodifiedby, createdtime, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?);
+      basePath: connections.*.documents.*
+      jsonMaps:
+       
+       - jsonPath: $.connections.*.documents.*.id
+       
+       - jsonPath: $.connections[*][?({id} in @.documents[*].id)].uuid
+       
+       - jsonPath: $.connections.*.documents.*.documentType
+       
+       - jsonPath: $.connections.*.documents.*.isActive
+       
+       - jsonPath: $.connections[*][?({id} in @.documents[*].id)].auditDetails.createdBy
+
+       - jsonPath: $.connections[*][?({id} in @.documents[*].id)].auditDetails.lastModifiedBy
+       
+       - jsonPath: $.connections[*][?({id} in @.documents[*].id)].auditDetails.createdTime
+
+       - jsonPath: $.connections[*][?({id} in @.documents[*].id)].auditDetails.lastModifiedTime
+       
+    - query: INSERT INTO eg_wcms_owner_v2(connectionuuid, userid, isactive, createdby, lastmodifiedby, createdtime, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?);
+      basePath: connections.*.owner.*
+      jsonMaps:
+
+       - jsonPath: $.connections[*][?({id} in @.owner[*].id)].uuid
+       
+       - jsonPath: $.connections.*.owner.*.id
+       
+       - jsonPath: $.connections.*.owner.*.isActive
+       
+       - jsonPath: $.connections[*][?({id} in @.owner[*].id)].auditDetails.createdBy
+
+       - jsonPath: $.connections[*][?({id} in @.owner[*].id)].auditDetails.lastModifiedBy
+       
+       - jsonPath: $.connections[*][?({id} in @.owner[*].id)].auditDetails.createdTime
+
+       - jsonPath: $.connections[*][?({id} in @.owner[*].id)].auditDetails.lastModifiedTime
+       

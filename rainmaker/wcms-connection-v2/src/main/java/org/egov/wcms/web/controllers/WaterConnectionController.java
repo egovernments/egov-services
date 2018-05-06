@@ -27,7 +27,7 @@ import io.swagger.annotations.ApiParam;
 @javax.annotation.Generated(value = "org.egov.codegen.SpringBootCodegen", date = "2018-05-03T01:09:48.367+05:30")
 
 @Controller
-@RequestMapping("/connection/v2")
+@RequestMapping("/connection")
 public class WaterConnectionController {
 
 	private final ObjectMapper objectMapper;

@@ -1,5 +1,7 @@
 package org.egov.wcms.service;
 
+import java.util.UUID;
+
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.wcms.config.MainConfiguration;
 import org.egov.wcms.producer.WaterConnectionProducer;
@@ -70,10 +72,12 @@ public class WaterConnectionService {
 	 * @return WaterConnectionRes
 	 */
 	public WaterConnectionRes createWaterConnections(WaterConnectionReq connections) {
+		
 		enrichCreateRequest(connections);
 		waterConnectionProducer.push(mainConfiguration.getSaveWaterConnectionTopic(), connections);
-		return WaterConnectionRes.builder().connections(connections.getConnections()).
-							responseInfo(responseInfoFactory.createResponseInfoFromRequestInfo(connections.getRequestInfo(), true)).build();
+		return WaterConnectionRes.builder().connections(connections.getConnections())
+				.responseInfo(responseInfoFactory.createResponseInfoFromRequestInfo(connections.getRequestInfo(), true))
+				.build();
 	}
 	
 	/**
@@ -85,6 +89,8 @@ public class WaterConnectionService {
 		// (1)
 		for(Connection connection: connections.getConnections()) {
 			connection.setConnectionNumber(wCServiceUtils.generateConnectonNumber());
+			connection.getMeter().setId(UUID.randomUUID().toString());
+			connection.getAddress().setUuid(UUID.randomUUID().toString());
 		}
 	}
 	

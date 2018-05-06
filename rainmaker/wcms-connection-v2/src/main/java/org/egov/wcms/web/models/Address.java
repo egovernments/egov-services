@@ -27,6 +27,10 @@ import lombok.Builder;
 @NoArgsConstructor
 @Builder
 public class Address   {
+	
+	@JsonProperty("uuid")
+		private String uuid;
+		
         @JsonProperty("tenantId")
         private String tenantId = null;
 

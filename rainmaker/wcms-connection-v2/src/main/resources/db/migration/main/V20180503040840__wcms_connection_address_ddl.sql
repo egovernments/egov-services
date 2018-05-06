@@ -1,49 +1,100 @@
-CREATE TABLE wcms_connection_v2 (
+CREATE TABLE eg_wcms_connection_v2 (
 
-  uuid character varying(64) NOT NULL,
-  tenantId character varying(256) NOT NULL,
-  type character varying(16) NOT NULL,
-  status character varying(16) NOT NULL,
-  oldConnectionNumber character varying(128),
-  acknowledgmentNumber character varying(128) NOT NULL,
-  connectionNumber character varying(128) NOT NULL,
-  applicationType character varying(64) ,
-  billingType character varying(64) NOT NULL,
-  pipesize character varying(64),
-  sourceType  character varying(64) NOT NULL,
-  numberOfTaps bigint,
-  numberOfPersons bigint,
-  parentConnection character varying(128),
-  documents character varying[],
-  property character varying(64),
-  address character varying(64), --> reference for address object in wcms connection
-  meter JSONB,
-  owner character varying[],
-  additionalDetails JSONB,
-  createdBy	character varying(64),
-  lastModifiedBy	character varying(64),
-  createdTime	bigint,
-  lastModifiedTime bigint,
+tenantid character varying(256),
+uuid character varying(64),
+type character varying(64),
+status character varying(64),
+acknowledgmentNumber character varying(128),
+connectionNumber character varying(128),
+oldConnectionNumber character varying(128),
+applicationType character varying(64),
+billingType character varying(128),
+pipesize character varying(64),
+sourceType character varying(128),
+numberOfTaps bigint,
+numberOfPersons bigint,
+parentConnection character varying(64),
+property character varying(64),
+location character varying(64),
+additionaldetails JSONB,
+createdby character varying(64),
+lastmodifiedby character varying(64),
+createdtime bigint,
+lastmodifiedtime bigint,
 
-  CONSTRAINT pk_wcms_connection_v2 PRIMARY KEY (connectionNumber,tenantid),
-  CONSTRAINT uk_wcms_connection_v2 UNIQUE (uuid,tenantid)
+CONSTRAINT uk_eg_wcms_connection_v2_uuid UNIQUE (uuid),
+CONSTRAINT pk_eg_wcms_connection_v2 PRIMARY KEY (tenantid, connectionNumber)
 );
 
-CREATE TABLE wcms_connection_address_v2 (
 
-  tenantid character varying(256) NOT NULL,
-  uuid character varying(64) NOT NULL,
-  buildingName character varying(1024),
-  roadName character varying(2056),
-  billingAddress character varying(2056),
-  gisNumber character varying(128),
-  revenueBoundary character varying(64),
-  locationBoundary character varying(64),
-  adminBoundary character varying(64),
-  createdBy	character varying(64),
-  lastModifiedBy	character varying(64),
-  createdTime	bigint,
-  lastModifiedTime bigint,
+CREATE TABLE eg_wcms_meter_v2(
 
-  CONSTRAINT pk_wcms_connection_address_v2 PRIMARY KEY(uuid,tenantid)
+connectionuuid character varying(128),
+uuid character varying(256),
+meterOwner character varying(64),
+meterModel character varying(64),
+meterCost bigint,
+meterSlNo bigint,
+createdby character varying(64),
+lastmodifiedby character varying(64),
+createdtime bigint,
+lastmodifiedtime bigint,
+
+CONSTRAINT pk_eg_wcms_meter_v2 PRIMARY KEY (uuid),
+CONSTRAINT fk_eg_wcms_meter_v2 FOREIGN KEY (connectionuuid) REFERENCES eg_wcms_connection_v2(uuid)
+);
+
+
+
+CREATE TABLE eg_wcms_address_v2(
+
+connectionuuid character varying(128),
+uuid character varying(64),
+latitude numeric(9,6),
+longitude numeric(10,7),
+addressId character varying(64),
+addressNumber character varying(64),
+addresstype character varying(64),
+addressLine1 character varying(1024),
+addressLine2 character varying(1024),
+landmark character varying(1024),
+city character varying(1024),
+pincode character varying(6),
+addressdetail character varying(2048),
+createdby character varying(64),
+lastmodifiedby character varying(64),
+createdtime bigint,
+lastmodifiedtime bigint,
+
+CONSTRAINT pk_eg_wcms_address_v2 PRIMARY KEY (uuid),
+CONSTRAINT fk_eg_wcms_address_v2 FOREIGN KEY (connectionuuid) REFERENCES eg_wcms_connection_v2(uuid)
+);
+
+CREATE TABLE eg_wcms_document_v2(
+
+uuid character varying(64),
+connectionuuid character varying(128),
+documenttype character varying(64),
+isActive boolean,
+createdby character varying(64),
+lastmodifiedby character varying(64),
+createdtime bigint,
+lastmodifiedtime bigint,
+
+CONSTRAINT pk_eg_wcms_documents_v2 PRIMARY KEY (uuid),
+CONSTRAINT fk_eg_wcms_documents_v2 FOREIGN KEY (connectionuuid) REFERENCES eg_wcms_connection_v2(uuid)
+);
+
+CREATE TABLE eg_wcms_owner_v2(
+
+connectionuuid character varying(128),
+userid character varying(1024),
+isActive boolean,
+createdby character varying(64),
+lastmodifiedby character varying(64),
+createdtime bigint,
+lastmodifiedtime bigint,
+
+CONSTRAINT pk_eg_wcms_owner_v2 PRIMARY KEY (userid,connectionuuid),
+CONSTRAINT fk_eg_wcms_owner_v2 FOREIGN KEY (connectionuuid) REFERENCES eg_wcms_connection_v2(uuid)
 );

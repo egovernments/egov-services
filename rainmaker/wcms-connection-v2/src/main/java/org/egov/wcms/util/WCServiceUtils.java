@@ -4,6 +4,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Random;
+import java.util.UUID;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.wcms.config.MainConfiguration;
@@ -66,6 +67,6 @@ public class WCServiceUtils {
 	}
 	
 	public String generateConnectonNumber() {		
-		return new StringBuilder().append("WCMS").append("/").append(new Date().getTime()).append("/").append(new Random().nextInt()).toString();
+		return new StringBuilder().append("WCMS/").append(UUID.randomUUID().toString()).toString();
 	}
 }

@@ -81,7 +81,7 @@ lastmodifiedby character varying(64),
 createdtime bigint,
 lastmodifiedtime bigint,
 
-CONSTRAINT pk_eg_wcms_documents_v2 PRIMARY KEY (uuid),
+CONSTRAINT pk_eg_wcms_documents_v2 PRIMARY KEY (uuid, connectionuuid),
 CONSTRAINT fk_eg_wcms_documents_v2 FOREIGN KEY (connectionuuid) REFERENCES eg_wcms_connection_v2(uuid)
 );
 

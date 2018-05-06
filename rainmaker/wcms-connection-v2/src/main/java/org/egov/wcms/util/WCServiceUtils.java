@@ -8,6 +8,7 @@ import java.util.UUID;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.wcms.config.MainConfiguration;
+import org.egov.wcms.web.models.AuditDetails;
 import org.egov.wcms.web.models.SearcherRequest;
 import org.egov.wcms.web.models.WaterConnectionRes;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +40,16 @@ public class WCServiceUtils {
 		
 		return SearcherRequest.builder().requestInfo(requestInfo).searchCriteria(request).build();
 		
+	}
+	
+	public AuditDetails getAuditDetails(String by, Boolean isCreate) {
+		
+		Long time = new Date().getTime();
+		
+		if(isCreate)
+			return AuditDetails.builder().createdBy(by).lastModifiedBy(by).createdTime(time).lastModifiedTime(time).build();
+		else
+			return AuditDetails.builder().lastModifiedBy(by).lastModifiedTime(time).build();
 	}
 	
 	/**

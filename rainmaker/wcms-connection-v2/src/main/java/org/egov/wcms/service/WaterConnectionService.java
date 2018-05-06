@@ -9,6 +9,7 @@ import org.egov.wcms.repository.WCRepository;
 import org.egov.wcms.util.ResponseInfoFactory;
 import org.egov.wcms.util.WCServiceUtils;
 import org.egov.wcms.util.WaterConnectionConstants;
+import org.egov.wcms.web.models.AuditDetails;
 import org.egov.wcms.web.models.Connection;
 import org.egov.wcms.web.models.SearcherRequest;
 import org.egov.wcms.web.models.WaterConnectionReq;
@@ -87,10 +88,14 @@ public class WaterConnectionService {
 	 */
 	public void enrichCreateRequest(WaterConnectionReq connections) {
 		// (1)
+		RequestInfo requestInfo = connections.getRequestInfo();
+		AuditDetails auditDetails = wCServiceUtils.getAuditDetails(requestInfo.getUserInfo().getId().toString(), true);
+		
 		for(Connection connection: connections.getConnections()) {
 			connection.setConnectionNumber(wCServiceUtils.generateConnectonNumber());
 			connection.getMeter().setId(UUID.randomUUID().toString());
 			connection.getAddress().setUuid(UUID.randomUUID().toString());
+			connection.setAuditDetails(auditDetails);
 		}
 	}
 	

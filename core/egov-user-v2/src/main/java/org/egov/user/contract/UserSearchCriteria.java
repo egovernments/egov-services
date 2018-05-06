@@ -1,6 +1,5 @@
 package org.egov.user.contract;
 
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -19,10 +18,9 @@ import lombok.ToString;
 @Builder
 public class UserSearchCriteria {
 	
-	@Builder.Default
-	private Set<String> ids = new HashSet<>();
+	private Set<String> ids;
 	
-    private String userName;
+    private Set<String> userNames;
     
     private String name;
     

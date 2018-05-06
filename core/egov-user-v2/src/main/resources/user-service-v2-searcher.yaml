@@ -17,8 +17,10 @@ SearchDefinitions:
     - name: id
       isMandatory: false
       jsonPath: $.searchCriteria.ids
-    - name: accountid
+    - name: username
       isMandatory: false
+      jsonPath: $.searchCriteria.userNames
+
       
 
    output:
@@ -41,8 +43,10 @@ SearchDefinitions:
     - name: id
       isMandatory: false
       jsonPath: $.searchCriteria.ids
-    - name: accountid
+    - name: username
       isMandatory: false
+      jsonPath: $.searchCriteria.userNames
+
 
    output:
     jsonFormat: {"ResponseInfo": {}}

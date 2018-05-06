@@ -47,8 +47,8 @@ public class UserRequestValidator {
 		RequestInfo requestInfo = userReq.getRequestInfo();
 		List<User> users = userReq.getUsers();
 		String tenantId = users.get(0).getTenantId();
-		Set<String> idsForCitizen = new HashSet<>();
-		Set<String> idsForEmployee = new HashSet<>();
+		Set<String> userNamesForCitizen = new HashSet<>();
+		Set<String> userNamesForEmployee = new HashSet<>();
 
 		for (User user : users) {
 			
@@ -56,9 +56,9 @@ public class UserRequestValidator {
 			Type type = user.getType();
 			
 			if (Type.CITIZEN.equals(type))
-				idsForCitizen.add(userId);
+				userNamesForCitizen.add(userId);
 			else if(Type.EMPLOYEE.equals(type))
-				idsForEmployee.add(userId);
+				userNamesForEmployee.add(userId);
 			
 			// TODO do we need to throw error back for every item in the list rather than the whole list @once?
 			if (!CollectionUtils.isEmpty(errors))
@@ -72,7 +72,7 @@ public class UserRequestValidator {
 		if(userTypes.contains(Type.EMPLOYEE.toString())) 
 			validateUserInfoAndRole(requestInfo.getUserInfo());
 		
-		validateUserIntegrityForCitizen(errors, tenantId, idsForCitizen, idsForEmployee, userReq.getRequestInfo());
+		validateUserIntegrityForCitizen(errors, tenantId, userNamesForCitizen, userNamesForEmployee, userReq.getRequestInfo());
 		
 		return errors;
 	}
@@ -90,11 +90,11 @@ public class UserRequestValidator {
 			Set<String> idsForEmployee, RequestInfo requestInfo) {
 
 		List<String> errorMsgList = new ArrayList<>();
-		UserSearchCriteria citizenCriteria = UserSearchCriteria.builder().ids(idsForCitizen).tenantId(tenantId).build();
+		UserSearchCriteria citizenCriteria = UserSearchCriteria.builder().userNames(idsForCitizen).tenantId(tenantId).build();
 		Set<String> userNamesFromDb = userService.getUsers(citizenCriteria, requestInfo, true).getUsers().parallelStream()
 				.map(User::getUserName).collect(Collectors.toSet());
 
-		UserSearchCriteria employeeCriteria = UserSearchCriteria.builder().ids(idsForEmployee).tenantId(tenantId)
+		UserSearchCriteria employeeCriteria = UserSearchCriteria.builder().userNames(idsForEmployee).tenantId(tenantId)
 				.build();
 		userNamesFromDb.addAll(userService.getUsers(employeeCriteria, requestInfo, false).getUsers().parallelStream()
 				.map(User::getUserName).collect(Collectors.toSet()));

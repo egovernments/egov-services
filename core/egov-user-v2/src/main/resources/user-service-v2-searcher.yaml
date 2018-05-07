@@ -5,7 +5,7 @@ SearchDefinitions:
  definitions:
  - name: userSearchForEmployee
    query: 
-    baseQuery: select array_to_json(array_agg(r)) from (select * from (select userv2.*,(select array_to_json(array_agg(row_to_json(roles))) from (select role.* from eg_user_role_v2 role INNER JOIN eg_user_v2 userv2 ON role.userid = userv2.id ) as roles) as additionalRoles,(select row_to_json(userDetails) from (select detail.*,(select array_to_json(array_agg(row_to_json(addresses))) from (select address.* from eg_user_address_v2 address INNER JOIN eg_user_v2 userv2 ON address.userid = userv2.id) as addresses) as addresses from  eg_user_detail_v2 detail INNER JOIN eg_user_v2 userv2 ON detail.userid = userv2.id) as userDetails) as userdetails from eg_user_v2 userv2 $where) users) as r
+    baseQuery: select array_to_json(array_agg(r)) from (select * from (select userv2.*,(select array_to_json(array_agg(row_to_json(roles))) from (select role.* from eg_user_role_v2 role INNER JOIN eg_user_v2 userv2 ON role.userid = userv2.uuid ) as roles) as additionalRoles,(select row_to_json(userDetails) from (select detail.*,(select array_to_json(array_agg(row_to_json(addresses))) from (select address.* from eg_user_address_v2 address INNER JOIN eg_user_v2 userv2 ON address.userid = userv2.uuid) as addresses) as addresses from  eg_user_detail_v2 detail INNER JOIN eg_user_v2 userv2 ON detail.userid = userv2.uuid $where) as userDetails) as userdetails from eg_user_v2 userv2 $where) users) as r
     groupBy:    
     orderBy: 
    searchParams:
@@ -14,7 +14,7 @@ SearchDefinitions:
     - name: tenantid
       isMandatory: true
       jsonPath: $.searchCriteria.tenantId
-    - name: id
+    - name: uuid
       isMandatory: false
       jsonPath: $.searchCriteria.ids
     - name: username
@@ -30,7 +30,7 @@ SearchDefinitions:
     
  - name: userSearchForCitizen
    query: 
-    baseQuery: select array_to_json(array_agg(r)) from (select * from (select userv2.*,(select array_to_json(array_agg(row_to_json(roles))) from (select role.* from eg_user_role_v2 role INNER JOIN eg_user_v2 userv2 ON role.userid = userv2.id ) as roles) as additionalRoles,(select row_to_json(userDetails) from (select detail.*,(select array_to_json(array_agg(row_to_json(addresses))) from (select address.* from eg_user_address_v2 address INNER JOIN eg_user_v2 userv2 ON address.userid = userv2.id) as addresses) as addresses from  eg_user_detail_v2 detail INNER JOIN eg_user_v2 userv2 ON detail.userid = userv2.id) as userDetails) as userdetails from eg_user_v2 userv2 $where) users) as r
+    baseQuery: select array_to_json(array_agg(r)) from (select * from (select userv2.*,(select array_to_json(array_agg(row_to_json(roles))) from (select role.* from eg_user_role_v2 role INNER JOIN eg_user_v2 userv2 ON role.userid = userv2.uuid ) as roles) as additionalRoles,(select row_to_json(userDetails) from (select detail.*,(select array_to_json(array_agg(row_to_json(addresses))) from (select address.* from eg_user_address_v2 address INNER JOIN eg_user_v2 userv2 ON address.userid = userv2.uuid) as addresses) as addresses from  eg_user_detail_v2 detail INNER JOIN eg_user_v2 userv2 ON detail.userid = userv2.uuid $where) as userDetails) as userdetails from eg_user_v2 userv2 $where) users) as r
     groupBy:    
     orderBy: 
    searchParams:
@@ -40,7 +40,7 @@ SearchDefinitions:
       isMandatory: true
       jsonPath: $.searchCriteria.tenantId
       operator: LIKE
-    - name: id
+    - name: uuid
       isMandatory: false
       jsonPath: $.searchCriteria.ids
     - name: username

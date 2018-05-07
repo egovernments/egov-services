@@ -1,7 +1,7 @@
 CREATE TABLE eg_user_address_v2 (
     tenantid character varying(256) NOT NULL,
     uuid character varying(64) NOT NULL,
- 	userid character varying(64) NOT NULL REFERENCES eg_user_v2 (id),-- id of eg_user_v2 table
+ 	userid character varying(64) NOT NULL REFERENCES eg_user_v2 (uuid),-- id of eg_user_v2 table
     latitude numeric(9,6),
     longitude numeric(9,6),
     addressid character varying(64),

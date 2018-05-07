@@ -52,13 +52,13 @@ public class UserRequestValidator {
 
 		for (User user : users) {
 			
-			String userId = user.getUserName()!=null ? user.getUserName() : user.getMobile();
+			String userName = user.getUserName()!=null ? user.getUserName() : user.getMobile();
 			Type type = user.getType();
 			
 			if (Type.CITIZEN.equals(type))
-				userNamesForCitizen.add(userId);
-			else if(Type.EMPLOYEE.equals(type))
-				userNamesForEmployee.add(userId);
+				userNamesForCitizen.add(userName);
+			else if(Type.EMPLOYEE.equals(type)) 
+				userNamesForEmployee.add(userName);
 			
 			// TODO do we need to throw error back for every item in the list rather than the whole list @once?
 			if (!CollectionUtils.isEmpty(errors))
@@ -90,14 +90,23 @@ public class UserRequestValidator {
 			Set<String> idsForEmployee, RequestInfo requestInfo) {
 
 		List<String> errorMsgList = new ArrayList<>();
-		UserSearchCriteria citizenCriteria = UserSearchCriteria.builder().userNames(idsForCitizen).tenantId(tenantId).build();
-		Set<String> userNamesFromDb = userService.getUsers(citizenCriteria, requestInfo, true).getUsers().parallelStream()
-				.map(User::getUserName).collect(Collectors.toSet());
+		Set<String> userNamesFromDb = new HashSet<>();
 
-		UserSearchCriteria employeeCriteria = UserSearchCriteria.builder().userNames(idsForEmployee).tenantId(tenantId)
-				.build();
-		userNamesFromDb.addAll(userService.getUsers(employeeCriteria, requestInfo, false).getUsers().parallelStream()
-				.map(User::getUserName).collect(Collectors.toSet()));
+		if (!idsForCitizen.isEmpty()) {
+
+			UserSearchCriteria citizenCriteria = UserSearchCriteria.builder().userNames(idsForCitizen)
+					.tenantId(tenantId).build();
+			userNamesFromDb.addAll(userService.getUsers(citizenCriteria, requestInfo, true).getUsers().parallelStream()
+					.map(User::getUserName).collect(Collectors.toSet()));
+		}
+
+		if (!idsForEmployee.isEmpty()) {
+
+			UserSearchCriteria employeeCriteria = UserSearchCriteria.builder().userNames(idsForEmployee)
+					.tenantId(tenantId).build();
+			userNamesFromDb.addAll(userService.getUsers(employeeCriteria, requestInfo, false).getUsers()
+					.parallelStream().map(User::getUserName).collect(Collectors.toSet()));
+		}
 
 		if (userNamesFromDb.isEmpty())
 			return;
@@ -137,7 +146,7 @@ public class UserRequestValidator {
 	 * 
 	 * */
 	private void validateUserInfoAndRole(UserInfo userInfo) {
-		Boolean hasRole = null;
+		Boolean hasRole = false;
 		if(userInfo != null) {
 			for(Role role : userInfo.getPrimaryrole()) {
 				if(userConfiguration.getRoleForCreateUserAsEmp().contains(role.getCode())){
@@ -148,7 +157,7 @@ public class UserRequestValidator {
 		} else {
 			errors.put(UserErrorConstant.USER_INFO_NOT_NULL, UserErrorConstant.USER_INFO_NOT_NULL_MSG);
 		}
-		if(!hasRole)
-			errors.put(UserErrorConstant.USER_CREATE_INVALID_USER_ROLE, UserErrorConstant.USER_CREATE_INVALID_USER_ROLE_MSG);		
+	/*	if(!hasRole)
+			errors.put(UserErrorConstant.USER_CREATE_INVALID_USER_ROLE, UserErrorConstant.USER_CREATE_INVALID_USER_ROLE_MSG);*/		
 	}
 }

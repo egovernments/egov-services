@@ -1,5 +1,7 @@
 package org.egov.user.web.controller;
 
+import java.util.Optional;
+
 import javax.validation.Valid;
 
 import org.egov.common.contract.request.RequestInfo;
@@ -29,9 +31,8 @@ public class UserController {
 	 *  
 	 * */
 	@PostMapping("_create")
-	public ResponseEntity<UserRes> create(@RequestBody @Valid UserReq userReq) {
-		userService.create(userReq);
-		return null;
+	public ResponseEntity<Optional<?>> create(@RequestBody @Valid UserReq userReq) {
+		return new ResponseEntity<>(userService.create(userReq),HttpStatus.CREATED);
 	}
 	
 	@PostMapping("_search")

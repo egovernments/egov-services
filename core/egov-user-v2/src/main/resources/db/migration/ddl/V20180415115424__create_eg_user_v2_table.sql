@@ -1,5 +1,5 @@
 CREATE TABLE eg_user_v2 (
-    id character varying(64) NOT NULL, -- uuid
+    uuid character varying(64) NOT NULL, -- uuid
     tenantid character varying(256) NOT NULL,
     username character varying(64) NOT NULL,
     type character varying(50),
@@ -13,13 +13,13 @@ CREATE TABLE eg_user_v2 (
     lastmodifiedby character varying(64),
     createddate bigint,
     lastmodifieddate bigint,
-    CONSTRAINT pk_eg_user_v2 PRIMARY KEY (id),
+    CONSTRAINT pk_eg_user_v2 PRIMARY KEY (uuid),
     CONSTRAINT unq_eg_user_v2_username UNIQUE(tenantid,username)
  );
 
  CREATE TABLE eg_user_detail_v2 (
  	uuid character varying(64) NOT NULL,
- 	userId character varying(64) NOT NULL REFERENCES eg_user_v2 (id),-- id of eg_user_v2 table
+ 	userId character varying(64) NOT NULL REFERENCES eg_user_v2 (uuid),-- id of eg_user_v2 table
     salutation character varying(5),
     firstname character varying(32),
     middlename character varying(32),

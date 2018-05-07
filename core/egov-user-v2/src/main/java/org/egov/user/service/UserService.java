@@ -2,12 +2,14 @@ package org.egov.user.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.otp.sevice.OtpService;
+import org.egov.tracer.model.CustomException;
 import org.egov.user.contract.SearcherRequest;
 import org.egov.user.contract.User;
 import org.egov.user.contract.UserReq;
@@ -54,7 +56,8 @@ public class UserService {
 	
 	public Optional<?> create(UserReq userReq) {
 		
-		userRequestValidator.validateCreateRequest(userReq);
+		Map<String, String> errorMap = userRequestValidator.validateCreateRequest(userReq);
+		if(!errorMap.isEmpty()) throw new CustomException(errorMap);
 		List<User> users = userReq.getUsers();
 		enrichUserRequestService.enrichUserRequest(users, userReq.getRequestInfo());
 		//TODO:

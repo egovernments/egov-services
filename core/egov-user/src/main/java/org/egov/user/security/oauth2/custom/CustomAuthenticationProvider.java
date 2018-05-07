@@ -43,6 +43,12 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 	@Value("${employee.login.password.otp.enabled}")
 	private boolean employeeLoginPasswordOtpEnabled;
 
+	@Value("${citizen.login.password.otp.fixed_otp}")
+	private String fixedOTPPassword;
+
+	@Value("${citizen.login.password.otp.fixed_otp_enabled}")
+	private boolean fixedOTPEnabled;
+
 	private static String tenantId;
 
 	public CustomAuthenticationProvider(UserService userService) {
@@ -87,14 +93,20 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 		if (user.getType() != null && user.getType().toString().equals("CITIZEN"))
 			isCitizen = true;
 
-		Boolean isPasswordMatch;
+		Boolean isPasswordMatched;
 		if (isCitizen) {
-			isPasswordMatch = isPasswordMatch(citizenLoginPasswordOtpEnabled, password, user, authentication);
+			isPasswordMatched = isPasswordMatch(citizenLoginPasswordOtpEnabled, password, user, authentication);
 		} else {
-			isPasswordMatch = isPasswordMatch(employeeLoginPasswordOtpEnabled, password, user, authentication);
+			if (fixedOTPEnabled && fixedOTPPassword != "" && fixedOTPPassword == password)
+			{
+				//for automation allow fixing otp validation to a fixed otp
+				isPasswordMatched = true;
+			} else {
+				isPasswordMatched = isPasswordMatch(employeeLoginPasswordOtpEnabled, password, user, authentication);
+			}
 		}
 
-		if (isPasswordMatch) {
+		if (isPasswordMatched) {
 
 			/**
 			 * We assume that there will be only one type. If it is multiple

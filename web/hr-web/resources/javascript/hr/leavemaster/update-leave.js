@@ -32,7 +32,8 @@ const makeAjaxUpload = function (file, docType, cb) {
 
 const uploadFiles = function (body, cb) {
 
-  var files = body.LeaveApplication[0].docs;
+
+  var files = body.LeaveApplication[0].docs? body.LeaveApplication[0].docs:[];
 
   if (files.length) {
     console.log(files)

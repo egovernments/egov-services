@@ -1441,6 +1441,7 @@ $("#createAgreementForm").validate({
         agreement["tenantId"] = tenantId;
         agreement["source"] = "SYSTEM";
         agreement["action"] = "CREATE";//Different in case of cancel/evict. Please remove
+        agreement["isHistory"] = false;
         uploadFiles(agreement, function(err, _agreement) {
             if (err) {
                 //Handle error

@@ -6,11 +6,11 @@ serviceMaps:
    description: create a new user
    fromTopic: save-user-v2
    queryMaps:
-    - query: INSERT INTO eg_user_v2 (id, tenantid, username, type, password, locale, mobile, email, active, accountlocked, createdby, lastmodifiedby, createddate, lastmodifieddate) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+    - query: INSERT INTO eg_user_v2 (uuid, tenantid, username, type, password, locale, mobile, email, active, accountlocked, createdby, lastmodifiedby, createddate, lastmodifieddate) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
       basePath: $.Users.*
       jsonMaps:
 
-       - jsonPath: $.Users.*.id
+       - jsonPath: $.Users.*.uuid
 
        - jsonPath: $.Users.*.tenantId
 

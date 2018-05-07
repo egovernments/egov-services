@@ -236,10 +236,8 @@ class Sale extends React.Component {
           }
           accounts.push(res);
           _this.setState({
-            disposal: {
-              ..._this.state.disposal,
+              ..._this.state,
               "assetAccount": accounts
-            }
           });
         }, { accountCodePurpose: res2["accountCodePurposes"][0].id });
       } else {
@@ -255,10 +253,8 @@ class Sale extends React.Component {
           }
           accounts.push(res);
           _this.setState({
-            disposal: {
-              ..._this.state.disposal,
+              ..._this.state,
               "assetAccount": accounts
-            }
           });
         }, { accountCodePurpose: res2["accountCodePurposes"][0].id });
       } else {
@@ -295,7 +291,8 @@ class Sale extends React.Component {
             ...this.state.disposal,
             [name]: e.target.value,
             "aadharCardNumber": "",
-            "panCardNumber": ""
+            "panCardNumber": "",
+            "assetSaleAccount": ""
           }
         })
       } else {
@@ -331,29 +328,6 @@ class Sale extends React.Component {
           }
         });
       }
-    } else if (name == "assetCurrentValue" && e.target.value) {
-      if (this.state.disposal.saleValue && Number(this.state.disposal.saleValue) && Number(e.target.value)) {
-
-        if (Number(e.target.value) - Number(this.state.disposal.saleValue) > 0) {
-          return this.setState({
-            disposal: {
-              ...this.state.disposal,
-              [name]: e.target.value,
-              "assetSaleAccount": "2711001"
-            }
-          });
-        } else {
-          return this.setState({
-            disposal: {
-              ...this.state.disposal,
-              [name]: e.target.value,
-              "assetSaleAccount": "1803001"
-            }
-          });
-        }
-
-      }
-
     } else if (name == "saleValue" && e.target.value) {
       if (this.state.disposal.assetCurrentValue && Number(this.state.disposal.assetCurrentValue) && Number(e.target.value)) {
 

@@ -86,6 +86,10 @@ public class ApplicationProperties {
         return environment.getProperty("spring.kafka.bootstrap.servers");
     }
 
+    public String getHostNameForMonolithic(final String tenantId){
+        return environment.getProperty(tenantId);
+        
+    }
     @Value("${egov.assetcategory.async}")
     private Boolean assetCategoryAsync;
 

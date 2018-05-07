@@ -7,7 +7,7 @@ import java.util.Random;
 import java.util.UUID;
 
 import org.egov.common.contract.request.RequestInfo;
-import org.egov.wcms.config.MainConfiguration;
+import org.egov.wcms.config.WaterConnectionConfig;
 import org.egov.wcms.web.models.AuditDetails;
 import org.egov.wcms.web.models.SearcherRequest;
 import org.egov.wcms.web.models.WaterConnectionRes;
@@ -23,10 +23,10 @@ import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Slf4j
-public class WCServiceUtils {
+public class WaterConnectionServiceUtils {
 	
 	@Autowired
-	private MainConfiguration mainConfiguration;
+	private WaterConnectionConfig mainConfiguration;
 	
 	@Autowired
 	private ResponseInfoFactory responseInfoFactory;

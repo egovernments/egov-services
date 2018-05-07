@@ -28,7 +28,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Builder
 @Component
-public class MainConfiguration {
+public class WaterConnectionConfig {
 
     @Value("${app.timezone}")
     private String timeZone;

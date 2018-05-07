@@ -4,11 +4,12 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
 import org.egov.common.contract.request.RequestInfo;
-import org.egov.wcms.config.MainConfiguration;
-import org.egov.wcms.producer.WaterConnectionProducer;
-import org.egov.wcms.repository.WCRepository;
+import org.egov.common.contract.request.User;
+import org.egov.wcms.config.WaterConnectionConfig;
+import org.egov.wcms.producer.Producer;
+import org.egov.wcms.repository.Repository;
 import org.egov.wcms.util.ResponseInfoFactory;
-import org.egov.wcms.util.WCServiceUtils;
+import org.egov.wcms.util.WaterConnectionServiceUtils;
 import org.egov.wcms.util.WaterConnectionConstants;
 import org.egov.wcms.web.models.SearcherRequest;
 import org.egov.wcms.web.models.WaterConnectionReq;
@@ -28,16 +29,16 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class WaterConnectionServiceTest {
 	
 	@Mock
-	private WCServiceUtils wCServiceUtils;
+	private WaterConnectionServiceUtils wCServiceUtils;
 	
 	@Mock
-	private WCRepository wcRepository;
+	private Repository wcRepository;
 	
 	@Mock
-	private WaterConnectionProducer waterConnectionProducer;
+	private Producer waterConnectionProducer;
 	
 	@Mock
-	private MainConfiguration mainConfiguration;
+	private WaterConnectionConfig mainConfiguration;
 	
 	@Mock
 	private ResponseInfoFactory responseInfoFactory;
@@ -51,6 +52,11 @@ public class WaterConnectionServiceTest {
 	@Test
 	public void testCreateWCSuccess() {
 		WaterConnectionReq waterConnectionReq = new WaterConnectionReq();
+		RequestInfo requestInfo = new RequestInfo();
+		User userInfo = new User();
+		userInfo.setId(10L);
+		requestInfo.setUserInfo(userInfo);
+		waterConnectionReq.setRequestInfo(requestInfo);
 		Mockito.doNothing().when(service).enrichCreateRequest(waterConnectionReq);
 		Mockito.when(mainConfiguration.getSaveWaterConnectionTopic()).thenReturn("save-wcms-connection");
 		Mockito.doNothing().when(waterConnectionProducer).push("save-wcms-connection", waterConnectionReq);

@@ -8,7 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Slf4j
-public class WaterConnectionProducer {
+public class Producer {
 
 	@Autowired
 	private LogAwareKafkaTemplate<String, Object> kafkaTemplate;

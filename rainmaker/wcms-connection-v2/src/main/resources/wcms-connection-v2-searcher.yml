@@ -1,0 +1,57 @@
+SearchDefinitions:
+ moduleName: wcms-connection
+ summary: Water charge and Sewerage Module
+ version: 1.0.0
+ definitions:
+ - name: searchWC
+   query: 
+    baseQuery: select array_to_json(array_agg(row_to_json(waterConnections))) from (select tenantid, id, type, status, acknowledgmentNumber, connectionNumber, oldConnectionNumber, applicationType, billingType, pipesize, sourceType, numberOfTaps, numberOfPersons, parentConnection, (select row_to_json(property) from (select propertyid from eg_wcms_connection_v2 $where) property) as property, (select row_to_json(location) from (select locationid as id from eg_wcms_connection_v2 $where) location) as location, additionaldetails, (select row_to_json(meter) from (select * from eg_wcms_meter_v2 where id=eg_wcms_connection_v2.meterid) meter) as meter, (select row_to_json(address) from (select * from eg_wcms_address_v2 where id=eg_wcms_connection_v2.addressid) address) as address, (select array_to_json(array_agg(row_to_json(owner))) from (select userid as id from eg_wcms_owner_v2 where id=eg_wcms_owner_v2.connectionid) owner) as owner, (select array_to_json(array_agg(row_to_json(documents))) from (select * from eg_wcms_document_v2 where connectionid=eg_wcms_document_v2.connectionid) documents) as documents from eg_wcms_connection_v2 $where $pagination) waterConnections
+   searchParams:
+    condition: AND
+    params:
+    - name: tenantid
+      isMandatory: true
+      jsonPath: $.searchCriteria.tenantId
+    - name: oldConnectionNumber
+      isMandatory: false
+      jsonPath: $.searchCriteria.oldConnectionNumber
+    - name: acknowledgmentNumber
+      isMandatory: false
+      jsonPath: $.searchCriteria.acknowledgmentNumber
+    - name: connectionNumber
+      isMandatory: false
+      jsonPath: $.searchCriteria.connectionNumber
+    - name: owner
+      isMandatory: false
+      jsonPath: $.searchCriteria.ownerId
+    pagination:
+      noOfRecords: $.searchCriteria.noOfRecords
+      offset: $.searchCriteria.offset
+
+   output:
+    jsonFormat: {"ResponseInfo": {}}
+    outJsonPath: $.connections
+    responseInfoPath: $.ResponseInfo
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

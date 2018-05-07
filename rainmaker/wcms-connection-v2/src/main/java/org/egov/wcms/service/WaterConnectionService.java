@@ -3,11 +3,11 @@ package org.egov.wcms.service;
 import java.util.UUID;
 
 import org.egov.common.contract.request.RequestInfo;
-import org.egov.wcms.config.MainConfiguration;
-import org.egov.wcms.producer.WaterConnectionProducer;
-import org.egov.wcms.repository.WCRepository;
+import org.egov.wcms.config.WaterConnectionConfig;
+import org.egov.wcms.producer.Producer;
+import org.egov.wcms.repository.Repository;
 import org.egov.wcms.util.ResponseInfoFactory;
-import org.egov.wcms.util.WCServiceUtils;
+import org.egov.wcms.util.WaterConnectionServiceUtils;
 import org.egov.wcms.util.WaterConnectionConstants;
 import org.egov.wcms.web.models.AuditDetails;
 import org.egov.wcms.web.models.Connection;
@@ -28,16 +28,16 @@ import lombok.extern.slf4j.Slf4j;
 public class WaterConnectionService {
 	
 	@Autowired
-	private WCServiceUtils wCServiceUtils;
+	private WaterConnectionServiceUtils wCServiceUtils;
 	
 	@Autowired
-	private WCRepository wcRepository;
+	private Repository wcRepository;
 	
 	@Autowired
-	private WaterConnectionProducer waterConnectionProducer;
+	private Producer waterConnectionProducer;
 	
 	@Autowired
-	private MainConfiguration mainConfiguration;
+	private WaterConnectionConfig mainConfiguration;
 	
 	@Autowired
 	private ResponseInfoFactory responseInfoFactory;
@@ -62,6 +62,7 @@ public class WaterConnectionService {
 			}
 			waterConnectionRes = mapper.convertValue(response, WaterConnectionRes.class);
 		}catch(Exception e) {
+			log.error("Exception: " + e);
 			return wCServiceUtils.getDefaultWaterConnectionResponse(requestInfo);
 		}
 		return waterConnectionRes;
@@ -93,8 +94,9 @@ public class WaterConnectionService {
 		
 		for(Connection connection: connections.getConnections()) {
 			connection.setConnectionNumber(wCServiceUtils.generateConnectonNumber());
+			connection.setId(UUID.randomUUID().toString());
 			connection.getMeter().setId(UUID.randomUUID().toString());
-			connection.getAddress().setUuid(UUID.randomUUID().toString());
+			connection.getAddress().setId(UUID.randomUUID().toString());
 			connection.setAuditDetails(auditDetails);
 		}
 	}

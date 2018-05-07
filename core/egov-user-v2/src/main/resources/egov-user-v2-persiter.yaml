@@ -10,7 +10,7 @@ serviceMaps:
       basePath: $.Users.*
       jsonMaps:
 
-       - jsonPath: $.Users.*.uuid
+       - jsonPath: $.Users.*.id
 
        - jsonPath: $.Users.*.tenantId
 

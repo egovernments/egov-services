@@ -43,10 +43,10 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 	@Value("${employee.login.password.otp.enabled}")
 	private boolean employeeLoginPasswordOtpEnabled;
 
-	@Value("${citizen.login.password.otp.fixed_otp}")
+	@Value("${citizen.login.password.otp.fixed.value}")
 	private String fixedOTPPassword;
 
-	@Value("${citizen.login.password.otp.fixed_otp_enabled}")
+	@Value("${citizen.login.password.otp.fixed.enabled}")
 	private boolean fixedOTPEnabled;
 
 	private static String tenantId;
@@ -95,15 +95,15 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 
 		Boolean isPasswordMatched;
 		if (isCitizen) {
-			isPasswordMatched = isPasswordMatch(citizenLoginPasswordOtpEnabled, password, user, authentication);
-		} else {
-			if (fixedOTPEnabled && fixedOTPPassword != "" && fixedOTPPassword == password)
+			if (fixedOTPEnabled && !fixedOTPPassword.equals("") && fixedOTPPassword.equals(password))
 			{
 				//for automation allow fixing otp validation to a fixed otp
 				isPasswordMatched = true;
 			} else {
-				isPasswordMatched = isPasswordMatch(employeeLoginPasswordOtpEnabled, password, user, authentication);
+				isPasswordMatched = isPasswordMatch(citizenLoginPasswordOtpEnabled, password, user, authentication);
 			}
+		} else {
+			isPasswordMatched = isPasswordMatch(employeeLoginPasswordOtpEnabled, password, user, authentication);
 		}
 
 		if (isPasswordMatched) {

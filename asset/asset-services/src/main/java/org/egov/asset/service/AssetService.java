@@ -115,7 +115,6 @@ public class AssetService {
         final BigDecimal grossValue = asset.getGrossValue();
         final BigDecimal accumulatedDepreciation = asset.getAccumulatedDepreciation();
 
-        // Accumulateddepreciation should be less than gross value todo in validator
         if (grossValue != null && accumulatedDepreciation != null)
             currentValue.setCurrentAmount(grossValue.subtract(accumulatedDepreciation));
         else if (grossValue != null)

@@ -116,8 +116,8 @@ public class VoucherService {
 
     @SuppressWarnings({ "rawtypes", "unchecked" })
     public String createVoucher(final VoucherRequest voucherRequest, final String tenantId, final HttpHeaders headers) {
-        headers.setOrigin("http://kurnool-pilot-services.egovernments.org");
-        final String createVoucherUrl = headers.getOrigin() + applicationProperties.getEgfServiceVoucherCreatePath()
+       // headers.setOrigin("http://kurnool-pilot-services.egovernments.org");
+        final String createVoucherUrl = applicationProperties.getEgfServiceVoucherHostPath() + applicationProperties.getEgfServiceVoucherCreatePath()
                 + "?tenantId=" + tenantId;
         log.debug("Voucher API Request URL :: " + createVoucherUrl);
         log.debug("VoucherRequest :: " + voucherRequest);

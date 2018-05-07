@@ -115,6 +115,9 @@ public class ApplicationProperties {
 
     @Value("${egov.services.egf_service.chartofaccountsdetails.searchpath}")
     private String egfServiceChartOfAccountsDetailsSearchPath;
+    
+    @Value("${egov.services.voucher.host}")
+    private String egfServiceVoucherHostPath;
 
     @Value("${egov.services.egf_service.voucher.createpath}")
     private String egfServiceVoucherCreatePath;

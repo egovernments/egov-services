@@ -125,7 +125,7 @@ class Sale extends React.Component {
     if (getUrlVars()["type"]) $('#hpCitizenTitle').text(titleCase(getUrlVars()["type"]) + " Asset Sale Or Disposal");
 
 
-    let id = getUrlVars()["id"], _this = this, count = 5, _state = {};
+    let id = getUrlVars()["id"], _this = this, count = 4, _state = {};
 
     if (getUrlVars()["type"] == "view") {
       _this.setState({
@@ -155,7 +155,7 @@ class Sale extends React.Component {
           if (res && res.AssetCurrentValues && res["AssetCurrentValues"][0]) {
             _this.setState({
               disposal: {
-                  ..._this.state.disposal,
+                ..._this.state.disposal,
                 assetCurrentValue: res.AssetCurrentValues[0].currentAmount
               }
             })
@@ -167,51 +167,51 @@ class Sale extends React.Component {
     })
 
     if (getUrlVars()["type"] == "view") {
-      setTimeout(function(){
-      commonApiPost("asset-services", "assets/dispose", "_search", { assetId: id, tenantId, pageSize: 500 }, function (err, res2) {
-        if (res2 && res2.Disposals && res2.Disposals.length) {
-          let disposedAsset = res2.Disposals[0];
+      setTimeout(function () {
+        commonApiPost("asset-services", "assets/dispose", "_search", { assetId: id, tenantId, pageSize: 500 }, function (err, res2) {
+          if (res2 && res2.Disposals && res2.Disposals.length) {
+            let disposedAsset = res2.Disposals[0];
 
-          //Changing date format
-          var d = new Date(disposedAsset.disposalDate);
-          disposedAsset.disposalDate = d.getDate() + "/" + (d.getMonth() + 1) + "/" + d.getFullYear();
+            //Changing date format
+            var d = new Date(disposedAsset.disposalDate);
+            disposedAsset.disposalDate = d.getDate() + "/" + (d.getMonth() + 1) + "/" + d.getFullYear();
 
-          let profitloss = disposedAsset.assetCurrentValue - disposedAsset.saleValue;
+            let profitloss = disposedAsset.assetCurrentValue - disposedAsset.saleValue;
 
-          if (disposedAsset.documents && disposedAsset.documents.length) {
-            var _files = [];
-            for (var i = 0; i < disposedAsset.documents.length; i++) {
-              _files.push(disposedAsset.documents[i]);
+            if (disposedAsset.documents && disposedAsset.documents.length) {
+              var _files = [];
+              for (var i = 0; i < disposedAsset.documents.length; i++) {
+                _files.push(disposedAsset.documents[i]);
+              }
+
+              _this.setState({
+                profitloss,
+                disposal: disposedAsset,
+                typeToDisplay: disposedAsset.transactionType,
+                disposedFiles: JSON.parse(JSON.stringify(_files))
+              })
+            } else {
+              _this.setState({
+                profitloss,
+                disposal: disposedAsset,
+                typeToDisplay: disposedAsset.transactionType
+              });
             }
 
-            _this.setState({
-              profitloss,
-              disposal: disposedAsset,
-              typeToDisplay: disposedAsset.transactionType,
-              disposedFiles: JSON.parse(JSON.stringify(_files))
-            })
-          } else {
-            _this.setState({
-              profitloss,
-              disposal: disposedAsset,
-              typeToDisplay: disposedAsset.transactionType
-            });
+            // commonApiPost("asset-services", "assets/currentvalue", "_search", { assetIds: id, tenantId }, function (err1, res3) {
+            //   if (res3){
+            //     _this.setState({
+            //       disposal:{
+            //       ..._this.state.disposal,
+            //       assetCurrentValue: res3["AssetCurrentValues"]["0"]["currentAmount"]
+            //     }
+            //     });
+            //   }
+            // });
+
           }
-
-          // commonApiPost("asset-services", "assets/currentvalue", "_search", { assetIds: id, tenantId }, function (err1, res3) {
-          //   if (res3){
-          //     _this.setState({
-          //       disposal:{
-          //       ..._this.state.disposal,
-          //       assetCurrentValue: res3["AssetCurrentValues"]["0"]["currentAmount"]
-          //     }
-          //     });
-          //   }
-          // });
-
-        }
-      })
-    },200);
+        })
+      }, 200);
     }
 
     getDropdown("assignments_department", function (res) {
@@ -226,13 +226,40 @@ class Sale extends React.Component {
       checkCountAndCall("revenueZones", res);
     });
 
-    commonApiPost("egf-masters", "accountcodepurposes", "_search", { tenantId, name: "Fixed Assets" }, function (err, res2) {
+    var accounts = [];
+
+    commonApiPost("egf-masters", "accountcodepurposes", "_search", { tenantId, name: "ASSET_PROFIT" }, function (err, res2) {
       if (res2) {
         getDropdown("assetAccount", function (res) {
           for (var i = 0; i < res.length; i++) {
             res[i].name = res[i].glcode + "-" + res[i].name;
           }
-          checkCountAndCall("assetAccount", res);
+          accounts.push(res);
+          _this.setState({
+            disposal: {
+              ..._this.state.disposal,
+              "assetAccount": accounts
+            }
+          });
+        }, { accountCodePurpose: res2["accountCodePurposes"][0].id });
+      } else {
+        checkCountAndCall("assetAccount", []);
+      }
+    })
+
+    commonApiPost("egf-masters", "accountcodepurposes", "_search", { tenantId, name: "ASSET_LOSS" }, function (err, res2) {
+      if (res2) {
+        getDropdown("assetAccount", function (res) {
+          for (var i = 0; i < res.length; i++) {
+            res[i].name = res[i].glcode + "-" + res[i].name;
+          }
+          accounts.push(res);
+          _this.setState({
+            disposal: {
+              ..._this.state.disposal,
+              "assetAccount": accounts
+            }
+          });
         }, { accountCodePurpose: res2["accountCodePurposes"][0].id });
       } else {
         checkCountAndCall("assetAccount", []);
@@ -240,7 +267,9 @@ class Sale extends React.Component {
     })
   }
 
-  componentDidUpdate(){
+
+
+  componentDidUpdate() {
     let _this = this;
     $("#disposalDate").datepicker({
       format: "dd/mm/yyyy",
@@ -259,15 +288,29 @@ class Sale extends React.Component {
 
   handleChange(e, name) {
     if (name == "transactionType") {
-      return this.setState({
-        typeToDisplay: e.target.value,
-        disposal: {
-          ...this.state.disposal,
-          [name]: e.target.value,
-          "aadharCardNumber": "",
-          "panCardNumber": ""
-        }
-      })
+      if(e.target.value === "SALE"){
+        return this.setState({
+          typeToDisplay: e.target.value,
+          disposal: {
+            ...this.state.disposal,
+            [name]: e.target.value,
+            "aadharCardNumber": "",
+            "panCardNumber": ""
+          }
+        })
+      } else {
+        return this.setState({
+          typeToDisplay: e.target.value,
+          disposal: {
+            ...this.state.disposal,
+            [name]: e.target.value,
+            "aadharCardNumber": "",
+            "panCardNumber": "",
+            "assetSaleAccount": "2711001"
+          }
+        })
+      }
+
     } else if (name == "aadharCardNumber" && e.target.value) {
       if (/[^0-9]/.test(e.target.value) || e.target.value.length > 12) {
         var val = e.target.value.substring(0, e.target.value.length - 1);
@@ -287,6 +330,51 @@ class Sale extends React.Component {
             [name]: val
           }
         });
+      }
+    } else if (name == "assetCurrentValue" && e.target.value) {
+      if (this.state.disposal.saleValue && Number(this.state.disposal.saleValue) && Number(e.target.value)) {
+
+        if (Number(e.target.value) - Number(this.state.disposal.saleValue) > 0) {
+          return this.setState({
+            disposal: {
+              ...this.state.disposal,
+              [name]: e.target.value,
+              "assetSaleAccount": "2711001"
+            }
+          });
+        } else {
+          return this.setState({
+            disposal: {
+              ...this.state.disposal,
+              [name]: e.target.value,
+              "assetSaleAccount": "1803001"
+            }
+          });
+        }
+
+      }
+
+    } else if (name == "saleValue" && e.target.value) {
+      if (this.state.disposal.assetCurrentValue && Number(this.state.disposal.assetCurrentValue) && Number(e.target.value)) {
+
+        if (Number(this.state.disposal.assetCurrentValue) - Number(e.target.value) > 0) {
+          return this.setState({
+            disposal: {
+              ...this.state.disposal,
+              [name]: e.target.value,
+              "assetSaleAccount": "2711001"
+            }
+          });
+        } else {
+          return this.setState({
+            disposal: {
+              ...this.state.disposal,
+              [name]: e.target.value,
+              "assetSaleAccount": "1803001"
+            }
+          });
+        }
+
       }
     }
 
@@ -480,7 +568,7 @@ class Sale extends React.Component {
                     </div>
                   </div>
                   <div className="col-sm-6 label-view-text" style={{ display: self.state.readOnly ? 'block' : 'none' }}>
-                    <label>{disposal.assetCurrentValue===null ?(item.grossValue === null ? 0 : item.grossValue) : disposal.assetCurrentValue}</label>
+                    <label>{disposal.assetCurrentValue === null ? (item.grossValue === null ? 0 : item.grossValue) : disposal.assetCurrentValue}</label>
                   </div>
                 </div>
               </div>
@@ -628,7 +716,7 @@ class Sale extends React.Component {
                   </div>
                   <div className="col-sm-6">
                     <div>
-                      <input type="text" disabled value={disposal.assetCurrentValue}  style={{ display: self.state.readOnly ? 'none' : 'block' }} />
+                      <input type="text" disabled value={disposal.assetCurrentValue} style={{ display: self.state.readOnly ? 'none' : 'block' }} />
                     </div>
                   </div>
                   <div className="col-sm-6 label-view-text" style={{ display: self.state.readOnly ? 'block' : 'none' }}>
@@ -800,20 +888,20 @@ class Sale extends React.Component {
 
                 {showOtherDetails()}
 
-                <div className="row" style={{display: this.state.readOnly ? 'block' : 'none' }}>
-                <div className="col-sm-6">
-                  <div className="row">
+                <div className="row" style={{ display: this.state.readOnly ? 'block' : 'none' }}>
+                  <div className="col-sm-6">
+                    <div className="row">
                       <div className="col-sm-6 label-text">
                         <label>Voucher Reference</label>
                       </div>
                       <div className="col-sm-6 label-view-text">
                         <label>{disposal.profitLossVoucherReference}</label>
                       </div>
+                    </div>
                   </div>
                 </div>
               </div>
-          </div>
-        </div>
+            </div>
           </div>
           <br />
           {showAttachedFiles()}

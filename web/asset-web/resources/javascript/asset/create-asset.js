@@ -2143,7 +2143,7 @@ class CreateAsset extends React.Component {
                   <label for="purchaseValue">Purchase Value </label>
                 </div>
                 <div className="col-sm-6">
-                  <input type="number" id="purchaseValue" name="purchaseValue" value={purchaseValue}
+                  <input type="number" key="purchaseValue" id="purchaseValue" name="purchaseValue" value={purchaseValue}
                     onChange={(e) => { handleChange(e, "purchaseValue") }} step="0.01" min="0" max="9999999999.99" disabled={readonly} />
                 </div>
               </div>
@@ -2154,7 +2154,7 @@ class CreateAsset extends React.Component {
                   <label for="purchaseDate">Purchased Date</label>
                 </div>
                 <div className="col-sm-6">
-                  <input type="text" id="purchaseDate" name="purchaseDate" value={purchaseDate}
+                  <input key="purchaseDate" type="text" id="purchaseDate" name="purchaseDate" value={purchaseDate}
                     onChange={(e) => { handleChange(e, "purchaseDate") }} pattern="\d{1,2}/\d{1,2}/\d{4}" disabled={readonly} />
                 </div>
               </div>
@@ -2170,7 +2170,7 @@ class CreateAsset extends React.Component {
                   <label for="donationDate">Donation Date</label>
                 </div>
                 <div className="col-sm-6">
-                  <input type="text" id="donationDate" name="donationDate" value={donationDate}
+                  <input type="text" key="donationDate" id="donationDate" name="donationDate" value={donationDate}
                     onChange={(e) => { handleChange(e, "donationDate") }} pattern="\d{1,2}/\d{1,2}/\d{4}" disabled={readonly} />
                 </div>
               </div>
@@ -2186,7 +2186,7 @@ class CreateAsset extends React.Component {
                   <label for="constructionValue">Construction Value </label>
                 </div>
                 <div className="col-sm-6">
-                  <input type="number" id="constructionValue" name="constructionValue" value={constructionValue}
+                  <input key="constructionValue" type="number" id="constructionValue" name="constructionValue" value={constructionValue}
                     onChange={(e) => { handleChange(e, "constructionValue") }} step="0.01" min="0" max="9999999999.99" disabled={readonly} />
                 </div>
               </div>
@@ -2197,7 +2197,7 @@ class CreateAsset extends React.Component {
                   <label for="constructionDate">Construction Date</label>
                 </div>
                 <div className="col-sm-6">
-                  <input type="text" id="constructionDate" name="constructionDate" value={constructionDate}
+                  <input key="constructionDate" type="text" id="constructionDate" name="constructionDate" value={constructionDate}
                     onChange={(e) => { handleChange(e, "constructionDate") }} pattern="\d{1,2}/\d{1,2}/\d{4}" disabled={readonly} />
                 </div>
               </div>
@@ -2213,7 +2213,7 @@ class CreateAsset extends React.Component {
                   <label for="acquisitionValue">Acquisition Value </label>
                 </div>
                 <div className="col-sm-6">
-                  <input type="number" id="acquisitionValue" name="acquisitionValue" value={acquisitionValue}
+                  <input key="acquisitionValue" type="number" id="acquisitionValue" name="acquisitionValue" value={acquisitionValue}
                     onChange={(e) => { handleChange(e, "acquisitionValue") }} step="0.01" min="0" max="9999999999.99" disabled={readonly} />
                 </div>
               </div>
@@ -2224,7 +2224,7 @@ class CreateAsset extends React.Component {
                   <label for="acquisitionDate">Acquisition Date</label>
                 </div>
                 <div className="col-sm-6">
-                  <input type="text" id="acquisitionDate" name="acquisitionDate" value={acquisitionDate}
+                  <input key="acquisitionDate" type="text" id="acquisitionDate" name="acquisitionDate" value={acquisitionDate}
                     onChange={(e) => { handleChange(e, "acquisitionDate") }} pattern="\d{1,2}/\d{1,2}/\d{4}" disabled={readonly} />
                 </div>
               </div>

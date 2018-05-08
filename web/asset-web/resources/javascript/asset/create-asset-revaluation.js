@@ -145,7 +145,7 @@ class Revaluation extends React.Component {
     });
 
     if (getUrlVars()["type"] == "view") {
-      commonApiPost("asset-services", "assets/revaluation", "_search", { assetId: id, tenantId, pageSize: 500 }, function (err, res2) {
+      commonApiPost("asset-services", "assets/revaluation", "_search", { id: getUrlVars()["revaluationId"], tenantId, pageSize: 500 }, function (err, res2) {
         if (res2 && res2.Revaluations && res2.Revaluations.length) {
           let revalAsset = res2.Revaluations[0];
 
@@ -213,19 +213,18 @@ class Revaluation extends React.Component {
       let valueAfterRevaluation = 0;
       let revaluationAmount = 0;
       let typeOfChange = "";
+      let revaluationReserveAccountToDisp ="";
       if (val) {
         valueAfterRevaluation = Number(val);
         if (this.state.revaluationSet.currentCapitalizedValue) {
           revaluationAmount = Number(valueAfterRevaluation - this.state.revaluationSet.currentCapitalizedValue);
           revaluationAmount > 0 ? typeOfChange = "INCREASED" : typeOfChange = "DECREASED";
           revaluationAmount > 0 ? revaluationReserveAccountToDisp = "3126001-Fixed Assets" : revaluationReserveAccountToDisp = "2704003 - Decline in Fixed Assets";
-          revaluationAmount > 0 ? fixedAssetsWrittenOffAccount = "N/A" : fixedAssetsWrittenOffAccount = "4108099-Other Fixed Assets";
           revaluationAmount = Math.abs(revaluationAmount);
         } else if (this.state.assetSet.grossValue) {
           revaluationAmount = Number(valueAfterRevaluation - this.state.assetSet.grossValue);
           revaluationAmount > 0 ? typeOfChange = "INCREASED" : typeOfChange = "DECREASED";
           revaluationAmount > 0 ? revaluationReserveAccountToDisp = "3126001-Fixed Assets" : revaluationReserveAccountToDisp = "2704003 - Decline in Fixed Assets";
-          revaluationAmount > 0 ? fixedAssetsWrittenOffAccount = "N/A" : fixedAssetsWrittenOffAccount = "4108099-Other Fixed Assets";
           revaluationAmount = Math.abs(revaluationAmount);
         }
       }
@@ -235,8 +234,9 @@ class Revaluation extends React.Component {
           revaluationSet: {
             ..._this.state.revaluationSet,
             "revaluationAmount": revaluationAmount,
-            "typeOfChange": typeOfChange
-          }
+            "typeOfChange": typeOfChange,
+          },
+          "revaluationReserveAccountToDisp" :revaluationReserveAccountToDisp
         })
       }, 200);
 
@@ -640,16 +640,24 @@ class Revaluation extends React.Component {
                 </div>
               </div>
               <div className="row">
-                <div className="col-sm-6">
+                {revaluationSet.typeOfChange === "DECREASED"  && <div className="col-sm-6">
                   <div className="row">
                     <div className="col-sm-6 label-text">
                       <label>Fixed Assets Written Off Account Code </label>
                     </div>
-                    <div className="col-sm-6 label-view-text">
+                    <div className="col-sm-6" style={{ display: this.state.readOnly ? 'none' : 'block' }}>
+                      <div>
+                        <select value={revaluationSet.fixedAssetsWrittenOffAccount} onChange={(e) => handleChange(e, "fixedAssetsWrittenOffAccount")}>
+                          <option value="">Select Account Code</option>
+                          {renderOptions(fixedAssetAccount)}
+                        </select>
+                      </div>
+                    </div>
+                    <div className="col-sm-6 label-view-text" style={{ display: this.state.readOnly ? 'block' : 'none' }}>
                       <label>{revaluationSet.fixedAssetsWrittenOffAccount ? getNameById(fixedAssetAccount, revaluationSet.fixedAssetsWrittenOffAccount) : ""}</label>
                     </div>
                   </div>
-                </div>
+                </div>}
                 <div className="col-sm-6">
                   <div className="row">
                     <div className="col-sm-6 label-text">

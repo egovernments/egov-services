@@ -26,10 +26,13 @@ class SearchAsset extends React.Component {
     this.setAssetList = this.setAssetList.bind(this);
   }
 
-  handleAction(e, id) {
+  handleAction(e, id, revaluationId) {
     e.preventDefault();
     e.stopPropagation();
-    window.open(`app/asset/create-asset-revaluation.html?id=${id}` + (getUrlVars()["type"] ? "&type=" + getUrlVars()["type"] : ""), '_blank', 'height=760, width=800, scrollbars=yes, status=yes');
+    if(revaluationId)
+      window.open(`app/asset/create-asset-revaluation.html?id=${id}&revaluationId=${revaluationId}` + (getUrlVars()["type"] ? "&type=" + getUrlVars()["type"] : ""), '_blank', 'height=760, width=800, scrollbars=yes, status=yes');
+    else
+      window.open(`app/asset/create-asset-revaluation.html?id=${id}` + (getUrlVars()["type"] ? "&type=" + getUrlVars()["type"] : ""), '_blank', 'height=760, width=800, scrollbars=yes, status=yes');
 
     this.setState({
       action: ""
@@ -97,7 +100,13 @@ class SearchAsset extends React.Component {
                   for(var i=0; i<res2.Revaluations.length; i++) {
                     for(var j=0; j<assetList.length; j++) {
                       if(assetList[j].id == res2.Revaluations[i].assetId) {
-                        newArray.push(assetList[j]);
+
+                        res2.Revaluations[i].assetId = assetList[j].code; 
+                        res2.Revaluations[i].assetName = assetList[j].name; 
+                        res2.Revaluations[i].assetCategory = assetList[j].assetCategory.name; 
+                        res2.Revaluations[i].assetLocation = assetList[j].locationDetails.locality ? getNameById(_this.state.locality, assetList[j].locationDetails.locality) : ""; 
+
+                        newArray.push(res2.Revaluations[i]);
                         break;
                       }
                     }
@@ -255,6 +264,23 @@ class SearchAsset extends React.Component {
 
     const renderBody = function() {
       if (assetList.length>0) {
+
+
+      if(getUrlVars()["type"] == "view"){
+        return assetList.map((item, index)=>
+        {
+          console.log(item);
+          return (<tr key={index} onClick={(e) => {handleAction(e, item.assetId, item.id)}}>
+                    <td>{index+1}</td>
+                    <td>{item.assetId}</td>
+                    <td>{item.assetName}</td>
+                    <td>{item.assetCategory}</td>
+                    <td>{item.assetLocation}</td>
+                    <td>{item.valueAfterRevaluation}</td>
+              </tr>  );
+        })
+      }else{
+
         return assetList.map((item, index)=>
         {
           console.log(item);
@@ -267,6 +293,10 @@ class SearchAsset extends React.Component {
                     <td>{item.currentValue === null ? (item.grossValue === null ? 0 : item.grossValue) : item.currentValue}</td>
               </tr>  );
         })
+
+      }
+
+
       }
     }
 

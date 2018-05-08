@@ -217,11 +217,15 @@ class Revaluation extends React.Component {
         valueAfterRevaluation = Number(val);
         if (this.state.revaluationSet.currentCapitalizedValue) {
           revaluationAmount = Number(valueAfterRevaluation - this.state.revaluationSet.currentCapitalizedValue);
-          revaluationAmount > 0 ? typeOfChange = "INCREASED" : typeOfChange = "DECREASED"
+          revaluationAmount > 0 ? typeOfChange = "INCREASED" : typeOfChange = "DECREASED";
+          revaluationAmount > 0 ? revaluationReserveAccountToDisp = "3126001-Fixed Assets" : revaluationReserveAccountToDisp = "2704003 - Decline in Fixed Assets";
+          revaluationAmount > 0 ? fixedAssetsWrittenOffAccount = "N/A" : fixedAssetsWrittenOffAccount = "4108099-Other Fixed Assets";
           revaluationAmount = Math.abs(revaluationAmount);
         } else if (this.state.assetSet.grossValue) {
           revaluationAmount = Number(valueAfterRevaluation - this.state.assetSet.grossValue);
-          revaluationAmount > 0 ? typeOfChange = "INCREASED" : typeOfChange = "DECREASED"
+          revaluationAmount > 0 ? typeOfChange = "INCREASED" : typeOfChange = "DECREASED";
+          revaluationAmount > 0 ? revaluationReserveAccountToDisp = "3126001-Fixed Assets" : revaluationReserveAccountToDisp = "2704003 - Decline in Fixed Assets";
+          revaluationAmount > 0 ? fixedAssetsWrittenOffAccount = "N/A" : fixedAssetsWrittenOffAccount = "4108099-Other Fixed Assets";
           revaluationAmount = Math.abs(revaluationAmount);
         }
       }
@@ -641,15 +645,7 @@ class Revaluation extends React.Component {
                     <div className="col-sm-6 label-text">
                       <label>Fixed Assets Written Off Account Code </label>
                     </div>
-                    <div className="col-sm-6" style={{ display: this.state.readOnly ? 'none' : 'block' }}>
-                      <div>
-                        <select value={revaluationSet.fixedAssetsWrittenOffAccount} onChange={(e) => handleChange(e, "fixedAssetsWrittenOffAccount")}>
-                          <option value="">Select Account Code</option>
-                          {renderOptions(fixedAssetAccount)}
-                        </select>
-                      </div>
-                    </div>
-                    <div className="col-sm-6 label-view-text" style={{ display: this.state.readOnly ? 'block' : 'none' }}>
+                    <div className="col-sm-6 label-view-text">
                       <label>{revaluationSet.fixedAssetsWrittenOffAccount ? getNameById(fixedAssetAccount, revaluationSet.fixedAssetsWrittenOffAccount) : ""}</label>
                     </div>
                   </div>

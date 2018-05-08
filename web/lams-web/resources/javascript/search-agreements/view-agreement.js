@@ -53,29 +53,6 @@ try { revenueBlock = !localStorage.getItem("revenueBlock") || localStorage.getIt
     revenueBlock = [];
 }
 
-// try {
-//     rentInc = commonApiPost("lams-services", "getrentincrements", "", {
-//         tenantId
-//     }).responseJSON;
-//
-//     if (rentInc && rentInc.constructor == Array) {
-//         for (var i = 0; i < rentInc.length; i++) {
-//             // console.log(rentInc[i]['id']);
-//             $(`#rentIncrementMethod.percentage`).append(`<option value='${rentInc[i]['id']}'>${rentInc[i]['percentage']}</option>`);
-//         }
-//     }
-// } catch (e) {
-//     console.log(e);
-// }
-
-
-
-try { reasonForCancellation = !localStorage.getItem("reasonForCancellation") || localStorage.getItem("reasonForCancellation") == "undefined" ? (localStorage.setItem("reasonForCancellation", JSON.stringify(commonApiPost("egov-location/boundarys", "boundariesByBndryTypeNameAndHierarchyTypeName", "", { boundaryTypeName: "BLOCK", hierarchyTypeName: "REVENUE", tenantId }).responseJSON["Boundary"] || [])), JSON.parse(localStorage.getItem("reasonForCancellation"))) : JSON.parse(localStorage.getItem("reasonForCancellation")); } catch (e) {
-    console.log(e);
-    reasonForCancellation = [];
-}
-
-
 
 var _type;
 $(document).ready(function() {
@@ -510,6 +487,8 @@ $(document).ready(function() {
             workflowId: agreementDetail.stateId
         }).responseJSON["tasks"];
 
+
+
         var process = commonApiPost("egov-common-workflows", "process", "_search", {
             tenantId: tenantId,
             id: agreementDetail.stateId
@@ -517,27 +496,18 @@ $(document).ready(function() {
 
         if (workflow && workflow.length) {
             workflow = workflow.sort();
-            for (var i = 0; i < workflow.length; i++) {
+            workflow = workflow.reverse();
+          for (var i = 0; i < workflow.length; i++) {
                 if(workflow[i].status == "Assistant Approved")
                     rejectedSenderName = workflow[i].senderName;
                 $("#historyTable tbody").append(`<tr>
-                    <td data-label="createdDate">${workflow[i].createdDate}</td>
+                    <td data-label="createdDate">${workflow[i].lastupdatedSince}</td>
                     <td data-label="updatedBy">${workflow[i].senderName}</td>
                     <td data-label="status">${workflow[i].status}</td>
                     <td data-label="comments">${workflow[i].comments}</td>
                     </tr>
                 `);
             }
-        }
-
-        if(process && process.status && process.status.toUpperCase() == "REJECTED") {
-          $('.details-label').remove();
-          $('.details-input').show();
-          if (rentInc && rentInc.constructor == Array)
-              for(var i=0; i<rentInc.length; i++)
-                $(`#rentIncrementMethod\\.percentage`).append(`<option value='${rentInc[i]['id']}'>${rentInc[i]['percentage']}</option>`);
-        } else {
-          $('.details-input').remove();
         }
 
         if (process && process.attributes && process.attributes.validActions && process.attributes.validActions.values && process.attributes.validActions.values.length) {
@@ -558,6 +528,7 @@ $(document).ready(function() {
         } else {
             $("#workFlowDetails").remove();
         }
+         $("#footer-btn-grp").append($('<button type="button" class="btn btn-close" id="close">Close</button>'));
 
         if (process) {
             getDesignations(process.status, function(designations) {
@@ -608,7 +579,7 @@ $(document).ready(function() {
     } else if (_type && _type.toLowerCase() == "shopping complex") {
 
         // remove all other Asset Details block from DOM except shop asset related fields
-        $(".landAssetDetailsBlock, .marketAssetDetailsBlock, .kalyanamandapamAssetDetailsBlock, .parkingSpaceAssetDetailsBlock, .slaughterHousesAssetDetailsBlock, .usfructsAssetDetailsBlock, .communityAssetDetailsBlock, .fishTankAssetDetailsBlock, .parkAssetDetailsBlock").remove();
+        $(".landAssetDetailsBlock,.shopAssetDetailsBlock, .marketAssetDetailsBlock, .kalyanamandapamAssetDetailsBlock, .parkingSpaceAssetDetailsBlock, .slaughterHousesAssetDetailsBlock, .usfructsAssetDetailsBlock, .communityAssetDetailsBlock, .fishTankAssetDetailsBlock, .parkAssetDetailsBlock").remove();
         //remove agreement template two and three from screen
         $(".agreementDetailsBlockTemplateOne,.agreementDetailsBlockTemplateThree").remove();
         setRentPrefix("Shopping Complex");

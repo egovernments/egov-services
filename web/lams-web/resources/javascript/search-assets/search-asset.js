@@ -197,6 +197,7 @@ class AssetSearch extends React.Component {
               }} defaultValue="" value="">
                   <option value="">Select Action</option>
                   <option value="dataEntry"> Data Entry </option>
+                  <option value="create"> Create </option>
               </select>
           </div>
         )

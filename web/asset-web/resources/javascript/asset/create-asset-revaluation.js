@@ -213,18 +213,15 @@ class Revaluation extends React.Component {
       let valueAfterRevaluation = 0;
       let revaluationAmount = 0;
       let typeOfChange = "";
-      let revaluationReserveAccountToDisp ="";
       if (val) {
         valueAfterRevaluation = Number(val);
         if (this.state.revaluationSet.currentCapitalizedValue) {
           revaluationAmount = Number(valueAfterRevaluation - this.state.revaluationSet.currentCapitalizedValue);
           revaluationAmount > 0 ? typeOfChange = "INCREASED" : typeOfChange = "DECREASED";
-          revaluationAmount > 0 ? revaluationReserveAccountToDisp = "3126001-Fixed Assets" : revaluationReserveAccountToDisp = "2704003 - Decline in Fixed Assets";
           revaluationAmount = Math.abs(revaluationAmount);
         } else if (this.state.assetSet.grossValue) {
           revaluationAmount = Number(valueAfterRevaluation - this.state.assetSet.grossValue);
           revaluationAmount > 0 ? typeOfChange = "INCREASED" : typeOfChange = "DECREASED";
-          revaluationAmount > 0 ? revaluationReserveAccountToDisp = "3126001-Fixed Assets" : revaluationReserveAccountToDisp = "2704003 - Decline in Fixed Assets";
           revaluationAmount = Math.abs(revaluationAmount);
         }
       }
@@ -235,8 +232,7 @@ class Revaluation extends React.Component {
             ..._this.state.revaluationSet,
             "revaluationAmount": revaluationAmount,
             "typeOfChange": typeOfChange,
-          },
-          "revaluationReserveAccountToDisp" :revaluationReserveAccountToDisp
+          }
         })
       }, 200);
 
@@ -628,7 +624,7 @@ class Revaluation extends React.Component {
                     </div>
                   </div>
                 </div>
-                <div className="col-sm-6">
+                {revaluationSet.typeOfChange === "INCREASED"  && <div className="col-sm-6">
                   <div className="row">
                     <div className="col-sm-6 label-text">
                       <label>Revaluation Reserve Account Code </label>
@@ -637,7 +633,7 @@ class Revaluation extends React.Component {
                       <span>{revaluationReserveAccountToDisp }</span>
                     </div>
                   </div>
-                </div>
+                </div>}
               </div>
               <div className="row">
                 {revaluationSet.typeOfChange === "DECREASED"  && <div className="col-sm-6">

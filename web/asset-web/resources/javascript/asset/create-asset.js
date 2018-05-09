@@ -1693,7 +1693,7 @@ class CreateAsset extends React.Component {
     const renderAssetFileBody = function (fles) {
       return fles.map(function (file, ind2) {
         return (
-          <tr key={ind2} style={{ "background-color": (removedFiles[v.key] && removedFiles[v.key][file] ? "#d3d3d3" : "#ffffff"), "text-decoration": (removedFiles[v.key] && removedFiles[v.key][file] ? "line-through" : "") }}>
+          <tr key={ind2}>
             <td>{ind2 + 1}</td>
             <td>Asset Documents</td>
             <td>
@@ -2673,8 +2673,8 @@ class CreateAsset extends React.Component {
                 </div>
               </div>
               {/* {showYearWiseDep()} */}
-              {showAttachedFiles()}
             </div>
+            {showAssetAttachedFiles()}
           </div>
           <div className="form-section" id="allotteeDetailsBlock">
             <h3 className="categoryType">Location Details </h3>

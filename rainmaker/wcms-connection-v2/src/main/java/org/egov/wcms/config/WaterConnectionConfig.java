@@ -59,6 +59,14 @@ public class WaterConnectionConfig {
     private String egovSearcherEndpoint;
     
     
+    //USER
+    @Value("${egov.user.host}")
+    private String userSvcHost;
+     
+    @Value("${egov.user.search.endpoint}")
+    private String userSearchEndpoint;
+    
+    
     //PERSISTER
     @Value("${persister.save.waterconnection.topic}")
     private String saveWaterConnectionTopic;

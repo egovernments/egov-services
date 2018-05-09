@@ -1,9 +1,8 @@
 package org.egov.wcms.util;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Random;
+import java.util.HashMap;
 import java.util.UUID;
 
 import org.egov.common.contract.request.RequestInfo;
@@ -39,6 +38,18 @@ public class WaterConnectionServiceUtils {
 		uri.append(endPoint);
 		
 		return SearcherRequest.builder().requestInfo(requestInfo).searchCriteria(request).build();
+		
+	}
+	
+	public HashMap<String, Object> getUserSearchRequest(StringBuilder uri, RequestInfo requestInfo, String tenantId, String phone) {
+		uri.append(mainConfiguration.getUserSvcHost()).append(mainConfiguration.getUserSearchEndpoint());
+		
+		HashMap<String, Object> request = new HashMap<>();
+		request.put("RequestInfo", requestInfo);
+		request.put("tenantId", tenantId);
+		request.put("phone", phone);
+		
+		return request;
 		
 	}
 	

@@ -29,11 +29,11 @@ public class WaterConnectionSearchCriteria {
 	@JsonProperty("connectionNumber")
 	private List<String> connectionNumber;
 	
-	@JsonProperty("ownerName")
-	private List<String> ownerName;
-	
+	@JsonProperty("ownerIds")
+	private List<Integer> ownerIds;
+		
 	@JsonProperty("phone")
-	private List<String> phone;
+	private String phone;
 
 
 }

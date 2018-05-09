@@ -1,7 +1,11 @@
 package org.egov.wcms.service;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.UUID;
 
+import org.apache.commons.lang3.StringUtils;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.wcms.config.WaterConnectionConfig;
 import org.egov.wcms.producer.Producer;
@@ -17,8 +21,10 @@ import org.egov.wcms.web.models.WaterConnectionRes;
 import org.egov.wcms.web.models.WaterConnectionSearchCriteria;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.jayway.jsonpath.JsonPath;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -45,22 +51,26 @@ public class WaterConnectionService {
 	/**
 	 * Searches Water Connections based on the criteria in WaterConnectionSearchCriteria.
 	 * 
-	 * @param WaterConnectionSearchCriteria
+	 * @param waterConnectionSearchCriteria
 	 * @param requestInfo
 	 * @return WaterConnectionRes
 	 */
-	public WaterConnectionRes getWaterConnections(WaterConnectionSearchCriteria WaterConnectionSearchCriteria, RequestInfo requestInfo) {
+	public WaterConnectionRes getWaterConnections(WaterConnectionSearchCriteria waterConnectionSearchCriteria, RequestInfo requestInfo) {
 		StringBuilder uri = new StringBuilder();
 		Object response = null;
 		WaterConnectionRes waterConnectionRes = null;
 		ObjectMapper mapper = wCServiceUtils.getObjectMapper();
-		SearcherRequest searcherRequest = wCServiceUtils.getSearcherRequest(uri, WaterConnectionSearchCriteria, requestInfo, WaterConnectionConstants.SEARCHER_WC_SEARCH_DEF_NAME);
+		enrichSearchRequest(waterConnectionSearchCriteria, requestInfo);
+		SearcherRequest searcherRequest = wCServiceUtils.getSearcherRequest(uri, waterConnectionSearchCriteria, requestInfo, 
+				(!CollectionUtils.isEmpty(waterConnectionSearchCriteria.getOwnerIds()) ? WaterConnectionConstants.SEARCHER_WC_ON_OWNER_SEARCH_DEF_NAME : WaterConnectionConstants.SEARCHER_WC_SEARCH_DEF_NAME));
 		try {
 			response = wcRepository.fetchResult(uri, searcherRequest);
 			if(null == response) {
 				return wCServiceUtils.getDefaultWaterConnectionResponse(requestInfo);
 			}
 			waterConnectionRes = mapper.convertValue(response, WaterConnectionRes.class);
+			if(null == waterConnectionRes.getActionHistory())
+				return wCServiceUtils.getDefaultWaterConnectionResponse(requestInfo);
 		}catch(Exception e) {
 			log.error("Exception: " + e);
 			return wCServiceUtils.getDefaultWaterConnectionResponse(requestInfo);
@@ -121,5 +131,46 @@ public class WaterConnectionService {
 	public void enrichUpdateRequest(WaterConnectionReq connections) {
 		
 	}
+	
+	/**
+	 * Request enrichment for search flow based on the following use-cases:
+	 * 1. Fetch the user id from user-svc if the search criteria contains mobile number
+	 * 
+	 * @param waterConnectionSearchCriteria
+	 * @param requestInfo
+	 */
+	public void enrichSearchRequest(WaterConnectionSearchCriteria waterConnectionSearchCriteria, RequestInfo requestInfo) {
+		StringBuilder uri = new StringBuilder();
+		ObjectMapper mapper = wCServiceUtils.getObjectMapper();
+
+		// (1)
+		if(!StringUtils.isEmpty(waterConnectionSearchCriteria.getPhone())){
+			HashMap<String, Object> userSearchRequest = wCServiceUtils.getUserSearchRequest(uri, requestInfo, 
+					waterConnectionSearchCriteria.getTenantId(), waterConnectionSearchCriteria.getPhone());
+			Integer userId = null;
+			try {
+				Object response = wcRepository.fetchResult(uri, userSearchRequest);
+				if(null != response) {
+					userId = JsonPath.read(mapper.writeValueAsString(response), "$.user[0].id");
+				}
+			}catch(Exception e) {
+				log.error("Exception while fetching userId from user svc: "+e);
+			}
+			if(null != userId) {
+				if(!CollectionUtils.isEmpty(waterConnectionSearchCriteria.getOwnerIds())) {
+					waterConnectionSearchCriteria.getOwnerIds().add(userId);
+				}else {
+					List<Integer> ownerIds = new ArrayList<>();
+					ownerIds.add(userId);
+					waterConnectionSearchCriteria.setOwnerIds(ownerIds);
+				}
+			}
+		//
+			
+			
+			
+		}
+	}
 
 }
+ 

@@ -236,7 +236,7 @@ class UpdateCancellation extends React.Component {
         var _this = this;
         var date = moment(new Date()).format("DD/MM/YYYY");
         $.ajax({
-            url: baseUrl + "/hr-employee/employees/_search?tenantId=" + tenantId + "&departmentId=" + departmentId + "&designationId=" + designationId + "&active=true&asOnDate="+date,
+            url: baseUrl + "/hr-employee/employees/_search?tenantId=" + tenantId + "&departmentId=" + departmentId + "&designationId=" + designationId + "&active=true&asOnDate=" + date,
             type: 'POST',
             dataType: 'json',
             data: JSON.stringify({ RequestInfo: requestInfo }),
@@ -296,7 +296,7 @@ class UpdateCancellation extends React.Component {
             {
                 stateId: stateId,
                 status: currStatus,
-                action:"View",
+                action: "View",
                 tenantId
             }).responseJSON["Agreements"][0] || {};
 
@@ -367,80 +367,113 @@ class UpdateCancellation extends React.Component {
     }
 
 
-    printNotice(noticeData) {
-        var commencementDate = noticeData.commencementDate;
-        var expiryDate = noticeData.expiryDate;
-        // var rentPayableDate = noticeData.rentPayableDate;
+    printNotice(agreement) {
+        
+        var LocalityData = commonApiPost("egov-location/boundarys", "boundariesByBndryTypeNameAndHierarchyTypeName", "", { boundaryTypeName: "LOCALITY", hierarchyTypeName: "LOCATION", tenantId });
+        var locality = getNameById(LocalityData["responseJSON"]["Boundary"], agreement.asset.locationDetails.locality);
+        var cityGrade = !localStorage.getItem("city_grade") || localStorage.getItem("city_grade") == "undefined" ? (localStorage.setItem("city_grade", JSON.stringify(commonApiPost("tenant", "v1/tenant", "_search", { code: tenantId }).responseJSON["tenant"][0]["city"]["ulbGrade"] || {})), JSON.parse(localStorage.getItem("city_grade"))) : JSON.parse(localStorage.getItem("city_grade"));
+        var ulbType = "Nagara Panchayat/Municipality";
+        var municipalact = "AP Municipal Act 1965";
+        if (cityGrade.toLowerCase() === 'corp') {
+            ulbType = "Municipal Corporation";
+            var municipalact = "AP Municipal Corporations Act 1994";
+        }
+
+        var today = new Date();
+        var dd = today.getDate();
+        var mm = today.getMonth() + 1;
+        var yyyy = today.getFullYear();
+        if (dd < 10) {
+            dd = '0' + dd;
+        }
+        if (mm < 10) {
+            mm = '0' + mm;
+        }
+        var today = dd + '/' + mm + '/' + yyyy;
+
+        var columns = [
+            { title: "Reason for cancellation", dataKey: "reason" },
+            { title: "Tick as applicable", dataKey: "tick" },
+        ];
+        var rows = [
+            { "reason": "Nonpayment of rentals by due date", "tick": "" },
+            { "reason": "Subletting premises", "tick": "" },
+            { "reason": "Lease term expired and not renewed", "tick": "" },
+            { "reason": "Altering premises without permission", "tick": "" },
+            { "reason": "License for business is not in the name of leaseholder", "tick": "" },
+            { "reason": "Using the premises for unlawful activities", "tick": "" },
+            { "reason": "Others ", "tick": "" },
+
+        ];
+
+        var autoTableOptions = {
+            tableLineColor: [0, 0, 0],
+            tableLineWidth: 0.2,
+            styles: {
+                lineColor: [0, 0, 0],
+                lineWidth: 0.2
+            },
+            headerStyles: {
+                textColor: [0, 0, 0],
+                fillColor: [255, 255, 255]
+            },
+            bodyStyles: {
+                fillColor: [255, 255, 255],
+                textColor: [0, 0, 0]
+            },
+            alternateRowStyles: {
+                fillColor: [255, 255, 255]
+            }, startY: 150
+        };
+
         var doc = new jsPDF();
 
-        doc.setFontSize(14);
         doc.setFontType("bold");
-        doc.text(105, 20, tenantId.split(".")[1], 'center');
-        doc.text(105, 27, tenantId.split(".")[1] + ' District', 'center');
-        doc.text(105, 34, 'Asset Category Lease/Agreement Notice', 'center');
-        doc.setLineWidth(0.5);
-        doc.line(15, 38, 195, 38);
-        doc.text(15, 47, 'Lease details: ');
-        doc.text(110, 47, 'Agreement No: ' + noticeData.agreementNumber);
-        doc.text(15, 57, 'Lease Name: ' + noticeData.allottee.name);
-        doc.text(110, 57, 'Asset No: ' + noticeData.asset.code);
-        doc.text(15, 67, (noticeData.allottee.mobileNumber ? noticeData.allottee.mobileNumber + ", " : "") + (noticeData.doorNo ? noticeData.doorNo + ", " : "") + (noticeData.allottee.permanentAddress ? noticeData.allottee.permanentAddress.replace(/(\r\n|\n|\r)/gm, "") + ", " : "") + tenantId.split(".")[1] + ".");
+        doc.setFontSize(13);
+        doc.text(105, 20, "PROCEEDINGS OF THE COMMISSIONER, " + tenantId.split(".")[1].toUpperCase(), 'center');
+        doc.text(105, 27, ulbType.toUpperCase(), 'center');
+        doc.text(105, 34, "Present: " + agreement.commissionerName, 'center');
 
         doc.setFontType("normal");
-        doc.text(15, 77, doc.splitTextToSize('1.    The period of lease shall be '));
-        doc.setFontType("bold");
-        doc.text(85, 77, doc.splitTextToSize(' ' + noticeData.timePeriod * 12 + ' '));
-        doc.setFontType("normal");
-        doc.text(93, 77, doc.splitTextToSize('months commencing from'));
-        doc.setFontType("bold");
-        doc.text(15, 83, doc.splitTextToSize(' ' + commencementDate + ' '));
-        doc.setFontType("normal");
-        doc.text(42, 83, doc.splitTextToSize('(dd/mm/yyyy) to'));
-        doc.setFontType("bold");
-        doc.text(77, 83, doc.splitTextToSize(' ' + expiryDate + ' '));
-        doc.setFontType("normal");
-        doc.text(104, 83, doc.splitTextToSize('(dd/mm/yyyy).', (210 - 15 - 15)));
-        doc.text(15, 91, doc.splitTextToSize('2.    The property leased is shop No'));
-        doc.setFontType("bold");
-        doc.text(93, 91, doc.splitTextToSize(' ' + noticeData.asset.code + ' '));
-        doc.setFontType("normal");
-        doc.text(112, 91, doc.splitTextToSize('and shall be leased for a sum of '));
-        doc.setFontType("bold");
-        doc.text(15, 97, doc.splitTextToSize('Rs.' + noticeData.rent + '/- '));
-        doc.setFontType("normal");
-        doc.text(111, 97, doc.splitTextToSize('per month exclusive of the payment'));
-        doc.text(15, 103, doc.splitTextToSize('of electricity and other charges.', (210 - 15 - 15)));
-        doc.text(15, 112, doc.splitTextToSize('3.   The lessee has paid a sum of '));
-        doc.setFontType("bold");
-        doc.text(90, 112, doc.splitTextToSize('Rs.' + noticeData.securityDeposit + '/- '));
-        doc.setFontType("normal");
-        doc.text(15, 118, doc.splitTextToSize('as security deposit for the tenancy and the said sum is repayable or adjusted only at the end of the tenancy on the lease delivery vacant possession of the shop let out, subject to deductions, if any, lawfully and legally payable by the lessee under the terms of this lease deed and in law.', (210 - 15 - 15)));
-        doc.text(15, 143, doc.splitTextToSize('4.   The rent for every month shall be payable on or before'));
-        doc.setFontType("bold");
-        doc.text(143, 143, doc.splitTextToSize(''));
-        doc.setFontType("normal");
-        doc.text(169, 143, doc.splitTextToSize('of the'));
-        doc.text(15, 149, doc.splitTextToSize('succeeding month.', (210 - 15 - 15)));
-        doc.text(15, 158, doc.splitTextToSize('5.   The lessee shall pay electricity charges to the Electricity Board every month without fail.', (210 - 15 - 15)));
-        doc.text(15, 172, doc.splitTextToSize('6.   The lessor or his agent shall have a right to inspect the shop at any hour during the day time.', (210 - 15 - 15)));
-        doc.text(15, 187, doc.splitTextToSize('7.   The Lessee shall use the shop let out duly for the business of General Merchandise and not use the same for any other purpose.  (The lessee shall not enter into partnership) and conduct the business in the premises in the name of the firm.  The lessee can only use the premises for his own business.', (210 - 15 - 15)));
-        doc.text(15, 214, doc.splitTextToSize('8.    The lessee shall not have any right to assign, sub-let, re-let, under-let or transfer the tenancy or any portion thereof.', (210 - 15 - 15)));
-        doc.text(15, 229, doc.splitTextToSize('9.    The lessee shall not carry out any addition or alteration to the shop without the previous consent and approval in writing of the lessor.', (210 - 15 - 15)));
-        doc.text(15, 244, doc.splitTextToSize('10.   The lessee on the expiry of the lease period of'));
-        doc.setFontType("bold");
-        doc.text(128, 244, doc.splitTextToSize(' ' + expiryDate + ' '));
-        doc.setFontType("normal");
-        doc.text(156, 244, doc.splitTextToSize('months'));
-        doc.text(15, 250, doc.splitTextToSize('shall hand over vacant possession of the ceased shop peacefully or the lease agreement can be renewed for a further period on mutually agreed terms.', (210 - 15 - 15)));
-        doc.text(15, 266, noticeData.commissionerName ? noticeData.commissionerName : "");
-        doc.text(160, 266, 'LESSEE');
-        doc.text(15, 274, 'Signature:   ');
-        doc.text(160, 274, 'Signature:  ');
-        doc.setFontType("bold");
-        doc.text(15, 282, tenantId.split(".")[1]);
-        doc.save('Notice-' + noticeData.agreementNumber + '.pdf');
+        doc.setFontSize(11);
+        doc.text(15, 50, 'Roc.No. ' + agreement.agreementNumber);
+        doc.text(140, 50, 'Dt. ' + today);
+
+        var paragraph = "Sub: Leases – Revenue Section – Shop No " + agreement.referenceNumber + " in " + agreement.asset.name + " Complex, " + locality + " - Lease cancellation – Orders  - Issued";
+        var lines = doc.splitTextToSize(paragraph, 180);
+        doc.text(15, 60, lines);
+
+        doc.text(15, 75, "Ref: 1. Lease agreement No " + agreement.agreementNumber + " dt " + agreement.agreementDate);
+        doc.text(24, 80, "2. Roc No …………………… dt…………………… of this office");
+        doc.text(24, 85, "3. Resolution No …………… dt …………… of Municipal Council/Standing Committee");
+        doc.text(105, 100, "><><><", 'center');
+
+        doc.text(15, 110, "Orders:");
+        doc.setLineWidth(0.5);
+        doc.line(15, 111, 30, 111);
+
+        var paragraph1 = "In the reference 1st cited, an agreement was concluded with you for leasing Shop No " + agreement.referenceNumber + " in the " + agreement.asset.name + " Shopping Complex and the lease is subject to the terms and conditions prescribed therein. Due to non observance of the same, your lease for the said shop is being cancelled. (Reasons as cited below).";
+        var lines = doc.splitTextToSize(paragraph1, 180);
+        doc.text(15, 120, lines);
+
+        doc.autoTable(columns, rows, autoTableOptions);
+
+        var paragraph2 = "In pursuance of the same you are hereby instructed to clear all the dues and vacate the premises with immediate effect and handover the premises to the Municipal officials as it is, failing which civil and criminal action will be initiated under relevant provisions of " + municipalact + " and rules issued there upon. No correspondence will be entertained in this ";
+        var lines = doc.splitTextToSize(paragraph2, 180);
+        doc.text(15, 220, lines);
+
+        doc.text(120, 250, "Commissioner");
+        doc.text(120, 255, tenantId.split(".")[1].charAt(0).toUpperCase() + tenantId.split(".")[1].slice(1) + ",");
+        doc.text(120, 260, ulbType);
+
+        doc.text(15, 265, "To");
+        doc.text(15, 270, "The Leaseholder");
+        doc.text(15, 275, "Copy to the concerned officials for necessary action");
+
+        doc.save('CancellationNotice-' + agreement.agreementNumber + '.pdf');
         var blob = doc.output('blob');
-        this.createFileStore(noticeData, blob).then(this.createNotice, this.errorHandler);
+
+        this.createFileStore(agreement, blob).then(this.createNotice, this.errorHandler);
     }
 
     createFileStore(noticeData, blob) {
@@ -484,8 +517,8 @@ class UpdateCancellation extends React.Component {
                     tenantId,
                     agreementNumber: obj.noticeData.agreementNumber,
                     fileStore: obj.fileStoreId,
-                    acknowledgementNumber:obj.noticeData.acknowledgementNumber,
-                    status : "INACTIVE"
+                    acknowledgementNumber: obj.noticeData.acknowledgementNumber,
+                    status: "INACTIVE"
                 }
             }),
             headers: {
@@ -523,8 +556,8 @@ class UpdateCancellation extends React.Component {
             $("#reasonForCancellation").prop("disabled", false)
             $("#documents").prop("disabled", false)
             $("#remarks").prop("disabled", false)
-        }else{
-          $("#documentSection").remove();
+        } else {
+            $("#documentSection").remove();
         }
         if (this.state.wfStatus === "Commissioner Approved") {
             $("#approvalDetailsSection").remove();
@@ -575,7 +608,7 @@ class UpdateCancellation extends React.Component {
     makeAjaxUpload(file, cb) {
         if (file.constructor == File) {
             let formData = new FormData();
-            formData.append("jurisdictionId",tenantId);
+            formData.append("jurisdictionId", tenantId);
             formData.append("module", "LAMS");
             formData.append("file", file);
             $.ajax({
@@ -625,11 +658,11 @@ class UpdateCancellation extends React.Component {
             var yyyy = asOnDate.getFullYear();
 
             if (dd < 10) {
-              dd = '0' + dd
+                dd = '0' + dd
             }
 
             if (mm < 10) {
-              mm = '0' + mm
+                mm = '0' + mm
             }
 
             asOnDate = dd + '/' + mm + '/' + yyyy;
@@ -701,6 +734,10 @@ class UpdateCancellation extends React.Component {
                                         agreement.acknowledgementNumber = res.Agreements[0].acknowledgementNumber;
 
                                         if (ID === "Print Notice") {
+                                            _this.state.workflow.forEach(function(item){
+                                                if(item.status === "")
+                                                agreement.commissionerName = item.senderName
+                                              });
                                             _this.printNotice(agreement);
                                         } else {
                                             $.ajax({
@@ -713,7 +750,7 @@ class UpdateCancellation extends React.Component {
                                                     'auth-token': authToken
                                                 },
                                                 success: function (res1) {
-                                                    console.log("res1",res1);
+                                                    console.log("res1", res1);
                                                     if (window.opener)
                                                         window.opener.location.reload();
                                                     if (res1 && res1.Employee && res1.Employee[0].name)
@@ -770,6 +807,10 @@ class UpdateCancellation extends React.Component {
                         agreement.acknowledgementNumber = res.Agreements[0].acknowledgementNumber;
 
                         if (ID === "Print Notice") {
+                            _this.state.workflow.forEach(function(item){
+                                if(item.status.trim() === "Commissioner Approved")
+                                agreement.commissionerName = item.senderName
+                              });
                             _this.printNotice(agreement);
                         } else {
                             $.ajax({
@@ -782,7 +823,7 @@ class UpdateCancellation extends React.Component {
                                     'auth-token': authToken
                                 },
                                 success: function (res1) {
-                                    console.log("res1",res1);
+                                    console.log("res1", res1);
                                     if (window.opener)
                                         window.opener.location.reload();
                                     if (res1 && res1.Employee && res1.Employee[0].name)
@@ -1243,74 +1284,73 @@ class UpdateCancellation extends React.Component {
             );
         }
         const renderDocuments = function () {
-          return (
-            <div className="form-section" id="documentsBlock">
-            <h3 className="categoryType">Attached Documents </h3>
-                 <div className="form-section-inner">
+            return (
+                <div className="form-section" id="documentsBlock">
+                    <h3 className="categoryType">Attached Documents </h3>
+                    <div className="form-section-inner">
 
-                <table id="documentsTable" className="table table-bordered">
-                <thead>
-                <tr>
-                    <th>S.No</th>
-                    <th>Document Name</th>
-                    <th>Action</th>
-                </tr>
-                </thead>
-                <tbody id="documentsTableBody">
-                    {
-                       renderDocumentsList()
-                    }
-                </tbody>
-            </table>
-            </div>
-            </div>
-          )
+                        <table id="documentsTable" className="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>S.No</th>
+                                    <th>Document Name</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="documentsTableBody">
+                                {
+                                    renderDocumentsList()
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            )
         }
-        const renderDocumentsList=function()
-        {
-          if (documents && documents.length>0) {
-             var CONST_API_GET_FILE = "/filestore/v1/files/id?tenantId=" + tenantId + "&fileStoreId=";
-            return documents.map((item,index)=>
-            {                   return (<tr key={index}>
-                                      <td>{index+1}.</td>
-                                      <td>{item.fileName || 'N/A'}</td>
-                                      <td>  <a href={window.location.origin + CONST_API_GET_FILE + item.fileStore} target="_self">
-                                          Download
+        const renderDocumentsList = function () {
+            if (documents && documents.length > 0) {
+                var CONST_API_GET_FILE = "/filestore/v1/files/id?tenantId=" + tenantId + "&fileStoreId=";
+                return documents.map((item, index) => {
+                    return (<tr key={index}>
+                        <td>{index + 1}.</td>
+                        <td>{item.fileName || 'N/A'}</td>
+                        <td>  <a href={window.location.origin + CONST_API_GET_FILE + item.fileStore} target="_self">
+                            Download
                                            </a>
-                                      </td>
-                                   </tr>
-                  );
+                        </td>
+                    </tr>
+                    );
 
-            })
-          }else {
-            return (<tr><td></td>
-               <td>No Documents</td>
-               <td></td>
-              </tr>)
-          }
+                })
+            } else {
+                return (<tr><td></td>
+                    <td>No Documents</td>
+                    <td></td>
+                </tr>)
+            }
         }
 
         const renderWorkflowHistory = function () {
             return (
                 <div className="form-section" id="historyDetails">
-                <h3 className="categoryType">Workflow History </h3>
+                    <h3 className="categoryType">Workflow History </h3>
                     <div className="form-section-inner">
-                    <table id="historyTable" className="table table-bordered">
-                    <thead>
-                    <tr>
-                        <th>Date</th>
-                        <th>Updated By</th>
-                        <th>Current Owner</th>
-                        <th>Status</th>
-                        <th>Comments</th>
-                    </tr>
-                    </thead>
-                    <tbody id="historyTableBody">
-                        {
-                           renderTr()
-                        }
-                    </tbody>
-                </table>
+                        <table id="historyTable" className="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Updated By</th>
+                                    <th>Current Owner</th>
+                                    <th>Status</th>
+                                    <th>Comments</th>
+                                </tr>
+                            </thead>
+                            <tbody id="historyTableBody">
+                                {
+                                    renderTr()
+                                }
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             );

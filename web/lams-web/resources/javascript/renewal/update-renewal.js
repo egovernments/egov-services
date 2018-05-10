@@ -358,80 +358,227 @@ class UpdateRenewal extends React.Component {
     }
 
 
-    printNotice(noticeData) {
-        var commencementDate = noticeData.commencementDate;
-        var expiryDate = noticeData.expiryDate;
-        // var rentPayableDate = noticeData.rentPayableDate;
+    printNotice(agreement) {
+        var LocalityData = commonApiPost("egov-location/boundarys", "boundariesByBndryTypeNameAndHierarchyTypeName", "", { boundaryTypeName: "LOCALITY", hierarchyTypeName: "LOCATION", tenantId });
+        var locality = getNameById(LocalityData["responseJSON"]["Boundary"], agreement.asset.locationDetails.locality);
+        var cityGrade = !localStorage.getItem("city_grade") || localStorage.getItem("city_grade") == "undefined" ? (localStorage.setItem("city_grade", JSON.stringify(commonApiPost("tenant", "v1/tenant", "_search", { code: tenantId }).responseJSON["tenant"][0]["city"]["ulbGrade"] || {})), JSON.parse(localStorage.getItem("city_grade"))) : JSON.parse(localStorage.getItem("city_grade"));
+        var ulbType = "Nagara Panchayat/Municipality";
+        if (cityGrade.toLowerCase() === 'corp') {
+            ulbType = "Municipal Corporation";
+        }
+
+        var renewalToDate = agreement.renewalDate.split("/")[0]+"/"+ agreement.renewalDate.split("/")[1]+"/" + (Number(agreement.renewalDate.split("/")[2]) + Number(agreement.timePeriod));
+
+        var today = new Date();
+        var dd = today.getDate();
+        var mm = today.getMonth() + 1;
+        var yyyy = today.getFullYear();
+        if (dd < 10) {
+            dd = '0' + dd;
+        }
+        if (mm < 10) {
+            mm = '0' + mm;
+        }
+        var today = dd + '/' + mm + '/' + yyyy;
+
+        var columns = [
+            { title: "S No", dataKey: "sNo" },
+            { title: "Shop No", dataKey: "shopNo" },
+            { title: "Name of the Leaseholder", dataKey: "leaseHolderName" },
+            { title: "Current Rent", dataKey: "currentRent" },
+            { title: "Shop Area", dataKey: "shopArea" },
+            { title: "Land Area", dataKey: "landArea" },
+            { title: "Rent per Sft", dataKey: "rentSft" },
+            { title: "\"A\" Rent as per Regn Value  (1)", dataKey: "aRent" },
+            { title: "\"B\" Rent of shops in the vicinity  (2)", dataKey: "bRent" },
+            { title: "\"C\" 33% increase in current rent  (3)", dataKey: "cRent" },
+            { title: "GST", dataKey: "gst" },
+            { title: "Total Rent", dataKey: "totalRent" },
+            { title: "Renewal Period", dataKey: "renewalPeriod" }
+        ];
+
+        var rows = [
+            {
+                "sNo": "1",
+                "shopNo": agreement.referenceNumber,
+                "leaseHolderName": agreement.allottee.name,
+                "currentRent": agreement.rent,
+                "shopArea": "",
+                "landArea": "",
+                "rentSft": "",
+                "aRent": "",
+                "bRent": "",
+                "cRent": "",
+                "gst": "",
+                "totalRent": "",
+                "renewalPeriod": agreement.timePeriod
+            }
+        ];
+
+        var autoTableOptions = {
+            tableLineColor: [0, 0, 0],
+            tableLineWidth: 0.2,
+            styles: {
+                lineColor: [0, 0, 0],
+                lineWidth: 0.2,
+            },
+            headerStyles: {
+                textColor: [0, 0, 0],
+                fillColor: [255, 255, 255],
+                overflow: 'linebreak',
+                columnWidth: 'wrap'
+            },
+            bodyStyles: {
+                fillColor: [255, 255, 255],
+                textColor: [0, 0, 0],
+                overflow: 'linebreak',
+                columnWidth: 'wrap'
+            },
+            alternateRowStyles: {
+                fillColor: [255, 255, 255]
+            }, startY: 135
+        };
+
+        var columns1 = [
+            { title: "Particulars", dataKey: "particulars" },
+            { title: "Amount", dataKey: "amount" },
+            { title: "Cheque/DD/Challan No and Date", dataKey: "leaseHolderName" },
+
+        ];
+
+        var rows1 = [
+            { "particulars": "Goodwill", "amount": agreement.goodWillAmount, "leaseHolderName": "" },
+            { "particulars": "3 Months Rental Deposits", "amount": agreement.securityDeposit, "leaseHolderName": "" },
+            { "particulars": "Total", "amount": "", "leaseHolderName": "" }
+        ];
+
+        var autoTableOptions1 = {
+            tableLineColor: [0, 0, 0],
+            tableLineWidth: 0.2,
+            styles: {
+                lineColor: [0, 0, 0],
+                lineWidth: 0.2,
+            },
+            headerStyles: {
+                textColor: [0, 0, 0],
+                fillColor: [255, 255, 255],
+                overflow: 'linebreak',
+                columnWidth: 'wrap'
+            },
+            bodyStyles: {
+                fillColor: [255, 255, 255],
+                textColor: [0, 0, 0],
+                overflow: 'linebreak',
+                columnWidth: 'wrap'
+            },
+            alternateRowStyles: {
+                fillColor: [255, 255, 255]
+            }, startY: 180
+        };
+
+        var columns2 = [
+            { title: "Particulars", dataKey: "particulars" },
+            { title: "Amount", dataKey: "amount" }
+        ];
+
+        var rows2 = [
+            { "particulars": "Monthly Rental", "amount": agreement.rent },
+            { "particulars": "GST", "amount": "" },
+        ];
+
+        var autoTableOptions2 = {
+            tableLineColor: [0, 0, 0],
+            tableLineWidth: 0.2,
+            styles: {
+                lineColor: [0, 0, 0],
+                lineWidth: 0.2,
+            },
+            headerStyles: {
+                textColor: [0, 0, 0],
+                fillColor: [255, 255, 255],
+                overflow: 'linebreak',
+                columnWidth: 'wrap'
+            },
+            bodyStyles: {
+                fillColor: [255, 255, 255],
+                textColor: [0, 0, 0],
+                overflow: 'linebreak',
+                columnWidth: 'wrap'
+            },
+            alternateRowStyles: {
+                fillColor: [255, 255, 255]
+            }, startY: 240
+        };
+
         var doc = new jsPDF();
 
-        doc.setFontSize(14);
         doc.setFontType("bold");
-        doc.text(105, 20, tenantId.split(".")[1], 'center');
-        doc.text(105, 27, tenantId.split(".")[1] + ' District', 'center');
-        doc.text(105, 34, 'Asset Category Lease/Agreement Notice', 'center');
-        doc.setLineWidth(0.5);
-        doc.line(15, 38, 195, 38);
-        doc.text(15, 47, 'Lease details: ');
-        doc.text(110, 47, 'Agreement No: ' + noticeData.agreementNumber);
-        doc.text(15, 57, 'Lease Name: ' + noticeData.allottee.name);
-        doc.text(110, 57, 'Asset No: ' + noticeData.asset.code);
-        doc.text(15, 67, (noticeData.allottee.mobileNumber ? noticeData.allottee.mobileNumber + ", " : "") + (noticeData.doorNo ? noticeData.doorNo + ", " : "") + (noticeData.allottee.permanentAddress ? noticeData.allottee.permanentAddress.replace(/(\r\n|\n|\r)/gm, "") + ", " : "") + tenantId.split(".")[1] + ".");
+        doc.setFontSize(13);
+        doc.text(105, 20, "PROCEEDINGS OF THE COMMISSIONER, " + tenantId.split(".")[1].toUpperCase(), 'center');
+        doc.text(105, 27, ulbType.toUpperCase(), 'center');
+        doc.text(105, 34, "Present: " + agreement.commissionerName, 'center');
 
         doc.setFontType("normal");
-        doc.text(15, 77, doc.splitTextToSize('1.    The period of lease shall be '));
-        doc.setFontType("bold");
-        doc.text(85, 77, doc.splitTextToSize(' ' + noticeData.timePeriod * 12 + ' '));
-        doc.setFontType("normal");
-        doc.text(93, 77, doc.splitTextToSize('months commencing from'));
-        doc.setFontType("bold");
-        doc.text(15, 83, doc.splitTextToSize(' ' + commencementDate + ' '));
-        doc.setFontType("normal");
-        doc.text(42, 83, doc.splitTextToSize('(dd/mm/yyyy) to'));
-        doc.setFontType("bold");
-        doc.text(77, 83, doc.splitTextToSize(' ' + expiryDate + ' '));
-        doc.setFontType("normal");
-        doc.text(104, 83, doc.splitTextToSize('(dd/mm/yyyy).', (210 - 15 - 15)));
-        doc.text(15, 91, doc.splitTextToSize('2.    The property leased is shop No'));
-        doc.setFontType("bold");
-        doc.text(93, 91, doc.splitTextToSize(' ' + noticeData.asset.code + ' '));
-        doc.setFontType("normal");
-        doc.text(112, 91, doc.splitTextToSize('and shall be leased for a sum of '));
-        doc.setFontType("bold");
-        doc.text(15, 97, doc.splitTextToSize('Rs.' + noticeData.rent + '/- '));
-        doc.setFontType("normal");
-        doc.text(111, 97, doc.splitTextToSize('per month exclusive of the payment'));
-        doc.text(15, 103, doc.splitTextToSize('of electricity and other charges.', (210 - 15 - 15)));
-        doc.text(15, 112, doc.splitTextToSize('3.   The lessee has paid a sum of '));
-        doc.setFontType("bold");
-        doc.text(90, 112, doc.splitTextToSize('Rs.' + noticeData.securityDeposit + '/- '));
-        doc.setFontType("normal");
-        doc.text(15, 118, doc.splitTextToSize('as security deposit for the tenancy and the said sum is repayable or adjusted only at the end of the tenancy on the lease delivery vacant possession of the shop let out, subject to deductions, if any, lawfully and legally payable by the lessee under the terms of this lease deed and in law.', (210 - 15 - 15)));
-        doc.text(15, 143, doc.splitTextToSize('4.   The rent for every month shall be payable on or before'));
-        doc.setFontType("bold");
-        doc.text(143, 143, doc.splitTextToSize(''));
-        doc.setFontType("normal");
-        doc.text(169, 143, doc.splitTextToSize('of the'));
-        doc.text(15, 149, doc.splitTextToSize('succeeding month.', (210 - 15 - 15)));
-        doc.text(15, 158, doc.splitTextToSize('5.   The lessee shall pay electricity charges to the Electricity Board every month without fail.', (210 - 15 - 15)));
-        doc.text(15, 172, doc.splitTextToSize('6.   The lessor or his agent shall have a right to inspect the shop at any hour during the day time.', (210 - 15 - 15)));
-        doc.text(15, 187, doc.splitTextToSize('7.   The Lessee shall use the shop let out duly for the business of General Merchandise and not use the same for any other purpose.  (The lessee shall not enter into partnership) and conduct the business in the premises in the name of the firm.  The lessee can only use the premises for his own business.', (210 - 15 - 15)));
-        doc.text(15, 214, doc.splitTextToSize('8.    The lessee shall not have any right to assign, sub-let, re-let, under-let or transfer the tenancy or any portion thereof.', (210 - 15 - 15)));
-        doc.text(15, 229, doc.splitTextToSize('9.    The lessee shall not carry out any addition or alteration to the shop without the previous consent and approval in writing of the lessor.', (210 - 15 - 15)));
-        doc.text(15, 244, doc.splitTextToSize('10.   The lessee on the expiry of the lease period of'));
-        doc.setFontType("bold");
-        doc.text(128, 244, doc.splitTextToSize(' ' + expiryDate + ' '));
-        doc.setFontType("normal");
-        doc.text(156, 244, doc.splitTextToSize('months'));
-        doc.text(15, 250, doc.splitTextToSize('shall hand over vacant possession of the ceased shop peacefully or the lease agreement can be renewed for a further period on mutually agreed terms.', (210 - 15 - 15)));
-        doc.text(15, 266, noticeData.commissionerName ? noticeData.commissionerName : "");
-        doc.text(160, 266, 'LESSEE');
-        doc.text(15, 274, 'Signature:   ');
-        doc.text(160, 274, 'Signature:  ');
-        doc.setFontType("bold");
-        doc.text(15, 282, tenantId.split(".")[1]);
-        doc.save('Notice-' + noticeData.agreementNumber + '.pdf');
+        doc.setFontSize(11);
+        doc.text(15, 50, 'Roc.No. ' + agreement.agreementNumber);
+        doc.text(140, 50, 'Dt. ' + today);
+
+        var paragraph = "Sub: Leases – Revenue Section – Shop No " + agreement.referenceNumber + " in " + agreement.asset.name + " Complex, " + locality + " - Remission of lease – Orders  - Issued";
+        var lines = doc.splitTextToSize(paragraph, 180);
+        doc.text(15, 65, lines);
+
+        doc.text(15, 80, "Ref: 1. Request Letter by the leaseholder");
+        doc.text(23, 85, "2. Resolution No …………… dt …………… of Municipal Council/Standing Committee");
+
+        doc.text(105, 95, "><><><", 'center');
+
+        doc.text(15, 105, "Orders:");
+        doc.setLineWidth(0.5);
+        doc.line(15, 106, 28, 106);
+
+        var paragraph1 = "In the reference 1st cited, a request for renewal of existing lease Shop No " + agreement.referenceNumber + " in the " + agreement.asset.name + " Shopping Complex was received by this office and your application for renewal of lease was accepted by the Municipal Council/Standing Committee wide reference 2nd cited with the as per the rates mentioned below";
+        var lines = doc.splitTextToSize(paragraph1, 180);
+        doc.text(15, 115, lines);
+
+        doc.autoTable(columns, rows, autoTableOptions);
+        
+        doc.text(15, 175, "Please fill (1)(2)(3) Manually");
+
+        doc.autoTable(columns1, rows1, autoTableOptions1);
+
+        var paragraph2 = "In pursuance of the Municipal Council/Standing Committee resolution and vide GO MS No 56 dt. 05.02.2011, existing lease of the said shop is being renewed for the period " + agreement.renewalDate + " to " + renewalToDate + " at following rates of rentals and taxes thereon.";
+        var lines = doc.splitTextToSize(paragraph2, 180);
+        doc.text(15, 220, lines);
+
+        doc.autoTable(columns2, rows2, autoTableOptions2);
+
+        doc.addPage();
+        var paragraph3 = "The following terms and conditions are applicable for the renewal of lease."
+
+            + "\n\t1. The leaseholder shall pay rent by 5th of the succeeding month"
+            + "\n\t2. All the late payments of rentals will attract penalty and interest as applicable"
+            + "\n\t3. The leaseholder shall not sub lease the premises in any case. If it is found that the premises are being sub let to any person, the lease shall stand cancelled without any prior notice."
+            + "\n\t4. The D&O Trade License of the establishment shall be in the name of the leaseholder only."
+            + "\n\t5. The leaseholder shall do business in the name of himself only."
+            + "\n\t6. The leaseholder not to use the premises for any unlawful activities"
+            + "\n\t7. The Goodwill and the Rental Deposits paid by the leaseholder shall be forfeited in the event of violation of terms and conditions in the agreement."
+
+            + "\n\nHence you are requested to conclude an agreement duly registered with the SRO for the above mentioned lease within 15 days of receipt of this renewal letter without fail unless the renewal will stand cancelled without any further correspondence."
+
+        var lines = doc.splitTextToSize(paragraph3, 180);
+        doc.text(15, 30, lines);
+
+        doc.text(120, 100, "Commissioner");
+        doc.text(120, 105, tenantId.split(".")[1].charAt(0).toUpperCase() + tenantId.split(".")[1].slice(1) + ",");
+        doc.text(120, 110, ulbType);
+
+        doc.text(15, 115, "To");
+        doc.text(15, 120, "The Leaseholder");
+        doc.text(15, 125, "Copy to the concerned officials for necessary action");
+
+        doc.save('RenewalNotice-' + agreement.agreementNumber + '.pdf');
         var blob = doc.output('blob');
-        this.createFileStore(noticeData, blob).then(this.createNotice, this.errorHandler);
+        this.createFileStore(agreement, blob).then(this.createNotice, this.errorHandler);
     }
 
     createFileStore(noticeData, blob) {
@@ -691,6 +838,10 @@ class UpdateRenewal extends React.Component {
                                         ackNo = res.Agreements[0].acknowledgementNumber;
                                       }
                                         if (ID === "Print Notice") {
+                                            _this.state.workflow.forEach(function(item){
+                                                if(item.status === "")
+                                                agreement.commissionerName = item.senderName
+                                              });
                                             _this.printNotice(agreement);
                                         } else {
 
@@ -760,6 +911,10 @@ class UpdateRenewal extends React.Component {
                         ackNo = res.Agreements[0].acknowledgementNumber;
                       }
                         if (ID === "Print Notice") {
+                            _this.state.workflow.forEach(function(item){
+                                if(item.status === "")
+                                agreement.commissionerName = item.senderName
+                              });
                             _this.printNotice(agreement);
                         } else {
                             $.ajax({

@@ -229,7 +229,7 @@ class Sale extends React.Component {
     var accounts = [];
 
     commonApiPost("egf-masters", "accountcodepurposes", "_search", { tenantId, name: "ASSET_PROFIT" }, function (err, res2) {
-      if (res2) {
+      if (res2 && res2["accountCodePurposes"][0]) {
         getDropdown("assetAccount", function (res) {
           for (var i = 0; i < res.length; i++) {
             res[i].name = res[i].glcode + "-" + res[i].name;
@@ -246,7 +246,7 @@ class Sale extends React.Component {
     })
 
     commonApiPost("egf-masters", "accountcodepurposes", "_search", { tenantId, name: "ASSET_LOSS" }, function (err, res2) {
-      if (res2) {
+      if (res2 && res2["accountCodePurposes"][0]) {
         getDropdown("assetAccount", function (res) {
           for (var i = 0; i < res.length; i++) {
             res[i].name = res[i].glcode + "-" + res[i].name;

@@ -50,6 +50,9 @@ public class WorkflowMatrixImpl implements Workflow {
 
 	private static Logger LOG = LoggerFactory.getLogger(WorkflowMatrixImpl.class);
 	public static final String SERVICE_CATEGORY_NAME = "serviceCategoryName";
+	public static final String APPLICATATIONTYPE_AGREEMENT = "LeaseAgreement";
+	public static final String DESIGNATION_COMMISSIONER = "Commissioner";
+	public static final String STATUS_FORWARDED = " Forwarded";
 
 	@Autowired
 	private StateService stateService;
@@ -167,6 +170,8 @@ public class WorkflowMatrixImpl implements Workflow {
 
 		RequestInfo requestInfo = taskRequest.getRequestInfo();
 		String tenantId = "";
+		String nextState = "";
+		String nextAction = "";
 
 		if (requestInfo != null && requestInfo.getUserInfo().getTenantId() != null
 				&& !requestInfo.getUserInfo().getTenantId().isEmpty()) {
@@ -180,14 +185,40 @@ public class WorkflowMatrixImpl implements Workflow {
 					taskRequest.getRequestInfo());
 		// final WorkflowEntity entity = task.getEntity();
 		String dept = null;
+		String currentDesignation = null;
+        WorkFlowMatrix wfMatrix =null;
 		if (task.getAttributes() != null && task.getAttributes().get("department") != null)
 			dept = task.getAttributes().get("department").getCode();
 
-		final WorkFlowMatrix wfMatrix = workflowService.getWfMatrix(task.getBusinessKey(), dept, null, null,
-				task.getStatus(), null, task.getTenantId());
+		if (task.getAttributes() != null && task.getAttributes().get("currentDesignation") != null) {
+			currentDesignation = task.getValueForKey("currentDesignation");
+		}
 
-		String nextState = wfMatrix.getNextState();
-		String nextAction = wfMatrix.getNextAction();
+		if (task.getBusinessKey().endsWith(APPLICATATIONTYPE_AGREEMENT)) {
+			wfMatrix = workflowService.getWfMatrix(task.getBusinessKey(), dept, null, null, task.getStatus(), null,
+					null, currentDesignation, task.getTenantId());
+		} else {
+			wfMatrix = workflowService.getWfMatrix(task.getBusinessKey(), dept, null, null, task.getStatus(), null,
+					task.getTenantId());
+		}
+
+		if (task.getBusinessKey().endsWith(APPLICATATIONTYPE_AGREEMENT)
+				&& WorkflowConstants.ACTION_FORWARD.equalsIgnoreCase(task.getAction())) {
+			if (currentDesignation != null && currentDesignation.endsWith(DESIGNATION_COMMISSIONER)) {
+				nextState = task.getValueForKey("nextState") != null ? task.getValueForKey("nextState")
+						: currentDesignation.concat(STATUS_FORWARDED);
+				nextAction = task.getValueForKey("nextAction");
+			} else {
+				nextState = wfMatrix.getNextState();
+				nextAction = wfMatrix.getNextAction();
+			}
+
+		} else {
+
+			nextState = wfMatrix.getNextState();
+			nextAction = wfMatrix.getNextAction();
+		}
+
 		final State state = stateService.findByIdAndTenantId(Long.valueOf(task.getId()), tenantId);
 
 		if ("END".equalsIgnoreCase(wfMatrix.getNextAction()))

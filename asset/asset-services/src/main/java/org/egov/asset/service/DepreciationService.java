@@ -51,6 +51,8 @@ package org.egov.asset.service;
 import java.math.BigDecimal;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -157,7 +159,7 @@ public class DepreciationService {
         // calculating the depreciation and adding the currenVal and DepDetail to the
         // lists
         calculateDepreciationAndCurrentValue(depreciationInputsList, depreciationDetailsList, currentValues,
-                depreciationCriteria.getFromDate(), depreciationCriteria.getToDate());
+                depreciationCriteria.getFromDate(), depreciationCriteria.getToDate(),depreciationCriteria.getFinancialYear());
 
         getDepreciationdetailsId(depreciationDetailsList);
         // sending dep/currval objects to respective create async methods
@@ -320,7 +322,7 @@ public class DepreciationService {
 
     private void calculateDepreciationAndCurrentValue(final List<DepreciationInputs> depreciationInputsList,
             final List<DepreciationDetail> depDetList, final List<AssetCurrentValue> currValList, final Long fromDate,
-            final Long toDate) {
+            final Long toDate,final String financialYear) {
         log.info("depreciationInputsList.size()" + depreciationInputsList.size());
 
         depreciationInputsList.forEach(depreciation -> {
@@ -352,7 +354,7 @@ public class DepreciationService {
                     status = DepreciationStatus.SUCCESS;
 
                     // getting the amt to be depreciated
-                    amtToBeDepreciated = getAmountToBeDepreciated(depreciation, invidualFromDate, toDate);
+                    amtToBeDepreciated = getAmountToBeDepreciated(depreciation, invidualFromDate, toDate,financialYear);
 
                     amtToBeDepreciatedRounded = new BigDecimal(
                             amtToBeDepreciated.setScale(2, BigDecimal.ROUND_HALF_UP).toString());
@@ -406,11 +408,11 @@ public class DepreciationService {
      * @return
      */
     private BigDecimal getAmountToBeDepreciated(final DepreciationInputs depInputs, final Long indvidualFromDate,
-            final Long toDate) {
+            final Long toDate,final String financialYear) {
 
         log.info("depInputs" + depInputs);
 
-        // getting the no of days betweeen the from and todate (including both from and
+       /* // getting the no of days betweeen the from and todate (including both from and
         // to date)
         final Long noOfDays = (toDate - indvidualFromDate) / 1000 / 60 / 60 / 24 + 1;
         log.info("no of days between fromdate : " + indvidualFromDate + " and todate : " + toDate + " is : " + noOfDays);
@@ -427,7 +429,23 @@ public class DepreciationService {
                     * (depRateForGivenPeriod / 100));
         else
             // written down value method
-            return BigDecimal.valueOf(depInputs.getCurrentValue().doubleValue() * (depRateForGivenPeriod / 100));
+            return BigDecimal.valueOf(depInputs.getCurrentValue().doubleValue() * (depRateForGivenPeriod / 100));*/
+        
+        final Integer year = Integer.parseInt(financialYear.substring(0, 4));
+        final String[] octDate = assetConfigurationService
+                .getAssetConfigValueByKeyAndTenantId(AssetConfigurationKeys.DEPRECIATIONSEPARATIONDATE, depInputs.getTenantId())
+                .split("/");
+        final Long seprationDate = Date
+                .from(LocalDateTime.of(year, Integer.parseInt(octDate[0]), Integer.parseInt(octDate[1]),
+                        Integer.parseInt(octDate[2]), Integer.parseInt(octDate[3]), Integer.parseInt(octDate[4]))
+                        .toInstant(ZoneOffset.UTC))
+                .getTime();
+        
+        if(toDate<seprationDate && depInputs.getDepreciationMethod().equals(DepreciationMethod.STRAIGHT_LINE_METHOD))
+              return BigDecimal.valueOf(depInputs.getCurrentValue().doubleValue() * ((depInputs.getDepreciationRate()/2)
+          / 100));
+              else  
+              return BigDecimal.valueOf(depInputs.getCurrentValue().doubleValue() * (depInputs.getDepreciationRate()/100));
 
     }
 

@@ -55,7 +55,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.regex.Matcher;
@@ -82,14 +81,12 @@ import org.egov.asset.model.Disposal;
 import org.egov.asset.model.DisposalCriteria;
 import org.egov.asset.model.Revaluation;
 import org.egov.asset.model.RevaluationCriteria;
-import org.egov.asset.model.YearWiseDepreciation;
 import org.egov.asset.model.enums.AssetCategoryType;
 import org.egov.asset.model.enums.AssetConfigurationKeys;
 import org.egov.asset.model.enums.AssetStatusObjectName;
 import org.egov.asset.model.enums.Status;
 import org.egov.asset.model.enums.TransactionType;
 import org.egov.asset.model.enums.TypeOfChangeEnum;
-import org.egov.asset.service.AssetCommonService;
 import org.egov.asset.service.AssetConfigurationService;
 import org.egov.asset.service.AssetMasterService;
 import org.egov.asset.service.AssetService;
@@ -124,9 +121,6 @@ public class AssetValidator {
     private AssetConfigurationService assetConfigurationService;
 
     @Autowired
-    private AssetCommonService assetCommonService;
-
-    @Autowired
     private ApplicationConstants applicationConstants;
 
     @Autowired
@@ -135,7 +129,7 @@ public class AssetValidator {
     public void validateAsset(final AssetRequest assetRequest) {
         final AssetCategory assetCategory = findAssetCategory(assetRequest);
         final Asset asset = assetRequest.getAsset();
-        if ( validateAssetCategoryForLand(assetCategory.getAssetCategoryType()))
+        if (validateAssetCategoryForLand(assetCategory.getAssetCategoryType()))
             asset.setDepreciationRate(null);
         if (Status.CAPITALIZED.toString().equals(asset.getStatus())) {
             final BigDecimal grossValue = asset.getGrossValue();
@@ -153,37 +147,23 @@ public class AssetValidator {
         }
     }
 
-   /* public void validateYearWiseDepreciationRate(final Asset asset) {
-        if (asset.getEnableYearWiseDepreciation() != null && asset.getEnableYearWiseDepreciation()) {
-            final List<String> finacialYears = new ArrayList<String>();
-            for (final YearWiseDepreciation ywd : asset.getYearWiseDepreciation()) {
-                finacialYears.add(ywd.getFinancialYear());
-                final Double depreciationRate = ywd.getDepreciationRate();
-                assetCommonService.validateDepreciationRateValue(depreciationRate);
-                ywd.setDepreciationRate(assetCommonService.getDepreciationRate(depreciationRate));
-            }
-            checkDuplicateFinancialYear(finacialYears);
-        } else if (asset.getEnableYearWiseDepreciation() != null && !asset.getEnableYearWiseDepreciation()) {
-            final Double depreciationRate = asset.getDepreciationRate();
-            assetCommonService.validateDepreciationRateValue(asset.getDepreciationRate());
-            asset.setDepreciationRate(assetCommonService.getDepreciationRate(depreciationRate));
-        }
-
-    }
-*/
-   /* private void checkDuplicateFinancialYear(final List<String> finacialYears) {
-        if (!finacialYears.isEmpty()) {
-            final Iterator<String> itr = finacialYears.iterator();
-            if (itr.hasNext()) {
-                final String finYear = itr.next();
-                while (itr.hasNext()) {
-                    final String current = itr.next();
-                    if (finYear.equalsIgnoreCase(current))
-                        throw new RuntimeException("Can not contain duplicate financial years");
-                }
-            }
-        }
-    }*/
+    /*
+     * public void validateYearWiseDepreciationRate(final Asset asset) { if (asset.getEnableYearWiseDepreciation() != null &&
+     * asset.getEnableYearWiseDepreciation()) { final List<String> finacialYears = new ArrayList<String>(); for (final
+     * YearWiseDepreciation ywd : asset.getYearWiseDepreciation()) { finacialYears.add(ywd.getFinancialYear()); final Double
+     * depreciationRate = ywd.getDepreciationRate(); assetCommonService.validateDepreciationRateValue(depreciationRate);
+     * ywd.setDepreciationRate(assetCommonService.getDepreciationRate(depreciationRate)); }
+     * checkDuplicateFinancialYear(finacialYears); } else if (asset.getEnableYearWiseDepreciation() != null &&
+     * !asset.getEnableYearWiseDepreciation()) { final Double depreciationRate = asset.getDepreciationRate();
+     * assetCommonService.validateDepreciationRateValue(asset.getDepreciationRate());
+     * asset.setDepreciationRate(assetCommonService.getDepreciationRate(depreciationRate)); } }
+     */
+    /*
+     * private void checkDuplicateFinancialYear(final List<String> finacialYears) { if (!finacialYears.isEmpty()) { final
+     * Iterator<String> itr = finacialYears.iterator(); if (itr.hasNext()) { final String finYear = itr.next(); while
+     * (itr.hasNext()) { final String current = itr.next(); if (finYear.equalsIgnoreCase(current)) throw new RuntimeException(
+     * "Can not contain duplicate financial years"); } } } }
+     */
 
     public AssetCategory findAssetCategory(final AssetRequest assetRequest) {
         final AssetCategory assetCategory = assetRequest.getAsset().getAssetCategory();
@@ -258,6 +238,10 @@ public class AssetValidator {
                 TransactionType.DEPRECIATION.equals(transactionType)))
             throw new RuntimeException(
                     "Without doing any Revaluation or Depreciation,system should not allow to Sale/Dispose an asset");
+        if (!(!asset.getAssetCategory().getAssetCategoryType().equals(AssetCategoryType.LAND) &&
+                TransactionType.DEPRECIATION.equals(transactionType)))
+            throw new RuntimeException(
+                    " Asset has to be depreciated atleast once for sale/disposal");
 
     }
 
@@ -431,7 +415,7 @@ public class AssetValidator {
                 assetRequest.getRequestInfo());
         if (!assetFromReq.getCode().equalsIgnoreCase(asset.getCode()))
             throw new RuntimeException("Invalid Asset Code for Asset :: " + asset.getName());
-       
+
     }
 
     public void validateDepreciation(final DepreciationRequest depreciationRequest) {

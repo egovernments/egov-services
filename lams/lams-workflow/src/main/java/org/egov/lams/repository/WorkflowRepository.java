@@ -1,7 +1,13 @@
 package org.egov.lams.repository;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.egov.lams.config.PropertiesManager;
 import org.egov.lams.contract.AgreementRequest;
+import org.egov.lams.contract.Attribute;
 import org.egov.lams.contract.Position;
 import org.egov.lams.contract.ProcessInstance;
 import org.egov.lams.contract.ProcessInstanceRequest;
@@ -11,17 +17,15 @@ import org.egov.lams.contract.RequestInfoWrapper;
 import org.egov.lams.contract.Task;
 import org.egov.lams.contract.TaskRequest;
 import org.egov.lams.contract.TaskResponse;
-import org.egov.lams.contract.TenantResponse;
+import org.egov.lams.contract.Value;
 import org.egov.lams.model.Agreement;
 import org.egov.lams.model.WorkflowDetails;
 import org.egov.lams.model.enums.Action;
-import org.egov.lams.model.City;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-import org.springframework.util.CollectionUtils;
 import org.springframework.web.client.RestTemplate;
 
 @Repository
@@ -30,7 +34,13 @@ public class WorkflowRepository {
 	public static final Logger LOGGER = LoggerFactory.getLogger(WorkflowRepository.class);
 	
 	public static final String ACTION = "Forward";
-
+	
+	public static final String COMMISSIONER = "Commissioner";
+	
+	public static final String ACTION_FORWARDED =" Forwarded";
+	
+	public static final String ACTION_APPROVAL_PENDING =" Approval Pending";
+	
 	@Autowired
 	private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
 	
@@ -112,27 +122,25 @@ public class WorkflowRepository {
 		Position assignee = new Position();
 		ProcessInstanceRequest processInstanceRequest = new ProcessInstanceRequest();
 		ProcessInstance processInstance = new ProcessInstance();
-		Boolean isCorporation = isCorporation(agreement.getTenantId());
-		LOGGER.info("isCorporation :" + isCorporation);
 		assignee.setId(workFlowDetails.getAssignee());
 		if (Action.JUDGEMENT.equals(agreement.getAction())) {
-			processInstance.setBusinessKey(isCorporation ? propertiesManager.getWorkflowServiceJudgementCorporationBusinessKey() : propertiesManager.getWorkflowServiceJudgementMunicipalityBusinessKey());
-			processInstance.setType(isCorporation ? propertiesManager.getWorkflowServiceJudgementCorporationBusinessKey() : propertiesManager.getWorkflowServiceJudgementMunicipalityBusinessKey());
+			processInstance.setBusinessKey(propertiesManager.getWorkflowServiceJudgementAgreementBusinessKey());
+			processInstance.setType(propertiesManager.getWorkflowServiceJudgementAgreementBusinessKey());
 		} else if (Action.OBJECTION.equals(agreement.getAction())) {
-			processInstance.setBusinessKey(isCorporation ? propertiesManager.getWorkflowServiceObjectionCorporationBusinessKey() : propertiesManager.getWorkflowServiceObjectionMunicipalityBusinessKey());
-			processInstance.setType(isCorporation ? propertiesManager.getWorkflowServiceObjectionCorporationBusinessKey() : propertiesManager.getWorkflowServiceObjectionMunicipalityBusinessKey());
+			processInstance.setBusinessKey(propertiesManager.getWorkflowServiceObjectionAgreementBusinessKey());
+			processInstance.setType(propertiesManager.getWorkflowServiceObjectionAgreementBusinessKey());
 		} else if (Action.RENEWAL.equals(agreement.getAction())) {
-			processInstance.setBusinessKey(isCorporation ? propertiesManager.getWorkflowServiceRenewCorporationBusinessKey() : propertiesManager.getWorkflowServiceRenewMunicipalityBusinessKey());
-			processInstance.setType(isCorporation ? propertiesManager.getWorkflowServiceRenewCorporationBusinessKey() : propertiesManager.getWorkflowServiceRenewMunicipalityBusinessKey());
+			processInstance.setBusinessKey(propertiesManager.getWorkflowServiceRenewalAgreementBusinessKey());
+			processInstance.setType(propertiesManager.getWorkflowServiceRenewalAgreementBusinessKey());
 		} else if (Action.CANCELLATION.equals(agreement.getAction())) {
-			processInstance.setBusinessKey(isCorporation ? propertiesManager.getWorkflowServiceCancelCorporationBusinessKey() : propertiesManager.getWorkflowServiceCancelMunicipalityBusinessKey());
-			processInstance.setType(isCorporation ? propertiesManager.getWorkflowServiceCancelCorporationBusinessKey() : propertiesManager.getWorkflowServiceCancelMunicipalityBusinessKey());
+			processInstance.setBusinessKey(propertiesManager.getWorkflowServiceCancellationAgreementBusinessKey());
+			processInstance.setType(propertiesManager.getWorkflowServiceCancellationAgreementBusinessKey());
 		} else if (Action.EVICTION.equals(agreement.getAction())) {
-			processInstance.setBusinessKey(isCorporation ? propertiesManager.getWorkflowServiceEvictCorporationBusinessKey() : propertiesManager.getWorkflowServiceEvictMunicipalityBusinessKey());
-			processInstance.setType(isCorporation ? propertiesManager.getWorkflowServiceEvictCorporationBusinessKey() : propertiesManager.getWorkflowServiceEvictMunicipalityBusinessKey());
+			processInstance.setBusinessKey(propertiesManager.getWorkflowServiceEvictionAgreementBusinessKey());
+			processInstance.setType(propertiesManager.getWorkflowServiceEvictionAgreementBusinessKey());
 		} else {
-			processInstance.setBusinessKey(isCorporation ? propertiesManager.getWorkflowServiceCreateCorporationBusinessKey() : propertiesManager.getWorkflowServiceCreateMunicipalityBusinessKey());
-			processInstance.setType(isCorporation ? propertiesManager.getWorkflowServiceCreateCorporationBusinessKey() : propertiesManager.getWorkflowServiceCreateMunicipalityBusinessKey());
+			processInstance.setBusinessKey(propertiesManager.getWorkflowServiceCreateAgreementBusinessKey());
+			processInstance.setType(propertiesManager.getWorkflowServiceCreateAgreementBusinessKey());
 		}
 		LOGGER.info("process businesskey :" + processInstance.getBusinessKey());
 		LOGGER.info("process type: " + processInstance.getType());
@@ -159,27 +167,25 @@ public class WorkflowRepository {
 		TaskRequest taskRequest = new TaskRequest();
 		Task task = new Task();
 		Position assignee = new Position();
-		Boolean isCorporation = isCorporation(agreement.getTenantId());
-		LOGGER.info("isCorporation :" + isCorporation);
 		taskRequest.setRequestInfo(requestInfo);
 		if (Action.JUDGEMENT.equals(agreement.getAction())) {
-			task.setBusinessKey(isCorporation ? propertiesManager.getWorkflowServiceJudgementCorporationBusinessKey() : propertiesManager.getWorkflowServiceJudgementMunicipalityBusinessKey());
-			task.setType(isCorporation ? propertiesManager.getWorkflowServiceJudgementCorporationBusinessKey() : propertiesManager.getWorkflowServiceJudgementMunicipalityBusinessKey());
+			task.setBusinessKey(propertiesManager.getWorkflowServiceJudgementAgreementBusinessKey());
+			task.setType(propertiesManager.getWorkflowServiceJudgementAgreementBusinessKey());
 		} else if (Action.OBJECTION.equals(agreement.getAction())) {
-			task.setBusinessKey(isCorporation ? propertiesManager.getWorkflowServiceObjectionCorporationBusinessKey() : propertiesManager.getWorkflowServiceObjectionMunicipalityBusinessKey());
-			task.setType(isCorporation ? propertiesManager.getWorkflowServiceObjectionCorporationBusinessKey() : propertiesManager.getWorkflowServiceObjectionMunicipalityBusinessKey());
+			task.setBusinessKey(propertiesManager.getWorkflowServiceObjectionAgreementBusinessKey());
+			task.setType(propertiesManager.getWorkflowServiceObjectionAgreementBusinessKey());
 		} else if (Action.RENEWAL.equals(agreement.getAction())) {
-			task.setBusinessKey(isCorporation ? propertiesManager.getWorkflowServiceRenewCorporationBusinessKey() : propertiesManager.getWorkflowServiceRenewMunicipalityBusinessKey());
-			task.setType(isCorporation ? propertiesManager.getWorkflowServiceRenewCorporationBusinessKey() : propertiesManager.getWorkflowServiceRenewMunicipalityBusinessKey());
+			task.setBusinessKey(propertiesManager.getWorkflowServiceRenewalAgreementBusinessKey());
+			task.setType(propertiesManager.getWorkflowServiceRenewalAgreementBusinessKey());
 		} else if (Action.CANCELLATION.equals(agreement.getAction())) {
-			task.setBusinessKey(isCorporation ? propertiesManager.getWorkflowServiceCancelCorporationBusinessKey() : propertiesManager.getWorkflowServiceCancelMunicipalityBusinessKey());
-			task.setType(isCorporation ? propertiesManager.getWorkflowServiceCancelCorporationBusinessKey() : propertiesManager.getWorkflowServiceCancelMunicipalityBusinessKey());
+			task.setBusinessKey(propertiesManager.getWorkflowServiceCancellationAgreementBusinessKey());
+			task.setType(propertiesManager.getWorkflowServiceCancellationAgreementBusinessKey());
 		} else if (Action.EVICTION.equals(agreement.getAction())) {
-			task.setBusinessKey(isCorporation ? propertiesManager.getWorkflowServiceEvictCorporationBusinessKey() : propertiesManager.getWorkflowServiceEvictMunicipalityBusinessKey());
-			task.setType(isCorporation ? propertiesManager.getWorkflowServiceEvictCorporationBusinessKey() : propertiesManager.getWorkflowServiceEvictMunicipalityBusinessKey());
+			task.setBusinessKey(propertiesManager.getWorkflowServiceEvictionAgreementBusinessKey());
+			task.setType(propertiesManager.getWorkflowServiceEvictionAgreementBusinessKey());
 		} else {
-			task.setBusinessKey(isCorporation ? propertiesManager.getWorkflowServiceCreateCorporationBusinessKey() : propertiesManager.getWorkflowServiceCreateMunicipalityBusinessKey());
-			task.setType(isCorporation ? propertiesManager.getWorkflowServiceCreateCorporationBusinessKey() : propertiesManager.getWorkflowServiceCreateMunicipalityBusinessKey());
+			task.setBusinessKey(propertiesManager.getWorkflowServiceCreateAgreementBusinessKey());
+			task.setType(propertiesManager.getWorkflowServiceCreateAgreementBusinessKey());
 		}
 		LOGGER.info("task businesskey :" + task.getBusinessKey());
 		LOGGER.info("task type: " + task.getType());
@@ -195,8 +201,25 @@ public class WorkflowRepository {
 
 				task.setStatus(propertiesManager.getWfStatusAssistantApproved());
 				LOGGER.info("updating the task status for reject-forward case after payment : ", task.getStatus());
-			} else
+			} else {
 				task.setStatus(workflowDetails.getStatus());
+			}
+			
+			if (ACTION.equalsIgnoreCase(workflowDetails.getAction()) && workflowDetails.getDesignation() != null
+					&& workflowDetails.getDesignation().endsWith(COMMISSIONER)) {
+				Attribute stateAttribute = null;
+				Attribute nextActionAttribute = null;
+				Attribute designationAttribute = null;
+				Map<String, Attribute> attributeMap = new HashMap<>();
+				stateAttribute = getNextStateAttribute(workflowDetails.getDesignation());
+				nextActionAttribute = getNextActionAttribute(workflowDetails.getNextDesignation());
+				designationAttribute = getCurrentDesigantionAttribute(workflowDetails.getDesignation());
+				attributeMap.put("nextState", stateAttribute);
+				attributeMap.put("nextAction", nextActionAttribute);
+				attributeMap.put("currentDesignation", designationAttribute);
+				task.setAttributes(attributeMap);
+
+			}
 			assignee.setId(workflowDetails.getAssignee());
 			task.setAssignee(assignee);
 			task.setComments(workflowDetails.getComments());
@@ -230,22 +253,40 @@ public class WorkflowRepository {
 		return taskRequest;
 	}
 
-	private Boolean isCorporation(String tenantId) {
-
-		City city;
-		Boolean isCorporation = Boolean.FALSE;
-		String url = propertiesManager.getTenantServiceHostName() + "tenant/v1/tenant/_search?code=" + tenantId;
-		TenantResponse tr = restTemplate.postForObject(url, new RequestInfo(), TenantResponse.class);
-		LOGGER.info("Tenant response :" + tr.toString());
-		if (!CollectionUtils.isEmpty(tr.getTenant())) {
-
-			city = tr.getTenant().get(0).getCity();
-			LOGGER.info("City details :" + city.toString());
-			if (propertiesManager.getCityGradeCorp().equalsIgnoreCase(city.getUlbGrade())) {
-				isCorporation = Boolean.TRUE;
-			}
-		}
-		return isCorporation;
+	private Attribute getNextStateAttribute(String currentDesignation) {
+		List<Value> nextStateValue = new ArrayList<>();
+		Attribute stateAttribute = new Attribute();
+		Value nextState = new Value();
+		nextState.setKey("nextState");
+		nextState.setName(currentDesignation.concat(ACTION_FORWARDED));
+		nextStateValue.add(nextState);
+		stateAttribute.setCode("WFSTATE");
+		stateAttribute.setValues(nextStateValue);
+		return stateAttribute;
 	}
-     
+
+	private Attribute getNextActionAttribute(String nextDesignation) {
+		List<Value> nextActionValues = new ArrayList<>();
+		Attribute actionAttribute = new Attribute();
+		Value nextAction = new Value();
+		nextAction.setKey("pendingAction");
+		nextAction.setName(nextDesignation.concat(ACTION_APPROVAL_PENDING));
+		nextActionValues.add(nextAction);
+		actionAttribute.setCode("ACTION");
+		actionAttribute.setValues(nextActionValues);
+		return actionAttribute;
+	}
+
+	private Attribute getCurrentDesigantionAttribute(String currentDesignation) {
+		List<Value> designationValues = new ArrayList<>();
+		Attribute designationAttribute = new Attribute();
+		Value designation = new Value();
+		designation.setKey("designation");
+		designation.setName(currentDesignation);
+		designationValues.add(designation);
+		designationAttribute.setCode("DESIG");
+		designationAttribute.setValues(designationValues);
+		return designationAttribute;
+	}
+
 }

@@ -55,6 +55,7 @@ try { revenueBlock = !localStorage.getItem("revenueBlock") || localStorage.getIt
 
 
 var _type;
+var nextUserDesignation;
 $(document).ready(function() {
     if (window.opener && window.opener.document) {
         var logo_ele = window.opener.document.getElementsByClassName("homepage_logo");
@@ -577,12 +578,36 @@ $(document).ready(function() {
             workflowId: agreementDetail.stateId
         }).responseJSON["tasks"];
 
-
-
         var process = commonApiPost("egov-common-workflows", "process", "_search", {
             tenantId: tenantId,
             id: agreementDetail.stateId
         }).responseJSON["processInstance"];
+        var currentUserDesignation = null;
+         var ownerPosition = process.owner.id;
+         var currOwnerPosition=null;
+
+         var loggedInEmployee = commonApiPost("hr-employee", "employees", "_loggedinemployee", {asOnDate: moment(new Date()).format("DD/MM/YYYY"), tenantId }).responseJSON["Employee"];
+            if(loggedInEmployee){
+              var assignments = loggedInEmployee[0].assignments;
+              var positions=[];
+              if(assignments){
+                for(var i=0;i<assignments.length;i++){
+                    if(ownerPosition==assignments[i].position){
+                      currentUserDesignation = process.owner.deptdesig.designation.name;
+                      break;
+                }else{
+                   currOwnerPosition =assignments[0].designation;
+                }
+                }
+              }
+
+            }
+            console.log(currOwnerPosition);
+         if(currOwnerPosition && currentUserDesignation==null){
+
+           var designation = getCommonMasterById("hr-masters", "designations", null,currOwnerPosition).responseJSON["Designation"];
+           currentUserDesignation = designation[0].name;
+         }
 
         if (workflow && workflow.length) {
             workflow = workflow.sort();
@@ -604,7 +629,8 @@ $(document).ready(function() {
             var flg = 0;
             for (var i = 0; i < process.attributes.validActions.values.length; i++) {
                 if (process.attributes.validActions.values[i].key)
-                    $("#footer-btn-grp").append($(`<button data-action='${process.attributes.validActions.values[i].key}' id=${process.attributes.validActions.values[i].key} type="button" class="btn btn-submit">${process.attributes.validActions.values[i].name}<button/>`));
+                $("#footer-btn-grp").append($(`<button data-action='${process.attributes.validActions.values[i].key}' id=${process.attributes.validActions.values[i].key} type="button" class="btn btn-submit">${process.attributes.validActions.values[i].name}</button>`))
+                                  $("#footer-btn-grp").append($('<span>&nbsp;&nbsp</span>'));
                 if (process.attributes.validActions.values[i].key.toLowerCase() == "print notice") {
                     $(".workFlowDetails").remove();
                 }
@@ -621,7 +647,7 @@ $(document).ready(function() {
          $("#footer-btn-grp").append($('<button type="button" class="btn btn-close" id="close">Close</button>'));
 
         if (process) {
-            getDesignations(process.status, function(designations) {
+            getDesignations(process.status,currentUserDesignation, function(designations) {
                 for (var variable in designations) {
                     if (!designations[variable]["id"]) {
                         var _res = commonApiPost("hr-masters", "designations", "_search", { tenantId, name: designations[variable]["name"] });
@@ -775,6 +801,8 @@ $(document).ready(function() {
             "type": process.businessKey,
             "assignee": $("#approverPositionId") && $("#approverPositionId").val() && (!data.action || (data.action && data.action.toLowerCase() != "reject")) ? getPositionId($("#approverPositionId").val()) : process.initiatorPosition,
             "status": process.status,
+            "designation":currentUserDesignation,
+            "nextDesignation": nextUserDesignation,
             "action": data.action
         };
 

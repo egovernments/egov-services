@@ -10,12 +10,13 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class WorkflowDetails {
-	
-  private String department;
-  private String designation;
-  private Long assignee;
-  private String action;
-  private String status;
-  private Long initiatorPosition;
-  private String comments;
+
+	private String department;
+	private String designation;
+	private String nextDesignation;
+	private Long assignee;
+	private String action;
+	private String status;
+	private Long initiatorPosition;
+	private String comments;
 }

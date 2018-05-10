@@ -29,41 +29,23 @@ public class PropertiesManager {
 	@Value("${egov.services.tenant.host}")
 	private String tenantServiceHostName;
 
-	@Value("${egov.services.workflow_service.hostname.create_municipality_businesskey}")
-	private String workflowServiceCreateMunicipalityBusinessKey;
+	@Value("${egov.services.workflow_service.new_leaseagreement_businesskey}")
+	private String workflowServiceCreateAgreementBusinessKey;
 
-	@Value("${egov.services.workflow_service.hostname.renew_municipality_businesskey}")
-	private String workflowServiceRenewMunicipalityBusinessKey;
-	
-	@Value("${egov.services.workflow_service.hostname.cancel_municipality_businesskey}")
-	private String workflowServiceCancelMunicipalityBusinessKey;
+	@Value("${egov.services.workflow_service.renewal_leaseagreement_businesskey}")
+	private String workflowServiceRenewalAgreementBusinessKey;
 
-	@Value("${egov.services.workflow_service.hostname.evict_municipality_businesskey}")
-	private String workflowServiceEvictMunicipalityBusinessKey;
+	@Value("${egov.services.workflow_service.cancellation_leaseagreement_businesskey}")
+	private String workflowServiceCancellationAgreementBusinessKey;
 
-	@Value("${egov.services.workflow_service.objection_municipality_businesskey}")
-	private String workflowServiceObjectionMunicipalityBusinessKey;
+	@Value("${egov.services.workflow_service.eviction_leaseagreement_businesskey}")
+	private String workflowServiceEvictionAgreementBusinessKey;
 
-	@Value("${egov.services.workflow_service.judgement_municipality_businesskey}")
-	private String workflowServiceJudgementMunicipalityBusinessKey;
+	@Value("${egov.services.workflow_service.objection_leaseagreement_businesskey}")
+	private String workflowServiceObjectionAgreementBusinessKey;
 
-	@Value("${egov.services.workflow_service.hostname.create_corporation_businesskey}")
-	private String workflowServiceCreateCorporationBusinessKey;
-
-	@Value("${egov.services.workflow_service.hostname.renew_corporation_businesskey}")
-	private String workflowServiceRenewCorporationBusinessKey;
-
-	@Value("${egov.services.workflow_service.hostname.cancel_corporation_businesskey}")
-	private String workflowServiceCancelCorporationBusinessKey;
-
-	@Value("${egov.services.workflow_service.hostname.evict_corporation_businesskey}")
-	private String workflowServiceEvictCorporationBusinessKey;
-
-	@Value("${egov.services.workflow_service.objection_corporation_businesskey}")
-	private String workflowServiceObjectionCorporationBusinessKey;
-
-	@Value("${egov.services.workflow_service.judgement_corporation_businesskey}")
-	private String workflowServiceJudgementCorporationBusinessKey;
+	@Value("${egov.services.workflow_service.judgement_leaseagreement_businesskey}")
+	private String workflowServiceJudgementAgreementBusinessKey;
 
 	@Value("${kafka.topics.start.workflow}")
 	private String kafkaStartWorkflowTopic;

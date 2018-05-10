@@ -106,7 +106,9 @@ public class AssetCategoryRowMapper implements RowMapper<AssetCategory> {
         assetCategory.setIsAssetAllow(rs.getBoolean("isassetallow"));
         assetCategory.setVersion(rs.getString("version"));
         assetCategory.setUsedForLease(rs.getBoolean("usedforlease"));
+        assetCategory.setLifeOfTheAsset(rs.getLong("lifeoftheasset"));
         return assetCategory;
+        
     }
 
 }

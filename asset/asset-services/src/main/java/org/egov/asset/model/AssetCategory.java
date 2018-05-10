@@ -55,6 +55,8 @@ import javax.validation.constraints.NotNull;
 import org.egov.asset.model.enums.AssetCategoryType;
 import org.egov.asset.model.enums.DepreciationMethod;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -110,4 +112,7 @@ public class AssetCategory {
     private Boolean usedForLease;
     
     private Boolean isAgreementsExists=false;
+    
+    @JsonProperty("lifeOfTheAsset")
+    private Long lifeOfTheAsset;
 }

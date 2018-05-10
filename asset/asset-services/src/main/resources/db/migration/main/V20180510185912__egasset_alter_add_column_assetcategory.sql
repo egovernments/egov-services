@@ -1,0 +1,1 @@
+alter table egasset_assetcategory add column lifeoftheasset bigint ;

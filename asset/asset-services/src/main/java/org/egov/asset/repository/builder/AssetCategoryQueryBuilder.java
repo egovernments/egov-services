@@ -180,14 +180,14 @@ public class AssetCategoryQueryBuilder {
         return "INSERT into egasset_assetcategory "
                 + "(id,name,code,parentid,assetcategorytype,depreciationmethod,depreciationrate,assetaccount,accumulateddepreciationaccount,"
                 + "revaluationreserveaccount,depreciationexpenseaccount,unitofmeasurement,customfields,tenantid,createdby,createddate,"
-                + "lastmodifiedby,lastmodifieddate,isassetallow,version,usedforlease)"
-                + "values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+                + "lastmodifiedby,lastmodifieddate,isassetallow,version,usedforlease,lifeoftheasset)"
+                + "values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
     }
 
     public String getUpdateQuery() {
         return "UPDATE egasset_assetcategory SET "
                 + "parentid=?,assetcategorytype=?,depreciationmethod=?,depreciationrate=?,assetaccount=?,accumulateddepreciationaccount=?,"
                 + "revaluationreserveaccount=?,depreciationexpenseaccount=?,unitofmeasurement=?,customfields=?,"
-                + "lastmodifiedby=?,lastmodifieddate=?,isassetallow=?,version=?,usedforlease=? WHERE code=? and tenantid=?";
+                + "lastmodifiedby=?,lastmodifieddate=?,isassetallow=?,version=?,usedforlease=?,lifeoftheasset=? WHERE code=? and tenantid=?";
     }
 }

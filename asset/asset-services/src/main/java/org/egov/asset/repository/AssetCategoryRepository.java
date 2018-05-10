@@ -141,7 +141,7 @@ public class AssetCategoryRepository {
                 assetCategory.getUnitOfMeasurement(), customFields, assetCategory.getTenantId(),
                 requestInfo.getUserInfo().getId(), new Date().getTime(), requestInfo.getUserInfo().getId(),
                 new Date().getTime(), assetCategory.getIsAssetAllow(), assetCategory.getVersion(),
-                assetCategory.getUsedForLease() };
+                assetCategory.getUsedForLease(),assetCategory.getLifeOfTheAsset()};
 
         try {
             jdbcTemplate.update(queryStr, obj);
@@ -188,7 +188,7 @@ public class AssetCategoryRepository {
                 assetCategory.getRevaluationReserveAccount(), assetCategory.getDepreciationExpenseAccount(),
                 assetCategory.getUnitOfMeasurement(), customFields, requestInfo.getUserInfo().getId(),
                 new Date().getTime(), assetCategory.getIsAssetAllow(), assetCategory.getVersion(),
-                assetCategory.getUsedForLease(),
+                assetCategory.getUsedForLease(),assetCategory.getLifeOfTheAsset(),
                 assetCategory.getCode(), assetCategory.getTenantId() };
 
         try {

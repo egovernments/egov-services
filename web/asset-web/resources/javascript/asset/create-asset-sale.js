@@ -230,35 +230,33 @@ class Sale extends React.Component {
 
     commonApiPost("egf-masters", "accountcodepurposes", "_search", { tenantId, name: "ASSET_PROFIT" }, function (err, res2) {
       if (res2 && res2["accountCodePurposes"][0]) {
-        getDropdown("assetAccount", function (res) {
-          for (var i = 0; i < res.length; i++) {
-            res[i].name = res[i].glcode + "-" + res[i].name;
-          }
-          accounts.push(res);
-          _this.setState({
+        commonApiPost("egf-masters", "chartofaccounts", "_search", { tenantId, classification: 4, accountCodePurpose: res2["accountCodePurposes"][0].id }, function (err, resA) {
+          if (resA) {
+            resA["chartOfAccounts"][0].name = resA["chartOfAccounts"][0].glcode + "-" + resA["chartOfAccounts"][0].name;
+            accounts.push(resA["chartOfAccounts"][0]);
+            _this.setState({
               ..._this.state,
-              "assetAccount": accounts
-          });
-        }, { accountCodePurpose: res2["accountCodePurposes"][0].id });
-      } else {
-        checkCountAndCall("assetAccount", []);
+              assetAccount: accounts,
+              assetAccountProfit: resA["chartOfAccounts"][0].id
+            });
+          }
+        })
       }
     })
 
     commonApiPost("egf-masters", "accountcodepurposes", "_search", { tenantId, name: "ASSET_LOSS" }, function (err, res2) {
       if (res2 && res2["accountCodePurposes"][0]) {
-        getDropdown("assetAccount", function (res) {
-          for (var i = 0; i < res.length; i++) {
-            res[i].name = res[i].glcode + "-" + res[i].name;
-          }
-          accounts.push(res);
-          _this.setState({
+        commonApiPost("egf-masters", "chartofaccounts", "_search", { tenantId, classification: 4, accountCodePurpose: res2["accountCodePurposes"][0].id }, function (err, resA) {
+          if (resA) {
+            resA["chartOfAccounts"][0].name = resA["chartOfAccounts"][0].glcode + "-" + resA["chartOfAccounts"][0].name;
+            accounts.push(resA["chartOfAccounts"][0]);
+            _this.setState({
               ..._this.state,
-              "assetAccount": accounts
-          });
-        }, { accountCodePurpose: res2["accountCodePurposes"][0].id });
-      } else {
-        checkCountAndCall("assetAccount", []);
+              assetAccount: accounts,
+              assetAccountLoss: resA["chartOfAccounts"][0].id
+            });
+          }
+        })
       }
     })
   }
@@ -284,7 +282,7 @@ class Sale extends React.Component {
 
   handleChange(e, name) {
     if (name == "transactionType") {
-      if(e.target.value === "SALE"){
+      if (e.target.value === "SALE") {
         return this.setState({
           typeToDisplay: e.target.value,
           disposal: {
@@ -303,7 +301,7 @@ class Sale extends React.Component {
             [name]: e.target.value,
             "aadharCardNumber": "",
             "panCardNumber": "",
-            "assetSaleAccount": "2711001"
+            "assetSaleAccount": this.state.assetAccountLoss
           }
         })
       }
@@ -336,7 +334,7 @@ class Sale extends React.Component {
             disposal: {
               ...this.state.disposal,
               [name]: e.target.value,
-              "assetSaleAccount": "2711001"
+              "assetSaleAccount": this.state.assetAccountLoss
             }
           });
         } else {
@@ -344,7 +342,7 @@ class Sale extends React.Component {
             disposal: {
               ...this.state.disposal,
               [name]: e.target.value,
-              "assetSaleAccount": "1803001"
+              "assetSaleAccount": this.state.assetAccountProfit
             }
           });
         }
@@ -434,6 +432,7 @@ class Sale extends React.Component {
       if (list) {
         if (list.constructor == Array) {
           return list.map((item, ind) => {
+            console.log(item);
             if (typeof item == "object") {
               return (<option key={ind} value={item.id}>
                 {item.name}

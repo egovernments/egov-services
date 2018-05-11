@@ -20,7 +20,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
-
+import org.springframework.util.CollectionUtils;
 import org.json.JSONArray;
 
 
@@ -151,12 +151,12 @@ public class SearchUtils {
 		
 	}
 	
-	public List<String> convertPGOBjects(List<PGobject> maps){
+	public List<String> convertPGObjects(List<PGobject> maps){
 		List<String> result = new ArrayList<>();
-		if(null != maps || !maps.isEmpty()) {
+		if(!CollectionUtils.isEmpty(maps)) {
 			for(PGobject obj: maps){
 				if(null == obj.getValue())
-					break;
+					continue;
 				String tuple = obj.toString();
 				if(tuple.startsWith("[") && tuple.endsWith("]")){
 					JSONArray jsonArray = new JSONArray(tuple);
@@ -167,7 +167,7 @@ public class SearchUtils {
 					try{
 						result.add(obj.getValue());
 					}catch(Exception e){
-						throw e;
+						continue;
 					}
 				}
 			}

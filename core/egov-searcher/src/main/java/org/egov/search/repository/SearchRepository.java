@@ -45,7 +45,6 @@ public class SearchRepository {
 		}
 		Long startTime = new Date().getTime();
 		List<PGobject> maps = jdbcTemplate.queryForList(query,PGobject.class);
-		//LOGGER.info("query result: "+maps);
 		Long endTime = new Date().getTime();
 		Long totalExecutionTime = endTime - startTime;
 		LOGGER.info("Query execution time in millisec: "+totalExecutionTime);
@@ -54,7 +53,7 @@ public class SearchRepository {
 			throw new CustomException(HttpStatus.INTERNAL_SERVER_ERROR.toString(), 
 					"Query Execution Timeout! Json query is taking more time than the max exec time, query: "+query);
 		}
-		result = searchUtils.convertPGOBjects(maps);
+		result = searchUtils.convertPGObjects(maps);
 		return result;
 	}
 

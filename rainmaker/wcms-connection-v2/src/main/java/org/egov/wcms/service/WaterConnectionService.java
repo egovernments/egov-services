@@ -69,8 +69,6 @@ public class WaterConnectionService {
 				return wCServiceUtils.getDefaultWaterConnectionResponse(requestInfo);
 			}
 			waterConnectionRes = mapper.convertValue(response, WaterConnectionRes.class);
-			if(null == waterConnectionRes.getActionHistory())
-				return wCServiceUtils.getDefaultWaterConnectionResponse(requestInfo);
 		}catch(Exception e) {
 			log.error("Exception: " + e);
 			return wCServiceUtils.getDefaultWaterConnectionResponse(requestInfo);
@@ -129,7 +127,7 @@ public class WaterConnectionService {
 	 * @param connections
 	 */
 	public void enrichUpdateRequest(WaterConnectionReq connections) {
-		
+		return;
 	}
 	
 	/**
@@ -166,8 +164,6 @@ public class WaterConnectionService {
 				}
 			}
 		//
-			
-			
 			
 		}
 	}

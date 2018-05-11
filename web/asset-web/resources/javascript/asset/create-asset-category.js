@@ -138,6 +138,7 @@ class CreateAsset extends React.Component {
         "assetFieldsDefination": [],
         "version": "",
         "depreciationRate": "",
+        "lifeOfTheAsset" : "",
         usedForLease : false
       },
       customField:{
@@ -238,7 +239,16 @@ class CreateAsset extends React.Component {
     // });
 
     commonApiPost("asset-services", "assetCategories", "_search", { tenantId,isParentCategory:true}, function(err, res) {
-      self.setState({assetCategories:res.AssetCategory})
+      if(res){
+        var buildingId = "", landId = ""; 
+        res.forEach(element => { 
+            if(element.name === "Buildings") 
+              buildingId = element.id
+            if(element.name === "LAND") 
+              landId = element.id
+            });
+      self.setState({assetCategories:res.AssetCategory, landId, buildingId})
+    }
     });
     getDropdown("depreciationMethod", function(res) {
       checkCountNCall("depreciationMethod", res);
@@ -339,6 +349,25 @@ class CreateAsset extends React.Component {
   handleChange(e, name) {
     if(name == "name" && !e.target.value.trim() && e.target.value == " ") {
       e.preventDefault();
+    } else if(name === "parent"){
+      if(e.target.value === this.state.landId){
+        this.setState({
+          assetCategory: {
+            ...this.state.assetCategory,
+            [name]: e.target.value,
+            depreciationRate : "0",
+            lifeOfTheAsset: ""
+          }
+        })
+      }
+      if(e.target.value === this.state.buildingId){
+        this.setState({
+          assetCategory: {
+            ...this.state.assetCategory,
+            [name]: e.target.value,
+          }
+        })
+      }
     } else {
       this.setState({
         assetCategory: {
@@ -553,7 +582,7 @@ class CreateAsset extends React.Component {
   render() {
     let {handleChange,addOrUpdate,renderDelEvent,addAsset,handleChangeTwoLevel,showCustomFieldForm}=this;
     let {isSearchClicked,list,customField,column,isEdit,index,assetCategory,isCustomFormVisible, readonly, showMsg}=this.state;
-    let {assetCategoryType,AssetCategory,parent,name,assetFieldsDefination,isMandatory,depreciationMethod,assetAccount,accumulatedDepreciationAccount,revaluationReserveAccount,depreciationExpenseAccount,unitOfMeasurement, version, depreciationRate, usedForLease, isAgreementsExists}=assetCategory;
+    let {assetCategoryType,AssetCategory,parent,name,assetFieldsDefination,isMandatory,depreciationMethod,lifeOfTheAsset ,assetAccount,accumulatedDepreciationAccount,revaluationReserveAccount,depreciationExpenseAccount,unitOfMeasurement, version, depreciationRate, usedForLease, isAgreementsExists}=assetCategory;
     let mode = getUrlVars()["type"];
 
     console.log(this.state.assetCategory);
@@ -1029,7 +1058,7 @@ class CreateAsset extends React.Component {
                     <label for="depreciationRate"> Depreciation Rate </label>
                   </div>
                   <div className="col-sm-6">
-                    <input type="number" name="depreciationRate" value={depreciationRate} onChange={(e)=>{handleChange(e,"depreciationRate")}}/>
+                    <input type="number" name="depreciationRate" value={depreciationRate} onChange={(e)=>{handleChange(e,"depreciationRate")}} disabled = {this.state.assetCategory.parent === this.state.landId} required />
                   </div>
                 </div>
               </div>
@@ -1048,11 +1077,20 @@ class CreateAsset extends React.Component {
                 </div>
               </div>
             </div>
-
+            {this.state.assetCategory.parent === this.state.buildingId && <div className="row">
+              <div className="col-sm-6">
+                <div className="row">
+                  <div className="col-sm-6 label-text">
+                    <label for="lifeOfTheAsset"> Life of the Asset </label>
+                  </div>
+                  <div className="col-sm-6">
+                    <input type="number" name="lifeOfTheAsset" value={lifeOfTheAsset} onChange={(e)=>{handleChange(e,"lifeOfTheAsset")}} required />
+                  </div>
+                </div>
+              </div>
+            </div>}
 
             {showCustomFieldsTable()}
-
-
 
             <div className="modal fade" id="calHoiday" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
               <div className="modal-dialog" role="document">

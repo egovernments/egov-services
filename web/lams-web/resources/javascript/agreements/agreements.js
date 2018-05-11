@@ -1188,11 +1188,7 @@ $(`#approverDesignation`).html(`<option value=''>Select</option>`)
 
 }*/
 
-var agreementType = "Create Municipality Agreement";
-if (cityGrade.toLowerCase() === 'corp') {
-  agreementType = "Create Corporation Agreement";
-}
-getDesignations(null, function(designations) {
+getDesignations(null,null,function(designations) {
     for (let variable in designations) {
         if (!designations[variable]["id"]) {
             var _res = commonApiPost("hr-masters", "designations", "_search", { tenantId, name: designations[variable]["name"] });
@@ -1201,7 +1197,7 @@ getDesignations(null, function(designations) {
 
         $(`#approverDesignation`).append(`<option value='${designations[variable]["id"]}'>${designations[variable]["name"]}</option>`);
     }
-},agreementType);
+},"New LeaseAgreement");
 
 // var locality=commonApiPost("v1/location/boundarys","boundariesByBndryTypeNameAndHierarchyTypeName","",{boundaryTypeName:"LOCALITY",hierarchyTypeName:"LOCATION"}).responseJSON["Boundary"] || [],
 // var electionwards=commonApiPost("v1/location/boundarys","boundariesByBndryTypeNameAndHierarchyTypeName","",{boundaryTypeName:"WARD",hierarchyTypeName:"ADMINISTRATION"}).responseJSON["Boundary"] || [],

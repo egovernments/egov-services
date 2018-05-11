@@ -2096,22 +2096,22 @@ class CreateAsset extends React.Component {
             <div className="col-sm-6">
               <div className="row">
                 <div className="col-sm-6 label-text">
-                  <label for="grossValue">Gross Value</label>
+                  <label for="grossValue">Gross Value<span>*</span></label>
                 </div>
                 <div className="col-sm-6">
                   <input type="number" id="grossValue" name="grossValue" value={grossValue}
-                    onChange={(e) => { handleChange(e, "grossValue") }} min="1" maxlength="16" disabled={readonly} />
+                    onChange={(e) => { handleChange(e, "grossValue") }} min="1" maxlength="16" disabled={readonly} required />
                 </div>
               </div>
             </div>
             <div className="col-sm-6">
               <div className="row">
                 <div className="col-sm-6 label-text">
-                  <label for="accumulatedDepreciation">Accumulated Depreciation</label>
+                  <label for="accumulatedDepreciation">Accumulated Depreciation<span>*</span></label>
                 </div>
                 <div className="col-sm-6">
                   <input type="number" id="accumulatedDepreciation" name="accumulatedDepreciation" value={accumulatedDepreciation}
-                    onChange={(e) => { handleChange(e, "accumulatedDepreciation") }} min="1" maxlength="16" disabled={readonly} />
+                    onChange={(e) => { handleChange(e, "accumulatedDepreciation") }} min="0" max={grossValue} maxlength="16" disabled={readonly} required />
                 </div>
               </div>
             </div>

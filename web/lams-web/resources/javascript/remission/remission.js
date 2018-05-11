@@ -124,12 +124,13 @@ class RemissionAgreement extends React.Component {
         this.handleChangeTwoLevel = this.handleChangeTwoLevel.bind(this);
         this.update = this.update.bind(this);
         this.setInitialState = this.setInitialState.bind(this);
+        this.printNotice = this.printNotice.bind(this);
+
     }
 
     setInitialState(initState) {
         this.setState(initState);
     }
-
 
     close() {
 
@@ -216,9 +217,11 @@ class RemissionAgreement extends React.Component {
                                     'auth-token': authToken
                                 },
                                 success: function (res) {
-
+                                    _this.printNotice(agreement);
                                     showSuccess("Remission details updated!");
-
+                                    setTimeout(function () {
+                                        open(location, '_self').close();
+                                    }, 4000);
                                 },
                                 error: function (err) {
                                     if (err.responseJSON.Error && err.responseJSON.Error.message)
@@ -251,6 +254,8 @@ class RemissionAgreement extends React.Component {
                     'auth-token': authToken
                 },
                 success: function (res) {
+                    
+                    _this.printNotice(agreement);
 
                     showSuccess("Remission details updated!");
                     setTimeout(function () {
@@ -322,7 +327,6 @@ class RemissionAgreement extends React.Component {
         }
     }
 
-
     handleChangeTwoLevel(e, pName, name) {
 
         var _this = this;
@@ -369,8 +373,6 @@ class RemissionAgreement extends React.Component {
         }
     }
 
-
-
     componentWillMount() {
 
         if (window.opener && window.opener.document) {
@@ -397,7 +399,6 @@ class RemissionAgreement extends React.Component {
             agreement: agreement
         });
     }
-
 
     componentDidMount() {
 
@@ -465,9 +466,116 @@ class RemissionAgreement extends React.Component {
 
     }
 
+    printNotice(agreement) {
+
+        var LocalityData = commonApiPost("egov-location/boundarys", "boundariesByBndryTypeNameAndHierarchyTypeName", "", { boundaryTypeName: "LOCALITY", hierarchyTypeName: "LOCATION", tenantId });
+        var locality = getNameById(LocalityData["responseJSON"]["Boundary"], agreement.asset.locationDetails.locality);
+        var cityGrade = !localStorage.getItem("city_grade") || localStorage.getItem("city_grade") == "undefined" ? (localStorage.setItem("city_grade", JSON.stringify(commonApiPost("tenant", "v1/tenant", "_search", { code: tenantId }).responseJSON["tenant"][0]["city"]["ulbGrade"] || {})), JSON.parse(localStorage.getItem("city_grade"))) : JSON.parse(localStorage.getItem("city_grade"));
+        var ulbType = "Nagara Panchayat/Municipality";
+        if (cityGrade.toLowerCase() === 'corp') {
+            ulbType = "Municipal Corporation";
+        }
+
+        var today = new Date();
+        var dd = today.getDate();
+        var mm = today.getMonth() + 1;
+        var yyyy = today.getFullYear();
+        if (dd < 10) {
+            dd = '0' + dd;
+        }
+        if (mm < 10) {
+            mm = '0' + mm;
+        }
+        var today = dd + '/' + mm + '/' + yyyy;
+
+        var columns = [
+            { title: "Particulars", dataKey: "p" },
+            { title: "Existing Amount (per month)", dataKey: "ea" },
+            { title: "Dues", dataKey: "d" },
+            { title: "Remission sanctioned", dataKey: "rs" },
+            { title: "Net Amount Due", dataKey: "nad" },
+        ];
+        var rows = [
+            { "p": "Lease Rentals", "ea": "100", "d": "200", "rs": "100", "nad": "100" },
+            { "p": "Total", "ea": "100", "d": "200", "rs": "100", "nad": "100" }
+        ];
+
+        var autoTableOptions = {
+            tableLineColor: [0, 0, 0],
+            tableLineWidth: 0.2,
+            styles: {
+                lineColor: [0, 0, 0],
+                lineWidth: 0.2
+            },
+            headerStyles: {
+                textColor: [0, 0, 0],
+                fillColor: [255, 255, 255]
+            },
+            bodyStyles: {
+                fillColor: [255, 255, 255],
+                textColor: [0, 0, 0]
+            },
+            alternateRowStyles: {
+                fillColor: [255, 255, 255]
+            }, startY: 135
+        };
+
+        var doc = new jsPDF();
+
+        doc.setFontType("bold");
+        doc.setFontSize(13);
+        doc.text(105, 20, "PROCEEDINGS OF THE COMMISSIONER, " + tenantId.split(".")[1].toUpperCase(), 'center');
+        doc.text(105, 27, "NAGAR PANCHAYATHY/MUNICIPALITY/MUNICIPAL CORPORATION TODO", 'center');
+        doc.text(105, 34, "Present: S Ravindra Babu", 'center');
+
+        doc.setFontType("normal");
+        doc.setFontSize(11);
+        doc.text(15, 50, 'Roc.No. ' + agreement.agreementNumber);
+        doc.text(140, 50, 'Dt. ' + today);
+
+        var paragraph = "Sub: Leases – Revenue Section – Shop No " + agreement.referenceNumber + " in " +agreement.asset.name + " Complex, " + locality + " - Remission of lease – Orders  - Issued";
+        var lines = doc.splitTextToSize(paragraph, 180);
+        doc.text(15, 65, lines);
+
+        doc.text(15, 80, "Ref: 1. Request Letter by the leaseholder");
+        doc.text(23, 85, "2. Resolution No …………… dt …………… of Municipal Council/Standing Committee");
+       
+        doc.text(105, 95, "><><><", 'center');
+
+        doc.text(15, 105, "Orders:");
+        doc.setLineWidth(0.5);
+        doc.line(15, 106, 28, 106);
+
+
+        var paragraph1 =  "In the reference 1st cited, a request for remission of lease amount of existing lease for Shop No " + agreement.referenceNumber + " in the " + agreement.asset.name + " Shopping Complex was received by this office and your application for remission of lease amount was accepted by the Municipal Council/Standing Committee vide reference 2nd cited with the as per the rates mentioned below";
+        var lines = doc.splitTextToSize(paragraph1, 180);
+        doc.text(15, 115, lines);
+
+        doc.autoTable(columns, rows, autoTableOptions);
+
+        var paragraph2 = "In pursuance of the Municipal Council/Standing Committee resolution and vide GO MS No 56 dt. 05.02.2011, you are requested to pay all the dues for the said lease mentioned above immediately failing which action will be initiated as per the agreement conditions.";
+        var lines = doc.splitTextToSize(paragraph2, 180);
+        doc.text(15, 170, lines);
+
+
+        doc.text(120, 190, "Commissioner");
+        doc.text(120, 195, tenantId.split(".")[1].charAt(0).toUpperCase() + tenantId.split(".")[1].slice(1) + ",");
+        doc.text(120, 200, ulbType);
+
+
+        doc.text(15, 205, "To");
+        doc.text(15, 210, "The Leaseholder");
+        doc.text(15, 215, "Copy to the concerned officials for necessary action");
+
+        doc.save('Notice-' + agreement.agreementNumber + '.pdf');
+        var blob = doc.output('blob');
+
+        this.createFileStore(agreement, blob).then(this.createNotice, this.errorHandler);
+    }
+
     render() {
         var _this = this;
-        let { handleChange, handleChangeTwoLevel, update } = this;
+        let { handleChange, handleChangeTwoLevel, update, printNotice } = this;
         let { agreement, remissionReasons } = this.state;
         let { allottee, asset, rentIncrementMethod, cancellation,
             renewal, eviction, objection, judgement, remission, remarks, documents } = this.state.agreement;
@@ -896,7 +1004,6 @@ class RemissionAgreement extends React.Component {
                 </div>
             );
         }
-
 
         return (
             <div>

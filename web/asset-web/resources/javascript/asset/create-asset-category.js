@@ -242,7 +242,6 @@ class CreateAsset extends React.Component {
       if(res){
         var buildingId = "", landId = ""; 
         res["AssetCategory"].forEach(element => { 
-          console.log("tttttttttttt",element);
             if(element.name === "Buildings") 
               buildingId = element.id
             if(element.name === "LAND") 
@@ -351,9 +350,7 @@ class CreateAsset extends React.Component {
     if(name == "name" && !e.target.value.trim() && e.target.value == " ") {
       e.preventDefault();
     } else if(name === "parent"){
-      console.log(e.target.value);
       if(e.target.value == this.state.landId){
-        console.log("Land" );
         this.setState({
           assetCategory: {
             ...this.state.assetCategory,
@@ -364,7 +361,6 @@ class CreateAsset extends React.Component {
         })
       }
       if(e.target.value == this.state.buildingId){
-        console.log("Building" );
 
         this.setState({
           assetCategory: {
@@ -589,8 +585,6 @@ class CreateAsset extends React.Component {
     let {isSearchClicked,list,customField,column,isEdit,index,assetCategory,isCustomFormVisible, readonly, showMsg}=this.state;
     let {assetCategoryType,AssetCategory,parent,name,assetFieldsDefination,isMandatory,depreciationMethod,lifeOfTheAsset ,assetAccount,accumulatedDepreciationAccount,revaluationReserveAccount,depreciationExpenseAccount,unitOfMeasurement, version, depreciationRate, usedForLease, isAgreementsExists}=assetCategory;
     let mode = getUrlVars()["type"];
-
-    console.log(this.state.assetCategory);
 
     const showActionButton = function() {
         if((!mode) ||mode==="update") {

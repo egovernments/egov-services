@@ -1,8 +1,5 @@
 package org.egov.wcms.web.controllers;
 
-import java.io.IOException;
-
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.egov.wcms.service.WaterConnectionService;
@@ -20,8 +17,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import io.swagger.annotations.ApiParam;
 
 @javax.annotation.Generated(value = "org.egov.codegen.SpringBootCodegen", date = "2018-05-03T01:09:48.367+05:30")
@@ -30,21 +25,11 @@ import io.swagger.annotations.ApiParam;
 @RequestMapping("/connection")
 public class WaterConnectionController {
 
-	private final ObjectMapper objectMapper;
-
-	private final HttpServletRequest request;
-
 	@Autowired
 	private WaterConnectionService waterConnectionService;
 
 	@Autowired
 	private WaterConnectionValidator waterConnectionValidator;
-
-	@Autowired
-	public WaterConnectionController(ObjectMapper objectMapper, HttpServletRequest request) {
-		this.objectMapper = objectMapper;
-		this.request = request;
-	}
 
 	@RequestMapping(value = "/_create", method = RequestMethod.POST)
 	public ResponseEntity<WaterConnectionRes> create(

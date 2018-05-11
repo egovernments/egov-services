@@ -1,6 +1,8 @@
 package org.egov.lams.contract;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
@@ -31,6 +33,7 @@ public class Task   {
 	private String details;
 	private String natureOfTask;
 	private String entity;
+	private Map<String, Attribute> attributes = new HashMap<>();
 	private String tenantId;
 }
 

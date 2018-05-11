@@ -1054,7 +1054,7 @@ class CreateAsset extends React.Component {
               <div className="col-sm-6">
                 <div className="row">
                   <div className="col-sm-6 label-text">
-                    <label for="depreciationRate"> Depreciation Rate </label>
+                    <label for="depreciationRate"> Depreciation Rate <span>*</span></label>
                   </div>
                   <div className="col-sm-6">
                     <input type="number" name="depreciationRate" value={depreciationRate} onChange={(e)=>{handleChange(e,"depreciationRate")}} disabled = {this.state.assetCategory.parent == this.state.landId} required />
@@ -1083,7 +1083,7 @@ class CreateAsset extends React.Component {
                     <label for="lifeOfTheAsset"> Life of the Asset </label>
                   </div>
                   <div className="col-sm-6">
-                    <input type="number" name="lifeOfTheAsset" value={lifeOfTheAsset} onChange={(e)=>{handleChange(e,"lifeOfTheAsset")}} required />
+                    <input type="number" name="lifeOfTheAsset" value={lifeOfTheAsset} onChange={(e)=>{handleChange(e,"lifeOfTheAsset")}} />
                   </div>
                 </div>
               </div>

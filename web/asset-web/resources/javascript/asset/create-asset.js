@@ -642,6 +642,7 @@ class CreateAsset extends React.Component {
             acquisitionDate: "",
             donationDate: "",
             grossValue: "1",
+            accumulatedDepreciation:"0",
             [name]: e.target.value
           }
         });

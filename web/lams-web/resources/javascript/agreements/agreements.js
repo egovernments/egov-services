@@ -201,7 +201,7 @@ $("select").on("change", function() {
 });
 
 function validateAgreementsForFloor(floorNumber) {
-   var noOfAgreements = commonApiPost("lams-services", "agreements", "_search", {tenantId, floorNumber:floorNumber,assetCode:getUrlVars()["assetId"]}).responseJSON["Agreements"];
+   var noOfAgreements = commonApiPost("lams-services", "agreements", "_search", {tenantId, floorNumber:floorNumber,asset:getUrlVars()["assetId"]}).responseJSON["Agreements"];
    var noOfShops = shopsMap[floorNumber];
  if(noOfAgreements.length === noOfShops){
    showError("Agreements should not exceed number of shops in the floor ");
@@ -352,10 +352,10 @@ var commomFieldsRules = {
         required: true
     },
     bankGuaranteeAmount: {
-        required: false
+        required: true
     },
     bankGuaranteeDate: {
-        required: false
+        required: true
     },
     agreementNumber: {
         required: true
@@ -364,10 +364,10 @@ var commomFieldsRules = {
         required: true
     },
     securityDepositDate: {
-        required: false
+        required: true
     },
     securityDeposit: {
-        required: false,
+        required: true,
         integerOnly:true
     },
     commencementDate: {
@@ -396,11 +396,11 @@ var commomFieldsRules = {
         required: false
     },
     solvencyCertificateNo: {
-        required: false,
+        required: true,
         alphaNumer: true
     },
     solvencyCertificateDate: {
-        required: false
+        required: true
     },
     timePeriod: {
         required: true

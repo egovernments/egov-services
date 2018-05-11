@@ -242,6 +242,7 @@ class CreateAsset extends React.Component {
       if(res){
         var buildingId = "", landId = ""; 
         res["AssetCategory"].forEach(element => { 
+          console.log("tttttttttttt",element);
             if(element.name === "Buildings") 
               buildingId = element.id
             if(element.name === "LAND") 
@@ -350,7 +351,9 @@ class CreateAsset extends React.Component {
     if(name == "name" && !e.target.value.trim() && e.target.value == " ") {
       e.preventDefault();
     } else if(name === "parent"){
-      if(e.target.value === this.state.landId){
+      console.log(e.target.value);
+      if(e.target.value == this.state.landId){
+        console.log("Land" );
         this.setState({
           assetCategory: {
             ...this.state.assetCategory,
@@ -360,7 +363,9 @@ class CreateAsset extends React.Component {
           }
         })
       }
-      if(e.target.value === this.state.buildingId){
+      if(e.target.value == this.state.buildingId){
+        console.log("Building" );
+
         this.setState({
           assetCategory: {
             ...this.state.assetCategory,
@@ -1058,7 +1063,7 @@ class CreateAsset extends React.Component {
                     <label for="depreciationRate"> Depreciation Rate </label>
                   </div>
                   <div className="col-sm-6">
-                    <input type="number" name="depreciationRate" value={depreciationRate} onChange={(e)=>{handleChange(e,"depreciationRate")}} disabled = {this.state.assetCategory.parent === this.state.landId} required />
+                    <input type="number" name="depreciationRate" value={depreciationRate} onChange={(e)=>{handleChange(e,"depreciationRate")}} disabled = {this.state.assetCategory.parent == this.state.landId} required />
                   </div>
                 </div>
               </div>
@@ -1077,7 +1082,7 @@ class CreateAsset extends React.Component {
                 </div>
               </div>
             </div>
-            {this.state.assetCategory.parent === this.state.buildingId && <div className="row">
+            {this.state.assetCategory.parent == this.state.buildingId && <div className="row">
               <div className="col-sm-6">
                 <div className="row">
                   <div className="col-sm-6 label-text">

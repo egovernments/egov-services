@@ -241,7 +241,7 @@ class CreateAsset extends React.Component {
     commonApiPost("asset-services", "assetCategories", "_search", { tenantId,isParentCategory:true}, function(err, res) {
       if(res){
         var buildingId = "", landId = ""; 
-        res.forEach(element => { 
+        res["AssetCategory"].forEach(element => { 
             if(element.name === "Buildings") 
               buildingId = element.id
             if(element.name === "LAND") 

@@ -602,7 +602,7 @@ $(document).ready(function() {
               }
 
             }
-            console.log(currOwnerPosition);
+            console.log(currentUserDesignation);
          if(currOwnerPosition && currentUserDesignation==null){
 
            var designation = getCommonMasterById("hr-masters", "designations", null,currOwnerPosition).responseJSON["Designation"];
@@ -632,7 +632,8 @@ $(document).ready(function() {
                 $("#footer-btn-grp").append($(`<button data-action='${process.attributes.validActions.values[i].key}' id=${process.attributes.validActions.values[i].key} type="button" class="btn btn-submit">${process.attributes.validActions.values[i].name}</button>`))
                                   $("#footer-btn-grp").append($('<span>&nbsp;&nbsp</span>'));
                 if (process.attributes.validActions.values[i].key.toLowerCase() == "print notice") {
-                    $(".workFlowDetails").remove();
+                    $(".workFlowDetailsSection").remove();
+
                 }
                 if(process.attributes.validActions.values[i].key.toLowerCase() == "forward") {
                     flg = 1;
@@ -644,10 +645,14 @@ $(document).ready(function() {
         } else {
             $("#workFlowDetails").remove();
         }
+        if(currentUserDesignation && currentUserDesignation==='Commissioner'){
+          $("#workFlowDetails").remove();
+
+        }
          $("#footer-btn-grp").append($('<button type="button" class="btn btn-close" id="close">Close</button>'));
 
         if (process) {
-            getDesignations(process.status,currentUserDesignation, function(designations) {
+            getDesignations(process.status,currentUserDesignation+" Approval Pending", function(designations) {
                 for (var variable in designations) {
                     if (!designations[variable]["id"]) {
                         var _res = commonApiPost("hr-masters", "designations", "_search", { tenantId, name: designations[variable]["name"] });

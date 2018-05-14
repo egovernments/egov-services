@@ -369,6 +369,16 @@ class CreateAsset extends React.Component {
           }
         })
       }
+    }  else if(name === "lifeOfTheAsset"){
+
+        this.setState({
+          assetCategory: {
+            ...this.state.assetCategory,
+            [name]: e.target.value,
+            depreciationRate: 100/Number(e.target.value)
+          }
+        })
+      
     } else {
       this.setState({
         assetCategory: {
@@ -1054,10 +1064,10 @@ class CreateAsset extends React.Component {
               <div className="col-sm-6">
                 <div className="row">
                   <div className="col-sm-6 label-text">
-                    <label for="depreciationRate"> Depreciation Rate <span>*</span></label>
+                    <label for="depreciationRate"> Depreciation Rate </label>
                   </div>
                   <div className="col-sm-6">
-                    <input type="number" name="depreciationRate" value={depreciationRate} onChange={(e)=>{handleChange(e,"depreciationRate")}} disabled = {this.state.assetCategory.parent == this.state.landId} required />
+                    <input type="number" name="depreciationRate" value={depreciationRate} onChange={(e)=>{handleChange(e,"depreciationRate")}} disabled = {this.state.assetCategory.parent == this.state.landId} disabled />
                   </div>
                 </div>
               </div>

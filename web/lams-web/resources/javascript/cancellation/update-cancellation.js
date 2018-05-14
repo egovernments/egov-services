@@ -285,6 +285,33 @@ class UpdateCancellation extends React.Component {
             id: stateId
         }).responseJSON["processInstance"] || {};
 
+        var currentUserDesignation = null;
+        var ownerPosition = process.owner.id;
+        var currOwnerPosition=null;
+
+        var loggedInEmployee = commonApiPost("hr-employee", "employees", "_loggedinemployee", {asOnDate: moment(new Date()).format("DD/MM/YYYY"), tenantId }).responseJSON["Employee"];
+        if(loggedInEmployee){
+          var assignments = loggedInEmployee[0].assignments;
+          var positions=[];
+          if(assignments){
+            for(var i=0;i<assignments.length;i++){
+                if(ownerPosition==assignments[i].position){
+                  currentUserDesignation = process.owner.deptdesig.designation.name;
+                  break;
+            }else{
+               currOwnerPosition =assignments[0].designation;
+            }
+            }
+          }
+
+        }
+        console.log(currentUserDesignation);
+     if(currOwnerPosition && currentUserDesignation==null){
+
+       var designation = getCommonMasterById("hr-masters", "designations", null,currOwnerPosition).responseJSON["Designation"];
+       currentUserDesignation = designation[0].name;
+     }
+
         var currStatus = null;
         if (process.status === 'Commissioner Approved') {
             currStatus = 'INACTIVE';
@@ -335,7 +362,7 @@ class UpdateCancellation extends React.Component {
             }
         }
 
-        getDesignations(process.status, function (designations) {
+        getDesignations(process.status, currentUserDesignation, function (designations) {
             //console.log(designations);
             _this.setState({
                 ..._this.state,

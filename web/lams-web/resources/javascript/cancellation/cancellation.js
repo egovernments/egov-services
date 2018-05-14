@@ -467,7 +467,7 @@ class CancellationAgreement extends React.Component {
       agreementType = "Cancel Corporation Agreement";
     }
 
-    getDesignations(null, function (designations) {
+    getDesignations(null,null, function (designations) {
       _this.setState({
         ..._this.state,
         designationList: designations

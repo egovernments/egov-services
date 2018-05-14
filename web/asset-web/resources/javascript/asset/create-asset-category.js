@@ -375,7 +375,7 @@ class CreateAsset extends React.Component {
           assetCategory: {
             ...this.state.assetCategory,
             [name]: e.target.value,
-            depreciationRate: 100/Number(e.target.value)
+            depreciationRate: Math.floor((100/Number(e.target.value)) * 100) / 100 
           }
         })
       

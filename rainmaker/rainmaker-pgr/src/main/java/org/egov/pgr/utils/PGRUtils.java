@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.Map.Entry;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.mdms.model.MasterDetail;
@@ -330,6 +331,26 @@ public class PGRUtils {
 	 */
 	public static Map<Integer, String> getEmployeeRolesPrecedenceMap(){
 		return employeeRolesPrecedenceMap;
+	}
+	
+	/**
+	 * Helper method which returns the precedent role among all the given roles
+	 * 
+	 * The employee precedent map is a tree map which will have the roles ordered based on their keys precedence
+	 * 
+	 * The method will fail if the list of roles is null, so the parameter must be null checked
+	 * 
+	 * If the none of roles in the precedence map has a match in roles object then the method will return null 
+	 */
+	public String getPrecedentRole(List<String> roles) {
+
+		for (Entry<Integer, String> entry : PGRUtils.getEmployeeRolesPrecedenceMap().entrySet()) {
+
+			String currentValue = entry.getValue();
+			if (roles.contains(currentValue))
+				return currentValue;
+		}
+		return null;
 	}
 
 }

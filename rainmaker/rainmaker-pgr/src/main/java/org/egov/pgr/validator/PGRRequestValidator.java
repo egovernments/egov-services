@@ -313,7 +313,8 @@ public class PGRRequestValidator {
 		Map<String, List<String>> roleActionMap = WorkFlowConfigs.getRoleActionMap();
 		final String errorCode = "EG_PGR_UPDATE_INVALID_ACTION";
 		List<String> actions = roleActionMap
-				.get(serviceRequest.getRequestInfo().getUserInfo().getRoles().get(0).getName().toUpperCase());
+				.get(pgrUtils.getPrecedentRole(serviceRequest.getRequestInfo().getUserInfo().getRoles().parallelStream()
+						.map(Role :: getName).collect(Collectors.toList())).toUpperCase());
 		log.info("actions: " + actions);
 		if (null != actions && !actions.isEmpty()) {
 			List<ActionInfo> infos = serviceRequest.getActionInfo();
@@ -335,28 +336,4 @@ public class PGRRequestValidator {
 		if (!errorMap.isEmpty())
 			throw new CustomException(errorMap);
 	}
-	
-/*	public void validateActionsOnStatus(ServiceRequest serviceRequest, Map<String, String> errorMap) {
-		if (null != actionInfo.getAction() && actionStatusMap.get(actionInfo.getAction()) != null) {
-			if (!WorkFlowConfigs.ACTION_CLOSE.equals(actionInfo.getAction())
-					&& (null != servReq.getFeedback() || null != servReq.getRating()))
-				addError(ErrorConstants.UPDATE_FEEDBACK_ERROR_MSG + actionInfo.getAction() + ", with service Id : "
-						+ servReq.getServiceRequestId(), ErrorConstants.UPDATE_FEEDBACK_ERROR_KEY, errorMap);
-			if (isUpdateValid(requestInfo, actionInfo, actioncurrentStatusMap.get(actionInfo.getAction()))) {
-				String resultStatus = actionStatusMap.get(actionInfo.getAction());
-				actionInfo.setStatus(resultStatus);
-				servReq.setStatus(StatusEnum.fromValue(resultStatus));
-			} else {
-
-				String errorMsg = " The Given Action " + actionInfo.getAction()
-						+ "cannot be applied for the Current status of the Grievance with ServiceRequestId "
-						+ servReq.getServiceRequestId();
-				addError(errorMsg, ErrorConstants.UPDATE_ERROR_KEY, errorMap);
-			}
-		} else if (null != actionInfo.getAction()) {
-			String errorMsg = "The given action " + actionInfo.getAction() + " is invalid for the current status: "+servReq.getStatus();
-			addError(errorMsg, ErrorConstants.UPDATE_ERROR_KEY, errorMap);
-		}
-		
-	}*/
 }

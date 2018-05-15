@@ -393,7 +393,7 @@ public class GrievanceService {
 		log.info("Enriching request.........: " + serviceReqSearchCriteria);
 		List<String> roleNames = requestInfo.getUserInfo().getRoles().parallelStream().map(Role::getName)
 				.collect(Collectors.toList());
-		String precedentRole = getPrecedentRole(roleNames);
+		String precedentRole = pGRUtils.getPrecedentRole(roleNames);
 		String userType = requestInfo.getUserInfo().getType();
 		if (userType.equalsIgnoreCase("CITIZEN")) {
 			log.info("Setting tenant for citizen........");
@@ -460,26 +460,6 @@ public class GrievanceService {
 
 		log.info("Enriched request: " + serviceReqSearchCriteria);
 
-	}
-
-	/**
-	 * Helper method which returns the precedent role among all the given roles
-	 * 
-	 * The employee precedent map is a tree map which will have the roles ordered based on their keys precedence
-	 * 
-	 * The method will fail if the list of roles is null, so the parameter must be null checked
-	 * 
-	 * If the none of roles in the precedence map has a match in roles object then the method will return null 
-	 */
-	private String getPrecedentRole(List<String> roles) {
-
-		for (Entry<Integer, String> entry : PGRUtils.getEmployeeRolesPrecedenceMap().entrySet()) {
-
-			String currentValue = entry.getValue();
-			if (roles.contains(currentValue))
-				return currentValue;
-		}
-		return null;
 	}
 
 	public String getDepartmentCode(ServiceReqSearchCriteria serviceReqSearchCriteria, RequestInfo requestInfo) {

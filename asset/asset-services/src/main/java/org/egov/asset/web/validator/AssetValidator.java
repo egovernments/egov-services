@@ -415,6 +415,10 @@ public class AssetValidator {
                 assetRequest.getRequestInfo());
         if (!assetFromReq.getCode().equalsIgnoreCase(asset.getCode()))
             throw new RuntimeException("Invalid Asset Code for Asset :: " + asset.getName());
+        if(asset.getStatus().equals(Status.DISPOSED.toString())){
+            throw new RuntimeException("Asset has been already sold/disposed, hence no modification is allowed :: " + asset.getName());
+            
+        }
 
     }
 

@@ -128,6 +128,9 @@ $(document).ready(function() {
         $('#hpCitizenTitle').html("Modify Data Entry Agreement");
         create=false;
         let modifyAgreements = response.Agreements[0];
+        //Creating docs key to display files and deleting documents for update 
+        modifyAgreements.docs = modifyAgreements.documents;
+        modifyAgreements.documents = [];
         // console.log(modifyAgreements);
         agreement = Object.assign({}, modifyAgreements);
         //Load subSeqRenewals based on response agreement['subSeqRenewals']
@@ -442,7 +445,7 @@ function displayFiles(agreement) {
     $(tBody).html("");
 
     for (var key in agreement) {
-        if (key == "documents" && agreement[key] && agreement[key].constructor == Array && agreement[key].length > 0) {
+        if (key == "docs" && agreement[key] && agreement[key].constructor == Array && agreement[key].length > 0) {
             for (var i = 0; i < agreement[key].length; i++) {
                 appendTr(tBody, count, "Documents", agreement[key][i]["fileStore"]);
                 count++;
@@ -1218,6 +1221,7 @@ function uploadFiles(agreement, cb) {
                     docs.push({fileStore: res.files[0].fileStoreId});
                     if (counter == 0 && breakout == 0) {
                         agreement.documents = docs;
+                        agreement.documents = agreement.documents.concat(agreement.docs);
                         cb(null, agreement);
                     }
                 }

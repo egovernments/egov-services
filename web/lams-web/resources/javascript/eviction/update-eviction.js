@@ -280,8 +280,9 @@ class UpdateEviction extends React.Component {
             tenantId: tenantId,
             id: stateId
         }).responseJSON["processInstance"] || {};
+        var wfState = process.status;
         var currStatus = null;
-        if(process.status ==='Commissioner Approved'){
+        if(wfState.includes('Commissioner Approved')){
           currStatus='EVICTED';
         }
 

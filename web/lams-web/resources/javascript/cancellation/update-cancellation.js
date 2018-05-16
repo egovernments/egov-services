@@ -311,9 +311,9 @@ class UpdateCancellation extends React.Component {
        var designation = getCommonMasterById("hr-masters", "designations", null,currOwnerPosition).responseJSON["Designation"];
        currentUserDesignation = designation[0].name;
      }
-
+       var wfState = process.status;
         var currStatus = null;
-        if (process.status === 'Commissioner Approved') {
+        if (wfState.includes('Commissioner Approved')) {
             currStatus = 'INACTIVE';
         }
 

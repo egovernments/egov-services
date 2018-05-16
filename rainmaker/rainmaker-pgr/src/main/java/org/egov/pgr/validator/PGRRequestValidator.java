@@ -312,9 +312,14 @@ public class PGRRequestValidator {
 	public void validateAction(ServiceRequest serviceRequest, Map<String, String> errorMap) {
 		Map<String, List<String>> roleActionMap = WorkFlowConfigs.getRoleActionMap();
 		final String errorCode = "EG_PGR_UPDATE_INVALID_ACTION";
-		List<String> actions = roleActionMap
-				.get(pgrUtils.getPrecedentRole(serviceRequest.getRequestInfo().getUserInfo().getRoles().parallelStream()
-						.map(Role :: getName).collect(Collectors.toList())).toUpperCase());
+		List<String> roles = serviceRequest.getRequestInfo().getUserInfo().getRoles().parallelStream()
+				.map(Role::getName).collect(Collectors.toList());
+		List<String> actions = null;
+		if (roles.contains("Citizen") || roles.contains("CITIZEN"))
+			actions = roleActionMap.get(serviceRequest.getRequestInfo().getUserInfo().getRoles().get(0).getName().toUpperCase());
+		else
+			actions = roleActionMap.get(pgrUtils.getPrecedentRole(serviceRequest.getRequestInfo().getUserInfo()
+					.getRoles().parallelStream().map(Role::getName).collect(Collectors.toList())).toUpperCase());
 		log.info("actions: " + actions);
 		if (null != actions && !actions.isEmpty()) {
 			List<ActionInfo> infos = serviceRequest.getActionInfo();

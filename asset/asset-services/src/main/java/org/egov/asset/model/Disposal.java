@@ -49,6 +49,7 @@
 package org.egov.asset.model;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 import javax.validation.constraints.NotNull;
 
@@ -122,4 +123,6 @@ public class Disposal {
 
     @JsonProperty("profitLossVoucherReference")
     private String profitLossVoucherReference;
+    
+    private List<Document> documents;
 }

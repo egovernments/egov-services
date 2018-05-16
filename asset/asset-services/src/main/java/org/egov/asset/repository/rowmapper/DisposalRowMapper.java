@@ -51,9 +51,11 @@ package org.egov.asset.repository.rowmapper;
 import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
-import org.egov.asset.model.AuditDetails;
 import org.egov.asset.model.Disposal;
+import org.egov.asset.model.Document;
 import org.egov.asset.model.enums.TransactionType;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
@@ -65,7 +67,7 @@ public class DisposalRowMapper implements RowMapper<Disposal> {
     public Disposal mapRow(final ResultSet rs, final int rowNum) throws SQLException {
 
         final Disposal disposal = new Disposal();
-        disposal.setId((Long) rs.getObject("id"));
+        disposal.setId((Long) rs.getObject("disposalId"));
         disposal.setTenantId(rs.getString("tenantid"));
         disposal.setAssetId(rs.getLong("assetid"));
         disposal.setBuyerName(rs.getString("buyername"));
@@ -80,14 +82,18 @@ public class DisposalRowMapper implements RowMapper<Disposal> {
         disposal.setTransactionType(TransactionType.fromValue(rs.getString("transactiontype")));
         disposal.setAssetSaleAccount((Long) rs.getObject("assetsaleaccount"));
 
-        final AuditDetails auditDetails = new AuditDetails();
-        auditDetails.setCreatedBy(rs.getString("createdby"));
-        auditDetails.setCreatedDate(rs.getLong("createddate"));
-        auditDetails.setLastModifiedBy(rs.getString("lastmodifiedby"));
-        auditDetails.setLastModifiedDate(rs.getLong("lastmodifieddate"));
-        disposal.setAuditDetails(auditDetails);
-
         disposal.setProfitLossVoucherReference(rs.getString("profitlossvoucherreference"));
+        
+        final List<Document> docList = new ArrayList<>();
+        final Document documents = new Document();
+        documents.setAsset((Long) rs.getObject("assetid"));
+        documents.setFileStore(rs.getString("filestore"));
+        documents.setId((Long) rs.getObject("documentsId"));
+        if (documents.getId() == null)
+            disposal.setDocuments(new ArrayList<>());
+        else
+            docList.add(documents);
+        disposal.setDocuments(docList);
 
         return disposal;
     }

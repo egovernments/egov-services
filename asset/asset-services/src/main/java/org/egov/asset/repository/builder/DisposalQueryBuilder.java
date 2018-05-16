@@ -70,11 +70,13 @@ public class DisposalQueryBuilder {
 			+ "createdby,createddate,lastmodifiedby,lastmodifieddate,profitlossvoucherreference)"
 			+ "values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 
-	public String BASE_QUERY = "SELECT "
-			+ "id,tenantid,assetid,buyername,buyeraddress,disposalreason,disposaldate,pancardnumber,"
-			+ "aadharcardnumber,assetcurrentvalue,salevalue,transactiontype,assetsaleaccount,"
-			+ "createdby,createddate,lastmodifiedby,lastmodifieddate,profitlossvoucherreference FROM"
-			+ " egasset_disposal as disposal";
+	public String BASE_QUERY = "SELECT *,"
+			+ "disposal.id as disposalId,disposal.tenantid as tenantid ,disposal.assetid as assetid,disposal.buyername as buyername ,"
+			+ "disposal.buyeraddress as buyeraddress,disposal.disposalreason as disposalreason,disposal.disposaldate as disposaldate,disposal.pancardnumber as pancardnumber,"
+			+ "disposal.aadharcardnumber as aadharcardnumber,disposal.assetcurrentvalue as assetcurrentvalue ,disposal.salevalue as salevalue ,disposal.transactiontype as transactiontype,"
+			+ "disposal.assetsaleaccount as assetsaleaccount,"
+			+ " disposal.profitlossvoucherreference as profitlossvoucherreference ,documents.filestore as filestore ,documents.id as documentsId FROM"
+			+ " egasset_disposal as disposal LEFT OUTER JOIN egasset_document documents ON disposal.assetid = documents.asset";
 
 	@SuppressWarnings("rawtypes")
 	public String getQuery(final DisposalCriteria disposalCriteria, final List preparedStatementValues) {

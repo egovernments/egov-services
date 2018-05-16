@@ -54,10 +54,12 @@ import java.util.List;
 import org.egov.asset.contract.DisposalRequest;
 import org.egov.asset.model.Disposal;
 import org.egov.asset.model.DisposalCriteria;
+import org.egov.asset.model.Document;
 import org.egov.asset.repository.builder.DisposalQueryBuilder;
 import org.egov.asset.repository.rowmapper.DisposalRowMapper;
 import org.egov.common.contract.request.RequestInfo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -96,6 +98,27 @@ public class DisposalRepository {
 
         final RequestInfo requestInfo = disposalRequest.getRequestInfo();
         final Disposal disposal = disposalRequest.getDisposal();
+        
+        final List<Document> documents = disposal.getDocuments();
+        if (documents != null) {
+            final String sql = "INSERT INTO egasset_document (id,asset,filestore,tenantid) values "
+                    + "(nextval('seq_egasset_document'),?,?,?);";
+            log.info("the insert query for assets docs : " + sql);
+            final List<Object[]> documentBatchArgs = new ArrayList<>();
+
+            for (final Document document : documents) {
+                final Object[] documentRecord = { disposal.getAssetId(), document.getFileStore(),
+                        disposal.getTenantId() };
+                documentBatchArgs.add(documentRecord);
+            }
+
+            try {
+                jdbcTemplate.batchUpdate(sql, documentBatchArgs);
+            } catch (final DataAccessException ex) {
+                log.info("exception saving Sale/Disposal document details" + ex);
+                throw new RuntimeException("exception saving Sale/Disposal document details");
+            }
+        }
 
         final Object[] values = { disposal.getId(), disposal.getTenantId(), disposal.getAssetId(),
                 disposal.getBuyerName(), disposal.getBuyerAddress(), disposal.getDisposalReason(),

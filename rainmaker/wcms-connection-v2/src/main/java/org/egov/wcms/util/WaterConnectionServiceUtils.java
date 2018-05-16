@@ -4,11 +4,11 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.wcms.config.WaterConnectionConfig;
-import org.egov.wcms.mdms.MDMSCache;
 import org.egov.wcms.mdms.MDMSConstants;
 import org.egov.wcms.web.models.AuditDetails;
 import org.egov.wcms.web.models.SearcherRequest;
@@ -99,10 +99,10 @@ public class WaterConnectionServiceUtils {
 	 * @param masterName
 	 * @return List
 	 */
-	public List<String> getValidCodes(String masterName){
+	public List<String> getValidCodes(String masterName, Map<String, List<Map<String, Object>>> mastersMap){
 		List<String> codes = new ArrayList<>();
-		if(!CollectionUtils.isEmpty(MDMSCache.mastersMap.get(masterName))) {
-			codes = JsonPath.read(MDMSCache.mastersMap.get(masterName), MDMSConstants.WCMS_MDMS_RES_CODE_JSONPATH);
+		if(!CollectionUtils.isEmpty(mastersMap.get(masterName))) {
+			codes = JsonPath.read(mastersMap.get(masterName), MDMSConstants.WCMS_MDMS_RES_CODE_JSONPATH);
 		}
 		log.debug("Valid Codes for "+masterName+" master: "+codes);
 		return codes;
@@ -114,10 +114,10 @@ public class WaterConnectionServiceUtils {
 	 * @param applicationType
 	 * @return List
 	 */
-	public List<String> getValidDocumentTypesForApplicationType(String applicationType){
+	public List<String> getValidDocumentTypesForApplicationType(String applicationType, Map<String, List<Map<String, Object>>> mastersMap){
 		List<String> documentTypes = new ArrayList<>();
-		if(!CollectionUtils.isEmpty(MDMSCache.mastersMap.get(MDMSConstants.APPLICATIONTYPE_MASTER_NAME))) {
-			documentTypes = JsonPath.read(MDMSCache.mastersMap.get(MDMSConstants.APPLICATIONTYPE_MASTER_NAME), 
+		if(!CollectionUtils.isEmpty(mastersMap.get(MDMSConstants.APPLICATIONTYPE_MASTER_NAME))) {
+			documentTypes = JsonPath.read(mastersMap.get(MDMSConstants.APPLICATIONTYPE_MASTER_NAME), 
 					MDMSConstants.WCMS_MDMS_RES_VALIDDOCTYPE_JSONPATH.replace("{$}", applicationType));
 		}
 		log.debug("Valid document types for "+applicationType+": "+documentTypes);

@@ -1,13 +1,19 @@
 package org.egov.wcms.service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.egov.common.contract.request.RequestInfo;
+import org.egov.mdms.model.MdmsCriteriaReq;
 import org.egov.wcms.config.WaterConnectionConfig;
+import org.egov.wcms.mdms.MDMSConstants;
+import org.egov.wcms.mdms.MDMSUtils;
 import org.egov.wcms.producer.Producer;
 import org.egov.wcms.repository.Repository;
 import org.egov.wcms.util.ResponseInfoFactory;
@@ -37,7 +43,7 @@ public class WaterConnectionService {
 	private WaterConnectionServiceUtils wCServiceUtils;
 	
 	@Autowired
-	private Repository wcRepository;
+	private Repository repository;
 	
 	@Autowired
 	private Producer waterConnectionProducer;
@@ -47,6 +53,10 @@ public class WaterConnectionService {
 	
 	@Autowired
 	private ResponseInfoFactory responseInfoFactory;
+	
+	@Autowired
+	private MDMSUtils mdmsUtils;
+	
 	
 	/**
 	 * Searches Water Connections based on the criteria in WaterConnectionSearchCriteria.
@@ -64,7 +74,7 @@ public class WaterConnectionService {
 		SearcherRequest searcherRequest = wCServiceUtils.getSearcherRequest(uri, waterConnectionSearchCriteria, requestInfo, 
 				(!CollectionUtils.isEmpty(waterConnectionSearchCriteria.getOwnerIds()) ? WaterConnectionConstants.SEARCHER_WC_ON_OWNER_SEARCH_DEF_NAME : WaterConnectionConstants.SEARCHER_WC_SEARCH_DEF_NAME));
 		try {
-			response = wcRepository.fetchResult(uri, searcherRequest);
+			response = repository.fetchResult(uri, searcherRequest);
 			if(null == response) {
 				return wCServiceUtils.getDefaultWaterConnectionResponse(requestInfo);
 			}
@@ -93,15 +103,17 @@ public class WaterConnectionService {
 	/**
 	 * Request enrichment for create flow based on the following use-cases:
 	 * 1. Generate ids for each request using idGen. 
+	 * 
 	 * @param connections
 	 */
 	public void enrichCreateRequest(WaterConnectionReq connections) {
-		// (1)
 		RequestInfo requestInfo = connections.getRequestInfo();
 		AuditDetails auditDetails = wCServiceUtils.getAuditDetails(requestInfo.getUserInfo().getId().toString(), true);
 		
 		for(Connection connection: connections.getConnections()) {
+			// (1)
 			connection.setConnectionNumber(wCServiceUtils.generateConnectonNumber());
+			//
 			connection.setId(UUID.randomUUID().toString());
 			connection.getMeter().setId(UUID.randomUUID().toString());
 			connection.getAddress().setId(UUID.randomUUID().toString());
@@ -147,7 +159,7 @@ public class WaterConnectionService {
 					waterConnectionSearchCriteria.getTenantId(), waterConnectionSearchCriteria.getPhone());
 			Integer userId = null;
 			try {
-				Object response = wcRepository.fetchResult(uri, userSearchRequest);
+				Object response = repository.fetchResult(uri, userSearchRequest);
 				if(null != response) {
 					userId = JsonPath.read(mapper.writeValueAsString(response), "$.user[0].id");
 				}
@@ -166,6 +178,46 @@ public class WaterConnectionService {
 		//
 			
 		}
+	}
+	
+	/**
+	 * 
+	 * 
+	 * @param tenantId
+	 * @param requestInfo
+	 * @return
+	 */
+	public Map<String, List<Map<String, Object>>> getMDMSDataForMasters(String tenantId, RequestInfo requestInfo){
+		Map<String, List<Map<String, Object>>> mastersMap = new HashMap<>();
+		StringBuilder uri = new StringBuilder();
+		MdmsCriteriaReq request = mdmsUtils.prepareMDMSReqForCache(uri, tenantId, requestInfo);
+		String[] masters = {MDMSConstants.APPLICATIONTYPE_MASTER_NAME, MDMSConstants.BILLINGSLAB_MASTER_NAME, MDMSConstants.BILLINGTYPE_MASTER_NAME,
+		           MDMSConstants.DOCUMENTTYPE_MASTER_NAME, MDMSConstants.PIPESIZE_MASTER_NAME};
+		try {
+			Object mdmsResponse = repository.fetchResult(uri, request);
+			if(null != mdmsResponse) {
+				for(String master: Arrays.asList(masters)) {
+					List<Object> masterDataList = new ArrayList<>();
+					try{
+						masterDataList = JsonPath.read(mdmsResponse, MDMSConstants.WCMS_MDMS_RES_JSONPATH + master);
+					}catch(Exception e) {
+						log.error(master+" master couldn't be fetched");
+						continue;
+					}
+					List<Map<String, Object>> masterData = masterDataList.parallelStream()
+							.map(obj -> {
+								return (Map<String, Object>) obj;
+							}).collect(Collectors.toList());
+					mastersMap.put(master, masterData);
+				}
+			}
+			log.debug("Cached Data: "+mastersMap);
+		}catch(Exception e) {
+			log.error("Failed to build MDMS Cache: "+e);
+		}
+		
+		return mastersMap;
+	
 	}
 
 }

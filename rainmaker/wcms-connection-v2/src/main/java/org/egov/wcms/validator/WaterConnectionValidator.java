@@ -8,7 +8,6 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.egov.tracer.model.CustomException;
-import org.egov.wcms.mdms.MDMSCache;
 import org.egov.wcms.mdms.MDMSConstants;
 import org.egov.wcms.mdms.MDMSUtils;
 import org.egov.wcms.service.WaterConnectionService;
@@ -27,9 +26,6 @@ public class WaterConnectionValidator {
 	
 	@Autowired
 	private WaterConnectionService waterConnectionService;
-	
-	@Autowired
-	private MDMSCache mdmsCache;
 	
 	@Autowired
 	private MDMSUtils mdmsUtils;
@@ -107,21 +103,19 @@ public class WaterConnectionValidator {
 	 * @param errorMap
 	 */
 	public void validateMDMSCodes(WaterConnectionReq waterConnectionReq, Map<String, String> errorMap) {
-		if(CollectionUtils.isEmpty(MDMSCache.mastersMap)) {
-			String stateTenantId = waterConnectionReq.getConnections().get(0).getTenantId().split("[.]")[0];
-			mdmsCache.buildCache(stateTenantId, waterConnectionReq.getRequestInfo());
-		}
+		Map<String, List<Map<String, Object>>> mastersMap = waterConnectionService.
+				getMDMSDataForMasters(waterConnectionReq.getConnections().get(0).getTenantId(), waterConnectionReq.getRequestInfo());
 		for(Connection connection: waterConnectionReq.getConnections()) {
 			// (1)
-			if(!waterConnectionServiceUtils.getValidCodes(MDMSConstants.PIPESIZE_MASTER_NAME).contains(connection.getPipesize())) {
+			if(!waterConnectionServiceUtils.getValidCodes(MDMSConstants.PIPESIZE_MASTER_NAME, mastersMap).contains(connection.getPipesize())) {
 				errorMap.put("INVALID_PIPESIZE", "PIPESIZE code is invalid for connection: ");
 			}
 			// (1) (2)
-			if(!waterConnectionServiceUtils.getValidCodes(MDMSConstants.APPLICATIONTYPE_MASTER_NAME).contains(connection.getApplicationType())) {
+			if(!waterConnectionServiceUtils.getValidCodes(MDMSConstants.APPLICATIONTYPE_MASTER_NAME, mastersMap).contains(connection.getApplicationType())) {
 				errorMap.put("INVALID_APPLICATION_TYPE", "APPLICATION TYPE code is invalid for connection: ");
 				continue;
 			}
-			List<String> validDocumentTypes = waterConnectionServiceUtils.getValidDocumentTypesForApplicationType(connection.getApplicationType());
+			List<String> validDocumentTypes = waterConnectionServiceUtils.getValidDocumentTypesForApplicationType(connection.getApplicationType(), mastersMap);
 			for(Document document: connection.getDocuments()) {
 				if(!validDocumentTypes.contains(document.getDocumentType()))
 					errorMap.put("INVALID_DOCUMENT_TYPE", "DOCUMENT TYPE code is invalid for document: "+document.getId());

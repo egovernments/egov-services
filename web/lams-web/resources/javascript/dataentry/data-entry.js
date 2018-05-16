@@ -163,6 +163,7 @@ $(document).ready(function() {
       }else{
         alert('This agreement is not a data entry agreement.')
       }
+      displayFiles(agreement);
     });
   }
 
@@ -434,6 +435,76 @@ function fillValueToObject(currentState) {
     }
     console.log(agreement);
 }
+
+function displayFiles(agreement) {
+    var tBody = "#fileBody",
+        count = 1;
+    $(tBody).html("");
+
+    for (var key in agreement) {
+        if (key == "documents" && agreement[key] && agreement[key].constructor == Array && agreement[key].length > 0) {
+            for (var i = 0; i < agreement[key].length; i++) {
+                appendTr(tBody, count, "Documents", agreement[key][i]["fileStore"]);
+                count++;
+            }
+        }
+    }
+}
+
+function appendTr(tBodyName, count, name, fileId) {
+    if ($("#fileTable").css('display') == 'none')
+        $("#fileTable").show();
+
+
+        $(tBodyName).append(`<tr data-key=${count}>
+            <td>
+            ${count}
+            </td>
+            <td>
+            ${titleCase(name)}
+            </td>
+            <td>
+            <a href=${window.location.origin + CONST_API_GET_FILE + fileId} target="_blank">
+                Download
+            </a>
+            </td>
+            <td>
+            ${"<button type='button' class='btn btn-close btn-danger' onclick='deleteFile(event, `" + name + "`, `" + fileId + "`, `" + count + "`)'>Delete</button>"}
+            </td>
+        </tr>`);
+    
+
+}
+
+function deleteFile(e, name, fileId, count) {
+    e.stopPropagation();
+
+    if ($("[data-key='" + count + "']").css("backgroundColor") == "rgb(211, 211, 211)") {
+        var ind = filesToBeDeleted.indexOf(fileId);
+        filesToBeDeleted.splice(ind, 1);
+        $("[data-key='" + count + "']").css("backgroundColor", "#ffffff");
+        $("[data-key='" + count + "']").css("textDecoration", "");
+        $("[data-key='" + count + "'] button").text("Delete");
+    } else {
+        if (!filesToBeDeleted)
+            filesToBeDeleted = [];
+        filesToBeDeleted.push(fileId);
+        $("[data-key='" + count + "']").css("backgroundColor", "#d3d3d3");
+        $("[data-key='" + count + "']").css("textDecoration", "line-through");
+        $("[data-key='" + count + "'] button").text("Undo");
+    }
+}
+
+function checkNRemoveFile() {
+
+    for (var i = 0; i < filesToBeDeleted.length; i++) {
+        for (var j = 0; j < agreement["documents"].length; j++) {
+            if (agreement["documents"][j]["fileStore"] == filesToBeDeleted[i])
+                agreement["documents"].splice(j, 1);
+        }
+    }
+}
+
 
 
 var validationRules = {};

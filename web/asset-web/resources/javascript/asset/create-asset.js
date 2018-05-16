@@ -1698,7 +1698,7 @@ class CreateAsset extends React.Component {
             <td>{ind2 + 1}</td>
             <td>Asset Documents</td>
             <td>
-              <a href={window.location.origin + CONST_API_GET_FILE + file} target="_blank">
+              <a href={window.location.origin + CONST_API_GET_FILE + file.fileStore} target="_blank">
                 Download
                 </a>
             </td>

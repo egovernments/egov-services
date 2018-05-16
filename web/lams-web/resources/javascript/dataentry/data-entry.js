@@ -47,6 +47,7 @@ $('#close').on("click", function() {
 
 var CONST_API_GET_FILE = "/filestore/v1/files/id?fileStoreId=";
 var agreement = {};
+var filesToBeDeleted = [];
 var assetDetails;
 var employees = [];
 var fileTypes = ["application/msword", "application/vnd.openxmlformats-officedocument.wordprocessingml.document", "application/vnd.ms-excel", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "application/pdf", "image/png", "image/jpeg"];
@@ -501,9 +502,9 @@ function deleteFile(e, name, fileId, count) {
 function checkNRemoveFile() {
 
     for (var i = 0; i < filesToBeDeleted.length; i++) {
-        for (var j = 0; j < agreement["documents"].length; j++) {
-            if (agreement["documents"][j]["fileStore"] == filesToBeDeleted[i])
-                agreement["documents"].splice(j, 1);
+        for (var j = 0; j < agreement["docs"].length; j++) {
+            if (agreement["docs"][j]["fileStore"] == filesToBeDeleted[i])
+                agreement["docs"].splice(j, 1);
         }
     }
 }

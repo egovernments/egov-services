@@ -1207,6 +1207,7 @@ $("#createAgreementForm").validate({
 })
 
 function uploadFiles(agreement, cb) {
+    checkNRemoveFile();
     if (agreement.documents && agreement.documents.constructor == FileList) {
         let counter = agreement.documents.length,
             breakout = 0, docs = [];

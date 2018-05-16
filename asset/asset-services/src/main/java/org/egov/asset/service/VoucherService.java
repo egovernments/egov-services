@@ -245,8 +245,8 @@ public class VoucherService {
         voucher.setDescription(assetConfigurationService
                 .getAssetConfigValueByKeyAndTenantId(AssetConfigurationKeys.REVALUATIONVOUCHERDESCRIPTION, tenantId));
 
-        final String source = header.getOrigin() + "/asset-web/app/asset/create-asset-revaluation.html?id=" + assetId
-                + "&type=view";
+        final String source = header.getOrigin() + "/asset-web/app/asset/create-asset-revaluation.html?id=" + assetId +
+                "revaluationId=" + revaluation.getId() + "&type=view";
 
         log.debug("Revaluation Source :: " + source);
         voucher.setSource(source);

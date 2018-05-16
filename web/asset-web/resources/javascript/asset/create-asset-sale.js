@@ -44,7 +44,7 @@ const uploadFiles = function (body, cb) {
           counter--;
           docs.push(res.files[0].fileStoreId);
           if (counter == 0) {
-            body.Asset.documents = docs;
+            body.Disposal.documents = docs;
             cb(null, body);
           }
         }

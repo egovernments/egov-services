@@ -164,7 +164,7 @@ class SearchAsset extends React.Component {
       }
     }
 
-    var count = 2, _this = this, _state = {};
+    var count = 1, _this = this, _state = {};
     let self = this;
     var checkCountNCall = function(key, res) {
       count--;

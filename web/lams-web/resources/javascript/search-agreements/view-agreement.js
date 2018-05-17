@@ -244,7 +244,7 @@ $(document).ready(function() {
 
         var doc = new jsPDF();
 
-        
+
 
         doc.setFontType("bold");
         doc.setFontSize(13);
@@ -283,7 +283,7 @@ $(document).ready(function() {
         doc.autoTable(columns2, rows2, autoTableOptions2);
 
 
-        
+
         var paragraph3 = "The following terms and conditions are applicable for the renewal of lease."
 
             + "\n\t1. The leaseholder shall pay rent by 5th of the succeeding month"
@@ -306,14 +306,14 @@ $(document).ready(function() {
 
         doc.text(120, 50, "Commissioner");
         doc.text(120, 55, tenantId.split(".")[1].charAt(0).toUpperCase() + tenantId.split(".")[1].slice(1) + " "+ulbType);
-        
+
         doc.text(15, 60, "To");
         doc.text(15, 65, "The Leaseholder");
         doc.text(15, 70, "Copy to the concerned officials for necessary action");
 
         doc.save('Notice-' + agreement.agreementNumber + '.pdf');
         var blob = doc.output('blob');
- 
+
         //  var text= noticeData.agreementPeriod * 12;
         //   doc.setFontType("normal");
 
@@ -656,7 +656,7 @@ $(document).ready(function() {
          $("#footer-btn-grp").append($('<button type="button" class="btn btn-close" id="close">Close</button>'));
 
         if (process) {
-            getDesignations(process.status,currentUserDesignation, function(designations) {
+            getDesignations(process.status,null, function(designations) {
                 for (var variable in designations) {
                     if (!designations[variable]["id"]) {
                         var _res = commonApiPost("hr-masters", "designations", "_search", { tenantId, name: designations[variable]["name"] });

@@ -478,6 +478,10 @@ $(document).ready(function() {
         renewAgreement[this.id] = this.value;
         if(this.id == "rentIncrementMethod.percentage")
             fillValueToObject(this);
+
+        if(this.id =="approverDesignation") {
+          nextUserDesignation =$('#approverDesignation option:selected').text();
+        }
         if (($("#approverDepartment").val() != "" && $("#approverDesignation").val() != "") && (this.id == "approverDepartment" || this.id == "approverDesignation")) {
             employees = commonApiPost("hr-employee", "employees", "_search", {
                 tenantId,

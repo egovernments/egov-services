@@ -55,15 +55,6 @@ const uploadFiles = function (body, cb) {
   }
 }
 
-const hasValues = function (files) {
-  for (var i = 0; i < files.length; i++) {
-    if (files[i] && files[i].value && files[i].value.constructor == Array && files[i].value.length)
-      return true;
-  }
-
-  return false;
-}
-
 class Sale extends React.Component {
   constructor(props) {
     super(props);
@@ -179,16 +170,11 @@ class Sale extends React.Component {
             let profitloss = disposedAsset.assetCurrentValue - disposedAsset.saleValue;
 
             if (disposedAsset.documents && disposedAsset.documents.length) {
-              var _files = [];
-              for (var i = 0; i < disposedAsset.documents.length; i++) {
-                _files.push(disposedAsset.documents[i]);
-              }
-
               _this.setState({
                 profitloss,
                 disposal: disposedAsset,
                 typeToDisplay: disposedAsset.transactionType,
-                disposedFiles: JSON.parse(JSON.stringify(_files))
+                disposedFiles: disposedAsset.documents.slice()
               })
             } else {
               _this.setState({
@@ -260,8 +246,6 @@ class Sale extends React.Component {
       }
     })
   }
-
-
 
   componentDidUpdate() {
     let _this = this;
@@ -455,11 +439,10 @@ class Sale extends React.Component {
 
     const renderFileBody = function (fles) {
       return fles.map(function (v, ind) {
-        return v.value.map(function (file, ind2) {
           return (
-            <tr key={ind2}>
-              <td>{ind2 + 1}</td>
-              <td>{v.key}</td>
+            <tr key={ind}>
+              <td>{ind + 1}</td>
+              <td> {"Document " + (ind+1)}</td>
               <td>
                 <a href={window.location.origin + CONST_API_GET_FILE + file} target="_blank">
                   Download
@@ -467,12 +450,12 @@ class Sale extends React.Component {
               </td>
             </tr>
           )
-        })
+        
       })
     }
 
     const showAttachedFiles = function () {
-      if (disposedFiles.length && hasValues(disposedFiles)) {
+      if (disposedFiles && disposedFiles.length) {
         return (
           <table id="fileTable" className="table table-bordered">
             <thead>

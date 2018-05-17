@@ -656,7 +656,7 @@ $(document).ready(function() {
          $("#footer-btn-grp").append($('<button type="button" class="btn btn-close" id="close">Close</button>'));
 
         if (process) {
-            getDesignations(process.status,null, function(designations) {
+            getDesignations(process.status,currentUserDesignation, function(designations) {
                 for (var variable in designations) {
                     if (!designations[variable]["id"]) {
                         var _res = commonApiPost("hr-masters", "designations", "_search", { tenantId, name: designations[variable]["name"] });

@@ -228,8 +228,9 @@ function getNameById(object, id, property = "") {
 }
 
 function getDesignations(status,currentUserDesignation, cb, businessKey) {
+    var pendingAction = currentUserDesignation!=null ? currentUserDesignation+" Approval Pending":"";
     $.ajax({
-        url: baseUrl + "/egov-common-workflows/designations/_search?businessKey=" + (businessKey || "Agreement") + "&approvalDepartmentName=&departmentRule=&currentStatus=" + (status || "") + "&tenantId="+tenantId+"&additionalRule=&pendingAction=&designation="+(currentUserDesignation || "")+"&amountRule=",
+        url: baseUrl + "/egov-common-workflows/designations/_search?businessKey=" + (businessKey || "Agreement") + "&approvalDepartmentName=&departmentRule=&currentStatus=" + (status || "") + "&tenantId="+tenantId+"&additionalRule=&pendingAction="+(pendingAction || "")+"&designation=&amountRule=",
         type: 'POST',
         dataType: 'json',
         data: JSON.stringify({ RequestInfo: requestInfo }),

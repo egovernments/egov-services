@@ -174,7 +174,7 @@ public class VoucherServiceTest {
                 .getAssetConfigValueByKeyAndTenantId(AssetConfigurationKeys.REVALUATIONVOUCHERDESCRIPTION, tenantId));
 
         voucher.setSource(
-                null + "/asset-web/app/asset/create-asset-revaluation.html?id=" + asset.getId() +"revaluationId=" + revaluation.getId() + "&type=view");
+                null + "/asset-web/app/asset/create-asset-revaluation.html?id=" + asset.getId() +"&revaluationId=" + revaluation.getId() + "&type=view");
 
         final Function function = new Function();
         function.setId(Long.valueOf("124"));

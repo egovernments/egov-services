@@ -42,7 +42,7 @@ const uploadFiles = function (body, cb) {
           breakout = 1;
         } else {
           counter--;
-          docs.push(res.files[0].fileStoreId);
+          docs.push({fileStoreId:res.files[0].fileStoreId});
           if (counter == 0) {
             body.Disposal.documents = docs;
             cb(null, body);

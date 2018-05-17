@@ -379,31 +379,38 @@ class Sale extends React.Component {
       Disposal: tempInfo
     };
 
-    $.ajax({
-      url: baseUrl + "/asset-services/assets/dispose/_create",
-      type: 'POST',
-      dataType: 'json',
-      data: JSON.stringify(body),
-      contentType: 'application/json',
-      headers: {
-        'auth-token': authToken
-      },
-      success: function (res) {
-        window.location.href = `app/asset/create-asset-ack.html?name=${_this.state.assetSet.name}&type=&value=${(tempInfo.type == "Disposal" ? "disposed" : "sold")}&code=${_this.state.assetSet.code}`;
-      },
-      error: function (err) {
-        console.log(err);
-        var _err = err["responseJSON"].Error.message || "";
-        if (err["responseJSON"].Error.fields && Object.keys(err["responseJSON"].Error.fields).length) {
-          for (var key in err["responseJSON"].Error.fields) {
-            _err += "\n " + key + "- " + err["responseJSON"].Error.fields[key] + " "; //HERE
+
+    uploadFiles(body, function (err1, _body) {
+      if (err1) {
+        showError(err1);
+      } else {
+        $.ajax({
+          url: baseUrl + "/asset-services/assets/dispose/_create",
+          type: 'POST',
+          dataType: 'json',
+          data: JSON.stringify(_body),
+          contentType: 'application/json',
+          headers: {
+            'auth-token': authToken
+          },
+          success: function (res) {
+            window.location.href = `app/asset/create-asset-ack.html?name=${_this.state.assetSet.name}&type=&value=${(tempInfo.type == "Disposal" ? "disposed" : "sold")}&code=${_this.state.assetSet.code}`;
+          },
+          error: function (err) {
+            console.log(err);
+            var _err = err["responseJSON"].Error.message || "";
+            if (err["responseJSON"].Error.fields && Object.keys(err["responseJSON"].Error.fields).length) {
+              for (var key in err["responseJSON"].Error.fields) {
+                _err += "\n " + key + "- " + err["responseJSON"].Error.fields[key] + " "; //HERE
+              }
+              showError(_err);
+            } else if (_err) {
+              showError(_err);
+            } else {
+              showError(err["statusText"]);
+            }
           }
-          showError(_err);
-        } else if (_err) {
-          showError(_err);
-        } else {
-          showError(err["statusText"]);
-        }
+        })
       }
     })
   }
@@ -439,18 +446,18 @@ class Sale extends React.Component {
 
     const renderFileBody = function (fles) {
       return fles.map(function (v, ind) {
-          return (
-            <tr key={ind}>
-              <td>{ind + 1}</td>
-              <td> {"Document " + (ind+1)}</td>
-              <td>
-                <a href={window.location.origin + CONST_API_GET_FILE + file} target="_blank">
-                  Download
+        return (
+          <tr key={ind}>
+            <td>{ind + 1}</td>
+            <td> {"Document " + (ind + 1)}</td>
+            <td>
+              <a href={window.location.origin + CONST_API_GET_FILE + file} target="_blank">
+                Download
                   </a>
-              </td>
-            </tr>
-          )
-        
+            </td>
+          </tr>
+        )
+
       })
     }
 

@@ -451,7 +451,7 @@ class Sale extends React.Component {
             <td>{ind + 1}</td>
             <td> {"Document " + (ind + 1)}</td>
             <td>
-              <a href={window.location.origin + CONST_API_GET_FILE + file} target="_blank">
+              <a href={window.location.origin + CONST_API_GET_FILE + v.fileStore} target="_blank">
                 Download
                   </a>
             </td>

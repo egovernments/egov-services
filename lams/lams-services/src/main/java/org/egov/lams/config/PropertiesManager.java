@@ -64,6 +64,12 @@ public class PropertiesManager {
 	
 	@Value("${egov.services.demand_service.taxreasongoodwillamount}")
 	private String taxReasonGoodWillAmount;
+	
+	@Value("${egov.services.demand_service.taxreasoncentralgst}")
+	private String taxReasonCentralGst;
+	
+	@Value("${egov.services.demand_service.taxreasonstategst}")
+	private String taxReasonStateGst;
 
 	@Value("${kafka.topics.start.workflow}")
 	private String startWorkflowTopic;
@@ -100,6 +106,9 @@ public class PropertiesManager {
 
 	@Value("${egov.services.financial.chartofaccounts}")
 	public String financialGetChartOfAccountsService;
+	
+	@Value("${egov.services.financial.finyear.searchpath}")
+	public String financialYearSearchPath;
 	
 	@Value("${egov.services.boundary_service.hostname}")
 	public String boundaryServiceHostName;

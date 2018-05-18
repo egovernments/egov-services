@@ -165,5 +165,7 @@ public class Agreement {
 	private Double solvencyAmount;
 	private Boolean showDetails = Boolean.TRUE;
 	private Boolean isHistory;
+	private Double gstAmount;
+	private String noticeNumber;
 
 }

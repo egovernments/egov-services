@@ -145,6 +145,8 @@ public class Notice   {
 	  this.zone = agreement.getAsset().getLocationDetails().getZone();
 	  this.doorNo = agreement.getAsset().getLocationDetails().getDoorNo();
 	  this.noticeType = agreement.getAction().toString();
+	  this.noticeNo = agreement.getNoticeNumber();
+	  this.noticeDate = agreement.getAgreementDate();
   }
 
 }

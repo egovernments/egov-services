@@ -79,6 +79,9 @@ public class AgreementServiceTest {
 
     @Mock
     private AgreementNumberUtil agreementNumberService;
+    
+    @Mock
+    private NoticeService noticeService;
 
     @Test
     public void test_to_check_if_agreement_exists(){

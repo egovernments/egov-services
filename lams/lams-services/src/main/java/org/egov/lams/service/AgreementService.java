@@ -72,12 +72,15 @@ public class AgreementService {
 	private AgreementMessageQueueRepository agreementMessageQueueRepository;
 	private PositionRestRepository positionRestRepository;
 	private DemandService demandService;
+	private NoticeService noticeService;
+
+	
 
 	public AgreementService(AgreementRepository agreementRepository, LamsConfigurationService lamsConfigurationService,
 							DemandRepository demandRepository, AcknowledgementNumberUtil acknowledgementNumberService,
 							AgreementNumberUtil agreementNumberService, AllotteeRepository allotteeRepository,
 							AgreementMessageQueueRepository agreementMessageQueueRepository, PositionRestRepository positionRestRepository,
-							DemandService demandService, @Value("${app.timezone}") String timeZone) {
+							DemandService demandService,NoticeService noticeService,@Value("${app.timezone}") String timeZone) {
 		this.agreementRepository = agreementRepository;
 		this.lamsConfigurationService = lamsConfigurationService;
 		this.demandRepository = demandRepository;
@@ -87,6 +90,8 @@ public class AgreementService {
 		this.agreementMessageQueueRepository = agreementMessageQueueRepository;
 		this.positionRestRepository = positionRestRepository;
 		this.demandService = demandService;
+		this.noticeService = noticeService;
+		
 	}
 
 	/**
@@ -356,6 +361,7 @@ public class AgreementService {
 						agreement.setAgreementNumber(
 								agreementNumberService.generateAgrementNumber(agreement.getCommencementDate(),agreement.getTenantId()));
 					}
+					agreement.setNoticeNumber(noticeService.generateNoticeNumber(agreement.getAction(),agreement.getTenantId(),agreementRequest.getRequestInfo()));
 					List<Demand> demands =demandService.prepareDemands(agreementRequest);
 					updateDemand(agreement.getDemands(),demands,
 							agreementRequest.getRequestInfo());
@@ -400,6 +406,8 @@ public class AgreementService {
 				agreementRepository.updateExistingAgreementAsHistory(agreement,userId);
 				agreement.setStatus(status);
 				agreement.setAgreementDate(new Date());
+			
+				agreement.setNoticeNumber(noticeService.generateNoticeNumber(agreement.getAction(),agreement.getTenantId(),requestInfo));
 			} else if (WF_ACTION_REJECT.equalsIgnoreCase(workFlowDetails.getAction())) {
 				agreement.setStatus(Status.REJECTED);
 			} else if (WF_ACTION_CANCEL.equalsIgnoreCase(workFlowDetails.getAction())) {
@@ -425,6 +433,8 @@ public class AgreementService {
 			List<Demand> demands = demandService.prepareDemandsByApprove(agreementRequest);
 			updateDemand(agreement.getDemands(), demands,
 					agreementRequest.getRequestInfo());
+			agreement.setNoticeNumber(noticeService.generateNoticeNumber(agreement.getAction(),agreement.getTenantId(),requestInfo));
+
 
 		} else if (WF_ACTION_REJECT.equalsIgnoreCase(workFlowDetails.getAction())) {
 			agreement.setStatus(Status.REJECTED);
@@ -455,6 +465,8 @@ public class AgreementService {
 				List<Demand> demands = prepareDemandsForRenewalApproval(agreementRequest);
 				updateDemand(agreement.getDemands(), demands,
 						agreementRequest.getRequestInfo());
+				agreement.setNoticeNumber(noticeService.generateNoticeNumber(agreement.getAction(),agreement.getTenantId(),requestInfo));
+
 			} else if (WF_ACTION_REJECT.equalsIgnoreCase(workFlowDetails.getAction())) {
 				agreement.setStatus(Status.REJECTED);
 			} else if (WF_ACTION_CANCEL.equalsIgnoreCase(workFlowDetails.getAction())) {

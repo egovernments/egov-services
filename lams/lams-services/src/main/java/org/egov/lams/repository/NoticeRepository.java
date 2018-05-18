@@ -35,7 +35,6 @@ public class NoticeRepository {
 
         RequestInfo requestInfo = noticeRequest.getRequestInfo();
         Notice notice = noticeRequest.getNotice();
-        notice.setNoticeNo(getNoticeNo());
 
 		Object[] obj = new Object[] { notice.getNoticeNo(), notice.getNoticeDate(), notice.getAgreementNumber(),
 				notice.getAssetCategory(), notice.getAcknowledgementNumber(), notice.getAssetNo(),
@@ -55,22 +54,7 @@ public class NoticeRepository {
         return notice;
     }
 
-    private String getNoticeNo() {
-
-        Integer result = jdbcTemplate.queryForObject(NoticeQueryBuilder.SEQ_NOTICE_NO, Integer.class);
-        StringBuilder noticeNo = null;
-
-        try {
-            noticeNo = new StringBuilder(String.format("%09d", result));
-        } catch (Exception ex) {
-            LOGGER.info("the exception from notice repo getnoticeno :: " + ex);
-            ex.printStackTrace();
-        }
-
-        return noticeNo.toString();
-    }
-
-	public List<Notice> getNotices(NoticeCriteria noticeCriteria) {
+    public List<Notice> getNotices(NoticeCriteria noticeCriteria) {
 
 		List<Notice> notices = null;
 		Map params = new HashMap<>();

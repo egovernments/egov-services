@@ -32,6 +32,7 @@ import org.egov.lams.repository.DemandRepository;
 import org.egov.lams.repository.PositionRestRepository;
 import org.egov.lams.util.AcknowledgementNumberUtil;
 import org.egov.lams.util.AgreementNumberUtil;
+import org.egov.lams.util.NoticeNumberUtil;
 import org.egov.lams.web.contract.AgreementRequest;
 import org.egov.lams.web.contract.AllotteeResponse;
 import org.egov.lams.web.contract.DemandResponse;
@@ -81,7 +82,7 @@ public class AgreementServiceTest {
     private AgreementNumberUtil agreementNumberService;
     
     @Mock
-    private NoticeService noticeService;
+    private NoticeNumberUtil noticeNumberUtil;
 
     @Test
     public void test_to_check_if_agreement_exists(){

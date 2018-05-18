@@ -7,14 +7,11 @@ import org.egov.lams.model.Agreement;
 import org.egov.lams.model.AgreementCriteria;
 import org.egov.lams.model.Notice;
 import org.egov.lams.model.NoticeCriteria;
-import org.egov.lams.model.enums.Action;
 import org.egov.lams.repository.NoticeRepository;
 import org.egov.lams.repository.WorkFlowRepository;
-import org.egov.lams.util.NoticeNumberUtil;
 import org.egov.lams.web.contract.NoticeRequest;
 import org.egov.lams.web.contract.NoticeResponse;
 import org.egov.lams.web.contract.RequestInfo;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -26,8 +23,7 @@ public class NoticeService {
 
 	private WorkFlowRepository workFlowRepository;
 
-	@Autowired
-	private NoticeNumberUtil noticeNumberUtil;
+	
 
 	public NoticeService(NoticeRepository noticeRepository, AgreementService agreementService,
 			WorkFlowRepository workFlowRepository) {
@@ -35,11 +31,6 @@ public class NoticeService {
 		this.agreementService = agreementService;
 		this.workFlowRepository = workFlowRepository;
 
-	}
-
-	public String generateNoticeNumber(Action type, String tenantId, RequestInfo requestInfo) {
-
-		return noticeNumberUtil.getNoticeNumber(type, tenantId, requestInfo);
 	}
 
 	public NoticeResponse generateNotice(NoticeRequest noticeRequest) {

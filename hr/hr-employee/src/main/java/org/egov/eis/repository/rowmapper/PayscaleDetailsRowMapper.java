@@ -38,89 +38,35 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.eis.web.contract;
+package org.egov.eis.repository.rowmapper;
 
-import java.util.Collections;
+import org.egov.eis.model.Assignment;
+import org.egov.eis.model.PayscaleDetails;
+import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Component;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
-import java.util.Set;
 
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import static org.springframework.util.ObjectUtils.isEmpty;
 
-import org.springframework.format.annotation.DateTimeFormat;
+@Component
+public class PayscaleDetailsRowMapper implements RowMapper<PayscaleDetails> {
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+    @Override
+    public PayscaleDetails mapRow(ResultSet rs, int rowNum) throws SQLException, DataAccessException {
+        PayscaleDetails payscaleDetails = new PayscaleDetails();
+        payscaleDetails.setId((Long) rs.getObject("id"));
+        payscaleDetails.setPayscaleHeaderId((Long) rs.getObject("payscaleHeaderId"));
+        payscaleDetails.setBasicFrom((Long) rs.getObject("basicFrom"));
+        payscaleDetails.setBasicTo((Long) rs.getObject("basicTo"));
+        payscaleDetails.setIncrement((Long) rs.getObject("increment"));
+        payscaleDetails.setTenantId(rs.getString("tenantId"));
 
-@Builder
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
-@ToString
-@EqualsAndHashCode
-public class EmployeeCriteria implements Cloneable {
-
-	private List<Long> id;
-
-	@Size(min=1, max=256)
-	private String code;
-	
-    private String codes;
-
-	@DateTimeFormat(pattern = "dd/MM/yyyy")
-	private Date asOnDate;
-
-	private Boolean isPrimary;
-
-	private Long designationId;
-	
-	private Long departmentId;
-
-	private Set<Long> departments;
-	
-	private List<String> departmentCode;
-	
-	private Long positionId;
-
-	private List<Long> employeeStatus;
-
-	private List<Long> employeeType;
-
-	private Boolean familyParticularsPresent;
-
-	private Boolean active;
-
-	private String userName;
-
-	private List<String> roleCodes;
-
-	private List<String> sort = Collections.singletonList("name");
-
-	private String sortBy;
-
-	private String sortOrder;
-
-	@NotNull
-	@Size(min=1, max=256)
-	private String tenantId;
-
-	@Min(1)
-	@Max(500)
-	private Integer pageSize;
-
-	private Integer pageNumber;
-
-	@Override
-	public Object clone() throws CloneNotSupportedException {
-		return super.clone();
-	}
+        return payscaleDetails;
+    }
 }

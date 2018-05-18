@@ -95,11 +95,35 @@ public class PayscaleController {
     @Autowired
     private ResponseEntityFactory responseEntityFactory;
 
+    @PostMapping("_search")
+    @ResponseBody
+    public ResponseEntity<?> search(@ModelAttribute @Valid final PayscaleGetRequest payscaleGetRequest,
+                                    final BindingResult modelAttributeBindingResult, @RequestBody @Valid final RequestInfoWrapper requestInfoWrapper,
+                                    final BindingResult bindingResult) {
+
+        RequestInfo requestInfo = requestInfoWrapper.getRequestInfo();
+
+        if (bindingResult.hasErrors()) {
+            ErrorResponse errorResponse = populateErrors(bindingResult);
+            return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+        }
+        // Call service
+        List<PayscaleHeader> payscaleHeaderList = null;
+        try {
+            payscaleHeaderList = payscaleService.getPayscaleHeaders(payscaleGetRequest, requestInfo);
+        } catch (final Exception exception) {
+            log.error("Error while processing request " + payscaleGetRequest, exception);
+            return errorHandler.getResponseEntityForUnexpectedErrors(requestInfo);
+        }
+
+        return getSuccessResponse(payscaleHeaderList, requestInfo);
+    }
+
 
     @PostMapping(value = "/_create")
     @ResponseBody
     public ResponseEntity<?> create(@RequestBody @Valid PayscaleRequest payscaleRequest, BindingResult errors) {
-        log.info("Payscale Request::" + payscaleRequest);
+        log.info("Create Payscale Request::" + payscaleRequest);
 
         PayscaleHeader payscaleHeader = null;
         try {
@@ -116,6 +140,33 @@ public class PayscaleController {
                 return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
             }
             payscaleHeader = payscaleService.create(payscaleRequest);
+        } catch (Exception exception) {
+            log.error("Error while processing request ", exception);
+            return errorHandler.getResponseEntityForUnexpectedErrors(payscaleRequest.getRequestInfo());
+        }
+        return getSuccessResponseForCreate(payscaleHeader, payscaleRequest.getRequestInfo());
+    }
+
+    @PostMapping(value = "/_update")
+    @ResponseBody
+    public ResponseEntity<?> update(@RequestBody @Valid PayscaleRequest payscaleRequest, BindingResult errors) {
+        log.info("Update Payscale Request::" + payscaleRequest);
+
+        PayscaleHeader payscaleHeader = null;
+        try {
+
+            if (errors.hasFieldErrors()) {
+                ErrorResponse errRes = populateErrors(errors);
+                return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
+            }
+
+            payscaleValidator.validatePayscaleRequest(payscaleRequest.getPayscaleHeader(), errors);
+
+            if (errors.hasFieldErrors()) {
+                ErrorResponse errRes = populateErrors(errors);
+                return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
+            }
+            payscaleHeader = payscaleService.update(payscaleRequest);
         } catch (Exception exception) {
             log.error("Error while processing request ", exception);
             return errorHandler.getResponseEntityForUnexpectedErrors(payscaleRequest.getRequestInfo());
@@ -145,6 +196,17 @@ public class PayscaleController {
         responseInfo.setStatus(HttpStatus.OK.toString());
         payscaleResponse.setResponseInfo(responseInfo);
         return new ResponseEntity<PayscaleResponse>(payscaleResponse, HttpStatus.OK);
+    }
+
+    private ResponseEntity<?> getSuccessResponse(final List<PayscaleHeader> payscaleHeaderList,
+                                                 final RequestInfo requestInfo) {
+        final PayscaleInfoResponse payscaleResponse = new PayscaleInfoResponse();
+        payscaleResponse.setPayscaleHeader(payscaleHeaderList);
+        final ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
+        responseInfo.setStatus(HttpStatus.OK.toString());
+        payscaleResponse.setResponseInfo(responseInfo);
+        return new ResponseEntity<>(payscaleResponse, HttpStatus.OK);
+
     }
 
 }

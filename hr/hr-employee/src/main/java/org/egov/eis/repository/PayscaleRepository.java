@@ -42,19 +42,25 @@ package org.egov.eis.repository;
 
 
 import lombok.extern.slf4j.Slf4j;
+import org.egov.common.contract.request.RequestInfo;
 import org.egov.eis.model.Assignment;
 import org.egov.eis.model.Employee;
 import org.egov.eis.model.PayscaleDetails;
 import org.egov.eis.model.PayscaleHeader;
 import org.egov.eis.model.enums.EntityType;
 import org.egov.eis.repository.builder.PayscaleQueryBuilder;
+import org.egov.eis.repository.rowmapper.PayscaleDetailsRowMapper;
+import org.egov.eis.repository.rowmapper.PayscaleHeaderRowMapper;
 import org.egov.eis.web.contract.EmployeeRequest;
+import org.egov.eis.web.contract.PayscaleGetRequest;
 import org.egov.eis.web.contract.PayscaleRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.sql.Date;
@@ -62,12 +68,12 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 @Slf4j
 @Repository
-
 public class PayscaleRepository {
 
     public static final Logger LOGGER = LoggerFactory.getLogger(PayscaleRepository.class);
@@ -77,6 +83,15 @@ public class PayscaleRepository {
 
     @Autowired
     private PayscaleQueryBuilder payscaleQueryBuilder;
+
+    @Autowired
+    private PayscaleDetailsRowMapper payscaleDetailsRowMapper;
+
+    @Autowired
+    private PayscaleHeaderRowMapper payscaleHeaderRowMapper;
+
+    @Autowired
+    private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
     public static final String INSERT_PAYSCALEHEADER_QUERY = "INSERT INTO egeis_payscaleheader"
             + " (id, paycommission, payscale, amountfrom, amountto, "
@@ -88,17 +103,19 @@ public class PayscaleRepository {
             + " VALUES (?,?,?,?,?,?)";
 
     public static final String UPDATE_PAYSCALEHEADER_QUERY = "UPDATE egeis_payscaleheader"
-            + " SET paycommission=?, payscale=?, amountfrom=?, amountto=?,"
-            + " lastModifiedBy=?, lastModifiedDate=?, tenantId=? where id=? and tenantid=? ";
+            + " SET (paycommission, payscale, amountfrom, amountto, lastmodifiedby, lastmodifieddate)"
+            + " = (?,?,?,?,?,?) WHERE id = ? AND tenantId=?";
 
-    public static final String UPDATE_PAYSCALEDETAILS_QUERY = "UPDATE egeis_leaveOpeningBalance"
-            + " SET payscaleheader=?, basicfrom=?, basicto=?, increment=? "
-            + " tenantId=? where id=? and tenantid=? ";
+    public static final String UPDATE_PAYSCALEDETAILS_QUERY = "UPDATE egeis_payscaledetails"
+            + " SET (basicfrom, basicto, increment )"
+            + " = (?,?,?) WHERE id = ? AND tenantId=?";
 
-    public static String selectLeaveTypeByNameQuery() {
-        return " select * from egeis_leavetype where upper(name) = ? and tenantId = ? ";
-    }
+    public static final String DELETE_PAYSCALEDEAILS_QUERY = "DELETE FROM egeis_payscaledetails"
+            + " WHERE id IN (:id) AND payscaleheaderid=:payscaleHeaderId AND tenantId=:tenantId";
 
+    public static final String SELECT_BY_PAYSCALEHEADERID_QUERY = "SELECT"
+            + " id, payscaleHeaderId, basicFrom, basicTo, increment, "
+            + " tenantId FROM egeis_payscaledetails WHERE payscaleheaderId = ? AND tenantId = ? ";
 
     public Long generateSequence(String sequenceName) {
         return jdbcTemplate.queryForObject("SELECT nextval('" + sequenceName + "')", Long.class);
@@ -113,16 +130,34 @@ public class PayscaleRepository {
         jdbcTemplate.update(INSERT_PAYSCALEHEADER_QUERY, obj);
     }
 
+    public List<PayscaleDetails> findByPayscaleHeaderId(Long id, String tenantId) {
+        try {
+            return jdbcTemplate.query(SELECT_BY_PAYSCALEHEADERID_QUERY, new Object[]{id, tenantId},
+                    payscaleDetailsRowMapper);
+        } catch (EmptyResultDataAccessException e) {
+            return null;
+        }
+    }
 
-    public void savePayscaleDetails(PayscaleRequest payscaleRequest) {
-        List<PayscaleDetails> payscaleDetails = payscaleRequest.getPayscaleHeader().getPayscaleDetails();
+    public List<PayscaleHeader> findForCriteria(final PayscaleGetRequest payscaleGetRequest,
+                                                final RequestInfo requestInfo) {
+        final List<Object> preparedStatementValues = new ArrayList<Object>();
+        final String queryStr = payscaleQueryBuilder.getQuery(payscaleGetRequest,
+                preparedStatementValues, requestInfo);
+        final List<PayscaleHeader> payscaleHeaders = jdbcTemplate.query(queryStr, preparedStatementValues.toArray(),
+                payscaleHeaderRowMapper);
+        return payscaleHeaders;
+    }
+
+    public void savePayscaleDetails(PayscaleHeader payscaleHeader) {
+        List<PayscaleDetails> payscaleDetails = payscaleHeader.getPayscaleDetails();
 
         jdbcTemplate.batchUpdate(INSERT_PAYSCALEDETAILS_QUERY, new BatchPreparedStatementSetter() {
             @Override
             public void setValues(PreparedStatement ps, int i) throws SQLException {
                 PayscaleDetails payscaleDet = payscaleDetails.get(i);
                 ps.setLong(1, payscaleDet.getId());
-                ps.setLong(2, payscaleRequest.getPayscaleHeader().getId());
+                ps.setLong(2, payscaleHeader.getId());
                 ps.setLong(3, payscaleDet.getBasicFrom());
                 ps.setLong(4, payscaleDet.getBasicTo());
                 ps.setLong(5, payscaleDet.getIncrement());
@@ -134,6 +169,31 @@ public class PayscaleRepository {
                 return payscaleDetails.size();
             }
         });
+    }
+
+    public void insertPayscaleDetail(PayscaleDetails payscaleDetails) {
+
+        Object[] obj = new Object[]{payscaleDetails.getId(), payscaleDetails.getPayscaleHeaderId(), payscaleDetails.getBasicFrom(),
+                payscaleDetails.getBasicTo(), payscaleDetails.getIncrement(), payscaleDetails.getTenantId()};
+
+        jdbcTemplate.update(INSERT_PAYSCALEDETAILS_QUERY, obj);
+    }
+
+    public void updatePayscaleHeader(PayscaleHeader payscaleHeader) {
+
+        Object[] obj = new Object[]{payscaleHeader.getPaycommission(), payscaleHeader.getPayscale(), payscaleHeader.getAmountFrom(),
+                payscaleHeader.getAmountTo(), payscaleHeader.getLastModifiedBy(), payscaleHeader.getLastModifiedDate(), payscaleHeader.getId(),
+                payscaleHeader.getTenantId()};
+
+        jdbcTemplate.update(UPDATE_PAYSCALEHEADER_QUERY, obj);
+    }
+
+    public void updatePayscaleDetails(PayscaleDetails payscaleDetails) {
+
+        Object[] obj = new Object[]{payscaleDetails.getBasicFrom(), payscaleDetails.getBasicTo(), payscaleDetails.getIncrement(),
+                payscaleDetails.getId(), payscaleDetails.getTenantId()};
+
+        jdbcTemplate.update(UPDATE_PAYSCALEDETAILS_QUERY, obj);
     }
 
     public boolean checkIfPayscaleExists(final Long id, final String name, final String tenantId) {
@@ -154,5 +214,14 @@ public class PayscaleRepository {
             return false;
 
         return true;
+    }
+
+    public void deletePayscaleDetails(List<Long> payscaleDetIdsToDelete, Long payscaleHeaderId, String tenantId) {
+        Map<String, Object> namedParameters = new HashMap<>();
+        namedParameters.put("id", payscaleDetIdsToDelete);
+        namedParameters.put("payscaleHeaderId", payscaleHeaderId);
+        namedParameters.put("tenantId", tenantId);
+
+        namedParameterJdbcTemplate.update(DELETE_PAYSCALEDEAILS_QUERY, namedParameters);
     }
 }

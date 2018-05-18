@@ -43,19 +43,24 @@ package org.egov.eis.service;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.eis.model.Assignment;
+import org.egov.eis.model.Employee;
 import org.egov.eis.model.PayscaleDetails;
 import org.egov.eis.model.PayscaleHeader;
+import org.egov.eis.model.enums.EntityType;
 import org.egov.eis.repository.EmployeeRepository;
 import org.egov.eis.repository.PayscaleRepository;
 import org.egov.eis.service.helper.EmployeeHelper;
 import org.egov.eis.web.contract.EmployeeRequest;
+import org.egov.eis.web.contract.PayscaleGetRequest;
 import org.egov.eis.web.contract.PayscaleRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.springframework.util.ObjectUtils.isEmpty;
 
@@ -72,8 +77,23 @@ public class PayscaleService {
         String tenantId = payscaleRequest.getPayscaleHeader().getTenantId();
         populateDataForPayscaleHeader(payscaleHeader, requesterId, tenantId);
         payscaleRepository.savePayscaleHeader(payscaleRequest.getPayscaleHeader());
-        payscaleRepository.savePayscaleDetails(payscaleRequest);
+        payscaleRepository.savePayscaleDetails(payscaleRequest.getPayscaleHeader());
         return payscaleHeader;
+    }
+
+    public PayscaleHeader update(PayscaleRequest payscaleRequest) {
+        PayscaleHeader payscaleHeader = payscaleRequest.getPayscaleHeader();
+        RequestInfo requestInfo = payscaleRequest.getRequestInfo();
+        Long requesterId = requestInfo.getUserInfo().getId();
+        populateDataForUpdate(payscaleHeader, requesterId);
+        payscaleRepository.updatePayscaleHeader(payscaleHeader);
+        updatePayscaleDetails(payscaleHeader);
+        return payscaleHeader;
+    }
+
+    public List<PayscaleHeader> getPayscaleHeaders(final PayscaleGetRequest payscaleGetRequest,
+                                                   final RequestInfo requestInfo) {
+        return payscaleRepository.findForCriteria(payscaleGetRequest, requestInfo);
     }
 
     private void populateDataForPayscaleHeader(PayscaleHeader payscaleHeader, Long requesterId, String tenantId) {
@@ -89,6 +109,74 @@ public class PayscaleService {
     public void populateDataForPayscaleDetails(PayscaleDetails payscaleDetails, String tenantId) {
         payscaleDetails.setId(payscaleRepository.generateSequence("seq_egeis_payscaledetails"));
         payscaleDetails.setTenantId(tenantId);
+    }
+
+    private void populateDataForUpdate(PayscaleHeader payscaleHeader, Long requesterId) {
+        payscaleHeader.setLastModifiedBy(requesterId);
+        payscaleHeader.setLastModifiedDate(new Date());
+        payscaleHeader.getPayscaleDetails().forEach((payscaleDet) -> {
+            if (isEmpty(payscaleDet.getId())) {
+                payscaleDet.setId(payscaleRepository.generateSequence("seq_egeis_payscaledetails"));
+                payscaleDet.setPayscaleHeaderId(payscaleHeader.getId());
+            }
+        });
+    }
+
+    public void updatePayscaleDetails(PayscaleHeader payscaleHeader) {
+        List<PayscaleDetails> payscaleDetails = payscaleRepository.findByPayscaleHeaderId(payscaleHeader.getId(), payscaleHeader.getTenantId());
+        payscaleHeader.getPayscaleDetails().forEach((payscaleDets) -> {
+            if (insertPayDetails(payscaleDets, payscaleDetails)) {
+                payscaleRepository.insertPayscaleDetail(payscaleDets);
+            } else if (updatePayDetails(payscaleDets, payscaleDetails)) {
+                payscaleDets.setTenantId(payscaleHeader.getTenantId());
+                payscaleRepository.updatePayscaleDetails(payscaleDets);
+            }
+        });
+        deleteAssignmentsInDBThatAreNotInInput(payscaleHeader.getPayscaleDetails(), payscaleDetails, payscaleHeader.getId(),
+                payscaleHeader.getTenantId());
+    }
+
+    private boolean insertPayDetails(PayscaleDetails payscaleDetails, List<PayscaleDetails> payscaleDetailsList) {
+        for (PayscaleDetails oldPayscale : payscaleDetailsList)
+            if (payscaleDetails.getId().equals(oldPayscale.getId()))
+                return false;
+        return true;
+    }
+
+    private boolean updatePayDetails(PayscaleDetails payscaleDetails, List<PayscaleDetails> payscaleDetailsList) {
+        for (PayscaleDetails oldPayscale : payscaleDetailsList)
+            if (payscaleDetails.equals(oldPayscale))
+                return false;
+        return true;
+    }
+
+    private List<PayscaleDetails> getListOfPayscaleDetailsToDelete(List<PayscaleDetails> inputPayscaleDetails,
+                                                                   List<PayscaleDetails> payscaleDetailsFromDb) {
+        List<PayscaleDetails> payDetailsToDelete = new ArrayList<>();
+        for (PayscaleDetails payDetInDB : payscaleDetailsFromDb) {
+            boolean found = false;
+            if (!isEmpty(inputPayscaleDetails)) {
+                for (PayscaleDetails inputPayscaleDet : inputPayscaleDetails)
+                    if (inputPayscaleDet.getId().equals(payDetInDB.getId())) {
+                        found = true;
+                        break;
+                    }
+            }
+            if (!found)
+                payDetailsToDelete.add(payDetInDB);
+        }
+        return payDetailsToDelete;
+    }
+
+
+    private void deleteAssignmentsInDBThatAreNotInInput(List<PayscaleDetails> inputPayscaleDets,
+                                                        List<PayscaleDetails> payscalDetsFromDb, Long payscaleHeaderid, String tenantId) {
+        List<PayscaleDetails> payDetsToDelete = getListOfPayscaleDetailsToDelete(inputPayscaleDets, payscalDetsFromDb);
+        List<Long> payDetailIdsToDelete = payDetsToDelete.stream().map(PayscaleDetails::getId)
+                .collect(Collectors.toList());
+        if (!payDetailIdsToDelete.isEmpty()) {
+            payscaleRepository.deletePayscaleDetails(payDetailIdsToDelete, payscaleHeaderid, tenantId);
+        }
     }
 
 }

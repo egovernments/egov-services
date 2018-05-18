@@ -153,6 +153,15 @@ public class RevaluationService {
         return revaluations;
     }
 
+    public List<Revaluation> getRevaluation(final String tenantId, final Long assetId, final RequestInfo requestInfo) {
+        final List<Long> assetIds = new ArrayList<>();
+        assetIds.add(assetId);
+        final RevaluationCriteria revaluationCriteria = RevaluationCriteria.builder().tenantId(tenantId).assetId(assetIds)
+                .build();
+        final List<Revaluation> revaluations = search(revaluationCriteria, requestInfo);
+        return revaluations;
+    }
+
     public String createVoucherForRevaluation(final RevaluationRequest revaluationRequest, final HttpHeaders headers) {
         final Revaluation revaluation = revaluationRequest.getRevaluation();
         final RequestInfo requestInfo = revaluationRequest.getRequestInfo();

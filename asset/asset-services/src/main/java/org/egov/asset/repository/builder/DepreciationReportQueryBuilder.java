@@ -129,6 +129,18 @@ public class DepreciationReportQueryBuilder {
             selectQuery.append(" depreciation.financialyear =?");
             preparedStatementValues.add(depreciationReportCriteria.getFinancialYear());
         }
+        
+        if (depreciationReportCriteria.getAssetId()!= null) {
+            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+            selectQuery.append(" depreciation.financialyear =?");
+            preparedStatementValues.add(depreciationReportCriteria.getFinancialYear());
+        }
+        
+        if (depreciationReportCriteria.getAssetId() != null ) {
+            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+            selectQuery.append(" depreciation.assetid =?");
+            preparedStatementValues.add(depreciationReportCriteria.getAssetId());
+        }
 
     }
 

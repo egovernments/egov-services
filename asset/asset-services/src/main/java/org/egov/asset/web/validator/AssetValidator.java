@@ -77,6 +77,7 @@ import org.egov.asset.model.AssetCriteria;
 import org.egov.asset.model.AssetCurrentValue;
 import org.egov.asset.model.AssetStatus;
 import org.egov.asset.model.DepreciationCriteria;
+import org.egov.asset.model.DepreciationReportCriteria;
 import org.egov.asset.model.Disposal;
 import org.egov.asset.model.DisposalCriteria;
 import org.egov.asset.model.Revaluation;
@@ -91,6 +92,8 @@ import org.egov.asset.service.AssetConfigurationService;
 import org.egov.asset.service.AssetMasterService;
 import org.egov.asset.service.AssetService;
 import org.egov.asset.service.CurrentValueService;
+import org.egov.asset.service.DepreciationService;
+import org.egov.asset.service.RevaluationService;
 import org.egov.asset.util.ApplicationConstants;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ErrorField;
@@ -125,6 +128,12 @@ public class AssetValidator {
 
     @Autowired
     private ApplicationProperties applicationProperties;
+
+    @Autowired
+    private RevaluationService revaluationService;
+
+    @Autowired
+    private DepreciationService depreciationService;
 
     public void validateAsset(final AssetRequest assetRequest) {
         final AssetCategory assetCategory = findAssetCategory(assetRequest);
@@ -207,7 +216,6 @@ public class AssetValidator {
     public void validateDisposal(final DisposalRequest disposalRequest) {
         final Disposal disposal = disposalRequest.getDisposal();
         final String tenantId = disposal.getTenantId();
-        TransactionType transactionType = null;
         final Set<Long> ids = new HashSet<>();
         ids.add(disposal.getAssetId());
 
@@ -228,20 +236,21 @@ public class AssetValidator {
                 throw new RuntimeException(
                         "Asset sale account should be present for asset disposal voucher generation");
         }
+        if (asset.getAssetCategory().getAssetCategoryType().toString().equals(AssetCategoryType.LAND.toString())) {
 
-        final List<AssetCurrentValue> assetCurrentValues = currentValueService
-                .getCurrentValues(ids, tenantId, disposalRequest.getRequestInfo()).getAssetCurrentValues();
-
-        if (assetCurrentValues != null && !assetCurrentValues.isEmpty())
-            transactionType = assetCurrentValues.get(0).getAssetTranType();
-        if (!(TransactionType.REVALUATION.equals(transactionType) ||
-                TransactionType.DEPRECIATION.equals(transactionType)))
-            throw new RuntimeException(
-                    "Without doing any Revaluation or Depreciation,system should not allow to Sale/Dispose an asset");
-        if (!(!asset.getAssetCategory().getAssetCategoryType().equals(AssetCategoryType.LAND) &&
-                TransactionType.DEPRECIATION.equals(transactionType)))
-            throw new RuntimeException(
-                    " Asset has to be depreciated atleast once for sale/disposal");
+            final List<Revaluation> revaluation = revaluationService.getRevaluation(tenantId, disposal.getAssetId(),
+                    disposalRequest.getRequestInfo());
+            if (revaluation.isEmpty())
+                throw new RuntimeException(
+                        "Asset has to be revaluation atleast once for sale/disposal");
+        } else {
+            final List<DepreciationReportCriteria> depreciation = depreciationService.getDepreciation(tenantId,
+                    disposal.getAssetId(),
+                    disposalRequest.getRequestInfo());
+            if (depreciation.isEmpty())
+                throw new RuntimeException(
+                        " Asset has to be depreciated atleast once for sale/disposal");
+        }
 
     }
 
@@ -415,10 +424,9 @@ public class AssetValidator {
                 assetRequest.getRequestInfo());
         if (!assetFromReq.getCode().equalsIgnoreCase(asset.getCode()))
             throw new RuntimeException("Invalid Asset Code for Asset :: " + asset.getName());
-        if(asset.getStatus().equals(Status.DISPOSED.toString())){
-            throw new RuntimeException("Asset has been already sold/disposed, hence no modification is allowed :: " + asset.getName());
-            
-        }
+        if (asset.getStatus().equals(Status.DISPOSED.toString()))
+            throw new RuntimeException(
+                    "Asset has been already sold/disposed, hence no modification is allowed :: " + asset.getName());
 
     }
 

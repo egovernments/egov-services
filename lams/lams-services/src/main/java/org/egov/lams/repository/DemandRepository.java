@@ -2,6 +2,9 @@ package org.egov.lams.repository;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -20,11 +23,13 @@ import org.egov.lams.model.enums.PaymentCycle;
 import org.egov.lams.model.enums.Source;
 import org.egov.lams.model.enums.Status;
 import org.egov.lams.repository.helper.DemandHelper;
+import org.egov.lams.service.LamsConfigurationService;
 import org.egov.lams.web.contract.AgreementRequest;
 import org.egov.lams.web.contract.DemandReasonResponse;
 import org.egov.lams.web.contract.DemandRequest;
 import org.egov.lams.web.contract.DemandResponse;
 import org.egov.lams.web.contract.DemandSearchCriteria;
+import org.egov.lams.web.contract.LamsConfigurationGetRequest;
 import org.egov.lams.web.contract.RequestInfo;
 import org.egov.lams.web.contract.UserErrorResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,6 +58,9 @@ public class DemandRepository {
 	@Autowired
 	DemandHelper demandHelper;
 	
+	@Autowired
+	private LamsConfigurationService lamsConfigurationService;
+	
 	
 
 	public List<DemandReason> getDemandReason(AgreementRequest agreementRequest) {
@@ -75,6 +83,7 @@ public class DemandRepository {
 		String taxReason = null;
 		LOGGER.info("month plus start date is : " + date);
 		if (Source.DATA_ENTRY.equals(agreement.getSource())) {
+			Date gstDate;
 			taxReason = propertiesManager.getTaxReasonAdvanceTax();
 			demandReasons.addAll(getDemandReasonsForTaxReason(agreementRequest, date, taxReason));
 			taxReason = propertiesManager.getTaxReasonGoodWillAmount();
@@ -82,6 +91,16 @@ public class DemandRepository {
 			taxReason = propertiesManager.getTaxReasonRent();
 			date = agreementRequest.getAgreement().getExpiryDate();
 			demandReasons.addAll(getDemandReasonsForTaxReason(agreementRequest, date, taxReason));
+			gstDate =getGstEffectiveDate(agreement.getTenantId());
+			if(agreement.getCommencementDate().compareTo(gstDate) >=0){
+				taxReason = propertiesManager.getTaxReasonStateGst();
+				demandReasons.addAll(getDemandReasonsForTaxReason(agreementRequest, date, taxReason));
+				taxReason = propertiesManager.getTaxReasonCentralGst();
+				demandReasons.addAll(getDemandReasonsForTaxReason(agreementRequest, date, taxReason));
+			}else{
+				taxReason = propertiesManager.getTaxReasonServiceTax();
+				demandReasons.addAll(getDemandReasonsForTaxReason(agreementRequest, date, taxReason));
+			}
 			return demandReasons;
 		}
 		for (int i = 0; i < 3; i++) {
@@ -94,6 +113,11 @@ public class DemandRepository {
 			} else if (i == 2 && agreement.getStatus().equals(Status.ACTIVE)) {
 				taxReason = propertiesManager.getTaxReasonRent();
 				date = agreementRequest.getAgreement().getExpiryDate();
+				demandReasons.addAll(getDemandReasonsForTaxReason(agreementRequest, date, taxReason));
+				taxReason = propertiesManager.getTaxReasonStateGst();
+				date = agreementRequest.getAgreement().getExpiryDate();
+				demandReasons.addAll(getDemandReasonsForTaxReason(agreementRequest, date, taxReason));
+				taxReason = propertiesManager.getTaxReasonCentralGst();
 				demandReasons.addAll(getDemandReasonsForTaxReason(agreementRequest, date, taxReason));
 			}
 		}
@@ -261,6 +285,15 @@ public class DemandRepository {
 				demandDetail.setTaxAmount(BigDecimal.valueOf(agreement.getSecurityDeposit()));
 				if (agreement.getCollectedSecurityDeposit() != null)
 					demandDetail.setCollectionAmount(BigDecimal.valueOf(agreement.getCollectedSecurityDeposit()));
+			}else if ("CENTRAL_GST".equalsIgnoreCase(demandReason.getName())){
+				demandDetail.setTaxAmount(BigDecimal.valueOf(agreement.getCgst()));
+
+			}else if ("STATE_GST".equalsIgnoreCase(demandReason.getName())){
+				demandDetail.setTaxAmount(BigDecimal.valueOf(agreement.getSgst()));
+
+			}else if ("SERVICE_TAX".equalsIgnoreCase(demandReason.getName())){
+				demandDetail.setTaxAmount(BigDecimal.valueOf(agreement.getServiceTax()));
+
 			}
 			if(demandDetail.getTaxAmount()!=null)
 			demandDetails.add(demandDetail);
@@ -401,4 +434,27 @@ public class DemandRepository {
 		}
 		return demandReasons;
 	}
+	
+	private Date getGstEffectiveDate(String tenantId) {
+		DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");// remove this Simple Date Format
+		Date gstDate = null;
+		LamsConfigurationGetRequest lamsConfigurationGetRequest = new LamsConfigurationGetRequest();
+		lamsConfigurationGetRequest.setName(propertiesManager.getGstEffectiveDate());
+		lamsConfigurationGetRequest.setTenantId(tenantId);
+		List<String> gstDates = lamsConfigurationService.getLamsConfigurations(lamsConfigurationGetRequest)
+				.get(propertiesManager.getGstEffectiveDate());
+		if (gstDates.isEmpty()) {
+			return null;
+		} else {
+			try {
+				gstDate = formatter.parse(gstDates.get(0));
+			} catch (ParseException e) {
+				LOGGER.error("exception in parsing GST date  ::: " + e);
+			}
+
+		}
+		return gstDate;
+	}
+	
+		
 }

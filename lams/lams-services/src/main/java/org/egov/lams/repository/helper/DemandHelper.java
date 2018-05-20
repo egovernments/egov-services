@@ -1,6 +1,8 @@
 package org.egov.lams.repository.helper;
 
 import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.egov.lams.config.PropertiesManager;
@@ -39,11 +41,25 @@ public class DemandHelper {
 		urlParams.append("&taxPeriod=" + agreement.getTimePeriod());
 		urlParams.append("&fromDate=" + DateFormatUtils.format(fromDate, "dd/MM/yyyy"));
 		urlParams.append("&installmentType=" + agreement.getPaymentCycle().toString());
-		urlParams.append("&taxCategory=" + (propertiesManager.getTaxReasonPenalty().equalsIgnoreCase(taxReason)
-				? propertiesManager.getPenaltyCategoryName() : propertiesManager.getTaxCategoryName()));
+		if ("STATE_GST".equalsIgnoreCase(taxReason) || "CENTRAL_GST".equalsIgnoreCase(taxReason)) {
+			urlParams.append("&taxCategory=GST");
+		} else if ("SERVICE_TAX".equalsIgnoreCase(taxReason)) {
+			urlParams.append("&taxCategory=SERVICETAX");
+		} else
+			urlParams.append("&taxCategory=" + (propertiesManager.getTaxReasonPenalty().equalsIgnoreCase(taxReason)
+					? propertiesManager.getPenaltyCategoryName() : propertiesManager.getTaxCategoryName()));
+
 		urlParams.append("&tenantId=" + agreement.getTenantId());
 		urlParams.append("&taxReason=" + taxReason);
 		urlParams.append("&toDate=" + DateFormatUtils.format(date, "dd/MM/yyyy"));
 		return urlParams.toString();
+	}
+	
+	public String getDemandIdParams(List<Long> idList) {
+		String dmdIdString = null;
+		if (!idList.isEmpty()) {
+			dmdIdString = idList.stream().map(Object::toString).collect(Collectors.joining(","));
+		}
+		return dmdIdString;
 	}
 }

@@ -124,7 +124,11 @@ public class AgreementRowMapper implements ResultSetExtractor<List<Agreement>> {
 					agreement.setAuctionAmount(rs.getDouble("auctionamount"));
 					agreement.setSolvencyAmount(rs.getDouble("solvencyamount"));
 					agreement.setIsHistory(rs.getBoolean("ishistory"));
-					
+					agreement.setCgst(rs.getDouble("cgst"));
+					agreement.setSgst(rs.getDouble("sgst"));
+					agreement.setServiceTax(rs.getDouble("servicetax"));
+					agreement.setNoticeNumber(rs.getString("noticeno"));
+
 					String baseAllotment = rs.getString("base_allotment");
 					agreement.setBasisOfAllotment(BasisOfAllotment.fromValue(baseAllotment));
 

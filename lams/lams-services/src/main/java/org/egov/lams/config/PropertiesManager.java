@@ -64,12 +64,15 @@ public class PropertiesManager {
 	
 	@Value("${egov.services.demand_service.taxreasongoodwillamount}")
 	private String taxReasonGoodWillAmount;
-	
+
 	@Value("${egov.services.demand_service.taxreasoncentralgst}")
 	private String taxReasonCentralGst;
-	
+
 	@Value("${egov.services.demand_service.taxreasonstategst}")
 	private String taxReasonStateGst;
+
+	@Value("${egov.services.demand_service.taxreasonservicetax}")
+	private String taxReasonServiceTax;
 
 	@Value("${kafka.topics.start.workflow}")
 	private String startWorkflowTopic;
@@ -179,4 +182,10 @@ public class PropertiesManager {
 	
 	@Value("${egov.services.demand_service.penaltyCategoryName}")
 	private String penaltyCategoryName;
+	
+	@Value("${egov.services.lams.gst.effective.date}")
+	private String gstEffectiveDate;
+	
+	@Value("${egov.services.lams.gst.rate}")
+	private String gstRate;
 }

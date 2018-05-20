@@ -173,9 +173,11 @@ public class Agreement {
 	private Date tenderOpeningDate;
 	private Double auctionAmount;
 	private Double solvencyAmount;
-	private Boolean showDetails=Boolean.TRUE;
-	private Boolean isHistory ;
-	private Double gstAmount;
+	private Boolean showDetails = Boolean.TRUE;
+	private Double serviceTax;
+	private Double cgst;
+	private Double sgst;
 	private String noticeNumber;
+	private Boolean isHistory;
 
 }

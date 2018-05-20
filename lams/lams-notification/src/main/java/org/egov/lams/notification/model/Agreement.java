@@ -167,8 +167,10 @@ public class Agreement {
 	private Double auctionAmount;
 	private Double solvencyAmount;
 	private Boolean showDetails = Boolean.TRUE;
-	private Boolean isHistory;
-	private Double gstAmount;
+	private Double serviceTax;
+	private Double cgst;
+	private Double sgst;
 	private String noticeNumber;
+	private Boolean isHistory;
 
 }

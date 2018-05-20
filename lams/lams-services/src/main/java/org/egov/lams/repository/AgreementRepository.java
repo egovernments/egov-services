@@ -624,6 +624,10 @@ public class AgreementRepository {
 		agreementParameters.put("auctionAmount", agreement.getAuctionAmount());
 		agreementParameters.put("solvencyAmount", agreement.getSolvencyAmount());
 		agreementParameters.put("isHistory", agreement.getIsHistory());
+		agreementParameters.put("serviceTax", agreement.getServiceTax());
+		agreementParameters.put("cgst", agreement.getCgst());
+		agreementParameters.put("sgst", agreement.getSgst());
+		agreementParameters.put("noticeNumber",agreement.getNoticeNumber() );
 				
 		return agreementParameters;
     }

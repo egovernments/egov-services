@@ -133,6 +133,7 @@ public class DemandRepository {
 		List<DemandReason> demandReasons = new ArrayList<>();
 		Agreement agreement = agreementRequest.getAgreement();
 		String taxReason;
+		Date gstDate;
 		Date effectiveToDate = getEffectiveToDate(agreement);
 		if(effectiveToDate.compareTo(agreement.getExpiryDate())>0){
             effectiveToDate = agreement.getExpiryDate();
@@ -141,6 +142,16 @@ public class DemandRepository {
 		demandReasons.addAll(getDemandReasonsForTaxReason(agreementRequest, effectiveToDate, taxReason));
 		taxReason = propertiesManager.getTaxReasonPenalty();
 		demandReasons.addAll(getDemandReasonsForTaxReason(agreementRequest, effectiveToDate, taxReason));
+		gstDate =getGstEffectiveDate(agreement.getTenantId());
+		if(agreement.getCommencementDate().compareTo(gstDate) >=0){
+			taxReason = propertiesManager.getTaxReasonStateGst();
+			demandReasons.addAll(getDemandReasonsForTaxReason(agreementRequest, effectiveToDate, taxReason));
+			taxReason = propertiesManager.getTaxReasonCentralGst();
+			demandReasons.addAll(getDemandReasonsForTaxReason(agreementRequest, effectiveToDate, taxReason));
+		}else{
+			taxReason = propertiesManager.getTaxReasonServiceTax();
+			demandReasons.addAll(getDemandReasonsForTaxReason(agreementRequest, effectiveToDate, taxReason));
+		}
 		return demandReasons;
 
 	}

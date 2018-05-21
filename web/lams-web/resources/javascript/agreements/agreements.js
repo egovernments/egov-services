@@ -1,21 +1,21 @@
 try {
-  var department = !localStorage.getItem("assignments_department") || localStorage.getItem("assignments_department") == "undefined" ? (localStorage.setItem("assignments_department", JSON.stringify(getCommonMaster("egov-common-masters", "departments", "Department").responseJSON["Department"] || [])), JSON.parse(localStorage.getItem("assignments_department"))) : JSON.parse(localStorage.getItem("assignments_department"));
+    var department = !localStorage.getItem("assignments_department") || localStorage.getItem("assignments_department") == "undefined" ? (localStorage.setItem("assignments_department", JSON.stringify(getCommonMaster("egov-common-masters", "departments", "Department").responseJSON["Department"] || [])), JSON.parse(localStorage.getItem("assignments_department"))) : JSON.parse(localStorage.getItem("assignments_department"));
 } catch (e) {
     console.log(e);
     var department = [];
 }
 
 try {
-  var natureOfAllotments = !localStorage.getItem("natureOfAllotments") || localStorage.getItem("natureOfAllotments") == "undefined" ? (localStorage.setItem("natureOfAllotments", JSON.stringify(commonApiPost("lams-services", "", "getnatureofallotment", {tenantId}).responseJSON || {})), JSON.parse(localStorage.getItem("natureOfAllotments"))) : JSON.parse(localStorage.getItem("natureOfAllotments"));
+    var natureOfAllotments = !localStorage.getItem("natureOfAllotments") || localStorage.getItem("natureOfAllotments") == "undefined" ? (localStorage.setItem("natureOfAllotments", JSON.stringify(commonApiPost("lams-services", "", "getnatureofallotment", { tenantId }).responseJSON || {})), JSON.parse(localStorage.getItem("natureOfAllotments"))) : JSON.parse(localStorage.getItem("natureOfAllotments"));
 } catch (e) {
     console.log(e);
     var natureOfAllotments = {};
 }
 try {
-  var paymentCycle = !localStorage.getItem("paymentCycle") || localStorage.getItem("paymentCycle") == "undefined" ? (localStorage.setItem("paymentCycle", JSON.stringify(commonApiPost("lams-services", "", "getpaymentcycle", {tenantId}).responseJSON || {})), JSON.parse(localStorage.getItem("paymentCycle"))) : JSON.parse(localStorage.getItem("paymentCycle"));
+    var paymentCycle = !localStorage.getItem("paymentCycle") || localStorage.getItem("paymentCycle") == "undefined" ? (localStorage.setItem("paymentCycle", JSON.stringify(commonApiPost("lams-services", "", "getpaymentcycle", { tenantId }).responseJSON || {})), JSON.parse(localStorage.getItem("paymentCycle"))) : JSON.parse(localStorage.getItem("paymentCycle"));
 } catch (e) {
     console.log(e);
-  var paymentCycle = {};
+    var paymentCycle = {};
 }
 
 try { locality = !localStorage.getItem("locality") || localStorage.getItem("locality") == "undefined" ? (localStorage.setItem("locality", JSON.stringify(commonApiPost("egov-location/boundarys", "boundariesByBndryTypeNameAndHierarchyTypeName", "", { boundaryTypeName: "LOCALITY", hierarchyTypeName: "LOCATION", tenantId }).responseJSON["Boundary"] || [])), JSON.parse(localStorage.getItem("locality"))) : JSON.parse(localStorage.getItem("locality")); } catch (e) {
@@ -42,17 +42,18 @@ try { revenueBlock = !localStorage.getItem("revenueBlock") || localStorage.getIt
     console.log(e);
     revenueBlock = [];
 }
-try { assetCategories = !localStorage.getItem("assetCategories") || localStorage.getItem("assetCategories") == "undefined" ? (localStorage.setItem("assetCategories", JSON.stringify(commonApiPost("asset-services", "assetCategories", "_search", {tenantId}).responseJSON["AssetCategory"] || [])), JSON.parse(localStorage.getItem("assetCategories"))) : JSON.parse(localStorage.getItem("assetCategories")); } catch (e) {
+try { assetCategories = !localStorage.getItem("assetCategories") || localStorage.getItem("assetCategories") == "undefined" ? (localStorage.setItem("assetCategories", JSON.stringify(commonApiPost("asset-services", "assetCategories", "_search", { tenantId }).responseJSON["AssetCategory"] || [])), JSON.parse(localStorage.getItem("assetCategories"))) : JSON.parse(localStorage.getItem("assetCategories")); } catch (e) {
     console.log(e);
     assetCategories = [];
 }
 try {
-cityGrade = !localStorage.getItem("city_grade") || localStorage.getItem("city_grade") == "undefined" ? (localStorage.setItem("city_grade", JSON.stringify(commonApiPost("tenant", "v1/tenant", "_search", { code: tenantId }).responseJSON["tenant"][0]["city"]["ulbGrade"] || {})), JSON.parse(localStorage.getItem("city_grade"))) : JSON.parse(localStorage.getItem("city_grade"));} catch (e) {
-console.log(e);
-cityGrade = null;
+    cityGrade = !localStorage.getItem("city_grade") || localStorage.getItem("city_grade") == "undefined" ? (localStorage.setItem("city_grade", JSON.stringify(commonApiPost("tenant", "v1/tenant", "_search", { code: tenantId }).responseJSON["tenant"][0]["city"]["ulbGrade"] || {})), JSON.parse(localStorage.getItem("city_grade"))) : JSON.parse(localStorage.getItem("city_grade"));
+} catch (e) {
+    console.log(e);
+    cityGrade = null;
 }
 
-$('#close').on("click", function() {
+$('#close').on("click", function () {
     window.close();
 })
 
@@ -62,82 +63,82 @@ var employees = [];
 var fileTypes = ["application/msword", "application/vnd.openxmlformats-officedocument.wordprocessingml.document", "application/vnd.ms-excel", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "application/pdf", "image/png", "image/jpeg"];
 var shopsMap = {};
 
-$(document).ready(function(){
+$(document).ready(function () {
 
-  $('#municipalOrder, #governmentOrder').hide();
-  if (decodeURIComponent(getUrlVars()["type"]) != "Shopping Complex"){
-    $("#natureOfAllotment option[value='DIRECT']").remove();
+    $('#municipalOrder, #governmentOrder').hide();
+    if (decodeURIComponent(getUrlVars()["type"]) != "Shopping Complex") {
+        $("#natureOfAllotment option[value='DIRECT']").remove();
 
-  }
+    }
 
-  if(window.opener && window.opener.document) {
-     var logo_ele = window.opener.document.getElementsByClassName("homepage_logo");
-     if(logo_ele && logo_ele[0]) {
-       document.getElementsByClassName("homepage_logo")[0].src = logo_ele[0].getAttribute("src");
-     }
-   }
+    if (window.opener && window.opener.document) {
+        var logo_ele = window.opener.document.getElementsByClassName("homepage_logo");
+        if (logo_ele && logo_ele[0]) {
+            document.getElementsByClassName("homepage_logo")[0].src = logo_ele[0].getAttribute("src");
+        }
+    }
 
-   $('#timePeriod').append($("<option/>").val('').text('Select Time Period'));
-   if (decodeURIComponent(getUrlVars()["type"]) == "Shopping Complex"){
-   for(var i=0;i<25;i++){
-     $('#timePeriod').append($("<option/>").val(i+1).text(i+1));
-   }
- } else{
-   $('#timePeriod').append($("<option/>").val(1).text("1"));
- }
+    $('#timePeriod').append($("<option/>").val('').text('Select Time Period'));
+    if (decodeURIComponent(getUrlVars()["type"]) == "Shopping Complex") {
+        for (var i = 0; i < 25; i++) {
+            $('#timePeriod').append($("<option/>").val(i + 1).text(i + 1));
+        }
+    } else {
+        $('#timePeriod').append($("<option/>").val(1).text("1"));
+    }
 
-   //basis of allotment API call
-   var basisOfAllotment = [{label:'Goodwill Auction Basis',value:'Goodwill Auction Basis'},{label:'Normal Basis',value:'Normal Basis'}];
-   $.each(basisOfAllotment, function (idx, basis){
-     $("#basisOfAllotment").append($("<option />").val(basis.value).text(basis.label));
-   });
+    //basis of allotment API call
+    var basisOfAllotment = [{ label: 'Goodwill Auction Basis', value: 'Goodwill Auction Basis' }, { label: 'Normal Basis', value: 'Normal Basis' }];
+    $.each(basisOfAllotment, function (idx, basis) {
+        $("#basisOfAllotment").append($("<option />").val(basis.value).text(basis.label));
+    });
 
-   //category API call
-   var category = commonApiPost("lams-services", "getreservations", "", {tenantId}).responseJSON;
-   $.each(category, function (idx, cat){
-     $("#reservationCategory").append($("<option />").val(cat.id).text(cat.name));
-   });
+    //category API call
+    var category = commonApiPost("lams-services", "getreservations", "", { tenantId }).responseJSON;
+    $.each(category, function (idx, cat) {
+        $("#reservationCategory").append($("<option />").val(cat.id).text(cat.name));
+    });
 
-   $('#basisOfAllotment').on('change',function(){
+    $('#basisOfAllotment').on('change', function () {
 
-     // dependent fields show & hide
-     if(this.value && $('#timePeriod').val()){
-       dependentonBasisTime(this.value, $('#timePeriod').val());
-     }
+        // dependent fields show & hide
+        if (this.value && $('#timePeriod').val()) {
+            dependentonBasisTime(this.value, $('#timePeriod').val());
+        }
 
-     // update natureOfAllotment dropdown
-     $('#natureOfAllotment').find('option').remove().end().append('<option value="">Select</option>');
-     fillValueToObject({id:'natureOfAllotment',name:'natureOfAllotment',value:''});
-     fillValueToObject({id:'rentIncrementMethod',name:'rentIncrementMethod',value:''});
-     if(this.value === 'Goodwill Auction Basis'){
-       $('#natureOfAllotment').append(`<option value='AUCTION'>AUCTION</option>`);
-     }else if(this.value === 'Normal Basis'){
-       Object.keys(natureOfAllotments).map((k, index)=>{
-           $('#natureOfAllotment').append('<option value='+k+'>'+natureOfAllotments[k]+'</option>')
-       });
-     }
+        // update natureOfAllotment dropdown
+        $('#natureOfAllotment').find('option').remove().end().append('<option value="">Select</option>');
+        fillValueToObject({ id: 'natureOfAllotment', name: 'natureOfAllotment', value: '' });
+        fillValueToObject({ id: 'rentIncrementMethod', name: 'rentIncrementMethod', value: '' });
+        if (this.value === 'Goodwill Auction Basis') {
+            $('#natureOfAllotment').append(`<option value='AUCTION'>AUCTION</option>`);
+        } else if (this.value === 'Normal Basis') {
+            Object.keys(natureOfAllotments).map((k, index) => {
+                $('#natureOfAllotment').append('<option value=' + k + '>' + natureOfAllotments[k] + '</option>')
+            });
+        }
 
-     $('#rentIncrementMethod').find('option').remove().end().append('<option value="">Choose Percentage</option>');
+        $('#rentIncrementMethod').find('option').remove().end().append('<option value="">Choose Percentage</option>');
 
-     loadRenewalRent(this.value);
+        loadRenewalRent(this.value);
 
-   });
+    });
 
-   $('#timePeriod').on('change',function(){
-     if($('#basisOfAllotment').val() && this.value){
-       dependentonBasisTime($('#basisOfAllotment').val(), this.value);
-     }
-   })
+    $('#timePeriod').on('change', function () {
+        if ($('#basisOfAllotment').val() && this.value) {
+            dependentonBasisTime($('#basisOfAllotment').val(), this.value);
+        }
+    })
 
 });
 
 $(".disabled").attr("disabled", true);
-$("textarea").on("keyup", function() {
+$("textarea").on("keyup", function () {
     fillValueToObject(this);
 });
 
 //Getting data for user input
-$("input").on("keyup", function() {
+$("input").on("keyup", function () {
     fillValueToObject(this);
     if (this.id == "rent") {
         $('#securityDeposit').val(this.value * 3);
@@ -148,29 +149,29 @@ $("input").on("keyup", function() {
     }
 });
 
-$(document).on("keyup","input", function() {
+$(document).on("keyup", "input", function () {
     //fillValueToObject(this);
     if (this.id === "auctionAmount") {
-        if($('#commencementDate').val()!=''){
+        if ($('#commencementDate').val() != '') {
             var fromDate = $('#commencementDate').val();
-            fromDate = moment(fromDate,"DD/MM/YYYY");
-          adjustSecurityDeposit(fromDate,this.val);
+            fromDate = moment(fromDate, "DD/MM/YYYY");
+            adjustSecurityDeposit(fromDate, this.val);
 
-    }else{
-      $('#securityDeposit').val(this.value * 0.25);
-      $("#securityDeposit").attr({
-          "min": this.value * 0.25
-      });
-      agreement["securityDeposit"] = Math.round(this.value * 0.25);
+        } else {
+            $('#securityDeposit').val(this.value * 0.25);
+            $("#securityDeposit").attr({
+                "min": this.value * 0.25
+            });
+            agreement["securityDeposit"] = Math.round(this.value * 0.25);
+        }
     }
-  }
 });
-$(document).on("blur",".datepicker", function() {
+$(document).on("blur", ".datepicker", function () {
     fillValueToObject(this);
 });
 
 //Getting data for user input
-$("select").on("change", function() {
+$("select").on("change", function () {
     // console.log(this.value);
     if (this.id == "natureOfAllotment") {
         if (this.value == "DIRECT") {
@@ -178,8 +179,8 @@ $("select").on("change", function() {
         } else {
             $(".disabled").attr("disabled", true);
         }
-    } else if(this.id == "floorNumber" && this.value){
-      validateAgreementsForFloor(this.value);
+    } else if (this.id == "floorNumber" && this.value) {
+        validateAgreementsForFloor(this.value);
     }
 
     if (($("#approverDepartment").val() != "" && $("#approverDesignation").val() != "") && (this.id == "approverDepartment" || this.id == "approverDesignation")) {
@@ -201,27 +202,27 @@ $("select").on("change", function() {
 });
 
 function validateAgreementsForFloor(floorNumber) {
-   var noOfAgreements = commonApiPost("lams-services", "agreements", "_search", {tenantId, floorNumber:floorNumber,asset:getUrlVars()["assetId"]}).responseJSON["Agreements"];
-   var noOfShops = shopsMap[floorNumber];
- if(noOfAgreements.length === noOfShops){
-   showError("Agreements should not exceed number of shops in the floor ");
-   $("#createAgreement").attr("disabled",true);
-   return false;
- } else{
-   $("#createAgreement").attr("disabled",false);
- }
+    var noOfAgreements = commonApiPost("lams-services", "agreements", "_search", { tenantId, floorNumber: floorNumber, asset: getUrlVars()["assetId"] }).responseJSON["Agreements"];
+    var noOfShops = shopsMap[floorNumber];
+    if (noOfAgreements.length === noOfShops) {
+        showError("Agreements should not exceed number of shops in the floor ");
+        $("#createAgreement").attr("disabled", true);
+        return false;
+    } else {
+        $("#createAgreement").attr("disabled", false);
+    }
 }
 
 //file change handle for file upload
-$("input[type=file]").on("change", function(evt) {
+$("input[type=file]").on("change", function (evt) {
     //2097152 = 2mb
-    if(evt.currentTarget.files[0].size > 2097152 && fileTypes.indexOf(evt.currentTarget.files[0].type) == -1) {
+    if (evt.currentTarget.files[0].size > 2097152 && fileTypes.indexOf(evt.currentTarget.files[0].type) == -1) {
         $("#documents").val('');
         return showError("Maximum file size allowed is 2 MB.\n Please upload only DOC, PDF, xls, xlsx, png, jpeg file.");
-    } else if(evt.currentTarget.files[0].size > 2097152) {
+    } else if (evt.currentTarget.files[0].size > 2097152) {
         $("#documents").val('');
         return showError("Maximum file size allowed is 2 MB.");
-    } else if(fileTypes.indexOf(evt.currentTarget.files[0].type) == -1) {
+    } else if (fileTypes.indexOf(evt.currentTarget.files[0].type) == -1) {
         $("#documents").val('');
         return showError("Please upload only DOC, PDF, xls, xlsx, png, jpeg file.");
     }
@@ -230,14 +231,14 @@ $("input[type=file]").on("change", function(evt) {
 });
 
 
-$(".onlyNumber").on("keydown", function(e) {
+$(".onlyNumber").on("keydown", function (e) {
     var key = e.keyCode ? e.keyCode : e.which;
     if (!([8, 9, 13, 27, 46, 110, 190].indexOf(key) !== -1 ||
-            (key == 65 && (e.ctrlKey || e.metaKey)) ||
-            (key >= 35 && key <= 40) ||
-            (key >= 48 && key <= 57 && !(e.shiftKey || e.altKey)) ||
-            (key >= 96 && key <= 105)
-        )) {
+        (key == 65 && (e.ctrlKey || e.metaKey)) ||
+        (key >= 35 && key <= 40) ||
+        (key >= 48 && key <= 57 && !(e.shiftKey || e.altKey)) ||
+        (key >= 96 && key <= 105)
+    )) {
         e.preventDefault();
     }
     /*if(this.value.length > 11 && [8, 46, 37, 39].indexOf(key) == -1) {
@@ -245,16 +246,16 @@ $(".onlyNumber").on("keydown", function(e) {
     }*/
 });
 
-$(".onlyAlphaNum").on("keydown", function(e) {
-  var key = e.keyCode ? e.keyCode : e.which;
-  if (!([8, 9, 13, 27, 46, 110, 190].indexOf(key) !== -1 ||
-          (key == 65 && (e.ctrlKey || e.metaKey)) ||
-          (key >= 35 && key <= 40) ||
-          (key >= 48 && key <= 57 && !(e.shiftKey || e.altKey)) ||
-          (key >= 96 && key <= 105)
-      )) {
-      e.preventDefault();
-  }
+$(".onlyAlphaNum").on("keydown", function (e) {
+    var key = e.keyCode ? e.keyCode : e.which;
+    if (!([8, 9, 13, 27, 46, 110, 190].indexOf(key) !== -1 ||
+        (key == 65 && (e.ctrlKey || e.metaKey)) ||
+        (key >= 35 && key <= 40) ||
+        (key >= 48 && key <= 57 && !(e.shiftKey || e.altKey)) ||
+        (key >= 96 && key <= 105)
+    )) {
+        e.preventDefault();
+    }
 });
 
 //it will split object string where it has .
@@ -313,9 +314,9 @@ var commomFieldsRules = {
         phone: true
     },
     "allottee.permanentAddress": {
-       required: true,
+        required: true,
 
-   },
+    },
     tenderNumber: {
         required: false,
         alphaNumer: true
@@ -368,7 +369,7 @@ var commomFieldsRules = {
     },
     securityDeposit: {
         required: true,
-        integerOnly:true
+        integerOnly: true
     },
     commencementDate: {
         required: true
@@ -378,10 +379,10 @@ var commomFieldsRules = {
     },
     rent: {
         required: true,
-        integerOnly:true
+        integerOnly: true
     },
-    goodWillAmount:{
-      integerOnly:false
+    goodWillAmount: {
+        integerOnly: false
     },
     paymentCycle: {
         required: true
@@ -418,79 +419,79 @@ var commomFieldsRules = {
         required: false,
         alphaNumer: true
     },
-    municipalOrderNumber:{
-      required :false,
-      alphaNumersh: true
+    municipalOrderNumber: {
+        required: false,
+        alphaNumersh: true
     },
-    governmentOrderNumber :{
-      required :false,
-      alphaNumersh: true
+    governmentOrderNumber: {
+        required: false,
+        alphaNumersh: true
     },
-    referenceNumber:{
-      required: decodeURIComponent(getUrlVars()["type"]).toLowerCase() == "shopping complex"  ? true : false,
-      alphaNumersh: true
+    referenceNumber: {
+        required: decodeURIComponent(getUrlVars()["type"]).toLowerCase() == "shopping complex" ? true : false,
+        alphaNumersh: true
     },
-    floorNumber :{
-      required :true
+    floorNumber: {
+        required: true
     },
-    auctionAmount:{
-      required :true
+    auctionAmount: {
+        required: true
     }
 };
 if (decodeURIComponent(getUrlVars()["type"]) == "Land") {
     // validation rules for land agreement
     validationRules = {
-            // landRegisterNumber: {
-            //     required: true
-            // },
-            // particularsOfLand: {
-            //     required: true
-            // },
-            // resurveyNumber: {
-            //     required: true
-            // },
-            // landAddress: {
-            //     required: true
-            // },
-            // townSurveyNumber: {
-            //     required: true
-            // }
-            // ,
-            // assetCategory: {
-            //     required: true
-            // },
-            // assetName: {
-            //     required: true
-            // },
-            // assetCode: {
-            //     required: true
-            // },
-            // assetArea: {
-            //     required: true
-            // },
-            // assetLocality: {
-            //     required: true
-            // },
-            // assetStreet: {
-            //     required: true
-            // },
-            // assetRevenueZone: {
-            //     required: true
-            // },
-            // assetrevenueWards: {
-            //     required: true
-            // },
-            // assetRevenueBlock: {
-            //     required: true
-            // },
-            // assetElectionWard: {
-            //     required: true
-            // },
-            // assetAssetAddress: {
-            //     required: true
-            // }
-        }
-        // remove all other Asset Details block from DOM except land asset related fields
+        // landRegisterNumber: {
+        //     required: true
+        // },
+        // particularsOfLand: {
+        //     required: true
+        // },
+        // resurveyNumber: {
+        //     required: true
+        // },
+        // landAddress: {
+        //     required: true
+        // },
+        // townSurveyNumber: {
+        //     required: true
+        // }
+        // ,
+        // assetCategory: {
+        //     required: true
+        // },
+        // assetName: {
+        //     required: true
+        // },
+        // assetCode: {
+        //     required: true
+        // },
+        // assetArea: {
+        //     required: true
+        // },
+        // assetLocality: {
+        //     required: true
+        // },
+        // assetStreet: {
+        //     required: true
+        // },
+        // assetRevenueZone: {
+        //     required: true
+        // },
+        // assetrevenueWards: {
+        //     required: true
+        // },
+        // assetRevenueBlock: {
+        //     required: true
+        // },
+        // assetElectionWard: {
+        //     required: true
+        // },
+        // assetAssetAddress: {
+        //     required: true
+        // }
+    }
+    // remove all other Asset Details block from DOM except land asset related fields
     $("#shopAssetDetailsBlock,#shoppingComplexAssetDetailsBlock, #marketAssetDetailsBlock, #kalyanamandapamAssetDetailsBlock, #parkingSpaceAssetDetailsBlock, #slaughterHousesAssetDetailsBlock, #usfructsAssetDetailsBlock, #communityAssetDetailsBlock, #fishTankAssetDetailsBlock, #parkAssetDetailsBlock").remove();
     //remove agreement template two and three from screen
     $("#agreementDetailsBlockTemplateTwo,#agreementDetailsBlockTemplateThree,#agreementDetailsBlockForAuctionAssets").remove();
@@ -561,7 +562,7 @@ if (decodeURIComponent(getUrlVars()["type"]) == "Land") {
     //remove agreement template two and three from screen
     $("#agreementDetailsBlockTemplateOne,#agreementDetailsBlockTemplateThree,#agreementDetailsBlockForAuctionAssets").remove();
     //remove allotee details block(old details)
-     $("#allotteeDetailsBlockTwo").remove();
+    $("#allotteeDetailsBlockTwo").remove();
     //disabling input tag of asset details
     $("#shopAssetDetailsBlock input").attr("disabled", true);
     //disabling textarea tag of asset details
@@ -577,20 +578,19 @@ if (decodeURIComponent(getUrlVars()["type"]) == "Land") {
     //remove agreement template two and three from screen
     $("#agreementDetailsBlockTemplateOne,#agreementDetailsBlockTemplateThree,#agreementDetailsBlockForAuctionAssets").remove();
     //remove allotee details block(old details)
-     $("#allotteeDetailsBlockTwo").remove();
+    $("#allotteeDetailsBlockTwo").remove();
     //disabling input tag of asset details
     $("#shoppingComplexAssetDetailsBlock input").attr("disabled", true);
     //disabling textarea tag of asset details
     $("#shoppingComplexAssetDetailsBlock textarea").attr("disabled", true);
     //disabling select tag of asset details
     $("#shoppingComplexAssetDetailsBlock select").attr("disabled", true);
-    $("#referenceNumber").attr("disabled",false);
-    $("#floorNumber").attr("disabled",false);
+    $("#referenceNumber").attr("disabled", false);
+    $("#floorNumber").attr("disabled", false);
     $("#referenceNumberSection").remove();
     //append category text
     $(".categoryType").prepend("Shopping Complex ");
-}
-else if (decodeURIComponent(getUrlVars()["type"]) == "Market") {
+} else if (decodeURIComponent(getUrlVars()["type"]) == "Market") {
     // validation rules for shop agreement
     validationRules = {
         // assetCategory: {
@@ -645,7 +645,7 @@ else if (decodeURIComponent(getUrlVars()["type"]) == "Market") {
     //remove agreement template two and three from screen
     $("#agreementDetailsBlockTemplateOne,#agreementDetailsBlockTemplateTwo,#agreementDetailsBlockTemplateThree").remove();
     //removing allotee details block
-     $("#allotteeDetailsBlock").remove();
+    $("#allotteeDetailsBlock").remove();
     //disabling input tag of asset details
     $("#historyDetails,#subesquentrenewals").remove();
     $("#marketAssetDetailsBlock input").attr("disabled", true);
@@ -696,7 +696,7 @@ else if (decodeURIComponent(getUrlVars()["type"]) == "Market") {
     //remove agreement template two and three from screen
     $("#agreementDetailsBlockTemplateOne,#agreementDetailsBlockTemplateTwo,#agreementDetailsBlockTemplateThree").remove();
     //remove allotee details block(old details)
-     $("#allotteeDetailsBlock").remove();
+    $("#allotteeDetailsBlock").remove();
     //disabling input tag of asset details
     $("#kalyanamandapamAssetDetailsBlock input").attr("disabled", true);
     $("#kalyanamandapamAssetDetailsBlock textarea").attr("disabled", true);
@@ -748,7 +748,7 @@ else if (decodeURIComponent(getUrlVars()["type"]) == "Market") {
     //remove agreement template two and three from screen
     $("#agreementDetailsBlockTemplateOne,#agreementDetailsBlockTemplateTwo,#agreementDetailsBlockForAuctionAssets").remove();
     //remove allotee details block(old details)
-     $("#allotteeDetailsBlockTwo").remove();
+    $("#allotteeDetailsBlockTwo").remove();
     //disabling input tag of asset details
     $("#parkingSpaceAssetDetailsBlock input").attr("disabled", true);
     $("#parkingSpaceAssetDetailsBlock textarea").attr("disabled", true);
@@ -847,7 +847,7 @@ else if (decodeURIComponent(getUrlVars()["type"]) == "Market") {
     //remove agreement template two and three from screen
     $("#agreementDetailsBlockTemplateOne,#agreementDetailsBlockTemplateTwo").remove();
     //remove allotee details block(old details)
-     $("#allotteeDetailsBlockTwo").remove();
+    $("#allotteeDetailsBlockTwo").remove();
     //disabling input tag of asset details
     $("#usfructsAssetDetailsBlock input").attr("disabled", true);
     $("#usfructsAssetDetailsBlock textarea").attr("disabled", true);
@@ -993,7 +993,7 @@ else if (decodeURIComponent(getUrlVars()["type"]) == "Market") {
     //remove agreement template two and three from screen
     $("#agreementDetailsBlockTemplateOne,#agreementDetailsBlockTemplateTwo,#agreementDetailsBlockForAuctionAssets").remove();
     //remove allotee details block(old details)
-     $("#allotteeDetailsBlockTwo").remove();
+    $("#allotteeDetailsBlockTwo").remove();
     //disabling input tag of asset details
     $("#parkAssetDetailsBlock input").attr("disabled", true);
     $("#parkAssetDetailsBlock textarea").attr("disabled", true);
@@ -1024,33 +1024,33 @@ for (var key in finalValidatinRules) {
 
 
 
-$.validator.addMethod('phone', function(value) {
+$.validator.addMethod('phone', function (value) {
     return /^[0-9]{10}$/.test(value);
 }, 'Please enter a valid phone number.');
 
-$.validator.addMethod('aadhar', function(value) {
+$.validator.addMethod('aadhar', function (value) {
     return value ? /^[0-9]{12}$/.test(value) : true;
 }, 'Please enter a valid aadhar.');
 
-$.validator.addMethod('panNo', function(value) {
-  return value.length > 0 ? /^([a-zA-Z]){5}([0-9]){4}([a-zA-Z]){1}?$/i.test(value) && value.length === 10 : true;
+$.validator.addMethod('panNo', function (value) {
+    return value.length > 0 ? /^([a-zA-Z]){5}([0-9]){4}([a-zA-Z]){1}?$/i.test(value) && value.length === 10 : true;
 }, 'Please enter a valid pan.');
 
-$.validator.addMethod('alloName', function(value) {
+$.validator.addMethod('alloName', function (value) {
     return /^[a-zA-Z ]*$/.test(value);
 }, 'Please enter a valid name.');
 
-$.validator.addMethod('alphaNumer', function(value) {
-  return value ? /^[a-z0-9]+$/i.test(value) : true;
+$.validator.addMethod('alphaNumer', function (value) {
+    return value ? /^[a-z0-9]+$/i.test(value) : true;
 }, 'Please enter only Alpha/Numeric Value');
 
-$.validator.addMethod('alphaNumersh', function(value) {
-  return value ? /^[a-z0-9./-]+$/i.test(value) : true;
+$.validator.addMethod('alphaNumersh', function (value) {
+    return value ? /^[a-z0-9./-]+$/i.test(value) : true;
 }, 'Alhpabets, Numbers and / - are only allowed');
 
-$.validator.addMethod('integerOnly',function(value){
-  return /^[0-9]*$/.test(value);
-},'please check the value/enter integer numbers only.');
+$.validator.addMethod('integerOnly', function (value) {
+    return /^[0-9]*$/.test(value);
+}, 'please check the value/enter integer numbers only.');
 
 
 finalValidatinRules["messages"] = {
@@ -1188,7 +1188,7 @@ $(`#approverDesignation`).html(`<option value=''>Select</option>`)
 
 }*/
 
-getDesignations(null,null,function(designations) {
+getDesignations(null, null, function (designations) {
     for (let variable in designations) {
         if (!designations[variable]["id"]) {
             var _res = commonApiPost("hr-masters", "designations", "_search", { tenantId, name: designations[variable]["name"] });
@@ -1197,7 +1197,7 @@ getDesignations(null,null,function(designations) {
 
         $(`#approverDesignation`).append(`<option value='${designations[variable]["id"]}'>${designations[variable]["name"]}</option>`);
     }
-},"New LeaseAgreement");
+}, "New LeaseAgreement");
 
 // var locality=commonApiPost("v1/location/boundarys","boundariesByBndryTypeNameAndHierarchyTypeName","",{boundaryTypeName:"LOCALITY",hierarchyTypeName:"LOCATION"}).responseJSON["Boundary"] || [],
 // var electionwards=commonApiPost("v1/location/boundarys","boundariesByBndryTypeNameAndHierarchyTypeName","",{boundaryTypeName:"WARD",hierarchyTypeName:"ADMINISTRATION"}).responseJSON["Boundary"] || [],
@@ -1225,9 +1225,9 @@ if (assetDetails && Object.keys(assetDetails).length) {
 
     $("#locationDetails\\.electionWard").val(getNameById(electionwards, assetDetails["locationDetails"]["electionWard"]));
 
-    if(assetDetails.assetAttributes) {
+    if (assetDetails.assetAttributes) {
         var attrs = assetDetails.assetAttributes;
-        for(var i=0, len = attrs.length; i<len; i++) {
+        for (var i = 0, len = attrs.length; i < len; i++) {
             switch (attrs[i].key) {
                 case 'Land Register Number':
                     $("#landRegisterNumber").val(attrs[i].value);
@@ -1254,11 +1254,11 @@ if (assetDetails && Object.keys(assetDetails).length) {
                     $("#shoppingComplexNo").val(attrs[i].value);
                     break;
                 case 'Total No. of Shops':
-                            $("#shoppingComplexNoShops").val(attrs[i].value);
-                            break;
-               case 'No. of Floors':
-                            $("#shoppingComplexNoFloors").val(attrs[i].value);
-                            break;
+                    $("#shoppingComplexNoShops").val(attrs[i].value);
+                    break;
+                case 'No. of Floors':
+                    $("#shoppingComplexNoFloors").val(attrs[i].value);
+                    break;
                 case 'Shop No':
                     $("#shoppingComplexShopNo").val(attrs[i].value);
                     break;
@@ -1271,13 +1271,13 @@ if (assetDetails && Object.keys(assetDetails).length) {
                 case 'Shopping Complex Address':
                     $("#shoppingComplexAddress").val(attrs[i].value);
                     break;
-                    case 'Floor Details':
-                          var floorDetails = attrs[i].value;
-                        for (let i in floorDetails){
-                         $(`#floorNumber`).append(`<option value='${floorDetails[i]["Floor No."]}'>${floorDetails[i]["Floor No."]}</option>`);
-                           shopsMap[floorDetails[i]["Floor No."]]=parseInt(floorDetails[i]["No. of Shops"]);
-                           }
-                           break;
+                case 'Floor Details':
+                    var floorDetails = attrs[i].value;
+                    for (let i in floorDetails) {
+                        $(`#floorNumber`).append(`<option value='${floorDetails[i]["Floor No."]}'>${floorDetails[i]["Floor No."]}</option>`);
+                        shopsMap[floorDetails[i]["Floor No."]] = parseInt(floorDetails[i]["No. of Shops"]);
+                    }
+                    break;
 
             }
         }
@@ -1285,61 +1285,61 @@ if (assetDetails && Object.keys(assetDetails).length) {
 }
 
 $('#commencementDate').datepicker({
-                    format: 'dd/mm/yyyy',
-                    autoclose:true
-
-                });
-
-$('.datepicker').datepicker({
-      format: 'dd/mm/yyyy',
-      endDate: new Date(),
-      autoclose:true
+    format: 'dd/mm/yyyy',
+    autoclose: true
 
 });
 
-$(".datepicker").on("changeDate", function() {
-    if(this.id ==='commencementDate'){
-      var auctionAmt = $('#auctionAmount').val();
-        if(auctionAmt){
-         var fromDate = moment(this.value,"DD/MM/YYYY");
-         adjustSecurityDeposit(fromDate,auctionAmt);
+$('.datepicker').datepicker({
+    format: 'dd/mm/yyyy',
+    endDate: new Date(),
+    autoclose: true
+
+});
+
+$(".datepicker").on("changeDate", function () {
+    if (this.id === 'commencementDate') {
+        var auctionAmt = $('#auctionAmount').val();
+        if (auctionAmt) {
+            var fromDate = moment(this.value, "DD/MM/YYYY");
+            adjustSecurityDeposit(fromDate, auctionAmt);
+        }
     }
-  }
     fillValueToObject(this);
 
 });
 
-function adjustSecurityDeposit(fromDate,auctionAmount){
-  var year = Number(fromDate.format('YYYY'));
-  var month = Number(fromDate.format('MM'));
-  if(month > 3){
-     year = year + 1;
-  }
-  var fisYear = new Date(year,2,31); //month number starts from 0(Jan) to 11(Dec)
-  fisYear = moment(fisYear).format("DD/MM/YYYY");
-  //var month = fromDate.getMonth();
-  let totalMonths = getAbsoulteMonths(moment(fisYear,"DD/MM/YYYY"))-getAbsoulteMonths(moment(fromDate),"DD/MM/YYYY");
-  totalMonths = totalMonths + 1;
-  var auctionAmt = $('#auctionAmount').val();
-  var monthlyRent = auctionAmt/totalMonths ;
-  var securityDeposit = monthlyRent;
-  if(totalMonths >3){
-    securityDeposit = Math.round(monthlyRent * 3);
-  }else {
-    securityDeposit = Math.round(monthlyRent);
-  }
+function adjustSecurityDeposit(fromDate, auctionAmount) {
+    var year = Number(fromDate.format('YYYY'));
+    var month = Number(fromDate.format('MM'));
+    if (month > 3) {
+        year = year + 1;
+    }
+    var fisYear = new Date(year, 2, 31); //month number starts from 0(Jan) to 11(Dec)
+    fisYear = moment(fisYear).format("DD/MM/YYYY");
+    //var month = fromDate.getMonth();
+    let totalMonths = getAbsoulteMonths(moment(fisYear, "DD/MM/YYYY")) - getAbsoulteMonths(moment(fromDate), "DD/MM/YYYY");
+    totalMonths = totalMonths + 1;
+    var auctionAmt = $('#auctionAmount').val();
+    var monthlyRent = auctionAmt / totalMonths;
+    var securityDeposit = monthlyRent;
+    if (totalMonths > 3) {
+        securityDeposit = Math.round(monthlyRent * 3);
+    } else {
+        securityDeposit = Math.round(monthlyRent);
+    }
 
-  $('#securityDeposit').val(securityDeposit);
-  var paymentCycle = $('#paymentCycle').val();
-  if(paymentCycle ==='ANNUAL'){
-    agreement["rent"] = auctionAmt;
-  }else if(paymentCycle ==='QUARTER'){
-    agreement["rent"] = Math.round(auctionAmt/4);
-  }else if(paymentCycle ==='HALFYEAR'){
-    agreement["rent"] = Math.round(auctionAmt/2);
- }else{
-    agreement["rent"] = Math.round(monthlyRent);
- }
+    $('#securityDeposit').val(securityDeposit);
+    var paymentCycle = $('#paymentCycle').val();
+    if (paymentCycle === 'ANNUAL') {
+        agreement["rent"] = auctionAmt;
+    } else if (paymentCycle === 'QUARTER') {
+        agreement["rent"] = Math.round(auctionAmt / 4);
+    } else if (paymentCycle === 'HALFYEAR') {
+        agreement["rent"] = Math.round(auctionAmt / 2);
+    } else {
+        agreement["rent"] = Math.round(monthlyRent);
+    }
     agreement["securityDeposit"] = Math.round(securityDeposit);
 
 }
@@ -1383,7 +1383,7 @@ function adjustSecurityDeposit(fromDate,auctionAmount){
 //   }
 // }
 
-$("#createAgreement").on("click", function(e) {
+$("#createAgreement").on("click", function (e) {
     e.preventDefault();
     $("#createAgreementForm").submit();
     // switchValidation("final_validatin_rules");
@@ -1398,7 +1398,7 @@ function getPositionId(id) {
         }
     }
 
-    if(tempEmploye && tempEmploye.assignments) {
+    if (tempEmploye && tempEmploye.assignments) {
         return tempEmploye.assignments[0].position;
     } else {
         return "";
@@ -1409,16 +1409,16 @@ function getPositionId(id) {
 $("#createAgreementForm").validate({
     rules: finalValidatinRules,
     messages: finalValidatinRules["messages"],
-    submitHandler: function(form) {
-         var fromDate = $('#commencementDate').val();
-         fromDate = moment(fromDate,"DD/MM/YYYY");
-         var auctionAmt = $('#auctionAmount').val();
-         if(auctionAmt){
-          adjustSecurityDeposit(fromDate,auctionAmount);
+    submitHandler: function (form) {
+        var fromDate = $('#commencementDate').val();
+        fromDate = moment(fromDate, "DD/MM/YYYY");
+        var auctionAmt = $('#auctionAmount').val();
+        if (auctionAmt) {
+            adjustSecurityDeposit(fromDate, auctionAmount);
         }
         agreement["workflowDetails"] = {};
         agreement["workflowDetails"]["assignee"] = getPositionId(agreement["approverPositionId"]);
-        if(agreement.remarks) {
+        if (agreement.remarks) {
             agreement["workflowDetails"]["comments"] = agreement.remarks;
         }
         agreement["asset"] = {};
@@ -1429,7 +1429,7 @@ $("#createAgreementForm").validate({
         agreement["asset"]["assetCategory"]["id"] = assetDetails["assetCategory"]["id"];
         agreement["asset"]["assetCategory"]["code"] = assetDetails["assetCategory"]["code"];
         agreement["asset"]["assetCategory"]["name"] = assetDetails["assetCategory"]["name"];
-        if($("#rentIncrementMethod").val()) {
+        if ($("#rentIncrementMethod").val()) {
             agreement["rentIncrementMethod"] = {};
             agreement["rentIncrementMethod"]["id"] = $("#rentIncrementMethod").val();
         }
@@ -1438,7 +1438,7 @@ $("#createAgreementForm").validate({
         agreement["source"] = "SYSTEM";
         agreement["action"] = "CREATE";//Different in case of cancel/evict. Please remove
         agreement["isHistory"] = false;
-        uploadFiles(agreement, function(err, _agreement) {
+        uploadFiles(agreement, function (err, _agreement) {
             if (err) {
                 //Handle error
             } else {
@@ -1467,29 +1467,29 @@ $("#createAgreementForm").validate({
                 });
 
                 if (response["status"] === 201) {
-                    if (typeof(response["responseJSON"]["Error"]) != "undefined") {
+                    if (typeof (response["responseJSON"]["Error"]) != "undefined") {
                         showError(response["responseJSON"]["Error"]["message"]);
                     } else {
-                        if(window.opener)
+                        if (window.opener)
                             window.opener.location.reload();
-                        window.location.href = "app/search-assets/create-agreement-ack.html?name=" + getNameById(employees, agreement["approverPositionId"]) +"&asset=" + response.responseJSON["Agreements"][0]["asset"]["name"]+ "&ackNo=" + response.responseJSON["Agreements"][0]["acknowledgementNumber"];
+                        window.location.href = "app/search-assets/create-agreement-ack.html?name=" + getNameById(employees, agreement["approverPositionId"]) + "&asset=" + response.responseJSON["Agreements"][0]["asset"]["name"] + "&ackNo=" + response.responseJSON["Agreements"][0]["acknowledgementNumber"];
                     }
 
-                } else if(response["responseJSON"] && response["responseJSON"].Error) {
+                } else if (response["responseJSON"] && response["responseJSON"].Error) {
                     var err = response["responseJSON"].Error.message || "";
-                    if(response["responseJSON"].Error.fields && Object.keys(response["responseJSON"].Error.fields).length) {
-                      for(var key in response["responseJSON"].Error.fields) {
-                        var _key = "";
-                        if(key.indexOf(".") > -1) {
-                          _key = key.split(".");
-                          _key.shift();
-                          _key = _key.join(".");
+                    if (response["responseJSON"].Error.fields && Object.keys(response["responseJSON"].Error.fields).length) {
+                        for (var key in response["responseJSON"].Error.fields) {
+                            var _key = "";
+                            if (key.indexOf(".") > -1) {
+                                _key = key.split(".");
+                                _key.shift();
+                                _key = _key.join(".");
+                            }
+                            err += "\n " + _key + "- " + response["responseJSON"].Error.fields[key] + " "; //HERE
                         }
-                        err += "\n " + _key + "- " + response["responseJSON"].Error.fields[key] + " "; //HERE
-                      }
-                      showError(err);
+                        showError(err);
                     } else {
-                      showError(response["statusText"]);
+                        showError(response["statusText"]);
                     }
                 } else {
                     showError(err);
@@ -1504,7 +1504,7 @@ function uploadFiles(agreement, cb) {
         let counter = agreement.documents.length,
             breakout = 0, docs = [];
         for (let i = 0, len = agreement.documents.length; i < len; i++) {
-            makeAjaxUpload(agreement.documents[i], function(err, res) {
+            makeAjaxUpload(agreement.documents[i], function (err, res) {
                 if (breakout == 1)
                     return;
                 else if (err) {
@@ -1512,7 +1512,7 @@ function uploadFiles(agreement, cb) {
                     breakout = 1;
                 } else {
                     counter--;
-                    docs.push({fileStore: res.files[0].fileStoreId});
+                    docs.push({ fileStore: res.files[0].fileStoreId });
                     if (counter == 0 && breakout == 0) {
                         agreement.documents = docs;
                         cb(null, agreement);
@@ -1527,7 +1527,7 @@ function uploadFiles(agreement, cb) {
 }
 
 function makeAjaxUpload(file, cb) {
-    if(file.constructor == File) {
+    if (file.constructor == File) {
         let formData = new FormData();
         formData.append("jurisdictionId", "ap.public");
         formData.append("module", "PGR");
@@ -1539,61 +1539,61 @@ function makeAjaxUpload(file, cb) {
             contentType: false,
             processData: false,
             type: 'POST',
-            success: function(res) {
+            success: function (res) {
                 cb(null, res);
             },
-            error: function(jqXHR, exception) {
+            error: function (jqXHR, exception) {
                 cb(jqXHR.responseText || jqXHR.statusText);
             }
         });
     } else {
         cb(null, {
-              files: [{
+            files: [{
                 fileStoreId: file
-              }]
-            });
+            }]
+        });
     }
 }
 
-async function loadRenewalRent(basisOfAllotment){
-  var renewalOfRent = commonApiPost("lams-services", "getrentincrements", "", {tenantId, basisOfAllotment:basisOfAllotment}).responseJSON;
- $.each(renewalOfRent, function (idx, rent){
-    $("#rentIncrementMethod").append($("<option />").val(rent.id).text(rent.description));
-  });
+async function loadRenewalRent(basisOfAllotment) {
+    var renewalOfRent = commonApiPost("lams-services", "getrentincrements", "", { tenantId, basisOfAllotment: basisOfAllotment }).responseJSON;
+    $.each(renewalOfRent, function (idx, rent) {
+        $("#rentIncrementMethod").append($("<option />").val(rent.id).text(rent.description));
+    });
 }
 
-function dependentonBasisTime(basis, time){
-  if(basis === 'Goodwill Auction Basis'){
-    if(time <= 5){
-      $('#governmentOrder').hide();
-      clearGovernment();
-      $('#municipalOrder').show();
-    }else{
-      $('#municipalOrder').hide();
-      clearMunicipal();
-      $('#governmentOrder').show();
+function dependentonBasisTime(basis, time) {
+    if (basis === 'Goodwill Auction Basis') {
+        if (time <= 5) {
+            $('#governmentOrder').hide();
+            clearGovernment();
+            $('#municipalOrder').show();
+        } else {
+            $('#municipalOrder').hide();
+            clearMunicipal();
+            $('#governmentOrder').show();
+        }
+    } else if (basis === 'Normal Basis') {
+        if (time <= 3) {
+            $('#governmentOrder').hide();
+            clearGovernment();
+            $('#municipalOrder').show();
+        } else {
+            $('#municipalOrder').hide();
+            clearMunicipal();
+            $('#governmentOrder').show();
+        }
     }
-  }else if(basis === 'Normal Basis'){
-    if(time <= 3){
-      $('#governmentOrder').hide();
-      clearGovernment();
-      $('#municipalOrder').show();
-    }else{
-      $('#municipalOrder').hide();
-      clearMunicipal();
-      $('#governmentOrder').show();
-    }
-  }
 }
 
-function clearGovernment(){
-  fillValueToObject({id:'governmentOrderNumber',name:'governmentOrderNumber',value:''});
-  fillValueToObject({id:'governmentOrderDate',name:'governmentOrderDate',value:''});
-  $('#governmentOrderNumber, #governmentOrderDate').val('');
+function clearGovernment() {
+    fillValueToObject({ id: 'governmentOrderNumber', name: 'governmentOrderNumber', value: '' });
+    fillValueToObject({ id: 'governmentOrderDate', name: 'governmentOrderDate', value: '' });
+    $('#governmentOrderNumber, #governmentOrderDate').val('');
 }
 
-function clearMunicipal(){
-  fillValueToObject({id:'municipalOrderNumber',name:'municipalOrderNumber',value:''});
-  fillValueToObject({id:'municipalOrderDate',name:'municipalOrderDate',value:''});
-  $('#municipalOrderNumber, #municipalOrderDate').val('');
+function clearMunicipal() {
+    fillValueToObject({ id: 'municipalOrderNumber', name: 'municipalOrderNumber', value: '' });
+    fillValueToObject({ id: 'municipalOrderDate', name: 'municipalOrderDate', value: '' });
+    $('#municipalOrderNumber, #municipalOrderDate').val('');
 }

@@ -131,7 +131,7 @@ $(document).ready(function () {
     })
 
     //GST Changes
-    $("#gstBlock").css("display", "none");
+    //$("#gstBlock").css("display", "none");
     $("#serviceTaxBlock").css("display", "none");
 
 });
@@ -159,6 +159,8 @@ $("input").on("keyup", function () {
             let gst = this.value * 0.09;
             $("#cgst").val(gst);
             $("#sgst").val(gst);
+            agreement["cgst"] = gst;
+            agreement["sgst"] = gst;
         }
         } 
         
@@ -197,6 +199,8 @@ $(document).on("change", ".datepicker", function () {
         $("#gstBlock").css("display", "none");
         $("#cgst").val("");
         $("#sgst").val("");
+        agreement["cgst"] = "";
+        agreement["sgst"] = "";
 
     } else {
         console.log("Show Service tax");
@@ -208,9 +212,14 @@ $(document).on("change", ".datepicker", function () {
             $("#cgst").val(gst);
             $("#sgst").val(gst);
 
+            agreement["cgst"] = gst;
+            agreement["sgst"] = gst;  
+
         } else {
             $("#cgst").val("");
             $("#sgst").val("");
+            agreement["cgst"] = "";
+            agreement["sgst"] = "";  
         }
     }
 

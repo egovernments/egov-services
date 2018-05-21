@@ -463,8 +463,8 @@ class UpdateCancellation extends React.Component {
 
         doc.setFontType("normal");
         doc.setFontSize(11);
-        doc.text(15, 50, 'Roc.No. ' + agreement.agreementNumber);
-        doc.text(140, 50, 'Dt. ' + today);
+        doc.text(15, 50, 'Roc.No. ' + agreement.noticeNumber);
+        doc.text(140, 50, 'Dt. ' + agreement.agreementDate);
 
         var paragraph = "Sub: Leases – Revenue Section – Shop No " + agreement.referenceNumber + " in " + agreement.asset.name + " Complex, " + locality + " - Lease cancellation – Orders  - Issued";
         var lines = doc.splitTextToSize(paragraph, 180);

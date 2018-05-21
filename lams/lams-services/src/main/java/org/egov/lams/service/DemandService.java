@@ -206,7 +206,8 @@ public class DemandService {
 			for (DemandDetails existingDetail : demands.get(0).getDemandDetails()) {
 
 				if (existingDetail.getTaxPeriod().equalsIgnoreCase(demandReason.getTaxPeriod())
-						&& existingDetail.getTaxReason().equalsIgnoreCase(demandReason.getName())) {
+						&& (existingDetail.getTaxReason().equalsIgnoreCase(demandReason.getName())
+								|| existingDetail.getTaxReasonCode().equalsIgnoreCase(demandReason.getName()))) {
 					isDemandDetailsExist = Boolean.TRUE;
 				}
 				existingDetail.setIsCollected(existingDetail.getCollectionAmount().compareTo(BigDecimal.ZERO) > 0

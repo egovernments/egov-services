@@ -51,10 +51,12 @@ package org.egov.lams.web.contract;
 
 import java.util.List;
 
-import org.egov.common.contract.response.ResponseInfo;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 import lombok.Data;
 
+@JsonInclude(value = Include.NON_NULL)
 public @Data class FinancialYearContractResponse {
 	private ResponseInfo responseInfo;
 	private List<FinancialYearContract> financialYears;

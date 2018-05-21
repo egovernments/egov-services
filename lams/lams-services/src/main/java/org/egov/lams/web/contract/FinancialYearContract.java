@@ -51,6 +51,11 @@ package org.egov.lams.web.contract;
 
 import java.util.Date;
 
+import javax.validation.constraints.NotNull;
+
+import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.NotBlank;
+
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 import lombok.AllArgsConstructor;
@@ -68,16 +73,27 @@ import lombok.ToString;
 @ToString
 
 @JsonPropertyOrder({ "id", "finYearRange", "startingDate", "endingDate", "active", "isActiveForPosting", "isClosed",
-		"transferClosingBalance", "fiscalPeriodList" })
+    "transferClosingBalance", "fiscalPeriodList" })
 public class FinancialYearContract {
 
-	private Long id;
-	private String finYearRange;
-	private Date startingDate;
-	private Date endingDate;
-	private Boolean active;
-	private Boolean isActiveForPosting;
-	private Boolean isClosed;
-	private Boolean transferClosingBalance;
+private Long id;
+
+@Length(min = 1, max = 25)
+@NotBlank
+private String finYearRange;
+
+@NotNull
+private Date startingDate;
+
+@NotNull
+private Date endingDate;
+@NotNull
+private Boolean active;
+@NotNull
+private Boolean isActiveForPosting;
+
+private Boolean isClosed;
+
+private Boolean transferClosingBalance;
 
 }

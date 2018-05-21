@@ -156,14 +156,15 @@ $("input").on("keyup", function () {
             let gstDate = new Date("06/01/2017");
 
             if (fromDate > gstDate) {
-            let gst = this.value * 0.09;
-            $("#cgst").val(gst);
-            $("#sgst").val(gst);
-            agreement["cgst"] = gst;
-            agreement["sgst"] = gst;
+                let gst = this.value * 0.09;
+                $("#cgst").val(gst);
+                $("#sgst").val(gst);
+                agreement["cgst"] = gst;
+                agreement["sgst"] = gst;
+                console.log(agreement);
+            }
         }
-        } 
-        
+
     }
 });
 
@@ -213,13 +214,13 @@ $(document).on("change", ".datepicker", function () {
             $("#sgst").val(gst);
 
             agreement["cgst"] = gst;
-            agreement["sgst"] = gst;  
+            agreement["sgst"] = gst;
 
         } else {
             $("#cgst").val("");
             $("#sgst").val("");
             agreement["cgst"] = "";
-            agreement["sgst"] = "";  
+            agreement["sgst"] = "";
         }
     }
 

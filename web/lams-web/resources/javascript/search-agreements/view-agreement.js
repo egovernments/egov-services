@@ -146,6 +146,14 @@ $(document).ready(function() {
 
     function printNotice(agreement) {
 
+         var commDesignation = commonApiPost("hr-masters", "designations", "_search", {name:"Commissioner", active:true,tenantId }).responseJSON["Designation"];
+         var commDesignationId = commDesignation[0].id;
+         var commissionerName =  commonApiPost("hr-employee", "employees", "_search", {
+                             tenantId,
+                             designationId: commDesignationId,
+                             active: true,
+                             asOnDate: moment(new Date()).format("DD/MM/YYYY")
+                             }).responseJSON["Employee"] || [];
         var LocalityData = commonApiPost("egov-location/boundarys", "boundariesByBndryTypeNameAndHierarchyTypeName", "", { boundaryTypeName: "LOCALITY", hierarchyTypeName: "LOCATION", tenantId });
         var locality = getNameById(LocalityData["responseJSON"]["Boundary"], agreement.asset.locationDetails.locality);
         var cityGrade = !localStorage.getItem("city_grade") || localStorage.getItem("city_grade") == "undefined" ? (localStorage.setItem("city_grade", JSON.stringify(commonApiPost("tenant", "v1/tenant", "_search", { code: tenantId }).responseJSON["tenant"][0]["city"]["ulbGrade"] || {})), JSON.parse(localStorage.getItem("city_grade"))) : JSON.parse(localStorage.getItem("city_grade"));
@@ -250,14 +258,14 @@ $(document).ready(function() {
         doc.setFontSize(13);
         doc.text(105, 20, "PROCEEDINGS OF THE COMMISSIONER, " + tenantId.split(".")[1].toUpperCase(), 'center');
         doc.text(105, 27, ulbType.toUpperCase(), 'center');
-        doc.text(105, 34, "Present: "+ agreement.commissionerName, 'center');
+        doc.text(105, 34, "Present: "+ commissionerName, 'center');
 
         doc.setFontType("normal");
         doc.setFontSize(11);
         doc.text(15, 50, 'Roc.No. ' + agreement.noticeNumber);
         doc.text(140, 50, 'Dt. ' + agreement.agreementDate);
 
-        var paragraph = "Sub: Leases – Revenue Section – Shop No " + agreement.referenceNumber + " in " + agreement.asset.name + " Complex, " + locality + " - Remission of lease – Orders  - Issued";
+        var paragraph = "Sub: Leases – Revenue Section – Shop No " + agreement.referenceNumber + " in " + agreement.asset.name + " Complex, " + locality + " - Allotment of lease – Orders  - Issued";
         var lines = doc.splitTextToSize(paragraph, 180);
         doc.text(15, 60, lines);
 
@@ -270,7 +278,7 @@ $(document).ready(function() {
         doc.setLineWidth(0.5);
         doc.line(15, 106, 28, 106);
 
-        var paragraph1 = "In the reference 1st cited, an Open Auction for leasing Shop No ……… in the …………… Shopping Complex was conducted and your bid for the highest amount (i.e. monthly rentals of Rs …………./- and Goodwill amount of Rs ………./-) was accepted by the Municipal Council/Standing Committee wide reference 2nd cited with the following deposit amounts as received by this office.";
+        var paragraph1 = "In the reference 1st cited, an Open Auction for leasing Shop No ……… in the …………… Shopping Complex was conducted and your bid for the highest amount (i.e. monthly rentals of Rs …………./- and Goodwill amount of Rs ………./-) was accepted by the Municipal Council/Standing Committee vide reference 2nd cited with the following deposit amounts as received by this office.";
         var lines = doc.splitTextToSize(paragraph1, 180);
         doc.text(15, 115, lines);
 
@@ -300,7 +308,7 @@ $(document).ready(function() {
         doc.text(15, 220, lines);
 
         doc.addPage();
-        var paragraph4 = "Hence you are requested to conclude an agreement duly registered with the SRO for the above mentioned lease within 15 days of receipt of this renewal letter without fail unless the renewal will stand cancelled without any further correspondence."
+        var paragraph4 = "Hence you are requested to conclude an agreement duly registered with the SRO for the above mentioned lease within 15 days of receipt of this allotment letter without fail unless the allotment will stand cancelled without any further correspondence."
         var lines = doc.splitTextToSize(paragraph4, 180);
         doc.text(15, 30, lines);
 

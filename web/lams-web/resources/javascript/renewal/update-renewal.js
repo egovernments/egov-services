@@ -359,6 +359,15 @@ class UpdateRenewal extends React.Component {
 
 
     printNotice(agreement) {
+
+        var commDesignation = commonApiPost("hr-masters", "designations", "_search", {name:"Commissioner", active:true,tenantId }).responseJSON["Designation"];
+        var commDesignationId = commDesignation[0].id;
+        var commissionerName =  commonApiPost("hr-employee", "employees", "_search", {
+                          tenantId,
+                          designationId: commDesignationId,
+                          active: true,
+                          asOnDate: moment(new Date()).format("DD/MM/YYYY")
+                          }).responseJSON["Employee"] || [];
         var LocalityData = commonApiPost("egov-location/boundarys", "boundariesByBndryTypeNameAndHierarchyTypeName", "", { boundaryTypeName: "LOCALITY", hierarchyTypeName: "LOCATION", tenantId });
         var locality = getNameById(LocalityData["responseJSON"]["Boundary"], agreement.asset.locationDetails.locality);
         var cityGrade = !localStorage.getItem("city_grade") || localStorage.getItem("city_grade") == "undefined" ? (localStorage.setItem("city_grade", JSON.stringify(commonApiPost("tenant", "v1/tenant", "_search", { code: tenantId }).responseJSON["tenant"][0]["city"]["ulbGrade"] || {})), JSON.parse(localStorage.getItem("city_grade"))) : JSON.parse(localStorage.getItem("city_grade"));
@@ -516,7 +525,7 @@ class UpdateRenewal extends React.Component {
         doc.setFontSize(13);
         doc.text(105, 20, "PROCEEDINGS OF THE COMMISSIONER, " + tenantId.split(".")[1].toUpperCase(), 'center');
         doc.text(105, 27, ulbType.toUpperCase(), 'center');
-        doc.text(105, 34, "Present: " + agreement.commissionerName, 'center');
+        doc.text(105, 34, "Present: " + commissionerName, 'center');
 
         doc.setFontType("normal");
         doc.setFontSize(11);

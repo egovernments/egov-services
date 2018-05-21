@@ -2,6 +2,7 @@ package org.egov.lams.service;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -24,6 +25,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class DemandService {
 	public static final Logger logger = LoggerFactory.getLogger(DemandService.class);
+	
+	private static final List<String> DEMAND_REASONS = Arrays.asList("RENT","PENALTY","STATE_GST","CENTRAL_GST","SERVICE_TAX");
 
 	@Autowired
 	private DemandRepository demandRepository;
@@ -210,8 +213,8 @@ public class DemandService {
 						? Boolean.TRUE : Boolean.FALSE);
 			}
 
-			if (!isDemandDetailsExist && (propertiesManager.getTaxReasonRent().equalsIgnoreCase(demandReason.getName())
-					|| propertiesManager.getTaxReasonPenalty().equalsIgnoreCase(demandReason.getName()))) {
+			if (!isDemandDetailsExist
+					&& DEMAND_REASONS.stream().anyMatch(reason -> reason.equalsIgnoreCase(demandReason.getName()))) {
 				demandDetail = new DemandDetails();
 				demandDetail.setCollectionAmount(BigDecimal.ZERO);
 				demandDetail.setRebateAmount(BigDecimal.ZERO);

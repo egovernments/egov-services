@@ -655,6 +655,10 @@ $(document).ready(function() {
         }
          $("#footer-btn-grp").append($('<button type="button" class="btn btn-close" id="close">Close</button>'));
 
+
+         if(currentUserDesignation==='Junior Assistant' || currentUserDesignation==='Senior Assistant'){
+           currentUserDesignation ="Assistant";
+         }
         if (process) {
             getDesignations(process.status,currentUserDesignation, function(designations) {
                 for (var variable in designations) {

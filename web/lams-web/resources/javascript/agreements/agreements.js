@@ -130,6 +130,10 @@ $(document).ready(function () {
         }
     })
 
+    //GST Changes
+    $("#gstBlock").css("display", "none");
+    $("#serviceTaxBlock").css("display", "none");
+
 });
 
 $(".disabled").attr("disabled", true);
@@ -146,6 +150,18 @@ $("input").on("keyup", function () {
             "min": this.value * 3
         });
         agreement["securityDeposit"] = this.value * 3;
+
+        if ($('#commencementDate').val() != '') {
+            let fromDate = moment($('#commencementDate').val(), "DD/MM/YYYY");
+            let gstDate = new Date("06/01/2017");
+
+            if (fromDate > gstDate) {
+            let gst = this.value * 0.09;
+            $("#cgst").val(gst);
+            $("#sgst").val(gst);
+        }
+        } 
+        
     }
 });
 
@@ -168,6 +184,36 @@ $(document).on("keyup", "input", function () {
 });
 $(document).on("blur", ".datepicker", function () {
     fillValueToObject(this);
+});
+
+$(document).on("change", ".datepicker", function () {
+
+    var fromDate = moment(this.value, "DD/MM/YYYY");
+    let gstDate = new Date("06/01/2017");
+
+
+    if (fromDate < gstDate) {
+        $("#serviceTaxBlock").css("display", "block");
+        $("#gstBlock").css("display", "none");
+        $("#cgst").val("");
+        $("#sgst").val("");
+
+    } else {
+        console.log("Show Service tax");
+        $("#gstBlock").css("display", "block");
+        $("#serviceTaxBlock").css("display", "none");
+        if ($("#rent").val()) {
+
+            let gst = $("#rent").val() * 0.09;
+            $("#cgst").val(gst);
+            $("#sgst").val(gst);
+
+        } else {
+            $("#cgst").val("");
+            $("#sgst").val("");
+        }
+    }
+
 });
 
 //Getting data for user input

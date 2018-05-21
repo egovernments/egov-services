@@ -148,12 +148,13 @@ $(document).ready(function() {
 
          var commDesignation = commonApiPost("hr-masters", "designations", "_search", {name:"Commissioner", active:true,tenantId }).responseJSON["Designation"];
          var commDesignationId = commDesignation[0].id;
-         var commissionerName =  commonApiPost("hr-employee", "employees", "_search", {
+         var commissioners =  commonApiPost("hr-employee", "employees", "_search", {
                              tenantId,
                              designationId: commDesignationId,
                              active: true,
                              asOnDate: moment(new Date()).format("DD/MM/YYYY")
                              }).responseJSON["Employee"] || [];
+        var commissionerName =commissioners[0].name;
         var LocalityData = commonApiPost("egov-location/boundarys", "boundariesByBndryTypeNameAndHierarchyTypeName", "", { boundaryTypeName: "LOCALITY", hierarchyTypeName: "LOCATION", tenantId });
         var locality = getNameById(LocalityData["responseJSON"]["Boundary"], agreement.asset.locationDetails.locality);
         var cityGrade = !localStorage.getItem("city_grade") || localStorage.getItem("city_grade") == "undefined" ? (localStorage.setItem("city_grade", JSON.stringify(commonApiPost("tenant", "v1/tenant", "_search", { code: tenantId }).responseJSON["tenant"][0]["city"]["ulbGrade"] || {})), JSON.parse(localStorage.getItem("city_grade"))) : JSON.parse(localStorage.getItem("city_grade"));

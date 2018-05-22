@@ -257,7 +257,7 @@ public class AssetQueryBuilder {
             if (searchAsset.getTransaction().toString().equals(TransactionType.DEPRECIATION.toString())) {
                 selectQuery.append(
                         " AND ASSET.status!='DISPOSED' AND ASSET.status='CAPITALIZED' AND assetcategory.assetcategorytype!='LAND' AND ASSET.id NOT in "
-                                + "(select depr.assetid from egasset_depreciation depr where depr.todate >=? )");
+                                + "(select depr.assetid from egasset_depreciation depr where depr.todate >=? and depr.status='SUCCESS')");
                 preparedStatementValues.add(searchAsset.getDateOfDepreciation());
             }
 

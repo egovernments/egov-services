@@ -148,19 +148,19 @@ class EditDemand extends React.Component {
     });
 
     agreementDetail["legacyDemands"][0]["demandDetails"].forEach((demand) => {
-      if (demand.taxReason.toLowerCase() === "cgst") {
+      if (demand.taxReason.toLowerCase() === "cgst" || demand.taxReason.toLowerCase() === "central_gst") {
         cgstDemands.push(demand);
       }
     });
 
     agreementDetail["legacyDemands"][0]["demandDetails"].forEach((demand) => {
-      if (demand.taxReason.toLowerCase() === "sgst") {
+      if (demand.taxReason.toLowerCase() === "sgst" || demand.taxReason.toLowerCase() === "state_gst") {
         sgstDemands.push(demand);
       }
     });
 
     agreementDetail["legacyDemands"][0]["demandDetails"].forEach((demand) => {
-      if (demand.taxReason.toLowerCase() === "servicetax") {
+      if (demand.taxReason.toLowerCase() === "servicetax" || demand.taxReason.toLowerCase() === "service_tax") {
         serviceTaxDemands.push(demand);
       }
     });

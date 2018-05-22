@@ -46,6 +46,7 @@ $('#close').on("click", function() {
 })
 
 var CONST_API_GET_FILE = "/filestore/v1/files/id?fileStoreId=";
+var GST_DATE = "01/07/2017"
 var agreement = {};
 var filesToBeDeleted = [];
 var assetDetails;
@@ -63,16 +64,28 @@ $(document).on("keyup","input", function() {
         });
         agreement["securityDeposit"] = this.value * 3;
 
-        if ($('#commencementDate').val() != '') {
-            let fromDate = moment($('#commencementDate').val(), "DD/MM/YYYY");
-            let gstDate = new Date("06/01/2017");
+        if ($('#commencementDate').val() && $('#timePeriod').val()) {
+            var fromDate = moment($('#commencementDate').val(), "DD/MM/YYYY");
+            let gstDate = moment(GST_DATE, "DD/MM/YYYY");
 
-            if (fromDate > gstDate) {
-                let gst = this.value * 0.09;
-                $("#cgst").val(gst);
-                $("#sgst").val(gst);
-                agreement["cgst"] = gst;
-                agreement["sgst"] = gst;
+            let endDate = $('#commencementDate').val().split('/');
+            endDate = endDate[0] + '/' + endDate[1] + '/' + (Number(endDate[2]) + Number($('#timePeriod').val()));
+            endDate = moment(endDate, "DD/MM/YYYY");
+
+            if (fromDate < gstDate && endDate < gstDate) {
+
+                agreement["cgst"] = "";
+                agreement["sgst"] = "";
+
+            } else{
+               
+                    let gst = $("#rent").val() * 0.09;
+                    $("#cgst").val(gst);
+                    $("#sgst").val(gst);
+
+                    agreement["cgst"] = gst;
+                    agreement["sgst"] = gst;
+
             }
         }
 
@@ -101,39 +114,61 @@ $(document).on("blur",".datepicker", function() {
 });
 
 $(document).on("change", ".datepicker", function () {
-
     var fromDate = moment(this.value, "DD/MM/YYYY");
-    let gstDate = new Date("06/01/2017");
+    let gstDate = moment(GST_DATE, "DD/MM/YYYY");
 
+    if ($('#timePeriod').val() != '') {
+        let endDate = this.value.split('/')[0] + '/' + this.value.split('/')[1] + '/' + (Number(this.value.split('/')[2]) + Number($('#timePeriod').val()));
+        endDate = moment(endDate, "DD/MM/YYYY");
 
-    if (fromDate < gstDate) {
-        $("#serviceTaxBlock").css("display", "block");
-        $("#gstBlock").css("display", "none");
-        $("#cgst").val("");
-        $("#sgst").val("");
-        agreement["cgst"] = "";
-        agreement["sgst"] = "";
-
-    } else {
-        $("#gstBlock").css("display", "block");
-        $("#serviceTaxBlock").css("display", "none");
-        if ($("#rent").val()) {
-
-            let gst = $("#rent").val() * 0.09;
-            $("#cgst").val(gst);
-            $("#sgst").val(gst);
-
-            agreement["cgst"] = gst;
-            agreement["sgst"] = gst;
-
-        } else {
+        if (fromDate < gstDate && endDate < gstDate) {
+            $("#serviceTaxBlock").css("display", "block");
+            $("#gstBlock").css("display", "none");
             $("#cgst").val("");
             $("#sgst").val("");
             agreement["cgst"] = "";
             agreement["sgst"] = "";
+
+        } else if (fromDate < gstDate && endDate > gstDate) {
+            $("#serviceTaxBlock").css("display", "block");
+            $("#gstBlock").css("display", "block");
+
+            if ($("#rent").val()) {
+
+                let gst = $("#rent").val() * 0.09;
+                $("#cgst").val(gst);
+                $("#sgst").val(gst);
+
+                agreement["cgst"] = gst;
+                agreement["sgst"] = gst;
+
+            } else {
+                $("#cgst").val("");
+                $("#sgst").val("");
+                agreement["cgst"] = "";
+                agreement["sgst"] = "";
+            }
+
+        } else {
+            $("#gstBlock").css("display", "block");
+            $("#serviceTaxBlock").css("display", "none");
+            if ($("#rent").val()) {
+
+                let gst = $("#rent").val() * 0.09;
+                $("#cgst").val(gst);
+                $("#sgst").val(gst);
+
+                agreement["cgst"] = gst;
+                agreement["sgst"] = gst;
+
+            } else {
+                $("#cgst").val("");
+                $("#sgst").val("");
+                agreement["cgst"] = "";
+                agreement["sgst"] = "";
+            }
         }
     }
-
 });
 
 
@@ -293,6 +328,63 @@ $(document).ready(function() {
     if($('#basisOfAllotment').val() && this.value){
       dependentonBasisTime($('#basisOfAllotment').val(), this.value);
     }
+
+    if ($('#commencementDate').val() != '') {
+        var fromDate = moment($('#commencementDate').val(), "DD/MM/YYYY");
+        let gstDate = moment(GST_DATE, "DD/MM/YYYY");
+
+        let endDate = $('#commencementDate').val().split('/');
+        endDate = endDate[0] + '/' + endDate[1] + '/' + (Number(endDate[2]) + Number(this.value));
+        endDate = moment(endDate, "DD/MM/YYYY");
+
+        if (fromDate < gstDate && endDate < gstDate) {
+            $("#serviceTaxBlock").css("display", "block");
+            $("#gstBlock").css("display", "none");
+            $("#cgst").val("");
+            $("#sgst").val("");
+            agreement["cgst"] = "";
+            agreement["sgst"] = "";
+
+        } else if (fromDate < gstDate && endDate > gstDate) {
+            $("#serviceTaxBlock").css("display", "block");
+            $("#gstBlock").css("display", "block");
+
+            if ($("#rent").val()) {
+
+                let gst = $("#rent").val() * 0.09;
+                $("#cgst").val(gst);
+                $("#sgst").val(gst);
+
+                agreement["cgst"] = gst;
+                agreement["sgst"] = gst;
+
+            } else {
+                $("#cgst").val("");
+                $("#sgst").val("");
+                agreement["cgst"] = "";
+                agreement["sgst"] = "";
+            }
+
+        } else {
+            $("#gstBlock").css("display", "block");
+            $("#serviceTaxBlock").css("display", "none");
+            if ($("#rent").val()) {
+
+                let gst = $("#rent").val() * 0.09;
+                $("#cgst").val(gst);
+                $("#sgst").val(gst);
+
+                agreement["cgst"] = gst;
+                agreement["sgst"] = gst;
+
+            } else {
+                $("#cgst").val("");
+                $("#sgst").val("");
+                agreement["cgst"] = "";
+                agreement["sgst"] = "";
+            }
+        }
+    }
   })
 
   $('#agreementDetailsBlockForAuctionAssets select').on('change',function(){
@@ -341,9 +433,6 @@ $(document).ready(function() {
      }
    }
 
-    //GST Changes
-    //$("#gstBlock").css("display", "none");
-    $("#serviceTaxBlock").css("display", "none");
 
  });
 

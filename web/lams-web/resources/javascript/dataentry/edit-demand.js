@@ -107,6 +107,9 @@ class EditDemand extends React.Component {
     var demands = [];
     var rentDemands = [];
     var penaltyDemands = [];
+    var sgstDemands = [];
+    var cgstDemands = [];
+    var serviceTaxDemands = [];
     var restOfDemands = [];
     var agreementDetail = {};
     var currentDate =  new Date();
@@ -145,6 +148,24 @@ class EditDemand extends React.Component {
     });
 
     agreementDetail["legacyDemands"][0]["demandDetails"].forEach((demand) => {
+      if (demand.taxReason.toLowerCase() === "cgst") {
+        cgstDemands.push(demand);
+      }
+    });
+
+    agreementDetail["legacyDemands"][0]["demandDetails"].forEach((demand) => {
+      if (demand.taxReason.toLowerCase() === "sgst") {
+        sgstDemands.push(demand);
+      }
+    });
+
+    agreementDetail["legacyDemands"][0]["demandDetails"].forEach((demand) => {
+      if (demand.taxReason.toLowerCase() === "servicetax") {
+        serviceTaxDemands.push(demand);
+      }
+    });
+
+    agreementDetail["legacyDemands"][0]["demandDetails"].forEach((demand) => {
       if (demand.taxReason.toLowerCase() != "rent" && demand.taxReason.toLowerCase() != "penalty") {
         restOfDemands.push(demand);
       }
@@ -164,6 +185,26 @@ class EditDemand extends React.Component {
         }
       });
 
+      sgstDemands.forEach((pDemand) => {
+        if (pDemand.taxPeriod === rentDemands[i].taxPeriod) {
+          demands.splice(index, 0, pDemand);
+          index++;
+        }
+      });
+
+      cgstDemands.forEach((pDemand) => {
+        if (pDemand.taxPeriod === rentDemands[i].taxPeriod) {
+          demands.splice(index, 0, pDemand);
+          index++;
+        }
+      });
+
+      serviceTaxDemands.forEach((pDemand) => {
+        if (pDemand.taxPeriod === rentDemands[i].taxPeriod) {
+          demands.splice(index, 0, pDemand);
+          index++;
+        }
+      });
 
     }
 

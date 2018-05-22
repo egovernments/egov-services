@@ -479,8 +479,12 @@ public class AgreementValidator {
 		if (currentDate.after(expiryDate)) {
 			errors.reject("Can't allowed", "Remission Can not be allowed on expired agreements.");
 		}
-		if (!propertiesManager.getAssetCategoryMarket().equalsIgnoreCase(assetCategory.getName())) {
-			errors.reject("Can't allowed", "Remission can be allowed on Market asset type only.");
+		List<String> remissionAssetCategories = getConfigurations(propertiesManager.getRemissionAssetCategoryKey(),
+				agreement.getTenantId());
+		if (!remissionAssetCategories.stream()
+				.anyMatch(category -> category.equalsIgnoreCase(assetCategory.getName()))) {
+			errors.reject("Remission Can't allowed",
+					"Remission can be allowed on Market and ShoppingComplex asset type only.");
 		}
 
 	}

@@ -509,18 +509,21 @@ public class AgreementValidator {
 		DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
 		Agreement agreement = agreementRequest.getAgreement();
 		Date gstDate = null;
-		Double securityDeposit = agreement.getSecurityDeposit();
+		Long gstRate = Long.valueOf("18");
+		Double rent = agreement.getRent();
 		Date agreementExpiryDate = agreementService.getExpiryDate(agreement);
 		List<String> gstDates = getConfigurations(propertiesManager.getGstEffectiveDate(), agreement.getTenantId());
-		if (gstDates.isEmpty()) {
+		List<String> gstRates = getConfigurations(propertiesManager.getGstRate(), agreement.getTenantId());
+		if (!gstDates.isEmpty() && !gstRates.isEmpty()) {
 			try {
 				gstDate = formatter.parse(gstDates.get(0));
+				gstRate = Long.valueOf(gstRates.get(0));
 			} catch (ParseException e) {
 				logger.error("exception in parsing GST date  ::: " + e);
 			}
 			if (agreementExpiryDate.compareTo(gstDate) > 0) {
-				agreement.setCgst(securityDeposit * 9 / 100);
-				agreement.setSgst(securityDeposit * 9 / 100);
+				agreement.setCgst((rent * gstRate / 100) / 2);
+				agreement.setSgst((rent * gstRate / 100) / 2);
 			}
 
 		}

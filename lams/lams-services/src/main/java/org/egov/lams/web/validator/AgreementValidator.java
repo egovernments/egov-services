@@ -1,6 +1,9 @@
 package org.egov.lams.web.validator;
 
 import java.math.BigDecimal;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
@@ -124,8 +127,9 @@ public class AgreementValidator {
 			errors.rejectValue("Agreement.TimePeriod", "",
 					"Can not create history agreement,please change Timeperiod/CommencementDate");
 		}
-		validateAsset(agreementRequest, errors);
-		
+			validateAsset(agreementRequest, errors);
+			calculateGstAndServiceTax(agreementRequest);
+
 	    }
 	    validateAllottee(agreementRequest, errors);
 				
@@ -499,6 +503,27 @@ public class AgreementValidator {
 			errors.rejectValue("Duplicate History Agreement", "History agreement is already created for this asset.");
 		}
 
+	}
+	
+	private void calculateGstAndServiceTax(AgreementRequest agreementRequest) {
+		DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+		Agreement agreement = agreementRequest.getAgreement();
+		Date gstDate = null;
+		Double securityDeposit = agreement.getSecurityDeposit();
+		Date agreementExpiryDate = agreementService.getExpiryDate(agreement);
+		List<String> gstDates = getConfigurations(propertiesManager.getGstEffectiveDate(), agreement.getTenantId());
+		if (gstDates.isEmpty()) {
+			try {
+				gstDate = formatter.parse(gstDates.get(0));
+			} catch (ParseException e) {
+				logger.error("exception in parsing GST date  ::: " + e);
+			}
+			if (agreementExpiryDate.compareTo(gstDate) > 0) {
+				agreement.setCgst(securityDeposit * 9 / 100);
+				agreement.setSgst(securityDeposit * 9 / 100);
+			}
+
+		}
 	}
 
 }

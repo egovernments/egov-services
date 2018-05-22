@@ -99,6 +99,10 @@ public class DemandRepository {
 				demandReasons.addAll(getDemandReasonsForTaxReason(agreementRequest, date, taxReason));
 			}else{
 				taxReason = propertiesManager.getTaxReasonServiceTax();
+				demandReasons.addAll(getDemandReasonsForTaxReason(agreementRequest, gstDate, taxReason));
+				taxReason = propertiesManager.getTaxReasonStateGst();
+				demandReasons.addAll(getDemandReasonsForTaxReason(agreementRequest, date, taxReason));
+				taxReason = propertiesManager.getTaxReasonCentralGst();
 				demandReasons.addAll(getDemandReasonsForTaxReason(agreementRequest, date, taxReason));
 			}
 			return demandReasons;
@@ -143,12 +147,20 @@ public class DemandRepository {
 		taxReason = propertiesManager.getTaxReasonPenalty();
 		demandReasons.addAll(getDemandReasonsForTaxReason(agreementRequest, effectiveToDate, taxReason));
 		gstDate =getGstEffectiveDate(agreement.getTenantId());
-		if(agreement.getCommencementDate().compareTo(gstDate) >=0){
+		if (agreement.getCommencementDate().compareTo(gstDate) >= 0) {
 			taxReason = propertiesManager.getTaxReasonStateGst();
 			demandReasons.addAll(getDemandReasonsForTaxReason(agreementRequest, effectiveToDate, taxReason));
 			taxReason = propertiesManager.getTaxReasonCentralGst();
 			demandReasons.addAll(getDemandReasonsForTaxReason(agreementRequest, effectiveToDate, taxReason));
-		}else{
+		} else if (agreement.getExpiryDate().compareTo(gstDate) >= 0) {
+			taxReason = propertiesManager.getTaxReasonServiceTax();
+			demandReasons.addAll(getDemandReasonsForTaxReason(agreementRequest, gstDate, taxReason));
+			taxReason = propertiesManager.getTaxReasonStateGst();
+			demandReasons.addAll(getDemandReasonsForTaxReason(agreementRequest, effectiveToDate, taxReason));
+			taxReason = propertiesManager.getTaxReasonCentralGst();
+			demandReasons.addAll(getDemandReasonsForTaxReason(agreementRequest, effectiveToDate, taxReason));
+
+		} else {
 			taxReason = propertiesManager.getTaxReasonServiceTax();
 			demandReasons.addAll(getDemandReasonsForTaxReason(agreementRequest, effectiveToDate, taxReason));
 		}
@@ -303,7 +315,7 @@ public class DemandRepository {
 				demandDetail.setTaxAmount(BigDecimal.valueOf(agreement.getSgst()));
 
 			}else if ("SERVICE_TAX".equalsIgnoreCase(demandReason.getName())){
-				demandDetail.setTaxAmount(BigDecimal.valueOf(agreement.getServiceTax()));
+				demandDetail.setTaxAmount(BigDecimal.valueOf(agreement.getServiceTax()!=null? agreement.getServiceTax() : 0));
 
 			}
 			if(demandDetail.getTaxAmount()!=null)

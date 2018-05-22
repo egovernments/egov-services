@@ -181,7 +181,7 @@ class Revaluation extends React.Component {
       checkCountAndCall("functions", res);
     });
     
-    commonApiPost("egf-masters", "accountcodepurposes", "_search", { tenantId, name: "Fixed Assets Written off" }, function (err, res2) {
+    commonApiPost("egf-masters", "accountcodepurposes", "_search", { tenantId, name: "ASSET_DEDUCTION" }, function (err, res2) {
       if (res2 && res2["accountCodePurposes"][0]) {
         commonApiPost("egf-masters", "chartofaccounts", "_search", { tenantId, classification: 4, accountCodePurpose: res2["accountCodePurposes"][0].id }, function (err, resA) {
           if (resA) {

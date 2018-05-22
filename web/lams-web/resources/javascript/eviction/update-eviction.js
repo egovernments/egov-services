@@ -118,7 +118,8 @@ class UpdateEviction extends React.Component {
             buttons: [],
             wfStatus: "",
             wfInitiator:"",
-            workflow:[]
+            workflow:[],
+            currentUserDesignation:null
 
         }
         this.handleChangeTwoLevel = this.handleChangeTwoLevel.bind(this);
@@ -387,7 +388,8 @@ class UpdateEviction extends React.Component {
             wfInitiator: process.initiatorPosition,
             wfStatus: process.status,
             workflow: workflow,
-            buttons: _btns ? _btns : []
+            buttons: _btns ? _btns : [],
+            currentUserDesignation:currentUserDesignation
         });
 
     }
@@ -553,8 +555,13 @@ class UpdateEviction extends React.Component {
           $("#documentSection").remove();
         }
 
-        if (this.state.wfStatus === "Commissioner Approved") {
-            $("#approvalDetailsSection").remove();
+        // if (this.state.wfStatus === "Commissioner Approved") {
+        //     $("#approvalDetailsSection").remove();
+        // }
+
+        if(this.state.currentUserDesignation && this.state.currentUserDesignation==='Commissioner'){
+          $("#approvalDetailsSection").remove();
+
         }
 
         $('#evictionProceedingDate').datepicker({
@@ -1358,7 +1365,7 @@ class UpdateEviction extends React.Component {
             var flg = 0;
 
             buttons.forEach(function (btn, ind) {
-                if (btn.key.toLowerCase() === "approve" || btn.key.toLowerCase() === "print notice") {
+                if (btn.key.toLowerCase() === "print notice") {
                     flg = 1;
                 }
             });

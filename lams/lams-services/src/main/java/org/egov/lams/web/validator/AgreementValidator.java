@@ -163,14 +163,12 @@ public class AgreementValidator {
 		if (agreement.getIsUnderWorkflow()) {
 			errors.reject(ERROR_FIELD_AGREEMENT_NO, ERROR_MSG_UNDER_WORKFLOW);
 		}
-		List<String> assetCategoryNames = getConfigurations(propertiesManager.getEvictionAssetCategoryKey(),
+		List<String> evictionAssetCategories = getConfigurations(propertiesManager.getEvictionAssetCategoryKey(),
 				agreement.getTenantId());
-		logger.info("the eviction asset category names found ::: " + assetCategoryNames);
-		for (String string : assetCategoryNames) {
-			if (!(string.equalsIgnoreCase(assetCategory.getName()))) {
 
-				errors.reject("Agreement not allowed for Evicition", "Eviction is valid only for Shop types.");
-			}
+		if (!evictionAssetCategories.stream().anyMatch(category -> category.equalsIgnoreCase(assetCategory.getName()))) {
+			errors.reject("Agreement not allowed for Evicition",
+					"Eviction is valid only for ShoppingComplex/Shop types.");
 		}
 	}
 
@@ -250,8 +248,14 @@ public class AgreementValidator {
 		AssetCategory assetCategory = agreement.getAsset().getCategory();
 		Boolean isRentCollected;
 		demandSearchCriteria.setDemandId(Long.valueOf(agreement.getDemands().get(0)));
-		if (!propertiesManager.getAssetCategoryMarket().equalsIgnoreCase(assetCategory.getName())) {
-			errors.reject("Remission Can't allowed", "Remission can be allowed on Market asset type only.");
+
+		List<String> remissionAssetCategories = getConfigurations(propertiesManager.getRemissionAssetCategoryKey(),
+				agreement.getTenantId());
+
+		if (!remissionAssetCategories.stream()
+				.anyMatch(category -> category.equalsIgnoreCase(assetCategory.getName()))) {
+			errors.reject("Remission Can't allowed",
+					"Remission can be allowed on Market and ShoppingComplex asset type only.");
 		}
 		Demand demand = demandRepository.getDemandBySearch(demandSearchCriteria, agreementRequest.getRequestInfo())
 				.getDemands().get(0);

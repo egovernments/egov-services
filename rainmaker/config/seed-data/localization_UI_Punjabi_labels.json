@@ -1,0 +1,1275 @@
+[
+ 
+ {
+   "code": "CS_COMMON_RE_ASSIGNED",
+   "message": "ਦੁਬਾਰਾ ਨਿਰਧਾਰਿਤ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "CS_COMMON_REJECTED",
+   "message": "ਨਾਮਨਜ਼ੂਰ ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "CS_COMMON_RESOLVED",
+   "message": "ਹੱਲ ਕੀਤਾ ਗਿਆ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "CS_COMMON_OPEN",
+   "message": "ਔਪੇਨ ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "CS_COMMON_OPENED",
+   "message": "ਔਪੇਨਡ ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "CS_COMMON_CLOSED",
+   "message": "ਬੰਦ ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "CS_COMMON_CITIZEN_FEEDBACK",
+   "message": "ਨਾਗਰਿਕ ਫੀਡਬੈਕ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "CS_COMMON_COMPLAINT_REOPENED",
+   "message": "ਫਿਰ ਤੋਂ ਸ਼ਿਕਾਇਤ ਕਰੋ ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "CS_COMMON_REOPENED",
+   "message": "ਸ਼ਿਕਾਇਤ ਦੁਬਾਰਾ ਖੋਲ੍ਹੀ ਗਈ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "CS_COMMON_ASSIGNED",
+   "message": "ਨਿਰਧਾਰਿਤ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "CS_COMMON_REJECTED_UCASE",
+   "message": "ਨਾਮਨਜ਼ੂਰ ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "CS_COMMON_RESOLVED_UCASE",
+   "message": "ਹੱਲ ਕਰ ਲੀਤੀ ਗਈ ਹੈ ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "CS_COMMON_OPEN_UCASE",
+   "message": "ਔਪੇਨ ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "CS_COMMON_CLOSED_UCASE",
+   "message": "ਬੰਦ ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "CS_COMMON_COMPLAINT_DATE",
+   "message": "ਸ਼ਿਕਾਇਤ ਦੀ ਤਾਰੀਖ ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "CS_COMMON_COMPLAINT_NO",
+   "message": "ਸ਼ਿਕਾਇਤ ਦਾ ਨੰਬਰ ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "CS_COMMON_SUBMIT",
+   "message": "ਜਮਾ ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "CS_COMMON_COMMENTS_PLACEHOLDER",
+   "message": "ਟਿੱਪਣੀ ਕਰੋ ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "CS_COMMON_COMMENTS_PLACEHOLDER2",
+   "message": "ਟਿੱਪਣੀ ਕਰੋ ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "CS_COMMON_REASSIGNED_TO",
+   "message": "ਦੁਬਾਰਾ ਨਿਰਧਾਰਿਤ ਹੈ ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "CS_COMMON_REASSIGNED",
+   "message": "ਦੁਬਾਰਾ ਨਿਯੂਕਤ ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "CS_HOME_STATUS_REASSIGN_PREFIX",
+   "message": "ਨਿਯੂਕਤ ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "CS_COMMON_ASSIGNED_TO",
+   "message": "ਨਿਰਧਾਰਿਤ ਹੈ ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "CS_COMMON_COMMENTS",
+   "message": "ਟਿੱਪਣੀ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "CS_COMMON_BLOCKAGE_OF_DRAINS",
+   "message": "ਨਾਲੇ ਦੀ ਰੁਕਾਵਟ ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "CS_COMMON_UPLOAD_PHOTOS",
+   "message": "ਫੋਟੋ ਅੱਪਲੋਡ ਕਰੋ ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "CS_COMMON_ACCUMULATION_LITTER",
+   "message": "ਕੂੜੇ ਦਾ ਜਮਾਵੜਾ ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "CS_COMMON_OVERFLOWING_BINS",
+   "message": "ਕੂੜਾਦਾਨ ਭਰਿਆ ਹੋਇਆ ਹੈ ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "CS_COMMON_GARBAGE_BIN_ABSENT",
+   "message": "ਕੂੜਾਦਾਨ ਨਹੀਂ ਹੈ ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "CS_COMMON_SWEEPERS_ABSENT",
+   "message": "ਸਫਾਈ ਮੁਲਾਜ਼ਮ ਨਹੀਂ ਹੈ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "CS_COMMON_PATHOLES",
+   "message": "ਸੜਕ ਉਤੇ ਗੱਡਾ ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "CS_COMMON_BROKEN_FOOTPATHS",
+   "message": "ਟੂਟੀਆਂ ਹੋਇਆ ਫੁੱਟਪਾਥ ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "CS_COMMON_CALL_BUTTON",
+   "message": "ਕਾਲ ਕਰੋ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "CORE_COMMON_REQUIRED_ERRMSG",
+   "message": "ਲੋੜ ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "CORE_COMMON_PHONENO_INVALIDMSG",
+   "message": "ਗ਼ਲਤ ਮੋਬਾਈਲ ਨੰਬਰ ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "CORE_COMMON_PHONENO_REGISTREDMSG",
+   "message": "ਮੋਬਾਈਲ ਨੰਬਰ ਪਹਿਲੇ ਤੋਂ ਹੀ ਦਰਜ ਹੈ ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "CORE_COMMON_CONTINUE",
+   "message": "ਅਗਲਾ ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "CORE_COMMON_LOGIN",
+   "message": "ਲੋਗਇਨ ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "CORE_COMMON_PHONE_NUMBER",
+   "message": "ਫੋਨ ਨੰਬਰ ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "CORE_COMMON_MOBILE_NUMBER",
+   "message": "ਫੋਨ ਨੰਬਰ ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "CORE_COMMON_PHONE_NUMBER_PLACEHOLDER",
+   "message": "ਆਪਣਾ ਮੋਬਾਈਲ ਨੰਬਰ ਡਾਲੋ ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "CORE_COMMON_NAME",
+   "message": "ਨਾਮ ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "CORE_COMMON_NAME_PLACEHOLDER",
+   "message": "ਆਪਣਾ ਨਾਮ ਡਾਲੋ ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "CORE_COMMON_NAME_LENGTHMSG",
+   "message": "ਨਾਮ 100 ਆਖ਼ਰ ਤੋਂ ਘਟ ਡਾਲੋਂ ** (doubt)",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "CORE_COMMON_NAME_VALIDMSG",
+   "message": "ਕ੍ਰਿਪਾ ਕਰ ਕੇ ਸਹੀ ਨਾਂ ਡਾਲੋ **",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "CORE_COMMON_CITY",
+   "message": "ਸ਼ਹਿਰ ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "CORE_COMMON_CITY_PLACEHOLDER",
+   "message": "ਆਪਣੇ ਸ਼ਹਿਰ ਦਾ ਨਾਂ ਡਾਲੋ ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "CORE_COMMON_LOGOUT",
+   "message": "ਲੋਗ-ਆਊਟ ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "CORE_COMMON_USERNAME_INVALIDMSG",
+   "message": "ਵੈਦ ਯੂਜ਼ਰ ਨਾਮ ਲਿਖੋ ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "CORE_COMMON_CHECK_MESSAGE",
+   "message": "ਵੈਦ ਸੰਦੇਸ਼ਾ ਲਿਖੋ ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "CS_HOME_HOMEHEADER",
+   "message": "ਹੋਮ ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "CS_HOME_FILE_COMPLAINT",
+   "message": "ਸ਼ਿਕਾਇਤ ਦਰਜ ਕਰੋ ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "CS_HOME_MY_COMPLAINTS",
+   "message": "ਤੁਹਾਡੀ ਸ਼ਿਕਾਇਤਾਂ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "CS_HOME_STATUS_PREFIX",
+   "message": "ਤੁਹਾਡੀ ਸ਼ਿਕਾਇਤ ਦਰਜ ਕਰ ਲੀਤੀ ਗਈ ਹੈ ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "CS_MYCOMPLAINTS_COMPLAINT_HEADER",
+   "message": "ਸ਼ਿਕਾਇਤ ਦਾ ਸਿਰਲੇਖ ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "CS_MYCOMPLAINTS_RE_ASSIGNED",
+   "message": "ਸ਼ਿਕਾਇਤ ਨਿਰਧਾਰਿਤ ਕੀਤੀ ਹੈ :",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "CS_MYCOMPLAINTS_CLOSED",
+   "message": "ਤੁਹਾਡੀ ਸ਼ਿਕਾਇਤ ਹੱਲ ਕਰ ਦਿਤੀ ਗਈ ਹੈ , ਕਿਰਪਾ ਕਰਕੇ ਰੇਟਿੰਗ ਦਿਓ ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "CS_MYCOMPLAINTS_REJECTED",
+   "message": "ਸ਼ਿਕਾਇਤ ਨਾਮਨਜ਼ੂਰ ਹੋ ਗਈ ਹੈ ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "CS_MYCOMPLAINTS_TRACK",
+   "message": "ਟਰੈਕ ਕਰੋ ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "CS_MYCOMPLAINTS_NO_COMPLAINTS",
+   "message": "ਤੁਸੀਂ ਹਲੇ ਤਕ ਕੋਈ ਸ਼ਿਕਾਇਤ ਦਰਜ ਨਹੀਂ ਕੀਤੀ ਹੈ ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "CS_MYCOMPLAINTS_TO",
+   "message": "ਨੂੰ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "CS_MYCOMPLAINTS_RATE",
+   "message": "ਕਿਰਪਾ ਰੇਟ ਕਰੋ ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "CS_MYCOMPLAINTS_COMPLAINT_PREFIX",
+   "message": "ਤੁਹਾਡੀ ਸ਼ਿਕਾਇਤ ਦਾ ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "CS_COMPLAINT_DETAILS_COMPLAINT_DETAILS",
+   "message": "ਸ਼ਿਕਾਇਤ ਦਾ ਵਿਸਤਾਰ ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "CS_COMPLAINT_DETAILS_CURRENT_STATUS",
+   "message": "ਹਾਲੀਆ ਸਟੇਟਸ ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "CS_COMPLAINT_DETAILS_SUBMISSION_DATE",
+   "message": "ਦਰਜ ਕਰਨ ਦੀ ਤਾਰੀਖ ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "CS_COMPLAINT_DETAILS_LOCATION",
+   "message": "ਸੈਕਟਰ 32, 1- ਮੇਨ , ਅੰਮ੍ਰਿਤਸਰ ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "CS_COMPLAINT_DETAILS_COMMENTS",
+   "message": "ਸੜਕ ਉਤੇ ਕੂੜੇ ਦੇ ਕਾਰਨ , ਚਲਣੇ ਵਿਚ ਸਮਸਿਆਂ ਆਉਂਦੀ ਹੈ ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "CS_COMPLAINT_DETAILS_COMPLAINT_TIMELINE",
+   "message": "ਸ਼ਿਕਾਇਤ ਦਾ ਸਮਾਂ ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "CS_COMPLAINT_DETAILS_RESOLUTION_EVIDENCE",
+   "message": "ਸਮਾਧਾਨ ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "CS_COMPLAINT_DETAILS_COMPLAINT_RESOLVED",
+   "message": "ਸ਼ਿਕਾਇਤ ਹਲ ਹੋ ਚੁਕੀ ਹੈ ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "CS_COMPLAINT_DETAILS_COMPLAINT_DESCRIPTION",
+   "message": "ਸ਼ਿਕਾਇਤ ਦਾ ਉਲੇਖ ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "CS_COMPLAINT_DETAILS_RATE",
+   "message": "ਰੇਟਿੰਗ ਕਰੋ ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "CS_COMPLAINT_DETAILS_REOPEN",
+   "message": "ਦੁਬਾਰਾ ਦਰਜ ਕਰੋ ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "CS_COMPLAINT_DETAILS_COMPLAINT_FILED",
+   "message": "ਸ਼ਿਕਾਇਤ ਦਰਜ ਹੋ ਚੁਕੀ ਹੈ ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "CS_COMPLAINT_DETAILS_REASSIGN_REQUESTED",
+   "message": "ਦੋਬਾਰਾ ਨਿਯੁਕਤੀ requested ਹੈ ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "CS_FEEDBACK_WHAT_WAS_GOOD",
+   "message": "ਤੁਹਾਨੂੰ ਕੀ ਚੰਗਾ ਲੱਗਿਆ ?",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "CS_FEEDBACK_SERVICES",
+   "message": "ਸੇਵਾਵਾਂ ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "CS_FEEDBACK_RESOLUTION_TIME",
+   "message": "ਸਮਾਧਾਨ ਲਈ ਵਖ਼ਤ ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "CS_FEEDBACK_QUALITY_OF_WORK",
+   "message": "ਕਾਮ ਦੀ ਕਵਾਲਿਟੀ ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "CS_FEEDBACK_OTHERS",
+   "message": "ਹੋਰ ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "CS_FEEDBACK_SUCCESS",
+   "message": "ਜਾਣਕਾਰੀ ਦੇਣ ਲਈ ਧੰਨਵਾਦ ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "CS_REOPEN_COMPLAINT_WHY",
+   "message": "ਤੁਸੀਂ ਫਿਰ ਤੋਂ ਸ਼ਿਕਾਇਤ ਕਿਓਂ ਦਰਜ ਕਰਵਾਣਾ ਚਾਹੁੰਦੇ ਹੋ ?",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "CS_REOPEN_OPTION_ONE",
+   "message": "ਕੋਈ ਕੰਮ ਨਹੀਂ ਹੋਇਆ ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "CS_REOPEN_OPTION_TWO",
+   "message": "ਘੱਟ ਕੰਮ ਹੋਇਆ ਹੈ ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "CS_REOPEN_OPTION_THREE",
+   "message": "ਮੁਲਾਜ਼ਮ ਨਹੀਂ ਆਇਆ ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "CS_REOPEN_OPTION_FOUR",
+   "message": "ਸਮਾਧਾਨ ਪੱਕਾ ਨਹੀਂ ਹੈ ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "CS_REOPEN_SUCCESS_MESSAGE",
+   "message": "ਤੁਹਾਡੀ ਸ਼ਿਕਾਇਤ reopen ਕਰ ਲੀਤੀ ਗਈ ਹੈ ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "CS_SELECT_CITY_CHOOSE_CITY",
+   "message": "ਆਪਣਾ ਸ਼ਹਿਰ ਚੁਣੋ ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "CS_SELECT_CITY_AMRITSAR",
+   "message": "ਅੰਮ੍ਰਿਤਸਰ ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "CS_SELECT_CITY_BHATINDA",
+   "message": "ਬਠਿੰਡਾ ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "CS_SELECT_CITY_CHANDIGARH",
+   "message": "ਚੰਡੀਗੜ੍ਹ ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "CS_SELECT_CITY_FARIDKOT",
+   "message": "ਫਰੀਦਕੋਟ ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "CS_SELECT_CITY_JALANDHAR",
+   "message": "ਜਲੰਧਰ ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "CS_SELECT_CITY_LUDHIYAA",
+   "message": "ਲੁਧਿਆਣਾ ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "CS_SELECT_CITY_MOHALI",
+   "message": "ਮੋਹਾਲੀ ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "CS_COMPLAINT_TYPE_DRAINS",
+   "message": "ਨਾਲਾ ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "CS_COMPLAINT_TYPE_STREET_LIGHTS",
+   "message": "ਸਟ੍ਰੀਟਲਈਟ ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "CS_COMPLAINT_TYPE_PUBLIC_HEALTH_HYGIENE",
+   "message": "ਜਨ ਸਵਾਸ ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "CS_COMPLAINT_TYPE_PUBLIC_LAND_PROPERTY",
+   "message": "ਜਨਤਕ ਸੰਪਤੀ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "CS_COMPLAINT_TYPE_WATER",
+   "message": "ਪਾਣੀ ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "CS_COMPLAINT_TYPE_OTHERS",
+   "message": "ਸੰਪਤੀ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "CORE_LOGOUTPOPUP_CONFIRM",
+   "message": "ਕਿਆ ਤੁਸੀ ਲਾਗਆਉਟ ਕਰਨਾ ਚਾਹੁੰਦੇ ਹੋ ?",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "CORE_LOGOUTPOPUP_NO",
+   "message": "ਨਹੀਂ ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "CORE_LOGOUTPOPUP_YES",
+   "message": "ਹਾਂ ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "CORE_OTP_HEADING",
+   "message": "OTP ਟਾਈਪ ਕਰੋ ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "CORE_OTP_SENT_MESSAGE",
+   "message": "ਤੁਹਾਡੇ ਨੰਬਰ ਉਤੇ OTP ਭੇਜ ਦਿੱਤਾ ਗਿਆ ਹੈ ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "CORE_OTP_OTP",
+   "message": "OTP",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "CORE_OTP_PLACEHOLDER",
+   "message": "OTP ਟਾਈਪ ਕਰੋ ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "CORE_OTP_ERRORMSG",
+   "message": "ਗ਼ਲਤ OTP ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "CORE_OTP_NOT_RECEIVE",
+   "message": "ਕਿਆ ਤੁਹਾਨੂੰ OTP ਨਹੀਂ ਆਇਆ ?",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "CORE_OTP_RESEND",
+   "message": "ਦੁਬਾਰਾ ਭੇਜੋ ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "CORE_OTP_GET_STARTED",
+   "message": "ਸ਼ੁਰੂ ਕਰੋ ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "CORE_REGISTER_HEADING",
+   "message": "ਰਜਿਸਟਰ ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "CORE_REGISTER_HAVE_ACCOUNT",
+   "message": "ਕੀ ਤੁਹਾਡਾ ਪਹਿਲਾ ਤੋਂ ਹੀ ਅਕਾਊਂਟ ਹੈ ?",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "CS_ADDCOMPLAINT_COMPLAINT_TYPE",
+   "message": "ਸ਼ਿਕਾਇਤ ਦਾ ਪ੍ਰਕਾਰ ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "CS_ADDCOMPLAINT_COMPLAINT_TYPE_PLACEHOLDER",
+   "message": "ਆਪਣੇ ਸ਼ਿਕਾਇਤ ਦਾ ਪ੍ਰਕਾਰ ਚੁਣੋ ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "CS_ADDCOMPLAINT_LOCATION",
+   "message": "ਥਾਂ ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "CS_ADDCOMPLAINT_LOCATION_ERRORMSG",
+   "message": "ਤੁਹਾਡਾ ਪਤਾ ਮੌਜੂਦ ਨਹੀਂ ਹੈ ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "CS_ADDCOMPLAINT_LANDMARK",
+   "message": "ਸੀਮਾ ਚੀਨ ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "CS_ADDCOMPLAINT_LANDMARK_PLACEHOLDER",
+   "message": "ਸੀਮਾ ਚੀਨ ਲਿਖੋ ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "CS_ADDCOMPLAINT_ADDITIONAL_DETAILS",
+   "message": "ਹੋਰ ਜਾਣਕਾਰੀ ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "CS_ADDCOMPLAINT_ADDITIONAL_DETAILS_PLACEHOLDER",
+   "message": "ਕ੍ਰਿਪਾ ਕਰ ਕੇ ਹੋਰ ਜਾਣਕਾਰੀ ਦੱਸੋ ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "CS_ADDCOMPLAINT_ADDITIONAL_DETAILS_SUBMIT_COMPLAINT",
+   "message": "ਸ਼ਿਕਾਇਤ ਦਰਜ ਕਰੋ ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "CS_HOWITWORKS_DESCRIPTION",
+   "message": "ਸ਼ਿਕਾਇਤ ਕਰੋ ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "CS_HOWITWORKS_RAISE_COMPLAINT",
+   "message": "ਸ਼ਿਕਾਇਤ ਦਰਜ ਕਰੋ ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "CS_HOWITWORKS_CONNECT_OFFICER",
+   "message": "ਸੰਬੰਧਿਤ ਕਰਮਚਾਰੀ ਨਾਲ ਗੱਲ ਕਰੋ ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "CS_HOWITWORKS_TRACK_STATUS",
+   "message": "ਸਟੇਟਸ ਪਤਾ ਕਰੋ ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "CS_CONTACTUS_OPEN_MAP",
+   "message": "ਨਕਸ਼ਾ ਖੋਲੋ ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "CS_CONTACTUS_WEEKDAY",
+   "message": "ਸੋਮ -ਸ਼ੁਕਰ ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "CS_CONTACTUS_WEEKEND",
+   "message": "ਸ਼ਨੀਵਾਰ ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "CS_PROFILE_EMAIL",
+   "message": "ਈ-ਮੇਲ ਆਈਡ ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "CS_PROFILE_EMAIL_PLACEHOLDER",
+   "message": "ਈ-ਮੇਲ ਆਈਡ ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "CS_PROFILE_EMAIL_ERRORMSG",
+   "message": "ਆਪਣਾ ਈ-ਮੇਲ ਆਈਡ ਡਾਲੋ ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "CS_PROFILE_SAVE",
+   "message": "ਸੇਵ ਕਰੋ ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "CS_MAP_PICK",
+   "message": "ਚੁਣੋ ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "CS_HOME_HEADER_HOME",
+   "message": "ਹੋਮ ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "CS_HOME_HEADER_PROFILE",
+   "message": "ਪ੍ਰੋਫਾਈਲ ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "CS_HOME_HEADER_LANGUAGE",
+   "message": "ਭਾਸ਼ਾ ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "CS_HOME_HEADER_CONTACT_US",
+   "message": "ਸੰਪਰਕ ਕਰੋ ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "CS_HOME_HEADER_HOW_IT_WORKS",
+   "message": "ਕਿਵੇਂ ਕਾਮ ਕਰਦਾ ਹੈ ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "CS_COMPLAINT_TYPE_SEARCH_PLACEHOLDER",
+   "message": "ਖੋਜ ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "CS_COMPLAINT_TYPE_GARBAGE",
+   "message": "ਕੂੜਾ ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "CS_COMPLAINT_TYPE_ROADS_FOOTPATHS",
+   "message": "ਸੜਕ ਅਤੇ ਫੁੱਟਪਾਥ ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "CS_COMPLAINT_SUBMITTED_LABEL1",
+   "message": "ਤੁਹਾਡੀ ਸ਼ਿਕਾਇਤ ਦਰਜ ਕਰ ਲੀਤੀ ਗਈ ਹੈ ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "CS_COMPLAINT_SUBMITTED_THANKYOU",
+   "message": "ਧੰਨਵਾਦ ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "CS_COMPLAINT_SUBMITTED_COMPLAINT_NO",
+   "message": "ਸ਼ਿਕਾਇਤ ਦਾ ਨੰਬਰ ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "CS_COMPLAINT_SUBMITTED_LABEL2",
+   "message": "ਤੁਸੀਂ ਇਸ ਐਪ ਉਤੇ ਆਪਣੀ ਸ਼ਿਕਾਇਤਾਂ ਦਾ ਸਟੇਟਸ ਕਦੇ ਵੀ ਟ੍ਰੈਕ ਕਰ ਸਕਦੇ ਹੋ ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "CS_HEADER_TRACK_LOCATION",
+   "message": "ਲੋਕੇਸ਼ਨ ਟਰੈਕ ਕਰੋ ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "CS_HEADER_COMPLAINT_SUBMITTED",
+   "message": "ਸ਼ਿਕਾਇਤ ਦਰਜ ਕਰ ਲੀਤੀ ਗਈ ਹੈ ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "CS_HEADER_REOPEN_COMPLAINT",
+   "message": "ਸ਼ਿਕਾਇਤ ਦੁਬਾਰਾ ਖੋਲ੍ਹੇ ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "CS_HEADER_FEEDBACK",
+   "message": "ਜਾਨਕਾਰੀ ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "CS_HEADER_ADD_COMPLAINT",
+   "message": "ਸ਼ਿਕਾਇਤ ਦਰਜ ਕਰੋ ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "CS_HEADER_ALL_COMPLAINTS",
+   "message": "ਸਾਰੀ ਸ਼ਿਕਾਇਤਾਂ ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "CS_HEADER_REQUEST_REASSIGN",
+   "message": "ਦੁਬਾਰਾ ਜਾਂਚ ਲਈ ਬੇਨਤੀ ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "CS_HEADER_COMPLAINT_SUMMARY",
+   "message": "ਸ਼ਿਕਾਇਤ ਸਾਰਾਂਸ਼",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "CS_HEADER_REASSIGN_COMPLAINT",
+   "message": "ਦੋਬਾਰਾ ਨਿਯੁਕਤ ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "CS_HEADER_ASSIGN_COMPLAINT",
+   "message": "ਨਿਯੁਕਤ ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "ES_REJECT_BUTTON",
+   "message": "ਨਾਮਨਜ਼ੂਰ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "ES_COMMON_ASSIGN",
+   "message": "ਨਿਯੁਕਤ ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "ES_COMMON_REASSIGN",
+   "message": "ਦੁਬਾਰਾ ਨਿਯੁਕਤ ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "CORE_COMMON_GOTOHOME",
+   "message": "ਹੋਮੇ ਤੇ ਆਓ ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "CORE_LOGIN_USERNAME",
+   "message": "ਯੂਜ਼ਰ ਨੇਮ ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "CORE_LOGIN_USERNAME_PLACEHOLDER",
+   "message": "ਐਮਪਲੋਈ ਆਈ.ਡ ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "CORE_LOGIN_PASSWORD",
+   "message": "ਪਾਸਵਰਡ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "CORE_LOGIN_PASSWORD_PLACEHOLDER",
+   "message": "ਪਾਸਵਰਡ ਲਿਖੋ ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "CORE_LOGIN_PASSWORD_ERRORMSG",
+   "message": "ਪਾਸਵਰਡ ਗ਼ਲਤ ਹੈ ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "CORE_COMMON_FORGOT_PASSWORD_LABEL",
+   "message": "ਪਾਸਵਰਡ ਭੁੱਲ ਗਏ ?",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "CORE_COMMON_FORGOT_PASSWORD",
+   "message": "ਪਾਸਵਰਡ ਭੁੱਲ ਗਏ ?",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "CORE_COMMON_MOBILE_NUMBER",
+   "message": "ਮੋਬਾਈਲ ਨੰਬਰ ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "CORE_CHANGEPASSWORD_EXISTINGPASSWORD",
+   "message": "ਮਜੂਦਾ ਪਾਸਵਰਡ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "CORE_CHANGEPASSWORD_EXISTINGPASSWORD_PLACEHOLDER",
+   "message": "ਮਜੂਦਾ ਪਾਸਵਰਡ ਲਿਖੋ ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "CORE_LOGIN_NEW_PASSWORD",
+   "message": "ਨਾਵਾਂ ਪਾਸਵਰਡ ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "CORE_LOGIN_NEW_PASSWORD_PLACEHOLDER",
+   "message": "ਨਾਵਾਂ ਪਾਸਵਰਡ ਲਿਖੋ ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "CORE_LOGIN_CONFIRM_NEW_PASSWORD",
+   "message": "ਨਾਵਾਂ ਪਾਸਵਰਡ ਕੰਫਿਰਮ ਕਰੋ ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "CORE_LOGIN_CONNFIRM_NEW_PASSWORD_PLACEHOLDER",
+   "message": "ਨਾਵਾਂ ਪਾਸਵਰਡ ਕੰਫਿਰਮ ਕਰੋ ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "CORE_COMMON_CHANGE_PASSWORD",
+   "message": "ਪਾਸਵਰਡ ਬਦਲੋ ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "CS_COMMON_RE-ASSIGN REQUESTED",
+   "message": "ਦੋਬਾਰਾ ਨਿਯੁਕਤ ਦੀ ਅਰਜੀ ਹੈ ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "CS_COMMON_CITIZEN_REQUEST_REASSIGN",
+   "message": "ਦੋਬਾਰਾ ਨਿਯੁਕਤ ਹੋ ਗਈ ਹੈ ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "CORE_COMMON_MOBILE_NUMBER_PLACEHOLDER",
+   "message": "ਆਪਣਾ ਮੋਬਾਈਲ ਨੰਬਰ ਲਿਖੋ ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "CS_ADD_COMPLAINT_COMPLAINT_SUBMISSION",
+   "message": "ਸ਼ਿਕਾਇਤ ਜਮਾਂ ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "ES_ASSIGN_STATUS_REASSIGN",
+   "message": "ਕਿਰਪਾ ਲਿਸਟ ਵਿੱਚੋ ਐਮਪਲੋਈ ਸਿਲੈਕਟ ਕਰੋ ਜਿਸ ਨੂੰ ਤੁਸੀਂ ਫਿਰ ਤੋਂ ਸ਼ਿਕਾਇਤ ਨਿਯੁਕਤ ਕਰਨਾ ਚਾਹੁੰਦੇ ਹੋ ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "ES_ASSIGN_STATUS_ASSIGN",
+   "message": "ਕਿਰਪਾ ਲਿਸਟ ਵਿੱਚੋ ਐਮਪਲੋਈ ਸਿਲੈਕਟ ਕਰੋ ਜਿਸ ਨੂੰ ਤੁਸੀਂ ਸ਼ਿਕਾਇਤ ਨਿਯੁਕਤ ਕਰਨਾ ਚਾਹੁੰਦੇ ਹੋ ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "ES_REQUEST_REQUEST_RE_ASSIGN",
+   "message": "ਦੋਬਾਰਾ ਨਿਯੁਕਤ ਬੇਨਤੀ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "ES_COMPLAINT_SUMMARY_MAP",
+   "message": "ਨਕਸ਼ਾ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "ES_COMMON_FILED_BY",
+   "message": "ਭਰਿਆ ਹੈ ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "CORE_EMPLOYEE_OTP_CHECK_MESSAGE",
+   "message": "OTP ਲਈ ਆਪਣੇ ਮੈਸਜ ਚੇਕ ਕਰੋ ਅਤੇ ਫਿਰ ਪਾਸਵਰਡ ਸੈੱਟ ਕਰੋ ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "ES_CLOSED_COMPLAINTS_HEADER",
+   "message": "ਬੰਦ ਸ਼ਿਕਾਇਤਾਂ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "ES_ALL_COMPLAINTS_HEADER",
+   "message": "ਸਾਰੀਆਂ ਸ਼ਿਕਾਇਤਾਂ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "ES_COMPLAINT_ASSIGNED_HEADER",
+   "message": "ਸ਼ਿਕਾਇਤ ਨਿਰਧਾਰਤ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "ES_COMPLAINT_REJECTED_HEADER",
+   "message": "ਸ਼ਿਕਾਇਤ ਨਕਾਰਾ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "ES_ASSIGN_TO_EMPLOYEE_HEADER",
+   "message": "ਕਰਮਚਾਰੀ ਨੂੰ ਨਿਯੁਕਤ ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "ES_REASSIGN_TO_EMPLOYEE_HEADER",
+   "message": "ਕਰਮਚਾਰੀ ਨੂੰ ਦੁਬਾਰਾ ਨਿਯੁਕਤ ਕਰੋ ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "ES_EMPLOYEE_DIRECTORY_HEADER",
+   "message": "ਕਰਮਚਾਰੀ ਡਾਇਰੈਕਟਰੀ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "ES_REASON_TO_REJECT_HEADER",
+   "message": "ਨੂੰ ਰੱਦ ਕਰਨ ਦਾ ਕਾਰਨ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "ES_COMPLAINT_REASSIGNED_HEADER",
+   "message": "ਸ਼ਿਕਾਇਤ ਮੁੜ ਸੌਂਪਿਆ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "ES_REASSIGN_OPTION_ONE",
+   "message": "ਮੇਰਾ ਵਿਭਾਗ ਨਹੀਂ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "ES_REASSIGN_OPTION_TWO",
+   "message": "ਮੇਰਾ ਅਧਿਕਾਰ ਖੇਤਰ ਨਹੀਂ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "ES_REASSIGN_OPTION_THREE",
+   "message": "ਗੈਰ ਹਾਜ਼ਰ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "ES_REASSIGN_OPTION_FOUR",
+   "message": "ਜਾਇਜ਼ ਸ਼ਿਕਾਇਤ ਨਹੀਂ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "ES_REASSIGN_REQUEST_QUESTION",
+   "message": "ਤੁਸੀਂ ਇਸ ਸ਼ਿਕਾਇਤ ਨੂੰ ਦੁਬਾਰਾ ਨਿਰਧਾਰਤ ਕਿਉਂ ਕਰਨਾ ਚਾਹੁੰਦੇ ਹੋ?",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "ES_REJECT_COMPLAINT_QUESTION",
+   "message": "ਤੁਸੀਂ ਇਸ ਸ਼ਿਕਾਇਤ ਨੂੰ ਰੱਦ ਕਿਉਂ ਕਰਨਾ ਚਾਹੁੰਦੇ ਹੋ?",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "ES_REJECT_OPTION_TWO",
+   "message": "ਕਾਰਵਾਈ ਸ਼ੇਤ੍ਰ ਤੋਂ ਬਾਹਰ ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "ES_REJECT_OPTION_THREE",
+   "message": "ਕਾਰਵਾਈ ਚਲ ਰਹੀ ਹੈ ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "ES_REJECT_OPTION_FOUR",
+   "message": "ਹੋਰ ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "ES_ALL_COMPLAINTS_UNASSIGNED_TAB_LABEL",
+   "message": "ਨਾ ਨਿਯੁਕਤ ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "ES_ALL_COMPLAINTS_ASSIGNED_TAB_LABEL",
+   "message": "ਨਿਯੁਕਤ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "ES_COMPLAINT_REJECT_SUCCESS_MESSAGE",
+   "message": "ਤੁਸੀ ਇਹ ਕੰਪਲੈਂਟ ਨਾਮੰਜ਼ੂਰ ਕੀਤੀ ਹੈ ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "ES_REASSIGN_REQUEST_SUCCESS_MESSAGE",
+   "message": "ਤੁਹਾਡੀ ਦੁਬਾਰਾ ਨਿਯੁਕਤੀ ਦੀ ਬੇਨਤੀ ਭੇਜ ਦਿਤੀ ਦਿਤੀ ਗਈ ਹੈ ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "ES_COMPLAINT_RESOLVED_SUCCESS_MESSAGE",
+   "message": "ਤੁਸੀਂ ਸ਼ਿਕਾਇਤ ਨੂੰ ਹੱਲ ਕੀਤਾ ਹੈ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "ES_COMMON_SEARCH_EMPLOYEE",
+   "message": "ਸੇਰਚ ਐਮਪਲੋਈ ",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ },
+ {
+   "code": "ES_ALL_COMPLAINTS_ASSIGNED_TO",
+   "message": "ਨਿਰਧਾਰਿਤ ਹੈ :",
+   "module": "rainmaker-pgr",
+   "locale": "pn_IN"
+ }
+]

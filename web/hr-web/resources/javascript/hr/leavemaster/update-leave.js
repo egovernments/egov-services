@@ -151,7 +151,7 @@ class UpdateLeave extends React.Component {
     var hrConfigurations = [], allHolidayList = [];
     $('#availableDays,#leaveDays,#name,#code').prop("disabled", true);
 
-    var _state = {}, count = 2;
+    var _state = {}, count = 3;
     const checkCountAndCall = function (key, res) {
       _state[key] = res;
       count--;
@@ -166,6 +166,9 @@ class UpdateLeave extends React.Component {
     });
     getDropdown("assignments_position", function (res) {
       checkCountAndCall("positionList", res);
+    });
+    getDropdown("assignments_designation", function (res) {
+      checkCountAndCall("assignments_designation", res);
     });
 
     commonApiPost("hr-masters", "hrstatuses", "_search", { tenantId, objectName: "LeaveApplication" }, function (err, res) {
@@ -214,7 +217,8 @@ class UpdateLeave extends React.Component {
 
         if (!_leaveSet.toDate)
           _leaveSet.toDate = "";
-
+        if (!_leaveSet.documents)
+          _leaveSet.documents = [];
 
         commonApiPost("hr-employee", "employees", "_search", {
           tenantId,
@@ -962,17 +966,15 @@ class UpdateLeave extends React.Component {
       commonApiPost("hr-employee", "hod/employees", "_search", { tenantId, asOnDate, departmentId, active: true }, function (err, res2) {
         if (res2 && res2["Employee"] && res2["Employee"][0]) {
           employee = res2["Employee"][0];
-          var assignments_designation = [];
-          getDropdown("assignments_designation", function (res) {
-            assignments_designation = res;
-          });
+          
+          
           var designation;
           employee.assignments.forEach(function (item) {
             if (item.isPrimary) {
               designation = item.designation;
             }
           });
-          var hodDesignation = getNameById(assignments_designation, designation);
+          var hodDesignation = getNameById(_this.state.assignments_designation, designation);
           var hodDetails = employee.name + " - " + employee.code + " - " + hodDesignation;
 
           if (!tempInfo.workflowDetails) {
@@ -1094,14 +1096,23 @@ class UpdateLeave extends React.Component {
                     var process = res["processInstance"];
                     if (process) {
                       var positionId = process.owner.id;
-                      console.log(positionId);
                       commonApiPost("hr-employee", "employees", "_search", {
                         tenantId,
-                        positionId: positionId
+                        positionId: positionId,
+                        asOnDate: today()
                       }, function (err, res) {
                         if (res && res["Employee"] && res["Employee"][0]) {
                           employee = res["Employee"][0];
-                          owner = employee.name;
+                          
+                          var designation;
+                          employee.assignments.forEach(function (item) {
+                            if (item.isPrimary) {
+                              designation = item.designation;
+                            }
+                          });
+                          var eDesignation = getNameById(_this.state.assignments_designation, designation);
+                          var owner = employee.name + " - " + employee.code + " - " + eDesignation;
+
                           window.location.href = `app/hr/leavemaster/ack-page.html?type=Submit&applicationNumber=${leaveNumber}&owner=${owner}`;
                         }
                         else {

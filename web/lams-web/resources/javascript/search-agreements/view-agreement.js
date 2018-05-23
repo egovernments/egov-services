@@ -814,6 +814,10 @@ $(document).ready(function() {
 
 
     $('body').on('click', 'button', function(e) {
+
+        if(e.target.id==='close'){
+          window.close();
+        }else{
         e.preventDefault();
         if (!e.target.id) return;
         var data = $("#" + e.target.id).data();
@@ -892,6 +896,7 @@ $(document).ready(function() {
                 showError(response["statusText"]);
             }
         }
+      }
     });
 
     // Adding Jquery validation dynamically

@@ -694,7 +694,7 @@ class Sale extends React.Component {
                   </div>
                   <div className="col-sm-6" style={{ display: self.state.readOnly ? 'none' : 'block' }}>
                     <div>
-                      <select required value={disposal.assetSaleAccount} onChange={(e) => handleChange(e, "assetSaleAccount")}>
+                      <select required value={disposal.assetSaleAccount} onChange={(e) => handleChange(e, "assetSaleAccount")} disabled>
                         <option value="">Select Account Code</option>
                         {renderOptions(assetAccount)}
                       </select>

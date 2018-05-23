@@ -356,6 +356,9 @@ public class WorkflowMatrixImpl implements Workflow {
 		}
 		// processInstance.getEntity().setProcessInstance(processInstance);
 		wfbean.map(processInstance);
+		if (processInstance.getBusinessKey().endsWith(APPLICATATIONTYPE_AGREEMENT)) {
+			wfbean.setPendingActions(state.getNextAction());
+		}
 		processInstance.setAttributes(new HashMap<>());
 		final Attribute validActions = new Attribute();
 		validActions.setValues(getValidActions(wfbean));

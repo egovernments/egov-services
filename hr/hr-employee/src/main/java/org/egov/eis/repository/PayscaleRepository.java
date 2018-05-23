@@ -43,17 +43,12 @@ package org.egov.eis.repository;
 
 import lombok.extern.slf4j.Slf4j;
 import org.egov.common.contract.request.RequestInfo;
-import org.egov.eis.model.Assignment;
-import org.egov.eis.model.Employee;
 import org.egov.eis.model.PayscaleDetails;
 import org.egov.eis.model.PayscaleHeader;
-import org.egov.eis.model.enums.EntityType;
 import org.egov.eis.repository.builder.PayscaleQueryBuilder;
 import org.egov.eis.repository.rowmapper.PayscaleDetailsRowMapper;
 import org.egov.eis.repository.rowmapper.PayscaleHeaderRowMapper;
-import org.egov.eis.web.contract.EmployeeRequest;
 import org.egov.eis.web.contract.PayscaleGetRequest;
-import org.egov.eis.web.contract.PayscaleRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,10 +58,8 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;

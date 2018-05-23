@@ -53,7 +53,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.egov.eis.model.*;
-import org.egov.eis.model.enums.MaritalStatus;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.stereotype.Component;

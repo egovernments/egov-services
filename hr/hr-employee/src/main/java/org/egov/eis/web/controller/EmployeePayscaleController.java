@@ -40,18 +40,18 @@
 
 package org.egov.eis.web.controller;
 
+
 import lombok.extern.slf4j.Slf4j;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ResponseInfo;
-import org.egov.eis.model.*;
-import org.egov.eis.service.PayscaleService;
+import org.egov.eis.model.EmployeePayscale;
+import org.egov.eis.service.EmployeePayscaleService;
 import org.egov.eis.web.contract.*;
-import org.egov.eis.web.contract.factory.ResponseEntityFactory;
 import org.egov.eis.web.contract.factory.ResponseInfoFactory;
+import org.egov.eis.web.errorhandler.Error;
 import org.egov.eis.web.errorhandler.ErrorHandler;
 import org.egov.eis.web.errorhandler.ErrorResponse;
-import org.egov.eis.web.errorhandler.Error;
-import org.egov.eis.web.validator.*;
+import org.egov.eis.web.validator.PayscaleValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -60,32 +60,29 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.List;
-
 
 @Slf4j
 @RestController
-@RequestMapping("/payscale")
-public class PayscaleController {
-
-    @Autowired
-    private PayscaleService payscaleService;
+@RequestMapping("/employeepayscale")
+public class EmployeePayscaleController {
 
     @Autowired
     private PayscaleValidator payscaleValidator;
 
     @Autowired
-    private ErrorHandler errorHandler;
+    private EmployeePayscaleService employeePayscaleService;
 
     @Autowired
     private ResponseInfoFactory responseInfoFactory;
 
     @Autowired
-    private ResponseEntityFactory responseEntityFactory;
+    private ErrorHandler errorHandler;
 
     @PostMapping("_search")
     @ResponseBody
-    public ResponseEntity<?> search(@ModelAttribute @Valid final PayscaleGetRequest payscaleGetRequest,
+    public ResponseEntity<?> search(@ModelAttribute @Valid final EmployeePayscaleGetRequest employeePayscaleGetRequest,
                                     final BindingResult modelAttributeBindingResult, @RequestBody @Valid final RequestInfoWrapper requestInfoWrapper,
                                     final BindingResult bindingResult) {
 
@@ -96,24 +93,23 @@ public class PayscaleController {
             return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
         }
         // Call service
-        List<PayscaleHeader> payscaleHeaderList = null;
+        List<EmployeePayscale> employeePayscaleList = null;
         try {
-            payscaleHeaderList = payscaleService.getPayscaleHeaders(payscaleGetRequest, requestInfo);
+            employeePayscaleList = employeePayscaleService.getEmpPayscale(employeePayscaleGetRequest, requestInfo);
         } catch (final Exception exception) {
-            log.error("Error while processing request " + payscaleGetRequest, exception);
+            log.error("Error while processing request " + employeePayscaleGetRequest, exception);
             return errorHandler.getResponseEntityForUnexpectedErrors(requestInfo);
         }
 
-        return getSuccessResponse(payscaleHeaderList, requestInfo);
+        return getSuccessResponse(employeePayscaleList, requestInfo);
     }
-
 
     @PostMapping(value = "/_create")
     @ResponseBody
-    public ResponseEntity<?> create(@RequestBody @Valid PayscaleRequest payscaleRequest, BindingResult errors) {
-        log.info("Create Payscale Request::" + payscaleRequest);
+    public ResponseEntity<?> create(@RequestBody @Valid EmployeePayscaleRequest employeePayscaleRequest, BindingResult errors) {
+        log.info("Create Employee Payscale Request::" + employeePayscaleRequest);
 
-        PayscaleHeader payscaleHeader = null;
+        List<EmployeePayscale> employeePayscale = new ArrayList<>();
         try {
 
             if (errors.hasFieldErrors()) {
@@ -121,45 +117,28 @@ public class PayscaleController {
                 return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
             }
 
-            payscaleValidator.validatePayscaleRequest(payscaleRequest.getPayscaleHeader(), errors);
+            payscaleValidator.validateEmpPayscaleReuest(employeePayscaleRequest.getEmployeePayscale(), employeePayscaleRequest.getRequestInfo(), errors);
 
             if (errors.hasFieldErrors()) {
                 ErrorResponse errRes = populateErrors(errors);
                 return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
             }
-            payscaleHeader = payscaleService.create(payscaleRequest);
+            employeePayscale = employeePayscaleService.create(employeePayscaleRequest);
         } catch (Exception exception) {
             log.error("Error while processing request ", exception);
-            return errorHandler.getResponseEntityForUnexpectedErrors(payscaleRequest.getRequestInfo());
+            return errorHandler.getResponseEntityForUnexpectedErrors(employeePayscaleRequest.getRequestInfo());
         }
-        return getSuccessResponseForCreate(payscaleHeader, payscaleRequest.getRequestInfo());
+        return getSuccessResponseForCreate(employeePayscale, employeePayscaleRequest.getRequestInfo());
     }
 
-    @PostMapping(value = "/_update")
-    @ResponseBody
-    public ResponseEntity<?> update(@RequestBody @Valid PayscaleRequest payscaleRequest, BindingResult errors) {
-        log.info("Update Payscale Request::" + payscaleRequest);
+    public ResponseEntity<?> getSuccessResponseForCreate(List<EmployeePayscale> employeePayscale, RequestInfo requestInfo) {
+        EmployeePayscaleResponse empPayscaleResponse = new EmployeePayscaleResponse();
+        empPayscaleResponse.setEmployeePayscale(employeePayscale);
 
-        PayscaleHeader payscaleHeader = null;
-        try {
-
-            if (errors.hasFieldErrors()) {
-                ErrorResponse errRes = populateErrors(errors);
-                return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
-            }
-
-            payscaleValidator.validatePayscaleRequest(payscaleRequest.getPayscaleHeader(), errors);
-
-            if (errors.hasFieldErrors()) {
-                ErrorResponse errRes = populateErrors(errors);
-                return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
-            }
-            payscaleHeader = payscaleService.update(payscaleRequest);
-        } catch (Exception exception) {
-            log.error("Error while processing request ", exception);
-            return errorHandler.getResponseEntityForUnexpectedErrors(payscaleRequest.getRequestInfo());
-        }
-        return getSuccessResponseForCreate(payscaleHeader, payscaleRequest.getRequestInfo());
+        ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
+        responseInfo.setStatus(HttpStatus.OK.toString());
+        empPayscaleResponse.setResponseInfo(responseInfo);
+        return new ResponseEntity<EmployeePayscaleResponse>(empPayscaleResponse, HttpStatus.OK);
     }
 
     private ErrorResponse populateErrors(BindingResult errors) {
@@ -176,25 +155,15 @@ public class PayscaleController {
         return errRes;
     }
 
-    public ResponseEntity<?> getSuccessResponseForCreate(PayscaleHeader payscaleHeader, RequestInfo requestInfo) {
-        PayscaleResponse payscaleResponse = new PayscaleResponse();
-        payscaleResponse.setPayscaleHeader(payscaleHeader);
 
-        ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
-        responseInfo.setStatus(HttpStatus.OK.toString());
-        payscaleResponse.setResponseInfo(responseInfo);
-        return new ResponseEntity<PayscaleResponse>(payscaleResponse, HttpStatus.OK);
-    }
-
-    private ResponseEntity<?> getSuccessResponse(final List<PayscaleHeader> payscaleHeaderList,
+    private ResponseEntity<?> getSuccessResponse(final List<EmployeePayscale> employeePayscaleList,
                                                  final RequestInfo requestInfo) {
-        final PayscaleInfoResponse payscaleResponse = new PayscaleInfoResponse();
-        payscaleResponse.setPayscaleHeader(payscaleHeaderList);
+        final EmployeePayscaleResponse employeePayscaleResponse = new EmployeePayscaleResponse();
+        employeePayscaleResponse.setEmployeePayscale(employeePayscaleList);
         final ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
         responseInfo.setStatus(HttpStatus.OK.toString());
-        payscaleResponse.setResponseInfo(responseInfo);
-        return new ResponseEntity<>(payscaleResponse, HttpStatus.OK);
+        employeePayscaleResponse.setResponseInfo(responseInfo);
+        return new ResponseEntity<>(employeePayscaleResponse, HttpStatus.OK);
 
     }
-
 }

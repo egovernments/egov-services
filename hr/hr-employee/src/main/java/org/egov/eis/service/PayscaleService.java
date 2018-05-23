@@ -42,20 +42,13 @@ package org.egov.eis.service;
 
 
 import org.egov.common.contract.request.RequestInfo;
-import org.egov.eis.model.Assignment;
-import org.egov.eis.model.Employee;
 import org.egov.eis.model.PayscaleDetails;
 import org.egov.eis.model.PayscaleHeader;
-import org.egov.eis.model.enums.EntityType;
-import org.egov.eis.repository.EmployeeRepository;
 import org.egov.eis.repository.PayscaleRepository;
-import org.egov.eis.service.helper.EmployeeHelper;
-import org.egov.eis.web.contract.EmployeeRequest;
 import org.egov.eis.web.contract.PayscaleGetRequest;
 import org.egov.eis.web.contract.PayscaleRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -132,7 +125,7 @@ public class PayscaleService {
                 payscaleRepository.updatePayscaleDetails(payscaleDets);
             }
         });
-        deleteAssignmentsInDBThatAreNotInInput(payscaleHeader.getPayscaleDetails(), payscaleDetails, payscaleHeader.getId(),
+        deletePayDetsInDBThatAreNotInInput(payscaleHeader.getPayscaleDetails(), payscaleDetails, payscaleHeader.getId(),
                 payscaleHeader.getTenantId());
     }
 
@@ -169,7 +162,7 @@ public class PayscaleService {
     }
 
 
-    private void deleteAssignmentsInDBThatAreNotInInput(List<PayscaleDetails> inputPayscaleDets,
+    private void deletePayDetsInDBThatAreNotInInput(List<PayscaleDetails> inputPayscaleDets,
                                                         List<PayscaleDetails> payscalDetsFromDb, Long payscaleHeaderid, String tenantId) {
         List<PayscaleDetails> payDetsToDelete = getListOfPayscaleDetailsToDelete(inputPayscaleDets, payscalDetsFromDb);
         List<Long> payDetailIdsToDelete = payDetsToDelete.stream().map(PayscaleDetails::getId)

@@ -38,29 +38,31 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.eis.repository.rowmapper;
+package org.egov.eis.web.contract;
 
-import org.egov.eis.model.PayscaleDetails;
-import org.springframework.dao.DataAccessException;
-import org.springframework.jdbc.core.RowMapper;
-import org.springframework.stereotype.Component;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.egov.common.contract.response.ResponseInfo;
+import org.egov.eis.model.EmployeePayscale;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
+import java.util.List;
 
-@Component
-public class PayscaleDetailsRowMapper implements RowMapper<PayscaleDetails> {
+@Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+public class EmployeePayscaleResponse {
 
-    @Override
-    public PayscaleDetails mapRow(ResultSet rs, int rowNum) throws SQLException, DataAccessException {
-        PayscaleDetails payscaleDetails = new PayscaleDetails();
-        payscaleDetails.setId((Long) rs.getObject("id"));
-        payscaleDetails.setPayscaleHeaderId((Long) rs.getObject("payscaleHeaderId"));
-        payscaleDetails.setBasicFrom((Long) rs.getObject("basicFrom"));
-        payscaleDetails.setBasicTo((Long) rs.getObject("basicTo"));
-        payscaleDetails.setIncrement((Long) rs.getObject("increment"));
-        payscaleDetails.setTenantId(rs.getString("tenantId"));
+    @NotNull
+    @JsonProperty("ResponseInfo")
+    private ResponseInfo responseInfo;
 
-        return payscaleDetails;
-    }
+    @NotNull
+    @JsonProperty("EmployeePayscale")
+    private List<EmployeePayscale> employeePayscale = new ArrayList<>();
 }

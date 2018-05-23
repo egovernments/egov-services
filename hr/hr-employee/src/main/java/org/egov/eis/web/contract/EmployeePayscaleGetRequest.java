@@ -41,29 +41,49 @@
 package org.egov.eis.web.contract;
 
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.egov.common.contract.response.ResponseInfo;
-import org.egov.eis.model.PayscaleHeader;
+import org.springframework.format.annotation.DateTimeFormat;
 
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
-
+import javax.validation.constraints.Size;
+import java.util.Date;
+import java.util.List;
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class PayscaleResponse {
+public class EmployeePayscaleGetRequest {
+
+    private List<Long> id;
+
+    private Long employee;
+
+    private Long payscaleHeader;
+
+    @DateTimeFormat(pattern = "dd/MM/yyyy")
+    @JsonFormat(pattern = "dd/MM/yyyy")
+    private Date effectiveFrom;
+
+    private String incrementMonth;
 
     @NotNull
-    @JsonProperty("ResponseInfo")
-    private ResponseInfo responseInfo;
+    @Size(max = 250)
+    private String tenantId;
 
-    @NotNull
-    @JsonProperty("PayscaleHeader")
-    private PayscaleHeader payscaleHeader = new PayscaleHeader();
+    private String sortBy;
 
+    private String sortOrder;
+
+    @Min(1)
+    @Max(500)
+    private Short pageSize;
+
+    private Short pageNumber;
 }

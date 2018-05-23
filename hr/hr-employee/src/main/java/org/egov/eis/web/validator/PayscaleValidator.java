@@ -40,12 +40,23 @@
 
 package org.egov.eis.web.validator;
 
+import org.egov.common.contract.request.RequestInfo;
+import org.egov.eis.model.Employee;
+import org.egov.eis.model.EmployeePayscale;
 import org.egov.eis.model.PayscaleHeader;
 import org.egov.eis.repository.PayscaleRepository;
-import org.egov.eis.web.contract.PayscaleRequest;
+import org.egov.eis.service.EmployeeService;
+import org.egov.eis.service.PayscaleService;
+import org.egov.eis.web.contract.EmployeePayscaleRequest;
+import org.egov.eis.web.contract.PayscaleGetRequest;
+import org.egov.eis.web.errorhandler.InvalidDataException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 @Component
 public class PayscaleValidator {
@@ -53,9 +64,37 @@ public class PayscaleValidator {
     @Autowired
     private PayscaleRepository payscaleRepository;
 
+    @Autowired
+    private PayscaleService payscaleService;
+
+    @Autowired
+    private EmployeeService employeeService;
+
     public void validatePayscaleRequest(PayscaleHeader payscaleHeader, Errors errors) {
-        if(payscaleRepository.checkIfPayscaleExists(payscaleHeader.getId(), payscaleHeader.getPayscale(), payscaleHeader.getTenantId()))
+        if (payscaleRepository.checkIfPayscaleExists(payscaleHeader.getId(), payscaleHeader.getPayscale(), payscaleHeader.getTenantId()))
             errors.rejectValue("payscaleHeader.payscale", "invalid",
                     "Payscale already exists.");
+    }
+
+    public void validateEmpPayscaleReuest(List<EmployeePayscale> employeePayscale, RequestInfo requestInfo, Errors errors) {
+        for (int index = 0; index < employeePayscale.size(); index++) {
+
+            PayscaleGetRequest payscaleGetRequest = new PayscaleGetRequest();
+            payscaleGetRequest.setId(new ArrayList<>(Arrays.asList(employeePayscale.get(index).getPayscaleHeader().getId())));
+            payscaleGetRequest.setTenantId(employeePayscale.get(index).getTenantId());
+
+            PayscaleHeader payscaleHeader = payscaleService.getPayscaleHeaders(payscaleGetRequest, requestInfo).get(0);
+
+            Employee employee = employeeService.getEmployee(employeePayscale.get(index).getEmployee().getId(), employeePayscale.get(index).getTenantId(), requestInfo);
+
+            if ((employeePayscale.get(index).getBasicAmount() < payscaleHeader.getAmountFrom()) || (employeePayscale.get(index).getBasicAmount() > payscaleHeader.getAmountTo()))
+                errors.rejectValue("employeePayscale[" + index + "]", "invalid",
+                        "Basic Amount should be between " + payscaleHeader.getAmountFrom() + " to " + payscaleHeader.getAmountTo());
+
+            if (employee.getDateOfAppointment() != null && !employee.getDateOfAppointment().equals("") && employeePayscale.get(index).getEffectiveFrom().before(employee.getDateOfAppointment()))
+                errors.rejectValue("employeePayscale[" + index + "]", "invalid",
+                        "Effective from should be greater than employee appointment date");
+
+        }
     }
 }

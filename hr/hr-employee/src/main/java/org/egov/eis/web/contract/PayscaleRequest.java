@@ -43,12 +43,9 @@ package org.egov.eis.web.contract;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 import org.egov.common.contract.request.RequestInfo;
-import org.egov.eis.model.PayscaleDetails;
 import org.egov.eis.model.PayscaleHeader;
 
 import javax.validation.constraints.NotNull;
-import java.util.ArrayList;
-import java.util.List;
 
 @Data
 @Builder

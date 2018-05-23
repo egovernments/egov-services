@@ -38,32 +38,55 @@
 *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
 */
 
-package org.egov.eis.web.contract;
+package org.egov.eis.model;
 
-
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.egov.common.contract.response.ResponseInfo;
-import org.egov.eis.model.PayscaleHeader;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+import java.util.Date;
 
 
 @Data
-@Builder
-@NoArgsConstructor
 @AllArgsConstructor
-public class PayscaleResponse {
+@NoArgsConstructor
+@Builder
+public class EmployeePayscale {
+
+    private Long id;
+
+    private Employee employee;
+
+    private PayscaleHeader payscaleHeader;
+
+    @DateTimeFormat(pattern = "dd/MM/yyyy")
+    @JsonFormat(pattern = "dd/MM/yyyy")
+    private Date effectiveFrom;
+
+    private Long basicAmount;
+
+    private String incrementMonth;
+
+    private String reason;
+
+    private Long createdBy;
+
+    @DateTimeFormat(pattern = "dd/MM/yyyy")
+    @JsonFormat(pattern = "dd/MM/yyyy")
+    private Date createdDate;
+
+    private Long lastModifiedBy;
+
+    @DateTimeFormat(pattern = "dd/MM/yyyy")
+    @JsonFormat(pattern = "dd/MM/yyyy")
+    private Date lastModifiedDate;
 
     @NotNull
-    @JsonProperty("ResponseInfo")
-    private ResponseInfo responseInfo;
-
-    @NotNull
-    @JsonProperty("PayscaleHeader")
-    private PayscaleHeader payscaleHeader = new PayscaleHeader();
-
+    @Size(max = 250)
+    private String tenantId;
 }

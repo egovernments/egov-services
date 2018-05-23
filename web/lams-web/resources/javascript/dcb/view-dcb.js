@@ -73,10 +73,77 @@ class ViewDCB extends React.Component {
           tenantId
         }).responseJSON["Agreements"][0] || {};
       var demandDetails = agreement.legacyDemands[0].demandDetails;
+
+
+      var demands = [];
+      var rentDemands = [];
+      var penaltyDemands = [];
+      var sgstDemands = [];
+      var cgstDemands = [];
+      var serviceTaxDemands = [];
+      var advanTaxDemands = [];
+
+      demandDetails.forEach((demand) => {
+
+        if (demand.taxReason.toLowerCase() === "rent")
+          rentDemands.push(demand);
+        else if (demand.taxReason.toLowerCase() === "penalty")
+          penaltyDemands.push(demand);
+        else if (demand.taxReason.toLowerCase() === "cgst" || demand.taxReason.toLowerCase() === "central_gst")
+          cgstDemands.push(demand);
+        else if (demand.taxReason.toLowerCase() === "sgst" || demand.taxReason.toLowerCase() === "state_gst")
+          sgstDemands.push(demand);
+        else if (demand.taxReason.toLowerCase() === "servicetax" || demand.taxReason.toLowerCase() === "service_tax" || demand.taxReason.toLowerCase() === "service tax")
+          serviceTaxDemands.push(demand);
+        else if (demand.taxReason.toLowerCase() === "advance tax" || demand.taxReason.toLowerCase() === "service_tax")
+          advanTaxDemands.push(demand);
+
+      });
+
+      var index = 0;
+
+      demands.splice(index, 0, advanTaxDemands[0]);
+      index++;
+
+      for (var i = 0; i < rentDemands.length; i++) {
+  
+        demands.splice(index, 0, rentDemands[i]);
+        index++;
+  
+        penaltyDemands.forEach((pDemand) => {
+          if (pDemand.taxPeriod === rentDemands[i].taxPeriod) {
+            demands.splice(index, 0, pDemand);
+            index++;
+          }
+        });
+  
+        sgstDemands.forEach((pDemand) => {
+          if (pDemand.taxPeriod === rentDemands[i].taxPeriod) {
+            demands.splice(index, 0, pDemand);
+            index++;
+          }
+        });
+  
+        cgstDemands.forEach((pDemand) => {
+          if (pDemand.taxPeriod === rentDemands[i].taxPeriod) {
+            demands.splice(index, 0, pDemand);
+            index++;
+          }
+        });
+  
+        serviceTaxDemands.forEach((pDemand) => {
+          if (pDemand.taxPeriod === rentDemands[i].taxPeriod) {
+            demands.splice(index, 0, pDemand);
+            index++;
+          }
+        });
+  
+      }
+
       this.setState({
         ...this.state,
         agreement: agreement,
-        demandDetails:demandDetails
+        demandDetails:demands
 
       });
       }

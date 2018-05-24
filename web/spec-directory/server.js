@@ -1,15 +1,15 @@
-var express = require('express');
-const path = require('path');
-const http = require('http');
-const bodyParser = require('body-parser');
-const config = require('./config');
-const fs = require('fs');
-const SwaggerParser = require('swagger-parser');
-var $RefParser = require('json-schema-ref-parser');
+var express = require("express");
+const path = require("path");
+const http = require("http");
+const bodyParser = require("body-parser");
+const config = require("./config");
+const fs = require("fs");
+const SwaggerParser = require("swagger-parser");
+var $RefParser = require("json-schema-ref-parser");
 const app = express();
-var request = require('request');
+var request = require("request");
 
-app.use(express.static(__dirname + '/'));
+app.use(express.static(__dirname + "/"));
 app.use(bodyParser.json());
 
 // app.use(function(req, res, next) {
@@ -24,42 +24,42 @@ app.use(bodyParser.json());
 
 function getType(type) {
   switch (type) {
-    case 'integer':
-      return 'number';
-    case 'float':
-      return 'number';
-    case 'double':
-      return 'number';
-    case 'long':
-      return 'number';
-    case 'number':
-      return 'number';
-    case 'string':
-      return 'text';
-    case 'boolean':
-      return 'checkbox';
-    case 'date':
-      return 'datePicker';
-    case 'email':
-      return 'email';
-    case 'pan':
-      return 'pan';
-    case 'pinCode':
-      return 'pinCode';
-    case 'mobileNumber':
-      return 'mobileNumber';
-    case 'autoComplete':
-      return 'autoCompelete';
-    case 'aadhar':
-      return 'aadhar';
-    case 'checkbox':
-      return 'checkbox';
-    case 'singleValueList':
-      return 'singleValueList';
-    case 'multiValueList':
-      return 'multiValueList';
+    case "integer":
+      return "number";
+    case "float":
+      return "number";
+    case "double":
+      return "number";
+    case "long":
+      return "number";
+    case "number":
+      return "number";
+    case "string":
+      return "text";
+    case "boolean":
+      return "checkbox";
+    case "date":
+      return "datePicker";
+    case "email":
+      return "email";
+    case "pan":
+      return "pan";
+    case "pinCode":
+      return "pinCode";
+    case "mobileNumber":
+      return "mobileNumber";
+    case "autoComplete":
+      return "autoCompelete";
+    case "aadhar":
+      return "aadhar";
+    case "checkbox":
+      return "checkbox";
+    case "singleValueList":
+      return "singleValueList";
+    case "multiValueList":
+      return "multiValueList";
     default:
-      return '';
+      return "";
   }
 }
 
@@ -112,18 +112,18 @@ var getFieldsFromInnerObject = function(
 ) {
   // console.log("Iner object called with - " + jPath);
   for (let key in properties) {
-    var isUnique = getPropertyStatus(module, master, '$.' + key);
-    var isSpecificHeader = getPropertyStatus(module, master, '$.' + key);
+    var isUnique = getPropertyStatus(module, master, "$." + key);
+    var isSpecificHeader = getPropertyStatus(module, master, "$." + key);
     // console.log(module, master, key, getPropertyStatus(module, master, key));
     //Adding tenantId and id as per discussion on Friday (08-12-2017)
-    if ([/*"id", "tenantId",*/ 'auditDetails', 'assigner'].indexOf(key) > -1)
+    if ([/*"id", "tenantId",*/ "auditDetails", "assigner"].indexOf(key) > -1)
       continue;
     if (properties[key].properties) {
       //its an inner object - should be another MDMS object - make UI paint a singleValueList with appropriate URL
       //Alert !!!! Hardcoding....
 
       //Adding custom specs for Address Block as per discussion on Friday (08-12-2017)
-      if (key == 'address' || key == 'wasteType') {
+      if (key == "address" || key == "wasteType") {
         // console.log(properties[key].properties);
         getFieldsFromInnerObject(
           fields,
@@ -131,16 +131,16 @@ var getFieldsFromInnerObject = function(
           properties[key].properties,
           module,
           master,
-          (isArray ? jPath + '[0]' : jPath) + '.' + key,
+          (isArray ? jPath + "[0]" : jPath) + "." + key,
           false,
           properties[key].properties.required || []
         );
       } else {
         fields.push({
           name: key,
-          jsonPath: (isArray ? jPath + '[0]' : jPath) + '.' + key,
-          label: 'MdmsMetadata.masterData.' + module + '.' + master + '.' + key, //Changes (08-12-2017)
-          type: 'singleValueList',
+          jsonPath: (isArray ? jPath + "[0]" : jPath) + "." + key,
+          label: "MdmsMetadata.masterData." + module + "." + master + "." + key, //Changes (08-12-2017)
+          type: "singleValueList",
           isRequired:
             properties[key].required ||
             (required &&
@@ -148,35 +148,35 @@ var getFieldsFromInnerObject = function(
               required.indexOf(key) > -1)
               ? true
               : false,
-          defaultValue: properties[key].default || '',
+          defaultValue: properties[key].default || "",
           url:
-            '/egov-mdms-service/v1/_get?&moduleName=' +
+            "/egov-mdms-service/v1/_get?&moduleName=" +
             module +
-            '&masterName=' +
+            "&masterName=" +
             master +
-            '|$.MdmsRes.' +
+            "|$.MdmsRes." +
             module +
-            '.' +
+            "." +
             key +
-            '.*.id|$.MdmsRes.' +
+            ".*.id|$.MdmsRes." +
             module +
-            '.' +
+            "." +
             key +
-            '.*.name',
+            ".*.name",
           isStateLevel: false,
-          apiKey: jPath + '.' + key,
+          apiKey: jPath + "." + key,
           isUnique: isUnique
         });
         if (getHeaderStatus(module, master, key)) {
           header.push({
             label:
-              'MdmsMetadata.masterData.' + module + '.' + master + '.' + key
+              "MdmsMetadata.masterData." + module + "." + master + "." + key
           });
         }
       }
     } else if (properties[key].items && properties[key].items.properties) {
-      if (jPath == 'WasteSubType') console.log(jPath + ' is an array');
-      if (jPath.search('.' + key) < 2)
+      if (jPath == "WasteSubType") console.log(jPath + " is an array");
+      if (jPath.search("." + key) < 2)
         //What is this for??
         getFieldsFromInnerObject(
           fields,
@@ -184,20 +184,20 @@ var getFieldsFromInnerObject = function(
           properties[key].items.properties,
           module,
           master,
-          (isArray ? jPath + '[0]' : jPath) + '.' + key,
+          (isArray ? jPath + "[0]" : jPath) + "." + key,
           true,
           properties[key].items.properties.required || []
         );
     } else {
       fields.push({
         name: key,
-        jsonPath: (isArray ? jPath + '[0]' : jPath) + '.' + key,
-        label: 'MdmsMetadata.masterData.' + module + '.' + master + '.' + key, //Changes (08-12-2017)
-        pattern: properties[key].pattern || '',
+        jsonPath: (isArray ? jPath + "[0]" : jPath) + "." + key,
+        label: "MdmsMetadata.masterData." + module + "." + master + "." + key, //Changes (08-12-2017)
+        pattern: properties[key].pattern || "",
         type: properties[key].enum
-          ? 'singleValueList'
+          ? "singleValueList"
           : properties[key].format &&
-            ['number', 'integer', 'double', 'long', 'float'].indexOf(
+            ["number", "integer", "double", "long", "float"].indexOf(
               properties[key].type
             ) == -1
             ? getType(properties[key].format)
@@ -210,17 +210,17 @@ var getFieldsFromInnerObject = function(
             ? true
             : false,
         isDisabled: properties[key].readOnly ? true : false,
-        defaultValue: properties[key].default || '',
+        defaultValue: properties[key].default || "",
         maxLength: properties[key].maxLength,
         minLength: properties[key].minLength,
         patternErrorMsg: properties[key].pattern
-          ? module + '.create.field.message.' + key
-          : '',
+          ? module + ".create.field.message." + key
+          : "",
         isUnique: isUnique
       });
       if (getHeaderStatus(module, master, key)) {
         header.push({
-          label: 'MdmsMetadata.masterData.' + module + '.' + master + '.' + key
+          label: "MdmsMetadata.masterData." + module + "." + master + "." + key
         });
       }
     }
@@ -254,7 +254,7 @@ for (module in configData) {
   for (var i = 0; i < configData[module].masters.length; i++) {
     if (
       configData[module].isSpecificHeader &&
-      configData[module].masters[i].hasOwnProperty('specificHeaders')
+      configData[module].masters[i].hasOwnProperty("specificHeaders")
     ) {
       if (
         !specificHeaderObj[module.toLowerCase()][
@@ -275,7 +275,7 @@ for (module in configData) {
 // console.log(specificHeaderObj);
 
 request.get(
-  'http://raw.githubusercontent.com/egovernments/egov-services/master/core/egov-mdms-create/src/main/resources/master-config.json',
+  "http://raw.githubusercontent.com/egovernments/egov-services/master/core/egov-mdms-create/src/main/resources/master-config.json",
   function(error, response, body) {
     if (!error && response.statusCode == 200) {
       var allModuleData = JSON.parse(body);
@@ -307,18 +307,18 @@ for (var i = 0; i < urls.length; i++) {
   SwaggerParser.dereference(urls[i])
     .then(function(yamlJSON) {
       // console.log(yamlJSON)
-      let module = yamlJSON['x-module'];
+      let module = yamlJSON["x-module"];
       if (module) {
         mainObj[module] = yamlJSON.definitions;
       } else {
         let basePath = [];
-        basePath = yamlJSON.basePath.split('-')[0].split(''); // "/asset-services" type pattern should be in basepath
-        let index = basePath.indexOf('/');
+        basePath = yamlJSON.basePath.split("-")[0].split(""); // "/asset-services" type pattern should be in basepath
+        let index = basePath.indexOf("/");
         if (index > -1) {
           basePath.splice(index, 1);
         }
 
-        mainObj[basePath.join('')] = yamlJSON.definitions;
+        mainObj[basePath.join("")] = yamlJSON.definitions;
       }
 
       completed_requests++;
@@ -332,7 +332,7 @@ for (var i = 0; i < urls.length; i++) {
           // 2. find unique property in mainObj
           // 3. if exists set flag as true
 
-          console.log('module name is - ' + moduleName);
+          console.log("module name is - " + moduleName);
           finalSpecs[moduleName.toLowerCase()] = {};
           finalSpecsRaw[moduleName.toLowerCase()] = {};
           for (master in mainObj[moduleName]) {
@@ -361,19 +361,19 @@ for (var i = 0; i < urls.length; i++) {
             finalSpecs[moduleName.toLowerCase()].masters[
               master.toLowerCase()
             ].name =
-              '';
+              "";
             finalSpecs[moduleName.toLowerCase()].masters[
               master.toLowerCase()
             ].label =
-              '';
+              "";
             finalSpecs[moduleName.toLowerCase()].masters[
               master.toLowerCase()
             ].type =
-              'multiFieldAddToTable';
+              "multiFieldAddToTable";
             finalSpecs[moduleName.toLowerCase()].masters[
               master.toLowerCase()
             ].jsonPath =
-              '';
+              "";
 
             var header = [];
             var fields = [];
@@ -383,7 +383,7 @@ for (var i = 0; i < urls.length; i++) {
               mainObj[moduleName][master].properties,
               moduleName,
               master,
-              'MdmsMetadata.masterData',
+              "MdmsMetadata.masterData",
               true,
               mainObj[moduleName][master].required || []
             );
@@ -402,9 +402,7 @@ for (var i = 0; i < urls.length; i++) {
         }
 
         // console.log(finalSpecs);
-        console.log(
-          finalSpecsRaw.swm.wastesubtype.properties.wasteType.properties
-        );
+        console.log(finalSpecs.propertytax.masters.propertytype);
       }
     })
     .catch(function(err) {
@@ -414,7 +412,7 @@ for (var i = 0; i < urls.length; i++) {
 
 // }
 
-app.post('/spec-directory/:module/:master', function(req, res, next) {
+app.post("/spec-directory/:module/:master", function(req, res, next) {
   for (var key in req.params) {
     req.params[key] = req.params[key].toLowerCase();
   }
@@ -423,23 +421,23 @@ app.post('/spec-directory/:module/:master', function(req, res, next) {
   console.log(req.params.master);
   var master = req.params.master;
   var module = req.params.module;
-  console.log(getPropertyStatus(module, master, 'code'));
+  console.log(getPropertyStatus(module, master, "code"));
   if (finalSpecs[module] && finalSpecs[module].masters[master]) {
     res.status(200).json(finalSpecs[module].masters[master]);
   } else {
     res.status(400).json({
-      message: 'Invalid parameters'
+      message: "Invalid parameters"
     });
   }
 
   next();
 });
 
-app.get('/spec-directory', (req, res) => {
-  res.sendFile(path.join(__dirname, 'index.html'));
+app.get("/spec-directory", (req, res) => {
+  res.sendFile(path.join(__dirname, "index.html"));
 });
 
-const port = process.env.PORT || '4022';
+const port = process.env.PORT || "4022";
 app.listen(port, function() {
-  console.log('Parser listening on port: ' + port);
+  console.log("Parser listening on port: " + port);
 });

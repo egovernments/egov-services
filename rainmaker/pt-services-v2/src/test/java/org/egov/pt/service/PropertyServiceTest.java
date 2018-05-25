@@ -150,17 +150,5 @@ public class PropertyServiceTest {
     }
 
 
-    public void name() {
-        ClassLoader classLoader = getClass().getClassLoader();
-        String path = "src/test/PropertyRequest.json";
-        try{
-            URL url = classLoader.getResource(path);
-        String s= new String(Files.readAllBytes(new File(path).toPath()));}
-        catch(Exception e){
-            e.printStackTrace();
-            fail();
-        }
-
-
-    }
+ 
 }

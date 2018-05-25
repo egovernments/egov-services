@@ -1,0 +1,122 @@
+{
+  "RequestInfo": {
+    "apiId": null,
+    "userInfo":{
+      "id":"12"
+    },
+    "ver": null,
+    "ts": 0,
+    "action": null,
+    "did": null,
+    "key": null,
+    "msgId": null,
+    "authToken": null
+  },
+  "properties": [
+    {  "id":"one",
+      "tenantId": "default",
+      "status": "ACTIVE",
+      "financialYear": null,
+      "propertyType": null,
+      "owners": [
+        {
+          "userName": null,
+          "password": null,
+          "salutation": null,
+          "name": null,
+          "gender": null,
+          "mobileNumber": null,
+          "emailId": null,
+          "altContactNumber": null,
+          "pan": null,
+          "aadhaarNumber": null,
+          "permanentAddress": null,
+          "permanentCity": null,
+          "permanentPincode": null,
+          "correspondenceCity": null,
+          "correspondencePincode": null,
+          "correspondenceAddress": null,
+          "active": true,
+          "dob": null,
+          "locale": null,
+          "type": null,
+          "signature": null,
+          "accountLocked": true,
+          "fatherOrHusbandName": null,
+          "bloodGroup": null,
+          "identificationMark": null,
+          "photo": null,
+          "createdBy": 0,
+          "createdDate": null,
+          "lastModifiedBy": 0,
+          "lastModifiedDate": 0,
+          "otpReference": null,
+          "tenantId": null,
+          "isPrimaryOwner": true,
+          "isCurrentOwner": true,
+          "ownerShipPercentage": 0,
+          "ownerType": null
+        }
+      ],
+      "address": {
+        "id":"two",
+        "tenantId": null,
+        "latitude": 0,
+        "longitude": 0,
+        "addressNumber": null,
+        "type": null,
+        "addressLine1": null,
+        "addressLine2": null,
+        "landmark": null,
+        "city": null,
+        "pincode": null,
+        "detail": null,
+        "buildingName": null,
+        "street": null,
+        "locality": {
+          "code": "ads",
+          "name": "string",
+          "label": "string",
+          "latitude": "string",
+          "longitude": "string"
+        }
+      },
+      "oldAssessmentNumber": null,
+      "assessmentDate": null,
+      "creationReason": "NEWPROPERTY",
+      "occupancyDate": 0,
+      "propertyDetail": {
+        "id":"three",
+        "source": "MUNICIPAL_RECORDS",
+        "usage": null,
+        "noOfFloors": 0,
+        "landArea": 0,
+        "buildUpArea": 0,
+        "units": [
+          {
+            "tenantId": null,
+            "floorNo": null,
+            "unitType": null,
+            "unitArea": 0,
+            "usage": [
+              {
+                "usage": null,
+                "fromDate": 0,
+                "toDate": 0,
+                "occupancyType": "Owner"
+              }
+            ]
+          }
+        ],
+        "documents": [
+          {
+            "documentType": null,
+            "fileStore": null
+          }
+        ],
+        "additionalDetails": null,
+        "channel": "SYSTEM"
+      }
+    }
+  ]
+}

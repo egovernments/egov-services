@@ -52,17 +52,20 @@ class PayScaleMaster extends React.Component {
     })
   }
 
-  deletePayscaleDetails() {
+  deletePayscaleDetails(ind) {
     let details = Object.assign([], this.state.payscaleSet.payscaleDetails);
-    details.splice(details.length - 1, 1);
+    if (details.length > 1) {
+      details.splice(ind, 1);
 
-    this.setState({
-      payscaleSet: {
-        ...this.state.payscaleSet,
-        payscaleDetails: details
-      }
-    })
-
+      this.setState({
+        payscaleSet: {
+          ...this.state.payscaleSet,
+          payscaleDetails: details
+        }
+      })
+    } else {
+      alert("Cant not Delete all payscale");
+    }
   }
 
   addPayScaleDetails(index) {
@@ -95,15 +98,15 @@ class PayScaleMaster extends React.Component {
 
     if (getUrlVars()["type"]) $('#hp-citizen-title').text(titleCase(getUrlVars()["type"]) + " Pay Scale");
 
-    if (getUrlVars()["type"] === "view") {
-      for (var variable in this.state.payscaleSet)
-        document.getElementById(variable).disabled = true;
-    }
+    if (getUrlVars()["type"] === "view")
+      $('input,select,textarea').prop("disabled", true);
+
 
     if (type === "view" || type === "update") {
-      getCommonMasterById("hr-employee", "payscale/_search", id, function (err, res) {
+      getCommonMasterById("hr-employee", "payscale", id, function (err, res) {
         if (res) {
-          var payscaleSet = res["Grade"][0];
+          var payscaleSet = res["PayscaleHeader"][0];
+          if (!payscaleSet.payscaleDetails[0].increment) payscaleSet.payscaleDetails[0].increment = ""
           _this.setState({
             payscaleSet
           })
@@ -127,18 +130,24 @@ class PayScaleMaster extends React.Component {
     }, _this = this;
 
     let url = "";
-    getUrlVars()["type"] == "update" ? "hr-employee/payscale/_update?tenantId=" : "hr-employee/payscale/_create?tenantId=" 
+    getUrlVars()["type"] == "update" ? url = "/hr-employee/payscale/_update?tenantId=" : url = "/hr-employee/payscale/_create?tenantId="
 
-      $.ajax({    
-        url: baseUrl + url + tenantId,
-        type: 'POST',
-        dataType: 'json',
-        data: JSON.stringify(body),
-        contentType: 'application/json',
-        headers: {
-          'auth-token': authToken
-        },
-        success: function (res) {
+    $.ajax({
+      url: baseUrl + url + tenantId,
+      type: 'POST',
+      dataType: 'json',
+      data: JSON.stringify(body),
+      contentType: 'application/json',
+      headers: {
+        'auth-token': authToken
+      },
+      success: function (res) {
+
+        if (getUrlVars()["type"] === "update") {
+          showSuccess("PayScale Update successfully.");
+          window.location.href = `app/hr/employee/payscale.html`;
+        }
+        else {
           showSuccess("PayScale Created successfully.");
           _this.setState({
             payscaleSet: {
@@ -157,18 +166,19 @@ class PayScaleMaster extends React.Component {
               ]
             }
           })
-        },
-        error: function (err) {
-          showError(err);
         }
-      });
-    
+      },
+      error: function (err) {
+        showError(err);
+      }
+    });
+
   }
 
 
   render() {
 
-    let { handleChange, addOrUpdate, handleDetailsChange, deletePayscaleDetails } = this;
+    let { handleChange, addOrUpdate, handleDetailsChange, deletePayscaleDetails, addPayScaleDetails } = this;
     let mode = getUrlVars()["type"];
     let { paycommission, payscale, amountFrom, amountTo, payscaleDetails } = this.state.payscaleSet;
 
@@ -178,13 +188,16 @@ class PayScaleMaster extends React.Component {
       }
     };
 
-    const renderDelBtn = function (ind) {
-      if (ind != 0 && ind == payscaleDetails.length - 1)
+
+    const renderPlusMinus = function (ind) {
+      if (mode !== "view")
         return (
-          <button type="button" className="btn btn-close" style={{ "color": "#000000" }} onClick={() => deletePayscaleDetails()}>Delete</button>
+          <td>
+            <button type="button" className="btn btn-default btn-action" onClick={() => addPayScaleDetails(payscaleDetails.length)}><span className="glyphicon glyphicon-plus" aria-hidden="true"></span></button>
+            &nbsp;<button type="button" className="btn btn-default btn-action" onClick={() => deletePayscaleDetails(ind)}><span className="glyphicon glyphicon-minus" aria-hidden="true"></span></button>
+          </td>
         )
     }
-
     const renderPayScaleDetails = function () {
 
       if (payscaleDetails && payscaleDetails.length) {
@@ -205,13 +218,21 @@ class PayScaleMaster extends React.Component {
                 <input type="number" name="increment" id="increment" value={payscaleDetail["increment"]}
                   onChange={(e) => { handleDetailsChange(e, ind, "increment") }} required />
               </td>
-              <td>{renderDelBtn(ind)}</td>
+
+              {renderPlusMinus(ind)}
+
             </tr>
 
           );
         })
       }
     }
+
+    const renderActionButton = function () {
+      if (mode !== "view")
+        return (<th>Action</th>)
+    }
+
 
     return (<div>
       <h3>{getUrlVars()["type"] ? titleCase(getUrlVars()["type"]) : "Create"} Pay Scale</h3>
@@ -283,7 +304,7 @@ class PayScaleMaster extends React.Component {
                     <th>From Basic<span>* </span></th>
                     <th>To Basic<span>* </span></th>
                     <th>Increment<span>* </span></th>
-                    <th>Action</th>
+                    {renderActionButton()}
                   </tr>
                 </thead>
                 <tbody id="tableBody">
@@ -292,9 +313,6 @@ class PayScaleMaster extends React.Component {
                   }
                 </tbody>
               </table>
-              <div className="text-right">
-                <button type="button" className="btn btn-submit" onClick={(e) => { this.addPayScaleDetails(payscaleDetails.length) }}>Add Payscale Details</button>
-              </div>
             </div>
           </div>
           <br />

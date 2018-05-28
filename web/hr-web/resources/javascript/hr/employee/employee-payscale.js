@@ -4,7 +4,7 @@ class EmployeePayscale extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            employeePayscale: {
+            employeePayscale: [{
                 id: "",
                 employee: {
                     "id": "",
@@ -22,7 +22,7 @@ class EmployeePayscale extends React.Component {
                 "createdDate": "",
                 "lastModifiedDate": "",
                 "tenantId": tenantId
-            },
+            }],
             currentEmployee: {
                 code: "",
                 name: "",
@@ -33,7 +33,8 @@ class EmployeePayscale extends React.Component {
         this.handleChange = this.handleChange.bind(this);
         this.addOrUpdate = this.addOrUpdate.bind(this);
         this.setInitialState = this.setInitialState.bind(this);
-        this.handleChangeThreeLevel = this.handleChangeThreeLevel.bind(this);
+        this.addPayScaleDetails = this.addPayScaleDetails.bind(this);
+        this.deletePayscaleDetails = this.deletePayscaleDetails.bind(this);
     }
 
     setInitialState(initState) {
@@ -41,7 +42,7 @@ class EmployeePayscale extends React.Component {
     }
 
     componentDidMount() {
-       
+
         if (window.opener && window.opener.document) {
             var logo_ele = window.opener.document.getElementsByClassName("homepage_logo");
             if (logo_ele && logo_ele[0]) {
@@ -68,6 +69,12 @@ class EmployeePayscale extends React.Component {
             checkCountAndCall("payscaleList", res);
         });
 
+        commonApiPost("hr-employee", "employeepayscale", "_search", { tenantId }, function (err, res) {
+            if (res) {
+                console.log(res);
+            }
+        });
+
         getCommonMasterById("hr-employee", "employees", getUrlVars()["id"], function (err, res) {
             if (res) {
                 var obj = res.Employee[0];
@@ -85,50 +92,115 @@ class EmployeePayscale extends React.Component {
                         code: obj.code,
                         department: department,
                         designation: designation
-                    }, employeePayscale: {
-                        ..._this.state.employeePayscale,
-                        employee: { id: obj.id }
+                        // }, employeePayscale: {
+                        //     ..._this.state.employeePayscale,
+                        //     employee: { id: obj.id }
                     }
                 })
             }
         });
 
-        $('#effectiveFrom').datepicker({
+    }
+
+    componentDidUpdate(prevProps, prevState) {
+        let _this = this;
+        let details = Object.assign([], _this.state.employeePayscale);
+
+        $('#effectiveFrom_0').datepicker({
             format: 'dd/mm/yyyy',
             autoclose: true
         });
-        $('#effectiveFrom').on("change", function (e) {
+        $('#effectiveFrom_0').on("change", function (e) {
+            details[e.target.name].effectiveFrom = e.target.value;
             _this.setState({
-                employeePayscale: {
-                    ..._this.state.employeePayscale,
-                    effectiveFrom: e.target.value
-                }
+                employeePayscale: details
             })
         });
 
+        if (prevState.employeePayscale !== _this.state.employeePayscale) {
+
+            
+            let names = "";
+            details.forEach(function (item, index) {
+                if (index == 0)
+                    names = names + "#effectiveFrom_" + index;
+                else
+                    names = names + ",#effectiveFrom_" + index;
+            })
+
+            $(names).datepicker({
+                format: 'dd/mm/yyyy',
+                autoclose: true
+            });
+            $(names).on("change", function (e) {
+                details[e.target.name].effectiveFrom = e.target.value;
+                _this.setState({
+                    employeePayscale: details
+                })
+            });
+        }
     }
 
-    handleChangeThreeLevel(e, pName, name) {
-        var _this = this;
-        this.setState({
-            employeePayscale: {
-                ...this.state.employeePayscale,
-                [pName]: {
-                    ...this.state.employeePayscale[pName],
-                    [name]: e.target.value
-                }
-            }
-        });
-    }
+    handleChange(e, ind, name) {
 
-    handleChange(e, name) {
+        let details = Object.assign([], this.state.employeePayscale);
+
+        if (name === "payscaleHeader")
+            details[ind][name]["id"] = e.target.value;
+        else
+            details[ind][name] = e.target.value;
+
         this.setState({
-            employeePayscale: {
-                ...this.state.employeePayscale,
-                [name]: e.target.type === 'checkbox' ? e.target.checked : e.target.value
-            }
+            employeePayscale: details
         })
     }
+
+    deletePayscaleDetails(ind) {
+        let details = Object.assign([], this.state.employeePayscale);
+        if (details.length > 1) {
+            details.splice(ind, 1);
+
+            this.setState({
+                employeePayscale: details
+            })
+        } else {
+            alert("Cant not Delete all payscale");
+        }
+    }
+
+    addPayScaleDetails(index) {
+
+        let details = Object.assign([], this.state.employeePayscale);
+
+
+        let newDetails = {
+            id: "",
+            employee: {
+                "id": "",
+                "code": ""
+            },
+            payscaleHeader: {
+                "id": ""
+            },
+            "effectiveFrom": "",
+            "basicAmount": "",
+            "incrementMonth": "",
+            "reason": "",
+            "createdBy": "",
+            "lastModifiedBy": "",
+            "createdDate": "",
+            "lastModifiedDate": "",
+            "tenantId": tenantId
+        }
+
+        details.push(newDetails);
+
+        this.setState({
+            employeePayscale: details
+        })
+
+    }
+
 
     close() {
         // widow.close();
@@ -139,12 +211,17 @@ class EmployeePayscale extends React.Component {
         e.preventDefault();
         var _this = this;
 
-        let tempInfo = Object.assign({}, _this.state.employeePayscale);
+        let tempInfo = Object.assign([], _this.state.employeePayscale);
+
+        tempInfo.forEach(function (item) {
+            item.employee.id = getUrlVars()["id"];
+        })
+
         let type = getUrlVars()["type"];
         let body = {
             "RequestInfo": requestInfo,
-            "EmployeePayscale": [tempInfo]
-          }
+            "EmployeePayscale": tempInfo
+        }
 
         $.ajax({
             url: baseUrl + "/hr-employee/employeepayscale/_create?tenantId=" + tenantId,
@@ -170,7 +247,7 @@ class EmployeePayscale extends React.Component {
     }
 
     render() {
-        let { handleChange, addOrUpdate, handleChangeThreeLevel } = this;
+        let { handleChange, addOrUpdate, deletePayscaleDetails, addPayScaleDetails } = this;
         let { currentEmployee, employeePayscale, payscaleList } = this.state;
         let { employee, payscaleHeader, effectiveFrom, basicAmount, incrementMonth, reason } = this.state.employeePayscale;
         let mode = getUrlVars()["type"];
@@ -196,13 +273,70 @@ class EmployeePayscale extends React.Component {
 
         }
 
+        const renderPlusMinus = function (ind) {
+            if (mode !== "view")
+                return (
+                    <td>
+                        <button type="button" className="btn btn-default btn-action" onClick={() => addPayScaleDetails(employeePayscale.length)}><span className="glyphicon glyphicon-plus" aria-hidden="true"></span></button>
+                        &nbsp;<button type="button" className="btn btn-default btn-action" onClick={() => deletePayscaleDetails(ind)}><span className="glyphicon glyphicon-minus" aria-hidden="true"></span></button>
+                    </td>
+                )
+        }
+        const renderPayScaleDetails = function () {
+            if (employeePayscale && employeePayscale.length) {
+
+                return employeePayscale.map(function (payscaleDetail, ind) {
+                    return (
+
+                        <tr key={ind} id={ind} >
+                            <td>
+                                <input type="text" id={"effectiveFrom_" + ind} key={"payscale" + ind} name={ind} value={payscaleDetail["effectiveFrom"]} required />
+                            </td>
+                            <td>
+                                <select id="payscaleHeader" name="payscaleHeader" value={payscaleDetail["payscaleHeader"].id}
+                                    onChange={(e) => { handleChange(e, ind, "payscaleHeader") }} required >
+                                    <option value=""> Select Payscale</option>
+                                    {renderOption(payscaleList)}
+                                </select>
+                            </td>
+                            <td>
+                                <input type="number" id="basicAmount" name="basicAmount" value={payscaleDetail["basicAmount"]}
+                                    onChange={(e) => { handleChange(e, ind, "basicAmount") }} required />
+
+                            </td>
+                            <td>
+                                <select id="incrementMonth" name="incrementMonth" value={payscaleDetail["incrementMonth"]}
+                                    onChange={(e) => { handleChange(e, ind, "incrementMonth") }} required>
+                                    <option value=""> Select month</option>
+                                    {renderMonths(months)}
+                                </select>
+                            </td>
+                            <td>
+                                <textarea rows="4" cols="50" id="reason" name="reason" value={payscaleDetail["reason"]}
+                                    onChange={(e) => { handleChange(e, ind, "reason") }} required></textarea>
+                            </td>
+                            {renderPlusMinus(ind)}
+
+                        </tr>
+
+                    );
+                })
+            }
+        }
+
+
         const showActionButton = function () {
             if (mode === "create" || !(mode)) {
                 return (<button type="submit" className="btn btn-submit">Create</button>);
-            } else if(mode === "update"){
+            } else if (mode === "update") {
                 return (<button type="submit" className="btn btn-submit">Update</button>);
             }
         };
+
+        const renderActionButton = function () {
+            if (mode !== "view")
+                return (<th>Action</th>)
+        }
 
         return (
             <div>
@@ -212,7 +346,7 @@ class EmployeePayscale extends React.Component {
                     <fieldset>
 
                         <div className="form-section">
-                        
+
                             <div className="row">
                                 <div className="col-sm-6">
                                     <div className="row">
@@ -220,7 +354,7 @@ class EmployeePayscale extends React.Component {
                                             <label htmlFor="">Employee Name</label>
                                         </div>
                                         <div className="col-sm-6">
-                                            <input type="text" id="name" name="name"  value={currentEmployee.name} disabled />
+                                            <input type="text" id="name" name="name" value={currentEmployee.name} disabled />
                                         </div>
                                     </div>
                                 </div>
@@ -230,12 +364,12 @@ class EmployeePayscale extends React.Component {
                                             <label htmlFor="">Employee Code</label>
                                         </div>
                                         <div className="col-sm-6">
-                                            <input type="text" id="code" name="code"  value={currentEmployee.code} disabled />
+                                            <input type="text" id="code" name="code" value={currentEmployee.code} disabled />
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            
+
                             <div className="row">
                                 <div className="col-sm-6">
                                     <div className="row">
@@ -243,7 +377,7 @@ class EmployeePayscale extends React.Component {
                                             <label htmlFor="department">Employee Department</label>
                                         </div>
                                         <div className="col-sm-6">
-                                            <input type="text" id="department" name="department"  value={currentEmployee.department} disabled />
+                                            <input type="text" id="department" name="department" value={currentEmployee.department} disabled />
                                         </div>
                                     </div>
                                 </div>
@@ -253,88 +387,38 @@ class EmployeePayscale extends React.Component {
                                             <label htmlFor="">Employee Designation</label>
                                         </div>
                                         <div className="col-sm-6">
-                                            <input type="text" id="designation" name="designation"  value={currentEmployee.designation} disabled />
+                                            <input type="text" id="designation" name="designation" value={currentEmployee.designation} disabled />
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        
-                        </div>
 
+                        </div>
                         <br />
-                        
                         <div className="form-section">
 
-                            <div className="row">
-                                <div className="col-sm-6">
-                                    <div className="row">
-                                        <div className="col-sm-6 label-text">
-                                            <label htmlFor="effectiveFrom">Effective From Date<span>*</span></label>
-                                        </div>
-                                        <div className="col-sm-6">
-                                            <input type="text" id="effectiveFrom" name="effectiveFrom" value={effectiveFrom} required />
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="col-sm-6">
-                                    <div className="row">
-                                        <div className="col-sm-6 label-text">
-                                            <label htmlFor="payscaleHeader">Pay scale <span>*</span></label>
-                                        </div>
-                                        <div className="col-sm-6">
-                                            <select id="payscaleHeader" name="payscaleHeader" value={payscaleHeader.id}
-                                             onChange={(e) => {handleChangeThreeLevel(e, "payscaleHeader", "id") }} required >
-                                                <option value=""> Select Payscale</option>
-                                                {renderOption(payscaleList)}
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                            <div className="form-section-inner">
 
-                            <div className="row">
-                                <div className="col-sm-6">
-                                    <div className="row">
-                                        <div className="col-sm-6 label-text">
-                                            <label htmlFor="basicAmount">Basic Amount<span>*</span></label>
-                                        </div>
-                                        <div className="col-sm-6">
-                                            <input type="number" id="basicAmount" name="basicAmount" value={basicAmount}
-                                                onChange={(e) => { handleChange(e, "basicAmount") }} required />
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="col-sm-6">
-                                    <div className="row">
-                                        <div className="col-sm-6 label-text">
-                                            <label htmlFor="incrementMonth">Increment Month<span>*</span></label>
-                                        </div>
-                                        <div className="col-sm-6">
-                                            <select id="incrementMonth" name="incrementMonth" value={incrementMonth} 
-                                            onChange={(e) => {handleChange(e, "incrementMonth") }} required>
-                                                <option value=""> Select month</option>
-                                                {renderMonths(months)}
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div className="row">
-                                <div className="col-sm-6">
-                                    <div className="row">
-                                        <div className="col-sm-6 label-text">
-                                            <label htmlFor="reason">Increment Reason<span>*</span></label>
-                                        </div>
-                                        <div className="col-sm-6">
-                                            <textarea rows="4" cols="50" id="reason" name="reason" value={reason}
-                                                onChange={(e) => { handleChange(e, "reason") }} required></textarea>
-
-                                        </div>
-                                    </div>
-                                </div>
+                                <table id="fileTable" className="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>Effective From Date<span>* </span></th>
+                                            <th>Pay scale<span>* </span></th>
+                                            <th>Basic Amount<span>* </span></th>
+                                            <th>Increment Month<span>* </span></th>
+                                            <th>Increment Reason<span>* </span></th>
+                                            {renderActionButton()}
+                                        </tr>
+                                    </thead>
+                                    <tbody id="tableBody">
+                                        {
+                                            renderPayScaleDetails()
+                                        }
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
+
                         <br />
 
                         <div className="text-center">

@@ -61,9 +61,9 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Component
 public class RevaluationQueryBuilder {
-	
-	@Autowired
-	private ApplicationProperties applicationProperties;
+
+    @Autowired
+    private ApplicationProperties applicationProperties;
 
     public static final String INSERT_QUERY = "INSERT into egasset_revalution "
             + "(id,tenantid,assetid,currentcapitalizedvalue,typeofchange,revaluationamount,valueafterrevaluation,"
@@ -154,8 +154,8 @@ public class RevaluationQueryBuilder {
     }
 
     /**
-     * This method is always called at the beginning of the method so that and
-     * is prepended before the field's predicate is handled.
+     * This method is always called at the beginning of the method so that and is prepended before the field's predicate is
+     * handled.
      *
      * @param appendAndClauseFlag
      * @param queryString

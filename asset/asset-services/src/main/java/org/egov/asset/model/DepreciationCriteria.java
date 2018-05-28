@@ -90,5 +90,4 @@ public class DepreciationCriteria {
     @JsonProperty("assetIds")
     private Set<Long> assetIds = new HashSet<>();
     
-    private Boolean enableYearwiseDepreciation;
 }

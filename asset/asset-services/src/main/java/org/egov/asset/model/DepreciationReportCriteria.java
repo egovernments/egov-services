@@ -100,8 +100,6 @@ public class DepreciationReportCriteria {
 
     private BigDecimal grossValue;
 
-    private BigDecimal originalValue;
-
     @JsonProperty("valueAfterDepreciation")
     private BigDecimal valueAfterDepreciation;
     private Long assetCategory;
@@ -111,5 +109,7 @@ public class DepreciationReportCriteria {
     private Double depreciationRate;
 
     private BigDecimal currentValue;
+    
+    private String voucherReference;
 
 }

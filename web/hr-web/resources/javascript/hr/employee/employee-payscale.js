@@ -69,11 +69,16 @@ class EmployeePayscale extends React.Component {
             checkCountAndCall("payscaleList", res);
         });
 
-        commonApiPost("hr-employee", "employeepayscale", "_search", { tenantId }, function (err, res) {
-            if (res) {
-                console.log(res);
-            }
-        });
+        if (getUrlVars()["type"] === "update" || getUrlVars()["type"] === "view") {
+            commonApiPost("hr-employee", "employeepayscale", "_search", { employee: getUrlVars()["id"], tenantId }, function (err, res) {
+
+                _this.setState({ employeePayscale: res["EmployeePayscale"] });
+
+            });
+        }
+
+        if (getUrlVars()["type"] === "view")
+            $('input,select,textarea').prop("disabled", true);
 
         getCommonMasterById("hr-employee", "employees", getUrlVars()["id"], function (err, res) {
             if (res) {
@@ -119,7 +124,7 @@ class EmployeePayscale extends React.Component {
 
         if (prevState.employeePayscale !== _this.state.employeePayscale) {
 
-            
+
             let names = "";
             details.forEach(function (item, index) {
                 if (index == 0)

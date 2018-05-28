@@ -53,6 +53,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.egov.asset.contract.AssetRequest;
 import org.egov.asset.model.Asset;
@@ -106,6 +107,9 @@ public class AssetRepository {
 
     @Autowired
     private AssetHistoryRowMapper assetHistoryRowMapper;
+
+    @Autowired
+    private AssetDocumentsRepository assetDocumentsRepository;
 
     public List<Asset> findForCriteria(final AssetCriteria assetCriteria) {
 
@@ -177,7 +181,7 @@ public class AssetRepository {
         }
 
         final List<Document> documents = asset.getDocuments();
-        if (documents != null) {
+        if (!documents.isEmpty()) {
             final String sql = "INSERT INTO egasset_document (id,asset,filestore,tenantid) values "
                     + "(nextval('seq_egasset_document'),?,?,?);";
             log.info("the insert query for assets docs : " + sql);
@@ -208,9 +212,11 @@ public class AssetRepository {
                 asset.getGrossValue(), asset.getAccumulatedDepreciation(), asset.getAssetReference(),
                 asset.getVersion(),
                 assetCommonService.getDepreciationRate(asset.getDepreciationRate()), asset.getSurveyNumber(),
-                asset.getMarketValue(), asset.getFunction(), asset.getScheme(), asset.getSubScheme() ,asset.getPurchaseValue(),asset.getPurchaseDate(),
-                asset.getConstructionValue(),asset.getAcquisitionValue(),asset.getAcquisitionDate(),asset.getNotApplicableForSaleOrDisposal(),
-                asset.getDonationDate(),asset.getConstructionDate()};
+                asset.getMarketValue(), asset.getFunction(), asset.getScheme(), asset.getSubScheme(), asset.getPurchaseValue(),
+                asset.getPurchaseDate(),
+                asset.getConstructionValue(), asset.getAcquisitionValue(), asset.getAcquisitionDate(),
+                asset.getNotApplicableForSaleOrDisposal(),
+                asset.getDonationDate(), asset.getConstructionDate() };
         try {
             jdbcTemplate.update(query, obj);
         } catch (final Exception ex) {
@@ -268,9 +274,11 @@ public class AssetRepository {
                 location.getDoorNo(), location.getPinCode(), location.getLocality(), location.getBlock(), property,
                 requestInfo.getUserInfo().getId(), new Date().getTime(), asset.getGrossValue(),
                 asset.getAccumulatedDepreciation(), asset.getAssetReference(), asset.getVersion(), asset.getSurveyNumber(),
-                asset.getMarketValue(), asset.getFunction(), asset.getScheme(), asset.getSubScheme(),asset.getPurchaseValue(),asset.getPurchaseDate(),
-                asset.getConstructionValue(),asset.getAcquisitionValue(),asset.getAcquisitionDate(),asset.getNotApplicableForSaleOrDisposal(),
-                asset.getDonationDate(),asset.getConstructionDate(),asset.getCode(), asset.getTenantId() };
+                asset.getMarketValue(), asset.getFunction(), asset.getScheme(), asset.getSubScheme(), asset.getPurchaseValue(),
+                asset.getPurchaseDate(),
+                asset.getConstructionValue(), asset.getAcquisitionValue(), asset.getAcquisitionDate(),
+                asset.getNotApplicableForSaleOrDisposal(),
+                asset.getDonationDate(), asset.getConstructionDate(), asset.getCode(), asset.getTenantId() };
         try {
             log.debug("query1::" + query + "," + Arrays.toString(obj));
             final int i = jdbcTemplate.update(query, obj);
@@ -288,7 +296,23 @@ public class AssetRepository {
                 log.debug("Updating Depreciation Data for asset :: " + asset.getName());
             // updateDepreciationData(assetRequest);
         }
+        updateAssetDocuments(asset);
+        if (asset.getDocuments() != null && !asset.getDocuments().isEmpty())
+            assetDocumentsRepository.save(asset.getId(), asset.getDocuments(), asset.getTenantId());
         return asset;
+    }
+
+    private void updateAssetDocuments(final Asset asset) {
+        final List<String> documents = asset.getDocuments().stream().map(doc -> doc.getFileStore()).collect(Collectors.toList());
+        final List<Document> documentsFromDB = assetDocumentsRepository.findByAssetId(asset.getId(), asset.getTenantId());
+        if (!documentsFromDB.isEmpty()) {
+            for (final Document documentInDb : documentsFromDB)
+                if (!documents.contains(documentInDb.getFileStore()))
+                    assetDocumentsRepository.delete(documentInDb.getAsset(), documentInDb.getFileStore(),
+                            asset.getTenantId());
+            if (asset.getDocuments() != null && !asset.getDocuments().isEmpty())
+                asset.getDocuments().removeAll(documentsFromDB);
+        }
     }
 
     /*

@@ -1,6 +1,7 @@
 package org.egov.asset.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -14,15 +15,17 @@ import lombok.ToString;
 @AllArgsConstructor
 @ToString
 @EqualsAndHashCode
-public class Document   {
-	
-  @JsonProperty("id")
-  private Long id;
+public class Document {
 
-  @JsonProperty("asset")
-  private Long asset;
+    @JsonProperty("id")
+    private Long id;
 
-  @JsonProperty("fileStore")
-  private String fileStore;
+    @JsonProperty("asset")
+    private Long asset;
+
+    @JsonProperty("fileStore")
+    private String fileStore;
+
+    @JsonProperty("tenantId")
+    private String tenantId;
 }
-

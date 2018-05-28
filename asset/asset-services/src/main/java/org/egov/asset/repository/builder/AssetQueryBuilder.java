@@ -67,14 +67,12 @@ public class AssetQueryBuilder {
     private ApplicationProperties applicationProperties;
 
     private static final String BASE_QUERY = "SELECT *, asset.id AS assetId,assetcategory.id AS assetcategoryId,"
-            + "asset.name as assetname,asset.code as assetcode,documents.filestore as filestore ,documents.id as documentsId,"
+            + "asset.name as assetname,asset.code as assetcode,"
             + "assetcategory.name AS assetcategoryname,assetcategory.assetcategorytype as assetcategorytype,assetcategory.code AS assetcategorycode, "
             + "assetcategory.depreciationrate as assetcategory_depreciationrate ,currentval.currentamount "
             + " FROM egasset_asset asset "
             + "INNER JOIN egasset_assetcategory assetcategory "
             + "ON asset.assetcategory = assetcategory.id "
-            + "LEFT OUTER JOIN egasset_document documents "
-            + "ON asset.id = documents.asset "
             + "left outer join (select current.assetid,current.tenantid,"
             + " maxcurr.currentamount from egasset_current_value current inner join (select curr.currentamount,curr.assetid,curr.tenantid,curr.createdtime "
             + " from egasset_current_value "

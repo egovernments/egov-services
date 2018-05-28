@@ -163,7 +163,7 @@ public class AssetRowMapper implements ResultSetExtractor<List<Asset>> {
                 department.setId((Long) rs.getObject("department"));
                 asset.setDepartment(department);
 
-                final List<Document> docList = new ArrayList<>();
+                /*final List<Document> docList = new ArrayList<>();
                 final Document documents = new Document();
                 documents.setAsset((Long) rs.getObject("asset"));
                 documents.setFileStore(rs.getString("filestore"));
@@ -172,7 +172,7 @@ public class AssetRowMapper implements ResultSetExtractor<List<Asset>> {
                     asset.setDocuments(new ArrayList<>());
                 else
                     docList.add(documents);
-                asset.setDocuments(docList);
+                asset.setDocuments(docList);*/
 
                 final Location location = new Location();
                 location.setBlock((Long) rs.getObject("block"));

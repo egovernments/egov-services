@@ -54,9 +54,7 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import org.egov.asset.config.ApplicationProperties;
 import org.egov.asset.contract.AssetRequest;
@@ -68,6 +66,7 @@ import org.egov.asset.model.Location;
 import org.egov.asset.model.enums.AssetCategoryType;
 import org.egov.asset.model.enums.ModeOfAcquisition;
 import org.egov.asset.model.enums.Status;
+import org.egov.asset.repository.AssetDocumentsRepository;
 import org.egov.asset.repository.AssetRepository;
 import org.egov.asset.web.wrapperfactory.ResponseInfoFactory;
 import org.egov.common.contract.request.RequestInfo;
@@ -83,178 +82,154 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @RunWith(MockitoJUnitRunner.class)
 public class AssetServiceTest {
 
-	@Mock
-	private AssetRepository assetRepository;
+    @Mock
+    private AssetRepository assetRepository;
 
-	@Mock
-	private ApplicationProperties applicationProperties;
+    @Mock
+    private ApplicationProperties applicationProperties;
 
-	@InjectMocks
-	private AssetService assetService;
+    @InjectMocks
+    private AssetService assetService;
 
-	@Mock
-	private ResponseInfoFactory responseInfoFactory;
+    @Mock
+    private ResponseInfoFactory responseInfoFactory;
 
-	@Mock
-	private ObjectMapper objectMapper;
+    @Mock
+    private ObjectMapper objectMapper;
 
-	@Mock
-	private LogAwareKafkaTemplate<String, Object> logAwareKafkaTemplate;
+    @Mock
+    private LogAwareKafkaTemplate<String, Object> logAwareKafkaTemplate;
 
-	@Mock
-	private AssetCommonService assetCommonService;
-	
-	@Mock
-	 private CurrentValueService currentValueService;
+    @Mock
+    private AssetCommonService assetCommonService;
 
-	@Test
-	public void testSearch() {
-		final List<Asset> assets = new ArrayList<>();
-		assets.add(getAsset());
-		final AssetResponse assetResponse = new AssetResponse();
-		assetResponse.setAssets(assets);
+    @Mock
+    private CurrentValueService currentValueService;
 
-		final AssetCriteria assetCriteria = AssetCriteria.builder().tenantId("ap.kurnool").build();
-		when(assetRepository.findForCriteria(any(AssetCriteria.class))).thenReturn(assets);
-		assertEquals(assets, assetService.getAssets(assetCriteria, new RequestInfo()));
-	}
+    @Mock
+    private AssetDocumentsRepository assetDocumentsRepository;
 
-	@Test
-	public void testCreate() {
+    @Test
+    public void testSearch() {
+        final List<Asset> assets = new ArrayList<>();
+        assets.add(getAsset());
+        final AssetResponse assetResponse = new AssetResponse();
+        assetResponse.setAssets(assets);
 
-		final Asset asset = getAsset();
-		final AssetRequest assetRequest = new AssetRequest();
-		assetRequest.setAsset(asset);
+        final AssetCriteria assetCriteria = AssetCriteria.builder().tenantId("ap.kurnool").build();
+        when(assetRepository.findForCriteria(any(AssetCriteria.class))).thenReturn(assets);
+        assertEquals(assets, assetService.getAssets(assetCriteria, new RequestInfo()));
+    }
 
-		final List<Asset> assets = new ArrayList<>();
-		assets.add(asset);
-		final AssetResponse assetResponse = new AssetResponse();
-		assetResponse.setResponseInfo(null);
-		assetResponse.setAssets(assets);
+    @Test
+    public void testCreate() {
 
-		when(assetRepository.create(any(AssetRequest.class))).thenReturn(asset);
+        final Asset asset = getAsset();
+        final AssetRequest assetRequest = new AssetRequest();
+        assetRequest.setAsset(asset);
 
-		assertTrue(asset.equals(assetService.create(assetRequest)));
-	}
+        final List<Asset> assets = new ArrayList<>();
+        assets.add(asset);
+        final AssetResponse assetResponse = new AssetResponse();
+        assetResponse.setResponseInfo(null);
+        assetResponse.setAssets(assets);
 
-	@Test
-	public void testCreateAsync() {
+        when(assetRepository.create(any(AssetRequest.class))).thenReturn(asset);
 
-		final Asset asset = getAsset();
-		final AssetRequest assetRequest = new AssetRequest();
-		assetRequest.setAsset(asset);
+        assertTrue(asset.equals(assetService.create(assetRequest)));
+    }
 
-		final List<Asset> assets = new ArrayList<>();
-		assets.add(asset);
-		final AssetResponse assetResponse = new AssetResponse();
-		assetResponse.setResponseInfo(null);
-		assetResponse.setAssets(assets);
+    @Test
+    public void testCreateAsync() {
 
-		when(assetCommonService.getDepreciationRate(any(Double.class))).thenReturn(Double.valueOf("13.17"));
+        final Asset asset = getAsset();
+        final AssetRequest assetRequest = new AssetRequest();
+        assetRequest.setAsset(asset);
 
-		assertTrue(asset.equals(assetService.createAsset(assetRequest)));
-	}
+        final List<Asset> assets = new ArrayList<>();
+        assets.add(asset);
+        final AssetResponse assetResponse = new AssetResponse();
+        assetResponse.setResponseInfo(null);
+        assetResponse.setAssets(assets);
 
-	@Test
-	public void testUpdate() {
+        when(assetCommonService.getDepreciationRate(any(Double.class))).thenReturn(Double.valueOf("13.17"));
 
-		final Asset asset = getAsset();
-		final AssetRequest assetRequest = new AssetRequest();
-		assetRequest.setAsset(asset);
+        assertTrue(asset.equals(assetService.createAsset(assetRequest)));
+    }
 
-		final List<Asset> assets = new ArrayList<>();
-		assets.add(asset);
-		final AssetResponse assetResponse = new AssetResponse();
-		assetResponse.setResponseInfo(null);
-		assetResponse.setAssets(assets);
+    @Test
+    public void testUpdate() {
 
-		when(assetRepository.update(any(AssetRequest.class))).thenReturn(asset);
+        final Asset asset = getAsset();
+        final AssetRequest assetRequest = new AssetRequest();
+        assetRequest.setAsset(asset);
 
-		assertTrue(asset.equals(assetService.update(assetRequest)));
-	}
+        final List<Asset> assets = new ArrayList<>();
+        assets.add(asset);
+        final AssetResponse assetResponse = new AssetResponse();
+        assetResponse.setResponseInfo(null);
+        assetResponse.setAssets(assets);
 
-	/*@Test
-	public void testUpdateAsync() {
+        when(assetRepository.update(any(AssetRequest.class))).thenReturn(asset);
 
-		final Asset asset = getAsset();
-		final AssetRequest assetRequest = new AssetRequest();
-		assetRequest.setAsset(asset);
-		final AssetResponse assetResponse = getAssetResponse(asset);
-		final Set<Long> assetIds = new HashSet<Long>();
-		assetIds.add(asset.getId());
-                //currentValueService.getCurrentValues(assetIds, "ap.kurnool", new RequestInfo());
+        assertTrue(asset.equals(assetService.update(assetRequest)));
+    }
 
-		when(assetCommonService.getDepreciationRate(any(Double.class))).thenReturn(Double.valueOf("13.17"));
-		when(currentValueService.getCurrentValues(assetIds, "ap.kurnool", new RequestInfo()));
-		assertTrue(assetResponse.equals(assetService.updateAsync(assetRequest)));
-	}*/
+    /*
+     * @Test public void testUpdateAsync() { final Asset asset = getAsset(); final AssetRequest assetRequest = new AssetRequest();
+     * assetRequest.setAsset(asset); final AssetResponse assetResponse = getAssetResponse(asset); final Set<Long> assetIds = new
+     * HashSet<Long>(); assetIds.add(asset.getId()); //currentValueService.getCurrentValues(assetIds, "ap.kurnool", new
+     * RequestInfo()); when(assetCommonService.getDepreciationRate(any(Double.class))).thenReturn(Double.valueOf("13.17"));
+     * when(currentValueService.getCurrentValues(assetIds, "ap.kurnool", new RequestInfo()));
+     * assertTrue(assetResponse.equals(assetService.updateAsync(assetRequest))); }
+     */
 
-	@Test
-	public void testGetAsset() {
+    @Test
+    public void testGetAsset() {
 
-		final Asset expectedAsset = getAsset();
-		final List<Asset> assets = new ArrayList<>();
-		assets.add(expectedAsset);
-		when(assetRepository.findForCriteria(any(AssetCriteria.class))).thenReturn(assets);
-		final Asset actualAsset = assetService.getAsset("ap.kurnool", Long.valueOf("552"), new RequestInfo());
+        final Asset expectedAsset = getAsset();
+        final List<Asset> assets = new ArrayList<>();
+        assets.add(expectedAsset);
+        when(assetRepository.findForCriteria(any(AssetCriteria.class))).thenReturn(assets);
+        final Asset actualAsset = assetService.getAsset("ap.kurnool", Long.valueOf("552"), new RequestInfo());
 
-		assertEquals(expectedAsset, actualAsset);
+        assertEquals(expectedAsset, actualAsset);
 
-	}
-/*
-	@Test
-	public void testGetDepreciationReport() {
-		final List<Asset> assets = new ArrayList<>();
-		assets.add(getAsset());
-		final AssetResponse expectedAssetResponse = new AssetResponse();
-		expectedAssetResponse.setAssets(assets);
+    }
+    /*
+     * @Test public void testGetDepreciationReport() { final List<Asset> assets = new ArrayList<>(); assets.add(getAsset()); final
+     * AssetResponse expectedAssetResponse = new AssetResponse(); expectedAssetResponse.setAssets(assets);
+     * when(assetRepository.getDepreciatedAsset(any(DepreciationReportCriteria.class))).thenReturn(assets); final
+     * DepreciationReportCriteria depreciationReportCriteria = DepreciationReportCriteria.builder()
+     * .assetCategoryType(AssetCategoryType.IMMOVABLE.toString()).assetCategoryName("category name")
+     * .tenantId("ap.kurnool").build(); final AssetResponse actualAssetResponse = assetService.getDepreciationReport(new
+     * RequestInfo(), depreciationReportCriteria); assertEquals(expectedAssetResponse, actualAssetResponse); }
+     */
 
-		when(assetRepository.getDepreciatedAsset(any(DepreciationReportCriteria.class))).thenReturn(assets);
+    private Asset getAsset() {
+        final Asset asset = new Asset();
+        asset.setTenantId("ap.kurnool");
+        asset.setId(Long.valueOf("5"));
+        asset.setName("asset name");
+        asset.setStatus(Status.CREATED.toString());
+        asset.setModeOfAcquisition(ModeOfAcquisition.ACQUIRED);
 
-		final DepreciationReportCriteria depreciationReportCriteria = DepreciationReportCriteria.builder()
-				.assetCategoryType(AssetCategoryType.IMMOVABLE.toString()).assetCategoryName("category name")
-				.tenantId("ap.kurnool").build();
-		final AssetResponse actualAssetResponse = assetService.getDepreciationReport(new RequestInfo(),
-				depreciationReportCriteria);
+        asset.setDepreciationRate(Double.valueOf("13.17"));
+        asset.setFunction("020");
 
-		assertEquals(expectedAssetResponse, actualAssetResponse);
+        final Location location = new Location();
+        location.setLocality(4l);
+        location.setDoorNo("door no");
 
-	}*/
+        final AssetCategory assetCategory = new AssetCategory();
+        assetCategory.setId(1l);
+        assetCategory.setName("category name");
+        assetCategory.setAssetCategoryType(AssetCategoryType.IMMOVABLE);
+        assetCategory.setTenantId("ap.kurnool");
 
-	private AssetResponse getAssetResponse(final Asset asset) {
-		final List<Asset> assets = new ArrayList<>();
-		assets.add(asset);
-		final AssetResponse assetResponse = new AssetResponse();
-		assetResponse.setResponseInfo(null);
-		assetResponse.setAssets(assets);
-		return assetResponse;
-	}
-
-	private Asset getAsset() {
-		final Asset asset = new Asset();
-		asset.setTenantId("ap.kurnool");
-		asset.setId(Long.valueOf("5"));
-		asset.setName("asset name");
-		asset.setStatus(Status.CREATED.toString());
-		asset.setModeOfAcquisition(ModeOfAcquisition.ACQUIRED);
-		
-		asset.setDepreciationRate(Double.valueOf("13.17"));
-		asset.setFunction("020");
-
-		final Location location = new Location();
-		location.setLocality(4l);
-		location.setDoorNo("door no");
-
-		final AssetCategory assetCategory = new AssetCategory();
-		assetCategory.setId(1l);
-		assetCategory.setName("category name");
-		assetCategory.setAssetCategoryType(AssetCategoryType.IMMOVABLE);
-		assetCategory.setTenantId("ap.kurnool");
-
-		asset.setLocationDetails(location);
-		asset.setAssetCategory(assetCategory);
-		return asset;
-	}
-
+        asset.setLocationDetails(location);
+        asset.setAssetCategory(assetCategory);
+        return asset;
+    }
 
 }

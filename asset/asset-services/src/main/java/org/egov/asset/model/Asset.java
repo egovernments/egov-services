@@ -124,7 +124,7 @@ public class Asset {
 
     private BigDecimal currentValue;
 
-    private List<Document> documents;
+    private List<Document> documents=new ArrayList<>();
 
     @JsonProperty("scheme")
     private String scheme;

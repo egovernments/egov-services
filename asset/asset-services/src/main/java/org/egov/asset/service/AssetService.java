@@ -61,9 +61,11 @@ import org.egov.asset.contract.AssetRequest;
 import org.egov.asset.model.Asset;
 import org.egov.asset.model.AssetCriteria;
 import org.egov.asset.model.AssetCurrentValue;
+import org.egov.asset.model.Document;
 import org.egov.asset.model.TransactionHistory;
 import org.egov.asset.model.enums.Sequence;
 import org.egov.asset.model.enums.TransactionType;
+import org.egov.asset.repository.AssetDocumentsRepository;
 import org.egov.asset.repository.AssetRepository;
 import org.egov.common.contract.request.RequestInfo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -84,9 +86,30 @@ public class AssetService {
     @Autowired
     private CurrentValueService currentValueService;
 
+    @Autowired
+    private AssetDocumentsRepository assetDocumentsRepository;
+
     public List<Asset> getAssets(final AssetCriteria searchAsset, final RequestInfo requestInfo) {
         log.info("AssetService getAssets");
         final List<Asset> assets = assetRepository.findForCriteria(searchAsset);
+
+        for (final Asset asset : assets) {
+            final List<Document> documents = new ArrayList<>();
+            final List<Document> assetDocuments = assetDocumentsRepository.findByAssetId(asset.getId(),
+                    asset.getTenantId());
+            if (!assetDocuments.isEmpty()) {
+                for (final Document document : assetDocuments) {
+                    final Document assetDocs = new Document();
+                    assetDocs.setId(document.getId());
+                    assetDocs.setAsset(asset.getId());
+                    assetDocs.setFileStore(document.getFileStore());
+                    assetDocs.setTenantId(document.getTenantId());
+                    documents.add(assetDocs);
+                }
+                asset.getDocuments().addAll(documents);
+
+            }
+        }
         if (searchAsset.getIsTransactionHistoryRequired() == null)
             searchAsset.setIsTransactionHistoryRequired(false);
         else if (searchAsset.getIsTransactionHistoryRequired().equals(true) && !assets.isEmpty())
@@ -132,7 +155,6 @@ public class AssetService {
     }
 
     public Asset update(final AssetRequest assetRequest) {
-
         return assetRepository.update(assetRequest);
 
     }

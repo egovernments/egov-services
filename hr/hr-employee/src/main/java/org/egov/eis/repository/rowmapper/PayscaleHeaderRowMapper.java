@@ -159,7 +159,7 @@ public class PayscaleHeaderRowMapper implements ResultSetExtractor<List<Payscale
                 PayscaleDetailsInfo payscaleDetailsInfo = payscaleDetailsInfoEntry.getValue();
 
                 PayscaleDetails payscaleDet = PayscaleDetails.builder().id(payscaleDetailsInfo.getId())
-                        .basicFrom(payscaleDetailsInfo.getBasicFrom()).basicTo(payscaleDetailsInfo.getBasicTo()).build();
+                        .basicFrom(payscaleDetailsInfo.getBasicFrom()).basicTo(payscaleDetailsInfo.getBasicTo()).increment(payscaleDetailsInfo.getIncrement()).build();
 
                 payscaleDetails.add(payscaleDet);
             }

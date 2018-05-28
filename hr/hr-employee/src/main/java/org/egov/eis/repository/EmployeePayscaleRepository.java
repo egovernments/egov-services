@@ -115,34 +115,6 @@ public class EmployeePayscaleRepository {
         return empPayscaleList;
     }
 
-    public void insertEmpPayscale(EmployeePayscaleRequest employeePayscaleRequest) {
-        List<EmployeePayscale> employeePayscale = employeePayscaleRequest.getEmployeePayscale();
-
-        jdbcTemplate.batchUpdate(INSERT_EMPLOYEEPAYSCALE_QUERY, new BatchPreparedStatementSetter() {
-            @Override
-            public void setValues(PreparedStatement ps, int i) throws SQLException {
-                EmployeePayscale empPayscale = employeePayscale.get(i);
-                ps.setLong(1, empPayscale.getId());
-                ps.setLong(2, empPayscale.getEmployee().getId());
-                ps.setLong(3, empPayscale.getPayscaleHeader().getId());
-                ps.setDate(4, new Date(empPayscale.getEffectiveFrom().getTime()));
-                ps.setString(5, empPayscale.getIncrementMonth());
-                ps.setLong(6, empPayscale.getBasicAmount());
-                ps.setString(7, empPayscale.getReason());
-                ps.setLong(8, empPayscale.getCreatedBy());
-                ps.setDate(9, new Date(empPayscale.getCreatedDate().getTime()));
-                ps.setLong(10, empPayscale.getLastModifiedBy());
-                ps.setDate(11, new Date(empPayscale.getLastModifiedDate().getTime()));
-                ps.setString(12, empPayscale.getTenantId());
-            }
-
-            @Override
-            public int getBatchSize() {
-                return employeePayscale.size();
-            }
-        });
-    }
-
     public void updateEmpPayscale(EmployeePayscale employeePayscale) {
 
         Object[] obj = new Object[]{employeePayscale.getEffectiveFrom(), employeePayscale.getIncrementMonth(), employeePayscale.getBasicAmount(),
@@ -151,7 +123,6 @@ public class EmployeePayscaleRepository {
 
         jdbcTemplate.update(UPDATE_EMPLOYEEPAYSCALE_QUERY, obj);
     }
-
 
     public void deleteEmpPayscale(List<Long> empPayscaleIdsToDelete, Long employeeId, String tenantId) {
         Map<String, Object> namedParameters = new HashMap<>();

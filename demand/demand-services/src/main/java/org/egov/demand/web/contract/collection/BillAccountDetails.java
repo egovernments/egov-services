@@ -47,9 +47,9 @@ import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
 @XStreamAlias("account")
 public class BillAccountDetails implements Comparable<BillAccountDetails> {
 
-    public enum PURPOSE {
-        ARREAR_AMOUNT, CURRENT_AMOUNT, ADVANCE_AMOUNT, ARREAR_LATEPAYMENT_CHARGES, CURRENT_LATEPAYMENT_CHARGES, CHEQUE_BOUNCE_PENALTY, REBATE, OTHERS
-    };
+	public enum PURPOSE {
+		ARREAR_AMOUNT, CURRENT_AMOUNT, ADVANCE_AMOUNT, ARREAR_LATEPAYMENT_CHARGES, CURRENT_LATEPAYMENT_CHARGES, CHEQUE_BOUNCE_PENALTY, REBATE, OTHERS, SERVICETAX, CG_SERVICETAX, SG_SERVICETAX
+	};
 
     @XStreamAsAttribute
     private final String glCode;

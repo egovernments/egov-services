@@ -318,7 +318,6 @@ public class AssetController {
         log.debug("Request Headers :: " + headers);
         final Depreciation depreciation = depreciationservice.saveDepreciateAsset(depreciationRequest,
                 headers);
-
         log.debug("depreciations :" + depreciation);
         return getDepreciationResponse(depreciation, depreciationRequest.getRequestInfo());
     }

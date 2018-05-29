@@ -222,6 +222,7 @@ public class AssetValidator {
         final Asset asset = assetService.getAsset(tenantId, disposal.getAssetId(), disposalRequest.getRequestInfo());
         log.debug("Asset For Disposal :: " + asset);
         validateAssetForCapitalizedStatus(asset);
+        validateSaleAndDisposalDate(disposal,asset);
         if (StringUtils.isEmpty(disposal.getDisposalReason()))
             throw new RuntimeException("Disposal Reason should be present for disposing asset : " + asset.getName());
 
@@ -289,6 +290,11 @@ public class AssetValidator {
             throw new RuntimeException(
                     "Status of asset :" + asset.getName() + "doesn't exists for tenant id : " + asset.getTenantId());
     }
+    
+    private void validateSaleAndDisposalDate(final Disposal disposal,final Asset asset) {
+       if (disposal.getDisposalDate()<asset.getDateOfCreation())
+           throw new RuntimeException("Sale/Disposal date should not be before the date of creation of asset");
+    }
 
     public void validateRevaluation(final RevaluationRequest revaluationRequest) {
         final Revaluation revaluation = revaluationRequest.getRevaluation();
@@ -346,7 +352,7 @@ public class AssetValidator {
                     "Decrease in amount should not be equal or greater than the current value of the asset. current value of asset is :: "
                             + assetCurrentAmount + " and value after revaluation is :: " + valueAfterRevaluation);
 
-        validateRevaluationDate(revaluation);
+        validateRevaluationDate(revaluation,asset);
 
         validateValueAfterRevaluation(assetCurrentAmount, revaluationAmount, valueAfterRevaluation, typeOfChange);
 
@@ -370,13 +376,14 @@ public class AssetValidator {
                     + " but the value is :: " + valueAfterRevaluation);
     }
 
-    private void validateRevaluationDate(final Revaluation revaluation) {
+    private void validateRevaluationDate(final Revaluation revaluation,final Asset asset) {
         final Long revaluationDate = revaluation.getRevaluationDate();
         if (revaluationDate == null)
             throw new RuntimeException("Revaluation Date is Required");
-
         if (revaluationDate > new Date().getTime())
             throw new RuntimeException("Revaluation Date should not be greater than current date.");
+        if(revaluationDate<asset.getDateOfCreation())
+            throw new RuntimeException("Date of Revaluation should not be before the date of creation of Asset.");
     }
 
     private TypeOfChangeEnum validateRevaluationForTypeOfChange(final Revaluation revaluation, final Asset asset) {

@@ -29,12 +29,15 @@ class PayScaleMaster extends React.Component {
 
   handleDetailsChange(e, index, name) {
 
-    console.log(index, name);
-
     let details = Object.assign([], this.state.payscaleSet.payscaleDetails);
 
-    details[index][name] = e.target.value;
+    if(name === 'basicTo'){
+      if(details[Number(index) + 1])
+        details[Number(index) + 1].basicFrom = e.target.value
+    }
 
+    details[index][name] = e.target.value;
+    
     this.setState({
       payscaleSet: {
         ...this.state.payscaleSet,
@@ -44,12 +47,29 @@ class PayScaleMaster extends React.Component {
   }
 
   handleChange(e, name) {
-    this.setState({
-      payscaleSet: {
-        ...this.state.payscaleSet,
-        [name]: e.target.value
-      }
-    })
+
+    if (name === 'amountFrom') {
+
+      let details = Object.assign([], this.state.payscaleSet.payscaleDetails);
+
+      if(details.length > 0)
+      details[0].basicFrom = e.target.value
+
+      this.setState({
+        payscaleSet: {
+          ...this.state.payscaleSet,
+          [name]: e.target.value,
+          payscaleDetails:details 
+        }
+      })
+    } else {
+      this.setState({
+        payscaleSet: {
+          ...this.state.payscaleSet,
+          [name]: e.target.value
+        }
+      })
+    }
   }
 
   deletePayscaleDetails(ind) {
@@ -72,7 +92,7 @@ class PayScaleMaster extends React.Component {
 
     let details = Object.assign([], this.state.payscaleSet.payscaleDetails);
 
-    let newDetails = { "basicFrom": "", "basicTo": "", "increment": "", "tenantId": tenantId };
+    let newDetails = { "basicFrom": details[Number(index) - 1].basicTo, "basicTo": "", "increment": "", "tenantId": tenantId };
 
     details.push(newDetails);
 
@@ -208,15 +228,15 @@ class PayScaleMaster extends React.Component {
             <tr key={ind} id={ind} >
               <td>
                 <input type="number" name="basicFrom" id="basicFrom" value={payscaleDetail["basicFrom"]}
-                  onChange={(e) => { handleDetailsChange(e, ind, "basicFrom") }} required />
+                  onChange={(e) => { handleDetailsChange(e, ind, "basicFrom") }} required disabled />
               </td>
               <td>
                 <input type="number" name="basicTo" id="basicTo" value={payscaleDetail["basicTo"]}
-                  onChange={(e) => { handleDetailsChange(e, ind, "basicTo") }} required />
+                  onChange={(e) => { handleDetailsChange(e, ind, "basicTo") }} min={payscaleDetail["basicFrom"]} required />
               </td>
               <td>
                 <input type="number" name="increment" id="increment" value={payscaleDetail["increment"]}
-                  onChange={(e) => { handleDetailsChange(e, ind, "increment") }} required />
+                  onChange={(e) => { handleDetailsChange(e, ind, "increment") }} max={payscaleDetail["basicTo"] - payscaleDetail["basicFrom"]} min="0" required />
               </td>
 
               {renderPlusMinus(ind)}
@@ -283,7 +303,7 @@ class PayScaleMaster extends React.Component {
                       <label htmlFor="">To <span>* </span></label>
                     </div>
                     <div className="col-sm-6 label-view-text">
-                      <input type="number" name="amountTo" id="amountTo" min="0" value={amountTo}
+                      <input type="number" name="amountTo" id="amountTo" min={amountFrom} value={amountTo}
                         onChange={(e) => { handleChange(e, "amountTo") }} required />
                     </div>
                   </div>

@@ -51,6 +51,11 @@ import org.springframework.web.client.RestTemplate;
 public class PaymentService {
 
 	private static final Logger LOGGER = Logger.getLogger(PaymentService.class);
+	private static final String ADVANCE_TAX = "ADVANCE TAX";
+	private static final String GOODWILL_AMOUNT = "GOODWILL AMOUNT";
+	private static final String SERVICE_TAX = "SERVICE TAX";
+	private static final String CENTRAL_GST = "CGST";
+	private static final String STATE_GST = "SGST";
 
 	@Autowired
 	PropertiesManager propertiesManager;
@@ -193,13 +198,15 @@ public class PaymentService {
 					.get(0);
 			BigDecimal totalAmount = BigDecimal.ZERO;
 			List<BillDetailInfo> billDetailInfos = new ArrayList<>();
+			List<DemandDetails> demandDetails = demand.getDemandDetails();
+			demandDetails.sort((d1, d2) -> d1.getPeriodStartDate().compareTo(d2.getPeriodStartDate()));
 			int orderNo = 0;
 			LOGGER.info("PaymentService- generateBillXml - getting purpose");
 			Map<String, String> purposeMap = billRepository.getPurpose(billInfo.getTenantId());
-			for (DemandDetails demandDetail : demand.getDemandDetails()) {
+			for (DemandDetails demandDetail : demandDetails) {
 				LOGGER.info("the reason for demanddetail : "+ demandDetail.getTaxReason());
-				if ("ADVANCE TAX".equalsIgnoreCase(demandDetail.getTaxReason())
-						|| "GOODWILL AMOUNT".equalsIgnoreCase(demandDetail.getTaxReason())
+				if (ADVANCE_TAX.equalsIgnoreCase(demandDetail.getTaxReason())
+						|| GOODWILL_AMOUNT.equalsIgnoreCase(demandDetail.getTaxReason())
 						|| (demandDetail.getPeriodStartDate().compareTo(new Date()) <= 0)) {
 					orderNo++;
 					totalAmount = totalAmount
@@ -249,8 +256,14 @@ public class PaymentService {
 			LOGGER.info("getGlCode after >>>>>>>" + demandDetail.getGlCode());
 			billdetail.setDescription(demandDetail.getTaxPeriod().concat(":").concat(demandDetail.getTaxReason()));
 			billdetail.setPeriod(demandDetail.getTaxPeriod());
-			// TODO: Fix me: As per the rules for the purpose for demanddetails
-			billdetail.setPurpose(purpose.get("CURRENT_AMOUNT").toString());
+			if (SERVICE_TAX.equalsIgnoreCase(demandDetail.getTaxReason())) {
+				billdetail.setPurpose(purpose.get("SERVICETAX"));
+			} else if (CENTRAL_GST.equalsIgnoreCase(demandDetail.getTaxReason())) {
+				billdetail.setPurpose(purpose.get("CG_SERVICETAX"));
+			} else if (STATE_GST.equalsIgnoreCase(demandDetail.getTaxReason())) {
+				billdetail.setPurpose(purpose.get("SG_SERVICETAX"));
+			} else
+				billdetail.setPurpose(purpose.get("CURRENT_AMOUNT"));
 			LOGGER.info("getPurpose after >>>>>>>" + purpose.get("CURRENT_AMOUNT"));
 
 			billdetail.setIsActualDemand(demandDetail.getIsActualDemand());

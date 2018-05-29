@@ -351,7 +351,7 @@ public class MDMSService {
 
 				return moduleContentJson;
 			}
-			masterData.addAll(mDMSCreateRequest.getMasterMetaData().getMasterData());
+			masterData.addAll(0, mDMSCreateRequest.getMasterMetaData().getMasterData());			
 			result = buildPushContent(moduleContentJson, mDMSCreateRequest, masterData);
 		} else {
 			if (null == masterData) {

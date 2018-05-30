@@ -461,7 +461,7 @@ class Depreciation extends React.Component {
                       <label>Voucher Number </label>
                     </div>
                     <div className="col-sm-6 label-view-text">
-                      <label>{depreciationSet.voucherReference}</label>
+                      <label>{depreciationSet.voucherReference? depreciationSet.voucherReference :"NA" }</label>
                     </div>
                   </div>
                 </div>

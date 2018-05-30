@@ -642,7 +642,7 @@ class CreateAsset extends React.Component {
             acquisitionDate: "",
             donationDate: "",
             grossValue: "1",
-            accumulatedDepreciation:"0",
+            accumulatedDepreciation: "0",
             [name]: e.target.value
           }
         });
@@ -1184,6 +1184,16 @@ class CreateAsset extends React.Component {
         if (res) {
           let asset = res["Assets"][0];
           var _date = asset.dateOfCreation ? asset.dateOfCreation : "";
+
+          if (asset.constructionDate == 0)
+            asset.constructionDate = ""
+          if (asset.acquisitionDate == 0)
+            asset.acquisitionDate = ""
+          if (asset.purchaseDate == 0)
+            asset.purchaseDate = ""
+          if (asset.donationDate == 0)
+            asset.donationDate = ""
+
 
           if (asset.donationDate)
             asset.donationDate = moment(new Date(asset.donationDate)).format("DD/MM/YYYY");

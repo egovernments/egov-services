@@ -51,6 +51,8 @@ package org.egov.asset.repository.rowmapper;
 import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.egov.asset.model.DepreciationReportCriteria;
 import org.springframework.jdbc.core.RowMapper;
@@ -65,7 +67,9 @@ public class DepreciationReportRowMapper implements RowMapper<DepreciationReport
         depreciation.setId(rs.getLong("depreciationId"));
         depreciation.setAssetName(rs.getString("assetname"));
         depreciation.setAssetCode(rs.getString("assetcode"));
-        depreciation.setAssetId(rs.getLong("assetId"));
+        final List<Long> assetIds = new ArrayList<>();
+        assetIds.add((Long) rs.getObject("assetId"));
+        depreciation.setAssetId(assetIds);
         depreciation.setFinancialYear(rs.getString("financialyear"));
         depreciation.setId(rs.getLong("depreciationId"));
         depreciation.setTenantId(rs.getString("tenantId"));

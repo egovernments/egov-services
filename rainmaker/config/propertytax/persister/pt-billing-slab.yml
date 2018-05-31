@@ -1,0 +1,90 @@
+serviceMaps:
+ serviceName: PropertyTax Calculator
+ mappings:
+ - version: 1.0
+   name: pt-calculator
+   description: Persists the pt-calculator related records to db
+   fromTopic: save-pt-billingslab
+   isTransaction: true
+   queryMaps:
+    - query: INSERT INTO eg_pt_billingslab(tenantid, propertyType, propertySubType, usageCategoryMajor, usageCategoryMinor, usageCategorySubMinor, usageCategoryDetail, ownerShipCategory, subOwnerShipCategory, fromFloor, toFloor, area, fromPlotSize, toPlotSize, unitRate) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+
+      basePath: billingSlab.*
+      jsonMaps:
+
+       - jsonPath: $.billingSlab.*.tenantId
+
+       - jsonPath: $.billingSlab.*.propertyType
+
+       - jsonPath: $.billingSlab.*.propertySubType
+
+       - jsonPath: $.billingSlab.*.usageCategoryMajor
+
+       - jsonPath: $.billingSlab.*.usageCategoryMinor
+
+       - jsonPath: $.billingSlab.*.usageCategorySubMinor
+
+       - jsonPath: $.billingSlab.*.usageCategoryDetail
+
+       - jsonPath: $.billingSlab.*.ownerShipCategory
+
+       - jsonPath: $.billingSlab.*.subOwnerShipCategory
+
+       - jsonPath: $.billingSlab.*.fromFloor
+
+       - jsonPath: $.billingSlab.*.toFloor
+
+       - jsonPath: $.billingSlab.*.area
+
+       - jsonPath: $.billingSlab.*.fromPlotSize
+
+       - jsonPath: $.billingSlab.*.toPlotSize
+
+       - jsonPath: $.billingSlab.*.unitRate
+
+
+
+ - version: 1.0
+   name: Asset
+   description: Persists asset details in eg_asset table
+   fromTopic: update-pgr-service
+   isTransaction: true
+   queryMaps:
+
+    - query: UPDATE eg_pt_billingslab SET propertyType=?, propertySubType=?, usageCategoryMajor=?, usageCategoryMinor=?, usageCategorySubMinor=?, usageCategoryDetail=?, ownerShipCategory=?, subOwnerShipCategory=?, fromFloor=?, toFloor=?, area=?, fromPlotSize=?,  toPlotSize=?, unitRate=? WHERE tenantid=? AND id=?;
+
+      basePath: billingSlab.*
+      jsonMaps:
+
+       - jsonPath: $.billingSlab.*.propertyType
+
+       - jsonPath: $.billingSlab.*.propertySubType
+
+       - jsonPath: $.billingSlab.*.usageCategoryMajor
+
+       - jsonPath: $.billingSlab.*.usageCategoryMinor
+
+       - jsonPath: $.billingSlab.*.usageCategorySubMinor
+
+       - jsonPath: $.billingSlab.*.usageCategoryDetail
+
+       - jsonPath: $.billingSlab.*.ownerShipCategory
+
+       - jsonPath: $.billingSlab.*.subOwnerShipCategory
+
+       - jsonPath: $.billingSlab.*.fromFloor
+
+       - jsonPath: $.billingSlab.*.toFloor
+
+       - jsonPath: $.billingSlab.*.area
+
+       - jsonPath: $.billingSlab.*.fromPlotSize
+
+       - jsonPath: $.billingSlab.*.toPlotSize
+
+       - jsonPath: $.services.*.unitRate
+
+       - jsonPath: $.billingSlab.*.tenantId
+
+       - jsonPath: $.billingSlab.*.id
+

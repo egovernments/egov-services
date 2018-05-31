@@ -107,6 +107,7 @@ class SearchAsset extends React.Component {
                         res2.DepreciationReportCriteria[i].assetId = assetList[j].code; 
                         res2.DepreciationReportCriteria[i].assetName = assetList[j].name; 
                         res2.DepreciationReportCriteria[i].assetCategory = assetList[j].assetCategory.name; 
+                        res2.DepreciationReportCriteria[i].assetCurrentvalue = assetList[j].currentValue;
                         res2.DepreciationReportCriteria[i].assetLocation = assetList[j].locationDetails.locality ? getNameById(_this.state.locality, assetList[j].locationDetails.locality) : ""; 
 
                         newArray.push(res2.DepreciationReportCriteria[i]);
@@ -278,7 +279,7 @@ class SearchAsset extends React.Component {
                     <td>{item.assetName}</td>
                     <td>{item.assetCategory}</td>
                     <td>{item.assetLocation}</td>
-                    <td>{item.currentValue}</td>
+                    <td>{item.assetCurrentvalue}</td>
               </tr>  );
         })
       }else{

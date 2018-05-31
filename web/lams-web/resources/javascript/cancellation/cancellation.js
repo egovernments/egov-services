@@ -459,21 +459,13 @@ class CancellationAgreement extends React.Component {
       var department = [];
     }
 
-
-    var cityGrade = !localStorage.getItem("city_grade") || localStorage.getItem("city_grade") == "undefined" ? (localStorage.setItem("city_grade", JSON.stringify(commonApiPost("tenant", "v1/tenant", "_search", { code: tenantId }).responseJSON["tenant"][0]["city"]["ulbGrade"] || {})), JSON.parse(localStorage.getItem("city_grade"))) : JSON.parse(localStorage.getItem("city_grade"));
-
-    var agreementType = "Cancel Municipality Agreement";
-    if (cityGrade.toLowerCase() === 'corp') {
-      agreementType = "Cancel Corporation Agreement";
-    }
-
     getDesignations(null,null, function (designations) {
       _this.setState({
         ..._this.state,
         designationList: designations
       });
 
-    }, agreementType);
+    }, "Cancellation LeaseAgreement");
 
 
     var agreement = commonApiPost("lams-services",

@@ -122,7 +122,8 @@ class UpdateCancellation extends React.Component {
             userList: [],
             buttons: [],
             wfStatus: "",
-            workflow: []
+            workflow: [],
+            currentUserDesignation:null
 
         }
         this.handleChangeTwoLevel = this.handleChangeTwoLevel.bind(this);
@@ -361,7 +362,9 @@ class UpdateCancellation extends React.Component {
                 }
             }
         }
-
+        if(currentUserDesignation==='Junior Assistant' || currentUserDesignation==='Senior Assistant'){
+          currentUserDesignation ="Assistant";
+        }
         getDesignations(process.status, currentUserDesignation, function (designations) {
             //console.log(designations);
             _this.setState({
@@ -388,7 +391,8 @@ class UpdateCancellation extends React.Component {
             initiatorPosition: process.initiatorPosition,
             wfStatus: process.status,
             workflow: workflow,
-            buttons: _btns ? _btns : []
+            buttons: _btns ? _btns : [],
+            currentUserDesignation:currentUserDesignation
         });
 
     }
@@ -594,8 +598,13 @@ class UpdateCancellation extends React.Component {
         } else {
             $("#documentSection").remove();
         }
+
+        if(this.state.currentUserDesignation && this.state.currentUserDesignation==='Commissioner'){
+          $("#approvalDetailsSection").remove();
+
+        }
         if (this.state.wfStatus === "Commissioner Approved") {
-            $("#approvalDetailsSection").remove();
+            $("#approvalCommentsSection").remove();
         }
 
         $('#orderDate').datepicker({
@@ -1411,7 +1420,7 @@ class UpdateCancellation extends React.Component {
             var flg = 0;
 
             buttons.forEach(function (btn, ind) {
-                if (btn.key.toLowerCase() === "approve" || btn.key.toLowerCase() === "print notice") {
+                if (btn.key.toLowerCase() === "print notice") {
                     flg = 1;
                 }
             });
@@ -1419,7 +1428,7 @@ class UpdateCancellation extends React.Component {
             if (flg === 0) {
 
                 return (
-                    <div className="form-section">
+                    <div className="form-section" id="approvalDetailsSection">
                         <div className="row">
                             <div className="col-md-8 col-sm-8">
                                 <h3 className="categoryType">Approval Details </h3>
@@ -1492,7 +1501,7 @@ class UpdateCancellation extends React.Component {
                 );
             } else {
                 return (
-                    <div className="form-section" id="approvalDetailsSection">
+                    <div className="form-section" id="approvalCommentsSection">
                         <div className="row">
                             <div className="col-md-8 col-sm-8">
                                 <h3 className="categoryType">Approval Details </h3>

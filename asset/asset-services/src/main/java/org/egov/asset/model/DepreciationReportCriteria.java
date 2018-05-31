@@ -49,6 +49,7 @@
 package org.egov.asset.model;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 import javax.validation.constraints.NotNull;
 
@@ -96,7 +97,7 @@ public class DepreciationReportCriteria {
 
     private String financialYear;
 
-    private Long assetId;
+    private List<Long> assetId;
 
     private BigDecimal grossValue;
 

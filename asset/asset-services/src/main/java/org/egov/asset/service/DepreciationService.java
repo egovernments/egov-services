@@ -314,7 +314,7 @@ public class DepreciationService {
             final RequestInfo requestInfo) {
         final List<Long> assetIds = new ArrayList<>();
         assetIds.add(assetId);
-        final DepreciationReportCriteria depreciations = DepreciationReportCriteria.builder().tenantId(tenantId).assetId(assetId)
+        final DepreciationReportCriteria depreciations = DepreciationReportCriteria.builder().tenantId(tenantId).assetId(assetIds)
                 .build();
         final List<DepreciationReportCriteria> depreciationsList = depreciationRepository
                 .getDepreciatedAsset(depreciations);

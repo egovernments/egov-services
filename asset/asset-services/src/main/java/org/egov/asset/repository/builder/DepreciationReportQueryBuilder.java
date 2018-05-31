@@ -129,11 +129,11 @@ public class DepreciationReportQueryBuilder {
             selectQuery.append(" depreciation.financialyear =?");
             preparedStatementValues.add(depreciationReportCriteria.getFinancialYear());
         }
-        
-        if (depreciationReportCriteria.getAssetId() != null ) {
+
+        if (depreciationReportCriteria.getAssetId()!=null && !depreciationReportCriteria.getAssetId().isEmpty()) {
             isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-            selectQuery.append(" depreciation.assetid =?");
-            preparedStatementValues.add(depreciationReportCriteria.getAssetId());
+            selectQuery.append(" depreciation.assetid IN (" + getIdQuery(depreciationReportCriteria.getAssetId()));
+
         }
 
     }
@@ -142,6 +142,16 @@ public class DepreciationReportQueryBuilder {
         if (appendAndClauseFlag)
             queryString.append(" AND");
         return true;
+    }
+
+    private static String getIdQuery(final List<Long> idList) {
+        StringBuilder query = null;
+        if (!idList.isEmpty()) {
+            query = new StringBuilder(idList.get(0).toString());
+            for (int i = 1; i < idList.size(); i++)
+                query.append("," + idList.get(i));
+        }
+        return query.append(")").toString();
     }
 
 }

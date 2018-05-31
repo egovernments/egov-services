@@ -135,6 +135,12 @@ public class DepreciationReportQueryBuilder {
             selectQuery.append(" depreciation.assetid IN (" + getIdQuery(depreciationReportCriteria.getAssetId()));
 
         }
+        
+        if (depreciationReportCriteria.getId() != null) {
+            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+            selectQuery.append(" depreciation.id =?");
+            preparedStatementValues.add(depreciationReportCriteria.getId());
+        }
 
     }
 

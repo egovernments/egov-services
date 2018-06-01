@@ -104,6 +104,7 @@ public class AssetService {
                     assetDocs.setAsset(asset.getId());
                     assetDocs.setFileStore(document.getFileStore());
                     assetDocs.setTenantId(document.getTenantId());
+                    assetDocs.setDocumentType(document.getDocumentType());
                     documents.add(assetDocs);
                 }
                 asset.getDocuments().addAll(documents);

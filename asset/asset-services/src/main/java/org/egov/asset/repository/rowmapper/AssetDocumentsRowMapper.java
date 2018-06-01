@@ -58,6 +58,7 @@ public class AssetDocumentsRowMapper implements RowMapper<Document> {
         document.setAsset((Long) rs.getObject("asset"));
         document.setFileStore(rs.getString("filestore"));
         document.setTenantId(rs.getString("tenantId"));
+        document.setDocumentType(rs.getString("documenttype"));
         return document;
 
     }

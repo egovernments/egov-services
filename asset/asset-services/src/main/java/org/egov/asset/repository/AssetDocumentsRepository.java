@@ -55,15 +55,18 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class AssetDocumentsRepository {
 
-    public static final String SELECT_BY_ASSETDOCUMENTID_QUERY = "SELECT id, asset, filestore, tenantId"
-            + " FROM egasset_document WHERE asset = ? AND tenantId = ? ";
+    public static final String SELECT_BY_ASSETDOCUMENTID_QUERY = "SELECT id, asset, filestore, documenttype,tenantId"
+            + " FROM egasset_document WHERE asset = ? AND tenantId = ? and documenttype='asset'";
+    
+    public static final String SELECT_BY_DISPOSALDOCUMENTID_QUERY = "SELECT id, asset, filestore, documenttype,tenantId"
+            + " FROM egasset_document WHERE asset = ? AND tenantId = ? and documenttype='disposal'";
 
     public static final String INSERT_ASSET_DOCUMENTS_QUERY = "INSERT INTO egasset_document"
-            + " (id,asset,filestore,tenantid)"
-            + " VALUES (nextval('seq_egasset_document'),?,?,?)";
+            + " (id,asset,filestore,tenantid,documenttype)"
+            + " VALUES (nextval('seq_egasset_document'),?,?,?,?)";
     
     public static final String DELETE_ASSET_DOCUMENTS_QUERY = "Delete from egasset_document"
-            + " where asset = ? and filestore = ? and tenantId = ? " ;
+            + " where asset = ? and filestore = ? and tenantId = ? and documenttype= ? " ;
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -79,6 +82,15 @@ public class AssetDocumentsRepository {
             return null;
         }
     }
+    
+    public List<Document> findByAssetIdWithDisposal(final Long id, final String tenantId) {
+        try {
+            return jdbcTemplate.query(SELECT_BY_DISPOSALDOCUMENTID_QUERY, new Object[] { id, tenantId },
+                    assetDocumentsRowMapper);
+        } catch (final EmptyResultDataAccessException e) {
+            return null;
+        }
+    }
 
     public void save(final Long assetId, final List<Document> documents, final String tenantId) {
         jdbcTemplate.batchUpdate(INSERT_ASSET_DOCUMENTS_QUERY, new BatchPreparedStatementSetter() {
@@ -87,6 +99,7 @@ public class AssetDocumentsRepository {
                 ps.setLong(1, assetId);
                 ps.setString(2, documents.get(i).getFileStore());
                 ps.setString(3, tenantId);
+                ps.setString(4, documents.get(i).getDocumentType());
             }
 
             @Override
@@ -96,8 +109,8 @@ public class AssetDocumentsRepository {
         });
     }
     
-    public int delete(Long assetId, String filestore, String tenantId) {
-        return jdbcTemplate.update(DELETE_ASSET_DOCUMENTS_QUERY, assetId, filestore, tenantId);
+    public int delete(Long assetId, String filestore, String tenantId,String documentType) {
+        return jdbcTemplate.update(DELETE_ASSET_DOCUMENTS_QUERY, assetId, filestore, tenantId,documentType);
     }
 
 }

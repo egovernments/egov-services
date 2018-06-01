@@ -182,14 +182,14 @@ public class AssetRepository {
 
         final List<Document> documents = asset.getDocuments();
         if (!documents.isEmpty()) {
-            final String sql = "INSERT INTO egasset_document (id,asset,filestore,tenantid) values "
-                    + "(nextval('seq_egasset_document'),?,?,?);";
+            final String sql = "INSERT INTO egasset_document (id,asset,filestore,tenantid,documenttype) values "
+                    + "(nextval('seq_egasset_document'),?,?,?,?);";
             log.info("the insert query for assets docs : " + sql);
             final List<Object[]> documentBatchArgs = new ArrayList<>();
 
             for (final Document document : documents) {
                 final Object[] documentRecord = { asset.getId(), document.getFileStore(),
-                        asset.getTenantId() };
+                        asset.getTenantId(),document.getDocumentType()};
                 documentBatchArgs.add(documentRecord);
             }
 
@@ -309,7 +309,7 @@ public class AssetRepository {
             for (final Document documentInDb : documentsFromDB)
                 if (!documents.contains(documentInDb.getFileStore()))
                     assetDocumentsRepository.delete(documentInDb.getAsset(), documentInDb.getFileStore(),
-                            asset.getTenantId());
+                            asset.getTenantId(),documentInDb.getDocumentType());
             if (asset.getDocuments() != null && !asset.getDocuments().isEmpty())
                 asset.getDocuments().removeAll(documentsFromDB);
         }

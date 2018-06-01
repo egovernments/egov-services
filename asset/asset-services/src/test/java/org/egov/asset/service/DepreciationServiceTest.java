@@ -52,7 +52,6 @@ import static org.junit.Assert.assertNotEquals;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -62,12 +61,9 @@ import org.egov.asset.contract.DepreciationRequest;
 import org.egov.asset.contract.DepreciationResponse;
 import org.egov.asset.contract.FinancialYearContract;
 import org.egov.asset.contract.FinancialYearContractResponse;
-import org.egov.asset.domain.CalculationAssetDetails;
 import org.egov.asset.model.Depreciation;
 import org.egov.asset.model.DepreciationCriteria;
 import org.egov.asset.model.DepreciationDetail;
-import org.egov.asset.model.enums.DepreciationMethod;
-import org.egov.asset.model.enums.DepreciationStatus;
 import org.egov.asset.repository.DepreciationRepository;
 import org.egov.asset.web.wrapperfactory.ResponseInfoFactory;
 import org.egov.common.contract.request.RequestInfo;
@@ -178,28 +174,6 @@ public class DepreciationServiceTest {
         return financialYearContractResponse;
     }
 
-    private List<CalculationAssetDetails> getCalculationAssetDetailList() {
-        final List<CalculationAssetDetails> calculationAssetDetails = new ArrayList<CalculationAssetDetails>();
-        final CalculationAssetDetails calculationAssetDetail = new CalculationAssetDetails();
-        calculationAssetDetail.setAccumulatedDepreciation(BigDecimal.ZERO);
-        calculationAssetDetail.setAccumulatedDepreciationAccount(Long.valueOf("1947"));
-        calculationAssetDetail.setAssetCategoryDepreciationRate(null);
-        calculationAssetDetail.setAssetCategoryId(Long.valueOf("196"));
-        calculationAssetDetail.setAssetCategoryName("Kalyana Mandapam");
-        calculationAssetDetail.setAssetDepreciationRate(Double.valueOf("16.53"));
-        calculationAssetDetail.setAssetId(Long.valueOf("597"));
-        calculationAssetDetail.setAssetReference(null);
-        calculationAssetDetail.setDepartmentId(Long.valueOf("5"));
-        calculationAssetDetail.setDepreciationExpenseAccount(Long.valueOf("1906"));
-        calculationAssetDetail.setDepreciationMethod(DepreciationMethod.STRAIGHT_LINE_METHOD);
-        calculationAssetDetail.setEnableYearWiseDepreciation(true);
-        calculationAssetDetail.setFinancialyear("2017-18");
-        calculationAssetDetail.setGrossValue(new BigDecimal("15000"));
-        calculationAssetDetail.setYearwisedepreciationrate(Double.valueOf("15"));
-        calculationAssetDetails.add(calculationAssetDetail);
-        return calculationAssetDetails;
-    }
-
     private HttpHeaders getHttpHeaders() {
         final List<MediaType> mediaTypes = new ArrayList<MediaType>();
         mediaTypes.add(MediaType.ALL);
@@ -231,15 +205,6 @@ public class DepreciationServiceTest {
         depreciationCriteria.setToDate(1514965363105l);
         depreciationCriteria.setTenantId("ap.kurnool");
         return depreciationCriteria;
-    }
-
-    private DepreciationDetail getDepreciationDetail() {
-        final DepreciationDetail depreciationDetail = DepreciationDetail.builder().assetId(Long.valueOf("552"))
-                .depreciationRate(Double.valueOf("20")).depreciationValue(new BigDecimal("3200"))
-                .status(DepreciationStatus.SUCCESS).reasonForFailure(null)
-                .valueBeforeDepreciation(new BigDecimal("16000")).valueAfterDepreciation(new BigDecimal("12800"))
-                .voucherReference("1/GJV/00000219/08/2017-18").build();
-        return depreciationDetail;
     }
 
 }

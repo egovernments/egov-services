@@ -75,8 +75,8 @@ public class DisposalQueryBuilder {
 			+ "disposal.buyeraddress as buyeraddress,disposal.disposalreason as disposalreason,disposal.disposaldate as disposaldate,disposal.pancardnumber as pancardnumber,"
 			+ "disposal.aadharcardnumber as aadharcardnumber,disposal.assetcurrentvalue as assetcurrentvalue ,disposal.salevalue as salevalue ,disposal.transactiontype as transactiontype,"
 			+ "disposal.assetsaleaccount as assetsaleaccount,"
-			+ " disposal.profitlossvoucherreference as profitlossvoucherreference ,documents.filestore as filestore ,documents.id as documentsId FROM"
-			+ " egasset_disposal as disposal LEFT OUTER JOIN egasset_document documents ON disposal.assetid = documents.asset";
+			+ " disposal.profitlossvoucherreference as profitlossvoucherreference  FROM "
+			+ " egasset_disposal as disposal";
 
 	@SuppressWarnings("rawtypes")
 	public String getQuery(final DisposalCriteria disposalCriteria, final List preparedStatementValues) {
@@ -92,7 +92,7 @@ public class DisposalQueryBuilder {
 	private void addWhereClause(final StringBuilder selectQuery, final List preparedStatementValues,
 			final DisposalCriteria disposalCriteria) {
 
-		System.out.println("revaluationCriteria>>" + disposalCriteria);
+		System.out.println("disposalCriteria>>" + disposalCriteria);
 		boolean isAppendAndClause = false;
 
 		selectQuery.append(" WHERE");

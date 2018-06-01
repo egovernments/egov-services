@@ -24,6 +24,7 @@
 			"transactionType": "SALE",
 			"assetSaleAccount": 15,
 			"profitLossVoucherReference": 6,
+			"documents":[],
 			"auditDetails": 
 			{
 				"createdBy": "2",

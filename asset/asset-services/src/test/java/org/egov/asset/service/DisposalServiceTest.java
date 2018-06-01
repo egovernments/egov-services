@@ -82,16 +82,15 @@ import org.egov.asset.model.Voucher;
 import org.egov.asset.model.VoucherAccountCodeDetails;
 import org.egov.asset.model.enums.AssetStatusObjectName;
 import org.egov.asset.model.enums.ModeOfAcquisition;
-import org.egov.asset.model.enums.Sequence;
 import org.egov.asset.model.enums.Status;
 import org.egov.asset.model.enums.TransactionType;
 import org.egov.asset.model.enums.VoucherType;
+import org.egov.asset.repository.AssetDocumentsRepository;
 import org.egov.asset.repository.AssetRepository;
 import org.egov.asset.repository.DisposalRepository;
 import org.egov.asset.util.FileUtils;
 import org.egov.asset.web.wrapperfactory.ResponseInfoFactory;
 import org.egov.common.contract.request.RequestInfo;
-import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -112,7 +111,6 @@ public class DisposalServiceTest {
 
     @Mock
     private AssetRepository assetRepository;
-
 
     @Mock
     private ObjectMapper objectMapper;
@@ -149,9 +147,12 @@ public class DisposalServiceTest {
 
     @Mock
     private ResponseInfoFactory responseInfoFactory;
-    
+
     @Mock
     private CurrentValueService currentValueService;
+
+    @Mock
+    private AssetDocumentsRepository assetDocumentsRepository;
 
     @Test
     public void testSearch() {
@@ -168,7 +169,6 @@ public class DisposalServiceTest {
         assertEquals(disposal.toString(), expectedDisposalResponse.toString());
     }
 
-
     @SuppressWarnings("unchecked")
     @Test
     public void createVoucherForDisposalTest() throws Exception {
@@ -182,7 +182,7 @@ public class DisposalServiceTest {
         final VoucherRequest voucherRequest = getVoucherRequest();
         when(assetRepository.findForCriteria(any(AssetCriteria.class))).thenReturn(assets);
         when(voucherService.createDisposalVoucherRequest(any(Disposal.class), any(Long.class), any(Long.class),
-                any(List.class),any(String.class) ,any(HttpHeaders.class))).thenReturn(voucherRequest);
+                any(List.class), any(String.class), any(HttpHeaders.class))).thenReturn(voucherRequest);
         disposalService.createVoucherForDisposal(disposalRequest, headers);
     }
 
@@ -417,7 +417,7 @@ public class DisposalServiceTest {
         disposal.setProfitLossVoucherReference("6");
         disposal.setAuditDetails(getAuditDetails());
         disposal.setProfitLossVoucherReference("6");
-
+        disposal.setDocuments(new ArrayList<>());
         return disposal;
     }
 

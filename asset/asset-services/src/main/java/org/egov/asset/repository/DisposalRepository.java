@@ -101,14 +101,14 @@ public class DisposalRepository {
         
         final List<Document> documents = disposal.getDocuments();
         if (documents != null) {
-            final String sql = "INSERT INTO egasset_document (id,asset,filestore,tenantid) values "
-                    + "(nextval('seq_egasset_document'),?,?,?);";
+            final String sql = "INSERT INTO egasset_document (id,asset,filestore,tenantid,documenttype) values "
+                    + "(nextval('seq_egasset_document'),?,?,?,?);";
             log.info("the insert query for assets docs : " + sql);
             final List<Object[]> documentBatchArgs = new ArrayList<>();
 
             for (final Document document : documents) {
                 final Object[] documentRecord = { disposal.getAssetId(), document.getFileStore(),
-                        disposal.getTenantId() };
+                        disposal.getTenantId(),document.getDocumentType() };
                 documentBatchArgs.add(documentRecord);
             }
 

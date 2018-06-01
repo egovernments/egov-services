@@ -200,15 +200,15 @@ class Depreciation extends React.Component {
                 <div className="col-sm-6">
                   <div className="row">
                     <div className="col-sm-6 label-text">
-                      <label>Depreciation Name</label>
+                      <label>Depreciation Rate</label>
                     </div>
                     <div className="col-sm-6">
                       <div>
-                        <input type="text" disabled value={depreciationSet.currentCapitalizedValue} style={{ display: this.state.readOnly ? 'none' : 'block' }} />
+                        <input type="text" disabled value={depreciationSet.depreciationRate} style={{ display: this.state.readOnly ? 'none' : 'block' }} />
                       </div>
                     </div>
                     <div className="col-sm-6 label-view-text" style={{ display: this.state.readOnly ? 'block' : 'none' }}>
-                      <label>{depreciationSet.assetId}</label>
+                      <label>{depreciationSet.depreciationRate}</label>
                     </div>
                   </div>
                 </div>

@@ -45,7 +45,7 @@ serviceMaps:
 
 
  - version: 1.0
-   name: Asset
+   name: pt-calculator
    description: Persists asset details in eg_asset table
    fromTopic: update-pgr-service
    isTransaction: true

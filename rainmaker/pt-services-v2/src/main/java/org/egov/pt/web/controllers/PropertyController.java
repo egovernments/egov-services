@@ -21,22 +21,19 @@ import java.util.List;
 @RequestMapping("/property")
 public class PropertyController {
 
+	@Autowired
+	private PropertyService propertyService;
 
-@Autowired
-private PropertyService propertyService;
-
-@Autowired
-private ResponseInfoFactory responseInfoFactory;
-
-
-
+	@Autowired
+	private ResponseInfoFactory responseInfoFactory;
 
 	@RequestMapping(value = "/_create", method = RequestMethod.POST)
 	public ResponseEntity<PropertyResponse> create(@Valid @RequestBody PropertyRequest propertyRequest) {
 
 		List<Property> properties = propertyService.createProperty(propertyRequest);
 		PropertyResponse response = PropertyResponse.builder().properties(properties)
-				.responseInfo(responseInfoFactory.createResponseInfoFromRequestInfo(propertyRequest.getRequestInfo(), true))
+				.responseInfo(
+						responseInfoFactory.createResponseInfoFromRequestInfo(propertyRequest.getRequestInfo(), true))
 				.build();
 		return new ResponseEntity<>(response, HttpStatus.CREATED);
 	}
@@ -46,18 +43,19 @@ private ResponseInfoFactory responseInfoFactory;
 
 		List<Property> properties = propertyService.updateProperty(propertyRequest);
 		PropertyResponse response = PropertyResponse.builder().properties(properties)
-				.responseInfo(responseInfoFactory.createResponseInfoFromRequestInfo(propertyRequest.getRequestInfo(), true))
+				.responseInfo(
+						responseInfoFactory.createResponseInfoFromRequestInfo(propertyRequest.getRequestInfo(), true))
 				.build();
 		return new ResponseEntity<>(response, HttpStatus.ACCEPTED);
 	}
 
 	@RequestMapping(value = "/_search", method = RequestMethod.POST)
 	public ResponseEntity<PropertyResponse> search(@Valid @RequestBody RequestInfoWrapper requestInfoWrapper,
-			@Valid @ModelAttribute  PropertyCriteria propertyCriteria) {
+			@Valid @ModelAttribute PropertyCriteria propertyCriteria) {
 
 		List<Property> properties = propertyService.searchProperty(propertyCriteria);
-		PropertyResponse response = PropertyResponse.builder().properties(properties)
-				.responseInfo(responseInfoFactory.createResponseInfoFromRequestInfo(requestInfoWrapper.getRequestInfo(),true))
+		PropertyResponse response = PropertyResponse.builder().properties(properties).responseInfo(
+				responseInfoFactory.createResponseInfoFromRequestInfo(requestInfoWrapper.getRequestInfo(), true))
 				.build();
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}

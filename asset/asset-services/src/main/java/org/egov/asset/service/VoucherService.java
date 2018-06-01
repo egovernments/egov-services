@@ -315,8 +315,8 @@ public class VoucherService {
     }
 
     public VoucherRequest createDepreciationVoucherRequest(
-            final List<DepreciationInputs> depreciationInputsList, final Long departmentId,final String functionCode,
-            final List<VoucherAccountCodeDetails> accountCodeDetails, final String tenantId, final HttpHeaders header) {
+            final List<DepreciationInputs> depreciationInputsList, final Long departmentId,final String functionCode,final Long assetId,
+           final Long depreciationId,  final List<VoucherAccountCodeDetails> accountCodeDetails, final String tenantId, final HttpHeaders header) {
 
         final VoucherRequest voucherRequest = new VoucherRequest();
         final List<Voucher> vouchers = new ArrayList<>();
@@ -327,6 +327,11 @@ public class VoucherService {
                 .getAssetConfigValueByKeyAndTenantId(AssetConfigurationKeys.DEPRECIATIONVOUCHERNAME, tenantId));
         voucher.setDescription(assetConfigurationService
                 .getAssetConfigValueByKeyAndTenantId(AssetConfigurationKeys.DEPRECIATIONVOUCHERDESCRIPTION, tenantId));
+        final String source = header.getOrigin() + "/asset-web/app/asset/view-asset-depreciation.html?id=" + assetId +
+                "&depreciationId=" + depreciationId + "&type=view";
+
+        log.debug("Revaluation Source :: " + source);
+        voucher.setSource(source);
         
         setFinancialParameters(voucher, accountCodeDetails, tenantId,functionCode);
        

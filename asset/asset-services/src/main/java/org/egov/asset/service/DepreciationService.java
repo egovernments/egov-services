@@ -162,7 +162,7 @@ public class DepreciationService {
                 depreciationCriteria.getFromDate(), depreciationCriteria.getToDate(), depreciationCriteria.getFinancialYear());
 
         getDepreciationdetailsId(depreciationDetailsList);
-        // sending dep/currval objects to respective create async methods
+        // sending dep/currval objects to respective create sync methods
         depreciation = Depreciation.builder().depreciationCriteria(depreciationCriteria)
                 .depreciationDetails(depreciationDetailsList).build();
         depreciation.setTenantId(depreciationCriteria.getTenantId());
@@ -191,6 +191,7 @@ public class DepreciationService {
 
                 final Long departmentId = depreciation.getDepartment();
                 final String functionCode = depreciation.getFunction();
+                final Long assetId=depreciation.getAssetId();
 
                 log.debug("Asset Department ID :: " + departmentId);
                 for (final DepreciationDetail depreciationDetail : depreciationDetailsList)
@@ -228,7 +229,7 @@ public class DepreciationService {
                         validateDepreciationSubledgerDetails(requestInfo, tenantId, ledgerMap.keySet());
                         if (!accountCodeDetails.isEmpty()) {
                             final VoucherRequest voucherRequest = voucherService.createDepreciationVoucherRequest(
-                                    depreciationInputsList, departmentId, functionCode, accountCodeDetails, tenantId, headers);
+                                    depreciationInputsList, departmentId, functionCode,assetId,depreciationDetail.getId(),accountCodeDetails, tenantId, headers);
                             log.debug("Voucher Request for Depreciation :: " + voucherRequest);
 
                             final String voucherNumber = voucherService.createVoucher(voucherRequest, tenantId, headers);

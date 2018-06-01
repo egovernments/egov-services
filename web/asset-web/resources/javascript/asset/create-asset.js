@@ -99,7 +99,7 @@ const uploadFilesForAsset = function (body, cb) {
             breakout = 1;
           } else {
             counter--;
-            docs.push({ fileStore: res.files[0].fileStoreId });
+            docs.push({ fileStore: res.files[0].fileStoreId, documentType:"asset" });
             if (counter == 0) {
               body.Asset.documents = body.Asset.documents.concat(docs);
               delete body.Asset.document
@@ -213,6 +213,7 @@ class CreateAsset extends React.Component {
       modify2: false,
       allFiles: [],
       removedFiles: {},
+      removedAssetFiles:[],
       schemes: [],
       subSchemes: []
     }
@@ -232,6 +233,8 @@ class CreateAsset extends React.Component {
     this.removeReference = this.removeReference.bind(this);
     this.openNewRelAssetMdl = this.openNewRelAssetMdl.bind(this);
     this.addToRemovedFiles = this.addToRemovedFiles.bind(this);
+    this.addToAssetRemovedFiles = this.addToAssetRemovedFiles.bind(this);
+
   }
 
   handleAddNewYearRow() {
@@ -701,6 +704,20 @@ class CreateAsset extends React.Component {
     });
     var tempInfo = Object.assign({}, this.state.assetSet), _this = this, type = getUrlVars()["type"];
     var remFiles = Object.assign({}, this.state.removedFiles);
+    var remAssetFiles = Object.assign([], this.state.removedAssetFiles);
+
+    if(remAssetFiles){
+      remAssetFiles.forEach(function(fileId){
+
+        for(let i = 0; i< tempInfo.documents.length; i++  ){
+          if(tempInfo.documents[i].fileStore === fileId ){
+            tempInfo.documents.splice(i,1);
+          }
+        }
+
+      })
+    }    
+
     if (tempInfo && tempInfo.assetCategory)
       tempInfo.assetCategory.tenantId = tenantId;
     delete tempInfo.assetReferenceName;
@@ -1436,10 +1453,22 @@ class CreateAsset extends React.Component {
     })
   }
 
+  addToAssetRemovedFiles(fileId, addBack) {
+    var removedAssetFiles = Object.assign([], this.state.removedAssetFiles);
+    if (addBack) {
+      removedAssetFiles.splice(removedAssetFiles.indexOf(fileId), 1);
+    } else {
+      removedAssetFiles.push(fileId);
+    }
+    this.setState({
+      removedAssetFiles: Object.assign([], removedAssetFiles)
+    })
+  }
+
   render() {
     // console.log(this.state);
-    let { handleChange, openRelatedAssetMdl, handleClick, addOrUpdate, handleChangeTwoLevel, handleChangeAssetAttr, addNewRow, handleReferenceChange, handleRefSearch, selectRef, removeRow, removeReference, removeReferenceConfirm, openNewRelAssetMdl, addToRemovedFiles, handleAddNewYearRow, handleDelYearRow, handleYearChange } = this;
-    let { isSearchClicked, list, customFields, error, success, acquisitionList, readonly, newRows, refSet, references, tblSet, departments, relatedAssets, allFiles, removedFiles, financialYears, functions, subSchemes, schemes } = this.state;
+    let { handleChange, openRelatedAssetMdl, handleClick, addOrUpdate, handleChangeTwoLevel, handleChangeAssetAttr, addNewRow, handleReferenceChange, handleRefSearch, selectRef, removeRow, removeReference, removeReferenceConfirm, openNewRelAssetMdl, addToRemovedFiles, addToAssetRemovedFiles, handleAddNewYearRow, handleDelYearRow, handleYearChange } = this;
+    let { isSearchClicked,removedAssetFiles,  list, customFields, error, success, acquisitionList, readonly, newRows, refSet, references, tblSet, departments, relatedAssets, allFiles, removedFiles, financialYears, functions, subSchemes, schemes } = this.state;
     let {
       assetCategory,
       locationDetails,
@@ -1659,6 +1688,19 @@ class CreateAsset extends React.Component {
         )
     }
 
+
+    const renderAssetFileDelBtn = function (fileId) {
+      console.log(removedAssetFiles);
+      if (!(removedAssetFiles && removedAssetFiles.indexOf(fileId)>-1))
+        return (
+          <button type="button" className="btn btn-close" style={{ "color": "#000000" }} onClick={() => addToAssetRemovedFiles(fileId)}>Delete</button>
+        )
+      else
+        return (
+          <button type="button" className="btn btn-close" style={{ "color": "#000000" }} onClick={() => addToAssetRemovedFiles(fileId, true)}>Undo</button>
+        )
+    }
+
     const renderFileBody = function (fles) {
       return fles.map(function (v, ind) {
         return v.value.map(function (file, ind2) {
@@ -1712,6 +1754,8 @@ class CreateAsset extends React.Component {
                 Download
                 </a>
             </td>
+            <td>{getUrlVars()["type"] == "update" ? renderAssetFileDelBtn(file.fileStore) : ""}</td>
+
           </tr>
         )
       })
@@ -1726,6 +1770,7 @@ class CreateAsset extends React.Component {
                 <th>Sr. No.</th>
                 <th>Name</th>
                 <th>File</th>
+                <th>Action</th>
               </tr>
             </thead>
             <tbody id="agreementSearchResultTableBody">

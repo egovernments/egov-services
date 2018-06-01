@@ -125,7 +125,7 @@ public class DisposalService {
         
         for (final Disposal disposal : disposals) {
             final List<Document> documents = new ArrayList<>();
-            final List<Document> disposalDocuments = assetDocumentsRepository.findByAssetId(disposal.getAssetId(),
+            final List<Document> disposalDocuments = assetDocumentsRepository.findByAssetIdWithDisposal(disposal.getAssetId(),
                     disposal.getTenantId());
             if (!disposalDocuments.isEmpty()) {
                 for (final Document document : disposalDocuments) {
@@ -134,6 +134,7 @@ public class DisposalService {
                     disposalDocs.setAsset(disposal.getAssetId());
                     disposalDocs.setFileStore(document.getFileStore());
                     disposalDocs.setTenantId(document.getTenantId());
+                    disposalDocs.setDocumentType(document.getDocumentType());
                     documents.add(disposalDocs);
                 }
                 disposal.getDocuments().addAll(documents);

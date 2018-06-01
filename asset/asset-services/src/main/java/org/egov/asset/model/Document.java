@@ -28,4 +28,7 @@ public class Document {
 
     @JsonProperty("tenantId")
     private String tenantId;
+    
+    @JsonProperty("documentType")
+    private String documentType;
 }

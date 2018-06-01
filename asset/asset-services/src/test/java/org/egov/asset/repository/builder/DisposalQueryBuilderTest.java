@@ -93,8 +93,8 @@ public class DisposalQueryBuilderTest {
                         + "disposal.buyeraddress as buyeraddress,disposal.disposalreason as disposalreason,disposal.disposaldate as disposaldate,disposal.pancardnumber as pancardnumber,"
                         + "disposal.aadharcardnumber as aadharcardnumber,disposal.assetcurrentvalue as assetcurrentvalue ,disposal.salevalue as salevalue ,disposal.transactiontype as transactiontype,"
                         + "disposal.assetsaleaccount as assetsaleaccount,"
-                        + " disposal.profitlossvoucherreference as profitlossvoucherreference ,documents.filestore as filestore ,documents.id as documentsId FROM"
-                        + " egasset_disposal as disposal LEFT OUTER JOIN egasset_document documents ON disposal.assetid = documents.asset WHERE disposal.tenantId = ? AND disposal.assetid IN (10,20) LIMIT ? OFFSET ?";
+                        + " disposal.profitlossvoucherreference as profitlossvoucherreference  FROM "
+                        + " egasset_disposal as disposal WHERE disposal.tenantId = ? AND disposal.assetid IN (10,20) LIMIT ? OFFSET ?";
 
 		List<Long> assetIds = new ArrayList<>();
 		assetIds.add(10L);
@@ -116,12 +116,12 @@ public class DisposalQueryBuilderTest {
 		Mockito.doReturn("500").when(applicationProperties).getSearchPageSizeDefault();
 		String expectedQueryWithTenantId = 
 		        "SELECT *,"
-                        + "disposal.id as disposalId,disposal.tenantid as tenantid ,disposal.assetid as assetid,disposal.buyername as buyername ,"
-                        + "disposal.buyeraddress as buyeraddress,disposal.disposalreason as disposalreason,disposal.disposaldate as disposaldate,disposal.pancardnumber as pancardnumber,"
-                        + "disposal.aadharcardnumber as aadharcardnumber,disposal.assetcurrentvalue as assetcurrentvalue ,disposal.salevalue as salevalue ,disposal.transactiontype as transactiontype,"
-                        + "disposal.assetsaleaccount as assetsaleaccount,"
-                        + " disposal.profitlossvoucherreference as profitlossvoucherreference ,documents.filestore as filestore ,documents.id as documentsId FROM"
-                        + " egasset_disposal as disposal LEFT OUTER JOIN egasset_document documents ON disposal.assetid = documents.asset WHERE disposal.tenantId = ? AND disposal.id IN (2,6) LIMIT ? OFFSET ?";
+	                        + "disposal.id as disposalId,disposal.tenantid as tenantid ,disposal.assetid as assetid,disposal.buyername as buyername ,"
+	                        + "disposal.buyeraddress as buyeraddress,disposal.disposalreason as disposalreason,disposal.disposaldate as disposaldate,disposal.pancardnumber as pancardnumber,"
+	                        + "disposal.aadharcardnumber as aadharcardnumber,disposal.assetcurrentvalue as assetcurrentvalue ,disposal.salevalue as salevalue ,disposal.transactiontype as transactiontype,"
+	                        + "disposal.assetsaleaccount as assetsaleaccount,"
+	                        + " disposal.profitlossvoucherreference as profitlossvoucherreference  FROM "
+	                        + " egasset_disposal as disposal WHERE disposal.tenantId = ? AND disposal.id IN (2,6) LIMIT ? OFFSET ?";
 		List<Long> ids = new ArrayList<>();
 		ids.add(2L);
 		ids.add(6L);
@@ -144,8 +144,8 @@ public class DisposalQueryBuilderTest {
                         + "disposal.buyeraddress as buyeraddress,disposal.disposalreason as disposalreason,disposal.disposaldate as disposaldate,disposal.pancardnumber as pancardnumber,"
                         + "disposal.aadharcardnumber as aadharcardnumber,disposal.assetcurrentvalue as assetcurrentvalue ,disposal.salevalue as salevalue ,disposal.transactiontype as transactiontype,"
                         + "disposal.assetsaleaccount as assetsaleaccount,"
-                        + " disposal.profitlossvoucherreference as profitlossvoucherreference ,documents.filestore as filestore ,documents.id as documentsId FROM"
-                        + " egasset_disposal as disposal LEFT OUTER JOIN egasset_document documents ON disposal.assetid = documents.asset WHERE disposal.tenantId = ? LIMIT ? OFFSET ?";
+                        + " disposal.profitlossvoucherreference as profitlossvoucherreference  FROM "
+                        + " egasset_disposal as disposal WHERE disposal.tenantId = ? LIMIT ? OFFSET ?";
 		DisposalCriteria disposalCriteria = DisposalCriteria.builder().tenantId("ap.kurnool").size(Long.valueOf(80))
 				.build();
 

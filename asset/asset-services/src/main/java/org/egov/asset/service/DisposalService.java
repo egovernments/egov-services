@@ -65,12 +65,14 @@ import org.egov.asset.model.AssetStatus;
 import org.egov.asset.model.ChartOfAccountDetailContract;
 import org.egov.asset.model.Disposal;
 import org.egov.asset.model.DisposalCriteria;
+import org.egov.asset.model.Document;
 import org.egov.asset.model.VoucherAccountCodeDetails;
 import org.egov.asset.model.enums.AssetConfigurationKeys;
 import org.egov.asset.model.enums.AssetStatusObjectName;
 import org.egov.asset.model.enums.Sequence;
 import org.egov.asset.model.enums.Status;
 import org.egov.asset.model.enums.TransactionType;
+import org.egov.asset.repository.AssetDocumentsRepository;
 import org.egov.asset.repository.AssetRepository;
 import org.egov.asset.repository.DisposalRepository;
 import org.egov.common.contract.request.RequestInfo;
@@ -107,6 +109,9 @@ public class DisposalService {
 
     @Autowired
     private CurrentValueService currentValueService;
+    
+    @Autowired
+    private AssetDocumentsRepository assetDocumentsRepository;
 
     public List<Disposal> search(final DisposalCriteria disposalCriteria, final RequestInfo requestInfo) {
         List<Disposal> disposals = null;
@@ -116,6 +121,24 @@ public class DisposalService {
         } catch (final Exception ex) {
             log.info("DisposalService:", ex);
             throw new RuntimeException(ex);
+        }
+        
+        for (final Disposal disposal : disposals) {
+            final List<Document> documents = new ArrayList<>();
+            final List<Document> disposalDocuments = assetDocumentsRepository.findByAssetId(disposal.getAssetId(),
+                    disposal.getTenantId());
+            if (!disposalDocuments.isEmpty()) {
+                for (final Document document : disposalDocuments) {
+                    final Document disposalDocs = new Document();
+                    disposalDocs.setId(document.getId());
+                    disposalDocs.setAsset(disposal.getAssetId());
+                    disposalDocs.setFileStore(document.getFileStore());
+                    disposalDocs.setTenantId(document.getTenantId());
+                    documents.add(disposalDocs);
+                }
+                disposal.getDocuments().addAll(documents);
+
+            }
         }
         return disposals;
     }

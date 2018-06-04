@@ -1,0 +1,41 @@
+serviceMaps:
+ serviceName: PropertyTax
+ mappings:
+ - version: 1.0
+   name: pt-service-v2
+   description: Persists the property tax requests
+   fromTopic: save-pt-drafts
+   isTransaction: true
+   queryMaps:
+    - query: INSERT INTO eg_pt_drafts_v2(id, userid, tenantid, draft) VALUES (?, ?, ?, ?);
+
+      basePath: draft.*
+      jsonMaps:
+
+       - jsonPath: $.draft.*.userid
+
+       - jsonPath: $.draft.*.tenantid
+
+       - jsonPath: $.draft.*.draft
+
+
+ - version: 1.0
+   name: pt-service-v2
+   description: Persists asset details in eg_asset table
+   fromTopic: update-pt-drafts
+   isTransaction: true
+   queryMaps:
+
+    - query: UPDATE eg_pt_drafts_v2 SET userid=?, tenantid=?, draft=? WHERE id=?;
+
+      basePath: draft.*
+      jsonMaps:
+
+       - jsonPath: $.draft.*.userid
+
+       - jsonPath: $.draft.*.tenantid
+
+       - jsonPath: $.draft.*.draft
+
+       - jsonPath: $.draft.*.id
+

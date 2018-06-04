@@ -6,6 +6,7 @@ import javax.validation.Valid;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.pt.calculator.service.BillingSlabService;
+import org.egov.pt.calculator.validator.BillingSlabValidator;
 import org.egov.pt.calculator.web.models.property.BillingSlabReq;
 import org.egov.pt.calculator.web.models.property.BillingSlabRes;
 import org.egov.pt.calculator.web.models.property.BillingSlabSearcCriteria;
@@ -31,6 +32,9 @@ public class BillingSlabController {
 	@Autowired
 	private BillingSlabService service;
 	
+	@Autowired
+	private BillingSlabValidator billingSlabValidator;
+	
 
 	/**
 	 * enpoint to create billing-slabs
@@ -42,8 +46,8 @@ public class BillingSlabController {
 	@ResponseBody
 	private ResponseEntity<?> create(@RequestBody @Valid BillingSlabReq billingSlabReq) {
 
-		//pgrRequestValidator.validateCreate(serviceRequest);
 		long startTime = new Date().getTime();
+		billingSlabValidator.validateCreate(billingSlabReq);
 		BillingSlabRes billingSlabRes = service.createBillingSlab(billingSlabReq);
 		long endTime = new Date().getTime();
 		log.debug(" the time taken for create in ms: {}", endTime - startTime);
@@ -60,8 +64,8 @@ public class BillingSlabController {
 	@ResponseBody
 	private ResponseEntity<?> update(@RequestBody @Valid BillingSlabReq billingSlabReq) {
 
-		//pgrRequestValidator.validateCreate(serviceRequest);
 		long startTime = new Date().getTime();
+		billingSlabValidator.validateUpdate(billingSlabReq);
 		BillingSlabRes billingSlabRes = service.updateBillingSlab(billingSlabReq);
 		long endTime = new Date().getTime();
 		log.debug(" the time taken for create in ms: {}", endTime - startTime);

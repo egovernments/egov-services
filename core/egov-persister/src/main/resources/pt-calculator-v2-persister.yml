@@ -7,10 +7,12 @@ serviceMaps:
    fromTopic: save-pt-billingslab
    isTransaction: true
    queryMaps:
-    - query: INSERT INTO eg_pt_billingslab(tenantid, propertyType, propertySubType, usageCategoryMajor, usageCategoryMinor, usageCategorySubMinor, usageCategoryDetail, ownerShipCategory, subOwnerShipCategory, fromFloor, toFloor, area, fromPlotSize, toPlotSize, unitRate) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+    - query: INSERT INTO eg_pt_billingslab_v2(id, tenantid, propertyType, propertySubType, usageCategoryMajor, usageCategoryMinor, usageCategorySubMinor, usageCategoryDetail, ownerShipCategory, subOwnerShipCategory, fromFloor, toFloor, area, fromPlotSize, toPlotSize, unitRate, createdby, createdtime, lastmodifiedby, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? , ?, ?, ?, ?, ?);
 
       basePath: billingSlab.*
       jsonMaps:
+
+       - jsonPath: $.billingSlab.*.id
 
        - jsonPath: $.billingSlab.*.tenantId
 
@@ -42,16 +44,23 @@ serviceMaps:
 
        - jsonPath: $.billingSlab.*.unitRate
 
+       - jsonPath: $.billingSlab.*.auditDetails.createdBy
+
+       - jsonPath: $.billingSlab.*.auditDetails.createdTime
+
+       - jsonPath: $.billingSlab.*.auditDetails.lastmodifiedBy
+
+       - jsonPath: $.billingSlab.*.auditDetails.lastmodifiedTime
 
 
  - version: 1.0
    name: pt-calculator
-   description: Persists asset details in eg_asset table
-   fromTopic: update-pgr-service
+   description: Persists the pt-calculator related records to db
+   fromTopic: update-pt-billingslab
    isTransaction: true
    queryMaps:
 
-    - query: UPDATE eg_pt_billingslab SET propertyType=?, propertySubType=?, usageCategoryMajor=?, usageCategoryMinor=?, usageCategorySubMinor=?, usageCategoryDetail=?, ownerShipCategory=?, subOwnerShipCategory=?, fromFloor=?, toFloor=?, area=?, fromPlotSize=?,  toPlotSize=?, unitRate=? WHERE tenantid=? AND id=?;
+    - query: UPDATE eg_pt_billingslab_v2 SET propertyType=?, propertySubType=?, usageCategoryMajor=?, usageCategoryMinor=?, usageCategorySubMinor=?, usageCategoryDetail=?, ownerShipCategory=?, subOwnerShipCategory=?, fromFloor=?, toFloor=?, area=?, fromPlotSize=?,  toPlotSize=?, unitRate=?, lastmodifiedby=?, lastmodifiedtime=? WHERE tenantid=? AND id=?;
 
       basePath: billingSlab.*
       jsonMaps:
@@ -83,6 +92,10 @@ serviceMaps:
        - jsonPath: $.billingSlab.*.toPlotSize
 
        - jsonPath: $.services.*.unitRate
+
+       - jsonPath: $.billingSlab.*.auditDetails.lastmodifiedBy
+
+       - jsonPath: $.billingSlab.*.auditDetails.lastmodifiedTime
 
        - jsonPath: $.billingSlab.*.tenantId
 

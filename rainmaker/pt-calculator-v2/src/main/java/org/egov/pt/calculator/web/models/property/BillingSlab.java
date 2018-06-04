@@ -46,10 +46,10 @@ public class BillingSlab   {
         @JsonProperty("usageCategoryDetail")
         private String usageCategoryDetail = null;
 
-        @JsonProperty("OwnerShipCategory")
+        @JsonProperty("ownerShipCategory")
         private String ownerShipCategory = null;
 
-        @JsonProperty("SubOwnerShipCategory")
+        @JsonProperty("subOwnerShipCategory")
         private String subOwnerShipCategory = null;
 
         @JsonProperty("fromFloor")
@@ -69,6 +69,9 @@ public class BillingSlab   {
 
         @JsonProperty("unitRate")
         private Double unitRate = null;
+        
+        @JsonProperty("auditDetails")
+        private AuditDetails auditDetails;
 
 
 }

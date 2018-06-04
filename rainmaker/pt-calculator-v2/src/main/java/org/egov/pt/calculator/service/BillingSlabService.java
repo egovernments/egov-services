@@ -2,6 +2,7 @@ package org.egov.pt.calculator.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.pt.calculator.producer.Producer;
@@ -38,13 +39,27 @@ public class BillingSlabService {
 	private ResponseInfoFactory factory;
 
 	public BillingSlabRes createBillingSlab(BillingSlabReq billingSlabReq) {
+		enrichBillingSlabForCreate(billingSlabReq);
 		producer.push(configurations.getBillingSlabSavePersisterTopic(), billingSlabReq);
 		return billingSlabUtils.getBillingSlabResponse(billingSlabReq);
 	}
 	
 	public BillingSlabRes updateBillingSlab(BillingSlabReq billingSlabReq) {
+		enrichBillingSlabForUpdate(billingSlabReq);
 		producer.push(configurations.getBillingSlabUpdatePersisterTopic(), billingSlabReq);
 		return billingSlabUtils.getBillingSlabResponse(billingSlabReq);
+	}
+	
+	public void enrichBillingSlabForCreate(BillingSlabReq billingSlabReq) {
+		for(BillingSlab billingSlab: billingSlabReq.getBillingSlab()) {
+			billingSlab.setId(UUID.randomUUID().toString());
+			billingSlab.setAuditDetails(billingSlabUtils.getAuditDetails(billingSlabReq.getRequestInfo()));
+		}
+	}
+	
+	public void enrichBillingSlabForUpdate(BillingSlabReq billingSlabReq) {
+		for(BillingSlab billingSlab: billingSlabReq.getBillingSlab())
+			billingSlab.setAuditDetails(billingSlabUtils.getAuditDetails(billingSlabReq.getRequestInfo()));
 	}
 	
 	public BillingSlabRes searchBillingSlabs(RequestInfo requestInfo, BillingSlabSearcCriteria billingSlabSearcCriteria) {

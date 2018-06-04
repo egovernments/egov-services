@@ -12,8 +12,11 @@ public class BillingSlabConstants {
 	public static final String MDMS_SUBOWNERSHIP_MASTER_NAME = "SubOwnerShipCategory";
 	
 	
+	public static final String MDMS_PROPERTYTYPE_JSONPATH = "$.MdmsRes.PropertyTax.PropertyType";
 	public static final String MDMS_PROPERTYSUBTYPE_JSONPATH = "$.MdmsRes.PropertyTax.PropertySubType";
+	public static final String MDMS_USAGEMAJOR_JSONPATH = "$.MdmsRes.PropertyTax.UsageCategoryMajor";
 	public static final String MDMS_USAGEMINOR_JSONPATH = "$.MdmsRes.PropertyTax.UsageCategoryMinor";
 	public static final String MDMS_USAGESUBMINOR_JSONPATH = "$.MdmsRes.PropertyTax.UsageCategorySubMinor";
+	public static final String MDMS_OWNERSHIP_JSONPATH = "$.MdmsRes.PropertyTax.ownerShipCategory";
 	public static final String MDMS_SUBOWNERSHIP_JSONPATH = "$.MdmsRes.PropertyTax.SubOwnerShipCategory";
 }

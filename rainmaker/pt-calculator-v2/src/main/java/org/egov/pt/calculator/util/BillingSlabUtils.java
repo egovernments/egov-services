@@ -2,6 +2,7 @@ package org.egov.pt.calculator.util;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import org.egov.common.contract.request.RequestInfo;
@@ -9,6 +10,7 @@ import org.egov.mdms.model.MasterDetail;
 import org.egov.mdms.model.MdmsCriteria;
 import org.egov.mdms.model.MdmsCriteriaReq;
 import org.egov.mdms.model.ModuleDetail;
+import org.egov.pt.calculator.web.models.property.AuditDetails;
 import org.egov.pt.calculator.web.models.property.BillingSlabReq;
 import org.egov.pt.calculator.web.models.property.BillingSlabRes;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +40,19 @@ public class BillingSlabUtils {
 					.responseInfo(factory.createResponseInfoFromRequestInfo(billingSlabReq.getRequestInfo(), true))
 					.billingSlab(billingSlabReq.getBillingSlab())
 					.build();
+	}
+	
+	/**
+	 * Common method to return the auditDetails for a given transaction
+	 * 
+	 * @param requestInfo
+	 * @return
+	 */
+	public AuditDetails getAuditDetails(RequestInfo requestInfo) {
+		
+		return AuditDetails.builder().createdBy(requestInfo.getUserInfo().getId().toString()).createdTime(new Date().getTime())
+				.lastModifiedBy(requestInfo.getUserInfo().getId().toString()).lastModifiedTime(new Date().getTime()).build();
+		
 	}
 	
 	/**

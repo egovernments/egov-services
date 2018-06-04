@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.egov.pt.calculator.web.models.property.AuditDetails;
 import org.egov.pt.calculator.web.models.property.BillingSlab;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.ResultSetExtractor;
@@ -22,17 +23,19 @@ public class BillingSlabRowMapper implements ResultSetExtractor<List<BillingSlab
 			String currentId = rs.getString("id");
 			BillingSlab currentBillingSlab = billingSlabMap.get(currentId);
 			if(null == currentBillingSlab) {
+				AuditDetails auditDetails = AuditDetails.builder().createdBy(rs.getString("createdby")).createdTime(rs.getLong("createdTime"))
+						.lastModifiedBy(rs.getString("lastmodifiedby")).lastModifiedTime(rs.getLong("lastmodifiedtime")).build();
+				
 				currentBillingSlab = BillingSlab.builder().id(rs.getString("id")).area(rs.getString("area"))
 						.fromFloor(rs.getString("fromFloor")).fromPlotSize(rs.getString("fromPlotSize")).ownerShipCategory(rs.getString("ownerShipCategory"))
 						.propertySubType(rs.getString("propertySubType")).propertyType(rs.getString("propertyType")).subOwnerShipCategory(rs.getString("subOwnerShipCategory"))
 						.tenantId(rs.getString("tenantId")).toFloor(rs.getString("toFLoor")).toPlotSize(rs.getString("toPlotSize")).unitRate(rs.getDouble("unitRate"))
 						.usageCategoryDetail(rs.getString("usageCategoryDetail")).usageCategoryMajor(rs.getString("usageCategoryMajor")).usageCategoryMinor(rs.getString("usageCategoryMinor"))
-						.usageCategorySubMinor(rs.getString("usageCategorySubMinor")).build();
+						.usageCategorySubMinor(rs.getString("usageCategorySubMinor")).auditDetails(auditDetails).build();
 				
 				billingSlabMap.put(currentId, currentBillingSlab);
 			}
-			
-			
+		
 		}
 		
 		return new ArrayList<>(billingSlabMap.values());

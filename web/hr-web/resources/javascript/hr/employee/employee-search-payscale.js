@@ -130,7 +130,7 @@ class EmployeeSearch extends React.Component {
         document.getElementsByClassName("homepage_logo")[0].src = window.location.origin + logo_ele[0].getAttribute("src");
       }
     }
-    $('#hp-citizen-title').text(titleCase(getUrlVars()["type"]) + "Search Employee for " + titleCase(getUrlVars()["value"]));
+    $('#hp-citizen-title').text("Search Employee for " + titleCase(getUrlVars()["type"]) + " Employee Payroll");
     var type = getUrlVars()["type"];
     var id = getUrlVars()["id"];
     var count = 5, _state = {}, _this = this;
@@ -277,7 +277,7 @@ class EmployeeSearch extends React.Component {
     }
     return (
       <div>
-        <h3>Search Employee for {titleCase(getUrlVars()["value"])}</h3>
+        <h3>Search Employee for {titleCase(getUrlVars()["type"])} Employee Payroll</h3>
         <form onSubmit={(e) => { search(e) }}>
           <fieldset>
             <div className="row">

@@ -28,5 +28,10 @@ public class Draft {
 	
 	@JsonProperty("draftRecord")
 	private Object draftRecord;
+	
+	@JsonProperty("auditDetails")
+	private AuditDetails auditDetails;
+	
+	
 
 }

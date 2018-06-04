@@ -8,10 +8,10 @@ public class DraftsQueryBuilder {
 
 	public String getDraftsSearchQuery(String tenantId, String userId) {
 		StringBuilder query = new StringBuilder();
-		query.append("SELECT * FROM eg_pt_drafts WHERE ");
-		query.append(" tenantId = "+tenantId);
+		query.append("SELECT * FROM eg_pt_drafts_v2 WHERE ");
+		query.append(" tenantId = '"+tenantId+"'");
 		if(!StringUtils.isEmpty(userId))
-			query.append("AND userId = "+userId);
+			query.append(" AND userId = '"+userId+"'");
 		
 		return query.toString();
 	}

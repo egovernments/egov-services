@@ -10,7 +10,9 @@ import java.util.Map;
 import org.egov.pt.web.models.Draft;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.ResultSetExtractor;
+import org.springframework.stereotype.Component;
 
+@Component
 public class DraftsRowMapper implements ResultSetExtractor<List<Draft>> {
 
 	@Override

@@ -364,7 +364,7 @@ public class MDMSService {
 						+ mDMSCreateRequest.getMasterMetaData().getMasterName());
 			} else if (keys.isEmpty()) {
 				logger.info("Skipping Validation.....");
-			        masterData.add(0, mDMSCreateRequest.getMasterMetaData().getMasterData().get(index));
+				masterData.addAll(0, mDMSCreateRequest.getMasterMetaData().getMasterData());
 			} else {
 				logger.info("keys: " + keys.toString());
 				if (null != keys) {

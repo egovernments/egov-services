@@ -4,6 +4,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 import org.springframework.validation.annotation.Validated;
 
@@ -31,8 +33,8 @@ import lombok.Setter;
 @Builder
 @EqualsAndHashCode
 public class PropertyDetail   {
-        @JsonProperty("id")
-        private String id;
+       /* @JsonProperty("id")
+        private String id;*/
 
               /**
    * Source of a assessment data. The properties will be created in a system based on the data avaialble in their manual records or during field survey. There can be more from client to client.
@@ -89,9 +91,36 @@ public class PropertyDetail   {
         private Set<Document> documents;
 
         @JsonProperty("additionalDetails")
-        private String additionalDetails;
+        private Object additionalDetails;
 
-              /**
+        @JsonProperty("financialYear")
+        private String financialYear;
+
+        @JsonProperty("propertyType")
+        private String propertyType;
+
+        @JsonProperty("propertySubType")
+        private String propertySubType;
+
+        @JsonProperty("assessmentNumber")
+        private String assessmentNumber;
+
+        @JsonProperty("assessmentDate")
+        private Long assessmentDate;
+
+        @JsonProperty("usageCategoryMajor")
+        private String usageCategoryMajor;
+
+        @JsonProperty("owners")
+        @Valid
+        @NotNull
+        @Size(min=1)
+        private Set<OwnerInfo> owners;
+
+
+
+
+    /**
    * Property can be created from different channels Eg. System (properties created by ULB officials), CFC Counter (From citizen faciliation counters) etc. Here we are defining some known channels, there can be more client to client.
    */
   public enum ChannelEnum {
@@ -147,6 +176,15 @@ public class PropertyDetail   {
         this.documents.add(documentsItem);
         return this;
         }
+
+
+    public PropertyDetail addOwnersItem(OwnerInfo ownersItem) {
+        if (this.owners == null) {
+            this.owners = new HashSet<>();
+        }
+        this.owners.add(ownersItem);
+        return this;
+    }
 
 }
 

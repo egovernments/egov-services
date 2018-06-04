@@ -85,9 +85,9 @@ serviceMaps:
 
            - jsonPath: $.properties.*.propertyDetail.buildUpArea
 
-           - jsonPath: $.properties.*.additionalDetails
+           - jsonPath: $.properties.*.propertyDetail.additionalDetails
 
-           - jsonPath: $.properties.*.channel
+           - jsonPath: $.properties.*.propertyDetail.channel
 
            - jsonPath: $.properties.*.auditDetails.createdBy
 
@@ -297,9 +297,9 @@ serviceMaps:
 
             - jsonPath: $.properties.*.propertyDetail.buildUpArea
 
-            - jsonPath: $.properties.*.additionalDetails
+            - jsonPath: $.properties.*.propertyDetail.additionalDetails
 
-            - jsonPath: $.properties.*.channel
+            - jsonPath: $.properties.*.propertyDetail.channel
 
             - jsonPath: $.properties.*.auditDetails.lastModifiedBy
 

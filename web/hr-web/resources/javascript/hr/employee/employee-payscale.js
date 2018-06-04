@@ -72,8 +72,9 @@ class EmployeePayscale extends React.Component {
         if (getUrlVars()["type"] === "update" || getUrlVars()["type"] === "view") {
             commonApiPost("hr-employee", "employeepayscale", "_search", { employee: getUrlVars()["id"], tenantId }, function (err, res) {
 
+                if(res["EmployeePayscale"] && res["EmployeePayscale"].length)
                 _this.setState({ employeePayscale: res["EmployeePayscale"] });
-
+                
             });
         }
 
@@ -241,11 +242,18 @@ class EmployeePayscale extends React.Component {
                 window.location.href = `app/hr/employee/employee-search-payscale.html`;
             },
             error: function (err) {
-                if (err.responseJSON && err.responseJSON.LeaveApplication && err.responseJSON.LeaveApplication[0] && err.responseJSON.LeaveApplication[0].errorMsg) {
-                    showError(err.responseJSON.LeaveApplication[0].errorMsg);
-                } else {
-                    showError("Something went wrong. Please contact Administrator.");
+                let error;
+                if(err.responseJSON.Error.fields){
+        
+                  let values = Object.values(err.responseJSON.Error.fields);
+                  values.forEach(function(value){
+                    console.log(value);
+        
+                   error =  value + "\n" 
+                  })
                 }
+                error? error = error: error = "Something went wrong. Please contact administrator"
+                showError(error);
             }
         });
 

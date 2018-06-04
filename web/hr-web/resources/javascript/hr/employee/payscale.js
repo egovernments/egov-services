@@ -189,7 +189,19 @@ class PayScaleMaster extends React.Component {
         }
       },
       error: function (err) {
-        showError(err);
+
+        let error;
+        if(err.responseJSON.Error.fields){
+
+          let values = Object.values(err.responseJSON.Error.fields);
+          values.forEach(function(value){
+            console.log(value);
+
+           error =  value + "\n" 
+          })
+        }
+        error? error = error: error = "Something went wrong. Please contact administrator"
+        showError(error);
       }
     });
 

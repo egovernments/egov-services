@@ -395,7 +395,7 @@ public class MDMSService {
 							iterator.remove();
 							logger.info("adding master to file: " + mapper.writeValueAsString(
 									mDMSCreateRequest.getMasterMetaData().getMasterData().get(index)));
-							masterData.add(0, mDMSCreateRequest.getMasterMetaData().getMasterData().get(index));
+							iterator.add(mDMSCreateRequest.getMasterMetaData().getMasterData().get(index));
 						}
 					}
 				}

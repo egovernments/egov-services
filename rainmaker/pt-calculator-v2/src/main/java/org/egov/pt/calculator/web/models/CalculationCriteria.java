@@ -10,33 +10,34 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 /**
  * CalulationCriteria
  */
 @Validated
-@javax.annotation.Generated(value = "org.egov.codegen.SpringBootCodegen", date = "2018-05-14T00:55:55.623+05:30")
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@ToString
 public class CalculationCriteria   {
         @JsonProperty("property")
-        private Property property = null;
+        private Property property;
 
         @JsonProperty("assesmentNumber")
-        private String assesmentNumber = null;
+        private String assesmentNumber;
 
         @JsonProperty("assesmentYear")
-        private String assesmentYear = null;
+        private String assesmentYear;
 
         @JsonProperty("oldAssesmentNumber")
-        private String oldAssesmentNumber = null;
+        private String oldAssesmentNumber;
 
         @JsonProperty("tenantId")
-        private String tenantId = null;
+        private String tenantId;
 
 
 }

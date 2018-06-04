@@ -45,7 +45,5 @@ public class Calculation   {
 
         @JsonProperty("tenantId")
         private String tenantId;
-
-
 }
 

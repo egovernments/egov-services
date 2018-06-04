@@ -4,6 +4,7 @@ import org.egov.pt.web.models.AuditDetails;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
+import java.util.Map;
 
 @Component
 public class PropertyUtil {
@@ -24,6 +25,12 @@ public class PropertyUtil {
             return AuditDetails.builder().createdBy(by).lastModifiedBy(by).createdTime(time).lastModifiedTime(time).build();
         else
             return AuditDetails.builder().lastModifiedBy(by).lastModifiedTime(time).build();
+    }
+    
+    public Object getMdmsRequest(Map<String, Map<String, String>> masterDetailMap) {
+    	
+    	
+    	return null;
     }
 
 

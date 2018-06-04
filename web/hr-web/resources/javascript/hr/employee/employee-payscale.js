@@ -239,7 +239,7 @@ class EmployeePayscale extends React.Component {
                 'auth-token': authToken
             },
             success: function (res) {
-                window.location.href = `app/hr/employee/employee-search-payscale.html`;
+                window.location.href = `app/hr/employee/employee-search-payscale.html?type=update`;
             },
             error: function (err) {
                 let error;

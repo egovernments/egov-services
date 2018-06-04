@@ -20,7 +20,9 @@ public enum Category {
 
 	FINES("FINES"),
 	
-	CHARGES("CHARGES");
+	CHARGES("CHARGES"),
+	
+	EXEMPTION ("EXEMPTION");
 
 	private String value;
 

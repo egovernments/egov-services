@@ -1,5 +1,7 @@
 package org.egov.pt.web.models;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -58,36 +60,8 @@ public class Unit   {
         @JsonProperty("usageCategoryDetail")
         private String usageCategoryDetail;
 
-        public enum occupancyTypeEnum {
-                OWNER("OWNER"),
-
-                TENANT("TENANT");
-
-                private String value;
-
-                occupancyTypeEnum(String value) {
-                        this.value = value;
-                }
-
-                @Override
-                @JsonValue
-                public String toString() {
-                        return String.valueOf(value);
-                }
-
-                @JsonCreator
-                public static Unit.occupancyTypeEnum fromValue(String text) {
-                        for (Unit.occupancyTypeEnum b : Unit.occupancyTypeEnum.values()) {
-                                if (String.valueOf(b.value).equals(text)) {
-                                        return b;
-                                }
-                        }
-                        return null;
-                }
-        }
-
         @JsonProperty("occupancyType")
-        private Unit.occupancyTypeEnum occupancyType;
+        private String occupancyType;
 
         @JsonProperty("occupancyDate")
         private Long occupancyDate;
@@ -99,9 +73,7 @@ public class Unit   {
         private String constructionSubType;
 
         @JsonProperty("arv")
-        private Double arv;
-
-
+        private BigDecimal arv;
 
 
 

@@ -22,26 +22,29 @@ public class DemandService {
 	@Autowired
 	private CalculatorService calculator;
 
-	public void generateDemands(CalculationReq request) {
+	public List<Demand> generateDemands(CalculationReq request) {
 
-		List<CalculationCriteria> props = request.getCalculationCriteria();
+		// fetch all the mdms data needed by sub methods
+		
+		List<CalculationCriteria> criterias = request.getCalculationCriteria();
 		List<Demand> demands = new ArrayList<>();
 
-		props.forEach(criteria -> {
+		criterias.forEach(criteria -> {
 
-			Map<String, Double> taxHeadTaxAmtMap = calculator.getCalculatedMap(criteria);
-			demands.add(getDemand(criteria, taxHeadTaxAmtMap));
+			Property property = criteria.getProperty();
+			Map<String ,Map<String, Double>> taxEstimationMap = calculator.getTaxMap(request);
+			demands.add(getDemand(property, taxEstimationMap.get(property.getAssessmentNumber())));
 		});
 
 		DemandRequest.builder().demands(demands).requestInfo(request.getRequestInfo()).build();
+		return demands;
 		/*
 		 * post demand Request to billing service
 		 */
 	}
 
-	private Demand getDemand(CalculationCriteria criteria, Map<String, Double> taxHeadTaxAmtMap) {
+	private Demand getDemand(Property property, Map<String, Double> taxHeadTaxAmtMap) {
 
-		Property property = criteria.getProperty();
 		String tenantId = property.getTenantId();
 		String propertyType = property.getPropertyType();
 		List<DemandDetail> details = new ArrayList<>();

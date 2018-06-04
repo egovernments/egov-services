@@ -15,6 +15,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 /**
  * CalculationReq
@@ -27,11 +28,10 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@ToString
 public class CalculationReq   {
-        @JsonProperty("RequestInfo")
         private RequestInfo requestInfo = null;
 
-        @JsonProperty("calculationCriteria")
         @Valid
         private List<CalculationCriteria> calculationCriteria = new ArrayList<>();
 

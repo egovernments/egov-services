@@ -7,17 +7,15 @@
   },
   "properties": [
     {
-      "tenantId": "test3",
+      "tenantId": "pb",
       "status": "ACTIVE",
       "assessmentNumber":"dsgdggd",
       "financialYear": "second",
       "acknowldgementNumber":"xyz",
-      "propertyType": "residential",
-      "propertySubType":"residential",
-      "usageCategoryMajor": "residential",
-      "owners":[
-        {}
-      ],
+      "propertyType": "P456",
+      "propertySubType":"Prop1",
+      "usageCategoryMajor": "NONRESIDENTIAL",
+      "owners":[{}],
       "address": {
         "latitude": 0,
         "longitude": 0,
@@ -57,15 +55,15 @@
             "floorNo": 1,
             "unitType": "string",
             "unitArea": 0,
-            "usageCategoryMajor":"residential",
-            "usageCategoryMinor":"residential",
-            "usageCategorySubMinor":"residential",
-            "usageCategoryDetail":"residential",
-            "occupancyType":"OWNER",
+            "usageCategoryMajor":"NONRESIDENTIAL",
+            "usageCategoryMinor":"COMMERCIAL",
+            "usageCategorySubMinor":"RETAIL",
+            "usageCategoryDetail":"GROCERYSTORE",
+            "occupancyType":"RENTED",
             "occupancyDate":132321,
-            "constructionType":"apartment",
-            "constructionSubType":"apartment",
-            "arv":132
+            "constructionType":"PUCCA",
+            "constructionSubType":"COUNTRYTILED",
+            "arv":100.1
           }
         ],
         "documents": [

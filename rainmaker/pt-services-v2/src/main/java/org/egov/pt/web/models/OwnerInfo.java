@@ -81,7 +81,7 @@ public class OwnerInfo   {
         @JsonProperty("correspondenceAddress")
         private String correspondenceAddress;
 
-        @JsonProperty("active")
+        @JsonProperty("isActive")
         private Boolean active;
 
         @JsonProperty("dob")

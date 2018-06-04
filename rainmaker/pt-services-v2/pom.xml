@@ -2,10 +2,10 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.egov</groupId>
-	<artifactId>pt-services-v2</artifactId>
+	<artifactId>egov-pt-services</artifactId>
 	<packaging>jar</packaging>
 	<name>egov-pt-services</name>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1.0.0</version>
 	<properties>
 		<java.version>1.8</java.version>
 		<maven.compiler.source>${java.version}</maven.compiler.source>
@@ -86,7 +86,12 @@
 			<groupId>javax.validation</groupId>
 			<artifactId>validation-api</artifactId>
 		</dependency>
-	</dependencies>
+        <dependency>
+            <groupId>org.egov</groupId>
+            <artifactId>mdms-client</artifactId>
+            <version>0.0.2-SNAPSHOT</version>
+        </dependency>
+    </dependencies>
 	<repositories>
 		<repository>
 			<id>repo.egovernments.org</id>

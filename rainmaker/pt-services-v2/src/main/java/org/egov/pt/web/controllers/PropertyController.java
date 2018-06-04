@@ -29,7 +29,6 @@ public class PropertyController {
 
 	@RequestMapping(value = "/_create", method = RequestMethod.POST)
 	public ResponseEntity<PropertyResponse> create(@Valid @RequestBody PropertyRequest propertyRequest) {
-
 		List<Property> properties = propertyService.createProperty(propertyRequest);
 		PropertyResponse response = PropertyResponse.builder().properties(properties)
 				.responseInfo(

@@ -56,7 +56,7 @@
         "buildUpArea": 0,
         "units": [
           {
-            "floorNo": 1,
+            "floorNo": "1",
             "unitType": "string",
             "unitArea": 0,
             "usageCategoryMajor":"residential",
@@ -67,11 +67,11 @@
             "occupancyDate":132321,
             "constructionType":"apartment",
             "constructionSubType":"apartment",
-            "arv":132
+            "arv":132.0
           }
         ],
         "documents": [
-          { 
+          {
             "documentType": "pancard",
             "fileStore": "string"
           }

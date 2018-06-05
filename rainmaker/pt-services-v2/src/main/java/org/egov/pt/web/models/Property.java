@@ -1,9 +1,13 @@
 package org.egov.pt.web.models;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 import org.springframework.validation.annotation.Validated;
 
@@ -29,11 +33,154 @@ import lombok.ToString;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
-@EqualsAndHashCode(of= {"id","tenantId"})
-public class Property {
+//@Builder
+//@EqualsAndHashCode(of= {"id","tenantId"})
+public class Property extends PropertyInfo{
 
-	@JsonProperty("id")
+
+	@JsonProperty("auditDetails")
+	private AuditDetails auditDetails;
+
+
+	public enum CreationReasonEnum {
+		NEWPROPERTY("NEWPROPERTY"),
+
+		SUBDIVISION("SUBDIVISION");
+
+		private String value;
+
+		CreationReasonEnum(String value) {
+			this.value = value;
+		}
+
+		@Override
+		@JsonValue
+		public String toString() {
+			return String.valueOf(value);
+		}
+
+		@JsonCreator
+		public static CreationReasonEnum fromValue(String text) {
+			for (CreationReasonEnum b : CreationReasonEnum.values()) {
+				if (String.valueOf(b.value).equals(text)) {
+					return b;
+				}
+			}
+			return null;
+		}
+	}
+
+	@JsonProperty("creationReason")
+	private CreationReasonEnum creationReason;
+
+	@JsonProperty("occupancyDate")
+	private Long occupancyDate;
+
+	@JsonProperty("propertyDetails")
+	private List<PropertyDetail> propertyDetails;
+
+
+	public Property addpropertyDetailsItem(PropertyDetail propertyDetailsItem) {
+		if (this.propertyDetails == null) {
+			this.propertyDetails = new ArrayList<>();
+		}
+		this.propertyDetails.add(propertyDetailsItem);
+		return this;
+	}
+
+
+	public static PropertyBuilder builder(){
+		return new PropertyBuilder();
+	}
+
+    public static class PropertyBuilder{
+
+		private CreationReasonEnum creationReason;
+		private Long occupancyDate;
+		private List<PropertyDetail>  propertyDetails;
+		private AuditDetails auditDetails;
+
+		private String propertyId;
+		private String tenantId;
+		private String acknowldgementNumber;
+		private String oldPropertyId;
+		private StatusEnum status;
+		private Address address;
+
+
+
+		public PropertyBuilder creationReason(CreationReasonEnum creationReason){
+			this.creationReason=creationReason;
+			return this;
+		}
+
+		public PropertyBuilder occupancyDate(Long occupancyDate){
+			this.occupancyDate=occupancyDate;
+			return this;
+		}
+
+		public PropertyBuilder propertyDetail( List<PropertyDetail> propertyDetails){
+			this.propertyDetails=propertyDetails;
+			return this;
+		}
+
+		public PropertyBuilder auditDetails(AuditDetails auditDetails){
+			this.auditDetails=auditDetails;
+			return this;
+		}
+
+		public PropertyBuilder propertyId(String propertyId){
+			this.propertyId =propertyId ;
+			return this;
+		}
+
+		public PropertyBuilder tenantId(String tenantId){
+			this.tenantId =tenantId ;
+			return this;
+		}
+
+		public PropertyBuilder acknowldgementNumber(String acknowldgementNumber){
+			this.acknowldgementNumber =acknowldgementNumber ;
+			return this;
+		}
+
+		public PropertyBuilder oldPropertyId(String oldPropertyId){
+			this.oldPropertyId=oldPropertyId;
+			return this;
+		}
+
+		public PropertyBuilder status(StatusEnum status){
+			this.status = status;
+			return this;
+		}
+
+		public PropertyBuilder address(Address address){
+			this.address = address;
+			return this;
+		}
+
+		public Property build(){
+			return new Property(this);
+		}
+
+
+	}
+
+
+	public Property(PropertyBuilder builder) {
+		super(builder.propertyId,builder.tenantId,builder.acknowldgementNumber,builder.oldPropertyId,builder.status,builder.address);
+		this.auditDetails = builder.auditDetails;
+		this.creationReason = builder.creationReason;
+		this.occupancyDate = builder.occupancyDate;
+		this.propertyDetails = builder.propertyDetails;
+
+	}
+}
+
+
+
+
+/*	@JsonProperty("id")
 	private String id;
 
 	@JsonProperty("tenantId")
@@ -43,14 +190,11 @@ public class Property {
 	private String acknowldgementNumber;
 
 	@JsonProperty("assessmentNumber")
-	private String assessmentNumber;
-
-	@JsonProperty("auditDetails")
-	private AuditDetails auditDetails;
+	private String assessmentNumber;*/
 
 	/**
 	 * status of the Property
-	 */
+	 *//*
 	public enum StatusEnum {
 		ACTIVE("ACTIVE"),
 
@@ -96,65 +240,30 @@ public class Property {
 
 	@JsonProperty("owners")
 	@Valid
+	@NotNull
+	@Size(min=1)
 	private Set<OwnerInfo> owners;
 
 	@JsonProperty("address")
-	private Address address;
+	private Address address;*/
 
-	@JsonProperty("oldAssessmentNumber")
+	/*@JsonProperty("oldAssessmentNumber")
 	private String oldAssessmentNumber;
 
 	@JsonProperty("assessmentDate")
-	private Long assessmentDate;
+	private Long assessmentDate;*/
 
-	/**
-	 * New property comes into system either property is newly constructed or
-	 * existing property got sub divided. Here the reason for creation will be
-	 * captured.
-	 */
-	public enum CreationReasonEnum {
-		NEWPROPERTY("NEWPROPERTY"),
+/**
+ * New property comes into system either property is newly constructed or
+ * existing property got sub divided. Here the reason for creation will be
+ * captured.
+ */
 
-		SUBDIVISION("SUBDIVISION");
-
-		private String value;
-
-		CreationReasonEnum(String value) {
-			this.value = value;
-		}
-
-		@Override
-		@JsonValue
-		public String toString() {
-			return String.valueOf(value);
-		}
-
-		@JsonCreator
-		public static CreationReasonEnum fromValue(String text) {
-			for (CreationReasonEnum b : CreationReasonEnum.values()) {
-				if (String.valueOf(b.value).equals(text)) {
-					return b;
-				}
-			}
-			return null;
-		}
-	}
-
-	@JsonProperty("creationReason")
-	private CreationReasonEnum creationReason;
-
-	@JsonProperty("occupancyDate")
-	private Long occupancyDate;
-
-	@JsonProperty("propertyDetail")
-	private PropertyDetail propertyDetail;
-
-
+/*
 	public Property addOwnersItem(OwnerInfo ownersItem) {
 		if (this.owners == null) {
 			this.owners = new HashSet<>();
 		}
 		this.owners.add(ownersItem);
 		return this;
-	}
-}
+	}*/

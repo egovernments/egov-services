@@ -56,6 +56,24 @@ public class PropertyConfiguration {
 
     @Value("${persister.update.property.topic}")
     private String updatePropertyTopic;
+    
+    @Value("${persister.save.drafts.topic}")
+    private String saveDraftsTopic;
 
+    @Value("${persister.update.drafts.topic}")
+    private String updateDraftsTopic;
+
+    //IDGEN
+    @Value("${egov.idgen.ack.name}")
+    private String acknowldgementIdGenName;
+
+    @Value("${egov.idgen.ack.format}")
+    private String acknowldgementIdGenFormat;
+
+    @Value("${egov.idgen.assm.name}")
+    private String assessmentIdGenName;
+
+    @Value("${egov.idgen.assm.format}")
+    private String assessmentIdGenFormat;
 
 }

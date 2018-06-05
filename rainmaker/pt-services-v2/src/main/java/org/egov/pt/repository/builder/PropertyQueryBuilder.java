@@ -14,38 +14,38 @@ public class PropertyQueryBuilder {
 	public static final String INNER_JOIN_STRING = "INNER JOIN";
 	
 	static final String QUERY = "SELECT pt.*,ptdl.*,address.*,owner.*,doc.*,unit.*,"
-			+ " pt.id as propertyid,ptdl.id as propertydetailid,doc.id as documentid,unit.id as unitid,"
+			+ " pt.propertyid as propertyid,ptdl.assessmentnumber as propertydetailid,doc.id as documentid,unit.id as unitid,"
 			+ "address.id as addresskeyid"
 			+ " FROM eg_pt_property_v2 pt "
 			+ INNER_JOIN_STRING
-			+ " eg_pt_propertydetail_v2 ptdl ON pt.id=ptdl.property "
+			+ " eg_pt_propertydetail_v2 ptdl ON pt.propertyid =ptdl.property "
 			+ INNER_JOIN_STRING
-			+ " eg_pt_owner_v2 owner ON pt.id=owner.property "
+			+ " eg_pt_owner_v2 owner ON ptdl.assessmentnumber=owner.propertydetail "
 			+ INNER_JOIN_STRING
-			+ " eg_pt_document_v2 doc ON ptdl.id=doc.propertydetail "
+			+ " eg_pt_document_v2 doc ON ptdl.assessmentnumber=doc.propertydetail "
 			+ INNER_JOIN_STRING
-			+ " eg_pt_unit_v2 unit ON ptdl.id=unit.propertydetail "
+			+ " eg_pt_unit_v2 unit ON ptdl.assessmentnumber=unit.propertydetail "
 			+ INNER_JOIN_STRING
-			+" eg_pt_address_v2 address on address.property=pt.id"
+			+" eg_pt_address_v2 address on address.property=pt.propertyid "
 			+ " WHERE ";
 	
 	public String getPropertySearchQuery(PropertyCriteria criteria, List<Object> preparedStmtList) {
 		
 		StringBuilder builder = new StringBuilder(QUERY);
-		builder.append("tenantid=? ");
+		builder.append("tenantid=?");
 		preparedStmtList.add(criteria.getTenantId());
 		
 		Set<String> ids = criteria.getIds();
 		if(!CollectionUtils.isEmpty(ids)) {
 			
-			builder.append("and pt.id IN ("+convertSetToString(ids)+")");
+			builder.append("and pt.propertyid IN ("+convertSetToString(ids)+")");
 
 		}
 
 		Set<String> propertyDetailids = criteria.getPropertyDetailids();
 		if(!CollectionUtils.isEmpty(propertyDetailids)) {
 
-			builder.append("and ptdl.id IN ("+convertSetToString(propertyDetailids)+")");
+			builder.append("and ptdl.assessmentnumber IN ("+convertSetToString(propertyDetailids)+")");
 
 		}
 

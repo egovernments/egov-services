@@ -70,6 +70,8 @@ public class EmployeeUserMapper {
                     employeeInfo.setEmailId(userInfo.getEmailId());
                     employeeInfo.setPan(userInfo.getPan());
                     employeeInfo.setAadhaarNumber(userInfo.getAadhaarNumber());
+                    employeeInfo.setPhoto(userInfo.getPhoto());
+                    employeeInfo.setSignature(userInfo.getSignature());
                     employeeInfo.setType(userInfo.getType());
                     employeeInfo.setActive(userInfo.getActive());
                     finalEmployeeList.add(employeeInfo);

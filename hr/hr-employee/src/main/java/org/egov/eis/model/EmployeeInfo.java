@@ -112,6 +112,12 @@ public class EmployeeInfo {
     @Size(max = 12)
     private String aadhaarNumber;
 
+    @Size(max=36)
+    private String photo;
+
+    @Size(max=36)
+    private String signature;
+
     @Size(max = 200)
     private String placeOfBirth;
 

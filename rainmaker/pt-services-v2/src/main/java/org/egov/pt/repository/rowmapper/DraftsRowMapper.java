@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.egov.pt.web.models.AuditDetails;
 import org.egov.pt.web.models.Draft;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.ResultSetExtractor;
@@ -22,8 +23,11 @@ public class DraftsRowMapper implements ResultSetExtractor<List<Draft>> {
 			String currentId = rs.getString("id");
 			Draft currentDraft = draftsMap.get(currentId);
 			if(null == currentDraft) {
+				AuditDetails auditDetails = AuditDetails.builder().createdBy(rs.getString("createdby")).createdTime(rs.getLong("createdTime"))
+						.lastModifiedBy(rs.getString("lastmodifiedby")).lastModifiedTime(rs.getLong("lastmodifiedtime")).build();
+				
 				currentDraft = Draft.builder().id(rs.getString("id")).userId(rs.getString("userId")).tenantId(rs.getString("tenantId"))
-						.draftRecord(rs.getObject("draft")).build();
+						.draftRecord(rs.getObject("draft")).auditDetails(auditDetails).build();
 				
 				draftsMap.put(currentId, currentDraft);
 			}			

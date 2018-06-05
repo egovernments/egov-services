@@ -44,7 +44,7 @@ public class BillingSlabValidator {
 		Map<String, String> errorMap = new HashMap<>();
 		runCommonChecks(billingSlabReq, errorMap);
 		validateDuplicateBillingSlabs(billingSlabReq, errorMap);
-		//fetchAndvalidateMDMSCodes(billingSlabReq, errorMap);
+		fetchAndvalidateMDMSCodes(billingSlabReq, errorMap);
 		if (!CollectionUtils.isEmpty(errorMap)) {
 			throw new CustomException(errorMap);
 		}
@@ -54,7 +54,7 @@ public class BillingSlabValidator {
 		Map<String, String> errorMap = new HashMap<>();
 		runCommonChecks(billingSlabReq, errorMap);
 		checkIfBillingSlabsExist(billingSlabReq, errorMap);
-		//fetchAndvalidateMDMSCodes(billingSlabReq, errorMap);
+		fetchAndvalidateMDMSCodes(billingSlabReq, errorMap);
 		if (!CollectionUtils.isEmpty(errorMap)) {
 			throw new CustomException(errorMap);
 		}
@@ -140,14 +140,14 @@ public class BillingSlabValidator {
 		List<Object> ownerShipCategory = new ArrayList<>();
 		List<Object> subOwnerShipCategory = new ArrayList<>();
 		try {
-			propertyTypes = JsonPath.read(mdmsResponse, BillingSlabConstants.MDMS_PROPERTYSUBTYPE_JSONPATH);
+			propertyTypes = JsonPath.read(mdmsResponse, BillingSlabConstants.MDMS_PROPERTYTYPE_JSONPATH);
 			propertySubtypes = JsonPath.read(mdmsResponse, BillingSlabConstants.MDMS_PROPERTYSUBTYPE_JSONPATH);
 			
-			usageCategoryMajor = JsonPath.read(mdmsResponse, BillingSlabConstants.MDMS_USAGEMINOR_JSONPATH);
+			usageCategoryMajor = JsonPath.read(mdmsResponse, BillingSlabConstants.MDMS_USAGEMAJOR_JSONPATH);
 			usageCategoryMinors = JsonPath.read(mdmsResponse, BillingSlabConstants.MDMS_USAGEMINOR_JSONPATH);
 			usageCategorySubMinor = JsonPath.read(mdmsResponse, BillingSlabConstants.MDMS_USAGESUBMINOR_JSONPATH);
 			
-			ownerShipCategory = JsonPath.read(mdmsResponse, BillingSlabConstants.MDMS_SUBOWNERSHIP_JSONPATH);
+			ownerShipCategory = JsonPath.read(mdmsResponse, BillingSlabConstants.MDMS_OWNERSHIP_JSONPATH);
 			subOwnerShipCategory = JsonPath.read(mdmsResponse, BillingSlabConstants.MDMS_SUBOWNERSHIP_JSONPATH);
 		} catch (Exception e) {
 			if (CollectionUtils.isEmpty(propertySubtypes) && CollectionUtils.isEmpty(usageCategoryMinors)
@@ -179,7 +179,7 @@ public class BillingSlabValidator {
 					errorMap.put("INVALID_OWNERSHIP_CATEGORY","Allowed Ownership categories are: "+allowedOwnerShipCategories);
 				}else {
 					if (!CollectionUtils.isEmpty(subOwnerShipCategory)) {
-						List<String> allowedsubOwnerShipCategories = JsonPath.read(subOwnerShipCategory,"$.*.[?(@.ownerShipCategory=='" + billingSlab.getOwnerShipCategory() + "')].code");
+						List<String> allowedsubOwnerShipCategories = JsonPath.read(subOwnerShipCategory,"$.*.[?(@.ownerShipCategoryCode=='" + billingSlab.getOwnerShipCategory() + "')].code");
 						if (!allowedsubOwnerShipCategories.contains(billingSlab.getSubOwnerShipCategory())) {
 							errorMap.put("INVALID_SUBOWNERSHIP_CATEGORY","Allowed subownership category for this ownership category: "+ billingSlab.getOwnerShipCategory() + " are: " + allowedsubOwnerShipCategories);
 						}

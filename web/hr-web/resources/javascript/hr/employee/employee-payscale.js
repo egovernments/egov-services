@@ -72,9 +72,9 @@ class EmployeePayscale extends React.Component {
         if (getUrlVars()["type"] === "update" || getUrlVars()["type"] === "view") {
             commonApiPost("hr-employee", "employeepayscale", "_search", { employee: getUrlVars()["id"], tenantId }, function (err, res) {
 
-                if(res["EmployeePayscale"] && res["EmployeePayscale"].length)
-                _this.setState({ employeePayscale: res["EmployeePayscale"] });
-                
+                if (res["EmployeePayscale"] && res["EmployeePayscale"].length)
+                    _this.setState({ employeePayscale: res["EmployeePayscale"] });
+
             });
         }
 
@@ -219,6 +219,21 @@ class EmployeePayscale extends React.Component {
 
         let tempInfo = Object.assign([], _this.state.employeePayscale);
 
+        for(var index = 0; index < tempInfo.length; index++){
+            console.log(tempInfo);
+            if(index -1 >=0){
+                
+                let old = tempInfo[index-1].effectiveFrom
+                let now = tempInfo[index].effectiveFrom
+
+                old = new Date(Number(old.split("/")[1])-1, old.split("/")[0], old.split("/")[2] );
+                now = new Date(Number(now.split("/")[1])-1, now.split("/")[0], now.split("/")[2] );
+
+               if(old > now)
+                return showError("Please enter the effective dates in increasing order"); 
+            }
+        }
+
         tempInfo.forEach(function (item) {
             item.employee.id = getUrlVars()["id"];
         })
@@ -243,16 +258,16 @@ class EmployeePayscale extends React.Component {
             },
             error: function (err) {
                 let error;
-                if(err.responseJSON.Error.fields){
-        
-                  let values = Object.values(err.responseJSON.Error.fields);
-                  values.forEach(function(value){
-                    console.log(value);
-        
-                   error =  value + "\n" 
-                  })
+                if (err.responseJSON.Error.fields) {
+
+                    let values = Object.values(err.responseJSON.Error.fields);
+                    values.forEach(function (value) {
+                        console.log(value);
+
+                        error = value + "\n"
+                    })
                 }
-                error? error = error: error = "Something went wrong. Please contact administrator"
+                error ? error = error : error = "Something went wrong. Please contact administrator"
                 showError(error);
             }
         });

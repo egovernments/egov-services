@@ -766,19 +766,14 @@ function getDropdown(name, cb, params) {
               }
               break;
         case 'payscale':
-              if (!localStorage.getItem('payscale') || localStorage.getItem('payscale') == 'undefined') {
-                getCommonMaster('hr-employee', 'payscale', function (err, res) {
-                  if (res) {
-                    localStorage.setItem('payscale', JSON.stringify(res['PayscaleHeader']));
+            getCommonMaster('hr-employee', 'payscale', function (err, res) {
+                if (res) {
                     cb(res['PayscaleHeader']);
-                  } else {
+                } else {
                     cb([]);
-                  }
-                })
-              } else {
-                cb(JSON.parse(localStorage.getItem('payscale')));
-              }
-              break;
+                }
+            })
+            break;
         case 'holidayTypes':
               if (!localStorage.getItem('holidayTypes') || localStorage.getItem('holidayTypes') == 'undefined') {
                 getCommonMaster('egov-common-masters', 'holidaytypes', function (err, res) {

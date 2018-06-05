@@ -118,8 +118,7 @@ class PayScaleMaster extends React.Component {
 
     if (getUrlVars()["type"]) $('#hp-citizen-title').text(titleCase(getUrlVars()["type"]) + " Pay Scale");
 
-    if (getUrlVars()["type"] === "view")
-      $('input,select,textarea').prop("disabled", true);
+
 
 
     if (type === "view" || type === "update") {
@@ -133,6 +132,13 @@ class PayScaleMaster extends React.Component {
         }
       })
     }
+  }
+
+  componentDidUpdate() {
+
+    if (getUrlVars()["type"] === "view")
+    $('input,select,textarea').prop("disabled", true);
+
   }
 
   close() {

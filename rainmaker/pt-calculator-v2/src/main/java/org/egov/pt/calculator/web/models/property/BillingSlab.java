@@ -52,20 +52,23 @@ public class BillingSlab   {
         @JsonProperty("subOwnerShipCategory")
         private String subOwnerShipCategory = null;
 
-        @JsonProperty("fromFloor")
-        private String fromFloor = null;
-
-        @JsonProperty("toFloor")
-        private String toFloor = null;
-
-        @JsonProperty("area")
-        private String area = null;
+        @JsonProperty("areaType")
+        private String areaType = null;
 
         @JsonProperty("fromPlotSize")
-        private String fromPlotSize = null;
+        private Double fromPlotSize = null;
 
         @JsonProperty("toPlotSize")
-        private String toPlotSize = null;
+        private Double toPlotSize = null;
+        
+        @JsonProperty("occupancyType")
+        private String occupancyType = null;
+        
+        @JsonProperty("fromFloor")
+        private Integer fromFloor = null;
+
+        @JsonProperty("toFloor")
+        private Integer toFloor = null;
 
         @JsonProperty("unitRate")
         private Double unitRate = null;

@@ -26,6 +26,7 @@ import org.springframework.util.CollectionUtils;
 import com.jayway.jsonpath.JsonPath;
 
 import lombok.extern.slf4j.Slf4j;
+import net.minidev.json.JSONArray;
 
 @Service
 @Slf4j
@@ -139,16 +140,20 @@ public class BillingSlabValidator {
 		List<Object> usageCategorySubMinor = new ArrayList<>();
 		List<Object> ownerShipCategory = new ArrayList<>();
 		List<Object> subOwnerShipCategory = new ArrayList<>();
+		List<Object> occupancyType = new ArrayList<>();
+		
 		try {
-			propertyTypes = JsonPath.read(mdmsResponse, BillingSlabConstants.MDMS_PROPERTYTYPE_JSONPATH);
-			propertySubtypes = JsonPath.read(mdmsResponse, BillingSlabConstants.MDMS_PROPERTYSUBTYPE_JSONPATH);
+			propertyTypes = JsonPath.read(mdmsResponse, BillingSlabConstants.MDMS_PROPERTYTAX_JSONPATH + BillingSlabConstants.MDMS_PROPERTYTYPE_MASTER_NAME);
+			propertySubtypes = JsonPath.read(mdmsResponse, BillingSlabConstants.MDMS_PROPERTYTAX_JSONPATH + BillingSlabConstants.MDMS_PROPERTYSUBTYPE_MASTER_NAME);
 			
-			usageCategoryMajor = JsonPath.read(mdmsResponse, BillingSlabConstants.MDMS_USAGEMAJOR_JSONPATH);
-			usageCategoryMinors = JsonPath.read(mdmsResponse, BillingSlabConstants.MDMS_USAGEMINOR_JSONPATH);
-			usageCategorySubMinor = JsonPath.read(mdmsResponse, BillingSlabConstants.MDMS_USAGESUBMINOR_JSONPATH);
+			usageCategoryMajor = JsonPath.read(mdmsResponse, BillingSlabConstants.MDMS_PROPERTYTAX_JSONPATH + BillingSlabConstants.MDMS_USAGEMAJOR_MASTER_NAME);
+			usageCategoryMinors = JsonPath.read(mdmsResponse, BillingSlabConstants.MDMS_PROPERTYTAX_JSONPATH + BillingSlabConstants.MDMS_USAGEMINOR_MASTER_NAME);
+			usageCategorySubMinor = JsonPath.read(mdmsResponse, BillingSlabConstants.MDMS_PROPERTYTAX_JSONPATH + BillingSlabConstants.MDMS_USAGESUBMINOR_MASTER_NAME);
 			
-			ownerShipCategory = JsonPath.read(mdmsResponse, BillingSlabConstants.MDMS_OWNERSHIP_JSONPATH);
-			subOwnerShipCategory = JsonPath.read(mdmsResponse, BillingSlabConstants.MDMS_SUBOWNERSHIP_JSONPATH);
+			ownerShipCategory = JsonPath.read(mdmsResponse, BillingSlabConstants.MDMS_PROPERTYTAX_JSONPATH + BillingSlabConstants.MDMS_OWNERSHIP_MASTER_NAME);
+			subOwnerShipCategory = JsonPath.read(mdmsResponse, BillingSlabConstants.MDMS_PROPERTYTAX_JSONPATH + BillingSlabConstants.MDMS_SUBOWNERSHIP_MASTER_NAME);
+			
+			occupancyType = JsonPath.read(mdmsResponse, BillingSlabConstants.MDMS_PROPERTYTAX_JSONPATH + BillingSlabConstants.MDMS_OCCUPANCYTYPE_MASTER_NAME);
 		} catch (Exception e) {
 			if (CollectionUtils.isEmpty(propertySubtypes) && CollectionUtils.isEmpty(usageCategoryMinors)
 					&& CollectionUtils.isEmpty(usageCategorySubMinor)
@@ -158,8 +163,14 @@ public class BillingSlabValidator {
 			}
 		}
 		for (BillingSlab billingSlab : billingSlabReq.getBillingSlab()) {
+			if(!StringUtils.isEmpty(billingSlab.getOccupancyType())) {
+				List<String> allowedOccupancyTypes = JsonPath.read(occupancyType, BillingSlabConstants.MDMS_CODE_JSONPATH);
+				log.info("allowedOccupancyTypes: "+allowedOccupancyTypes);
+				if(!allowedOccupancyTypes.contains(billingSlab.getOccupancyType()))
+					errorMap.put("INVALID_OCCUPANCY_TYPE","Allowed Occupancy Types are: "+allowedOccupancyTypes);
+			}
 			if(!StringUtils.isEmpty(billingSlab.getPropertyType())) {
-				List<String> allowedPropertyTypes = JsonPath.read(propertyTypes,"$.*.code");
+				List<String> allowedPropertyTypes = JsonPath.read(propertyTypes,BillingSlabConstants.MDMS_CODE_JSONPATH);
 				if(!allowedPropertyTypes.contains(billingSlab.getPropertyType())) {
 					errorMap.put("INVALID_PROPERTY_TYPE","Allowed Property Type are: "+allowedPropertyTypes);
 				}else {
@@ -174,7 +185,7 @@ public class BillingSlabValidator {
 				}
 			}
 			if(!StringUtils.isEmpty(billingSlab.getOwnerShipCategory())) {
-				List<String> allowedOwnerShipCategories = JsonPath.read(ownerShipCategory,"$.*.code");
+				List<String> allowedOwnerShipCategories = JsonPath.read(ownerShipCategory,BillingSlabConstants.MDMS_CODE_JSONPATH);
 				if(!allowedOwnerShipCategories.contains(billingSlab.getOwnerShipCategory())) {
 					errorMap.put("INVALID_OWNERSHIP_CATEGORY","Allowed Ownership categories are: "+allowedOwnerShipCategories);
 				}else {
@@ -187,7 +198,7 @@ public class BillingSlabValidator {
 				}
 			}
 			if(!StringUtils.isEmpty(billingSlab.getUsageCategoryMajor())) {
-				List<String> allowedUsageCategoryMajor = JsonPath.read(usageCategoryMajor,"$.*.code");
+				List<String> allowedUsageCategoryMajor = JsonPath.read(usageCategoryMajor, BillingSlabConstants.MDMS_CODE_JSONPATH);
 				if(!allowedUsageCategoryMajor.contains(billingSlab.getUsageCategoryMajor())) {
 					errorMap.put("INVALID_USAGECATEGORY_MAJOR","Allowed Usage category major are: "+allowedUsageCategoryMajor);
 				}else {

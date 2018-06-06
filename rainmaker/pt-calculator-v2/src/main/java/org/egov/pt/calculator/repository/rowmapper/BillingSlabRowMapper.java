@@ -26,10 +26,10 @@ public class BillingSlabRowMapper implements ResultSetExtractor<List<BillingSlab
 				AuditDetails auditDetails = AuditDetails.builder().createdBy(rs.getString("createdby")).createdTime(rs.getLong("createdTime"))
 						.lastModifiedBy(rs.getString("lastmodifiedby")).lastModifiedTime(rs.getLong("lastmodifiedtime")).build();
 				
-				currentBillingSlab = BillingSlab.builder().id(rs.getString("id")).area(rs.getString("area"))
-						.fromFloor(rs.getString("fromFloor")).fromPlotSize(rs.getString("fromPlotSize")).ownerShipCategory(rs.getString("ownerShipCategory"))
+				currentBillingSlab = BillingSlab.builder().id(rs.getString("id")).areaType(rs.getString("area"))
+						.fromFloor(rs.getInt("fromFloor")).fromPlotSize(rs.getDouble("fromPlotSize")).ownerShipCategory(rs.getString("ownerShipCategory"))
 						.propertySubType(rs.getString("propertySubType")).propertyType(rs.getString("propertyType")).subOwnerShipCategory(rs.getString("subOwnerShipCategory"))
-						.tenantId(rs.getString("tenantId")).toFloor(rs.getString("toFLoor")).toPlotSize(rs.getString("toPlotSize")).unitRate(rs.getDouble("unitRate"))
+						.tenantId(rs.getString("tenantId")).toFloor(rs.getInt("toFLoor")).toPlotSize(rs.getDouble("toPlotSize")).unitRate(rs.getDouble("unitRate"))
 						.usageCategoryDetail(rs.getString("usageCategoryDetail")).usageCategoryMajor(rs.getString("usageCategoryMajor")).usageCategoryMinor(rs.getString("usageCategoryMinor"))
 						.usageCategorySubMinor(rs.getString("usageCategorySubMinor")).auditDetails(auditDetails).build();
 				

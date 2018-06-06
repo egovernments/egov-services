@@ -67,7 +67,7 @@ public class BillingSlabUtils {
 		uri.append(configurations.getMdmsHost()).append(configurations.getMdmsEndpoint());
 		String[] mastersForValidation = {BillingSlabConstants.MDMS_PROPERTYSUBTYPE_MASTER_NAME, BillingSlabConstants.MDMS_SUBOWNERSHIP_MASTER_NAME,
 				BillingSlabConstants.MDMS_USAGEMINOR_MASTER_NAME, BillingSlabConstants.MDMS_USAGESUBMINOR_MASTER_NAME, BillingSlabConstants.MDMS_PROPERTYTYPE_MASTER_NAME,
-				BillingSlabConstants.MDMS_USAGEMAJOR_MASTER_NAME, BillingSlabConstants.MDMS_OWNERSHIP_MASTER_NAME};
+				BillingSlabConstants.MDMS_USAGEMAJOR_MASTER_NAME, BillingSlabConstants.MDMS_OWNERSHIP_MASTER_NAME, BillingSlabConstants.MDMS_OCCUPANCYTYPE_MASTER_NAME};
 		List<MasterDetail> masterDetails = new ArrayList<>();
 		for(String master: Arrays.asList(mastersForValidation)) {
 			MasterDetail masterDetail = org.egov.mdms.model.MasterDetail.builder().name(master).build();

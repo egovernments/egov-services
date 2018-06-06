@@ -81,47 +81,52 @@ class EmployeePayscale extends React.Component {
         if (getUrlVars()["type"] === "view")
             $('input,select,textarea').prop("disabled", true);
 
-        getCommonMasterById("hr-employee", "employees", getUrlVars()["id"], function (err, res) {
-            if (res) {
-                var obj = res.Employee[0];
+        setTimeout(function () {
 
-                for (var i = 0; i < obj.assignments.length; i++) {
-                    if (obj.assignments[i].isPrimary) {
-                        var department = getNameById(_this.state.assignments_department, obj.assignments[i]["department"]);
-                        var designation = getNameById(_this.state.assignments_designation, obj.assignments[i]["designation"]);
+            getCommonMasterById("hr-employee", "employees", getUrlVars()["id"], function (err, res) {
+                if (res) {
+                    var obj = res.Employee[0];
+
+                    for (var i = 0; i < obj.assignments.length; i++) {
+                        if (obj.assignments[i].isPrimary) {
+                            var department = getNameById(_this.state.assignments_department, obj.assignments[i]["department"]);
+                            var designation = getNameById(_this.state.assignments_designation, obj.assignments[i]["designation"]);
+                        }
                     }
+
+                    _this.setState({
+                        currentEmployee: {
+                            name: obj.name,
+                            code: obj.code,
+                            department: department,
+                            designation: designation
+                            // }, employeePayscale: {
+                            //     ..._this.state.employeePayscale,
+                            //     employee: { id: obj.id }
+                        }
+                    })
                 }
+            });
 
-                _this.setState({
-                    currentEmployee: {
-                        name: obj.name,
-                        code: obj.code,
-                        department: department,
-                        designation: designation
-                        // }, employeePayscale: {
-                        //     ..._this.state.employeePayscale,
-                        //     employee: { id: obj.id }
-                    }
-                })
-            }
-        });
+        }, 300);
 
     }
 
     componentDidUpdate(prevProps, prevState) {
         let _this = this;
         let details = Object.assign([], _this.state.employeePayscale);
-
-        $('#effectiveFrom_0').datepicker({
-            format: 'dd/mm/yyyy',
-            autoclose: true
-        });
-        $('#effectiveFrom_0').on("change", function (e) {
-            details[e.target.name].effectiveFrom = e.target.value;
-            _this.setState({
-                employeePayscale: details
-            })
-        });
+            $('#effectiveFrom_0').datepicker({
+                format: 'dd/mm/yyyy',
+                autoclose: true
+            });
+            $('#effectiveFrom_0').on("change", function (e) {
+                if (details[e.target.name].effectiveFrom !== e.target.value) {
+                    details[e.target.name].effectiveFrom = e.target.value;
+                    _this.setState({
+                        employeePayscale: details
+                    })
+                }
+            });
 
         if (prevState.employeePayscale !== _this.state.employeePayscale) {
 
@@ -129,6 +134,8 @@ class EmployeePayscale extends React.Component {
             let names = "";
             details.forEach(function (item, index) {
                 if (index == 0)
+                    names = names;
+                else if (index == 1)
                     names = names + "#effectiveFrom_" + index;
                 else
                     names = names + ",#effectiveFrom_" + index;
@@ -139,10 +146,12 @@ class EmployeePayscale extends React.Component {
                 autoclose: true
             });
             $(names).on("change", function (e) {
-                details[e.target.name].effectiveFrom = e.target.value;
-                _this.setState({
-                    employeePayscale: details
-                })
+                if (details[e.target.name].effectiveFrom !== e.target.value) {
+                    details[e.target.name].effectiveFrom = e.target.value;
+                    _this.setState({
+                        employeePayscale: details
+                    })
+                }
             });
         }
     }
@@ -219,18 +228,18 @@ class EmployeePayscale extends React.Component {
 
         let tempInfo = Object.assign([], _this.state.employeePayscale);
 
-        for(var index = 0; index < tempInfo.length; index++){
+        for (var index = 0; index < tempInfo.length; index++) {
             console.log(tempInfo);
-            if(index -1 >=0){
-                
-                let old = tempInfo[index-1].effectiveFrom
+            if (index - 1 >= 0) {
+
+                let old = tempInfo[index - 1].effectiveFrom
                 let now = tempInfo[index].effectiveFrom
 
-                old = new Date(Number(old.split("/")[1])-1, old.split("/")[0], old.split("/")[2] );
-                now = new Date(Number(now.split("/")[1])-1, now.split("/")[0], now.split("/")[2] );
+                old = new Date(Number(old.split("/")[1]) - 1, old.split("/")[0], old.split("/")[2]);
+                now = new Date(Number(now.split("/")[1]) - 1, now.split("/")[0], now.split("/")[2]);
 
-               if(old > now)
-                return showError("Please enter the effective dates in increasing order"); 
+                if (old > now)
+                    return showError("Please enter the effective dates in increasing order");
             }
         }
 

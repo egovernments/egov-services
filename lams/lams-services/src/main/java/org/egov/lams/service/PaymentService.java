@@ -65,9 +65,12 @@ public class PaymentService {
 	private static final Logger LOGGER = Logger.getLogger(PaymentService.class);
 	private static final String ADVANCE_TAX = "ADVANCE TAX";
 	private static final String GOODWILL_AMOUNT = "GOODWILL AMOUNT";
+	private static final String RENT = "RENT";
+	private static final String PENALTY = "PENALTY";
 	private static final String SERVICE_TAX = "SERVICE TAX";
 	private static final String CENTRAL_GST = "CGST";
 	private static final String STATE_GST = "SGST";
+	private static final String ADVANCE_COLLECTION = "Advance Collection";
 
 	@Autowired
 	PropertiesManager propertiesManager;
@@ -254,51 +257,7 @@ public class PaymentService {
 	}
 
 	
-	private List<DemandDetails> getOrderedDemandDetails(List<DemandDetails> demandDetails) {
-
-		List<DemandDetails> newDemandList = new LinkedList<>();
-		Map<Date, List<DemandDetails>> demandDetailsMap;
-
-		demandDetails.sort((d1, d2) -> d1.getPeriodStartDate().compareTo(d2.getPeriodStartDate()));
-		demandDetailsMap = getDemandDetailsMap(demandDetails);
-
-		Set<Date> installmentDates = demandDetailsMap.keySet();
-		for (Date installment : installmentDates) {
-			Set<DemandDetails> demandList = new LinkedHashSet<>();
-			Map<String, DemandDetails> ddMap = new HashMap<>();
-			List<DemandDetails> installmentDemands = demandDetailsMap.get(installment);
-			for (DemandDetails demandDetail : installmentDemands) {
-
-				ddMap.put(demandDetail.getTaxReasonCode(), demandDetail);
-
-			}
-			if (ddMap.containsKey("ADVANCE_TAX")) {
-				demandList.add(ddMap.get("ADVANCE_TAX"));
-			}
-			if (ddMap.containsKey("GOODWILL_AMOUNT")) {
-				demandList.add(ddMap.get("GOODWILL_AMOUNT"));
-			}
-			if (ddMap.containsKey("RENT")) {
-				demandList.add(ddMap.get("RENT"));
-			}
-			if (ddMap.containsKey("PENALTY")) {
-				demandList.add(ddMap.get("PENALTY"));
-			}
-			if (ddMap.containsKey("SERVICE_TAX")) {
-				demandList.add(ddMap.get("SERVICE_TAX"));
-			}
-			if (ddMap.containsKey("CENTRAL_GST")) {
-				demandList.add(ddMap.get("CENTRAL_GST"));
-			}
-			if (ddMap.containsKey("STATE_GST")) {
-				demandList.add(ddMap.get("STATE_GST"));
-			}
-			newDemandList.addAll(demandList);
-
-		}
-		return newDemandList;
-
-	}
+	
 	public List<BillDetailInfo> getBilldetails(final DemandDetails demandDetail, String functionCode, int orderNo,
 			RequestInfo requestInfo, Map<String, String> purpose) {
 		final List<BillDetailInfo> billDetails = new ArrayList<>();
@@ -306,7 +265,6 @@ public class PaymentService {
 		LOGGER.info("paymentservice demand detail ::"+demandDetail);
 		try {
 			BillDetailInfo billdetail = new BillDetailInfo();
-			// TODO: Fix me: As per the rules for the order no.
 			String description = getInstallmentDescription(demandDetail);
 			balance=demandDetail.getTaxAmount().subtract(demandDetail.getCollectionAmount());
 			billdetail.setOrderNo(orderNo);
@@ -317,16 +275,30 @@ public class PaymentService {
 			LOGGER.info("getGlCode after >>>>>>>" + demandDetail.getGlCode());
 			billdetail.setDescription(description);
 			billdetail.setPeriod(demandDetail.getTaxPeriod());
-			if (SERVICE_TAX.equalsIgnoreCase(demandDetail.getTaxReason())) {
+			if (ADVANCE_TAX.equalsIgnoreCase(demandDetail.getTaxReason())) {
+				billdetail.setPurpose(purpose.get("ADVANCE_AMOUNT"));
+			} else if (SERVICE_TAX.equalsIgnoreCase(demandDetail.getTaxReason())) {
 				billdetail.setPurpose(purpose.get("SERVICETAX"));
 			} else if (CENTRAL_GST.equalsIgnoreCase(demandDetail.getTaxReason())) {
 				billdetail.setPurpose(purpose.get("CG_SERVICETAX"));
 			} else if (STATE_GST.equalsIgnoreCase(demandDetail.getTaxReason())) {
 				billdetail.setPurpose(purpose.get("SG_SERVICETAX"));
-			} else
-				billdetail.setPurpose(purpose.get("CURRENT_AMOUNT"));
-			LOGGER.info("getPurpose after >>>>>>>" + purpose.get("CURRENT_AMOUNT"));
+			} else if (demandDetail.getPeriodStartDate().compareTo(new Date()) < 0) {
 
+				if (RENT.equalsIgnoreCase(demandDetail.getTaxReason())) {
+					billdetail.setPurpose(purpose.get("ARREAR_AMOUNT"));
+				} else if (PENALTY.equalsIgnoreCase(demandDetail.getTaxReason())) {
+					billdetail.setPurpose(purpose.get("ARREAR_LATEPAYMENT_CHARGES"));
+				}
+
+			} else {
+				if (RENT.equalsIgnoreCase(demandDetail.getTaxReason())) {
+					billdetail.setPurpose(purpose.get("CURRENT_AMOUNT"));
+				} else if (PENALTY.equalsIgnoreCase(demandDetail.getTaxReason())) {
+					billdetail.setPurpose(purpose.get("CURRENT_LATEPAYMENT_CHARGES"));
+				}
+
+			}
 			billdetail.setIsActualDemand(demandDetail.getIsActualDemand());
 			billdetail.setFunctionCode(functionCode);
 			if (balance.compareTo(BigDecimal.ZERO) > 0) {
@@ -558,32 +530,86 @@ public class PaymentService {
 
 	}
 
+	/*
+	 * preparing map installment wise
+	 *  key is installment date and value is list of demand details for that installment
+	 * 
+	 */
 	private Map<Date, List<DemandDetails>> getDemandDetailsMap(List<DemandDetails> demandDetails) {
 		Map<Date, List<DemandDetails>> demandDetailsMap = new LinkedHashMap<>();
+		for (DemandDetails demandDetail : demandDetails) {
 
-		for (DemandDetails d : demandDetails) {
-
-			if (!demandDetailsMap.containsKey(d.getPeriodStartDate())) {
-				List<DemandDetails> ddList = new ArrayList<>();
-				ddList.add(d);
-				demandDetailsMap.put(d.getPeriodStartDate(), ddList);
+			if (!demandDetailsMap.containsKey(demandDetail.getPeriodStartDate())) {
+				List<DemandDetails> demandDetailsList = new ArrayList<>();
+				demandDetailsList.add(demandDetail);
+				demandDetailsMap.put(demandDetail.getPeriodStartDate(), demandDetailsList);
 
 			} else {
-				List<DemandDetails> ddList = new ArrayList<>();
-				ddList.add(d);
-				demandDetailsMap.get(d.getPeriodStartDate()).addAll(ddList);
-
+				demandDetailsMap.get(demandDetail.getPeriodStartDate()).add(demandDetail);
 			}
 
 		}
-
 		return demandDetailsMap;
 
 	}
+    
+	/*
+	 * Method to order the demand details in custom order this order will be
+	 * shown in account details of collection screen
+	 */
+	private List<DemandDetails> getOrderedDemandDetails(List<DemandDetails> demandDetails) {
+		demandDetails.sort((d1, d2) -> d1.getPeriodStartDate().compareTo(d2.getPeriodStartDate()));
 
+		List<DemandDetails> orderedDemandDetailsList = new LinkedList<>();
+		Map<Date, List<DemandDetails>> demandDetailsMap = getDemandDetailsMap(demandDetails);
+		
+		Set<Date> installmentDates = demandDetailsMap.keySet();
+		for (Date installmentDate : installmentDates) {
+			Set<DemandDetails> demandDetailsSet = new LinkedHashSet<>();
+			Map<String, DemandDetails> demandReasonMap = new HashMap<>();
+			List<DemandDetails> installmentDemands = demandDetailsMap.get(installmentDate);
+			for (DemandDetails demandDetail : installmentDemands) {
+
+				demandReasonMap.put(demandDetail.getTaxReasonCode(), demandDetail);
+
+			}
+			if (demandReasonMap.containsKey("ADVANCE_TAX")) {
+				demandDetailsSet.add(demandReasonMap.get("ADVANCE_TAX"));
+			}
+			if (demandReasonMap.containsKey("GOODWILL_AMOUNT")) {
+				demandDetailsSet.add(demandReasonMap.get("GOODWILL_AMOUNT"));
+			}
+			if (demandReasonMap.containsKey("RENT")) {
+				demandDetailsSet.add(demandReasonMap.get("RENT"));
+			}
+			if (demandReasonMap.containsKey(PENALTY)) {
+				demandDetailsSet.add(demandReasonMap.get(PENALTY));
+			}
+			if (demandReasonMap.containsKey("SERVICE_TAX")) {
+				demandDetailsSet.add(demandReasonMap.get("SERVICE_TAX"));
+			}
+			if (demandReasonMap.containsKey("CENTRAL_GST")) {
+				demandDetailsSet.add(demandReasonMap.get("CENTRAL_GST"));
+			}
+			if (demandReasonMap.containsKey("STATE_GST")) {
+				demandDetailsSet.add(demandReasonMap.get("STATE_GST"));
+			}
+			orderedDemandDetailsList.addAll(demandDetailsSet);
+
+		}
+		return orderedDemandDetailsList;
+
+	}
+
+	/*
+	 * preparing the description for the installment ex: if the collection is
+	 * for January then the description will be like Jan,<YEAR>:<DemandReason> (Jan,2018:Rent)
+	 * If it is for quarter/halfyear/annual it will be
+	 * <startmonth>,<year> - <endingmonth>,<year>:<demandreason> (Apr,2018-Jun,2018:Rent)
+	 */
 	private String getInstallmentDescription(DemandDetails demandDetail) {
 
-		StringBuilder installmentDesc = new StringBuilder();
+		StringBuilder installmentDescription = new StringBuilder();
 		StringBuilder timePeriod = new StringBuilder();
 		Instant startInstant = Instant.ofEpochMilli(demandDetail.getPeriodStartDate().getTime());
 		LocalDateTime startDate = LocalDateTime.ofInstant(startInstant, ZoneId.systemDefault());
@@ -598,19 +624,24 @@ public class PaymentService {
 		Month toDate = installmentToDate.getMonth();
 		String endingMonth = toDate.toString();
 		int toYear = installmentToDate.getYear();
-
-		if (startingMonth.equalsIgnoreCase(endingMonth)) {
-
-			timePeriod.append(WordUtils.capitalizeFully(startingMonth.substring(0, 3))).append(",").append(fromYear);
+		
+		if (ADVANCE_TAX.equalsIgnoreCase(demandDetail.getTaxReason())) {
+			timePeriod.append(ADVANCE_COLLECTION).append(",").append(fromYear);
 		} else {
-			timePeriod.append(WordUtils.capitalizeFully(startingMonth.substring(0, 3))).append(",").append(fromYear)
-					.append("-").append(WordUtils.capitalizeFully(endingMonth.substring(0, 3))).append(",")
-					.append(toYear);
 
+			if (startingMonth.equalsIgnoreCase(endingMonth)) {
+
+				timePeriod.append(WordUtils.capitalizeFully(startingMonth.substring(0, 3))).append(",")
+						.append(fromYear);
+			} else {
+				timePeriod.append(WordUtils.capitalizeFully(startingMonth.substring(0, 3))).append(",").append(fromYear)
+						.append("-").append(WordUtils.capitalizeFully(endingMonth.substring(0, 3))).append(",")
+						.append(toYear);
+
+			}
 		}
+		installmentDescription.append(timePeriod.toString()).append(":").append(demandDetail.getTaxReason());
 
-		installmentDesc.append(timePeriod.toString()).append(":").append(demandDetail.getTaxReason());
-
-		return installmentDesc.toString();
+		return installmentDescription.toString();
 	}
 }

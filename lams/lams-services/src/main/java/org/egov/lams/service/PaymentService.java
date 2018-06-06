@@ -4,12 +4,24 @@ package org.egov.lams.service;
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.net.URLEncoder;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.Month;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.text.WordUtils;
 import org.apache.log4j.Logger;
 import org.egov.lams.config.PropertiesManager;
 import org.egov.lams.exceptions.CollectionExceedException;
@@ -198,12 +210,13 @@ public class PaymentService {
 					.get(0);
 			BigDecimal totalAmount = BigDecimal.ZERO;
 			List<BillDetailInfo> billDetailInfos = new ArrayList<>();
-			List<DemandDetails> demandDetails = demand.getDemandDetails();
-			demandDetails.sort((d1, d2) -> d1.getPeriodStartDate().compareTo(d2.getPeriodStartDate()));
+			List<DemandDetails> demandDetails = getOrderedDemandDetails(demand.getDemandDetails());
+			
 			int orderNo = 0;
 			LOGGER.info("PaymentService- generateBillXml - getting purpose");
 			Map<String, String> purposeMap = billRepository.getPurpose(billInfo.getTenantId());
 			for (DemandDetails demandDetail : demandDetails) {
+				if(demandDetail!=null){
 				LOGGER.info("the reason for demanddetail : "+ demandDetail.getTaxReason());
 				if (ADVANCE_TAX.equalsIgnoreCase(demandDetail.getTaxReason())
 						|| GOODWILL_AMOUNT.equalsIgnoreCase(demandDetail.getTaxReason())
@@ -214,6 +227,7 @@ public class PaymentService {
 					LOGGER.info("the amount added to bill : "+totalAmount);
 					billDetailInfos
 							.addAll(getBilldetails(demandDetail, functionCode, orderNo, requestInfo, purposeMap));
+				}
 				}
 			}
 			billDetailInfos.sort((b1, b2) -> b1.getPeriod().compareTo(b2.getPeriod()));
@@ -239,6 +253,52 @@ public class PaymentService {
 		return collectXML;
 	}
 
+	
+	private List<DemandDetails> getOrderedDemandDetails(List<DemandDetails> demandDetails) {
+
+		List<DemandDetails> newDemandList = new LinkedList<>();
+		Map<Date, List<DemandDetails>> demandDetailsMap;
+
+		demandDetails.sort((d1, d2) -> d1.getPeriodStartDate().compareTo(d2.getPeriodStartDate()));
+		demandDetailsMap = getDemandDetailsMap(demandDetails);
+
+		Set<Date> installmentDates = demandDetailsMap.keySet();
+		for (Date installment : installmentDates) {
+			Set<DemandDetails> demandList = new LinkedHashSet<>();
+			Map<String, DemandDetails> ddMap = new HashMap<>();
+			List<DemandDetails> installmentDemands = demandDetailsMap.get(installment);
+			for (DemandDetails demandDetail : installmentDemands) {
+
+				ddMap.put(demandDetail.getTaxReasonCode(), demandDetail);
+
+			}
+			if (ddMap.containsKey("ADVANCE_TAX")) {
+				demandList.add(ddMap.get("ADVANCE_TAX"));
+			}
+			if (ddMap.containsKey("GOODWILL_AMOUNT")) {
+				demandList.add(ddMap.get("GOODWILL_AMOUNT"));
+			}
+			if (ddMap.containsKey("RENT")) {
+				demandList.add(ddMap.get("RENT"));
+			}
+			if (ddMap.containsKey("PENALTY")) {
+				demandList.add(ddMap.get("PENALTY"));
+			}
+			if (ddMap.containsKey("SERVICE_TAX")) {
+				demandList.add(ddMap.get("SERVICE_TAX"));
+			}
+			if (ddMap.containsKey("CENTRAL_GST")) {
+				demandList.add(ddMap.get("CENTRAL_GST"));
+			}
+			if (ddMap.containsKey("STATE_GST")) {
+				demandList.add(ddMap.get("STATE_GST"));
+			}
+			newDemandList.addAll(demandList);
+
+		}
+		return newDemandList;
+
+	}
 	public List<BillDetailInfo> getBilldetails(final DemandDetails demandDetail, String functionCode, int orderNo,
 			RequestInfo requestInfo, Map<String, String> purpose) {
 		final List<BillDetailInfo> billDetails = new ArrayList<>();
@@ -247,6 +307,7 @@ public class PaymentService {
 		try {
 			BillDetailInfo billdetail = new BillDetailInfo();
 			// TODO: Fix me: As per the rules for the order no.
+			String description = getInstallmentDescription(demandDetail);
 			balance=demandDetail.getTaxAmount().subtract(demandDetail.getCollectionAmount());
 			billdetail.setOrderNo(orderNo);
 			billdetail.setCreditAmount(balance);
@@ -254,7 +315,7 @@ public class PaymentService {
 			LOGGER.info("getGlCode before>>>>>>>" + demandDetail.getGlCode());
 			billdetail.setGlCode(demandDetail.getGlCode());
 			LOGGER.info("getGlCode after >>>>>>>" + demandDetail.getGlCode());
-			billdetail.setDescription(demandDetail.getTaxPeriod().concat(":").concat(demandDetail.getTaxReason()));
+			billdetail.setDescription(description);
 			billdetail.setPeriod(demandDetail.getTaxPeriod());
 			if (SERVICE_TAX.equalsIgnoreCase(demandDetail.getTaxReason())) {
 				billdetail.setPurpose(purpose.get("SERVICETAX"));
@@ -495,5 +556,61 @@ public class PaymentService {
 			}
 		}
 
+	}
+
+	private Map<Date, List<DemandDetails>> getDemandDetailsMap(List<DemandDetails> demandDetails) {
+		Map<Date, List<DemandDetails>> demandDetailsMap = new LinkedHashMap<>();
+
+		for (DemandDetails d : demandDetails) {
+
+			if (!demandDetailsMap.containsKey(d.getPeriodStartDate())) {
+				List<DemandDetails> ddList = new ArrayList<>();
+				ddList.add(d);
+				demandDetailsMap.put(d.getPeriodStartDate(), ddList);
+
+			} else {
+				List<DemandDetails> ddList = new ArrayList<>();
+				ddList.add(d);
+				demandDetailsMap.get(d.getPeriodStartDate()).addAll(ddList);
+
+			}
+
+		}
+
+		return demandDetailsMap;
+
+	}
+
+	private String getInstallmentDescription(DemandDetails demandDetail) {
+
+		StringBuilder installmentDesc = new StringBuilder();
+		StringBuilder timePeriod = new StringBuilder();
+		Instant startInstant = Instant.ofEpochMilli(demandDetail.getPeriodStartDate().getTime());
+		LocalDateTime startDate = LocalDateTime.ofInstant(startInstant, ZoneId.systemDefault());
+		LocalDate installmentFromDate = startDate.toLocalDate();
+		Month fromDate = installmentFromDate.getMonth();
+		String startingMonth = fromDate.toString();
+		int fromYear = installmentFromDate.getYear();
+
+		Instant endInstant = Instant.ofEpochMilli(demandDetail.getPeriodEndDate().getTime());
+		LocalDateTime endDate = LocalDateTime.ofInstant(endInstant, ZoneId.systemDefault());
+		LocalDate installmentToDate = endDate.toLocalDate();
+		Month toDate = installmentToDate.getMonth();
+		String endingMonth = toDate.toString();
+		int toYear = installmentToDate.getYear();
+
+		if (startingMonth.equalsIgnoreCase(endingMonth)) {
+
+			timePeriod.append(WordUtils.capitalizeFully(startingMonth.substring(0, 3))).append(",").append(fromYear);
+		} else {
+			timePeriod.append(WordUtils.capitalizeFully(startingMonth.substring(0, 3))).append(",").append(fromYear)
+					.append("-").append(WordUtils.capitalizeFully(endingMonth.substring(0, 3))).append(",")
+					.append(toYear);
+
+		}
+
+		installmentDesc.append(timePeriod.toString()).append(":").append(demandDetail.getTaxReason());
+
+		return installmentDesc.toString();
 	}
 }

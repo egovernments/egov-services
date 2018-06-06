@@ -33,8 +33,6 @@ import lombok.ToString;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-//@Builder
-//@EqualsAndHashCode(of= {"id","tenantId"})
 public class Property extends PropertyInfo{
 
 
@@ -76,6 +74,7 @@ public class Property extends PropertyInfo{
 	@JsonProperty("occupancyDate")
 	private Long occupancyDate;
 
+	@Valid
 	@JsonProperty("propertyDetails")
 	private List<PropertyDetail> propertyDetails;
 
@@ -176,94 +175,3 @@ public class Property extends PropertyInfo{
 
 	}
 }
-
-
-
-
-/*	@JsonProperty("id")
-	private String id;
-
-	@JsonProperty("tenantId")
-	private String tenantId;
-
-	@JsonProperty("acknowldgementNumber")
-	private String acknowldgementNumber;
-
-	@JsonProperty("assessmentNumber")
-	private String assessmentNumber;*/
-
-	/**
-	 * status of the Property
-	 *//*
-	public enum StatusEnum {
-		ACTIVE("ACTIVE"),
-
-		INACTIVE("INACTIVE");
-
-		private String value;
-
-		StatusEnum(String value) {
-			this.value = value;
-		}
-
-		@Override
-		@JsonValue
-		public String toString() {
-			return String.valueOf(value);
-		}
-
-		@JsonCreator
-		public static StatusEnum fromValue(String text) {
-			for (StatusEnum b : StatusEnum.values()) {
-				if (String.valueOf(b.value).equals(text)) {
-					return b;
-				}
-			}
-			return null;
-		}
-	}
-
-	@JsonProperty("status")
-	private StatusEnum status;
-
-	@JsonProperty("financialYear")
-	private String financialYear;
-
-	@JsonProperty("propertyType")
-	private String propertyType;
-
-	@JsonProperty("propertySubType")
-	private String propertySubType;
-
-	@JsonProperty("usageCategoryMajor")
-	private String usageCategoryMajor;
-
-	@JsonProperty("owners")
-	@Valid
-	@NotNull
-	@Size(min=1)
-	private Set<OwnerInfo> owners;
-
-	@JsonProperty("address")
-	private Address address;*/
-
-	/*@JsonProperty("oldAssessmentNumber")
-	private String oldAssessmentNumber;
-
-	@JsonProperty("assessmentDate")
-	private Long assessmentDate;*/
-
-/**
- * New property comes into system either property is newly constructed or
- * existing property got sub divided. Here the reason for creation will be
- * captured.
- */
-
-/*
-	public Property addOwnersItem(OwnerInfo ownersItem) {
-		if (this.owners == null) {
-			this.owners = new HashSet<>();
-		}
-		this.owners.add(ownersItem);
-		return this;
-	}*/

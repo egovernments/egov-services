@@ -239,31 +239,6 @@ serviceMaps:
 
 
 
-        - query: INSERT INTO eg_pt_owner_v2(propertyDetail, userid, isActive, createdby, lastmodifiedby, createdtime, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?) ON CONFLICT (userid,propertyDetail) DO UPDATE SET isActive =?, lastmodifiedby =?, lastmodifiedtime =?;
-          basePath: properties.*.propertyDetails.*.owners.*
-          jsonMaps:
-
-           - jsonPath: $.properties.*.propertyDetails[*][?({id} in @.owners[*].id)].assessmentNumber
-
-           - jsonPath: $.properties.*.propertyDetails.*.owners.*.id
-
-           - jsonPath: $.properties.*.propertyDetails.*.owners.*.isActive
-
-           - jsonPath: $.properties[*][?({id} in @.propertyDetails.*.owners[*].id)].auditDetails.lastModifiedBy
-
-           - jsonPath: $.properties[*][?({id} in @.propertyDetails.*.owners[*].id)].auditDetails.lastModifiedBy
-
-           - jsonPath: $.properties[*][?({id} in @.propertyDetails.*.owners[*].id)].auditDetails.lastModifiedTime
-
-           - jsonPath: $.properties[*][?({id} in @.propertyDetails.*.owners[*].id)].auditDetails.lastModifiedTime
-
-           - jsonPath: $.properties.*.propertyDetails.*.owners.*.isActive
-
-           - jsonPath: $.properties[*][?({id} in @.propertyDetails.*.owners[*].id)].auditDetails.lastModifiedBy
-
-           - jsonPath: $.properties[*][?({id} in @.propertyDetails.*.owners[*].id)].auditDetails.lastModifiedTime
-
-
 
         - query: INSERT INTO eg_pt_propertydetail_v2(assessmentNumber,property,source,usage,noOfFloors,landArea,buildUpArea,additionalDetails,channel,financialYear,propertyType,propertySubType,usageCategoryMajor,assessmentDate,createdby, lastmodifiedby, createdtime,lastmodifiedtime) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?) ON CONFLICT ON CONSTRAINT pk_eg_pt_propertydetail_v2 DO UPDATE SET financialYear=?, propertyType=?, propertySubType=?,usageCategoryMajor=?, assessmentDate=?,source=?,usage=?,noOfFloors=?,landArea=?,buildUpArea=?,additionalDetails=?,channel=?,lastModifiedBy=?, lastModifiedTime=?;
           basePath: properties.*.propertyDetails.*
@@ -299,11 +274,11 @@ serviceMaps:
 
             - jsonPath: $.properties.*.propertyDetails.*.assessmentDate
 
-            - jsonPath: $.properties[*][?({assessmentNumber} in @.propertyDetails[*].assessmentNumber)].auditDetails.createdBy
+            - jsonPath: $.properties[*][?({assessmentNumber} in @.propertyDetails[*].assessmentNumber)].auditDetails.lastModifiedBy
 
             - jsonPath: $.properties[*][?({assessmentNumber} in @.propertyDetails[*].assessmentNumber)].auditDetails.lastModifiedBy
 
-            - jsonPath: $.properties[*][?({assessmentNumber} in @.propertyDetails[*].assessmentNumber)].auditDetails.createdTime
+            - jsonPath: $.properties[*][?({assessmentNumber} in @.propertyDetails[*].assessmentNumber)].auditDetails.lastModifiedTime
 
             - jsonPath: $.properties[*][?({assessmentNumber} in @.propertyDetails[*].assessmentNumber)].auditDetails.lastModifiedTime
 
@@ -366,6 +341,34 @@ serviceMaps:
             - jsonPath: $.properties[*][?({id} in @.propertyDetails.*.documents[*].id)].auditDetails.lastModifiedBy
 
             - jsonPath: $.properties[*][?({id} in @.propertyDetails.*.documents[*].id)].auditDetails.lastModifiedTime
+
+
+        - query: INSERT INTO eg_pt_owner_v2(propertyDetail, userid, isActive, createdby, lastmodifiedby, createdtime, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?) ON CONFLICT (userid,propertyDetail) DO UPDATE SET isActive =?, lastmodifiedby =?, lastmodifiedtime =?;
+          basePath: properties.*.propertyDetails.*.owners.*
+          jsonMaps:
+
+           - jsonPath: $.properties.*.propertyDetails[*][?({id} in @.owners[*].id)].assessmentNumber
+
+           - jsonPath: $.properties.*.propertyDetails.*.owners.*.id
+
+           - jsonPath: $.properties.*.propertyDetails.*.owners.*.isActive
+
+           - jsonPath: $.properties[*][?({id} in @.propertyDetails.*.owners[*].id)].auditDetails.lastModifiedBy
+
+           - jsonPath: $.properties[*][?({id} in @.propertyDetails.*.owners[*].id)].auditDetails.lastModifiedBy
+
+           - jsonPath: $.properties[*][?({id} in @.propertyDetails.*.owners[*].id)].auditDetails.lastModifiedTime
+
+           - jsonPath: $.properties[*][?({id} in @.propertyDetails.*.owners[*].id)].auditDetails.lastModifiedTime
+
+           - jsonPath: $.properties.*.propertyDetails.*.owners.*.isActive
+
+           - jsonPath: $.properties[*][?({id} in @.propertyDetails.*.owners[*].id)].auditDetails.lastModifiedBy
+
+           - jsonPath: $.properties[*][?({id} in @.propertyDetails.*.owners[*].id)].auditDetails.lastModifiedTime
+
+
+
 
 
         - query: INSERT INTO eg_pt_unit_v2(id,propertyDetail,floorNo,unitType,unitArea,usageCategoryMajor,usageCategoryMinor,usageCategorySubMinor,usageCategoryDetail,occupancyType,occupancyDate,constructionType,constructionSubType,arv,createdby, lastmodifiedby, createdtime, lastmodifiedtime) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?) ON CONFLICT (id) DO UPDATE SET floorNo=?,unitType=?,unitArea=?,usageCategoryMajor=?,usageCategoryMinor=?,usageCategorySubMinor=?,usageCategoryDetail=?,occupancyType=?,occupancyDate=?,constructionType=?,constructionSubType=?,arv=?,lastmodifiedby=?,lastmodifiedtime=?;

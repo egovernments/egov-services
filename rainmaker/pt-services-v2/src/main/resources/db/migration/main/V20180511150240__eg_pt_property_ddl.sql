@@ -40,8 +40,7 @@ CREATE TABLE eg_pt_propertydetail_v2 (
 
 
   CONSTRAINT pk_eg_pt_propertydetail_v2 PRIMARY KEY (financialYear,property),
-  CONSTRAINT uk_eg_pt_propertydetail_1_v2 UNIQUE (property),
-  CONSTRAINT uk_eg_pt_propertydetail_2_v2 UNIQUE (assessmentNumber),
+  CONSTRAINT uk_eg_pt_propertydetail_1_v2 UNIQUE (assessmentNumber),
   CONSTRAINT fk_eg_pt_propertydetail_v2 FOREIGN KEY (property) REFERENCES eg_pt_property_v2 (propertyId)
 );
 

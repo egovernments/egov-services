@@ -74,6 +74,7 @@ public class PropertyInfo   {
         @JsonProperty("status")
         public StatusEnum status;
 
+        @Valid
         @JsonProperty("address")
         public Address address;
 

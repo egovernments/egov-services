@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.egov.pt.web.models.*;
 import org.egov.pt.web.models.Property.CreationReasonEnum;
@@ -46,13 +47,18 @@ public class PropertyRowMapper implements ResultSetExtractor<List<Property>> {
 						.longitude(rs.getDouble("longitude")).pincode(rs.getString("pincode"))
 						.street(rs.getString("street")).tenantId(tenanId).type(rs.getString("type")).build();
 
+				AuditDetails auditdetails = AuditDetails.builder().createdBy(rs.getString("createdBy"))
+						.createdTime(rs.getLong("createdTime")).lastModifiedBy(rs.getString("lastModifiedBy"))
+						.lastModifiedTime(rs.getLong("lastModifiedTime"))
+						.build();
+
 				currentProperty = Property.builder().address(address)
 						.acknowldgementNumber(rs.getString("acknowldgementNumber"))
 						.creationReason(CreationReasonEnum.fromValue(rs.getString("creationReason")))
 						.occupancyDate(rs.getLong("occupancyDate")).propertyId(currentId)
 						.oldPropertyId(rs.getString("oldPropertyId"))
 						.status(PropertyInfo.StatusEnum.fromValue(rs.getString("status")))
-						.tenantId(tenanId).build();
+						.tenantId(tenanId).auditDetails(auditdetails).build();
 
 				propertyMap.put(currentId, currentProperty);
 			}
@@ -63,6 +69,8 @@ public class PropertyRowMapper implements ResultSetExtractor<List<Property>> {
 	}
 
 	private void addChildrenToProperty(ResultSet rs, Property property) throws SQLException {
+
+
 
 		PropertyDetail detail = PropertyDetail.builder()
 				.additionalDetails(rs.getObject("additionalDetails")).buildUpArea(rs.getFloat("buildUpArea"))

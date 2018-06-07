@@ -310,52 +310,64 @@ class EmployeePayscale extends React.Component {
 
         }
 
-        const renderPlusMinus = function (ind) {
+        const renderPlusMinus = function (ind,length) {
             if (mode !== "view")
                 return (
                     <td>
-                        <button type="button" className="btn btn-default btn-action" onClick={() => addPayScaleDetails(employeePayscale.length)}><span className="glyphicon glyphicon-plus" aria-hidden="true"></span></button>
-                        &nbsp;<button type="button" className="btn btn-default btn-action" onClick={() => deletePayscaleDetails(ind)}><span className="glyphicon glyphicon-minus" aria-hidden="true"></span></button>
+                        <button type="button" className="btn btn-default btn-action" onClick={() => addPayScaleDetails(employeePayscale.length)}
+                            disabled ={ind !== length -1}
+                            ><span className="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                        </button>
+                        &nbsp;
+                        <button type="button" className="btn btn-default btn-action" onClick={() => deletePayscaleDetails(ind)}
+                            disabled ={ind !== length -1}
+                        >
+                            <span className="glyphicon glyphicon-minus" aria-hidden="true"></span>
+                        </button>
                     </td>
                 )
         }
         const renderPayScaleDetails = function () {
             if (employeePayscale && employeePayscale.length) {
-
-                return employeePayscale.map(function (payscaleDetail, ind) {
+                return employeePayscale.map(function (payscaleDetail, ind){
                     return (
-
                         <tr key={ind} id={ind} >
-                            <td>
-                                <input type="text" id={"effectiveFrom_" + ind} key={"payscale" + ind} name={ind} value={payscaleDetail["effectiveFrom"]} required />
+                            <td >
+                                <input type="text" id={"effectiveFrom_" + ind} key={"payscale" + ind} name={ind} value={payscaleDetail["effectiveFrom"]}
+                                   disabled ={ind !== employeePayscale.length -1} onChange={(e) => { handleChange(e, ind, "effectiveFrom") }}
+                                />
                             </td>
                             <td>
                                 <select id="payscaleHeader" name="payscaleHeader" value={payscaleDetail["payscaleHeader"].id}
-                                    onChange={(e) => { handleChange(e, ind, "payscaleHeader") }} required >
-                                    <option value=""> Select Payscale</option>
+                                    onChange={(e) => { handleChange(e, ind, "payscaleHeader") }} required  disabled ={ind !== employeePayscale.length -1}>
+                                    <option value=""  disabled ={ind !== employeePayscale.length -1}> Select Payscale</option>
                                     {renderOption(payscaleList)}
                                 </select>
                             </td>
                             <td>
                                 <input type="number" id="basicAmount" name="basicAmount" value={payscaleDetail["basicAmount"]}
-                                    onChange={(e) => { handleChange(e, ind, "basicAmount") }} required />
+                                    onChange={(e) => { handleChange(e, ind, "basicAmount") }} required
+                                    disabled ={ind !== employeePayscale.length -1}
+                                />
 
                             </td>
                             <td>
                                 <select id="incrementMonth" name="incrementMonth" value={payscaleDetail["incrementMonth"]}
-                                    onChange={(e) => { handleChange(e, ind, "incrementMonth") }} required>
+                                    onChange={(e) => { handleChange(e, ind, "incrementMonth") }} required
+                                    disabled ={ind !== employeePayscale.length -1}
+                                    >
                                     <option value=""> Select month</option>
                                     {renderMonths(months)}
                                 </select>
                             </td>
                             <td>
                                 <textarea rows="4" cols="50" id="reason" name="reason" value={payscaleDetail["reason"]}
-                                    onChange={(e) => { handleChange(e, ind, "reason") }} required></textarea>
+                                    onChange={(e) => { handleChange(e, ind, "reason") }} required
+                                    disabled ={ind !== employeePayscale.length -1}
+                                    ></textarea>
                             </td>
-                            {renderPlusMinus(ind)}
-
+                            {renderPlusMinus(ind,employeePayscale.length)}
                         </tr>
-
                     );
                 })
             }

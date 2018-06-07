@@ -1,0 +1,1 @@
+insert into eg_wf_types values(nextval('seq_eg_wf_types'),'Remission LeaseAgreement','org.egov.lams.models.Agreement','/lams-web/app/remission/update-remission.html?view=inbox&state=:ID','Remission Agreement',true,true,1,now(),1,now(),0,'default',false);

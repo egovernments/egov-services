@@ -194,6 +194,22 @@ public class AgreementControllerTest {
 				.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
 				.andExpect(content().json(getFileContents("agreementsearchresponse.json")));
 	}
+	
+	@Test
+	public void test_Remission_On_Agreement() throws Exception {
+		Agreement agreement = new Agreement();
+		agreement.setTenantId("1");
+		agreement.setAction(Action.REMISSION);
+		agreement.setAcknowledgementNumber("ack");
+		ResponseInfo responseInfo = new ResponseInfo();
+		when(agreementService.createRemission(any(AgreementRequest.class))).thenReturn(agreement);
+		when(responseInfoFactory.createResponseInfoFromRequestInfo(any(RequestInfo.class), any(Boolean.class)))
+				.thenReturn(responseInfo);
+		mockMvc.perform(post("/agreements/_remission").contentType(MediaType.APPLICATION_JSON)
+				.content(getFileContents("agreementrequest.json"))).andExpect(status().isCreated())
+				.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+				.andExpect(content().json(getFileContents("agreementsearchresponse.json")));
+	}
 
 	@Test
 	public void test_should_prepare_demands() throws Exception {

@@ -297,6 +297,19 @@ public class AgreementService {
 		agreementMessageQueueRepository.save(agreementRequest, START_WORKFLOW);
 		return agreement;
 	}
+	
+	public Agreement createRemission(AgreementRequest agreementRequest) {
+		logger.info("create remission of agreement::" + agreementRequest.getAgreement());
+		Agreement agreement = enrichAgreement(agreementRequest);
+		List<Demand> demands = demandService.prepareDemandsForClone(agreement.getDemands().get(0),agreementRequest.getRequestInfo());
+		DemandResponse demandResponse = demandRepository.createDemand(demands, agreementRequest.getRequestInfo());
+		List<String> demandIdList = demandResponse.getDemands().stream().map(Demand::getId)
+				.collect(Collectors.toList());
+		agreement.setDemands(demandIdList);
+
+		agreementMessageQueueRepository.save(agreementRequest, START_WORKFLOW);
+		return agreement;
+	}
 
 	private Agreement enrichAgreement(AgreementRequest agreementRequest){
 		Agreement agreement = agreementRequest.getAgreement();
@@ -311,17 +324,7 @@ public class AgreementService {
 		return agreement;
 	}
 
-	public Agreement saveRemission(AgreementRequest agreementRequest) {
-		Agreement agreement = agreementRequest.getAgreement();
-		agreement.setId(agreementRepository.getAgreementID());
-		List<Demand> demands = demandService.updateDemandOnRemission(agreement, agreementRequest.getRequestInfo());
-		DemandResponse demandResponse = demandRepository.updateDemand(demands, agreementRequest.getRequestInfo());
-		List<String> demandList = demandResponse.getDemands().stream().map(Demand::getId)
-				.collect(Collectors.toList());
-		agreement.setDemands(demandList);
-		agreementMessageQueueRepository.save(agreementRequest, SAVE);
-		return agreement;
-	}
+	
 
 	/***
 	 * method to update agreementNumber using acknowledgeNumber
@@ -478,6 +481,52 @@ public class AgreementService {
 			}
 		}
 		agreementMessageQueueRepository.save(agreementRequest, UPDATE_WORKFLOW);
+		return agreement;
+	}
+	
+	public Agreement updateRemission(AgreementRequest agreementRequest) {
+		Agreement agreement = agreementRequest.getAgreement();
+		RequestInfo requestInfo = agreementRequest.getRequestInfo();
+		String userId = requestInfo.getUserInfo().getId().toString();
+		WorkflowDetails workFlowDetails = agreement.getWorkflowDetails();
+		updateAuditDetails(agreement, requestInfo);
+		if (workFlowDetails != null) {
+			if (WF_ACTION_APPROVE.equalsIgnoreCase(workFlowDetails.getAction())) {
+				agreementRepository.updateExistingAgreementAsHistory(agreement, userId);
+				agreement.setStatus(Status.ACTIVE);
+				agreement.setAgreementDate(new Date());
+				List<Demand> demands = demandService.updateDemandOnRemission(agreement,
+						agreementRequest.getRequestInfo());
+				DemandResponse demandResponse = demandRepository.updateDemand(demands,
+						agreementRequest.getRequestInfo());
+				List<String> demandList = demandResponse.getDemands().stream().map(Demand::getId)
+						.collect(Collectors.toList());
+				agreement.setDemands(demandList);
+				agreement.setNoticeNumber(
+						noticeNumberUtil.getNoticeNumber(agreement.getAction(), agreement.getTenantId(), requestInfo));
+
+			} else if (WF_ACTION_REJECT.equalsIgnoreCase(workFlowDetails.getAction())) {
+				agreement.setStatus(Status.REJECTED);
+			} else if (WF_ACTION_CANCEL.equalsIgnoreCase(workFlowDetails.getAction())) {
+				agreement.setStatus(Status.CANCELLED);
+				agreement.setIsUnderWorkflow(Boolean.FALSE);
+			} else if (WF_ACTION_PRINT_NOTICE.equalsIgnoreCase(workFlowDetails.getAction())) {
+				agreement.setIsUnderWorkflow(Boolean.FALSE);
+			}
+		}
+		agreementMessageQueueRepository.save(agreementRequest, UPDATE_WORKFLOW);
+		return agreement;
+	}
+	
+	public Agreement saveRemission(AgreementRequest agreementRequest) {
+		Agreement agreement = agreementRequest.getAgreement();
+		agreement.setId(agreementRepository.getAgreementID());
+		List<Demand> demands = demandService.updateDemandOnRemission(agreement, agreementRequest.getRequestInfo());
+		DemandResponse demandResponse = demandRepository.updateDemand(demands, agreementRequest.getRequestInfo());
+		List<String> demandList = demandResponse.getDemands().stream().map(Demand::getId)
+				.collect(Collectors.toList());
+		agreement.setDemands(demandList);
+		agreementMessageQueueRepository.save(agreementRequest, SAVE);
 		return agreement;
 	}
 

@@ -290,7 +290,6 @@ public class AgreementController {
 			return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
 		}
 
-		LOGGER.info("agreementRequest cancel ::" + agreementRequest);
 		agreementValidator.validateRemissionDetails(agreementRequest, errors);
 
 		if (errors.hasFieldErrors()) {
@@ -298,13 +297,14 @@ public class AgreementController {
 			return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
 		}
 
-		Agreement agreement = agreementService.saveRemission(agreementRequest);
+		Agreement agreement = agreementService.createRemission(agreementRequest);
 		List<Agreement> agreements = new ArrayList<>();
 		agreements.add(agreement);
 		AgreementResponse agreementResponse = getAgreementResponse(agreements, agreementRequest.getRequestInfo());
-		LOGGER.info("agreement judgement response:" + agreementResponse.toString());
+		LOGGER.info("agreement remission response:" + agreementResponse.toString());
 		return new ResponseEntity<>(agreementResponse, HttpStatus.CREATED);
 	}
+	
 	@PostMapping("_update/{code}")
 	@ResponseBody
 	public ResponseEntity<?> update(@PathVariable("code") String code, @RequestBody AgreementRequest agreementRequest,
@@ -475,6 +475,33 @@ public class AgreementController {
 		agreements.add(agreement);
 		AgreementResponse agreementResponse = getAgreementResponse(agreements, agreementRequest.getRequestInfo());
 		LOGGER.info("the response form update agreement call : " + agreementResponse);
+		return new ResponseEntity<>(agreementResponse, HttpStatus.CREATED);
+	}
+	
+	@PostMapping("remission/_update")
+	@ResponseBody
+	public ResponseEntity<?> updateRmission(@RequestBody AgreementRequest agreementRequest,
+			BindingResult bindingResult) {
+
+		if (bindingResult.hasErrors()) {
+			ErrorResponse errorResponse = populateErrors(bindingResult);
+			return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+		}
+
+		if (!agreementService.isAgreementExist(agreementRequest.getAgreement().getAcknowledgementNumber()))
+			throw new RuntimeException(" no agreement found with given AcknowledgementNumber");
+
+		agreementValidator.validateUpdate(agreementRequest, bindingResult);
+
+		if (bindingResult.hasFieldErrors()) {
+			ErrorResponse errRes = populateErrors(bindingResult);
+			return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
+		}
+		Agreement agreement = null;
+		agreement = agreementService.updateRemission(agreementRequest);
+		List<Agreement> agreements = new ArrayList<>();
+		agreements.add(agreement);
+		AgreementResponse agreementResponse = getAgreementResponse(agreements, agreementRequest.getRequestInfo());
 		return new ResponseEntity<>(agreementResponse, HttpStatus.CREATED);
 	}
 

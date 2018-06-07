@@ -468,31 +468,31 @@ $(document).ready(function() {
  }
 
  function handleBlur(e) {
-//     var resolutionNo = this.agreement.councilNumber;
-//     // commonApiGet("restapi", "councilresolutions", "", { resolutionNo, tenantId }, function (err, res) {
-//     //     if (res) {
-//     //         alert(res);
-//     //     }else{
-//     //         alert("Invalid CR number");
-//     //         this.agreement.councilNumber = "";
-//     //     }
-//     // });
-
-//     $.ajax({
-//         url: baseUrl + "/restapi/councilresolutions?resolutionNo=" + resolutionNo,
-//         type: 'GET',
-//         dataType: 'json',
-//         contentType: 'application/json',
-//         headers: {
-//           'auth-token': authToken
-//         },
-//         success: function (res1) { alert(res1[0].preambleNo);},
-//         error: function (err) {
-//             $('#councilNumber').val("");
-//             alert("Invalid CR number");
-//         }
-//       })
-
+    var resolutionNo = this.agreement.councilNumber;
+    // commonApiGet("restapi", "councilresolutions", "", { resolutionNo, tenantId }, function (err, res) {
+    //     if (res) {
+    //         alert(res);
+    //     }else{
+    //         alert("Invalid CR number");
+    //         this.agreement.councilNumber = "";
+    //     }
+    // });
+if(resolutionNo){
+    $.ajax({
+        url: baseUrl + "/restapi/councilresolutions?resolutionNo=" + resolutionNo,
+        type: 'GET',
+        dataType: 'json',
+        contentType: 'application/json',
+        headers: {
+          'auth-token': authToken
+        },
+        success: function (res1) { alert(res1[0].preambleNo);},
+        error: function (err) {
+            $('#councilNumber').val("");
+            alert("Invalid CR number");
+        }
+      })
+    }
  }
 
  function clearGovernment(){

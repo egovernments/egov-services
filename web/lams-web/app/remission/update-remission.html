@@ -11,8 +11,6 @@
 
     <!-- Bootstrap -->
     <link rel="stylesheet" type="text/css" href="resources/stylesheet/bootstrap.min.css">
-    <script type="text/javascript" src="resources/javascript/jspdf.min.js"></script>
-    <script type="text/javascript" src="resources/javascript/jspdf.plugin.autotable.js"></script>
     <link rel="stylesheet" type="text/css" href="resources/stylesheet/global/multi-level-menu/jquery.multilevelpushmenu.min.css">
     <link rel="stylesheet" type="text/css" href="resources/stylesheet/application.css">
     <link rel="stylesheet" type="text/css" href="resources/stylesheet/egov/custom.css">
@@ -83,6 +81,8 @@
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script type="text/javascript" src="resources/javascript/jquery.min.js"></script>
     <script type="text/javascript" src="resources/javascript/bootstrap.min.js"></script>
+    <script type="text/javascript" src="resources/javascript/jspdf.min.js"></script>
+    <script type="text/javascript" src="resources/javascript/jspdf.plugin.autotable.js"></script>
 
     <script type="text/javascript" src="resources/javascript/global/multi-level-menu/jquery.multilevelpushmenu.min.js"></script>
 
@@ -138,79 +138,11 @@
                 </div>
 
                 <div class="navbar-brand">
-                    <h3 class="horizontal-page-title homepage hidden-xs" id="remission-title"></h3>
+                    <h3 class="horizontal-page-title homepage hidden-xs" id="lams-title"></h3>
                 </div>
 
                 <!-- notifications and other links -->
                 <ul class="nav navbar-right pull-right">
-                    <!-- <li class="dropdown">
-                        <a href="javascript:void(0);" class="tooltip-secondary workspace active" data-toggle="tooltip" title="" data-work="worklist" data-original-title="Worklist">
-                            <i class="fa fa-list fa-fw"></i>
-                        </a>
-                    </li>
-                    <li class="dropdown">
-                        <a href="javascript:void(0);" class="tooltip-secondary workspace" data-toggle="tooltip" title="" data-work="drafts" data-original-title="Drafts">
-                            <i class="fa fa-pencil fa-fw"></i>
-                        </a>
-                    </li>
-                    <li class="dropdown">
-                        <a href="javascript:void(0);" class="tooltip-secondary workspace" data-toggle="tooltip" title="" data-work="notifications" data-original-title="Notifications">
-                            <i class="fa fa-bell fa-fw"></i>
-                        </a>
-                    </li>
-
-                    <li class="hidden-xs menu-responsive">
-                        <a href="javascript:void(0);" class="profile-name">
-                            <i class="fa fa-user img-circle"></i> Chandragiri Murali Krishna
-                        </a>
-                        <ul>
-                            <li>
-                                <a href="home/profile/edit" class="open-popup">
-                                    <i class="fa fa-user"></i>
-                                    <span class="title">Edit Profile</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="javascript:void(0);" onclick="jQuery('.change-password').modal('show', {backdrop: 'static'});">
-                                    <i class="fa fa-key"></i>
-                                    <span class="title">Change Password</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="javascript:void(0);" onclick="jQuery('.add-feedback').modal('show', {backdrop: 'static'});">
-                                    <i class="fa fa-comment"></i>
-                                    <span class="title">Feedback</span>
-                                </a>
-                            </li>
-
-                            <li>
-                                <a href="http://apemunicipalityissues.egovernments.org/servicedesk/customer/portal/2" data-strwindname="r&amp;i" class="open-popup">
-                                    <i class="fa fa-bug"></i>
-                                    <span class="title">Report an Issue</span>
-                                </a>
-                            </li>
-
-                            <li>
-                                <a href="help" data-strwindname="help" class="open-popup">
-                                    <i class="fa fa-question"></i>
-                                    <span class="title">Help</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="" class="signout" id="logout">
-                                    <i class="fa fa-sign-out"></i>
-                                    <span class="title">Sign Out</span>
-                                </a>
-                            </li>
-                        </ul>
-                    </li> -->
-
-                    <!-- <li class="dropdown visible-xs hidden-sm">
-                        <a href="/egi/logout" class="tooltip-secondary signout" data-toggle="tooltip" title="" data-original-title="Sign Out">
-                            <i class="fa fa-sign-out"></i>
-                        </a>
-                    </li> -->
-
                     <li class="dropdown">
                         <a href="http://www.egovernments.org" target="_blank">
                             <img src="resources/images/logo@2x.png" title="Powered by eGovernments" height="25px" style="padding-top:5px">
@@ -231,7 +163,7 @@
                             <div class="body-cont-inner">
                                 <div class="form-section">
                                     <div id="root"></div>
-                                      <script>document.write('<script type="text/babel" type="text/babel" src="resources/javascript/remission/remission.js?version=' + getTimestamp() + '"\><\/script>');</script>
+                                      <script>document.write('<script type="text/babel" type="text/babel" src="resources/javascript/remission/update-remission.js?version=' + getTimestamp() + '"\><\/script>');</script>
                                 </div>
                             </div>
                         </div>
@@ -242,15 +174,6 @@
         </div>
 
     </div>
-
-    <!-- <footer class="clearfix simple">
-        <div class="constrain">
-            <div id="legal">
-                <span class="copyright">Copyright <span><i class="fa fa-copyright"></i></span> 2017 <a href="http://www.egovernments.org" target="_blank"> eGovernments Foundation.<sup>®</sup></a></span>
-                <span class="version">eGov ERP - 2.1.0-SNAPSHOT_2486 @ Core - 2.1.0-SNAPSHOT_2486</span>
-            </div>
-        </div>
-    </footer> -->
 
     <script src="resources/javascript/egov/custom.js"></script>
     <script src="resources/javascript/js.cookies.js"></script>

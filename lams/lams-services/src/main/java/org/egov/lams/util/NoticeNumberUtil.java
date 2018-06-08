@@ -106,6 +106,8 @@ public class NoticeNumberUtil {
 			noticeNumber.append("/ON/");
 		} else if (Action.JUDGEMENT.equals(noticeType)) {
 			noticeNumber.append("/JN/");
+		} else if (Action.REMISSION.equals(noticeType)) {
+			noticeNumber.append("/RM/");
 		} else {
 			noticeNumber.append("");
 		}

@@ -34,6 +34,7 @@ public class EnrichmentService {
 
         RequestInfo requestInfo = request.getRequestInfo();
         AuditDetails auditDetails = propertyutil.getAuditDetails(requestInfo.getUserInfo().getId().toString(), true);
+        String tenantId = request.getProperties().get(0).getTenantId();
 
         for (Property property : request.getProperties()) {
             property.getAddress().setId(UUID.randomUUID().toString());
@@ -44,10 +45,12 @@ public class EnrichmentService {
                 Set<OwnerInfo> owners = propertyDetail.getOwners();
                 owners.forEach(owner -> {
                     owner.setId(UUID.randomUUID().toString());
+                    owner.setTenantId(tenantId);
                 });
                 Set<Unit> units =propertyDetail.getUnits();
                 units.forEach(unit -> {
                     unit.setId(UUID.randomUUID().toString());
+                    unit.setTenantId(tenantId);
                 });
                 Set<Document> documents = propertyDetail.getDocuments();
                 documents.forEach(document ->{
@@ -75,6 +78,7 @@ public class EnrichmentService {
 
         RequestInfo requestInfo = request.getRequestInfo();
         AuditDetails auditDetails = propertyutil.getAuditDetails(requestInfo.getUserInfo().getId().toString(), false);
+        String tenantId = request.getProperties().get(0).getTenantId();
 
         Map<String,Property> idToProperty = new HashMap<>();
         propertiesFromResponse.forEach(propertyFromResponse -> {
@@ -100,6 +104,7 @@ public class EnrichmentService {
                     ownerInfos.forEach(owner -> {
                         if (owner.getId() == null) {
                             owner.setId(UUID.randomUUID().toString());
+                            owner.setTenantId(tenantId);
                         }
                     });
                 }
@@ -116,6 +121,7 @@ public class EnrichmentService {
                     units.forEach(unit ->{
                         if(unit.getId()==null){
                             unit.setId(UUID.randomUUID().toString());
+                            unit.setTenantId(tenantId);
                         }
                     });
                 }

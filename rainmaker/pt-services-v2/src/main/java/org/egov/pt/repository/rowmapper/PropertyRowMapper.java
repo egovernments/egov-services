@@ -1,14 +1,6 @@
 package org.egov.pt.repository.rowmapper;
 
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import org.egov.pt.web.models.*;
 import org.egov.pt.web.models.Property.CreationReasonEnum;
 import org.egov.pt.web.models.PropertyDetail.ChannelEnum;
@@ -16,6 +8,14 @@ import org.egov.pt.web.models.PropertyDetail.SourceEnum;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Component
 public class PropertyRowMapper implements ResultSetExtractor<List<Property>> {
@@ -26,7 +26,7 @@ public class PropertyRowMapper implements ResultSetExtractor<List<Property>> {
 		Map<String, Property> propertyMap = new HashMap<>();
 
 		while (rs.next()) {
-			
+
 			String currentId = rs.getString("propertyid");
 			Property currentProperty = propertyMap.get(currentId);
 			String tenanId = rs.getString("tenantId");
@@ -70,18 +70,29 @@ public class PropertyRowMapper implements ResultSetExtractor<List<Property>> {
 
 	private void addChildrenToProperty(ResultSet rs, Property property) throws SQLException {
 
+		PropertyDetail detail = null;
 
-
-		PropertyDetail detail = PropertyDetail.builder()
-				.additionalDetails(rs.getObject("additionalDetails")).buildUpArea(rs.getFloat("buildUpArea"))
-				.channel(ChannelEnum.fromValue(rs.getString("channel"))).landArea(rs.getFloat("landArea"))
-				.noOfFloors(rs.getLong("noOfFloors")).source(SourceEnum.fromValue(rs.getString("source")))
-				.usage(rs.getString("usage")).assessmentDate(rs.getLong("assessmentDate"))
-				.assessmentNumber(rs.getString("assessmentNumber")).financialYear(rs.getString("financialYear"))
-				.propertyType(rs.getString("propertyType")).propertySubType(rs.getString("propertySubType"))
-				.usageCategoryMajor(rs.getString("usageCategoryMajor"))
-				.build();
-
+		String assessmentNumber = rs.getString("assessmentNumber");
+		if(!CollectionUtils.isEmpty(property.getPropertyDetails())) {
+			for(PropertyDetail propertyDetail:property.getPropertyDetails()){
+				if(propertyDetail.getAssessmentNumber().equals(assessmentNumber)){
+					detail = propertyDetail;
+					break;
+				}
+			}
+		}
+		if(detail==null) {
+			detail = PropertyDetail.builder()
+					.additionalDetails(rs.getObject("additionalDetails")).buildUpArea(rs.getFloat("buildUpArea"))
+					.channel(ChannelEnum.fromValue(rs.getString("channel"))).landArea(rs.getFloat("landArea"))
+					.noOfFloors(rs.getLong("noOfFloors")).source(SourceEnum.fromValue(rs.getString("source")))
+					.usage(rs.getString("usage")).assessmentDate(rs.getLong("assessmentDate"))
+					.assessmentNumber(rs.getString("assessmentNumber")).financialYear(rs.getString("financialYear"))
+					.propertyType(rs.getString("propertyType")).propertySubType(rs.getString("propertySubType"))
+					.usageCategoryMajor(rs.getString("usageCategoryMajor"))
+					.build();
+			property.addpropertyDetailsItem(detail);
+		}
 
 		String tenantId = property.getTenantId();
 
@@ -104,6 +115,6 @@ public class PropertyRowMapper implements ResultSetExtractor<List<Property>> {
 		detail.addOwnersItem(owner);
 		detail.addDocumentsItem(document);
 		detail.addUnitsItem(unit);
-		property.addpropertyDetailsItem(detail);
+
 	}
 }

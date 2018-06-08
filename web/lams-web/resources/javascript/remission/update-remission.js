@@ -316,16 +316,16 @@ class UpdateRemission extends React.Component {
      }
        var wfState = process.status;
         var currStatus = null;
-        if (wfState.includes('Commissioner Approved')) {
-            currStatus = 'INACTIVE';
-        }
+        // if (wfState.includes('Commissioner Approved')) {
+        //     currStatus = 'INACTIVE';
+        // }
 
         var agreement = commonApiPost("lams-services",
             "agreements",
             "_search",
             {
                 stateId: stateId,
-                status: currStatus,
+                //status: currStatus,
                 action: "View",
                 tenantId
             }).responseJSON["Agreements"][0] || {};
@@ -707,6 +707,9 @@ class UpdateRemission extends React.Component {
             agreement.action = "remission";
             agreement.workflowDetails.action = ID;
             agreement.workflowDetails.status = this.state.wfStatus;
+            agreement.workflowDetails.nextDesignation = getNameById(this.state.designationList ,agreement.workflowDetails.designation);
+            agreement.workflowDetails.designation = this.state.currentUserDesignation;
+            
 
             var asOnDate = new Date();
             var dd = asOnDate.getDate();

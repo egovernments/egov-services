@@ -67,6 +67,7 @@ public class PropertyService {
 		boolean ifPropertyExists=propertyValidator.PropertyExists(request,responseProperties);
         if(ifPropertyExists) {
 			enrichmentService.enrichUpdateRequest(request,responseProperties);
+			propertyValidator.validateMasterData(request);
 			producer.push(config.getUpdatePropertyTopic(), request);
 			return request.getProperties();
 		}

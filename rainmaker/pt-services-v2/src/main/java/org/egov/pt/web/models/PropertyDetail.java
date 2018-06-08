@@ -84,6 +84,8 @@ public class PropertyDetail   {
 
         @JsonProperty("units")
         @Valid
+        @NotNull
+        @Size(min=1)
         private Set<Unit> units;
 
         @JsonProperty("documents")

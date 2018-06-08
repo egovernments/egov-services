@@ -17,7 +17,7 @@ CREATE TABLE eg_pt_property_v2(
 );
 
 CREATE TABLE eg_pt_propertydetail_v2 (
-
+  tenantId character varying(256),
   property character varying(64),
   source character varying(64),
   usage	character varying(64),
@@ -46,7 +46,7 @@ CREATE TABLE eg_pt_propertydetail_v2 (
 
 
 CREATE TABLE eg_pt_owner_v2(
-
+  tenantId character varying(256),
   propertydetail character varying(64),
   userid character varying(64),
   isactive boolean,
@@ -59,7 +59,7 @@ CREATE TABLE eg_pt_owner_v2(
   );
 
 CREATE TABLE eg_pt_address_v2 (
-
+  tenantId character varying(256),
   id character varying(64),
   property character varying(64),
   latitude numeric(9,6),
@@ -88,7 +88,7 @@ CREATE TABLE eg_pt_address_v2 (
 
 
 CREATE TABLE eg_pt_document_v2 (
-
+  tenantId character varying(256),
   id character varying(64),
   propertydetail character varying(128),
   documenttype character varying(64),
@@ -105,7 +105,7 @@ CREATE TABLE eg_pt_document_v2 (
 
 
 CREATE TABLE eg_pt_unit_v2 (
-
+  tenantId character varying(256),
   id character varying(64),
   propertydetail character varying(64),
   floorNo	character varying(64),
@@ -128,5 +128,4 @@ CREATE TABLE eg_pt_unit_v2 (
   CONSTRAINT pk_eg_pt_unit_v2 PRIMARY KEY (id),
   CONSTRAINT fk_eg_pt_unit_v2 FOREIGN KEY (propertydetail) REFERENCES eg_pt_propertydetail_v2 (assessmentNumber)
 );
-
 

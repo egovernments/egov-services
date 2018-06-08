@@ -138,6 +138,9 @@ public class WorkflowRepository {
 		} else if (Action.EVICTION.equals(agreement.getAction())) {
 			processInstance.setBusinessKey(propertiesManager.getWorkflowServiceEvictionAgreementBusinessKey());
 			processInstance.setType(propertiesManager.getWorkflowServiceEvictionAgreementBusinessKey());
+		} else if (Action.REMISSION.equals(agreement.getAction())) {
+			processInstance.setBusinessKey(propertiesManager.getWorkflowServiceRemissionAgreementBusinessKey());
+			processInstance.setType(propertiesManager.getWorkflowServiceRemissionAgreementBusinessKey());
 		} else {
 			processInstance.setBusinessKey(propertiesManager.getWorkflowServiceCreateAgreementBusinessKey());
 			processInstance.setType(propertiesManager.getWorkflowServiceCreateAgreementBusinessKey());
@@ -183,6 +186,9 @@ public class WorkflowRepository {
 		} else if (Action.EVICTION.equals(agreement.getAction())) {
 			task.setBusinessKey(propertiesManager.getWorkflowServiceEvictionAgreementBusinessKey());
 			task.setType(propertiesManager.getWorkflowServiceEvictionAgreementBusinessKey());
+		} else if (Action.REMISSION.equals(agreement.getAction())) {
+			task.setBusinessKey(propertiesManager.getWorkflowServiceRemissionAgreementBusinessKey());
+			task.setType(propertiesManager.getWorkflowServiceRemissionAgreementBusinessKey());
 		} else {
 			task.setBusinessKey(propertiesManager.getWorkflowServiceCreateAgreementBusinessKey());
 			task.setType(propertiesManager.getWorkflowServiceCreateAgreementBusinessKey());

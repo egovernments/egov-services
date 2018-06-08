@@ -251,7 +251,9 @@ public class AgreementValidator {
 
 		List<String> remissionAssetCategories = getConfigurations(propertiesManager.getRemissionAssetCategoryKey(),
 				agreement.getTenantId());
-
+		if (agreement.getIsUnderWorkflow()) {
+			errors.reject(ERROR_FIELD_AGREEMENT_NO, ERROR_MSG_UNDER_WORKFLOW);
+		}
 		if (!remissionAssetCategories.stream()
 				.anyMatch(category -> category.equalsIgnoreCase(assetCategory.getName()))) {
 			errors.reject("Remission Can't allowed",
@@ -476,6 +478,9 @@ public class AgreementValidator {
 		Date currentDate = new Date();
 		Date expiryDate = agreement.getExpiryDate();
 		AssetCategory assetCategory = agreement.getAsset().getCategory();
+		if (agreement.getIsUnderWorkflow()) {
+			errors.reject(ERROR_FIELD_AGREEMENT_NO, ERROR_MSG_UNDER_WORKFLOW);
+		}
 		if (currentDate.after(expiryDate)) {
 			errors.reject("Can't allowed", "Remission Can not be allowed on expired agreements.");
 		}

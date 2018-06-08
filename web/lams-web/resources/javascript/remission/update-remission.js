@@ -548,7 +548,7 @@ class UpdateRemission extends React.Component {
                     agreementNumber: obj.noticeData.agreementNumber,
                     fileStore: obj.fileStoreId,
                     acknowledgementNumber: obj.noticeData.acknowledgementNumber,
-                    status: "INACTIVE"
+                    status: "ACTIVE"
                 }
             }),
             headers: {
@@ -1458,11 +1458,15 @@ class UpdateRemission extends React.Component {
 
             var flg = 0;
 
-            buttons.forEach(function (btn, ind) {
-                if (btn.key.toLowerCase() === "print notice") {
-                    flg = 1;
-                }
-            });
+            let buttonsLowercase = [];
+ 
+            buttons.forEach(function(button){
+                buttonsLowercase.push(button.key.toLowerCase());
+            })
+
+
+            if(buttonsLowercase.indexOf("forward") < 0 && (buttonsLowercase.indexOf("approve") > -1 || buttonsLowercase.indexOf("print notice") > -1))
+            flg = 1;
 
             if (flg === 0) {
 

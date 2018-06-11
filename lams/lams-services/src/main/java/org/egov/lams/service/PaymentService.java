@@ -576,6 +576,13 @@ public class PaymentService {
 			if (demandReasonMap.containsKey("ADVANCE_TAX")) {
 				demandDetailsSet.add(demandReasonMap.get("ADVANCE_TAX"));
 			}
+
+			if (demandReasonMap.containsKey("ADV_CGST")) {
+				demandDetailsSet.add(demandReasonMap.get("ADV_CGST"));
+			}
+			if (demandReasonMap.containsKey("ADV_SGST")) {
+				demandDetailsSet.add(demandReasonMap.get("ADV_SGST"));
+			}
 			if (demandReasonMap.containsKey("GOODWILL_AMOUNT")) {
 				demandDetailsSet.add(demandReasonMap.get("GOODWILL_AMOUNT"));
 			}

@@ -111,6 +111,11 @@ public class DemandRepository {
 			if (i == 0 && agreement.getSource().equals(Source.SYSTEM) && agreement.getStatus().equals(Status.WORKFLOW)) {
 				taxReason = propertiesManager.getTaxReasonAdvanceTax();
 				demandReasons.addAll(getDemandReasonsForTaxReason(agreementRequest, date, taxReason));
+				taxReason = propertiesManager.getTaxReasonCGSTOnAdvance();
+				demandReasons.addAll(getDemandReasonsForTaxReason(agreementRequest, date, taxReason));
+				taxReason = propertiesManager.getTaxReasonSGSTOnAdvance();
+				demandReasons.addAll(getDemandReasonsForTaxReason(agreementRequest, date, taxReason));
+
 			} else if (i == 1 && agreement.getSource().equals(Source.SYSTEM) && agreement.getStatus().equals(Status.WORKFLOW)) {
 				taxReason = propertiesManager.getTaxReasonGoodWillAmount();
 				demandReasons.addAll(getDemandReasonsForTaxReason(agreementRequest, date, taxReason));
@@ -283,6 +288,7 @@ public class DemandRepository {
 		demand.setInstallment(demandReasons.get(0).getTaxPeriod());
 		demand.setModuleName("Leases And Agreements");
 		
+		Double gstOnAdvance = agreement.getSecurityDeposit() !=null ?  (agreement.getSecurityDeposit() * 18)/100 : 0;
 		if (agreement.getDemands() != null) 
 			demand.setId(agreement.getDemands().get(0));
 		
@@ -316,6 +322,10 @@ public class DemandRepository {
 
 			}else if ("SERVICE_TAX".equalsIgnoreCase(demandReason.getName())){
 				demandDetail.setTaxAmount(BigDecimal.valueOf(agreement.getServiceTax()!=null? agreement.getServiceTax() : 0));
+
+			} else if ("ADV_CGST".equalsIgnoreCase(demandReason.getName())
+					|| "ADV_SGST".equalsIgnoreCase(demandReason.getName())) {
+				demandDetail.setTaxAmount(BigDecimal.valueOf(gstOnAdvance / 2));
 
 			}
 			if(demandDetail.getTaxAmount()!=null)

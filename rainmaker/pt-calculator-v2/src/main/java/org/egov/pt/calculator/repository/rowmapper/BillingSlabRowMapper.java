@@ -26,7 +26,7 @@ public class BillingSlabRowMapper implements ResultSetExtractor<List<BillingSlab
 				AuditDetails auditDetails = AuditDetails.builder().createdBy(rs.getString("createdby")).createdTime(rs.getLong("createdTime"))
 						.lastModifiedBy(rs.getString("lastmodifiedby")).lastModifiedTime(rs.getLong("lastmodifiedtime")).build();
 				
-				currentBillingSlab = BillingSlab.builder().id(rs.getString("id")).areaType(rs.getString("area"))
+				currentBillingSlab = BillingSlab.builder().id(rs.getString("id")).areaType(rs.getString("areaType"))
 						.fromFloor(rs.getInt("fromFloor")).fromPlotSize(rs.getDouble("fromPlotSize")).ownerShipCategory(rs.getString("ownerShipCategory"))
 						.propertySubType(rs.getString("propertySubType")).propertyType(rs.getString("propertyType")).subOwnerShipCategory(rs.getString("subOwnerShipCategory"))
 						.tenantId(rs.getString("tenantId")).toFloor(rs.getInt("toFLoor")).toPlotSize(rs.getDouble("toPlotSize")).unitRate(rs.getDouble("unitRate"))

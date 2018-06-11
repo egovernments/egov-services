@@ -1406,7 +1406,7 @@ function updateTable(tableName, modalName, object) {
             $(tableName).append(`<td data-label=${"documents"}>
                                     ${employee[object][i]["documents"]?employee[object][i]["documents"].length:""}
                                 </td>`);
-            closeTR(tableName, modalName, object, i);
+            closeTR(tableName, modalName, object, i, employee[object][i]["isAssignmentBased"]);
         } else if (object == "probation" || object == "regularisation") {
             $(tableName).append(`<tr>`);
             $(tableName).append(`<td data-label=${"designation"}>
@@ -1580,6 +1580,18 @@ function markEditIndex(index = -1, modalName = "", object = "", fromServer) {
                                 $("#assignments\\.toDate").datepicker('setStartDate', new Date());
                             }
                         }
+                    }
+
+                    if(object == "serviceHistory" && fromServer){
+
+                        $("#serviceHistory\\.city").attr('disabled', true);
+                        $("#serviceHistory\\.serviceFrom").attr('disabled', true);
+                        $("#serviceHistory\\.serviceTo").attr('disabled', true);
+                        $("#serviceHistory\\.department").attr('disabled', true);
+                        $("#serviceHistory\\.designation").attr('disabled', true);
+                        $("#serviceHistory\\.orderNo").attr('disabled', true);
+                        $("#serviceHistory\\.documents").attr('disabled', true);
+
                     }
 
                     employeeSubObject[object] = Object.assign({}, employee[object][editIndex]);

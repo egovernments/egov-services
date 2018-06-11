@@ -181,7 +181,7 @@ public class PaymentService {
 			LOGGER.info("after serviceCode>>>>>>>" + serviceCode);
 
 			billInfo.setServiceCode(serviceCode);
-			billInfo.setPartPaymentAllowed('N');
+			billInfo.setPartPaymentAllowed('Y');
 			billInfo.setOverrideAccHeadAllowed('N');
 			billInfo.setDescription("Leases And Agreements : " + (StringUtils.isBlank(agreement.getAgreementNumber())
 					? agreement.getAcknowledgementNumber() : agreement.getAgreementNumber()));

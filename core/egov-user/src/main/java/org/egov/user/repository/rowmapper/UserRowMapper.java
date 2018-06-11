@@ -13,7 +13,10 @@ import org.egov.user.domain.model.enums.UserType;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 
+import lombok.extern.slf4j.Slf4j;
+
 @Component
+@Slf4j
 public class UserRowMapper implements RowMapper<User> {
 
 	public List<User> userList = new ArrayList<User>();
@@ -28,6 +31,8 @@ public class UserRowMapper implements RowMapper<User> {
 				.pan(rs.getString("pan")).aadhaarNumber(rs.getString("aadhaarnumber")).createdBy(rs.getLong("createdby")).createdDate(rs.getTimestamp("createddate"))
 				.guardian(rs.getString("guardian")).signature(rs.getString("signature"))
 				.accountLocked(rs.getBoolean("accountlocked")).photo(rs.getString("photo")).identificationMark(rs.getString("identificationmark")).uuid(rs.getString("uuid")).build();
+		
+		log.info("ID: "+user.getId()+" uuid: "+user.getUuid());
 
 		for (UserType type : UserType.values()) {
 			if (type.toString().equals(rs.getString("type"))) {

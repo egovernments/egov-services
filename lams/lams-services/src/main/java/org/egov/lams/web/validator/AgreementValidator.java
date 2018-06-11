@@ -245,20 +245,12 @@ public class AgreementValidator {
 		Agreement agreement = agreementRequest.getAgreement();
 		Date fromDate = agreement.getRemission().getRemissionDate();
 		Date toDate = agreement.getRemission().getRemissionToDate();
-		AssetCategory assetCategory = agreement.getAsset().getCategory();
 		Boolean isRentCollected;
 		demandSearchCriteria.setDemandId(Long.valueOf(agreement.getDemands().get(0)));
-
-		List<String> remissionAssetCategories = getConfigurations(propertiesManager.getRemissionAssetCategoryKey(),
-				agreement.getTenantId());
 		if (agreement.getIsUnderWorkflow()) {
 			errors.reject(ERROR_FIELD_AGREEMENT_NO, ERROR_MSG_UNDER_WORKFLOW);
 		}
-		if (!remissionAssetCategories.stream()
-				.anyMatch(category -> category.equalsIgnoreCase(assetCategory.getName()))) {
-			errors.reject("Remission Can't allowed",
-					"Remission can be allowed on Market and ShoppingComplex asset type only.");
-		}
+		
 		Demand demand = demandRepository.getDemandBySearch(demandSearchCriteria, agreementRequest.getRequestInfo())
 				.getDemands().get(0);
 		if (demand == null)

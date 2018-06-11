@@ -165,7 +165,6 @@ public class BillingSlabValidator {
 		for (BillingSlab billingSlab : billingSlabReq.getBillingSlab()) {
 			if(!StringUtils.isEmpty(billingSlab.getOccupancyType())) {
 				List<String> allowedOccupancyTypes = JsonPath.read(occupancyType, BillingSlabConstants.MDMS_CODE_JSONPATH);
-				log.info("allowedOccupancyTypes: "+allowedOccupancyTypes);
 				if(!allowedOccupancyTypes.contains(billingSlab.getOccupancyType()))
 					//errorMap.put("INVALID_OCCUPANCY_TYPE","Allowed Occupancy Types are: "+allowedOccupancyTypes);
 					errorMap.put("INVALID_OCCUPANCY_TYPE","Occupancy Type provided is invalid");
@@ -217,8 +216,8 @@ public class BillingSlabValidator {
 							errorMap.put("INVALID_USAGE_CATEGORY_MINOR","Usage category minor is invalid");
 						} else {
 							if (!CollectionUtils.isEmpty(allowedUsageCategoryMinors)) {
-								List<String> usageCategorySubMinors = JsonPath.read(allowedUsageCategoryMinors,"$.*.[?(@.usageCategoryMinor=='" + billingSlab.getUsageCategoryMinor() + "')].code");
-								if (!usageCategorySubMinors.contains(billingSlab.getUsageCategorySubMinor())) {
+								List<String> allowedUsageCategorySubMinors = JsonPath.read(usageCategorySubMinor,"$.*.[?(@.usageCategoryMinor=='" + billingSlab.getUsageCategoryMinor() + "')].code");
+								if (!allowedUsageCategorySubMinors.contains(billingSlab.getUsageCategorySubMinor())) {
 									//errorMap.put("INVALID_USAGE_CATEGORY_SUBMINOR","Allowed Usage category sub minor for this usage category minor: "+ billingSlab.getUsageCategoryMinor() + " are: " + usageCategorySubMinors);
 									errorMap.put("INVALID_USAGE_CATEGORY_SUBMINOR","Provided Usage category sub minor is invalid");
 								}

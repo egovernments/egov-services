@@ -54,6 +54,9 @@ public class UserRequest {
 	private Long lastModifiedBy;
 	private String tenantId;
 	private List<RoleRequest> roles;
+	
+	private String uuid;
+
 
 	@JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss")
 	private Date createdDate;
@@ -93,6 +96,7 @@ public class UserRequest {
 		this.tenantId = user.getTenantId();
 		this.roles = convertDomainRoleToContract(user.getRoles());
 		this.fatherOrHusbandName = user.getGuardian();
+		this.uuid = user.getUuid();
 		mapPermanentAddress(user);
 		mapCorrespondenceAddress(user);
 	}

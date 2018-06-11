@@ -734,10 +734,10 @@ class Nominee extends React.Component {
               {item.gender}
             </td>
             <td  >
-              {item.maritalStatus}
+              {item.relationship}
             </td>
             <td  >
-              {item.relationship}
+              {item.maritalStatus}
             </td>
             <td  >
               {getNameById(bankList, item.bank)}

@@ -94,7 +94,7 @@ class Attendance extends React.Component {
             window.location.href = "app/hr/common/employee-attendance.html";
           },
           error: function(err) {
-            showError(response["responseJSON"][0]["error"]["description"]);
+            showError(err["responseJSON"][0]["error"]["description"]);
           }
       });
   }

@@ -469,21 +469,13 @@ public class AgreementValidator {
 		Agreement agreement = agreementRequest.getAgreement();
 		Date currentDate = new Date();
 		Date expiryDate = agreement.getExpiryDate();
-		AssetCategory assetCategory = agreement.getAsset().getCategory();
 		if (agreement.getIsUnderWorkflow()) {
 			errors.reject(ERROR_FIELD_AGREEMENT_NO, ERROR_MSG_UNDER_WORKFLOW);
 		}
 		if (currentDate.after(expiryDate)) {
 			errors.reject("Can't allowed", "Remission Can not be allowed on expired agreements.");
 		}
-		List<String> remissionAssetCategories = getConfigurations(propertiesManager.getRemissionAssetCategoryKey(),
-				agreement.getTenantId());
-		if (!remissionAssetCategories.stream()
-				.anyMatch(category -> category.equalsIgnoreCase(assetCategory.getName()))) {
-			errors.reject("Remission Can't allowed",
-					"Remission can be allowed on Market and ShoppingComplex asset type only.");
-		}
-
+		
 	}
 	
 	public void validatePartialCollection(AgreementRequest agreementRequest, Errors errors){

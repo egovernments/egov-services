@@ -18,6 +18,9 @@ public class UserSearchRequest {
 
 	@JsonProperty("id")
 	private List<Long> id;
+	
+	@JsonProperty("uuid")
+	private List<String> uuid;
 
 	@JsonProperty("userName")
 	private String userName;
@@ -79,6 +82,7 @@ public class UserSearchRequest {
 				.type(userType)
 				.tenantId(tenantId)
 				.roleCodes(roleCodes)
+				.uuid(uuid)
 				.build();
 	}
 }

@@ -47,6 +47,7 @@ import org.egov.user.domain.model.UserSearchCriteria;
 import org.egov.user.persistence.repository.RoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -168,6 +169,11 @@ public class UserTypeQueryBuilder {
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
 			selectQuery.append(" u.name like " + "'%" + userSearchCriteria.getName().trim() + "%'");
 		}
+		
+		if (!CollectionUtils.isEmpty(userSearchCriteria.getUuid())) {
+			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+			selectQuery.append(" u.uuid IN " + getUUIDQuery(userSearchCriteria.getUuid()));
+		}
 	}
 
 	private void addOrderByClause(final StringBuilder selectQuery, final UserSearchCriteria userSearchCriteria) {
@@ -196,6 +202,16 @@ public class UserTypeQueryBuilder {
 			query.append(idList.get(0).toString());
 			for (int i = 1; i < idList.size(); i++)
 				query.append(", " + idList.get(i));
+		}
+		return query.append(")").toString();
+	}
+	
+	private static String getUUIDQuery(final List<String> idList) {
+		final StringBuilder query = new StringBuilder("(");
+		if (idList.size() >= 1) {
+			query.append("'").append(idList.get(0).toString()).append("'");
+			for (int i = 1; i < idList.size(); i++)
+				query.append(", '" + idList.get(i)).append("'");
 		}
 		return query.append(")").toString();
 	}

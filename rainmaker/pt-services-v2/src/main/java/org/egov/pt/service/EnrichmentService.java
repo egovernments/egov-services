@@ -1,5 +1,6 @@
 package org.egov.pt.service;
 
+import org.dozer.DozerBeanMapper;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.pt.config.PropertyConfiguration;
 import org.egov.pt.repository.IdGenRepository;
@@ -8,6 +9,8 @@ import org.egov.pt.util.PropertyUtil;
 import org.egov.pt.web.models.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
+import org.dozer.DozerBeanMapper;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -26,6 +29,7 @@ public class EnrichmentService {
     private PropertyConfiguration config;
 
 
+
     /**
      * Assigns UUIDs to all id fields and also assigns acknowledgementnumber and assessmentnumber generated from idgen
      * @param request
@@ -34,23 +38,20 @@ public class EnrichmentService {
 
         RequestInfo requestInfo = request.getRequestInfo();
         AuditDetails auditDetails = propertyutil.getAuditDetails(requestInfo.getUserInfo().getId().toString(), true);
-        String tenantId = request.getProperties().get(0).getTenantId();
 
         for (Property property : request.getProperties()) {
             property.getAddress().setId(UUID.randomUUID().toString());
             property.setAuditDetails(auditDetails);
 
             property.getPropertyDetails().forEach(propertyDetail -> {
-                 propertyDetail.setAssessmentNumber(UUID.randomUUID().toString());
-                Set<OwnerInfo> owners = propertyDetail.getOwners();
+                propertyDetail.setAssessmentNumber(UUID.randomUUID().toString());
+              /*  Set<OwnerInfo> owners = propertyDetail.getOwners();
                 owners.forEach(owner -> {
                     owner.setId(UUID.randomUUID().toString());
-                    owner.setTenantId(tenantId);
-                });
+                });*/
                 Set<Unit> units =propertyDetail.getUnits();
                 units.forEach(unit -> {
                     unit.setId(UUID.randomUUID().toString());
-                    unit.setTenantId(tenantId);
                 });
                 Set<Document> documents = propertyDetail.getDocuments();
                 documents.forEach(document ->{
@@ -63,8 +64,6 @@ public class EnrichmentService {
 
 
         }
-
-
         setIdgenIds(request);
     }
 
@@ -78,7 +77,6 @@ public class EnrichmentService {
 
         RequestInfo requestInfo = request.getRequestInfo();
         AuditDetails auditDetails = propertyutil.getAuditDetails(requestInfo.getUserInfo().getId().toString(), false);
-        String tenantId = request.getProperties().get(0).getTenantId();
 
         Map<String,Property> idToProperty = new HashMap<>();
         propertiesFromResponse.forEach(propertyFromResponse -> {
@@ -100,15 +98,13 @@ public class EnrichmentService {
                 Set<Document> documents = propertyDetail.getDocuments();
                 Set<Unit> units=propertyDetail.getUnits();
 
-                if(ownerInfos!=null && !ownerInfos.isEmpty()) {
+               /* if(ownerInfos!=null && !ownerInfos.isEmpty()) {
                     ownerInfos.forEach(owner -> {
                         if (owner.getId() == null) {
                             owner.setId(UUID.randomUUID().toString());
-                            owner.setTenantId(tenantId);
                         }
                     });
-                }
-
+                }*/
                 if(documents!=null && !documents.isEmpty()){
                     documents.forEach(document ->{
                         if(document.getId()==null){
@@ -121,7 +117,6 @@ public class EnrichmentService {
                     units.forEach(unit ->{
                         if(unit.getId()==null){
                             unit.setId(UUID.randomUUID().toString());
-                            unit.setTenantId(tenantId);
                         }
                     });
                 }
@@ -182,8 +177,85 @@ public class EnrichmentService {
         });*/
     }
 
+    /**
+     * Populates the owner fields inside of property objects from the response got from calling user api
+     * @param userDetailResponse
+     * @param properties
+     */
 
 
+    public void enrichOwner(UserDetailResponse userDetailResponse, List<Property> properties){
+        List<OwnerInfo> users = userDetailResponse.getUser();
+        Map<Long,OwnerInfo> userIdToOwnerMap = new HashMap<>();
+        users.forEach(user -> {
+            userIdToOwnerMap.put(user.getId(),user);
+        });
+        properties.forEach(property -> {
+            property.getPropertyDetails().forEach(propertyDetail -> {
+                propertyDetail.getOwners().forEach(owner -> {
+                    addOwnerDetail(owner,userIdToOwnerMap);
+                });
+
+            });
+        });
+    }
+
+   /* private void addOwnerDetail(OwnerInfo owner,Map<Long,OwnerInfo> userIdToOwnerMap){
+        OwnerInfo user = userIdToOwnerMap.get(owner.getId());
+        owner.setLastModifiedDate(user.getLastModifiedDate());
+        owner.setLastModifiedDate(user.getLastModifiedDate());
+        owner.setCreatedBy(user.getCreatedBy());
+        owner.setCreatedDate(user.getCreatedDate());
+        owner.setUserName(user.getUserName());
+        owner.setPassword(user.getPassword());
+        owner.setSalutation(user.getSalutation());
+        owner.setName(user.getName());
+        owner.setGender(user.getGender());
+        owner.setMobileNumber(user.getMobileNumber());
+        owner.setEmailId(user.getEmailId());
+        owner.setAltContactNumber(user.getAltContactNumber());
+        owner.setPan(user.getPan());
+        owner.setAadhaarNumber(user.getAadhaarNumber());
+        owner.setPermanentAddress(user.getPermanentAddress());
+        owner.setPermanentCity(user.getPermanentCity());
+        owner.setPermanentPincode(user.getPermanentPincode());
+        owner.setCorrespondenceAddress(user.getCorrespondenceAddress());
+        owner.setCorrespondenceCity(user.getCorrespondenceCity());
+        owner.setCorrespondencePincode(user.getCorrespondencePincode());
+        owner.setActive(user.getActive());
+        owner.setDob(user.getDob());
+        owner.setPwdExpiryDate(user.getPwdExpiryDate());
+        owner.setLocale(user.getLocale());
+        owner.setType(user.getType());
+        owner.setAccountLocked(user.getAccountLocked());
+        owner.setRoles(user.getRoles());
+        owner.setFatherOrHusbandName(user.getFatherOrHusbandName());
+        owner.setBloodGroup(user.getBloodGroup());
+        owner.setIdentificationMark(user.getIdentificationMark());
+        owner.setPhoto(user.getPhoto());
+    }*/
+
+
+    /**
+     * Copies all fields to owner from the corresponding ownerInfo from userIdToOwnerMap
+     * @param owner Owner whose fields are to be populated
+     * @param userIdToOwnerMap Map of userId to OwnerInfo
+     */
+    private void addOwnerDetail(OwnerInfo owner,Map<Long,OwnerInfo> userIdToOwnerMap){
+        OwnerInfo user = userIdToOwnerMap.get(owner.getId());
+        DozerBeanMapper dozerBeanMapper = new DozerBeanMapper();
+        dozerBeanMapper.map(user,owner);
+    }
+
+    public void enrichPropertyCriteria(PropertyCriteria criteria,UserDetailResponse userDetailResponse){
+        if(CollectionUtils.isEmpty(criteria.getOwnerids())){
+            List<Long> ownerids = new ArrayList<>();
+            userDetailResponse.getUser().forEach(owner -> {
+                ownerids.add(owner.getId());
+            });
+            criteria.setOwnerids(ownerids);
+        }
+    }
 
 
 }

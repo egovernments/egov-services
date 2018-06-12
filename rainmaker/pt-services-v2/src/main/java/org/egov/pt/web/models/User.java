@@ -6,7 +6,6 @@ import java.util.List;
 
 import javax.validation.Valid;
 
-import org.egov.common.contract.request.Role;
 import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -30,6 +29,9 @@ import lombok.Setter;
 public class User   {
         @JsonProperty("id")
         private Long id;
+
+        @JsonProperty("uuid")
+        private String uuid;
 
         @JsonProperty("userName")
         private String userName;

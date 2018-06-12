@@ -2,6 +2,7 @@ package org.egov.pt.service;
 
 import java.util.*;
 
+import org.egov.common.contract.request.RequestInfo;
 import org.egov.pt.config.PropertyConfiguration;
 import org.egov.pt.producer.Producer;
 import org.egov.pt.repository.PropertyRepository;
@@ -33,12 +34,18 @@ public class PropertyService {
 	@Autowired
 	private PropertyValidator propertyValidator;
 
+	@Autowired
+	private UserService userService;
+
+
+
 	/**
 	 * Assign ids through enrichment and pushes to kafka
 	 * @param request
 	 * @return
 	 */
 	public List<Property> createProperty(PropertyRequest request) {
+		userService.createUser(request);
 		enrichmentService.enrichCreateRequest(request);
 		propertyValidator.validateMasterData(request);
 		producer.push(config.getSavePropertyTopic(), request);
@@ -51,8 +58,11 @@ public class PropertyService {
 	 * @param criteria
 	 * @return
 	 */
-	public List<Property> searchProperty(PropertyCriteria criteria) {
+	public List<Property> searchProperty(PropertyCriteria criteria,RequestInfo requestInfo) {
+		UserDetailResponse userDetailResponse = userService.getUser(criteria,requestInfo);
+		enrichmentService.enrichPropertyCriteria(criteria,userDetailResponse);
 		List<Property> properties = repository.getProperties(criteria);
+		enrichmentService.enrichOwner(userDetailResponse,properties);
 		return properties;
 	}
 
@@ -62,14 +72,21 @@ public class PropertyService {
 	 * @return
 	 */
 	public List<Property> updateProperty(PropertyRequest request) {
-		PropertyCriteria propertyCriteria = propertyValidator.getPropertirsFromSearch(request);
-		List<Property> responseProperties = searchProperty(propertyCriteria);
+		PropertyCriteria propertyCriteria = propertyValidator.getPropertyCriteriaForSearch(request);
+		List<Property> responseProperties = searchProperty(propertyCriteria,request.getRequestInfo());
 		boolean ifPropertyExists=propertyValidator.PropertyExists(request,responseProperties);
-        if(ifPropertyExists) {
+		boolean paid = false;
+		/**
+		 * Call demand api to check if payment is done
+		 */
+		if(ifPropertyExists && !paid) {
 			enrichmentService.enrichUpdateRequest(request,responseProperties);
-			propertyValidator.validateMasterData(request);
+			userService.updateUser(request);
 			producer.push(config.getUpdatePropertyTopic(), request);
 			return request.getProperties();
+		}
+		else if(ifPropertyExists && paid){
+			return createProperty(request);
 		}
 		else
 		{    throw new CustomException("usr_002","invalid id");  // Change the error code

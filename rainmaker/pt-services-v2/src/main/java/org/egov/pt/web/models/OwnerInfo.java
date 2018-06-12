@@ -5,7 +5,6 @@ import java.util.List;
 
 import javax.validation.Valid;
 
-import org.egov.common.contract.request.Role;
 import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -27,120 +26,11 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
 @EqualsAndHashCode(of= {"id"})
-public class OwnerInfo   {
-        @JsonProperty("id")
-        private String id;
-
-        @JsonProperty("userName")
-        private String userName;
-
-        @JsonProperty("password")
-        private String password;
-
-        @JsonProperty("salutation")
-        private String salutation;
-
-        @JsonProperty("name")
-        private String name;
-
-        @JsonProperty("gender")
-        private String gender;
-
-        @JsonProperty("mobileNumber")
-        private String mobileNumber;
-
-        @JsonProperty("emailId")
-        private String emailId;
-
-        @JsonProperty("altContactNumber")
-        private String altContactNumber;
-
-        @JsonProperty("pan")
-        private String pan;
-
-        @JsonProperty("aadhaarNumber")
-        private String aadhaarNumber;
-
-        @JsonProperty("permanentAddress")
-        private String permanentAddress;
-
-        @JsonProperty("permanentCity")
-        private String permanentCity;
-
-        @JsonProperty("permanentPincode")
-        private String permanentPincode;
-
-        @JsonProperty("correspondenceCity")
-        private String correspondenceCity;
-
-        @JsonProperty("correspondencePincode")
-        private String correspondencePincode;
-
-        @JsonProperty("correspondenceAddress")
-        private String correspondenceAddress;
-
-        @JsonProperty("isActive")
-        private Boolean active;
-
-        @JsonProperty("dob")
-        private Long dob;
-
-        @JsonProperty("pwdExpiryDate")
-        private Long pwdExpiryDate;
-
-        @JsonProperty("locale")
-        private String locale;
-
-        @JsonProperty("type")
-        private String type;
-
-        @JsonProperty("signature")
-        private String signature;
-
-        @JsonProperty("accountLocked")
-        private Boolean accountLocked;
-
-        @JsonProperty("roles")
-        @Valid
-        private List<Role> roles;
-
-        @JsonProperty("fatherOrHusbandName")
-        private String fatherOrHusbandName;
-
-        @JsonProperty("bloodGroup")
-        private String bloodGroup;
-
-        @JsonProperty("identificationMark")
-        private String identificationMark;
-
-        @JsonProperty("photo")
-        private String photo;
-
-        @JsonProperty("createdBy")
-        private String createdBy;
-
-        @JsonProperty("createdDate")
-        private Long createdDate;
-
-        @JsonProperty("lastModifiedBy")
-        private Long lastModifiedBy;
-
-        @JsonProperty("lastModifiedDate")
-        private Long lastModifiedDate;
-
-        @JsonProperty("otpReference")
-        private String otpReference;
-
-        @JsonProperty("tenantId")
-        private String tenantId;
+public class OwnerInfo extends User  {
 
         @JsonProperty("isPrimaryOwner")
         private Boolean isPrimaryOwner;
-
-        @JsonProperty("isCurrentOwner")
-        private Boolean isCurrentOwner;
 
         @JsonProperty("ownerShipPercentage")
         private Double ownerShipPercentage;
@@ -149,13 +39,15 @@ public class OwnerInfo   {
         private String ownerType;
 
 
-        public OwnerInfo addRolesItem(Role rolesItem) {
-            if (this.roles == null) {
-            this.roles = new ArrayList<>();
-            }
-        this.roles.add(rolesItem);
-        return this;
+        @Builder
+        public OwnerInfo(Long id, String uuid, String userName, String password, String salutation, String name, String gender, String mobileNumber, String emailId, String altContactNumber, String pan, String aadhaarNumber, String permanentAddress, String permanentCity, String permanentPincode, String correspondenceCity, String correspondencePincode, String correspondenceAddress, Boolean active, Long dob, Long pwdExpiryDate, String locale, String type, String signature, Boolean accountLocked, List<Role> roles, String fatherOrHusbandName, String bloodGroup, String identificationMark, String photo, String createdBy, Long createdDate, Long lastModifiedBy, Long lastModifiedDate, String otpReference, String tenantId, Boolean isPrimaryOwner, Double ownerShipPercentage, String ownerType) {
+                super(id,uuid, userName, password, salutation, name, gender, mobileNumber, emailId, altContactNumber, pan, aadhaarNumber, permanentAddress, permanentCity, permanentPincode, correspondenceCity, correspondencePincode, correspondenceAddress, active, dob, pwdExpiryDate, locale, type, signature, accountLocked, roles, fatherOrHusbandName, bloodGroup, identificationMark, photo, createdBy, createdDate, lastModifiedBy, lastModifiedDate, otpReference, tenantId);
+                this.isPrimaryOwner = isPrimaryOwner;
+                this.ownerShipPercentage = ownerShipPercentage;
+                this.ownerType = ownerType;
         }
+
+
 
 }
 

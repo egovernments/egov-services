@@ -250,7 +250,7 @@ serviceMaps:
 
 
 
-        - query: INSERT INTO eg_pt_propertydetail_v2(tenantId,assessmentNumber,property,source,usage,noOfFloors,landArea,buildUpArea,additionalDetails,channel,financialYear,propertyType,propertySubType,usageCategoryMajor,assessmentDate,createdby, lastmodifiedby, createdtime,lastmodifiedtime) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?) ON CONFLICT ON CONSTRAINT pk_eg_pt_propertydetail_v2 DO UPDATE SET financialYear=?, propertyType=?, propertySubType=?,usageCategoryMajor=?, assessmentDate=?,source=?,usage=?,noOfFloors=?,landArea=?,buildUpArea=?,additionalDetails=?,channel=?,lastModifiedBy=?, lastModifiedTime=?;
+        - query: INSERT INTO eg_pt_propertydetail_v2(tenantId,assessmentNumber,property,source,usage,noOfFloors,landArea,buildUpArea,additionalDetails,channel,financialYear,propertyType,propertySubType,usageCategoryMajor,assessmentDate,createdby, lastmodifiedby, createdtime,lastmodifiedtime) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?) ON CONFLICT ON CONSTRAINT (assessmentNumber) DO UPDATE SET financialYear=?, propertyType=?, propertySubType=?,usageCategoryMajor=?, assessmentDate=?,source=?,usage=?,noOfFloors=?,landArea=?,buildUpArea=?,additionalDetails=?,channel=?,lastModifiedBy=?, lastModifiedTime=?;
           basePath: properties.*.propertyDetails.*
           jsonMaps:
 

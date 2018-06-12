@@ -177,7 +177,7 @@ public class PropertyValidator {
      * @param request
      * @return
      */
-    public PropertyCriteria getPropertirsFromSearch(PropertyRequest request) {
+    public PropertyCriteria getPropertyCriteriaForSearch(PropertyRequest request) {
 
         RequestInfo requestInfo = request.getRequestInfo();
         List<Property> properties=request.getProperties();
@@ -233,7 +233,7 @@ public class PropertyValidator {
         Set<String> ownerIds = new HashSet<>();
         owners.forEach(owner -> {
             if(owner.getId()!=null)
-                ownerIds.add(owner.getId());
+                ownerIds.add(owner.getUuid());
         });
         return ownerIds;
     }

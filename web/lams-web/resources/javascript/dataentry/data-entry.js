@@ -477,22 +477,22 @@ $(document).ready(function() {
     //         this.agreement.councilNumber = "";
     //     }
     // });
-if(resolutionNo){
-    $.ajax({
-        url: baseUrl + "/restapi/councilresolutions?resolutionNo=" + resolutionNo,
-        type: 'GET',
-        dataType: 'json',
-        contentType: 'application/json',
-        headers: {
-          'auth-token': authToken
-        },
-        success: function (res1) { alert(res1[0].preambleNo);},
-        error: function (err) {
-            $('#councilNumber').val("");
-            alert("Invalid CR number");
-        }
-      })
-    }
+// if(resolutionNo){
+//     $.ajax({
+//         url: baseUrl + "/restapi/councilresolutions?resolutionNo=" + resolutionNo,
+//         type: 'GET',
+//         dataType: 'json',
+//         contentType: 'application/json',
+//         headers: {
+//           'auth-token': authToken
+//         },
+//         success: function (res1) { alert(res1[0].preambleNo);},
+//         error: function (err) {
+//             $('#councilNumber').val("");
+//             alert("Invalid CR number");
+//         }
+//       })
+//     }
  }
 
  function clearGovernment(){
@@ -1394,6 +1394,7 @@ function uploadFiles(agreement, cb) {
                     docs.push({fileStore: res.files[0].fileStoreId});
                     if (counter == 0 && breakout == 0) {
                         agreement.documents = docs;
+                        if(agreement.docs)
                         agreement.documents = agreement.documents.concat(agreement.docs);
                         cb(null, agreement);
                     }

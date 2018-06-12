@@ -15,6 +15,7 @@ import static org.apache.commons.lang3.StringUtils.isEmpty;
 public class UserSearchCriteria {
 
     private List<Long> id;
+    private List<String> uuid;
     private String userName;
     private String name;
     private String mobileNumber;

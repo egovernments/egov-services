@@ -471,7 +471,7 @@ class UpdateRemission extends React.Component {
         doc.text(15, 65, lines);
 
         doc.text(15, 80, "Ref: 1. Request Letter by the leaseholder");
-        doc.text(23, 85, "2. Resolution No …………… dt …………… of Municipal Council/Standing Committee");
+        doc.text(23, 85, "2. Resolution No " + agreement.remissionOrder + " dt " + agreement.remissionDate + " of Municipal Council/Standing Committee");
 
         doc.text(105, 95, "><><><", 'center');
 
@@ -812,15 +812,15 @@ class UpdateRemission extends React.Component {
                                                     if (window.opener)
                                                         window.opener.location.reload();
                                                     if (res1 && res1.Employee && res1.Employee[0].name)
-                                                        window.location.href = `app/acknowledgement/common-ack.html?wftype=Cancel&action=${ID}&name=${res1.Employee[0].code}::${res1.Employee[0].name}&ackNo=${res.Agreements[0].acknowledgementNumber}`;
+                                                        window.location.href = `app/acknowledgement/common-ack.html?wftype=Remission&action=${ID}&name=${res1.Employee[0].code}::${res1.Employee[0].name}&ackNo=${res.Agreements[0].acknowledgementNumber}`;
                                                     else
-                                                        window.location.href = `app/acknowledgement/common-ack.html?wftype=Cancel&action=${ID}&name=&ackNo=${res.Agreements[0].acknowledgementNumber}`;
+                                                        window.location.href = `app/acknowledgement/common-ack.html?wftype=Remission&action=${ID}&name=&ackNo=${res.Agreements[0].acknowledgementNumber}`;
 
                                                 },
                                                 error: function (err) {
                                                     if (window.opener)
                                                         window.opener.location.reload();
-                                                    window.location.href = `app/acknowledgement/common-ack.html?wftype=Cancel&action=${ID}&name=&ackNo=${res.Agreements[0].acknowledgementNumber}`;
+                                                    window.location.href = `app/acknowledgement/common-ack.html?wftype=Remission&action=${ID}&name=&ackNo=${res.Agreements[0].acknowledgementNumber}`;
                                                 }
                                             })
                                         }
@@ -847,7 +847,7 @@ class UpdateRemission extends React.Component {
 
 
                 $.ajax({
-                    url: baseUrl + "/lams-services/agreements/cancel/_update?tenantId=" + tenantId,
+                    url: baseUrl + "/lams-services/agreements/remission/_update?tenantId=" + tenantId,
                     type: 'POST',
                     dataType: 'json',
                     data: JSON.stringify(body),
@@ -880,15 +880,15 @@ class UpdateRemission extends React.Component {
                                     if (window.opener)
                                         window.opener.location.reload();
                                     if (res1 && res1.Employee && res1.Employee[0].name)
-                                        window.location.href = `app/acknowledgement/common-ack.html?wftype=Cancel&action=${ID}&name=${res1.Employee[0].code}::${res1.Employee[0].name}&ackNo=${res.Agreements[0].acknowledgementNumber}`;
+                                        window.location.href = `app/acknowledgement/common-ack.html?wftype=Remission&action=${ID}&name=${res1.Employee[0].code}::${res1.Employee[0].name}&ackNo=${res.Agreements[0].acknowledgementNumber}`;
                                     else
-                                        window.location.href = `app/acknowledgement/common-ack.html?wftype=Cancel&action=${ID}&name=&ackNo=${res.Agreements[0].acknowledgementNumber}`;
+                                        window.location.href = `app/acknowledgement/common-ack.html?wftype=Remission&action=${ID}&name=&ackNo=${res.Agreements[0].acknowledgementNumber}`;
 
                                 },
                                 error: function (err) {
                                     if (window.opener)
                                         window.opener.location.reload();
-                                    window.location.href = `app/acknowledgement/common-ack.html?wftype=Cancel&action=${ID}&name=&ackNo=${res.Agreements[0].acknowledgementNumber}`;
+                                    window.location.href = `app/acknowledgement/common-ack.html?wftype=Remission&action=${ID}&name=&ackNo=${res.Agreements[0].acknowledgementNumber}`;
                                 }
                             })
                         }

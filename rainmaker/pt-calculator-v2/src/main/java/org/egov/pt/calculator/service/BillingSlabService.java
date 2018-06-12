@@ -15,6 +15,7 @@ import org.egov.pt.calculator.web.models.property.BillingSlabReq;
 import org.egov.pt.calculator.web.models.property.BillingSlabRes;
 import org.egov.pt.calculator.web.models.property.BillingSlabSearchCriteria;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import lombok.extern.slf4j.Slf4j;
@@ -37,6 +38,15 @@ public class BillingSlabService {
 	
 	@Autowired
 	private ResponseInfoFactory factory;
+	
+	@Value("${billingslab.max.toFloor}")
+	private Double maxToFloor;
+	
+	@Value("${billingslab.min.fromFloor}")
+	private Double minFromFloor;
+	
+	@Value("${billingslab.max.toPLotSize}")
+	private Double maxToPlotSize;
 
 	public BillingSlabRes createBillingSlab(BillingSlabReq billingSlabReq) {
 		enrichBillingSlabForCreate(billingSlabReq);
@@ -54,12 +64,31 @@ public class BillingSlabService {
 		for(BillingSlab billingSlab: billingSlabReq.getBillingSlab()) {
 			billingSlab.setId(UUID.randomUUID().toString());
 			billingSlab.setAuditDetails(billingSlabUtils.getAuditDetails(billingSlabReq.getRequestInfo()));
+			if(null == billingSlab.getToFloor()) {
+				billingSlab.setToFloor((null == maxToFloor) ? Double.POSITIVE_INFINITY : maxToFloor);
+			}
+			if(null == billingSlab.getToPlotSize()) {
+				billingSlab.setToPlotSize((null == maxToPlotSize) ? Double.POSITIVE_INFINITY : maxToPlotSize);
+			}
+			if(null == billingSlab.getFromFloor()) {
+				billingSlab.setFromFloor((null == minFromFloor) ? Double.NEGATIVE_INFINITY : minFromFloor);
+			}
 		}
 	}
 	
 	public void enrichBillingSlabForUpdate(BillingSlabReq billingSlabReq) {
-		for(BillingSlab billingSlab: billingSlabReq.getBillingSlab())
+		for(BillingSlab billingSlab: billingSlabReq.getBillingSlab()) {
 			billingSlab.setAuditDetails(billingSlabUtils.getAuditDetails(billingSlabReq.getRequestInfo()));
+			if(null == billingSlab.getToFloor()) {
+				billingSlab.setToFloor((null == maxToFloor) ? Double.POSITIVE_INFINITY : maxToFloor);
+			}
+			if(null == billingSlab.getToPlotSize()) {
+				billingSlab.setToPlotSize((null == maxToPlotSize) ? Double.POSITIVE_INFINITY : maxToPlotSize);
+			}
+			if(null == billingSlab.getFromFloor()) {
+				billingSlab.setFromFloor((null == minFromFloor) ? Double.NEGATIVE_INFINITY : minFromFloor);
+			}
+		}
 	}
 	
 	public BillingSlabRes searchBillingSlabs(RequestInfo requestInfo, BillingSlabSearchCriteria billingSlabSearcCriteria) {

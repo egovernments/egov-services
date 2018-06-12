@@ -65,10 +65,10 @@ public class BillingSlab   {
         private String occupancyType = null;
         
         @JsonProperty("fromFloor")
-        private Integer fromFloor = null;
+        private Double fromFloor = null;
 
         @JsonProperty("toFloor")
-        private Integer toFloor = null;
+        private Double toFloor = null;
 
         @JsonProperty("unitRate")
         private Double unitRate = null;

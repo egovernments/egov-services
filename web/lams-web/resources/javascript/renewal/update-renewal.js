@@ -538,7 +538,7 @@ class UpdateRenewal extends React.Component {
         doc.text(15, 65, lines);
 
         doc.text(15, 80, "Ref: 1. Request Letter by the leaseholder");
-        doc.text(23, 85, "2. Resolution No …………… dt …………… of Municipal Council/Standing Committee");
+        doc.text(23, 85, "2. Resolution No " + agreement.renewal.renewalOrderNumber + " dt " + agreement.renewal.renewalOrderDate + " of Municipal Council/Standing Committee");
 
         doc.text(105, 95, "><><><", 'center');
 

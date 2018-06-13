@@ -114,7 +114,7 @@ class RenewalAgreement extends React.Component {
         isAdvancePaid: "",
         adjustmentStartDate: ""
       },
-      renewalReasons: ["Reason 1", "Reason 2", "Reason 3", "Reason 4"],
+      renewalReasons: ["Reason 1", "Reason 2", "Reason 3", "Reason 4", "Others"],
       positionList: [],
       departmentList: [],
       designationList: [],
@@ -141,6 +141,10 @@ class RenewalAgreement extends React.Component {
     var agreement = Object.assign({}, _this.state.agreement);
     agreement.action = "Renewal";
     var ID = "Forward";
+
+    if(agreement.renewal.reasonForRenewal == "Others" && !(agreement.remarks))
+    return(showError("Please enter remarks when selected reason as others"));
+
 
     var asOnDate = new Date();
     var dd = asOnDate.getDate();

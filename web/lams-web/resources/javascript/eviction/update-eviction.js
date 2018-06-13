@@ -110,7 +110,7 @@ class UpdateEviction extends React.Component {
                 isAdvancePaid: "",
                 adjustmentStartDate: ""
             },
-            evictionReasons: ["Court Case", "Committee Order",],
+            evictionReasons: ["Court Case", "Committee Order", "Others"],
             positionList: [],
             departmentList: [],
             designationList: [],
@@ -630,6 +630,9 @@ class UpdateEviction extends React.Component {
             var _this = this;
             var agreement = Object.assign({}, _this.state.agreement);
 
+            if(agreement.eviction.reasonForEviction == "Others" && !(agreement.remarks))
+            return(showError("Please enter remarks when selected reason as others"));
+    
             agreement.action = "eviction";
             agreement.workflowDetails.action = ID;
             agreement.workflowDetails.status = this.state.wfStatus;

@@ -117,7 +117,7 @@ class UpdateRemission extends React.Component {
                 isAdvancePaid: "",
                 adjustmentStartDate: ""
             },
-            remissionReasons: ["Natural Calamity", "Infrastructure Development"],
+            remissionReasons: ["Natural Calamity", "Infrastructure Development", "Others"],
             positionList: [],
             departmentList: [],
             designationList: [],
@@ -703,6 +703,9 @@ class UpdateRemission extends React.Component {
             var ID = e.target.id;
             var _this = this;
             var agreement = Object.assign({}, _this.state.agreement);
+
+            if(agreement.remission.remissionReason == "Others" && !(agreement.remarks))
+            return(showError("Please enter remarks when selected reason as others"));        
 
             agreement.action = "remission";
             agreement.workflowDetails.action = ID;

@@ -36,8 +36,11 @@ public class User {
     @JsonIgnore
     @JsonProperty("actions")
     private List<Action> actions;
+    
+    @JsonProperty("uuid")
+    private String uuid;
 
-    public User() {
+	public User() {
     }
 
     @JsonIgnore
@@ -81,5 +84,13 @@ public class User {
     public void setTenantId(String tenantId) {
         this.tenantId = tenantId;
     }
+    
+    public String getUuid() {
+		return uuid;
+	}
+
+	public void setUuid(String uuid) {
+		this.uuid = uuid;
+	}
 
 }

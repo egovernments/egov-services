@@ -22,6 +22,7 @@ public class CustomUserDetails {
 	private boolean active;
 	private List<Action> actions;
 	private String tenantId;
+	private String uuid;
 
 	public CustomUserDetails(UserDetail userDetail) {
 		final SecureUser secureUser = userDetail.getSecureUser();
@@ -35,6 +36,7 @@ public class CustomUserDetails {
 		this.roles = secureUser.getUser().getRoles();
 		this.active = secureUser.getUser().isActive();
 		this.tenantId = secureUser.getUser().getTenantId();
+		this.uuid = secureUser.getUser().getUuid();
 		this.actions = userDetail.getActions().stream().map(Action::new).collect(Collectors.toList());
 	}
 }

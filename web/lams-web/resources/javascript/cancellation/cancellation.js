@@ -115,7 +115,7 @@ class CancellationAgreement extends React.Component {
         isAdvancePaid: "",
         adjustmentStartDate: ""
       },
-      cancelReasons: ["Termination", "Cancellation"],
+      cancelReasons: ["Termination", "Cancellation", "Others"],
       positionList: [],
       departmentList: [],
       designationList: [],
@@ -162,6 +162,10 @@ class CancellationAgreement extends React.Component {
     }
 
     asOnDate = dd + '/' + mm + '/' + yyyy;
+
+    if(agreement.cancellation.reasonForCancellation == "Others" && !(agreement.remarks))
+    return(showError("Please enter remarks when selected reason as others"));
+
 
     if (agreement.documents && agreement.documents.constructor == FileList) {
       let counter = agreement.documents.length,

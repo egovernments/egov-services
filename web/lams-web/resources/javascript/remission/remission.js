@@ -117,7 +117,7 @@ class RemissionAgreement extends React.Component {
                 isAdvancePaid: "",
                 adjustmentStartDate: ""
             },
-            remissionReasons: ["Natural Calamity", "Infrastructure Development"],
+            remissionReasons: ["Natural Calamity", "Infrastructure Development", "Others"],
             positionList: [],
             departmentList: [],
             designationList: [],
@@ -149,6 +149,9 @@ class RemissionAgreement extends React.Component {
         agreement.action = "Remission";
 
         var ID = "Forward";
+
+        if(agreement.remission.remissionReason == "Others" && !(agreement.remarks))
+        return(showError("Please enter remarks when selected reason as others"));    
     
         var asOnDate = new Date();
         var dd = asOnDate.getDate();

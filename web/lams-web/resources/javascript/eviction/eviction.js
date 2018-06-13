@@ -110,7 +110,7 @@ class EvictionAgreement extends React.Component {
                 isAdvancePaid: "",
                 adjustmentStartDate: ""
             },
-            evictionReasons: ["Court Case", "Committee Order",],
+            evictionReasons: ["Court Case", "Committee Order", "Others"],
             positionList: [],
             departmentList: [],
             designationList: [],
@@ -138,6 +138,10 @@ class EvictionAgreement extends React.Component {
         var agreement = Object.assign({}, _this.state.agreement);
         agreement.action = "Eviction";
         var ID = "Forward";
+
+        if(agreement.eviction.reasonForEviction == "Others" && !(agreement.remarks))
+        return(showError("Please enter remarks when selected reason as others"));
+    
 
         var asOnDate = new Date();
         var dd = asOnDate.getDate();

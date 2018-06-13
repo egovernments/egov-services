@@ -247,6 +247,9 @@ definitions:
       tenantId:
         type: string
         description: Unique Identifier of the tenant to which user primarily belongs
+      doorNo:
+        type: string
+        description: House number or door number.
       latitude:
         type: number
         format: double

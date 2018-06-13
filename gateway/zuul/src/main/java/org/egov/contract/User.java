@@ -11,6 +11,9 @@ import java.util.List;
 public class User {
     @JsonProperty("id")
     private Integer id;
+    
+    @JsonProperty("uuid")
+    private String uuid;
 
     @JsonProperty("userName")
     private String userName;
@@ -36,9 +39,6 @@ public class User {
     @JsonIgnore
     @JsonProperty("actions")
     private List<Action> actions;
-    
-    @JsonProperty("uuid")
-    private String uuid;
 
 	public User() {
     }

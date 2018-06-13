@@ -4,8 +4,8 @@
         "authToken": "dummy-auth-token",
         "userInfo": {
             "id": 30,
-            "userName": "userName",
             "uuid":"asdfgvcxzawertyjnbvcxzasdfgh",
+            "userName": "userName",
             "name": "name",
             "type": "EMPLOYEE",
             "mobileNumber": "1234567890",

@@ -74,7 +74,7 @@ public class RequestEnrichmentFilterTest {
         assertEquals(expectedBody, IOUtils.toString(currentContext.getRequest().getInputStream()));
     }
 
-/*    @Test
+    @Test
     public void test_should_add_user_info_to_request_info_section_of_request_body() throws IOException {
         final RequestContext currentContext = RequestContext.getCurrentContext();
         final MockHttpServletRequest request = new MockHttpServletRequest();
@@ -91,9 +91,9 @@ public class RequestEnrichmentFilterTest {
 
         String expectedBody = resources.getFileContents("enrichedPostRequest.json");
         assertEquals(expectedBody, IOUtils.toString(currentContext.getRequest().getInputStream()));
-    }*/
+    }
 
-/*    @Test
+    @Test
     public void test_should_add_user_info_request_header_for_GET_request_type() throws IOException {
         final RequestContext currentContext = RequestContext.getCurrentContext();
         final MockHttpServletRequest request = new MockHttpServletRequest();
@@ -108,7 +108,7 @@ public class RequestEnrichmentFilterTest {
         String expectedHeaderValue = resources.getFileContents("userInfoHeader.json");
         final Map<String, String> zuulRequestHeaders = currentContext.getZuulRequestHeaders();
         assertEquals(expectedHeaderValue, zuulRequestHeaders.get("x-user-info"));
-    }*/
+    }
 
     @Test
     public void test_should_not_modify_request_body_when_request_info_section_is_not_present() throws IOException {

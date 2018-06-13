@@ -33,7 +33,7 @@ public class PropertyUtil {
             return AuditDetails.builder().lastModifiedBy(by).lastModifiedTime(time).build();
     }
 
-    public MdmsCriteriaReq prepareMdMsRequest(String tenantId, List<String> names, RequestInfo requestInfo) {
+    public MdmsCriteriaReq prepareMdMsRequestForCodes(String tenantId, List<String> names, RequestInfo requestInfo) {
 
         List<MasterDetail> masterDetails = new ArrayList<>();
         MasterDetail masterDetail;

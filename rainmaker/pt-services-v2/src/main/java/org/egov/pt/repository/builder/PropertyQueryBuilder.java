@@ -43,6 +43,13 @@ public class PropertyQueryBuilder {
 
 		}
 
+		Set<String> oldpropertyids = criteria.getOldpropertyids();
+		if(!CollectionUtils.isEmpty(oldpropertyids)) {
+
+			builder.append("and pt.oldpropertyid IN (").append(convertSetToString(oldpropertyids)).append(")");
+
+		}
+
 		Set<String> propertyDetailids = criteria.getPropertyDetailids();
 		if(!CollectionUtils.isEmpty(propertyDetailids)) {
 

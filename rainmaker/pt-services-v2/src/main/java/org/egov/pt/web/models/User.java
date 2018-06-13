@@ -6,15 +6,10 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import lombok.*;
 import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 /**
  * User
@@ -25,7 +20,9 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
+@ToString
+@EqualsAndHashCode(of={"uuid"})
+
 public class User   {
         @JsonProperty("id")
         private Long id;
@@ -69,13 +66,13 @@ public class User   {
         @JsonProperty("permanentCity")
         private String permanentCity;
 
-        @JsonProperty("permanentPincode")
+        @JsonProperty("permanentPinCode")
         private String permanentPincode;
 
         @JsonProperty("correspondenceCity")
         private String correspondenceCity;
 
-        @JsonProperty("correspondencePincode")
+        @JsonProperty("correspondencePinCode")
         private String correspondencePincode;
 
         @JsonProperty("correspondenceAddress")

@@ -27,26 +27,27 @@ import io.swagger.annotations.ApiModel;
 @Setter
 @NoArgsConstructor
 //@Builder
-@EqualsAndHashCode(of= {"propertyId","tenantId"})
-public class PropertyInfo   {
-        @JsonProperty("propertyId")
-        public String propertyId;
+    @EqualsAndHashCode(of= {"propertyId","tenantId"})
+    public class PropertyInfo   {
 
-        @JsonProperty("tenantId")
-        public String tenantId;
+    @JsonProperty("propertyId")
+    public String propertyId;
 
-        @JsonProperty("acknowldgementNumber")
-        public String acknowldgementNumber;
+    @JsonProperty("tenantId")
+    public String tenantId;
 
-        @JsonProperty("oldPropertyId")
-        public String oldPropertyId;
+    @JsonProperty("acknowldgementNumber")
+    public String acknowldgementNumber;
+
+    @JsonProperty("oldPropertyId")
+    public String oldPropertyId;
 
               /**
    * status of the Property
    */
-  public enum StatusEnum {
+    public enum StatusEnum {
     ACTIVE("ACTIVE"),
-    
+
     INACTIVE("INACTIVE");
 
     private String value;
@@ -70,13 +71,14 @@ public class PropertyInfo   {
       }
       return null;
     }
-  }
-        @JsonProperty("status")
-        public StatusEnum status;
+    }
 
-        @Valid
-        @JsonProperty("address")
-        public Address address;
+    @JsonProperty("status")
+    public StatusEnum status;
+
+    @Valid
+    @JsonProperty("address")
+    public Address address;
 
 
 

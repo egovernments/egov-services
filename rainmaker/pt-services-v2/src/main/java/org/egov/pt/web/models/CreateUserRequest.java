@@ -11,7 +11,7 @@ import org.egov.common.contract.request.RequestInfo;
 @NoArgsConstructor
 public class CreateUserRequest {
 
-    @JsonProperty("responseInfo")
+    @JsonProperty("requestInfo")
     private RequestInfo requestInfo;
 
     @JsonProperty("user")

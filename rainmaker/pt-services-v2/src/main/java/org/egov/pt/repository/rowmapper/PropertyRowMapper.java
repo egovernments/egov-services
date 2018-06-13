@@ -96,7 +96,11 @@ public class PropertyRowMapper implements ResultSetExtractor<List<Property>> {
 
 		String tenantId = property.getTenantId();
 
-		OwnerInfo owner = OwnerInfo.builder().id(rs.getString("userid")).build();
+		OwnerInfo owner = OwnerInfo.builder().uuid(rs.getString("userid"))
+				          .isPrimaryOwner(rs.getBoolean("isPrimaryOwner"))
+				          .ownerType(rs.getString("ownerType"))
+				          .ownerShipPercentage(rs.getDouble("ownerShipPercentage"))
+				          .build();
 		Document document = Document.builder().id(rs.getString("documentid")).documentType(rs.getString("documentType"))
 				.fileStore(rs.getString("fileStore")).build();
 		Unit unit = Unit.builder().id(rs.getString("unitid")).floorNo(rs.getString("floorNo")).tenantId(tenantId)
@@ -112,7 +116,9 @@ public class PropertyRowMapper implements ResultSetExtractor<List<Property>> {
 		/*
 		 * add item methods of models are being used to avoid the null checks
 		 */
+		System.out.println("Curr owner: "+owner.getUuid());
 		detail.addOwnersItem(owner);
+		detail.getOwners().forEach(item -> System.out.println(item.getUuid()));
 		detail.addDocumentsItem(document);
 		detail.addUnitsItem(unit);
 

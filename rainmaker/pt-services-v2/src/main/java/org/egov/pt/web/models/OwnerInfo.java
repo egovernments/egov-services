@@ -5,16 +5,10 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import lombok.*;
 import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 /**
  * OwnerInfo
@@ -26,7 +20,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode(of= {"id"})
+@ToString
 public class OwnerInfo extends User  {
 
         @JsonProperty("isPrimaryOwner")
@@ -46,6 +40,7 @@ public class OwnerInfo extends User  {
                 this.ownerShipPercentage = ownerShipPercentage;
                 this.ownerType = ownerType;
         }
+
 
 
 

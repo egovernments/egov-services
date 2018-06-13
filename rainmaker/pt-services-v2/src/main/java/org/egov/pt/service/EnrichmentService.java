@@ -34,21 +34,18 @@ public class EnrichmentService {
      * Assigns UUIDs to all id fields and also assigns acknowledgementnumber and assessmentnumber generated from idgen
      * @param request
      */
-    public void enrichCreateRequest(PropertyRequest request) {
-
+    public void enrichCreateRequest(PropertyRequest request,Boolean onlyPropertyDetail) {
         RequestInfo requestInfo = request.getRequestInfo();
-        AuditDetails auditDetails = propertyutil.getAuditDetails(requestInfo.getUserInfo().getId().toString(), true);
+        AuditDetails auditDetails = propertyutil.getAuditDetails(requestInfo.getUserInfo().getId().toString(), !onlyPropertyDetail);
 
         for (Property property : request.getProperties()) {
-            property.getAddress().setId(UUID.randomUUID().toString());
+            if(!onlyPropertyDetail)
+             property.getAddress().setId(UUID.randomUUID().toString());
+           //  property.setAccountId(request.getRequestInfo().getUserInfo().getId());
             property.setAuditDetails(auditDetails);
 
             property.getPropertyDetails().forEach(propertyDetail -> {
                 propertyDetail.setAssessmentNumber(UUID.randomUUID().toString());
-              /*  Set<OwnerInfo> owners = propertyDetail.getOwners();
-                owners.forEach(owner -> {
-                    owner.setId(UUID.randomUUID().toString());
-                });*/
                 Set<Unit> units =propertyDetail.getUnits();
                 units.forEach(unit -> {
                     unit.setId(UUID.randomUUID().toString());
@@ -61,10 +58,9 @@ public class EnrichmentService {
                 Long time = new Date().getTime();
                 propertyDetail.setAssessmentDate(time);
             });
-
-
         }
-        setIdgenIds(request);
+        if(!onlyPropertyDetail)
+         setIdgenIds(request);
     }
 
     /**
@@ -98,13 +94,6 @@ public class EnrichmentService {
                 Set<Document> documents = propertyDetail.getDocuments();
                 Set<Unit> units=propertyDetail.getUnits();
 
-               /* if(ownerInfos!=null && !ownerInfos.isEmpty()) {
-                    ownerInfos.forEach(owner -> {
-                        if (owner.getId() == null) {
-                            owner.setId(UUID.randomUUID().toString());
-                        }
-                    });
-                }*/
                 if(documents!=null && !documents.isEmpty()){
                     documents.forEach(document ->{
                         if(document.getId()==null){
@@ -112,7 +101,6 @@ public class EnrichmentService {
                         }
                     });
                 }
-
                 if(units!=null && !units.isEmpty()){
                     units.forEach(unit ->{
                         if(unit.getId()==null){
@@ -153,18 +141,12 @@ public class EnrichmentService {
         List<Property> properties = request.getProperties();
 
         List<String> acknowledgementNumbers = getIdList(requestInfo,tenantId,config.getAcknowldgementIdGenName(),config.getAcknowldgementIdGenFormat(),request.getProperties().size());
-
         for(int i=0;i<acknowledgementNumbers.size();i++)
-        {
-            properties.get(i).setAcknowldgementNumber(acknowledgementNumbers.get(i));
-        }
+        { properties.get(i).setAcknowldgementNumber(acknowledgementNumbers.get(i)); }
 
         List<String> propertyIds = getIdList(requestInfo,tenantId,config.getAcknowldgementIdGenName(),config.getAcknowldgementIdGenFormat(),request.getProperties().size());
-
         for(int i=0;i<propertyIds.size();i++)
-        {
-            properties.get(i).setPropertyId(propertyIds.get(i));
-        }
+        { properties.get(i).setPropertyId(propertyIds.get(i)); }
 
        /* properties.forEach(property -> {
             List<PropertyDetail> propertyDetails = property.getPropertyDetails();
@@ -177,6 +159,7 @@ public class EnrichmentService {
         });*/
     }
 
+
     /**
      * Populates the owner fields inside of property objects from the response got from calling user api
      * @param userDetailResponse
@@ -186,9 +169,9 @@ public class EnrichmentService {
 
     public void enrichOwner(UserDetailResponse userDetailResponse, List<Property> properties){
         List<OwnerInfo> users = userDetailResponse.getUser();
-        Map<Long,OwnerInfo> userIdToOwnerMap = new HashMap<>();
+        Map<String,OwnerInfo> userIdToOwnerMap = new HashMap<>();
         users.forEach(user -> {
-            userIdToOwnerMap.put(user.getId(),user);
+            userIdToOwnerMap.put(user.getUuid(),user);
         });
         properties.forEach(property -> {
             property.getPropertyDetails().forEach(propertyDetail -> {
@@ -201,7 +184,7 @@ public class EnrichmentService {
     }
 
    /* private void addOwnerDetail(OwnerInfo owner,Map<Long,OwnerInfo> userIdToOwnerMap){
-        OwnerInfo user = userIdToOwnerMap.get(owner.getId());
+        OwnerInfo user = userIdToOwnerMap.get(owner.getUuid());
         owner.setLastModifiedDate(user.getLastModifiedDate());
         owner.setLastModifiedDate(user.getLastModifiedDate());
         owner.setCreatedBy(user.getCreatedBy());
@@ -241,20 +224,32 @@ public class EnrichmentService {
      * @param owner Owner whose fields are to be populated
      * @param userIdToOwnerMap Map of userId to OwnerInfo
      */
-    private void addOwnerDetail(OwnerInfo owner,Map<Long,OwnerInfo> userIdToOwnerMap){
-        OwnerInfo user = userIdToOwnerMap.get(owner.getId());
+    private void addOwnerDetail(OwnerInfo owner,Map<String,OwnerInfo> userIdToOwnerMap){
+        OwnerInfo user = userIdToOwnerMap.get(owner.getUuid());
         DozerBeanMapper dozerBeanMapper = new DozerBeanMapper();
         dozerBeanMapper.map(user,owner);
     }
 
     public void enrichPropertyCriteria(PropertyCriteria criteria,UserDetailResponse userDetailResponse){
         if(CollectionUtils.isEmpty(criteria.getOwnerids())){
-            List<Long> ownerids = new ArrayList<>();
+            Set<String> ownerids = new HashSet<>();
             userDetailResponse.getUser().forEach(owner -> {
-                ownerids.add(owner.getId());
+                ownerids.add(owner.getUuid());
             });
             criteria.setOwnerids(ownerids);
         }
+    }
+
+    public void enrichPropertyCriteria(PropertyCriteria criteria,List<Property> properties){
+        Set<String> ownerids = new HashSet<>();
+        properties.forEach(property -> {
+            property.getPropertyDetails().forEach(propertyDetail -> {
+                propertyDetail.getOwners().forEach(owner ->{
+                    ownerids.add(owner.getUuid());
+                });
+            });
+        });
+        criteria.setOwnerids(ownerids);
     }
 
 

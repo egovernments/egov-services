@@ -14,8 +14,6 @@ import org.springframework.beans.factory.annotation.Value;
 
 import java.util.*;
 
-import com.jayway.jsonpath.JsonPath;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
@@ -63,7 +61,6 @@ public class PropertyValidator {
      *
      */
     public void validateMasterData(PropertyRequest request){
-
       Map<String,String> errorMap = new HashMap<>();
       String tenantId = request.getProperties().get(0).getTenantId();
 
@@ -71,13 +68,10 @@ public class PropertyValidator {
       PTConstants.MDMS_PT_PROPERTYTYPE,PTConstants.MDMS_PT_PROPERTYSUBTYPE,PTConstants.MDMS_PT_OWNERSHIP,PTConstants.MDMS_PT_SUBOWNERSHIP,
       PTConstants.MDMS_PT_USAGEMAJOR,PTConstants.MDMS_PT_USAGEMINOR,PTConstants.MDMS_PT_USAGESUBMINOR,PTConstants.MDMS_PT_USAGEDETAIL
       };
-
       List<String> names = new ArrayList<>();
       names.addAll(Arrays.asList(masterNames));
 
       Map<String,List<String>> codes = getCodes(tenantId,names,request.getRequestInfo());
-
-
       validateCodes(request.getProperties(),codes,errorMap);
 
         if (!errorMap.isEmpty())
@@ -95,7 +89,7 @@ public class PropertyValidator {
      */
     public Map<String,List<String>> getCodes(String tenantId,List<String> names, RequestInfo requestInfo){
         StringBuilder uri = new StringBuilder(mdmsHost).append(mdmsEndpoint);
-        MdmsCriteriaReq criteriaReq = propertyUtil.prepareMdMsRequest(tenantId,names,requestInfo);
+        MdmsCriteriaReq criteriaReq = propertyUtil.prepareMdMsRequestForCodes(tenantId,names,requestInfo);
         try {
             Object result = serviceRequestRepository.fetchResult(uri, criteriaReq);
             return JsonPath.read(result,PTConstants.JSONPATH_CODES);
@@ -122,6 +116,10 @@ public class PropertyValidator {
        errorMap.put("Invalid PropertyType","The PropertyType '"+propertyDetail.getPropertyType()+"' does not exists");
        }
 
+       if(!codes.get(PTConstants.MDMS_PT_SUBOWNERSHIP).contains(propertyDetail.getOwnershipType()) && propertyDetail.getOwnershipType()!=null){
+           errorMap.put("Invalid OwnershipType","The OwnershipType '"+propertyDetail.getOwnershipType()+"' does not exists");
+       }
+
        if(!codes.get(PTConstants.MDMS_PT_PROPERTYSUBTYPE).contains(propertyDetail.getPropertySubType()) && propertyDetail.getPropertySubType()!=null){
            errorMap.put(ErrorConstants.INVALID_PROPERTYSUBTYPE,"The PropertySubType '"+propertyDetail.getPropertySubType()+"' does not exists");
        }
@@ -134,10 +132,6 @@ public class PropertyValidator {
                if(!codes.get(PTConstants.MDMS_PT_USAGEMAJOR).contains(unit.getUsageCategoryMajor()) && unit.getUsageCategoryMajor()!=null){
                    errorMap.put("Invalid UsageCategoryMajor","The UsageCategoryMajor '"+unit.getUsageCategoryMajor()+"' at unit level does not exists");
                }
-
-               /*if(unit.getUsageCategoryMajor()!=property.getUsageCategoryMajor()){
-                   errorMap.put("Invalid UsageCategoryMajor","The UsageCategoryMajor are different at property level and unit level");
-               }*/
 
                if(!codes.get(PTConstants.MDMS_PT_USAGEMINOR).contains(unit.getUsageCategoryMinor()) && unit.getUsageCategoryMinor()!=null){
                    errorMap.put("Invalid UsageCategoryMinor","The UsageCategoryMinor '"+unit.getUsageCategoryMinor()+"' does not exists");
@@ -161,6 +155,12 @@ public class PropertyValidator {
 
                if(!codes.get(PTConstants.MDMS_PT_OCCUPANCYTYPE).contains(unit.getOccupancyType()) && unit.getOccupancyType()!=null){
                    errorMap.put("Invalid OccupancyType","The OccupancyType '"+unit.getOccupancyType()+"' does not exists");
+               }
+           });
+
+	       propertyDetail.getOwners().forEach(owner ->{
+               if(!codes.get(PTConstants.MDMS_PT_USAGEMAJOR).contains(owner.getOwnerType()) && owner.getOwnerType()!=null){
+                   errorMap.put("Invalid OwnerType","The UsageCategoryMajor '"+owner.getOwnerType()+"' does not exists");
                }
            });
 	     });
@@ -206,11 +206,8 @@ public class PropertyValidator {
                                 unitids.addAll(getUnitids(propertyDetail));
                             }
                         });
-
-                        }
+                      }
                     });
-
-
 
         propertyCriteria.setTenantId(properties.get(0).getTenantId());
         propertyCriteria.setIds(ids);
@@ -232,7 +229,7 @@ public class PropertyValidator {
         Set<OwnerInfo> owners= propertyDetail.getOwners();
         Set<String> ownerIds = new HashSet<>();
         owners.forEach(owner -> {
-            if(owner.getId()!=null)
+            if(owner.getUuid()!=null)
                 ownerIds.add(owner.getUuid());
         });
         return ownerIds;

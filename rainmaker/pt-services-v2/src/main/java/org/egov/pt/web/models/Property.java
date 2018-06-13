@@ -39,6 +39,9 @@ public class Property extends PropertyInfo{
 	@JsonProperty("auditDetails")
 	private AuditDetails auditDetails;
 
+	@JsonProperty("accountId")
+	private String accountId;
+
 
 	public enum CreationReasonEnum {
 		NEWPROPERTY("NEWPROPERTY"),
@@ -98,6 +101,7 @@ public class Property extends PropertyInfo{
 		private Long occupancyDate;
 		private List<PropertyDetail>  propertyDetails;
 		private AuditDetails auditDetails;
+		private String accountId;
 
 		private String propertyId;
 		private String tenantId;
@@ -130,6 +134,11 @@ public class Property extends PropertyInfo{
 
 		public PropertyBuilder propertyId(String propertyId){
 			this.propertyId =propertyId ;
+			return this;
+		}
+
+		public PropertyBuilder accountId(String accountId){
+			this.accountId =accountId ;
 			return this;
 		}
 
@@ -172,6 +181,6 @@ public class Property extends PropertyInfo{
 		this.creationReason = builder.creationReason;
 		this.occupancyDate = builder.occupancyDate;
 		this.propertyDetails = builder.propertyDetails;
-
+		this.accountId=builder.accountId;
 	}
 }

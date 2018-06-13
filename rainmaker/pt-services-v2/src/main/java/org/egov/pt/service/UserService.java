@@ -44,12 +44,12 @@ public class UserService {
         properties.forEach(property -> {
             property.getPropertyDetails().forEach(propertyDetail -> {
                 propertyDetail.getOwners().forEach(owner -> {
-                    if(owner.getId()==null){
+                    if(owner.getUuid()==null){
                         UserDetailResponse userDetailResponse = userExists(owner,requestInfo);
                         if(CollectionUtils.isEmpty(userDetailResponse.getUser()))
                         {
                             LinkedHashMap responseMap = (LinkedHashMap)serviceRequestRepository.fetchResult(uri, new CreateUserRequest(requestInfo,owner));
-                            parseResponse(responseMap);
+                            parseResponse(responseMap,"dd/MM/yyyy");
                             ObjectMapper mapper = new ObjectMapper();
                             userDetailResponse = mapper.convertValue(responseMap,UserDetailResponse.class);
                         }
@@ -68,6 +68,9 @@ public class UserService {
         userSearchRequest.setMobileNumber(owner.getMobileNumber());
         userSearchRequest.setName(owner.getName());
         userSearchRequest.setRequestInfo(requestInfo);
+        userSearchRequest.setActive(false);
+        if(owner.getUuid()!=null)
+         userSearchRequest.setUuid(Arrays.asList(owner.getUuid()));
         return searchUser(userSearchRequest);
     }
 
@@ -81,22 +84,20 @@ public class UserService {
     public UserDetailResponse searchUser(UserSearchRequest userSearchRequest) {
         StringBuilder uri = new StringBuilder(userHost).append(userSearchEndpoint);
         LinkedHashMap responseMap = (LinkedHashMap)serviceRequestRepository.fetchResult(uri, userSearchRequest);
-        parseResponse(responseMap);
+        parseResponse(responseMap,"dd-MM-yyyy");
         ObjectMapper mapper = new ObjectMapper();
         UserDetailResponse userDetailResponse = mapper.convertValue(responseMap,UserDetailResponse.class);
         return userDetailResponse;
     }
 
 
-    private void parseResponse(LinkedHashMap responeMap){
+    private void parseResponse(LinkedHashMap responeMap,String dobFormat){
         List<LinkedHashMap> users = (List<LinkedHashMap>)responeMap.get("user");
         String format1 = "dd-MM-yyyy HH:mm:ss";
-        String format2 = "dd/MM/yyyy";
-        String format3 = "dd-MM-yyyy";
         users.forEach( map -> {
             map.put("createdDate",dateTolong((String)map.get("createdDate"),format1));
             map.put("lastModifiedDate",dateTolong((String)map.get("lastModifiedDate"),format1));
-            map.put("dob",dateTolong((String)map.get("dob"),format3));
+            map.put("dob",dateTolong((String)map.get("dob"),dobFormat));
             map.put("pwdExpiryDate",dateTolong((String)map.get("pwdExpiryDate"),format1)); }
         );
     }
@@ -115,7 +116,7 @@ public class UserService {
 
 
     private void setOwnerFields(OwnerInfo owner, UserDetailResponse userDetailResponse){
-        owner.setId(userDetailResponse.getUser().get(0).getId());
+        owner.setUuid(userDetailResponse.getUser().get(0).getUuid());
         owner.setCreatedBy(userDetailResponse.getUser().get(0).getCreatedBy());
         owner.setCreatedDate(userDetailResponse.getUser().get(0).getCreatedDate());
         owner.setLastModifiedBy(userDetailResponse.getUser().get(0).getLastModifiedBy());
@@ -126,12 +127,14 @@ public class UserService {
     private UserSearchRequest getUserSearchRequest(PropertyCriteria criteria,RequestInfo requestInfo){
         UserSearchRequest userSearchRequest = new UserSearchRequest();
         Set<String> userIds = criteria.getOwnerids();
-        userSearchRequest.setUuid( new ArrayList(userIds));
+        if(!CollectionUtils.isEmpty(userIds))
+         userSearchRequest.setUuid( new ArrayList(userIds));
         userSearchRequest.setRequestInfo(requestInfo);
         userSearchRequest.setTenantId(criteria.getTenantId());
         userSearchRequest.setMobileNumber(criteria.getMobileNumber());
         userSearchRequest.setUserName(criteria.getUserName());
         userSearchRequest.setName(criteria.getName());
+        userSearchRequest.setActive(false);
         return userSearchRequest;
     }
 
@@ -144,19 +147,24 @@ public class UserService {
                 propertyDetail.getOwners().forEach(owner -> {
                     UserDetailResponse userDetailResponse = userExists(owner,requestInfo);
                     StringBuilder uri  = new StringBuilder(userHost);
-                    if(CollectionUtils.isEmpty(userDetailResponse.getUser()))
-                        uri=uri.append(userContextPath).append(userCreateEndpoint);
+                    String dobFormat;
+                    if(CollectionUtils.isEmpty(userDetailResponse.getUser())) {
+                        uri = uri.append(userContextPath).append(userCreateEndpoint);
+                        dobFormat="dd/MM/yyyy";
+                    }
                     else
-                        uri=uri.append(userContextPath).append(owner.getId()).append(userUpdateEndpoint);
+                    { owner.setId(userDetailResponse.getUser().get(0).getId());
+                      uri=uri.append(userContextPath).append(owner.getId()).append(userUpdateEndpoint);
+                      dobFormat = "dd-MM-yyyy";
+                    }
                     LinkedHashMap responseMap = (LinkedHashMap)serviceRequestRepository.fetchResult(uri, new CreateUserRequest(requestInfo,owner));
-                    parseResponse(responseMap);
+                    parseResponse(responseMap,dobFormat);
                     ObjectMapper mapper = new ObjectMapper();
                     userDetailResponse = mapper.convertValue(responseMap,UserDetailResponse.class);
                     setOwnerFields(owner,userDetailResponse);
                 });
             });
         });
-
     }
 
 

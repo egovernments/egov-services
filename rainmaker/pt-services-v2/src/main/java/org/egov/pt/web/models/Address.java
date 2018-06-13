@@ -18,7 +18,6 @@ import javax.validation.constraints.Size;
  * Address
  */
 @Validated
-
 @Getter
 @Setter
 @AllArgsConstructor
@@ -47,7 +46,6 @@ public class Address   {
         @JsonProperty("type")
         private String type;
 
-        @NotNull
         @Size(max=256)
         @JsonProperty("addressLine1")
         private String addressLine1;
@@ -60,9 +58,12 @@ public class Address   {
         private String landmark;
 
         @NotNull
+        @JsonProperty("doorNo")
+        private String doorNo;
+
+        @NotNull
         @JsonProperty("city")
         private String city;
-
 
         @JsonProperty("pincode")
         private String pincode;

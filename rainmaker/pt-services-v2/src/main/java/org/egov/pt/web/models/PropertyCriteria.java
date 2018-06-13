@@ -19,6 +19,8 @@ public class PropertyCriteria {
 
 	private Set<String> ids;
 
+	private Set<String> oldpropertyids;
+
 	private Set<String> propertyDetailids;
 
 	private Set<String> addressids;

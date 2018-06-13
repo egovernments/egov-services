@@ -271,7 +271,7 @@ $(document).ready(function() {
         doc.setLineWidth(0.5);
         doc.line(15, 106, 28, 106);
 
-        var paragraph1 = "In the reference 1st cited, an Open Auction for leasing Shop No " + agreement.referenceNumber + " in " + agreement.asset.name + " Shopping Complex was conducted and your bid for the highest amount (i.e. monthly rentals of ₹ " + agreement.rent + "/- and Goodwill amount of ₹ " + agreement.goodWillAmount + "/-) was accepted by the Municipal Council/Standing Committee vide reference 2nd cited with the following deposit amounts as received by this office.";
+        var paragraph1 = "In the reference 1st cited, an Open Auction for leasing Shop No " + agreement.referenceNumber + " in " + agreement.asset.name + " Shopping Complex was conducted and your bid for the highest amount (i.e. monthly rentals of Rs " + agreement.rent + "/- and Goodwill amount of Rs " + agreement.goodWillAmount + "/-) was accepted by the Municipal Council/Standing Committee vide reference 2nd cited with the following deposit amounts as received by this office.";
         var lines = doc.splitTextToSize(paragraph1, 180);
         doc.text(15, 115, lines);
 

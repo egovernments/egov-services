@@ -367,6 +367,15 @@ class Nominee extends React.Component {
 
     var _this = this;
     var nomineeFieldsDefination = Object.assign([], _this.state.allNomineeValue.nomineeFieldsDefination);
+
+    for (var k = 0; k < nomineeFieldsDefination.length; k++) {
+      for (var l = 0; l < nomineeFieldsDefination.length; l++) {
+        if (k!==l && nomineeFieldsDefination[k].name.toLowerCase() === nomineeFieldsDefination[l].name.toLowerCase() && nomineeFieldsDefination[k].relationship === nomineeFieldsDefination[l].relationship){
+          return (showError("Dupilcate records are not accepted. Please check"));
+        }
+      }
+    }
+
     var nominees = [];
     for (var i = 0; i < nomineeFieldsDefination.length; i++) {
       var _tempInfo = Object.assign({}, _this.state.allNomineeValue);

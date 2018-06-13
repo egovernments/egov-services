@@ -163,17 +163,9 @@ $(document).ready(function() {
             ulbType = "Municipal Corporation";
         }
 
-        var today = new Date();
-        var dd = today.getDate();
-        var mm = today.getMonth() + 1;
-        var yyyy = today.getFullYear();
-        if (dd < 10) {
-            dd = '0' + dd;
-        }
-        if (mm < 10) {
-            mm = '0' + mm;
-        }
-        var today = dd + '/' + mm + '/' + yyyy;
+        let commencementDate = agreement.commencementDate;
+        let timePeriod = agreement.timePeriod;
+        let endDate = commencementDate.split("/")[0]+"/"+commencementDate.split("/")[1]+"/"+ (Number(commencementDate.split("/")[2]) + Number(timePeriod))
 
         var columns1 = [
             { title: "Particulars", dataKey: "particulars" },
@@ -270,8 +262,8 @@ $(document).ready(function() {
         var lines = doc.splitTextToSize(paragraph, 180);
         doc.text(15, 60, lines);
 
-        doc.text(15, 80, "Ref: 1. Open Auction Notice dt. …………… of this office");
-        doc.text(23, 85, "2. Resolution No …………… dt …………… of Municipal Council/Standing Committee");
+        doc.text(15, 80, "Ref: 1. Open Auction Notice dt. " + agreement.tenderDate + " of this office");
+        doc.text(23, 85, "2. Resolution No " + agreement.councilNumber + " dt " + agreement.councilDate + " of Municipal Council/Standing Committee");
 
         doc.text(105, 95, "><><><", 'center');
 
@@ -279,13 +271,13 @@ $(document).ready(function() {
         doc.setLineWidth(0.5);
         doc.line(15, 106, 28, 106);
 
-        var paragraph1 = "In the reference 1st cited, an Open Auction for leasing Shop No ……… in the …………… Shopping Complex was conducted and your bid for the highest amount (i.e. monthly rentals of Rs …………./- and Goodwill amount of Rs ………./-) was accepted by the Municipal Council/Standing Committee vide reference 2nd cited with the following deposit amounts as received by this office.";
+        var paragraph1 = "In the reference 1st cited, an Open Auction for leasing Shop No " + agreement.referenceNumber + " in " + agreement.asset.name + " Shopping Complex was conducted and your bid for the highest amount (i.e. monthly rentals of ₹ " + agreement.rent + "/- and Goodwill amount of ₹ " + agreement.goodWillAmount + "/-) was accepted by the Municipal Council/Standing Committee vide reference 2nd cited with the following deposit amounts as received by this office.";
         var lines = doc.splitTextToSize(paragraph1, 180);
         doc.text(15, 115, lines);
 
         doc.autoTable(columns1, rows1, autoTableOptions1);
 
-        var paragraph2 = "In pursuance of the Municipal Council/Standing Committee resolution and vide GO MS No 56 (MA & UD Department) dt. 05.02.2011, the said shop is allotted to you for the period ……………… to …………. at following rates of rentals and taxes thereon."
+        var paragraph2 = "In pursuance of the Municipal Council/Standing Committee resolution and vide GO MS No 56 (MA & UD Department) dt. 05.02.2011, the said shop is allotted to you for the period " + commencementDate + " to " + endDate + " at following rates of rentals and taxes thereon."
         var lines = doc.splitTextToSize(paragraph2, 180);
         doc.text(15, 175, lines);
 

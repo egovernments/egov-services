@@ -483,8 +483,8 @@ class UpdateCancellation extends React.Component {
         doc.text(15, 60, lines);
 
         doc.text(15, 75, "Ref: 1. Lease agreement No " + agreement.agreementNumber + " dt " + agreement.agreementDate);
-        doc.text(24, 80, "2. Roc No …………………… dt…………………… of this office");
-        doc.text(24, 85, "3. Resolution No …………… dt …………… of Municipal Council/Standing Committee");
+        doc.text(24, 80, "2. Roc No " + agreement.noticeNumber + " dt " + agreement.agreementDate + " of this office");
+        doc.text(24, 85, "3. Resolution No " + agreement.cancellation.orderNo + " dt " + agreement.cancellation.orderDate + " of Municipal Council/Standing Committee");
         doc.text(105, 100, "><><><", 'center');
 
         doc.text(15, 110, "Orders:");

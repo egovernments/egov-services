@@ -127,6 +127,7 @@ class CancellationAgreement extends React.Component {
     this.addOrUpdate = this.addOrUpdate.bind(this);
     this.setInitialState = this.setInitialState.bind(this);
     this.getUsersFun = this.getUsersFun.bind(this);
+    this.handleBlur = this.handleBlur.bind(this);
   }
 
 
@@ -343,6 +344,33 @@ class CancellationAgreement extends React.Component {
     }
   }
 
+  handleBlur(e) {
+    // setTimeout(function(){
+    //    if(document.activeElement.id == "sub") {
+    //       $("#sub").click();
+    //    }
+    // }, 100);
+    // var _this = this;
+
+    // if(e.target.value) {
+    //    var resolutionNo = e.target.value;
+    //    //Make get employee call//
+    //    commonApiPost("restapi","councilresolutions","",{resolutionNo,tenantId}, function(err, res) {
+    //     if(res) {
+    //       alert(res);
+    //     }
+    //    });
+    // } else {
+    //   _this.setState({
+    //     searchSet: {
+    //       ..._this.state.searchSet,
+    //       name: ""
+    //     }
+    //   })
+
+    // }
+
+  }
 
   handleChangeTwoLevel(e, pName, name) {
 
@@ -382,7 +410,6 @@ class CancellationAgreement extends React.Component {
 
   }
 
-
   getUsersFun(departmentId, designationId) {
     var _this = this;
     $.ajax({
@@ -409,7 +436,6 @@ class CancellationAgreement extends React.Component {
     })
 
   }
-
 
   makeAjaxUpload(file, cb) {
     if (file.constructor == File) {
@@ -439,7 +465,6 @@ class CancellationAgreement extends React.Component {
       });
     }
   }
-
 
   componentWillMount() {
 
@@ -493,7 +518,6 @@ class CancellationAgreement extends React.Component {
 
   }
 
-
   componentDidMount() {
 
     var _this = this;
@@ -544,7 +568,7 @@ class CancellationAgreement extends React.Component {
 
   render() {
     var _this = this;
-    let { handleChange, handleChangeTwoLevel, addOrUpdate } = this;
+    let { handleChange, handleChangeTwoLevel, addOrUpdate, handleBlur } = this;
     let { agreement, cancelReasons } = this.state;
     let { allottee, asset, rentIncrementMethod, workflowDetails, cancellation,
       renewal, eviction, objection, judgement, remission, remarks, documents } = this.state.agreement;
@@ -876,11 +900,11 @@ class CancellationAgreement extends React.Component {
               <div className="col-sm-6">
                 <div className="row">
                   <div className="col-sm-6 label-text">
-                    <label htmlFor="orderNo"> Order Number<span>*</span> </label>
+                    <label htmlFor="orderNo"> Council Resolution Number<span>*</span> </label>
                   </div>
                   <div className="col-sm-6">
                     <input type="text" name="orderNo" id="orderNo" value={cancellation.orderNo} maxLength="15"
-                      onChange={(e) => { handleChangeTwoLevel(e, "cancellation", "orderNo") }} required />
+                      onChange={(e) => { handleChangeTwoLevel(e, "cancellation", "orderNo") }} onBlur={(e)=>{handleBlur(e)}} required />
                   </div>
                 </div>
               </div>

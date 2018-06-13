@@ -70,6 +70,8 @@ public class PaymentService {
 	private static final String SERVICE_TAX = "SERVICE TAX";
 	private static final String CENTRAL_GST = "CGST";
 	private static final String STATE_GST = "SGST";
+	private static final String CGST_ON_ADVANCE = "CGST On Adavance";
+	private static final String SGST_ON_ADVANCE = "SGST On Advance";
 	private static final String ADVANCE_COLLECTION = "Advance Collection";
 
 	@Autowired
@@ -279,11 +281,13 @@ public class PaymentService {
 				billdetail.setPurpose(purpose.get("ADVANCE_AMOUNT"));
 			} else if (SERVICE_TAX.equalsIgnoreCase(demandDetail.getTaxReason())) {
 				billdetail.setPurpose(purpose.get("SERVICETAX"));
-			} else if (CENTRAL_GST.equalsIgnoreCase(demandDetail.getTaxReason())) {
+			} else if (CENTRAL_GST.equalsIgnoreCase(demandDetail.getTaxReason())
+					|| CGST_ON_ADVANCE.equalsIgnoreCase(demandDetail.getTaxReason())) {
 				billdetail.setPurpose(purpose.get("CG_SERVICETAX"));
-			} else if (STATE_GST.equalsIgnoreCase(demandDetail.getTaxReason())) {
+			} else if (STATE_GST.equalsIgnoreCase(demandDetail.getTaxReason())
+					|| SGST_ON_ADVANCE.equalsIgnoreCase(demandDetail.getTaxReason())) {
 				billdetail.setPurpose(purpose.get("SG_SERVICETAX"));
-			} else if (demandDetail.getPeriodStartDate().compareTo(new Date()) < 0) {
+			} else if (demandDetail.getPeriodEndDate().compareTo(new Date()) < 0) {
 
 				if (RENT.equalsIgnoreCase(demandDetail.getTaxReason())) {
 					billdetail.setPurpose(purpose.get("ARREAR_AMOUNT"));

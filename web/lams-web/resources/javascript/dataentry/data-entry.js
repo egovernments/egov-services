@@ -486,7 +486,7 @@ if(resolutionNo){
         headers: {
           'auth-token': authToken
         },
-        success: function (res1) { alert("Preamble No : " + res1.preambleNo +" Desscription : "+ res1.gistOfPreamble);},
+        success: function (res1) { alert("Preamble No : " + res1.preambleNumber +" Gist Of Preamble : "+ res1.gistOfPreamble);},
         error: function (err) {
             $('#councilNumber').val("");
             alert("Invalid CR number");

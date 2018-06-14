@@ -478,8 +478,8 @@ $(document).ready(function() {
     //     }
     // });
 if(resolutionNo){
-    $.ajax({
-        url: baseUrl + "/restapi/councilresolutions/" + resolutionNo,
+    $.ajax({ 
+        url: baseUrl + "/council/councilresolution/" + resolutionNo,
         type: 'GET',
         dataType: 'json',
         contentType: 'application/json',

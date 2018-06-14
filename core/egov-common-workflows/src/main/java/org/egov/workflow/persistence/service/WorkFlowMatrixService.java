@@ -326,7 +326,7 @@ public class WorkFlowMatrixService {
 			commonWfMatrixCriteria.add(Restrictions.eq("additionalRule", additionalRule));
 
 		if (pendingActions != null && !"".equals(pendingActions.trim()))
-			commonWfMatrixCriteria.add(Restrictions.ilike("pendingActions", pendingActions, MatchMode.ANYWHERE));
+			commonWfMatrixCriteria.add(Restrictions.ilike("pendingActions", pendingActions, MatchMode.EXACT));
 
 		if (currentState != null && !"".equals(currentState.trim()))
 			commonWfMatrixCriteria.add(Restrictions.ilike("currentState", currentState, MatchMode.EXACT));

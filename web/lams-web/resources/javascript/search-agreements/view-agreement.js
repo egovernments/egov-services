@@ -175,9 +175,9 @@ $(document).ready(function() {
         ];
 
         var rows1 = [
-            { "particulars": "Goodwill", "amount": "", "leaseHolderName": "" },
-            { "particulars": "3 Months Rental Deposits", "amount": "", "leaseHolderName": "" },
-            { "particulars": "Total", "amount": "", "leaseHolderName": "" }
+            { "particulars": "Goodwill", "amount": agreement.goodWillAmount, "leaseHolderName": "" },
+            { "particulars": "3 Months Rental Deposits", "amount": agreement.securityDeposit, "leaseHolderName": "" },
+            { "particulars": "Total", "amount": Number(agreement.goodWillAmount) + Number(agreement.securityDeposit), "leaseHolderName": "" }
         ];
 
 
@@ -212,8 +212,8 @@ $(document).ready(function() {
         ];
 
         var rows2 = [
-            { "particulars": "Monthly Rental", "amount": "" },
-            { "particulars": "GST", "amount": "" },
+            { "particulars": "Monthly Rental", "amount": agreement.rent },
+            { "particulars": "GST", "amount": Number(agreement.sgst) + Number(agreement.cgst) },
         ];
 
 

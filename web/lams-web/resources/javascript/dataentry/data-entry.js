@@ -477,22 +477,22 @@ $(document).ready(function() {
     //         this.agreement.councilNumber = "";
     //     }
     // });
-// if(resolutionNo){
-//     $.ajax({
-//         url: baseUrl + "/restapi/councilresolutions?resolutionNo=" + resolutionNo,
-//         type: 'GET',
-//         dataType: 'json',
-//         contentType: 'application/json',
-//         headers: {
-//           'auth-token': authToken
-//         },
-//         success: function (res1) { alert(res1[0].preambleNo);},
-//         error: function (err) {
-//             $('#councilNumber').val("");
-//             alert("Invalid CR number");
-//         }
-//       })
-//     }
+if(resolutionNo){
+    $.ajax({
+        url: baseUrl + "/restapi/councilresolutions/" + resolutionNo,
+        type: 'GET',
+        dataType: 'json',
+        contentType: 'application/json',
+        headers: {
+          'auth-token': authToken
+        },
+        success: function (res1) { alert(res1[0].preambleNo);},
+        error: function (err) {
+            $('#councilNumber').val("");
+            alert("Invalid CR number");
+        }
+      })
+    }
  }
 
  function clearGovernment(){

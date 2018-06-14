@@ -5,7 +5,7 @@ class Notice extends React.Component {
       searchSet:{
         tenantId
       },
-      noticeType:["CREATE", "RENEWAL", "EVICTION", "CANCELLATION","OBJECTION","JUDGEMENT"]
+      noticeType:["CREATE", "RENEWAL", "EVICTION", "CANCELLATION","REMISSION"]
     };
     this.handleChange=this.handleChange.bind(this);
     this.search=this.search.bind(this);

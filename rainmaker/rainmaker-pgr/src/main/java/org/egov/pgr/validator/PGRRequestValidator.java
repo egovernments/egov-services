@@ -53,7 +53,12 @@ public class PGRRequestValidator {
 	private String mdmsEndpoint;
 
 	/**
-	 * validates the create Request
+	 * validates the create Request based on the following cirtera:
+	 * 
+	 * 1. Checks if the length of actionInfo and services are same.
+	 * 2. Overrides accountId field of the request with the id of the logged in user.
+	 * 3. Services codes mentioned in the request are validated against the mdms records.
+	 * 4. Validates address. 
 	 * 
 	 * @param serviceRequest
 	 */
@@ -71,8 +76,15 @@ public class PGRRequestValidator {
 	}
 
 	/**
-	 * validates the update request
+	 * validates the update Request based on the following cirtera:
 	 * 
+	 * 1. Checks if the length of actionInfo and services are same.
+	 * 2. Overrides accountId field of the request with the id of the logged in user.
+	 * 3. Services codes mentioned in the request are validated against the mdms records.
+	 * 4. Validates assignment of service requests based on various roles.
+	 * 5. Validates the action performed on the service request based on the role.
+	 * 6. Checks if the service being updated does exist.
+	 *
 	 * @param serviceRequest
 	 */
 	public void validateUpdate(ServiceRequest serviceRequest) {
@@ -114,8 +126,7 @@ public class PGRRequestValidator {
 		});
 
 		if (!errorList.isEmpty())
-			errorMap.put("EG_PGR_UPDATE_SERVICEREQUESTID",
-					"request object does not exist for the given id's : " + errorList);
+			errorMap.put(ErrorConstants.INVALID_SERVICEREQUESTID_CODE, ErrorConstants.INVALID_SERVICEREQUESTID_MSG + errorList);
 	}
 
 	/**
@@ -168,7 +179,7 @@ public class PGRRequestValidator {
 		});
 
 		if (!errorList.isEmpty())
-			errorMap.put("EG_PGR_INVALID_SERVICECODE", "Following Service codes are invalid: " + errorList);
+			errorMap.put(ErrorConstants.INVALID_SERVICECODE_CODE, ErrorConstants.INVALID_SERVICECODE_MSG + errorList);
 	}
 
 	/**
@@ -242,22 +253,6 @@ public class PGRRequestValidator {
 					ErrorConstants.ASSIGNEE_MISSING_FOR_ACTION_ASSIGN_REASSIGN_MSG + errorMsgForActionAssign);
 	}
 
-	public void userInfoCheck(ServiceRequest serviceRequest, Map<String, String> errorMap) {
-
-		if (null == serviceRequest.getRequestInfo()) {
-			errorMap.put("EG_PGR_REQUESTINFO", "Request info is mandatory for serviceRequest");
-
-		} else if (null == serviceRequest.getRequestInfo().getUserInfo()) {
-			errorMap.put("EG_PGR_REQUESTINFO_USERINFO", "UserInfo info is mandatory for serviceRequest");
-
-		} else if (CollectionUtils.isEmpty(serviceRequest.getRequestInfo().getUserInfo().getRoles())) {
-			errorMap.put("EG_PGR_REQUESTINFO_USERINFO_ROLES", "Roles cannot be empty for serviceRequest");
-		}
-
-		if (!errorMap.isEmpty())
-			throw new CustomException(errorMap);
-	}
-
 	/**
 	 * validates the legality of the search criteria given
 	 * 
@@ -270,12 +265,11 @@ public class PGRRequestValidator {
 		validateUserRBACProxy(errorMap, requestInfo);
 		if ((criteria.getStartDate() != null && criteria.getStartDate() > new Date().getTime())
 				|| (criteria.getEndDate() != null && criteria.getEndDate() > new Date().getTime())) {
-			errorMap.put("EG_PGR_INVALID_START_END_DATE", "startDate or endDate cannot be greater than currentDate");
-			throw new CustomException("400", "startDate or endDate cannot be greater than currentDate");
+			errorMap.put(ErrorConstants.INVALID_START_END_DATE_CODE, ErrorConstants.INVALID_START_END_DATE_MSG);
 		}
 		if ((criteria.getStartDate() != null && criteria.getEndDate() != null)
 				&& criteria.getStartDate().compareTo(criteria.getEndDate()) > 0) {
-			errorMap.put("EG_PGR_START_DATE", "startDate cannot be greater than endDate");
+			errorMap.put(ErrorConstants.INVALID_START_DATE_CODE, ErrorConstants.INVALID_START_DATE_MSG);
 		}
 
 		if (!errorMap.isEmpty())
@@ -288,16 +282,16 @@ public class PGRRequestValidator {
 
 		if (null != requestInfo.getUserInfo()) {
 			if (null == requestInfo.getUserInfo().getType() || requestInfo.getUserInfo().getType().isEmpty()) {
-				errorMap.put("EG_PGR_REQUESTINFO_USERTYPE_MISSING", "Unauthenticated user, user type is missing in the request.");
+				errorMap.put(ErrorConstants.MISSING_USERTYPE_CODE, ErrorConstants.MISSING_USERTYPE_MSG);
 				return;
 			}
 			if (null == requestInfo.getUserInfo().getId() || (null == requestInfo.getUserInfo().getRoles()
 					|| requestInfo.getUserInfo().getRoles().isEmpty())) {
-				errorMap.put("EG_PGR_REQUESTINFO_ROLES_USERID_MISSING", "Unauthenticated user, userId and Roles missing in the request.");
+				errorMap.put(ErrorConstants.MISSING_ROLE_USERID_CODE, ErrorConstants.MISSING_ROLE_USERID_MSG);
 				return;
 			}
 		} else {
-			errorMap.put("EG_PGR_REQUESTINFO_USERINFO_MISSING", "Unauthenticated user, userInfo missing in the request.");
+			errorMap.put(ErrorConstants.MISSING_USERINFO_CODE, ErrorConstants.MISSING_USERINFO_MSG);
 			return;
 		}
 
@@ -311,7 +305,6 @@ public class PGRRequestValidator {
 	 */
 	public void validateAction(ServiceRequest serviceRequest, Map<String, String> errorMap) {
 		Map<String, List<String>> roleActionMap = WorkFlowConfigs.getRoleActionMap();
-		final String errorCode = "EG_PGR_UPDATE_INVALID_ACTION";
 		List<String> roles = serviceRequest.getRequestInfo().getUserInfo().getRoles().parallelStream()
 				.map(Role::getName).collect(Collectors.toList());
 		List<String> actions = null;
@@ -328,13 +321,13 @@ public class PGRRequestValidator {
 					ActionInfo info = infos.get(i);
 					if (null != info && null != info.getAction() && !info.getAction().isEmpty()
 							&& !actions.contains(info.getAction())) {
-						errorMap.put(errorCode,
+						errorMap.put(ErrorConstants.INVALID_ROLE_CODE,
 								"Invalid Action: " + info.getAction() + " " + "for Role: " + serviceRequest
 										.getRequestInfo().getUserInfo().getRoles().get(0).getName().toUpperCase());
 					}
 				}
 		} else {
-			errorMap.put("EG_PGR_INVALID_ROLE", "Invalid Role: "
+			errorMap.put(ErrorConstants.INVALID_ROLE_CODE, ErrorConstants.INVALID_ROLE_MSG
 					+ serviceRequest.getRequestInfo().getUserInfo().getRoles().get(0).getName().toUpperCase());
 		}
 

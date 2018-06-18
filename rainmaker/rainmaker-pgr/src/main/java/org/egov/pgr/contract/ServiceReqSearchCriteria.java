@@ -56,6 +56,9 @@ public class ServiceReqSearchCriteria {
 	@JsonProperty("phone")
 	private String phone;
 	
+	@JsonProperty("createdBy")
+	private String createdBy;
+	
 	
 
 }

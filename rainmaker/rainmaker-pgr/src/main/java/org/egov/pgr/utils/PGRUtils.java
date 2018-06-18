@@ -320,9 +320,12 @@ public class PGRUtils {
 	private static Map<Integer, String> prepareEmployeeRolesPrecedenceMap() {
 
 		Map<Integer, String> map = new TreeMap<>();
-		map.put(2, PGRConstants.ROLE_EMPLOYEE);
-		map.put(1, PGRConstants.ROLE_DGRO);
-		map.put(0, PGRConstants.ROLE_GRO);
+		
+		map.put(3, PGRConstants.ROLE_EMPLOYEE);
+		map.put(2, PGRConstants.ROLE_DGRO);
+		map.put(1, PGRConstants.ROLE_GRO);
+		map.put(0, PGRConstants.ROLE_CSR);
+		
 		return map;
 	}
 	

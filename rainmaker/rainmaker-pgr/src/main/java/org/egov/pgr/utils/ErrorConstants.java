@@ -37,7 +37,28 @@ public class ErrorConstants {
 	public static final String UNAUTHORIZED_USER_MSG = "This User is not authorized to access this information";
 	public static final String UNAUTHORIZED_USER_KEY = "EG_PGR_INVALID_USER";
 	
-	//public static final String UPDATE_NO_ACTIONS_ERROR_KEY = "EG_PGR_UPDATE_ACTIONINFO";
+	public static final String MISSING_USERTYPE_CODE = "EG_PGR_REQUESTINFO_USERTYPE_MISSING";
+	public static final String MISSING_USERTYPE_MSG = "Unauthenticated user, user type is missing in the request.";
 	
-	//public static final String UPDATE_NO_ACTIONS_ERROR_MSG = "Update cannot be performed without";
+	public static final String MISSING_ROLE_USERID_CODE = "EG_PGR_REQUESTINFO_USERTYPE_MISSING";
+	public static final String MISSING_ROLE_USERID_MSG = "Unauthenticated user, user type is missing in the request.";
+	
+	public static final String MISSING_USERINFO_CODE = "EG_PGR_USERINFO_MISSING";
+	public static final String MISSING_USERINFO_MSG = "Unauthenticated user, userInfo missing in the request.";
+	
+	public static final String INVALID_ROLE_CODE = "EG_PGR_INVALID_ROLE";
+	public static final String INVALID_ROLE_MSG = "Inavlid role: ";
+	
+	public static final String INVALID_START_END_DATE_CODE = "EG_PGR_INVALID_START_END_DATE";
+	public static final String INVALID_START_END_DATE_MSG = "startDate or endDate cannot be greater than currentDate";
+	
+	public static final String INVALID_START_DATE_CODE = "EG_PGR_INVALID_START_DATE";
+	public static final String INVALID_START_DATE_MSG = "startDate cannot be greater than endDate";
+	
+	public static final String INVALID_SERVICEREQUESTID_CODE = "EG_PGR_INVALID_SERVICEREQUESTID";
+	public static final String INVALID_SERVICEREQUESTID_MSG = "request object does not exist for the given ids: ";
+	
+	public static final String INVALID_SERVICECODE_CODE = "EG_PGR_INVALID_SERVICECODE";
+	public static final String INVALID_SERVICECODE_MSG = "Following Service codes are invalid: ";
+	
 }

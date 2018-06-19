@@ -17,7 +17,7 @@ Additional gateways can be added by implementing the [Gateway](src/main/java/org
 # Build & Run
 
     mvn clean install
-    java -jar target/egov-pg-service-1.0-SNAPSHOT.jar
+    java -jar target/egov-pg-service-0.0.1-SNAPSHOT.jar
 
 ## Dependencies
 

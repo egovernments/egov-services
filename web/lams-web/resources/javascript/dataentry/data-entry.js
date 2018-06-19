@@ -479,8 +479,8 @@ $(document).ready(function() {
     // });
     if(resolutionNo){
         $.ajax({
-            url:baseUrl + "/council/councilresolution/"+ resolutionNo,
-            type: 'GET',
+            url: baseUrl + "/council/councilresolution/"+ resolutionNo,
+            type:'GET',
             dataType: 'json',
             contentType: 'application/json;charset=utf-8',
             headers: {
@@ -489,14 +489,13 @@ $(document).ready(function() {
             success: function (res1) { 
                 console.log("url",url);
                 $('#alert-box').fadeIn(function(){
-                    $("p").html(res1[0].preambleNo);
+                    $("#alert-box-content").html("Preamble No : " + res1.preambleNumber +" Gist Of Preamble : "+ res1.gistOfPreamble);
                 });
             },
             error: function (err) {
                 $('#councilNumber').val("");
-                //alert("Invalid CR number");
                 $('#alert-box').fadeIn(function(){
-                    $("p").html("Invalid CR number");
+                    $("#alert-box-content").html("Invalid CR number");
                 });
             }
         })

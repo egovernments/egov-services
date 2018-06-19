@@ -57,7 +57,17 @@ public class PGRRequestValidator {
 
 	@Value("${egov.mdms.search.endpoint}")
 	private String mdmsEndpoint;
-
+	
+	@Value("${egov.user.host}")
+	private String userBasePath;
+	
+	@Value("${egov.user.create.endpoint}")
+	private String userCreateEndPoint;
+	
+	@Value("${egov.user.search.endpoint}")
+	private String userSearchEndPoint;
+	
+	
 	/**
 	 * validates the create Request based on the following cirtera:
 	 * 
@@ -110,7 +120,7 @@ public class PGRRequestValidator {
 		citizen.setRoles(Arrays.asList(org.egov.pgr.model.user.Role.builder().code(WorkFlowConfigs.ROLE_CITIZEN).build()));
 		//Role role = Role.builder().
 		
-		StringBuilder url = new StringBuilder(); //put create url here
+		StringBuilder url = new StringBuilder(userBasePath+userCreateEndPoint); 
 		CreateUserRequest req = CreateUserRequest.builder().citizen(citizen).requestInfo(requestInfo).build();
 		UserResponse res = (UserResponse)serviceRequestRepository.fetchResult(url, req);
 		return res.getUser().get(0).getId().toString();
@@ -120,7 +130,7 @@ public class PGRRequestValidator {
 
 		UserSearchRequest searchRequest = UserSearchRequest.builder().userName(citizen.getMobileNumber())
 				.tenantId(tenantId).requestInfo(requestInfo).build();
-		StringBuilder url = new StringBuilder(); // put search url here.
+		StringBuilder url = new StringBuilder(userBasePath+userSearchEndPoint); 
 		UserResponse res = (UserResponse)serviceRequestRepository.fetchResult(url, searchRequest);
 		return res.getUser().get(0).getId().toString();
 	}

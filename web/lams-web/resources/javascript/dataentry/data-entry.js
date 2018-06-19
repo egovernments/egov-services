@@ -477,35 +477,45 @@ $(document).ready(function() {
     //         this.agreement.councilNumber = "";
     //     }
     // });
-if(resolutionNo){
-    $.ajax({ 
-        url: baseUrl + "/council/councilresolution/" + resolutionNo,
-        type: 'GET',
-        dataType: 'json',
-        contentType: 'application/json',
-        headers: {
-          'auth-token': authToken
-        },
-        success: function (res1) { alert("Preamble No : " + res1.preambleNumber +" Gist Of Preamble : "+ res1.gistOfPreamble);},
-        error: function (err) {
-            $('#councilNumber').val("");
-            alert("Invalid CR number");
-        }
-      })
+    if(resolutionNo){
+        $.ajax({
+            url: baseUrl + "/restapi/councilresolutions?resolutionNo=" + resolutionNo,
+            type: 'GET',
+            dataType: 'json',
+            contentType: 'application/json;charset=utf-8',
+            headers: {
+            'auth-token': authToken
+            },
+            success: function (res1) { 
+                console.log("url",url);
+                $('#alert-box').fadeIn(function(){
+                    $("p").html(res1[0].preambleNo);
+                });
+            },
+            error: function (err) {
+                $('#councilNumber').val("");
+                //alert("Invalid CR number");
+                $('#alert-box').fadeIn(function(){
+                    $("p").html("Invalid CR number");
+                });
+            }
+        })
     }
- }
+}
+$("#alert-box-close").click(function(){
+    $('#alert-box').hide();
+})
+function clearGovernment(){
+    fillValueToObject({id:'governmentOrderNumber',name:'governmentOrderNumber',value:''});
+    fillValueToObject({id:'governmentOrderDate',name:'governmentOrderDate',value:''});
+    $('#governmentOrderNumber, #governmentOrderDate').val('');
+}
 
- function clearGovernment(){
-   fillValueToObject({id:'governmentOrderNumber',name:'governmentOrderNumber',value:''});
-   fillValueToObject({id:'governmentOrderDate',name:'governmentOrderDate',value:''});
-   $('#governmentOrderNumber, #governmentOrderDate').val('');
- }
-
- function clearMunicipal(){
-   fillValueToObject({id:'municipalOrderNumber',name:'municipalOrderNumber',value:''});
-   fillValueToObject({id:'municipalOrderDate',name:'municipalOrderDate',value:''});
-   $('#municipalOrderNumber, #municipalOrderDate').val('');
- }
+function clearMunicipal(){
+fillValueToObject({id:'municipalOrderNumber',name:'municipalOrderNumber',value:''});
+fillValueToObject({id:'municipalOrderDate',name:'municipalOrderDate',value:''});
+$('#municipalOrderNumber, #municipalOrderDate').val('');
+}
 
 //Getting data for user input
 $("select").on("change", function() {

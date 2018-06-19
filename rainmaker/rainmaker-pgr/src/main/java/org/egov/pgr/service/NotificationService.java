@@ -33,6 +33,12 @@ public class NotificationService {
 	@Value("${egov.hr.employee.v2.search.endpoint}")
 	private String hrEmployeeV2SearchEndpoint;
 	
+	@Value("${egov.user.host}")
+	private String egovUserHost;
+
+	@Value("${egov.user.search.endpoint}")
+	private String egovUserSearchEndpoint;
+	
 	@Autowired
 	private ServiceRequestRepository serviceRequestRepository;
 
@@ -151,6 +157,22 @@ public class NotificationService {
 			}
 			localizedMessageMap.put(locale + "|" + tenantId, mapOfCodesAndMessages);
 		}
+	}
+	
+	public String getPhoneNumberForNotificationService(RequestInfo requestInfo, String userId, String tenantId) {
+		String phoneNumber = null;
+		Object response = null;
+		StringBuilder uri = new StringBuilder();
+		Map<String, Object> request = pGRUtils.prepareRequestForUserSearch(uri, requestInfo, userId, tenantId);
+		try {
+			response = serviceRequestRepository.fetchResult(uri, request);
+			if(null != response) {
+				phoneNumber = JsonPath.read(response, "$.user.*.mobileNumber");
+			}
+		}catch(Exception e) {
+			log.error("Couldn't fetch user for id: "+userId);
+		}
+		return phoneNumber;
 	}
 
 }

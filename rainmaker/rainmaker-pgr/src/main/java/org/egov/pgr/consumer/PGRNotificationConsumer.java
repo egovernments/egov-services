@@ -137,7 +137,8 @@ public class PGRNotificationConsumer {
 	}
 
 	public SMSRequest prepareSMSRequest(Service serviceReq, ActionInfo actionInfo, RequestInfo requestInfo) {
-		String phone = serviceReq.getPhone();
+		String phoneNumberRetrived = notificationService.getPhoneNumberForNotificationService(requestInfo, serviceReq.getAccountId(), serviceReq.getTenantId());
+		String phone = StringUtils.isEmpty(phoneNumberRetrived) ? serviceReq.getPhone() : phoneNumberRetrived;
 		String message = getMessageForSMS(serviceReq, actionInfo, requestInfo);
 		if (null == message)
 			return null;

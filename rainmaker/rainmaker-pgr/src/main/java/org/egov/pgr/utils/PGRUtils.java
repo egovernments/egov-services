@@ -1,6 +1,7 @@
 package org.egov.pgr.utils;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -71,6 +72,12 @@ public class PGRUtils {
 	
 	@Value("${egov.localization.search.endpoint}")
 	private String localizationSearchEndpoint;
+	
+	@Value("${egov.user.host}")
+	private String egovUserHost;
+
+	@Value("${egov.user.search.endpoint}")
+	private String egovUserSearchEndpoint;
 	
 	@Autowired
 	private ResponseInfoFactory factory;
@@ -275,6 +282,18 @@ public class PGRUtils {
 		uri.append(localizationHost).append(localizationSearchEndpoint).append("?tenantId="+tenantId).append("&module="+module).append("&locale="+locale);
 
 		return requestInfoWrapper;
+	}
+	
+	public Map<String, Object> prepareRequestForUserSearch(StringBuilder uri, RequestInfo requestInfo, String userId, String tenantId) {
+		Map<String, Object> userServiceRequest = new HashMap();
+		String[] userIds = {userId};
+		userServiceRequest.put("RequestInfo", requestInfo);
+		userServiceRequest.put("tenantId", tenantId);
+		userServiceRequest.put("id", Arrays.asList(userIds));
+		
+		uri.append(egovUserHost).append(egovUserSearchEndpoint);
+
+		return userServiceRequest;
 	}
 	
 	/**

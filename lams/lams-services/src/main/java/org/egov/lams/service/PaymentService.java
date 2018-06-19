@@ -104,7 +104,7 @@ public class PaymentService {
 	public String generateBillXml(Agreement agreement, RequestInfo requestInfo) {
 		String collectXML = "";
 		try {
-			
+
 			Allottee allottee = agreement.getAllottee();
 			LamsConfigurationGetRequest lamsGetRequest = new LamsConfigurationGetRequest();
 			List<BillInfo> billInfos = new ArrayList<>();
@@ -119,11 +119,11 @@ public class PaymentService {
 			billInfo.setTenantId(agreement.getTenantId());
 			// billInfo.setCitizenAddress(agreement.getAllottee().getAddress());
 			// TODO: Fix me after the issue is fixed by user service
-			
+
 			if (allottee.getAddress() != null)
 				billInfo.setCitizenAddress(allottee.getAddress());
 			else
-				billInfo.setCitizenAddress("NA");	
+				billInfo.setCitizenAddress("NA");
 			billInfo.setBillType("AUTO");
 			billInfo.setIssuedDate(new Date());
 			billInfo.setLastDate(new Date());
@@ -216,7 +216,7 @@ public class PaymentService {
 			BigDecimal totalAmount = BigDecimal.ZERO;
 			List<BillDetailInfo> billDetailInfos = new ArrayList<>();
 			List<DemandDetails> demandDetails = getOrderedDemandDetails(demand.getDemandDetails());
-			
+
 			int orderNo = 0;
 			LOGGER.info("PaymentService- generateBillXml - getting purpose");
 			Map<String, String> purposeMap = billRepository.getPurpose(billInfo.getTenantId());
@@ -258,8 +258,8 @@ public class PaymentService {
 		return collectXML;
 	}
 
-	
-	
+
+
 	public List<BillDetailInfo> getBilldetails(final DemandDetails demandDetail, String functionCode, int orderNo,
 			RequestInfo requestInfo, Map<String, String> purpose) {
 		final List<BillDetailInfo> billDetails = new ArrayList<>();
@@ -267,7 +267,6 @@ public class PaymentService {
 		LOGGER.info("paymentservice demand detail ::"+demandDetail);
 		try {
 			BillDetailInfo billdetail = new BillDetailInfo();
-			String description = getInstallmentDescription(demandDetail);
 			balance=demandDetail.getTaxAmount().subtract(demandDetail.getCollectionAmount());
 			billdetail.setOrderNo(orderNo);
 			billdetail.setCreditAmount(balance);
@@ -275,7 +274,7 @@ public class PaymentService {
 			LOGGER.info("getGlCode before>>>>>>>" + demandDetail.getGlCode());
 			billdetail.setGlCode(demandDetail.getGlCode());
 			LOGGER.info("getGlCode after >>>>>>>" + demandDetail.getGlCode());
-			billdetail.setDescription(description);
+			billdetail.setDescription(demandDetail.getTaxPeriod().concat(":").concat(demandDetail.getTaxReason()));
 			billdetail.setPeriod(demandDetail.getTaxPeriod());
 			if (ADVANCE_TAX.equalsIgnoreCase(demandDetail.getTaxReason())) {
 				billdetail.setPurpose(purpose.get("ADVANCE_AMOUNT"));
@@ -341,7 +340,7 @@ public class PaymentService {
 		LOGGER.info("PaymentService- updateDemand - setPaymentInfos done");
 
 		// / FIXME put update workflow here here
-		
+
 		updateWorkflow(billInfo.getConsumerCode(), requestInfo);
 		isAdvanceCollection(billInfo.getConsumerCode(),currentDemand);
 		LOGGER.info("the consumer code from bill object ::: " + billInfo.getConsumerCode());
@@ -352,7 +351,7 @@ public class PaymentService {
 
 		// FIXME get the query String from query builder //FIXME do the
 		// jdbctemplate in repository
-		String sql = AgreementQueryBuilder.BASE_SEARCH_QUERY + " where agreement.acknowledgementnumber='" 
+		String sql = AgreementQueryBuilder.BASE_SEARCH_QUERY + " where agreement.acknowledgementnumber='"
 					+ consumerCode + "' OR agreement.agreement_no='" + consumerCode + "' order by agreement.id desc ";
 
 		LOGGER.info("the sql query for fetching agreement using consumercode ::: " + sql);
@@ -403,10 +402,10 @@ public class PaymentService {
 		LOGGER.info("updateDemandDetailForReceiptCreate  ::: totalAmountCollected " + totalAmountCollected);
 		demand.setCollectionAmount(totalAmountCollected);
 	}
-     
+
 	/*
-	 * making collection amount zero if rent is fully paid 
-	 * and actual collection should be updated in back update of collection 
+	 * making collection amount zero if rent is fully paid
+	 * and actual collection should be updated in back update of collection
 	 */
 	private void prepareDemandDetailsForCollectionUpdate(Demand demand) {
 
@@ -490,7 +489,7 @@ public class PaymentService {
 
 		BoundaryResponse boundaryResponse = null;
 		String boundaryUrl = propertiesManager.getBoundaryServiceHostName()
-							+ propertiesManager.getBoundaryServiceSearchPath() 
+							+ propertiesManager.getBoundaryServiceSearchPath()
 							+ "?Boundary.id=" + boundaryId
 							+ "&Boundary.tenantId=" + tenantId;
 		// FIXME in boundary contract id is string
@@ -504,7 +503,7 @@ public class PaymentService {
 		LOGGER.info("the response from boundary ::"+boundaryResponse);
 		return boundaryResponse;
 	}
-	
+
 	private void isAdvanceCollection(String acknowledgementno, Demand demand) {
 		boolean isAdvancePaid = false;
 		String sql = AgreementQueryBuilder.BASE_SEARCH_QUERY + " where agreement.acknowledgementnumber='"
@@ -537,7 +536,7 @@ public class PaymentService {
 	/*
 	 * preparing map installment wise
 	 *  key is installment date and value is list of demand details for that installment
-	 * 
+	 *
 	 */
 	private Map<Date, List<DemandDetails>> getDemandDetailsMap(List<DemandDetails> demandDetails) {
 		Map<Date, List<DemandDetails>> demandDetailsMap = new LinkedHashMap<>();
@@ -556,7 +555,7 @@ public class PaymentService {
 		return demandDetailsMap;
 
 	}
-    
+
 	/*
 	 * Method to order the demand details in custom order this order will be
 	 * shown in account details of collection screen
@@ -566,7 +565,7 @@ public class PaymentService {
 
 		List<DemandDetails> orderedDemandDetailsList = new LinkedList<>();
 		Map<Date, List<DemandDetails>> demandDetailsMap = getDemandDetailsMap(demandDetails);
-		
+
 		Set<Date> installmentDates = demandDetailsMap.keySet();
 		for (Date installmentDate : installmentDates) {
 			Set<DemandDetails> demandDetailsSet = new LinkedHashSet<>();
@@ -635,7 +634,7 @@ public class PaymentService {
 		Month toDate = installmentToDate.getMonth();
 		String endingMonth = toDate.toString();
 		int toYear = installmentToDate.getYear();
-		
+
 		if (ADVANCE_TAX.equalsIgnoreCase(demandDetail.getTaxReason())) {
 			timePeriod.append(ADVANCE_COLLECTION).append(",").append(fromYear);
 		} else {

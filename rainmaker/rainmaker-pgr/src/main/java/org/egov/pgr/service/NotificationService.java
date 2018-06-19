@@ -10,12 +10,14 @@ import org.egov.common.contract.request.RequestInfo;
 import org.egov.mdms.model.MdmsCriteriaReq;
 import org.egov.pgr.contract.RequestInfoWrapper;
 import org.egov.pgr.model.Service;
+import org.egov.pgr.model.user.UserResponse;
 import org.egov.pgr.repository.ServiceRequestRepository;
 import org.egov.pgr.utils.PGRConstants;
 import org.egov.pgr.utils.PGRUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.JsonPath;
 
 import lombok.extern.slf4j.Slf4j;
@@ -160,19 +162,21 @@ public class NotificationService {
 	}
 	
 	public String getPhoneNumberForNotificationService(RequestInfo requestInfo, String userId, String tenantId) {
-		Object phoneNumber = null;
+		String phoneNumber = null;
 		Object response = null;
+		ObjectMapper mapper = pGRUtils.getObjectMapper();
 		StringBuilder uri = new StringBuilder();
 		Map<String, Object> request = pGRUtils.prepareRequestForUserSearch(uri, requestInfo, userId, tenantId);
 		try {
 			response = serviceRequestRepository.fetchResult(uri, request);
 			if(null != response) {
-				phoneNumber = JsonPath.read(response, "$.user.0.mobileNumber");
+				UserResponse res = mapper.convertValue(response, UserResponse.class);
+				phoneNumber = res.getUser().get(0).getMobileNumber();
 			}
 		}catch(Exception e) {
 			log.error("Couldn't fetch user for id: "+userId+" error: " + e);
 		}
-		return phoneNumber.toString();
+		return phoneNumber;
 	}
 
 }

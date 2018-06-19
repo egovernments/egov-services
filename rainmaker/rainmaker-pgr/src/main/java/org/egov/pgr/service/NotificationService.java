@@ -160,19 +160,19 @@ public class NotificationService {
 	}
 	
 	public String getPhoneNumberForNotificationService(RequestInfo requestInfo, String userId, String tenantId) {
-		String phoneNumber = null;
+		Object phoneNumber = null;
 		Object response = null;
 		StringBuilder uri = new StringBuilder();
 		Map<String, Object> request = pGRUtils.prepareRequestForUserSearch(uri, requestInfo, userId, tenantId);
 		try {
 			response = serviceRequestRepository.fetchResult(uri, request);
 			if(null != response) {
-				phoneNumber = JsonPath.read(response, "$.user.*.mobileNumber");
+				phoneNumber = JsonPath.read(response, "$.user.0.mobileNumber");
 			}
 		}catch(Exception e) {
-			log.error("Couldn't fetch user for id: "+userId);
+			log.error("Couldn't fetch user for id: "+userId+" error: " + e);
 		}
-		return phoneNumber;
+		return phoneNumber.toString();
 	}
 
 }

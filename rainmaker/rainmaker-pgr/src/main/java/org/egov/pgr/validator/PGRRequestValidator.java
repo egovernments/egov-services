@@ -133,6 +133,9 @@ public class PGRRequestValidator {
 				.tenantId(tenantId).requestInfo(requestInfo).build();
 		StringBuilder url = new StringBuilder(userBasePath+userSearchEndPoint); 
 		UserResponse res = mapper.convertValue(serviceRequestRepository.fetchResult(url, searchRequest), UserResponse.class);
+	        if(CollectionUtils.isEmpty(res.getUser())) {
+			return null;
+		}
 		return res.getUser().get(0).getId().toString();
 	}
 

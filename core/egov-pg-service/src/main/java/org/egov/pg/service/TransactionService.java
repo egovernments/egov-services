@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.net.URI;
 import java.util.*;
 
@@ -157,7 +158,7 @@ public class TransactionService {
 
         Transaction newTxn = gateway.fetchStatus(currentTxnStatus, requestParams);
 
-        if (currentTxnStatus.getTxnAmount().equals(newTxn.getTxnAmount())) {
+        if (new BigDecimal(currentTxnStatus.getTxnAmount()).compareTo(new BigDecimal(newTxn.getTxnAmount())) != 0) {
             log.error("Transaction Amount mismatch, expected {} got {}", currentTxnStatus.getTxnAmount(), newTxn.getTxnAmount());
             newTxn.setTxnStatus(Transaction.TxnStatusEnum.FAILURE);
         }

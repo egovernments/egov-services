@@ -9,7 +9,7 @@ info:
     email: contact@egovernments.org
 schemes:
   - https
-basePath: /egov-pg
+basePath: /egov-pg-service
 x-common-path: >-
   https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml
 paths:
@@ -139,6 +139,9 @@ definitions:
       gateway:
         type: string
         description: Gateway to be used, from the available list, such as PAYTM, PHONEPE.
+      callbackUrl:
+        type: string
+        description: URL to which control has to be redirected to from the gateway
       txnId:
          type: string
          readOnly: true

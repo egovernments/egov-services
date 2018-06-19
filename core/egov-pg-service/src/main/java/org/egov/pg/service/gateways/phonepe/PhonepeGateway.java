@@ -9,7 +9,6 @@ import org.egov.pg.utils.Utils;
 import org.egov.tracer.model.CustomException;
 import org.egov.tracer.model.ServiceCallException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
@@ -27,7 +26,6 @@ import java.util.TreeMap;
 
 @Service
 @Slf4j
-@PropertySource("classpath:gateways/phonepe.properties")
 public class PhonepeGateway implements Gateway {
 
     private static final String GATEWAY_NAME = "PHONEPE";
@@ -48,13 +46,13 @@ public class PhonepeGateway implements Gateway {
         this.restTemplate = restTemplate;
         this.objectMapper = objectMapper;
 
-        ACTIVE = Boolean.valueOf(environment.getRequiredProperty("active"));
-        MERCHANT_ID = environment.getRequiredProperty("merchant.id");
-        SALT = environment.getRequiredProperty("merchant.secret.key");
-        SALT_INDEX = environment.getRequiredProperty("merchant.secret.index");
-        MERCHANT_HOST = environment.getRequiredProperty("merchant.host");
-        MERCHANT_PATH_DEBIT = environment.getRequiredProperty("url.debit");
-        MERCHANT_PATH_STATUS = environment.getRequiredProperty("url.status");
+        ACTIVE = Boolean.valueOf(environment.getRequiredProperty("phonepe.active"));
+        MERCHANT_ID = environment.getRequiredProperty("phonepe.merchant.id");
+        SALT = environment.getRequiredProperty("phonepe.merchant.secret.key");
+        SALT_INDEX = environment.getRequiredProperty("phonepe.merchant.secret.index");
+        MERCHANT_HOST = environment.getRequiredProperty("phonepe.merchant.host");
+        MERCHANT_PATH_DEBIT = environment.getRequiredProperty("phonepe.url.debit");
+        MERCHANT_PATH_STATUS = environment.getRequiredProperty("phonepe.url.status");
     }
 
 

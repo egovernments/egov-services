@@ -6,7 +6,6 @@ import org.egov.pg.service.Gateway;
 import org.egov.pg.utils.Utils;
 import org.egov.tracer.model.ServiceCallException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
@@ -28,7 +27,6 @@ import java.util.Objects;
  */
 @Component
 @Slf4j
-@PropertySource("classpath:gateways/axis.properties")
 public class AxisGateway implements Gateway {
 
 
@@ -63,19 +61,19 @@ public class AxisGateway implements Gateway {
     public AxisGateway(RestTemplate restTemplate, Environment environment) {
         this.restTemplate = restTemplate;
 
-        ACTIVE = Boolean.valueOf(environment.getRequiredProperty("active"));
-        CURRENCY = environment.getRequiredProperty("currency");
-        LOCALE = environment.getRequiredProperty("locale");
-        MERCHANT_ID = environment.getRequiredProperty("merchant.id");
-        SECURE_SECRET = environment.getRequiredProperty("merchant.secret.key");
-        AMA_USER = environment.getRequiredProperty("merchant.user");
-        AMA_PWD = environment.getRequiredProperty("merchant.pwd");
-        VPC_ACCESS_CODE = environment.getRequiredProperty("merchant.access.code");
-        VPC_VERSION = environment.getRequiredProperty("merchant.vpc.version");
-        VPC_COMMAND_PAY = environment.getRequiredProperty("merchant.vpc.command.pay");
-        VPC_COMMAND_STATUS = environment.getRequiredProperty("merchant.vpc.command.status");
-        MERCHANT_URL_PAY = environment.getRequiredProperty("url.debit");
-        MERCHANT_URL_STATUS = environment.getRequiredProperty("url.status");
+        ACTIVE = Boolean.valueOf(environment.getRequiredProperty("axis.active"));
+        CURRENCY = environment.getRequiredProperty("axis.currency");
+        LOCALE = environment.getRequiredProperty("axis.locale");
+        MERCHANT_ID = environment.getRequiredProperty("axis.merchant.id");
+        SECURE_SECRET = environment.getRequiredProperty("axis.merchant.secret.key");
+        AMA_USER = environment.getRequiredProperty("axis.merchant.user");
+        AMA_PWD = environment.getRequiredProperty("axis.merchant.pwd");
+        VPC_ACCESS_CODE = environment.getRequiredProperty("axis.merchant.access.code");
+        VPC_VERSION = environment.getRequiredProperty("axis.merchant.vpc.version");
+        VPC_COMMAND_PAY = environment.getRequiredProperty("axis.merchant.vpc.command.pay");
+        VPC_COMMAND_STATUS = environment.getRequiredProperty("axis.merchant.vpc.command.status");
+        MERCHANT_URL_PAY = environment.getRequiredProperty("axis.url.debit");
+        MERCHANT_URL_STATUS = environment.getRequiredProperty("axis.url.status");
     }
 
     @Override

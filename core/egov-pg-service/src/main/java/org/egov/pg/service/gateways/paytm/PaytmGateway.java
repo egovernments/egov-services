@@ -7,7 +7,6 @@ import org.egov.pg.service.Gateway;
 import org.egov.pg.utils.Utils;
 import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -28,7 +27,6 @@ import java.util.TreeMap;
 
 @Service
 @Slf4j
-@PropertySource("classpath:gateways/paytm.properties")
 public class PaytmGateway implements Gateway {
 
     private static final String GATEWAY_NAME = "PAYTM";
@@ -48,14 +46,14 @@ public class PaytmGateway implements Gateway {
     public PaytmGateway(RestTemplate restTemplate, Environment environment) {
         this.restTemplate = restTemplate;
 
-        ACTIVE = Boolean.valueOf(environment.getRequiredProperty("active"));
-        MID = environment.getRequiredProperty("merchant.id");
-        MERCHANT_KEY = environment.getRequiredProperty("merchant.secret.key");
-        INDUSTRY_TYPE_ID = environment.getRequiredProperty("merchant.industry.type");
-        CHANNEL_ID = environment.getRequiredProperty("merchant.channel.id");
-        WEBSITE = environment.getRequiredProperty("merchant.website");
-        MERCHANT_URL_DEBIT = environment.getRequiredProperty("url.debit");
-        MERCHANT_URL_STATUS = environment.getRequiredProperty("url.status");
+        ACTIVE = Boolean.valueOf(environment.getRequiredProperty("paytm.active"));
+        MID = environment.getRequiredProperty("paytm.merchant.id");
+        MERCHANT_KEY = environment.getRequiredProperty("paytm.merchant.secret.key");
+        INDUSTRY_TYPE_ID = environment.getRequiredProperty("paytm.merchant.industry.type");
+        CHANNEL_ID = environment.getRequiredProperty("paytm.merchant.channel.id");
+        WEBSITE = environment.getRequiredProperty("paytm.merchant.website");
+        MERCHANT_URL_DEBIT = environment.getRequiredProperty("paytm.url.debit");
+        MERCHANT_URL_STATUS = environment.getRequiredProperty("paytm.url.status");
 
     }
 

@@ -35,6 +35,7 @@ import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.JsonPath;
 
 import lombok.extern.slf4j.Slf4j;
@@ -112,7 +113,7 @@ public class PGRRequestValidator {
 	}
 
 	private String createUser(Citizen citizen, RequestInfo requestInfo, String tenantId) {
-		
+		ObjectMapper mapper = pgrUtils.getObjectMapper();
 		citizen.setUserName(citizen.getMobileNumber());
 		citizen.setActive(true);
 		citizen.setTenantId(tenantId);
@@ -122,16 +123,19 @@ public class PGRRequestValidator {
 		
 		StringBuilder url = new StringBuilder(userBasePath+userCreateEndPoint); 
 		CreateUserRequest req = CreateUserRequest.builder().citizen(citizen).requestInfo(requestInfo).build();
-		UserResponse res = (UserResponse)serviceRequestRepository.fetchResult(url, req);
+		UserResponse res = mapper.convertValue(serviceRequestRepository.fetchResult(url, req), UserResponse.class);
 		return res.getUser().get(0).getId().toString();
 	}
 
 	private String isUserPresent(Citizen citizen, RequestInfo requestInfo, String tenantId) {
-
+		ObjectMapper mapper = pgrUtils.getObjectMapper();
 		UserSearchRequest searchRequest = UserSearchRequest.builder().userName(citizen.getMobileNumber())
 				.tenantId(tenantId).requestInfo(requestInfo).build();
 		StringBuilder url = new StringBuilder(userBasePath+userSearchEndPoint); 
-		UserResponse res = (UserResponse)serviceRequestRepository.fetchResult(url, searchRequest);
+		UserResponse res = mapper.convertValue(serviceRequestRepository.fetchResult(url, searchRequest), UserResponse.class);
+	        if(CollectionUtils.isEmpty(res.getUser())) {
+			return null;
+		}
 		return res.getUser().get(0).getId().toString();
 	}
 

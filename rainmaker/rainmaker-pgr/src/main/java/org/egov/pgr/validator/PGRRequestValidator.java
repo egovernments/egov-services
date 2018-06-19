@@ -1,6 +1,7 @@
 package org.egov.pgr.validator;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -19,6 +20,11 @@ import org.egov.pgr.contract.ServiceRequest;
 import org.egov.pgr.contract.ServiceResponse;
 import org.egov.pgr.model.ActionInfo;
 import org.egov.pgr.model.Service;
+import org.egov.pgr.model.user.Citizen;
+import org.egov.pgr.model.user.CreateUserRequest;
+import org.egov.pgr.model.user.UserResponse;
+import org.egov.pgr.model.user.UserSearchRequest;
+import org.egov.pgr.model.user.UserType;
 import org.egov.pgr.repository.ServiceRequestRepository;
 import org.egov.pgr.service.GrievanceService;
 import org.egov.pgr.utils.ErrorConstants;
@@ -70,13 +76,57 @@ public class PGRRequestValidator {
 		overRideCitizenAccountId(serviceRequest);
 		vaidateServiceCodes(serviceRequest, errorMap);
 		validateAddressCombo(serviceRequest, errorMap);
+		validateAndCreateUser(serviceRequest, errorMap);
 
 		if (!errorMap.isEmpty())
 			throw new CustomException(errorMap);
 	}
 
+	private void validateAndCreateUser(ServiceRequest serviceRequest, Map<String, String> errorMap) {
+
+		RequestInfo requestInfo = serviceRequest.getRequestInfo();
+		List<Service> services = serviceRequest.getServices();
+
+		for (Service service : services) {
+
+			Citizen citizen = service.getCitizen();
+			String accid = null;
+			if (null != citizen) {
+
+				accid = isUserPresent(citizen,requestInfo,service.getTenantId());
+				if (null == accid)
+					accid = createUser(citizen,requestInfo,service.getTenantId());
+			}
+			service.setAccountId(accid);
+		}
+	}
+
+	private String createUser(Citizen citizen, RequestInfo requestInfo, String tenantId) {
+		
+		citizen.setUserName(citizen.getMobileNumber());
+		citizen.setActive(true);
+		citizen.setTenantId(tenantId);
+		citizen.setType(UserType.CITIZEN);
+		citizen.setRoles(Arrays.asList(org.egov.pgr.model.user.Role.builder().code(WorkFlowConfigs.ROLE_CITIZEN).build()));
+		//Role role = Role.builder().
+		
+		StringBuilder url = new StringBuilder(); //put create url here
+		CreateUserRequest req = CreateUserRequest.builder().citizen(citizen).requestInfo(requestInfo).build();
+		UserResponse res = (UserResponse)serviceRequestRepository.fetchResult(url, req);
+		return res.getUser().get(0).getId().toString();
+	}
+
+	private String isUserPresent(Citizen citizen, RequestInfo requestInfo, String tenantId) {
+
+		UserSearchRequest searchRequest = UserSearchRequest.builder().userName(citizen.getMobileNumber())
+				.tenantId(tenantId).requestInfo(requestInfo).build();
+		StringBuilder url = new StringBuilder(); // put search url here.
+		UserResponse res = (UserResponse)serviceRequestRepository.fetchResult(url, searchRequest);
+		return res.getUser().get(0).getId().toString();
+	}
+
 	/**
-	 * validates the update Request based on the following cirtera:
+	 * validates the update Request based on the following criteria:
 	 * 
 	 * 1. Checks if the length of actionInfo and services are same.
 	 * 2. Overrides accountId field of the request with the id of the logged in user.
@@ -153,7 +203,7 @@ public class PGRRequestValidator {
 
 		if (serviceRequest.getServices().size() != serviceRequest.getServices().parallelStream()
 				.filter(a -> (a.getAddress() != null || a.getAddressId() != null
-						|| (a.getLat() != null && a.getLong() != null)))
+						|| (a.getLat() != null && a.getLongitutde() != null)))
 				.map(Service::getServiceRequestId).collect(Collectors.toList()).size())
 			errorMap.put(ErrorConstants.CREATE_ADDRESS_COMBO_ERROR_KEY, ErrorConstants.CREATE_ADDRESS_COMBO_ERROR_MSG);
 	}

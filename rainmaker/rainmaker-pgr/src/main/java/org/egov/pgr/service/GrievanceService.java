@@ -429,11 +429,6 @@ public class GrievanceService {
 					log.info("Setting assignee for employee........");
 					serviceReqSearchCriteria.setAssignedTo(requestInfo.getUserInfo().getId().toString());
 				}
-			} else if (precedentRole.equalsIgnoreCase(PGRConstants.ROLE_CSR)) {
-				if (StringUtils.isEmpty(serviceReqSearchCriteria.getCreatedBy()) && CollectionUtils.isEmpty(serviceReqSearchCriteria.getServiceRequestId())) {
-					log.info("Setting created by for csr........");
-					serviceReqSearchCriteria.setCreatedBy(requestInfo.getUserInfo().getId().toString());
-				}
 			}
 
 		}

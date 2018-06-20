@@ -7,7 +7,7 @@ serviceMaps:
    fromTopic: save-pg-txns
    isTransaction: true
    queryMaps:
-    - query: INSERT INTO eg_pg_transactions (txn_id, txn_amount, txn_status, gateway, "module", order_id, product_info, user_name, tenant_id, gateway_txn_id, gateway_payment_mode, gateway_status_code, gateway_status_msg, created_time, last_modified_time) VALUES (?, ?::numeric, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+    - query: INSERT INTO eg_pg_transactions (txn_id, txn_amount, txn_status, gateway, "module", order_id, product_info, user_name, mobile_number, email_id, name, user_tenant_id,  tenant_id, gateway_txn_id, gateway_payment_mode, gateway_status_code, gateway_status_msg, created_time, last_modified_time) VALUES (?, ?::numeric, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
 
       basePath: Transaction
       jsonMaps:
@@ -28,6 +28,14 @@ serviceMaps:
 
        - jsonPath: $.Transaction.user.userName
 
+       - jsonPath: $.Transaction.user.mobileNumber
+
+       - jsonPath: $.Transaction.user.emailId
+
+       - jsonPath: $.Transaction.user.name
+
+       - jsonPath: $.Transaction.user.tenantId
+
        - jsonPath: $.Transaction.tenantId
 
        - jsonPath: $.Transaction.gatewayTxnId
@@ -41,21 +49,6 @@ serviceMaps:
        - jsonPath: $.Transaction.createdTime
 
        - jsonPath: $.Transaction.lastModifiedTime
-
-    - query: INSERT INTO eg_pg_user (user_name, mobile_number, email_id, name, tenant_id) VALUES (?, ?, ?, ?, ?);
-
-      basePath: Transaction
-      jsonMaps:
-
-       - jsonPath: $.Transaction.user.userName
-
-       - jsonPath: $.Transaction.user.mobileNumber
-
-       - jsonPath: $.Transaction.user.emailId
-
-       - jsonPath: $.Transaction.user.name
-
-       - jsonPath: $.Transaction.user.tenantId
 
 
 

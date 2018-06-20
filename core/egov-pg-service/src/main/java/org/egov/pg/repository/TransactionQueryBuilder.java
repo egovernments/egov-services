@@ -7,10 +7,11 @@ import java.util.*;
 
 class TransactionQueryBuilder {
     private static final String SEARCH_TXN_SQL = "SELECT pg.txn_id, pg.txn_amount, pg.txn_status, pg.gateway, pg" +
-            ".module, pg.order_id, pg.product_info, pg.user_name, pg_user.mobile_number, pg_user.email_id, pg_user" +
-            ".name, pg_user.tenant_id as user_Tenant_Id , pg.tenant_id, pg.gateway_txn_id, pg.gateway_payment_mode, pg.gateway_status_code," +
+            ".module, pg.order_id, pg.product_info, pg.user_name, pg.mobile_number, pg.email_id, pg.name, " +
+            " pg.user_tenant_id, pg.tenant_id, pg.gateway_txn_id, pg.gateway_payment_mode, " +
+            "pg.gateway_status_code," +
             " pg.gateway_status_msg, pg.created_time, pg.last_modified_time " +
-            "FROM eg_pg_transactions pg INNER JOIN eg_pg_user pg_user ON pg.user_name = pg_user.user_name ";
+            "FROM eg_pg_transactions pg ";
 
     private TransactionQueryBuilder() {
     }

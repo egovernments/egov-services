@@ -28,7 +28,7 @@ public class TransactionRepository {
         log.debug(query);
         return jdbcTemplate.query(query, params.toArray(), (rs, rowNum) -> {
             User user = User.builder().userName(rs.getString("user_name")).mobileNumber(rs.getString("mobile_number")
-            ).emailId(rs.getString("email_id")).name(rs.getString("name")).tenantId(rs.getString("user_Tenant_Id"))
+            ).emailId(rs.getString("email_id")).name(rs.getString("name")).tenantId(rs.getString("user_tenant_id"))
                     .build();
             return Transaction.builder()
                     .txnId(rs.getString("txn_id"))

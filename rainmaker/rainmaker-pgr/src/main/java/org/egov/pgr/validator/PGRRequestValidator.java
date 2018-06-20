@@ -99,16 +99,15 @@ public class PGRRequestValidator {
 		List<Service> services = serviceRequest.getServices();
 
 		for (Service service : services) {
-
 			Citizen citizen = service.getCitizen();
-			String accid = null;
+			String accId = null;
 			if (null != citizen) {
-
-				accid = isUserPresent(citizen,requestInfo,service.getTenantId());
-				if (null == accid)
-					accid = createUser(citizen,requestInfo,service.getTenantId());
+				accId = isUserPresent(citizen,requestInfo,service.getTenantId());
+				if (null == accId) {
+					accId = createUser(citizen,requestInfo,service.getTenantId());
+				}
+				service.setAccountId(accId);
 			}
-			service.setAccountId(accid);
 		}
 	}
 

@@ -135,10 +135,14 @@ public class TransactionService {
 
         String txnId = transactionOptional.get();
 
+        TransactionCriteria criteria = TransactionCriteria.builder()
+                .txnId(txnId)
+                .orderId(requestParams.get("orderId"))
+                .module(requestParams.get("module"))
+                .tenantId(requestParams.get("tenantId"))
+                .build();
 
-        List<Transaction> statuses = getTransactions(TransactionCriteria.builder().txnId
-                (txnId).tenantId(requestParams.get("tenantId")).build
-                ());
+        List<Transaction> statuses = getTransactions(criteria);
 
         //TODO Add to error queue
         if (statuses.isEmpty()) {

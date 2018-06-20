@@ -1,5 +1,7 @@
 package org.egov.pg.service.jobs.dailyReconciliation;
 
+import org.quartz.JobDetail;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.quartz.CronTriggerFactoryBean;
@@ -21,9 +23,10 @@ public class DailyReconciliationJobConfig {
     }
 
     @Bean
-    CronTriggerFactoryBean processStatusUpdateTrigger() {
+    @Autowired
+    CronTriggerFactoryBean processStatusUpdateTrigger(JobDetail processStatusUpdateJob) {
         CronTriggerFactoryBean cronTriggerFactoryBean = new CronTriggerFactoryBean();
-        cronTriggerFactoryBean.setJobDetail(processStatusUpdateJob().getObject());
+        cronTriggerFactoryBean.setJobDetail(processStatusUpdateJob);
         cronTriggerFactoryBean.setCronExpression("0 0 * * * ?");
         cronTriggerFactoryBean.setGroup("status-update");
         return cronTriggerFactoryBean;

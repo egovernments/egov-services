@@ -11,6 +11,7 @@ import javax.sql.DataSource;
 @Configuration
 public class MainConfig {
 
+
     @Bean
     public ObjectMapper objectMapper() {
         return new ObjectMapper();
@@ -34,5 +35,6 @@ public class MainConfig {
 //        clientHttpRequestFactory.setConnectTimeout(timeout);
 //        return clientHttpRequestFactory;
 //    }
+
 
 }

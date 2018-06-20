@@ -1,13 +1,5 @@
 package org.egov.lams.repository.rowmapper;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.egov.lams.model.Agreement;
 import org.egov.lams.model.Allottee;
 import org.egov.lams.model.Asset;
@@ -29,6 +21,17 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.ResultSetExtractor;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import static org.apache.commons.lang3.StringUtils.EMPTY;
+import static org.springframework.util.StringUtils.isEmpty;
 
 public class AgreementRowMapper implements ResultSetExtractor<List<Agreement>> {
 
@@ -116,7 +119,7 @@ public class AgreementRowMapper implements ResultSetExtractor<List<Agreement>> {
 					agreement.setGovernmentOrderDate(rs.getTimestamp("govt_order_date"));
 					agreement.setRenewalDate(rs.getTimestamp("renewal_date"));
 					agreement.setReservationCategory((Long) rs.getObject("res_category"));
-					agreement.setOldAgreementNumber(rs.getString("old_agreement_no"));
+					agreement.setOldAgreementNumber(isEmpty(rs.getString("old_agreement_no")) ?  "" : rs.getString("old_agreement_no"));
 					agreement.setReferenceNumber(rs.getString("referenceno"));
 					agreement.setFloorNumber(rs.getString("floorno"));
 					agreement.setParent((Long) rs.getObject("parent"));

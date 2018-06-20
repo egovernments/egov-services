@@ -118,9 +118,9 @@ public class AgreementValidator {
 					&& (agreement.getGoodWillAmount().compareTo(agreement.getCollectedGoodWillAmount()) < 0))
 				errors.rejectValue("Agreement.CollectedGoodWillAmount", "",
 						"CollectedGoodWillAmount should not be greater than GoodWillAmount");
-			else if (!allowedAssetCategory && StringUtils.isBlank(agreement.getOldAgreementNumber()))
+			/*else if (!allowedAssetCategory && StringUtils.isBlank(agreement.getOldAgreementNumber()))
 				errors.rejectValue("Agreement.oldAgreementNumber", "",
-						"Old agreement number is mandatory for Data Entry");
+						"Old agreement number is mandatory for Data Entry");*/
 
 		}
 		if(currentDate.after(expiryDate)){

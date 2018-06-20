@@ -827,7 +827,7 @@ var commomFieldsRules = {
         alphaNumer: true
     },
     oldAgreementNumber:{
-      required: decodeURIComponent(getUrlVars()["type"]).toLowerCase() == "shopping complex"  ? true : false,
+      required: false,
       alphaNumersh: true
     },
     referenceNumber:{

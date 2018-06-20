@@ -245,8 +245,6 @@ $(document).ready(function() {
 
         var doc = new jsPDF();
 
-
-
         doc.setFontType("bold");
         doc.setFontSize(13);
         doc.text(105, 20, "PROCEEDINGS OF THE COMMISSIONER, " + tenantId.split(".")[1].toUpperCase(), 'center');
@@ -255,15 +253,19 @@ $(document).ready(function() {
 
         doc.setFontType("normal");
         doc.setFontSize(11);
-        doc.text(15, 50, 'Roc.No. ' + agreement.noticeNumber);
-        doc.text(140, 50, 'Dt. ' + agreement.agreementDate);
+        doc.text(15,50, 'Roc.No.');
+        doc.setFontType("bold");
+        doc.text(30,50, agreement.noticeNumber);
+        doc.setFontType("normal");
+        doc.text(140,50, 'Dt. ');
+        doc.setFontType("bold");
+        doc.text(146,50, agreement.agreementDate);
 
-        var paragraph = "Sub: Leases – Revenue Section – Shop No " + agreement.referenceNumber + " in " + agreement.asset.name + " Complex, " + locality + " - Allotment of lease – Orders  - Issued";
-        var lines = doc.splitTextToSize(paragraph, 180);
-        doc.text(15, 60, lines);
+        doc.fromHTML("Sub: Leases – Revenue Section – Shop No <b>" + agreement.referenceNumber + "</b> in <b>" + agreement.asset.name + "</b> Complex, <b> " + locality + "</b> <br> - Allotment of lease – Orders  - Issued",15, 60);
 
-        doc.text(15, 80, "Ref: 1. Open Auction Notice dt. " + agreement.tenderDate + " of this office");
-        doc.text(23, 85, "2. Resolution No " + agreement.councilNumber + " dt " + agreement.councilDate + " of Municipal Council/Standing Committee");
+        doc.fromHTML("Ref: 1. Open Auction Notice dt. <b>" + agreement.tenderDate +"</b> of this office",15,80);
+
+        doc.fromHTML("2. Resolution No <b>" + agreement.councilNumber + "</b> dt <b>" + agreement.councilDate + "</b> of Municipal Council/Standing Committee",23,85);
 
         doc.text(105, 95, "><><><", 'center');
 
@@ -271,15 +273,11 @@ $(document).ready(function() {
         doc.setLineWidth(0.5);
         doc.line(15, 106, 28, 106);
 
-        var paragraph1 = "In the reference 1st cited, an Open Auction for leasing Shop No " + agreement.referenceNumber + " in " + agreement.asset.name + " Shopping Complex was conducted and your bid for the highest amount (i.e. monthly rentals of Rs " + agreement.rent + "/- and Goodwill amount of Rs " + agreement.goodWillAmount + "/-) was accepted by the Municipal Council/Standing Committee vide reference 2nd cited with the following deposit amounts as received by this office.";
-        var lines = doc.splitTextToSize(paragraph1, 180);
-        doc.text(15, 115, lines);
+        doc.fromHTML("In the reference 1st cited, an Open Auction for leasing Shop No <b>" + agreement.referenceNumber + "</b> in <b>" + agreement.asset.name + "</b> <br>Shopping Complex was conducted and your bid for the highest amount (i.e. monthly rentals of Rs <b>" + agreement.rent + "/- </b> <br>and Goodwill amount of Rs <b>" + agreement.goodWillAmount + "/- </b> was accepted by the Municipal Council/Standing Committee vide <br>reference 2nd cited with the following deposit amounts as received by this office.",15, 115);
 
         doc.autoTable(columns1, rows1, autoTableOptions1);
 
-        var paragraph2 = "In pursuance of the Municipal Council/Standing Committee resolution and vide GO MS No 56 (MA & UD Department) dt. 05.02.2011, the said shop is allotted to you for the period " + commencementDate + " to " + endDate + " at following rates of rentals and taxes thereon."
-        var lines = doc.splitTextToSize(paragraph2, 180);
-        doc.text(15, 175, lines);
+        doc.fromHTML("In pursuance of the Municipal Council/Standing Committee resolution and vide GO MS No 56 (MA & UD <br> Department) dt. 05.02.2011, the said shop is allotted to you for the period <b>" + commencementDate + "</b> to <b>" + endDate + "</b> at <br> following rates of rentals and taxes thereon.",15, 175);
 
         doc.autoTable(columns2, rows2, autoTableOptions2);
 
@@ -306,7 +304,7 @@ $(document).ready(function() {
         doc.text(15, 30, lines);
 
         doc.text(120, 50, "Commissioner");
-        doc.text(120, 55, tenantId.split(".")[1].charAt(0).toUpperCase() + tenantId.split(".")[1].slice(1) + " "+ulbType);
+        doc.fromHTML("<b> "+tenantId.split(".")[1].charAt(0).toUpperCase() + tenantId.split(".")[1].slice(1) + " "+ulbType+"</b>",120, 55)
 
         doc.text(15, 60, "To");
         doc.text(15, 65, "The Leaseholder");

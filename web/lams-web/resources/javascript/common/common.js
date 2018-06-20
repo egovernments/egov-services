@@ -30,6 +30,7 @@ var tenantId = JSON.parse(localStorage.getItem("userRequest")) || "";
         tenantId = tenantIds[tenantId] || "ap." + tenantId;
 
 }
+
 function titleCase(field) {
     if (field) {
         var newField = field[0].toUpperCase();

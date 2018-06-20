@@ -16,8 +16,6 @@ if (tenantId) {
 
 }
 
-//var tenantId = "ap.kurnool";
-
 var authToken = localStorage.getItem("auth-token");
 var now = new Date();
 var year = now.getFullYear();

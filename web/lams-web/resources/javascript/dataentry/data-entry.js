@@ -487,7 +487,6 @@ $(document).ready(function() {
             'auth-token': authToken
             },
             success: function (res1) { 
-                console.log("url",url);
                 $('#alert-box').fadeIn(function(){
                     $("#alert-box-content").html("Preamble No : " + res1.preambleNumber +" Gist Of Preamble : "+ res1.gistOfPreamble);
                 });

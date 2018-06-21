@@ -135,7 +135,7 @@ class UpdateRemission extends React.Component {
         this.setState = this.setState.bind(this);
         this.getUsersFun = this.getUsersFun.bind(this);
         this.printNotice = this.printNotice.bind(this);
-
+        this.handleBlur = this.handleBlur.bind(this);
     }
 
 
@@ -143,7 +143,39 @@ class UpdateRemission extends React.Component {
         this.setState(initState);
     }
 
-
+    handleBlur(e) {
+        var resolutionNo = this.agreement.councilNumber;
+        // commonApiGet("restapi", "councilresolutions", "", { resolutionNo, tenantId }, function (err, res) {
+        // if (res) {
+        // alert(res);
+        // }else{
+        // alert("Invalid CR number");
+        // this.agreement.councilNumber = "";
+        // }
+        // });
+        if(resolutionNo){
+        $.ajax({
+        url: baseUrl + "/council/councilresolution?councilResolutionNo="+ resolutionNo,
+        type:'GET',
+        dataType: 'json',
+        contentType: 'application/json;charset=utf-8',
+        headers: {
+        'auth-token': authToken
+        },
+        success: function (res1) { 
+            $('#alert-box').fadeIn(function(){
+                $("#alert-box-content").html("Preamble No : " + res1.preambleNumber +" Gist Of Preamble : "+ res1.gistOfPreamble);
+            });
+        },
+        error: function (err) {
+            $('#councilNumber').val("");
+                $('#alert-box').fadeIn(function(){
+                    $("#alert-box-content").html("Invalid CR number");
+                    });
+                }
+            })
+        }
+    }
     handleChange(e, name) {
 
         var _this = this;
@@ -918,7 +950,7 @@ class UpdateRemission extends React.Component {
 
     render() {
         var _this = this;
-        let { handleChange, handleChangeTwoLevel, addOrUpdate, printNotice, handleProcess } = this;
+        let { handleChange, handleChangeTwoLevel, addOrUpdate, printNotice, handleProcess,handleBlur} = this;
         let { agreement, remissionReasons, buttons } = this.state;
         let { allottee, asset, rentIncrementMethod, workflowDetails, cancellation,
             renewal, eviction, objection, judgement, remission, remarks, documents } = this.state.agreement;
@@ -1253,18 +1285,19 @@ class UpdateRemission extends React.Component {
                             <div className="col-sm-6">
                                 <div className="row">
                                     <div className="col-sm-6 label-text">
-                                        <label htmlFor="remissionOrder"> Order Number<span>*</span> </label>
+                                        <label htmlFor="remissionOrder">Council/standing committee Resolution Number<span>*</span> </label>
                                     </div>
                                     <div className="col-sm-6">
                                         <input type="text" name="remissionOrder" id="remissionOrder" disabled value={remission.remissionOrder}
-                                            onChange={(e) => { handleChangeTwoLevel(e, "remission", "remissionOrder") }} required />
+                                            onChange={(e) => { handleChangeTwoLevel(e, "remission", "remissionOrder") }} 
+                                            onBlur={(e)=>{handleBlur(e)}} required />
                                     </div>
                                 </div>
                             </div>
                             <div className="col-sm-6">
                                 <div className="row">
                                     <div className="col-sm-6 label-text">
-                                        <label htmlFor="remissionDate">Order Date<span>*</span> </label>
+                                        <label htmlFor="remissionDate">Council/standing committee Resolution Date<span>*</span> </label>
                                     </div>
                                     <div className="col-sm-6">
                                         <div className="text-no-ui">

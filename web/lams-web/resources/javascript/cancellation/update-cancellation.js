@@ -1244,7 +1244,7 @@ class UpdateCancellation extends React.Component {
                             <div className="col-sm-6">
                                 <div className="row">
                                     <div className="col-sm-6 label-text">
-                                        <label htmlFor="orderNo"> Order Number<span>*</span> </label>
+                                        <label htmlFor="orderNo">Council/standing committee Resolution Number<span>*</span> </label>
                                     </div>
                                     <div className="col-sm-6">
                                         <input type="text" name="orderNo" id="orderNo" value={cancellation.orderNo}
@@ -1255,7 +1255,7 @@ class UpdateCancellation extends React.Component {
                             <div className="col-sm-6">
                                 <div className="row">
                                     <div className="col-sm-6 label-text">
-                                        <label htmlFor="orderDate">Order Date<span>*</span> </label>
+                                        <label htmlFor="orderDate">Council/standing committee Resolution Date<span>*</span> </label>
                                     </div>
                                     <div className="col-sm-6">
                                         <div className="text-no-ui">

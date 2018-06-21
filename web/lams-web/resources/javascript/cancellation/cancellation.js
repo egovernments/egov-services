@@ -373,7 +373,29 @@ class CancellationAgreement extends React.Component {
     //   })
 
     // }
-
+    var resolutionNo = this.agreement.councilNumber;
+    if(resolutionNo){
+        $.ajax({
+            url: baseUrl + "/council/councilresolution?councilResolutionNo="+ resolutionNo,
+            type:'GET',
+            dataType: 'json',
+            contentType: 'application/json;charset=utf-8',
+            headers: {
+            'auth-token': authToken
+            },
+            success: function (res1) { 
+                $('#alert-box').fadeIn(function(){
+                    $("#alert-box-content").html("Preamble No : " + res1.preambleNumber +" Gist Of Preamble : "+ res1.gistOfPreamble);
+                });
+            },
+            error: function (err) {
+                $('#councilNumber').val("");
+                $('#alert-box').fadeIn(function(){
+                    $("#alert-box-content").html("Invalid CR number");
+                });
+            }
+        })
+    }    
   }
 
   handleChangeTwoLevel(e, pName, name) {
@@ -904,18 +926,18 @@ class CancellationAgreement extends React.Component {
               <div className="col-sm-6">
                 <div className="row">
                   <div className="col-sm-6 label-text">
-                    <label htmlFor="orderNo"> Council Resolution Number<span>*</span> </label>
+                    <label htmlFor="orderNo"> Council/standing committee Resolution Number<span>*</span> </label>
                   </div>
                   <div className="col-sm-6">
                     <input type="text" name="orderNo" id="orderNo" value={cancellation.orderNo} maxLength="15"
-                      onChange={(e) => { handleChangeTwoLevel(e, "cancellation", "orderNo") }} onBlur={(e)=>{handleBlur(e)}} required />
+                      onChange={(e) => {handleChangeTwoLevel(e, "cancellation", "orderNo") }} onBlur={(e)=>{handleBlur(e)}} required />
                   </div>
                 </div>
               </div>
               <div className="col-sm-6">
                 <div className="row">
                   <div className="col-sm-6 label-text">
-                    <label htmlFor="orderDate">Order Date<span>*</span> </label>
+                    <label htmlFor="orderDate">Council/standing committee Resolution Date<span>*</span> </label>
                   </div>
                   <div className="col-sm-6">
                     <div className="text-no-ui">
@@ -1067,7 +1089,6 @@ class CancellationAgreement extends React.Component {
             {renderAgreementDetails()}
             {renederCancelDetails()}
             {renderWorkFlowDetails()}
-
             <br />
             <div className="text-center">
               <button id="sub" type="submit" className="btn btn-submit">Submit</button>&nbsp;&nbsp;

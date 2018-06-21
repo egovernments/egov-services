@@ -122,6 +122,7 @@ class EvictionAgreement extends React.Component {
         this.addOrUpdate = this.addOrUpdate.bind(this);
         this.setInitialState = this.setInitialState.bind(this);
         this.getUsersFun = this.getUsersFun.bind(this);
+        this.handleBlur = this.handleBlur.bind(this);
     }
 
     setInitialState(initState) {
@@ -291,6 +292,41 @@ class EvictionAgreement extends React.Component {
 
         }
 
+    }
+
+    handleBlur(e) {
+    var resolutionNo = this.agreement.councilNumber;
+    // commonApiGet("restapi", "councilresolutions", "", { resolutionNo, tenantId }, function (err, res) {
+    // if (res) {
+    // alert(res);
+    // }else{
+    // alert("Invalid CR number");
+    // this.agreement.councilNumber = "";
+    // }
+    // });
+    if(resolutionNo){
+        $.ajax({
+        url: baseUrl + "/council/councilresolution?councilResolutionNo="+ resolutionNo,
+        type:'GET',
+        dataType: 'json',
+        contentType: 'application/json;charset=utf-8',
+        
+        headers: {
+        'auth-token': authToken
+        },
+        success: function (res1) { 
+        $('#alert-box').fadeIn(function(){
+            $("#alert-box-content").html("Preamble No : " + res1.preambleNumber +" Gist Of Preamble : "+ res1.gistOfPreamble);
+        });
+    },
+    error: function (err) {
+        $('#councilNumber').val("");
+            $('#alert-box').fadeIn(function(){
+                $("#alert-box-content").html("Invalid CR number");
+                });
+                }
+            })
+        }
     }
 
     handleChange(e, name) {
@@ -525,7 +561,7 @@ class EvictionAgreement extends React.Component {
 
     render() {
         var _this = this;
-        let { handleChange, handleChangeTwoLevel, addOrUpdate } = this;
+        let { handleChange, handleChangeTwoLevel, addOrUpdate,handleBlur } = this;
         let { agreement, evictionReasons } = this.state;
         let { allottee, asset, rentIncrementMethod, workflowDetails, cancellation,
             renewal, eviction, objection, judgement, remission, remarks, documents } = this.state.agreement;
@@ -857,20 +893,21 @@ class EvictionAgreement extends React.Component {
                             <div className="col-sm-6">
                                 <div className="row">
                                     <div className="col-sm-6 label-text">
-                                        <label for="evictionProceedingNumber">Eviction Proceeding Number
+                                        <label for="evictionProceedingNumber">Council/standing committee Resolution Number
                                        <span>*</span>
                                         </label>
                                     </div>
                                     <div className="col-sm-6">
                                         <input type="text" name="evictionProceedingNumber" id="evictionProceedingNumber" value={eviction.evictionProceedingNumber}
-                                            onChange={(e) => { handleChangeTwoLevel(e, "eviction", "evictionProceedingNumber") }} required />
+                                            onChange={(e) => { handleChangeTwoLevel(e, "eviction", "evictionProceedingNumber") }} 
+                                            onBlur={(e)=>handleBlur(e)} required />
                                     </div>
                                 </div>
                             </div>
                             <div className="col-sm-6">
                                 <div className="row">
                                     <div className="col-sm-6 label-text">
-                                        <label for="evictionProceedingDate">Eviction Proceeding Date
+                                        <label for="evictionProceedingDate">Council/standing committee Resolution Date
                                        <span>*</span>
                                         </label>
                                     </div>
@@ -886,7 +923,7 @@ class EvictionAgreement extends React.Component {
                         </div>
 
                         <div className="row">
-                            <div className="col-sm-6" id="courtReferenceNumber">
+                            <div className="col-sm-6" id="courtR.ferenceNumber">
                                 <div className="row">
                                     <div className="col-sm-6 label-text">
                                         <label for="courtReferenceNumber">Court Reference Number

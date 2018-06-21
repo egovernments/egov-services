@@ -291,7 +291,40 @@ class RenewalAgreement extends React.Component {
     }
 
   }
-
+  handleBlur(e) {
+    var resolutionNo = this.agreement.councilNumber;
+    // commonApiGet("restapi", "councilresolutions", "", { resolutionNo, tenantId }, function (err, res) {
+    // if (res) {
+    // alert(res);
+    // }else{
+    // alert("Invalid CR number");
+    // this.agreement.councilNumber = "";
+    // }
+    // });
+    if(resolutionNo){
+      $.ajax({
+      url: baseUrl + "/council/councilresolution?councilResolutionNo="+ resolutionNo,
+      type:'GET',
+      dataType: 'json',
+      contentType: 'application/json;charset=utf-8',
+      
+      headers: {
+      'auth-token': authToken
+    },
+    success: function (res1) { 
+      $('#alert-box').fadeIn(function(){
+        $("#alert-box-content").html("Preamble No : " + res1.preambleNumber +" Gist Of Preamble : "+ res1.gistOfPreamble);
+      });
+    },
+    error: function (err) {
+      $('#councilNumber').val("");
+        $('#alert-box').fadeIn(function(){
+          $("#alert-box-content").html("Invalid CR number");
+          });
+        }
+        })
+      }
+    }
   handleChange(e, name) {
 
     var _this = this;
@@ -921,20 +954,21 @@ class RenewalAgreement extends React.Component {
               <div className="col-sm-6">
                 <div className="row">
                   <div className="col-sm-6 label-text">
-                    <label for="renewalOrderNumber">Renewal Order Number
+                    <label for="renewalOrderNumber">Council/standing committee Resolution Number
                               <span>*</span>
                     </label>
                   </div>
                   <div className="col-sm-6">
                     <input type="text" name="renewalOrderNumber" id="renewalOrderNumber"
-                      onChange={(e) => { handleChangeTwoLevel(e, "renewal", "renewalOrderNumber") }} required />
+                      onChange={(e) => { handleChangeTwoLevel(e, "renewal", "renewalOrderNumber") }} 
+                      onBlur={(e) => handleBlur(e)} required />
                   </div>
                 </div>
               </div>
               <div className="col-sm-6">
                 <div className="row">
                   <div className="col-sm-6 label-text">
-                    <label for="renewalOrderDate">Renewal Order Date
+                    <label for="renewalOrderDate">Council/standing committee Resolution Date
                               <span>*</span>
                     </label>
                   </div>

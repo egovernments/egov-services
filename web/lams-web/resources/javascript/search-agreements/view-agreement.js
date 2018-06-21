@@ -146,6 +146,14 @@ $(document).ready(function() {
 
     function printNotice(agreement) {
 
+        var tenderDate;
+        
+        if(agreement.tenderDate === null){
+            tenderDate = "N/A";
+        }else{
+            tenderDate = agreement.tenderDate;
+        }
+
          var commDesignation = commonApiPost("hr-masters", "designations", "_search", {name:"Commissioner", active:true,tenantId }).responseJSON["Designation"];
          var commDesignationId = commDesignation[0].id;
          var commissioners =  commonApiPost("hr-employee", "employees", "_search", {
@@ -175,9 +183,9 @@ $(document).ready(function() {
         ];
 
         var rows1 = [
-            { "particulars": "Goodwill", "amount": agreement.goodWillAmount, "leaseHolderName": "" },
-            { "particulars": "3 Months Rental Deposits", "amount": agreement.securityDeposit, "leaseHolderName": "" },
-            { "particulars": "Total", "amount": Number(agreement.goodWillAmount) + Number(agreement.securityDeposit), "leaseHolderName": "" }
+            { "particulars": "Goodwill", "amount": agreement.goodWillAmount, "leaseHolderName":  agreement.name },
+            { "particulars": "3 Months Rental Deposits", "amount": agreement.securityDeposit, "leaseHolderName":  agreement.name },
+            { "particulars": "Total", "amount": Number(agreement.goodWillAmount) + Number(agreement.securityDeposit), "leaseHolderName": agreement.name }
         ];
 
 
@@ -246,7 +254,7 @@ $(document).ready(function() {
         var doc = new jsPDF();
 
         doc.setFontType("bold");
-        doc.setFontSize(13);
+        doc.setFontSize(12);
         doc.text(105, 20, "PROCEEDINGS OF THE COMMISSIONER, " + tenantId.split(".")[1].toUpperCase(), 'center');
         doc.text(105, 27, ulbType.toUpperCase(), 'center');
         doc.text(105, 34, "Present: "+ commissionerName, 'center');
@@ -261,28 +269,27 @@ $(document).ready(function() {
         doc.setFontType("bold");
         doc.text(146,50, agreement.agreementDate);
 
-        doc.fromHTML("Sub: Leases – Revenue Section – Shop No <b>" + agreement.referenceNumber + "</b> in <b>" + agreement.asset.name + "</b> Complex, <b> " + locality + "</b> <br> - Allotment of lease – Orders  - Issued",15, 60);
+        doc.fromHTML("Sub:Leases-Revenue Section-Shop No <b>"+ agreement.referenceNumber + "</b> in <b>" + agreement.asset.name + "</b> Complex, <b> " + locality + "</b> <br>-Allotment of lease - orders - Issued",15, 60);
 
-        doc.fromHTML("Ref: 1. Open Auction Notice dt. <b>" + agreement.tenderDate +"</b> of this office",15,80);
+        doc.fromHTML("Ref: 1. Open Auction Notice dt. <b>" + tenderDate +"</b> of this office",15,80);
 
         doc.fromHTML("2. Resolution No <b>" + agreement.councilNumber + "</b> dt <b>" + agreement.councilDate + "</b> of Municipal Council/Standing Committee",23,85);
 
-        doc.text(105, 95, "><><><", 'center');
+        doc.text(100, 98, "><><><", 'center');
 
         doc.text(15, 105, "Orders:");
         doc.setLineWidth(0.5);
         doc.line(15, 106, 28, 106);
 
-        doc.fromHTML("In the reference 1st cited, an Open Auction for leasing Shop No <b>" + agreement.referenceNumber + "</b> in <b>" + agreement.asset.name + "</b> <br>Shopping Complex was conducted and your bid for the highest amount (i.e. monthly rentals of Rs <b>" + agreement.rent + "/- </b> <br>and Goodwill amount of Rs <b>" + agreement.goodWillAmount + "/- </b> was accepted by the Municipal Council/Standing Committee vide <br>reference 2nd cited with the following deposit amounts as received by this office.",15, 115);
+        doc.fromHTML("In the reference 1st cited, an Open Auction for leasing Shop No <b>" + agreement.referenceNumber + "</b> in <b>" + agreement.asset.name + "</b> <br>Complex was conducted and your bid for the highest amount (i.e. monthly rentals of Rs <b>" + agreement.rent + "/- </b> <br>and Goodwill amount of Rs <b>" + agreement.goodWillAmount + "/- </b> was accepted by the Municipal Council/Standing Committee vide <br>reference 2nd cited with the following deposit amounts as received by this office.",15, 100);
 
         doc.autoTable(columns1, rows1, autoTableOptions1);
 
-        doc.fromHTML("In pursuance of the Municipal Council/Standing Committee resolution and vide GO MS No 56 (MA & UD <br> Department) dt. 05.02.2011, the said shop is allotted to you for the period <b>" + commencementDate + "</b> to <b>" + endDate + "</b> at <br> following rates of rentals and taxes thereon.",15, 175);
+        doc.fromHTML("In pursuance of the Municipal Council/Standing Committee resolution and vide GO MS No 56 (MA & UD <br> Department) dt. 05.02.2011, the said shop is allotted to you for the period <b>" + commencementDate + "</b> to <b>" + endDate + "</b> at <br> following rates of rentals and taxes thereon.",15, 167);
 
         doc.autoTable(columns2, rows2, autoTableOptions2);
 
-
-
+        doc.setFontType("normal");
         var paragraph3 = "The following terms and conditions are applicable for the renewal of lease."
 
             + "\n\t1. The leaseholder shall pay rent by 5th of the succeeding month"
@@ -296,7 +303,7 @@ $(document).ready(function() {
         var paragraph4 = "Hence you are requested to conclude an agreement duly registered with the SRO for the above mentioned lease within 15 days of receipt of this renewal letter without fail unless the renewal will stand cancelled without any further correspondence."
 
         var lines = doc.splitTextToSize(paragraph3, 180);
-        doc.text(15, 220, lines);
+        doc.text(15, 230, lines);
 
         doc.addPage();
         var paragraph4 = "Hence you are requested to conclude an agreement duly registered with the SRO for the above mentioned lease within 15 days of receipt of this allotment letter without fail unless the allotment will stand cancelled without any further correspondence."

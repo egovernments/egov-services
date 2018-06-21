@@ -230,6 +230,7 @@ public class AgreementRowMapper implements ResultSetExtractor<List<Agreement>> {
 			remission.setRemissionReason(reason);
 			remission.setRemissionOrder(rs.getString("remission_order_no"));
 			remission.setRemissionRent(rs.getDouble("remission_fee"));
+			remission.setRemissionDate(rs.getTimestamp("remission_order_date"));
 
 			agreement.setRemission(remission);
 			return agreement;

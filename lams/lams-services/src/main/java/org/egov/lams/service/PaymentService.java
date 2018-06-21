@@ -278,7 +278,9 @@ public class PaymentService {
 			billdetail.setPeriod(demandDetail.getTaxPeriod());
 			if (ADVANCE_TAX.equalsIgnoreCase(demandDetail.getTaxReason())) {
 				billdetail.setPurpose(purpose.get("ADVANCE_AMOUNT"));
-			} else if (SERVICE_TAX.equalsIgnoreCase(demandDetail.getTaxReason())) {
+			} else if (GOODWILL_AMOUNT.equalsIgnoreCase(demandDetail.getTaxReason())) {
+				billdetail.setPurpose(purpose.get("CURRENT_AMOUNT"));
+			}else if (SERVICE_TAX.equalsIgnoreCase(demandDetail.getTaxReason())) {
 				billdetail.setPurpose(purpose.get("SERVICETAX"));
 			} else if (CENTRAL_GST.equalsIgnoreCase(demandDetail.getTaxReason())
 					|| CGST_ON_ADVANCE.equalsIgnoreCase(demandDetail.getTaxReason())) {
@@ -287,7 +289,6 @@ public class PaymentService {
 					|| SGST_ON_ADVANCE.equalsIgnoreCase(demandDetail.getTaxReason())) {
 				billdetail.setPurpose(purpose.get("SG_SERVICETAX"));
 			} else if (demandDetail.getPeriodEndDate().compareTo(new Date()) < 0) {
-
 				if (RENT.equalsIgnoreCase(demandDetail.getTaxReason())) {
 					billdetail.setPurpose(purpose.get("ARREAR_AMOUNT"));
 				} else if (PENALTY.equalsIgnoreCase(demandDetail.getTaxReason())) {

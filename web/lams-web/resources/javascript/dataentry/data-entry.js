@@ -479,7 +479,7 @@ $(document).ready(function() {
     // });
     if(resolutionNo){
         $.ajax({
-            url: baseUrl + "/council/councilresolution?resolutionNo="+ resolutionNo,
+            url: baseUrl + "/council/councilresolution?councilResolutionNo="+ resolutionNo,
             type:'GET',
             dataType: 'json',
             contentType: 'application/json;charset=utf-8',

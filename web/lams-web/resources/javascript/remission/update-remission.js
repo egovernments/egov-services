@@ -1340,16 +1340,7 @@ class UpdateRemission extends React.Component {
                         </div>
                         <div className="row">
                             <div className="col-sm-6">
-                                <div className="row">
-                                    <div className="col-sm-6 label-text">
-                                        <label>Attach Document </label>
-                                    </div>
-                                    <div className="col-sm-6">
-                                        <div className="styled-file">
-                                            <input id="documents" name="documents" type="file" disabled onChange={(e) => { handleChange(e, "documents") }} multiple />
-                                        </div>
-                                    </div>
-                                </div>
+
                             </div>
                             <div className="col-sm-6">
                                 <div className="row">
@@ -1357,7 +1348,7 @@ class UpdateRemission extends React.Component {
                                         <label htmlFor="remarks">Remarks </label>
                                     </div>
                                     <div className="col-sm-6">
-                                        <textarea rows="4" cols="50" id="remarks" name="remarks" disabled value={remission.remarks}
+                                        <textarea rows="4" cols="50" id="remarks" name="remarks" disabled value={remarks}
                                             onChange={(e) => { handleChange(e, "remarks") }} ></textarea>
                                     </div>
                                 </div>

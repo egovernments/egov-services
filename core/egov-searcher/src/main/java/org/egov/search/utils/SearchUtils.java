@@ -59,9 +59,7 @@ public class SearchUtils {
 			queryString.append(" "+query.getSort());
 		}
 		finalQuery = queryString.toString().replace("$where", where.toString());
-		if(null != searchParam.getPagination()) {
-			finalQuery = finalQuery.replace("$pagination", paginationClause);
-		}
+		finalQuery = finalQuery.replace("$pagination", paginationClause);
 		
 		logger.info("Final Query: "+finalQuery);
 		
@@ -118,13 +116,14 @@ public class SearchUtils {
 		ObjectMapper mapper = new ObjectMapper();
 		Object limit = null;
 		Object offset = null;
-		try {
-			limit = JsonPath.read(mapper.writeValueAsString(searchRequest), pagination.getNoOfRecords());
-			offset = JsonPath.read(mapper.writeValueAsString(searchRequest), pagination.getOffset());
-		}catch(Exception e) {
-			logger.error("Error while fetching limit and offset", e);
+		if(null != pagination) {
+			try {
+				limit = JsonPath.read(mapper.writeValueAsString(searchRequest), pagination.getNoOfRecords());
+				offset = JsonPath.read(mapper.writeValueAsString(searchRequest), pagination.getOffset());
+			}catch(Exception e) {
+				logger.error("Error while fetching limit and offset", e);
+			}
 		}
-		
 		paginationClause.append(" LIMIT ").append((!StringUtils.isEmpty((null != limit) ? limit.toString() : null) ? limit.toString() : defaultPageSize))
 		.append(" OFFSET ").append((!StringUtils.isEmpty((null != offset) ? offset.toString() : null) ? offset.toString() : defaultOffset));		
 		

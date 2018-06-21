@@ -3,6 +3,7 @@ package org.egov.lams.repository.helper;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -24,6 +25,8 @@ import org.springframework.stereotype.Component;
 public class DemandHelper {
 
 	public static final Logger logger = LoggerFactory.getLogger(AgreementService.class);
+	
+	private static final List<String> GST_REASONS = Arrays.asList("ADV_CGST", "ADV_SGST", "CENTRAL_GST", "STATE_GST");
 
 	@Autowired
 	private PropertiesManager propertiesManager;
@@ -54,7 +57,7 @@ public class DemandHelper {
 		urlParams.append("&taxPeriod=" + agreement.getTimePeriod());
 		urlParams.append("&fromDate=" + DateFormatUtils.format(fromDate, "dd/MM/yyyy"));
 		urlParams.append("&installmentType=" + agreement.getPaymentCycle().toString());
-		if ("STATE_GST".equalsIgnoreCase(taxReason) || "CENTRAL_GST".equalsIgnoreCase(taxReason)) {
+		if (GST_REASONS.stream().anyMatch(reason -> reason.equalsIgnoreCase(taxReason))) {
 			urlParams.append("&taxCategory=GST");
 		} else if ("SERVICE_TAX".equalsIgnoreCase(taxReason)) {
 			urlParams.append("&taxCategory=SERVICETAX");

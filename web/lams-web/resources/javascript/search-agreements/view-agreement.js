@@ -497,7 +497,7 @@ $(document).ready(function() {
                 asOnDate: moment(new Date()).format("DD/MM/YYYY")
             }).responseJSON["Employee"] || [];
 
-
+            $(`#approverPositionId`).html(`<option value=''>select employee</option>`);
 
             for (var i = 0; i < employees.length; i++) {
                 $(`#approverPositionId`).append(`<option value='${employees[i]['id']}'>${employees[i]['name']}</option>`)

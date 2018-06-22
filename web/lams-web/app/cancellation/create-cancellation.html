@@ -98,7 +98,6 @@
         }
     </style>
 
-
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
@@ -179,7 +178,7 @@
         </header>
 
         <!-- Multi level menu content -->
-        <div class="home-container" style="border:solid blue">
+        <div class="home-container">
             <div id="alert-box">
                 <div class="alert-box-panel">
                     <p id="alert-box-content"></p>
@@ -227,6 +226,9 @@
         $('.hidden-xs.menu-responsive').mouseout(function(event) {
             $('.menu-responsive > ul').css('display', 'none')
         });
+        $("#alert-box-close").click(function(){
+            $('#alert-box').hide();
+        })
     </script>
 </body>
 

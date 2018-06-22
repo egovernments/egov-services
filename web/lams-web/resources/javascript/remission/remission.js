@@ -129,15 +129,13 @@ class RemissionAgreement extends React.Component {
         this.update = this.update.bind(this);
         this.setInitialState = this.setInitialState.bind(this);
         this.getUsersFun = this.getUsersFun.bind(this);
-
+        this.onBlur = this.onBlur.bind(this);
     }
 
     setInitialState(initState) {
         this.setState(initState);
     }
-
     close() {
-
         open(location, '_self').close();
     }
 
@@ -332,6 +330,36 @@ class RemissionAgreement extends React.Component {
 
         }
 
+    }
+    onBlur(value){
+        var resolutionNo = value;
+        if(resolutionNo){
+            $.ajax({
+                url: baseUrl + "/council/councilresolution?councilResolutionNo="+ resolutionNo,
+                type:'GET',
+                dataType: 'json',
+                contentType: 'application/json;charset=utf-8',
+                headers: {
+                'auth-token': authToken
+                },
+                success: function (res1) { 
+                    $('#alert-box').fadeIn(function(){
+                        if(res1.preambleNumber !== null){
+                            $("#alert-box-content").html("Preamble No : " + res1.preambleNumber +" Gist Of Preamble : "+ res1.gistOfPreamble);
+                        }
+                        if(res1.preambleNumber === null){
+                            $("#alert-box-content").html("Invalid CR number");
+                        }     
+                    });
+                },
+                error: function (err) {
+                    $('#councilNumber').val("");
+                    $('#alert-box').fadeIn(function(){
+                        $("#alert-box-content").html("Invalid CR number");
+                    });
+                }
+            })
+        } 
     }
 
     handleChange(e, name) {
@@ -594,7 +622,7 @@ class RemissionAgreement extends React.Component {
 
     render() {
         var _this = this;
-        let { handleChange, handleChangeTwoLevel, update } = this;
+        let { handleChange, handleChangeTwoLevel, update,onBlur } = this;
         let { agreement, remissionReasons } = this.state;
         let { allottee, asset, rentIncrementMethod, cancellation, workflowDetails,
             renewal, eviction, objection, judgement, remission, remarks, documents } = this.state.agreement;
@@ -926,18 +954,19 @@ class RemissionAgreement extends React.Component {
                             <div className="col-sm-6">
                                 <div className="row">
                                     <div className="col-sm-6 label-text">
-                                        <label htmlFor="remissionOrder"> Order Number<span>*</span> </label>
+                                        <label htmlFor="remissionOrder">Council/standing committee Resolution Number<span>*</span> </label>
                                     </div>
                                     <div className="col-sm-6">
                                         <input type="text" name="remissionOrder" id="remissionOrder"
-                                            onChange={(e) => { handleChangeTwoLevel(e, "remission", "remissionOrder") }} required />
+                                            onChange={(e) => { handleChangeTwoLevel(e, "remission", "remissionOrder") }}
+                                            onBlur={(e)=>onBlur(e.target.value)} required />
                                     </div>
                                 </div>
                             </div>
                             <div className="col-sm-6">
                                 <div className="row">
                                     <div className="col-sm-6 label-text">
-                                        <label htmlFor="remissionDate">Order Date<span>*</span> </label>
+                                        <label htmlFor="remissionDate">Council/standing committee Resolution Date<span>*</span> </label>
                                     </div>
                                     <div className="col-sm-6">
                                         <div className="text-no-ui">

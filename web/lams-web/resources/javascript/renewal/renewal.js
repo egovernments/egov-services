@@ -128,6 +128,7 @@ class RenewalAgreement extends React.Component {
     this.addOrUpdate = this.addOrUpdate.bind(this);
     this.setInitialState = this.setInitialState.bind(this);
     this.getUsersFun = this.getUsersFun.bind(this);
+    this.onBlur = this.onBlur.bind(this);
   }
 
   setInitialState(initState) {
@@ -291,40 +292,34 @@ class RenewalAgreement extends React.Component {
     }
 
   }
-  handleBlur(e) {
-    var resolutionNo = this.agreement.councilNumber;
-    // commonApiGet("restapi", "councilresolutions", "", { resolutionNo, tenantId }, function (err, res) {
-    // if (res) {
-    // alert(res);
-    // }else{
-    // alert("Invalid CR number");
-    // this.agreement.councilNumber = "";
-    // }
-    // });
+  onBlur(value){
+    var resolutionNo = value;
     if(resolutionNo){
-      $.ajax({
-      url: baseUrl + "/council/councilresolution?councilResolutionNo="+ resolutionNo,
-      type:'GET',
-      dataType: 'json',
-      contentType: 'application/json;charset=utf-8',
-      
-      headers: {
-      'auth-token': authToken
-    },
-    success: function (res1) { 
-      $('#alert-box').fadeIn(function(){
-        $("#alert-box-content").html("Preamble No : " + res1.preambleNumber +" Gist Of Preamble : "+ res1.gistOfPreamble);
-      });
-    },
-    error: function (err) {
-      $('#councilNumber').val("");
-        $('#alert-box').fadeIn(function(){
-          $("#alert-box-content").html("Invalid CR number");
-          });
-        }
+        $.ajax({
+            url: baseUrl + "/council/councilresolution?councilResolutionNo="+ resolutionNo,
+            type:'GET',
+            dataType: 'json',
+            contentType: 'application/json;charset=utf-8',
+            headers: {
+            'auth-token': authToken
+            },
+            success: function (res1) { 
+                if(res1.preambleNumber !== null){
+                  $("#alert-box-content").html("Preamble No : " + res1.preambleNumber +" Gist Of Preamble : "+ res1.gistOfPreamble);
+                }
+                if(res1.preambleNumber === null){
+                    $("#alert-box-content").html("Invalid CR number");
+                }   
+            },
+            error: function (err) {
+                $('#councilNumber').val("");
+                $('#alert-box').fadeIn(function(){
+                    $("#alert-box-content").html("Invalid CR number");
+                });
+            }
         })
-      }
-    }
+    } 
+  }
   handleChange(e, name) {
 
     var _this = this;
@@ -610,7 +605,7 @@ class RenewalAgreement extends React.Component {
 
   render() {
     var _this = this;
-    let { handleChange, handleChangeTwoLevel, addOrUpdate } = this;
+    let { handleChange, handleChangeTwoLevel, addOrUpdate,onBlur} = this;
     let { agreement, renewalReasons, rentInc, minRent } = _this.state;
     let { allottee, asset, rentIncrementMethod, workflowDetails, cancellation,
       renewal, eviction, objection, judgement, remission, remarks, documents } = this.state.agreement;
@@ -961,7 +956,7 @@ class RenewalAgreement extends React.Component {
                   <div className="col-sm-6">
                     <input type="text" name="renewalOrderNumber" id="renewalOrderNumber"
                       onChange={(e) => { handleChangeTwoLevel(e, "renewal", "renewalOrderNumber") }} 
-                      onBlur={(e) => handleBlur(e)} required />
+                      onBlur={(e)=>onBlur(e.target.value)} required />
                   </div>
                 </div>
               </div>

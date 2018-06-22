@@ -70,6 +70,34 @@
             padding-right: 10px;
             margin-bottom: 0px;
         }
+        #alert-box{
+            width:100%;
+            height:100%;
+            background-color: rgba(0,0,0,0.4);
+            position: fixed;
+            z-index:10;
+            display: none;
+        }
+        .alert-box-panel{
+            padding:10px 5px;
+            border:solid 1px #f68f31;
+            width:30%;
+            height:17%;
+            left:35%;
+            top:35%;
+            position:fixed;
+            background-color:#f2f2f2;
+            border-radius:4px;
+        }
+        .alert-box-panel p{
+            text-align:center;
+            height:70%;
+            padding:10px;
+        }
+        .alert-box-panel button{
+            float:center;
+            margin-left:44%;
+        }
     </style>
 
 
@@ -222,6 +250,12 @@
 
         <!-- Multi level menu content -->
         <div class="home-container">
+            <div id="alert-box">
+                <div class="alert-box-panel">
+                    <p id="alert-box-content"></p>
+                    <button type="button" id="alert-box-close" class="btn btn-submit">Close</button> 
+                </div>
+            </div>
             <!-- <div id="menu" class="homepage" style="min-height: 242px; width: 250px; height: 242px; min-width: 250px;"></div> -->
             <div class="inline-main-content" style="width:100%">
                 <div class="row main-space" id="worklist">
@@ -272,6 +306,9 @@
         $('.hidden-xs.menu-responsive').mouseout(function(event) {
             $('.menu-responsive > ul').css('display', 'none')
         });
+        $("#alert-box-close").click(function(){
+            $('#alert-box').hide();
+        })
     </script>
 </body>
 

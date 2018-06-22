@@ -127,7 +127,7 @@ class CancellationAgreement extends React.Component {
     this.addOrUpdate = this.addOrUpdate.bind(this);
     this.setInitialState = this.setInitialState.bind(this);
     this.getUsersFun = this.getUsersFun.bind(this);
-    this.handleBlur = this.handleBlur.bind(this);
+    this.onBlur = this.onBlur.bind();
   }
 
 
@@ -348,7 +348,7 @@ class CancellationAgreement extends React.Component {
     }
   }
 
-  handleBlur(e) {
+  onBlur(value){
     // setTimeout(function(){
     //    if(document.activeElement.id == "sub") {
     //       $("#sub").click();
@@ -373,7 +373,8 @@ class CancellationAgreement extends React.Component {
     //   })
 
     // }
-    var resolutionNo = this.agreement.councilNumber;
+    //var resolutionNo = this.agreement.councilNumber;
+    var resolutionNo = value;
     if(resolutionNo){
         $.ajax({
             url: baseUrl + "/council/councilresolution?councilResolutionNo="+ resolutionNo,
@@ -383,10 +384,13 @@ class CancellationAgreement extends React.Component {
             headers: {
             'auth-token': authToken
             },
-            success: function (res1) { 
-                $('#alert-box').fadeIn(function(){
+            success: function (res1) {
+                if(res1.preambleNumber !== null){
                     $("#alert-box-content").html("Preamble No : " + res1.preambleNumber +" Gist Of Preamble : "+ res1.gistOfPreamble);
-                });
+                }
+                if(res1.preambleNumber === null){
+                    $("#alert-box-content").html("Invalid CR number");
+                }   
             },
             error: function (err) {
                 $('#councilNumber').val("");
@@ -395,9 +399,9 @@ class CancellationAgreement extends React.Component {
                 });
             }
         })
-    }    
+    } 
   }
-
+  
   handleChangeTwoLevel(e, pName, name) {
 
     var _this = this;
@@ -594,7 +598,7 @@ class CancellationAgreement extends React.Component {
 
   render() {
     var _this = this;
-    let { handleChange, handleChangeTwoLevel, addOrUpdate, handleBlur } = this;
+    let { handleChange, handleChangeTwoLevel, addOrUpdate,onBlur} = this;
     let { agreement, cancelReasons } = this.state;
     let { allottee, asset, rentIncrementMethod, workflowDetails, cancellation,
       renewal, eviction, objection, judgement, remission, remarks, documents } = this.state.agreement;
@@ -930,7 +934,8 @@ class CancellationAgreement extends React.Component {
                   </div>
                   <div className="col-sm-6">
                     <input type="text" name="orderNo" id="orderNo" value={cancellation.orderNo} maxLength="15"
-                      onChange={(e) => {handleChangeTwoLevel(e, "cancellation", "orderNo") }} onBlur={(e)=>{handleBlur(e)}} required />
+                      onChange={(e) => {handleChangeTwoLevel(e, "cancellation", "orderNo")}} 
+                      onBlur={(e)=>onBlur(e.target.value)} required />
                   </div>
                 </div>
               </div>

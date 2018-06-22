@@ -467,7 +467,7 @@ $(document).ready(function() {
    }
  }
 
- function handleBlur(e) {
+function handleBlur(e) {
     var resolutionNo = this.agreement.councilNumber;
     // commonApiGet("restapi", "councilresolutions", "", { resolutionNo, tenantId }, function (err, res) {
     //     if (res) {
@@ -487,9 +487,16 @@ $(document).ready(function() {
             'auth-token': authToken
             },
             success: function (res1) { 
-                $('#alert-box').fadeIn(function(){
-                    $("#alert-box-content").html("Preamble No : " + res1.preambleNumber +" Gist Of Preamble : "+ res1.gistOfPreamble);
-                });
+                if(res1.preambleNumber !== null){
+                    $('#alert-box').fadeIn(function(){
+                        $("#alert-box-content").html("Preamble No : " + res1.preambleNumber +" Gist Of Preamble : "+ res1.gistOfPreamble);
+                    })
+                }
+                if(res1.preambleNumber === null){
+                    $('#alert-box').fadeIn(function(){
+                        $("#alert-box-content").html("Invalid CR number");
+                    });
+                }   
             },
             error: function (err) {
                 $('#councilNumber').val("");

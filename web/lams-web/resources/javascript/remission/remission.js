@@ -345,11 +345,15 @@ class RemissionAgreement extends React.Component {
                 success: function (res1) { 
                     $('#alert-box').fadeIn(function(){
                         if(res1.preambleNumber !== null){
-                            $("#alert-box-content").html("Preamble No : " + res1.preambleNumber +" Gist Of Preamble : "+ res1.gistOfPreamble);
+                            $('#alert-box').fadeIn(function(){
+                                $("#alert-box-content").html("Preamble No : " + res1.preambleNumber +" Gist Of Preamble : "+ res1.gistOfPreamble);
+                            })
                         }
                         if(res1.preambleNumber === null){
-                            $("#alert-box-content").html("Invalid CR number");
-                        }     
+                            $('#alert-box').fadeIn(function(){
+                                $("#alert-box-content").html("Invalid CR number");
+                            });
+                        }        
                     });
                 },
                 error: function (err) {

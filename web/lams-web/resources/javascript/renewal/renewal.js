@@ -304,12 +304,16 @@ class RenewalAgreement extends React.Component {
             'auth-token': authToken
             },
             success: function (res1) { 
-                if(res1.preambleNumber !== null){
+              if(res1.preambleNumber !== null){
+                $('#alert-box').fadeIn(function(){
                   $("#alert-box-content").html("Preamble No : " + res1.preambleNumber +" Gist Of Preamble : "+ res1.gistOfPreamble);
-                }
-                if(res1.preambleNumber === null){
-                    $("#alert-box-content").html("Invalid CR number");
-                }   
+                })
+              }
+              if(res1.preambleNumber === null){
+                $('#alert-box').fadeIn(function(){
+                  $("#alert-box-content").html("Invalid CR number");
+                });
+              }    
             },
             error: function (err) {
                 $('#councilNumber').val("");

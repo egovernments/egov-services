@@ -21,6 +21,7 @@ import org.egov.lams.contract.Value;
 import org.egov.lams.model.Agreement;
 import org.egov.lams.model.WorkflowDetails;
 import org.egov.lams.model.enums.Action;
+import org.egov.lams.model.enums.Status;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -204,6 +205,8 @@ public class WorkflowRepository {
 					&& agreement.getIsAdvancePaid()
 					&& propertiesManager.getAgreementStatusRejected().equalsIgnoreCase(agreement.getStatus().toString())
 					&& agreement.getAction().equals(Action.CREATE)) {
+				
+				agreement.setStatus(Status.WORKFLOW);
 
 				task.setStatus(propertiesManager.getWfStatusAssistantApproved());
 				LOGGER.info("updating the task status for reject-forward case after payment : ", task.getStatus());

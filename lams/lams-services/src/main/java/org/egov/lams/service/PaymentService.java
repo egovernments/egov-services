@@ -72,6 +72,8 @@ public class PaymentService {
 	private static final String STATE_GST = "SGST";
 	private static final String CGST_ON_ADVANCE = "CGST On Adavance";
 	private static final String SGST_ON_ADVANCE = "SGST On Advance";
+	private static final String CGST_ON_GOODWILL = "CGST On GoodWill";
+	private static final String SGST_ON_GOODWILL = "SGST On GoodWill";
 	private static final String ADVANCE_COLLECTION = "Advance Collection";
 
 	@Autowired
@@ -283,10 +285,12 @@ public class PaymentService {
 			}else if (SERVICE_TAX.equalsIgnoreCase(demandDetail.getTaxReason())) {
 				billdetail.setPurpose(purpose.get("SERVICETAX"));
 			} else if (CENTRAL_GST.equalsIgnoreCase(demandDetail.getTaxReason())
-					|| CGST_ON_ADVANCE.equalsIgnoreCase(demandDetail.getTaxReason())) {
+					|| CGST_ON_ADVANCE.equalsIgnoreCase(demandDetail.getTaxReason())
+					|| CGST_ON_GOODWILL.equalsIgnoreCase(demandDetail.getTaxReason())) {
 				billdetail.setPurpose(purpose.get("CG_SERVICETAX"));
 			} else if (STATE_GST.equalsIgnoreCase(demandDetail.getTaxReason())
-					|| SGST_ON_ADVANCE.equalsIgnoreCase(demandDetail.getTaxReason())) {
+					|| SGST_ON_ADVANCE.equalsIgnoreCase(demandDetail.getTaxReason())
+					|| SGST_ON_GOODWILL.equalsIgnoreCase(demandDetail.getTaxReason())) {
 				billdetail.setPurpose(purpose.get("SG_SERVICETAX"));
 			} else if (demandDetail.getPeriodEndDate().compareTo(new Date()) < 0) {
 				if (RENT.equalsIgnoreCase(demandDetail.getTaxReason())) {
@@ -589,6 +593,12 @@ public class PaymentService {
 			}
 			if (demandReasonMap.containsKey("GOODWILL_AMOUNT")) {
 				demandDetailsSet.add(demandReasonMap.get("GOODWILL_AMOUNT"));
+			}
+			if (demandReasonMap.containsKey("GW_CGST")) {
+				demandDetailsSet.add(demandReasonMap.get("GW_CGST"));
+			}
+			if (demandReasonMap.containsKey("GW_SGST")) {
+				demandDetailsSet.add(demandReasonMap.get("GW_SGST"));
 			}
 			if (demandReasonMap.containsKey("RENT")) {
 				demandDetailsSet.add(demandReasonMap.get("RENT"));

@@ -80,6 +80,12 @@ public class PropertiesManager {
 	@Value("${egov.services.demand_service.taxreasonsgstonadvance}")
 	private String taxReasonSGSTOnAdvance;
 	
+	@Value("${egov.services.demand_service.taxreasoncgstongoodwill}")
+	private String taxReasonCGSTOnGoodwill;
+	
+	@Value("${egov.services.demand_service.taxreasonsgstongoodwill}")
+	private String taxReasonSGSTOnGoodwill;
+	
 	@Value("${kafka.topics.start.workflow}")
 	private String startWorkflowTopic;
 	

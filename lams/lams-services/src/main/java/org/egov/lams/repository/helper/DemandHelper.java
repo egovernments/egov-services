@@ -26,7 +26,7 @@ public class DemandHelper {
 
 	public static final Logger logger = LoggerFactory.getLogger(AgreementService.class);
 	
-	private static final List<String> GST_REASONS = Arrays.asList("ADV_CGST", "ADV_SGST", "CENTRAL_GST", "STATE_GST");
+	private static final List<String> GST_REASONS = Arrays.asList("ADV_CGST", "ADV_SGST","GW_CGST", "GW_SGST", "CENTRAL_GST", "STATE_GST");
 
 	@Autowired
 	private PropertiesManager propertiesManager;

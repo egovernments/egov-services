@@ -202,12 +202,8 @@ public class WorkflowRepository {
 
 			task.setAction(workflowDetails.getAction());
 			if (propertiesManager.getWfStatusRejected().equalsIgnoreCase(workflowDetails.getStatus())
-					&& agreement.getIsAdvancePaid()
-					&& propertiesManager.getAgreementStatusRejected().equalsIgnoreCase(agreement.getStatus().toString())
-					&& agreement.getAction().equals(Action.CREATE)) {
+					&& agreement.getIsAdvancePaid() && agreement.getAction().equals(Action.CREATE)) {
 				
-				agreement.setStatus(Status.WORKFLOW);
-
 				task.setStatus(propertiesManager.getWfStatusAssistantApproved());
 				LOGGER.info("updating the task status for reject-forward case after payment : ", task.getStatus());
 			} else {

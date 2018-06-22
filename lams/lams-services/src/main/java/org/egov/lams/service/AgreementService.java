@@ -56,6 +56,7 @@ public class AgreementService {
 	public static final String WF_ACTION_APPROVE = "Approve";
 	public static final String WF_ACTION_REJECT = "Reject";
 	public static final String WF_ACTION_CANCEL = "Cancel";
+	public static final String WF_ACTION_FORWARD = "Forward";
 	public static final String WF_ACTION_PRINT_NOTICE = "Print Notice";
 	public static final String START_WORKFLOW = "START_WORKFLOW";
 	public static final String UPDATE_WORKFLOW = "UPDATE_WORKFLOW";
@@ -369,6 +370,8 @@ public class AgreementService {
 					List<Demand> demands =demandService.prepareDemands(agreementRequest);
 					updateDemand(agreement.getDemands(),demands,
 							agreementRequest.getRequestInfo());
+				} else if (WF_ACTION_FORWARD.equalsIgnoreCase(workFlowDetails.getAction())) {
+					agreement.setStatus(Status.WORKFLOW);
 				} else if (WF_ACTION_REJECT.equalsIgnoreCase(workFlowDetails.getAction())) {
 					agreement.setStatus(Status.REJECTED);
 				} else if (WF_ACTION_CANCEL.equalsIgnoreCase(workFlowDetails.getAction())) {

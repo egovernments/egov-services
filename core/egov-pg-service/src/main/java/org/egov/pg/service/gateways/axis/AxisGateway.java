@@ -1,5 +1,6 @@
 package org.egov.pg.service.gateways.axis;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.egov.pg.models.Transaction;
 import org.egov.pg.service.Gateway;
@@ -11,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
+import org.springframework.util.StringUtils;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponents;
@@ -48,6 +50,7 @@ public class AxisGateway implements Gateway {
     private final String CURRENCY;
 
     private final RestTemplate restTemplate;
+    private ObjectMapper objectMapper;
 
     private final boolean ACTIVE;
 
@@ -58,8 +61,9 @@ public class AxisGateway implements Gateway {
      * @param environment containing all required config parameters
      */
     @Autowired
-    public AxisGateway(RestTemplate restTemplate, Environment environment) {
+    public AxisGateway(RestTemplate restTemplate, Environment environment, ObjectMapper objectMapper) {
         this.restTemplate = restTemplate;
+        this.objectMapper = objectMapper;
 
         ACTIVE = Boolean.valueOf(environment.getRequiredProperty("axis.active"));
         CURRENCY = environment.getRequiredProperty("axis.currency");
@@ -107,6 +111,41 @@ public class AxisGateway implements Gateway {
 
     @Override
     public Transaction fetchStatus(Transaction currentStatus, Map<String, String> params) {
+        String checksum = params.get("vpc_SecureHash");
+        params.remove("vpc_SecureHash");
+        params.remove("vpc_SecureHashType");
+
+        if (!StringUtils.isEmpty(checksum)) {
+            if (checksum.equals(AxisUtils.SHAhashAllFields(params, SECURE_SECRET))) {
+                MultiValueMap<String, String> resp = new LinkedMultiValueMap<>();
+                params.forEach(resp::add);
+                Transaction txn = transformRawResponse(resp, currentStatus);
+                if (txn.getTxnStatus().equals(Transaction.TxnStatusEnum.PENDING) || txn.getTxnStatus().equals(Transaction.TxnStatusEnum.FAILURE)) {
+                    return txn;
+                }
+            }
+        }
+
+        return fetchStatusFromGateway(currentStatus);
+
+    }
+
+    @Override
+    public boolean isActive() {
+        return ACTIVE;
+    }
+
+    @Override
+    public String gatewayName() {
+        return GATEWAY_NAME;
+    }
+
+    @Override
+    public String transactionIdKeyInResponse() {
+        return "vpc_MerchTxnRef";
+    }
+
+    private Transaction fetchStatusFromGateway(Transaction currentStatus) {
         Map<String, String> fields = new HashMap<>();
         fields.put("vpc_Version", VPC_VERSION);
         fields.put("vpc_Command", VPC_COMMAND_STATUS);
@@ -127,7 +166,6 @@ public class AxisGateway implements Gateway {
 
             log.info(response.getBody());
 
-
             Map<String, List<String>> responseParams = AxisUtils.splitQuery(response.getBody());
 
             log.info(responseParams.toString());
@@ -137,22 +175,6 @@ public class AxisGateway implements Gateway {
             log.error("Unable to fetch status from payment gateway for txnid: "+ currentStatus.getTxnId(), e);
             throw new ServiceCallException("Error occurred while fetching status from payment gateway");
         }
-
-    }
-
-    @Override
-    public boolean isActive() {
-        return ACTIVE;
-    }
-
-    @Override
-    public String gatewayName() {
-        return GATEWAY_NAME;
-    }
-
-    @Override
-    public String transactionIdKeyInResponse() {
-        return "vpc_MerchTxnRef";
     }
 
     private Transaction transformRawResponse(Map<String, List<String>> resp, Transaction currentStatus) {
@@ -257,22 +279,34 @@ public class AxisGateway implements Gateway {
                 break;
         }
 
-        if (Integer.valueOf(respCode) == 0)
+        if (respCode.equalsIgnoreCase("0")) {
             status = Transaction.TxnStatusEnum.SUCCESS;
-        else
+            return Transaction.builder()
+                    .txnId(currentStatus.getTxnId())
+                    .txnAmount(Utils.convertPaiseToRupee(resp.get("vpc_Amount").get(0)))
+                    .txnStatus(status)
+                    .gatewayTxnId(resp.get("vpc_TransactionNo").get(0))
+                    .gatewayPaymentMode(resp.get("vpc_Card").get(0))
+                    .gatewayStatusCode(respCode)
+                    .gatewayStatusMsg(respMsg)
+                    .lastModifiedTime(System.currentTimeMillis())
+                    .responseJson(resp)
+                    .build();
+        } else {
             status = Transaction.TxnStatusEnum.FAILURE;
+            return Transaction.builder()
+                    .txnId(currentStatus.getTxnId())
+                    .txnAmount(Utils.convertPaiseToRupee(resp.get("vpc_Amount").get(0)))
+                    .txnStatus(status)
+                    .gatewayTxnId(resp.get("vpc_TransactionNo").get(0))
+                    .gatewayStatusCode(respCode)
+                    .gatewayStatusMsg(respMsg)
+                    .lastModifiedTime(System.currentTimeMillis())
+                    .responseJson(resp)
+                    .build();
+        }
 
-        return Transaction.builder()
-                .txnId(currentStatus.getTxnId())
-                .txnAmount(Utils.convertPaiseToRupee(resp.get("vpc_Amount").get(0)))
-                .txnStatus(status)
-                .gatewayTxnId(resp.get("vpc_TransactionNo").get(0))
-                .gatewayPaymentMode(resp.get("vpc_Card").get(0))
-                .gatewayStatusCode(respCode)
-                .gatewayStatusMsg(respMsg)
-                .lastModifiedTime(System.currentTimeMillis())
-                .responseJson(resp)
-                .build();
+
     }
 
 }

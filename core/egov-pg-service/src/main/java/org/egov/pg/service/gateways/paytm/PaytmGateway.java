@@ -1,5 +1,6 @@
 package org.egov.pg.service.gateways.paytm;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.paytm.pg.merchant.CheckSumServiceHelper;
 import lombok.extern.slf4j.Slf4j;
 import org.egov.pg.models.Transaction;
@@ -15,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
+import org.springframework.util.StringUtils;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponents;
@@ -41,10 +43,12 @@ public class PaytmGateway implements Gateway {
     private final boolean ACTIVE;
 
     private RestTemplate restTemplate;
+    private ObjectMapper objectMapper;
 
     @Autowired
-    public PaytmGateway(RestTemplate restTemplate, Environment environment) {
+    public PaytmGateway(RestTemplate restTemplate, Environment environment, ObjectMapper objectMapper) {
         this.restTemplate = restTemplate;
+        this.objectMapper = objectMapper;
 
         ACTIVE = Boolean.valueOf(environment.getRequiredProperty("paytm.active"));
         MID = environment.getRequiredProperty("paytm.merchant.id");
@@ -92,31 +96,29 @@ public class PaytmGateway implements Gateway {
 
     @Override
     public Transaction fetchStatus(Transaction currentStatus, Map<String, String> params) {
-        TreeMap<String, String> treeMap = new TreeMap<String, String>();
-        treeMap.put("MID", MID);
-        treeMap.put("ORDER_ID", currentStatus.getTxnId());
-
-        try {
-            String checkSum = CheckSumServiceHelper.getCheckSumServiceHelper().genrateCheckSum(MERCHANT_KEY, treeMap);
-            treeMap.put("CHECKSUMHASH", checkSum);
-
-            HttpHeaders httpHeaders = new HttpHeaders();
-            httpHeaders.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON.toString());
-
-            HttpEntity<Map<String, String>> httpEntity = new HttpEntity<>(treeMap, httpHeaders);
-
-            ResponseEntity<PaytmResponse> response = restTemplate.postForEntity(MERCHANT_URL_STATUS, httpEntity,
-                    PaytmResponse.class);
-
-            return transformRawResponse(response.getBody(), currentStatus);
-
-        } catch (RestClientException e) {
-            log.error("Unable to fetch status from Paytm gateway", e);
-            throw new CustomException("UNABLE_TO_FETCH_STATUS", "Unable to fetch status from Paytm gateway");
-        } catch (Exception e) {
-            log.error("Paytm Checksum generation failed", e);
-            throw new CustomException("CHECKSUM_GEN_FAILED", "Hash generation failed, gateway redirect URI cannot be generated");
+        String checksum = params.get("CHECKSUMHASH");
+        params.remove("CHECKSUMHASH");
+        if (!StringUtils.isEmpty(params.get(transactionIdKeyInResponse())) && !StringUtils.isEmpty(params.get("MID")) && !StringUtils.isEmpty(checksum)) {
+            TreeMap<String, String> treeMap = new TreeMap<>(params);
+            try {
+                boolean valid = CheckSumServiceHelper.getCheckSumServiceHelper().verifycheckSum(MERCHANT_KEY, treeMap,
+                        checksum);
+                if (valid) {
+                    PaytmResponse response = objectMapper.convertValue(params, PaytmResponse.class);
+                    Transaction txn = transformRawResponse(response, currentStatus);
+                    if (txn.getTxnStatus().equals(Transaction.TxnStatusEnum.PENDING) ||
+                            txn.getTxnStatus().equals(Transaction.TxnStatusEnum.FAILURE))
+                        return txn;
+                }
+            } catch (Exception e) {
+                log.error("Paytm Response Checksum verification failed", e);
+                throw new CustomException("CHECKSUM_VERIFICATION_FAILED", "Hash verification failed");
+            }
         }
+
+
+        return fetchStatusFromGateway(currentStatus);
+
     }
 
     @Override
@@ -132,6 +134,35 @@ public class PaytmGateway implements Gateway {
     @Override
     public String transactionIdKeyInResponse() {
         return "ORDERID";
+    }
+
+    private Transaction fetchStatusFromGateway(Transaction currentStatus) {
+
+        TreeMap<String, String> params = new TreeMap<>();
+        params.put("MID", MID);
+        params.put("ORDER_ID", currentStatus.getTxnId());
+
+        try {
+            String checkSum = CheckSumServiceHelper.getCheckSumServiceHelper().genrateCheckSum(MERCHANT_KEY, params);
+            params.put("CHECKSUMHASH", checkSum);
+
+            HttpHeaders httpHeaders = new HttpHeaders();
+            httpHeaders.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON.toString());
+
+            HttpEntity<Map<String, String>> httpEntity = new HttpEntity<>(params, httpHeaders);
+
+            ResponseEntity<PaytmResponse> response = restTemplate.postForEntity(MERCHANT_URL_STATUS, httpEntity,
+                    PaytmResponse.class);
+
+            return transformRawResponse(response.getBody(), currentStatus);
+
+        } catch (RestClientException e) {
+            log.error("Unable to fetch status from Paytm gateway", e);
+            throw new CustomException("UNABLE_TO_FETCH_STATUS", "Unable to fetch status from Paytm gateway");
+        } catch (Exception e) {
+            log.error("Paytm Checksum generation failed", e);
+            throw new CustomException("CHECKSUM_GEN_FAILED", "Hash generation failed, gateway redirect URI cannot be generated");
+        }
     }
 
     private Transaction transformRawResponse(PaytmResponse resp, Transaction currentStatus) {

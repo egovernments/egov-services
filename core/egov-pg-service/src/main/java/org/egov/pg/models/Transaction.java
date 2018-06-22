@@ -32,6 +32,7 @@ public class Transaction {
      */
     @JsonProperty("txnAmount")
     @NotNull
+    @Size(min = 1)
     private String txnAmount;
 
     /**
@@ -40,6 +41,7 @@ public class Transaction {
      */
     @JsonProperty("module")
     @NotNull
+    @Size(min = 2)
     private String module;
 
     /**
@@ -47,6 +49,7 @@ public class Transaction {
      */
     @JsonProperty("orderId")
     @NotNull
+    @Size(min = 2)
     private String orderId;
 
     /**
@@ -67,6 +70,7 @@ public class Transaction {
      */
     @JsonProperty("gateway")
     @NotNull
+    @Size(min = 2)
     private String gateway;
 
     /**
@@ -75,6 +79,7 @@ public class Transaction {
      */
     @JsonProperty("callbackUrl")
     @NotNull
+    @Size(min = 2)
     private String callbackUrl;
 
     /**

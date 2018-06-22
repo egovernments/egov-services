@@ -1,10 +1,10 @@
 package org.egov.pg.web.controllers;
 
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.net.HttpHeaders;
 import lombok.extern.slf4j.Slf4j;
 import org.egov.pg.models.Transaction;
+import org.egov.pg.service.GatewayService;
 import org.egov.pg.service.TransactionService;
 import org.egov.pg.utils.ResponseInfoFactory;
 import org.egov.pg.web.models.*;
@@ -29,14 +29,15 @@ import java.util.Set;
 @Controller
 public class TransactionsApiController {
 
-    private final ObjectMapper objectMapper;
     private final TransactionService transactionService;
+    private final GatewayService gatewayService;
 
 
     @Autowired
-    public TransactionsApiController(ObjectMapper objectMapper, TransactionService transactionService) {
-        this.objectMapper = objectMapper;
+    public TransactionsApiController(TransactionService transactionService, GatewayService
+            gatewayService) {
         this.transactionService = transactionService;
+        this.gatewayService = gatewayService;
     }
 
 
@@ -46,7 +47,7 @@ public class TransactionsApiController {
      * @param transactionRequest Request containing all information necessary for initiating payment
      * @return 302 Redirect to the payment gateway
      */
-    @RequestMapping(value = "/transactions/v1/_create", method = RequestMethod.POST)
+    @RequestMapping(value = "/transaction/v1/_create", method = RequestMethod.POST)
     public ResponseEntity<Void> transactionsV1CreatePost(@Valid @RequestBody TransactionRequest transactionRequest) {
 
         URI uri = transactionService.initiateTransaction(transactionRequest);
@@ -62,7 +63,7 @@ public class TransactionsApiController {
      * @param transactionCriteria Search Conditions that should be matched
      * @return List of transactions matching the search criteria
      */
-    @RequestMapping(value = "/transactions/v1/_search", method = RequestMethod.POST)
+    @RequestMapping(value = "/transaction/v1/_search", method = RequestMethod.POST)
     public ResponseEntity<TransactionResponse> transactionsV1SearchPost(@Valid @RequestBody RequestInfoWrapper
                                                                                 requestInfoWrapper, @Valid
                                                                         @ModelAttribute TransactionCriteria transactionCriteria) {
@@ -78,20 +79,17 @@ public class TransactionsApiController {
     /**
      * Updates the status of the transaction from the gateway
      *
-     * @param requestInfoWrapper
      * @param params             Parameters posted by the gateway
      * @return The current transaction status of the tranasction
      */
-    @RequestMapping(value = "/transactions/v1/_update", method = RequestMethod.POST)
-    public ResponseEntity<TransactionResponse> transactionsV1UpdatePost(@Valid @RequestBody RequestInfoWrapper
-                                                                                requestInfoWrapper, @RequestParam
-                                                                                Map<String, String> params) {
+    @RequestMapping(value = "/transaction/v1/_update", method = {RequestMethod.POST, RequestMethod.GET})
+    public ResponseEntity<TransactionResponse> transactionsV1UpdatePost(@RequestParam Map<String, String> params) {
 
-
-        Transaction status = transactionService.updateTransaction(requestInfoWrapper.getRequestInfo(), params);
+        RequestInfo requestInfo = new RequestInfo();
+        Transaction status = transactionService.updateTransaction(requestInfo, params);
 
         return new ResponseEntity<>(new TransactionResponse(ResponseInfoFactory
-                .createResponseInfoFromRequestInfo(requestInfoWrapper.getRequestInfo(), true), Collections
+                .createResponseInfoFromRequestInfo(requestInfo, true), Collections
                 .singletonList(status)), HttpStatus.OK);
     }
 
@@ -101,10 +99,10 @@ public class TransactionsApiController {
      *
      * @return list of active gateways that can be used for payments
      */
-    @RequestMapping(value = "/gateways/v1/_search", method = RequestMethod.POST)
+    @RequestMapping(value = "/gateway/v1/_search", method = RequestMethod.POST)
     public ResponseEntity<Set<String>> transactionsV1AvailableGatewaysPost() {
 
-        Set<String> gateways = transactionService.activeGateways();
+        Set<String> gateways = gatewayService.getActiveGateways();
         log.debug("Available gateways : " + gateways);
         return new ResponseEntity<>(gateways, HttpStatus.OK);
     }

@@ -4,6 +4,7 @@ import org.egov.pg.config.AppProperties;
 import org.egov.pg.models.Transaction;
 import org.egov.pg.producer.Producer;
 import org.egov.pg.repository.TransactionRepository;
+import org.egov.pg.validator.TransactionValidator;
 import org.egov.pg.web.models.RequestInfo;
 import org.egov.pg.web.models.TransactionCriteria;
 import org.egov.pg.web.models.TransactionRequest;
@@ -19,9 +20,9 @@ import org.springframework.dao.TransientDataAccessResourceException;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertTrue;
@@ -37,6 +38,9 @@ public class TransactionServiceTest {
     private Producer producer;
 
     @Mock
+    private GatewayService gatewayService;
+
+    @Mock
     private TransactionRepository transactionRepository;
 
     @Mock
@@ -46,25 +50,24 @@ public class TransactionServiceTest {
     private AppProperties appProperties;
 
     @Mock
-    private Gateway gateway;
+    private TransactionValidator validator;
+
 
     private User user;
     private RequestInfo requestInfo;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         user = User.builder().userName("USER001").mobileNumber("9XXXXXXXXX").name("XYZ").tenantId("pb").emailId("").build();
         requestInfo = new RequestInfo("", "", 0L, "", "", "", "", "", "", null, "");
 
-        List<Gateway> gateways = new ArrayList<>();
-        when(gateway.gatewayName()).thenReturn("PAYTM");
-        when(gateway.isActive()).thenReturn(true);
-        when(gateway.transactionIdKeyInResponse()).thenReturn("ORDERID");
-        gateways.add(gateway);
+
+        when(gatewayService.getTxnId(any(Map.class))).thenReturn(Optional.of("ORDERID"));
 
         Mockito.doNothing().when(producer).push(any(String.class), any(Object.class));
 
-        this.transactionService = new TransactionService(gateways, producer, transactionRepository, idGenService,
+        this.transactionService = new TransactionService(validator, gatewayService, producer, transactionRepository,
+                idGenService,
                 appProperties);
     }
 
@@ -76,6 +79,8 @@ public class TransactionServiceTest {
     @Test
     public void initiateTransactionSuccessTest() throws URISyntaxException {
         String redirectUrl = "https://paytm.com";
+
+
         Transaction txn = Transaction.builder().txnAmount("100")
                 .orderId("ORDER0012")
                 .productInfo("Property Tax Payment")
@@ -83,8 +88,9 @@ public class TransactionServiceTest {
                 .build();
         TransactionRequest transactionRequest = new TransactionRequest(requestInfo, txn);
 
+        Mockito.doNothing().when(validator).validateCreateTxn(any(Transaction.class));
         when(idGenService.generateTxnId(transactionRequest)).thenReturn("PT_001");
-        when(gateway.generateRedirectURI(txn)).thenReturn(new URI(redirectUrl));
+        when(gatewayService.initiateTxn(any(Transaction.class))).thenReturn(new URI(redirectUrl));
 
         URI resp = transactionService.initiateTransaction(transactionRequest);
 
@@ -103,6 +109,11 @@ public class TransactionServiceTest {
                 .gateway("ABCD123")
                 .build();
         TransactionRequest transactionRequest = new TransactionRequest(requestInfo, txn);
+
+
+        when(validator.validateUpdateTxn(any(Map.class))).thenThrow(new CustomException("INVALID_GATEWAY", "Invalid " +
+                "Gateway"));
+        when(gatewayService.initiateTxn(any(Transaction.class))).thenThrow(new CustomException());
 
         URI resp = transactionService.initiateTransaction(transactionRequest);
 
@@ -160,9 +171,8 @@ public class TransactionServiceTest {
                 .gateway("PAYTM")
                 .build();
 
-        when(transactionRepository.fetchTransactions(any(TransactionCriteria.class))).thenReturn(Collections
-                .singletonList(txnStatus));
-        when(gateway.fetchStatus(txnStatus, Collections.singletonMap("ORDERID", "PT_001"))).thenReturn(finalTxnStatus);
+        when(validator.validateUpdateTxn(any(Map.class))).thenReturn(txnStatus);
+        when(gatewayService.getLiveStatus(txnStatus, Collections.singletonMap("ORDERID", "PT_001"))).thenReturn(finalTxnStatus);
 
         assertEquals(transactionService.updateTransaction(requestInfo, Collections.singletonMap
                 ("ORDERID", "PT_001")).getTxnStatus(), Transaction.TxnStatusEnum.SUCCESS);
@@ -175,7 +185,7 @@ public class TransactionServiceTest {
     @Test(expected = CustomException.class)
     public void updateTransactionFailTest(){
 
-        when(transactionRepository.fetchTransactions(any(TransactionCriteria.class))).thenReturn(Collections.emptyList());
+        when(validator.validateUpdateTxn(any(Map.class))).thenThrow(new CustomException("MISSING_TXN_ID", "Cannot process request, missing transaction id"));
 
         transactionService.updateTransaction(requestInfo, Collections.singletonMap("abc", "PT_001"));
 
@@ -187,7 +197,8 @@ public class TransactionServiceTest {
     @Test(expected = CustomException.class)
     public void updateTransactionInvalidTxnIdTest() {
 
-        when(transactionRepository.fetchTransactions(any(TransactionCriteria.class))).thenReturn(Collections.emptyList());
+        when(validator.validateUpdateTxn(any(Map.class))).thenThrow(new CustomException("TXN_NOT_FOUND", "Transaction not found"));
+
         transactionService.updateTransaction(requestInfo, Collections.singletonMap("abc", "PT_001"));
     }
 }

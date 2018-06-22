@@ -1,4 +1,4 @@
-package org.egov.pg.service.jobs.dailyReconciliation;
+package org.egov.pg.service.jobs.earlyReconciliation;
 
 import org.quartz.JobDetail;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,15 +8,15 @@ import org.springframework.scheduling.quartz.CronTriggerFactoryBean;
 import org.springframework.scheduling.quartz.JobDetailFactoryBean;
 
 /**
- * Scheduled to run at 12am and 12pm on a daily basis
+ * Scheduled to run every 15 minutes
  */
 @Configuration
-public class DailyReconciliationJobConfig {
+public class EarlyReconciliationJobConfig {
 
     @Bean
-    JobDetailFactoryBean processStatusUpdateJob() {
+    JobDetailFactoryBean earlyReconciliationJob() {
         JobDetailFactoryBean jobDetailFactory = new JobDetailFactoryBean();
-        jobDetailFactory.setJobClass(DailyReconciliationJob.class);
+        jobDetailFactory.setJobClass(EarlyReconciliationJob.class);
         jobDetailFactory.setGroup("status-update");
         jobDetailFactory.setDurability(true);
         return jobDetailFactory;
@@ -24,12 +24,13 @@ public class DailyReconciliationJobConfig {
 
     @Bean
     @Autowired
-    CronTriggerFactoryBean processStatusUpdateTrigger(JobDetail processStatusUpdateJob) {
+    CronTriggerFactoryBean earlyReconciliationTrigger(JobDetail earlyReconciliationJob) {
         CronTriggerFactoryBean cronTriggerFactoryBean = new CronTriggerFactoryBean();
-        cronTriggerFactoryBean.setJobDetail(processStatusUpdateJob);
-        cronTriggerFactoryBean.setCronExpression("0 0 0,12 * * ?");
+        cronTriggerFactoryBean.setJobDetail(earlyReconciliationJob);
+        cronTriggerFactoryBean.setCronExpression("0 0/15 * * * ?");
         cronTriggerFactoryBean.setGroup("status-update");
         return cronTriggerFactoryBean;
     }
+
 
 }

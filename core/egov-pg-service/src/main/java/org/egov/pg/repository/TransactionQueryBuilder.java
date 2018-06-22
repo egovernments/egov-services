@@ -18,37 +18,52 @@ class TransactionQueryBuilder {
 
     static String getPaymentSearchQuery(TransactionCriteria transactionCriteria, List<Object> preparedStmtList) {
 
-        StringBuilder builder = new StringBuilder(SEARCH_TXN_SQL);
-        Map<String, String> query = new HashMap<>();
+        return buildQuery(SEARCH_TXN_SQL, transactionCriteria, preparedStmtList);
+    }
+
+
+    private static String buildQuery(String query, TransactionCriteria transactionCriteria, List<Object>
+            preparedStmtList) {
+        StringBuilder builder = new StringBuilder(query);
+        Map<String, Object> queryParams = new HashMap<>();
 
         if (!Objects.isNull(transactionCriteria.getTenantId())) {
-            query.put("pg.tenant_id", transactionCriteria.getTenantId());
+            queryParams.put("pg.tenant_id", transactionCriteria.getTenantId());
         }
 
         if (!Objects.isNull(transactionCriteria.getTxnId())) {
-            query.put("pg.txn_id", transactionCriteria.getTxnId());
+            queryParams.put("pg.txn_id", transactionCriteria.getTxnId());
         }
 
         if (!Objects.isNull(transactionCriteria.getOrderId())) {
-            query.put("pg.order_id", transactionCriteria.getOrderId());
+            queryParams.put("pg.order_id", transactionCriteria.getOrderId());
         }
 
         if (!Objects.isNull(transactionCriteria.getTxnStatus())) {
-            query.put("pg.txn_status", transactionCriteria.getTxnStatus().toString());
+            queryParams.put("pg.txn_status", transactionCriteria.getTxnStatus().toString());
         }
 
         if (!Objects.isNull(transactionCriteria.getModule())) {
-            query.put("pg.module", transactionCriteria.getModule());
+            queryParams.put("pg.module", transactionCriteria.getModule());
         }
 
-        if (!query.isEmpty()) {
+        if (!Objects.isNull(transactionCriteria.getCreatedTime())) {
+            queryParams.put("pg.created_time", transactionCriteria.getCreatedTime());
+        }
+
+        if (!queryParams.isEmpty()) {
 
             builder.append(" WHERE ");
 
-            Iterator<Map.Entry<String, String>> iterator = query.entrySet().iterator();
+            Iterator<Map.Entry<String, Object>> iterator = queryParams.entrySet().iterator();
             while (iterator.hasNext()) {
-                Map.Entry<String, String> entry = iterator.next();
-                builder.append(entry.getKey()).append(" = ? ");
+                Map.Entry<String, Object> entry = iterator.next();
+                if (entry.getKey().equalsIgnoreCase("pg.created_time")) {
+                    builder.append(entry.getKey()).append(" > ? ");
+                } else {
+                    builder.append(entry.getKey()).append(" = ? ");
+                }
+
                 preparedStmtList.add(entry.getValue());
 
                 if (iterator.hasNext())

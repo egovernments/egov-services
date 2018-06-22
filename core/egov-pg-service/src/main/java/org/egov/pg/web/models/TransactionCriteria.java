@@ -21,6 +21,8 @@ public class TransactionCriteria {
 
     private String module;
 
+    private Long createdTime;
+
     private Transaction.TxnStatusEnum txnStatus;
 
     private int limit;

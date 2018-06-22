@@ -157,23 +157,34 @@ public class PhonepeGateway implements Gateway {
     private Transaction transformRawResponse(PhonepeResponse resp, Transaction currentStatus) {
         Transaction.TxnStatusEnum status;
 
-        if (resp.getCode().equalsIgnoreCase("PAYMENT_SUCCESS"))
+        if (resp.getSuccess()) {
             status = Transaction.TxnStatusEnum.SUCCESS;
-        else if (resp.getCode().equalsIgnoreCase("PAYMENT_PENDING"))
-            status = Transaction.TxnStatusEnum.PENDING;
-        else
-            status = Transaction.TxnStatusEnum.FAILURE;
 
-        return Transaction.builder()
-                .txnId(currentStatus.getTxnId())
-                .txnAmount(Utils.convertPaiseToRupee(resp.getAmount()))
-                .txnStatus(status)
-                .gatewayTxnId(resp.getProviderReferenceId())
-                .gatewayStatusCode(resp.getCode())
-                .gatewayStatusMsg(resp.getMessage())
-                .lastModifiedTime(System.currentTimeMillis())
-                .responseJson(resp)
-                .build();
+            return Transaction.builder()
+                    .txnId(currentStatus.getTxnId())
+                    .txnAmount(Utils.convertPaiseToRupee(resp.getAmount()))
+                    .txnStatus(status)
+                    .gatewayTxnId(resp.getProviderReferenceId())
+                    .gatewayStatusCode(resp.getCode())
+                    .gatewayStatusMsg(resp.getMessage())
+                    .lastModifiedTime(System.currentTimeMillis())
+                    .responseJson(resp)
+                    .build();
+        } else {
+            if (resp.getCode().equalsIgnoreCase("PAYMENT_PENDING"))
+                status = Transaction.TxnStatusEnum.PENDING;
+            else
+                status = Transaction.TxnStatusEnum.FAILURE;
+            return Transaction.builder()
+                    .txnId(currentStatus.getTxnId())
+                    .txnStatus(status)
+                    .gatewayTxnId(resp.getProviderReferenceId())
+                    .gatewayStatusCode(resp.getCode())
+                    .gatewayStatusMsg(resp.getMessage())
+                    .lastModifiedTime(System.currentTimeMillis())
+                    .responseJson(resp)
+                    .build();
+        }
 
     }
 

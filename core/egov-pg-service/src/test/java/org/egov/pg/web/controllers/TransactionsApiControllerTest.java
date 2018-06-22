@@ -3,6 +3,7 @@ package org.egov.pg.web.controllers;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.egov.pg.TestConfiguration;
 import org.egov.pg.models.Transaction;
+import org.egov.pg.service.GatewayService;
 import org.egov.pg.service.TransactionService;
 import org.egov.pg.web.models.RequestInfo;
 import org.egov.pg.web.models.TransactionCriteria;
@@ -45,10 +46,13 @@ public class TransactionsApiControllerTest {
     @MockBean
     private TransactionService transactionService;
 
+    @MockBean
+    private GatewayService gatewayService;
+
     private ObjectMapper mapper = new ObjectMapper();
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         user = User.builder().userName("USER001").mobileNumber("9XXXXXXXXX").name("XYZ").tenantId("pb").emailId("").build();
         requestInfo = new RequestInfo("", "", 0L, "", "", "", "", "", "", null, "");
 
@@ -57,9 +61,9 @@ public class TransactionsApiControllerTest {
 
     @Test
     public void paymentsV1AvailableGatewaysPostSuccess() throws Exception {
-        when(transactionService.activeGateways()).thenReturn(Collections.singleton("PAYTM"));
+        when(gatewayService.getActiveGateways()).thenReturn(Collections.singleton("PAYTM"));
 
-        mockMvc.perform(post("/gateways/v1/_search").contentType(MediaType
+        mockMvc.perform(post("/gateway/v1/_search").contentType(MediaType
                 .APPLICATION_JSON_UTF8))
                 .andExpect(status().isOk());
     }
@@ -73,7 +77,7 @@ public class TransactionsApiControllerTest {
                 .gateway("AXIS")
                 .module("PT")
                 .tenantId("pb")
-                .callbackUrl("http://2a91377b.ngrok.io/egov-pg/payments/v1/_update")
+                .callbackUrl("http://2a91377b.ngrok.io/pg-service/payments/v1/_update")
                 .user(user).build();
 
         TransactionRequest transactionRequest = new TransactionRequest(requestInfo, transaction);
@@ -81,7 +85,7 @@ public class TransactionsApiControllerTest {
         when(transactionService.initiateTransaction(any(TransactionRequest.class))).thenReturn(new URI
                 ("redirect:/axis"));
 
-        mockMvc.perform(post("/transactions/v1/_create").contentType(MediaType
+        mockMvc.perform(post("/transaction/v1/_create").contentType(MediaType
                 .APPLICATION_JSON_UTF8).content(mapper.writeValueAsString(transactionRequest)))
                 .andExpect(status().isFound());
     }
@@ -91,7 +95,7 @@ public class TransactionsApiControllerTest {
         when(transactionService.initiateTransaction(any(TransactionRequest.class))).thenReturn(new URI
                 ("redirect:/axis"));
 
-        mockMvc.perform(post("/transactions/v1/_create").contentType(MediaType
+        mockMvc.perform(post("/transaction/v1/_create").contentType(MediaType
                 .APPLICATION_JSON_UTF8))
                 .andExpect(status().isBadRequest());
     }
@@ -101,7 +105,7 @@ public class TransactionsApiControllerTest {
         when(transactionService.getTransactions(any(TransactionCriteria.class))).thenReturn(Collections.singletonList
                 (new Transaction()));
 
-        mockMvc.perform(post("/transactions/v1/_search").param("txnId", "PT_001").contentType
+        mockMvc.perform(post("/transaction/v1/_search").param("txnId", "PT_001").contentType
                 (MediaType
                         .APPLICATION_JSON_UTF8).content(mapper.writeValueAsString(requestInfo)))
                 .andExpect(status().isOk());
@@ -112,7 +116,7 @@ public class TransactionsApiControllerTest {
         when(transactionService.getTransactions(any(TransactionCriteria.class))).thenReturn(Collections.singletonList
                 (new Transaction()));
 
-        mockMvc.perform(post("/transactions/v1/_search").contentType(MediaType
+        mockMvc.perform(post("/transaction/v1/_search").contentType(MediaType
                 .APPLICATION_JSON_UTF8))
                 .andExpect(status().isBadRequest());
     }
@@ -123,16 +127,9 @@ public class TransactionsApiControllerTest {
                 .thenReturn
                         (new Transaction());
 
-        mockMvc.perform(post("/transactions/v1/_update").contentType(MediaType
+        mockMvc.perform(post("/transaction/v1/_update").contentType(MediaType
                 .APPLICATION_JSON_UTF8).content(mapper.writeValueAsString(requestInfo)))
                 .andExpect(status().isOk());
-    }
-
-    @Test
-    public void transactionsV1UpdatePostFailure() throws Exception {
-        mockMvc.perform(post("/transactions/v1/_update").contentType(MediaType
-                .APPLICATION_JSON_UTF8))
-                .andExpect(status().isBadRequest());
     }
 
 }

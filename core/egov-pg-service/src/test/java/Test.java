@@ -4,7 +4,6 @@ import org.egov.pg.service.Gateway;
 import org.egov.pg.service.gateways.axis.AxisGateway;
 import org.egov.pg.service.gateways.paytm.PaytmGateway;
 import org.egov.pg.service.gateways.phonepe.PhonepeGateway;
-import org.egov.pg.utils.Utils;
 import org.egov.pg.web.models.User;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -25,7 +24,7 @@ public class Test {
     private Environment environment;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         user = User.builder().userName("USER001").mobileNumber("9XXXXXXXXX").name("XYZ").tenantId("pb").emailId("").build();
         this.restTemplate = new RestTemplate();
         this.objectMapper = new ObjectMapper();
@@ -42,7 +41,7 @@ public class Test {
                 .callbackUrl("http://2a91377b.ngrok.io/egov-pay/payments/v1/_update")
                 .user(user).build();
 
-        Gateway gateway = new AxisGateway(restTemplate, environment);
+        Gateway gateway = new AxisGateway(restTemplate, environment, objectMapper);
         URI redirectUri = gateway.generateRedirectURI(txn);
         System.out.println(redirectUri.toString());
 
@@ -75,7 +74,7 @@ public class Test {
                 .user(user).build();
 
 
-        Gateway gateway = new PaytmGateway(restTemplate,  environment);
+        Gateway gateway = new PaytmGateway(restTemplate, environment, objectMapper);
 
         URI redirectUri = gateway.generateRedirectURI(txn);
         System.out.println(redirectUri);
@@ -126,7 +125,7 @@ public class Test {
                 .callbackUrl("http://2a91377b.ngrok.io/egov-pay/payments/v1/_update")
                 .build();
 
-        Gateway gateway = new PaytmGateway(restTemplate, environment);
+        Gateway gateway = new PaytmGateway(restTemplate, environment, objectMapper);
         gateway.fetchStatus(txn, Collections.singletonMap("transactionId", "PB_PG_2018_06_09-000014_24"));
 
 
@@ -143,7 +142,7 @@ public class Test {
                 .callbackUrl("http://2a91377b.ngrok.io/egov-pay/payments/v1/_update")
                 .build();
 
-        Gateway gateway = new AxisGateway(restTemplate, environment);
+        Gateway gateway = new AxisGateway(restTemplate, environment, objectMapper);
         gateway.fetchStatus(txn, Collections.singletonMap("transactionId", "PB_PG_2018_06_09-000014_24"));
 
 
@@ -153,10 +152,5 @@ public class Test {
     public void name1() {
         final DecimalFormat CURRENCY_FORMATTER_RUPEE = new DecimalFormat("0.00");
         System.out.println(Double.valueOf(CURRENCY_FORMATTER_RUPEE.format(Double.valueOf("141"))));
-    }
-
-    @org.junit.Test
-    public void name3() {
-        System.out.println(Utils.convertPaiseToRupee("10"));
     }
 }

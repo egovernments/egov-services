@@ -359,10 +359,10 @@ class AgreementSearch extends React.Component {
             code,
             oldAgreementNumber,
             tenderNumber, fromDate, toDate, shopComplexNumber, acknowledgementNumber, referenceNumber } = this.state.searchSet;
-        const showCollectTaxOption = function () {
-            if (!hideCollectTaxOption) {
-                return (<option value="collTax">Collect Tax</option>);
-            }
+        const showCollectTaxOption = function (item) {
+                if (!hideCollectTaxOption && !(item.action == "CREATE" && item.status == "REJECTED")) {
+                    return (<option value="collTax">Collect Tax</option>);
+                }
         }
 
         const getValueByName = function (name, id) {
@@ -475,7 +475,7 @@ class AgreementSearch extends React.Component {
                         <option value="">Select Action</option>
                         <option value="view">View</option>
                         {/*<option value="renew">Renew</option>*/}
-                        {showCollectTaxOption()}
+                        {showCollectTaxOption(item)}
                         {getDemandListing(item)}
                     </select>
                 )
@@ -486,7 +486,7 @@ class AgreementSearch extends React.Component {
                     }}>
                         <option value="">Select Action</option>
                         <option value="view">View</option>
-                        {showCollectTaxOption()}
+                        {showCollectTaxOption(item)}
                         {getDemandListing(item)}
 
                     </select>

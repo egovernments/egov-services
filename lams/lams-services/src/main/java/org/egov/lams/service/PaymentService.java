@@ -344,8 +344,8 @@ public class PaymentService {
 		demandRepository.updateDemandForCollection(Arrays.asList(currentDemand), requestInfo).getDemands().get(0);
 		LOGGER.info("PaymentService- updateDemand - setPaymentInfos done");
 
-		// / FIXME put update workflow here here
-
+		// / FIXME put update workflow here
+          
 		updateWorkflow(billInfo.getConsumerCode(), requestInfo);
 		isAdvanceCollection(billInfo.getConsumerCode(),currentDemand);
 		LOGGER.info("the consumer code from bill object ::: " + billInfo.getConsumerCode());
@@ -354,29 +354,26 @@ public class PaymentService {
 
 	private void updateWorkflow(String consumerCode, RequestInfo requestInfo) {
 
-		// FIXME get the query String from query builder //FIXME do the
-		// jdbctemplate in repository
 		String sql = AgreementQueryBuilder.BASE_SEARCH_QUERY + " where agreement.acknowledgementnumber='"
 					+ consumerCode + "' OR agreement.agreement_no='" + consumerCode + "' order by agreement.id desc ";
 
 		LOGGER.info("the sql query for fetching agreement using consumercode ::: " + sql);
-		List<Agreement> agreements = null;
+		List<Agreement> agreements = new ArrayList<>();
 		try {
 			agreements = jdbcTemplate.query(sql, new AgreementRowMapper());
 		} catch (DataAccessException e) {
-			e.printStackTrace();
-			LOGGER.info("exception while fetching agreemment in paymentService");
+			LOGGER.info("exception while fetching agreemment in paymentService"+e);
 		}
-		LOGGER.info("the result form jdbc query ::: " + agreements);
 		agreements.sort((agreement1, agreement2) -> agreement2.getId().compareTo(agreement1.getId()));
 		Agreement agreement = agreements.get(0);
 		LOGGER.info("agreement under workflow --> "+agreement.getId());
-		if (Source.SYSTEM.equals(agreement.getSource())
-					|| (Source.DATA_ENTRY.equals(agreement.getSource()) && Action.RENEWAL.equals(agreement.getAction()))) {
+		
+		if (!agreement.getIsAdvancePaid() && (Source.SYSTEM.equals(agreement.getSource())
+				|| (Source.DATA_ENTRY.equals(agreement.getSource()) && Action.RENEWAL.equals(agreement.getAction())))) {
 			AgreementRequest agreementRequest = new AgreementRequest();
 			agreementRequest.setRequestInfo(requestInfo);
 			agreementRequest.setAgreement(agreement);
-			LOGGER.info("calling agreement service todo agreement update");
+				
 			agreementService.updateAgreement(agreementRequest);
 			LOGGER.info("Workflow update for collection has been put into Kafka Queue");
 		}

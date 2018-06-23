@@ -285,7 +285,7 @@ $(document).ready(function() {
 
         doc.autoTable(columns1, rows1, autoTableOptions1);
 
-        doc.fromHTML("In pursuance of the Municipal Council/Standing Committee resolution and vide GO MS No 56 (MA & UD <br> Department) dt. 05.02.2011, the said shop is allotted to you for the period <b>" + commencementDate + "</b> to <b>" + endDate + "</b> at <br> following rates of rentals and taxes thereon.",15, 167);
+        doc.fromHTML("In pursuance of the Municipal Council/Standing Committee resolution and vide GO MS No 56 (MA & UD <br> Department) dt. 05.02.2011, the said shop is allotted to you for the period <b>" + commencementDate + "</b> to <b>" + endDate + "</b> at <br> following rates of rentals and taxes thereon.",15, 164);
 
         doc.autoTable(columns2, rows2, autoTableOptions2);
 
@@ -303,7 +303,7 @@ $(document).ready(function() {
         var paragraph4 = "Hence you are requested to conclude an agreement duly registered with the SRO for the above mentioned lease within 15 days of receipt of this renewal letter without fail unless the renewal will stand cancelled without any further correspondence."
 
         var lines = doc.splitTextToSize(paragraph3, 180);
-        doc.text(15, 230, lines);
+        doc.text(15, 228, lines);
 
         doc.addPage();
         var paragraph4 = "Hence you are requested to conclude an agreement duly registered with the SRO for the above mentioned lease within 15 days of receipt of this allotment letter without fail unless the allotment will stand cancelled without any further correspondence."

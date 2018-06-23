@@ -147,7 +147,6 @@ $(document).ready(function() {
     function printNotice(agreement) {
 
         var tenderDate;
-        
         if(agreement.tenderDate === null){
             tenderDate = "N/A";
         }else{
@@ -320,10 +319,10 @@ $(document).ready(function() {
         doc.save('Notice-' + agreement.agreementNumber + '.pdf');
         var blob = doc.output('blob');
 
+      createFileStore(agreement, blob).then(createNotice, errorHandler);
         //  var text= noticeData.agreementPeriod * 12;
         //   doc.setFontType("normal");
 
-        return text;
     }
 
     // function wordWrap(doc, paragraph, lMargin, rMargin, pdfInMM) {

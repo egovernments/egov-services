@@ -83,7 +83,6 @@ $(document).ready(function() {
     function createFileStore(noticeData, blob){
       var promiseObj = new Promise(function(resolve, reject){
         let formData = new FormData();
-        formData.append("tenantId", tenantId);
         formData.append("module", "LAMS");
         formData.append("file", blob);
         $.ajax({

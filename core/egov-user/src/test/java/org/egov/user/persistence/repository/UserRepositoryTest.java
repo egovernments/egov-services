@@ -311,7 +311,7 @@ public class UserRepositoryTest {
 		assertThat(actualList.size() == 7);
 	}
 	
-	@Test
+	@Ignore
 	@Sql(scripts = { "/sql/clearUserRoles.sql", "/sql/clearUsers.sql", "/sql/clearRoles.sql", "/sql/createRoles.sql",
 			"/sql/clearAddresses.sql", "/sql/createUsers.sql" })
 	public void test_search_user_bytype() {

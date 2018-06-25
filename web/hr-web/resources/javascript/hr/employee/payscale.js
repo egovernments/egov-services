@@ -254,7 +254,7 @@ class PayScaleMaster extends React.Component {
               </td>
               <td>
                 <input type="number" name="increment" id="increment" value={payscaleDetail["increment"]}
-                  onChange={(e) => { handleDetailsChange(e, ind, "increment") }} max={amountTo - amountFrom} min="1" required />
+                  onChange={(e) => { handleDetailsChange(e, ind, "increment") }} max={amountTo - amountFrom} min="0" required />
               </td>
 
               {renderPlusMinus(ind)}
@@ -310,7 +310,7 @@ class PayScaleMaster extends React.Component {
                       <label htmlFor="">From <span>* </span></label>
                     </div>
                     <div className="col-sm-6 label-view-text">
-                      <input type="number" name="amountFrom" id="amountFrom" min="0" value={amountFrom}
+                      <input type="number" name="amountFrom" id="amountFrom" min="1" value={amountFrom}
                         onChange={(e) => { handleChange(e, "amountFrom") }} required />
                     </div>
                   </div>

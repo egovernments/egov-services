@@ -705,7 +705,11 @@ public class GrievanceService {
 			Map<Long, Citizen> userResponseMap = userResponse.getUser().parallelStream()
 					.collect(Collectors.toMap(Citizen :: getId, Function.identity()));
 			for(Service service: response.getServices()) {
-				service.setCitizen(userResponseMap.get(Long.parseLong(service.getAccountId())));
+				Long id = null;
+				try {
+					id = Long.parseLong(service.getAccountId());
+				}catch(Exception e) {}
+				service.setCitizen(userResponseMap.get(id));
 			}
 		}
 		return response;

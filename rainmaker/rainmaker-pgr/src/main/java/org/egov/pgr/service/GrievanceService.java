@@ -389,7 +389,11 @@ public class GrievanceService {
 		log.debug(PGRConstants.SEARCHER_RESPONSE_TEXT + response);
 		if (null == response)
 			return pGRUtils.getDefaultServiceResponse(requestInfo);
-		return enrichSearchResWithUserInfo(requestInfo, prepareResult(response, requestInfo));
+		ServiceResponse serviceResponse = prepareResult(response, requestInfo);
+		if(CollectionUtils.isEmpty(serviceResponse.getServices()))
+			return serviceResponse;
+		else
+			return enrichSearchResWithUserInfo(requestInfo, prepareResult(response, requestInfo));
 	}
 
 	/**

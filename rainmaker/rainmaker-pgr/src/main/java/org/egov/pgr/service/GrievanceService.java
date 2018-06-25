@@ -5,8 +5,8 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.UUID;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
@@ -26,6 +26,9 @@ import org.egov.pgr.model.ActionInfo;
 import org.egov.pgr.model.AuditDetails;
 import org.egov.pgr.model.Service;
 import org.egov.pgr.model.Service.StatusEnum;
+import org.egov.pgr.model.user.Citizen;
+import org.egov.pgr.model.user.UserResponse;
+import org.egov.pgr.model.user.UserSearchRequest;
 import org.egov.pgr.producer.PGRProducer;
 import org.egov.pgr.repository.FileStoreRepo;
 import org.egov.pgr.repository.IdGenRepo;
@@ -63,6 +66,12 @@ public class GrievanceService {
 	
 	@Value("${egov.hr.employee.search.endpoint}")
 	private String hrEmployeeSearchEndpoint;
+	
+	@Value("${egov.user.host}")
+	private String userBasePath;
+	
+	@Value("${egov.user.search.endpoint}")
+	private String userSearchEndPoint;
 
 	@Autowired
 	private ResponseInfoFactory factory;
@@ -380,7 +389,7 @@ public class GrievanceService {
 		log.debug(PGRConstants.SEARCHER_RESPONSE_TEXT + response);
 		if (null == response)
 			return pGRUtils.getDefaultServiceResponse(requestInfo);
-		return prepareResult(response, requestInfo);
+		return enrichSearchResWithUserInfo(requestInfo, prepareResult(response, requestInfo));
 	}
 
 	/**
@@ -675,6 +684,46 @@ public class GrievanceService {
 		} catch (Exception e) {
 			log.error("Exception while replacing s3 links: " + e);
 		}
+	}
+	
+	public ServiceResponse enrichSearchResWithUserInfo(RequestInfo requestInfo, ServiceResponse response) {
+		List<Long> userIds = response.getServices().parallelStream()
+				.map(a -> {
+					try {
+						return Long.parseLong(a.getAccountId());
+					}catch(Exception e) {
+						return null;
+					}
+				}).collect(Collectors.toList());
+		String tenantId = response.getServices().get(0).getTenantId().split("[.]")[0]; //citizen is state-level no point in sending ulb level tenant.
+		UserResponse userResponse = getUsers(requestInfo, tenantId, userIds);
+		if(null != userResponse) {
+			Map<Long, Citizen> userResponseMap = userResponse.getUser().parallelStream()
+					.collect(Collectors.toMap(Citizen :: getId, Function.identity()));
+			for(Service service: response.getServices()) {
+				service.setCitizen(userResponseMap.get(Long.parseLong(service.getAccountId())));
+			}
+		}
+		return response;
+	}
+	
+	public UserResponse getUsers(RequestInfo requestInfo, String tenantId, List<Long> userIds) {
+		ObjectMapper mapper = pGRUtils.getObjectMapper();
+		UserSearchRequest searchRequest = UserSearchRequest.builder().id(userIds).tenantId(tenantId)
+				.userType("CITIZEN").requestInfo(requestInfo).build();
+		StringBuilder url = new StringBuilder();
+		url.append(userBasePath).append(userSearchEndPoint);
+		try {
+			UserResponse res = mapper.convertValue(serviceRequestRepository.fetchResult(url, searchRequest), UserResponse.class);
+			if(CollectionUtils.isEmpty(res.getUser())) {
+				return null;
+			}else {
+				return res;
+			}
+		}catch(Exception e) {
+			return null;
+		}
+		
 	}
 
 }

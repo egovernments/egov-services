@@ -17,5 +17,5 @@ public class UserResponse {
 	ResponseInfo responseInfo;
 
     @JsonProperty("user")
-    List<User> user;
+    List<Citizen> user;
 }

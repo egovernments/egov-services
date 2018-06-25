@@ -1,0 +1,38 @@
+ReportDefinitions:
+- reportName: SourceWiseReport
+  summary: Fetches reports based on the source of reception of the complaint
+  version: 1.0.0
+  moduleName: rainmaker-pgr
+  sourceColumns:
+  - name: citizen_mobile_app
+    label: reports.rainmaker-pgr.citizen_mobile_app
+    type: number
+    source: eg_pgr_service
+  - name: citizen_web_app
+    label: reports.rainmaker-pgr.citizen_web_app
+    type: number
+    source: eg_pgr_service
+  - name: counter_desktop
+    label: reports.rainmaker-pgr.counter_desktop
+    type: number
+    source: eg_pgr_service
+   
+  searchParams: 
+  - name: tenantId
+    label: reports.rainmaker-pgr.tenantId
+    type: singlevaluelist
+    pattern: 'list://Wet:Wet,Dry:Dry'
+    source: eg_pgr_service
+    isMandatory: true    
+  - name: fromDate
+    label: reports.rainmaker-pgr.datefrom
+    type: epoch
+    source: eg_pgr_service
+    isMandatory: true
+  - name: toDate
+    label: reports.rainmaker-pgr.dateto
+    type: epoch
+    source: eg_pgr_service
+    isMandatory: true
+  query: SELECT sum(case when source = 'mobileapp' then 1 else 0 end) as citizen_mobile_app, sum(case when source = 'web' then 1 else 0 end) as citizen_web_app, sum(case when source = 'ivr' then 1 else 0 end) as counter_desktop FROM eg_pgr_service WHERE tenantid = $tenantid AND createdtime >= $fromDate and  createdtime <= $toDate
+

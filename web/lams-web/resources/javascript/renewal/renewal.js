@@ -516,16 +516,13 @@ class RenewalAgreement extends React.Component {
     var cityGrade = !localStorage.getItem("city_grade") || localStorage.getItem("city_grade") == "undefined" ? (localStorage.setItem("city_grade", JSON.stringify(commonApiPost("tenant", "v1/tenant", "_search", { code: tenantId }).responseJSON["tenant"][0]["city"]["ulbGrade"] || {})), JSON.parse(localStorage.getItem("city_grade"))) : JSON.parse(localStorage.getItem("city_grade"));
     var agreementType = "Renew Municipality Agreement";
     if (cityGrade.toLowerCase() === 'corp') {
-      agreementType = "Renew Corporation Agreement";
+      agreementType = "Renewal LeaseAgreement";
     }
 
-    getDesignations(null, function (designations) {
+    getDesignations(null,null, function (designations) {
       for (let variable in designations) {
         if (!designations[variable]["id"]) {
-          var _res = commonApiPost("hr-masters", "designations", "_search", {
-            tenantId,
-            name: designations[variable]["name"]
-          });
+          var _res = commonApiPost("hr-masters", "designations", "_search", {tenantId, name: designations[variable]["name"]});
           designations[variable]["id"] = _res && _res.responseJSON && _res.responseJSON["Designation"] && _res.responseJSON["Designation"][0] ? _res.responseJSON["Designation"][0].id : "";
         }
       }
@@ -535,7 +532,7 @@ class RenewalAgreement extends React.Component {
         designationList: designations
       });
 
-    }, agreementType);
+    }, "Renewal LeaseAgreement");
 
     var agreement = commonApiPost("lams-services",
       "agreements",

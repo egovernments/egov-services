@@ -254,7 +254,7 @@ class PayScaleMaster extends React.Component {
               </td>
               <td>
                 <input type="number" name="increment" id="increment" value={payscaleDetail["increment"]}
-                  onChange={(e) => { handleDetailsChange(e, ind, "increment") }} max={amountTo - amountFrom} min="0" required />
+                  onChange={(e) => { handleDetailsChange(e, ind, "increment") }} max={amountTo - amountFrom} min="1" required />
               </td>
 
               {renderPlusMinus(ind)}

@@ -42,6 +42,7 @@ package org.egov.user.repository.builder;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.egov.user.domain.model.Role;
 import org.egov.user.domain.model.UserSearchCriteria;
 import org.egov.user.persistence.repository.RoleRepository;
@@ -113,8 +114,15 @@ public class UserTypeQueryBuilder {
 
 		if (userSearchCriteria.getTenantId() != null) {
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" u.tenantid = ?");
-			preparedStatementValues.add(userSearchCriteria.getTenantId().trim());
+			if(!StringUtils.isEmpty(userSearchCriteria.getType())) {
+				if(userSearchCriteria.getType().equalsIgnoreCase("CITIZEN")) {
+					String tenantId = userSearchCriteria.getTenantId().split("[.]")[0];
+					selectQuery.append(" u.tenantid LIKE ").append("'%").append(tenantId).append("%'");
+				}
+			}else {
+				selectQuery.append(" u.tenantid = ?");
+				preparedStatementValues.add(userSearchCriteria.getTenantId().trim());
+			}
 		}
 
 		if (userSearchCriteria.getUserName() != null) {

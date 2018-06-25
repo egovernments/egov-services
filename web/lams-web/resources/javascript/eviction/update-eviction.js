@@ -649,7 +649,6 @@ class UpdateEviction extends React.Component {
             if (mm < 10) {
               mm = '0' + mm
             }
-        
             asOnDate = dd + '/' + mm + '/' + yyyy;
 
             if (ID === "Reject") {
@@ -668,6 +667,10 @@ class UpdateEviction extends React.Component {
                 else if (!agreement.workflowDetails.assignee)
                     return showError("Please Select the Employee");
 
+            }
+
+            if (!agreement.workflowDetails.assignee) {
+                agreement.workflowDetails.assignee = this.state.wfInitiator;
             }
 
             if (ID.toLowerCase() === "approve"){

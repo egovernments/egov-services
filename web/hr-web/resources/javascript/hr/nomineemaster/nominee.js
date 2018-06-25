@@ -692,7 +692,7 @@ class Nominee extends React.Component {
                       <label htmlFor="">Is Nominee <span>*</span></label>
                     </div>
                     <div className="col-sm-6">
-                      <input type="checkbox" name="nominated" value={nominated} onChange={(e) => { handleChange(e, "nominated", true) }} checked={nominated ? true : false} />
+                      <input type="checkbox" name="nominated" value={nominated} onChange={(e) => { handleChange(e, "nominated", true) }} checked={nominated === true ? "Yes" : "No"} />
                     </div>
                   </div>
                 </div>
@@ -702,7 +702,7 @@ class Nominee extends React.Component {
                       <label for="employed"> Is Employed <span>*</span></label>
                     </div>
                     <div className="col-sm-6">
-                      <input type="checkbox" name="employed" value={employed} onChange={(e) => { handleChange(e, "employed", true) }} checked={employed ? true : false} />
+                      <input type="checkbox" name="employed" value={employed} onChange={(e) => { handleChange(e, "employed", true) }} checked={employed === true ? "Yes" : "No"} />
                     </div>
                   </div>
                 </div>
@@ -751,19 +751,18 @@ class Nominee extends React.Component {
             <td  >
               {getNameById(bankList, item.bank)}
             </td>
-            <td  >
+            <td >
               {getNameById(allBankBranchList, item.bankBranch)}
             </td>
-            <td  >
+            <td >
               {item.bankAccount}
             </td>
-
-            <td  >
-              {item.nominated ? "true" : "false"}
+            <td >
+              {item.nominated === true ? "Yes" : "No"}
             </td>
 
-            <td  >
-              {item.employed ? "true" : "false"}
+            <td >
+              {item.employed === true ? "Yes" : "No"}
             </td>
             {renderActionFeilds(mode, index)}
           </tr>)

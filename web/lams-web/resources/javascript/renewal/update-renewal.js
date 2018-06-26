@@ -1615,7 +1615,7 @@ class UpdateRenewal extends React.Component {
             var flg = 0;
 
             buttons.forEach(function (btn, ind) {
-                if (btn.key.toLowerCase() === "approve" || btn.key.toLowerCase() === "print notice") {
+                if (btn.key.toLowerCase() === "print notice") {
                     flg = 1;
                 }
             });

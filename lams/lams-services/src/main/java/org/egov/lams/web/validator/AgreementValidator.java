@@ -153,6 +153,7 @@ public class AgreementValidator {
 			errors.reject("Agreement.TimePeriod",
 					"Can not create history agreement,please change Timeperiod/CommencementDate");
 		}
+		validateAgreementsForFloor(agreement, agreement.getAsset().getId(), errors);
 
 	}
 	public void validateEviction(AgreementRequest agreementRequest, Errors errors) {
@@ -278,7 +279,7 @@ public class AgreementValidator {
 		if (agreement.getIsUnderWorkflow()) {
 			errors.reject("Agreement underworkflow", "Agreement is already in other workflow");
 		}
-		validateAgreementsForFloor(agreement, agreement.getAsset().getId(), errors);
+		
 	}
 
 	public void validateAsset(AgreementRequest agreementRequest, Errors errors) {

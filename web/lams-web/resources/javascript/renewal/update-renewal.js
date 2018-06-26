@@ -118,7 +118,8 @@ class UpdateRenewal extends React.Component {
             buttons: [],
             wfStatus: "",
             wfInitiator:"",
-            rentInc: []
+            rentInc: [],
+            currentUserDesignation: ""
 
         }
         this.handleChangeTwoLevel = this.handleChangeTwoLevel.bind(this);
@@ -322,8 +323,37 @@ class UpdateRenewal extends React.Component {
                 }
             }
         }
+        var currentUserDesignation = null;
+        var ownerPosition = process.owner.id;
+        var currOwnerPosition=null;
 
-        getDesignations(process.status, function (designations) {
+        var loggedInEmployee = commonApiPost("hr-employee", "employees", "_loggedinemployee", {asOnDate: moment(new Date()).format("DD/MM/YYYY"), tenantId }).responseJSON["Employee"];
+        if(loggedInEmployee){
+            var assignments = loggedInEmployee[0].assignments;
+            var positions=[];
+            if(assignments){
+                for(var i=0;i<assignments.length;i++){
+                    if(ownerPosition==assignments[i].position){
+                        currentUserDesignation = process.owner.deptdesig.designation.name;
+                        break;
+                    }else{
+                        currOwnerPosition =assignments[0].designation;
+                    }
+                }
+            }
+
+        }
+
+        console.log(currentUserDesignation);
+        if(currOwnerPosition && currentUserDesignation==null){
+
+            var designation = getCommonMasterById("hr-masters", "designations", null,currOwnerPosition).responseJSON["Designation"];
+            currentUserDesignation = designation[0].name;
+        }
+        if(currentUserDesignation==='Junior Assistant' || currentUserDesignation==='Senior Assistant'){
+            currentUserDesignation ="Assistant";
+        }
+        getDesignations(process.status,currentUserDesignation,function (designations) {
             //console.log(designations);
             _this.setState({
                 ..._this.state,
@@ -352,7 +382,8 @@ class UpdateRenewal extends React.Component {
             workflow: workflow,
             buttons: _btns ? _btns : [],
             rentInc: rentInc,
-            minRent: agreement.rent
+            minRent: agreement.rent,
+            currentUserDesignation : currentUserDesignation
         });
 
     }

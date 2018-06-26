@@ -174,7 +174,7 @@ public class AssetService {
             final BigDecimal grossValue = asset.getGrossValue();
             final BigDecimal accumulatedDepreciation = asset.getAccumulatedDepreciation();
 
-            if (grossValue != null && accumulatedDepreciation != null)
+            if ((grossValue != null ||grossValue!=BigDecimal.ZERO)  && (accumulatedDepreciation != null || accumulatedDepreciation!=BigDecimal.ZERO))
                 assetCurrentValues.get(0).setCurrentAmount(grossValue.subtract(accumulatedDepreciation));
             else if (grossValue != null)
                 assetCurrentValues.get(0).setCurrentAmount(grossValue);

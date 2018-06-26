@@ -48,6 +48,7 @@
 
 package org.egov.asset.repository;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -177,8 +178,21 @@ public class AssetRepository {
         if (asset.getAssetCategory() != null
                 && asset.getAssetCategory().getAssetCategoryType().equals(AssetCategoryType.MOVABLE)) {
             asset.setSurveyNumber(null);
-            asset.setMarketValue(null);
+            asset.setMarketValue(BigDecimal.ZERO);
         }
+
+        if (asset.getGrossValue() == null)
+            asset.setGrossValue(BigDecimal.ZERO);
+        if (asset.getAcquisitionValue() == null)
+            asset.setAcquisitionValue(BigDecimal.ZERO);
+        if (asset.getMarketValue() == null)
+            asset.setMarketValue(BigDecimal.ZERO);
+        if (asset.getConstructionValue() == null)
+            asset.setConstructionValue(BigDecimal.ZERO);
+        if (asset.getPurchaseValue() == null)
+            asset.setPurchaseValue(BigDecimal.ZERO);
+        if (asset.getAccumulatedDepreciation() == null)
+            asset.setAccumulatedDepreciation(BigDecimal.ZERO);
 
         final List<Document> documents = asset.getDocuments();
         if (!documents.isEmpty()) {
@@ -189,7 +203,7 @@ public class AssetRepository {
 
             for (final Document document : documents) {
                 final Object[] documentRecord = { asset.getId(), document.getFileStore(),
-                        asset.getTenantId(),document.getDocumentType()};
+                        asset.getTenantId(), document.getDocumentType() };
                 documentBatchArgs.add(documentRecord);
             }
 
@@ -262,8 +276,21 @@ public class AssetRepository {
         if (asset.getAssetCategory() != null
                 && asset.getAssetCategory().getAssetCategoryType().equals(AssetCategoryType.MOVABLE)) {
             asset.setSurveyNumber(null);
-            asset.setMarketValue(null);
+            asset.setMarketValue(BigDecimal.ZERO);
         }
+
+        if (asset.getGrossValue() == null)
+            asset.setGrossValue(BigDecimal.ZERO);
+        if (asset.getAcquisitionValue() == null)
+            asset.setAcquisitionValue(BigDecimal.ZERO);
+        if (asset.getMarketValue() == null)
+            asset.setMarketValue(BigDecimal.ZERO);
+        if (asset.getConstructionValue() == null)
+            asset.setConstructionValue(BigDecimal.ZERO);
+        if (asset.getPurchaseValue() == null)
+            asset.setPurchaseValue(BigDecimal.ZERO);
+        if (asset.getAccumulatedDepreciation() == null)
+            asset.setAccumulatedDepreciation(BigDecimal.ZERO);
 
         final Location location = asset.getLocationDetails();
 
@@ -309,7 +336,7 @@ public class AssetRepository {
             for (final Document documentInDb : documentsFromDB)
                 if (!documents.contains(documentInDb.getFileStore()))
                     assetDocumentsRepository.delete(documentInDb.getAsset(), documentInDb.getFileStore(),
-                            asset.getTenantId(),documentInDb.getDocumentType());
+                            asset.getTenantId(), documentInDb.getDocumentType());
             if (asset.getDocuments() != null && !asset.getDocuments().isEmpty())
                 asset.getDocuments().removeAll(documentsFromDB);
         }

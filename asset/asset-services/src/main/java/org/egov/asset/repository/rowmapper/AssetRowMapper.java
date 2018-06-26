@@ -61,7 +61,6 @@ import java.util.Map;
 import org.egov.asset.model.Asset;
 import org.egov.asset.model.AssetCategory;
 import org.egov.asset.model.Department;
-import org.egov.asset.model.Document;
 import org.egov.asset.model.Location;
 import org.egov.asset.model.enums.AssetCategoryType;
 import org.egov.asset.model.enums.DepreciationMethod;
@@ -162,17 +161,6 @@ public class AssetRowMapper implements ResultSetExtractor<List<Asset>> {
                 final Department department = new Department();
                 department.setId((Long) rs.getObject("department"));
                 asset.setDepartment(department);
-
-                /*final List<Document> docList = new ArrayList<>();
-                final Document documents = new Document();
-                documents.setAsset((Long) rs.getObject("asset"));
-                documents.setFileStore(rs.getString("filestore"));
-                documents.setId((Long) rs.getObject("documentsId"));
-                if (documents.getId() == null)
-                    asset.setDocuments(new ArrayList<>());
-                else
-                    docList.add(documents);
-                asset.setDocuments(docList);*/
 
                 final Location location = new Location();
                 location.setBlock((Long) rs.getObject("block"));

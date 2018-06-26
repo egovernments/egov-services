@@ -82,21 +82,30 @@ class ViewDCB extends React.Component {
       var cgstDemands = [];
       var serviceTaxDemands = [];
       var advanTaxDemands = [];
+      var goodwillTaxDemands = [];
+      var gstOnAdvanceDemands = [];
+      var gstOnGoodWillDemands = [];
 
       demandDetails.forEach((demand) => {
 
-        if (demand.taxReason.toLowerCase() === "rent")
+        if (demand.taxReasonCode.toLowerCase() === "rent")
           rentDemands.push(demand);
-        else if (demand.taxReason.toLowerCase() === "penalty")
+        else if (demand.taxReasonCode.toLowerCase() === "penalty")
           penaltyDemands.push(demand);
-        else if (demand.taxReason.toLowerCase() === "cgst" || demand.taxReason.toLowerCase() === "central_gst")
+        else if (demand.taxReasonCode.toLowerCase() === "state_gst")
           cgstDemands.push(demand);
-        else if (demand.taxReason.toLowerCase() === "sgst" || demand.taxReason.toLowerCase() === "state_gst")
+        else if (demand.taxReasonCode.toLowerCase() === "central_gst")
           sgstDemands.push(demand);
-        else if (demand.taxReason.toLowerCase() === "servicetax" || demand.taxReason.toLowerCase() === "service_tax" || demand.taxReason.toLowerCase() === "service tax")
+        else if (demand.taxReasonCode.toLowerCase() === "service_tax")
           serviceTaxDemands.push(demand);
-        else if (demand.taxReason.toLowerCase() === "advance tax" || demand.taxReason.toLowerCase() === "service_tax")
+        else if (demand.taxReasonCode.toLowerCase() === "advance_tax")
           advanTaxDemands.push(demand);
+        else if (demand.taxReasonCode.toLowerCase() === "goodwill_amount")
+          goodwillTaxDemands.push(demand);
+        else if (demand.taxReasonCode.toLowerCase() === "adv_cgst" || demand.taxReasonCode.toLowerCase() === "adv_sgst")
+          gstOnAdvanceDemands.push(demand);
+        else if (demand.taxReasonCode.toLowerCase() === "gw_cgst" || demand.taxReasonCode.toLowerCase() === "gw_sgst")
+          gstOnGoodWillDemands.push(demand);
 
       });
 
@@ -104,40 +113,50 @@ class ViewDCB extends React.Component {
 
       demands.splice(index, 0, advanTaxDemands[0]);
       index++;
+      if(gstOnAdvanceDemands.length>0){
+      demands.splice(index, 0, gstOnAdvanceDemands[0]);
+      index++;
+      demands.splice(index, 0, gstOnAdvanceDemands[1]);
+      index++;
+      }
+      if(goodwillTaxDemands.length>0){
+      demands.splice(index, 0, goodwillTaxDemands[0]);
+      index++;
+      }
+      if(goodwillTaxDemands.length>0 && gstOnGoodWillDemands.length>0){
+      demands.splice(index, 0, gstOnGoodWillDemands[0]);
+      index++;
+      demands.splice(index, 0, gstOnGoodWillDemands[1]);
+      index++;
+    }
 
       for (var i = 0; i < rentDemands.length; i++) {
-  
         demands.splice(index, 0, rentDemands[i]);
         index++;
-  
         penaltyDemands.forEach((pDemand) => {
           if (pDemand.taxPeriod === rentDemands[i].taxPeriod) {
             demands.splice(index, 0, pDemand);
             index++;
           }
         });
-  
         sgstDemands.forEach((pDemand) => {
           if (pDemand.taxPeriod === rentDemands[i].taxPeriod) {
             demands.splice(index, 0, pDemand);
             index++;
           }
         });
-  
         cgstDemands.forEach((pDemand) => {
           if (pDemand.taxPeriod === rentDemands[i].taxPeriod) {
             demands.splice(index, 0, pDemand);
             index++;
           }
         });
-  
         serviceTaxDemands.forEach((pDemand) => {
           if (pDemand.taxPeriod === rentDemands[i].taxPeriod) {
             demands.splice(index, 0, pDemand);
             index++;
           }
         });
-  
       }
 
       this.setState({

@@ -175,15 +175,18 @@ $(document).ready(function() {
 
         var columns1 = [
             { title: "Particulars", dataKey: "particulars" },
-            { title: "Amount", dataKey: "amount" },
+            { title: "Amount (Rs)", dataKey: "amount" },
             { title: "Cheque/DD/Challan No and Date", dataKey: "leaseHolderName" },
 
         ];
-
+         var goodwillGst = Number((agreement.goodWillAmount*18)/100);
+         var secureGst = Number((agreement.securityDeposit*18)/100);
         var rows1 = [
-            { "particulars": "Goodwill", "amount": agreement.goodWillAmount, "leaseHolderName":  agreement.name },
-            { "particulars": "3 Months Rental Deposits", "amount": agreement.securityDeposit, "leaseHolderName":  agreement.name },
-            { "particulars": "Total", "amount": Number(agreement.goodWillAmount) + Number(agreement.securityDeposit), "leaseHolderName": agreement.name }
+            { "particulars": "Advance Tax(3 months Rental Deposits)", "amount": agreement.securityDeposit, "leaseHolderName":  agreement.name },
+            { "particulars": "GST for Advance Tax", "amount": secureGst, "leaseHolderName":  agreement.name },
+            { "particulars": "Goodwill Amount", "amount": agreement.goodWillAmount, "leaseHolderName":  agreement.name },
+            { "particulars": "GST for Goodwill Amount", "amount": goodwillGst, "leaseHolderName":  agreement.name },
+            { "particulars": "Total", "amount": Number(agreement.goodWillAmount) +Number(goodwillGst) + Number(agreement.securityDeposit) + secureGst, "leaseHolderName": agreement.name }
         ];
 
 
@@ -214,7 +217,7 @@ $(document).ready(function() {
 
         var columns2 = [
             { title: "Particulars", dataKey: "particulars" },
-            { title: "Amount", dataKey: "amount" }
+            { title: "Amount (Rs)", dataKey: "amount" }
         ];
 
         var rows2 = [
@@ -244,7 +247,7 @@ $(document).ready(function() {
             },
             alternateRowStyles: {
                 fillColor: [255, 255, 255]
-            }, startY: 190
+            }, startY: 200
         };
 
 
@@ -283,7 +286,7 @@ $(document).ready(function() {
 
         doc.autoTable(columns1, rows1, autoTableOptions1);
 
-        doc.fromHTML("In pursuance of the Municipal Council/Standing Committee resolution and vide GO MS No 56 (MA & UD <br> Department) dt. 05.02.2011, the said shop is allotted to you for the period <b>" + commencementDate + "</b> to <b>" + endDate + "</b> at <br> following rates of rentals and taxes thereon.",15, 164);
+        doc.fromHTML("In pursuance of the Municipal Council/Standing Committee resolution and vide GO MS No 56 (MA & UD <br> Department) dt. 05.02.2011, the said shop is allotted to you for the period <b>" + commencementDate + "</b> to <b>" + endDate + "</b> at <br> following rates of rentals and taxes thereon.",15, 176);
 
         doc.autoTable(columns2, rows2, autoTableOptions2);
 
@@ -292,20 +295,20 @@ $(document).ready(function() {
 
             + "\n\t1. The leaseholder shall pay rent by 5th of the succeeding month"
             + "\n\t2. All the late payments of rentals will attract penalty and interest as applicable"
-            + "\n\t3. The leaseholder shall not sub lease the premises in any case. If it is found that the premises are being sub let to any person, the lease shall stand cancelled without any prior notice."
+            + "\n\t3. The leaseholder shall not sub lease the premises in any case. If it is found that the premises are being \t    sub let to any person, the lease shall stand cancelled without any prior notice."
             + "\n\t4. The D&O Trade License of the establishment shall be in the name of the leaseholder only."
             + "\n\t5. The leaseholder shall do business in the name of himself only."
             + "\n\t6. The leaseholder not to use the premises for any unlawful activities"
-            + "\n\t7. The Goodwill and the Rental Deposits paid by the leaseholder shall be forfeited in the event of violation of terms and conditions in the agreement."
+            + "\n\t7. The Goodwill and the Rental Deposits paid by the leaseholder shall be forfeited in the event of violation \t    of terms and conditions in the agreement."
 
         var paragraph4 = "Hence you are requested to conclude an agreement duly registered with the SRO for the above mentioned lease within 15 days of receipt of this renewal letter without fail unless the renewal will stand cancelled without any further correspondence."
 
-        var lines = doc.splitTextToSize(paragraph3, 180);
-        doc.text(15, 228, lines);
+        var lines = doc.splitTextToSize(paragraph3, 183);
+        doc.text(12, 228, lines);
 
         doc.addPage();
         var paragraph4 = "Hence you are requested to conclude an agreement duly registered with the SRO for the above mentioned lease within 15 days of receipt of this allotment letter without fail unless the allotment will stand cancelled without any further correspondence."
-        var lines = doc.splitTextToSize(paragraph4, 180);
+        var lines = doc.splitTextToSize(paragraph4, 183);
         doc.text(15, 30, lines);
 
         doc.text(120, 50, "Commissioner");

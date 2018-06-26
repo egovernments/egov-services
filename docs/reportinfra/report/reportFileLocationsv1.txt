@@ -6,3 +6,4 @@ inventory=https://raw.githubusercontent.com/egovernments/egov-services/master/do
 common=https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/reports/report.yml
 swm=https://raw.githubusercontent.com/egovernments/egov-services/master/docs/swm/report/report.yml
 works=https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/reports/report.yml
+rainmaker-pgr=https://raw.githubusercontent.com/egovernments/egov-services/master/docs/rainmaker-pgr/reports/reports.yml

@@ -583,7 +583,7 @@ public class PaymentService {
 			}
 
 			if (demandReasonMap.containsKey(CGST_ON_ADVANCE)) {
-				demandDetailsSet.add(demandReasonMap.get("CGST_ON_ADVANCE"));
+				demandDetailsSet.add(demandReasonMap.get(CGST_ON_ADVANCE));
 			}
 			if (demandReasonMap.containsKey(SGST_ON_ADVANCE)) {
 				demandDetailsSet.add(demandReasonMap.get(SGST_ON_ADVANCE));

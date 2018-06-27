@@ -87,6 +87,7 @@ class UpdateCancellation extends React.Component {
                 workflowDetails: {
                     department: "",
                     designation: "",
+                    nextDesignation:"",
                     assignee: "",
                     action: "",
                     status: "",
@@ -306,12 +307,12 @@ class UpdateCancellation extends React.Component {
           }
 
         }
-        console.log(currentUserDesignation);
      if(currOwnerPosition && currentUserDesignation==null){
 
        var designation = getCommonMasterById("hr-masters", "designations", null,currOwnerPosition).responseJSON["Designation"];
        currentUserDesignation = designation[0].name;
      }
+     console.log("loggedinuser",currentUserDesignation);
        var wfState = process.status;
         var currStatus = null;
         if (wfState.includes('Commissioner Approved')) {
@@ -644,10 +645,7 @@ class UpdateCancellation extends React.Component {
                 }
             });
         });
-
-
     }
-
 
     makeAjaxUpload(file, cb) {
         if (file.constructor == File) {
@@ -698,6 +696,8 @@ class UpdateCancellation extends React.Component {
             agreement.action = "cancellation";
             agreement.workflowDetails.action = ID;
             agreement.workflowDetails.status = this.state.wfStatus;
+            agreement.workflowDetails.nextDesignation = getNameById(this.state.designationList ,agreement.workflowDetails.designation);
+            agreement.workflowDetails.designation = this.state.currentUserDesignation;
 
             var asOnDate = new Date();
             var dd = asOnDate.getDate();

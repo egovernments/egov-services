@@ -151,7 +151,7 @@ $(document).on("change", ".datepicker", function () {
 
         } else {
             $("#gstBlock").css("display", "block");
-            $("#serviceTaxBlock").css("display", "none");
+            // $("#serviceTaxBlock").css("display", "block");
             if ($("#rent").val()) {
 
                 let gst = $("#rent").val() * 0.09;
@@ -1678,6 +1678,7 @@ function basedOnType(){
       $("#shoppingComplexAssetDetailsBlock select").attr("disabled", true);
       $("#referenceNumber").attr("disabled",false);
       $("#floorNumber").attr("disabled",false);
+      $("#serviceTaxBlock").css("display", "none");
       $("#referenceNumberSection").remove();
       //append category text
       $(".categoryType").prepend("Shopping Complex ");

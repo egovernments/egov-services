@@ -73,7 +73,7 @@ public class PaymentService {
 	private static final String CGST_ON_ADVANCE = "ADV_CGST";
 	private static final String SGST_ON_ADVANCE = "ADV_SGST";
 	private static final String CGST_ON_GOODWILL = "GW_CGST";
-	private static final String SGST_ON_GOODWILL = "GW_CGST";
+	private static final String SGST_ON_GOODWILL = "GW_SGST";
 	private static final String ADVANCE_COLLECTION = "Advance Collection";
 
 	@Autowired

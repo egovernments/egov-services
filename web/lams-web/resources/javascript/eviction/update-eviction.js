@@ -87,6 +87,7 @@ class UpdateEviction extends React.Component {
                 workflowDetails: {
                     department: "",
                     designation: "",
+                    nextDesignation:"",
                     assignee: "",
                     action: "",
                     status: "",
@@ -632,10 +633,11 @@ class UpdateEviction extends React.Component {
 
             if(agreement.eviction.reasonForEviction == "Others" && !(agreement.remarks))
             return(showError("Please enter remarks when selected reason as others"));
-    
             agreement.action = "eviction";
             agreement.workflowDetails.action = ID;
             agreement.workflowDetails.status = this.state.wfStatus;
+            agreement.workflowDetails.nextDesignation = getNameById(this.state.designationList ,agreement.workflowDetails.designation);
+            agreement.workflowDetails.designation = this.state.currentUserDesignation;
 
             var asOnDate = new Date();
             var dd = asOnDate.getDate();

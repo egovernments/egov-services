@@ -87,6 +87,7 @@ class UpdateRenewal extends React.Component {
                 workflowDetails: {
                     department: "",
                     designation: "",
+                    nextDesignation:"",
                     assignee: "",
                     action: "",
                     status: "",
@@ -800,6 +801,8 @@ class UpdateRenewal extends React.Component {
             agreement.action = "renewal";
             agreement.workflowDetails.action = ID;
             agreement.workflowDetails.status = this.state.wfStatus;
+            agreement.workflowDetails.nextDesignation = getNameById(this.state.designationList ,agreement.workflowDetails.designation);
+            agreement.workflowDetails.designation = this.state.currentUserDesignation;
 
             var asOnDate = new Date();
             var dd = asOnDate.getDate();

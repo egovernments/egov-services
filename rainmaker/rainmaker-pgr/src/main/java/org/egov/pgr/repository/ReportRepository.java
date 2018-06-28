@@ -27,6 +27,8 @@ public class ReportRepository {
 		List<Map<String, Object>> result = new ArrayList<>();
 		if(reportRequest.getReportName().equalsIgnoreCase(ReportConstants.COMPLAINT_TYPE_REPORT)) {
 			query = reportQueryBuilder.getComplaintWiseReportQuery(reportRequest);
+		}else if(reportRequest.getReportName().equalsIgnoreCase(ReportConstants.AO_REPORT)) {
+			query = reportQueryBuilder.getAOWiseReportQuery(reportRequest);
 		}
 		try {
 			result = jdbcTemplate.queryForList(query);

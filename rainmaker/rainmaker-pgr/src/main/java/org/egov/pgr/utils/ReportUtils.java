@@ -8,8 +8,10 @@ import java.util.Map;
 import org.egov.pgr.contract.ColumnDetail;
 import org.egov.pgr.contract.ReportRequest;
 import org.egov.pgr.contract.ReportResponse;
+import org.egov.pgr.contract.RequestInfoWrapper;
 import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import lombok.extern.slf4j.Slf4j;
@@ -20,6 +22,12 @@ public class ReportUtils {
 	
 	@Autowired
 	private ResponseInfoFactory factory;
+	
+	@Value("${egov.hr.employee.v2.host}")
+	private String hrEmployeeV2Host;
+
+	@Value("${egov.hr.employee.v2.search.endpoint}")
+	private String hrEmployeeV2SearchEndpoint;
 
 	/**
 	 * Formats the DB Response according to the existing Report Framework response for the ease of UI intgeration
@@ -62,16 +70,23 @@ public class ReportUtils {
 	
 	
 	public ReportResponse getDefaultResponse(ReportRequest reportRequest) {
-		String[] supersetOfKeys = {"Total Complaints Recieved", "Total Complaints Closed", "Total Open Complaints", "Within SLA", "Outside SLA", "Avg. Citizen Rating"};
+		String[] supersetOfKeys = {"total complaints recieved", "total complaints closed", "total open complaints", "within SLA", "outside SLA", "avg. Citizen Rating"};
+		String[] supersetOfKeysOfAOReport = {"total Complaints Received", "complaints assigned", "compliants rejected", "compliants unassigned"};
 		List<ColumnDetail> reportHeader = new ArrayList<ColumnDetail>();
 		ColumnDetail columnDetail = ColumnDetail.builder().name(ReportConstants.reportCoulmnKeyMap.get(reportRequest.getReportName()))
 				.label("reports.rainmaker-pgr."+ReportConstants.reportCoulmnKeyMap.get(reportRequest.getReportName()))
 				.type("string").showColumn(true).build();
 		reportHeader.add(columnDetail);
-		
-		for(String key: Arrays.asList(supersetOfKeys)) {
-			ColumnDetail colmDetail = ColumnDetail.builder().name(key).label("reports.rainmaker-pgr."+key).type("string").showColumn(true).build();
-			reportHeader.add(colmDetail);
+		if(reportRequest.getReportName().equalsIgnoreCase(ReportConstants.AO_REPORT)) {
+			for(String key: Arrays.asList(supersetOfKeysOfAOReport)) {
+				ColumnDetail colmDetail = ColumnDetail.builder().name(key).label("reports.rainmaker-pgr."+key).type("string").showColumn(true).build();
+				reportHeader.add(colmDetail);
+			}
+		}else {
+			for(String key: Arrays.asList(supersetOfKeys)) {
+				ColumnDetail colmDetail = ColumnDetail.builder().name(key).label("reports.rainmaker-pgr."+key).type("string").showColumn(true).build();
+				reportHeader.add(colmDetail);
+			}
 		}
 		
 		return ReportResponse.builder().responseInfo(factory.createResponseInfoFromRequestInfo(reportRequest.getRequestInfo(), true))
@@ -84,6 +99,23 @@ public class ReportUtils {
 		log.info("report list: "+Arrays.asList(ReportConstants.REPORT_LIST));
 		if(!Arrays.asList(ReportConstants.REPORT_LIST).contains(reportRequest.getReportName()))
 			throw new CustomException("INVALID_REPORT_REQUEST", "There's no definition of this report");
+	}
+
+	/**
+	 * Returns uri and request for searching Employees based on id
+	 * 
+	 * @param uri
+	 * @param GROids
+	 * @param reportRequest
+	 * @return RequestInfoWrapper
+	 */
+	public RequestInfoWrapper getGROSearchRequest(StringBuilder uri, List<Long> GROids, ReportRequest reportRequest) {
+		RequestInfoWrapper requestInfoWrapper = RequestInfoWrapper.builder().requestInfo(reportRequest.getRequestInfo()).build();
+		uri.append(hrEmployeeV2Host).append(hrEmployeeV2SearchEndpoint)
+		.append("?tenantId=").append(reportRequest.getTenantId())
+		.append("&id=").append(GROids.toString().substring(1, GROids.toString().length() - 1));
+		
+		return requestInfoWrapper;
 	}
 	
 	

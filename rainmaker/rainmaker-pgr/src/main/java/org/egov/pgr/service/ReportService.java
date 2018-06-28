@@ -62,6 +62,8 @@ public class ReportService {
 			enrichDepartmentWiseReport(reportRequest, dbResponse);
 		} else if (reportRequest.getReportName().equalsIgnoreCase(ReportConstants.SOURCE_REPORT)) {
 			enrichSourceWiseReport(reportRequest, dbResponse);
+		} else if (reportRequest.getReportName().equalsIgnoreCase(ReportConstants.FUNCTIONARY_REPORT)) {
+			enrichFunctionaryWiseReport(reportRequest, dbResponse);
 		}
 		return reportUtils.formatDBResponse(reportRequest, dbResponse);
 	}
@@ -77,7 +79,7 @@ public class ReportService {
 			return Long.valueOf(obj.get("ao_name").toString().split("[:]")[0]);
 		}).collect(Collectors.toList());
 		
-		Map<Long, String> mapOfIdAndName = getGRODetails(reportRequest, GROids);
+		Map<Long, String> mapOfIdAndName = getEmployeeDetails(reportRequest, GROids);
 		
 		for (Map<String, Object> tuple : dbResponse) {
 			String name = mapOfIdAndName.get(Long.valueOf(tuple.get("ao_name").toString().split("[:]")[0]));
@@ -101,12 +103,27 @@ public class ReportService {
 	public void enrichSourceWiseReport(ReportRequest reportRequest, List<Map<String, Object>> dbResponse) {
 		//do nothing for now, later if there's a requirement, this method can be used.
 	}
+	
+	public void enrichFunctionaryWiseReport(ReportRequest reportRequest, List<Map<String, Object>> dbResponse) {
+		List<Long> employeeIds = dbResponse.parallelStream().map(obj -> {
+			return Long.valueOf(obj.get("employee_name").toString());
+		}).collect(Collectors.toList());
+		
+		Map<Long, String> mapOfIdAndName = getEmployeeDetails(reportRequest, employeeIds);
+		
+		for (Map<String, Object> tuple : dbResponse) {
+			String name = mapOfIdAndName.get(Long.valueOf(tuple.get("employee_name").toString()));
+			tuple.put("employee_name", 
+				 !StringUtils.isEmpty(name) ? name : tuple.get("employee_name").toString());
+		}
 
-	public Map<Long, String> getGRODetails(ReportRequest reportRequest, List<Long> GROids){
+	}
+
+	public Map<Long, String> getEmployeeDetails(ReportRequest reportRequest, List<Long> employeeIds){
 		Map<Long, String> mapOfIdAndName = new HashMap<>();
 		ObjectMapper mapper = pgrUtils.getObjectMapper();
 		StringBuilder uri = new StringBuilder();
-		Object request = reportUtils.getGROSearchRequest(uri, GROids, reportRequest);
+		Object request = reportUtils.getGROSearchRequest(uri, employeeIds, reportRequest);
 		Object response = serviceRequestRepository.fetchResult(uri, request);
 		if(null != response) {
 			List<Map<String, Object>> resultCast = mapper.convertValue(JsonPath.read(response, "$.Employee"), List.class);

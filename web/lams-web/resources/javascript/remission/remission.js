@@ -144,12 +144,17 @@ class RemissionAgreement extends React.Component {
         e.preventDefault();
         var _this = this;
         var agreement = Object.assign({}, _this.state.agreement);
+        var _oldRent = agreement.rent;
+        var _newRent = agreement.remission.remissionRent;
         agreement.action = "Remission";
 
         var ID = "Forward";
 
         if(agreement.remission.remissionReason == "Others" && !(agreement.remarks))
-        return(showError("Please enter remarks when selected reason as others"));    
+        return(showError("Please enter remarks when selected reason as others"));
+
+        if (_oldRent  != null  && _oldRent <= _newRent)
+        return(showError("Remission Rent should be less than Actual Rent "));
     
         var asOnDate = new Date();
         var dd = asOnDate.getDate();

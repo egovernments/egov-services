@@ -15,13 +15,33 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class ReportQueryBuilder {
 
+	public String getCreateViewQuery() {
+		String query = "create view slaservicerequestidview as select businesskey,\n"
+				+ "case when (max(\"when\") - min(\"when\") > 10) then 'Yes' else 'No' end as has_sla_crossed \n"
+				+ "from eg_pgr_action                                                            \n"
+				+ "group by businesskey\n" + "";
+
+		log.info("Create view query: " + query);
+		return query;
+
+	}
+
+	public String getDropViewQuery() {
+		String query = "DROP VIEW slaservicerequestidview";
+		return query;
+
+	}
+
 	public String getComplaintWiseReportQuery(ReportRequest reportRequest) {
 		String query = "SELECT servicecode as complaint_type,          \n"
 				+ "       sum(case when tenantId NOTNULL then 1 else 0 end) as total_complaints,\n"
 				+ "       sum(case when status IN ('closed','resolved','rejected') then 1 else 0 end) as total_closed_complaints,\n"
 				+ "       sum(case when status IN ('open','assigned') then 1 else 0 end) as total_open_complaints,\n"
-				+ "       avg(cast(rating as numeric)) as avg_citizen_rating\n" + "  FROM eg_pgr_service $where\n"
-				+ "  GROUP BY servicecode";
+				+ "       sum(case when has_sla_crossed = 'Yes' then 1 else 0 end) as within_sla,\n"
+				+ "       sum(case when has_sla_crossed = 'No' then 1 else 0 end) as outside_sla, \n"
+				+ "       avg(cast(rating as numeric)) as avg_citizen_rating\n"
+				+ "  from eg_pgr_service INNER JOIN slaservicerequestidview ON servicerequestid = businesskey\n"
+				+ "  group by servicecode";
 
 		query = addWhereClause(query, reportRequest);
 		log.info("Complaint Type wise report query: " + query);
@@ -42,26 +62,28 @@ public class ReportQueryBuilder {
 		return query;
 
 	}
-	
+
 	public String getDepartmentWiseReportQuery(ReportRequest reportRequest) {
 		String query = "SELECT servicecode as department_name,          \n"
 				+ "       sum(case when tenantId NOTNULL then 1 else 0 end) as total_complaints,\n"
 				+ "       sum(case when status IN ('closed','resolved','rejected') then 1 else 0 end) as total_closed_complaints,\n"
 				+ "       sum(case when status IN ('open','assigned') then 1 else 0 end) as total_open_complaints,\n"
-				+ "       avg(cast(rating as numeric)) as avg_citizen_rating\n" + "  FROM eg_pgr_service $where\n"
-				+ "  GROUP BY servicecode";
+				+ "       sum(case when has_sla_crossed = 'Yes' then 1 else 0 end) as within_sla,\n"
+				+ "       sum(case when has_sla_crossed = 'No' then 1 else 0 end) as outside_sla, \n"
+				+ "       avg(cast(rating as numeric)) as avg_citizen_rating\n"
+				+ "  from eg_pgr_service INNER JOIN slaservicerequestidview ON servicerequestid = businesskey\n"
+				+ "  group by servicecode";
 
 		query = addWhereClause(query, reportRequest);
 		log.info("Department name wise report query: " + query);
 		return query;
 
 	}
-	
+
 	public String getSourceWiseReportQuery(ReportRequest reportRequest) {
-		String query = "SELECT sum(case when source = 'mobileapp' then 1 else 0 end) as citizen_mobile_app,\n" + 
-				"       sum(case when source = 'web' then 1 else 0 end) as citizen_web_app,\n" + 
-				"       sum(case when source = 'ivr' then 1 else 0 end) as counter_desktop\n" + 
-				"FROM eg_pgr_service";
+		String query = "SELECT sum(case when source = 'mobileapp' then 1 else 0 end) as citizen_mobile_app,\n"
+				+ "       sum(case when source = 'web' then 1 else 0 end) as citizen_web_app,\n"
+				+ "       sum(case when source = 'ivr' then 1 else 0 end) as counter_desktop\n" + "FROM eg_pgr_service";
 
 		query = addWhereClause(query, reportRequest);
 		log.info("Source wise report query: " + query);
@@ -72,9 +94,9 @@ public class ReportQueryBuilder {
 		List<ParamValue> searchParams = reportRequest.getSearchParams();
 		StringBuilder queryBuilder = new StringBuilder();
 		queryBuilder.append("WHERE eg_pgr_service.tenantid = ").append("'" + reportRequest.getTenantId() + "'");
-		if(reportRequest.getReportName().equalsIgnoreCase(ReportConstants.AO_REPORT)) {
+		if (reportRequest.getReportName().equalsIgnoreCase(ReportConstants.AO_REPORT)) {
 			queryBuilder.append(" AND (by LIKE '%GRO' OR by LIKE '%Grievance Routing Officer') ");
-			query = query.replace("$subwhere", "WHERE tenantid = '"+reportRequest.getTenantId()+"'");
+			query = query.replace("$subwhere", "WHERE tenantid = '" + reportRequest.getTenantId() + "'");
 		}
 		if (!CollectionUtils.isEmpty(searchParams)) {
 			for (ParamValue param : searchParams) {

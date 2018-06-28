@@ -40,11 +40,17 @@ public class ReportService {
 
 	public ReportResponse getReports(ReportRequest reportRequest) {
 		reportUtils.validateReportRequest(reportRequest);
+		createViewForSLA(false);
 		List<Map<String, Object>> dbResponse = repository.getDataFromDb(reportRequest);
 		if (CollectionUtils.isEmpty(dbResponse)) {
 			return reportUtils.getDefaultResponse(reportRequest);
 		}
+		createViewForSLA(true);
 		return enrichAndFormatResponse(reportRequest, dbResponse);
+	}
+
+	public void createViewForSLA(Boolean shouldViewBeDropped) {
+		repository.createOrDropViewDb(shouldViewBeDropped);
 	}
 
 	public ReportResponse enrichAndFormatResponse(ReportRequest reportRequest, List<Map<String, Object>> dbResponse) {
@@ -86,7 +92,7 @@ public class ReportService {
 	}
 	
 	public void enrichDepartmentWiseReport(ReportRequest reportRequest, List<Map<String, Object>> dbResponse) {
-		Map<String, String> mapOfServiceCodesAndDepts = getDepartmentsForServiceCodes(reportRequest);
+		Map<String, String> mapOfServiceCodesAndDepts = getServiceDefsData(reportRequest, false);
 		for (Map<String, Object> tuple : dbResponse) {
 			tuple.put("department_name", mapOfServiceCodesAndDepts.get(tuple.get("department_name")));
 		}
@@ -112,8 +118,9 @@ public class ReportService {
 		return mapOfIdAndName;
 	}
 	
-	public Map<String, String> getDepartmentsForServiceCodes(ReportRequest reportRequest){
+	public Map<String, String> getServiceDefsData(ReportRequest reportRequest, Boolean iWantSlahours){
 		Map<String, String> mapOfServiceCodesAndDepts = new HashMap<>();
+		Map<String, String> mapOfServiceCodesAndSLA = new HashMap<>();
 		ObjectMapper mapper = pgrUtils.getObjectMapper();
 		StringBuilder uri = new StringBuilder();
 		Object request = reportUtils.getRequestForServiceDefsSearch(uri, reportRequest.getTenantId(), reportRequest.getRequestInfo());
@@ -122,10 +129,14 @@ public class ReportService {
 			List<Map<String, Object>> resultCast = mapper.convertValue(JsonPath.read(response, "$.MdmsRes.RAINMAKER-PGR.ServiceDefs"), List.class);
 			for(Map<String, Object> serviceDef: resultCast) {
 				mapOfServiceCodesAndDepts.put(serviceDef.get("serviceCode").toString(), serviceDef.get("department").toString());
+				mapOfServiceCodesAndSLA.put(serviceDef.get("serviceCode").toString(), serviceDef.get("slaHours").toString());
 			}
 		}
 		log.info("mapOfServiceCodesAndDepts: "+mapOfServiceCodesAndDepts);
-		return mapOfServiceCodesAndDepts;
+		if(iWantSlahours)
+			return mapOfServiceCodesAndSLA;
+		else
+			return mapOfServiceCodesAndDepts;
 	}
 
 }

@@ -42,5 +42,19 @@ public class ReportRepository {
 		log.info("dbResponse: "+result);
 		return result;
 	}
+	
+	public void createOrDropViewDb(Boolean shouldbeDropped) {
+		String query = null;
+		if(!shouldbeDropped) {
+			query = reportQueryBuilder.getCreateViewQuery();
+		}else {
+			query = reportQueryBuilder.getDropViewQuery();
+		}
+		try {
+			   jdbcTemplate.execute(query);
+		}catch(Exception e) {
+			log.error("View creation failed: "+e);
+		}
+	}
 
 }

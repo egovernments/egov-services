@@ -149,7 +149,7 @@ $("input").on("keyup", function () {
         });
         agreement["securityDeposit"] = this.value * 3;
 
-        let gst = $("#rent").val() * 0.09;
+        let gst = Math.round($("#rent").val() * 0.09);
         $("#cgst").val(gst);
         $("#sgst").val(gst);
 

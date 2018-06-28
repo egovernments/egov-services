@@ -79,7 +79,7 @@ $(document).on("keyup","input", function() {
 
             } else{
                
-                    let gst = $("#rent").val() * 0.09;
+                    let gst = Math.round($("#rent").val() * 0.09);
                     $("#cgst").val(gst);
                     $("#sgst").val(gst);
 
@@ -135,7 +135,7 @@ $(document).on("change", ".datepicker", function () {
 
             if ($("#rent").val()) {
 
-                let gst = $("#rent").val() * 0.09;
+                let gst = Math.round($("#rent").val() * 0.09);
                 $("#cgst").val(gst);
                 $("#sgst").val(gst);
 
@@ -154,7 +154,7 @@ $(document).on("change", ".datepicker", function () {
             // $("#serviceTaxBlock").css("display", "block");
             if ($("#rent").val()) {
 
-                let gst = $("#rent").val() * 0.09;
+                let gst = Math.round($("#rent").val() * 0.09);
                 $("#cgst").val(gst);
                 $("#sgst").val(gst);
 
@@ -351,7 +351,7 @@ $(document).ready(function() {
 
             if ($("#rent").val()) {
 
-                let gst = $("#rent").val() * 0.09;
+                let gst = Math.round($("#rent").val() * 0.09);
                 $("#cgst").val(gst);
                 $("#sgst").val(gst);
 
@@ -370,7 +370,7 @@ $(document).ready(function() {
             $("#serviceTaxBlock").css("display", "none");
             if ($("#rent").val()) {
 
-                let gst = $("#rent").val() * 0.09;
+                let gst = Math.round($("#rent").val() * 0.09);
                 $("#cgst").val(gst);
                 $("#sgst").val(gst);
 

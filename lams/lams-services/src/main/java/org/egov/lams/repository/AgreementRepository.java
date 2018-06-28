@@ -545,15 +545,16 @@ public class AgreementRepository {
         Map<Long, List<Document>> existingDocuments = getAttachedDocuments(Arrays.asList(agreement));
         List<Document> existDocument = existingDocuments.get(agreement.getId());
         ArrayList<Document> documents = new ArrayList<>();
-
-        for (Document document : agreement.getDocuments()) {
-            for (Document existDoc : existDocument) {
-                if (existDoc.getFileStore().equalsIgnoreCase(document.getFileStore())) {
-                    documents.add(document);
+            if(existingDocuments != null  && existingDocuments.size() > 0) {
+                for (Document document : agreement.getDocuments()) {
+                    for (Document existDoc : existDocument) {
+                        if (existDoc.getFileStore().equalsIgnoreCase(document.getFileStore())) {
+                            documents.add(document);
+                        }
+                    }
                 }
+                agreement.getDocuments().removeAll(documents);
             }
-        }
-        agreement.getDocuments().removeAll(documents);
         saveDocument(agreement);
 
 	}

@@ -556,10 +556,9 @@ class UpdateEviction extends React.Component {
           $("#documentSection").remove();
         }
 
-        // if (this.state.wfStatus === "Commissioner Approved") {
-        //     $("#approvalDetailsSection").remove();
-        // }
-
+        if (this.state.wfStatus.includes("Commissioner Approved")) {
+            $("#approvalCommentsSection").remove();
+        }
         if(this.state.currentUserDesignation && this.state.currentUserDesignation==='Commissioner'){
           $("#approvalDetailsSection").remove();
 
@@ -1185,7 +1184,7 @@ class UpdateEviction extends React.Component {
                             <div className="col-sm-6">
                                 <div className="row">
                                     <div className="col-sm-6 label-text">
-                                        <label for="evictionProceedingNo">Eviction Proceeding Number
+                                        <label for="evictionProceedingNo">Council/Committee Resolution Number
                                        <span>*</span>
                                         </label>
                                     </div>
@@ -1198,7 +1197,7 @@ class UpdateEviction extends React.Component {
                             <div className="col-sm-6">
                                 <div className="row">
                                     <div className="col-sm-6 label-text">
-                                        <label for="evictionProceedingDate">Eviction Proceeding Date
+                                        <label for="evictionProceedingDate">Council/Committee Resolution Date
                                        <span>*</span>
                                         </label>
                                     </div>
@@ -1371,17 +1370,19 @@ class UpdateEviction extends React.Component {
         const renderWorkFlowDetails = function () {
 
             var flg = 0;
+            let buttonsLowercase = [];
 
-            buttons.forEach(function (btn, ind) {
-                if (btn.key.toLowerCase() === "print notice") {
-                    flg = 1;
-                }
-            });
+            buttons.forEach(function(button){
+                buttonsLowercase.push(button.key.toLowerCase());
+            })
+            if(buttonsLowercase.indexOf("forward") < 0 && (buttonsLowercase.indexOf("approve") > -1 || buttonsLowercase.indexOf("print notice") > -1))
+            flg = 1;
+
 
             if (flg === 0) {
 
                 return (
-                    <div className="form-section">
+                    <div className="form-section" id="approvalCommentsSection">
                         <div className="row">
                             <div className="col-md-8 col-sm-8">
                                 <h3 className="categoryType">Workflow Details </h3>
@@ -1454,7 +1455,7 @@ class UpdateEviction extends React.Component {
                 );
             } else {
                 return (
-                    <div className="form-section" id="approvalDetailsSection">
+                    <div className="form-section" id="approvalCommentsSection">
                         <div className="row">
                             <div className="col-md-8 col-sm-8">
                                 <h3 className="categoryType">Approval Details </h3>

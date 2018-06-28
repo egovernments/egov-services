@@ -366,6 +366,7 @@ class UpdateCancellation extends React.Component {
         if(currentUserDesignation==='Junior Assistant' || currentUserDesignation==='Senior Assistant'){
           currentUserDesignation ="Assistant";
         }
+        console.log("loggedinuser",currentUserDesignation);
         getDesignations(process.status, currentUserDesignation, function (designations) {
             //console.log(designations);
             _this.setState({
@@ -600,12 +601,12 @@ class UpdateCancellation extends React.Component {
             $("#documentSection").remove();
         }
 
+        if (this.state.wfStatus.includes("Commissioner Approved")) {
+            $("#approvalCommentsSection").remove();
+        }
         if(this.state.currentUserDesignation && this.state.currentUserDesignation==='Commissioner'){
           $("#approvalDetailsSection").remove();
 
-        }
-        if (this.state.wfStatus === "Commissioner Approved") {
-            $("#approvalCommentsSection").remove();
         }
 
         $('#orderDate').datepicker({
@@ -1419,14 +1420,14 @@ class UpdateCancellation extends React.Component {
         }
 
         const renderWorkFlowDetails = function () {
-
             var flg = 0;
+            let buttonsLowercase = [];
 
-            buttons.forEach(function (btn, ind) {
-                if (btn.key.toLowerCase() === "print notice") {
-                    flg = 1;
-                }
-            });
+            buttons.forEach(function(button){
+                buttonsLowercase.push(button.key.toLowerCase());
+            })
+            if(buttonsLowercase.indexOf("forward") < 0 && (buttonsLowercase.indexOf("approve") > -1 || buttonsLowercase.indexOf("print notice") > -1))
+            flg = 1;
 
             if (flg === 0) {
 

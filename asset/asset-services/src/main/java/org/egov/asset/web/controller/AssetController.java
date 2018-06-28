@@ -49,7 +49,9 @@
 package org.egov.asset.web.controller;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.validation.Valid;
@@ -158,6 +160,30 @@ public class AssetController {
         return getAssetResponse(assets, requestInfoWrapper.getRequestInfo());
     }
 
+    @PostMapping("_paginatedsearch")
+    @ResponseBody
+    public ResponseEntity<?> paginatedSearch(@ModelAttribute @Valid final AssetCriteria assetCriteria,
+            @RequestBody @Valid final RequestInfoWrapper requestInfoWrapper,
+            final BindingResult bindingResult) {
+        final RequestInfo requestInfo = requestInfoWrapper.getRequestInfo();
+        if (bindingResult.hasErrors()) {
+            final ErrorResponse errorResponse = assetCommonService.populateErrors(bindingResult);
+            return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+
+        }
+
+        // Call service
+        Map<String, Object> assetMap = null;
+        try {
+            assetMap = assetService.getPaginatedAssets(assetCriteria, requestInfoWrapper.getRequestInfo());
+        } catch (final Exception exception) {
+            log.error("Error while processing request " + assetCriteria, exception);
+            throw new RuntimeException("Error while processing request for assets");
+        }
+
+        return getPaginatedSuccessResponse(assetMap, requestInfo);
+    }
+
     @PostMapping("_create")
     @ResponseBody
     public ResponseEntity<?> create(@RequestBody @Valid final AssetRequest assetRequest,
@@ -207,8 +233,8 @@ public class AssetController {
         log.debug("Request Headers :: " + headers);
         assetValidator.validateRevaluation(revaluationRequest);
 
-        Revaluation revaluation = revaluationService.saveRevaluation(revaluationRequest, headers);
-         List<Revaluation> revaluations = new ArrayList<>();
+        final Revaluation revaluation = revaluationService.saveRevaluation(revaluationRequest, headers);
+        final List<Revaluation> revaluations = new ArrayList<>();
         revaluations.add(revaluation);
         return getRevaluationResponse(revaluations, revaluationRequest.getRequestInfo());
 
@@ -375,5 +401,15 @@ public class AssetController {
         responseInfo.setStatus(HttpStatus.OK.toString());
         depreciationRes.setResponseInfo(responseInfoFactory.createResponseInfoFromRequestHeaders(requestInfo));
         return new ResponseEntity<DepreciationResponse>(depreciationRes, HttpStatus.OK);
+    }
+
+    public ResponseEntity<?> getPaginatedSuccessResponse(final Map<String, Object> requestMap, final RequestInfo requestInfo) {
+        final ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestHeaders(requestInfo);
+
+        final Map<String, Object> response = new LinkedHashMap<>();
+        response.put("ResponseInfo", responseInfo);
+        requestMap.forEach(response::put);
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }

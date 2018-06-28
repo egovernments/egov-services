@@ -45,28 +45,29 @@
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  *
  */
-
 package org.egov.asset.model;
 
-import javax.validation.constraints.Max;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
-import lombok.Data;
-
-@Data
+@Builder
+@AllArgsConstructor
+@EqualsAndHashCode
+@Getter
+@NoArgsConstructor
+@Setter
+@ToString
 public class Pagination {
 
-    public static int DEFAULT_PAGE_SIZE = 500;
-    public static int DEFAULT_PAGE_OFFSET = 0;
-
     private Integer totalResults;
-
-    private Integer totalPages;
-
-    @Max(500l)
-    private Integer pageSize = Integer.valueOf(DEFAULT_PAGE_SIZE);
-
     private Integer currentPage;
-
-    private Integer offSet = Integer.valueOf(DEFAULT_PAGE_OFFSET);
+    private Integer totalPages;
+    private Integer pageNumber;
+    private Integer pageSize;
 
 }

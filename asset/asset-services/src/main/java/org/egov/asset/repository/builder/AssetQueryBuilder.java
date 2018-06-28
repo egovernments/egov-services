@@ -263,7 +263,7 @@ public class AssetQueryBuilder {
             selectQuery.append(" AND asset.dateofcreation IS NOT NULL AND asset.dateofcreation<?");
             preparedStatementValues.add(searchAsset.getDateOfDepreciation());
         }
-        if (searchAsset.getIsTransactionHistoryRequired() != null)
+        if (searchAsset.getIsTransactionHistoryRequired() != null && searchAsset.getIsTransactionHistoryRequired())
             selectQuery.append(" AND ASSET.status IN ('CAPITALIZED','DISPOSED')");
 
         if (searchAsset.getApplicableForSaleOrDisposal() != null)
@@ -351,6 +351,25 @@ public class AssetQueryBuilder {
                 + "surveynumber=?,marketvalue=?,function=?,scheme=?,subscheme=?,purchaseValue=?,purchaseDate=?,"
                 + "constructionValue=?,acquisitionValue=?,acquisitionDate=?,notApplicableForSaleOrDisposal=?,"
                 + " donationDate=?,constructionDate=? WHERE code=? and tenantid=?";
+    }
+
+    @SuppressWarnings("rawtypes")
+    public String getPaginatedQuery(final AssetCriteria searchAsset, final List preparedStatementValues) {
+        final StringBuilder selectQuery = new StringBuilder(BASE_QUERY);
+
+        addWhereClause(selectQuery, preparedStatementValues, searchAsset);
+        addOrderByClause(selectQuery, searchAsset);
+
+        log.debug("Query : " + selectQuery);
+        return selectQuery.toString();
+    }
+
+    private void addOrderByClause(final StringBuilder selectQuery, final AssetCriteria searchAsset) {
+        final String sortBy = searchAsset.getSortBy() == null ? "ASSET.code"
+                : searchAsset.getSortBy();
+        final String sortOrder = searchAsset.getSortOrder() == null ? "ASC"
+                : searchAsset.getSortOrder();
+        selectQuery.append(" ORDER BY " + sortBy + " " + sortOrder);
     }
 
     /*

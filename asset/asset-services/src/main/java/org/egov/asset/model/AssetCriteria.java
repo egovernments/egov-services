@@ -51,6 +51,8 @@ package org.egov.asset.model;
 import java.util.List;
 import java.util.Set;
 
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
 import org.egov.asset.model.enums.TransactionType;
@@ -104,5 +106,12 @@ public class AssetCriteria {
     private TransactionType transaction;
     private Boolean isTransactionHistoryRequired;
     private Boolean applicableForSaleOrDisposal;
-}
 
+    @Min(1)
+    @Max(500)
+    private Integer pageSize;
+    private Integer pageNumber;
+    private String sortBy;
+    private String sortOrder;
+
+}

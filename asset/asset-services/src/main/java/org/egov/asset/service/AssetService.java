@@ -48,20 +48,26 @@
 
 package org.egov.asset.service;
 
+import static org.springframework.util.ObjectUtils.isEmpty;
+
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.egov.asset.config.ApplicationProperties;
 import org.egov.asset.contract.AssetCurrentValueRequest;
 import org.egov.asset.contract.AssetRequest;
 import org.egov.asset.model.Asset;
 import org.egov.asset.model.AssetCriteria;
 import org.egov.asset.model.AssetCurrentValue;
 import org.egov.asset.model.Document;
+import org.egov.asset.model.Pagination;
 import org.egov.asset.model.TransactionHistory;
 import org.egov.asset.model.enums.Sequence;
 import org.egov.asset.model.enums.TransactionType;
@@ -88,6 +94,9 @@ public class AssetService {
 
     @Autowired
     private AssetDocumentsRepository assetDocumentsRepository;
+
+    @Autowired
+    private ApplicationProperties applicationProperties;
 
     public List<Asset> getAssets(final AssetCriteria searchAsset, final RequestInfo requestInfo) {
         log.info("AssetService getAssets");
@@ -174,12 +183,14 @@ public class AssetService {
             final BigDecimal grossValue = asset.getGrossValue();
             final BigDecimal accumulatedDepreciation = asset.getAccumulatedDepreciation();
 
-            if ((grossValue != null ||grossValue!=BigDecimal.ZERO)  && (accumulatedDepreciation != null || accumulatedDepreciation!=BigDecimal.ZERO))
+            if ((grossValue != null || asset.getGrossValue().compareTo(BigDecimal.ZERO) != 0)
+                    && (accumulatedDepreciation != null || asset.getAccumulatedDepreciation().compareTo(BigDecimal.ZERO) != 0))
                 assetCurrentValues.get(0).setCurrentAmount(grossValue.subtract(accumulatedDepreciation));
-            else if (grossValue != null)
+            else if (grossValue != null || asset.getGrossValue().compareTo(BigDecimal.ZERO) != 0)
                 assetCurrentValues.get(0).setCurrentAmount(grossValue);
 
-            if (grossValue != null || accumulatedDepreciation != null)
+            if ((grossValue != null && asset.getGrossValue().compareTo(BigDecimal.ZERO) != 0) ||
+                    (accumulatedDepreciation != null && asset.getAccumulatedDepreciation().compareTo(BigDecimal.ZERO) != 0))
                 currentValueService.saveUpdatedCurrentValue(AssetCurrentValueRequest.builder()
                         .assetCurrentValues(assetCurrentValues).requestInfo(assetRequest.getRequestInfo()).build());
 
@@ -217,6 +228,46 @@ public class AssetService {
         final Map<Long, List<TransactionHistory>> transactionhistoryMap = assetRepository.getTransactionHistory(assetIds,
                 assets.get(0).getTenantId());
         assets.forEach(assetsList -> assetsList.setTransactionHistory(transactionhistoryMap.get(assetsList.getId())));
+    }
+
+    public Map<String, Object> getPaginatedAssets(AssetCriteria assetCriteria, RequestInfo requestInfo)
+            throws CloneNotSupportedException {
+        List<Asset> assets = getAssets(assetCriteria, requestInfo);
+        if (isEmpty(assets))
+            return getResponseForNoRecords(assetCriteria.getPageSize(), assetCriteria.getPageNumber());
+
+        return getResponseForExistingRecords(assetCriteria.getPageSize(), assetCriteria.getPageNumber(),
+                assets.size(), assetCriteria, assets);
+    }
+
+    private Map<String, Object> getResponseForNoRecords(Integer pageSize, Integer pageNumber) {
+        Pagination page = Pagination.builder().totalResults(0).totalPages(0).currentPage(0).pageNumber(pageNumber)
+                .pageSize(pageSize).build();
+        return new LinkedHashMap<String, Object>() {
+            {
+                put("Asset", Collections.EMPTY_LIST);
+                put("Page", page);
+            }
+        };
+    }
+
+    private Map<String, Object> getResponseForExistingRecords(Integer pageSize, Integer pageNumber,
+            Integer recordsFetched, AssetCriteria assetCriteria, List<Asset> assets) {
+        pageSize = isEmpty(pageSize) ? Integer.parseInt(applicationProperties.getSearchPageSizeDefault())
+                : pageSize;
+        pageNumber = isEmpty(pageNumber) ? 1 : pageNumber;
+
+        Integer totalDBRecords = assetRepository.getTotalDBRecords(assetCriteria);
+        Integer totalpages = (int) Math.ceil((double) totalDBRecords / pageSize);
+        Pagination page = Pagination.builder().totalResults(totalDBRecords).totalPages(totalpages)
+                .currentPage(pageNumber).pageNumber(pageNumber).pageSize(pageSize).build();
+
+        return new LinkedHashMap<String, Object>() {
+            {
+                put("Asset", assets);
+                put("Page", page);
+            }
+        };
     }
 
 }

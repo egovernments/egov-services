@@ -342,6 +342,18 @@ public class AssetRepository {
         }
     }
 
+    public Integer getTotalDBRecords(final AssetCriteria assetCriteria) {
+        final List<Object> namedParamsForMatchingRecords = new ArrayList<>();
+        final String queryStrForMatchingRecords = assetQueryBuilder.getPaginatedQuery(assetCriteria,
+                namedParamsForMatchingRecords);
+
+        final String queryForTotalMatchingRecords = "SELECT count(DISTINCT assetcode) FROM (" + queryStrForMatchingRecords
+                + ") AS asset";
+        log.debug("queryForTotalMatchingRecords :: " + queryForTotalMatchingRecords);
+        return jdbcTemplate.queryForObject(queryForTotalMatchingRecords, namedParamsForMatchingRecords.toArray(),
+                Integer.class);
+
+    }
     /*
      * public void updateDepreciationData(final AssetRequest assetRequest) { final Asset asset = assetRequest.getAsset(); final
      * List<Asset> assets = findAssetByCode(asset.getCode(), asset.getTenantId()); if (assets != null && !assets.isEmpty()) {

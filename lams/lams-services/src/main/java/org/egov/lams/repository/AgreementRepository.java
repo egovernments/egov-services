@@ -1,13 +1,5 @@
 package org.egov.lams.repository;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
 import org.egov.lams.exceptions.NoObjectionRecordsFoundException;
 import org.egov.lams.exceptions.NoRenewalRecordsFoundException;
 import org.egov.lams.model.Agreement;
@@ -44,6 +36,15 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Repository
 public class AgreementRepository {
@@ -541,6 +542,20 @@ public class AgreementRepository {
 			throw new RuntimeException(ex.getMessage());
 		}
 
+        Map<Long, List<Document>> existingDocuments = getAttachedDocuments(Arrays.asList(agreement));
+        List<Document> existDocument = existingDocuments.get(agreement.getId());
+        ArrayList<Document> documents = new ArrayList<>();
+
+        for (Document document : agreement.getDocuments()) {
+            for (Document existDoc : existDocument) {
+                if (existDoc.getFileStore().equalsIgnoreCase(document.getFileStore())) {
+                    documents.add(document);
+                }
+            }
+        }
+        agreement.getDocuments().removeAll(documents);
+        saveDocument(agreement);
+
 	}
 
     private Map<String, Object> getInputParams(Agreement agreement, Map<String, Object> processMap) {
@@ -844,5 +859,34 @@ public class AgreementRepository {
 		return documentsMap;
 
 	}
-	
+
+
+    public void saveDocument(Agreement agreement) {
+        List<Document> documents = agreement.getDocuments();
+
+        if (documents != null) {
+            String sqlQuery = "INSERT INTO eglams_document (id,documenttype,agreement,filestore,tenantid) values "
+                    + "(nextval('seq_eglams_document'),(select id from eglams_documenttype where "
+                    + "name='Agreement Docs'  and tenantid= ?),?,?,?);";
+            logger.info("the update query for agreement docs : " + sqlQuery);
+            List<Object[]> documentBatchArgs = new ArrayList<>();
+
+            for (Document document : documents) {
+                Object[] documentRecord = {
+                        agreement.getTenantId(), agreement.getId(),
+                        document.getFileStore(), agreement.getTenantId()
+                };
+                documentBatchArgs.add(documentRecord);
+            }
+
+            try {
+                jdbcTemplate.batchUpdate(sqlQuery, documentBatchArgs);
+            } catch (DataAccessException ex) {
+                logger.info("exception saving agreement document details" + ex);
+                throw new RuntimeException(ex.getMessage());
+            }
+        }
+
+    }
+
 }

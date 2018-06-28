@@ -1,7 +1,5 @@
 package org.egov.pgr.service;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,10 +14,7 @@ import org.egov.pgr.repository.ServiceRequestRepository;
 import org.egov.pgr.utils.PGRUtils;
 import org.egov.pgr.utils.ReportConstants;
 import org.egov.pgr.utils.ReportUtils;
-import org.egov.pgr.utils.ResponseInfoFactory;
-import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -57,8 +52,10 @@ public class ReportService {
 			enrichComplaintTypeWiseReport(reportRequest, dbResponse);
 		} else if (reportRequest.getReportName().equalsIgnoreCase(ReportConstants.AO_REPORT)) {
 			enrichAOWiseReport(reportRequest, dbResponse);
-		}  else if (reportRequest.getReportName().equalsIgnoreCase(ReportConstants.DEPARTMENT_REPORT)) {
+		} else if (reportRequest.getReportName().equalsIgnoreCase(ReportConstants.DEPARTMENT_REPORT)) {
 			enrichDepartmentWiseReport(reportRequest, dbResponse);
+		} else if (reportRequest.getReportName().equalsIgnoreCase(ReportConstants.SOURCE_REPORT)) {
+			enrichSourceWiseReport(reportRequest, dbResponse);
 		}
 		return reportUtils.formatDBResponse(reportRequest, dbResponse);
 	}
@@ -93,6 +90,10 @@ public class ReportService {
 		for (Map<String, Object> tuple : dbResponse) {
 			tuple.put("department_name", mapOfServiceCodesAndDepts.get(tuple.get("department_name")));
 		}
+	}
+	
+	public void enrichSourceWiseReport(ReportRequest reportRequest, List<Map<String, Object>> dbResponse) {
+		//do nothing for now, later if there's a requirement, this method can be used.
 	}
 
 	public Map<Long, String> getGRODetails(ReportRequest reportRequest, List<Long> GROids){

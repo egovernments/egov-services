@@ -31,6 +31,8 @@ public class ReportRepository {
 			query = reportQueryBuilder.getAOWiseReportQuery(reportRequest);
 		}else if(reportRequest.getReportName().equalsIgnoreCase(ReportConstants.DEPARTMENT_REPORT)) {
 			query = reportQueryBuilder.getDepartmentWiseReportQuery(reportRequest);
+		}else if(reportRequest.getReportName().equalsIgnoreCase(ReportConstants.SOURCE_REPORT)) {
+			query = reportQueryBuilder.getSourceWiseReportQuery(reportRequest);
 		}
 		try {
 			result = jdbcTemplate.queryForList(query);

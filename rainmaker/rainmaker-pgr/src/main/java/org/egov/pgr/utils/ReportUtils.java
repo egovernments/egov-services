@@ -82,6 +82,8 @@ public class ReportUtils {
 	public ReportResponse getDefaultResponse(ReportRequest reportRequest) {
 		String[] supersetOfKeys = {"total complaints recieved", "total complaints closed", "total open complaints", "within SLA", "outside SLA", "avg. Citizen Rating"};
 		String[] supersetOfKeysOfAOReport = {"total Complaints Received", "complaints assigned", "compliants rejected", "compliants unassigned"};
+		String[] supersetOfKeysOfSourceWiseReport = {"citizen mobile app", "citizen web app", "counter desktop"};
+
 		List<ColumnDetail> reportHeader = new ArrayList<ColumnDetail>();
 		ColumnDetail columnDetail = ColumnDetail.builder().name(ReportConstants.reportCoulmnKeyMap.get(reportRequest.getReportName()))
 				.label("reports.rainmaker-pgr."+ReportConstants.reportCoulmnKeyMap.get(reportRequest.getReportName()))
@@ -89,6 +91,11 @@ public class ReportUtils {
 		reportHeader.add(columnDetail);
 		if(reportRequest.getReportName().equalsIgnoreCase(ReportConstants.AO_REPORT)) {
 			for(String key: Arrays.asList(supersetOfKeysOfAOReport)) {
+				ColumnDetail colmDetail = ColumnDetail.builder().name(key).label("reports.rainmaker-pgr."+key).type("string").showColumn(true).build();
+				reportHeader.add(colmDetail);
+			}
+		}else if(reportRequest.getReportName().equalsIgnoreCase(ReportConstants.SOURCE_REPORT)) {
+			for(String key: Arrays.asList(supersetOfKeysOfSourceWiseReport)) {
 				ColumnDetail colmDetail = ColumnDetail.builder().name(key).label("reports.rainmaker-pgr."+key).type("string").showColumn(true).build();
 				reportHeader.add(colmDetail);
 			}

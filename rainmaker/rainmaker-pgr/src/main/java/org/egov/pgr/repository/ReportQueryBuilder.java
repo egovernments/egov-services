@@ -56,6 +56,17 @@ public class ReportQueryBuilder {
 		return query;
 
 	}
+	
+	public String getSourceWiseReportQuery(ReportRequest reportRequest) {
+		String query = "SELECT sum(case when source = 'mobileapp' then 1 else 0 end) as citizen_mobile_app,\n" + 
+				"       sum(case when source = 'web' then 1 else 0 end) as citizen_web_app,\n" + 
+				"       sum(case when source = 'ivr' then 1 else 0 end) as counter_desktop\n" + 
+				"FROM eg_pgr_service";
+
+		query = addWhereClause(query, reportRequest);
+		log.info("Source wise report query: " + query);
+		return query;
+	}
 
 	public String addWhereClause(String query, ReportRequest reportRequest) {
 		List<ParamValue> searchParams = reportRequest.getSearchParams();

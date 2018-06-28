@@ -106,7 +106,7 @@ public class ReportService {
 	
 	public void enrichFunctionaryWiseReport(ReportRequest reportRequest, List<Map<String, Object>> dbResponse) {
 		List<Long> employeeIds = dbResponse.parallelStream().map(obj -> {
-			return Long.valueOf(obj.get("employee_name").toString());
+			return Long.valueOf(StringUtils.isEmpty(obj.get("employee_name").toString()) ? "0" : obj.get("employee_name").toString());
 		}).collect(Collectors.toList());
 		
 		Map<Long, String> mapOfIdAndName = getEmployeeDetails(reportRequest, employeeIds);

@@ -53,15 +53,14 @@ public class ReportService {
 	}
 
 	public ReportResponse enrichAndFormatResponse(ReportRequest reportRequest, List<Map<String, Object>> dbResponse) {
-		ReportResponse reportResponse = null;
 		if (reportRequest.getReportName().equalsIgnoreCase(ReportConstants.COMPLAINT_TYPE_REPORT)) {
 			enrichComplaintTypeWiseReport(reportRequest, dbResponse);
-			return reportUtils.formatDBResponse(reportRequest, dbResponse);
 		} else if (reportRequest.getReportName().equalsIgnoreCase(ReportConstants.AO_REPORT)) {
 			enrichAOWiseReport(reportRequest, dbResponse);
-			return reportUtils.formatDBResponse(reportRequest, dbResponse);
+		}  else if (reportRequest.getReportName().equalsIgnoreCase(ReportConstants.DEPARTMENT_REPORT)) {
+			enrichDepartmentWiseReport(reportRequest, dbResponse);
 		}
-		return reportResponse;
+		return reportUtils.formatDBResponse(reportRequest, dbResponse);
 	}
 
 	public void enrichComplaintTypeWiseReport(ReportRequest reportRequest, List<Map<String, Object>> dbResponse) {
@@ -88,6 +87,13 @@ public class ReportService {
 		}
 
 	}
+	
+	public void enrichDepartmentWiseReport(ReportRequest reportRequest, List<Map<String, Object>> dbResponse) {
+		Map<String, String> mapOfServiceCodesAndDepts = getDepartmentsForServiceCodes(reportRequest);
+		for (Map<String, Object> tuple : dbResponse) {
+			tuple.put("department_name", mapOfServiceCodesAndDepts.get(tuple.get("department_name")));
+		}
+	}
 
 	public Map<Long, String> getGRODetails(ReportRequest reportRequest, List<Long> GROids){
 		Map<Long, String> mapOfIdAndName = new HashMap<>();
@@ -103,6 +109,22 @@ public class ReportService {
 		}
 		log.info("mapOfIdAndName: "+mapOfIdAndName);
 		return mapOfIdAndName;
+	}
+	
+	public Map<String, String> getDepartmentsForServiceCodes(ReportRequest reportRequest){
+		Map<String, String> mapOfServiceCodesAndDepts = new HashMap<>();
+		ObjectMapper mapper = pgrUtils.getObjectMapper();
+		StringBuilder uri = new StringBuilder();
+		Object request = reportUtils.getRequestForServiceDefsSearch(uri, reportRequest.getTenantId(), reportRequest.getRequestInfo());
+		Object response = serviceRequestRepository.fetchResult(uri, request);
+		if(null != response) {
+			List<Map<String, Object>> resultCast = mapper.convertValue(JsonPath.read(response, "$.MdmsRes.RAINMAKER-PGR.ServiceDefs"), List.class);
+			for(Map<String, Object> serviceDef: resultCast) {
+				mapOfServiceCodesAndDepts.put(serviceDef.get("serviceCode").toString(), serviceDef.get("department").toString());
+			}
+		}
+		log.info("mapOfServiceCodesAndDepts: "+mapOfServiceCodesAndDepts);
+		return mapOfServiceCodesAndDepts;
 	}
 
 }

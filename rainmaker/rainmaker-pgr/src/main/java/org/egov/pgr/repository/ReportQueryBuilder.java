@@ -42,6 +42,20 @@ public class ReportQueryBuilder {
 		return query;
 
 	}
+	
+	public String getDepartmentWiseReportQuery(ReportRequest reportRequest) {
+		String query = "SELECT servicecode as department_name,          \n"
+				+ "       sum(case when tenantId NOTNULL then 1 else 0 end) as total_complaints,\n"
+				+ "       sum(case when status IN ('closed','resolved','rejected') then 1 else 0 end) as total_closed_complaints,\n"
+				+ "       sum(case when status IN ('open','assigned') then 1 else 0 end) as total_open_complaints,\n"
+				+ "       avg(cast(rating as numeric)) as avg_citizen_rating\n" + "  FROM eg_pgr_service $where\n"
+				+ "  GROUP BY servicecode";
+
+		query = addWhereClause(query, reportRequest);
+		log.info("Department name wise report query: " + query);
+		return query;
+
+	}
 
 	public String addWhereClause(String query, ReportRequest reportRequest) {
 		List<ParamValue> searchParams = reportRequest.getSearchParams();
@@ -55,11 +69,11 @@ public class ReportQueryBuilder {
 			for (ParamValue param : searchParams) {
 				if (param.getName().equalsIgnoreCase("fromDate")) {
 					if (!StringUtils.isEmpty(param.getInput().toString())) {
-						queryBuilder.append("AND createdtime >= ").append(param.getInput());
+						queryBuilder.append(" AND createdtime >= ").append(param.getInput());
 					}
 				} else if (param.getName().equalsIgnoreCase("toDate")) {
 					if (!StringUtils.isEmpty(param.getInput().toString())) {
-						queryBuilder.append("AND createdtime <= ").append(param.getInput());
+						queryBuilder.append(" AND createdtime <= ").append(param.getInput());
 					}
 				}
 			}

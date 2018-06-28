@@ -5,6 +5,11 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
+import org.egov.common.contract.request.RequestInfo;
+import org.egov.mdms.model.MasterDetail;
+import org.egov.mdms.model.MdmsCriteria;
+import org.egov.mdms.model.MdmsCriteriaReq;
+import org.egov.mdms.model.ModuleDetail;
 import org.egov.pgr.contract.ColumnDetail;
 import org.egov.pgr.contract.ReportRequest;
 import org.egov.pgr.contract.ReportResponse;
@@ -28,6 +33,12 @@ public class ReportUtils {
 
 	@Value("${egov.hr.employee.v2.search.endpoint}")
 	private String hrEmployeeV2SearchEndpoint;
+	
+	@Value("${egov.mdms.host}")
+	private String mdmsHost;
+
+	@Value("${egov.mdms.search.endpoint}")
+	private String mdmsEndpoint;
 
 	/**
 	 * Formats the DB Response according to the existing Report Framework response for the ease of UI intgeration
@@ -58,7 +69,6 @@ public class ReportUtils {
 		
 		//preparing report data
 		for(Map<String, Object> tuple: dbResponse) {
-			log.info("value: "+tuple.values());
 			List<Object> data = new ArrayList(tuple.values());
 			reportData.add(data);
 		}
@@ -116,6 +126,30 @@ public class ReportUtils {
 		.append("&id=").append(GROids.toString().substring(1, GROids.toString().length() - 1));
 		
 		return requestInfoWrapper;
+	}
+	
+	/**
+	 * Prepares request and uri for service type search from MDMS
+	 * 
+	 * @param uri
+	 * @param tenantId
+	 * @param department
+	 * @param requestInfo
+	 * @return MdmsCriteriaReq
+	 * @author vishal
+	 */
+	public MdmsCriteriaReq getRequestForServiceDefsSearch(StringBuilder uri, String tenantId, RequestInfo requestInfo) {
+		uri.append(mdmsHost).append(mdmsEndpoint);
+		MasterDetail masterDetail = org.egov.mdms.model.MasterDetail.builder()
+				.name(PGRConstants.MDMS_SERVICETYPE_MASTER_NAME).build();
+		List<MasterDetail> masterDetails = new ArrayList<>();
+		masterDetails.add(masterDetail);
+		ModuleDetail moduleDetail = ModuleDetail.builder().moduleName(PGRConstants.MDMS_PGR_MOD_NAME)
+				.masterDetails(masterDetails).build();
+		List<ModuleDetail> moduleDetails = new ArrayList<>();
+		moduleDetails.add(moduleDetail);
+		MdmsCriteria mdmsCriteria = MdmsCriteria.builder().tenantId(tenantId).moduleDetails(moduleDetails).build();
+		return MdmsCriteriaReq.builder().requestInfo(requestInfo).mdmsCriteria(mdmsCriteria).build();
 	}
 	
 	

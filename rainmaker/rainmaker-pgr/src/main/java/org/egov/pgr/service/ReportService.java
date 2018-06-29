@@ -111,9 +111,9 @@ public class ReportService {
 					if (key.equalsIgnoreCase("department_name"))
 						continue;
 					if (key.equalsIgnoreCase("avg_citizen_rating")) {
-						Long rating = (Long
+						Double rating = (Double
 								.valueOf(null != parentTuple.get(key) ? parentTuple.get(key).toString() : "0")
-								+ Long.valueOf(null != tuple.get(key) ? tuple.get(key).toString() : "0"));
+								+ Double.valueOf(null != tuple.get(key) ? tuple.get(key).toString() : "0"));
 						parentTuple.put(key, rating / 2);
 					} else {
 						parentTuple.put(key,

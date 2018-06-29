@@ -100,12 +100,12 @@ public class ReportService {
 		List<Map<String, Object>> enrichedResponse = new ArrayList<>();
 		for (Map<String, Object> tuple : dbResponse) {
 			if (null == mapOfDeptAndIndex.get(mapOfServiceCodesAndDepts.get(tuple.get("department_name")))) {
-				mapOfDeptAndIndex.put(mapOfServiceCodesAndDepts.get(tuple.get("department_name")),
-						dbResponse.indexOf(tuple));
 				tuple.put("department_name", mapOfServiceCodesAndDepts.get(tuple.get("department_name")));
 				enrichedResponse.add(tuple);
+				mapOfDeptAndIndex.put(mapOfServiceCodesAndDepts.get(tuple.get("department_name")),
+						enrichedResponse.indexOf(tuple));
 			} else {
-				Map<String, Object> parentTuple = dbResponse
+				Map<String, Object> parentTuple = enrichedResponse
 						.get(mapOfDeptAndIndex.get(mapOfServiceCodesAndDepts.get(tuple.get("department_name"))));
 				for (String key : parentTuple.keySet()) {
 					if (key.equalsIgnoreCase("department_name"))

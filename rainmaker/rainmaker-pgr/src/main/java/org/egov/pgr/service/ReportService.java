@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.JsonPath;
 
+import lombok.extern.java.Log;
 import lombok.extern.slf4j.Slf4j;
 
 @Service
@@ -99,14 +100,18 @@ public class ReportService {
 		Map<String, Integer> mapOfDeptAndIndex = new HashMap<>();
 		List<Map<String, Object>> enrichedResponse = new ArrayList<>();
 		for (Map<String, Object> tuple : dbResponse) {
+			log.info("DEPARTMENT: "+mapOfServiceCodesAndDepts.get(tuple.get("department_name")));
+			log.info("MAP: "+mapOfDeptAndIndex);
 			if (null == mapOfDeptAndIndex.get(mapOfServiceCodesAndDepts.get(tuple.get("department_name")))) {
 				tuple.put("department_name", mapOfServiceCodesAndDepts.get(tuple.get("department_name")));
 				enrichedResponse.add(tuple);
-				mapOfDeptAndIndex.put(mapOfServiceCodesAndDepts.get(tuple.get("department_name")),
-						enrichedResponse.indexOf(tuple));
+				log.info("enriched in if: "+enrichedResponse);
+				mapOfDeptAndIndex.put(tuple.get("department_name").toString(), enrichedResponse.indexOf(tuple));
 			} else {
 				Map<String, Object> parentTuple = enrichedResponse
 						.get(mapOfDeptAndIndex.get(mapOfServiceCodesAndDepts.get(tuple.get("department_name"))));
+				log.info("parentTuple: "+ parentTuple);
+				log.info("index: "+mapOfServiceCodesAndDepts.get(tuple.get("department_name")));
 				for (String key : parentTuple.keySet()) {
 					if (key.equalsIgnoreCase("department_name"))
 						continue;
@@ -125,6 +130,9 @@ public class ReportService {
 						parentTuple);
 				enrichedResponse
 						.remove(mapOfDeptAndIndex.get(mapOfServiceCodesAndDepts.get(tuple.get("department_name"))) + 1);
+				
+				log.info("enriched in else: "+enrichedResponse);
+
 
 			}
 		}

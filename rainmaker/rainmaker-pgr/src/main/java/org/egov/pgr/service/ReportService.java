@@ -100,18 +100,20 @@ public class ReportService {
 		Map<String, Integer> mapOfDeptAndIndex = new HashMap<>();
 		List<Map<String, Object>> enrichedResponse = new ArrayList<>();
 		for (Map<String, Object> tuple : dbResponse) {
-			log.info("DEPARTMENT: "+mapOfServiceCodesAndDepts.get(tuple.get("department_name")));
+			String department = mapOfServiceCodesAndDepts.get(tuple.get("department_name"));
+			if(StringUtils.isEmpty(department)) {
+				continue;
+			}
+			log.info("DEPARTMENT: "+department);
 			log.info("MAP: "+mapOfDeptAndIndex);
-			if (null == mapOfDeptAndIndex.get(mapOfServiceCodesAndDepts.get(tuple.get("department_name")))) {
-				tuple.put("department_name", mapOfServiceCodesAndDepts.get(tuple.get("department_name")));
+			if (null == mapOfDeptAndIndex.get(department)) {
+				tuple.put("department_name", department);
 				enrichedResponse.add(tuple);
 				log.info("enriched in if: "+enrichedResponse);
-				mapOfDeptAndIndex.put(tuple.get("department_name").toString(), enrichedResponse.indexOf(tuple));
+				mapOfDeptAndIndex.put(department, enrichedResponse.indexOf(tuple));
 			} else {
-				Map<String, Object> parentTuple = enrichedResponse
-						.get(mapOfDeptAndIndex.get(mapOfServiceCodesAndDepts.get(tuple.get("department_name"))));
+				Map<String, Object> parentTuple = enrichedResponse.get(mapOfDeptAndIndex.get(department));
 				log.info("parentTuple: "+ parentTuple);
-				log.info("index: "+mapOfServiceCodesAndDepts.get(tuple.get("department_name")));
 				for (String key : parentTuple.keySet()) {
 					if (key.equalsIgnoreCase("department_name"))
 						continue;
@@ -126,10 +128,8 @@ public class ReportService {
 										+ Long.valueOf(null != tuple.get(key) ? tuple.get(key).toString() : "0")));
 					}
 				}
-				enrichedResponse.add(mapOfDeptAndIndex.get(mapOfServiceCodesAndDepts.get(tuple.get("department_name"))),
-						parentTuple);
-				enrichedResponse
-						.remove(mapOfDeptAndIndex.get(mapOfServiceCodesAndDepts.get(tuple.get("department_name"))) + 1);
+				enrichedResponse.add(mapOfDeptAndIndex.get(department),parentTuple);
+				enrichedResponse.remove(mapOfDeptAndIndex.get(department) + 1);
 				
 				log.info("enriched in else: "+enrichedResponse);
 

@@ -60,7 +60,7 @@ public class ReportService {
 		} else if (reportRequest.getReportName().equalsIgnoreCase(ReportConstants.AO_REPORT)) {
 			enrichAOWiseReport(reportRequest, dbResponse);
 		} else if (reportRequest.getReportName().equalsIgnoreCase(ReportConstants.DEPARTMENT_REPORT)) {
-			enrichDepartmentWiseReport(reportRequest, dbResponse);
+			dbResponse = enrichDepartmentWiseReport(reportRequest, dbResponse);
 		} else if (reportRequest.getReportName().equalsIgnoreCase(ReportConstants.SOURCE_REPORT)) {
 			enrichSourceWiseReport(reportRequest, dbResponse);
 		} else if (reportRequest.getReportName().equalsIgnoreCase(ReportConstants.FUNCTIONARY_REPORT)) {
@@ -93,11 +93,42 @@ public class ReportService {
 
 	}
 
-	public void enrichDepartmentWiseReport(ReportRequest reportRequest, List<Map<String, Object>> dbResponse) {
+	public List<Map<String, Object>> enrichDepartmentWiseReport(ReportRequest reportRequest,
+			List<Map<String, Object>> dbResponse) {
 		Map<String, String> mapOfServiceCodesAndDepts = getServiceDefsData(reportRequest, false);
+		Map<String, Integer> mapOfDeptAndIndex = new HashMap<>();
+		List<Map<String, Object>> enrichedResponse = new ArrayList<>();
 		for (Map<String, Object> tuple : dbResponse) {
-			tuple.put("department_name", mapOfServiceCodesAndDepts.get(tuple.get("department_name")));
+			if (null == mapOfDeptAndIndex.get(mapOfServiceCodesAndDepts.get(tuple.get("department_name")))) {
+				mapOfDeptAndIndex.put(mapOfServiceCodesAndDepts.get(tuple.get("department_name")),
+						dbResponse.indexOf(tuple));
+				tuple.put("department_name", mapOfServiceCodesAndDepts.get(tuple.get("department_name")));
+				enrichedResponse.add(tuple);
+			} else {
+				Map<String, Object> parentTuple = dbResponse
+						.get(mapOfDeptAndIndex.get(mapOfServiceCodesAndDepts.get(tuple.get("department_name"))));
+				for (String key : parentTuple.keySet()) {
+					if (key.equalsIgnoreCase("department_name"))
+						continue;
+					if (key.equalsIgnoreCase("avg_citizen_rating")) {
+						Long rating = (Long
+								.valueOf(null != parentTuple.get(key) ? parentTuple.get(key).toString() : "0")
+								+ Long.valueOf(null != tuple.get(key) ? tuple.get(key).toString() : "0"));
+						parentTuple.put(key, rating / 2);
+					} else {
+						parentTuple.put(key,
+								(Long.valueOf(null != parentTuple.get(key) ? parentTuple.get(key).toString() : "0")
+										+ Long.valueOf(null != tuple.get(key) ? tuple.get(key).toString() : "0")));
+					}
+				}
+				enrichedResponse.add(mapOfDeptAndIndex.get(mapOfServiceCodesAndDepts.get(tuple.get("department_name"))),
+						parentTuple);
+				enrichedResponse
+						.remove(mapOfDeptAndIndex.get(mapOfServiceCodesAndDepts.get(tuple.get("department_name"))) + 1);
+
+			}
 		}
+		return enrichedResponse;
 	}
 
 	public void enrichSourceWiseReport(ReportRequest reportRequest, List<Map<String, Object>> dbResponse) {

@@ -104,16 +104,12 @@ public class ReportService {
 			if(StringUtils.isEmpty(department)) {
 				continue;
 			}
-			log.info("DEPARTMENT: "+department);
-			log.info("MAP: "+mapOfDeptAndIndex);
 			if (null == mapOfDeptAndIndex.get(department)) {
 				tuple.put("department_name", department);
 				enrichedResponse.add(tuple);
-				log.info("enriched in if: "+enrichedResponse);
 				mapOfDeptAndIndex.put(department, enrichedResponse.indexOf(tuple));
 			} else {
 				Map<String, Object> parentTuple = enrichedResponse.get(mapOfDeptAndIndex.get(department));
-				log.info("parentTuple: "+ parentTuple);
 				for (String key : parentTuple.keySet()) {
 					if (key.equalsIgnoreCase("department_name"))
 						continue;
@@ -130,10 +126,6 @@ public class ReportService {
 				}
 				enrichedResponse.add(mapOfDeptAndIndex.get(department),parentTuple);
 				enrichedResponse.remove(mapOfDeptAndIndex.get(department) + 1);
-				
-				log.info("enriched in else: "+enrichedResponse);
-
-
 			}
 		}
 		return enrichedResponse;

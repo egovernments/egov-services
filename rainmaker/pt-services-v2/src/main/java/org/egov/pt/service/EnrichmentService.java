@@ -41,10 +41,10 @@ public class EnrichmentService {
             if(!onlyPropertyDetail)
              property.getAddress().setId(UUID.randomUUID().toString());
              property.getAddress().setTenantId(property.getTenantId());
-         //  property.setAccountId(request.getRequestInfo().getUserInfo().getUuid());
-            property.setAuditDetails(auditDetails);
-            property.setStatus(PropertyInfo.StatusEnum.ACTIVE);
-            property.getPropertyDetails().forEach(propertyDetail -> {
+             property.setAccountId(request.getRequestInfo().getUserInfo().getUuid());
+             property.setAuditDetails(auditDetails);
+             property.setStatus(PropertyInfo.StatusEnum.ACTIVE);
+             property.getPropertyDetails().forEach(propertyDetail -> {
                 propertyDetail.setAssessmentNumber(UUID.randomUUID().toString());
                 propertyDetail.getUnits().forEach(unit -> unit.setId(UUID.randomUUID().toString()));
                 propertyDetail.getUnits().forEach(unit -> unit.setTenantId(property.getTenantId()));
@@ -170,8 +170,8 @@ public class EnrichmentService {
         OwnerInfo user = userIdToOwnerMap.get(owner.getUuid());
         // Is the condition correct or we should throw error?
         if(user!=null)
-         dozerBeanMapper.map(user,owner);
-         owner.setRoles(user.getRoles());
+        {dozerBeanMapper.map(user,owner);
+         owner.setRoles(user.getRoles());}
     }
 
 

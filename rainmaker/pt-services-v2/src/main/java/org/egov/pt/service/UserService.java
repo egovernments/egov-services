@@ -51,14 +51,13 @@ public class UserService {
                 Set<String> listOfMobileNumbers = getMobileNumbers(propertyDetail);
                 propertyDetail.getOwners().forEach(owner -> {
                     if(owner.getUuid()==null){
-                        /* Sets userName equal to mobileNumber if mobileNumber already assigned as username
-                          random number is assigned as username */
-                        setUserName(owner,listOfMobileNumbers);
                         // Checks if the user is already present based on name of the owner and mobileNumber
                         UserDetailResponse userDetailResponse = userExists(owner,requestInfo);
                         // If user not present new user is created
                         if(CollectionUtils.isEmpty(userDetailResponse.getUser()))
-                        {
+                        {   /* Sets userName equal to mobileNumber if mobileNumber already assigned as username
+                          random number is assigned as username */
+                            setUserName(owner,listOfMobileNumbers);
                             userDetailResponse = userCall(new CreateUserRequest(requestInfo,owner),uri);
                             log.info("owner created --> "+userDetailResponse.getUser().get(0).getUuid());
                         }
@@ -79,7 +78,6 @@ public class UserService {
     private UserDetailResponse userExists(OwnerInfo owner,RequestInfo requestInfo){
         UserSearchRequest userSearchRequest =new UserSearchRequest();
         userSearchRequest.setTenantId(owner.getTenantId());
-  //      userSearchRequest.setUserName(owner.getUserName());
         userSearchRequest.setMobileNumber(owner.getMobileNumber());
         userSearchRequest.setName(owner.getName());
         userSearchRequest.setRequestInfo(requestInfo);

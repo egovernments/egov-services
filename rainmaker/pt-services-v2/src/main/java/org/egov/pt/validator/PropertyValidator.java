@@ -14,8 +14,6 @@ import org.springframework.beans.factory.annotation.Value;
 
 import java.util.*;
 
-import com.jayway.jsonpath.JsonPath;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
@@ -63,7 +61,6 @@ public class PropertyValidator {
      *
      */
     public void validateMasterData(PropertyRequest request){
-
       Map<String,String> errorMap = new HashMap<>();
       String tenantId = request.getProperties().get(0).getTenantId();
 
@@ -71,13 +68,12 @@ public class PropertyValidator {
       PTConstants.MDMS_PT_PROPERTYTYPE,PTConstants.MDMS_PT_PROPERTYSUBTYPE,PTConstants.MDMS_PT_OWNERSHIP,PTConstants.MDMS_PT_SUBOWNERSHIP,
       PTConstants.MDMS_PT_USAGEMAJOR,PTConstants.MDMS_PT_USAGEMINOR,PTConstants.MDMS_PT_USAGESUBMINOR,PTConstants.MDMS_PT_USAGEDETAIL
       };
-
       List<String> names = new ArrayList<>();
       names.addAll(Arrays.asList(masterNames));
 
-      Map<String,List<String>> codes = getCodes(tenantId,names,request.getRequestInfo());
+    //  validateFinancialYear(request,errorMap);
 
-
+      Map<String,List<String>> codes = getAttributeValues(tenantId,PTConstants.MDMS_PT_MOD_NAME,names,"$.*.code",request.getRequestInfo());
       validateCodes(request.getProperties(),codes,errorMap);
 
         if (!errorMap.isEmpty())
@@ -85,7 +81,7 @@ public class PropertyValidator {
     }
 
     /**
-     *Fetches all the codes as map of fieldname to list
+     *Fetches all the values of particular attribute as map of fieldname to list
      *
      * @param tenantId
      * @param names
@@ -93,9 +89,9 @@ public class PropertyValidator {
      * @return
      *
      */
-    public Map<String,List<String>> getCodes(String tenantId,List<String> names, RequestInfo requestInfo){
+    public Map<String,List<String>> getAttributeValues(String tenantId, String moduleName, List<String> names, String filter, RequestInfo requestInfo){
         StringBuilder uri = new StringBuilder(mdmsHost).append(mdmsEndpoint);
-        MdmsCriteriaReq criteriaReq = propertyUtil.prepareMdMsRequest(tenantId,names,requestInfo);
+        MdmsCriteriaReq criteriaReq = propertyUtil.prepareMdMsRequest(tenantId,moduleName,names,filter,requestInfo);
         try {
             Object result = serviceRequestRepository.fetchResult(uri, criteriaReq);
             return JsonPath.read(result,PTConstants.JSONPATH_CODES);
@@ -118,8 +114,12 @@ public class PropertyValidator {
        properties.forEach(property -> {
            property.getPropertyDetails().forEach(propertyDetail -> {
 
-	   if(!codes.get(PTConstants.MDMS_PT_PROPERTYTYPE).contains(propertyDetail.getPropertyType()) && propertyDetail.getPropertyType()!=null){
+       if(!codes.get(PTConstants.MDMS_PT_PROPERTYTYPE).contains(propertyDetail.getPropertyType()) && propertyDetail.getPropertyType()!=null){
        errorMap.put("Invalid PropertyType","The PropertyType '"+propertyDetail.getPropertyType()+"' does not exists");
+       }
+
+       if(!codes.get(PTConstants.MDMS_PT_SUBOWNERSHIP).contains(propertyDetail.getOwnershipCategory()) && propertyDetail.getOwnershipCategory()!=null){
+           errorMap.put("Invalid OwnershipType","The OwnershipType '"+propertyDetail.getOwnershipCategory()+"' does not exists");
        }
 
        if(!codes.get(PTConstants.MDMS_PT_PROPERTYSUBTYPE).contains(propertyDetail.getPropertySubType()) && propertyDetail.getPropertySubType()!=null){
@@ -134,10 +134,6 @@ public class PropertyValidator {
                if(!codes.get(PTConstants.MDMS_PT_USAGEMAJOR).contains(unit.getUsageCategoryMajor()) && unit.getUsageCategoryMajor()!=null){
                    errorMap.put("Invalid UsageCategoryMajor","The UsageCategoryMajor '"+unit.getUsageCategoryMajor()+"' at unit level does not exists");
                }
-
-               /*if(unit.getUsageCategoryMajor()!=property.getUsageCategoryMajor()){
-                   errorMap.put("Invalid UsageCategoryMajor","The UsageCategoryMajor are different at property level and unit level");
-               }*/
 
                if(!codes.get(PTConstants.MDMS_PT_USAGEMINOR).contains(unit.getUsageCategoryMinor()) && unit.getUsageCategoryMinor()!=null){
                    errorMap.put("Invalid UsageCategoryMinor","The UsageCategoryMinor '"+unit.getUsageCategoryMinor()+"' does not exists");
@@ -163,6 +159,12 @@ public class PropertyValidator {
                    errorMap.put("Invalid OccupancyType","The OccupancyType '"+unit.getOccupancyType()+"' does not exists");
                }
            });
+
+	       propertyDetail.getOwners().forEach(owner ->{
+               if(!codes.get(PTConstants.MDMS_PT_USAGEMAJOR).contains(owner.getOwnerType()) && owner.getOwnerType()!=null){
+                   errorMap.put("Invalid OwnerType","The UsageCategoryMajor '"+owner.getOwnerType()+"' does not exists");
+               }
+           });
 	     });
 
        });
@@ -177,7 +179,7 @@ public class PropertyValidator {
      * @param request
      * @return
      */
-    public PropertyCriteria getPropertirsFromSearch(PropertyRequest request) {
+    public PropertyCriteria getPropertyCriteriaForSearch(PropertyRequest request) {
 
         RequestInfo requestInfo = request.getRequestInfo();
         List<Property> properties=request.getProperties();
@@ -189,7 +191,9 @@ public class PropertyValidator {
         Set<String> addressids = new HashSet<>();
 
         PropertyCriteria propertyCriteria = new PropertyCriteria();
-
+      /*
+      * Is search on ids other than propertyIds required?
+      * */
         properties.forEach(property -> {
                     ids.add(property.getPropertyId());
                     if(!CollectionUtils.isEmpty(ids)) {
@@ -206,11 +210,8 @@ public class PropertyValidator {
                                 unitids.addAll(getUnitids(propertyDetail));
                             }
                         });
-
-                        }
+                      }
                     });
-
-
 
         propertyCriteria.setTenantId(properties.get(0).getTenantId());
         propertyCriteria.setIds(ids);
@@ -232,8 +233,8 @@ public class PropertyValidator {
         Set<OwnerInfo> owners= propertyDetail.getOwners();
         Set<String> ownerIds = new HashSet<>();
         owners.forEach(owner -> {
-            if(owner.getId()!=null)
-                ownerIds.add(owner.getId());
+            if(owner.getUuid()!=null)
+                ownerIds.add(owner.getUuid());
         });
         return ownerIds;
     }
@@ -304,6 +305,21 @@ public class PropertyValidator {
     }
 
 
+    public void validateFinancialYear(PropertyRequest request,Map<String,String> errorMap){
+      String tenantId = request.getProperties().get(0).getTenantId();
+      RequestInfo requestInfo = request.getRequestInfo();
+      request.getProperties().forEach(property ->
+              property.getPropertyDetails().forEach(propertyDetail ->
+              { // String filter = "$.FinancialYear[?(@.finYearRange == '"+propertyDetail.getFinancialYear()+"')].id";
+                  String filter = "$.*.finYearRange";
+                  Map<String,List<String>> years = getAttributeValues(tenantId,PTConstants.MDMS_PT_MOD_NAME,Arrays.asList("FinancialYear"),filter,requestInfo);
+                  if(!years.get(PTConstants.MDMS_PT_FINANCIALYEAR).contains(propertyDetail.getFinancialYear()))
+                  {
+                      errorMap.put("Invalid FinancialYear","The finacialYearRange '"+propertyDetail.getFinancialYear()+"' is not valid");
+                  }
+              }
+      ));
+    }
 
 
 }

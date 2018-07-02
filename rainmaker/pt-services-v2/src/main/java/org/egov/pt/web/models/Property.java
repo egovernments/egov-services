@@ -39,6 +39,9 @@ public class Property extends PropertyInfo{
 	@JsonProperty("auditDetails")
 	private AuditDetails auditDetails;
 
+	@JsonProperty("accountId")
+	private String accountId;
+
 
 	public enum CreationReasonEnum {
 		NEWPROPERTY("NEWPROPERTY"),
@@ -87,7 +90,26 @@ public class Property extends PropertyInfo{
 		return this;
 	}
 
+	@Builder
+	public Property(String propertyId, String tenantId, String acknowldgementNumber, String oldPropertyId, StatusEnum status, Address address, AuditDetails auditDetails, String accountId, CreationReasonEnum creationReason, Long occupancyDate, List<PropertyDetail> propertyDetails) {
+		super(propertyId, tenantId, acknowldgementNumber, oldPropertyId, status, address);
+		this.auditDetails = auditDetails;
+		this.accountId = accountId;
+		this.creationReason = creationReason;
+		this.occupancyDate = occupancyDate;
+		this.propertyDetails = propertyDetails;
+	}
 
+}
+
+
+
+
+
+
+
+
+/*
 	public static PropertyBuilder builder(){
 		return new PropertyBuilder();
 	}
@@ -98,6 +120,7 @@ public class Property extends PropertyInfo{
 		private Long occupancyDate;
 		private List<PropertyDetail>  propertyDetails;
 		private AuditDetails auditDetails;
+		private String accountId;
 
 		private String propertyId;
 		private String tenantId;
@@ -130,6 +153,11 @@ public class Property extends PropertyInfo{
 
 		public PropertyBuilder propertyId(String propertyId){
 			this.propertyId =propertyId ;
+			return this;
+		}
+
+		public PropertyBuilder accountId(String accountId){
+			this.accountId =accountId ;
 			return this;
 		}
 
@@ -172,6 +200,16 @@ public class Property extends PropertyInfo{
 		this.creationReason = builder.creationReason;
 		this.occupancyDate = builder.occupancyDate;
 		this.propertyDetails = builder.propertyDetails;
+		this.accountId=builder.accountId;
+	}*/
 
-	}
-}
+
+
+	/*public Property(AuditDetails auditDetails, String accountId, CreationReasonEnum creationReason, Long occupancyDate, List<PropertyDetail> propertyDetails) {
+		this.auditDetails = auditDetails;
+		this.accountId = accountId;
+		this.creationReason = creationReason;
+		this.occupancyDate = occupancyDate;
+		this.propertyDetails = propertyDetails;
+	}*/
+

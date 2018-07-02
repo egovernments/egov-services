@@ -75,9 +75,5 @@ public class Unit   {
         @JsonProperty("arv")
         private BigDecimal arv;
 
-
-
-
-
 }
 

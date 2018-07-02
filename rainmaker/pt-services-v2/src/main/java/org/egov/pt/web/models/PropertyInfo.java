@@ -26,27 +26,29 @@ import io.swagger.annotations.ApiModel;
 @Getter
 @Setter
 @NoArgsConstructor
-//@Builder
-@EqualsAndHashCode(of= {"propertyId","tenantId"})
-public class PropertyInfo   {
-        @JsonProperty("propertyId")
-        public String propertyId;
+@AllArgsConstructor
 
-        @JsonProperty("tenantId")
-        public String tenantId;
+    @EqualsAndHashCode(of= {"propertyId","tenantId"})
+    public class PropertyInfo   {
 
-        @JsonProperty("acknowldgementNumber")
-        public String acknowldgementNumber;
+    @JsonProperty("propertyId")
+    public String propertyId;
 
-        @JsonProperty("oldPropertyId")
-        public String oldPropertyId;
+    @JsonProperty("tenantId")
+    public String tenantId;
+
+    @JsonProperty("acknowldgementNumber")
+    public String acknowldgementNumber;
+
+    @JsonProperty("oldPropertyId")
+    public String oldPropertyId;
 
               /**
    * status of the Property
    */
-  public enum StatusEnum {
+    public enum StatusEnum {
     ACTIVE("ACTIVE"),
-    
+
     INACTIVE("INACTIVE");
 
     private String value;
@@ -70,24 +72,25 @@ public class PropertyInfo   {
       }
       return null;
     }
-  }
-        @JsonProperty("status")
-        public StatusEnum status;
+    }
 
-        @Valid
-        @JsonProperty("address")
-        public Address address;
+    @JsonProperty("status")
+    public StatusEnum status;
+
+    @Valid
+    @JsonProperty("address")
+    public Address address;
 
 
 
 
-    protected PropertyInfo(String propertyId, String tenantId, String acknowldgementNumber, String oldPropertyId, StatusEnum status, Address address) {
+   /* protected PropertyInfo(String propertyId, String tenantId, String acknowldgementNumber, String oldPropertyId, StatusEnum status, Address address) {
         this.propertyId = propertyId;
         this.tenantId = tenantId;
         this.acknowldgementNumber = acknowldgementNumber;
         this.oldPropertyId = oldPropertyId;
         this.status = status;
         this.address = address;
-    }
+    }*/
 }
 

@@ -45,6 +45,7 @@ public class PropertyRowMapper implements ResultSetExtractor<List<Property>> {
 						.city(rs.getString("city")).detail(rs.getString("detail")).id(rs.getString("addresskeyid"))
 						.landmark(rs.getString("landmark")).latitude(rs.getDouble("latitude")).locality(locality)
 						.longitude(rs.getDouble("longitude")).pincode(rs.getString("pincode"))
+						.doorNo(rs.getString("doorno"))
 						.street(rs.getString("street")).tenantId(tenanId).type(rs.getString("type")).build();
 
 				AuditDetails auditdetails = AuditDetails.builder().createdBy(rs.getString("createdBy"))
@@ -58,6 +59,7 @@ public class PropertyRowMapper implements ResultSetExtractor<List<Property>> {
 						.occupancyDate(rs.getLong("occupancyDate")).propertyId(currentId)
 						.oldPropertyId(rs.getString("oldPropertyId"))
 						.status(PropertyInfo.StatusEnum.fromValue(rs.getString("status")))
+						.accountId(rs.getString("accountId"))
 						.tenantId(tenanId).auditDetails(auditdetails).build();
 
 				propertyMap.put(currentId, currentProperty);
@@ -89,6 +91,8 @@ public class PropertyRowMapper implements ResultSetExtractor<List<Property>> {
 					.usage(rs.getString("usage")).assessmentDate(rs.getLong("assessmentDate"))
 					.assessmentNumber(rs.getString("assessmentNumber")).financialYear(rs.getString("financialYear"))
 					.propertyType(rs.getString("propertyType")).propertySubType(rs.getString("propertySubType"))
+					.ownershipCategory(rs.getString("ownershipCategory"))
+					.subOwnershipCategory(rs.getString("subOwnershipCategory"))
 					.usageCategoryMajor(rs.getString("usageCategoryMajor"))
 					.build();
 			property.addpropertyDetailsItem(detail);
@@ -96,7 +100,11 @@ public class PropertyRowMapper implements ResultSetExtractor<List<Property>> {
 
 		String tenantId = property.getTenantId();
 
-		OwnerInfo owner = OwnerInfo.builder().id(rs.getString("userid")).build();
+		OwnerInfo owner = OwnerInfo.builder().uuid(rs.getString("userid"))
+				          .isPrimaryOwner(rs.getBoolean("isPrimaryOwner"))
+				          .ownerType(rs.getString("ownerType"))
+				          .ownerShipPercentage(rs.getDouble("ownerShipPercentage"))
+				          .build();
 		Document document = Document.builder().id(rs.getString("documentid")).documentType(rs.getString("documentType"))
 				.fileStore(rs.getString("fileStore")).build();
 		Unit unit = Unit.builder().id(rs.getString("unitid")).floorNo(rs.getString("floorNo")).tenantId(tenantId)

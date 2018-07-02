@@ -48,8 +48,6 @@ public class PropertyConfiguration {
     }
 
 
-
-
     //PERSISTER
     @Value("${persister.save.property.topic}")
     private String savePropertyTopic;

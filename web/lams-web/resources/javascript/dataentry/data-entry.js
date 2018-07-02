@@ -216,7 +216,7 @@ $(document).ready(function() {
         let modifyAgreements = response.Agreements[0];
         //Creating docs key to display files and deleting documents for update 
         modifyAgreements.docs = modifyAgreements.documents;
-        modifyAgreements.documents = [];
+        modifyAgreements.documents = modifyAgreements.docs;
         // console.log(modifyAgreements);
         agreement = Object.assign({}, modifyAgreements);
         //Load subSeqRenewals based on response agreement['subSeqRenewals']

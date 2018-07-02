@@ -541,20 +541,7 @@ public class AgreementRepository {
 			logger.error("exception in modify agreement " + ex);
 			throw new RuntimeException(ex.getMessage());
 		}
-
-        Map<Long, List<Document>> existingDocuments = getAttachedDocuments(Arrays.asList(agreement));
-        List<Document> existDocument = existingDocuments.get(agreement.getId());
-        ArrayList<Document> documents = new ArrayList<>();
-            if(existingDocuments != null  && existingDocuments.size() > 0) {
-                for (Document document : agreement.getDocuments()) {
-                    for (Document existDoc : existDocument) {
-                        if (existDoc.getFileStore().equalsIgnoreCase(document.getFileStore())) {
-                            documents.add(document);
-                        }
-                    }
-                }
-                agreement.getDocuments().removeAll(documents);
-            }
+        deleteDocument(agreement.getId(),agreement.getTenantId());
         saveDocument(agreement);
 
 	}
@@ -890,4 +877,17 @@ public class AgreementRepository {
 
     }
 
+    public void deleteDocument(Long agreementId, String tenantId) {
+        Map<String, Object> paramsMap = new HashMap<>();
+        paramsMap.put("agreementId", agreementId);
+        paramsMap.put("tenantId", tenantId);
+        String deleteQuery = "DELETE FROM  eglams_document WHERE agreement = :agreementId AND tenantid=:tenantId";
+        try {
+            namedParameterJdbcTemplate.update(deleteQuery, paramsMap);
+
+        } catch (DataAccessException ex) {
+            logger.error("the exception in updating subseqrenewal in modify agreement" + ex);
+            throw new RuntimeException(ex.getMessage());
+        }
+    }
 }

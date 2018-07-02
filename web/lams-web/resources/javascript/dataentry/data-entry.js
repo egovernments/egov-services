@@ -802,7 +802,8 @@ var commomFieldsRules = {
     },
     rent: {
         required: true,
-        integerOnly:true
+        integerOnly:true,
+        rent: true
     },
     goodWillAmount:{
       integerOnly:true
@@ -896,6 +897,10 @@ for (var key in finalValidatinRules) {
 $.validator.addMethod('phone', function(value) {
     return /^[0-9]{10}$/.test(value);
 }, 'Please enter a valid phone number.');
+
+$.validator.addMethod('rent', function(value) {
+    return /^\s*(?=.*[1-9])\d*(?:\.\d{1,2})?\s*$/.test(value);
+}, 'Rent should be greater than Zero.');
 
 $.validator.addMethod('aadhar', function(value) {
     return value ? /^[0-9]{12}$/.test(value) : true;

@@ -60,9 +60,7 @@ public class PGRConstants {
 	public static final String DEPARTMENTNAME_EMPLOYEE_JSONPATH = "$.Department[0].name";
 	
 	public static final String SEARCHER_RESPONSE_TEXT = "Searcher response : ";
-	
-	public static final String WEB_APP_FEEDBACK_PAGE_LINK = "/citizen/feedback/";
-	
+		
 	public static final String SMS_NOTIFICATION_STATUS_KEY = "<status>";
 	public static final String SMS_NOTIFICATION_COMPLAINT_TYPE_KEY = "<complaint_type>";
 	public static final String SMS_NOTIFICATION_DATE_KEY = "<date>";

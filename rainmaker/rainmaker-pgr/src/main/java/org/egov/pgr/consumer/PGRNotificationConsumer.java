@@ -76,6 +76,9 @@ public class PGRNotificationConsumer {
 	@Value("${egov.ui.app.host}")
 	private String uiAppHost;
 	
+	@Value("${egov.ui.feedback.url}")
+	private String uiFeedbackUrl;
+		
 	@Value("${notification.allowed.on.status}")
 	private String notificationEnabledStatuses;
 	
@@ -218,7 +221,7 @@ public class PGRNotificationConsumer {
 		return text.replaceAll(PGRConstants.SMS_NOTIFICATION_COMPLAINT_TYPE_KEY, serviceType)
 			.replaceAll(PGRConstants.SMS_NOTIFICATION_ID_KEY, serviceReq.getServiceRequestId())
 			.replaceAll(PGRConstants.SMS_NOTIFICATION_DATE_KEY, date)
-			.replaceAll(PGRConstants.SMS_NOTIFICATION_APP_LINK_KEY, uiAppHost + PGRConstants.WEB_APP_FEEDBACK_PAGE_LINK + serviceReq.getServiceRequestId());	
+			.replaceAll(PGRConstants.SMS_NOTIFICATION_APP_LINK_KEY, uiAppHost + uiFeedbackUrl + serviceReq.getServiceRequestId());	
 		}
 		return text;
 	}

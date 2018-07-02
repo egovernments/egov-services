@@ -291,3 +291,8 @@ function hideLoading(){
  document.getElementById("loadingMask").style.display = "none";
  document.getElementById("loading").style.display = "none";
 }
+
+function maskAlloteeDetails(details){
+
+  return(details.replace(details.substr(0, 8),"********"))
+}

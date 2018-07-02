@@ -634,7 +634,7 @@ function displayFiles(agreement) {
     for (var key in agreement) {
         if (key == "docs" && agreement[key] && agreement[key].constructor == Array && agreement[key].length > 0) {
             for (var i = 0; i < agreement[key].length; i++) {
-                appendTr(tBody, count, "Documents", agreement[key][i]["fileStore"]);
+                appendTr(tBody, count, agreement[key][i]["fileName"], agreement[key][i]["fileStore"]);
                 count++;
             }
         }

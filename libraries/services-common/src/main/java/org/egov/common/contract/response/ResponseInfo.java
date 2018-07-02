@@ -21,7 +21,7 @@ public class ResponseInfo {
 
     private String ver;
 
-    private String ts;
+    private Long ts;
 
     private String resMsgId;
 

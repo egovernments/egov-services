@@ -100,7 +100,6 @@ public class LocationBoundaryController {
 		endTime = new Date().getTime();
 		LOGGER.info("ToTAL Time Taken In Controller To fetch Boundaries = " +(endTime - startTime)+"ms");
 		return response;
-
 	}
 
 	private ResponseEntity<?> getBoundarySearchSuccessResponse(BoundaryMdmsResponse boundaryResponse,

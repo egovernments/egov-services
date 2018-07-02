@@ -21,7 +21,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-@EqualsAndHashCode(of={"uuid"})
+@EqualsAndHashCode
 
 public class User   {
         @JsonProperty("id")

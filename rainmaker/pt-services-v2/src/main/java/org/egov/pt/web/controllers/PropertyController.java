@@ -38,7 +38,6 @@ public class PropertyController {
 
 	@RequestMapping(value = "/_update", method = RequestMethod.POST)
 	public ResponseEntity<PropertyResponse> update(@Valid @RequestBody PropertyRequest propertyRequest) {
-
 		List<Property> properties = propertyService.updateProperty(propertyRequest);
 		PropertyResponse response = PropertyResponse.builder().properties(properties)
 				.responseInfo(responseInfoFactory.createResponseInfoFromRequestInfo(propertyRequest.getRequestInfo(), true))
@@ -49,7 +48,6 @@ public class PropertyController {
 	@RequestMapping(value = "/_search", method = RequestMethod.POST)
 	public ResponseEntity<PropertyResponse> search(@Valid @RequestBody RequestInfoWrapper requestInfoWrapper,
 			@Valid @ModelAttribute PropertyCriteria propertyCriteria) {
-
 		List<Property> properties = propertyService.searchProperty(propertyCriteria,requestInfoWrapper.getRequestInfo());
 		PropertyResponse response = PropertyResponse.builder().properties(properties).responseInfo(
 				responseInfoFactory.createResponseInfoFromRequestInfo(requestInfoWrapper.getRequestInfo(), true))

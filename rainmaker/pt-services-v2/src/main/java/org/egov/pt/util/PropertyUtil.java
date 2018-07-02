@@ -33,17 +33,17 @@ public class PropertyUtil {
             return AuditDetails.builder().lastModifiedBy(by).lastModifiedTime(time).build();
     }
 
-    public MdmsCriteriaReq prepareMdMsRequestForCodes(String tenantId, List<String> names, RequestInfo requestInfo) {
+    public MdmsCriteriaReq prepareMdMsRequest(String tenantId,String moduleName, List<String> names, String filter, RequestInfo requestInfo) {
 
         List<MasterDetail> masterDetails = new ArrayList<>();
         MasterDetail masterDetail;
 
         names.forEach(name -> {
-            masterDetails.add(MasterDetail.builder().name(name).filter("$.*.code").build());
+            masterDetails.add(MasterDetail.builder().name(name).filter(filter).build());
         });
 
         ModuleDetail moduleDetail = ModuleDetail.builder()
-                .moduleName(PTConstants.MDMS_PT_MOD_NAME).masterDetails(masterDetails).build();
+                .moduleName(moduleName).masterDetails(masterDetails).build();
         List<ModuleDetail> moduleDetails = new ArrayList<>();
         moduleDetails.add(moduleDetail);
         MdmsCriteria mdmsCriteria = MdmsCriteria.builder().tenantId(tenantId).moduleDetails(moduleDetails).build();

@@ -37,5 +37,11 @@ public class PropertyCriteria {
 
 	private String name;
 
+	private String doorNo;
+
+	private String locality;
+
+	private String accountId;
+
 
 }

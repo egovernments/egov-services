@@ -71,7 +71,9 @@ public class PropertyValidator {
       List<String> names = new ArrayList<>();
       names.addAll(Arrays.asList(masterNames));
 
-      Map<String,List<String>> codes = getCodes(tenantId,names,request.getRequestInfo());
+    //  validateFinancialYear(request,errorMap);
+
+      Map<String,List<String>> codes = getAttributeValues(tenantId,PTConstants.MDMS_PT_MOD_NAME,names,"$.*.code",request.getRequestInfo());
       validateCodes(request.getProperties(),codes,errorMap);
 
         if (!errorMap.isEmpty())
@@ -79,7 +81,7 @@ public class PropertyValidator {
     }
 
     /**
-     *Fetches all the codes as map of fieldname to list
+     *Fetches all the values of particular attribute as map of fieldname to list
      *
      * @param tenantId
      * @param names
@@ -87,9 +89,9 @@ public class PropertyValidator {
      * @return
      *
      */
-    public Map<String,List<String>> getCodes(String tenantId,List<String> names, RequestInfo requestInfo){
+    public Map<String,List<String>> getAttributeValues(String tenantId, String moduleName, List<String> names, String filter, RequestInfo requestInfo){
         StringBuilder uri = new StringBuilder(mdmsHost).append(mdmsEndpoint);
-        MdmsCriteriaReq criteriaReq = propertyUtil.prepareMdMsRequestForCodes(tenantId,names,requestInfo);
+        MdmsCriteriaReq criteriaReq = propertyUtil.prepareMdMsRequest(tenantId,moduleName,names,filter,requestInfo);
         try {
             Object result = serviceRequestRepository.fetchResult(uri, criteriaReq);
             return JsonPath.read(result,PTConstants.JSONPATH_CODES);
@@ -112,12 +114,12 @@ public class PropertyValidator {
        properties.forEach(property -> {
            property.getPropertyDetails().forEach(propertyDetail -> {
 
-	   if(!codes.get(PTConstants.MDMS_PT_PROPERTYTYPE).contains(propertyDetail.getPropertyType()) && propertyDetail.getPropertyType()!=null){
+       if(!codes.get(PTConstants.MDMS_PT_PROPERTYTYPE).contains(propertyDetail.getPropertyType()) && propertyDetail.getPropertyType()!=null){
        errorMap.put("Invalid PropertyType","The PropertyType '"+propertyDetail.getPropertyType()+"' does not exists");
        }
 
-       if(!codes.get(PTConstants.MDMS_PT_SUBOWNERSHIP).contains(propertyDetail.getOwnershipType()) && propertyDetail.getOwnershipType()!=null){
-           errorMap.put("Invalid OwnershipType","The OwnershipType '"+propertyDetail.getOwnershipType()+"' does not exists");
+       if(!codes.get(PTConstants.MDMS_PT_SUBOWNERSHIP).contains(propertyDetail.getOwnershipCategory()) && propertyDetail.getOwnershipCategory()!=null){
+           errorMap.put("Invalid OwnershipType","The OwnershipType '"+propertyDetail.getOwnershipCategory()+"' does not exists");
        }
 
        if(!codes.get(PTConstants.MDMS_PT_PROPERTYSUBTYPE).contains(propertyDetail.getPropertySubType()) && propertyDetail.getPropertySubType()!=null){
@@ -189,7 +191,9 @@ public class PropertyValidator {
         Set<String> addressids = new HashSet<>();
 
         PropertyCriteria propertyCriteria = new PropertyCriteria();
-
+      /*
+      * Is search on ids other than propertyIds required?
+      * */
         properties.forEach(property -> {
                     ids.add(property.getPropertyId());
                     if(!CollectionUtils.isEmpty(ids)) {
@@ -301,6 +305,21 @@ public class PropertyValidator {
     }
 
 
+    public void validateFinancialYear(PropertyRequest request,Map<String,String> errorMap){
+      String tenantId = request.getProperties().get(0).getTenantId();
+      RequestInfo requestInfo = request.getRequestInfo();
+      request.getProperties().forEach(property ->
+              property.getPropertyDetails().forEach(propertyDetail ->
+              { // String filter = "$.FinancialYear[?(@.finYearRange == '"+propertyDetail.getFinancialYear()+"')].id";
+                  String filter = "$.*.finYearRange";
+                  Map<String,List<String>> years = getAttributeValues(tenantId,PTConstants.MDMS_PT_MOD_NAME,Arrays.asList("FinancialYear"),filter,requestInfo);
+                  if(!years.get(PTConstants.MDMS_PT_FINANCIALYEAR).contains(propertyDetail.getFinancialYear()))
+                  {
+                      errorMap.put("Invalid FinancialYear","The finacialYearRange '"+propertyDetail.getFinancialYear()+"' is not valid");
+                  }
+              }
+      ));
+    }
 
 
 }

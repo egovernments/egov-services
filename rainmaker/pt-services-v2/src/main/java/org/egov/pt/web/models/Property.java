@@ -90,7 +90,26 @@ public class Property extends PropertyInfo{
 		return this;
 	}
 
+	@Builder
+	public Property(String propertyId, String tenantId, String acknowldgementNumber, String oldPropertyId, StatusEnum status, Address address, AuditDetails auditDetails, String accountId, CreationReasonEnum creationReason, Long occupancyDate, List<PropertyDetail> propertyDetails) {
+		super(propertyId, tenantId, acknowldgementNumber, oldPropertyId, status, address);
+		this.auditDetails = auditDetails;
+		this.accountId = accountId;
+		this.creationReason = creationReason;
+		this.occupancyDate = occupancyDate;
+		this.propertyDetails = propertyDetails;
+	}
 
+}
+
+
+
+
+
+
+
+
+/*
 	public static PropertyBuilder builder(){
 		return new PropertyBuilder();
 	}
@@ -182,5 +201,15 @@ public class Property extends PropertyInfo{
 		this.occupancyDate = builder.occupancyDate;
 		this.propertyDetails = builder.propertyDetails;
 		this.accountId=builder.accountId;
-	}
-}
+	}*/
+
+
+
+	/*public Property(AuditDetails auditDetails, String accountId, CreationReasonEnum creationReason, Long occupancyDate, List<PropertyDetail> propertyDetails) {
+		this.auditDetails = auditDetails;
+		this.accountId = accountId;
+		this.creationReason = creationReason;
+		this.occupancyDate = occupancyDate;
+		this.propertyDetails = propertyDetails;
+	}*/
+

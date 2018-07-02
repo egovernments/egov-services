@@ -26,7 +26,8 @@ import io.swagger.annotations.ApiModel;
 @Getter
 @Setter
 @NoArgsConstructor
-//@Builder
+@AllArgsConstructor
+
     @EqualsAndHashCode(of= {"propertyId","tenantId"})
     public class PropertyInfo   {
 
@@ -83,13 +84,13 @@ import io.swagger.annotations.ApiModel;
 
 
 
-    protected PropertyInfo(String propertyId, String tenantId, String acknowldgementNumber, String oldPropertyId, StatusEnum status, Address address) {
+   /* protected PropertyInfo(String propertyId, String tenantId, String acknowldgementNumber, String oldPropertyId, StatusEnum status, Address address) {
         this.propertyId = propertyId;
         this.tenantId = tenantId;
         this.acknowldgementNumber = acknowldgementNumber;
         this.oldPropertyId = oldPropertyId;
         this.status = status;
         this.address = address;
-    }
+    }*/
 }
 

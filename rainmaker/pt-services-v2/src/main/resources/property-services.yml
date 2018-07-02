@@ -35,7 +35,7 @@ serviceMaps:
           - jsonPath: $.properties.*.auditDetails.lastModifiedTime
 
 
-       - query: INSERT INTO eg_pt_propertydetail_v2(tenantId,assessmentNumber,property,ownershipType,source,usage,noOfFloors,landArea,buildUpArea,additionalDetails,channel,financialYear,propertyType,propertySubType,usageCategoryMajor,assessmentDate,createdby, lastmodifiedby, createdtime, lastmodifiedtime) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);
+       - query: INSERT INTO eg_pt_propertydetail_v2(tenantId,assessmentNumber,property,ownershipCategory,subOwnershipCategory,source,usage,noOfFloors,landArea,buildUpArea,additionalDetails,channel,financialYear,propertyType,propertySubType,usageCategoryMajor,assessmentDate,createdby, lastmodifiedby, createdtime, lastmodifiedtime) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);
          basePath: properties.*.propertyDetails.*
          jsonMaps:
 
@@ -45,7 +45,9 @@ serviceMaps:
 
            - jsonPath: $.properties[*][?({assessmentNumber} in @.propertyDetails[*].assessmentNumber)].propertyId
 
-           - jsonPath: $.properties.*.propertyDetails.*.ownershipType
+           - jsonPath: $.properties.*.propertyDetails.*.ownershipCategory
+
+           - jsonPath: $.properties.*.propertyDetails.*.subOwnershipCategory
 
            - jsonPath: $.properties.*.propertyDetails.*.source
 
@@ -262,9 +264,7 @@ serviceMaps:
 
 
 
-
-
-        - query: INSERT INTO eg_pt_propertydetail_v2(tenantId,assessmentNumber,property,ownershipType,source,usage,noOfFloors,landArea,buildUpArea,additionalDetails,channel,financialYear,propertyType,propertySubType,usageCategoryMajor,assessmentDate,createdby, lastmodifiedby, createdtime,lastmodifiedtime) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?) ON CONFLICT (assessmentNumber) DO UPDATE SET financialYear=?, propertyType=?, propertySubType=?,usageCategoryMajor=?, assessmentDate=?,ownershipType=?,source=?,usage=?,noOfFloors=?,landArea=?,buildUpArea=?,additionalDetails=?,channel=?,lastModifiedBy=?, lastModifiedTime=?;
+        - query: INSERT INTO eg_pt_propertydetail_v2(tenantId,assessmentNumber,property,ownershipCategory,subOwnershipCategory,source,usage,noOfFloors,landArea,buildUpArea,additionalDetails,channel,financialYear,propertyType,propertySubType,usageCategoryMajor,assessmentDate,createdby, lastmodifiedby, createdtime,lastmodifiedtime) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?) ON CONFLICT (assessmentNumber) DO UPDATE SET financialYear=?, propertyType=?, propertySubType=?,usageCategoryMajor=?, assessmentDate=?,ownershipCategory=?,subOwnershipCategory=?,source=?,usage=?,noOfFloors=?,landArea=?,buildUpArea=?,additionalDetails=?,channel=?,lastModifiedBy=?, lastModifiedTime=?;
           basePath: properties.*.propertyDetails.*
           jsonMaps:
 
@@ -274,7 +274,9 @@ serviceMaps:
 
             - jsonPath: $.properties[*][?({assessmentNumber} in @.propertyDetails[*].assessmentNumber)].propertyId
 
-            - jsonPath: $.properties.*.propertyDetails.*.ownershipType
+            - jsonPath: $.properties.*.propertyDetails.*.ownershipCategory
+
+            - jsonPath: $.properties.*.propertyDetails.*.subOwnershipCategory
 
             - jsonPath: $.properties.*.propertyDetails.*.source
 
@@ -320,7 +322,9 @@ serviceMaps:
 
             - jsonPath: $.properties.*.propertyDetails.*.assessmentDate
 
-            - jsonPath: $.properties.*.propertyDetails.*.ownershipType
+            - jsonPath: $.properties.*.propertyDetails.*.ownershipCategory
+
+            - jsonPath: $.properties.*.propertyDetails.*.subOwnershipCategory
 
             - jsonPath: $.properties.*.propertyDetails.*.source
 
@@ -375,7 +379,7 @@ serviceMaps:
             - jsonPath: $.properties[*][?({id} in @.propertyDetails.*.documents[*].id)].auditDetails.lastModifiedTime
 
 
-        - query: INSERT INTO eg_pt_owner_v2(tenantId,propertyDetail, userid, isActive,isPrimaryOwner,ownerShipPercentage, ownerType, createdby, lastmodifiedby, createdtime, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ON CONFLICT (userid,propertyDetail) DO UPDATE SET isActive =?,isPrimaryOwner=?,ownerShipPercentage=?,ownerType=?,lastmodifiedby =?,lastmodifiedtime =?;
+        - query: INSERT INTO eg_pt_owner_v2(tenantId,propertyDetail, userid, isActive,isPrimaryOwner,ownerShipPercentage, ownerType, createdby, lastmodifiedby, createdtime, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ON CONFLICT ON CONSTRAINT pk_eg_pt_owner_v2 DO UPDATE SET isActive =?,isPrimaryOwner=?,ownerShipPercentage=?,ownerType=?,lastmodifiedby =?,lastmodifiedtime =?;
           basePath: properties.*.propertyDetails.*.owners.*
           jsonMaps:
 
@@ -492,7 +496,6 @@ serviceMaps:
         - query: UPDATE eg_pt_address_v2 SET doorNo=?,latitude=?,longitude=?, addressid=?, addressnumber=?, type=?, addressline1=?, addressline2=?, landmark=?, city=?, pincode=?, detail=?,buildingName=?,street=?, locality=?, lastmodifiedby=?, lastmodifiedtime=? where id=?;
           basePath: properties.*.address
           jsonMaps:
-
 
           - jsonPath: $.properties.*.address.doorNo
 

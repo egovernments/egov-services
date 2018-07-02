@@ -78,12 +78,19 @@ public class PropertyQueryBuilder {
 
 		}
 
-
 		Set<String> documentids = criteria.getDocumentids();
 		if(!CollectionUtils.isEmpty(documentids)) {
 
 			builder.append("and doc.id IN (").append(convertSetToString(documentids)).append(")");
 
+		}
+
+		if(criteria.getDoorNo()!=null && criteria.getLocality()!=null){
+			builder.append(" and address.doorno = '").append(criteria.getDoorNo()).append("' and address.locality = '").append(criteria.getLocality()).append("'");
+		}
+
+		if(criteria.getAccountId()!=null) {
+			builder.append(" and pt.accountid = '").append(criteria.getAccountId()).append("'");
 		}
 
 		return builder.toString();

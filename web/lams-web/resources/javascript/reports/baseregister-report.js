@@ -101,7 +101,7 @@ class BaseRegister extends React.Component {
                   <td>{list.assetName}</td>
                   <td>{list.agreementNumber}</td>
                   <td>{list.allotteeName}</td>
-                  <td>{list.mobileNumber}</td>
+                  <td>{maskAlloteeDetails(list.mobileNumber)}</td>
                   <td>{list.gstin}</td>
                   <td>{list.councilResolutionNumberDate  || "N/A"}</td>
                   <td>{list.commencementDate}</td>
@@ -304,7 +304,7 @@ class BaseRegister extends React.Component {
               <div className="text-center">
                 <button type="submit" className="btn btn-submit">Search</button>  &nbsp;&nbsp;
                 <button type="reset" className="btn btn-submit">Reset</button> &nbsp;&nbsp;
-                <button type="button" className="btn btn-submit" onClick={(e)=>{this.closeWindow()}}>Close</button> 
+                <button type="button" className="btn btn-submit" onClick={(e)=>{this.closeWindow()}}>Close</button>
               </div>
             </fieldset>
           </form>

@@ -1,6 +1,6 @@
 package org.egov.pt.calculator.web.models;
 
-import org.springframework.validation.annotation.Validated;
+import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -13,20 +13,20 @@ import lombok.Setter;
 /**
  * Calculation
  */
-@Validated
-@javax.annotation.Generated(value = "org.egov.codegen.SpringBootCodegen", date = "2018-05-14T00:55:55.623+05:30")
-
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 public class Calculation   {
-        @JsonProperty("connectionNumber")
-        private String connectionNumber;
+	
+        @JsonProperty("serviceNumber")
+        private String serviceNumber;
 
         @JsonProperty("totalAmount")
         private Double totalAmount;
+        
+        private Double taxAmount; 
 
         @JsonProperty("penalty")
         private Double penalty;
@@ -45,5 +45,7 @@ public class Calculation   {
 
         @JsonProperty("tenantId")
         private String tenantId;
+
+        List<TaxHeadEstimate> taxHeadEstimates;
 }
 

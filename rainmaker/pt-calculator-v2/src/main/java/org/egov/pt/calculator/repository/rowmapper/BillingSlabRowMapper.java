@@ -7,8 +7,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.egov.pt.calculator.web.models.BillingSlab;
 import org.egov.pt.calculator.web.models.property.AuditDetails;
-import org.egov.pt.calculator.web.models.property.BillingSlab;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.stereotype.Component;
@@ -31,7 +31,7 @@ public class BillingSlabRowMapper implements ResultSetExtractor<List<BillingSlab
 						.propertySubType(rs.getString("propertySubType")).propertyType(rs.getString("propertyType")).subOwnerShipCategory(rs.getString("subOwnerShipCategory"))
 						.tenantId(rs.getString("tenantId")).toFloor(rs.getDouble("toFLoor")).toPlotSize(rs.getDouble("toPlotSize")).unitRate(rs.getDouble("unitRate"))
 						.usageCategoryDetail(rs.getString("usageCategoryDetail")).usageCategoryMajor(rs.getString("usageCategoryMajor")).usageCategoryMinor(rs.getString("usageCategoryMinor"))
-						.usageCategorySubMinor(rs.getString("usageCategorySubMinor")).auditDetails(auditDetails).build();
+						.usageCategorySubMinor(rs.getString("usageCategorySubMinor")).occupancyType(rs.getString("occupancyType")).auditDetails(auditDetails).build();
 				
 				billingSlabMap.put(currentId, currentBillingSlab);
 			}

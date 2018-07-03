@@ -3,8 +3,8 @@ package org.egov.pt.calculator.repository;
 import java.util.List;
 
 import org.egov.pt.calculator.repository.rowmapper.BillingSlabRowMapper;
-import org.egov.pt.calculator.web.models.property.BillingSlab;
-import org.egov.pt.calculator.web.models.property.BillingSlabSearchCriteria;
+import org.egov.pt.calculator.web.models.BillingSlab;
+import org.egov.pt.calculator.web.models.BillingSlabSearchCriteria;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;

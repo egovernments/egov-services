@@ -10,9 +10,9 @@ import org.egov.mdms.model.MasterDetail;
 import org.egov.mdms.model.MdmsCriteria;
 import org.egov.mdms.model.MdmsCriteriaReq;
 import org.egov.mdms.model.ModuleDetail;
+import org.egov.pt.calculator.web.models.BillingSlabReq;
+import org.egov.pt.calculator.web.models.BillingSlabRes;
 import org.egov.pt.calculator.web.models.property.AuditDetails;
-import org.egov.pt.calculator.web.models.property.BillingSlabReq;
-import org.egov.pt.calculator.web.models.property.BillingSlabRes;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

@@ -1,18 +1,12 @@
 package org.egov.pt.calculator.web.models.property;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.validation.Valid;
-
-import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -20,26 +14,24 @@ import lombok.Setter;
 /**
  * This is lightweight property object that can be used as reference by definitions needing property linking. Actual Property Object extends this to include more elaborate attributes of the property.
  */
-@Validated
-@javax.annotation.Generated(value = "org.egov.codegen.SpringBootCodegen", date = "2018-05-11T14:12:44.497+05:30")
 
 @Getter
 @Setter
-@AllArgsConstructor
 @NoArgsConstructor
-@Builder
+//@Builder
+@EqualsAndHashCode(of= {"propertyId","tenantId"})
 public class PropertyInfo   {
-        @JsonProperty("id")
-        private String id;
+        @JsonProperty("propertyId")
+        public String propertyId;
 
         @JsonProperty("tenantId")
-        private String tenantId;
+        public String tenantId;
 
         @JsonProperty("acknowldgementNumber")
-        private String acknowldgementNumber;
+        public String acknowldgementNumber;
 
-        @JsonProperty("assessmentNumber")
-        private String assessmentNumber;
+        @JsonProperty("oldPropertyId")
+        public String oldPropertyId;
 
               /**
    * status of the Property
@@ -71,31 +63,23 @@ public class PropertyInfo   {
       return null;
     }
   }
-
         @JsonProperty("status")
-        private StatusEnum status;
+        public StatusEnum status;
 
-        @JsonProperty("financialYear")
-        private String financialYear;
-
-        @JsonProperty("propertyType")
-        private String propertyType;
-
-        @JsonProperty("owners")
         @Valid
-        private List<OwnerInfo> owners;
-
         @JsonProperty("address")
-        private Address address;
+        public Address address;
 
 
-        public PropertyInfo addOwnersItem(OwnerInfo ownersItem) {
-            if (this.owners == null) {
-            this.owners = new ArrayList<>();
-            }
-        this.owners.add(ownersItem);
-        return this;
-        }
 
+
+    protected PropertyInfo(String propertyId, String tenantId, String acknowldgementNumber, String oldPropertyId, StatusEnum status, Address address) {
+        this.propertyId = propertyId;
+        this.tenantId = tenantId;
+        this.acknowldgementNumber = acknowldgementNumber;
+        this.oldPropertyId = oldPropertyId;
+        this.status = status;
+        this.address = address;
+    }
 }
 

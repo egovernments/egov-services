@@ -83,10 +83,10 @@ public class User   {
         private Boolean active;
 
         @JsonProperty("dob")
-        private LocalDate dob;
+        private Long dob;
 
         @JsonProperty("pwdExpiryDate")
-        private LocalDate pwdExpiryDate;
+        private Long pwdExpiryDate;
 
         @JsonProperty("locale")
         private String locale;
@@ -117,16 +117,16 @@ public class User   {
         private String photo;
 
         @JsonProperty("createdBy")
-        private Long createdBy;
+        private String createdBy;
 
         @JsonProperty("createdDate")
-        private LocalDate createdDate;
+        private Long createdDate;
 
         @JsonProperty("lastModifiedBy")
         private Long lastModifiedBy;
 
         @JsonProperty("lastModifiedDate")
-        private LocalDate lastModifiedDate;
+        private Long lastModifiedDate;
 
         @JsonProperty("otpReference")
         private String otpReference;

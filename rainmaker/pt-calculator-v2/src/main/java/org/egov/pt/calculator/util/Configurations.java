@@ -3,10 +3,10 @@ package org.egov.pt.calculator.util;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 
-import lombok.Data;
+import lombok.Getter;
 
 @Configuration
-@Data
+@Getter
 public class Configurations {
 
 	//PERSISTER
@@ -22,4 +22,35 @@ public class Configurations {
 	
 	@Value("${egov.mdms.search.endpoint}")
 	private String mdmsEndpoint;
+	
+	
+	/*
+	 * Calculator Configs
+	 */
+	
+	// billing service
+	@Value("${egov.billingservice.host}")
+	private String billingServiceHost;
+	
+	@Value("${egov.taxhead.search.endpoint}")
+	private String	taxheadsSearchEndpoint;
+	
+	// billing slab configs
+	
+	@Value("${billingslab.value.all}")
+	private String slabValueAll;
+	
+	@Value("${billingslab.value.usagemajor.nonresidential}")
+	private String usageMajorNonResidential;
+	
+	@Value("${billingslab.value.occupancytype.rented}")
+	private String occupancyTypeRented;
+	
+	@Value("${billingslab.value.arv.percent}")
+	private Double arvPercent;
+	
+	@Value("${billingslab.value.taxheadcode.pttax}")
+	private String ptTaxCode;
+	
+	
 }

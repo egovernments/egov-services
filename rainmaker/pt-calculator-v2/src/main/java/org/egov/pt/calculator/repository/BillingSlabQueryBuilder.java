@@ -4,7 +4,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
-import org.egov.pt.calculator.web.models.property.BillingSlabSearchCriteria;
+import org.egov.pt.calculator.web.models.BillingSlabSearchCriteria;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 

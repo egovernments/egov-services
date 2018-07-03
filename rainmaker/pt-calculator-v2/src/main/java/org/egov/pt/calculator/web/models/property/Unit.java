@@ -1,16 +1,21 @@
 package org.egov.pt.calculator.web.models.property;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.validation.Valid;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
 import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -26,6 +31,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@EqualsAndHashCode(exclude={"usage"})
 public class Unit   {
         @JsonProperty("id")
         private String id;
@@ -42,18 +48,36 @@ public class Unit   {
         @JsonProperty("unitArea")
         private Float unitArea;
 
-        @JsonProperty("usage")
-        @Valid
-        private List<UnitUsage> usage;
+        @JsonProperty("usageCategoryMajor")
+        private String usageCategoryMajor;
+
+        @JsonProperty("usageCategoryMinor")
+        private String usageCategoryMinor;
+
+        @JsonProperty("usageCategorySubMinor")
+        private String usageCategorySubMinor;
+
+        @JsonProperty("usageCategoryDetail")
+        private String usageCategoryDetail;
+
+        @JsonProperty("occupancyType")
+        private String occupancyType;
+
+        @JsonProperty("occupancyDate")
+        private Long occupancyDate;
+
+        @JsonProperty("constructionType")
+        private String constructionType;
+
+        @JsonProperty("constructionSubType")
+        private String constructionSubType;
+
+        @JsonProperty("arv")
+        private BigDecimal arv;
 
 
-        public Unit addUsageItem(UnitUsage usageItem) {
-            if (this.usage == null) {
-            this.usage = new ArrayList<>();
-            }
-        this.usage.add(usageItem);
-        return this;
-        }
+
+
 
 }
 

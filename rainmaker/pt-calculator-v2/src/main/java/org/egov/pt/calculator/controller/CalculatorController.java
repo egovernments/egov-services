@@ -1,14 +1,14 @@
 package org.egov.pt.calculator.controller;
 
-import java.util.List;
+import java.util.Map;
 
 import javax.validation.Valid;
 
-import org.egov.pt.calculator.service.CalculatorService;
 import org.egov.pt.calculator.service.DemandService;
+import org.egov.pt.calculator.service.EstimationService;
+import org.egov.pt.calculator.web.models.Calculation;
 import org.egov.pt.calculator.web.models.CalculationReq;
 import org.egov.pt.calculator.web.models.CalculationRes;
-import org.egov.pt.calculator.web.models.demand.Demand;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,7 +25,7 @@ public class CalculatorController {
 	private DemandService demandService;
 
 	@Autowired
-	private CalculatorService calculatorService;
+	private EstimationService calculatorService;
 
 	@PostMapping("/_estimate")
 	public ResponseEntity<CalculationRes> getTaxEstimation(@RequestBody @Valid CalculationReq calculationReq) {
@@ -34,7 +34,7 @@ public class CalculatorController {
 	}
 
 	@PostMapping("/_generate")
-	public ResponseEntity<List<Demand>> generateDemands(@RequestBody @Valid CalculationReq calculationReq) {
+	public ResponseEntity<Map<String, Calculation>> generateDemands(@RequestBody @Valid CalculationReq calculationReq) {
 
 		return new ResponseEntity<>(demandService.generateDemands(calculationReq), HttpStatus.OK);
 	}

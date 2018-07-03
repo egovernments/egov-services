@@ -1,6 +1,5 @@
 package org.egov.pt.calculator.web.models.property;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,6 +12,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -28,9 +28,10 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@EqualsAndHashCode(of= {"id"})
 public class OwnerInfo   {
         @JsonProperty("id")
-        private Long id;
+        private String id;
 
         @JsonProperty("userName")
         private String userName;
@@ -80,14 +81,14 @@ public class OwnerInfo   {
         @JsonProperty("correspondenceAddress")
         private String correspondenceAddress;
 
-        @JsonProperty("active")
+        @JsonProperty("isActive")
         private Boolean active;
 
         @JsonProperty("dob")
-        private LocalDate dob;
+        private Long dob;
 
         @JsonProperty("pwdExpiryDate")
-        private LocalDate pwdExpiryDate;
+        private Long pwdExpiryDate;
 
         @JsonProperty("locale")
         private String locale;
@@ -118,16 +119,16 @@ public class OwnerInfo   {
         private String photo;
 
         @JsonProperty("createdBy")
-        private Long createdBy;
+        private String createdBy;
 
         @JsonProperty("createdDate")
-        private LocalDate createdDate;
+        private Long createdDate;
 
         @JsonProperty("lastModifiedBy")
         private Long lastModifiedBy;
 
         @JsonProperty("lastModifiedDate")
-        private LocalDate lastModifiedDate;
+        private Long lastModifiedDate;
 
         @JsonProperty("otpReference")
         private String otpReference;

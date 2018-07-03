@@ -10,6 +10,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
 /**
  * Address
  */
@@ -21,6 +25,10 @@ import lombok.Setter;
 @NoArgsConstructor
 @Builder
 public class Address   {
+
+        @JsonProperty("id")
+        private String id;
+
         @JsonProperty("tenantId")
         private String tenantId;
 
@@ -39,17 +47,22 @@ public class Address   {
         @JsonProperty("type")
         private String type;
 
+        @NotNull
+        @Size(max=256)
         @JsonProperty("addressLine1")
         private String addressLine1;
 
+        @Size(max=256)
         @JsonProperty("addressLine2")
         private String addressLine2;
 
         @JsonProperty("landmark")
         private String landmark;
 
+        @NotNull
         @JsonProperty("city")
         private String city;
+
 
         @JsonProperty("pincode")
         private String pincode;
@@ -63,6 +76,7 @@ public class Address   {
         @JsonProperty("street")
         private String street;
 
+        @Valid
         @JsonProperty("locality")
         private Boundary locality;
 

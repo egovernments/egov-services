@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 
 import org.springframework.validation.annotation.Validated;
 
@@ -27,6 +28,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Builder
 public class Boundary   {
+        @NotNull
         @JsonProperty("code")
         private String code;
 

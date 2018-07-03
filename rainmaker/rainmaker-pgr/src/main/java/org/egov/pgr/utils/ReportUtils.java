@@ -1,5 +1,6 @@
 package org.egov.pgr.utils;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -168,5 +169,28 @@ public class ReportUtils {
 	public String splitCamelCase(String s) {
 		return s.replaceAll(String.format("%s|%s|%s", "(?<=[A-Z])(?=[A-Z][a-z])", "(?<=[^A-Z])(?=[A-Z])",
 				"(?<=[A-Za-z])(?=[^A-Za-z])"), " ");
+	}
+	
+	public String getPercentage(Object totalValue, Object percentValue) {
+		Long total = Long.valueOf(totalValue.toString());
+		Long fraction = Long.valueOf(percentValue.toString());
+		Double percentage = Double.valueOf((fraction * 100) / total);
+		if(Long.valueOf(percentage.toString() .split("[.]")[1]) > 0) {
+			return percentValue + " (" + percentage.toString()+ "%" + ")";
+		}else {
+			return percentValue + " (" + percentage.toString() .split("[.]")[0]+ "%" + ")";
+		}
+		
+	}
+	
+	public String getAvgRating(Object avgRating) {
+		String value = null;
+		if(null != avgRating) {
+			value = new DecimalFormat("#.##").format(avgRating) + "/" + "5";
+		}else {
+			value =  "5/5";
+		}
+		
+		return value;
 	}
 }

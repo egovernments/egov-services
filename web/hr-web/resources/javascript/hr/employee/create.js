@@ -2988,8 +2988,4 @@ function loadUI() {
                 window.close();
             })
 
-        function maskEmployeeDetail(details){
-
-            return(details.replace(details.substr(0, 8),"********"))
-        }
 });

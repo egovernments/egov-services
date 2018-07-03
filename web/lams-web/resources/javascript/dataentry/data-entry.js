@@ -1460,7 +1460,7 @@ function initDatepicker(){
       format: 'dd/mm/yyyy',
       endDate : new Date(),
       autoclose:true
-    }).on("changeDate", function() {
+    }).on("changeDate blur", function() {
         fillValueToObject(this);
         if($(this).hasClass('srFromDate') || $(this).hasClass('srToDate')){
           let fromDate = $(this).closest('tr').find('.srFromDate').val();

@@ -45,9 +45,9 @@ public class PropertyService {
 	 * @return List of properties successfully created
 	 */
 	public List<Property> createProperty(PropertyRequest request) {
+		propertyValidator.validateMasterData(request);
 		userService.createUser(request);
 		enrichmentService.enrichCreateRequest(request,false);
-		propertyValidator.validateMasterData(request);
 		producer.push(config.getSavePropertyTopic(), request);
 		return request.getProperties();
 	}

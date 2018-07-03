@@ -1,19 +1,25 @@
 package org.egov.pgr.service;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.mdms.model.MdmsCriteriaReq;
 import org.egov.pgr.contract.RequestInfoWrapper;
+import org.egov.pgr.contract.ServiceReqSearchCriteria;
+import org.egov.pgr.contract.ServiceResponse;
+import org.egov.pgr.model.ActionInfo;
 import org.egov.pgr.model.Service;
 import org.egov.pgr.model.user.UserResponse;
 import org.egov.pgr.repository.ServiceRequestRepository;
 import org.egov.pgr.utils.PGRConstants;
 import org.egov.pgr.utils.PGRUtils;
+import org.egov.pgr.utils.WorkFlowConfigs;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 
@@ -43,6 +49,9 @@ public class NotificationService {
 	
 	@Autowired
 	private ServiceRequestRepository serviceRequestRepository;
+	
+	@Autowired
+	private GrievanceService requestService;
 
 	@Autowired
 	private PGRUtils pGRUtils;
@@ -59,13 +68,11 @@ public class NotificationService {
 		try {
 			Object result = serviceRequestRepository.fetchResult(uri, mdmsCriteriaReq);
 			serviceTypes = JsonPath.read(result, PGRConstants.JSONPATH_SERVICE_CODES);
-			log.info("Category type code: " + serviceTypes);
 			if (CollectionUtils.isEmpty(serviceTypes))
 				return null;
 			if (null == localizedMessageMap.get(locale + "|" + tenantId)) // static map that saves code-message pair against locale | tenantId.
 				getLocalisedMessages(requestInfo, tenantId, locale, PGRConstants.LOCALIZATION_MODULE_NAME);
 			serviceType = localizedMessageMap.get(locale + "|" + tenantId).get(PGRConstants.LOCALIZATION_COMP_CATEGORY_PREFIX + serviceTypes.get(0));
-			log.info("Category type: " + serviceType);
 			if(StringUtils.isEmpty(serviceType))
 				serviceType = serviceTypes.get(0);
 		} catch (Exception e) {
@@ -82,17 +89,16 @@ public class NotificationService {
 		uri.append(hrEmployeeV2Host).append(hrEmployeeV2SearchEndpoint).append("?id=" + id)
 				.append("&tenantId=" + tenantId);
 		Object response = null;
-		log.debug("Employee: " + response);
 		Map<String, String> employeeDetails = new HashMap<>();
 		try {
 			response = serviceRequestRepository.fetchResult(uri, requestInfoWrapper);
 			if (null == response) {
 				return null;
 			}
-			log.debug("Employee: " + response);
 			employeeDetails.put("name", JsonPath.read(response, PGRConstants.EMPLOYEE_NAME_JSONPATH));
 			employeeDetails.put("department", JsonPath.read(response, PGRConstants.EMPLOYEE_DEPTCODE_JSONPATH));
 			employeeDetails.put("designation", JsonPath.read(response, PGRConstants.EMPLOYEE_DESGCODE_JSONPATH));
+			employeeDetails.put("phone", JsonPath.read(response, PGRConstants.EMPLOYEE_PHNO_JSONPATH));
 
 		} catch (Exception e) {
 			log.error("Exception: " + e);
@@ -147,7 +153,6 @@ public class NotificationService {
 		Object result = null;
 		try {
 			result = serviceRequestRepository.fetchResult(uri, requestInfoWrapper);
-			log.info("localization result: " + result);
 			codes = JsonPath.read(result, "$.messages.*.code");
 			messages = JsonPath.read(result, "$.messages.*.message");
 		} catch (Exception e) {
@@ -161,22 +166,41 @@ public class NotificationService {
 		}
 	}
 	
-	public String getPhoneNumberForNotificationService(RequestInfo requestInfo, String userId, String tenantId) {
+	public String getPhoneNumberForNotificationService(RequestInfo requestInfo, String userId, String tenantId, String assignee, String role) {
 		String phoneNumber = null;
 		Object response = null;
 		ObjectMapper mapper = pGRUtils.getObjectMapper();
 		StringBuilder uri = new StringBuilder();
-		Map<String, Object> request = pGRUtils.prepareRequestForUserSearch(uri, requestInfo, userId, tenantId);
-		try {
-			response = serviceRequestRepository.fetchResult(uri, request);
-			if(null != response) {
-				UserResponse res = mapper.convertValue(response, UserResponse.class);
-				phoneNumber = res.getUser().get(0).getMobileNumber();
+		Object request = new HashMap<>();
+		if(role.equals(WorkFlowConfigs.ROLE_CITIZEN)) {
+			request = pGRUtils.prepareRequestForUserSearch(uri, requestInfo, userId, tenantId);
+			try {
+				response = serviceRequestRepository.fetchResult(uri, request);
+				if(null != response) {
+					UserResponse res = mapper.convertValue(response, UserResponse.class);
+					phoneNumber = res.getUser().get(0).getMobileNumber();
+				}
+			}catch(Exception e) {
+				log.error("Couldn't fetch user for id: "+userId+" error: " + e);
 			}
-		}catch(Exception e) {
-			log.error("Couldn't fetch user for id: "+userId+" error: " + e);
+			return phoneNumber;
+		}else if(role.equals(WorkFlowConfigs.ROLE_EMPLOYEE)) {
+			Map<String, String> employeeDetails = getEmployeeDetails(tenantId, assignee, requestInfo);
+			if(!StringUtils.isEmpty(employeeDetails.get("phone"))) {
+				phoneNumber = employeeDetails.get("phone");
+			}
 		}
 		return phoneNumber;
+	}
+	
+	public String getCurrentAssigneeForTheServiceRequest(Service serviceReq, RequestInfo requestInfo) {
+		ServiceReqSearchCriteria serviceReqSearchCriteria = ServiceReqSearchCriteria.builder().tenantId(serviceReq.getTenantId())
+				.serviceRequestId(Arrays.asList(serviceReq.getServiceRequestId())).build();
+		ServiceResponse response = (ServiceResponse) requestService.getServiceRequestDetails(requestInfo, serviceReqSearchCriteria);
+		List<ActionInfo> actions = response.getActionHistory().get(0).getActions().parallelStream()
+				.filter(obj -> !StringUtils.isEmpty(obj.getAssignee())).collect(Collectors.toList());
+		
+		return actions.get(0).getAssignee();
 	}
 
 }

@@ -45,6 +45,12 @@ public class WorkFlowConfigs {
 	private static Map<String, List<String>> actionCurrentStatusMap = prepareActionCurrentStatusMap();
 
 	private static Map<String, List<String>> roleActionMap = prepareRoleActionMap();
+	
+	private static Map<String, List<String>> mapOfStatusAndReceptors = prepareMapOfStatusAndNotificationReceptors();
+	
+	private static Map<String, List<String>> mapOfActionAndNotificationReceptors = prepareMapOfActionAndNotificationReceptors();
+
+
 
 	private static Map<String, String> prepareStatusMap() {
 
@@ -87,6 +93,27 @@ public class WorkFlowConfigs {
 		return map;
 	}
 	
+	private static Map<String, List<String>> prepareMapOfStatusAndNotificationReceptors(){
+		Map<String, List<String>> map = new HashMap<>();
+		
+		map.put(WorkFlowConfigs.STATUS_ASSIGNED, Arrays.asList(WorkFlowConfigs.ROLE_CITIZEN, WorkFlowConfigs.ROLE_EMPLOYEE));
+		map.put(WorkFlowConfigs.STATUS_OPENED, Arrays.asList(WorkFlowConfigs.ROLE_CITIZEN));
+		map.put(WorkFlowConfigs.STATUS_REJECTED, Arrays.asList(WorkFlowConfigs.ROLE_CITIZEN));
+		map.put(WorkFlowConfigs.STATUS_RESOLVED, Arrays.asList(WorkFlowConfigs.ROLE_CITIZEN));
+		map.put(WorkFlowConfigs.STATUS_CLOSED, Arrays.asList(WorkFlowConfigs.ROLE_EMPLOYEE));
+		
+		return map;
+	}
+	
+	private static Map<String, List<String>> prepareMapOfActionAndNotificationReceptors(){
+		Map<String, List<String>> map = new HashMap<>();
+		
+		map.put(WorkFlowConfigs.ACTION_REASSIGN, Arrays.asList(WorkFlowConfigs.ROLE_CITIZEN, WorkFlowConfigs.ROLE_EMPLOYEE));
+		map.put(WorkFlowConfigs.ACTION_REOPEN, Arrays.asList(WorkFlowConfigs.ROLE_EMPLOYEE));
+		
+		return map;
+	}
+	
 	public static Map<String, String> getActionStatusMap(){
 		return actionStatusMap;
 	}
@@ -97,5 +124,13 @@ public class WorkFlowConfigs {
 	
 	public static Map<String, List<String>> getRoleActionMap(){
 		return roleActionMap;
+	}
+	
+	public static Map<String, List<String>> getMapOfStatusAndReceptors(){
+		return mapOfStatusAndReceptors;
+	}
+	
+	public static Map<String, List<String>> getMapOfActionAndReceptors(){
+		return mapOfActionAndNotificationReceptors;
 	}
 }

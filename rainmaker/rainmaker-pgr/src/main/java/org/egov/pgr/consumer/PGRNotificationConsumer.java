@@ -1,21 +1,27 @@
 package org.egov.pgr.consumer;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.pgr.contract.SMSRequest;
+import org.egov.pgr.contract.ServiceReqSearchCriteria;
 import org.egov.pgr.contract.ServiceRequest;
+import org.egov.pgr.contract.ServiceResponse;
 import org.egov.pgr.model.ActionInfo;
 import org.egov.pgr.model.Service;
 import org.egov.pgr.producer.PGRProducer;
 import org.egov.pgr.repository.ServiceRequestRepository;
+import org.egov.pgr.service.GrievanceService;
 import org.egov.pgr.service.NotificationService;
 import org.egov.pgr.utils.PGRConstants;
 import org.egov.pgr.utils.PGRUtils;
@@ -82,6 +88,9 @@ public class PGRNotificationConsumer {
 	@Value("${notification.allowed.on.status}")
 	private String notificationEnabledStatuses;
 	
+	@Value("${egov.pgr.app.playstore.link}")
+	private String appDownloadLink;
+	
 
 	@Autowired
 	private ServiceRequestRepository serviceRequestRepository;
@@ -91,6 +100,9 @@ public class PGRNotificationConsumer {
 
 	@Autowired
 	private NotificationService notificationService;
+	
+	@Autowired
+	private GrievanceService requestService;
 
 	@KafkaListener(topics = {"${kafka.topics.save.service}","${kafka.topics.update.service}"})
 
@@ -114,13 +126,15 @@ public class PGRNotificationConsumer {
 							.get(serviceReqRequest.getActionInfo().indexOf(actionInfo));
 					if (isNotificationEnabled(actionInfo.getStatus(), serviceReqRequest.getRequestInfo().getUserInfo().getType(), actionInfo.getComment(), actionInfo.getAction())) {
 						if (isSMSNotificationEnabled) {
-							SMSRequest smsRequest = prepareSMSRequest(service, actionInfo, serviceReqRequest.getRequestInfo());
-							if (null == smsRequest) {
+							List<SMSRequest> smsRequests = prepareSMSRequest(service, actionInfo, serviceReqRequest.getRequestInfo());
+							if (CollectionUtils.isEmpty(smsRequests)) {
 								log.info("Messages from localization couldn't be fetched!");
 								continue;
 							}
-							log.info("SMS: " + smsRequest.getMessage() + " | MOBILE: " + smsRequest.getMobileNumber());
-							pGRProducer.push(smsNotifTopic, smsRequest);
+							for(SMSRequest smsRequest: smsRequests) {
+								log.info("SMS: " + smsRequest.getMessage() + " | MOBILE: " + smsRequest.getMobileNumber());
+								pGRProducer.push(smsNotifTopic, smsRequest);
+							}
 						}
 						// Not enabled for now - email notifications to be part of next version of PGR.
 						if (isEmailNotificationEnabled
@@ -139,16 +153,24 @@ public class PGRNotificationConsumer {
 		}
 	}
 
-	public SMSRequest prepareSMSRequest(Service serviceReq, ActionInfo actionInfo, RequestInfo requestInfo) {
-		String phoneNumberRetrived = notificationService.getPhoneNumberForNotificationService(requestInfo, serviceReq.getAccountId(), serviceReq.getTenantId());
-		String phone = StringUtils.isEmpty(phoneNumberRetrived) ? serviceReq.getPhone() : phoneNumberRetrived;
-		String message = getMessageForSMS(serviceReq, actionInfo, requestInfo);
-		if (null == message)
-			return null;
-		return SMSRequest.builder().mobileNumber(phone).message(message).build();
+	public List<SMSRequest> prepareSMSRequest(Service serviceReq, ActionInfo actionInfo, RequestInfo requestInfo) {
+		List<SMSRequest> smsRequestsTobeSent = new ArrayList<>();
+		if(StringUtils.isEmpty(actionInfo.getAssignee())) {
+			actionInfo.setAssignee(notificationService.getCurrentAssigneeForTheServiceRequest(serviceReq, requestInfo));
+		}
+		for(String role: pGRUtils.getReceptorsOfNotification(actionInfo.getStatus(), actionInfo.getAction())) {
+			String phoneNumberRetrived = notificationService.getPhoneNumberForNotificationService(requestInfo, serviceReq.getAccountId(), serviceReq.getTenantId(), actionInfo.getAssignee(), role);
+			String phone = StringUtils.isEmpty(phoneNumberRetrived) ? serviceReq.getPhone() : phoneNumberRetrived;
+			String message = getMessageForSMS(serviceReq, actionInfo, requestInfo, role);
+			if (null == message)
+				continue;
+			
+			smsRequestsTobeSent.add(SMSRequest.builder().mobileNumber(phone).message(message).build());
+		}
+		return smsRequestsTobeSent;
 	}
 
-	public String getMessageForSMS(Service serviceReq, ActionInfo actionInfo, RequestInfo requestInfo) {
+	public String getMessageForSMS(Service serviceReq, ActionInfo actionInfo, RequestInfo requestInfo, String role) {
 		SimpleDateFormat dateFormat = new SimpleDateFormat(notificationDateFormat);
 		String date = dateFormat.format(new Date());
 		String tenantId = serviceReq.getTenantId().split("[.]")[0]; // localization values are for now state-level.
@@ -166,11 +188,11 @@ public class PGRNotificationConsumer {
 		if (null == messageMap)
 			return null;
 		String serviceType = notificationService.getServiceType(serviceReq, requestInfo, locale);
-		return getMessage(serviceType, date, serviceReq, actionInfo, requestInfo, messageMap);
+		return getMessage(serviceType, date, serviceReq, actionInfo, requestInfo, messageMap, role);
 
 	}
 	
-	public String getMessage(String serviceType, String date, Service serviceReq, ActionInfo actionInfo, RequestInfo requestInfo, Map<String, String> messageMap) {
+	public String getMessage(String serviceType, String date, Service serviceReq, ActionInfo actionInfo, RequestInfo requestInfo, Map<String, String> messageMap, String role) {
 		if (null == serviceType) {
 			return getDefaultMessage(messageMap, actionInfo.getStatus(), actionInfo.getAction(), actionInfo.getComment());
 		}
@@ -184,14 +206,14 @@ public class PGRNotificationConsumer {
 			text = text.replaceAll(PGRConstants.SMS_NOTIFICATION_COMMENT_KEY, actionInfo.getComment())
 				.replaceAll(PGRConstants.SMS_NOTIFICATION_USER_NAME_KEY, requestInfo.getUserInfo().getName());
 		}else {
-			text = messageMap.get(PGRConstants.getStatusLocalizationKeyMap().get(actionInfo.getStatus()));
+			text = messageMap.get(PGRConstants.getStatusRoleLocalizationKeyMap().get(actionInfo.getStatus() + "|" + role));
 			if(actionInfo.getStatus().equals(WorkFlowConfigs.STATUS_OPENED)) {
-				if (null != actionInfo.getAction() && actionInfo.getAction().equals(WorkFlowConfigs.ACTION_REOPEN))
-					text = messageMap.get(PGRConstants.getActionLocalizationKeyMap().get(WorkFlowConfigs.ACTION_REOPEN));
-			}else if(actionInfo.getStatus().equals(WorkFlowConfigs.STATUS_ASSIGNED)) {
-				if (null != actionInfo.getAction() && actionInfo.getAction().equals(WorkFlowConfigs.ACTION_REASSIGN)) {
-					text = messageMap.get(PGRConstants.getActionLocalizationKeyMap().get(WorkFlowConfigs.ACTION_REASSIGN));
+				if (null != actionInfo.getAction() && actionInfo.getAction().equals(WorkFlowConfigs.ACTION_REOPEN)) {
+					text = messageMap.get(PGRConstants.getActionRoleLocalizationKeyMap().get(WorkFlowConfigs.ACTION_REOPEN + "|" + role));
+					employeeDetails = notificationService.getEmployeeDetails(serviceReq.getTenantId(), actionInfo.getAssignee(), requestInfo);
+					text = 	text.replaceAll(PGRConstants.SMS_NOTIFICATION_EMP_NAME_KEY, employeeDetails.get("name"));
 				}
+			}else if(actionInfo.getStatus().equals(WorkFlowConfigs.STATUS_ASSIGNED)) {
 				employeeDetails = notificationService.getEmployeeDetails(serviceReq.getTenantId(), actionInfo.getAssignee(), requestInfo);
 				if(null != employeeDetails) {
 					department = notificationService.getDepartment(serviceReq, employeeDetails.get("department"), requestInfo);
@@ -205,25 +227,49 @@ public class PGRNotificationConsumer {
 				text = 	text.replaceAll(PGRConstants.SMS_NOTIFICATION_EMP_NAME_KEY, employeeDetails.get("name"))
 							.replaceAll(PGRConstants.SMS_NOTIFICATION_EMP_DESIGNATION_KEY, designation)
 							.replaceAll(PGRConstants.SMS_NOTIFICATION_EMP_DEPT_KEY, department);	
-			}
-			if(actionInfo.getStatus().equals(WorkFlowConfigs.STATUS_REJECTED)) {
+			}else if(actionInfo.getStatus().equals(WorkFlowConfigs.STATUS_REJECTED)) {
 				if(StringUtils.isEmpty(actionInfo.getComment()))
 					return getDefaultMessage(messageMap, actionInfo.getStatus(), actionInfo.getAction(), actionInfo.getComment());
 				reasonForRejection = actionInfo.getComment().split(";");
 				if(reasonForRejection.length < 2)
 					return getDefaultMessage(messageMap, actionInfo.getStatus(), actionInfo.getAction(), actionInfo.getComment());	
-				
+				log.info("text before: "+text);
 				text = text.replaceAll(PGRConstants.SMS_NOTIFICATION_REASON_FOR_REOPEN_KEY, reasonForRejection[0])
 						.replaceAll(PGRConstants.SMS_NOTIFICATION_ADDITIONAL_COMMENT_KEY, reasonForRejection[1]);
+				log.info("text after: "+text);
+			}else if(actionInfo.getStatus().equals(WorkFlowConfigs.STATUS_RESOLVED)) {
+				String assignee = notificationService.getCurrentAssigneeForTheServiceRequest(serviceReq, requestInfo);
+				employeeDetails = notificationService.getEmployeeDetails(serviceReq.getTenantId(), assignee, requestInfo);
+				
+				text = 	text.replaceAll(PGRConstants.SMS_NOTIFICATION_EMP_NAME_KEY, employeeDetails.get("name"));
+			}if(actionInfo.getStatus().equals(WorkFlowConfigs.STATUS_CLOSED)) {
+				ServiceReqSearchCriteria serviceReqSearchCriteria = ServiceReqSearchCriteria.builder().tenantId(serviceReq.getTenantId())
+						.serviceRequestId(Arrays.asList(serviceReq.getServiceRequestId())).build();
+				ServiceResponse response = (ServiceResponse) requestService.getServiceRequestDetails(requestInfo, serviceReqSearchCriteria);
+				List<ActionInfo> actions = response.getActionHistory().get(0).getActions().parallelStream()
+						.filter(obj -> !StringUtils.isEmpty(obj.getAssignee())).collect(Collectors.toList());
+				employeeDetails = notificationService.getEmployeeDetails(serviceReq.getTenantId(), actions.get(0).getAssignee(), requestInfo);
+				text = 	text.replaceAll(PGRConstants.SMS_NOTIFICATION_RATING_KEY, 
+						StringUtils.isEmpty(response.getServices().get(0).getRating()) ? "5" : response.getServices().get(0).getRating())
+				       .replaceAll(PGRConstants.SMS_NOTIFICATION_EMP_NAME_KEY, employeeDetails.get("name"));
 			}
 		}
 		if(null != text) {
-		return text.replaceAll(PGRConstants.SMS_NOTIFICATION_COMPLAINT_TYPE_KEY, serviceType)
-			.replaceAll(PGRConstants.SMS_NOTIFICATION_ID_KEY, serviceReq.getServiceRequestId())
-			.replaceAll(PGRConstants.SMS_NOTIFICATION_DATE_KEY, date)
-			.replaceAll(PGRConstants.SMS_NOTIFICATION_APP_LINK_KEY, uiAppHost + uiFeedbackUrl + serviceReq.getServiceRequestId());	
-		}
-		return text;
+			String ulb = null;
+			if(StringUtils.isEmpty(serviceReq.getTenantId().split("[.]")[1]))
+				ulb = "Punjab";
+			else {
+				ulb = StringUtils.capitalize(serviceReq.getTenantId().split("[.]")[1]);
+			}
+			return text.replaceAll(PGRConstants.SMS_NOTIFICATION_COMPLAINT_TYPE_KEY, serviceType)
+				.replaceAll(PGRConstants.SMS_NOTIFICATION_ID_KEY, serviceReq.getServiceRequestId())
+				.replaceAll(PGRConstants.SMS_NOTIFICATION_DATE_KEY, date)
+				.replaceAll(PGRConstants.SMS_NOTIFICATION_APP_LINK_KEY, uiAppHost + uiFeedbackUrl + serviceReq.getServiceRequestId())
+				.replaceAll(PGRConstants.SMS_NOTIFICATION_APP_DOWNLOAD_LINK_KEY, appDownloadLink)
+				.replaceAll(PGRConstants.SMS_NOTIFICATION_AO_DESIGNATION, PGRConstants.ROLE_GRO)
+				.replaceAll(PGRConstants.SMS_NOTIFICATION_ULB_NAME, ulb);
+			}
+			return text;
 	}
 	
 	public String getDefaultMessage(Map<String, String> messageMap, String status, String action, String comment) {
@@ -249,17 +295,11 @@ public class PGRNotificationConsumer {
 		boolean isNotifEnabled = false;
 		List<String> notificationEnabledStatusList = Arrays.asList(notificationEnabledStatuses.split(","));
 		if(notificationEnabledStatusList.contains(status)) {
-			if(status.equalsIgnoreCase(WorkFlowConfigs.STATUS_OPENED)) {
-				if (action.equals(WorkFlowConfigs.ACTION_REOPEN)) {
-					if (isReopenNotifEnaled)
-						isNotifEnabled = true;
-				}	
+			if(status.equalsIgnoreCase(WorkFlowConfigs.STATUS_OPENED) && action.equals(WorkFlowConfigs.ACTION_REOPEN) && isReopenNotifEnaled) {
+						isNotifEnabled = true;	
 			}
-			if(status.equalsIgnoreCase(WorkFlowConfigs.STATUS_ASSIGNED)) {
-				if (action.equals(WorkFlowConfigs.ACTION_REASSIGN)) {
-					if (isReassignNotifEnaled)
+			if(status.equalsIgnoreCase(WorkFlowConfigs.STATUS_ASSIGNED) && action.equals(WorkFlowConfigs.ACTION_REASSIGN) && isReassignNotifEnaled) {
 						isNotifEnabled = true;
-				}	
 			}
 			isNotifEnabled= true;
 		}

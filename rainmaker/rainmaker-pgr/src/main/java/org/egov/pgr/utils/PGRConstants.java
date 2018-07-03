@@ -32,19 +32,25 @@ public class PGRConstants {
 	public static final String MDMS_DESIGNATION_MASTERS_MASTER_NAME = "Designation";
 	public static final String LOCALIZATION_MODULE_NAME = "rainmaker-pgr";
 	
-	public static final String LOCALIZATION_CODE_SUBMIT = "pgr.sms.notification.submit";
-	public static final String LOCALIZATION_CODE_REOPEN = "pgr.sms.notification.reopen";
-	public static final String LOCALIZATION_CODE_ASSIGN = "pgr.sms.notification.assign";
-	public static final String LOCALIZATION_CODE_REASSIGN = "pgr.sms.notification.reassign";
-	public static final String LOCALIZATION_CODE_REJECT = "pgr.sms.notification.reject";
-	public static final String LOCALIZATION_CODE_RESOLVE = "pgr.sms.notification.resolve";
+
+	public static final String LOCALIZATION_CODE_SUBMIT_CITIZEN = "pgr.sms.notification.submit.citizen";
+	public static final String LOCALIZATION_CODE_REOPEN_CITIZEN = "pgr.sms.notification.reopen.citizen";
+	public static final String LOCALIZATION_CODE_REOPEN_EMPLOYEE = "pgr.sms.notification.reopen.employee";
+
+	public static final String LOCALIZATION_CODE_ASSIGN_CITIZEN = "pgr.sms.notification.assign.citizen";
+	public static final String LOCALIZATION_CODE_REASSIGN_CITIZEN = "pgr.sms.notification.reassign.citizen";
+	
+	public static final String LOCALIZATION_CODE_ASSIGN_EMPLOYEE = "pgr.sms.notification.assign.employee";
+	public static final String LOCALIZATION_CODE_REASSIGN_EMPLOYEE = "pgr.sms.notification.reassign.employee";
+	
+	public static final String LOCALIZATION_CODE_REJECT_CITIZEN = "pgr.sms.notification.reject.citizen";
+	public static final String LOCALIZATION_CODE_RESOLVE_CITIZEN = "pgr.sms.notification.resolve.citizen";
+	public static final String LOCALIZATION_CODE_CLOSE_EMPLOYEE = "pgr.sms.notification.close.employee";
+	
 	public static final String LOCALIZATION_CODE_COMMENT = "pgr.sms.notification.comment";
 	public static final String LOCALIZATION_CODE_DEFAULT = "pgr.sms.notification.default";
 	public static final String LOCALIZATION_CODE_COMMENT_DEFAULT = "pgr.sms.notification.comment.default";
 	public static final String LOCALIZATION_COMP_CATEGORY_PREFIX = "pgr.complaint.category.";
-
-
-
 
 
 	public static final String SERVICE_CODES = "serviceCode";
@@ -57,6 +63,7 @@ public class PGRConstants {
 	public static final String EMPLOYEE_DEPTCODE_JSONPATH = "$.Employee[0].assignments[0].department";
 	public static final String EMPLOYEE_DESGCODE_JSONPATH = "$.Employee[0].assignments[0].designation";
 	public static final String EMPLOYEE_NAME_JSONPATH = "$.Employee[0].name";
+	public static final String EMPLOYEE_PHNO_JSONPATH = "$.Employee[0].mobileNumber";
 	public static final String DEPARTMENTNAME_EMPLOYEE_JSONPATH = "$.Department[0].name";
 	
 	public static final String SEARCHER_RESPONSE_TEXT = "Searcher response : ";
@@ -73,6 +80,11 @@ public class PGRConstants {
 	public static final String SMS_NOTIFICATION_REASON_FOR_REOPEN_KEY = "<reason>";
 	public static final String SMS_NOTIFICATION_ADDITIONAL_COMMENT_KEY = "<additional_comments>";
 	public static final String SMS_NOTIFICATION_APP_LINK_KEY = "<app_link>";
+	public static final String SMS_NOTIFICATION_APP_DOWNLOAD_LINK_KEY = "<download_link>";
+	public static final String SMS_NOTIFICATION_AO_DESIGNATION = "<ao_designation>";
+	public static final String SMS_NOTIFICATION_ULB_NAME = "<ulb>";
+	public static final String SMS_NOTIFICATION_RATING_KEY = "<rating>";
+	
 
 
 	
@@ -88,9 +100,9 @@ public class PGRConstants {
 
 	private static Map<String, String> actionNotifKeyMap = prepareActionNotifKeyMap();
 	
-	private static Map<String, String> statusLocalizationKeyMap = prepareStatusLocalizationKeyMap();
+	private static Map<String, String> statusRoleLocalizationKeyMap = prepareStatusRoleLocalizationKeyMap();
 
-	private static Map<String, String> actionLocalizationKeyMap = prepareActionLocalizationKeyMap();
+	private static Map<String, String> actionRoleLocalizationKeyMap = prepareActionRoleLocalizationKeyMap();
 
 	
 	private static Map<String, String> prepareStatusNotifKeyMap() {
@@ -112,23 +124,30 @@ public class PGRConstants {
 
 		return map;
 	}
-	
-	private static Map<String, String> prepareStatusLocalizationKeyMap() {
+		
+	private static Map<String, String> prepareStatusRoleLocalizationKeyMap() {
 
 		Map<String, String> map = new HashMap<>();
-		map.put(WorkFlowConfigs.STATUS_OPENED, LOCALIZATION_CODE_SUBMIT);
-		map.put(WorkFlowConfigs.STATUS_ASSIGNED, LOCALIZATION_CODE_ASSIGN);
-		map.put(WorkFlowConfigs.STATUS_REJECTED, LOCALIZATION_CODE_REJECT);
-		map.put(WorkFlowConfigs.STATUS_RESOLVED, LOCALIZATION_CODE_RESOLVE);
+		map.put(WorkFlowConfigs.STATUS_OPENED + "|" + WorkFlowConfigs.ROLE_CITIZEN, LOCALIZATION_CODE_SUBMIT_CITIZEN);
+		
+		map.put(WorkFlowConfigs.STATUS_ASSIGNED + "|" + WorkFlowConfigs.ROLE_CITIZEN, LOCALIZATION_CODE_ASSIGN_CITIZEN);
+		map.put(WorkFlowConfigs.STATUS_ASSIGNED + "|" + WorkFlowConfigs.ROLE_EMPLOYEE, LOCALIZATION_CODE_ASSIGN_EMPLOYEE);
+
+		map.put(WorkFlowConfigs.STATUS_REJECTED + "|" + WorkFlowConfigs.ROLE_CITIZEN, LOCALIZATION_CODE_REJECT_CITIZEN);
+		map.put(WorkFlowConfigs.STATUS_RESOLVED + "|" + WorkFlowConfigs.ROLE_CITIZEN, LOCALIZATION_CODE_RESOLVE_CITIZEN);
+		
+		map.put(WorkFlowConfigs.STATUS_CLOSED + "|" + WorkFlowConfigs.ROLE_EMPLOYEE, LOCALIZATION_CODE_CLOSE_EMPLOYEE);
 	
 		return map;
 	}
 	
-	private static Map<String, String> prepareActionLocalizationKeyMap() {
+	private static Map<String, String> prepareActionRoleLocalizationKeyMap() {
 
 		Map<String, String> map = new HashMap<>();
-		map.put(WorkFlowConfigs.ACTION_REOPEN, LOCALIZATION_CODE_REOPEN);
-		map.put(WorkFlowConfigs.ACTION_REASSIGN, LOCALIZATION_CODE_REASSIGN);
+		map.put(WorkFlowConfigs.ACTION_REOPEN + "|" + WorkFlowConfigs.ROLE_EMPLOYEE, LOCALIZATION_CODE_REOPEN_EMPLOYEE);
+		map.put(WorkFlowConfigs.ACTION_REASSIGN + "|" + WorkFlowConfigs.ROLE_CITIZEN, LOCALIZATION_CODE_REASSIGN_CITIZEN);
+		map.put(WorkFlowConfigs.ACTION_REASSIGN + "|" + WorkFlowConfigs.ROLE_EMPLOYEE, LOCALIZATION_CODE_REASSIGN_EMPLOYEE);
+
 	
 		return map;
 	}
@@ -141,12 +160,12 @@ public class PGRConstants {
 		return actionNotifKeyMap;
 	}
 	
-	public static Map<String, String> getStatusLocalizationKeyMap(){
-		return statusLocalizationKeyMap;
+	public static Map<String, String> getStatusRoleLocalizationKeyMap(){
+		return statusRoleLocalizationKeyMap;
 	}
 	
-	public static Map<String, String> getActionLocalizationKeyMap(){
-		return actionLocalizationKeyMap;
+	public static Map<String, String> getActionRoleLocalizationKeyMap(){
+		return actionRoleLocalizationKeyMap;
 	}
 		
 }

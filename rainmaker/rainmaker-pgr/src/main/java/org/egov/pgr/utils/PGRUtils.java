@@ -4,12 +4,15 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 import java.util.TreeMap;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.mdms.model.MasterDetail;
 import org.egov.mdms.model.MdmsCriteria;
@@ -277,7 +280,7 @@ public class PGRUtils {
 
 		return requestInfoWrapper;
 	}
-
+	
 	public RequestInfoWrapper prepareRequestForLocalization(StringBuilder uri, RequestInfo requestInfo, String locale,
 			String tenantId, String module) {
 		RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
@@ -384,6 +387,22 @@ public class PGRUtils {
 		return null;
 	}
 
+	/**
+	 * Returns the roles that need to receive notification at this status and action.
+	 * 
+	 * @param status
+	 * @param action
+	 * @return Set
+	 */
+	public Set<String> getReceptorsOfNotification(String status, String action){
+		Set<String> setOfRoles = new HashSet<>();
+		setOfRoles.addAll(WorkFlowConfigs.getMapOfStatusAndReceptors().get(status));
+		if(!StringUtils.isEmpty(action) && (action.equals(WorkFlowConfigs.ACTION_REASSIGN) || action.equals(WorkFlowConfigs.ACTION_REOPEN))) {
+			setOfRoles.clear();
+			setOfRoles.addAll(WorkFlowConfigs.getMapOfActionAndReceptors().get(action));
+		}		
+		return setOfRoles;
+	}
 	/**
 	 * Splits any camelCase to human readable string
 	 * @param String

@@ -1205,7 +1205,7 @@ class UpdateRenewal extends React.Component {
                                     </div>
                                     <div className="col-sm-6 label-view-text">
                                         <label id="mobileNumber" name="mobileNumber">
-                                            {allottee.mobileNumber ? allottee.mobileNumber : "N/A"}
+                                            {allottee.mobileNumber ? maskAlloteeDetails(allottee.mobileNumber) : "N/A"}
                                         </label>
                                     </div>
                                 </div>
@@ -1219,7 +1219,7 @@ class UpdateRenewal extends React.Component {
                                     </div>
                                     <div className="col-sm-6 label-view-text">
                                         <label id="aadhaarNumber" name="aadhaarNumber">
-                                            {allottee.aadhaarNumber ? allottee.aadhaarNumber : "N/A"}
+                                            {allottee.aadhaarNumber ? maskAlloteeDetails(allottee.aadhaarNumber) : "N/A"}
                                         </label>
                                     </div>
                                 </div>

@@ -1845,7 +1845,12 @@ function printValue(object = "", values) {
                                     $('[data-active="no"]').prop("checked", true);
                                     $('[data-active="yes"]').prop("checked", false);
                                 }
-                            } else {
+                            } else if(ckey == "aadhaarNumber"){
+                                var aadharNo = values[key][ckey];
+                                aadharNo = aadharNo.replace(aadharNo.substr(0,8),"********");
+                                $("[name='" + key + "." + ckey + "']").val(aadharNo ? aadharNo : "N/A");
+                            }
+                            else {
                                 $("[name='" + key + "." + ckey + "']").val(values[key][ckey] ? values[key][ckey] : "");
 
                             }
@@ -2982,4 +2987,9 @@ function loadUI() {
             $('#close').on("click", function() {
                 window.close();
             })
+
+        function maskEmployeeDetail(details){
+
+            return(details.replace(details.substr(0, 8),"********"))
+        }
 });

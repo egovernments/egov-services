@@ -461,6 +461,9 @@ class Sale extends React.Component {
       })
     }
 
+    function maskAadharCardNumber(aadharCardNumber){
+      return(aadharCardNumber.replace(aadharCardNumber.substr(0, 8),"********"))
+           }
     const showAttachedFiles = function () {
       if (disposedFiles && disposedFiles.length) {
         return (
@@ -666,7 +669,7 @@ class Sale extends React.Component {
                     </div>
                   </div>
                   <div className="col-sm-6 label-view-text" style={{ display: self.state.readOnly ? 'block' : 'none' }}>
-                    <label>{disposal.aadharCardNumber}</label>
+                    <label id="aadharCardNumber"> {maskAadharCardNumber(disposal.aadharCardNumber)}</label>
                   </div>
                 </div>
               </div>

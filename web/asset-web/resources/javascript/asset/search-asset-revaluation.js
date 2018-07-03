@@ -7,7 +7,7 @@ class SearchAsset extends React.Component {
         name: "",
         code: "",
         assetCategory: "",
-        status: "CAPITALIZED",
+        status:"CAPITALIZED",
         location: ""
       },
       assetCategories: [],
@@ -25,6 +25,7 @@ class SearchAsset extends React.Component {
     this.handleAction = this.handleAction.bind(this);
     this.setAssetList = this.setAssetList.bind(this);
   }
+
 
   handleAction(e, id, revaluationId) {
     e.preventDefault();
@@ -101,10 +102,10 @@ class SearchAsset extends React.Component {
                     for(var j=0; j<assetList.length; j++) {
                       if(assetList[j].id == res2.Revaluations[i].assetId) {
 
-                        res2.Revaluations[i].assetId = assetList[j].code; 
-                        res2.Revaluations[i].assetName = assetList[j].name; 
-                        res2.Revaluations[i].assetCategory = assetList[j].assetCategory.name; 
-                        res2.Revaluations[i].assetLocation = assetList[j].locationDetails.locality ? getNameById(_this.state.locality, assetList[j].locationDetails.locality) : ""; 
+                        res2.Revaluations[i].assetId = assetList[j].code;
+                        res2.Revaluations[i].assetName = assetList[j].name;
+                        res2.Revaluations[i].assetCategory = assetList[j].assetCategory.name;
+                        res2.Revaluations[i].assetLocation = assetList[j].locationDetails.locality ? getNameById(_this.state.locality, assetList[j].locationDetails.locality) : "";
 
                         newArray.push(res2.Revaluations[i]);
                         break;
@@ -197,6 +198,20 @@ class SearchAsset extends React.Component {
     });
   }
 
+  componentWillMount() {
+    var type= getUrlVars()["type"];
+    if(type==="view"){
+      this.setState({
+        ...this.state,
+      searchSet:{
+        ...this.state.searchSet,
+        status:null
+      }
+
+      });
+    }
+  }
+
   close() {
     open(location, '_self').close();
   }
@@ -261,6 +276,28 @@ class SearchAsset extends React.Component {
             )
         }
     }
+
+    const showStatu = function () {
+      var type = getUrlVars()["type"];
+      if (type != "view") {
+        return (
+
+      <div className="row">
+          <div className="col-sm-6">
+            <div className="row">
+              <div className="col-sm-6 label-text">
+                <label for="status">Status  </label>
+              </div>
+              <div className="col-sm-6 label-view-text">
+                CAPITALIZED
+              </div>
+          </div>
+        </div>
+    </div>
+      )
+    }
+
+  }
 
     const renderBody = function() {
       if (assetList.length>0) {
@@ -359,21 +396,7 @@ class SearchAsset extends React.Component {
               </div>
             </div>
           </div>
-
-
-          <div className="row">
-              <div className="col-sm-6">
-                <div className="row">
-                  <div className="col-sm-6 label-text">
-                    <label for="status">Status  </label>
-                  </div>
-                  <div className="col-sm-6 label-view-text">
-                    CAPITALIZED
-                  </div>
-              </div>
-            </div>
-        </div>
-          <br/>
+          {showStatu()}
 
               <div className="text-center">
                   <button type="submit" className="btn btn-submit">Search</button>&nbsp;&nbsp;

@@ -7,7 +7,6 @@ class SearchAsset extends React.Component {
         name: "",
         code: "",
         assetCategory: "",
-        status: "CAPITALIZED",
         location: ""
       },
       assetCategories: [],
@@ -104,11 +103,11 @@ class SearchAsset extends React.Component {
                     for(var j=0; j<assetList.length; j++) {
                       if(assetList[j].id == res2.DepreciationReportCriteria[i].assetId) {
 
-                        res2.DepreciationReportCriteria[i].assetId = assetList[j].code; 
-                        res2.DepreciationReportCriteria[i].assetName = assetList[j].name; 
-                        res2.DepreciationReportCriteria[i].assetCategory = assetList[j].assetCategory.name; 
+                        res2.DepreciationReportCriteria[i].assetId = assetList[j].code;
+                        res2.DepreciationReportCriteria[i].assetName = assetList[j].name;
+                        res2.DepreciationReportCriteria[i].assetCategory = assetList[j].assetCategory.name;
                         res2.DepreciationReportCriteria[i].assetCurrentvalue = assetList[j].currentValue;
-                        res2.DepreciationReportCriteria[i].assetLocation = assetList[j].locationDetails.locality ? getNameById(_this.state.locality, assetList[j].locationDetails.locality) : ""; 
+                        res2.DepreciationReportCriteria[i].assetLocation = assetList[j].locationDetails.locality ? getNameById(_this.state.locality, assetList[j].locationDetails.locality) : "";
 
                         newArray.push(res2.DepreciationReportCriteria[i]);
                         break;
@@ -361,21 +360,6 @@ class SearchAsset extends React.Component {
               </div>
             </div>
           </div>
-
-
-          <div className="row">
-              <div className="col-sm-6">
-                <div className="row">
-                  <div className="col-sm-6 label-text">
-                    <label for="status">Status  </label>
-                  </div>
-                  <div className="col-sm-6 label-view-text">
-                    CAPITALIZED
-                  </div>
-              </div>
-            </div>
-        </div>
-          <br/>
 
               <div className="text-center">
                   <button type="submit" className="btn btn-submit">Search</button>&nbsp;&nbsp;

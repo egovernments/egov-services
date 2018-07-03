@@ -159,6 +159,7 @@ class SearchAsset extends React.Component {
       }
     }
 
+
     var count = 1, _this = this, _state = {};
     let self = this;
     var checkCountNCall = function(key, res) {
@@ -194,6 +195,20 @@ class SearchAsset extends React.Component {
 
   close() {
     open(location, '_self').close();
+  }
+
+  componentWillMount() {
+    var type= getUrlVars()["type"];
+    if(type==="view"){
+      this.setState({
+        ...this.state,
+      searchSet:{
+        ...this.state.searchSet,
+        status:null
+      }
+
+      });
+    }
   }
 
   render() {
@@ -273,6 +288,28 @@ class SearchAsset extends React.Component {
       }
     }
 
+    const showStatu = function () {
+      var type = getUrlVars()["type"];
+      if (type != "view") {
+        return (
+
+      <div className="row">
+          <div className="col-sm-6">
+            <div className="row">
+              <div className="col-sm-6 label-text">
+                <label for="status">Status  </label>
+              </div>
+              <div className="col-sm-6 label-view-text">
+                CAPITALIZED
+              </div>
+          </div>
+        </div>
+    </div>
+      )
+    }
+
+  }
+
     return (
       <div>
       <h3>Asset Sale/Disposal Search</h3>
@@ -333,20 +370,7 @@ class SearchAsset extends React.Component {
             </div>
           </div>
 
-
-          {getUrlVars()["type"] !== "view" && <div className="row">
-              <div className="col-sm-6">
-                <div className="row">
-                  <div className="col-sm-6 label-text">
-                    <label for="status">Status  </label>
-                  </div>
-                  <div className="col-sm-6 label-view-text">
-                    CAPITALIZED
-                  </div>
-              </div>
-            </div>
-          </div>}
-          <br/>
+          {showStatu()}
 
               <div className="text-center">
                   <button type="submit" className="btn btn-submit">Search</button>&nbsp;&nbsp;

@@ -35,6 +35,9 @@ public class Configurations {
 	@Value("${egov.taxhead.search.endpoint}")
 	private String	taxheadsSearchEndpoint;
 	
+	@Value("${egov.demand.create.endpoint}")
+	private String demandCreateEndPoint;
+	
 	// billing slab configs
 	
 	@Value("${billingslab.value.all}")

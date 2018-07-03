@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.egov.pt.calculator.config.CalculatorConfig;
+import org.egov.pt.calculator.util.Configurations;
 import org.egov.pt.calculator.web.models.Calculation;
 import org.egov.pt.calculator.web.models.CalculationCriteria;
 import org.egov.pt.calculator.web.models.CalculationReq;
@@ -13,10 +14,12 @@ import org.egov.pt.calculator.web.models.TaxHeadEstimate;
 import org.egov.pt.calculator.web.models.demand.Demand;
 import org.egov.pt.calculator.web.models.demand.DemandDetail;
 import org.egov.pt.calculator.web.models.demand.DemandRequest;
+import org.egov.pt.calculator.web.models.demand.DemandResponse;
 import org.egov.pt.calculator.web.models.property.OwnerInfo;
 import org.egov.pt.calculator.web.models.property.Property;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -26,6 +29,14 @@ public class DemandService {
 
 	@Autowired
 	private EstimationService calculator;
+	
+	@Autowired
+	private RestTemplate restTemplate;
+	
+	@Autowired
+	private Configurations configs;
+	
+	
 
 	public Map<String, Calculation> generateDemands(CalculationReq request) {
 

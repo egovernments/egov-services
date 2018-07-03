@@ -53,6 +53,8 @@ public class AgreementValidator {
 	public static final String ACTION_MODIFY ="Modify";
 	public static final String SHOPPING_COMPLEX = "Shopping Complex";
 	private static final List<String> AUCTION_CATEGORIES = Arrays.asList("Market", "Fish Tanks", "Slaughter House", "Community Toilet Complex", "Community Hall");
+	private static final String ERROR_MSG_AGREEMENT_INACTIVE = "History/InActive agreements are not allowed.";
+	
 	@Autowired
 	private AssetRepository assetService;
 
@@ -164,6 +166,9 @@ public class AgreementValidator {
 		if (agreement.getIsUnderWorkflow()) {
 			errors.reject(ERROR_FIELD_AGREEMENT_NO, ERROR_MSG_UNDER_WORKFLOW);
 		}
+		if(Status.EVICTED.equals(agreement.getStatus()) || Status.INACTIVE.equals(agreement.getStatus()) || Status.HISTORY.equals(agreement.getStatus())){
+			errors.reject(ERROR_FIELD_AGREEMENT_NO, ERROR_MSG_AGREEMENT_INACTIVE);
+		}
 		List<String> evictionAssetCategories = getConfigurations(propertiesManager.getEvictionAssetCategoryKey(),
 				agreement.getTenantId());
 
@@ -179,6 +184,9 @@ public class AgreementValidator {
 		RequestInfo requestInfo = agreementRequest.getRequestInfo();
 		if (agreement.getIsUnderWorkflow()) {
 			errors.reject(ERROR_FIELD_AGREEMENT_NO, ERROR_MSG_UNDER_WORKFLOW);
+		}
+		if(Status.EVICTED.equals(agreement.getStatus()) || Status.INACTIVE.equals(agreement.getStatus()) || Status.HISTORY.equals(agreement.getStatus())){
+			errors.reject(ERROR_FIELD_AGREEMENT_NO, ERROR_MSG_AGREEMENT_INACTIVE);
 		}
 		checkRentDue(agreement.getDemands().get(0), requestInfo, errors, Action.RENEWAL.toString());
 
@@ -215,6 +223,9 @@ public class AgreementValidator {
 		if (agreement.getIsUnderWorkflow()) {
 			errors.reject(ERROR_FIELD_AGREEMENT_NO, ERROR_MSG_UNDER_WORKFLOW);
 		}
+		if(Status.EVICTED.equals(agreement.getStatus()) || Status.INACTIVE.equals(agreement.getStatus()) || Status.HISTORY.equals(agreement.getStatus())){
+			errors.reject(ERROR_FIELD_AGREEMENT_NO, ERROR_MSG_AGREEMENT_INACTIVE);
+		}
 		checkRentDue(agreement.getDemands().get(0), requestInfo, errors, Action.CANCELLATION.toString());
 	}
 
@@ -250,6 +261,9 @@ public class AgreementValidator {
 		demandSearchCriteria.setDemandId(Long.valueOf(agreement.getDemands().get(0)));
 		if (agreement.getIsUnderWorkflow()) {
 			errors.reject(ERROR_FIELD_AGREEMENT_NO, ERROR_MSG_UNDER_WORKFLOW);
+		}
+		if(Status.EVICTED.equals(agreement.getStatus()) || Status.INACTIVE.equals(agreement.getStatus()) || Status.HISTORY.equals(agreement.getStatus())){
+			errors.reject(ERROR_FIELD_AGREEMENT_NO, ERROR_MSG_AGREEMENT_INACTIVE);
 		}
 		
 		Demand demand = demandRepository.getDemandBySearch(demandSearchCriteria, agreementRequest.getRequestInfo())
@@ -444,8 +458,8 @@ public class AgreementValidator {
 	public void validateAgreementForWorkFLow(AgreementRequest agreementRequest, Errors errors, String action) {
 
 		Agreement agreement = agreementRequest.getAgreement();
-		if(Status.INACTIVE.equals(agreement.getStatus()) || Status.HISTORY.equals(agreement.getStatus())){
-			errors.reject(ERROR_FIELD_AGREEMENT_NO, "History/InActive agreements are not allowed.");
+		if(Status.EVICTED.equals(agreement.getStatus()) || Status.INACTIVE.equals(agreement.getStatus()) || Status.HISTORY.equals(agreement.getStatus())){
+			errors.reject(ERROR_FIELD_AGREEMENT_NO, ERROR_MSG_AGREEMENT_INACTIVE);
 		}
 		
 		if (Action.RENEWAL.toString().equals(action)) {

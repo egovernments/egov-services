@@ -815,7 +815,7 @@ class AgreementDetails extends React.Component {
                                     </div>
                                     <div className="col-sm-6 label-view-text">
                                         <label id="cgst" name="CGST">
-                                            &#8377; {String(agreement.cgst) || 0}
+                                            &#8377; {String(Math.round(agreement.cgst)) || 0}
                                         </label>
                                     </div>
                                 </div>
@@ -827,7 +827,7 @@ class AgreementDetails extends React.Component {
                                     </div>
                                     <div className="col-sm-6 label-view-text">
                                         <label id="sgst" name="sgst">
-                                            &#8377; {String(agreement.sgst) || 0}
+                                            &#8377; {String(Math.round(agreement.sgst)) || 0}
                                         </label>
                                     </div>
                                 </div>

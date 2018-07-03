@@ -38,10 +38,10 @@ public class DemandService {
 			demands.add(getDemand(property,
 					propertyCalculationMap.get(property.getPropertyDetails().get(0).getAssessmentNumber())));
 		}
-		DemandRequest.builder().demands(demands).requestInfo(request.getRequestInfo()).build();
-		/*
-		 * post demand Request to billing service
-		 */
+		DemandRequest dmReq = DemandRequest.builder().demands(demands).requestInfo(request.getRequestInfo()).build();
+		String url = new StringBuilder().append(configs.getBillingServiceHost()).append(configs.getDemandCreateEndPoint()).toString();
+		DemandResponse res = restTemplate.postForObject(url, dmReq, DemandResponse.class);
+		log.info(" The demand Response is : " + res);
 		return propertyCalculationMap;
 	}
 

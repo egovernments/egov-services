@@ -1396,6 +1396,11 @@ function adjustSecurityDeposit(fromDate, auctionAmount) {
     agreement["securityDeposit"] = Math.round(securityDeposit);
 
 }
+function getAbsoulteMonths(momentDate) {
+  var months = Number(momentDate.format("MM"));
+  var years = Number(momentDate.format("YYYY"));
+  return months + (years * 12);
+}
 
 // printValue("",assetDetails)
 //

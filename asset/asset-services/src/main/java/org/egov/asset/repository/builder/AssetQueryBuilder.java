@@ -276,7 +276,7 @@ public class AssetQueryBuilder {
         // handle limit(also called pageSize) here
         selectQuery.append(" ORDER BY asset.name");
 
-        selectQuery.append(" LIMIT ?");
+       /* selectQuery.append(" LIMIT ?");
         long pageSize = Integer.parseInt(applicationProperties.getSearchPageSizeDefault());
 
         if (searchAsset.getSize() != null)
@@ -288,7 +288,7 @@ public class AssetQueryBuilder {
         long pageNumber = 0; // Default pageNo is zero meaning first page
         if (searchAsset.getOffset() != null)
             pageNumber = searchAsset.getOffset() - 1;
-        preparedStatementValues.add(pageNumber * pageSize); // Set offset to
+        preparedStatementValues.add(pageNumber * pageSize);*/ // Set offset to
                                                             // pageNo * pageSize
     }
 

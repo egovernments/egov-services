@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.WordUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.egov.pgr.contract.ReportRequest;
 import org.egov.pgr.contract.ReportResponse;
@@ -151,10 +152,10 @@ public class ReportService {
 		List<Map<String, Object>> enrichedResponse = new ArrayList<>();
 		Map<String, Object> tuple = dbResponse.get(0);
 		Long total = Long.valueOf(tuple.get("citizen_mobile_app").toString()) 
-				+ Long.valueOf(tuple.get("citizen_web_app").toString()) + Long.valueOf(tuple.get("counter_desktop").toString());
+				+ Long.valueOf(tuple.get("citizen_web_app").toString()) + Long.valueOf(tuple.get("customer_service_desk").toString());
 		for(String key: dbResponse.get(0).keySet()) {
 			Map<String, Object> newtuple = new LinkedHashMap<>();
-			newtuple.put("Source", key.replaceAll("[_]", " "));
+			newtuple.put("Source", WordUtils.capitalize(key.replaceAll("[_]", " ")));
 			newtuple.put("Complaints Received", reportUtils.getPercentage(total, tuple.get(key)));
 			enrichedResponse.add(newtuple);
 		}

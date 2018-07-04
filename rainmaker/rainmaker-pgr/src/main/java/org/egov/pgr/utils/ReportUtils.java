@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.WordUtils;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.mdms.model.MasterDetail;
 import org.egov.mdms.model.MdmsCriteria;
@@ -59,11 +60,14 @@ public class ReportUtils {
 			ColumnDetail coloumnDetail = null;
 			if(null != firstTuple.get(key)) {
 				if(firstTuple.get(key).getClass().getTypeName().contains("String"))
-					coloumnDetail = ColumnDetail.builder().name(key.replaceAll("[_]", " ")).type("string").label("reports.rainmaker-pgr."+key.replaceAll("[_]", " ")).showColumn(true).total(false).build();
+					coloumnDetail = ColumnDetail.builder().name(WordUtils.capitalize(key.replaceAll("[_]", " "))).
+					type("string").label("reports.rainmaker-pgr."+WordUtils.capitalize(key.replaceAll("[_]", " "))).showColumn(true).total(false).build();
 				else 
-					coloumnDetail = ColumnDetail.builder().name(key.replaceAll("[_]", " ")).type("number").label("reports.rainmaker-pgr."+key.replaceAll("[_]", " ")).showColumn(true).total(true).build();
+					coloumnDetail = ColumnDetail.builder().name(WordUtils.capitalize(key.replaceAll("[_]", " ")))
+					.type("number").label("reports.rainmaker-pgr."+WordUtils.capitalize(key.replaceAll("[_]", " "))).showColumn(true).total(true).build();
 			}else {
-				coloumnDetail = ColumnDetail.builder().name(key.replaceAll("[_]", " ")).type("number").label("reports.rainmaker-pgr."+key.replaceAll("[_]", " ")).showColumn(true).total(true).build();
+				coloumnDetail = ColumnDetail.builder().name(WordUtils.capitalize(key.replaceAll("[_]", " ")))
+						.type("number").label("reports.rainmaker-pgr."+WordUtils.capitalize(key.replaceAll("[_]", " "))).showColumn(true).total(true).build();
 			}
 			reportHeader.add(coloumnDetail);
 		}

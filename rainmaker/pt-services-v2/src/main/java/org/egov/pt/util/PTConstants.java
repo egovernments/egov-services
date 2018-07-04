@@ -31,6 +31,8 @@ public class PTConstants {
 
     public static final String MDMS_PT_USAGESUBMINOR = "UsageCategorySubMinor";
 
+    public static final String MDMS_PT_OWNERTYPE = "OwnerType";
+
     public static final String MDMS_PT_FINANCIALYEAR = "FinancialYear";
 
 

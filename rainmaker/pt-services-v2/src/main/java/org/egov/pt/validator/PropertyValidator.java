@@ -66,8 +66,8 @@ public class PropertyValidator {
 
       String[] masterNames = {PTConstants.MDMS_PT_CONSTRUCTIONSUBTYPE, PTConstants.MDMS_PT_CONSTRUCTIONTYPE, PTConstants.MDMS_PT_OCCUPANCYTYPE,
       PTConstants.MDMS_PT_PROPERTYTYPE,PTConstants.MDMS_PT_PROPERTYSUBTYPE,PTConstants.MDMS_PT_OWNERSHIP,PTConstants.MDMS_PT_SUBOWNERSHIP,
-      PTConstants.MDMS_PT_USAGEMAJOR,PTConstants.MDMS_PT_USAGEMINOR,PTConstants.MDMS_PT_USAGESUBMINOR,PTConstants.MDMS_PT_USAGEDETAIL
-      };
+      PTConstants.MDMS_PT_USAGEMAJOR,PTConstants.MDMS_PT_USAGEMINOR,PTConstants.MDMS_PT_USAGESUBMINOR,PTConstants.MDMS_PT_USAGEDETAIL,
+      PTConstants.MDMS_PT_OWNERTYPE};
       List<String> names = new ArrayList<>();
       names.addAll(Arrays.asList(masterNames));
 
@@ -161,8 +161,8 @@ public class PropertyValidator {
            });
 
 	       propertyDetail.getOwners().forEach(owner ->{
-               if(!codes.get(PTConstants.MDMS_PT_USAGEMAJOR).contains(owner.getOwnerType()) && owner.getOwnerType()!=null){
-                   errorMap.put("Invalid OwnerType","The UsageCategoryMajor '"+owner.getOwnerType()+"' does not exists");
+               if(!codes.get(PTConstants.MDMS_PT_OWNERTYPE).contains(owner.getOwnerType()) && owner.getOwnerType()!=null){
+                   errorMap.put("Invalid OwnerType","The OwnerType '"+owner.getOwnerType()+"' does not exists");
                }
            });
 	     });

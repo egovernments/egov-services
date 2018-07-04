@@ -61,13 +61,13 @@ public class ReportUtils {
 			if(null != firstTuple.get(key)) {
 				if(firstTuple.get(key).getClass().getTypeName().contains("String"))
 					coloumnDetail = ColumnDetail.builder().name(WordUtils.capitalize(key.replaceAll("[_]", " "))).
-					type("string").label("reports.rainmaker-pgr."+WordUtils.capitalize(key.replaceAll("[_]", " "))).showColumn(true).total(false).build();
+					type("string").label("reports.rainmaker-pgr."+(key.replaceAll("[_]", " "))).showColumn(true).total(false).build();
 				else 
 					coloumnDetail = ColumnDetail.builder().name(WordUtils.capitalize(key.replaceAll("[_]", " ")))
-					.type("number").label("reports.rainmaker-pgr."+WordUtils.capitalize(key.replaceAll("[_]", " "))).showColumn(true).total(true).build();
+					.type("number").label("reports.rainmaker-pgr."+(key.replaceAll("[_]", " "))).showColumn(true).total(true).build();
 			}else {
 				coloumnDetail = ColumnDetail.builder().name(WordUtils.capitalize(key.replaceAll("[_]", " ")))
-						.type("number").label("reports.rainmaker-pgr."+WordUtils.capitalize(key.replaceAll("[_]", " "))).showColumn(true).total(true).build();
+						.type("number").label("reports.rainmaker-pgr."+(key.replaceAll("[_]", " "))).showColumn(true).total(true).build();
 			}
 			reportHeader.add(coloumnDetail);
 		}

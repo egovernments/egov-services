@@ -2,6 +2,7 @@ package org.egov.pgr.service;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -21,7 +22,6 @@ import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.JsonPath;
 
-import lombok.extern.java.Log;
 import lombok.extern.slf4j.Slf4j;
 
 @Service
@@ -63,7 +63,7 @@ public class ReportService {
 		} else if (reportRequest.getReportName().equalsIgnoreCase(ReportConstants.DEPARTMENT_REPORT)) {
 			dbResponse = enrichDepartmentWiseReport(reportRequest, dbResponse);
 		} else if (reportRequest.getReportName().equalsIgnoreCase(ReportConstants.SOURCE_REPORT)) {
-			enrichSourceWiseReport(reportRequest, dbResponse);
+			dbResponse = enrichSourceWiseReport(reportRequest, dbResponse);
 		} else if (reportRequest.getReportName().equalsIgnoreCase(ReportConstants.FUNCTIONARY_REPORT)) {
 			enrichFunctionaryWiseReport(reportRequest, dbResponse);
 		}
@@ -147,15 +147,19 @@ public class ReportService {
 		return enrichedResponse;
 	}
 
-	public void enrichSourceWiseReport(ReportRequest reportRequest, List<Map<String, Object>> dbResponse) {
-		for (Map<String, Object> tuple : dbResponse) {
-			Long total = Long.valueOf(tuple.get("citizen_mobile_app").toString()) 
-					+ Long.valueOf(tuple.get("citizen_web_app").toString()) + Long.valueOf(tuple.get("counter_desktop").toString());
-		
-			tuple.put("citizen_mobile_app", reportUtils.getPercentage(total, tuple.get("citizen_mobile_app")));
-			tuple.put("citizen_web_app", reportUtils.getPercentage(total, tuple.get("citizen_web_app")));
-			tuple.put("counter_desktop", reportUtils.getPercentage(total, tuple.get("counter_desktop")));
+	public List<Map<String, Object>> enrichSourceWiseReport(ReportRequest reportRequest, List<Map<String, Object>> dbResponse) {
+		List<Map<String, Object>> enrichedResponse = new ArrayList<>();
+		Map<String, Object> tuple = dbResponse.get(0);
+		Long total = Long.valueOf(tuple.get("citizen_mobile_app").toString()) 
+				+ Long.valueOf(tuple.get("citizen_web_app").toString()) + Long.valueOf(tuple.get("counter_desktop").toString());
+		for(String key: dbResponse.get(0).keySet()) {
+			Map<String, Object> newtuple = new LinkedHashMap<>();
+			newtuple.put("Source", key.replaceAll("[_]", " "));
+			newtuple.put("Complaints Received", reportUtils.getPercentage(total, tuple.get(key)));
+			enrichedResponse.add(newtuple);
 		}
+		
+		return enrichedResponse;
 	}
 
 	public void enrichFunctionaryWiseReport(ReportRequest reportRequest, List<Map<String, Object>> dbResponse) {
@@ -186,8 +190,7 @@ public class ReportService {
 		Object request = reportUtils.getGROSearchRequest(uri, employeeIds, reportRequest);
 		Object response = serviceRequestRepository.fetchResult(uri, request);
 		if (null != response) {
-			List<Map<String, Object>> resultCast = mapper.convertValue(JsonPath.read(response, "$.Employee"),
-					List.class);
+			List<Map<String, Object>> resultCast = mapper.convertValue(JsonPath.read(response, "$.Employee"), List.class);
 			for (Map<String, Object> employee : resultCast) {
 				mapOfIdAndName.put(Long.parseLong(employee.get("id").toString()), employee.get("name").toString());
 			}
@@ -205,8 +208,7 @@ public class ReportService {
 				reportRequest.getRequestInfo());
 		Object response = serviceRequestRepository.fetchResult(uri, request);
 		if (null != response) {
-			List<Map<String, Object>> resultCast = mapper
-					.convertValue(JsonPath.read(response, "$.MdmsRes.RAINMAKER-PGR.ServiceDefs"), List.class);
+			List<Map<String, Object>> resultCast = mapper.convertValue(JsonPath.read(response, "$.MdmsRes.RAINMAKER-PGR.ServiceDefs"), List.class);
 			for (Map<String, Object> serviceDef : resultCast) {
 				mapOfServiceCodesAndDepts.put(serviceDef.get("serviceCode").toString(),
 						serviceDef.get("department").toString());

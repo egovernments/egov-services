@@ -192,9 +192,9 @@ public class AttendanceController {
         Long noOfDaysInMonth = null;
         Long noOfWorkingDays = null;
         try {
-        	 noOfDaysInMonth = attendanceService.getNoOfDaysInMonth(attendanceReportRequest.getMonth(), attendanceReportRequest.getYear());
-             noOfWorkingDays = attendanceService.getNoOfWorkingDays(attendanceReportRequest, noOfDaysInMonth, requestInfo);
-             attendancesList = attendanceService.getAttendanceReport(attendanceReportRequest,noOfDaysInMonth,noOfWorkingDays, requestInfo);      
+            noOfDaysInMonth = attendanceService.getNoOfDaysInMonth(attendanceReportRequest.getMonth(), attendanceReportRequest.getYear());
+            noOfWorkingDays = attendanceService.getNoOfWorkingDays(attendanceReportRequest, noOfDaysInMonth, requestInfo);
+            attendancesList = attendanceService.getAttendanceReport(attendanceReportRequest, noOfDaysInMonth, noOfWorkingDays, requestInfo);
         } catch (final Exception exception) {
             logger.error("Error while processing request " + attendanceReportRequest, exception);
             return errHandler.getResponseEntityForUnexpectedErrors(requestInfo);
@@ -384,26 +384,24 @@ public class AttendanceController {
     @SuppressWarnings("deprecation")
     public boolean isSecondSaturdayOfMonth(final Date date) {
         final Calendar cal = Calendar.getInstance();
-        cal.set(Calendar.MONTH, date.getMonth());
-        cal.setFirstDayOfWeek(Calendar.SATURDAY);
+        cal.setTime(date);
         cal.set(Calendar.DAY_OF_WEEK, Calendar.SATURDAY);
         cal.set(Calendar.WEEK_OF_MONTH, 2);
-        return cal.getTime().equals(date.getTime());
+        return cal.getTime().equals(date);
     }
 
     @SuppressWarnings("deprecation")
     public boolean isSecondOrFourthSaturdayOfMonth(final Date date) {
         boolean isSecondOrFourthSaturday = false;
         final Calendar cal = Calendar.getInstance();
-        cal.set(Calendar.MONTH, date.getMonth());
-        cal.setFirstDayOfWeek(Calendar.SATURDAY);
+        cal.setTime(date);
         cal.set(Calendar.DAY_OF_WEEK, Calendar.SATURDAY);
         cal.set(Calendar.WEEK_OF_MONTH, 2);
-        isSecondOrFourthSaturday = cal.getTime().equals(date.getTime());
+        isSecondOrFourthSaturday = cal.getTime().equals(date);
 
         if (!isSecondOrFourthSaturday) {
             cal.set(Calendar.WEEK_OF_MONTH, 4);
-            isSecondOrFourthSaturday = cal.getTime().equals(date.getTime());
+            isSecondOrFourthSaturday = cal.getTime().equals(date);
         }
 
         return isSecondOrFourthSaturday;

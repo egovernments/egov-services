@@ -1,10 +1,24 @@
 package org.egov.lams.service;
 
-import org.egov.lams.model.*;
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.when;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
+
+import org.egov.lams.model.Agreement;
+import org.egov.lams.model.AgreementCriteria;
+import org.egov.lams.model.Allottee;
+import org.egov.lams.model.Asset;
+import org.egov.lams.model.AssetCategory;
+import org.egov.lams.model.Location;
+import org.egov.lams.model.Notice;
 import org.egov.lams.model.enums.Action;
 import org.egov.lams.model.enums.Status;
 import org.egov.lams.repository.NoticeRepository;
-import org.egov.lams.repository.WorkFlowRepository;
 import org.egov.lams.web.contract.NoticeRequest;
 import org.egov.lams.web.contract.NoticeResponse;
 import org.egov.lams.web.contract.RequestInfo;
@@ -15,23 +29,11 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.when;
-
 @RunWith(MockitoJUnitRunner.class)
 public class NoticeServiceTest {
 
     @Mock
     private NoticeRepository noticeRepository;
-
-    @Mock
-    private WorkFlowRepository workFlowRepository;
 
     @Mock
     private AgreementService agreementService;
@@ -41,12 +43,11 @@ public class NoticeServiceTest {
     @Before
     public void before(){
         noticeService = new NoticeService(noticeRepository,
-                agreementService,workFlowRepository);
+                agreementService);
     }
 
     @Test
     public void test_should_generate_notice(){
-        when(workFlowRepository.getCommissionerName(any(),any(),any())).thenReturn("Narasimha Rao");
         when(noticeRepository.createNotice(any())).thenReturn(getNotice());
         when(agreementService.getAgreementsByAgreementNumber(any(),any())).thenReturn(getAgreementsList());
 

@@ -8,7 +8,6 @@ import org.egov.lams.model.AgreementCriteria;
 import org.egov.lams.model.Notice;
 import org.egov.lams.model.NoticeCriteria;
 import org.egov.lams.repository.NoticeRepository;
-import org.egov.lams.repository.WorkFlowRepository;
 import org.egov.lams.web.contract.NoticeRequest;
 import org.egov.lams.web.contract.NoticeResponse;
 import org.egov.lams.web.contract.RequestInfo;
@@ -21,15 +20,11 @@ public class NoticeService {
 
 	private AgreementService agreementService;
 
-	private WorkFlowRepository workFlowRepository;
-
 	
 
-	public NoticeService(NoticeRepository noticeRepository, AgreementService agreementService,
-			WorkFlowRepository workFlowRepository) {
+	public NoticeService(NoticeRepository noticeRepository, AgreementService agreementService) {
 		this.noticeRepository = noticeRepository;
 		this.agreementService = agreementService;
-		this.workFlowRepository = workFlowRepository;
 
 	}
 
@@ -41,9 +36,6 @@ public class NoticeService {
 
 		Agreement agreement = agreements.get(0);
 		notice.toNotice(agreement);
-		notice.setCommissionerName(workFlowRepository.getCommissionerName(agreement.getStateId(),
-				agreement.getTenantId(), noticeRequest.getRequestInfo()));
-
 		notice = noticeRepository.createNotice(noticeRequest);
 		List<Notice> notices = new ArrayList<>();
 		notices.add(notice);

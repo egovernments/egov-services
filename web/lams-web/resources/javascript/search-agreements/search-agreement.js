@@ -31,9 +31,14 @@ class AgreementSearch extends React.Component {
             users: [],
             hideCollectTaxOption: true
         }
+
         this.handleChange = this.handleChange.bind(this);
         this.search = this.search.bind(this);
         this.handleMobileValidation = this.handleMobileValidation.bind(this);
+        this.handleSelectChange = this.handleSelectChange.bind(this);
+        this.prepareNotice = this.prepareNotice.bind(this);
+
+
     }
 
     handleMobileValidation(e) {
@@ -288,7 +293,10 @@ class AgreementSearch extends React.Component {
         })
     }
 
+
+
     handleSelectChange(type, id, number, assetCategory, acknowledgementNumber, status) {
+
         switch (type) {
             case "renew":
                 window.open("app/search-agreement/view-renew-agreement.html?view=renew&type=" + assetCategory + (number ? "&agreementNumber=" + number : "&acknowledgementNumber=" + acknowledgementNumber) + "&assetId=" + id, "fs", "fullscreen=yes")
@@ -331,7 +339,282 @@ class AgreementSearch extends React.Component {
             case "addeditdemand":
                 window.open("app/dataentry/edit-demand.html?" + (number ? "agreementNumber=" + number : "acknowledgementNumber=" + acknowledgementNumber) + "&assetId=" + id, "fs", "fullscreen=yes");
                 break;
+
+           case "generateNotice" :
+             var agreementNumber = number;
+             var noticeType = "CREATE";
+             var notice = commonApiPost("lams-services/agreement", "notice", "_search", { tenantId,agreementNumber,noticeType }).responseJSON.Notices[0];
+            if(notice && notice.fileStore){
+              console.log(notice.fileStore);
+              this.showNotice(notice.fileStore);
+            }else{
+              var status = "ACTIVE";
+              var agreement = commonApiPost("lams-services", "agreements", "_search", { tenantId,agreementNumber,status }).responseJSON.Agreements[0];
+             this.prepareNotice(agreement);
+
+            }
+
+           break;
         }
+    }
+    prepareNotice(agreement) {
+        debugger;
+        var doc = new jsPDF();
+        var tenderDate;
+        if(agreement.tenderDate === null){
+            tenderDate = "N/A";
+        }else{
+            tenderDate = agreement.tenderDate;
+        }
+         var commDesignation = commonApiPost("hr-masters", "designations", "_search", {name:"Commissioner", active:true,tenantId }).responseJSON["Designation"];
+         var commDesignationId = commDesignation[0].id;
+         var commissioners =  commonApiPost("hr-employee", "employees", "_search", {
+                             tenantId,
+                             designationId: commDesignationId,
+                             active: true,
+                             asOnDate: moment(new Date()).format("DD/MM/YYYY")
+                             }).responseJSON["Employee"] || [];
+        var commissionerName =commissioners[0].name;
+        var LocalityData = commonApiPost("egov-location/boundarys", "boundariesByBndryTypeNameAndHierarchyTypeName", "", { boundaryTypeName: "LOCALITY", hierarchyTypeName: "LOCATION", tenantId });
+        var locality = getNameById(LocalityData["responseJSON"]["Boundary"], agreement.asset.locationDetails.locality);
+        var cityGrade = !localStorage.getItem("city_grade") || localStorage.getItem("city_grade") == "undefined" ? (localStorage.setItem("city_grade", JSON.stringify(commonApiPost("tenant", "v1/tenant", "_search", { code: tenantId }).responseJSON["tenant"][0]["city"]["ulbGrade"] || {})), JSON.parse(localStorage.getItem("city_grade"))) : JSON.parse(localStorage.getItem("city_grade"));
+        var ulbType = "Nagara Panchayat/Municipality";
+        if (cityGrade.toLowerCase() === 'corp') {
+            ulbType = "Municipal Corporation";
+        }
+
+        let commencementDate = agreement.commencementDate;
+        let timePeriod = agreement.timePeriod;
+        let endDate = commencementDate.split("/")[0]+"/"+commencementDate.split("/")[1]+"/"+ (Number(commencementDate.split("/")[2]) + Number(timePeriod))
+
+        var depositParticulars = [
+            { title: "Particulars", dataKey: "particulars" },
+            { title: "Amount (Rs)", dataKey: "amount" },
+            { title: "Cheque/DD/Challan No and Date", dataKey: "leaseHolderName" },
+
+        ];
+         var gstOnGoodWill = Number((agreement.goodWillAmount*18)/100);
+         var gstOnAdvance = Number((agreement.securityDeposit*18)/100);
+        var depositDetails = [
+            { "particulars": "Advance Tax(3 months Rental Deposits)", "amount": agreement.securityDeposit, "leaseHolderName":  agreement.name },
+            { "particulars": "GST for Advance Tax", "amount": gstOnAdvance, "leaseHolderName":  agreement.name },
+            { "particulars": "Goodwill Amount", "amount": agreement.goodWillAmount, "leaseHolderName":  agreement.name },
+            { "particulars": "GST for Goodwill Amount", "amount": gstOnGoodWill, "leaseHolderName":  agreement.name },
+            { "particulars": "Total", "amount": Number(agreement.goodWillAmount) +Number(gstOnGoodWill) + Number(agreement.securityDeposit) + gstOnAdvance, "leaseHolderName": agreement.name }
+        ];
+
+
+        var depositTableStyle = {
+            tableLineColor: [0, 0, 0],
+            tableLineWidth: 0.2,
+            styles: {
+                lineColor: [0, 0, 0],
+                lineWidth: 0.2,
+            },
+            headerStyles: {
+                textColor: [0, 0, 0],
+                fillColor: [255, 255, 255],
+                overflow: 'linebreak',
+                columnWidth: 'wrap'
+            },
+            bodyStyles: {
+                fillColor: [255, 255, 255],
+                textColor: [0, 0, 0],
+                overflow: 'linebreak',
+                columnWidth: 'wrap'
+            },
+            alternateRowStyles: {
+                fillColor: [255, 255, 255]
+            }, startY: 135
+        };
+
+
+        var rentParticulars = [
+            { title: "Particulars", dataKey: "particulars" },
+            { title: "Amount (Rs)", dataKey: "amount" }
+        ];
+
+        var rentDetails = [
+            { "particulars": "Monthly Rental", "amount": agreement.rent },
+            { "particulars": "GST", "amount": Number(agreement.sgst) + Number(agreement.cgst) },
+        ];
+
+
+        var rentTableStyle = {
+            tableLineColor: [0, 0, 0],
+            tableLineWidth: 0.2,
+            styles: {
+                lineColor: [0, 0, 0],
+                lineWidth: 0.2,
+            },
+            headerStyles: {
+                textColor: [0, 0, 0],
+                fillColor: [255, 255, 255],
+                overflow: 'linebreak',
+                columnWidth: 'wrap'
+            },
+            bodyStyles: {
+                fillColor: [255, 255, 255],
+                textColor: [0, 0, 0],
+                overflow: 'linebreak',
+                columnWidth: 'wrap'
+            },
+            alternateRowStyles: {
+                fillColor: [255, 255, 255]
+            }, startY: 200
+        };
+
+        doc.setFontType("bold");
+        doc.setFontSize(12);
+        doc.text(105, 20, "PROCEEDINGS OF THE COMMISSIONER, " + tenantId.split(".")[1].toUpperCase(), 'center');
+        doc.text(105, 27, ulbType.toUpperCase(), 'center');
+        doc.text(105, 34, "Present: "+ commissionerName, 'center');
+
+        doc.setFontType("normal");
+        doc.setFontSize(11);
+        doc.text(15,50, 'Roc.No.');
+        doc.setFontType("bold");
+        doc.text(30,50, agreement.noticeNumber ? agreement.noticeNumber :"");
+        doc.setFontType("normal");
+        doc.text(140,50, 'Dt. ');
+        doc.setFontType("bold");
+        doc.text(146,50, agreement.agreementDate);
+
+        doc.fromHTML("Sub:Leases-Revenue Section-Shop No <b>"+ agreement.referenceNumber + "</b> in <b>" + agreement.asset.name + "</b> Complex, <b> " + locality + "</b> <br>-Allotment of lease - orders - Issued",15, 60);
+
+        doc.fromHTML("Ref: 1. Open Auction Notice dt. <b>" + tenderDate +"</b> of this office",15,80);
+
+        doc.fromHTML("2. Resolution No <b>" + agreement.councilNumber + "</b> dt <b>" + agreement.councilDate + "</b> of Municipal Council/Standing Committee",23,85);
+
+        doc.text(100, 98, "><><><", 'center');
+
+        doc.text(15, 105, "Orders:");
+        doc.setLineWidth(0.5);
+        doc.line(15, 106, 28, 106);
+
+        doc.fromHTML("In the reference 1st cited, an Open Auction for leasing Shop No <b>" + agreement.referenceNumber + "</b> in <b>" + agreement.asset.name + "</b> <br>Complex was conducted and your bid for the highest amount (i.e. monthly rentals of Rs <b>" + agreement.rent + "/- </b> <br>and Goodwill amount of Rs <b>" + agreement.goodWillAmount + "/-  </b> ) was accepted by the Municipal Council/Standing Committee vide <br>reference 2nd cited with the following deposit amounts as received by this office.",15, 100);
+
+        doc.autoTable(depositParticulars, depositDetails, depositTableStyle);
+
+        doc.fromHTML("In pursuance of the Municipal Council/Standing Committee resolution and vide GO MS No 56 (MA & UD <br> Department) dt. 05.02.2011, the said shop is allotted to you for the period <b>" + commencementDate + "</b> to <b>" + endDate + "</b> at <br> following rates of rentals and taxes thereon.",15, 176);
+
+        doc.autoTable(rentParticulars, rentDetails, rentTableStyle);
+
+        doc.setFontType("normal");
+        var termsAndConditions = "The following terms and conditions are applicable for the renewal of lease."
+
+            + "\n\t1. The leaseholder shall pay rent by 5th of the succeeding month"
+            + "\n\t2. All the late payments of rentals will attract penalty and interest as applicable"
+            + "\n\t3. The leaseholder shall not sub lease the premises in any case. If it is found that the premises are being \t    sub let to any person, the lease shall stand cancelled without any prior notice."
+            + "\n\t4. The D&O Trade License of the establishment shall be in the name of the leaseholder only."
+            + "\n\t5. The leaseholder shall do business in the name of himself only."
+            + "\n\t6. The leaseholder not to use the premises for any unlawful activities"
+            + "\n\t7. The Goodwill and the Rental Deposits paid by the leaseholder shall be forfeited in the event of violation \t    of terms and conditions in the agreement."
+
+        var lines = doc.splitTextToSize(termsAndConditions, 183);
+        doc.text(12, 228, lines);
+
+        doc.addPage();
+        var declaration = "Hence you are requested to conclude an agreement duly registered with the SRO for the above mentioned lease within 15 days of receipt of this allotment letter without fail unless the allotment will stand cancelled without any further correspondence."
+        var lines = doc.splitTextToSize(declaration, 183);
+        doc.text(15, 30, lines);
+
+        doc.text(120, 50, "Commissioner");
+        doc.fromHTML("<b> "+tenantId.split(".")[1].charAt(0).toUpperCase() + tenantId.split(".")[1].slice(1) + " "+ulbType+"</b>",120, 55)
+
+        doc.text(15, 60, "To");
+        doc.text(15, 65, "The Leaseholder");
+        doc.text(15, 70, "Copy to the concerned officials for necessary action");
+
+        var blob = doc.output('blob');
+
+        this.createFileStore(agreement, blob).then(this.createNotice, this.errorHandler);
+    }
+
+
+    errorHandler(statusCode){
+     console.log("failed with status", status);
+     showError('Error');
+    }
+
+
+    createFileStore(noticeData, blob){
+      var promiseObj = new Promise(function(resolve, reject){
+        let formData = new FormData();
+        let fileName = "AN/"+noticeData.agreementNumber;
+        formData.append("module", "LAMS");
+        formData.append("file", blob,fileName);
+        $.ajax({
+            url: baseUrl + "/filestore/v1/files?tenantId=" + tenantId,
+            data: formData,
+            cache: false,
+            contentType: false,
+            processData: false,
+            type: 'POST',
+            success: function (res) {
+                let obj={
+                  noticeData : noticeData,
+                  fileStoreId : res.files[0].fileStoreId
+                }
+                resolve(obj);
+            },
+            error: function (jqXHR, exception) {
+                reject(jqXHR.status);
+            }
+        });
+      });
+      return promiseObj;
+    }
+
+    createNotice(obj){
+      var CONST_API_GET_FILE = "/filestore/v1/files/id?tenantId=" + tenantId + "&fileStoreId=";
+      var filestore = obj.fileStoreId;
+      $.ajax({
+          url: baseUrl + `/lams-services/agreement/notice/_create?tenantId=` + tenantId,
+          type: 'POST',
+          dataType: 'json',
+          data: JSON.stringify({
+              RequestInfo: requestInfo,
+              Notice: {
+                  tenantId,
+                  agreementNumber: obj.noticeData.agreementNumber,
+                  fileStore:obj.fileStoreId
+              }
+          }),
+          headers: {
+              'auth-token': authToken
+          },
+          contentType: 'application/json',
+          success:function(res){
+            if(window.opener)
+                window.open(window.location.origin+ CONST_API_GET_FILE+filestore, '_self');
+          },
+          error:function(jqXHR, exception){
+            console.log('error');
+            showError('Error while creating notice');
+          }
+      });
+
+    }
+
+    showNotice(fileStoreId){
+      let self = this;
+      var fileURL = '/filestore/v1/files/id?fileStoreId='+fileStoreId+'&tenantId='+tenantId;
+      var oReq = new XMLHttpRequest();
+      oReq.open("GET", fileURL, true);
+      oReq.responseType = "arraybuffer";
+      console.log(fileURL);
+      oReq.onload = function(oEvent) {
+        var blob = new Blob([oReq.response], {type: oReq.getResponseHeader('content-type')});
+        var url = URL.createObjectURL(blob);
+        self.setState({
+          iframe_src : url,
+          contentType: oReq.getResponseHeader('content-type')
+        });
+        $(self.refs.modal).modal('show')
+      };
+      oReq.send();
+
     }
 
 
@@ -343,8 +626,7 @@ class AgreementSearch extends React.Component {
 
 
     render() {
-        //console.log(this.state.searchSet);
-        let { handleChange, search, updateTable, handleSelectChange, handleMobileValidation } = this;
+        let {handleChangeFile, handleChange,prepareNotice, search, updateTable, handleSelectChange, handleMobileValidation } = this;
         var self = this;
         let { isSearchClicked, agreements, assetCategories, hideCollectTaxOption } = this.state;
         let { locality,
@@ -465,6 +747,11 @@ class AgreementSearch extends React.Component {
                 return (<option value="addeditdemand">Add / Edit Demand </option>);
             }
         }
+        const getNoticeOption = function (agreement) {
+            if (agreement.source === "DATA_ENTRY" && agreement.action === "CREATE"  && agreement.status === "ACTIVE") {
+                return (<option value="generateNotice">Allotment Notice </option>);
+            }
+        }
 
         const getOption = function (isShopOrLand, item) {
             if (isShopOrLand) {
@@ -477,6 +764,7 @@ class AgreementSearch extends React.Component {
                         {/*<option value="renew">Renew</option>*/}
                         {showCollectTaxOption(item)}
                         {getDemandListing(item)}
+                        {getNoticeOption(item)}
                     </select>
                 )
             } else {
@@ -488,6 +776,7 @@ class AgreementSearch extends React.Component {
                         <option value="view">View</option>
                         {showCollectTaxOption(item)}
                         {getDemandListing(item)}
+                        {getNoticeOption(item)}
 
                     </select>
                 )
@@ -740,39 +1029,35 @@ class AgreementSearch extends React.Component {
                         </form>
                     </div>
                 </div>
-
-
-
                 <div className="table-cont" id="table">
                     {showTable()}
 
                 </div>
+                <div id="myModal" ref="modal" className="modal fade" role="dialog">
+                  <div className="modal-dialog">
 
+                    <div className="modal-content">
+                      <div className="modal-header">
+                        <button type="button" className="close" data-dismiss="modal">&times;</button>
+                        <h4 className="modal-title">Notice</h4>
+                      </div>
+                      <div className="modal-body">
+                        <iframe title="Document" src={this.state.iframe_src} frameBorder="0" allowFullScreen height="500" width="100%"></iframe>
+                      </div>
+                      <div className="modal-footer">
+                        <button type="button" className="btn btn-default" data-dismiss="modal">Close</button>
+                      </div>
+                    </div>
+
+                  </div>
+                </div>
             </div>
+
         );
     }
 }
-
-
-
-
-
 
 ReactDOM.render(
     <AgreementSearch />,
     document.getElementById('root')
 );
-
-
-// <div className="col-sm-6" id="shopping_complex_number">
-//     <div className="row">
-//         <div className="col-sm-6 label-text">
-//             <label for="shopping_complex_no">Shopping Complex Number </label>
-//         </div>
-//         <div className="col-sm-6">
-//             <input  type="text" name="shopping_complex_no" id="shopping_complex_no" value={shopComplexNumber} onChange={(e)=>{
-//     handleChange(e,"shopComplexNumber")
-// }}/>
-//         </div>
-//     </div>
-// </div>

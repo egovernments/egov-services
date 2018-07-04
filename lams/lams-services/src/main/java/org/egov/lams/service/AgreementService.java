@@ -175,8 +175,11 @@ public class AgreementService {
 				List<String> demandList = demandResponse.getDemands().stream().map(Demand::getId)
 						.collect(Collectors.toList());
 				agreement.setDemands(demandList);
-				agreement.setAgreementNumber(agreementNumberService.generateAgrementNumber(agreement.getCommencementDate(),agreement.getTenantId()));
+				agreement.setAgreementNumber(agreementNumberService
+						.generateAgrementNumber(agreement.getCommencementDate(), agreement.getTenantId()));
 				agreement.setAgreementDate(agreement.getCommencementDate());
+				agreement.setNoticeNumber(noticeNumberUtil.getNoticeNumber(agreement.getAction(),
+						agreement.getTenantId(), agreementRequest.getRequestInfo()));
 				agreementRepository.saveAgreement(agreementRequest);
 			} else {
 				agreement.setStatus(Status.WORKFLOW);

@@ -108,7 +108,6 @@ public class AssetCriteria {
     private Boolean applicableForSaleOrDisposal;
 
     @Min(1)
-    @Max(500)
     private Integer pageSize;
     private Integer pageNumber;
     private String sortBy;

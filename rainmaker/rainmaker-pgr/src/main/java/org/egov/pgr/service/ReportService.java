@@ -73,13 +73,8 @@ public class ReportService {
 	public void enrichComplaintTypeWiseReport(ReportRequest reportRequest, List<Map<String, Object>> dbResponse) {
 		for (Map<String, Object> tuple : dbResponse) {
 			tuple.put("complaint_type", reportUtils.splitCamelCase(tuple.get("complaint_type").toString()));
-			tuple.put("total_closed_complaints",
-					reportUtils.getPercentage(tuple.get("total_complaints"), tuple.get("total_closed_complaints")));
-			tuple.put("total_open_complaints",
-					reportUtils.getPercentage(tuple.get("total_complaints"), tuple.get("total_open_complaints")));
-			tuple.put("within_sla", reportUtils.getPercentage(tuple.get("total_complaints"), tuple.get("within_sla")));
-			tuple.put("outside_sla",
-					reportUtils.getPercentage(tuple.get("total_complaints"), tuple.get("outside_sla")));
+			tuple.put("total_open_complaints", reportUtils.getPercentage(tuple.get("total_complaints"), tuple.get("total_open_complaints")));
+			tuple.put("outside_sla", reportUtils.getPercentage(tuple.get("total_complaints"), tuple.get("outside_sla")));
 			tuple.put("avg_citizen_rating", reportUtils.getAvgRating(tuple.get("avg_citizen_rating")));
 		}
 	}
@@ -145,13 +140,8 @@ public class ReportService {
 			}
 		}
 		for (Map<String, Object> tuple : enrichedResponse) {
-			tuple.put("total_closed_complaints",
-					reportUtils.getPercentage(tuple.get("total_complaints"), tuple.get("total_closed_complaints")));
-			tuple.put("total_open_complaints",
-					reportUtils.getPercentage(tuple.get("total_complaints"), tuple.get("total_open_complaints")));
-			tuple.put("within_sla", reportUtils.getPercentage(tuple.get("total_complaints"), tuple.get("within_sla")));
-			tuple.put("outside_sla",
-					reportUtils.getPercentage(tuple.get("total_complaints"), tuple.get("outside_sla")));
+			tuple.put("total_open_complaints", reportUtils.getPercentage(tuple.get("total_complaints"), tuple.get("total_open_complaints")));
+			tuple.put("outside_sla", reportUtils.getPercentage(tuple.get("total_complaints"), tuple.get("outside_sla")));
 			tuple.put("avg_citizen_rating", reportUtils.getAvgRating(tuple.get("avg_citizen_rating")));
 		}
 		return enrichedResponse;
@@ -178,16 +168,12 @@ public class ReportService {
 		Map<Long, String> mapOfIdAndName = getEmployeeDetails(reportRequest, employeeIds);
 
 		for (Map<String, Object> tuple : dbResponse) {
+			log.info("tuple: "+tuple);
 			String name = mapOfIdAndName.get(
 					Long.valueOf((null == tuple.get("employee_name")) ? "0" : tuple.get("employee_name").toString()));
-			tuple.put("employee_name", name);
-			tuple.put("total_closed_complaints",
-					reportUtils.getPercentage(tuple.get("total_complaints"), tuple.get("total_closed_complaints")));
-			tuple.put("total_open_complaints",
-					reportUtils.getPercentage(tuple.get("total_complaints"), tuple.get("total_open_complaints")));
-			tuple.put("within_sla", reportUtils.getPercentage(tuple.get("total_complaints"), tuple.get("within_sla")));
-			tuple.put("outside_sla",
-					reportUtils.getPercentage(tuple.get("total_complaints"), tuple.get("outside_sla")));
+			tuple.put("employee_name", StringUtils.isEmpty(name) ? "No-Name" : name);
+			tuple.put("total_open_complaints", reportUtils.getPercentage(tuple.get("total_complaints_received"), tuple.get("total_open_complaints")));
+			tuple.put("outside_sla", reportUtils.getPercentage(tuple.get("total_complaints_received"), tuple.get("outside_sla")));
 			tuple.put("avg_citizen_rating", reportUtils.getAvgRating(tuple.get("avg_citizen_rating")));
 		}
 

@@ -12,7 +12,7 @@ public class ReportConstants {
 	public static final String DEPARTMENT_REPORT = "DepartmentWiseReport";
 	public static final String FUNCTIONARY_REPORT = "FunctionaryWiseReport";
 	public static final String AO_REPORT = "AOWiseReport";
-	public static final String COMPLAINT_TYPE_REPORT = "CompliantTypeWiseReport";
+	public static final String COMPLAINT_TYPE_REPORT = "ComplaintTypeWiseReport";
 	public static final String SOURCE_REPORT = "SourceWiseReport";
 	
 	public static final String[] REPORT_LIST = {BLOCK_REPORT, DEPARTMENT_REPORT, FUNCTIONARY_REPORT, AO_REPORT, COMPLAINT_TYPE_REPORT, SOURCE_REPORT};

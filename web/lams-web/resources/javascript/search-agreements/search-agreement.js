@@ -355,6 +355,18 @@ class AgreementSearch extends React.Component {
             }
 
            break;
+
+          case "showNotice" :
+           var agreementNumber = number;
+           var noticeType = "CREATE";
+           var notice = commonApiPost("lams-services/agreement", "notice", "_search", { tenantId,agreementNumber,noticeType }).responseJSON.Notices[0];
+          if(notice && notice.fileStore){
+            console.log(notice.fileStore);
+            this.showNotice(notice.fileStore);
+          }else{
+            showError('No notice available');
+          }
+           break;
         }
     }
     prepareNotice(agreement) {
@@ -748,8 +760,12 @@ class AgreementSearch extends React.Component {
             }
         }
         const getNoticeOption = function (agreement) {
-            if (agreement.source === "DATA_ENTRY" && agreement.action === "CREATE"  && agreement.status === "ACTIVE") {
-                return (<option value="generateNotice">Allotment Notice </option>);
+            if (agreement.action === "CREATE"  && agreement.status === "ACTIVE") {
+                 if(agreement.source === "DATA_ENTRY"){
+                    return (<option value="generateNotice">Allotment Notice </option>);
+                }else if(agreement.source === "SYSTEM"){
+                    return (<option value="showNotice">Allotment Notice </option>);
+              }
             }
         }
 

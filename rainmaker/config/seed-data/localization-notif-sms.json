@@ -27,56 +27,56 @@
     "tenantId": "pb",
     "messages": [
         {
-            "code": "pgr.sms.notification.submit",
-            "message": "Your complaint for <complaint_type> has been submitted with ID <id> on <date>. You can track your complaint status on the mSeva app or your local government web portal.",
+            "code": "pgr.sms.notification.submit.citizen",
+            "message": "Dear Citizen, Your complaint for <complaint_type> has been submitted with ID <id> on <date>. You can track your complaint status on the on the mSeva Punjab mobile App (download here - <download_link>) or your local municipal web portal",
             "module": "rainmaker-pgr",
             "locale": "en_IN"
         },
         {
-            "code": "pgr.sms.notification.reopen",
-            "message": "Your complaint for <complaint_type> has been re-opened on <date>.",
+            "code": "pgr.sms.notification.reopen.employee",
+            "message": "Shri <emp_name>, Complaint for <complaint_type> with ID <id> has been re-opened by the citizen. It is being reviewed by Assigning officer - <ulb>.",
             "module": "rainmaker-pgr",
             "locale": "en_IN"
         },
         {
-            "code": "pgr.sms.notification.assign",
-            "message": "Your complaint for <complaint_type> has been assigned to <emp_name>, <emp_designation>, <emp_department>",
+            "code": "pgr.sms.notification.assign.citizen",
+            "message": "Dear Citizen, Your complaint for <complaint_type> with ID <id> submitted on <date> has been assigned to <emp_name>, <emp_designation>, <emp_department>. You can track your complaint status and connect with our officials on the on the mSeva Punjab mobile App (download here - <download_link>) or your local municipal web portal.",
             "module": "rainmaker-pgr",
             "locale": "en_IN"
         },
         {
-            "code": "pgr.sms.notification.reassign",
-            "message": "Your complaint for <complaint_type> has been re-assigned to <emp_name>, <emp_designation>, <emp_department>.",
+            "code": "pgr.sms.notification.assign.employee",
+            "message": "Shri <emp_name>, Complaint for '<complaint_type>' with ID <id> has been assigned to you. Please take appropriate action. <ao_designation> - <ulb>",
             "module": "rainmaker-pgr",
             "locale": "en_IN"
         },
         {
-            "code": "pgr.sms.notification.reject",
-            "message": "Your complaint for <complaint_type> has been rejected on <date>. Reason for Rejection: <reason> Additional Comments: <additional_comments>.",
+            "code": "pgr.sms.notification.reassign.citizen",
+            "message": "Dear Citizen, Your complaint for <complaint_type> with ID <id> submitted on <date> has been re-assigned to <emp_name>, <emp_designation>, <emp_department>. You can track your complaint status and connect with our officials on the on the mSeva Punjab mobile App (download here - <download_link>) or your local municipal web portal.",
             "module": "rainmaker-pgr",
             "locale": "en_IN"
         },
         {
-            "code": "pgr.sms.notification.resolve",
-            "message": "Your complaint for <complaint_type> has been resolved on <date>. Please give us your feedback on the mSeva app, your local government web portal or at this link <app_link>.",
+            "code": "pgr.sms.notification.reassign.employee",
+            "message": "Shri <emp_name>, Complaint for '<complaint_type>' with ID <id> has been re-assigned as per your request. <ao_designation> - <ulb>",
             "module": "rainmaker-pgr",
             "locale": "en_IN"
         },
         {
-            "code": "pgr.sms.notification.default",
-            "message": "Your complaint has been <status>. You can track your complaint status on the mSeva app or your local government web portal",
+            "code": "pgr.sms.notification.reject.citizen",
+            "message": "Dear Citizen, Your complaint for <complaint_type> with ID <id> submitted on <date> has been rejected. Reason for Rejection: <reason>, Additional Comments: <additional_comments> If you wish to re-open the complaint, you can download the mSeva Punjab mobile app (download here - <download_link>) or visit your local municipal website.",
             "module": "rainmaker-pgr",
             "locale": "en_IN"
         },
         {
-            "code": "pgr.sms.notification.comment",
-            "message": "<emp_name> has commented on your complaint for <complaint_type> with complaint ID <id>. Comment - <comment>.",
+            "code": "pgr.sms.notification.resolve.citizen",
+            "message": "Dear Citizen, Your complaint for <complaint_type> with ID <id> submitted on <date> has been resolved by <emp_name>. Please share your valuable feedback with us on the mSeva Punjab mobile App (download here - <download_link>) or your local municipal web portal. ",
             "module": "rainmaker-pgr",
             "locale": "en_IN"
         },
         {
-            "code": "pgr.sms.notification.comment.default",
-            "message": "You have received a comment on your complaint. You can track your complaint status on the  mSeva app or your local government web portal.",
+            "code": "pgr.sms.notification.close.employee",
+            "message": "Shri <emp_name>, Complaint for <complaint_type> with ID <id> has received <rating>/5 feedback from the citizen. Thank you for your service.",
             "module": "rainmaker-pgr",
             "locale": "en_IN"
         }

@@ -28,11 +28,11 @@ ReportDefinitions:
     label: reports.rainmaker-pgr.datefrom
     type: epoch
     source: eg_pgr_service
-    isMandatory: false
+    isMandatory: true
   - name: toDate
     label: reports.rainmaker-pgr.dateto
     type: epoch
     source: eg_pgr_service
-    isMandatory: false
+    isMandatory: true
   query: SELECT sum(case when source = 'mobileapp' then 1 else 0 end) as citizen_mobile_app, sum(case when source = 'web' then 1 else 0 end) as citizen_web_app, sum(case when source = 'ivr' then 1 else 0 end) as counter_desktop FROM eg_pgr_service WHERE tenantid = $tenantid
 

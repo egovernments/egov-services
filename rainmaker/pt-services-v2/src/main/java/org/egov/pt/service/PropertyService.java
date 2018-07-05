@@ -104,7 +104,7 @@ public class PropertyService {
 		PropertyCriteria propertyCriteria = propertyValidator.getPropertyCriteriaForSearch(request);
 		List<Property> propertiesFromSearchResponse = searchProperty(propertyCriteria,request.getRequestInfo());
 		boolean ifPropertyExists=propertyValidator.PropertyExists(request,propertiesFromSearchResponse);
-		boolean paid = false;
+		boolean paid = true;
 		/**
 		 * Call demand api to check if payment is done
 		 */

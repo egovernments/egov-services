@@ -138,7 +138,7 @@ public class UserService {
     private UserDetailResponse userCall(Object userRequest, StringBuilder uri) {
         String dobFormat = null;
         if(uri.toString().contains(userSearchEndpoint) || uri.toString().contains(userUpdateEndpoint))
-            dobFormat="dd-MM-yyyy";
+            dobFormat="yyyy-MM-dd";
         else if(uri.toString().contains(userCreateEndpoint))
             dobFormat = "dd/MM/yyyy";
         try{

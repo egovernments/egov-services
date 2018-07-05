@@ -843,6 +843,10 @@ $(document).ready(function() {
                 return showError("Approver name is required.");
             }
 
+            if(data.action.toLowerCase() == "approve"){
+              _agrmntDet["workflowDetails"]["assignee"] = process.initiatorPosition;
+            }
+
             var response = $.ajax({
                 url: baseUrl + `/lams-services/agreements/_update/${agreementDetail.acknowledgementNumber}?tenantId=` + tenantId,
                 type: 'POST',

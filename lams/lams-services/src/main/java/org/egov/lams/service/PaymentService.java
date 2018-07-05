@@ -1,25 +1,6 @@
 
 package org.egov.lams.service;
 
-import java.io.UnsupportedEncodingException;
-import java.math.BigDecimal;
-import java.net.URLEncoder;
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.Month;
-import java.time.ZoneId;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.text.WordUtils;
 import org.apache.log4j.Logger;
@@ -58,6 +39,26 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+
+import java.io.UnsupportedEncodingException;
+import java.math.BigDecimal;
+import java.net.URLEncoder;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.Month;
+import java.time.ZoneId;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class PaymentService {
@@ -185,10 +186,10 @@ public class PaymentService {
 			LOGGER.info("after serviceCode>>>>>>>" + serviceCode);
 
 			billInfo.setServiceCode(serviceCode);
-			billInfo.setPartPaymentAllowed('Y');
+
 			billInfo.setOverrideAccHeadAllowed('N');
-			billInfo.setDescription("Leases And Agreements : " + (StringUtils.isBlank(agreement.getAgreementNumber())
-					? agreement.getAcknowledgementNumber() : agreement.getAgreementNumber()));
+			String description = String.format("Asset Name : %s  Asset Code : %s", agreement.getAsset().getName(),agreement.getAsset().getCode());
+					billInfo.setDescription(description);
 			LOGGER.info("after billInfo.setDescription>>>>>>>" + billInfo.getDescription());
 
 			billInfo.setConsumerCode(StringUtils.isBlank(agreement.getAgreementNumber())
@@ -208,7 +209,38 @@ public class PaymentService {
 
 			Demand demand = demandRepository.getDemandBySearch(demandSearchCriteria, requestInfo).getDemands().get(0);
 			LOGGER.info("demand>>>>>>>" + demand);
+			for (DemandDetails demandDetails : demand.getDemandDetails()) {
+				BigDecimal balance = demandDetails.getTaxAmount().subtract(demandDetails.getCollectionAmount());
+				if (ADVANCE_TAX.equalsIgnoreCase(demandDetails.getTaxReasonCode())
+						|| GOODWILL_AMOUNT.equalsIgnoreCase(demandDetails.getTaxReasonCode())
+						|| CGST_ON_GOODWILL.equalsIgnoreCase(demandDetails.getTaxReasonCode())
+						|| SGST_ON_GOODWILL.equalsIgnoreCase(demandDetails.getTaxReasonCode())
+						|| CGST_ON_ADVANCE.equalsIgnoreCase(demandDetails.getTaxReasonCode())
+						|| SGST_ON_ADVANCE.equalsIgnoreCase(demandDetails.getTaxReasonCode())) {
+					billInfo.setPartPaymentAllowed(balance.compareTo(BigDecimal.ZERO) > 0 ? 'N' : 'Y');
 
+				}else {
+					billInfo.setPartPaymentAllowed('Y');
+				}
+			}
+
+			List<Date> installmentDates = demand.getDemandDetails().stream().map(demandDetails -> demandDetails.getPeriodStartDate())
+					.distinct().collect(Collectors.toList());
+			BigDecimal rentSum = BigDecimal.ZERO;
+			for (DemandDetails demandDetails : demand.getDemandDetails()) {
+
+				if (demandDetails.getPeriodStartDate().compareTo((installmentDates.get(0))) == 0) {
+					if (demandDetails.getTaxReason().equalsIgnoreCase(RENT)
+							|| demandDetails.getTaxReason().equalsIgnoreCase(CENTRAL_GST)
+							|| demandDetails.getTaxReason().equalsIgnoreCase(STATE_GST)
+							|| demandDetails.getTaxReason().equalsIgnoreCase(PENALTY)
+							|| demandDetails.getTaxReason().equalsIgnoreCase(SERVICE_TAX)) {
+						rentSum = rentSum.add(demandDetails.getTaxAmount());
+					}
+				}
+
+			}
+			billInfo.setMinAmountPayable(rentSum.doubleValue());
 			billInfo.setDisplayMessage(demand.getModuleName());
 			billInfo.setMinAmountPayable(demand.getMinAmountPayable());
 

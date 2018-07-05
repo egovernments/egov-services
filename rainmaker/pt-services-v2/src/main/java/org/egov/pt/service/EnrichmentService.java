@@ -45,11 +45,12 @@ public class EnrichmentService {
              property.setAuditDetails(auditDetails);
              property.setStatus(PropertyInfo.StatusEnum.ACTIVE);
              property.getPropertyDetails().forEach(propertyDetail -> {
-                propertyDetail.setAssessmentNumber(UUID.randomUUID().toString());
-                propertyDetail.getUnits().forEach(unit -> unit.setId(UUID.randomUUID().toString()));
-                propertyDetail.getUnits().forEach(unit -> unit.setTenantId(property.getTenantId()));
-                propertyDetail.getDocuments().forEach(document -> document.setId(UUID.randomUUID().toString()));
-                propertyDetail.setAssessmentDate(new Date().getTime());
+                if(propertyDetail.getAssessmentNumber()==null)
+                { propertyDetail.setAssessmentNumber(UUID.randomUUID().toString());
+                  propertyDetail.getUnits().forEach(unit -> unit.setId(UUID.randomUUID().toString()));
+                  propertyDetail.getUnits().forEach(unit -> unit.setTenantId(property.getTenantId()));
+                  propertyDetail.getDocuments().forEach(document -> document.setId(UUID.randomUUID().toString()));
+                  propertyDetail.setAssessmentDate(new Date().getTime());}
             });
         }
         if(!onlyPropertyDetail)

@@ -209,41 +209,28 @@ public class PaymentService {
 
 			Demand demand = demandRepository.getDemandBySearch(demandSearchCriteria, requestInfo).getDemands().get(0);
 			LOGGER.info("demand>>>>>>>" + demand);
-			for (DemandDetails demandDetails : demand.getDemandDetails()) {
-				BigDecimal balance = demandDetails.getTaxAmount().subtract(demandDetails.getCollectionAmount());
-				if (ADVANCE_TAX.equalsIgnoreCase(demandDetails.getTaxReasonCode())
-						|| GOODWILL_AMOUNT.equalsIgnoreCase(demandDetails.getTaxReasonCode())
-						|| CGST_ON_GOODWILL.equalsIgnoreCase(demandDetails.getTaxReasonCode())
-						|| SGST_ON_GOODWILL.equalsIgnoreCase(demandDetails.getTaxReasonCode())
-						|| CGST_ON_ADVANCE.equalsIgnoreCase(demandDetails.getTaxReasonCode())
-						|| SGST_ON_ADVANCE.equalsIgnoreCase(demandDetails.getTaxReasonCode())) {
-					billInfo.setPartPaymentAllowed(balance.compareTo(BigDecimal.ZERO) > 0 ? 'N' : 'Y');
 
-				}else {
-					billInfo.setPartPaymentAllowed('Y');
-				}
-			}
+			if ("SYSTEM".equalsIgnoreCase(agreement.getSource().toString())) {
+				for (DemandDetails demandDetails : demand.getDemandDetails()) {
+					BigDecimal balance = demandDetails.getTaxAmount().subtract(demandDetails.getCollectionAmount());
+					if (balance.compareTo(BigDecimal.ZERO) > 0 && ADVANCE_TAX.equalsIgnoreCase(demandDetails.getTaxReasonCode())
+							|| GOODWILL_AMOUNT.equalsIgnoreCase(demandDetails.getTaxReasonCode())
+							|| CGST_ON_GOODWILL.equalsIgnoreCase(demandDetails.getTaxReasonCode())
+							|| SGST_ON_GOODWILL.equalsIgnoreCase(demandDetails.getTaxReasonCode())
+							|| CGST_ON_ADVANCE.equalsIgnoreCase(demandDetails.getTaxReasonCode())
+							|| SGST_ON_ADVANCE.equalsIgnoreCase(demandDetails.getTaxReasonCode())) {
+						billInfo.setPartPaymentAllowed('N');
 
-			List<Date> installmentDates = demand.getDemandDetails().stream().map(demandDetails -> demandDetails.getPeriodStartDate())
-					.distinct().collect(Collectors.toList());
-			BigDecimal rentSum = BigDecimal.ZERO;
-			for (DemandDetails demandDetails : demand.getDemandDetails()) {
-
-				if (demandDetails.getPeriodStartDate().compareTo((installmentDates.get(0))) == 0) {
-					if (demandDetails.getTaxReason().equalsIgnoreCase(RENT)
-							|| demandDetails.getTaxReason().equalsIgnoreCase(CENTRAL_GST)
-							|| demandDetails.getTaxReason().equalsIgnoreCase(STATE_GST)
-							|| demandDetails.getTaxReason().equalsIgnoreCase(PENALTY)
-							|| demandDetails.getTaxReason().equalsIgnoreCase(SERVICE_TAX)) {
-						rentSum = rentSum.add(demandDetails.getTaxAmount());
+					} else {
+						billInfo.setPartPaymentAllowed('Y');
+						billInfo.setMinAmountPayable(calculateMinAmount(demand).doubleValue());
 					}
 				}
-
+			} else {
+				billInfo.setPartPaymentAllowed('Y');
 			}
-			billInfo.setMinAmountPayable(rentSum.doubleValue());
-			billInfo.setDisplayMessage(demand.getModuleName());
-			billInfo.setMinAmountPayable(demand.getMinAmountPayable());
 
+			billInfo.setDisplayMessage(demand.getModuleName());
 			lamsGetRequest.setName("FUNCTION_CODE");
 			String functionCode = lamsConfigurationService.getLamsConfigurations(lamsGetRequest).get("FUNCTION_CODE")
 					.get(0);
@@ -693,5 +680,24 @@ public class PaymentService {
 		installmentDescription.append(timePeriod.toString()).append(":").append(demandDetail.getTaxReason());
 
 		return installmentDescription.toString();
+	}
+
+	private BigDecimal calculateMinAmount(Demand demand) {
+		List<Date> installmentDates = demand.getDemandDetails().stream().map(demandDetails -> demandDetails.getPeriodStartDate())
+				.distinct().collect(Collectors.toList());
+		BigDecimal rentSum = BigDecimal.ZERO;
+		for (DemandDetails demandDetails : demand.getDemandDetails()) {
+
+			if (demandDetails.getPeriodStartDate().compareTo((installmentDates.get(0))) == 0) {
+				if (demandDetails.getTaxReason().equalsIgnoreCase(RENT)
+						|| demandDetails.getTaxReason().equalsIgnoreCase(CENTRAL_GST)
+						|| demandDetails.getTaxReason().equalsIgnoreCase(STATE_GST)
+						|| demandDetails.getTaxReason().equalsIgnoreCase(PENALTY)
+						|| demandDetails.getTaxReason().equalsIgnoreCase(SERVICE_TAX)) {
+					rentSum = rentSum.add(demandDetails.getTaxAmount());
+				}
+			}
+		}
+		return rentSum;
 	}
 }

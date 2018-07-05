@@ -79,7 +79,8 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 				tenant = tenant.split("\\.")[0];
 			user = userService.getUserByUsernameAndTenantId(userName, tenant);
 			if(null != user) {
-				if(user.getType().equals("EMPLOYEE") && !tenant.equals(tenantId)) {
+				if(user.getType().equals(UserType.EMPLOYEE) && !user.getTenantId().equals(tenantId)) {
+					log.info("Employee belongs to another tenant.......");
 					throw new OAuth2Exception("Invalid login credentials");
 				}
 			}

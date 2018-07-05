@@ -559,7 +559,7 @@ class CreateAsset extends React.Component {
   handleRefSearch(e) {
     e.preventDefault();
     var assets = [], _this = this;
-    commonApiPost("asset-services", "assets", "_search", this.state.refSet, function (err, res) {
+    commonApiPost("asset-services", "assets", "_paginatedsearch", this.state.refSet, function (err, res) {
       if (res && res["Assets"]) {
         assets = res["Assets"];
         assets.sort(function (item1, item2) {
@@ -716,7 +716,7 @@ class CreateAsset extends React.Component {
         }
 
       })
-    }    
+    }
 
     if (tempInfo && tempInfo.assetCategory)
       tempInfo.assetCategory.tenantId = tenantId;
@@ -1400,7 +1400,7 @@ class CreateAsset extends React.Component {
       modify1: true
     });
 
-    commonApiPost("asset-services", "assets", "_search", { tenantId, assetReference: this.state.assetSet.id }, function (err, res) {
+    commonApiPost("asset-services", "assets", "_paginatedsearch", { tenantId, assetReference: this.state.assetSet.id }, function (err, res) {
       if (res) {
         flag1 = 1;
         _this.setState({

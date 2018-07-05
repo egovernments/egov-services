@@ -33,31 +33,33 @@ class SearchAsset extends React.Component {
     e.preventDefault();
     try {
       //call api call
-      var _this = this;
-      commonApiPost("asset-services","assets","_search", {...this.state.searchSet, tenantId, pageSize:500}, function(err, res) {
+      var modify,_this = this;
+      commonApiPost("asset-services","assets","_paginatedsearch", {tenantId}, function(err, res) {
         if(res) {
-          var list = res["Assets"];
-          list.sort(function(item1, item2) {
-            return item1.code.toLowerCase() > item2.code.toLowerCase() ? 1 : item1.code.toLowerCase() < item2.code.toLowerCase() ? -1 : 0;
-          })
-          flag = 1;
-          _this.setState({
-            isSearchClicked: true,
-            list,
-            modify: true
-          });
+          var list = res.Asset;
+          if (res.Page)
+          commonApiPost("asset-services","assets","_paginatedsearch",{..._this.state.searchSet,tenantId, pageSize:res.Page.totalResults},  function (err, res1){
+            var list = res1.Asset;
+
+              flag = 1;
+            _this.setState({
+              isSearchClicked: true,
+              list:list,
+              modify: true
+            });
 
           setTimeout(function(){
             _this.setState({
               modify: false
             });
           }, 1200);
-        }
+        })
+      }
       })
     } catch(e) {
       console.log(e);
     }
-  }
+}
 
   componentWillUpdate() {
     if(flag == 1) {

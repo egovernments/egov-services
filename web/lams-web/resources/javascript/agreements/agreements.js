@@ -153,8 +153,8 @@ $("input").on("keyup", function () {
         $("#cgst").val(gst);
         $("#sgst").val(gst);
 
-        agreement["cgst"] = gst;
-        agreement["sgst"] = gst;
+        agreement["cgst"] = Math.round(gst);
+        agreement["sgst"] = Math.round(gst);
 
     }
 });

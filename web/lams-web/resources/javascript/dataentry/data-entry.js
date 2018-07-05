@@ -83,8 +83,8 @@ $(document).on("keyup","input", function() {
                     $("#cgst").val(gst);
                     $("#sgst").val(gst);
 
-                    agreement["cgst"] = gst;
-                    agreement["sgst"] = gst;
+                    agreement["cgst"] = Math.round(gst);
+                    agreement["sgst"] = Math.round(gst);
 
             }
         }
@@ -139,8 +139,8 @@ $(document).on("change", ".datepicker", function () {
                 $("#cgst").val(gst);
                 $("#sgst").val(gst);
 
-                agreement["cgst"] = gst;
-                agreement["sgst"] = gst;
+                agreement["cgst"] = Math.round(gst);
+                agreement["sgst"] = Math.round(gst);
 
             } else {
                 $("#cgst").val("");
@@ -158,8 +158,8 @@ $(document).on("change", ".datepicker", function () {
                 $("#cgst").val(gst);
                 $("#sgst").val(gst);
 
-                agreement["cgst"] = gst;
-                agreement["sgst"] = gst;
+                agreement["cgst"] = Math.round(gst);
+                agreement["sgst"] = Math.round(gst);
 
             } else {
                 $("#cgst").val("");
@@ -355,8 +355,8 @@ $(document).ready(function() {
                 $("#cgst").val(gst);
                 $("#sgst").val(gst);
 
-                agreement["cgst"] = gst;
-                agreement["sgst"] = gst;
+                agreement["cgst"] = Math.round(gst);
+                agreement["sgst"] = Math.round(gst);
 
             } else {
                 $("#cgst").val("");
@@ -374,8 +374,8 @@ $(document).ready(function() {
                 $("#cgst").val(gst);
                 $("#sgst").val(gst);
 
-                agreement["cgst"] = gst;
-                agreement["sgst"] = gst;
+                agreement["cgst"] = Math.round(gst);
+                agreement["sgst"] = Math.round(gst);
 
             } else {
                 $("#cgst").val("");

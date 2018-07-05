@@ -193,6 +193,12 @@ public class AgreementService {
 				List<String> demandIdList = demandResponse.getDemands().stream().map(Demand::getId)
 						.collect(Collectors.toList());
 				agreement.setAcknowledgementNumber(acknowledgementNumberService.generateAcknowledgeNumber());
+				if(agreement.getCgst() !=null ) {
+					agreement.setCgst(Double.valueOf(Math.round(agreement.getCgst())));
+				}
+				if(agreement.getSgst() !=null ) {
+					agreement.setSgst(Double.valueOf(Math.round(agreement.getSgst())));
+				}
 				logger.info(agreement.getAcknowledgementNumber());
 				agreement.setDemands(demandIdList);
 				agreementMessageQueueRepository.save(agreementRequest, START_WORKFLOW);
@@ -226,6 +232,12 @@ public class AgreementService {
 		agreement.setStatus(Status.ACTIVE);
 		agreement.setIsUnderWorkflow(Boolean.FALSE);
 		agreement.setAgreementDate(agreement.getCommencementDate());
+		if(agreement.getCgst() !=null ) {
+			agreement.setCgst(Double.valueOf(Math.round(agreement.getCgst())));
+		}
+		if(agreement.getSgst() !=null ) {
+			agreement.setSgst(Double.valueOf(Math.round(agreement.getSgst())));
+		}
 		agreementRepository.modifyAgreement(agreementRequest);
 		return agreement;
 	}

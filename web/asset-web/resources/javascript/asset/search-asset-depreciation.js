@@ -278,7 +278,7 @@ class SearchAsset extends React.Component {
                     <td>{item.assetName}</td>
                     <td>{item.assetCategory}</td>
                     <td>{item.assetLocation}</td>
-                    <td>{item.assetCurrentvalue}</td>
+                    <td>{item.valueAfterDepreciation}</td>
               </tr>  );
         })
       }else{

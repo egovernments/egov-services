@@ -370,13 +370,7 @@ public class AgreementValidator {
 				errors.reject("No demands", "No Demands found for the given agreement");
 			else {
 				Date today = new Date();
-				Boolean demandExist = demand.getDemandDetails().stream()
-						.anyMatch(demandDetails -> demandDetails.getPeriodEndDate().compareTo(new Date()) >= 0);
-				if (!demandExist) {
-					errors.reject("No demand details",
-							"No demand found for current installment, please add by using Add/Edit demand");
-				}
-
+				
 				Boolean balance = demand.getDemandDetails().stream()
 						.filter(demandDetail -> today.compareTo(demandDetail.getPeriodStartDate()) >= 0)
 						.anyMatch(demandDetail -> demandDetail.getTaxAmount()

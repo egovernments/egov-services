@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 import org.egov.user.domain.model.Role;
 import org.egov.user.domain.model.SecureUser;
 import org.egov.user.domain.model.User;
+import org.egov.user.domain.model.enums.UserType;
 import org.egov.user.domain.service.UserService;
 import org.egov.user.web.contract.Otp;
 import org.springframework.beans.factory.annotation.Value;

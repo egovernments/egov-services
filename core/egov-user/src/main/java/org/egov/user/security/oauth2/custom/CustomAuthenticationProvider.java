@@ -78,6 +78,11 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 			if (tenant.contains("."))
 				tenant = tenant.split("\\.")[0];
 			user = userService.getUserByUsernameAndTenantId(userName, tenant);
+			if(null != user) {
+				if(user.getType().equals("EMPLOYEE") && !tenant.equals(tenantId)) {
+					throw new OAuth2Exception("Invalid login credentials");
+				}
+			}
 		}
 
 		if (user == null)
@@ -86,7 +91,7 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 		if (user.getActive() == null || !user.getActive()) {
 			throw new OAuth2Exception("Please activate your account");
 		}
-
+		
 		System.out.println("tenantId in authenticate------->" + user.getTenantId());
 
 		boolean isCitizen = false;

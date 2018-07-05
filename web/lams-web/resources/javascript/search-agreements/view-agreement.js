@@ -83,8 +83,9 @@ $(document).ready(function() {
     function createFileStore(noticeData, blob){
       var promiseObj = new Promise(function(resolve, reject){
         let formData = new FormData();
+        let fileName = "AN/"+noticeData.agreementNumber;
         formData.append("module", "LAMS");
-        formData.append("file", blob);
+        formData.append("file", blob,fileName);
         $.ajax({
             url: baseUrl + "/filestore/v1/files?tenantId=" + tenantId,
             data: formData,
@@ -108,6 +109,8 @@ $(document).ready(function() {
     }
 
     function createNotice(obj){
+      var CONST_API_GET_FILE = "/filestore/v1/files/id?tenantId=" + tenantId + "&fileStoreId=";
+      var filestore = obj.fileStoreId;
       $.ajax({
           url: baseUrl + `/lams-services/agreement/notice/_create?tenantId=` + tenantId,
           type: 'POST',
@@ -125,10 +128,10 @@ $(document).ready(function() {
           },
           contentType: 'application/json',
           success:function(res){
-            // console.log('notice created');
             if(window.opener)
                 window.opener.location.reload();
-            open(location, '_self').close();
+                window.open(window.location.origin+ CONST_API_GET_FILE+filestore,"_blank");
+                open(location,'_self').close();
           },
           error:function(jqXHR, exception){
             console.log('error');
@@ -318,12 +321,9 @@ $(document).ready(function() {
         doc.text(15, 65, "The Leaseholder");
         doc.text(15, 70, "Copy to the concerned officials for necessary action");
 
-        doc.save('Notice-' + agreement.agreementNumber + '.pdf');
         var blob = doc.output('blob');
 
-      createFileStore(agreement, blob).then(createNotice, errorHandler);
-        //  var text= noticeData.agreementPeriod * 12;
-        //   doc.setFontType("normal");
+        createFileStore(agreement, blob).then(createNotice, errorHandler);
 
     }
 

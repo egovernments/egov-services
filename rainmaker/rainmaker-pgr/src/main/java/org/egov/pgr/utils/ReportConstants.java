@@ -22,11 +22,11 @@ public class ReportConstants {
 	public static Map<String, String> prepareReportColumnKeyMap() {
 		
 		Map<String, String> map = new HashMap<>();
-		map.put(COMPLAINT_TYPE_REPORT, "Complaint Type");
-		map.put(DEPARTMENT_REPORT, "Department");
+		map.put(COMPLAINT_TYPE_REPORT, "complaint type");
+		map.put(DEPARTMENT_REPORT, "department name");
 		map.put(BLOCK_REPORT, "Block");
-		map.put(FUNCTIONARY_REPORT, "Employee");
-		map.put(AO_REPORT, "AO");
+		map.put(FUNCTIONARY_REPORT, "employee name");
+		map.put(AO_REPORT, "ao name");
 		map.put(SOURCE_REPORT, "Source");
 	
 		return map;		

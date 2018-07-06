@@ -85,9 +85,9 @@ public class ReportUtils {
 	
 	
 	public ReportResponse getDefaultResponse(ReportRequest reportRequest) {
-		String[] supersetOfKeys = {"total complaints recieved", "total complaints closed", "total open complaints", "within SLA", "outside SLA", "avg. Citizen Rating"};
-		String[] supersetOfKeysOfAOReport = {"total Complaints Received", "complaints assigned", "compliants rejected", "compliants unassigned"};
-		String[] supersetOfKeysOfSourceWiseReport = {"citizen mobile app", "citizen web app", "counter desktop"};
+		String[] supersetOfKeys = {"total complaints received", "total open complaints", "outside sla", "avg Citizen Rating"};
+		String[] supersetOfKeysOfAOReport = {"total complaints received", "complaints assigned", "complaints rejected", "complaints unassigned"};
+		String[] supersetOfKeysOfSourceWiseReport = {"Source", "Complaints Received"};
 
 		List<ColumnDetail> reportHeader = new ArrayList<ColumnDetail>();
 		ColumnDetail columnDetail = ColumnDetail.builder().name(ReportConstants.reportCoulmnKeyMap.get(reportRequest.getReportName()))

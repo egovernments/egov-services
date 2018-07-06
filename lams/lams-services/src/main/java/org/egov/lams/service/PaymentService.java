@@ -690,10 +690,10 @@ public class PaymentService {
 
 			if (demandDetails.getPeriodStartDate().compareTo((installmentDates.get(0))) == 0) {
 				if (demandDetails.getTaxReason().equalsIgnoreCase(RENT)
-						|| demandDetails.getTaxReason().equalsIgnoreCase(CENTRAL_GST)
-						|| demandDetails.getTaxReason().equalsIgnoreCase(STATE_GST)
-						|| demandDetails.getTaxReason().equalsIgnoreCase(PENALTY)
-						|| demandDetails.getTaxReason().equalsIgnoreCase(SERVICE_TAX)) {
+						|| demandDetails.getTaxReasonCode().equalsIgnoreCase(CENTRAL_GST)
+						|| demandDetails.getTaxReasonCode().equalsIgnoreCase(STATE_GST)
+						|| demandDetails.getTaxReasonCode().equalsIgnoreCase(PENALTY)
+						|| demandDetails.getTaxReasonCode().equalsIgnoreCase(SERVICE_TAX)) {
 					rentSum = rentSum.add(demandDetails.getTaxAmount());
 				}
 			}

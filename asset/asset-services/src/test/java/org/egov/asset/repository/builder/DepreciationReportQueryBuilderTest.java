@@ -75,7 +75,7 @@ public class DepreciationReportQueryBuilderTest {
             + "asset.name as assetname,asset.code as assetcode,asset.department as department,depreciation.depreciationrate as depreciationrate,"
             + "depreciation.depreciationvalue as depreciationvalue,depreciation.valueafterdepreciation as valueafterdepreciation,asset.grossvalue as grossvalue, "
             + "assetcategory.name as assetcategoryname,assetcategory.code as assetcategorycode,assetcategory.assetcategorytype as assetcategorytype,assetcategory.parentid as parentid, "
-            + "assetcategory.depreciationrate as assetcategory_depreciationrate,depreciation.financialyear as financialyear,depreciation.voucherreference as voucherreference"
+            + "assetcategory.depreciationrate as assetcategory_depreciationrate,depreciation.financialyear as financialyear,depreciation.voucherreference as voucherreference,depreciation.todate as todate"
             + " FROM egasset_depreciation depreciation,egasset_asset asset, egasset_assetcategory assetcategory "
             + " WHERE asset.assetcategory = assetcategory.id and "
             + " depreciation.assetid = asset.id and depreciation.tenantId =asset.tenantId "

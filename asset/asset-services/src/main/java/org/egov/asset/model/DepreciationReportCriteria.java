@@ -112,5 +112,7 @@ public class DepreciationReportCriteria {
     private BigDecimal currentValue;
     
     private String voucherReference;
+    
+    private Long toDate;
 
 }

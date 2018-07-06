@@ -99,6 +99,9 @@ class Depreciation extends React.Component {
         if (res2 && res2.DepreciationReportCriteria && res2.DepreciationReportCriteria.length) {
           let revalAsset = res2.DepreciationReportCriteria[0];
 
+          var d = new Date(res2.DepreciationReportCriteria[0].toDate);
+          res2.DepreciationReportCriteria[0].toDate = d.getDate() + "/" + (d.getMonth() + 1) + "/" + d.getFullYear();
+
           _this.setState({
             depreciationSet: revalAsset
           });
@@ -195,7 +198,7 @@ class Depreciation extends React.Component {
               </div>
             </div>
             <div className="form-section-inner">
-              
+
               <div className="row">
                 <div className="col-sm-6">
                   <div className="row">
@@ -228,6 +231,24 @@ class Depreciation extends React.Component {
                   </div>
                 </div>
               </div>
+              <div className="row">
+                <div className="col-sm-6">
+                  <div className="row">
+                    <div className="col-sm-6 label-text">
+                      <label>Last Depreciation Date </label>
+                    </div>
+                    <div className="col-sm-6">
+                    <div>
+                      <input type="text" disabled value={depreciationSet.toDate} style={{ display: this.state.readOnly ? 'none' : 'block' }} />
+                    </div>
+                  </div>
+                  <div className="col-sm-6 label-view-text" style={{ display: this.state.readOnly ? 'block' : 'none' }}>
+                    <label>{depreciationSet.toDate ? depreciationSet.toDate : ""}</label>
+                </div>
+                  </div>
+                </div>
+              </div>
+
 
               <div className="row">
               <div className="col-sm-6">

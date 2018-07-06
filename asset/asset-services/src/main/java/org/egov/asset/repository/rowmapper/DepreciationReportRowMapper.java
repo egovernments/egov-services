@@ -88,6 +88,7 @@ public class DepreciationReportRowMapper implements RowMapper<DepreciationReport
         depreciation.setDepreciationValue(rs.getBigDecimal("depreciationvalue"));
         depreciation.setValueAfterDepreciation(rs.getBigDecimal("valueafterdepreciation"));
         depreciation.setVoucherReference(rs.getString("voucherreference"));
+        depreciation.setToDate(rs.getLong("todate"));
         return depreciation;
 
     }

@@ -51,10 +51,8 @@ package org.egov.asset.repository.builder;
 
 import java.util.List;
 
-import org.egov.asset.config.ApplicationProperties;
 import org.egov.asset.model.AssetCriteria;
 import org.egov.asset.model.enums.TransactionType;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import lombok.extern.slf4j.Slf4j;
@@ -62,9 +60,6 @@ import lombok.extern.slf4j.Slf4j;
 @Component
 @Slf4j
 public class AssetQueryBuilder {
-
-    @Autowired
-    private ApplicationProperties applicationProperties;
 
     private static final String BASE_QUERY = "SELECT *, asset.id AS assetId,assetcategory.id AS assetcategoryId,"
             + "asset.name as assetname,asset.code as assetcode,"
@@ -93,7 +88,7 @@ public class AssetQueryBuilder {
         final StringBuilder selectQuery = new StringBuilder(BASE_QUERY);
         log.info("get query");
         addWhereClause(selectQuery, preparedStatementValues, searchAsset);
-        addPagingClause(selectQuery, preparedStatementValues, searchAsset);
+        addPagingClause(selectQuery, searchAsset);
         log.debug("Query from asset querybuilder for search : " + selectQuery);
         return selectQuery.toString();
     }
@@ -271,25 +266,10 @@ public class AssetQueryBuilder {
     }
 
     @SuppressWarnings({ "unchecked", "rawtypes" })
-    private void addPagingClause(final StringBuilder selectQuery, final List preparedStatementValues,
+    private void addPagingClause(final StringBuilder selectQuery,
             final AssetCriteria searchAsset) {
         // handle limit(also called pageSize) here
         selectQuery.append(" ORDER BY asset.name");
-
-       /* selectQuery.append(" LIMIT ?");
-        long pageSize = Integer.parseInt(applicationProperties.getSearchPageSizeDefault());
-
-        if (searchAsset.getSize() != null)
-            pageSize = searchAsset.getSize();
-        preparedStatementValues.add(pageSize); // Set limit to pageSize
-
-        // handle offset here
-        selectQuery.append(" OFFSET ?");
-        long pageNumber = 0; // Default pageNo is zero meaning first page
-        if (searchAsset.getOffset() != null)
-            pageNumber = searchAsset.getOffset() - 1;
-        preparedStatementValues.add(pageNumber * pageSize);*/ // Set offset to
-                                                            // pageNo * pageSize
     }
 
     @SuppressWarnings({ "rawtypes", "unchecked" })

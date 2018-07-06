@@ -85,7 +85,7 @@ public class ReportUtils {
 	
 	
 	public ReportResponse getDefaultResponse(ReportRequest reportRequest) {
-		String[] supersetOfKeys = {"total complaints received", "total open complaints", "outside sla", "avg Citizen Rating"};
+		String[] supersetOfKeys = {"total complaints received", "total open complaints", "outside sla", "avg citizen rating"};
 		String[] supersetOfKeysOfAOReport = {"total complaints received", "complaints assigned", "complaints rejected", "complaints unassigned"};
 		String[] supersetOfKeysOfSourceWiseReport = {"Source", "Complaints Received"};
 
@@ -178,6 +178,10 @@ public class ReportUtils {
 	public String getPercentage(Object totalValue, Object percentValue) {
 		if(null == totalValue || null == percentValue) {
 			return "0 (0%)";
+		}else {
+			if(totalValue.equals("0") || percentValue.equals("0")) {
+				return "0 (0%)";
+			}
 		}
 		Long total = Long.valueOf(totalValue.toString());
 		Long fraction = Long.valueOf(percentValue.toString());

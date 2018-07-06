@@ -151,9 +151,9 @@ public class ReportService {
 	public List<Map<String, Object>> enrichSourceWiseReport(ReportRequest reportRequest, List<Map<String, Object>> dbResponse) {
 		List<Map<String, Object>> enrichedResponse = new ArrayList<>();
 		Map<String, Object> tuple = dbResponse.get(0);
-		Long total = Long.valueOf(StringUtils.isEmpty(tuple.get("citizen_mobile_app").toString()) ? "0" : tuple.get("citizen_mobile_app").toString()) 
-				+ Long.valueOf(StringUtils.isEmpty(tuple.get("citizen_web_app").toString()) ? "0" : tuple.get("citizen_web_app").toString()) 
-				+ Long.valueOf(StringUtils.isEmpty(tuple.get("customer_service_desk").toString()) ? "0" : tuple.get("customer_service_desk").toString());
+		Long total = Long.valueOf((null ==tuple.get("citizen_mobile_app")) ? "0" : tuple.get("citizen_mobile_app").toString()) 
+				+ Long.valueOf((null == tuple.get("citizen_web_app")) ? "0" : tuple.get("citizen_web_app").toString()) 
+				+ Long.valueOf((null == tuple.get("customer_service_desk")) ? "0" : tuple.get("customer_service_desk").toString());
 		for(String key: dbResponse.get(0).keySet()) {
 			Map<String, Object> newtuple = new LinkedHashMap<>();
 			newtuple.put("Source", WordUtils.capitalize(key.replaceAll("[_]", " ")));

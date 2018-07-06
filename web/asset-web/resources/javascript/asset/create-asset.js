@@ -1992,7 +1992,7 @@ class CreateAsset extends React.Component {
               );
             })}
             {<td>
-              <button className="btn btn-close" onClick={(e) => { removeRow(e, "new", item.name, (len ? len : ind), len ? (len + ind) : (ind + 1)) }}>Remove</button>
+              <button className="btn btn-close" onClick={(e) => { removeRow(e, "new", item.name, (len ? len : ind), len ? (len + ind) : (ind + 1)) }}disabled={getUrlVars()["type"] == "view"}>Remove</button>
             </td>}
           </tr>)
         })
@@ -2035,7 +2035,7 @@ class CreateAsset extends React.Component {
                   }
                 })}
                 <td>
-                  <button className="btn btn-close" onClick={(e) => { removeRow(e, "old", name, ind) }}>Remove</button>
+                  <button className="btn btn-close" onClick={(e) => { removeRow(e, "old", name, ind) }} disabled={getUrlVars()["type"] == "view"}>Remove</button>
                 </td>
               </tr>)
             }
@@ -2078,7 +2078,7 @@ class CreateAsset extends React.Component {
               )
             })}
             <td>
-              <button className="btn btn-close" onClick={(e) => { removeRow(e, "custom", item.name, 0, 0) }}>Remove</button>
+              <button className="btn btn-close" onClick={(e) => { removeRow(e, "custom", item.name, 0, 0) }} disabled={getUrlVars()["type"] == "view"}>Remove</button>
             </td>
           </tr>)
       }

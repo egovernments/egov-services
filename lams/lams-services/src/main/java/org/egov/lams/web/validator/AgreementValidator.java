@@ -1,15 +1,5 @@
 package org.egov.lams.web.validator;
 
-import java.math.BigDecimal;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-import java.util.TimeZone;
-
 import org.apache.commons.lang3.StringUtils;
 import org.egov.lams.config.PropertiesManager;
 import org.egov.lams.model.Agreement;
@@ -40,6 +30,16 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
+
+import java.math.BigDecimal;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+import java.util.TimeZone;
 
 @Component
 public class AgreementValidator {
@@ -528,8 +528,8 @@ public class AgreementValidator {
 				logger.error("exception in parsing GST date  ::: " + e);
 			}
 			if (agreementExpiryDate.compareTo(gstDate) > 0) {
-				agreement.setCgst((rent * gstRate / 100) / 2);
-				agreement.setSgst((rent * gstRate / 100) / 2);
+				agreement.setCgst(Double.valueOf(Math.round((rent * gstRate / 100) / 2)));
+				agreement.setSgst(Double.valueOf(Math.round((rent * gstRate / 100) / 2)));
 			}
 
 		}

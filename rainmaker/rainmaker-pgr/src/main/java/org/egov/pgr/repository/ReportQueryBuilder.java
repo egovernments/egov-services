@@ -40,7 +40,7 @@ public class ReportQueryBuilder {
 				//+ "       sum(case when has_sla_crossed = 'Yes' then 1 else 0 end) as within_sla,\n"
 				+ "       sum(case when has_sla_crossed = 'No' then 1 else 0 end) as outside_sla, \n"
 				+ "       avg(cast(rating as numeric)) as avg_citizen_rating\n"
-				+ "  from eg_pgr_service INNER JOIN slaservicerequestidview ON servicerequestid = businesskey\n"
+				+ "  from eg_pgr_service INNER JOIN slaservicerequestidview ON servicerequestid = businesskey $where\n"
 				+ "  group by servicecode";
 
 		query = addWhereClause(query, reportRequest);
@@ -71,7 +71,7 @@ public class ReportQueryBuilder {
 				//+ "       sum(case when has_sla_crossed = 'Yes' then 1 else 0 end) as within_sla,\n"
 				+ "       sum(case when has_sla_crossed = 'No' then 1 else 0 end) as outside_sla, \n"
 				+ "       avg(cast(rating as numeric)) as avg_citizen_rating\n"
-				+ "  from eg_pgr_service INNER JOIN slaservicerequestidview ON servicerequestid = businesskey\n"
+				+ "  from eg_pgr_service INNER JOIN slaservicerequestidview ON servicerequestid = businesskey $where\n"
 				+ "  group by servicecode";
 
 		query = addWhereClause(query, reportRequest);
@@ -83,7 +83,7 @@ public class ReportQueryBuilder {
 	public String getSourceWiseReportQuery(ReportRequest reportRequest) {
 		String query = "SELECT sum(case when source = 'mobileapp' then 1 else 0 end) as citizen_mobile_app,\n"
 				+ "       sum(case when source = 'web' then 1 else 0 end) as citizen_web_app,\n"
-				+ "       sum(case when source = 'ivr' then 1 else 0 end) as customer_service_desk\n" + "FROM eg_pgr_service";
+				+ "       sum(case when source = 'ivr' then 1 else 0 end) as customer_service_desk\n" + "FROM eg_pgr_service $where";
 
 		query = addWhereClause(query, reportRequest);
 		log.info("Source wise report query: " + query);

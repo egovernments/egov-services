@@ -210,7 +210,8 @@ public class WorkflowMatrixImpl implements Workflow {
 				nextAction = task.getValueForKey("nextAction");
 			} else {
 				nextState = wfMatrix.getNextState();
-				nextAction = wfMatrix.getNextAction();
+				nextAction = task.getValueForKey("nextAction") == null ? wfMatrix.getNextAction()
+						: task.getValueForKey("nextAction");
 			}
 
 		} else {

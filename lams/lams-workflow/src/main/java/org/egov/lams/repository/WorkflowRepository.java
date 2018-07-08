@@ -210,19 +210,29 @@ public class WorkflowRepository {
 				task.setStatus(workflowDetails.getStatus());
 			}
 			
-			if (ACTION.equalsIgnoreCase(workflowDetails.getAction()) && workflowDetails.getDesignation() != null
-					&& workflowDetails.getDesignation().endsWith(COMMISSIONER)) {
+			if (ACTION.equalsIgnoreCase(workflowDetails.getAction())
+					&& (workflowDetails.getDesignation() != null || workflowDetails.getNextDesignation() != null)) {
 				Attribute stateAttribute = null;
 				Attribute nextActionAttribute = null;
 				Attribute designationAttribute = null;
 				Map<String, Attribute> attributeMap = new HashMap<>();
-				stateAttribute = getNextStateAttribute(workflowDetails.getDesignation());
-				nextActionAttribute = getNextActionAttribute(workflowDetails.getNextDesignation());
-				designationAttribute = getCurrentDesigantionAttribute(workflowDetails.getDesignation());
-				attributeMap.put("nextState", stateAttribute);
-				attributeMap.put("nextAction", nextActionAttribute);
-				attributeMap.put("currentDesignation", designationAttribute);
-				task.setAttributes(attributeMap);
+
+				if (workflowDetails.getDesignation().endsWith(COMMISSIONER)) {
+					stateAttribute = getNextStateAttribute(workflowDetails.getDesignation());
+					nextActionAttribute = getNextActionAttribute(workflowDetails.getNextDesignation());
+					designationAttribute = getCurrentDesigantionAttribute(workflowDetails.getDesignation());
+					attributeMap.put("nextState", stateAttribute);
+					attributeMap.put("nextAction", nextActionAttribute);
+					attributeMap.put("currentDesignation", designationAttribute);
+					task.setAttributes(attributeMap);
+				} else if (COMMISSIONER.equalsIgnoreCase(workflowDetails.getNextDesignation())) {
+
+					nextActionAttribute = getNextActionAttribute(workflowDetails.getNextDesignation());
+					designationAttribute = getCurrentDesigantionAttribute(workflowDetails.getDesignation());
+					attributeMap.put("nextAction", nextActionAttribute);
+					attributeMap.put("currentDesignation", designationAttribute);
+					task.setAttributes(attributeMap);
+				}
 
 			}
 			assignee.setId(workflowDetails.getAssignee());

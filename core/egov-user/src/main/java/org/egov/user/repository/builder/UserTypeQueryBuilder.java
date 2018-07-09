@@ -113,13 +113,14 @@ public class UserTypeQueryBuilder {
 		}
 
 		if (userSearchCriteria.getTenantId() != null) {
-			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
 			if(!StringUtils.isEmpty(userSearchCriteria.getType())) {
 				if(userSearchCriteria.getType().equalsIgnoreCase("CITIZEN")) {
+					isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
 					String tenantId = userSearchCriteria.getTenantId().split("[.]")[0];
 					selectQuery.append(" u.tenantid LIKE ").append("'%").append(tenantId).append("%'");
 				}
 			}else {
+				isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
 				selectQuery.append(" u.tenantid = ?");
 				preparedStatementValues.add(userSearchCriteria.getTenantId().trim());
 			}
@@ -181,7 +182,7 @@ public class UserTypeQueryBuilder {
 		if (!CollectionUtils.isEmpty(userSearchCriteria.getUuid())) {
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
 			selectQuery.append(" u.uuid IN " + getUUIDQuery(userSearchCriteria.getUuid()));
-		}
+		}		
 	}
 
 	private void addOrderByClause(final StringBuilder selectQuery, final UserSearchCriteria userSearchCriteria) {

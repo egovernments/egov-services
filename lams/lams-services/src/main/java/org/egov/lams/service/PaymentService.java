@@ -188,7 +188,7 @@ public class PaymentService {
 			billInfo.setServiceCode(serviceCode);
 
 			billInfo.setOverrideAccHeadAllowed('N');
-			String description = String.format("Asset Name : %s  Asset Code : %s", agreement.getAsset().getName(),agreement.getAsset().getCode());
+			String description = String.format("Asset Name : %s,  Asset Code : %s", agreement.getAsset().getName(),agreement.getAsset().getCode());
 					billInfo.setDescription(description);
 			LOGGER.info("after billInfo.setDescription>>>>>>>" + billInfo.getDescription());
 
@@ -387,7 +387,8 @@ public class PaymentService {
 		Agreement agreement = agreements.get(0);
 		LOGGER.info("agreement under workflow --> "+agreement.getId());
 		
-		if (!agreement.getIsAdvancePaid() && (Source.SYSTEM.equals(agreement.getSource())
+		if (!agreement.getIsAdvancePaid() && ((Source.SYSTEM.equals(agreement.getSource())
+				&& (Action.CREATE.equals(agreement.getAction()) || Action.RENEWAL.equals(agreement.getAction())))
 				|| (Source.DATA_ENTRY.equals(agreement.getSource()) && Action.RENEWAL.equals(agreement.getAction())))) {
 			AgreementRequest agreementRequest = new AgreementRequest();
 			agreementRequest.setRequestInfo(requestInfo);
@@ -526,7 +527,7 @@ public class PaymentService {
 	}
 
 	private void isAdvanceCollection(String acknowledgementno, Demand demand) {
-		boolean isAdvancePaid = false;
+		boolean isAdvanceTax = false;
 		String sql = AgreementQueryBuilder.BASE_SEARCH_QUERY + " where agreement.acknowledgementnumber='"
 				+ acknowledgementno + "'";
 		List<Agreement> agreements = null;
@@ -541,13 +542,14 @@ public class PaymentService {
 			agreement = agreements.get(0);
 
 			for (DemandDetails demandDetail : demand.getDemandDetails()) {
-				LOGGER.info("the reason for demanddetail : " + demandDetail.getTaxReason());
-				if ("ADVANCE TAX".equalsIgnoreCase(demandDetail.getTaxReason())) {
-					isAdvancePaid = true;
+				LOGGER.info("the reason for demanddetail : " + demandDetail.getTaxReasonCode());
+				if ("ADVANCE_TAX".equalsIgnoreCase(demandDetail.getTaxReasonCode())) {
+					isAdvanceTax = true;
 				}
 
 			}
-			if (isAdvancePaid && agreement.getAction().equals(Action.CREATE)) {
+			if (isAdvanceTax
+					&& (Action.CREATE.equals(agreement.getAction()) || Action.RENEWAL.equals(agreement.getAction()))) {
 				agreementService.updateAdvanceFlag(agreement);
 			}
 		}

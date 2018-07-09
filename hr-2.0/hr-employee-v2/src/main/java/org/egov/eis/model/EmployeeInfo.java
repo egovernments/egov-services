@@ -183,6 +183,8 @@ public class EmployeeInfo {
     private String ifscCode;
 
     private List<String> documents = new ArrayList<String>();
+	
+    private List<Role> roles = new ArrayList<Role>();
 
     private String tenantId;
     

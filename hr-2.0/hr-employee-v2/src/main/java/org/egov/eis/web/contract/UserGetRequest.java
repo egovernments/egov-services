@@ -90,6 +90,8 @@ public class UserGetRequest {
 	private String emailId;
 
 	private List<String> roleCodes;
+	
+	private String userType;
 
     private Boolean active;
 

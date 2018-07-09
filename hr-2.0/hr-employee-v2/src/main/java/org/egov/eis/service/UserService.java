@@ -209,7 +209,7 @@ public class UserService {
 			userGetRequest.setPageSize(employeeCriteria.getId().size());
 		}
 		if (!isEmpty(userGetRequest.getRoleCodes())) {
-			userGetRequest.getRoleCodes().add("EMPLOYEE");
+			userGetRequest.setUserType("EMPLOYEE");
 			userGetRequest.setPageSize(500);
 		}
 

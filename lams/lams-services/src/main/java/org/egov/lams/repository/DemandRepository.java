@@ -331,11 +331,12 @@ public class DemandRepository {
 
 			} else if ("ADV_CGST".equalsIgnoreCase(demandReason.getName())
 					|| "ADV_SGST".equalsIgnoreCase(demandReason.getName())) {
-				demandDetail.setTaxAmount(BigDecimal.valueOf(gstOnAdvance / 2));
+				demandDetail.setTaxAmount(BigDecimal.valueOf(Math.round(gstOnAdvance / 2)));
 
 			} else if ("GW_CGST".equalsIgnoreCase(demandReason.getName())
 					|| "GW_SGST".equalsIgnoreCase(demandReason.getName())) {
-				demandDetail.setTaxAmount(BigDecimal.valueOf(gstOnGoodWill / 2));
+				demandDetail.setTaxAmount(BigDecimal.valueOf(Math.round(gstOnGoodWill / 2)));
+
 
 			}
 			if(demandDetail.getTaxAmount()!=null)

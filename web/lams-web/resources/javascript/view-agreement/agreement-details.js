@@ -1372,7 +1372,6 @@ class AgreementDetails extends React.Component {
         }
 
         const renderHistoryDetails=function(){
-            if(agreement.workflowDetails != null) {
                 return (
                     <div className="form-section" id="historyDetails">
                         <h3 className="categoryType">History Details </h3>
@@ -1395,9 +1394,6 @@ class AgreementDetails extends React.Component {
                         </div>
                     </div>
                 )
-            }else {
-                return null;
-            }
         }
 
         const renderRemissionOfAgreementDetails = function () {

@@ -178,13 +178,12 @@ public class ReportUtils {
 	public String getPercentage(Object totalValue, Object percentValue) {
 		if(null == totalValue || null == percentValue) {
 			return "0 (0%)";
-		}else {
-			if(totalValue.equals("0") || percentValue.equals("0")) {
-				return "0 (0%)";
-			}
 		}
 		Long total = Long.valueOf(totalValue.toString());
 		Long fraction = Long.valueOf(percentValue.toString());
+		if(0 >= total || 0 >= fraction) {
+			return "0 (0%)";
+		}
 		Double percentage = Double.valueOf((fraction * 100) / total);
 		if(Long.valueOf(percentage.toString() .split("[.]")[1]) > 0) {
 			return percentValue + " (" + percentage.toString()+ "%" + ")";

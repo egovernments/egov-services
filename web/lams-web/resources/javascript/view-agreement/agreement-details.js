@@ -493,6 +493,7 @@ class AgreementDetails extends React.Component {
                 </div>
             );
         }
+
         const renderMinimalAllottee = function () {
             return (
                 <div className="form-section" id="allotteeDetailsBlock">
@@ -1371,27 +1372,335 @@ class AgreementDetails extends React.Component {
         }
 
         const renderHistoryDetails=function(){
-          return(
-            <div className="form-section" id="historyDetails">
-              <h3 className="categoryType">History Details </h3>
-              <div className="form-section-inner">
-                <div className="row">
-                    <div className="col-sm-6">
-                        <div className="row">
-                            <div className="col-sm-6 label-text">
-                                <label htmlFor="firstAllotment">Month/Year of First Allotment to the Current Lessee :</label>
-                            </div>
-                            <div className="col-sm-6 label-view-text">
-                                <label id="status" name="status">
-                                    {agreement.firstAllotment ? agreement.firstAllotment : "N/A"}
-                                </label>
+            if(agreement.workflowDetails != null) {
+                return (
+                    <div className="form-section" id="historyDetails">
+                        <h3 className="categoryType">History Details </h3>
+                        <div className="form-section-inner">
+                            <div className="row">
+                                <div className="col-sm-6">
+                                    <div className="row">
+                                        <div className="col-sm-6 label-text">
+                                            <label htmlFor="firstAllotment">Month/Year of First Allotment to the Current
+                                                Lessee :</label>
+                                        </div>
+                                        <div className="col-sm-6 label-view-text">
+                                            <label id="status" name="status">
+                                                {agreement.firstAllotment ? agreement.firstAllotment : "N/A"}
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-              </div>
-            </div>
-          )
+                )
+            }else {
+                return null;
+            }
+        }
+
+        const renderRemissionOfAgreementDetails = function () {
+            if(agreement.remission != null) {
+                return (
+                    <div className="form-section" id="remissionDetailsBlock">
+                        <h3>Remission Details </h3>
+                        <div className="form-section-inner">
+                            <div className="row">
+                                <div className="col-sm-6">
+                                    <div className="row">
+                                        <div className="col-sm-6 label-text">
+                                            <label htmlFor="crNumber"> Council/standing committee Resolution Number :</label>
+                                        </div>
+                                        <div className="col-sm-6 label-view-text">
+                                            <label id="crNumber" name="crNumber">
+                                                {agreement.councilNumber ? agreement.councilNumber : "N/A"}
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="row">
+                                    <div className="col-sm-6">
+                                        <div className="row">
+                                            <div className="col-sm-6 label-text">
+                                                <label htmlFor="crDate"> Council/standing committee Resolution Date :</label>
+                                            </div>
+                                            <div className="col-sm-6 label-view-text">
+                                                <label id="crDate" name="crDate">
+                                                    {agreement.councilDate ? agreement.councilDate : "N/A"}
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="row">
+                                <div className="col-sm-6">
+                                    <div className="row">
+                                        <div className="col-sm-6 label-text">
+                                            <label htmlFor="remFromDate"> Remission From Date :</label>
+                                        </div>
+                                        <div className="col-sm-6 label-view-text">
+                                            <label id="remFromDate" name="remFromDate">
+                                                {agreement.remission.remissionFromDate ? agreement.remission.remissionFromDate : "N/A"}
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="row">
+                                    <div className="col-sm-6">
+                                        <div className="row">
+                                            <div className="col-sm-6 label-text">
+                                                <label htmlFor="remToDate"> Remission To Date:</label>
+                                            </div>
+                                            <div className="col-sm-6 label-view-text">
+                                                <label id="remToDate" name="remToDate">
+                                                    {agreement.remission.remissionToDate ? agreement.remission.remissionToDate : "N/A"}
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="row">
+                                <div className="col-sm-6">
+                                    <div className="row">
+                                        <div className="col-sm-6 label-text">
+                                            <label htmlFor="reason"> Remission Reason :</label>
+                                        </div>
+                                        <div className="col-sm-6 label-view-text">
+                                            <label id="reason" name="reason">
+                                                {agreement.remission.remissionReason ? agreement.remission.remissionReason : "N/A"}
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="row">
+                                    <div className="col-sm-6">
+                                        <div className="row">
+                                            <div className="col-sm-6 label-text">
+                                                <label htmlFor="remRent"> Remission Rent :</label>
+                                            </div>
+                                            <div className="col-sm-6 label-view-text">
+                                                <label id="remRent" name="remRent">
+                                                    {agreement.remission.remissionRent ? agreement.remission.remissionRent : "N/A"}
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                );
+            }else{
+                return null;
+            }
+
+        }
+
+        const renderCancellationOfAgreementDetails = function () {
+            if(agreement.cancellation != null){
+                return (
+                    <div className="form-section" id="cancellationDetailsBlock">
+                        <h3>Cancellation Details </h3>
+                        <div className="form-section-inner">
+                            <div className="row">
+                                <div className="col-sm-6">
+                                    <div className="row">
+                                        <div className="col-sm-6 label-text">
+                                            <label htmlFor="crNumber"> Council/standing committee Resolution Number :</label>
+                                        </div>
+                                        <div className="col-sm-6 label-view-text">
+                                            <label id="crNumber" name="crNumber">
+                                                {agreement.cancellation.orderNo ? agreement.cancellation.orderNo : "N/A"}
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="row">
+                                    <div className="col-sm-6">
+                                        <div className="row">
+                                            <div className="col-sm-6 label-text">
+                                                <label htmlFor="agreementNumber"> Council/standing committee Resolution Date :</label>
+                                            </div>
+                                            <div className="col-sm-6 label-view-text">
+                                                <label id="agreementNumber" name="agreementNumber">
+                                                    {agreement.cancellation.orderDate ? agreement.cancellation.orderDate : "N/A"}
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="row">
+                                <div className="col-sm-6">
+                                    <div className="row">
+                                        <div className="col-sm-6 label-text">
+                                            <label htmlFor="date">Reason For Cancellation :</label>
+                                        </div>
+                                        <div className="col-sm-6 label-view-text">
+                                            <label id="date" name="date">
+                                                {agreement.cancellation.reasonForCancellation ? agreement.cancellation.reasonForCancellation : "N/A"}
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="row">
+                                    <div className="col-sm-6">
+                                        <div className="row">
+                                            <div className="col-sm-6 label-text">
+                                                <label htmlFor="agreementNumber"> Termination Date :</label>
+                                            </div>
+                                            <div className="col-sm-6 label-view-text">
+                                                <label id="agreementNumber" name="agreementNumber">
+                                                    {agreement.cancellation.terminationDate ? agreement.cancellation.terminationDate : "N/A"}
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                );
+            }else{
+                return null;
+            }
+
+        }
+
+        const renderRenewalOfAgreementDetails= function () {
+            if(agreement.renewal != null) {
+                return (
+                    <div className="form-section" id="renewalDetailsBlock">
+                        <h3>Renewal Details </h3>
+                        <div className="form-section-inner">
+                            <div className="row">
+                                <div className="col-sm-6">
+                                    <div className="row">
+                                        <div className="col-sm-6 label-text">
+                                            <label htmlFor="crNumber"> Council/standing committee Resolution Number :</label>
+                                        </div>
+                                        <div className="col-sm-6 label-view-text">
+                                            <label id="crNumber" name="crNumber">
+                                                {agreement.renewal.renewalOrderNumber ? agreement.renewal.renewalOrderNumber : "N/A"}
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="row">
+                                    <div className="col-sm-6">
+                                        <div className="row">
+                                            <div className="col-sm-6 label-text">
+                                                <label htmlFor="agreementNumber"> Council/standing committee Resolution Date :</label>
+                                            </div>
+                                            <div className="col-sm-6 label-view-text">
+                                                <label id="agreementNumber" name="agreementNumber">
+                                                    {agreement.renewal.renewalOrderDate ? agreement.renewal.renewalOrderDate : "N/A"}
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="row">
+                                <div className="col-sm-6">
+                                    <div className="row">
+                                        <div className="col-sm-6 label-text">
+                                            <label htmlFor="crNumber"> Renewal Reason :</label>
+                                        </div>
+                                        <div className="col-sm-6 label-view-text">
+                                            <label id="crNumber" name="crNumber">
+                                                {agreement.renewal.reasonForRenewal ? agreement.renewal.reasonForRenewal : "N/A"}
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                );
+            }else{
+                return null;
+            }
+        }
+
+        const renderEvictionOfAgreementDetails= function () {
+            if(agreement.eviction != null) {
+                return (
+                    <div className="form-section" id="evictionDetailsBlock">
+                        <h3>Eviction Details </h3>
+                        <div className="form-section-inner">
+                            <div className="row">
+                                <div className="col-sm-6">
+                                    <div className="row">
+                                        <div className="col-sm-6 label-text">
+                                            <label htmlFor="crNumber"> Council/standing committee Resolution Number :</label>
+                                        </div>
+                                        <div className="col-sm-6 label-view-text">
+                                            <label id="crNumber" name="crNumber">
+                                                {agreement.eviction.evictionProceedingNumber ? agreement.eviction.evictionProceedingNumber : "N/A"}
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="row">
+                                    <div className="col-sm-6">
+                                        <div className="row">
+                                            <div className="col-sm-6 label-text">
+                                                <label htmlFor="agreementNumber"> Council/standing committee Resolution Date :</label>
+                                            </div>
+                                            <div className="col-sm-6 label-view-text">
+                                                <label id="agreementNumber" name="agreementNumber">
+                                                    {agreement.eviction.evictionProceedingDate ? agreement.eviction.evictionProceedingDate : "N/A"}
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="row">
+                                <div className="col-sm-6">
+                                    <div className="row">
+                                        <div className="col-sm-6 label-text">
+                                            <label htmlFor="crNumber"> Eviction Reason :</label>
+                                        </div>
+                                        <div className="col-sm-6 label-view-text">
+                                            <label id="crNumber" name="crNumber">
+                                                {agreement.eviction.reasonForEviction ? agreement.eviction.reasonForEviction : "N/A"}
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="row">
+                                    <div className="col-sm-6">
+                                        <div className="row">
+                                            <div className="col-sm-6 label-text">
+                                                <label htmlFor="agreementNumber"> Court Reference Number :</label>
+                                            </div>
+                                            <div className="col-sm-6 label-view-text">
+                                                <label id="agreementNumber" name="agreementNumber">
+                                                    {agreement.eviction.courtReferenceNumber ? agreement.eviction.courtReferenceNumber : "N/A"}
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                );
+            }else{
+                return null;
+            }
         }
 
         const renderSubSeqRenewals=function()
@@ -1504,6 +1813,10 @@ class AgreementDetails extends React.Component {
             {renderDocuments()}
             {renderHistoryDetails()}
             {renderSubSeqRenewals()}
+            {renderRemissionOfAgreementDetails()}
+            {renderCancellationOfAgreementDetails()}
+            {renderRenewalOfAgreementDetails()}
+            {renderEvictionOfAgreementDetails()}
           </div>)
           }else{
             return (<div>

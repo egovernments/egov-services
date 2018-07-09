@@ -691,7 +691,7 @@ public class PaymentService {
 		for (DemandDetails demandDetails : demand.getDemandDetails()) {
 
 			if (demandDetails.getPeriodStartDate().compareTo((installmentDates.get(0))) == 0) {
-				if (demandDetails.getTaxReason().equalsIgnoreCase(RENT)
+				if (demandDetails.getTaxReasonCode().equalsIgnoreCase(RENT)
 						|| demandDetails.getTaxReasonCode().equalsIgnoreCase(CENTRAL_GST)
 						|| demandDetails.getTaxReasonCode().equalsIgnoreCase(STATE_GST)
 						|| demandDetails.getTaxReasonCode().equalsIgnoreCase(PENALTY)

@@ -626,14 +626,14 @@ class UpdateEviction extends React.Component {
         e.preventDefault();
 
         if ($('#update-eviction').valid()) {
-            var ID = e.target.id;
+            var buttonAction = e.target.id;
             var _this = this;
             var agreement = Object.assign({}, _this.state.agreement);
 
             if(agreement.eviction.reasonForEviction == "Others" && !(agreement.remarks))
             return(showError("Please enter remarks when selected reason as others"));
             agreement.action = "eviction";
-            agreement.workflowDetails.action = ID;
+            agreement.workflowDetails.action = buttonAction;
             agreement.workflowDetails.status = this.state.wfStatus;
             agreement.workflowDetails.nextDesignation = getNameById(this.state.designationList ,agreement.workflowDetails.designation);
             agreement.workflowDetails.designation = this.state.currentUserDesignation;
@@ -652,14 +652,14 @@ class UpdateEviction extends React.Component {
             }
             asOnDate = dd + '/' + mm + '/' + yyyy;
 
-            if (ID === "Reject") {
+            if (buttonAction === "Reject") {
 
                 if (!agreement.workflowDetails.comments)
                     return showError("Please enter the Comments, If you are rejecting");
 
             }
 
-            if (ID === "Forward") {
+            if (buttonAction === "Forward") {
 
                 if (!agreement.workflowDetails.department)
                     return showError("Please Select the Department");
@@ -674,13 +674,13 @@ class UpdateEviction extends React.Component {
                 agreement.workflowDetails.assignee = this.state.wfInitiator;
             }
 
-            if (ID.toLowerCase() === "approve"){
+            if (buttonAction.toLowerCase() === "approve" || buttonAction.toLowerCase() === "reject"){
               agreement.workflowDetails.assignee = _this.state.wfInitiator;
             }
 
             //console.log("Agreement", agreement);
 
-            if (ID === "Print Notice") {
+            if (buttonAction === "Print Notice") {
               //lams update
               var body = {
                   "RequestInfo": requestInfo,
@@ -757,15 +757,15 @@ class UpdateEviction extends React.Component {
                                                     if (window.opener)
                                                         window.opener.location.reload();
                                                     if (res1 && res1.Employee && res1.Employee[0].name)
-                                                        window.location.href = `app/acknowledgement/common-ack.html?wftype=Eviction&action=${ID}&name=${res1.Employee[0].code}::${res1.Employee[0].name}&ackNo=${res.Agreements[0].acknowledgementNumber}`;
+                                                        window.location.href = `app/acknowledgement/common-ack.html?wftype=Eviction&action=${buttonAction}&name=${res1.Employee[0].code}::${res1.Employee[0].name}&ackNo=${res.Agreements[0].acknowledgementNumber}`;
                                                     else
-                                                        window.location.href = `app/acknowledgement/common-ack.html?wftype=Eviction&action=${ID}&name=&ackNo=${res.Agreements[0].acknowledgementNumber}`;
+                                                        window.location.href = `app/acknowledgement/common-ack.html?wftype=Eviction&action=${buttonAction}&name=&ackNo=${res.Agreements[0].acknowledgementNumber}`;
 
                                                 },
                                                 error: function (err) {
                                                     if (window.opener)
                                                         window.opener.location.reload();
-                                                    window.location.href = `app/acknowledgement/common-ack.html?wftype=Eviction&action=${ID}&name=&ackNo=${res.Agreements[0].acknowledgementNumber}`;
+                                                    window.location.href = `app/acknowledgement/common-ack.html?wftype=Eviction&action=${buttonAction}&name=&ackNo=${res.Agreements[0].acknowledgementNumber}`;
                                                 }
                                             })
                                         },
@@ -815,15 +815,15 @@ class UpdateEviction extends React.Component {
                                     if (window.opener)
                                         window.opener.location.reload();
                                     if (res1 && res1.Employee && res1.Employee[0].name)
-                                        window.location.href = `app/acknowledgement/common-ack.html?wftype=Eviction&action=${ID}&name=${res1.Employee[0].code}::${res1.Employee[0].name}&ackNo=${res.Agreements[0].acknowledgementNumber}`;
+                                        window.location.href = `app/acknowledgement/common-ack.html?wftype=Eviction&action=${buttonAction}&name=${res1.Employee[0].code}::${res1.Employee[0].name}&ackNo=${res.Agreements[0].acknowledgementNumber}`;
                                     else
-                                        window.location.href = `app/acknowledgement/common-ack.html?wftype=Eviction&action=${ID}&name=&ackNo=${res.Agreements[0].acknowledgementNumber}`;
+                                        window.location.href = `app/acknowledgement/common-ack.html?wftype=Eviction&action=${buttonAction}&name=&ackNo=${res.Agreements[0].acknowledgementNumber}`;
 
                                 },
                                 error: function (err) {
                                     if (window.opener)
                                         window.opener.location.reload();
-                                    window.location.href = `app/acknowledgement/common-ack.html?wftype=Eviction&action=${ID}&name=&ackNo=${res.Agreements[0].acknowledgementNumber}`;
+                                    window.location.href = `app/acknowledgement/common-ack.html?wftype=Eviction&action=${buttonAction}&name=&ackNo=${res.Agreements[0].acknowledgementNumber}`;
                                 }
                             })
                         },

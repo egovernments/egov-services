@@ -162,7 +162,7 @@ class UpdateRemission extends React.Component {
         headers: {
         'auth-token': authToken
         },
-        success: function (res1) { 
+        success: function (res1) {
             $('#alert-box').fadeIn(function(){
                 $("#alert-box-content").html("Preamble No : " + res1.preambleNumber +" Gist Of Preamble : "+ res1.gistOfPreamble);
             });
@@ -632,7 +632,7 @@ class UpdateRemission extends React.Component {
             $("#approvalCommentsSection").remove();
         }
 
-        
+
         $('#remissionDate').datepicker({
             format: 'dd/mm/yyyy',
             autoclose: true,
@@ -732,15 +732,15 @@ class UpdateRemission extends React.Component {
         e.preventDefault();
 
         if ($('#update-remission').valid()) {
-            var action = e.target.id;
+            var buttonAction = e.target.id;
             var _this = this;
             var agreement = Object.assign({}, _this.state.agreement);
 
             if(agreement.remission.remissionReason == "Others" && !(agreement.remarks))
-            return(showError("Please enter remarks when selected reason as others"));        
+            return(showError("Please enter remarks when selected reason as others"));
 
             agreement.action = "remission";
-            agreement.workflowDetails.action = action;
+            agreement.workflowDetails.action = buttonAction;
             agreement.workflowDetails.status = this.state.wfStatus;
             agreement.workflowDetails.nextDesignation = getNameById(this.state.designationList ,agreement.workflowDetails.designation);
             agreement.workflowDetails.designation = this.state.currentUserDesignation;
@@ -762,14 +762,14 @@ class UpdateRemission extends React.Component {
             asOnDate = dd + '/' + mm + '/' + yyyy;
 
 
-            if (action === "Reject") {
+            if (buttonAction === "Reject") {
 
                 if (!agreement.workflowDetails.comments)
                     return showError("Please enter the Comments, If you are rejecting");
 
             }
 
-            if (action === "Forward") {
+            if (buttonAction === "Forward") {
 
                 if (!agreement.workflowDetails.department)
                     return showError("Please Select the Department");
@@ -783,7 +783,7 @@ class UpdateRemission extends React.Component {
             if (!agreement.workflowDetails.assignee) {
                 agreement.workflowDetails.assignee = this.state.initiatorPosition;
             }
-            if(action.toLowerCase()==="approve"){
+            if(buttonAction.toLowerCase()==="approve" || buttonAction.toLowerCase()==="reject" ){
               agreement.workflowDetails.assignee = this.state.initiatorPosition;
             }
 
@@ -828,7 +828,7 @@ class UpdateRemission extends React.Component {
 
                                         agreement.acknowledgementNumber = res.Agreements[0].acknowledgementNumber;
 
-                                        if (action === "Print Notice") {
+                                        if (buttonAction === "Print Notice") {
                                             _this.state.workflow.forEach(function(item){
                                                 if(item.status === "")
                                                 agreement.commissionerName = item.senderName
@@ -849,15 +849,15 @@ class UpdateRemission extends React.Component {
                                                     if (window.opener)
                                                         window.opener.location.reload();
                                                     if (res1 && res1.Employee && res1.Employee[0].name)
-                                                        window.location.href = `app/acknowledgement/common-ack.html?wftype=Remission&action=${action}&name=${res1.Employee[0].code}::${res1.Employee[0].name}&ackNo=${res.Agreements[0].acknowledgementNumber}`;
+                                                        window.location.href = `app/acknowledgement/common-ack.html?wftype=Remission&action=${buttonActio}&name=${res1.Employee[0].code}::${res1.Employee[0].name}&ackNo=${res.Agreements[0].acknowledgementNumber}`;
                                                     else
-                                                        window.location.href = `app/acknowledgement/common-ack.html?wftype=Remission&action=${action}&name=&ackNo=${res.Agreements[0].acknowledgementNumber}`;
+                                                        window.location.href = `app/acknowledgement/common-ack.html?wftype=Remission&action=${buttonActio}&name=&ackNo=${res.Agreements[0].acknowledgementNumber}`;
 
                                                 },
                                                 error: function (err) {
                                                     if (window.opener)
                                                         window.opener.location.reload();
-                                                    window.location.href = `app/acknowledgement/common-ack.html?wftype=Remission&action=${action}&name=&ackNo=${res.Agreements[0].acknowledgementNumber}`;
+                                                    window.location.href = `app/acknowledgement/common-ack.html?wftype=Remission&action=${buttonActio}&name=&ackNo=${res.Agreements[0].acknowledgementNumber}`;
                                                 }
                                             })
                                         }
@@ -896,7 +896,7 @@ class UpdateRemission extends React.Component {
 
                         agreement.acknowledgementNumber = res.Agreements[0].acknowledgementNumber;
 
-                        if (action === "Print Notice") {
+                        if (buttonActio === "Print Notice") {
                             _this.state.workflow.forEach(function(item){
                                 if(item.status.trim() === "Commissioner Approved")
                                 agreement.commissionerName = item.senderName
@@ -917,15 +917,15 @@ class UpdateRemission extends React.Component {
                                     if (window.opener)
                                         window.opener.location.reload();
                                     if (res1 && res1.Employee && res1.Employee[0].name)
-                                        window.location.href = `app/acknowledgement/common-ack.html?wftype=Remission&action=${action}&name=${res1.Employee[0].code}::${res1.Employee[0].name}&ackNo=${res.Agreements[0].acknowledgementNumber}`;
+                                        window.location.href = `app/acknowledgement/common-ack.html?wftype=Remission&action=${buttonActio}&name=${res1.Employee[0].code}::${res1.Employee[0].name}&ackNo=${res.Agreements[0].acknowledgementNumber}`;
                                     else
-                                        window.location.href = `app/acknowledgement/common-ack.html?wftype=Remission&action=${action}&name=&ackNo=${res.Agreements[0].acknowledgementNumber}`;
+                                        window.location.href = `app/acknowledgement/common-ack.html?wftype=Remission&action=${buttonActio}&name=&ackNo=${res.Agreements[0].acknowledgementNumber}`;
 
                                 },
                                 error: function (err) {
                                     if (window.opener)
                                         window.opener.location.reload();
-                                    window.location.href = `app/acknowledgement/common-ack.html?wftype=Remission&action=${action}&name=&ackNo=${res.Agreements[0].acknowledgementNumber}`;
+                                    window.location.href = `app/acknowledgement/common-ack.html?wftype=Remission&action=${buttonActio}&name=&ackNo=${res.Agreements[0].acknowledgementNumber}`;
                                 }
                             })
                         }
@@ -1291,7 +1291,7 @@ class UpdateRemission extends React.Component {
                                     </div>
                                     <div className="col-sm-6">
                                         <input type="text" name="remissionOrder" id="remissionOrder" disabled value={remission.remissionOrder}
-                                            onChange={(e) => { handleChangeTwoLevel(e, "remission", "remissionOrder") }} 
+                                            onChange={(e) => { handleChangeTwoLevel(e, "remission", "remissionOrder") }}
                                             onBlur={(e)=>{handleBlur(e)}} required />
                                     </div>
                                 </div>

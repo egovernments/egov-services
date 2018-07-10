@@ -92,7 +92,7 @@ class EditDemand extends React.Component {
   handleChange(e, name, k) {
 
     var tempDemands = this.state.demands.slice();
-    tempDemands[k][name] = e.target.value;
+    tempDemands[k][name] = Math.round(e.target.value);
 
     this.setState({
       demands: tempDemands

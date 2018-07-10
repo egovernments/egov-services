@@ -96,7 +96,7 @@ public class NotificationService {
 		try {
 			response = serviceRequestRepository.fetchResult(uri, requestInfoWrapper);
 			if (null == response) {
-				return null;
+				return employeeDetails;
 			}
 			employeeDetails.put("name", JsonPath.read(response, PGRConstants.EMPLOYEE_NAME_JSONPATH));
 			employeeDetails.put("department", JsonPath.read(response, PGRConstants.EMPLOYEE_DEPTCODE_JSONPATH));
@@ -105,7 +105,6 @@ public class NotificationService {
 
 		} catch (Exception e) {
 			log.error("Exception: " + e);
-			return null;
 		}
 		return employeeDetails;
 	}
@@ -189,6 +188,7 @@ public class NotificationService {
 			return phoneNumber;
 		}else if(role.equals(WorkFlowConfigs.ROLE_EMPLOYEE)) {
 			Map<String, String> employeeDetails = getEmployeeDetails(tenantId, assignee, requestInfo);
+			
 			if(!StringUtils.isEmpty(employeeDetails.get("phone"))) {
 				phoneNumber = employeeDetails.get("phone");
 			}

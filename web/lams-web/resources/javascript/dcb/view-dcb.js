@@ -81,7 +81,7 @@ class ViewDCB extends React.Component {
       var sgstDemands = [];
       var cgstDemands = [];
       var serviceTaxDemands = [];
-      var advanTaxDemands = [];
+      var advanceTaxDemands = [];
       var goodwillTaxDemands = [];
       var gstOnAdvanceDemands = [];
       var gstOnGoodWillDemands = [];
@@ -99,7 +99,7 @@ class ViewDCB extends React.Component {
         else if (demand.taxReasonCode.toLowerCase() === "service_tax")
           serviceTaxDemands.push(demand);
         else if (demand.taxReasonCode.toLowerCase() === "advance_tax")
-          advanTaxDemands.push(demand);
+          advanceTaxDemands.push(demand);
         else if (demand.taxReasonCode.toLowerCase() === "goodwill_amount")
           goodwillTaxDemands.push(demand);
         else if (demand.taxReasonCode.toLowerCase() === "adv_cgst" || demand.taxReasonCode.toLowerCase() === "adv_sgst")
@@ -110,9 +110,10 @@ class ViewDCB extends React.Component {
       });
 
       var index = 0;
-
-      demands.splice(index, 0, advanTaxDemands[0]);
+      if(advanceTaxDemands.length>0){
+      demands.splice(index, 0, advanceTaxDemands[0]);
       index++;
+       }
       if(gstOnAdvanceDemands.length>0){
       demands.splice(index, 0, gstOnAdvanceDemands[0]);
       index++;

@@ -26,12 +26,18 @@ class EditDemand extends React.Component {
 
     for (var i = 0; i < demands.length; i++) {
 
+         if(demands[i].taxAmount <0 || demands[i].taxAmount ==""){
+           demands[i].taxAmount = 0;
+         }
+         if(demands[i].collectionAmount <0 || demands[i].collectionAmount==""){
+           demands[i].collectionAmount = 0;
+         }
       if (demands[i].taxAmount < 0 || demands[i].collectionAmount < 0)
          return showError("amount can't be negative.");
-      if (demands[i].collectionAmount
+      if (demands[i].collectionAmount >0
         && demands[i].taxAmount < demands[i].collectionAmount)
         return showError("advance collection is not allowed");
-      if (demands[i].collectionAmount
+      if (demands[i].collectionAmount >0
         && demands[i].taxAmount > demands[i].collectionAmount)
         return showError("partial collection is not allowed");
 
@@ -40,18 +46,16 @@ class EditDemand extends React.Component {
 
     for (var i = 0; i < demands.length; i++) {
 
-      if (demands[i].taxReason.toLowerCase() == "rent" && 
-            demands[i].taxAmount == 0 && 
+      if (demands[i].taxReason.toLowerCase() == "rent" &&
+            demands[i].taxAmount == 0 &&
             demands[i+1].taxAmount != 0) {
 
               return showError("Penalty cannot be entered for the taxperiod where rent is 0");
 
             }
-        
+
     }
-
-
-
+     showLoading();
     var tempt = demands.concat(restOfDemands);
 
     agreementDetail["legacyDemands"][0]["demandDetails"] = tempt;
@@ -72,12 +76,15 @@ class EditDemand extends React.Component {
       contentType: 'application/json'
     });
     if (response["status"] === 201) {
+      hideLoading();
       showSuccess("Demand updated successfully");
       setTimeout(function () {
         window.open(location, '_self').close();
-      }, 5000);
+      }, 3000);
+
     } else {
       showError(response["statusText"]);
+      hideLoading();
     }
 
   }
@@ -148,25 +155,27 @@ class EditDemand extends React.Component {
     });
 
     agreementDetail["legacyDemands"][0]["demandDetails"].forEach((demand) => {
-      if (demand.taxReason.toLowerCase() === "cgst" || demand.taxReason.toLowerCase() === "central_gst") {
+      if (demand.taxReason.toLowerCase() === "cgst" || demand.taxReasonCode.toLowerCase() === "central_gst") {
         cgstDemands.push(demand);
       }
     });
 
     agreementDetail["legacyDemands"][0]["demandDetails"].forEach((demand) => {
-      if (demand.taxReason.toLowerCase() === "sgst" || demand.taxReason.toLowerCase() === "state_gst") {
+      if (demand.taxReason.toLowerCase() === "sgst" || demand.taxReasonCode.toLowerCase() === "state_gst") {
         sgstDemands.push(demand);
       }
     });
 
     agreementDetail["legacyDemands"][0]["demandDetails"].forEach((demand) => {
-      if (demand.taxReason.toLowerCase() === "servicetax" || demand.taxReason.toLowerCase() === "service_tax") {
+      if (demand.taxReason.toLowerCase() === "service tax" || demand.taxReasonCode.toLowerCase() === "service_tax") {
         serviceTaxDemands.push(demand);
       }
     });
 
     agreementDetail["legacyDemands"][0]["demandDetails"].forEach((demand) => {
-      if (demand.taxReason.toLowerCase() != "rent" && demand.taxReason.toLowerCase() != "penalty") {
+      if (demand.taxReasonCode.toLowerCase() == "advance_tax" || demand.taxReasonCode.toLowerCase() == "adv_cgst" || demand.taxReasonCode.toLowerCase() == "adv_sgst") {
+        restOfDemands.push(demand);
+      }else if (demand.taxReasonCode.toLowerCase() == "goodwill_amount" || demand.taxReasonCode.toLowerCase() == "gw_cgst" || demand.taxReasonCode.toLowerCase() == "gw_sgst"){
         restOfDemands.push(demand);
       }
     });
@@ -184,8 +193,7 @@ class EditDemand extends React.Component {
           index++;
         }
       });
-
-      sgstDemands.forEach((pDemand) => {
+      serviceTaxDemands.forEach((pDemand) => {
         if (pDemand.taxPeriod === rentDemands[i].taxPeriod) {
           demands.splice(index, 0, pDemand);
           index++;
@@ -199,7 +207,7 @@ class EditDemand extends React.Component {
         }
       });
 
-      serviceTaxDemands.forEach((pDemand) => {
+      sgstDemands.forEach((pDemand) => {
         if (pDemand.taxPeriod === rentDemands[i].taxPeriod) {
           demands.splice(index, 0, pDemand);
           index++;

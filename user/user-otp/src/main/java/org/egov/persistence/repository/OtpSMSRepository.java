@@ -11,8 +11,8 @@ import static java.lang.String.format;
 
 @Service
 public class OtpSMSRepository {
-	private static final String SMS_REGISTER_OTP_MESSAGE = "Use OTP %s for portal registration.";
-	private static final String SMS_LOGIN_OTP_MESSAGE = "Use OTP %s for login.";
+	private static final String SMS_REGISTER_OTP_MESSAGE = "Dear Citizen, Welcome to mSeva Punjab. Your OTP to complete your mSeva Registration is %s ";
+	private static final String SMS_LOGIN_OTP_MESSAGE = "Dear Citizen, Your mSeva Punjab Login OTP is %s";
 	private static final String SMS_PASSWORD_RESET_OTP_MESSAGE = "Your OTP for recovering password is %s.";
 	private LogAwareKafkaTemplate<String, SMSRequest> kafkaTemplate;
 	private String smsTopic;

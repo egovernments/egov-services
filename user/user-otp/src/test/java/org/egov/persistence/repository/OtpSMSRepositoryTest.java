@@ -36,7 +36,7 @@ public class OtpSMSRepositoryTest {
         final String otpNumber = "otpNumber";
         final OtpRequestType type = OtpRequestType.REGISTER;
         final OtpRequest otpRequest = new OtpRequest(mobileNumber, tenantId, type);
-        final String expectedMessage = "Use OTP otpNumber for portal registration.";
+        final String expectedMessage = "Dear Citizen, Welcome to mSeva Punjab. Your OTP to complete your mSeva Registration is otpNumber";
         final SMSRequest expectedSmsRequest = new SMSRequest(mobileNumber, expectedMessage);
         final SendResult<String, SMSRequest> sendResult = new SendResult<>(null, null);
         when(kafkaTemplate.send(eq(SMS_TOPIC), argThat(new SmsRequestMatcher(expectedSmsRequest))))

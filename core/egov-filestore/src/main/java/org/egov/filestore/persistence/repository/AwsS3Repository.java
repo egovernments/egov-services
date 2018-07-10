@@ -18,6 +18,7 @@ import javax.imageio.ImageIO;
 import org.apache.commons.io.FilenameUtils;
 import org.egov.filestore.domain.model.FileLocation;
 import org.egov.filestore.persistence.entity.Artifact;
+import org.egov.tracer.model.CustomException;
 import org.imgscalr.Scalr;
 import org.imgscalr.Scalr.Method;
 import org.imgscalr.Scalr.Mode;
@@ -123,8 +124,13 @@ public class AwsS3Repository {
 	private void writeImage(MultipartFile file, String bucketName, String fileName) {
 
 		try {
-
 			BufferedImage originalImage = ImageIO.read(file.getInputStream());
+
+			if (null == originalImage) {
+				Map<String, String> map = new HashMap<>();
+				map.put("Image Source Invalid", "Image File present in upload request is Invalid/Not Readable");
+				throw new CustomException(map);
+			}
 
 			BufferedImage largeImage = Scalr.resize(originalImage, Method.QUALITY, Mode.AUTOMATIC, mediumWidth, null,
 					Scalr.OP_ANTIALIAS);
@@ -150,8 +156,10 @@ public class AwsS3Repository {
 			originalImage.flush();
 
 		} catch (IOException ioe) {
-			log.error("IO exception occurred while trying to read image. {}", ioe);
-			throw new RuntimeException(ioe);
+
+			Map<String, String> map = new HashMap<>();
+			map.put("Image Source Invalid", "Image File present in upload request is Invalid/Not Readable");
+			throw new CustomException(map);
 		}
 	}
 

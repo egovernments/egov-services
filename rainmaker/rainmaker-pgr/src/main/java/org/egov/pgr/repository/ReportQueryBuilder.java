@@ -6,7 +6,9 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.egov.pgr.contract.ParamValue;
 import org.egov.pgr.contract.ReportRequest;
+import org.egov.pgr.service.NotificationService;
 import org.egov.pgr.utils.ReportConstants;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import lombok.extern.slf4j.Slf4j;
@@ -15,12 +17,16 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class ReportQueryBuilder {
 
+	@Autowired
+	private NotificationService notificationService;
+	
 	public String getCreateViewQuery() {
+		Long slaHours = notificationService.getSlaHours();
 		String query = "create view slaservicerequestidview as select businesskey,\n"
-				+ "case when (max(\"when\") - min(\"when\") > 10) then 'Yes' else 'No' end as has_sla_crossed \n"
+				+ "case when (max(\"when\") - min(\"when\") > $sla) then 'Yes' else 'No' end as has_sla_crossed \n"
 				+ "from eg_pgr_action                                                            \n"
 				+ "group by businesskey\n" + "";
-
+		query = query.replace("$sla", slaHours.toString());
 		log.info("Create view query: " + query);
 		return query;
 

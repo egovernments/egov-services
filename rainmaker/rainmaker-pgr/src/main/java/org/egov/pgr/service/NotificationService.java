@@ -47,6 +47,9 @@ public class NotificationService {
 	@Value("${egov.user.search.endpoint}")
 	private String egovUserSearchEndpoint;
 	
+	@Value("${egov.default.sla.in.ms}")
+	private Long egovDefaultServiceSla;
+	
 	@Autowired
 	private ServiceRequestRepository serviceRequestRepository;
 	
@@ -203,6 +206,11 @@ public class NotificationService {
 			return null;
 		}
 		return actions.get(0).getAssignee();
+	}
+	
+	public Long getSlaHours() {
+		log.info("Returning default sla: "+egovDefaultServiceSla);
+		return egovDefaultServiceSla;
 	}
 
 }

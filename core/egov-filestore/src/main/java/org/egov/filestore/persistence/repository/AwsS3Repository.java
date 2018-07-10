@@ -124,9 +124,12 @@ public class AwsS3Repository {
 	private void writeImage(MultipartFile file, String bucketName, String fileName) {
 
 		try {
-			
+			log.info(" the file name " + file.getName());
+			log.info(" the file size " + file.getSize());
+			log.info(" the file content " + file.getContentType());
+
 			BufferedImage originalImage = ImageIO.read(file.getInputStream());
-			
+
 			if (null == originalImage) {
 				Map<String, String> map = new HashMap<>();
 				map.put("Image Source Unavailable", "Image File present in upload request is Invalid/Not Readable");

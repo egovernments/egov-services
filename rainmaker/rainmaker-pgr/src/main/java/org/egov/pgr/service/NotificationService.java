@@ -188,7 +188,6 @@ public class NotificationService {
 			return phoneNumber;
 		}else if(role.equals(WorkFlowConfigs.ROLE_EMPLOYEE)) {
 			Map<String, String> employeeDetails = getEmployeeDetails(tenantId, assignee, requestInfo);
-			
 			if(!StringUtils.isEmpty(employeeDetails.get("phone"))) {
 				phoneNumber = employeeDetails.get("phone");
 			}

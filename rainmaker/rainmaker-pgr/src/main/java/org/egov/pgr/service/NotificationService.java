@@ -75,9 +75,9 @@ public class NotificationService {
 				return null;
 			if (null == localizedMessageMap.get(locale + "|" + tenantId)) // static map that saves code-message pair against locale | tenantId.
 				getLocalisedMessages(requestInfo, tenantId, locale, PGRConstants.LOCALIZATION_MODULE_NAME);
-			serviceType = localizedMessageMap.get(locale + "|" + tenantId).get(PGRConstants.LOCALIZATION_COMP_CATEGORY_PREFIX + serviceTypes.get(0));
+			serviceType = localizedMessageMap.get(locale + "|" + tenantId).get(PGRConstants.LOCALIZATION_COMP_CATEGORY_PREFIX + serviceTypes.get(0)); //resultset is always of size one.
 			if(StringUtils.isEmpty(serviceType))
-				serviceType = serviceTypes.get(0);
+				serviceType = pGRUtils.splitCamelCase(serviceTypes.get(0));
 		} catch (Exception e) {
 			return null;
 		}

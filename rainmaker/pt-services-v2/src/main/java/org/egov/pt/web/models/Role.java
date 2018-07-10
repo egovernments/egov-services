@@ -1,13 +1,11 @@
 package org.egov.pt.web.models;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
+import lombok.*;
 
 import java.util.Date;
 
 @Getter
+@Setter
 @Builder
 @AllArgsConstructor
 @EqualsAndHashCode(of = "code")
@@ -23,5 +21,11 @@ public class Role {
     private String tenantId;
 
     public Role(){}
+
+    public Role(org.egov.common.contract.request.Role role){
+        this.setCode(role.getCode());
+        this.setName(role.getName());
+        this.setId(role.getId());
+    }
 
 }

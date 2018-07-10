@@ -72,7 +72,7 @@ public class PropertyValidator {
       names.addAll(Arrays.asList(masterNames));
 
     //  validateFinancialYear(request,errorMap);
-
+      validateInstitution(request,errorMap);
       Map<String,List<String>> codes = getAttributeValues(tenantId,PTConstants.MDMS_PT_MOD_NAME,names,"$.*.code",request.getRequestInfo());
       validateCodes(request.getProperties(),codes,errorMap);
 
@@ -320,6 +320,28 @@ public class PropertyValidator {
               }
       ));
     }
+
+    /**
+     * Validates if institution Object has null InstitutionType
+     * @param request
+     * @param errorMap
+     */
+    private void validateInstitution(PropertyRequest request,Map<String,String> errorMap){
+        List<Property> properties = request.getProperties();
+        properties.forEach(property -> {
+            property.getPropertyDetails().forEach(propertyDetail -> {
+               if(propertyDetail.getInstitution()!=null){
+                   if(propertyDetail.getInstitution().getType()==null)
+                       errorMap.put(" INVALID INSTITUTION OBJECT ","The institutionType cannot be null ");
+               }
+               else if(!propertyDetail.getSubOwnershipCategory().equals("INSTITUTIONAL") && propertyDetail.getInstitution()!=null){
+                   errorMap.put(" INVALID INSTITUTION OBJECT ","The institution Object should be null. Type of OwnerShip is not Institution ");
+               }
+            });
+        });
+    }
+
+
 
 
 }

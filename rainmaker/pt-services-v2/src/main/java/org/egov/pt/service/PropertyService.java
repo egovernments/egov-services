@@ -48,6 +48,7 @@ public class PropertyService {
 		propertyValidator.validateMasterData(request);
 		userService.createUser(request);
 		enrichmentService.enrichCreateRequest(request,false);
+		userService.createCitizen(request);
 		producer.push(config.getSavePropertyTopic(), request);
 		return request.getProperties();
 	}
@@ -117,6 +118,7 @@ public class PropertyService {
 		else if(ifPropertyExists && paid){
 			enrichmentService.enrichCreateRequest(request,true);
 			userService.createUser(request);
+			userService.createCitizen(request);
 			producer.push(config.getUpdatePropertyTopic(), request);
 			return request.getProperties();
 		}

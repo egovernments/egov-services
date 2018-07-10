@@ -74,4 +74,10 @@ public class PropertyConfiguration {
     @Value("${egov.idgen.assm.format}")
     private String assessmentIdGenFormat;
 
+    @Value("${egov.idgen.ptid.name}")
+    private String propertyIdGenName;
+
+    @Value("${egov.idgen.ptid.format}")
+    private String propertyIdGenFormat;
+
 }

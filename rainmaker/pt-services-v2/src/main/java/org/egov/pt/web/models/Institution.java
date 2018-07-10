@@ -17,14 +17,11 @@ public class Institution {
   @JsonProperty("tenantId")
   private String tenantId;
 
-  @JsonProperty("institutionName")
-  private String institutionName;
+  @JsonProperty("name")
+  private String name;
 
-  @JsonProperty("institutionType")
-  private String institutionType;
-
-  @JsonProperty("authorizedPersonName")
-  private String authorizedPersonName;
+  @JsonProperty("type")
+  private String type;
 
   @JsonProperty("designation")
   private String designation;

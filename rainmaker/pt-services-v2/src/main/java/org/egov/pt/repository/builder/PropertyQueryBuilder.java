@@ -14,9 +14,14 @@ public class PropertyQueryBuilder {
 	private static final String INNER_JOIN_STRING = "INNER JOIN";
 	private static final String LEFT_OUTER_JOIN_STRING = "LEFT OUTER JOIN";
 	
-	private static final String QUERY = "SELECT pt.*,ptdl.*,address.*,owner.*,doc.*,unit.*,"
+	private static final String QUERY = "SELECT pt.*,ptdl.*,address.*,owner.*,doc.*,unit.*,insti.*,"
 			+ " pt.propertyid as propertyid,ptdl.assessmentnumber as propertydetailid,doc.id as documentid,unit.id as unitid,"
-			+ "address.id as addresskeyid"
+			+ "address.id as addresskeyid,insti.id as instiid,"
+			+ "ownerdoc.id as ownerdocid,ownerdoc.documenttype as ownerdocType,ownerdoc.filestore as ownerfileStore,"
+			+ "ownerdoc.documentuid as ownerdocuid,"
+			+ "ptdl.createdby as assesscreatedby,ptdl.lastModifiedBy as assesslastModifiedBy,ptdl.createdTime as assesscreatedTime,"
+			+ "ptdl.lastModifiedTime as assesslastModifiedTime,"
+			+ "insti.name as institutionname,insti.type as institutiontype"
 			+ " FROM eg_pt_property_v2 pt "
 			+ INNER_JOIN_STRING
 			+ " eg_pt_propertydetail_v2 ptdl ON pt.propertyid =ptdl.property "
@@ -27,13 +32,17 @@ public class PropertyQueryBuilder {
 			+ INNER_JOIN_STRING
 			+" eg_pt_address_v2 address on address.property=pt.propertyid "
 			+ LEFT_OUTER_JOIN_STRING
-			+ " eg_pt_document_v2 doc ON ptdl.assessmentnumber=doc.propertydetail "
+			+ " eg_pt_document_v2 doc ON ptdl.assessmentnumber=doc.foreignkeyid "
+			+ LEFT_OUTER_JOIN_STRING
+			+ " eg_pt_document_v2 ownerdoc ON ptdl.assessmentnumber=ownerdoc.foreignkeyid "
+			+ LEFT_OUTER_JOIN_STRING
+			+ " eg_pt_institution_v2 insti ON ptdl.assessmentnumber=insti.propertydetail "
 			+ " WHERE ";
 	
 	public String getPropertySearchQuery(PropertyCriteria criteria, List<Object> preparedStmtList) {
 		
 		StringBuilder builder = new StringBuilder(QUERY);
-		builder.append("pt.tenantid=?");
+		builder.append(" pt.tenantid=? ");
 		preparedStmtList.add(criteria.getTenantId());
 		
 		Set<String> ids = criteria.getIds();
@@ -90,7 +99,7 @@ public class PropertyQueryBuilder {
 		}
 
 		if(criteria.getAccountId()!=null) {
-			builder.append(" and pt.accountid = '").append(criteria.getAccountId()).append("'");
+			builder.append(" and ptdl.accountid = '").append(criteria.getAccountId()).append("'");
 		}
 
 		return builder.toString();

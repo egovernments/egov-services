@@ -1,6 +1,5 @@
 package org.egov.pt.service;
 
-import org.dozer.DozerBeanMapper;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.pt.config.PropertyConfiguration;
 import org.egov.pt.repository.IdGenRepository;
@@ -35,22 +34,43 @@ public class EnrichmentService {
      */
     public void enrichCreateRequest(PropertyRequest request,Boolean onlyPropertyDetail) {
         RequestInfo requestInfo = request.getRequestInfo();
-        AuditDetails auditDetails = propertyutil.getAuditDetails(requestInfo.getUserInfo().getId().toString(), !onlyPropertyDetail);
+        AuditDetails auditDetails = propertyutil.getAuditDetails(requestInfo.getUserInfo().getUuid(), !onlyPropertyDetail);
+
 
         for (Property property : request.getProperties()) {
-            if(!onlyPropertyDetail)
-             property.getAddress().setId(UUID.randomUUID().toString());
+             if(!onlyPropertyDetail)
+              property.getAddress().setId(UUID.randomUUID().toString());
              property.getAddress().setTenantId(property.getTenantId());
-             property.setAccountId(request.getRequestInfo().getUserInfo().getUuid());
              property.setAuditDetails(auditDetails);
              property.setStatus(PropertyInfo.StatusEnum.ACTIVE);
+             setAssessmentNo(property.getTenantId(),property.getPropertyDetails(),requestInfo);
              property.getPropertyDetails().forEach(propertyDetail -> {
-                if(propertyDetail.getAssessmentNumber()==null)
-                { propertyDetail.setAssessmentNumber(UUID.randomUUID().toString());
-                  propertyDetail.getUnits().forEach(unit -> unit.setId(UUID.randomUUID().toString()));
-                  propertyDetail.getUnits().forEach(unit -> unit.setTenantId(property.getTenantId()));
-                  propertyDetail.getDocuments().forEach(document -> document.setId(UUID.randomUUID().toString()));
-                  propertyDetail.setAssessmentDate(new Date().getTime());}
+             //   if(propertyDetail.getAssessmentNumber()==null)
+                {
+                  propertyDetail.setTenantId(property.getTenantId());
+                  propertyDetail.setAuditDetails(auditDetails);
+                  if(onlyPropertyDetail){
+                      propertyDetail.getAuditDetails().setCreatedBy(property.getAuditDetails().getCreatedBy());
+                      propertyDetail.getAuditDetails().setCreatedTime(property.getAuditDetails().getCreatedTime());
+                  }
+                  propertyDetail.getUnits().forEach(unit -> {
+                      unit.setId(UUID.randomUUID().toString());
+                      unit.setTenantId(property.getTenantId());});
+                  if( propertyDetail.getDocuments()!=null)
+                   propertyDetail.getDocuments().forEach(document -> document.setId(UUID.randomUUID().toString()));
+                  propertyDetail.setAssessmentDate(new Date().getTime());
+                  if(propertyDetail.getSubOwnershipCategory().equals("INSTITUTIONAL"))
+                   { propertyDetail.getInstitution().setId(UUID.randomUUID().toString());
+                     propertyDetail.getInstitution().setTenantId(property.getTenantId());
+                     propertyDetail.getOwners().forEach(owner -> {
+                         owner.setInstitutionId(propertyDetail.getInstitution().getId());
+                     });
+                   }
+                   propertyDetail.getOwners().forEach(owner -> {
+                       if(owner.getDocument()!=null)
+                           owner.getDocument().setId(UUID.randomUUID().toString());
+                   });
+                }
             });
         }
         if(!onlyPropertyDetail)
@@ -135,13 +155,29 @@ public class EnrichmentService {
         // Make one combined call? (If format is to be kept same)
         //Calling idGen service to generate id's
         List<String> acknowledgementNumbers = getIdList(requestInfo,tenantId,config.getAcknowldgementIdGenName(),config.getAcknowldgementIdGenFormat(),request.getProperties().size());
-        List<String> propertyIds = getIdList(requestInfo,tenantId,config.getAcknowldgementIdGenName(),config.getAcknowldgementIdGenFormat(),request.getProperties().size());
+        List<String> propertyIds = getIdList(requestInfo,tenantId,config.getPropertyIdGenName(),config.getPropertyIdGenFormat(),request.getProperties().size());
         ListIterator<String> itAck = acknowledgementNumbers.listIterator();
         ListIterator<String> itPt = propertyIds.listIterator();
 
         properties.forEach(property -> {
             property.setAcknowldgementNumber(itAck.next());
             property.setPropertyId(itPt.next());
+        });
+    }
+
+
+    /**
+     * Sets assessmentNumbers for the given list of propertyDetail
+     * @param tenantId tenantId of the propertyDetails
+     * @param propertyDetails List of propertyDetails whose assessmentNumber is to be assigned
+     * @param requestInfo RequestInfo of the PropertyRequest
+     */
+    private void setAssessmentNo(String tenantId,List<PropertyDetail> propertyDetails,RequestInfo requestInfo){
+        int numOfPropertyDetails = propertyDetails.size();
+        List<String> assessmentNumbers = getIdList(requestInfo,tenantId,config.getAssessmentIdGenName(),config.getAssessmentIdGenFormat(),numOfPropertyDetails);
+        ListIterator<String> itAssess = assessmentNumbers.listIterator();
+        propertyDetails.forEach(propertyDetail -> {
+            propertyDetail.setAssessmentNumber(itAssess.next());
         });
     }
 
@@ -155,25 +191,14 @@ public class EnrichmentService {
         List<OwnerInfo> users = userDetailResponse.getUser();
         Map<String,OwnerInfo> userIdToOwnerMap = new HashMap<>();
         users.forEach(user -> userIdToOwnerMap.put(user.getUuid(),user));
-        DozerBeanMapper dozerBeanMapper = new DozerBeanMapper();
         properties.forEach(property -> {
-            property.getPropertyDetails().forEach(propertyDetail -> propertyDetail.getOwners().forEach(owner -> addOwnerDetail(owner,userIdToOwnerMap,dozerBeanMapper)));
+            property.getPropertyDetails().forEach(propertyDetail ->
+            {propertyDetail.getOwners().forEach(owner -> owner.addUserDetail(userIdToOwnerMap.get(owner.getUuid())));
+             propertyDetail.getCitizenInfo().addCitizenDetail(userIdToOwnerMap.get(propertyDetail.getCitizenInfo().getUuid()));
+            });
         });
     }
 
-
-    /**
-     * Copies all fields to owner from the corresponding ownerInfo in userIdToOwnerMap
-     * @param owner Owner whose fields are to be populated
-     * @param userIdToOwnerMap Map of userId to OwnerInfo
-     */
-    private void addOwnerDetail(OwnerInfo owner,Map<String,OwnerInfo> userIdToOwnerMap,DozerBeanMapper dozerBeanMapper ){
-        OwnerInfo user = userIdToOwnerMap.get(owner.getUuid());
-        // Is the condition correct or we should throw error?
-        if(user!=null)
-        {dozerBeanMapper.map(user,owner);
-         owner.setRoles(user.getRoles());}
-    }
 
 
     /**
@@ -198,6 +223,11 @@ public class EnrichmentService {
         Set<String> ownerids = new HashSet<>();
         properties.forEach(property -> {
             property.getPropertyDetails().forEach(propertyDetail -> propertyDetail.getOwners().forEach(owner -> ownerids.add(owner.getUuid())));
+        });
+        properties.forEach(property -> {
+            property.getPropertyDetails().forEach(propertyDetail -> {
+                ownerids.add(propertyDetail.getCitizenInfo().getUuid());
+            });
         });
         criteria.setOwnerids(ownerids);
     }

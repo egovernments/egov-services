@@ -1,6 +1,7 @@
 package org.egov.pt.repository.rowmapper;
 
 
+import org.egov.common.contract.request.User;
 import org.egov.pt.web.models.*;
 import org.egov.pt.web.models.Property.CreationReasonEnum;
 import org.egov.pt.web.models.PropertyDetail.ChannelEnum;
@@ -59,7 +60,6 @@ public class PropertyRowMapper implements ResultSetExtractor<List<Property>> {
 						.occupancyDate(rs.getLong("occupancyDate")).propertyId(currentId)
 						.oldPropertyId(rs.getString("oldPropertyId"))
 						.status(PropertyInfo.StatusEnum.fromValue(rs.getString("status")))
-						.accountId(rs.getString("accountId"))
 						.tenantId(tenanId).auditDetails(auditdetails).build();
 
 				propertyMap.put(currentId, currentProperty);
@@ -84,6 +84,20 @@ public class PropertyRowMapper implements ResultSetExtractor<List<Property>> {
 			}
 		}
 		if(detail==null) {
+			AuditDetails assessAuditdetails = AuditDetails.builder().createdBy(rs.getString("assesscreatedBy"))
+					.createdTime(rs.getLong("assesscreatedTime")).lastModifiedBy(rs.getString("assesslastModifiedBy"))
+					.lastModifiedTime(rs.getLong("assesslastModifiedTime"))
+					.build();
+
+			Institution institution = Institution.builder()
+					.id(rs.getString("instiid"))
+					.tenantId(rs.getString("tenantId"))
+					.name(rs.getString("institutionName"))
+					.type(rs.getString("institutionType"))
+					.designation(rs.getString("designation"))
+					.build();
+
+            OwnerInfo citizenInfo = OwnerInfo.builder().uuid(rs.getString("accountId")).build();
 			detail = PropertyDetail.builder()
 					.additionalDetails(rs.getObject("additionalDetails")).buildUpArea(rs.getFloat("buildUpArea"))
 					.channel(ChannelEnum.fromValue(rs.getString("channel"))).landArea(rs.getFloat("landArea"))
@@ -94,19 +108,38 @@ public class PropertyRowMapper implements ResultSetExtractor<List<Property>> {
 					.ownershipCategory(rs.getString("ownershipCategory"))
 					.subOwnershipCategory(rs.getString("subOwnershipCategory"))
 					.usageCategoryMajor(rs.getString("usageCategoryMajor"))
+					.adhocExemption(rs.getBigDecimal("adhocExemption"))
+					.adhocPenalty(rs.getBigDecimal("adhocPenalty"))
+					.institution(institution)
+					.citizenInfo(citizenInfo)
+					.auditDetails(assessAuditdetails)
 					.build();
 			property.addpropertyDetailsItem(detail);
 		}
 
 		String tenantId = property.getTenantId();
 
+		Document ownerDocument = Document.builder().id(rs.getString("ownerdocid")).documentType(rs.getString("ownerdocType"))
+				.fileStore(rs.getString("ownerfileStore"))
+				.documentUid(rs.getString("ownerdocuid"))
+				.build();
+
 		OwnerInfo owner = OwnerInfo.builder().uuid(rs.getString("userid"))
 				          .isPrimaryOwner(rs.getBoolean("isPrimaryOwner"))
 				          .ownerType(rs.getString("ownerType"))
 				          .ownerShipPercentage(rs.getDouble("ownerShipPercentage"))
+				          .institutionId(rs.getString("institutionid"))
+				          .relationship(OwnerInfo.RelationshipEnum.fromValue(rs.getString("relationship")))
+				          .document(ownerDocument)
 				          .build();
-		Document document = Document.builder().id(rs.getString("documentid")).documentType(rs.getString("documentType"))
-				.fileStore(rs.getString("fileStore")).build();
+
+		Document document = Document.builder().id(rs.getString("documentid"))
+				.documentType(rs.getString("documentType"))
+				.fileStore(rs.getString("fileStore"))
+				.documentUid(rs.getString("documentuid"))
+				.build();
+
+
 		Unit unit = Unit.builder().id(rs.getString("unitid")).floorNo(rs.getString("floorNo")).tenantId(tenantId)
 				.unitArea(rs.getFloat("unitArea")).unitType(rs.getString("unitType")).usageCategoryMajor(rs.getString("usageCategoryMajor"))
 				.usageCategoryMinor(rs.getString("usageCategoryMinor")).usageCategorySubMinor(rs.getString("usageCategorySubMinor"))

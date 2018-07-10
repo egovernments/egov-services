@@ -32,5 +32,9 @@ public class Document   {
 
         @JsonProperty("fileStore")
         private String fileStore;
+
+        @JsonProperty("documentUid")
+        private String documentUid;
+
 }
 

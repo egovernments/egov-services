@@ -39,9 +39,6 @@ public class Property extends PropertyInfo{
 	@JsonProperty("auditDetails")
 	private AuditDetails auditDetails;
 
-	@JsonProperty("accountId")
-	private String accountId;
-
 
 	public enum CreationReasonEnum {
 		NEWPROPERTY("NEWPROPERTY"),
@@ -91,10 +88,9 @@ public class Property extends PropertyInfo{
 	}
 
 	@Builder
-	public Property(String propertyId, String tenantId, String acknowldgementNumber, String oldPropertyId, StatusEnum status, Address address, AuditDetails auditDetails, String accountId, CreationReasonEnum creationReason, Long occupancyDate, List<PropertyDetail> propertyDetails) {
+	public Property(String propertyId, String tenantId, String acknowldgementNumber, String oldPropertyId, StatusEnum status, Address address, AuditDetails auditDetails, CreationReasonEnum creationReason, Long occupancyDate, List<PropertyDetail> propertyDetails) {
 		super(propertyId, tenantId, acknowldgementNumber, oldPropertyId, status, address);
 		this.auditDetails = auditDetails;
-		this.accountId = accountId;
 		this.creationReason = creationReason;
 		this.occupancyDate = occupancyDate;
 		this.propertyDetails = propertyDetails;

@@ -3,6 +3,7 @@ package org.egov.pt.service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.egov.common.contract.request.RequestInfo;
+import org.egov.common.contract.request.User;
 import org.egov.pt.repository.ServiceRequestRepository;
 import org.egov.pt.web.models.*;
 import org.egov.tracer.model.CustomException;
@@ -47,8 +48,9 @@ public class UserService {
         RequestInfo requestInfo = request.getRequestInfo();
         properties.forEach(property -> {
             property.getPropertyDetails().forEach(propertyDetail -> {
-                // Fetches the unique mobileNumbers from all the owners in the PropertyDetail
-                Set<String> listOfMobileNumbers = getMobileNumbers(propertyDetail);
+                // Fetches the unique mobileNumbers from all the owners
+                Set<String> listOfMobileNumbers = getMobileNumbers(propertyDetail,property.getTenantId());
+                log.info("Unique MobileNumbers: "+listOfMobileNumbers);
                 propertyDetail.getOwners().forEach(owner -> {
                     if(owner.getUuid()==null){
                         // Checks if the user is already present based on name of the owner and mobileNumber
@@ -88,6 +90,7 @@ public class UserService {
         return userCall(userSearchRequest,uri);
     }
 
+
     /**
      * Sets userName for the owner as mobileNumber if mobileNumber already assigned last 10 digits of currentTime is assigned as userName
      * @param owner owner whose username has to be assigned
@@ -100,7 +103,7 @@ public class UserService {
             listOfMobileNumber.remove(owner.getMobileNumber());
         }
         else {
-            String username = (Long.toString(new Date().getTime())).substring(3);
+            String username = UUID.randomUUID().toString();
             owner.setUserName(username);
         }
     }
@@ -110,9 +113,18 @@ public class UserService {
      * @param propertyDetail whose unique mobileNumbers are needed to be fetched
      * @return list of all unique mobileNumbers in the given propertyDetail
      */
-    private Set<String> getMobileNumbers(PropertyDetail propertyDetail){
+    private Set<String> getMobileNumbers(PropertyDetail propertyDetail,String tenantId){
         Set<String> listOfMobileNumbers = new HashSet<>();
         propertyDetail.getOwners().forEach(owner -> {listOfMobileNumbers.add(owner.getMobileNumber());});
+        StringBuilder uri = new StringBuilder(userHost).append(userSearchEndpoint);
+        UserSearchRequest userSearchRequest = new UserSearchRequest();
+        userSearchRequest.setTenantId(tenantId);
+        listOfMobileNumbers.forEach(mobilenumber -> {
+            userSearchRequest.setMobileNumber(mobilenumber);
+            UserDetailResponse userDetailResponse =  userCall(userSearchRequest,uri);
+            if(!CollectionUtils.isEmpty(userDetailResponse.getUser()))
+                listOfMobileNumbers.remove(mobilenumber);
+        });
         return listOfMobileNumbers;
     }
 
@@ -167,9 +179,12 @@ public class UserService {
         String format1 = "dd-MM-yyyy HH:mm:ss";
         users.forEach( map -> {
             map.put("createdDate",dateTolong((String)map.get("createdDate"),format1));
-            map.put("lastModifiedDate",dateTolong((String)map.get("lastModifiedDate"),format1));
-            map.put("dob",dateTolong((String)map.get("dob"),dobFormat));
-            map.put("pwdExpiryDate",dateTolong((String)map.get("pwdExpiryDate"),format1));
+            if((String)map.get("lastModifiedDate")!=null)
+                map.put("lastModifiedDate",dateTolong((String)map.get("lastModifiedDate"),format1));
+            if((String)map.get("dob")!=null)
+                map.put("dob",dateTolong((String)map.get("dob"),dobFormat));
+            if((String)map.get("pwdExpiryDate")!=null)
+                map.put("pwdExpiryDate",dateTolong((String)map.get("pwdExpiryDate"),format1));
          }
         );
     }
@@ -198,6 +213,7 @@ public class UserService {
      */
     private void setOwnerFields(OwnerInfo owner, UserDetailResponse userDetailResponse){
         owner.setUuid(userDetailResponse.getUser().get(0).getUuid());
+        owner.setUserName((userDetailResponse.getUser().get(0).getUserName()));
         owner.setCreatedBy(userDetailResponse.getUser().get(0).getCreatedBy());
         owner.setCreatedDate(userDetailResponse.getUser().get(0).getCreatedDate());
         owner.setLastModifiedBy(userDetailResponse.getUser().get(0).getLastModifiedBy());
@@ -252,6 +268,46 @@ public class UserService {
         });
     }
 
+    /**
+     * Creates citizenInfo if employee is creating assessment in case of user the citizenInfo object is pointed to userinfo from requestInfo
+     * @param request PropertyRequest for the assessment
+     */
+    public void createCitizen(PropertyRequest request){
+        StringBuilder uriCreate = new StringBuilder(userHost).append(userContextPath).append(userCreateEndpoint);
+        StringBuilder uriSearch = new StringBuilder(userHost).append(userSearchEndpoint);
+        RequestInfo requestInfo = request.getRequestInfo();
+        // If user is creating assessment, userInfo object from requestInfo is assigned as citizenInfo
+        if(requestInfo.getUserInfo().getType().equals("CITIZEN"))
+        {   request.getProperties().forEach(property -> {
+                property.getPropertyDetails().forEach(propertyDetail -> {
+                    propertyDetail.setCitizenInfo(new OwnerInfo(requestInfo.getUserInfo()));
+                });
+            });
+        }
+        else{
+        // In case of employee login it checks if the citizenInfo object is present else it creates it
+        request.getProperties().forEach(property -> {
+            property.getPropertyDetails().forEach(propertyDetail -> {
+                UserDetailResponse userDetailResponse = userExists(propertyDetail.getCitizenInfo(),requestInfo);
+                // If user not present new user is created
+                if(CollectionUtils.isEmpty(userDetailResponse.getUser()))
+                {   UserSearchRequest userSearchRequest = new UserSearchRequest();
+                    userSearchRequest.setTenantId(property.getTenantId());
+                    userSearchRequest.setMobileNumber(propertyDetail.getCitizenInfo().getMobileNumber());
+                    userDetailResponse =  userCall(userSearchRequest,uriSearch);
+                    if(!CollectionUtils.isEmpty(userDetailResponse.getUser()))
+                        propertyDetail.getCitizenInfo().setUserName(UUID.randomUUID().toString());
+                    else
+                        propertyDetail.getCitizenInfo().setUserName(propertyDetail.getCitizenInfo().getMobileNumber());
+                    userDetailResponse = userCall(new CreateUserRequest(requestInfo,propertyDetail.getCitizenInfo()),uriCreate);
+                    log.info("citizen created --> "+userDetailResponse.getUser().get(0).getUuid());
+                }
+                propertyDetail.setCitizenInfo(userDetailResponse.getUser().get(0));
+            });
+         });
+        }
+
+    }
 
 
 

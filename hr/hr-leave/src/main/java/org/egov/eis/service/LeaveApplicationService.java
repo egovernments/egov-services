@@ -152,11 +152,11 @@ public class LeaveApplicationService {
                         leaveApplicationRequest.getRequestInfo()).get(0).getId());
             leaveApplication.setApplicationNumber(leaveApplicationNumberGeneratorService.generate());
         }
-        LOGGER.debug("leaveApplicationRequest::" + leaveApplicationRequest.getLeaveApplication() );
-        LOGGER.debug("leaveApplicationRequest size::" + leaveApplicationRequest.getLeaveApplication().size() );
+        LOGGER.info("leaveApplicationRequest::" + leaveApplicationRequest.getLeaveApplication());
+        LOGGER.info("leaveApplicationRequest size::" + leaveApplicationRequest.getLeaveApplication().size());
 
 
-        LOGGER.debug("leaveApplication::" + leaveApplicationRequest.getLeaveApplication().get(0) );
+        LOGGER.info("leaveApplication::" + leaveApplicationRequest.getLeaveApplication().get(0));
         create(leaveApplicationRequest);
         if (isExcelUpload)
             return getSuccessResponseForUpload(successLeaveApplicationsList, errorLeaveApplicationsList,
@@ -310,6 +310,9 @@ public class LeaveApplicationService {
                     errorMsg = applicationConstants.getErrorMessage(ApplicationConstants.MSG_LEAVETYPE_MAXDAYS) + " ";
                 if (leaveTypes.get(0).getEncashable().equals(true) && leaveApplication.getEncashable().equals(true) && leaveApplication.getLeaveDays() > leaveApplication.getAvailableDays())
                     errorMsg = applicationConstants.getErrorMessage(ApplicationConstants.MSG_LEAVEAPPLICATION_ENCASHABLE) + " ";
+                if ((leaveTypes.get(0).getEncashable().equals(false) || (leaveTypes.get(0).getEncashable().equals(true) && leaveApplication.getEncashable().equals(false))) && leaveApplication.getFromDate().after(leaveApplication.getToDate()))
+                    errorMsg = errorMsg + applicationConstants.getErrorMessage(ApplicationConstants.MSG_FROMDATE_TODATE)
+                            + " ";
             }
             final List<EmployeeInfo> employees = employeeRepository.getEmployeeById(
                     leaveApplicationRequest.getRequestInfo(), leaveApplication.getTenantId(),
@@ -319,9 +322,7 @@ public class LeaveApplicationService {
             if (leaveTypes.isEmpty() && (leaveApplication.getCompensatoryForDate() == null
                     || leaveApplication.getCompensatoryForDate().equals("")))
                 errorMsg = applicationConstants.getErrorMessage(ApplicationConstants.MSG_LEAVETYPE_NOTPRESENT) + " ";
-            if ((leaveTypes.get(0).getEncashable().equals(false) || (leaveTypes.get(0).getEncashable().equals(true) && leaveApplication.getEncashable().equals(false))) && leaveApplication.getFromDate().after(leaveApplication.getToDate()))
-                errorMsg = errorMsg + applicationConstants.getErrorMessage(ApplicationConstants.MSG_FROMDATE_TODATE)
-                        + " ";
+
             if (isExcelUpload) {
                 Date cutOffDate = null;
                 try {
@@ -414,17 +415,16 @@ public class LeaveApplicationService {
     }
 
     public LeaveApplicationRequest create(final LeaveApplicationRequest leaveApplicationRequest) {
-        LOGGER.debug("LeaveApplication :: " + leaveApplicationRequest.getLeaveApplication() + "Leave Application count::" + leaveApplicationRequest.getLeaveApplication().size());
-        LOGGER.debug( "LeaveType : " + leaveApplicationRequest.getLeaveApplication().get(0).getLeaveType());
+        LOGGER.info("LeaveApplication :: " + leaveApplicationRequest.getLeaveApplication() + "Leave Application count::" + leaveApplicationRequest.getLeaveApplication().size());
+        LOGGER.info("LeaveType : " + leaveApplicationRequest.getLeaveApplication().get(0).getLeaveType());
 
         if (leaveApplicationRequest.getLeaveApplication().size() > 0
                 && leaveApplicationRequest.getLeaveApplication().get(0).getLeaveType() != null) {
-            LOGGER.debug("LeaveApplication : " );
+            LOGGER.info("LeaveApplication : ");
             leaveApplicationRequest.getLeaveApplication().get(0).setId(leaveApplicationRepository.generateSequence());
             return leaveApplicationRepository.saveLeaveApplication(leaveApplicationRequest);
-        }
-        else {
-            LOGGER.debug("COMPOFF : " );
+        } else {
+            LOGGER.info("COMPOFF : ");
             leaveApplicationRequest.getLeaveApplication().get(0).setId(leaveApplicationRepository.generateSequence());
             return leaveApplicationRepository.saveCompoffLeaveApplication(leaveApplicationRequest);
         }

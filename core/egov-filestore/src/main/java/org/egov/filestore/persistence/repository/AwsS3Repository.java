@@ -125,10 +125,10 @@ public class AwsS3Repository {
 
 		try {
 			BufferedImage originalImage = ImageIO.read(file.getInputStream());
-
+			
 			if (null == originalImage) {
 				Map<String, String> map = new HashMap<>();
-				map.put("Image Source Invalid", "Image File present in upload request is Invalid/Not Readable");
+				map.put("Image Source Unavailable", "Image File present in upload request is Invalid/Not Readable");
 				throw new CustomException(map);
 			}
 
@@ -155,7 +155,7 @@ public class AwsS3Repository {
 			mediumImg.flush();
 			originalImage.flush();
 
-		} catch (IOException ioe) {
+		} catch (Exception ioe) {
 
 			Map<String, String> map = new HashMap<>();
 			map.put("Image Source Invalid", "Image File present in upload request is Invalid/Not Readable");

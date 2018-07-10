@@ -74,6 +74,7 @@ public class PropertyValidator {
     //  validateFinancialYear(request,errorMap);
       validateInstitution(request,errorMap);
       Map<String,List<String>> codes = getAttributeValues(tenantId,PTConstants.MDMS_PT_MOD_NAME,names,"$.*.code",request.getRequestInfo());
+      validateMDMSData(masterNames,codes);
       validateCodes(request.getProperties(),codes,errorMap);
 
         if (!errorMap.isEmpty())
@@ -173,6 +174,17 @@ public class PropertyValidator {
    }
 
 
+   private void validateMDMSData(String[] masterNames,Map<String,List<String>> codes){
+       Map<String,String> errorMap = new HashMap<>();
+       for(String masterName:masterNames){
+               if(CollectionUtils.isEmpty(codes.get(masterName))){
+               errorMap.put("MDMS data Error ","Unable to fetch "+masterName+" codes from MDMS");
+            }
+           }
+       if (!errorMap.isEmpty())
+           throw new CustomException(errorMap);
+   }
+
     /**
      * Returns PropertyCriteria to search for properties in database with ids set from properties in request
      *
@@ -243,7 +255,7 @@ public class PropertyValidator {
     /**
      * Adds ids of all Units of property to a list
      * @param propertyDetail
-     * @return
+     * @return List of all unitids of a propertyDetail
      */
     private Set<String> getUnitids(PropertyDetail propertyDetail){
         Set<Unit> units= propertyDetail.getUnits();
@@ -259,7 +271,7 @@ public class PropertyValidator {
     /**
      * Adds ids of all Documents of property to a list
      * @param propertyDetail
-     * @return
+     * @return List of all documentids of properyDetail
      */
     private Set<String> getDocumentids(PropertyDetail propertyDetail){
         Set<Document> documents= propertyDetail.getDocuments();
@@ -323,8 +335,8 @@ public class PropertyValidator {
 
     /**
      * Validates if institution Object has null InstitutionType
-     * @param request
-     * @param errorMap
+     * @param request PropertyRequest which is to be validated
+     * @param errorMap ErrorMap to catch and to throw error using CustomException
      */
     private void validateInstitution(PropertyRequest request,Map<String,String> errorMap){
         List<Property> properties = request.getProperties();

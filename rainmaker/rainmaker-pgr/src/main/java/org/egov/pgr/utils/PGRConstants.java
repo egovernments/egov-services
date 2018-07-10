@@ -93,7 +93,7 @@ public class PGRConstants {
 	public static final String ROLE_EMPLOYEE = "Employee";
 	public static final String ROLE_GRO = "Grievance Routing Officer";
 	public static final String ROLE_DGRO = "Department Grievance Routing Officer";
-	public static final String ROLE_CSR = "Customer Support Representative";
+	public static final String ROLE_CSR = "Citizen Service Representative";
 
 	
 	private static Map<String, String> statusNotifKeyMap = prepareStatusNotifKeyMap();

@@ -19,7 +19,7 @@ public class WorkFlowConfigs {
 	public static final String ROLE_NAME_GRO = "GRIEVANCE ROUTING OFFICER";
 	public static final String ROLE_NAME_DGRO = "DEPARTMENT GRIEVANCE ROUTING OFFICER";
 	public static final String ROLE_CSR = "CSR";
-	public static final String ROLE_NAME_CSR = "CUSTOMER SUPPORT REPRESENTATIVE";
+	public static final String ROLE_NAME_CSR = "CITIZEN SERVICE REPRESENTATIVE";
 
 	public static final String ACTION_OPEN = "open";
 	public static final String ACTION_ASSIGN = "assign";

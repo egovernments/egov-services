@@ -124,6 +124,7 @@ public class AwsS3Repository {
 	private void writeImage(MultipartFile file, String bucketName, String fileName) {
 
 		try {
+			
 			BufferedImage originalImage = ImageIO.read(file.getInputStream());
 			
 			if (null == originalImage) {

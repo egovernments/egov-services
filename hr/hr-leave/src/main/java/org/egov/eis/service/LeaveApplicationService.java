@@ -133,16 +133,21 @@ public class LeaveApplicationService {
     public ResponseEntity<?> createLeaveApplication(final LeaveApplicationRequest leaveApplicationRequest,
                                                     final String type) {
         final Boolean isExcelUpload = type != null && "upload".equalsIgnoreCase(type);
+        LOGGER.info("Before Validate::" + leaveApplicationRequest.getLeaveApplication());
+        LOGGER.info("Before ValidateleaveApplicationRequest size::" + leaveApplicationRequest.getLeaveApplication().size());
         final List<LeaveApplication> leaveApplicationsList = validate(leaveApplicationRequest, isExcelUpload);
         final List<LeaveApplication> successLeaveApplicationsList = new ArrayList<>();
         final List<LeaveApplication> errorLeaveApplicationsList = new ArrayList<>();
         leaveApplicationRequest.setType(type);
-        for (final LeaveApplication leaveApplication : leaveApplicationsList)
+        for (final LeaveApplication leaveApplication : leaveApplicationsList) {
             if (leaveApplication.getErrorMsg().isEmpty())
                 successLeaveApplicationsList.add(leaveApplication);
             else
                 errorLeaveApplicationsList.add(leaveApplication);
+        }
         leaveApplicationRequest.setLeaveApplication(successLeaveApplicationsList);
+        LOGGER.info("After Validate leaveApplicationRequest::" + leaveApplicationRequest.getLeaveApplication());
+        LOGGER.info("After Validate leaveApplicationRequest size::" + leaveApplicationRequest.getLeaveApplication().size());
         for (final LeaveApplication leaveApplication : leaveApplicationRequest.getLeaveApplication()) {
             if (isExcelUpload)
                 leaveApplication.setStatus(hrStatusService.getHRStatuses("APPROVED", leaveApplication.getTenantId(),
@@ -155,9 +160,9 @@ public class LeaveApplicationService {
         LOGGER.info("leaveApplicationRequest::" + leaveApplicationRequest.getLeaveApplication());
         LOGGER.info("leaveApplicationRequest size::" + leaveApplicationRequest.getLeaveApplication().size());
 
+        if(leaveApplicationRequest.getLeaveApplication().size() >0)
+          create(leaveApplicationRequest);
 
-        LOGGER.info("leaveApplication::" + leaveApplicationRequest.getLeaveApplication().get(0));
-        create(leaveApplicationRequest);
         if (isExcelUpload)
             return getSuccessResponseForUpload(successLeaveApplicationsList, errorLeaveApplicationsList,
                     leaveApplicationRequest.getRequestInfo());
@@ -299,6 +304,7 @@ public class LeaveApplicationService {
         String errorMsg = "";
         Boolean isHoliday = false;
         for (final LeaveApplication leaveApplication : leaveApplicationRequest.getLeaveApplication()) {
+            LOGGER.info("Validate Loop Entry::"+leaveApplication);
             errorMsg = "";
             final LeaveTypeGetRequest leaveTypeGetRequest = new LeaveTypeGetRequest();
             List<LeaveType> leaveTypes = new ArrayList<>();
@@ -409,7 +415,7 @@ public class LeaveApplicationService {
             if (!applications.isEmpty())
                 errorMsg = errorMsg + applicationConstants.getErrorMessage(ApplicationConstants.MSG_ALREADY_PRESENT);
             leaveApplication.setErrorMsg(errorMsg);
-
+            LOGGER.info("Validate Loop Exit::"+leaveApplication);
         }
         return leaveApplicationRequest.getLeaveApplication();
     }

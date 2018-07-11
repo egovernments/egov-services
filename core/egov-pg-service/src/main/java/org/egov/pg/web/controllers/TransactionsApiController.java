@@ -47,7 +47,7 @@ public class TransactionsApiController {
      * @param transactionRequest Request containing all information necessary for initiating payment
      * @return 302 Redirect to the payment gateway
      */
-    @RequestMapping(value = "/transaction/v1/_create", method = RequestMethod.POST)
+    @RequestMapping(value = "/transactions/v1/_create", method = RequestMethod.POST)
     public ResponseEntity<Void> transactionsV1CreatePost(@Valid @RequestBody TransactionRequest transactionRequest) {
 
         URI uri = transactionService.initiateTransaction(transactionRequest);
@@ -63,7 +63,7 @@ public class TransactionsApiController {
      * @param transactionCriteria Search Conditions that should be matched
      * @return List of transactions matching the search criteria
      */
-    @RequestMapping(value = "/transaction/v1/_search", method = RequestMethod.POST)
+    @RequestMapping(value = "/transactions/v1/_search", method = RequestMethod.POST)
     public ResponseEntity<TransactionResponse> transactionsV1SearchPost(@Valid @RequestBody RequestInfoWrapper
                                                                                 requestInfoWrapper, @Valid
                                                                         @ModelAttribute TransactionCriteria transactionCriteria) {
@@ -82,8 +82,8 @@ public class TransactionsApiController {
      * @param params             Parameters posted by the gateway
      * @return The current transaction status of the tranasction
      */
-    @RequestMapping(value = "/transaction/v1/_update", method = {RequestMethod.POST, RequestMethod.GET})
-    public ResponseEntity<TransactionResponse> transactionsV1UpdatePost(@RequestParam Map<String, String> params) {
+    @RequestMapping(value = "/transactions/v1/_update", method = {RequestMethod.POST, RequestMethod.GET})
+    public ResponseEntity<TransactionResponse> transactionsV1UpdatePost( @RequestParam Map<String, String> params) {
 
         RequestInfo requestInfo = new RequestInfo();
         Transaction status = transactionService.updateTransaction(requestInfo, params);
@@ -99,7 +99,7 @@ public class TransactionsApiController {
      *
      * @return list of active gateways that can be used for payments
      */
-    @RequestMapping(value = "/gateway/v1/_search", method = RequestMethod.POST)
+    @RequestMapping(value = "/gateways/v1/_search", method = RequestMethod.POST)
     public ResponseEntity<Set<String>> transactionsV1AvailableGatewaysPost() {
 
         Set<String> gateways = gatewayService.getActiveGateways();

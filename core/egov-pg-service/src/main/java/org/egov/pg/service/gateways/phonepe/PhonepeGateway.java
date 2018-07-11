@@ -157,7 +157,7 @@ public class PhonepeGateway implements Gateway {
     private Transaction transformRawResponse(PhonepeResponse resp, Transaction currentStatus) {
         Transaction.TxnStatusEnum status;
 
-        if (resp.getSuccess()) {
+        if(resp.getSuccess()) {
             status = Transaction.TxnStatusEnum.SUCCESS;
 
             return Transaction.builder()
@@ -170,8 +170,8 @@ public class PhonepeGateway implements Gateway {
                     .lastModifiedTime(System.currentTimeMillis())
                     .responseJson(resp)
                     .build();
-        } else {
-            if (resp.getCode().equalsIgnoreCase("PAYMENT_PENDING"))
+        } else{
+            if(resp.getCode().equalsIgnoreCase("PAYMENT_PENDING"))
                 status = Transaction.TxnStatusEnum.PENDING;
             else
                 status = Transaction.TxnStatusEnum.FAILURE;

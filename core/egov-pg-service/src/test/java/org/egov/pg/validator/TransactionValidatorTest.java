@@ -30,7 +30,7 @@ public class TransactionValidatorTest {
     private TransactionValidator validator;
 
     @Before
-    public void setUp() {
+    public void setUp() throws Exception {
         validator = new TransactionValidator(gatewayService, transactionRepository);
     }
 
@@ -51,7 +51,7 @@ public class TransactionValidatorTest {
     }
 
     /**
-     * Duplicate order id and module combination
+     * Duplicatet order id and module combination
      */
     @Test(expected = CustomException.class)
     public void validateCreateTxnDuplicateOrder() {
@@ -127,4 +127,15 @@ public class TransactionValidatorTest {
         validator.validateUpdateTxn(Collections.singletonMap("transactionId", "PB_PG_001"));
     }
 
+    /**
+     * Transaction status already set to completed
+     */
+    @Test(expected = CustomException.class)
+    public void validateUpdateTxnStatusCompleted() {
+
+        when(gatewayService.getTxnId(any(Map.class))).thenReturn(Optional.of("PB_PG_001"));
+        when(transactionRepository.fetchTransactions(any(TransactionCriteria.class))).thenReturn(Collections.emptyList());
+
+        validator.validateUpdateTxn(Collections.singletonMap("transactionId", "PB_PG_001"));
+    }
 }

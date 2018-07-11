@@ -39,7 +39,7 @@ public class TransactionService {
     @Autowired
     TransactionService(TransactionValidator validator, GatewayService gatewayService, Producer producer,
                        TransactionRepository
-                               transactionRepository,
+            transactionRepository,
                        IdGenService idGenService,
                        AppProperties appProperties) {
         this.validator = validator;
@@ -127,17 +127,12 @@ public class TransactionService {
 
         Transaction currentTxnStatus = validator.validateUpdateTxn(requestParams);
 
-        if (!currentTxnStatus.getTxnStatus().equals(Transaction.TxnStatusEnum.PENDING)) {
-            log.info("Transaction has already reached completion");
-            return currentTxnStatus;
-        }
-
         log.info(currentTxnStatus.toString());
         log.info(requestParams.toString());
 
         Transaction newTxn = gatewayService.getLiveStatus(currentTxnStatus, requestParams);
 
-        if (newTxn.getTxnStatus().equals(Transaction.TxnStatusEnum.SUCCESS)) {
+        if(newTxn.getTxnStatus().equals(Transaction.TxnStatusEnum.SUCCESS)) {
             if (new BigDecimal(currentTxnStatus.getTxnAmount()).compareTo(new BigDecimal(newTxn.getTxnAmount())) != 0) {
                 log.error("Transaction Amount mismatch, expected {} got {}", currentTxnStatus.getTxnAmount(), newTxn.getTxnAmount());
                 newTxn.setTxnStatus(Transaction.TxnStatusEnum.FAILURE);

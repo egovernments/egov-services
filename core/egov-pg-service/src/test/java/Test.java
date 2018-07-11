@@ -24,7 +24,7 @@ public class Test {
     private Environment environment;
 
     @Before
-    public void setUp() {
+    public void setUp() throws Exception {
         user = User.builder().userName("USER001").mobileNumber("9XXXXXXXXX").name("XYZ").tenantId("pb").emailId("").build();
         this.restTemplate = new RestTemplate();
         this.objectMapper = new ObjectMapper();
@@ -74,7 +74,7 @@ public class Test {
                 .user(user).build();
 
 
-        Gateway gateway = new PaytmGateway(restTemplate, environment, objectMapper);
+        Gateway gateway = new PaytmGateway(restTemplate,  environment, objectMapper);
 
         URI redirectUri = gateway.generateRedirectURI(txn);
         System.out.println(redirectUri);
@@ -152,5 +152,11 @@ public class Test {
     public void name1() {
         final DecimalFormat CURRENCY_FORMATTER_RUPEE = new DecimalFormat("0.00");
         System.out.println(Double.valueOf(CURRENCY_FORMATTER_RUPEE.format(Double.valueOf("141"))));
+    }
+
+    @org.junit.Test
+    public void name3() {
+        String respCode = "0";
+        System.out.println(((int) respCode.toCharArray()[0]));
     }
 }

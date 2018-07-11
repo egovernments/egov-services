@@ -12,7 +12,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
-import org.springframework.util.StringUtils;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponents;
@@ -115,14 +114,12 @@ public class AxisGateway implements Gateway {
         params.remove("vpc_SecureHash");
         params.remove("vpc_SecureHashType");
 
-        if (!StringUtils.isEmpty(checksum)) {
-            if (checksum.equals(AxisUtils.SHAhashAllFields(params, SECURE_SECRET))) {
-                MultiValueMap<String, String> resp = new LinkedMultiValueMap<>();
-                params.forEach(resp::add);
-                Transaction txn = transformRawResponse(resp, currentStatus);
-                if (txn.getTxnStatus().equals(Transaction.TxnStatusEnum.PENDING) || txn.getTxnStatus().equals(Transaction.TxnStatusEnum.FAILURE)) {
-                    return txn;
-                }
+        if(checksum.equals(AxisUtils.SHAhashAllFields(params, SECURE_SECRET))){
+            MultiValueMap<String, String> resp = new LinkedMultiValueMap<>();
+            params.forEach(resp::add);
+            Transaction txn = transformRawResponse(resp, currentStatus);
+            if(txn.getTxnStatus().equals(Transaction.TxnStatusEnum.PENDING) || txn.getTxnStatus().equals(Transaction.TxnStatusEnum.FAILURE)){
+                return txn;
             }
         }
 
@@ -145,7 +142,7 @@ public class AxisGateway implements Gateway {
         return "vpc_MerchTxnRef";
     }
 
-    private Transaction fetchStatusFromGateway(Transaction currentStatus) {
+    private Transaction fetchStatusFromGateway(Transaction currentStatus){
         Map<String, String> fields = new HashMap<>();
         fields.put("vpc_Version", VPC_VERSION);
         fields.put("vpc_Command", VPC_COMMAND_STATUS);
@@ -279,7 +276,7 @@ public class AxisGateway implements Gateway {
                 break;
         }
 
-        if (respCode.equalsIgnoreCase("0")) {
+        if ((int) respCode.toCharArray()[0] == 0) {
             status = Transaction.TxnStatusEnum.SUCCESS;
             return Transaction.builder()
                     .txnId(currentStatus.getTxnId())
@@ -292,7 +289,8 @@ public class AxisGateway implements Gateway {
                     .lastModifiedTime(System.currentTimeMillis())
                     .responseJson(resp)
                     .build();
-        } else {
+        }
+        else {
             status = Transaction.TxnStatusEnum.FAILURE;
             return Transaction.builder()
                     .txnId(currentStatus.getTxnId())

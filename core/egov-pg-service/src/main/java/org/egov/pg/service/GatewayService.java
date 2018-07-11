@@ -19,7 +19,7 @@ public class GatewayService {
     private Map<String, GatewayStatus> GATEWAY_MAP = new HashMap<>();
 
     @Autowired
-    public GatewayService(List<Gateway> gateways) {
+    public GatewayService(List<Gateway> gateways){
         this.gateways = Collections.unmodifiableList(gateways);
         initialize();
     }
@@ -58,13 +58,13 @@ public class GatewayService {
 
     /**
      * Returns the redirectURI from the requested gateway if exists
-     * else throws CustomException
+     *  else throws CustomException
      *
      * @param transaction Txn for which payment should be initiated
      * @return Redirect URI to the gateway
      */
-    URI initiateTxn(Transaction transaction) {
-        if (!isGatewayActive(transaction.getGateway()))
+    URI initiateTxn(Transaction transaction){
+        if(!isGatewayActive(transaction.getGateway()))
             throw new CustomException("INVALID_PAYMENT_GATEWAY", "Invalid or inactive payment gateway provided");
 
         Gateway gateway = getGateway(transaction.getGateway());
@@ -75,21 +75,21 @@ public class GatewayService {
      * Fetch the live transaction status from the gateway
      *
      * @param currentStatus Current transaction details
-     * @param params        Response params sent by the gateway
+     * @param params Response params sent by the gateway
      * @return Updated live transaction status
      */
-    Transaction getLiveStatus(Transaction currentStatus, Map<String, String> params) {
+    Transaction getLiveStatus(Transaction currentStatus, Map<String, String> params){
         Gateway gateway = getGateway(currentStatus.getGateway());
         return gateway.fetchStatus(currentStatus, params);
     }
 
 
-    public boolean isGatewayActive(String gateway) {
+    public boolean isGatewayActive(String gateway){
         return GATEWAY_MAP.containsKey(gateway) && GATEWAY_MAP.get(gateway).isActive();
     }
 
-    private Gateway getGateway(String gateway) {
-        return GATEWAY_MAP.get(gateway).getGateway();
+    private Gateway getGateway(String gateway){
+            return GATEWAY_MAP.get(gateway).getGateway();
     }
 
 

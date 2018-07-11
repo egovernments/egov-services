@@ -98,15 +98,15 @@ public class PaytmGateway implements Gateway {
     public Transaction fetchStatus(Transaction currentStatus, Map<String, String> params) {
         String checksum = params.get("CHECKSUMHASH");
         params.remove("CHECKSUMHASH");
-        if (!StringUtils.isEmpty(params.get(transactionIdKeyInResponse())) && !StringUtils.isEmpty(params.get("MID")) && !StringUtils.isEmpty(checksum)) {
+        if(!StringUtils.isEmpty(params.get(transactionIdKeyInResponse())) && !StringUtils.isEmpty(params.get("MID")) && !StringUtils.isEmpty(checksum)){
             TreeMap<String, String> treeMap = new TreeMap<>(params);
             try {
                 boolean valid = CheckSumServiceHelper.getCheckSumServiceHelper().verifycheckSum(MERCHANT_KEY, treeMap,
                         checksum);
-                if (valid) {
+                if(valid){
                     PaytmResponse response = objectMapper.convertValue(params, PaytmResponse.class);
                     Transaction txn = transformRawResponse(response, currentStatus);
-                    if (txn.getTxnStatus().equals(Transaction.TxnStatusEnum.PENDING) ||
+                    if(txn.getTxnStatus().equals(Transaction.TxnStatusEnum.PENDING) ||
                             txn.getTxnStatus().equals(Transaction.TxnStatusEnum.FAILURE))
                         return txn;
                 }
@@ -136,7 +136,7 @@ public class PaytmGateway implements Gateway {
         return "ORDERID";
     }
 
-    private Transaction fetchStatusFromGateway(Transaction currentStatus) {
+    private Transaction fetchStatusFromGateway(Transaction currentStatus){
 
         TreeMap<String, String> params = new TreeMap<>();
         params.put("MID", MID);

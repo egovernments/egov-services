@@ -1,10 +1,10 @@
 package org.egov.pg.web.controllers;
 
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.net.HttpHeaders;
 import lombok.extern.slf4j.Slf4j;
 import org.egov.pg.models.Transaction;
-import org.egov.pg.service.GatewayService;
 import org.egov.pg.service.TransactionService;
 import org.egov.pg.utils.ResponseInfoFactory;
 import org.egov.pg.web.models.*;
@@ -29,15 +29,14 @@ import java.util.Set;
 @Controller
 public class TransactionsApiController {
 
+    private final ObjectMapper objectMapper;
     private final TransactionService transactionService;
-    private final GatewayService gatewayService;
 
 
     @Autowired
-    public TransactionsApiController(TransactionService transactionService, GatewayService
-            gatewayService) {
+    public TransactionsApiController(ObjectMapper objectMapper, TransactionService transactionService) {
+        this.objectMapper = objectMapper;
         this.transactionService = transactionService;
-        this.gatewayService = gatewayService;
     }
 
 
@@ -79,17 +78,20 @@ public class TransactionsApiController {
     /**
      * Updates the status of the transaction from the gateway
      *
+     * @param requestInfoWrapper
      * @param params             Parameters posted by the gateway
      * @return The current transaction status of the tranasction
      */
-    @RequestMapping(value = "/transactions/v1/_update", method = {RequestMethod.POST, RequestMethod.GET})
-    public ResponseEntity<TransactionResponse> transactionsV1UpdatePost( @RequestParam Map<String, String> params) {
+    @RequestMapping(value = "/transactions/v1/_update", method = RequestMethod.POST)
+    public ResponseEntity<TransactionResponse> transactionsV1UpdatePost(@Valid @RequestBody RequestInfoWrapper
+                                                                                requestInfoWrapper, @RequestParam
+                                                                                Map<String, String> params) {
 
-        RequestInfo requestInfo = new RequestInfo();
-        Transaction status = transactionService.updateTransaction(requestInfo, params);
+
+        Transaction status = transactionService.updateTransaction(requestInfoWrapper.getRequestInfo(), params);
 
         return new ResponseEntity<>(new TransactionResponse(ResponseInfoFactory
-                .createResponseInfoFromRequestInfo(requestInfo, true), Collections
+                .createResponseInfoFromRequestInfo(requestInfoWrapper.getRequestInfo(), true), Collections
                 .singletonList(status)), HttpStatus.OK);
     }
 
@@ -102,7 +104,7 @@ public class TransactionsApiController {
     @RequestMapping(value = "/gateways/v1/_search", method = RequestMethod.POST)
     public ResponseEntity<Set<String>> transactionsV1AvailableGatewaysPost() {
 
-        Set<String> gateways = gatewayService.getActiveGateways();
+        Set<String> gateways = transactionService.activeGateways();
         log.debug("Available gateways : " + gateways);
         return new ResponseEntity<>(gateways, HttpStatus.OK);
     }

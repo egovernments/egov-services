@@ -4,6 +4,7 @@ import org.egov.pg.service.Gateway;
 import org.egov.pg.service.gateways.axis.AxisGateway;
 import org.egov.pg.service.gateways.paytm.PaytmGateway;
 import org.egov.pg.service.gateways.phonepe.PhonepeGateway;
+import org.egov.pg.utils.Utils;
 import org.egov.pg.web.models.User;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -41,7 +42,7 @@ public class Test {
                 .callbackUrl("http://2a91377b.ngrok.io/egov-pay/payments/v1/_update")
                 .user(user).build();
 
-        Gateway gateway = new AxisGateway(restTemplate, environment, objectMapper);
+        Gateway gateway = new AxisGateway(restTemplate, environment);
         URI redirectUri = gateway.generateRedirectURI(txn);
         System.out.println(redirectUri.toString());
 
@@ -74,7 +75,7 @@ public class Test {
                 .user(user).build();
 
 
-        Gateway gateway = new PaytmGateway(restTemplate,  environment, objectMapper);
+        Gateway gateway = new PaytmGateway(restTemplate,  environment);
 
         URI redirectUri = gateway.generateRedirectURI(txn);
         System.out.println(redirectUri);
@@ -125,7 +126,7 @@ public class Test {
                 .callbackUrl("http://2a91377b.ngrok.io/egov-pay/payments/v1/_update")
                 .build();
 
-        Gateway gateway = new PaytmGateway(restTemplate, environment, objectMapper);
+        Gateway gateway = new PaytmGateway(restTemplate, environment);
         gateway.fetchStatus(txn, Collections.singletonMap("transactionId", "PB_PG_2018_06_09-000014_24"));
 
 
@@ -142,7 +143,7 @@ public class Test {
                 .callbackUrl("http://2a91377b.ngrok.io/egov-pay/payments/v1/_update")
                 .build();
 
-        Gateway gateway = new AxisGateway(restTemplate, environment, objectMapper);
+        Gateway gateway = new AxisGateway(restTemplate, environment);
         gateway.fetchStatus(txn, Collections.singletonMap("transactionId", "PB_PG_2018_06_09-000014_24"));
 
 
@@ -156,7 +157,6 @@ public class Test {
 
     @org.junit.Test
     public void name3() {
-        String respCode = "0";
-        System.out.println(((int) respCode.toCharArray()[0]));
+        System.out.println(Utils.convertPaiseToRupee("10"));
     }
 }

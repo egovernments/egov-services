@@ -2,12 +2,12 @@ package org.egov.pg.service;
 
 import lombok.extern.slf4j.Slf4j;
 import org.egov.pg.config.AppProperties;
+import org.egov.pg.models.GatewayStatus;
 import org.egov.pg.models.Transaction;
 import org.egov.pg.models.TransactionDump;
 import org.egov.pg.models.TransactionDumpRequest;
 import org.egov.pg.producer.Producer;
 import org.egov.pg.repository.TransactionRepository;
-import org.egov.pg.validator.TransactionValidator;
 import org.egov.pg.web.models.RequestInfo;
 import org.egov.pg.web.models.TransactionCriteria;
 import org.egov.pg.web.models.TransactionRequest;
@@ -18,8 +18,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.net.URI;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Handles all transaction related requests
@@ -28,8 +27,9 @@ import java.util.Map;
 @Slf4j
 public class TransactionService {
 
-    private TransactionValidator validator;
-    private GatewayService gatewayService;
+    private List<Gateway> gateways;
+    private Map<String, GatewayStatus> gatewayMap = new HashMap<>();
+    private Set<String> transactionIdKeyset = new HashSet<>();
     private Producer producer;
     private IdGenService idGenService;
     private AppProperties appProperties;
@@ -37,24 +37,22 @@ public class TransactionService {
 
 
     @Autowired
-    TransactionService(TransactionValidator validator, GatewayService gatewayService, Producer producer,
-                       TransactionRepository
-            transactionRepository,
-                       IdGenService idGenService,
-                       AppProperties appProperties) {
-        this.validator = validator;
-        this.gatewayService = gatewayService;
+    TransactionService(List<Gateway> gateways, Producer producer, TransactionRepository transactionRepository,
+                              IdGenService idGenService,
+                              AppProperties appProperties) {
+        this.gateways = gateways;
         this.producer = producer;
         this.transactionRepository = transactionRepository;
         this.idGenService = idGenService;
         this.appProperties = appProperties;
+        initialize();
     }
 
     /**
      * Initiates a transaction by generating a gateway redirect URI for the request
      * <p>
-     * 1. Validates transaction object
-     * 2. Enriches the request by assigning a TxnID and a default status of PENDING
+     * 1. Enriches the request by assigning a TxnID and a default status of PENDING
+     * 2. Verifies if the selected gateway is valid & active
      * 3. If yes, calls the gateway's implementation to generate a redirect URI
      * 4. Persists the transaction and a transaction dump with the RAW requests asynchronously
      * 5. Returns the redirect URI
@@ -65,28 +63,33 @@ public class TransactionService {
     public URI initiateTransaction(TransactionRequest transactionRequest) {
         Transaction transaction = transactionRequest.getTransaction();
 
-        validator.validateCreateTxn(transaction);
+        // Check if chosen gateway is valid & active
+        if (gatewayMap.containsKey(transaction.getGateway()) && gatewayMap.get(transaction.getGateway()).isActive()) {
+            Gateway gateway = gatewayMap.get(transaction.getGateway()).getGateway();
 
-        // Generate ID from ID Gen service and assign to txn object
-        String txnId = idGenService.generateTxnId(transactionRequest);
-        transaction.setTxnId(txnId);
-        transaction.setTxnStatus(Transaction.TxnStatusEnum.PENDING);
-        transaction.setCreatedTime(System.currentTimeMillis());
+            // Generate ID from ID Gen service and assign to txn object
+            String txnId = idGenService.generateTxnId(transactionRequest);
+            transaction.setTxnId(txnId);
+            transaction.setTxnStatus(Transaction.TxnStatusEnum.PENDING);
+            transaction.setCreatedTime(System.currentTimeMillis());
 
-        URI uri = gatewayService.initiateTxn(transaction);
+            URI uri = gateway.generateRedirectURI(transaction);
 
-        TransactionDump dump = new TransactionDump(transaction.getTxnId(), uri.toString(), null, System
-                .currentTimeMillis
-                        (), null);
+            TransactionDump dump = new TransactionDump(transaction.getTxnId(), uri.toString(), null, System
+                    .currentTimeMillis
+                            (), null);
 
 
-        // Persist transaction and transaction dump objects
-        producer.push(appProperties.getSaveTxnTopic(), new org.egov.pg.models.TransactionRequest
-                (transactionRequest.getRequestInfo(), transaction));
-        producer.push(appProperties.getSaveTxnDumpTopic(), new TransactionDumpRequest(transactionRequest
-                .getRequestInfo(), dump));
+            // Persist transaction and transaction dump objects
+            producer.push(appProperties.getSaveTxnTopic(), new org.egov.pg.models.TransactionRequest
+                    (transactionRequest.getRequestInfo(), transaction));
+            producer.push(appProperties.getSaveTxnDumpTopic(), new TransactionDumpRequest(transactionRequest
+                    .getRequestInfo(), dump));
 
-        return uri;
+            return uri;
+        } else {
+            throw new CustomException("INVALID_PAYMENT_GATEWAY", "Invalid or inactive payment gateway provided");
+        }
     }
 
 
@@ -104,8 +107,8 @@ public class TransactionService {
         transactionCriteria.setLimit(5);
         try {
             return transactionRepository.fetchTransactions(transactionCriteria);
-        } catch (DataAccessException e) {
-            log.error("Unable to fetch data from the database for criteria: " + transactionCriteria.toString(), e);
+        }catch (DataAccessException e){
+            log.error("Unable to fetch data from the database for criteria: "+transactionCriteria.toString(), e);
             throw new CustomException("FETCH_TXNS_FAILED", "Unable to fetch transactions from store");
         }
     }
@@ -125,18 +128,43 @@ public class TransactionService {
      */
     public Transaction updateTransaction(RequestInfo requestInfo, Map<String, String> requestParams) {
 
-        Transaction currentTxnStatus = validator.validateUpdateTxn(requestParams);
+        Optional<String> transactionOptional = fetchTransactionIdFromRequest(requestParams);
+
+        if (!transactionOptional.isPresent())
+            throw new CustomException("MISSING_TXN_ID", "Cannot process request, missing transaction id");
+
+        String txnId = transactionOptional.get();
+
+        TransactionCriteria criteria = TransactionCriteria.builder()
+                .txnId(txnId)
+                .orderId(requestParams.get("orderId"))
+                .module(requestParams.get("module"))
+                .tenantId(requestParams.get("tenantId"))
+                .build();
+
+        List<Transaction> statuses = getTransactions(criteria);
+
+        //TODO Add to error queue
+        if (statuses.isEmpty()) {
+            throw new CustomException("TXN_NOT_FOUND", "Transaction not found");
+        }
+
+        Transaction currentTxnStatus = statuses.get(0);
+
+        if(!currentTxnStatus.getTxnStatus().equals(Transaction.TxnStatusEnum.PENDING))
+            throw new CustomException("TXN_ALREADY_COMPLETED", "Transaction has already reached completion, check " +
+                    "status");
+
+        Gateway gateway = gatewayMap.get(currentTxnStatus.getGateway()).getGateway();
 
         log.info(currentTxnStatus.toString());
         log.info(requestParams.toString());
 
-        Transaction newTxn = gatewayService.getLiveStatus(currentTxnStatus, requestParams);
+        Transaction newTxn = gateway.fetchStatus(currentTxnStatus, requestParams);
 
-        if(newTxn.getTxnStatus().equals(Transaction.TxnStatusEnum.SUCCESS)) {
-            if (new BigDecimal(currentTxnStatus.getTxnAmount()).compareTo(new BigDecimal(newTxn.getTxnAmount())) != 0) {
-                log.error("Transaction Amount mismatch, expected {} got {}", currentTxnStatus.getTxnAmount(), newTxn.getTxnAmount());
-                newTxn.setTxnStatus(Transaction.TxnStatusEnum.FAILURE);
-            }
+        if (new BigDecimal(currentTxnStatus.getTxnAmount()).compareTo(new BigDecimal(newTxn.getTxnAmount())) != 0) {
+            log.error("Transaction Amount mismatch, expected {} got {}", currentTxnStatus.getTxnAmount(), newTxn.getTxnAmount());
+            newTxn.setTxnStatus(Transaction.TxnStatusEnum.FAILURE);
         }
 
         populateBaseTxnInfo(currentTxnStatus, newTxn);
@@ -156,6 +184,36 @@ public class TransactionService {
         return newTxn;
     }
 
+    /**
+     * Returns the active payment gateways
+     *
+     * @return list of active gateways that can be used for payments
+     */
+    public Set<String> activeGateways() {
+        return gatewayMap.keySet();
+    }
+
+    /**
+     * Get the transaction id from the raw request
+     * <p>
+     * The TXNID key can be anything, as this is gateway specific,
+     * *  ex., txnid, vpc_txnid etc,
+     * check all payment gateway specific keys for txnid and returns txnid
+     *
+     * @param params Request parameters
+     * @return Transaction id
+     */
+    private Optional<String> fetchTransactionIdFromRequest(Map<String, String> params) {
+
+        Map<String, String> caseInsensitiveMap = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+        caseInsensitiveMap.putAll(params);
+        for (String txnId : transactionIdKeyset) {
+            if (caseInsensitiveMap.containsKey(txnId))
+                return Optional.of(caseInsensitiveMap.get(txnId));
+        }
+
+        return Optional.empty();
+    }
 
     private void populateBaseTxnInfo(Transaction currentTxn, Transaction newTxn) {
         newTxn.setTxnId(currentTxn.getTxnId());
@@ -168,5 +226,19 @@ public class TransactionService {
         newTxn.setUser(currentTxn.getUser());
     }
 
+
+    private void initialize() {
+        if (Objects.isNull(gateways))
+            throw new IllegalStateException("No gateways found, spring initialization failed.");
+
+        if (!gateways.isEmpty() && gatewayMap.isEmpty())
+            gateways.forEach(gateway -> {
+                gatewayMap.put(gateway.gatewayName().toUpperCase(), new GatewayStatus(gateway, gateway.isActive()));
+                transactionIdKeyset.add(gateway.transactionIdKeyInResponse());
+            });
+
+        log.info(gatewayMap.toString());
+        log.info(transactionIdKeyset.toString());
+    }
 
 }

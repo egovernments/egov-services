@@ -93,7 +93,7 @@ class AxisUtils {
 
             m.update(buf.toString().getBytes("ISO-8859-1"));
             mac = m.doFinal();
-        } catch (NoSuchAlgorithmException | UnsupportedEncodingException | InvalidKeyException | IllegalArgumentException e) {
+        } catch (NoSuchAlgorithmException | UnsupportedEncodingException | InvalidKeyException e) {
             log.error("Error occurred while generating hash for fields "+fields.toString(), e);
             throw new CustomException("CHECKSUM_GEN_FAILED", "Hash generation failed, gateway redirect URI " +
                     "cannot be generated");

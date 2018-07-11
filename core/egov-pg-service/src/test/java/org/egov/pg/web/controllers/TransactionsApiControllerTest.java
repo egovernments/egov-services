@@ -3,7 +3,6 @@ package org.egov.pg.web.controllers;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.egov.pg.TestConfiguration;
 import org.egov.pg.models.Transaction;
-import org.egov.pg.service.GatewayService;
 import org.egov.pg.service.TransactionService;
 import org.egov.pg.web.models.RequestInfo;
 import org.egov.pg.web.models.TransactionCriteria;
@@ -46,9 +45,6 @@ public class TransactionsApiControllerTest {
     @MockBean
     private TransactionService transactionService;
 
-    @MockBean
-    private GatewayService gatewayService;
-
     private ObjectMapper mapper = new ObjectMapper();
 
     @Before
@@ -61,7 +57,7 @@ public class TransactionsApiControllerTest {
 
     @Test
     public void paymentsV1AvailableGatewaysPostSuccess() throws Exception {
-        when(gatewayService.getActiveGateways()).thenReturn(Collections.singleton("PAYTM"));
+        when(transactionService.activeGateways()).thenReturn(Collections.singleton("PAYTM"));
 
         mockMvc.perform(post("/gateway/v1/_search").contentType(MediaType
                 .APPLICATION_JSON_UTF8))

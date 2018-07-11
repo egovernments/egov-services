@@ -43,17 +43,17 @@ public class ReportService {
 
 	public ReportResponse getReports(ReportRequest reportRequest) {
 		reportUtils.validateReportRequest(reportRequest);
-		createViewForSLA(false);
+		createViewForSLA(reportRequest, false);
 		List<Map<String, Object>> dbResponse = repository.getDataFromDb(reportRequest);
 		if (CollectionUtils.isEmpty(dbResponse)) {
 			return reportUtils.getDefaultResponse(reportRequest);
 		}
-		createViewForSLA(true);
+		createViewForSLA(reportRequest, true);
 		return enrichAndFormatResponse(reportRequest, dbResponse);
 	}
 
-	public void createViewForSLA(Boolean shouldViewBeDropped) {
-		repository.createOrDropViewDb(shouldViewBeDropped);
+	public void createViewForSLA(ReportRequest reportRequest, Boolean shouldViewBeDropped) {
+		repository.createOrDropViewDb(reportRequest, shouldViewBeDropped);
 	}
 
 	public ReportResponse enrichAndFormatResponse(ReportRequest reportRequest, List<Map<String, Object>> dbResponse) {
@@ -65,7 +65,7 @@ public class ReportService {
 			dbResponse = enrichDepartmentWiseReport(reportRequest, dbResponse);
 		} else if (reportRequest.getReportName().equalsIgnoreCase(ReportConstants.SOURCE_REPORT)) {
 			dbResponse = enrichSourceWiseReport(reportRequest, dbResponse);
-		} else if (reportRequest.getReportName().equalsIgnoreCase(ReportConstants.FUNCTIONARY_REPORT)) {
+		} else if (reportRequest.getReportName().equalsIgnoreCase(ReportConstants.ULBEMPLOYEE_REPORT)) {
 			enrichFunctionaryWiseReport(reportRequest, dbResponse);
 		}
 		return reportUtils.formatDBResponse(reportRequest, dbResponse);

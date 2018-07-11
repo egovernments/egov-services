@@ -1,6 +1,7 @@
 package org.egov.pgr.repository;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -20,13 +21,24 @@ public class ReportQueryBuilder {
 	@Autowired
 	private NotificationService notificationService;
 	
-	public String getCreateViewQuery() {
-		Long slaHours = notificationService.getSlaHours();
-		String query = "create view slaservicerequestidview as select businesskey,\n"
-				+ "case when (max(\"when\") - min(\"when\") > $sla) then 'Yes' else 'No' end as has_sla_crossed \n"
-				+ "from eg_pgr_action                                                            \n"
-				+ "group by businesskey\n" + "";
-		query = query.replace("$sla", slaHours.toString());
+	public String getCreateViewQuery(ReportRequest reportRequest) {
+		Map<String, Long> slaHoursMap = notificationService.getSlaHours(reportRequest.getRequestInfo(), reportRequest.getTenantId());
+		String query = null;
+		if(null != slaHoursMap.get("default")) {
+			query = "create view slaservicerequestidview as select businesskey,\n"
+					+ "case when (max(\"when\") - min(\"when\") > $sla) then 'Yes' else 'No' end as has_sla_crossed \n"
+					+ "from eg_pgr_action                                                            \n"
+					+ "group by businesskey\n" + "";
+			
+			query = query.replace("$sla", slaHoursMap.get("default").toString());
+		}else {
+/*			String query = "create view slaservicerequestidview as select businesskey,\n"
+					+ "case when (max(\"when\") - min(\"when\") > $sla) then 'Yes' else 'No' end as has_sla_crossed \n"
+					+ "from eg_pgr_action                                                            \n"
+					+ "group by businesskey\n" + "";
+			query = query.replace("$sla", slaHours.toString());*/
+		}
+		
 		log.info("Create view query: " + query);
 		return query;
 
@@ -115,7 +127,7 @@ public class ReportQueryBuilder {
 	public String addWhereClause(String query, ReportRequest reportRequest) {
 		List<ParamValue> searchParams = reportRequest.getSearchParams();
 		StringBuilder queryBuilder = new StringBuilder();
-		if(reportRequest.getReportName().equalsIgnoreCase(ReportConstants.FUNCTIONARY_REPORT)) {
+		if(reportRequest.getReportName().equalsIgnoreCase(ReportConstants.ULBEMPLOYEE_REPORT)) {
 			queryBuilder.append(" AND eg_pgr_service.tenantid = ").append("'" + reportRequest.getTenantId() + "'");
 		}else {
 			queryBuilder.append("WHERE eg_pgr_service.tenantid = ").append("'" + reportRequest.getTenantId() + "'");

@@ -33,7 +33,7 @@ public class ReportRepository {
 			query = reportQueryBuilder.getDepartmentWiseReportQuery(reportRequest);
 		}else if(reportRequest.getReportName().equalsIgnoreCase(ReportConstants.SOURCE_REPORT)) {
 			query = reportQueryBuilder.getSourceWiseReportQuery(reportRequest);
-		}else if(reportRequest.getReportName().equalsIgnoreCase(ReportConstants.FUNCTIONARY_REPORT)) {
+		}else if(reportRequest.getReportName().equalsIgnoreCase(ReportConstants.ULBEMPLOYEE_REPORT)) {
 			query = reportQueryBuilder.getFunctionaryWiseReportQuert(reportRequest);
 		}
 		try {
@@ -45,10 +45,10 @@ public class ReportRepository {
 		return result;
 	}
 	
-	public void createOrDropViewDb(Boolean shouldbeDropped) {
+	public void createOrDropViewDb(ReportRequest reportRequest, Boolean shouldbeDropped) {
 		String query = null;
 		if(!shouldbeDropped) {
-			query = reportQueryBuilder.getCreateViewQuery();
+			query = reportQueryBuilder.getCreateViewQuery(reportRequest);
 		}else {
 			query = reportQueryBuilder.getDropViewQuery();
 		}

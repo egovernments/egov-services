@@ -207,9 +207,27 @@ public class NotificationService {
 		return actions.get(0).getAssignee();
 	}
 	
-	public Long getSlaHours() {
-		log.info("Returning default sla: "+egovDefaultServiceSla);
-		return egovDefaultServiceSla;
+	public Map<String, Long> getSlaHours(RequestInfo requestInfo, String tenantId) {
+		StringBuilder uri = new StringBuilder();
+		MdmsCriteriaReq request = pGRUtils.prepareServiceDefSearchMdmsRequest(uri, tenantId, requestInfo);
+		Map<String, Long> mapOfServiceCodesAndSLA = new HashMap<>();
+		try {
+			Object response = serviceRequestRepository.fetchResult(uri, request);
+			if(null != response) {
+				List<String> serviceCodes = JsonPath.read(response, "$.MdmsRes.RAINMAKER-PGR.ServiceDefs.*.serviceCode");
+				List<String> slaHours = JsonPath.read(response, "$.MdmsRes.RAINMAKER-PGR.ServiceDefs.*.slaHours");
+				for(int i = 0; i < serviceCodes.size(); i++) {
+					//mapOfServiceCodesAndSLA.put(serviceCodes.get(i), Long.valueOf(slaHours.get(i)));
+				}
+			}
+		}catch(Exception e) {
+			log.error("Exception while fetching service codes and respective sla: ",e);
+		}
+		if(CollectionUtils.isEmpty(mapOfServiceCodesAndSLA.keySet())) {
+			log.info("Returning default sla: "+egovDefaultServiceSla);
+			mapOfServiceCodesAndSLA.put("default", egovDefaultServiceSla);
+		}
+		return mapOfServiceCodesAndSLA;
 	}
 
 }

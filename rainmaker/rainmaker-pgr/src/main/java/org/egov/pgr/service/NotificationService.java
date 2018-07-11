@@ -207,7 +207,7 @@ public class NotificationService {
 		return actions.get(0).getAssignee();
 	}
 	
-	public Map<String, Long> getSlaHours(RequestInfo requestInfo, String tenantId) {
+/*	public Map<String, Long> getSlaHours(RequestInfo requestInfo, String tenantId) {
 		StringBuilder uri = new StringBuilder();
 		MdmsCriteriaReq request = pGRUtils.prepareServiceDefSearchMdmsRequest(uri, tenantId, requestInfo);
 		Map<String, Long> mapOfServiceCodesAndSLA = new HashMap<>();
@@ -229,6 +229,11 @@ public class NotificationService {
 			mapOfServiceCodesAndSLA.put("default", egovDefaultServiceSla);
 		}
 		return mapOfServiceCodesAndSLA;
+	}*/
+	
+	public Long getSlaHours() {
+		log.info("Returning default sla: "+egovDefaultServiceSla);
+		return egovDefaultServiceSla;
 	}
 
 }

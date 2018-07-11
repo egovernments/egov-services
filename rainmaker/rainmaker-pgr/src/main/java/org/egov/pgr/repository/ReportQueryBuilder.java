@@ -21,7 +21,7 @@ public class ReportQueryBuilder {
 	@Autowired
 	private NotificationService notificationService;
 	
-	public String createATempTable() {
+/*	public String createATempTable() {
 		String query = "create temporary table slaService (code varchar(265), sla numeric)";
 		return query;
 	}
@@ -51,17 +51,32 @@ public class ReportQueryBuilder {
 		log.info("Create view query: " + query);
 		return query;
 
+	}*/
+	
+	public String getCreateViewQuery() {
+		Long slaHours = notificationService.getSlaHours();
+		String query = "create view slaservicerequestidview as select businesskey,\n"
+				+ "case when (max(\"when\") - min(\"when\") > $sla) then 'Yes' else 'No' end as has_sla_crossed \n"
+				+ "from eg_pgr_action                                                            \n"
+				+ "group by businesskey\n" + "";
+		
+		query = query.replace("$sla", slaHours.toString());
+		log.info("Create view query: " + query);
+		return query;
+
 	}
 
 	public String getDropViewQuery() {
 		String query = "DROP VIEW slaservicerequestidview";
 		return query;
+
 	}
 	
-	public String getDropTempTableQuery() {
+	
+/*	public String getDropTempTableQuery() {
 		String query = "DROP TABLE slaService";
 		return query;
-	}
+	}*/
 
 	public String getComplaintWiseReportQuery(ReportRequest reportRequest) {
 		String query = "SELECT servicecode as complaint_type,          \n"

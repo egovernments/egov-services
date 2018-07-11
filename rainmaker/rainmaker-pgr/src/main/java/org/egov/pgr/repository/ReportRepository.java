@@ -49,12 +49,12 @@ public class ReportRepository {
 	public void createOrDropViewDb(ReportRequest reportRequest, Boolean shouldbeDropped) {
 		List<String> queries = new LinkedList<>();
 		if(!shouldbeDropped) {
-			queries.add(reportQueryBuilder.createATempTable());
-			queries.add(reportQueryBuilder.populateTempTable(reportRequest));
+/*			queries.add(reportQueryBuilder.createATempTable());
+			queries.add(reportQueryBuilder.populateTempTable(reportRequest));*/
 			queries.add(reportQueryBuilder.getCreateViewQuery());
 		}else {
 			queries.add(reportQueryBuilder.getDropViewQuery());
-			queries.add(reportQueryBuilder.getDropTempTableQuery());
+		//	queries.add(reportQueryBuilder.getDropTempTableQuery());
 		}
 		for(String query: queries) {
 			try {

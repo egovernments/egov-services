@@ -849,15 +849,15 @@ class UpdateRemission extends React.Component {
                                                     if (window.opener)
                                                         window.opener.location.reload();
                                                     if (res1 && res1.Employee && res1.Employee[0].name)
-                                                        window.location.href = `app/acknowledgement/common-ack.html?wftype=Remission&action=${buttonActio}&name=${res1.Employee[0].code}::${res1.Employee[0].name}&ackNo=${res.Agreements[0].acknowledgementNumber}`;
+                                                        window.location.href = `app/acknowledgement/common-ack.html?wftype=Remission&action=${buttonAction}&name=${res1.Employee[0].code}::${res1.Employee[0].name}&ackNo=${res.Agreements[0].acknowledgementNumber}`;
                                                     else
-                                                        window.location.href = `app/acknowledgement/common-ack.html?wftype=Remission&action=${buttonActio}&name=&ackNo=${res.Agreements[0].acknowledgementNumber}`;
+                                                        window.location.href = `app/acknowledgement/common-ack.html?wftype=Remission&action=${buttonAction}&name=&ackNo=${res.Agreements[0].acknowledgementNumber}`;
 
                                                 },
                                                 error: function (err) {
                                                     if (window.opener)
                                                         window.opener.location.reload();
-                                                    window.location.href = `app/acknowledgement/common-ack.html?wftype=Remission&action=${buttonActio}&name=&ackNo=${res.Agreements[0].acknowledgementNumber}`;
+                                                    window.location.href = `app/acknowledgement/common-ack.html?wftype=Remission&action=${buttonAction}&name=&ackNo=${res.Agreements[0].acknowledgementNumber}`;
                                                 }
                                             })
                                         }
@@ -896,7 +896,7 @@ class UpdateRemission extends React.Component {
 
                         agreement.acknowledgementNumber = res.Agreements[0].acknowledgementNumber;
 
-                        if (buttonActio === "Print Notice") {
+                        if (buttonAction === "Print Notice") {
                             _this.state.workflow.forEach(function(item){
                                 if(item.status.trim() === "Commissioner Approved")
                                 agreement.commissionerName = item.senderName
@@ -917,15 +917,15 @@ class UpdateRemission extends React.Component {
                                     if (window.opener)
                                         window.opener.location.reload();
                                     if (res1 && res1.Employee && res1.Employee[0].name)
-                                        window.location.href = `app/acknowledgement/common-ack.html?wftype=Remission&action=${buttonActio}&name=${res1.Employee[0].code}::${res1.Employee[0].name}&ackNo=${res.Agreements[0].acknowledgementNumber}`;
+                                        window.location.href = `app/acknowledgement/common-ack.html?wftype=Remission&action=${buttonAction}&name=${res1.Employee[0].code}::${res1.Employee[0].name}&ackNo=${res.Agreements[0].acknowledgementNumber}`;
                                     else
-                                        window.location.href = `app/acknowledgement/common-ack.html?wftype=Remission&action=${buttonActio}&name=&ackNo=${res.Agreements[0].acknowledgementNumber}`;
+                                        window.location.href = `app/acknowledgement/common-ack.html?wftype=Remission&action=${buttonAction}&name=&ackNo=${res.Agreements[0].acknowledgementNumber}`;
 
                                 },
                                 error: function (err) {
                                     if (window.opener)
                                         window.opener.location.reload();
-                                    window.location.href = `app/acknowledgement/common-ack.html?wftype=Remission&action=${buttonActio}&name=&ackNo=${res.Agreements[0].acknowledgementNumber}`;
+                                    window.location.href = `app/acknowledgement/common-ack.html?wftype=Remission&action=${buttonAction}&name=&ackNo=${res.Agreements[0].acknowledgementNumber}`;
                                 }
                             })
                         }
@@ -1393,7 +1393,7 @@ class UpdateRemission extends React.Component {
                 </div>
             );
         }
-     
+
         const renderDocuments = function () {
             return (
                 <div className="form-section" id="documentsBlock">
@@ -1488,7 +1488,7 @@ class UpdateRemission extends React.Component {
             var flg = 0;
 
             let buttonsLowercase = [];
- 
+
             buttons.forEach(function(button){
                 buttonsLowercase.push(button.key.toLowerCase());
             })

@@ -676,6 +676,17 @@ private List<Action> convertToAction(ActionRequest actionRequest,JSONArray actio
 		if(actionsArray.getJSONObject(i).has("serviceCode")){
 		act.setServiceCode(actionsArray.getJSONObject(i).getString("serviceCode"));
 		} else {act.setServiceCode("");}
+		
+		if(actionsArray.getJSONObject(i).has("navigationURL")){
+		act.setNavigationURL(actionsArray.getJSONObject(i).getString("navigationURL"));
+		} else {act.setNavigationURL("");}
+		if(actionsArray.getJSONObject(i).has("leftIcon")){
+		act.setLeftIcon(actionsArray.getJSONObject(i).getString("leftIcon"));
+		} else {act.setLeftIcon("");}
+		if(actionsArray.getJSONObject(i).has("rightIcon")){
+		act.setRightIcon(actionsArray.getJSONObject(i).getString("rightIcon"));
+		} else {act.setRightIcon("");}
+		
 		act.setTenantId(actionRequest.getTenantId());
 		actionList.add(act);
 	}

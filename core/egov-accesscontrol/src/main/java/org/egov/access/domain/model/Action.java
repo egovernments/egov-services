@@ -37,5 +37,9 @@ public class Action {
 	private Long lastModifiedBy;
 
 	private String path;
+	
+	private String navigationURL;
+	private String leftIcon;
+	private String rightIcon;
 
 }

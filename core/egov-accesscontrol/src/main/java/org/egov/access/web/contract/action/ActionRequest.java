@@ -31,6 +31,10 @@ public class ActionRequest {
 	private Boolean enabled;
 	private List<Action> actions;
 	private String actionMaster;
+	private String navigationURL;
+	private String leftIcon;
+	private String rightIcon;
+
 
 	public ActionSearchCriteria toDomain() {
 		return ActionSearchCriteria.builder().tenantId(tenantId).roleCodes(roleCodes).build();

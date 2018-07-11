@@ -101,7 +101,6 @@ public class ReportService {
 					tuple.get("complaints_rejected")));
 			tuple.put("complaints_unassigned", reportUtils.getPercentage(tuple.get("total_complaints_received"),
 					tuple.get("complaints_unassigned")));
-			tuple.put("avg_citizen_rating", reportUtils.getAvgRating(tuple.get("avg_citizen_rating")));
 		}
 
 	}

@@ -43,8 +43,8 @@ public class ReportQueryBuilder {
 				+ "       sum(case when tenantId NOTNULL then 1 else 0 end) as total_complaints,\n"
 				//+ "       sum(case when status IN ('closed','resolved','rejected') then 1 else 0 end) as total_closed_complaints,\n"
 				+ "       sum(case when status IN ('open','assigned') then 1 else 0 end) as total_open_complaints,\n"
-				//+ "       sum(case when has_sla_crossed = 'Yes' then 1 else 0 end) as within_sla,\n"
-				+ "       sum(case when has_sla_crossed = 'No' then 1 else 0 end) as outside_sla, \n"
+				//+ "       sum(case when has_sla_crossed = 'No' then 1 else 0 end) as within_sla,\n"
+				+ "       sum(case when has_sla_crossed = 'Yes' then 1 else 0 end) as outside_sla, \n"
 				+ "       avg(cast(rating as numeric)) as avg_citizen_rating\n"
 				+ "  from eg_pgr_service INNER JOIN slaservicerequestidview ON servicerequestid = businesskey $where\n"
 				+ "  group by servicecode";
@@ -74,8 +74,8 @@ public class ReportQueryBuilder {
 				+ "       sum(case when tenantId NOTNULL then 1 else 0 end) as total_complaints,\n"
 				//+ "       sum(case when status IN ('closed','resolved','rejected') then 1 else 0 end) as total_closed_complaints,\n"
 				+ "       sum(case when status IN ('open','assigned') then 1 else 0 end) as total_open_complaints,\n"
-				//+ "       sum(case when has_sla_crossed = 'Yes' then 1 else 0 end) as within_sla,\n"
-				+ "       sum(case when has_sla_crossed = 'No' then 1 else 0 end) as outside_sla, \n"
+				//+ "       sum(case when has_sla_crossed = 'No' then 1 else 0 end) as within_sla,\n"
+				+ "       sum(case when has_sla_crossed = 'Yes' then 1 else 0 end) as outside_sla, \n"
 				+ "       avg(cast(rating as numeric)) as avg_citizen_rating\n"
 				+ "  from eg_pgr_service INNER JOIN slaservicerequestidview ON servicerequestid = businesskey $where\n"
 				+ "  group by servicecode";
@@ -101,8 +101,8 @@ public class ReportQueryBuilder {
 				+ "sum(case when eg_pgr_action.businesskey IN (select DISTINCT businesskey from eg_pgr_action where status = 'assigned') then 1 else 0 end) as total_complaints_received,\n"
 				//+ "sum(case when eg_pgr_action.when IN (select max(\"when\") from eg_pgr_action where status = 'resolved' group by businessKey) then 1 else 0 end) as total_closed_complaints,\n"
 				+ "sum(case when eg_pgr_action.when IN (select max(\"when\") from eg_pgr_action where assignee NOTNULL group by businessKey) then 1 else 0 end) as total_open_complaints,\n"
-				//+ "sum(case when has_sla_crossed = 'Yes' then 1 else 0 end) as within_sla,\n"
-				+ "sum(case when has_sla_crossed = 'No' then 1 else 0 end) as outside_sla,\n"
+				//+ "sum(case when has_sla_crossed = 'No' then 1 else 0 end) as within_sla,\n"
+				+ "sum(case when has_sla_crossed = 'Yes' then 1 else 0 end) as outside_sla,\n"
 				+ "avg(cast(rating as numeric)) as avg_citizen_rating\n"
 				+ "from eg_pgr_service INNER JOIN eg_pgr_action ON servicerequestid = eg_pgr_action.businesskey INNER JOIN slaservicerequestidview ON servicerequestid = slaservicerequestidview.businesskey  where eg_pgr_action.businesskey IN (select DISTINCT businesskey from eg_pgr_action where status = 'assigned')\n"
 				+ "$where group by assignee";

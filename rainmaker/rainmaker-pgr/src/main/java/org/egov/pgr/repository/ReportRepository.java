@@ -1,6 +1,7 @@
 package org.egov.pgr.repository;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -46,16 +47,21 @@ public class ReportRepository {
 	}
 	
 	public void createOrDropViewDb(ReportRequest reportRequest, Boolean shouldbeDropped) {
-		String query = null;
+		List<String> queries = new LinkedList<>();
 		if(!shouldbeDropped) {
-			query = reportQueryBuilder.getCreateViewQuery(reportRequest);
+			queries.add(reportQueryBuilder.createATempTable());
+			queries.add(reportQueryBuilder.populateTempTable(reportRequest));
+			queries.add(reportQueryBuilder.getCreateViewQuery());
 		}else {
-			query = reportQueryBuilder.getDropViewQuery();
+			queries.add(reportQueryBuilder.getDropViewQuery());
 		}
-		try {
-			   jdbcTemplate.execute(query);
-		}catch(Exception e) {
-			log.error("View creation failed: "+e);
+		for(String query: queries) {
+			try {
+				   jdbcTemplate.execute(query);
+			}catch(Exception e) {
+				log.error("Query: "+query);
+				log.error("Execution failed: "+e);
+			}
 		}
 	}
 

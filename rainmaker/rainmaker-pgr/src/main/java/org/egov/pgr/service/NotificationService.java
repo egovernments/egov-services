@@ -215,9 +215,10 @@ public class NotificationService {
 			Object response = serviceRequestRepository.fetchResult(uri, request);
 			if(null != response) {
 				List<String> serviceCodes = JsonPath.read(response, "$.MdmsRes.RAINMAKER-PGR.ServiceDefs.*.serviceCode");
-				List<String> slaHours = JsonPath.read(response, "$.MdmsRes.RAINMAKER-PGR.ServiceDefs.*.slaHours");
+				List<Integer> slaHours = JsonPath.read(response, "$.MdmsRes.RAINMAKER-PGR.ServiceDefs.*.slaHours");
 				for(int i = 0; i < serviceCodes.size(); i++) {
-					//mapOfServiceCodesAndSLA.put(serviceCodes.get(i), Long.valueOf(slaHours.get(i)));
+					Long epoch = pGRUtils.convertToMilliSec(slaHours.get(i));
+					mapOfServiceCodesAndSLA.put(serviceCodes.get(i), epoch);
 				}
 			}
 		}catch(Exception e) {

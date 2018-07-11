@@ -21,24 +21,33 @@ public class ReportQueryBuilder {
 	@Autowired
 	private NotificationService notificationService;
 	
-	public String getCreateViewQuery(ReportRequest reportRequest) {
-		Map<String, Long> slaHoursMap = notificationService.getSlaHours(reportRequest.getRequestInfo(), reportRequest.getTenantId());
-		String query = null;
-		if(null != slaHoursMap.get("default")) {
-			query = "create view slaservicerequestidview as select businesskey,\n"
-					+ "case when (max(\"when\") - min(\"when\") > $sla) then 'Yes' else 'No' end as has_sla_crossed \n"
-					+ "from eg_pgr_action                                                            \n"
-					+ "group by businesskey\n" + "";
-			
-			query = query.replace("$sla", slaHoursMap.get("default").toString());
-		}else {
-/*			String query = "create view slaservicerequestidview as select businesskey,\n"
-					+ "case when (max(\"when\") - min(\"when\") > $sla) then 'Yes' else 'No' end as has_sla_crossed \n"
-					+ "from eg_pgr_action                                                            \n"
-					+ "group by businesskey\n" + "";
-			query = query.replace("$sla", slaHours.toString());*/
+	public String createATempTable() {
+		String query = "create temporary table slaService (code varchar(265), sla numeric)";
+		return query;
+	}
+	
+	public String populateTempTable(ReportRequest reportRequest) {
+		Map<String, Long> slaHoursMap = notificationService.getSlaHours(reportRequest.getRequestInfo(),
+				reportRequest.getTenantId());
+		StringBuilder queryBuilder = new StringBuilder();
+		queryBuilder.append("insert into slaService(code, sla) VALUES ");
+		for(String key: slaHoursMap.keySet()) {
+			queryBuilder.append("(");
+			queryBuilder.append("'" + key + "'" + ", ");
+			queryBuilder.append(slaHoursMap.get(key));
+			queryBuilder.append("),");
 		}
-		
+		String query = queryBuilder.toString();
+		query = query.substring(0, query.length() - 1);
+		return query.toString();
+	}
+
+	public String getCreateViewQuery() {
+		String 	query = "create view slaservicerequestidview as select businesskey, "
+				+ "case when (max(\"when\") - min(\"when\") > (SELECT sla from slaService JOIN eg_pgr_service ON slaService.code = eg_pgr_service.servicecode JOIN "
+				+ "eg_pgr_action ON eg_pgr_action.businesskey = eg_pgr_service.servicerequestid)) then 'Yes' else 'No' end as has_sla_crossed "
+				+ "from eg_pgr_action group by businesskey";
+
 		log.info("Create view query: " + query);
 		return query;
 
@@ -53,9 +62,10 @@ public class ReportQueryBuilder {
 	public String getComplaintWiseReportQuery(ReportRequest reportRequest) {
 		String query = "SELECT servicecode as complaint_type,          \n"
 				+ "       sum(case when tenantId NOTNULL then 1 else 0 end) as total_complaints,\n"
-				//+ "       sum(case when status IN ('closed','resolved','rejected') then 1 else 0 end) as total_closed_complaints,\n"
+				// + " sum(case when status IN ('closed','resolved','rejected') then 1 else 0
+				// end) as total_closed_complaints,\n"
 				+ "       sum(case when status IN ('open','assigned') then 1 else 0 end) as total_open_complaints,\n"
-				//+ "       sum(case when has_sla_crossed = 'No' then 1 else 0 end) as within_sla,\n"
+				// + " sum(case when has_sla_crossed = 'No' then 1 else 0 end) as within_sla,\n"
 				+ "       sum(case when has_sla_crossed = 'Yes' then 1 else 0 end) as outside_sla, \n"
 				+ "       avg(cast(rating as numeric)) as avg_citizen_rating\n"
 				+ "  from eg_pgr_service INNER JOIN slaservicerequestidview ON servicerequestid = businesskey $where\n"
@@ -84,9 +94,10 @@ public class ReportQueryBuilder {
 	public String getDepartmentWiseReportQuery(ReportRequest reportRequest) {
 		String query = "SELECT servicecode as department_name,          \n"
 				+ "       sum(case when tenantId NOTNULL then 1 else 0 end) as total_complaints,\n"
-				//+ "       sum(case when status IN ('closed','resolved','rejected') then 1 else 0 end) as total_closed_complaints,\n"
+				// + " sum(case when status IN ('closed','resolved','rejected') then 1 else 0
+				// end) as total_closed_complaints,\n"
 				+ "       sum(case when status IN ('open','assigned') then 1 else 0 end) as total_open_complaints,\n"
-				//+ "       sum(case when has_sla_crossed = 'No' then 1 else 0 end) as within_sla,\n"
+				// + " sum(case when has_sla_crossed = 'No' then 1 else 0 end) as within_sla,\n"
 				+ "       sum(case when has_sla_crossed = 'Yes' then 1 else 0 end) as outside_sla, \n"
 				+ "       avg(cast(rating as numeric)) as avg_citizen_rating\n"
 				+ "  from eg_pgr_service INNER JOIN slaservicerequestidview ON servicerequestid = businesskey $where\n"
@@ -101,7 +112,8 @@ public class ReportQueryBuilder {
 	public String getSourceWiseReportQuery(ReportRequest reportRequest) {
 		String query = "SELECT sum(case when source = 'mobileapp' then 1 else 0 end) as citizen_mobile_app,\n"
 				+ "       sum(case when source = 'web' then 1 else 0 end) as citizen_web_app,\n"
-				+ "       sum(case when source = 'ivr' then 1 else 0 end) as customer_service_desk\n" + "FROM eg_pgr_service $where";
+				+ "       sum(case when source = 'ivr' then 1 else 0 end) as customer_service_desk\n"
+				+ "FROM eg_pgr_service $where";
 
 		query = addWhereClause(query, reportRequest);
 		log.info("Source wise report query: " + query);
@@ -111,14 +123,16 @@ public class ReportQueryBuilder {
 	public String getFunctionaryWiseReportQuert(ReportRequest reportRequest) {
 		String query = "select assignee as employee_name,\n"
 				+ "sum(case when eg_pgr_action.businesskey IN (select DISTINCT businesskey from eg_pgr_action where status = 'assigned') then 1 else 0 end) as total_complaints_received,\n"
-				//+ "sum(case when eg_pgr_action.when IN (select max(\"when\") from eg_pgr_action where status = 'resolved' group by businessKey) then 1 else 0 end) as total_closed_complaints,\n"
+				// + "sum(case when eg_pgr_action.when IN (select max(\"when\") from
+				// eg_pgr_action where status = 'resolved' group by businessKey) then 1 else 0
+				// end) as total_closed_complaints,\n"
 				+ "sum(case when eg_pgr_action.when IN (select max(\"when\") from eg_pgr_action where assignee NOTNULL group by businessKey) then 1 else 0 end) as total_open_complaints,\n"
-				//+ "sum(case when has_sla_crossed = 'No' then 1 else 0 end) as within_sla,\n"
+				// + "sum(case when has_sla_crossed = 'No' then 1 else 0 end) as within_sla,\n"
 				+ "sum(case when has_sla_crossed = 'Yes' then 1 else 0 end) as outside_sla,\n"
 				+ "avg(cast(rating as numeric)) as avg_citizen_rating\n"
 				+ "from eg_pgr_service INNER JOIN eg_pgr_action ON servicerequestid = eg_pgr_action.businesskey INNER JOIN slaservicerequestidview ON servicerequestid = slaservicerequestidview.businesskey  where eg_pgr_action.businesskey IN (select DISTINCT businesskey from eg_pgr_action where status = 'assigned')\n"
 				+ "$where group by assignee";
-		
+
 		query = addWhereClause(query, reportRequest);
 		log.info("Functionary Wise report query: " + query);
 		return query;
@@ -127,9 +141,9 @@ public class ReportQueryBuilder {
 	public String addWhereClause(String query, ReportRequest reportRequest) {
 		List<ParamValue> searchParams = reportRequest.getSearchParams();
 		StringBuilder queryBuilder = new StringBuilder();
-		if(reportRequest.getReportName().equalsIgnoreCase(ReportConstants.ULBEMPLOYEE_REPORT)) {
+		if (reportRequest.getReportName().equalsIgnoreCase(ReportConstants.ULBEMPLOYEE_REPORT)) {
 			queryBuilder.append(" AND eg_pgr_service.tenantid = ").append("'" + reportRequest.getTenantId() + "'");
-		}else {
+		} else {
 			queryBuilder.append("WHERE eg_pgr_service.tenantid = ").append("'" + reportRequest.getTenantId() + "'");
 		}
 		if (reportRequest.getReportName().equalsIgnoreCase(ReportConstants.AO_REPORT)) {

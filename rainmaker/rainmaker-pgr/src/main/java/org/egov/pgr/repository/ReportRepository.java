@@ -54,6 +54,7 @@ public class ReportRepository {
 			queries.add(reportQueryBuilder.getCreateViewQuery());
 		}else {
 			queries.add(reportQueryBuilder.getDropViewQuery());
+			queries.add(reportQueryBuilder.getDropTempTableQuery());
 		}
 		for(String query: queries) {
 			try {

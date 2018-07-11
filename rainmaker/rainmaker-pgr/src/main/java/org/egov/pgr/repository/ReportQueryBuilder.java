@@ -56,7 +56,11 @@ public class ReportQueryBuilder {
 	public String getDropViewQuery() {
 		String query = "DROP VIEW slaservicerequestidview";
 		return query;
-
+	}
+	
+	public String getDropTempTableQuery() {
+		String query = "DROP TABLE slaService";
+		return query;
 	}
 
 	public String getComplaintWiseReportQuery(ReportRequest reportRequest) {

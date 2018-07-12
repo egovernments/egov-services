@@ -119,8 +119,12 @@ public class PropertyValidator {
        errorMap.put("Invalid PropertyType","The PropertyType '"+propertyDetail.getPropertyType()+"' does not exists");
        }
 
-       if(!codes.get(PTConstants.MDMS_PT_SUBOWNERSHIP).contains(propertyDetail.getOwnershipCategory()) && propertyDetail.getOwnershipCategory()!=null){
-           errorMap.put("Invalid OwnershipType","The OwnershipType '"+propertyDetail.getOwnershipCategory()+"' does not exists");
+       if(!codes.get(PTConstants.MDMS_PT_SUBOWNERSHIP).contains(propertyDetail.getSubOwnershipCategory()) && propertyDetail.getSubOwnershipCategory()!=null){
+           errorMap.put("Invalid SubOwnershipCategory","The SubOwnershipCategory '"+propertyDetail.getSubOwnershipCategory()+"' does not exists");
+       }
+
+       if(!codes.get(PTConstants.MDMS_PT_OWNERSHIP).contains(propertyDetail.getOwnershipCategory()) && propertyDetail.getOwnershipCategory()!=null){
+           errorMap.put("Invalid OwnershipCategory","The OwnershipCategory '"+propertyDetail.getOwnershipCategory()+"' does not exists");
        }
 
        if(!codes.get(PTConstants.MDMS_PT_PROPERTYSUBTYPE).contains(propertyDetail.getPropertySubType()) && propertyDetail.getPropertySubType()!=null){
@@ -354,6 +358,20 @@ public class PropertyValidator {
     }
 
 
+
+    public void validateAssessees(PropertyRequest request){
+       String uuid = request.getRequestInfo().getUserInfo().getUuid();
+        Map<String,String> errorMap = new HashMap<>();
+        request.getProperties().forEach(property -> {
+            property.getPropertyDetails().forEach(propertyDetail -> {
+                if(!propertyDetail.getCitizenInfo().getUuid().equals(uuid)){
+                    errorMap.put("UPDATE AUTHORIZATION FAILURE","Not Authorized to assess property with propertyId "+property.getPropertyId());
+                }
+            });
+        });
+        if(!errorMap.isEmpty())
+            throw new CustomException(errorMap);
+    }
 
 
 }

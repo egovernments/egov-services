@@ -91,7 +91,7 @@ public class PropertyRowMapper implements ResultSetExtractor<List<Property>> {
 
 			Institution institution = Institution.builder()
 					.id(rs.getString("instiid"))
-					.tenantId(rs.getString("tenantId"))
+					.tenantId(rs.getString("institenantId"))
 					.name(rs.getString("institutionName"))
 					.type(rs.getString("institutionType"))
 					.designation(rs.getString("designation"))
@@ -110,6 +110,7 @@ public class PropertyRowMapper implements ResultSetExtractor<List<Property>> {
 					.usageCategoryMajor(rs.getString("usageCategoryMajor"))
 					.adhocExemption(rs.getBigDecimal("adhocExemption"))
 					.adhocPenalty(rs.getBigDecimal("adhocPenalty"))
+					.tenantId(rs.getString("tenantid"))
 					.institution(institution)
 					.citizenInfo(citizenInfo)
 					.auditDetails(assessAuditdetails)

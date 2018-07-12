@@ -105,7 +105,10 @@ public class PropertyService {
 		PropertyCriteria propertyCriteria = propertyValidator.getPropertyCriteriaForSearch(request);
 		List<Property> propertiesFromSearchResponse = searchProperty(propertyCriteria,request.getRequestInfo());
 		boolean ifPropertyExists=propertyValidator.PropertyExists(request,propertiesFromSearchResponse);
+		if(request.getRequestInfo().getUserInfo().getType().equals("CITIZEN"))
+		 propertyValidator.validateAssessees(request);
 		boolean paid = true;
+
 		/**
 		 * Call demand api to check if payment is done
 		 */
@@ -123,7 +126,7 @@ public class PropertyService {
 			return request.getProperties();
 		}
 		else
-		{    throw new CustomException("usr_002","invalid id");  // Change the error code
+		{    throw new CustomException("PROPERTY NOT FOUND","The property to be updated does not exist");  // Change the error code
 		}
 	}
 

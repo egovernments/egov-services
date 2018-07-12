@@ -60,6 +60,7 @@ public class UserService {
                         {   /* Sets userName equal to mobileNumber if mobileNumber already assigned as username
                           random number is assigned as username */
                             setUserName(owner,listOfMobileNumbers);
+                            owner.setActive(true);
                             userDetailResponse = userCall(new CreateUserRequest(requestInfo,owner),uri);
                             log.info("owner created --> "+userDetailResponse.getUser().get(0).getUuid());
                         }
@@ -83,7 +84,7 @@ public class UserService {
         userSearchRequest.setMobileNumber(owner.getMobileNumber());
         userSearchRequest.setName(owner.getName());
         userSearchRequest.setRequestInfo(requestInfo);
-        userSearchRequest.setActive(false);
+        userSearchRequest.setActive(true);
         if(owner.getUuid()!=null)
          userSearchRequest.setUuid(Arrays.asList(owner.getUuid()));
         StringBuilder uri = new StringBuilder(userHost).append(userSearchEndpoint);
@@ -237,7 +238,7 @@ public class UserService {
         userSearchRequest.setMobileNumber(criteria.getMobileNumber());
      //   userSearchRequest.setUserName(criteria.getUserName());
         userSearchRequest.setName(criteria.getName());
-        userSearchRequest.setActive(false);
+        userSearchRequest.setActive(true);
         return userSearchRequest;
     }
 
@@ -299,6 +300,7 @@ public class UserService {
                         propertyDetail.getCitizenInfo().setUserName(UUID.randomUUID().toString());
                     else
                         propertyDetail.getCitizenInfo().setUserName(propertyDetail.getCitizenInfo().getMobileNumber());
+                    propertyDetail.getCitizenInfo().setActive(true);
                     userDetailResponse = userCall(new CreateUserRequest(requestInfo,propertyDetail.getCitizenInfo()),uriCreate);
                     log.info("citizen created --> "+userDetailResponse.getUser().get(0).getUuid());
                 }

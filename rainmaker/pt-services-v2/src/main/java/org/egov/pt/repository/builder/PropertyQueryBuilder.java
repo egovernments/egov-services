@@ -21,7 +21,7 @@ public class PropertyQueryBuilder {
 			+ "ownerdoc.documentuid as ownerdocuid,"
 			+ "ptdl.createdby as assesscreatedby,ptdl.lastModifiedBy as assesslastModifiedBy,ptdl.createdTime as assesscreatedTime,"
 			+ "ptdl.lastModifiedTime as assesslastModifiedTime,"
-			+ "insti.name as institutionname,insti.type as institutiontype"
+			+ "insti.name as institutionname,insti.type as institutiontype,insti.tenantid as institenantId"
 			+ " FROM eg_pt_property_v2 pt "
 			+ INNER_JOIN_STRING
 			+ " eg_pt_propertydetail_v2 ptdl ON pt.propertyid =ptdl.property "
@@ -34,7 +34,7 @@ public class PropertyQueryBuilder {
 			+ LEFT_OUTER_JOIN_STRING
 			+ " eg_pt_document_v2 doc ON ptdl.assessmentnumber=doc.foreignkeyid "
 			+ LEFT_OUTER_JOIN_STRING
-			+ " eg_pt_document_v2 ownerdoc ON ptdl.assessmentnumber=ownerdoc.foreignkeyid "
+			+ " eg_pt_document_v2 ownerdoc ON owner.userid=ownerdoc.foreignkeyid "
 			+ LEFT_OUTER_JOIN_STRING
 			+ " eg_pt_institution_v2 insti ON ptdl.assessmentnumber=insti.propertydetail "
 			+ " WHERE ";

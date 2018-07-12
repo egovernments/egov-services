@@ -1,12 +1,23 @@
 package org.egov.pt.calculator.util;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.mdms.model.MasterDetail;
 import org.egov.mdms.model.MdmsCriteria;
 import org.egov.mdms.model.MdmsCriteriaReq;
 import org.egov.mdms.model.ModuleDetail;
+import org.egov.pt.calculator.web.models.Assessment;
+import org.egov.pt.calculator.web.models.GetBillCriteria;
+import org.egov.pt.calculator.web.models.demand.Demand;
+import org.egov.pt.calculator.web.models.demand.DemandDetail;
+import org.egov.pt.calculator.web.models.property.AuditDetails;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -18,6 +29,18 @@ public class CalculatorUtils {
 
 	@Autowired
 	private Configurations configurations;
+
+	private Map<String, Integer> taxHeadApportionPriorityMap;
+
+	public Map<String, Integer> getTaxHeadApportionPriorityMap() {
+
+		if (null == taxHeadApportionPriorityMap) {
+			Map<String, Integer> map = new HashMap<>();
+			map.put(CalculatorConstants.PT_TAX, 0);
+			map.put(CalculatorConstants.PT_TIME_PENALTY, 1);
+		}
+		return taxHeadApportionPriorityMap;
+	}
 
 	/**
 	 * Prepares and returns Mdms search request with financial master criteria
@@ -34,6 +57,27 @@ public class CalculatorUtils {
 		ModuleDetail moduleDetail = ModuleDetail.builder().moduleName(CalculatorConstants.FINANCIAL_MODULE)
 				.masterDetails(Arrays.asList(mstrDetail)).build();
 		MdmsCriteria mdmsCriteria = MdmsCriteria.builder().moduleDetails(Arrays.asList(moduleDetail)).tenantId(tenantId)
+				.build();
+		return MdmsCriteriaReq.builder().requestInfo(requestInfo).mdmsCriteria(mdmsCriteria).build();
+	}
+
+	/**
+	 * Methods provides all the usage category master for property tax module
+	 */
+	public MdmsCriteriaReq getPropertyModuleRequest(RequestInfo requestInfo, String tenantId) {
+
+		List<MasterDetail> details = new ArrayList<>();
+
+		details.add(MasterDetail.builder().name(CalculatorConstants.USAGE_MAJOR_MASTER).build());
+		details.add(MasterDetail.builder().name(CalculatorConstants.USAGE_MINOR_MASTER).build());
+		details.add(MasterDetail.builder().name(CalculatorConstants.USAGE_SUB_MINOR_MASTER).build());
+		details.add(MasterDetail.builder().name(CalculatorConstants.USAGE_DETAIL_MASTER).build());
+		details.add(MasterDetail.builder().name(CalculatorConstants.OWNER_TYPE_MASTER).build());
+		details.add(MasterDetail.builder().name(CalculatorConstants.REBATE_MASTER).build());
+		details.add(MasterDetail.builder().name(CalculatorConstants.PENANLTY_MASTER).build());
+		ModuleDetail mdDtl = ModuleDetail.builder().masterDetails(details)
+				.moduleName(CalculatorConstants.PROPERTY_TAX_MODULE).build();
+		MdmsCriteria mdmsCriteria = MdmsCriteria.builder().moduleDetails(Arrays.asList(mdDtl)).tenantId(tenantId)
 				.build();
 		return MdmsCriteriaReq.builder().requestInfo(requestInfo).mdmsCriteria(mdmsCriteria).build();
 	}
@@ -61,5 +105,166 @@ public class CalculatorUtils {
 				.append(CalculatorConstants.TENANT_ID_FIELD_FOR_SEARCH_URL).append(tenantId)
 				.append(CalculatorConstants.SEPARATER).append(CalculatorConstants.SERVICE_FIELD_FOR_SEARCH_URL)
 				.append(CalculatorConstants.SERVICE_FIELD_VALUE_PT);
+	}
+	
+	/**
+	 * method to create demandsearch url with demand criteria
+	 * 
+	 * @param criteria
+	 * @return
+	 */
+	public StringBuilder getDemandSearchUrl(GetBillCriteria getBillCriteria) {
+
+		return new StringBuilder().append(configurations.getBillingServiceHost())
+				.append(configurations.getDemandSearchEndPoint()).append(CalculatorConstants.URL_PARAMS_SEPARATER)
+				.append(CalculatorConstants.TENANT_ID_FIELD_FOR_SEARCH_URL).append(getBillCriteria.getTenantId())
+				.append(CalculatorConstants.SEPARATER)
+				.append(CalculatorConstants.CONSUMER_CODE_SEARCH_FIELD_NAME).append(getBillCriteria.getPropertyId()+"-"+getBillCriteria.getAssessmentNumber());
+	}
+	
+	/**
+	 * method to create demandsearch url with demand criteria
+	 * 
+	 * @param criteria
+	 * @return
+	 */
+	public StringBuilder getDemandSearchUrl(Assessment assessment) {
+
+		return new StringBuilder().append(configurations.getBillingServiceHost())
+				.append(configurations.getDemandSearchEndPoint()).append(CalculatorConstants.URL_PARAMS_SEPARATER)
+				.append(CalculatorConstants.TENANT_ID_FIELD_FOR_SEARCH_URL).append(assessment.getTenantId())
+				.append(CalculatorConstants.SEPARATER)
+				.append(CalculatorConstants.CONSUMER_CODE_SEARCH_FIELD_NAME).append(assessment.getPropertyId()+"-"+assessment.getAssessmentNumber());
+	}
+	
+	/**
+	 * Returns the total tax amount to be paid on a demand
+	 * 
+	 * @param demand
+	 * @return
+	 */
+	public BigDecimal getTaxAmtFromDemand(Demand demand) {
+		BigDecimal taxAmt = BigDecimal.ZERO;
+		for (DemandDetail detail : demand.getDemandDetails()) {
+			taxAmt = taxAmt.add(detail.getTaxAmount());
+			if (null != detail.getCollectionAmount())
+				taxAmt = taxAmt.subtract(detail.getCollectionAmount());
+		}
+		return taxAmt;
+	}
+
+	/**
+	 * Returns url for demand update Api
+	 *  
+	 * @param tenantId
+	 * @param demandId
+	 * @return
+	 */
+	public StringBuilder getUpdateDemandUrl() {
+		return new StringBuilder().append(configurations.getBillingServiceHost()).append(configurations.getDemandUpdateEndPoint());
+	}
+
+	/**
+	 * Returns url for Bill Gen Api
+	 * 
+	 * @param tenantId
+	 * @param demandId
+	 * @return
+	 */
+	public StringBuilder getBillGenUrl(String tenantId, String demandId, String consumerCode) {
+		return new StringBuilder().append(configurations.getBillingServiceHost())
+				.append(configurations.getBillGenEndPoint()).append(CalculatorConstants.URL_PARAMS_SEPARATER)
+				.append(CalculatorConstants.TENANT_ID_FIELD_FOR_SEARCH_URL).append(tenantId)
+				.append(CalculatorConstants.SEPARATER).append(CalculatorConstants.DEMAND_ID_SEARCH_FIELD_NAME)
+				.append(demandId).append(CalculatorConstants.SEPARATER)
+				.append(CalculatorConstants.BUSINESSSERVICE_FIELD_FOR_SEARCH_URL)
+				.append(CalculatorConstants.PROPERTY_TAX_SERVICE_CODE).append(CalculatorConstants.SEPARATER)
+				.append(CalculatorConstants.CONSUMER_CODE_SEARCH_FIELD_NAME).append(consumerCode);
+	}
+
+	/**
+	 * Query to fetch assessments for the given criteria
+	 * @param assessment
+	 * @return
+	 */
+	public String getAssessmentQuery(Assessment assessment) {
+
+		StringBuilder query = new StringBuilder("SELECT * FROM eg_pt_assessment where tenantId=");
+		
+		query.append("'"+assessment.getTenantId()+"'");
+		
+		if (assessment.getAssessmentNumber() != null)
+			query.append(" AND assessmentNumber=").append("'"+assessment.getAssessmentNumber()+"'");
+
+		if(assessment.getDemandId() != null)
+			query.append(" AND demandId=").append("'"+assessment.getDemandId()+"'");
+		
+		if(assessment.getPropertyId() != null)
+			query.append(" AND propertyId=").append("'"+assessment.getPropertyId()+"'");
+		
+		query.append(" ORDER BY createdtime");
+		
+		return query.toString();
+	}
+	
+	/**
+	 * Query to fetch latest assessment for the given criteria
+	 * @param assessment
+	 * @return
+	 */
+	public String getMaxAssessmentQuery(Assessment assessment) {
+
+		StringBuilder query = new StringBuilder("SELECT * FROM eg_pt_assessment a1 INNER JOIN "
+
+				+ "(select Max(createdtime) as maxtime, propertyid from eg_pt_assessment group by propertyid) a2 "
+
+				+ "ON a1.createdtime=a2.maxtime and a1.propertyid=a2.propertyid where a1.tenantId=");
+
+		query.append("'"+assessment.getTenantId()+"'");
+		
+		if (assessment.getAssessmentNumber() != null)
+			query.append(" AND a1.assessmentNumber=").append("'"+assessment.getAssessmentNumber()+"'");
+
+		if(assessment.getDemandId() != null)
+			query.append(" AND a1.demandId=").append("'"+assessment.getDemandId()+"'");
+		
+		if(assessment.getPropertyId() != null)
+			query.append(" AND a1.propertyId=").append("'"+assessment.getPropertyId()+"'");
+		
+		return query.toString();
+	}
+
+	/**
+	 * Returns the insert query for assessment
+	 * @return
+	 */
+	public String getAssessmentInsertQuery() {
+		return CalculatorConstants.QUERY_ASSESSMENT_INSERT;
+	}
+	
+	/**
+	 * Sums up the collection amount from the given demand and returns
+	 * @param demand
+	 * @return carryForward
+	 */
+	public BigDecimal getTotalCollectedAmount(Demand demand) {
+
+		BigDecimal carryForward = BigDecimal.ZERO;
+		for (DemandDetail detail : demand.getDemandDetails()) {
+			BigDecimal collection = detail.getCollectionAmount();
+			if (null != collection)
+				carryForward = carryForward.add(collection);
+		}
+		return carryForward;
+	}
+	
+	public AuditDetails getAuditDetails(String by, boolean isCreate) {
+		Long time = new Date().getTime();
+
+		if (isCreate)
+			return AuditDetails.builder().createdBy(by).createdTime(time).lastModifiedBy(by).lastModifiedTime(time)
+					.build();
+		else
+			return AuditDetails.builder().lastModifiedBy(by).lastModifiedTime(time).build();
 	}
 }

@@ -38,6 +38,16 @@ public class Configurations {
 	@Value("${egov.demand.create.endpoint}")
 	private String demandCreateEndPoint;
 	
+	@Value("${egov.demand.update.endpoint}")
+	private String demandUpdateEndPoint;
+	
+	@Value("${egov.demand.search.endpoint}")
+	private String demandSearchEndPoint;
+	
+	@Value("${egov.bill.gen.endpoint}")
+	private String billGenEndPoint;
+
+	
 	// billing slab configs
 	
 	@Value("${billingslab.value.all}")
@@ -52,8 +62,11 @@ public class Configurations {
 	@Value("${billingslab.value.arv.percent}")
 	private Double arvPercent;
 	
-	@Value("${billingslab.value.taxheadcode.pttax}")
-	private String ptTaxCode;
+	// property demand configs
 	
+	@Value("${pt.module.code}")
+	private String ptModuleCode;
 	
+	@Value("${pt.module.minpayable.amount}")
+	private Integer ptMinAmountPayable;
 }

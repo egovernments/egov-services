@@ -1,6 +1,5 @@
 package org.egov.pt.calculator.web.models;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -30,10 +29,13 @@ import lombok.ToString;
 @Builder
 @ToString
 public class CalculationReq   {
-        private RequestInfo requestInfo = null;
+	
+		@JsonProperty("RequestInfo")
+        private RequestInfo requestInfo;
 
         @Valid
-        private List<CalculationCriteria> calculationCriteria = new ArrayList<>();
+        @JsonProperty("CalculationCriteria")
+        private List<CalculationCriteria> calculationCriteria;
 
 
         public CalculationReq addCalulationCriteriaItem(CalculationCriteria calulationCriteriaItem) {

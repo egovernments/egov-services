@@ -1,5 +1,7 @@
 package org.egov.pt.calculator.web.models;
 
+import java.math.BigDecimal;
+
 import org.egov.pt.calculator.web.models.demand.Category;
 
 import lombok.AllArgsConstructor;
@@ -15,7 +17,7 @@ public class TaxHeadEstimate {
 
 	private String taxHeadCode;
 	
-	private Double estimateAmount;
+	private BigDecimal estimateAmount;
 	
 	private Category category;
 }

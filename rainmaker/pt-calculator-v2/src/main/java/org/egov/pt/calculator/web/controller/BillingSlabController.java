@@ -1,4 +1,4 @@
-package org.egov.pt.calculator.controller;
+package org.egov.pt.calculator.web.controller;
 
 import java.util.Date;
 

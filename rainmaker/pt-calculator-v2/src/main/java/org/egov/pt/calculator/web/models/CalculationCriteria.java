@@ -30,11 +30,11 @@ public class CalculationCriteria   {
         @JsonProperty("assesmentNumber")
         private String assesmentNumber;
 
-        @JsonProperty("assesmentYear")
-        private String assesmentYear;
+        @JsonProperty("assessmentYear")
+        private String assessmentYear;
 
-        @JsonProperty("oldAssesmentNumber")
-        private String oldAssesmentNumber;
+        @JsonProperty("oldAssessmentNumber")
+        private String oldAssessmentNumber;
 
         @JsonProperty("tenantId")
         private String tenantId;

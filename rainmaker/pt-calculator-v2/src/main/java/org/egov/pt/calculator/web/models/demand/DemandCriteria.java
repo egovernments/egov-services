@@ -40,10 +40,9 @@
 package org.egov.pt.calculator.web.models.demand;
 
 import java.math.BigDecimal;
+import java.util.Set;
 
 import javax.validation.constraints.NotNull;
-
-import org.egov.pt.calculator.web.models.property.AuditDetails;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -51,26 +50,29 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 @Builder
-public class DemandDetail {
+public class DemandCriteria {
 
-	private String id;
+	@NotNull
+	private String tenantId; 
 	
-	private String demandId;	
-
-	@NotNull
-	private String taxHeadMasterCode;
-
-	@NotNull
-	private BigDecimal taxAmount;
+	private Set<String> demandId;
 	
-	@NotNull
-	@Builder.Default
-	private BigDecimal collectionAmount = BigDecimal.valueOf(0d);
-
-	private AuditDetails auditDetail;
-
-	private String tenantId;
+	//private Set<String> owner;
+	
+	private Set<String> consumerCode;
+	
+	private String businessService;
+	
+	private BigDecimal demandFrom;
+	
+	private BigDecimal demandTo;
+	
+	private String mobileNumber;
+	
+	private String email;
+	
+	private Boolean receiptRequired;
 }

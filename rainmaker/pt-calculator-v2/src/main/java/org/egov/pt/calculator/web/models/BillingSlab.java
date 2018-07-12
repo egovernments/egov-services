@@ -74,6 +74,8 @@ public class BillingSlab   {
         @JsonProperty("unitRate")
         private Double unitRate;
         
+        private Integer NoOfFloors;
+        
         @JsonProperty("auditDetails")
         private AuditDetails auditDetails;
 

@@ -1,5 +1,6 @@
 package org.egov.pt.calculator.web.models;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -24,18 +25,18 @@ public class Calculation   {
         private String serviceNumber;
 
         @JsonProperty("totalAmount")
-        private Double totalAmount;
+        private BigDecimal totalAmount;
         
-        private Double taxAmount; 
+        private BigDecimal taxAmount; 
 
         @JsonProperty("penalty")
-        private Double penalty;
+        private BigDecimal penalty;
 
         @JsonProperty("exemption")
-        private Double exemption;
+        private BigDecimal exemption;
 
         @JsonProperty("rebate")
-        private Double rebate;
+        private BigDecimal rebate;
 
         @JsonProperty("fromDate")
         private Long fromDate;

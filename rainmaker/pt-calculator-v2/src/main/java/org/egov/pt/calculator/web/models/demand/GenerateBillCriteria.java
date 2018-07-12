@@ -39,38 +39,37 @@
  */
 package org.egov.pt.calculator.web.models.demand;
 
-import java.math.BigDecimal;
-
 import javax.validation.constraints.NotNull;
 
-import org.egov.pt.calculator.web.models.property.AuditDetails;
+import org.hibernate.validator.constraints.Email;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
-@Data
+@Setter
+@Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class DemandDetail {
-
-	private String id;
-	
-	private String demandId;	
-
-	@NotNull
-	private String taxHeadMasterCode;
-
-	@NotNull
-	private BigDecimal taxAmount;
+@ToString
+public class GenerateBillCriteria {
 	
 	@NotNull
-	@Builder.Default
-	private BigDecimal collectionAmount = BigDecimal.valueOf(0d);
-
-	private AuditDetails auditDetail;
-
 	private String tenantId;
+	
+	private String demandId;
+	
+	private String consumerCode;
+	
+	private String businessService;
+	
+	@Email
+	private String email;
+	
+	private String mobileNumber;
+
 }

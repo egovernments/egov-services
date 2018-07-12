@@ -19,8 +19,6 @@ import lombok.Setter;
 /**
  * CalculationRes
  */
-@Validated
-@javax.annotation.Generated(value = "org.egov.codegen.SpringBootCodegen", date = "2018-05-14T00:55:55.623+05:30")
 
 @Getter
 @Setter
@@ -28,12 +26,13 @@ import lombok.Setter;
 @NoArgsConstructor
 @Builder
 public class CalculationRes   {
+	
         @JsonProperty("ResponseInfo")
-        private ResponseInfo responseInfo = null;
+        private ResponseInfo responseInfo;
 
-        @JsonProperty("calculation")
+        @JsonProperty("Calculation")
         @Valid
-        private List<Calculation> calculation = null;
+        private List<Calculation> calculation;
 
 
         public CalculationRes addCalculationItem(Calculation calculationItem) {

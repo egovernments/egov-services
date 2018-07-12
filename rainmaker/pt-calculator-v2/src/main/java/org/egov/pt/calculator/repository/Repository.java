@@ -1,14 +1,20 @@
 package org.egov.pt.calculator.repository;
 
+import java.io.IOException;
+import java.net.ConnectException;
+import java.util.HashMap;
 import java.util.Map;
 
+import org.egov.pt.calculator.util.CalculatorConstants;
 import org.egov.tracer.http.LogAwareRestTemplate;
+import org.egov.tracer.model.CustomException;
 import org.egov.tracer.model.ServiceCallException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.ResourceAccessException;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -18,6 +24,10 @@ public class Repository {
 
 	@Autowired
 	private LogAwareRestTemplate restTemplate;
+	
+	@Autowired
+	@Qualifier("secondaryMapper")
+	private ObjectMapper mapper;
 		
 	/**
 	 * Fetches results from external services through rest call.
@@ -27,19 +37,25 @@ public class Repository {
 	 * @return Object
 	 */
 	public Object fetchResult(StringBuilder uri, Object request) {
-		ObjectMapper mapper = new ObjectMapper();
-        mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
+		
 		Object response = null;
-		log.info("URI: "+uri.toString());
+		log.info("URI: " + uri.toString());
 		try {
-			log.info("Request: "+mapper.writeValueAsString(request));
+
+			log.info("Request: " + mapper.writeValueAsString(request));
 			response = restTemplate.postForObject(uri.toString(), request, Map.class);
-		}catch(HttpClientErrorException e) {
-			log.error("External Service threw an Exception: {}",e.getMessage());
-			log.error("the error is : "+e.getResponseBodyAsString());
+		} catch (ResourceAccessException e) {
+			
+			Map<String, String> map = new HashMap<>();
+			map.put(CalculatorConstants.CONNECT_EXCEPTION_KEY, e.getMessage());
+			throw new CustomException(map);
+		}  catch (HttpClientErrorException e) {
+
+			log.info("the error is : " + e.getResponseBodyAsString());
 			throw new ServiceCallException(e.getResponseBodyAsString());
-		}catch(Exception e) {
-			log.error("Exception while fetching from searcher: ",e);
+		}catch (Exception e) {
+
+			log.error("Exception while fetching from searcher: ", e);
 		}
 		return response;
 	}

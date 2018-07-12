@@ -8,12 +8,14 @@ import javax.validation.constraints.NotNull;
 import org.egov.pt.calculator.web.models.property.AuditDetails;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class TaxHeadMaster {
 
 	private String id;

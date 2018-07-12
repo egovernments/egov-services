@@ -1,5 +1,6 @@
 package org.egov.pt.calculator.web.models.property;
 
+import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -20,6 +21,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+
 /**
  * PropertyDetail
  */
@@ -39,7 +41,15 @@ public class PropertyDetail   {
               /**
    * Source of a assessment data. The properties will be created in a system based on the data avaialble in their manual records or during field survey. There can be more from client to client.
    */
-  public enum SourceEnum {
+
+        @JsonProperty("tenantId")
+        private String tenantId;
+
+        @JsonProperty("citizenInfo")
+        private OwnerInfo citizenInfo;
+
+
+        public enum SourceEnum {
     MUNICIPAL_RECORDS("MUNICIPAL_RECORDS"),
     
     FIELD_SURVEY("FIELD_SURVEY");
@@ -119,12 +129,21 @@ public class PropertyDetail   {
         @JsonProperty("subOwnershipCategory")
         private String subOwnershipCategory;
 
+        @JsonProperty("adhocExemption")
+        private BigDecimal adhocExemption;
+
+        @JsonProperty("adhocPenalty")
+        private BigDecimal adhocPenalty;
+
         @JsonProperty("owners")
         @Valid
         @NotNull
         @Size(min=1)
         private Set<OwnerInfo> owners;
 
+
+        @JsonProperty("auditDetails")
+        private AuditDetails auditDetails;
 
 
 

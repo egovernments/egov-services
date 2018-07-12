@@ -118,7 +118,16 @@
 			<url>https://nexus-repo.egovernments.org/nexus/content/repositories/releases/</url>
 		</repository>
 	</repositories>
-
+	<repository>
+		<id>repo.egovernments.org.snapshots</id>
+		<name>eGov ERP Releases Repository</name>
+		<url>https://nexus-repo.egovernments.org/nexus/content/repositories/snapshots/</url>
+	</repository>
+	<repository>
+		<id>repo.egovernments.org.public</id>
+		<name>eGov Public Repository Group</name>
+		<url>https://nexus-repo.egovernments.org/nexus/content/groups/public/</url>
+	</repository>
 	<build>
 		<plugins>
 

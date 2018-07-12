@@ -13,6 +13,8 @@ public enum Category {
 	FEE("FEE"),
 
 	REBATE("REBATE"),
+	
+	EXEMPTION("EXEMPTION"),
 
 	ADVANCE_COLLECTION("ADVANCE_COLLECTION"),
 

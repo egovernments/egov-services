@@ -1,6 +1,7 @@
 package org.egov.pt.validator;
 
 import com.jayway.jsonpath.JsonPath;
+import lombok.extern.slf4j.Slf4j;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.mdms.model.MdmsCriteriaReq;
 import org.egov.pt.repository.ServiceRequestRepository;
@@ -17,6 +18,7 @@ import java.util.*;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
+@Slf4j
 @Component
 public class PropertyValidator {
 
@@ -112,6 +114,7 @@ public class PropertyValidator {
      *
      */
    public static Map<String,String> validateCodes(List<Property> properties,Map<String,List<String>> codes,Map<String,String> errorMap){
+      log.info("Validating Property");
        properties.forEach(property -> {
            property.getPropertyDetails().forEach(propertyDetail -> {
 

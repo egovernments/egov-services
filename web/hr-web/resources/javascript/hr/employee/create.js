@@ -1845,7 +1845,7 @@ function printValue(object = "", values) {
                                     $('[data-active="no"]').prop("checked", true);
                                     $('[data-active="yes"]').prop("checked", false);
                                 }
-                            } else if(ckey == "aadhaarNumber"){
+                            } else if(ckey == "aadhaarNumber" && values[key][ckey] != null){
                                 var aadharNo = values[key][ckey];
                                 aadharNo = aadharNo.replace(aadharNo.substr(0,8),"********");
                                 $("[name='" + key + "." + ckey + "']").val(aadharNo ? aadharNo : "N/A");

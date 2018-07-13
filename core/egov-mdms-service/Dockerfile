@@ -1,4 +1,4 @@
-FROM egovio/apline-jre:8u121-mdms-pb
+FROM egovio/apline-jre:8u121-mdms-1.0
 
 MAINTAINER Senthil<senthil.kalimuthu@tarento.com>
 
@@ -7,7 +7,9 @@ MAINTAINER Senthil<senthil.kalimuthu@tarento.com>
 # Move to the location where pom.xml is exist in project and build project using below command
 # "mvn clean package"
 
-RUN cd /opt/mdms && git pull origin master
+#RUN cd /opt/mdms && git pull origin master
+
+#RUN cd /opt && wget "https://codeload.github.com/egovernments/egov-mdms-data/zip/master" -O master.zip && unzip master.zip && rm -rf master.zip mdms && mv egov-mdms-data-master mdms 
 
 COPY /target/egov-mdms-service-test-0.0.1-SNAPSHOT.jar /opt/egov/egov-mdms-service-test.jar
 

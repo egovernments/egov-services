@@ -107,6 +107,9 @@ public class EmployeeHelper {
 		RequestInfo requestInfo = employeeRequest.getRequestInfo();
 		userRequest.setRequestInfo(requestInfo);
 		User user = employeeRequest.getEmployee().getUser();
+		// FIXME : password hard-coded
+		if (null == user.getPassword())
+			user.setPassword(propertiesManager.getEmployeeDefaultPassword());
 		user.setTenantId(employeeRequest.getEmployee().getTenantId());
 		userRequest.setUser(user);
 

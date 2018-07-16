@@ -40,7 +40,6 @@
 package org.egov.pt.calculator.web.models.demand;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -86,11 +85,13 @@ public class Demand {
 	
 	@Valid
 	@NotNull
-	private List<DemandDetail> demandDetails = new ArrayList<>();
+	private List<DemandDetail> demandDetails;
 
 	@NotNull
 	@Min(1)
 	private BigDecimal minimumAmountPayable = BigDecimal.ZERO;
 
 	private AuditDetails auditDetail;
+	
+	private DemandStatus status;
 }

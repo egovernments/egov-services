@@ -34,6 +34,9 @@ public class Boundary   {
 
         @JsonProperty("name")
         private String name;
+        
+        @JsonProperty("area")
+        private String area;
 
         @JsonProperty("label")
         private String label;

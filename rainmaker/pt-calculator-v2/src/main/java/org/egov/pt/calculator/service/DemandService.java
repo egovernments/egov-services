@@ -23,6 +23,7 @@ import org.egov.pt.calculator.web.models.demand.Demand;
 import org.egov.pt.calculator.web.models.demand.DemandDetail;
 import org.egov.pt.calculator.web.models.demand.DemandRequest;
 import org.egov.pt.calculator.web.models.demand.DemandResponse;
+import org.egov.pt.calculator.web.models.demand.DemandStatus;
 import org.egov.pt.calculator.web.models.property.OwnerInfo;
 import org.egov.pt.calculator.web.models.property.Property;
 import org.egov.pt.calculator.web.models.property.PropertyDetail;
@@ -181,14 +182,14 @@ public class DemandService {
 		if (!CollectionUtils.isEmpty(assessments)) {
 
 			Assessment latestAssessment = assessments.get(0);
+			System.err.println(" the lates assessment : "+ latestAssessment);
+			
 			DemandResponse res = mapper.convertValue(
-					repository.fetchResult(utils.getDemandSearchUrl(latestAssessment), requestInfo), DemandResponse.class);
+					repository.fetchResult(utils.getDemandSearchUrl(latestAssessment), new RequestInfoWrapper(requestInfo)), DemandResponse.class);
 			Demand demand = res.getDemands().get(0);
 
 			carryForward = utils.getTotalCollectedAmount(demand);
-			// FIXME set the demand status to inactive and update it
-
-			// update demand with status inactive
+			demand.setStatus(DemandStatus.CANCELLED);
 			DemandRequest request = DemandRequest.builder().demands(Arrays.asList(demand)).requestInfo(requestInfo)
 					.build();
 			StringBuilder updateDemandUrl = utils.getUpdateDemandUrl();

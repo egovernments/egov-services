@@ -1,7 +1,6 @@
 package org.egov.pt.calculator.web.models;
 
 import org.egov.pt.calculator.web.models.property.AuditDetails;
-import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -14,8 +13,6 @@ import lombok.Setter;
 /**
  * BillingSlab
  */
-@Validated
-@javax.annotation.Generated(value = "org.egov.codegen.SpringBootCodegen", date = "2018-05-31T14:59:52.408+05:30")
 
 @Getter
 @Setter
@@ -74,11 +71,10 @@ public class BillingSlab   {
         @JsonProperty("unitRate")
         private Double unitRate;
         
-        private Integer NoOfFloors;
+        @JsonProperty("isPropertyMultiFloored")
+        private Boolean isPropertyMultiFloored;
         
         @JsonProperty("auditDetails")
         private AuditDetails auditDetails;
-
-
 }
 

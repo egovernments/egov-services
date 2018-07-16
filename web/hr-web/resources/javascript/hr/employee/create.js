@@ -62,7 +62,7 @@ var employee = {
         emailId: "",
         altContactNumber: "",
         pan: "",
-        aadhaarNumber: "",
+        //aadhaarNumber: "",
         permanentAddress: "",
         permanentCity: "",
         permanentPinCode: "",
@@ -281,8 +281,8 @@ var commom_fields_rules = {
         panNo: true
     },
     "user.aadhaarNumber": {
-        required: true,
-        aadhar: true
+        required: false,
+        aadhar: false
     },
     "user.permanentAddress": {
         required: false,
@@ -699,8 +699,7 @@ var user = {
         required: false
     },
     aadhaarNumber: {
-        required: true
-
+        required: false
     },
     permanentAddress: {
         required: false

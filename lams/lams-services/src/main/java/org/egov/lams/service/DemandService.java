@@ -27,6 +27,8 @@ public class DemandService {
 	public static final Logger logger = LoggerFactory.getLogger(DemandService.class);
 	
 	private static final List<String> DEMAND_REASONS = Arrays.asList("RENT","PENALTY","STATE_GST","CENTRAL_GST","SERVICE_TAX");
+	private static final String CENTRAL_GST = "CENTRAL_GST";
+	private static final String STATE_GST = "STATE_GST";
 
 	@Autowired
 	private DemandRepository demandRepository;
@@ -249,18 +251,22 @@ public class DemandService {
 		DemandSearchCriteria demandSearchCriteria = new DemandSearchCriteria();
 		demandSearchCriteria.setDemandId(Long.valueOf(agreement.getDemands().get(0)));
 		List<Demand> demands = demandRepository.getDemandBySearch(demandSearchCriteria, requestInfo).getDemands();
-		BigDecimal excessCollection = BigDecimal.ZERO;
+		BigDecimal totalExcessCollection = BigDecimal.ZERO;
 		BigDecimal revisedRent = BigDecimal.valueOf(agreement.getRemission().getRemissionRent());
 		Date fromDate = agreement.getRemission().getRemissionFromDate();
 		Date toDate = agreement.getRemission().getRemissionToDate();
 		for (DemandDetails demandDetail : demands.get(0).getDemandDetails()) {
-			if (propertiesManager.getTaxReasonRent().equalsIgnoreCase(demandDetail.getTaxReason())) {
+			BigDecimal excessCollection ;
+			if (propertiesManager.getTaxReasonRent().equalsIgnoreCase(demandDetail.getTaxReasonCode())
+					|| CENTRAL_GST.equalsIgnoreCase(demandDetail.getTaxReasonCode())
+					|| STATE_GST.equalsIgnoreCase(demandDetail.getTaxReasonCode())) {
 				excessCollection = updateDemadDetails(demandDetail, revisedRent, fromDate, toDate);
-				excessCollection = excessCollection.add(excessCollection);
-			}
+				totalExcessCollection = totalExcessCollection.add(excessCollection);
+			}	
+			
 		}
-		if (excessCollection.compareTo(BigDecimal.ZERO) > 0) {
-			adjustCollection(demands, excessCollection);
+		if (totalExcessCollection.compareTo(BigDecimal.ZERO) > 0) {
+			demands = adjustCollection(demands, totalExcessCollection);
 		}
 		return demands;
 	}
@@ -269,18 +275,35 @@ public class DemandService {
 		BigDecimal excessCollection = BigDecimal.ZERO;
 		if (demandDetail.getPeriodEndDate().compareTo(fromDate) >= 0
 				&& demandDetail.getPeriodStartDate().compareTo(toDate) <= 0) {
-			excessCollection = demandDetail.getCollectionAmount();
-			if (demandDetail.getTaxAmount().compareTo(rent) > 0)
-				demandDetail.setTaxAmount(rent);
-			if (demandDetail.getCollectionAmount().compareTo(rent) > 0) {
-				excessCollection = demandDetail.getCollectionAmount().subtract(rent);
-				demandDetail.setCollectionAmount(rent);
+			Double gstAmount = (rent.doubleValue() * 18) / 100;
+
+			if (CENTRAL_GST.equalsIgnoreCase(demandDetail.getTaxReasonCode())
+					|| STATE_GST.equalsIgnoreCase(demandDetail.getTaxReasonCode())) {
+				demandDetail.setTaxAmount(BigDecimal.valueOf(Math.round(gstAmount / 2)));
+
+			} else {
+
+				if (demandDetail.getTaxAmount().compareTo(rent) > 0) {
+					excessCollection = demandDetail.getCollectionAmount();
+					demandDetail.setTaxAmount(rent);
+				}
+
+				if (demandDetail.getCollectionAmount().compareTo(rent) >= 0) {
+					excessCollection = demandDetail.getCollectionAmount().subtract(rent);
+					demandDetail.setCollectionAmount(rent);
+				}
 			}
 		}
 		return excessCollection;
 	}
 
-	private void adjustCollection(List<Demand> demands, BigDecimal collection) {
+
+	/*
+	 * Adjusting excess collection in remission , currently we are 
+	 * doing this adjustment for the agreements for which already collection is done
+	 * and for same installments remission is applying (DATA_ENTRY agreements use case)
+	 */
+	private List<Demand> adjustCollection(List<Demand> demands, BigDecimal collection) {
 
 		for (DemandDetails demandDetail : demands.get(0).getDemandDetails()) {
 
@@ -289,28 +312,28 @@ public class DemandService {
 				if (collection.compareTo(balance) > 0) {
 
 					collection = collection.subtract(balance);
-					demandDetail.getCollectionAmount().add(balance);
+					demandDetail.setCollectionAmount(demandDetail.getCollectionAmount().add(balance));
 
 				} else
-					demandDetail.getCollectionAmount().add(balance);
+					demandDetail.setCollectionAmount(demandDetail.getCollectionAmount().add(balance));
 			}
 		}
 		if (collection.compareTo(BigDecimal.ZERO) > 0) {
 			for (DemandDetails demandDetail : demands.get(0).getDemandDetails()) {
 				if ("ADVANCE_TAX".equalsIgnoreCase(demandDetail.getTaxReasonCode())) {
-					demandDetail.getCollectionAmount().add(collection);
+					demandDetail.setCollectionAmount(demandDetail.getCollectionAmount().add(collection));
 				}
 			}
 		}
 
+		return demands;
 	}
 	
-	public List<Demand> prepareDemandsForRenewal(AgreementRequest agreementRequest,boolean isForApproval) {
+	public List<Demand> prepareDemandsForRenewal(AgreementRequest agreementRequest, boolean isForApproval) {
 		List<Demand> demands;
 		List<DemandReason> demandReasons = demandRepository.getDemandReasonForRenewal(agreementRequest, isForApproval);
 		if (!demandReasons.isEmpty()) {
 			demands = demandRepository.getDemandList(agreementRequest, demandReasons);
-			demands.get(0).getDemandDetails().addAll(getExistingDemandDetails(agreementRequest.getAgreement().getDemands().get(0), agreementRequest.getRequestInfo()));
 			return demands;
 		} else
 			throw new RuntimeException("No demand reason found for given criteria in Renewal");

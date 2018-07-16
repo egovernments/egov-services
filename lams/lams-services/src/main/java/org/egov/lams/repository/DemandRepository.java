@@ -320,14 +320,15 @@ public class DemandRepository {
 				demandDetail.setTaxAmount(BigDecimal.valueOf(agreement.getSecurityDeposit()));
 				if (agreement.getCollectedSecurityDeposit() != null)
 					demandDetail.setCollectionAmount(BigDecimal.valueOf(agreement.getCollectedSecurityDeposit()));
-			}else if ("CENTRAL_GST".equalsIgnoreCase(demandReason.getName())){
+			} else if ("CENTRAL_GST".equalsIgnoreCase(demandReason.getName())) {
 				demandDetail.setTaxAmount(BigDecimal.valueOf(agreement.getCgst()));
 
-			}else if ("STATE_GST".equalsIgnoreCase(demandReason.getName())){
+			} else if ("STATE_GST".equalsIgnoreCase(demandReason.getName())) {
 				demandDetail.setTaxAmount(BigDecimal.valueOf(agreement.getSgst()));
 
-			}else if ("SERVICE_TAX".equalsIgnoreCase(demandReason.getName())){
-				demandDetail.setTaxAmount(BigDecimal.valueOf(agreement.getServiceTax()!=null? agreement.getServiceTax() : 0));
+			} else if ("SERVICE_TAX".equalsIgnoreCase(demandReason.getName())) {
+				demandDetail.setTaxAmount(
+						BigDecimal.valueOf(agreement.getServiceTax() != null ? agreement.getServiceTax() : 0));
 
 			} else if ("ADV_CGST".equalsIgnoreCase(demandReason.getName())
 					|| "ADV_SGST".equalsIgnoreCase(demandReason.getName())) {
@@ -337,10 +338,9 @@ public class DemandRepository {
 					|| "GW_SGST".equalsIgnoreCase(demandReason.getName())) {
 				demandDetail.setTaxAmount(BigDecimal.valueOf(Math.round(gstOnGoodWill / 2)));
 
-
 			}
-			if(demandDetail.getTaxAmount()!=null)
-			demandDetails.add(demandDetail);
+			if (demandDetail.getTaxAmount() != null && demandDetail.getTaxAmount().compareTo(BigDecimal.ZERO) > 0)
+				demandDetails.add(demandDetail);
 		}
 
 		demand.setDemandDetails(demandDetails);
@@ -380,7 +380,7 @@ public class DemandRepository {
 		try {
 			demandResponse = restTemplate.postForObject(url, requestInfo, DemandResponse.class);
 		} catch (Exception e) {
-			e.printStackTrace();
+
 			LOGGER.info("the exception thrown from demand search api call ::: " + e);
 		}
 		LOGGER.info("the response form demand search api call ::: " + demandResponse);
@@ -402,7 +402,7 @@ public class DemandRepository {
 		try {
 			demandResponse = restTemplate.postForObject(url, demandRequest, DemandResponse.class);
 		} catch (Exception e) {
-			e.printStackTrace();
+
 			LOGGER.info("the exception raised during update demand API call ::: " + e);
 		}
 		LOGGER.info("the exception raised during update demand API call ::: " + demandResponse);
@@ -424,7 +424,7 @@ public class DemandRepository {
 		try {
 			demandResponse = restTemplate.postForObject(url, demandRequest, DemandResponse.class);
 		} catch (Exception e) {
-			e.printStackTrace();
+
 			LOGGER.info("the exception raised during update demand API call ::: " + e);
 		}
 		LOGGER.info("the exception raised during update demand API call ::: " + demandResponse);
@@ -443,10 +443,6 @@ public class DemandRepository {
 		String taxReason;
 		Date effectiveInstDate;
 		Date expiryDate = agreement.getExpiryDate();
-		if (Status.ACTIVE.equals(agreement.getStatus())) {
-			taxReason = propertiesManager.getTaxReasonRent();
-			demandReasons.addAll(getDemandReasonsForTaxReason(agreementRequest, expiryDate, taxReason));
-		} else {
 			Instant instant = Instant.ofEpochMilli(expiryDate.getTime());
 			LocalDateTime localDateTime = LocalDateTime.ofInstant(instant, ZoneId.systemDefault());
 			LocalDate startDate = localDateTime.toLocalDate();
@@ -464,18 +460,30 @@ public class DemandRepository {
 			}
 
 			effectiveInstDate = Date.from(startDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
-			if(isForApproval){
+			if (isForApproval) {
 				taxReason = propertiesManager.getTaxReasonRent();
-				demandReasons.addAll(getDemandReasonsForTaxReason(agreementRequest, effectiveInstDate, taxReason));
+				demandReasons.addAll(getDemandReasonsForTaxReason(agreementRequest, expiryDate, taxReason));
+				taxReason = propertiesManager.getTaxReasonCentralGst();
+				demandReasons.addAll(getDemandReasonsForTaxReason(agreementRequest, expiryDate, taxReason));
+				taxReason = propertiesManager.getTaxReasonStateGst();
+				demandReasons.addAll(getDemandReasonsForTaxReason(agreementRequest, expiryDate, taxReason));
 			} else {
 				taxReason = propertiesManager.getTaxReasonAdvanceTax();
 				demandReasons.addAll(getDemandReasonsForTaxReason(agreementRequest, effectiveInstDate, taxReason));
-				if(agreement.getGoodWillAmount() > 0){
+				taxReason = propertiesManager.getTaxReasonCGSTOnAdvance();
+				demandReasons.addAll(getDemandReasonsForTaxReason(agreementRequest, effectiveInstDate, taxReason));
+				taxReason = propertiesManager.getTaxReasonSGSTOnAdvance();
+				demandReasons.addAll(getDemandReasonsForTaxReason(agreementRequest, effectiveInstDate, taxReason));
+				if (agreement.getGoodWillAmount() > 0) {
 					taxReason = propertiesManager.getTaxReasonGoodWillAmount();
+					demandReasons.addAll(getDemandReasonsForTaxReason(agreementRequest, effectiveInstDate, taxReason));
+					taxReason = propertiesManager.getTaxReasonCGSTOnGoodwill();
+					demandReasons.addAll(getDemandReasonsForTaxReason(agreementRequest, effectiveInstDate, taxReason));
+					taxReason = propertiesManager.getTaxReasonSGSTOnGoodwill();
 					demandReasons.addAll(getDemandReasonsForTaxReason(agreementRequest, effectiveInstDate, taxReason));
 				}
 			}
-		}
+		
 		return demandReasons;
 	}
 	

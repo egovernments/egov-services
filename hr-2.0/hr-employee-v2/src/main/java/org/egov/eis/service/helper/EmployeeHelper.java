@@ -40,19 +40,35 @@
 
 package org.egov.eis.service.helper;
 
+import static org.springframework.util.ObjectUtils.isEmpty;
+
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.eis.config.PropertiesManager;
-import org.egov.eis.model.*;
+import org.egov.eis.model.APRDetail;
+import org.egov.eis.model.Assignment;
+import org.egov.eis.model.DepartmentalTest;
+import org.egov.eis.model.EducationalQualification;
+import org.egov.eis.model.Employee;
+import org.egov.eis.model.EmployeeDocument;
+import org.egov.eis.model.EmployeeInfo;
+import org.egov.eis.model.Probation;
+import org.egov.eis.model.Regularisation;
+import org.egov.eis.model.ServiceHistory;
+import org.egov.eis.model.TechnicalQualification;
+import org.egov.eis.model.User;
 import org.egov.eis.repository.EmployeeRepository;
 import org.egov.eis.web.contract.EmployeeRequest;
 import org.egov.eis.web.contract.UserRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import java.util.*;
-import java.util.stream.Collectors;
-
-import static org.springframework.util.ObjectUtils.isEmpty;
 
 @Component
 public class EmployeeHelper {
@@ -91,8 +107,6 @@ public class EmployeeHelper {
 		RequestInfo requestInfo = employeeRequest.getRequestInfo();
 		userRequest.setRequestInfo(requestInfo);
 		User user = employeeRequest.getEmployee().getUser();
-		// FIXME : password hard-coded
-		user.setPassword(propertiesManager.getEmployeeDefaultPassword());
 		user.setTenantId(employeeRequest.getEmployee().getTenantId());
 		userRequest.setUser(user);
 

@@ -257,6 +257,7 @@ public class AgreementValidator {
 		Agreement agreement = agreementRequest.getAgreement();
 		Date fromDate = agreement.getRemission().getRemissionDate();
 		Date toDate = agreement.getRemission().getRemissionToDate();
+		Double remissionRent = agreement.getRemission().getRemissionRent();
 		Boolean isRentCollected;
 		demandSearchCriteria.setDemandId(Long.valueOf(agreement.getDemands().get(0)));
 		if (agreement.getIsUnderWorkflow()) {
@@ -265,7 +266,10 @@ public class AgreementValidator {
 		if(Status.EVICTED.equals(agreement.getStatus()) || Status.INACTIVE.equals(agreement.getStatus()) || Status.HISTORY.equals(agreement.getStatus())){
 			errors.reject(ERROR_FIELD_AGREEMENT_NO, ERROR_MSG_AGREEMENT_INACTIVE);
 		}
-		
+		if (remissionRent.compareTo(agreement.getRent()) > 0) {
+
+			errors.reject("Remission", "Remission rent can not be more than actual rent.");
+		}
 		Demand demand = demandRepository.getDemandBySearch(demandSearchCriteria, agreementRequest.getRequestInfo())
 				.getDemands().get(0);
 		if (demand == null)

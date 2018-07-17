@@ -1,3 +1,13 @@
+DROP TABLE IF EXISTS eg_pt_drafts_v2;
+DROP TABLE IF EXISTS eg_pt_institution_v2;
+DROP TABLE IF EXISTS eg_pt_unit_v2;
+DROP TABLE IF EXISTS eg_pt_document_owner_v2;
+DROP TABLE IF EXISTS eg_pt_document_propertydetail_v2;
+DROP TABLE IF EXISTS eg_pt_owner_v2;
+DROP TABLE IF EXISTS eg_pt_propertydetail_v2;
+DROP TABLE IF EXISTS eg_pt_address_v2;
+DROP TABLE IF EXISTS eg_pt_property_v2;
+
 CREATE TABLE eg_pt_property_v2(
 
   PropertyId character varying(64),
@@ -47,7 +57,6 @@ CREATE TABLE eg_pt_propertydetail_v2 (
   CONSTRAINT fk_eg_pt_propertydetail_v2 FOREIGN KEY (property) REFERENCES eg_pt_property_v2 (propertyId)
 );
 
-
 CREATE TABLE eg_pt_owner_v2(
   tenantId character varying(256),
   propertydetail character varying(64),
@@ -94,8 +103,6 @@ CREATE TABLE eg_pt_address_v2 (
   CONSTRAINT fk_eg_pt_address_v2 FOREIGN KEY (property) REFERENCES eg_pt_property_v2 (propertyId)
 );
 
-
-
 CREATE TABLE eg_pt_document_propertydetail_v2 (
   tenantId character varying(256),
   id character varying(64),
@@ -112,7 +119,6 @@ CREATE TABLE eg_pt_document_propertydetail_v2 (
   CONSTRAINT pk_eg_pt_document_propertydetail_v2 PRIMARY KEY (id),
   CONSTRAINT fk_eg_pt_document_propertydetail_v2 FOREIGN KEY (propertydetail) REFERENCES eg_pt_propertydetail_v2 (assessmentNumber)
 );
-
 
 CREATE TABLE eg_pt_document_owner_v2 (
   tenantId character varying(256),
@@ -132,7 +138,6 @@ CREATE TABLE eg_pt_document_owner_v2 (
   CONSTRAINT uk_eg_pt_document_owner_v2 UNIQUE (userid, propertydetail),
   CONSTRAINT fk_eg_pt_document_owner_v2 FOREIGN KEY (userid, propertydetail) REFERENCES eg_pt_owner_v2 (userid, propertydetail)
 );
-
 
 CREATE TABLE eg_pt_unit_v2 (
   tenantId character varying(256),
@@ -189,3 +194,5 @@ CREATE TABLE eg_pt_drafts_v2(
   CONSTRAINT pk_eg_pt_drafts_v2 PRIMARY KEY (id,tenantid),
   CONSTRAINT uk_eg_pt_drafts_v2 UNIQUE (id)
 );
+
+

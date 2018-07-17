@@ -96,8 +96,6 @@ public class EstimationService {
 	 */
 	private List<TaxHeadEstimate> getEstimationMap(CalculationCriteria criteria, RequestInfo requestInfo) {
 
-		String tenantId = null != criteria.getTenantId() ? criteria.getTenantId()
-				: criteria.getProperty().getTenantId();
 		List<TaxHeadEstimate> estimates = new ArrayList<>();
 		String assessmentYear = criteria.getAssessmentYear();
 		BigDecimal taxAmt = BigDecimal.ZERO;

@@ -4,7 +4,6 @@ import java.util.Map;
 
 import javax.validation.Valid;
 
-import org.egov.common.contract.request.RequestInfo;
 import org.egov.pt.calculator.service.DemandService;
 import org.egov.pt.calculator.service.EstimationService;
 import org.egov.pt.calculator.web.models.Calculation;
@@ -23,7 +22,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-@RequestMapping
+@RequestMapping("/propertytax")
 public class CalculatorController {
 
 	@Autowired
@@ -32,17 +31,17 @@ public class CalculatorController {
 	@Autowired
 	private EstimationService calculatorService;
 
-	@PostMapping("/tax/_estimate")
+	@PostMapping("/_estimate")
 	public ResponseEntity<CalculationRes> getTaxEstimation(@RequestBody @Valid CalculationReq calculationReq) {
 		return new ResponseEntity<>(calculatorService.getTaxCalculation(calculationReq), HttpStatus.OK);
 	}
 
-	@PostMapping("/tax/_generate")
+	@PostMapping("/_generate")
 	public ResponseEntity<Map<String, Calculation>> generateDemands(@RequestBody @Valid CalculationReq calculationReq) {
 		return new ResponseEntity<>(demandService.generateDemands(calculationReq), HttpStatus.OK);
 	}
 	
-	@PostMapping("bill/_generate")
+	@PostMapping("/_getbill")
 	public ResponseEntity<BillResponse> getBill(@RequestBody @Valid RequestInfoWrapper requestInfoWrapper,
 			@ModelAttribute @Valid GetBillCriteria getBillCriteria) {
 		return new ResponseEntity<>(demandService.getBill(getBillCriteria, requestInfoWrapper), HttpStatus.OK);

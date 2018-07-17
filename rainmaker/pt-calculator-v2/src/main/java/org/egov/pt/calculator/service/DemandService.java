@@ -28,6 +28,7 @@ import org.egov.pt.calculator.web.models.property.OwnerInfo;
 import org.egov.pt.calculator.web.models.property.Property;
 import org.egov.pt.calculator.web.models.property.PropertyDetail;
 import org.egov.pt.calculator.web.models.property.RequestInfoWrapper;
+import org.egov.tracer.model.CustomException;
 import org.egov.tracer.model.ServiceCallException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -98,7 +99,7 @@ public class DemandService {
 						propertyCalculationMap.get(property.getPropertyDetails().get(0).getAssessmentNumber()));
 				if (carryForwardCollectedAmount.doubleValue() > 0.0)
 					demand.getDemandDetails()
-							.add(DemandDetail.builder().taxAmount(carryForwardCollectedAmount)
+							.add(DemandDetail.builder().taxAmount(carryForwardCollectedAmount.negate())
 									.tenantId(criteria.getTenantId()).demandId(demand.getId())
 									.taxHeadMasterCode(CalculatorConstants.PT_ADVANCE_CARRYFORWARD).build());
 				demands.add(demand);
@@ -145,7 +146,11 @@ public class DemandService {
 		DemandResponse res = mapper.convertValue(
 				repository.fetchResult(utils.getDemandSearchUrl(getBillCriteria), requestInfoWrapper),
 				DemandResponse.class);
-		
+		if (CollectionUtils.isEmpty(res.getDemands())) {
+			Map<String, String> map = new HashMap<>();
+			map.put(CalculatorConstants.EMPTY_DEMAND_ERROR_CODE, CalculatorConstants.EMPTY_DEMAND_ERROR_MESSAGE);
+			throw new CustomException(map);
+		}
 		Demand demand = res.getDemands().get(0);
 		applyPenaltyAndRebate(demand, getBillCriteria.getAssessmentYear(), timeBasedExmeptionMasterMap);
 		DemandRequest request = DemandRequest.builder().demands(Arrays.asList(demand)).requestInfo(requestInfo).build();

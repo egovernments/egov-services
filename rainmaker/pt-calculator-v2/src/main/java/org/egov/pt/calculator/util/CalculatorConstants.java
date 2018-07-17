@@ -137,4 +137,8 @@ public class CalculatorConstants {
 	 * exceptions
 	 */
 	public static final String CONNECT_EXCEPTION_KEY = "CONNECTION_FAILED";
+	
+	public static final String EMPTY_DEMAND_ERROR_CODE = "EMPTY_DEMANDS";
+	
+	public static final String EMPTY_DEMAND_ERROR_MESSAGE = "No demands found for the given bill generate criteria";
 }

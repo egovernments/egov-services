@@ -11,6 +11,7 @@ setInitialState(initState) {
   this.setState(initState);
 }
 
+
 componentDidMount() {
 
   if(window.opener && window.opener.document) {
@@ -27,7 +28,7 @@ componentDidMount() {
   if(count == 0)
     _this.setInitialState(_state);
   }
-  getDropdown("employeeStatus", function(res) {
+  getDropdown("leaveStatus", function(res) {
     checkCountNCall("_status", res);
   });
 
@@ -95,18 +96,22 @@ componentDidUpdate(prevProps, prevState) {
 }
 
 
-close() {
-      open(location, '_self').close();
-  }
+close()
+{
+  open(location, '_self').close();
+}
 
 
 render() {
   let {list,_status}=this.state;
-
+  console.log(this.state,"state");
+  console.log(_status,"_status");
+  console.log(list,"list");
 
 const renderBody=function() {
   if(list.length>0) {
     return list.map((item,index)=> {
+        console.log(item,"item");
         return (<tr key={index}>
           <td>{index+1}</td>
           <td data-label="name">{item.name}</td>

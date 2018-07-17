@@ -1,10 +1,7 @@
 package org.egov.pgr.utils;
 
 import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import org.apache.commons.lang.WordUtils;
 import org.egov.common.contract.request.RequestInfo;
@@ -55,7 +52,7 @@ public class ReportUtils {
 		List<List<Object>> reportData = new ArrayList<List<Object>>();
 		
 		//preparing report header
-		Map<String, Object> firstTuple = dbResponse.get(0);
+		Map<String, Object> firstTuple = dbResponse.isEmpty() ? new HashMap<>() : dbResponse.get(0);
 		for(String key: firstTuple.keySet()) {
 			ColumnDetail coloumnDetail = null;
 			if(null != firstTuple.get(key)) {

@@ -5,7 +5,12 @@ class SearchDepreciationReport extends React.Component {
     this.state={
       list:[],
       searchSet:{
-        tenantId
+        "tenantId":tenantId,
+        "assetCategory":"",
+        "parent":"",
+        "assetCategoryType":"",
+        "financialYear":""
+
       },
       isSearchClicked:false,asset_category_type:[],assetCategories:[],departments:[],financialYears:[],result:[],modify: false}
     this.handleChange = this.handleChange.bind(this);

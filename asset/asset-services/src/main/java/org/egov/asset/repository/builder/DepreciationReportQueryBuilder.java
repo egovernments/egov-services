@@ -111,6 +111,12 @@ public class DepreciationReportQueryBuilder {
             selectQuery.append(" assetcategory.parentid =?");
             preparedStatementValues.add(depreciationReportCriteria.getParent());
         }
+        
+        if (depreciationReportCriteria.getAssetCategory() != null) {
+            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+            selectQuery.append(" assetcategory.id =?");
+            preparedStatementValues.add(depreciationReportCriteria.getAssetCategory());
+        }
 
         if (depreciationReportCriteria.getAssetName() != null) {
             isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);

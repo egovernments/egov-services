@@ -38,43 +38,46 @@ public class EnrichmentService {
 
 
         for (Property property : request.getProperties()) {
-             if(!onlyPropertyDetail)
-              property.getAddress().setId(UUID.randomUUID().toString());
-             property.getAddress().setTenantId(property.getTenantId());
-             property.setAuditDetails(auditDetails);
-             property.setStatus(PropertyInfo.StatusEnum.ACTIVE);
-             setAssessmentNo(property.getTenantId(),property.getPropertyDetails(),requestInfo);
-             property.getPropertyDetails().forEach(propertyDetail -> {
-             //   if(propertyDetail.getAssessmentNumber()==null)
+            if(!onlyPropertyDetail)
+                property.getAddress().setId(UUID.randomUUID().toString());
+            property.getAddress().setTenantId(property.getTenantId());
+            property.setAuditDetails(auditDetails);
+            property.setStatus(PropertyInfo.StatusEnum.ACTIVE);
+            setAssessmentNo(property.getTenantId(),property.getPropertyDetails(),requestInfo);
+            property.getPropertyDetails().forEach(propertyDetail -> {
+                //   if(propertyDetail.getAssessmentNumber()==null)
                 {
-                  propertyDetail.setTenantId(property.getTenantId());
-                  propertyDetail.setAuditDetails(auditDetails);
-                  if(onlyPropertyDetail){
-                      propertyDetail.getAuditDetails().setCreatedBy(property.getAuditDetails().getCreatedBy());
-                      propertyDetail.getAuditDetails().setCreatedTime(property.getAuditDetails().getCreatedTime());
-                  }
-                  propertyDetail.getUnits().forEach(unit -> {
-                      unit.setId(UUID.randomUUID().toString());
-                      unit.setTenantId(property.getTenantId());});
-                  if( propertyDetail.getDocuments()!=null)
-                   propertyDetail.getDocuments().forEach(document -> document.setId(UUID.randomUUID().toString()));
-                  propertyDetail.setAssessmentDate(new Date().getTime());
-                  if(propertyDetail.getSubOwnershipCategory().equals("INSTITUTIONAL"))
-                   { propertyDetail.getInstitution().setId(UUID.randomUUID().toString());
-                     propertyDetail.getInstitution().setTenantId(property.getTenantId());
-                     propertyDetail.getOwners().forEach(owner -> {
-                         owner.setInstitutionId(propertyDetail.getInstitution().getId());
-                     });
-                   }
-                   propertyDetail.getOwners().forEach(owner -> {
-                       if(owner.getDocument()!=null)
-                           owner.getDocument().setId(UUID.randomUUID().toString());
-                   });
+                    propertyDetail.setTenantId(property.getTenantId());
+                    propertyDetail.setAuditDetails(auditDetails);
+                    if(onlyPropertyDetail){
+                        propertyDetail.getAuditDetails().setCreatedBy(requestInfo.getUserInfo().getUuid());
+                        propertyDetail.getAuditDetails().setCreatedTime(System.currentTimeMillis());
+                    }
+                    if(!CollectionUtils.isEmpty(propertyDetail.getUnits()))
+                        propertyDetail.getUnits().forEach(unit -> {
+                            unit.setId(UUID.randomUUID().toString());
+                            unit.setTenantId(property.getTenantId());});
+                    if( propertyDetail.getDocuments()!=null)
+                        propertyDetail.getDocuments().forEach(document -> document.setId(UUID.randomUUID().toString()));
+                    propertyDetail.setAssessmentDate(System.currentTimeMillis());
+                    if(propertyDetail.getSubOwnershipCategory().equals("INSTITUTIONAL"))
+                    { propertyDetail.getInstitution().setId(UUID.randomUUID().toString());
+                        propertyDetail.getInstitution().setTenantId(property.getTenantId());
+                        propertyDetail.getOwners().forEach(owner -> {
+                            owner.setInstitutionId(propertyDetail.getInstitution().getId());
+                        });
+                    }
+                    propertyDetail.getOwners().forEach(owner -> {
+                        if(!CollectionUtils.isEmpty(owner.getDocuments()))
+                            owner.getDocuments().forEach(document -> {
+                                document.setId(UUID.randomUUID().toString());
+                            });
+                    });
                 }
             });
         }
         if(!onlyPropertyDetail)
-         setIdgenIds(request);
+            setIdgenIds(request);
     }
 
     /**
@@ -87,9 +90,9 @@ public class EnrichmentService {
         AuditDetails auditDetails = propertyutil.getAuditDetails(requestInfo.getUserInfo().getId().toString(), false);
 
         /*Map of propertyId to property is created from the responseproperty list
-        * Not required if address id is sent in request was used before when one to one mapping was
-        * present between property and propertyDetail
-        * */
+         * Not required if address id is sent in request was used before when one to one mapping was
+         * present between property and propertyDetail
+         * */
         Map<String,Property> idToProperty = new HashMap<>();
         propertiesFromResponse.forEach(propertyFromResponse -> {
             idToProperty.put(propertyFromResponse.getPropertyId(),propertyFromResponse);
@@ -97,7 +100,7 @@ public class EnrichmentService {
 
         /*For every Property if id of any subfield is null new uuid is assigned
          *
-          * */
+         * */
         for (Property property : request.getProperties()){
             property.setAuditDetails(auditDetails);
 
@@ -194,7 +197,7 @@ public class EnrichmentService {
         properties.forEach(property -> {
             property.getPropertyDetails().forEach(propertyDetail ->
             {propertyDetail.getOwners().forEach(owner -> owner.addUserDetail(userIdToOwnerMap.get(owner.getUuid())));
-             propertyDetail.getCitizenInfo().addCitizenDetail(userIdToOwnerMap.get(propertyDetail.getCitizenInfo().getUuid()));
+                propertyDetail.getCitizenInfo().addCitizenDetail(userIdToOwnerMap.get(propertyDetail.getCitizenInfo().getUuid()));
             });
         });
     }

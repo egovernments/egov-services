@@ -26,7 +26,7 @@ public class PropertyUtil {
      * @return AuditDetails
      */
     public AuditDetails getAuditDetails(String by, Boolean isCreate) {
-        Long time = new Date().getTime();
+        Long time = System.currentTimeMillis();
         if(isCreate)
             return AuditDetails.builder().createdBy(by).lastModifiedBy(by).createdTime(time).lastModifiedTime(time).build();
         else

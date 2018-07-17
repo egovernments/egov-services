@@ -109,17 +109,17 @@ serviceMaps:
 
           - jsonPath: $.Properties.*.propertyDetails.*.owners.*.relationship
 
-          - jsonPath: $.Properties.*.propertyDetails.*.owners.*.createdBy
+          - jsonPath: $.Properties.*.propertyDetails[*][?({uuid} in @.owners[*].uuid)].auditDetails.createdBy
 
-          - jsonPath: $.Properties.*.propertyDetails.*.owners.*.lastModifiedBy
+          - jsonPath: $.Properties.*.propertyDetails[*][?({uuid} in @.owners[*].uuid)].auditDetails.lastModifiedBy
 
-          - jsonPath: $.Properties.*.propertyDetails.*.owners.*.createdDate
+          - jsonPath: $.Properties.*.propertyDetails[*][?({uuid} in @.owners[*].uuid)].auditDetails.createdTime
 
-          - jsonPath: $.Properties.*.propertyDetails.*.owners.*.lastModifiedDate
+          - jsonPath: $.Properties.*.propertyDetails[*][?({uuid} in @.owners[*].uuid)].auditDetails.lastModifiedTime
 
 
 
-       - query: INSERT INTO eg_pt_document_v2(tenantId,id, foreignkeyid, documenttype, fileStore,documentuid, createdby, lastmodifiedby, createdtime, lastmodifiedtime) VALUES (?,?,?, ?, ?, ?, ?, ?, ?, ?);
+       - query: INSERT INTO eg_pt_document_propertydetail_v2(tenantId,id, propertydetail, documenttype, fileStore,documentuid, createdby, lastmodifiedby, createdtime, lastmodifiedtime) VALUES (?,?,?, ?, ?, ?, ?, ?, ?, ?);
          basePath: $.Properties.*.propertyDetails.*.documents.*
          jsonMaps:
 
@@ -135,38 +135,40 @@ serviceMaps:
 
            - jsonPath: $.Properties.*.propertyDetails.*.documents.*.documentUid
 
-           - jsonPath: $.Properties[*][?({id} in @.propertyDetails.*.documents[*].id)].auditDetails.createdBy
+           - jsonPath: $.Properties.*.propertyDetails[*][?({id} in @.documents[*].id)].auditDetails.createdBy
 
-           - jsonPath: $.Properties[*][?({id} in @.propertyDetails.*.documents[*].id)].auditDetails.lastModifiedBy
+           - jsonPath: $.Properties.*.propertyDetails[*][?({id} in @.documents[*].id)].auditDetails.lastModifiedBy
 
-           - jsonPath: $.Properties[*][?({id} in @.propertyDetails.*.documents[*].id)].auditDetails.createdTime
+           - jsonPath: $.Properties.*.propertyDetails[*][?({id} in @.documents[*].id)].auditDetails.createdTime
 
-           - jsonPath: $.Properties[*][?({id} in @.propertyDetails.*.documents[*].id)].auditDetails.lastModifiedTime
+           - jsonPath: $.Properties.*.propertyDetails[*][?({id} in @.documents[*].id)].auditDetails.lastModifiedTime
 
 
-       - query: INSERT INTO eg_pt_document_v2(tenantId,id, foreignkeyid, documenttype, fileStore,documentuid, createdby, lastmodifiedby, createdtime, lastmodifiedtime) VALUES (?,?,?, ?, ?, ?, ?, ?, ?, ?);
-         basePath: $.Properties.*.propertyDetails.*.owners.*.document
+       - query: INSERT INTO eg_pt_document_owner_v2(tenantId,id,userid, propertydetail, documenttype, fileStore,documentuid, createdby, lastmodifiedby, createdtime, lastmodifiedtime) VALUES (?,?,?,?, ?, ?, ?, ?, ?, ?, ?);
+         basePath: $.Properties.*.propertyDetails.*.owners.*.documents.*
          jsonMaps:
 
-           - jsonPath: $.Properties.*.tenantId
+           - jsonPath: $.Properties[*][?({id} in @.propertyDetails.*.owners.*.documents[*].id)].tenantId
 
-           - jsonPath: $.Properties.*.propertyDetails.*.owners.*.document.id
+           - jsonPath: $.Properties.*.propertyDetails.*.owners.*.documents.*.id
 
-           - jsonPath: $.Properties.*.propertyDetails.*.owners.*.uuid
+           - jsonPath: $.Properties.*.propertyDetails.*.owners[*][?({id} in @.documents[*].id)].uuid
 
-           - jsonPath: $.Properties.*.propertyDetails.*.owners.*.document.documentType
+           - jsonPath: $.Properties.*.propertyDetails[*][?({id} in @.owners.*.documents[*].id)].assessmentNumber
 
-           - jsonPath: $.Properties.*.propertyDetails.*.owners.*.document.fileStore
+           - jsonPath: $.Properties.*.propertyDetails.*.owners.*.documents.*.documentType
 
-           - jsonPath: $.Properties.*.propertyDetails.*.owners.*.document.documentUid
+           - jsonPath: $.Properties.*.propertyDetails.*.owners.*.documents.*.fileStore
 
-           - jsonPath: $.Properties.*.propertyDetails.*.owners.*.createdBy
+           - jsonPath: $.Properties.*.propertyDetails.*.owners.*.documents.*.documentUid
 
-           - jsonPath: $.Properties.*.propertyDetails.*.owners.*.lastModifiedBy
+           - jsonPath: $.Properties.*.propertyDetails[*][?({id} in @.owners.*.documents[*].id)].auditDetails.createdBy
 
-           - jsonPath: $.Properties.*.propertyDetails.*.owners.*.createdDate
+           - jsonPath: $.Properties.*.propertyDetails[*][?({id} in @.owners.*.documents[*].id)].auditDetails.lastModifiedBy
 
-           - jsonPath: $.Properties.*.propertyDetails.*.owners.*.lastModifiedDate
+           - jsonPath: $.Properties.*.propertyDetails[*][?({id} in @.owners.*.documents[*].id)].auditDetails.createdTime
+
+           - jsonPath: $.Properties.*.propertyDetails[*][?({id} in @.owners.*.documents[*].id)].auditDetails.lastModifiedTime
 
 
 
@@ -253,13 +255,13 @@ serviceMaps:
 
           - jsonPath: $.Properties.*.propertyDetails.*.units.*.arv
 
-          - jsonPath: $.Properties[*][?({id} in @.propertyDetails.*.units[*].id)].auditDetails.createdBy
+          - jsonPath: $.Properties.*.propertyDetails[*][?({id} in @.units[*].id)].auditDetails.createdBy
 
-          - jsonPath: $.Properties[*][?({id} in @.propertyDetails.*.units[*].id)].auditDetails.lastModifiedBy
+          - jsonPath: $.Properties.*.propertyDetails[*][?({id} in @.units[*].id)].auditDetails.lastModifiedBy
 
-          - jsonPath: $.Properties[*][?({id} in @.propertyDetails.*.units[*].id)].auditDetails.createdTime
+          - jsonPath: $.Properties.*.propertyDetails[*][?({id} in @.units[*].id)].auditDetails.createdTime
 
-          - jsonPath: $.Properties[*][?({id} in @.propertyDetails.*.units[*].id)].auditDetails.lastModifiedTime
+          - jsonPath: $.Properties.*.propertyDetails[*][?({id} in @.units[*].id)].auditDetails.lastModifiedTime
 
        - query: INSERT INTO eg_pt_institution_v2(tenantId,id, propertyDetail, name, type,designation, createdby, lastmodifiedby, createdtime, lastmodifiedtime) VALUES (?,?,?, ?, ?, ?, ?, ?, ?,?) ON CONFLICT ON CONSTRAINT pk_eg_pt_institution_v2 DO NOTHING;
          basePath: $.Properties.*.propertyDetails.*.institution
@@ -366,13 +368,13 @@ serviceMaps:
 
             - jsonPath: $.Properties.*.propertyDetails.*.adhocPenalty
 
-            - jsonPath: $.Properties[*][?({assessmentNumber} in @.propertyDetails[*].assessmentNumber)].auditDetails.lastModifiedBy
+            - jsonPath: $.Properties.*.propertyDetails.*.auditDetails.createdBy
 
-            - jsonPath: $.Properties[*][?({assessmentNumber} in @.propertyDetails[*].assessmentNumber)].auditDetails.lastModifiedBy
+            - jsonPath: $.Properties.*.propertyDetails.*.auditDetails.lastModifiedBy
 
-            - jsonPath: $.Properties[*][?({assessmentNumber} in @.propertyDetails[*].assessmentNumber)].auditDetails.lastModifiedTime
+            - jsonPath: $.Properties.*.propertyDetails.*.auditDetails.createdTime
 
-            - jsonPath: $.Properties[*][?({assessmentNumber} in @.propertyDetails[*].assessmentNumber)].auditDetails.lastModifiedTime
+            - jsonPath: $.Properties.*.propertyDetails.*.auditDetails.lastModifiedTime
 
             - jsonPath: $.Properties.*.propertyDetails.*.citizenInfo.uuid
 
@@ -410,9 +412,9 @@ serviceMaps:
 
             - jsonPath: $.Properties.*.propertyDetails.*.adhocPenalty
 
-            - jsonPath: $.Properties[*][?({assessmentNumber} in @.propertyDetails[*].assessmentNumber)].auditDetails.lastModifiedBy
+            - jsonPath: $.Properties.*.propertyDetails.*.auditDetails.lastModifiedBy
 
-            - jsonPath: $.Properties[*][?({assessmentNumber} in @.propertyDetails[*].assessmentNumber)].auditDetails.lastModifiedTime
+            - jsonPath: $.Properties.*.propertyDetails.*.auditDetails.lastModifiedTime
 
 
 
@@ -438,13 +440,13 @@ serviceMaps:
 
            - jsonPath: $.Properties.*.propertyDetails.*.owners.*.relationship
 
-           - jsonPath: $.Properties.*.propertyDetails.*.owners.*.lastModifiedBy
+           - jsonPath: $.Properties.*.propertyDetails[*][?({uuid} in @.owners[*].uuid)].auditDetails.lastModifiedBy
 
-           - jsonPath: $.Properties.*.propertyDetails.*.owners.*.lastModifiedBy
+           - jsonPath: $.Properties.*.propertyDetails[*][?({uuid} in @.owners[*].uuid)].auditDetails.lastModifiedBy
 
-           - jsonPath: $.Properties.*.propertyDetails.*.owners.*.lastModifiedDate
+           - jsonPath: $.Properties.*.propertyDetails[*][?({uuid} in @.owners[*].uuid)].auditDetails.lastModifiedTime
 
-           - jsonPath: $.Properties.*.propertyDetails.*.owners.*.lastModifiedDate
+           - jsonPath: $.Properties.*.propertyDetails[*][?({uuid} in @.owners[*].uuid)].auditDetails.lastModifiedTime
 
            - jsonPath: $.Properties.*.propertyDetails.*.owners.*.isActive
 
@@ -458,12 +460,12 @@ serviceMaps:
 
            - jsonPath: $.Properties.*.propertyDetails.*.owners.*.relationship
 
-           - jsonPath: $.Properties.*.propertyDetails.*.owners.*.lastModifiedBy
+           - jsonPath: $.Properties.*.propertyDetails[*][?({uuid} in @.owners[*].uuid)].auditDetails.lastModifiedBy
 
-           - jsonPath: $.Properties.*.propertyDetails.*.owners.*.lastModifiedDate
+           - jsonPath: $.Properties.*.propertyDetails[*][?({uuid} in @.owners[*].uuid)].auditDetails.lastModifiedTime
 
 
-        - query: INSERT INTO eg_pt_document_v2(tenantId,id, foreignkeyid, documenttype, fileStore,documentuid, createdby, lastmodifiedby, createdtime, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?,?) ON CONFLICT (id) DO UPDATE SET documenttype = ?, fileStore = ?,documentuid=?, lastmodifiedby = ?, lastmodifiedtime = ?;
+        - query: INSERT INTO eg_pt_document_propertydetail_v2(tenantId,id, propertydetail, documenttype, fileStore,documentuid, createdby, lastmodifiedby, createdtime, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?,?) ON CONFLICT (id) DO UPDATE SET documenttype = ?, fileStore = ?,documentuid=?, lastmodifiedby = ?, lastmodifiedtime = ?;
           basePath: $.Properties.*.propertyDetails.*.documents.*
           jsonMaps:
 
@@ -479,13 +481,13 @@ serviceMaps:
 
             - jsonPath: $.Properties.*.propertyDetails.*.documents.*.documentUid
 
-            - jsonPath: $.Properties[*][?({id} in @.propertyDetails.*.documents[*].id)].auditDetails.lastModifiedBy
+            - jsonPath: $.Properties.*.propertyDetails[*][?({id} in @.documents[*].id)].auditDetails.lastModifiedBy
 
-            - jsonPath: $.Properties[*][?({id} in @.propertyDetails.*.documents[*].id)].auditDetails.lastModifiedBy
+            - jsonPath: $.Properties.*.propertyDetails[*][?({id} in @.documents[*].id)].auditDetails.lastModifiedBy
 
-            - jsonPath: $.Properties[*][?({id} in @.propertyDetails.*.documents[*].id)].auditDetails.lastModifiedTime
+            - jsonPath: $.Properties.*.propertyDetails[*][?({id} in @.documents[*].id)].auditDetails.lastModifiedTime
 
-            - jsonPath: $.Properties[*][?({id} in @.propertyDetails.*.documents[*].id)].auditDetails.lastModifiedTime
+            - jsonPath: $.Properties.*.propertyDetails[*][?({id} in @.documents[*].id)].auditDetails.lastModifiedTime
 
             - jsonPath: $.Properties.*.propertyDetails.documents.*.documentType
 
@@ -493,44 +495,46 @@ serviceMaps:
 
             - jsonPath: $.Properties.*.propertyDetails.*.documents.*.documentUid
 
-            - jsonPath: $.Properties[*][?({id} in @.propertyDetails.*.documents[*].id)].auditDetails.lastModifiedBy
+            - jsonPath: $.Properties.*.propertyDetails[*][?({id} in @.documents[*].id)].auditDetails.lastModifiedBy
 
-            - jsonPath: $.Properties[*][?({id} in @.propertyDetails.*.documents[*].id)].auditDetails.lastModifiedTime
+            - jsonPath: $.Properties.*.propertyDetails[*][?({id} in @.documents[*].id)].auditDetails.lastModifiedTime
 
 
-        - query: INSERT INTO eg_pt_document_v2(tenantId,id, foreignkeyid, documenttype, fileStore,documentuid, createdby, lastmodifiedby, createdtime, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?,?) ON CONFLICT (id) DO UPDATE SET documenttype = ?, fileStore = ?,documentuid=?, lastmodifiedby = ?, lastmodifiedtime = ?;
-          basePath:  $.Properties.*.propertyDetails.*.owners.*.document
+        - query: INSERT INTO eg_pt_document_owner_v2(tenantId,id, userid,propertydetail, documenttype, fileStore,documentuid, createdby, lastmodifiedby, createdtime, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?) ON CONFLICT (userid,propertydetail) DO UPDATE SET documenttype = ?, fileStore = ?,documentuid=?, lastmodifiedby = ?, lastmodifiedtime = ?;
+          basePath:  $.Properties.*.propertyDetails.*.owners.*.documents.*
           jsonMaps:
 
-           - jsonPath: $.Properties.*.tenantId
+           - jsonPath: $.Properties[*][?({id} in @.propertyDetails.*.owners.*.documents[*].id)].tenantId
 
-           - jsonPath: $.Properties.*.propertyDetails.*.owners.*.document.id
+           - jsonPath: $.Properties.*.propertyDetails.*.owners.*.documents.*.id
 
-           - jsonPath: $.Properties.*.propertyDetails.*.owners.*.uuid
+           - jsonPath: $.Properties.*.propertyDetails.*.owners[*][?({id} in @.documents[*].id)].uuid
 
-           - jsonPath: $.Properties.*.propertyDetails.*.owners.*.document.documentType
+           - jsonPath: $.Properties.*.propertyDetails[*][?({id} in @.owners.*.documents[*].id)].assessmentNumber
 
-           - jsonPath: $.Properties.*.propertyDetails.*.owners.*.document.fileStore
+           - jsonPath: $.Properties.*.propertyDetails.*.owners.*.documents.*.documentType
 
-           - jsonPath: $.Properties.*.propertyDetails.*.owners.*.document.documentUid
+           - jsonPath: $.Properties.*.propertyDetails.*.owners.*.documents.*.fileStore
 
-           - jsonPath: $.Properties.*.propertyDetails.*.owners.*.createdBy
+           - jsonPath: $.Properties.*.propertyDetails.*.owners.*.documents.*.documentUid
 
-           - jsonPath: $.Properties.*.propertyDetails.*.owners.*.lastModifiedBy
+           - jsonPath: $.Properties.*.propertyDetails[*][?({id} in @.owners.*.documents[*].id)].auditDetails.createdBy
 
-           - jsonPath: $.Properties.*.propertyDetails.*.owners.*.createdDate
+           - jsonPath: $.Properties.*.propertyDetails[*][?({id} in @.owners.*.documents[*].id)].auditDetails.lastModifiedBy
 
-           - jsonPath: $.Properties.*.propertyDetails.*.owners.*.lastModifiedDate
+           - jsonPath: $.Properties.*.propertyDetails[*][?({id} in @.owners.*.documents[*].id)].auditDetails.createdTime
 
-           - jsonPath: $.Properties.*.propertyDetails.*.owners.*.document.documentType
+           - jsonPath: $.Properties.*.propertyDetails[*][?({id} in @.owners.*.documents[*].id)].auditDetails.lastModifiedTime
 
-           - jsonPath: $.Properties.*.propertyDetails.*.owners.*.document.fileStore
+           - jsonPath: $.Properties.*.propertyDetails.*.owners.*.documents.*.documentType
 
-           - jsonPath: $.Properties.*.propertyDetails.*.owners.*.document.documentUid
+           - jsonPath: $.Properties.*.propertyDetails.*.owners.*.documents.*.fileStore
 
-           - jsonPath: $.Properties.*.propertyDetails.*.owners.*.lastModifiedBy
+           - jsonPath: $.Properties.*.propertyDetails.*.owners.*.documents.*.documentUid
 
-           - jsonPath: $.Properties.*.propertyDetails.*.owners.*.lastModifiedDate
+           - jsonPath: $.Properties.*.propertyDetails[*][?({id} in @.owners.*.documents[*].id)].auditDetails.lastModifiedBy
+
+           - jsonPath: $.Properties.*.propertyDetails[*][?({id} in @.owners.*.documents[*].id)].auditDetails.lastModifiedTime
 
 
 
@@ -568,13 +572,13 @@ serviceMaps:
 
            - jsonPath: $.Properties.*.propertyDetails.*.units.*.arv
 
-           - jsonPath: $.Properties[*][?({id} in @.propertyDetails.*.units[*].id)].auditDetails.lastModifiedBy
+           - jsonPath: $.Properties.*.propertyDetails[*][?({id} in @.units[*].id)].auditDetails.lastModifiedBy
 
-           - jsonPath: $.Properties[*][?({id} in @.propertyDetails.*.units[*].id)].auditDetails.lastModifiedBy
+           - jsonPath: $.Properties.*.propertyDetails[*][?({id} in @.units[*].id)].auditDetails.lastModifiedBy
 
-           - jsonPath: $.Properties[*][?({id} in @.propertyDetails.*.units[*].id)].auditDetails.lastModifiedTime
+           - jsonPath: $.Properties.*.propertyDetails[*][?({id} in @.units[*].id)].auditDetails.lastModifiedTime
 
-           - jsonPath: $.Properties[*][?({id} in @.propertyDetails.*.units[*].id)].auditDetails.lastModifiedTime
+           - jsonPath: $.Properties.*.propertyDetails[*][?({id} in @.units[*].id)].auditDetails.lastModifiedTime
 
            - jsonPath: $.Properties.*.propertyDetails.*.units.*.floorNo
 
@@ -600,9 +604,9 @@ serviceMaps:
 
            - jsonPath: $.Properties.*.propertyDetails.*.units.*.arv
 
-           - jsonPath: $.Properties[*][?({id} in @.propertyDetails.*.units[*].id)].auditDetails.lastModifiedBy
+           - jsonPath: $.Properties.*.propertyDetails[*][?({id} in @.units[*].id)].auditDetails.lastModifiedBy
 
-           - jsonPath: $.Properties[*][?({id} in @.propertyDetails.*.units[*].id)].auditDetails.lastModifiedTime
+           - jsonPath: $.Properties.*.propertyDetails[*][?({id} in @.units[*].id)].auditDetails.lastModifiedTime
 
 
 

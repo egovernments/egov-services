@@ -22,7 +22,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@EqualsAndHashCode(exclude={"documentType"})
+@EqualsAndHashCode(of= {"fileStore","documentUid","id"})
 public class Document   {
         @JsonProperty("id")
         private String id;

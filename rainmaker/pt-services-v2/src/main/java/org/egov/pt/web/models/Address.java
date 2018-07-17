@@ -57,7 +57,7 @@ public class Address   {
         @JsonProperty("landmark")
         private String landmark;
 
-        @NotNull
+
         @JsonProperty("doorNo")
         private String doorNo;
 

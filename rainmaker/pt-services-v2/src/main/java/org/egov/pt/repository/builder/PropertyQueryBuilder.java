@@ -13,41 +13,42 @@ public class PropertyQueryBuilder {
 
 	private static final String INNER_JOIN_STRING = "INNER JOIN";
 	private static final String LEFT_OUTER_JOIN_STRING = "LEFT OUTER JOIN";
-	
+
 	private static final String QUERY = "SELECT pt.*,ptdl.*,address.*,owner.*,doc.*,unit.*,insti.*,"
 			+ " pt.propertyid as propertyid,ptdl.assessmentnumber as propertydetailid,doc.id as documentid,unit.id as unitid,"
 			+ "address.id as addresskeyid,insti.id as instiid,"
 			+ "ownerdoc.id as ownerdocid,ownerdoc.documenttype as ownerdocType,ownerdoc.filestore as ownerfileStore,"
 			+ "ownerdoc.documentuid as ownerdocuid,"
 			+ "ptdl.createdby as assesscreatedby,ptdl.lastModifiedBy as assesslastModifiedBy,ptdl.createdTime as assesscreatedTime,"
-			+ "ptdl.lastModifiedTime as assesslastModifiedTime,"
-			+ "insti.name as institutionname,insti.type as institutiontype,insti.tenantid as institenantId"
+			+ "ptdl.lastModifiedTime as assesslastModifiedTime,unit.occupancyDate as unitoccupancyDate,"
+			+ "insti.name as institutionname,insti.type as institutiontype,insti.tenantid as institenantId,"
+			+ "ownerdoc.userid as docuserid,ownerdoc.propertydetail as docassessmentnumber"
 			+ " FROM eg_pt_property_v2 pt "
 			+ INNER_JOIN_STRING
 			+ " eg_pt_propertydetail_v2 ptdl ON pt.propertyid =ptdl.property "
 			+ INNER_JOIN_STRING
 			+ " eg_pt_owner_v2 owner ON ptdl.assessmentnumber=owner.propertydetail "
 			+ INNER_JOIN_STRING
-			+ " eg_pt_unit_v2 unit ON ptdl.assessmentnumber=unit.propertydetail "
-			+ INNER_JOIN_STRING
 			+" eg_pt_address_v2 address on address.property=pt.propertyid "
 			+ LEFT_OUTER_JOIN_STRING
-			+ " eg_pt_document_v2 doc ON ptdl.assessmentnumber=doc.foreignkeyid "
+			+ " eg_pt_unit_v2 unit ON ptdl.assessmentnumber=unit.propertydetail "
 			+ LEFT_OUTER_JOIN_STRING
-			+ " eg_pt_document_v2 ownerdoc ON owner.userid=ownerdoc.foreignkeyid "
+			+ " eg_pt_document_propertydetail_v2 doc ON ptdl.assessmentnumber=doc.propertydetail "
+			+ LEFT_OUTER_JOIN_STRING
+			+ " eg_pt_document_owner_v2 ownerdoc ON ownerdoc.userid=owner.userid "
 			+ LEFT_OUTER_JOIN_STRING
 			+ " eg_pt_institution_v2 insti ON ptdl.assessmentnumber=insti.propertydetail "
 			+ " WHERE ";
-	
+
 	public String getPropertySearchQuery(PropertyCriteria criteria, List<Object> preparedStmtList) {
-		
+
 		StringBuilder builder = new StringBuilder(QUERY);
 		builder.append(" pt.tenantid=? ");
 		preparedStmtList.add(criteria.getTenantId());
-		
+
 		Set<String> ids = criteria.getIds();
 		if(!CollectionUtils.isEmpty(ids)) {
-			
+
 			builder.append("and pt.propertyid IN (").append(convertSetToString(ids)).append(")");
 
 		}
@@ -104,9 +105,9 @@ public class PropertyQueryBuilder {
 
 		return builder.toString();
 	}
-	
+
 	private String convertSetToString(Set<String> ids) {
-		
+
 		final String quotes = "'";
 		final String comma = ",";
 		StringBuilder builder = new StringBuilder();

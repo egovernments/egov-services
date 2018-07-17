@@ -97,9 +97,6 @@ public class PropertyDetail   {
         private Float buildUpArea;
 
         @JsonProperty("units")
-        @Valid
-        @NotNull
-        @Size(min=1)
         private Set<Unit> units;
 
         @JsonProperty("documents")

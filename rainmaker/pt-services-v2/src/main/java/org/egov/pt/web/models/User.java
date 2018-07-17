@@ -5,6 +5,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Digits;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 
 import lombok.*;
 import org.springframework.validation.annotation.Validated;
@@ -39,12 +42,17 @@ public class User   {
         @JsonProperty("salutation")
         private String salutation;
 
+        @NotNull
+        @Pattern(regexp = "[a-z-A-Z]*", message = "Name has invalid characters")
         @JsonProperty("name")
         private String name;
 
+        @NotNull
         @JsonProperty("gender")
         private String gender;
 
+        @NotNull
+        @Pattern(regexp = "[0-9]*", message = "MobileNumber has invalid Number")
         @JsonProperty("mobileNumber")
         private String mobileNumber;
 
@@ -57,9 +65,11 @@ public class User   {
         @JsonProperty("pan")
         private String pan;
 
+        @Digits(integer = 12,fraction=0)
         @JsonProperty("aadhaarNumber")
         private String aadhaarNumber;
 
+        @NotNull
         @JsonProperty("permanentAddress")
         private String permanentAddress;
 
@@ -103,6 +113,7 @@ public class User   {
         @Valid
         private List<Role> roles;
 
+        @NotNull
         @JsonProperty("fatherOrHusbandName")
         private String fatherOrHusbandName;
 
@@ -122,7 +133,7 @@ public class User   {
         private Long createdDate;
 
         @JsonProperty("lastModifiedBy")
-        private Long lastModifiedBy;
+        private String lastModifiedBy;
 
         @JsonProperty("lastModifiedDate")
         private Long lastModifiedDate;

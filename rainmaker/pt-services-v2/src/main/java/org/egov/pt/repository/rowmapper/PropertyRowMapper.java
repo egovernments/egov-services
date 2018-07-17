@@ -1,6 +1,7 @@
 package org.egov.pt.repository.rowmapper;
 
 
+import lombok.extern.slf4j.Slf4j;
 import org.egov.common.contract.request.User;
 import org.egov.pt.web.models.*;
 import org.egov.pt.web.models.Property.CreationReasonEnum;
@@ -17,7 +18,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
+@Slf4j
 @Component
 public class PropertyRowMapper implements ResultSetExtractor<List<Property>> {
 
@@ -74,6 +75,7 @@ public class PropertyRowMapper implements ResultSetExtractor<List<Property>> {
 
 		PropertyDetail detail = null;
 
+		//Search if the row contains new PropertyDetail or existing one
 		String assessmentNumber = rs.getString("assessmentNumber");
 		if(!CollectionUtils.isEmpty(property.getPropertyDetails())) {
 			for(PropertyDetail propertyDetail:property.getPropertyDetails()){
@@ -83,21 +85,26 @@ public class PropertyRowMapper implements ResultSetExtractor<List<Property>> {
 				}
 			}
 		}
+
+		// If assessmentNumber not found in previous loop new PropertyDetail is created
 		if(detail==null) {
 			AuditDetails assessAuditdetails = AuditDetails.builder().createdBy(rs.getString("assesscreatedBy"))
 					.createdTime(rs.getLong("assesscreatedTime")).lastModifiedBy(rs.getString("assesslastModifiedBy"))
 					.lastModifiedTime(rs.getLong("assesslastModifiedTime"))
 					.build();
 
-			Institution institution = Institution.builder()
+			Institution institution = null;
+			if(rs.getString("instiid")!=null)
+			{ institution = Institution.builder()
 					.id(rs.getString("instiid"))
 					.tenantId(rs.getString("institenantId"))
 					.name(rs.getString("institutionName"))
 					.type(rs.getString("institutionType"))
 					.designation(rs.getString("designation"))
 					.build();
+			}
 
-            OwnerInfo citizenInfo = OwnerInfo.builder().uuid(rs.getString("accountId")).build();
+			OwnerInfo citizenInfo = OwnerInfo.builder().uuid(rs.getString("accountId")).build();
 			detail = PropertyDetail.builder()
 					.additionalDetails(rs.getObject("additionalDetails")).buildUpArea(rs.getFloat("buildUpArea"))
 					.channel(ChannelEnum.fromValue(rs.getString("channel"))).landArea(rs.getFloat("landArea"))
@@ -120,43 +127,65 @@ public class PropertyRowMapper implements ResultSetExtractor<List<Property>> {
 
 		String tenantId = property.getTenantId();
 
-		Document ownerDocument = Document.builder().id(rs.getString("ownerdocid")).documentType(rs.getString("ownerdocType"))
+
+		if(rs.getString("documentid")!=null)
+		{Document document = Document.builder().id(rs.getString("documentid"))
+				.documentType(rs.getString("documentType"))
+				.fileStore(rs.getString("fileStore"))
+				.documentUid(rs.getString("documentuid"))
+				.build();
+			detail.addDocumentsItem(document);
+		}
+
+
+		if(rs.getString("unitid")!=null)
+		{Unit unit = Unit.builder().id(rs.getString("unitid"))
+				.floorNo(rs.getString("floorNo"))
+				.tenantId(tenantId)
+				.unitArea(rs.getFloat("unitArea"))
+				.unitType(rs.getString("unitType"))
+				.usageCategoryMajor(rs.getString("usageCategoryMajor"))
+				.usageCategoryMinor(rs.getString("usageCategoryMinor"))
+				.usageCategorySubMinor(rs.getString("usageCategorySubMinor"))
+				.usageCategoryDetail(rs.getString("usageCategoryDetail"))
+				.occupancyType(rs.getString("occupancyType"))
+				.occupancyDate(rs.getLong("unitoccupancyDate"))
+				.constructionType(rs.getString("constructionType"))
+				.constructionSubType(rs.getString("constructionSubType"))
+				.arv(rs.getBigDecimal("arv"))
+				.build();
+			detail.addUnitsItem(unit);
+		}
+
+
+
+		Document ownerDocument = Document.builder().id(rs.getString("ownerdocid"))
+				.documentType(rs.getString("ownerdocType"))
 				.fileStore(rs.getString("ownerfileStore"))
 				.documentUid(rs.getString("ownerdocuid"))
 				.build();
 
 		OwnerInfo owner = OwnerInfo.builder().uuid(rs.getString("userid"))
-				          .isPrimaryOwner(rs.getBoolean("isPrimaryOwner"))
-				          .ownerType(rs.getString("ownerType"))
-				          .ownerShipPercentage(rs.getDouble("ownerShipPercentage"))
-				          .institutionId(rs.getString("institutionid"))
-				          .relationship(OwnerInfo.RelationshipEnum.fromValue(rs.getString("relationship")))
-				          .document(ownerDocument)
-				          .build();
-
-		Document document = Document.builder().id(rs.getString("documentid"))
-				.documentType(rs.getString("documentType"))
-				.fileStore(rs.getString("fileStore"))
-				.documentUid(rs.getString("documentuid"))
+				.isPrimaryOwner(rs.getBoolean("isPrimaryOwner"))
+				.ownerType(rs.getString("ownerType"))
+				.ownerShipPercentage(rs.getDouble("ownerShipPercentage"))
+				.institutionId(rs.getString("institutionid"))
+				.relationship(OwnerInfo.RelationshipEnum.fromValue(rs.getString("relationship")))
 				.build();
-
-
-		Unit unit = Unit.builder().id(rs.getString("unitid")).floorNo(rs.getString("floorNo")).tenantId(tenantId)
-				.unitArea(rs.getFloat("unitArea")).unitType(rs.getString("unitType")).usageCategoryMajor(rs.getString("usageCategoryMajor"))
-				.usageCategoryMinor(rs.getString("usageCategoryMinor")).usageCategorySubMinor(rs.getString("usageCategorySubMinor"))
-				.usageCategoryDetail(rs.getString("usageCategoryDetail"))
-				.occupancyType(rs.getString("occupancyType"))
-				.occupancyDate(rs.getLong("occupancyDate")).constructionType(rs.getString("constructionType"))
-				.constructionSubType(rs.getString("constructionSubType")).arv(rs.getBigDecimal("arv"))
-				.build();
-
 
 		/*
 		 * add item methods of models are being used to avoid the null checks
 		 */
 		detail.addOwnersItem(owner);
-		detail.addDocumentsItem(document);
-		detail.addUnitsItem(unit);
 
+		// Add owner document to the specific propertyDetail for which it was used
+		String docuserid = rs.getString("docuserid");
+		String docAssessmentNumber = rs.getString("docassessmentnumber");
+		if(assessmentNumber.equalsIgnoreCase(docAssessmentNumber) && docuserid!=null) {
+			detail.getOwners().forEach(ownerInfo -> {
+				if (docuserid.equalsIgnoreCase(ownerInfo.getUuid()))
+					ownerInfo.addDocumentsItem(ownerDocument);
+			});
+		}
 	}
 }

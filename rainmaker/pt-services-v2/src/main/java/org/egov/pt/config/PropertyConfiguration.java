@@ -35,11 +35,6 @@ public class PropertyConfiguration {
     }
 
     @Bean
-    public ObjectMapper objectMapper(){
-    return new ObjectMapper().disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES).setTimeZone(TimeZone.getTimeZone(timeZone));
-    }
-
-    @Bean
     @Autowired
     public MappingJackson2HttpMessageConverter jacksonConverter(ObjectMapper objectMapper) {
     MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter();

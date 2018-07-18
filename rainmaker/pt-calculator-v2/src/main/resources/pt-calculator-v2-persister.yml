@@ -7,7 +7,7 @@ serviceMaps:
    fromTopic: save-pt-billingslab
    isTransaction: true
    queryMaps:
-    - query: INSERT INTO eg_pt_billingslab_v2(id, tenantid, propertyType, propertySubType, usageCategoryMajor, usageCategoryMinor, usageCategorySubMinor, usageCategoryDetail, ownerShipCategory, subOwnerShipCategory, fromFloor, toFloor, areaType, fromPlotSize, toPlotSize, occupancyType, unitRate, createdby, createdtime, lastmodifiedby, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, cast(? as double precision), cast(? as double precision), ?, ?, cast(? as double precision), ?, ?, ?, ?, ?, ?);
+    - query: INSERT INTO eg_pt_billingslab_v2(id, tenantid, propertyType, propertySubType, usageCategoryMajor, usageCategoryMinor, usageCategorySubMinor, usageCategoryDetail, ownerShipCategory, subOwnerShipCategory, fromFloor, toFloor, areaType, fromPlotSize, toPlotSize, occupancyType, unitRate, unbuiltunitrate, avrpercent, createdby, createdtime, lastmodifiedby, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, cast(? as double precision), cast(? as double precision), ?, ?, cast(? as double precision), ?, ?, ?, ?, ?, ?);
 
       basePath: billingSlab.*
       jsonMaps:
@@ -45,6 +45,10 @@ serviceMaps:
        - jsonPath: $.billingSlab.*.occupancyType
        
        - jsonPath: $.billingSlab.*.unitRate
+       
+       - jsonPath: $.billingSlab.*.unBuiltUnitRate
+       
+       - jsonPath: $.billingSlab.*.arvPercent
 
        - jsonPath: $.billingSlab.*.auditDetails.createdBy
 
@@ -62,7 +66,7 @@ serviceMaps:
    isTransaction: true
    queryMaps:
 
-    - query: UPDATE eg_pt_billingslab_v2 SET propertyType=?, propertySubType=?, usageCategoryMajor=?, usageCategoryMinor=?, usageCategorySubMinor=?, usageCategoryDetail=?, ownerShipCategory=?, subOwnerShipCategory=?, fromFloor=cast(? as double precision), toFloor=cast(? as double precision), areaType=?, fromPlotSize=?,  toPlotSize=cast(? as double precision), occupancyType=?, unitRate=?, lastmodifiedby=?, lastmodifiedtime=? WHERE tenantid=? AND id=?;
+    - query: UPDATE eg_pt_billingslab_v2 SET propertyType=?, propertySubType=?, usageCategoryMajor=?, usageCategoryMinor=?, usageCategorySubMinor=?, usageCategoryDetail=?, ownerShipCategory=?, subOwnerShipCategory=?, fromFloor=cast(? as double precision), toFloor=cast(? as double precision), areaType=?, fromPlotSize=?,  toPlotSize=cast(? as double precision), occupancyType=?, unitRate=?, unbuiltunitrate=?, arvpercent=?, lastmodifiedby=?, lastmodifiedtime=? WHERE tenantid=? AND id=?;
 
       basePath: billingSlab.*
       jsonMaps:
@@ -96,6 +100,10 @@ serviceMaps:
        - jsonPath: $.billingSlab.*.occupancyType
 
        - jsonPath: $.services.*.unitRate
+       
+       - jsonPath: $.billingSlab.*.unBuiltUnitRate
+       
+       - jsonPath: $.billingSlab.*.arvPercent
 
        - jsonPath: $.billingSlab.*.auditDetails.lastmodifiedBy
 

@@ -689,20 +689,20 @@ class Nominee extends React.Component {
                 <div className="col-sm-6">
                   <div className="row">
                     <div className="col-sm-6 label-text">
-                      <label htmlFor="">Is Nominee <span>*</span></label>
+                      <label htmlFor="">Is Nominee</label>
                     </div>
                     <div className="col-sm-6">
-                      <input type="checkbox" name="nominated" value={nominated} onChange={(e) => { handleChange(e, "nominated", true) }} checked={nominated === true ? "Yes" : "No"} />
+                      <input type="checkbox" name="nominated" value={nominated} onChange={(e) => { handleChange(e, "nominated", true) }} checked={nominated === true ? true : false} />
                     </div>
                   </div>
                 </div>
                 <div className="col-sm-6">
                   <div className="row">
                     <div className="col-sm-6 label-text">
-                      <label for="employed"> Is Employed <span>*</span></label>
+                      <label for="employed"> Is Employed</label>
                     </div>
                     <div className="col-sm-6">
-                      <input type="checkbox" name="employed" value={employed} onChange={(e) => { handleChange(e, "employed", true) }} checked={employed === true ? "Yes" : "No"} />
+                      <input type="checkbox" name="employed" value={employed} onChange={(e) => { handleChange(e, "employed", true) }} checked={employed === true ? true : false} />
                     </div>
                   </div>
                 </div>

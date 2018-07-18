@@ -21,47 +21,47 @@ paths:
       parameters:
         - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo'
         - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId'
-        - name: active
+        - name: name
           in: query
-          description: True will be set in cases where only active properties are needed and False will be set when inactive properties are needed and no value will be set when all properties are needed.
+          description: Name of owner whose property is to be searched.
           required: false
-          type: boolean
+          type: string
           format: varchar
           allowEmptyValue: true
-        - name: propertyId
+        - name: ids
           in: query
-          description: Primary key of Property object.
+          description: List of system generated ids of properties.
           required: false
           type: string
           format: varchar
-        - name: assessmentNumber
+        - name: propertyDetailids
           in: query
           required: false
-          description: The unique reference number for a property.
+          description: List of assessmentNumbers to search.
           type: string
           minLength: 4
           maxLength: 128
           exclusiveMinimum: true
           exclusiveMaximum: false
-        - name: oldAssessmentNumber
+        - name: oldpropertyids
           in: query
           required: false
-          description: The unique old assessment no for a Property.
+          description: List of oldassessmentNumbers to search..
           type: string
           minLength: 4
           maxLength: 128
           exclusiveMinimum: true
           exclusiveMaximum: false
-        - name: locality
+        - name: mobileNumber
           in: query
-          description: Locality boundary where the property is located.
+          description: MobileNumber of owner whose property is to be searched.
           required: false
           type: integer
           format: int64
-        - name: acknowldgementNumber
+        - name: accountId
           in: query
           required: false
-          description: The acknowldgement number no for a property.
+          description: The uuid of the user who created the property.
           type: string
           minLength: 1
           maxLength: 64

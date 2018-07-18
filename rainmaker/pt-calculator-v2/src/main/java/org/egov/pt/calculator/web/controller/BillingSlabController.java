@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import lombok.extern.slf4j.Slf4j;
 
 @Controller
-@RequestMapping("/billing-slab")
+@RequestMapping("/billingslab")
 @Slf4j
 public class BillingSlabController {
 	

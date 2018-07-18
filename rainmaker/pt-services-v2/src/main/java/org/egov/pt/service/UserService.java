@@ -117,19 +117,21 @@ public class UserService {
      * @param propertyDetail whose unique mobileNumbers are needed to be fetched
      * @return list of all unique mobileNumbers in the given propertyDetail
      */
-    private Set<String> getMobileNumbers(PropertyDetail propertyDetail,String tenantId){
+     private Set<String> getMobileNumbers(PropertyDetail propertyDetail,String tenantId){
         Set<String> listOfMobileNumbers = new HashSet<>();
         propertyDetail.getOwners().forEach(owner -> {listOfMobileNumbers.add(owner.getMobileNumber());});
         StringBuilder uri = new StringBuilder(userHost).append(userSearchEndpoint);
         UserSearchRequest userSearchRequest = new UserSearchRequest();
         userSearchRequest.setTenantId(tenantId);
+        Set<String> availableMobileNumbers = new HashSet<>();
+
         listOfMobileNumbers.forEach(mobilenumber -> {
             userSearchRequest.setMobileNumber(mobilenumber);
             UserDetailResponse userDetailResponse =  userCall(userSearchRequest,uri);
-            if(!CollectionUtils.isEmpty(userDetailResponse.getUser()))
-                listOfMobileNumbers.remove(mobilenumber);
+            if(CollectionUtils.isEmpty(userDetailResponse.getUser()))
+                availableMobileNumbers.add(mobilenumber);
         });
-        return listOfMobileNumbers;
+        return availableMobileNumbers;
     }
 
     /**

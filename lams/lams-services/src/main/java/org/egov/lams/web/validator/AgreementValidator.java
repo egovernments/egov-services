@@ -54,6 +54,9 @@ public class AgreementValidator {
 	public static final String SHOPPING_COMPLEX = "Shopping Complex";
 	private static final List<String> AUCTION_CATEGORIES = Arrays.asList("Market", "Fish Tanks", "Slaughter House", "Community Toilet Complex", "Community Hall");
 	private static final String ERROR_MSG_AGREEMENT_INACTIVE = "History/InActive agreements are not allowed.";
+	private static final String CENTRAL_GST = "CENTRAL_GST";
+	private static final String STATE_GST = "STATE_GST";
+	private static final String RENT = "RENT";
 	
 	@Autowired
 	private AssetRepository assetService;
@@ -434,7 +437,9 @@ public class AgreementValidator {
 	private Boolean checkCollection(List<DemandDetails> demandDetails, Date fromDate, Date toDate) {
 		Boolean isPaid = Boolean.FALSE;
 		for (DemandDetails demandDetail : demandDetails) {
-			if (propertiesManager.getTaxReasonRent().equalsIgnoreCase(demandDetail.getTaxReason())) {
+			if (RENT.equalsIgnoreCase(demandDetail.getTaxReasonCode())
+					|| CENTRAL_GST.equalsIgnoreCase(demandDetail.getTaxReasonCode())
+					|| STATE_GST.equalsIgnoreCase(demandDetail.getTaxReasonCode())) {
 				if (demandDetail.getPeriodEndDate().compareTo(fromDate) >= 0
 						&& demandDetail.getPeriodStartDate().compareTo(toDate) <= 0
 						&& demandDetail.getCollectionAmount().compareTo(BigDecimal.ZERO) > 0) {

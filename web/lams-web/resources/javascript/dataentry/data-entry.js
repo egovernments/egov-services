@@ -842,14 +842,6 @@ var commomFieldsRules = {
       required: decodeURIComponent(getUrlVars()["type"]).toLowerCase() == "shopping complex"  ? true : false,
       alphaNumersh: true
     },
-    collectedGoodWillAmount: {
-      required: false,
-      integerOnly:true
-    },
-    collectedSecurityDeposit: {
-      required: false,
-      integerOnly:true
-    },
     goodWillAmount: {
       required: false,
       integerOnly:true
@@ -1276,21 +1268,6 @@ $("#createAgreementForm").validate({
         }
 
       }
-
-    var id1 = $('#collectedGoodWillAmount').val();
-    var id2 = $('#goodWillAmount').val();
-    if (id1 && id2 && Number(id1) > Number(id2)) {
-        showError("Collected GoodWill Amount should be less than GoodWill Amount");
-        return false;
-
-    }
-    var id3 = $('#collectedSecurityDeposit').val();
-    var id4 = $('#securityDeposit').val();
-    if (Number(id3) > Number(id4)) {
-        showError("Collected Security Deposit should be less than Security Deposit");
-        return false;
-
-    }
 
     showLoading();
         var fromDate = $('#commencementDate').val();

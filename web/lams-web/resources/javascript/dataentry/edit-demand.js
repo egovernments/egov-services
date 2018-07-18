@@ -116,8 +116,16 @@ class EditDemand extends React.Component {
     var penaltyDemands = [];
     var sgstDemands = [];
     var cgstDemands = [];
+    var goodWillAmount = [];
+    var cgstGoodWillAmount = [];
+    var sgstGoodWillAmount = [];
+    var depositAmount = [];
+    var cgstDepositAmount = [];
+    var sgstDepositAmount = [];
     var serviceTaxDemands = [];
     var restOfDemands = [];
+    var serviceTaxOnGoodWill = [];
+    var serviceTaxOnAdvance = [];
     var agreementDetail = {};
     var currentDate =  new Date();
 
@@ -172,11 +180,38 @@ class EditDemand extends React.Component {
       }
     });
 
+      agreementDetail["legacyDemands"][0]["demandDetails"].forEach((demand) => {
+
+          if (demand.taxReasonCode.toLowerCase() === "gw_st" || demand.taxReason.toLowerCase() === "ServiceTax On GoodWill") {
+              serviceTaxOnGoodWill.push(demand);
+          }
+      });
+
+      agreementDetail["legacyDemands"][0]["demandDetails"].forEach((demand) => {
+          if (demand.taxReasonCode.toLowerCase() === "adv_st" || demand.taxReason.toLowerCase() === "ServiceTax On Advance") {
+          serviceTaxOnAdvance.push(demand);
+      }
+      });
     agreementDetail["legacyDemands"][0]["demandDetails"].forEach((demand) => {
-      if (demand.taxReasonCode.toLowerCase() == "advance_tax" || demand.taxReasonCode.toLowerCase() == "adv_cgst" || demand.taxReasonCode.toLowerCase() == "adv_sgst") {
-        restOfDemands.push(demand);
-      }else if (demand.taxReasonCode.toLowerCase() == "goodwill_amount" || demand.taxReasonCode.toLowerCase() == "gw_cgst" || demand.taxReasonCode.toLowerCase() == "gw_sgst"){
-        restOfDemands.push(demand);
+
+        if (demand.taxReasonCode.toLowerCase() == "advance_tax") {
+          depositAmount.push(demand);
+
+      }
+      if(demand.taxReasonCode.toLowerCase() == "adv_cgst") {
+            cgstDepositAmount.push(demand);
+        }
+        if( demand.taxReasonCode.toLowerCase() == "adv_sgst") {
+        sgstDepositAmount.push(demand);
+      }
+       if (demand.taxReasonCode.toLowerCase() == "goodwill_amount") {
+        goodWillAmount.push(demand);
+        }
+        if( demand.taxReasonCode.toLowerCase() == "gw_cgst") {
+            cgstGoodWillAmount.push(demand);
+        }
+        if( demand.taxReasonCode.toLowerCase() == "gw_sgst"){
+        sgstGoodWillAmount.push(demand);
       }
     });
 
@@ -187,7 +222,64 @@ class EditDemand extends React.Component {
       demands.splice(index, 0, rentDemands[i]);
       index++;
 
-      penaltyDemands.forEach((pDemand) => {
+        serviceTaxOnAdvance.forEach((pDemand) => {
+            if (pDemand.taxPeriod === rentDemands[i].taxPeriod) {
+                demands.splice(index, 0, pDemand);
+                index++;
+            }
+        });
+
+        serviceTaxOnGoodWill.forEach((pDemand) => {
+            if (pDemand.taxPeriod === rentDemands[i].taxPeriod) {
+                demands.splice(index, 0, pDemand);
+                index++;
+            }
+        });
+
+        depositAmount.forEach((pDemand) => {
+            if (pDemand.taxPeriod === rentDemands[i].taxPeriod) {
+                demands.splice(index, 0, pDemand);
+                index++;
+            }
+        });
+
+        cgstDepositAmount.forEach((pDemand) => {
+            if (pDemand.taxPeriod === rentDemands[i].taxPeriod) {
+                demands.splice(index, 0, pDemand);
+                index++;
+            }
+        });
+
+        sgstDepositAmount.forEach((pDemand) => {
+            if (pDemand.taxPeriod === rentDemands[i].taxPeriod) {
+                demands.splice(index, 0, pDemand);
+                index++;
+            }
+        });
+
+        goodWillAmount.forEach((pDemand) => {
+            if (pDemand.taxPeriod === rentDemands[i].taxPeriod) {
+                demands.splice(index, 0, pDemand);
+                index++;
+            }
+        });
+
+        sgstGoodWillAmount.forEach((pDemand) => {
+            if (pDemand.taxPeriod === rentDemands[i].taxPeriod) {
+                demands.splice(index, 0, pDemand);
+                index++;
+            }
+        });
+
+
+        cgstGoodWillAmount.forEach((pDemand) => {
+            if (pDemand.taxPeriod === rentDemands[i].taxPeriod) {
+                demands.splice(index, 0, pDemand);
+                index++;
+            }
+        });
+
+        penaltyDemands.forEach((pDemand) => {
         if (pDemand.taxPeriod === rentDemands[i].taxPeriod) {
           demands.splice(index, 0, pDemand);
           index++;

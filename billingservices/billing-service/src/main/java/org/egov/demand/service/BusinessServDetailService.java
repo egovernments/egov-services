@@ -103,9 +103,9 @@ public class BusinessServDetailService {
 
         businessServiceDetailRequest.setBusinessServiceDetails(businessServiceDetailList);
 
-        LOGGER.info(" -- createAsync businessServiceDetailRequest -- " + businessServiceDetailRequest);
-        kafkaTemplate.send(applicationProperties.getCreateBusinessServiceDetailTopicName(), applicationProperties.getCreateBusinessServiceDetailTopicKey(),
-                businessServiceDetailRequest);
+       /* kafkaTemplate.send(applicationProperties.getCreateBusinessServiceDetailTopicName(), applicationProperties.getCreateBusinessServiceDetailTopicKey(),
+                businessServiceDetailRequest);*/
+        create(businessServiceDetailRequest);
         return getBusinessServiceDetailResponse(businessServiceDetailList, businessServiceDetailRequest.getRequestInfo());
     }
 

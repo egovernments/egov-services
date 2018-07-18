@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class BillingControllerAdvice {
 
-	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	@ExceptionHandler(Exception.class)
 	public ErrorResponse handleServerError(Exception ex) {
 		ex.printStackTrace();
@@ -22,8 +22,8 @@ public class BillingControllerAdvice {
 		errRes.setResponseInfo(responseInfo);
 		Error error = new Error();
 
-		error.setCode(500);
-		error.setMessage("Internal Server Error");
+		error.setCode(400);
+		error.setMessage(ex.getMessage());
 		error.setDescription(ex.getMessage());
 		errRes.setError(error);
 		return errRes;

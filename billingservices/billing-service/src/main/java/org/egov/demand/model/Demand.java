@@ -47,13 +47,17 @@ import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
+import org.egov.demand.model.enums.DemandStatus;
+
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class Demand {
 
 	private String id;
@@ -88,4 +92,6 @@ public class Demand {
 	private BigDecimal minimumAmountPayable = BigDecimal.ZERO;
 
 	private AuditDetail auditDetail;
+	
+	private DemandStatus status;
 }

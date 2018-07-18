@@ -230,7 +230,7 @@ public class DemandValidator implements Validator {
 
 	private void validateDemandDetails(List<DemandDetail> demandDetails, Errors errors) {
 
-		for (DemandDetail demandDetail : demandDetails) {
+/*		for (DemandDetail demandDetail : demandDetails) {
 			if(!"ADVANCE".equalsIgnoreCase(demandDetail.getTaxHeadMasterCode())){
 				BigDecimal tax = demandDetail.getTaxAmount();
 				BigDecimal collection = demandDetail.getCollectionAmount();
@@ -239,7 +239,7 @@ public class DemandValidator implements Validator {
 					errors.rejectValue("Demands", "", "DEMAND_DETAIL_COLLECTIONAMOUNT : " + collection
 							+ " should not be greater than taxAmount : " + tax + " for demandDetail");
 			}
-		}
+		}*/
 	}
 
 	private void validateTaxPeriod(DemandRequest demandRequest, Errors errors) {

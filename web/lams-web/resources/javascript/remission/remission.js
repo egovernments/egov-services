@@ -185,7 +185,7 @@ class RemissionAgreement extends React.Component {
                 var newDateStr = dateParts2[1] + "/" + dateParts2[0] + "/" + dateParts2[2];
                 var date2 = new Date(newDateStr);
                 if (date2 < date1) {
-                    return (showError("Remission Order Date should be before Remission From Date"));
+                    return (showError("Council/standing committee resolution date should be before remission from date"));
                     $('#' + _triggerId).val("");
                 }
             }

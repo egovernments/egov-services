@@ -19,6 +19,7 @@ import org.egov.pt.calculator.web.models.CalculationReq;
 import org.egov.pt.calculator.web.models.GetBillCriteria;
 import org.egov.pt.calculator.web.models.TaxHeadEstimate;
 import org.egov.pt.calculator.web.models.demand.BillResponse;
+import org.egov.pt.calculator.web.models.demand.Category;
 import org.egov.pt.calculator.web.models.demand.Demand;
 import org.egov.pt.calculator.web.models.demand.DemandDetail;
 import org.egov.pt.calculator.web.models.demand.DemandRequest;
@@ -219,9 +220,18 @@ public class DemandService {
 		OwnerInfo owner = detail.getCitizenInfo();
 		List<DemandDetail> details = new ArrayList<>();
 
-		for (TaxHeadEstimate estimate : calculation.getTaxHeadEstimates())
-			details.add(DemandDetail.builder().taxHeadMasterCode(estimate.getTaxHeadCode())
-					.taxAmount(estimate.getEstimateAmount()).tenantId(tenantId).build());
+		for (TaxHeadEstimate estimate : calculation.getTaxHeadEstimates()) {
+
+			Category category = estimate.getCategory();
+
+			if (category.equals(Category.REBATE) || category.equals(Category.ADVANCE_COLLECTION)
+					|| category.equals(Category.EXEMPTION))
+				details.add(DemandDetail.builder().taxHeadMasterCode(estimate.getTaxHeadCode())
+						.collectionAmount(estimate.getEstimateAmount()).taxAmount(BigDecimal.ZERO).tenantId(tenantId).build());
+			else
+				details.add(DemandDetail.builder().taxHeadMasterCode(estimate.getTaxHeadCode())
+						.taxAmount(estimate.getEstimateAmount()).tenantId(tenantId).build());
+		}
 
 		return Demand.builder().tenantId(tenantId).businessService(configs.getPtModuleCode()).consumerType(propertyType)
 				.consumerCode(consumerCode).owner(owner).taxPeriodFrom(calculation.getFromDate())

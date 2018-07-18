@@ -19,6 +19,7 @@ public class GetBillCriteria {
 	@NotNull
 	private String propertyId;
 	
+	@NotNull
 	private String assessmentYear;
 	
 	@NotNull

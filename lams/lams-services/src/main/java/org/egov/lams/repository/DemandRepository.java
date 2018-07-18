@@ -48,7 +48,7 @@ public class DemandRepository {
 
 	@Autowired
 	private ObjectMapper objectMapper;
-	
+
 	@Autowired
 	private RestTemplate restTemplate;
 
@@ -57,11 +57,11 @@ public class DemandRepository {
 
 	@Autowired
 	DemandHelper demandHelper;
-	
+
 	@Autowired
 	private LamsConfigurationService lamsConfigurationService;
-	
-	
+
+
 
 	public List<DemandReason> getDemandReason(AgreementRequest agreementRequest) {
 
@@ -69,7 +69,7 @@ public class DemandRepository {
 		Agreement agreement = agreementRequest.getAgreement();
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTime(agreement.getCommencementDate());
-		
+
 		if (agreement.getPaymentCycle().equals(PaymentCycle.MONTH))
 			calendar.add(Calendar.MONTH, 1);
 		else if (agreement.getPaymentCycle().equals(PaymentCycle.QUARTER))
@@ -97,6 +97,20 @@ public class DemandRepository {
 				demandReasons.addAll(getDemandReasonsForTaxReason(agreementRequest, date, taxReason));
 				taxReason = propertiesManager.getTaxReasonCentralGst();
 				demandReasons.addAll(getDemandReasonsForTaxReason(agreementRequest, date, taxReason));
+				date = calendar.getTime();
+				taxReason = propertiesManager.getTaxReasonCGSTOnAdvance();
+				demandReasons.addAll(getDemandReasonsForTaxReason(agreementRequest, date, taxReason));
+
+				taxReason = propertiesManager.getTaxReasonSGSTOnAdvance();
+				demandReasons.addAll(getDemandReasonsForTaxReason(agreementRequest, date, taxReason));
+
+				taxReason = propertiesManager.getTaxReasonCGSTOnGoodwill();
+				demandReasons.addAll(getDemandReasonsForTaxReason(agreementRequest, date, taxReason));
+
+				taxReason = propertiesManager.getTaxReasonSGSTOnGoodwill();
+				demandReasons.addAll(getDemandReasonsForTaxReason(agreementRequest, date, taxReason));
+
+
 			}else{
 				taxReason = propertiesManager.getTaxReasonServiceTax();
 				demandReasons.addAll(getDemandReasonsForTaxReason(agreementRequest, gstDate, taxReason));
@@ -104,6 +118,13 @@ public class DemandRepository {
 				demandReasons.addAll(getDemandReasonsForTaxReason(agreementRequest, date, taxReason));
 				taxReason = propertiesManager.getTaxReasonCentralGst();
 				demandReasons.addAll(getDemandReasonsForTaxReason(agreementRequest, date, taxReason));
+				date = calendar.getTime();
+				taxReason = propertiesManager.getTaxReasonServiceTaxOnGoodwill();
+				demandReasons.addAll(getDemandReasonsForTaxReason(agreementRequest, date, taxReason));
+				taxReason = propertiesManager.getTaxReasonServiceTaxOnAdvance();
+				demandReasons.addAll(getDemandReasonsForTaxReason(agreementRequest, date, taxReason));
+
+
 			}
 			return demandReasons;
 		}
@@ -136,11 +157,11 @@ public class DemandRepository {
 		}
 		return demandReasons;
 	}
-	
+
 	/*
 	 * to get demand reason RENT upto current installment in Add/Edit Demand
 	 */
-	
+
 	public List<DemandReason> getLegacyDemandReason(AgreementRequest agreementRequest) {
 
 		List<DemandReason> demandReasons = new ArrayList<>();
@@ -176,7 +197,7 @@ public class DemandRepository {
 		return demandReasons;
 
 	}
-	
+
 	/*
 	 * API to fetch current installment end date based on agreement payment
 	 * cycle and current date
@@ -238,8 +259,8 @@ public class DemandRepository {
 		}
 		return cal;
 	}
-	
-	
+
+
 	private List<DemandReason> getDemandReasonsForTaxReason(AgreementRequest agreementRequest, Date date,
 			String taxReason) {
 
@@ -291,13 +312,13 @@ public class DemandRepository {
 		demand.setTenantId(agreement.getTenantId());
 		demand.setInstallment(demandReasons.get(0).getTaxPeriod());
 		demand.setModuleName("Leases And Agreements");
-		
+
 		Double gstOnAdvance = agreement.getSecurityDeposit() !=null ?  (agreement.getSecurityDeposit() * 18)/100 : 0;
 		Double gstOnGoodWill = agreement.getGoodWillAmount() != null ? (agreement.getGoodWillAmount() * 18) / 100 : 0;
 
-		if (agreement.getDemands() != null) 
+		if (agreement.getDemands() != null)
 			demand.setId(agreement.getDemands().get(0));
-		
+
 		DemandDetails demandDetail = null;
 		for (DemandReason demandReason : demandReasons) {
 
@@ -307,7 +328,7 @@ public class DemandRepository {
 			demandDetail.setTaxReason(demandReason.getName());
 			demandDetail.setTaxReasonCode(demandReason.getName());
 			demandDetail.setTaxPeriod(demandReason.getTaxPeriod());
-			
+
 			LOGGER.info("the demand reason object in the loop : " + demandReason);
 			if ("RENT".equalsIgnoreCase(demandReason.getName())) {
 				demandDetail.setTaxAmount(BigDecimal.valueOf(agreement.getRent()));
@@ -338,8 +359,11 @@ public class DemandRepository {
 					|| "GW_SGST".equalsIgnoreCase(demandReason.getName())) {
 				demandDetail.setTaxAmount(BigDecimal.valueOf(Math.round(gstOnGoodWill / 2)));
 
+			}else if ("GW_ST".equalsIgnoreCase(demandReason.getName()) || "ADV_ST".equalsIgnoreCase(demandReason.getName())) {
+				demandDetail.setTaxAmount(BigDecimal.ZERO);
+
 			}
-			if (demandDetail.getTaxAmount() != null && demandDetail.getTaxAmount().compareTo(BigDecimal.ZERO) > 0)
+			if (demandDetail.getTaxAmount() != null)
 				demandDetails.add(demandDetail);
 		}
 
@@ -430,12 +454,12 @@ public class DemandRepository {
 		LOGGER.info("the exception raised during update demand API call ::: " + demandResponse);
 		return demandResponse;
 	}
-	
+
 	/**
-	 * Based on Expiry date all the demand reasons are fetched 
+	 * Based on Expiry date all the demand reasons are fetched
 	 * expirydate = Renewal date + No.of Years(Time period)
 	 */
-	
+
 	public List<DemandReason> getDemandReasonForRenewal(AgreementRequest agreementRequest, boolean isForApproval) {
 
 		List<DemandReason> demandReasons = new ArrayList<>();
@@ -483,10 +507,10 @@ public class DemandRepository {
 					demandReasons.addAll(getDemandReasonsForTaxReason(agreementRequest, effectiveInstDate, taxReason));
 				}
 			}
-		
+
 		return demandReasons;
 	}
-	
+
 	private Date getGstEffectiveDate(String tenantId) {
 		DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");// remove this Simple Date Format
 		Date gstDate = null;
@@ -507,6 +531,6 @@ public class DemandRepository {
 		}
 		return gstDate;
 	}
-	
-		
+
+
 }

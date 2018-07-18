@@ -59,7 +59,7 @@ public class DemandHelper {
 		urlParams.append("&installmentType=" + agreement.getPaymentCycle().toString());
 		if (GST_REASONS.stream().anyMatch(reason -> reason.equalsIgnoreCase(taxReason))) {
 			urlParams.append("&taxCategory=GST");
-		} else if ("SERVICE_TAX".equalsIgnoreCase(taxReason)) {
+		} else if ("SERVICE_TAX".equalsIgnoreCase(taxReason) || "ADV_ST".equalsIgnoreCase(taxReason) || "GW_ST".equalsIgnoreCase(taxReason)) {
 			urlParams.append("&taxCategory=SERVICETAX");
 		} else
 			urlParams.append("&taxCategory=" + (propertiesManager.getTaxReasonPenalty().equalsIgnoreCase(taxReason)

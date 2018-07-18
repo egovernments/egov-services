@@ -149,7 +149,8 @@ public class ReportQueryBuilder {
 				// + "sum(case when has_sla_crossed = 'No' then 1 else 0 end) as within_sla,\n"
 				+ "sum(case when has_sla_crossed = 'Yes' then 1 else 0 end) as outside_sla,\n"
 				+ "avg(cast(rating as numeric)) as avg_citizen_rating\n"
-				+ "from eg_pgr_service INNER JOIN eg_pgr_action ON servicerequestid = eg_pgr_action.businesskey INNER JOIN slaservicerequestidview ON servicerequestid = slaservicerequestidview.businesskey  where eg_pgr_action.businesskey IN (select DISTINCT businesskey from eg_pgr_action where status = 'assigned')\n"
+				+ "from eg_pgr_service INNER JOIN eg_pgr_action ON servicerequestid = eg_pgr_action.businesskey INNER JOIN slaservicerequestidview ON servicerequestid = slaservicerequestidview.businesskey  "
+				+ "where eg_pgr_action.businesskey IN (select DISTINCT businesskey from eg_pgr_action where status = 'assigned' AND \"when\" IN (select max(\"when\") from eg_pgr_action group by businesskey))\n"
 				+ "$where group by assignee";
 
 		query = addWhereClause(query, reportRequest);

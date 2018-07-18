@@ -471,8 +471,8 @@ class ApplyLeave extends React.Component {
   }
 
   handleChange(e, name) {
-
     if (name === "encashable") {
+      let val = e.target.checked;
       if (e.target.checked)
         $('#totalWorkingDays').prop("disabled", false);
       else
@@ -504,18 +504,17 @@ class ApplyLeave extends React.Component {
               leaveSet: {
                 ..._this.state.leaveSet,
                 availableDays: _day,
-                encashable,
+                encashable:val,
                 fromDate: "",
                 toDate: ""
               }
             });
           }
         } else {
-
           _this.setState({
             leaveSet: {
               ..._this.state.leaveSet,
-              encashable,
+              encashable:val,
               fromDate: "",
               toDate: ""
             }
@@ -831,7 +830,6 @@ class ApplyLeave extends React.Component {
       if (this.state.leaveSet.leaveType.id) {
         let encashableLeaveType = getNameById(this.state.leaveList, this.state.leaveSet.leaveType.id, "encashable");
         if (encashableLeaveType || encashableLeaveType == "TRUE" || encashableLeaveType == "true") {
-
           return (
 
             <div className="row">
@@ -841,8 +839,8 @@ class ApplyLeave extends React.Component {
                     <label htmlFor="">En-cashable</label>
                   </div>
                   <div className="col-sm-6">
-                    <input type="checkbox" id="encashable" name="encashable" checked={encashable}
-                      onChange={(e) => { handleChange(e, "encashable") }} />
+                    <input type="checkbox" id="encashable" name="encashable" checked={encashable === true? true : false}
+                      onChange={(e) => { handleChange(e, "encashable",true) }} />
                   </div>
                 </div>
               </div>

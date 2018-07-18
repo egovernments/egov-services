@@ -15,6 +15,8 @@ import org.egov.pt.calculator.repository.PTCalculatorRepository;
 import org.egov.pt.calculator.service.BillingSlabService;
 import org.egov.pt.calculator.util.BillingSlabConstants;
 import org.egov.pt.calculator.util.BillingSlabUtils;
+import org.egov.pt.calculator.util.CalculatorConstants;
+import org.egov.pt.calculator.util.Configurations;
 import org.egov.pt.calculator.web.models.BillingSlab;
 import org.egov.pt.calculator.web.models.BillingSlabReq;
 import org.egov.pt.calculator.web.models.BillingSlabRes;
@@ -40,7 +42,7 @@ public class BillingSlabValidator {
 
 	@Autowired
 	private BillingSlabService billingSlabService;
-
+	
 	public void validateCreate(BillingSlabReq billingSlabReq) {
 		Map<String, String> errorMap = new HashMap<>();
 		runCommonChecks(billingSlabReq, errorMap);
@@ -133,6 +135,9 @@ public class BillingSlabValidator {
 	}
 
 	public void validateMDMSCodes(BillingSlabReq billingSlabReq, Map<String, String> errorMap, Object mdmsResponse) {
+		
+		final String allValue = BillingSlabConstants.ALL_PLACEHOLDER_BILLING_SLAB;
+		
 		List<Object> propertyTypes = new ArrayList<>();
 		List<Object> propertySubtypes = new ArrayList<>();
 		List<Object> usageCategoryMajor = new ArrayList<>();
@@ -167,12 +172,12 @@ public class BillingSlabValidator {
 		for (BillingSlab billingSlab : billingSlabReq.getBillingSlab()) {
 			if(!StringUtils.isEmpty(billingSlab.getOccupancyType())) {
 				List<String> allowedOccupancyTypes = JsonPath.read(occupancyType, BillingSlabConstants.MDMS_CODE_JSONPATH);
-				if(!allowedOccupancyTypes.contains(billingSlab.getOccupancyType()))
+				if(!allowedOccupancyTypes.contains(billingSlab.getOccupancyType()) && !(billingSlab.getOccupancyType().equalsIgnoreCase(allValue)))
 					errorMap.put("INVALID_OCCUPANCY_TYPE","Occupancy Type provided is invalid");
 			}
 			if(!StringUtils.isEmpty(billingSlab.getPropertyType())) {
 				List<String> allowedPropertyTypes = JsonPath.read(propertyTypes,BillingSlabConstants.MDMS_CODE_JSONPATH);
-				if(!allowedPropertyTypes.contains(billingSlab.getPropertyType())) {
+				if(!allowedPropertyTypes.contains(billingSlab.getPropertyType()) && !(billingSlab.getPropertyType().equalsIgnoreCase(allValue))) {
 					errorMap.put("INVALID_PROPERTY_TYPE","Property Type provided is invalid");
 				}else {
 					if (!StringUtils.isEmpty(billingSlab.getPropertySubType()) && !billingSlab.getPropertySubType().equalsIgnoreCase(BillingSlabConstants.ALL_PLACEHOLDER_BILLING_SLAB)) {
@@ -187,13 +192,13 @@ public class BillingSlabValidator {
 			}
 			if(!StringUtils.isEmpty(billingSlab.getOwnerShipCategory())) {
 				List<String> allowedOwnerShipCategories = JsonPath.read(ownerShipCategory,BillingSlabConstants.MDMS_CODE_JSONPATH);
-				if(!allowedOwnerShipCategories.contains(billingSlab.getOwnerShipCategory())) {
+				if(!allowedOwnerShipCategories.contains(billingSlab.getOwnerShipCategory()) && !(billingSlab.getOwnerShipCategory().equalsIgnoreCase(allValue)) ) {
 					errorMap.put("INVALID_OWNERSHIP_CATEGORY","Ownership category is invalid");
 
 				}else {
 					if (!CollectionUtils.isEmpty(subOwnerShipCategory)) {
 						List<String> allowedsubOwnerShipCategories = JsonPath.read(subOwnerShipCategory,"$.*.[?(@.ownerShipCategoryCode=='" + billingSlab.getOwnerShipCategory() + "')].code");
-						if (!allowedsubOwnerShipCategories.contains(billingSlab.getSubOwnerShipCategory())) {
+						if (!allowedsubOwnerShipCategories.contains(billingSlab.getSubOwnerShipCategory()) && !(billingSlab.getSubOwnerShipCategory().equalsIgnoreCase(allValue))) {
 							errorMap.put("INVALID_SUBOWNERSHIP_CATEGORY","Subownership category is invalid");
 
 						}
@@ -202,7 +207,7 @@ public class BillingSlabValidator {
 			}
 			if(!StringUtils.isEmpty(billingSlab.getUsageCategoryMajor())) {
 				List<String> allowedUsageCategoryMajor = JsonPath.read(usageCategoryMajor, BillingSlabConstants.MDMS_CODE_JSONPATH);
-				if(!allowedUsageCategoryMajor.contains(billingSlab.getUsageCategoryMajor())) {
+				if(!allowedUsageCategoryMajor.contains(billingSlab.getUsageCategoryMajor()) && !(billingSlab.getUsageCategoryMajor().equalsIgnoreCase(allValue)) ) {
 					errorMap.put("INVALID_USAGECATEGORY_MAJOR","Usage category Major is invalid");
 				}else {
 					if (!CollectionUtils.isEmpty(usageCategoryMinors) && !StringUtils.isEmpty(billingSlab.getUsageCategoryMinor()) && !billingSlab.getUsageCategoryMinor().equalsIgnoreCase(BillingSlabConstants.ALL_PLACEHOLDER_BILLING_SLAB)) {

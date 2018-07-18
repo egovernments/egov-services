@@ -275,6 +275,8 @@ public class EstimationService {
 	 */
 	private BillingSlab getSlabForCalc(List<BillingSlab> billingSlabs, Unit unit) {
 
+		log.info(" the remaining slabs : ------------------------ : "+ billingSlabs);
+		
 		final String all = configs.getSlabValueAll();
 
 		for (BillingSlab billSlb : billingSlabs) {

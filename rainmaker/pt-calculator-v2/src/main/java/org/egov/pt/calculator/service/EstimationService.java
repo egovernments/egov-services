@@ -178,7 +178,7 @@ public class EstimationService {
 
 			Category category = taxHeadCategoryMap.get(estimate.getTaxHeadCode()).getCategory();
 			estimate.setCategory(category);
-			System.err.println(" the category : "+ category.toString());
+
 			switch (category) {
 
 			case TAX:

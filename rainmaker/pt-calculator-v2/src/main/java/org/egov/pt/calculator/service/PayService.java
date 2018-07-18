@@ -43,9 +43,8 @@ public class PayService {
 		Map<String, BigDecimal> estimates = new HashMap<>();
 		BigDecimal rebate = getRebate(taxAmt, assessmentYear,
 				timeBasedExmeptionMasterMap.get(CalculatorConstants.REBATE_MASTER));
-		BigDecimal remaningTax = taxAmt.subtract(rebate);
 		BigDecimal penalty = BigDecimal.ZERO;
-		if (remaningTax.doubleValue() > 0.0)
+		if (rebate.doubleValue() == 0.0)
 			getPenalty(taxAmt, assessmentYear, timeBasedExmeptionMasterMap.get(CalculatorConstants.PENANLTY_MASTER));
 		estimates.put(CalculatorConstants.PT_TIME_REBATE, rebate);
 		estimates.put(CalculatorConstants.PT_TIME_PENALTY, penalty);

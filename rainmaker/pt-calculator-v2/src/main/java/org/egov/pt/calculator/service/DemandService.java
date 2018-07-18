@@ -227,7 +227,7 @@ public class DemandService {
 			if (category.equals(Category.REBATE) || category.equals(Category.ADVANCE_COLLECTION)
 					|| category.equals(Category.EXEMPTION))
 				details.add(DemandDetail.builder().taxHeadMasterCode(estimate.getTaxHeadCode())
-						.collectionAmount(estimate.getEstimateAmount()).taxAmount(BigDecimal.ZERO).tenantId(tenantId).build());
+						.taxAmount(estimate.getEstimateAmount().negate()).tenantId(tenantId).build());
 			else
 				details.add(DemandDetail.builder().taxHeadMasterCode(estimate.getTaxHeadCode())
 						.taxAmount(estimate.getEstimateAmount()).tenantId(tenantId).build());
@@ -266,10 +266,10 @@ public class DemandService {
 
 		for (DemandDetail detail : details) {
 			if (detail.getTaxHeadMasterCode().equalsIgnoreCase(CalculatorConstants.PT_TIME_REBATE)) {
-				detail.setTaxAmount(rebate);
+				detail.setTaxAmount(rebate.negate());
 				isRebateUpdated = true;
 			} else if (detail.getTaxHeadMasterCode().equalsIgnoreCase(CalculatorConstants.PT_TIME_PENALTY)) {
-				detail.setTaxAmount(rebate);
+				detail.setTaxAmount(penalty);
 				isPenaltyUpdated = true;
 			}
 		}
@@ -277,7 +277,7 @@ public class DemandService {
 			details.add(DemandDetail.builder().taxAmount(penalty).taxHeadMasterCode(CalculatorConstants.PT_TIME_PENALTY)
 					.demandId(demandId).tenantId(tenantId).build());
 		if (!isRebateUpdated && rebate.compareTo(BigDecimal.ZERO) > 0)
-			details.add(DemandDetail.builder().taxAmount(rebate).taxHeadMasterCode(CalculatorConstants.PT_TIME_REBATE)
+			details.add(DemandDetail.builder().taxAmount(rebate.negate()).taxHeadMasterCode(CalculatorConstants.PT_TIME_REBATE)
 					.demandId(demandId).tenantId(tenantId).build());
 	}
 }

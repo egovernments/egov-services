@@ -104,7 +104,7 @@ public class WorkFlowService {
         else if ("Reject".equalsIgnoreCase(workFlowAction))
             task.setStatus("Rejected");
         else if ("Cancel".equalsIgnoreCase(workFlowAction))
-            task.setStatus(LeaveStatus.CANCELLED.toString());
+            task.setStatus("Rejected");
         else if ("Submit".equalsIgnoreCase(workFlowAction))
             task.setStatus("NEW");
         else if ("Forward".equalsIgnoreCase(workFlowAction))

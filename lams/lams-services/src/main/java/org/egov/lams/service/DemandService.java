@@ -251,28 +251,25 @@ public class DemandService {
 		DemandSearchCriteria demandSearchCriteria = new DemandSearchCriteria();
 		demandSearchCriteria.setDemandId(Long.valueOf(agreement.getDemands().get(0)));
 		List<Demand> demands = demandRepository.getDemandBySearch(demandSearchCriteria, requestInfo).getDemands();
-		BigDecimal totalExcessCollection = BigDecimal.ZERO;
+		
 		BigDecimal revisedRent = BigDecimal.valueOf(agreement.getRemission().getRemissionRent());
 		Date fromDate = agreement.getRemission().getRemissionFromDate();
 		Date toDate = agreement.getRemission().getRemissionToDate();
 		for (DemandDetails demandDetail : demands.get(0).getDemandDetails()) {
-			BigDecimal excessCollection ;
+
 			if (propertiesManager.getTaxReasonRent().equalsIgnoreCase(demandDetail.getTaxReasonCode())
 					|| CENTRAL_GST.equalsIgnoreCase(demandDetail.getTaxReasonCode())
 					|| STATE_GST.equalsIgnoreCase(demandDetail.getTaxReasonCode())) {
-				excessCollection = updateDemadDetails(demandDetail, revisedRent, fromDate, toDate);
-				totalExcessCollection = totalExcessCollection.add(excessCollection);
-			}	
-			
-		}
-		if (totalExcessCollection.compareTo(BigDecimal.ZERO) > 0) {
-			demands = adjustCollection(demands, totalExcessCollection);
+				updateDemadDetails(demandDetail, revisedRent, fromDate, toDate);
+
+			}
+
 		}
 		return demands;
 	}
 
-	private BigDecimal updateDemadDetails(DemandDetails demandDetail, BigDecimal rent, Date fromDate, Date toDate) {
-		BigDecimal excessCollection = BigDecimal.ZERO;
+	private void updateDemadDetails(DemandDetails demandDetail, BigDecimal rent, Date fromDate, Date toDate) {
+	
 		if (demandDetail.getPeriodEndDate().compareTo(fromDate) >= 0
 				&& demandDetail.getPeriodStartDate().compareTo(toDate) <= 0) {
 			Double gstAmount = (rent.doubleValue() * 18) / 100;
@@ -280,28 +277,20 @@ public class DemandService {
 			if (CENTRAL_GST.equalsIgnoreCase(demandDetail.getTaxReasonCode())
 					|| STATE_GST.equalsIgnoreCase(demandDetail.getTaxReasonCode())) {
 				demandDetail.setTaxAmount(BigDecimal.valueOf(Math.round(gstAmount / 2)));
+				demandDetail.setTaxAmount(BigDecimal.ZERO);
 
 			} else {
+				demandDetail.setTaxAmount(rent);
+				demandDetail.setCollectionAmount(BigDecimal.ZERO);
 
-				if (demandDetail.getTaxAmount().compareTo(rent) > 0) {
-					excessCollection = demandDetail.getCollectionAmount();
-					demandDetail.setTaxAmount(rent);
-				}
-
-				if (demandDetail.getCollectionAmount().compareTo(rent) >= 0) {
-					excessCollection = demandDetail.getCollectionAmount().subtract(rent);
-					demandDetail.setCollectionAmount(rent);
-				}
 			}
 		}
-		return excessCollection;
+		
 	}
 
 
 	/*
-	 * Adjusting excess collection in remission , currently we are 
-	 * doing this adjustment for the agreements for which already collection is done
-	 * and for same installments remission is applying (DATA_ENTRY agreements use case)
+	 * currnetly we are not doing any collection adjustment in remission
 	 */
 	private List<Demand> adjustCollection(List<Demand> demands, BigDecimal collection) {
 

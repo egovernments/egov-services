@@ -76,6 +76,7 @@ public class WorkFlowService {
         Position assignee = new Position();
         LOGGER.info("leaveApplicationRequest::" + leaveApplicationRequest);
         assignee.setId(leaveApplicationRequest.getLeaveApplication().get(0).getWorkflowDetails().getAssignee());
+        processInstance.setDetails("Application Number : " + leaveApplicationRequest.getLeaveApplication().get(0).getApplicationNumber());
         processInstance.setAssignee(assignee);
         processInstanceRequest.setRequestInfo(leaveApplicationRequest.getRequestInfo());
         processInstanceRequest.setProcessInstance(processInstance);
@@ -112,6 +113,7 @@ public class WorkFlowService {
         task.setTenantId(leaveApplicationRequest.getLeaveApplication().getTenantId());
         Position assignee = new Position();
         assignee.setId(leaveApplicationRequest.getLeaveApplication().getWorkflowDetails().getAssignee());
+        task.setDetails("Application Number : " + leaveApplicationRequest.getLeaveApplication().getApplicationNumber());
         task.setAssignee(assignee);
         taskRequest.setRequestInfo(leaveApplicationRequest.getRequestInfo());
         taskRequest.setTask(task);

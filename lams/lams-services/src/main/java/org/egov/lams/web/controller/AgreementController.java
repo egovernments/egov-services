@@ -121,6 +121,9 @@ public class AgreementController {
 		if (errors.hasFieldErrors()) {
 			ErrorResponse errRes = populateErrors(errors);
 			return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
+		} else if (errors.hasErrors()) {
+			ErrorResponse errorResponse = populateValidationErrors(errors);
+			return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
 		}
 
 		Agreement agreement = agreementService.createAgreement(agreementRequest);
@@ -172,6 +175,9 @@ public class AgreementController {
 		if (errors.hasFieldErrors()) {
 			ErrorResponse errRes = populateErrors(errors);
 			return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
+		} else if (errors.hasErrors()) {
+			ErrorResponse errorResponse = populateValidationErrors(errors);
+			return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
 		}
 
 		Agreement agreement = agreementService.createRenewal(agreementRequest);
@@ -197,6 +203,9 @@ public class AgreementController {
 		if (errors.hasFieldErrors()) {
 			ErrorResponse errRes = populateErrors(errors);
 			return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
+		} else if (errors.hasErrors()) {
+			ErrorResponse errorResponse = populateValidationErrors(errors);
+			return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
 		}
 
 		Agreement agreement = agreementService.createEviction(agreementRequest);
@@ -222,6 +231,9 @@ public class AgreementController {
 		if (errors.hasFieldErrors()) {
 			ErrorResponse errRes = populateErrors(errors);
 			return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
+		} else if (errors.hasErrors()) {
+			ErrorResponse errorResponse = populateValidationErrors(errors);
+			return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
 		}
 
 		Agreement agreement = agreementService.createCancellation(agreementRequest);
@@ -247,6 +259,9 @@ public class AgreementController {
 		if (errors.hasFieldErrors()) {
 			ErrorResponse errRes = populateErrors(errors);
 			return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
+		} else if (errors.hasErrors()) {
+			ErrorResponse errorResponse = populateValidationErrors(errors);
+			return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
 		}
 
 		Agreement agreement = agreementService.createObjection(agreementRequest);
@@ -272,6 +287,9 @@ public class AgreementController {
 		if (errors.hasFieldErrors()) {
 			ErrorResponse errRes = populateErrors(errors);
 			return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
+		} else if (errors.hasErrors()) {
+			ErrorResponse errorResponse = populateValidationErrors(errors);
+			return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
 		}
 		Agreement agreement = agreementService.createJudgement(agreementRequest);
 		List<Agreement> agreements = new ArrayList<>();
@@ -295,6 +313,9 @@ public class AgreementController {
 		if (errors.hasFieldErrors()) {
 			ErrorResponse errRes = populateErrors(errors);
 			return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
+		} else if (errors.hasErrors()) {
+			ErrorResponse errorResponse = populateValidationErrors(errors);
+			return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
 		}
 
 		Agreement agreement = agreementService.createRemission(agreementRequest);

@@ -67,7 +67,7 @@ public class BillingSlabValidator {
 		Set<String> tenantIds = billingSlabReq.getBillingSlab().parallelStream().map(BillingSlab::getTenantId)
 				.collect(Collectors.toSet());
 		if(tenantIds.size() < 1)
-			errorMap.put("EG_PT_INVALID_INPUT", "Input must have atleast once billing slab");
+			errorMap.put("EG_PT_INVALID_INPUT", "Input must have atleast one billing slab");
 		else if(tenantIds.size() > 1)
 			errorMap.put("EG_PT_INVALID_INPUT", "All billing slabs must belong to same tenant");
 		

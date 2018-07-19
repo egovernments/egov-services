@@ -31,7 +31,7 @@ public class BillingSlabReq   {
         @JsonProperty("RequestInfo")
         private RequestInfo requestInfo = null;
 
-        @JsonProperty("billingSlab")
+        @JsonProperty("BillingSlab")
         @Valid
         private List<BillingSlab> billingSlab = new ArrayList<>();
 

@@ -7,7 +7,7 @@ serviceMaps:
    fromTopic: save-pt-billingslab
    isTransaction: true
    queryMaps:
-    - query: INSERT INTO eg_pt_billingslab_v2(id, tenantid, propertyType, propertySubType, usageCategoryMajor, usageCategoryMinor, usageCategorySubMinor, usageCategoryDetail, ownerShipCategory, subOwnerShipCategory, fromFloor, toFloor, areaType, fromPlotSize, toPlotSize, occupancyType, unitRate, unbuiltunitrate, avrpercent, createdby, createdtime, lastmodifiedby, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, cast(? as double precision), cast(? as double precision), ?, ?, cast(? as double precision), ?, ?, ?, ?, ?, ?);
+    - query: INSERT INTO eg_pt_billingslab_v2(id, tenantid, propertyType, propertySubType, usageCategoryMajor, usageCategoryMinor, usageCategorySubMinor, usageCategoryDetail, ownerShipCategory, subOwnerShipCategory, fromFloor, toFloor, areaType, fromPlotSize, toPlotSize, occupancyType, unitRate, unbuiltunitrate, arvpercent, createdby, createdtime, lastmodifiedby, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, cast(? as double precision), cast(? as double precision), ?, ?, cast(? as double precision), ?, ?, ?, ?, ?, ?, ?, ?);
 
       basePath: billingSlab.*
       jsonMaps:

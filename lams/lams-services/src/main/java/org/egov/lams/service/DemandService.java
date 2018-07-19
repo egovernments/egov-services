@@ -277,7 +277,7 @@ public class DemandService {
 			if (CENTRAL_GST.equalsIgnoreCase(demandDetail.getTaxReasonCode())
 					|| STATE_GST.equalsIgnoreCase(demandDetail.getTaxReasonCode())) {
 				demandDetail.setTaxAmount(BigDecimal.valueOf(Math.round(gstAmount / 2)));
-				demandDetail.setTaxAmount(BigDecimal.ZERO);
+				demandDetail.setCollectionAmount(BigDecimal.ZERO);
 
 			} else {
 				demandDetail.setTaxAmount(rent);

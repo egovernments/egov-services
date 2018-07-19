@@ -141,4 +141,9 @@ public class CalculatorConstants {
 	public static final String EMPTY_DEMAND_ERROR_CODE = "EMPTY_DEMANDS";
 	
 	public static final String EMPTY_DEMAND_ERROR_MESSAGE = "No demands found for the given bill generate criteria";
+	
+	
+	public static final String BILLING_SLAB_MATCH_ERROR_CODE = "NO_BILLING_SLAB_FOUND";
+	
+	public static final String BILLING_SLAB_MATCH_ERROR_MESSAGE = "No matching billing slab has been found for your criteria please check all your master fields";
 }

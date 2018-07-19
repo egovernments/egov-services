@@ -26,6 +26,7 @@ import org.egov.pt.calculator.web.models.property.OwnerInfo;
 import org.egov.pt.calculator.web.models.property.Property;
 import org.egov.pt.calculator.web.models.property.PropertyDetail;
 import org.egov.pt.calculator.web.models.property.Unit;
+import org.egov.tracer.model.CustomException;
 import org.egov.tracer.model.ServiceCallException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -121,8 +122,12 @@ public class EstimationService {
 				// get ARV FROM MASTERS TODO
 			} else {
 				BillingSlab slab = getSlabForCalc(filteredbillingSlabs, unit);
-				if (null == slab)
-					throw new ServiceCallException("No Billing slab found for the current unit");
+				if (null == slab) {
+					
+					Map<String, String> map = new HashMap<>();
+					map.put(CalculatorConstants.BILLING_SLAB_MATCH_ERROR_CODE, CalculatorConstants.BILLING_SLAB_MATCH_ERROR_MESSAGE);
+					throw new CustomException(map);
+				}
 				Double a = unit.getUnitArea() * slab.getUnitRate(); // FIXME change to Bigdecimal
 				currentUnitTax = BigDecimal.valueOf(a);
 			}
@@ -234,7 +239,7 @@ public class EstimationService {
 		final String dtlareaType = property.getAddress().getLocality().getArea();
 		final Boolean dtlIsMultiFloored = detail.getNoOfFloors() > 1;
 
-		billingSlabs.stream().filter(slab -> {
+		return billingSlabs.stream().filter(slab -> {
 
 			Boolean slabMultiFloored = slab.getIsPropertyMultiFloored();
 			String  slabAreatype = slab.getAreaType();
@@ -262,8 +267,6 @@ public class EstimationService {
 			return isPtTypeMatching && isPtSubTypeMactching && isOwnerShipMatching && isSubOwnerShipMatching
 					&& isPlotMatching && isAreaMatching && isPropertyMultiFloored;
 		}).collect(Collectors.toList());
-
-		return billingSlabs;
 	}
 
 	/**
@@ -299,14 +302,11 @@ public class EstimationService {
 
 			boolean isOccupancyTypeMatching = billSlb.getOccupancyType().equalsIgnoreCase(unit.getOccupancyType());
 
-			log.info(" is major matching : " + isMajorMatching + " isMinorMatching : " + isMinorMatching
-					+ " isSubMinorMatching : " + isSubMinorMatching + " isDetailsMatching : " + isDetailsMatching
-					+ " isFloorMatching : " + isFloorMatching + " isOccupancyTypeMatching : "
-					+ isOccupancyTypeMatching);
-
 			if (isMajorMatching && isMinorMatching && isSubMinorMatching && isDetailsMatching && isFloorMatching
-					&& isOccupancyTypeMatching)
+					&& isOccupancyTypeMatching) {
+				log.info(" The Id of the matching slab : "+ billSlb.getId());
 				return billSlb;
+			}
 		}
 		return null;
 	}

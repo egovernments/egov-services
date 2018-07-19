@@ -333,8 +333,7 @@ public class DemandRepository {
 			if ("RENT".equalsIgnoreCase(demandReason.getName())) {
 				demandDetail.setTaxAmount(BigDecimal.valueOf(agreement.getRent()));
 			} else if ("GOODWILL_AMOUNT".equalsIgnoreCase(demandReason.getName())) {
-				if (agreement.getGoodWillAmount() != null)
-					demandDetail.setTaxAmount(BigDecimal.valueOf(agreement.getGoodWillAmount()));
+				demandDetail.setTaxAmount(agreement.getGoodWillAmount() != null ? BigDecimal.valueOf(agreement.getGoodWillAmount()) : BigDecimal.ZERO);
 				if (agreement.getCollectedGoodWillAmount() != null)
 					demandDetail.setCollectionAmount(BigDecimal.valueOf(agreement.getCollectedGoodWillAmount()));
 			} else if ("ADVANCE_TAX".equalsIgnoreCase(demandReason.getName())) {

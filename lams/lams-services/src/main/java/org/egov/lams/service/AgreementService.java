@@ -362,7 +362,7 @@ public class AgreementService {
 			Demand demand = agreement.getLegacyDemands().get(0);
 			List<DemandDetails> demandDetailList = new ArrayList<>();
 			for(DemandDetails demandDetail : demand.getDemandDetails()){
-				if(demandDetail.getTaxAmount().compareTo(BigDecimal.ZERO) > 0)
+				if(demandDetail.getTaxAmount().compareTo(BigDecimal.ZERO) >= 0)
 					demandDetailList.add(demandDetail);
 			}
 			demand.getDemandDetails().clear();

@@ -40,9 +40,106 @@ class EditDemand extends React.Component {
       if (demands[i].collectionAmount >0
         && demands[i].taxAmount > demands[i].collectionAmount)
         return showError("partial collection is not allowed");
-
     }
+          for (var i = 0; i < demands.length; i++) {
 
+              // good will amount gst and sgst collected or not
+              if (demands[i].taxReasonCode.toLowerCase() == "goodwill_amount"
+                  && demands[i].taxAmount == demands[i].collectionAmount) {
+
+                  if (demands[i + 1].taxReasonCode.toLowerCase() == "gw_cgst"
+                      && demands[i + 1].taxAmount != demands[i + 1].collectionAmount) {
+                      return showError("Please Enter Good Will Amount CGST");
+                  }
+                  if (demands[i + 2].taxReasonCode.toLowerCase() == "gw_sgst"
+                      && demands[i + 2].taxAmount != demands[i + 2].collectionAmount) {
+                      return showError("Please Enter Good Will Amount SGST");
+                  }
+              }
+
+              if (demands[i].taxReasonCode.toLowerCase() == "gw_cgst"
+                  && demands[i].taxAmount == demands[i].collectionAmount) {
+
+                  if (demands[i - 1].taxReasonCode.toLowerCase() == "goodwill_amount"
+                      && demands[i - 1].taxAmount != demands[i - 1].collectionAmount) {
+                      return showError("Please Collect Good Will Amount ");
+                  }
+              }
+              if (demands[i].taxReasonCode.toLowerCase() == "gw_sgst"
+                  && demands[i].taxAmount == demands[i].collectionAmount) {
+                  if (demands[i - 2].taxReasonCode.toLowerCase() == "goodwill_amount"
+                      && demands[i - 2].taxAmount != demands[i - 2].collectionAmount) {
+                      return showError("Please Collect Good Will Amount ");
+                  }
+              }
+
+            // Advance amount gst and sgst collected or not
+              if (demands[i].taxReasonCode.toLowerCase() == "advance_tax"
+                  && demands[i].taxAmount == demands[i].collectionAmount) {
+
+                  if (demands[i + 1].taxReasonCode.toLowerCase() == "adv_cgst"
+                      && demands[i + 1].taxAmount != demands[i + 1].collectionAmount) {
+                      return showError("Please Enter Advance Amount CGST");
+                  }
+                  if (demands[i + 2].taxReasonCode.toLowerCase() == "adv_sgst"
+                      && demands[i + 2].taxAmount != demands[i + 2].collectionAmount) {
+                      return showError("Please Enter Advance Amount SGST");
+                  }
+              }
+
+              if (demands[i].taxReasonCode.toLowerCase() == "adv_cgst"
+                  && demands[i].taxAmount == demands[i].collectionAmount) {
+
+                  if (demands[i - 1].taxReasonCode.toLowerCase() == "advance_tax"
+                      && demands[i - 1].taxAmount != demands[i - 1].collectionAmount) {
+                      return showError("Please Collect Advance Amount  ");
+                  }
+              }
+              if (demands[i].taxReasonCode.toLowerCase() == "adv_sgst"
+                  && demands[i].taxAmount == demands[i].collectionAmount) {
+                  if (demands[i - 2].taxReasonCode.toLowerCase() == "advance_tax"
+                      && demands[i - 2].taxAmount != demands[i - 2].collectionAmount) {
+                      return showError("Please Collect Advance Amount  ");
+                  }
+              }
+
+        // condition to check service tax for advance and good will collected or not
+              if (demands[i].taxReasonCode.toLowerCase() == "advance_tax"
+                  && demands[i].taxAmount == demands[i].collectionAmount) {
+
+                  if (demands[i + 1].taxReasonCode.toLowerCase() == "adv_st"
+                      && demands[i + 1].taxAmount != demands[i + 1].collectionAmount) {
+                      return showError("Please Collect Service Tax On Advance ");
+                  }
+              }
+
+              if (demands[i].taxReasonCode.toLowerCase() == "adv_st"
+                  && demands[i].taxAmount == demands[i].collectionAmount) {
+
+                  if (demands[i - 1].taxReasonCode.toLowerCase() == "advance_tax"
+                      && demands[i - 1].taxAmount != demands[i - 1].collectionAmount) {
+                      return showError("Please Collect  Advance Tax  ");
+                  }
+              }
+
+              if (demands[i].taxReasonCode.toLowerCase() == "goodwill_amount"
+                  && demands[i].taxAmount == demands[i].collectionAmount ) {
+
+                  if (demands[i + 1].taxReasonCode.toLowerCase() == "gw_st"
+                      && demands[i + 1].taxAmount != demands[i + 1].collectionAmount) {
+                      return showError("Please Collect Service Tax On Good Will ");
+                  }
+              }
+
+              if (demands[i].taxReasonCode.toLowerCase() == "gw_st"
+                  && demands[i].taxAmount == demands[i].collectionAmount) {
+
+                  if (demands[i - 1].taxReasonCode.toLowerCase() == "goodwill_amount"
+                      && demands[i - 1].taxAmount != demands[i - 1].collectionAmount) {
+                      return showError("Please Collect  Good Will Amount ");
+                  }
+              }
+          }
 
     for (var i = 0; i < demands.length; i++) {
 

@@ -57,14 +57,13 @@ class Nominee extends React.Component {
     this.setState(initState);
   }
 
-  addNominee() {
+  addNominee(nominated,employed) {
     var {
       isEdit,
       index,
       list,
       nomineeSet
     } = this.state;
-
 
     var patt = new RegExp("[a-zA-Z\s]+");
     if (!patt.test(nomineeSet.name)) {
@@ -74,12 +73,13 @@ class Nominee extends React.Component {
     }
 
 
-    if ((!nomineeSet.name || !nomineeSet.dateOfBirth || !nomineeSet.employed ||
-      !nomineeSet.maritalStatus || !nomineeSet.gender || !nomineeSet.relationship)) {
+    if ((!nomineeSet.name || !nomineeSet.dateOfBirth || !nomineeSet.maritalStatus ||
+      !nomineeSet.gender || !nomineeSet.relationship)) {
       return this.setState({
         showMsg: true
       })
     } else {
+
       var _this = this;
       setTimeout(function () {
         _this.setState({
@@ -89,6 +89,7 @@ class Nominee extends React.Component {
     }
 
     if (isEdit) {
+
       var nomineeFieldsDefination = this.state.allNomineeValue.nomineeFieldsDefination;
       nomineeFieldsDefination[index] = nomineeSet;
       this.setState({
@@ -107,8 +108,8 @@ class Nominee extends React.Component {
           "bank": "",
           "bankBranch": "",
           "bankAccount": "",
-          "nominated": true,
-          "employed": true,
+          "nominated": nominated,
+          "employed": employed,
           "createdBy": "",
           "createdDate": "",
           "lastModifiedBy": "",
@@ -136,8 +137,8 @@ class Nominee extends React.Component {
           "bank": "",
           "bankBranch": "",
           "bankAccount": "",
-          "nominated": true,
-          "employed": true,
+          "nominated": nominated,
+          "employed": employed,
           "createdBy": "",
           "createdDate": "",
           "lastModifiedBy": "",
@@ -709,7 +710,7 @@ class Nominee extends React.Component {
               </div>
               {showNoteMsg()}
               <div className="text-center">
-                <button type="button" className="btn btn-primary" onClick={(e) => { addNominee() }}>Add/Edit</button>
+                <button type="button" className="btn btn-primary" onClick={(e) => { addNominee(nominated,employed) }}>Add/Edit</button>
               </div>
             </div>
           </div>
@@ -835,9 +836,9 @@ class Nominee extends React.Component {
             </div>
             {showCustomFieldsTable()}
             &nbsp;&nbsp;
-                  <div className="text-center">
-              {showActionButton()} &nbsp;&nbsp;
-                        <button type="button" className="btn btn-close" onClick={(e) => { this.close() }}>Close</button>
+                <div className="text-center">
+                {showActionButton()} &nbsp;&nbsp;
+                <button type="button" className="btn btn-close" onClick={(e) => {this.close()}}>Close</button>
             </div>
           </div>
         </form>

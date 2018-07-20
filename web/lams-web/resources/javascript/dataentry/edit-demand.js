@@ -49,11 +49,11 @@ class EditDemand extends React.Component {
 
                   if (demands[i + 1].taxReasonCode.toLowerCase() == "gw_cgst"
                       && demands[i + 1].taxAmount != demands[i + 1].collectionAmount) {
-                      return showError("Please Enter Good Will Amount CGST");
+                      return showError("Please Collect CGST On Good Will Amount");
                   }
                   if (demands[i + 2].taxReasonCode.toLowerCase() == "gw_sgst"
                       && demands[i + 2].taxAmount != demands[i + 2].collectionAmount) {
-                      return showError("Please Enter Good Will Amount SGST");
+                      return showError("Please Collect SGST On Good Will Amount ");
                   }
               }
 
@@ -79,11 +79,11 @@ class EditDemand extends React.Component {
 
                   if (demands[i + 1].taxReasonCode.toLowerCase() == "adv_cgst"
                       && demands[i + 1].taxAmount != demands[i + 1].collectionAmount) {
-                      return showError("Please Enter Advance Amount CGST");
+                      return showError("Please Collect CGST On Advance Amount");
                   }
                   if (demands[i + 2].taxReasonCode.toLowerCase() == "adv_sgst"
                       && demands[i + 2].taxAmount != demands[i + 2].collectionAmount) {
-                      return showError("Please Enter Advance Amount SGST");
+                      return showError("Please Collect SGST On Advance Amount");
                   }
               }
 
@@ -92,14 +92,14 @@ class EditDemand extends React.Component {
 
                   if (demands[i - 1].taxReasonCode.toLowerCase() == "advance_tax"
                       && demands[i - 1].taxAmount != demands[i - 1].collectionAmount) {
-                      return showError("Please Collect Advance Amount  ");
+                      return showError("Please Collect Advance Amount ");
                   }
               }
               if (demands[i].taxReasonCode.toLowerCase() == "adv_sgst"
                   && demands[i].taxAmount == demands[i].collectionAmount) {
                   if (demands[i - 2].taxReasonCode.toLowerCase() == "advance_tax"
                       && demands[i - 2].taxAmount != demands[i - 2].collectionAmount) {
-                      return showError("Please Collect Advance Amount  ");
+                      return showError("Please Collect Advance Amount ");
                   }
               }
 
@@ -118,7 +118,7 @@ class EditDemand extends React.Component {
 
                   if (demands[i - 1].taxReasonCode.toLowerCase() == "advance_tax"
                       && demands[i - 1].taxAmount != demands[i - 1].collectionAmount) {
-                      return showError("Please Collect  Advance Tax  ");
+                      return showError("Please Collect Advance Tax ");
                   }
               }
 
@@ -136,7 +136,7 @@ class EditDemand extends React.Component {
 
                   if (demands[i - 1].taxReasonCode.toLowerCase() == "goodwill_amount"
                       && demands[i - 1].taxAmount != demands[i - 1].collectionAmount) {
-                      return showError("Please Collect  Good Will Amount ");
+                      return showError("Please Collect Good Will Amount ");
                   }
               }
           }

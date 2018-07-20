@@ -1,18 +1,8 @@
 package org.egov.lams.repository;
 
-import java.io.IOException;
-import java.math.BigDecimal;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.log4j.Logger;
 import org.egov.lams.config.PropertiesManager;
 import org.egov.lams.model.Agreement;
@@ -37,9 +27,19 @@ import org.springframework.stereotype.Repository;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import java.io.IOException;
+import java.math.BigDecimal;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
 
 @Repository
 public class DemandRepository {
@@ -165,10 +165,24 @@ public class DemandRepository {
 	public List<DemandReason> getLegacyDemandReason(AgreementRequest agreementRequest) {
 
 		List<DemandReason> demandReasons = new ArrayList<>();
+		List<DemandReason> goodwillReasons = new ArrayList<>();
 		Agreement agreement = agreementRequest.getAgreement();
 		String taxReason;
 		Date gstDate;
 		Date effectiveToDate = getEffectiveToDate(agreement);
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTime(agreement.getCommencementDate());
+
+		if (agreement.getPaymentCycle().equals(PaymentCycle.MONTH))
+			calendar.add(Calendar.MONTH, 1);
+		else if (agreement.getPaymentCycle().equals(PaymentCycle.QUARTER))
+			calendar.add(Calendar.MONTH, 3);
+		else if (agreement.getPaymentCycle().equals(PaymentCycle.HALFYEAR))
+			calendar.add(Calendar.MONTH, 6);
+		else
+			calendar.add(Calendar.YEAR, 1);
+		calendar.add(Calendar.DATE, -1);
+		Date gstInstallmentDate = calendar.getTime();
 		if(effectiveToDate.compareTo(agreement.getExpiryDate())>0){
             effectiveToDate = agreement.getExpiryDate();
 		}
@@ -177,12 +191,24 @@ public class DemandRepository {
 		taxReason = propertiesManager.getTaxReasonPenalty();
 		demandReasons.addAll(getDemandReasonsForTaxReason(agreementRequest, effectiveToDate, taxReason));
 		gstDate =getGstEffectiveDate(agreement.getTenantId());
-		if (agreement.getCommencementDate().compareTo(gstDate) >= 0) {
+		if (agreement.getCommencementDate().compareTo(gstDate) >= 0) {  //commencedate > gst date
 			taxReason = propertiesManager.getTaxReasonStateGst();
 			demandReasons.addAll(getDemandReasonsForTaxReason(agreementRequest, effectiveToDate, taxReason));
 			taxReason = propertiesManager.getTaxReasonCentralGst();
 			demandReasons.addAll(getDemandReasonsForTaxReason(agreementRequest, effectiveToDate, taxReason));
-		} else if (agreement.getExpiryDate().compareTo(gstDate) >= 0) {
+
+			taxReason = propertiesManager.getTaxReasonCGSTOnAdvance();
+			demandReasons.addAll(getDemandReasonsForTaxReason(agreementRequest, gstInstallmentDate, taxReason));
+			taxReason = propertiesManager.getTaxReasonSGSTOnAdvance();
+			demandReasons.addAll(getDemandReasonsForTaxReason(agreementRequest, gstInstallmentDate, taxReason));
+
+				taxReason = propertiesManager.getTaxReasonCGSTOnGoodwill();
+				goodwillReasons.addAll(getDemandReasonsForTaxReason(agreementRequest, gstInstallmentDate, taxReason));
+				taxReason = propertiesManager.getTaxReasonSGSTOnGoodwill();
+				goodwillReasons.addAll(getDemandReasonsForTaxReason(agreementRequest, gstInstallmentDate, taxReason));
+
+
+		} else if (agreement.getExpiryDate().compareTo(gstDate) >= 0) { //st
 			taxReason = propertiesManager.getTaxReasonServiceTax();
 			demandReasons.addAll(getDemandReasonsForTaxReason(agreementRequest, gstDate, taxReason));
 			taxReason = propertiesManager.getTaxReasonStateGst();
@@ -190,9 +216,21 @@ public class DemandRepository {
 			taxReason = propertiesManager.getTaxReasonCentralGst();
 			demandReasons.addAll(getDemandReasonsForTaxReason(agreementRequest, effectiveToDate, taxReason));
 
+			taxReason = propertiesManager.getTaxReasonServiceTaxOnAdvance();
+			demandReasons.addAll(getDemandReasonsForTaxReason(agreementRequest, gstInstallmentDate, taxReason));
+
+				taxReason = propertiesManager.getTaxReasonServiceTaxOnGoodwill();
+			goodwillReasons.addAll(getDemandReasonsForTaxReason(agreementRequest, gstInstallmentDate, taxReason));
+
 		} else {
 			taxReason = propertiesManager.getTaxReasonServiceTax();
 			demandReasons.addAll(getDemandReasonsForTaxReason(agreementRequest, effectiveToDate, taxReason));
+		}
+
+		for(DemandReason demandReason : demandReasons) {
+			if (demandReason.getName().equalsIgnoreCase("GOODWILL_AMOUNT")) {
+				demandReasons.addAll(goodwillReasons);
+			}
 		}
 		return demandReasons;
 

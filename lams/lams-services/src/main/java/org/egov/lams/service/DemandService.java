@@ -1,11 +1,5 @@
 package org.egov.lams.service;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-
 import org.egov.lams.config.PropertiesManager;
 import org.egov.lams.model.Agreement;
 import org.egov.lams.model.Demand;
@@ -22,11 +16,18 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
+
 @Service
 public class DemandService {
 	public static final Logger logger = LoggerFactory.getLogger(DemandService.class);
 	
 	private static final List<String> DEMAND_REASONS = Arrays.asList("RENT","PENALTY","STATE_GST","CENTRAL_GST","SERVICE_TAX");
+	private static final List<String> NEW_DEMAND_REASONS = Arrays.asList("ADVANCE_TAX","ADV_ST","ADV_CGST","ADV_SGST","GOODWILL_AMOUNT","GW_ST","GW_CGST","GW_SGST","RENT","PENALTY","STATE_GST","CENTRAL_GST","SERVICE_TAX");
 	private static final String CENTRAL_GST = "CENTRAL_GST";
 	private static final String STATE_GST = "STATE_GST";
 
@@ -217,7 +218,7 @@ public class DemandService {
 			}
 
 			if (!isDemandDetailsExist
-					&& DEMAND_REASONS.stream().anyMatch(reason -> reason.equalsIgnoreCase(demandReason.getName()))) {
+					&& NEW_DEMAND_REASONS.stream().anyMatch(reason -> reason.equalsIgnoreCase(demandReason.getName()))) {
 				demandDetail = new DemandDetails();
 				demandDetail.setCollectionAmount(BigDecimal.ZERO);
 				demandDetail.setRebateAmount(BigDecimal.ZERO);

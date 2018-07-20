@@ -50,7 +50,7 @@ serviceMaps:
        
        - jsonPath: $.BillingSlab.*.arvPercent
        
-       - jsonPath: $.BillingSlab.*.isPropertyMultiFloored,
+       - jsonPath: $.BillingSlab.*.isPropertyMultiFloored
 
        - jsonPath: $.BillingSlab.*.auditDetails.createdBy
 

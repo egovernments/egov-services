@@ -25,6 +25,7 @@ import org.egov.tracer.model.ErrorQueueContract;
 import org.egov.tracer.model.ErrorRes;
 import org.egov.tracer.model.ServiceCallException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
@@ -58,12 +59,18 @@ public class ExceptionAdvise {
 
 	@Autowired
 	private ErrorQueueProducer  errorQueueProducer;
-	
+
+	@Value("${tracer.errors.sendToKafka:false}")
+    boolean sendErrorsToKafka;
+
 	@ExceptionHandler(value = Exception.class)
 	@ResponseBody
 	public ResponseEntity<?> exceptionHandler(HttpServletRequest request ,Exception ex) {
-	
+
 		log.info("ExceptionAdvise exception  webRequest:");
+		String contentType = request.getContentType();
+		boolean isJsonContentType = (contentType != null && contentType.toLowerCase().contains("application/json"));
+
 		System.out.println(ex instanceof BindException);
 		ex.printStackTrace();
 		String body = "";
@@ -136,7 +143,7 @@ public class ExceptionAdvise {
 			} else if (ex instanceof ServiceCallException) {
 				log.info("ServiceCallException block");
 				ServiceCallException serviceCallException = (ServiceCallException) ex;
-				sendErrorMessage(body, ex, request.getRequestURL().toString(),errorRes);
+				sendErrorMessage(body, ex, request.getRequestURL().toString(),errorRes, isJsonContentType);
 				DocumentContext documentContext = JsonPath.parse(serviceCallException.getError());
 				log.info("exceptionHandler:"+documentContext);
 				LinkedHashMap<Object, Object> linkedHashMap = documentContext.json();
@@ -163,15 +170,18 @@ public class ExceptionAdvise {
 	
 				//errorRes.setErrors(errors);
 			}
-			
+
+            String exceptionName = ex.getClass().getSimpleName();
+			String exceptionMessage = ex.getMessage();
+
 			if (errorRes.getErrors() == null || errorRes.getErrors().size() == 0) {
-				errorRes.setErrors(new ArrayList<>(Arrays.asList(new Error("UnhandledException", "An unhandled exception occured on the server", null, null))));
+				errorRes.setErrors(new ArrayList<>(Arrays.asList(new Error(exceptionName, "An unhandled exception occurred on the server", exceptionMessage, null))));
 			}
 
-			sendErrorMessage(body, ex, request.getRequestURL().toString(),errorRes);
+			sendErrorMessage(body, ex, request.getRequestURL().toString(),errorRes, isJsonContentType);
 		} catch (Exception tracerException) {
 			tracerException.printStackTrace();
-			errorRes.setErrors(new ArrayList<>(Arrays.asList(new Error("TracerException", "An unhandled exception occured in tracer handler", null, null))));
+			errorRes.setErrors(new ArrayList<>(Arrays.asList(new Error("TracerException", "An unhandled exception occurred in tracer handler", null, null))));
 		}
 		return new ResponseEntity<>(errorRes, HttpStatus.BAD_REQUEST);
 	}
@@ -209,25 +219,30 @@ public class ExceptionAdvise {
 
 	}
 		
-	public void sendErrorMessage(String body, Exception ex, String source, ErrorRes errorRes) {
+	public void sendErrorMessage(String body, Exception ex, String source, ErrorRes errorRes, boolean isJsonContentType) {
 		DocumentContext documentContext;
-		String bodyJSON ; 
-		try{
-			documentContext = JsonPath.parse(body);
-			bodyJSON = documentContext.json();
-			log.info("sendErrorMessage documentContext: "+ bodyJSON);
-		} catch (Exception exception) {
-			bodyJSON = body;
-			log.info("sendErrorMessage documentContext: Failed to parse JSON", exception);
-		}
-		
-		StackTraceElement elements[] = ex.getStackTrace();
-		
-		ErrorQueueContract errorQueueContract = ErrorQueueContract.builder().body(bodyJSON).source(source).
-				ts(new Date().getTime()).errorRes(errorRes).exception(Arrays.asList(elements)).message(ex.getMessage()).build();
-		
-		log.info("sendErrorMessage errorQueueContract:"+errorQueueContract);
-		errorQueueProducer.sendMessage(errorQueueContract);
+		String bodyJSON = body;
+
+		if (isJsonContentType) {
+            try {
+                documentContext = JsonPath.parse(body);
+                bodyJSON = documentContext.json();
+                log.info("sendErrorMessage documentContext: " + bodyJSON);
+            } catch (Exception exception) {
+                bodyJSON = body;
+                log.info("sendErrorMessage documentContext: Failed to parse JSON", exception);
+            }
+        }
+
+		if (sendErrorsToKafka) {
+            StackTraceElement elements[] = ex.getStackTrace();
+
+            ErrorQueueContract errorQueueContract = ErrorQueueContract.builder().body(bodyJSON).source(source).
+                ts(new Date().getTime()).errorRes(errorRes).exception(Arrays.asList(elements)).message(ex.getMessage()).build();
+
+            log.info("sendErrorMessage errorQueueContract:" + errorQueueContract);
+            errorQueueProducer.sendMessage(errorQueueContract);
+        }
 	}
 	
 }

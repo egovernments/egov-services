@@ -16,28 +16,28 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class ErrorQueueProducer {
 
-	@Autowired
-	private KafkaTemplate<String, Object> kafkaTemplate;
-	
-	@Value(("${error.queue.topic:egov.error}"))
-	private String topic;
-	
-	public void sendMessage(ErrorQueueContract errorQueueContract) {
-		try {
-		kafkaTemplate.send(topic, errorQueueContract);
-		} catch (SerializationException serializationException) {
-			log.info("SerializationException exception occured while sending exception to error queue");
-			ObjectMapper objectMapper = new ObjectMapper();
-			try {
-				kafkaTemplate.send(topic,objectMapper.writeValueAsString(errorQueueContract));
-			} catch (JsonProcessingException e) {
-				log.info("exception occured while converting ErrorQueueContract to json string");
-				e.printStackTrace();
-			}
-		} catch (Exception ex) {
-			log.info("exception occured while sending exception to error queue");
-			ex.printStackTrace();
-		}
-	}
-	
+    @Autowired
+    private KafkaTemplate<String, Object> kafkaTemplate;
+
+    @Value(("${error.queue.topic:egov.error}"))
+    private String topic;
+
+    public void sendMessage(ErrorQueueContract errorQueueContract) {
+        try {
+            kafkaTemplate.send(topic, errorQueueContract);
+        } catch (SerializationException serializationException) {
+            log.info("SerializationException exception occured while sending exception to error queue");
+            ObjectMapper objectMapper = new ObjectMapper();
+            try {
+                kafkaTemplate.send(topic, objectMapper.writeValueAsString(errorQueueContract));
+            } catch (JsonProcessingException e) {
+                log.info("exception occured while converting ErrorQueueContract to json string");
+                e.printStackTrace();
+            }
+        } catch (Exception ex) {
+            log.info("exception occured while sending exception to error queue");
+            ex.printStackTrace();
+        }
+    }
+
 }

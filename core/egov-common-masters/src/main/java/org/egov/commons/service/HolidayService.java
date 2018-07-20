@@ -58,131 +58,153 @@ import java.util.List;
 
 @Service
 public class HolidayService {
-	public static final Logger LOGGER = LoggerFactory.getLogger(HolidayService.class);
+    public static final Logger LOGGER = LoggerFactory.getLogger(HolidayService.class);
 
-	@Autowired
-	private HolidayRepository holidayRepository;
+    @Autowired
+    private HolidayRepository holidayRepository;
 
-	@Autowired
-	private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
-	
-	@Autowired
-	private ObjectMapper objectMapper;
+    @Autowired
+    private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
 
-	public List<Holiday> getHolidays(HolidayGetRequest holidayGetRequest) {
-		return holidayRepository.findForCriteria(holidayGetRequest);
-	}
+    @Autowired
+    private ObjectMapper objectMapper;
 
-	public List<Holiday> getPrefixSuffixHolidays(HolidayGetRequest holidayGetRequest) {
-		Integer prefixDays = 0;
-		Integer suffixDays = 0;
+    public List<Holiday> getHolidays(HolidayGetRequest holidayGetRequest) {
+        List<Holiday> holidaysList = holidayRepository.findForCriteria(holidayGetRequest);
+        if (holidayGetRequest.getEnclosedHoliday() != null && holidayGetRequest.getEnclosedHoliday()) {
+            getEnclosedHolidays(holidayGetRequest, holidaysList);
+        }
+        return holidaysList;
+    }
+
+
+    public void getEnclosedHolidays(HolidayGetRequest holidayGetRequest, List<Holiday> holidaysList) {
+        Calendar c1 = Calendar.getInstance();
+        c1.setTime(holidayGetRequest.getFromDate());
+        Calendar c2 = Calendar.getInstance();
+        c2.setTime(holidayGetRequest.getToDate());
+
+        while (c1.getTime().compareTo(c2.getTime()) <= 0) {
+            if (isSunday(c1.getTime())) {
+                Holiday holiday = new Holiday();
+                holiday.setApplicableOn(c1.getTime());
+                holiday.setName("Sunday");
+                holiday.setTenantId(holidayGetRequest.getTenantId());
+                holidaysList.add(holiday);
+            }
+            if (isSecondSaturday(c1.getTime())) {
+                Holiday holiday = new Holiday();
+                holiday.setApplicableOn(c1.getTime());
+                holiday.setName("Second Saturday");
+                holiday.setTenantId(holidayGetRequest.getTenantId());
+                holidaysList.add(holiday);
+            }
+            c1.add(Calendar.DATE, 1);
+        }
+
+    }
+
+    public List<Holiday> getPrefixSuffixHolidays(HolidayGetRequest holidayGetRequest) {
+        Integer prefixDays = 0;
+        Integer suffixDays = 0;
         List<Holiday> holidays = new ArrayList<>();
-		Holiday holiday = new Holiday() ;
-		Boolean prefixExists = true;
-		Boolean suffixExists = true;
+        Holiday holiday = new Holiday();
+        Boolean prefixExists = true;
+        Boolean suffixExists = true;
 
-		Calendar c1 = Calendar.getInstance();
-		c1.setTime(holidayGetRequest.getFromDate());
-		c1.add(Calendar.DATE, -1);
+        Calendar c1 = Calendar.getInstance();
+        c1.setTime(holidayGetRequest.getFromDate());
+        c1.add(Calendar.DATE, -1);
 
-		Calendar fromDate = Calendar.getInstance();
-		fromDate.setTime(holidayGetRequest.getFromDate());
+        Calendar fromDate = Calendar.getInstance();
+        fromDate.setTime(holidayGetRequest.getFromDate());
 
-		while(prefixExists && (c1.YEAR == fromDate.YEAR)){
-			if ((getHolidayByApplicableOn(null, c1.getTime(), holidayGetRequest.getTenantId()) || isSunday(c1.getTime()) || isSecondSaturday(c1.getTime())) && prefixDays == 0) {
-				holiday.setPrefixFromDate(c1.getTime());
-				holiday.setPrefixToDate(c1.getTime());
-				prefixDays++;
-			}
-			else if(getHolidayByApplicableOn(null, c1.getTime(), holidayGetRequest.getTenantId()) || isSunday(c1.getTime()) || isSecondSaturday(c1.getTime()))  {
-				holiday.setPrefixFromDate(c1.getTime());
-				prefixDays++;
-			}
-			else{
-				prefixExists = false;
-			}
-			c1.add(Calendar.DATE, -1);
-		}
+        while (prefixExists && (c1.YEAR == fromDate.YEAR)) {
+            if ((getHolidayByApplicableOn(null, c1.getTime(), holidayGetRequest.getTenantId()) || isSunday(c1.getTime()) || isSecondSaturday(c1.getTime())) && prefixDays == 0) {
+                holiday.setPrefixFromDate(c1.getTime());
+                holiday.setPrefixToDate(c1.getTime());
+                prefixDays++;
+            } else if (getHolidayByApplicableOn(null, c1.getTime(), holidayGetRequest.getTenantId()) || isSunday(c1.getTime()) || isSecondSaturday(c1.getTime())) {
+                holiday.setPrefixFromDate(c1.getTime());
+                prefixDays++;
+            } else {
+                prefixExists = false;
+            }
+            c1.add(Calendar.DATE, -1);
+        }
 
-		Calendar c2 = Calendar.getInstance();
-		c2.setTime(holidayGetRequest.getToDate());
-		c2.add(Calendar.DATE, 1);
+        Calendar c2 = Calendar.getInstance();
+        c2.setTime(holidayGetRequest.getToDate());
+        c2.add(Calendar.DATE, 1);
 
-		Calendar toDate = Calendar.getInstance();
-		toDate.setTime(holidayGetRequest.getToDate());
+        Calendar toDate = Calendar.getInstance();
+        toDate.setTime(holidayGetRequest.getToDate());
 
-		while(suffixExists && (c2.YEAR == toDate.YEAR)){
-			if ((getHolidayByApplicableOn(null, c2.getTime(), holidayGetRequest.getTenantId()) || isSunday(c2.getTime()) || isSecondSaturday(c2.getTime())) && suffixDays == 0) {
-				holiday.setSuffixFromDate(c2.getTime());
-				holiday.setSuffixToDate(c2.getTime());
-				suffixDays++;
-			}
-			else if(getHolidayByApplicableOn(null, c2.getTime(), holidayGetRequest.getTenantId()) || isSunday(c2.getTime()) || isSecondSaturday(c2.getTime()))  {
-				holiday.setSuffixToDate(c2.getTime());
-				suffixDays++;
-			}
-			else{
-				suffixExists = false;
-			}
-			c2.add(Calendar.DATE, 1);
-		}
+        while (suffixExists && (c2.YEAR == toDate.YEAR)) {
+            if ((getHolidayByApplicableOn(null, c2.getTime(), holidayGetRequest.getTenantId()) || isSunday(c2.getTime()) || isSecondSaturday(c2.getTime())) && suffixDays == 0) {
+                holiday.setSuffixFromDate(c2.getTime());
+                holiday.setSuffixToDate(c2.getTime());
+                suffixDays++;
+            } else if (getHolidayByApplicableOn(null, c2.getTime(), holidayGetRequest.getTenantId()) || isSunday(c2.getTime()) || isSecondSaturday(c2.getTime())) {
+                holiday.setSuffixToDate(c2.getTime());
+                suffixDays++;
+            } else {
+                suffixExists = false;
+            }
+            c2.add(Calendar.DATE, 1);
+        }
 
-		holiday.setNoOfDays(prefixDays + suffixDays);
-		holiday.setTenantId(holidayGetRequest.getTenantId());
-		holidays.add(holiday);
-		return holidays;
-	}
+        holiday.setNoOfDays(prefixDays + suffixDays);
+        holiday.setTenantId(holidayGetRequest.getTenantId());
+        holidays.add(holiday);
+        return holidays;
+    }
 
-	public Holiday createHoliday(final HolidayRequest holidayRequest) {
-		kafkaTemplate.send("egov-common-holiday", holidayRequest);
-		return holidayRequest.getHoliday();
-	}
+    public Holiday createHoliday(final HolidayRequest holidayRequest) {
+        kafkaTemplate.send("egov-common-holiday", holidayRequest);
+        return holidayRequest.getHoliday();
+    }
 
-	public HolidayRequest create(final HolidayRequest holidayRequest) {
-		if (holidayRequest.getHoliday().getId() == null)
-			return holidayRepository.saveHoliday(holidayRequest);
-		else
-			return holidayRepository.modifyHoliday(holidayRequest);
-	}
+    public HolidayRequest create(final HolidayRequest holidayRequest) {
+        if (holidayRequest.getHoliday().getId() == null)
+            return holidayRepository.saveHoliday(holidayRequest);
+        else
+            return holidayRepository.modifyHoliday(holidayRequest);
+    }
 
-	public Boolean isSunday(Date date) {
+    public Boolean isSunday(Date date) {
 
-		Calendar c1 = Calendar.getInstance();
-		c1.setTime(date);
+        final Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        cal.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
+        return cal.getTime().equals(date);
+    }
 
-			if (c1.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY) {
-				return true;
-			}
-		return false;
-	}
+    public Boolean isSecondSaturday(Date date) {
+        final Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        cal.set(Calendar.DAY_OF_WEEK, Calendar.SATURDAY);
+        cal.set(Calendar.WEEK_OF_MONTH, 2);
+        return cal.getTime().equals(date);
+    }
 
-	public Boolean isSecondSaturday(Date date) {
-		Calendar c1 = Calendar.getInstance();
-		c1.setTime(date);
+    public Boolean isSecondOrFourthSaturday(Date date) {
+        if (isSecondSaturday(date)) {
+            return true;
+        } else {
+            Calendar c1 = Calendar.getInstance();
+            c1.setTime(date);
 
-			if ((c1.get(Calendar.WEEK_OF_MONTH) == 2) && (c1.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY)) {
-				return true;
- 			}
+            if ((c1.get(Calendar.WEEK_OF_MONTH) == 4) && (c1.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY)) {
+                return true;
+            }
+        }
         return false;
-	}
-
-	public Boolean isSecondOrFourthSaturday(Date date) {
-		if (isSecondSaturday(date)) {
-			return true;
-		} else {
-			Calendar c1 = Calendar.getInstance();
-			c1.setTime(date);
-
-				if ((c1.get(Calendar.WEEK_OF_MONTH) == 4) && (c1.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY)) {
-                   return true;
-				}
-			}
-			return false;
-	}
+    }
 
 
-	public boolean getHolidayByApplicableOn(final Long id, final Date applicableOn, final String tenantId) {
-		return holidayRepository.checkHolidayByApplicableOn(id, applicableOn, tenantId);
-	}
+    public boolean getHolidayByApplicableOn(final Long id, final Date applicableOn, final String tenantId) {
+        return holidayRepository.checkHolidayByApplicableOn(id, applicableOn, tenantId);
+    }
 
 }

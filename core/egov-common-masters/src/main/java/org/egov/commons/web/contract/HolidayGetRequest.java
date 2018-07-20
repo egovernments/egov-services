@@ -65,6 +65,8 @@ public class HolidayGetRequest {
 
     private Integer holidayType;
 
+    private Boolean enclosedHoliday;
+
     @Size(min = 3, max = 200)
     private String name;
 

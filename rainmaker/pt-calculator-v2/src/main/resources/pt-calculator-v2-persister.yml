@@ -7,56 +7,56 @@ serviceMaps:
    fromTopic: save-pt-billingslab
    isTransaction: true
    queryMaps:
-    - query: INSERT INTO eg_pt_billingslab_v2(id, tenantid, propertyType, propertySubType, usageCategoryMajor, usageCategoryMinor, usageCategorySubMinor, usageCategoryDetail, ownerShipCategory, subOwnerShipCategory, fromFloor, toFloor, areaType, fromPlotSize, toPlotSize, occupancyType, unitRate, unbuiltunitrate, arvpercent, createdby, createdtime, lastmodifiedby, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, cast(? as double precision), cast(? as double precision), ?, ?, cast(? as double precision), ?, ?, ?, ?, ?, ?, ?, ?);
+    - query: INSERT INTO eg_pt_Billingslab_v2(id, tenantid, propertyType, propertySubType, usageCategoryMajor, usageCategoryMinor, usageCategorySubMinor, usageCategoryDetail, ownerShipCategory, subOwnerShipCategory, fromFloor, toFloor, areaType, fromPlotSize, toPlotSize, occupancyType, unitRate, unbuiltunitrate, arvpercent, createdby, createdtime, lastmodifiedby, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, cast(? as double precision), cast(? as double precision), ?, ?, cast(? as double precision), ?, ?, ?, ?, ?, ?, ?, ?);
 
-      basePath: billingSlab.*
+      basePath: BillingSlab.*
       jsonMaps:
 
-       - jsonPath: $.billingSlab.*.id
+       - jsonPath: $.BillingSlab.*.id
 
-       - jsonPath: $.billingSlab.*.tenantId
+       - jsonPath: $.BillingSlab.*.tenantId
 
-       - jsonPath: $.billingSlab.*.propertyType
+       - jsonPath: $.BillingSlab.*.propertyType
 
-       - jsonPath: $.billingSlab.*.propertySubType
+       - jsonPath: $.BillingSlab.*.propertySubType
 
-       - jsonPath: $.billingSlab.*.usageCategoryMajor
+       - jsonPath: $.BillingSlab.*.usageCategoryMajor
 
-       - jsonPath: $.billingSlab.*.usageCategoryMinor
+       - jsonPath: $.BillingSlab.*.usageCategoryMinor
 
-       - jsonPath: $.billingSlab.*.usageCategorySubMinor
+       - jsonPath: $.BillingSlab.*.usageCategorySubMinor
 
-       - jsonPath: $.billingSlab.*.usageCategoryDetail
+       - jsonPath: $.BillingSlab.*.usageCategoryDetail
 
-       - jsonPath: $.billingSlab.*.ownerShipCategory
+       - jsonPath: $.BillingSlab.*.ownerShipCategory
 
-       - jsonPath: $.billingSlab.*.subOwnerShipCategory
+       - jsonPath: $.BillingSlab.*.subOwnerShipCategory
 
-       - jsonPath: $.billingSlab.*.fromFloor
+       - jsonPath: $.BillingSlab.*.fromFloor
 
-       - jsonPath: $.billingSlab.*.toFloor
+       - jsonPath: $.BillingSlab.*.toFloor
 
-       - jsonPath: $.billingSlab.*.areaType
+       - jsonPath: $.BillingSlab.*.areaType
 
-       - jsonPath: $.billingSlab.*.fromPlotSize
+       - jsonPath: $.BillingSlab.*.fromPlotSize
 
-       - jsonPath: $.billingSlab.*.toPlotSize
+       - jsonPath: $.BillingSlab.*.toPlotSize
        
-       - jsonPath: $.billingSlab.*.occupancyType
+       - jsonPath: $.BillingSlab.*.occupancyType
        
-       - jsonPath: $.billingSlab.*.unitRate
+       - jsonPath: $.BillingSlab.*.unitRate
        
-       - jsonPath: $.billingSlab.*.unBuiltUnitRate
+       - jsonPath: $.BillingSlab.*.unBuiltUnitRate
        
-       - jsonPath: $.billingSlab.*.arvPercent
+       - jsonPath: $.BillingSlab.*.arvPercent
 
-       - jsonPath: $.billingSlab.*.auditDetails.createdBy
+       - jsonPath: $.BillingSlab.*.auditDetails.createdBy
 
-       - jsonPath: $.billingSlab.*.auditDetails.createdTime
+       - jsonPath: $.BillingSlab.*.auditDetails.createdTime
 
-       - jsonPath: $.billingSlab.*.auditDetails.lastmodifiedBy
+       - jsonPath: $.BillingSlab.*.auditDetails.lastmodifiedBy
 
-       - jsonPath: $.billingSlab.*.auditDetails.lastmodifiedTime
+       - jsonPath: $.BillingSlab.*.auditDetails.lastmodifiedTime
 
 
  - version: 1.0
@@ -66,50 +66,50 @@ serviceMaps:
    isTransaction: true
    queryMaps:
 
-    - query: UPDATE eg_pt_billingslab_v2 SET propertyType=?, propertySubType=?, usageCategoryMajor=?, usageCategoryMinor=?, usageCategorySubMinor=?, usageCategoryDetail=?, ownerShipCategory=?, subOwnerShipCategory=?, fromFloor=cast(? as double precision), toFloor=cast(? as double precision), areaType=?, fromPlotSize=?,  toPlotSize=cast(? as double precision), occupancyType=?, unitRate=?, unbuiltunitrate=?, arvpercent=?, lastmodifiedby=?, lastmodifiedtime=? WHERE tenantid=? AND id=?;
+    - query: UPDATE eg_pt_Billingslab_v2 SET propertyType=?, propertySubType=?, usageCategoryMajor=?, usageCategoryMinor=?, usageCategorySubMinor=?, usageCategoryDetail=?, ownerShipCategory=?, subOwnerShipCategory=?, fromFloor=cast(? as double precision), toFloor=cast(? as double precision), areaType=?, fromPlotSize=?,  toPlotSize=cast(? as double precision), occupancyType=?, unitRate=?, unbuiltunitrate=?, arvpercent=?, lastmodifiedby=?, lastmodifiedtime=? WHERE tenantid=? AND id=?;
 
-      basePath: billingSlab.*
+      basePath: BillingSlab.*
       jsonMaps:
 
-       - jsonPath: $.billingSlab.*.propertyType
+       - jsonPath: $.BillingSlab.*.propertyType
 
-       - jsonPath: $.billingSlab.*.propertySubType
+       - jsonPath: $.BillingSlab.*.propertySubType
 
-       - jsonPath: $.billingSlab.*.usageCategoryMajor
+       - jsonPath: $.BillingSlab.*.usageCategoryMajor
 
-       - jsonPath: $.billingSlab.*.usageCategoryMinor
+       - jsonPath: $.BillingSlab.*.usageCategoryMinor
 
-       - jsonPath: $.billingSlab.*.usageCategorySubMinor
+       - jsonPath: $.BillingSlab.*.usageCategorySubMinor
 
-       - jsonPath: $.billingSlab.*.usageCategoryDetail
+       - jsonPath: $.BillingSlab.*.usageCategoryDetail
 
-       - jsonPath: $.billingSlab.*.ownerShipCategory
+       - jsonPath: $.BillingSlab.*.ownerShipCategory
 
-       - jsonPath: $.billingSlab.*.subOwnerShipCategory
+       - jsonPath: $.BillingSlab.*.subOwnerShipCategory
 
-       - jsonPath: $.billingSlab.*.fromFloor
+       - jsonPath: $.BillingSlab.*.fromFloor
 
-       - jsonPath: $.billingSlab.*.toFloor
+       - jsonPath: $.BillingSlab.*.toFloor
 
-       - jsonPath: $.billingSlab.*.areaType
+       - jsonPath: $.BillingSlab.*.areaType
 
-       - jsonPath: $.billingSlab.*.fromPlotSize
+       - jsonPath: $.BillingSlab.*.fromPlotSize
 
-       - jsonPath: $.billingSlab.*.toPlotSize
+       - jsonPath: $.BillingSlab.*.toPlotSize
        
-       - jsonPath: $.billingSlab.*.occupancyType
+       - jsonPath: $.BillingSlab.*.occupancyType
 
-       - jsonPath: $.services.*.unitRate
+       - jsonPath: $.BillingSlab.*.unitRate
        
-       - jsonPath: $.billingSlab.*.unBuiltUnitRate
+       - jsonPath: $.BillingSlab.*.unBuiltUnitRate
        
-       - jsonPath: $.billingSlab.*.arvPercent
+       - jsonPath: $.BillingSlab.*.arvPercent
 
-       - jsonPath: $.billingSlab.*.auditDetails.lastmodifiedBy
+       - jsonPath: $.BillingSlab.*.auditDetails.lastmodifiedBy
 
-       - jsonPath: $.billingSlab.*.auditDetails.lastmodifiedTime
+       - jsonPath: $.BillingSlab.*.auditDetails.lastmodifiedTime
 
-       - jsonPath: $.billingSlab.*.tenantId
+       - jsonPath: $.BillingSlab.*.tenantId
 
-       - jsonPath: $.billingSlab.*.id
+       - jsonPath: $.BillingSlab.*.id
 

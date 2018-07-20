@@ -2,6 +2,9 @@ package org.egov.pt.calculator.web.models.property;
 
 import java.math.BigDecimal;
 
+import javax.validation.constraints.NotNull;
+
+import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -26,7 +29,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @Builder
 @ToString
-@EqualsAndHashCode(exclude={"usage"})
+@EqualsAndHashCode
 public class Unit   {
         @JsonProperty("id")
         private String id;
@@ -34,27 +37,34 @@ public class Unit   {
         @JsonProperty("tenantId")
         private String tenantId;
 
+        @NotEmpty
         @JsonProperty("floorNo")
         private String floorNo;
 
         @JsonProperty("unitType")
         private String unitType;
 
+        @NotNull
         @JsonProperty("unitArea")
         private Float unitArea;
 
+        @NotEmpty
         @JsonProperty("usageCategoryMajor")
         private String usageCategoryMajor;
 
+        @NotEmpty
         @JsonProperty("usageCategoryMinor")
         private String usageCategoryMinor;
 
+        @NotEmpty
         @JsonProperty("usageCategorySubMinor")
         private String usageCategorySubMinor;
 
+        @NotEmpty
         @JsonProperty("usageCategoryDetail")
         private String usageCategoryDetail;
 
+        @NotEmpty
         @JsonProperty("occupancyType")
         private String occupancyType;
 
@@ -69,10 +79,5 @@ public class Unit   {
 
         @JsonProperty("arv")
         private BigDecimal arv;
-
-
-
-
-
 }
 

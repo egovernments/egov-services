@@ -8,6 +8,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
@@ -83,14 +84,17 @@ public class PropertyDetail   {
         @JsonProperty("usage")
         private String usage;
 
+        @NotNull
         @JsonProperty("noOfFloors")
         private Long noOfFloors;
 
+        @NotNull
         @JsonProperty("landArea")
-        private Float landArea;
+        private Double landArea;
 
+        @NotNull
         @JsonProperty("buildUpArea")
-        private Float buildUpArea;
+        private Double buildUpArea;
 
         @JsonProperty("units")
         @Valid
@@ -108,9 +112,11 @@ public class PropertyDetail   {
         @JsonProperty("financialYear")
         private String financialYear;
 
+        @NotEmpty
         @JsonProperty("propertyType")
         private String propertyType;
 
+        @NotEmpty
         @JsonProperty("propertySubType")
         private String propertySubType;
 
@@ -123,9 +129,11 @@ public class PropertyDetail   {
         @JsonProperty("usageCategoryMajor")
         private String usageCategoryMajor;
 
+        @NotEmpty
         @JsonProperty("ownershipCategory")
         private String ownershipCategory;
 
+        @NotEmpty
         @JsonProperty("subOwnershipCategory")
         private String subOwnershipCategory;
 

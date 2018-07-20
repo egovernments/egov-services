@@ -6,6 +6,7 @@ import java.util.List;
 import javax.validation.Valid;
 
 import org.egov.common.contract.request.Role;
+import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -30,6 +31,7 @@ import lombok.Setter;
 @Builder
 @EqualsAndHashCode(of= {"id"})
 public class OwnerInfo   {
+	
         @JsonProperty("id")
         private String id;
 
@@ -145,6 +147,7 @@ public class OwnerInfo   {
         @JsonProperty("ownerShipPercentage")
         private Double ownerShipPercentage;
 
+        @NotEmpty
         @JsonProperty("ownerType")
         private String ownerType;
 

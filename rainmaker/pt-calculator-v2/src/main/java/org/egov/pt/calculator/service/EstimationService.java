@@ -226,11 +226,12 @@ public class EstimationService {
 		List<BillingSlab> billingSlabs = billingSlabService.searchBillingSlabs(requestInfo, slabSearchCriteria)
 				.getBillingSlab();
 
+		System.err.println(" the slabs count : " + billingSlabs.size());
 		final String all = configs.getSlabValueAll();
 		/*
 		 * check when the land area should be used
 		 */
-		Float plotSize = detail.getBuildUpArea();
+		Double plotSize = detail.getBuildUpArea();
 
 		final String dtlPtType = detail.getPropertyType();
 		final String dtlPtSubType = detail.getPropertySubType();
@@ -264,6 +265,12 @@ public class EstimationService {
 					|| all.equalsIgnoreCase(slabSubOwnerShipCat);
 			boolean isPlotMatching = slabAreaFrom <= plotSize && slabAreaTo >= plotSize;
 
+			log.debug(" the slab is : " + slab);
+			
+			log.debug(" the match is isPtTypeMatching && isPtSubTypeMactching && isOwnerShipMatching && isSubOwnerShipMatching\r\n" + 
+					"					&& isPlotMatching && isAreaMatching && isPropertyMultiFloored  :  " + isPtTypeMatching + "  :  "  + isPtSubTypeMactching + "  :  "  + isOwnerShipMatching + "  :  "  + isSubOwnerShipMatching
+					+ "  :  "  + isPlotMatching + "  :  "  + isAreaMatching + "  :  "  + isPropertyMultiFloored);
+			
 			return isPtTypeMatching && isPtSubTypeMactching && isOwnerShipMatching && isSubOwnerShipMatching
 					&& isPlotMatching && isAreaMatching && isPropertyMultiFloored;
 		}).collect(Collectors.toList());
@@ -278,7 +285,7 @@ public class EstimationService {
 	 */
 	private BillingSlab getSlabForCalc(List<BillingSlab> billingSlabs, Unit unit) {
 
-		log.info(" the remaining slabs : ------------------------ : "+ billingSlabs);
+		log.debug(" the remaining slabs : ------------------------ : "+ billingSlabs);
 		
 		final String all = configs.getSlabValueAll();
 
@@ -302,9 +309,13 @@ public class EstimationService {
 
 			boolean isOccupancyTypeMatching = billSlb.getOccupancyType().equalsIgnoreCase(unit.getOccupancyType());
 
+			log.debug(" the match for each slab :  isMajorMatching && isMinorMatching && isSubMinorMatching && isDetailsMatching && isFloorMatching\r\n" + 
+					"					&& isOccupancyTypeMatching " + isMajorMatching + "  :   " + isMinorMatching + "  :   " + isSubMinorMatching + "  :   " + isDetailsMatching + "  :   " + isFloorMatching
+					+ "  :   " + isOccupancyTypeMatching);
+			
 			if (isMajorMatching && isMinorMatching && isSubMinorMatching && isDetailsMatching && isFloorMatching
 					&& isOccupancyTypeMatching) {
-				log.info(" The Id of the matching slab : "+ billSlb.getId());
+				log.debug(" The Id of the matching slab : "+ billSlb.getId());
 				return billSlb;
 			}
 		}
@@ -360,6 +371,9 @@ public class EstimationService {
 		final int userCount = owners.size();
 		BigDecimal share = taxAmt.divide(BigDecimal.valueOf(userCount));
 		for (OwnerInfo owner : owners) {
+			
+			if(null == owner.getOwnerType())
+				continue;
 			Map<String, Object> applicableOwnerType = mstrDataService.getApplicableMasterFromList(financialYear,
 					ownerTypeMap.get(owner.getOwnerType()));
 			if (null != applicableOwnerType) {
@@ -405,18 +419,22 @@ public class EstimationService {
 				.get(CalculatorConstants.USAGE_MINOR_MASTER);
 		Map<String, List<Object>> usageMajors = proeprtyBasedExemptionMasterMap
 				.get(CalculatorConstants.USAGE_MAJOR_MASTER);
-
-		Map<String, Object> applicableUsageMaster = mstrDataService.getApplicableMasterFromList(financialYear,
+		
+		Map<String, Object> applicableUsageMaster = null;
+		
+		if(null != usageDetails.get(unit.getUsageCategoryDetail()))
+		 applicableUsageMaster = mstrDataService.getApplicableMasterFromList(financialYear,
 				usageDetails.get(unit.getUsageCategoryDetail()));
 
-		if (null == applicableUsageMaster.get(CalculatorConstants.EXEMPTION_FIELD_NAME))
+		if ( null != applicableUsageMaster &&  null == applicableUsageMaster.get(CalculatorConstants.EXEMPTION_FIELD_NAME) && null != usageSubMinors.get(unit.getUsageCategorySubMinor()))
 			applicableUsageMaster = mstrDataService.getApplicableMasterFromList(financialYear,
 					usageSubMinors.get(unit.getUsageCategorySubMinor()));
 
-		if (null == applicableUsageMaster.get(CalculatorConstants.EXEMPTION_FIELD_NAME))
+		if (null != applicableUsageMaster && null == applicableUsageMaster.get(CalculatorConstants.EXEMPTION_FIELD_NAME) && null != usageMinors.get(unit.getUsageCategoryMinor()))
 			applicableUsageMaster = mstrDataService.getApplicableMasterFromList(financialYear,
 					usageMinors.get(unit.getUsageCategoryMinor()));
-		if (null == applicableUsageMaster.get(CalculatorConstants.EXEMPTION_FIELD_NAME))
+		
+		if (null != applicableUsageMaster && null == applicableUsageMaster.get(CalculatorConstants.EXEMPTION_FIELD_NAME) && null != usageMajors.get(unit.getUsageCategoryMajor()))
 			applicableUsageMaster = mstrDataService.getApplicableMasterFromList(financialYear,
 					usageMajors.get(unit.getUsageCategoryMajor()));
 

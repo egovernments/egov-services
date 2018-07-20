@@ -1,5 +1,8 @@
 package org.egov.pt.calculator.web.models;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+
 import org.egov.pt.calculator.web.models.property.Property;
 import org.springframework.validation.annotation.Validated;
 
@@ -24,18 +27,23 @@ import lombok.ToString;
 @Builder
 @ToString
 public class CalculationCriteria   {
+	
+		@Valid
+		@NotNull
         @JsonProperty("property")
         private Property property;
 
         @JsonProperty("assesmentNumber")
         private String assesmentNumber;
 
+        @NotNull
         @JsonProperty("assessmentYear")
         private String assessmentYear;
 
         @JsonProperty("oldAssessmentNumber")
         private String oldAssessmentNumber;
 
+        @NotNull
         @JsonProperty("tenantId")
         private String tenantId;
 

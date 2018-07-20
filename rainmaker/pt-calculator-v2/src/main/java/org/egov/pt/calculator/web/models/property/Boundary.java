@@ -6,6 +6,7 @@ import java.util.List;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
+import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -28,6 +29,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Builder
 public class Boundary   {
+	
         @NotNull
         @JsonProperty("code")
         private String code;
@@ -35,6 +37,7 @@ public class Boundary   {
         @JsonProperty("name")
         private String name;
         
+        @NotEmpty
         @JsonProperty("area")
         private String area;
 

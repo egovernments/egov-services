@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 
 import org.springframework.validation.annotation.Validated;
 
@@ -16,6 +17,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import lombok.val;
 
 /**
  * Property
@@ -90,6 +92,9 @@ public class Property extends PropertyInfo{
 
 		private CreationReasonEnum creationReason;
 		private Long occupancyDate;
+		
+		@NotNull
+		@Valid
 		private List<PropertyDetail>  propertyDetails;
 		private AuditDetails auditDetails;
 
@@ -98,6 +103,9 @@ public class Property extends PropertyInfo{
 		private String acknowldgementNumber;
 		private String oldPropertyId;
 		private StatusEnum status;
+		
+		@NotNull
+		@Valid
 		private Address address;
 
 

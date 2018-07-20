@@ -287,7 +287,7 @@ public class BillService {
 
 	private Purpose getPurpose(Category category, String taxHeadCode, Long taxPeriodFrom, Long taxPeriodTo) {
 
-		Long currDate = new Date().getTime();
+		Long currDate = System.currentTimeMillis();
 		//TODO check about arrears late payments ask Ramki to take a look
 		if (category.equals(Category.TAX) || category.equals(Category.FEE) 
 				|| category.equals(Category.CHARGES)) {

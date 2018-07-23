@@ -676,8 +676,8 @@ public class ReceiptService {
 			BillResponse billResponse = billingServiceRepository.getBillForBillId(requestInfo, bill, billDetail);
 			if (null != billResponse && !CollectionUtils.isEmpty(billResponse.getBill())) {
 				for(BillDetail resbillDetail: billResponse.getBill().get(0).getBillDetails()) {
-					List<BillDetail> reqBillDetail = bill.getBillDetails().parallelStream()
-							.filter(obj -> obj.getId() == resbillDetail.getId()).collect(Collectors.toList());
+                                      List<BillDetail> reqBillDetail = bill.getBillDetails().parallelStream()
+							.filter(obj -> obj.getId().equals(resbillDetail.getId())).collect(Collectors.toList());
 					if(CollectionUtils.isEmpty(reqBillDetail)) {
 						LOGGER.info("BillDetail is not availble in billing service");
 						isBillValid = false;

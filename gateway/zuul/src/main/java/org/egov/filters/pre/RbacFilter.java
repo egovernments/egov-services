@@ -2,6 +2,7 @@ package org.egov.filters.pre;
 
 import com.netflix.zuul.ZuulFilter;
 import com.netflix.zuul.context.RequestContext;
+import org.egov.Utils.ExceptionUtils;
 import org.egov.contract.Action;
 import org.egov.contract.User;
 import org.springframework.http.HttpStatus;
@@ -35,7 +36,8 @@ public class RbacFilter extends ZuulFilter{
         if(isIncomingURIInAuthorizedActionList)
             return null;
 
-        abortWithStatus(ctx,HttpStatus.FORBIDDEN, FORBIDDEN_MESSAGE);
+        ExceptionUtils.setCustomException(HttpStatus.FORBIDDEN, FORBIDDEN_MESSAGE);
+
         return null;
     }
 
@@ -53,10 +55,4 @@ public class RbacFilter extends ZuulFilter{
         return requestUri.equals(action.getUrl());
     }
 
-
-    private void abortWithStatus(RequestContext ctx, HttpStatus status, String message) {
-        ctx.set(ERROR_CODE_KEY, status.value());
-        ctx.set(ERROR_MESSAGE_KEY, message);
-        ctx.setSendZuulResponse(false);
-    }
 }

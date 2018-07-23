@@ -362,6 +362,7 @@ public class LeaveApplicationService {
                     if (isSecondOrFourthSaturday(leaveApplication.getFromDate(), leaveApplication.getToDate()))
                         isHoliday = true;
                 }
+                leaveApplication.setEncashable(false);
 
                 if (isSunday(leaveApplication.getFromDate(), leaveApplication.getToDate()))
                     isHoliday = true;

@@ -27,7 +27,6 @@ import org.egov.pt.calculator.web.models.property.Property;
 import org.egov.pt.calculator.web.models.property.PropertyDetail;
 import org.egov.pt.calculator.web.models.property.Unit;
 import org.egov.tracer.model.CustomException;
-import org.egov.tracer.model.ServiceCallException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -123,9 +122,13 @@ public class EstimationService {
 			} else {
 				BillingSlab slab = getSlabForCalc(filteredbillingSlabs, unit);
 				if (null == slab) {
-					
+
 					Map<String, String> map = new HashMap<>();
-					map.put(CalculatorConstants.BILLING_SLAB_MATCH_ERROR_CODE, CalculatorConstants.BILLING_SLAB_MATCH_ERROR_MESSAGE);
+					map.put(CalculatorConstants.BILLING_SLAB_MATCH_ERROR_CODE,
+							CalculatorConstants.BILLING_SLAB_MATCH_ERROR_MESSAGE
+							.replace(CalculatorConstants.BILLING_SLAB_MATCH_AREA, unit.getUnitArea().toString())
+							.replace(CalculatorConstants.BILLING_SLAB_MATCH_FLOOR, unit.getFloorNo())
+							.replace(CalculatorConstants.BILLING_SLAB_MATCH_USAGE_DETAIL, unit.getUsageCategoryDetail()));
 					throw new CustomException(map);
 				}
 				Double a = unit.getUnitArea() * slab.getUnitRate(); // FIXME change to Bigdecimal

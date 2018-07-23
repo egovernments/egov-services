@@ -217,7 +217,12 @@ public class DemandService {
 		PropertyDetail detail = property.getPropertyDetails().get(0);
 		String propertyType = detail.getPropertyType();
 		String consumerCode = property.getPropertyId() + "-" + detail.getAssessmentNumber();
-		OwnerInfo owner = detail.getCitizenInfo();
+		OwnerInfo owner = null;
+		if (null != detail.getCitizenInfo())
+			owner = detail.getCitizenInfo();
+		else
+			owner = detail.getOwners().iterator().next();
+
 		List<DemandDetail> details = new ArrayList<>();
 
 		for (TaxHeadEstimate estimate : calculation.getTaxHeadEstimates()) {

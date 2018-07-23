@@ -146,9 +146,8 @@ public class CalculatorUtils {
 	public BigDecimal getTaxAmtFromDemand(Demand demand) {
 		BigDecimal taxAmt = BigDecimal.ZERO;
 		for (DemandDetail detail : demand.getDemandDetails()) {
-			taxAmt = taxAmt.add(detail.getTaxAmount());
-			if (null != detail.getCollectionAmount())
-				taxAmt = taxAmt.subtract(detail.getCollectionAmount());
+			if (! CalculatorConstants.REBATE_LISTS.contains(detail.getTaxHeadMasterCode()))
+				taxAmt = taxAmt.add(detail.getTaxAmount());
 		}
 		return taxAmt;
 	}
@@ -184,53 +183,62 @@ public class CalculatorUtils {
 
 	/**
 	 * Query to fetch assessments for the given criteria
+	 * 
 	 * @param assessment
 	 * @return
 	 */
-	public String getAssessmentQuery(Assessment assessment) {
+	public String getAssessmentQuery(Assessment assessment, List<Object> preparedStmtList) {
 
 		StringBuilder query = new StringBuilder("SELECT * FROM eg_pt_assessment where tenantId=");
-		
-		query.append("'"+assessment.getTenantId()+"'");
-		
-		if (assessment.getAssessmentNumber() != null)
-			query.append(" AND assessmentNumber=").append("'"+assessment.getAssessmentNumber()+"'");
 
-		if(assessment.getDemandId() != null)
-			query.append(" AND demandId=").append("'"+assessment.getDemandId()+"'");
-		
-		if(assessment.getPropertyId() != null)
-			query.append(" AND propertyId=").append("'"+assessment.getPropertyId()+"'");
-		
+		preparedStmtList.add(assessment.getTenantId());
+
+		if (assessment.getAssessmentNumber() != null) {
+			query.append(" AND assessmentNumber=?");
+			preparedStmtList.add(assessment.getAssessmentNumber());
+		}
+
+		if (assessment.getDemandId() != null) {
+			query.append(" AND a1.demandId=?");
+			preparedStmtList.add(assessment.getDemandId());
+		}
+
+		if (assessment.getPropertyId() != null) {
+			query.append(" AND a1.propertyId=?");
+			preparedStmtList.add(assessment.getPropertyId());
+		}
+
 		query.append(" ORDER BY createdtime");
-		
+
 		return query.toString();
 	}
-	
+
 	/**
 	 * Query to fetch latest assessment for the given criteria
+	 * 
 	 * @param assessment
 	 * @return
 	 */
-	public String getMaxAssessmentQuery(Assessment assessment) {
+	public String getMaxAssessmentQuery(Assessment assessment, List<Object> preparedStmtList) {
 
 		StringBuilder query = new StringBuilder("SELECT * FROM eg_pt_assessment a1 INNER JOIN "
 
 				+ "(select Max(createdtime) as maxtime, propertyid from eg_pt_assessment group by propertyid) a2 "
 
-				+ "ON a1.createdtime=a2.maxtime and a1.propertyid=a2.propertyid where a1.tenantId=");
+				+ "ON a1.createdtime=a2.maxtime and a1.propertyid=a2.propertyid where a1.tenantId=?");
 
-		query.append("'"+assessment.getTenantId()+"'");
-		
-		if (assessment.getAssessmentNumber() != null)
-			query.append(" AND a1.assessmentNumber=").append("'"+assessment.getAssessmentNumber()+"'");
+		preparedStmtList.add(assessment.getTenantId());
 
-		if(assessment.getDemandId() != null)
-			query.append(" AND a1.demandId=").append("'"+assessment.getDemandId()+"'");
-		
-		if(assessment.getPropertyId() != null)
-			query.append(" AND a1.propertyId=").append("'"+assessment.getPropertyId()+"'");
-		
+		if (assessment.getDemandId() != null) {
+			query.append(" AND a1.demandId=?");
+			preparedStmtList.add(assessment.getDemandId());
+		}
+
+		if (assessment.getPropertyId() != null) {
+			query.append(" AND a1.propertyId=?");
+			preparedStmtList.add(assessment.getPropertyId());
+		}
+
 		return query.toString();
 	}
 

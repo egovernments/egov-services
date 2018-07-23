@@ -61,7 +61,7 @@ public class AssessmentService {
 	public List<Assessment> getMaxAssessment(Assessment assessment){
 		
 		List<Object> preparedStatementList = new ArrayList<>();
-		String query = utils.getMaxAssessmentQuery(assessment);
+		String query = utils.getMaxAssessmentQuery(assessment, preparedStatementList);
 		return repository.getAssessments(query, preparedStatementList.toArray());
 	}
 	
@@ -74,7 +74,7 @@ public class AssessmentService {
 	public List<Assessment> getAssessments(Assessment assessment){
 		
 		List<Object> preparedStatementList = new ArrayList<>();
-		String query = utils.getAssessmentQuery(assessment);
+		String query = utils.getAssessmentQuery(assessment, preparedStatementList);
 		return repository.getAssessments(query, preparedStatementList.toArray());
 	}
 }

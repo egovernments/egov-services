@@ -19,6 +19,16 @@ import org.springframework.stereotype.Service;
 
 import net.minidev.json.JSONArray;
 
+/**
+ * Deals with the functionality that are performed 
+ * 
+ * before the time of bill generation(before payment)  
+ * 
+ * or at the time of bill apportioning(after payment)
+ * 
+ * @author kavi elrey
+ *
+ */
 @Service
 public class PayService {
 
@@ -71,7 +81,7 @@ public class PayService {
 			setDateToCalendar(assessmentYear, time, cal);
 
 			if (cal.getTime().compareTo(new Date()) >= 0) {
-
+				
 				Double exemptionRate = (Double) rebate.get(CalculatorConstants.RATE_FIELD_NAME);
 				Double exempMaxRate = (Double) rebate.get(CalculatorConstants.MAX_AMOUNT_FIELD_NAME);
 				rebateAmt = rebateAmt.add(taxAmt.multiply(BigDecimal.valueOf(exemptionRate / 100)));

@@ -1,5 +1,6 @@
 package org.egov.pt.calculator.repository;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.egov.pt.calculator.repository.rowmapper.BillingSlabRowMapper;
@@ -25,9 +26,11 @@ public class PTCalculatorDBRepository {
 	private BillingSlabRowMapper billingSlabRowMapper;
 	
 	public List<BillingSlab> searchBillingSlab(BillingSlabSearchCriteria billingSlabSearcCriteria) {
-		String query = billingSlabQueryBuilder.getBillingSlabSearchQuery(billingSlabSearcCriteria);
-		log.info("Query: "+query);
-		return jdbcTemplate.query(query, billingSlabRowMapper);		
+		
+		List<Object> preparedStmtList = new ArrayList<>();
+		String query = billingSlabQueryBuilder.getBillingSlabSearchQuery(billingSlabSearcCriteria, preparedStmtList);
+		log.debug("Query: "+query);
+		return jdbcTemplate.query(query, preparedStmtList.toArray(), billingSlabRowMapper);		
 	}
 
 }

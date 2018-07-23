@@ -21,6 +21,10 @@ public class BillingSlabConstants {
 	public static final String MDMS_CODE_JSONPATH = "$.*.code";
 	
 	public static final String ALL_PLACEHOLDER_BILLING_SLAB = "All";
+	
+	public static final String MDMS_DATA_NOT_FOUND_KEY  = "MDMS data couldn't be fetched. Skipping code validation.....";
+	
+	public static final String MDMS_DATA_NOT_FOUND_MESSAGE  = "MDMS data couldn't be fetched. Skipping code validation.....";
 
 
 }

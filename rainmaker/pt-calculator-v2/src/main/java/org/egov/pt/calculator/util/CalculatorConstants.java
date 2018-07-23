@@ -21,6 +21,8 @@ public class CalculatorConstants {
 	
 	public static final String PT_ADVANCE_CARRYFORWARD = "PT_ADVANCE_CARRYFORWARD";
 	
+	public static final List<String> REBATE_LISTS = Arrays.asList(PT_TIME_REBATE);
+	
 	
 	
 	/*
@@ -145,5 +147,11 @@ public class CalculatorConstants {
 	
 	public static final String BILLING_SLAB_MATCH_ERROR_CODE = "NO_BILLING_SLAB_FOUND";
 	
-	public static final String BILLING_SLAB_MATCH_ERROR_MESSAGE = "No matching billing slab has been found for your criteria please check all your master fields";
+	public static final String BILLING_SLAB_MATCH_ERROR_MESSAGE = "No matching slabs has been found for unit on FloorNo : {floor} of Area : {area} with usageCategoryDetail : {usageDetail}";
+	
+	public static final String BILLING_SLAB_MATCH_FLOOR = "{floor}";
+	
+	public static final String BILLING_SLAB_MATCH_AREA = "{area}";
+	
+	public static final String BILLING_SLAB_MATCH_USAGE_DETAIL = "{usageDetail}";
 }

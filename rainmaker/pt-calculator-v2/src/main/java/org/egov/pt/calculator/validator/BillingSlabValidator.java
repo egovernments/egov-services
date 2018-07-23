@@ -2,7 +2,6 @@ package org.egov.pt.calculator.validator;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -10,17 +9,15 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.egov.mdms.model.MdmsCriteriaReq;
-import org.egov.tracer.model.CustomException;
 import org.egov.pt.calculator.repository.PTCalculatorRepository;
 import org.egov.pt.calculator.service.BillingSlabService;
 import org.egov.pt.calculator.util.BillingSlabConstants;
 import org.egov.pt.calculator.util.BillingSlabUtils;
-import org.egov.pt.calculator.util.CalculatorConstants;
-import org.egov.pt.calculator.util.Configurations;
 import org.egov.pt.calculator.web.models.BillingSlab;
 import org.egov.pt.calculator.web.models.BillingSlabReq;
 import org.egov.pt.calculator.web.models.BillingSlabRes;
 import org.egov.pt.calculator.web.models.BillingSlabSearchCriteria;
+import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -28,7 +25,6 @@ import org.springframework.util.CollectionUtils;
 import com.jayway.jsonpath.JsonPath;
 
 import lombok.extern.slf4j.Slf4j;
-import net.minidev.json.JSONArray;
 
 @Service
 @Slf4j
@@ -45,7 +41,7 @@ public class BillingSlabValidator {
 	
 	public void validateCreate(BillingSlabReq billingSlabReq) {
 		Map<String, String> errorMap = new HashMap<>();
-		runCommonChecks(billingSlabReq, errorMap);
+		validateIfTenantIdIsUnique(billingSlabReq, errorMap);
 		validateDuplicateBillingSlabs(billingSlabReq, errorMap);
 		fetchAndvalidateMDMSCodes(billingSlabReq, errorMap);
 		if (!CollectionUtils.isEmpty(errorMap)) {
@@ -55,7 +51,7 @@ public class BillingSlabValidator {
 
 	public void validateUpdate(BillingSlabReq billingSlabReq) {
 		Map<String, String> errorMap = new HashMap<>();
-		runCommonChecks(billingSlabReq, errorMap);
+		validateIfTenantIdIsUnique(billingSlabReq, errorMap);
 		checkIfBillingSlabsExist(billingSlabReq, errorMap);
 		fetchAndvalidateMDMSCodes(billingSlabReq, errorMap);
 		if (!CollectionUtils.isEmpty(errorMap)) {
@@ -63,10 +59,11 @@ public class BillingSlabValidator {
 		}
 	}
 	
-	public void runCommonChecks(BillingSlabReq billingSlabReq, Map<String, String> errorMap) {
+	
+	public void validateIfTenantIdIsUnique(BillingSlabReq billingSlabReq, Map<String, String> errorMap) {
 		Set<String> tenantIds = billingSlabReq.getBillingSlab().parallelStream().map(BillingSlab::getTenantId)
 				.collect(Collectors.toSet());
-		if(tenantIds.size() < 1)
+		if(tenantIds.isEmpty())
 			errorMap.put("EG_PT_INVALID_INPUT", "Input must have atleast one billing slab");
 		else if(tenantIds.size() > 1)
 			errorMap.put("EG_PT_INVALID_INPUT", "All billing slabs must belong to same tenant");
@@ -100,18 +97,30 @@ public class BillingSlabValidator {
 			throw new CustomException(errorMap);
 	}
 
+	/**
+	 * Validates the Incoming request for duplicate Records
+	 *  
+	 * @param billingSlabReq
+	 * @param errorMap
+	 */
 	public void validateDuplicateBillingSlabs(BillingSlabReq billingSlabReq, Map<String, String> errorMap) {
-		List<String> ids = billingSlabReq.getBillingSlab().parallelStream().map(BillingSlab::getId)
-				.collect(Collectors.toList());
-		BillingSlabRes billingSlabRes = billingSlabService.searchBillingSlabs(billingSlabReq.getRequestInfo(),
-				BillingSlabSearchCriteria.builder().id(ids).build());
-		if (!CollectionUtils.isEmpty(billingSlabRes.getBillingSlab())) {
-			List<String> duplicateIds = billingSlabRes.getBillingSlab().parallelStream().map(BillingSlab::getId)
-					.collect(Collectors.toList());
 
-			errorMap.put("EG_PT_DUPLICATE_IDS", "Following records are duplicate, IDs: [" + duplicateIds + "]");
+		List<BillingSlab> incomingSlabs = billingSlabReq.getBillingSlab();
+		String tenantId = incomingSlabs.get(0).getTenantId();
+		List<Integer> errorList = new ArrayList<>();
+
+		List<BillingSlab> dbSlabs = billingSlabService.searchBillingSlabs(billingSlabReq.getRequestInfo(),
+				BillingSlabSearchCriteria.builder().tenantId(tenantId).build()).getBillingSlab();
+
+		if (!CollectionUtils.isEmpty(dbSlabs)) {
+			for (int i = 0; i < incomingSlabs.size(); i++) {
+				if (dbSlabs.contains(incomingSlabs.get(i)))
+					errorList.add(i);
+			}
+			if (!CollectionUtils.isEmpty(errorList))
+				errorMap.put("EG_PT_BILLING_SLAB_DUPLICATE",
+						"Records in following indices are duplicate, : " + errorList);
 		}
-		
 		if (!CollectionUtils.isEmpty(errorMap))
 			throw new CustomException(errorMap);
 	}
@@ -124,12 +133,14 @@ public class BillingSlabValidator {
 		try {
 			response = repository.fetchResult(uri, request);
 			if (null == response) {
-				log.info("MDMS data couldn't be fetched. Skipping code validation.....");
-				return;
+				log.info(BillingSlabConstants.MDMS_DATA_NOT_FOUND_MESSAGE);
+				throw new CustomException();
 			}
 			validateMDMSCodes(billingSlabReq, errorMap, response);
 		} catch (Exception e) {
-			log.error("MDMS data couldn't be fetched. Skipping code validation.....", e);
+			log.error(BillingSlabConstants.MDMS_DATA_NOT_FOUND_KEY, e);
+			errorMap.put(BillingSlabConstants.MDMS_DATA_NOT_FOUND_KEY,
+					BillingSlabConstants.MDMS_DATA_NOT_FOUND_MESSAGE);
 			return;
 		}
 	}

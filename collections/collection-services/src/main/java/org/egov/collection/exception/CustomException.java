@@ -16,5 +16,10 @@ public class CustomException extends RuntimeException {
 	private String customMessage;
 	
 	private String description;
+	
+	public CustomException(Long code, String customMessage) {
+		this.code = code;
+		this.customMessage = customMessage;
+	}
 
 }

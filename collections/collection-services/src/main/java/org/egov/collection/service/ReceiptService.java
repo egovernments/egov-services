@@ -58,12 +58,14 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import javax.xml.bind.ValidationException;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class ReceiptService {
@@ -110,11 +112,8 @@ public class ReceiptService {
 	public Receipt apportionAndCreateReceipt(ReceiptReq receiptReq) {
 		Receipt receipt = receiptReq.getReceipt().get(0);
 		Bill bill = receipt.getBill().get(0);
-
-		try {
-			validateBill(receiptReq.getRequestInfo(), bill);
-		} catch (CustomException e) {
-			LOGGER.error("Invalid Bill: ", e);
+		if(!validateBill(receiptReq.getRequestInfo(), bill)) {
+			throw new CustomException(Long.valueOf(HttpStatus.BAD_REQUEST.toString()), CollectionServiceConstants.INVALID_BILL_EXCEPTION_DESC);
 		}
 		WorkflowDetailsRequest workflowDetailsRequest = receipt
 				.getWorkflowDetails();
@@ -131,7 +130,7 @@ public class ReceiptService {
 			receipt = receiptRepository.pushToQueue(receiptReq);
 		}
 		return receipt;
-	}
+	}  
 
 	private List<BillDetail> apportionPaidAmount(RequestInfo requestInfo,
 			Bill bill, String tenantId) {
@@ -672,22 +671,33 @@ public class ReceiptService {
 	}
 
 	public boolean validateBill(RequestInfo requestInfo, Bill bill) {
-		boolean isBillValid = false;
+		boolean isBillValid = true;
 		for (BillDetail billDetail : bill.getBillDetails()) {
-			BillResponse billResponse = billingServiceRepository
-					.getBillForBillId(requestInfo, bill, billDetail);
-			if (null != billResponse && !billResponse.getBill().isEmpty()) {
-				isBillValid = true;
-				return isBillValid;
-			}
-			if (!isBillValid) {
-				throw new CustomException(
-						Long.valueOf(HttpStatus.INTERNAL_SERVER_ERROR
-								.toString()),
-						CollectionServiceConstants.INVALID_BILL_EXCEPTION_MSG
-								.concat(billDetail.getConsumerCode()).concat(
-										billDetail.getBusinessService()),
-						CollectionServiceConstants.INVALID_BILL_EXCEPTION_DESC);
+			BillResponse billResponse = billingServiceRepository.getBillForBillId(requestInfo, bill, billDetail);
+			if (null != billResponse && !CollectionUtils.isEmpty(billResponse.getBill())) {
+				for(BillDetail resbillDetail: billResponse.getBill().get(0).getBillDetails()) {
+					List<BillDetail> reqBillDetail = bill.getBillDetails().parallelStream()
+							.filter(obj -> obj.getId() == resbillDetail.getId()).collect(Collectors.toList());
+					if(CollectionUtils.isEmpty(reqBillDetail)) {
+						isBillValid = false;
+						break;
+					}
+					BillDetail billDetailTobeValidated = reqBillDetail.get(0);
+					if(billDetailTobeValidated.getPartPaymentAllowed()) {
+						if(resbillDetail.getMinimumAmount().longValue() > billDetailTobeValidated.getAmountPaid().longValue()) {
+							isBillValid = false;
+							break;
+						}
+					}else {
+						if(!resbillDetail.getTotalAmount().equals(billDetailTobeValidated.getAmountPaid())) {
+							isBillValid = false;
+							break;
+						}
+					}
+
+				}
+			}else {
+				isBillValid = false;
 			}
 		}
 		return isBillValid;

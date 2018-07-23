@@ -74,7 +74,7 @@ public class BillDetail {
 
 	private BigDecimal totalAmount;
 	
-        private List<String> collectionModesNotAllowed = new ArrayList<>();
+    private List<String> collectionModesNotAllowed = new ArrayList<>();
 
 	private String tenantId;
 
@@ -112,5 +112,7 @@ public class BillDetail {
     private String manualReceiptNumber;
 
     private Long stateId;
+    
+	private Boolean partPaymentAllowed;
     
 }

@@ -187,15 +187,23 @@ class EditDemand extends React.Component {
   }
 
   handleChange(e, name, k) {
-
     var tempDemands = this.state.demands.slice();
-    tempDemands[k][name] = Math.round(e.target.value);
+    if(!isNaN(e.target.value)){
+        tempDemands[k][name] = Math.round(e.target.value);
+    }
 
     this.setState({
       demands: tempDemands
     })
 
   }
+     isNumberKey(evt) {
+        var charCode = (evt.which) ? evt.which : event.keyCode
+        if (charCode > 47 && charCode < 58)
+            return true;
+
+        return false;
+    }
 
   componentDidMount() {
     if (window.opener && window.opener.document) {
@@ -441,12 +449,12 @@ class EditDemand extends React.Component {
         return (<tr key={index}>
           <td>{demand["taxPeriod"] + "[" + demand["taxReason"].toLowerCase() + "]"}</td>
           <td data-label="demand">
-            <input type="number" name={demand["taxPeriod"] + "demand"} value={demand["taxAmount"]} onChange={(e) => {
+            <input type="text" name={demand["taxPeriod"] + "demand"} value={demand["taxAmount"]} onkeypress="return isNumberKey(event)" onChange={(e) => {
               handleChange(e, "taxAmount", index)
             }} />
           </td>
           <td data-label="collection">
-            <input type="number" name={demand["taxPeriod"] + "collection"} value={demand["collectionAmount"]} onChange={(e) => {
+            <input type="text" name={demand["taxPeriod"] + "collection"} value={demand["collectionAmount"]} onkeypress="return isNumberKey(event)" onChange={(e) => {
               handleChange(e, "collectionAmount", index)
             }} disabled={demand.isCollected} />
           </td>

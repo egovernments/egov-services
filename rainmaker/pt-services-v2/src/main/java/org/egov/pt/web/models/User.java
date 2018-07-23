@@ -3,6 +3,7 @@ package org.egov.pt.web.models;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Digits;
@@ -24,7 +25,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-@EqualsAndHashCode
 
 public class User   {
         @JsonProperty("id")
@@ -153,5 +153,20 @@ public class User   {
         return this;
         }
 
+        @Override
+        public boolean equals(Object o) {
+                if (this == o) return true;
+                if (o == null || getClass() != o.getClass()) return false;
+                User user = (User) o;
+                return Objects.equals(uuid, user.uuid) &&
+                        Objects.equals(name, user.name) &&
+                        Objects.equals(mobileNumber, user.mobileNumber);
+        }
+
+        @Override
+        public int hashCode() {
+
+                return Objects.hash(uuid, name, mobileNumber);
+        }
 }
 

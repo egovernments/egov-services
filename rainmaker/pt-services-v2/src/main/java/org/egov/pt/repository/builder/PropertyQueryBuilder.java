@@ -1,5 +1,6 @@
 package org.egov.pt.repository.builder;
 
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
@@ -49,64 +50,67 @@ public class PropertyQueryBuilder {
 		Set<String> ids = criteria.getIds();
 		if(!CollectionUtils.isEmpty(ids)) {
 
-			builder.append("and pt.propertyid IN (").append(convertSetToString(ids)).append(")");
-
+			builder.append("and pt.propertyid IN (").append(createQuery(ids)).append(")");
+			addToPreparedStatement(preparedStmtList,ids);
 		}
 
 		Set<String> oldpropertyids = criteria.getOldpropertyids();
 		if(!CollectionUtils.isEmpty(oldpropertyids)) {
 
-			builder.append("and pt.oldpropertyid IN (").append(convertSetToString(oldpropertyids)).append(")");
-
+			builder.append("and pt.oldpropertyid IN (").append(createQuery(oldpropertyids)).append(")");
+			addToPreparedStatement(preparedStmtList,oldpropertyids);
 		}
 
 		Set<String> propertyDetailids = criteria.getPropertyDetailids();
 		if(!CollectionUtils.isEmpty(propertyDetailids)) {
 
-			builder.append("and ptdl.assessmentnumber IN (").append(convertSetToString(propertyDetailids)).append(")");
-
+			builder.append("and ptdl.assessmentnumber IN (").append(createQuery(propertyDetailids)).append(")");
+			addToPreparedStatement(preparedStmtList,propertyDetailids);
 		}
 
 		Set<String> addressids = criteria.getAddressids();
 		if(!CollectionUtils.isEmpty(addressids)) {
 
-			builder.append("and address.id IN (").append(convertSetToString(addressids)).append(")");
-
+			builder.append("and address.id IN (").append(createQuery(addressids)).append(")");
+			addToPreparedStatement(preparedStmtList,addressids);
 		}
 
 		Set<String> ownerids = criteria.getOwnerids();
 		if(!CollectionUtils.isEmpty(ownerids)) {
 
-			builder.append("and owner.userid IN (").append(convertSetToString(ownerids)).append(")");
-
+			builder.append("and owner.userid IN (").append(createQuery(ownerids)).append(")");
+			addToPreparedStatement(preparedStmtList,ownerids);
 		}
 
 		Set<String> unitids = criteria.getUnitids();
 		if(!CollectionUtils.isEmpty(unitids)) {
 
-			builder.append("and unit.id IN (").append(convertSetToString(unitids)).append(")");
-
+			builder.append("and unit.id IN (").append(createQuery(unitids)).append(")");
+			addToPreparedStatement(preparedStmtList,unitids);
 		}
 
 		Set<String> documentids = criteria.getDocumentids();
 		if(!CollectionUtils.isEmpty(documentids)) {
 
-			builder.append("and doc.id IN (").append(convertSetToString(documentids)).append(")");
-
+			builder.append("and doc.id IN (").append(createQuery(documentids)).append(")");
+			addToPreparedStatement(preparedStmtList,documentids);
 		}
 
 		if(criteria.getDoorNo()!=null && criteria.getLocality()!=null){
-			builder.append(" and address.doorno = '").append(criteria.getDoorNo()).append("' and address.locality = '").append(criteria.getLocality()).append("'");
+			builder.append(" and address.doorno = ? ").append(" and address.locality = ? ");
+			preparedStmtList.add(criteria.getDoorNo());
+			preparedStmtList.add(criteria.getLocality());
 		}
 
 		if(criteria.getAccountId()!=null) {
-			builder.append(" and ptdl.accountid = '").append(criteria.getAccountId()).append("'");
+			builder.append(" and ptdl.accountid = ? ");
+			preparedStmtList.add(criteria.getAccountId());
 		}
 
 		return builder.toString();
 	}
 
-	private String convertSetToString(Set<String> ids) {
+	/*private String createQuery(Set<String> ids) {
 
 		final String quotes = "'";
 		final String comma = ",";
@@ -117,5 +121,22 @@ public class PropertyQueryBuilder {
 			if(iterator.hasNext()) builder.append(comma);
 		}
 		return builder.toString();
+	}*/
+
+
+	private String createQuery(Set<String> ids) {
+		StringBuilder builder = new StringBuilder();
+		int length = ids.size();
+		for( int i = 0; i< length; i++){
+			builder.append(" ?");
+			if(i != length -1) builder.append(",");
+		}
+		return builder.toString();
 	}
+
+	private void addToPreparedStatement(List<Object> preparedStmtList,Set<String> ids)
+	{ ids.forEach(id ->{ preparedStmtList.add(id);});
+	}
+
+
 }

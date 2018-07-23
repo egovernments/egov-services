@@ -5,6 +5,7 @@ import org.egov.pt.config.PropertyConfiguration;
 import org.egov.pt.repository.IdGenRepository;
 import org.egov.pt.util.PropertyUtil;
 import org.egov.pt.web.models.*;
+import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -34,25 +35,21 @@ public class EnrichmentService {
      */
     public void enrichCreateRequest(PropertyRequest request,Boolean onlyPropertyDetail) {
         RequestInfo requestInfo = request.getRequestInfo();
-        AuditDetails auditDetails = propertyutil.getAuditDetails(requestInfo.getUserInfo().getUuid(), !onlyPropertyDetail);
-
+        AuditDetails propertyAuditDetails = propertyutil.getAuditDetails(requestInfo.getUserInfo().getUuid(), !onlyPropertyDetail);
+        AuditDetails assessmentAuditDetails = propertyutil.getAuditDetails(requestInfo.getUserInfo().getUuid(),true);
 
         for (Property property : request.getProperties()) {
             if(!onlyPropertyDetail)
                 property.getAddress().setId(UUID.randomUUID().toString());
             property.getAddress().setTenantId(property.getTenantId());
-            property.setAuditDetails(auditDetails);
+            property.setAuditDetails(propertyAuditDetails);
             property.setStatus(PropertyInfo.StatusEnum.ACTIVE);
             setAssessmentNo(property.getTenantId(),property.getPropertyDetails(),requestInfo);
             property.getPropertyDetails().forEach(propertyDetail -> {
                 //   if(propertyDetail.getAssessmentNumber()==null)
                 {
                     propertyDetail.setTenantId(property.getTenantId());
-                    propertyDetail.setAuditDetails(auditDetails);
-                    if(onlyPropertyDetail){
-                        propertyDetail.getAuditDetails().setCreatedBy(requestInfo.getUserInfo().getUuid());
-                        propertyDetail.getAuditDetails().setCreatedTime(System.currentTimeMillis());
-                    }
+                    propertyDetail.setAuditDetails(assessmentAuditDetails);
                     if(!CollectionUtils.isEmpty(propertyDetail.getUnits()))
                         propertyDetail.getUnits().forEach(unit -> {
                             unit.setId(UUID.randomUUID().toString());
@@ -60,7 +57,7 @@ public class EnrichmentService {
                     if( propertyDetail.getDocuments()!=null)
                         propertyDetail.getDocuments().forEach(document -> document.setId(UUID.randomUUID().toString()));
                     propertyDetail.setAssessmentDate(System.currentTimeMillis());
-                    if(propertyDetail.getSubOwnershipCategory().equals("INSTITUTIONAL"))
+                    if(propertyDetail.getSubOwnershipCategory().equalsIgnoreCase("INSTITUTIONAL"))
                     { propertyDetail.getInstitution().setId(UUID.randomUUID().toString());
                         propertyDetail.getInstitution().setTenantId(property.getTenantId());
                         propertyDetail.getOwners().forEach(owner -> {
@@ -162,6 +159,17 @@ public class EnrichmentService {
         ListIterator<String> itAck = acknowledgementNumbers.listIterator();
         ListIterator<String> itPt = propertyIds.listIterator();
 
+        Map<String,String> errorMap = new HashMap<>();
+        if(acknowledgementNumbers.size()!=request.getProperties().size()){
+            errorMap.put("IdGen ERROR ","The number of acknowledgementNumbers returned by idgen is not equal to number of properties");
+        }
+        if(propertyIds.size()!=request.getProperties().size()){
+            errorMap.put("IdGen ERROR ","The number of propertyIds returned by idgen is not equal to number of properties");
+        }
+
+        if(!errorMap.isEmpty())
+            throw new CustomException(errorMap);
+
         properties.forEach(property -> {
             property.setAcknowldgementNumber(itAck.next());
             property.setPropertyId(itPt.next());
@@ -179,6 +187,10 @@ public class EnrichmentService {
         int numOfPropertyDetails = propertyDetails.size();
         List<String> assessmentNumbers = getIdList(requestInfo,tenantId,config.getAssessmentIdGenName(),config.getAssessmentIdGenFormat(),numOfPropertyDetails);
         ListIterator<String> itAssess = assessmentNumbers.listIterator();
+        Map<String,String> errorMap = new HashMap<>();
+        if(assessmentNumbers.size()!=propertyDetails.size()){
+            errorMap.put("IdGen ERROR ","The number of assessmentNumbers returned by idgen is not equal to number of propertyDetails");
+        }
         propertyDetails.forEach(propertyDetail -> {
             propertyDetail.setAssessmentNumber(itAssess.next());
         });

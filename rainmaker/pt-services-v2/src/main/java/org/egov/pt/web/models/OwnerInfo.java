@@ -168,9 +168,23 @@ public class OwnerInfo extends User  {
         }
 
 
+        @Override
+        public boolean equals(Object o) {
+                if (this == o) return true;
+                if (o == null || getClass() != o.getClass()) return false;
+                if (!super.equals(o)) return false;
 
+                User user = (User) o;
 
+                return Objects.equals(this.getUuid(), user.getUuid()) &&
+                        Objects.equals(this.getName(), user.getName()) &&
+                        Objects.equals(this.getMobileNumber(), user.getMobileNumber());
+        }
 
+        @Override
+        public int hashCode() {
 
+                return super.hashCode();
+        }
 }
 

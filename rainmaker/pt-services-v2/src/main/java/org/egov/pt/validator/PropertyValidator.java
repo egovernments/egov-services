@@ -49,6 +49,7 @@ public class PropertyValidator {
     public void validateCreateRequest(PropertyRequest request){
         validateMasterData(request);
         validateCitizenInfo(request);
+        validateUnits(request);
     }
 
     /**
@@ -179,7 +180,7 @@ public class PropertyValidator {
                             errorMap.put("Invalid OccupancyType","The OccupancyType '"+unit.getOccupancyType()+"' does not exists");
                         }
 
-                        if(unit.getOccupancyType().equals("RENTED")){
+                        if(unit.getOccupancyType().equalsIgnoreCase("RENTED")){
                             if(unit.getArv()==null || unit.getArv().compareTo(new BigDecimal(0))!=1)
                                 errorMap.put("INVALID ARV","Total Annual Rent should be greater than zero ");
                         }
@@ -211,6 +212,24 @@ public class PropertyValidator {
             }
         }
         if (!errorMap.isEmpty())
+            throw new CustomException(errorMap);
+    }
+
+    /**
+     * Validates units based on PropertyType
+     * @param request PropertyRequest received for create or update
+     */
+    private void validateUnits(PropertyRequest request){
+        Map<String,String> errorMap = new HashMap<>();
+        request.getProperties().forEach(property -> {
+            property.getPropertyDetails().forEach(propertyDetail -> {
+                /*If the Units is empty or null the propertyType should be vacant*/
+                if(CollectionUtils.isEmpty(propertyDetail.getUnits()))
+                    if(!propertyDetail.getPropertyType().equalsIgnoreCase("VACANT"))
+                       errorMap.put("INVALID UNITS","Units cannot be null or empty");
+            });
+        });
+        if(!errorMap.isEmpty())
             throw new CustomException(errorMap);
     }
 
@@ -376,6 +395,7 @@ public class PropertyValidator {
         List<Property> properties = request.getProperties();
         properties.forEach(property -> {
             property.getPropertyDetails().forEach(propertyDetail -> {
+                // Checks for mandatory fields in Institution object if SubownershipCategory is INSTITUTIONAL
                 if(propertyDetail.getInstitution()!=null && propertyDetail.getSubOwnershipCategory().equalsIgnoreCase("INSTITUTIONAL")){
                     if(propertyDetail.getInstitution().getType()==null)
                         errorMap.put(" INVALID INSTITUTION OBJECT ","The institutionType cannot be null ");
@@ -384,7 +404,8 @@ public class PropertyValidator {
                     if(propertyDetail.getInstitution().getDesignation()==null)
                         errorMap.put("INVALID INSTITUTION OBJECT","Designation cannot be null");
                 }
-                else if(!propertyDetail.getSubOwnershipCategory().equals("INSTITUTIONAL") && propertyDetail.getInstitution()!=null){
+                // Throws error if the SubownerShipCategory is not institutional and the institution object contains not null values
+                else if(!propertyDetail.getSubOwnershipCategory().equalsIgnoreCase("INSTITUTIONAL") && propertyDetail.getInstitution()!=null){
                     if(propertyDetail.getInstitution().getType()!=null || propertyDetail.getInstitution().getName()!=null
                             || propertyDetail.getInstitution().getDesignation()!=null)
                         errorMap.put(" INVALID INSTITUTION OBJECT ","The institution object should be null. SubOwnershipCategory is not equal to Institutional");
@@ -403,6 +424,7 @@ public class PropertyValidator {
         Map<String,String> errorMap = new HashMap<>();
         request.getProperties().forEach(property -> {
             property.getPropertyDetails().forEach(propertyDetail -> {
+                // Only the person who has created the property can assess it
                 if(!propertyDetail.getCitizenInfo().getUuid().equals(uuid)){
                     errorMap.put("UPDATE AUTHORIZATION FAILURE","Not Authorized to assess property with propertyId "+property.getPropertyId());
                 }
@@ -419,9 +441,10 @@ public class PropertyValidator {
     private void validateCitizenInfo(PropertyRequest request){
         Map<String,String> errorMap = new HashMap<>();
         RequestInfo requestInfo = request.getRequestInfo();
-        if(!requestInfo.getUserInfo().getType().equals("CITIZEN")){
+        if(!requestInfo.getUserInfo().getType().equalsIgnoreCase("CITIZEN")){
             request.getProperties().forEach(property -> {
                 property.getPropertyDetails().forEach(propertyDetail -> {
+                 // Checks for mandatory fields in citizenInfo if the assessment is done by employee
                     if(propertyDetail.getCitizenInfo()==null){
                         errorMap.put("INVALID CITIZENINFO","CitizenInfo Object cannot be null");
                     }

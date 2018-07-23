@@ -65,15 +65,18 @@ public class PropertyService {
 		{   UserDetailResponse userDetailResponse = userService.getUser(criteria,requestInfo);
 			// If user not found with given user fields return empty list
 			if(userDetailResponse.getUser().size()==0){
-				return new ArrayList<>();
+				return Collections.emptyList();
 			}
+			// Add the user uuid to search property
 			enrichmentService.enrichPropertyCriteriaWithOwnerids(criteria,userDetailResponse);
 			properties = repository.getProperties(criteria);
 			// If property not found with given propertyId or oldPropertyId or address fields return empty list
 			if(properties.size()==0){
-				return new ArrayList<>();
+				return Collections.emptyList();
 			}
+			// Add propertyIds of all properties owned by the user
 			criteria=enrichmentService.getPropertyCriteriaFromPropertyIds(properties);
+			//Get all properties with ownerInfo enriched from user service
 			properties = getPropertiesWithOwnerInfo(criteria,requestInfo);
 		}
 		else{

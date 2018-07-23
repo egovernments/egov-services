@@ -46,7 +46,6 @@ public class UserService {
      * @param request PropertyRequest received for creating properties
      */
     public void createUser(PropertyRequest request){
-        StringBuilder uri = new StringBuilder(userHost).append(userContextPath).append(userCreateEndpoint);
         List<Property> properties = request.getProperties();
         RequestInfo requestInfo = request.getRequestInfo();
         properties.forEach(property -> {
@@ -62,10 +61,19 @@ public class UserService {
                         if(CollectionUtils.isEmpty(userDetailResponse.getUser()))
                         {   /* Sets userName equal to mobileNumber if mobileNumber already assigned as username
                           random number is assigned as username */
+                            StringBuilder uri = new StringBuilder(userHost).append(userContextPath).append(userCreateEndpoint);
                             setUserName(owner,listOfMobileNumbers);
                             owner.setActive(true);
                             userDetailResponse = userCall(new CreateUserRequest(requestInfo,owner),uri);
                             log.info("owner created --> "+userDetailResponse.getUser().get(0).getUuid());
+                        }
+                        else
+                        { log.info("User update -> ","MobileNumber: ",owner.getMobileNumber()," Name: ",owner.getName());
+                          owner.setId(userDetailResponse.getUser().get(0).getId());
+                          owner.setActive(true);
+                          StringBuilder uri = new StringBuilder(userHost).append(userContextPath).append(owner.getId())
+                                              .append(userUpdateEndpoint);
+                          userDetailResponse = userCall( new CreateUserRequest(requestInfo,owner),uri);
                         }
                         // Assigns value of fields from user got from userDetailResponse to owner object
                         setOwnerFields(owner,userDetailResponse,requestInfo);
@@ -122,6 +130,7 @@ public class UserService {
         propertyDetail.getOwners().forEach(owner -> {listOfMobileNumbers.add(owner.getMobileNumber());});
         StringBuilder uri = new StringBuilder(userHost).append(userSearchEndpoint);
         UserSearchRequest userSearchRequest = new UserSearchRequest();
+        // Citizens are searched state level so property tenantId can be used
         userSearchRequest.setTenantId(tenantId);
         Set<String> availableMobileNumbers = new HashSet<>();
 
@@ -281,10 +290,11 @@ public class UserService {
         StringBuilder uriSearch = new StringBuilder(userHost).append(userSearchEndpoint);
         RequestInfo requestInfo = request.getRequestInfo();
         // If user is creating assessment, userInfo object from requestInfo is assigned as citizenInfo
-        if(requestInfo.getUserInfo().getType().equals("CITIZEN"))
+        if(requestInfo.getUserInfo().getType().equalsIgnoreCase("CITIZEN"))
         {   request.getProperties().forEach(property -> {
             property.getPropertyDetails().forEach(propertyDetail -> {
                 propertyDetail.setCitizenInfo(new OwnerInfo(requestInfo.getUserInfo()));
+                log.info("uuid of userInfo: ",requestInfo.getUserInfo().toString());
             });
         });
         }
@@ -296,6 +306,7 @@ public class UserService {
                     // If user not present new user is created
                     if(CollectionUtils.isEmpty(userDetailResponse.getUser()))
                     {   UserSearchRequest userSearchRequest = new UserSearchRequest();
+                        //  Is tenantId captured in citizenInfo?
                         userSearchRequest.setTenantId(property.getTenantId());
                         userSearchRequest.setMobileNumber(propertyDetail.getCitizenInfo().getMobileNumber());
                         userDetailResponse =  userCall(userSearchRequest,uriSearch);

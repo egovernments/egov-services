@@ -156,9 +156,7 @@ public class DemandService {
 				demandDetail.setCollectionAmount(BigDecimal.ZERO);
 			demandDetail.setId(demandDetailIds.get(currentDetailId++));
 		}
-		logger.info("demand Request object : " + demandRequest);
-		logger.info("demand detail list : " + demandDetails);
-		kafkaTemplate.send(applicationProperties.getCreateDemandTopic(), demandRequest);
+		save(demandRequest);
 		return new DemandResponse(responseInfoFactory.getResponseInfo(requestInfo, HttpStatus.CREATED), demands);
 	}
 	

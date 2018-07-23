@@ -188,11 +188,10 @@ class ApplyLeave extends React.Component {
       });
 
       commonApiPost("egov-common-masters", "holidays", "_search", {
-        tenantId
+        tenantId,pageSize:500
       }, function (err, res) {
-
+        console.log("allHolidayList api response",res);
         _this.setState({
-          ..._this.state,
           allHolidayList: res ? res.Holiday : []
         });
 
@@ -326,10 +325,10 @@ class ApplyLeave extends React.Component {
 
     //Calling enclosing Holiday api
     let enclosingHoliday = getNameById(_this.state.leaveList, _this.state.leaveSet.leaveType.id, "encloseHoliday");
+    //console.log("enclosingHoliday",_this.state.leaveSet);
     if (enclosingHoliday || enclosingHoliday == "TRUE" || enclosingHoliday == "true") {
-      commonApiPost("egov-common-masters", "holidays", "_search", { tenantId, fromDate, toDate: asOnDate }, function (err, res) {
+      commonApiPost("egov-common-masters", "holidays", "_search", { tenantId, fromDate, toDate: asOnDate,enclosedHoliday:true }, function (err, res) {
         if (res) {
-          console.log("enclosingDays", res.Holiday.length);
           enclosingDays = res.Holiday.length;
           _this.setState({
             encloseHoliday: res.Holiday
@@ -347,7 +346,6 @@ class ApplyLeave extends React.Component {
     if (includePrefixSuffix || includePrefixSuffix == "TRUE" || includePrefixSuffix == "true") {
       commonApiPost("egov-common-masters", "holidays", "_searchprefixsuffix", { tenantId, fromDate, toDate: asOnDate }, function (err, res) {
         if (res) {
-          console.log("prefixSuffixDays", res.Holiday[0].noOfDays);
           prefixSuffixDays = res.Holiday[0].noOfDays;
           _this.setState({
             perfixSuffix: res.Holiday[0]
@@ -359,7 +357,7 @@ class ApplyLeave extends React.Component {
         perfixSuffix: ""
       });
     }
-
+    
     var holidayList = [], m1 = fromDate.split("/")[1], m2 = asOnDate.split("/")[1], y1 = fromDate.split("/")[2], y2 = asOnDate.split("/")[2];
     for (var i = 0; i < allHolidayList.length; i++) {
       if (allHolidayList[i].applicableOn && +allHolidayList[i].applicableOn.split("/")[1] >= +m1 && +allHolidayList[i].applicableOn.split("/")[1] <= +m2 && +allHolidayList[i].applicableOn.split("/")[2] <= y1 && +allHolidayList[i].applicableOn.split("/")[2] >= y2) {
@@ -380,11 +378,16 @@ class ApplyLeave extends React.Component {
       }
     } else if (hrConfigurations["HRConfiguration"]["Weekly_holidays"][0] == "5-day week with 2nd Saturday holiday") {
       for (var d = startDate; d <= endDate; d.setDate(d.getDate() + 1)) {
+        //console.log("date",_this.isSecondSat(d) + " " + _this.isFourthSat(d));
         if (holidayList.indexOf(d.getTime()) == -1 && hrConfigurations["HRConfiguration"]["Include_enclosed_holidays"][0] != "Y" && !_this.isSecondSat(d) && d.getDay() != 0)
+        {
           _days++;
+        }
+  
       }
     } else if (hrConfigurations["HRConfiguration"]["Weekly_holidays"][0] == "5-day week with 2nd and 4th Saturday holiday") {
       for (var d = startDate; d <= endDate; d.setDate(d.getDate() + 1)) {
+        
         if (holidayList.indexOf(d.getTime()) == -1 && hrConfigurations["HRConfiguration"]["Include_enclosed_holidays"][0] != "Y" && d.getDay() != 0 && !_this.isSecondSat(d) && !_this.isFourthSat(d))
           _days++;
       }
@@ -397,7 +400,7 @@ class ApplyLeave extends React.Component {
 
 
     setTimeout(function () {
-      console.log("prefixSuffixDays ", prefixSuffixDays, " ", enclosingDays);
+      //console.log("calcluating:days+prefix+enclose ", _days + " " + prefixSuffixDays, " ", enclosingDays);
       _this.setState({
         leaveSet: {
           ..._this.state.leaveSet,
@@ -624,7 +627,7 @@ class ApplyLeave extends React.Component {
     }
 
 
-    console.log(this.state.perfixSuffix, this.state.encloseHoliday);
+    //console.log(this.state.perfixSuffix, this.state.encloseHoliday);
 
     let holidays = [];
     if (this.state.encloseHoliday) {

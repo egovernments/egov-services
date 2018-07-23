@@ -955,7 +955,7 @@ class UpdateLeave extends React.Component {
 
       let holidays = [];
       if (this.state.encloseHoliday) {
-        for (let i = 0; i < this.state.encloseHoliday.length; i++)
+        for (var i = 0; i < this.state.encloseHoliday.length; i++)
           holidays.push(this.state.encloseHoliday[i].applicableOn)
       }
 
@@ -1150,6 +1150,7 @@ class UpdateLeave extends React.Component {
     let { name, code, leaveDays, availableDays, fromDate, toDate, leaveGround, reason, leaveType, encashable, totalWorkingDays, workflowDetails, documents } = leaveSet;
     let mode = getUrlVars()["type"];
     let _this = this;
+    console.log("this.state",this.state);
     const renderProcesedBtns = function () {
       if (buttons.length) {
         return buttons.map(function (btn, ind) {

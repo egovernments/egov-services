@@ -100,7 +100,7 @@ addOrUpdate(e,mode) {
         "LeaveApplication":[tempInfo]
       }, _this=this;
           $.ajax({
-                url: baseUrl+"/hr-leave/leaveapplications/_create?tenantId=" + tenantId,
+                url: baseUrl+"/hr-leave/leaveapplications/_create?tenantId=" + tenantId + "&encashable=false",
                 type: 'POST',
                 dataType: 'json',
                 data:JSON.stringify(body),

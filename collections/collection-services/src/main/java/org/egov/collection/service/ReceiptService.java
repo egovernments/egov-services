@@ -676,7 +676,7 @@ public class ReceiptService {
 			BillResponse billResponse = billingServiceRepository.getBillForBillId(requestInfo, bill, billDetail);
 			if (null != billResponse && !CollectionUtils.isEmpty(billResponse.getBill())) {
 				for(BillDetail resbillDetail: billResponse.getBill().get(0).getBillDetails()) {
-                                      List<BillDetail> reqBillDetail = bill.getBillDetails().parallelStream()
+                     List<BillDetail> reqBillDetail = bill.getBillDetails().parallelStream()
 							.filter(obj -> obj.getId().equals(resbillDetail.getId())).collect(Collectors.toList());
 					if(CollectionUtils.isEmpty(reqBillDetail)) {
 						LOGGER.info("BillDetail is not availble in billing service");
@@ -687,7 +687,6 @@ public class ReceiptService {
 					if(billDetailTobeValidated.getPartPaymentAllowed()) {
 						LOGGER.info("Part payment is allowed!");
 						if(resbillDetail.getMinimumAmount().longValue() > billDetailTobeValidated.getAmountPaid().longValue()) {
-							LOGGER.info("Amount paid is less than the minimum value. BillDetail id: "+billDetailTobeValidated.getId());
 							isBillValid = false;
 							break;
 						}

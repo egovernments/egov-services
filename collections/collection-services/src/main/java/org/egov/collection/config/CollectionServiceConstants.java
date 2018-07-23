@@ -143,7 +143,7 @@ public class CollectionServiceConstants {
 	public static final String DUPLICATE_RCPT_EXCEPTION_DESC = "Receipt number already exists, Receipt cannot be created";
 
 	public static final String INVALID_BILL_EXCEPTION_MSG = "Invalid Bill";
-	public static final String INVALID_BILL_EXCEPTION_DESC = "Bill with Consumer Code and Business Service ";
+	public static final String INVALID_BILL_EXCEPTION_DESC = "Bill is invalid, Receipt cannot be created.";
 	public static final String INVALID_BILL_EXCEPTION_MESSAGE_DESC = " is invalid, Receipt cannot be created,";
 
 	public static final String CUTT_OFF_DATE_CODE = "egcl_0016";

@@ -184,6 +184,7 @@ public class UserRepository {
 			user.setPassword(UUID.randomUUID().toString());
 		final Long newId = getNextSequence();
 		user.setId(newId);
+	        user.setUuid(UUID.randomUUID().toString());
 		user.setCreatedDate(new Date());
 		user.setLastModifiedDate(new Date());
 		user.setCreatedBy(user.getLoggedInUserId());

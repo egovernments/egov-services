@@ -294,7 +294,7 @@ public class UserService {
         {   request.getProperties().forEach(property -> {
             property.getPropertyDetails().forEach(propertyDetail -> {
                 propertyDetail.setCitizenInfo(new OwnerInfo(requestInfo.getUserInfo()));
-                log.info("uuid of userInfo: ",requestInfo.getUserInfo().toString());
+                System.out.println("userInfo---> "+requestInfo.getUserInfo().toString());
             });
         });
         }

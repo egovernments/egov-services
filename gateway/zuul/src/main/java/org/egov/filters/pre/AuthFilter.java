@@ -2,7 +2,7 @@ package org.egov.filters.pre;
 
 import com.netflix.zuul.ZuulFilter;
 import com.netflix.zuul.context.RequestContext;
-import org.apache.commons.io.IOUtils;
+import org.egov.Utils.ExceptionUtils;
 import org.egov.contract.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,8 +11,6 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
-
-import java.io.IOException;
 
 import static org.egov.constants.RequestContextConstants.*;
 
@@ -62,7 +60,7 @@ public class AuthFilter extends ZuulFilter {
             ctx.set(USER_INFO_KEY, user);
         } catch (HttpClientErrorException ex) {
             logger.error(RETRIEVING_USER_FAILED_MESSAGE, ex);
-            abortWithException(ctx, ex);
+            ExceptionUtils.setExceptionDetails(ex);
         }
         return null;
     }
@@ -73,18 +71,6 @@ public class AuthFilter extends ZuulFilter {
         headers.add(CORRELATION_ID_HEADER_NAME, (String) ctx.get(CORRELATION_ID_KEY));
         final HttpEntity<Object> httpEntity = new HttpEntity<>(null, headers);
         return restTemplate.postForObject(authURL, httpEntity, User.class);
-    }
-
-    private void abortWithException(RequestContext ctx, HttpClientErrorException ex) {
-        ctx.setSendZuulResponse(false);
-        try {
-            helper.setResponse(ex.getStatusCode().value(),
-                IOUtils.toInputStream(ex.getResponseBodyAsString()),
-                ex.getResponseHeaders());
-        } catch (IOException e) {
-            logger.error(INPUT_STREAM_CONVERSION_FAILED_MESSAGE, e);
-            throw new RuntimeException(e);
-        }
     }
 
 }

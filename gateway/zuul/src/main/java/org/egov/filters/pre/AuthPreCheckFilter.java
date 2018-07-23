@@ -5,6 +5,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.netflix.zuul.ZuulFilter;
 import com.netflix.zuul.context.RequestContext;
+import org.egov.Utils.ExceptionUtils;
 import org.egov.model.RequestBodyInspector;
 import org.egov.wrapper.CustomRequestWrapper;
 import org.slf4j.Logger;
@@ -79,7 +80,7 @@ public class AuthPreCheckFilter extends ZuulFilter {
             authToken = getAuthTokenFromRequest();
         } catch (IOException e) {
             logger.error(AUTH_TOKEN_RETRIEVE_FAILURE_MESSAGE, e);
-            abortWithStatus(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
+            ExceptionUtils.setExceptionDetails(e);
             return null;
         }
         RequestContext.getCurrentContext().set(AUTH_TOKEN_KEY, authToken);
@@ -90,7 +91,7 @@ public class AuthPreCheckFilter extends ZuulFilter {
                 setShouldDoAuth(false);
             } else {
                 logger.info(ROUTING_TO_PROTECTED_ENDPOINT_RESTRICTED_MESSAGE, getRequestURI());
-                abortWithStatus(HttpStatus.UNAUTHORIZED, UNAUTHORIZED_USER_MESSAGE);
+                ExceptionUtils.setCustomException(HttpStatus.UNAUTHORIZED, UNAUTHORIZED_USER_MESSAGE);
                 return null;
             }
         } else {
@@ -165,10 +166,4 @@ public class AuthPreCheckFilter extends ZuulFilter {
         return getRequest().getMethod();
     }
 
-    private void abortWithStatus(HttpStatus status, String message) {
-        RequestContext ctx = RequestContext.getCurrentContext();
-        ctx.set(ERROR_CODE_KEY, status.value());
-        ctx.set(ERROR_MESSAGE_KEY, message);
-        ctx.setSendZuulResponse(false);
-    }
 }

@@ -76,10 +76,12 @@ public class AuthFilterTest {
         when(restTemplate.postForObject(eq(authUrl), any(), eq(User.class)))
             .thenThrow(new HttpClientErrorException(HttpStatus.UNAUTHORIZED));
 
-        authFilter.run();
-
-        assertFalse(ctx.sendZuulResponse());
-        verify(proxyRequestHelper).setResponse(eq(401), any(), any());
+        try {
+            authFilter.run();
+            assertFalse("Shouldn't reach here", true );
+        } catch (RuntimeException ex) {
+            assertThat(((HttpClientErrorException)ex.getCause()).getStatusCode().value(), is(401));
+        }
     }
 
 }

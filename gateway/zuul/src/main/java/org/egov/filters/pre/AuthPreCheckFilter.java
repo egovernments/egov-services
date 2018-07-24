@@ -80,7 +80,7 @@ public class AuthPreCheckFilter extends ZuulFilter {
             authToken = getAuthTokenFromRequest();
         } catch (IOException e) {
             logger.error(AUTH_TOKEN_RETRIEVE_FAILURE_MESSAGE, e);
-            ExceptionUtils.setExceptionDetails(e);
+            ExceptionUtils.RaiseException(e);
             return null;
         }
         RequestContext.getCurrentContext().set(AUTH_TOKEN_KEY, authToken);
@@ -91,7 +91,7 @@ public class AuthPreCheckFilter extends ZuulFilter {
                 setShouldDoAuth(false);
             } else {
                 logger.info(ROUTING_TO_PROTECTED_ENDPOINT_RESTRICTED_MESSAGE, getRequestURI());
-                ExceptionUtils.setCustomException(HttpStatus.UNAUTHORIZED, UNAUTHORIZED_USER_MESSAGE);
+                ExceptionUtils.raiseCustomException(HttpStatus.UNAUTHORIZED, UNAUTHORIZED_USER_MESSAGE);
                 return null;
             }
         } else {
@@ -138,7 +138,7 @@ public class AuthPreCheckFilter extends ZuulFilter {
             requestWrapper.setPayload(objectMapper.writeValueAsString(requestBodyInspector.getRequestBody()));
         } catch (JsonProcessingException e) {
             logger.error(FAILED_TO_SERIALIZE_REQUEST_BODY_MESSAGE, e);
-            throw new RuntimeException(e);
+            ExceptionUtils.RaiseException(e);
         }
         RequestContext.getCurrentContext().setRequest(requestWrapper);
     }

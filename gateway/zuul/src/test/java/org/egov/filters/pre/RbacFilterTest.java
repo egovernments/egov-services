@@ -1,8 +1,10 @@
 package org.egov.filters.pre;
 
 import com.netflix.zuul.context.RequestContext;
+import com.netflix.zuul.monitoring.MonitoringHelper;
 import org.egov.contract.Action;
 import org.egov.contract.User;
+import org.egov.exceptions.CustomException;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
@@ -39,8 +41,9 @@ public class RbacFilterTest {
         assertFalse(rbacFilter.shouldFilter());
     }
 
-    @Test
-    public void shouldAbortWhenUserIsRequestingUnauthorizedURI() throws Exception {
+    @Test(expected = CustomException.class)
+    public void shouldAbortWhenUserIsRequestingUnauthorizedURI() throws Throwable {
+        MonitoringHelper.initMocks();
         User user = new User();
         Action action1  = new Action();
         action1.setUrl("/pgr/seva");
@@ -50,7 +53,13 @@ public class RbacFilterTest {
 
         request.setRequestURI("/hr-masters/do/something");
         ctx.setRequest(request);
-        rbacFilter.run();
+        try {
+            rbacFilter.run();
+        } catch (RuntimeException ex) {
+            CustomException e = (CustomException)ex.getCause();
+            assertThat(e.nStatusCode, is(403));
+            throw ex.getCause();
+        }
 
         assertForbiddenResponse(ctx);
     }
@@ -71,8 +80,9 @@ public class RbacFilterTest {
         assertEquals(null, ctx.get(ERROR_CODE_KEY));
     }
 
-    @Test
-    public void shouldAbortWhenUserDoesNotHaveAnyAuthorizedURI() throws Exception {
+    @Test(expected = CustomException.class)
+    public void shouldAbortWhenUserDoesNotHaveAnyAuthorizedURI() throws Throwable {
+        MonitoringHelper.initMocks();
         RequestContext ctx = RequestContext.getCurrentContext();
         request.setRequestURI("/hr-masters/do/something");
         ctx.setRequest(request);
@@ -80,7 +90,13 @@ public class RbacFilterTest {
         user.setActions(new ArrayList<>());
         ctx.set(USER_INFO_KEY, user);
 
-        rbacFilter.run();
+        try {
+            rbacFilter.run();
+        } catch (RuntimeException ex) {
+            CustomException e = (CustomException)ex.getCause();
+            assertThat(e.nStatusCode, is(403));
+            throw ex.getCause();
+        }
 
         assertForbiddenResponse(ctx);
     }
@@ -111,14 +127,14 @@ public class RbacFilterTest {
         ctx.set(USER_INFO_KEY, user);
         request.setRequestURI("/pgr/seva/default/123/_update");
         ctx.setRequest(request);
-
         rbacFilter.run();
 
         assertEquals(null, ctx.get(ERROR_CODE_KEY));
     }
 
-    @Test
-    public void shouldAbortWhenUserIsRequestingURIAndAuthorizedURIWithDynamicPlaceHoldersDoesNotMatch() throws Exception {
+    @Test(expected = CustomException.class)
+    public void shouldAbortWhenUserIsRequestingURIAndAuthorizedURIWithDynamicPlaceHoldersDoesNotMatch() throws Throwable {
+        MonitoringHelper.initMocks();
         User user = new User();
         Action action1  = new Action();
         action1.setUrl("/pgr/seva/{id}/_create");
@@ -128,7 +144,13 @@ public class RbacFilterTest {
 
         request.setRequestURI("/pgr/seva/123/_update");
         ctx.setRequest(request);
-        rbacFilter.run();
+        try {
+            rbacFilter.run();
+        } catch (RuntimeException ex) {
+            CustomException e = (CustomException)ex.getCause();
+            assertThat(e.nStatusCode, is(403));
+            throw ex.getCause();
+        }
 
         assertForbiddenResponse(ctx);
     }

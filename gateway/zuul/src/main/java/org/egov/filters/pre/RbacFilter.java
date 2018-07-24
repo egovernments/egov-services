@@ -2,10 +2,13 @@ package org.egov.filters.pre;
 
 import com.netflix.zuul.ZuulFilter;
 import com.netflix.zuul.context.RequestContext;
+import com.netflix.zuul.exception.ZuulException;
 import org.egov.Utils.ExceptionUtils;
 import org.egov.contract.Action;
 import org.egov.contract.User;
 import org.springframework.http.HttpStatus;
+
+import java.util.List;
 
 import static org.egov.constants.RequestContextConstants.*;
 
@@ -36,15 +39,21 @@ public class RbacFilter extends ZuulFilter{
         if(isIncomingURIInAuthorizedActionList)
             return null;
 
-        ExceptionUtils.setCustomException(HttpStatus.FORBIDDEN, FORBIDDEN_MESSAGE);
-
+        ExceptionUtils.raiseCustomException(HttpStatus.FORBIDDEN, FORBIDDEN_MESSAGE);
         return null;
     }
 
     private boolean isIncomingURIInAuthorizedActionList(RequestContext ctx) {
         String requestUri = ctx.getRequest().getRequestURI();
         User user = (User) ctx.get(USER_INFO_KEY);
-        return user.getActions().stream()
+
+        if (user == null) {
+            ExceptionUtils.raiseCustomException(HttpStatus.UNAUTHORIZED, "User information not found. Can't execute RBAC filter");
+        }
+
+        List<Action> actions = user.getActions();
+
+        return actions.stream()
             .anyMatch(action -> isActionMatchingIncomingURI(requestUri, action));
     }
 

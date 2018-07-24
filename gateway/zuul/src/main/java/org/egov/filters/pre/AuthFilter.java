@@ -9,7 +9,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.cloud.netflix.zuul.filters.ProxyRequestHelper;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestTemplate;
 
 import static org.egov.constants.RequestContextConstants.*;
@@ -60,7 +62,10 @@ public class AuthFilter extends ZuulFilter {
             ctx.set(USER_INFO_KEY, user);
         } catch (HttpClientErrorException ex) {
             logger.error(RETRIEVING_USER_FAILED_MESSAGE, ex);
-            ExceptionUtils.setExceptionDetails(ex);
+            ExceptionUtils.RaiseException(ex);
+        } catch (ResourceAccessException ex) {
+            logger.error(RETRIEVING_USER_FAILED_MESSAGE, ex);
+            ExceptionUtils.raiseCustomException(HttpStatus.INTERNAL_SERVER_ERROR, "User authentication service is down");
         }
         return null;
     }

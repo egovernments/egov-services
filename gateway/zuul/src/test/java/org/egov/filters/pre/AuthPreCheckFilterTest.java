@@ -1,9 +1,15 @@
 package org.egov.filters.pre;
 
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.netflix.zuul.context.RequestContext;
+import com.netflix.zuul.monitoring.CounterFactory;
+import com.netflix.zuul.monitoring.MonitoringHelper;
 import org.apache.commons.io.IOUtils;
+import org.egov.exceptions.CustomException;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.springframework.mock.web.MockHttpServletRequest;
 
 import java.io.IOException;
@@ -19,6 +25,9 @@ public class AuthPreCheckFilterTest {
 
     private HashSet<String> openEndpointsWhitelist = new HashSet<>();
     private HashSet<String> anonymousEndpointsWhitelist = new HashSet<>();
+
+    @Rule
+    public ExpectedException expectedEx = ExpectedException.none();
 
     @Before
     public void init() {
@@ -191,93 +200,120 @@ public class AuthPreCheckFilterTest {
         assertEquals("authtoken", ctx.get("authToken"));
     }
 
-    @Test
-    public void testThatFilterShouldAbortForOtherGETEndpointsOnNoAuthToken() {
+    @Test(expected = CustomException.class)
+    public void testThatFilterShouldAbortForOtherGETEndpointsOnNoAuthToken() throws Throwable {
+        MonitoringHelper.initMocks();
         RequestContext ctx = RequestContext.getCurrentContext();
         request.setMethod("GET");
         request.setRequestURI("other-endpoint");
         ctx.setRequest(request);
 
-        authPreCheckFilter.run();
-        assertFalse(ctx.sendZuulResponse());
-        assertThat(ctx.get("error.status_code"), is(401));
+        try {
+            authPreCheckFilter.run();
+        } catch (RuntimeException ex) {
+            CustomException e = (CustomException) ex.getCause();
+            assertThat(e.nStatusCode, is(401));
+            throw ex.getCause();
+        }
     }
 
-    @Test
-    public void testThatFilterShouldAbortForOtherPOSTEndpointsOnNoAuthToken() throws IOException {
+    @Test(expected = CustomException.class)
+    public void testThatFilterShouldAbortForOtherPOSTEndpointsOnNoAuthToken() throws Throwable {
         RequestContext ctx = RequestContext.getCurrentContext();
         request.setMethod("POST");
         request.setRequestURI("other-endpoint");
         request.setContent(IOUtils.toByteArray(IOUtils.toInputStream("{\"RequestInfo\": {\"fu\": \"bar\"}}")));
         ctx.setRequest(request);
 
-        authPreCheckFilter.run();
-        assertFalse(ctx.sendZuulResponse());
-        assertThat(ctx.get("error.status_code"), is(401));
+        try {
+            authPreCheckFilter.run();
+        } catch (RuntimeException ex) {
+            CustomException e = (CustomException) ex.getCause();
+            assertThat(e.nStatusCode, is(401));
+            throw ex.getCause();
+        }
     }
 
-    @Test
-    public void testThatFilterShouldAbortForOtherPOSTEndpointsOnNoRequestnInfo() throws IOException {
+    @Test(expected = CustomException.class)
+    public void testThatFilterShouldAbortForOtherPOSTEndpointsOnNoRequestnInfo() throws Throwable {
+        MonitoringHelper.initMocks();
         RequestContext ctx = RequestContext.getCurrentContext();
         request.setMethod("POST");
         request.setRequestURI("other-endpoint");
         request.setContent(IOUtils.toByteArray(IOUtils.toInputStream("{\"ServiceRequest\": {\"fu\": \"bar\"}}")));
         ctx.setRequest(request);
 
-        authPreCheckFilter.run();
-        assertFalse(ctx.sendZuulResponse());
-        assertThat(ctx.get("error.status_code"), is(401));
+        try {
+            authPreCheckFilter.run();
+        } catch (RuntimeException ex) {
+            CustomException e = (CustomException) ex.getCause();
+
+            assertThat(e.nStatusCode, is(401));
+            throw ex.getCause();
+        }
     }
 
-    @Test
-    public void testThatFilterShouldAbortForPOSTEndpointsOnNoRequestBody() throws IOException {
+    @Test(expected = JsonMappingException.class)
+    public void testThatFilterShouldAbortForPOSTEndpointsOnNoRequestBody() throws Throwable {
         RequestContext ctx = RequestContext.getCurrentContext();
         request.setMethod("POST");
         request.setRequestURI("other-endpoint");
         ctx.setRequest(request);
 
-        authPreCheckFilter.run();
+        try {
+            authPreCheckFilter.run();
+        } catch (RuntimeException ex) {
+            throw ex.getCause();
+        }
 
-        assertFalse(ctx.sendZuulResponse());
-        assertThat(ctx.get("error.status_code"), is(500));
     }
 
-    @Test
-    public void testThatFilterShouldAbortForOtherPUTEndpointsOnNoAuthToken() throws IOException {
+    @Test(expected = CustomException.class)
+    public void testThatFilterShouldAbortForOtherPUTEndpointsOnNoAuthToken() throws Throwable {
         RequestContext ctx = RequestContext.getCurrentContext();
         request.setMethod("PUT");
         request.setRequestURI("other-endpoint");
         request.setContent(IOUtils.toByteArray(IOUtils.toInputStream("{\"RequestInfo\": {\"fu\": \"bar\"}}")));
         ctx.setRequest(request);
 
-        authPreCheckFilter.run();
-        assertFalse(ctx.sendZuulResponse());
-        assertThat(ctx.get("error.status_code"), is(401));
+        try {
+            authPreCheckFilter.run();
+        } catch (RuntimeException ex) {
+            CustomException e = (CustomException) ex.getCause();
+            assertThat(e.nStatusCode, is(401));
+            throw ex.getCause();
+        }
     }
 
-    @Test
-    public void testThatFilterShouldAbortForOtherPUTEndpointsOnNoRequestnInfo() throws IOException {
+    @Test (expected = CustomException.class)
+    public void testThatFilterShouldAbortForOtherPUTEndpointsOnNoRequestnInfo() throws Throwable {
         RequestContext ctx = RequestContext.getCurrentContext();
         request.setMethod("PUT");
         request.setRequestURI("other-endpoint");
         request.setContent(IOUtils.toByteArray(IOUtils.toInputStream("{\"ServiceRequest\": {\"fu\": \"bar\"}}")));
         ctx.setRequest(request);
 
-        authPreCheckFilter.run();
-        assertFalse(ctx.sendZuulResponse());
-        assertThat(ctx.get("error.status_code"), is(401));
+        try {
+            authPreCheckFilter.run();
+        } catch (RuntimeException ex) {
+            throw ex.getCause();
+        }
     }
 
-    @Test
-    public void testThatFilterShouldAbortForPUTEndpointsOnNoRequestBody() throws IOException {
+    @Test(expected = JsonMappingException.class)
+    public void testThatFilterShouldAbortForPUTEndpointsOnNoRequestBody() throws Throwable {
         RequestContext ctx = RequestContext.getCurrentContext();
         request.setMethod("PUT");
         request.setRequestURI("other-endpoint");
         ctx.setRequest(request);
 
-        authPreCheckFilter.run();
+        try {
+            authPreCheckFilter.run();
+        } catch (RuntimeException ex) {
+            throw ex.getCause();
+        }
         assertFalse(ctx.sendZuulResponse());
-        assertThat(ctx.get("error.status_code"), is(500));
+        assertThat(ctx.getResponseStatusCode(), is(500));
     }
 
     @Test

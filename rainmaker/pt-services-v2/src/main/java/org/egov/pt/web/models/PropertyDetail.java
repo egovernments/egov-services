@@ -136,6 +136,12 @@ public class PropertyDetail   {
         @JsonProperty("adhocPenalty")
         private BigDecimal adhocPenalty;
 
+        @JsonProperty("adhocExemptionReason")
+        private String adhocExemptionReason;
+
+        @JsonProperty("adhocPenaltyReason")
+        private String adhocPenaltyReason;
+
         @JsonProperty("owners")
         @Valid
         @NotNull

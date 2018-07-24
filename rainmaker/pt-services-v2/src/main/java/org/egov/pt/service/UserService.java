@@ -66,6 +66,9 @@ public class UserService {
                             owner.setActive(true);
                             userDetailResponse = userCall(new CreateUserRequest(requestInfo,owner),uri);
                             log.info("owner created --> "+userDetailResponse.getUser().get(0).getUuid());
+                            if(userDetailResponse.getUser().get(0).getUuid()==null){
+                                throw new CustomException("INVALID USER RESPONSE","The user created has uuid as null");
+                            }
                         }
                         else
                         { log.info("User update -> ","MobileNumber: ",owner.getMobileNumber()," Name: ",owner.getName());
@@ -319,6 +322,9 @@ public class UserService {
                         log.info("citizen created --> "+userDetailResponse.getUser().get(0).getUuid());
                     }
                     propertyDetail.setCitizenInfo(userDetailResponse.getUser().get(0));
+                    if(userDetailResponse.getUser().get(0).getUuid()==null){
+                        throw new CustomException("INVALID CITIZENINFO","CitizenInfo cannot have uuid equal to null");
+                    }
                 });
             });
         }

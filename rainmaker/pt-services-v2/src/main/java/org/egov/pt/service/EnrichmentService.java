@@ -50,13 +50,13 @@ public class EnrichmentService {
                 {
                     propertyDetail.setTenantId(property.getTenantId());
                     propertyDetail.setAuditDetails(assessmentAuditDetails);
+                    propertyDetail.setAssessmentDate(System.currentTimeMillis());
                     if(!CollectionUtils.isEmpty(propertyDetail.getUnits()))
                         propertyDetail.getUnits().forEach(unit -> {
                             unit.setId(UUID.randomUUID().toString());
                             unit.setTenantId(property.getTenantId());});
                     if( propertyDetail.getDocuments()!=null)
                         propertyDetail.getDocuments().forEach(document -> document.setId(UUID.randomUUID().toString()));
-                    propertyDetail.setAssessmentDate(System.currentTimeMillis());
                     if(propertyDetail.getSubOwnershipCategory().equalsIgnoreCase("INSTITUTIONAL"))
                     { propertyDetail.getInstitution().setId(UUID.randomUUID().toString());
                         propertyDetail.getInstitution().setTenantId(property.getTenantId());
@@ -208,8 +208,18 @@ public class EnrichmentService {
         users.forEach(user -> userIdToOwnerMap.put(user.getUuid(),user));
         properties.forEach(property -> {
             property.getPropertyDetails().forEach(propertyDetail ->
-            {propertyDetail.getOwners().forEach(owner -> owner.addUserDetail(userIdToOwnerMap.get(owner.getUuid())));
-                propertyDetail.getCitizenInfo().addCitizenDetail(userIdToOwnerMap.get(propertyDetail.getCitizenInfo().getUuid()));
+            {
+                propertyDetail.getOwners().forEach(owner -> {
+                    if(userIdToOwnerMap.get(owner.getUuid())==null)
+                     throw new CustomException("INVALID OWNER","The owner of the property is not in databse");
+                    else
+                      owner.addUserDetail(userIdToOwnerMap.get(owner.getUuid()));
+
+                });
+                if(userIdToOwnerMap.get(propertyDetail.getCitizenInfo().getUuid())!=null)
+                  propertyDetail.getCitizenInfo().addCitizenDetail(userIdToOwnerMap.get(propertyDetail.getCitizenInfo().getUuid()));
+                else
+                    throw new CustomException("INVALID CITIZENINFO","The citizenInfo of property with id: "+property.getPropertyId()+" is invalid");
             });
         });
     }

@@ -50,6 +50,8 @@ CREATE TABLE eg_pt_propertydetail_v2 (
   subOwnershipCategory character varying(64),
   adhocExemption numeric,
   adhocPenalty numeric,
+  adhocExemptionReason character varying(1024),
+  adhocPenaltyReason character varying(1024),
   accountId character varying(64),
 
   CONSTRAINT pk_eg_pt_propertydetail_v2 PRIMARY KEY (assessmentNumber),

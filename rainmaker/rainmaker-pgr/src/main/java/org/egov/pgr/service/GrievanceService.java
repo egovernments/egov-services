@@ -659,7 +659,7 @@ public class GrievanceService {
 			}));
 			Map<String, String> urlIdMap = null;
 			try {
-				urlIdMap = fileStoreRepo.getUrlMaps(tenantId, fileStoreIds);
+				urlIdMap = fileStoreRepo.getUrlMaps(tenantId.split("\\.")[0], fileStoreIds);
 			} catch (Exception e) {
 				log.error(" exception while connecting to filestore : " + e);
 			}

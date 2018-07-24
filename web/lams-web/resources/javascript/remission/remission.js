@@ -569,6 +569,8 @@ class RemissionAgreement extends React.Component {
 
         var ad = this.state.agreement.agreementDate;
         var startDate = new Date(ad.split("/")[2], ad.split("/")[1] - 1, ad.split("/")[0]);
+        var expDate = this.state.agreement.expiryDate;
+        var endDate = new Date(expDate.split("/")[2], expDate.split("/")[1] - 1, expDate.split("/")[0]);
 
         $('#remissionDate').datepicker({
             format: 'dd/mm/yyyy',
@@ -611,6 +613,7 @@ class RemissionAgreement extends React.Component {
         $('#remissionToDate').datepicker({
             format: 'dd/mm/yyyy',
             startDate: startDate,
+            endDate: endDate,
             autoclose: true,
             defaultDate: ""
         });

@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.netflix.zuul.ZuulFilter;
 import com.netflix.zuul.context.RequestContext;
 import org.apache.commons.io.IOUtils;
+import org.egov.Utils.ExceptionUtils;
 import org.egov.contract.User;
 import org.egov.model.RequestBodyInspector;
 import org.egov.wrapper.CustomRequestWrapper;
@@ -85,7 +86,7 @@ public class RequestEnrichmentFilter extends ZuulFilter {
                 logger.info(ADDED_USER_INFO_TO_HEADER_MESSAGE);
             } catch (JsonProcessingException e) {
                 logger.error(USER_SERIALIZATION_MESSAGE, e);
-                throw new RuntimeException(e);
+                ExceptionUtils.RaiseException(e);
             }
 
         }

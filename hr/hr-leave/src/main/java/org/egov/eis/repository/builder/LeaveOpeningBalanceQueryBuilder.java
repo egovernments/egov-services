@@ -68,10 +68,6 @@ public class LeaveOpeningBalanceQueryBuilder {
 			+ " lt.lastModifiedBy AS lt_lastModifiedBy, lt.lastModifiedDate AS lt_lastModifiedDate"
 			+ " FROM egeis_leaveOpeningBalance lob" + " JOIN egeis_leaveType lt ON lob.leaveTypeId = lt.id";
 
-	public static String selectLeaveAllotmentByDesignationQuery() {
-		return " select * from egeis_leaveallotment where leavetypeid = ? and designationid = ? and tenantId = ? ";
-	}
-
 	@SuppressWarnings("rawtypes")
 	public String getQuery(LeaveOpeningBalanceGetRequest leaveOpeningBalanceGetRequest, List preparedStatementValues) {
 		StringBuilder selectQuery = new StringBuilder(BASE_QUERY);
@@ -86,7 +82,7 @@ public class LeaveOpeningBalanceQueryBuilder {
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private void addWhereClause(StringBuilder selectQuery, List preparedStatementValues,
-			LeaveOpeningBalanceGetRequest leaveOpeningBalanceGetRequest) {
+								LeaveOpeningBalanceGetRequest leaveOpeningBalanceGetRequest) {
 
 		if (leaveOpeningBalanceGetRequest.getId() == null && leaveOpeningBalanceGetRequest.getEmployee() == null
 				&& leaveOpeningBalanceGetRequest.getYear() == null
@@ -131,7 +127,7 @@ public class LeaveOpeningBalanceQueryBuilder {
 	}
 
 	private void addOrderByClause(StringBuilder selectQuery,
-			LeaveOpeningBalanceGetRequest leaveOpeningBalanceGetRequest) {
+								  LeaveOpeningBalanceGetRequest leaveOpeningBalanceGetRequest) {
 		String sortBy = (leaveOpeningBalanceGetRequest.getSortBy() == null ? "lob.leaveTypeId , lob.employeeId "
 				: leaveOpeningBalanceGetRequest.getSortBy());
 		String sortOrder = (leaveOpeningBalanceGetRequest.getSortOrder() == null ? "ASC"
@@ -141,7 +137,7 @@ public class LeaveOpeningBalanceQueryBuilder {
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private void addPagingClause(StringBuilder selectQuery, List preparedStatementValues,
-			LeaveOpeningBalanceGetRequest leaveOpeningBalanceGetRequest) {
+								 LeaveOpeningBalanceGetRequest leaveOpeningBalanceGetRequest) {
 		// handle limit(also called pageSize) here
 		selectQuery.append(" LIMIT ?");
 		long pageSize = Integer.parseInt(applicationProperties.hrLeaveSearchPageSizeDefault());
@@ -155,13 +151,13 @@ public class LeaveOpeningBalanceQueryBuilder {
 		if (leaveOpeningBalanceGetRequest.getPageNumber() != null)
 			pageNumber = leaveOpeningBalanceGetRequest.getPageNumber() - 1;
 		preparedStatementValues.add(pageNumber * pageSize); // Set offset to
-															// pageNo * pageSize
+		// pageNo * pageSize
 	}
 
 	/**
 	 * This method is always called at the beginning of the method so that and
 	 * is prepended before the field's predicate is handled.
-	 * 
+	 *
 	 * @param appendAndClauseFlag
 	 * @param queryString
 	 * @return boolean indicates if the next predicate should append an "AND"
@@ -171,6 +167,10 @@ public class LeaveOpeningBalanceQueryBuilder {
 			queryString.append(" AND");
 
 		return true;
+	}
+
+	public static String selectLeaveOpeningBalanceQuery() {
+		return " select * from egeis_leaveopeningbalance where employeeid=?, leavetypeid=?, calendaryear=?, tenantid=?";
 	}
 
 	private static String getIdQuery(List<Long> idList) {

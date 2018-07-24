@@ -43,6 +43,7 @@ package org.egov.eis.repository;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.egov.eis.model.LeaveOpeningBalance;
 import org.egov.eis.repository.builder.LeaveOpeningBalanceQueryBuilder;
@@ -155,7 +156,24 @@ public class LeaveOpeningBalanceRepository {
 			ex.printStackTrace();
 			throw new RuntimeException(ex.getMessage());
 		}
+	}
 
+	@SuppressWarnings("static-access")
+	public boolean checkLOBExists(final Long empId, final Long leaveTypeId, final Integer year, final String tenantId) {
+		final List<Object> preparedStatementValues = new ArrayList<Object>();
+		preparedStatementValues.add(empId);
+		preparedStatementValues.add(leaveTypeId);
+		preparedStatementValues.add(year);
+		preparedStatementValues.add(tenantId);
+
+		final String query = leaveOpeningBalanceQueryBuilder.selectLeaveOpeningBalanceQuery();
+
+		final List<Map<String, Object>> lob = jdbcTemplate.queryForList(query,
+				preparedStatementValues.toArray());
+		if (lob.isEmpty())
+			return false;
+
+		return true;
 	}
 
 }

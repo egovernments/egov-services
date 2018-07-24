@@ -59,6 +59,7 @@ import org.egov.eis.repository.EmployeeRepository;
 import org.egov.eis.repository.LeaveAllotmentRepository;
 import org.egov.eis.repository.LeaveApplicationRepository;
 import org.egov.eis.repository.LeaveOpeningBalanceRepository;
+import org.egov.eis.util.ApplicationConstants;
 import org.egov.eis.web.contract.Assignment;
 import org.egov.eis.web.contract.CalendarYear;
 import org.egov.eis.web.contract.CalendarYearResponse;
@@ -121,12 +122,12 @@ public class LeaveOpeningBalanceService {
 	}
 
 	public List<LeaveOpeningBalance> getLeaveOpeningBalance(LeaveOpeningBalanceGetRequest leaveOpeningBalanceGetRequest,
-			RequestInfo requestInfo) {
+															RequestInfo requestInfo) {
 		LeaveSearchRequest leaveSearchRequest = new LeaveSearchRequest();
 		leaveSearchRequest.setIsPrimary(true);
 		if (leaveOpeningBalanceGetRequest.getCode()!=null && !leaveOpeningBalanceGetRequest.getCode().equals(""))
 			leaveSearchRequest.setCode(leaveOpeningBalanceGetRequest.getCode());
-    	else
+		else
 			leaveSearchRequest.setDepartmentId(leaveOpeningBalanceGetRequest.getDepartmentId());
 
 		leaveSearchRequest.setAsOnDate(new Date());
@@ -145,8 +146,8 @@ public class LeaveOpeningBalanceService {
 	}
 
 	public ResponseEntity<?> createLeaveOpeningBalance(LeaveOpeningBalanceRequest leaveOpeningBalanceRequest,
-			String type) {
-		List<LeaveOpeningBalance> leaveOpeningBalanceList = validate(leaveOpeningBalanceRequest);
+													   String type) {
+		List<LeaveOpeningBalance> leaveOpeningBalanceList = validate(leaveOpeningBalanceRequest,type);
 
 		List<LeaveOpeningBalance> successLeaveOpeningBalanceList = new ArrayList<LeaveOpeningBalance>();
 		List<LeaveOpeningBalance> errorLeaveOpeningBalanceList = new ArrayList<LeaveOpeningBalance>();
@@ -215,7 +216,7 @@ public class LeaveOpeningBalanceService {
 	}
 
 	public void carryForwardLOB(LeaveOpeningBalanceGetRequest leaveOpeningBalanceGetRequest, EmployeeInfo employee,
-			List<LeaveOpeningBalance> successLeaveOpeningBalanceList, RequestInfo requestInfo) {
+								List<LeaveOpeningBalance> successLeaveOpeningBalanceList, RequestInfo requestInfo) {
 		Long designationid = null;
 		Float allotmentValue = 0f, applicationValue = 0f, openingBalanceValue = 0f;
 		LeaveOpeningBalance leaveOpeningBalance = new LeaveOpeningBalance();
@@ -292,7 +293,7 @@ public class LeaveOpeningBalanceService {
 		successLeaveOpeningBalanceList.add(leaveOpeningBalance);
 	}
 
-	private List<LeaveOpeningBalance> validate(LeaveOpeningBalanceRequest leaveOpeningBalanceRequest) {
+	private List<LeaveOpeningBalance> validate(LeaveOpeningBalanceRequest leaveOpeningBalanceRequest, String type) {
 
 		String tenantId = "", errorMsg = "";
 		Integer year = null;
@@ -320,6 +321,12 @@ public class LeaveOpeningBalanceService {
 		}
 		for (LeaveOpeningBalance leaveOpeningBalance : leaveOpeningBalanceRequest.getLeaveOpeningBalance()) {
 			errorMsg = "";
+			if (type != null && "upload".equalsIgnoreCase(type)){
+				boolean lobExists = leaveOpeningBalanceRepository.checkLOBExists(leaveOpeningBalance.getEmployee(), leaveOpeningBalance.getLeaveType().getId(), leaveOpeningBalance.getCalendarYear(), leaveOpeningBalance.getTenantId());
+				if(lobExists)
+				   errorMsg = ApplicationConstants.MSG_LOB_EXISTS;
+			}
+
 			if (calendarYearMap.get(leaveOpeningBalance.getCalendarYear()) == null) {
 				errorMsg = "CalendarYear " + leaveOpeningBalance.getCalendarYear() + " does not exist in the system";
 			}
@@ -346,7 +353,7 @@ public class LeaveOpeningBalanceService {
 			errorMsg = "";
 			if (lobMap.get(leaveOpeningBalance.getEmployee() + "-" + leaveOpeningBalance.getLeaveType().getId() + "-"
 					+ leaveOpeningBalance.getCalendarYear()) == null) {
-				errorMsg = "Leave opening balance already present in the system for this Employee";
+				errorMsg = ApplicationConstants.MSG_LOB_EXISTS;
 			}
 		}
 
@@ -369,7 +376,7 @@ public class LeaveOpeningBalanceService {
 	 * @return ResponseEntity<?>
 	 */
 	public ResponseEntity<?> getSuccessResponseForCreate(List<LeaveOpeningBalance> leaveOpeningBalance,
-			RequestInfo requestInfo) {
+														 RequestInfo requestInfo) {
 		LeaveOpeningBalanceResponse leaveOpeningBalanceResponse = new LeaveOpeningBalanceResponse();
 		leaveOpeningBalanceResponse.getLeaveOpeningBalance().addAll(leaveOpeningBalance);
 
@@ -380,7 +387,7 @@ public class LeaveOpeningBalanceService {
 	}
 
 	public ResponseEntity<?> getSuccessResponseForUpload(List<LeaveOpeningBalance> successLeaveOpeningBalanceList,
-			List<LeaveOpeningBalance> errorLeaveOpeningBalanceList, RequestInfo requestInfo) {
+														 List<LeaveOpeningBalance> errorLeaveOpeningBalanceList, RequestInfo requestInfo) {
 		LeaveOpeningBalanceUploadResponse leaveOpeningBalanceResponse = new LeaveOpeningBalanceUploadResponse();
 		leaveOpeningBalanceResponse.getSuccessList().addAll(successLeaveOpeningBalanceList);
 		leaveOpeningBalanceResponse.getErrorList().addAll(errorLeaveOpeningBalanceList);

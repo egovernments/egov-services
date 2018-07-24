@@ -22,18 +22,26 @@ class AckPage extends React.Component {
                       <center><font color="black"> Leave Application with Application Number:  <strong style={{'fontWeight':700}}> {getUrlVars()["applicationNumber"]} </strong> has been Rejected  and forwarded to <strong style={{'fontWeight':700}}> {getUrlVars()["owner"] ?  decodeURIComponent(getUrlVars()["owner"]) : ""} </strong> </font> </center>
                   </h4>)
           break;
+          
           case "Approve": return(<h4>
                       <center><font color="black"> Leave Application with Application Number: <strong style={{'fontWeight':700}}> {getUrlVars()["applicationNumber"]}</strong> has been Approved </font> </center>
                   </h4>)
           break;
+
           case "Apply": return(<h4>
                       <center><font color="black"> Leave Application with Application Number: <strong style={{'fontWeight':700}}> {getUrlVars()["applicationNumber"]} </strong> has been Applied successfully and forwarded to <strong style={{'fontWeight':700}}> {getUrlVars()["owner"] ?  decodeURIComponent(getUrlVars()["owner"]) : ""} </strong> </font> </center>
                   </h4>)
           break;
+
           case "Submit":  return(<h4>
                       <center><font color="black"> Leave Application with Application Number: <strong style={{'fontWeight':700}}> {getUrlVars()["applicationNumber"]} </strong> has been Submitted successfully and forwarded to <strong style={{'fontWeight':700}}> {getUrlVars()["owner"] ?  decodeURIComponent(getUrlVars()["owner"]) : ""} </strong> </font> </center>
                   </h4>)
-            break;
+          break;
+
+          case "Forward":  return(<h4>
+              <center><font color="black"> Leave Application with Application Number: <strong style={{'fontWeight':700}}> {getUrlVars()["applicationNumber"]} </strong> has been Submitted successfully and forwarded to <strong style={{'fontWeight':700}}> {getUrlVars()["owner"] ?  decodeURIComponent(getUrlVars()["owner"]) : ""} </strong> </font> </center>
+          </h4>)
+          break;
 
           default:  return(<h4>
                       <center><font color="black"> Leave Application with Application Number: <strong style={{'fontWeight':700}}> {getUrlVars()["applicationNumber"]} </strong> has been Cancelled </font> </center>

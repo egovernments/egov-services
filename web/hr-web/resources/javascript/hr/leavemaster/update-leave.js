@@ -248,7 +248,7 @@ class UpdateLeave extends React.Component {
         if (enclosingHoliday || enclosingHoliday == "TRUE" || enclosingHoliday == "true") {
           commonApiPost("egov-common-masters", "holidays", "_search", { tenantId, fromDate, toDate: asOnDate }, function (err, res) {
             if (res) {
-              console.log("enclosingDays", res.Holiday.length);
+              //console.log("enclosingDays", res.Holiday.length);
               enclosingDays = res.Holiday.length;
               _this.setState({
                 encloseHoliday: res.Holiday
@@ -266,7 +266,7 @@ class UpdateLeave extends React.Component {
         if (includePrefixSuffix || includePrefixSuffix == "TRUE" || includePrefixSuffix == "true") {
           commonApiPost("egov-common-masters", "holidays", "_searchprefixsuffix", { tenantId, fromDate, toDate: asOnDate }, function (err, res) {
             if (res) {
-              console.log("prefixSuffixDays", res.Holiday[0].noOfDays);
+              //console.log("prefixSuffixDays", res.Holiday[0].noOfDays);
               prefixSuffixDays = res.Holiday[0].noOfDays;
               _this.setState({
                 perfixSuffix: res.Holiday[0]
@@ -280,7 +280,7 @@ class UpdateLeave extends React.Component {
         }
 
         setTimeout(function () {
-          console.log("prefixSuffixDays ", prefixSuffixDays, " ", enclosingDays);
+          //console.log("prefixSuffixDays ", prefixSuffixDays, " ", enclosingDays);
           _this.setState({
             leaveSet: {
               ..._this.state.leaveSet,
@@ -300,10 +300,11 @@ class UpdateLeave extends React.Component {
       tenantId: tenantId,
       id: stateId
     }, function (err, res) {
+      console.log("res",res)
       if (res) {
 
         process = res["processInstance"];
-
+        
         $.ajax({
           url: baseUrl + "/egov-common-workflows/designations/_search?businessKey=" + process.businessKey + "&approvalDepartmentName=&departmentRule=&currentStatus=" + process.status + "&tenantId=" + tenantId + "&additionalRule=&pendingAction=&designation=&amountRule=",
           type: 'POST',
@@ -440,7 +441,7 @@ class UpdateLeave extends React.Component {
     if (enclosingHoliday || enclosingHoliday == "TRUE" || enclosingHoliday == "true") {
       commonApiPost("egov-common-masters", "holidays", "_search", { tenantId, fromDate, toDate: asOnDate }, function (err, res) {
         if (res) {
-          console.log("enclosingDays", res.Holiday.length);
+          //console.log("enclosingDays", res.Holiday.length);
           enclosingDays = res.Holiday.length;
           _this.setState({
             encloseHoliday: res.Holiday
@@ -508,7 +509,7 @@ class UpdateLeave extends React.Component {
 
 
     setTimeout(function () {
-      console.log("prefixSuffixDays ", prefixSuffixDays, " ", enclosingDays);
+      //console.log("prefixSuffixDays ", prefixSuffixDays, " ", enclosingDays);
       _this.setState({
         leaveSet: {
           ..._this.state.leaveSet,
@@ -927,8 +928,6 @@ class UpdateLeave extends React.Component {
     e.preventDefault();
     var ID = e.target.id, _this = this, employee = {}, owner;
     var stateId = getUrlVars()["stateId"];
-    var _this = this;
-
 
     if (e.target.id.toLowerCase() == "reject") {
       $('#department, #designation, #assignee').prop('required', false);
@@ -1007,7 +1006,7 @@ class UpdateLeave extends React.Component {
                   'auth-token': authToken
                 },
                 success: function (res) {
-                  window.location.href = `app/hr/leavemaster/ack-page.html?type=Submit&applicationNumber=${leaveNumber}&owner=${hodDetails}`;
+                  window.location.href = `app/hr/leavemaster/ack-page.html?type=${ID}&applicationNumber=${leaveNumber}&owner=${hodDetails}`;
 
                 },
                 error: function (err) {
@@ -1113,7 +1112,7 @@ class UpdateLeave extends React.Component {
                           var eDesignation = getNameById(_this.state.assignments_designation, designation);
                           var owner = employee.name + " - " + employee.code + " - " + eDesignation;
 
-                          window.location.href = `app/hr/leavemaster/ack-page.html?type=Submit&applicationNumber=${leaveNumber}&owner=${owner}`;
+                          window.location.href = `app/hr/leavemaster/ack-page.html?type=${ID}&applicationNumber=${leaveNumber}&owner=${owner}`;
                         }
                         else {
                           return (showError("Unable to fetch Employee details after forwarding."))
@@ -1150,8 +1149,9 @@ class UpdateLeave extends React.Component {
     let { name, code, leaveDays, availableDays, fromDate, toDate, leaveGround, reason, leaveType, encashable, totalWorkingDays, workflowDetails, documents } = leaveSet;
     let mode = getUrlVars()["type"];
     let _this = this;
-    console.log("this.state",this.state);
+    //console.log("this.state",_this);
     const renderProcesedBtns = function () {
+      //console.log("button",buttons);
       if (buttons.length) {
         return buttons.map(function (btn, ind) {
           return (

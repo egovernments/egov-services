@@ -68,6 +68,10 @@ public class LeaveOpeningBalanceQueryBuilder {
 			+ " lt.lastModifiedBy AS lt_lastModifiedBy, lt.lastModifiedDate AS lt_lastModifiedDate"
 			+ " FROM egeis_leaveOpeningBalance lob" + " JOIN egeis_leaveType lt ON lob.leaveTypeId = lt.id";
 
+	public static String selectLeaveOpeningBalanceQuery() {
+		return " select * from egeis_leaveopeningbalance where employeeid=? leavetypeid=? calendaryear=? tenantid=?";
+	}
+
 	@SuppressWarnings("rawtypes")
 	public String getQuery(LeaveOpeningBalanceGetRequest leaveOpeningBalanceGetRequest, List preparedStatementValues) {
 		StringBuilder selectQuery = new StringBuilder(BASE_QUERY);
@@ -167,10 +171,6 @@ public class LeaveOpeningBalanceQueryBuilder {
 			queryString.append(" AND");
 
 		return true;
-	}
-
-	public static String selectLeaveOpeningBalanceQuery() {
-		return " select * from egeis_leaveopeningbalance where employeeid=?, leavetypeid=?, calendaryear=?, tenantid=?";
 	}
 
 	private static String getIdQuery(List<Long> idList) {

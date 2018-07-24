@@ -321,12 +321,6 @@ public class LeaveOpeningBalanceService {
 		}
 		for (LeaveOpeningBalance leaveOpeningBalance : leaveOpeningBalanceRequest.getLeaveOpeningBalance()) {
 			errorMsg = "";
-			if (type != null && "upload".equalsIgnoreCase(type)){
-				boolean lobExists = leaveOpeningBalanceRepository.checkLOBExists(leaveOpeningBalance.getEmployee(), leaveOpeningBalance.getLeaveType().getId(), leaveOpeningBalance.getCalendarYear(), leaveOpeningBalance.getTenantId());
-				if(lobExists)
-				   errorMsg = ApplicationConstants.MSG_LOB_EXISTS;
-			}
-
 			if (calendarYearMap.get(leaveOpeningBalance.getCalendarYear()) == null) {
 				errorMsg = "CalendarYear " + leaveOpeningBalance.getCalendarYear() + " does not exist in the system";
 			}
@@ -336,6 +330,11 @@ public class LeaveOpeningBalanceService {
 			} else {
 				leaveOpeningBalance.getLeaveType()
 						.setName(leaveTypeMap.get(leaveOpeningBalance.getLeaveType().getId()).getName());
+			}
+			if (type != null && "upload".equalsIgnoreCase(type)){
+				boolean lobExists = leaveOpeningBalanceRepository.checkLOBExists(leaveOpeningBalance.getEmployee(), leaveOpeningBalance.getLeaveType().getId(), leaveOpeningBalance.getCalendarYear(), leaveOpeningBalance.getTenantId());
+				if(lobExists)
+					errorMsg = ApplicationConstants.MSG_LOB_EXISTS;
 			}
 			leaveOpeningBalance.setErrorMsg(errorMsg);
 

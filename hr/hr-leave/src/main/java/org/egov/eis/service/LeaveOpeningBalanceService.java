@@ -114,6 +114,9 @@ public class LeaveOpeningBalanceService {
 	private LeaveOpeningBalanceService leaveOpeningBalanceService;
 
 	@Autowired
+	private ApplicationConstants applicationConstants;
+
+	@Autowired
 	private ResponseInfoFactory responseInfoFactory;
 
 	public List<LeaveOpeningBalance> getLeaveOpeningBalances(
@@ -334,7 +337,7 @@ public class LeaveOpeningBalanceService {
 			if (type != null && "upload".equalsIgnoreCase(type)){
 				boolean lobExists = leaveOpeningBalanceRepository.checkLOBExists(leaveOpeningBalance.getEmployee(), leaveOpeningBalance.getLeaveType().getId(), leaveOpeningBalance.getCalendarYear(), leaveOpeningBalance.getTenantId());
 				if(lobExists)
-					errorMsg = ApplicationConstants.MSG_LOB_EXISTS;
+					errorMsg = applicationConstants.getErrorMessage(ApplicationConstants.MSG_LOB_EXISTS) + " ";
 			}
 			leaveOpeningBalance.setErrorMsg(errorMsg);
 
@@ -352,7 +355,7 @@ public class LeaveOpeningBalanceService {
 			errorMsg = "";
 			if (lobMap.get(leaveOpeningBalance.getEmployee() + "-" + leaveOpeningBalance.getLeaveType().getId() + "-"
 					+ leaveOpeningBalance.getCalendarYear()) == null) {
-				errorMsg = ApplicationConstants.MSG_LOB_EXISTS;
+				errorMsg = applicationConstants.getErrorMessage(ApplicationConstants.MSG_LOB_EXISTS) + " ";
 			}
 		}
 

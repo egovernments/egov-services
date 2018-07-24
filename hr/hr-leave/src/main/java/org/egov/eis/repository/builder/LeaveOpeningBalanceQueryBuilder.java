@@ -69,7 +69,7 @@ public class LeaveOpeningBalanceQueryBuilder {
 			+ " FROM egeis_leaveOpeningBalance lob" + " JOIN egeis_leaveType lt ON lob.leaveTypeId = lt.id";
 
 	public static String selectLeaveOpeningBalanceQuery() {
-		return " select * from egeis_leaveopeningbalance where employeeid=? leavetypeid=? calendaryear=? tenantid=?";
+		return " select * from egeis_leaveopeningbalance where employeeid=? and leavetypeid=? and calendaryear=? and tenantid=?";
 	}
 
 	@SuppressWarnings("rawtypes")

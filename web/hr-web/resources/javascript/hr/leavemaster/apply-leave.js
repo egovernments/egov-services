@@ -723,13 +723,14 @@ class ApplyLeave extends React.Component {
       if (this.state.encloseHoliday) {
         if (this.state.encloseHoliday.length != 0) {
           return encloseHoliday.map((item, ind) => {
+                 if(item.name!='Sunday' && item.name!='Second Saturday')  {
             return (
               <tr key={ind}>
                 <td>{item.name}</td>
                 <td>{item.applicableOn}</td>
               </tr>
             )
-          })
+          }})
         } else {
           return (
             <tr>

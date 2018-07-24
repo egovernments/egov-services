@@ -1,13 +1,7 @@
 package org.egov.user.security.oauth2.custom;
 
-import static org.springframework.util.StringUtils.isEmpty;
-
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.stream.Collectors;
-
-import org.egov.user.domain.model.Role;
+import com.jayway.jsonpath.JsonPath;
+import lombok.extern.slf4j.Slf4j;
 import org.egov.user.domain.model.SecureUser;
 import org.egov.user.domain.model.User;
 import org.egov.user.domain.model.enums.UserType;
@@ -23,9 +17,12 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.oauth2.common.exceptions.OAuth2Exception;
 import org.springframework.stereotype.Component;
 
-import com.jayway.jsonpath.JsonPath;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.stream.Collectors;
 
-import lombok.extern.slf4j.Slf4j;
+import static org.springframework.util.StringUtils.isEmpty;
 
 @Component
 @Slf4j
@@ -124,7 +121,8 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 			grantedAuths.add(new SimpleGrantedAuthority("ROLE_" + user.getType()));
 			final SecureUser secureUser = new SecureUser(getUser(user));
 			System.out.println("tenantId in secureUser------->" + secureUser.getTenantId());
-			return new UsernamePasswordAuthenticationToken(secureUser, password, grantedAuths);
+            return new UsernamePasswordAuthenticationToken(secureUser,
+                    password, grantedAuths);
 		} else {
 			throw new OAuth2Exception("Invalid login credentials");
 		}
@@ -170,7 +168,7 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 	}
 
 	private org.egov.user.web.contract.auth.User getUser(User user) {
-		return org.egov.user.web.contract.auth.User.builder().id(user.getId()).userName(user.getUsername())
+        return org.egov.user.web.contract.auth.User.builder().id(user.getId()).userName(user.getUsername()).uuid(user.getUuid())
 				.name(user.getName()).mobileNumber(user.getMobileNumber()).emailId(user.getEmailId())
 				.locale(user.getLocale()).active(user.getActive()).type(user.getType().name())
 				.roles(toAuthRole(user.getRoles())).tenantId(user.getTenantId()).build();

@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.ToString;
-import org.egov.pg.web.models.RequestInfo;
 
 @AllArgsConstructor
 @Getter
@@ -12,7 +11,7 @@ import org.egov.pg.web.models.RequestInfo;
 public class TransactionDumpRequest {
 
     @JsonProperty("RequestInfo")
-    private RequestInfo requestInfo;
+    private org.egov.common.contract.request.RequestInfo requestInfo;
 
     @JsonProperty("TransactionDump")
     private TransactionDump transactionDump;

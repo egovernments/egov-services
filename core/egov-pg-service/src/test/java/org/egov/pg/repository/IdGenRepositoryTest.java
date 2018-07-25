@@ -1,9 +1,9 @@
 package org.egov.pg.repository;
 
 
+import org.egov.common.contract.request.RequestInfo;
 import org.egov.pg.config.AppProperties;
 import org.egov.pg.models.IdGenerationResponse;
-import org.egov.pg.web.models.RequestInfo;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -16,7 +16,7 @@ public class IdGenRepositoryTest {
     private IdGenRepository idGenRepository;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         MockEnvironment env = new MockEnvironment();
         env.setProperty("idGenHost", "http://localhost:8088/");
         env.setProperty("idGenPath", "egov-idgen/id/_generate");
@@ -29,7 +29,7 @@ public class IdGenRepositoryTest {
     @Test
     public void testIdGen() {
 
-        RequestInfo requestInfo = new RequestInfo("", "", 0L, "", "", "", "", "", "8e88988e-d342-45c2-81d0-487a2a20350e", null, "");
+        RequestInfo requestInfo = new RequestInfo("", "", 0L, "", "", "", "", "", "8e88988e-d342-45c2-81d0-487a2a20350e", null);
         IdGenerationResponse response = idGenRepository.getId(requestInfo, "pb", "pg.txnid",
                 "" +
                         "PB-PG-[cy:yyyy/MM/dd]-[SEQ_EG_PG_TXN]-[d{2}]", 1);

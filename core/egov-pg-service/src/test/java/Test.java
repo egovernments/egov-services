@@ -12,6 +12,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.mock.env.MockEnvironment;
 import org.springframework.web.client.RestTemplate;
 
+import java.math.BigDecimal;
 import java.net.URI;
 import java.text.DecimalFormat;
 import java.util.Collections;
@@ -36,7 +37,7 @@ public class Test {
     public void axisTest() {
         Transaction txn = Transaction.builder().txnAmount("100")
                 .txnId("ABC231")
-                .orderId("ORDER001")
+                .billId("ORDER001")
                 .productInfo("Property Tax Payment")
                 .gateway("AXIS")
                 .callbackUrl("http://2a91377b.ngrok.io/egov-pay/payments/v1/_update")
@@ -52,7 +53,7 @@ public class Test {
     public void phonepeTest() {
         Transaction txn = Transaction.builder().txnAmount("100")
                 .txnId("ABC2312")
-                .orderId("ORDER0012")
+                .billId("ORDER0012")
                 .productInfo("Property Tax Payment")
                 .gateway("PHONEPE")
                 .callbackUrl("http://2a91377b.ngrok.io/egov-pay/payments/v1/_update")
@@ -85,7 +86,7 @@ public class Test {
 //    public void payUTest() {
 //        Transaction txn = Transaction.builder().txnAmount("100")
 //                .txnId("ABC231")
-//                .orderId("ORDER001")
+//                .billId("ORDER001")
 //                .productInfo("Property Tax Payment")
 //                .gateway("AXIS")
 //                .callbackUrl("http://2a91377b.ngrok.io/egov-pay/payments/v1/_update")
@@ -104,7 +105,7 @@ public class Test {
 
         Transaction txn = Transaction.builder().txnAmount("100")
                 .txnId("PB_PG_2018_06_09-000013_13")
-                .orderId("ORDER0012")
+                .billId("ORDER0012")
                 .productInfo("Property Tax Payment")
                 .gateway("PHONEPE")
                 .callbackUrl("http://2a91377b.ngrok.io/egov-pay/payments/v1/_update")
@@ -120,7 +121,7 @@ public class Test {
 
         Transaction txn = Transaction.builder().txnAmount("100")
                 .txnId("PB_PG_2018_06_09-000014_24")
-                .orderId("ORDER0012")
+                .billId("ORDER0012")
                 .productInfo("Property Tax Payment")
                 .gateway("PAYTM")
                 .callbackUrl("http://2a91377b.ngrok.io/egov-pay/payments/v1/_update")
@@ -137,7 +138,7 @@ public class Test {
 
         Transaction txn = Transaction.builder().txnAmount("100")
                 .txnId("PB_PG_2018_06_11-000024_17")
-                .orderId("ORDER0012")
+                .billId("ORDER0012")
                 .productInfo("Property Tax Payment")
                 .gateway("AXIS")
                 .callbackUrl("http://2a91377b.ngrok.io/egov-pay/payments/v1/_update")
@@ -153,6 +154,10 @@ public class Test {
     public void name1() {
         final DecimalFormat CURRENCY_FORMATTER_RUPEE = new DecimalFormat("0.00");
         System.out.println(Double.valueOf(CURRENCY_FORMATTER_RUPEE.format(Double.valueOf("141"))));
+        BigDecimal decimal = new BigDecimal(10488.88);
+        BigDecimal decimal1 = new BigDecimal(10488);
+        System.out.println(decimal.longValueExact());
+        System.out.println(decimal == decimal1);
     }
 
     @org.junit.Test

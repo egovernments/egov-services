@@ -29,6 +29,14 @@ public class AppProperties {
 
     private final String idGenFormat;
 
+    private final String billingServiceHost;
+
+    private final String billingServicePath;
+
+    private final String collectionServiceHost;
+
+    private final String collectionServicePath;
+
     @Autowired
     public AppProperties(Environment environment){
         this.saveTxnTopic = environment.getRequiredProperty("persister.save.pg.txns");
@@ -39,6 +47,10 @@ public class AppProperties {
         this.idGenPath = environment.getRequiredProperty("egov.idgen.path");
         this.idGenName = environment.getRequiredProperty("egov.idgen.ack.name");
         this.idGenFormat = environment.getRequiredProperty("egov.idgen.ack.format");
+        this.billingServiceHost = environment.getRequiredProperty("egov.billingservice.host");
+        this.billingServicePath = environment.getRequiredProperty("egov.billingservice.path");
+        this.collectionServiceHost = environment.getRequiredProperty("egov.collectionservice.host");
+        this.collectionServicePath = environment.getRequiredProperty("egov.collectionservice.path");
     }
 
 }

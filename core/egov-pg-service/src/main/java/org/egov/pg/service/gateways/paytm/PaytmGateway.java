@@ -151,7 +151,6 @@ public class PaytmGateway implements Gateway {
                 .gatewayPaymentMode(resp.getPaymentMode())
                 .gatewayStatusCode(resp.getRespCode())
                 .gatewayStatusMsg(resp.getRespMsg())
-                .lastModifiedTime(System.currentTimeMillis())
                 .responseJson(resp)
                 .build();
 

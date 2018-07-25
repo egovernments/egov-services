@@ -19,11 +19,8 @@ public class TransactionDump {
     @JsonProperty("txnResponse")
     private Object txnResponse;
 
-    @JsonProperty("createdTime")
-    private Long createdTime;
-
-    @JsonProperty("lastModifiedTime")
-    private Long lastModifiedTime;
+    @JsonProperty("auditDetails")
+    private AuditDetails auditDetails;
 
 
 }

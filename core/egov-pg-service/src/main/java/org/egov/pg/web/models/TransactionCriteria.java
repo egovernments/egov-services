@@ -15,11 +15,15 @@ public class TransactionCriteria {
 
     private String txnId;
 
-    private String orderId;
+    private String billId;
 
-    private String userId;
+    private String userUuid;
 
     private String module;
+
+    private String moduleId;
+
+    private String receipt;
 
     private Long createdTime;
 

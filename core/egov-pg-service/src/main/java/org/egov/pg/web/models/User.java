@@ -11,7 +11,17 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 public class User {
 
-    private Long id;
+    @NotNull
+    private String uuid;
+
+    public User(org.egov.common.contract.request.User user) {
+        this.uuid = user.getUuid();
+        this.name = user.getName();
+        this.userName = user.getUserName();
+        this.mobileNumber = user.getMobileNumber();
+        this.emailId = user.getEmailId();
+        this.tenantId = user.getTenantId();
+    }
 
     @NotNull
     private String name;

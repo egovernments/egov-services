@@ -1,12 +1,13 @@
 package org.egov.pg.web.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.egov.common.contract.request.RequestInfo;
 import org.egov.pg.TestConfiguration;
 import org.egov.pg.models.Transaction;
 import org.egov.pg.service.TransactionService;
-import org.egov.pg.web.models.RequestInfo;
 import org.egov.pg.web.models.TransactionCriteria;
 import org.egov.pg.web.models.TransactionRequest;
+import org.egov.pg.web.models.TransactionResponse;
 import org.egov.pg.web.models.User;
 import org.junit.Before;
 import org.junit.Test;
@@ -50,7 +51,7 @@ public class TransactionsApiControllerTest {
     @Before
     public void setUp() {
         user = User.builder().userName("USER001").mobileNumber("9XXXXXXXXX").name("XYZ").tenantId("pb").emailId("").build();
-        requestInfo = new RequestInfo("", "", 0L, "", "", "", "", "", "", null, "");
+        requestInfo = new RequestInfo("", "", 0L, "", "", "", "", "", "", null);
 
     }
 
@@ -68,10 +69,11 @@ public class TransactionsApiControllerTest {
     public void transactionsV1CreatePostSuccess() throws Exception {
         Transaction transaction = Transaction.builder().txnAmount("100.00")
                 .txnId("ABC231")
-                .orderId("ORDER001")
+                .billId("ORDER001")
                 .productInfo("Property Tax Payment")
                 .gateway("AXIS")
                 .module("PT")
+                .moduleId("PT_ASSESS")
                 .tenantId("pb")
                 .callbackUrl("http://2a91377b.ngrok.io/pg-service/payments/v1/_update")
                 .user(user).build();
@@ -121,7 +123,7 @@ public class TransactionsApiControllerTest {
     public void transactionsV1UpdatePostSuccess() throws Exception {
         when(transactionService.updateTransaction(any(RequestInfo.class), any(Map.class)))
                 .thenReturn
-                        (new Transaction());
+                        (new TransactionResponse());
 
         mockMvc.perform(post("/transaction/v1/_update").contentType(MediaType
                 .APPLICATION_JSON_UTF8).content(mapper.writeValueAsString(requestInfo)))

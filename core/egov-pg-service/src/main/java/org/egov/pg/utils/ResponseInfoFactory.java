@@ -1,6 +1,6 @@
 package org.egov.pg.utils;
 
-import org.egov.pg.web.models.RequestInfo;
+import org.egov.common.contract.request.RequestInfo;
 import org.egov.pg.web.models.ResponseInfo;
 
 public class ResponseInfoFactory {

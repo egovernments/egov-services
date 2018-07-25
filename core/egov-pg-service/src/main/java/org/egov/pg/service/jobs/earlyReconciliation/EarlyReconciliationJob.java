@@ -1,9 +1,10 @@
 package org.egov.pg.service.jobs.earlyReconciliation;
 
 import lombok.extern.slf4j.Slf4j;
+import org.egov.common.contract.request.RequestInfo;
+import org.egov.common.contract.request.User;
 import org.egov.pg.models.Transaction;
 import org.egov.pg.service.TransactionService;
-import org.egov.pg.web.models.RequestInfo;
 import org.egov.pg.web.models.TransactionCriteria;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
@@ -22,7 +23,8 @@ public class EarlyReconciliationJob implements Job {
     private static final RequestInfo requestInfo;
 
     static {
-        requestInfo = new RequestInfo();
+        User userInfo = User.builder().uuid("DAILY_RECONC_JOB").roles(Collections.emptyList()).id(0L).build();
+        requestInfo = new RequestInfo("", "", 0L, "", "", "", "", "", "", userInfo);
     }
 
     @Autowired

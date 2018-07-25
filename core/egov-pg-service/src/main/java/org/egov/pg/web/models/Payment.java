@@ -36,7 +36,7 @@ public class Payment {
     @NotNull
     private String module;
 
-    @JsonProperty("orderId")
+    @JsonProperty("billId")
     @NotNull
     private String orderId;
 

@@ -13,7 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -22,7 +22,7 @@ public class InstrumentRepository {
 	public static final Logger LOGGER = LoggerFactory
 			.getLogger(BillingServiceRepository.class);
 	@Autowired
-	public RestTemplate restTemplate;
+	private RestTemplate restTemplate;
 	@Autowired
 	private ApplicationProperties applicationProperties;
 
@@ -34,7 +34,7 @@ public class InstrumentRepository {
 		builder.append(hostname).append(baseUri);
 		InstrumentRequest instrumentRequest = new InstrumentRequest();
 		instrumentRequest.setRequestInfo(requestinfo);
-		instrumentRequest.setInstruments(Arrays.asList(instrument));
+		instrumentRequest.setInstruments(Collections.singletonList(instrument));
 
 		LOGGER.info("Request to instrument create: "
 				+ instrumentRequest.toString());
@@ -47,7 +47,7 @@ public class InstrumentRepository {
 		return !instruments.isEmpty() ? instruments.get(0) : null ;
 	}
 
-    public Instrument searchInstruments(final String instrumentHeader,final String tenantId,final RequestInfo requestInfo) {
+    Instrument searchInstruments(final String instrumentHeader, final String tenantId, final RequestInfo requestInfo) {
         StringBuilder builder = new StringBuilder();
         String hostname = applicationProperties.getInstrumentServiceHost();
         String baseUri = applicationProperties.getSearchInstrument();

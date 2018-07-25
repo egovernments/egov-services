@@ -162,7 +162,7 @@ public class ReceiptReqValidator {
 
 					if (billDetails.getAmountPaid() != null
 							&& billDetails.getAmountPaid().compareTo(
-									BigDecimal.ZERO) == 1) {
+							BigDecimal.ZERO) > 0) {
 						isAmountEntered = true;
 					}
 
@@ -369,7 +369,7 @@ public class ReceiptReqValidator {
 					.field(CollectionServiceConstants.INVALID_RECEIPT_REQUEST)
 					.build();
 			errorFields.add(errorField);
-			LOGGER.error("Exception in Receipt Request Validator" + e);
+			LOGGER.error("Exception in Receipt Request Validator" , e);
 		}
 	}
 

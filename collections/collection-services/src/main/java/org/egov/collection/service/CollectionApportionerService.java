@@ -39,32 +39,27 @@
  */
 package org.egov.collection.service;
 
-import java.math.BigDecimal;
-import java.util.Collections;
-import java.util.List;
-
-import javax.validation.ValidationException;
-
+import lombok.ToString;
 import org.apache.log4j.Logger;
 import org.egov.collection.web.contract.BillAccountDetail;
 import org.springframework.stereotype.Service;
 
-import lombok.ToString;
+import javax.validation.ValidationException;
+import java.math.BigDecimal;
+import java.util.Comparator;
+import java.util.List;
 
 @Service
 public class CollectionApportionerService {
 	private static final Logger LOGGER = Logger
 			.getLogger(CollectionApportionerService.class);
 
-	public List<BillAccountDetail> apportionPaidAmount(
+	List<BillAccountDetail> apportionPaidAmount(
 			final BigDecimal actualAmountPaid,
 			final List<BillAccountDetail> billAccountDetails) {
 		LOGGER.info("receiptDetails before apportioning amount "
 				+ actualAmountPaid + ": " + billAccountDetails);
-		Collections.sort(billAccountDetails, (
-				BillAccountDetail billAccountDetail1,
-				BillAccountDetail billAccountDetail2) -> billAccountDetail1
-				.getOrder().compareTo(billAccountDetail2.getOrder()));
+		billAccountDetails.sort(Comparator.comparing(BillAccountDetail::getOrder));
 		BigDecimal totalCrAmountToBePaid = BigDecimal.ZERO;
 		for (final BillAccountDetail billAccountDetail : billAccountDetails) {
 			totalCrAmountToBePaid = totalCrAmountToBePaid.add(billAccountDetail

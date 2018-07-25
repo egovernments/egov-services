@@ -29,7 +29,7 @@ public class UserRepository {
         this.url = userServiceHost + url;
     }
 
-    public List<User> getUsersById(List<Long> userIds,final RequestInfo requestInfo,final String tenantId) {
+    List<User> getUsersById(List<Long> userIds, final RequestInfo requestInfo, final String tenantId) {
         GetUserByIdRequest userRequest = GetUserByIdRequest.builder().requestInfo(requestInfo)
                 .id(userIds).tenantId(tenantId).build();
         LOGGER.info("URI: "+url);

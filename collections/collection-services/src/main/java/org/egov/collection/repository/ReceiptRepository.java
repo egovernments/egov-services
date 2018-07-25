@@ -67,7 +67,6 @@ import org.springframework.stereotype.Repository;
 import javax.xml.bind.ValidationException;
 import java.text.ParseException;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @AllArgsConstructor
 @Repository
@@ -159,18 +158,16 @@ public class ReceiptRepository {
 
     public boolean persistReceipt(Map<String, Object> parametersMap,
             Map<String, Object>[] parametersReceiptDetails, long receiptHeader, String instrumentId) {
-        boolean isInsertionSuccessful;
 
         persistToReceiptHeader(parametersMap);
         persistToReceiptDetails(parametersReceiptDetails);
         persistIntoReceiptInstrument(instrumentId, receiptHeader, parametersMap.get("tenantid").toString());
 
-        isInsertionSuccessful = true;
-        return isInsertionSuccessful;
+        return true;
 
     }
 
-    public Pagination<?> getPagination(String searchQuery, Pagination<?> page, Map<String, Object> paramValues) {
+    private Pagination<?> getPagination(String searchQuery, Pagination<?> page, Map<String, Object> paramValues) {
         String countQuery = "select count(*) from (" + searchQuery + ") as x";
         Long count = namedParameterJdbcTemplate.queryForObject(countQuery.toString(), paramValues, Long.class);
         Integer totalpages = (int) Math.ceil((double) count / page.getPageSize());
@@ -215,7 +212,7 @@ public class ReceiptRepository {
             receiptDetailsPreparedStatementValues.add(header.getId());
 
             List<BusinessDetailsRequestInfo> businessDetails = businessDetailsRepository.getBusinessDetails(
-                    Arrays.asList(header.getBusinessDetails()), header.getTenantId(), requestInfo)
+                    Collections.singletonList(header.getBusinessDetails()), header.getTenantId(), requestInfo)
                     .getBusinessDetails();
             logger.info("BusinessDetails for Receipt" + businessDetails);
             receiptHeader = header;
@@ -224,7 +221,7 @@ public class ReceiptRepository {
                 List<ReceiptDetail> receiptDetails = jdbcTemplate.query(
                         receiptDetailsQuery, receiptDetailsPreparedStatementValues.toArray(),
                         receiptDetaiRowMapper);
-                receiptHeader.setReceiptDetails(receiptDetails.stream().collect(Collectors.toSet()));
+                receiptHeader.setReceiptDetails(new HashSet<>(receiptDetails));
             }
             receiptHeader.setReceiptInstrument(
                     searchInstrumentHeader(receiptHeader.getId(), receiptSearchCriteria.getTenantId(), requestInfo));
@@ -294,7 +291,7 @@ public class ReceiptRepository {
         try {
             Long id = jdbcTemplate.queryForObject(query,
                     new Object[] { receiptHeaderId }, Long.class);
-            stateId = Long.valueOf(id);
+            stateId = id;
         } catch (Exception e) {
             logger.error("Couldn't fetch stateId for the receipt: "
                     + receiptHeaderId);
@@ -309,23 +306,22 @@ public class ReceiptRepository {
             final String tenantId) {
         String queryString = receiptDetailQueryBuilder.searchQuery();
         List<Long> receiptCreators = jdbcTemplate.queryForList(queryString,
-                Long.class, new Object[] { tenantId });
+                Long.class, tenantId);
         return userRepository.getUsersById(receiptCreators, requestInfo,
                 tenantId);
     }
 
     public List<String> getReceiptStatus(final String tenantId) {
         String queryString = receiptDetailQueryBuilder.searchStatusQuery();
-        List<String> statusList = jdbcTemplate.queryForList(queryString,
-                String.class, new Object[] { tenantId });
-        return statusList;
+        return jdbcTemplate.queryForList(queryString,
+                String.class, tenantId);
     }
 
-    public void persistIntoReceiptInstrument(String instrumentId,
-            Long receiptHeaderId, String tenantId) {
+    private void persistIntoReceiptInstrument(String instrumentId,
+                                              Long receiptHeaderId, String tenantId) {
         logger.info("Persisting into receipt Instrument");
         String queryString = receiptDetailQueryBuilder.insertInstrumentId();
-        jdbcTemplate.update(queryString, new Object[] { instrumentId, receiptHeaderId, tenantId });
+        jdbcTemplate.update(queryString, instrumentId, receiptHeaderId, tenantId);
     }
 
     public void updateReceipt(final ReceiptReq receiptReq) throws ValidationException {
@@ -367,7 +363,7 @@ public class ReceiptRepository {
         String queryString = receiptDetailQueryBuilder
                 .searchBusinessDetailsQuery();
         List<String> businessDetailsList = jdbcTemplate.queryForList(
-                queryString, String.class, new Object[] { tenantId });
+                queryString, String.class, tenantId);
         return businessDetailsRepository.getBusinessDetails(
                 businessDetailsList, tenantId, requestInfo)
                 .getBusinessDetails();
@@ -378,7 +374,7 @@ public class ReceiptRepository {
         String queryString = receiptDetailQueryBuilder
                 .searchChartOfAccountsQuery();
         List<String> chartOfAccountsList = jdbcTemplate.queryForList(
-                queryString, String.class, new Object[] { tenantId });
+                queryString, String.class, tenantId);
         return chartOfAccountsRepository.getChartOfAccounts(
                 chartOfAccountsList, tenantId, requestInfo);
     }
@@ -394,10 +390,10 @@ public class ReceiptRepository {
         return sequence;
     }
 
-    public Instrument searchInstrumentHeader(final Long receiptHeader, final String tenantId, final RequestInfo requestInfo) {
+    private Instrument searchInstrumentHeader(final Long receiptHeader, final String tenantId, final RequestInfo requestInfo) {
         String queryString = receiptDetailQueryBuilder.searchReceiptInstrument();
         List<String> instrumentHeaders = jdbcTemplate.queryForList(
-                queryString, String.class, new Object[] { receiptHeader, tenantId });
+                queryString, String.class, receiptHeader, tenantId);
         return !instrumentHeaders.isEmpty()
                 ? instrumentRepository.searchInstruments(instrumentHeaders.get(0), tenantId, requestInfo) : null;
     }

@@ -20,7 +20,7 @@ public class BillingServiceRepository {
 	public static final Logger LOGGER = LoggerFactory
 			.getLogger(BillingServiceRepository.class);
 	@Autowired
-	public RestTemplate restTemplate;
+	private RestTemplate restTemplate;
 	@Autowired
 	private ApplicationProperties applicationProperties;
 
@@ -43,7 +43,7 @@ public class BillingServiceRepository {
 					billRequest, BillResponse.class);
 		} catch (Exception e) {
 			LOGGER.error("Error while apportioning paid amount from billing service. "
-					+ e);
+					, e);
 		}
 		LOGGER.info("Response from billing service: " + response);
 		return response;
@@ -64,7 +64,7 @@ public class BillingServiceRepository {
 					prepareBillRequestWrapper(requestInfo), BillResponse.class);
 		} catch (Exception e) {
 			LOGGER.error("Error while searching bill from billing service. "
-					+ e);
+					, e);
 		}
 		LOGGER.info("Response from billing service: " + response);
 		return response;

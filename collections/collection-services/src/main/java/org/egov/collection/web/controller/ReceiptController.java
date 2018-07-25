@@ -184,7 +184,7 @@ public class ReceiptController {
             receiptInfo = receiptService
                     .apportionAndCreateReceipt(receiptRequest);
         } catch (CustomException e) {
-            LOGGER.error("Exception Message: " + e);
+            LOGGER.error("Exception Message: " , e);
             Error error = new Error();
             final ResponseInfo responseInfo = responseInfoFactory
                     .createResponseInfoFromRequestInfo(
@@ -198,7 +198,7 @@ public class ReceiptController {
 
             return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
         } catch (ValidationException e) {
-            LOGGER.error("Exception Message: " + e);
+            LOGGER.error("Exception Message: " , e);
             Error error = new Error();
             final ResponseInfo responseInfo = responseInfoFactory
                     .createResponseInfoFromRequestInfo(

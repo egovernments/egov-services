@@ -18,16 +18,13 @@ public class BusinessDetailsRepository {
 	public static final Logger LOGGER = LoggerFactory.getLogger(BusinessDetailsRepository.class);
 	
     @Autowired
-    public RestTemplate restTemplate;
-
-    public String commonServiceHost;
+    private RestTemplate restTemplate;
 
     private String url;
 
     public BusinessDetailsRepository(RestTemplate restTemplate,@Value("${egov.common.service.host}") final String commonServiceHost,
                                      @Value("${egov.services.get_businessdetails_by_codes}") final String url) {
         this.restTemplate = restTemplate;
-        this.commonServiceHost =commonServiceHost;
         this.url = commonServiceHost + url;
     }
 

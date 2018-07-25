@@ -26,7 +26,7 @@ public class Test {
     private Environment environment;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         user = User.builder().userName("USER001").mobileNumber("9XXXXXXXXX").name("XYZ").tenantId("pb").emailId("").build();
         this.restTemplate = new RestTemplate();
         this.objectMapper = new ObjectMapper();
@@ -43,7 +43,7 @@ public class Test {
                 .callbackUrl("http://2a91377b.ngrok.io/egov-pay/payments/v1/_update")
                 .user(user).build();
 
-        Gateway gateway = new AxisGateway(restTemplate, environment);
+        Gateway gateway = new AxisGateway(restTemplate, environment, objectMapper);
         URI redirectUri = gateway.generateRedirectURI(txn);
         System.out.println(redirectUri.toString());
 
@@ -144,7 +144,7 @@ public class Test {
                 .callbackUrl("http://2a91377b.ngrok.io/egov-pay/payments/v1/_update")
                 .build();
 
-        Gateway gateway = new AxisGateway(restTemplate, environment);
+        Gateway gateway = new AxisGateway(restTemplate, environment, objectMapper);
         gateway.fetchStatus(txn, Collections.singletonMap("transactionId", "PB_PG_2018_06_09-000014_24"));
 
 

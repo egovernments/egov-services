@@ -1,8 +1,6 @@
 package org.egov.tracer;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.net.ConnectException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -63,7 +61,11 @@ public class ExceptionAdvise {
 	@Value("${tracer.errors.sendToKafka:false}")
     boolean sendErrorsToKafka;
 
-	@ExceptionHandler(value = Exception.class)
+    @Value("${tracer.errors.provideExceptionInDetails:false}")
+    boolean provideExceptionInDetails;
+
+
+    @ExceptionHandler(value = Exception.class)
 	@ResponseBody
 	public ResponseEntity<?> exceptionHandler(HttpServletRequest request ,Exception ex) {
 
@@ -176,7 +178,12 @@ public class ExceptionAdvise {
 
 			if (errorRes.getErrors() == null || errorRes.getErrors().size() == 0) {
 				errorRes.setErrors(new ArrayList<>(Arrays.asList(new Error(exceptionName, "An unhandled exception occurred on the server", exceptionMessage, null))));
-			}
+			} else if (provideExceptionInDetails && errorRes.getErrors() != null && errorRes.getErrors().size() > 0) {
+                StringWriter sw = new StringWriter();
+                PrintWriter pw = new PrintWriter(sw);
+                ex.printStackTrace(pw);
+                errorRes.getErrors().get(0).setDescription(sw.toString());
+            }
 
 			sendErrorMessage(body, ex, request.getRequestURL().toString(),errorRes, isJsonContentType);
 		} catch (Exception tracerException) {

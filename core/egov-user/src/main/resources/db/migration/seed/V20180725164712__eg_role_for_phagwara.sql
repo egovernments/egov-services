@@ -8,9 +8,6 @@ insert into eg_role (id,name,code,description,createddate,createdby,lastmodified
 (nextval('SEQ_EG_ROLE'),'Grievance Routing Officer','GRO','Grievance Routing Officer',now(),1,1,now(),0,'pb.phagwara');
 
 insert into eg_role (id,name,code,description,createddate,createdby,lastmodifiedby,lastmodifieddate,version,tenantid)values
-(nextval('SEQ_EG_ROLE'),'Department Grievance Routing Officer','DGRO','Department Grievance Routing Officer',now(),1,1,now(),0,'pb.phagwara');
-
-insert into eg_role (id,name,code,description,createddate,createdby,lastmodifiedby,lastmodifieddate,version,tenantid)values
 (nextval('SEQ_EG_ROLE'),'Citizen Service Representative','CSR',
 'Employee who files and follows up complaints on behalf of the citizen',now(),1,1,now(),0,'pb.phagwara');
 

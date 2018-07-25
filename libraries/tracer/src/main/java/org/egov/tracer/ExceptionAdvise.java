@@ -226,11 +226,11 @@ public class ExceptionAdvise {
 		if (isJsonContentType) {
             try {
                 documentContext = JsonPath.parse(body);
-                bodyJSON = documentContext.json();
+                bodyJSON = documentContext.json().toString();
                 log.info("sendErrorMessage documentContext: " + bodyJSON);
             } catch (Exception exception) {
                 bodyJSON = body;
-                log.info("sendErrorMessage documentContext: Failed to parse JSON", exception);
+                log.info("sendErrorMessage documentContext: Failed to parse JSON");
             }
         }
 

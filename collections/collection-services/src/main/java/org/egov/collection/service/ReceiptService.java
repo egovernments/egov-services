@@ -692,7 +692,7 @@ public class ReceiptService {
 						}
 					}else {
 						LOGGER.info("Part payment is not allowed!");
-						if(!resbillDetail.getTotalAmount().equals(billDetailTobeValidated.getAmountPaid())) {
+						if(resbillDetail.getTotalAmount().compareTo(billDetailTobeValidated.getAmountPaid()) != 0) {
 							isBillValid = false;
 							break;
 						}

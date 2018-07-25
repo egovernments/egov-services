@@ -96,6 +96,7 @@ public class ExceptionUtils {
                     if (existingResponse == null)
                     {
                         existingResponse = IOUtils.toString(ctx.getResponseDataStream());
+                        ctx.setResponseBody(existingResponse);
                     }
                     if (existingResponse != null && existingResponse.contains("InvalidAccessTokenException"))
                         _setExceptionBody(HttpStatus.UNAUTHORIZED, existingResponse);

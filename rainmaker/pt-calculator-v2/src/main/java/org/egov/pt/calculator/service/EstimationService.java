@@ -131,6 +131,13 @@ public class EstimationService {
 
 			if (isUnitCommercial && isUnitRented) {
 
+				
+				if(unit.getArv() == null) {
+					Map<String, String> map = new HashMap<>();
+					map.put("EG_PT_ESTIMATE_ARV_NULL", "Arv field is required for commercial and rented properties");
+					throw new CustomException(map);
+				}
+				
 				BigDecimal multiplier = null;
 				if (null != slab.getArvPercent())
 					multiplier = BigDecimal.valueOf(slab.getArvPercent() / 100);

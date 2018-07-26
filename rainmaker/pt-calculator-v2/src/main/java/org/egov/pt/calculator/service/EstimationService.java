@@ -116,24 +116,31 @@ public class EstimationService {
 			boolean isUnitRented = unit.getOccupancyType().equalsIgnoreCase(configs.getOccupancyTypeRented());
 			BigDecimal currentUnitTax = null;
 
-			if (isUnitCommercial && isUnitRented) {
-				currentUnitTax = unit.getArv().multiply(BigDecimal.valueOf(configs.getArvPercent() / 100));
-				// get ARV FROM MASTERS TODO
-			} else {
-				BillingSlab slab = getSlabForCalc(filteredbillingSlabs, unit);
-				if (null == slab) {
+			BillingSlab slab = getSlabForCalc(filteredbillingSlabs, unit);
+			if (null == slab) {
 
-					Map<String, String> map = new HashMap<>();
-					map.put(CalculatorConstants.BILLING_SLAB_MATCH_ERROR_CODE,
-							CalculatorConstants.BILLING_SLAB_MATCH_ERROR_MESSAGE
-							.replace(CalculatorConstants.BILLING_SLAB_MATCH_AREA, unit.getUnitArea().toString())
-							.replace(CalculatorConstants.BILLING_SLAB_MATCH_FLOOR, unit.getFloorNo())
-							.replace(CalculatorConstants.BILLING_SLAB_MATCH_USAGE_DETAIL, unit.getUsageCategoryDetail()));
-					throw new CustomException(map);
-				}
-				Double a = unit.getUnitArea() * slab.getUnitRate(); // FIXME change to Bigdecimal
-				currentUnitTax = BigDecimal.valueOf(a);
+				Map<String, String> map = new HashMap<>();
+				map.put(CalculatorConstants.BILLING_SLAB_MATCH_ERROR_CODE,
+						CalculatorConstants.BILLING_SLAB_MATCH_ERROR_MESSAGE
+								.replace(CalculatorConstants.BILLING_SLAB_MATCH_AREA, unit.getUnitArea().toString())
+								.replace(CalculatorConstants.BILLING_SLAB_MATCH_FLOOR, unit.getFloorNo())
+								.replace(CalculatorConstants.BILLING_SLAB_MATCH_USAGE_DETAIL,
+										unit.getUsageCategoryDetail()));
+				throw new CustomException(map);
 			}
+
+			if (isUnitCommercial && isUnitRented) {
+
+				BigDecimal multiplier = null;
+				if (null != slab.getArvPercent())
+					multiplier = BigDecimal.valueOf(slab.getArvPercent() / 100);
+				else
+					multiplier = BigDecimal.valueOf(configs.getArvPercent() / 100);
+				currentUnitTax = unit.getArv().multiply(multiplier);
+			} else {
+				currentUnitTax = BigDecimal.valueOf(unit.getUnitArea() * slab.getUnitRate());
+			}
+
 			taxAmt = taxAmt.add(currentUnitTax);
 			usageExemption = usageExemption
 					.add(getExemption(unit, currentUnitTax, assessmentYear, propertyBasedExemptionMasterMap));
@@ -143,6 +150,15 @@ public class EstimationService {
 		estimates.add(TaxHeadEstimate.builder().taxHeadCode(CalculatorConstants.PT_UNIT_USAGE_EXEMPTION)
 				.estimateAmount(usageExemption).build());
 		BigDecimal payableTax = taxAmt.subtract(usageExemption);
+
+		/*
+		 * FIXME ADD CESS FIRE
+		 */
+/*		BigDecimal fireCess = getFireCess(payableTax);
+		estimates.add(TaxHeadEstimate.builder().taxHeadCode(CalculatorConstants.PT_FIRE_CESS)
+				.estimateAmount(BigDecimal.ZERO).build());
+		payableTax = payableTax.add(BigDecimal.ZERO);*/
+
 		BigDecimal userExemption = getExemption(detail.getOwners(), payableTax, assessmentYear,
 				propertyBasedExemptionMasterMap);
 		estimates.add(TaxHeadEstimate.builder().taxHeadCode(CalculatorConstants.PT_OWNER_EXEMPTION)
@@ -176,7 +192,7 @@ public class EstimationService {
 		Long fromDate = (Long) finYearMap.get(CalculatorConstants.FINANCIAL_YEAR_STARTING_DATE);
 		Long toDate = (Long) finYearMap.get(CalculatorConstants.FINANCIAL_YEAR_ENDING_DATE);
 		Map<String, TaxHeadMaster> taxHeadCategoryMap = mstrDataService.getTaxHeadMasterMap(requestInfo, tenantId);
-		System.err.println(" the heads : " + taxHeadCategoryMap);
+		
 		BigDecimal taxAmt = BigDecimal.ZERO;
 		BigDecimal penalty = BigDecimal.ZERO;
 		BigDecimal exemption = BigDecimal.ZERO;
@@ -229,7 +245,7 @@ public class EstimationService {
 		List<BillingSlab> billingSlabs = billingSlabService.searchBillingSlabs(requestInfo, slabSearchCriteria)
 				.getBillingSlab();
 
-		System.err.println(" the slabs count : " + billingSlabs.size());
+		log.debug(" the slabs count : " + billingSlabs.size());
 		final String all = configs.getSlabValueAll();
 		/*
 		 * check when the land area should be used
@@ -358,6 +374,18 @@ public class EstimationService {
 
 	}
 
+	/**
+	 * Estimates the fire cess that needs to be paid for the given tax amount
+	 * 
+	 * @param payableTax
+	 * @return
+	 */
+	private BigDecimal getFireCess(BigDecimal payableTax) {
+
+		
+		return null;
+	}
+	
 	/**
 	 * Applies discount on Total tax amount OwnerType based exemptions
 	 * 

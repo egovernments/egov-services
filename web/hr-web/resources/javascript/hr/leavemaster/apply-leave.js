@@ -380,11 +380,228 @@ class ApplyLeave extends React.Component {
         "holidays",
         "_search",
         { tenantId, fromDate, toDate: asOnDate, enclosedHoliday: true },
-        function(err, res) {
-          if (res) {
-            enclosingDays = res.Holiday.length;
+        function(err, res1) {
+          if (res1) {
+            enclosingDays = res1.Holiday.length;
+           _this.setState({
+              encloseHoliday: res1.Holiday
+            });
+          }
+
+          //calling PrefixSuffix api
+          let includePrefixSuffix = getNameById(
+            _this.state.leaveList,
+            _this.state.leaveSet.leaveType.id,
+            "includePrefixSuffix"
+          );
+          if (
+            includePrefixSuffix ||
+            includePrefixSuffix == "TRUE" ||
+            includePrefixSuffix == "true"
+          ) {
+            commonApiPost(
+              "egov-common-masters",
+              "holidays",
+              "_searchprefixsuffix",
+              { tenantId, fromDate, toDate: asOnDate },
+              function(err, res2) {
+                if (res2) {
+                  prefixSuffixDays = res2.Holiday && res2.Holiday[0].noOfDays;
+                  let prefixFromDate =
+                    res2.Holiday && res2.Holiday[0].prefixFromDate;
+                  let prefixToDate =
+                    res2.Holiday && res2.Holiday[0].prefixToDate;
+                  let suffixFromDate =
+                    res2.Holiday && res2.Holiday[0].suffixFromDate;
+                  let suffixToDate =
+                    res2.Holiday && res2.Holiday[0].suffixToDate;
+                  _this.setState({
+                    perfixSuffix: res2.Holiday[0]
+                  });
+                  var holidayList = [],
+                    m1 = fromDate.split("/")[1],
+                    m2 = asOnDate.split("/")[1],
+                    y1 = fromDate.split("/")[2],
+                    y2 = asOnDate.split("/")[2];
+                  for (var i = 0; i < allHolidayList.length; i++) {
+                    if (
+                      allHolidayList[i].applicableOn &&
+                      +allHolidayList[i].applicableOn.split("/")[1] >= +m1 &&
+                      +allHolidayList[i].applicableOn.split("/")[1] <= +m2 &&
+                      +allHolidayList[i].applicableOn.split("/")[2] <= y1 &&
+                      +allHolidayList[i].applicableOn.split("/")[2] >= y2
+                    ) {
+                      holidayList.push(
+                        new Date(
+                          allHolidayList[i].applicableOn.split("/")[2],
+                          allHolidayList[i].applicableOn.split("/")[1] - 1,
+                          allHolidayList[i].applicableOn.split("/")[0]
+                        ).getTime()
+                      );
+                    }
+                  }
+                  //Calculate working days
+                  var _days = 0;
+                  var parts1 = $("#fromDate")
+                    .val()
+                    .split("/");
+                  var parts2 = $("#toDate")
+                    .val()
+                    .split("/");
+                  var startDate = new Date(
+                    parts1[2],
+                    +parts1[1] - 1,
+                    parts1[0]
+                  );
+                  var endDate = new Date(parts2[2], +parts2[1] - 1, parts2[0]);
+                  console.log(holidayList);
+                  if (
+                    hrConfigurations["HRConfiguration"]["Weekly_holidays"][0] ==
+                    "5-day week"
+                  ) {
+                    for (
+                      var d = startDate;
+                      d <= endDate;
+                      d.setDate(d.getDate() + 1)
+                    ) {
+                      if (
+                        holidayList.indexOf(d.getTime()) == -1 &&
+                        hrConfigurations["HRConfiguration"][
+                          "Include_enclosed_holidays"
+                        ][0] != "Y" &&
+                        !(d.getDay() === 0 || d.getDay() === 6)
+                      )
+                        _days++;
+                    }
+                  } else if (
+                    hrConfigurations["HRConfiguration"]["Weekly_holidays"][0] ==
+                    "5-day week with 2nd Saturday holiday"
+                  ) {
+                    for (
+                      var d = startDate;
+                      d <= endDate;
+                      d.setDate(d.getDate() + 1)
+                    ) {
+                      //console.log("date",_this.isSecondSat(d) + " " + _this.isFourthSat(d));
+                      if (
+                        holidayList.indexOf(d.getTime()) == -1 &&
+                        hrConfigurations["HRConfiguration"][
+                          "Include_enclosed_holidays"
+                        ][0] != "Y" &&
+                        !_this.isSecondSat(d) &&
+                        d.getDay() != 0
+                      ) {
+                        _days++;
+                      }
+                    }
+                  } else if (
+                    hrConfigurations["HRConfiguration"]["Weekly_holidays"][0] ==
+                    "5-day week with 2nd and 4th Saturday holiday"
+                  ) {
+                    for (
+                      var d = startDate;
+                      d <= endDate;
+                      d.setDate(d.getDate() + 1)
+                    ) {
+                      if (
+                        holidayList.indexOf(d.getTime()) == -1 &&
+                        hrConfigurations["HRConfiguration"][
+                          "Include_enclosed_holidays"
+                        ][0] != "Y" &&
+                        d.getDay() != 0 &&
+                        !_this.isSecondSat(d) &&
+                        !_this.isFourthSat(d)
+                      )
+                        _days++;
+                    }
+                  } else {
+                    for (
+                      var d = startDate;
+                      d <= endDate;
+                      d.setDate(d.getDate() + 1)
+                    ) {
+                      if (
+                        holidayList.indexOf(d.getTime()) == -1 &&
+                        hrConfigurations["HRConfiguration"][
+                          "Include_enclosed_holidays"
+                        ][0] != "Y" &&
+                        !(d.getDay() === 0)
+                      )
+                        _days++;
+                    }
+                  }
+                  console.log(_days, prefixSuffixDays, enclosingDays);
+                  _this.setState({
+                    leaveSet: {
+                      ..._this.state.leaveSet,
+                      leaveDays: _days,
+                      totalWorkingDays: _days + prefixSuffixDays + enclosingDays
+                    }
+                  });
+                  if (prefixSuffixDays) {
+                    if (prefixFromDate && prefixToDate) {
+                      commonApiPost(
+                        "egov-common-masters",
+                        "holidays",
+                        "_search",
+                        {
+                          tenantId,
+                          fromDate: prefixFromDate,
+                          toDate: prefixToDate,
+                          enclosedHoliday: true
+                        },
+                        function(err, res3) {
+                          if (res3) {
+                            _this.setState({
+                              prefixHolidays: res3.Holiday
+                            });
+                          }
+                        }
+                      );
+                    } else {
+                      _this.setState({
+                        prefixHolidays: ""
+                      });
+                    }
+                    if (suffixFromDate && suffixToDate) {
+                      commonApiPost(
+                        "egov-common-masters",
+                        "holidays",
+                        "_search",
+                        {
+                          tenantId,
+                          fromDate: suffixFromDate,
+                          toDate: suffixToDate,
+                          enclosedHoliday: true
+                        },
+                        function(err, res3) {
+                          if (res3) {
+                            _this.setState({
+                              suffixHolidays: res3.Holiday
+                            });
+                          }
+                        }
+                      );
+                    } else {
+                      _this.setState({
+                        suffixHolidays: ""
+                      });
+                    }
+                  } else {
+                    _this.setState({
+                      prefixHolidays: ""
+                    });
+
+                    _this.setState({
+                      suffixHolidays: ""
+                    });
+                  }
+                }
+              }
+            );
+          } else {
             _this.setState({
-              encloseHoliday: res.Holiday
+              perfixSuffix: ""
             });
           }
         }
@@ -395,197 +612,18 @@ class ApplyLeave extends React.Component {
       });
     }
 
-    //calling PrefixSuffix api
-    let includePrefixSuffix = getNameById(
-      _this.state.leaveList,
-      _this.state.leaveSet.leaveType.id,
-      "includePrefixSuffix"
-    );
-    if (
-      includePrefixSuffix ||
-      includePrefixSuffix == "TRUE" ||
-      includePrefixSuffix == "true"
-    ) {
-      commonApiPost(
-        "egov-common-masters",
-        "holidays",
-        "_searchprefixsuffix",
-        { tenantId, fromDate, toDate: asOnDate },
-        function(err, res) {
-          if (res) {
-            prefixSuffixDays = res.Holiday && res.Holiday[0].noOfDays;
-            let prefixFromDate = res.Holiday && res.Holiday[0].prefixFromDate;
-            let prefixToDate = res.Holiday && res.Holiday[0].prefixToDate;
-            let suffixFromDate = res.Holiday && res.Holiday[0].suffixFromDate;
-            let suffixToDate = res.Holiday && res.Holiday[0].suffixToDate;
-            _this.setState({
-              perfixSuffix: res.Holiday[0]
-            });
-            if (prefixSuffixDays) {
-              if (prefixFromDate && prefixToDate) {
-                commonApiPost(
-                  "egov-common-masters",
-                  "holidays",
-                  "_search",
-                  {
-                    tenantId,
-                    fromDate: prefixFromDate,
-                    toDate: prefixToDate,
-                    enclosedHoliday: true
-                  },
-                  function(err, res) {
-                    if (res) {
-                      _this.setState({
-                        prefixHolidays: res.Holiday
-                      });
-                    }
-                  }
-                );
-              } else {
-                _this.setState({
-                  prefixHolidays: ""
-                });
-              }
-              if (suffixFromDate && suffixToDate) {
-                commonApiPost(
-                  "egov-common-masters",
-                  "holidays",
-                  "_search",
-                  {
-                    tenantId,
-                    fromDate: suffixFromDate,
-                    toDate: suffixToDate,
-                    enclosedHoliday: true
-                  },
-                  function(err, res) {
-                    if (res) {
-                      _this.setState({
-                        suffixHolidays: res.Holiday
-                      });
-                    }
-                  }
-                );
-              } else {
-                _this.setState({
-                  suffixHolidays: ""
-                });
-              }
-            } else {
-              _this.setState({
-                prefixHolidays: ""
-              });
+    // setTimeout(function() {
+    //   console.log(_days, prefixSuffixDays, enclosingDays);
 
-              _this.setState({
-                suffixHolidays: ""
-              });
-            }
-          }
-        }
-      );
-    } else {
-      _this.setState({
-        perfixSuffix: ""
-      });
-    }
-
-    var holidayList = [],
-      m1 = fromDate.split("/")[1],
-      m2 = asOnDate.split("/")[1],
-      y1 = fromDate.split("/")[2],
-      y2 = asOnDate.split("/")[2];
-    for (var i = 0; i < allHolidayList.length; i++) {
-      if (
-        allHolidayList[i].applicableOn &&
-        +allHolidayList[i].applicableOn.split("/")[1] >= +m1 &&
-        +allHolidayList[i].applicableOn.split("/")[1] <= +m2 &&
-        +allHolidayList[i].applicableOn.split("/")[2] <= y1 &&
-        +allHolidayList[i].applicableOn.split("/")[2] >= y2
-      ) {
-        holidayList.push(
-          new Date(
-            allHolidayList[i].applicableOn.split("/")[2],
-            allHolidayList[i].applicableOn.split("/")[1] - 1,
-            allHolidayList[i].applicableOn.split("/")[0]
-          ).getTime()
-        );
-      }
-    }
-    //Calculate working days
-    var _days = 0;
-    var parts1 = $("#fromDate")
-      .val()
-      .split("/");
-    var parts2 = $("#toDate")
-      .val()
-      .split("/");
-    var startDate = new Date(parts1[2], +parts1[1] - 1, parts1[0]);
-    var endDate = new Date(parts2[2], +parts2[1] - 1, parts2[0]);
-
-    if (
-      hrConfigurations["HRConfiguration"]["Weekly_holidays"][0] == "5-day week"
-    ) {
-      for (var d = startDate; d <= endDate; d.setDate(d.getDate() + 1)) {
-        if (
-          holidayList.indexOf(d.getTime()) == -1 &&
-          hrConfigurations["HRConfiguration"]["Include_enclosed_holidays"][0] !=
-            "Y" &&
-          !(d.getDay() === 0 || d.getDay() === 6)
-        )
-          _days++;
-      }
-    } else if (
-      hrConfigurations["HRConfiguration"]["Weekly_holidays"][0] ==
-      "5-day week with 2nd Saturday holiday"
-    ) {
-      for (var d = startDate; d <= endDate; d.setDate(d.getDate() + 1)) {
-        //console.log("date",_this.isSecondSat(d) + " " + _this.isFourthSat(d));
-        if (
-          holidayList.indexOf(d.getTime()) == -1 &&
-          hrConfigurations["HRConfiguration"]["Include_enclosed_holidays"][0] !=
-            "Y" &&
-          !_this.isSecondSat(d) &&
-          d.getDay() != 0
-        ) {
-          _days++;
-        }
-      }
-    } else if (
-      hrConfigurations["HRConfiguration"]["Weekly_holidays"][0] ==
-      "5-day week with 2nd and 4th Saturday holiday"
-    ) {
-      for (var d = startDate; d <= endDate; d.setDate(d.getDate() + 1)) {
-        if (
-          holidayList.indexOf(d.getTime()) == -1 &&
-          hrConfigurations["HRConfiguration"]["Include_enclosed_holidays"][0] !=
-            "Y" &&
-          d.getDay() != 0 &&
-          !_this.isSecondSat(d) &&
-          !_this.isFourthSat(d)
-        )
-          _days++;
-      }
-    } else {
-      for (var d = startDate; d <= endDate; d.setDate(d.getDate() + 1)) {
-        if (
-          holidayList.indexOf(d.getTime()) == -1 &&
-          hrConfigurations["HRConfiguration"]["Include_enclosed_holidays"][0] !=
-            "Y" &&
-          !(d.getDay() === 0)
-        )
-          _days++;
-      }
-    }
-
-    setTimeout(function() {
-      //console.log("calcluating:days+prefix+enclose ", _days + " " + prefixSuffixDays, " ", enclosingDays);
-      _this.setState({
-        leaveSet: {
-          ..._this.state.leaveSet,
-          leaveDays: _days,
-          totalWorkingDays: _days + prefixSuffixDays + enclosingDays
-        }
-      });
-    }, 500);
+    //   //console.log("calcluating:days+prefix+enclose ", _days + " " + prefixSuffixDays, " ", enclosingDays);
+    //   _this.setState({
+    //     leaveSet: {
+    //       ..._this.state.leaveSet,
+    //       leaveDays: _days,
+    //       totalWorkingDays: _days + prefixSuffixDays + enclosingDays
+    //     }
+    //   });
+    // }, 500);
 
     commonApiPost(
       "hr-leave",
@@ -659,10 +697,10 @@ class ApplyLeave extends React.Component {
   handleChange(e, name) {
     if (name === "encashable") {
       let val = e.target.checked;
-      if (e.target.checked) $("#totalWorkingDays").prop("disabled", false);
+      if (e.target.checked && !(getUrlVars()["type"] === "view"))
+        $("#totalWorkingDays").prop("disabled", false);
       else $("#totalWorkingDays").prop("disabled", true);
       let _this = this;
-
       var asOnDate = today();
       let leaveType = this.state.leaveSet.leaveType.id;
       let employeeid = getUrlVars()["id"];
@@ -945,7 +983,7 @@ class ApplyLeave extends React.Component {
 
   render() {
     let { handleChange, addOrUpdate, handleChangeThreeLevel } = this;
-    let { leaveSet, perfixSuffix, encloseHoliday } = this.state;
+    let { leaveSet, perfixSuffix } = this.state;
     let {
       name,
       code,

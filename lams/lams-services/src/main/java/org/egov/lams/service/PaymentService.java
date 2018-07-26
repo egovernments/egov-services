@@ -75,6 +75,8 @@ public class PaymentService {
 	private static final String SGST_ON_ADVANCE = "ADV_SGST";
 	private static final String CGST_ON_GOODWILL = "GW_CGST";
 	private static final String SGST_ON_GOODWILL = "GW_SGST";
+	private static final String ST_ON_GOODWILL = "GW_ST";
+	private static final String ST_ON_ADVANCE = "ADV_ST";
 	private static final String ADVANCE_COLLECTION = "Advance Collection";
 
 	@Autowired
@@ -239,8 +241,12 @@ public class PaymentService {
 			List<DemandDetails> demandDetails = getOrderedDemandDetails(demand.getDemandDetails());
 
 			int orderNo = 0;
+			int groupId =2;
 			LOGGER.info("PaymentService- generateBillXml - getting purpose");
 			Map<String, String> purposeMap = billRepository.getPurpose(billInfo.getTenantId());
+			List<Date> installmentDates = demandDetails.stream().map(demandDetail -> demandDetail.getPeriodStartDate())
+					.distinct().collect(Collectors.toList());
+
 			for (DemandDetails demandDetail : demandDetails) {
 				if(demandDetail!=null){
 				LOGGER.info("the reason for demanddetail : "+ demandDetail.getTaxReason());
@@ -251,8 +257,16 @@ public class PaymentService {
 					totalAmount = totalAmount
 							.add(demandDetail.getTaxAmount().subtract(demandDetail.getCollectionAmount()));
 					LOGGER.info("the amount added to bill : "+totalAmount);
+
+					for(Date date : installmentDates){
+						if(date.compareTo(demandDetail.getPeriodStartDate())==0
+						&& RENT.equalsIgnoreCase(demandDetail.getTaxReasonCode())){
+							groupId++;
+						}
+
+					}
 					billDetailInfos
-							.addAll(getBilldetails(demandDetail, functionCode, orderNo, requestInfo, purposeMap));
+							.addAll(getBilldetails(demandDetail, functionCode, orderNo, groupId,requestInfo, purposeMap,installmentDates));
 				}
 				}
 			}
@@ -281,8 +295,8 @@ public class PaymentService {
 
 
 
-	public List<BillDetailInfo> getBilldetails(final DemandDetails demandDetail, String functionCode, int orderNo,
-			RequestInfo requestInfo, Map<String, String> purpose) {
+	public List<BillDetailInfo> getBilldetails(final DemandDetails demandDetail, String functionCode, int orderNo,int groupId,
+			RequestInfo requestInfo, Map<String, String> purpose,List<Date> instalmentDates) {
 		final List<BillDetailInfo> billDetails = new ArrayList<>();
 		BigDecimal balance = BigDecimal.ZERO;
 		LOGGER.info("paymentservice demand detail ::"+demandDetail);
@@ -331,6 +345,34 @@ public class PaymentService {
 			if (balance.compareTo(BigDecimal.ZERO) > 0) {
 				billDetails.add(billdetail);
 			}
+
+			for(Date date : instalmentDates){
+					if(date.compareTo(demandDetail.getPeriodStartDate() ) == 0){
+					if(ADVANCE_TAX.equalsIgnoreCase(demandDetail.getTaxReasonCode())
+							|| CGST_ON_ADVANCE.equalsIgnoreCase(demandDetail.getTaxReasonCode())
+							|| SGST_ON_ADVANCE.equalsIgnoreCase(demandDetail.getTaxReasonCode())
+							|| ST_ON_ADVANCE.equalsIgnoreCase(demandDetail.getTaxReasonCode())) {
+						billdetail.setGroupId(1);
+					}
+					else if (GOODWILL_AMOUNT.equalsIgnoreCase(demandDetail.getTaxReasonCode())
+							|| CGST_ON_GOODWILL.equalsIgnoreCase(demandDetail.getTaxReasonCode())
+							|| SGST_ON_GOODWILL.equalsIgnoreCase(demandDetail.getTaxReasonCode())
+							|| ST_ON_GOODWILL.equalsIgnoreCase(demandDetail.getTaxReasonCode())) {
+						billdetail.setGroupId(2);
+					}
+					else if(RENT.equalsIgnoreCase(demandDetail.getTaxReasonCode())
+							|| CENTRAL_GST.equalsIgnoreCase(demandDetail.getTaxReasonCode())
+							|| STATE_GST.equalsIgnoreCase(demandDetail.getTaxReasonCode())
+							|| SERVICE_TAX.equalsIgnoreCase(demandDetail.getTaxReasonCode())
+							|| PENALTY.equalsIgnoreCase(demandDetail.getTaxReasonCode())) {
+						if(billdetail.getGroupId() == null) {
+							billdetail.setGroupId(groupId);
+						}
+
+						}
+
+					}
+				}
 
 		} catch (Exception e) {
 			e.printStackTrace();

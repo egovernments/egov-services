@@ -24,6 +24,7 @@ public class BillDetailInfo {
 	private String purpose = null;
 	private String period = null;
 	private Integer orderNo = null;
+	private Integer groupId = null;
 	private Integer isActualDemand = null;
 
 }

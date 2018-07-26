@@ -62,7 +62,7 @@ public class CollectionUtils {
                     isActualDemand = egBillDet.getAdditionalFlag()!=null && egBillDet.getAdditionalFlag() == 1 ? true : false;
                     billAccDetails = new BillAccountDetails(egBillDet.getGlcode(), egBillDet.getOrderNo(),
                             egBillDet.getCrAmount(), egBillDet.getDrAmount(), egBillDet.getFunctionCode(),
-                            egBillDet.getDescription(), isActualDemand,egBillDet.getPurpose()!=null?PURPOSE.valueOf(egBillDet.getPurpose()):PURPOSE.OTHERS);
+                            egBillDet.getDescription(), isActualDemand,egBillDet.getPurpose()!=null?PURPOSE.valueOf(egBillDet.getPurpose()):PURPOSE.OTHERS,egBillDet.getGroupId());
                     billDetails.addBillAccountDetails(billAccDetails);
                 }
                 billPayeeDet.addBillDetails(billDetails);

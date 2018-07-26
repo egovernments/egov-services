@@ -111,9 +111,11 @@ public class EgBillDetails implements java.io.Serializable, Comparable<EgBillDet
 	private EgDemandReason egDemandReason;
 	@Column(name = "purpose")
 	private String purpose;
+	@Column(name = "groupid")
+	private Integer groupId;
 	@Column(name = "tenantid")
 	private String tenantId;
-
+	
 	public EgBillDetails(BillDetailInfo billDetail) {
 		this.createDate = new Date();
 		this.modifiedDate = new Date();
@@ -124,6 +126,7 @@ public class EgBillDetails implements java.io.Serializable, Comparable<EgBillDet
 		this.description = billDetail.getDescription();
 		this.functionCode = billDetail.getFunctionCode();
 		this.purpose = billDetail.getPurpose();
+		this.groupId = billDetail.getGroupId();
 		this.additionalFlag = billDetail.getIsActualDemand();
 	}
 
@@ -131,13 +134,13 @@ public class EgBillDetails implements java.io.Serializable, Comparable<EgBillDet
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
 		builder.append("EgBillDetails [glcode=").append(glcode).append(", collectedAmount=").append(collectedAmount)
-				.append(", orderNo=").append(orderNo).append(", functionCode=").append(functionCode)
-				.append(", crAmount=").append(crAmount).append(", drAmount=").append(drAmount).append(", description=")
-				.append(description).append(", additionalFlag=").append(additionalFlag).append(", egDemandReason=")
-				.append(egDemandReason).append(purpose).append("]");
+				.append(", orderNo=").append(orderNo).append(", groupId=").append(groupId).append(", functionCode=")
+				.append(functionCode).append(", crAmount=").append(crAmount).append(", drAmount=").append(drAmount)
+				.append(", description=").append(description).append(", additionalFlag=").append(additionalFlag)
+				.append(", egDemandReason=").append(egDemandReason).append(purpose).append("]");
 		return builder.toString();
 	}
-	
+
 	public BillDetailInfo toDomain(){
 		
 		//private Installment egInstallmentMaster;
@@ -170,6 +173,14 @@ public class EgBillDetails implements java.io.Serializable, Comparable<EgBillDet
 
 	public void setDescription(String description) {
 		this.description = description;
+	}
+
+	public Integer getGroupId() {
+		return groupId;
+	}
+
+	public void setGroupId(Integer groupId) {
+		this.groupId = groupId;
 	}
 
 	public Integer getOrderNo() {

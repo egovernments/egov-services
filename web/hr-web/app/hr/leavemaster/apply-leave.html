@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
     <title>EIS</title>
-    <base href="/hr-web/"/>
+    <base href="/hr-web/" />
 
     <!-- Bootstrap -->
     <link rel="stylesheet" type="text/css" href="resources/stylesheet/bootstrap.min.css">
@@ -68,6 +68,10 @@
             padding-right: 10px;
             margin-bottom: 0px;
         }
+
+        #encashable {
+            cursor: default
+        }
     </style>
 
 
@@ -122,7 +126,9 @@
 
     <div id="loadingMask" style="display: none;"></div>
     <div id="loading" style="display: none;">
-        <div class="loading-indicator"><i class="fa fa-spinner fa-pulse fa-2x"></i></div>
+        <div class="loading-indicator">
+            <i class="fa fa-spinner fa-pulse fa-2x"></i>
+        </div>
     </div>
 
     <div class="page-container horizontal-menu" id="dashboard">
@@ -256,7 +262,7 @@
 
 
     <script type="text/javascript">
-        $(window).load(function() {
+        $(window).load(function () {
             document.getElementById("loading").style.display = "none";
             document.getElementById("loadingMask").style.display = "none";
         });
@@ -265,10 +271,10 @@
 
     <script type="text/javascript">
 
-        $('.menu-responsive').mouseover(function() {
+        $('.menu-responsive').mouseover(function () {
             $('.menu-responsive > ul').css('display', 'block')
         });
-        $('.hidden-xs.menu-responsive').mouseout(function(event) {
+        $('.hidden-xs.menu-responsive').mouseout(function (event) {
             $('.menu-responsive > ul').css('display', 'none')
         });
     </script>

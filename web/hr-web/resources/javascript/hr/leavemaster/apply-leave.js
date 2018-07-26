@@ -163,7 +163,6 @@ class ApplyLeave extends React.Component {
     var asOnDate = _this.state.leaveSet.toDate,
       _leaveSet = {},
       employee;
-
     if (getUrlVars()["type"] === "view") {
       $("input,select,textarea").prop("disabled", true);
     }
@@ -1165,6 +1164,7 @@ class ApplyLeave extends React.Component {
                       onChange={e => {
                         handleChange(e, "encashable", true);
                       }}
+                      disabled={getUrlVars()["type"] === "view"}
                     />
                   </div>
                 </div>

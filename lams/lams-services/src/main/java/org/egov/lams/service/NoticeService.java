@@ -1,10 +1,16 @@
 package org.egov.lams.service;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
+import java.util.stream.Collectors;
 
 import org.egov.lams.model.Agreement;
 import org.egov.lams.model.AgreementCriteria;
+import org.egov.lams.model.DefaultersInfo;
+import org.egov.lams.model.DueSearchCriteria;
 import org.egov.lams.model.Notice;
 import org.egov.lams.model.NoticeCriteria;
 import org.egov.lams.repository.NoticeRepository;
@@ -41,6 +47,16 @@ public class NoticeService {
 		notices.add(notice);
 
 		return getNoticeResponse(notices);
+	}
+	
+	public Set<DefaultersInfo> generateDueNotice(DueSearchCriteria dueCriteria, RequestInfo requestInfo) {
+
+		Set<DefaultersInfo> defaulters;
+		defaulters = noticeRepository.generateDueNoticeDate(dueCriteria);
+		defaulters = defaulters.stream().collect(
+				Collectors.toCollection(() -> new TreeSet<>(Comparator.comparing(DefaultersInfo::getAgreementNumber))));
+		return defaulters;
+
 	}
 
 	public List<Agreement> getAgreementByAuckNumOrAgreementNum(AgreementCriteria agreementCriteria,

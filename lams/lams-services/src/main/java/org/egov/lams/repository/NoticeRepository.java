@@ -2,12 +2,17 @@ package org.egov.lams.repository;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
+import org.egov.lams.model.DefaultersInfo;
+import org.egov.lams.model.DueSearchCriteria;
 import org.egov.lams.model.Notice;
 import org.egov.lams.model.NoticeCriteria;
 import org.egov.lams.repository.builder.NoticeQueryBuilder;
+import org.egov.lams.repository.rowmapper.DueDetailsRowMapper;
 import org.egov.lams.repository.rowmapper.NoticeRowMapper;
 import org.egov.lams.web.contract.NoticeRequest;
 import org.egov.lams.web.contract.RequestInfo;
@@ -55,6 +60,19 @@ public class NoticeRepository {
 		return notice;
 	}
 
+	public Set<DefaultersInfo> generateDueNoticeDate(DueSearchCriteria dueCriteria) {
+		Set<DefaultersInfo> defaulters = new LinkedHashSet<>();
+		Map<String, Object> params = new HashMap<>();
+		String queryStr = NoticeQueryBuilder.getRentDueSearchQuery(dueCriteria, params);
+		try {
+			defaulters = namedParameterJdbcTemplate.query(queryStr, params, new DueDetailsRowMapper());
+		} catch (Exception ex) {
+			LOGGER.info("exception while fetching defaulters :: " + ex);
+			throw new RuntimeException(ex.getMessage());
+		}
+
+		return defaulters;
+	}
     public List<Notice> getNotices(NoticeCriteria noticeCriteria) {
 
 		List<Notice> notices = null;

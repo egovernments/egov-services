@@ -1,12 +1,17 @@
 package org.egov.lams.web.controller;
 
 import java.util.List;
+import java.util.Set;
 
 import javax.validation.Valid;
 
+import org.apache.commons.lang3.StringUtils;
+import org.egov.lams.model.DefaultersInfo;
+import org.egov.lams.model.DueSearchCriteria;
 import org.egov.lams.model.Notice;
 import org.egov.lams.model.NoticeCriteria;
 import org.egov.lams.service.NoticeService;
+import org.egov.lams.web.contract.DefaultersInfoResponse;
 import org.egov.lams.web.contract.NoticeRequest;
 import org.egov.lams.web.contract.NoticeResponse;
 import org.egov.lams.web.contract.RequestInfo;
@@ -67,6 +72,31 @@ public class NoticeController {
 
 		List<Notice> notices = noticeService.getNotices(noticeCriteria);
 		return getSuccessResponse(notices, requestInfo);
+	}
+	
+	@PostMapping("_duenotice")
+	@ResponseBody
+	public ResponseEntity<?> generateDueNotice(@ModelAttribute @Valid DueSearchCriteria dueCriteria,
+			@RequestBody @Valid RequestInfo requestInfo, BindingResult errors) {
+		if (errors.hasErrors()) {
+			ErrorResponse errRes = populateErrors(errors);
+			return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
+		}
+		if (StringUtils.isBlank(dueCriteria.getTenantId())) {
+			ErrorResponse errRes = populateErrors(errors);
+			return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
+		}
+		Set<DefaultersInfo> defaulterDetails = noticeService.generateDueNotice(dueCriteria, requestInfo);
+		return getSuccessResponseForSearch(defaulterDetails, requestInfo);
+	}
+
+	private ResponseEntity<?> getSuccessResponseForSearch(Set<DefaultersInfo> defaulterSet, RequestInfo requestInfo) {
+		DefaultersInfoResponse defaultersInfoResponse = new DefaultersInfoResponse();
+		defaultersInfoResponse.setDefaulters(defaulterSet);
+		ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
+		responseInfo.setStatus(HttpStatus.OK.toString());
+		defaultersInfoResponse.setResponseInfo(responseInfo);
+		return new ResponseEntity<>(defaultersInfoResponse, HttpStatus.OK);
 	}
 
 	private ErrorResponse populateErrors(BindingResult errors) {

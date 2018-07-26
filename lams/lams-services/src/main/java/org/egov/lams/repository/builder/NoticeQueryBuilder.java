@@ -1,11 +1,13 @@
 package org.egov.lams.repository.builder;
 
+import java.util.Date;
+import java.util.Map;
+
+import org.egov.lams.model.DueSearchCriteria;
 import org.egov.lams.model.NoticeCriteria;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
-
-import java.util.Map;
 
 @Component
 public class NoticeQueryBuilder {
@@ -23,15 +25,17 @@ public class NoticeQueryBuilder {
 
     public final static String SEQ_NOTICE_ID = "SELECT nextval('seq_eglams_notice')";
 
-    public final static String RENTINCREMENTTYPEQUERY = "SELECT * FROM eglams_rentincrementtype rent WHERE rent.id = :rentId";
+	public final static String RENTINCREMENTTYPEQUERY = "SELECT * FROM eglams_rentincrementtype rent WHERE rent.id = :rentId";
 
-    @SuppressWarnings("unchecked")
-    public static String getNoticeQuery(NoticeCriteria noticeCriteria,
-                                        @SuppressWarnings("rawtypes") Map params) {
+	public final static String RENT_DUE_QUERY = "select distinct df.agreementnumber,df.id, df.action,df.status,df.paymentcycle,df.rent,df.securitydeposit,df.commencementdate,df.expirydate,df.allotteename,df.allotteemobilenumber,df.assetcode,df.categoryname,df.assetcategory,df.zone,df.ward,df.street,df.electionward,df.locality,df.block, dft.installment,df.lastpaid,(select min(fromdate)  from eglams_defaulters_details where agreementnumber=df.agreementnumber and tenantid=df.tenantid) as fromdate,(select max(todate)  from eglams_defaulters_details where agreementnumber=df.agreementnumber and tenantid=df.tenantid) as todate,(select sum(amount)  from eglams_defaulters_details where agreementnumber=df.agreementnumber and tenantid=df.tenantid) as amount,(select sum(collection) from eglams_defaulters_details where agreementnumber=df.agreementnumber and tenantid=df.tenantid) as collection,"
+			+ "(select sum(balance)  from eglams_defaulters_details where agreementnumber=df.agreementnumber and tenantid=df.tenantid) as balance,df.tenantid from eglams_defaulters df inner join eglams_defaulters_details dft on df.agreementnumber=dft.agreementnumber where df.agreementnumber=dft.agreementnumber and df.tenantid=dft.tenantid ";
 
-        StringBuilder selectQuery = new StringBuilder("SELECT * FROM eglams_notice notice");
+	@SuppressWarnings("unchecked")
+	public static String getNoticeQuery(NoticeCriteria noticeCriteria, @SuppressWarnings("rawtypes") Map params) {
 
-        selectQuery.append(" WHERE notice.id is not null");
+		StringBuilder selectQuery = new StringBuilder("SELECT * FROM eglams_notice notice");
+
+		selectQuery.append(" WHERE notice.id is not null");
 
         if (noticeCriteria.getId() != null) {
             selectQuery.append("and notice.id IN (:noticeId)");
@@ -93,6 +97,50 @@ public class NoticeQueryBuilder {
 
         return selectQuery.toString();
     }
+    
+	public static String getRentDueSearchQuery(DueSearchCriteria dueCriteria, Map<String, Object> params) {
+
+		StringBuilder selectQuery = new StringBuilder(RENT_DUE_QUERY);
+		Date installmentDate = new Date();
+		params.put("tenantId", dueCriteria.getTenantId());
+		if (dueCriteria.getAgreementNumber() != null) {
+			selectQuery.append(" and dft.agreementnumber = :agreementNumber");
+			params.put("agreementNumber", dueCriteria.getAgreementNumber());
+		}
+
+		if (dueCriteria.getAssetCategory() != null) {
+			selectQuery.append(" and df.assetcategory = :assetCategory");
+			params.put("assetCategory", dueCriteria.getAssetCategory());
+		}
+		if (dueCriteria.getAssetCode() != null) {
+			selectQuery.append(" and df.assetcode = :assetCode");
+			params.put("assetCode", dueCriteria.getAssetCode());
+		}
+		if (dueCriteria.getRevenueWard() != null) {
+			selectQuery.append(" and df.ward = :revenueWard");
+			params.put("revenueWard", dueCriteria.getRevenueWard());
+		}
+		if (dueCriteria.getRevenueBlock() != null) {
+			selectQuery.append(" and df.block = :revenueBlock");
+			params.put("revenueBlock", dueCriteria.getRevenueBlock());
+		}
+		if (dueCriteria.getZone() != null) {
+			selectQuery.append(" and df.zone = :zone");
+			params.put("zone", dueCriteria.getZone());
+		}
+
+		if (dueCriteria.getLocality() != null) {
+			selectQuery.append(" and df.locality = :locality");
+			params.put("locality", dueCriteria.getLocality());
+		}
+
+		selectQuery.append(" and dft.balance >0");
+		selectQuery.append(" and dft.todate <= :installmentDate");
+		selectQuery.append(" and df.tenantid = :tenantId");
+		params.put("installmentDate", installmentDate);
+		selectQuery.append(" order by balance desc");
+		return selectQuery.toString();
+	}
 
 }
 

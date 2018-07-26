@@ -16,7 +16,7 @@ import java.util.*;
 public class GatewayService {
 
     private final List<Gateway> gateways;
-    private Set<String> TXN_IDS_KEY_SET = new HashSet<>();
+    private Set<String> TXN_IDS_KEY_SET = new LinkedHashSet<>();
     private Map<String, GatewayStatus> GATEWAY_MAP = new HashMap<>();
 
     @Autowired

@@ -53,10 +53,11 @@ const uploadFiles = function(body, cb) {
             counter--;
             docs.push(res.files[0].fileStoreId);
             if (counter == 0) {
-              body.LeaveApplication[0].documents = body.LeaveApplication[0].documents.concat(
-                docs
-              );
-              delete body.LeaveApplication[0].docs;
+              // body.LeaveApplication[0].documents = body.LeaveApplication[0].documents.concat(
+              //   docs
+              // );
+              body && body.LeaveApplication && body.LeaveApplication.documents && body.LeaveApplication.documents.push(res.files[0].fileStoreId);
+              delete body.LeaveApplication.docs;
               cb(null, body);
             }
           }

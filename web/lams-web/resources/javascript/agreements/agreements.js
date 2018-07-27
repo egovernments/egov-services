@@ -207,14 +207,14 @@ function handleBlur() {
                 }
                 if(res1.preambleNumber === null){
                     $('#alert-box').fadeIn(function(){
-                        $("#alert-box-content").html("Invalid CR number");
+                        $("#alert-box-content").html("Entered CR number is not valid. Please enter a valid CR number");
                     });
                 }   
             },
             error: function (err) {
                 $('#councilNumber').val("");
                 $('#alert-box').fadeIn(function(){
-                    $("#alert-box-content").html("Invalid CR number");
+                    $("#alert-box-content").html("Entered CR number is not valid. Please enter a valid CR number");
                 });
             }
         })

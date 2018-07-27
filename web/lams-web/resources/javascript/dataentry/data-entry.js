@@ -39,8 +39,6 @@ try { assetCategories = !localStorage.getItem("assetCategories") || localStorage
     assetCategories = [];
 }
 
-
-
 $('#close').on("click", function() {
     window.close();
 })
@@ -51,9 +49,21 @@ var agreement = {};
 var filesToBeDeleted = [];
 var assetDetails;
 var employees = [];
+var agreementNum = window.location.href.split("/")[6].split("&")[2].split("=")[1];
 var fileTypes = ["application/msword", "application/vnd.openxmlformats-officedocument.wordprocessingml.document", "application/vnd.ms-excel", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "application/pdf", "image/png", "image/jpeg"];
 
+
 $(".disabled").attr("disabled", true);
+$(".goodWillAmount").attr("disabled",false);
+$(".securityDeposit").attr("disabled",false);
+$(".rent").attr("disabled",false);
+
+if(agreementNum){
+    console.log("agree",agreementNum)
+    $(".goodWillAmount").attr('disabled',true);
+    $(".securityDeposit").attr('disabled',true);
+    $(".rent").attr("disabled",true);
+}
 //Getting data for user input
 $(document).on("keyup","input", function() {
     fillValueToObject(this);
@@ -1644,7 +1654,7 @@ function basedOnType(){
       $("#shopAssetDetailsBlock select").attr("disabled", true);
       //append category text
       $(".categoryType").prepend("Shop ");
-  } else if (decodeURIComponent(getUrlVars()["type"]) == "Shopping Complex") {
+    } else if (decodeURIComponent(getUrlVars()["type"]) == "Shopping Complex") {
       // validation rules for shop agreement
       // remove all other Asset Details block from DOM except shop asset related fields
       $("#shopAssetDetailsBlock,#landAssetDetailsBlock, #marketAssetDetailsBlock, #kalyanamandapamAssetDetailsBlock, #parkingSpaceAssetDetailsBlock, #slaughterHousesAssetDetailsBlock, #usfructsAssetDetailsBlock, #communityAssetDetailsBlock, #fishTankAssetDetailsBlock, #parkAssetDetailsBlock").remove();
@@ -2090,6 +2100,8 @@ function basedOnType(){
       window.open(location, '_self').close();
   }
 }
+
+
 
 ///^[0-9]*$/.test(value);
 $(document).on('keyup','.srRent',function(){

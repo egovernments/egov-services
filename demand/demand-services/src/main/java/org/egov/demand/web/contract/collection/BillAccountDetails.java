@@ -130,6 +130,11 @@ public class BillAccountDetails implements Comparable<BillAccountDetails> {
         return purpose;
     }
 
+    public  Integer getGroupId() {
+        return groupId;
+    }
+
+
     @Override
     public int compareTo(final BillAccountDetails obj) {
         return order - obj.order;

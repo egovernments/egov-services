@@ -49,7 +49,6 @@ var agreement = {};
 var filesToBeDeleted = [];
 var assetDetails;
 var employees = [];
-var agreementNum = window.location.href.split("/")[6].split("&")[2].split("=")[1];
 var fileTypes = ["application/msword", "application/vnd.openxmlformats-officedocument.wordprocessingml.document", "application/vnd.ms-excel", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "application/pdf", "image/png", "image/jpeg"];
 
 
@@ -58,12 +57,6 @@ $(".goodWillAmount").attr("disabled",false);
 $(".securityDeposit").attr("disabled",false);
 $(".rent").attr("disabled",false);
 
-if(agreementNum){
-    console.log("agree",agreementNum)
-    $(".goodWillAmount").attr('disabled',true);
-    $(".securityDeposit").attr('disabled',true);
-    $(".rent").attr("disabled",true);
-}
 //Getting data for user input
 $(document).on("keyup","input", function() {
     fillValueToObject(this);
@@ -222,6 +215,9 @@ $(document).ready(function() {
       if(response.Agreements[0].source === 'DATA_ENTRY' ){
         $('#pageTitle').html('Modify Agreement');
         $('#hpCitizenTitle').html("Modify Data Entry Agreement");
+        $(".goodWillAmount").attr('disabled',true);
+        $(".securityDeposit").attr('disabled',true);
+        $(".rent").attr("disabled",true);
         create=false;
         let modifyAgreements = response.Agreements[0];
         //Creating docs key to display files and deleting documents for update 

@@ -141,28 +141,27 @@ definitions:
         description: describes Whether propertyType is Active or not.
     required:
       - code
-  
   Exemption:
     type: object
     properties:
       isEnabled:
         type: boolean
-        description: if Exemption are applicable, the value will be true. 
+        description: 'if Exemption are applicable, the value will be true.'
       rate:
         type: number
-        format: double 
+        format: double
         description: Exemption rate in percentage.
         maxLength: 128
         minLength: 2
       maxAmount:
         type: number
-        format: double 
-        description: Maximum exemption amount, it is applicable if exemption are applied using exemptionRate.
+        format: double
+        description: 'Maximum exemption amount, it is applicable if exemption are applied using exemptionRate.'
         maxLength: 128
         minLength: 2
       flatAmount:
         type: number
-        format: double 
+        format: double
         description: Flat amount exemption.
         maxLength: 128
         minLength: 2
@@ -171,25 +170,24 @@ definitions:
         description: Exemption are applicable from the defined date.
         maxLength: 128
         minLength: 2
-  
   Rebate:
     type: object
     properties:
       rate:
         type: number
-        format: double 
+        format: double
         description: Exemption rate in percentage.
         maxLength: 128
         minLength: 2
       maxAmount:
         type: number
-        format: double 
-        description: Maximum exemption amount, it is applicable if exemption are applied using exemptionRate.
+        format: double
+        description: 'Maximum exemption amount, it is applicable if exemption are applied using exemptionRate.'
         maxLength: 128
         minLength: 2
       flatAmount:
         type: number
-        format: double 
+        format: double
         description: Flat amount exemption.
         maxLength: 128
         minLength: 2
@@ -200,26 +198,25 @@ definitions:
         minLength: 2
       endDate:
         type: string
-        description: this is the rebate end date, this will be date and month.
-  
+        description: 'this is the rebate end date, this will be date and month.'
   Penalty:
     type: object
     properties:
       rate:
         type: number
-        format: double 
+        format: double
         description: Exemption rate in percentage.
         maxLength: 128
         minLength: 2
       minAmount:
         type: number
-        format: double 
-        description: Maximum exemption amount, it is applicable if exemption are applied using exemptionRate.
+        format: double
+        description: 'Maximum exemption amount, it is applicable if exemption are applied using exemptionRate.'
         maxLength: 128
         minLength: 2
       flatAmount:
         type: number
-        format: double 
+        format: double
         description: Flat amount exemption.
         maxLength: 128
         minLength: 2
@@ -230,8 +227,7 @@ definitions:
         minLength: 2
       startDate:
         type: string
-        description: this is the rebate end date, this will be date and month.
-  
+        description: 'this is the rebate end date, this will be date and month.'
   PropertySubType:
     type: object
     properties:
@@ -252,10 +248,9 @@ definitions:
         description: provides info on whether the propertySubType is active for usage.
     required:
       - code
-      
   UsageCategoryMajor:
     allOf:
-     - $ref: '#/definitions/Exemption'
+      - $ref: '#/definitions/Exemption'
     type: object
     properties:
       name:
@@ -271,7 +266,6 @@ definitions:
       active:
         type: boolean
         description: Whether UsageCategoryMajor is Active or not.
-      
     required:
       - code
   UsageCategoryMinor:
@@ -297,7 +291,6 @@ definitions:
     required:
       - code
       - usageCategoryMajor
-      
   UsageCategorySubMinor:
     allOf:
       - $ref: '#/definitions/Exemption'
@@ -321,7 +314,6 @@ definitions:
     required:
       - code
       - usageCategoryMinor
-      
   UsageCategoryDetail:
     allOf:
       - $ref: '#/definitions/Exemption'
@@ -345,7 +337,6 @@ definitions:
     required:
       - code
       - usageCategorySubMinor
-      
   ConstructionType:
     type: object
     properties:
@@ -364,7 +355,6 @@ definitions:
         description: 'Whether UsageCategorySubMinor is Active or not. If the value is TRUE, then UsageCategorySubMinor is active, if the value is FALSE then UsageCategorySubMinor is inactive, default value is TRUE'
     required:
       - code
-      
   ConstructionSubType:
     type: object
     properties:
@@ -480,7 +470,6 @@ definitions:
         description: 'Whether OccupancyType is Active or not. If the value is TRUE, then OccupancyType is active, if the value is FALSE then OccupancyType is inactive, default value is TRUE'
     required:
       - code
-      
   BillingSlab:
     type: object
     properties:
@@ -737,6 +726,12 @@ definitions:
             description: 'Type of owner, based on this option Exemptions will be applied. This is master data defined in mdms.'
             maxLength: 256
             minLength: 4
+          documents:
+            description: 'The documents attached by owner for exemption.'
+            type: array
+            items:
+              $ref: '#/definitions/Document'
+
   Address:
     allOf:
       - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-1-0.yml#/definitions/Address'
@@ -862,3 +857,4 @@ definitions:
         type: array
         items:
           $ref: '#/definitions/Property'
+

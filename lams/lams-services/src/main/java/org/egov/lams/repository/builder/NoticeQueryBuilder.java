@@ -3,6 +3,7 @@ package org.egov.lams.repository.builder;
 import java.util.Date;
 import java.util.Map;
 
+import org.egov.lams.model.DueNoticeCriteria;
 import org.egov.lams.model.DueSearchCriteria;
 import org.egov.lams.model.NoticeCriteria;
 import org.slf4j.Logger;
@@ -20,10 +21,11 @@ public class NoticeQueryBuilder {
             + " securitydeposit, commissionername, zone, ward, street, electionward, locality, block, createdby,"
 			+ " createddate, lastmodifiedby ,lastmodifieddate, tenantId, filestore, noticetype)"
 			+ " VALUES (nextval('seq_eglams_notice'),?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+	public static final String INSERT_DUE_NOTICE_QUERY = "INSERT INTO eglams_duenotice (id,noticeno, noticedate,agreementnumber,assetcode,assetcategory,categoryname,allotteename,mobilenumber,commencementdate,duefromdate,duetodate,expirydate,action,status,createddate,createdby, lastmodifieddate,lastmodifiedby,ward,noticetype,filestore, tenantId)"
+			+ " values (nextval('seq_eglams_duenotice'),:noticeNo, :noticeDate,:agreementNumber,:assetCode,:assetCategory,:categoryName,:allotteeName,:mobileNumber,:commencementDate,:dueFromDate,:dueToDate,:expiryDate,:action,:status,:createdDate,:createdBy, :lastmodifiedby ,:lastmodifiedDate,:ward,:noticeType , :filestore, :tenantId)";
+	public final static String SEQ_NOTICE_NO = "SELECT nextval('seq_eglams_noticeno')";
 
-    public final static String SEQ_NOTICE_NO = "SELECT nextval('seq_eglams_noticeno')";
-
-    public final static String SEQ_NOTICE_ID = "SELECT nextval('seq_eglams_notice')";
+	public final static String SEQ_NOTICE_ID = "SELECT nextval('seq_eglams_notice')";
 
 	public final static String RENTINCREMENTTYPEQUERY = "SELECT * FROM eglams_rentincrementtype rent WHERE rent.id = :rentId";
 
@@ -37,66 +39,64 @@ public class NoticeQueryBuilder {
 
 		selectQuery.append(" WHERE notice.id is not null");
 
-        if (noticeCriteria.getId() != null) {
-            selectQuery.append("and notice.id IN (:noticeId)");
-            params.put("noticeId", noticeCriteria.getId());
-        }
+		if (noticeCriteria.getId() != null) {
+			selectQuery.append("and notice.id IN (:noticeId)");
+			params.put("noticeId", noticeCriteria.getId());
+		}
 
-        if (noticeCriteria.getAgreementNumber() != null) {
-            selectQuery.append(" and notice.agreementno = :agreementNumber");
-            params.put("agreementNumber", noticeCriteria.getAgreementNumber());
-        }
-        if (noticeCriteria.getAcknowledgementNumber() != null) {
-            selectQuery.append(" and notice.acknowledgementnumber = :ackNumber");
-            params.put("ackNumber", noticeCriteria.getAcknowledgementNumber());
-        }
-        if (noticeCriteria.getAssetCategory() != null) {
-            selectQuery.append(" and notice.assetcategory = :assetCategory");
-            params.put("assetCategory", noticeCriteria.getAssetCategory());
-        }
-        if (noticeCriteria.getNoticeNo() != null) {
-            selectQuery.append(" and notice.noticeno = :noticeNo");
-            params.put("noticeNo", noticeCriteria.getNoticeNo());
-        }
-        
-        if (noticeCriteria.getNoticeType() != null) {
-            selectQuery.append(" and notice.noticetype = :noticeType");
-            params.put("noticeType", noticeCriteria.getNoticeType());
-        }
-        
-        if (noticeCriteria.getRevenueWard() != null) {
-            selectQuery.append(" and notice.ward = :revenueWard");
-            params.put("revenueWard", noticeCriteria.getRevenueWard());
-        }
+		if (noticeCriteria.getAgreementNumber() != null) {
+			selectQuery.append(" and notice.agreementno = :agreementNumber");
+			params.put("agreementNumber", noticeCriteria.getAgreementNumber());
+		}
+		if (noticeCriteria.getAcknowledgementNumber() != null) {
+			selectQuery.append(" and notice.acknowledgementnumber = :ackNumber");
+			params.put("ackNumber", noticeCriteria.getAcknowledgementNumber());
+		}
+		if (noticeCriteria.getAssetCategory() != null) {
+			selectQuery.append(" and notice.assetcategory = :assetCategory");
+			params.put("assetCategory", noticeCriteria.getAssetCategory());
+		}
+		if (noticeCriteria.getNoticeNo() != null) {
+			selectQuery.append(" and notice.noticeno = :noticeNo");
+			params.put("noticeNo", noticeCriteria.getNoticeNo());
+		}
 
-        if (noticeCriteria.getAssetNo() != null) {
-            selectQuery.append(" and notice.assetno = :assetNo");
-            params.put("assetNo", noticeCriteria.getAssetNo());
-        }
-        
-        if (noticeCriteria.getTenantId() != null) {
-            selectQuery.append(" and notice.tenantid = :tenantId");
-            params.put("tenantId", noticeCriteria.getTenantId());
-        }
+		if (noticeCriteria.getNoticeType() != null) {
+			selectQuery.append(" and notice.noticetype = :noticeType");
+			params.put("noticeType", noticeCriteria.getNoticeType());
+		}
 
-        selectQuery.append(" ORDER BY notice.ID");
-        selectQuery.append(" LIMIT :pageSize");
-        if (noticeCriteria.getSize() != null)
-            params.put("pageSize", noticeCriteria.getSize());
-        else
-            params.put("pageSize", 20);
+		if (noticeCriteria.getRevenueWard() != null) {
+			selectQuery.append(" and notice.ward = :revenueWard");
+			params.put("revenueWard", noticeCriteria.getRevenueWard());
+		}
 
-        selectQuery.append(" OFFSET :pageNumber");
+		if (noticeCriteria.getAssetNo() != null) {
+			selectQuery.append(" and notice.assetno = :assetNo");
+			params.put("assetNo", noticeCriteria.getAssetNo());
+		}
 
-        if (noticeCriteria.getOffset() != null)
-            params.put("pageNumber", noticeCriteria.getOffset());
-        else
-            params.put("pageNumber", 0);
+		if (noticeCriteria.getTenantId() != null) {
+			selectQuery.append(" and notice.tenantid = :tenantId");
+			params.put("tenantId", noticeCriteria.getTenantId());
+		}
 
-        logger.debug("the select query in notice querybuilder ::" + selectQuery.toString());
+		selectQuery.append(" ORDER BY notice.ID");
+		selectQuery.append(" LIMIT :pageSize");
+		if (noticeCriteria.getSize() != null)
+			params.put("pageSize", noticeCriteria.getSize());
+		else
+			params.put("pageSize", 20);
 
-        return selectQuery.toString();
-    }
+		selectQuery.append(" OFFSET :pageNumber");
+
+		if (noticeCriteria.getOffset() != null)
+			params.put("pageNumber", noticeCriteria.getOffset());
+		else
+			params.put("pageNumber", 0);
+
+		return selectQuery.toString();
+	}
     
 	public static String getRentDueSearchQuery(DueSearchCriteria dueCriteria, Map<String, Object> params) {
 
@@ -139,8 +139,55 @@ public class NoticeQueryBuilder {
 		selectQuery.append(" and df.tenantid = :tenantId");
 		params.put("installmentDate", installmentDate);
 		selectQuery.append(" order by balance desc");
+		selectQuery.append(" LIMIT 500");
+	
 		return selectQuery.toString();
 	}
 
+	public static String getDueNoticesQuery(DueNoticeCriteria noticeCriteria, Map<String, Object> params) {
+		StringBuilder selectQuery = new StringBuilder("SELECT * FROM eglams_duenotice ");
+
+		selectQuery.append(" WHERE id is not null and noticetype='DUE' ");
+
+		if (noticeCriteria.getId() != null) {
+			selectQuery.append(" and id IN (:noticeId)");
+			params.put("noticeId", noticeCriteria.getId());
+		}
+
+		if (noticeCriteria.getAgreementNumber() != null) {
+			selectQuery.append(" and agreementnumber = :agreementNumber");
+			params.put("agreementNumber", noticeCriteria.getAgreementNumber());
+		}
+
+		if (noticeCriteria.getAssetCategory() != null) {
+			selectQuery.append(" and assetcategory = :assetCategory");
+			params.put("assetCategory", noticeCriteria.getAssetCategory());
+		}
+		if (noticeCriteria.getNoticeNo() != null) {
+			selectQuery.append(" and noticeno = :noticeNo");
+			params.put("noticeNo", noticeCriteria.getNoticeNo());
+		}
+
+		if (noticeCriteria.getTenantId() != null) {
+			selectQuery.append(" and tenantid = :tenantId");
+			params.put("tenantId", noticeCriteria.getTenantId());
+		}
+		selectQuery.append(" and duefromdate <= :dueDate");
+		params.put("dueDate", new Date());
+		selectQuery.append(" ORDER BY ID desc");
+		selectQuery.append(" LIMIT :pageSize");
+		if (noticeCriteria.getSize() != null)
+			params.put("pageSize", noticeCriteria.getSize());
+		else
+			params.put("pageSize", 20);
+
+		selectQuery.append(" OFFSET :pageNumber");
+
+		if (noticeCriteria.getOffset() != null)
+			params.put("pageNumber", noticeCriteria.getOffset());
+		else
+			params.put("pageNumber", 0);
+		return selectQuery.toString();
+	}
 }
 

@@ -1,5 +1,6 @@
 package org.egov.lams.repository;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
@@ -8,12 +9,16 @@ import java.util.Map;
 import java.util.Set;
 
 import org.egov.lams.model.DefaultersInfo;
+import org.egov.lams.model.DueNotice;
+import org.egov.lams.model.DueNoticeCriteria;
 import org.egov.lams.model.DueSearchCriteria;
 import org.egov.lams.model.Notice;
 import org.egov.lams.model.NoticeCriteria;
 import org.egov.lams.repository.builder.NoticeQueryBuilder;
 import org.egov.lams.repository.rowmapper.DueDetailsRowMapper;
+import org.egov.lams.repository.rowmapper.DueNoticeRowMapper;
 import org.egov.lams.repository.rowmapper.NoticeRowMapper;
+import org.egov.lams.web.contract.DueNoticeRequest;
 import org.egov.lams.web.contract.NoticeRequest;
 import org.egov.lams.web.contract.RequestInfo;
 import org.slf4j.Logger;
@@ -60,6 +65,32 @@ public class NoticeRepository {
 		return notice;
 	}
 
+	public DueNotice createDueNotice(DueNoticeRequest noticeRequest) {
+		DueNotice notice = noticeRequest.getDueNotice();
+		Map<String, Object> processMap = getDueNoticeParams(notice);
+
+		try {
+			namedParameterJdbcTemplate.update(NoticeQueryBuilder.INSERT_DUE_NOTICE_QUERY, processMap);
+		} catch (Exception ex) {
+			LOGGER.info("exception in saving due notice :: " + ex);
+			throw new RuntimeException(ex.getMessage());
+		}
+
+		return notice;
+	}
+	
+	public List<DueNotice> getAllDueNoticesByAgreement(DueNoticeCriteria noticeCriteria){
+		List<DueNotice> dueNotices = null;
+		Map<String,Object> params = new HashMap<>();
+		String queryString = NoticeQueryBuilder.getDueNoticesQuery(noticeCriteria, params);
+		try {
+			dueNotices = namedParameterJdbcTemplate.query(queryString, params, new DueNoticeRowMapper());
+		} catch (DataAccessException e) {
+			LOGGER.info(" exception while fetching all the due notices:: " + e);
+			throw new RuntimeException(e.getMessage());
+		}
+		return dueNotices;
+	}
 	public Set<DefaultersInfo> generateDueNoticeDate(DueSearchCriteria dueCriteria) {
 		Set<DefaultersInfo> defaulters = new LinkedHashSet<>();
 		Map<String, Object> params = new HashMap<>();
@@ -73,10 +104,11 @@ public class NoticeRepository {
 
 		return defaulters;
 	}
-    public List<Notice> getNotices(NoticeCriteria noticeCriteria) {
+
+	public List<Notice> getNotices(NoticeCriteria noticeCriteria) {
 
 		List<Notice> notices = null;
-		Map params = new HashMap<>();
+		Map<String, Object> params = new HashMap<>();
 		String queryString = NoticeQueryBuilder.getNoticeQuery(noticeCriteria, params);
 		try {
 			notices = namedParameterJdbcTemplate.query(queryString, params, new NoticeRowMapper());
@@ -86,5 +118,58 @@ public class NoticeRepository {
 		}
 		return notices;
 	}
+    
+	public List<DefaultersInfo> getDefaulterDetails(DueNotice noticeData) {
 
+		Map<String, Object> params = new HashMap<>();
+		Set<DefaultersInfo> defaultersData = null;
+		List<DefaultersInfo> defaulterDetails = new ArrayList<>();
+		StringBuilder defaultersQueryString = new StringBuilder(NoticeQueryBuilder.RENT_DUE_QUERY);
+		if (noticeData.getAgreementNumber() != null) {
+			defaultersQueryString.append(" and df.agreementnumber=:agreementNumber");
+			params.put("agreementNumber", noticeData.getAgreementNumber());
+		}
+		if (noticeData.getTenantId() != null) {
+			defaultersQueryString.append(" and df.tenantid=:tenantId");
+			params.put("tenantId", noticeData.getTenantId());
+		}
+		try {
+			defaultersData = namedParameterJdbcTemplate.query(defaultersQueryString.toString(), params,
+					new DueDetailsRowMapper());
+		} catch (DataAccessException e) {
+			LOGGER.info("the exception fetching data to save duenotice :: " + e);
+			throw new RuntimeException(e.getMessage());
+		}
+		defaulterDetails.addAll(defaultersData);
+
+		return defaulterDetails;
+
+	}
+	 private Map<String, Object> getDueNoticeParams(DueNotice notice) {
+	        Map<String, Object> inputParameters = new HashMap<>();
+     inputParameters.put("noticeNo", notice.getNoticeNo());
+     inputParameters.put("noticeDate",new Date());
+     inputParameters.put("agreementNumber",notice.getAgreementNumber());
+     inputParameters.put("assetCategory",notice.getAssetCategory());
+     inputParameters.put("categoryName",notice.getCategoryName());
+     inputParameters.put("allotteeName",notice.getAllotteeName());
+     inputParameters.put("mobileNumber",notice.getAllotteeMobileNumber());
+     inputParameters.put("commencementDate",notice.getCommencementDate());
+     inputParameters.put("expiryDate",notice.getExpiryDate());
+     inputParameters.put("dueFromDate",new Date());
+     inputParameters.put("dueToDate", new Date());
+     inputParameters.put("action",notice.getAction());
+     inputParameters.put("status",notice.getStatus());
+     inputParameters.put("createdDate",new Date());
+     inputParameters.put("createdBy",1);
+     inputParameters.put("lastmodifiedby",1);
+     inputParameters.put("lastmodifiedDate",new Date());
+     inputParameters.put("noticeType","DUE");
+     inputParameters.put("filestore",notice.getFileStore());
+     inputParameters.put("tenantId",notice.getTenantId());
+     
+         
+	        
+       return inputParameters;
+      }
 }

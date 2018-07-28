@@ -1,6 +1,7 @@
 package org.egov.lams.service;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
@@ -10,10 +11,13 @@ import java.util.stream.Collectors;
 import org.egov.lams.model.Agreement;
 import org.egov.lams.model.AgreementCriteria;
 import org.egov.lams.model.DefaultersInfo;
+import org.egov.lams.model.DueNotice;
+import org.egov.lams.model.DueNoticeCriteria;
 import org.egov.lams.model.DueSearchCriteria;
 import org.egov.lams.model.Notice;
 import org.egov.lams.model.NoticeCriteria;
 import org.egov.lams.repository.NoticeRepository;
+import org.egov.lams.web.contract.DueNoticeRequest;
 import org.egov.lams.web.contract.NoticeRequest;
 import org.egov.lams.web.contract.NoticeResponse;
 import org.egov.lams.web.contract.RequestInfo;
@@ -49,6 +53,27 @@ public class NoticeService {
 		return getNoticeResponse(notices);
 	}
 	
+	public List<DueNotice> createDueNotice(DueNoticeRequest dueNoticeRequest) {
+		List<DueNotice> dueNotices = new ArrayList<>();
+		DueNotice dueNoticeData = dueNoticeRequest.getDueNotice();
+		DefaultersInfo defaulterDetails = getDefaultersByAgreementNumber(dueNoticeData);
+		if(defaulterDetails==null){
+			return Collections.emptyList();
+		}else{
+		dueNoticeData.toDueNotice(defaulterDetails);
+		dueNoticeData = noticeRepository.createDueNotice(dueNoticeRequest);
+		dueNotices.add(dueNoticeData);
+		return dueNotices;
+		}
+
+	}
+
+	public List<DueNotice> getAllDueNotices(DueNoticeCriteria noticeCriteria) {
+
+		return noticeRepository.getAllDueNoticesByAgreement(noticeCriteria);
+
+	}
+
 	public Set<DefaultersInfo> generateDueNotice(DueSearchCriteria dueCriteria, RequestInfo requestInfo) {
 
 		Set<DefaultersInfo> defaulters;
@@ -69,6 +94,17 @@ public class NoticeService {
 		return agreements;
 	}
 
+	public DefaultersInfo getDefaultersByAgreementNumber(DueNotice defaulterData) {
+
+		List<DefaultersInfo> defaulters = noticeRepository.getDefaulterDetails(defaulterData);
+
+		if (defaulters.isEmpty()) {
+			return null;
+		} else
+			return defaulters.get(0);
+
+	}
+
 	public List<Notice> getNotices(NoticeCriteria noticeCriteria) {
 		return noticeRepository.getNotices(noticeCriteria);
 	}
@@ -78,7 +114,6 @@ public class NoticeService {
 		noticeResponse.setNotices(notices);
 		return noticeResponse;
 	}
-
 	private AgreementCriteria getAgreementSearchCriteria(Notice notice) {
 		return AgreementCriteria.builder().tenantId(notice.getTenantId())
 				.acknowledgementNumber(notice.getAcknowledgementNumber()).agreementNumber(notice.getAgreementNumber())

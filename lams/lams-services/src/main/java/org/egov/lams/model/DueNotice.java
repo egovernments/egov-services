@@ -49,66 +49,107 @@ package org.egov.lams.model;
 
 import java.util.Date;
 
+import javax.validation.constraints.NotNull;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-@Builder
-@AllArgsConstructor
-@EqualsAndHashCode
+@Setter
 @Getter
 @NoArgsConstructor
-@Setter
+@AllArgsConstructor
 @ToString
-public class DefaultersInfo {
+@Builder
+public class DueNotice {
 
-	private Long id;
-	private String agreementNumber;
-	private String acknowledgementNumber;
+	@JsonProperty("id")
+	private Long id = null;
 
-	private String doorno;
-	private Double securityDeposit;
-	private Double goodWillAmount;
+	@JsonProperty("tenantId")
+	@NotNull
+	private String tenantId = null;
+
+	@JsonProperty("noticeNo")
+	private String noticeNo = null;
+
+	@JsonProperty("noticeDate")
 	@JsonFormat(pattern = "dd/MM/yyyy")
-	private Date commencementDate;
+	private Date noticeDate = null;
+
+	@JsonProperty("agreementNumber")
+	private String agreementNumber = null;
+
+	@JsonProperty("assetCode")
+	private String assetCode = null;
+
+	@JsonProperty("assetCategory")
+	@NotNull
+	private Long assetCategory = null;
+
+	@JsonProperty("categoryName")
+	private String categoryName = null;
+
+	@JsonProperty("allotteeName")
+	private String allotteeName = null;
+
+	@JsonProperty("allotteeAddress")
+	private String allotteeAddress = null;
+
+	@JsonProperty("allotteeMobileNumber")
+	private String allotteeMobileNumber = null;
+
+	@JsonProperty("agreementPeriod")
+	private Long agreementPeriod = null;
+
+	@JsonProperty("commencementDate")
 	@JsonFormat(pattern = "dd/MM/yyyy")
-	private Date expiryDate;
+	private Date commencementDate = null;
+
+	@JsonProperty("expiryDate")
 	@JsonFormat(pattern = "dd/MM/yyyy")
-	private Date agreementDate;
-	private Long timePeriod;
+	private Date expiryDate = null;
+
+	@JsonFormat(pattern = "dd/MM/yyyy")
+	private Date dueFromDate = null;
+
+	@JsonFormat(pattern = "dd/MM/yyyy")
+	private Date dueToDate = null;
+
+	@JsonProperty("action")
 	private String action;
+
+	@JsonProperty("status")
 	private String status;
-	private String assetName;
-	private String assetCode;
-	private Long assetCategory;
-	private String categoryName;
-	private Long locality;
-	private Long street;
-	private Long zone;
-	private Long revenueWard;
-	private Long block;
-	private Long electionward;
-	private String paymentCycle;
-	private String source;
 
-	private String allotteeName;
-	private String mobileNumber;
-	private Double totalAmount;
-	private Double totalCollection;
-	private Double totalBalance;
-	@JsonFormat(pattern = "dd/MM/yyyy")
-	private Date lastPaid;
-	@JsonFormat(pattern = "dd/MM/yyyy")
-	private Date installmentFromDate;
-	@JsonFormat(pattern = "dd/MM/yyyy")
-	private Date installmentToDate;
-	private String installment;
-	private String tenantId;
+	@JsonProperty("ward")
+	private Long ward;
 
+	@JsonProperty("noticeType")
+	private String noticeType;
+
+	@NotNull
+	private String fileStore;
+
+	public void toDueNotice(DefaultersInfo defaultersInfo) {
+		this.agreementNumber = defaultersInfo.getAgreementNumber();
+		this.assetCode = defaultersInfo.getAssetCode();
+		this.allotteeName = defaultersInfo.getAllotteeName();
+		this.allotteeMobileNumber = defaultersInfo.getMobileNumber();
+		this.commencementDate = defaultersInfo.getCommencementDate();
+		this.expiryDate = defaultersInfo.getExpiryDate();
+		this.dueFromDate = defaultersInfo.getInstallmentFromDate();
+		this.dueToDate = defaultersInfo.getInstallmentToDate();
+		this.action = defaultersInfo.getAction();
+		this.status = defaultersInfo.getStatus();
+		this.ward = defaultersInfo.getRevenueWard();
+		
+
+	}
 }

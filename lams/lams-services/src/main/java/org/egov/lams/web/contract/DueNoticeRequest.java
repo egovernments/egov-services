@@ -45,70 +45,34 @@
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  *
  */
-package org.egov.lams.model;
+package org.egov.lams.web.contract;
 
-import java.util.Date;
+import javax.validation.Valid;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
+import org.egov.lams.model.DueNotice;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-@Builder
-@AllArgsConstructor
-@EqualsAndHashCode
+@Setter
 @Getter
 @NoArgsConstructor
-@Setter
+@AllArgsConstructor
 @ToString
-public class DefaultersInfo {
+@Builder
+public class DueNoticeRequest {
 
-	private Long id;
-	private String agreementNumber;
-	private String acknowledgementNumber;
+	@JsonProperty("RequestInfo")
+	private RequestInfo requestInfo = null;
 
-	private String doorno;
-	private Double securityDeposit;
-	private Double goodWillAmount;
-	@JsonFormat(pattern = "dd/MM/yyyy")
-	private Date commencementDate;
-	@JsonFormat(pattern = "dd/MM/yyyy")
-	private Date expiryDate;
-	@JsonFormat(pattern = "dd/MM/yyyy")
-	private Date agreementDate;
-	private Long timePeriod;
-	private String action;
-	private String status;
-	private String assetName;
-	private String assetCode;
-	private Long assetCategory;
-	private String categoryName;
-	private Long locality;
-	private Long street;
-	private Long zone;
-	private Long revenueWard;
-	private Long block;
-	private Long electionward;
-	private String paymentCycle;
-	private String source;
-
-	private String allotteeName;
-	private String mobileNumber;
-	private Double totalAmount;
-	private Double totalCollection;
-	private Double totalBalance;
-	@JsonFormat(pattern = "dd/MM/yyyy")
-	private Date lastPaid;
-	@JsonFormat(pattern = "dd/MM/yyyy")
-	private Date installmentFromDate;
-	@JsonFormat(pattern = "dd/MM/yyyy")
-	private Date installmentToDate;
-	private String installment;
-	private String tenantId;
+	@JsonProperty("DueNotice")
+	@Valid
+	private DueNotice dueNotice;
 
 }

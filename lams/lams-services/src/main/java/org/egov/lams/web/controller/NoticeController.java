@@ -7,11 +7,15 @@ import javax.validation.Valid;
 
 import org.apache.commons.lang3.StringUtils;
 import org.egov.lams.model.DefaultersInfo;
+import org.egov.lams.model.DueNotice;
+import org.egov.lams.model.DueNoticeCriteria;
 import org.egov.lams.model.DueSearchCriteria;
 import org.egov.lams.model.Notice;
 import org.egov.lams.model.NoticeCriteria;
 import org.egov.lams.service.NoticeService;
 import org.egov.lams.web.contract.DefaultersInfoResponse;
+import org.egov.lams.web.contract.DueNoticeRequest;
+import org.egov.lams.web.contract.DueNoticeResponse;
 import org.egov.lams.web.contract.NoticeRequest;
 import org.egov.lams.web.contract.NoticeResponse;
 import org.egov.lams.web.contract.RequestInfo;
@@ -74,6 +78,9 @@ public class NoticeController {
 		return getSuccessResponse(notices, requestInfo);
 	}
 	
+	/*
+	 * API to fetch all the defaulters details upto current installment
+	 */
 	@PostMapping("_duenotice")
 	@ResponseBody
 	public ResponseEntity<?> generateDueNotice(@ModelAttribute @Valid DueSearchCriteria dueCriteria,
@@ -90,6 +97,37 @@ public class NoticeController {
 		return getSuccessResponseForSearch(defaulterDetails, requestInfo);
 	}
 
+	@PostMapping("duenotice/_create")
+	@ResponseBody
+	public ResponseEntity<?> createDueNotice(@RequestBody @Valid DueNoticeRequest dueNoticeRequest,
+			BindingResult errors) {
+		RequestInfo requestInfo = dueNoticeRequest.getRequestInfo();
+		if (errors.hasErrors()) {
+			ErrorResponse errRes = populateErrors(errors);
+			return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
+		} 
+	
+		List<DueNotice> dueNotices = noticeService.createDueNotice(dueNoticeRequest);
+		return getSuccessResponseForCreate(dueNotices, requestInfo);
+	}
+	
+	@PostMapping("duenotice/_search")
+	@ResponseBody
+	public ResponseEntity<?> searchDueNotice(@ModelAttribute @Valid DueNoticeCriteria noticeCriteria,
+			@RequestBody @Valid RequestInfo requestInfo, BindingResult errors) {
+		if (errors.hasErrors()) {
+			ErrorResponse errRes = populateErrors(errors);
+			return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
+		} 
+		 if (StringUtils.isBlank(noticeCriteria.getTenantId())) {
+		 ErrorResponse errRes = populateErrors(errors);
+		 return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
+		 }
+		List<DueNotice> dueNotices = noticeService.getAllDueNotices(noticeCriteria);
+		return getSuccessResponseForCreate(dueNotices, requestInfo);
+	}
+	
+	
 	private ResponseEntity<?> getSuccessResponseForSearch(Set<DefaultersInfo> defaulterSet, RequestInfo requestInfo) {
 		DefaultersInfoResponse defaultersInfoResponse = new DefaultersInfoResponse();
 		defaultersInfoResponse.setDefaulters(defaulterSet);
@@ -124,5 +162,10 @@ public class NoticeController {
 		ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
 		LOGGER.info("before returning from getsucces resposne ::" + responseInfo + "notices : " + notices);
 		return new ResponseEntity<>(new NoticeResponse(responseInfo, notices), HttpStatus.OK);
+	}
+	private ResponseEntity<?> getSuccessResponseForCreate(List<DueNotice> notices, RequestInfo requestInfo) {
+
+		ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
+		return new ResponseEntity<>(new DueNoticeResponse(responseInfo, notices), HttpStatus.OK);
 	}
 }

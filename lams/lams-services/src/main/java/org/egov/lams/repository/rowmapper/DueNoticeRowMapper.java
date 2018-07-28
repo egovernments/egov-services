@@ -45,70 +45,50 @@
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  *
  */
-package org.egov.lams.model;
+package org.egov.lams.repository.rowmapper;
 
-import java.util.Date;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
+import org.egov.lams.model.DueNotice;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.core.ResultSetExtractor;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+public class DueNoticeRowMapper implements ResultSetExtractor<List<DueNotice>> {
+	public static final Logger logger = LoggerFactory.getLogger(NoticeRowMapper.class);
 
-@Builder
-@AllArgsConstructor
-@EqualsAndHashCode
-@Getter
-@NoArgsConstructor
-@Setter
-@ToString
-public class DefaultersInfo {
+	@Override
+	public List<DueNotice> extractData(ResultSet rs) throws SQLException, DataAccessException {
 
-	private Long id;
-	private String agreementNumber;
-	private String acknowledgementNumber;
+		List<DueNotice> dueNotices = new ArrayList<>();
+		while (rs.next()) {
+			DueNotice dueNotice = new DueNotice();
+			try {
+				dueNotice.setId((Long) (rs.getObject("id")));
+				dueNotice.setNoticeNo(rs.getString("noticeno"));
+				dueNotice.setAgreementNumber(rs.getString("agreementnumber"));
+				dueNotice.setAllotteeName(rs.getString("allotteename"));
+				dueNotice.setAllotteeMobileNumber(rs.getString("mobilenumber"));
+				dueNotice.setAssetCategory((Long) rs.getObject("assetcategory"));
+				dueNotice.setDueFromDate(rs.getTimestamp("duefromdate"));
+				dueNotice.setDueToDate(rs.getTimestamp("duetodate"));
+				dueNotice.setAction(rs.getString("action"));
+				dueNotice.setStatus(rs.getString("status"));
+				dueNotice.setNoticeType(rs.getString("noticetype"));
+				dueNotice.setTenantId(rs.getString("tenantid"));
+				dueNotice.setFileStore(rs.getString("filestore"));
 
-	private String doorno;
-	private Double securityDeposit;
-	private Double goodWillAmount;
-	@JsonFormat(pattern = "dd/MM/yyyy")
-	private Date commencementDate;
-	@JsonFormat(pattern = "dd/MM/yyyy")
-	private Date expiryDate;
-	@JsonFormat(pattern = "dd/MM/yyyy")
-	private Date agreementDate;
-	private Long timePeriod;
-	private String action;
-	private String status;
-	private String assetName;
-	private String assetCode;
-	private Long assetCategory;
-	private String categoryName;
-	private Long locality;
-	private Long street;
-	private Long zone;
-	private Long revenueWard;
-	private Long block;
-	private Long electionward;
-	private String paymentCycle;
-	private String source;
-
-	private String allotteeName;
-	private String mobileNumber;
-	private Double totalAmount;
-	private Double totalCollection;
-	private Double totalBalance;
-	@JsonFormat(pattern = "dd/MM/yyyy")
-	private Date lastPaid;
-	@JsonFormat(pattern = "dd/MM/yyyy")
-	private Date installmentFromDate;
-	@JsonFormat(pattern = "dd/MM/yyyy")
-	private Date installmentToDate;
-	private String installment;
-	private String tenantId;
+				dueNotices.add(dueNotice);
+			} catch (Exception e) {
+				logger.info("exception in notice RowMapper : " + e);
+				throw new RuntimeException("error while mapping notices from reult set : " + e.getCause());
+			}
+		}
+		return dueNotices;
+	}
 
 }

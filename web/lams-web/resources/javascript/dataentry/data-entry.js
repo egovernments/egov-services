@@ -50,7 +50,12 @@ var filesToBeDeleted = [];
 var assetDetails;
 var employees = [];
 var fileTypes = ["application/msword", "application/vnd.openxmlformats-officedocument.wordprocessingml.document", "application/vnd.ms-excel", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "application/pdf", "image/png", "image/jpeg"];
-
+let firstinput;
+let secondInput
+let monthFirst;
+let monthSecond;
+let yearFirst;
+let yearSecond; 
 
 $(".disabled").attr("disabled", true);
 $(".goodWillAmount").attr("disabled",false);
@@ -173,7 +178,6 @@ $(document).on("change", ".datepicker", function () {
         }
     }
 });
-
 
 var index=1;
 var create = true;
@@ -629,7 +633,36 @@ function fillValueToObject(currentState) {
     }else {
         agreement[currentState.id] = currentState.value;
     }
-    console.log(agreement);
+    firstinput = agreement.firstAllotment;
+    secondInput = agreement.subSeqRenewals && agreement.subSeqRenewals[0]["fromDate"];
+} 
+
+function handleSelectRenewal(valuefromE){
+    let value = valuefromE && valuefromE.getAttribute("value");
+    //console.log("log 1",valuefromE.getAttribute("value"));
+    if(value == 0){
+        handleSelect();
+    }
+}
+
+function handleSelect(){
+    if(firstinput && secondInput){
+        monthFirst = firstinput.split("/") && firstinput.split("/")[0];
+        monthSecond = secondInput.split("/") && secondInput.split("/")[1];
+        yearFirst = firstinput.split("/") && firstinput.split("/")[1];
+        yearSecond = secondInput.split("/") && secondInput.split("/")[2];
+        //console.log("value",monthFirst);
+        if(monthFirst !== monthSecond || monthSecond !== monthFirst){
+            $('#alert-box').fadeIn(function(){
+                $("#alert-box-content").html("Current Lessee date and Subsequent Renewals date is not valid");
+            })
+        }
+        if(yearFirst !== yearSecond || yearSecond !== yearFirst){
+            $('#alert-box').fadeIn(function(){
+                $("#alert-box-content").html("Current Lessee date and Subsequent Renewals date is not valid");
+            })
+        }
+    }
 }
 
 function displayFiles(agreement) {
@@ -2113,11 +2146,12 @@ function cloneRow(){
     $(this).attr({
       'id': function(_, str) { return str.replace(/\[(.+?)\]/g, "["+index+"]") },
       'name': function(_, str) { return str.replace(/\[(.+?)\]/g, "["+index+"]") },
-      'value': ''
+      'value':index
     });
     $(this).val('');
   }).end().appendTo("#subesquentrenewalsTable tbody");
   $("#subesquentrenewalsTable tbody tr:last").find('td:last .subsequentRenewalsDelete').show();
   initDatepicker();
   index++;
+  
 }

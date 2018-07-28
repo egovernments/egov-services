@@ -3916,7 +3916,8 @@
                                                         <label for="firstAllotment">Month/Year of First Allotment to the Current Lessee</label>
                                                     </div>
                                                     <div class="col-sm-6">
-                                                        <input type="text" name="firstAllotment" id="firstAllotment" placeholder="mm/yyyy">
+                                                        <input type="text" name="firstAllotment" id="firstAllotment" placeholder="mm/yyyy"
+                                                        onchange="handleSelect()">
                                                     </div>
                                                 </div>
                                             </div>
@@ -3940,13 +3941,14 @@
                                             </thead>
                                             <tbody>
                                               <tr>
-                                                <td><input type="text" data-class="resolutionNumber" class="resolutionNumber" name="subSeqRenewals[0].resolutionNumber" id="subSeqRenewals[0].resolutionNumber" value="" maxlength="48"></td>
-                                                <td><input type="text" data-class="resolutionDate" class="resolutionDate" id="subSeqRenewals[0].resolutionDate" name="subSeqRenewals[0].resolutionDate" value="" ></td>
-                                                <td><input type="text" class="srFromDate" id="subSeqRenewals[0].fromDate" name="subSeqRenewals[0].fromDate" value="" required></td>
-                                                <td><input type="text" class="srToDate" id="subSeqRenewals[0].toDate" name="subSeqRenewals[0].toDate" value="" required></td>
-                                                <td><input type="text" class="srYears" name="subSeqRenewals[0].years" id="subSeqRenewals[0].years" value="" disabled></td>
+                                                <td><input type="text" data-class="resolutionNumber" class="resolutionNumber" name="subSeqRenewals[0].resolutionNumber" id="subSeqRenewals[0].resolutionNumber" value="0" maxlength="48"></td>
+                                                <td><input type="text" data-class="resolutionDate" class="resolutionDate" id="subSeqRenewals[0].resolutionDate" name="subSeqRenewals[0].resolutionDate" value="0" ></td>
+                                                <td><input type="text" class="srFromDate" id="subSeqRenewals[0].fromDate" name="subSeqRenewals[0].fromDate" value="0" 
+                                                    onchange="handleSelectRenewal(this)" required ></td>
+                                                <td><input type="text" class="srToDate" id="subSeqRenewals[0].toDate" name="subSeqRenewals[0].toDate" value="0" required></td>
+                                                <td><input type="text" class="srYears" name="subSeqRenewals[0].years" id="subSeqRenewals[0].years" value="0" disabled></td>
                                                 <td>
-                                                  <input type="text" class="srRent" name="subSeqRenewals[0].rent" id="subSeqRenewals[0].rent" value="" required maxlength="10">
+                                                  <input type="text" class="srRent" name="subSeqRenewals[0].rent" id="subSeqRenewals[0].rent" value="0" required maxlength="10">
                                                 </td>
                                                 <td><p style="cursor:pointer"><span class="glyphicon glyphicon-trash subsequentRenewalsDelete"></span></p></td>
                                               </tr>

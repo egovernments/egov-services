@@ -34,57 +34,37 @@ class DueNotice extends React.Component {
       searchSet:Object.assign(this.state.searchSet || {},{[property]:value}),
     })
   }
-  handleSelectChange(type){
-    console.log("type",type);
-    var notice ={};
-    var status = "active";
-    var number = "LA-18-1016000613";
-    var status = "ACTIVE";
-    var id = 1324;
-    var agreement = {};
+  handleSelectChange(type,agreementNumber){
     switch(type){
-      // case "View":
-      //   console.log("View")
-      //   window.open("app/search-agreement/view-agreement-details.html?&" + (number ? "&agreementNumber=" + number : "&acknowledgementNumber=" + acknowledgementNumber) + (status ? "&status=" + status : "") + "&assetId=" + id, "fs", "fullscreen=yes");
-      // break
       case "dueNotice":
-        console.log("dueNotice");
-        var fileStoreId = commonApiPost()
-        var agreementNumber = number;
-        var noticeType = "CREATE";
-        var notice = commonApiPost("lams-services/agreement", "notice", "_search", { tenantId,agreementNumber,noticeType }).responseJSON.Notices[0];
-        console.log("notice from case",notice);
+        let noticeType = "CREATE";
+        let notice = commonApiPost("lams-services/agreement","notice/duenotice","_search",{tenantId,agreementNumber,noticeType}).responseJSON.DueNotices[0];
+        console.log("notice from",notice);
         if(notice && notice.fileStore){
           console.log("fileStore id exist")
-          this.showNotice("4a66c97d-86f7-400a-aa6d-568113e214b3");
+          this.showNotice(notice.fileStore);
         }else{
-          console.log("No data")
-        }
-      break
+          let noticeType = "ACTIVE";  
+          let agreement = commonApiPost("lams-services", "agreements", "_search", { tenantId,agreementNumber,noticeType}).responseJSON["Agreements"];
+          this.printNotice(agreement,tenantId);
+        break
+      }
     }
   }
   search(e){
     let {searchSet} = this.state;
     let {agreementNumber} = searchSet
     let _this=this;
-    let noticeType = "ACTIVE";
     if(!_this.state.searchSet.assetCategory){
       showError("Asset category is required.")
       return false;
     }
-    //console.log("searchset",searchSet);
-    // Promise.all([
-    // //   commonApiPost("lams-services/agreement","notice","_duenotice",{tenantId,agreementNumber})
-    //     commonApiPost("lams-services","agreements","_search",{assetCategory:2012,tenantId}).responseJSON["Agreements"]
-    // ]).then(function(response){
-      //let response = commonApiPost("lams-services","agreements","_search",{assetCategory:2012,tenantId}).responseJSON["Agreements"]
-      let response = commonApiPost("lams-services/agreement","notice","_duenotice",{tenantId,agreementNumber}).responseJSON["Defaulters"]
-      _this.setState({
-        searchClicked:true,
-        error:{},
-        resultSet:response
-      });
-    //})
+    let response = commonApiPost("lams-services/agreement","notice","_duenotice",{tenantId,agreementNumber}).responseJSON["Defaulters"]
+    _this.setState({
+      searchClicked:true,
+      error:{},
+      resultSet:response
+    });
   }
 
   showNotice(fileStoreId){
@@ -105,28 +85,28 @@ class DueNotice extends React.Component {
       };
       oReq.send();
     }
+  
 
-  printNotice(){
-
+  printNotice(agreements,tenantId){
+    var agreement = agreements[0];
     var doc = new jsPDF();
-
-    var noticeNumber = "1016/AN/000202/2018-19";
-    var agreementNumber = "1016/AN/000202/2018-19";
-    var ShopNo = 2345;
-    var agreementDate ="22/05/2018";
-    var tenantId = "kurnool";
     var ulbType = "MUNICIPALITY/MUNICIPAL CORPORATION";
     var referenceNumber = "22245";
-    var assetName = "RMT Shoping Complex";
-    var shopName = "RMT Complex";
-    var locality = "Sampath Nagar";
     var referenceNumber = "7878";
-    var lastYear = 2018;
-    var total = 3000;
+    var assetName =  agreement.asset && agreement.asset["assetCategory"].name;
+    var referenceNumber;
+    var LocalityData = commonApiPost("egov-location/boundarys", "boundariesByBndryTypeNameAndHierarchyTypeName", "", { boundaryTypeName: "LOCALITY", hierarchyTypeName: "LOCATION", tenantId});
+    var locality = getNameById(LocalityData["responseJSON"]["Boundary"], agreement.asset.locationDetails.locality);
+
+    if(agreement.referenceNumber && agreement.referenceNumber){
+      referenceNumber = agreement.referenceNumber;
+    }else{
+      referenceNumber = "N/A";
+    }
 
     doc.setFontType("bold");
     doc.setFontSize(13)
-    doc.text(105, 30, "OFFICE OF THE COMMISSIONER, " + tenantId.toUpperCase(), 'center');
+    doc.text(105, 30, "OFFICE OF THE COMMISSIONER, " + tenantId.split(".")[1].toUpperCase(), 'center');
     doc.text(105, 37, ulbType.toUpperCase(), 'center');
     doc.text(105, 44, "NOTICE", 'center');
 
@@ -134,40 +114,112 @@ class DueNotice extends React.Component {
     doc.setFontSize(11);
     doc.text(20,60, 'Roc.No.');
     doc.setFontType("bold");
-    doc.text(35,60, noticeNumber);
+    doc.text(35,60, agreement.agreementNumber? agreement.agreementNumber : "");
     doc.setFontType("normal");
     doc.text(165,60, 'Dt. ');
     doc.setFontType("bold");
-    doc.text(171,60, agreementDate);
+    doc.text(171,60, agreement.agreementDate ? agreement.agreementDate : "");
 
     doc.fromHTML("Sub:Leases-Revenu Section-Shop No <b>" + referenceNumber + " </b> in <b>" + assetName + "</b> Complex, <b> <br>"+
-    locality + "</b> , - Notice for dues - Reg.",20,70);  
+    locality + "</b>- Notice for dues - Reg.",20,70);  
   
 
-    doc.fromHTML("Ref: 1. Lease agreement No <b>" + agreementNumber +"</b> dt <b>" + agreementDate +"</b>",20,90);
+    doc.fromHTML("Ref: 1. Lease agreement No <b>" + agreement.agreementNumber +"</b> dt <b>" + agreement.agreementDate +"</b>",20,90);
     doc.fromHTML("2. Roc No........................................dt.......................of this office",29,95);
     doc.fromHTML("3. Roc No........................................dt.......................of Municipal Council/Standing Committee ",29,100);
 
     doc.text(100, 120, "><><><", 'center');
 
-    doc.fromHTML("As per the reference 1st cited, rentals for Shop No <b>" +ShopNo + "</b> in the <b>" + shopName + "</b>",40,130)
+    doc.fromHTML("As per the reference 1st cited, rentals for Shop No <b>" + referenceNumber + "</b> in the <b>" + assetName + "</b>",40,130)
     doc.fromHTML(" Shopping Complex  are to be paid by 5th of succeeding month."+
-    "But it is observed that rental payments <br> are pending for the said lease since <b>" + lastYear + "</b>",20,132);
+    "But it is observed that rental payments <br> are pending for the said lease since <b>" +agreement.createdDate + "</b>",20,132);
 
-    doc.fromHTML("You are hereby instructed to pay " + total+ " within 7 days of receipt of this" ,40,150)
-    doc.fromHTML("notice failing which exiting lease for the<br> said shop will be cancelled without any further correspondence,",20,152)
+    doc.fromHTML("You are hereby instructed to pay <b>" + agreement.goodWillAmount + "</b> within 7 days of receipt of this notice failing which" ,40,150)
+    doc.fromHTML("exiting lease for the said shop will be cancelled without any further correspondence,",20,155)
 
     doc.setFontType("normal");
+    doc.setFontSize(11)
     doc.text(165,187, "Commissioner",'center');
-    doc.text(165,192, tenantId.toUpperCase(),'center');
+    doc.text(165,192, tenantId.split(".")[1].toUpperCase(),'center');
     doc.text(163,197,"(Municipality/Municipal Corporation)",'center')
 
+    doc.setFontType("normal");
+    doc.setFontSize(11)
     doc.text(22,207, "To");
     doc.text(22,212, "The Leaseholder");
     doc.text(22,217,"Copy to the concerned officials for necessary action");
 
-    doc.save("notice.pdf");
+    var blob = doc.output('blob');
+
+    this.createFileStore(agreement, blob).then(this.createNotice, this.errorHandler);
+
+    //doc.save("notice.pdf");
   }
+
+  errorHandler(statusCode){
+    console.log("failed with status", status);
+    showError('Error');
+   }
+
+
+   createFileStore(noticeData, blob){
+     var promiseObj = new Promise(function(resolve, reject){
+       let formData = new FormData();
+       let fileName = "AN/"+noticeData.agreementNumber;
+       formData.append("module", "LAMS");
+       formData.append("file", blob,fileName);
+       $.ajax({
+           url: baseUrl + "/filestore/v1/files?tenantId=" + tenantId,
+           data: formData,
+           cache: false,
+           contentType: false,
+           processData: false,
+           type: 'POST',
+           success: function (res) {
+               let obj={
+                 noticeData : noticeData,
+                 fileStoreId : res.files[0].fileStoreId
+               }
+               resolve(obj);
+           },
+           error: function (jqXHR, exception) {
+               reject(jqXHR.status);
+           }
+       });
+     });
+     return promiseObj;
+   }
+
+   createNotice(obj){
+     var CONST_API_GET_FILE = "/filestore/v1/files/id?tenantId=" + tenantId + "&fileStoreId=";
+     var filestore = obj.fileStoreId;
+     $.ajax({
+         url: baseUrl + `/lams-services/agreement/notice/_create?tenantId=` + tenantId,
+         type: 'POST',
+         dataType: 'json',
+         data: JSON.stringify({
+             RequestInfo: requestInfo,
+             Notice: {
+                 tenantId,
+                 agreementNumber: obj.noticeData.agreementNumber,
+                 fileStore:obj.fileStoreId
+             }
+         }),
+         headers: {
+             'auth-token': authToken
+         },
+         contentType: 'application/json',
+         success:function(res){
+           if(window.opener)
+               window.open(window.location.origin+ CONST_API_GET_FILE+filestore, '_self');
+         },
+         error:function(jqXHR, exception){
+           console.log('error');
+           showError('Error while creating notice');
+         }
+     });
+
+   }
 
   closeWindow ()
   {
@@ -212,7 +264,7 @@ class DueNotice extends React.Component {
                   <td>{item.locality}</td>
                   <td>{item.electionWard? item.electionWard : "N/A"}</td>
                   <td>
-                      <select onChange={(e)=>this.handleSelectChange(e.target.value,item.agreementNumber,status="ACTIVE")}>
+                      <select onChange={(e)=>this.handleSelectChange(e.target.value,item.agreementNumber)}>
                         <option value="">Select Action</option>
                         <option value="dueNotice">Due Notice</option>
                       </select>

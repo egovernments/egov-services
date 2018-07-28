@@ -135,7 +135,7 @@ public class NoticeQueryBuilder {
 		}
 
 		selectQuery.append(" and dft.balance >0");
-		selectQuery.append(" and dft.todate <= :installmentDate");
+		selectQuery.append(" and dft.formdate <= :installmentDate");
 		selectQuery.append(" and df.tenantid = :tenantId");
 		params.put("installmentDate", installmentDate);
 		selectQuery.append(" order by balance desc");

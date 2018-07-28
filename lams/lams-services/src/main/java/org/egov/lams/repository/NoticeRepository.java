@@ -150,6 +150,7 @@ public class NoticeRepository {
      inputParameters.put("noticeNo", notice.getNoticeNo());
      inputParameters.put("noticeDate",new Date());
      inputParameters.put("agreementNumber",notice.getAgreementNumber());
+     inputParameters.put("assetCode",notice.getAssetCode());
      inputParameters.put("assetCategory",notice.getAssetCategory());
      inputParameters.put("categoryName",notice.getCategoryName());
      inputParameters.put("allotteeName",notice.getAllotteeName());
@@ -164,6 +165,7 @@ public class NoticeRepository {
      inputParameters.put("createdBy",1);
      inputParameters.put("lastmodifiedby",1);
      inputParameters.put("lastmodifiedDate",new Date());
+     inputParameters.put("ward",notice.getWard());
      inputParameters.put("noticeType","DUE");
      inputParameters.put("filestore",notice.getFileStore());
      inputParameters.put("tenantId",notice.getTenantId());

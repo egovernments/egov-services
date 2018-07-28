@@ -22,7 +22,7 @@ public class NoticeQueryBuilder {
 			+ " createddate, lastmodifiedby ,lastmodifieddate, tenantId, filestore, noticetype)"
 			+ " VALUES (nextval('seq_eglams_notice'),?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 	public static final String INSERT_DUE_NOTICE_QUERY = "INSERT INTO eglams_duenotice (id,noticeno, noticedate,agreementnumber,assetcode,assetcategory,categoryname,allotteename,mobilenumber,commencementdate,duefromdate,duetodate,expirydate,action,status,createddate,createdby, lastmodifieddate,lastmodifiedby,ward,noticetype,filestore, tenantId)"
-			+ " values (nextval('seq_eglams_duenotice'),:noticeNo, :noticeDate,:agreementNumber,:assetCode,:assetCategory,:categoryName,:allotteeName,:mobileNumber,:commencementDate,:dueFromDate,:dueToDate,:expiryDate,:action,:status,:createdDate,:createdBy, :lastmodifiedby ,:lastmodifiedDate,:ward,:noticeType , :filestore, :tenantId)";
+			+ " values (nextval('seq_eglams_duenotice'),:noticeNo, :noticeDate,:agreementNumber,:assetCode,:assetCategory,:categoryName,:allotteeName,:mobileNumber,:commencementDate,:dueFromDate,:dueToDate,:expiryDate,:action,:status,:createdDate,:createdBy, :lastmodifiedDate,:lastmodifiedBy ,:ward,:noticeType , :filestore, :tenantId)";
 	public final static String SEQ_NOTICE_NO = "SELECT nextval('seq_eglams_noticeno')";
 
 	public final static String SEQ_NOTICE_ID = "SELECT nextval('seq_eglams_notice')";

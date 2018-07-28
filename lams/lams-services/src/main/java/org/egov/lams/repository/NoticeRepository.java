@@ -163,7 +163,7 @@ public class NoticeRepository {
      inputParameters.put("status",notice.getStatus());
      inputParameters.put("createdDate",new Date());
      inputParameters.put("createdBy",1);
-     inputParameters.put("lastmodifiedby",1);
+     inputParameters.put("lastmodifiedBy",1);
      inputParameters.put("lastmodifiedDate",new Date());
      inputParameters.put("ward",notice.getWard());
      inputParameters.put("noticeType","DUE");

@@ -84,13 +84,13 @@ public class DueNotice {
 	private Date noticeDate = null;
 
 	@JsonProperty("agreementNumber")
+	@NotNull
 	private String agreementNumber = null;
 
 	@JsonProperty("assetCode")
 	private String assetCode = null;
 
 	@JsonProperty("assetCategory")
-	@NotNull
 	private Long assetCategory = null;
 
 	@JsonProperty("categoryName")

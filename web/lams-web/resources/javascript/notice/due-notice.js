@@ -7,14 +7,13 @@ class DueNotice extends React.Component {
         agreementNumber:null,
         assetCategory:null,
         revenueWard:null,
-        zone:null,
-        fromDate:"Select Date",
-        toDate:"Select Date"
+        locality:null
       }
     };
     this.handleChange=this.handleChange.bind(this);
     this.search=this.search.bind(this);
     this.closeWindow=this.closeWindow.bind(this);
+    this.handleSelectChange = this.handleSelectChange.bind(this);
     this.showTable=this.showTable.bind(this);
   }
   componentDidMount(){
@@ -34,37 +33,34 @@ class DueNotice extends React.Component {
       searchSet:Object.assign(this.state.searchSet || {},{[property]:value}),
     })
   }
-  handleSelectChange(type,agreementNumber){
-    switch(type){
-      case "dueNotice":
-        let noticeType = "CREATE";
-        let notice = commonApiPost("lams-services/agreement","notice/duenotice","_search",{tenantId,agreementNumber,noticeType}).responseJSON.DueNotices[0];
-        console.log("notice from",notice);
-        if(notice && notice.fileStore){
-          console.log("fileStore id exist")
-          this.showNotice(notice.fileStore);
-        }else{
-          let noticeType = "ACTIVE";  
-          let agreement = commonApiPost("lams-services", "agreements", "_search", { tenantId,agreementNumber,noticeType}).responseJSON["Agreements"];
-          this.printNotice(agreement,tenantId);
-        break
-      }
-    }
-  }
+
   search(e){
-    let {searchSet} = this.state;
-    let {agreementNumber} = searchSet
+    let searchSet = this.state.searchSet;
     let _this=this;
     if(!_this.state.searchSet.assetCategory){
       showError("Asset category is required.")
       return false;
     }
-    let response = commonApiPost("lams-services/agreement","notice","_duenotice",{tenantId,agreementNumber}).responseJSON["Defaulters"]
+    let response = commonApiPost("lams-services/agreement","notice","_duenotice",searchSet).responseJSON["Defaulters"]
     _this.setState({
       searchClicked:true,
       error:{},
       resultSet:response
     });
+  }
+
+  handleSelectChange(type,agreement){
+    switch(type){
+      case "dueNotice":
+        let agreementNumber = agreement.agreementNumber;
+        let noticeType = "DUE";
+        let notice = commonApiPost("lams-services/agreement","notice/duenotice","_search",{tenantId,agreementNumber,noticeType}).responseJSON.DueNotices[0];
+        if(notice && notice.fileStore){
+          this.showNotice(notice.fileStore);
+        }else{
+          this.printNotice(agreement);
+            }
+    }
   }
 
   showNotice(fileStoreId){
@@ -85,18 +81,23 @@ class DueNotice extends React.Component {
       };
       oReq.send();
     }
-  
 
-  printNotice(agreements,tenantId){
-    var agreement = agreements[0];
-    var doc = new jsPDF();
-    var ulbType = "MUNICIPALITY/MUNICIPAL CORPORATION";
-    var referenceNumber = "22245";
-    var referenceNumber = "7878";
-    var assetName =  agreement.asset && agreement.asset["assetCategory"].name;
+
+  printNotice(agreement){
+    console.log(agreement);
+    var assetCategories = this.state.assetCategories;
     var referenceNumber;
+    var doc = new jsPDF();
+    var date = moment(new Date()).format("DD/MM/YYYY");
+    var ulbType = "MUNICIPALITY/MUNICIPAL CORPORATION";
+    var assetName =  this.getName(assetCategories,agreement.assetCategory);
+    var cityGrade = !localStorage.getItem("city_grade") || localStorage.getItem("city_grade") == "undefined" ? (localStorage.setItem("city_grade", JSON.stringify(commonApiPost("tenant", "v1/tenant", "_search", { code: tenantId }).responseJSON["tenant"][0]["city"]["ulbGrade"] || {})), JSON.parse(localStorage.getItem("city_grade"))) : JSON.parse(localStorage.getItem("city_grade"));
+
+    if (cityGrade.toLowerCase() === 'corp') {
+        ulbType = "MUNICIPAL CORPORATION";
+    }
     var LocalityData = commonApiPost("egov-location/boundarys", "boundariesByBndryTypeNameAndHierarchyTypeName", "", { boundaryTypeName: "LOCALITY", hierarchyTypeName: "LOCATION", tenantId});
-    var locality = getNameById(LocalityData["responseJSON"]["Boundary"], agreement.asset.locationDetails.locality);
+    var locality = getNameById(LocalityData["responseJSON"]["Boundary"], agreement.locality);
 
     if(agreement.referenceNumber && agreement.referenceNumber){
       referenceNumber = agreement.referenceNumber;
@@ -114,17 +115,17 @@ class DueNotice extends React.Component {
     doc.setFontSize(11);
     doc.text(20,60, 'Roc.No.');
     doc.setFontType("bold");
-    doc.text(35,60, agreement.agreementNumber? agreement.agreementNumber : "");
+    doc.text(35,60, agreement.noticeNumber? agreement.noticeNumber : "N/A");
     doc.setFontType("normal");
     doc.text(165,60, 'Dt. ');
     doc.setFontType("bold");
-    doc.text(171,60, agreement.agreementDate ? agreement.agreementDate : "");
+    doc.text(171,60, agreement.noticeDate ? agreement.noticeDate : date);
 
     doc.fromHTML("Sub:Leases-Revenu Section-Shop No <b>" + referenceNumber + " </b> in <b>" + assetName + "</b> Complex, <b> <br>"+
-    locality + "</b>- Notice for dues - Reg.",20,70);  
-  
+    locality + "</b>- Notice for dues - Reg.",20,70);
 
-    doc.fromHTML("Ref: 1. Lease agreement No <b>" + agreement.agreementNumber +"</b> dt <b>" + agreement.agreementDate +"</b>",20,90);
+
+    doc.fromHTML("Ref: 1. Lease agreement No <b>" + agreement.agreementNumber +"</b> dt <b>" + agreement.commencementDate +"</b>",20,90);
     doc.fromHTML("2. Roc No........................................dt.......................of this office",29,95);
     doc.fromHTML("3. Roc No........................................dt.......................of Municipal Council/Standing Committee ",29,100);
 
@@ -132,9 +133,9 @@ class DueNotice extends React.Component {
 
     doc.fromHTML("As per the reference 1st cited, rentals for Shop No <b>" + referenceNumber + "</b> in the <b>" + assetName + "</b>",40,130)
     doc.fromHTML(" Shopping Complex  are to be paid by 5th of succeeding month."+
-    "But it is observed that rental payments <br> are pending for the said lease since <b>" +agreement.createdDate + "</b>",20,132);
+    "But it is observed that rental payments <br> are pending for the said lease since <b>" +agreement.lastPaid  + "</b>",20,132);
 
-    doc.fromHTML("You are hereby instructed to pay <b>" + agreement.goodWillAmount + "</b> within 7 days of receipt of this notice failing which" ,40,150)
+    doc.fromHTML("You are hereby instructed to pay <b>" + agreement.totalBalance + " /- </b> within 7 days of receipt of this notice failing which" ,40,150)
     doc.fromHTML("exiting lease for the said shop will be cancelled without any further correspondence,",20,155)
 
     doc.setFontType("normal");
@@ -150,10 +151,7 @@ class DueNotice extends React.Component {
     doc.text(22,217,"Copy to the concerned officials for necessary action");
 
     var blob = doc.output('blob');
-
-    this.createFileStore(agreement, blob).then(this.createNotice, this.errorHandler);
-
-    //doc.save("notice.pdf");
+   this.createFileStore(agreement, blob).then(this.createNotice, this.errorHandler);
   }
 
   errorHandler(statusCode){
@@ -161,11 +159,10 @@ class DueNotice extends React.Component {
     showError('Error');
    }
 
-
    createFileStore(noticeData, blob){
      var promiseObj = new Promise(function(resolve, reject){
        let formData = new FormData();
-       let fileName = "AN/"+noticeData.agreementNumber;
+       let fileName = "DN/"+noticeData.agreementNumber;
        formData.append("module", "LAMS");
        formData.append("file", blob,fileName);
        $.ajax({
@@ -194,12 +191,12 @@ class DueNotice extends React.Component {
      var CONST_API_GET_FILE = "/filestore/v1/files/id?tenantId=" + tenantId + "&fileStoreId=";
      var filestore = obj.fileStoreId;
      $.ajax({
-         url: baseUrl + `/lams-services/agreement/notice/_create?tenantId=` + tenantId,
+         url: baseUrl + `/lams-services/agreement/notice/duenotice/_create?tenantId=` + tenantId,
          type: 'POST',
          dataType: 'json',
          data: JSON.stringify({
              RequestInfo: requestInfo,
-             Notice: {
+             DueNotice: {
                  tenantId,
                  agreementNumber: obj.noticeData.agreementNumber,
                  fileStore:obj.fileStoreId
@@ -258,13 +255,13 @@ class DueNotice extends React.Component {
                 <tr >
                   <td>{index+1}</td>
                   <td>{item.agreementNumber}</td>
-                  <td>{item.assetCategory}</td>
+                  <td>{getName(assetCategories,item.assetCategory)}</td>
                   <td>{item.assetCode}</td>
                   <td>{item.assetName ? item.assetName : "N/A"}</td>
-                  <td>{item.locality}</td>
+                  <td>{getName(locality,item.locality)}</td>
                   <td>{item.electionWard? item.electionWard : "N/A"}</td>
                   <td>
-                      <select onChange={(e)=>this.handleSelectChange(e.target.value,item.agreementNumber)}>
+                      <select onChange={(e)=>this.handleSelectChange(e.target.value,item)}>
                         <option value="">Select Action</option>
                         <option value="dueNotice">Due Notice</option>
                       </select>
@@ -364,7 +361,7 @@ class DueNotice extends React.Component {
                               <label for="">Asset Code</label>
                           </div>
                           <div className="col-sm-6">
-                            <input type="text" id="assetNo" onChange={(e) => { handleChange(e.target.value, "assetNo") }}/>
+                            <input type="text" id="assetCode" onChange={(e) => { handleChange(e.target.value, "assetCode") }}/>
                           </div>
                       </div>
                   </div>
@@ -460,35 +457,7 @@ class DueNotice extends React.Component {
                       </div>
                   </div>
               </div>
-              {/* <div className="row">
-                  <div className="col-sm-6">
-                      <div className="row">
-                          <div className="col-sm-6 label-text">
-                              <label for="">From Date</label>
-                          </div>
-                          <div className="col-sm-6">
-                            <div className="text-no-ui">
-                              <span><i className="glyphicon glyphicon-calendar"></i></span>
-                              <input type="text" id="fromDate" name="fromDate" value="fromDate" value={fromDate}/>
-                            </div>
-                          </div>
-                      </div>
-                  </div>
-                  <div className="col-sm-6">
-                      <div className="row">
-                          <div className="col-sm-6 label-text">
-                              <label for="">To Date</label>
-                          </div>
-                          <div className="col-sm-6">
-                            <div className="text-no-ui">
-                              <span><i className="glyphicon glyphicon-calendar"></i></span>
-                              <input type="text" id="toDate" name="fromDate" value={toDate} 
-                              />
-                            </div>
-                          </div>>
-                      </div>
-                  </div>
-              </div> */}
+
               <div className="text-center">
                 <button type="button" className="btn btn-submit" onClick={(e)=>{search(e)}}>Search</button>  &nbsp;&nbsp;
                 <button type="button" className="btn btn-close" onClick={(e)=>{this.closeWindow()}}>Close</button>
@@ -504,7 +473,24 @@ class DueNotice extends React.Component {
         <div className="table-cont" id="table">
           {searchClicked && showTable()}
         </div>
+        <div id="myModal" ref="modal" className="modal fade" role="dialog">
+          <div className="modal-dialog">
 
+            <div className="modal-content">
+              <div className="modal-header">
+                <button type="button" className="close" data-dismiss="modal">&times;</button>
+                <h4 className="modal-title">Notice</h4>
+              </div>
+              <div className="modal-body">
+                <iframe title="Document" src={this.state.iframe_src} frameBorder="0" allowFullScreen height="500" width="100%"></iframe>
+              </div>
+              <div className="modal-footer">
+                <button type="button" className="btn btn-default" data-dismiss="modal">Close</button>
+              </div>
+            </div>
+
+          </div>
+        </div>
       </div>
     )
   }

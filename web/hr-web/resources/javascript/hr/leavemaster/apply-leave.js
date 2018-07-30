@@ -383,7 +383,7 @@ class ApplyLeave extends React.Component {
         function(err, res1) {
           if (res1) {
             enclosingDays = res1.Holiday.length;
-           _this.setState({
+            _this.setState({
               encloseHoliday: res1.Holiday
             });
           }
@@ -1081,6 +1081,41 @@ class ApplyLeave extends React.Component {
         );
       }
     };
+    const renderDocumentLinks = () => {
+      return documents.map((doc, i) => {
+        console.log(window.location.origin + CONST_API_GET_FILE + doc);
+        return (
+          <tr key={i}>
+            <td>{i + 1}</td>
+            <td>
+              <a href={window.location.origin + CONST_API_GET_FILE + doc}>
+                Download
+              </a>
+            </td>
+          </tr>
+        );
+      });
+    };
+    const showAttachments = () => {
+      return (
+        <div>
+          {documents &&
+            documents.length > 0 && (
+              <div className="land-table">
+                <table id="employeeTable" className="table table-bordered">
+                  <thead>
+                    <tr>
+                      <th>Sr.No</th>
+                      <th>Documents</th>
+                    </tr>
+                  </thead>
+                  <tbody>{renderDocumentLinks()}</tbody>
+                </table>
+              </div>
+            )}
+        </div>
+      );
+    };
 
     const showPrefix = () => {
       if (
@@ -1491,6 +1526,7 @@ class ApplyLeave extends React.Component {
             </div>
 
             {showEnclosingHolidayTable()}
+            {showAttachments()}
 
             <div className="text-center">
               {showActionButton()} &nbsp;&nbsp;

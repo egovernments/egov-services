@@ -56,7 +56,10 @@ const uploadFiles = function(body, cb) {
               // body.LeaveApplication[0].documents = body.LeaveApplication[0].documents.concat(
               //   docs
               // );
-              body && body.LeaveApplication && body.LeaveApplication.documents && body.LeaveApplication.documents.push(res.files[0].fileStoreId);
+              body &&
+                body.LeaveApplication &&
+                body.LeaveApplication.documents &&
+                body.LeaveApplication.documents.push(res.files[0].fileStoreId);
               delete body.LeaveApplication.docs;
               cb(null, body);
             }
@@ -703,8 +706,7 @@ class UpdateLeave extends React.Component {
                         ][0] != "Y" &&
                         !(d.getDay() === 0)
                       )
-                        
-                      _days++;
+                        _days++;
                     }
                   }
                   console.log(_days, prefixSuffixDays, enclosingDays);
@@ -1820,6 +1822,41 @@ class UpdateLeave extends React.Component {
         );
       }
     };
+    const renderDocumentLinks = () => {
+      return documents.map((doc, i) => {
+        console.log(window.location.origin + CONST_API_GET_FILE + doc);
+        return (
+          <tr key={i}>
+            <td>{i + 1}</td>
+            <td>
+              <a href={window.location.origin + CONST_API_GET_FILE + doc}>
+                Download
+              </a>
+            </td>
+          </tr>
+        );
+      });
+    };
+    const showAttachments = () => {
+      return (
+        <div>
+          {documents &&
+            documents.length > 0 && (
+              <div className="land-table">
+                <table id="employeeTable" className="table table-bordered">
+                  <thead>
+                    <tr>
+                      <th>Sr.No</th>
+                      <th>Documents</th>
+                    </tr>
+                  </thead>
+                  <tbody>{renderDocumentLinks()}</tbody>
+                </table>
+              </div>
+            )}
+        </div>
+      );
+    };
 
     const showPrefix = () => {
       let { perfixSuffix } = this.state;
@@ -2379,7 +2416,7 @@ class UpdateLeave extends React.Component {
 
             {showEnclosingHolidayTable()}
             <br />
-            {showAttachedFiles()}
+            {showAttachments()}
             <br />
             {renderWorkflowDetails(this.state.leaveSet.status)}
             <br />

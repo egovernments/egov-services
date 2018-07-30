@@ -50,7 +50,7 @@ var filesToBeDeleted = [];
 var assetDetails;
 var employees = [];
 var fileTypes = ["application/msword", "application/vnd.openxmlformats-officedocument.wordprocessingml.document", "application/vnd.ms-excel", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "application/pdf", "image/png", "image/jpeg"];
-var firstinput;
+var firstInput;
 var secondInput
 var monthFirst;
 var monthSecond;

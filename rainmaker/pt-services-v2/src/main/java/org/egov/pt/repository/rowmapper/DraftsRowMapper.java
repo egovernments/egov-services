@@ -10,18 +10,14 @@ import java.util.Map;
 import org.egov.pt.web.models.AuditDetails;
 import org.egov.pt.web.models.Draft;
 import org.egov.tracer.model.CustomException;
-import org.json.JSONException;
-import org.json.JSONTokener;
 import org.postgresql.util.PGobject;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.stereotype.Component;
 
-import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.jayway.jsonpath.Configuration;
 
-import io.swagger.util.Json;
 import lombok.extern.slf4j.Slf4j;
 
 @Component
@@ -41,14 +37,13 @@ public class DraftsRowMapper implements ResultSetExtractor<List<Draft>> {
 
 				PGobject obj = (PGobject) rs.getObject("draft");
                 try {
-                    Map<String, Object> pGDraft = mapper.readValue( obj.getValue() , Map.class);
+                    JsonNode pGDraft = mapper.readTree( obj.getValue());
                     currentDraft = Draft.builder().id(rs.getString("id")).userId(rs.getString("userId")).tenantId(rs.getString("tenantId"))
                             .draftRecord(pGDraft)
                             .auditDetails(auditDetails).build();
                 } catch (Exception e) {
-                    throw new CustomException("SERVER_ERROR","Exception occured while parsing the draft json");
+                    throw new CustomException("SERVER_ERROR","Exception occured while parsing the draft json : "+ e.getMessage());
                 }
-
 
 				draftsMap.put(currentId, currentDraft);
 			}

@@ -274,7 +274,7 @@ public class BillService {
 					partPaymentAllowed(businessServiceDetail.getPartPaymentAllowed()).
 					totalAmount(totalTaxAmount.subtract(totalCollectedAmount)).tenantId(tenantId).build();
 
-			if(billDetail.getTotalAmount().compareTo(BigDecimal.ZERO) > 0)
+			//if(billDetail.getTotalAmount().compareTo(BigDecimal.ZERO) > 0)
 			billDetails.add(billDetail);
 
 		}

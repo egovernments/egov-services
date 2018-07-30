@@ -1,6 +1,5 @@
 package org.egov.pt.calculator.web.models.property;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -10,10 +9,15 @@ import javax.validation.constraints.Digits;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
-import lombok.*;
 import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 /**
  * User
@@ -43,11 +47,10 @@ public class User   {
         private String salutation;
 
         @NotNull
-        @Pattern(regexp = "[a-z-A-Z]*", message = "Name has invalid characters")
+        @Pattern(regexp = "[a-z-A-Z' ']*", message = "Name has invalid characters")
         @JsonProperty("name")
         private String name;
 
-        @NotNull
         @JsonProperty("gender")
         private String gender;
 
@@ -69,7 +72,6 @@ public class User   {
         @JsonProperty("aadhaarNumber")
         private String aadhaarNumber;
 
-        @NotNull
         @JsonProperty("permanentAddress")
         private String permanentAddress;
 

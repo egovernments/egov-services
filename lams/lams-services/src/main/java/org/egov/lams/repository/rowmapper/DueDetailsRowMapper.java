@@ -76,15 +76,16 @@ public class DueDetailsRowMapper implements ResultSetExtractor<Set<DefaultersInf
 				defaultersInfo.setPaymentCycle(rs.getString("paymentCycle"));
 				defaultersInfo.setSecurityDeposit(rs.getDouble("securitydeposit"));
 				defaultersInfo.setAssetCode(rs.getString("assetcode"));
+				defaultersInfo.setAssetName(rs.getString("assetname"));
 				defaultersInfo.setAssetCategory((Long) rs.getObject("assetcategory"));
 				defaultersInfo.setCategoryName(rs.getString("categoryname"));
+				defaultersInfo.setShopNumber(rs.getString("shopno"));
 				defaultersInfo.setElectionward((Long) rs.getObject("electionward"));
 				defaultersInfo.setRevenueWard((Long) rs.getObject("ward"));
 				defaultersInfo.setStreet((Long) rs.getObject("street"));
 				defaultersInfo.setBlock((Long) rs.getObject("block"));
 				defaultersInfo.setLocality((Long) rs.getObject("locality"));
 				defaultersInfo.setZone((Long) rs.getObject("zone"));
-
 				defaultersInfo.setAllotteeName(rs.getString("allotteename"));
 				defaultersInfo.setMobileNumber(rs.getString("allotteemobilenumber"));
 				defaultersInfo.setCommencementDate(rs.getTimestamp("commencementdate"));

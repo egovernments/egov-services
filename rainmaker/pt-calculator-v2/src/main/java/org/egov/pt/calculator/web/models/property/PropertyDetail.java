@@ -88,7 +88,6 @@ public class PropertyDetail   {
         @JsonProperty("noOfFloors")
         private Long noOfFloors;
 
-        @NotNull
         @JsonProperty("landArea")
         private Double landArea;
 
@@ -116,7 +115,6 @@ public class PropertyDetail   {
         @JsonProperty("propertyType")
         private String propertyType;
 
-        @NotEmpty
         @JsonProperty("propertySubType")
         private String propertySubType;
 
@@ -133,7 +131,6 @@ public class PropertyDetail   {
         @JsonProperty("ownershipCategory")
         private String ownershipCategory;
 
-        @NotEmpty
         @JsonProperty("subOwnershipCategory")
         private String subOwnershipCategory;
 

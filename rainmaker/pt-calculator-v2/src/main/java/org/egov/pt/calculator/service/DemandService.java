@@ -153,7 +153,7 @@ public class DemandService {
 			throw new CustomException(map);
 		}
 		Demand demand = res.getDemands().get(0);
-		applyPenaltyAndRebate(demand, getBillCriteria.getAssessmentYear(), timeBasedExmeptionMasterMap);
+		applytimeBasedApplicables(demand, getBillCriteria.getAssessmentYear(), timeBasedExmeptionMasterMap);
 		DemandRequest request = DemandRequest.builder().demands(Arrays.asList(demand)).requestInfo(requestInfo).build();
 		StringBuilder updateDemandUrl = utils.getUpdateDemandUrl();
 		repository.fetchResult(updateDemandUrl, request);
@@ -246,7 +246,7 @@ public class DemandService {
 	}
 
 	/**
-	 * Applies Penalty/Rebate to the incoming demands
+	 * Applies Penalty/Rebate/Interest to the incoming demands
 	 * 
 	 * If applied already then the demand details will be updated
 	 * 
@@ -254,7 +254,7 @@ public class DemandService {
 	 * @param assessmentYear
 	 * @return
 	 */
-	private void applyPenaltyAndRebate(Demand demand, String assessmentYear,
+	private void applytimeBasedApplicables(Demand demand, String assessmentYear,
 			Map<String, JSONArray> timeBasedExmeptionMasterMap) {
 
 		String tenantId = demand.getTenantId();
@@ -263,26 +263,38 @@ public class DemandService {
 
 		boolean isRebateUpdated = false;
 		boolean isPenaltyUpdated = false;
+		boolean isInterestUpdated = false;
 		List<DemandDetail> details = demand.getDemandDetails();
-		Map<String, BigDecimal> rebatePenaltyEstimates = payService.applyPenaltyAndRebate(taxAmt, assessmentYear,
-				timeBasedExmeptionMasterMap);
+		Map<String, BigDecimal> rebatePenaltyEstimates = payService.applyPenaltyRebateAndInterest(taxAmt,
+				assessmentYear, timeBasedExmeptionMasterMap);
 		BigDecimal rebate = rebatePenaltyEstimates.get(CalculatorConstants.PT_TIME_REBATE);
 		BigDecimal penalty = rebatePenaltyEstimates.get(CalculatorConstants.PT_TIME_PENALTY);
+		BigDecimal interest = rebatePenaltyEstimates.get(CalculatorConstants.PT_TIME_INTEREST);
 
 		for (DemandDetail detail : details) {
 			if (detail.getTaxHeadMasterCode().equalsIgnoreCase(CalculatorConstants.PT_TIME_REBATE)) {
 				detail.setTaxAmount(rebate.negate());
 				isRebateUpdated = true;
-			} else if (detail.getTaxHeadMasterCode().equalsIgnoreCase(CalculatorConstants.PT_TIME_PENALTY)) {
+			}
+			if (detail.getTaxHeadMasterCode().equalsIgnoreCase(CalculatorConstants.PT_TIME_PENALTY)) {
 				detail.setTaxAmount(penalty);
 				isPenaltyUpdated = true;
+			}
+			if (detail.getTaxHeadMasterCode().equalsIgnoreCase(CalculatorConstants.PT_TIME_INTEREST)) {
+				detail.setTaxAmount(interest);
+				isInterestUpdated = true;
 			}
 		}
 		if (!isPenaltyUpdated && penalty.compareTo(BigDecimal.ZERO) > 0)
 			details.add(DemandDetail.builder().taxAmount(penalty).taxHeadMasterCode(CalculatorConstants.PT_TIME_PENALTY)
 					.demandId(demandId).tenantId(tenantId).build());
 		if (!isRebateUpdated && rebate.compareTo(BigDecimal.ZERO) > 0)
-			details.add(DemandDetail.builder().taxAmount(rebate.negate()).taxHeadMasterCode(CalculatorConstants.PT_TIME_REBATE)
-					.demandId(demandId).tenantId(tenantId).build());
+			details.add(DemandDetail.builder().taxAmount(rebate.negate())
+					.taxHeadMasterCode(CalculatorConstants.PT_TIME_REBATE).demandId(demandId).tenantId(tenantId)
+					.build());
+		if (!isInterestUpdated && interest.compareTo(BigDecimal.ZERO) > 0)
+			details.add(
+					DemandDetail.builder().taxAmount(interest).taxHeadMasterCode(CalculatorConstants.PT_TIME_INTEREST)
+							.demandId(demandId).tenantId(tenantId).build());
 	}
 }

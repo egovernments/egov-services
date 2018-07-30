@@ -1,9 +1,15 @@
 package org.egov.pt.calculator.util;
 
+import java.math.BigDecimal;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class CalculatorConstants {
+	
+	private CalculatorConstants() {
+		
+	}
 
 	/*
 	 * tax head codes constants
@@ -19,11 +25,13 @@ public class CalculatorConstants {
 	
 	public static final String PT_TIME_PENALTY = "PT_TIME_PENALTY";
 	
+	public static final String PT_TIME_INTEREST = "PT_TIME_INTEREST";
+	
 	public static final String PT_ADVANCE_CARRYFORWARD = "PT_ADVANCE_CARRYFORWARD";
 	
-	public static final List<String> REBATE_LISTS = Arrays.asList(PT_TIME_REBATE);
+	public static final String PT_FIRE_CESS = "PT_FIRE_CESS";
 	
-	
+	protected static final List<String> TAXES_TO_BE_IGNORED_WHEN_CALUCLATING_REBATE_AND_PENALTY = Arrays.asList(PT_TIME_REBATE, PT_TIME_PENALTY, PT_TIME_INTEREST);
 	
 	/*
 	 * Mdms constants
@@ -49,8 +57,12 @@ public class CalculatorConstants {
 	
 	public static final String PENANLTY_MASTER = "Penalty";
 	
-	public static final List<String> propertyBasedExemptionMasterList = Arrays.asList(USAGE_MAJOR_MASTER, USAGE_MINOR_MASTER, USAGE_SUB_MINOR_MASTER, 
-			USAGE_DETAIL_MASTER, OWNER_TYPE_MASTER);
+	public static final String FIRE_CESS_MASTER = "FireCess";
+	
+	public static final String INTEREST_MASTER = "Interest";
+	
+	public static final List<String> PROPERTY_BASED_EXEMPTION_MASTERS = Collections.unmodifiableList(Arrays.asList(USAGE_MAJOR_MASTER, USAGE_MINOR_MASTER, USAGE_SUB_MINOR_MASTER, 
+			USAGE_DETAIL_MASTER, OWNER_TYPE_MASTER));
 
 	/*
 	 * Module names
@@ -78,15 +90,21 @@ public class CalculatorConstants {
 	
 	public static final String FROMFY_FIELD_NAME = "fromFY";
 	
-	public static final String ENDING_DATE_REBATE = "endingDay";
+	public static final String ENDING_DATE_APPLICABLES = "endingDay";
 	
-	public static final String STARTING_DATE_PENALTY = "startingDay";
+	public static final String STARTING_DATE_APPLICABLES = "startingDay";
 	
 	/*
-	 * special charatcers
+	 * special characters
 	 */
 	
 	public static final String UNDERSCORE = "_";
+	
+	/*
+	 * bigdecimal values
+	 */
+	
+	public static final BigDecimal HUNDRED = BigDecimal.valueOf(100);
 	
 	/*
 	 * Field Name constants
@@ -97,7 +115,7 @@ public class CalculatorConstants {
 
 	public static final String BILLING_SLAB_MASTER = "BillingSlab";
 
-	public static final String BILLING_SLAB_MODULE = "PropertyTax";
+	public static final String BILLING_SLAB_MODULE = PROPERTY_TAX_MODULE;
 
 	public static final String FINANCIAL_YEAR_STARTING_DATE = "startingDate";
 
@@ -154,4 +172,10 @@ public class CalculatorConstants {
 	public static final String BILLING_SLAB_MATCH_AREA = "{area}";
 	
 	public static final String BILLING_SLAB_MATCH_USAGE_DETAIL = "{usageDetail}";
+	
+	
+	public static final String EG_PT_OWNER_TYPE_INVALID = "EG_PT_OWNER_TYPE_INVALID";
+	
+	public static final String EG_PT_OWNER_TYPE_INVALID_MESSAGE = " The given owner type value is invalid : ";
+	
 }

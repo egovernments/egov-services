@@ -1,7 +1,5 @@
 package org.egov.pt.calculator.web.controller;
 
-import java.util.Date;
-
 import javax.validation.Valid;
 
 import org.egov.common.contract.request.RequestInfo;
@@ -36,7 +34,7 @@ public class BillingSlabController {
 	
 
 	/**
-	 * enpoint to create billing-slabs
+	 * endpoint to create billing-slabs
 	 * 
 	 * @param BillingSlabReq
 	 * @author vishal
@@ -45,10 +43,10 @@ public class BillingSlabController {
 	@ResponseBody
 	private ResponseEntity<?> create(@RequestBody @Valid BillingSlabReq billingSlabReq) {
 
-		long startTime = new Date().getTime();
+		long startTime = System.currentTimeMillis();
 		billingSlabValidator.validateCreate(billingSlabReq);
 		BillingSlabRes billingSlabRes = service.createBillingSlab(billingSlabReq);
-		long endTime = new Date().getTime();
+		long endTime = System.currentTimeMillis();
 		log.debug(" the time taken for create in ms: {}", endTime - startTime);
 		return new ResponseEntity<>(billingSlabRes, HttpStatus.CREATED);
 	}
@@ -63,10 +61,10 @@ public class BillingSlabController {
 	@ResponseBody
 	private ResponseEntity<?> update(@RequestBody @Valid BillingSlabReq billingSlabReq) {
 
-		long startTime = new Date().getTime();
+		long startTime = System.currentTimeMillis();
 		billingSlabValidator.validateUpdate(billingSlabReq);
 		BillingSlabRes billingSlabRes = service.updateBillingSlab(billingSlabReq);
-		long endTime = new Date().getTime();
+		long endTime = System.currentTimeMillis();
 		log.debug(" the time taken for create in ms: {}", endTime - startTime);
 		return new ResponseEntity<>(billingSlabRes, HttpStatus.CREATED);
 	}
@@ -82,10 +80,10 @@ public class BillingSlabController {
 	@ResponseBody
 	private ResponseEntity<?> search(@RequestBody @Valid RequestInfo requestInfo, 
 					@ModelAttribute @Valid BillingSlabSearchCriteria billingSlabSearcCriteria) {
-		long startTime = new Date().getTime();
+		long startTime = System.currentTimeMillis();
 		BillingSlabRes billingSlabRes = service.searchBillingSlabs(requestInfo, billingSlabSearcCriteria);
-		long endTime = new Date().getTime();
+		long endTime = System.currentTimeMillis();
 		log.debug(" the time taken for create in ms: {}", endTime - startTime);
-		return new ResponseEntity<>(billingSlabRes, HttpStatus.CREATED);
+		return new ResponseEntity<>(billingSlabRes, HttpStatus.OK);
 	}
 }

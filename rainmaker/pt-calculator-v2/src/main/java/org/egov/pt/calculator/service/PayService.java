@@ -4,7 +4,6 @@ import java.math.BigDecimal;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -39,7 +38,7 @@ public class PayService {
 	private MasterDataService mDService;
 	
 	/**
-	 * Updates the incoming demand with latest rebate and penalty values if applicable
+	 * Updates the incoming demand with latest rebate, penalty and interest values if applicable
 	 * 
 	 * If the demand details are not already present then new demand details will be added
 	 * 
@@ -47,17 +46,25 @@ public class PayService {
 	 * @param assessmentYear
 	 * @return
 	 */
-	public Map<String, BigDecimal> applyPenaltyAndRebate(BigDecimal taxAmt, String assessmentYear,
+	public Map<String, BigDecimal> applyPenaltyRebateAndInterest(BigDecimal taxAmt, String assessmentYear,
 			Map<String, JSONArray> timeBasedExmeptionMasterMap) {
 
 		Map<String, BigDecimal> estimates = new HashMap<>();
 		BigDecimal rebate = getRebate(taxAmt, assessmentYear,
 				timeBasedExmeptionMasterMap.get(CalculatorConstants.REBATE_MASTER));
+		
 		BigDecimal penalty = BigDecimal.ZERO;
-		if (rebate.doubleValue() == 0.0)
+		BigDecimal interest = BigDecimal.ZERO;
+
+		if (rebate.equals(BigDecimal.ZERO)) {
 			getPenalty(taxAmt, assessmentYear, timeBasedExmeptionMasterMap.get(CalculatorConstants.PENANLTY_MASTER));
+			interest = getInterest(taxAmt.subtract(rebate), assessmentYear,
+					timeBasedExmeptionMasterMap.get(CalculatorConstants.INTEREST_MASTER));
+		}
+
 		estimates.put(CalculatorConstants.PT_TIME_REBATE, rebate);
 		estimates.put(CalculatorConstants.PT_TIME_PENALTY, penalty);
+		estimates.put(CalculatorConstants.PT_TIME_INTEREST, interest);
 		return estimates;
 	}
 
@@ -74,21 +81,25 @@ public class PayService {
 		BigDecimal rebateAmt = BigDecimal.ZERO;
 		Map<String, Object> rebate = mDService.getApplicableMasterFromList(assessmentYear, rebateMasterList);
 
-		if (null != rebate) {
+		if (null == rebate) return rebateAmt;
 
-			String[] time = ((String) rebate.get(CalculatorConstants.ENDING_DATE_REBATE)).split("/");
-			Calendar cal = Calendar.getInstance();
-			setDateToCalendar(assessmentYear, time, cal);
+		String[] time = ((String) rebate.get(CalculatorConstants.ENDING_DATE_APPLICABLES)).split("/");
+		Calendar cal = Calendar.getInstance();
+		setDateToCalendar(assessmentYear, time, cal);
 
-			if (cal.getTime().compareTo(new Date()) >= 0) {
-				
-				Double exemptionRate = (Double) rebate.get(CalculatorConstants.RATE_FIELD_NAME);
-				Double exempMaxRate = (Double) rebate.get(CalculatorConstants.MAX_AMOUNT_FIELD_NAME);
-				rebateAmt = rebateAmt.add(taxAmt.multiply(BigDecimal.valueOf(exemptionRate / 100)));
-				if (null != exempMaxRate && !exemptionRate.equals(100.0)
-						&& rebateAmt.compareTo(BigDecimal.valueOf(exempMaxRate)) > 0)
-					rebateAmt = BigDecimal.valueOf(exempMaxRate);
-			}
+		if (cal.getTimeInMillis() > System.currentTimeMillis()) {
+
+			BigDecimal rate = null != rebate.get(CalculatorConstants.RATE_FIELD_NAME) ? BigDecimal.valueOf(
+					((Number) rebate.get(CalculatorConstants.RATE_FIELD_NAME)).doubleValue()) : null;
+
+			BigDecimal maxAmt = null != rebate.get(CalculatorConstants.MAX_AMOUNT_FIELD_NAME) ? BigDecimal.valueOf(
+					((Number) rebate.get(CalculatorConstants.MAX_AMOUNT_FIELD_NAME)).doubleValue())	: null;
+
+			if (null != rate)
+				rebateAmt = rebateAmt.add(taxAmt.multiply(rate.divide(CalculatorConstants.HUNDRED)));
+
+			if (null != maxAmt && rebateAmt.compareTo(maxAmt) > 0)
+				rebateAmt = maxAmt;
 		}
 		return rebateAmt;
 	}
@@ -104,27 +115,74 @@ public class PayService {
 
 		BigDecimal penaltyAmt = BigDecimal.ZERO;
 		Map<String, Object> penalty = mDService.getApplicableMasterFromList(assessmentYear, penaltyMasterList);
-		if (null != penalty) {
+		if (null == penalty) return penaltyAmt;
 
-			String[] time = ((String) penalty.get(CalculatorConstants.STARTING_DATE_PENALTY)).split("/");
-			Calendar cal = Calendar.getInstance();
-			setDateToCalendar(assessmentYear, time, cal);
+		String[] time = ((String) penalty.get(CalculatorConstants.STARTING_DATE_APPLICABLES)).split("/");
+		Calendar cal = Calendar.getInstance();
+		setDateToCalendar(assessmentYear, time, cal);
 
-			if (cal.getTime().compareTo(new Date()) < 0) {
+		if (cal.getTimeInMillis() < System.currentTimeMillis()) {
 
-				Double exemptionRate = (Double) penalty.get(CalculatorConstants.RATE_FIELD_NAME);
-				Double exempMinRate = (Double) penalty.get(CalculatorConstants.MIN_AMOUNT_FIELD_NAME);
-				penaltyAmt = penaltyAmt.add(taxAmt.multiply(BigDecimal.valueOf(exemptionRate / 100)));
-				if (null != exempMinRate && !exemptionRate.equals(100.0)
-						&& penaltyAmt.compareTo(BigDecimal.valueOf(exempMinRate)) < 0)
-					penaltyAmt = BigDecimal.valueOf(exempMinRate);
-			}
+			BigDecimal rate = null != penalty.get(CalculatorConstants.RATE_FIELD_NAME) ? BigDecimal.valueOf(
+					((Number) penalty.get(CalculatorConstants.RATE_FIELD_NAME)).doubleValue()) : null;
+
+			BigDecimal minAmt = null != penalty.get(CalculatorConstants.MIN_AMOUNT_FIELD_NAME) ? BigDecimal.valueOf(
+					((Number) penalty.get(CalculatorConstants.MIN_AMOUNT_FIELD_NAME)).doubleValue()) : null;
+
+			if (null != rate)
+				penaltyAmt = penaltyAmt.add(taxAmt.multiply(rate.divide(CalculatorConstants.HUNDRED)));
+
+			if (null != minAmt && penaltyAmt.compareTo(minAmt) < 0)
+				penaltyAmt = minAmt;
 		}
+
 		return penaltyAmt;
+	}
+
+	/**
+	 * Returns the Amount of penalty that has to be applied on the given tax amount for the given period
+	 * 
+	 * @param taxAmt
+	 * @param assessmentYear
+	 * @return
+	 */
+	public BigDecimal getInterest(BigDecimal taxAmt, String assessmentYear, JSONArray interestMasterList) {
+
+		BigDecimal interestAmt = BigDecimal.ZERO;
+		Map<String, Object> interestMap = mDService.getApplicableMasterFromList(assessmentYear, interestMasterList);
+		if (null == interestMap) return interestAmt;
+
+		String[] time = ((String) interestMap.get(CalculatorConstants.STARTING_DATE_APPLICABLES)).split("/");
+		Calendar cal = Calendar.getInstance();
+		setDateToCalendar(assessmentYear, time, cal);
+
+		if (cal.getTimeInMillis() < System.currentTimeMillis()) {
+
+			BigDecimal rate = null != interestMap.get(CalculatorConstants.RATE_FIELD_NAME) ? BigDecimal.valueOf(
+					((Number) interestMap.get(CalculatorConstants.RATE_FIELD_NAME)).doubleValue()) : null;
+
+			BigDecimal minAmt = null != interestMap.get(CalculatorConstants.MIN_AMOUNT_FIELD_NAME) ? BigDecimal.valueOf(
+					((Number) interestMap.get(CalculatorConstants.MIN_AMOUNT_FIELD_NAME)).doubleValue()) : null;
+					
+			BigDecimal maxAmt = null != interestMap.get(CalculatorConstants.MAX_AMOUNT_FIELD_NAME) ? BigDecimal.valueOf(
+					((Number) interestMap.get(CalculatorConstants.MAX_AMOUNT_FIELD_NAME)).doubleValue()) : null;
+
+			if (null != rate)
+				interestAmt = interestAmt.add(taxAmt.multiply(rate.divide(CalculatorConstants.HUNDRED)));
+
+			if (null != minAmt && interestAmt.compareTo(minAmt) < 0)
+				interestAmt = minAmt;
+
+			else if (null != maxAmt && interestAmt.compareTo(maxAmt) > 0)
+				interestAmt = maxAmt;
+		}
+
+		return interestAmt;
 	}
 	
 	/**
 	 * Return the BillResponse which contains apportioned bills
+	 * 
 	 * @param billRequest
 	 * @return
 	 */

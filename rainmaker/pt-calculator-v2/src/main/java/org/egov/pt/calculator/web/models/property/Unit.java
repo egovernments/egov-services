@@ -5,7 +5,6 @@ import java.math.BigDecimal;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.NotEmpty;
-import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -20,8 +19,6 @@ import lombok.ToString;
 /**
  * Unit
  */
-@Validated
-@javax.annotation.Generated(value = "org.egov.codegen.SpringBootCodegen", date = "2018-05-11T14:12:44.497+05:30")
 
 @Getter
 @Setter
@@ -48,19 +45,15 @@ public class Unit   {
         @JsonProperty("unitArea")
         private Float unitArea;
 
-        @NotEmpty
         @JsonProperty("usageCategoryMajor")
         private String usageCategoryMajor;
 
-        @NotEmpty
         @JsonProperty("usageCategoryMinor")
         private String usageCategoryMinor;
 
-        @NotEmpty
         @JsonProperty("usageCategorySubMinor")
         private String usageCategorySubMinor;
 
-        @NotEmpty
         @JsonProperty("usageCategoryDetail")
         private String usageCategoryDetail;
 

@@ -1,5 +1,6 @@
 package org.egov.pt.calculator.service;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -47,9 +48,6 @@ public class MasterDataService {
 	@SuppressWarnings("unchecked") 
 	public Map<String, Object> getfinancialYear(RequestInfo requestInfo, String assesmentYear, String tenantId) {
 
-		// FIXME remove harcoding after putting data for pb
-		tenantId = "mh";
-
 		MdmsCriteriaReq mdmsCriteriaReq = calculatorUtils.getFinancialYearRequest(requestInfo, assesmentYear, tenantId);
 		StringBuilder url = calculatorUtils.getMdmsSearchUrl();
 		MdmsResponse res = mapper.convertValue(repository.fetchResult(url, mdmsCriteriaReq), MdmsResponse.class);
@@ -91,7 +89,7 @@ public class MasterDataService {
 			String masterName = entry.getKey();
 			
 			/* Masters which need to be parsed will be contained in the list */
-			if (CalculatorConstants.propertyBasedExemptionMasterList.contains(entry.getKey()))
+			if (CalculatorConstants.PROPERTY_BASED_EXEMPTION_MASTERS.contains(entry.getKey()))
 				propertyBasedExemptionMasterMap.put(masterName, getParsedMaster(entry));
 			
 			/* Master not contained in list will be stored as it is  */
@@ -160,6 +158,59 @@ public class MasterDataService {
 			}
 		}
 		return objToBeReturned;
+	}
+	
+	/**
+	 * Estimates the fire cess that needs to be paid for the given tax amount
+	 * 
+	 * Returns Zero if no data is found for the given criteria
+	 * 
+	 * @param payableTax
+	 * @param timeBasedExmeptionMasterMap 
+	 * @param assessmentYear 
+	 * @return
+	 */
+	public BigDecimal getFireCess(BigDecimal payableTax, String assessmentYear,
+			Map<String, JSONArray> timeBasedExmeptionMasterMap) {
+
+		BigDecimal fireCess = BigDecimal.ZERO;
+		Map<String, Object> fireCessMap = getApplicableMasterFromList(assessmentYear,
+				timeBasedExmeptionMasterMap.get(CalculatorConstants.FIRE_CESS_MASTER));
+		if (null == fireCessMap) return fireCess;
+
+		BigDecimal rate = null != fireCessMap.get(CalculatorConstants.RATE_FIELD_NAME) ? BigDecimal.valueOf(
+					((Number) fireCessMap.get(CalculatorConstants.RATE_FIELD_NAME)).doubleValue()) : null;
+
+		BigDecimal flatAmt = null != fireCessMap.get(CalculatorConstants.FLAT_AMOUNT_FIELD_NAME) ? BigDecimal.valueOf(		
+					((Number) fireCessMap.get(CalculatorConstants.FLAT_AMOUNT_FIELD_NAME)).doubleValue()) : null;
+
+		BigDecimal minAmt = null != fireCessMap.get(CalculatorConstants.MIN_AMOUNT_FIELD_NAME) ? BigDecimal.valueOf(
+					((Number) fireCessMap.get(CalculatorConstants.MIN_AMOUNT_FIELD_NAME)).doubleValue()) : null;
+					
+		BigDecimal maxAmt = null != fireCessMap.get(CalculatorConstants.MAX_AMOUNT_FIELD_NAME) ? BigDecimal.valueOf(
+					((Number) fireCessMap.get(CalculatorConstants.MAX_AMOUNT_FIELD_NAME)).doubleValue()) : null;
+
+		/*
+		 * Applying rate if value is not null
+		 * 
+		 *  if the applied value is lesser than min value then take min value
+		 *  
+		 *  else if the applied value is greater than max value then take max value
+		 *  
+		 * else apply flat amount in case of rate is null and flat amt is not null 
+		 */
+			if (null != rate) {
+				fireCess = payableTax.multiply(rate.divide(CalculatorConstants.HUNDRED));
+
+				if (null != minAmt && fireCess.compareTo(minAmt) < 1)
+					fireCess = minAmt;
+
+				else if (null != maxAmt && fireCess.compareTo(maxAmt) > 1)
+					fireCess = maxAmt;
+			} else
+				fireCess = flatAmt;
+			
+		return fireCess;
 	}
 	
 }

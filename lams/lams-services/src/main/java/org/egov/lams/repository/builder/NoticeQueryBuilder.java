@@ -172,7 +172,7 @@ public class NoticeQueryBuilder {
 			selectQuery.append(" and tenantid = :tenantId");
 			params.put("tenantId", noticeCriteria.getTenantId());
 		}
-		selectQuery.append(" and duefromdate <= :dueDate");
+		selectQuery.append(" and duetodate::date >= :dueDate");
 		params.put("dueDate", new Date());
 		selectQuery.append(" ORDER BY ID desc");
 		selectQuery.append(" LIMIT :pageSize");

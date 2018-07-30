@@ -51,7 +51,7 @@ var assetDetails;
 var employees = [];
 var fileTypes = ["application/msword", "application/vnd.openxmlformats-officedocument.wordprocessingml.document", "application/vnd.ms-excel", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "application/pdf", "image/png", "image/jpeg"];
 var firstInput;
-var secondInput
+var secondInput;
 var monthFirst;
 var monthSecond;
 var yearFirst;
@@ -633,7 +633,7 @@ function fillValueToObject(currentState) {
     }else {
         agreement[currentState.id] = currentState.value;
     }
-    firstinput = agreement.firstAllotment;
+    firstInput = agreement.firstAllotment;
     secondInput = agreement.subSeqRenewals && agreement.subSeqRenewals[0]["fromDate"];
 } 
 
@@ -646,20 +646,20 @@ function handleSelectRenewal(valuefromE){
 }
 
 function handleSelect(){
-    if(firstinput && secondInput){
-        monthFirst = firstinput.split("/") && firstinput.split("/")[0];
+    if(firstInput && secondInput){
+        monthFirst = firstInput.split("/") && firstInput.split("/")[0];
         monthSecond = secondInput.split("/") && secondInput.split("/")[1];
-        yearFirst = firstinput.split("/") && firstinput.split("/")[1];
+        yearFirst = firstInput.split("/") && firstInput.split("/")[1];
         yearSecond = secondInput.split("/") && secondInput.split("/")[2];
         //console.log("value",monthFirst);
         if(monthFirst !== monthSecond || monthSecond !== monthFirst){
             $('#alert-box').fadeIn(function(){
-                $("#alert-box-content").html("Subsequent Renewal from date Should start from " + firstinput);
+                $("#alert-box-content").html("Subsequent Renewal from date Should start from " + firstInput);
             })
         }
         if(yearFirst !== yearSecond || yearSecond !== yearFirst){
             $('#alert-box').fadeIn(function(){
-                $("#alert-box-content").html("Subsequent Renewal from date Should start from " + firstinput);
+                $("#alert-box-content").html("Subsequent Renewal from date Should start from " + firstInput);
             })
         }
     }

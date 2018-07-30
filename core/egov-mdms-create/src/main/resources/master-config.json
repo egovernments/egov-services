@@ -110,6 +110,15 @@
         "$.code",
         "$.tenantId"
       ]
+    },
+    "FinancialYear": {
+      "masterName": "FinancialYear",
+      "moduleDefinition": null,
+      "isStateLevel": true,
+      "uniqueKeys": [
+        "$.code",
+        "$.tenantId"
+      ]
     }
   },
   "lcms": {

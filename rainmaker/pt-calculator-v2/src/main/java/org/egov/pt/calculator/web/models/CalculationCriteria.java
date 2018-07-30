@@ -36,7 +36,6 @@ public class CalculationCriteria   {
         @JsonProperty("assesmentNumber")
         private String assesmentNumber;
 
-        @NotNull
         @JsonProperty("assessmentYear")
         private String assessmentYear;
 

@@ -301,6 +301,22 @@ serviceMaps:
    isTransaction: true
    queryMaps:
 
+
+        - query: INSERT INTO eg_pt_property_audit_v2 SELECT * FROM eg_pt_property_v2 WHERE propertyid = ?;
+          basePath: Properties.*
+          jsonMaps:
+
+           - jsonPath: $.Properties.*.propertyId
+
+
+        - query: INSERT INTO eg_pt_address_audit_v2 SELECT * FROM eg_pt_address_v2 WHERE id = ?;
+          basePath: Properties.*.address
+          jsonMaps:
+
+          - jsonPath: $.Properties.*.address.id
+
+
+
         - query: UPDATE eg_pt_property_v2 SET status=?,acknowldgementNumber=?,oldPropertyId=?,creationReason=?, occupancyDate=?,lastModifiedBy=?, lastModifiedTime=? where propertyId=? AND tenantId=?;
           basePath: Properties.*
           jsonMaps:

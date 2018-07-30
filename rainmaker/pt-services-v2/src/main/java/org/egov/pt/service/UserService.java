@@ -65,10 +65,11 @@ public class UserService {
                             setUserName(owner,listOfMobileNumbers);
                             owner.setActive(true);
                             userDetailResponse = userCall(new CreateUserRequest(requestInfo,owner),uri);
-                            log.info("owner created --> "+userDetailResponse.getUser().get(0).getUuid());
                             if(userDetailResponse.getUser().get(0).getUuid()==null){
                                 throw new CustomException("INVALID USER RESPONSE","The user created has uuid as null");
                             }
+                            log.info("owner created --> "+userDetailResponse.getUser().get(0).getUuid());
+
                         }
                         else
                         { log.info("User update -> ","MobileNumber: ",owner.getMobileNumber()," Name: ",owner.getName());
@@ -77,6 +78,9 @@ public class UserService {
                           StringBuilder uri = new StringBuilder(userHost).append(userContextPath).append(owner.getId())
                                               .append(userUpdateEndpoint);
                           userDetailResponse = userCall( new CreateUserRequest(requestInfo,owner),uri);
+                            if(userDetailResponse.getUser().get(0).getUuid()==null){
+                                throw new CustomException("INVALID USER RESPONSE","The user updated has uuid as null");
+                            }
                         }
                         // Assigns value of fields from user got from userDetailResponse to owner object
                         setOwnerFields(owner,userDetailResponse,requestInfo);
@@ -99,6 +103,7 @@ public class UserService {
         userSearchRequest.setName(owner.getName());
         userSearchRequest.setRequestInfo(requestInfo);
         userSearchRequest.setActive(true);
+        userSearchRequest.setUserType(owner.getType());
         if(owner.getUuid()!=null)
             userSearchRequest.setUuid(Arrays.asList(owner.getUuid()));
         StringBuilder uri = new StringBuilder(userHost).append(userSearchEndpoint);
@@ -133,8 +138,9 @@ public class UserService {
         propertyDetail.getOwners().forEach(owner -> {listOfMobileNumbers.add(owner.getMobileNumber());});
         StringBuilder uri = new StringBuilder(userHost).append(userSearchEndpoint);
         UserSearchRequest userSearchRequest = new UserSearchRequest();
-        // Citizens are searched state level so property tenantId can be used
         userSearchRequest.setTenantId(tenantId);
+        // Should this be hardcoded?
+        userSearchRequest.setUserType("CITIZEN");
         Set<String> availableMobileNumbers = new HashSet<>();
 
         listOfMobileNumbers.forEach(mobilenumber -> {
@@ -178,10 +184,9 @@ public class UserService {
             return userDetailResponse;
         }
         // Which Exception to throw?
-        catch(Exception e)
+        catch(IllegalArgumentException  e)
         {
-            log.error("uri does not contain appropriate endpoint");
-            throw e;
+            throw new CustomException("IllegalArgumentException","ObjectMapper not able to convertValue in userCall");
         }
     }
 
@@ -194,16 +199,18 @@ public class UserService {
     private void parseResponse(LinkedHashMap responeMap,String dobFormat){
         List<LinkedHashMap> users = (List<LinkedHashMap>)responeMap.get("user");
         String format1 = "dd-MM-yyyy HH:mm:ss";
-        users.forEach( map -> {
-                    map.put("createdDate",dateTolong((String)map.get("createdDate"),format1));
-                    if((String)map.get("lastModifiedDate")!=null)
-                        map.put("lastModifiedDate",dateTolong((String)map.get("lastModifiedDate"),format1));
-                    if((String)map.get("dob")!=null)
-                        map.put("dob",dateTolong((String)map.get("dob"),dobFormat));
-                    if((String)map.get("pwdExpiryDate")!=null)
-                        map.put("pwdExpiryDate",dateTolong((String)map.get("pwdExpiryDate"),format1));
-                }
-        );
+        if(users!=null){
+            users.forEach( map -> {
+                        map.put("createdDate",dateTolong((String)map.get("createdDate"),format1));
+                        if((String)map.get("lastModifiedDate")!=null)
+                            map.put("lastModifiedDate",dateTolong((String)map.get("lastModifiedDate"),format1));
+                        if((String)map.get("dob")!=null)
+                            map.put("dob",dateTolong((String)map.get("dob"),dobFormat));
+                        if((String)map.get("pwdExpiryDate")!=null)
+                            map.put("pwdExpiryDate",dateTolong((String)map.get("pwdExpiryDate"),format1));
+                    }
+            );
+        }
     }
 
     /**
@@ -254,6 +261,7 @@ public class UserService {
         userSearchRequest.setMobileNumber(criteria.getMobileNumber());
         userSearchRequest.setName(criteria.getName());
         userSearchRequest.setActive(true);
+        userSearchRequest.setUserType("CITIZEN");
         return userSearchRequest;
     }
 
@@ -312,6 +320,7 @@ public class UserService {
                         //  Is tenantId captured in citizenInfo?
                         userSearchRequest.setTenantId(property.getTenantId());
                         userSearchRequest.setMobileNumber(propertyDetail.getCitizenInfo().getMobileNumber());
+                        userSearchRequest.setUserType("CITIZEN");
                         userDetailResponse =  userCall(userSearchRequest,uriSearch);
                         if(!CollectionUtils.isEmpty(userDetailResponse.getUser()))
                             propertyDetail.getCitizenInfo().setUserName(UUID.randomUUID().toString());

@@ -37,6 +37,9 @@ public class PropertyService {
 	@Autowired
 	private UserService userService;
 
+	@Autowired
+	private CalculationService calculationService;
+
 
 
 	/**
@@ -46,9 +49,10 @@ public class PropertyService {
 	 */
 	public List<Property> createProperty(PropertyRequest request) {
 		propertyValidator.validateCreateRequest(request);
-		userService.createUser(request);
 		enrichmentService.enrichCreateRequest(request,false);
+		userService.createUser(request);
 		userService.createCitizen(request);
+		calculationService.calculateTax(request);
 		producer.push(config.getSavePropertyTopic(), request);
 		return request.getProperties();
 	}
@@ -110,6 +114,7 @@ public class PropertyService {
 
 		enrichmentService.enrichCreateRequest(request,true);
 		userService.createUser(request);
+		calculationService.calculateTax(request);
 		producer.push(config.getUpdatePropertyTopic(), request);
 		return request.getProperties();
 	}

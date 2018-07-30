@@ -227,6 +227,11 @@ public class PropertyValidator {
                 if(CollectionUtils.isEmpty(propertyDetail.getUnits()))
                     if(!propertyDetail.getPropertyType().equalsIgnoreCase("VACANT"))
                        errorMap.put("INVALID UNITS","Units cannot be null or empty");
+
+                if(request.getRequestInfo().getUserInfo().getType().equalsIgnoreCase("CITIZEN")){
+                    if(propertyDetail.getAdhocExemption()!=null || propertyDetail.getAdhocPenalty()!=null)
+                        errorMap.put("INVALID ADHOC CHARGES","AdhocExemption or AdhocPenalty should be null for request from citizen ");
+                }
             });
         });
         if(!errorMap.isEmpty())
@@ -395,8 +400,9 @@ public class PropertyValidator {
         List<Property> properties = request.getProperties();
         properties.forEach(property -> {
             property.getPropertyDetails().forEach(propertyDetail -> {
+                System.out.println("contains check: "+propertyDetail.getOwnershipCategory().contains("INSTITUTIONAL"));
                 // Checks for mandatory fields in Institution object if SubownershipCategory is INSTITUTIONAL
-                if(propertyDetail.getInstitution()!=null && propertyDetail.getSubOwnershipCategory().equalsIgnoreCase("INSTITUTIONAL")){
+                if(propertyDetail.getInstitution()!=null && propertyDetail.getOwnershipCategory().contains("INSTITUTIONAL")){
                     if(propertyDetail.getInstitution().getType()==null)
                         errorMap.put(" INVALID INSTITUTION OBJECT ","The institutionType cannot be null ");
                     if(propertyDetail.getInstitution().getName()==null)
@@ -405,10 +411,10 @@ public class PropertyValidator {
                         errorMap.put("INVALID INSTITUTION OBJECT","Designation cannot be null");
                 }
                 // Throws error if the SubownerShipCategory is not institutional and the institution object contains not null values
-                else if(!propertyDetail.getSubOwnershipCategory().equalsIgnoreCase("INSTITUTIONAL") && propertyDetail.getInstitution()!=null){
+                else if(!propertyDetail.getOwnershipCategory().contains("INSTITUTIONAL") && propertyDetail.getInstitution()!=null){
                     if(propertyDetail.getInstitution().getType()!=null || propertyDetail.getInstitution().getName()!=null
                             || propertyDetail.getInstitution().getDesignation()!=null)
-                        errorMap.put(" INVALID INSTITUTION OBJECT ","The institution object should be null. SubOwnershipCategory is not equal to Institutional");
+                        errorMap.put(" INVALID INSTITUTION OBJECT ","The institution object should be null. OwnershipCategory does not contain Institutional");
                 }
             });
         });

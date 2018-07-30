@@ -35,7 +35,8 @@ public class PropertyRowMapper implements ResultSetExtractor<List<Property>> {
 
 			if (null == currentProperty) {
 
-				Boundary locality = Boundary.builder().code(rs.getString("locality")).build();
+				Boundary locality = Boundary.builder().code(rs.getString("locality"))
+						            .build();
 
 				/*
 				 * id of the address table is being fetched as address key to avoid confusion

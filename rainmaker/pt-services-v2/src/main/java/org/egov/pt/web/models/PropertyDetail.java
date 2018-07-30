@@ -106,6 +106,7 @@ public class PropertyDetail   {
         @JsonProperty("additionalDetails")
         private Object additionalDetails;
 
+        @NotNull
         @JsonProperty("financialYear")
         private String financialYear;
 
@@ -151,6 +152,9 @@ public class PropertyDetail   {
 
         @JsonProperty("auditDetails")
         private AuditDetails auditDetails;
+
+        @JsonProperty("calculation")
+        private Calculation calculation;
 
 
 

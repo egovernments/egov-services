@@ -57,7 +57,7 @@ public class EnrichmentService {
                             unit.setTenantId(property.getTenantId());});
                     if( propertyDetail.getDocuments()!=null)
                         propertyDetail.getDocuments().forEach(document -> document.setId(UUID.randomUUID().toString()));
-                    if(propertyDetail.getSubOwnershipCategory().equalsIgnoreCase("INSTITUTIONAL"))
+                    if(propertyDetail.getOwnershipCategory().contains("INSTITUTIONAL"))
                     { propertyDetail.getInstitution().setId(UUID.randomUUID().toString());
                         propertyDetail.getInstitution().setTenantId(property.getTenantId());
                         propertyDetail.getOwners().forEach(owner -> {
@@ -139,7 +139,12 @@ public class EnrichmentService {
      */
     private List<String> getIdList(RequestInfo requestInfo, String tenantId, String idKey,
                                    String idformat,int count) {
-        return idGenRepository.getId(requestInfo, tenantId, idKey, idformat,count).getIdResponses().stream()
+        List<IdResponse> idResponses = idGenRepository.getId(requestInfo, tenantId, idKey, idformat,count).getIdResponses();
+
+        if(CollectionUtils.isEmpty(idResponses))
+            throw new CustomException("IDGEN ERROR","No ids returned from idgen Service");
+
+        return idResponses.stream()
                 .map(IdResponse::getId).collect(Collectors.toList());
     }
 
@@ -211,7 +216,7 @@ public class EnrichmentService {
             {
                 propertyDetail.getOwners().forEach(owner -> {
                     if(userIdToOwnerMap.get(owner.getUuid())==null)
-                     throw new CustomException("INVALID OWNER","The owner of the property is not in databse");
+                     throw new CustomException("OWNER SEARCH ERROR","The owner of the propertyDetail "+propertyDetail.getAssessmentNumber()+" is not coming in user search");
                     else
                       owner.addUserDetail(userIdToOwnerMap.get(owner.getUuid()));
 
@@ -219,7 +224,7 @@ public class EnrichmentService {
                 if(userIdToOwnerMap.get(propertyDetail.getCitizenInfo().getUuid())!=null)
                   propertyDetail.getCitizenInfo().addCitizenDetail(userIdToOwnerMap.get(propertyDetail.getCitizenInfo().getUuid()));
                 else
-                    throw new CustomException("INVALID CITIZENINFO","The citizenInfo of property with id: "+property.getPropertyId()+" is invalid");
+                    throw new CustomException("CITIZENINFO ERROR","The citizenInfo of property with id: "+property.getPropertyId()+" cannot be found");
             });
         });
     }

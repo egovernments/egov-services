@@ -44,6 +44,9 @@ public class Boundary   {
         @JsonProperty("longitude")
         private String longitude;
 
+        @JsonProperty("area")
+        private String area;
+
         @JsonProperty("children")
         @Valid
         private List<Boundary> children;

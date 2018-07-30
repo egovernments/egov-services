@@ -199,10 +199,10 @@ public class EstimationService {
 				.estimateAmount(usageExemption).build());
 		BigDecimal payableTax = taxAmt.subtract(usageExemption);
 
-		BigDecimal fireCess = mstrDataService.getFireCess(payableTax, assessmentYear, timeBasedExmeptionMasterMap);
+/*		BigDecimal fireCess = mstrDataService.getFireCess(payableTax, assessmentYear, timeBasedExmeptionMasterMap);
 		estimates.add(TaxHeadEstimate.builder().taxHeadCode(CalculatorConstants.PT_FIRE_CESS)
 				.estimateAmount(fireCess).build());
-		payableTax = payableTax.add(fireCess);
+		payableTax = payableTax.add(fireCess);*/
 
 		BigDecimal userExemption = getExemption(detail.getOwners(), payableTax, assessmentYear,
 				propertyBasedExemptionMasterMap);

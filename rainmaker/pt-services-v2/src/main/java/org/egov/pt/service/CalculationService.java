@@ -1,17 +1,18 @@
 package org.egov.pt.service;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.Map;
+
 import org.egov.pt.repository.ServiceRequestRepository;
-import org.egov.pt.web.models.*;
+import org.egov.pt.web.models.Calculation;
+import org.egov.pt.web.models.CalculationCriteria;
+import org.egov.pt.web.models.CalculationReq;
+import org.egov.pt.web.models.PropertyRequest;
 import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.function.Function;
-import java.util.stream.Collectors;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
 public class CalculationService {
@@ -46,7 +47,7 @@ public class CalculationService {
                  if(responseMap.get(propertyDetail.getAssessmentNumber())==null)
                      throw new CustomException("CALCULATION_ERROR","The calculation object is coming null from calculation service");
                  else
-                 propertyDetail.setCalculation(responseMap.get(propertyDetail.getAssessmentNumber()));
+                 propertyDetail.setCalculation(mapper.convertValue(responseMap.get(propertyDetail.getAssessmentNumber()), Calculation.class));
              });
          });
 

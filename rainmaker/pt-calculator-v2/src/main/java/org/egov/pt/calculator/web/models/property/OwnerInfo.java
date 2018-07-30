@@ -1,22 +1,15 @@
 package org.egov.pt.calculator.web.models.property;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 import javax.validation.Valid;
 
-import org.egov.common.contract.request.Role;
-import org.hibernate.validator.constraints.NotEmpty;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
+import lombok.*;
 import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 /**
  * OwnerInfo
@@ -28,137 +21,170 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
-@EqualsAndHashCode(of= {"id"})
-public class OwnerInfo   {
-	
-        @JsonProperty("id")
-        private String id;
-
-        @JsonProperty("userName")
-        private String userName;
-
-        @JsonProperty("password")
-        private String password;
-
-        @JsonProperty("salutation")
-        private String salutation;
-
-        @JsonProperty("name")
-        private String name;
-
-        @JsonProperty("gender")
-        private String gender;
-
-        @JsonProperty("mobileNumber")
-        private String mobileNumber;
-
-        @JsonProperty("emailId")
-        private String emailId;
-
-        @JsonProperty("altContactNumber")
-        private String altContactNumber;
-
-        @JsonProperty("pan")
-        private String pan;
-
-        @JsonProperty("aadhaarNumber")
-        private String aadhaarNumber;
-
-        @JsonProperty("permanentAddress")
-        private String permanentAddress;
-
-        @JsonProperty("permanentCity")
-        private String permanentCity;
-
-        @JsonProperty("permanentPincode")
-        private String permanentPincode;
-
-        @JsonProperty("correspondenceCity")
-        private String correspondenceCity;
-
-        @JsonProperty("correspondencePincode")
-        private String correspondencePincode;
-
-        @JsonProperty("correspondenceAddress")
-        private String correspondenceAddress;
-
-        @JsonProperty("isActive")
-        private Boolean active;
-
-        @JsonProperty("dob")
-        private Long dob;
-
-        @JsonProperty("pwdExpiryDate")
-        private Long pwdExpiryDate;
-
-        @JsonProperty("locale")
-        private String locale;
-
-        @JsonProperty("type")
-        private String type;
-
-        @JsonProperty("signature")
-        private String signature;
-
-        @JsonProperty("accountLocked")
-        private Boolean accountLocked;
-
-        @JsonProperty("roles")
-        @Valid
-        private List<Role> roles;
-
-        @JsonProperty("fatherOrHusbandName")
-        private String fatherOrHusbandName;
-
-        @JsonProperty("bloodGroup")
-        private String bloodGroup;
-
-        @JsonProperty("identificationMark")
-        private String identificationMark;
-
-        @JsonProperty("photo")
-        private String photo;
-
-        @JsonProperty("createdBy")
-        private String createdBy;
-
-        @JsonProperty("createdDate")
-        private Long createdDate;
-
-        @JsonProperty("lastModifiedBy")
-        private Long lastModifiedBy;
-
-        @JsonProperty("lastModifiedDate")
-        private Long lastModifiedDate;
-
-        @JsonProperty("otpReference")
-        private String otpReference;
-
-        @JsonProperty("tenantId")
-        private String tenantId;
+@ToString
+public class OwnerInfo extends User  {
 
         @JsonProperty("isPrimaryOwner")
         private Boolean isPrimaryOwner;
 
-        @JsonProperty("isCurrentOwner")
-        private Boolean isCurrentOwner;
-
         @JsonProperty("ownerShipPercentage")
         private Double ownerShipPercentage;
 
-        @NotEmpty
         @JsonProperty("ownerType")
         private String ownerType;
 
+        @JsonProperty("institutionId")
+        private String institutionId;
 
-        public OwnerInfo addRolesItem(Role rolesItem) {
-            if (this.roles == null) {
-            this.roles = new ArrayList<>();
-            }
-        this.roles.add(rolesItem);
-        return this;
+        @JsonProperty("documents")
+        @Valid
+        private Set<Document> documents;
+
+        public enum RelationshipEnum {
+                FATHER("FATHER"),
+
+                HUSBAND("HUSBAND");
+
+                private String value;
+
+                RelationshipEnum(String value) {
+                        this.value = value;
+                }
+
+                @Override
+                @JsonValue
+                public String toString() {
+                        return String.valueOf(value);
+                }
+
+                @JsonCreator
+                public static RelationshipEnum fromValue(String text) {
+                        for (RelationshipEnum b : RelationshipEnum.values()) {
+                                if (String.valueOf(b.value).equals(text)) {
+                                        return b;
+                                }
+                        }
+                        return null;
+                }
         }
 
+        @JsonProperty("relationship")
+        private RelationshipEnum relationship;
+
+
+
+        @Builder
+        public OwnerInfo(Long id, String uuid, String userName, String password, String salutation, String name, String gender, String mobileNumber, String emailId, String altContactNumber, String pan, String aadhaarNumber, String permanentAddress, String permanentCity, String permanentPincode, String correspondenceCity, String correspondencePincode, String correspondenceAddress, Boolean active, Long dob, Long pwdExpiryDate, String locale, String type, String signature, Boolean accountLocked, List<Role> roles, String fatherOrHusbandName, String bloodGroup, String identificationMark, String photo, String createdBy, Long createdDate, String lastModifiedBy, Long lastModifiedDate, String otpReference, String tenantId, Boolean isPrimaryOwner, Double ownerShipPercentage, String ownerType,String institutionId,Set<Document> documents,RelationshipEnum relationship) {
+                super(id,uuid, userName, password, salutation, name, gender, mobileNumber, emailId, altContactNumber, pan, aadhaarNumber, permanentAddress, permanentCity, permanentPincode, correspondenceCity, correspondencePincode, correspondenceAddress, active, dob, pwdExpiryDate, locale, type, signature, accountLocked, roles, fatherOrHusbandName, bloodGroup, identificationMark, photo, createdBy, createdDate, lastModifiedBy, lastModifiedDate, otpReference, tenantId);
+                this.isPrimaryOwner = isPrimaryOwner;
+                this.ownerShipPercentage = ownerShipPercentage;
+                this.ownerType = ownerType;
+                this.relationship=relationship;
+                this.institutionId=institutionId;
+                this.documents=documents;
+        }
+
+        public OwnerInfo addDocumentsItem(Document documentsItem) {
+                if (this.documents == null) {
+                        this.documents = new HashSet<>();
+                }
+                this.documents.add(documentsItem);
+                return this;
+        }
+
+        /**
+         * Populates Owner fields from the given User object
+         * @param user User object obtained from user service
+         */
+        public void addUserDetail(User user){
+                this.setLastModifiedDate(user.getLastModifiedDate());
+                this.setLastModifiedBy(user.getLastModifiedBy());
+                this.setCreatedBy(user.getCreatedBy());
+                this.setCreatedDate(user.getCreatedDate());
+                this.setUserName(user.getUserName());
+                this.setPassword(user.getPassword());
+                this.setSalutation(user.getSalutation());
+                this.setName(user.getName());
+                this.setGender(user.getGender());
+                this.setMobileNumber(user.getMobileNumber());
+                this.setEmailId(user.getEmailId());
+                this.setAltContactNumber(user.getAltContactNumber());
+                this.setPan(user.getPan());
+                this.setAadhaarNumber(user.getAadhaarNumber());
+                this.setPermanentAddress(user.getPermanentAddress());
+                this.setPermanentCity(user.getPermanentCity());
+                this.setPermanentPincode(user.getPermanentPincode());
+                this.setCorrespondenceAddress(user.getCorrespondenceAddress());
+                this.setCorrespondenceCity(user.getCorrespondenceCity());
+                this.setCorrespondencePincode(user.getCorrespondencePincode());
+                this.setActive(user.getActive());
+                this.setDob(user.getDob());
+                this.setPwdExpiryDate(user.getPwdExpiryDate());
+                this.setLocale(user.getLocale());
+                this.setType(user.getType());
+                this.setAccountLocked(user.getAccountLocked());
+                this.setRoles(user.getRoles());
+                this.setFatherOrHusbandName(user.getFatherOrHusbandName());
+                this.setBloodGroup(user.getBloodGroup());
+                this.setIdentificationMark(user.getIdentificationMark());
+                this.setPhoto(user.getPhoto());
+                this.setTenantId(user.getTenantId());
+        }
+
+        public OwnerInfo(User user){
+                this.setTenantId(user.getTenantId());
+                this.setUserName(user.getUserName());
+                this.setId(user.getId());
+                this.setName(user.getName());
+                this.setType(user.getType());
+                this.setMobileNumber(user.getMobileNumber());
+                this.setEmailId(user.getEmailId());
+                this.setRoles(addRoles(user.getRoles()));
+                this.setUuid(user.getUuid());
+        }
+
+        public void addCitizenDetail(User user){
+                this.setTenantId(user.getTenantId());
+                this.setUserName(user.getUserName());
+                this.setId(user.getId());
+                this.setName(user.getName());
+                this.setType(user.getType());
+                this.setMobileNumber(user.getMobileNumber());
+                this.setEmailId(user.getEmailId());
+                this.setRoles(user.getRoles());
+                this.setUuid(user.getUuid());
+        }
+
+        private List<Role> addRoles(List<Role> Roles){
+                LinkedList<Role> addroles = new LinkedList<>();
+                Roles.forEach(role -> {
+                        Role addrole = new Role();
+                        addrole.setId(role.getId());
+                        addrole.setName(role.getName());
+                        addrole.setCode(role.getCode());
+                        addroles.add(addrole);
+                });
+                return addroles;
+        }
+
+
+        @Override
+        public boolean equals(Object o) {
+                if (this == o) return true;
+                if (o == null || getClass() != o.getClass()) return false;
+                if (!super.equals(o)) return false;
+
+                User user = (User) o;
+
+                return Objects.equals(this.getUuid(), user.getUuid()) &&
+                        Objects.equals(this.getName(), user.getName()) &&
+                        Objects.equals(this.getMobileNumber(), user.getMobileNumber());
+        }
+
+        @Override
+        public int hashCode() {
+
+                return super.hashCode();
+        }
 }
 

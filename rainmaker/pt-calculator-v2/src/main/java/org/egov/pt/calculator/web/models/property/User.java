@@ -3,19 +3,17 @@ package org.egov.pt.calculator.web.models.property;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Digits;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 
-import org.egov.common.contract.request.Role;
+import lombok.*;
 import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 /**
  * User
@@ -26,10 +24,14 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
+@ToString
+
 public class User   {
         @JsonProperty("id")
         private Long id;
+
+        @JsonProperty("uuid")
+        private String uuid;
 
         @JsonProperty("userName")
         private String userName;
@@ -40,12 +42,17 @@ public class User   {
         @JsonProperty("salutation")
         private String salutation;
 
+        @NotNull
+        @Pattern(regexp = "[a-z-A-Z]*", message = "Name has invalid characters")
         @JsonProperty("name")
         private String name;
 
+        @NotNull
         @JsonProperty("gender")
         private String gender;
 
+        @NotNull
+        @Pattern(regexp = "[0-9]*", message = "MobileNumber has invalid Number")
         @JsonProperty("mobileNumber")
         private String mobileNumber;
 
@@ -58,22 +65,24 @@ public class User   {
         @JsonProperty("pan")
         private String pan;
 
+        @Digits(integer = 12,fraction=0)
         @JsonProperty("aadhaarNumber")
         private String aadhaarNumber;
 
+        @NotNull
         @JsonProperty("permanentAddress")
         private String permanentAddress;
 
         @JsonProperty("permanentCity")
         private String permanentCity;
 
-        @JsonProperty("permanentPincode")
+        @JsonProperty("permanentPinCode")
         private String permanentPincode;
 
         @JsonProperty("correspondenceCity")
         private String correspondenceCity;
 
-        @JsonProperty("correspondencePincode")
+        @JsonProperty("correspondencePinCode")
         private String correspondencePincode;
 
         @JsonProperty("correspondenceAddress")
@@ -104,6 +113,7 @@ public class User   {
         @Valid
         private List<Role> roles;
 
+        @NotNull
         @JsonProperty("fatherOrHusbandName")
         private String fatherOrHusbandName;
 
@@ -123,7 +133,7 @@ public class User   {
         private Long createdDate;
 
         @JsonProperty("lastModifiedBy")
-        private Long lastModifiedBy;
+        private String lastModifiedBy;
 
         @JsonProperty("lastModifiedDate")
         private Long lastModifiedDate;
@@ -143,5 +153,20 @@ public class User   {
         return this;
         }
 
+        @Override
+        public boolean equals(Object o) {
+                if (this == o) return true;
+                if (o == null || getClass() != o.getClass()) return false;
+                User user = (User) o;
+                return Objects.equals(uuid, user.uuid) &&
+                        Objects.equals(name, user.name) &&
+                        Objects.equals(mobileNumber, user.mobileNumber);
+        }
+
+        @Override
+        public int hashCode() {
+
+                return Objects.hash(uuid, name, mobileNumber);
+        }
 }
 

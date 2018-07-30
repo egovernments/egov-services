@@ -31,6 +31,10 @@ public class CalculatorConstants {
 	
 	public static final String PT_FIRE_CESS = "PT_FIRE_CESS";
 	
+	public static final String PT_ADHOC_PENALTY = "PT_ADHOC_PENALTY";
+	
+	public static final String PT_ADHOC_REBATE = "PT_ADHOC_REBATE";
+	
 	protected static final List<String> TAXES_TO_BE_IGNORED_WHEN_CALUCLATING_REBATE_AND_PENALTY = Arrays.asList(PT_TIME_REBATE, PT_TIME_PENALTY, PT_TIME_INTEREST);
 	
 	/*

@@ -38,9 +38,7 @@ public class CalculationService {
 
          CalculationReq calculationReq = createCalculationReq(request);
 
-         Map<String,Calculation> responseMap = mapper.convertValue(serviceRequestRepository.fetchResult(uri, calculationReq),CalculationRes.class)
-                 .getCalculation()
-                 .stream().collect(Collectors.toMap(Calculation::getServiceNumber, Function.identity()));
+         Map<String,Calculation> responseMap = ((Map<String, Calculation>)serviceRequestRepository.fetchResult(uri, calculationReq));
 
          System.out.println("responsemap-> "+responseMap);
          request.getProperties().forEach(property -> {

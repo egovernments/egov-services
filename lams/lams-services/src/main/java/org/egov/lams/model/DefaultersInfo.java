@@ -82,6 +82,7 @@ public class DefaultersInfo {
 	@JsonFormat(pattern = "dd/MM/yyyy")
 	private Date agreementDate;
 	private Long timePeriod;
+	private String shopNumber;
 	private String action;
 	private String status;
 	private String assetName;

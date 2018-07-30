@@ -464,8 +464,9 @@ public class EstimationService {
 			Map<String, Object> applicableOwnerType = mstrDataService.getApplicableMasterFromList(financialYear,
 					ownerTypeMap.get(owner.getOwnerType()));
 
-			if (null == applicableOwnerType)
-				continue;
+			if (null != applicableOwnerType
+					&& null != applicableOwnerType.get(CalculatorConstants.EXEMPTION_FIELD_NAME))
+			{
 
 			@SuppressWarnings("unchecked")
 			Map<String, Object> exemption = (Map<String, Object>) applicableOwnerType
@@ -482,6 +483,7 @@ public class EstimationService {
 
 			if (null != exempMaxValue && currentExemption.compareTo(BigDecimal.valueOf(exempMaxValue)) > 0)
 				userExemption = BigDecimal.valueOf(exempMaxValue);
+			}
 		}
 		return userExemption;
 	}

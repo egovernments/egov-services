@@ -654,12 +654,12 @@ function handleSelect(){
         //console.log("value",monthFirst);
         if(monthFirst !== monthSecond || monthSecond !== monthFirst){
             $('#alert-box').fadeIn(function(){
-                $("#alert-box-content").html("Current Lessee date and Subsequent Renewals date is not valid");
+                $("#alert-box-content").html("Subsequent Renewal from date Should start from " + firstinput);
             })
         }
         if(yearFirst !== yearSecond || yearSecond !== yearFirst){
             $('#alert-box').fadeIn(function(){
-                $("#alert-box-content").html("Current Lessee date and Subsequent Renewals date is not valid");
+                $("#alert-box-content").html("Subsequent Renewal from date Should start from " + firstinput);
             })
         }
     }

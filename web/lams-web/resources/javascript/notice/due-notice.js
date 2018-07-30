@@ -83,22 +83,21 @@ class DueNotice extends React.Component {
     }
 
 
-  printNotice(agreement,tenantId){
-    //console.log(agreement);
-    var assetCategories = this.state.assetCategories;
+  printNotice(agreement){
+    var locality = this.state.locality;
     var referenceNumber;
     var assetName = 'N/A';
+    var lastPaid;
     var doc = new jsPDF();
     var date = moment(new Date()).format("DD/MM/YYYY");
     var ulbType = "MUNICIPALITY/MUNICIPAL CORPORATION";
-    var assetCategory =  this.getName(assetCategories,agreement.assetCategory);
     var cityGrade = !localStorage.getItem("city_grade") || localStorage.getItem("city_grade") == "undefined" ? (localStorage.setItem("city_grade", JSON.stringify(commonApiPost("tenant", "v1/tenant", "_search", { code: tenantId }).responseJSON["tenant"][0]["city"]["ulbGrade"] || {})), JSON.parse(localStorage.getItem("city_grade"))) : JSON.parse(localStorage.getItem("city_grade"));
 
     if (cityGrade.toLowerCase() === 'corp') {
         ulbType = "MUNICIPAL CORPORATION";
     }
     var LocalityData = commonApiPost("egov-location/boundarys", "boundariesByBndryTypeNameAndHierarchyTypeName", "", { boundaryTypeName: "LOCALITY", hierarchyTypeName: "LOCATION", tenantId});
-    var locality = getNameById(LocalityData["responseJSON"]["Boundary"], agreement.locality);
+    var locality = getNameById(locality, agreement.locality);
 
     if(agreement.shopNumber){
       referenceNumber = agreement.shopNumber;
@@ -107,6 +106,11 @@ class DueNotice extends React.Component {
     }
     if(agreement.assetName){
       assetName = agreement.assetName;
+    }
+    if(agreement.lastPaid){
+      lastPaid = agreement.lastPaid;
+    }else{
+      lastPaid = agreement.commencementDate;
     }
 
     doc.setFontType("bold");
@@ -137,7 +141,7 @@ class DueNotice extends React.Component {
 
     doc.fromHTML("As per the reference 1st cited, rentals for Shop No <b>" + referenceNumber + "</b> in the <b>" + assetName + "</b>",40,130)
     doc.fromHTML(" Shopping Complex  are to be paid by 5th of succeeding month."+
-    "But it is observed that rental payments <br> are pending for the said lease since <b>" +agreement.lastPaid  + "</b>",20,132);
+    "But it is observed that rental payments <br> are pending for the said lease since <b>" +lastPaid  + "</b>",20,132);
 
     doc.fromHTML("You are hereby instructed to pay <b>" + agreement.totalBalance + " /- </b> within 7 days of receipt of this notice failing which" ,40,150)
     doc.fromHTML("exiting lease for the said shop will be cancelled without any further correspondence,",20,155)
@@ -155,7 +159,7 @@ class DueNotice extends React.Component {
     doc.text(22,217,"Copy to the concerned officials for necessary action");
 
     var blob = doc.output('blob');
-    
+
     this.createFileStore(agreement, blob).then(this.createNotice, this.errorHandler);
   }
 

@@ -157,8 +157,8 @@ public class NoticeRepository {
      inputParameters.put("mobileNumber",notice.getAllotteeMobileNumber());
      inputParameters.put("commencementDate",notice.getCommencementDate());
      inputParameters.put("expiryDate",notice.getExpiryDate());
-     inputParameters.put("dueFromDate",new Date());
-     inputParameters.put("dueToDate", new Date());
+     inputParameters.put("dueFromDate",notice.getDueFromDate());
+     inputParameters.put("dueToDate", notice.getDueToDate());
      inputParameters.put("action",notice.getAction());
      inputParameters.put("status",notice.getStatus());
      inputParameters.put("createdDate",new Date());

@@ -87,10 +87,11 @@ class DueNotice extends React.Component {
     console.log(agreement);
     var assetCategories = this.state.assetCategories;
     var referenceNumber;
+    var assetName = 'N/A';
     var doc = new jsPDF();
     var date = moment(new Date()).format("DD/MM/YYYY");
     var ulbType = "MUNICIPALITY/MUNICIPAL CORPORATION";
-    var assetName =  this.getName(assetCategories,agreement.assetCategory);
+    var assetCategory =  this.getName(assetCategories,agreement.assetCategory);
     var cityGrade = !localStorage.getItem("city_grade") || localStorage.getItem("city_grade") == "undefined" ? (localStorage.setItem("city_grade", JSON.stringify(commonApiPost("tenant", "v1/tenant", "_search", { code: tenantId }).responseJSON["tenant"][0]["city"]["ulbGrade"] || {})), JSON.parse(localStorage.getItem("city_grade"))) : JSON.parse(localStorage.getItem("city_grade"));
 
     if (cityGrade.toLowerCase() === 'corp') {
@@ -99,10 +100,13 @@ class DueNotice extends React.Component {
     var LocalityData = commonApiPost("egov-location/boundarys", "boundariesByBndryTypeNameAndHierarchyTypeName", "", { boundaryTypeName: "LOCALITY", hierarchyTypeName: "LOCATION", tenantId});
     var locality = getNameById(LocalityData["responseJSON"]["Boundary"], agreement.locality);
 
-    if(agreement.referenceNumber && agreement.referenceNumber){
-      referenceNumber = agreement.referenceNumber;
+    if(agreement.shopNumber){
+      referenceNumber = agreement.shopNumber;
     }else{
       referenceNumber = "N/A";
+    }
+    if(agreement.assetName){
+      assetName = agreement.assetName;
     }
 
     doc.setFontType("bold");
@@ -151,7 +155,8 @@ class DueNotice extends React.Component {
     doc.text(22,217,"Copy to the concerned officials for necessary action");
 
     var blob = doc.output('blob');
-   this.createFileStore(agreement, blob).then(this.createNotice, this.errorHandler);
+    
+    this.createFileStore(agreement, blob).then(this.createNotice, this.errorHandler);
   }
 
   errorHandler(statusCode){

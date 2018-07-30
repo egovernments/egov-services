@@ -55,7 +55,7 @@ var secondInput;
 var monthFirst;
 var monthSecond;
 var yearFirst;
-var yearSecond; 
+var yearSecond;
 
 $(".disabled").attr("disabled", true);
 $(".goodWillAmount").attr("disabled",false);
@@ -601,6 +601,7 @@ $(".onlyNumber").on("keydown", function(e) {
 
 //it will split object string where it has .
 function fillValueToObject(currentState) {
+    var index = 0;
     if(currentState.id.includes("[")){
       let keys = currentState.name.split('[');
       let mainKey = keys[0];
@@ -633,19 +634,18 @@ function fillValueToObject(currentState) {
     }else {
         agreement[currentState.id] = currentState.value;
     }
-    firstInput = agreement.firstAllotment;
-    secondInput = agreement.subSeqRenewals && agreement.subSeqRenewals[0]["fromDate"];
 } 
 
 function handleSelectRenewal(valuefromE){
     let value = valuefromE && valuefromE.getAttribute("value");
-    //console.log("log 1",valuefromE.getAttribute("value"));
     if(value == 0){
         handleSelect();
     }
 }
 
 function handleSelect(){
+    firstInput = document.getElementById("firstAllotment").value; //agreement.firstAllotment;
+    secondInput = document.getElementById("subSeqRenewals[0].fromDate").value;  
     if(firstInput && secondInput){
         monthFirst = firstInput.split("/") && firstInput.split("/")[0];
         monthSecond = secondInput.split("/") && secondInput.split("/")[1];

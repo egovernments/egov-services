@@ -50,12 +50,12 @@ var filesToBeDeleted = [];
 var assetDetails;
 var employees = [];
 var fileTypes = ["application/msword", "application/vnd.openxmlformats-officedocument.wordprocessingml.document", "application/vnd.ms-excel", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "application/pdf", "image/png", "image/jpeg"];
-let firstinput;
-let secondInput
-let monthFirst;
-let monthSecond;
-let yearFirst;
-let yearSecond; 
+var firstinput;
+var secondInput
+var monthFirst;
+var monthSecond;
+var yearFirst;
+var yearSecond; 
 
 $(".disabled").attr("disabled", true);
 $(".goodWillAmount").attr("disabled",false);

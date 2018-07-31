@@ -12,7 +12,7 @@ public class LoggedInUserUpdatePasswordRequestTest {
 	@Test
 	public void test_should_map_from_contract_to_domain() {
 		final User userInfo = User.builder()
-				.id(123L)
+				.userName("abcd")
 				.build();
 		final RequestInfo requestInfo = RequestInfo.builder()
 				.userInfo(userInfo)
@@ -28,7 +28,7 @@ public class LoggedInUserUpdatePasswordRequestTest {
 		assertNotNull(domain);
 		assertEquals("existingPassword", domain.getExistingPassword());
 		assertEquals("newPassword", domain.getNewPassword());
-		assertEquals(Long.valueOf(123), domain.getUserId());
+		assertEquals("abcd", domain.getUserName());
 	}
 
 	@Test
@@ -41,7 +41,7 @@ public class LoggedInUserUpdatePasswordRequestTest {
 
 		final org.egov.user.domain.model.LoggedInUserUpdatePasswordRequest domain = loggedInUserUpdatePasswordRequest.toDomain();
 
-		assertNull(domain.getUserId());
+		assertNull(domain.getUserName());
 	}
 
 	@Test
@@ -57,6 +57,6 @@ public class LoggedInUserUpdatePasswordRequestTest {
 
 		final org.egov.user.domain.model.LoggedInUserUpdatePasswordRequest domain = loggedInUserUpdatePasswordRequest.toDomain();
 
-		assertNull(domain.getUserId());
+		assertNull(domain.getUserName());
 	}
 }

@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.user.domain.model.UserSearchCriteria;
+import org.egov.user.domain.model.enums.UserType;
 
 import java.util.Collections;
 import java.util.List;
@@ -79,7 +80,7 @@ public class UserSearchRequest {
 				.pageSize(pageSize)
 				.pageNumber(pageNumber)
 				.sort(sort)
-				.type(userType)
+				.type(UserType.fromValue(userType))
 				.tenantId(tenantId)
 				.roleCodes(roleCodes)
 				.uuid(uuid)

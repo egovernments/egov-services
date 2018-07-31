@@ -1,9 +1,9 @@
 package org.egov.user.domain.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
+import lombok.*;
 import org.egov.user.domain.exception.InvalidUserSearchCriteriaException;
+import org.egov.user.domain.model.enums.UserType;
+import org.springframework.util.CollectionUtils;
 
 import java.util.List;
 
@@ -11,7 +11,9 @@ import static org.apache.commons.lang3.StringUtils.isEmpty;
 
 @AllArgsConstructor
 @Getter
+@Setter
 @Builder
+@ToString
 public class UserSearchCriteria {
 
     private List<Long> id;
@@ -27,18 +29,13 @@ public class UserSearchCriteria {
     private int pageSize;
     private int pageNumber;
     private List<String> sort;
-    private String type;
+    private UserType type;
     private String tenantId;
     private List<String> roleCodes;
 
     public void validate() {
-    	boolean isInvalid = isTenantIdAbsent();
-    	if (isInvalid) {
-    		throw new InvalidUserSearchCriteriaException(this);
-		}
-	}
-
-	public boolean isTenantIdAbsent() {
-    	return isEmpty(tenantId);
-	}
+        if (CollectionUtils.isEmpty(uuid) && CollectionUtils.isEmpty(id) && isEmpty(tenantId)) {
+            throw new InvalidUserSearchCriteriaException(this);
+        }
+    }
 }

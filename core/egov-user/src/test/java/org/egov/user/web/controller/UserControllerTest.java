@@ -1,42 +1,10 @@
 package org.egov.user.web.controller;
 
-import static java.util.Arrays.asList;
-import static java.util.Collections.singletonList;
-import static org.apache.commons.lang3.ArrayUtils.isEquals;
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.argThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
-import java.io.IOException;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-import java.util.TimeZone;
-
 import org.apache.commons.io.IOUtils;
 import org.egov.user.TestConfiguration;
 import org.egov.user.domain.exception.InvalidUserSearchCriteriaException;
-import org.egov.user.domain.model.Action;
-import org.egov.user.domain.model.Address;
-import org.egov.user.domain.model.SecureUser;
-import org.egov.user.domain.model.UserDetail;
-import org.egov.user.domain.model.UserSearchCriteria;
-import org.egov.user.domain.model.enums.AddressType;
-import org.egov.user.domain.model.enums.BloodGroup;
-import org.egov.user.domain.model.enums.Gender;
-import org.egov.user.domain.model.enums.GuardianRelation;
-import org.egov.user.domain.model.enums.UserType;
+import org.egov.user.domain.model.*;
+import org.egov.user.domain.model.enums.*;
 import org.egov.user.domain.service.TokenService;
 import org.egov.user.domain.service.UserService;
 import org.egov.user.security.CustomAuthenticationKeyGenerator;
@@ -57,6 +25,24 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
+
+import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.util.*;
+
+import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
+import static org.apache.commons.lang3.ArrayUtils.isEquals;
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.argThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(UserController.class)
@@ -200,7 +186,8 @@ public class UserControllerTest {
 	public void test_should_update_user_details() throws Exception {
 
 		org.egov.user.domain.model.User userRequest = org.egov.user.domain.model.User.builder().name("foo").username("userName").dob(new Date("04/08/1986")).guardian("name of relative").build();
-		when(userService.updateWithoutOtpValidation(any(Long.class),any())).thenReturn(userRequest);
+		when(userService.updateWithoutOtpValidation(any(org.egov.user.domain.model.User.class))).thenReturn
+				(userRequest);
 		mockMvc.perform(post("/users/112/_updatenovalidate")
 				.contentType(MediaType.APPLICATION_JSON_UTF8)
 				.content(getFileContents("userCreateRequest.json")))
@@ -285,7 +272,7 @@ public class UserControllerTest {
 				.pageSize(0)
 				.pageNumber(0)
 				.sort(singletonList("name"))
-				.type("CITIZEN")
+				.type(UserType.CITIZEN)
 				.roleCodes(Arrays.asList("roleCode1", "roleCode2"))
 				.build();
 	}

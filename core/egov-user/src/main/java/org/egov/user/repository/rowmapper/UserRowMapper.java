@@ -1,22 +1,16 @@
 package org.egov.user.repository.rowmapper;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
-
 import org.egov.user.domain.model.User;
 import org.egov.user.domain.model.enums.BloodGroup;
 import org.egov.user.domain.model.enums.Gender;
 import org.egov.user.domain.model.enums.GuardianRelation;
 import org.egov.user.domain.model.enums.UserType;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.stereotype.Component;
 
-@Component
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 public class UserRowMapper implements RowMapper<User> {
-
-	public List<User> userList = new ArrayList<User>();
 
 	@Override
 	public User mapRow(final ResultSet rs, final int rowNum) throws SQLException {
@@ -34,6 +28,8 @@ public class UserRowMapper implements RowMapper<User> {
 				user.setType(type);
 			}
 		}
+
+
 		for (BloodGroup bloodGroup : BloodGroup.values()) {
 			if (bloodGroup.toString().equals(rs.getString("bloodgroup"))) {
 				user.setBloodGroup(bloodGroup);
@@ -51,22 +47,6 @@ public class UserRowMapper implements RowMapper<User> {
 			if (guardianRelation.toString().equals(rs.getString("guardianrelation"))) {
 				user.setGuardianRelation(guardianRelation);
 			}
-		}
-		boolean flag = true;
-		if (userList.size() > 0) {
-			Long id = user.getId();
-			for (User user1 : userList) {
-				if (user1.getId().equals(id)) {
-					flag = false;
-					break;
-				}
-			}
-			if (flag) {
-				userList.add(user);
-			}
-
-		} else {
-			userList.add(user);
 		}
 		return user;
 	}

@@ -1,21 +1,5 @@
 package org.egov.user.web.controller;
 
-import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
-import java.io.IOException;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-import java.util.TimeZone;
-
 import org.apache.commons.io.IOUtils;
 import org.egov.user.TestConfiguration;
 import org.egov.user.domain.exception.DuplicateUserNameException;
@@ -23,6 +7,7 @@ import org.egov.user.domain.exception.OtpValidationPendingException;
 import org.egov.user.domain.exception.UserNotFoundException;
 import org.egov.user.domain.model.Role;
 import org.egov.user.domain.model.User;
+import org.egov.user.domain.model.UserSearchCriteria;
 import org.egov.user.domain.model.enums.BloodGroup;
 import org.egov.user.domain.model.enums.Gender;
 import org.egov.user.domain.model.enums.UserType;
@@ -41,6 +26,18 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+
+import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.util.*;
+
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(UserController.class)
@@ -155,10 +152,10 @@ public class UserRequestControllerTest {
     @Test
     @WithMockUser
     public void testShouldUpdateACitizen() throws Exception {
-        when(userService.updateWithoutOtpValidation(any(Long.class), any(org.egov.user.domain.model.User.class))).thenReturn(buildUser());
+        when(userService.updateWithoutOtpValidation(any(org.egov.user.domain.model.User.class))).thenReturn(buildUser());
 
         String fileContents = getFileContents("updateValidatedCitizenSuccessRequest.json");
-        mockMvc.perform(post("/users/1/_updatenovalidate")
+        mockMvc.perform(post("/users/_updatenovalidate")
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .content(fileContents)
         )
@@ -171,8 +168,9 @@ public class UserRequestControllerTest {
     @WithMockUser
     @Ignore
     public void testShouldThrowErrorWhileUpdatingWithDuplicateCitizen() throws Exception {
-        DuplicateUserNameException exception = new DuplicateUserNameException(org.egov.user.domain.model.User.builder().build());
-        when(userService.updateWithoutOtpValidation(any(Long.class), any(org.egov.user.domain.model.User.class))).thenThrow(exception);
+        DuplicateUserNameException exception = new DuplicateUserNameException(UserSearchCriteria.builder().userName
+                ("test").build());
+        when(userService.updateWithoutOtpValidation( any(org.egov.user.domain.model.User.class))).thenThrow(exception);
 
         String fileContents = getFileContents("updateCitizenUnsuccessfulRequest.json");
         mockMvc.perform(post("/users/1/_updatenovalidate")
@@ -188,8 +186,9 @@ public class UserRequestControllerTest {
     @WithMockUser
     @Ignore
     public void testShouldThrowErrorWhileUpdatingWithInvalidCitizen() throws Exception {
-        UserNotFoundException exception = new UserNotFoundException(org.egov.user.domain.model.User.builder().build());
-        when(userService.updateWithoutOtpValidation(any(Long.class), any(org.egov.user.domain.model.User.class))).thenThrow(exception);
+        UserNotFoundException exception = new UserNotFoundException(UserSearchCriteria.builder().userName
+                ("test").build());
+        when(userService.updateWithoutOtpValidation(any(org.egov.user.domain.model.User.class))).thenThrow(exception);
 
         String fileContents = getFileContents("updateCitizenUnsuccessfulRequest.json");
         mockMvc.perform(post("/users/1/_updatenovalidate")

@@ -25,7 +25,7 @@ public class InvalidNonLoggedInUserUpdatePasswordRequestErrorHandlerTest {
 	@Test
 	public void test_should_return_error_when_mobile_number_is_not_present() {
 		final NonLoggedInUserUpdatePasswordRequest updatePassword = mock(NonLoggedInUserUpdatePasswordRequest.class);
-		when(updatePassword.isMobileNumberAbsent()).thenReturn(true);
+		when(updatePassword.isUsernameAbsent()).thenReturn(true);
 
 		final ErrorResponse errorResponse = errorHandler.adapt(updatePassword);
 

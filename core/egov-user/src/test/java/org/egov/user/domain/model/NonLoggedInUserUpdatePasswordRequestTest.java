@@ -1,6 +1,7 @@
 package org.egov.user.domain.model;
 
 import org.egov.user.domain.exception.InvalidNonLoggedInUserUpdatePasswordRequestException;
+import org.egov.user.domain.model.enums.UserType;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -13,13 +14,15 @@ public class NonLoggedInUserUpdatePasswordRequestTest {
 				.tenantId("tenant")
 				.newPassword("newPassword")
 				.userName("userName")
+				.tenantId("ap.public")
+				.type(UserType.CITIZEN)
 				.otpReference("otpReference")
 				.build();
 
 		request.validate();
 
 		assertFalse(request.isTenantIdAbsent());
-		assertFalse(request.isMobileNumberAbsent());
+		assertFalse(request.isUsernameAbsent());
 		assertFalse(request.isNewPasswordAbsent());
 		assertFalse(request.isOtpReferenceAbsent());
 	}
@@ -93,7 +96,7 @@ public class NonLoggedInUserUpdatePasswordRequestTest {
 				.otpReference("otpReference")
 				.build();
 
-		assertTrue(request.isMobileNumberAbsent());
+		assertTrue(request.isUsernameAbsent());
 	}
 
 	@Test(expected = InvalidNonLoggedInUserUpdatePasswordRequestException.class)

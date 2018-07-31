@@ -36,6 +36,8 @@ public class CalculatorConstants {
 	
 	public static final String PT_ADHOC_REBATE = "PT_ADHOC_REBATE";
 	
+	public static final String PT_DECIMAL_CEILING = "PT_DECIMAL_CEILING"; 
+	
 	protected static final List<String> TAXES_TO_BE_IGNORED_WHEN_CALUCLATING_REBATE_AND_PENALTY = Arrays.asList(PT_TIME_REBATE, PT_TIME_PENALTY, PT_TIME_INTEREST);
 	
 	/*

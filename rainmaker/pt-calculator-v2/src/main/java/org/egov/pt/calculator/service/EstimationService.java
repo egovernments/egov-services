@@ -324,7 +324,7 @@ public class EstimationService {
 		log.debug(" the slabs count : " + billingSlabs.size());
 		final String all = configs.getSlabValueAll();
 
-		Double plotSize = detail.getBuildUpArea();
+		Double plotSize = null != detail.getLandArea() ? detail.getLandArea() : detail.getBuildUpArea();
 
 		final String dtlPtType = detail.getPropertyType();
 		final String dtlPtSubType = detail.getPropertySubType();

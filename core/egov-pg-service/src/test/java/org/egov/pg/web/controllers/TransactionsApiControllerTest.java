@@ -87,7 +87,7 @@ public class TransactionsApiControllerTest {
 
         mockMvc.perform(post("/transaction/v1/_create").contentType(MediaType
                 .APPLICATION_JSON_UTF8).content(mapper.writeValueAsString(transactionRequest)))
-                .andExpect(status().isFound());
+                .andExpect(status().isOk());
     }
 
     @Test

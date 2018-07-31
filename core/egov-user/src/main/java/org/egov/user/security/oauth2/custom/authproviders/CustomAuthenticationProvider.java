@@ -131,6 +131,7 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 				return true;
 			}
 			try {
+				user.setOtpReference(password);
 				return userService.validateOtp(user);
 			} catch (Exception e) {
 				throw new OAuth2Exception(JsonPath.read(e.getMessage(), "$.error.message"));
@@ -178,4 +179,3 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
     }
 
 }
-

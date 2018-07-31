@@ -12,6 +12,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Import;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @SpringBootApplication
@@ -24,7 +25,10 @@ public class PropertyApplication {
     
     @Bean
     public ObjectMapper objectMapper(){
-    return new ObjectMapper().disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES).setTimeZone(TimeZone.getTimeZone(timeZone));
+    return new ObjectMapper()
+    		.configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true)
+    		.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
+    		.setTimeZone(TimeZone.getTimeZone(timeZone));
     }
     
     public static void main(String[] args) throws Exception {

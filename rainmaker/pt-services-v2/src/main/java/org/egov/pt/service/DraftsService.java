@@ -1,6 +1,7 @@
 package org.egov.pt.service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
@@ -15,6 +16,8 @@ import org.egov.pt.web.models.DraftRequest;
 import org.egov.pt.web.models.DraftResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -36,6 +39,9 @@ public class DraftsService {
 	
 	@Autowired
 	private PropertyUtil propertyUtil;
+	
+	@Autowired
+	private ObjectMapper mapper;
 
 	public DraftResponse createDraft(DraftRequest draftRequest) {
 		enrichDraftsForCreate(draftRequest);
@@ -68,7 +74,7 @@ public class DraftsService {
 	public DraftResponse searchDrafts(RequestInfo requestInfo, String userId, String tenantId) {
 		List<Draft> drafts = null;
 		try {
-			drafts = draftRepository.getDrafts(userId, tenantId);
+			drafts = Arrays.asList(mapper.readValue(draftRepository.getDrafts(userId, tenantId), Draft[].class));
 		}catch(Exception e) {
 			log.info("Exception while fetching drafts: "+e);
 			drafts = new ArrayList<>();

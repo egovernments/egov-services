@@ -114,7 +114,6 @@ public class UserService {
         userSearchRequest.setRequestInfo(requestInfo);
         userSearchRequest.setActive(true);
         userSearchRequest.setUserType(owner.getType());
-        userSearchRequest.setRoleCodes(Collections.singletonList("CITIZEN"));
         if(owner.getUuid()!=null)
             userSearchRequest.setUuid(Arrays.asList(owner.getUuid()));
         StringBuilder uri = new StringBuilder(userHost).append(userSearchEndpoint);
@@ -273,7 +272,6 @@ public class UserService {
         userSearchRequest.setName(criteria.getName());
         userSearchRequest.setActive(true);
         userSearchRequest.setUserType("CITIZEN");
-        userSearchRequest.setRoleCodes(Collections.singletonList("CITIZEN"));
         return userSearchRequest;
     }
 
@@ -341,7 +339,6 @@ public class UserService {
                         userSearchRequest.setTenantId(property.getTenantId());
                         userSearchRequest.setMobileNumber(propertyDetail.getCitizenInfo().getMobileNumber());
                         userSearchRequest.setUserType("CITIZEN");
-                        userSearchRequest.setRoleCodes(Collections.singletonList("CITIZEN"));
                         userDetailResponse =  userCall(userSearchRequest,uriSearch);
                         if(!CollectionUtils.isEmpty(userDetailResponse.getUser()))
                             propertyDetail.getCitizenInfo().setUserName(UUID.randomUUID().toString());

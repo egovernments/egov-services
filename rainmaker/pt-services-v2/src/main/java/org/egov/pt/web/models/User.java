@@ -111,7 +111,6 @@ public class User   {
         @Valid
         private List<Role> roles;
 
-        @NotNull
         @JsonProperty("fatherOrHusbandName")
         private String fatherOrHusbandName;
 

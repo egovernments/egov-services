@@ -48,6 +48,9 @@ public class UserService {
     public void createUser(PropertyRequest request){
         List<Property> properties = request.getProperties();
         RequestInfo requestInfo = request.getRequestInfo();
+        Role role = new Role();
+        role.setCode("CITIZEN");
+        role.setName("Citizen");
         properties.forEach(property -> {
             property.getPropertyDetails().forEach(propertyDetail -> {
                 // Fetches the unique mobileNumbers from all the owners
@@ -55,6 +58,10 @@ public class UserService {
                 log.info("Unique MobileNumbers: "+listOfMobileNumbers);
                 propertyDetail.getOwners().forEach(owner -> {
                     if(owner.getUuid()==null){
+                        owner.setActive(true);
+                        owner.setTenantId(property.getTenantId());
+                        owner.setRoles(Collections.singletonList(role));
+                        owner.setType("CITIZEN");
                         // Checks if the user is already present based on name of the owner and mobileNumber
                         UserDetailResponse userDetailResponse = userExists(owner,requestInfo);
                         // If user not present new user is created
@@ -63,7 +70,7 @@ public class UserService {
                           random number is assigned as username */
                             StringBuilder uri = new StringBuilder(userHost).append(userContextPath).append(userCreateEndpoint);
                             setUserName(owner,listOfMobileNumbers);
-                            owner.setActive(true);
+
                             userDetailResponse = userCall(new CreateUserRequest(requestInfo,owner),uri);
                             if(userDetailResponse.getUser().get(0).getUuid()==null){
                                 throw new CustomException("INVALID USER RESPONSE","The user created has uuid as null");
@@ -75,6 +82,9 @@ public class UserService {
                         { log.info("User update -> ","MobileNumber: ",owner.getMobileNumber()," Name: ",owner.getName());
                           owner.setId(userDetailResponse.getUser().get(0).getId());
                           owner.setActive(true);
+                          owner.setTenantId(property.getTenantId());
+                          owner.setRoles(Collections.singletonList(role));
+                          owner.setType("CITIZEN");
                           StringBuilder uri = new StringBuilder(userHost).append(userContextPath).append(owner.getId())
                                               .append(userUpdateEndpoint);
                           userDetailResponse = userCall( new CreateUserRequest(requestInfo,owner),uri);
@@ -104,6 +114,7 @@ public class UserService {
         userSearchRequest.setRequestInfo(requestInfo);
         userSearchRequest.setActive(true);
         userSearchRequest.setUserType(owner.getType());
+        userSearchRequest.setRoleCodes(Collections.singletonList("CITIZEN"));
         if(owner.getUuid()!=null)
             userSearchRequest.setUuid(Arrays.asList(owner.getUuid()));
         StringBuilder uri = new StringBuilder(userHost).append(userSearchEndpoint);
@@ -262,6 +273,7 @@ public class UserService {
         userSearchRequest.setName(criteria.getName());
         userSearchRequest.setActive(true);
         userSearchRequest.setUserType("CITIZEN");
+        userSearchRequest.setRoleCodes(Collections.singletonList("CITIZEN"));
         return userSearchRequest;
     }
 
@@ -300,6 +312,10 @@ public class UserService {
         StringBuilder uriCreate = new StringBuilder(userHost).append(userContextPath).append(userCreateEndpoint);
         StringBuilder uriSearch = new StringBuilder(userHost).append(userSearchEndpoint);
         RequestInfo requestInfo = request.getRequestInfo();
+
+        Role role = new Role();
+        role.setCode("CITIZEN");
+        role.setName("Citizen");
         // If user is creating assessment, userInfo object from requestInfo is assigned as citizenInfo
         if(requestInfo.getUserInfo().getType().equalsIgnoreCase("CITIZEN"))
         {   request.getProperties().forEach(property -> {
@@ -313,6 +329,10 @@ public class UserService {
             // In case of employee login it checks if the citizenInfo object is present else it creates it
             request.getProperties().forEach(property -> {
                 property.getPropertyDetails().forEach(propertyDetail -> {
+                    propertyDetail.getCitizenInfo().setActive(true);
+                    propertyDetail.getCitizenInfo().setTenantId(property.getTenantId());
+                    propertyDetail.getCitizenInfo().setRoles(Collections.singletonList(role));
+                    propertyDetail.getCitizenInfo().setType("CITIZEN");
                     UserDetailResponse userDetailResponse = userExists(propertyDetail.getCitizenInfo(),requestInfo);
                     // If user not present new user is created
                     if(CollectionUtils.isEmpty(userDetailResponse.getUser()))
@@ -321,12 +341,13 @@ public class UserService {
                         userSearchRequest.setTenantId(property.getTenantId());
                         userSearchRequest.setMobileNumber(propertyDetail.getCitizenInfo().getMobileNumber());
                         userSearchRequest.setUserType("CITIZEN");
+                        userSearchRequest.setRoleCodes(Collections.singletonList("CITIZEN"));
                         userDetailResponse =  userCall(userSearchRequest,uriSearch);
                         if(!CollectionUtils.isEmpty(userDetailResponse.getUser()))
                             propertyDetail.getCitizenInfo().setUserName(UUID.randomUUID().toString());
                         else
                             propertyDetail.getCitizenInfo().setUserName(propertyDetail.getCitizenInfo().getMobileNumber());
-                        propertyDetail.getCitizenInfo().setActive(true);
+
                         userDetailResponse = userCall(new CreateUserRequest(requestInfo,propertyDetail.getCitizenInfo()),uriCreate);
                         log.info("citizen created --> "+userDetailResponse.getUser().get(0).getUuid());
                     }

@@ -192,36 +192,55 @@ public class EstimationService {
 	private List<TaxHeadEstimate> getEstimatesForTax(String assessmentYear, BigDecimal taxAmt, BigDecimal usageExemption, PropertyDetail detail,
 			Map<String, Map<String, List<Object>>> propertyBasedExemptionMasterMap,	Map<String, JSONArray> timeBasedExmeptionMasterMap) {
 		
-		// FIXME add adhoc applicables
+		BigDecimal payableTax = taxAmt;
 		List<TaxHeadEstimate> estimates = new ArrayList<>();
+
+		// AdHoc Values (additional rebate or penalty manually entered by the employee)
+		if (null != detail.getAdhocPenalty())
+			estimates.add(TaxHeadEstimate.builder().taxHeadCode(CalculatorConstants.PT_ADHOC_PENALTY)
+					.estimateAmount(detail.getAdhocPenalty()).build());
+		if (null != detail.getAdhocExemption() && detail.getAdhocExemption().compareTo(taxAmt) <= 0) {
+			estimates.add(
+					TaxHeadEstimate.builder().taxHeadCode(CalculatorConstants.PT_TAX).estimateAmount(taxAmt).build());
+			payableTax = payableTax.subtract(detail.getAdhocPenalty());
+		} else
+			throw new CustomException(CalculatorConstants.PT_ADHOC_REBATE_INVALID_AMOUNT,
+					CalculatorConstants.PT_ADHOC_REBATE_INVALID_AMOUNT_MSG + taxAmt);
+
+		// taxes
 		estimates.add(TaxHeadEstimate.builder().taxHeadCode(CalculatorConstants.PT_TAX).estimateAmount(taxAmt).build());
+
+		// usage exemption
 		estimates.add(TaxHeadEstimate.builder().taxHeadCode(CalculatorConstants.PT_UNIT_USAGE_EXEMPTION)
 				.estimateAmount(usageExemption).build());
-		BigDecimal payableTax = taxAmt.subtract(usageExemption);
+		payableTax = payableTax.subtract(usageExemption);
 
-/*		BigDecimal fireCess = mstrDataService.getFireCess(payableTax, assessmentYear, timeBasedExmeptionMasterMap);
-		estimates.add(TaxHeadEstimate.builder().taxHeadCode(CalculatorConstants.PT_FIRE_CESS)
-				.estimateAmount(fireCess).build());
-		payableTax = payableTax.add(fireCess);*/
+		// Fire cess
+		BigDecimal fireCess = mstrDataService.getFireCess(payableTax, assessmentYear, timeBasedExmeptionMasterMap);
+		estimates.add(TaxHeadEstimate.builder().taxHeadCode(CalculatorConstants.PT_FIRE_CESS).estimateAmount(fireCess)
+				.build());
+		payableTax = payableTax.add(fireCess);
 
+		// owner exemption
 		BigDecimal userExemption = getExemption(detail.getOwners(), payableTax, assessmentYear,
 				propertyBasedExemptionMasterMap);
 		estimates.add(TaxHeadEstimate.builder().taxHeadCode(CalculatorConstants.PT_OWNER_EXEMPTION)
 				.estimateAmount(userExemption).build());
 		payableTax = payableTax.subtract(userExemption);
+
 		/*
 		 * get applicable rebate and penalty
 		 */
 		Map<String, BigDecimal> rebatePenaltyMap = payService.applyPenaltyRebateAndInterest(payableTax, assessmentYear,
 				timeBasedExmeptionMasterMap);
-		
+
 		estimates.add(TaxHeadEstimate.builder().taxHeadCode(CalculatorConstants.PT_TIME_REBATE)
 				.estimateAmount(rebatePenaltyMap.get(CalculatorConstants.PT_TIME_REBATE)).build());
 		estimates.add(TaxHeadEstimate.builder().taxHeadCode(CalculatorConstants.PT_TIME_PENALTY)
 				.estimateAmount(rebatePenaltyMap.get(CalculatorConstants.PT_TIME_PENALTY)).build());
 		estimates.add(TaxHeadEstimate.builder().taxHeadCode(CalculatorConstants.PT_TIME_INTEREST)
 				.estimateAmount(rebatePenaltyMap.get(CalculatorConstants.PT_TIME_INTEREST)).build());
-		
+
 		return estimates;
 	}
 

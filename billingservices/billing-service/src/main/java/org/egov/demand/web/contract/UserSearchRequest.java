@@ -47,6 +47,8 @@ public class UserSearchRequest {
 	@JsonProperty("pageSize")
 	private Integer pageSize=500;
 	
+	@JsonProperty("userType")
+	private String userType;
 	
 /*	@JsonProperty("fuzzyLogic")
 	private boolean fuzzyLogic;
@@ -63,9 +65,6 @@ public class UserSearchRequest {
 
 	@JsonProperty("sort")
 	private List<String> sort = Collections.singletonList("name");
-
-	@JsonProperty("userType")
-	private String userType;
 
 	@JsonProperty("roleCodes")
 	private List<String> roleCodes;*/

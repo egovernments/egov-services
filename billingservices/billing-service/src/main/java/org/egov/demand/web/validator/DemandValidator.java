@@ -362,8 +362,9 @@ public class DemandValidator implements Validator {
 		List<Demand> demands = demandRequest.getDemands();
 		List<Long> ownerIds = new ArrayList<>(
 				demands.stream().map(demand -> demand.getOwner().getId()).collect(Collectors.toSet()));
+		// demands should never be created for employee
 		UserSearchRequest userSearchRequest = UserSearchRequest.builder().requestInfo(demandRequest.getRequestInfo())
-				.id(ownerIds).tenantId(demands.get(0).getTenantId()).pageSize(500).build();
+				.id(ownerIds).tenantId(demands.get(0).getTenantId()).userType("CITIZEN").pageSize(500).build();
 		Map<Long, Long> ownerMap = new HashMap<>();
 		List<Owner> owners = ownerRepository.getOwners(userSearchRequest);
 		if (owners.isEmpty())

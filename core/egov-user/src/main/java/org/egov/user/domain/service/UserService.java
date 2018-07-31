@@ -285,6 +285,7 @@ public class UserService {
             throw new InvalidUpdatePasswordRequestException();
         if (user.getType().toString().equals(UserType.EMPLOYEE.toString()) && isEmployeeLoginOtpBased)
             throw new InvalidUpdatePasswordRequestException();
+        user.setOtpReference(request.getOtpReference());
         validateOtp(user);
         user.updatePassword(encryptPwd(request.getNewPassword()));
         userRepository.update(user, user);

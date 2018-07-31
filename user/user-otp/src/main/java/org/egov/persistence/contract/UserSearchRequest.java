@@ -12,4 +12,5 @@ import lombok.Setter;
 public class UserSearchRequest {
 	private String userName;
 	private String tenantId;
+	private String type;
 }

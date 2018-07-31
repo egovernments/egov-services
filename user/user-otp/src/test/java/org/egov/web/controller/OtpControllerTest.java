@@ -1,15 +1,10 @@
 package org.egov.web.controller;
 
 import org.egov.Resources;
-import org.egov.domain.exception.InvalidOtpRequestException;
-import org.egov.domain.exception.UserAlreadyExistInSystemException;
-import org.egov.domain.exception.UserMobileNumberNotFoundException;
-import org.egov.domain.exception.UserNotExistingInSystemException;
-import org.egov.domain.exception.UserNotFoundException;
+import org.egov.domain.exception.*;
 import org.egov.domain.model.OtpRequest;
 import org.egov.domain.model.OtpRequestType;
 import org.egov.domain.service.OtpService;
-import org.egov.persistence.contract.Otp;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,13 +42,13 @@ public class OtpControllerTest {
 				.content(resources.getFileContents("otpSendRequest.json"))).andExpect(status().isCreated())
 				.andExpect(content().json(resources.getFileContents("otpSendSuccessResponse.json")));
 
-		final OtpRequest expectedOtpRequest = new OtpRequest("mobileNumber", "tenantId", OtpRequestType.PASSWORD_RESET);
+		final OtpRequest expectedOtpRequest = new OtpRequest("mobileNumber", "tenantId", OtpRequestType.PASSWORD_RESET, "CITIZEN");
 		verify(otpService).sendOtp(expectedOtpRequest);
 	}
 
 	@Test
 	public void test_should_return_error_response_when_mandatory_fields_are_not_present_in_request() throws Exception {
-		final OtpRequest expectedOtpRequest = new OtpRequest("", "", null);
+		final OtpRequest expectedOtpRequest = new OtpRequest("", "", null, "CITIZEN");
 		doThrow(new InvalidOtpRequestException(expectedOtpRequest)).when(otpService).sendOtp(expectedOtpRequest);
 
 		mockMvc.perform(post("/v1/_send").contentType(MediaType.APPLICATION_JSON_UTF8)
@@ -65,7 +60,7 @@ public class OtpControllerTest {
 	@Test
 	public void test_should_return_error_response_when_user_not_found_for_sending_forgot_password_otp()
 			throws Exception {
-		final OtpRequest expectedOtpRequest = new OtpRequest("", "", null);
+		final OtpRequest expectedOtpRequest = new OtpRequest("", "", null, "CITIZEN");
 		doThrow(new UserNotFoundException()).when(otpService).sendOtp(expectedOtpRequest);
 
 		mockMvc.perform(post("/v1/_send").contentType(MediaType.APPLICATION_JSON_UTF8)
@@ -76,7 +71,7 @@ public class OtpControllerTest {
 
 	@Test
 	public void test_should_return_error_response_when_user_alreadyExist_incaseoftypeisregister() throws Exception {
-		final OtpRequest expectedOtpRequest = new OtpRequest("mobileNumber", "tenantId", OtpRequestType.REGISTER);
+		final OtpRequest expectedOtpRequest = new OtpRequest("mobileNumber", "tenantId", OtpRequestType.REGISTER, "CITIZEN");
 		doThrow(new UserAlreadyExistInSystemException()).when(otpService).sendOtp(expectedOtpRequest);
 
 		mockMvc.perform(post("/v1/_send").contentType(MediaType.APPLICATION_JSON_UTF8)
@@ -86,7 +81,7 @@ public class OtpControllerTest {
 
 	@Test
 	public void test_should_return_error_response_when_user_doesntExist_incaseoftypeislogin() throws Exception {
-		final OtpRequest expectedOtpRequest = new OtpRequest("mobileNumber", "tenantId", OtpRequestType.LOGIN);
+		final OtpRequest expectedOtpRequest = new OtpRequest("mobileNumber", "tenantId", OtpRequestType.LOGIN, "CITIZEN");
 		doThrow(new UserNotExistingInSystemException()).when(otpService).sendOtp(expectedOtpRequest);
 
 		mockMvc.perform(post("/v1/_send").contentType(MediaType.APPLICATION_JSON_UTF8)
@@ -97,7 +92,7 @@ public class OtpControllerTest {
 	@Test
 	public void test_should_return_error_response_when_user_mobilenot_found_for_sending_forgot_password_otp()
 			throws Exception {
-		final OtpRequest expectedOtpRequest = new OtpRequest("", "", null);
+		final OtpRequest expectedOtpRequest = new OtpRequest("", "", null, "CITIZEN");
 		doThrow(new UserMobileNumberNotFoundException()).when(otpService).sendOtp(expectedOtpRequest);
 
 		mockMvc.perform(post("/v1/_send").contentType(MediaType.APPLICATION_JSON_UTF8)
@@ -108,7 +103,7 @@ public class OtpControllerTest {
 
 	@Test
 	public void test_should_return_error_message_when_unhandled_exception_occurs() throws Exception {
-		final OtpRequest expectedOtpRequest = new OtpRequest("mobileNumber", "tenantId", null);
+		final OtpRequest expectedOtpRequest = new OtpRequest("mobileNumber", "tenantId", null, "CITIZEN");
 		final String exceptionMessage = "Some exception message";
 		doThrow(new RuntimeException(exceptionMessage)).when(otpService).sendOtp(expectedOtpRequest);
 

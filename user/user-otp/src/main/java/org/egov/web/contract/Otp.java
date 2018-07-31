@@ -21,6 +21,7 @@ public class Otp {
 	private String mobileNumber;
 	private String tenantId;
 	private String type;
+	private String userType;
 
 	@JsonIgnore
 	public OtpRequestType getTypeOrDefault() {

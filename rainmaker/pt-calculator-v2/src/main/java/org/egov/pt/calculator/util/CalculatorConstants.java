@@ -14,6 +14,7 @@ public class CalculatorConstants {
 	/*
 	 * tax head codes constants
 	 */
+	public static final String MAX_PRIORITY_VALUE = "MAX_PRIORITY_VALUE";
 	
 	public static final String PT_TAX = "PT_TAX";
 	
@@ -181,5 +182,10 @@ public class CalculatorConstants {
 	public static final String EG_PT_OWNER_TYPE_INVALID = "EG_PT_OWNER_TYPE_INVALID";
 	
 	public static final String EG_PT_OWNER_TYPE_INVALID_MESSAGE = " The given owner type value is invalid : ";
+	
+	public static final String PT_ADHOC_REBATE_INVALID_AMOUNT = "PT_ADHOC_REBATE_INVALID_AMOUNT";
+	
+	public static final String PT_ADHOC_REBATE_INVALID_AMOUNT_MSG = "Adhoc Rebate cannot be greater than the estimated tax for the given property please enter a value lesser than : ";
+	
 	
 }

@@ -210,11 +210,22 @@ public class PayService {
 
 		Collections.sort(billAccountDetails, new Comparator<BillAccountDetail>() {
 			final Map<String, Integer> taxHeadpriorityMap = utils.getTaxHeadApportionPriorityMap();
+
 			@Override
 			public int compare(BillAccountDetail arg0, BillAccountDetail arg1) {
 				String taxHead0 = arg0.getAccountDescription().split("-")[0];
 				String taxHead1 = arg1.getAccountDescription().split("-")[0];
-				return taxHeadpriorityMap.get(taxHead0) - taxHeadpriorityMap.get(taxHead1);
+
+				Integer value0 = taxHeadpriorityMap.get(CalculatorConstants.MAX_PRIORITY_VALUE);
+				Integer value1 = taxHeadpriorityMap.get(CalculatorConstants.MAX_PRIORITY_VALUE);
+
+				if (null != taxHeadpriorityMap.get(taxHead0))
+					value0 = taxHeadpriorityMap.get(taxHead0);
+
+				if (null != taxHeadpriorityMap.get(taxHead1))
+					value1 = taxHeadpriorityMap.get(taxHead1);
+
+				return value0 - value1;
 			}
 		});
 

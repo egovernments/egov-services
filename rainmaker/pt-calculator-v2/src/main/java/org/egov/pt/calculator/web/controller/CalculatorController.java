@@ -6,10 +6,12 @@ import javax.validation.Valid;
 
 import org.egov.pt.calculator.service.DemandService;
 import org.egov.pt.calculator.service.EstimationService;
+import org.egov.pt.calculator.service.PayService;
 import org.egov.pt.calculator.web.models.Calculation;
 import org.egov.pt.calculator.web.models.CalculationReq;
 import org.egov.pt.calculator.web.models.CalculationRes;
 import org.egov.pt.calculator.web.models.GetBillCriteria;
+import org.egov.pt.calculator.web.models.demand.BillRequest;
 import org.egov.pt.calculator.web.models.demand.BillResponse;
 import org.egov.pt.calculator.web.models.property.RequestInfoWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +32,9 @@ public class CalculatorController {
 
 	@Autowired
 	private EstimationService calculatorService;
+	
+	@Autowired
+	private PayService payService;
 
 	@PostMapping("/_estimate")
 	public ResponseEntity<CalculationRes> getTaxEstimation(@RequestBody @Valid CalculationReq calculationReq) {
@@ -46,4 +51,9 @@ public class CalculatorController {
 			@ModelAttribute @Valid GetBillCriteria getBillCriteria) {
 		return new ResponseEntity<>(demandService.getBill(getBillCriteria, requestInfoWrapper), HttpStatus.OK);
 	}
+	
+	@PostMapping("/bill/_apportion")
+	public ResponseEntity<BillResponse> getBill(@RequestBody @Valid BillRequest billRequest) {
+		return new ResponseEntity<>(payService.apportionBills(billRequest), HttpStatus.OK);
+	}	
 }

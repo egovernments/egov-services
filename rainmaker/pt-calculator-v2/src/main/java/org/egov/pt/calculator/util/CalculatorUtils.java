@@ -36,8 +36,11 @@ public class CalculatorUtils {
 
 		if (null == taxHeadApportionPriorityMap) {
 			Map<String, Integer> map = new HashMap<>();
-			map.put(CalculatorConstants.PT_TAX, 0);
+			map.put(CalculatorConstants.PT_TAX, 3);
 			map.put(CalculatorConstants.PT_TIME_PENALTY, 1);
+			map.put(CalculatorConstants.PT_FIRE_CESS, 2);
+			map.put(CalculatorConstants.PT_TIME_INTEREST, 0);
+			map.put(CalculatorConstants.MAX_PRIORITY_VALUE, 100);
 		}
 		return taxHeadApportionPriorityMap;
 	}

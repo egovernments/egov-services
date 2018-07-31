@@ -69,7 +69,7 @@ public class TransactionService {
      * @param transactionRequest Valid transaction request for which transaction needs to be initiated
      * @return Redirect URI to the gateway for the particular transaction
      */
-    public URI initiateTransaction(TransactionRequest transactionRequest) {
+    public Transaction initiateTransaction(TransactionRequest transactionRequest) {
         validator.validateCreateTxn(transactionRequest);
 
         // Enrich transaction by generating txnid, audit details, default status
@@ -78,7 +78,9 @@ public class TransactionService {
         RequestInfo requestInfo = transactionRequest.getRequestInfo();
         Transaction transaction = transactionRequest.getTransaction();
 
+
         URI uri = gatewayService.initiateTxn(transaction);
+        transaction.setRedirectUrl(uri.toString());
 
         TransactionDump dump = new TransactionDump(transaction.getTxnId(), uri.toString(), null, transaction.getAuditDetails());
 
@@ -87,7 +89,7 @@ public class TransactionService {
                 (requestInfo, transaction));
         producer.push(appProperties.getSaveTxnDumpTopic(), new TransactionDumpRequest(requestInfo, dump));
 
-        return uri;
+        return transaction;
     }
 
 

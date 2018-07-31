@@ -21,7 +21,6 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.net.URI;
 import java.util.Collections;
 import java.util.Map;
 
@@ -84,8 +83,7 @@ public class TransactionsApiControllerTest {
 
         TransactionRequest transactionRequest = new TransactionRequest(requestInfo, transaction);
 
-        when(transactionService.initiateTransaction(any(TransactionRequest.class))).thenReturn(new URI
-                ("redirect:/axis"));
+        when(transactionService.initiateTransaction(any(TransactionRequest.class))).thenReturn(transaction);
 
         mockMvc.perform(post("/transaction/v1/_create").contentType(MediaType
                 .APPLICATION_JSON_UTF8).content(mapper.writeValueAsString(transactionRequest)))
@@ -94,8 +92,17 @@ public class TransactionsApiControllerTest {
 
     @Test
     public void transactionsV1CreatePostFailure() throws Exception {
-        when(transactionService.initiateTransaction(any(TransactionRequest.class))).thenReturn(new URI
-                ("redirect:/axis"));
+        Transaction transaction = Transaction.builder().txnAmount("100.00")
+                .txnId("ABC231")
+                .billId("ORDER001")
+                .productInfo("Property Tax Payment")
+                .gateway("AXIS")
+                .module("PT")
+                .moduleId("PT_ASSESS")
+                .tenantId("pb")
+                .callbackUrl("http://2a91377b.ngrok.io/pg-service/payments/v1/_update")
+                .user(user).build();
+        when(transactionService.initiateTransaction(any(TransactionRequest.class))).thenReturn(transaction);
 
         mockMvc.perform(post("/transaction/v1/_create").contentType(MediaType
                 .APPLICATION_JSON_UTF8))

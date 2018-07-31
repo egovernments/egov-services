@@ -97,9 +97,9 @@ public class TransactionServiceTest {
         Mockito.doNothing().when(validator).validateCreateTxn(any(TransactionRequest.class));
         when(gatewayService.initiateTxn(any(Transaction.class))).thenReturn(new URI(redirectUrl));
 
-        URI resp = transactionService.initiateTransaction(transactionRequest);
+        Transaction resp = transactionService.initiateTransaction(transactionRequest);
 
-        assertTrue(resp.toString().equalsIgnoreCase(redirectUrl));
+        assertTrue(resp.getRedirectUrl().equalsIgnoreCase(redirectUrl));
 
     }
 
@@ -120,7 +120,7 @@ public class TransactionServiceTest {
                 "Gateway"));
         when(gatewayService.initiateTxn(any(Transaction.class))).thenThrow(new CustomException());
 
-        URI resp = transactionService.initiateTransaction(transactionRequest);
+        Transaction resp = transactionService.initiateTransaction(transactionRequest);
 
 
     }

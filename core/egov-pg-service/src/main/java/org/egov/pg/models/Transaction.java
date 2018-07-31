@@ -98,6 +98,9 @@ public class Transaction {
     @JsonProperty("user")
     private User user;
 
+    @JsonProperty("redirectUrl")
+    private String redirectUrl;
+
     /**
      * Represents the current status of a transaction
      */

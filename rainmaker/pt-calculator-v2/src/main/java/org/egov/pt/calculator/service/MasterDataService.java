@@ -202,10 +202,10 @@ public class MasterDataService {
 			if (null != rate) {
 				fireCess = payableTax.multiply(rate.divide(CalculatorConstants.HUNDRED));
 
-				if (null != minAmt && fireCess.compareTo(minAmt) < 1)
+				if (null != minAmt && fireCess.compareTo(minAmt) < 0)
 					fireCess = minAmt;
 
-				else if (null != maxAmt && fireCess.compareTo(maxAmt) > 1)
+				else if (null != maxAmt && fireCess.compareTo(maxAmt) > 0)
 					fireCess = maxAmt;
 			} else
 				fireCess = flatAmt;

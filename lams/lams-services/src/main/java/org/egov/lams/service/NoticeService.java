@@ -2,11 +2,8 @@ package org.egov.lams.service;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
-import java.util.TreeSet;
-import java.util.stream.Collectors;
 
 import org.egov.lams.model.Agreement;
 import org.egov.lams.model.AgreementCriteria;
@@ -77,9 +74,7 @@ public class NoticeService {
 	public Set<DefaultersInfo> generateDueNotice(DueSearchCriteria dueCriteria, RequestInfo requestInfo) {
 
 		Set<DefaultersInfo> defaulters;
-		defaulters = noticeRepository.generateDueNoticeDate(dueCriteria);
-		defaulters = defaulters.stream().collect(
-				Collectors.toCollection(() -> new TreeSet<>(Comparator.comparing(DefaultersInfo::getAgreementNumber))));
+		defaulters = noticeRepository.generateDueNoticeData(dueCriteria);
 		return defaulters;
 
 	}

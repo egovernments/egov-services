@@ -95,13 +95,12 @@ public class DueDetailsRowMapper implements ResultSetExtractor<Set<DefaultersInf
 				defaultersInfo.setTotalAmount(rs.getDouble("amount"));
 				defaultersInfo.setTotalCollection(rs.getDouble("collection"));
 				defaultersInfo.setTotalBalance(rs.getDouble("balance"));
-				defaultersInfo.setInstallment(rs.getString("installment"));
 				defaultersInfo.setLastPaid(rs.getTimestamp("lastpaid"));
 				defaultersInfo.setTenantId(rs.getString("tenantid"));
 				defaultersInfos.add(defaultersInfo);
 
 			} catch (Exception e) {
-				logger.info("exception in agreementInfoRowMapper : " + e);
+				logger.info("exception in defaulters RowMapper : " + e);
 				throw new RuntimeException("error while mapping object from result set : " + e.getCause());
 			}
 		}

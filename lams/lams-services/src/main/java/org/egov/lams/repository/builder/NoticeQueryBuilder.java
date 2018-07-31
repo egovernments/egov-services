@@ -28,9 +28,17 @@ public class NoticeQueryBuilder {
 	public final static String SEQ_NOTICE_ID = "SELECT nextval('seq_eglams_notice')";
 
 	public final static String RENTINCREMENTTYPEQUERY = "SELECT * FROM eglams_rentincrementtype rent WHERE rent.id = :rentId";
+	
+	public final static String RENT_DUE_QUERY = "select df.id as id,df.agreementnumber as agreementnumber, df.action as action,df.status as status, df.paymentcycle as paymentcycle, df.rent as rent,df.securitydeposit as securitydeposit, df.commencementdate as commencementdate,df.expirydate as expirydate,df.allotteename as allotteename,df.allotteemobilenumber as allotteemobilenumber,df.assetname as assetname,df.assetcode as assetcode,"
+			+ " df.categoryname as categoryname,df.assetcategory as assetcategory,df.shopno as shopno,df.zone as zone,df.ward as ward,df.street as street,df.electionward as electionward,df.locality as locality,df.block as block,df.lastpaid as lastpaid,df.tenantid as tenantid, min(dft1.fromdate) as fromdate,max(dft1.todate) as todate,(select sum(dft2.amount) from eglams_defaulters_details dft2 where df.agreementnumber=dft2.agreementnumber and df.tenantid=dft2.tenantid) as amount, (select sum(dft2.collection) from eglams_defaulters_details dft2 where df.agreementnumber=dft2.agreementnumber and df.tenantid=dft2.tenantid) as collection,(select sum(dft2.balance) from eglams_defaulters_details dft2 where df.agreementnumber=dft2.agreementnumber and df.tenantid=dft2.tenantid) as balance "
+			+ " from eglams_defaulters df,eglams_defaulters_details dft,eglams_defaulters_details dft1 where dft.agreementnumber=dft1.agreementnumber and dft.tenantid=dft1.tenantid and df.agreementnumber=dft.agreementnumber"
+			+ " and df.tenantid=dft.tenantid ";
+	
+	public final static String RENT_DUE_GROUP_BY = " group by df.id,df.agreementnumber,df.tenantid,df.agreementnumber,df.id, df.action,df.status,df.paymentcycle,df.rent,df.securitydeposit,df.commencementdate,"
+			+ "df.expirydate,df.allotteename,df.allotteemobilenumber,df.assetname,df.assetcode,df.categoryname,df.assetcategory,df.shopno,df.zone,df.ward,df.street,df.electionward,df.locality,df.block,df.lastpaid ,df.tenantid";
 
-	public final static String RENT_DUE_QUERY = "select distinct df.agreementnumber,df.id, df.action,df.status,df.paymentcycle,df.rent,df.securitydeposit,df.commencementdate,df.expirydate,df.allotteename,df.allotteemobilenumber,df.assetname,df.assetcode,df.categoryname,df.assetcategory,df.shopno,df.zone,df.ward,df.street,df.electionward,df.locality,df.block, dft.installment,df.lastpaid,(select min(fromdate)  from eglams_defaulters_details where agreementnumber=df.agreementnumber and tenantid=df.tenantid) as fromdate,(select max(todate)  from eglams_defaulters_details where agreementnumber=df.agreementnumber and tenantid=df.tenantid) as todate,(select sum(amount)  from eglams_defaulters_details where agreementnumber=df.agreementnumber and tenantid=df.tenantid) as amount,(select sum(collection) from eglams_defaulters_details where agreementnumber=df.agreementnumber and tenantid=df.tenantid) as collection,"
-			+ "(select sum(balance)  from eglams_defaulters_details where agreementnumber=df.agreementnumber and tenantid=df.tenantid) as balance,df.tenantid from eglams_defaulters df inner join eglams_defaulters_details dft on df.agreementnumber=dft.agreementnumber where df.agreementnumber=dft.agreementnumber and df.tenantid=dft.tenantid ";
+	public static final String RENT_DUE_OUTER_QUERY_GROUP_BY = " ) as result group by id,agreementnumber,action,status, paymentcycle, rent,securitydeposit, commencementdate,expirydate, allotteename,allotteemobilenumber,assetname,assetcode,"
+			+ "categoryname,assetcategory,shopno,zone,ward,street,electionward,locality,block,lastpaid,fromdate,todate,amount,collection,balance,tenantid ";
 
 	@SuppressWarnings("unchecked")
 	public static String getNoticeQuery(NoticeCriteria noticeCriteria, @SuppressWarnings("rawtypes") Map params) {
@@ -101,6 +109,7 @@ public class NoticeQueryBuilder {
 	public static String getRentDueSearchQuery(DueSearchCriteria dueCriteria, Map<String, Object> params) {
 
 		StringBuilder selectQuery = new StringBuilder(RENT_DUE_QUERY);
+
 		Date installmentDate = new Date();
 		params.put("tenantId", dueCriteria.getTenantId());
 		if (dueCriteria.getAgreementNumber() != null) {
@@ -138,10 +147,14 @@ public class NoticeQueryBuilder {
 		selectQuery.append(" and dft.fromdate <= :installmentDate");
 		selectQuery.append(" and df.tenantid = :tenantId");
 		params.put("installmentDate", installmentDate);
-		selectQuery.append(" order by balance desc");
-		selectQuery.append(" LIMIT 500");
-	
-		return selectQuery.toString();
+		selectQuery.append(RENT_DUE_GROUP_BY);
+
+		StringBuilder mainQuery = new StringBuilder("select * from ( ").append(selectQuery.toString());
+
+		mainQuery.append(RENT_DUE_OUTER_QUERY_GROUP_BY);
+		mainQuery.append(" order by balance desc");
+		mainQuery.append(" LIMIT 500 ");
+		return mainQuery.toString();
 	}
 
 	public static String getDueNoticesQuery(DueNoticeCriteria noticeCriteria, Map<String, Object> params) {

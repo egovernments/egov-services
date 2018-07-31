@@ -91,7 +91,7 @@ public class NoticeRepository {
 		}
 		return dueNotices;
 	}
-	public Set<DefaultersInfo> generateDueNoticeDate(DueSearchCriteria dueCriteria) {
+	public Set<DefaultersInfo> generateDueNoticeData(DueSearchCriteria dueCriteria) {
 		Set<DefaultersInfo> defaulters = new LinkedHashSet<>();
 		Map<String, Object> params = new HashMap<>();
 		String queryStr = NoticeQueryBuilder.getRentDueSearchQuery(dueCriteria, params);
@@ -125,6 +125,7 @@ public class NoticeRepository {
 		Set<DefaultersInfo> defaultersData = null;
 		List<DefaultersInfo> defaulterDetails = new ArrayList<>();
 		StringBuilder defaultersQueryString = new StringBuilder(NoticeQueryBuilder.RENT_DUE_QUERY);
+		
 		if (noticeData.getAgreementNumber() != null) {
 			defaultersQueryString.append(" and df.agreementnumber=:agreementNumber");
 			params.put("agreementNumber", noticeData.getAgreementNumber());
@@ -133,6 +134,7 @@ public class NoticeRepository {
 			defaultersQueryString.append(" and df.tenantid=:tenantId");
 			params.put("tenantId", noticeData.getTenantId());
 		}
+		defaultersQueryString.append(NoticeQueryBuilder.RENT_DUE_GROUP_BY);
 		try {
 			defaultersData = namedParameterJdbcTemplate.query(defaultersQueryString.toString(), params,
 					new DueDetailsRowMapper());

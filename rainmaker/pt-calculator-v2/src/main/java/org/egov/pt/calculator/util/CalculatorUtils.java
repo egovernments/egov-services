@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.tomcat.util.descriptor.tld.TagFileXml;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.mdms.model.MasterDetail;
 import org.egov.mdms.model.MdmsCriteria;
@@ -260,11 +261,13 @@ public class CalculatorUtils {
 	 * @param demand
 	 * @return carryForward
 	 */
-	public BigDecimal getTotalCollectedAmount(Demand demand) {
+	public BigDecimal getTotalCollectedAmountAndSetTaxAmt(Demand demand, BigDecimal taxAmt) {
 
 		BigDecimal carryForward = BigDecimal.ZERO;
+		
 		for (DemandDetail detail : demand.getDemandDetails()) {
 			BigDecimal collection = detail.getCollectionAmount();
+			taxAmt = taxAmt.add(detail.getTaxAmount());
 			if (null != collection)
 				carryForward = carryForward.add(collection);
 		}

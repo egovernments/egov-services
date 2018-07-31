@@ -87,14 +87,18 @@ public class DemandService {
 
 		List<CalculationCriteria> criterias = request.getCalculationCriteria();
 		List<Demand> demands = new ArrayList<>();
-		Map<String, Calculation> propertyCalculationMap = null;
+		List<String> lesserAssessments = new ArrayList<>();
+		
+		Map<String, Calculation> propertyCalculationMap = estimationService.getEstimationPropertyMap(request);
 		for (CalculationCriteria criteria : criterias) {
 
-			BigDecimal carryForwardCollectedAmount = getCarryForwardAndCancelOldDemand(criteria,
+			String assessmentNumber = criteria.getProperty().getPropertyDetails().get(0).getAssessmentNumber();
+			BigDecimal newTax = propertyCalculationMap.get(assessmentNumber).getTaxAmount();
+			
+			BigDecimal carryForwardCollectedAmount = getCarryForwardAndCancelOldDemand(newTax, criteria,
 					request.getRequestInfo());
 			if (carryForwardCollectedAmount.doubleValue() >= 0.0) {
 				Property property = criteria.getProperty();
-				propertyCalculationMap = estimationService.getEstimationPropertyMap(request);
 
 				Demand demand = prepareDemand(property,
 						propertyCalculationMap.get(property.getPropertyDetails().get(0).getAssessmentNumber()));
@@ -105,10 +109,16 @@ public class DemandService {
 									.taxHeadMasterCode(CalculatorConstants.PT_ADVANCE_CARRYFORWARD).build());
 				demands.add(demand);
 			}else {
-				// FIXME if carry forward is in negative then add the property exception
-				// assessment cannot be
+				lesserAssessments.add(assessmentNumber);
 			}
 		}
+		
+		if (!CollectionUtils.isEmpty(lesserAssessments)) {
+			throw new CustomException("EG_PT_DEPRECIATING_ASSESSMENT_ERROR",
+					"Depreciating assessments are not allowed, please kindly update the values for the following properties : "
+							+ lesserAssessments);
+		}
+		
 		DemandRequest dmReq = DemandRequest.builder().demands(demands).requestInfo(request.getRequestInfo()).build();
 		String url = new StringBuilder().append(configs.getBillingServiceHost())
 				.append(configs.getDemandCreateEndPoint()).toString();
@@ -173,11 +183,12 @@ public class DemandService {
 	 * @param criteria
 	 * @return
 	 */
-	private BigDecimal getCarryForwardAndCancelOldDemand(CalculationCriteria criteria, RequestInfo requestInfo) {
+	private BigDecimal getCarryForwardAndCancelOldDemand(BigDecimal newTax, CalculationCriteria criteria, RequestInfo requestInfo) {
 
 		Property property = criteria.getProperty();
 
 		BigDecimal carryForward = BigDecimal.ZERO;
+		BigDecimal oldTaxAmt = BigDecimal.ZERO;
 
 		Assessment assessment = Assessment.builder().propertyId(property.getPropertyId())
 				.tenantId(property.getTenantId())
@@ -194,7 +205,10 @@ public class DemandService {
 					repository.fetchResult(utils.getDemandSearchUrl(latestAssessment), new RequestInfoWrapper(requestInfo)), DemandResponse.class);
 			Demand demand = res.getDemands().get(0);
 
-			carryForward = utils.getTotalCollectedAmount(demand);
+			carryForward = utils.getTotalCollectedAmountAndSetTaxAmt(demand, oldTaxAmt);
+			if(oldTaxAmt.compareTo(newTax) > 0)
+				carryForward = BigDecimal.valueOf(-1);
+			
 			demand.setStatus(DemandStatus.CANCELLED);
 			DemandRequest request = DemandRequest.builder().demands(Arrays.asList(demand)).requestInfo(requestInfo)
 					.build();

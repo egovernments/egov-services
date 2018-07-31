@@ -137,7 +137,7 @@ public class LeaveApplicationRepository {
             final Object[] obj = new Object[]{leaveApplication.getId(),leaveApplication.getApplicationNumber(), leaveApplication.getEmployee(),
                     leaveApplication.getLeaveType().getId(), leaveApplication.getFromDate(),
                     leaveApplication.getToDate(), leaveApplication.getCompensatoryForDate(),
-                    leaveApplication.getLeaveDays(), leaveApplication.getAvailableDays(),
+                    leaveApplication.getLeaveDays(), leaveApplication.getWorkingDays(), leaveApplication.getAvailableDays(),
                     leaveApplication.getHalfdays(), leaveApplication.getFirstHalfleave(), leaveApplication.getReason(),
                     leaveApplication.getStatus(), leaveApplication.getLeaveGround(),leaveApplication.getStateId() , leaveApplication.getPrefixDate(),
                     leaveApplication.getSuffixDate(), holiday, leaveApplication.getEncashable(), userResponse.getUsers().get(0).getId(),
@@ -187,12 +187,36 @@ public class LeaveApplicationRepository {
         leaveApplicationStatusChange(leaveApplication, leaveApplicationRequest.getRequestInfo());
         final Object[] obj = new Object[]{leaveApplication.getApplicationNumber(), leaveApplication.getEmployee(),
                 leaveApplication.getLeaveType().getId(), leaveApplication.getFromDate(), leaveApplication.getToDate(),
-                leaveApplication.getCompensatoryForDate(), leaveApplication.getLeaveDays(),
+                leaveApplication.getCompensatoryForDate(), leaveApplication.getLeaveDays(), leaveApplication.getWorkingDays(),
                 leaveApplication.getAvailableDays(), leaveApplication.getHalfdays(),
                 leaveApplication.getFirstHalfleave(), leaveApplication.getReason(), leaveApplication.getStatus(),
                 Long.valueOf(task.getId()), userResponse.getUsers().get(0).getId(), now, leaveApplication.getId(),
                 leaveApplication.getTenantId()};
         jdbcTemplate.update(leaveApplicationInsertQuery, obj);
+        updateDocuments(leaveApplication);
+        if (leaveApplication.getDocuments() != null && !leaveApplication.getDocuments().isEmpty())
+            leaveDocumentsRepository.save(leaveApplication.getId(), leaveApplication.getDocuments(), leaveApplication.getTenantId());
+
+        return leaveApplication;
+    }
+
+    public LeaveApplication updateCompOffLeaveApplication(final LeaveApplicationSingleRequest leaveApplicationRequest) {
+        final Task task = workFlowService.update(leaveApplicationRequest);
+        final String leaveApplicationUpdateQuery = LeaveApplicationQueryBuilder.updateCompOffLeaveApplicationQuery();
+        final Date now = new Date();
+        final LeaveApplication leaveApplication = leaveApplicationRequest.getLeaveApplication();
+        final UserResponse userResponse = userService
+                .findUserByUserNameAndTenantId(leaveApplicationRequest.getRequestInfo());
+        leaveApplication.setStateId(Long.valueOf(task.getId()));
+        leaveApplicationStatusChange(leaveApplication, leaveApplicationRequest.getRequestInfo());
+        final Object[] obj = new Object[]{leaveApplication.getApplicationNumber(), leaveApplication.getEmployee(),
+                leaveApplication.getFromDate(), leaveApplication.getToDate(),
+                leaveApplication.getCompensatoryForDate(), leaveApplication.getLeaveDays(),
+                leaveApplication.getAvailableDays(), leaveApplication.getHalfdays(),
+                leaveApplication.getFirstHalfleave(), leaveApplication.getReason(), leaveApplication.getStatus(),
+                Long.valueOf(task.getId()), userResponse.getUsers().get(0).getId(), now, leaveApplication.getId(),
+                leaveApplication.getTenantId()};
+        jdbcTemplate.update(leaveApplicationUpdateQuery, obj);
         updateDocuments(leaveApplication);
         if (leaveApplication.getDocuments() != null && !leaveApplication.getDocuments().isEmpty())
             leaveDocumentsRepository.save(leaveApplication.getId(), leaveApplication.getDocuments(), leaveApplication.getTenantId());

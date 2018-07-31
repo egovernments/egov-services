@@ -115,6 +115,7 @@ public class LeaveApplicationRowMapper implements RowMapper<LeaveApplication> {
         }
         leaveApplication.setEncashable((Boolean) rs.getObject("la_encashable"));
         leaveApplication.setLeaveDays((Float) rs.getObject("la_leaveDays"));
+        leaveApplication.setWorkingDays((Float) rs.getObject("la_workingDays"));
         leaveApplication.setAvailableDays((Float) rs.getObject("la_availableDays"));
         leaveApplication.setHalfdays((Integer) rs.getObject("la_halfdays"));
         leaveApplication.setFirstHalfleave((Boolean) rs.getObject("la_firstHalfleave"));

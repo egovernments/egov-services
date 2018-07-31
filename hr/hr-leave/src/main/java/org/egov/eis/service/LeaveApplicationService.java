@@ -579,7 +579,16 @@ public class LeaveApplicationService {
     }
 
     public LeaveApplication update(final LeaveApplicationSingleRequest leaveApplicationRequest) {
-        return leaveApplicationRepository.updateLeaveApplication(leaveApplicationRequest);
+        LOGGER.info("LeaveApplication :: " + leaveApplicationRequest.getLeaveApplication());
+        LOGGER.info("LeaveType : " + leaveApplicationRequest.getLeaveApplication().getLeaveType());
+
+        if (leaveApplicationRequest.getLeaveApplication().getLeaveType() != null) {
+            LOGGER.info("LeaveApplication : ");
+            return leaveApplicationRepository.updateLeaveApplication(leaveApplicationRequest);
+        } else {
+            LOGGER.info("COMPOFF : ");
+            return leaveApplicationRepository.updateCompOffLeaveApplication(leaveApplicationRequest);
+        }
     }
 
     public List<LeaveApplication> getLeaveApplicationForDateRange(final LeaveApplication leaveApplication,

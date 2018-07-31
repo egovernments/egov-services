@@ -86,6 +86,8 @@ public class LeaveApplication {
 
     private Float leaveDays;
 
+    private Float workingDays;
+
     private Float availableDays;
 
     private Float totalLeavesEligible;

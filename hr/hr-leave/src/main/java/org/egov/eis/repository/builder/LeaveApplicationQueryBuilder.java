@@ -68,7 +68,7 @@ public class LeaveApplicationQueryBuilder {
 
     private static final String BASE_QUERY = "SELECT la.id AS la_id, la.applicationNumber AS la_applicationNumber,"
             + " la.employeeId AS la_employeeId, la.fromDate AS la_fromDate, la.toDate AS la_toDate,"
-            + " la.compensatoryForDate AS la_compensatoryForDate, la.leaveDays AS la_leaveDays,"
+            + " la.compensatoryForDate AS la_compensatoryForDate, la.leaveDays AS la_leaveDays, la.workingDays AS la_workingDays,"
             + " la.availableDays AS la_availableDays, la.halfdays AS la_halfdays, la.firstHalfleave AS la_firstHalfleave,"
             + " la.reason AS la_reason, la.status AS la_status, la.leaveGround AS la_leaveGround, la.stateId AS la_stateId,"
             + " la.prefixDate AS la_prefixDate, la.suffixDate AS la_suffixDate, la.holidays AS la_holidays, la.encashable AS la_encashable, la.createdBy AS la_createdBy,"
@@ -103,10 +103,10 @@ public class LeaveApplicationQueryBuilder {
 
     public static String insertLeaveApplicationQuery() {
         return "INSERT INTO egeis_leaveapplication(id, applicationnumber, employeeid, "
-                + "leavetypeid, fromdate, todate, compensatoryfordate, leavedays, availabledays,"
+                + "leavetypeid, fromdate, todate, compensatoryfordate, leavedays, workingdays, availabledays,"
                 + " halfdays, firsthalfleave, reason, status, leaveground, stateid, prefixDate, suffixDate, holidays, encashable, createdby, createddate, "
                 + "lastmodifiedby, lastmodifieddate, tenantid) VALUES "
-                + "(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+                + "(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
     }
 
     public static String insertCompoffLeaveApplicationQuery() {
@@ -119,7 +119,14 @@ public class LeaveApplicationQueryBuilder {
 
     public static String updateLeaveApplicationQuery() {
         return "UPDATE egeis_leaveapplication SET applicationnumber=?, employeeid=?,"
-                + " leavetypeid=?, fromdate=?, todate=?, compensatoryfordate=?, leavedays=?,"
+                + " leavetypeid=?, fromdate=?, todate=?, compensatoryfordate=?, leavedays=?, workingdays=?,"
+                + " availabledays=?, halfdays=?, firsthalfleave=?, reason=?, status=?, stateid=?,"
+                + " lastmodifiedby=?, lastmodifieddate=? WHERE id=? and tenantid=?";
+    }
+
+    public static String updateCompOffLeaveApplicationQuery() {
+        return "UPDATE egeis_leaveapplication SET applicationnumber=?, employeeid=?,"
+                + " fromdate=?, todate=?, compensatoryfordate=?, leavedays=?,"
                 + " availabledays=?, halfdays=?, firsthalfleave=?, reason=?, status=?, stateid=?,"
                 + " lastmodifiedby=?, lastmodifieddate=? WHERE id=? and tenantid=?";
     }
@@ -127,7 +134,7 @@ public class LeaveApplicationQueryBuilder {
     public static String getLeaveApplicationForDateRangeQuery() {
         return "SELECT la.id AS la_id, la.applicationNumber AS la_applicationNumber,"
                 + " la.employeeId AS la_employeeId, la.fromDate AS la_fromDate, la.toDate AS la_toDate,"
-                + " la.compensatoryForDate AS la_compensatoryForDate, la.leaveDays AS la_leaveDays,"
+                + " la.compensatoryForDate AS la_compensatoryForDate, la.leaveDays AS la_leaveDays, la.workingDays AS la_workingDays, "
                 + " la.availableDays AS la_availableDays, la.halfdays AS la_halfdays, la.firstHalfleave AS la_firstHalfleave,"
                 + " la.reason AS la_reason, la.status AS la_status,la.leaveGround AS la_leaveGround, la.stateId AS la_stateId, "
                 + " la.prefixDate AS la_prefixDate, la.suffixDate AS la_suffixDate, la.holidays AS la_holidays, la.encashable AS la_encashable, la.createdBy AS la_createdBy,"

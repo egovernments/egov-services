@@ -199,9 +199,9 @@ public class EstimationService {
 		if (null != detail.getAdhocPenalty())
 			estimates.add(TaxHeadEstimate.builder().taxHeadCode(CalculatorConstants.PT_ADHOC_PENALTY)
 					.estimateAmount(detail.getAdhocPenalty()).build());
-		if (null != detail.getAdhocExemption() && detail.getAdhocExemption().compareTo(taxAmt) < 0) {
+		if (null != detail.getAdhocExemption() && detail.getAdhocExemption().compareTo(taxAmt) > 0) {
 			estimates.add(
-					TaxHeadEstimate.builder().taxHeadCode(CalculatorConstants.PT_TAX).estimateAmount(taxAmt).build());
+					TaxHeadEstimate.builder().taxHeadCode(CalculatorConstants.PT_ADHOC_REBATE).estimateAmount(taxAmt).build());
 			payableTax = payableTax.subtract(detail.getAdhocPenalty());
 		} else
 			throw new CustomException(CalculatorConstants.PT_ADHOC_REBATE_INVALID_AMOUNT,

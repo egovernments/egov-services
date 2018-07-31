@@ -17,7 +17,7 @@ public class CreateUserRequest {
     public User toDomain(boolean isCreate) {
         return user.toDomain(loggedInUserId(), isCreate);
     }
-// TODO Update libraries to have uuid in request info
+
     private Long loggedInUserId() {
 		return requestInfo.getUserInfo() == null ? null : requestInfo.getUserInfo().getId();
 	}

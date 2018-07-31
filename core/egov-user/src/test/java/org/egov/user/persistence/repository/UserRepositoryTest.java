@@ -1,5 +1,13 @@
 package org.egov.user.persistence.repository;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 import org.egov.user.domain.exception.InvalidRoleCodeException;
 import org.egov.user.domain.model.Address;
 import org.egov.user.domain.model.Role;
@@ -8,7 +16,6 @@ import org.egov.user.domain.model.UserSearchCriteria;
 import org.egov.user.domain.model.enums.AddressType;
 import org.egov.user.domain.model.enums.BloodGroup;
 import org.egov.user.domain.model.enums.Gender;
-import org.egov.user.domain.model.enums.UserType;
 import org.egov.user.repository.builder.UserTypeQueryBuilder;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -21,14 +28,6 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
@@ -56,21 +55,36 @@ public class UserRepositoryTest {
 
 	@Before
 	public void before() {
-		userRepository = new UserRepository(roleRepository, userTypeQueryBuilder,  addressRepository,
+		userRepository = new UserRepository(roleRepository, userTypeQueryBuilder, passwordEncoder, addressRepository,
 				jdbcTemplate, namedParameterJdbcTemplate);
 	}
 
 	@Test
 	@Sql(scripts = { "/sql/clearUserRoles.sql","/sql/clearUsers.sql", "/sql/createUsers.sql" })
-	public void test_should_return_true_when_user_exists_with_given_user_name_and_tenant() {
-		boolean isPresent = userRepository.isUserPresent("bigcat399", "ap.public", UserType.EMPLOYEE);
+	public void test_should_return_true_when_user_exists_with_given_user_name_id_and_tenant() {
+		boolean isPresent = userRepository.isUserPresent("bigcat399", 2L, "ap.public");
 
 		assertTrue(isPresent);
 	}
 
 	@Test
+	@Sql(scripts = { "/sql/clearUserRoles.sql","/sql/clearUsers.sql", "/sql/createUsers.sql" })
+	public void test_should_return_true_when_user_exists_with_given_user_name_and_tenant() {
+		boolean isPresent = userRepository.isUserPresent("bigcat399", "ap.public");
+
+		assertTrue(isPresent);
+	}
+
+	@Test
+	public void test_should_return_false_when_user_does_not_exist_with_given_user_name_id_and_tenant() {
+		boolean isPresent = userRepository.isUserPresent("userName", 1L, "ap.public");
+
+		assertFalse(isPresent);
+	}
+
+	@Test
 	public void test_should_return_false_when_user_does_not_exist_with_given_user_name_and_tenant() {
-		boolean isPresent = userRepository.isUserPresent("userName", "ap.public", UserType.EMPLOYEE);
+		boolean isPresent = userRepository.isUserPresent("userName", "ap.public");
 
 		assertFalse(isPresent);
 	}
@@ -78,8 +92,7 @@ public class UserRepositoryTest {
 	@Test
 	@Sql(scripts = { "/sql/clearUserRoles.sql","/sql/clearUsers.sql", "/sql/createUsers.sql" })
 	public void test_get_user_by_userName() {
-        User user = userRepository.findAll(UserSearchCriteria.builder().userName("bigcat399")
-                .tenantId("ap.public").type(UserType.EMPLOYEE).build()).get(0);
+		User user = userRepository.findByUsername("bigcat399", "ap.public");
 		assertThat(user.getId().equals(1l));
 		assertThat(user.getUsername().equals("bigcat399"));
 		assertThat(user.getMobileNumber().equals("9731123456"));
@@ -87,6 +100,14 @@ public class UserRepositoryTest {
 		assertThat(user.getTenantId().equals("ap.public"));
 	}
 
+	@Test
+	@Sql(scripts = { "/sql/clearUserRoles.sql","/sql/clearUsers.sql","/sql/createUsers.sql" })
+	public void test_get_user_by_emailId() {
+		User user = userRepository.findByEmailId("kay.alexander@example.com", "ap.public");
+		assertThat(user.getId().equals(1l));
+		assertThat(user.getEmailId().equals("kay.alexander@example.com"));
+		assertThat(user.getTenantId().equals("ap.public"));
+	}
 
 	@Test
 	@Sql(scripts = { "/sql/clearUserRoles.sql", "/sql/clearUsers.sql", "/sql/clearRoles.sql", "/sql/createRoles.sql" })
@@ -295,8 +316,7 @@ public class UserRepositoryTest {
 			"/sql/clearAddresses.sql", "/sql/createUsers.sql" })
 	public void test_search_user_bytype() {
 
-		UserSearchCriteria userSearch = UserSearchCriteria.builder().tenantId("ap.public").type(UserType.EMPLOYEE)
-				.build();
+		UserSearchCriteria userSearch = UserSearchCriteria.builder().tenantId("ap.public").type("EMPLOYEE").build();
 		List<User> actualList = userRepository.findAll(userSearch);
 		assertThat(actualList.size() == 7);
 	}
@@ -317,24 +337,21 @@ public class UserRepositoryTest {
 		final List<Role> roles = new ArrayList<>();
 		final String roleCode = "EMP";
 		roles.add(Role.builder().code(roleCode).build());
-		User domainUser = User.builder().roles(roles).name("test1").id(1L).username("TestUserName").password("password")
+		User domainUser = User.builder().roles(roles).name("test1").id(1l).username("TestUserName").password("password")
 				.emailId("Test@gmail.com").aadhaarNumber("AadharNumber").mobileNumber("1234567890").active(true)
-				.gender(Gender.FEMALE).bloodGroup(BloodGroup.A_NEGATIVE).accountLocked(true).loggedInUserId(10L)
-				.createdBy(10L).tenantId("ap.public").build();
-		userRepository.update(domainUser, domainUser);
-		User actualUser = userRepository.findAll(UserSearchCriteria.builder().userName("TestUserName").tenantId("ap" +
-                ".public").type(UserType.CITIZEN)
-                .build()).get(0);
+				.gender(Gender.FEMALE).bloodGroup(BloodGroup.A_NEGATIVE).accountLocked(true).loggedInUserId(10l)
+				.createdBy(10l).tenantId("ap.public").build();
+		User actualUser = userRepository.update(domainUser);
 
 		assertThat(actualUser != null);
-		assertThat(actualUser.getId().equals(1L));
-		assertThat(actualUser.getRoles().size() == 1L);
+		assertThat(actualUser.getId().equals(1l));
+		assertThat(actualUser.getRoles().size() == 1l);
 		assertThat(actualUser.getUsername().equals("TestUserName"));
 		assertThat(actualUser.getEmailId().equals("Test@gmail.com"));
 		assertThat(actualUser.getAadhaarNumber().equals("AadharNumber"));
 		assertThat(actualUser.getGender().toString().equals("FEMALE"));
-		assertThat(actualUser.getCreatedBy().equals(10L));
-		assertThat(actualUser.getLastModifiedBy().equals(10L));
+		assertThat(actualUser.getCreatedBy().equals(10l));
+		assertThat(actualUser.getLastModifiedBy().equals(10l));
 		assertThat(actualUser.getTenantId().equals("ap.public"));
 	}
 	
@@ -345,17 +362,15 @@ public class UserRepositoryTest {
 		final org.egov.user.domain.model.Role domainRole = org.egov.user.domain.model.Role.builder().name(roleCode)
 				.build();
 		User domainUser = User.builder()
-				.roles(Collections.singletonList(domainRole)).id(1L).tenantId("ap.public").build();
-		userRepository.update(domainUser, domainUser);
+				.roles(Collections.singletonList(domainRole)).id(1l).tenantId("ap.public").build();
+		userRepository.update(domainUser);
 	}
 
 	@Test
-    @Ignore
 	public void test_should_return_user() {
 
-		List<User> actualUsers = userRepository.findAll(UserSearchCriteria.builder().userName("bigcat399")
-                .tenantId("ap.public").type(UserType.EMPLOYEE).build());
-		assertTrue(!actualUsers.isEmpty());
+		User actualUser = userRepository.getUserById(123L, "tenantId");
+		assertThat(actualUser != null);
 	}
 
 }

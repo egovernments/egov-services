@@ -39,7 +39,10 @@
  */
 package org.egov.user.repository.builder;
 
-import lombok.extern.slf4j.Slf4j;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.commons.lang3.StringUtils;
 import org.egov.user.domain.model.Role;
 import org.egov.user.domain.model.UserSearchCriteria;
 import org.egov.user.persistence.repository.RoleRepository;
@@ -47,209 +50,234 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
-import java.util.ArrayList;
-import java.util.List;
+import lombok.extern.slf4j.Slf4j;
 
 @Component
 @Slf4j
 public class UserTypeQueryBuilder {
 
-    @Autowired
-    private RoleRepository roleRepository;
+	@Autowired
+	private RoleRepository roleRepositiry;
 
-    private static final String BASE_QUERY = "SELECT * from eg_user u ";
+	private static final String BASE_QUERY = "SELECT * from eg_user u ";
 
-    public static final String SELECT_NEXT_SEQUENCE_USER = "select nextval('seq_eg_user')";
+	@SuppressWarnings("rawtypes")
+	public String getQuery(final UserSearchCriteria userSearchCriteria, final List preparedStatementValues) {
+		final StringBuilder selectQuery = new StringBuilder(BASE_QUERY);
+		List<Long> roleIds = getRoleIds(userSearchCriteria);
+		if (userSearchCriteria.getRoleCodes() != null && userSearchCriteria.getRoleCodes().size() > 0
+				&& !roleIds.isEmpty()) {
+			selectQuery.append(",eg_userrole ur");
+		}
+		addWhereClause(selectQuery, preparedStatementValues, userSearchCriteria);
+		if (!roleIds.isEmpty())
+			selectQuery.append("And ur.roleid IN" + getIdQuery(roleIds) + " And ur.userid = u.id");
+		addOrderByClause(selectQuery, userSearchCriteria);
+		addPagingClause(selectQuery, preparedStatementValues, userSearchCriteria);
+		log.debug("Query : " + selectQuery);
+		return selectQuery.toString();
+	}
 
-    @SuppressWarnings("rawtypes")
-    public String getQuery(final UserSearchCriteria userSearchCriteria, final List preparedStatementValues) {
-        final StringBuilder selectQuery = new StringBuilder(BASE_QUERY);
-        List<Long> roleIds = getRoleIds(userSearchCriteria);
-        if (userSearchCriteria.getRoleCodes() != null && userSearchCriteria.getRoleCodes().size() > 0
-                && !roleIds.isEmpty()) {
-            selectQuery.append(",eg_userrole ur");
-        }
-        addWhereClause(selectQuery, preparedStatementValues, userSearchCriteria);
-        if (!roleIds.isEmpty())
-            selectQuery.append("And ur.roleid IN").append(getIdQuery(roleIds)).append(" And ur.userid = u.id");
-        addOrderByClause(selectQuery, userSearchCriteria);
-        addPagingClause(selectQuery, preparedStatementValues, userSearchCriteria);
-        log.debug("Query : " + selectQuery);
-        return selectQuery.toString();
-    }
+	private List<Long> getRoleIds(final UserSearchCriteria userSearchCriteria) {
 
-    private List<Long> getRoleIds(final UserSearchCriteria userSearchCriteria) {
+		List<Long> roleIdList = new ArrayList<Long>();
+		if (userSearchCriteria.getRoleCodes() != null && userSearchCriteria.getRoleCodes().size() > 0) {
+			for (String roleCode : userSearchCriteria.getRoleCodes()) {
+				Role role = roleRepositiry.findByTenantIdAndCode(userSearchCriteria.getTenantId(), roleCode);
+				if (role != null) {
+					roleIdList.add(role.getId());
+				}
+			}
+		}
+		return roleIdList;
+	}
 
-        List<Long> roleIdList = new ArrayList<Long>();
-        if (userSearchCriteria.getRoleCodes() != null && userSearchCriteria.getRoleCodes().size() > 0) {
-            for (String roleCode : userSearchCriteria.getRoleCodes()) {
-                Role role = roleRepository.findByTenantIdAndCode(userSearchCriteria.getTenantId(), roleCode);
-                if (role != null) {
-                    roleIdList.add(role.getId());
-                }
-            }
-        }
-        return roleIdList;
-    }
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	private void addWhereClause(final StringBuilder selectQuery, final List preparedStatementValues,
+			final UserSearchCriteria userSearchCriteria) {
 
-    @SuppressWarnings({"unchecked", "rawtypes"})
-    private void addWhereClause(final StringBuilder selectQuery, final List preparedStatementValues,
-                                final UserSearchCriteria userSearchCriteria) {
+		if (userSearchCriteria.getId() == null && userSearchCriteria.getUserName() == null
+				&& userSearchCriteria.getName() == null && userSearchCriteria.getEmailId() == null
+				&& userSearchCriteria.getActive() == null && userSearchCriteria.getTenantId() == null
+				&& userSearchCriteria.getAadhaarNumber() == null && userSearchCriteria.getMobileNumber() == null
+				&& userSearchCriteria.getPan() == null && userSearchCriteria.getRoleCodes() == null
+				&& userSearchCriteria.getType() == null)
+			return;
 
-        if (userSearchCriteria.getId() == null && userSearchCriteria.getUserName() == null
-                && userSearchCriteria.getName() == null && userSearchCriteria.getEmailId() == null
-                && userSearchCriteria.getActive() == null && userSearchCriteria.getTenantId() == null
-                && userSearchCriteria.getAadhaarNumber() == null && userSearchCriteria.getMobileNumber() == null
-                && userSearchCriteria.getPan() == null && userSearchCriteria.getRoleCodes() == null
-                && userSearchCriteria.getType() == null && userSearchCriteria.getUuid() == null)
-            return;
+		selectQuery.append(" WHERE");
+		boolean isAppendAndClause = false;
 
-        selectQuery.append(" WHERE");
-        boolean isAppendAndClause = false;
+		if (userSearchCriteria.getId() != null && !userSearchCriteria.getId().isEmpty()) {
+			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+			selectQuery.append(" u.id IN " + getIdQuery(userSearchCriteria.getId()));
+		}
 
-        if (userSearchCriteria.getId() != null && !userSearchCriteria.getId().isEmpty()) {
-            isAppendAndClause = addAndClauseIfRequired(false, selectQuery);
-            selectQuery.append(" u.id IN ").append(getIdQuery(userSearchCriteria.getId()));
-        }
+		if (userSearchCriteria.getTenantId() != null) {
+			if(!StringUtils.isEmpty(userSearchCriteria.getType())) {
+				if(userSearchCriteria.getType().equalsIgnoreCase("CITIZEN")) {
+					isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+					String tenantId = userSearchCriteria.getTenantId().split("[.]")[0];
+					selectQuery.append(" u.tenantid LIKE ").append("'%").append(tenantId).append("%'");
+				}
+			}else {
+				isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+				selectQuery.append(" u.tenantid = ?");
+				preparedStatementValues.add(userSearchCriteria.getTenantId().trim());
+			}
+		}
 
-        if (userSearchCriteria.getTenantId() != null) {
-            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-            selectQuery.append(" u.tenantid = ?");
-            preparedStatementValues.add(userSearchCriteria.getTenantId().trim());
-        }
+		if (userSearchCriteria.getUserName() != null) {
+			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+			selectQuery.append(" u.username = ?");
+			preparedStatementValues.add(userSearchCriteria.getUserName().trim());
+		}
 
-        if (userSearchCriteria.getUserName() != null) {
-            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-            selectQuery.append(" u.username = ?");
-            preparedStatementValues.add(userSearchCriteria.getUserName().trim());
-        }
+		if (userSearchCriteria.isFuzzyLogic() == false && userSearchCriteria.getName() != null) {
+			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+			selectQuery.append(" u.name = ?");
+			preparedStatementValues.add(userSearchCriteria.getName().trim());
+		}
 
-        if (!userSearchCriteria.isFuzzyLogic() && userSearchCriteria.getName() != null) {
-            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-            selectQuery.append(" u.name = ?");
-            preparedStatementValues.add(userSearchCriteria.getName().trim());
-        }
+		if (userSearchCriteria.getActive() != null) {
+			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+			selectQuery.append(" u.active = ?");
+			preparedStatementValues.add(userSearchCriteria.getActive());
+		}
 
-        if (userSearchCriteria.getActive() != null) {
-            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-            selectQuery.append(" u.active = ?");
-            preparedStatementValues.add(userSearchCriteria.getActive());
-        }
+		if (userSearchCriteria.getEmailId() != null) {
+			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+			selectQuery.append(" u.emailid = ?");
+			preparedStatementValues.add(userSearchCriteria.getEmailId().trim());
+		}
 
-        if (userSearchCriteria.getEmailId() != null) {
-            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-            selectQuery.append(" u.emailid = ?");
-            preparedStatementValues.add(userSearchCriteria.getEmailId().trim());
-        }
+		if (userSearchCriteria.getAadhaarNumber() != null) {
+			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+			selectQuery.append(" u.aadhaarnumber = ?");
+			preparedStatementValues.add(userSearchCriteria.getAadhaarNumber().trim());
+		}
 
-        if (userSearchCriteria.getAadhaarNumber() != null) {
-            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-            selectQuery.append(" u.aadhaarnumber = ?");
-            preparedStatementValues.add(userSearchCriteria.getAadhaarNumber().trim());
-        }
+		if (userSearchCriteria.getMobileNumber() != null) {
+			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+			selectQuery.append(" u.mobilenumber = ?");
+			preparedStatementValues.add(userSearchCriteria.getMobileNumber().trim());
+		}
 
-        if (userSearchCriteria.getMobileNumber() != null) {
-            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-            selectQuery.append(" u.mobilenumber = ?");
-            preparedStatementValues.add(userSearchCriteria.getMobileNumber().trim());
-        }
+		if (userSearchCriteria.getPan() != null) {
+			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+			selectQuery.append(" u.pan = ?");
+			preparedStatementValues.add(userSearchCriteria.getPan().trim());
+		}
 
-        if (userSearchCriteria.getPan() != null) {
-            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-            selectQuery.append(" u.pan = ?");
-            preparedStatementValues.add(userSearchCriteria.getPan().trim());
-        }
+		if (userSearchCriteria.getType() != null) {
+			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+			selectQuery.append(" u.type = ?");
+			preparedStatementValues.add(userSearchCriteria.getType().trim());
+		}
 
-        if (userSearchCriteria.getType() != null) {
-            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-            selectQuery.append(" u.type = ?");
-            preparedStatementValues.add(userSearchCriteria.getType().toString());
-        }
+		if (userSearchCriteria.isFuzzyLogic() == true && userSearchCriteria.getName() != null) {
+			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+			selectQuery.append(" u.name like " + "'%" + userSearchCriteria.getName().trim() + "%'");
+		}
+		
+		if (!CollectionUtils.isEmpty(userSearchCriteria.getUuid())) {
+			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+			selectQuery.append(" u.uuid IN " + getUUIDQuery(userSearchCriteria.getUuid()));
+		}		
+	}
 
-        if (userSearchCriteria.isFuzzyLogic() && userSearchCriteria.getName() != null) {
-            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-            selectQuery.append(" u.name like " + "'%").append(userSearchCriteria.getName().trim()).append("%'");
-        }
+	private void addOrderByClause(final StringBuilder selectQuery, final UserSearchCriteria userSearchCriteria) {
+		final String sortBy = userSearchCriteria.getSort() != null && !userSearchCriteria.getSort().isEmpty()
+				? " u." + userSearchCriteria.getSort().get(0) : "u.name";
+		selectQuery.append(" ORDER BY " + sortBy);
+	}
 
-        if (!CollectionUtils.isEmpty(userSearchCriteria.getUuid())) {
-            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-            selectQuery.append(" u.uuid IN ").append(getUUIDQuery(userSearchCriteria.getUuid()));
-        }
-    }
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	private void addPagingClause(final StringBuilder selectQuery, final List preparedStatementValues,
+			final UserSearchCriteria userSearchCriteria) {
+		// handle limit(also called pageSize) here
+		selectQuery.append(" LIMIT ?");
+		int pageSize = userSearchCriteria.getPageSize();
+		if (pageSize != 0) {
+			pageSize = userSearchCriteria.getPageSize();
+		} else {
+			pageSize = 500;
+		}
+		preparedStatementValues.add(pageSize); // Set limit to pageSize
+	}
 
-    private void addOrderByClause(final StringBuilder selectQuery, final UserSearchCriteria userSearchCriteria) {
-        final String sortBy = userSearchCriteria.getSort() != null && !userSearchCriteria.getSort().isEmpty()
-                ? " u." + userSearchCriteria.getSort().get(0) : "u.name";
-        selectQuery.append(" ORDER BY ").append(sortBy);
-    }
+	private static String getIdQuery(final List<Long> idList) {
+		final StringBuilder query = new StringBuilder("(");
+		if (idList.size() >= 1) {
+			query.append(idList.get(0).toString());
+			for (int i = 1; i < idList.size(); i++)
+				query.append(", " + idList.get(i));
+		}
+		return query.append(")").toString();
+	}
+	
+	private static String getUUIDQuery(final List<String> idList) {
+		final StringBuilder query = new StringBuilder("(");
+		if (idList.size() >= 1) {
+			query.append("'").append(idList.get(0).toString()).append("'");
+			for (int i = 1; i < idList.size(); i++)
+				query.append(", '" + idList.get(i)).append("'");
+		}
+		return query.append(")").toString();
+	}
 
-    @SuppressWarnings({"unchecked", "rawtypes"})
-    private void addPagingClause(final StringBuilder selectQuery, final List preparedStatementValues,
-                                 final UserSearchCriteria userSearchCriteria) {
-        // handle limit(also called pageSize) here
-        selectQuery.append(" LIMIT ?");
-        int pageSize = userSearchCriteria.getPageSize();
-        if (pageSize != 0) {
-            pageSize = userSearchCriteria.getPageSize();
-        } else {
-            pageSize = 500;
-        }
-        preparedStatementValues.add(pageSize); // Set limit to pageSize
-    }
+	/**
+	 * This method is always called at the beginning of the method so that and
+	 * is prepended before the field's predicate is handled.
+	 *
+	 * @param appendAndClauseFlag
+	 * @param queryString
+	 * @return boolean indicates if the next predicate should append an "AND"
+	 */
+	private boolean addAndClauseIfRequired(final boolean appendAndClauseFlag, final StringBuilder queryString) {
+		if (appendAndClauseFlag)
+			queryString.append(" AND");
 
-    private static String getIdQuery(final List<Long> idList) {
-        final StringBuilder query = new StringBuilder("(");
-        if (idList.size() >= 1) {
-            query.append(idList.get(0).toString());
-            for (int i = 1; i < idList.size(); i++)
-                query.append(", ").append(idList.get(i));
-        }
-        return query.append(")").toString();
-    }
+		return true;
+	}
 
-    private static String getUUIDQuery(final List<String> idList) {
-        final StringBuilder query = new StringBuilder("(");
-        if (idList.size() >= 1) {
-            query.append("'").append(idList.get(0)).append("'");
-            for (int i = 1; i < idList.size(); i++)
-                query.append(", '").append(idList.get(i)).append("'");
-        }
-        return query.append(")").toString();
-    }
+	public String getInsertUserQuery() {
+		String insertQuery = "insert into eg_user (id,uuid,tenantid,salutation,dob,locale,username,password,pwdexpirydate,mobilenumber,altcontactnumber,emailid,active,name,gender,pan,aadhaarnumber,"
+				+ "type,guardian,guardianrelation,signature,accountlocked,bloodgroup,photo,identificationmark,createddate,lastmodifieddate,createdby,lastmodifiedby) values (:id,:uuid,:tenantid,:salutation,"
+				+ ":dob,:locale,:username,:password,:pwdexpirydate,:mobilenumber,:altcontactnumber,:emailid,:active,:name,:gender,:pan,:aadhaarnumber,:type,:guardian,:guardianrelation,:signature,"
+				+ ":accountlocked,:bloodgroup,:photo,:identificationmark,:createddate,:lastmodifieddate,:createdby,:lastmodifiedby) ";
+		return insertQuery;
+	}
 
-    /**
-     * This method is always called at the beginning of the method so that and
-     * is prepended before the field's predicate is handled.
-     *
-     * @param appendAndClauseFlag
-     * @param queryString
-     * @return boolean indicates if the next predicate should append an "AND"
-     */
-    private boolean addAndClauseIfRequired(final boolean appendAndClauseFlag, final StringBuilder queryString) {
-        if (appendAndClauseFlag)
-            queryString.append(" AND");
+	public String getUpdateUserQuery() {
+		return "update eg_user set salutation=:Salutation,dob=:Dob,locale=:Locale,password=:Password,pwdexpirydate=:PasswordExpiryDate,mobilenumber=:MobileNumber,altcontactnumber=:AltContactNumber,emailid=:EmailId,active=:Active,name=:Name,gender=:Gender,pan=:Pan,aadhaarnumber=:AadhaarNumber,"
+				+ "type=:Type,guardian=:Guardian,guardianrelation=:GuardianRelation,signature=:Signature,accountlocked=:AccountLocked,bloodgroup=:BloodGroup,photo=:Photo,identificationmark=:IdentificationMark,lastmodifieddate=:LastModifiedDate,lastmodifiedby=:LastModifiedBy where id=:id and tenantid=:tenantid";
+	}
 
-        return true;
-    }
+	public String getUserRoleInsertQuery() {
+		return "insert into eg_userrole(roleid,roleidtenantid,userid,tenantid,lastmodifieddate) values (:roleid,:roleidtenantid,:userid,:tenantid,:lastmodifieddate)";
+	}
 
-    public String getInsertUserQuery() {
-        return "insert into eg_user (id,uuid,tenantid,salutation,dob,locale,username,password,pwdexpirydate,mobilenumber,altcontactnumber,emailid,active,name,gender,pan,aadhaarnumber,"
-                + "type,guardian,guardianrelation,signature,accountlocked,bloodgroup,photo,identificationmark,createddate,lastmodifieddate,createdby,lastmodifiedby) values (:id,:uuid,:tenantid,:salutation,"
-                + ":dob,:locale,:username,:password,:pwdexpirydate,:mobilenumber,:altcontactnumber,:emailid,:active,:name,:gender,:pan,:aadhaarnumber,:type,:guardian,:guardianrelation,:signature,"
-                + ":accountlocked,:bloodgroup,:photo,:identificationmark,:createddate,:lastmodifieddate,:createdby,:lastmodifiedby) ";
-    }
+	public String getFindUserByIdAndTenantId() {
+		return "select * from eg_user where id=:id and tenantid =:tenantId ";
+	}
 
-    public String getUpdateUserQuery() {
-        return "update eg_user set salutation=:Salutation,dob=:Dob,locale=:Locale,password=:Password,pwdexpirydate=:PasswordExpiryDate,mobilenumber=:MobileNumber,altcontactnumber=:AltContactNumber,emailid=:EmailId,active=:Active,name=:Name,gender=:Gender,pan=:Pan,aadhaarnumber=:AadhaarNumber,"
-                + "type=:Type,guardian=:Guardian,guardianrelation=:GuardianRelation,signature=:Signature," +
-                "accountlocked=:AccountLocked,bloodgroup=:BloodGroup,photo=:Photo," +
-                "identificationmark=:IdentificationMark,lastmodifieddate=:LastModifiedDate," +
-                "lastmodifiedby=:LastModifiedBy where username=:username and tenantid=:tenantid and type=:type";
-    }
+	public String getFindUserByUserNameAndTenantId() {
+		return "select * from eg_user where username=:userName and tenantid =:tenantId ";
+	}
+	
+	public String getUserByUserNameAndTenantId(String tenantId) {
+		return "select * from eg_user where username=:userName and tenantid like"  + "'" + tenantId + "%'";
+	}
 
+	public String getUserPresentByIdAndUserNameAndTenant() {
+		return "select id from eg_user where username =:userName and id !=:id and tenantid =:tenantId";
+	}
 
-    public String getUserPresentByUserNameAndTenant() {
-        return "select count(*) from eg_user where username =:userName and tenantId =:tenantId and type = :userType " ;
-    }
+	public String getUserPresentByUserNameAndTenant() {
+		return "select id from eg_user where username =:userName and tenantId =:tenantId";
+	}
 
+	public String getUserByEmailAntTenant() {
+		return "select * from eg_user where emailid =:emailId and tenantId =:tenantId";
+	}
 }

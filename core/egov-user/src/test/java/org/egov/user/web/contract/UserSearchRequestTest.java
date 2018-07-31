@@ -1,7 +1,6 @@
 package org.egov.user.web.contract;
 
 import org.egov.user.domain.model.UserSearchCriteria;
-import org.egov.user.domain.model.enums.UserType;
 import org.junit.Test;
 
 import java.util.Arrays;
@@ -41,6 +40,6 @@ public class UserSearchRequestTest {
         assertThat(userSearch.getPageSize()).isEqualTo(0);
         assertThat(userSearch.getPageNumber()).isEqualTo(0);
         assertThat(userSearch.getSort()).isEqualTo(Collections.singletonList("name"));
-        assertThat(userSearch.getType()).isEqualTo(UserType.CITIZEN);
+        assertThat(userSearch.getType()).isEqualTo("CITIZEN");
     }
 }

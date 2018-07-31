@@ -9,7 +9,6 @@ public class InvalidUserSearchCriteriaException extends RuntimeException {
 	private UserSearchCriteria searchCriteria;
 
 	public InvalidUserSearchCriteriaException(UserSearchCriteria searchCriteria) {
-		super("Insufficient or invalid search criteria: "+searchCriteria.toString());
 		this.searchCriteria = searchCriteria;
 	}
 }

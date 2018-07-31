@@ -5,9 +5,7 @@ import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import org.egov.user.domain.exception.InvalidNonLoggedInUserUpdatePasswordRequestException;
-import org.egov.user.domain.model.enums.UserType;
 
-import static java.util.Objects.isNull;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 
 @AllArgsConstructor
@@ -19,7 +17,6 @@ public class NonLoggedInUserUpdatePasswordRequest {
 	private String userName;
 	private String newPassword;
 	private String tenantId;
-	private UserType type;
 
 	public void validate() {
 		if (isModelInvalid()) {
@@ -39,7 +36,7 @@ public class NonLoggedInUserUpdatePasswordRequest {
 		return isEmpty(otpReference);
 	}
 
-	public boolean isUsernameAbsent() {
+	public boolean isMobileNumberAbsent() {
 		return isEmpty(userName);
 	}
 
@@ -51,12 +48,7 @@ public class NonLoggedInUserUpdatePasswordRequest {
 		return isEmpty(tenantId);
 	}
 
-    private boolean isUserTypeAbsent() {
-        return isNull(type);
-    }
-
-
-    private boolean isModelInvalid() {
-		return isOtpReferenceAbsent() || isUsernameAbsent() || isTenantIdAbsent() || isUserTypeAbsent() || isNewPasswordAbsent();
+	private boolean isModelInvalid() {
+		return isOtpReferenceAbsent() || isMobileNumberAbsent() || isTenantIdAbsent() || isNewPasswordAbsent();
 	}
 }

@@ -1,7 +1,6 @@
 package org.egov.user.domain.model;
 
 import org.egov.user.domain.exception.InvalidLoggedInUserUpdatePasswordRequestException;
-import org.egov.user.domain.model.enums.UserType;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -12,12 +11,12 @@ public class LoggedInUserUpdatePasswordRequestTest {
 	@Test
 	public void test_equals_should_return_true_when_both_instances_have_same_field_values() {
 		final LoggedInUserUpdatePasswordRequest updatePassword1 = LoggedInUserUpdatePasswordRequest.builder()
-				.userName("greenfish424")
+				.userId(123L)
 				.existingPassword("existingPassword")
 				.newPassword("newPassword")
 				.build();
 		final LoggedInUserUpdatePasswordRequest updatePassword2 = LoggedInUserUpdatePasswordRequest.builder()
-				.userName("greenfish424")
+				.userId(123L)
 				.existingPassword("existingPassword")
 				.newPassword("newPassword")
 				.build();
@@ -28,12 +27,12 @@ public class LoggedInUserUpdatePasswordRequestTest {
 	@Test
 	public void test_hashcode_should_be_same_when_both_instances_have_same_field_values() {
 		final LoggedInUserUpdatePasswordRequest updatePassword1 = LoggedInUserUpdatePasswordRequest.builder()
-				.userName("greenfish424")
+				.userId(123L)
 				.existingPassword("existingPassword")
 				.newPassword("newPassword")
 				.build();
 		final LoggedInUserUpdatePasswordRequest updatePassword2 = LoggedInUserUpdatePasswordRequest.builder()
-				.userName("greenfish424")
+				.userId(123L)
 				.existingPassword("existingPassword")
 				.newPassword("newPassword")
 				.build();
@@ -44,12 +43,12 @@ public class LoggedInUserUpdatePasswordRequestTest {
 	@Test
 	public void test_equals_should_return_false_when_both_instances_have_different_field_values() {
 		final LoggedInUserUpdatePasswordRequest updatePassword1 = LoggedInUserUpdatePasswordRequest.builder()
-				.userName("greenfish424")
+				.userId(124L)
 				.existingPassword("oldPassword1")
 				.newPassword("newPassword1")
 				.build();
 		final LoggedInUserUpdatePasswordRequest updatePassword2 = LoggedInUserUpdatePasswordRequest.builder()
-				.userName("greenfish424")
+				.userId(123L)
 				.existingPassword("existingPassword")
 				.newPassword("newPassword")
 				.build();
@@ -60,12 +59,12 @@ public class LoggedInUserUpdatePasswordRequestTest {
 	@Test
 	public void test_hashcode_should_differ_when_both_instances_have_different_field_values() {
 		final LoggedInUserUpdatePasswordRequest updatePassword1 = LoggedInUserUpdatePasswordRequest.builder()
-				.userName("greenfish424")
+				.userId(124L)
 				.existingPassword("oldPassword1")
 				.newPassword("newPassword1")
 				.build();
 		final LoggedInUserUpdatePasswordRequest updatePassword2 = LoggedInUserUpdatePasswordRequest.builder()
-				.userName("greenfish425")
+				.userId(123L)
 				.existingPassword("existingPassword")
 				.newPassword("newPassword")
 				.build();
@@ -78,9 +77,7 @@ public class LoggedInUserUpdatePasswordRequestTest {
 		final LoggedInUserUpdatePasswordRequest updatePassword = LoggedInUserUpdatePasswordRequest.builder()
 				.existingPassword("existingPassword")
 				.newPassword("newPassword")
-				.userName("greenfish424")
-				.tenantId("ap.public")
-				.type(UserType.CITIZEN)
+				.userId(123L)
 				.build();
 
 		updatePassword.validate();
@@ -91,7 +88,7 @@ public class LoggedInUserUpdatePasswordRequestTest {
 		final LoggedInUserUpdatePasswordRequest updatePassword = LoggedInUserUpdatePasswordRequest.builder()
 				.existingPassword("existingPassword")
 				.newPassword("newPassword")
-				.userName(null)
+				.userId(null)
 				.build();
 
 		updatePassword.validate();
@@ -102,7 +99,7 @@ public class LoggedInUserUpdatePasswordRequestTest {
 		final LoggedInUserUpdatePasswordRequest updatePassword = LoggedInUserUpdatePasswordRequest.builder()
 				.existingPassword(null)
 				.newPassword("newPassword")
-				.userName("xya")
+				.userId(123L)
 				.build();
 
 		updatePassword.validate();
@@ -113,7 +110,7 @@ public class LoggedInUserUpdatePasswordRequestTest {
 		final LoggedInUserUpdatePasswordRequest updatePassword = LoggedInUserUpdatePasswordRequest.builder()
 				.existingPassword("existingPassword")
 				.newPassword(null)
-				.userName("xyz")
+				.userId(123L)
 				.build();
 
 		updatePassword.validate();

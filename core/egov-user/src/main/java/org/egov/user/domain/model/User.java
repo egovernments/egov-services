@@ -1,9 +1,12 @@
 package org.egov.user.domain.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import static org.springframework.util.ObjectUtils.isEmpty;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
+
 import org.apache.commons.lang3.time.DateUtils;
 import org.egov.user.domain.exception.InvalidUserCreateException;
 import org.egov.user.domain.exception.InvalidUserUpdateException;
@@ -13,12 +16,10 @@ import org.egov.user.domain.model.enums.GuardianRelation;
 import org.egov.user.domain.model.enums.UserType;
 import org.springframework.util.CollectionUtils;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-
-import static org.springframework.util.ObjectUtils.isEmpty;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
 
 @AllArgsConstructor
 @Getter
@@ -138,7 +139,6 @@ public class User {
 
 	public void nullifySensitiveFields() {
 		username = null;
-		type = null;
 		mobileNumber = null;
 		password = null;
 		passwordExpiryDate = null;

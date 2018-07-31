@@ -93,7 +93,7 @@ public class InvalidNonLoggedInUserUpdatePasswordRequestErrorHandler
 
 	private void addMobileNumberMandatoryError(NonLoggedInUserUpdatePasswordRequest model,
 											   ArrayList<ErrorField> errorFields) {
-		if(!model.isUsernameAbsent()) {
+		if(!model.isMobileNumberAbsent()) {
 			return;
 		}
 		final ErrorField errorField = ErrorField.builder()

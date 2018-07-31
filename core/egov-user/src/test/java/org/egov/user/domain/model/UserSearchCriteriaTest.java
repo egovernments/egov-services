@@ -3,6 +3,9 @@ package org.egov.user.domain.model;
 import org.egov.user.domain.exception.InvalidUserSearchCriteriaException;
 import org.junit.Test;
 
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 public class UserSearchCriteriaTest {
 
 	@Test
@@ -12,6 +15,7 @@ public class UserSearchCriteriaTest {
 				.build();
 		
 		searchCriteria.validate();
+		assertFalse(searchCriteria.isTenantIdAbsent());
 	}
 
 	@Test(expected = InvalidUserSearchCriteriaException.class)
@@ -23,5 +27,13 @@ public class UserSearchCriteriaTest {
 		searchCriteria.validate();
 	}
 
+	@Test
+	public void test_should_return_true_when_tenant_id_is_not_present() {
+		final UserSearchCriteria searchCriteria = UserSearchCriteria.builder()
+				.tenantId(null)
+				.build();
+
+		assertTrue(searchCriteria.isTenantIdAbsent());
+	}
 
 }

@@ -38,7 +38,8 @@ public class PasswordController {
 	 * @return
 	 */
 	@PostMapping("/nologin/_update")
-	public UpdatePasswordResponse updatePasswordForNonLoggedInUser(@RequestBody NonLoggedInUserUpdatePasswordRequest request) {
+	public UpdatePasswordResponse updatePasswordForNonLoggedInUser(
+			@RequestBody NonLoggedInUserUpdatePasswordRequest request) {
 		userService.updatePasswordForNonLoggedInUser(request.toDomain());
 		return new UpdatePasswordResponse(null);
 	}

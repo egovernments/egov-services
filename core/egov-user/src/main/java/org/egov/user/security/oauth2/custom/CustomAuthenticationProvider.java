@@ -1,13 +1,12 @@
-package org.egov.user.security.oauth2.custom.authproviders;
+package org.egov.user.security.oauth2.custom;
 
 import com.jayway.jsonpath.JsonPath;
 import lombok.extern.slf4j.Slf4j;
-import org.egov.user.domain.exception.DuplicateUserNameException;
-import org.egov.user.domain.exception.UserNotFoundException;
 import org.egov.user.domain.model.SecureUser;
 import org.egov.user.domain.model.User;
 import org.egov.user.domain.model.enums.UserType;
 import org.egov.user.domain.service.UserService;
+import org.egov.user.web.contract.Otp;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -23,14 +22,13 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static java.util.Objects.isNull;
 import static org.springframework.util.StringUtils.isEmpty;
 
-@Component("customAuthProvider")
+@Component
 @Slf4j
 public class CustomAuthenticationProvider implements AuthenticationProvider {
 
-    /**
+	/**
 	 * TO-Do:Need to remove this and provide authentication for web, based on
 	 * authentication_code.
 	 */
@@ -49,8 +47,14 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 	@Value("${citizen.login.password.otp.fixed.enabled}")
 	private boolean fixedOTPEnabled;
 
+	private static String tenantId;
+
 	public CustomAuthenticationProvider(UserService userService) {
 		this.userService = userService;
+	}
+
+	public static String getTenantId() {
+		return CustomAuthenticationProvider.tenantId;
 	}
 
 	@Override
@@ -58,34 +62,36 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 
 		String userName = authentication.getName();
 		String password = authentication.getCredentials().toString();
-
-        final LinkedHashMap<String, String> details = (LinkedHashMap<String, String>) authentication.getDetails();
-
-        String tenantId = details.get("tenantId");
-        String userType = details.get("userType");
-
-        if (isEmpty(tenantId)) {
-            throw new OAuth2Exception("TenantId is mandatory");
-        }
-        if(isEmpty(userType) || isNull(UserType.fromValue(userType))){
-            throw new OAuth2Exception("User Type is mandatory and has to be a valid type");
-        }
-
+		CustomAuthenticationProvider.tenantId = getTenantId(authentication);
 		User user;
-        try {
-            user = userService.getUniqueUser(userName, tenantId, UserType.fromValue(userType));
-        } catch (UserNotFoundException e){
-            log.error("User not found", e);
-            throw new OAuth2Exception("Invalid login credentials");
-        } catch (DuplicateUserNameException e){
-            log.error("Fatal error, user conflict, more than one user found", e);
-            throw new OAuth2Exception("Invalid login credentials");
+		/*
+		 * if (userName.contains("@") && userName.contains(".")) { user =
+		 * userService.getUserByEmailId(userName, tenantId); } else { user =
+		 * userService.getUserByUsername(userName, tenantId); }
+		 */
 
-        }
+		user = userService.getUserByUsername(userName, tenantId);
+		if (user == null) {
+			String tenant = tenantId;
+			if (tenant.contains("."))
+				tenant = tenant.split("\\.")[0];
+			user = userService.getUserByUsernameAndTenantId(userName, tenant);
+			if(null != user) {
+				if(user.getType().equals(UserType.EMPLOYEE) && !user.getTenantId().equals(tenantId)) {
+					log.info("Employee belongs to another tenant.......");
+					throw new OAuth2Exception("Invalid login credentials");
+				}
+			}
+		}
+
+		if (user == null)
+			throw new OAuth2Exception("Invalid login credentials");
 
 		if (user.getActive() == null || !user.getActive()) {
 			throw new OAuth2Exception("Please activate your account");
 		}
+		
+		System.out.println("tenantId in authenticate------->" + user.getTenantId());
 
 		boolean isCitizen = false;
 		if (user.getType() != null && user.getType().toString().equals("CITIZEN"))
@@ -114,6 +120,7 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 			List<GrantedAuthority> grantedAuths = new ArrayList<>();
 			grantedAuths.add(new SimpleGrantedAuthority("ROLE_" + user.getType()));
 			final SecureUser secureUser = new SecureUser(getUser(user));
+			System.out.println("tenantId in secureUser------->" + secureUser.getTenantId());
             return new UsernamePasswordAuthenticationToken(secureUser,
                     password, grantedAuths);
 		} else {
@@ -130,9 +137,11 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 				log.info("Skipping otp validation during login.........");
 				return true;
 			}
+			Otp otp = Otp.builder().otp(password).identity(user.getUsername()).tenantId(tenantId).build();
 			try {
-				return userService.validateOtp(user);
+				return userService.validateOtp(otp);
 			} catch (Exception e) {
+				// TODO Auto-generated catch block
 				throw new OAuth2Exception(JsonPath.read(e.getMessage(), "$.error.message"));
 			}
 		} else {
@@ -173,9 +182,8 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 
 	@Override
 	public boolean supports(final Class<?> authentication) {
-        return UsernamePasswordAuthenticationToken.class.isAssignableFrom(authentication);
-
-    }
+		return authentication.equals(UsernamePasswordAuthenticationToken.class);
+	}
 
 }
 

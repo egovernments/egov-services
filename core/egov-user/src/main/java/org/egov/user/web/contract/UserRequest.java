@@ -132,7 +132,6 @@ public class UserRequest {
 			bloodGroup = BloodGroup.fromValue(this.bloodGroup);
 		}
 		return User.builder()
-				.uuid(this.uuid)
 				.id(this.id)
 				.name(this.name)
 				.username(this.userName)

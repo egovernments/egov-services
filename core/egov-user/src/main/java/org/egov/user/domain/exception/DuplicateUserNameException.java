@@ -1,16 +1,16 @@
 package org.egov.user.domain.exception;
 
 import lombok.Getter;
-import org.egov.user.domain.model.UserSearchCriteria;
+import org.egov.user.domain.model.User;
 
 public class DuplicateUserNameException extends RuntimeException {
 
     private static final long serialVersionUID = -6903761146294214595L;
     @Getter
-    private UserSearchCriteria userSearchCriteria;
+    private User user;
 
-    public DuplicateUserNameException(UserSearchCriteria userSearchCriteria) {
-        this.userSearchCriteria = userSearchCriteria;
+    public DuplicateUserNameException(User user) {
+        this.user = user;
     }
 
 }

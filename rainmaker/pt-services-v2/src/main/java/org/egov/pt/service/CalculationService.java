@@ -62,7 +62,6 @@ public class CalculationService {
              CalculationCriteria calculationCriteria = new CalculationCriteria();
              calculationCriteria.setProperty(property);
              calculationCriteria.setTenantId(property.getTenantId());
-             calculationCriteria.setAssessmentYear("2018-19");
 
              calculationReq.addCalulationCriteriaItem(calculationCriteria);
          });

@@ -174,6 +174,8 @@ class ApplyLeave extends React.Component {
       ) {
         if (res && res.LeaveApplication && res.LeaveApplication[0]) {
           _leaveSet = res && res.LeaveApplication && res.LeaveApplication[0];
+          $("#fromDate").prop("value", _leaveSet.fromDate);
+          $("#toDate").prop("value", _leaveSet.toDate);
           commonApiPost(
             "hr-employee",
             "employees",
@@ -309,6 +311,9 @@ class ApplyLeave extends React.Component {
             [_triggerId]: $("#" + _triggerId).val()
           }
         });
+        // console.log($("#fromDate"));
+        // console.log(_from);
+        // console.log(_to);
 
         if (_from && _to) {
           let dateParts1 = _from.split("/");
@@ -816,6 +821,7 @@ class ApplyLeave extends React.Component {
         }
       });
     }
+    console.log(this.state.leaveSet);
   }
 
   close() {
@@ -1269,11 +1275,12 @@ class ApplyLeave extends React.Component {
                         type="text"
                         id="fromDate"
                         name="fromDate"
-                        value="fromDate"
-                        value={fromDate}
-                        onChange={e => {
-                          handleChange(e, "fromDate");
-                        }}
+                        // value={fromDate}
+                        // onChange={e => {
+                        //   console.log("handleChange");
+                        //   handleChange(e, "fromDate");
+                        //   //this.calculate();
+                        // }}
                         required
                       />
                     </div>
@@ -1296,10 +1303,11 @@ class ApplyLeave extends React.Component {
                         type="text"
                         id="toDate"
                         name="toDate"
-                        value={toDate}
-                        onChange={e => {
-                          handleChange(e, "toDate");
-                        }}
+                        // value={toDate}
+                        // onChange={e => {
+                        //   handleChange(e, "toDate");
+                        //   // this.calculate();
+                        // }}
                         required
                       />
                     </div>

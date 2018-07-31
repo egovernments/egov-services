@@ -258,6 +258,12 @@ class UpdateLeave extends React.Component {
 
           if (!_leaveSet.toDate) _leaveSet.toDate = "";
           if (!_leaveSet.documents) _leaveSet.documents = [];
+          // if ($("#fromDate") && $("#fromDate")[0].disabled) {
+          $("#fromDate").prop("value", _leaveSet.fromDate);
+          // }
+          // if ($("#toDate") && $("#toDate")[0].disabled) {
+          $("#toDate").prop("value", _leaveSet.toDate);
+          // }
 
           commonApiPost(
             "hr-employee",
@@ -386,7 +392,7 @@ class UpdateLeave extends React.Component {
         id: stateId
       },
       function(err, res) {
-        console.log("res", res);
+        //console.log("res", res);
         if (res) {
           process = res["processInstance"];
 
@@ -561,7 +567,7 @@ class UpdateLeave extends React.Component {
         function(err, res1) {
           if (res1) {
             enclosingDays = res1.Holiday.length;
-            console.log(enclosingDays);
+            // console.log(enclosingDays);
             _this.setState({
               encloseHoliday: res1.Holiday
             });
@@ -633,7 +639,7 @@ class UpdateLeave extends React.Component {
                     parts1[0]
                   );
                   var endDate = new Date(parts2[2], +parts2[1] - 1, parts2[0]);
-                  console.log(holidayList);
+                  //console.log(holidayList);
                   if (
                     hrConfigurations["HRConfiguration"]["Weekly_holidays"][0] ==
                     "5-day week"
@@ -2010,11 +2016,10 @@ class UpdateLeave extends React.Component {
                         type="text"
                         id="fromDate"
                         name="fromDate"
-                        value="fromDate"
-                        value={fromDate}
-                        onChange={e => {
-                          handleChange(e, "fromDate");
-                        }}
+                        // value={fromDate}
+                        // onChange={e => {
+                        //   handleChange(e, "fromDate");
+                        // }}
                         required
                       />
                     </div>
@@ -2037,10 +2042,10 @@ class UpdateLeave extends React.Component {
                         type="text"
                         id="toDate"
                         name="toDate"
-                        value={toDate}
-                        onChange={e => {
-                          handleChange(e, "toDate");
-                        }}
+                        //value={toDate}
+                        // onChange={e => {
+                        //   handleChange(e, "toDate");
+                        // }}
                         required
                       />
                     </div>

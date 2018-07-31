@@ -123,7 +123,7 @@ class DueNotice extends React.Component {
     doc.setFontSize(11);
     doc.text(20,60, 'Roc.No.');
     doc.setFontType("bold");
-    doc.text(35,60, agreement.noticeNumber? agreement.noticeNumber : "N/A");
+    doc.text(35,60, agreement.noticeNumber? agreement.noticeNumber : "");
     doc.setFontType("normal");
     doc.text(165,60, 'Dt. ');
     doc.setFontType("bold");

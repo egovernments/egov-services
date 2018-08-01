@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collections;
@@ -31,7 +32,7 @@ public class UserController {
 	
 	@Value("${otp.validation.register.mandatory}")
 	private boolean IsValidationMandatory;
-	
+
 	@Value("${citizen.registration.withlogin.enabled}")
 	private boolean isRegWithLoginEnabled;
 
@@ -50,10 +51,14 @@ public class UserController {
 	 * @return
 	 */
 	@PostMapping("/citizen/_create")
-	public UserDetailResponse createCitizen(@RequestBody CreateUserRequest createUserRequest) {
+	public Object createCitizen(@RequestBody CreateUserRequest createUserRequest) {
 		log.info("Received Citizen Registration Request  " + createUserRequest);
 		User user = createUserRequest.toDomain(true);
 		user.setOtpValidationMandatory(IsValidationMandatory);
+		if(isRegWithLoginEnabled) {
+			Object object = userService.registerWithLogin(user);
+			return new ResponseEntity<>(object, HttpStatus.OK);
+		}
 		User createdUser = userService.createCitizen(user);
 		return createResponse(createdUser);
 	}

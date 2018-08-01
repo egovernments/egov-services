@@ -198,11 +198,11 @@ public class EstimationService {
 		// AdHoc Values (additional rebate or penalty manually entered by the employee)
 		if (null != detail.getAdhocPenalty())
 			estimates.add(TaxHeadEstimate.builder().taxHeadCode(CalculatorConstants.PT_ADHOC_PENALTY)
-					.estimateAmount(detail.getAdhocPenalty()).build());
+					.estimateAmount(BigDecimal.valueOf(10.25)).build());
 		
 		if (null != detail.getAdhocExemption() && detail.getAdhocExemption().compareTo(taxAmt) <= 0) {
 			estimates.add(
-					TaxHeadEstimate.builder().taxHeadCode(CalculatorConstants.PT_ADHOC_REBATE).estimateAmount(taxAmt).build());
+					TaxHeadEstimate.builder().taxHeadCode(CalculatorConstants.PT_ADHOC_REBATE).estimateAmount(BigDecimal.valueOf(10.65)).build());
 			payableTax = payableTax.subtract(detail.getAdhocExemption());
 		} else if(null != detail.getAdhocExemption())
 			throw new CustomException(CalculatorConstants.PT_ADHOC_REBATE_INVALID_AMOUNT,
@@ -241,7 +241,8 @@ public class EstimationService {
 				.estimateAmount(rebatePenaltyMap.get(CalculatorConstants.PT_TIME_PENALTY)).build());
 		estimates.add(TaxHeadEstimate.builder().taxHeadCode(CalculatorConstants.PT_TIME_INTEREST)
 				.estimateAmount(rebatePenaltyMap.get(CalculatorConstants.PT_TIME_INTEREST)).build());
-
+		
+		payService.roundOfDecimals(estimates);
 		return estimates;
 	}
 

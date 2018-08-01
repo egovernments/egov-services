@@ -10,6 +10,7 @@ import java.util.Map;
 
 import org.egov.pt.calculator.util.CalculatorConstants;
 import org.egov.pt.calculator.util.CalculatorUtils;
+import org.egov.pt.calculator.web.models.TaxHeadEstimate;
 import org.egov.pt.calculator.web.models.demand.BillAccountDetail;
 import org.egov.pt.calculator.web.models.demand.BillRequest;
 import org.egov.pt.calculator.web.models.demand.BillResponse;
@@ -267,4 +268,35 @@ public class PayService {
 		cal.set(year, month, day);
 	}
 
+	/**
+	 * Decimal is ceiled for all the tax heads
+	 * 
+	 * if the decimal is greater than 0.5 upper bound will be applied
+	 * 
+	 * else if decimal is lesser than 0.5 lower bound is applied
+	 * 
+	 * @param estimates
+	 */
+	public void roundOfDecimals(List<TaxHeadEstimate> estimates) {
+
+		BigDecimal roundOff = BigDecimal.ZERO;
+
+		for (TaxHeadEstimate estimate : estimates) {
+
+			BigDecimal currentTax = estimate.getEstimateAmount().setScale(2, 2);
+			estimate.setEstimateAmount(currentTax);
+
+			BigDecimal reminder = currentTax.remainder(BigDecimal.ONE);
+			double reminderVal = reminder.doubleValue();
+
+			if (reminderVal > 0.5)
+				roundOff = roundOff.add(BigDecimal.ONE.subtract(reminder));
+			else if (reminderVal < 0.5)
+				roundOff = roundOff.add(reminder.negate());
+		}
+
+		if (roundOff.doubleValue() > 0)
+			estimates.add(TaxHeadEstimate.builder().estimateAmount(roundOff)
+					.taxHeadCode(CalculatorConstants.PT_DECIMAL_CEILING).build());
+	}
 }

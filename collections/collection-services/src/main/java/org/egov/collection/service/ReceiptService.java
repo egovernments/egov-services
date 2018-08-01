@@ -58,14 +58,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
 
 import javax.xml.bind.ValidationException;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 public class ReceiptService {
@@ -104,7 +102,7 @@ public class ReceiptService {
 			receiptHeaders = receiptRepository.findAllReceiptsByCriteria(
 					receiptSearchCriteria, requestInfo);
 		} catch (ParseException e) {
-			LOGGER.error("Parse exception while parsing date" , e);
+			LOGGER.error("Parse exception while parsing date" + e);
 		}
 		return receiptHeaders;
 	}
@@ -112,8 +110,11 @@ public class ReceiptService {
 	public Receipt apportionAndCreateReceipt(ReceiptReq receiptReq) {
 		Receipt receipt = receiptReq.getReceipt().get(0);
 		Bill bill = receipt.getBill().get(0);
-		if(!validateBill(receiptReq.getRequestInfo(), bill)) {
-			throw new CustomException(Long.valueOf(HttpStatus.BAD_REQUEST.toString()), CollectionServiceConstants.INVALID_BILL_EXCEPTION_DESC);
+
+		try {
+			validateBill(receiptReq.getRequestInfo(), bill);
+		} catch (CustomException e) {
+			LOGGER.error("Invalid Bill: ", e);
 		}
 		WorkflowDetailsRequest workflowDetailsRequest = receipt
 				.getWorkflowDetails();
@@ -126,27 +127,26 @@ public class ReceiptService {
 		if (null != receipt.getBill()) {
 			LOGGER.info("Pushing receipt to kafka queue");
 			receipt.setWorkflowDetails(workflowDetailsRequest);
-			receiptReq.setReceipt(Collections.singletonList(receipt));
+			receiptReq.setReceipt(Arrays.asList(receipt));
 			receipt = receiptRepository.pushToQueue(receiptReq);
 		}
 		return receipt;
-	}  
+	}
 
 	private List<BillDetail> apportionPaidAmount(RequestInfo requestInfo,
 			Bill bill, String tenantId) {
 		Bill apportionBill = new Bill(bill.getId(), bill.getPayeeName(),
 				bill.getPayeeAddress(), bill.getPayeeEmail(),
 				bill.getIsActive(), bill.getIsCancelled(), bill.getPaidBy(),
-				null, tenantId, bill.getMobileNumber());
+				new ArrayList<BillDetail>(), tenantId, bill.getMobileNumber());
 		Boolean callBackForApportion = false;
 		List<BillDetail> apportionBillDetails = new ArrayList<>();
 		for (BillDetail billDetail : bill.getBillDetails()) {
 			if (billDetail.getAmountPaid().longValueExact() > 0) {
-				BusinessDetailsResponse businessDetailsRes = getBusinessDetails(
-						billDetail.getBusinessService(), requestInfo, tenantId);
-				if (billDetail.getAmountPaid().compareTo(billDetail.getTotalAmount()) != 0) {
-					if (businessDetailsRes.getBusinessDetails().get(0)
-							.getCallBackForApportioning()) {
+//				BusinessDetailsResponse businessDetailsRes = getBusinessDetails(
+//						billDetail.getBusinessService(), requestInfo, tenantId);
+				if (billDetail.getAmountPaid() != billDetail.getTotalAmount()) {
+					if (billDetail.getCallBackForApportioning()) {
 						apportionBill.getBillDetails().add(billDetail);
 						callBackForApportion = true;
 					} else {
@@ -168,14 +168,14 @@ public class ReceiptService {
 		return apportionBillDetails;
 	}
 
-	private boolean validateGLCode(RequestInfo requestInfo, String tenantId,
-								   BillDetail billdetails) {
+	public boolean validateGLCode(RequestInfo requestInfo, String tenantId,
+			BillDetail billdetails) {
 		for (BillAccountDetail billAccountDetail : billdetails
 				.getBillAccountDetails()) {
 
 			List<ChartOfAccount> chartOfAccounts = chartOfAccountsRepository
 					.getChartOfAccounts(
-							Collections.singletonList(billAccountDetail.getGlcode()),
+							Arrays.asList(billAccountDetail.getGlcode()),
 							tenantId, requestInfo);
 			LOGGER.info("chartOfAccount: " + chartOfAccounts);
 			if (chartOfAccounts.isEmpty()) {
@@ -187,7 +187,7 @@ public class ReceiptService {
 		return true;
 	}
 
-	private Boolean validateFundAndDept(
+	public Boolean validateFundAndDept(
 			BusinessDetailsResponse businessDetailsRes) {
 		BusinessDetailsRequestInfo businessDetails;
 		if (null != businessDetailsRes
@@ -406,7 +406,7 @@ public class ReceiptService {
 				}
 			}
 		}
-		receipt.setBill(Collections.singletonList(bill));
+		receipt.setBill(Arrays.asList(bill));
 		receipt.setAuditDetails(auditDetail);
 		receipt.setTransactionId(transactionId);
 		receipt.setTenantId(tenantId);
@@ -458,7 +458,7 @@ public class ReceiptService {
 		parametersMap.put("tenantid", tenantId);
 		parametersMap.put("referencedate", billDetail.getBillDate());
 		parametersMap.put("referencedesc", billDetail.getBillDescription());
-//		parametersMap.put("manualreceiptnumber", null);
+		parametersMap.put("manualreceiptnumber", null);
 		parametersMap.put("manualreceiptdate", null);
 		parametersMap.put("reference_ch_id", null);
 		parametersMap.put("stateid", null);
@@ -500,7 +500,7 @@ public class ReceiptService {
 		final Map<String, Object> parameterMap = new HashMap<>();
 		List<ChartOfAccount> chartOfAccounts = chartOfAccountsRepository
 				.getChartOfAccounts(
-						Collections.singletonList(billAccountDetails.getGlcode()),
+						Arrays.asList(billAccountDetails.getGlcode()),
 						tenantId, requestInfo);
 		if (!chartOfAccounts.isEmpty()) {
 			parameterMap.put("chartofaccount", billAccountDetails.getGlcode());
@@ -522,13 +522,13 @@ public class ReceiptService {
 		return parameterMap;
 	}
 
-	private BusinessDetailsResponse getBusinessDetails(
+	public BusinessDetailsResponse getBusinessDetails(
 			String businessDetailsCode, RequestInfo requestInfo, String tenantId) {
 		LOGGER.info("Searching for fund aand other businessDetails based on code.");
-		BusinessDetailsResponse businessDetailsResponse;
+		BusinessDetailsResponse businessDetailsResponse = new BusinessDetailsResponse();
 		try {
 			businessDetailsResponse = businessDetailsRepository
-					.getBusinessDetails(Collections.singletonList(businessDetailsCode),
+					.getBusinessDetails(Arrays.asList(businessDetailsCode),
 							tenantId, requestInfo);
 		} catch (Exception e) {
 			LOGGER.error("Exception while fetching buisnessDetails: ", e);
@@ -610,7 +610,7 @@ public class ReceiptService {
 		return receiptRepository.getChartOfAccounts(tenantId, requestInfo);
 	}
 
-	private void pushUpdateReceiptDetailsToQueque(
+	public void pushUpdateReceiptDetailsToQueque(
 			WorkflowDetailsRequest workFlowDetailsRequest) {
 		LOGGER.info("WorkflowDetailsRequest :" + workFlowDetailsRequest);
 		receiptRepository.pushUpdateDetailsToQueque(workFlowDetailsRequest);
@@ -644,8 +644,8 @@ public class ReceiptService {
 		return billAccountDetail;
 	}
 
-	private void validateReceiptNumber(String receiptNumber, String tenantId,
-									   RequestInfo requestInfo) {
+	public void validateReceiptNumber(String receiptNumber, String tenantId,
+			RequestInfo requestInfo) {
 
 		ReceiptSearchCriteria receiptSearchCriteria = new ReceiptSearchCriteria();
 		receiptSearchCriteria.setTenantId(tenantId);
@@ -670,37 +670,23 @@ public class ReceiptService {
 		}
 	}
 
-	private boolean validateBill(RequestInfo requestInfo, Bill bill) {
-		boolean isBillValid = true;
+	public boolean validateBill(RequestInfo requestInfo, Bill bill) {
+		boolean isBillValid = false;
 		for (BillDetail billDetail : bill.getBillDetails()) {
-			BillResponse billResponse = billingServiceRepository.getBillForBillId(requestInfo, bill, billDetail);
-			if (null != billResponse && !CollectionUtils.isEmpty(billResponse.getBill())) {
-				for(BillDetail resbillDetail: billResponse.getBill().get(0).getBillDetails()) {
-                     List<BillDetail> reqBillDetail = bill.getBillDetails().parallelStream()
-							.filter(obj -> obj.getId().equals(resbillDetail.getId())).collect(Collectors.toList());
-					if(CollectionUtils.isEmpty(reqBillDetail)) {
-						LOGGER.info("BillDetail is not availble in billing service");
-						isBillValid = false;
-						break;
-					}
-					BillDetail billDetailTobeValidated = reqBillDetail.get(0);
-					if(billDetailTobeValidated.getPartPaymentAllowed()) {
-						LOGGER.info("Part payment is allowed!");
-						if(resbillDetail.getMinimumAmount().longValue() > billDetailTobeValidated.getAmountPaid().longValue()) {
-							isBillValid = false;
-							break;
-						}
-					}else {
-						LOGGER.info("Part payment is not allowed!");
-						if(resbillDetail.getTotalAmount().compareTo(billDetailTobeValidated.getAmountPaid()) != 0) {
-							isBillValid = false;
-							break;
-						}
-					}
-
-				}
-			}else {
-				isBillValid = false;
+			BillResponse billResponse = billingServiceRepository
+					.getBillForBillId(requestInfo, bill, billDetail);
+			if (null != billResponse && !billResponse.getBill().isEmpty()) {
+				isBillValid = true;
+				return isBillValid;
+			}
+			if (!isBillValid) {
+				throw new CustomException(
+						Long.valueOf(HttpStatus.INTERNAL_SERVER_ERROR
+								.toString()),
+						CollectionServiceConstants.INVALID_BILL_EXCEPTION_MSG
+								.concat(billDetail.getConsumerCode()).concat(
+										billDetail.getBusinessService()),
+						CollectionServiceConstants.INVALID_BILL_EXCEPTION_DESC);
 			}
 		}
 		return isBillValid;

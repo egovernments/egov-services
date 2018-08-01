@@ -81,6 +81,7 @@ public class UserService {
                         else
                         { log.info("User update -> ","MobileNumber: ",owner.getMobileNumber()," Name: ",owner.getName());
                           owner.setId(userDetailResponse.getUser().get(0).getId());
+                          owner.setUuid(userDetailResponse.getUser().get(0).getUuid());
                           owner.setActive(true);
                           owner.setTenantId(property.getTenantId());
                           owner.setRoles(Collections.singletonList(role));

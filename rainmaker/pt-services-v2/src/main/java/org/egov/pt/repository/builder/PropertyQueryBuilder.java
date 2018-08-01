@@ -44,6 +44,13 @@ public class PropertyQueryBuilder {
 	public String getPropertySearchQuery(PropertyCriteria criteria, List<Object> preparedStmtList) {
 
 		StringBuilder builder = new StringBuilder(QUERY);
+
+		if(criteria.getAccountId()!=null) {
+			builder.append(" ptdl.accountid = ? ");
+			preparedStmtList.add(criteria.getAccountId());
+			return builder.toString();
+		}
+
 		builder.append(" pt.tenantid=? ");
 		preparedStmtList.add(criteria.getTenantId());
 
@@ -102,10 +109,7 @@ public class PropertyQueryBuilder {
 			preparedStmtList.add(criteria.getLocality());
 		}
 
-		if(criteria.getAccountId()!=null) {
-			builder.append(" and ptdl.accountid = ? ");
-			preparedStmtList.add(criteria.getAccountId());
-		}
+
 
 		return builder.toString();
 	}

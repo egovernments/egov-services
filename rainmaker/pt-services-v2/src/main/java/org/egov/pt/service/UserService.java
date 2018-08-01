@@ -85,7 +85,7 @@ public class UserService {
                           owner.setTenantId(property.getTenantId());
                           owner.setRoles(Collections.singletonList(role));
                           owner.setType("CITIZEN");
-                          StringBuilder uri = new StringBuilder(userHost).append(userContextPath).append(owner.getId())
+                          StringBuilder uri = new StringBuilder(userHost).append(userContextPath)
                                               .append(userUpdateEndpoint);
                           userDetailResponse = userCall( new CreateUserRequest(requestInfo,owner),uri);
                             if(userDetailResponse.getUser().get(0).getUuid()==null){

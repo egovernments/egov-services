@@ -688,6 +688,9 @@ var user = {
         required: true
 
     },
+    fatherOrHusbandName:{
+    required:false
+    },
     emailId: {
         required: false,
 
@@ -729,9 +732,6 @@ var user = {
         required: false
     },
     signature: {
-        required: false
-    },
-    fatherOrHusbandName: {
         required: false
     },
     bloodGroup: {
@@ -2149,7 +2149,7 @@ function loadUI() {
 
                 $('#dateOfAppointment, #dateOfRetirement').datepicker({
                     format: 'dd/mm/yyyy',
-                    autoclose: true
+                    autoclose: true,
                 });
 
                 $('#dateOfAppointment, #dateOfRetirement').on("change", function(e) {
@@ -2730,7 +2730,7 @@ function loadUI() {
                 }, 'Only alphanumeric with -/_ allowed.');
 
                 $.validator.addMethod('alphanumericWAllSplCharNSpc', function(value) {
-                    return value ? /^[a-zA-Z0-9\-\/\_ \#\(\)\,\.\&]*$/.test(value) : true;
+                    return value ? /^[a-zA-Z0-9\-\/\_ \#\(\)\,\.\&\n]*$/.test(value) : true;
                 }, 'Only alphanumeric with -/_#(),.& allowed.');
 
                 $.validator.addMethod('alphaWSplChar', function(value) {

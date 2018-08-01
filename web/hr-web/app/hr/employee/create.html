@@ -20,54 +20,54 @@
     <link rel="stylesheet" type="text/css" href="resources/stylesheet/bootstrap-datetimepicker.min.css">
     <link rel="stylesheet" type="text/css" href="resources/stylesheet/jquery-ui.css" />
     <style>
-    /*.modal{
+        /*.modal{
           width:70%
         }*/
 
-    body {
-        padding: 0;
-    }
+        body {
+            padding: 0;
+        }
 
-    footer {
-        background-color: #f3f4f5;
-        bottom: 0;
-        clear: both;
-        position: fixed;
-        width: 100%;
-        z-index: 999;
-    }
+        footer {
+            background-color: #f3f4f5;
+            bottom: 0;
+            clear: both;
+            position: fixed;
+            width: 100%;
+            z-index: 999;
+        }
 
-    footer a {
-        color: rgb(116, 101, 101);
-        text-decoration: none;
-    }
+        footer a {
+            color: rgb(116, 101, 101);
+            text-decoration: none;
+        }
 
-    footer span.copyright {
-        float: left;
-        font-size: 11px;
-        padding: 7px;
-    }
+        footer span.copyright {
+            float: left;
+            font-size: 11px;
+            padding: 7px;
+        }
 
-    footer span.version {
-        float: right;
-        font-size: 11px;
-        padding: 7px;
-    }
+        footer span.version {
+            float: right;
+            font-size: 11px;
+            padding: 7px;
+        }
 
-    footer span.copyright a {
-        color: rgb(116, 101, 101);
-    }
+        footer span.copyright a {
+            color: rgb(116, 101, 101);
+        }
 
-    footer #legal {
-        clear: left;
-        display: block;
-    }
+        footer #legal {
+            clear: left;
+            display: block;
+        }
 
-    .constrain {
-        padding-left: 10px;
-        padding-right: 10px;
-        margin-bottom: 0px;
-    }
+        .constrain {
+            padding-left: 10px;
+            padding-right: 10px;
+            margin-bottom: 0px;
+        }
     </style>
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -95,7 +95,9 @@
     <!-- for showing loading spinner -->
     <div id="loadingMask" style="display: none;"></div>
     <div id="loading" style="display: none;">
-        <div class="loading-indicator"><i class="fa fa-spinner fa-pulse fa-2x"></i></div>
+        <div class="loading-indicator">
+            <i class="fa fa-spinner fa-pulse fa-2x"></i>
+        </div>
     </div>
     <div class="page-container horizontal-menu" id="dashboard">
         <header class="navbar navbar-fixed-top border-header">
@@ -199,11 +201,21 @@
                                 <div class="body-cont-inner">
                                     <!-- Nav tabs -->
                                     <ul class="nav nav-tabs" role="tablist">
-                                        <li role="presentation" class="active"><a href="#employeeDetails" aria-controls="employeeDetails" role="tab" data-toggle="tab">Employee Details</a></li>
-                                        <li role="presentation"><a href="#assignmentDetails" aria-controls="assignmentDetails" role="tab" data-toggle="tab">Assignment Details</a></li>
-                                        <li role="presentation"><a href="#jurisdictionList" aria-controls="jurisdictionList" role="tab" data-toggle="tab">Jurisdiction List</a></li>
-                                        <li role="presentation"><a href="#serviceSection" aria-controls="serviceSection" role="tab" data-toggle="tab">Service Section</a></li>
-                                        <li role="presentation"><a href="#otherDetails" aria-controls="otherDetails" role="tab" data-toggle="tab">Other Details</a></li>
+                                        <li role="presentation" class="active">
+                                            <a href="#employeeDetails" aria-controls="employeeDetails" role="tab" data-toggle="tab">Employee Details</a>
+                                        </li>
+                                        <li role="presentation">
+                                            <a href="#assignmentDetails" aria-controls="assignmentDetails" role="tab" data-toggle="tab">Assignment Details</a>
+                                        </li>
+                                        <li role="presentation">
+                                            <a href="#jurisdictionList" aria-controls="jurisdictionList" role="tab" data-toggle="tab">Jurisdiction List</a>
+                                        </li>
+                                        <li role="presentation">
+                                            <a href="#serviceSection" aria-controls="serviceSection" role="tab" data-toggle="tab">Service Section</a>
+                                        </li>
+                                        <li role="presentation">
+                                            <a href="#otherDetails" aria-controls="otherDetails" role="tab" data-toggle="tab">Other Details</a>
+                                        </li>
                                     </ul>
                                     <!-- Tab panes -->
                                     <div class="tab-content">
@@ -219,7 +231,7 @@
                                                                     <label for="user.name">Employee Name</label>
                                                                 </div>
                                                                 <div class="col-sm-6">
-                                                                    <input id="user.name" name="user.name" type="text" maxlength="256"/>
+                                                                    <input id="user.name" name="user.name" type="text" maxlength="100" />
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -229,7 +241,7 @@
                                                                     <label for="code">Employee Code</label>
                                                                 </div>
                                                                 <div class="col-sm-6">
-                                                                    <input id="code" name="code" type="text" maxlength="256"/>
+                                                                    <input id="code" name="code" type="text" maxlength="256" />
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -241,9 +253,9 @@
                                                                     <label for="employeeType">Employee Type</label>
                                                                 </div>
                                                                 <div class="col-sm-6">
-                                                                        <select id="employeeType" name="employeeType" class="selectStyle">
-                                                                            <option value="">Select</option>
-                                                                        </select>
+                                                                    <select id="employeeType" name="employeeType" class="selectStyle">
+                                                                        <option value="">Select</option>
+                                                                    </select>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -254,7 +266,7 @@
                                                                 </div>
                                                                 <div class="col-sm-6">
 
-                                                                    <select id="employeeStatus" name="employeeStatus" class="selectStyle" >
+                                                                    <select id="employeeStatus" name="employeeStatus" class="selectStyle">
                                                                         <option value="">Select</option>
                                                                     </select>
 
@@ -284,7 +296,9 @@
                                                                 </div>
                                                                 <div class="col-sm-6">
                                                                     <div class="text-no-ui">
-                                                                        <span><i class="glyphicon glyphicon-calendar"></i></span>
+                                                                        <span>
+                                                                            <i class="glyphicon glyphicon-calendar"></i>
+                                                                        </span>
                                                                         <input id="user.dob" name="user.dob" type="text" class="datetimepicker">
                                                                         <!-- <input id="user.dob" name="user.dob" type="text" class="datetimepicker" > -->
                                                                         <!-- <input class="form-control datepicker" data-date-format="mm/dd/yyyy" type="text"> -->
@@ -387,7 +401,7 @@
                                                                     <label for="user.mobileNumber">Mobile number </label>
                                                                 </div>
                                                                 <div class="col-sm-6">
-                                                                    <input id="user.mobileNumber" name="user.mobileNumber" type="text" maxlength="10" class="onlyNumber"/>
+                                                                    <input id="user.mobileNumber" name="user.mobileNumber" type="text" maxlength="10" class="onlyNumber" />
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -409,7 +423,7 @@
                                                                     <label for="user.fatherOrHusbandName">Father's/Spouse Name </label>
                                                                 </div>
                                                                 <div class="col-sm-6">
-                                                                    <input id="user.fatherOrHusbandName" name="user.fatherOrHusbandName" type="text">
+                                                                    <input id="user.fatherOrHusbandName" name="user.fatherOrHusbandName" type="text" maxLength="100">
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -523,10 +537,10 @@
                                                                 </div>
                                                                 <div class="col-sm-6">
                                                                     <label class="radio-inline radioUi">
-                                                                        <input type="radio" name="medicalReportProduced" id="medicalReportProduced" value="true" data-mrp="yes" > Yes
+                                                                        <input type="radio" name="medicalReportProduced" id="medicalReportProduced" value="true" data-mrp="yes"> Yes
                                                                     </label>
                                                                     <label class="radio-inline radioUi">
-                                                                        <input type="radio" name="medicalReportProduced" id="medicalReportProduced" value="false" checked="true" data-mrp="no" > No
+                                                                        <input type="radio" name="medicalReportProduced" id="medicalReportProduced" value="false" checked="true" data-mrp="no"> No
                                                                     </label>
                                                                 </div>
                                                             </div>
@@ -537,7 +551,7 @@
                                                                     <label for="user.identificationMark">Identification Mark</label>
                                                                 </div>
                                                                 <div class="col-sm-6">
-                                                                    <input id="user.identificationMark" name="user.identificationMark" type="text">
+                                                                    <input id="user.identificationMark" name="user.identificationMark" type="text" maxlength="300">
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -549,7 +563,7 @@
                                                                     <label for="user.pan">PAN </label>
                                                                 </div>
                                                                 <div class="col-sm-6">
-                                                                    <input id="user.pan" name="user.pan" type="text" maxlength="10"/>
+                                                                    <input id="user.pan" name="user.pan" type="text" maxlength="10" />
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -559,7 +573,7 @@
                                                                     <label for="passportNo">Passport Number</label>
                                                                 </div>
                                                                 <div class="col-sm-6">
-                                                                    <input id="passportNo" name="passportNo" type="text">
+                                                                    <input id="passportNo" name="passportNo" type="text" maxlength="250">
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -571,7 +585,7 @@
                                                                     <label for="gpfNo">GPF Number/CPS Number</label>
                                                                 </div>
                                                                 <div class="col-sm-6">
-                                                                    <input id="gpfNo" name="gpfNo" type="text" maxlength="16"/>
+                                                                    <input id="gpfNo" name="gpfNo" type="text" maxlength="16" />
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -593,9 +607,9 @@
                                                                     <label for="bank">Bank </label>
                                                                 </div>
                                                                 <div class="col-sm-6">
-                                                                        <select id="bank" name="bank" class="selectStyle">
-                                                                            <option value="">Select</option>
-                                                                        </select>
+                                                                    <select id="bank" name="bank" class="selectStyle">
+                                                                        <option value="">Select</option>
+                                                                    </select>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -605,10 +619,10 @@
                                                                     <label for="bankBranch">Branch </label>
                                                                 </div>
                                                                 <div class="col-sm-6">
-                                                                        <select id="bankBranch" name="bankBranch" class="selectStyle">
-                                                                            <option value="">Select</option>
-                                                                        </select>
-                                                                        
+                                                                    <select id="bankBranch" name="bankBranch" class="selectStyle">
+                                                                        <option value="">Select</option>
+                                                                    </select>
+
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -620,7 +634,7 @@
                                                                     <label for="bankAccount">Account number </label>
                                                                 </div>
                                                                 <div class="col-sm-6">
-                                                                    <input id="bankAccount" name="bankAccount" type="text" maxlength="30">
+                                                                    <input id="bankAccount" name="bankAccount" type="text" maxlength="20">
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -651,7 +665,7 @@
                                                                         <label for="user.permanentCity">City </label>
                                                                     </div>
                                                                     <div class="col-sm-6">
-                                                                        <input id="user.permanentCity" name="user.permanentCity" type="text" maxlength="50"/>
+                                                                        <input id="user.permanentCity" name="user.permanentCity" type="text" maxlength="50" />
                                                                     </div>
                                                                 </div>
                                                                 <div class="row">
@@ -709,12 +723,12 @@
                                                         </div>
                                                         <div class="col-sm-6">
                                                             <div class="row">
-                                                              <div class="col-sm-6 label-text">
-                                                                  <label for="user.altContactNumber">Phone number (Emergency/Res) </label>
-                                                              </div>
-                                                              <div class="col-sm-6">
-                                                                  <input id="user.altContactNumber" name="user.altContactNumber" type="text" maxlength="10" class="onlyNumber">
-                                                              </div>
+                                                                <div class="col-sm-6 label-text">
+                                                                    <label for="user.altContactNumber">Phone number (Emergency/Res) </label>
+                                                                </div>
+                                                                <div class="col-sm-6">
+                                                                    <input id="user.altContactNumber" name="user.altContactNumber" type="text" maxlength="10" class="onlyNumber">
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -770,7 +784,9 @@
                                                                 </div>
                                                                 <div class="col-sm-6">
                                                                     <div class="text-no-ui">
-                                                                        <span><i class="glyphicon glyphicon-calendar"></i></span>
+                                                                        <span>
+                                                                            <i class="glyphicon glyphicon-calendar"></i>
+                                                                        </span>
                                                                         <input id="dateOfAppointment" name="dateOfAppointment" type="text" class="datetimepicker">
                                                                         <!-- </div> -->
                                                                     </div>
@@ -785,7 +801,9 @@
                                                                     </div>
                                                                     <div class="col-sm-6">
                                                                         <div class="text-no-ui">
-                                                                            <span><i class="glyphicon glyphicon-calendar"></i></span>
+                                                                            <span>
+                                                                                <i class="glyphicon glyphicon-calendar"></i>
+                                                                            </span>
                                                                             <input id="dateOfJoining" name="dateOfJoining" type="text" class="datetimepicker">
                                                                         </div>
                                                                     </div>
@@ -797,7 +815,7 @@
                                                                         <label for="retirementAge">Retirement Age</label>
                                                                     </div>
                                                                     <div class="col-sm-6">
-                                                                        <input id="retirementAge" name="retirementAge" type="number" min="0">
+                                                                        <input id="retirementAge" name="retirementAge" type="number" min="0" max="100">
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -810,8 +828,10 @@
                                                                     </div>
                                                                     <div class="col-sm-6">
                                                                         <div class="text-no-ui">
-                                                                            <span><i class="glyphicon glyphicon-calendar"></i></span>
-                                                                            <input id="dateOfRetirement" name="dateOfRetirement" type="text" class="datetimepicker">
+                                                                            <span>
+                                                                                <i class="glyphicon glyphicon-calendar"></i>
+                                                                            </span>
+                                                                            <input id="dateOfRetirement" name="dateOfRetirement" type="text" class="datetimepicker" max="12/12/9999">
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -823,7 +843,9 @@
                                                                     </div>
                                                                     <div class="col-sm-6">
                                                                         <div class="text-no-ui">
-                                                                            <span><i class="glyphicon glyphicon-calendar"></i></span>
+                                                                            <span>
+                                                                                <i class="glyphicon glyphicon-calendar"></i>
+                                                                            </span>
                                                                             <input id="dateOfTermination" name="dateOfTermination" type="text" class="datetimepicker">
                                                                         </div>
                                                                     </div>
@@ -838,7 +860,9 @@
                                                                     </div>
                                                                     <div class="col-sm-6">
                                                                         <div class="text-no-ui">
-                                                                            <span><i class="glyphicon glyphicon-calendar"></i></span>
+                                                                            <span>
+                                                                                <i class="glyphicon glyphicon-calendar"></i>
+                                                                            </span>
                                                                             <input id="dateOfResignation" name="dateOfResignation" type="text" class="datetimepicker">
                                                                         </div>
                                                                     </div>
@@ -909,7 +933,10 @@
                                         <div role="tabpanel" class="tab-pane" id="assignmentDetails">
                                             <div class="form-section">
                                                 <!-- <h3 class="pull-left">Assignment Details </h3> -->
-                                                <a id="assignmentDetailsModalOpenBtn" href="#" class="btn btn-default btn-action pull-right" data-toggle="modal" data-target="#assignmentDetailModal" title="Add"><span class="glyphicon glyphicon-plus"></span></a>
+                                                <a id="assignmentDetailsModalOpenBtn" href="#" class="btn btn-default btn-action pull-right" data-toggle="modal" data-target="#assignmentDetailModal"
+                                                    title="Add">
+                                                    <span class="glyphicon glyphicon-plus"></span>
+                                                </a>
                                                 <div class="clearfix"></div>
                                                 <div class="land-table">
                                                     <table class="table table-bordered">
@@ -941,8 +968,12 @@
                                                     <div class="modal-dialog" role="document">
                                                         <div class="modal-content">
                                                             <div class="modal-header">
-                                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                                                <h4 class="modal-title" id="myModalLabel">Assignments  <th>Grade</th></h4>
+                                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                    <span aria-hidden="true">&times;</span>
+                                                                </button>
+                                                                <h4 class="modal-title" id="myModalLabel">Assignments
+                                                                    <th>Grade</th>
+                                                                </h4>
                                                             </div>
                                                             <div class="modal-body">
                                                                 <div class="row">
@@ -987,11 +1018,11 @@
                                                                                 <label for="assignments.department">Main Department</label>
                                                                             </div>
                                                                             <div class="col-sm-6">
-                                                                                 <div class="styled-select">
-                                                                                <select id="assignments.department" name="assignments.department">
-                                                                                    <option value="">Select</option>
-                                                                                </select>
-                                                                                 </div>
+                                                                                <div class="styled-select">
+                                                                                    <select id="assignments.department" name="assignments.department">
+                                                                                        <option value="">Select</option>
+                                                                                    </select>
+                                                                                </div>
                                                                             </div>
                                                                         </div>
                                                                     </div>
@@ -1003,11 +1034,11 @@
                                                                                 <label for="assignments.designation">Designation</label>
                                                                             </div>
                                                                             <div class="col-sm-6">
-                                                                              <div class="styled-select">
-                                                                                <select id="assignments.designation" name="assignments.designation">
-                                                                                    <option value="">Select</option>
-                                                                                </select>
-                                                                               </div>
+                                                                                <div class="styled-select">
+                                                                                    <select id="assignments.designation" name="assignments.designation">
+                                                                                        <option value="">Select</option>
+                                                                                    </select>
+                                                                                </div>
                                                                             </div>
                                                                         </div>
                                                                     </div>
@@ -1017,7 +1048,7 @@
                                                                                 <label for="assignments.position">Position</label>
                                                                             </div>
                                                                             <div class="col-sm-6">
-                                                                                <input id="assignments.position" name="assignments.position" type="text"/>
+                                                                                <input id="assignments.position" name="assignments.position" type="text" />
                                                                             </div>
                                                                         </div>
                                                                     </div>
@@ -1095,7 +1126,8 @@
                                                                                     <input type="radio" name="assignments.hod" id="assignments.hod" value="true" onchange="enableAndDisable('departments')" data-hod="yes"> Yes
                                                                                 </label>
                                                                                 <label class="radio-inline radioUi">
-                                                                                    <input type="radio" name="assignments.hod" id="assignments.hod" value="false" onchange="enableAndDisable('departments')" checked="checked" data-hod="no"> No
+                                                                                    <input type="radio" name="assignments.hod" id="assignments.hod" value="false" onchange="enableAndDisable('departments')"
+                                                                                        checked="checked" data-hod="no"> No
                                                                                 </label>
                                                                             </div>
                                                                         </div>
@@ -1106,10 +1138,10 @@
                                                                                 <label for="assignments.mainDepartments">Departments</label>
                                                                             </div>
                                                                             <div class="col-sm-6">
-                                                                                 <div class="styled-select multiple">
-                                                                                <select multiple id="assignments.mainDepartments" name="assignments.mainDepartments">
-                                                                                </select>
-                                                                                 </div>
+                                                                                <div class="styled-select multiple">
+                                                                                    <select multiple id="assignments.mainDepartments" name="assignments.mainDepartments">
+                                                                                    </select>
+                                                                                </div>
                                                                             </div>
                                                                         </div>
                                                                     </div>
@@ -1121,7 +1153,7 @@
                                                                                 <label for="assignments.govtOrderNumber">Govt Order / Transfer Proceedings</label>
                                                                             </div>
                                                                             <div class="col-sm-6">
-                                                                                <input id="assignments.govtOrderNumber" name="assignments.govtOrderNumber" type="text" maxlength="50"/>
+                                                                                <input id="assignments.govtOrderNumber" name="assignments.govtOrderNumber" type="text" maxlength="50" />
                                                                             </div>
                                                                         </div>
                                                                     </div>
@@ -1154,7 +1186,9 @@
                                             <div class="form-section">
                                                 <!-- <h3>Service Section </h3> -->
                                                 <!-- <h3 class="pull-left">Jurisdiction List </h3> -->
-                                                <a href="#" class="btn btn-default btn-action pull-right" data-toggle="modal" data-target="#jurisdictionDetailModal" title="Add"><span class="glyphicon glyphicon-plus"></span></a>
+                                                <a href="#" class="btn btn-default btn-action pull-right" data-toggle="modal" data-target="#jurisdictionDetailModal" title="Add">
+                                                    <span class="glyphicon glyphicon-plus"></span>
+                                                </a>
                                                 <div class="clearfix"></div>
                                                 <div class="land-table">
                                                     <table class="table table-bordered">
@@ -1173,7 +1207,9 @@
                                                     <div class="modal-dialog" role="document">
                                                         <div class="modal-content">
                                                             <div class="modal-header">
-                                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                    <span aria-hidden="true">&times;</span>
+                                                                </button>
                                                                 <h4 class="modal-title" id="myModalLabel">Jurisdiction </h4>
                                                             </div>
                                                             <div class="modal-body">
@@ -1185,10 +1221,10 @@
                                                                                     <label for="jurisdictions.jurisdictionsType">Jurisdiction Type</label>
                                                                                 </div>
                                                                                 <div class="col-sm-6">
-                                                                                     <div class="styled-select">
-                                                                                    <select id="jurisdictions.jurisdictionsType" name="jurisdictions.jurisdictionsType">
-                                                                                        <option value="">Select</option>
-                                                                                    </select>
+                                                                                    <div class="styled-select">
+                                                                                        <select id="jurisdictions.jurisdictionsType" name="jurisdictions.jurisdictionsType">
+                                                                                            <option value="">Select</option>
+                                                                                        </select>
                                                                                     </div>
                                                                                 </div>
                                                                             </div>
@@ -1199,11 +1235,11 @@
                                                                                     <label for="jurisdictions.boundary">Jurisdiction List</label>
                                                                                 </div>
                                                                                 <div class="col-sm-6">
-                                                                                     <div class="styled-select">
-                                                                                    <select id="jurisdictions.boundary" name="jurisdictions.boundary">
-                                                                                        <option value="">Select</option>
-                                                                                    </select>
-                                                                                     </div>
+                                                                                    <div class="styled-select">
+                                                                                        <select id="jurisdictions.boundary" name="jurisdictions.boundary">
+                                                                                            <option value="">Select</option>
+                                                                                        </select>
+                                                                                    </div>
                                                                                 </div>
                                                                             </div>
                                                                         </div>
@@ -1224,7 +1260,9 @@
                                             <div class="form-section">
                                                 <!-- <h3>Service Section </h3> -->
                                                 <h3 class="pull-left">Service Details/history/ledger </h3>
-                                                <a href="#" class="btn btn-default btn-action pull-right" data-toggle="modal" data-target="#serviceHistoryDetailModal" title="Add"><span class="glyphicon glyphicon-plus"></span></a>
+                                                <a href="#" class="btn btn-default btn-action pull-right" data-toggle="modal" data-target="#serviceHistoryDetailModal" title="Add">
+                                                    <span class="glyphicon glyphicon-plus"></span>
+                                                </a>
                                                 <div class="clearfix"></div>
                                                 <div class="land-table">
                                                     <table class="table table-border">
@@ -1249,7 +1287,9 @@
                                                         <div class="modal-dialog" role="document">
                                                             <div class="modal-content">
                                                                 <div class="modal-header">
-                                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                        <span aria-hidden="true">&times;</span>
+                                                                    </button>
                                                                     <h4 class="modal-title" id="myModalLabel">Service History </h4>
                                                                 </div>
                                                                 <div class="modal-body">
@@ -1276,7 +1316,7 @@
                                                                                 </div>
                                                                             </div>
                                                                         </div>
-                                                                
+
                                                                     </div>
                                                                     <div class="row">
                                                                         <div class="col-sm-6">
@@ -1362,7 +1402,7 @@
                                                                             </div>
                                                                         </div>
                                                                     </div>
-                                                                
+
                                                                     <p class="text-danger error-p" style="display:none">Duplicate entry not allowed.</p>
                                                                 </div>
                                                                 <div class="modal-footer">
@@ -1374,7 +1414,9 @@
                                                     </div>
                                                 </div>
                                                 <h3 class="pull-left">Probation</h3>
-                                                <a href="#" class="btn btn-default btn-action pull-right" data-toggle="modal" data-target="#probationDetailModal" title="Add"><span class="glyphicon glyphicon-plus"></span></a>
+                                                <a href="#" class="btn btn-default btn-action pull-right" data-toggle="modal" data-target="#probationDetailModal" title="Add">
+                                                    <span class="glyphicon glyphicon-plus"></span>
+                                                </a>
                                                 <div class="clearfix"></div>
                                                 <div class="land-table">
                                                     <table class="table table-border">
@@ -1396,7 +1438,9 @@
                                                         <div class="modal-dialog" role="document">
                                                             <div class="modal-content">
                                                                 <div class="modal-header">
-                                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                        <span aria-hidden="true">&times;</span>
+                                                                    </button>
                                                                     <h4 class="modal-title" id="myModalLabel">Probation </h4>
                                                                 </div>
                                                                 <div class="modal-body">
@@ -1407,10 +1451,10 @@
                                                                                     <label for="probation.designation">Designation</label>
                                                                                 </div>
                                                                                 <div class="col-sm-6">
-                                                                                   <div class="styled-select">
-                                                                                    <select id="probation.designation" name="probation.designation">
-                                                                                        <<option value="">Select</option>
-                                                                                    </select>
+                                                                                    <div class="styled-select">
+                                                                                        <select id="probation.designation" name="probation.designation">
+                                                                                            <<option value="">Select</option>
+                                                                                        </select>
                                                                                     </div>
                                                                                 </div>
                                                                             </div>
@@ -1485,7 +1529,9 @@
                                                 </div>
                                                 <br>
                                                 <h3 class="pull-left">Regularisation</h3>
-                                                <a href="#" class="btn btn-default btn-action pull-right" data-toggle="modal" data-target="#regularisationDetailModal" title="Add"><span class="glyphicon glyphicon-plus"></span></a>
+                                                <a href="#" class="btn btn-default btn-action pull-right" data-toggle="modal" data-target="#regularisationDetailModal" title="Add">
+                                                    <span class="glyphicon glyphicon-plus"></span>
+                                                </a>
                                                 <div class="clearfix"></div>
                                                 <div class="land-table">
                                                     <table class="table table-border">
@@ -1507,7 +1553,9 @@
                                                         <div class="modal-dialog" role="document">
                                                             <div class="modal-content">
                                                                 <div class="modal-header">
-                                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                        <span aria-hidden="true">&times;</span>
+                                                                    </button>
                                                                     <h4 class="modal-title" id="myModalLabel">Regularisation </h4>
                                                                 </div>
                                                                 <div class="modal-body">
@@ -1518,10 +1566,10 @@
                                                                                     <label for="regularisation.designation">Designation</label>
                                                                                 </div>
                                                                                 <div class="col-sm-6">
-                                                                                     <div class="styled-select ">
-                                                                                    <select id="regularisation.designation" name="regularisation.designation">
-                                                                                        <option value="">Select</option>
-                                                                                    </select>
+                                                                                    <div class="styled-select ">
+                                                                                        <select id="regularisation.designation" name="regularisation.designation">
+                                                                                            <option value="">Select</option>
+                                                                                        </select>
                                                                                     </div>
                                                                                 </div>
                                                                             </div>
@@ -1599,7 +1647,9 @@
                                             <div class="form-section">
                                                 <!-- <h3>Other Details </h3> -->
                                                 <h3 class="pull-left">Educational Qualification </h3>
-                                                <a href="#" class="btn btn-default btn-action pull-right" data-toggle="modal" data-target="#educationDetailModal" title="Add"><span class="glyphicon glyphicon-plus"></span></a>
+                                                <a href="#" class="btn btn-default btn-action pull-right" data-toggle="modal" data-target="#educationDetailModal" title="Add">
+                                                    <span class="glyphicon glyphicon-plus"></span>
+                                                </a>
                                                 <div class="clearfix"></div>
                                                 <div class="land-table">
                                                     <table class="table table-border">
@@ -1620,7 +1670,9 @@
                                                         <div class="modal-dialog" role="document">
                                                             <div class="modal-content">
                                                                 <div class="modal-header">
-                                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                        <span aria-hidden="true">&times;</span>
+                                                                    </button>
                                                                     <h4 class="modal-title" id="myModalLabel">Educational Qualification </h4>
                                                                 </div>
                                                                 <div class="modal-body">
@@ -1631,7 +1683,7 @@
                                                                                     <label for="education.qualification">Qualification</label>
                                                                                 </div>
                                                                                 <div class="col-sm-6">
-                                                                                    <input id="education.qualification" name="education.qualification" type="text" maxlength="50"/  >
+                                                                                    <input id="education.qualification" name="education.qualification" type="text" maxlength="50" />
                                                                                 </div>
                                                                             </div>
                                                                         </div>
@@ -1653,7 +1705,7 @@
                                                                                     <label for="education.yearOfPassing">Year of Passing</label>
                                                                                 </div>
                                                                                 <div class="col-sm-6">
-                                                                                    <input type="text" maxlength="4" class="onlyNumber" id="education.yearOfPassing" name="education.yearOfPassing"/>
+                                                                                    <input type="text" maxlength="4" class="onlyNumber" id="education.yearOfPassing" name="education.yearOfPassing" />
                                                                                 </div>
                                                                             </div>
                                                                         </div>
@@ -1663,7 +1715,7 @@
                                                                                     <label for="education.university">University/Board</label>
                                                                                 </div>
                                                                                 <div class="col-sm-6">
-                                                                                    <input id="education.university" name="education.university" type="text" maxlength="50"/>
+                                                                                    <input id="education.university" name="education.university" type="text" maxlength="50" />
                                                                                 </div>
                                                                             </div>
                                                                         </div>
@@ -1693,7 +1745,9 @@
                                                     </div>
                                                 </div>
                                                 <h3 class="pull-left">Technical Qualification </h3>
-                                                <a href="#" class="btn btn-default btn-action pull-right" data-toggle="modal" data-target="#technicalDetailModal" title="Add"><span class="glyphicon glyphicon-plus"></span></a>
+                                                <a href="#" class="btn btn-default btn-action pull-right" data-toggle="modal" data-target="#technicalDetailModal" title="Add">
+                                                    <span class="glyphicon glyphicon-plus"></span>
+                                                </a>
                                                 <div class="clearfix"></div>
                                                 <div class="land-table">
                                                     <table class="table table-border">
@@ -1714,7 +1768,9 @@
                                                         <div class="modal-dialog" role="document">
                                                             <div class="modal-content">
                                                                 <div class="modal-header">
-                                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                        <span aria-hidden="true">&times;</span>
+                                                                    </button>
                                                                     <h4 class="modal-title" id="myModalLabel">Technical Qualification </h4>
                                                                 </div>
                                                                 <div class="modal-body">
@@ -1747,7 +1803,7 @@
                                                                                     <label for="technical.yearOfPassing">Year of Completion</label>
                                                                                 </div>
                                                                                 <div class="col-sm-6">
-                                                                                    <input type="text" maxlength="4" class="onlyNumber" id="technical.yearOfPassing" name="technical.yearOfPassing"/>
+                                                                                    <input type="text" maxlength="4" class="onlyNumber" id="technical.yearOfPassing" name="technical.yearOfPassing" />
                                                                                 </div>
                                                                             </div>
                                                                         </div>
@@ -1787,7 +1843,9 @@
                                                     </div>
                                                 </div>
                                                 <h3 class="pull-left">Departmental Test Details</h3>
-                                                <a href="#" class="btn btn-default btn-action pull-right" data-toggle="modal" data-target="#testDetailModal" title="Add"><span class="glyphicon glyphicon-plus"></span></a>
+                                                <a href="#" class="btn btn-default btn-action pull-right" data-toggle="modal" data-target="#testDetailModal" title="Add">
+                                                    <span class="glyphicon glyphicon-plus"></span>
+                                                </a>
                                                 <div class="clearfix"></div>
                                                 <div class="land-table">
                                                     <table class="table table-border">
@@ -1807,7 +1865,9 @@
                                                         <div class="modal-dialog" role="document">
                                                             <div class="modal-content">
                                                                 <div class="modal-header">
-                                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                        <span aria-hidden="true">&times;</span>
+                                                                    </button>
                                                                     <h4 class="modal-title" id="myModalLabel">Departmental Test </h4>
                                                                 </div>
                                                                 <div class="modal-body">
@@ -1828,8 +1888,8 @@
                                                                                     <label for="test.yearOfPassing">Year of Completion</label>
                                                                                 </div>
                                                                                 <div class="col-sm-6">
-                                                                                    <input type="text" class="onlyNumber" id="test.yearOfPassing" name="test.yearOfPassing"/>
-                                                                              </div>
+                                                                                    <input type="text" class="onlyNumber" id="test.yearOfPassing" name="test.yearOfPassing" />
+                                                                                </div>
                                                                             </div>
                                                                         </div>
                                                                     </div>
@@ -2050,27 +2110,27 @@
     <script type="text/javascript" src="resources/javascript/global/jquery-validation/jquery.validate.min.js"></script>
     <script type="text/javascript" src="resources/javascript/global/jquery-validation/additional-methods.min.js"></script>
     <script type="text/javascript">
-    $(window).load(function() {
-        document.getElementById("loading").style.display = "none";
-        document.getElementById("loadingMask").style.display = "none";
-    });
+        $(window).load(function () {
+            document.getElementById("loading").style.display = "none";
+            document.getElementById("loadingMask").style.display = "none";
+        });
     // $(document).on("keydown", disableRefreshAndBack);
     </script>
     <script type="text/javascript">
-    // $(function () {
-    //
-    // });
+        // $(function () {
+        //
+        // });
 
-    $('#ast-srch').DataTable({
-        "bFilter": false
+        $('#ast-srch').DataTable({
+            "bFilter": false
             // "bLengthChange": false
-    });
-    $('.menu-responsive').mouseover(function() {
-        $('.menu-responsive > ul').css('display', 'block')
-    });
-    $('.hidden-xs.menu-responsive').mouseout(function(event) {
-        $('.menu-responsive > ul').css('display', 'none')
-    });
+        });
+        $('.menu-responsive').mouseover(function () {
+            $('.menu-responsive > ul').css('display', 'block')
+        });
+        $('.hidden-xs.menu-responsive').mouseout(function (event) {
+            $('.menu-responsive > ul').css('display', 'none')
+        });
     </script>
 </body>
 

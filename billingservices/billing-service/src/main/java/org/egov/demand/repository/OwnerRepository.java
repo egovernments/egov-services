@@ -44,7 +44,6 @@ public class OwnerRepository {
 		UserResponse userResponse = null;
 		try {
 			logger.info("OwnerRepository URL ---->> "+url+" \n userSearchRequest ---->> "+userSearchRequest);
-			userSearchRequest.setUserType("CITIZEN");
 			userResponse = restTemplate.postForObject(url, userSearchRequest, UserResponse.class);
 		} catch (HttpClientErrorException e) {
 			String errorResponseBody = e.getResponseBodyAsString();

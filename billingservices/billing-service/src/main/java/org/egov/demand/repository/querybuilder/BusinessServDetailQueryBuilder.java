@@ -44,6 +44,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.egov.demand.model.BusinessServiceDetail;
 import org.egov.demand.web.contract.BusinessServiceDetailCriteria;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 
 import java.util.List;
 import java.util.Set;
@@ -54,7 +55,7 @@ public class BusinessServDetailQueryBuilder {
 
     private static final String BASE_QUERY = "SELECT * FROM EGBS_BUSINESS_SERVICE_DETAILS businessservice ";
 
-    public String prepareSearchQuery(final BusinessServiceDetailCriteria businessServiceDetailCriteria, final List preparedStatementValues) {
+    public String prepareSearchQuery(final BusinessServiceDetailCriteria businessServiceDetailCriteria, final List<Object> preparedStatementValues) {
         final StringBuilder selectQuery = new StringBuilder(BASE_QUERY);
         log.debug("prepareSearchQuery --> ");
         prepareWhereClause(selectQuery, preparedStatementValues, businessServiceDetailCriteria);
@@ -62,7 +63,7 @@ public class BusinessServDetailQueryBuilder {
         return selectQuery.toString();
     }
 
-    private void prepareWhereClause(final StringBuilder selectQuery, final List preparedStatementValues,
+    private void prepareWhereClause(final StringBuilder selectQuery, final List<Object> preparedStatementValues,
                                     final BusinessServiceDetailCriteria businessServiceDetailCriteria) {
 
         selectQuery.append(" WHERE ");
@@ -72,7 +73,7 @@ public class BusinessServDetailQueryBuilder {
             preparedStatementValues.add(businessServiceDetailCriteria.getTenantId());
         }
 
-        if (!businessServiceDetailCriteria.getBusinessService().isEmpty())
+        if (!CollectionUtils.isEmpty(businessServiceDetailCriteria.getBusinessService()))
             selectQuery.append(" and businessservice.businessservice IN " +
                     getQueryForCollection(businessServiceDetailCriteria.getBusinessService()));
 

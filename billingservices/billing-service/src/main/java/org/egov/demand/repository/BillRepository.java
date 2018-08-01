@@ -195,12 +195,13 @@ public class BillRepository {
 		Map<String, BillDetail> responseBillDetailsMap = new HashMap<>();
 		inputBillrequest.setRequestInfo(requestInfo);
 
-		BusinessServiceDetailCriteria businessCriteria = BusinessServiceDetailCriteria.builder().build();
+		BusinessServiceDetailCriteria businessCriteria = BusinessServiceDetailCriteria.builder()
+				.tenantId(inputBills.get(0).getTenantId()).build();
 		businessServiceDetailRepository.searchBusinessServiceDetails(businessCriteria);
 		Map<String, BusinessServiceDetail> businessServicesMap = businessServiceDetailRepository
-				.searchBusinessServiceDetails(businessCriteria).stream().filter(businessServie -> {
-					return businessServie.getCallBackForApportioning();
-				}).collect(Collectors.toMap(BusinessServiceDetail::getBusinessService, Function.identity()));
+				.searchBusinessServiceDetails(businessCriteria).stream()
+				.filter(BusinessServiceDetail::getCallBackForApportioning)
+				.collect(Collectors.toMap(BusinessServiceDetail::getBusinessService, Function.identity()));
 
 		for (String businessService : businessServicesMap.keySet()) {
 

@@ -102,13 +102,13 @@ class ApplyLeave extends React.Component {
         toDate: "",
         availableDays: "",
         leaveGround: "",
-        leaveDays: "",
+        workingDays: "",
         reason: "",
         status: "",
         stateId: "",
         tenantId: tenantId,
         encashable: false,
-        totalWorkingDays: "",
+        leaveDays: "",
         docs: [],
         documents: [],
         workflowDetails: {
@@ -151,7 +151,7 @@ class ApplyLeave extends React.Component {
       }
     }
 
-    $("#availableDays,#leaveDays,#name,#code").prop("disabled", true);
+    $("#availableDays,#workingDays,#name,#code").prop("disabled", true);
 
     if (getUrlVars()["type"])
       $("#hp-citizen-title").text(
@@ -360,7 +360,7 @@ class ApplyLeave extends React.Component {
     let _this = this;
     let asOnDate = _this.state.leaveSet.toDate;
     let fromDate = _this.state.leaveSet.fromDate;
-    let leaveDays = _this.state.leaveSet.leaveDays;
+    let workingDays = _this.state.leaveSet.workingDays;
     let leaveType = _this.state.leaveSet.leaveType.id;
     let employeeid = getUrlVars()["id"] || _this.state.leaveSet.employee;
     let allHolidayList = _this.state.allHolidayList;
@@ -539,8 +539,8 @@ class ApplyLeave extends React.Component {
                   _this.setState({
                     leaveSet: {
                       ..._this.state.leaveSet,
-                      leaveDays: _days,
-                      totalWorkingDays: _days + prefixSuffixDays + enclosingDays
+                      workingDays: _days,
+                      leaveDays: _days + prefixSuffixDays + enclosingDays
                     }
                   });
                   if (prefixSuffixDays) {
@@ -624,8 +624,8 @@ class ApplyLeave extends React.Component {
     //   _this.setState({
     //     leaveSet: {
     //       ..._this.state.leaveSet,
-    //       leaveDays: _days,
-    //       totalWorkingDays: _days + prefixSuffixDays + enclosingDays
+    //       workingDays: _days,
+    //       leaveDays: _days + prefixSuffixDays + enclosingDays
     //     }
     //   });
     // }, 500);
@@ -703,8 +703,8 @@ class ApplyLeave extends React.Component {
     if (name === "encashable") {
       let val = e.target.checked;
       if (e.target.checked && !(getUrlVars()["type"] === "view"))
-        $("#totalWorkingDays").prop("disabled", false);
-      else $("#totalWorkingDays").prop("disabled", true);
+        $("#leaveDays").prop("disabled", false);
+      else $("#leaveDays").prop("disabled", true);
       let _this = this;
       var asOnDate = today();
       let leaveType = this.state.leaveSet.leaveType.id;
@@ -853,7 +853,7 @@ class ApplyLeave extends React.Component {
       _this.state.leaveSet.leaveType.id,
       "maxDays"
     );
-    if (maxDays && maxDays < _this.state.leaveSet.leaveDays) {
+    if (maxDays && maxDays < _this.state.leaveSet.workingDays) {
       return showError(
         "Number of Leaves applied exceeds Maximum leaves permitted"
       );
@@ -869,29 +869,25 @@ class ApplyLeave extends React.Component {
     delete tempInfo.name;
     delete tempInfo.code;
 
-    if (tempInfo.encashable && !tempInfo.totalWorkingDays)
+    if (tempInfo.encashable && !tempInfo.leaveDays)
       return showError(
         "Total Leave Days cannot be empty or zero. Please enter Total Leave Days"
       );
 
-    if (
-      tempInfo.encashable &&
-      tempInfo.totalWorkingDays &&
-      tempInfo.totalWorkingDays < 1
-    )
+    if (tempInfo.encashable && tempInfo.leaveDays && tempInfo.leaveDays < 1)
       return showError("Total Leave Days cannot be negative or zero.");
 
     if (
       tempInfo.encashable &&
-      tempInfo.totalWorkingDays &&
-      tempInfo.totalWorkingDays > tempInfo.availableDays
+      tempInfo.leaveDays &&
+      tempInfo.leaveDays > tempInfo.availableDays
     )
       return showError(
         "Total Leave Days cannot be greater than available days"
       );
 
     if (tempInfo.encashable) {
-      tempInfo.leaveDays = tempInfo.totalWorkingDays;
+      tempInfo.workingDays = tempInfo.leaveDays;
     }
 
     //console.log(this.state.perfixSuffix, this.state.encloseHoliday);
@@ -993,14 +989,14 @@ class ApplyLeave extends React.Component {
     let {
       name,
       code,
-      leaveDays,
+      workingDays,
       availableDays,
       fromDate,
       toDate,
       leaveGround,
       reason,
       leaveType,
-      totalWorkingDays,
+      leaveDays,
       encashable,
       documents
     } = leaveSet;
@@ -1325,11 +1321,11 @@ class ApplyLeave extends React.Component {
                   <div className="col-sm-6">
                     <input
                       type="number"
-                      id="leaveDays"
-                      name="leaveDays"
-                      value={leaveDays}
+                      id="workingDays"
+                      name="workingDays"
+                      value={workingDays}
                       onChange={e => {
-                        handleChange(e, "leaveDays");
+                        handleChange(e, "workingDays");
                       }}
                       disabled
                     />
@@ -1497,11 +1493,11 @@ class ApplyLeave extends React.Component {
                   <div className="col-sm-6">
                     <input
                       type="number"
-                      id="totalWorkingDays"
-                      name="totalWorkingDays"
-                      value={totalWorkingDays}
+                      id="leaveDays"
+                      name="leaveDays"
+                      value={leaveDays}
                       onChange={e => {
-                        handleChange(e, "totalWorkingDays");
+                        handleChange(e, "leaveDays");
                       }}
                       disabled
                     />

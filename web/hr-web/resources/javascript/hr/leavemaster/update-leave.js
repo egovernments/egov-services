@@ -106,14 +106,14 @@ class UpdateLeave extends React.Component {
         toDate: "",
         availableDays: "",
         leaveGround: "",
-        leaveDays: "",
+        workingDays: "",
         reason: "",
         status: "",
         stateId: "",
         tenantId: tenantId,
         encashable: false,
         documents: [],
-        totalWorkingDays: "",
+        leaveDays: "",
         workflowDetails: {
           department: "",
           designation: "",
@@ -168,7 +168,7 @@ class UpdateLeave extends React.Component {
       enclosingDays = "";
     var hrConfigurations = [],
       allHolidayList = [];
-    $("#availableDays,#leaveDays,#name,#code").prop("disabled", true);
+    $("#availableDays,#workingDays,#name,#code").prop("disabled", true);
 
     var _state = {},
       count = 3;
@@ -281,7 +281,7 @@ class UpdateLeave extends React.Component {
                 _leaveSet.leaveGround = _leaveSet.leaveGround
                   ? _leaveSet.leaveGround
                   : "";
-                _leaveSet.totalWorkingDays = _leaveSet.leaveDays;
+                // _leaveSet.leaveDays = _leaveSet.workingDays;
 
                 _this.setState({
                   leaveSet: Object.assign({}, _leaveSet),
@@ -372,8 +372,8 @@ class UpdateLeave extends React.Component {
             _this.setState({
               leaveSet: {
                 ..._this.state.leaveSet,
-                leaveDays:
-                  _leaveSet.leaveDays - (prefixSuffixDays + enclosingDays)
+                workingDays:
+                  _leaveSet.workingDays - (prefixSuffixDays + enclosingDays)
               }
             });
           }, 500);
@@ -517,12 +517,12 @@ class UpdateLeave extends React.Component {
       console.log(status);
 
       $("input,select,textarea").prop("disabled", true);
-      $("#availableDays,#leaveDays,#name,#code").prop("disabled", true);
+      $("#availableDays,#workingDays,#name,#code").prop("disabled", true);
     }
     if (status == "REJECTED") {
       $("input,select,textarea").prop("disabled", false);
-      $("#availableDays,#leaveDays,#name,#code").prop("disabled", true);
-    }
+      $("#availableDays,#workingDays,#name,#code").prop("disabled", true);
+    } 
 
     if (status == "APPLIED" || status == "RESUBMITTED") {
       $("#department, #designation, #assignee").prop("disabled", false);
@@ -539,7 +539,7 @@ class UpdateLeave extends React.Component {
     let _this = this;
     let asOnDate = _this.state.leaveSet.toDate;
     let fromDate = _this.state.leaveSet.fromDate;
-    let leaveDays = _this.state.leaveSet.leaveDays;
+    let workingDays = _this.state.leaveSet.workingDays;
     let leaveType = _this.state.leaveSet.leaveType.id;
     let employeeid = getUrlVars()["id"] || _this.state.leaveSet.employee;
     let allHolidayList = _this.state.allHolidayList;
@@ -719,8 +719,8 @@ class UpdateLeave extends React.Component {
                   _this.setState({
                     leaveSet: {
                       ..._this.state.leaveSet,
-                      leaveDays: _days,
-                      totalWorkingDays: _days + prefixSuffixDays + enclosingDays
+                      workingDays: _days,
+                      leaveDays: _days + prefixSuffixDays + enclosingDays
                     }
                   });
                   if (prefixSuffixDays) {
@@ -804,8 +804,8 @@ class UpdateLeave extends React.Component {
     //   _this.setState({
     //     leaveSet: {
     //       ..._this.state.leaveSet,
-    //       leaveDays: _days,
-    //       totalWorkingDays: _days + prefixSuffixDays + enclosingDays
+    //       workingDays: _days,
+    //       leaveDays: _days + prefixSuffixDays + enclosingDays
     //     }
     //   });
     // }, 500);
@@ -919,7 +919,7 @@ class UpdateLeave extends React.Component {
             " - Sanction of " +
             noticeData.leaveTypeName +
             " for period of (" +
-            noticeData.totalWorkingDays +
+            noticeData.leaveDays +
             ")"
         )
       );
@@ -963,7 +963,7 @@ class UpdateLeave extends React.Component {
           "is hereby sanctioned " +
             noticeData.leaveTypeName +
             " for a period of (" +
-            noticeData.totalWorkingDays +
+            noticeData.leaveDays +
             ") days on " +
             noticeData.leaveGround +
             " grounds "
@@ -1064,7 +1064,7 @@ class UpdateLeave extends React.Component {
             " - Sanction of " +
             noticeData.leaveTypeName +
             " for period of (" +
-            noticeData.totalWorkingDays +
+            noticeData.leaveDays +
             ")"
         )
       );
@@ -1120,7 +1120,7 @@ class UpdateLeave extends React.Component {
         113,
         doc.splitTextToSize(
           "Leave (" +
-            noticeData.totalWorkingDays +
+            noticeData.leaveDays +
             ") days as on " +
             today +
             " for encashment purpose during the financial year"
@@ -1275,8 +1275,9 @@ class UpdateLeave extends React.Component {
     }
 
     if (name === "encashable") {
-      if (e.target.checked) $("#totalWorkingDays").prop("disabled", false);
-      else $("#totalWorkingDays").prop("disabled", true);
+      console.log(e.target.checked);
+      if (e.target.checked) $("#leaveDays").prop("disabled", false);
+      else $("#leaveDays").prop("disabled", true);
       let _this = this;
       let asOnDate = today();
       let leaveType = this.state.leaveSet.leaveType.id;
@@ -1718,7 +1719,7 @@ class UpdateLeave extends React.Component {
     let {
       name,
       code,
-      leaveDays,
+      workingDays,
       availableDays,
       fromDate,
       toDate,
@@ -1726,7 +1727,7 @@ class UpdateLeave extends React.Component {
       reason,
       leaveType,
       encashable,
-      totalWorkingDays,
+      leaveDays,
       workflowDetails,
       documents
     } = leaveSet;
@@ -2063,11 +2064,11 @@ class UpdateLeave extends React.Component {
                   <div className="col-sm-6">
                     <input
                       type="number"
-                      id="leaveDays"
-                      name="leaveDays"
-                      value={leaveDays}
+                      id="workingDays"
+                      name="workingDays"
+                      value={workingDays}
                       onChange={e => {
-                        handleChange(e, "leaveDays");
+                        handleChange(e, "workingDays");
                       }}
                       disabled
                     />
@@ -2383,11 +2384,11 @@ class UpdateLeave extends React.Component {
                   <div className="col-sm-6">
                     <input
                       type="number"
-                      id="totalWorkingDays"
-                      name="totalWorkingDays"
-                      value={totalWorkingDays}
+                      id="leaveDays"
+                      name="leaveDays"
+                      value={leaveDays}
                       onChange={e => {
-                        handleChange(e, "totalWorkingDays");
+                        handleChange(e, "leaveDays");
                       }}
                       disabled
                     />

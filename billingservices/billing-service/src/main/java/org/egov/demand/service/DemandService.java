@@ -376,7 +376,7 @@ public class DemandService {
 		if (demandCriteria.getEmail() != null || demandCriteria.getMobileNumber() != null) {
 			userSearchRequest = UserSearchRequest.builder().requestInfo(requestInfo)
 					.tenantId(demandCriteria.getTenantId()).emailId(demandCriteria.getEmail())
-					.mobileNumber(demandCriteria.getMobileNumber()).pageSize(500).type("CITIZEN").build();
+					.mobileNumber(demandCriteria.getMobileNumber()).pageSize(500).userType("CITIZEN").build();
 			// TODO GET PAGE SIZE VALUE FROM CONFIG DONT HARD CODE
 			owners = ownerRepository.getOwners(userSearchRequest);
 			Set<String> ownerIds = owners.stream().map(owner -> owner.getId().toString()).collect(Collectors.toSet());
@@ -389,7 +389,7 @@ public class DemandService {
 				List<Long> ownerIds = new ArrayList<>(
 						demands.stream().map(demand -> demand.getOwner().getId()).collect(Collectors.toSet()));
 				userSearchRequest = UserSearchRequest.builder().requestInfo(requestInfo)
-						.tenantId(demandCriteria.getTenantId()).id(ownerIds).type("CITIZEN").pageSize(500).build();
+						.tenantId(demandCriteria.getTenantId()).id(ownerIds).userType("CITIZEN").pageSize(500).build();
 				owners = ownerRepository.getOwners(userSearchRequest);
 			}
 		}

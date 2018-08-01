@@ -362,7 +362,7 @@ public class DemandValidator implements Validator {
 				demands.stream().map(demand -> demand.getOwner().getId()).collect(Collectors.toSet()));
 		// demands should never be created for employee
 		UserSearchRequest userSearchRequest = UserSearchRequest.builder().requestInfo(demandRequest.getRequestInfo())
-				.id(ownerIds).tenantId(demands.get(0).getTenantId()).type("CITIZEN").pageSize(500).build();
+				.id(ownerIds).tenantId(demands.get(0).getTenantId()).userType("CITIZEN").pageSize(500).build();
 		
 		log.info("The user search req : " + userSearchRequest);
 		Map<Long, Long> ownerMap = new HashMap<>();

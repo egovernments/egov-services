@@ -48,7 +48,7 @@ public class UserSearchRequest {
 	private Integer pageSize=500;
 	
 	@JsonProperty("type")
-	private String type;
+	private String userType;
 	
 /*	@JsonProperty("fuzzyLogic")
 	private boolean fuzzyLogic;

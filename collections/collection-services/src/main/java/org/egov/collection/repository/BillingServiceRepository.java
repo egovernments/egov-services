@@ -30,8 +30,8 @@ public class BillingServiceRepository {
 		StringBuilder uriForApportion = new StringBuilder();
 		uriForApportion
 				.append(applicationProperties.getBillingServiceHostName())
-				.append(applicationProperties.getBillingServiceApportion())
-				.append("&tenantId=").append(apportionBill.getTenantId());
+				.append(applicationProperties.getBillingServiceApportion());
+				//.append("&tenantId=").append(apportionBill.getTenantId());
 		LOGGER.info("URI For Apportioning Paid Amount in Billing Service: "
 				+ uriForApportion.toString());
 		BillRequest billRequest = new BillRequest();
@@ -86,7 +86,7 @@ public class BillingServiceRepository {
 		billingServiceRequestInfo.setKey(requestInfo.getKey());
 		billingServiceRequestInfo.setMsgId(requestInfo.getMsgId());
 		// billingServiceRequestInfo.setRequesterId(requestInfo.getRequesterId());
-		billingServiceRequestInfo.setTs(requestInfo.getTs().getTime()); // this
+		//billingServiceRequestInfo.setTs(requestInfo.getTs().getTime()); // this
 																// is
 																// the
 																// difference

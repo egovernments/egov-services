@@ -182,14 +182,66 @@ $(document).ready(function() {
             { title: "Cheque/DD/Challan No and Date", dataKey: "leaseHolderName" },
 
         ];
-         var goodwillGst = Number((agreement.goodWillAmount*18)/100);
-         var secureGst = Number((agreement.securityDeposit*18)/100);
+
+        var agreementNumber=agreement.agreementNumber;
+        var acknowledgementNumber = agreement.acknowledgementNumber;
+
+        var status = "ACTIVE";
+        var agreements = commonApiPost("lams-services",
+            "agreements/dcb",
+            "_view", {
+                agreementNumber,acknowledgementNumber,status,
+                tenantId
+            }).responseJSON["Agreements"][0] || {};
+
+        console.log("hhhhh"+agreements);
+
+        var demands = agreements.legacyDemands[0].demandDetails;
+        console.log("dyegyy" + demands);
+        var goodwillCGst = [] ;
+        var goodwillSGst= [] ;
+        var advanceCGst= [] ;
+        var advanceSGst= [] ;
+
+        demands.forEach((demand) => {
+
+            if(demand.taxReasonCode.toLowerCase() === "gw_cgst") {
+                goodwillCGst = demand.taxAmount;
+            }else{
+                goodwillCGst = 0;
+
+            }
+            if(demand.taxReasonCode.toLowerCase() === "gw_sgst") {
+                goodwillSGst = demand.taxAmount;
+            }else{
+                goodwillSGst = 0;
+
+            }
+
+            if(demand.taxReasonCode.toLowerCase() === "adv_cgst") {
+                advanceCGst = demand.taxAmount;
+            }else{
+                goodwillSGst = 0;
+
+            }
+            if(demand.taxReasonCode.toLowerCase() === "adv_sgst") {
+                advanceSGst = demand.taxAmount;
+
+            }else{
+                goodwillSGst = 0;
+
+            }
+
+        });
+
         var rows1 = [
             { "particulars": "Advance Tax(3 months Rental Deposits)", "amount": agreement.securityDeposit, "leaseHolderName":  agreement.name },
-            { "particulars": "GST for Advance Tax", "amount": secureGst, "leaseHolderName":  agreement.name },
+            { "particulars": "CGST for Advance Tax", "amount": advanceCGst, "leaseHolderName":  agreement.name },
+            { "particulars": "SGST for Advance Tax", "amount": advanceSGst, "leaseHolderName":  agreement.name },
             { "particulars": "Goodwill Amount", "amount": agreement.goodWillAmount, "leaseHolderName":  agreement.name },
-            { "particulars": "GST for Goodwill Amount", "amount": goodwillGst, "leaseHolderName":  agreement.name },
-            { "particulars": "Total", "amount": Number(agreement.goodWillAmount) +Number(goodwillGst) + Number(agreement.securityDeposit) + secureGst, "leaseHolderName": agreement.name }
+            { "particulars": "CGST for Goodwill Amount", "amount": goodwillCGst, "leaseHolderName":  agreement.name },
+            { "particulars": "SGST for Goodwill Amount", "amount": goodwillSGst, "leaseHolderName":  agreement.name },
+            { "particulars": "Total", "amount": Number(agreement.goodWillAmount) +Number(goodwillCGst) +Number(goodwillSGst)+ Number(agreement.securityDeposit) + Number(advanceCGst)+Number(goodwillSGst), "leaseHolderName": agreement.name }
         ];
 
 
@@ -225,7 +277,8 @@ $(document).ready(function() {
 
         var rows2 = [
             { "particulars": "Monthly Rental", "amount": agreement.rent },
-            { "particulars": "GST", "amount": Number(agreement.sgst) + Number(agreement.cgst) },
+            { "particulars": "CGST", "amount": Number(agreement.sgst)},
+            { "particulars": "SGST", "amount": Number(agreement.sgst)},
         ];
 
 
@@ -250,7 +303,7 @@ $(document).ready(function() {
             },
             alternateRowStyles: {
                 fillColor: [255, 255, 255]
-            }, startY: 200
+            }, startY: 220
         };
 
 
@@ -273,7 +326,7 @@ $(document).ready(function() {
         doc.setFontType("bold");
         doc.text(146,50, agreement.agreementDate);
 
-        doc.fromHTML("Sub:Leases-Revenue Section-Shop No <b>"+ agreement.referenceNumber + "</b> in <b>" + agreement.asset.name + "</b> Complex, <b> " + locality + "</b> <br>-Allotment of lease - orders - Issued",15, 60);
+        doc.fromHTML("Sub:Leases-Revenue Section-Shop No <b>"+ agreement.referenceNumber + "</b> in <b>" + agreement.asset.name + "</b>  Complex, <b> <br>"  + locality + "</b> -Allotment of lease - orders - Issued",15, 60);
 
         doc.fromHTML("Ref: 1. Open Auction Notice dt. <b>" + tenderDate +"</b> of this office",15,80);
 
@@ -285,15 +338,17 @@ $(document).ready(function() {
         doc.setLineWidth(0.5);
         doc.line(15, 106, 28, 106);
 
-        doc.fromHTML("In the reference 1st cited, an Open Auction for leasing Shop No <b>" + agreement.referenceNumber + "</b> in <b>" + agreement.asset.name + "</b> <br>Complex was conducted and your bid for the highest amount (i.e. monthly rentals of Rs <b>" + agreement.rent + "/- </b> <br>and Goodwill amount of Rs <b>" + agreement.goodWillAmount + "/- </b> was accepted by the Municipal Council/Standing Committee vide <br>reference 2nd cited with the following deposit amounts as received by this office.",15, 100);
+        doc.fromHTML("In the reference 1st cited, an Open Auction for leasing Shop No <b>" + agreement.referenceNumber + "</b> in <b>" + agreement.asset.name + "</b> <br> Complex was conducted and your bid for the highest amount (i.e. monthly rentals of Rs <b>" + agreement.rent + "/- </b> <br> and Goodwill amount of Rs <b>" + agreement.goodWillAmount + "/-) </b> was accepted by the Municipal Council/Standing Committee vide <br> reference 2nd cited with the following deposit amounts as received by this office.",15, 100);
 
         doc.autoTable(columns1, rows1, autoTableOptions1);
 
-        doc.fromHTML("In pursuance of the Municipal Council/Standing Committee resolution and vide GO MS No 56 (MA & UD <br> Department) dt. 05.02.2011, the said shop is allotted to you for the period <b>" + commencementDate + "</b> to <b>" + endDate + "</b> at <br> following rates of rentals and taxes thereon.",15, 176);
+        doc.fromHTML("In pursuance of the Municipal Council/Standing Committee resolution and vide GO MS No 56 (MA & UD <br> Department) dt. 05.02.2011, the said shop is allotted to you for the period <b>" + commencementDate + "</b> to <b>" + endDate + "</b> at <br> following rates of rentals and taxes thereon.",15, 195);
 
         doc.autoTable(columns2, rows2, autoTableOptions2);
 
         doc.setFontType("normal");
+
+        doc.addPage();
         var paragraph3 = "The following terms and conditions are applicable for the renewal of lease."
 
             + "\n\t1. The leaseholder shall pay rent by 5th of the succeeding month"
@@ -304,22 +359,19 @@ $(document).ready(function() {
             + "\n\t6. The leaseholder not to use the premises for any unlawful activities"
             + "\n\t7. The Goodwill and the Rental Deposits paid by the leaseholder shall be forfeited in the event of violation \t    of terms and conditions in the agreement."
 
-        var paragraph4 = "Hence you are requested to conclude an agreement duly registered with the SRO for the above mentioned lease within 15 days of receipt of this renewal letter without fail unless the renewal will stand cancelled without any further correspondence."
+        var lines = doc.splitTextToSize(paragraph3, 200);
+        doc.text(12, 30, lines);
 
-        var lines = doc.splitTextToSize(paragraph3, 183);
-        doc.text(12, 228, lines);
-
-        doc.addPage();
         var paragraph4 = "Hence you are requested to conclude an agreement duly registered with the SRO for the above mentioned lease within 15 days of receipt of this allotment letter without fail unless the allotment will stand cancelled without any further correspondence."
         var lines = doc.splitTextToSize(paragraph4, 183);
-        doc.text(15, 30, lines);
+        doc.text(15, 80, lines);
 
-        doc.text(120, 50, "Commissioner");
-        doc.fromHTML("<b> "+tenantId.split(".")[1].charAt(0).toUpperCase() + tenantId.split(".")[1].slice(1) + " "+ulbType+"</b>",120, 55)
+        doc.text(125, 130, "Commissioner");
+        doc.fromHTML("<b> "+tenantId.split(".")[1].charAt(0).toUpperCase() + tenantId.split(".")[1].slice(1) + " "+ulbType+"</b>",125, 132)
 
-        doc.text(15, 60, "To");
-        doc.text(15, 65, "The Leaseholder");
-        doc.text(15, 70, "Copy to the concerned officials for necessary action");
+        doc.text(15, 140, "To");
+        doc.text(15, 145, "The Leaseholder");
+        doc.text(15, 150, "Copy to the concerned officials for necessary action");
 
         var blob = doc.output('blob');
 

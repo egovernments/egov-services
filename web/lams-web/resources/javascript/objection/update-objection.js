@@ -693,11 +693,14 @@ class UpdateObjection extends React.Component {
                                                 success: function (res1) {
                                                     if (window.opener)
                                                         window.opener.location.reload();
-                                                    if (res1 && res1.Employee && res1.Employee[0].name)
-                                                        window.location.href = `app/acknowledgement/common-ack.html?wftype=Objection&action=${buttonAction}&name=${res1.Employee[0].code}::${res1.Employee[0].name}&ackNo=${res.Agreements[0].acknowledgementNumber}`;
-                                                    else
-                                                        window.location.href = `app/acknowledgement/common-ack.html?wftype=Objection&action=${buttonAction}&name=&ackNo=${res.Agreements[0].acknowledgementNumber}`;
-
+                                                    if (buttonAction.toLowerCase() === 'cancel') {
+                                                        window.location.href = `app/acknowledgement/common-ack.html?wftype=Objection&action=${buttonAction}&ackNo=${res.Agreements[0].acknowledgementNumber}`;
+                                                    } else {
+                                                        if (res1 && res1.Employee && res1.Employee[0].name)
+                                                            window.location.href = `app/acknowledgement/common-ack.html?wftype=Objection&action=${buttonAction}&name=${res1.Employee[0].code}::${res1.Employee[0].name}&ackNo=${res.Agreements[0].acknowledgementNumber}`;
+                                                        else
+                                                            window.location.href = `app/acknowledgement/common-ack.html?wftype=Objection&action=${buttonAction}&name=&ackNo=${res.Agreements[0].acknowledgementNumber}`;
+                                                    }
                                                 },
                                                 error: function (err) {
                                                     if (window.opener)
@@ -756,11 +759,14 @@ class UpdateObjection extends React.Component {
                                 success: function (res1) {
                                     if (window.opener)
                                         window.opener.location.reload();
-                                    if (res1 && res1.Employee && res1.Employee[0].name)
-                                        window.location.href = `app/acknowledgement/common-ack.html?wftype=Objection&action=${buttonAction}&name=${res1.Employee[0].code}::${res1.Employee[0].name}&ackNo=${res.Agreements[0].acknowledgementNumber}`;
-                                    else
-                                        window.location.href = `app/acknowledgement/common-ack.html?wftype=Objection&action=${buttonAction}&name=&ackNo=${res.Agreements[0].acknowledgementNumber}`;
-
+                                    if (buttonAction.toLowerCase() === 'cancel') {
+                                        window.location.href = `app/acknowledgement/common-ack.html?wftype=Objection&action=${buttonAction}&ackNo=${res.Agreements[0].acknowledgementNumber}`;
+                                    } else {
+                                        if (res1 && res1.Employee && res1.Employee[0].name)
+                                            window.location.href = `app/acknowledgement/common-ack.html?wftype=Objection&action=${buttonAction}&name=${res1.Employee[0].code}::${res1.Employee[0].name}&ackNo=${res.Agreements[0].acknowledgementNumber}`;
+                                        else
+                                            window.location.href = `app/acknowledgement/common-ack.html?wftype=Objection&action=${buttonAction}&name=&ackNo=${res.Agreements[0].acknowledgementNumber}`;
+                                    }
                                 },
                                 error: function (err) {
                                     if (window.opener)

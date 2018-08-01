@@ -640,13 +640,13 @@ class UpdateEviction extends React.Component {
 
             var asOnDate = new Date();
             var dd = asOnDate.getDate();
-            var mm = asOnDate.getMonth() + 1; 
+            var mm = asOnDate.getMonth() + 1;
             var yyyy = asOnDate.getFullYear();
-        
+
             if (dd < 10) {
               dd = '0' + dd
             }
-        
+
             if (mm < 10) {
               mm = '0' + mm
             }
@@ -756,11 +756,17 @@ class UpdateEviction extends React.Component {
                                                 success: function (res1) {
                                                     if (window.opener)
                                                         window.opener.location.reload();
-                                                    if (res1 && res1.Employee && res1.Employee[0].name)
-                                                        window.location.href = `app/acknowledgement/common-ack.html?wftype=Eviction&action=${buttonAction}&name=${res1.Employee[0].code}::${res1.Employee[0].name}&ackNo=${res.Agreements[0].acknowledgementNumber}`;
-                                                    else
-                                                        window.location.href = `app/acknowledgement/common-ack.html?wftype=Eviction&action=${buttonAction}&name=&ackNo=${res.Agreements[0].acknowledgementNumber}`;
 
+                                                    if (buttonAction.toLowerCase() === 'cancel') {
+                                                        window.location.href = `app/acknowledgement/common-ack.html?wftype=Eviction&action=${buttonAction}&ackNo=${res.Agreements[0].acknowledgementNumber}`;
+                                                    } else {
+                                                        if (res1 && res1.Employee && res1.Employee[0].name)
+                                                            window.location.href = `app/acknowledgement/common-ack.html?wftype=Eviction&action=${buttonAction}&name=${res1.Employee[0].code}::${res1.Employee[0].name}&ackNo=${res.Agreements[0].acknowledgementNumber}`;
+                                                        else
+                                                            window.location.href = `app/acknowledgement/common-ack.html?wftype=Eviction&action=${buttonAction}&name=&ackNo=${res.Agreements[0].acknowledgementNumber}`;
+
+
+                                                    }
                                                 },
                                                 error: function (err) {
                                                     if (window.opener)
@@ -814,11 +820,14 @@ class UpdateEviction extends React.Component {
                                 success: function (res1) {
                                     if (window.opener)
                                         window.opener.location.reload();
-                                    if (res1 && res1.Employee && res1.Employee[0].name)
-                                        window.location.href = `app/acknowledgement/common-ack.html?wftype=Eviction&action=${buttonAction}&name=${res1.Employee[0].code}::${res1.Employee[0].name}&ackNo=${res.Agreements[0].acknowledgementNumber}`;
-                                    else
-                                        window.location.href = `app/acknowledgement/common-ack.html?wftype=Eviction&action=${buttonAction}&name=&ackNo=${res.Agreements[0].acknowledgementNumber}`;
-
+                                    if (buttonAction.toLowerCase() === 'cancel') {
+                                        window.location.href = `app/acknowledgement/common-ack.html?wftype=Eviction&action=${buttonAction}&ackNo=${res.Agreements[0].acknowledgementNumber}`;
+                                    } else {
+                                        if (res1 && res1.Employee && res1.Employee[0].name)
+                                            window.location.href = `app/acknowledgement/common-ack.html?wftype=Eviction&action=${buttonAction}&name=${res1.Employee[0].code}::${res1.Employee[0].name}&ackNo=${res.Agreements[0].acknowledgementNumber}`;
+                                        else
+                                            window.location.href = `app/acknowledgement/common-ack.html?wftype=Eviction&action=${buttonAction}&name=&ackNo=${res.Agreements[0].acknowledgementNumber}`;
+                                    }
                                 },
                                 error: function (err) {
                                     if (window.opener)

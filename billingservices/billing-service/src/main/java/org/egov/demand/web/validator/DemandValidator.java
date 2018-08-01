@@ -39,14 +39,12 @@
  */
 package org.egov.demand.web.validator;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.Map.Entry;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -364,7 +362,9 @@ public class DemandValidator implements Validator {
 				demands.stream().map(demand -> demand.getOwner().getId()).collect(Collectors.toSet()));
 		// demands should never be created for employee
 		UserSearchRequest userSearchRequest = UserSearchRequest.builder().requestInfo(demandRequest.getRequestInfo())
-				.id(ownerIds).tenantId(demands.get(0).getTenantId()).userType("CITIZEN").pageSize(500).build();
+				.id(ownerIds).tenantId(demands.get(0).getTenantId()).type("CITIZEN").pageSize(500).build();
+		
+		log.info("The user search req : " + userSearchRequest);
 		Map<Long, Long> ownerMap = new HashMap<>();
 		List<Owner> owners = ownerRepository.getOwners(userSearchRequest);
 		if (owners.isEmpty())

@@ -118,20 +118,16 @@ public class BillController {
 	
 	@PostMapping("_apportion")
 	@ResponseBody
-	public ResponseEntity<?> apportion(@RequestBody BillRequest billRequest, @PathVariable String tenantId,
-			BindingResult bindingResult) {
+	public ResponseEntity<?> apportion(@RequestBody BillRequest billRequest, BindingResult bindingResult) {
 
 		RequestInfo requestInfo = billRequest.getRequestInfo();
-		log.debug("genrateBill tenantId : " + tenantId);
 		log.debug("genrateBill requestInfo : " + requestInfo);
 
 		if (bindingResult.hasErrors()) {
 			return new ResponseEntity<>(responseFactory.getErrorResponse(bindingResult, requestInfo),
 					HttpStatus.BAD_REQUEST);
 		}
-		// billValidator.validateBillRequest(billRequest);
 		BillResponse billResponse = billService.apportion(billRequest);
-
 		return new ResponseEntity<>(billResponse, HttpStatus.CREATED);
 	}
 }

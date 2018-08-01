@@ -217,6 +217,7 @@ public class UserService {
      */
     public User updateWithoutOtpValidation(final User user) {
         final User existingUser = getUserByUuid(user.getUuid());
+        user.setTenantId(getStateLevelTenantForCitizen(user.getTenantId(), user.getType()));
         validateUserRoles(user);
         user.validateUserModification();
         user.setPassword(encryptPwd(user.getPassword()));
@@ -285,7 +286,6 @@ public class UserService {
             throw new InvalidUpdatePasswordRequestException();
         if (user.getType().toString().equals(UserType.EMPLOYEE.toString()) && isEmployeeLoginOtpBased)
             throw new InvalidUpdatePasswordRequestException();
-        user.setOtpReference(request.getOtpReference());
         validateOtp(user);
         user.updatePassword(encryptPwd(request.getNewPassword()));
         userRepository.update(user, user);

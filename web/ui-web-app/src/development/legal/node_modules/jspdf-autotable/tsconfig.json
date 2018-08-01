@@ -1,6 +1,0 @@
-{
-  "strictNullChecks": true,
-  "include": [
-    "src/**/*"
-  ]
-}

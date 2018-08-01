@@ -253,8 +253,7 @@ public class UserService {
         OtpValidateRequest otpValidationRequest = OtpValidateRequest.builder().requestInfo(requestInfo).otp(otp)
                 .build();
         try {
-            return true;
-//            return otpRepository.validateOtp(otpValidationRequest);
+            return otpRepository.validateOtp(otpValidationRequest);
         } catch (Exception e) {
             String errorMessage = JsonPath.read(e.getMessage(), "$.error.message");
             System.out.println("message " + errorMessage);

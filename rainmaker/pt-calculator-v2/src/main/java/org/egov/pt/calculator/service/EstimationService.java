@@ -84,6 +84,21 @@ public class EstimationService {
 	public CalculationRes getTaxCalculation(CalculationReq request) {
 
 		CalculationCriteria criteria = request.getCalculationCriteria().get(0);
+		
+		Property property = criteria.getProperty();
+		PropertyDetail detail = property.getPropertyDetails().get(0);
+		
+		Map<String, String> error = new HashMap<>();
+		
+		if (null == detail.getLandArea() && null == detail.getBuildUpArea())
+			error.put(CalculatorConstants.PT_ESTIMATE_AREA_NULL, CalculatorConstants.PT_ESTIMATE_AREA_NULL_MSG);
+		
+		if(CalculatorConstants.PT_TYPE_VACANT_LAND.equalsIgnoreCase(detail.getPropertyType()) && null == detail.getLandArea())
+			error.put(CalculatorConstants.PT_ESTIMATE_VACANT_LAND_NULL, CalculatorConstants.PT_ESTIMATE_VACANT_LAND_NULL_MSG);
+		
+		if(!CollectionUtils.isEmpty(error))
+			throw new CustomException(error);
+		
 		return new CalculationRes(new ResponseInfo(), Arrays.asList(getcalculation(request.getRequestInfo(), criteria,
 				getEstimationMap(criteria, request.getRequestInfo()))));
 	}
@@ -104,10 +119,6 @@ public class EstimationService {
 		String assessmentYear =  detail.getFinancialYear();
 		String tenantId       =  property.getTenantId();
 		
-		if (null == detail.getLandArea() && null == detail.getBuildUpArea())
-			throw new CustomException(CalculatorConstants.PT_ESTIMATE_AREA_NULL,
-					CalculatorConstants.PT_ESTIMATE_AREA_NULL_MSG);
-
 		List<BillingSlab> filteredbillingSlabs = getSlabsFiltered(property, requestInfo);
 		
 		Map<String, Map<String, List<Object>>> propertyBasedExemptionMasterMap = new HashMap<>();
@@ -230,11 +241,12 @@ public class EstimationService {
 					.estimateAmount(usageExemption).build());
 			payableTax = payableTax.subtract(usageExemption);
 
+		if(payableTax.doubleValue() > 0.0) {
 		// Fire cess
 		BigDecimal fireCess = mstrDataService.getFireCess(payableTax, assessmentYear, timeBasedExmeptionMasterMap);
 		estimates.add(TaxHeadEstimate.builder().taxHeadCode(CalculatorConstants.PT_FIRE_CESS).estimateAmount(fireCess)
 				.build());
-		payableTax = payableTax.add(fireCess);
+		payableTax = payableTax.subtract(fireCess);
 
 		// owner exemption
 		BigDecimal userExemption = getExemption(detail.getOwners(), payableTax, assessmentYear,
@@ -255,6 +267,7 @@ public class EstimationService {
 				.estimateAmount(rebatePenaltyMap.get(CalculatorConstants.PT_TIME_PENALTY)).build());
 		estimates.add(TaxHeadEstimate.builder().taxHeadCode(CalculatorConstants.PT_TIME_INTEREST)
 				.estimateAmount(rebatePenaltyMap.get(CalculatorConstants.PT_TIME_INTEREST)).build());
+		}
 		
 		payService.roundOfDecimals(estimates);
 		return estimates;

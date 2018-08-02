@@ -201,6 +201,10 @@ public class CalculatorConstants {
 	public static final String PT_ESTIMATE_AREA_NULL = "PT_ESTIMATE_AREA_NULL";
 
 	public static final String PT_ESTIMATE_AREA_NULL_MSG = " Atleast one area value is mandatory of landArea and buildUpArea";
+	
+	public static final String PT_ESTIMATE_VACANT_LAND_NULL = "PT_ESTIMATE_VACANT_LAND_AREA_NULL";
+
+	public static final String PT_ESTIMATE_VACANT_LAND_NULL_MSG = " landArea is mandatory for vacant land";
 
 	public static final String PT_ESTIMATE_BILLINGSLABS_UNMATCH_VACANCT = "PT_ESTIMATE_BILLINGSLABS_UNMATCH";
 

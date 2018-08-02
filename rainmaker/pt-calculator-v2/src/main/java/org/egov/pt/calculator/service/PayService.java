@@ -283,7 +283,8 @@ public class PayService {
 	 */
 	public void roundOfDecimals(List<TaxHeadEstimate> estimates) {
 
-		BigDecimal roundOff = BigDecimal.ZERO;
+		BigDecimal roundOffPos = BigDecimal.ZERO;
+		BigDecimal roundOffNeg = BigDecimal.ZERO;
 
 		for (TaxHeadEstimate estimate : estimates) {
 
@@ -294,13 +295,16 @@ public class PayService {
 			double reminderVal = reminder.doubleValue();
 
 			if (reminderVal > 0.5)
-				roundOff = roundOff.add(BigDecimal.ONE.subtract(reminder));
+				roundOffPos = roundOffPos.add(BigDecimal.ONE.subtract(reminder));
 			else if (reminderVal < 0.5)
-				roundOff = roundOff.add(reminder.negate());
+				roundOffNeg = roundOffNeg.add(reminder.negate());
 		}
 
-		if (roundOff.doubleValue() > 0)
-			estimates.add(TaxHeadEstimate.builder().estimateAmount(roundOff)
-					.taxHeadCode(CalculatorConstants.PT_DECIMAL_CEILING).build());
+		if (roundOffPos.doubleValue() > 0)
+			estimates.add(TaxHeadEstimate.builder().estimateAmount(roundOffPos)
+					.taxHeadCode(CalculatorConstants.PT_DECIMAL_CEILING_CREDIT).build());
+		if(roundOffNeg.doubleValue() < 0)
+			estimates.add(TaxHeadEstimate.builder().estimateAmount(roundOffNeg)
+					.taxHeadCode(CalculatorConstants.PT_DECIMAL_CEILING_DEBIT).build());
 	}
 }

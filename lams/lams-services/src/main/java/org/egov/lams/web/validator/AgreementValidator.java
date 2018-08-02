@@ -82,9 +82,7 @@ public class AgreementValidator {
 	public void validateCreate(AgreementRequest agreementRequest, Errors errors) {
 		Boolean allowedAssetCategory;
 		Agreement agreement = agreementRequest.getAgreement();
-		if (agreement.getIsHistory()) {
-			validateHistoryAgreementsForAsset(agreement, errors);
-		} else {
+		if (!agreement.getIsHistory() && agreement.getIsHistory()!=null) {
  		Double rent = agreement.getRent();
 		Double securityDeposit = agreement.getSecurityDeposit();
 		Date solvencyCertificateDate = agreement.getSolvencyCertificateDate();
@@ -508,16 +506,6 @@ public class AgreementValidator {
 							+ demandDetails.getTaxReason() + " of " + demandDetails.getTaxPeriod());
 			}
 		}
-	}
-
-	private void validateHistoryAgreementsForAsset(Agreement agreement, Errors errors) {
-
-		List<Agreement> agreements = null;
-		agreements = agreementService.getAllHistoryAgreementsForAsset(agreement);
-		if (!agreements.isEmpty()) {
-			errors.rejectValue("Duplicate History Agreement", "History agreement is already created for this asset.");
-		}
-
 	}
 	
 	private void calculateGstAndServiceTax(AgreementRequest agreementRequest) {

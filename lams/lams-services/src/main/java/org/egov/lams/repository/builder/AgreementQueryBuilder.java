@@ -18,7 +18,7 @@ public class AgreementQueryBuilder {
     public static final String AGREEMENT_QUERY = "SELECT id FROM eglams_agreement agreement WHERE "
             + "agreement.acknowledgementnumber = :acknowledgementNumber OR agreement.agreement_no = :agreementNumber";
 
-    public static final String AGREEMENT_BY_ASSET_QUERY = "SELECT *,agreement.id as lamsagreementid  FROM eglams_agreement agreement WHERE "
+    public static final String AGREEMENT_BY_ASSET_QUERY = "SELECT *,agreement.id as lamsagreementid,0 as percentage  FROM eglams_agreement agreement WHERE "
             + "agreement.asset = :assetId";
 
     public static final String BASE_SEARCH_QUERY = "SELECT *,agreement.id as lamsagreementid FROM eglams_agreement agreement "

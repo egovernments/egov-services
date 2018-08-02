@@ -10,11 +10,9 @@ import org.egov.pg.models.TransactionDump;
 import org.egov.pg.models.TransactionDumpRequest;
 import org.egov.pg.producer.Producer;
 import org.egov.pg.repository.TransactionRepository;
-import org.egov.pg.utils.ResponseInfoFactory;
 import org.egov.pg.validator.TransactionValidator;
 import org.egov.pg.web.models.TransactionCriteria;
 import org.egov.pg.web.models.TransactionRequest;
-import org.egov.pg.web.models.TransactionResponse;
 import org.egov.tracer.model.CustomException;
 import org.egov.tracer.model.ServiceCallException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -103,8 +101,6 @@ public class TransactionService {
      */
     public List<Transaction> getTransactions(TransactionCriteria transactionCriteria) {
         log.info(transactionCriteria.toString());
-        transactionCriteria.setOffset(0);
-        transactionCriteria.setLimit(5);
         try {
             return transactionRepository.fetchTransactions(transactionCriteria);
         } catch (DataAccessException e) {
@@ -127,7 +123,7 @@ public class TransactionService {
      * @param requestParams Response parameters posted by the gateway
      * @return Updated transaction
      */
-    public TransactionResponse updateTransaction(RequestInfo requestInfo, Map<String, String> requestParams) {
+    public List<Transaction> updateTransaction(RequestInfo requestInfo, Map<String, String> requestParams) {
 
         Transaction currentTxnStatus = validator.validateUpdateTxn(requestParams);
 
@@ -136,7 +132,7 @@ public class TransactionService {
 
         if (!currentTxnStatus.getTxnStatus().equals(Transaction.TxnStatusEnum.PENDING)) {
             log.info("Transaction has already reached completion");
-            throw new CustomException("TXN_IN_COMPLETED_STATE", "Transaction has already reached completion");
+            return Collections.singletonList(currentTxnStatus);
         }
 
         Transaction newTxn = gatewayService.getLiveStatus(currentTxnStatus, requestParams);
@@ -144,13 +140,10 @@ public class TransactionService {
         // Enrich the new transaction status before persisting
         enrichmentService.enrichUpdateTransaction(new TransactionRequest(requestInfo, currentTxnStatus), newTxn);
 
-        List<Receipt> receipts;
 
         // Check if transaction is successful, amount matches etc
         if (validator.isTransactionSuccessful(currentTxnStatus, newTxn)) {
-            receipts = generateReceipt(requestInfo, newTxn);
-        } else {
-            receipts = Collections.emptyList();
+            generateReceipt(requestInfo, newTxn);
         }
 
         TransactionDump dump = TransactionDump.builder()
@@ -162,20 +155,16 @@ public class TransactionService {
         producer.push(appProperties.getUpdateTxnTopic(), new org.egov.pg.models.TransactionRequest(requestInfo, newTxn));
         producer.push(appProperties.getUpdateTxnDumpTopic(), new TransactionDumpRequest(requestInfo, dump));
 
-        return new TransactionResponse(ResponseInfoFactory
-                .createResponseInfoFromRequestInfo(requestInfo, true), Collections
-                .singletonList(newTxn), receipts);
+        return Collections.singletonList(newTxn);
     }
 
-    private List<Receipt> generateReceipt(RequestInfo requestInfo, Transaction transaction) {
+    private void generateReceipt(RequestInfo requestInfo, Transaction transaction) {
         try {
             List<Receipt> receipts = collectionService.generateReceipt(requestInfo, transaction);
             transaction.setReceipt(receipts.get(0).getTransactionId());
-            return receipts;
         } catch (CustomException | ServiceCallException e) {
             log.error("Unable to generate receipt ", e);
             transaction.setTxnStatusMsg(PgConstants.TXN_RECEIPT_GEN_FAILED);
-            return Collections.emptyList();
         }
 
     }

@@ -187,7 +187,7 @@ public class TransactionServiceTest {
                 (Collections.singletonList(receipt));
 
         assertEquals(transactionService.updateTransaction(requestInfo, Collections.singletonMap
-                ("ORDERID", "PT_001")).getTransactions().get(0).getTxnStatus(), Transaction.TxnStatusEnum.SUCCESS);
+                ("ORDERID", "PT_001")).get(0).getTxnStatus(), Transaction.TxnStatusEnum.SUCCESS);
     }
 
     /**

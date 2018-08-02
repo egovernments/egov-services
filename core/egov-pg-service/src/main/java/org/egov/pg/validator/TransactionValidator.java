@@ -1,6 +1,7 @@
 package org.egov.pg.validator;
 
 import lombok.extern.slf4j.Slf4j;
+import org.egov.common.contract.request.User;
 import org.egov.pg.constants.PgConstants;
 import org.egov.pg.models.Bill;
 import org.egov.pg.models.BillDetail;
@@ -19,6 +20,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+
+import static java.util.Objects.isNull;
 
 @Slf4j
 @Service
@@ -46,6 +49,7 @@ public class TransactionValidator {
      */
     public void validateCreateTxn(TransactionRequest transaction) {
         Map<String, String> errorMap = new HashMap<>();
+        isUserDetailPresent(transaction, errorMap);
         isGatewayActive(transaction.getTransaction(), errorMap);
         validateBillAndAddModuleId(transaction, errorMap);
 
@@ -103,6 +107,13 @@ public class TransactionValidator {
         }
     }
 
+
+    private void isUserDetailPresent(TransactionRequest transactionRequest, Map<String, String> errorMap) {
+        User user = transactionRequest.getRequestInfo().getUserInfo();
+        if (isNull(user.getUuid()) || isNull(user.getName()) || isNull(user.getUserName()) || isNull(user
+                .getTenantId()))
+            errorMap.put("INVALID_USER_DETAILS", "User UUID, Name, Username and Tenant Id are mandatory");
+    }
 
     private void isGatewayActive(Transaction transaction, Map<String, String> errorMap) {
         if (!gatewayService.isGatewayActive(transaction.getGateway()))
@@ -209,7 +220,7 @@ public class TransactionValidator {
     private void validateIfTxnForBillAbsent(Map<String, String> errorMap, BillDetail billDetail,
                                             Transaction newTxn) {
         if (billDetail.getPartPaymentAllowed()) {
-            if (billDetail.getTotalAmount().compareTo(new BigDecimal(newTxn.getTxnAmount())) > 0) {
+            if (billDetail.getTotalAmount().compareTo(new BigDecimal(newTxn.getTxnAmount())) < 0) {
                 log.error("Transaction Amount of {} cannot be greater than bill amount of {}", newTxn.getTxnAmount()
                         , billDetail.getTotalAmount());
                 errorMap.put("TXN_AMOUNT_MISMATCH", "Transaction Amount cannot be greater than bill amount");

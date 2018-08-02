@@ -16,9 +16,40 @@ class TransactionQueryBuilder {
     private TransactionQueryBuilder() {
     }
 
-    static String getPaymentSearchQuery(TransactionCriteria transactionCriteria, List<Object> preparedStmtList) {
-
+    static String getPaymentSearchQueryByCreatedTimeRange(TransactionCriteria transactionCriteria, List<Object> preparedStmtList) {
         return buildQuery(transactionCriteria, preparedStmtList);
+    }
+
+    static String getPaymentSearchQueryByCreatedTimeRange(TransactionCriteria transactionCriteria, Long startTime, Long endTime, List<Object> preparedStmtList) {
+        return buildQueryForTimeRange(transactionCriteria, startTime, endTime, preparedStmtList);
+    }
+
+    private static String buildQueryForTimeRange(TransactionCriteria transactionCriteria, Long startTime, Long endTime, List<Object> preparedStmtList) {
+        String preparedQuery = buildQuery(transactionCriteria, preparedStmtList);
+
+        if (preparedQuery.contains(" offset")) {
+            preparedQuery = preparedQuery.substring(0, preparedQuery.indexOf(" offset"));
+            preparedStmtList.remove(preparedStmtList.size() - 1);
+        }
+        if (preparedQuery.contains(" limit")) {
+            preparedQuery = preparedQuery.substring(0, preparedQuery.indexOf(" limit"));
+            preparedStmtList.remove(preparedStmtList.size() - 1);
+        }
+
+        StringBuilder builder = new StringBuilder(preparedQuery);
+
+        if (!preparedQuery.contains("WHERE"))
+            builder.append(" WHERE ");
+        else
+            builder.append(" AND ");
+
+        builder.append(" pg.created_time >= ? ");
+        preparedStmtList.add(startTime);
+        builder.append(" AND ");
+        builder.append(" pg.created_time <= ? ");
+        preparedStmtList.add(endTime);
+
+        return builder.toString();
     }
 
 
@@ -59,9 +90,6 @@ class TransactionQueryBuilder {
         }
 
 
-        if (!Objects.isNull(transactionCriteria.getCreatedTime())) {
-            queryParams.put("pg.created_time", transactionCriteria.getCreatedTime());
-        }
 
         if (!queryParams.isEmpty()) {
 
@@ -70,11 +98,7 @@ class TransactionQueryBuilder {
             Iterator<Map.Entry<String, Object>> iterator = queryParams.entrySet().iterator();
             while (iterator.hasNext()) {
                 Map.Entry<String, Object> entry = iterator.next();
-                if (entry.getKey().equalsIgnoreCase("pg.created_time")) {
-                    builder.append(entry.getKey()).append(" > ? ");
-                } else {
-                    builder.append(entry.getKey()).append(" = ? ");
-                }
+                builder.append(entry.getKey()).append(" = ? ");
 
                 preparedStmtList.add(entry.getValue());
 
@@ -83,9 +107,14 @@ class TransactionQueryBuilder {
             }
         }
 
-        builder.append(" limit ? offset ?");
-        preparedStmtList.add(transactionCriteria.getLimit() > 0 ? transactionCriteria.getLimit() : 1);
-        preparedStmtList.add(transactionCriteria.getOffset());
+        if (transactionCriteria.getLimit() > 0) {
+            builder.append(" limit ? ");
+            preparedStmtList.add(transactionCriteria.getLimit());
+        }
+        if (transactionCriteria.getOffset() > 0) {
+            builder.append(" offset ? ");
+            preparedStmtList.add(transactionCriteria.getOffset());
+        }
 
         return builder.toString();
     }

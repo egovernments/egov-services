@@ -64,13 +64,15 @@ public class TransactionsApiController {
      * @return List of transactions matching the search criteria
      */
     @RequestMapping(value = "/transaction/v1/_search", method = RequestMethod.POST)
-    public ResponseEntity<TransactionSearchResponse> transactionsV1SearchPost(@Valid @RequestBody RequestInfoWrapper
+    public ResponseEntity<TransactionResponse> transactionsV1SearchPost(@Valid @RequestBody RequestInfoWrapper
                                                                                 requestInfoWrapper, @Valid
                                                                         @ModelAttribute TransactionCriteria transactionCriteria) {
+        transactionCriteria.setOffset(0);
+        transactionCriteria.setLimit(5);
         List<Transaction> transactions = transactionService.getTransactions(transactionCriteria);
         ResponseInfo responseInfo = ResponseInfoFactory.createResponseInfoFromRequestInfo(requestInfoWrapper
                 .getRequestInfo(), true);
-        TransactionSearchResponse response = new TransactionSearchResponse(responseInfo, transactions);
+        TransactionResponse response = new TransactionResponse(responseInfo, transactions);
 
         return new ResponseEntity<>(response, HttpStatus.OK);
 
@@ -88,10 +90,11 @@ public class TransactionsApiController {
                                                                                 requestInfoWrapper, @RequestParam
                                                                                 Map<String,
                                                                                         String> params) {
-
-        TransactionResponse transactionResponse = transactionService.updateTransaction(requestInfoWrapper.getRequestInfo(), params);
-
-        return new ResponseEntity<>(transactionResponse, HttpStatus.OK);
+        List<Transaction> transactions = transactionService.updateTransaction(requestInfoWrapper.getRequestInfo(), params);
+        ResponseInfo responseInfo = ResponseInfoFactory.createResponseInfoFromRequestInfo(requestInfoWrapper
+                .getRequestInfo(), true);
+        TransactionResponse response = new TransactionResponse(responseInfo, transactions);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
 

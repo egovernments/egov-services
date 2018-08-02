@@ -1,5 +1,6 @@
 package org.egov.pg.web.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.egov.pg.models.Transaction;
 
@@ -25,12 +26,15 @@ public class TransactionCriteria {
 
     private String receipt;
 
+    @JsonIgnore
     private Long createdTime;
 
     private Transaction.TxnStatusEnum txnStatus;
 
+    @JsonIgnore
     private int limit;
 
+    @JsonIgnore
     private int offset;
 
 }

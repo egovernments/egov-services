@@ -3,7 +3,6 @@ package org.egov.pg.web.models;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
 import lombok.*;
-import org.egov.pg.models.Receipt;
 import org.egov.pg.models.Transaction;
 import org.springframework.validation.annotation.Validated;
 
@@ -31,10 +30,6 @@ public class TransactionResponse {
     @JsonProperty("Transaction")
     @Valid
     private List<Transaction> transactions;
-
-    @JsonProperty("Receipt")
-    @Valid
-    private List<Receipt> receipts;
 
 }
 

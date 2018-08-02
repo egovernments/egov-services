@@ -8,7 +8,6 @@ import org.egov.pg.service.GatewayService;
 import org.egov.pg.service.TransactionService;
 import org.egov.pg.web.models.TransactionCriteria;
 import org.egov.pg.web.models.TransactionRequest;
-import org.egov.pg.web.models.TransactionResponse;
 import org.egov.pg.web.models.User;
 import org.junit.Before;
 import org.junit.Test;
@@ -134,7 +133,7 @@ public class TransactionsApiControllerTest {
     public void transactionsV1UpdatePostSuccess() throws Exception {
         when(transactionService.updateTransaction(any(RequestInfo.class), any(Map.class)))
                 .thenReturn
-                        (new TransactionResponse());
+                        (Collections.emptyList());
 
         mockMvc.perform(post("/transaction/v1/_update").contentType(MediaType
                 .APPLICATION_JSON_UTF8).content(mapper.writeValueAsString(requestInfo)))

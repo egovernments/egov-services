@@ -208,6 +208,7 @@ public class BillService {
 			BigDecimal totalTaxAmount = BigDecimal.ZERO;
 			BigDecimal totalMinAmount = BigDecimal.ZERO;
 			BigDecimal totalCollectedAmount = BigDecimal.ZERO;
+			BigDecimal totalDebitAmount = BigDecimal.ZERO;
 
 			for(Demand demand2 : demands2){
 				List<DemandDetail> demandDetails = demand2.getDemandDetails();
@@ -259,8 +260,10 @@ public class BillService {
 							.order(taxHeadMaster.getOrder()).purpose(purpose)
 							.build();
 
-					if (taxHeadMaster.getIsDebit())
+					if (taxHeadMaster.getIsDebit()) {
 						billAccountDetail.setDebitAmount(demandDetail.getTaxAmount());
+						totalDebitAmount = totalDebitAmount.add(demandDetail.getTaxAmount());
+					}
 					else {
 						billAccountDetail.setCrAmountToBePaid(demandDetail.getTaxAmount().subtract(
 								demandDetail.getCollectionAmount() != null ? demandDetail.getCollectionAmount()
@@ -281,7 +284,7 @@ public class BillService {
 					collectionModesNotAllowed(businessServiceDetail.getCollectionModesNotAllowed()).
 					consumerType(demand3.getConsumerType()).consumerCode(demand3.getConsumerCode()).minimumAmount(totalMinAmount).
 					partPaymentAllowed(businessServiceDetail.getPartPaymentAllowed()).
-					totalAmount(totalTaxAmount.subtract(totalCollectedAmount)).tenantId(tenantId).build();
+					totalAmount(totalTaxAmount.subtract(totalDebitAmount).subtract(totalCollectedAmount)).tenantId(tenantId).build();
 
 			//if(billDetail.getTotalAmount().compareTo(BigDecimal.ZERO) > 0)
 			billDetails.add(billDetail);

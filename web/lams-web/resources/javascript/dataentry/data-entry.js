@@ -638,7 +638,7 @@ function fillValueToObject(currentState) {
 
 function handleSelectRenewal(valuefromE){
     let value = valuefromE && valuefromE.getAttribute("value");
-    if(value == 0){
+    if(value == ""){
         handleSelect();
     }
 }
@@ -751,6 +751,10 @@ var commomFieldsRules = {
     "allottee.aadhaarNumber": {
         required: false,
         aadhar: true
+    },
+    "serviceTax": {
+        required: false,
+        serviceTax: true
     },
     "allottee.pan": {
         required: false,
@@ -932,6 +936,11 @@ $.validator.addMethod('phone', function(value) {
 $.validator.addMethod('rent', function(value) {
     return /^\s*(?=.*[1-9])\d*(?:\.\d{1,2})?\s*$/.test(value);
 }, 'Rent should be greater than Zero.');
+
+
+$.validator.addMethod('serviceTax', function(value) {
+    return /^\s*(?=.*[1-9])\d*(?:\.\d{1,2})?\s*$/.test(value);
+}, 'Service Tax should be greater than Zero.');
 
 $.validator.addMethod('aadhar', function(value) {
     return value ? /^[0-9]{12}$/.test(value) : true;

@@ -462,35 +462,35 @@
     },
     "UsageCategoryMajor": {
       "masterName": "UsageCategoryMajor",
-      "isStateLevel": true,
+      "isStateLevel": false,
       "uniqueKeys": [
         "$.code"
       ]
     },
     "UsageCategoryMinor": {
       "masterName": "UsageCategoryMinor",
-      "isStateLevel": true,
+      "isStateLevel": false,
       "uniqueKeys": [
         "$.code"
       ]
     },
     "UsageCategorySubMinor": {
       "masterName": "UsageCategorySubMinor",
-      "isStateLevel": true,
+      "isStateLevel": false,
       "uniqueKeys": [
         "$.code"
       ]
     },
     "UsageCategoryDetail": {
       "masterName": "UsageCategoryDetail",
-      "isStateLevel": true,
+      "isStateLevel": false,
       "uniqueKeys": [
         "$.code"
       ]
     },
     "OwnerType": {
       "masterName": "OwnerType",
-      "isStateLevel": true,
+      "isStateLevel": false,
       "uniqueKeys": [
         "$.code"
       ]

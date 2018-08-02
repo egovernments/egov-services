@@ -82,58 +82,49 @@ public class AgreementValidator {
 	public void validateCreate(AgreementRequest agreementRequest, Errors errors) {
 		Boolean allowedAssetCategory;
 		Agreement agreement = agreementRequest.getAgreement();
-		if (!agreement.getIsHistory() && agreement.getIsHistory()!=null) {
- 		Double rent = agreement.getRent();
-		Double securityDeposit = agreement.getSecurityDeposit();
-		Date solvencyCertificateDate = agreement.getSolvencyCertificateDate();
-		Date bankGuaranteeDate = agreement.getBankGuaranteeDate();
-		Date expiryDate = agreementService.getExpiryDate(agreement);
-		Date currentDate = new Date();
-		String securityDepositFactor = getConfigurations(propertiesManager.getSecurityDepositFactor(),
-				agreement.getTenantId()).get(0);
-		allowedAssetCategory = isValidAuctionAssetCategory(agreement);
+		if (!agreement.getIsHistory() && agreement.getIsHistory() != null) {
+			Double rent = agreement.getRent();
+			Double securityDeposit = agreement.getSecurityDeposit();
+			Date solvencyCertificateDate = agreement.getSolvencyCertificateDate();
+			Date bankGuaranteeDate = agreement.getBankGuaranteeDate();
+			String securityDepositFactor = getConfigurations(propertiesManager.getSecurityDepositFactor(),
+					agreement.getTenantId()).get(0);
+			allowedAssetCategory = isValidAuctionAssetCategory(agreement);
 
-		if(allowedAssetCategory){
-			agreement.setExpiryDate(agreementService.getEffectiveFinYearToDate());
-		}
-         
-		if (securityDeposit < rent * Integer.valueOf(securityDepositFactor) && !allowedAssetCategory){
-			errors.rejectValue("Agreement.securityDeposit", "",
-					"security deposit value should be greater than or equal to thrice rent value");}
-		 if (Source.SYSTEM.equals(agreement.getSource())) {
-			if (solvencyCertificateDate.compareTo(new Date()) >= 0)
-			errors.rejectValue("Agreement.solvencyCertificateDate", "",
-					"solvency certificate date should be lesser than current date");
+			if (allowedAssetCategory) {
+				agreement.setExpiryDate(agreementService.getEffectiveFinYearToDate());
+			}
 
-			else if (bankGuaranteeDate.compareTo(new Date()) >= 0)
-			errors.rejectValue("Agreement.bankGuaranteeDate", "",
-						"bank Guarantee Date date should be lesser than current date");
-		validateWorkflowDetails(agreement.getWorkflowDetails(), errors);
-		}
-		else {
+			if (securityDeposit < rent * Integer.valueOf(securityDepositFactor) && !allowedAssetCategory) {
+				errors.rejectValue("Agreement.securityDeposit", "",
+						"security deposit value should be greater than or equal to thrice rent value");
+			}
+			if (Source.SYSTEM.equals(agreement.getSource())) {
+				if (solvencyCertificateDate.compareTo(new Date()) >= 0)
+					errors.rejectValue("Agreement.solvencyCertificateDate", "",
+							"solvency certificate date should be lesser than current date");
 
-			if (agreement.getCollectedSecurityDeposit() != null
-					&& (agreement.getSecurityDeposit().compareTo(agreement.getCollectedSecurityDeposit()) < 0))
-				errors.rejectValue("Agreement.CollectedSecurotyDeposit", "",
-						"collectedSecurityDeposit should not be greater than security deposit");
+				else if (bankGuaranteeDate.compareTo(new Date()) >= 0)
+					errors.rejectValue("Agreement.bankGuaranteeDate", "",
+							"bank Guarantee Date date should be lesser than current date");
+				validateWorkflowDetails(agreement.getWorkflowDetails(), errors);
+			} else {
 
-			else if (agreement.getCollectedGoodWillAmount() != null
-					&& (agreement.getGoodWillAmount().compareTo(agreement.getCollectedGoodWillAmount()) < 0))
-				errors.rejectValue("Agreement.CollectedGoodWillAmount", "",
-						"CollectedGoodWillAmount should not be greater than GoodWillAmount");
-			/*else if (!allowedAssetCategory && StringUtils.isBlank(agreement.getOldAgreementNumber()))
-				errors.rejectValue("Agreement.oldAgreementNumber", "",
-						"Old agreement number is mandatory for Data Entry");*/
+				if (agreement.getCollectedSecurityDeposit() != null
+						&& (agreement.getSecurityDeposit().compareTo(agreement.getCollectedSecurityDeposit()) < 0))
+					errors.rejectValue("Agreement.CollectedSecurotyDeposit", "",
+							"collectedSecurityDeposit should not be greater than security deposit");
 
-		}
-		if(currentDate.after(expiryDate)){
-			errors.rejectValue("Agreement.TimePeriod", "",
-					"Can not create history agreement,please change Timeperiod/CommencementDate");
-		}
+				else if (agreement.getCollectedGoodWillAmount() != null
+						&& (agreement.getGoodWillAmount().compareTo(agreement.getCollectedGoodWillAmount()) < 0))
+					errors.rejectValue("Agreement.CollectedGoodWillAmount", "",
+							"CollectedGoodWillAmount should not be greater than GoodWillAmount");
+
+			}
 			validateAsset(agreementRequest, errors);
 			calculateGstAndServiceTax(agreementRequest);
 
-	    }
+		}
 	    validateAllottee(agreementRequest, errors);
 				
 	}

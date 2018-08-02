@@ -313,13 +313,13 @@ class RemissionAgreement extends React.Component {
                         },
                         success: function (res1) {
                             if (res1 && res1.Employee && res1.Employee[0].name)
-                                window.location.href = `app/acknowledgement/common-ack.html?wftype=Cancel&action=${ID}&name=${res1.Employee[0].code}::${res1.Employee[0].name}&ackNo=${res.Agreements[0].acknowledgementNumber}`;
+                                window.location.href = `app/acknowledgement/common-ack.html?wftype=Remission&action=${ID}&name=${res1.Employee[0].code}::${res1.Employee[0].name}&ackNo=${res.Agreements[0].acknowledgementNumber}`;
                             else
-                                window.location.href = `app/acknowledgement/common-ack.html?wftype=Cancel&action=${ID}&name=&ackNo=${res.Agreements[0].acknowledgementNumber}`;
+                                window.location.href = `app/acknowledgement/common-ack.html?wftype=Remission&action=${ID}&name=&ackNo=${res.Agreements[0].acknowledgementNumber}`;
 
                         },
                         error: function (err) {
-                            window.location.href = `app/acknowledgement/common-ack.html?wftype=Cancel&action=${ID}&name=&ackNo=${res.Agreements[0].acknowledgementNumber}`;
+                            window.location.href = `app/acknowledgement/common-ack.html?wftype=Remission&action=${ID}&name=&ackNo=${res.Agreements[0].acknowledgementNumber}`;
                         }
                     })
 
@@ -959,7 +959,7 @@ class RemissionAgreement extends React.Component {
 
         const renederRemissionDetails = function () {
             return (
-                <div className="form-section hide-sec" id="agreementCancelDetails">
+                <div className="form-section hide-sec" id="agreementRemissionDetails">
                     <h3 className="categoryType">Remission Details </h3>
                     <div className="form-section-inner">
                         <div className="row">

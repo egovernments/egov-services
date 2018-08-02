@@ -19,7 +19,6 @@ import org.egov.pt.calculator.web.models.CalculationReq;
 import org.egov.pt.calculator.web.models.GetBillCriteria;
 import org.egov.pt.calculator.web.models.TaxHeadEstimate;
 import org.egov.pt.calculator.web.models.demand.BillResponse;
-import org.egov.pt.calculator.web.models.demand.Category;
 import org.egov.pt.calculator.web.models.demand.Demand;
 import org.egov.pt.calculator.web.models.demand.DemandDetail;
 import org.egov.pt.calculator.web.models.demand.DemandRequest;
@@ -102,7 +101,7 @@ public class DemandService {
 
 				Demand demand = prepareDemand(property,
 						propertyCalculationMap.get(property.getPropertyDetails().get(0).getAssessmentNumber()));
-				System.err.println(" the demand : " + demand);
+
 				if (carryForwardCollectedAmount.doubleValue() > 0.0)
 					demand.getDemandDetails()
 							.add(DemandDetail.builder().taxAmount(carryForwardCollectedAmount.negate())
@@ -200,7 +199,7 @@ public class DemandService {
 		if (!CollectionUtils.isEmpty(assessments)) {
 
 			Assessment latestAssessment = assessments.get(0);
-			System.err.println(" the lates assessment : "+ latestAssessment);
+			log.debug(" the lates assessment : "+ latestAssessment);
 			
 			DemandResponse res = mapper.convertValue(
 					repository.fetchResult(utils.getDemandSearchUrl(latestAssessment), new RequestInfoWrapper(requestInfo)), DemandResponse.class);
@@ -281,7 +280,7 @@ public class DemandService {
 
 		for (DemandDetail detail : details) {
 			if (detail.getTaxHeadMasterCode().equalsIgnoreCase(CalculatorConstants.PT_TIME_REBATE)) {
-				detail.setTaxAmount(rebate.negate());
+				detail.setTaxAmount(rebate);
 				isRebateUpdated = true;
 			}
 			if (detail.getTaxHeadMasterCode().equalsIgnoreCase(CalculatorConstants.PT_TIME_PENALTY)) {
@@ -297,7 +296,7 @@ public class DemandService {
 			details.add(DemandDetail.builder().taxAmount(penalty).taxHeadMasterCode(CalculatorConstants.PT_TIME_PENALTY)
 					.demandId(demandId).tenantId(tenantId).build());
 		if (!isRebateUpdated && rebate.compareTo(BigDecimal.ZERO) > 0)
-			details.add(DemandDetail.builder().taxAmount(rebate.negate())
+			details.add(DemandDetail.builder().taxAmount(rebate)
 					.taxHeadMasterCode(CalculatorConstants.PT_TIME_REBATE).demandId(demandId).tenantId(tenantId)
 					.build());
 		if (!isInterestUpdated && interest.compareTo(BigDecimal.ZERO) > 0)

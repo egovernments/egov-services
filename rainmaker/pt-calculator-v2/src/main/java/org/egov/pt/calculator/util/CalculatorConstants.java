@@ -196,7 +196,7 @@ public class CalculatorConstants {
 
 	public static final String PT_ADHOC_REBATE_INVALID_AMOUNT = "PT_ADHOC_REBATE_INVALID_AMOUNT";
 
-	public static final String PT_ADHOC_REBATE_INVALID_AMOUNT_MSG = "Adhoc Rebate cannot be greater than the estimated tax for the given property please enter a value lesser than : ";
+	public static final String PT_ADHOC_REBATE_INVALID_AMOUNT_MSG = "Adhoc Exemption cannot be greater than the estimated tax for the given property please enter a value lesser than : ";
 
 	public static final String PT_ESTIMATE_AREA_NULL = "PT_ESTIMATE_AREA_NULL";
 

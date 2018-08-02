@@ -37,7 +37,8 @@ public class BillingSlabRowMapper implements ResultSetExtractor<List<BillingSlab
 						.unitRate(rs.getDouble("unitRate")).usageCategoryDetail(rs.getString("usageCategoryDetail"))
 						.usageCategoryMajor(rs.getString("usageCategoryMajor"))
 						.usageCategoryMinor(rs.getString("usageCategoryMinor"))
-						.usageCategorySubMinor(rs.getString("usageCategorySubMinor"))
+						.usageCategorySubMinor(rs.getString("usageCategorySubMinor")).unBuiltUnitRate(rs.getDouble("unbuiltunitrate"))
+						.arvPercent(rs.getDouble("arvPercent"))
 						.occupancyType(rs.getString("occupancyType")).auditDetails(auditDetails).build();
 
 				billingSlabMap.put(currentId, currentBillingSlab);

@@ -361,13 +361,12 @@ public class EstimationService {
 			
 			boolean isPropertyMultiFloored = slabMultiFloored.equals(dtlIsMultiFloored);
 			
-			boolean isAreaMatching = slabAreatype.equalsIgnoreCase(dtlareaType);
+			boolean isAreaMatching = slabAreatype.equalsIgnoreCase(dtlareaType) || all.equalsIgnoreCase(slab.getAreaType());
 
-			boolean isPtTypeMatching = slabPropertyType.equalsIgnoreCase(dtlPtType)
-					|| all.equalsIgnoreCase(slabPropertyType);
+			boolean isPtTypeMatching = slabPropertyType.equalsIgnoreCase(dtlPtType);
 			
 			boolean isPtSubTypeMactching = slabPropertySubType.equalsIgnoreCase(dtlPtSubType)
-					|| all.equalsIgnoreCase(dtlPtSubType);
+					|| all.equalsIgnoreCase(slabPropertySubType);
 			
 			boolean isOwnerShipMatching = slabOwnerShipCat.equalsIgnoreCase(dtlOwnerShipCat)
 					|| all.equalsIgnoreCase(slabOwnerShipCat);

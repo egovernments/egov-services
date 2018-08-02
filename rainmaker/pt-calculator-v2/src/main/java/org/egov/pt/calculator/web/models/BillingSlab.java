@@ -24,7 +24,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @Builder
 @ToString
-@EqualsAndHashCode(exclude={"id","auditDetails"})
+@EqualsAndHashCode(exclude={"unitRate","arvPercent","unBuiltUnitRate","id","auditDetails"})
 public class BillingSlab   {
 	
 		@NotNull

@@ -8,7 +8,7 @@ DROP TABLE IF EXISTS eg_pt_propertydetail_v2;
 DROP TABLE IF EXISTS eg_pt_address_v2;
 DROP TABLE IF EXISTS eg_pt_property_v2;
 DROP TABLE IF EXISTS eg_pt_property_audit_v2;
-DROP TABLE IF EXISTS eg_pt_property_eg_pt_address_audit_v2;
+DROP TABLE IF EXISTS eg_pt_address_audit_v2;
 
 CREATE TABLE eg_pt_property_v2(
 

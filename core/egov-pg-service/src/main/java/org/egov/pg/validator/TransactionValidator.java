@@ -110,8 +110,8 @@ public class TransactionValidator {
 
     private void isUserDetailPresent(TransactionRequest transactionRequest, Map<String, String> errorMap) {
         User user = transactionRequest.getRequestInfo().getUserInfo();
-        if (isNull(user.getUuid()) || isNull(user.getName()) || isNull(user.getUserName()) || isNull(user
-                .getTenantId()))
+        if (isNull(user) || isNull(user.getUuid()) || isNull(user.getName()) || isNull(user.getUserName()) || isNull
+                (user.getTenantId()))
             errorMap.put("INVALID_USER_DETAILS", "User UUID, Name, Username and Tenant Id are mandatory");
     }
 

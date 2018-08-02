@@ -1,6 +1,7 @@
 package org.egov.pg.validator;
 
 import org.egov.common.contract.request.RequestInfo;
+import org.egov.common.contract.request.User;
 import org.egov.pg.models.Bill;
 import org.egov.pg.models.BillDetail;
 import org.egov.pg.models.Transaction;
@@ -59,7 +60,9 @@ public class TransactionValidatorTest {
 
     @Test
     public void validateCreateTxnSuccess() {
-        TransactionRequest transactionRequest = new TransactionRequest(new RequestInfo(), txn);
+        User user = User.builder().userName("").name("").uuid("").tenantId("").build();
+        RequestInfo requestInfo = RequestInfo.builder().userInfo(user).build();
+        TransactionRequest transactionRequest = new TransactionRequest(requestInfo, txn);
 
 
         when(transactionRepository.fetchTransactions(any(TransactionCriteria.class))).thenReturn(Collections.emptyList());
@@ -76,7 +79,10 @@ public class TransactionValidatorTest {
      */
     @Test
     public void validateCreateTxnSuccessAmtLower() {
-        TransactionRequest transactionRequest = new TransactionRequest(new RequestInfo(), txn);
+        User user = User.builder().userName("").name("").uuid("").tenantId("").build();
+        RequestInfo requestInfo = RequestInfo.builder().userInfo(user).build();
+        TransactionRequest transactionRequest = new TransactionRequest(requestInfo, txn);
+
         BillDetail billDetail = BillDetail.builder().partPaymentAllowed(true).totalAmount(new BigDecimal(10)).build();
         Bill bill = Bill.builder().billDetails(Collections.singletonList(billDetail)).build();
 
@@ -94,7 +100,10 @@ public class TransactionValidatorTest {
      */
     @Test(expected = CustomException.class)
     public void validateCreateTxnDuplicateOrder() {
-        TransactionRequest transactionRequest = new TransactionRequest(new RequestInfo(), txn);
+        User user = User.builder().userName("").name("").uuid("").tenantId("").build();
+        RequestInfo requestInfo = RequestInfo.builder().userInfo(user).build();
+        TransactionRequest transactionRequest = new TransactionRequest(requestInfo, txn);
+
 
         when(transactionRepository.fetchTransactions(any(TransactionCriteria.class))).thenReturn(Collections.singletonList(txn));
         when(gatewayService.isGatewayActive(txn.getGateway())).thenReturn(true);
@@ -110,7 +119,10 @@ public class TransactionValidatorTest {
      */
     @Test(expected = CustomException.class)
     public void validateCreateTxnInvalidGateway() {
-        TransactionRequest transactionRequest = new TransactionRequest(new RequestInfo(), txn);
+        User user = User.builder().userName("").name("").uuid("").tenantId("").build();
+        RequestInfo requestInfo = RequestInfo.builder().userInfo(user).build();
+        TransactionRequest transactionRequest = new TransactionRequest(requestInfo, txn);
+
 
         when(gatewayService.isGatewayActive(txn.getGateway())).thenReturn(false);
         when(billingRepository.fetchBill(any(RequestInfo.class), any(String.class), any(String.class))).thenReturn
@@ -125,7 +137,10 @@ public class TransactionValidatorTest {
      */
     @Test(expected = CustomException.class)
     public void validateCreateTxnInvalidOrderId() {
-        TransactionRequest transactionRequest = new TransactionRequest(new RequestInfo(), txn);
+        User user = User.builder().userName("").name("").uuid("").tenantId("").build();
+        RequestInfo requestInfo = RequestInfo.builder().userInfo(user).build();
+        TransactionRequest transactionRequest = new TransactionRequest(requestInfo, txn);
+
 
         when(transactionRepository.fetchTransactions(any(TransactionCriteria.class))).thenReturn(Collections.emptyList());
         when(gatewayService.isGatewayActive(txn.getGateway())).thenReturn(true);
@@ -142,7 +157,10 @@ public class TransactionValidatorTest {
      */
     @Test(expected = CustomException.class)
     public void validateCreateTxnInvalidAmt() {
-        TransactionRequest transactionRequest = new TransactionRequest(new RequestInfo(), txn);
+        User user = User.builder().userName("").name("").uuid("").tenantId("").build();
+        RequestInfo requestInfo = RequestInfo.builder().userInfo(user).build();
+        TransactionRequest transactionRequest = new TransactionRequest(requestInfo, txn);
+
         BillDetail billDetail = BillDetail.builder().partPaymentAllowed(false).totalAmount(new BigDecimal(10)).build();
         Bill bill = Bill.builder().billDetails(Collections.singletonList(billDetail)).build();
 

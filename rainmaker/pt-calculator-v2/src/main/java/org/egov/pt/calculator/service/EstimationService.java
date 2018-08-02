@@ -29,6 +29,7 @@ import org.egov.pt.calculator.web.models.property.Unit;
 import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import lombok.extern.slf4j.Slf4j;
 import net.minidev.json.JSONArray;
@@ -100,34 +101,47 @@ public class EstimationService {
 		BigDecimal usageExemption = BigDecimal.ZERO;
 		Property property = criteria.getProperty();
 		PropertyDetail detail = property.getPropertyDetails().get(0);
+		String assessmentYear =  detail.getFinancialYear();
+		String tenantId       =  property.getTenantId();
 		
-		String assessmentYear = null != criteria.getAssessmentYear() ? criteria.getAssessmentYear() : detail.getFinancialYear();
-		String tenantId       = null != criteria.getTenantId() ? criteria.getTenantId() : property.getTenantId();
-		
-		
+		if (null == detail.getLandArea() && null == detail.getBuildUpArea())
+			throw new CustomException(CalculatorConstants.PT_ESTIMATE_AREA_NULL,
+					CalculatorConstants.PT_ESTIMATE_AREA_NULL_MSG);
+
 		List<BillingSlab> filteredbillingSlabs = getSlabsFiltered(property, requestInfo);
+		
 		Map<String, Map<String, List<Object>>> propertyBasedExemptionMasterMap = new HashMap<>();
 		Map<String, JSONArray> timeBasedExmeptionMasterMap = new HashMap<>();
 		mstrDataService.setPropertyMasterValues(requestInfo, tenantId, propertyBasedExemptionMasterMap,
 				timeBasedExmeptionMasterMap);
 
-		double unBuiltRate = 0.0;
+		if (CalculatorConstants.PT_TYPE_VACANT_LAND.equalsIgnoreCase(detail.getPropertyType())
+				&& filteredbillingSlabs.size() != 1)
+			throw new CustomException(CalculatorConstants.PT_ESTIMATE_BILLINGSLABS_UNMATCH_VACANCT,
+					CalculatorConstants.PT_ESTIMATE_BILLINGSLABS_UNMATCH_VACANT_MSG.replace("{count}",
+							String.valueOf(filteredbillingSlabs.size())));
 
-		for (Unit unit : detail.getUnits()) {
+		else if (CalculatorConstants.PT_TYPE_VACANT_LAND.equalsIgnoreCase(detail.getPropertyType())) {
+			taxAmt = taxAmt.add(BigDecimal.valueOf(filteredbillingSlabs.get(0).getUnitRate() * detail.getLandArea()));
+		} else {
 
-			BillingSlab slab = getSlabForCalc(filteredbillingSlabs, unit);
-			BigDecimal currentUnitTax = getTaxForUnit(slab, unit);
-			if (null != slab.getUnBuiltUnitRate())
-				unBuiltRate += slab.getUnBuiltUnitRate();
+			double unBuiltRate = 0.0;
+			for (Unit unit : detail.getUnits()) {
 
-			taxAmt = taxAmt.add(currentUnitTax);
-			usageExemption = usageExemption
-					.add(getExemption(unit, currentUnitTax, assessmentYear, propertyBasedExemptionMasterMap));
+				BillingSlab slab = getSlabForCalc(filteredbillingSlabs, unit);
+				BigDecimal currentUnitTax = getTaxForUnit(slab, unit);
+				if (null != slab.getUnBuiltUnitRate())
+					unBuiltRate += slab.getUnBuiltUnitRate();
+
+				taxAmt = taxAmt.add(currentUnitTax);
+				usageExemption = usageExemption
+						.add(getExemption(unit, currentUnitTax, assessmentYear, propertyBasedExemptionMasterMap));
+			}
+
+			unBuiltRate = unBuiltRate / detail.getUnits().size();
+			if (0.0 < unBuiltRate && null != detail.getLandArea())
+				taxAmt = BigDecimal.valueOf(unBuiltRate * (detail.getLandArea() - detail.getBuildUpArea()));
 		}
-		
-		unBuiltRate = unBuiltRate / detail.getUnits().size();
-		if (0.0 < unBuiltRate && null != detail.getLandArea())
-			taxAmt = BigDecimal.valueOf(unBuiltRate * (detail.getLandArea() - detail.getBuildUpArea()));
 
 		return getEstimatesForTax(assessmentYear, taxAmt, usageExemption, detail, propertyBasedExemptionMasterMap,
 				timeBasedExmeptionMasterMap);
@@ -212,9 +226,9 @@ public class EstimationService {
 		estimates.add(TaxHeadEstimate.builder().taxHeadCode(CalculatorConstants.PT_TAX).estimateAmount(taxAmt).build());
 
 		// usage exemption
-		estimates.add(TaxHeadEstimate.builder().taxHeadCode(CalculatorConstants.PT_UNIT_USAGE_EXEMPTION)
-				.estimateAmount(usageExemption).build());
-		payableTax = payableTax.subtract(usageExemption);
+			estimates.add(TaxHeadEstimate.builder().taxHeadCode(CalculatorConstants.PT_UNIT_USAGE_EXEMPTION)
+					.estimateAmount(usageExemption).build());
+			payableTax = payableTax.subtract(usageExemption);
 
 		// Fire cess
 		BigDecimal fireCess = mstrDataService.getFireCess(payableTax, assessmentYear, timeBasedExmeptionMasterMap);

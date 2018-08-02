@@ -220,8 +220,6 @@ public class BillService {
 
 					log.debug("prepareBill demandDetail:" + demandDetail);
 					String taxHeadCode = demandDetail.getTaxHeadMasterCode();
-					totalTaxAmount = totalTaxAmount.add(demandDetail.getTaxAmount());
-					totalCollectedAmount = totalCollectedAmount.add(demandDetail.getCollectionAmount());
 
 					List<TaxHeadMaster> taxHeadMasters = taxHeadCodes.get(taxHeadCode);
 					TaxHeadMaster taxHeadMaster = taxHeadMasters.stream().filter(t -> 
@@ -260,6 +258,10 @@ public class BillService {
 							.order(taxHeadMaster.getOrder()).purpose(purpose)
 							.build();
 
+					/*
+					 * collecting values of total tax amount , collection amount and debit amount
+					 */
+					totalCollectedAmount = totalCollectedAmount.add(demandDetail.getCollectionAmount());
 					if (taxHeadMaster.getIsDebit()) {
 						billAccountDetail.setDebitAmount(demandDetail.getTaxAmount());
 						totalDebitAmount = totalDebitAmount.add(demandDetail.getTaxAmount());
@@ -268,8 +270,8 @@ public class BillService {
 						billAccountDetail.setCrAmountToBePaid(demandDetail.getTaxAmount().subtract(
 								demandDetail.getCollectionAmount() != null ? demandDetail.getCollectionAmount()
 										: BigDecimal.ZERO));
+						totalTaxAmount = totalTaxAmount.add(demandDetail.getTaxAmount());
 					}
-						
 						
 					billAccountDetails.add(billAccountDetail);
 				}

@@ -188,6 +188,8 @@ CREATE TABLE eg_pt_drafts_v2(
   tenantId character varying(256),
   userId character varying(64),
   draft JSONB,
+  isActive boolean,
+  assessmentNumber character varying(256),
   createdby character varying(64),
   createdtime bigint,
   lastmodifiedby character varying(64),

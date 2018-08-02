@@ -1,19 +1,20 @@
 package org.egov.pt.web.controllers;
 
-import javax.validation.Valid;
-
-import org.egov.common.contract.request.RequestInfo;
 import org.egov.pt.service.DraftsService;
 import org.egov.pt.web.models.DraftRequest;
 import org.egov.pt.web.models.DraftResponse;
+import org.egov.pt.web.models.DraftSearchCriteria;
+import org.egov.pt.web.models.RequestInfoWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+
+import javax.validation.Valid;
 
 @Controller
 @RequestMapping("/drafts")
@@ -32,13 +33,13 @@ public class DraftsController {
 	@RequestMapping(value = "/_update", method = RequestMethod.POST)
 	public ResponseEntity<DraftResponse> update(@Valid @RequestBody DraftRequest draftRequest) {
 		DraftResponse response = draftsService.updateDraft(draftRequest);
-		return new ResponseEntity<>(response, HttpStatus.CREATED);
+		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 	
 	@RequestMapping(value = "/_search", method = RequestMethod.POST)
-	public ResponseEntity<DraftResponse> update(@Valid @RequestBody RequestInfo requestInfo, 
-			@RequestParam(value = "userId") String userId, @RequestParam(value = "tenantId") String tenantId) {
-		DraftResponse response = draftsService.searchDrafts(requestInfo, userId, tenantId);
-		return new ResponseEntity<>(response, HttpStatus.CREATED);
+	public ResponseEntity<DraftResponse> search(@Valid @RequestBody RequestInfoWrapper requestInfo, @Valid
+	@ModelAttribute DraftSearchCriteria draftSearchCriteria) {
+		DraftResponse response = draftsService.searchDrafts(requestInfo.getRequestInfo(), draftSearchCriteria);
+		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 }

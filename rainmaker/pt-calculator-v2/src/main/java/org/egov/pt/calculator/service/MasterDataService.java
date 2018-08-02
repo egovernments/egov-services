@@ -172,8 +172,10 @@ public class MasterDataService {
 	 */
 	public BigDecimal getFireCess(BigDecimal payableTax, String assessmentYear,
 			Map<String, JSONArray> timeBasedExmeptionMasterMap) {
-
 		BigDecimal fireCess = BigDecimal.ZERO;
+		
+		if(payableTax.doubleValue() == 0.0 ) return fireCess; 
+		
 		Map<String, Object> fireCessMap = getApplicableMasterFromList(assessmentYear,
 				timeBasedExmeptionMasterMap.get(CalculatorConstants.FIRE_CESS_MASTER));
 		if (null == fireCessMap) return fireCess;

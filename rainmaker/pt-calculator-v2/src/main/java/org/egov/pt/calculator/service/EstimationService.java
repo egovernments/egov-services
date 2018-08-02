@@ -241,7 +241,6 @@ public class EstimationService {
 					.estimateAmount(usageExemption).build());
 			payableTax = payableTax.subtract(usageExemption);
 
-		if(payableTax.doubleValue() > 0.0) {
 		// Fire cess
 		BigDecimal fireCess = mstrDataService.getFireCess(payableTax, assessmentYear, timeBasedExmeptionMasterMap);
 		estimates.add(TaxHeadEstimate.builder().taxHeadCode(CalculatorConstants.PT_FIRE_CESS).estimateAmount(fireCess)
@@ -267,7 +266,6 @@ public class EstimationService {
 				.estimateAmount(rebatePenaltyMap.get(CalculatorConstants.PT_TIME_PENALTY)).build());
 		estimates.add(TaxHeadEstimate.builder().taxHeadCode(CalculatorConstants.PT_TIME_INTEREST)
 				.estimateAmount(rebatePenaltyMap.get(CalculatorConstants.PT_TIME_INTEREST)).build());
-		}
 		
 		payService.roundOfDecimals(estimates);
 		return estimates;

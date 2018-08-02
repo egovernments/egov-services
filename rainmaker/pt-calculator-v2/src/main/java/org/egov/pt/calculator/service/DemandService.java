@@ -102,6 +102,7 @@ public class DemandService {
 
 				Demand demand = prepareDemand(property,
 						propertyCalculationMap.get(property.getPropertyDetails().get(0).getAssessmentNumber()));
+				System.err.println(" the demand : " + demand);
 				if (carryForwardCollectedAmount.doubleValue() > 0.0)
 					demand.getDemandDetails()
 							.add(DemandDetail.builder().taxAmount(carryForwardCollectedAmount.negate())

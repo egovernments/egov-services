@@ -6,6 +6,7 @@ import java.util.List;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
+import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
@@ -98,6 +99,8 @@ public class Property extends PropertyInfo{
 		private AuditDetails auditDetails;
 
 		private String propertyId;
+		
+		@NotEmpty
 		private String tenantId;
 		private String acknowldgementNumber;
 		private String oldPropertyId;

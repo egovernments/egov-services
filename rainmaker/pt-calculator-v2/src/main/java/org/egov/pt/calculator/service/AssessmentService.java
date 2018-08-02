@@ -6,6 +6,7 @@ import java.util.UUID;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.pt.calculator.repository.AssessmentRepository;
+import org.egov.pt.calculator.util.CalculatorConstants;
 import org.egov.pt.calculator.util.CalculatorUtils;
 import org.egov.pt.calculator.web.models.Assessment;
 import org.egov.pt.calculator.web.models.demand.Demand;
@@ -44,7 +45,7 @@ public class AssessmentService {
 		AuditDetails details = utils.getAuditDetails(info.getUserInfo().getId().toString(), true);
 		demands.forEach(demand -> {
 
-			String[] consumerCodeSplitArray = demand.getConsumerCode().split("-");
+			String[] consumerCodeSplitArray = demand.getConsumerCode().split(CalculatorConstants.PT_CONSUMER_CODE_SEPARATOR);
 			assessments.add(Assessment.builder().propertyId(consumerCodeSplitArray[0])
 					.uuid(UUID.randomUUID().toString()).assessmentNumber(consumerCodeSplitArray[1])
 					.tenantId(demand.getTenantId()).demandId(demand.getId()).auditDetails(details).build());

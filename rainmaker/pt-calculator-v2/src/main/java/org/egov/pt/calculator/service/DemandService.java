@@ -230,7 +230,7 @@ public class DemandService {
 		String tenantId = property.getTenantId();
 		PropertyDetail detail = property.getPropertyDetails().get(0);
 		String propertyType = detail.getPropertyType();
-		String consumerCode = property.getPropertyId() + "-" + detail.getAssessmentNumber();
+		String consumerCode = property.getPropertyId() + CalculatorConstants.PT_CONSUMER_CODE_SEPARATOR + detail.getAssessmentNumber();
 		OwnerInfo owner = null;
 		if (null != detail.getCitizenInfo())
 			owner = detail.getCitizenInfo();
@@ -241,13 +241,6 @@ public class DemandService {
 
 		for (TaxHeadEstimate estimate : calculation.getTaxHeadEstimates()) {
 
-			Category category = estimate.getCategory();
-
-			if (category.equals(Category.REBATE) || category.equals(Category.ADVANCE_COLLECTION)
-					|| category.equals(Category.EXEMPTION))
-				details.add(DemandDetail.builder().taxHeadMasterCode(estimate.getTaxHeadCode())
-						.taxAmount(estimate.getEstimateAmount().negate()).tenantId(tenantId).build());
-			else
 				details.add(DemandDetail.builder().taxHeadMasterCode(estimate.getTaxHeadCode())
 						.taxAmount(estimate.getEstimateAmount()).tenantId(tenantId).build());
 		}

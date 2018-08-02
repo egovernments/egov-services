@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -85,19 +86,18 @@ public class PropertyDetail   {
         private String usage;
 
         @NotNull
+        @Min(1)
         @JsonProperty("noOfFloors")
         private Long noOfFloors;
 
         @JsonProperty("landArea")
         private Double landArea;
 
-        @NotNull
         @JsonProperty("buildUpArea")
         private Double buildUpArea;
 
         @JsonProperty("units")
         @Valid
-        @NotNull
         @Size(min=1)
         private Set<Unit> units;
 
@@ -108,6 +108,7 @@ public class PropertyDetail   {
         @JsonProperty("additionalDetails")
         private Object additionalDetails;
 
+        @NotEmpty
         @JsonProperty("financialYear")
         private String financialYear;
 

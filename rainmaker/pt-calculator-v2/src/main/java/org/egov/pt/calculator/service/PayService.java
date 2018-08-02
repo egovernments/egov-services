@@ -214,8 +214,8 @@ public class PayService {
 
 			@Override
 			public int compare(BillAccountDetail arg0, BillAccountDetail arg1) {
-				String taxHead0 = arg0.getAccountDescription().split("-")[0];
-				String taxHead1 = arg1.getAccountDescription().split("-")[0];
+				String taxHead0 = arg0.getAccountDescription().split(CalculatorConstants.PT_CONSUMER_CODE_SEPARATOR)[0];
+				String taxHead1 = arg1.getAccountDescription().split(CalculatorConstants.PT_CONSUMER_CODE_SEPARATOR)[0];
 
 				Integer value0 = taxHeadpriorityMap.get(CalculatorConstants.MAX_PRIORITY_VALUE);
 				Integer value1 = taxHeadpriorityMap.get(CalculatorConstants.MAX_PRIORITY_VALUE);
@@ -232,10 +232,14 @@ public class PayService {
 
 		/*
 		 * amtRemaining is the total amount left to apportioned if amtRemaining is zero
-		 * then break the for loop if the amountToBePaid is greater then amount left
-		 * then set amtRemaining to collectedAmount(creditAmount) if the amtRemaining is
-		 * Greater than amountToBeCollected then subtract amtToBecollected from
-		 * amtRemaining and set the same to collectedAmount(creditAmount)
+		 * then break the for loop 
+		 * 
+		 * if the amountToBePaid is greater then amtRemaining
+		 * then set amtRemaining to collectedAmount(creditAmount) 
+		 * 
+		 * if the amtRemaining is Greater than amountToBeCollected then 
+		 * subtract amtToBecollected from amtRemaining and 
+		 * set the same to collectedAmount(creditAmount)
 		 */
 		BigDecimal amtRemaining = amtPaid;
 		for (BillAccountDetail billAccountDetail : billAccountDetails) {

@@ -125,7 +125,7 @@ public class CalculatorUtils {
 				.append(configurations.getDemandSearchEndPoint()).append(CalculatorConstants.URL_PARAMS_SEPARATER)
 				.append(CalculatorConstants.TENANT_ID_FIELD_FOR_SEARCH_URL).append(getBillCriteria.getTenantId())
 				.append(CalculatorConstants.SEPARATER)
-				.append(CalculatorConstants.CONSUMER_CODE_SEARCH_FIELD_NAME).append(getBillCriteria.getPropertyId()+"-"+getBillCriteria.getAssessmentNumber());
+				.append(CalculatorConstants.CONSUMER_CODE_SEARCH_FIELD_NAME).append(getBillCriteria.getPropertyId()+ CalculatorConstants.PT_CONSUMER_CODE_SEPARATOR +getBillCriteria.getAssessmentNumber());
 	}
 	
 	/**
@@ -140,7 +140,7 @@ public class CalculatorUtils {
 				.append(configurations.getDemandSearchEndPoint()).append(CalculatorConstants.URL_PARAMS_SEPARATER)
 				.append(CalculatorConstants.TENANT_ID_FIELD_FOR_SEARCH_URL).append(assessment.getTenantId())
 				.append(CalculatorConstants.SEPARATER)
-				.append(CalculatorConstants.CONSUMER_CODE_SEARCH_FIELD_NAME).append(assessment.getPropertyId()+"-"+assessment.getAssessmentNumber());
+				.append(CalculatorConstants.CONSUMER_CODE_SEARCH_FIELD_NAME).append(assessment.getPropertyId()+ CalculatorConstants.PT_CONSUMER_CODE_SEPARATOR +assessment.getAssessmentNumber());
 	}
 	
 	/**

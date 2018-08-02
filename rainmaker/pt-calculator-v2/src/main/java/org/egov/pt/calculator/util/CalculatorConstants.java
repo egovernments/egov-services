@@ -113,6 +113,8 @@ public class CalculatorConstants {
 	 */
 
 	public static final String UNDERSCORE = "_";
+	
+	public static final String PT_CONSUMER_CODE_SEPARATOR = ":";
 
 	/*
 	 * bigdecimal values

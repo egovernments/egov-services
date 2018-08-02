@@ -24,7 +24,7 @@ public class AgreementQueryBuilderTest {
 		assertEquals("SELECT *,agreement.id as lamsagreementid FROM eglams_agreement agreement LEFT OUTER JOIN eglams_demand demand "
 				+ "ON agreement.id = demand.agreementid "
 				+ "LEFT OUTER JOIN eglams_rentincrementtype rent ON agreement.rent_increment_method = rent.id WHERE agreement.id is not null"
-                + " and AGREEMENT.STATUS IN ('ACTIVE','WORKFLOW','RENEWED','REJECTED','HISTORY') "
+                + " and AGREEMENT.STATUS IN ('ACTIVE','WORKFLOW','RENEWED','REJECTED') "
 				+ "ORDER BY AGREEMENT.ID LIMIT :pageSize OFFSET :pageNumber", AgreementQueryBuilder.getAgreementSearchQuery(agreementsModel, params));
         assertEquals(0, params.size() - 2);
 	}

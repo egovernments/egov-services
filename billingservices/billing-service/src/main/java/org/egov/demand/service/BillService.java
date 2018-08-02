@@ -218,10 +218,11 @@ public class BillService {
 				for (DemandDetail demandDetail : demandDetails) {
 
 					log.debug("prepareBill demandDetail:" + demandDetail);
+					String taxHeadCode = demandDetail.getTaxHeadMasterCode();
 					totalTaxAmount = totalTaxAmount.add(demandDetail.getTaxAmount());
 					totalCollectedAmount = totalCollectedAmount.add(demandDetail.getCollectionAmount());
 
-					List<TaxHeadMaster> taxHeadMasters = taxHeadCodes.get(demandDetail.getTaxHeadMasterCode());
+					List<TaxHeadMaster> taxHeadMasters = taxHeadCodes.get(taxHeadCode);
 					TaxHeadMaster taxHeadMaster = taxHeadMasters.stream().filter(t -> 
 					demand2.getTaxPeriodFrom().compareTo(t.getValidFrom()) >= 0 && demand2.getTaxPeriodTo().
 					compareTo(t.getValidTill()) <= 0).findAny().orElse(null);
@@ -247,18 +248,26 @@ public class BillService {
 								+ " and fromdate : "+demand2.getTaxPeriodFrom()+" todate : "+demand2.getTaxPeriodTo());
 
 					log.info("prepareBill taxHeadMaster:" + taxHeadMaster);
-					String taxHeadCode = demandDetail.getTaxHeadMasterCode();
+					
 					Purpose purpose = getPurpose(
 							taxHeadMaster.getCategory(),taxHeadCode,demand2.getTaxPeriodFrom(),demand2.getTaxPeriodTo());
 					
 					String accountDespcription = taxHeadCode+"-"+demand2.getTaxPeriodFrom()+"-"+demand2.getTaxPeriodTo();
+					
 					BillAccountDetail billAccountDetail = BillAccountDetail.builder().accountDescription(accountDespcription)
-							.crAmountToBePaid(demandDetail.getTaxAmount().subtract(demandDetail.getCollectionAmount()))
-							//.creditAmount())
 							.glcode(glCodeMaster.getGlCode()).isActualDemand(taxHeadMaster.getIsActualDemand())
 							.order(taxHeadMaster.getOrder()).purpose(purpose)
 							.build();
 
+					if (taxHeadMaster.getIsDebit())
+						billAccountDetail.setDebitAmount(demandDetail.getTaxAmount());
+					else {
+						billAccountDetail.setCrAmountToBePaid(demandDetail.getTaxAmount().subtract(
+								demandDetail.getCollectionAmount() != null ? demandDetail.getCollectionAmount()
+										: BigDecimal.ZERO));
+					}
+						
+						
 					billAccountDetails.add(billAccountDetail);
 				}
 			}

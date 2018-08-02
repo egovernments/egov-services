@@ -9,6 +9,7 @@ import org.egov.pt.calculator.web.models.property.AuditDetails;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Builder.Default;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -34,6 +35,7 @@ public class TaxHeadMaster {
 	
 	private List<GlCodeMaster> glCodes;
 
+	@Default
 	private Boolean isDebit = false;
 
 	private Boolean isActualDemand;

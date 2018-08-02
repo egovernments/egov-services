@@ -168,7 +168,7 @@ public class EstimationService {
 							.replace(CalculatorConstants.BILLING_SLAB_MATCH_AREA, unit.getUnitArea().toString())
 							.replace(CalculatorConstants.BILLING_SLAB_MATCH_FLOOR, unit.getFloorNo())
 							.replace(CalculatorConstants.BILLING_SLAB_MATCH_USAGE_DETAIL,
-									unit.getUsageCategoryDetail()));
+									null!= unit.getUsageCategoryDetail() ? unit.getUsageCategoryDetail() : "nill"));
 			throw new CustomException(map);
 		}
 

@@ -1823,24 +1823,53 @@ class AgreementDetails extends React.Component {
             </div>)
           }
         }
+        
+        if ( agreement.status == 'HISTORY') {
 
-        return (
-            <div>
+            return (<div>
                 <h3>Agreement Details</h3>
-                <form onSubmit={(e) => { viewDCB(e) }} >
+                <form onSubmit={(e) => {
+                    viewDCB(e)
+                }}>
                     <fieldset>
-                         {renederDetails()}
-                        <br />
+                        {renederDetails()}
+                        <br/>
                         <div className="text-center">
-                           <button id="sub" type="submit" className="btn btn-submit">View DCB</button>&nbsp;&nbsp;
-                           <button type="button" className="btn btn-close" onClick={(e) => { this.close() }}>Close</button>  &nbsp;&nbsp;
-
+                            <button type="button" className="btn btn-close" onClick={(e) => {
+                                this.close()
+                            }}>Close
+                            </button>
                         </div>
 
                     </fieldset>
                 </form>
-            </div>
-        );
+            </div>);
+        }else{
+            return (
+                <div>
+                    <h3>Agreement Details</h3>
+                    <form onSubmit={(e) => {
+                        viewDCB(e)
+                    }}>
+                        <fieldset>
+                            {renederDetails()}
+                            <br/>
+                            <div className="text-center">
+                                <button id="sub" type="submit" className="btn btn-submit">View DCB</button>
+                                &nbsp;&nbsp;
+                                <button type="button" className="btn btn-close" onClick={(e) => {
+                                    this.close()
+                                }}>Close
+                                </button>
+                                &nbsp;&nbsp;
+
+                            </div>
+
+                        </fieldset>
+                    </form>
+                </div>
+            );
+        }
     }
 
 }

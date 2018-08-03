@@ -770,7 +770,17 @@ class AgreementSearch extends React.Component {
         }
 
         const getOption = function (isShopOrLand, item) {
-            if (isShopOrLand) {
+            if(item.status === 'HISTORY'){
+                return (
+                    <select id="myOptions" onChange={(e) => {
+                        handleSelectChange(e.target.value, item.asset.id, item.agreementNumber, getValueByName("name", item.asset.assetCategory.id), item.acknowledgementNumber, item.status)
+                    }}>
+                        <option value="">Select Action</option>
+                        <option value="view">View</option>
+                    </select>
+                )
+            }
+           else if (isShopOrLand) {
                 return (
                     <select id="myOptions" onChange={(e) => {
                         handleSelectChange(e.target.value, item.asset.id, item.agreementNumber, getValueByName("name", item.asset.assetCategory.id), item.acknowledgementNumber, item.status)

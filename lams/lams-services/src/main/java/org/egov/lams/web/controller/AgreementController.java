@@ -155,7 +155,7 @@ public class AgreementController {
         }
 
         log.info("agreementRequest::" + agreementRequest);
-        //agreementValidator.validateCreate(agreementRequest, errors);
+        agreementValidator.validateCreate(agreementRequest, errors);
 
         if (errors.hasFieldErrors()) {
             final ErrorResponse errRes = populateErrors(errors);

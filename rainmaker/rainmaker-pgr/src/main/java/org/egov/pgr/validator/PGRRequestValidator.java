@@ -129,7 +129,7 @@ public class PGRRequestValidator {
 	private String isUserPresent(Citizen citizen, RequestInfo requestInfo, String tenantId) {
 		ObjectMapper mapper = pgrUtils.getObjectMapper();
 		UserSearchRequest searchRequest = UserSearchRequest.builder().userName(citizen.getMobileNumber())
-				.tenantId(tenantId).userType(UserType.CITIZEN.toString()).requestInfo(requestInfo).build();
+				.tenantId(tenantId).requestInfo(requestInfo).build();
 		StringBuilder url = new StringBuilder(userBasePath+userSearchEndPoint); 
 		UserResponse res = mapper.convertValue(serviceRequestRepository.fetchResult(url, searchRequest), UserResponse.class);
 		if(CollectionUtils.isEmpty(res.getUser())) {

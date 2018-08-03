@@ -14,7 +14,9 @@ public class DraftsQueryBuilder {
     public String getDraftsSearchQuery(DraftSearchCriteria searchCriteria, List<Object> preparedStatementList) {
 		StringBuilder query = new StringBuilder();
 
-        query.append("SELECT id, userId, tenantId, draft as draftRecord, isactive, assessmentNumber FROM " +
+        query.append("SELECT id, userId, tenantId, draft , isactive, assessmentNumber, createdby, " +
+                "createdtime, lastmodifiedby, lastmodifiedtime" +
+                " FROM " +
                 "eg_pt_drafts_v2 WHERE " +
                 "tenantId = ? AND isActive = ? ");
         preparedStatementList.add(searchCriteria.getTenantId());
@@ -38,6 +40,7 @@ public class DraftsQueryBuilder {
             preparedStatementList.add(searchCriteria.getOffset());
         }
 
-        return "select (select array_to_json(array_agg(row_to_json(t))) from ({query}) t) as drafts".replace("{query}", query);
+        return query.toString();
+//        return "select (select array_to_json(array_agg(row_to_json(t))) from ({query}) t) as drafts".replace("{query}", query);
 	}
 }

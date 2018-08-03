@@ -12,6 +12,7 @@ import org.egov.pt.web.models.Draft;
 import org.egov.pt.web.models.DraftRequest;
 import org.egov.pt.web.models.DraftResponse;
 import org.egov.pt.web.models.DraftSearchCriteria;
+import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -80,10 +81,10 @@ public class DraftsService {
 			draftSearchCriteria.setActive(true);
 
 		try {
-			drafts = Arrays.asList(mapper.readValue(draftRepository.getDrafts(draftSearchCriteria), Draft[].class));
+			drafts = draftRepository.getDrafts(draftSearchCriteria);
 		}catch(Exception e) {
-			log.info("Exception while fetching drafts: "+e);
-			drafts = new ArrayList<>();
+			log.info("Exception while fetching drafts: ",e);
+			throw new CustomException("FETCH_DRAFTS_FAILED", "Unable to fetch drafts");
 		}
 		return DraftResponse.builder().responseInfo(responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true))
 				.drafts(drafts).build();

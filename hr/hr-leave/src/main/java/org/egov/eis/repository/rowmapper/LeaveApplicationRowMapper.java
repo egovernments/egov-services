@@ -69,24 +69,34 @@ public class LeaveApplicationRowMapper implements RowMapper<LeaveApplication> {
         leaveApplication.setEmployee((Long) rs.getObject("la_employeeId"));
 
         final LeaveType leaveType = new LeaveType();
-        leaveType.setId(rs.getLong("lt_id"));
-        leaveType.setName(rs.getString("lt_name"));
-        leaveType.setDescription(rs.getString("lt_description"));
-        leaveType.setHalfdayAllowed((Boolean) rs.getObject("lt_halfdayAllowed"));
-        leaveType.setPayEligible((Boolean) rs.getObject("lt_payEligible"));
-        leaveType.setAccumulative((Boolean) rs.getObject("lt_accumulative"));
-        leaveType.setEncashable((Boolean) rs.getObject("lt_encashable"));
-        leaveType.setActive((Boolean) rs.getObject("lt_active"));
-        leaveType.setCreatedBy((Long) rs.getObject("lt_createdBy"));
-        leaveType.setLastModifiedBy((Long) rs.getObject("lt_lastModifiedBy"));
-        leaveType.setTenantId(rs.getString("la_tenantId"));
+        if(rs.getString("lt_name")!=null) {
+            leaveType.setId(rs.getLong("lt_id"));
+            leaveType.setName(rs.getString("lt_name"));
+            leaveType.setDescription(rs.getString("lt_description"));
+            leaveType.setHalfdayAllowed((Boolean) rs.getObject("lt_halfdayAllowed"));
+            leaveType.setPayEligible((Boolean) rs.getObject("lt_payEligible"));
+            leaveType.setAccumulative((Boolean) rs.getObject("lt_accumulative"));
+            leaveType.setEncashable((Boolean) rs.getObject("lt_encashable"));
+            leaveType.setActive((Boolean) rs.getObject("lt_active"));
+            leaveType.setCreatedBy((Long) rs.getObject("lt_createdBy"));
+            leaveType.setLastModifiedBy((Long) rs.getObject("lt_lastModifiedBy"));
+            leaveType.setTenantId(rs.getString("la_tenantId"));
+        }
         try {
             Date date = isEmpty(rs.getDate("lt_createdDate")) ? null
                     : sdf.parse(sdf.format(rs.getDate("lt_createdDate")));
-            leaveType.setCreatedDate(date);
-            date = isEmpty(rs.getDate("lt_lastModifiedDate")) ? null
-                    : sdf.parse(sdf.format(rs.getDate("lt_lastModifiedDate")));
-            leaveType.setLastModifiedDate(date);
+            if(rs.getString("lt_name")!=null) {
+
+                leaveType.setCreatedDate(date);
+                date = isEmpty(rs.getDate("lt_lastModifiedDate")) ? null
+                        : sdf.parse(sdf.format(rs.getDate("lt_lastModifiedDate")));
+                leaveType.setLastModifiedDate(date);
+                leaveApplication.setLeaveType(leaveType);
+            }
+            else
+            {
+                leaveApplication.setLeaveType(null);
+            }
             date = isEmpty(rs.getDate("la_fromDate")) ? null : sdf.parse(sdf.format(rs.getDate("la_fromDate")));
             leaveApplication.setFromDate(date);
             date = isEmpty(rs.getDate("la_toDate")) ? null : sdf.parse(sdf.format(rs.getDate("la_toDate")));
@@ -108,7 +118,6 @@ public class LeaveApplicationRowMapper implements RowMapper<LeaveApplication> {
             throw new SQLException("Parse exception while parsing Date");
         }
 
-        leaveApplication.setLeaveType(leaveType);
         if(rs.getString("la_holidays")!=null && !rs.getString("la_holidays").equals("")) {
             List<String> holidayList = new ArrayList<String>(Arrays.asList(rs.getString("la_holidays").split(",")));
             leaveApplication.setHolidays(holidayList);

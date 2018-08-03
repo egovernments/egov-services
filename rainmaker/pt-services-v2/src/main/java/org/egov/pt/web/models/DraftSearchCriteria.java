@@ -16,6 +16,8 @@ public class DraftSearchCriteria {
     @NotNull
     private String tenantId;
 
+    private String id;
+
     private String userId;
 
     private String assessmentNumber;

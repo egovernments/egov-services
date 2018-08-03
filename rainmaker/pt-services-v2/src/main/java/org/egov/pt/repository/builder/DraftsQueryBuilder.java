@@ -22,6 +22,12 @@ public class DraftsQueryBuilder {
         preparedStatementList.add(searchCriteria.getTenantId());
         preparedStatementList.add(searchCriteria.isActive());
 
+        if (!isEmpty(searchCriteria.getId())) {
+            query.append(" AND id = ?");
+            preparedStatementList.add(searchCriteria.getId());
+        }
+
+
         if (!isEmpty(searchCriteria.getUserId())) {
 			query.append(" AND userId = ?");
             preparedStatementList.add(searchCriteria.getUserId());

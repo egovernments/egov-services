@@ -39,39 +39,31 @@
  */
 package org.egov.lams.web.contract;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
 
-@Setter
+@AllArgsConstructor
 @Getter
-@ToString
-public class Task {
+@Builder
+@NoArgsConstructor
+@Setter
+public class Attribute {
 
-    private String id;
-    private String businessKey;
-    private String type;
-    private Position assignee;
-    private String comments;
-    @JsonFormat(pattern = "dd/MM/yyyy")
-    private Date createdDate;
-    @JsonFormat(pattern = "dd/MM/yyyy")
-    private Date lastupdatedSince;
-    private Position owner;
-    private String state;
-    private String status;
-    private String url;
-    private String action;
-    private String senderName;
-    private String details;
-    private String natureOfTask;
-    private String entity;
-    private String tenantId;
-    private Map<String, Attribute> attributes = new HashMap<>();
+    private Boolean variable;
+
+    private String code;
+
+    private String datatype;
+
+    private Boolean required;
+
+    private String datatypeDescription;
+
+    private List<Value> values;
+
 }

@@ -39,39 +39,26 @@
  */
 package org.egov.lams.web.contract;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-
-import com.fasterxml.jackson.annotation.JsonFormat;
+import java.util.ArrayList;
+import java.util.List;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-@Setter
 @Getter
+@Setter
 @ToString
-public class Task {
+public class ProcessInstanceRequest {
 
-    private String id;
-    private String businessKey;
-    private String type;
-    private Position assignee;
-    private String comments;
-    @JsonFormat(pattern = "dd/MM/yyyy")
-    private Date createdDate;
-    @JsonFormat(pattern = "dd/MM/yyyy")
-    private Date lastupdatedSince;
-    private Position owner;
-    private String state;
-    private String status;
-    private String url;
-    private String action;
-    private String senderName;
-    private String details;
-    private String natureOfTask;
-    private String entity;
-    private String tenantId;
-    private Map<String, Attribute> attributes = new HashMap<>();
+    @JsonProperty("requestInfo")
+    private RequestInfo requestInfo = null;
+
+    @JsonProperty("processInstances")
+    private List<ProcessInstance> processInstances = new ArrayList<ProcessInstance>();
+
+    @JsonProperty("processInstance")
+    private ProcessInstance processInstance = null;
+
 }

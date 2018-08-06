@@ -445,7 +445,26 @@ class EditDemand extends React.Component {
     const renderBody = function () {
 
       return demands.map((demand, index) => {
-
+          if(demand.taxReason.toLowerCase() === 'cgst on advance'
+              || demand.taxReason.toLowerCase() === 'sgst on advance'
+              || demand.taxReason.toLowerCase() === 'cgst on goodwill'
+              || demand.taxReason.toLowerCase() === 'sgst on goodwill'
+              || demand.taxReason.toLowerCase() === 'cgst'
+              || demand.taxReason.toLowerCase() === 'sgst'){
+              return (<tr key={index}>
+                  <td>{demand["taxPeriod"] + "[9% " + demand["taxReason"].toLowerCase() + "]"}</td>
+                  <td data-label="demand">
+                      <input type="text" name={demand["taxPeriod"] + "demand"} value={demand["taxAmount"]} onkeypress="return isNumberKey(event)" onChange={(e) => {
+                          handleChange(e, "taxAmount", index)
+                      }} />
+                  </td>
+                  <td data-label="collection">
+                      <input type="text" name={demand["taxPeriod"] + "collection"} value={demand["collectionAmount"]} onkeypress="return isNumberKey(event)" onChange={(e) => {
+                          handleChange(e, "collectionAmount", index)
+                      }} disabled={demand.isCollected} />
+                  </td>
+              </tr>)
+          } else
         return (<tr key={index}>
           <td>{demand["taxPeriod"] + "[" + demand["taxReason"].toLowerCase() + "]"}</td>
           <td data-label="demand">

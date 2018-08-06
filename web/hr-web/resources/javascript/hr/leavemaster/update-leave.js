@@ -522,6 +522,11 @@ class UpdateLeave extends React.Component {
     if (status == "REJECTED") {
       $("input,select,textarea").prop("disabled", false);
       $("#availableDays,#workingDays,#name,#code").prop("disabled", true);
+      if(_this.state.leaveSet.encashable){
+        $("#leaveDays").prop("disabled", false);
+      }else{
+        $("#leaveDays").prop("disabled", true);
+      }
     } 
 
     if (status == "APPLIED" || status == "RESUBMITTED") {
@@ -1275,8 +1280,7 @@ class UpdateLeave extends React.Component {
     }
 
     if (name === "encashable") {
-      console.log(e.target.checked);
-      if (e.target.checked) $("#leaveDays").prop("disabled", false);
+        if (e.target.checked) $("#leaveDays").prop("disabled", false);
       else $("#leaveDays").prop("disabled", true);
       let _this = this;
       let asOnDate = today();

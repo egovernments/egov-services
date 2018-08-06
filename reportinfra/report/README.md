@@ -15,26 +15,26 @@ couple of APIS.
 
 
 #### Report Configuration Details:
-reportName: Name of the report<br />
-summary: Summary message for the report(AssetReport)<br />
-version: version of the report(optional)<br />
-moduleName: modulename of which the report belongs to (eg : asset)<br />
-sourceColumns: - (list of source columns fetched from the query.)<br />
-- name: receiptNo (column name)<br />
-  label: reports.citizen.receiptno (label which will get displayed in the report)<br />
-  type: string (typr of the column)<br />
-  source: citizen (source module)<br />
-searchParams:(list of search parameters which is required for the report)<br />
+- reportName: Name of the report<br />
+- summary: Summary message for the report(AssetReport)<br />
+- version: version of the report(optional)<br />
+- moduleName: modulename of which the report belongs to (eg : asset)<br />
+- sourceColumns: - (list of source columns fetched from the query.)<br />
+  - name: receiptNo (column name)<br />
+  - label: reports.citizen.receiptno (label which will get displayed in the report)<br />
+  - type: string (typr of the column)<br />
+  - source: citizen (source module)<br />
+- searchParams:(list of search parameters which is required for the report)<br />
   - name: consumerno (name of the search param)<br />
-    label: reports.citizen.consumerno (label which will be used for displaying the search param. It has to be created in common.js Front end team will update this information)<br />
-    type: string (type of the search param)<br />
-    source: (source module)<br />
-    isMandatory: false (specifies whether the search param is optional or not)<br />
-    searchClause: and consumerNo = $consumerno (Search clause will get appended to the query based on the ismandatory flag. if it is false and the search param is having that parameter then it will get appended
+  - label: reports.citizen.consumerno (label which will be used for displaying the search param. It has to be created in common.js Front end team will update this information)<br />
+  - type: string (type of the search param)<br />
+  - source: (source module)<br />
+  - isMandatory: false (specifies whether the search param is optional or not)<br />
+  - searchClause: and consumerNo = $consumerno (Search clause will get appended to the query based on the ismandatory flag. if it is false and the search param is having that parameter then it will get appended
     otherwise it will not get appended)<br />
-query: (query string which needs to get execute to generate the report with the place holders for the search params. refer sample config for clarifications)<br />
-groupby: group by clause if needed(group by fieldname)<br />
-orderby: order by clause if needed(order by fieldname asc)<br />
+- query: (query string which needs to get execute to generate the report with the place holders for the search params. refer - sample config for clarifications)<br />
+- groupby: group by clause if needed(group by fieldname)<br />
+- orderby: order by clause if needed(order by fieldname asc)<br />
 ### API Details:
 
 /report/asset/metadata/_get
@@ -111,5 +111,21 @@ Request Sample for reload API:<br />
    
 }<br />
 
+---
+#### Call the MDMS or any other API with the post method
+1. Configuring the post object in the yaml itself like below.
 
-
+- externalService:
+  - entity: $.MdmsRes.egf-master.FinancialYear
+    - apiURL:  http://localhost:8094/egov-mdms-service/v1/_search
+    - keyOrder: finYearRange,startingDate,endingDate,tenantId
+    - tableName: tbl_financialyear
+    - stateData: true
+    - postObject:
+      - tenantId: $tenantid
+      - moduleDetails:
+        - moduleName: egf-master
+        - masterDetails:
+          - name: FinancialYear
+          filter: "[?(@.id IN [2,3] && @.active == true)]"
+2. Keep the post object in a seperate json file externally and call at runtime.

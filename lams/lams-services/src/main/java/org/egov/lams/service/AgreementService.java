@@ -743,7 +743,7 @@ public class AgreementService {
     }
 
     private void updateAuditDetails(final Agreement agreement, final RequestInfo requestInfo) {
-        final String requesterId = requestInfo.getRequesterId().toString();
+        final String requesterId = requestInfo.getUserInfo().getId().toString();
         agreement.setLastmodifiedBy(requesterId);
         agreement.setLastmodifiedDate(new Date());
     }

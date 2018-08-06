@@ -93,7 +93,7 @@ public class CollectionServiceConstants {
     public static final String COLL_REMITTENACE_ID_FORMAT = "REM/[[SEQ_COLL_REMITTENCE]/[cy:MM]/[fy:yyyy-yy]";
 
 	public static final String COLL_TRANSACTION_ID_NAME = "collection.transactionno";
-	public static final String COLL_TRANSACTION_FORMAT = "[CITY.CODE][d{10}]";
+	public static final String COLL_TRANSACTION_FORMAT = "{tenant}[d{10}]";
 
 	public static final String STATUS_MISSING_CODE = "egcl_011";
 	public static final String STATUS_MISSING_MESSAGE = "status";

@@ -115,7 +115,8 @@ public class IdGenRepository {
         IdRequest idRequest = new IdRequest();
         idRequest.setIdName(CollectionServiceConstants.COLL_TRANSACTION_ID_NAME);
         idRequest.setTenantId(tenantId);
-        idRequest.setFormat(CollectionServiceConstants.COLL_TRANSACTION_FORMAT);
+        String splitTenant = tenantId.contains(".") ? tenantId.split("\\.")[1] : tenantId; 
+        idRequest.setFormat(CollectionServiceConstants.COLL_TRANSACTION_FORMAT.replace("{tenant}", splitTenant));
 
         List<IdRequest> idRequests = new ArrayList<>();
         idRequests.add(idRequest);

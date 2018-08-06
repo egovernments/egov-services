@@ -180,7 +180,7 @@ public class PropertyValidator {
                             errorMap.put("Invalid OccupancyType","The OccupancyType '"+unit.getOccupancyType()+"' does not exists");
                         }
 
-                        if(unit.getOccupancyType().equalsIgnoreCase("RENTED")){
+                        if("RENTED".equalsIgnoreCase(unit.getOccupancyType())){
                             if(unit.getArv()==null || unit.getArv().compareTo(new BigDecimal(0))!=1)
                                 errorMap.put("INVALID ARV","Total Annual Rent should be greater than zero ");
                         }
@@ -227,6 +227,10 @@ public class PropertyValidator {
                 if(CollectionUtils.isEmpty(propertyDetail.getUnits()))
                     if(!propertyDetail.getPropertyType().equalsIgnoreCase("VACANT"))
                        errorMap.put("INVALID UNITS","Units cannot be null or empty");
+                    else if(propertyDetail.getPropertyType().equalsIgnoreCase("VACANT"))
+                       {if(propertyDetail.getLandArea()==null)
+                           errorMap.put("INVALID LANDAREA","Vacant land cannot have landArea as null");
+                       }
 
                 if(request.getRequestInfo().getUserInfo().getType().equalsIgnoreCase("CITIZEN")){
                     if(propertyDetail.getAdhocExemption()!=null || propertyDetail.getAdhocPenalty()!=null)

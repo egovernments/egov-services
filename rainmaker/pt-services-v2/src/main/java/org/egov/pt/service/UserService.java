@@ -48,20 +48,15 @@ public class UserService {
     public void createUser(PropertyRequest request){
         List<Property> properties = request.getProperties();
         RequestInfo requestInfo = request.getRequestInfo();
-        Role role = new Role();
-        role.setCode("CITIZEN");
-        role.setName("Citizen");
+        Role role = getCitizenRole();
         properties.forEach(property -> {
             property.getPropertyDetails().forEach(propertyDetail -> {
                 // Fetches the unique mobileNumbers from all the owners
-                Set<String> listOfMobileNumbers = getMobileNumbers(propertyDetail,property.getTenantId());
+                Set<String> listOfMobileNumbers = getMobileNumbers(propertyDetail,requestInfo,property.getTenantId());
                 log.info("Unique MobileNumbers: "+listOfMobileNumbers);
                 propertyDetail.getOwners().forEach(owner -> {
                     if(owner.getUuid()==null){
-                        owner.setActive(true);
-                        owner.setTenantId(property.getTenantId());
-                        owner.setRoles(Collections.singletonList(role));
-                        owner.setType("CITIZEN");
+                        addUserDefaultFields(property.getTenantId(),role,owner);
                         // Checks if the user is already present based on name of the owner and mobileNumber
                         UserDetailResponse userDetailResponse = userExists(owner,requestInfo);
                         // If user not present new user is created
@@ -82,10 +77,8 @@ public class UserService {
                         { log.info("User update -> ","MobileNumber: ",owner.getMobileNumber()," Name: ",owner.getName());
                           owner.setId(userDetailResponse.getUser().get(0).getId());
                           owner.setUuid(userDetailResponse.getUser().get(0).getUuid());
-                          owner.setActive(true);
-                          owner.setTenantId(property.getTenantId());
-                          owner.setRoles(Collections.singletonList(role));
-                          owner.setType("CITIZEN");
+                          addUserDefaultFields(property.getTenantId(),role,owner);
+
                           StringBuilder uri = new StringBuilder(userHost).append(userContextPath)
                                               .append(userUpdateEndpoint);
                           userDetailResponse = userCall( new CreateUserRequest(requestInfo,owner),uri);
@@ -99,6 +92,27 @@ public class UserService {
                 });
             });
         });
+    }
+
+
+    /**
+     * Sets the role,type,active and tenantId for a Citizen
+     * @param tenantId TenantId of the property
+     * @param role The role of the user set in this case to CITIZEN
+     * @param owner The user whose fields are to be set
+     */
+    private void addUserDefaultFields(String tenantId,Role role,OwnerInfo owner){
+        owner.setActive(true);
+        owner.setTenantId(tenantId);
+        owner.setRoles(Collections.singletonList(role));
+        owner.setType("CITIZEN");
+    }
+
+    private Role getCitizenRole(){
+        Role role = new Role();
+        role.setCode("CITIZEN");
+        role.setName("Citizen");
+        return role;
     }
 
     /**
@@ -144,11 +158,12 @@ public class UserService {
      * @param propertyDetail whose unique mobileNumbers are needed to be fetched
      * @return list of all unique mobileNumbers in the given propertyDetail
      */
-     private Set<String> getMobileNumbers(PropertyDetail propertyDetail,String tenantId){
+     private Set<String> getMobileNumbers(PropertyDetail propertyDetail,RequestInfo requestInfo,String tenantId){
         Set<String> listOfMobileNumbers = new HashSet<>();
         propertyDetail.getOwners().forEach(owner -> {listOfMobileNumbers.add(owner.getMobileNumber());});
         StringBuilder uri = new StringBuilder(userHost).append(userSearchEndpoint);
         UserSearchRequest userSearchRequest = new UserSearchRequest();
+        userSearchRequest.setRequestInfo(requestInfo);
         userSearchRequest.setTenantId(tenantId);
         // Should this be hardcoded?
         userSearchRequest.setUserType("CITIZEN");
@@ -248,6 +263,7 @@ public class UserService {
      */
     private void setOwnerFields(OwnerInfo owner, UserDetailResponse userDetailResponse,RequestInfo requestInfo){
         owner.setUuid(userDetailResponse.getUser().get(0).getUuid());
+        owner.setId(userDetailResponse.getUser().get(0).getId());
         owner.setUserName((userDetailResponse.getUser().get(0).getUserName()));
         owner.setCreatedBy(requestInfo.getUserInfo().getUuid());
         owner.setCreatedDate(System.currentTimeMillis());
@@ -312,9 +328,7 @@ public class UserService {
         StringBuilder uriSearch = new StringBuilder(userHost).append(userSearchEndpoint);
         RequestInfo requestInfo = request.getRequestInfo();
 
-        Role role = new Role();
-        role.setCode("CITIZEN");
-        role.setName("Citizen");
+        Role role = getCitizenRole();
         // If user is creating assessment, userInfo object from requestInfo is assigned as citizenInfo
         if(requestInfo.getUserInfo().getType().equalsIgnoreCase("CITIZEN"))
         {   request.getProperties().forEach(property -> {
@@ -328,10 +342,7 @@ public class UserService {
             // In case of employee login it checks if the citizenInfo object is present else it creates it
             request.getProperties().forEach(property -> {
                 property.getPropertyDetails().forEach(propertyDetail -> {
-                    propertyDetail.getCitizenInfo().setActive(true);
-                    propertyDetail.getCitizenInfo().setTenantId(property.getTenantId());
-                    propertyDetail.getCitizenInfo().setRoles(Collections.singletonList(role));
-                    propertyDetail.getCitizenInfo().setType("CITIZEN");
+                    addUserDefaultFields(property.getTenantId(),role,propertyDetail.getCitizenInfo());
                     UserDetailResponse userDetailResponse = userExists(propertyDetail.getCitizenInfo(),requestInfo);
                     // If user not present new user is created
                     if(CollectionUtils.isEmpty(userDetailResponse.getUser()))

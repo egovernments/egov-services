@@ -142,21 +142,21 @@ class EvictionAgreement extends React.Component {
 
         if(agreement.eviction.reasonForEviction == "Others" && !(agreement.remarks))
         return(showError("Please enter remarks when selected reason as others"));
-    
+
 
         var asOnDate = new Date();
         var dd = asOnDate.getDate();
-        var mm = asOnDate.getMonth() + 1; 
+        var mm = asOnDate.getMonth() + 1;
         var yyyy = asOnDate.getFullYear();
-    
+
         if (dd < 10) {
           dd = '0' + dd
         }
-    
+
         if (mm < 10) {
           mm = '0' + mm
         }
-    
+
         asOnDate = dd + '/' + mm + '/' + yyyy;
 
         console.log("Documents", agreement);
@@ -305,7 +305,7 @@ class EvictionAgreement extends React.Component {
                 headers: {
                 'auth-token': authToken
                 },
-                success: function (res1) { 
+                success: function (res1) {
                     if(res1.preambleNumber !== null){
                         $('#alert-box').fadeIn(function(){
                             $("#alert-box-content").html("Preamble No : " + res1.preambleNumber +" Gist Of Preamble : "+ res1.gistOfPreamble);
@@ -315,7 +315,7 @@ class EvictionAgreement extends React.Component {
                         $('#alert-box').fadeIn(function(){
                             $("#alert-box-content").html("Entered CR number is not valid. Please enter a valid CR number");
                         });
-                    }      
+                    }
                 },
                 error: function (err) {
                     $('#councilNumber').val("");
@@ -324,7 +324,7 @@ class EvictionAgreement extends React.Component {
                     });
                 }
             })
-        } 
+        }
     }
 
     handleChange(e, name) {
@@ -506,13 +506,18 @@ class EvictionAgreement extends React.Component {
         }, "Eviction LeaseAgreement");
 
 
-        var agreement = commonApiPost("lams-services",
+        var agreements = commonApiPost("lams-services",
             "agreements",
             "_search", {
                 agreementNumber: getUrlVars()["agreementNumber"],
                 tenantId
-            }).responseJSON["Agreements"][0] || {};
-        console.log(agreement);
+            }).responseJSON["Agreements"] || {};
+
+        if(agreements)
+        agreements = agreements.sort((agreement1,agreement2) => agreement1.id < agreement2.id);
+          console.log(agreements);
+        var agreement = agreements[0];
+          console.log(agreement);
 
         if (!agreement.eviction) {
             agreement.eviction = {};
@@ -897,7 +902,7 @@ class EvictionAgreement extends React.Component {
                                     </div>
                                     <div className="col-sm-6">
                                         <input type="text" name="evictionProceedingNumber" id="evictionProceedingNumber" value={eviction.evictionProceedingNumber}
-                                            onChange={(e) => { handleChangeTwoLevel(e, "eviction", "evictionProceedingNumber") }} 
+                                            onChange={(e) => { handleChangeTwoLevel(e, "eviction", "evictionProceedingNumber") }}
                                             onBlur={(e)=>onBlur(e.target.value)} required />
                                     </div>
                                 </div>

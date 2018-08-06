@@ -89,13 +89,17 @@ public class EstimationService {
 		PropertyDetail detail = property.getPropertyDetails().get(0);
 		
 		Map<String, String> error = new HashMap<>();
-		
+		boolean isLandProperty = CalculatorConstants.PT_TYPE_VACANT_LAND.equalsIgnoreCase(detail.getPropertyType());
+
 		if (null == detail.getLandArea() && null == detail.getBuildUpArea())
 			error.put(CalculatorConstants.PT_ESTIMATE_AREA_NULL, CalculatorConstants.PT_ESTIMATE_AREA_NULL_MSG);
-		
-		if(CalculatorConstants.PT_TYPE_VACANT_LAND.equalsIgnoreCase(detail.getPropertyType()) && null == detail.getLandArea())
+
+		if (isLandProperty && null == detail.getLandArea())
 			error.put(CalculatorConstants.PT_ESTIMATE_VACANT_LAND_NULL, CalculatorConstants.PT_ESTIMATE_VACANT_LAND_NULL_MSG);
-		
+
+		if (!isLandProperty && CollectionUtils.isEmpty(detail.getUnits()))
+			error.put(CalculatorConstants.PT_ESTIMATE_NON_VACANT_LAND_UNITS, CalculatorConstants.PT_ESTIMATE_NON_VACANT_LAND_UNITS_MSG);
+
 		if(!CollectionUtils.isEmpty(error))
 			throw new CustomException(error);
 		

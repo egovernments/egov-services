@@ -177,36 +177,39 @@ public class CalculatorConstants {
 	public static final String CONNECT_EXCEPTION_KEY = "CONNECTION_FAILED";
 
 	public static final String EMPTY_DEMAND_ERROR_CODE = "EMPTY_DEMANDS";
-
 	public static final String EMPTY_DEMAND_ERROR_MESSAGE = "No demands found for the given bill generate criteria";
 
+	
 	public static final String BILLING_SLAB_MATCH_ERROR_CODE = "NO_BILLING_SLAB_FOUND";
-
 	public static final String BILLING_SLAB_MATCH_ERROR_MESSAGE = "No matching slabs has been found for unit on FloorNo : {floor} of Area : {area} with usageCategoryDetail : {usageDetail}";
 
+	
 	public static final String BILLING_SLAB_MATCH_FLOOR = "{floor}";
-
 	public static final String BILLING_SLAB_MATCH_AREA = "{area}";
-
 	public static final String BILLING_SLAB_MATCH_USAGE_DETAIL = "{usageDetail}";
 
+	
 	public static final String EG_PT_OWNER_TYPE_INVALID = "EG_PT_OWNER_TYPE_INVALID";
-
 	public static final String EG_PT_OWNER_TYPE_INVALID_MESSAGE = " The given owner type value is invalid : ";
 
+	
 	public static final String PT_ADHOC_REBATE_INVALID_AMOUNT = "PT_ADHOC_REBATE_INVALID_AMOUNT";
-
 	public static final String PT_ADHOC_REBATE_INVALID_AMOUNT_MSG = "Adhoc Exemption cannot be greater than the estimated tax for the given property please enter a value lesser than : ";
 
+	
 	public static final String PT_ESTIMATE_AREA_NULL = "PT_ESTIMATE_AREA_NULL";
-
 	public static final String PT_ESTIMATE_AREA_NULL_MSG = " Atleast one area value is mandatory of landArea and buildUpArea";
 	
+	
 	public static final String PT_ESTIMATE_VACANT_LAND_NULL = "PT_ESTIMATE_VACANT_LAND_AREA_NULL";
-
 	public static final String PT_ESTIMATE_VACANT_LAND_NULL_MSG = " landArea is mandatory for vacant land";
 
+	
 	public static final String PT_ESTIMATE_BILLINGSLABS_UNMATCH_VACANCT = "PT_ESTIMATE_BILLINGSLABS_UNMATCH";
-
 	public static final String PT_ESTIMATE_BILLINGSLABS_UNMATCH_VACANT_MSG = " Incorrect count of {count} billing slabs has been found for the give property detail";
+
+
+	public static final String PT_ESTIMATE_NON_VACANT_LAND_UNITS = "PT_ESTIMATE_NON_VACANT_LAND_UNITS";
+	public static final String PT_ESTIMATE_NON_VACANT_LAND_UNITS_MSG = " unit is mandatory for non vacant land properties";
+
 }

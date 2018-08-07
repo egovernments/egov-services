@@ -6,11 +6,9 @@ import java.util.List;
 import org.egov.egf.instrument.domain.model.InstrumentType;
 import org.egov.egf.instrument.domain.model.InstrumentTypeProperty;
 import org.egov.egf.instrument.domain.model.InstrumentTypeSearch;
-import org.egov.egf.instrument.domain.model.TransactionType;
 import org.egov.egf.instrument.web.contract.InstrumentTypeContract;
 import org.egov.egf.instrument.web.contract.InstrumentTypePropertyContract;
 import org.egov.egf.instrument.web.contract.InstrumentTypeSearchContract;
-import org.egov.egf.instrument.web.contract.TransactionTypeContract;
 
 public class InstrumentTypeMapper {
 
@@ -26,7 +24,7 @@ public class InstrumentTypeMapper {
 
 		List<InstrumentTypeProperty> instrumentTypeProperties = new ArrayList<>();
 
-		if (contract.getInstrumentTypeProperties() != null)
+/*		if (contract.getInstrumentTypeProperties() != null)
 			for (InstrumentTypePropertyContract itp : contract.getInstrumentTypeProperties()) {
 				instrumentTypeProperties.add(InstrumentTypeProperty.builder().id(itp.getId())
 						.reconciledOncreate(itp.getReconciledOncreate()).statusOnCreate(itp.getStatusOnCreate())
@@ -37,7 +35,7 @@ public class InstrumentTypeMapper {
 			}
 
 		instrumentType.setInstrumentTypeProperties(instrumentTypeProperties);
-
+*/
 		instrumentType.setCreatedBy(contract.getCreatedBy());
 		instrumentType.setCreatedDate(contract.getCreatedDate());
 		instrumentType.setLastModifiedBy(contract.getLastModifiedBy());
@@ -59,7 +57,7 @@ public class InstrumentTypeMapper {
 
 		List<InstrumentTypePropertyContract> instrumentTypeProperties = new ArrayList<>();
 
-		if (instrumentType.getInstrumentTypeProperties() != null)
+/*		if (instrumentType.getInstrumentTypeProperties() != null)
 			for (InstrumentTypeProperty itp : instrumentType.getInstrumentTypeProperties()) {
 				instrumentTypeProperties.add(InstrumentTypePropertyContract.builder().id(itp.getId())
 						.reconciledOncreate(itp.getReconciledOncreate()).statusOnCreate(itp.getStatusOnCreate())
@@ -69,7 +67,7 @@ public class InstrumentTypeMapper {
 			}
 
 		contract.setInstrumentTypeProperties(instrumentTypeProperties);
-
+*/
 		contract.setCreatedBy(instrumentType.getCreatedBy());
 		contract.setCreatedDate(instrumentType.getCreatedDate());
 		contract.setLastModifiedBy(instrumentType.getLastModifiedBy());
@@ -91,7 +89,7 @@ public class InstrumentTypeMapper {
 
 		List<InstrumentTypeProperty> instrumentTypeProperties = new ArrayList<>();
 
-		if (contract.getInstrumentTypeProperties() != null)
+		/*if (contract.getInstrumentTypeProperties() != null)
 			for (InstrumentTypePropertyContract itp : contract.getInstrumentTypeProperties()) {
 				instrumentTypeProperties.add(InstrumentTypeProperty.builder().id(itp.getId())
 						.reconciledOncreate(itp.getReconciledOncreate()).statusOnCreate(itp.getStatusOnCreate())
@@ -100,7 +98,7 @@ public class InstrumentTypeMapper {
 								? TransactionType.valueOf(itp.getTransactionType().name()) : null).build());
 			}
 
-		instrumentTypeSearch.setInstrumentTypeProperties(instrumentTypeProperties);
+		instrumentTypeSearch.setInstrumentTypeProperties(instrumentTypeProperties);*/
 
 		instrumentTypeSearch.setCreatedBy(contract.getCreatedBy());
 		instrumentTypeSearch.setCreatedDate(contract.getCreatedDate());
@@ -126,7 +124,7 @@ public class InstrumentTypeMapper {
 		contract.setName(instrumentTypeSearch.getName());
 
 		List<InstrumentTypePropertyContract> instrumentTypeProperties = new ArrayList<>();
-
+/*
 		if (instrumentTypeSearch.getInstrumentTypeProperties() != null)
 			for (InstrumentTypeProperty itp : instrumentTypeSearch.getInstrumentTypeProperties()) {
 				instrumentTypeProperties.add(InstrumentTypePropertyContract.builder().id(itp.getId())
@@ -137,7 +135,7 @@ public class InstrumentTypeMapper {
 			}
 
 		contract.setInstrumentTypeProperties(instrumentTypeProperties);
-
+*/
 		contract.setCreatedBy(instrumentTypeSearch.getCreatedBy());
 		contract.setCreatedDate(instrumentTypeSearch.getCreatedDate());
 		contract.setLastModifiedBy(instrumentTypeSearch.getLastModifiedBy());

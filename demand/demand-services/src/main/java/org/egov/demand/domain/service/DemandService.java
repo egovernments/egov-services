@@ -138,7 +138,9 @@ public class DemandService {
 			EgdmCollectedReceipt receipt = new EgdmCollectedReceipt();
 			for (DemandDetails demandsDetails : demand.getDemandDetails()) {
 
-				if (info.getTaxPeriod().equalsIgnoreCase(demandsDetails.getTaxPeriod())
+				if (demandsDetails.getTaxReason() != null && info.getPurpose() != null
+				&& info.getTaxPeriod() != null && demandsDetails.getTaxPeriod() != null
+				&& info.getTaxPeriod().equalsIgnoreCase(demandsDetails.getTaxPeriod())
 						&& info.getPurpose().equalsIgnoreCase(demandsDetails.getTaxReason())) {
 					receipt.setEgdemandDetail(egDemandDetails);
 					receipt.setReceiptNumber(info.getReceiptNumber());

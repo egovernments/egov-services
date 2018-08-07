@@ -394,7 +394,7 @@ class CancellationAgreement extends React.Component {
                   $('#alert-box').fadeIn(function(){
                     $("#alert-box-content").html("Entered CR number is not valid. Please enter a valid CR number");
                   });
-                }   
+                }
             },
             error: function (err) {
                 $('#councilNumber').val("");
@@ -403,9 +403,9 @@ class CancellationAgreement extends React.Component {
                 });
             }
         })
-    } 
+    }
   }
-  
+
   handleChangeTwoLevel(e, pName, name) {
 
     var _this = this;
@@ -527,14 +527,19 @@ class CancellationAgreement extends React.Component {
     }, "Cancellation LeaseAgreement");
 
 
-    var agreement = commonApiPost("lams-services",
+    var agreements = commonApiPost("lams-services",
       "agreements",
       "_search", {
         agreementNumber: getUrlVars()["agreementNumber"],
         tenantId
-      }).responseJSON["Agreements"][0] || {};
+      }).responseJSON["Agreements"] || {};
+        console.log(agreements);
 
-    console.log(agreement);
+      if(agreements)
+      agreements = agreements.sort((agreement1,agreement2) => agreement1.id < agreement2.id);
+        console.log(agreements);
+      var agreement = agreements[0];
+        console.log(agreement);
 
     if (!agreement.cancellation) {
       agreement.cancellation = {};
@@ -938,7 +943,7 @@ class CancellationAgreement extends React.Component {
                   </div>
                   <div className="col-sm-6">
                     <input type="text" name="orderNo" id="orderNo" value={cancellation.orderNo} maxLength="15"
-                      onChange={(e) => {handleChangeTwoLevel(e, "cancellation", "orderNo")}} 
+                      onChange={(e) => {handleChangeTwoLevel(e, "cancellation", "orderNo")}}
                       onBlur={(e)=>onBlur(e.target.value)} required />
                   </div>
                 </div>

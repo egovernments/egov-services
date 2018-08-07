@@ -1,9 +1,10 @@
 package org.egov.test;
 
 import org.apache.commons.io.IOUtils;
+import org.junit.Ignore;
 
 import java.io.IOException;
-
+@Ignore
 public class Resources {
 
     public String getFileContents(String fileName) {

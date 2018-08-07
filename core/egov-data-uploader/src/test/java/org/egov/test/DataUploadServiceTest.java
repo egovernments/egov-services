@@ -7,6 +7,7 @@ import org.egov.dataupload.model.UploadJob;
 import org.egov.dataupload.model.UploaderRequest;
 import org.egov.dataupload.service.DataUploadService;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,7 @@ import java.util.Collections;
 @RunWith(SpringRunner.class)
 @ContextConfiguration(classes = {DataUploadApplication.class})
 @Import(TestConfiguration.class)
+@Ignore
 public class DataUploadServiceTest {
 
     private UploadJob uploadJob;

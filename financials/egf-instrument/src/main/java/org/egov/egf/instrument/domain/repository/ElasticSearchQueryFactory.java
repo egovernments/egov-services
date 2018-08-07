@@ -54,7 +54,7 @@ public class ElasticSearchQueryFactory {
         elasticSearchUtils.add(instrumentTypeSearchContract.getName(), "name", boolQueryBuilder);
         elasticSearchUtils.add(instrumentTypeSearchContract.getDescription(), "description", boolQueryBuilder);
         elasticSearchUtils.add(instrumentTypeSearchContract.getActive(), "active", boolQueryBuilder);
-        elasticSearchUtils.add(instrumentTypeSearchContract.getInstrumentTypeProperties(), "instrumentTypeProperties", boolQueryBuilder);
+       // elasticSearchUtils.add(instrumentTypeSearchContract.getInstrumentTypeProperties(), "instrumentTypeProperties", boolQueryBuilder);
         return boolQueryBuilder;
     }
 

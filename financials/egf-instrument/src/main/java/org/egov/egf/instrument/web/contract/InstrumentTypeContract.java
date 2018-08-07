@@ -93,10 +93,10 @@ public class InstrumentTypeContract extends AuditableContract {
 	@NotNull
 	private Boolean active;
 
-	@Valid
+/*	@Valid
 	@NotNull
 	@Size(max=2,min=2,message="")
-	private List<InstrumentTypePropertyContract> instrumentTypeProperties;
+	private List<InstrumentTypePropertyContract> instrumentTypeProperties;*/
 
 
 

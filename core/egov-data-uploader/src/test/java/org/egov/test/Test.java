@@ -7,12 +7,14 @@ import com.jayway.jsonpath.JsonPath;
 import org.egov.dataupload.model.Document;
 import org.egov.dataupload.model.UploadDefinition;
 import org.egov.dataupload.utils.DataUploadUtils;
+import org.junit.Ignore;
 
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
+@Ignore
 public class Test {
 
     private DataUploadUtils dataUploadUtils = new DataUploadUtils();

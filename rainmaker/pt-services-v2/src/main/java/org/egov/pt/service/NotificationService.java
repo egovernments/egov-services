@@ -8,6 +8,7 @@ import org.egov.pt.util.PTConstants;
 import org.egov.pt.web.models.Property;
 import org.egov.pt.web.models.PropertyRequest;
 import org.egov.pt.web.models.SMSRequest;
+import org.egov.tracer.model.CustomException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -56,6 +57,7 @@ public class NotificationService {
     public void process(PropertyRequest request){
         String tenantId = request.getProperties().get(0).getTenantId();
         StringBuilder uri = getUri(tenantId);
+        try{
         LinkedHashMap responseMap = (LinkedHashMap)serviceRequestRepository.fetchResult(uri, request.getRequestInfo());
         String jsonString = new JSONObject(responseMap).toString();
         String message = JsonPath.parse(jsonString).read("$.messages[0].message");
@@ -63,7 +65,10 @@ public class NotificationService {
             String customMessage = getCustomizedMessage(property,message);
             List<SMSRequest> smsRequests = getSMSRequests(getMobileNumbers(property),customMessage);
             sendSMS(smsRequests);
-        });
+         });
+        }
+        catch(Exception e)
+        {throw new CustomException("LOCALIZATION ERROR","Unable to get message from localization");}
     }
 
 
@@ -79,7 +84,8 @@ public class NotificationService {
         uri.append(localizationHost).append(localizationContextPath).append(localizationSearchEndpoint);
         uri.append("?").append("locale=").append(PTConstants.NOTIFICATION_LOCALE)
         .append("&tenantId=").append(tenantId)
-        .append("&module=").append(PTConstants.MODULE);
+        .append("&module=").append(PTConstants.MODULE)
+        .append("&code=").append(PTConstants.NOTIFICATION_CREATE_CODE);
         return uri;
     }
 

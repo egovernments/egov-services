@@ -6,6 +6,7 @@ import org.egov.demand.model.enums.Purpose;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Builder.Default;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -27,11 +28,13 @@ public class BillAccountDetail {
 
 	private String accountDescription;
 	
-	private BigDecimal crAmountToBePaid;
+	@Default
+	private BigDecimal crAmountToBePaid = BigDecimal.ZERO;
 
 	private BigDecimal creditAmount;
 
-	private BigDecimal debitAmount;
+	@Default
+	private BigDecimal debitAmount = BigDecimal.ZERO;
 
 	private Boolean isActualDemand;
 

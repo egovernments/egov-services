@@ -16,8 +16,6 @@ public class PaymentInfo {
 	private Double debitedAmount;
 	private String taxPeriod;
 
-
-
 	public String getReceiptNumber() {
 		return receiptNumber;
 	}
@@ -42,6 +40,14 @@ public class PaymentInfo {
 		return description;
 	}
 
+	public String getTaxReason() {
+		return taxReason;
+	}
+
+	public void setTaxReason(String taxReason) {
+		this.taxReason = taxReason;
+	}
+
 	public void setDescription(String description) {
 		this.description = description;
 	}
@@ -56,14 +62,6 @@ public class PaymentInfo {
 
 	public void setStatus(String status) {
 		this.status = status;
-	}
-
-	public String getTaxReason() {
-		return taxReason;
-	}
-
-	public void setPurpose(String taxReason) {
-		this.taxReason = taxReason;
 	}
 
 	public String getGlCode() {

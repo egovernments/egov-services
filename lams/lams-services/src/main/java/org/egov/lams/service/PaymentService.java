@@ -460,7 +460,7 @@ public class PaymentService {
 			if (accountIfo.getDescription() != null) {
 				String[] taxperiods = accountIfo.getDescription().split(":");
 				paymentInfo.setTaxPeriod(taxperiods[0]);
-				paymentInfo.setTaxPeriod(taxperiods[1]);
+				paymentInfo.setTaxReason(taxperiods[1]);
 			}
 			paymentInfos.add(paymentInfo);
 		}

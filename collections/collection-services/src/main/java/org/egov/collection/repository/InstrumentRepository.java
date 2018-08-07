@@ -28,6 +28,8 @@ public class InstrumentRepository {
 
 	public Instrument createInstrument(RequestInfo requestinfo,
 			Instrument instrument) {
+		
+		instrument.getBank().setTenantId(instrument.getTenantId());
 		StringBuilder builder = new StringBuilder();
 		String hostname = applicationProperties.getInstrumentServiceHost();
 		String baseUri = applicationProperties.getCreateInstrument();

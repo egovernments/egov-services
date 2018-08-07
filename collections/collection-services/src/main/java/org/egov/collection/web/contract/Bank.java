@@ -24,6 +24,7 @@ public class Bank   {
   private Boolean active;
 
   private String type;
-
+  
+  private String tenantId;
 }
 

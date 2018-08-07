@@ -84,6 +84,8 @@ public class BankContract {
 
 	@Length(max = 50)
 	private String type;
+	
+	private String tenantId;
 
 	public Long getId() {
 		return id;
@@ -95,6 +97,7 @@ public class BankContract {
 	}
 
 	public BankContract(Bank bean) {
+		this.setTenantId(bean.getTenantId());
 		this.setId(bean.getId());
 		this.setCode(bean.getCode());
 		this.setName(bean.getName());

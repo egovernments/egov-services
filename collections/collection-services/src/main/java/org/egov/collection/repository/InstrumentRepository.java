@@ -15,6 +15,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class InstrumentRepository {
@@ -29,7 +30,9 @@ public class InstrumentRepository {
 	public Instrument createInstrument(RequestInfo requestinfo,
 			Instrument instrument) {
 		
-		instrument.getBank().setTenantId(instrument.getTenantId());
+		if (!Objects.isNull(instrument.getBank()))
+			instrument.getBank().setTenantId(instrument.getTenantId());
+
 		StringBuilder builder = new StringBuilder();
 		String hostname = applicationProperties.getInstrumentServiceHost();
 		String baseUri = applicationProperties.getCreateInstrument();

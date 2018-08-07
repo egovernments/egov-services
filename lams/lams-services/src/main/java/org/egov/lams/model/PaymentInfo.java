@@ -8,6 +8,15 @@ public class PaymentInfo {
 	private BigDecimal receiptAmount;
 	private Date receiptDate;
 	private String status;
+	private String description;
+	private String purpose;
+	private String glCode;
+	private Double creditedAmount;
+	private Double creditAmountToBePaid;
+	private Double debitedAmount;
+	private String taxPeriod;
+
+
 
 	public String getReceiptNumber() {
 		return receiptNumber;
@@ -29,6 +38,14 @@ public class PaymentInfo {
 		return receiptDate;
 	}
 
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
 	public void setReceiptDate(Date receiptDate) {
 		this.receiptDate = receiptDate;
 	}
@@ -41,4 +58,51 @@ public class PaymentInfo {
 		this.status = status;
 	}
 
+	public String getPurpose() {
+		return purpose;
+	}
+
+	public void setPurpose(String purpose) {
+		this.purpose = purpose;
+	}
+
+	public String getGlCode() {
+		return glCode;
+	}
+
+	public void setGlCode(String glCode) {
+		this.glCode = glCode;
+	}
+
+	public Double getCreditedAmount() {
+		return creditedAmount;
+	}
+
+	public void setCreditedAmount(Double creditedAmount) {
+		this.creditedAmount = creditedAmount;
+	}
+
+	public Double getCreditAmountToBePaid() {
+		return creditAmountToBePaid;
+	}
+
+	public void setCreditAmountToBePaid(Double creditAmountToBePaid) {
+		this.creditAmountToBePaid = creditAmountToBePaid;
+	}
+
+	public Double getDebitedAmount() {
+		return debitedAmount;
+	}
+
+	public void setDebitedAmount(Double debitedAmount) {
+		this.debitedAmount = debitedAmount;
+	}
+
+	public String getTaxPeriod() {
+		return taxPeriod;
+	}
+
+	public void setTaxPeriod(String taxPeriod) {
+		this.taxPeriod = taxPeriod;
+	}
 }

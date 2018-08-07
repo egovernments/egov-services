@@ -128,25 +128,32 @@ public class DemandService {
 		egDemand.addCollected(demand.getCollectionAmount());
 		return demandRepository.save(egDemand);
 	}
-	
+
 	private Set<EgdmCollectedReceipt> getCollectedReceipts(Demand demand, EgDemandDetails egDemandDetails) {
 		Set<EgdmCollectedReceipt> egdmCollectedReceipts = new HashSet<>();
 
 		List<PaymentInfo> paymentInfo = demand.getPaymentInfos();
+
 		for (PaymentInfo info : paymentInfo) {
 			EgdmCollectedReceipt receipt = new EgdmCollectedReceipt();
-			receipt.setEgdemandDetail(egDemandDetails);
-			receipt.setReceiptNumber(info.getReceiptNumber());
-			receipt.setReasonAmount(egDemandDetails.getAmtCollected());
-			receipt.setReceiptDate(info.getReceiptDate());
-			receipt.setUpdatedTime(new Date());
-			receipt.setAmount(info.getReceiptAmount());
-			receipt.setStatus(info.getStatus().charAt(0));
-			receipt.setTenantId(egDemandDetails.getTenantId());
-			egdmCollectedReceipts.add(receipt);
-			LOGGER.info("adding receipt details " + receipt);
+			for (DemandDetails demandsDetails : demand.getDemandDetails()) {
+
+				if (info.getTaxPeriod().equalsIgnoreCase(demandsDetails.getTaxPeriod())
+						&& info.getPurpose().equalsIgnoreCase(demandsDetails.getTaxReason())) {
+					receipt.setEgdemandDetail(egDemandDetails);
+					receipt.setReceiptNumber(info.getReceiptNumber());
+					receipt.setReasonAmount(egDemandDetails.getAmtCollected());
+					receipt.setReceiptDate(info.getReceiptDate());
+					receipt.setUpdatedTime(new Date());
+					receipt.setAmount(info.getCreditedAmount());
+					receipt.setStatus(info.getStatus().charAt(0));
+					receipt.setTenantId(egDemandDetails.getTenantId());
+					egdmCollectedReceipts.add(receipt);
+					LOGGER.info("adding receipt details " + receipt);
+				}
+			}
 		}
 		return egdmCollectedReceipts;
 	}
-	
+
 }

@@ -444,13 +444,27 @@ public class PaymentService {
 	private List<PaymentInfo> setPaymentInfos(BillReceiptReq billReceiptInfo) {
 
 		List<PaymentInfo> paymentInfos = new ArrayList<>();
-		PaymentInfo paymentInfo = new PaymentInfo();
-		paymentInfo.setReceiptAmount(billReceiptInfo.getTotalAmount());
-		paymentInfo.setReceiptDate(billReceiptInfo.getReceiptDate());
-		paymentInfo.setReceiptNumber(billReceiptInfo.getReceiptNum());
-		paymentInfo.setStatus(billReceiptInfo.getReceiptStatus());
-		paymentInfos.add(paymentInfo);
-		LOGGER.info("paymengtinfo"+ paymentInfos);
+		for (ReceiptAccountInfo accountIfo : billReceiptInfo.getAccountDetails()) {
+			PaymentInfo paymentInfo = new PaymentInfo();
+
+			paymentInfo.setReceiptAmount(billReceiptInfo.getTotalAmount());
+			paymentInfo.setReceiptDate(billReceiptInfo.getReceiptDate());
+			paymentInfo.setReceiptNumber(billReceiptInfo.getReceiptNum());
+			paymentInfo.setStatus(billReceiptInfo.getReceiptStatus());
+
+			paymentInfo.setCreditedAmount(accountIfo.getCrAmount());
+			paymentInfo.setDebitedAmount(accountIfo.getDrAmount());
+			paymentInfo.setDescription(accountIfo.getDescription());
+			paymentInfo.setGlCode(accountIfo.getGlCode());
+			paymentInfo.setCreditAmountToBePaid(accountIfo.getCreditAmountToBePaid());
+			if (accountIfo.getDescription() != null) {
+				String taxperiods[] = accountIfo.getDescription().split(":");
+				paymentInfo.setTaxPeriod(taxperiods[0]);
+				paymentInfo.setPurpose(taxperiods[1]);
+			}
+			paymentInfos.add(paymentInfo);
+		}
+		LOGGER.info("paymengtinfo" + paymentInfos);
 		return paymentInfos;
 	}
 

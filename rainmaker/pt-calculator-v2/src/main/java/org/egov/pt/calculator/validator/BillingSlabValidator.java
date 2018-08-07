@@ -208,7 +208,7 @@ public class BillingSlabValidator {
 
 				}else {
 					if (!CollectionUtils.isEmpty(subOwnerShipCategory)) {
-						List<String> allowedsubOwnerShipCategories = JsonPath.read(subOwnerShipCategory,"$.*.[?(@.code=='" + billingSlab.getOwnerShipCategory() + "')].code");
+						List<String> allowedsubOwnerShipCategories = JsonPath.read(subOwnerShipCategory,"$.*.[?(@.ownerShipCategory=='" + billingSlab.getOwnerShipCategory() + "')].code");
 						if (!allowedsubOwnerShipCategories.contains(billingSlab.getSubOwnerShipCategory()) && !(billingSlab.getSubOwnerShipCategory().equalsIgnoreCase(allValue))) {
 							errorMap.put("INVALID_SUBOWNERSHIP_CATEGORY","Subownership category is invalid");
 

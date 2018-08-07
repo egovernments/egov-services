@@ -142,14 +142,18 @@ public class EmployeeRepository {
         List<Long> listOfIds = namedParameterJdbcTemplate.query(queryStrForListOfEmployeeIds,
                 namedParametersForListOfEmployeeIds, employeeIdsRowMapper);
 
+        log.info("List of Employee Ids : " + listOfIds.size());
+
         if (listOfIds.isEmpty()) {
             return Collections.EMPTY_LIST;
         }
+        log.info("Employee Ids : " + listOfIds);
 
         Map<String, Object> namedParameters = new HashMap<>();
         String queryStr = employeeQueryBuilder.getQuery(employeeCriteria, namedParameters, listOfIds);
 
         List<EmployeeInfo> employeesInfo = namedParameterJdbcTemplate.query(queryStr, namedParameters, employeeInfoRowMapper);
+        log.info("employeesInfo List : " + employeesInfo.size());
 
         return employeesInfo;
     }

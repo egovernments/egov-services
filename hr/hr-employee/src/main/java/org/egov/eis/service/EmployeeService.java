@@ -66,6 +66,7 @@ import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.kafka.listener.LoggingErrorHandler;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -223,7 +224,7 @@ public class EmployeeService {
         }
 
         List<EmployeeInfo> empInfoList = employeeRepository.findForCriteria(empCriteria);
-
+        log.info("Employee search list : " + empInfoList.size());
         if (isEmpty(empInfoList)) {
             return Collections.EMPTY_LIST;
         }

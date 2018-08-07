@@ -31,7 +31,8 @@ public class BillAccountDetail {
 	@Default
 	private BigDecimal crAmountToBePaid = BigDecimal.ZERO;
 
-	private BigDecimal creditAmount;
+	@Default
+	private BigDecimal creditAmount = BigDecimal.ZERO;
 
 	@Default
 	private BigDecimal debitAmount = BigDecimal.ZERO;

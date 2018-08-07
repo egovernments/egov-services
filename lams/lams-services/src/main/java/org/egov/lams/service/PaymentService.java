@@ -458,9 +458,9 @@ public class PaymentService {
 			paymentInfo.setGlCode(accountIfo.getGlCode());
 			paymentInfo.setCreditAmountToBePaid(accountIfo.getCreditAmountToBePaid());
 			if (accountIfo.getDescription() != null) {
-				String taxperiods[] = accountIfo.getDescription().split(":");
+				String[] taxperiods = accountIfo.getDescription().split(":");
 				paymentInfo.setTaxPeriod(taxperiods[0]);
-				paymentInfo.setPurpose(taxperiods[1]);
+				paymentInfo.setTaxPeriod(taxperiods[1]);
 			}
 			paymentInfos.add(paymentInfo);
 		}

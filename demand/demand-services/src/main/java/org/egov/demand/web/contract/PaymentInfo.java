@@ -9,7 +9,7 @@ public class PaymentInfo {
 	private Date receiptDate;
 	private String status;
 	private String description;
-	private String purpose;
+	private String taxReason;
 	private String glCode;
 	private BigDecimal creditedAmount;
 	private Double creditAmountToBePaid;
@@ -57,12 +57,14 @@ public class PaymentInfo {
 		this.description = description;
 	}
 
-	public String getPurpose() {
-		return purpose;
+
+
+	public String getTaxReason() {
+		return taxReason;
 	}
 
-	public void setPurpose(String purpose) {
-		this.purpose = purpose;
+	public void setTaxReason(String taxReason) {
+		this.taxReason = taxReason;
 	}
 
 	public String getGlCode() {

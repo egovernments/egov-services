@@ -84,7 +84,7 @@ public class DemandService {
 					egDemandDetail.addCollected(demandDetails.getCollectionAmount());
 					LOGGER.info("payment info to update receipts" + demand.getPaymentInfos());
 					if (!demand.getPaymentInfos().isEmpty()) {
-						egDemandDetail.setEgdmCollectedReceipts(getCollectedReceipts(demand, egDemandDetail));
+						egDemandDetail.setEgdmCollectedReceipts(getCollectedReceipts(demand.getPaymentInfos(), demandDetails,egDemandDetail));
 						LOGGER.info("back end receipt details" + egDemandDetail.getEgdmCollectedReceipts());
 					}
 				}
@@ -129,33 +129,30 @@ public class DemandService {
 		return demandRepository.save(egDemand);
 	}
 
-	private Set<EgdmCollectedReceipt> getCollectedReceipts(Demand demand, EgDemandDetails egDemandDetails) {
+	private Set<EgdmCollectedReceipt> getCollectedReceipts(List<PaymentInfo> paymentInfo, DemandDetails demandDetails,
+			EgDemandDetails egDemandDetails) {
 		Set<EgdmCollectedReceipt> egdmCollectedReceipts = new HashSet<>();
-
-		List<PaymentInfo> paymentInfo = demand.getPaymentInfos();
 
 		for (PaymentInfo info : paymentInfo) {
 			EgdmCollectedReceipt receipt = new EgdmCollectedReceipt();
-			for (DemandDetails demandsDetails : demand.getDemandDetails()) {
 
-				if (demandsDetails.getTaxReason() != null && info.getPurpose() != null
-				&& info.getTaxPeriod() != null && demandsDetails.getTaxPeriod() != null
-				&& info.getTaxPeriod().equalsIgnoreCase(demandsDetails.getTaxPeriod())
-						&& info.getPurpose().equalsIgnoreCase(demandsDetails.getTaxReason())) {
-					receipt.setEgdemandDetail(egDemandDetails);
-					receipt.setReceiptNumber(info.getReceiptNumber());
-					receipt.setReasonAmount(egDemandDetails.getAmtCollected());
-					receipt.setReceiptDate(info.getReceiptDate());
-					receipt.setUpdatedTime(new Date());
-					receipt.setAmount(info.getCreditedAmount());
-					receipt.setStatus(info.getStatus().charAt(0));
-					receipt.setTenantId(egDemandDetails.getTenantId());
-					egdmCollectedReceipts.add(receipt);
-					LOGGER.info("adding receipt details " + receipt);
-				}
+			if (info.getTaxReason() != null && info.getTaxPeriod() != null
+					&& info.getTaxPeriod().equalsIgnoreCase(demandDetails.getTaxPeriod())
+					&& info.getTaxReason().equalsIgnoreCase(demandDetails.getTaxReason())) {
+				receipt.setEgdemandDetail(egDemandDetails);
+				receipt.setReceiptNumber(info.getReceiptNumber());
+				receipt.setReasonAmount(egDemandDetails.getAmtCollected());
+				receipt.setReceiptDate(info.getReceiptDate());
+				receipt.setUpdatedTime(new Date());
+				receipt.setAmount(info.getCreditedAmount());
+				receipt.setStatus(info.getStatus().charAt(0));
+				receipt.setTenantId(egDemandDetails.getTenantId());
+				egdmCollectedReceipts.add(receipt);
+				LOGGER.info("adding receipt details " + receipt);
 			}
+
 		}
 		return egdmCollectedReceipts;
 	}
-
+	
 }

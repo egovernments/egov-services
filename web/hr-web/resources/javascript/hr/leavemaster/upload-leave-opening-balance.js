@@ -38,7 +38,10 @@ class UploadLeaveType extends React.Component {
       _state = {};
     var checkCountNCall = function(key, res) {
       count--;
-      _state[key] = res;
+      _this.setState({
+        [key]: res
+      });
+      // _state[key] = res;
       if (count == 0) _this.setInitialState(_state);
     };
 
@@ -49,7 +52,43 @@ class UploadLeaveType extends React.Component {
       checkCountNCall("_leaveTypes", res);
     });
     getCommonMaster("hr-employee", "employees", function(err, res) {
-      checkCountNCall("employees", res ? res.Employee : []);
+      if (res && res.Employee) {
+        var employees = res["Employee"];
+        if (res.Page && res.Page.totalPages > 1) {
+          count = 0;
+
+          try {
+            var promises = [];
+            for (var i = 2; i <= res.Page.totalPages; i++) {
+              var queryParam = { tenantId, pageSize: 500 };
+              queryParam.pageNumber = i;
+
+              var employeePromise = new Promise(function(resolve, reject) {
+                commonApiPost(
+                  "hr-employee",
+                  "employees",
+                  "_search",
+                  queryParam,
+                  function(err, res1) {
+                    resolve(res1 ? res1["Employee"] : []);
+                  }
+                );
+              });
+
+              promises.push(employeePromise);
+            }
+            Promise.all(promises).then(function(results) {
+              for (var itm in results)
+                employees = employees.concat(results[itm]);
+              checkCountNCall("employees", results ? employees : []);
+            });
+          } catch (error) {
+            console.log(error);
+          }
+        } else {
+          checkCountNCall("employees", res ? res.Employee : []);
+        }
+      }
     });
   }
 
@@ -193,10 +232,6 @@ class UploadLeaveType extends React.Component {
       });
     });
 
-    console.log("this.state._leaveTypes", _this.state._leaveTypes);
-    console.log("this.state.employees", _this.state.employees);
-    console.log("this.state._years", _this.state._years);
-
     var post = 0,
       error = 0,
       errorList = [],
@@ -209,7 +244,6 @@ class UploadLeaveType extends React.Component {
       calenderId = 0;
     for (var k = 0; k < tempInfo.length; k++) {
       var d = tempInfo[k];
-      console.log(d);
       noOfDays = parseInt(d.noOfDays);
       leaveName = d.leaveType.id;
       employeeName = d.employee;
@@ -217,10 +251,6 @@ class UploadLeaveType extends React.Component {
       var leaveValidate = checkLeave.indexOf(d.leaveType.id);
       var employeeValidate = checkEmployee.indexOf(d.employee);
       var calenderValidate = checkCalenderYear.indexOf(d.calendarYear);
-
-      console.log("leaveValidate", leaveValidate);
-      console.log("employeeValidate", employeeValidate);
-      console.log("calenderValidate", calenderValidate);
 
       d.errorMsg = "";
       if (noOfDays < 0) {
@@ -582,7 +612,6 @@ class UploadLeaveType extends React.Component {
     let { addOrUpdate, filePicked } = this;
     let { my_file_input } = this.state.leaveTypeSet;
     let mode = getUrlVars()["type"];
-
     return (
       <div>
         <form

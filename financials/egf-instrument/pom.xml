@@ -229,6 +229,7 @@
 										<exclude>org.egov.egf.instrument.domain.repository.SurrenderReasonESRepository</exclude>
 										<exclude>org.egov.egf.instrument.domain.repository.ElasticSearchQueryFactory</exclude>
 										<exclude>org.egov.egf.instrument.domain.repository.ElasticSearchUtils</exclude>
+										<exclude>org.egov.egf.instrument.web.mapper.InstrumentTypeMapper:</exclude>
 									</excludes>
 									<limits>
 										<limit>

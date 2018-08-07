@@ -1,4 +1,4 @@
-package org.egov.egf.instrument.web.mapper;
+/*package org.egov.egf.instrument.web.mapper;
 
 import static org.junit.Assert.assertEquals;
 
@@ -59,7 +59,7 @@ public class InstrumentTypeMapperTest {
 
 	}
 
-/*	@Test
+	@Test
 	public void test_to_contract() {
 
 		InstrumentTypeContract expectedContract = instrumentTypeMapper.toContract(domain());
@@ -84,7 +84,7 @@ public class InstrumentTypeMapperTest {
 		assertEquals(expectedContract.getLastModifiedBy().getId(), contract().getLastModifiedBy().getId());
 		assertEquals(expectedContract.getTenantId(), contract().getTenantId());
 
-	}*/
+	}
 
 	@Test
 	public void test_to_search_domain() {
@@ -114,7 +114,7 @@ public class InstrumentTypeMapperTest {
 		assertEquals(expectedSearchDomain.getOffset(), searchDomain().getOffset());
 	}
 
-	/*@Test
+	@Test
 	public void test_to_search_contract() {
 
 		InstrumentTypeSearchContract expectedSearchContract = instrumentTypeMapper.toSearchContract(searchDomain());
@@ -141,7 +141,7 @@ public class InstrumentTypeMapperTest {
 		assertEquals(expectedSearchContract.getPageSize(), searchContract().getPageSize());
 		assertEquals(expectedSearchContract.getOffset(), searchContract().getOffset());
 
-	}*/
+	}
 
 	public InstrumentType domain() {
 
@@ -177,7 +177,7 @@ public class InstrumentTypeMapperTest {
 		contract.setDescription("description");
 		contract.setName("name");
 
-/*		List<InstrumentTypePropertyContract> instrumentTypeProperties = new ArrayList<>();
+		List<InstrumentTypePropertyContract> instrumentTypeProperties = new ArrayList<>();
 
 		instrumentTypeProperties.add(InstrumentTypePropertyContract.builder().id("id").reconciledOncreate(true)
 				.statusOnCreate(FinancialStatusContract.builder().code("Create").build())
@@ -185,7 +185,7 @@ public class InstrumentTypeMapperTest {
 				.statusOnUpdate(FinancialStatusContract.builder().code("Update").build())
 				.transactionType(TransactionTypeContract.Credit).build());
 
-		contract.setInstrumentTypeProperties(instrumentTypeProperties);*/
+		contract.setInstrumentTypeProperties(instrumentTypeProperties);
 		contract.setCreatedBy(User.builder().id(1l).build());
 		contract.setLastModifiedBy(User.builder().id(1l).build());
 		contract.setTenantId("tenantId");
@@ -229,7 +229,7 @@ public class InstrumentTypeMapperTest {
 		contract.setDescription("description");
 		contract.setName("name");
 
-		/*List<InstrumentTypePropertyContract> instrumentTypeProperties = new ArrayList<>();
+		List<InstrumentTypePropertyContract> instrumentTypeProperties = new ArrayList<>();
 
 		instrumentTypeProperties.add(InstrumentTypePropertyContract.builder().id("id").reconciledOncreate(true)
 				.statusOnCreate(FinancialStatusContract.builder().code("Create").build())
@@ -237,7 +237,7 @@ public class InstrumentTypeMapperTest {
 				.statusOnUpdate(FinancialStatusContract.builder().code("Update").build())
 				.transactionType(TransactionTypeContract.Credit).build());
 
-		contract.setInstrumentTypeProperties(instrumentTypeProperties);*/
+		contract.setInstrumentTypeProperties(instrumentTypeProperties);
 		contract.setCreatedBy(User.builder().id(1l).build());
 		contract.setLastModifiedBy(User.builder().id(1l).build());
 		contract.setTenantId("tenantId");
@@ -248,3 +248,4 @@ public class InstrumentTypeMapperTest {
 	}
 
 }
+*/

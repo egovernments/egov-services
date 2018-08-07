@@ -39,9 +39,6 @@
  */
 package org.egov.egf.instrument.web.contract;
 
-import java.util.List;
-
-import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -62,7 +59,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 
-@JsonPropertyOrder({ "id","name","description","active","instrumentTypeProperties"})
+@JsonPropertyOrder({ "id", "name", "description", "active", "instrumentTypeProperties" })
 public class InstrumentTypeContract extends AuditableContract {
 
 	/*
@@ -76,15 +73,15 @@ public class InstrumentTypeContract extends AuditableContract {
 	 */
 	@NotNull
 	@NotBlank
-	@Size(max=50,min=2)
+	@Size(max = 50, min = 2)
 	private String name;
 
 	/*
-	 * description specifies details of the instrument type . For example
-	 * type DD description may be Demand Draft
+	 * description specifies details of the instrument type . For example type DD
+	 * description may be Demand Draft
 	 */
 
-	@Size(max=100)
+	@Size(max = 100)
 	private String description;
 
 	/*
@@ -92,12 +89,5 @@ public class InstrumentTypeContract extends AuditableContract {
 	 */
 	@NotNull
 	private Boolean active;
-
-/*	@Valid
-	@NotNull
-	@Size(max=2,min=2,message="")
-	private List<InstrumentTypePropertyContract> instrumentTypeProperties;*/
-
-
 
 }

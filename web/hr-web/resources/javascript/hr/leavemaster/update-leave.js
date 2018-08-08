@@ -45,6 +45,7 @@ const uploadFiles = function(body, cb) {
     for (let j = 0; j < files.length; j++) {
       if (files[j].file instanceof File) {
         makeAjaxUpload(files[j].file, files[j].docType, function(err, res) {
+          console.log(res.files);
           if (breakout == 1) return;
           else if (err) {
             cb(err);
@@ -55,11 +56,17 @@ const uploadFiles = function(body, cb) {
             if (counter == 0) {
               // body.LeaveApplication[0].documents = body.LeaveApplication[0].documents.concat(
               //   docs
-              // );
-              body &&
+              // )
+              if (
+                body &&
                 body.LeaveApplication &&
-                body.LeaveApplication.documents &&
-                body.LeaveApplication.documents.push(res.files[0].fileStoreId);
+                body.LeaveApplication.documents
+              ) {
+                body.LeaveApplication.documents = body.LeaveApplication.documents.concat(
+                  docs
+                );
+              }
+
               delete body.LeaveApplication.docs;
               cb(null, body);
             }
@@ -447,7 +454,7 @@ class UpdateLeave extends React.Component {
             }
 
             _this.setState({
-              positionId: process.owner.id,
+              positionId: process.owner && process.owner.id,
               buttons: _btns.length ? _btns : []
             });
           }
@@ -522,12 +529,12 @@ class UpdateLeave extends React.Component {
     if (status == "REJECTED") {
       $("input,select,textarea").prop("disabled", false);
       $("#availableDays,#workingDays,#name,#code").prop("disabled", true);
-      if(_this.state.leaveSet.encashable){
+      if (_this.state.leaveSet.encashable) {
         $("#leaveDays").prop("disabled", false);
-      }else{
+      } else {
         $("#leaveDays").prop("disabled", true);
       }
-    } 
+    }
 
     if (status == "APPLIED" || status == "RESUBMITTED") {
       $("#department, #designation, #assignee").prop("disabled", false);
@@ -1280,7 +1287,7 @@ class UpdateLeave extends React.Component {
     }
 
     if (name === "encashable") {
-        if (e.target.checked) $("#leaveDays").prop("disabled", false);
+      if (e.target.checked) $("#leaveDays").prop("disabled", false);
       else $("#leaveDays").prop("disabled", true);
       let _this = this;
       let asOnDate = today();
@@ -1653,7 +1660,7 @@ class UpdateLeave extends React.Component {
                     if (res) {
                       var process = res["processInstance"];
                       if (process) {
-                        var positionId = process.owner.id;
+                        var positionId = process.owner && process.owner.id;
                         commonApiPost(
                           "hr-employee",
                           "employees",

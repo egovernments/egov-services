@@ -299,12 +299,19 @@ public class BillService {
 		return bills;
 	}
 
+	/**
+	 * Applies the purpose on Bill Account Details
+	 * @param category
+	 * @param taxHeadCode
+	 * @param taxPeriodFrom
+	 * @param taxPeriodTo
+	 * @return
+	 */
 	private Purpose getPurpose(Category category, String taxHeadCode, Long taxPeriodFrom, Long taxPeriodTo) {
 
 		Long currDate = System.currentTimeMillis();
-		//TODO check about arrears late payments ask Ramki to take a look
-		if (category.equals(Category.TAX) || category.equals(Category.FEE) 
-				|| category.equals(Category.CHARGES)) {
+
+		if (category.equals(Category.TAX) || category.equals(Category.FEE) || category.equals(Category.CHARGES)) {
 
 			if (taxPeriodFrom <= currDate && taxPeriodTo >= currDate)
 				return Purpose.CURRENT_AMOUNT;
@@ -312,12 +319,15 @@ public class BillService {
 				return Purpose.ARREAR_AMOUNT;
 			else
 				return Purpose.ADVANCE_AMOUNT;
-		} else if (category.equals(Category.REBATE))
+		} else if (category.equals(Category.REBATE)) {
 			return Purpose.REBATE;
-		else if (category.equals(Category.ADVANCE_COLLECTION))
+		} else if (category.equals(Category.EXEMPTION)) {
+			return Purpose.EXEMPTION;
+		} else if (category.equals(Category.ADVANCE_COLLECTION)) {
 			return Purpose.ADVANCE_AMOUNT;
-		else
+		} else {
 			return Purpose.OTHERS;
+		}
 	}
 
 	private Map<String, List<TaxHeadMaster>> getTaxHeadMaster(List<Demand> demands, String tenantId, RequestInfo requestInfo) {

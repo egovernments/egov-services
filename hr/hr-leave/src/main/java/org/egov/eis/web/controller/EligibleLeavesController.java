@@ -40,6 +40,7 @@
 
 package org.egov.eis.web.controller;
 
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.time.Duration;
 import java.time.LocalDate;
@@ -49,6 +50,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.LongAdder;
 import java.util.stream.Collectors;
 
 import javax.validation.Valid;
@@ -211,8 +213,9 @@ public class EligibleLeavesController {
 			return errHandler.getResponseEntityForUnexpectedErrors(requestInfo);
 		}
 
-		if (leaveApplicationsList != null && !leaveApplicationsList.isEmpty())
-			applicationValue = leaveApplicationsList.get(0).getLeaveDays();
+		List<Double> leaveDays = leaveApplicationsList.stream().map(leaveApp -> leaveApp.getLeaveDays().doubleValue()).collect(Collectors.toList());
+		Double sum = leaveDays.stream().collect(Collectors.summingDouble(d -> d));
+		applicationValue = sum.floatValue();
 
 		final EligibleLeave eligibleLeave = new EligibleLeave();
 		eligibleLeave.setAsOnDate(asOnDate);

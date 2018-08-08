@@ -68,6 +68,10 @@
             padding-right: 10px;
             margin-bottom: 0px;
         }
+
+        .land-table {
+            overflow-x: auto;
+        }
     </style>
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -299,7 +303,7 @@
                                                                         <span>
                                                                             <i class="glyphicon glyphicon-calendar"></i>
                                                                         </span>
-                                                                        <input id="user.dob" name="user.dob" type="text" class="datetimepicker">
+                                                                        <input id="user.dob" name="user.dob" type="text" class="datetimepicker" maxlength="10">
                                                                         <!-- <input id="user.dob" name="user.dob" type="text" class="datetimepicker" > -->
                                                                         <!-- <input class="form-control datepicker" data-date-format="mm/dd/yyyy" type="text"> -->
                                                                         <!-- <div class="container">
@@ -787,7 +791,7 @@
                                                                         <span>
                                                                             <i class="glyphicon glyphicon-calendar"></i>
                                                                         </span>
-                                                                        <input id="dateOfAppointment" name="dateOfAppointment" type="text" class="datetimepicker">
+                                                                        <input id="dateOfAppointment" name="dateOfAppointment" type="text" class="datetimepicker" maxlength="10">
                                                                         <!-- </div> -->
                                                                     </div>
                                                                 </div>
@@ -804,7 +808,7 @@
                                                                             <span>
                                                                                 <i class="glyphicon glyphicon-calendar"></i>
                                                                             </span>
-                                                                            <input id="dateOfJoining" name="dateOfJoining" type="text" class="datetimepicker">
+                                                                            <input id="dateOfJoining" name="dateOfJoining" type="text" class="datetimepicker" maxlength="10">
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -831,7 +835,7 @@
                                                                             <span>
                                                                                 <i class="glyphicon glyphicon-calendar"></i>
                                                                             </span>
-                                                                            <input id="dateOfRetirement" name="dateOfRetirement" type="text" class="datetimepicker" max="12/12/9999">
+                                                                            <input id="dateOfRetirement" name="dateOfRetirement" type="text" class="datetimepicker" maxlength="10">
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -846,7 +850,7 @@
                                                                             <span>
                                                                                 <i class="glyphicon glyphicon-calendar"></i>
                                                                             </span>
-                                                                            <input id="dateOfTermination" name="dateOfTermination" type="text" class="datetimepicker">
+                                                                            <input id="dateOfTermination" name="dateOfTermination" type="text" class="datetimepicker" maxlength="10">
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -863,7 +867,7 @@
                                                                             <span>
                                                                                 <i class="glyphicon glyphicon-calendar"></i>
                                                                             </span>
-                                                                            <input id="dateOfResignation" name="dateOfResignation" type="text" class="datetimepicker">
+                                                                            <input id="dateOfResignation" name="dateOfResignation" type="text" class="datetimepicker" maxlength="10">
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -998,7 +1002,7 @@
                                                                                 <label for="assignments.fromDate">From Date</label>
                                                                             </div>
                                                                             <div class="col-sm-6">
-                                                                                <input id="assignments.fromDate" name="assignments.fromDate" type="text" class="datetimepicker">
+                                                                                <input id="assignments.fromDate" name="assignments.fromDate" type="text" class="datetimepicker" maxlength="10">
                                                                             </div>
                                                                         </div>
                                                                     </div>
@@ -1008,7 +1012,7 @@
                                                                                 <label for="assignments.toDate">To Date</label>
                                                                             </div>
                                                                             <div class="col-sm-6">
-                                                                                <input id="assignments.toDate" name="assignments.toDate" type="text" class="datetimepicker">
+                                                                                <input id="assignments.toDate" name="assignments.toDate" type="text" class="datetimepicker" maxlength="10">
                                                                             </div>
                                                                         </div>
                                                                     </div>
@@ -1259,7 +1263,7 @@
                                         <div role="tabpanel" class="tab-pane" id="serviceSection">
                                             <div class="form-section">
                                                 <!-- <h3>Service Section </h3> -->
-                                                <h3 class="pull-left">Service Details/history/ledger </h3>
+                                                <h3 class="pull-left"> </h3>
                                                 <a href="#" class="btn btn-default btn-action pull-right" data-toggle="modal" data-target="#serviceHistoryDetailModal" title="Add">
                                                     <span class="glyphicon glyphicon-plus"></span>
                                                 </a>
@@ -1325,7 +1329,7 @@
                                                                                     <label for="serviceHistory.serviceFrom">From Date</label>
                                                                                 </div>
                                                                                 <div class="col-sm-6">
-                                                                                    <input id="serviceHistory.serviceFrom" name="serviceHistory.serviceFrom" type="text" class="datetimepicker">
+                                                                                    <input id="serviceHistory.serviceFrom" name="serviceHistory.serviceFrom" type="text" class="datetimepicker" maxlength="10">
                                                                                 </div>
                                                                             </div>
                                                                         </div>
@@ -1335,7 +1339,7 @@
                                                                                     <label for="serviceHistory.serviceTo">To Date</label>
                                                                                 </div>
                                                                                 <div class="col-sm-6">
-                                                                                    <input id="serviceHistory.serviceTo" name="serviceHistory.serviceTo" type="text" class="datetimepicker">
+                                                                                    <input id="serviceHistory.serviceTo" name="serviceHistory.serviceTo" type="text" class="datetimepicker" maxlength="10">
                                                                                 </div>
                                                                             </div>
                                                                         </div>
@@ -1465,7 +1469,7 @@
                                                                                     <label for="probation.declaredOn">Probation Declared Date</label>
                                                                                 </div>
                                                                                 <div class="col-sm-6">
-                                                                                    <input id="probation.declaredOn" name="probation.declaredOn" type="text" class="datetimepicker">
+                                                                                    <input id="probation.declaredOn" name="probation.declaredOn" type="text" class="datetimepicker" maxlength="10">
                                                                                 </div>
                                                                             </div>
                                                                         </div>
@@ -1487,7 +1491,7 @@
                                                                                     <label for="probation.orderDate">Order Date</label>
                                                                                 </div>
                                                                                 <div class="col-sm-6">
-                                                                                    <input id="probation.orderDate" name="probation.orderDate" type="text" class="datetimepicker">
+                                                                                    <input id="probation.orderDate" name="probation.orderDate" type="text" class="datetimepicker" maxlength="10">
                                                                                 </div>
                                                                             </div>
                                                                         </div>
@@ -1580,7 +1584,7 @@
                                                                                     <label for="regularisation.declaredOn">Regularisation Declared Date</label>
                                                                                 </div>
                                                                                 <div class="col-sm-6">
-                                                                                    <input id="regularisation.declaredOn" name="regularisation.declaredOn" type="text" class="datetimepicker">
+                                                                                    <input id="regularisation.declaredOn" name="regularisation.declaredOn" type="text" class="datetimepicker" maxlength="10">
                                                                                 </div>
                                                                             </div>
                                                                         </div>
@@ -1602,7 +1606,7 @@
                                                                                     <label for="regularisation.orderDate">Order Date</label>
                                                                                 </div>
                                                                                 <div class="col-sm-6">
-                                                                                    <input id="regularisation.orderDate" name="regularisation.orderDate" type="text" class="datetimepicker">
+                                                                                    <input id="regularisation.orderDate" name="regularisation.orderDate" type="text" class="datetimepicker" maxlength="10">
                                                                                 </div>
                                                                             </div>
                                                                         </div>

@@ -44,6 +44,8 @@ public class BillDetail {
 	private BigDecimal minimumAmount;
 
 	private BigDecimal totalAmount;
+	
+	private BigDecimal collectedAmount;
 
 	private List<String> collectionModesNotAllowed = new ArrayList<>();
 

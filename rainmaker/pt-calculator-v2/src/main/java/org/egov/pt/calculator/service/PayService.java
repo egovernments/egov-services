@@ -232,14 +232,14 @@ public class PayService {
 
 		/*
 		 * amtRemaining is the total amount left to apportioned if amtRemaining is zero
-		 * then break the for loop 
+		 * then break the for loop
 		 * 
-		 * if the amountToBePaid is greater then amtRemaining
-		 * then set amtRemaining to collectedAmount(creditAmount) 
+		 * if the amountToBePaid is greater then amtRemaining then set amtRemaining to
+		 * collectedAmount(creditAmount)
 		 * 
-		 * if the amtRemaining is Greater than amountToBeCollected then 
-		 * subtract amtToBecollected from amtRemaining and 
-		 * set the same to collectedAmount(creditAmount)
+		 * if the amtRemaining is Greater than amountToBeCollected then subtract
+		 * amtToBecollected from amtRemaining and set the same to
+		 * collectedAmount(creditAmount)
 		 */
 		BigDecimal amtRemaining = amtPaid;
 		for (BillAccountDetail billAccountDetail : billAccountDetails) {
@@ -249,10 +249,10 @@ public class PayService {
 					billAccountDetail.setCreditAmount(amtRemaining);
 					amtRemaining = BigDecimal.ZERO;
 				} else if (amtToBePaid.compareTo(amtRemaining) < 0) {
+					billAccountDetail.setCreditAmount(amtToBePaid);
 					amtRemaining = amtRemaining.subtract(amtToBePaid);
 				}
-			} else
-				break;
+			} else break;
 		}
 	}
 

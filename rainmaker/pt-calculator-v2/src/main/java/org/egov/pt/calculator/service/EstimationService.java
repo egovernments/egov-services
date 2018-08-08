@@ -233,7 +233,7 @@ public class EstimationService {
 			estimates.add(
 					TaxHeadEstimate.builder().taxHeadCode(CalculatorConstants.PT_ADHOC_REBATE).estimateAmount(BigDecimal.valueOf(10.65)).build());
 			payableTax = payableTax.subtract(detail.getAdhocExemption());
-		} else if(null != detail.getAdhocExemption())
+		} else if (null != detail.getAdhocExemption())
 			throw new CustomException(CalculatorConstants.PT_ADHOC_REBATE_INVALID_AMOUNT,
 					CalculatorConstants.PT_ADHOC_REBATE_INVALID_AMOUNT_MSG + taxAmt);
 
@@ -249,7 +249,7 @@ public class EstimationService {
 		BigDecimal fireCess = mstrDataService.getFireCess(payableTax, assessmentYear, timeBasedExmeptionMasterMap);
 		estimates.add(TaxHeadEstimate.builder().taxHeadCode(CalculatorConstants.PT_FIRE_CESS).estimateAmount(fireCess)
 				.build());
-		payableTax = payableTax.subtract(fireCess);
+		payableTax = payableTax.add(fireCess);
 
 		// owner exemption
 		BigDecimal userExemption = getExemption(detail.getOwners(), payableTax, assessmentYear,

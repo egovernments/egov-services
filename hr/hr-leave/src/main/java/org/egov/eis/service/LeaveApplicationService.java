@@ -320,6 +320,9 @@ public class LeaveApplicationService {
                     errorMsg = errorMsg + applicationConstants.getErrorMessage(ApplicationConstants.MSG_FROMDATE_TODATE)
                             + " ";
             }
+            if(leaveApplication.getLeaveDays() > leaveApplication.getAvailableDays())
+              errorMsg = applicationConstants.getErrorMessage(ApplicationConstants.MSG_LEAVEAPPLICATION_ENCASHABLE) + " ";
+
             final List<EmployeeInfo> employees = employeeRepository.getEmployeeById(
                     leaveApplicationRequest.getRequestInfo(), leaveApplication.getTenantId(),
                     leaveApplication.getEmployee());

@@ -121,10 +121,10 @@ public class LeaveApplicationRepository {
     public LeaveApplicationRequest saveLeaveApplication(final LeaveApplicationRequest leaveApplicationRequest) {
         ProcessInstance processInstance = new ProcessInstance();
         Long stateId = null;
-        if (StringUtils.isEmpty(leaveApplicationRequest.getType()))
+       if (StringUtils.isEmpty(leaveApplicationRequest.getType()))
            processInstance = workFlowService.start(leaveApplicationRequest);
-        if (processInstance.getId() != null)
-            stateId = Long.valueOf(processInstance.getId());
+       if (processInstance.getId() != null)
+           stateId = Long.valueOf(processInstance.getId());
         final String leaveApplicationInsertQuery = LeaveApplicationQueryBuilder.insertLeaveApplicationQuery();
         final Date now = new Date();
         final UserResponse userResponse = userService
@@ -273,7 +273,8 @@ public class LeaveApplicationRepository {
         }
 
         if (leaveApplication.getDocuments() != null && !leaveApplication.getDocuments().isEmpty()) {
-            leaveApplication.getDocuments().removeAll(documents);
+            List<String> leaveAppDoc = documentsFromDB.stream().map(doc -> doc.getDocument()).collect(Collectors.toList());
+            leaveApplication.getDocuments().removeAll(leaveAppDoc);
         }
     }
 

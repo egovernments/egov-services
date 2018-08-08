@@ -36,6 +36,7 @@ public class BillService {
 		for (BillDetailInfo billDetailInfo : billInfo.getBillDetailInfos()) {
 			EgBillDetails egBillDetail = new EgBillDetails(billDetailInfo);
 			egBillDetail.setEgBill(egBill);
+			egBillDetail.setTenantId(billInfo.getTenantId());
 			billDetails.add(egBillDetail);
 		}
 		egBill.setEgBillDetails(billDetails);

@@ -147,9 +147,14 @@ class UploadLeaveType extends React.Component {
       for (var i = 0; i < scannedObject.length; i++) {
         for (var j = i + 1; j <= scannedObject.length - 1; j++)
           if (scannedObject[i].employee === scannedObject[j].employee) {
-            if (scannedObject[i].leaveType.id === scannedObject[j].leaveType.id)
+            if (
+              scannedObject[i].leaveType.id.toLowerCase() ===
+                scannedObject[j].leaveType.id.toLowerCase() &&
+              scannedObject[i].calendarYear === scannedObject[j].calendarYear
+            ) {
               scannedObject[i].duplicate = "true";
-            scannedObject[j].duplicate = "true";
+              scannedObject[j].duplicate = "true";
+            }
           }
       }
       scannedObject.forEach(function(d) {

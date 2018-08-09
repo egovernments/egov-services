@@ -141,7 +141,7 @@ public class ReportQueryBuilder {
 
 	public String getFunctionaryWiseReportQuert(ReportRequest reportRequest) {
 		String query = "select assignee as employee_name,\n"
-				+ "sum(case when eg_pgr_action.businesskey IN (select DISTINCT businesskey from eg_pgr_action where status = 'assigned') then 1 else 0 end) as total_complaints_received,\n"
+				+ "sum(case when eg_pgr_action.businesskey IN (select DISTINCT businesskey from eg_pgr_action where status = 'assigned' AND \"when\" IN (select max(\"when\") from eg_pgr_action group by businesskey) then 1 else 0 end) as total_complaints_received,\n"
 				// + "sum(case when eg_pgr_action.when IN (select max(\"when\") from
 				// eg_pgr_action where status = 'resolved' group by businessKey) then 1 else 0
 				// end) as total_closed_complaints,\n"

@@ -294,10 +294,27 @@ public class PayService {
 			BigDecimal reminder = currentTax.remainder(BigDecimal.ONE);
 			double reminderVal = reminder.doubleValue();
 
-			if (reminderVal > 0.5)
-				roundOffPos = roundOffPos.add(BigDecimal.ONE.subtract(reminder));
-			else if (reminderVal < 0.5)
-				roundOffNeg = roundOffNeg.add(reminder);
+			/*
+			 * if there is positive round off in debit amounts
+			 * (ie amount to be paid by consumer/Tax & penalty) add it to the roundoff positive
+			 * 
+			 * else if there is a negative round off in debit amount add it to negative round off
+			 */
+			if (!CalculatorConstants.CREDIT_CATEGORIES.contains(estimate.getCategory())) {
+				if (reminderVal > 0.5)
+					roundOffPos = roundOffPos.add(BigDecimal.ONE.subtract(reminder));
+				else if (reminderVal < 0.5)
+					roundOffNeg = roundOffNeg.add(reminder);
+			}
+			/*
+			 * for credit amounts (ie credit given/rebate & exemption ) do the reverse process which has been applie dfor debit
+			 */
+			else {
+				if (reminderVal > 0.5)
+					roundOffPos = roundOffPos.add(reminder);
+				else if (reminderVal < 0.5)
+					roundOffNeg = roundOffNeg.add(BigDecimal.ONE.subtract(reminder));
+			}
 		}
 
 		if (roundOffPos.doubleValue() > 0)

@@ -255,19 +255,20 @@ public class EstimationService {
 	 * @param timeBasedExmeptionMasterMap
 	 */
 	private List<TaxHeadEstimate> getEstimatesForTax(String assessmentYear, BigDecimal taxAmt, BigDecimal usageExemption, PropertyDetail detail,
-			Map<String, Map<String, List<Object>>> propertyBasedExemptionMasterMap,	Map<String, JSONArray> timeBasedExmeptionMasterMap) {
-		
+			Map<String, Map<String, List<Object>>> propertyBasedExemptionMasterMap,
+			Map<String, JSONArray> timeBasedExmeptionMasterMap) {
+
 		BigDecimal payableTax = taxAmt;
 		List<TaxHeadEstimate> estimates = new ArrayList<>();
 
 		// AdHoc Values (additional rebate or penalty manually entered by the employee)
 		if (null != detail.getAdhocPenalty())
 			estimates.add(TaxHeadEstimate.builder().taxHeadCode(CalculatorConstants.PT_ADHOC_PENALTY)
-					.estimateAmount(BigDecimal.valueOf(10.25)).build());
-		
+					.estimateAmount(detail.getAdhocPenalty()).build());
+
 		if (null != detail.getAdhocExemption() && detail.getAdhocExemption().compareTo(taxAmt) <= 0) {
-			estimates.add(
-					TaxHeadEstimate.builder().taxHeadCode(CalculatorConstants.PT_ADHOC_REBATE).estimateAmount(BigDecimal.valueOf(10.65)).build());
+			estimates.add(TaxHeadEstimate.builder().taxHeadCode(CalculatorConstants.PT_ADHOC_REBATE)
+					.estimateAmount(detail.getAdhocExemption()).build());
 			payableTax = payableTax.subtract(detail.getAdhocExemption());
 		} else if (null != detail.getAdhocExemption()) {
 			throw new CustomException(CalculatorConstants.PT_ADHOC_REBATE_INVALID_AMOUNT,
@@ -275,24 +276,25 @@ public class EstimationService {
 		}
 
 		// taxes
-		estimates.add(TaxHeadEstimate.builder().taxHeadCode(CalculatorConstants.PT_TAX).estimateAmount(taxAmt).build());
+		estimates.add(TaxHeadEstimate.builder().taxHeadCode(CalculatorConstants.PT_TAX)
+				.estimateAmount(taxAmt.setScale(2, 2)).build());
 
 		// usage exemption
-			estimates.add(TaxHeadEstimate.builder().taxHeadCode(CalculatorConstants.PT_UNIT_USAGE_EXEMPTION)
-					.estimateAmount(usageExemption).build());
-			payableTax = payableTax.subtract(usageExemption);
+		estimates.add(TaxHeadEstimate.builder().taxHeadCode(CalculatorConstants.PT_UNIT_USAGE_EXEMPTION)
+				.estimateAmount(usageExemption.setScale(2, 2)).build());
+		payableTax = payableTax.subtract(usageExemption);
 
 		// Fire cess
 		BigDecimal fireCess = mstrDataService.getFireCess(payableTax, assessmentYear, timeBasedExmeptionMasterMap);
-		estimates.add(TaxHeadEstimate.builder().taxHeadCode(CalculatorConstants.PT_FIRE_CESS).estimateAmount(fireCess)
-				.build());
+		estimates.add(TaxHeadEstimate.builder().taxHeadCode(CalculatorConstants.PT_FIRE_CESS)
+				.estimateAmount(fireCess.setScale(2, 2)).build());
 		payableTax = payableTax.add(fireCess);
 
 		// owner exemption
 		BigDecimal userExemption = getExemption(detail.getOwners(), payableTax, assessmentYear,
 				propertyBasedExemptionMasterMap);
 		estimates.add(TaxHeadEstimate.builder().taxHeadCode(CalculatorConstants.PT_OWNER_EXEMPTION)
-				.estimateAmount(userExemption).build());
+				.estimateAmount(userExemption.setScale(2, 2)).build());
 		payableTax = payableTax.subtract(userExemption);
 
 		/*
@@ -302,12 +304,12 @@ public class EstimationService {
 				timeBasedExmeptionMasterMap);
 
 		estimates.add(TaxHeadEstimate.builder().taxHeadCode(CalculatorConstants.PT_TIME_REBATE)
-				.estimateAmount(rebatePenaltyMap.get(CalculatorConstants.PT_TIME_REBATE)).build());
+				.estimateAmount(rebatePenaltyMap.get(CalculatorConstants.PT_TIME_REBATE).setScale(2, 2)).build());
 		estimates.add(TaxHeadEstimate.builder().taxHeadCode(CalculatorConstants.PT_TIME_PENALTY)
-				.estimateAmount(rebatePenaltyMap.get(CalculatorConstants.PT_TIME_PENALTY)).build());
+				.estimateAmount(rebatePenaltyMap.get(CalculatorConstants.PT_TIME_PENALTY).setScale(2, 2)).build());
 		estimates.add(TaxHeadEstimate.builder().taxHeadCode(CalculatorConstants.PT_TIME_INTEREST)
-				.estimateAmount(rebatePenaltyMap.get(CalculatorConstants.PT_TIME_INTEREST)).build());
-		
+				.estimateAmount(rebatePenaltyMap.get(CalculatorConstants.PT_TIME_INTEREST).setScale(2, 2)).build());
+
 		return estimates;
 	}
 

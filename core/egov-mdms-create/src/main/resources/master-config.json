@@ -497,14 +497,14 @@
     },
     "Rebate": {
       "masterName": "Rebate",
-      "isStateLevel": true,
+      "isStateLevel": false,
       "uniqueKeys": [
         "$.fromFY"
       ]
     },
     "Penalty": {
       "masterName": "Penalty",
-      "isStateLevel": true,
+      "isStateLevel": false,
       "uniqueKeys": [
         "$.fromFY"
       ]

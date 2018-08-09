@@ -245,7 +245,7 @@
                                                                     <label for="code">Employee Code</label>
                                                                 </div>
                                                                 <div class="col-sm-6">
-                                                                    <input id="code" name="code" type="text" maxlength="256" />
+                                                                    <input id="code" name="code" type="text" maxlength="250" />
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -373,7 +373,7 @@
                                                                     <label for="user.userName">User Name</label>
                                                                 </div>
                                                                 <div class="col-sm-6">
-                                                                    <input id="user.userName" name="user.userName" type="text">
+                                                                    <input id="user.userName" name="user.userName" type="text" maxlength="64">
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -415,7 +415,7 @@
                                                                     <label for="user.emailId">Email ID </label>
                                                                 </div>
                                                                 <div class="col-sm-6">
-                                                                    <input id="user.emailId" name="user.emailId" type="email">
+                                                                    <input id="user.emailId" name="user.emailId" type="email" maxlength="128">
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -661,7 +661,7 @@
                                                                         <label for="user.permanentAddress">Permanent Address </label>
                                                                     </div>
                                                                     <div class="col-sm-6">
-                                                                        <textarea id="user.permanentAddress" name="user.permanentAddress" maxlength="1024"></textarea>
+                                                                        <textarea id="user.permanentAddress" name="user.permanentAddress" maxlength="300"></textarea>
                                                                     </div>
                                                                 </div>
                                                                 <div class="row">
@@ -689,7 +689,7 @@
                                                                         <label for="user.correspondenceAddress">Correspondence Address </label>
                                                                     </div>
                                                                     <div class="col-sm-6">
-                                                                        <textarea id="user.correspondenceAddress" name="user.correspondenceAddress"></textarea>
+                                                                        <textarea id="user.correspondenceAddress" name="user.correspondenceAddress" maxlength="300"></textarea>
                                                                     </div>
                                                                 </div>
                                                                 <div class="row">
@@ -697,7 +697,7 @@
                                                                         <label for="user.correspondenceCity">City </label>
                                                                     </div>
                                                                     <div class="col-sm-6">
-                                                                        <input id="user.correspondenceCity" name="user.correspondenceCity" type="text">
+                                                                        <input id="user.correspondenceCity" name="user.correspondenceCity" type="text" maxlength="250">
                                                                     </div>
                                                                 </div>
                                                                 <div class="row">
@@ -1304,7 +1304,7 @@
                                                                                     <label for="serviceHistory.city">ULB/City</label>
                                                                                 </div>
                                                                                 <div class="col-sm-6">
-                                                                                    <select id="serviceHistory.city" name="serviceHistory.city" type="text">
+                                                                                    <select id="serviceHistory.city" name="serviceHistory.city" type="text" maxlength="250">
                                                                                         <option value="">Select ULB/City</option>
                                                                                     </select>
                                                                                 </div>
@@ -1316,7 +1316,7 @@
                                                                                     <label for="serviceHistory.serviceInfo">Service Entry Description</label>
                                                                                 </div>
                                                                                 <div class="col-sm-6">
-                                                                                    <textarea id="serviceHistory.serviceInfo" name="serviceHistory.serviceInfo" type="text"></textarea>
+                                                                                    <textarea id="serviceHistory.serviceInfo" name="serviceHistory.serviceInfo" type="text" maxLength="250"></textarea>
                                                                                 </div>
                                                                             </div>
                                                                         </div>
@@ -1377,7 +1377,7 @@
                                                                                     <label for="serviceHistory.remarks">Remarks/Comments</label>
                                                                                 </div>
                                                                                 <div class="col-sm-6">
-                                                                                    <textarea id="serviceHistory.remarks" name="serviceHistory.remarks" type="text" maxlength="1024"></textarea>
+                                                                                    <textarea id="serviceHistory.remarks" name="serviceHistory.remarks" type="text" maxlength="250"></textarea>
                                                                                 </div>
                                                                             </div>
                                                                         </div>
@@ -1481,7 +1481,7 @@
                                                                                     <label for="probation.orderNo">Order No</label>
                                                                                 </div>
                                                                                 <div class="col-sm-6">
-                                                                                    <input id="probation.orderNo" name="probation.orderNo" type="text">
+                                                                                    <input id="probation.orderNo" name="probation.orderNo" type="text" maxlength="250">
                                                                                 </div>
                                                                             </div>
                                                                         </div>
@@ -1503,7 +1503,7 @@
                                                                                     <label for="probation.remarks">Remarks</label>
                                                                                 </div>
                                                                                 <div class="col-sm-6">
-                                                                                    <textarea id="probation.remarks" name="probation.remarks"></textarea>
+                                                                                    <textarea id="probation.remarks" name="probation.remarks" maxlength="250"></textarea>
                                                                                 </div>
                                                                             </div>
                                                                         </div>
@@ -1596,7 +1596,7 @@
                                                                                     <label for="regularisation.orderNo">Order No</label>
                                                                                 </div>
                                                                                 <div class="col-sm-6">
-                                                                                    <input id="regularisation.orderNo" name="regularisation.orderNo" type="text">
+                                                                                    <input id="regularisation.orderNo" name="regularisation.orderNo" type="text" maxlength="250">
                                                                                 </div>
                                                                             </div>
                                                                         </div>
@@ -1618,7 +1618,7 @@
                                                                                     <label for="regularisation.remarks">Remarks</label>
                                                                                 </div>
                                                                                 <div class="col-sm-6">
-                                                                                    <textarea id="regularisation.remarks" name="regularisation.remarks"></textarea>
+                                                                                    <textarea id="regularisation.remarks" name="regularisation.remarks" maxlength="250"></textarea>
                                                                                 </div>
                                                                             </div>
                                                                         </div>
@@ -1785,7 +1785,7 @@
                                                                                     <label for="technical.skill">Skills</label>
                                                                                 </div>
                                                                                 <div class="col-sm-6">
-                                                                                    <textarea id="technical.skill" name="technical.skill" type="text"></textarea>
+                                                                                    <textarea id="technical.skill" name="technical.skill" type="text" maxlength="250"></textarea>
                                                                                 </div>
                                                                             </div>
                                                                         </div>
@@ -1795,7 +1795,7 @@
                                                                                     <label for="technical.grade"> Grade</label>
                                                                                 </div>
                                                                                 <div class="col-sm-6">
-                                                                                    <input id="technical.grade" name="technical.grade" type="text">
+                                                                                    <input id="technical.grade" name="technical.grade" type="text" maxlength="250">
                                                                                 </div>
                                                                             </div>
                                                                         </div>
@@ -1817,7 +1817,7 @@
                                                                                     <label for="technical.remarks"> Remarks</label>
                                                                                 </div>
                                                                                 <div class="col-sm-6">
-                                                                                    <textarea id="technical.remarks" name="technical.remarks" type="text"></textarea>
+                                                                                    <textarea id="technical.remarks" name="technical.remarks" type="text" maxlength="250"></textarea>
                                                                                 </div>
                                                                             </div>
                                                                         </div>
@@ -1882,7 +1882,7 @@
                                                                                     <label for="test.test">Name of the Test</label>
                                                                                 </div>
                                                                                 <div class="col-sm-6">
-                                                                                    <textarea id="test.test" name="test.test" type="text"></textarea>
+                                                                                    <textarea id="test.test" name="test.test" type="text" maxlength="250"></textarea>
                                                                                 </div>
                                                                             </div>
                                                                         </div>
@@ -1904,7 +1904,7 @@
                                                                                     <label for="test.remarks">Remarks</label>
                                                                                 </div>
                                                                                 <div class="col-sm-6">
-                                                                                    <textarea id="test.remarks" name="test.remarks" type="text"></textarea>
+                                                                                    <textarea id="test.remarks" name="test.remarks" type="text" maxlength="250"></textarea>
                                                                                 </div>
                                                                             </div>
                                                                         </div>

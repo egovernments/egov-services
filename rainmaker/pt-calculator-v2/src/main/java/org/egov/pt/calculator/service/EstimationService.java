@@ -130,6 +130,9 @@ public class EstimationService {
 		mstrDataService.setPropertyMasterValues(requestInfo, tenantId, propertyBasedExemptionMasterMap,
 				timeBasedExmeptionMasterMap);
 
+		/*
+		 * by default land should get only one slab from database per tenantId
+		 */
 		if (CalculatorConstants.PT_TYPE_VACANT_LAND.equalsIgnoreCase(detail.getPropertyType())
 				&& filteredbillingSlabs.size() != 1)
 			throw new CustomException(CalculatorConstants.PT_ESTIMATE_BILLINGSLABS_UNMATCH_VACANCT,
@@ -141,7 +144,18 @@ public class EstimationService {
 		} else {
 
 			double unBuiltRate = 0.0;
+			int groundUnitsCount = 0;
+			Double groundUnitsArea = 0.0;
+			
 			for (Unit unit : detail.getUnits()) {
+				
+				/*
+				 * counting the number of units & total area in ground floor for unbuilt area tax calculation
+				 */
+				if (unit.getFloorNo().equalsIgnoreCase("0")) {
+					groundUnitsCount += 1;
+					groundUnitsArea += unit.getUnitArea();
+				}
 
 				BillingSlab slab = getSlabForCalc(filteredbillingSlabs, unit);
 				BigDecimal currentUnitTax = getTaxForUnit(slab, unit);
@@ -152,14 +166,36 @@ public class EstimationService {
 				usageExemption = usageExemption
 						.add(getExemption(unit, currentUnitTax, assessmentYear, propertyBasedExemptionMasterMap));
 			}
-
-			unBuiltRate = unBuiltRate / detail.getUnits().size();
-			if (0.0 < unBuiltRate && null != detail.getLandArea())
-				taxAmt = BigDecimal.valueOf(unBuiltRate * (detail.getLandArea() - detail.getBuildUpArea()));
+			/*
+			 * making call to get unbuilt area tax estimate
+			 */
+			taxAmt = taxAmt.add(getUnBuiltRate( detail, unBuiltRate, groundUnitsCount, groundUnitsArea));
 		}
-
 		return getEstimatesForTax(assessmentYear, taxAmt, usageExemption, detail, propertyBasedExemptionMasterMap,
 				timeBasedExmeptionMasterMap);
+	}
+
+	/**
+	 * Private method to calculate the unbuilt area tax estimate
+	 * 
+	 * @param detail
+	 * @param unBuiltRate
+	 * @param groundUnitsCount
+	 * @param groundUnitsArea
+	 * @return
+	 */
+	private BigDecimal getUnBuiltRate(PropertyDetail detail, double unBuiltRate, int groundUnitsCount,
+			Double groundUnitsArea) {
+
+		BigDecimal unBuiltAmt = BigDecimal.ZERO;
+
+		if (0.0 < unBuiltRate && null != detail.getLandArea() && groundUnitsCount > 0) {
+
+			Double diffArea = null != detail.getBuildUpArea() ? detail.getLandArea() - detail.getBuildUpArea()
+					: detail.getLandArea() - groundUnitsArea;
+			unBuiltAmt = unBuiltAmt.add(BigDecimal.valueOf(unBuiltRate * (diffArea)));
+		}
+		return unBuiltAmt;
 	}
 
 	/**
@@ -233,9 +269,10 @@ public class EstimationService {
 			estimates.add(
 					TaxHeadEstimate.builder().taxHeadCode(CalculatorConstants.PT_ADHOC_REBATE).estimateAmount(BigDecimal.valueOf(10.65)).build());
 			payableTax = payableTax.subtract(detail.getAdhocExemption());
-		} else if (null != detail.getAdhocExemption())
+		} else if (null != detail.getAdhocExemption()) {
 			throw new CustomException(CalculatorConstants.PT_ADHOC_REBATE_INVALID_AMOUNT,
 					CalculatorConstants.PT_ADHOC_REBATE_INVALID_AMOUNT_MSG + taxAmt);
+		}
 
 		// taxes
 		estimates.add(TaxHeadEstimate.builder().taxHeadCode(CalculatorConstants.PT_TAX).estimateAmount(taxAmt).build());
@@ -547,7 +584,7 @@ public class EstimationService {
 	 * if any appropriate match is found in getApplicableMasterFromList, then the
 	 * exemption object from that master will be returned
 	 * 
-	 * if no match found null will be returned
+	 * if no match found(for all the four usages) then null will be returned
 	 * 
 	 * @param unit
 	 * @param financialYear
@@ -572,15 +609,21 @@ public class EstimationService {
 		 applicableUsageMasterexemption = mstrDataService.getApplicableMasterFromList(financialYear,
 				usageDetails.get(unit.getUsageCategoryDetail()));
 
-		if ( null != applicableUsageMasterexemption &&  null == applicableUsageMasterexemption.get(CalculatorConstants.EXEMPTION_FIELD_NAME) && null != usageSubMinors.get(unit.getUsageCategorySubMinor()))
+		if (null != applicableUsageMasterexemption
+				&& null == applicableUsageMasterexemption.get(CalculatorConstants.EXEMPTION_FIELD_NAME)
+				&& null != usageSubMinors.get(unit.getUsageCategorySubMinor()))
 			applicableUsageMasterexemption = mstrDataService.getApplicableMasterFromList(financialYear,
 					usageSubMinors.get(unit.getUsageCategorySubMinor()));
 
-		if (null != applicableUsageMasterexemption && null == applicableUsageMasterexemption.get(CalculatorConstants.EXEMPTION_FIELD_NAME) && null != usageMinors.get(unit.getUsageCategoryMinor()))
+		if (null != applicableUsageMasterexemption
+				&& null == applicableUsageMasterexemption.get(CalculatorConstants.EXEMPTION_FIELD_NAME)
+				&& null != usageMinors.get(unit.getUsageCategoryMinor()))
 			applicableUsageMasterexemption = mstrDataService.getApplicableMasterFromList(financialYear,
 					usageMinors.get(unit.getUsageCategoryMinor()));
 		
-		if (null != applicableUsageMasterexemption && null == applicableUsageMasterexemption.get(CalculatorConstants.EXEMPTION_FIELD_NAME) && null != usageMajors.get(unit.getUsageCategoryMajor()))
+		if (null != applicableUsageMasterexemption
+				&& null == applicableUsageMasterexemption.get(CalculatorConstants.EXEMPTION_FIELD_NAME)
+				&& null != usageMajors.get(unit.getUsageCategoryMajor()))
 			applicableUsageMasterexemption = mstrDataService.getApplicableMasterFromList(financialYear,
 					usageMajors.get(unit.getUsageCategoryMajor()));
 

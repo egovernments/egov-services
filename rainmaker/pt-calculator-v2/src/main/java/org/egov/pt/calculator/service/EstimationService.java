@@ -297,8 +297,9 @@ public class EstimationService {
 				tenantId);
 		Long fromDate = (Long) finYearMap.get(CalculatorConstants.FINANCIAL_YEAR_STARTING_DATE);
 		Long toDate = (Long) finYearMap.get(CalculatorConstants.FINANCIAL_YEAR_ENDING_DATE);
-		Map<String, TaxHeadMaster> taxHeadCategoryMap = mstrDataService.getTaxHeadMasterMap(requestInfo, tenantId);
-		
+		Map<String, Category> taxHeadCategoryMap = mstrDataService.getTaxHeadMasterMap(requestInfo, tenantId).stream()
+				.collect(Collectors.toMap(TaxHeadMaster::getCode, TaxHeadMaster::getCategory));
+
 		BigDecimal taxAmt = BigDecimal.ZERO;
 		BigDecimal penalty = BigDecimal.ZERO;
 		BigDecimal exemption = BigDecimal.ZERO;
@@ -306,7 +307,7 @@ public class EstimationService {
 
 		for (TaxHeadEstimate estimate : estimates) {
 
-			Category category = taxHeadCategoryMap.get(estimate.getTaxHeadCode()).getCategory();
+			Category category = taxHeadCategoryMap.get(estimate.getTaxHeadCode());
 			estimate.setCategory(category);
 
 			switch (category) {

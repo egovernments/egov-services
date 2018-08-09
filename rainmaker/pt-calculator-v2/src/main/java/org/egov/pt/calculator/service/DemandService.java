@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.pt.calculator.repository.Repository;
@@ -24,6 +25,7 @@ import org.egov.pt.calculator.web.models.demand.DemandDetail;
 import org.egov.pt.calculator.web.models.demand.DemandRequest;
 import org.egov.pt.calculator.web.models.demand.DemandResponse;
 import org.egov.pt.calculator.web.models.demand.DemandStatus;
+import org.egov.pt.calculator.web.models.demand.TaxHeadMaster;
 import org.egov.pt.calculator.web.models.property.OwnerInfo;
 import org.egov.pt.calculator.web.models.property.Property;
 import org.egov.pt.calculator.web.models.property.PropertyDetail;
@@ -196,25 +198,31 @@ public class DemandService {
 
 		List<Assessment> assessments = assessmentService.getMaxAssessment(assessment);
 
-		if (!CollectionUtils.isEmpty(assessments)) {
+		if (CollectionUtils.isEmpty(assessments)) return carryForward;
 
-			Assessment latestAssessment = assessments.get(0);
-			log.debug(" the lates assessment : "+ latestAssessment);
-			
-			DemandResponse res = mapper.convertValue(
-					repository.fetchResult(utils.getDemandSearchUrl(latestAssessment), new RequestInfoWrapper(requestInfo)), DemandResponse.class);
-			Demand demand = res.getDemands().get(0);
+		Assessment latestAssessment = assessments.get(0);
+		log.debug(" the lates assessment : " + latestAssessment);
 
-			carryForward = utils.getTotalCollectedAmountAndSetTaxAmt(demand, oldTaxAmt);
-			if(oldTaxAmt.compareTo(newTax) > 0)
-				carryForward = BigDecimal.valueOf(-1);
-			
-			demand.setStatus(DemandStatus.CANCELLED);
-			DemandRequest request = DemandRequest.builder().demands(Arrays.asList(demand)).requestInfo(requestInfo)
-					.build();
-			StringBuilder updateDemandUrl = utils.getUpdateDemandUrl();
-			repository.fetchResult(updateDemandUrl, request);
-		}
+		DemandResponse res = mapper.convertValue(
+				repository.fetchResult(utils.getDemandSearchUrl(latestAssessment), new RequestInfoWrapper(requestInfo)),
+				DemandResponse.class);
+		Demand demand = res.getDemands().get(0);
+
+		Map<String, Boolean> isTaxHeadDebitMap = mstrDataService
+				.getTaxHeadMasterMap(requestInfo, property.getTenantId()).stream()
+				.collect(Collectors.toMap(TaxHeadMaster::getCode, TaxHeadMaster::getIsDebit));
+
+		carryForward = utils.getTotalCollectedAmountAndSetTaxAmt(demand, oldTaxAmt, isTaxHeadDebitMap);
+		if (oldTaxAmt.compareTo(newTax) > 0)
+			carryForward = BigDecimal.valueOf(-1);
+
+		if (BigDecimal.ZERO.compareTo(carryForward) > 0) return carryForward;
+		
+		demand.setStatus(DemandStatus.CANCELLED);
+		DemandRequest request = DemandRequest.builder().demands(Arrays.asList(demand)).requestInfo(requestInfo).build();
+		StringBuilder updateDemandUrl = utils.getUpdateDemandUrl();
+		repository.fetchResult(updateDemandUrl, request);
+
 		return carryForward;
 	}
 
@@ -239,11 +247,9 @@ public class DemandService {
 
 		List<DemandDetail> details = new ArrayList<>();
 
-		for (TaxHeadEstimate estimate : calculation.getTaxHeadEstimates()) {
-
+		for (TaxHeadEstimate estimate : calculation.getTaxHeadEstimates())
 				details.add(DemandDetail.builder().taxHeadMasterCode(estimate.getTaxHeadCode())
 						.taxAmount(estimate.getEstimateAmount()).tenantId(tenantId).build());
-		}
 
 		return Demand.builder().tenantId(tenantId).businessService(configs.getPtModuleCode()).consumerType(propertyType)
 				.consumerCode(consumerCode).owner(owner).taxPeriodFrom(calculation.getFromDate())

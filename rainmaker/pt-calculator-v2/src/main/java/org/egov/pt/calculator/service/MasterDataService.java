@@ -6,8 +6,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.mdms.model.MdmsCriteriaReq;
@@ -61,15 +59,14 @@ public class MasterDataService {
 	 * @param tenantId
 	 * @return
 	 */
-	public Map<String, TaxHeadMaster> getTaxHeadMasterMap(RequestInfo requestInfo, String tenantId) {
+	public List<TaxHeadMaster> getTaxHeadMasterMap(RequestInfo requestInfo, String tenantId) {
 
 		
 		StringBuilder uri = calculatorUtils.getTaxHeadSearchUrl(tenantId);
 		TaxHeadMasterResponse res = mapper.convertValue(
 				repository.fetchResult(uri, RequestInfoWrapper.builder().requestInfo(requestInfo).build()),
 				TaxHeadMasterResponse.class);
-		return res.getTaxHeadMasters().parallelStream()
-				.collect(Collectors.toMap(TaxHeadMaster::getCode, Function.identity()));
+		return res.getTaxHeadMasters();
 	}
 	
 	/**

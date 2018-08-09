@@ -297,7 +297,7 @@ public class PayService {
 			if (reminderVal > 0.5)
 				roundOffPos = roundOffPos.add(BigDecimal.ONE.subtract(reminder));
 			else if (reminderVal < 0.5)
-				roundOffNeg = roundOffNeg.add(reminder.negate());
+				roundOffNeg = roundOffNeg.add(reminder);
 		}
 
 		if (roundOffPos.doubleValue() > 0)

@@ -260,15 +260,11 @@ public class CalculatorUtils {
 	 * @param demand
 	 * @return carryForward
 	 */
-	public BigDecimal getTotalCollectedAmountAndSetTaxAmt(Demand demand, BigDecimal taxAmt, Map<String, Boolean> isTaxHeadDebitMap) {
+	public BigDecimal getTotalCollectedAmountAndSetTaxAmt(Demand demand, Map<String, Boolean> isTaxHeadDebitMap) {
 
 		BigDecimal carryForward = BigDecimal.ZERO;
-
-		for (DemandDetail detail : demand.getDemandDetails()) {
-			if (!isTaxHeadDebitMap.get(detail.getTaxHeadMasterCode()))
-				taxAmt = taxAmt.add(detail.getTaxAmount());
+		for (DemandDetail detail : demand.getDemandDetails())
 			carryForward = carryForward.add(detail.getCollectionAmount());
-		}
 		return carryForward;
 	}
 	

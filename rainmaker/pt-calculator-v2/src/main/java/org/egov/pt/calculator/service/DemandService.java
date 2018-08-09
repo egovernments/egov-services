@@ -98,6 +98,7 @@ public class DemandService {
 			
 			BigDecimal carryForwardCollectedAmount = getCarryForwardAndCancelOldDemand(newTax, criteria,
 					request.getRequestInfo());
+
 			if (carryForwardCollectedAmount.doubleValue() >= 0.0) {
 				Property property = criteria.getProperty();
 
@@ -212,7 +213,12 @@ public class DemandService {
 				.getTaxHeadMasterMap(requestInfo, property.getTenantId()).stream()
 				.collect(Collectors.toMap(TaxHeadMaster::getCode, TaxHeadMaster::getIsDebit));
 
-		carryForward = utils.getTotalCollectedAmountAndSetTaxAmt(demand, oldTaxAmt, isTaxHeadDebitMap);
+		for (DemandDetail detail : demand.getDemandDetails())
+			if (!isTaxHeadDebitMap.get(detail.getTaxHeadMasterCode()))
+				oldTaxAmt = oldTaxAmt.add(detail.getTaxAmount());
+
+		carryForward = utils.getTotalCollectedAmountAndSetTaxAmt(demand, isTaxHeadDebitMap);
+
 		if (oldTaxAmt.compareTo(newTax) > 0)
 			carryForward = BigDecimal.valueOf(-1);
 

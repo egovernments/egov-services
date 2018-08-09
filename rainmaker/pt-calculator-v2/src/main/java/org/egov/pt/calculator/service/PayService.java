@@ -281,47 +281,27 @@ public class PayService {
 	 * 
 	 * @param estimates
 	 */
-	public void roundOfDecimals(List<TaxHeadEstimate> estimates) {
+	public TaxHeadEstimate roundOfDecimals(BigDecimal creditAmount, BigDecimal debitAmount) {
 
 		BigDecimal roundOffPos = BigDecimal.ZERO;
 		BigDecimal roundOffNeg = BigDecimal.ZERO;
 
-		for (TaxHeadEstimate estimate : estimates) {
+		BigDecimal result = creditAmount.subtract(debitAmount);
+		BigDecimal roundOffAmount = result.setScale(2, 2);
+		BigDecimal reminder = roundOffAmount.remainder(BigDecimal.ONE);
 
-			BigDecimal currentTax = estimate.getEstimateAmount().setScale(2, 2);
-			estimate.setEstimateAmount(currentTax);
-
-			BigDecimal reminder = currentTax.remainder(BigDecimal.ONE);
-			double reminderVal = reminder.doubleValue();
-
-			/*
-			 * if there is positive round off in debit amounts
-			 * (ie amount to be paid by consumer/Tax & penalty) add it to the roundoff positive
-			 * 
-			 * else if there is a negative round off in debit amount add it to negative round off
-			 */
-			if (!CalculatorConstants.CREDIT_CATEGORIES.contains(estimate.getCategory())) {
-				if (reminderVal > 0.5)
-					roundOffPos = roundOffPos.add(BigDecimal.ONE.subtract(reminder));
-				else if (reminderVal < 0.5)
-					roundOffNeg = roundOffNeg.add(reminder);
-			}
-			/*
-			 * for credit amounts (ie credit given/rebate & exemption ) do the reverse process which has been applie dfor debit
-			 */
-			else {
-				if (reminderVal > 0.5)
-					roundOffPos = roundOffPos.add(reminder);
-				else if (reminderVal < 0.5)
-					roundOffNeg = roundOffNeg.add(BigDecimal.ONE.subtract(reminder));
-			}
-		}
+		if (reminder.doubleValue() > 0.5)
+			roundOffPos = roundOffPos.add(BigDecimal.ONE.subtract(reminder));
+		else if (reminder.doubleValue() < 0.5)
+			roundOffNeg = roundOffNeg.add(reminder);
 
 		if (roundOffPos.doubleValue() > 0)
-			estimates.add(TaxHeadEstimate.builder().estimateAmount(roundOffPos)
-					.taxHeadCode(CalculatorConstants.PT_DECIMAL_CEILING_CREDIT).build());
-		if(roundOffNeg.doubleValue() < 0)
-			estimates.add(TaxHeadEstimate.builder().estimateAmount(roundOffNeg)
-					.taxHeadCode(CalculatorConstants.PT_DECIMAL_CEILING_DEBIT).build());
+			return TaxHeadEstimate.builder().estimateAmount(roundOffPos)
+					.taxHeadCode(CalculatorConstants.PT_DECIMAL_CEILING_CREDIT).build();
+		else if (roundOffNeg.doubleValue() > 0)
+			return TaxHeadEstimate.builder().estimateAmount(roundOffNeg)
+					.taxHeadCode(CalculatorConstants.PT_DECIMAL_CEILING_DEBIT).build();
+		else
+			return null;
 	}
 }

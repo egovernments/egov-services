@@ -308,7 +308,6 @@ public class EstimationService {
 		estimates.add(TaxHeadEstimate.builder().taxHeadCode(CalculatorConstants.PT_TIME_INTEREST)
 				.estimateAmount(rebatePenaltyMap.get(CalculatorConstants.PT_TIME_INTEREST)).build());
 		
-		payService.roundOfDecimals(estimates);
 		return estimates;
 	}
 
@@ -370,6 +369,18 @@ public class EstimationService {
 				break;
 			}
 		}
+		
+		TaxHeadEstimate decimalEstimate = payService.roundOfDecimals(taxAmt.add(penalty), rebate.add(exemption));
+		
+		if (null != decimalEstimate) {
+
+			estimates.add(decimalEstimate);
+			if (CalculatorConstants.PT_DECIMAL_CEILING_CREDIT.equalsIgnoreCase(decimalEstimate.getTaxHeadCode()))
+				taxAmt = taxAmt.add(decimalEstimate.getEstimateAmount());
+			else
+				rebate = rebate.add(decimalEstimate.getEstimateAmount());
+		}
+
 		return Calculation.builder().totalAmount(taxAmt.add(penalty).subtract(rebate).subtract(exemption))
 				.taxAmount(taxAmt).penalty(penalty).exemption(exemption).rebate(rebate).fromDate(fromDate)
 				.toDate(toDate).tenantId(tenantId).serviceNumber(assessmentNumber)

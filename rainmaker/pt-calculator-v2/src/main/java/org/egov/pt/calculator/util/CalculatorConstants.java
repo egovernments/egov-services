@@ -83,7 +83,7 @@ public class CalculatorConstants {
 	public static final List<String> PROPERTY_BASED_EXEMPTION_MASTERS = Collections.unmodifiableList(Arrays.asList(
 			USAGE_MAJOR_MASTER, USAGE_MINOR_MASTER, USAGE_SUB_MINOR_MASTER, USAGE_DETAIL_MASTER, OWNER_TYPE_MASTER));
 	
-	public static final List<Category> CREDIT_CATEGORIES = Collections.unmodifiableList(Arrays.asList(Category.REBATE, Category.EXEMPTION));
+	public static final List<Category> DEBIT_CATEGORIES = Collections.unmodifiableList(Arrays.asList(Category.REBATE, Category.EXEMPTION));
 
 	/*
 	 * Module names

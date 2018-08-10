@@ -278,18 +278,21 @@ public class DemandService {
 
 		String tenantId = demand.getTenantId();
 		String demandId = demand.getId();
-		BigDecimal taxAmt = utils.getTaxAmtFromDemand(demand);
+		BigDecimal taxAmt = utils.getTaxAmtFromDemandForApplicablesGeneration(demand);
 
 		boolean isRebateUpdated = false;
 		boolean isPenaltyUpdated = false;
 		boolean isInterestUpdated = false;
+		boolean isDecimalMathcing = false;
+		
 		List<DemandDetail> details = demand.getDemandDetails();
 		Map<String, BigDecimal> rebatePenaltyEstimates = payService.applyPenaltyRebateAndInterest(taxAmt,
 				assessmentYear, timeBasedExmeptionMasterMap);
 		BigDecimal rebate = rebatePenaltyEstimates.get(CalculatorConstants.PT_TIME_REBATE);
 		BigDecimal penalty = rebatePenaltyEstimates.get(CalculatorConstants.PT_TIME_PENALTY);
 		BigDecimal interest = rebatePenaltyEstimates.get(CalculatorConstants.PT_TIME_INTEREST);
-
+		TaxHeadEstimate estimate = payService.roundOfDecimals( taxAmt.add(penalty).add(interest), rebate);
+		
 		for (DemandDetail detail : details) {
 			if (detail.getTaxHeadMasterCode().equalsIgnoreCase(CalculatorConstants.PT_TIME_REBATE)) {
 				detail.setTaxAmount(rebate);
@@ -303,6 +306,18 @@ public class DemandService {
 				detail.setTaxAmount(interest);
 				isInterestUpdated = true;
 			}
+			
+			if (detail.getTaxHeadMasterCode().equalsIgnoreCase(CalculatorConstants.PT_DECIMAL_CEILING_CREDIT)
+					&& estimate.getTaxHeadCode().equalsIgnoreCase(CalculatorConstants.PT_DECIMAL_CEILING_CREDIT)) {
+				detail.setTaxAmount(estimate.getEstimateAmount());
+				isDecimalMathcing = true;
+			}
+			
+			if (detail.getTaxHeadMasterCode().equalsIgnoreCase(CalculatorConstants.PT_DECIMAL_CEILING_DEBIT)
+					&& estimate.getTaxHeadCode().equalsIgnoreCase(CalculatorConstants.PT_DECIMAL_CEILING_DEBIT)) {
+				detail.setTaxAmount(estimate.getEstimateAmount());
+				isDecimalMathcing = true;
+			}
 		}
 		if (!isPenaltyUpdated && penalty.compareTo(BigDecimal.ZERO) > 0)
 			details.add(DemandDetail.builder().taxAmount(penalty).taxHeadMasterCode(CalculatorConstants.PT_TIME_PENALTY)
@@ -315,5 +330,9 @@ public class DemandService {
 			details.add(
 					DemandDetail.builder().taxAmount(interest).taxHeadMasterCode(CalculatorConstants.PT_TIME_INTEREST)
 							.demandId(demandId).tenantId(tenantId).build());
+
+		if (!isDecimalMathcing && BigDecimal.ZERO.compareTo(estimate.getEstimateAmount()) <= 0)
+			details.add(DemandDetail.builder().taxAmount(estimate.getEstimateAmount())
+					.taxHeadMasterCode(estimate.getTaxHeadCode()).demandId(demandId).tenantId(tenantId).build());
 	}
 }

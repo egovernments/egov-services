@@ -531,9 +531,10 @@ public class EstimationService {
 			exempted = currentUnitTax.multiply(BigDecimal.valueOf(exemptionRate / 100));
 			if (exempted.compareTo(BigDecimal.valueOf(exempMaxValue)) > 0)
 				exempted = BigDecimal.valueOf(exempMaxValue);
-		} else if (null != exemption.get(CalculatorConstants.FLAT_AMOUNT_FIELD_NAME))
+		} else if (null != exemption.get(CalculatorConstants.FLAT_AMOUNT_FIELD_NAME)) {
 			exempted = BigDecimal
 					.valueOf(((Number) exemption.get(CalculatorConstants.FLAT_AMOUNT_FIELD_NAME)).doubleValue());
+		}
 
 		return exempted;
 	}
@@ -563,7 +564,7 @@ public class EstimationService {
 
 			Map<String, Object> applicableOwnerType = mstrDataService.getApplicableMasterFromList(financialYear,
 					ownerTypeMap.get(owner.getOwnerType()));
-
+			
 			if (null != applicableOwnerType
 					&& null != applicableOwnerType.get(CalculatorConstants.EXEMPTION_FIELD_NAME))
 			{
@@ -582,8 +583,9 @@ public class EstimationService {
 				currentExemption = share.multiply(BigDecimal.valueOf(exemptionRate/100));
 
 			if (null != exempMaxValue && currentExemption.compareTo(BigDecimal.valueOf(exempMaxValue)) > 0)
-				userExemption = BigDecimal.valueOf(exempMaxValue);
+				currentExemption = BigDecimal.valueOf(exempMaxValue);
 			}
+			userExemption = userExemption.add(currentExemption);
 		}
 		return userExemption;
 	}

@@ -139,17 +139,18 @@ public class MasterDataService {
 	public Map<String, Object> getApplicableMasterFromList(String assessmentYear, List<Object> masterList) {
 		
 		Map<String, Object> objToBeReturned = null;
-		String maxYearFromTheList = (String) ((Map<String, Object>) masterList.get(0))
-				.get(CalculatorConstants.FROMFY_FIELD_NAME);
+		String maxYearFromTheList = ((String) ((Map<String, Object>) masterList.get(0))
+				.get(CalculatorConstants.FROMFY_FIELD_NAME)).split("-")[0];
 
 		for (Object object : masterList) {
 
 			Map<String, Object> objMap = (Map<String, Object>) object;
-			String objFinYear = (String) objMap.get(CalculatorConstants.FROMFY_FIELD_NAME);
+			String objFinYear = ((String) objMap.get(CalculatorConstants.FROMFY_FIELD_NAME)).split("-")[0];
 
-			if (objFinYear.compareTo(assessmentYear) == 0)
+			if (objFinYear.compareTo(assessmentYear.split("-")[0]) == 0) 
 				return  objMap;
-			else if (assessmentYear.compareTo(objFinYear) > 0 && maxYearFromTheList.compareTo(objFinYear) <= 0) {
+				
+			else if (assessmentYear.split("-")[0].compareTo(objFinYear) > 0 && maxYearFromTheList.compareTo(objFinYear) <= 0) {
 				maxYearFromTheList = objFinYear;
 				objToBeReturned = objMap;
 			}

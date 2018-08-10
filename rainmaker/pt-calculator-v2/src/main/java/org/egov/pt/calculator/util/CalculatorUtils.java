@@ -148,7 +148,7 @@ public class CalculatorUtils {
 	 * @param demand
 	 * @return
 	 */
-	public BigDecimal getTaxAmtFromDemand(Demand demand) {
+	public BigDecimal getTaxAmtFromDemandForApplicablesGeneration(Demand demand) {
 		BigDecimal taxAmt = BigDecimal.ZERO;
 		for (DemandDetail detail : demand.getDemandDetails()) {
 			if (! CalculatorConstants.TAXES_TO_BE_IGNORED_WHEN_CALUCLATING_REBATE_AND_PENALTY.contains(detail.getTaxHeadMasterCode()))

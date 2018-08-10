@@ -180,15 +180,22 @@ public class BillingSlabValidator {
 				return;
 			}
 		}
+		/*
+		 * occupancy type is not allowed to have ALL string value
+		 */
 		for (BillingSlab billingSlab : billingSlabReq.getBillingSlab()) {
 			if(!StringUtils.isEmpty(billingSlab.getOccupancyType())) {
 				List<String> allowedOccupancyTypes = JsonPath.read(occupancyType, BillingSlabConstants.MDMS_CODE_JSONPATH);
-				if(!allowedOccupancyTypes.contains(billingSlab.getOccupancyType()) && !(billingSlab.getOccupancyType().equalsIgnoreCase(allValue)))
+				if(!allowedOccupancyTypes.contains(billingSlab.getOccupancyType()))
 					errorMap.put("INVALID_OCCUPANCY_TYPE","Occupancy Type provided is invalid");
 			}
+			
+			/*
+			 * property type is not allowed to have ALL string value
+			 */
 			if(!StringUtils.isEmpty(billingSlab.getPropertyType())) {
 				List<String> allowedPropertyTypes = JsonPath.read(propertyTypes,BillingSlabConstants.MDMS_CODE_JSONPATH);
-				if(!allowedPropertyTypes.contains(billingSlab.getPropertyType()) && !(billingSlab.getPropertyType().equalsIgnoreCase(allValue))) {
+				if(!allowedPropertyTypes.contains(billingSlab.getPropertyType())) {
 					errorMap.put("INVALID_PROPERTY_TYPE","Property Type provided is invalid");
 				}else {
 					if (!StringUtils.isEmpty(billingSlab.getPropertySubType()) && !billingSlab.getPropertySubType().equalsIgnoreCase(BillingSlabConstants.ALL_PLACEHOLDER_BILLING_SLAB)) {

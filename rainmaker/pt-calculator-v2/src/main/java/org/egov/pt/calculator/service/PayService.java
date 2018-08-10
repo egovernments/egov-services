@@ -58,8 +58,8 @@ public class PayService {
 		BigDecimal interest = BigDecimal.ZERO;
 
 		if (rebate.equals(BigDecimal.ZERO)) {
-			getPenalty(taxAmt, assessmentYear, timeBasedExmeptionMasterMap.get(CalculatorConstants.PENANLTY_MASTER));
-			interest = getInterest(taxAmt.subtract(rebate), assessmentYear,
+			penalty = getPenalty(taxAmt, assessmentYear, timeBasedExmeptionMasterMap.get(CalculatorConstants.PENANLTY_MASTER));
+			interest = getInterest(taxAmt.subtract(penalty), assessmentYear,
 					timeBasedExmeptionMasterMap.get(CalculatorConstants.INTEREST_MASTER));
 		}
 
@@ -266,7 +266,7 @@ public class PayService {
 	private void setDateToCalendar(String assessmentYear, String[] time, Calendar cal) {
 		
 		Integer day = Integer.valueOf(time[0]);
-		Integer month = Integer.valueOf(time[0]);
+		Integer month = Integer.valueOf(time[1]);
 		Integer year = Integer.valueOf(assessmentYear.split("-")[0]);
 		if (month <= 3) year += 1;
 		cal.set(year, month, day);
@@ -281,30 +281,27 @@ public class PayService {
 	 * 
 	 * @param estimates
 	 */
-	public void roundOfDecimals(List<TaxHeadEstimate> estimates) {
+	public TaxHeadEstimate roundOfDecimals(BigDecimal creditAmount, BigDecimal debitAmount) {
 
 		BigDecimal roundOffPos = BigDecimal.ZERO;
 		BigDecimal roundOffNeg = BigDecimal.ZERO;
 
-		for (TaxHeadEstimate estimate : estimates) {
+		BigDecimal result = creditAmount.subtract(debitAmount);
+		BigDecimal roundOffAmount = result.setScale(2, 2);
+		BigDecimal reminder = roundOffAmount.remainder(BigDecimal.ONE);
 
-			BigDecimal currentTax = estimate.getEstimateAmount().setScale(2, 2);
-			estimate.setEstimateAmount(currentTax);
-
-			BigDecimal reminder = currentTax.remainder(BigDecimal.ONE);
-			double reminderVal = reminder.doubleValue();
-
-			if (reminderVal > 0.5)
-				roundOffPos = roundOffPos.add(BigDecimal.ONE.subtract(reminder));
-			else if (reminderVal < 0.5)
-				roundOffNeg = roundOffNeg.add(reminder.negate());
-		}
+		if (reminder.doubleValue() >= 0.5)
+			roundOffPos = roundOffPos.add(BigDecimal.ONE.subtract(reminder));
+		else if (reminder.doubleValue() < 0.5)
+			roundOffNeg = roundOffNeg.add(reminder);
 
 		if (roundOffPos.doubleValue() > 0)
-			estimates.add(TaxHeadEstimate.builder().estimateAmount(roundOffPos)
-					.taxHeadCode(CalculatorConstants.PT_DECIMAL_CEILING_CREDIT).build());
-		if(roundOffNeg.doubleValue() < 0)
-			estimates.add(TaxHeadEstimate.builder().estimateAmount(roundOffNeg)
-					.taxHeadCode(CalculatorConstants.PT_DECIMAL_CEILING_DEBIT).build());
+			return TaxHeadEstimate.builder().estimateAmount(roundOffPos)
+					.taxHeadCode(CalculatorConstants.PT_DECIMAL_CEILING_CREDIT).build();
+		else if (roundOffNeg.doubleValue() > 0)
+			return TaxHeadEstimate.builder().estimateAmount(roundOffNeg)
+					.taxHeadCode(CalculatorConstants.PT_DECIMAL_CEILING_DEBIT).build();
+		else
+			return null;
 	}
 }

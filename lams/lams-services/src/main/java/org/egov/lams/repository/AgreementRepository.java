@@ -39,14 +39,7 @@
  */
 package org.egov.lams.repository;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
+import lombok.extern.slf4j.Slf4j;
 import org.egov.lams.exceptions.NoObjectionRecordsFoundException;
 import org.egov.lams.exceptions.NoRenewalRecordsFoundException;
 import org.egov.lams.model.Agreement;
@@ -82,7 +75,13 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import lombok.extern.slf4j.Slf4j;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Repository
 @Slf4j
@@ -248,6 +247,56 @@ public class AgreementRepository {
 
         return agreements;
     }
+
+    public List<Agreement> findAllAgreementByAgreementNo(final AgreementCriteria agreementCriteria, final RequestInfo requestInfo) {
+        log.info("AgreementController SearchAgreementService AgreementRepository : inside findByAgreement");
+        final Map<String, Object> params = new HashMap<>();
+        final Map<String, Object> parameter = new HashMap<>();
+        List<Agreement> agreements = new ArrayList<>();
+        List<Agreement> parentAgreementsList = null;
+        List<Agreement> agreementList = null;
+        Long parentId = null;
+        final String mainQuery = AgreementQueryBuilder.getAgreementSearchQuery(agreementCriteria, params);
+        agreementList = namedParameterJdbcTemplate.query(mainQuery, params, new AgreementRowMapper());
+
+        for (Agreement agreement : agreementList) {
+            if (agreement.getParent() != null) {
+                agreements.add(agreement);
+                parentId = agreement.getParent();
+                parentLoop:
+                while (parentId != null) {
+                    agreementCriteria.setParent(parentId);
+                    final String searchQuery = AgreementQueryBuilder.getAgreementQuery(agreementCriteria, parameter);
+                    parentAgreementsList = namedParameterJdbcTemplate.query(searchQuery, parameter, new AgreementRowMapper());
+                    for (Agreement parentAgreement : parentAgreementsList) {
+                        if (parentAgreement.getParent() != null) {
+                            agreements.add(parentAgreement);
+                            parentId = parentAgreement.getParent();
+                            continue parentLoop;
+                        } else {
+                            parentId = null;
+                            agreements.add(parentAgreement);
+                            break parentLoop;
+                        }
+                    }
+                }
+            } else {
+                agreements.add(agreement);
+            }
+        }
+        agreementCriteria.setAsset(assetHelper.getAssetIdListByAgreements(agreements));
+        agreementCriteria.setAllottee(allotteeHelper.getAllotteeIdListByAgreements(agreements));
+        final List<Asset> assets = getAssets(agreementCriteria, requestInfo);
+        final List<Allottee> allottees = getAllottees(agreementCriteria, requestInfo);
+        agreements = agreementHelper.filterAndEnrichAgreements(agreements, allottees, assets);
+        if (ACTION_MODIFY.equalsIgnoreCase(agreementCriteria.getAction())
+                || ACTION_VIEW.equalsIgnoreCase(agreementCriteria.getAction()))
+            agreements = agreementHelper.enrichAgreementsWithSubSeqRenewals(agreements, getSubSeqRenewals(agreements),
+                    getAttachedDocuments(agreements));
+
+        return agreements;
+    }
+
 
     public List<Agreement> findByAgreementAndAllotee(final AgreementCriteria agreementCriteria, final RequestInfo requestInfo) {
         log.info(

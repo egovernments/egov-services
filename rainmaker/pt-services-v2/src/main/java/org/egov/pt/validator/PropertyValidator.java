@@ -57,12 +57,13 @@ public class PropertyValidator {
      * @param request PropertyRequest for update
      */
     public void validateUpdateRequest(PropertyRequest request){
+        validateIds(request);
         PropertyCriteria criteria = getPropertyCriteriaForSearch(request);
         List<Property> propertiesFromSearchResponse = propertyRepository.getProperties(criteria);
         boolean ifPropertyExists=PropertyExists(request,propertiesFromSearchResponse);
         if(!ifPropertyExists)
         {throw new CustomException("PROPERTY NOT FOUND","The property to be updated does not exist");}
-
+        propertyUtil.addAddressIds(propertiesFromSearchResponse,request.getProperties());
         validateMasterData(request);
         validateCitizenInfo(request);
         if(request.getRequestInfo().getUserInfo().getType().equalsIgnoreCase("CITIZEN"))
@@ -85,9 +86,9 @@ public class PropertyValidator {
                 PTConstants.MDMS_PT_OWNERTYPE};
         List<String> names = new ArrayList<>(Arrays.asList(masterNames));
 
-        //  validateFinancialYear(request,errorMap);
+        validateFinancialYear(request,errorMap);
         validateInstitution(request,errorMap);
-        Map<String,List<String>> codes = getAttributeValues(tenantId,PTConstants.MDMS_PT_MOD_NAME,names,"$.*.code",request.getRequestInfo());
+        Map<String,List<String>> codes = getAttributeValues(tenantId,PTConstants.MDMS_PT_MOD_NAME,names,"$.*.code",PTConstants.JSONPATH_CODES,request.getRequestInfo());
         validateMDMSData(masterNames,codes);
         validateCodes(request.getProperties(),codes,errorMap);
 
@@ -104,13 +105,14 @@ public class PropertyValidator {
      * @return Map of MasterData name to the list of code in the MasterData
      *
      */
-    private Map<String,List<String>> getAttributeValues(String tenantId, String moduleName, List<String> names, String filter, RequestInfo requestInfo){
+    private Map<String,List<String>> getAttributeValues(String tenantId, String moduleName, List<String> names, String filter,String jsonpath, RequestInfo requestInfo){
         StringBuilder uri = new StringBuilder(mdmsHost).append(mdmsEndpoint);
         MdmsCriteriaReq criteriaReq = propertyUtil.prepareMdMsRequest(tenantId,moduleName,names,filter,requestInfo);
         try {
             Object result = serviceRequestRepository.fetchResult(uri, criteriaReq);
-            return JsonPath.read(result,PTConstants.JSONPATH_CODES);
+            return JsonPath.read(result,jsonpath);
         } catch (Exception e) {
+            log.error("Error while fetvhing MDMS data",e);
             throw new CustomException(ErrorConstants.INVALID_TENANT_ID_MDMS_KEY,
                     ErrorConstants.INVALID_TENANT_ID_MDMS_MSG);
         }
@@ -236,6 +238,21 @@ public class PropertyValidator {
                     if(propertyDetail.getAdhocExemption()!=null || propertyDetail.getAdhocPenalty()!=null)
                         errorMap.put("INVALID ADHOC CHARGES","AdhocExemption or AdhocPenalty should be null for request from citizen ");
                 }
+            });
+        });
+        if(!errorMap.isEmpty())
+            throw new CustomException(errorMap);
+    }
+
+
+    private void validateIds(PropertyRequest request){
+        Map<String,String> errorMap = new HashMap<>();
+        request.getProperties().forEach(property -> {
+            if(property.getPropertyId()==null)
+                errorMap.put("INVALID PROPERTY","Property cannot be updated without propertyId");
+            property.getPropertyDetails().forEach(propertyDetail -> {
+                if(propertyDetail.getAssessmentNumber()==null)
+                    errorMap.put("INVALID PROPERTYDETAIL","The propertyDetail cannot be updated without assessment number");
             });
         });
         if(!errorMap.isEmpty())
@@ -386,10 +403,10 @@ public class PropertyValidator {
                 property.getPropertyDetails().forEach(propertyDetail ->
                         { // String filter = "$.FinancialYear[?(@.finYearRange == '"+propertyDetail.getFinancialYear()+"')].id";
                             String filter = "$.*.finYearRange";
-                            Map<String,List<String>> years = getAttributeValues(tenantId,PTConstants.MDMS_PT_MOD_NAME,Arrays.asList("FinancialYear"),filter,requestInfo);
+                            Map<String,List<String>> years = getAttributeValues(tenantId.split("\\.")[0],PTConstants.MDMS_PT_EGF_MASTER,Arrays.asList("FinancialYear"),filter,PTConstants.JSONPATH_FINANCIALYEAR,requestInfo);
                             if(!years.get(PTConstants.MDMS_PT_FINANCIALYEAR).contains(propertyDetail.getFinancialYear()))
                             {
-                                errorMap.put("Invalid FinancialYear","The finacialYearRange '"+propertyDetail.getFinancialYear()+"' is not valid");
+                                errorMap.put("Invalid FinancialYear","The finacialYear '"+propertyDetail.getFinancialYear()+"' is not valid");
                             }
                         }
                 ));
@@ -404,7 +421,7 @@ public class PropertyValidator {
         List<Property> properties = request.getProperties();
         properties.forEach(property -> {
             property.getPropertyDetails().forEach(propertyDetail -> {
-                System.out.println("contains check: "+propertyDetail.getOwnershipCategory().contains("INSTITUTIONAL"));
+                log.debug("contains check: "+propertyDetail.getOwnershipCategory().contains("INSTITUTIONAL"));
                 // Checks for mandatory fields in Institution object if SubownershipCategory is INSTITUTIONAL
                 if(propertyDetail.getInstitution()!=null && propertyDetail.getOwnershipCategory().contains("INSTITUTIONAL")){
                     if(propertyDetail.getInstitution().getType()==null)
@@ -468,6 +485,7 @@ public class PropertyValidator {
         if(!errorMap.isEmpty())
             throw new CustomException(errorMap);
     }
+
 
 
 

@@ -6,8 +6,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.mdms.model.MdmsCriteriaReq;
@@ -61,15 +59,14 @@ public class MasterDataService {
 	 * @param tenantId
 	 * @return
 	 */
-	public Map<String, TaxHeadMaster> getTaxHeadMasterMap(RequestInfo requestInfo, String tenantId) {
+	public List<TaxHeadMaster> getTaxHeadMasterMap(RequestInfo requestInfo, String tenantId) {
 
 		
 		StringBuilder uri = calculatorUtils.getTaxHeadSearchUrl(tenantId);
 		TaxHeadMasterResponse res = mapper.convertValue(
 				repository.fetchResult(uri, RequestInfoWrapper.builder().requestInfo(requestInfo).build()),
 				TaxHeadMasterResponse.class);
-		return res.getTaxHeadMasters().parallelStream()
-				.collect(Collectors.toMap(TaxHeadMaster::getCode, Function.identity()));
+		return res.getTaxHeadMasters();
 	}
 	
 	/**
@@ -142,17 +139,18 @@ public class MasterDataService {
 	public Map<String, Object> getApplicableMasterFromList(String assessmentYear, List<Object> masterList) {
 		
 		Map<String, Object> objToBeReturned = null;
-		String maxYearFromTheList = (String) ((Map<String, Object>) masterList.get(0))
-				.get(CalculatorConstants.FROMFY_FIELD_NAME);
+		String maxYearFromTheList = ((String) ((Map<String, Object>) masterList.get(0))
+				.get(CalculatorConstants.FROMFY_FIELD_NAME)).split("-")[0];
 
 		for (Object object : masterList) {
 
 			Map<String, Object> objMap = (Map<String, Object>) object;
-			String objFinYear = (String) objMap.get(CalculatorConstants.FROMFY_FIELD_NAME);
+			String objFinYear = ((String) objMap.get(CalculatorConstants.FROMFY_FIELD_NAME)).split("-")[0];
 
-			if (objFinYear.compareTo(assessmentYear) == 0)
+			if (objFinYear.compareTo(assessmentYear.split("-")[0]) == 0) 
 				return  objMap;
-			else if (assessmentYear.compareTo(objFinYear) > 0 && maxYearFromTheList.compareTo(objFinYear) <= 0) {
+				
+			else if (assessmentYear.split("-")[0].compareTo(objFinYear) > 0 && maxYearFromTheList.compareTo(objFinYear) <= 0) {
 				maxYearFromTheList = objFinYear;
 				objToBeReturned = objMap;
 			}

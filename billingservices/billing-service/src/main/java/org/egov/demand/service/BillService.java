@@ -182,7 +182,7 @@ public class BillService {
 		
 		Set<Pair<String, String>> businessConsumerPairMap = map.keySet();
 		//Set<Pair<String, String>> businessConsumerMap = map.keySet();
-		Set<String> businessServices = businessConsumerPairMap.stream().map(t -> t.getLeft()).collect(Collectors.toSet());
+		Set<String> businessServices = businessConsumerPairMap.stream().map(Pair::getLeft).collect(Collectors.toSet());
 		Map<String,BusinessServiceDetail> businessServiceMap = getBusinessService(businessServices,tenantId,requestInfo);
 		log.info("prepareBill map:" +map);
 		Demand demand = demands.get(0);
@@ -278,17 +278,23 @@ public class BillService {
 			}
 
 			BusinessServiceDetail businessServiceDetail = businessServiceMap.get(businessService);
-			String description = demand3.getBusinessService()+" Consumer Code: "+demand3.getConsumerCode();
-			
+			String description = demand3.getBusinessService() + " Consumer Code: " + demand3.getConsumerCode();
+
 			BillDetail billDetail = BillDetail.builder().businessService(demand3.getBusinessService())
 					.billDescription(description).displayMessage(description).billAccountDetails(billAccountDetails)
-					.billDate(new Date().getTime()).callBackForApportioning(businessServiceDetail.getCallBackForApportioning()).
-					collectionModesNotAllowed(businessServiceDetail.getCollectionModesNotAllowed()).
-					consumerType(demand3.getConsumerType()).consumerCode(demand3.getConsumerCode()).minimumAmount(totalMinAmount).
-					partPaymentAllowed(businessServiceDetail.getPartPaymentAllowed()).
-					totalAmount(totalTaxAmount.subtract(totalDebitAmount).subtract(totalCollectedAmount)).tenantId(tenantId).build();
+					.billDate(new Date().getTime())
+					.callBackForApportioning(businessServiceDetail.getCallBackForApportioning())
+					.collectionModesNotAllowed(businessServiceDetail.getCollectionModesNotAllowed())
+					.consumerType(demand3.getConsumerType()).consumerCode(demand3.getConsumerCode())
+					.minimumAmount(totalMinAmount).partPaymentAllowed(businessServiceDetail.getPartPaymentAllowed())
+					.totalAmount(totalTaxAmount.subtract(totalDebitAmount).subtract(totalCollectedAmount))
+					.collectedAmount(totalCollectedAmount).tenantId(tenantId).build();
 
-			//if(billDetail.getTotalAmount().compareTo(BigDecimal.ZERO) > 0)
+			/*
+			 * bill with zero gen enabled, remove the commented if condition to block bills
+			 * with zero amount to be collected
+			 */
+			// if(billDetail.getTotalAmount().compareTo(BigDecimal.ZERO) > 0)
 			billDetails.add(billDetail);
 
 		}
@@ -299,12 +305,19 @@ public class BillService {
 		return bills;
 	}
 
+	/**
+	 * Applies the purpose on Bill Account Details
+	 * @param category
+	 * @param taxHeadCode
+	 * @param taxPeriodFrom
+	 * @param taxPeriodTo
+	 * @return
+	 */
 	private Purpose getPurpose(Category category, String taxHeadCode, Long taxPeriodFrom, Long taxPeriodTo) {
 
 		Long currDate = System.currentTimeMillis();
-		//TODO check about arrears late payments ask Ramki to take a look
-		if (category.equals(Category.TAX) || category.equals(Category.FEE) 
-				|| category.equals(Category.CHARGES)) {
+
+		if (category.equals(Category.TAX) || category.equals(Category.FEE) || category.equals(Category.CHARGES)) {
 
 			if (taxPeriodFrom <= currDate && taxPeriodTo >= currDate)
 				return Purpose.CURRENT_AMOUNT;
@@ -312,12 +325,15 @@ public class BillService {
 				return Purpose.ARREAR_AMOUNT;
 			else
 				return Purpose.ADVANCE_AMOUNT;
-		} else if (category.equals(Category.REBATE))
+		} else if (category.equals(Category.REBATE)) {
 			return Purpose.REBATE;
-		else if (category.equals(Category.ADVANCE_COLLECTION))
+		} else if (category.equals(Category.EXEMPTION)) {
+			return Purpose.EXEMPTION;
+		} else if (category.equals(Category.ADVANCE_COLLECTION)) {
 			return Purpose.ADVANCE_AMOUNT;
-		else
+		} else {
 			return Purpose.OTHERS;
+		}
 	}
 
 	private Map<String, List<TaxHeadMaster>> getTaxHeadMaster(List<Demand> demands, String tenantId, RequestInfo requestInfo) {

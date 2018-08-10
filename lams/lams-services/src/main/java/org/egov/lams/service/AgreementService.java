@@ -39,22 +39,7 @@
  */
 package org.egov.lams.service;
 
-import java.math.BigDecimal;
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
-
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.egov.lams.model.Agreement;
@@ -89,7 +74,22 @@ import org.egov.lams.web.contract.TaskResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import lombok.extern.slf4j.Slf4j;
+import java.math.BigDecimal;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -638,6 +638,17 @@ public class AgreementService {
         }
     }
 
+    public List<Agreement> searchAgreementByAgreementNo(final AgreementCriteria agreementCriteria, final RequestInfo requestInfo) {
+        if (agreementCriteria.getAgreementNumber() != null) {
+            log.info("agreementRepository.findByAgreement : all values null");
+            return agreementRepository.findAllAgreementByAgreementNo(agreementCriteria, requestInfo);
+
+        } else {
+            return Collections.emptyList();
+        }
+
+
+    }
     public List<Agreement> getAgreementsByAgreementNumber(final AgreementCriteria agreementCriteria,
             final RequestInfo requestInfo) {
         return agreementRepository.findByAgreementNumber(agreementCriteria, requestInfo);

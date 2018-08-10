@@ -39,9 +39,13 @@ public class Boundary {
 
 	@JsonProperty("boundaryType")
 	private BoundaryType boundaryType;
-	
+
 	@JsonProperty("code")
 	private String code;
+
+	@JsonProperty("area")
+	private String area;
+
 
 	public Boundary(org.egov.boundary.domain.model.Boundary entityBoundary) {
 		this.id = entityBoundary.getId() != null ? entityBoundary.getId().toString() : null;
@@ -58,6 +62,7 @@ public class Boundary {
 		}
 		this.boundaryType = entityBoundary.getBoundaryType();
 		this.code = entityBoundary.getCode();
+		this.area = entityBoundary.getArea();
 	}
 
 }

@@ -314,12 +314,13 @@ public class LeaveApplicationService {
                 leaveTypes = leaveTypeService.getLeaveTypes(leaveTypeGetRequest);
                 if (leaveTypes.get(0).getMaxDays() > 0 && leaveTypes.get(0).getMaxDays() < leaveApplication.getLeaveDays())
                     errorMsg = applicationConstants.getErrorMessage(ApplicationConstants.MSG_LEAVETYPE_MAXDAYS) + " ";
-                if (leaveTypes.get(0).getEncashable().equals(true) && leaveApplication.getEncashable().equals(true) && leaveApplication.getLeaveDays() > leaveApplication.getAvailableDays())
+                if (leaveApplication.getLeaveDays() > leaveApplication.getAvailableDays())
                     errorMsg = applicationConstants.getErrorMessage(ApplicationConstants.MSG_LEAVEAPPLICATION_ENCASHABLE) + " ";
                 if ((leaveTypes.get(0).getEncashable().equals(false) || (leaveTypes.get(0).getEncashable().equals(true) && leaveApplication.getEncashable().equals(false))) && leaveApplication.getFromDate().after(leaveApplication.getToDate()))
                     errorMsg = errorMsg + applicationConstants.getErrorMessage(ApplicationConstants.MSG_FROMDATE_TODATE)
                             + " ";
             }
+
             final List<EmployeeInfo> employees = employeeRepository.getEmployeeById(
                     leaveApplicationRequest.getRequestInfo(), leaveApplication.getTenantId(),
                     leaveApplication.getEmployee());

@@ -145,7 +145,7 @@ public class LeaveApplicationQueryBuilder {
                 + " lt.active AS lt_active, lt.createdBy AS lt_createdBy, lt.createdDate AS lt_createdDate,"
                 + " lt.lastModifiedBy AS lt_lastModifiedBy, lt.lastModifiedDate AS lt_lastModifiedDate"
                 + " FROM egeis_leaveApplication la JOIN egeis_leaveType lt ON la.leaveTypeId = lt.id"
-                + " where ((fromdate between ? and ?) or (todate between ? and ?)) and la.employeeid = ?"
+                + " where ((fromdate between ? and ?) or (todate between ? and ?) or (fromdate<=? and todate >= ?)) and la.employeeid = ?"
                 + " and la.status != ? and la.id != ? and la.tenantid = ?";
     }
 

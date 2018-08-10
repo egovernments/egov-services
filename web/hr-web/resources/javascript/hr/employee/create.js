@@ -168,13 +168,16 @@ var commom_fields_rules = {
         alphanumeric: true
     },
     dateOfAppointment: {
-        required: true
+        required: true,
+        dateCheck:true,
     },
     dateOfJoining: {
-        required: false
+        required: false,
+        dateCheck:true,
     },
     dateOfRetirement: {
-        required: false
+        required: false,
+        dateCheck:true,
     },
     employeeStatus: {
         required: true
@@ -192,10 +195,12 @@ var commom_fields_rules = {
         required: false
     },
     dateOfResignation: {
-        required: false
+        required: false,
+        dateCheck:true,
     },
     dateOfTermination: {
-        required: false
+        required: false,
+        dateCheck:true,
     },
     employeeType: {
         required: true
@@ -310,7 +315,8 @@ var commom_fields_rules = {
         required: true
     },
     "user.dob": {
-        required: true
+        required: true,
+        dateCheck:true
     },
     "user.locale": {
         required: false
@@ -332,10 +338,12 @@ var commom_fields_rules = {
         required: false
     },
     "assignments.fromDate": {
-        required: true
+        required: true,
+        dateCheck:true,
     },
     "assignments.toDate": {
-        required: true
+        required: true,
+        dateCheck:true,
     },
     "assignments.fund": {
         required: false
@@ -406,10 +414,12 @@ var commom_fields_rules = {
         required: true
     },
     "serviceHistory.serviceFrom": {
-        required: true
+        required: true,
+        dateCheck:true,
     },
     "serviceHistory.serviceTo": {
-        required: true
+        required: true,
+        dateCheck:true,
     },
     "serviceHistory.department": {
         required: true
@@ -432,13 +442,15 @@ var commom_fields_rules = {
         required: true
     },
     "probation.declaredOn": {
-        required: true
+        required: true,
+        dateCheck:true,
     },
     "probation.orderNo": {
         required: false
     },
     "probation.orderDate": {
-        required: false
+        required: false,
+        dateCheck:true,
     },
     "probation.remarks": {
         required: false
@@ -450,13 +462,15 @@ var commom_fields_rules = {
         required: true
     },
     "regularisation.declaredOn": {
-        required: true
+        required: true,
+        dateCheck:true,
     },
     "regularisation.orderNo": {
         required: false
     },
     "regularisation.orderDate": {
-        required: false
+        required: false,
+        dateCheck:true,
     },
     "regularisation.remarks": {
         required: false
@@ -726,7 +740,8 @@ var user = {
         required: true
     },
     dob: {
-        required: true
+        required: true,
+
     },
     locale: {
         required: false
@@ -2144,10 +2159,11 @@ function loadUI() {
                 $("input[name='user.dob']").datepicker({
                     format: 'dd/mm/yyyy',
                     endDate: '-15y',
+                   // startDate:"-120y",
                     autoclose: true
                 });
 
-                $('#dateOfAppointment, #dateOfRetirement').datepicker({
+                $('#dateOfAppointment, #dateOfRetirement',"#probation.declaredOn").datepicker({
                     format: 'dd/mm/yyyy',
                     autoclose: true,
                 });
@@ -2739,6 +2755,13 @@ function loadUI() {
 
                 $.validator.addMethod('year', function(value) {
                     return value ? /^\d{4}$/.test(value) : true;
+                }, 'Year should have 4 digits.');
+
+                $.validator.addMethod('dateCheck', function(value) {
+                    var val=value.split("/");
+                    console.log(val);
+                    return (val && val.length>0 && val[2]) ? /^\d{4}$/.test(val[2]) : true;
+                   
                 }, 'Year should have 4 digits.');
 
                 $(".onlyNumber").on("keydown", function(e) {

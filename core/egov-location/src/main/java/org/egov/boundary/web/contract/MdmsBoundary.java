@@ -20,6 +20,7 @@ public class MdmsBoundary {
 	private String label;
 	private String latitude;
 	private String longitude;
+	private String area;
 	private Long boundaryNum;
-    private List<MdmsBoundary> children = new ArrayList<MdmsBoundary>();
+	private List<MdmsBoundary> children = new ArrayList<MdmsBoundary>();
 }

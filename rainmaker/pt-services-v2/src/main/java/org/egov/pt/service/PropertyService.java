@@ -86,6 +86,7 @@ public class PropertyService {
 		else{
 			properties = getPropertiesWithOwnerInfo(criteria,requestInfo);
 		}
+		enrichmentService.enrichBoundary(new PropertyRequest(requestInfo,properties));
 		return properties;
 	}
 
@@ -111,10 +112,10 @@ public class PropertyService {
 	public List<Property> updateProperty(PropertyRequest request) {
 		userService.createCitizen(request);
 		propertyValidator.validateUpdateRequest(request);
-
 		enrichmentService.enrichCreateRequest(request,true);
 		userService.createUser(request);
 		calculationService.calculateTax(request);
+	//	enrichmentService.enrichAssessmentNumber(request);
 		producer.push(config.getUpdatePropertyTopic(), request);
 		return request.getProperties();
 	}

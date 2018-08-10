@@ -454,12 +454,12 @@ class EditDemand extends React.Component {
               return (<tr key={index}>
                   <td>{demand["taxPeriod"] + "[9% " + demand["taxReason"].toLowerCase() + "]"}</td>
                   <td data-label="demand">
-                      <input type="text" name={demand["taxPeriod"] + "demand"} value={demand["taxAmount"]} onkeypress="return isNumberKey(event)" onChange={(e) => {
+                      <input type="text"  maxLength={10}  name={demand["taxPeriod"] + "demand"} value={demand["taxAmount"]} onkeypress="return isNumberKey(event)" onChange={(e) => {
                           handleChange(e, "taxAmount", index)
                       }} />
                   </td>
                   <td data-label="collection">
-                      <input type="text" name={demand["taxPeriod"] + "collection"} value={demand["collectionAmount"]} onkeypress="return isNumberKey(event)" onChange={(e) => {
+                      <input type="text"  maxLength={10}  name={demand["taxPeriod"] + "collection"} value={demand["collectionAmount"]} onkeypress="return isNumberKey(event)" onChange={(e) => {
                           handleChange(e, "collectionAmount", index)
                       }} disabled={demand.isCollected} />
                   </td>
@@ -468,12 +468,12 @@ class EditDemand extends React.Component {
         return (<tr key={index}>
           <td>{demand["taxPeriod"] + "[" + demand["taxReason"].toLowerCase() + "]"}</td>
           <td data-label="demand">
-            <input type="text" name={demand["taxPeriod"] + "demand"} value={demand["taxAmount"]} onkeypress="return isNumberKey(event)" onChange={(e) => {
+            <input type="text"  maxLength={10}  name={demand["taxPeriod"] + "demand"} value={demand["taxAmount"]} onkeypress="return isNumberKey(event)" onChange={(e) => {
               handleChange(e, "taxAmount", index)
             }} />
           </td>
           <td data-label="collection">
-            <input type="text" name={demand["taxPeriod"] + "collection"} value={demand["collectionAmount"]} onkeypress="return isNumberKey(event)" onChange={(e) => {
+            <input type="text"  maxLength={10} name={demand["taxPeriod"] + "collection"} value={demand["collectionAmount"]} onkeypress="return isNumberKey(event)" onChange={(e) => {
               handleChange(e, "collectionAmount", index)
             }} disabled={demand.isCollected} />
           </td>

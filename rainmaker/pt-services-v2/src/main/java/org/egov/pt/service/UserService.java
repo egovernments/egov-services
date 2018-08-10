@@ -325,7 +325,6 @@ public class UserService {
      */
     public void createCitizen(PropertyRequest request){
         StringBuilder uriCreate = new StringBuilder(userHost).append(userContextPath).append(userCreateEndpoint);
-        StringBuilder uriSearch = new StringBuilder(userHost).append(userSearchEndpoint);
         RequestInfo requestInfo = request.getRequestInfo();
 
         Role role = getCitizenRole();
@@ -334,7 +333,7 @@ public class UserService {
         {   request.getProperties().forEach(property -> {
             property.getPropertyDetails().forEach(propertyDetail -> {
                 propertyDetail.setCitizenInfo(new OwnerInfo(requestInfo.getUserInfo()));
-                System.out.println("userInfo---> "+requestInfo.getUserInfo().toString());
+                log.debug("userInfo---> "+requestInfo.getUserInfo().toString());
             });
         });
         }
@@ -343,20 +342,12 @@ public class UserService {
             request.getProperties().forEach(property -> {
                 property.getPropertyDetails().forEach(propertyDetail -> {
                     addUserDefaultFields(property.getTenantId(),role,propertyDetail.getCitizenInfo());
-                    UserDetailResponse userDetailResponse = userExists(propertyDetail.getCitizenInfo(),requestInfo);
+                    // Send MobileNumber as the userName in search
+                    UserDetailResponse userDetailResponse = searchByUserName(propertyDetail.getCitizenInfo().getMobileNumber(),propertyDetail.getCitizenInfo().getTenantId());
                     // If user not present new user is created
                     if(CollectionUtils.isEmpty(userDetailResponse.getUser()))
-                    {   UserSearchRequest userSearchRequest = new UserSearchRequest();
-                        //  Is tenantId captured in citizenInfo?
-                        userSearchRequest.setTenantId(property.getTenantId());
-                        userSearchRequest.setMobileNumber(propertyDetail.getCitizenInfo().getMobileNumber());
-                        userSearchRequest.setUserType("CITIZEN");
-                        userDetailResponse =  userCall(userSearchRequest,uriSearch);
-                        if(!CollectionUtils.isEmpty(userDetailResponse.getUser()))
-                            propertyDetail.getCitizenInfo().setUserName(UUID.randomUUID().toString());
-                        else
-                            propertyDetail.getCitizenInfo().setUserName(propertyDetail.getCitizenInfo().getMobileNumber());
-
+                    {
+                        propertyDetail.getCitizenInfo().setUserName(propertyDetail.getCitizenInfo().getMobileNumber());
                         userDetailResponse = userCall(new CreateUserRequest(requestInfo,propertyDetail.getCitizenInfo()),uriCreate);
                         log.info("citizen created --> "+userDetailResponse.getUser().get(0).getUuid());
                     }
@@ -367,6 +358,16 @@ public class UserService {
                 });
             });
         }
+
+    }
+
+    private UserDetailResponse searchByUserName(String userName,String tenantId){
+        UserSearchRequest userSearchRequest = new UserSearchRequest();
+        userSearchRequest.setUserType("CITIZEN");
+        userSearchRequest.setUserName(userName);
+        userSearchRequest.setTenantId(tenantId);
+        StringBuilder uri = new StringBuilder(userHost).append(userSearchEndpoint);
+        return userCall(userSearchRequest,uri);
 
     }
 

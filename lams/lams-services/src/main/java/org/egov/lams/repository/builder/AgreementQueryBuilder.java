@@ -39,6 +39,14 @@ public class AgreementQueryBuilder {
         return selectQuery.toString();
     }
 
+    public static String getAgreementQuery(AgreementCriteria agreementsModel,
+                                                 @SuppressWarnings("rawtypes") Map params) {
+        StringBuilder selectQuery = new StringBuilder(BASE_SEARCH_QUERY);
+        appendQueryParams(agreementsModel, params, selectQuery);
+        appendLimitAndOffset(agreementsModel, params, selectQuery);
+        return selectQuery.toString();
+    }
+
     @SuppressWarnings("unchecked")
     private static void appendParams(AgreementCriteria agreementsModel,
                                      @SuppressWarnings("rawtypes") Map params, StringBuilder selectQuery) {
@@ -130,7 +138,22 @@ public class AgreementQueryBuilder {
             throw new RuntimeException("Invalid date Range, please enter Both fromDate and toDate");
 
     }
+    private static void appendQueryParams(AgreementCriteria agreementsModel,
+                                     @SuppressWarnings("rawtypes") Map params, StringBuilder selectQuery) {
 
+        selectQuery.append(" WHERE agreement.id is not null");
+
+        if (agreementsModel.getParent() != null) {
+            selectQuery.append(" and AGREEMENT.ID IN (:agreementId)");
+            params.put("agreementId", agreementsModel.getParent());
+        }
+
+        if (agreementsModel.getTenantId() != null) {
+            selectQuery.append(" and AGREEMENT.TENANT_ID = :tenantId");
+            params.put("tenantId", agreementsModel.getTenantId());
+        }
+
+    }
     @SuppressWarnings("unchecked")
     private static StringBuilder appendLimitAndOffset(AgreementCriteria agreementsModel,
                                                       @SuppressWarnings("rawtypes") Map params, StringBuilder selectQuery) {

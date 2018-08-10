@@ -45,6 +45,7 @@ const uploadFiles = function(body, cb) {
     for (let j = 0; j < files.length; j++) {
       if (files[j].file instanceof File) {
         makeAjaxUpload(files[j].file, files[j].docType, function(err, res) {
+          console.log(res.files);
           if (breakout == 1) return;
           else if (err) {
             cb(err);
@@ -55,11 +56,17 @@ const uploadFiles = function(body, cb) {
             if (counter == 0) {
               // body.LeaveApplication[0].documents = body.LeaveApplication[0].documents.concat(
               //   docs
-              // );
-              body &&
+              // )
+              if (
+                body &&
                 body.LeaveApplication &&
-                body.LeaveApplication.documents &&
-                body.LeaveApplication.documents.push(res.files[0].fileStoreId);
+                body.LeaveApplication.documents
+              ) {
+                body.LeaveApplication.documents = body.LeaveApplication.documents.concat(
+                  docs
+                );
+              }
+
               delete body.LeaveApplication.docs;
               cb(null, body);
             }
@@ -133,7 +140,11 @@ class UpdateLeave extends React.Component {
       buttons: [],
       encloseHoliday: "",
       prefixHolidays: "",
-      suffixHolidays: ""
+      suffixHolidays: "",
+      compensetorySet: {
+        compensatoryForDate: ""
+      },
+      workedOnDays: []
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleChangeThreeLevel = this.handleChangeThreeLevel.bind(this);
@@ -299,68 +310,86 @@ class UpdateLeave extends React.Component {
           );
 
           //Calling enclosing Holiday api
-          let enclosingHoliday = getNameById(
-            _this.state.leaveList,
-            _leaveSet.leaveType.id,
-            "encloseHoliday"
-          );
-          if (
-            enclosingHoliday ||
-            enclosingHoliday == "TRUE" ||
-            enclosingHoliday == "true"
-          ) {
-            commonApiPost(
-              "egov-common-masters",
-              "holidays",
-              "_search",
-              {
-                tenantId,
-                fromDate: _leaveSet.fromDate,
-                toDate: asOnDate,
-                enclosedHoliday: true
-              },
-              function(err, res) {
-                if (res) {
-                  //console.log("enclosingDays", res.Holiday.length);
-                  enclosingDays = res.Holiday.length;
-                  _this.setState({
-                    encloseHoliday: res.Holiday
-                  });
-                }
-              }
+
+          if (_leaveSet.leaveType) {
+            let enclosingHoliday = getNameById(
+              _this.state.leaveList,
+              _leaveSet.leaveType.id,
+              "encloseHoliday"
             );
+            if (
+              enclosingHoliday ||
+              enclosingHoliday == "TRUE" ||
+              enclosingHoliday == "true"
+            ) {
+              commonApiPost(
+                "egov-common-masters",
+                "holidays",
+                "_search",
+                {
+                  tenantId,
+                  fromDate: _leaveSet.fromDate,
+                  toDate: asOnDate,
+                  enclosedHoliday: true
+                },
+                function(err, res) {
+                  if (res) {
+                    //console.log("enclosingDays", res.Holiday.length);
+                    enclosingDays = res.Holiday.length;
+                    _this.setState({
+                      encloseHoliday: res.Holiday
+                    });
+                  }
+                }
+              );
+            }
           } else {
             _this.setState({
               encloseHoliday: ""
             });
           }
+          if (!_leaveSet.leaveType) {
+            var workedOnDate = _leaveSet.compensatoryForDate;
+            console.log(workedOnDate);
+          }
+          if (workedOnDate) {
+            _this.setState({
+              compensetorySet: {
+                ..._this.state.compensetorySet,
+                compensatoryForDate: workedOnDate
+              },
+              workedOnDays: [workedOnDate]
+            });
+          }
 
           //calling PrefixSuffix api
-          let includePrefixSuffix = getNameById(
-            _this.state.leaveList,
-            _this.state.leaveSet.leaveType.id,
-            "includePrefixSuffix"
-          );
-          if (
-            includePrefixSuffix ||
-            includePrefixSuffix == "TRUE" ||
-            includePrefixSuffix == "true"
-          ) {
-            commonApiPost(
-              "egov-common-masters",
-              "holidays",
-              "_searchprefixsuffix",
-              { tenantId, fromDate, toDate: asOnDate },
-              function(err, res) {
-                if (res) {
-                  //console.log("prefixSuffixDays", res.Holiday[0].noOfDays);
-                  prefixSuffixDays = res.Holiday[0].noOfDays;
-                  _this.setState({
-                    perfixSuffix: res.Holiday[0]
-                  });
-                }
-              }
+          if (_leaveSet.leaveType) {
+            let includePrefixSuffix = getNameById(
+              _this.state.leaveList,
+              _this.state.leaveSet.leaveType.id,
+              "includePrefixSuffix"
             );
+            if (
+              includePrefixSuffix ||
+              includePrefixSuffix == "TRUE" ||
+              includePrefixSuffix == "true"
+            ) {
+              commonApiPost(
+                "egov-common-masters",
+                "holidays",
+                "_searchprefixsuffix",
+                { tenantId, fromDate, toDate: asOnDate },
+                function(err, res) {
+                  if (res) {
+                    //console.log("prefixSuffixDays", res.Holiday[0].noOfDays);
+                    prefixSuffixDays = res.Holiday[0].noOfDays;
+                    _this.setState({
+                      perfixSuffix: res.Holiday[0]
+                    });
+                  }
+                }
+              );
+            }
           } else {
             _this.setState({
               perfixSuffix: ""
@@ -447,7 +476,7 @@ class UpdateLeave extends React.Component {
             }
 
             _this.setState({
-              positionId: process.owner.id,
+              positionId: process.owner && process.owner.id,
               buttons: _btns.length ? _btns : []
             });
           }
@@ -467,11 +496,13 @@ class UpdateLeave extends React.Component {
     });
 
     $("#fromDate, #toDate").on("change", function(e) {
-      if (!_this.state.leaveSet.leaveType.id) {
-        showError(
-          "Please select Leave Type before entering from date and to date."
-        );
-        $("#" + e.target.id).val("");
+      if (_this.state.leaveSet.leaveType) {
+        if (!_this.state.leaveSet.leaveType.id) {
+          showError(
+            "Please select Leave Type before entering from date and to date."
+          );
+          $("#" + e.target.id).val("");
+        }
       }
 
       if (_this.state.leaveSet[e.target.id] != e.target.value) {
@@ -501,8 +532,9 @@ class UpdateLeave extends React.Component {
             showError("From date must be before End date.");
             $("#" + _triggerId).val("");
           }
-
-          _this.calculate();
+          if (_this.state.leaveSet && _this.state.leaveSet.leaveType) {
+            _this.calculate();
+          }
         }
       }
     });
@@ -522,12 +554,12 @@ class UpdateLeave extends React.Component {
     if (status == "REJECTED") {
       $("input,select,textarea").prop("disabled", false);
       $("#availableDays,#workingDays,#name,#code").prop("disabled", true);
-      if(_this.state.leaveSet.encashable){
+      if (_this.state.leaveSet.encashable) {
         $("#leaveDays").prop("disabled", false);
-      }else{
+      } else {
         $("#leaveDays").prop("disabled", true);
       }
-    } 
+    }
 
     if (status == "APPLIED" || status == "RESUBMITTED") {
       $("#department, #designation, #assignee").prop("disabled", false);
@@ -1244,7 +1276,11 @@ class UpdateLeave extends React.Component {
         }
       });
 
-      if (_this.state.leaveSet.fromDate && _this.state.leaveSet.toDate)
+      if (
+        _this.state.leaveSet.fromDate &&
+        _this.state.leaveSet.toDate &&
+        _this.state.leaveSet.leaveType
+      )
         _this.calculate();
     } else {
       this.setState({
@@ -1280,11 +1316,12 @@ class UpdateLeave extends React.Component {
     }
 
     if (name === "encashable") {
-        if (e.target.checked) $("#leaveDays").prop("disabled", false);
+      if (e.target.checked) $("#leaveDays").prop("disabled", false);
       else $("#leaveDays").prop("disabled", true);
       let _this = this;
       let asOnDate = today();
-      let leaveType = this.state.leaveSet.leaveType.id;
+      let leaveType =
+        this.state.leaveSet.leaveType && this.state.leaveSet.leaveType.id;
       let employeeid = this.state.leaveSet.employee;
       let encashable = !this.state.leaveSet.encashable;
 
@@ -1481,6 +1518,29 @@ class UpdateLeave extends React.Component {
         : "";
       tempInfo.holidays = holidays;
 
+      var _to = this.state.leaveSet.fromDate;
+      var _from = this.state.compensetorySet.compensatoryForDate;
+      if (_from && _to) {
+        var dateParts1 = _from.split("/");
+        var newDateStr =
+          dateParts1[1] + "/" + dateParts1[0] + "/ " + dateParts1[2];
+        var date1 = new Date(newDateStr);
+        var dateParts2 = _to.split("/");
+        var newDateStr =
+          dateParts2[1] + "/" + dateParts2[0] + "/" + dateParts2[2];
+        var date2 = new Date(newDateStr);
+        var daysDiff = Math.round((date2 - date1) / (1000 * 60 * 60 * 24));
+        if (daysDiff > 90) {
+          return showError(
+            "Compensatory Leave Day should not be greater than Worked on Date by 90 days"
+          );
+        } else if (date2 < date1) {
+          return showError(
+            "Compensatory Leave Day should not be before Worked on Date"
+          );
+        }
+      }
+
       commonApiPost(
         "hr-employee",
         "hod/employees",
@@ -1632,11 +1692,14 @@ class UpdateLeave extends React.Component {
             success: function(res) {
               if (ID == "Approve") {
                 tempInfo.name = _name;
-                tempInfo.leaveTypeName = getNameById(
-                  _this.state.leaveList,
-                  _this.state.leaveSet.leaveType.id
-                );
-                _this.printNotice(tempInfo);
+                if (_this.state.leaveSet.leaveType) {
+                  tempInfo.leaveTypeName = getNameById(
+                    _this.state.leaveList,
+                    _this.state.leaveSet.leaveType.id
+                  );
+                  _this.printNotice(tempInfo);
+                }
+
                 window.location.href = `app/hr/leavemaster/ack-page.html?type=${ID}&applicationNumber=${leaveNumber}`;
               } else if (ID == "Cancel")
                 window.location.href = `app/hr/leavemaster/ack-page.html?type=${ID}&applicationNumber=${leaveNumber}`;
@@ -1653,7 +1716,7 @@ class UpdateLeave extends React.Component {
                     if (res) {
                       var process = res["processInstance"];
                       if (process) {
-                        var positionId = process.owner.id;
+                        var positionId = process.owner && process.owner.id;
                         commonApiPost(
                           "hr-employee",
                           "employees",
@@ -1719,7 +1782,8 @@ class UpdateLeave extends React.Component {
 
   render() {
     let { handleChange, handleChangeThreeLevel, handleProcess } = this;
-    let { leaveSet, buttons } = this.state;
+    let { leaveSet, buttons, workedOnDays } = this.state;
+    let { compensatoryForDate } = this.state.compensetorySet;
     let {
       name,
       code,
@@ -1738,6 +1802,20 @@ class UpdateLeave extends React.Component {
     let mode = getUrlVars()["type"];
     let _this = this;
     //console.log("this.state",_this);
+    const renderWorkedDate = function(list) {
+      if (list) {
+        return list.map((item, ind) => {
+          return (
+            <option
+              key={ind}
+              value={typeof item == "object" ? item.workedDate : item}
+            >
+              {typeof item == "object" ? item.workedDate : item}
+            </option>
+          );
+        });
+      }
+    };
     const renderProcesedBtns = function() {
       //console.log("button",buttons);
       if (buttons.length) {
@@ -1962,7 +2040,7 @@ class UpdateLeave extends React.Component {
     };
 
     const showEncashable = () => {
-      if (this.state.leaveSet.leaveType.id) {
+      if (this.state.leaveSet.leaveType && this.state.leaveSet.leaveType.id) {
         let encashableLeaveType = getNameById(
           this.state.leaveList,
           this.state.leaveSet.leaveType.id,
@@ -2285,144 +2363,206 @@ class UpdateLeave extends React.Component {
             </div>
 
             <div className="row">
-              <div className="col-sm-6">
-                <div className="row">
-                  <div className="col-sm-6 label-text">
-                    <label htmlFor="leaveType">
-                      Leave Type<span>*</span>
-                    </label>
+              {leaveType ? (
+                <div className="col-sm-6">
+                  <div className="row">
+                    <div className="col-sm-6 label-text">
+                      <label htmlFor="leaveType">
+                        Leave Type<span>*</span>
+                      </label>
+                    </div>
+                    <div className="col-sm-6">
+                      <div className="styled-select">
+                        <select
+                          id="leaveType"
+                          name="leaveType"
+                          value={leaveType ? leaveType.id : ""}
+                          required="true"
+                          onChange={e => {
+                            handleChangeThreeLevel(e, "leaveType", "id");
+                          }}
+                        >
+                          <option value=""> Select Leave Type</option>
+                          {renderOption(this.state.leaveList)}
+                        </select>
+                      </div>
+                    </div>
                   </div>
-                  <div className="col-sm-6">
-                    <div className="styled-select">
-                      <select
-                        id="leaveType"
-                        name="leaveType"
-                        value={leaveType.id}
-                        required="true"
+                </div>
+              ) : (
+                <div className="col-sm-6">
+                  <div className="row">
+                    <div className="col-sm-6 label-text">
+                      <label for="">
+                        Worked On <span>*</span>
+                      </label>
+                    </div>
+                    <div className="col-sm-6">
+                      <div className="styled-select">
+                        <select
+                          name="compensatoryForDate"
+                          id="compensatoryForDate"
+                          value={compensatoryForDate}
+                          onChange={e => {
+                            handleChange(e, "compensatoryForDate");
+                          }}
+                          disabled={getUrlVars()["workedOnDate"] ? true : false}
+                          required
+                        >
+                          <option value="">Select worked on date</option>
+                          {renderWorkedDate(workedOnDays)}
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+              {!leaveType ? (
+                <div className="col-sm-6">
+                  <div className="row">
+                    <div className="col-sm-6 label-text">
+                      <label for="">
+                        Compensetory Leave On <span>*</span>
+                      </label>
+                    </div>
+                    <div className="col-sm-6">
+                      <div className="text-no-ui">
+                        <span>
+                          <i className="glyphicon glyphicon-calendar" />
+                        </span>
+                        <input
+                          type="text"
+                          id="fromDate"
+                          name="fromDate"
+                          value={fromDate}
+                          onChange={e => {
+                            handleChange(e, "fromDate");
+                          }}
+                          required
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                <div className="col-sm-6">
+                  <div className="row">
+                    <div className="col-sm-6 label-text">
+                      <label htmlFor="Reason">
+                        Reason <span>*</span>
+                      </label>
+                    </div>
+                    <div className="col-sm-6">
+                      <textarea
+                        rows="4"
+                        cols="50"
+                        id="reason"
+                        name="reason"
+                        value={reason}
                         onChange={e => {
-                          handleChangeThreeLevel(e, "leaveType", "id");
+                          handleChange(e, "reason");
                         }}
-                      >
-                        <option value=""> Select Leave Type</option>
-                        {renderOption(this.state.leaveList)}
-                      </select>
+                        required
+                      />
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {leaveType && showEncashable()}
+            {leaveType && showDateRange()}
+
+            {leaveType && (
+              <div className="row">
+                <div className="col-sm-6">
+                  <div className="row">
+                    <div className="col-sm-6 label-text">
+                      <label htmlFor="">Available Leave</label>
+                    </div>
+                    <div className="col-sm-6">
+                      <input
+                        type="number"
+                        id="availableDays"
+                        name="availableDays"
+                        value={availableDays}
+                        onChange={e => {
+                          handleChange(e, "availableDays");
+                        }}
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div className="col-sm-6">
+                  <div className="row">
+                    <div className="col-sm-6 label-text">
+                      <label htmlFor="documents">Attachments</label>
+                    </div>
+                    <div className="col-sm-6 label-view-text">
+                      <input
+                        type="file"
+                        name="documents"
+                        id="documents"
+                        onChange={e => {
+                          handleChange(e, "documents");
+                        }}
+                        multiple
+                      />
                     </div>
                   </div>
                 </div>
               </div>
-              <div className="col-sm-6">
-                <div className="row">
-                  <div className="col-sm-6 label-text">
-                    <label htmlFor="Reason">
-                      Reason <span>*</span>
-                    </label>
-                  </div>
-                  <div className="col-sm-6">
-                    <textarea
-                      rows="4"
-                      cols="50"
-                      id="reason"
-                      name="reason"
-                      value={reason}
-                      onChange={e => {
-                        handleChange(e, "reason");
-                      }}
-                      required
-                    />
-                  </div>
-                </div>
-              </div>
-            </div>
+            )}
 
-            {showEncashable()}
-            {showDateRange()}
+            {leaveType && showPrefix()}
+            {leaveType && showSuffix()}
 
-            <div className="row">
-              <div className="col-sm-6">
-                <div className="row">
-                  <div className="col-sm-6 label-text">
-                    <label htmlFor="">Available Leave</label>
+            {leaveType && (
+              <div className="row">
+                <div className="col-sm-6">
+                  <div className="row">
+                    <div className="col-sm-6 label-text">
+                      <label htmlFor="">Total Leave Days</label>
+                    </div>
+                    <div className="col-sm-6">
+                      <input
+                        type="number"
+                        id="leaveDays"
+                        name="leaveDays"
+                        value={leaveDays}
+                        onChange={e => {
+                          handleChange(e, "leaveDays");
+                        }}
+                        disabled
+                      />
+                    </div>
                   </div>
-                  <div className="col-sm-6">
-                    <input
-                      type="number"
-                      id="availableDays"
-                      name="availableDays"
-                      value={availableDays}
-                      onChange={e => {
-                        handleChange(e, "availableDays");
-                      }}
-                    />
+                </div>
+                <div className="col-sm-6">
+                  <div className="row">
+                    <div className="col-sm-6 label-text">
+                      <label htmlFor="">
+                        Leave Grounds <span>*</span>
+                      </label>
+                    </div>
+                    <div className="col-sm-6">
+                      <input
+                        type="text"
+                        id="leaveGround"
+                        name="leaveGround"
+                        value={leaveGround}
+                        pattern="[a-zA-Z][a-zA-Z ]+"
+                        maxLength="50"
+                        onChange={e => {
+                          handleChange(e, "leaveGround");
+                        }}
+                        required
+                      />
+                    </div>
                   </div>
                 </div>
               </div>
-              <div className="col-sm-6">
-                <div className="row">
-                  <div className="col-sm-6 label-text">
-                    <label htmlFor="documents">Attachments</label>
-                  </div>
-                  <div className="col-sm-6 label-view-text">
-                    <input
-                      type="file"
-                      name="documents"
-                      id="documents"
-                      onChange={e => {
-                        handleChange(e, "documents");
-                      }}
-                      multiple
-                    />
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {showPrefix()}
-            {showSuffix()}
-
-            <div className="row">
-              <div className="col-sm-6">
-                <div className="row">
-                  <div className="col-sm-6 label-text">
-                    <label htmlFor="">Total Leave Days</label>
-                  </div>
-                  <div className="col-sm-6">
-                    <input
-                      type="number"
-                      id="leaveDays"
-                      name="leaveDays"
-                      value={leaveDays}
-                      onChange={e => {
-                        handleChange(e, "leaveDays");
-                      }}
-                      disabled
-                    />
-                  </div>
-                </div>
-              </div>
-              <div className="col-sm-6">
-                <div className="row">
-                  <div className="col-sm-6 label-text">
-                    <label htmlFor="">
-                      Leave Grounds <span>*</span>
-                    </label>
-                  </div>
-                  <div className="col-sm-6">
-                    <input
-                      type="text"
-                      id="leaveGround"
-                      name="leaveGround"
-                      value={leaveGround}
-                      pattern="[a-zA-Z][a-zA-Z ]+"
-                      maxLength="50"
-                      onChange={e => {
-                        handleChange(e, "leaveGround");
-                      }}
-                      required
-                    />
-                  </div>
-                </div>
-              </div>
-            </div>
+            )}
 
             {showEnclosingHolidayTable()}
             <br />

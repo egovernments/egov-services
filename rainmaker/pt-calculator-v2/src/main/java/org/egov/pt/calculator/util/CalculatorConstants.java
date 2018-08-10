@@ -5,6 +5,8 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import org.egov.pt.calculator.web.models.demand.Category;
+
 public class CalculatorConstants {
 
 	private CalculatorConstants() {
@@ -47,7 +49,8 @@ public class CalculatorConstants {
 	public static final String PT_DECIMAL_CEILING_DEBIT = "PT_DECIMAL_CEILING_DEBIT";
 
 	protected static final List<String> TAXES_TO_BE_IGNORED_WHEN_CALUCLATING_REBATE_AND_PENALTY = Arrays
-			.asList(PT_TIME_REBATE, PT_TIME_PENALTY, PT_TIME_INTEREST);
+			.asList(PT_TIME_REBATE, PT_TIME_PENALTY, PT_TIME_INTEREST, PT_DECIMAL_CEILING_CREDIT, PT_DECIMAL_CEILING_DEBIT);
+	
 
 	/*
 	 * Mdms constants
@@ -79,6 +82,8 @@ public class CalculatorConstants {
 
 	public static final List<String> PROPERTY_BASED_EXEMPTION_MASTERS = Collections.unmodifiableList(Arrays.asList(
 			USAGE_MAJOR_MASTER, USAGE_MINOR_MASTER, USAGE_SUB_MINOR_MASTER, USAGE_DETAIL_MASTER, OWNER_TYPE_MASTER));
+	
+	public static final List<Category> DEBIT_CATEGORIES = Collections.unmodifiableList(Arrays.asList(Category.REBATE, Category.EXEMPTION));
 
 	/*
 	 * Module names

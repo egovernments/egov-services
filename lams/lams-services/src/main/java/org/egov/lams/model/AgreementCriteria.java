@@ -60,6 +60,7 @@ public class AgreementCriteria {
     private String referenceNumber;
     private String oldAgreementNumber;
     private String floorNumber;
+    private Long parent;
 
     /*
      * Below three methods use the Java Stream api and stream all specified fields and check for null all these methods return

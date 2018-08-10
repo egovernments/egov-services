@@ -2,6 +2,7 @@ package org.egov.pt.service;
 
 import java.util.Map;
 
+import lombok.extern.slf4j.Slf4j;
 import org.egov.pt.repository.ServiceRequestRepository;
 import org.egov.pt.web.models.Calculation;
 import org.egov.pt.web.models.CalculationCriteria;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+@Slf4j
 @Service
 public class CalculationService {
 
@@ -41,7 +43,7 @@ public class CalculationService {
 
          Map<String,Calculation> responseMap = ((Map<String, Calculation>)serviceRequestRepository.fetchResult(uri, calculationReq));
 
-         System.out.println("responsemap-> "+responseMap);
+         log.debug("responsemap-> "+responseMap);
          request.getProperties().forEach(property -> {
              property.getPropertyDetails().forEach(propertyDetail -> {
                  if(responseMap.get(propertyDetail.getAssessmentNumber())==null)

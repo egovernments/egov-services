@@ -1,16 +1,24 @@
 package org.egov.collection.model;
 
-import lombok.*;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+
+import javax.validation.constraints.NotNull;
 
 @Getter
-@Setter
-@ToString
+@AllArgsConstructor
 public class IdRequest {
-	
-	public String idName;
-	
-	public String tenantId;
-	
-	public String format;
+
+    @JsonProperty("idName")
+    @NotNull
+    private String idName;
+
+    @NotNull
+    @JsonProperty("tenantId")
+    private String tenantId;
+
+    @JsonProperty("format")
+    private String format;
 
 }

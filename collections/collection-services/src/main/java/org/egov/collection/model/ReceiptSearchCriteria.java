@@ -40,12 +40,7 @@
 
 package org.egov.collection.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.List;
 @Setter
@@ -58,8 +53,8 @@ public class ReceiptSearchCriteria {
     private List<Long> ids;
 	
     private List<String> receiptNumbers;
-    
-    private String consumerCode;
+
+    private List<String> consumerCode;
 
     private Long fromDate;
 

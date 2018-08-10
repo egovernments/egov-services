@@ -51,11 +51,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.text.ParseException;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @EqualsAndHashCode
@@ -114,9 +110,27 @@ public class ReceiptDetailQueryBuilder {
     }
 
 
+    private static String getNumberQuery(List<String> receiptNumbersList) {
+        StringBuilder query = new StringBuilder("(array [");
+
+        if (receiptNumbersList.size() >= 1) {
+            query.append("'%").append(receiptNumbersList.get(0)).append("%'");
+            for (int i = 1; i < receiptNumbersList.size(); i++) {
+                query.append(", '%").append(receiptNumbersList.get(i)).append("%'");
+            }
+        }
+        return query.append("])").toString();
+    }
+
+    public String getReceiptDetailByReceiptHeader() {
+        StringBuilder selectQuery = new StringBuilder(RECEIPT_DETAILS_QUERY);
+        logger.debug("RECEIPT DETAILS Query : " + selectQuery);
+        return selectQuery.toString();
+    }
+
     @SuppressWarnings("rawtypes")
     public String getQuery(ReceiptSearchCriteria searchCriteria,
-            Map<String,Object> preparedStatementValues) throws ParseException {
+                           Map<String, Object> preparedStatementValues) {
         StringBuilder selectQuery = new StringBuilder(RECEIPT_HEADER_QUERY);
 
         addWhereClause(selectQuery, preparedStatementValues, searchCriteria);
@@ -126,16 +140,9 @@ public class ReceiptDetailQueryBuilder {
         return selectQuery.toString();
     }
 
-    public String getReceiptDetailByReceiptHeader() {
-        StringBuilder selectQuery = new StringBuilder(RECEIPT_DETAILS_QUERY);
-        logger.debug("RECEIPT DETAILS Query : " + selectQuery);
-        return selectQuery.toString();
-    }
-
     @SuppressWarnings({ "unchecked", "rawtypes", "deprecation" })
-    private void addWhereClause(StringBuilder selectQuery,
-            Map<String,Object> preparedStatementValues, ReceiptSearchCriteria searchCriteria)
-            throws ParseException {
+    private void addWhereClause(StringBuilder selectQuery, Map<String, Object> preparedStatementValues,
+                                ReceiptSearchCriteria searchCriteria) {
 
         if (searchCriteria.getTenantId() == null)
             return;
@@ -159,7 +166,8 @@ public class ReceiptDetailQueryBuilder {
                 isAppendAndClause = addAndClauseIfRequired(isAppendAndClause,
                         selectQuery);
                 selectQuery.append(" rh.id in(select receiptheader from egcl_receiptinstrument receiptinstrument " +
-                        "where receiptinstrument.instrumentheader IN " + getInstrumentIdQuery(instrumentIds) + ")");
+                        "where receiptinstrument.instrumentheader IN :instrumentIds )");
+                preparedStatementValues.put("instrumentIds", instrumentIds);
             } else {
                 isAppendAndClause = addAndClauseIfRequired(isAppendAndClause,
                         selectQuery);
@@ -170,15 +178,14 @@ public class ReceiptDetailQueryBuilder {
         if (searchCriteria.getReceiptNumbers() != null && !searchCriteria.getReceiptNumbers().isEmpty()) {
             isAppendAndClause = addAndClauseIfRequired(isAppendAndClause,
                     selectQuery);
-            selectQuery.append(" rh.receiptNumber ilike any  "
-                    + getNumberQuery(searchCriteria.getReceiptNumbers()));
+            selectQuery.append(" rh.receiptNumber IN (:receiptNumbers)  ");
+            preparedStatementValues.put("receiptNumbers", searchCriteria.getReceiptNumbers());
         }
 
-        if (StringUtils.isNotBlank(searchCriteria.getConsumerCode())) {
-            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause,
-                    selectQuery);
-            selectQuery.append(" rh.consumerCode = :consumerCode");
-            preparedStatementValues.put("consumerCode", searchCriteria.getConsumerCode());
+        if (!Objects.isNull(searchCriteria.getConsumerCode()) && !searchCriteria.getConsumerCode().isEmpty()) {
+            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+            selectQuery.append(" rh.consumerCode in (:consumerCodes)");
+            preparedStatementValues.put("consumerCodes", searchCriteria.getConsumerCode());
         }
 
         if (StringUtils.isNotBlank(searchCriteria.getStatus())) {
@@ -223,10 +230,9 @@ public class ReceiptDetailQueryBuilder {
         }
 
         if (searchCriteria.getIds() != null) {
-            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause,
-                    selectQuery);
-            selectQuery.append(" rh.id IN "
-                    + getIdQuery(searchCriteria.getIds()));
+            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+            selectQuery.append(" rh.id IN (:ids)");
+            preparedStatementValues.put("ids", searchCriteria.getIds());
         }
 
         if (StringUtils.isNotBlank(searchCriteria.getTransactionId())) {
@@ -239,38 +245,23 @@ public class ReceiptDetailQueryBuilder {
         if(searchCriteria.getManualReceiptNumbers() != null && !searchCriteria.getManualReceiptNumbers().isEmpty()) {
             isAppendAndClause = addAndClauseIfRequired(isAppendAndClause,
                     selectQuery);
-            selectQuery.append(" rh.manualreceiptnumber ilike any  "
-                    + getNumberQuery(searchCriteria.getManualReceiptNumbers()));
+            selectQuery.append(" rh.manualreceiptnumber IN (:manualReceiptNumbers) ");
+            preparedStatementValues.put("manualReceiptNumbers", searchCriteria.getManualReceiptNumbers());
         }
 
         if(searchCriteria.getBillIds() != null && !searchCriteria.getBillIds().isEmpty()) {
             isAppendAndClause = addAndClauseIfRequired(isAppendAndClause,
                     selectQuery);
-            selectQuery.append(" rh.referencenumber ilike any  "
-                    + getNumberQuery(searchCriteria.getBillIds()));
+            selectQuery.append(" rh.referencenumber IN (:billIds) ");
+            preparedStatementValues.put("billIds", searchCriteria.getBillIds());
         }
     }
 
-    private static String getIdQuery(List<Long> idList) {
-        StringBuilder query = new StringBuilder("(");
-        if (idList.size() >= 1) {
-            query.append(idList.get(0).toString());
-            for (int i = 1; i < idList.size(); i++) {
-                query.append(", " + idList.get(i));
-            }
-        }
-        return query.append(")").toString();
-    }
-
-    private static String getInstrumentIdQuery(List<String> instrumentIdList) {
-        StringBuilder query = new StringBuilder("(");
-        if (instrumentIdList.size() >= 1) {
-            query.append("'" + instrumentIdList.get(0).toString() + "'");
-            for (int i = 1; i < instrumentIdList.size(); i++) {
-                query.append(", '" + instrumentIdList.get(i) + "'");
-            }
-        }
-        return query.append(")").toString();
+    private boolean addAndClauseIfRequired(boolean appendAndClauseFlag,
+                                           StringBuilder queryString) {
+        if (appendAndClauseFlag)
+            queryString.append(" AND");
+        return true;
     }
 
     private void addOrderByClause(StringBuilder selectQuery,
@@ -279,26 +270,7 @@ public class ReceiptDetailQueryBuilder {
                 : "rh." + criteria.getSortBy());
         String sortOrder = (criteria.getSortOrder() == null ? "DESC" : criteria
                 .getSortOrder());
-        selectQuery.append(" ORDER BY " + sortBy + " " + sortOrder);
-    }
-
-    private boolean addAndClauseIfRequired(boolean appendAndClauseFlag,
-            StringBuilder queryString) {
-        if (appendAndClauseFlag)
-            queryString.append(" AND");
-        return true;
-    }
-
-    private static String getNumberQuery(List<String> receiptNumbersList) {
-        StringBuilder query = new StringBuilder("(array [");
-
-        if (receiptNumbersList.size() >= 1) {
-            query.append("'%").append(receiptNumbersList.get(0).toString()).append("%'");
-            for (int i = 1; i < receiptNumbersList.size(); i++) {
-                query.append(", '%" + receiptNumbersList.get(i) + "%'");
-            }
-        }
-        return query.append("])").toString();
+        selectQuery.append(" ORDER BY ").append(sortBy).append(" ").append(sortOrder);
     }
 
     public static String getNextSeqForRcptHeader() {
@@ -388,7 +360,7 @@ public class ReceiptDetailQueryBuilder {
 
     private void addLimitForLegacy(LegacyReceiptGetReq legacyReceiptGetRequest, StringBuilder legacySelectQuery) {
         if (legacyReceiptGetRequest.getLimit() != null) {
-            legacySelectQuery.append(" limit " + legacyReceiptGetRequest.getLimit());
+            legacySelectQuery.append(" limit ").append(legacyReceiptGetRequest.getLimit());
         }
     }
 
@@ -397,7 +369,7 @@ public class ReceiptDetailQueryBuilder {
                 : "lrh." + legacyReceiptGetRequest.getSortBy());
         String sortOrder = (legacyReceiptGetRequest.getSortOrder() == null ? "DESC" : legacyReceiptGetRequest
                 .getSortOrder());
-        legacySelectQuery.append(" ORDER BY " + sortBy + " " + sortOrder);
+        legacySelectQuery.append(" ORDER BY ").append(sortBy).append(" ").append(sortOrder);
     }
 
     private void addWhereClauseForLegacy(LegacyReceiptGetReq legacyReceiptGetRequest, StringBuilder legacySelectQuery,
@@ -414,8 +386,7 @@ public class ReceiptDetailQueryBuilder {
         if (legacyReceiptGetRequest.getReceiptNumbers() != null) {
             isAppendAndClause = addAndClauseIfRequired(isAppendAndClause,
                     legacySelectQuery);
-            legacySelectQuery.append(" lrh.receiptNo ilike any  "
-                    + getNumberQuery(legacyReceiptGetRequest.getReceiptNumbers()));
+            legacySelectQuery.append(" lrh.receiptNo ilike any  ").append(getNumberQuery(legacyReceiptGetRequest.getReceiptNumbers()));
         }
         if (legacyReceiptGetRequest.getConsumerNo() != null) {
             isAppendAndClause = addAndClauseIfRequired(isAppendAndClause,

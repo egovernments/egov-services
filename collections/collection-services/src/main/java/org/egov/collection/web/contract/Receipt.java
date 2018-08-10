@@ -1,23 +1,15 @@
 package org.egov.collection.web.contract;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.validation.constraints.NotNull;
-
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
-
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.*;
 import org.egov.collection.model.AuditDetails;
 import org.egov.collection.model.Instrument;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
 import org.egov.collection.model.OnlinePayment;
+
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+import java.util.ArrayList;
+import java.util.List;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -28,13 +20,15 @@ import org.egov.collection.model.OnlinePayment;
 @EqualsAndHashCode
 public class Receipt {
 
-	private String tenantId;
+    @NotNull
+    private String tenantId;
 	
 	private String id;
 
     private String transactionId;
 
 	@NotNull
+    @Size(min = 1, max = 1)
 	@JsonProperty("Bill")
 	private List<Bill> bill = new ArrayList<>();
 

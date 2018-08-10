@@ -1,20 +1,11 @@
 package org.egov.collection.web.contract;
 
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
-
-
-
-import com.fasterxml.jackson.annotation.JsonProperty;
 
 @Getter
 @Setter
@@ -36,8 +27,8 @@ public class Bill   {
 	private Boolean isActive;
 
 	private Boolean isCancelled;
-	
-	private String paidBy;
+
+    private String paidBy;
 
 	@JsonProperty("billDetails")
 	private List<BillDetail> billDetails = new ArrayList<>(); //for billing-service

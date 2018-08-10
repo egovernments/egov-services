@@ -42,11 +42,10 @@ package org.egov.collection.service;
 
 import com.jayway.jsonpath.JsonPath;
 import org.egov.collection.config.CollectionServiceConstants;
-import org.egov.collection.exception.CustomException;
 import org.egov.collection.model.PositionSearchCriteriaWrapper;
+import org.egov.tracer.model.CustomException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 
@@ -69,8 +68,7 @@ public class WorkflowService {
 		}catch(Exception e){
 			e.printStackTrace();
 			logger.error("No position returned from the service: "+e.getCause());
-			throw new CustomException(Long.valueOf(HttpStatus.INTERNAL_SERVER_ERROR.toString()),
-					CollectionServiceConstants.POSITION_EXCEPTION_MSG, CollectionServiceConstants.POSITION_EXCEPTION_DESC);
+            throw new CustomException(CollectionServiceConstants.POSITION_EXCEPTION_MSG, CollectionServiceConstants.POSITION_EXCEPTION_DESC);
 		}
 		logger.info("Position fetched is: "+position);
 		return Long.valueOf(position);

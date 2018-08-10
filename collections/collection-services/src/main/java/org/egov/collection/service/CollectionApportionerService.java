@@ -40,42 +40,35 @@
 package org.egov.collection.service;
 
 import lombok.ToString;
-import org.apache.log4j.Logger;
+import lombok.extern.slf4j.Slf4j;
 import org.egov.collection.web.contract.BillAccountDetail;
 import org.springframework.stereotype.Service;
 
-import javax.validation.ValidationException;
 import java.math.BigDecimal;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 
 @Service
+@Slf4j
 public class CollectionApportionerService {
-	private static final Logger LOGGER = Logger
-			.getLogger(CollectionApportionerService.class);
 
-	List<BillAccountDetail> apportionPaidAmount(
-			final BigDecimal actualAmountPaid,
-			final List<BillAccountDetail> billAccountDetails) {
-		LOGGER.info("receiptDetails before apportioning amount "
-				+ actualAmountPaid + ": " + billAccountDetails);
+    List<BillAccountDetail> apportionPaidAmount(final BigDecimal actualAmountPaid, final List<BillAccountDetail>
+            billAccountDetails) {
+        log.debug("Amount Paid: " + actualAmountPaid.toString());
+        log.debug("Bill Account Details before apportioning : " + billAccountDetails.toString());
+
 		billAccountDetails.sort(Comparator.comparing(BillAccountDetail::getOrder));
-		BigDecimal totalCrAmountToBePaid = BigDecimal.ZERO;
-		for (final BillAccountDetail billAccountDetail : billAccountDetails) {
-			totalCrAmountToBePaid = totalCrAmountToBePaid.add(billAccountDetail
-					.getCrAmountToBePaid());
-		}
+
 		Amount balance = new Amount(actualAmountPaid);
-		BigDecimal crAmountToBePaid;
 		for (final BillAccountDetail billAcctDetail : billAccountDetails) {
 
 			if (balance.isZero()) {
 				// nothing left to apportion
 				billAcctDetail.setCreditAmount(BigDecimal.ZERO);
-				billAcctDetail.setDebitAmount(BigDecimal.ZERO);
 				continue;
 			}
-			crAmountToBePaid = billAcctDetail.getCrAmountToBePaid();
+            BigDecimal crAmountToBePaid = Objects.isNull(billAcctDetail.getCrAmountToBePaid()) ? BigDecimal.ZERO : billAcctDetail.getCrAmountToBePaid();
 
 			if (balance.isLessThanOrEqualTo(crAmountToBePaid)) {
 				// partial or exact payment
@@ -86,14 +79,8 @@ public class CollectionApportionerService {
 				balance = balance.minus(crAmountToBePaid);
 			}
 		}
-		LOGGER.info("balance: "+balance);
-		if (balance.isGreaterThanZero()) {
-			LOGGER.error("Apportioning failed: excess payment!");
-			throw new ValidationException(
-					"Paid Amount is greater than Total Amount to be paid");
-		}
 
-		LOGGER.info("receiptDetails after apportioning: " + billAccountDetails);
+        log.debug("Bill Account Details after apportioning : " + billAccountDetails.toString());
 		return billAccountDetails;
 	}
 

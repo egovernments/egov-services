@@ -1,196 +1,78 @@
 package org.egov.collection.repository;
 
+import lombok.extern.slf4j.Slf4j;
+import org.egov.collection.config.ApplicationProperties;
+import org.egov.collection.model.IdGenerationRequest;
+import org.egov.collection.model.IdGenerationResponse;
+import org.egov.collection.model.IdRequest;
+import org.egov.common.contract.request.RequestInfo;
+import org.egov.tracer.model.ServiceCallException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponentsBuilder;
+
 import java.util.ArrayList;
 import java.util.List;
 
-import org.egov.collection.config.ApplicationProperties;
-import org.egov.collection.config.CollectionServiceConstants;
-import org.egov.collection.exception.CustomException;
-import org.egov.collection.model.IdGenRequestInfo;
-import org.egov.collection.model.IdRequest;
-import org.egov.collection.model.IdRequestWrapper;
-import org.egov.common.contract.request.RequestInfo;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
-
-import com.jayway.jsonpath.JsonPath;
+import static org.egov.collection.config.CollectionServiceConstants.*;
 
 @Service
+@Slf4j
 public class IdGenRepository {
 	
     @Autowired
-    public RestTemplate restTemplate;
+    private RestTemplate restTemplate;
     
 	@Autowired
 	private ApplicationProperties applicationProperties;
 	
-	public static final Logger LOGGER = LoggerFactory.getLogger(IdGenRepository.class);
-	
 	public String generateReceiptNumber(RequestInfo requestInfo, String tenantId) {
-		LOGGER.info("Generating receipt number for the receipt.");
+        log.info("Attempting to generate Receipt Number from ID Gen");
 
-		StringBuilder builder = new StringBuilder();
-		String hostname = applicationProperties.getIdGenServiceHost();
-		String baseUri = applicationProperties.getIdGeneration();
-		builder.append(hostname).append(baseUri);
-
-		LOGGER.info("URI being hit: " + builder.toString());
-
-		IdRequestWrapper idRequestWrapper = new IdRequestWrapper();
-		IdGenRequestInfo idGenReq = new IdGenRequestInfo();
-
-		// Because idGen Svc uses a slightly different form of requestInfo
-
-		idGenReq.setAction(requestInfo.getAction());
-		idGenReq.setApiId(requestInfo.getApiId());
-		idGenReq.setAuthToken(requestInfo.getAuthToken());
-		idGenReq.setCorrelationId(requestInfo.getCorrelationId());
-		idGenReq.setDid(requestInfo.getDid());
-		idGenReq.setKey(requestInfo.getKey());
-		idGenReq.setMsgId(requestInfo.getMsgId());
-        //idGenReq.setRequesterId(requestInfo.getRequesterId());
-		idGenReq.setTs(requestInfo.getTs().getTime()); 
-		idGenReq.setUserInfo(requestInfo.getUserInfo());
-		idGenReq.setVer(requestInfo.getVer());
-
-		IdRequest idRequest = new IdRequest();
-		idRequest.setIdName(CollectionServiceConstants.COLL_ID_NAME);
-		idRequest.setTenantId(tenantId);
-		idRequest.setFormat(CollectionServiceConstants.COLL_ID_FORMAT);
-
-		List<IdRequest> idRequests = new ArrayList<>();
-		idRequests.add(idRequest);
-
-		idRequestWrapper.setIdGenRequestInfo(idGenReq);
-		idRequestWrapper.setIdRequests(idRequests);
-		Object response = null;
-		
-		LOGGER.info("Request for idgen rcptno: " + idRequestWrapper.toString());
-
-
-		try {
-			response = restTemplate.postForObject(builder.toString(),
-					idRequestWrapper, Object.class);
-		} catch (Exception e) {
-			throw new CustomException(Long.valueOf(HttpStatus.INTERNAL_SERVER_ERROR.toString()),
-					CollectionServiceConstants.RCPTNO_EXCEPTION_MSG, CollectionServiceConstants.RCPTNO_EXCEPTION_DESC);
-
-		}
-		LOGGER.info("Response from id gen service: " + response.toString());
-
-		return JsonPath.read(response, "$.idResponses[0].id");
+        return getId(requestInfo, tenantId, COLL_ID_NAME, COLL_ID_FORMAT, 1);
 	}
 
     public String generateTransactionNumber(RequestInfo requestInfo, String tenantId) {
-        LOGGER.info("Generating transaction number for the receipt.");
+        log.info("Attempting to generate Transaction Number from ID Gen");
 
-        StringBuilder builder = new StringBuilder();
-        String hostname = applicationProperties.getIdGenServiceHost();
-        String baseUri = applicationProperties.getIdGeneration();
-        builder.append(hostname).append(baseUri);
+        String splitTenant = tenantId.contains(".") ? tenantId.split("\\.")[1] : tenantId;
+        String tenantFormat = COLL_TRANSACTION_FORMAT.replace("{tenant}", splitTenant);
 
-        LOGGER.info("URI being hit: " + builder.toString());
 
-        IdRequestWrapper idRequestWrapper = new IdRequestWrapper();
+        return getId(requestInfo, tenantId, COLL_TRANSACTION_ID_NAME, tenantFormat, 1);
 
-        IdGenRequestInfo idGenReq = new IdGenRequestInfo();
-
-        // Because idGen Svc uses a slightly different form of requestInfo
-
-        idGenReq.setAction(requestInfo.getAction());
-        idGenReq.setApiId(requestInfo.getApiId());
-        idGenReq.setAuthToken(requestInfo.getAuthToken());
-        idGenReq.setCorrelationId(requestInfo.getCorrelationId());
-        idGenReq.setDid(requestInfo.getDid());
-        idGenReq.setKey(requestInfo.getKey());
-        idGenReq.setMsgId(requestInfo.getMsgId());
-        //idGenReq.setRequesterId(requestInfo.getRequesterId());
-        idGenReq.setTs(requestInfo.getTs().getTime()); 
-        idGenReq.setUserInfo(requestInfo.getUserInfo());
-        idGenReq.setVer(requestInfo.getVer());
-        IdRequest idRequest = new IdRequest();
-        idRequest.setIdName(CollectionServiceConstants.COLL_TRANSACTION_ID_NAME);
-        idRequest.setTenantId(tenantId);
-        String splitTenant = tenantId.contains(".") ? tenantId.split("\\.")[1] : tenantId; 
-        idRequest.setFormat(CollectionServiceConstants.COLL_TRANSACTION_FORMAT.replace("{tenant}", splitTenant));
-
-        List<IdRequest> idRequests = new ArrayList<>();
-        idRequests.add(idRequest);
-
-        idRequestWrapper.setIdGenRequestInfo(idGenReq);
-        idRequestWrapper.setIdRequests(idRequests);
-        Object response = null;
-        
-		LOGGER.info("Request for idgen transactionId: " + idRequestWrapper.toString());
-
-        try {
-            response = restTemplate.postForObject(builder.toString(),
-                    idRequestWrapper, Object.class);
-        } catch (Exception e) {
-            throw new CustomException(Long.valueOf(HttpStatus.INTERNAL_SERVER_ERROR.toString()),
-                    CollectionServiceConstants.TRANSACTIONNO_EXCEPTION_MSG, CollectionServiceConstants.TRANSACTIONNO_EXCEPTION_DESC);
-
-        }
-        LOGGER.info("Response from id gen service: " + response.toString());
-
-        return JsonPath.read(response, "$.idResponses[0].id");
     }
 
     public String generateRemittanceNumber(RequestInfo requestInfo, String tenantId) {
-        LOGGER.info("Generating transaction number for the receipt.");
+        log.info("Attempting to generate Remittance Number from ID Gen");
+        return getId(requestInfo, tenantId, COLL_REMITTENACE_ID_NAME, COLL_REMITTENACE_ID_FORMAT, 1);
 
-        StringBuilder builder = new StringBuilder();
-        String hostname = applicationProperties.getIdGenServiceHost();
-        String baseUri = applicationProperties.getIdGeneration();
-        builder.append(hostname).append(baseUri);
+    }
 
-        LOGGER.info("URI being hit: " + builder.toString());
+    private String getId(RequestInfo requestInfo, String tenantId, String name, String format, int count) {
 
-        IdRequestWrapper idRequestWrapper = new IdRequestWrapper();
-
-        IdGenRequestInfo idGenReq = new IdGenRequestInfo();
-
-        // Because idGen Svc uses a slightly different form of requestInfo
-
-        idGenReq.setAction(requestInfo.getAction());
-        idGenReq.setApiId(requestInfo.getApiId());
-        idGenReq.setAuthToken(requestInfo.getAuthToken());
-        idGenReq.setCorrelationId(requestInfo.getCorrelationId());
-        idGenReq.setDid(requestInfo.getDid());
-        idGenReq.setKey(requestInfo.getKey());
-        idGenReq.setMsgId(requestInfo.getMsgId());
-        //idGenReq.setRequesterId(requestInfo.getRequesterId());
-        idGenReq.setTs(requestInfo.getTs().getTime());
-        idGenReq.setUserInfo(requestInfo.getUserInfo());
-        idGenReq.setVer(requestInfo.getVer());
-        IdRequest idRequest = new IdRequest();
-        idRequest.setIdName(CollectionServiceConstants.COLL_REMITTENACE_ID_NAME);
-        idRequest.setTenantId(tenantId);
-        idRequest.setFormat(CollectionServiceConstants.COLL_REMITTENACE_ID_FORMAT);
-
-        List<IdRequest> idRequests = new ArrayList<>();
-        idRequests.add(idRequest);
-
-        idRequestWrapper.setIdGenRequestInfo(idGenReq);
-        idRequestWrapper.setIdRequests(idRequests);
-        Object response = null;
-
-        LOGGER.info("Request for idgen remittance Id: " + idRequestWrapper.toString());
-
-        try {
-            response = restTemplate.postForObject(builder.toString(),
-                    idRequestWrapper, Object.class);
-        } catch (Exception e) {
-            throw new CustomException(Long.valueOf(HttpStatus.INTERNAL_SERVER_ERROR.toString()),
-                    CollectionServiceConstants.REMITTANCENO_EXCEPTION_MSG, CollectionServiceConstants.REMITTANCENO_EXCEPTION_DESC);
-
+        List<IdRequest> reqList = new ArrayList<>();
+        for (int i = 0; i < count; i++) {
+            reqList.add(new IdRequest(name, tenantId, format));
         }
-        LOGGER.info("Response from id gen service: " + response.toString());
-
-        return JsonPath.read(response, "$.idResponses[0].id");
+        IdGenerationRequest req = new IdGenerationRequest(requestInfo, reqList);
+        String uri = UriComponentsBuilder
+                .fromHttpUrl(applicationProperties.getIdGenServiceHost())
+                .path(applicationProperties.getIdGeneration())
+                .build()
+                .toUriString();
+        try {
+            IdGenerationResponse idGenerationResponse = restTemplate.postForObject(uri, req,
+                    IdGenerationResponse.class);
+            return idGenerationResponse.getIdResponses().get(0).getId();
+        } catch (HttpClientErrorException e) {
+            log.error("ID Gen Service failure ", e);
+            throw new ServiceCallException(e.getResponseBodyAsString());
+        } catch (Exception e) {
+            log.error("ID Gen Service failure", e);
+            throw new org.egov.tracer.model.CustomException("IDGEN_SERVICE_ERROR", "Failed to generate ID, unknown error occurred");
+        }
     }
 }

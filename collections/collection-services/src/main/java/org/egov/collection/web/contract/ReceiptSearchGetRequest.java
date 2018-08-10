@@ -14,7 +14,7 @@ public class ReceiptSearchGetRequest {
     
     private Boolean isLegacy=false;
 
-    private String consumerCode;
+    private List<String> consumerCode;
 
     private Long fromDate;
     

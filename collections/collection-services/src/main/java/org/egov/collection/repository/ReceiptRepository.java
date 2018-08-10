@@ -43,7 +43,6 @@ package org.egov.collection.repository;
 import lombok.AllArgsConstructor;
 import org.egov.collection.config.ApplicationProperties;
 import org.egov.collection.config.CollectionServiceConstants;
-import org.egov.collection.exception.CustomException;
 import org.egov.collection.model.*;
 import org.egov.collection.model.enums.ReceiptStatus;
 import org.egov.collection.producer.CollectionProducer;
@@ -55,17 +54,16 @@ import org.egov.collection.repository.rowmapper.ReceiptRowMapper;
 import org.egov.collection.web.contract.*;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.request.User;
+import org.egov.tracer.model.CustomException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import javax.xml.bind.ValidationException;
-import java.text.ParseException;
 import java.util.*;
 
 @AllArgsConstructor
@@ -128,7 +126,7 @@ public class ReceiptRepository {
 
     }
 
-    public Receipt pushToQueue(ReceiptReq receiptReq) {
+    public void pushToQueue(ReceiptReq receiptReq) {
         try {
             collectionProducer.producer(
                     applicationProperties.getCreateReceiptTopicName(),
@@ -137,10 +135,8 @@ public class ReceiptRepository {
 
         } catch (Exception e) {
             logger.error("Pushing to Queue FAILED! ", e.getMessage());
-            throw new CustomException(Long.valueOf(HttpStatus.INTERNAL_SERVER_ERROR.toString()),
-                    CollectionServiceConstants.KAFKA_PUSH_EXCEPTION_MSG, CollectionServiceConstants.KAFKA_PUSH_EXCEPTION_DESC);
+            throw new CustomException(CollectionServiceConstants.KAFKA_PUSH_EXCEPTION_MSG, CollectionServiceConstants.KAFKA_PUSH_EXCEPTION_DESC);
         }
-        return receiptReq.getReceipt().get(0);
     }
 
     public void persistToReceiptHeader(Map<String, Object> parametersMap) {
@@ -169,7 +165,7 @@ public class ReceiptRepository {
 
     private Pagination<?> getPagination(String searchQuery, Pagination<?> page, Map<String, Object> paramValues) {
         String countQuery = "select count(*) from (" + searchQuery + ") as x";
-        Long count = namedParameterJdbcTemplate.queryForObject(countQuery.toString(), paramValues, Long.class);
+        Long count = namedParameterJdbcTemplate.queryForObject(countQuery, paramValues, Long.class);
         Integer totalpages = (int) Math.ceil((double) count / page.getPageSize());
         page.setTotalPages(totalpages);
         page.setCurrentPage(page.getOffset());
@@ -177,13 +173,13 @@ public class ReceiptRepository {
     }
 
     public Pagination<ReceiptHeader> findAllReceiptsByCriteria(
-            ReceiptSearchCriteria receiptSearchCriteria, RequestInfo requestInfo) throws ParseException {
+            ReceiptSearchCriteria receiptSearchCriteria, RequestInfo requestInfo) {
         Map<String, Object> preparedStatementValues = new HashMap<>();
 
-        String receiptHeaderQuery = receiptDetailQueryBuilder.getQuery(
-                receiptSearchCriteria, preparedStatementValues);
+        String receiptHeaderQuery = receiptDetailQueryBuilder.getQuery(receiptSearchCriteria, preparedStatementValues);
 
         String receiptDetailsQuery = receiptDetailQueryBuilder.getReceiptDetailByReceiptHeader();
+
         Pagination<ReceiptHeader> page = new Pagination<>();
         if (receiptSearchCriteria.getOffset() != null) {
             page.setOffset(receiptSearchCriteria.getOffset());
@@ -199,8 +195,10 @@ public class ReceiptRepository {
         int pageNumber = receiptSearchCriteria.getOffset() != null ? receiptSearchCriteria.getOffset() : Pagination.DEFAULT_PAGE_OFFSET;
         preparedStatementValues.put("offset", pageNumber * pageSize);
 
+
+        MapSqlParameterSource sqlParameterSource = new MapSqlParameterSource(preparedStatementValues);
         List<ReceiptHeader> listOfHeadersFromDB = namedParameterJdbcTemplate.query(
-                receiptHeaderQuery, preparedStatementValues,
+                receiptHeaderQuery, sqlParameterSource,
                 receiptRowMapper);
         page.setTotalResults(listOfHeadersFromDB.size());
         List<Object> receiptDetailsPreparedStatementValues = null;
@@ -223,8 +221,8 @@ public class ReceiptRepository {
                         receiptDetaiRowMapper);
                 receiptHeader.setReceiptDetails(new HashSet<>(receiptDetails));
             }
-            receiptHeader.setReceiptInstrument(
-                    searchInstrumentHeader(receiptHeader.getId(), receiptSearchCriteria.getTenantId(), requestInfo));
+            receiptHeader.setReceiptInstrument(searchInstrumentHeader(receiptHeader.getId(), receiptSearchCriteria
+                    .getTenantId(), requestInfo));
             receiptHeaders.add(receiptHeader);
         }
 
@@ -375,13 +373,12 @@ public class ReceiptRepository {
                 .searchChartOfAccountsQuery();
         List<String> chartOfAccountsList = jdbcTemplate.queryForList(
                 queryString, String.class, tenantId);
-        return chartOfAccountsRepository.getChartOfAccounts(
-                chartOfAccountsList, tenantId, requestInfo);
+        return chartOfAccountsRepository.getChartOfAccounts(chartOfAccountsList, tenantId, requestInfo);
     }
 
     public Long getNextSeqForRcptHeader() {
         Long sequence = null;
-        String queryString = receiptDetailQueryBuilder.getNextSeqForRcptHeader();
+        String queryString = ReceiptDetailQueryBuilder.getNextSeqForRcptHeader();
         try {
             sequence = jdbcTemplate.queryForObject(queryString, Long.class);
         } catch (Exception e) {
@@ -407,7 +404,7 @@ public class ReceiptRepository {
      */
 
     public void insertOnlinePayments(final OnlinePayment onlinePayment,final RequestInfo requestInfo,final Long receiptHeaderId) {
-        String onlineReceiptsInsertQuery = receiptDetailQueryBuilder.insertOnlinePayments();
+        String onlineReceiptsInsertQuery = ReceiptDetailQueryBuilder.insertOnlinePayments();
         List<Map<String, Object>> onlineReceiptBatchValues = new ArrayList<>();
 
         try {

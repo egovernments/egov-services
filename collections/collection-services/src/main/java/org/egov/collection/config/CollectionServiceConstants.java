@@ -193,7 +193,8 @@ public class CollectionServiceConstants {
 
 	public static final String AMOUNT_PAID_CODE = "egcl_0022";
 	public static final String AMOUNT_PAID_FIELD = "Amount Paid";
-	public static final String AMOUNT_PAID_MESSAGE = "Enter Amount Paid for atleast one Billing Service";
+	public static final String AMOUNT_PAID_MESSAGE = "Invalid amount entered in amountPaid field. Amount should be " +
+			"greater than 0 and without fractions";
 
 	public static final String INSTRUMENT_TYPE_CASH = "Cash";
 	public static final String INSTRUMENT_TYPE_ONLINE = "ONLINE";

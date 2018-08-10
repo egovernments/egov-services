@@ -315,15 +315,15 @@ public class DemandService {
 			}
 			
 			if (detail.getTaxHeadMasterCode().equalsIgnoreCase(CalculatorConstants.PT_DECIMAL_CEILING_CREDIT)
-					&& estimate.getTaxHeadCode().equalsIgnoreCase(CalculatorConstants.PT_DECIMAL_CEILING_CREDIT)
-					&& null != estimate) {
+					&& null != estimate
+					&& estimate.getTaxHeadCode().equalsIgnoreCase(CalculatorConstants.PT_DECIMAL_CEILING_CREDIT)) {
 				detail.setTaxAmount(estimate.getEstimateAmount());
 				isDecimalMathcing = true;
 			}
 
 			if (detail.getTaxHeadMasterCode().equalsIgnoreCase(CalculatorConstants.PT_DECIMAL_CEILING_DEBIT)
-					&& estimate.getTaxHeadCode().equalsIgnoreCase(CalculatorConstants.PT_DECIMAL_CEILING_DEBIT)
-					&& null != estimate) {
+					&& null != estimate
+					&& estimate.getTaxHeadCode().equalsIgnoreCase(CalculatorConstants.PT_DECIMAL_CEILING_DEBIT)) {
 				detail.setTaxAmount(estimate.getEstimateAmount());
 				isDecimalMathcing = true;
 			}

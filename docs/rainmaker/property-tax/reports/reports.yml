@@ -3,7 +3,7 @@ ReportDefinitions:
 - reportName: DailyCollectionsReport
   summary: Daily Collections Report
   version: 1.0.0
-  moduleName: pt
+  moduleName: rainmaker-pt
   sourceColumns:
   - name: day
     label: reports.pt.day
@@ -69,7 +69,7 @@ ReportDefinitions:
 - reportName: MonthlyCollectionsReport
   summary: Monthly Collections Report
   version: 1.0.0
-  moduleName: pt
+  moduleName: rainmaker-pt
   sourceColumns:
   - name: month
     label: reports.pt.month
@@ -135,7 +135,7 @@ ReportDefinitions:
 - reportName: OwnerBasedExemptionReport
   summary: Owner Based Exemption Report
   version: 1.0.0
-  moduleName: pt
+  moduleName: rainmaker-pt
   selectiveDownload: true
   externalService:
   - entity: $.MdmsRes.PropertyTax.OwnerType
@@ -184,7 +184,7 @@ ReportDefinitions:
 - reportName: UsageBasedExemptionReport
   summary: Usage Based Exemption Report
   version: 1.0.0
-  moduleName: pt
+  moduleName: rainmaker-pt
   selectiveDownload: true
   externalService:
   - entity: $.MdmsRes.PropertyTax.UsageCategorySubMinor
@@ -225,7 +225,7 @@ ReportDefinitions:
 - reportName: AdhocChargesReport
   summary: Adhoc Charges Report
   version: 1.0.0
-  moduleName: pt
+  moduleName: rainmaker-pt
   sourceColumns:
   - name: assessmentNo
     label: reports.pt.assessmentNo
@@ -260,7 +260,7 @@ ReportDefinitions:
 - reportName: AdhocRebatesReport
   summary: Adhoc Rebates Report
   version: 1.0.0
-  moduleName: pt
+  moduleName: rainmaker-pt
   sourceColumns:
   - name: assessmentNo
     label: reports.pt.assessmentNo
@@ -295,7 +295,7 @@ ReportDefinitions:
 - reportName: UlbWiseCollectionReport
   summary: ULB Wise Collection Report
   version: 1.0.0
-  moduleName: pt
+  moduleName: rainmaker-pt
   sourceColumns:
   - name: ulb
     label: reports.pt.ulb

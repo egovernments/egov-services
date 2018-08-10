@@ -7,3 +7,4 @@ common=https://raw.githubusercontent.com/egovernments/egov-services/master/docs/
 swm=https://raw.githubusercontent.com/egovernments/egov-services/master/docs/swm/report/report.yml
 works=https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/reports/report.yml
 rainmaker-pgr=https://raw.githubusercontent.com/egovernments/egov-services/master/docs/rainmaker-pgr/reports/reports.yml
+rainmaker-pt-services-v2=https://raw.githubusercontent.com/egovernments/egov-services/master/docs/rainmaker/property-tax/reports/reports.yml

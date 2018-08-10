@@ -1,0 +1,330 @@
+---
+ReportDefinitions:
+- reportName: DailyCollectionsReport
+  summary: Daily Collections Report
+  version: 1.0.0
+  moduleName: pt
+  sourceColumns:
+  - name: day
+    label: reports.pt.day
+    type: string
+    source: pt
+  - name: assessments
+    label: reports.pt.assessments
+    type: string
+    source: pt
+  - name: assessmentAmount
+    label: reports.pt.assessmentAmount
+    type: string
+    source: pt
+  - name: collectedAmount
+    label: reports.pt.collectedAmount
+    type: string
+    source: pt
+  - name: ptCollected
+    label: reports.pt.ptCollected
+    type: string
+    source: pt
+  - name: firecessCollected
+    label: reports.pt.fireCessCollected
+    type: string
+    source: pt
+  - name: penaltiesCollected
+    label: reports.pt.penaltiesCollected
+    type: string
+    source: pt
+  - name: interestCollected
+    label: reports.pt.interestCollected
+    type: string
+    source: pt
+  - name: rebateGiven
+    label: reports.pt.rebateGiven
+    type: string
+    source: pt
+  - name: exemptionGiven
+    label: reports.pt.exemptionGiven
+    type: string
+    source: pt
+  - name: paymentDues
+    label: reports.pt.paymentDues
+    type: string
+    source: pt
+  searchParams:
+  - name: fromDate
+    label: reports.pt.fromDate
+    type: epoch
+    source: pt
+    isMandatory: true
+    searchClause: AND createdtime >= $fromDate
+  - name: toDate
+    label: reports.pt.toDate
+    type: epoch
+    source: pt
+    isMandatory: true
+    searchClause: AND createdtime <= $toDate
+  query: SELECT COUNT(*)::VARCHAR as assessments, sum(taxamount)::VARCHAR AS assessmentAmount, sum(collectionamount)::VARCHAR AS collectedAmount, sum(CASE WHEN taxheadcode LIKE 'PT_TAX' THEN collectionamount ELSE 0 END) AS ptCollected, sum(CASE WHEN taxheadcode LIKE 'PT_FIRE_CESS' THEN collectionamount ELSE 0 END) as fireCessCollected, sum(CASE WHEN taxheadcode LIKE '%PENALTY%' THEN collectionamount ELSE 0 END) AS penaltiesCollected, sum(CASE WHEN taxheadcode LIKE '%INTEREST%' THEN collectionamount ELSE 0 END) AS interestCollected, sum(CASE WHEN taxheadcode LIKE '%REBATE%' THEN taxamount ELSE 0 END) AS rebateGiven, sum(CASE WHEN taxheadcode LIKE '%EXEMPTION%' THEN taxamount ELSE 0 END) AS exemptionGiven, sum(CASE WHEN taxheadcode LIKE '%LATE_PENALTY%' THEN taxamount ELSE 0 END) AS paymentDues, to_char(to_timestamp(TRUNC(CAST(createdtime AS bigint) / 1000)), 'YYYY-MM-DD') as day FROM egbs_demanddetail WHERE tenantid LIKE $tenantid
+  groupby: GROUP BY day
+
+
+- reportName: MonthlyCollectionsReport
+  summary: Monthly Collections Report
+  version: 1.0.0
+  moduleName: pt
+  sourceColumns:
+  - name: month
+    label: reports.pt.month
+    type: string
+    source: pt
+  - name: assessments
+    label: reports.pt.assessments
+    type: string
+    source: pt
+  - name: assessmentAmount
+    label: reports.pt.assessmentAmount
+    type: string
+    source: pt
+  - name: collectedAmount
+    label: reports.pt.collectedAmount
+    type: string
+    source: pt
+  - name: ptCollected
+    label: reports.pt.ptCollected
+    type: string
+    source: pt
+  - name: firecessCollected
+    label: reports.pt.fireCessCollected
+    type: string
+    source: pt
+  - name: penaltiesCollected
+    label: reports.pt.penaltiesCollected
+    type: string
+    source: pt
+  - name: interestCollected
+    label: reports.pt.interestCollected
+    type: string
+    source: pt
+  - name: rebateGiven
+    label: reports.pt.rebateGiven
+    type: string
+    source: pt
+  - name: exemptionGiven
+    label: reports.pt.exemptionGiven
+    type: string
+    source: pt
+  - name: paymentDues
+    label: reports.pt.paymentDues
+    type: string
+    source: pt
+  searchParams:
+  - name: fromDate
+    label: reports.pt.fromDate
+    type: epoch
+    source: pt
+    isMandatory: true
+    searchClause: AND createdtime >= $fromDate
+  - name: toDate
+    label: reports.pt.toDate
+    type: epoch
+    source: pt
+    isMandatory: true
+    searchClause: AND createdtime <= $toDate
+  query: SELECT COUNT(*)::VARCHAR as assessments, sum(taxamount)::VARCHAR AS assessmentAmount, sum(collectionamount)::VARCHAR AS collectedAmount, sum(CASE WHEN taxheadcode LIKE 'PT_TAX' THEN collectionamount ELSE 0 END) AS ptCollected, sum(CASE WHEN taxheadcode LIKE 'PT_FIRE_CESS' THEN collectionamount ELSE 0 END) as fireCessCollected, sum(CASE WHEN taxheadcode LIKE '%PENALTY%' THEN collectionamount ELSE 0 END) AS penaltiesCollected, sum(CASE WHEN taxheadcode LIKE '%INTEREST%' THEN collectionamount ELSE 0 END) AS interestCollected, sum(CASE WHEN taxheadcode LIKE '%REBATE%' THEN taxamount ELSE 0 END) AS rebateGiven, sum(CASE WHEN taxheadcode LIKE '%EXEMPTION%' THEN taxamount ELSE 0 END) AS exemptionGiven, sum(CASE WHEN taxheadcode LIKE '%LATE_PENALTY%' THEN taxamount ELSE 0 END) AS paymentDues, to_char(to_timestamp(TRUNC(CAST(createdtime AS bigint) / 1000)), 'YYYY-MM') AS month FROM egbs_demanddetail WHERE tenantid LIKE $tenantid
+  groupby: GROUP BY month
+
+
+- reportName: OwnerBasedExemptionReport
+  summary: Owner Based Exemption Report
+  version: 1.0.0
+  moduleName: pt
+  selectiveDownload: true
+  externalService:
+  - entity: $.MdmsRes.PropertyTax.OwnerType
+    apiURL: http://egov-mdms-service:8080/egov-mdms-service/v1/_get?tenantId=pb.jalandhar&moduleName=PropertyTax&masterName=OwnerType
+    keyOrder: code,exemption
+    tableName: tbl_ownertype
+  sourceColumns:
+  - name: assessmentnumber
+    label: reports.pt.assessmentNo
+    type: string
+    source: pt
+  - name: exemptionamount
+    label: reports.pt.exemptionAmount
+    type: string
+    source: pt
+  - name: exemptionrate
+    label: reports.pt.exemptionRate
+    type: string
+    source: pt
+  - name: ownertype
+    label: reports.pt.ownerType
+    type: string
+    source: pt
+  - name: documenttype
+    label: reports.pt.documentType
+    type: string
+    source: pt
+  - name: documentuid
+    label: reports.pt.documentUid
+    type: string
+    source: pt
+  searchParams:
+  - name: fromDate
+    label: reports.pt.fromDate
+    type: epoch
+    source: pt
+    isMandatory: false
+  - name: toDate
+    label: reports.pt.toDate
+    type: epoch
+    source: pt
+    isMandatory: false
+  query: SELECT assessmentnumber, (SELECT exemption::jsonb ->> ('flatAmount') FROM (VALUES tbl_ownertype) AS ext_owner (code, exemption) WHERE ext_owner.code=ownertype) AS exemptionamount, (SELECT CONCAT(exemption::jsonb ->> ('rate'), '%') FROM (VALUES tbl_ownertype) AS ext_owner (code, exemption) WHERE ext_owner.code=ownertype) AS exemptionrate, ownertype, documenttype, documentuid FROM eg_pt_propertydetail_v2 AS a, eg_pt_document_owner_v2 AS b, eg_pt_owner_v2 AS c WHERE a.assessmentnumber = b.propertydetail AND a.assessmentnumber = c.propertydetail AND a.tenantid LIKE $tenantid AND a.createdtime >= $fromDate AND a.createdtime <= $toDate AND (SELECT exemption FROM (VALUES tbl_ownertype) AS ext_owner (code, exemption) WHERE ext_owner.code=ownertype) IS NOT NULL
+
+
+- reportName: UsageBasedExemptionReport
+  summary: Usage Based Exemption Report
+  version: 1.0.0
+  moduleName: pt
+  selectiveDownload: true
+  externalService:
+  - entity: $.MdmsRes.PropertyTax.UsageCategorySubMinor
+    apiURL: http://egov-mdms-service:8080/egov-mdms-service/v1/_get?tenantId=pb.jalandhar&moduleName=PropertyTax&masterName=UsageCategorySubMinor
+    keyOrder: code,exemption
+    tableName: tbl_usagetype
+  sourceColumns:
+  - name: propertydetail
+    label: reports.pt.assessmentNo
+    type: string
+    source: pt
+  - name: exemptionamount
+    label: reports.pt.exemptionAmount
+    type: string
+    source: pt
+  - name: exemptionrate
+    label: reports.pt.exemptionRate
+    type: string
+    source: pt
+  - name: usagecategorysubminor
+    label: reports.pt.subUsageType
+    type: string
+    source: pt
+  searchParams:
+  - name: fromDate
+    label: reports.pt.fromDate
+    type: epoch
+    source: pt
+    isMandatory: false
+  - name: toDate
+    label: reports.pt.toDate
+    type: epoch
+    source: pt
+    isMandatory: false
+  query: SELECT propertydetail, (SELECT exemption::jsonb ->> ('flatAmount') FROM (VALUES tbl_usagetype) AS ext_usage (code, exemption) WHERE ext_usage.code=usagecategorysubminor) AS exemptionamount, (SELECT CONCAT(exemption::jsonb ->> ('rate'), '%') FROM (VALUES tbl_usagetype) AS ext_usage (code, exemption) WHERE ext_usage.code=usagecategorysubminor) AS exemptionrate, usagecategorysubminor FROM eg_pt_unit_v2 WHERE usagecategorysubminor IS NOT NULL AND tenantid LIKE $tenantid AND createdtime >= $fromDate AND createdtime <= $toDate AND (SELECT exemption FROM (VALUES tbl_usagetype) AS ext_usage (code, exemption) WHERE ext_usage.code=usagecategorysubminor) IS NOT NULL
+
+
+- reportName: AdhocChargesReport
+  summary: Adhoc Charges Report
+  version: 1.0.0
+  moduleName: pt
+  sourceColumns:
+  - name: assessmentNo
+    label: reports.pt.assessmentNo
+    type: string
+    source: pt
+  - name: amount
+    label: reports.pt.amount
+    type: string
+    source: pt
+  - name: reason
+    label: reports.pt.reason
+    type: string
+    source: pt
+  - name: name
+    label: reports.pt.name
+    type: string
+    source: pt
+  searchParams:
+  - name: fromDate
+    label: reports.pt.fromDate
+    type: epoch
+    source: pt
+    isMandatory: false
+  - name: toDate
+    label: reports.pt.toDate
+    type: epoch
+    source: pt
+    isMandatory: false
+  query: SELECT a.assessmentnumber as assessmentNo, a.adhocpenalty AS amount, a.adhocpenaltyreason AS reason, b.name AS name FROM eg_pt_propertydetail_v2 AS a, eg_user AS b WHERE a.createdby = b.uuid AND a.tenantid LIKE $tenantid AND a.adhocpenalty IS NOT NULL AND createdtime >= $fromDate AND createdtime <= $toDate
+
+
+- reportName: AdhocRebatesReport
+  summary: Adhoc Rebates Report
+  version: 1.0.0
+  moduleName: pt
+  sourceColumns:
+  - name: assessmentNo
+    label: reports.pt.assessmentNo
+    type: string
+    source: pt
+  - name: amount
+    label: reports.pt.amount
+    type: string
+    source: pt
+  - name: reason
+    label: reports.pt.reason
+    type: string
+    source: pt
+  - name: name
+    label: reports.pt.name
+    type: string
+    source: pt
+  searchParams:
+  - name: fromDate
+    label: reports.pt.fromDate
+    type: epoch
+    source: pt
+    isMandatory: false
+  - name: toDate
+    label: reports.pt.toDate
+    type: epoch
+    source: pt
+    isMandatory: false
+  query: SELECT a.assessmentnumber as assessmentNo, a.adhocexemption AS amount, a.adhocexemptionreason AS reason, b.name AS name FROM eg_pt_propertydetail_v2 AS a, eg_user AS b WHERE a.createdby = b.uuid AND a.tenantid LIKE $tenantid and a.adhocexemption IS NOT NULL AND createdtime >= $fromDate AND createdtime <= $toDate
+
+
+- reportName: UlbWiseCollectionReport
+  summary: ULB Wise Collection Report
+  version: 1.0.0
+  moduleName: pt
+  sourceColumns:
+  - name: ulb
+    label: reports.pt.ulb
+    type: string
+    source: pt
+  - name: totalAssessments
+    label: reports.pt.totalAssessments
+    type: string
+    source: pt
+  - name: totalAssessmentAmount
+    label: reports.pt.totalAssessmentAmount
+    type: string
+    source: pt
+  - name: totalCollectedAmount
+    label: reports.pt.totalCollectedAmount
+    type: string
+    source: pt
+  searchParams:
+  - name: fromDate
+    label: reports.pt.fromDate
+    type: epoch
+    source: pt
+    isMandatory: false
+    searchClause: AND createdtime >= $fromDate
+  - name: toDate
+    label: reports.pt.toDate
+    type: epoch
+    source: pt
+    isMandatory: false
+    searchClause: AND createdtime <= $toDate
+  query: SELECT tenantid AS "ulb", count(*)::VARCHAR AS "totalAssessments", sum(taxamount)::VARCHAR AS "totalAssessmentAmount", sum(collectionamount)::VARCHAR AS "totalCollectedAmount" FROM egbs_demanddetail WHERE tenantid LIKE 'pb.%'
+  groupBy: GROUP BY tenantid

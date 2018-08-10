@@ -183,7 +183,7 @@ public class PayService {
 				interestAmt = maxAmt;
 		}
 
-		return interestAmt.multiply(BigDecimal.valueOf(((numberOfDays / 3600) / 86400) / 365));
+		return interestAmt.multiply(BigDecimal.valueOf(((Double.valueOf(numberOfDays) / 3600) / 86400) / 365));
 	}
 	
 	/**

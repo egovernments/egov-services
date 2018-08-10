@@ -7,6 +7,7 @@ import org.egov.pt.service.NotificationService;
 import org.egov.pt.web.models.Property;
 import org.egov.pt.web.models.PropertyRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.support.KafkaHeaders;
 import org.springframework.messaging.handler.annotation.Header;
@@ -36,7 +37,10 @@ public class PropertyNotificationConsumer {
             log.error("Error while listening to value: " + record + " on topic: " + topic + ": " + e);
         }
         log.info("property Received: "+propertyRequest.getProperties().get(0).getPropertyId());
-        notificationService.process(propertyRequest);
+
+        notificationService.process(propertyRequest,topic);
+
+
     }
 
 

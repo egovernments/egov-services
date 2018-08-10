@@ -6,11 +6,10 @@ import org.egov.mdms.model.MdmsCriteria;
 import org.egov.mdms.model.MdmsCriteriaReq;
 import org.egov.mdms.model.ModuleDetail;
 import org.egov.pt.web.models.AuditDetails;
+import org.egov.pt.web.models.Property;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Component
 public class PropertyUtil {
@@ -48,6 +47,17 @@ public class PropertyUtil {
         moduleDetails.add(moduleDetail);
         MdmsCriteria mdmsCriteria = MdmsCriteria.builder().tenantId(tenantId).moduleDetails(moduleDetails).build();
         return MdmsCriteriaReq.builder().requestInfo(requestInfo).mdmsCriteria(mdmsCriteria).build();
+    }
+
+
+    public void addAddressIds(List<Property> responseProperties,List<Property> requestProperties){
+        Map<String,String > propertyIdToAddressId = new HashMap<>();
+        responseProperties.forEach(property -> {
+            propertyIdToAddressId.put(property.getPropertyId(),property.getAddress().getId());
+        });
+        requestProperties.forEach(property -> {
+            property.getAddress().setId(propertyIdToAddressId.get(property.getPropertyId()));
+        });
     }
 
 

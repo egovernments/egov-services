@@ -3,6 +3,7 @@ package org.egov.pt.service;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.pt.config.PropertyConfiguration;
 import org.egov.pt.repository.IdGenRepository;
+import org.egov.pt.util.PTConstants;
 import org.egov.pt.util.PropertyUtil;
 import org.egov.pt.web.models.*;
 import org.egov.tracer.model.CustomException;
@@ -24,6 +25,9 @@ public class EnrichmentService {
     IdGenRepository idGenRepository;
 
     @Autowired
+    BoundaryService boundaryService;
+
+    @Autowired
     private PropertyConfiguration config;
 
 
@@ -40,11 +44,12 @@ public class EnrichmentService {
 
         for (Property property : request.getProperties()) {
             if(!onlyPropertyDetail)
-                property.getAddress().setId(UUID.randomUUID().toString());
+            {  property.getAddress().setId(UUID.randomUUID().toString());
+            }
+            setAssessmentNo(property.getTenantId(),property.getPropertyDetails(),requestInfo);
             property.getAddress().setTenantId(property.getTenantId());
             property.setAuditDetails(propertyAuditDetails);
             property.setStatus(PropertyInfo.StatusEnum.ACTIVE);
-            setAssessmentNo(property.getTenantId(),property.getPropertyDetails(),requestInfo);
             property.getPropertyDetails().forEach(propertyDetail -> {
                 //   if(propertyDetail.getAssessmentNumber()==null)
                 {
@@ -75,6 +80,7 @@ public class EnrichmentService {
         }
         if(!onlyPropertyDetail)
             setIdgenIds(request);
+        enrichBoundary(request);
     }
 
     /**
@@ -274,6 +280,25 @@ public class EnrichmentService {
         criteria.setIds(propertyids);
         criteria.setTenantId(properties.get(0).getTenantId());
         return criteria;
+    }
+
+    /**
+     *  Enriches the locality object
+     * @param request The propertyRequest received for create or update
+     */
+    public void enrichBoundary(PropertyRequest request){
+        boundaryService.getAreaType(request,PTConstants.BOUNDARY_HEIRARCHY_CODE);
+    }
+
+    /**
+     *
+     * @param request The propertyrequest received for update
+     */
+    public void enrichAssessmentNumber(PropertyRequest request){
+        RequestInfo requestInfo = request.getRequestInfo();
+        request.getProperties().forEach(property -> {
+            setAssessmentNo(property.getTenantId(),property.getPropertyDetails(),requestInfo);
+        });
     }
 
 

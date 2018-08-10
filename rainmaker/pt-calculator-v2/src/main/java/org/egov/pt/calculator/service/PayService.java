@@ -183,7 +183,7 @@ public class PayService {
 				interestAmt = maxAmt;
 		}
 
-		return interestAmt.multiply(BigDecimal.valueOf(((Double.valueOf(numberOfDays) / 3600) / 86400) / 365));
+		return interestAmt.multiply(BigDecimal.valueOf(((Double.valueOf(numberOfDays) /1000/ 3600) / 24) / 365));
 	}
 	
 	/**
@@ -271,7 +271,7 @@ public class PayService {
 	private void setDateToCalendar(String assessmentYear, String[] time, Calendar cal) {
 		
 		Integer day = Integer.valueOf(time[0]);
-		Integer month = Integer.valueOf(time[1]);
+		Integer month = Integer.valueOf(time[1])-1;
 		Integer year = Integer.valueOf(assessmentYear.split("-")[0]);
 		if (month <= 3) year += 1;
 		cal.set(year, month, day);

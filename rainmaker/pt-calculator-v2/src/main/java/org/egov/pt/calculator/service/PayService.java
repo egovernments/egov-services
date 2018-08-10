@@ -290,7 +290,7 @@ public class PayService {
 		BigDecimal roundOffAmount = result.setScale(2, 2);
 		BigDecimal reminder = roundOffAmount.remainder(BigDecimal.ONE);
 
-		if (reminder.doubleValue() > 0.5)
+		if (reminder.doubleValue() >= 0.5)
 			roundOffPos = roundOffPos.add(BigDecimal.ONE.subtract(reminder));
 		else if (reminder.doubleValue() < 0.5)
 			roundOffNeg = roundOffNeg.add(reminder);

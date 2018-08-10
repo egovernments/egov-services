@@ -253,6 +253,7 @@ public class LeaveApplicationRepository {
         final String leaveApplicationGetForDateRangeQuery = LeaveApplicationQueryBuilder
                 .getLeaveApplicationForDateRangeQuery();
         final Object[] obj = new Object[]{leaveApplication.getFromDate(), leaveApplication.getToDate(),
+                leaveApplication.getFromDate(), leaveApplication.getToDate(),
                 leaveApplication.getFromDate(), leaveApplication.getToDate(), leaveApplication.getEmployee(),
                 hrStatusService
                         .getHRStatuses(LeaveStatus.CANCELLED.toString(), leaveApplication.getTenantId(), requestInfo)

@@ -151,8 +151,12 @@ public class CalculatorUtils {
 	public BigDecimal getTaxAmtFromDemandForApplicablesGeneration(Demand demand) {
 		BigDecimal taxAmt = BigDecimal.ZERO;
 		for (DemandDetail detail : demand.getDemandDetails()) {
-			if (! CalculatorConstants.TAXES_TO_BE_IGNORED_WHEN_CALUCLATING_REBATE_AND_PENALTY.contains(detail.getTaxHeadMasterCode()))
+			if (CalculatorConstants.TAXES_TO_BE_CONSIDERD_WHEN_CALUCLATING_REBATE_AND_PENALTY
+					.contains(detail.getTaxHeadMasterCode()))
 				taxAmt = taxAmt.add(detail.getTaxAmount());
+			else if (CalculatorConstants.TAXES_TO_BE_SUBTRACTED_WHEN_CALCULATING_REBATE_AND_PENALTY
+					.contains(detail.getTaxHeadMasterCode()))
+				taxAmt = taxAmt.subtract(detail.getTaxAmount());
 		}
 		return taxAmt;
 	}

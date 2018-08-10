@@ -65,9 +65,9 @@ public class PayService {
 					timeBasedExmeptionMasterMap.get(CalculatorConstants.INTEREST_MASTER));
 		}
 
-		estimates.put(CalculatorConstants.PT_TIME_REBATE, rebate);
-		estimates.put(CalculatorConstants.PT_TIME_PENALTY, penalty);
-		estimates.put(CalculatorConstants.PT_TIME_INTEREST, interest);
+		estimates.put(CalculatorConstants.PT_TIME_REBATE, rebate.setScale(2, 2));
+		estimates.put(CalculatorConstants.PT_TIME_PENALTY, penalty.setScale(2, 2));
+		estimates.put(CalculatorConstants.PT_TIME_INTEREST, interest.setScale(2, 2));
 		return estimates;
 	}
 

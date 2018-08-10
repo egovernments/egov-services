@@ -48,8 +48,11 @@ public class CalculatorConstants {
 	
 	public static final String PT_DECIMAL_CEILING_DEBIT = "PT_DECIMAL_CEILING_DEBIT";
 
-	protected static final List<String> TAXES_TO_BE_IGNORED_WHEN_CALUCLATING_REBATE_AND_PENALTY = Arrays
-			.asList(PT_TIME_REBATE, PT_TIME_PENALTY, PT_TIME_INTEREST, PT_DECIMAL_CEILING_CREDIT, PT_DECIMAL_CEILING_DEBIT);
+	public static final List<String> TAXES_TO_BE_CONSIDERD_WHEN_CALUCLATING_REBATE_AND_PENALTY = Collections.unmodifiableList(Arrays
+			.asList(PT_TAX));
+	
+	public static final List<String> TAXES_TO_BE_SUBTRACTED_WHEN_CALCULATING_REBATE_AND_PENALTY = Collections.unmodifiableList(Arrays
+			.asList(PT_OWNER_EXEMPTION, PT_UNIT_USAGE_EXEMPTION ));
 	
 
 	/*

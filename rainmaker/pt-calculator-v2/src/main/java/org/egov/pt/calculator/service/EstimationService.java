@@ -305,11 +305,11 @@ public class EstimationService {
 		if(null == rebatePenaltyMap) return estimates;
 		
 		estimates.add(TaxHeadEstimate.builder().taxHeadCode(CalculatorConstants.PT_TIME_REBATE)
-				.estimateAmount(rebatePenaltyMap.get(CalculatorConstants.PT_TIME_REBATE).setScale(2, 2)).build());
+				.estimateAmount(rebatePenaltyMap.get(CalculatorConstants.PT_TIME_REBATE)).build());
 		estimates.add(TaxHeadEstimate.builder().taxHeadCode(CalculatorConstants.PT_TIME_PENALTY)
-				.estimateAmount(rebatePenaltyMap.get(CalculatorConstants.PT_TIME_PENALTY).setScale(2, 2)).build());
+				.estimateAmount(rebatePenaltyMap.get(CalculatorConstants.PT_TIME_PENALTY)).build());
 		estimates.add(TaxHeadEstimate.builder().taxHeadCode(CalculatorConstants.PT_TIME_INTEREST)
-				.estimateAmount(rebatePenaltyMap.get(CalculatorConstants.PT_TIME_INTEREST).setScale(2, 2)).build());
+				.estimateAmount(rebatePenaltyMap.get(CalculatorConstants.PT_TIME_INTEREST)).build());
 
 		return estimates;
 	}

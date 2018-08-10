@@ -39,11 +39,7 @@
  */
 package org.egov.lams.web.controller;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.validation.Valid;
-
+import lombok.extern.slf4j.Slf4j;
 import org.egov.lams.model.Agreement;
 import org.egov.lams.model.AgreementCriteria;
 import org.egov.lams.model.enums.Source;
@@ -71,7 +67,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import lombok.extern.slf4j.Slf4j;
+import javax.validation.Valid;
+import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 @RequestMapping("agreements")
@@ -99,6 +97,22 @@ public class AgreementController {
         final RequestInfo requestInfo = requestInfoWrapper.getRequestInfo();
         log.info("AgreementController:getAgreements():searchAgreementsModel:" + agreementCriteria);
         final List<Agreement> agreements = agreementService.searchAgreement(agreementCriteria, requestInfo);
+        log.info("before sending for response success");
+        return getSuccessResponse(agreements, requestInfo);
+    }
+
+    @PostMapping("_advancesearch")
+    @ResponseBody
+    public ResponseEntity<?> searchAgreementByAgreementNo(@ModelAttribute @Valid final AgreementCriteria agreementCriteria,
+                                                          @RequestBody final RequestInfoWrapper requestInfoWrapper, final BindingResult bindingResult) {
+
+        if (bindingResult.hasErrors()) {
+            final ErrorResponse errorResponse = populateErrors(bindingResult);
+            return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+        }
+        final RequestInfo requestInfo = requestInfoWrapper.getRequestInfo();
+        log.info("AgreementController:getAgreements():searchAgreementsModel:" + agreementCriteria);
+        final List<Agreement> agreements = agreementService.searchAgreementByAgreementNo(agreementCriteria, requestInfo);
         log.info("before sending for response success");
         return getSuccessResponse(agreements, requestInfo);
     }

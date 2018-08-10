@@ -102,12 +102,10 @@ public class BoundaryService {
      */
     private Map<String,String> getJsonpath(PropertyRequest request){
         Map<String,String> propertyIdToJsonPath = new LinkedHashMap<>();
-        StringBuilder initialString = new StringBuilder("$..boundary[?(@.code==\"");
-        StringBuilder endString = new StringBuilder("\")]");
-
+        String jsonpath = "$..boundary[?(@.code==\"{}\")]";
         request.getProperties().forEach(property -> {
-            StringBuilder jsonPath = new StringBuilder(property.getAddress().getLocality().getCode());
-            propertyIdToJsonPath.put(property.getPropertyId(), initialString.append(jsonPath).append(endString).toString());
+            propertyIdToJsonPath.put(property.getPropertyId(),jsonpath.replace("{}",property.getAddress().getLocality().getCode()
+            ));
         });
 
         return  propertyIdToJsonPath;

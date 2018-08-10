@@ -139,8 +139,7 @@ public class MasterDataService {
 	public Map<String, Object> getApplicableMasterFromList(String assessmentYear, List<Object> masterList) {
 		
 		Map<String, Object> objToBeReturned = null;
-		String maxYearFromTheList = ((String) ((Map<String, Object>) masterList.get(0))
-				.get(CalculatorConstants.FROMFY_FIELD_NAME)).split("-")[0];
+		String maxYearFromTheList = "0";
 
 		for (Object object : masterList) {
 

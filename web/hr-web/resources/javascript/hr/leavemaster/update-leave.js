@@ -37,15 +37,12 @@ const uploadFiles = function(body, cb) {
   var files = body.LeaveApplication.docs ? body.LeaveApplication.docs : [];
 
   if (files.length) {
-    console.log(files);
-
     var breakout = 0;
     var docs = [];
     let counter = files.length;
     for (let j = 0; j < files.length; j++) {
       if (files[j].file instanceof File) {
         makeAjaxUpload(files[j].file, files[j].docType, function(err, res) {
-          console.log(res.files);
           if (breakout == 1) return;
           else if (err) {
             cb(err);
@@ -350,7 +347,6 @@ class UpdateLeave extends React.Component {
           }
           if (!_leaveSet.leaveType) {
             var workedOnDate = _leaveSet.compensatoryForDate;
-            console.log(workedOnDate);
           }
           if (workedOnDate) {
             _this.setState({
@@ -2406,7 +2402,7 @@ class UpdateLeave extends React.Component {
                           onChange={e => {
                             handleChange(e, "compensatoryForDate");
                           }}
-                          disabled={getUrlVars()["workedOnDate"] ? true : false}
+                          disabled
                           required
                         >
                           <option value="">Select worked on date</option>

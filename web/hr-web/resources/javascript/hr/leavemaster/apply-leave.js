@@ -126,7 +126,11 @@ class ApplyLeave extends React.Component {
       perfixSuffix: "",
       encloseHoliday: "",
       prefixHolidays: "",
-      suffixHolidays: ""
+      suffixHolidays: "",
+      compensetorySet: {
+        compensatoryForDate: ""
+      },
+      workedOnDays: []
     };
     this.handleChange = this.handleChange.bind(this);
     this.addOrUpdate = this.addOrUpdate.bind(this);
@@ -200,6 +204,18 @@ class ApplyLeave extends React.Component {
               }
             }
           );
+          if (!_leaveSet.leaveType) {
+            var workedOnDate = _leaveSet.compensatoryForDate;
+          }
+          if (workedOnDate) {
+            _this.setState({
+              compensetorySet: {
+                ..._this.state.compensetorySet,
+                compensatoryForDate: workedOnDate
+              },
+              workedOnDays: [workedOnDate]
+            });
+          }
         } else {
           showError("Something went wrong. Please contact Administrator.");
         }
@@ -293,7 +309,9 @@ class ApplyLeave extends React.Component {
     });
 
     $("#fromDate, #toDate").on("change", function(e) {
-      if (!_this.state.leaveSet.leaveType.id) {
+      if (
+        !(_this.state.leaveSet.leaveType && _this.state.leaveSet.leaveType.id)
+      ) {
         showError(
           "Please select Leave Type before entering from date and to date."
         );
@@ -707,7 +725,8 @@ class ApplyLeave extends React.Component {
       else $("#leaveDays").prop("disabled", true);
       let _this = this;
       var asOnDate = today();
-      let leaveType = this.state.leaveSet.leaveType.id;
+      let leaveType =
+        this.state.leaveSet.leaveType && this.state.leaveSet.leaveType.id;
       let employeeid = getUrlVars()["id"];
 
       commonApiPost(
@@ -848,15 +867,17 @@ class ApplyLeave extends React.Component {
       return showError("You do not have leave for this leave type.");
     }
 
-    let maxDays = getNameById(
-      _this.state.leaveList,
-      _this.state.leaveSet.leaveType.id,
-      "maxDays"
-    );
-    if (maxDays && maxDays < _this.state.leaveSet.workingDays) {
-      return showError(
-        "Number of Leaves applied exceeds Maximum leaves permitted"
+    if (_this.state.leaveSet.leaveType) {
+      let maxDays = getNameById(
+        _this.state.leaveList,
+        _this.state.leaveSet.leaveType.id,
+        "maxDays"
       );
+      if (maxDays && maxDays < _this.state.leaveSet.workingDays) {
+        return showError(
+          "Number of Leaves applied exceeds Maximum leaves permitted"
+        );
+      }
     }
 
     var employee;
@@ -985,7 +1006,8 @@ class ApplyLeave extends React.Component {
 
   render() {
     let { handleChange, addOrUpdate, handleChangeThreeLevel } = this;
-    let { leaveSet, perfixSuffix } = this.state;
+    let { leaveSet, perfixSuffix, workedOnDays } = this.state;
+    let { compensatoryForDate } = this.state.compensetorySet;
     let {
       name,
       code,
@@ -1013,7 +1035,20 @@ class ApplyLeave extends React.Component {
         });
       }
     };
-
+    const renderWorkedDate = function(list) {
+      if (list) {
+        return list.map((item, ind) => {
+          return (
+            <option
+              key={ind}
+              value={typeof item == "object" ? item.workedDate : item}
+            >
+              {typeof item == "object" ? item.workedDate : item}
+            </option>
+          );
+        });
+      }
+    };
     const showActionButton = function() {
       if (mode === "create" || !mode) {
         return (
@@ -1212,7 +1247,7 @@ class ApplyLeave extends React.Component {
     };
 
     const showEncashable = () => {
-      if (this.state.leaveSet.leaveType.id) {
+      if (this.state.leaveSet.leaveType && this.state.leaveSet.leaveType.id) {
         let encashableLeaveType = getNameById(
           this.state.leaveList,
           this.state.leaveSet.leaveType.id,
@@ -1390,147 +1425,210 @@ class ApplyLeave extends React.Component {
             </div>
 
             <div className="row">
-              <div className="col-sm-6">
-                <div className="row">
-                  <div className="col-sm-6 label-text">
-                    <label htmlFor="leaveType">
-                      Leave Type<span>*</span>
-                    </label>
+              {leaveType ? (
+                <div className="col-sm-6">
+                  <div className="row">
+                    <div className="col-sm-6 label-text">
+                      <label htmlFor="leaveType">
+                        Leave Type<span>*</span>
+                      </label>
+                    </div>
+                    <div className="col-sm-6">
+                      <div className="styled-select">
+                        <select
+                          id="leaveType"
+                          name="leaveType"
+                          value={leaveType.id}
+                          required="true"
+                          onChange={e => {
+                            handleChangeThreeLevel(e, "leaveType", "id");
+                          }}
+                        >
+                          <option value=""> Select Leave Type</option>
+                          {renderOption(this.state.leaveList)}
+                        </select>
+                      </div>
+                    </div>
                   </div>
-                  <div className="col-sm-6">
-                    <div className="styled-select">
-                      <select
-                        id="leaveType"
-                        name="leaveType"
-                        value={leaveType.id}
-                        required="true"
+                </div>
+              ) : (
+                <div className="col-sm-6">
+                  <div className="row">
+                    <div className="col-sm-6 label-text">
+                      <label for="">
+                        Worked On <span>*</span>
+                      </label>
+                    </div>
+                    <div className="col-sm-6">
+                      <div className="styled-select">
+                        <select
+                          name="compensatoryForDate"
+                          id="compensatoryForDate"
+                          value={compensatoryForDate}
+                          onChange={e => {
+                            handleChange(e, "compensatoryForDate");
+                          }}
+                          disabled
+                          required
+                        >
+                          <option value="">Select worked on date</option>
+                          {renderWorkedDate(workedOnDays)}
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+              {!leaveType ? (
+                <div className="col-sm-6">
+                  <div className="row">
+                    <div className="col-sm-6 label-text">
+                      <label for="">
+                        Compensetory Leave On <span>*</span>
+                      </label>
+                    </div>
+                    <div className="col-sm-6">
+                      <div className="text-no-ui">
+                        <span>
+                          <i className="glyphicon glyphicon-calendar" />
+                        </span>
+                        <input
+                          type="text"
+                          id="fromDate"
+                          name="fromDate"
+                          value={fromDate}
+                          onChange={e => {
+                            handleChange(e, "fromDate");
+                          }}
+                          required
+                          disabled
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                <div className="col-sm-6">
+                  <div className="row">
+                    <div className="col-sm-6 label-text">
+                      <label htmlFor="Reason">
+                        Reason <span>*</span>
+                      </label>
+                    </div>
+                    <div className="col-sm-6">
+                      <textarea
+                        rows="4"
+                        cols="50"
+                        id="reason"
+                        name="reason"
+                        value={reason}
                         onChange={e => {
-                          handleChangeThreeLevel(e, "leaveType", "id");
+                          handleChange(e, "reason");
                         }}
-                      >
-                        <option value=""> Select Leave Type</option>
-                        {renderOption(this.state.leaveList)}
-                      </select>
+                        required
+                      />
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {leaveType && showEncashable()}
+            {leaveType && showDateRange()}
+
+            {leaveType && (
+              <div className="row">
+                <div className="col-sm-6">
+                  <div className="row">
+                    <div className="col-sm-6 label-text">
+                      <label htmlFor="">Available Leave</label>
+                    </div>
+                    <div className="col-sm-6">
+                      <input
+                        type="number"
+                        id="availableDays"
+                        name="availableDays"
+                        value={availableDays}
+                        onChange={e => {
+                          handleChange(e, "availableDays");
+                        }}
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div className="col-sm-6">
+                  <div className="row">
+                    <div className="col-sm-6 label-text">
+                      <label htmlFor="documents">Attachments</label>
+                    </div>
+                    <div className="col-sm-6 label-view-text">
+                      <input
+                        type="file"
+                        name="documents"
+                        id="documents"
+                        onChange={e => {
+                          handleChange(e, "documents");
+                        }}
+                        multiple
+                      />
                     </div>
                   </div>
                 </div>
               </div>
-              <div className="col-sm-6">
-                <div className="row">
-                  <div className="col-sm-6 label-text">
-                    <label htmlFor="Reason">
-                      Reason <span>*</span>
-                    </label>
+            )}
+
+            {leaveType && showPrefix()}
+            {leaveType && showSuffix()}
+
+            {leaveType && (
+              <div className="row">
+                <div className="col-sm-6">
+                  <div className="row">
+                    <div className="col-sm-6 label-text">
+                      <label htmlFor="">Total Leave Days</label>
+                    </div>
+                    <div className="col-sm-6">
+                      <input
+                        type="number"
+                        id="leaveDays"
+                        name="leaveDays"
+                        value={leaveDays}
+                        onChange={e => {
+                          handleChange(e, "leaveDays");
+                        }}
+                        disabled
+                      />
+                    </div>
                   </div>
-                  <div className="col-sm-6">
-                    <textarea
-                      rows="4"
-                      cols="50"
-                      id="reason"
-                      name="reason"
-                      value={reason}
-                      onChange={e => {
-                        handleChange(e, "reason");
-                      }}
-                      required
-                    />
+                </div>
+                <div className="col-sm-6">
+                  <div className="row">
+                    <div className="col-sm-6 label-text">
+                      <label htmlFor="">
+                        Leave Grounds <span>*</span>
+                      </label>
+                    </div>
+                    <div className="col-sm-6">
+                      <input
+                        type="text"
+                        id="leaveGround"
+                        name="leaveGround"
+                        value={leaveGround}
+                        pattern="[a-zA-Z][a-zA-Z ]+"
+                        maxLength="50"
+                        onChange={e => {
+                          handleChange(e, "leaveGround");
+                        }}
+                        required
+                      />
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
+            )}
 
-            {showEncashable()}
-            {showDateRange()}
-
-            <div className="row">
-              <div className="col-sm-6">
-                <div className="row">
-                  <div className="col-sm-6 label-text">
-                    <label htmlFor="">Available Leave</label>
-                  </div>
-                  <div className="col-sm-6">
-                    <input
-                      type="number"
-                      id="availableDays"
-                      name="availableDays"
-                      value={availableDays}
-                      onChange={e => {
-                        handleChange(e, "availableDays");
-                      }}
-                    />
-                  </div>
-                </div>
-              </div>
-              <div className="col-sm-6">
-                <div className="row">
-                  <div className="col-sm-6 label-text">
-                    <label htmlFor="documents">Attachments</label>
-                  </div>
-                  <div className="col-sm-6 label-view-text">
-                    <input
-                      type="file"
-                      name="documents"
-                      id="documents"
-                      onChange={e => {
-                        handleChange(e, "documents");
-                      }}
-                      multiple
-                    />
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {showPrefix()}
-            {showSuffix()}
-
-            <div className="row">
-              <div className="col-sm-6">
-                <div className="row">
-                  <div className="col-sm-6 label-text">
-                    <label htmlFor="">Total Leave Days</label>
-                  </div>
-                  <div className="col-sm-6">
-                    <input
-                      type="number"
-                      id="leaveDays"
-                      name="leaveDays"
-                      value={leaveDays}
-                      onChange={e => {
-                        handleChange(e, "leaveDays");
-                      }}
-                      disabled
-                    />
-                  </div>
-                </div>
-              </div>
-              <div className="col-sm-6">
-                <div className="row">
-                  <div className="col-sm-6 label-text">
-                    <label htmlFor="">
-                      Leave Grounds <span>*</span>
-                    </label>
-                  </div>
-                  <div className="col-sm-6">
-                    <input
-                      type="text"
-                      id="leaveGround"
-                      name="leaveGround"
-                      value={leaveGround}
-                      pattern="[a-zA-Z][a-zA-Z ]+"
-                      maxLength="50"
-                      onChange={e => {
-                        handleChange(e, "leaveGround");
-                      }}
-                      required
-                    />
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {showEnclosingHolidayTable()}
-            {showAttachments()}
+            {leaveType && showEnclosingHolidayTable()}
+            {leaveType && showAttachments()}
 
             <div className="text-center">
               {showActionButton()} &nbsp;&nbsp;

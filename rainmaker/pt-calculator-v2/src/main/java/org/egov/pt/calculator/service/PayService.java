@@ -47,9 +47,11 @@ public class PayService {
 	 * @param assessmentYear
 	 * @return
 	 */
-	public Map<String, BigDecimal> applyPenaltyRebateAndInterest(BigDecimal taxAmt, String assessmentYear,
+	public Map<String, BigDecimal> applyPenaltyRebateAndInterest(BigDecimal taxAmt, BigDecimal collectedAmount, String assessmentYear,
 			Map<String, JSONArray> timeBasedExmeptionMasterMap) {
 
+		if(BigDecimal.ZERO.compareTo(taxAmt) >= 0) return null;
+		
 		Map<String, BigDecimal> estimates = new HashMap<>();
 		BigDecimal rebate = getRebate(taxAmt, assessmentYear,
 				timeBasedExmeptionMasterMap.get(CalculatorConstants.REBATE_MASTER));
@@ -59,7 +61,7 @@ public class PayService {
 
 		if (rebate.equals(BigDecimal.ZERO)) {
 			penalty = getPenalty(taxAmt, assessmentYear, timeBasedExmeptionMasterMap.get(CalculatorConstants.PENANLTY_MASTER));
-			interest = getInterest(taxAmt.subtract(penalty), assessmentYear,
+			interest = getInterest(taxAmt.subtract(collectedAmount), assessmentYear,
 					timeBasedExmeptionMasterMap.get(CalculatorConstants.INTEREST_MASTER));
 		}
 
@@ -156,8 +158,11 @@ public class PayService {
 		String[] time = ((String) interestMap.get(CalculatorConstants.STARTING_DATE_APPLICABLES)).split("/");
 		Calendar cal = Calendar.getInstance();
 		setDateToCalendar(assessmentYear, time, cal);
+		long current = System.currentTimeMillis();
+		long interestStart = cal.getTimeInMillis();
+		long numberOfDays = current - interestStart;
 
-		if (cal.getTimeInMillis() < System.currentTimeMillis()) {
+		if (interestStart < current) {
 
 			BigDecimal rate = null != interestMap.get(CalculatorConstants.RATE_FIELD_NAME) ? BigDecimal.valueOf(
 					((Number) interestMap.get(CalculatorConstants.RATE_FIELD_NAME)).doubleValue()) : null;
@@ -178,7 +183,7 @@ public class PayService {
 				interestAmt = maxAmt;
 		}
 
-		return interestAmt;
+		return interestAmt.multiply(BigDecimal.valueOf(numberOfDays/365));
 	}
 	
 	/**

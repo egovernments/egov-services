@@ -279,6 +279,10 @@ public class DemandService {
 		String tenantId = demand.getTenantId();
 		String demandId = demand.getId();
 		BigDecimal taxAmt = utils.getTaxAmtFromDemandForApplicablesGeneration(demand);
+		BigDecimal collectedAmount = BigDecimal.ZERO;
+		
+		for (DemandDetail detail : demand.getDemandDetails())
+			collectedAmount = collectedAmount.add(detail.getCollectionAmount());
 
 		boolean isRebateUpdated = false;
 		boolean isPenaltyUpdated = false;
@@ -287,7 +291,10 @@ public class DemandService {
 		
 		List<DemandDetail> details = demand.getDemandDetails();
 		Map<String, BigDecimal> rebatePenaltyEstimates = payService.applyPenaltyRebateAndInterest(taxAmt,
-				assessmentYear, timeBasedExmeptionMasterMap);
+				collectedAmount, assessmentYear, timeBasedExmeptionMasterMap);
+		
+		if(null == rebatePenaltyEstimates) return;
+		
 		BigDecimal rebate = rebatePenaltyEstimates.get(CalculatorConstants.PT_TIME_REBATE);
 		BigDecimal penalty = rebatePenaltyEstimates.get(CalculatorConstants.PT_TIME_PENALTY);
 		BigDecimal interest = rebatePenaltyEstimates.get(CalculatorConstants.PT_TIME_INTEREST);

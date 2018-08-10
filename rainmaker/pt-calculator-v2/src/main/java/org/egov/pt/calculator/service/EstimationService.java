@@ -284,25 +284,26 @@ public class EstimationService {
 				.estimateAmount(usageExemption.setScale(2, 2)).build());
 		payableTax = payableTax.subtract(usageExemption);
 
-		// Fire cess
-		BigDecimal fireCess = mstrDataService.getFireCess(payableTax, assessmentYear, timeBasedExmeptionMasterMap);
-		estimates.add(TaxHeadEstimate.builder().taxHeadCode(CalculatorConstants.PT_FIRE_CESS)
-				.estimateAmount(fireCess.setScale(2, 2)).build());
-		payableTax = payableTax.add(fireCess);
-
 		// owner exemption
 		BigDecimal userExemption = getExemption(detail.getOwners(), payableTax, assessmentYear,
 				propertyBasedExemptionMasterMap);
 		estimates.add(TaxHeadEstimate.builder().taxHeadCode(CalculatorConstants.PT_OWNER_EXEMPTION)
 				.estimateAmount(userExemption.setScale(2, 2)).build());
 		payableTax = payableTax.subtract(userExemption);
+		
+		// Fire cess
+		BigDecimal fireCess = mstrDataService.getFireCess(payableTax, assessmentYear, timeBasedExmeptionMasterMap);
+		estimates.add(TaxHeadEstimate.builder().taxHeadCode(CalculatorConstants.PT_FIRE_CESS)
+				.estimateAmount(fireCess.setScale(2, 2)).build());
 
 		/*
 		 * get applicable rebate and penalty
 		 */
-		Map<String, BigDecimal> rebatePenaltyMap = payService.applyPenaltyRebateAndInterest(payableTax, assessmentYear,
+		Map<String, BigDecimal> rebatePenaltyMap = payService.applyPenaltyRebateAndInterest(payableTax, BigDecimal.ZERO, assessmentYear,
 				timeBasedExmeptionMasterMap);
 
+		if(null == rebatePenaltyMap) return estimates;
+		
 		estimates.add(TaxHeadEstimate.builder().taxHeadCode(CalculatorConstants.PT_TIME_REBATE)
 				.estimateAmount(rebatePenaltyMap.get(CalculatorConstants.PT_TIME_REBATE).setScale(2, 2)).build());
 		estimates.add(TaxHeadEstimate.builder().taxHeadCode(CalculatorConstants.PT_TIME_PENALTY)

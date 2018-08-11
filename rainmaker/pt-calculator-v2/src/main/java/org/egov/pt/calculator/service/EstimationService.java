@@ -193,7 +193,7 @@ public class EstimationService {
 
 			Double diffArea = null != detail.getBuildUpArea() ? detail.getLandArea() - detail.getBuildUpArea()
 					: detail.getLandArea() - groundUnitsArea;
-			unBuiltAmt = unBuiltAmt.add(BigDecimal.valueOf(unBuiltRate * (diffArea)));
+			unBuiltAmt = unBuiltAmt.add(BigDecimal.valueOf((unBuiltRate/groundUnitsCount) * (diffArea)));
 		}
 		return unBuiltAmt;
 	}

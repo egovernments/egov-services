@@ -149,18 +149,18 @@ public class EstimationService {
 			
 			for (Unit unit : detail.getUnits()) {
 				
+				BillingSlab slab = getSlabForCalc(filteredbillingSlabs, unit);
+				BigDecimal currentUnitTax = getTaxForUnit(slab, unit);
+				
 				/*
 				 * counting the number of units & total area in ground floor for unbuilt area tax calculation
 				 */
 				if (unit.getFloorNo().equalsIgnoreCase("0")) {
 					groundUnitsCount += 1;
 					groundUnitsArea += unit.getUnitArea();
+					if (null != slab.getUnBuiltUnitRate())
+						unBuiltRate += slab.getUnBuiltUnitRate();
 				}
-
-				BillingSlab slab = getSlabForCalc(filteredbillingSlabs, unit);
-				BigDecimal currentUnitTax = getTaxForUnit(slab, unit);
-				if (null != slab.getUnBuiltUnitRate())
-					unBuiltRate += slab.getUnBuiltUnitRate();
 
 				taxAmt = taxAmt.add(currentUnitTax);
 				usageExemption = usageExemption

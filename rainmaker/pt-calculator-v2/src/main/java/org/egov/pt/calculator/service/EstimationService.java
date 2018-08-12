@@ -293,7 +293,6 @@ public class EstimationService {
 		if (null != detail.getAdhocExemption() && detail.getAdhocExemption().compareTo(taxAmt) <= 0) {
 			estimates.add(TaxHeadEstimate.builder().taxHeadCode(CalculatorConstants.PT_ADHOC_REBATE)
 					.estimateAmount(detail.getAdhocExemption()).build());
-			payableTax = payableTax.subtract(detail.getAdhocExemption());
 		} else if (null != detail.getAdhocExemption()) {
 			throw new CustomException(CalculatorConstants.PT_ADHOC_REBATE_INVALID_AMOUNT,
 					CalculatorConstants.PT_ADHOC_REBATE_INVALID_AMOUNT_MSG + taxAmt);

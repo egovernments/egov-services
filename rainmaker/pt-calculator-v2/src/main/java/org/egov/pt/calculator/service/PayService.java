@@ -47,21 +47,22 @@ public class PayService {
 	 * @param assessmentYear
 	 * @return
 	 */
-	public Map<String, BigDecimal> applyPenaltyRebateAndInterest(BigDecimal taxAmt, BigDecimal collectedAmount, String assessmentYear,
-			Map<String, JSONArray> timeBasedExmeptionMasterMap) {
+	public Map<String, BigDecimal> applyPenaltyRebateAndInterest(BigDecimal taxAmt, BigDecimal collectedAmount,
+			Long lastCollectedTime, String assessmentYear, Map<String, JSONArray> timeBasedExmeptionMasterMap) {
 
-		if(BigDecimal.ZERO.compareTo(taxAmt) >= 0) return null;
-		
+		if (BigDecimal.ZERO.compareTo(taxAmt) >= 0)
+			return null;
+
 		Map<String, BigDecimal> estimates = new HashMap<>();
 		BigDecimal rebate = getRebate(taxAmt, assessmentYear,
 				timeBasedExmeptionMasterMap.get(CalculatorConstants.REBATE_MASTER));
-		
+
 		BigDecimal penalty = BigDecimal.ZERO;
 		BigDecimal interest = BigDecimal.ZERO;
 
 		if (rebate.equals(BigDecimal.ZERO)) {
 			penalty = getPenalty(taxAmt, assessmentYear, timeBasedExmeptionMasterMap.get(CalculatorConstants.PENANLTY_MASTER));
-			interest = getInterest(taxAmt.subtract(collectedAmount), assessmentYear,
+			interest = getInterest(taxAmt.subtract(collectedAmount), assessmentYear, lastCollectedTime,
 					timeBasedExmeptionMasterMap.get(CalculatorConstants.INTEREST_MASTER));
 		}
 
@@ -149,7 +150,7 @@ public class PayService {
 	 * @param assessmentYear
 	 * @return
 	 */
-	public BigDecimal getInterest(BigDecimal taxAmt, String assessmentYear, JSONArray interestMasterList) {
+	public BigDecimal getInterest(BigDecimal taxAmt, String assessmentYear,Long lastCollectedTime, JSONArray interestMasterList) {
 
 		BigDecimal interestAmt = BigDecimal.ZERO;
 		Map<String, Object> interestMap = mDService.getApplicableMasterFromList(assessmentYear, interestMasterList);
@@ -160,7 +161,7 @@ public class PayService {
 		setDateToCalendar(assessmentYear, time, cal);
 		long current = System.currentTimeMillis();
 		long interestStart = cal.getTimeInMillis();
-		long numberOfDays = current - interestStart;
+		long numberOfDays = 0 < lastCollectedTime ? current - lastCollectedTime : current - interestStart;
 
 		if (interestStart < current) {
 

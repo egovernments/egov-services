@@ -278,11 +278,20 @@ public class DemandService {
 
 		String tenantId = demand.getTenantId();
 		String demandId = demand.getId();
+		Long lastCollectedTime = 0l;
+		
 		BigDecimal taxAmt = utils.getTaxAmtFromDemandForApplicablesGeneration(demand);
 		BigDecimal collectedAmount = BigDecimal.ZERO;
+		BigDecimal oldInterest = BigDecimal.ZERO;
 		
-		for (DemandDetail detail : demand.getDemandDetails())
+		for (DemandDetail detail : demand.getDemandDetails()) {
 			collectedAmount = collectedAmount.add(detail.getCollectionAmount());
+			if (detail.getTaxHeadMasterCode().equalsIgnoreCase(CalculatorConstants.PT_TIME_INTEREST)) {
+				oldInterest = detail.getTaxAmount();
+				if (detail.getCollectionAmount().doubleValue() > 0.0)
+					lastCollectedTime = detail.getAuditDetail().getLastModifiedTime();
+			}
+		}
 
 		boolean isRebateUpdated = false;
 		boolean isPenaltyUpdated = false;
@@ -291,13 +300,13 @@ public class DemandService {
 		
 		List<DemandDetail> details = demand.getDemandDetails();
 		Map<String, BigDecimal> rebatePenaltyEstimates = payService.applyPenaltyRebateAndInterest(taxAmt,
-				collectedAmount, assessmentYear, timeBasedExmeptionMasterMap);
+				collectedAmount, lastCollectedTime, assessmentYear, timeBasedExmeptionMasterMap);
 		
 		if(null == rebatePenaltyEstimates) return;
 		
 		BigDecimal rebate = rebatePenaltyEstimates.get(CalculatorConstants.PT_TIME_REBATE);
 		BigDecimal penalty = rebatePenaltyEstimates.get(CalculatorConstants.PT_TIME_PENALTY);
-		BigDecimal interest = rebatePenaltyEstimates.get(CalculatorConstants.PT_TIME_INTEREST);
+		BigDecimal interest = oldInterest.add(rebatePenaltyEstimates.get(CalculatorConstants.PT_TIME_INTEREST));
 		TaxHeadEstimate estimate = payService.roundOfDecimals( taxAmt.add(penalty).add(interest), rebate);
 		
 		for (DemandDetail detail : details) {

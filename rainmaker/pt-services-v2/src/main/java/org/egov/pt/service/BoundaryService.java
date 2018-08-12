@@ -43,6 +43,9 @@ public class BoundaryService {
      * @param hierarchyTypeCode HierarchyTypeCode of the boundaries
      */
     public void getAreaType(PropertyRequest request,String hierarchyTypeCode){
+        if(CollectionUtils.isEmpty(request.getProperties()))
+            return;
+
         String tenantId = request.getProperties().get(0).getTenantId();
 
         LinkedList<String> localities = new LinkedList<>();

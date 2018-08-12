@@ -55,7 +55,7 @@ public class EstimationService {
 	 * 
 	 * map(taxhead code as key, amount to be paid as value) as value
 	 * 
-	 * NOTE : This method updates the master data map in masterDataService
+	 * will be called by calculate api
 	 * 
 	 * @param CalculationReq
 	 * @return Map<String, Calculation>
@@ -77,6 +77,8 @@ public class EstimationService {
 
 	/**
 	 * Method to estimate the tax to be paid for given property
+	 * 
+	 * will be called by estimate api 
 	 * 
 	 * @param request
 	 * @return CalculationRes
@@ -108,8 +110,9 @@ public class EstimationService {
 	}
 
 	/**
-	 * Generates a List of Estimates containing object with tax head code as key and
-	 * the amount to be collected as value against the keys
+	 * Generates a List of Tax head estimates with tax head code, 
+	 * 
+	 * tax head category and the amount to be collected for the key.
 	 * 
 	 * @param criteria
 	 * @return Map<String, Double>
@@ -178,6 +181,16 @@ public class EstimationService {
 	/**
 	 * Private method to calculate the unbuilt area tax estimate
 	 * 
+	 * gives the subtraction of landArea and buildUpArea if both are present.
+	 * 
+	 * on absence of landArea Zero will be given.
+	 * 
+	 * on absence of buildUpArea sum of all unit areas of ground floor
+	 * 
+	 * will be subtracted from the landArea.
+	 * 
+	 * the unBuilUnitRate is the average of unBuilt rates from ground units.
+	 * 
 	 * @param detail
 	 * @param unBuiltRate
 	 * @param groundUnitsCount
@@ -200,6 +213,16 @@ public class EstimationService {
 
 	/**
 	 * Returns Tax amount value for the unit from the list of slabs passed
+	 * 
+	 * The tax is dependent on the unit rate and unit area for all cases
+	 * 
+	 * except for commercial units which is rented, for this a percent will
+	 * 
+	 * be applied on the annual rent value from the slab.
+	 * 
+	 * arvPercent is not provided in the slab, it will be picked from the config
+	 * 
+	 * which is common for the slab.
 	 * 
 	 * @param filteredbillingSlabs
 	 * @param unit
@@ -244,7 +267,8 @@ public class EstimationService {
 	}
 
 	/**
-	 * Return an Estimate list containing all the required tax head codes mapped with respective amt to be paid
+	 * Return an Estimate list containing all the required tax heads
+	 * mapped with respective amt to be paid.
 	 * 
 	 * @param estimates
 	 * @param assessmentYear
@@ -315,7 +339,9 @@ public class EstimationService {
 	}
 
 	/**
-	 * Prepares Calculation Response based on the provided tax head-Amount map
+	 * Prepares Calculation Response based on the provided TaxHeadEstimate List
+	 * 
+	 * All the credit taxHeads will be payable and all debit tax heads will be deducted.
 	 * 
 	 * @param criteria
 	 * @param calculatedMap
@@ -391,9 +417,7 @@ public class EstimationService {
 	}
 
 	/**
-	 * method to filter the slabs based on the values present in Property detail
-	 * object
-	 * 
+	 * method to do a first level filtering on the slabs based on the values present in Property detail
 	 */
 	private List<BillingSlab> getSlabsFiltered(Property property, RequestInfo requestInfo) {
 
@@ -455,7 +479,8 @@ public class EstimationService {
 	}
 
 	/**
-	 * Method to get the matching billing slab for the respective unit
+	 * Second level filtering to get the matching billing slab for the respective unit
+	 * will return only one slab per unit.
 	 * 
 	 * @param billingSlabs
 	 * @param unit
@@ -487,11 +512,10 @@ public class EstimationService {
 
 			boolean isOccupancyTypeMatching = billSlb.getOccupancyType().equalsIgnoreCase(unit.getOccupancyType());
 
-			log.debug(
-					" the match for each slab :  isMajorMatching && isMinorMatching && isSubMinorMatching && isDetailsMatching &&"
-					+ " isFloorMatching\r\n" + " && isOccupancyTypeMatching " + isMajorMatching + "  :  "
-					+ isMinorMatching + "  :  " + isSubMinorMatching + "  :   " + isDetailsMatching + "  :   "
-					+ isFloorMatching + "  :   " + isOccupancyTypeMatching);
+			log.debug( " the match for each slab :  isMajorMatching && isMinorMatching && isSubMinorMatching &&"
+					+ " isDetailsMatching &&" + " isFloorMatching\r\n" + " && isOccupancyTypeMatching " 
+					+ isMajorMatching + "  :  "	+ isMinorMatching + "  :  " + isSubMinorMatching 
+					+ "  :  " + isDetailsMatching + "  :   "+ isFloorMatching + "  :   " + isOccupancyTypeMatching);
 
 			if (isMajorMatching && isMinorMatching && isSubMinorMatching && isDetailsMatching && isFloorMatching
 					&& isOccupancyTypeMatching) {
@@ -503,14 +527,10 @@ public class EstimationService {
 	}
 
 	/**
-	 * Usage based exemptions applied on unit
+	 * Usage based exemptions applied on unit.
 	 * 
 	 * The exemption discount will be applied based on the exemption rate of the
-	 * usage types
-	 * 
-	 * @param unit
-	 * @param currentUnitTax
-	 * @return
+	 * usage master types.
 	 */
 	private BigDecimal getExemption(Unit unit, BigDecimal currentUnitTax, String financialYear,
 			Map<String, Map<String, List<Object>>> propertyMasterDataMap) {
@@ -541,11 +561,7 @@ public class EstimationService {
 	}
 	
 	/**
-	 * Applies discount on Total tax amount OwnerType based exemptions
-	 * 
-	 * @param owners
-	 * @param taxAmt
-	 * @return
+	 * Applies discount on Total tax amount OwnerType based exemptions.
 	 */
 	private BigDecimal getExemption(Set<OwnerInfo> owners, BigDecimal taxAmt, String financialYear,
 			Map<String, Map<String, List<Object>>> propertyBasedExemptionMasterMap) {
@@ -560,9 +576,8 @@ public class EstimationService {
 			BigDecimal currentExemption = BigDecimal.ZERO;
 
 			if (null == ownerTypeMap.get(owner.getOwnerType()))
-				throw new CustomException(CalculatorConstants.EG_PT_OWNER_TYPE_INVALID,
-						CalculatorConstants.EG_PT_OWNER_TYPE_INVALID_MESSAGE + owner.getOwnerType());
-
+				continue;
+			
 			Map<String, Object> applicableOwnerType = mstrDataService.getApplicableMasterFromList(financialYear,
 					ownerTypeMap.get(owner.getOwnerType()));
 			

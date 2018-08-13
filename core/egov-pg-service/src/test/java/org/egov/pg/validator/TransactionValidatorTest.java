@@ -60,7 +60,7 @@ public class TransactionValidatorTest {
 
     @Test
     public void validateCreateTxnSuccess() {
-        User user = User.builder().userName("").name("").uuid("").tenantId("").build();
+        User user = User.builder().userName("").name("XYZ").uuid("").tenantId("").build();
         RequestInfo requestInfo = RequestInfo.builder().userInfo(user).build();
         TransactionRequest transactionRequest = new TransactionRequest(requestInfo, txn);
 
@@ -79,7 +79,7 @@ public class TransactionValidatorTest {
      */
     @Test
     public void validateCreateTxnSuccessAmtLower() {
-        User user = User.builder().userName("").name("").uuid("").tenantId("").build();
+        User user = User.builder().userName("").name("XYZ").uuid("").tenantId("").build();
         RequestInfo requestInfo = RequestInfo.builder().userInfo(user).build();
         TransactionRequest transactionRequest = new TransactionRequest(requestInfo, txn);
 

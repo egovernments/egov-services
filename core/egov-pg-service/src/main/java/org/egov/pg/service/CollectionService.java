@@ -3,6 +3,7 @@ package org.egov.pg.service;
 import lombok.extern.slf4j.Slf4j;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.pg.models.*;
+import org.egov.pg.models.enums.CollectionType;
 import org.egov.pg.repository.BillingRepository;
 import org.egov.pg.repository.CollectionsRepository;
 import org.egov.tracer.model.CustomException;
@@ -37,20 +38,14 @@ public class CollectionService {
                     .amount(new BigDecimal(transaction.getTxnAmount()))
                     .instrumentType(InstrumentType.builder().name("Online").build())
                     .transactionType(TransactionType.Debit)
-                    .build();
-
-            OnlinePayment payment = OnlinePayment.builder()
-                    .paymentGatewayName(transaction.getGateway())
-                    .callBackUrl(transaction.getCallbackUrl())
-                    .status(transaction.getTxnStatus().toString())
+                    .transactionDateInput(transaction.getAuditDetails().getCreatedTime())
+                    .transactionNumber(transaction.getTxnId())
+                    .payee(transaction.getUser().getName())
                     .tenantId(transaction.getTenantId())
-                    .remarks(transaction.getGatewayStatusMsg())
-                    .authorisationStatusCode(transaction.getGatewayStatusCode())
                     .build();
 
             Receipt receipt = Receipt.builder()
                     .bill(bills)
-                    .onlinePayment(payment)
                     .instrument(instrument)
                     .tenantId(transaction.getTenantId())
                     .build();
@@ -76,6 +71,7 @@ public class CollectionService {
         bill.setPaidBy(transaction.getUser().getName());
         List<BillDetail> billDetails = bill.getBillDetails();
         billDetails.get(0).setAmountPaid(new BigDecimal(transaction.getTxnAmount()));
+        billDetails.get(0).setCollectionType(CollectionType.ONLINE);
     }
 
 }

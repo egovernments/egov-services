@@ -2,6 +2,8 @@ package org.egov.pg.service;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.pg.config.AppProperties;
+import org.egov.pg.models.Bill;
+import org.egov.pg.models.BillDetail;
 import org.egov.pg.models.Receipt;
 import org.egov.pg.models.Transaction;
 import org.egov.pg.producer.Producer;
@@ -176,12 +178,18 @@ public class TransactionServiceTest {
                 .gateway("PAYTM")
                 .build();
 
+
+        BillDetail billDetail = BillDetail.builder().receiptNumber("XYZ").build();
+
+        Bill bill = Bill.builder().billDetails(Collections.singletonList(billDetail)).build();
+
         Receipt receipt = Receipt.builder()
                 .transactionId("DEFA15273")
+                .bill(Collections.singletonList(bill))
                 .build();
 
         when(validator.validateUpdateTxn(any(Map.class))).thenReturn(txnStatus);
-        when(validator.isTransactionSuccessful(any(Transaction.class), any(Transaction.class))).thenReturn(true);
+        when(validator.shouldGenerateReceipt(any(Transaction.class), any(Transaction.class))).thenReturn(true);
         when(gatewayService.getLiveStatus(txnStatus, Collections.singletonMap("ORDERID", "PT_001"))).thenReturn(finalTxnStatus);
         when(collectionService.generateReceipt(any(RequestInfo.class), any(Transaction.class))).thenReturn
                 (Collections.singletonList(receipt));

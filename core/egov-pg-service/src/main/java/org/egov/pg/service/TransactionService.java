@@ -127,13 +127,8 @@ public class TransactionService {
 
         Transaction currentTxnStatus = validator.validateUpdateTxn(requestParams);
 
-        log.info(currentTxnStatus.toString());
-        log.info(requestParams.toString());
-
-        if (!currentTxnStatus.getTxnStatus().equals(Transaction.TxnStatusEnum.PENDING)) {
-            log.info("Transaction has already reached completion");
-            return Collections.singletonList(currentTxnStatus);
-        }
+        log.debug(currentTxnStatus.toString());
+        log.debug(requestParams.toString());
 
         Transaction newTxn = gatewayService.getLiveStatus(currentTxnStatus, requestParams);
 
@@ -142,7 +137,7 @@ public class TransactionService {
 
 
         // Check if transaction is successful, amount matches etc
-        if (validator.isTransactionSuccessful(currentTxnStatus, newTxn)) {
+        if (validator.shouldGenerateReceipt(currentTxnStatus, newTxn)) {
             generateReceipt(requestInfo, newTxn);
         }
 
@@ -161,7 +156,7 @@ public class TransactionService {
     private void generateReceipt(RequestInfo requestInfo, Transaction transaction) {
         try {
             List<Receipt> receipts = collectionService.generateReceipt(requestInfo, transaction);
-            transaction.setReceipt(receipts.get(0).getTransactionId());
+            transaction.setReceipt(receipts.get(0).getBill().get(0).getBillDetails().get(0).getReceiptNumber());
         } catch (CustomException | ServiceCallException e) {
             log.error("Unable to generate receipt ", e);
             transaction.setTxnStatusMsg(PgConstants.TXN_RECEIPT_GEN_FAILED);

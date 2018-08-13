@@ -22,6 +22,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import static java.util.Objects.isNull;
+import static org.apache.commons.lang3.StringUtils.isEmpty;
 
 @Slf4j
 @Service
@@ -87,7 +88,10 @@ public class TransactionValidator {
         return statuses.get(0);
     }
 
-    public boolean isTransactionSuccessful(Transaction prevStatus, Transaction newStatus) {
+    public boolean shouldGenerateReceipt(Transaction prevStatus, Transaction newStatus) {
+        if(prevStatus.getTxnStatus().equals(Transaction.TxnStatusEnum.SUCCESS))
+            return false;
+
         if (newStatus.getTxnStatus().equals(Transaction.TxnStatusEnum.SUCCESS)) {
             if (new BigDecimal(prevStatus.getTxnAmount()).compareTo(new BigDecimal(newStatus.getTxnAmount())) == 0) {
                 newStatus.setTxnStatus(Transaction.TxnStatusEnum.SUCCESS);
@@ -110,7 +114,8 @@ public class TransactionValidator {
 
     private void isUserDetailPresent(TransactionRequest transactionRequest, Map<String, String> errorMap) {
         User user = transactionRequest.getRequestInfo().getUserInfo();
-        if (isNull(user) || isNull(user.getUuid()) || isNull(user.getName()) || isNull(user.getUserName()) || isNull
+        if (isNull(user) || isNull(user.getUuid()) || isEmpty(user.getName()) || isNull(user.getUserName()) ||
+                isNull
                 (user.getTenantId()))
             errorMap.put("INVALID_USER_DETAILS", "User UUID, Name, Username and Tenant Id are mandatory");
     }
@@ -175,33 +180,14 @@ public class TransactionValidator {
      */
     private void validateIfTxnExistsForBill(Map<String, String> errorMap, BillDetail billDetail, Transaction newTxn,
                                             List<Transaction> existingTxns) {
-        if (billDetail.getPartPaymentAllowed()) {
-            BigDecimal totalAmount = new BigDecimal(newTxn.getTxnAmount());
-            BigDecimal totalAmountExistingTxns = BigDecimal.ZERO;
-            for (Transaction curr : existingTxns) {
-                if (curr.getTxnStatus().equals(Transaction.TxnStatusEnum.PENDING) || curr
-                        .getTxnStatus().equals(Transaction.TxnStatusEnum.SUCCESS)) {
-                    totalAmountExistingTxns = totalAmountExistingTxns.add(new BigDecimal(curr.getTxnAmount()));
-                }
+        for (Transaction curr : existingTxns) {
+            if (curr.getTxnStatus().equals(Transaction.TxnStatusEnum.PENDING) || curr
+                    .getTxnStatus().equals(Transaction.TxnStatusEnum.SUCCESS)) {
+                errorMap.put("BILL_ALREADY_PAID", "Bill has already been paid or is in pending state");
             }
-
-            totalAmount = totalAmount.add(totalAmountExistingTxns);
-
-            if (totalAmount.compareTo(billDetail.getTotalAmount()) > 0) {
-                log.error("Expected total bill amount {}, already initiated payment of {} for this bill, " +
-                        "initiated new payment of {} which is over expected bill amount ", billDetail.getTotalAmount
-                        (), totalAmountExistingTxns, newTxn.getTxnAmount());
-                errorMap.put("BILL_PAYMENT_IN_PROGRESS", "A transaction is already initiated for" +
-                        " this bill, combination of existing payment and new " +
-                        "shouldn't exceed total bill amount");
-            }
-        } else {
-            if (existingTxns.get(0).getTxnStatus().equals(Transaction.TxnStatusEnum.PENDING))
-                errorMap.put("BILL_PAYMENT_IN_PROGRESS", "A transaction is already initiated for" +
-                        " this bill and is in pending state");
-            else if (existingTxns.get(0).getTxnStatus().equals(Transaction.TxnStatusEnum.SUCCESS))
-                errorMap.put("BILL_PAYMENT_COMPLETE", "This bill has already been paid");
         }
+
+        validateIfTxnForBillAbsent(errorMap, billDetail, newTxn );
     }
 
     /**
@@ -219,14 +205,24 @@ public class TransactionValidator {
 
     private void validateIfTxnForBillAbsent(Map<String, String> errorMap, BillDetail billDetail,
                                             Transaction newTxn) {
+
+        BigDecimal txnAmount = new BigDecimal(newTxn.getTxnAmount());
         if (billDetail.getPartPaymentAllowed()) {
-            if (billDetail.getTotalAmount().compareTo(new BigDecimal(newTxn.getTxnAmount())) < 0) {
+
+            if(txnAmount.compareTo(billDetail.getMinimumAmount()) < 0 ){
+                log.error("Amount paid of {} cannot be lesser than minimum payable amount of {} for bill detail " +
+                        "{}", billDetail.getAmountPaid(), billDetail.getMinimumAmount(), billDetail.getId());
+                errorMap.put("AMOUNT_MISMATCH", "Amount paid cannot be greater than bill amount");
+            }
+
+            if (billDetail.getTotalAmount().compareTo(txnAmount) < 0) {
                 log.error("Transaction Amount of {} cannot be greater than bill amount of {}", newTxn.getTxnAmount()
                         , billDetail.getTotalAmount());
                 errorMap.put("TXN_AMOUNT_MISMATCH", "Transaction Amount cannot be greater than bill amount");
             }
+
         } else {
-            if (!(billDetail.getTotalAmount().compareTo(new BigDecimal(newTxn.getTxnAmount())) == 0)) {
+            if (!(billDetail.getTotalAmount().compareTo(txnAmount) == 0)) {
                 log.error("Transaction Amount of {} has to be equal to bill amount of {}", newTxn.getTxnAmount(),
                         billDetail.getTotalAmount());
                 errorMap.put("TXN_AMOUNT_MISMATCH", "Transaction Amount has to be equal to bill amount");

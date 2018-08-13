@@ -57,6 +57,8 @@ public class EnrichmentService {
         Transaction currentTxnStatus = transactionRequest.getTransaction();
 
         AuditDetails auditDetails = AuditDetails.builder()
+                .createdBy(currentTxnStatus.getAuditDetails().getCreatedBy())
+                .createdTime(currentTxnStatus.getAuditDetails().getCreatedTime())
                 .lastModifiedBy(requestInfo.getUserInfo() != null ? requestInfo.getUserInfo().getUuid() : null)
                 .lastModifiedTime(System.currentTimeMillis()).build();
         newTxn.setAuditDetails(auditDetails);

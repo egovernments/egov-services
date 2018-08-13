@@ -310,9 +310,8 @@ public class EstimationService {
 		BigDecimal fireCess = mstrDataService.getFireCess(payableTax, assessmentYear, timeBasedExmeptionMasterMap);
 		estimates.add(TaxHeadEstimate.builder().taxHeadCode(CalculatorConstants.PT_FIRE_CESS)
 				.estimateAmount(fireCess.setScale(2, 2)).build());
-		payableTax = payableTax.add(fireCess);
 
-		if (null != detail.getAdhocExemption() && detail.getAdhocExemption().compareTo(payableTax) <= 0) {
+		if (null != detail.getAdhocExemption() && detail.getAdhocExemption().compareTo(payableTax.add(fireCess)) <= 0) {
 			estimates.add(TaxHeadEstimate.builder().taxHeadCode(CalculatorConstants.PT_ADHOC_REBATE)
 					.estimateAmount(detail.getAdhocExemption()).build());
 		} else if (null != detail.getAdhocExemption()) {

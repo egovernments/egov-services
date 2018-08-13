@@ -33,7 +33,7 @@ public class PropertyController {
 		PropertyResponse response = PropertyResponse.builder().properties(properties)
 				.responseInfo(responseInfoFactory.createResponseInfoFromRequestInfo(propertyRequest.getRequestInfo(), true))
 				.build();
-		return new ResponseEntity<>(response, HttpStatus.CREATED);
+		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 
 	@RequestMapping(value = "/_update", method = RequestMethod.POST)
@@ -42,7 +42,7 @@ public class PropertyController {
 		PropertyResponse response = PropertyResponse.builder().properties(properties)
 				.responseInfo(responseInfoFactory.createResponseInfoFromRequestInfo(propertyRequest.getRequestInfo(), true))
 				.build();
-		return new ResponseEntity<>(response, HttpStatus.ACCEPTED);
+		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 
 	@RequestMapping(value = "/_search", method = RequestMethod.POST)

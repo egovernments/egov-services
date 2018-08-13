@@ -24,7 +24,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @Builder
 @ToString
-@EqualsAndHashCode(exclude={"unitRate","arvPercent","unBuiltUnitRate","id","auditDetails"})
+@EqualsAndHashCode(exclude={"unitRate","arvPercent","unBuiltUnitRate","id","auditDetails" /*, "fromPlotSize", "toPlotSize", "fromFloor", "toFloor"*/})
 public class BillingSlab   {
 	
 		@NotNull
@@ -102,6 +102,10 @@ public class BillingSlab   {
         
         @JsonProperty("arvPercent")
         private Double arvPercent;
+        
+/*        @NotNull
+        @JsonProperty("fromDate")
+        private Long fromDate;*/
         
         @JsonProperty("auditDetails")
         private AuditDetails auditDetails;

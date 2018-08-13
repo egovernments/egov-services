@@ -51,7 +51,7 @@ serviceMaps:
        - jsonPath: $.BillingSlab.*.arvPercent
        
        - jsonPath: $.BillingSlab.*.isPropertyMultiFloored
-
+              
        - jsonPath: $.BillingSlab.*.auditDetails.createdBy
 
        - jsonPath: $.BillingSlab.*.auditDetails.createdTime
@@ -108,7 +108,7 @@ serviceMaps:
        - jsonPath: $.BillingSlab.*.arvPercent
        
        - jsonPath: $.BillingSlab.*.isPropertyMultiFloored
-
+              
        - jsonPath: $.BillingSlab.*.auditDetails.lastmodifiedBy
 
        - jsonPath: $.BillingSlab.*.auditDetails.lastmodifiedTime

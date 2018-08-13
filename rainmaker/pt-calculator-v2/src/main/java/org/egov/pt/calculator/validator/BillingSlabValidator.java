@@ -114,8 +114,17 @@ public class BillingSlabValidator {
 
 		if (!CollectionUtils.isEmpty(dbSlabs)) {
 			for (int i = 0; i < incomingSlabs.size(); i++) {
-				if (dbSlabs.contains(incomingSlabs.get(i)))
+				Integer index = null;
+				if (dbSlabs.contains(incomingSlabs.get(i))) {
+					log.info("Equals passed!");
 					errorList.add(i);
+/*					index = dbSlabs.indexOf(incomingSlabs.get(i));
+					BillingSlab dbSlab = dbSlabs.get(index);
+					if(!billingSlabUtils.checkIfRangeSatisfies(dbSlab, incomingSlabs.get(i))){
+						log.info("Range doesn't statisfy.");
+						errorList.add(i);
+					}*/
+				}
 			}
 			if (!CollectionUtils.isEmpty(errorList))
 				errorMap.put("EG_PT_BILLING_SLAB_DUPLICATE",

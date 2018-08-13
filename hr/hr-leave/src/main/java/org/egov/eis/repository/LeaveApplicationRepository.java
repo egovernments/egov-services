@@ -188,7 +188,7 @@ public class LeaveApplicationRepository {
         final Object[] obj = new Object[]{leaveApplication.getApplicationNumber(), leaveApplication.getEmployee(),
                 leaveApplication.getLeaveType().getId(), leaveApplication.getFromDate(), leaveApplication.getToDate(),
                 leaveApplication.getCompensatoryForDate(), leaveApplication.getLeaveDays(), leaveApplication.getWorkingDays(),
-                leaveApplication.getAvailableDays(), leaveApplication.getHalfdays(),
+                leaveApplication.getAvailableDays(), leaveApplication.getEncashable(), leaveApplication.getHalfdays(),
                 leaveApplication.getFirstHalfleave(), leaveApplication.getReason(), leaveApplication.getStatus(),
                 Long.valueOf(task.getId()), userResponse.getUsers().get(0).getId(), now, leaveApplication.getId(),
                 leaveApplication.getTenantId()};

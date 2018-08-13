@@ -414,7 +414,7 @@ public class LeaveApplicationService {
                 }
             }
 
-            if (!applications.isEmpty())
+            if (leaveApplication.getEncashable().equals(false) && !applications.isEmpty())
                 errorMsg = errorMsg + applicationConstants.getErrorMessage(ApplicationConstants.MSG_ALREADY_PRESENT);
             leaveApplication.setErrorMsg(errorMsg);
             LOGGER.info("Validate Loop Exit::"+leaveApplication);

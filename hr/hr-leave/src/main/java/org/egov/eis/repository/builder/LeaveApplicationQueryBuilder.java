@@ -120,7 +120,7 @@ public class LeaveApplicationQueryBuilder {
     public static String updateLeaveApplicationQuery() {
         return "UPDATE egeis_leaveapplication SET applicationnumber=?, employeeid=?,"
                 + " leavetypeid=?, fromdate=?, todate=?, compensatoryfordate=?, leavedays=?, workingdays=?,"
-                + " availabledays=?, halfdays=?, firsthalfleave=?, reason=?, status=?, stateid=?,"
+                + " availabledays=?, encashable=?, halfdays=?, firsthalfleave=?, reason=?, status=?, stateid=?,"
                 + " lastmodifiedby=?, lastmodifieddate=? WHERE id=? and tenantid=?";
     }
 

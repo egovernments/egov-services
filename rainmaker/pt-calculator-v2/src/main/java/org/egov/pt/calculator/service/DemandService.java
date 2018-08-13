@@ -283,6 +283,8 @@ public class DemandService {
 		BigDecimal taxAmt = utils.getTaxAmtFromDemandForApplicablesGeneration(demand);
 		BigDecimal collectedAmount = BigDecimal.ZERO;
 		BigDecimal oldInterest = BigDecimal.ZERO;
+		BigDecimal decimalCredit = BigDecimal.ZERO;
+		BigDecimal decimalDebit = BigDecimal.ZERO;
 		
 		for (DemandDetail detail : demand.getDemandDetails()) {
 			collectedAmount = collectedAmount.add(detail.getCollectionAmount());
@@ -291,6 +293,10 @@ public class DemandService {
 				if (detail.getCollectionAmount().doubleValue() > 0.0)
 					lastCollectedTime = detail.getAuditDetail().getLastModifiedTime();
 			}
+			if(detail.getTaxHeadMasterCode().equalsIgnoreCase(CalculatorConstants.PT_DECIMAL_CEILING_CREDIT))
+				decimalCredit = detail.getTaxAmount();
+			else if(detail.getTaxHeadMasterCode().equalsIgnoreCase(CalculatorConstants.PT_DECIMAL_CEILING_DEBIT))
+				decimalDebit = detail.getTaxAmount();
 		}
 
 		boolean isRebateUpdated = false;
@@ -306,9 +312,14 @@ public class DemandService {
 		
 		BigDecimal rebate = rebatePenaltyEstimates.get(CalculatorConstants.PT_TIME_REBATE);
 		BigDecimal penalty = rebatePenaltyEstimates.get(CalculatorConstants.PT_TIME_PENALTY);
-		BigDecimal interest = oldInterest.add(rebatePenaltyEstimates.get(CalculatorConstants.PT_TIME_INTEREST));
-		TaxHeadEstimate estimate = payService.roundOfDecimals( taxAmt.add(penalty).add(interest), rebate);
+		BigDecimal interest = rebatePenaltyEstimates.get(CalculatorConstants.PT_TIME_INTEREST);
 		
+		if (lastCollectedTime > 0)
+			interest = oldInterest.add(rebatePenaltyEstimates.get(CalculatorConstants.PT_TIME_INTEREST));
+		
+		TaxHeadEstimate estimate = payService.roundOfDecimals(taxAmt.add(penalty).add(interest).add(decimalCredit),
+				rebate.add(decimalDebit));
+
 		for (DemandDetail detail : details) {
 			if (detail.getTaxHeadMasterCode().equalsIgnoreCase(CalculatorConstants.PT_TIME_REBATE)) {
 				detail.setTaxAmount(rebate);
@@ -324,16 +335,14 @@ public class DemandService {
 			}
 			
 			if (detail.getTaxHeadMasterCode().equalsIgnoreCase(CalculatorConstants.PT_DECIMAL_CEILING_CREDIT)
-					&& null != estimate
-					&& estimate.getTaxHeadCode().equalsIgnoreCase(CalculatorConstants.PT_DECIMAL_CEILING_CREDIT)) {
-				detail.setTaxAmount(estimate.getEstimateAmount());
+					&& decimalCredit.doubleValue() > 0.0) {
+				detail.setTaxAmount(decimalCredit);
 				isDecimalMathcing = true;
 			}
 
 			if (detail.getTaxHeadMasterCode().equalsIgnoreCase(CalculatorConstants.PT_DECIMAL_CEILING_DEBIT)
-					&& null != estimate
-					&& estimate.getTaxHeadCode().equalsIgnoreCase(CalculatorConstants.PT_DECIMAL_CEILING_DEBIT)) {
-				detail.setTaxAmount(estimate.getEstimateAmount());
+					&& decimalDebit.doubleValue() > 0.0) {
+				detail.setTaxAmount(decimalDebit);
 				isDecimalMathcing = true;
 			}
 		}

@@ -186,7 +186,7 @@ public class BillingSlabValidator {
 		for (BillingSlab billingSlab : billingSlabReq.getBillingSlab()) {
 			if(!StringUtils.isEmpty(billingSlab.getOccupancyType())) {
 				List<String> allowedOccupancyTypes = JsonPath.read(occupancyType, BillingSlabConstants.MDMS_CODE_JSONPATH);
-				if(!allowedOccupancyTypes.contains(billingSlab.getOccupancyType()))
+				if(!allowedOccupancyTypes.contains(billingSlab.getOccupancyType()) && !(billingSlab.getOccupancyType().equalsIgnoreCase(allValue)))
 					errorMap.put("INVALID_OCCUPANCY_TYPE","Occupancy Type provided is invalid");
 			}
 			

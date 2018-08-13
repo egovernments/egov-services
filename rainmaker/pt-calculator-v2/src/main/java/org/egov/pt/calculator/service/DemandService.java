@@ -283,8 +283,6 @@ public class DemandService {
 		BigDecimal taxAmt = utils.getTaxAmtFromDemandForApplicablesGeneration(demand);
 		BigDecimal collectedAmount = BigDecimal.ZERO;
 		BigDecimal oldInterest = BigDecimal.ZERO;
-		BigDecimal decimalCredit = BigDecimal.ZERO;
-		BigDecimal decimalDebit = BigDecimal.ZERO;
 		
 		for (DemandDetail detail : demand.getDemandDetails()) {
 			collectedAmount = collectedAmount.add(detail.getCollectionAmount());
@@ -293,10 +291,6 @@ public class DemandService {
 				if (detail.getCollectionAmount().doubleValue() > 0.0)
 					lastCollectedTime = detail.getAuditDetail().getLastModifiedTime();
 			}
-			if(detail.getTaxHeadMasterCode().equalsIgnoreCase(CalculatorConstants.PT_DECIMAL_CEILING_CREDIT))
-				decimalCredit = detail.getTaxAmount();
-			else if(detail.getTaxHeadMasterCode().equalsIgnoreCase(CalculatorConstants.PT_DECIMAL_CEILING_DEBIT))
-				decimalDebit = detail.getTaxAmount();
 		}
 
 		boolean isRebateUpdated = false;
@@ -317,8 +311,18 @@ public class DemandService {
 		if (lastCollectedTime > 0)
 			interest = oldInterest.add(rebatePenaltyEstimates.get(CalculatorConstants.PT_TIME_INTEREST));
 		
-		TaxHeadEstimate estimate = payService.roundOfDecimals(taxAmt.add(penalty).add(interest).add(decimalCredit),
-				rebate.add(decimalDebit));
+		TaxHeadEstimate estimate = payService.roundOfDecimals(taxAmt.add(penalty).add(interest).subtract(collectedAmount),
+				rebate);
+
+		BigDecimal decimalCredit = null != estimate
+				&& estimate.getTaxHeadCode().equalsIgnoreCase(CalculatorConstants.PT_DECIMAL_CEILING_CREDIT)
+						? estimate.getEstimateAmount()
+						: BigDecimal.ZERO;
+
+		BigDecimal decimalDebit = null != estimate
+				&& estimate.getTaxHeadCode().equalsIgnoreCase(CalculatorConstants.PT_DECIMAL_CEILING_DEBIT)
+						? estimate.getEstimateAmount()
+						: BigDecimal.ZERO;
 
 		for (DemandDetail detail : details) {
 			if (detail.getTaxHeadMasterCode().equalsIgnoreCase(CalculatorConstants.PT_TIME_REBATE)) {
@@ -334,14 +338,12 @@ public class DemandService {
 				isInterestUpdated = true;
 			}
 			
-			if (detail.getTaxHeadMasterCode().equalsIgnoreCase(CalculatorConstants.PT_DECIMAL_CEILING_CREDIT)
-					&& decimalCredit.doubleValue() > 0.0) {
+			if (detail.getTaxHeadMasterCode().equalsIgnoreCase(CalculatorConstants.PT_DECIMAL_CEILING_CREDIT)) {
 				detail.setTaxAmount(decimalCredit);
 				isDecimalMathcing = true;
 			}
 
-			if (detail.getTaxHeadMasterCode().equalsIgnoreCase(CalculatorConstants.PT_DECIMAL_CEILING_DEBIT)
-					&& decimalDebit.doubleValue() > 0.0) {
+			if (detail.getTaxHeadMasterCode().equalsIgnoreCase(CalculatorConstants.PT_DECIMAL_CEILING_DEBIT)) {
 				detail.setTaxAmount(decimalDebit);
 				isDecimalMathcing = true;
 			}

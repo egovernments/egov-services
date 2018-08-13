@@ -160,8 +160,8 @@ public class LeaveApplicationService {
         LOGGER.info("leaveApplicationRequest::" + leaveApplicationRequest.getLeaveApplication());
         LOGGER.info("leaveApplicationRequest size::" + leaveApplicationRequest.getLeaveApplication().size());
 
-        if(leaveApplicationRequest.getLeaveApplication().size() >0)
-          create(leaveApplicationRequest);
+        if (leaveApplicationRequest.getLeaveApplication().size() > 0)
+            create(leaveApplicationRequest);
 
         if (isExcelUpload)
             return getSuccessResponseForUpload(successLeaveApplicationsList, errorLeaveApplicationsList,
@@ -304,7 +304,7 @@ public class LeaveApplicationService {
         String errorMsg = "";
         Boolean isHoliday = false;
         for (final LeaveApplication leaveApplication : leaveApplicationRequest.getLeaveApplication()) {
-            LOGGER.info("Validate Loop Entry::"+leaveApplication);
+            LOGGER.info("Validate Loop Entry::" + leaveApplication);
             errorMsg = "";
             final LeaveTypeGetRequest leaveTypeGetRequest = new LeaveTypeGetRequest();
             List<LeaveType> leaveTypes = new ArrayList<>();
@@ -324,8 +324,10 @@ public class LeaveApplicationService {
             final List<EmployeeInfo> employees = employeeRepository.getEmployeeById(
                     leaveApplicationRequest.getRequestInfo(), leaveApplication.getTenantId(),
                     leaveApplication.getEmployee());
-            final List<LeaveApplication> applications = getLeaveApplicationForDateRange(leaveApplication,
+            final List<LeaveApplication> leaveApplications = getLeaveApplicationForDateRange(leaveApplication,
                     leaveApplicationRequest.getRequestInfo());
+            List<LeaveApplication> applications = leaveApplications.stream().filter(appl -> appl.getEncashable().equals(false)).collect(Collectors.toList());
+
             if (leaveTypes.isEmpty() && (leaveApplication.getCompensatoryForDate() == null
                     || leaveApplication.getCompensatoryForDate().equals("")))
                 errorMsg = applicationConstants.getErrorMessage(ApplicationConstants.MSG_LEAVETYPE_NOTPRESENT) + " ";
@@ -417,7 +419,7 @@ public class LeaveApplicationService {
             if (leaveApplication.getEncashable().equals(false) && !applications.isEmpty())
                 errorMsg = errorMsg + applicationConstants.getErrorMessage(ApplicationConstants.MSG_ALREADY_PRESENT);
             leaveApplication.setErrorMsg(errorMsg);
-            LOGGER.info("Validate Loop Exit::"+leaveApplication);
+            LOGGER.info("Validate Loop Exit::" + leaveApplication);
         }
         return leaveApplicationRequest.getLeaveApplication();
     }

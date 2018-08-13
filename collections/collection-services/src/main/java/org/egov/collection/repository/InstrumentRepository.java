@@ -10,8 +10,6 @@ import org.egov.collection.web.contract.factory.RequestInfoWrapper;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.tracer.model.CustomException;
 import org.egov.tracer.model.ServiceCallException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.client.HttpClientErrorException;
@@ -19,13 +17,12 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
+
+import static java.util.Objects.isNull;
 
 @Repository
 @Slf4j
 public class InstrumentRepository {
-
-    public static final Logger LOGGER = LoggerFactory.getLogger(BillingServiceRepository.class);
 
 	@Autowired
 	private RestTemplate restTemplate;
@@ -35,7 +32,7 @@ public class InstrumentRepository {
 
     public Instrument createInstrument(RequestInfo requestinfo, Instrument instrument) {
 		
-		if (!Objects.isNull(instrument.getBank()))
+		if (!isNull(instrument.getBank()))
 			instrument.getBank().setTenantId(instrument.getTenantId());
 
 		StringBuilder builder = new StringBuilder();
@@ -75,7 +72,7 @@ public class InstrumentRepository {
 
         try {
             List<Instrument> instruments = restTemplate.postForObject(builder.toString(),
-                    requestInfoWrapper, InstrumentResponse.class, instrumentHeader, tenantId).getInstruments();
+                    requestInfoWrapper, InstrumentResponse.class, instrumentHeader).getInstruments();
 
             if (instruments.isEmpty())
                 return null;
@@ -93,6 +90,32 @@ public class InstrumentRepository {
 
     }
 
+    public List<Instrument> searchInstruments(final String instrumentHeader, final RequestInfo
+            requestInfo) {
+        StringBuilder builder = new StringBuilder();
+        String hostname = applicationProperties.getInstrumentServiceHost();
+        String baseUri = applicationProperties.getSearchInstrument();
+        builder.append(hostname).append(baseUri);
+
+        RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper(requestInfo);
+
+        try {
+            InstrumentResponse instrumentResponse= restTemplate.postForObject(builder.toString(),
+                    requestInfoWrapper, InstrumentResponse.class, instrumentHeader);
+
+            return isNull(instrumentResponse.getInstruments()) ? Collections.emptyList() : instrumentResponse.getInstruments();
+
+        } catch (HttpClientErrorException e) {
+            log.error("Unable to fetch instrument, {} ", instrumentHeader, e);
+            throw new ServiceCallException(e.getResponseBodyAsString());
+        } catch (Exception e) {
+            log.error("Unable to fetch instrument, {} ", instrumentHeader, e);
+            throw new CustomException("INSTRUMENT_SERVICE_ERROR", "Unable to fetch instrument, unknown error " +
+                    "occurred");
+        }
+
+    }
+
     public List<Instrument> searchInstrumentsByPaymentMode(final String paymentMode,final String tenantId,final RequestInfo requestInfo) {
         StringBuilder builder = new StringBuilder();
         String hostname = applicationProperties.getInstrumentServiceHost();
@@ -101,18 +124,17 @@ public class InstrumentRepository {
 
         RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper(requestInfo);
 
-        LOGGER.info("Request to instrument search: "
+        log.info("Request to instrument search: "
                 + baseUri);
-        LOGGER.info("URI Instrument search: " + builder.toString());
+        log.info("URI Instrument search: " + builder.toString());
         List<Instrument> instrumentList = restTemplate.postForObject(builder.toString(),
                 requestInfoWrapper, InstrumentResponse.class, paymentMode, tenantId).getInstruments();
-        LOGGER.info("Response from instrument service: " + instrumentList);
+        log.info("Response from instrument service: " + instrumentList);
         return instrumentList;
 
     }
 
     public String getAccountCodeId(RequestInfo requestinfo, Instrument instrument, String tenantId) {
-		String glcode = null;
 		StringBuilder builder = new StringBuilder();
 		String hostname = applicationProperties.getInstrumentServiceHost();
 		String baseUri = applicationProperties.getSearchAccountCodes();
@@ -121,17 +143,16 @@ public class InstrumentRepository {
 
         RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper(requestinfo);
 
-		LOGGER.info("URI account code id search: " + builder.toString());
-		LOGGER.info("Request account code id search: " + requestinfo);
+        log.info("URI account code id search: " + builder.toString());
+        log.info("Request account code id search: " + requestinfo);
 
         Object response = restTemplate.postForObject(builder.toString(),
 					requestInfoWrapper, Object.class);
 			
-			glcode = JsonPath.read(response, "$.instrumentAccountCodes[0].accountCode.glcode");
-		LOGGER.info("Response from instrument service: " + response.toString());
+		String glCode = JsonPath.read(response, "$.instrumentAccountCodes[0].accountCode.glcode");
+        log.info("Response from instrument service: " + response.toString());
 		
-		
-		return glcode;
+		return glCode;
 	}
 
 }

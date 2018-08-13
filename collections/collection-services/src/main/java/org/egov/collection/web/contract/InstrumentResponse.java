@@ -10,6 +10,6 @@ import java.util.List;
 @Getter
 @Setter
 public class InstrumentResponse {
-    public ResponseInfo responseInfo;
-    public List<Instrument> instruments;
+    private ResponseInfo responseInfo;
+    private List<Instrument> instruments;
 }

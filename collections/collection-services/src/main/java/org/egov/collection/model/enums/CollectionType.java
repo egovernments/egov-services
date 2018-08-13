@@ -27,17 +27,14 @@ public enum CollectionType {
     public String getValue() {
         return value;
     }
-   
+
     @JsonCreator
 	public static CollectionType fromValue(String text) {
 		for (CollectionType b : CollectionType.values()) {
 			if (0 ==b.value.toString().compareTo(text)) {
 				return b;
 			}
-			System.out.println("Mismatch: "+String.valueOf(b.value).compareTo(text.trim()));
 		}
-		System.out.println(CollectionType.FIELD.toString().equals("FIELD"));
-		System.out.println("textLength:"+text.length());
 		return null;
 	}
 }

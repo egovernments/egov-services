@@ -44,7 +44,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.egov.collection.model.*;
 import org.egov.collection.model.enums.CollectionType;
-import org.egov.collection.model.enums.OnlineStatusCode;
 import org.egov.collection.model.enums.ReceiptStatus;
 import org.egov.collection.repository.*;
 import org.egov.collection.util.ReceiptEnricher;
@@ -108,16 +107,16 @@ public class ReceiptService {
     }
 
     public Receipt createReceipt(ReceiptReq receiptReq) {
-        receiptEnricher.enrichReceipt(receiptReq);
-        receiptValidator.validatecreateReceiptRequest(receiptReq);
+        receiptEnricher.enrichReceiptPreValidate(receiptReq);
+        receiptValidator.validateReceiptForCreate(receiptReq);
 
         Receipt receipt = receiptReq.getReceipt().get(0);
         Bill bill = receipt.getBill().get(0);
 
         WorkflowDetailsRequest workflowDetailsRequest = receipt.getWorkflowDetails();
 
-        List<BillDetail> billDetails = apportionPaidAmount(receiptReq.getRequestInfo(), bill, receipt.getTenantId());
-        bill.setBillDetails(billDetails);
+//        List<BillDetail> billDetails = apportionPaidAmount(receiptReq.getRequestInfo(), bill, receipt.getTenantId());
+//        bill.setBillDetails(billDetails);
         log.info("Bill object after apportioning: " + bill.toString());
 
         receipt = create(bill, receiptReq.getRequestInfo(),
@@ -132,30 +131,28 @@ public class ReceiptService {
         return receipt;
     }
 
-    private List<BillDetail> apportionPaidAmount(RequestInfo requestInfo, Bill bill, String tenantId) {
-        Bill apportionBill = new Bill(bill.getId(), bill.getPayeeName(),
-                bill.getPayeeAddress(), bill.getPayeeEmail(),
-                bill.getIsActive(), bill.getIsCancelled(), bill.getPaidBy(),
-                new ArrayList<>(), tenantId, bill.getMobileNumber());
-
-        List<BillDetail> apportionBillDetails = new ArrayList<>();
-        for (BillDetail billDetail : bill.getBillDetails()) {
-            if (billDetail.getCallBackForApportioning()) {
-                apportionBill.getBillDetails().add(billDetail);
-            } else {
-                billDetail.setBillAccountDetails(collectionApportionerService
-                        .apportionPaidAmount(billDetail
-                                .getAmountPaid(), billDetail
-                                .getBillAccountDetails()));
-                apportionBillDetails.add(billDetail);
-            }
-        }
-        if (!apportionBill.getBillDetails().isEmpty()) {
-            apportionBillDetails.addAll(billingServiceRepository.getApportionListFromBillingService(requestInfo,
-                    apportionBill).getBill().get(0).getBillDetails());
-        }
-        return apportionBillDetails;
-    }
+//    private List<BillDetail> apportionPaidAmount(RequestInfo requestInfo, Bill bill, String tenantId) {
+//        Bill apportionBill = new Bill(bill.getId(), bill.getPayeeName(),
+//                bill.getPayeeAddress(), bill.getPayeeEmail(),
+//                bill.getIsActive(), bill.getIsCancelled(), bill.getPaidBy(),
+//                new ArrayList<>(), tenantId, bill.getMobileNumber());
+//
+//        List<BillDetail> apportionBillDetails = new ArrayList<>();
+//        for (BillDetail billDetail : bill.getBillDetails()) {
+//            if (billDetail.getCallBackForApportioning()) {
+//                apportionBill.getBillDetails().add(billDetail);
+//            } else {
+//                billDetail.setBillAccountDetails(CollectionApportionerService
+//                        .apportionPaidAmount(Collections.singletonList(billDetail)));
+//                apportionBillDetails.add(billDetail);
+//            }
+//        }
+//        if (!apportionBill.getBillDetails().isEmpty()) {
+//            apportionBillDetails.addAll(billingServiceRepository.getApportionListFromBillingService(requestInfo,
+//                    apportionBill).getBill().get(0).getBillDetails());
+//        }
+//        return apportionBillDetails;
+//    }
 
     public Receipt create(Bill bill, RequestInfo requestInfo, String tenantId,
                           Instrument instrument, OnlinePayment onlinePayment) {
@@ -182,16 +179,6 @@ public class ReceiptService {
                     String transactionDate = simpleDateFormat.format(new Date());
                     instrument.setTransactionDate(simpleDateFormat.parse(transactionDate));
                     instrument.setTransactionNumber(transactionId);
-                    if (onlinePayment == null) {
-                        onlinePayment = new OnlinePayment();
-                        onlinePayment.setTenantId(tenantId);
-                        onlinePayment.setTransactionNumber(transactionId);
-                        onlinePayment.setTransactionDate(simpleDateFormat.parse(transactionDate).getTime());
-                        onlinePayment.setAuthorisationStatusCode(ONLINE_PAYMENT_AUTHORISATION_SUCCESS_CODE);
-                        onlinePayment.setRemarks(ONLINE_PAYMENT_REMARKS);
-                        onlinePayment.setStatus(OnlineStatusCode.SUCCESS.toString());
-                        onlinePayment.setTransactionAmount(billDetail.getAmountPaid());
-                    }
                 } else {
                     DateTime transactionDate = new DateTime(instrument.getTransactionDateInput());
                     instrument.setTransactionDate(simpleDateFormat.parse(transactionDate.toString("dd/MM/yyyy")));
@@ -390,8 +377,7 @@ public class ReceiptService {
         return parameterMap;
     }
 
-    private BusinessDetailsResponse getBusinessDetails(
-            String businessDetailsCode, RequestInfo requestInfo, String tenantId) {
+    private BusinessDetailsResponse getBusinessDetails(String businessDetailsCode, RequestInfo requestInfo, String tenantId) {
         log.info("Searching for fund aand other businessDetails based on code.");
         BusinessDetailsResponse businessDetailsResponse;
         try {

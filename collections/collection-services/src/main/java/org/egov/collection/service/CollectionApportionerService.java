@@ -42,6 +42,7 @@ package org.egov.collection.service;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import org.egov.collection.web.contract.BillAccountDetail;
+import org.egov.collection.web.contract.BillDetail;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -53,35 +54,34 @@ import java.util.Objects;
 @Slf4j
 public class CollectionApportionerService {
 
-    List<BillAccountDetail> apportionPaidAmount(final BigDecimal actualAmountPaid, final List<BillAccountDetail>
-            billAccountDetails) {
-        log.debug("Amount Paid: " + actualAmountPaid.toString());
-        log.debug("Bill Account Details before apportioning : " + billAccountDetails.toString());
+    static List<BillDetail> apportionPaidAmount(List<BillDetail> billDetails) {
+        for(BillDetail billDetail : billDetails) {
 
-		billAccountDetails.sort(Comparator.comparing(BillAccountDetail::getOrder));
+			billDetail.getBillAccountDetails().sort(Comparator.comparing(BillAccountDetail::getOrder));
 
-		Amount balance = new Amount(actualAmountPaid);
-		for (final BillAccountDetail billAcctDetail : billAccountDetails) {
+			Amount balance = new Amount(billDetail.getAmountPaid());
+			for (final BillAccountDetail billAcctDetail : billDetail.getBillAccountDetails()) {
 
-			if (balance.isZero()) {
-				// nothing left to apportion
-				billAcctDetail.setCreditAmount(BigDecimal.ZERO);
-				continue;
+				if (balance.isZero()) {
+					// nothing left to apportion
+					billAcctDetail.setCreditAmount(BigDecimal.ZERO);
+					continue;
+				}
+				BigDecimal crAmountToBePaid = Objects.isNull(billAcctDetail.getCrAmountToBePaid()) ? BigDecimal.ZERO : billAcctDetail.getCrAmountToBePaid();
+
+				if (balance.isLessThanOrEqualTo(crAmountToBePaid)) {
+					// partial or exact payment
+					billAcctDetail.setCreditAmount(balance.crAmount);
+					balance = Amount.ZERO;
+				} else { // excess payment
+					billAcctDetail.setCreditAmount(crAmountToBePaid);
+					balance = balance.minus(crAmountToBePaid);
+				}
 			}
-            BigDecimal crAmountToBePaid = Objects.isNull(billAcctDetail.getCrAmountToBePaid()) ? BigDecimal.ZERO : billAcctDetail.getCrAmountToBePaid();
 
-			if (balance.isLessThanOrEqualTo(crAmountToBePaid)) {
-				// partial or exact payment
-				billAcctDetail.setCreditAmount(balance.crAmount);
-				balance = Amount.ZERO;
-			} else { // excess payment
-				billAcctDetail.setCreditAmount(crAmountToBePaid);
-				balance = balance.minus(crAmountToBePaid);
-			}
+			log.debug("Bill Account Details after apportioning : " + billDetail.getBillAccountDetails().toString());
 		}
-
-        log.debug("Bill Account Details after apportioning : " + billAccountDetails.toString());
-		return billAccountDetails;
+		return billDetails;
 	}
 
 	@ToString

@@ -1,18 +1,23 @@
 package org.egov.collection.repository;
 
+import lombok.extern.slf4j.Slf4j;
 import org.egov.collection.web.contract.BusinessDetailsResponse;
 import org.egov.collection.web.contract.factory.RequestInfoWrapper;
 import org.egov.common.contract.request.RequestInfo;
+import org.egov.tracer.model.CustomException;
+import org.egov.tracer.model.ServiceCallException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Repository;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 
-@Service
+@Repository
+@Slf4j
 public class BusinessDetailsRepository {
 
 	public static final Logger LOGGER = LoggerFactory.getLogger(BusinessDetailsRepository.class);
@@ -32,10 +37,17 @@ public class BusinessDetailsRepository {
         RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
         requestInfoWrapper.setRequestInfo(requestInfo);
         String businessDetailsCodes = String.join(",", businessCodes);
-        LOGGER.info("URI: "+url);
-        LOGGER.info("tenantid: "+tenantId);
-        LOGGER.info("businessDetailsCodes: "+businessDetailsCodes);
-        return restTemplate.postForObject(url, requestInfoWrapper,
-                    BusinessDetailsResponse.class,tenantId,businessDetailsCodes);
+        try {
+            return restTemplate.postForObject(url, requestInfoWrapper,
+                    BusinessDetailsResponse.class, tenantId, businessDetailsCodes);
+        } catch (HttpClientErrorException e) {
+            log.error("Unable to fetch business detail for {} and tenant id {} from egov-common-masters, " ,
+                    businessCodes, tenantId, e);
+            throw new ServiceCallException(e.getResponseBodyAsString());
+        } catch (Exception e) {
+            log.error("Unable to fetch business detail for {} and tenant id, " , businessCodes, tenantId, e);
+            throw new CustomException("BUSINESS_DETAIL_SERVICE_ERROR", "Unable to fetch business detail from " +
+                    "egov-common-masters, unknown error occurred");
+        }
     }
 }

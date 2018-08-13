@@ -200,6 +200,7 @@ public class CollectionServiceConstants {
 	public static final String INSTRUMENT_TYPE_ONLINE = "ONLINE";
 	public static final String INSTRUMENT_TYPE_CHEQUE = "Cheque";
 	public static final String INSTRUMENT_TYPE_DD = "DD";
+	public static final String INSTRUMENT_TYPE_CARD = "Card";
 
 	public static final String MANUAL_RECEIPT_DETAILS_REQUIRED_CONFIG_KEY = "MANUAL_RECEIPT_DETAILS_REQUIRED_OR_NOT";
 

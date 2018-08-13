@@ -51,6 +51,7 @@ import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.text.SimpleDateFormat;
@@ -58,7 +59,8 @@ import java.util.Locale;
 import java.util.TimeZone;
 
 @SpringBootApplication
-@Import({TracerConfiguration.class})
+@Component
+@Import(TracerConfiguration.class)
 public class CollectionServicesApplication {
 
     private static final String DATE_FORMAT = "dd-MM-yyyy HH:mm:ss";

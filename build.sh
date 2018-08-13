@@ -1,5 +1,6 @@
 #!/bin/bash
 
+set -ex
 ci_image=egovio/ci:0.0.4
 db=`sudo docker run -d postgres:9.6`
 echo "Started db container: $db"

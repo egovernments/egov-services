@@ -188,7 +188,7 @@ public class ReceiptEnricher {
                     .getInstrumentType().getName().equalsIgnoreCase(InstrumentTypesEnum.CARD.name())) {
 
                 String transactionId = idGenRepository.generateTransactionNumber(receiptReq.getRequestInfo(),
-                        receiptReq.getTenantId());
+                        receipt.getTenantId());
                 String transactionDate = simpleDateFormat.format(new Date());
                 instrument.setTransactionDate(simpleDateFormat.parse(transactionDate));
 

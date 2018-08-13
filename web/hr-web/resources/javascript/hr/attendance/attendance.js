@@ -286,8 +286,8 @@ class Attendance extends React.Component {
     });
 
     commonApiPost("hr-leave", "leaveapplications", "_search", {
-        fromDate: currentDate.getDate()+"/"+currentDate.getMonth()+"/"+currentDate.getFullYear(),
-        toDate: endDate.getDate()+"/"+endDate.getMonth()+"/"+endDate.getFullYear(),
+        fromDate: currentDate.getDate()+"/"+(currentDate.getMonth()+1)+"/"+currentDate.getFullYear(),
+        toDate: endDate.getDate()+"/"+(endDate.getMonth()+1)+"/"+endDate.getFullYear(),
         status:"APPROVED",
         tenantId,
         employee,

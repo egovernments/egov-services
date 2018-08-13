@@ -54,8 +54,9 @@ public class PayService {
 			return null;
 
 		Map<String, BigDecimal> estimates = new HashMap<>();
-		BigDecimal rebate = getRebate(taxAmt, assessmentYear,
-				timeBasedExmeptionMasterMap.get(CalculatorConstants.REBATE_MASTER));
+
+		BigDecimal rebate = BigDecimal.ZERO.compareTo(collectedAmount) < 0 ? getRebate(taxAmt, assessmentYear,
+				timeBasedExmeptionMasterMap.get(CalculatorConstants.REBATE_MASTER)) : BigDecimal.ZERO;
 
 		BigDecimal penalty = BigDecimal.ZERO;
 		BigDecimal interest = BigDecimal.ZERO;
@@ -83,7 +84,7 @@ public class PayService {
 	public BigDecimal getRebate(BigDecimal taxAmt, String assessmentYear, JSONArray rebateMasterList) {
 
 		BigDecimal rebateAmt = BigDecimal.ZERO;
-		Map<String, Object> rebate = mDService.getApplicableMasterFromList(assessmentYear, rebateMasterList);
+		Map<String, Object> rebate = mDService.getApplicableMaster(assessmentYear, rebateMasterList);
 
 		if (null == rebate) return rebateAmt;
 
@@ -118,7 +119,7 @@ public class PayService {
 	public BigDecimal getPenalty(BigDecimal taxAmt, String assessmentYear, JSONArray penaltyMasterList) {
 
 		BigDecimal penaltyAmt = BigDecimal.ZERO;
-		Map<String, Object> penalty = mDService.getApplicableMasterFromList(assessmentYear, penaltyMasterList);
+		Map<String, Object> penalty = mDService.getApplicableMaster(assessmentYear, penaltyMasterList);
 		if (null == penalty) return penaltyAmt;
 
 		String[] time = ((String) penalty.get(CalculatorConstants.STARTING_DATE_APPLICABLES)).split("/");
@@ -153,7 +154,7 @@ public class PayService {
 	public BigDecimal getInterest(BigDecimal taxAmt, String assessmentYear,Long lastCollectedTime, JSONArray interestMasterList) {
 
 		BigDecimal interestAmt = BigDecimal.ZERO;
-		Map<String, Object> interestMap = mDService.getApplicableMasterFromList(assessmentYear, interestMasterList);
+		Map<String, Object> interestMap = mDService.getApplicableMaster(assessmentYear, interestMasterList);
 		if (null == interestMap) return interestAmt;
 
 		String[] time = ((String) interestMap.get(CalculatorConstants.STARTING_DATE_APPLICABLES)).split("/");

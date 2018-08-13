@@ -35,6 +35,9 @@ public class Configurations {
 	@Value("${egov.taxhead.search.endpoint}")
 	private String	taxheadsSearchEndpoint;
 	
+	@Value("${egov.taxperiod.search.endpoint}")
+	private String	taxPeriodSearchEndpoint;
+	
 	@Value("${egov.demand.create.endpoint}")
 	private String demandCreateEndPoint;
 	

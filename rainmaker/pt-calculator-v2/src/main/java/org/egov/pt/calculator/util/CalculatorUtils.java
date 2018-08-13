@@ -111,6 +111,22 @@ public class CalculatorUtils {
 				.append(CalculatorConstants.SEPARATER).append(CalculatorConstants.SERVICE_FIELD_FOR_SEARCH_URL)
 				.append(CalculatorConstants.SERVICE_FIELD_VALUE_PT);
 	}
+
+	/**
+	 * Returns the tax head search Url with tenantId and PropertyTax service name
+	 * parameters
+	 * 
+	 * @param tenantId
+	 * @return
+	 */
+	public StringBuilder getTaxPeriodSearchUrl(String tenantId) {
+
+		return new StringBuilder().append(configurations.getBillingServiceHost())
+				.append(configurations.getTaxPeriodSearchEndpoint()).append(CalculatorConstants.URL_PARAMS_SEPARATER)
+				.append(CalculatorConstants.TENANT_ID_FIELD_FOR_SEARCH_URL).append(tenantId)
+				.append(CalculatorConstants.SEPARATER).append(CalculatorConstants.SERVICE_FIELD_FOR_SEARCH_URL)
+				.append(CalculatorConstants.SERVICE_FIELD_VALUE_PT);
+	}
 	
 	/**
 	 * method to create demandsearch url with demand criteria
@@ -143,7 +159,7 @@ public class CalculatorUtils {
 	}
 	
 	/**
-	 * Returns the total tax amount to be paid on a demand
+	 * Returns the applicable total tax amount to be paid on a demand
 	 * 
 	 * @param demand
 	 * @return
@@ -155,6 +171,25 @@ public class CalculatorUtils {
 					.contains(detail.getTaxHeadMasterCode()))
 				taxAmt = taxAmt.add(detail.getTaxAmount());
 			else if (CalculatorConstants.TAXES_TO_BE_SUBTRACTED_WHEN_CALCULATING_REBATE_AND_PENALTY
+					.contains(detail.getTaxHeadMasterCode()))
+				taxAmt = taxAmt.subtract(detail.getTaxAmount());
+		}
+		return taxAmt;
+	}
+	
+	/**
+	 * Returns the total tax amount to be paid on a demand
+	 * 
+	 * @param demand
+	 * @return
+	 */
+	public BigDecimal getTaxAmtFromDemandForAdditonalTaxes(Demand demand) {
+		BigDecimal taxAmt = BigDecimal.ZERO;
+		for (DemandDetail detail : demand.getDemandDetails()) {
+			if (CalculatorConstants.ADDITIONAL_TAXES
+					.contains(detail.getTaxHeadMasterCode()))
+				taxAmt = taxAmt.add(detail.getTaxAmount());
+			else if (CalculatorConstants.ADDITIONAL_DEBITS
 					.contains(detail.getTaxHeadMasterCode()))
 				taxAmt = taxAmt.subtract(detail.getTaxAmount());
 		}
@@ -264,7 +299,7 @@ public class CalculatorUtils {
 	 * @param demand
 	 * @return carryForward
 	 */
-	public BigDecimal getTotalCollectedAmountAndSetTaxAmt(Demand demand, Map<String, Boolean> isTaxHeadDebitMap) {
+	public BigDecimal getTotalCollectedAmountAndSetTaxAmt(Demand demand) {
 
 		BigDecimal carryForward = BigDecimal.ZERO;
 		for (DemandDetail detail : demand.getDemandDetails())

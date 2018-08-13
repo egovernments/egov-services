@@ -290,14 +290,6 @@ public class EstimationService {
 			estimates.add(TaxHeadEstimate.builder().taxHeadCode(CalculatorConstants.PT_ADHOC_PENALTY)
 					.estimateAmount(detail.getAdhocPenalty()).build());
 
-		if (null != detail.getAdhocExemption() && detail.getAdhocExemption().compareTo(taxAmt) <= 0) {
-			estimates.add(TaxHeadEstimate.builder().taxHeadCode(CalculatorConstants.PT_ADHOC_REBATE)
-					.estimateAmount(detail.getAdhocExemption()).build());
-		} else if (null != detail.getAdhocExemption()) {
-			throw new CustomException(CalculatorConstants.PT_ADHOC_REBATE_INVALID_AMOUNT,
-					CalculatorConstants.PT_ADHOC_REBATE_INVALID_AMOUNT_MSG + taxAmt);
-		}
-
 		// taxes
 		estimates.add(TaxHeadEstimate.builder().taxHeadCode(CalculatorConstants.PT_TAX)
 				.estimateAmount(taxAmt.setScale(2, 2)).build());
@@ -318,7 +310,16 @@ public class EstimationService {
 		BigDecimal fireCess = mstrDataService.getFireCess(payableTax, assessmentYear, timeBasedExmeptionMasterMap);
 		estimates.add(TaxHeadEstimate.builder().taxHeadCode(CalculatorConstants.PT_FIRE_CESS)
 				.estimateAmount(fireCess.setScale(2, 2)).build());
+		payableTax = payableTax.add(fireCess);
 
+		if (null != detail.getAdhocExemption() && detail.getAdhocExemption().compareTo(payableTax) <= 0) {
+			estimates.add(TaxHeadEstimate.builder().taxHeadCode(CalculatorConstants.PT_ADHOC_REBATE)
+					.estimateAmount(detail.getAdhocExemption()).build());
+		} else if (null != detail.getAdhocExemption()) {
+			throw new CustomException(CalculatorConstants.PT_ADHOC_REBATE_INVALID_AMOUNT,
+					CalculatorConstants.PT_ADHOC_REBATE_INVALID_AMOUNT_MSG + taxAmt);
+		}
+		
 		/*
 		 * get applicable rebate and penalty
 		 */
@@ -532,75 +533,38 @@ public class EstimationService {
 	 * usage master types.
 	 */
 	private BigDecimal getExemption(Unit unit, BigDecimal currentUnitTax, String financialYear,
-			Map<String, Map<String, List<Object>>> propertyMasterDataMap) {
+			Map<String, Map<String, List<Object>>> propertyMasterMap) {
 
-		Map<String, Object> exemption = getExemptionFromUsage(unit, financialYear, propertyMasterDataMap);
-		BigDecimal exempted = BigDecimal.ZERO;
-
-		if (null == exemption)  return exempted;
-
-		Double exemptionRate = null != exemption.get(CalculatorConstants.RATE_FIELD_NAME)
-				? ((Number) exemption.get(CalculatorConstants.RATE_FIELD_NAME)).doubleValue()
-				: null;
-		Double exempMaxValue = null != exemption.get(CalculatorConstants.MAX_AMOUNT_FIELD_NAME)
-				? ((Number) exemption.get(CalculatorConstants.MAX_AMOUNT_FIELD_NAME)).doubleValue()
-				: null;
-
-		if (null != exemptionRate) {
-
-			exempted = currentUnitTax.multiply(BigDecimal.valueOf(exemptionRate / 100));
-			if (exempted.compareTo(BigDecimal.valueOf(exempMaxValue)) > 0)
-				exempted = BigDecimal.valueOf(exempMaxValue);
-		} else if (null != exemption.get(CalculatorConstants.FLAT_AMOUNT_FIELD_NAME)) {
-			exempted = BigDecimal
-					.valueOf(((Number) exemption.get(CalculatorConstants.FLAT_AMOUNT_FIELD_NAME)).doubleValue());
-		}
-
-		return exempted;
+		Map<String, Object> exemption = getExemptionFromUsage(unit, financialYear, propertyMasterMap);
+		return mstrDataService.calculateApplicables(currentUnitTax, exemption);
 	}
 	
 	/**
-	 * Applies discount on Total tax amount OwnerType based exemptions.
+	 * Applies discount on Total tax amount OwnerType based on exemptions.
 	 */
 	private BigDecimal getExemption(Set<OwnerInfo> owners, BigDecimal taxAmt, String financialYear,
-			Map<String, Map<String, List<Object>>> propertyBasedExemptionMasterMap) {
+			Map<String, Map<String, List<Object>>> propertyMasterMap) {
 
-		Map<String, List<Object>> ownerTypeMap = propertyBasedExemptionMasterMap
-				.get(CalculatorConstants.OWNER_TYPE_MASTER);
+		Map<String, List<Object>> ownerTypeMap = propertyMasterMap.get(CalculatorConstants.OWNER_TYPE_MASTER);
 		BigDecimal userExemption = BigDecimal.ZERO;
 		final int userCount = owners.size();
 		BigDecimal share = taxAmt.divide(BigDecimal.valueOf(userCount));
-		for (OwnerInfo owner : owners) {
 
-			BigDecimal currentExemption = BigDecimal.ZERO;
+		for (OwnerInfo owner : owners) {
 
 			if (null == ownerTypeMap.get(owner.getOwnerType()))
 				continue;
-			
-			Map<String, Object> applicableOwnerType = mstrDataService.getApplicableMasterFromList(financialYear,
+
+			Map<String, Object> applicableOwnerType = mstrDataService.getApplicableMaster(financialYear,
 					ownerTypeMap.get(owner.getOwnerType()));
-			
-			if (null != applicableOwnerType
-					&& null != applicableOwnerType.get(CalculatorConstants.EXEMPTION_FIELD_NAME))
-			{
 
-			@SuppressWarnings("unchecked")
-			Map<String, Object> exemption = (Map<String, Object>) applicableOwnerType
-					.get(CalculatorConstants.EXEMPTION_FIELD_NAME);
+			if (null != applicableOwnerType) {
 
-			Double exemptionRate = null != exemption.get(CalculatorConstants.RATE_FIELD_NAME)
-					? ((Number) exemption.get(CalculatorConstants.RATE_FIELD_NAME)).doubleValue()
-					: null;
-			Double exempMaxValue = null != exemption.get(CalculatorConstants.MAX_AMOUNT_FIELD_NAME)
-					? ((Number) exemption.get(CalculatorConstants.MAX_AMOUNT_FIELD_NAME)).doubleValue()
-					: null;
-			if (null != exemptionRate)
-				currentExemption = share.multiply(BigDecimal.valueOf(exemptionRate/100));
+				BigDecimal currentExemption = mstrDataService.calculateApplicables(share,
+						applicableOwnerType.get(CalculatorConstants.EXEMPTION_FIELD_NAME));
 
-			if (null != exempMaxValue && currentExemption.compareTo(BigDecimal.valueOf(exempMaxValue)) > 0)
-				currentExemption = BigDecimal.valueOf(exempMaxValue);
+				userExemption = userExemption.add(currentExemption);
 			}
-			userExemption = userExemption.add(currentExemption);
 		}
 		return userExemption;
 	}
@@ -635,31 +599,32 @@ public class EstimationService {
 		
 		Map<String, Object> applicableUsageMasterexemption = null;
 		
-		if(null != usageDetails.get(unit.getUsageCategoryDetail()))
-		 applicableUsageMasterexemption = mstrDataService.getApplicableMasterFromList(financialYear,
-				usageDetails.get(unit.getUsageCategoryDetail()));
+		if (null != usageDetails.get(unit.getUsageCategoryDetail()))
+			applicableUsageMasterexemption = mstrDataService.getApplicableMaster(financialYear,
+					usageDetails.get(unit.getUsageCategoryDetail()));
 
-		if (null != applicableUsageMasterexemption
-				&& null == applicableUsageMasterexemption.get(CalculatorConstants.EXEMPTION_FIELD_NAME)
+		if (isExemptionNull(applicableUsageMasterexemption)
 				&& null != usageSubMinors.get(unit.getUsageCategorySubMinor()))
-			applicableUsageMasterexemption = mstrDataService.getApplicableMasterFromList(financialYear,
+			applicableUsageMasterexemption = mstrDataService.getApplicableMaster(financialYear,
 					usageSubMinors.get(unit.getUsageCategorySubMinor()));
 
-		if (null != applicableUsageMasterexemption
-				&& null == applicableUsageMasterexemption.get(CalculatorConstants.EXEMPTION_FIELD_NAME)
-				&& null != usageMinors.get(unit.getUsageCategoryMinor()))
-			applicableUsageMasterexemption = mstrDataService.getApplicableMasterFromList(financialYear,
+		if (isExemptionNull(applicableUsageMasterexemption) && null != usageMinors.get(unit.getUsageCategoryMinor()))
+			applicableUsageMasterexemption = mstrDataService.getApplicableMaster(financialYear,
 					usageMinors.get(unit.getUsageCategoryMinor()));
-		
-		if (null != applicableUsageMasterexemption
-				&& null == applicableUsageMasterexemption.get(CalculatorConstants.EXEMPTION_FIELD_NAME)
-				&& null != usageMajors.get(unit.getUsageCategoryMajor()))
-			applicableUsageMasterexemption = mstrDataService.getApplicableMasterFromList(financialYear,
+
+		if (isExemptionNull(applicableUsageMasterexemption) && null != usageMajors.get(unit.getUsageCategoryMajor()))
+			applicableUsageMasterexemption = mstrDataService.getApplicableMaster(financialYear,
 					usageMajors.get(unit.getUsageCategoryMajor()));
 
 		if (null != applicableUsageMasterexemption)
 			return (Map<String, Object>) applicableUsageMasterexemption.get(CalculatorConstants.EXEMPTION_FIELD_NAME);
 		return applicableUsageMasterexemption;
 	}
+	
+	private boolean isExemptionNull(Map<String, Object> applicableUsageMasterexemption) {
 
+		return (null != applicableUsageMasterexemption
+				&& null == applicableUsageMasterexemption.get(CalculatorConstants.EXEMPTION_FIELD_NAME))
+				|| null == applicableUsageMasterexemption;
+	}
 }

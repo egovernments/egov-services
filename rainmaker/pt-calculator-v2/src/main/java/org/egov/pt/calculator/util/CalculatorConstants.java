@@ -54,6 +54,11 @@ public class CalculatorConstants {
 	public static final List<String> TAXES_TO_BE_SUBTRACTED_WHEN_CALCULATING_REBATE_AND_PENALTY = Collections.unmodifiableList(Arrays
 			.asList(PT_OWNER_EXEMPTION, PT_UNIT_USAGE_EXEMPTION ));
 	
+	public static final List<String> ADDITIONAL_TAXES = Collections.unmodifiableList(Arrays
+			.asList(PT_FIRE_CESS, PT_ADHOC_PENALTY));
+					
+	public static final List<String> ADDITIONAL_DEBITS = Collections.unmodifiableList(Arrays
+							.asList( PT_ADHOC_REBATE));					
 
 	/*
 	 * Mdms constants
@@ -219,5 +224,8 @@ public class CalculatorConstants {
 
 	public static final String PT_ESTIMATE_NON_VACANT_LAND_UNITS = "PT_ESTIMATE_NON_VACANT_LAND_UNITS";
 	public static final String PT_ESTIMATE_NON_VACANT_LAND_UNITS_MSG = " unit is mandatory for non vacant land properties";
+	
+	public static final String PT_GET_BILL_ARREAR_DEMAND = "PT_GET_BILL_ARREAR_DEMAND";
+	public static final String PT_GET_BILL_ARREAR_DEMAND_MSG = " Partial Payment is not allowed for arrear payments, please make the complete payment";
 
 }

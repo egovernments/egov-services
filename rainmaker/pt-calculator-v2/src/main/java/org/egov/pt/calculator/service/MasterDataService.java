@@ -15,6 +15,8 @@ import org.egov.pt.calculator.util.CalculatorConstants;
 import org.egov.pt.calculator.util.CalculatorUtils;
 import org.egov.pt.calculator.web.models.demand.TaxHeadMaster;
 import org.egov.pt.calculator.web.models.demand.TaxHeadMasterResponse;
+import org.egov.pt.calculator.web.models.demand.TaxPeriod;
+import org.egov.pt.calculator.web.models.demand.TaxPeriodResponse;
 import org.egov.pt.calculator.web.models.property.RequestInfoWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -61,12 +63,26 @@ public class MasterDataService {
 	 */
 	public List<TaxHeadMaster> getTaxHeadMasterMap(RequestInfo requestInfo, String tenantId) {
 
-		
 		StringBuilder uri = calculatorUtils.getTaxHeadSearchUrl(tenantId);
 		TaxHeadMasterResponse res = mapper.convertValue(
 				repository.fetchResult(uri, RequestInfoWrapper.builder().requestInfo(requestInfo).build()),
 				TaxHeadMasterResponse.class);
 		return res.getTaxHeadMasters();
+	}
+
+	/**
+	 * Fetch Tax Head Masters From billing service
+	 * @param requestInfo
+	 * @param tenantId
+	 * @return
+	 */
+	public List<TaxPeriod> getTaxPeriodList(RequestInfoWrapper requestInfoWrapper, String tenantId) {
+
+		StringBuilder uri = calculatorUtils.getTaxPeriodSearchUrl(tenantId);
+		TaxPeriodResponse res = mapper.convertValue(
+				repository.fetchResult(uri, requestInfoWrapper),
+				TaxPeriodResponse.class);
+		return res.getTaxPeriods();
 	}
 	
 	/**
@@ -136,7 +152,7 @@ public class MasterDataService {
 	 * @param masterListMap
 	 */
 	@SuppressWarnings("unchecked")
-	public Map<String, Object> getApplicableMasterFromList(String assessmentYear, List<Object> masterList) {
+	public Map<String, Object> getApplicableMaster(String assessmentYear, List<Object> masterList) {
 		
 		Map<String, Object> objToBeReturned = null;
 		String maxYearFromTheList = "0";
@@ -163,53 +179,67 @@ public class MasterDataService {
 	 * Returns Zero if no data is found for the given criteria
 	 * 
 	 * @param payableTax
-	 * @param timeBasedExmeptionMasterMap 
+	 * @param timeBasedMasterMap 
 	 * @param assessmentYear 
 	 * @return
 	 */
 	public BigDecimal getFireCess(BigDecimal payableTax, String assessmentYear,
-			Map<String, JSONArray> timeBasedExmeptionMasterMap) {
+			Map<String, JSONArray> timeBasedMasterMap) {
 		BigDecimal fireCess = BigDecimal.ZERO;
-		
-		if(payableTax.doubleValue() == 0.0 ) return fireCess; 
-		
-		Map<String, Object> fireCessMap = getApplicableMasterFromList(assessmentYear,
-				timeBasedExmeptionMasterMap.get(CalculatorConstants.FIRE_CESS_MASTER));
-		if (null == fireCessMap) return fireCess;
 
-		BigDecimal rate = null != fireCessMap.get(CalculatorConstants.RATE_FIELD_NAME) ? BigDecimal.valueOf(
-					((Number) fireCessMap.get(CalculatorConstants.RATE_FIELD_NAME)).doubleValue()) : null;
+		if (payableTax.doubleValue() == 0.0)
+			return fireCess;
 
-		BigDecimal flatAmt = null != fireCessMap.get(CalculatorConstants.FLAT_AMOUNT_FIELD_NAME) ? BigDecimal.valueOf(		
-					((Number) fireCessMap.get(CalculatorConstants.FLAT_AMOUNT_FIELD_NAME)).doubleValue()) : null;
+		Map<String, Object> fireCessMap = getApplicableMaster(assessmentYear,
+				timeBasedMasterMap.get(CalculatorConstants.FIRE_CESS_MASTER));
 
-		BigDecimal minAmt = null != fireCessMap.get(CalculatorConstants.MIN_AMOUNT_FIELD_NAME) ? BigDecimal.valueOf(
-					((Number) fireCessMap.get(CalculatorConstants.MIN_AMOUNT_FIELD_NAME)).doubleValue()) : null;
-					
-		BigDecimal maxAmt = null != fireCessMap.get(CalculatorConstants.MAX_AMOUNT_FIELD_NAME) ? BigDecimal.valueOf(
-					((Number) fireCessMap.get(CalculatorConstants.MAX_AMOUNT_FIELD_NAME)).doubleValue()) : null;
+		return calculateApplicables(payableTax, fireCessMap);
+	}
+	
+	/**
+	 * Method to calculate exmeption based on the Amount and exemption map
+	 * 
+	 * @param applicableAmount
+	 * @param configMap
+	 * @return
+	 */
+	public BigDecimal calculateApplicables(BigDecimal applicableAmount, Object config) {
 
-		/*
-		 * Applying rate if value is not null
-		 * 
-		 *  if the applied value is lesser than min value then take min value
-		 *  
-		 *  else if the applied value is greater than max value then take max value
-		 *  
-		 * else apply flat amount in case of rate is null and flat amt is not null 
-		 */
-			if (null != rate) {
-				fireCess = payableTax.multiply(rate.divide(CalculatorConstants.HUNDRED));
+		BigDecimal currentApplicable = BigDecimal.ZERO;
 
-				if (null != minAmt && fireCess.compareTo(minAmt) < 0)
-					fireCess = minAmt;
+		if (null == config)
+			return currentApplicable;
 
-				else if (null != maxAmt && fireCess.compareTo(maxAmt) > 0)
-					fireCess = maxAmt;
-			} else
-				fireCess = flatAmt;
-			
-		return fireCess;
+		@SuppressWarnings("unchecked")
+		Map<String, Object> configMap = (Map<String, Object>) config;
+
+		BigDecimal rate = null != configMap.get(CalculatorConstants.RATE_FIELD_NAME)
+				? BigDecimal.valueOf(((Number) configMap.get(CalculatorConstants.RATE_FIELD_NAME)).doubleValue())
+				: null;
+
+		BigDecimal maxAmt = null != configMap.get(CalculatorConstants.MAX_AMOUNT_FIELD_NAME)
+				? BigDecimal.valueOf(((Number) configMap.get(CalculatorConstants.MAX_AMOUNT_FIELD_NAME)).doubleValue())
+				: null;
+
+		BigDecimal minAmt = null != configMap.get(CalculatorConstants.MIN_AMOUNT_FIELD_NAME)
+				? BigDecimal.valueOf(((Number) configMap.get(CalculatorConstants.MIN_AMOUNT_FIELD_NAME)).doubleValue())
+				: null;
+
+		BigDecimal flatAmt = null != configMap.get(CalculatorConstants.FLAT_AMOUNT_FIELD_NAME)
+				? BigDecimal.valueOf(((Number) configMap.get(CalculatorConstants.FLAT_AMOUNT_FIELD_NAME)).doubleValue())
+				: BigDecimal.ZERO;
+
+		if (null == rate)
+			currentApplicable = flatAmt.compareTo(applicableAmount) > 0 ? applicableAmount : flatAmt;
+		else {
+			currentApplicable = applicableAmount.multiply(rate.divide(CalculatorConstants.HUNDRED));
+
+			if (null != maxAmt && currentApplicable.compareTo(maxAmt) > 0)
+				currentApplicable = maxAmt;
+			else if (null != minAmt && currentApplicable.compareTo(minAmt) < 0)
+				currentApplicable = minAmt;
+		}
+		return currentApplicable;
 	}
 	
 }

@@ -67,7 +67,7 @@ public class AgreementQueryBuilder {
             selectQuery.append(" and AGREEMENT.STATUS = :status");
             params.put("status", agreementsModel.getStatus().toString());
         } else {
-            selectQuery.append(" and AGREEMENT.STATUS IN ('ACTIVE','WORKFLOW','RENEWED','REJECTED','HISTORY')");
+            selectQuery.append(" and AGREEMENT.STATUS IN ('ACTIVE','WORKFLOW','RENEWED','REJECTED')");
         }
 
         if (agreementsModel.getTenantId() != null) {

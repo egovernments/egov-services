@@ -741,6 +741,13 @@ class ApplyLeave extends React.Component {
         },
         function(err, res) {
           if (res) {
+            let today = new Date();
+            let formattedDate =
+              today.getDate() +
+              "/" +
+              (today.getMonth() + 1) +
+              "/" +
+              today.getFullYear();
             var _day =
               res && res["EligibleLeave"] && res["EligibleLeave"][0]
                 ? res["EligibleLeave"][0].noOfDays
@@ -750,8 +757,8 @@ class ApplyLeave extends React.Component {
                 leaveSet: {
                   ..._this.state.leaveSet,
                   availableDays: "",
-                  fromDate: "",
-                  toDate: ""
+                  fromDate: formattedDate,
+                  toDate: formattedDate
                 }
               });
               return showError("You do not have leave for this leave type.");
@@ -761,8 +768,8 @@ class ApplyLeave extends React.Component {
                   ..._this.state.leaveSet,
                   availableDays: _day,
                   encashable: val,
-                  fromDate: "",
-                  toDate: ""
+                  fromDate: formattedDate,
+                  toDate: formattedDate
                 }
               });
             }
@@ -771,8 +778,8 @@ class ApplyLeave extends React.Component {
               leaveSet: {
                 ..._this.state.leaveSet,
                 encashable: val,
-                fromDate: "",
-                toDate: ""
+                fromDate: formattedDate,
+                toDate: formattedDate
               }
             });
           }

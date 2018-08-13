@@ -77,6 +77,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -253,35 +254,48 @@ public class AgreementRepository {
         final Map<String, Object> params = new HashMap<>();
         final Map<String, Object> parameter = new HashMap<>();
         List<Agreement> agreements = new ArrayList<>();
-        List<Agreement> parentAgreementsList = null;
         List<Agreement> agreementList = null;
-        Long parentId = null;
         final String mainQuery = AgreementQueryBuilder.getAgreementSearchQuery(agreementCriteria, params);
         agreementList = namedParameterJdbcTemplate.query(mainQuery, params, new AgreementRowMapper());
 
-        for (Agreement agreement : agreementList) {
-            if (agreement.getParent() != null) {
-                agreements.add(agreement);
-                parentId = agreement.getParent();
-                parentLoop:
-                while (parentId != null) {
-                    agreementCriteria.setParent(parentId);
+
+        if (agreementList.size() > 0) {
+            List<Agreement> parentAgreementsList = new ArrayList<>();
+            Agreement firstAgreement = agreementList.get(0);
+            if ("CREATE".equalsIgnoreCase(firstAgreement.getAction().toString())) {
+                agreements.add(firstAgreement);
+
+                if (agreementList.get(0).getId() != null) {
+                    agreementCriteria.setParent(firstAgreement.getId());
+                    agreementCriteria.setAction(firstAgreement.getAction().toString());
                     final String searchQuery = AgreementQueryBuilder.getAgreementQuery(agreementCriteria, parameter);
                     parentAgreementsList = namedParameterJdbcTemplate.query(searchQuery, parameter, new AgreementRowMapper());
-                    for (Agreement parentAgreement : parentAgreementsList) {
-                        if (parentAgreement.getParent() != null) {
-                            agreements.add(parentAgreement);
-                            parentId = parentAgreement.getParent();
-                            continue parentLoop;
-                        } else {
-                            parentId = null;
-                            agreements.add(parentAgreement);
-                            break parentLoop;
+                    if (parentAgreementsList.size() > 0) {
+                        for (Agreement agreementData : parentAgreementsList) {
+                            agreements.add(agreementData);
                         }
                     }
                 }
             } else {
-                agreements.add(agreement);
+                List<Agreement> agreement = new ArrayList<>();
+                agreementCriteria.setParent(firstAgreement.getParent());
+                agreementCriteria.setAction(firstAgreement.getAction().toString());
+                final String searchQuery = AgreementQueryBuilder.getAgreementQuery(agreementCriteria, parameter);
+                parentAgreementsList = namedParameterJdbcTemplate.query(searchQuery, parameter, new AgreementRowMapper());
+                if (parentAgreementsList.size() > 0) {
+                    for (Agreement agreementData : parentAgreementsList) {
+                        agreements.add(agreementData);
+                    }
+                }
+
+                agreementCriteria.setId(firstAgreement.getParent());
+                final String searchQueryById = AgreementQueryBuilder.getAgreementQuery(agreementCriteria, parameter);
+                agreement = namedParameterJdbcTemplate.query(searchQueryById, parameter, new AgreementRowMapper());
+                if (agreement.size() > 0) {
+                    for (Agreement agreementData : agreement) {
+                        agreements.add(agreementData);
+                    }
+                }
             }
         }
         agreementCriteria.setAsset(assetHelper.getAssetIdListByAgreements(agreements));

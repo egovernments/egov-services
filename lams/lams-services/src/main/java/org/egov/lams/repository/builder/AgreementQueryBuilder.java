@@ -138,22 +138,34 @@ public class AgreementQueryBuilder {
             throw new RuntimeException("Invalid date Range, please enter Both fromDate and toDate");
 
     }
+
     private static void appendQueryParams(AgreementCriteria agreementsModel,
-                                     @SuppressWarnings("rawtypes") Map params, StringBuilder selectQuery) {
+                                          @SuppressWarnings("rawtypes") Map params, StringBuilder selectQuery) {
 
         selectQuery.append(" WHERE agreement.id is not null");
+        if ("CREATE".equalsIgnoreCase(agreementsModel.getAction())) {
+            if (agreementsModel.getParent() != null) {
+                selectQuery.append(" and AGREEMENT.PARENT IN (:parent)");
+                params.put("parent", agreementsModel.getParent());
+            }
+        } else if (!"CREATE".equalsIgnoreCase(agreementsModel.getAction()) && agreementsModel.getId() != null) {
 
-        if (agreementsModel.getParent() != null) {
-            selectQuery.append(" and AGREEMENT.ID IN (:agreementId)");
-            params.put("agreementId", agreementsModel.getParent());
+            if (agreementsModel.getId() != null) {
+                selectQuery.append(" and AGREEMENT.id IN (:id)");
+                params.put("id", agreementsModel.getId());
+            }
+        } else {
+            if (agreementsModel.getParent() != null) {
+                selectQuery.append(" and AGREEMENT.PARENT IN (:parent)");
+                params.put("parent", agreementsModel.getParent());
+            }
         }
-
         if (agreementsModel.getTenantId() != null) {
             selectQuery.append(" and AGREEMENT.TENANT_ID = :tenantId");
             params.put("tenantId", agreementsModel.getTenantId());
         }
-
     }
+
     @SuppressWarnings("unchecked")
     private static StringBuilder appendLimitAndOffset(AgreementCriteria agreementsModel,
                                                       @SuppressWarnings("rawtypes") Map params, StringBuilder selectQuery) {

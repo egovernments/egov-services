@@ -97,6 +97,7 @@ public class TransactionServiceTest {
         TransactionRequest transactionRequest = new TransactionRequest(requestInfo, txn);
 
         Mockito.doNothing().when(validator).validateCreateTxn(any(TransactionRequest.class));
+        when(validator.skipGateway(txn)).thenReturn(false);
         when(gatewayService.initiateTxn(any(Transaction.class))).thenReturn(new URI(redirectUrl));
 
         Transaction resp = transactionService.initiateTransaction(transactionRequest);
@@ -117,15 +118,48 @@ public class TransactionServiceTest {
                 .build();
         TransactionRequest transactionRequest = new TransactionRequest(requestInfo, txn);
 
-
-        when(validator.validateUpdateTxn(any(Map.class))).thenThrow(new CustomException("INVALID_GATEWAY", "Invalid " +
-                "Gateway"));
+        Mockito.doThrow(new CustomException("INVALID_GATEWAY", "Invalid Gateway")).when(validator).validateCreateTxn(any(TransactionRequest.class));
         when(gatewayService.initiateTxn(any(Transaction.class))).thenThrow(new CustomException());
 
         Transaction resp = transactionService.initiateTransaction(transactionRequest);
 
+    }
+
+    /**
+     * Test for invalid or inactive gateway
+     */
+    @Test
+    public void initiateTransactionSkipGatewayTest(){
+        String receiptNumber = "XYZ";
+        Transaction txn = Transaction.builder().txnAmount("100")
+                .billId("ORDER0012")
+                .productInfo("Property Tax Payment")
+                .gateway("ABCD123")
+                .txnAmount("0")
+                .build();
+        TransactionRequest transactionRequest = new TransactionRequest(requestInfo, txn);
+
+        BillDetail billDetail = BillDetail.builder().receiptNumber(receiptNumber).build();
+
+        Bill bill = Bill.builder().billDetails(Collections.singletonList(billDetail)).build();
+
+        Receipt receipt = Receipt.builder()
+                .transactionId("DEFA15273")
+                .bill(Collections.singletonList(bill))
+                .build();
+
+        Mockito.doNothing().when(validator).validateCreateTxn(any(TransactionRequest.class));
+
+        when(gatewayService.initiateTxn(any(Transaction.class))).thenThrow(new CustomException());
+        when(validator.skipGateway(txn)).thenReturn(true);
+        when(collectionService.generateReceipt(any(RequestInfo.class), any(Transaction.class))).thenReturn
+                (Collections.singletonList(receipt));
+        Transaction resp = transactionService.initiateTransaction(transactionRequest);
+
+        assertTrue(resp.getReceipt().equalsIgnoreCase(receiptNumber));
 
     }
+
 
     /**
      * Test for fetching transactions based on criteria
@@ -189,6 +223,7 @@ public class TransactionServiceTest {
                 .build();
 
         when(validator.validateUpdateTxn(any(Map.class))).thenReturn(txnStatus);
+        when(validator.skipGateway(any(Transaction.class))).thenReturn(false);
         when(validator.shouldGenerateReceipt(any(Transaction.class), any(Transaction.class))).thenReturn(true);
         when(gatewayService.getLiveStatus(txnStatus, Collections.singletonMap("ORDERID", "PT_001"))).thenReturn(finalTxnStatus);
         when(collectionService.generateReceipt(any(RequestInfo.class), any(Transaction.class))).thenReturn

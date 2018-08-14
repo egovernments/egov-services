@@ -192,26 +192,30 @@ public class ReceiptValidator {
      */
 
     private void validateIfReceiptForBillAbsent(Map<String, String> errorMap, BillDetail billDetail) {
+        BigDecimal totalAmount = billDetail.getTotalAmount();
+        BigDecimal amountPaid = billDetail.getAmountPaid();
+
         if (billDetail.getPartPaymentAllowed()) {
 
-            if(billDetail.getAmountPaid().compareTo(billDetail.getMinimumAmount()) < 0 ){
+            if(amountPaid.compareTo(BigDecimal.ZERO) != 0 && amountPaid.compareTo(billDetail
+                    .getMinimumAmount()) < 0 ){
                 log.error("Amount paid of {} cannot be lesser than minimum payable amount of {} for bill detail " +
-                                "{}", billDetail.getAmountPaid(), billDetail.getMinimumAmount(), billDetail.getId());
-                errorMap.put("AMOUNT_MISMATCH", "Amount paid cannot be greater than bill amount");
+                                "{}", amountPaid, billDetail.getMinimumAmount(), billDetail.getId());
+                errorMap.put("AMOUNT_MISMATCH", "Amount paid cannot be lesser than minimum payable amount");
             }
 
-            if (billDetail.getTotalAmount().compareTo(billDetail.getAmountPaid()) < 0) {
+            if (totalAmount.compareTo(amountPaid) < 0) {
                 log.error("Amount paid of {} cannot be greater than bill amount of {} for bill detail {}", billDetail
                                 .getAmountPaid()
-                        , billDetail.getTotalAmount(), billDetail.getId());
+                        , totalAmount, billDetail.getId());
                 errorMap.put("AMOUNT_MISMATCH", "Amount paid cannot be greater than bill amount");
             }
 
         } else {
-            if (!(billDetail.getTotalAmount().compareTo(billDetail.getAmountPaid()) == 0)) {
+            if (!(totalAmount.compareTo(amountPaid) == 0)) {
                 log.error("Transaction Amount of {} has to be equal to bill amount of {} for bill detail {}",
-                        billDetail.getAmountPaid(),
-                        billDetail.getTotalAmount(), billDetail.getId());
+                        amountPaid,
+                        totalAmount, billDetail.getId());
                 errorMap.put("AMOUNT_MISMATCH", "Amount paid has to be equal to bill amount");
             }
         }

@@ -88,8 +88,12 @@ public class TransactionValidator {
         return statuses.get(0);
     }
 
+    public boolean skipGateway(Transaction transaction){
+        return new BigDecimal(transaction.getTxnAmount()).compareTo(BigDecimal.ZERO) == 0;
+    }
+
     public boolean shouldGenerateReceipt(Transaction prevStatus, Transaction newStatus) {
-        if(prevStatus.getTxnStatus().equals(Transaction.TxnStatusEnum.SUCCESS))
+        if(prevStatus.getTxnStatus().equals(Transaction.TxnStatusEnum.SUCCESS) && !isEmpty(prevStatus.getReceipt()))
             return false;
 
         if (newStatus.getTxnStatus().equals(Transaction.TxnStatusEnum.SUCCESS)) {
@@ -221,7 +225,7 @@ public class TransactionValidator {
 
         if (billDetail.getPartPaymentAllowed()) {
 
-            if(txnAmount.compareTo(billDetail.getMinimumAmount()) < 0 ){
+            if(txnAmount.compareTo(BigDecimal.ZERO) != 0 && txnAmount.compareTo(billDetail.getMinimumAmount()) < 0 ){
                 log.error("Amount paid of {} cannot be lesser than minimum payable amount of {} for bill detail " +
                         "{}", billDetail.getAmountPaid(), billDetail.getMinimumAmount(), billDetail.getId());
                 errorMap.put("AMOUNT_MISMATCH", "Amount paid cannot be greater than bill amount");

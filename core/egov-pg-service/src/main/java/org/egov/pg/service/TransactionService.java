@@ -76,11 +76,20 @@ public class TransactionService {
         RequestInfo requestInfo = transactionRequest.getRequestInfo();
         Transaction transaction = transactionRequest.getTransaction();
 
+        TransactionDump dump = TransactionDump.builder()
+                .txnId(transaction.getTxnId())
+                .auditDetails(transaction.getAuditDetails())
+                .build();
 
-        URI uri = gatewayService.initiateTxn(transaction);
-        transaction.setRedirectUrl(uri.toString());
+        if(validator.skipGateway(transaction)){
+            generateReceipt(requestInfo, transaction);
+        }
+        else{
+            URI uri = gatewayService.initiateTxn(transaction);
+            transaction.setRedirectUrl(uri.toString());
 
-        TransactionDump dump = new TransactionDump(transaction.getTxnId(), uri.toString(), null, transaction.getAuditDetails());
+            dump.setTxnRequest(uri.toString());
+        }
 
         // Persist transaction and transaction dump objects
         producer.push(appProperties.getSaveTxnTopic(), new org.egov.pg.models.TransactionRequest
@@ -130,11 +139,17 @@ public class TransactionService {
         log.debug(currentTxnStatus.toString());
         log.debug(requestParams.toString());
 
-        Transaction newTxn = gatewayService.getLiveStatus(currentTxnStatus, requestParams);
+        Transaction newTxn = null;
 
-        // Enrich the new transaction status before persisting
-        enrichmentService.enrichUpdateTransaction(new TransactionRequest(requestInfo, currentTxnStatus), newTxn);
+        if(validator.skipGateway(currentTxnStatus)) {
+            newTxn = currentTxnStatus;
 
+        } else{
+            newTxn = gatewayService.getLiveStatus(currentTxnStatus, requestParams);
+
+            // Enrich the new transaction status before persisting
+            enrichmentService.enrichUpdateTransaction(new TransactionRequest(requestInfo, currentTxnStatus), newTxn);
+        }
 
         // Check if transaction is successful, amount matches etc
         if (validator.shouldGenerateReceipt(currentTxnStatus, newTxn)) {
@@ -163,7 +178,5 @@ public class TransactionService {
         }
 
     }
-
-
 
 }

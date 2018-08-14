@@ -66,10 +66,19 @@ class AgreementSearch extends React.Component {
       var agreements = {};
 
       if (!advancedSearch) {
-        agreements =
+        let tempRes = {};
+        tempRes =
           commonApiPost("lams-services", "agreements", "_search", searchSet)
             .responseJSON["Agreements"] || [];
         flag = 1;
+        if (tempRes && tempRes.length) {
+          aggr.map((tempRes, i) => {
+            if (item.status.toLowerCase() === "history") {
+              delete tempRes[i];
+            }
+          });
+        }
+        agreements = tempRes;
         if (agreements && agreements.length) {
           agreements.sort(function(d1, d2) {
             var date1 = d1.createdDate.split("/");
@@ -378,7 +387,8 @@ class AgreementSearch extends React.Component {
         bDestroy: true,
         language: {
           emptyTable: "No Records"
-        }
+        },
+        columnDefs: [{ orderable: false, targets: 0 }]
       });
     }
   }
@@ -1092,13 +1102,14 @@ class AgreementSearch extends React.Component {
         );
       }
     };
-    const renderBody = function() {
+    const renderBody = () => {
       if (agreements.length > 0) {
         return agreements.map((item, index) => {
           var category_name = getValueByName(
             "name",
             item.asset.assetCategory.id
           );
+
           return (
             <tr key={index}>
               <td>{index + 1}</td>
@@ -1125,7 +1136,8 @@ class AgreementSearch extends React.Component {
                   {getOption(
                     category_name == "Land" || category_name == "shop",
                     item
-                  )};
+                  )}
+                  ;
                 </div>
               </td>
             </tr>
@@ -1255,7 +1267,8 @@ class AgreementSearch extends React.Component {
                   <div className="row">
                     <div className="col-sm-3 col-sm-offset-5">
                       <label for="asset_category">
-                        Asset category<span> *</span>
+                        Asset category
+                        <span> *</span>
                       </label>
                       <div className="styled-select">
                         <select
@@ -1620,7 +1633,8 @@ class AgreementSearch extends React.Component {
               <div className="text-center">
                 <button type="submit" className="btn btn-submit">
                   Search
-                </button>&nbsp;&nbsp;
+                </button>
+                &nbsp;&nbsp;
                 <button
                   type="button"
                   className="btn btn-close"

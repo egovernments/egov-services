@@ -54,13 +54,13 @@ public class DraftsService {
 		draftRequest.getDraft().setId(UUID.randomUUID().toString());
 		draftRequest.getDraft().setActive(true);
 		draftRequest.getDraft().setUserId(draftRequest.getRequestInfo().getUserInfo().getUuid());
+		draftRequest.getDraft().setTenantId(draftRequest.getRequestInfo().getUserInfo().getTenantId());
 		draftRequest.getDraft().setAuditDetails(propertyUtil.getAuditDetails(draftRequest.getRequestInfo().getUserInfo().getId().toString(), true));
 	}
 	
 	public DraftResponse updateDraft(DraftRequest draftRequest) {
-		DraftSearchCriteria criteria = DraftSearchCriteria.builder().id(draftRequest.getDraft().getId()).tenantId(draftRequest.getDraft().getTenantId()).build();
+		DraftSearchCriteria criteria = DraftSearchCriteria.builder().id(draftRequest.getDraft().getId()).build();
 		DraftResponse response = searchDrafts(draftRequest.getRequestInfo(), criteria);
-		log.info("Response: "+response);
 		if(response.getDrafts().isEmpty()) {
 			throw new CustomException("INVALID_UPDATE_REQUEST", "Draft being updated doesn't belong to this user");
 		}
@@ -74,6 +74,7 @@ public class DraftsService {
 	private void enrichDraftsForUpdate(DraftRequest draftRequest) {
 		if (!isEmpty(draftRequest.getDraft().getAssessmentNumber()))
 			draftRequest.getDraft().setActive(false);
+		draftRequest.getDraft().setTenantId(draftRequest.getRequestInfo().getUserInfo().getTenantId());
 		draftRequest.getDraft().setAuditDetails(propertyUtil.getAuditDetails(draftRequest.getRequestInfo().getUserInfo().getId().toString(), false));
 	}
 
@@ -81,8 +82,8 @@ public class DraftsService {
 		draftSearchCriteria.setOffset(draftSearchCriteria.getOffset() > 0 ? draftSearchCriteria.getOffset() : 0);
 		draftSearchCriteria.setLimit(draftSearchCriteria.getLimit() > 0 ? draftSearchCriteria.getLimit() : 5);
 		draftSearchCriteria.setUserId(requestInfo.getUserInfo().getUuid());
+		draftSearchCriteria.setTenantId(requestInfo.getUserInfo().getTenantId());
 		draftSearchCriteria.setActive(true);
-		log.info("SearchCriteria: "+draftSearchCriteria);
 		List<Draft> drafts = null;
 
 		if (!isEmpty(draftSearchCriteria.getAssessmentNumber()))

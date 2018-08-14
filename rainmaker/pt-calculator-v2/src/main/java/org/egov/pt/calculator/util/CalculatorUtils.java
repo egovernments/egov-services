@@ -269,7 +269,7 @@ public class CalculatorUtils {
 
 				+ "(select Max(createdtime) as maxtime, propertyid from eg_pt_assessment group by propertyid) a2 "
 
-				+ "ON a1.createdtime=a2.maxtime and a1.propertyid=a2.propertyid where a1.tenantId=?");
+				+ "ON a1.createdtime=a2.maxtime and a1.propertyid=a2.propertyid where a1.tenantId=? ");
 
 		preparedStmtList.add(assessment.getTenantId());
 
@@ -281,6 +281,11 @@ public class CalculatorUtils {
 		if (assessment.getPropertyId() != null) {
 			query.append(" AND a1.propertyId=?");
 			preparedStmtList.add(assessment.getPropertyId());
+		}
+		
+		if(assessment.getAssessmentYear() != null) {
+			query.append(" AND a1.assessmentyear=?");
+			preparedStmtList.add(assessment.getAssessmentYear());
 		}
 
 		return query.toString();

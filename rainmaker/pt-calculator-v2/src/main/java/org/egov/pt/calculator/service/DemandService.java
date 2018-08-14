@@ -90,12 +90,15 @@ public class DemandService {
 		List<CalculationCriteria> criterias = request.getCalculationCriteria();
 		List<Demand> demands = new ArrayList<>();
 		List<String> lesserAssessments = new ArrayList<>();
+		Map<String, String> consumerCodeFinYearMap = new HashMap<String, String>();
 		
 		Map<String, Calculation> propertyCalculationMap = estimationService.getEstimationPropertyMap(request);
 		for (CalculationCriteria criteria : criterias) {
 
-			String assessmentNumber = criteria.getProperty().getPropertyDetails().get(0).getAssessmentNumber();
-			BigDecimal newTax = propertyCalculationMap.get(assessmentNumber).getTaxAmount();
+			PropertyDetail detail = criteria.getProperty().getPropertyDetails().get(0);
+			
+			String assessmentNumber = detail.getAssessmentNumber();
+			BigDecimal newTax = propertyCalculationMap.get(assessmentNumber).getTotalAmount();
 			
 			BigDecimal carryForwardCollectedAmount = getCarryForwardAndCancelOldDemand(newTax, criteria,
 					request.getRequestInfo());
@@ -112,15 +115,16 @@ public class DemandService {
 									.tenantId(criteria.getTenantId()).demandId(demand.getId())
 									.taxHeadMasterCode(CalculatorConstants.PT_ADVANCE_CARRYFORWARD).build());
 				demands.add(demand);
+				consumerCodeFinYearMap.put(demand.getConsumerCode(), detail.getFinancialYear());
+				
 			}else {
 				lesserAssessments.add(assessmentNumber);
 			}
 		}
 		
 		if (!CollectionUtils.isEmpty(lesserAssessments)) {
-			throw new CustomException("EG_PT_DEPRECIATING_ASSESSMENT_ERROR",
-					"Depreciating assessments are not allowed, please kindly update the values for the following properties : "
-							+ lesserAssessments);
+			throw new CustomException(CalculatorConstants.EG_PT_DEPRECIATING_ASSESSMENT_ERROR,
+					CalculatorConstants.EG_PT_DEPRECIATING_ASSESSMENT_ERROR_MSG + lesserAssessments);
 		}
 		
 		DemandRequest dmReq = DemandRequest.builder().demands(demands).requestInfo(request.getRequestInfo()).build();
@@ -134,7 +138,7 @@ public class DemandService {
 			throw new ServiceCallException(e.getResponseBodyAsString());
 		}
 		log.info(" The demand Response is : " + res);
-		assessmentService.saveAssessments(res.getDemands(), request.getRequestInfo());
+		assessmentService.saveAssessments(res.getDemands(), consumerCodeFinYearMap, request.getRequestInfo());
 		return propertyCalculationMap;
 	}
 
@@ -238,7 +242,7 @@ public class DemandService {
 		if (oldTaxAmt.compareTo(newTax) > 0)
 			carryForward = BigDecimal.valueOf(-1);
 
-		if (BigDecimal.ZERO.compareTo(carryForward) > 0) return carryForward;
+		if (BigDecimal.ZERO.compareTo(carryForward) >= 0) return carryForward;
 		
 		demand.setStatus(DemandStatus.CANCELLED);
 		DemandRequest request = DemandRequest.builder().demands(Arrays.asList(demand)).requestInfo(requestInfo).build();
@@ -275,7 +279,7 @@ public class DemandService {
 
 		return Demand.builder().tenantId(tenantId).businessService(configs.getPtModuleCode()).consumerType(propertyType)
 				.consumerCode(consumerCode).owner(owner).taxPeriodFrom(calculation.getFromDate())
-				.taxPeriodTo(calculation.getToDate())
+				.taxPeriodTo(calculation.getToDate()).status(DemandStatus.ACTIVE)
 				.minimumAmountPayable(BigDecimal.valueOf(configs.getPtMinAmountPayable())).demandDetails(details)
 				.build();
 	}

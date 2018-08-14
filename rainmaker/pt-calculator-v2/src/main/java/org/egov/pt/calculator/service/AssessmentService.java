@@ -2,6 +2,7 @@ package org.egov.pt.calculator.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import org.egov.common.contract.request.RequestInfo;
@@ -38,7 +39,7 @@ public class AssessmentService {
 	 * @param demands
 	 * @param info
 	 */
-	public List<Assessment> saveAssessments(List<Demand> demands, RequestInfo info) {
+	public List<Assessment> saveAssessments(List<Demand> demands, Map<String, String> consumerCodeFinYearMap, RequestInfo info) {
 		
 		List<Assessment> assessments = new ArrayList<>();
 		
@@ -46,7 +47,7 @@ public class AssessmentService {
 		demands.forEach(demand -> {
 
 			String[] consumerCodeSplitArray = demand.getConsumerCode().split(CalculatorConstants.PT_CONSUMER_CODE_SEPARATOR);
-			assessments.add(Assessment.builder().propertyId(consumerCodeSplitArray[0])
+			assessments.add(Assessment.builder().propertyId(consumerCodeSplitArray[0]).assessmentYear(consumerCodeFinYearMap.get(demand.getConsumerCode()))
 					.uuid(UUID.randomUUID().toString()).assessmentNumber(consumerCodeSplitArray[1])
 					.tenantId(demand.getTenantId()).demandId(demand.getId()).auditDetails(details).build());
 		});

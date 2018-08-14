@@ -13,7 +13,7 @@ public class AssessmentRowMapper implements RowMapper<Assessment> {
 	@Override
 	public Assessment mapRow(ResultSet rs, int rowNum) throws SQLException {
 
-		return Assessment.builder().demandId(rs.getString("demandId")).propertyId(rs.getString("propertyId"))
+		return Assessment.builder().demandId(rs.getString("demandId")).propertyId(rs.getString("propertyId")).assessmentYear(rs.getString("assessmentyear"))
 				.uuid(rs.getString("uuid")).assessmentNumber(rs.getString("assessmentNumber")).tenantId(rs.getString("tenantId")).build();
 	}
 

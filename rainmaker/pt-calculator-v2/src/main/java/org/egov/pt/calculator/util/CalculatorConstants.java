@@ -189,9 +189,12 @@ public class CalculatorConstants {
 	 */
 	public static final String CONNECT_EXCEPTION_KEY = "CONNECTION_FAILED";
 
+	public static final String EG_PT_DEPRECIATING_ASSESSMENT_ERROR = "EG_PT_DEPRECIATING_ASSESSMENT_ERROR";
+	public static final String EG_PT_DEPRECIATING_ASSESSMENT_ERROR_MSG = "Depreciating assessments are not allowed for the same assessmentyear,"
+			+ " please kindly update the values for the following properties with assessmentNumbers : ";
+
 	public static final String EMPTY_DEMAND_ERROR_CODE = "EMPTY_DEMANDS";
 	public static final String EMPTY_DEMAND_ERROR_MESSAGE = "No demands found for the given bill generate criteria";
-
 	
 	public static final String BILLING_SLAB_MATCH_ERROR_CODE = "NO_BILLING_SLAB_FOUND";
 	public static final String BILLING_SLAB_MATCH_ERROR_MESSAGE = "No matching slabs has been found for unit on FloorNo : {floor} of Area : {area} with usageCategoryDetail : {usageDetail}";

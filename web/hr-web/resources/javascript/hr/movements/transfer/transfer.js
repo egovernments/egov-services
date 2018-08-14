@@ -321,12 +321,17 @@ class EmployeeTransfer extends React.Component {
       checkCountAndCall("transferList", res);
     });
 
+ var today = new Date();
+        var dd = today.getDate()+1;
+        var mm = today.getMonth()+1;
+        var yyyy = today.getFullYear();
 
+        today = dd+'/'+mm+'/'+yyyy;
 
     // $('#code,#name,#departmentId,#designationId').prop("disabled", true);
     $('#effectiveFrom').datepicker({
       format: 'dd/mm/yyyy',
-      startDate: new Date(),
+      startDate: today,
       autoclose: true,
       defaultDate: ""
     });

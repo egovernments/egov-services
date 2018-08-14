@@ -260,11 +260,16 @@ class UpdateMovement extends React.Component {
       }
     })
 
+ var today = new Date();
+        var dd = today.getDate()+1;
+        var mm = today.getMonth()+1;
+        var yyyy = today.getFullYear();
 
+        today = dd+'/'+mm+'/'+yyyy;
 
     $('#effectiveFrom').datepicker({
       format: 'dd/mm/yyyy',
-      startDate: new Date(),
+      startDate: today,
       autoclose: true,
       defaultDate: ""
     });

@@ -58,8 +58,9 @@ public class DraftsService {
 	}
 	
 	public DraftResponse updateDraft(DraftRequest draftRequest) {
-		DraftSearchCriteria criteria = DraftSearchCriteria.builder().id(draftRequest.getDraft().getId()).build();
+		DraftSearchCriteria criteria = DraftSearchCriteria.builder().id(draftRequest.getDraft().getId()).tenantId(draftRequest.getDraft().getTenantId()).build();
 		DraftResponse response = searchDrafts(draftRequest.getRequestInfo(), criteria);
+		log.info("Response: "+response);
 		if(response.getDrafts().isEmpty()) {
 			throw new CustomException("INVALID_UPDATE_REQUEST", "Draft being updated doesn't belong to this user");
 		}
@@ -81,6 +82,7 @@ public class DraftsService {
 		draftSearchCriteria.setLimit(draftSearchCriteria.getLimit() > 0 ? draftSearchCriteria.getLimit() : 5);
 		draftSearchCriteria.setUserId(requestInfo.getUserInfo().getUuid());
 		draftSearchCriteria.setActive(true);
+		log.info("SearchCriteria: "+draftSearchCriteria);
 		List<Draft> drafts = null;
 
 		if (!isEmpty(draftSearchCriteria.getAssessmentNumber()))

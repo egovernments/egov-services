@@ -172,13 +172,13 @@ public class DemandService {
 	    }
 	    billRequest.setBills(bills);
 	    }
-	    return updateDemandFromBill(billRequest);
+	    return updateDemandFromBill(billRequest, false);
 	    
 	    
 	}
 	
 	
-	public DemandResponse updateDemandFromBill(BillRequest billRequest) {
+	public DemandResponse updateDemandFromBill(BillRequest billRequest, Boolean isReceiptCancellation) {
 	    
 		log.info("THE recieved bill request object------"+billRequest);
 	    if(billRequest !=null && billRequest.getBills()!=null){
@@ -244,9 +244,16 @@ public class DemandService {
 									BigDecimal collectedAmount = accountDetail.getCreditAmount();
 									log.info("the credit amt :" + collectedAmount);
 									//demandDetail.setTaxAmount(demandDetail.getTaxAmount().subtract(collectedAmount));
-									
-									demandDetail.setCollectionAmount(
-											demandDetail.getCollectionAmount().add(collectedAmount));
+									/*
+									 * If receipt cancellation is true, it will subtract the creditAmount from the collectionAmount
+									 */
+									if(isReceiptCancellation) {
+										demandDetail.setCollectionAmount(
+												demandDetail.getCollectionAmount().subtract(collectedAmount));
+									}else {
+										demandDetail.setCollectionAmount(
+												demandDetail.getCollectionAmount().add(collectedAmount));
+									}
 									log.info("the setTaxAmount ::: " + demandDetail.getTaxAmount());
 									log.info("the setCollectionAmount ::: " + demandDetail.getCollectionAmount());
 								}

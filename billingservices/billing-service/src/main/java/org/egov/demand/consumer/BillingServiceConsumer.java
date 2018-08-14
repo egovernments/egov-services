@@ -10,6 +10,7 @@ import org.egov.demand.model.DemandUpdateMisRequest;
 import org.egov.demand.model.enums.Status;
 import org.egov.demand.repository.BillRepository;
 import org.egov.demand.service.BusinessServDetailService;
+import org.egov.demand.service.DemandAdjustmentService;
 import org.egov.demand.service.DemandService;
 import org.egov.demand.service.GlCodeMasterService;
 import org.egov.demand.service.TaxHeadMasterService;
@@ -55,13 +56,16 @@ public class BillingServiceConsumer {
 
 	@Autowired
 	private BusinessServDetailService businessServDetailService;
+	
+	@Autowired
+	private DemandAdjustmentService demandAdjustmentService;
 
 
 	@KafkaListener(topics = { "${kafka.topics.receipt.update.collecteReceipt}","${kafka.topics.updateMIS.demand}","${kafka.topics.save.bill}", "${kafka.topics.update.bill}", "${kafka.topics.save.demand}",
 			"${kafka.topics.update.demand}" , "${kafka.topics.save.taxHeadMaster}","${kafka.topics.update.taxHeadMaster}",
 			"${kafka.topics.create.taxperiod.name}", "${kafka.topics.update.taxperiod.name}","${kafka.topics.save.glCodeMaster}",
 			"${kafka.topics.update.glCodeMaster}","${kafka.topics.receipt.update.demand}",
-			"${kafka.topics.create.businessservicedetail.name}", "${kafka.topics.update.businessservicedetail.name}"})
+			"${kafka.topics.create.businessservicedetail.name}", "${kafka.topics.update.businessservicedetail.name}", "${kafka.topics.receipt.cancel.name}"})
 	public void processMessage(Map<String, Object> consumerRecord, @Header(KafkaHeaders.RECEIVED_TOPIC) String topic) {
 		log.debug("key:" + topic + ":" + "value:" + consumerRecord);
 		
@@ -106,6 +110,10 @@ public class BillingServiceConsumer {
 			}
 			else if(applicationProperties.getSaveCollectedReceipts().equals(topic))
 				demandService.saveCollectedReceipts(objectMapper.convertValue(consumerRecord, BillRequest.class));
+			
+			else if(applicationProperties.getReceiptCancellationTopic().equals(topic)) {
+				demandAdjustmentService.adjustDemandOnReceiptCancellation(objectMapper.convertValue(consumerRecord, ReceiptRequest.class));
+			}
 			
 		} catch (Exception exception) {
 			log.debug("processMessage:" + exception);

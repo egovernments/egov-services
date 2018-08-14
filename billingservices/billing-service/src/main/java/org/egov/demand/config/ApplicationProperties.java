@@ -182,6 +182,9 @@ public class ApplicationProperties {
 	@Value("${bs.businessservicedetail.seq.name}")
 	private String businessServiceDetailSeqName;
 
+	@Value("${kafka.topics.receipt.cancel.name}")
+	private String receiptCancellationTopic;
+	
 	public String commonsSearchPageSizeDefault() {
 		return environment.getProperty(SEARCH_PAGESIZE_DEFAULT);
 	}

@@ -2,6 +2,7 @@ package org.egov.demand.model;
 
 import java.math.BigDecimal;
 
+import org.apache.commons.lang3.StringUtils;
 import org.egov.demand.model.enums.Purpose;
 
 import lombok.AllArgsConstructor;
@@ -40,4 +41,11 @@ public class BillAccountDetail {
 	private Boolean isActualDemand;
 
 	private Purpose purpose;
+	
+	public String getTaxHeadCode() {
+		if(!StringUtils.isEmpty(this.accountDescription))
+			return this.accountDescription.split("[-]")[0];
+		else
+			return null;
+	}
 }

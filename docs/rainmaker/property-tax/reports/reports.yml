@@ -136,7 +136,6 @@ ReportDefinitions:
   summary: Owner Based Exemption Report
   version: 1.0.0
   moduleName: rainmaker-pt
-  selectiveDownload: true
   externalService:
   - entity: $.MdmsRes.PropertyTax.OwnerType
     apiURL: http://egov-mdms-service:8080/egov-mdms-service/v1/_get?tenantId=pb.jalandhar&moduleName=PropertyTax&masterName=OwnerType
@@ -172,20 +171,21 @@ ReportDefinitions:
     label: reports.pt.fromDate
     type: epoch
     source: pt
-    isMandatory: false
+    isMandatory: true
+    searchClause: AND createdtime >= $fromDate
   - name: toDate
     label: reports.pt.toDate
     type: epoch
     source: pt
-    isMandatory: false
-  query: SELECT assessmentnumber, (SELECT exemption::jsonb ->> ('flatAmount') FROM (VALUES tbl_ownertype) AS ext_owner (code, exemption) WHERE ext_owner.code=ownertype) AS exemptionamount, (SELECT CONCAT(exemption::jsonb ->> ('rate'), '%') FROM (VALUES tbl_ownertype) AS ext_owner (code, exemption) WHERE ext_owner.code=ownertype) AS exemptionrate, ownertype, documenttype, documentuid FROM eg_pt_propertydetail_v2 AS a, eg_pt_document_owner_v2 AS b, eg_pt_owner_v2 AS c WHERE a.assessmentnumber = b.propertydetail AND a.assessmentnumber = c.propertydetail AND a.tenantid LIKE $tenantid AND a.createdtime >= $fromDate AND a.createdtime <= $toDate AND (SELECT exemption FROM (VALUES tbl_ownertype) AS ext_owner (code, exemption) WHERE ext_owner.code=ownertype) IS NOT NULL
+    isMandatory: true
+    searchClause: AND createdtime <= $toDate
+  query: SELECT assessmentnumber, (SELECT exemption::jsonb ->> ('flatAmount') FROM (VALUES tbl_ownertype) AS ext_owner (code, exemption) WHERE ext_owner.code=ownertype) AS exemptionamount, (SELECT CONCAT(exemption::jsonb ->> ('rate'), '%') FROM (VALUES tbl_ownertype) AS ext_owner (code, exemption) WHERE ext_owner.code=ownertype) AS exemptionrate, ownertype, documenttype, documentuid FROM eg_pt_propertydetail_v2 AS a, eg_pt_document_owner_v2 AS b, eg_pt_owner_v2 AS c WHERE a.assessmentnumber = b.propertydetail AND a.assessmentnumber = c.propertydetail AND a.tenantid LIKE $tenantid AND (SELECT exemption FROM (VALUES tbl_ownertype) AS ext_owner (code, exemption) WHERE ext_owner.code=ownertype) IS NOT NULL
 
 
 - reportName: UsageBasedExemptionReport
   summary: Usage Based Exemption Report
   version: 1.0.0
   moduleName: rainmaker-pt
-  selectiveDownload: true
   externalService:
   - entity: $.MdmsRes.PropertyTax.UsageCategorySubMinor
     apiURL: http://egov-mdms-service:8080/egov-mdms-service/v1/_get?tenantId=pb.jalandhar&moduleName=PropertyTax&masterName=UsageCategorySubMinor
@@ -213,17 +213,17 @@ ReportDefinitions:
     label: reports.pt.fromDate
     type: epoch
     source: pt
-    isMandatory: false
+    isMandatory: true
   - name: toDate
     label: reports.pt.toDate
     type: epoch
     source: pt
-    isMandatory: false
+    isMandatory: true
   query: SELECT propertydetail, (SELECT exemption::jsonb ->> ('flatAmount') FROM (VALUES tbl_usagetype) AS ext_usage (code, exemption) WHERE ext_usage.code=usagecategorysubminor) AS exemptionamount, (SELECT CONCAT(exemption::jsonb ->> ('rate'), '%') FROM (VALUES tbl_usagetype) AS ext_usage (code, exemption) WHERE ext_usage.code=usagecategorysubminor) AS exemptionrate, usagecategorysubminor FROM eg_pt_unit_v2 WHERE usagecategorysubminor IS NOT NULL AND tenantid LIKE $tenantid AND createdtime >= $fromDate AND createdtime <= $toDate AND (SELECT exemption FROM (VALUES tbl_usagetype) AS ext_usage (code, exemption) WHERE ext_usage.code=usagecategorysubminor) IS NOT NULL
 
 
-- reportName: AdhocChargesReport
-  summary: Adhoc Charges Report
+- reportName: AdditionalChargesReport
+  summary: Additional Charges Report
   version: 1.0.0
   moduleName: rainmaker-pt
   sourceColumns:
@@ -248,17 +248,17 @@ ReportDefinitions:
     label: reports.pt.fromDate
     type: epoch
     source: pt
-    isMandatory: false
+    isMandatory: true
   - name: toDate
     label: reports.pt.toDate
     type: epoch
     source: pt
-    isMandatory: false
+    isMandatory: true
   query: SELECT a.assessmentnumber as assessmentNo, a.adhocpenalty AS amount, a.adhocpenaltyreason AS reason, b.name AS name FROM eg_pt_propertydetail_v2 AS a, eg_user AS b WHERE a.createdby = b.uuid AND a.tenantid LIKE $tenantid AND a.adhocpenalty IS NOT NULL AND createdtime >= $fromDate AND createdtime <= $toDate
 
 
-- reportName: AdhocRebatesReport
-  summary: Adhoc Rebates Report
+- reportName: AdditionalRebatesReport
+  summary: Additional Rebates Report
   version: 1.0.0
   moduleName: rainmaker-pt
   sourceColumns:
@@ -283,12 +283,12 @@ ReportDefinitions:
     label: reports.pt.fromDate
     type: epoch
     source: pt
-    isMandatory: false
+    isMandatory: true
   - name: toDate
     label: reports.pt.toDate
     type: epoch
     source: pt
-    isMandatory: false
+    isMandatory: true
   query: SELECT a.assessmentnumber as assessmentNo, a.adhocexemption AS amount, a.adhocexemptionreason AS reason, b.name AS name FROM eg_pt_propertydetail_v2 AS a, eg_user AS b WHERE a.createdby = b.uuid AND a.tenantid LIKE $tenantid and a.adhocexemption IS NOT NULL AND createdtime >= $fromDate AND createdtime <= $toDate
 
 
@@ -296,6 +296,11 @@ ReportDefinitions:
   summary: ULB Wise Collection Report
   version: 1.0.0
   moduleName: rainmaker-pt
+  externalService:
+  - entity: $.MdmsRes.tenant.tenants
+    apiURL: http://egov-mdms-service:8080/egov-mdms-service/v1/_get?tenantId=pb.jalandhar&moduleName=tenant&masterName=tenants
+    keyOrder: code,name
+    tableName: tbl_ulb
   sourceColumns:
   - name: ulb
     label: reports.pt.ulb
@@ -326,5 +331,6 @@ ReportDefinitions:
     source: pt
     isMandatory: false
     searchClause: AND createdtime <= $toDate
-  query: SELECT tenantid AS "ulb", count(*)::VARCHAR AS "totalAssessments", sum(taxamount)::VARCHAR AS "totalAssessmentAmount", sum(collectionamount)::VARCHAR AS "totalCollectedAmount" FROM egbs_demanddetail WHERE tenantid LIKE 'pb.%'
-  groupBy: GROUP BY tenantid
+  query: SELECT (SELECT ulbmap.name FROM (VALUES tbl_ulb) AS ulbmap(code, name) WHERE ulbmap.code = tenantid) AS ulb, COUNT(*)::VARCHAR AS totalAssessments, SUM(taxamount)::VARCHAR AS totalAssessmentAmount, SUM(collectionamount)::VARCHAR AS totalCollectedAmount FROM egbs_demanddetail WHERE LEFT(tenantid, 3) = LEFT($tenantid, 3)
+  groupBy: GROUP BY ulb
+  orderBy: ORDER BY ulb

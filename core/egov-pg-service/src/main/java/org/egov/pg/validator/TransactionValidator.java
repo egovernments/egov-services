@@ -207,6 +207,18 @@ public class TransactionValidator {
                                             Transaction newTxn) {
 
         BigDecimal txnAmount = new BigDecimal(newTxn.getTxnAmount());
+        BigDecimal totalAmount = billDetail.getTotalAmount();
+
+        if(!isIntegerValue(txnAmount))
+            errorMap.put("INVALID_TXN_AMOUNT", "Transaction amount is invalid, cannot have fractions");
+
+        if(!isIntegerValue(totalAmount))
+            errorMap.put("INVALID_BILL_AMOUNT", "Bill amount is invalid, cannot have fractions");
+
+        if(txnAmount.compareTo(BigDecimal.ZERO) == 0 && totalAmount.compareTo(BigDecimal.ZERO) != 0)
+            errorMap.put("INVALID_TXN_AMOUNT", "Transaction amount cannot be zero unless bill to be paid is also zero");
+
+
         if (billDetail.getPartPaymentAllowed()) {
 
             if(txnAmount.compareTo(billDetail.getMinimumAmount()) < 0 ){
@@ -215,9 +227,9 @@ public class TransactionValidator {
                 errorMap.put("AMOUNT_MISMATCH", "Amount paid cannot be greater than bill amount");
             }
 
-            if (billDetail.getTotalAmount().compareTo(txnAmount) < 0) {
+            if (totalAmount.compareTo(txnAmount) < 0) {
                 log.error("Transaction Amount of {} cannot be greater than bill amount of {}", newTxn.getTxnAmount()
-                        , billDetail.getTotalAmount());
+                        , totalAmount);
                 errorMap.put("TXN_AMOUNT_MISMATCH", "Transaction Amount cannot be greater than bill amount");
             }
 
@@ -228,6 +240,10 @@ public class TransactionValidator {
                 errorMap.put("TXN_AMOUNT_MISMATCH", "Transaction Amount has to be equal to bill amount");
             }
         }
+    }
+
+    private boolean isIntegerValue(BigDecimal bd) {
+        return bd.signum() == 0 || bd.scale() <= 0 || bd.stripTrailingZeros().scale() <= 0;
     }
 
 }

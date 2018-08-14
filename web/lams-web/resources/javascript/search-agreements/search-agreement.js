@@ -72,7 +72,7 @@ class AgreementSearch extends React.Component {
             .responseJSON["Agreements"] || [];
         flag = 1;
         if (tempRes && tempRes.length) {
-          aggr.map((tempRes, i) => {
+          tempRes.map((item, i) => {
             if (item.status.toLowerCase() === "history") {
               delete tempRes[i];
             }

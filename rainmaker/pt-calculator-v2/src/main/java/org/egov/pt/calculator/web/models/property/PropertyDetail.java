@@ -1,7 +1,9 @@
 package org.egov.pt.calculator.web.models.property;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.validation.Valid;
@@ -100,7 +102,7 @@ public class PropertyDetail   {
 
         @JsonProperty("units")
         @Valid
-        private Set<Unit> units;
+        private List<Unit> units;
 
         @JsonProperty("documents")
         @Valid
@@ -197,7 +199,7 @@ public class PropertyDetail   {
 
         public PropertyDetail addUnitsItem(Unit unitsItem) {
             if (this.units == null) {
-            this.units = new HashSet<>();
+            this.units = new ArrayList<>();
             }
         this.units.add(unitsItem);
         return this;

@@ -9,6 +9,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 
 import lombok.*;
 import org.springframework.validation.annotation.Validated;
@@ -51,7 +52,7 @@ public class User   {
         private String gender;
 
         @NotNull
-        @Pattern(regexp = "[0-9]*", message = "MobileNumber has invalid Number")
+        @Pattern(regexp = "^[0-9]{10}$", message = "MobileNumber should be 10 digit number")
         @JsonProperty("mobileNumber")
         private String mobileNumber;
 
@@ -64,7 +65,7 @@ public class User   {
         @JsonProperty("pan")
         private String pan;
 
-        @Digits(integer = 12,fraction=0)
+        @Pattern(regexp = "^[0-9]{12}$", message = "AdharNumber should be 12 digit number")
         @JsonProperty("aadhaarNumber")
         private String aadhaarNumber;
 

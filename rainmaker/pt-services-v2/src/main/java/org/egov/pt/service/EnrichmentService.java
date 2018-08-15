@@ -117,7 +117,7 @@ public class EnrichmentService {
                 if (propertyDetail.getAssessmentNumber() == null)
                     propertyDetail.setAssessmentNumber(UUID.randomUUID().toString());
                 Set<Document> documents = propertyDetail.getDocuments();
-                Set<Unit> units=propertyDetail.getUnits();
+                List<Unit> units=propertyDetail.getUnits();
 
                 if(documents!=null && !documents.isEmpty()){
                     documents.forEach(document ->{
@@ -172,10 +172,10 @@ public class EnrichmentService {
 
         Map<String,String> errorMap = new HashMap<>();
         if(acknowledgementNumbers.size()!=request.getProperties().size()){
-            errorMap.put("IdGen ERROR ","The number of acknowledgementNumbers returned by idgen is not equal to number of properties");
+            errorMap.put("IDGEN ERROR ","The number of acknowledgementNumbers returned by idgen is not equal to number of properties");
         }
         if(propertyIds.size()!=request.getProperties().size()){
-            errorMap.put("IdGen ERROR ","The number of propertyIds returned by idgen is not equal to number of properties");
+            errorMap.put("IDGEN ERROR ","The number of propertyIds returned by idgen is not equal to number of properties");
         }
 
         if(!errorMap.isEmpty())

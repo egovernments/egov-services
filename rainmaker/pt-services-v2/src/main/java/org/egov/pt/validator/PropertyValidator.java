@@ -133,15 +133,15 @@ public class PropertyValidator {
             property.getPropertyDetails().forEach(propertyDetail -> {
 
                 if(!codes.get(PTConstants.MDMS_PT_PROPERTYTYPE).contains(propertyDetail.getPropertyType()) && propertyDetail.getPropertyType()!=null){
-                    errorMap.put("Invalid PropertyType","The PropertyType '"+propertyDetail.getPropertyType()+"' does not exists");
+                    errorMap.put("Invalid PROPERTYTYPE","The PropertyType '"+propertyDetail.getPropertyType()+"' does not exists");
                 }
 
                 if(!codes.get(PTConstants.MDMS_PT_SUBOWNERSHIP).contains(propertyDetail.getSubOwnershipCategory()) && propertyDetail.getSubOwnershipCategory()!=null){
-                    errorMap.put("Invalid SubOwnershipCategory","The SubOwnershipCategory '"+propertyDetail.getSubOwnershipCategory()+"' does not exists");
+                    errorMap.put("Invalid SUBOWNERSHIPCATEGORY","The SubOwnershipCategory '"+propertyDetail.getSubOwnershipCategory()+"' does not exists");
                 }
 
                 if(!codes.get(PTConstants.MDMS_PT_OWNERSHIP).contains(propertyDetail.getOwnershipCategory()) && propertyDetail.getOwnershipCategory()!=null){
-                    errorMap.put("Invalid OwnershipCategory","The OwnershipCategory '"+propertyDetail.getOwnershipCategory()+"' does not exists");
+                    errorMap.put("Invalid OWNERSHIPCATEGORY","The OwnershipCategory '"+propertyDetail.getOwnershipCategory()+"' does not exists");
                 }
 
                 if(!codes.get(PTConstants.MDMS_PT_PROPERTYSUBTYPE).contains(propertyDetail.getPropertySubType()) && propertyDetail.getPropertySubType()!=null){
@@ -149,37 +149,37 @@ public class PropertyValidator {
                 }
 
                 if(!codes.get(PTConstants.MDMS_PT_USAGEMAJOR).contains(propertyDetail.getUsageCategoryMajor()) && propertyDetail.getUsageCategoryMajor()!=null){
-                    errorMap.put("Invalid UsageCategoryMajor","The UsageCategoryMajor '"+propertyDetail.getUsageCategoryMajor()+"' at Property level does not exists");
+                    errorMap.put("INVALID USAGECATEGORYMAJOR","The UsageCategoryMajor '"+propertyDetail.getUsageCategoryMajor()+"' at Property level does not exists");
                 }
 
                 if(!CollectionUtils.isEmpty(propertyDetail.getUnits()))
                     propertyDetail.getUnits().forEach(unit ->{
                         if(!codes.get(PTConstants.MDMS_PT_USAGEMAJOR).contains(unit.getUsageCategoryMajor()) && unit.getUsageCategoryMajor()!=null){
-                            errorMap.put("Invalid UsageCategoryMajor","The UsageCategoryMajor '"+unit.getUsageCategoryMajor()+"' at unit level does not exists");
+                            errorMap.put("INVALID USAGECATEGORYMAJOR","The UsageCategoryMajor '"+unit.getUsageCategoryMajor()+"' at unit level does not exists");
                         }
 
                         if(!codes.get(PTConstants.MDMS_PT_USAGEMINOR).contains(unit.getUsageCategoryMinor()) && unit.getUsageCategoryMinor()!=null){
-                            errorMap.put("Invalid UsageCategoryMinor","The UsageCategoryMinor '"+unit.getUsageCategoryMinor()+"' does not exists");
+                            errorMap.put("INVALID USAGECATEGORYMINOR","The UsageCategoryMinor '"+unit.getUsageCategoryMinor()+"' does not exists");
                         }
 
                         if(!codes.get(PTConstants.MDMS_PT_USAGESUBMINOR).contains(unit.getUsageCategorySubMinor()) && unit.getUsageCategorySubMinor()!=null){
-                            errorMap.put("Invalid UsageCategorySubMinor","The UsageCategorySubMinor '"+unit.getUsageCategorySubMinor()+"' does not exists");
+                            errorMap.put("INVALID USAGECATEGORYSUBMINOR","The UsageCategorySubMinor '"+unit.getUsageCategorySubMinor()+"' does not exists");
                         }
 
                         if(!codes.get(PTConstants.MDMS_PT_USAGEDETAIL).contains(unit.getUsageCategoryDetail()) && unit.getUsageCategoryDetail()!=null){
-                            errorMap.put("Invalid UsageCategoryDetail","The UsageCategoryDetail "+unit.getUsageCategoryDetail()+" does not exists");
+                            errorMap.put("INVALID USAGECATEGORYDETAIL","The UsageCategoryDetail "+unit.getUsageCategoryDetail()+" does not exists");
                         }
 
                         if(!codes.get(PTConstants.MDMS_PT_CONSTRUCTIONTYPE).contains(unit.getConstructionType()) && unit.getConstructionType()!=null){
-                            errorMap.put("Invalid ConstructionType","The ConstructionType '"+unit.getConstructionType()+"' does not exists");
+                            errorMap.put("INVALID CONSTRUCTIONTYPE","The ConstructionType '"+unit.getConstructionType()+"' does not exists");
                         }
 
                         if(!codes.get(PTConstants.MDMS_PT_CONSTRUCTIONSUBTYPE).contains(unit.getConstructionSubType()) && unit.getConstructionSubType()!=null){
-                            errorMap.put("Invalid ConstructionSubType","The ConstructionSubType '"+unit.getConstructionSubType()+"' does not exists");
+                            errorMap.put("INVALID CONSTRUCTIONSUBTYPE","The ConstructionSubType '"+unit.getConstructionSubType()+"' does not exists");
                         }
 
                         if(!codes.get(PTConstants.MDMS_PT_OCCUPANCYTYPE).contains(unit.getOccupancyType()) && unit.getOccupancyType()!=null){
-                            errorMap.put("Invalid OccupancyType","The OccupancyType '"+unit.getOccupancyType()+"' does not exists");
+                            errorMap.put("INVALID OCCUPANCYTYPE","The OccupancyType '"+unit.getOccupancyType()+"' does not exists");
                         }
 
                         if("RENTED".equalsIgnoreCase(unit.getOccupancyType())){
@@ -190,7 +190,7 @@ public class PropertyValidator {
 
                 propertyDetail.getOwners().forEach(owner ->{
                     if(!codes.get(PTConstants.MDMS_PT_OWNERTYPE).contains(owner.getOwnerType()) && owner.getOwnerType()!=null){
-                        errorMap.put("Invalid OwnerType","The OwnerType '"+owner.getOwnerType()+"' does not exists");
+                        errorMap.put("INVALID OWNERTYPE","The OwnerType '"+owner.getOwnerType()+"' does not exists");
                     }
                 });
             });
@@ -210,7 +210,7 @@ public class PropertyValidator {
         Map<String,String> errorMap = new HashMap<>();
         for(String masterName:masterNames){
             if(CollectionUtils.isEmpty(codes.get(masterName))){
-                errorMap.put("MDMS data Error ","Unable to fetch "+masterName+" codes from MDMS");
+                errorMap.put("MDMS DATA ERROR ","Unable to fetch "+masterName+" codes from MDMS");
             }
         }
         if (!errorMap.isEmpty())
@@ -331,9 +331,9 @@ public class PropertyValidator {
      * @param propertyDetail PropertyDetail whose unit ids are to be returned
      * @return Set of all unitids of a propertyDetail
      */
-    private Set<String> getUnitids(PropertyDetail propertyDetail){
-        Set<Unit> units= propertyDetail.getUnits();
-        Set<String> unitIds = new HashSet<>();
+    private List<String> getUnitids(PropertyDetail propertyDetail){
+        List<Unit> units= propertyDetail.getUnits();
+        List<String> unitIds = new ArrayList<>();
         units.forEach(unit -> {
             if(unit.getId()!=null)
                 unitIds.add(unit.getId());
@@ -406,7 +406,7 @@ public class PropertyValidator {
                             Map<String,List<String>> years = getAttributeValues(tenantId.split("\\.")[0],PTConstants.MDMS_PT_EGF_MASTER,Arrays.asList("FinancialYear"),filter,PTConstants.JSONPATH_FINANCIALYEAR,requestInfo);
                             if(!years.get(PTConstants.MDMS_PT_FINANCIALYEAR).contains(propertyDetail.getFinancialYear()))
                             {
-                                errorMap.put("Invalid FinancialYear","The finacialYear '"+propertyDetail.getFinancialYear()+"' is not valid");
+                                errorMap.put("INVALID FINANCIALYEAR","The finacialYear '"+propertyDetail.getFinancialYear()+"' is not valid");
                             }
                         }
                 ));
@@ -435,7 +435,7 @@ public class PropertyValidator {
                 else if(!propertyDetail.getOwnershipCategory().contains("INSTITUTIONAL") && propertyDetail.getInstitution()!=null){
                     if(propertyDetail.getInstitution().getType()!=null || propertyDetail.getInstitution().getName()!=null
                             || propertyDetail.getInstitution().getDesignation()!=null)
-                        errorMap.put(" INVALID INSTITUTION OBJECT ","The institution object should be null. OwnershipCategory does not contain Institutional");
+                        errorMap.put("INVALID INSTITUTION OBJECT","The institution object should be null. OwnershipCategory does not contain Institutional");
                 }
             });
         });

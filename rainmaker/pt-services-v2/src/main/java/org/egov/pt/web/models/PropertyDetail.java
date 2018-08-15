@@ -1,8 +1,7 @@
 package org.egov.pt.web.models;
 
 import java.math.BigDecimal;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
@@ -97,7 +96,7 @@ public class PropertyDetail   {
         private Float buildUpArea;
 
         @JsonProperty("units")
-        private Set<Unit> units;
+        private List<Unit> units;
 
         @JsonProperty("documents")
         @Valid
@@ -201,9 +200,10 @@ public class PropertyDetail   {
 
         public PropertyDetail addUnitsItem(Unit unitsItem) {
             if (this.units == null) {
-            this.units = new HashSet<>();
+            this.units = new ArrayList<>();
             }
-        this.units.add(unitsItem);
+            if(!this.units.contains(unitsItem))
+                this.units.add(unitsItem);
         return this;
         }
 

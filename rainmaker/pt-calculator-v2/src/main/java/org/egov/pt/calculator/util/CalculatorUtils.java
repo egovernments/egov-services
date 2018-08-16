@@ -129,6 +129,22 @@ public class CalculatorUtils {
 	}
 	
 	/**
+	 * Returns the Receipt search Url with tenantId and cosumerCode service name
+	 * parameters
+	 * 
+	 * @param tenantId
+	 * @return
+	 */
+	public StringBuilder getReceiptSearchUrl(String tenantId, String consumerCode) {
+
+		return new StringBuilder().append(configurations.getCollectionServiceHost())
+				.append(configurations.getReceiptSearchEndpoint()).append(CalculatorConstants.URL_PARAMS_SEPARATER)
+				.append(CalculatorConstants.TENANT_ID_FIELD_FOR_SEARCH_URL).append(tenantId)
+				.append(CalculatorConstants.SEPARATER).append(CalculatorConstants.CONSUMER_CODE_SEARCH_FIELD_NAME)
+				.append(consumerCode);
+	}
+	
+	/**
 	 * method to create demandsearch url with demand criteria
 	 * 
 	 * @param criteria

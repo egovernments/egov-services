@@ -50,9 +50,16 @@ public class Configurations {
 	@Value("${egov.bill.gen.endpoint}")
 	private String billGenEndPoint;
 
+	// Collections service
+	
+	@Value("${egov.collectionservice.host}")
+	private String collectionServiceHost;
+	
+	@Value("${egov.receipt.search.endpoint}")
+	private String	ReceiptSearchEndpoint;
 	
 	// billing slab configs
-	
+		
 	@Value("${billingslab.value.all}")
 	private String slabValueAll;
 	

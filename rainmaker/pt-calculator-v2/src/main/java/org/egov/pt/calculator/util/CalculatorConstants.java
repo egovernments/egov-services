@@ -47,6 +47,8 @@ public class CalculatorConstants {
 	public static final String PT_DECIMAL_CEILING_CREDIT = "PT_DECIMAL_CEILING_CREDIT";
 	
 	public static final String PT_DECIMAL_CEILING_DEBIT = "PT_DECIMAL_CEILING_DEBIT";
+	
+	public static final String RECEIPT_STATUS_APPROVED = "APPROVED";
 
 	public static final List<String> TAXES_TO_BE_CONSIDERD_WHEN_CALUCLATING_REBATE_AND_PENALTY = Collections.unmodifiableList(Arrays
 			.asList(PT_TAX));
@@ -157,7 +159,7 @@ public class CalculatorConstants {
 	public static final String TENANT_ID_FIELD_FOR_SEARCH_URL = "tenantId=";
 
 	public static final String SERVICE_FIELD_FOR_SEARCH_URL = "service=";
-
+	
 	public static final String BUSINESSSERVICE_FIELD_FOR_SEARCH_URL = "businessService=";
 
 	public static final String SERVICE_FIELD_VALUE_PT = "PT";

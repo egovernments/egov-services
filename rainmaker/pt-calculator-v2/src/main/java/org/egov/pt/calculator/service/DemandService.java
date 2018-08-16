@@ -74,6 +74,9 @@ public class DemandService {
 
 	@Autowired
 	private MasterDataService mstrDataService;
+	
+	@Autowired
+	private ReceiptService rcptService;
 
 	/**
 	 * Generates and persists the demand to billing service for the given property
@@ -90,7 +93,7 @@ public class DemandService {
 		List<CalculationCriteria> criterias = request.getCalculationCriteria();
 		List<Demand> demands = new ArrayList<>();
 		List<String> lesserAssessments = new ArrayList<>();
-		Map<String, String> consumerCodeFinYearMap = new HashMap<String, String>();
+		Map<String, String> consumerCodeFinYearMap = new HashMap<>();
 		
 		Map<String, Calculation> propertyCalculationMap = estimationService.getEstimationPropertyMap(request);
 		for (CalculationCriteria criteria : criterias) {
@@ -300,7 +303,7 @@ public class DemandService {
 		boolean isCurrentDemand = false;
 		String tenantId = demand.getTenantId();
 		String demandId = demand.getId();
-		Long lastCollectedTime = 0l;
+		Long lastCollectedTime = rcptService.getInterestLatestCollectedTime(demand, requestInfoWrapper);
 		
 		BigDecimal taxAmtForApplicableGeneration = utils.getTaxAmtFromDemandForApplicablesGeneration(demand);
 		BigDecimal totalTax = taxAmtForApplicableGeneration.add(utils.getTaxAmtFromDemandForAdditonalTaxes(demand));
@@ -313,13 +316,8 @@ public class DemandService {
 			totalCollectedAmount = totalCollectedAmount.add(detail.getCollectionAmount());
 			if (detail.getTaxHeadMasterCode().equalsIgnoreCase(CalculatorConstants.PT_TAX))
 				collectedApplicableAmount = collectedApplicableAmount.add(detail.getCollectionAmount());
-			if (detail.getTaxHeadMasterCode().equalsIgnoreCase(CalculatorConstants.PT_TIME_INTEREST)) {
-				oldInterest = detail.getTaxAmount();
-				if (detail.getCollectionAmount().doubleValue() > 0.0)
-					lastCollectedTime = detail.getAuditDetail().getLastModifiedTime();
-			}
 		}
-
+		
 		boolean isRebateUpdated = false;
 		boolean isPenaltyUpdated = false;
 		boolean isInterestUpdated = false;

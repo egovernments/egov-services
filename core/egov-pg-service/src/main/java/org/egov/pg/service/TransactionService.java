@@ -82,6 +82,7 @@ public class TransactionService {
                 .build();
 
         if(validator.skipGateway(transaction)){
+            transaction.setTxnStatus(Transaction.TxnStatusEnum.SUCCESS);
             generateReceipt(requestInfo, transaction);
         }
         else{

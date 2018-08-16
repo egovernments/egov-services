@@ -161,8 +161,7 @@ public class ReceiptController {
 
     @RequestMapping(value = "/_create", method = RequestMethod.POST)
     @ResponseBody
-    public ResponseEntity<ReceiptRes> create(@RequestBody ReceiptReq receiptRequest, BindingResult errors) {
-        log.info("Request: " + receiptRequest.toString());
+    public ResponseEntity<ReceiptRes> create(@RequestBody ReceiptReq receiptRequest) {
         Receipt receiptInfo = collectionService.createReceipt(receiptRequest);
 
         return getSuccessResponse(Collections.singletonList(receiptInfo), receiptRequest.getRequestInfo());

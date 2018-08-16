@@ -93,8 +93,10 @@ public class EstimationService {
 		Map<String, String> error = new HashMap<>();
 		boolean isLandProperty = PT_TYPE_VACANT_LAND.equalsIgnoreCase(detail.getPropertyType());
 
+		// error throw removed to accomodate flat/shared building problem arising from allowing multi units suddenly in screen
 		if (null == detail.getLandArea() && null == detail.getBuildUpArea())
-			error.put(PT_ESTIMATE_AREA_NULL, PT_ESTIMATE_AREA_NULL_MSG);
+			detail.setBuildUpArea(detail.getUnits().stream().filter(
+					unit -> unit.getFloorNo().equals("0")).mapToDouble(Unit::getUnitArea).sum());
 
 		if (isLandProperty && null == detail.getLandArea())
 			error.put(PT_ESTIMATE_VACANT_LAND_NULL, PT_ESTIMATE_VACANT_LAND_NULL_MSG);

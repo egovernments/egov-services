@@ -234,7 +234,7 @@ public class MasterDataService {
 		else {
 			currentApplicable = applicableAmount.multiply(rate.divide(CalculatorConstants.HUNDRED));
 
-			if (null != maxAmt && currentApplicable.compareTo(maxAmt) > 0)
+			if (null != maxAmt && BigDecimal.ZERO.compareTo(maxAmt) < 0 && currentApplicable.compareTo(maxAmt) > 0)
 				currentApplicable = maxAmt;
 			else if (null != minAmt && currentApplicable.compareTo(minAmt) < 0)
 				currentApplicable = minAmt;

@@ -232,5 +232,8 @@ public class CalculatorConstants {
 	
 	public static final String PT_GET_BILL_ARREAR_DEMAND = "PT_GET_BILL_ARREAR_DEMAND";
 	public static final String PT_GET_BILL_ARREAR_DEMAND_MSG = " Partial Payment is not allowed for arrear payments, please make the complete payment";
+	
+	public static final String EG_PT_ESTIMATE_ARV_NULL = "EG_PT_ESTIMATE_ARV_NULL";
+	public static final String EG_PT_ESTIMATE_ARV_NULL_MSG = " Arv field is required for Commercial plus Rented properties";
 
 }

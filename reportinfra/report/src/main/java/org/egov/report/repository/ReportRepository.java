@@ -30,7 +30,8 @@ public class ReportRepository {
   public static final Logger LOGGER = LoggerFactory.getLogger(ReportRepository.class);
   
   public List<Map<String, Object>> getData(ReportRequest reportRequest, ReportDefinition reportDefinition,String authToken) {
-    String query = reportQueryBuilder.buildQuery(reportRequest.getSearchParams(),reportRequest.getTenantId(),reportDefinition,authToken);
+    Long userId = reportRequest.getRequestInfo().getUserInfo() == null ? null : reportRequest.getRequestInfo().getUserInfo().getId();
+    String query = reportQueryBuilder.buildQuery(reportRequest.getSearchParams(),reportRequest.getTenantId(),reportDefinition,authToken, userId);
     Long startTime = new Date().getTime();
     List<Map<String, Object>> maps = null;
     LOGGER.info("final query:"+query);

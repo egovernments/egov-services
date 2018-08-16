@@ -54,7 +54,7 @@ public class ReportQueryBuilder {
 		 
 	public static final Logger LOGGER = LoggerFactory.getLogger(ReportQueryBuilder.class);
 	   
-	public String buildQuery(List<SearchParam> searchParams, String tenantId, ReportDefinition reportDefinition,String authToken) {
+	public String buildQuery(List<SearchParam> searchParams, String tenantId, ReportDefinition reportDefinition,String authToken, Long userId) {
 		
 		String baseQuery = null;
 		
@@ -80,7 +80,11 @@ public class ReportQueryBuilder {
 			}
 		
 		baseQuery = baseQuery.replaceAll("\\$tenantid","'"+tenantId+"'");
-		
+
+		if (reportDefinition.getModuleName().equalsIgnoreCase("rainmaker-pgr")) {
+			baseQuery = baseQuery.replaceAll("\\$userid", "'" + userId + "'");
+		}
+
 		for(SearchParam searchParam : searchParams){
 				
 			Object value = searchParam.getInput();

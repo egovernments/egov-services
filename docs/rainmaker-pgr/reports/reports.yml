@@ -16,7 +16,6 @@ ReportDefinitions:
     label: reports.rainmaker-pgr.counter_desktop
     type: number
     source: eg_pgr_service
-   
   searchParams: 
   - name: tenantId
     label: reports.rainmaker-pgr.tenantId
@@ -36,3 +35,104 @@ ReportDefinitions:
     isMandatory: true
   query: SELECT sum(case when source = 'mobileapp' then 1 else 0 end) as citizen_mobile_app, sum(case when source = 'web' then 1 else 0 end) as citizen_web_app, sum(case when source = 'ivr' then 1 else 0 end) as counter_desktop FROM eg_pgr_service WHERE tenantid = $tenantid
 
+- reportName: DescriptionReport
+  summary: Fetches department wise reports based description of the complaint
+  version: 1.0.0
+  moduleName: rainmaker-pgr
+  externalService:
+  - entity: $.MdmsRes.RAINMAKER-PGR.ServiceDefs
+    apiURL: https://egov-micro-dev.egovernments.org/egov-mdms-service/v1/_get?moduleName=RAINMAKER-PGR&masterName=ServiceDefs&tenantId=$tenantId
+    keyOrder: servicecode,department
+    tableName: tbl_dept
+  sourceColumns:
+  - name: complaintNo
+    label: reports.rainmaker-pgr.complaintNo
+    type: string
+    source: eg_pgr_service
+  - name: phone
+    label: reports.rainmaker-pgr.phone
+    type: number
+    source: eg_pgr_service
+  - name: complaintNature
+    label: reports.rainmaker-pgr.complaintNature
+    type: string
+    source: eg_pgr_service
+  - name: description
+    label: reports.rainmaker-pgr.description
+    type: string
+    source: eg_pgr_service
+  searchParams:
+  - name: fromDate
+    label: reports.rainmaker-pgr.datefrom
+    type: epoch
+    source: eg_pgr_service
+    isMandatory: false
+    searchClause: AND createdtime >= $fromDate
+  - name: toDate
+    label: reports.rainmaker-pgr.dateto
+    type: epoch
+    source: eg_pgr_service
+    isMandatory: false
+    searchClause: AND createdtime <= $toDate
+  - name: deptName
+    label: reports.rainmaker-pgr.deptName
+    type: singlevaluelist
+    pattern: https://egov-micro-dev.egovernments.org/egov-mdms-service/v1/_get?moduleName=RAINMAKER-PGR&masterName=ServiceDefs&tenantId=$tenantid|$..serviceCode|$..department
+    source: rainmaker-pgr
+    wrapper: true
+    isMandatory: false
+    searchClause : AND servicecode = $deptName
+  query: SELECT servicerequestid as complaintNo, phone, servicecode as complaintNature, description FROM eg_pgr_service WHERE tenantid LIKE $tenantid
+
+- reportName: EmployeeReport
+  summary: Fetches complaints for employees
+  version: 1.0.0
+  moduleName: rainmaker-pgr
+  externalService:
+  - entity: $.MdmsRes.RAINMAKER-PGR.ServiceDefs
+    apiURL: https://egov-micro-dev.egovernments.org/egov-mdms-service/v1/_get?moduleName=RAINMAKER-PGR&masterName=ServiceDefs&tenantId=$tenantId
+    keyOrder: servicecode,department
+    tableName: tbl_dept
+  sourceColumns:
+  - name: complaintNo
+    label: reports.rainmaker-pgr.complaintNo
+    type: string
+    source: eg_pgr_service
+  - name: complaintNature
+    label: reports.rainmaker-pgr.complaintNature
+    type: string
+    source: eg_pgr_service
+  - name: citizenName
+    label: reports.rainmaker-pgr.citizenName
+    type: string
+    source: eg_user
+  - name: phone
+    label: reports.rainmaker-pgr.phone
+    type: number
+    source: eg_pgr_service
+  - name: address
+    label: reports.rainmaker-pgr.address
+    type: number
+    source: eg_pgr_service
+  - name: landmark
+    label: reports.rainmaker-pgr.landmark
+    type: number
+    source: eg_pgr_service
+  - name: description
+    label: reports.rainmaker-pgr.description
+    type: string
+    source: eg_pgr_service
+  searchParams:
+  - name: fromDate
+    label: reports.rainmaker-pgr.datefrom
+    type: epoch
+    source: eg_pgr_service
+    isMandatory: false
+    searchClause: AND createdtime >= $fromDate
+  - name: toDate
+    label: reports.rainmaker-pgr.dateto
+    type: epoch
+    source: eg_pgr_service
+    isMandatory: false
+    searchClause: AND createdtime <= $toDate
+  query: SELECT servicerequestid as complaintNo, servicecode as complaintNature, eg_user.name as citizenName, eg_user.mobilenumber as phone, address, landmark, description FROM eg_pgr_service INNER JOIN eg_user ON eg_pgr_service.accountid = cast(eg_user.id as varchar) WHERE eg_pgr_service.status = 'assigned' AND servicerequestid IN (select DISTINCT businesskey from eg_pgr_action where status = 'assigned' AND "when" IN (select max("when") from eg_pgr_action where assignee NOTNULL group by businesskey) AND assignee = $userid)

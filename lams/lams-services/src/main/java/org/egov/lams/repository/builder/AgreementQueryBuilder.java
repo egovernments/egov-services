@@ -39,6 +39,14 @@ public class AgreementQueryBuilder {
         return selectQuery.toString();
     }
 
+    public static String getAgreementByAgreementNoQuery(AgreementCriteria agreementsModel,
+                                                 @SuppressWarnings("rawtypes") Map params) {
+        StringBuilder selectQuery = new StringBuilder(BASE_SEARCH_QUERY);
+        appendSearchParams(agreementsModel, params, selectQuery);
+        appendLimitAndOffset(agreementsModel, params, selectQuery);
+        return selectQuery.toString();
+    }
+
     public static String getAgreementQuery(AgreementCriteria agreementsModel,
                                                  @SuppressWarnings("rawtypes") Map params) {
         StringBuilder selectQuery = new StringBuilder(BASE_SEARCH_QUERY);
@@ -67,7 +75,7 @@ public class AgreementQueryBuilder {
             selectQuery.append(" and AGREEMENT.STATUS = :status");
             params.put("status", agreementsModel.getStatus().toString());
         } else {
-            selectQuery.append(" and AGREEMENT.STATUS IN ('ACTIVE','WORKFLOW','RENEWED','REJECTED','HISTORY')");
+            selectQuery.append(" and AGREEMENT.STATUS IN ('ACTIVE','WORKFLOW','RENEWED','REJECTED')");
         }
 
         if (agreementsModel.getTenantId() != null) {
@@ -136,6 +144,25 @@ public class AgreementQueryBuilder {
         } else if ((agreementsModel.getFromDate() != null && agreementsModel.getToDate() == null) ||
                 (agreementsModel.getToDate() != null && agreementsModel.getFromDate() == null))
             throw new RuntimeException("Invalid date Range, please enter Both fromDate and toDate");
+
+    }
+
+    @SuppressWarnings("unchecked")
+    private static void appendSearchParams(AgreementCriteria agreementsModel,
+                                     @SuppressWarnings("rawtypes") Map params, StringBuilder selectQuery) {
+
+        selectQuery.append(" WHERE agreement.id is not null");
+
+        if (agreementsModel.getAgreementNumber() != null) {
+            selectQuery.append(" and AGREEMENT.AGREEMENT_NO = :agreementNumber");
+            params.put("agreementNumber", agreementsModel.getAgreementNumber());
+        }
+            selectQuery.append(" and AGREEMENT.STATUS IN ('ACTIVE','WORKFLOW','RENEWED','REJECTED','HISTORY')");
+
+        if (agreementsModel.getTenantId() != null) {
+            selectQuery.append(" and AGREEMENT.TENANT_ID = :tenantId");
+            params.put("tenantId", agreementsModel.getTenantId());
+        }
 
     }
 

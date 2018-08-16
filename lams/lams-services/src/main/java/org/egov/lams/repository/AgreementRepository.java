@@ -255,7 +255,7 @@ public class AgreementRepository {
         final Map<String, Object> parameter = new HashMap<>();
         List<Agreement> agreements = new ArrayList<>();
         List<Agreement> agreementList = null;
-        final String mainQuery = AgreementQueryBuilder.getAgreementSearchQuery(agreementCriteria, params);
+        final String mainQuery = AgreementQueryBuilder.getAgreementByAgreementNoQuery(agreementCriteria, params);
         agreementList = namedParameterJdbcTemplate.query(mainQuery, params, new AgreementRowMapper());
 
 

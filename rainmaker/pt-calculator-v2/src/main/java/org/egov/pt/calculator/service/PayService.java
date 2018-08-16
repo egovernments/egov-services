@@ -55,7 +55,7 @@ public class PayService {
 
 		Map<String, BigDecimal> estimates = new HashMap<>();
 
-		BigDecimal rebate = BigDecimal.ZERO.compareTo(collectedPtTax) <= 0 ? getRebate(taxAmt, assessmentYear,
+		BigDecimal rebate = BigDecimal.ZERO.compareTo(collectedPtTax) == 0 ? getRebate(taxAmt, assessmentYear,
 				timeBasedExmeptionMasterMap.get(CalculatorConstants.REBATE_MASTER)) : BigDecimal.ZERO;
 
 		BigDecimal penalty = BigDecimal.ZERO;

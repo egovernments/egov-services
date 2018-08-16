@@ -11,7 +11,7 @@ class TransactionQueryBuilder {
             ".mobile_number, pg.email_id, pg.name, pg.user_tenant_id, pg.tenant_id, pg.gateway_txn_id, pg.gateway_payment_mode, " +
             "pg.gateway_status_code, pg.gateway_status_msg, pg.receipt,  pg.created_by, pg.created_time, pg" +
             ".last_modified_by, pg.last_modified_time " +
-            "FROM eg_pg_transactions pg order by pg.created_time";
+            "FROM eg_pg_transactions pg ";
 
     private TransactionQueryBuilder() {
     }
@@ -106,6 +106,8 @@ class TransactionQueryBuilder {
                     builder.append(" AND ");
             }
         }
+
+        builder.append(" order by pg.created_time ");
 
         if (transactionCriteria.getLimit() > 0) {
             builder.append(" limit ? ");

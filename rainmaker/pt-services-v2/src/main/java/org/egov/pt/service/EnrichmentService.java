@@ -287,7 +287,37 @@ public class EnrichmentService {
      * @param request The propertyRequest received for create or update
      */
     public void enrichBoundary(PropertyRequest request){
-        boundaryService.getAreaType(request,PTConstants.BOUNDARY_HEIRARCHY_CODE);
+        List<PropertyRequest> requests = getRequestByTenantId(request);
+        requests.forEach(tenantWiseRequest -> {
+        boundaryService.getAreaType(tenantWiseRequest,PTConstants.BOUNDARY_HEIRARCHY_CODE);
+        });
+    }
+
+    /**
+     * From single Request with multiple tenantIds returns List of PropertyRequests grouped together by tenantId
+     * @param request PropertyRequest received from search
+     * @return List of PropertyRequest grouped by tenantId
+     */
+    private List<PropertyRequest> getRequestByTenantId(PropertyRequest request){
+        List<Property> properties = request.getProperties();
+        RequestInfo requestInfo = request.getRequestInfo();
+
+        Map<String,List<Property>> tenantIdToProperties = new HashMap<>();
+        if(!CollectionUtils.isEmpty(properties)){
+            properties.forEach(property -> {
+                if(tenantIdToProperties.containsKey(property.getTenantId()))
+                    tenantIdToProperties.get(property.getTenantId()).add(property);
+                else{
+                    tenantIdToProperties.put(property.getTenantId(),new ArrayList<>());
+                }
+            });
+        }
+        List<PropertyRequest> requests = new LinkedList<>();
+
+       tenantIdToProperties.forEach((key,value)-> {
+           requests.add(new PropertyRequest(requestInfo,value));
+       });
+       return requests;
     }
 
     /**

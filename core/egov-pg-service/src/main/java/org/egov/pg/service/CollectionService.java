@@ -69,6 +69,7 @@ public class CollectionService {
 
     private void enrichBill(Bill bill, Transaction transaction) {
         bill.setPaidBy(transaction.getUser().getName());
+        bill.setMobileNumber(transaction.getUser().getMobileNumber());
         List<BillDetail> billDetails = bill.getBillDetails();
         billDetails.get(0).setAmountPaid(new BigDecimal(transaction.getTxnAmount()));
         billDetails.get(0).setCollectionType(CollectionType.ONLINE);

@@ -107,7 +107,7 @@ class TransactionQueryBuilder {
             }
         }
 
-        builder.append(" order by pg.created_time ");
+        builder.append(" order by pg.created_time desc ");
 
         if (transactionCriteria.getLimit() > 0) {
             builder.append(" limit ? ");

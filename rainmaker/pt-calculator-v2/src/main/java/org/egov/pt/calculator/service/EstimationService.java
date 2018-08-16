@@ -198,19 +198,20 @@ public class EstimationService {
 	 * @param groundUnitsArea
 	 * @return
 	 */
-	private BigDecimal getUnBuiltRate(PropertyDetail detail, double unBuiltRate, int groundUnitsCount,
-			Double groundUnitsArea) {
+	private BigDecimal getUnBuiltRate(PropertyDetail detail, double unBuiltRate, int groundUnitsCount, Double groundUnitsArea) {
 
-		BigDecimal unBuiltAmt = BigDecimal.ZERO;
+        BigDecimal unBuiltAmt = BigDecimal.ZERO;
+        if (0.0 < unBuiltRate && null != detail.getLandArea() && groundUnitsCount > 0) {
 
-		if (0.0 < unBuiltRate && null != detail.getLandArea() && groundUnitsCount > 0) {
-
-			Double diffArea = null != detail.getBuildUpArea() ? detail.getLandArea() - detail.getBuildUpArea()
-					: detail.getLandArea() - groundUnitsArea;
-			unBuiltAmt = unBuiltAmt.add(BigDecimal.valueOf((unBuiltRate / groundUnitsCount) * (diffArea)));
-		}
-		return unBuiltAmt;
-	}
+            Double diffArea = null != detail.getBuildUpArea() ? detail.getLandArea() - detail.getBuildUpArea()
+                    : detail.getLandArea() - groundUnitsArea;
+            // ignoring if land Area is lesser than buildUpArea/groundUnitsAreaSum in estimate instead of throwing error
+            // since property service validates the same for calculation
+            diffArea = diffArea < 0.0 ? 0.0 : diffArea;
+            unBuiltAmt = unBuiltAmt.add(BigDecimal.valueOf((unBuiltRate / groundUnitsCount) * (diffArea)));
+        }
+        return unBuiltAmt;
+    }
 
 	/**
 	 * Returns Tax amount value for the unit from the list of slabs passed

@@ -56,6 +56,7 @@ public class PropertyConfiguration {
     @Value("${persister.update.drafts.topic}")
     private String updateDraftsTopic;
 
+
     //IDGEN
     @Value("${egov.idgen.ack.name}")
     private String acknowldgementIdGenName;
@@ -74,6 +75,23 @@ public class PropertyConfiguration {
 
     @Value("${egov.idgen.ptid.format}")
     private String propertyIdGenFormat;
+
+
+    //NOTIFICATION TOPICS
+    @Value("${kafka.topics.notification.sms}")
+    private String smsNotifTopic;
+
+    @Value("${kafka.topics.notification.fullpayment}")
+    private String receiptTopic;
+
+    @Value("${kafka.topics.notification.pg.save.txns}")
+    private String pgTopic;
+
+    @Value("${egov.localization.statelevel}")
+    private Boolean isStateLevel;
+
+    @Value("${notification.sms.enabled}")
+    private Boolean isSMSNotificationEnabled;
 
 
 

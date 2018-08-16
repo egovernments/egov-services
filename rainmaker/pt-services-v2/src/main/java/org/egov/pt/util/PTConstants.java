@@ -53,6 +53,13 @@ public class PTConstants {
 
     public static final String NOTIFICATION_CITIZEN_URL = "www.egovernments.org/propertyTax";
 
+    public static final String NOTIFICATION_PAYMENT_ONLINE = "pt.payment.online";
+
+    public static final String NOTIFICATION_PAYMENT_OFFLINE = "pt.payment.offline";
+
+    public static final String NOTIFICATION_PAYMENT_FAIL = "pt.payment.fail";
+
+    public static final String NOTIFICATION_OLDPROPERTYID_ABSENT = "pt.oldpropertyid.absent";
 
 
 

@@ -2,6 +2,7 @@ package org.egov.pt.service;
 
 import com.jayway.jsonpath.JsonPath;
 import lombok.extern.slf4j.Slf4j;
+import org.egov.pt.config.PropertyConfiguration;
 import org.egov.pt.producer.Producer;
 import org.egov.pt.repository.ServiceRequestRepository;
 import org.egov.pt.util.PTConstants;
@@ -27,6 +28,9 @@ public class NotificationService {
     @Autowired
     private ServiceRequestRepository serviceRequestRepository;
 
+    @Autowired
+    private PropertyConfiguration propertyConfiguration;
+
     @Value("${egov.localization.host}")
     private String localizationHost;
 
@@ -35,27 +39,6 @@ public class NotificationService {
 
     @Value("${egov.localization.search.endpoint}")
     private String localizationSearchEndpoint;
-
-    @Value("${kafka.topics.notification.sms}")
-    private String smsNotifTopic;
-
-    @Value("${kafka.topics.notification.email}")
-    private String emailNotifTopic;
-
-    @Value("${notification.sms.enabled}")
-    private Boolean isSMSNotificationEnabled;
-
-    @Value("${notification.email.enabled}")
-    private Boolean isEmailNotificationEnabled;
-
-    @Value("${egov.localization.statelevel}")
-    private Boolean isStateLevel;
-
-    @Value("${persister.save.property.topic}")
-    private String propertySave;
-
-    @Value("${persister.update.property.topic}")
-    private String propertyUpdate;
 
     /**
      * Processes the json and send the SMSRequest
@@ -109,7 +92,7 @@ public class NotificationService {
      * @return The uri for localization search call
      */
     private StringBuilder getUri(String tenantId){
-        if(isStateLevel)
+        if(propertyConfiguration.getIsStateLevel())
            tenantId = tenantId.split("\\.")[0];
         StringBuilder uri = new StringBuilder();
         uri.append(localizationHost).append(localizationContextPath).append(localizationSearchEndpoint);
@@ -127,13 +110,13 @@ public class NotificationService {
     private String getJsonPath(String topic,String userType){
         String path = "$..messages[?(@.code==\"{}\")].message";
 
-        if(topic.equalsIgnoreCase(propertySave))
+        if(topic.equalsIgnoreCase(propertyConfiguration.getSavePropertyTopic()))
             path = path.replace("{}",PTConstants.NOTIFICATION_CREATE_CODE);
 
-        if(topic.equalsIgnoreCase(propertyUpdate) && userType.equalsIgnoreCase("CITIZEN"))
+        if(topic.equalsIgnoreCase(propertyConfiguration.getUpdatePropertyTopic()) && userType.equalsIgnoreCase("CITIZEN"))
             path = path.replace("{}",PTConstants.NOTIFICATION_UPDATE_CODE);
 
-        if(topic.equalsIgnoreCase(propertyUpdate) && !userType.equalsIgnoreCase("CITIZEN"))
+        if(topic.equalsIgnoreCase(propertyConfiguration.getUpdatePropertyTopic()) && !userType.equalsIgnoreCase("CITIZEN"))
             path = path.replace("{}",PTConstants.NOTIFICATION_EMPLOYEE_UPDATE_CODE);
 
         return path;
@@ -163,7 +146,7 @@ public class NotificationService {
             message = message.replace("<Street No.>,","");
 
         if(property.getAddress().getLocality().getCode()!=null)
-            message = message.replace("<Mohalla>",property.getAddress().getLocality().getCode());
+            message = message.replace("<Mohalla>",property.getAddress().getLocality().getName());
         else
             message = message.replace("<Mohalla>,","");
 
@@ -233,8 +216,10 @@ public class NotificationService {
     private List<SMSRequest> getSMSRequests(Set<String> mobileNumbers,String customizedMessage){
         List<SMSRequest> smsRequests = new ArrayList<>();
              mobileNumbers.forEach(mobileNumber-> {
-                 SMSRequest smsRequest = new SMSRequest(mobileNumber,customizedMessage);
-                 smsRequests.add(smsRequest);
+                 if(mobileNumber!=null){
+                     SMSRequest smsRequest = new SMSRequest(mobileNumber,customizedMessage);
+                     smsRequests.add(smsRequest);
+                 }
              });
          return smsRequests;
     }
@@ -244,11 +229,11 @@ public class NotificationService {
      * @param smsRequestList The list of SMSRequest to be sent
      */
     private void sendSMS(List<SMSRequest> smsRequestList){
-        if (isSMSNotificationEnabled) {
+        if (propertyConfiguration.getIsSMSNotificationEnabled()) {
             if (CollectionUtils.isEmpty(smsRequestList))
                 log.info("Messages from localization couldn't be fetched!");
             for(SMSRequest smsRequest: smsRequestList) {
-                producer.push(smsNotifTopic, smsRequest);
+                producer.push(propertyConfiguration.getSmsNotifTopic(), smsRequest);
             }
         }
     }

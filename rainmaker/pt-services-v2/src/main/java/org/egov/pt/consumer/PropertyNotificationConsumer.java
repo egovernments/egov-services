@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.egov.pt.config.PropertyConfiguration;
 import org.egov.pt.service.NotificationService;
+import org.egov.pt.service.PaymentNotificationService;
 import org.egov.pt.web.models.Property;
 import org.egov.pt.web.models.PropertyRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +27,10 @@ public class PropertyNotificationConsumer {
     private NotificationService notificationService;
 
 
+    @Autowired
+    private PaymentNotificationService paymentNotificationService;
+
+
     @KafkaListener(topics = {"${persister.save.property.topic}","${persister.update.property.topic}"})
     public void listen(final HashMap<String, Object> record, @Header(KafkaHeaders.RECEIVED_TOPIC) String topic) {
         ObjectMapper mapper = new ObjectMapper();
@@ -39,10 +44,13 @@ public class PropertyNotificationConsumer {
         log.info("property Received: "+propertyRequest.getProperties().get(0).getPropertyId());
 
         notificationService.process(propertyRequest,topic);
-
-
     }
 
+
+    @KafkaListener(topics = {"${kafka.topics.notification.fullpayment}","${kafka.topics.notification.pg.save.txns}"})
+    public void listenPayments(final HashMap<String, Object> record, @Header(KafkaHeaders.RECEIVED_TOPIC) String topic) {
+        paymentNotificationService.process(record,topic);
+    }
 
 
 

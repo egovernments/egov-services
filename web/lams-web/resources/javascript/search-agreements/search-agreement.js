@@ -1267,7 +1267,7 @@ class AgreementSearch extends React.Component {
                   <div className="row">
                     <div className="col-sm-3 col-sm-offset-5">
                       <label for="asset_category">
-                        Asset category
+                          Asset category
                         <span> *</span>
                       </label>
                       <div className="styled-select">
@@ -1289,6 +1289,7 @@ class AgreementSearch extends React.Component {
                 </div>
               </div>
               <div className="form-section">
+                  <center><h5 style={{color : "red"}} >  Note : To view all transactions happened on Agreement, kindly select on History Search.</h5></center>
                 <div className="row">
                   <div className="col-sm-6">
                     <div className="row">
@@ -1314,7 +1315,7 @@ class AgreementSearch extends React.Component {
                               display: "inline"
                             }}
                           >
-                            Advanced Search
+                            History Search
                           </div>
                         </label>
                       </div>

@@ -82,7 +82,7 @@ public class PGRRequestValidator {
 	public void validateCreate(ServiceRequest serviceRequest) {
 
 		Map<String, String> errorMap = new HashMap<>();
-
+		validateUserRBACProxy(errorMap, serviceRequest.getRequestInfo());
 		validateIfArraysEqual(serviceRequest, errorMap);
 		overRideCitizenAccountId(serviceRequest);
 		vaidateServiceCodes(serviceRequest, errorMap);
@@ -94,20 +94,22 @@ public class PGRRequestValidator {
 	}
 
 	private void validateAndCreateUser(ServiceRequest serviceRequest, Map<String, String> errorMap) {
-
 		RequestInfo requestInfo = serviceRequest.getRequestInfo();
-		List<Service> services = serviceRequest.getServices();
-
-		for (Service service : services) {
-			Citizen citizen = service.getCitizen();
-			String accId = null;
-			if (null != citizen) {
-				accId = isUserPresent(citizen,requestInfo,service.getTenantId());
-				if (null == accId) {
-					accId = createUser(citizen,requestInfo,service.getTenantId());
+		List<String> roleNames = requestInfo.getUserInfo().getRoles().parallelStream().map(Role::getName)
+				.collect(Collectors.toList());
+		if(roleNames.contains("Citizen Service Representative") || roleNames.contains("CSR")) {
+			List<Service> services = serviceRequest.getServices();
+			for (Service service : services) {
+				Citizen citizen = service.getCitizen();
+				String accId = null;
+				if (null != citizen) {
+					accId = isUserPresent(citizen,requestInfo,service.getTenantId());
+					if (null == accId) {
+						accId = createUser(citizen,requestInfo,service.getTenantId());
+					}
+					service.setAccountId(accId);
 				}
-				service.setAccountId(accId);
-			}
+			}	
 		}
 	}
 
@@ -129,7 +131,7 @@ public class PGRRequestValidator {
 	private String isUserPresent(Citizen citizen, RequestInfo requestInfo, String tenantId) {
 		ObjectMapper mapper = pgrUtils.getObjectMapper();
 		UserSearchRequest searchRequest = UserSearchRequest.builder().userName(citizen.getMobileNumber())
-				.tenantId(tenantId).requestInfo(requestInfo).build();
+				.tenantId(tenantId).userType(WorkFlowConfigs.ROLE_CITIZEN).requestInfo(requestInfo).build();
 		StringBuilder url = new StringBuilder(userBasePath+userSearchEndPoint); 
 		UserResponse res = mapper.convertValue(serviceRequestRepository.fetchResult(url, searchRequest), UserResponse.class);
 		if(CollectionUtils.isEmpty(res.getUser())) {
@@ -278,8 +280,7 @@ public class PGRRequestValidator {
 
 		User user = serviceRequest.getRequestInfo().getUserInfo();
 		List<String> codes = user.getRoles().parallelStream().map(Role::getName).collect(Collectors.toList());
-		boolean isUserCitizen = codes.contains("CITIZEN") || codes.contains("Citizen");
-		if (isUserCitizen)
+		if (codes.contains("CITIZEN") || codes.contains("Citizen"))
 			serviceRequest.getServices().forEach(service -> service.setAccountId(String.valueOf(user.getId())));
 	}
 

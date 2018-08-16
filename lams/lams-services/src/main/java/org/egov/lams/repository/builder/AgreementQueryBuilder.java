@@ -39,8 +39,7 @@ public class AgreementQueryBuilder {
         return selectQuery.toString();
     }
 
-    public static String getAgreementByAgreementNoQuery(AgreementCriteria agreementsModel,
-                                                 @SuppressWarnings("rawtypes") Map params) {
+    public static String getAgreementByAgreementNoQuery(AgreementCriteria agreementsModel, Map<String, Object> params) {
         StringBuilder selectQuery = new StringBuilder(BASE_SEARCH_QUERY);
         appendSearchParams(agreementsModel, params, selectQuery);
         appendLimitAndOffset(agreementsModel, params, selectQuery);
@@ -157,7 +156,6 @@ public class AgreementQueryBuilder {
             selectQuery.append(" and AGREEMENT.AGREEMENT_NO = :agreementNumber");
             params.put("agreementNumber", agreementsModel.getAgreementNumber());
         }
-            selectQuery.append(" and AGREEMENT.STATUS IN ('ACTIVE','WORKFLOW','RENEWED','REJECTED','HISTORY')");
 
         if (agreementsModel.getTenantId() != null) {
             selectQuery.append(" and AGREEMENT.TENANT_ID = :tenantId");

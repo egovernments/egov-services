@@ -63,9 +63,9 @@ public class PaymentNotificationService {
         try{
             String jsonString = new JSONObject(record).toString();
             DocumentContext documentContext = JsonPath.parse(jsonString);
-            requestInfo = objectMapper.convertValue(record.get("RequestInfo"),RequestInfo.class);
-            if(requestInfo==null)
-                requestInfo = new RequestInfo();
+          //  requestInfo = objectMapper.convertValue(record.get("RequestInfo"),RequestInfo.class);
+        //    if(requestInfo==null)
+            requestInfo = new RequestInfo();
             if(topic.equalsIgnoreCase(propertyConfiguration.getReceiptTopic()))
                 valMap = getValuesFromReceipt(documentContext);
             else
@@ -78,7 +78,7 @@ public class PaymentNotificationService {
             valMap.put("oldPropertyId",propertyAttributes.get("oldPropertyId").get(0));
         }
         catch (Exception e)
-        {  // e.printStackTrace();
+        {
             throw new CustomException("PARSING ERROR","Error while parsing the json received from kafka");
         }
 
@@ -128,7 +128,7 @@ public class PaymentNotificationService {
      */
     private Map<String,String> getValuesFromReceipt(DocumentContext documentContext){
         BigDecimal totalAmount,amountPaid;
-        String consumerCode,transactionId,paymentMode,tenantId;
+        String consumerCode,transactionId,paymentMode,tenantId,mobileNumber;
         Map<String,String> valMap = new HashMap<>();
 
 
@@ -154,6 +154,9 @@ public class PaymentNotificationService {
 
             tenantId = documentContext.read("$.Receipt[0].tenantId");
             valMap.put("tenantId",tenantId);
+
+            mobileNumber = documentContext.read("$.Receipt[0].Bill[0].mobileNumber");
+            valMap.put("mobileNumber",mobileNumber);
         }
         catch (Exception e)
         {
@@ -173,25 +176,25 @@ public class PaymentNotificationService {
         HashMap<String,String> valMap = new HashMap<>();
 
         try{
-            txnStatus = documentContext.read("$.Transaction[0].txnStatus");
+            txnStatus = documentContext.read("$.Transaction.txnStatus");
             valMap.put("txnStatus",txnStatus);
 
-            txnAmount = documentContext.read("$.Transaction[0].txnAmount");
+            txnAmount = documentContext.read("$.Transaction.txnAmount");
             valMap.put("txnAmount",txnAmount.toString());
 
-            tenantId = documentContext.read("$.Transaction[0].tenantId");
+            tenantId = documentContext.read("$.Transaction.tenantId");
             valMap.put("tenantId",tenantId);
 
-            moduleId = documentContext.read("$.Transaction[0].moduleId");
+            moduleId = documentContext.read("$.Transaction.moduleId");
             valMap.put("moduleId",moduleId);
             valMap.put("propertyId",moduleId.split(":")[0]);
             valMap.put("assessmentNumber",moduleId.split(":")[1]);
 
-            mobileNumber = documentContext.read("$.Transaction[0].user.mobileNumber");
+            mobileNumber = documentContext.read("$.Transaction.user.mobileNumber");
             valMap.put("mobileNumber",mobileNumber);
         }
         catch (Exception e)
-        {  //e.printStackTrace();
+        {   log.error("Transaction Object Parsing: ",e);
             throw new CustomException("PARSING ERROR","Failed to fetch values from the Transaction Object");
         }
 
@@ -234,12 +237,18 @@ public class PaymentNotificationService {
         return propertyAttributes;
     }
 
+    /**
+     * Adds MobileNumber of logged in user
+     * @param topic topic from which listening
+     * @param requestInfo RequestInfo of the request
+     * @param valMap The map of the required values
+     * @param mobileNumbers The list of mobileNumbers of owner of properties
+     */
      private void addUserNumber(String topic,RequestInfo requestInfo,Map<String,String> valMap,List<String> mobileNumbers)
      {
          // If the requestInfo is of citizen add citizen's MobileNumber
-         if(topic.equalsIgnoreCase(propertyConfiguration.getReceiptTopic()) && requestInfo.getUserInfo().getType().equalsIgnoreCase("CITIZEN"))
-             mobileNumbers.add(requestInfo.getUserInfo().getMobileNumber());
-         else if(topic.equalsIgnoreCase(propertyConfiguration.getPgTopic()))
+         if(topic.equalsIgnoreCase(propertyConfiguration.getReceiptTopic())
+                 || topic.equalsIgnoreCase(propertyConfiguration.getPgTopic()))
              mobileNumbers.add(valMap.get("mobileNumber"));
      }
 
@@ -384,6 +393,7 @@ public class PaymentNotificationService {
                 log.error("Messages from localization couldn't be fetched!");
             for(SMSRequest smsRequest: smsRequestList) {
                 producer.push(propertyConfiguration.getSmsNotifTopic(), smsRequest);
+                log.debug(smsRequest.toString());
             }
         }
     }

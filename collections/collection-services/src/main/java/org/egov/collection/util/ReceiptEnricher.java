@@ -96,6 +96,7 @@ public class ReceiptEnricher {
 
         Bill validatedBill = validatedBills.get(0);
         validatedBill.setPaidBy(billFromRequest.getPaidBy());
+        validatedBill.setMobileNumber(billFromRequest.getMobileNumber());
 
         for(int i = 0; i < validatedBill.getBillDetails().size(); i++){
             validatedBill.getBillDetails().get(i).setAmountPaid(billFromRequest.getBillDetails().get(i).getAmountPaid

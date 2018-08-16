@@ -308,7 +308,9 @@ public class EnrichmentService {
                 if(tenantIdToProperties.containsKey(property.getTenantId()))
                     tenantIdToProperties.get(property.getTenantId()).add(property);
                 else{
-                    tenantIdToProperties.put(property.getTenantId(),new ArrayList<>());
+                    List<Property> list = new ArrayList<>();
+                    list.add(property);
+                    tenantIdToProperties.put(property.getTenantId(),list);
                 }
             });
         }

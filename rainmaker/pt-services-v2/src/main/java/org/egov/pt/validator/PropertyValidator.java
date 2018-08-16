@@ -50,6 +50,7 @@ public class PropertyValidator {
         validateMasterData(request);
         validateCitizenInfo(request);
         validateUnits(request);
+        validateMobileNumber(request);
     }
 
     /**
@@ -58,6 +59,7 @@ public class PropertyValidator {
      */
     public void validateUpdateRequest(PropertyRequest request){
         validateIds(request);
+        validateMobileNumber(request);
         PropertyCriteria criteria = getPropertyCriteriaForSearch(request);
         List<Property> propertiesFromSearchResponse = propertyRepository.getProperties(criteria);
         boolean ifPropertyExists=PropertyExists(request,propertiesFromSearchResponse);
@@ -484,6 +486,32 @@ public class PropertyValidator {
         }
         if(!errorMap.isEmpty())
             throw new CustomException(errorMap);
+    }
+
+    private void validateMobileNumber(PropertyRequest request){
+        Map<String,String > errorMap = new HashMap<>();
+        request.getProperties().forEach(property -> {
+            property.getPropertyDetails().forEach(propertyDetail -> {
+                if(!propertyDetail.getOwnershipCategory().contains("INSTITUTIONAL"))
+                {
+                    propertyDetail.getOwners().forEach(owner -> {
+                        if(owner.getMobileNumber()==null)
+                            errorMap.put("INVALID OWNER","MobileNumber cannot be null");
+                    });
+                }
+                if(propertyDetail.getOwnershipCategory().contains("INSTITUTIONAL"))
+                {
+                    propertyDetail.getOwners().forEach(owner -> {
+                        if(owner.getAltContactNumber()==null)
+                            errorMap.put("INVALID OWNER","TelephoneNumber cannot be null for institutional");
+                    });
+                }
+
+            });
+        });
+        if(!errorMap.isEmpty())
+            throw new CustomException(errorMap);
+
     }
 
 

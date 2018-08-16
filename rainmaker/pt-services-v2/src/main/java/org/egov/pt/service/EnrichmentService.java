@@ -68,6 +68,12 @@ public class EnrichmentService {
                         propertyDetail.getOwners().forEach(owner -> {
                             owner.setInstitutionId(propertyDetail.getInstitution().getId());
                         });
+
+                        propertyDetail.getOwners().forEach(owner -> {
+                            if(owner.getMobileNumber()==null && owner.getAltContactNumber()!=null)
+                                 owner.setMobileNumber(owner.getAltContactNumber());
+                        });
+
                     }
                     propertyDetail.getOwners().forEach(owner -> {
                         if(!CollectionUtils.isEmpty(owner.getDocuments()))

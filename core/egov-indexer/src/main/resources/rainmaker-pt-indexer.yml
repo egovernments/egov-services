@@ -1,0 +1,19 @@
+ServiceMaps:
+ serviceName: Property Tax - rainmaker
+ version: 1.0.0
+ mappings:
+  - topic: save-pt-property
+    indexes:
+    - name: propertycreate
+      type: propertycreate
+      id: $.propertyId, $.tenantId
+      isBulk: true
+      jsonPath: $.Properties.*
+
+  - topic: update-pt-property
+    indexes:
+    - name: propertycreate
+      type: propertycreate
+      id: $.propertyId, $.tenantId
+      isBulk: true
+      jsonPath: $.Properties.*

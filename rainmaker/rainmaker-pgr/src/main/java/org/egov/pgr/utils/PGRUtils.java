@@ -310,6 +310,7 @@ public class PGRUtils {
 		userServiceRequest.put("RequestInfo", requestInfo);
 		userServiceRequest.put("tenantId", tenantId);
 		userServiceRequest.put("id", Arrays.asList(userIds));
+		userServiceRequest.put("userType", WorkFlowConfigs.ROLE_CITIZEN);
 
 		uri.append(egovUserHost).append(egovUserSearchEndpoint);
 

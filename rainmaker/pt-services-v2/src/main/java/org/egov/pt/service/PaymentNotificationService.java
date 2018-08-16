@@ -217,7 +217,7 @@ public class PaymentNotificationService {
             throw new CustomException("ASSESSMENT NOT FOUND","The assessment for the given consumer code is not available");
 
         // Extracting all the mobileNumbers to which notification be sent
-        List<String> mobileNumbers = new LinkedList<>();
+        Set<String> mobileNumbers = new HashSet<>();
         properties.forEach(property -> {
             property.getPropertyDetails().forEach(propertyDetail -> {
                 propertyDetail.getOwners().forEach(owner -> {
@@ -230,7 +230,7 @@ public class PaymentNotificationService {
         String oldPropertyId = properties.get(0).getOldPropertyId();
 
         Map<String,List<String>> propertyAttributes = new HashMap<>();
-        propertyAttributes.put("mobileNumbers",mobileNumbers);
+        propertyAttributes.put("mobileNumbers",new ArrayList<>(mobileNumbers));
         propertyAttributes.put("financialYear",Collections.singletonList(fianancialYear));
         propertyAttributes.put("oldPropertyId",Collections.singletonList(oldPropertyId));
 
@@ -247,8 +247,8 @@ public class PaymentNotificationService {
      private void addUserNumber(String topic,RequestInfo requestInfo,Map<String,String> valMap,List<String> mobileNumbers)
      {
          // If the requestInfo is of citizen add citizen's MobileNumber
-         if(topic.equalsIgnoreCase(propertyConfiguration.getReceiptTopic())
-                 || topic.equalsIgnoreCase(propertyConfiguration.getPgTopic()))
+         if((topic.equalsIgnoreCase(propertyConfiguration.getReceiptTopic())
+                 || topic.equalsIgnoreCase(propertyConfiguration.getPgTopic())) && !mobileNumbers.contains(valMap.get("mobileNumber")))
              mobileNumbers.add(valMap.get("mobileNumber"));
      }
 

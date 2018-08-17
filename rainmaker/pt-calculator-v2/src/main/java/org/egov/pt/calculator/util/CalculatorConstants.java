@@ -216,9 +216,13 @@ public class CalculatorConstants {
 
 	
 	public static final String PT_ESTIMATE_AREA_NULL = "PT_ESTIMATE_AREA_NULL";
-	public static final String PT_ESTIMATE_AREA_NULL_MSG = " Atleast one area value is mandatory of landArea and buildUpArea";
-	
-	
+	public static final String PT_ESTIMATE_AREA_NULL_MSG = " Atleast one area value of buildUpArea Or groundfloor units area is mandatory";
+
+
+	public static final String PT_ESTIMATE_GROUND_AREA_ZERO = "PT_ESTIMATE_GROUND_AREA_ZERO";
+	public static final String PT_ESTIMATE_GROUND_AREA_ZERO_MSG = " Ground floor units must be present in the absence of proper buildup area";
+
+
 	public static final String PT_ESTIMATE_VACANT_LAND_NULL = "PT_ESTIMATE_VACANT_LAND_AREA_NULL";
 	public static final String PT_ESTIMATE_VACANT_LAND_NULL_MSG = " landArea is mandatory for vacant land";
 

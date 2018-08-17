@@ -83,33 +83,39 @@ public class EstimationService {
 	 * @param request
 	 * @return CalculationRes
 	 */
-	public CalculationRes getTaxCalculation(CalculationReq request) {
+    public CalculationRes getTaxCalculation(CalculationReq request) {
 
-		CalculationCriteria criteria = request.getCalculationCriteria().get(0);
+        CalculationCriteria criteria = request.getCalculationCriteria().get(0);
+        Property property = criteria.getProperty();
+        PropertyDetail detail = property.getPropertyDetails().get(0);
+        Map<String, String> error = new HashMap<>();
 
-		Property property = criteria.getProperty();
-		PropertyDetail detail = property.getPropertyDetails().get(0);
+        boolean isLandProperty = PT_TYPE_VACANT_LAND.equalsIgnoreCase(detail.getPropertyType());
 
-		Map<String, String> error = new HashMap<>();
-		boolean isLandProperty = PT_TYPE_VACANT_LAND.equalsIgnoreCase(detail.getPropertyType());
+        if (isLandProperty && null == detail.getLandArea())
+            error.put(PT_ESTIMATE_VACANT_LAND_NULL, PT_ESTIMATE_VACANT_LAND_NULL_MSG);
 
-		// error throw removed to accomodate flat/shared building problem arising from allowing multi units suddenly in screen
-		if (null == detail.getLandArea() && null == detail.getBuildUpArea())
-			detail.setBuildUpArea(detail.getUnits().stream().filter(
-					unit -> unit.getFloorNo().equals("0")).mapToDouble(Unit::getUnitArea).sum());
+        if (!isLandProperty && CollectionUtils.isEmpty(detail.getUnits()))
+            error.put(PT_ESTIMATE_NON_VACANT_LAND_UNITS, PT_ESTIMATE_NON_VACANT_LAND_UNITS_MSG);
 
-		if (isLandProperty && null == detail.getLandArea())
-			error.put(PT_ESTIMATE_VACANT_LAND_NULL, PT_ESTIMATE_VACANT_LAND_NULL_MSG);
+        // error throw altered to accomodate flat/shared building issues arising from allowing multi units in screen suddenly.
+        if (null == detail.getBuildUpArea() && CollectionUtils.isEmpty(detail.getUnits()))
+            error.put(PT_ESTIMATE_AREA_NULL, PT_ESTIMATE_AREA_NULL_MSG);
+        else if (null == detail.getBuildUpArea() && !CollectionUtils.isEmpty(detail.getUnits())) {
 
-		if (!isLandProperty && CollectionUtils.isEmpty(detail.getUnits()))
-			error.put(PT_ESTIMATE_NON_VACANT_LAND_UNITS, PT_ESTIMATE_NON_VACANT_LAND_UNITS_MSG);
+            double builtUp = detail.getUnits().stream().filter(
+                    unit -> unit.getFloorNo().equals("0")).mapToDouble(Unit::getUnitArea).sum();
+            if (builtUp == 0.0)
+                throw new CustomException(PT_ESTIMATE_GROUND_AREA_ZERO, PT_ESTIMATE_GROUND_AREA_ZERO_MSG);
+            detail.setBuildUpArea(builtUp);
+        }
 
-		if (!CollectionUtils.isEmpty(error))
-			throw new CustomException(error);
+        if (!CollectionUtils.isEmpty(error))
+            throw new CustomException(error);
 
-		return new CalculationRes(new ResponseInfo(), Arrays.asList(getcalculation(request.getRequestInfo(), criteria,
-				getEstimationMap(criteria, request.getRequestInfo()))));
-	}
+        return new CalculationRes(new ResponseInfo(), Arrays.asList(getcalculation(request.getRequestInfo(), criteria,
+                getEstimationMap(criteria, request.getRequestInfo()))));
+    }
 
 	/**
 	 * Generates a List of Tax head estimates with tax head code,

@@ -411,20 +411,6 @@
     }
   },
   "PropertyTax": {
-    "PropertyType": {
-      "masterName": "PropertyType",
-      "isStateLevel": true,
-      "uniqueKeys": [
-        "$.code"
-      ]
-    },
-    "PropertySubType": {
-      "masterName": "PropertySubType",
-      "isStateLevel": true,
-      "uniqueKeys": [
-        "$.code"
-      ]
-    },
     "ConstructionType": {
       "masterName": "ConstructionType",
       "isStateLevel": true,
@@ -439,8 +425,49 @@
         "$.code"
       ]
     },
+    "FireCess": {
+      "masterName": "FireCess",
+      "isStateLevel": true,
+      "uniqueKeys": [
+      ]
+    },
+    "Floor": {
+      "masterName": "Floor",
+      "isStateLevel": true,
+      "uniqueKeys": [
+        "$.code"
+      ]
+    },
+    "Interest": {
+      "masterName": "Interest",
+      "isStateLevel": true,
+      "uniqueKeys": [
+        "$.fromFY"
+      ]
+    },
+    "PropertyType": {
+      "masterName": "PropertyType",
+      "isStateLevel": true,
+      "uniqueKeys": [
+        "$.code"
+      ]
+    },
+    "PropertySubType": {
+      "masterName": "PropertySubType",
+      "isStateLevel": true,
+      "uniqueKeys": [
+        "$.code"
+      ]
+    },
     "OwnerShipCategory": {
       "masterName": "OwnerShipCategory",
+      "isStateLevel": true,
+      "uniqueKeys": [
+        "$.code"
+      ]
+    },
+    "OwnerTypeDocument": {
+      "masterName": "OwnerTypeDocument",
       "isStateLevel": true,
       "uniqueKeys": [
         "$.code"
@@ -462,65 +489,51 @@
     },
     "UsageCategoryMajor": {
       "masterName": "UsageCategoryMajor",
-      "isStateLevel": false,
+      "isStateLevel": true,
       "uniqueKeys": [
         "$.code"
       ]
     },
     "UsageCategoryMinor": {
       "masterName": "UsageCategoryMinor",
-      "isStateLevel": false,
+      "isStateLevel": true,
       "uniqueKeys": [
         "$.code"
       ]
     },
     "UsageCategorySubMinor": {
       "masterName": "UsageCategorySubMinor",
-      "isStateLevel": false,
+      "isStateLevel": true,
       "uniqueKeys": [
         "$.code"
       ]
     },
     "UsageCategoryDetail": {
       "masterName": "UsageCategoryDetail",
-      "isStateLevel": false,
+      "isStateLevel": true,
       "uniqueKeys": [
         "$.code"
       ]
     },
     "OwnerType": {
       "masterName": "OwnerType",
-      "isStateLevel": false,
+      "isStateLevel": true,
       "uniqueKeys": [
         "$.code"
       ]
     },
     "Rebate": {
       "masterName": "Rebate",
-      "isStateLevel": false,
+      "isStateLevel": true,
       "uniqueKeys": [
         "$.fromFY"
       ]
     },
     "Penalty": {
       "masterName": "Penalty",
-      "isStateLevel": false,
-      "uniqueKeys": [
-        "$.fromFY"
-      ]
-    },
-    "Interest": {
-      "masterName": "Interest",
-      "isStateLevel": false,
-      "uniqueKeys": [
-        "$.fromFY"
-      ]
-    },
-    "Floor": {
-      "masterName": "Floor",
       "isStateLevel": true,
       "uniqueKeys": [
-        "$.code"
+        "$.fromFY"
       ]
     }
   }

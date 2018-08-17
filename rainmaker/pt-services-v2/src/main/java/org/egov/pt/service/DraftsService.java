@@ -15,6 +15,7 @@ import org.egov.pt.web.models.DraftSearchCriteria;
 import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.util.*;
 
@@ -60,7 +61,7 @@ public class DraftsService {
 	
 	public DraftResponse updateDraft(DraftRequest draftRequest) {
 		DraftSearchCriteria criteria = DraftSearchCriteria.builder().id(draftRequest.getDraft().getId()).build();
-		DraftResponse response = searchDrafts(draftRequest.getRequestInfo(), criteria);
+		DraftResponse response = searchDraftsForValidation(draftRequest.getRequestInfo(), criteria);
 		if(response.getDrafts().isEmpty()) {
 			throw new CustomException("INVALID_UPDATE_REQUEST", "Draft being updated doesn't belong to this user");
 		}
@@ -99,5 +100,20 @@ public class DraftsService {
 		return DraftResponse.builder().responseInfo(responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true))
 				.drafts(drafts).build();
 		
+	}
+	
+	public DraftResponse searchDraftsForValidation(RequestInfo requestInfo, DraftSearchCriteria draftSearchCriteria) {
+		draftSearchCriteria.setUserId(requestInfo.getUserInfo().getUuid());
+		draftSearchCriteria.setTenantId(requestInfo.getUserInfo().getTenantId());
+		try {
+			List<Draft> drafts = draftRepository.getDrafts(draftSearchCriteria);
+			if(!CollectionUtils.isEmpty(drafts))
+				return DraftResponse.builder().responseInfo(responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true))
+						.drafts(drafts).build();
+		}catch(Exception e) {
+			log.info("Exception while fetching drafts: ",e);
+			throw new CustomException("FETCH_DRAFTS_FAILED", "Unable to fetch drafts");
+		}
+		return new DraftResponse();
 	}
 }

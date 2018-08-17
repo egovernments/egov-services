@@ -216,7 +216,7 @@ public class CalculatorConstants {
 
 	
 	public static final String PT_ESTIMATE_AREA_NULL = "PT_ESTIMATE_AREA_NULL";
-	public static final String PT_ESTIMATE_AREA_NULL_MSG = " Atleast one area value of buildUpArea Or groundfloor units area is mandatory";
+	public static final String PT_ESTIMATE_AREA_NULL_MSG = " At least one area value of buildUpArea Or ground floor units area is mandatory";
 
 
 	public static final String PT_ESTIMATE_GROUND_AREA_ZERO = "PT_ESTIMATE_GROUND_AREA_ZERO";
@@ -228,7 +228,7 @@ public class CalculatorConstants {
 
 	
 	public static final String PT_ESTIMATE_BILLINGSLABS_UNMATCH_VACANCT = "PT_ESTIMATE_BILLINGSLABS_UNMATCH";
-	public static final String PT_ESTIMATE_BILLINGSLABS_UNMATCH_VACANT_MSG = " Incorrect count of {count} billing slabs has been found for the give property detail";
+	public static final String PT_ESTIMATE_BILLINGSLABS_UNMATCH_VACANT_MSG = " Incorrect count of {count} billing slabs has been found for the given VACANT LAND property detail";
 
 
 	public static final String PT_ESTIMATE_NON_VACANT_LAND_UNITS = "PT_ESTIMATE_NON_VACANT_LAND_UNITS";

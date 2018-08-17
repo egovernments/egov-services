@@ -23,7 +23,7 @@ public class DraftSearchCriteria {
     private String assessmentNumber;
 
     @JsonIgnore
-    private boolean isActive;
+    private Boolean isActive;
 
     private int limit;
 

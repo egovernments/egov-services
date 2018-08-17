@@ -18,9 +18,8 @@ public class DraftsQueryBuilder {
                 "createdtime, lastmodifiedby, lastmodifiedtime" +
                 " FROM " +
                 "eg_pt_drafts_v2 WHERE " +
-                "tenantId = ? AND isActive = ? ");
+                "tenantId = ? ");
         preparedStatementList.add(searchCriteria.getTenantId());
-        preparedStatementList.add(searchCriteria.isActive());
 
         if (!isEmpty(searchCriteria.getId())) {
             query.append(" AND id = ?");
@@ -36,6 +35,11 @@ public class DraftsQueryBuilder {
             preparedStatementList.add(searchCriteria.getAssessmentNumber());
         }
 
+        if (null != searchCriteria.getIsActive()) {
+            query.append(" AND isActive = ?");
+            preparedStatementList.add(searchCriteria.getIsActive());
+        }
+        
         if (searchCriteria.getLimit() > 0) {
             query.append(" limit ? ");
             preparedStatementList.add(searchCriteria.getLimit());

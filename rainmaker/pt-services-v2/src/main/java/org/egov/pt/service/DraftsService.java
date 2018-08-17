@@ -105,15 +105,14 @@ public class DraftsService {
 	public DraftResponse searchDraftsForValidation(RequestInfo requestInfo, DraftSearchCriteria draftSearchCriteria) {
 		draftSearchCriteria.setUserId(requestInfo.getUserInfo().getUuid());
 		draftSearchCriteria.setTenantId(requestInfo.getUserInfo().getTenantId());
+		List<Draft> drafts = new ArrayList<>();
 		try {
-			List<Draft> drafts = draftRepository.getDrafts(draftSearchCriteria);
-			if(!CollectionUtils.isEmpty(drafts))
-				return DraftResponse.builder().responseInfo(responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true))
-						.drafts(drafts).build();
+			drafts = draftRepository.getDrafts(draftSearchCriteria);
 		}catch(Exception e) {
 			log.info("Exception while fetching drafts: ",e);
 			throw new CustomException("FETCH_DRAFTS_FAILED", "Unable to fetch drafts");
 		}
-		return new DraftResponse();
+		return DraftResponse.builder().responseInfo(responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true))
+				.drafts(drafts).build();	
 	}
 }

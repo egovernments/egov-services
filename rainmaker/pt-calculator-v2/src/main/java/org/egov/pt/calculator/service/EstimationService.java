@@ -149,7 +149,6 @@ public class EstimationService {
 
 				BillingSlab slab = getSlabForCalc(filteredBillingSlabs, unit);
 				BigDecimal currentUnitTax = getTaxForUnit(slab, unit);
-
 				/*
 				 * counting the number of units & total area in ground floor for unbuilt area
 				 * tax calculation
@@ -160,7 +159,6 @@ public class EstimationService {
 					if (null != slab.getUnBuiltUnitRate())
 						unBuiltRate += slab.getUnBuiltUnitRate();
 				}
-
 				taxAmt = taxAmt.add(currentUnitTax);
 				usageExemption = usageExemption
 						.add(getExemption(unit, currentUnitTax, assessmentYear, propertyBasedExemptionMasterMap));
@@ -338,11 +336,11 @@ public class EstimationService {
 
         Property property = criteria.getProperty();
         PropertyDetail detail = property.getPropertyDetails().get(0);
-        String assessmentYear = null != criteria.getAssessmentYear() ? criteria.getAssessmentYear() : detail.getFinancialYear();
-        String assessmentNumber = null != criteria.getAssesmentNumber() ? criteria.getAssesmentNumber() : detail.getAssessmentNumber();
-        String tenantId = null != criteria.getTenantId() ? criteria.getTenantId() : property.getTenantId();
+        String assessmentYear = detail.getFinancialYear();
+        String assessmentNumber = null != detail.getAssessmentNumber() ? detail.getAssessmentNumber() : criteria.getAssesmentNumber();
+        String tenantId = null != property.getTenantId() ? property.getTenantId() : criteria.getTenantId();
 
-		Map<String, Object> finYearMap = mDataService.getfinancialYear(requestInfo, assessmentYear, tenantId);
+		Map<String, Object> finYearMap = mDataService.getFinancialYear(requestInfo, assessmentYear, tenantId);
 		Long fromDate = (Long) finYearMap.get(FINANCIAL_YEAR_STARTING_DATE);
 		Long toDate = (Long) finYearMap.get(FINANCIAL_YEAR_ENDING_DATE);
 		Map<String, Category> taxHeadCategoryMap = mDataService.getTaxHeadMasterMap(requestInfo, tenantId).stream()

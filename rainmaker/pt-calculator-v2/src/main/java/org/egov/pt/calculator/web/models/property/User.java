@@ -54,7 +54,6 @@ public class User   {
         @JsonProperty("gender")
         private String gender;
 
-        @NotNull
         @Pattern(regexp = "[0-9]*", message = "MobileNumber has invalid Number")
         @JsonProperty("mobileNumber")
         private String mobileNumber;

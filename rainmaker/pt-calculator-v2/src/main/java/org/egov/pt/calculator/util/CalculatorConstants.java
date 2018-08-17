@@ -192,8 +192,8 @@ public class CalculatorConstants {
 	public static final String CONNECT_EXCEPTION_KEY = "CONNECTION_FAILED";
 
 	public static final String EG_PT_DEPRECIATING_ASSESSMENT_ERROR = "EG_PT_DEPRECIATING_ASSESSMENT_ERROR";
-	public static final String EG_PT_DEPRECIATING_ASSESSMENT_ERROR_MSG = "Depreciating assessments are not allowed for the same assessmentyear,"
-			+ " please kindly update the values for the following properties with assessmentNumbers : ";
+	public static final String EG_PT_DEPRECIATING_ASSESSMENT_ERROR_MSG = "Depreciating assessments are not allowed for the same assessment year,"
+			+ "please kindly update the values for the following properties with assessmentNumbers : ";
 
 	public static final String EMPTY_DEMAND_ERROR_CODE = "EMPTY_DEMANDS";
 	public static final String EMPTY_DEMAND_ERROR_MESSAGE = "No demands found for the given bill generate criteria";
@@ -208,7 +208,7 @@ public class CalculatorConstants {
 
 	
 	public static final String EG_PT_OWNER_TYPE_INVALID = "EG_PT_OWNER_TYPE_INVALID";
-	public static final String EG_PT_OWNER_TYPE_INVALID_MESSAGE = " The given owner type value is invalid : ";
+	public static final String EG_PT_OWNER_TYPE_INVALID_MESSAGE = "The given owner type value is invalid : ";
 
 	
 	public static final String PT_ADHOC_REBATE_INVALID_AMOUNT = "PT_ADHOC_REBATE_INVALID_AMOUNT";
@@ -216,28 +216,30 @@ public class CalculatorConstants {
 
 	
 	public static final String PT_ESTIMATE_AREA_NULL = "PT_ESTIMATE_AREA_NULL";
-	public static final String PT_ESTIMATE_AREA_NULL_MSG = " At least one area value of buildUpArea Or ground floor units area is mandatory";
+	public static final String PT_ESTIMATE_AREA_NULL_MSG = "At least one area value of buildUpArea Or ground floor units area is mandatory";
 
 
 	public static final String PT_ESTIMATE_GROUND_AREA_ZERO = "PT_ESTIMATE_GROUND_AREA_ZERO";
-	public static final String PT_ESTIMATE_GROUND_AREA_ZERO_MSG = " Ground floor units must be present in the absence of proper buildup area";
+	public static final String PT_ESTIMATE_GROUND_AREA_ZERO_MSG = "Ground floor units must be present in the absence of proper buildup area";
 
 
 	public static final String PT_ESTIMATE_VACANT_LAND_NULL = "PT_ESTIMATE_VACANT_LAND_AREA_NULL";
-	public static final String PT_ESTIMATE_VACANT_LAND_NULL_MSG = " landArea is mandatory for vacant land";
+	public static final String PT_ESTIMATE_VACANT_LAND_NULL_MSG = "landArea is mandatory for vacant land";
 
 	
 	public static final String PT_ESTIMATE_BILLINGSLABS_UNMATCH_VACANCT = "PT_ESTIMATE_BILLINGSLABS_UNMATCH";
-	public static final String PT_ESTIMATE_BILLINGSLABS_UNMATCH_VACANT_MSG = " Incorrect count of {count} billing slabs has been found for the given VACANT LAND property detail";
+	public static final String PT_ESTIMATE_BILLINGSLABS_UNMATCH_VACANT_MSG = "Incorrect count of {count} billing slabs has been found for the given VACANT LAND property detail";
 
 
 	public static final String PT_ESTIMATE_NON_VACANT_LAND_UNITS = "PT_ESTIMATE_NON_VACANT_LAND_UNITS";
-	public static final String PT_ESTIMATE_NON_VACANT_LAND_UNITS_MSG = " unit is mandatory for non vacant land properties";
+	public static final String PT_ESTIMATE_NON_VACANT_LAND_UNITS_MSG = "unit is mandatory for non vacant land properties";
 	
 	public static final String PT_GET_BILL_ARREAR_DEMAND = "PT_GET_BILL_ARREAR_DEMAND";
-	public static final String PT_GET_BILL_ARREAR_DEMAND_MSG = " Partial Payment is not allowed for arrear payments, please make the complete payment";
+	public static final String PT_GET_BILL_ARREAR_DEMAND_MSG = "Partial Payment is not allowed for arrear payments, please make the complete payment";
 	
 	public static final String EG_PT_ESTIMATE_ARV_NULL = "EG_PT_ESTIMATE_ARV_NULL";
-	public static final String EG_PT_ESTIMATE_ARV_NULL_MSG = " Arv field is required for Commercial plus Rented properties";
+	public static final String EG_PT_ESTIMATE_ARV_NULL_MSG = "Arv field is required for Commercial plus Rented properties";
 
+	public static final String EG_PT_FINANCIAL_MASTER_NOT_FOUND = "EG_PT_FINANCIAL_MASTER_NOT_FOUND";
+	public static final String EG_PT_FINANCIAL_MASTER_NOT_FOUND_MSG = "No Financial Year data is available for the given year value of : ";
 }

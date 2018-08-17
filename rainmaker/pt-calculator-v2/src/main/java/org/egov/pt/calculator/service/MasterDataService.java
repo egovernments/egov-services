@@ -18,6 +18,7 @@ import org.egov.pt.calculator.web.models.demand.TaxHeadMasterResponse;
 import org.egov.pt.calculator.web.models.demand.TaxPeriod;
 import org.egov.pt.calculator.web.models.demand.TaxPeriodResponse;
 import org.egov.pt.calculator.web.models.property.RequestInfoWrapper;
+import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -41,18 +42,22 @@ public class MasterDataService {
 	 * Fetches Financial Year from Mdms Api
 	 * 
 	 * @param requestInfo
-	 * @param assesmentYear
+	 * @param assessmentYear
 	 * @param tenantId
 	 * @return
 	 */
 	@SuppressWarnings("unchecked") 
-	public Map<String, Object> getfinancialYear(RequestInfo requestInfo, String assesmentYear, String tenantId) {
+	public Map<String, Object> getFinancialYear(RequestInfo requestInfo, String assessmentYear, String tenantId) {
 
-		MdmsCriteriaReq mdmsCriteriaReq = calculatorUtils.getFinancialYearRequest(requestInfo, assesmentYear, tenantId);
+		MdmsCriteriaReq mdmsCriteriaReq = calculatorUtils.getFinancialYearRequest(requestInfo, assessmentYear, tenantId);
 		StringBuilder url = calculatorUtils.getMdmsSearchUrl();
 		MdmsResponse res = mapper.convertValue(repository.fetchResult(url, mdmsCriteriaReq), MdmsResponse.class);
-		return (Map<String, Object>) res.getMdmsRes().get(CalculatorConstants.FINANCIAL_MODULE)
-				.get(CalculatorConstants.FINANCIAL_YEAR_MASTER).get(0);
+		try {
+			return (Map<String, Object>) res.getMdmsRes().get(CalculatorConstants.FINANCIAL_MODULE)
+					.get(CalculatorConstants.FINANCIAL_YEAR_MASTER).get(0);
+		}catch (IndexOutOfBoundsException e){
+			throw new CustomException(CalculatorConstants.EG_PT_FINANCIAL_MASTER_NOT_FOUND, CalculatorConstants.EG_PT_FINANCIAL_MASTER_NOT_FOUND_MSG + assessmentYear);
+		}
 	}
 	
 	/**
@@ -72,7 +77,7 @@ public class MasterDataService {
 
 	/**
 	 * Fetch Tax Head Masters From billing service
-	 * @param requestInfo
+	 * @param requestInfoWrapper
 	 * @param tenantId
 	 * @return
 	 */
@@ -149,7 +154,7 @@ public class MasterDataService {
 	 * NOTE : applicable points to single object  out of all the entries for a given master which fits the period of the property being assessed
 	 *  
 	 * @param assessmentYear
-	 * @param masterListMap
+	 * @param masterList
 	 */
 	@SuppressWarnings("unchecked")
 	public Map<String, Object> getApplicableMaster(String assessmentYear, List<Object> masterList) {
@@ -200,7 +205,7 @@ public class MasterDataService {
 	 * Method to calculate exmeption based on the Amount and exemption map
 	 * 
 	 * @param applicableAmount
-	 * @param configMap
+	 * @param config
 	 * @return
 	 */
 	public BigDecimal calculateApplicables(BigDecimal applicableAmount, Object config) {

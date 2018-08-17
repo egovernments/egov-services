@@ -42,23 +42,51 @@ ReportDefinitions:
   externalService:
   - entity: $.MdmsRes.RAINMAKER-PGR.ServiceDefs
     apiURL: https://egov-micro-dev.egovernments.org/egov-mdms-service/v1/_get?moduleName=RAINMAKER-PGR&masterName=ServiceDefs&tenantId=$tenantId
-    keyOrder: servicecode,department
+    keyOrder: serviceCode,department,slaHours
     tableName: tbl_dept
   sourceColumns:
+  - name: department
+    label: reports.rainmaker-pgr.department
+    type: string
+    source: eg_pgr_service
+  - name: servicecode
+    label: reports.rainmaker-pgr.servicecode
+    type: string
+    source: eg_pgr_service
   - name: complaintNo
     label: reports.rainmaker-pgr.complaintNo
     type: string
     source: eg_pgr_service
+  - name: date
+    label: reports.rainmaker-pgr.date
+    type: string
+    source: eg_pgr_service
+  - name: name
+    label: reports.rainmaker-pgr.name
+    type: string
+    source: eg_pgr_service
   - name: phone
     label: reports.rainmaker-pgr.phone
-    type: number
+    type: string
     source: eg_pgr_service
-  - name: complaintNature
-    label: reports.rainmaker-pgr.complaintNature
+  - name: address
+    label: reports.rainmaker-pgr.address
+    type: string
+    source: eg_pgr_service
+  - name: landmark
+    label: reports.rainmaker-pgr.landmark
     type: string
     source: eg_pgr_service
   - name: description
     label: reports.rainmaker-pgr.description
+    type: string
+    source: eg_pgr_service
+  - name: status
+    label: reports.rainmaker-pgr.status
+    type: string
+    source: eg_pgr_service
+  - name: slahours
+    label: reports.rainmaker-pgr.slahours
     type: string
     source: eg_pgr_service
   searchParams:
@@ -74,15 +102,8 @@ ReportDefinitions:
     source: eg_pgr_service
     isMandatory: false
     searchClause: AND createdtime <= $toDate
-  - name: deptName
-    label: reports.rainmaker-pgr.deptName
-    type: singlevaluelist
-    pattern: https://egov-micro-dev.egovernments.org/egov-mdms-service/v1/_get?moduleName=RAINMAKER-PGR&masterName=ServiceDefs&tenantId=$tenantid|$..serviceCode|$..department
-    source: rainmaker-pgr
-    wrapper: true
-    isMandatory: false
-    searchClause : AND servicecode = $deptName
-  query: SELECT servicerequestid as complaintNo, phone, servicecode as complaintNature, description FROM eg_pgr_service WHERE tenantid LIKE $tenantid
+  query: SELECT (SELECT deptmap.department FROM (VALUES tbl_dept) AS deptmap(serviceCode, department, slaHours) WHERE deptmap.serviceCode = eg_pgr_service.servicecode) AS department, eg_pgr_service.servicecode AS servicecode, servicerequestid AS complaintNo, to_char(to_timestamp(TRUNC(CAST(createdtime AS bigint) / 1000)), 'DD/MM/YYYY') AS date, eg_user.name, phone, landmark, address, description, CONCAT(((SELECT deptmap.slaHours FROM (VALUES tbl_dept) AS deptmap(serviceCode, department, slaHours) WHERE deptmap.serviceCode = eg_pgr_service.servicecode)::integer / 24), ' days') AS slahours, status FROM eg_pgr_service, eg_user WHERE eg_pgr_service.accountid = eg_user.id::VARCHAR AND eg_pgr_service.tenantid LIKE $tenantid AND status IN ('open','assigned','reassigrequested','rejected')
+
 
 - reportName: EmployeeReport
   summary: Fetches complaints for employees
@@ -91,35 +112,51 @@ ReportDefinitions:
   externalService:
   - entity: $.MdmsRes.RAINMAKER-PGR.ServiceDefs
     apiURL: https://egov-micro-dev.egovernments.org/egov-mdms-service/v1/_get?moduleName=RAINMAKER-PGR&masterName=ServiceDefs&tenantId=$tenantId
-    keyOrder: servicecode,department
+    keyOrder: serviceCode,department,slaHours
     tableName: tbl_dept
   sourceColumns:
+  - name: department
+    label: reports.rainmaker-pgr.department
+    type: string
+    source: eg_pgr_service
+  - name: servicecode
+    label: reports.rainmaker-pgr.servicecode
+    type: string
+    source: eg_pgr_service
   - name: complaintNo
     label: reports.rainmaker-pgr.complaintNo
     type: string
     source: eg_pgr_service
-  - name: complaintNature
-    label: reports.rainmaker-pgr.complaintNature
+  - name: date
+    label: reports.rainmaker-pgr.date
     type: string
     source: eg_pgr_service
-  - name: citizenName
-    label: reports.rainmaker-pgr.citizenName
+  - name: name
+    label: reports.rainmaker-pgr.name
     type: string
-    source: eg_user
+    source: eg_pgr_service
   - name: phone
     label: reports.rainmaker-pgr.phone
-    type: number
+    type: string
     source: eg_pgr_service
   - name: address
     label: reports.rainmaker-pgr.address
-    type: number
+    type: string
     source: eg_pgr_service
   - name: landmark
     label: reports.rainmaker-pgr.landmark
-    type: number
+    type: string
     source: eg_pgr_service
   - name: description
     label: reports.rainmaker-pgr.description
+    type: string
+    source: eg_pgr_service
+  - name: status
+    label: reports.rainmaker-pgr.status
+    type: string
+    source: eg_pgr_service
+  - name: slahours
+    label: reports.rainmaker-pgr.slahours
     type: string
     source: eg_pgr_service
   searchParams:
@@ -135,4 +172,4 @@ ReportDefinitions:
     source: eg_pgr_service
     isMandatory: false
     searchClause: AND createdtime <= $toDate
-  query: SELECT servicerequestid as complaintNo, servicecode as complaintNature, eg_user.name as citizenName, eg_user.mobilenumber as phone, address, landmark, description FROM eg_pgr_service INNER JOIN eg_user ON eg_pgr_service.accountid = cast(eg_user.id as varchar) WHERE eg_pgr_service.status = 'assigned' AND servicerequestid IN (select DISTINCT businesskey from eg_pgr_action where status = 'assigned' AND "when" IN (select max("when") from eg_pgr_action where assignee NOTNULL group by businesskey) AND assignee = $userid)
+  query: SELECT (SELECT deptmap.department FROM (VALUES tbl_dept) AS deptmap(serviceCode, department, slaHours) WHERE deptmap.serviceCode = eg_pgr_service.servicecode) AS department, eg_pgr_service.servicecode AS servicecode, servicerequestid AS complaintNo, to_char(to_timestamp(TRUNC(CAST(createdtime AS bigint) / 1000)), 'DD/MM/YYYY') AS date, eg_user.name, phone, landmark, address, description, CONCAT(((SELECT deptmap.slaHours FROM (VALUES tbl_dept) AS deptmap(serviceCode, department, slaHours) WHERE deptmap.serviceCode = eg_pgr_service.servicecode)::integer / 24), ' days') AS slahours, status FROM eg_pgr_service INNER JOIN eg_user ON eg_pgr_service.accountid = eg_user.id::VARCHAR WHERE eg_pgr_service.status = 'assigned' AND servicerequestid IN (SELECT DISTINCT businesskey FROM eg_pgr_action WHERE status = 'assigned' AND "when" IN (select max("when") FROM eg_pgr_action WHERE assignee NOTNULL GROUP BY businesskey) AND assignee = $userid)

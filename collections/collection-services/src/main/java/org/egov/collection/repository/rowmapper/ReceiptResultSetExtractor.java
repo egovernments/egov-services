@@ -46,7 +46,7 @@ public class ReceiptResultSetExtractor implements ResultSetExtractor<List<Receip
                         .receiptDate(resultSet.getLong("rh_receiptDate"))
                         .billDescription(resultSet.getString("rh_referenceDesc"))
                         .manualReceiptNumber(resultSet.getString("rh_manualReceiptNumber"))
-                        .amountPaid(getBigDecimalValue(resultSet.getBigDecimal("rh_totalAmount")))
+                        .amountPaid(BigDecimal.ZERO)
                         .totalAmount(getBigDecimalValue(resultSet.getBigDecimal("rh_totalAmount")))
                         .minimumAmount(getBigDecimalValue(resultSet.getBigDecimal("rh_minimumAmount")))
                         .billAccountDetails(new ArrayList<>())
@@ -86,21 +86,26 @@ public class ReceiptResultSetExtractor implements ResultSetExtractor<List<Receip
                 receipt = receipts.get(receiptHeader);
             }
 
-            receipt.getBill().get(0).getBillDetails().get(0).getBillAccountDetails().add(populateAccountDetail
-                    (resultSet));
+            BillDetail billDetail = receipt.getBill().get(0).getBillDetails().get(0);
+            billDetail.getBillAccountDetails().add(populateAccountDetail
+                    (resultSet, billDetail));
 
         }
 
         return new ArrayList<>(receipts.values());
     }
 
-    private BillAccountDetail populateAccountDetail(ResultSet resultSet) throws SQLException, DataAccessException{
+    private BillAccountDetail populateAccountDetail(ResultSet resultSet, BillDetail billDetail) throws SQLException,
+            DataAccessException{
+
+        BigDecimal crAmount = getBigDecimalValue(resultSet.getBigDecimal("rd_cramount"));
+        billDetail.setAmountPaid(billDetail.getAmountPaid().add(crAmount));
 
         return BillAccountDetail.builder()
                     .isActualDemand((Boolean) resultSet.getObject("rd_isActualDemand"))
                     .tenantId(resultSet.getString("rd_tenantId"))
                     .billDetail(String.valueOf(resultSet.getLong("rh_id")))
-                    .creditAmount(getBigDecimalValue(resultSet.getBigDecimal("rd_cramount")))
+                    .creditAmount(crAmount)
                     .crAmountToBePaid(getBigDecimalValue(resultSet.getBigDecimal("rd_actualcramountToBePaid")))
                     .accountDescription(resultSet.getString("rd_description"))
                     .order(resultSet.getInt("rd_ordernumber"))

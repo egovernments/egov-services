@@ -10,10 +10,7 @@ import org.egov.collection.web.contract.BillDetail;
 import org.egov.collection.web.contract.Receipt;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 public class CollectionsQueryBuilder {
 
@@ -84,7 +81,7 @@ public class CollectionsQueryBuilder {
         sqlParameterSource.addValue("collectiontype", billDetail.getCollectionType().toString());
         sqlParameterSource.addValue("reasonforcancellation",billDetail.getReasonForCancellation());
         sqlParameterSource.addValue("minimumamount", billDetail.getMinimumAmount());
-        sqlParameterSource.addValue("totalamount", billDetail.getAmountPaid());
+        sqlParameterSource.addValue("totalamount", billDetail.getTotalAmount());
         sqlParameterSource.addValue("collmodesnotallwd", collectionModesNotAllowed);
         sqlParameterSource.addValue("consumercode", billDetail.getConsumerCode());
         sqlParameterSource.addValue("channel", billDetail.getChannel());
@@ -152,57 +149,49 @@ public class CollectionsQueryBuilder {
     private static void addWhereClause(StringBuilder selectQuery, Map<String, Object> preparedStatementValues,
                                 ReceiptSearchCriteria searchCriteria) {
 
-        if (searchCriteria.getTenantId() == null)
-            return;
-
-        selectQuery.append(" WHERE");
-        boolean isAppendAndClause = false;
-
         if (StringUtils.isNotBlank(searchCriteria.getTenantId())) {
-            isAppendAndClause = true;
+            addClauseIfRequired(preparedStatementValues, selectQuery);
             selectQuery.append(" rh.tenantId =:tenantId");
             preparedStatementValues.put("tenantId", searchCriteria.getTenantId());
 
         }
 
         if (searchCriteria.getReceiptNumbers() != null && !searchCriteria.getReceiptNumbers().isEmpty()) {
-            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause,
-                    selectQuery);
+            addClauseIfRequired(preparedStatementValues, selectQuery);
             selectQuery.append(" rh.receiptNumber IN (:receiptNumbers)  ");
             preparedStatementValues.put("receiptNumbers", searchCriteria.getReceiptNumbers());
         }
 
         if (!Objects.isNull(searchCriteria.getConsumerCode()) && !searchCriteria.getConsumerCode().isEmpty()) {
-            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+
+            addClauseIfRequired(preparedStatementValues, selectQuery);
             selectQuery.append(" rh.consumerCode in (:consumerCodes)");
             preparedStatementValues.put("consumerCodes", searchCriteria.getConsumerCode());
         }
 
         if (StringUtils.isNotBlank(searchCriteria.getStatus())) {
-            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause,
-                    selectQuery);
+
+            addClauseIfRequired(preparedStatementValues, selectQuery);
             selectQuery.append(" rh.status = :status");
             preparedStatementValues.put("status", searchCriteria.getStatus());
         }
 
         if (StringUtils.isNotBlank(searchCriteria.getCollectedBy())) {
-            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause,
-                    selectQuery);
+
+            addClauseIfRequired(preparedStatementValues, selectQuery);
             selectQuery.append(" rh.createdBy = :collectedBy");
             preparedStatementValues.put("collectedBy",new Long(searchCriteria
                     .getCollectedBy()));
         }
 
         if (searchCriteria.getFromDate() != null) {
-            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause,
-                    selectQuery);
+            addClauseIfRequired(preparedStatementValues, selectQuery);
             selectQuery.append(" rh.receiptDate >= :fromDate");
             preparedStatementValues.put("fromDate", searchCriteria.getFromDate());
         }
 
         if (searchCriteria.getToDate() != null) {
-            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause,
-                    selectQuery);
+            addClauseIfRequired(preparedStatementValues, selectQuery);
             selectQuery.append(" rh.receiptDate <= :toDate");
             Calendar c = Calendar.getInstance();
             c.setTime(new Date(searchCriteria.getToDate()));
@@ -213,46 +202,45 @@ public class CollectionsQueryBuilder {
         }
 
         if (StringUtils.isNotBlank(searchCriteria.getBusinessCode())) {
-            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause,
-                    selectQuery);
+            addClauseIfRequired(preparedStatementValues, selectQuery);
             selectQuery.append(" rh.businessDetails = :businessCode");
             preparedStatementValues.put("businessCode", searchCriteria.getBusinessCode());
         }
 
         if (searchCriteria.getIds() != null) {
-            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+            addClauseIfRequired(preparedStatementValues, selectQuery);
             selectQuery.append(" rh.id IN (:ids)");
             preparedStatementValues.put("ids", searchCriteria.getIds());
         }
 
         if (StringUtils.isNotBlank(searchCriteria.getTransactionId())) {
-            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause,
-                    selectQuery);
+            addClauseIfRequired(preparedStatementValues, selectQuery);
             selectQuery.append(" rh.transactionid = :transactionId ");
             preparedStatementValues.put("transactionId", searchCriteria.getTransactionId());
         }
 
         if(searchCriteria.getManualReceiptNumbers() != null && !searchCriteria.getManualReceiptNumbers().isEmpty()) {
-            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause,
-                    selectQuery);
+            addClauseIfRequired(preparedStatementValues, selectQuery);
             selectQuery.append(" rh.manualreceiptnumber IN (:manualReceiptNumbers) ");
             preparedStatementValues.put("manualReceiptNumbers", searchCriteria.getManualReceiptNumbers());
         }
 
         if(searchCriteria.getBillIds() != null && !searchCriteria.getBillIds().isEmpty()) {
-            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause,
-                    selectQuery);
+            addClauseIfRequired(preparedStatementValues, selectQuery);
             selectQuery.append(" rh.referencenumber IN (:billIds) ");
             preparedStatementValues.put("billIds", searchCriteria.getBillIds());
         }
+
+
+    }
+    private static void addClauseIfRequired(Map<String, Object> values, StringBuilder queryString) {
+        if(values.isEmpty())
+            queryString.append(" WHERE ");
+        else{
+            queryString.append(" AND");
+        }
     }
 
-    private static boolean addAndClauseIfRequired(boolean appendAndClauseFlag,
-                                           StringBuilder queryString) {
-        if (appendAndClauseFlag)
-            queryString.append(" AND");
-        return true;
-    }
 
     private static void addOrderByClause(StringBuilder selectQuery,
                                   ReceiptSearchCriteria criteria) {

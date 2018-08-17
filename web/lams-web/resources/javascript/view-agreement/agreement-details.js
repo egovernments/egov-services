@@ -173,12 +173,14 @@ class AgreementDetails extends React.Component {
         var requestParam;
         var paramValue;
         var agreementNumber = getUrlVars()["agreementNumber"];
+        var action = getUrlVars()["action"];
+        var agreementId = getUrlVars()["id"];
         var acknowledgementNumber = getUrlVars()["acknowledgementNumber"];
         var status = getUrlVars()["status"];
 
         var promise1 = new Promise(function(resolve, reject) {
           var reservationCategory = commonApiPost("lams-services", "getreservations", "", {tenantId}).responseJSON;
-          var agreement = commonApiPost("lams-services","agreements","_search", { agreementNumber,status,acknowledgementNumber,action:"View",tenantId}).responseJSON["Agreements"][0] || {};
+          var agreement = commonApiPost("lams-services","agreements","_search", { agreementId,agreementNumber,status,acknowledgementNumber,action,tenantId}).responseJSON["Agreements"][0] || {};
           resolve({reservationCategory:reservationCategory,agreement:agreement});
         });
 

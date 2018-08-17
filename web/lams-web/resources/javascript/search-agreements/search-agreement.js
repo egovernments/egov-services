@@ -460,6 +460,8 @@ class AgreementSearch extends React.Component {
     type,
     id,
     number,
+    action,
+    agreementId,
     assetCategory,
     acknowledgementNumber,
     status
@@ -520,13 +522,15 @@ class AgreementSearch extends React.Component {
           }
         });
         break;
-      case "view":
+        case "view":
         window.open(
-          "app/search-agreement/view-agreement-details.html?&" +
+          "app/search-agreement/view-agreement-details.html?" +
             (number
               ? "&agreementNumber=" + number
               : "&acknowledgementNumber=" + acknowledgementNumber) +
             (status ? "&status=" + status : "") +
+            (action ? "&action=" + action : "") +
+            (agreementId ? "&id=" + agreementId : "") +
             "&assetId=" +
             id,
           "fs",
@@ -1179,26 +1183,7 @@ class AgreementSearch extends React.Component {
     };
 
     const getOption = function(isShopOrLand, item) {
-      if (item.status === "HISTORY") {
-        return (
-          <select
-            id="myOptions"
-            onChange={e => {
-              handleSelectChange(
-                e.target.value,
-                item.asset.id,
-                item.agreementNumber,
-                getValueByName("name", item.asset.assetCategory.id),
-                item.acknowledgementNumber,
-                item.status
-              );
-            }}
-          >
-            <option value="">Select Action</option>
-            <option value="view">View</option>
-          </select>
-        );
-      }else if (item.status === "INACTIVE") {
+       if (item.status === "INACTIVE" || item.status === "HISTORY") {
           return (
               <select
                   id="myOptions"
@@ -1207,6 +1192,8 @@ class AgreementSearch extends React.Component {
                           e.target.value,
                           item.asset.id,
                           item.agreementNumber,
+                          item.action,
+                          item.id,
                           getValueByName("name", item.asset.assetCategory.id),
                           item.acknowledgementNumber,
                           item.status
@@ -1226,7 +1213,9 @@ class AgreementSearch extends React.Component {
                 e.target.value,
                 item.asset.id,
                 item.agreementNumber,
-                getValueByName("name", item.asset.assetCategory.id),
+                  item.action,
+                  item.id,
+                  getValueByName("name", item.asset.assetCategory.id),
                 item.acknowledgementNumber,
                 item.status
               );
@@ -1249,7 +1238,9 @@ class AgreementSearch extends React.Component {
                 e.target.value,
                 item.asset.id,
                 item.agreementNumber,
-                getValueByName("name", item.asset.assetCategory.id),
+                  item.action,
+                  item.id,
+                  getValueByName("name", item.asset.assetCategory.id),
                 item.acknowledgementNumber,
                 item.status
               );
@@ -1266,7 +1257,7 @@ class AgreementSearch extends React.Component {
     };
     const disbaled = function(type) {
       if (type === "view") {
-        return "ture";
+        return "true";
       } else {
         return "false";
       }

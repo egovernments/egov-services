@@ -30,10 +30,10 @@ class RenewalAgreement extends React.Component {
           id: "",
           assetCategory: {
             id: "",
-            name: "dfsdf",
-            code: "948598"
+            name: "",
+            code: ""
           },
-          name: "dddd",
+          name: "",
           code: "",
           locationDetails: {
             locality: "",
@@ -43,7 +43,7 @@ class RenewalAgreement extends React.Component {
             street: "",
             electionWard: "",
             doorNo: "",
-            pinCode: "23235"
+            pinCode: ""
           }
         },
         tenderNumber: "",
@@ -120,7 +120,8 @@ class RenewalAgreement extends React.Component {
       designationList: [],
       userList: [],
       rentInc: [],
-      minRent:0
+      existingRent:0,
+      renewalDeposit:0
 
     }
     this.handleChangeTwoLevel = this.handleChangeTwoLevel.bind(this);
@@ -303,7 +304,7 @@ class RenewalAgreement extends React.Component {
             headers: {
             'auth-token': authToken
             },
-            success: function (res1) { 
+            success: function (res1) {
               if(res1.preambleNumber !== null){
                 $('#alert-box').fadeIn(function(){
                   $("#alert-box-content").html("Preamble No : " + res1.preambleNumber +" Gist Of Preamble : "+ res1.gistOfPreamble);
@@ -313,7 +314,7 @@ class RenewalAgreement extends React.Component {
                 $('#alert-box').fadeIn(function(){
                   $("#alert-box-content").html("Entered CR number is not valid.Please enter a valid CR number");
                 });
-              }    
+              }
             },
             error: function (err) {
                 $('#councilNumber').val("");
@@ -322,7 +323,7 @@ class RenewalAgreement extends React.Component {
                 });
             }
         })
-    } 
+    }
   }
   handleChange(e, name) {
 
@@ -365,17 +366,18 @@ class RenewalAgreement extends React.Component {
 
     } else if(name === "rent"){
 
-      var securityDeposit = 3 * e.target.value;
+      var renewalDeposit = 3 * e.target.value;
 
       _this.setState({
         ..._this.state,
+        renewalDeposit: renewalDeposit,
         agreement: {
           ..._this.state.agreement,
           [name]: e.target.value,
-          securityDeposit: securityDeposit
+          securityDeposit:renewalDeposit
+
         }
       })
-
     } else  {
 
       _this.setState({
@@ -514,10 +516,6 @@ class RenewalAgreement extends React.Component {
 
 
     var cityGrade = !localStorage.getItem("city_grade") || localStorage.getItem("city_grade") == "undefined" ? (localStorage.setItem("city_grade", JSON.stringify(commonApiPost("tenant", "v1/tenant", "_search", { code: tenantId }).responseJSON["tenant"][0]["city"]["ulbGrade"] || {})), JSON.parse(localStorage.getItem("city_grade"))) : JSON.parse(localStorage.getItem("city_grade"));
-    var agreementType = "Renew Municipality Agreement";
-    if (cityGrade.toLowerCase() === 'corp') {
-      agreementType = "Renewal LeaseAgreement";
-    }
 
     getDesignations(null,null, function (designations) {
       for (let variable in designations) {
@@ -548,7 +546,7 @@ class RenewalAgreement extends React.Component {
       agreement.workflowDetails = {};
     }
 
-    var minRent = agreement.rent; 
+    var existingRent = agreement.rent;
 
     var rentInc = commonApiPost("lams-services", "getrentincrements", "", {tenantId, basisOfAllotment:agreement.basisOfAllotment}).responseJSON;
 
@@ -557,7 +555,7 @@ class RenewalAgreement extends React.Component {
       agreement: agreement,
       departmentList: departmentList,
       rentInc,
-      minRent
+      existingRent
     });
 
   }
@@ -600,6 +598,25 @@ class RenewalAgreement extends React.Component {
         }
       });
     });
+    $('#renewalFromDate').datepicker({
+      format: 'dd/mm/yyyy',
+      startDate : _this.state.agreement.expiryDate,
+      autoclose: true,
+      defaultDate: ""
+    });
+
+    $('#renewalFromDate').on('change blur', function (e) {
+      _this.setState({
+        agreement: {
+          ..._this.state.agreement,
+          renewal: {
+            ..._this.state.agreement.renewal,
+            "renewalFromDate": $("#renewalFromDate").val()
+          }
+        }
+      });
+    });
+
 
   }
 
@@ -607,7 +624,7 @@ class RenewalAgreement extends React.Component {
   render() {
     var _this = this;
     let { handleChange, handleChangeTwoLevel, addOrUpdate,onBlur} = this;
-    let { agreement, renewalReasons, rentInc, minRent } = _this.state;
+    let { agreement, renewalReasons, rentInc, existingRent,renewalDeposit } = _this.state;
     let { allottee, asset, rentIncrementMethod, workflowDetails, cancellation,
       renewal, eviction, objection, judgement, remission, remarks, documents } = this.state.agreement;
     let { assetCategory, locationDetails } = this.state.agreement.asset;
@@ -890,7 +907,7 @@ class RenewalAgreement extends React.Component {
                   </div>
                   <div className="col-sm-6 label-view-text">
                     <label id="rent" name="rent">
-                      {minRent ? minRent : "N/A"}
+                      {existingRent ? existingRent : "N/A"}
                     </label>
                   </div>
                 </div>
@@ -924,11 +941,37 @@ class RenewalAgreement extends React.Component {
               <div className="col-sm-6">
                 <div className="row">
                   <div className="col-sm-6 label-text">
-                    <label htmlFor="natureOfAllotment">Allotment Type :</label>
+                    <label htmlFor="agreementType">Agreement Type :</label>
                   </div>
                   <div className="col-sm-6 label-view-text">
-                    <label id="natureOfAllotment" name="natureOfAllotment">
-                      {agreement.natureOfAllotment ? agreement.natureOfAllotment : "N/A"}
+                    <label id="agreementType" name="agreementType">
+                      {agreement.action ? agreement.action : "N/A"}
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="row">
+              <div className="col-sm-6">
+                <div className="row">
+                  <div className="col-sm-6 label-text">
+                    <label htmlFor="commencementDate"> Allotment Date :</label>
+                  </div>
+                  <div className="col-sm-6 label-view-text">
+                    <label id="commencementDate" name="commencementDate">
+                      {agreement.commencementDate ? agreement.commencementDate : "N/A"}
+                    </label>
+                  </div>
+                </div>
+              </div>
+              <div className="col-sm-6">
+                <div className="row">
+                  <div className="col-sm-6 label-text">
+                    <label htmlFor="expiryDate">Expiry Date:</label>
+                  </div>
+                  <div className="col-sm-6 label-view-text">
+                    <label id="expiryDate" name="expiryDate">
+                      {agreement.expiryDate ? agreement.expiryDate : "N/A"}
                     </label>
                   </div>
                 </div>
@@ -946,17 +989,17 @@ class RenewalAgreement extends React.Component {
           <h3 className="categoryType">Renewal Details </h3>
           <div className="form-section-inner">
 
-            <div className="row">
+             <div className="row">
               <div className="col-sm-6">
                 <div className="row">
                   <div className="col-sm-6 label-text">
-                    <label for="renewalOrderNumber">Council/standing committee Resolution Number
+                    <label for="renewalOrderNumber">Council/Standing Committee Resolution Number
                               <span>*</span>
                     </label>
                   </div>
                   <div className="col-sm-6">
                     <input type="text" name="renewalOrderNumber" id="renewalOrderNumber"
-                      onChange={(e) => { handleChangeTwoLevel(e, "renewal", "renewalOrderNumber") }} 
+                      onChange={(e) => { handleChangeTwoLevel(e, "renewal", "renewalOrderNumber") }}
                       onBlur={(e)=>onBlur(e.target.value)} required />
                   </div>
                 </div>
@@ -964,35 +1007,33 @@ class RenewalAgreement extends React.Component {
               <div className="col-sm-6">
                 <div className="row">
                   <div className="col-sm-6 label-text">
-                    <label for="renewalOrderDate">Council/standing committee Resolution Date
+                    <label for="renewalOrderDate">Council/Standing Committee Resolution Date
                               <span>*</span>
                     </label>
                   </div>
                   <div className="col-sm-6">
                     <div className="text-no-ui">
                       <span className="glyphicon glyphicon-calendar"></span>
-                      <input type="text" className="datepicker" name="renewalOrderDate" id="renewalOrderDate" 
+                      <input type="text" className="datepicker" name="renewalOrderDate" id="renewalOrderDate"
                         onChange={(e) => { handleChangeTwoLevel(e, "renewal", "renewalOrderDate") }} required />
                     </div>
                   </div>
                 </div>
               </div>
-            </div>
-
-            <div className="row">
+             </div>
+             <div className="row">
               <div className="col-sm-6">
                 <div className="row">
                   <div className="col-sm-6 label-text">
-
-                    <label for="renewalRent" className="categoryType">Rent
+                    <label for="renewalFromDate">Renewal From Date
                               <span>*</span>
                     </label>
                   </div>
                   <div className="col-sm-6">
                     <div className="text-no-ui">
-                      <span>₹</span>
-                      <input type="number" min="0" name="renewalRent" id="renewalRent" 
-                        onChange={(e) => { handleChange(e, "rent") }} required />
+                      <span className="glyphicon glyphicon-calendar"></span>
+                      <input type="text" className="datepicker" name="renewalFromDate" id="renewalFromDate"
+                        onChange={(e) => { handleChangeTwoLevel(e, "renewal", "renewalFromDate") }} required />
                     </div>
                   </div>
                 </div>
@@ -1005,21 +1046,54 @@ class RenewalAgreement extends React.Component {
                     </label>
                   </div>
                   <div className="col-sm-6">
-                    <select name="timePeriod" id="timePeriod" className="selectStyle"  onChange={(e) => { handleChange(e, "timePeriod") }} required >
+                       <select name="timePeriod" id="timePeriod" className="selectStyle"  onChange={(e) => { handleChange(e, "timePeriod") }} required >
                       <option value="">Select </option>
                       <option value="1">1</option>
                       <option value="2">2</option>
                       <option value="3">3 </option>
                       <option value="4">4 </option>
                       <option value="5">5 </option>
+                      </select>
+                      </div>
+                </div>
+              </div>
+
+             </div>
+             <div className="row">
+              <div className="col-sm-6">
+                <div className="row">
+                  <div className="col-sm-6 label-text">
+
+                    <label for="renewalRent" className="categoryType">Renewal Rent
+                              <span>*</span>
+                    </label>
+                  </div>
+                  <div className="col-sm-6">
+                    <div className="text-no-ui">
+                      <span>₹</span>
+                      <input type="number" min="0" name="renewalRent" id="renewalRent"
+                        onChange={(e) => { handleChange(e, "rent") }} required />
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="col-sm-6">
+                <div className="row">
+                  <div className="col-sm-6 label-text">
+                    <label for="reasonForRenewal">Renewal Reason
+                              <span>*</span>
+                    </label>
+                  </div>
+                  <div className="col-sm-6">
+                    <select name="reasonForRenewal" id="reasonForRenewal" className="selectStyle" onChange={(e) => { handleChangeTwoLevel(e, "renewal", "reasonForRenewal") }} required>
+                      <option>Select</option>
+                      {renderOption(renewalReasons)}
                     </select>
                   </div>
                 </div>
               </div>
-
-            </div>
-
-            <div className="row">
+             </div>
+             <div className="row">
               <div className="col-sm-6">
                 <div className="row">
                   <div className="col-sm-6 label-text">
@@ -1028,7 +1102,7 @@ class RenewalAgreement extends React.Component {
                     </label>
                   </div>
                   <div className="col-sm-6">
-                    <input type="number" min="0" id="securityDeposit" name="securityDeposit" onChange={(e) => { handleChange(e, "securityDeposit") }} required />
+                    <input type="number" min="0" id="securityDeposit" name="securityDeposit"  onChange={(e) => { handleChange(e, "securityDeposit") }} value={renewalDeposit} required />
                   </div>
                 </div>
               </div>
@@ -1048,9 +1122,8 @@ class RenewalAgreement extends React.Component {
                   </div>
                 </div>
               </div>
-            </div>
-
-            <div className="row">
+             </div>
+             <div className="row">
               <div className="col-sm-6" id="rentCalculatedMethod">
                 <div className="row">
                   <div className="col-sm-6 label-text">
@@ -1069,23 +1142,18 @@ class RenewalAgreement extends React.Component {
               <div className="col-sm-6">
                 <div className="row">
                   <div className="col-sm-6 label-text">
-                    <label for="reasonForRenewal">Renewal Reason
-                              <span>*</span>
-                    </label>
+                    <label for="remarks">Remarks </label>
                   </div>
                   <div className="col-sm-6">
-                    <select name="reasonForRenewal" id="reasonForRenewal" className="selectStyle" onChange={(e) => { handleChangeTwoLevel(e, "renewal", "reasonForRenewal") }} required>
-                      <option>Select</option>
-                      {renderOption(renewalReasons)}
-                    </select>
+                    <textarea name="remarks" id="remarks"
+                      onChange={(e) => { handleChange(e, "remarks") }}></textarea>
                   </div>
                 </div>
               </div>
-            </div>
-            <div className="row">
-
-            </div>
-            <div className="row">
+             </div>
+             <div className="row">
+             </div>
+             <div className="row">
               <div className="col-sm-6">
                 <div className="row">
                   <div className="col-sm-6 label-text">
@@ -1098,18 +1166,7 @@ class RenewalAgreement extends React.Component {
                   </div>
                 </div>
               </div>
-              <div className="col-sm-6">
-                <div className="row">
-                  <div className="col-sm-6 label-text">
-                    <label for="remarks">Remarks </label>
-                  </div>
-                  <div className="col-sm-6">
-                    <textarea name="remarks" id="remarks"
-                      onChange={(e) => { handleChange(e, "remarks") }}></textarea>
-                  </div>
-                </div>
-              </div>
-            </div>
+             </div>
 
           </div>
         </div>

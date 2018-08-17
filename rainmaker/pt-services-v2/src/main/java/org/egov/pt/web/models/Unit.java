@@ -7,6 +7,7 @@ import java.util.Set;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
@@ -34,42 +35,54 @@ import lombok.Setter;
 @Builder
 @EqualsAndHashCode(exclude={"usage"})
 public class Unit   {
+
+        @Size(max=64)
         @JsonProperty("id")
         private String id;
 
+        @Size(max=256)
         @JsonProperty("tenantId")
         private String tenantId;
 
+        @Size(max=64)
         @JsonProperty("floorNo")
         private String floorNo;
 
+        @Size(max=64)
         @JsonProperty("unitType")
         private String unitType;
 
         @JsonProperty("unitArea")
         private Float unitArea;
 
+        @Size(max=64)
         @JsonProperty("usageCategoryMajor")
         private String usageCategoryMajor;
 
+        @Size(max=64)
         @JsonProperty("usageCategoryMinor")
         private String usageCategoryMinor;
 
+        @Size(max=64)
         @JsonProperty("usageCategorySubMinor")
         private String usageCategorySubMinor;
 
+        @Size(max=64)
         @JsonProperty("usageCategoryDetail")
         private String usageCategoryDetail;
 
+        @Size(max=64)
         @JsonProperty("occupancyType")
         private String occupancyType;
 
         @JsonProperty("occupancyDate")
         private Long occupancyDate;
 
+        @Size(max=64)
         @JsonProperty("constructionType")
         private String constructionType;
 
+        @Size(max=64)
         @JsonProperty("constructionSubType")
         private String constructionSubType;
 

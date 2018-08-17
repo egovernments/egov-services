@@ -45,6 +45,7 @@ public class PropertyDetail   {
         @JsonProperty("institution")
         private Institution institution;
 
+        @Size(max=256)
         @JsonProperty("tenantId")
         private String tenantId;
 
@@ -83,6 +84,7 @@ public class PropertyDetail   {
         @JsonProperty("source")
         private SourceEnum source;
 
+        @Size(max=64)
         @JsonProperty("usage")
         private String usage;
 
@@ -106,27 +108,34 @@ public class PropertyDetail   {
         private Object additionalDetails;
 
         @NotNull
+        @Size(max=64)
         @JsonProperty("financialYear")
         private String financialYear;
 
+        @Size(max=64)
         @JsonProperty("propertyType")
         private String propertyType;
 
+        @Size(max=64)
         @JsonProperty("propertySubType")
         private String propertySubType;
 
+        @Size(max=64)
         @JsonProperty("assessmentNumber")
         private String assessmentNumber;
 
         @JsonProperty("assessmentDate")
         private Long assessmentDate;
 
+        @Size(max=64)
         @JsonProperty("usageCategoryMajor")
         private String usageCategoryMajor;
 
+        @Size(max=64)
         @JsonProperty("ownershipCategory")
         private String ownershipCategory;
 
+        @Size(max=64)
         @JsonProperty("subOwnershipCategory")
         private String subOwnershipCategory;
 
@@ -136,9 +145,11 @@ public class PropertyDetail   {
         @JsonProperty("adhocPenalty")
         private BigDecimal adhocPenalty;
 
+        @Size(max=1024)
         @JsonProperty("adhocExemptionReason")
         private String adhocExemptionReason;
 
+        @Size(max=1024)
         @JsonProperty("adhocPenaltyReason")
         private String adhocPenaltyReason;
 

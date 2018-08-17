@@ -3,6 +3,7 @@ package org.egov.pt.web.models;
 import java.util.*;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
@@ -30,9 +31,11 @@ public class OwnerInfo extends User  {
         @JsonProperty("ownerShipPercentage")
         private Double ownerShipPercentage;
 
+        @Size(max=64)
         @JsonProperty("ownerType")
         private String ownerType;
 
+        @Size(max=64)
         @JsonProperty("institutionId")
         private String institutionId;
 

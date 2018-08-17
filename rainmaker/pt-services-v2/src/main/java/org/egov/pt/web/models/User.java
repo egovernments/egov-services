@@ -31,12 +31,15 @@ public class User   {
         @JsonProperty("id")
         private Long id;
 
+        @Size(max=64)
         @JsonProperty("uuid")
         private String uuid;
 
+        @Size(max=64)
         @JsonProperty("userName")
         private String userName;
 
+        @Size(max=64)
         @JsonProperty("password")
         private String password;
 
@@ -44,6 +47,7 @@ public class User   {
         private String salutation;
 
         @NotNull
+        @Size(max=100)
         @Pattern(regexp = "[a-z-A-Z' ']*", message = "Name has invalid characters")
         @JsonProperty("name")
         private String name;
@@ -55,12 +59,15 @@ public class User   {
         @JsonProperty("mobileNumber")
         private String mobileNumber;
 
+        @Size(max=128)
         @JsonProperty("emailId")
         private String emailId;
 
+        @Size(max=50)
         @JsonProperty("altContactNumber")
         private String altContactNumber;
 
+        @Size(max=10)
         @JsonProperty("pan")
         private String pan;
 
@@ -68,21 +75,27 @@ public class User   {
         @JsonProperty("aadhaarNumber")
         private String aadhaarNumber;
 
+        @Size(max=300)
         @JsonProperty("permanentAddress")
         private String permanentAddress;
 
+        @Size(max=300)
         @JsonProperty("permanentCity")
         private String permanentCity;
 
+        @Size(max=10)
         @JsonProperty("permanentPinCode")
         private String permanentPincode;
 
+        @Size(max=300)
         @JsonProperty("correspondenceCity")
         private String correspondenceCity;
 
+        @Size(max=10)
         @JsonProperty("correspondencePinCode")
         private String correspondencePincode;
 
+        @Size(max=300)
         @JsonProperty("correspondenceAddress")
         private String correspondenceAddress;
 
@@ -95,12 +108,15 @@ public class User   {
         @JsonProperty("pwdExpiryDate")
         private Long pwdExpiryDate;
 
+        @Size(max=16)
         @JsonProperty("locale")
         private String locale;
 
+        @Size(max=50)
         @JsonProperty("type")
         private String type;
 
+        @Size(max=36)
         @JsonProperty("signature")
         private String signature;
 
@@ -111,24 +127,30 @@ public class User   {
         @Valid
         private List<Role> roles;
 
+        @Size(max=100)
         @JsonProperty("fatherOrHusbandName")
         private String fatherOrHusbandName;
 
+        @Size(max=32)
         @JsonProperty("bloodGroup")
         private String bloodGroup;
 
+        @Size(max=300)
         @JsonProperty("identificationMark")
         private String identificationMark;
 
+        @Size(max=36)
         @JsonProperty("photo")
         private String photo;
 
+        @Size(max=64)
         @JsonProperty("createdBy")
         private String createdBy;
 
         @JsonProperty("createdDate")
         private Long createdDate;
 
+        @Size(max=64)
         @JsonProperty("lastModifiedBy")
         private String lastModifiedBy;
 
@@ -138,6 +160,7 @@ public class User   {
         @JsonProperty("otpReference")
         private String otpReference;
 
+        @Size(max=256)
         @JsonProperty("tenantId")
         private String tenantId;
 

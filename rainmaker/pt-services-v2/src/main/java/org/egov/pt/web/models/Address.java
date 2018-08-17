@@ -25,9 +25,11 @@ import javax.validation.constraints.Size;
 @Builder
 public class Address   {
 
+        @Size(max=64)
         @JsonProperty("id")
         private String id;
 
+        @Size(max=256)
         @JsonProperty("tenantId")
         private String tenantId;
 
@@ -37,43 +39,52 @@ public class Address   {
         @JsonProperty("longitude")
         private Double longitude;
 
+        @Size(max=64)
         @JsonProperty("addressId")
         private String addressId;
 
+        @Size(max=64)
         @JsonProperty("addressNumber")
         private String addressNumber;
 
+        @Size(max=64)
         @JsonProperty("type")
         private String type;
 
-        @Size(max=256)
+        @Size(max=1024)
         @JsonProperty("addressLine1")
         private String addressLine1;
 
-        @Size(max=256)
+        @Size(max=1024)
         @JsonProperty("addressLine2")
         private String addressLine2;
 
+        @Size(max=1024)
         @JsonProperty("landmark")
         private String landmark;
 
-
+        @Size(max=64)
         @JsonProperty("doorNo")
         private String doorNo;
 
         @NotNull
+        @Size(max=1024)
         @JsonProperty("city")
         private String city;
 
+        @Size(max=6)
         @JsonProperty("pincode")
         private String pincode;
 
+        @Size(max=2048)
         @JsonProperty("detail")
         private String detail;
 
+        @Size(max=1024)
         @JsonProperty("buildingName")
         private String buildingName;
 
+        @Size(max=1024)
         @JsonProperty("street")
         private String street;
 

@@ -12,6 +12,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+import javax.validation.constraints.Size;
+
 /**
  * Collection of audit related fields used by most models
  */
@@ -26,9 +28,12 @@ import lombok.ToString;
 @Builder
 @ToString
 public class AuditDetails   {
+
+        @Size(max=64)
         @JsonProperty("createdBy")
         private String createdBy;
 
+        @Size(max=64)
         @JsonProperty("lastModifiedBy")
         private String lastModifiedBy;
 

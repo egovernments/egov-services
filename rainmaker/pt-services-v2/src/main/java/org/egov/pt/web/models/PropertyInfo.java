@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Set;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Size;
 
 import lombok.*;
 import org.springframework.validation.annotation.Validated;
@@ -31,15 +33,19 @@ import io.swagger.annotations.ApiModel;
     @EqualsAndHashCode(of= {"propertyId","tenantId"})
     public class PropertyInfo   {
 
+    @Size(max=64)
     @JsonProperty("propertyId")
     public String propertyId;
 
+    @Size(max=256)
     @JsonProperty("tenantId")
     public String tenantId;
 
+    @Size(max=64)
     @JsonProperty("acknowldgementNumber")
     public String acknowldgementNumber;
 
+    @Size(max=256)
     @JsonProperty("oldPropertyId")
     public String oldPropertyId;
 

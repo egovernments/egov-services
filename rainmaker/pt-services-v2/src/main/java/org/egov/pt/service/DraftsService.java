@@ -72,8 +72,8 @@ public class DraftsService {
 	}
 
 	private void enrichDraftsForUpdate(DraftRequest draftRequest) {
-		if (!isEmpty(draftRequest.getDraft().getAssessmentNumber()))
-			draftRequest.getDraft().setActive(false);
+/*		if (!isEmpty(draftRequest.getDraft().getAssessmentNumber()))
+			draftRequest.getDraft().setActive(false);*/
 		draftRequest.getDraft().setTenantId(draftRequest.getRequestInfo().getUserInfo().getTenantId());
 		draftRequest.getDraft().setAuditDetails(propertyUtil.getAuditDetails(draftRequest.getRequestInfo().getUserInfo().getId().toString(), false));
 	}
@@ -83,13 +83,12 @@ public class DraftsService {
 		draftSearchCriteria.setLimit(draftSearchCriteria.getLimit() > 0 ? draftSearchCriteria.getLimit() : 5);
 		draftSearchCriteria.setUserId(requestInfo.getUserInfo().getUuid());
 		draftSearchCriteria.setTenantId(requestInfo.getUserInfo().getTenantId());
-		draftSearchCriteria.setActive(true);
 		List<Draft> drafts = null;
 
-		if (!isEmpty(draftSearchCriteria.getAssessmentNumber()))
+/*		if (!isEmpty(draftSearchCriteria.getAssessmentNumber()))
 			draftSearchCriteria.setActive(false);
 		else
-			draftSearchCriteria.setActive(true);
+			draftSearchCriteria.setActive(true);*/
 
 		try {
 			drafts = draftRepository.getDrafts(draftSearchCriteria);

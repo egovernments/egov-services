@@ -1,9 +1,13 @@
 package org.egov.id.model;
 
+import java.io.IOException;
+
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -67,4 +71,12 @@ public class RequestInfo {
 
 	@JsonProperty("correlationId")
 	private String correlationId = null;
+	
+	public static org.egov.common.contract.request.RequestInfo toCommonRequestInfo(RequestInfo requestInfo) throws IOException {
+		ObjectMapper objectMapper = new ObjectMapper();
+		objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+		String jsonInString = objectMapper.writeValueAsString(requestInfo);
+		org.egov.common.contract.request.RequestInfo requestInfo2 = objectMapper.readValue(jsonInString, org.egov.common.contract.request.RequestInfo.class);
+		return requestInfo2;
+	}
 }

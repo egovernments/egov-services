@@ -45,6 +45,9 @@ public class IdGenerationService {
 	
 	@Autowired
 	private ResponseInfoFactory responseInfoFactory;
+	
+	@Autowired
+	private MdmsService mdmsService;
 
 	/**
 	 * Description : This method to generate idGenerationResponse
@@ -351,30 +354,6 @@ public class IdGenerationService {
      * @throws Exception
      */
     private String getCityCode(String tenantId, RequestInfo requestInfo) throws Exception {
-
-        String citySql = "SELECT code from city where tenantcode = ? ";
-        // connection and prepared statement
-        PreparedStatement pst = null;
-        ResultSet rs = null;
-        Connection conn = null;
-        String cityCode = null;
-        try {
-            conn = DataSourceUtils.getConnection(dataSource);
-            conn.setAutoCommit(false);
-            pst = conn.prepareStatement(citySql);
-            pst.setString(1,tenantId);
-            rs = pst.executeQuery();
-            if (rs.next())
-                cityCode = rs.getString(1);
-            // committing the transaction
-            conn.commit();
-            conn.setAutoCommit(true);
-        } catch (Exception e) {
-                throw new CityCodeNotFoundException(propertiesManager.getCityCodeNotFound(), requestInfo);
-
-        } finally {
-            conn.close();
-        }
-        return cityCode;
+       return mdmsService.getCity(requestInfo, tenantId);
     }
 }

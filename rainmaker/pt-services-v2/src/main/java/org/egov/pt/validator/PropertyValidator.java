@@ -404,11 +404,11 @@ public class PropertyValidator {
         request.getProperties().forEach(property ->
                 property.getPropertyDetails().forEach(propertyDetail ->
                         { // String filter = "$.FinancialYear[?(@.finYearRange == '"+propertyDetail.getFinancialYear()+"')].id";
-                            String filter = "$.*.finYearRange";
+                            String filter = "$.*.[?(@.module=='PT')].finYearRange";
                             Map<String,List<String>> years = getAttributeValues(tenantId.split("\\.")[0],PTConstants.MDMS_PT_EGF_MASTER,Arrays.asList("FinancialYear"),filter,PTConstants.JSONPATH_FINANCIALYEAR,requestInfo);
                             if(!years.get(PTConstants.MDMS_PT_FINANCIALYEAR).contains(propertyDetail.getFinancialYear()))
                             {
-                                errorMap.put("INVALID FINANCIALYEAR","The finacialYear '"+propertyDetail.getFinancialYear()+"' is not valid");
+                                errorMap.put("INVALID FINANCIALYEAR","The finacialYear '"+propertyDetail.getFinancialYear()+"' is not valid for PT");
                             }
                         }
                 ));

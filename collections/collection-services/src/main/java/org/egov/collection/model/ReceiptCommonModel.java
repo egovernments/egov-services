@@ -45,7 +45,6 @@ import org.egov.collection.web.contract.*;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -92,7 +91,7 @@ public class ReceiptCommonModel {
 			}
 			BillDetail billDetail = BillDetail.builder().id(receiptHeader.getId().toString()).billNumber(receiptHeader.getReferenceNumber())
 					.consumerCode(receiptHeader.getConsumerCode()).consumerType(receiptHeader.getConsumerType())
-					.collectionModesNotAllowed(Arrays.asList(receiptHeader.getCollModesNotAllwd()))
+					.collectionModesNotAllowed(Collections.singletonList(receiptHeader.getCollModesNotAllwd()))
 					.tenantId(receiptHeader.getTenantId()).displayMessage(receiptHeader.getDisplayMsg())
 					.billAccountDetails(billAccountDetails).businessService(receiptHeader.getBusinessDetails())
 					.receiptNumber(receiptHeader.getReceiptNumber()).receiptType(receiptHeader.getReceiptType())
@@ -114,7 +113,7 @@ public class ReceiptCommonModel {
 					.payeeAddress(receiptHeader.getPayeeAddress()).payeeEmail(receiptHeader.getPayeeEmail())
 					.paidBy(receiptHeader.getPaidBy()).tenantId(receiptHeader.getTenantId())
 					.billDetails(Collections.singletonList(billDetail)).build();
-			Receipt receipt = Receipt.builder().id(receiptHeader.getId().toString()).stateId(receiptHeader.getStateId()).tenantId(receiptHeader.getTenantId()).bill(Arrays.asList(billInfo)).
+			Receipt receipt = Receipt.builder().tenantId(receiptHeader.getTenantId()).bill(Collections.singletonList(billInfo)).
                     transactionId(receiptHeader.getTransactionId()).instrument(receiptHeader.getReceiptInstrument()).build();
             receipts.add(receipt);
 		}

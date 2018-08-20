@@ -80,7 +80,7 @@ public class ReceiptValidator {
             BigDecimal totalAmount = billDetails.getTotalAmount();
 
             if (isNull(amountPaid) || !isIntegerValue(amountPaid)) {
-                errorMap.put(AMOUNT_PAID_CODE, AMOUNT_PAID_MESSAGE);
+                errorMap.put("INVALID_AMOUNT_PAID", "Invalid amount entered in amountPaid field. Amount should be greater than 0 and without fractions");
             }
 
             if (isNull(totalAmount) || !isIntegerValue(totalAmount)) {
@@ -89,8 +89,8 @@ public class ReceiptValidator {
             }
             if (!isNull(amountPaid) && (amountPaid.compareTo(BigDecimal.ZERO) == 0 && totalAmount.compareTo
                     (BigDecimal.ZERO) != 0)) {
-                errorMap.put("INVALID_AMOUNT", "Invalid amount paid, amount paid can only be 0 if bill amount is also" +
-                        " 0");
+                errorMap.put("INVALID_ZERO_AMOUNT", "Invalid amount paid, amount paid can only be 0 if bill amount is" +
+                        " also 0");
             }
 
 
@@ -115,10 +115,10 @@ public class ReceiptValidator {
 
 
             if (isBlank(billDetails.getBillDescription()))
-                errorMap.put(COLL_DETAILS_DESCRIPTION_CODE, COLL_DETAILS_DESCRIPTION_MESSAGE);
+                errorMap.put("INVALID_BILL_DESC", "Bill description cannot be empty");
 
             if (isEmpty(billDetails.getBusinessService())) {
-                errorMap.put(BD_CODE_MISSING_CODE, BD_CODE_MISSING_MESSAGE);
+                errorMap.put("INVALID_BUSINESS_DETAILS", "Business details code cannot be empty");
             }
 
             if (instrumentType.equalsIgnoreCase(InstrumentTypesEnum.CHEQUE.name()) || instrumentType.equalsIgnoreCase
@@ -145,21 +145,21 @@ public class ReceiptValidator {
 
         if (!Objects.isNull(billDetails.getReceiptDate()) && isNotEmpty(billDetails.getManualReceiptNumber())) {
             if (instrumentDate.isAfter(billDetails.getReceiptDate())) {
-                errorMap.put(RECEIPT_CHEQUE_OR_DD_DATE_CODE, RECEIPT_CHEQUE_OR_DD_DATE_MESSAGE);
+                errorMap.put(RECEIPT_CHEQUE_OR_DD_DATE, RECEIPT_CHEQUE_OR_DD_DATE_MESSAGE);
             }
 
             Days daysDiff = Days.daysBetween(instrumentDate, new DateTime(billDetails.getReceiptDate()));
             if (daysDiff.getDays() > Integer.valueOf(INSTRUMENT_DATE_DAYS)) {
-                errorMap.put(CHEQUE_DD_DATE_WITH_MANUAL_RECEIPT_DATE_CODE,CHEQUE_DD_DATE_WITH_MANUAL_RECEIPT_DATE_MESSAGE);
+                errorMap.put("CHEQUE_DD_DATE_WITH_MANUAL_RECEIPT_DATE",CHEQUE_DD_DATE_WITH_MANUAL_RECEIPT_DATE_MESSAGE);
             }
 
         } else {
             Days daysDiff = Days.daysBetween(instrumentDate, new DateTime());
             if (daysDiff.getDays() > Integer.valueOf(INSTRUMENT_DATE_DAYS)) {
-                errorMap.put(CHEQUE_DD_DATE_WITH_RECEIPT_DATE_CODE,CHEQUE_DD_DATE_WITH_RECEIPT_DATE_MESSAGE);
+                errorMap.put("CHEQUE_DD_DATE_WITH_RECEIPT_DATE", CHEQUE_DD_DATE_WITH_RECEIPT_DATE_MESSAGE);
             }
             if (instrumentDate.isAfter(new DateTime().getMillis())) {
-                errorMap.put(CHEQUE_DD_DATE_WITH_FUTURE_DATE_CODE,CHEQUE_DD_DATE_WITH_FUTURE_DATE_MESSAGE);
+                errorMap.put("CHEQUE_DD_DATE_WITH_FUTURE_DATE",CHEQUE_DD_DATE_WITH_FUTURE_DATE_MESSAGE);
             }
         }
 
@@ -168,11 +168,11 @@ public class ReceiptValidator {
     private void validateBillAccountDetails(List<BillAccountDetail> billAccountDetails, Map<String, String> errorMap) {
         for (BillAccountDetail billAccountDetail : billAccountDetails) {
             if (isNull(billAccountDetail.getPurpose())) {
-                throw new CustomException(PURPOSE_MISSING_CODE, PURPOSE_MISSING_MESSAGE);
+                throw new CustomException("PURPOSE_MISSING", PURPOSE_MISSING_MESSAGE);
             }
 
             if (isEmpty(billAccountDetail.getGlcode())) {
-                throw new CustomException(COA_MISSING_CODE, COA_MISSING_MESSAGE);
+                throw new CustomException("COA_MISSING", COA_MISSING_MESSAGE);
             }
         }
 
@@ -201,14 +201,14 @@ public class ReceiptValidator {
                     .getMinimumAmount()) < 0 ){
                 log.error("Amount paid of {} cannot be lesser than minimum payable amount of {} for bill detail " +
                                 "{}", amountPaid, billDetail.getMinimumAmount(), billDetail.getId());
-                errorMap.put("AMOUNT_MISMATCH", "Amount paid cannot be lesser than minimum payable amount");
+                errorMap.put("AMOUNT_MISMATCH_LOW", "Amount paid cannot be lesser than minimum payable amount");
             }
 
             if (totalAmount.compareTo(amountPaid) < 0) {
                 log.error("Amount paid of {} cannot be greater than bill amount of {} for bill detail {}", billDetail
                                 .getAmountPaid()
                         , totalAmount, billDetail.getId());
-                errorMap.put("AMOUNT_MISMATCH", "Amount paid cannot be greater than bill amount");
+                errorMap.put("AMOUNT_MISMATCH_HIGH", "Amount paid cannot be greater than bill amount");
             }
 
         } else {

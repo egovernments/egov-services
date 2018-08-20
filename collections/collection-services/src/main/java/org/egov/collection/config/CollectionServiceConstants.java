@@ -171,7 +171,7 @@ public class CollectionServiceConstants {
 	public static final String RECEIPT_WORKFLOW_ASSIGNEE_MISSING_FIELD = "initiatorPosition";
 	public static final String RECEIPT_WORKFLOW_ASSIGNEE_MISSING_MESSAGE = "Assignment details not found for workflow";
 
-	public static final String RECEIPT_CHEQUE_OR_DD_DATE_CODE = "egcl_0020";
+	public static final String RECEIPT_CHEQUE_OR_DD_DATE = "INVALID_CHEQUE_DD_DATE";
 	public static final String RECEIPT_CHEQUE_OR_DD_DATE_FIELD = "Cheque/DD Date";
 	public static final String RECEIPT_CHEQUE_OR_DD_DATE_MESSAGE = "Cheque/DD date should not be greater than Manual Receipt Date ";
 

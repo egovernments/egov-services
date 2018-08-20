@@ -43,8 +43,6 @@ package org.egov.collection.consumer;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.egov.collection.config.ApplicationProperties;
-import org.egov.collection.service.ReceiptService;
-import org.egov.collection.web.contract.ReceiptReq;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,9 +60,6 @@ public class CollectionConsumer {
 	
 	@Autowired
 	private ApplicationProperties applicationProperties;
-	
-	@Autowired 
-	private ReceiptService recieptService;
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -76,10 +71,10 @@ public class CollectionConsumer {
 		try {
              if(topic.equals(applicationProperties.getCancelReceiptTopicName())){
 				logger.info("Consuming cancel Receipt request");
-				recieptService.cancelReceiptBeforeRemittance(objectMapper.convertValue(record, ReceiptReq.class));
+//				recieptService.cancelReceiptBeforeRemittance(objectMapper.convertValue(record, ReceiptReq.class));
 			} else if(topic.equals(applicationProperties.getKafkaUpdateWorkFlowDetailsTopic())) {
                  logger.info("Consuming topic workflow started after creating receipt :" +applicationProperties.getKafkaUpdateWorkFlowDetailsTopic());
-                 recieptService.updateReceiptWithWorkFlowDetails(objectMapper.convertValue(record, ReceiptReq.class));
+//                 recieptService.updateReceiptWithWorkFlowDetails(objectMapper.convertValue(record, ReceiptReq.class));
              }
 			
 		} catch (final Exception e) {

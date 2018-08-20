@@ -24,7 +24,6 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static java.util.Objects.isNull;
-import static org.egov.collection.config.CollectionServiceConstants.*;
 
 @Service
 @Slf4j
@@ -90,7 +89,8 @@ public class ReceiptEnricher {
             log.error("Mismatch in bill details records provided in request and actual bill. Expected {} billdetails " +
                     "found {} in request", billFromRequest.getBillDetails().size(), validatedBills.get(0)
                     .getBillDetails().size());
-            throw new CustomException("INVALID_BILL_ID", "Mismatch in bill detail records provided in request and actual bill");
+            throw new CustomException("INVALID_BILL_DETAILS", "Mismatch in bill detail records provided in request " +
+                    "and actual bill");
 
         }
 
@@ -137,7 +137,7 @@ public class ReceiptEnricher {
                 .getBusinessDetails().isEmpty()) {
             log.error("Business detail not found for {} and tenant {}", billDetail.getBusinessService(), billDetail
                     .getTenantId());
-            throw new CustomException(BUSINESSDETAILS_EXCEPTION_MSG, BUSINESSDETAILS_EXCEPTION_DESC);
+            throw new CustomException("BUSINESS_DETAILS_INVALID", "fetch buisness details, common masters failed to return fund, function, department and fundsource");
         }
         else {
             billDetail.setReceiptType(businessDetailsResponse.getBusinessDetails().get(0).getBusinessType());

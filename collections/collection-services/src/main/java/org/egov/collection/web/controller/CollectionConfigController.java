@@ -40,12 +40,6 @@
 
 package org.egov.collection.web.controller;
 
-import java.util.List;
-import java.util.Map;
-
-import javax.validation.Valid;
-import javax.validation.ValidationException;
-
 import org.apache.commons.lang3.StringUtils;
 import org.egov.collection.config.CollectionServiceConstants;
 import org.egov.collection.model.RequestInfoWrapper;
@@ -61,12 +55,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
+import javax.validation.ValidationException;
+import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/collectionconfig")
@@ -77,9 +71,6 @@ public class CollectionConfigController {
 
 	@Autowired
 	private CollectionConfigService collectionConfigService;
-
-	@Autowired
-	private ResponseInfoFactory responseInfoFactory;
 
 	@PostMapping("_search")
 	@ResponseBody
@@ -111,7 +102,7 @@ public class CollectionConfigController {
 		CollectionConfigResponse collectionConfigResponse = new CollectionConfigResponse();
 		collectionConfigResponse
 				.setCollectionConfiguration(collectionConfigKeyValMap);
-		ResponseInfo responseInfo = responseInfoFactory
+		ResponseInfo responseInfo = ResponseInfoFactory
 				.createResponseInfoFromRequestInfo(requestInfo, true);
 		responseInfo.setStatus(HttpStatus.OK.toString());
 		collectionConfigResponse.setResponseInfo(responseInfo);

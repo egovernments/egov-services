@@ -22,7 +22,8 @@ public class CollectionProducer {
             kafkaTemplate.send(topicName, key, value);
         } catch (Exception e) {
             logger.error("Pushing to Queue FAILED! ", e.getMessage());
-            throw new CustomException(CollectionServiceConstants.KAFKA_PUSH_EXCEPTION_MSG, CollectionServiceConstants.KAFKA_PUSH_EXCEPTION_DESC);
+            throw new CustomException("COLLECTIONS_KAFKA_PUSH_FAILED", CollectionServiceConstants
+                    .KAFKA_PUSH_EXCEPTION_DESC);
         }
     	
     }

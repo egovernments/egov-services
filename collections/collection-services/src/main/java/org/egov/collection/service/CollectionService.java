@@ -57,7 +57,8 @@ public class CollectionService {
      */
     public List<Receipt> getReceipts(RequestInfo requestInfo, ReceiptSearchCriteria receiptSearchCriteria){
         List<Receipt> receipts = collectionRepository.fetchReceipts(receiptSearchCriteria);
-        receiptEnricher.enrichReceiptsWithInstruments(requestInfo, receipts);
+        if(!receipts.isEmpty())
+            receiptEnricher.enrichReceiptsWithInstruments(requestInfo, receipts);
         return receipts;
     }
 

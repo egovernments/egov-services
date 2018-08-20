@@ -37,7 +37,7 @@ public class CollectionsQueryBuilder {
 
     public static final String SELECT_RECEIPT_HEADER_SEQ_NEXT = "select NEXTVAL('SEQ_EGCL_RECEIPTHEADER')";
 
-    public static final String SELECT_RECEIPTS_SQL = "Select rh.id as rh_id,rh.payeename as rh_payeename,rh" +
+    private static final String SELECT_RECEIPTS_SQL = "Select rh.id as rh_id,rh.payeename as rh_payeename,rh" +
             ".payeeAddress as rh_payeeAddress,rh.payeeEmail as rh_payeeEmail,rh.paidBy as rh_paidBy,rh" +
             ".referenceNumber as rh_referenceNumber, rh.referenceDate as rh_referenceDate,rh.receiptType as " +
             "rh_receiptType,rh.receiptNumber as rh_receiptNumber, rh.receiptDate as rh_receiptDate,rh.referenceDesc " +
@@ -230,9 +230,8 @@ public class CollectionsQueryBuilder {
             selectQuery.append(" rh.referencenumber IN (:billIds) ");
             preparedStatementValues.put("billIds", searchCriteria.getBillIds());
         }
-
-
     }
+
     private static void addClauseIfRequired(Map<String, Object> values, StringBuilder queryString) {
         if(values.isEmpty())
             queryString.append(" WHERE ");
@@ -244,8 +243,7 @@ public class CollectionsQueryBuilder {
 
     private static void addOrderByClause(StringBuilder selectQuery,
                                   ReceiptSearchCriteria criteria) {
-        String sortBy = (criteria.getSortBy() == null ? "rh.receiptDate"
-                : "rh." + criteria.getSortBy());
+        String sortBy = (criteria.getSortBy() == null ? "rh.receiptDate" : "rh." + criteria.getSortBy());
         String sortOrder = (criteria.getSortOrder() == null ? "DESC" : criteria
                 .getSortOrder());
         selectQuery.append(" ORDER BY ").append(sortBy).append(" ").append(sortOrder);

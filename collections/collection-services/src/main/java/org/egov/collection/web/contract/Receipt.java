@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 import org.egov.collection.model.AuditDetails;
 import org.egov.collection.model.Instrument;
-import org.egov.collection.model.OnlinePayment;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -22,8 +21,6 @@ public class Receipt {
 
     @NotNull
     private String tenantId;
-	
-	private String id;
 
     private String transactionId;
 
@@ -37,10 +34,4 @@ public class Receipt {
 	@NotNull
 	private Instrument instrument;
 
-    private OnlinePayment onlinePayment;
-	
-	private Long stateId;
-	
-	@JsonProperty("WorkflowDetails")
-	private WorkflowDetailsRequest workflowDetails;
 }

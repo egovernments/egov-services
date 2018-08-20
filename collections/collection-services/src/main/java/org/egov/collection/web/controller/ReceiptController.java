@@ -41,26 +41,21 @@
 package org.egov.collection.web.controller;
 
 import lombok.extern.slf4j.Slf4j;
-import org.egov.collection.config.CollectionServiceConstants;
-import org.egov.collection.model.*;
+import org.egov.collection.model.ReceiptSearchCriteria;
 import org.egov.collection.service.CollectionService;
-import org.egov.collection.service.ReceiptService;
-import org.egov.collection.util.ReceiptValidator;
-import org.egov.collection.web.contract.*;
+import org.egov.collection.web.contract.Receipt;
+import org.egov.collection.web.contract.ReceiptReq;
+import org.egov.collection.web.contract.ReceiptRes;
 import org.egov.collection.web.contract.factory.RequestInfoWrapper;
 import org.egov.collection.web.contract.factory.ResponseInfoFactory;
 import org.egov.common.contract.request.RequestInfo;
-import org.egov.common.contract.response.Error;
-import org.egov.common.contract.response.ErrorResponse;
 import org.egov.common.contract.response.ResponseInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -72,91 +67,17 @@ public class ReceiptController {
     @Autowired
     private CollectionService collectionService;
 
-    @Autowired
-    private ReceiptService receiptService;
-
-    @Autowired
-    private ReceiptValidator receiptReqValidator;
-
-    @Autowired
-    private ResponseInfoFactory responseInfoFactory;
-
     @RequestMapping(value = "/_search", method = RequestMethod.POST)
     @ResponseBody
     public ResponseEntity<ReceiptRes> search(
-            @ModelAttribute ReceiptSearchGetRequest receiptGetRequest,
-            final BindingResult modelAttributeBindingResult,
-            @RequestBody @Valid final RequestInfoWrapper requestInfoWrapper,
-            final BindingResult requestBodyBindingResult) {
-
-        ReceiptSearchCriteria searchCriteria = ReceiptSearchCriteria.builder()
-                .businessCode(receiptGetRequest.getBusinessCode())
-                .classification(receiptGetRequest.getClassification())
-                .collectedBy(receiptGetRequest.getCollectedBy())
-                .consumerCode(receiptGetRequest.getConsumerCode())
-                .fromDate(receiptGetRequest.getFromDate())
-                .toDate(receiptGetRequest.getToDate())
-                .paymentType(receiptGetRequest.getPaymentType())
-                .receiptNumbers(receiptGetRequest.getReceiptNumbers())
-                .receiptDetailsRequired(receiptGetRequest.isReceiptDetailsRequired())
-                .status(receiptGetRequest.getStatus()).pageSize(receiptGetRequest.getPageSize())
-                .tenantId(receiptGetRequest.getTenantId()).offset(receiptGetRequest.getOffset())
-                .sortBy(receiptGetRequest.getSortBy()).billIds(receiptGetRequest.getBillIds())
-                .sortOrder(receiptGetRequest.getSortOrder()).manualReceiptNumbers(receiptGetRequest.getManualReceiptNumbers())
-                .transactionId(receiptGetRequest.getTransactionId()).build();
+            @ModelAttribute ReceiptSearchCriteria receiptSearchCriteria,
+            @RequestBody @Valid final RequestInfoWrapper requestInfoWrapper) {
 
         final RequestInfo requestInfo = requestInfoWrapper.getRequestInfo();
 
-        List<Receipt> receipts = collectionService.getReceipts(requestInfo, searchCriteria);
+        List<Receipt> receipts = collectionService.getReceipts(requestInfo, receiptSearchCriteria);
 
-        ReceiptRes receiptResponse = new ReceiptRes();
-        final ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
-        responseInfo.setStatus(HttpStatus.OK.toString());
-        receiptResponse.setReceipts(receipts);
-        receiptResponse.setResponseInfo(responseInfo);
-        return new ResponseEntity<>(receiptResponse, HttpStatus.OK);
-    }
-
-    @RequestMapping(value = "/_view", method = RequestMethod.POST)
-    @ResponseBody
-    public List<Receipt> view(
-            @ModelAttribute ReceiptSearchGetRequest receiptGetRequest) {
-
-        ReceiptSearchCriteria searchCriteria = ReceiptSearchCriteria.builder()
-                .businessCode(receiptGetRequest.getBusinessCode())
-                .classification(receiptGetRequest.getClassification())
-                .collectedBy(receiptGetRequest.getCollectedBy())
-                .consumerCode(receiptGetRequest.getConsumerCode())
-                .fromDate(receiptGetRequest.getFromDate())
-                .toDate(receiptGetRequest.getToDate())
-                .paymentType(receiptGetRequest.getPaymentType())
-                .receiptNumbers(receiptGetRequest.getReceiptNumbers())
-                .status(receiptGetRequest.getStatus())
-                .tenantId(receiptGetRequest.getTenantId())
-                .sortBy(receiptGetRequest.getSortBy())
-                .sortOrder(receiptGetRequest.getSortOrder()).build();
-
-        List<Receipt> receipts = new ArrayList<>();
-        try {
-            receipts = (List<Receipt>) receiptService.getReceipts(searchCriteria, null);
-        } catch (final Exception exception) {
-            log.error("Error while processing request " + receiptGetRequest,
-                    exception);
-        }
-        return receipts;
-    }
-
-    @RequestMapping(value = "/_cancel", method = RequestMethod.POST)
-    @ResponseBody
-    public ResponseEntity<?> cancelReceipt(
-            @RequestBody ReceiptReq receiptRequest, BindingResult errors) {
-        //TODO Receipt cancel validations
-//        final ErrorResponse errorResponse = receiptReqValidator
-//                .validateReceiptForCreate(receiptRequest);
-
-        List<Receipt> receipt = receiptService
-                .cancelReceiptPushToQueue(receiptRequest);
-        return getSuccessResponse(receipt, receiptRequest.getRequestInfo());
+        return getSuccessResponse(receipts, requestInfo);
     }
 
     @RequestMapping(value = "/_create", method = RequestMethod.POST)
@@ -167,87 +88,30 @@ public class ReceiptController {
         return getSuccessResponse(Collections.singletonList(receiptInfo), receiptRequest.getRequestInfo());
     }
 
+    @RequestMapping(value = "/_cancel", method = RequestMethod.POST)
+    @ResponseBody
+    public ResponseEntity<?> cancelReceipt(
+            @RequestBody ReceiptReq receiptRequest) {
+
+
+        return getSuccessResponse(receiptRequest.getReceipt(), receiptRequest.getRequestInfo());
+    }
+
     @RequestMapping(value = "/_update", method = RequestMethod.POST)
     @ResponseBody
-    public ResponseEntity<?> update(@RequestBody @Valid ReceiptReq receiptReq, BindingResult errors) {
-
-        Receipt receipt = receiptReq.getReceipt().get(0);
-            for (Receipt receipts : receiptReq.getReceipt()) {
-                WorkflowDetailsRequest workFlowRequest = receiptReq.getReceipt().get(0)
-                        .getWorkflowDetails();
-                workFlowRequest.setReceiptHeaderId(Long.valueOf(receipts.getId()));
-                workFlowRequest.setTenantId(receipt.getTenantId());
-                workFlowRequest.setRequestInfo(receiptReq.getRequestInfo());
-                if (!validator(workFlowRequest.getTenantId(),
-                        workFlowRequest.getReceiptHeaderId())) {
-                    log.info("Invalid TenantId");
-                    Error error = new Error();
-                    error.setCode(Integer.parseInt(HttpStatus.BAD_REQUEST.toString()));
-                    error.setMessage(CollectionServiceConstants.TENANT_ID_REQUIRED_MESSAGE);
-                    ErrorResponse errorResponse = new ErrorResponse();
-                    errorResponse.setError(error);
-
-                    return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
-                }
-                /*WorkflowDetailsRequest workFlowDetailsRequest = workFlowService
-                        .update(workFlowRequest);*/
-              //  receipts.setWorkflowDetails(workFlowDetailsRequest);
-
-        }
+    public ResponseEntity<?> update(@RequestBody @Valid ReceiptReq receiptReq) {
 
         return getSuccessResponse(receiptReq.getReceipt(), receiptReq.getRequestInfo());
     }
 
-    @RequestMapping(value = "/_legacycreate", method = RequestMethod.POST)
-    @ResponseBody
-    public ResponseEntity<?> createLegacyReceipt(@RequestBody @Valid final LegacyReceiptReq legacyReceiptRequest,
-            final BindingResult errors) {
-        final List<ErrorResponse> errorResponses = receiptReqValidator
-                .validateCreateLegacyReceiptRequest(legacyReceiptRequest);
-        if (null != errorResponses && !errorResponses.isEmpty())
-            return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
-        log.info("LegacyReceiptReq :" + legacyReceiptRequest.toString());
-        List<LegacyReceiptHeader> listOfLegacyReceipts = receiptService.persistAndPushToQueue(legacyReceiptRequest);
-        return getSuccessResponseForLegacy(listOfLegacyReceipts, legacyReceiptRequest.getRequestInfo());
-    }
-
-    @RequestMapping(value = "/_legacysearch", method = RequestMethod.POST)
-    @ResponseBody
-    public ResponseEntity<?> searchLegacyReceipt(@ModelAttribute @Valid final LegacyReceiptGetReq legacyReceiptGetReq,
-            final BindingResult modelAttributeBindingResult, @RequestBody @Valid final RequestInfoWrapper requestInfoWrapper,
-            final BindingResult requestInfoBindingResult) {
-        List<LegacyReceiptHeader> legacyReceiptHeaders = receiptService.getLegacyReceiptsByCriteria(legacyReceiptGetReq);
-        return getSuccessResponseForLegacy(legacyReceiptHeaders, requestInfoWrapper.getRequestInfo());
-    }
-
-    private ResponseEntity<?> getSuccessResponseForLegacy(List<LegacyReceiptHeader> listOfLegacyReceipts,
-            RequestInfo requestInfo) {
-        log.info("Building success response.");
-        LegacyReceiptRes legacyReceiptResponse = new LegacyReceiptRes();
-        final ResponseInfo responseInfo = responseInfoFactory
-                .createResponseInfoFromRequestInfo(requestInfo, true);
-        responseInfo.setStatus(HttpStatus.OK.toString());
-        legacyReceiptResponse.setLegacyReceipts(listOfLegacyReceipts);
-        legacyReceiptResponse.setResponseInfo(responseInfo);
-        return new ResponseEntity<>(legacyReceiptResponse, HttpStatus.OK);
-    }
-
-    private boolean validator(String tenantId, long receiptHeaderId) {
-        boolean isTenantValid = true;
-        if (null == tenantId || tenantId.isEmpty() || receiptHeaderId == 0L)
-            isTenantValid = false;
-        return isTenantValid;
-    }
 
     private ResponseEntity<ReceiptRes> getSuccessResponse(List<Receipt> receipts,
                                                           RequestInfo requestInfo) {
-        log.info("Building success response.");
-        ReceiptRes receiptResponse = new ReceiptRes();
-        final ResponseInfo responseInfo = responseInfoFactory
+        final ResponseInfo responseInfo = ResponseInfoFactory
                 .createResponseInfoFromRequestInfo(requestInfo, true);
         responseInfo.setStatus(HttpStatus.OK.toString());
-        receiptResponse.setReceipts(receipts);
-        receiptResponse.setResponseInfo(responseInfo);
+
+        ReceiptRes receiptResponse = new ReceiptRes(responseInfo, receipts);
         return new ResponseEntity<>(receiptResponse, HttpStatus.OK);
     }
 }

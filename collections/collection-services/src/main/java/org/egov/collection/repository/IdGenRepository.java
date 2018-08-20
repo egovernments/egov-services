@@ -29,13 +29,13 @@ public class IdGenRepository {
 	private ApplicationProperties applicationProperties;
 	
 	public String generateReceiptNumber(RequestInfo requestInfo, String tenantId) {
-        log.info("Attempting to generate Receipt Number from ID Gen");
+        log.debug("Attempting to generate Receipt Number from ID Gen");
 
         return getId(requestInfo, tenantId, COLL_ID_NAME, COLL_ID_FORMAT, 1);
 	}
 
     public String generateTransactionNumber(RequestInfo requestInfo, String tenantId) {
-        log.info("Attempting to generate Transaction Number from ID Gen");
+        log.debug("Attempting to generate Transaction Number from ID Gen");
 
         String splitTenant = tenantId.contains(".") ? tenantId.split("\\.")[1] : tenantId;
         String tenantFormat = COLL_TRANSACTION_FORMAT.replace("{tenant}", splitTenant);

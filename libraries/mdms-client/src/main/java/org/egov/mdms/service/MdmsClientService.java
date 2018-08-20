@@ -27,8 +27,11 @@ public class MdmsClientService {
 	@Autowired
 	private RestTemplate restTemplate;
 
-	@Value("${mdms.service.host:http://localhost:8080/mdms-service/v1/mdms/v11/_search}")
+	@Value("${mdms.service.host:http://localhost:8080/}")
 	private String mdmsHost;
+	
+	@Value("${mdms.service.search.uri:egov-mdms-service/v1/_search}")
+	private String mdmsSearchUri;
 
 	public MdmsResponse getMaster(RequestInfo requestInfo, String tenantId,
 			Map<String, List<MasterDetail>> masterDetails) {
@@ -53,7 +56,7 @@ public class MdmsClientService {
 		log.info("mdmsCriteriaReq:" + mdmsCriteriaReq);
 		MdmsResponse mdmsResponse = null;
 		try {
-			  mdmsResponse = restTemplate.postForObject(mdmsHost, mdmsCriteriaReq, MdmsResponse.class);
+			  mdmsResponse = restTemplate.postForObject(mdmsHost.concat(mdmsSearchUri), mdmsCriteriaReq, MdmsResponse.class);
 		} catch (HttpClientErrorException ex) {
 			ex.printStackTrace();
 			String excep = ex.getResponseBodyAsString();

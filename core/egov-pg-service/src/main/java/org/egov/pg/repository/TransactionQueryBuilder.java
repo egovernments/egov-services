@@ -17,7 +17,10 @@ class TransactionQueryBuilder {
     }
 
     static String getPaymentSearchQueryByCreatedTimeRange(TransactionCriteria transactionCriteria, List<Object> preparedStmtList) {
-        return buildQuery(transactionCriteria, preparedStmtList);
+        String query = buildQuery(transactionCriteria, preparedStmtList);
+        query = addOrderByClause(query);
+        query = addPagination(query, transactionCriteria, preparedStmtList);
+        return query;
     }
 
     static String getPaymentSearchQueryByCreatedTimeRange(TransactionCriteria transactionCriteria, Long startTime, Long endTime, List<Object> preparedStmtList) {
@@ -26,15 +29,6 @@ class TransactionQueryBuilder {
 
     private static String buildQueryForTimeRange(TransactionCriteria transactionCriteria, Long startTime, Long endTime, List<Object> preparedStmtList) {
         String preparedQuery = buildQuery(transactionCriteria, preparedStmtList);
-
-        if (preparedQuery.contains(" offset")) {
-            preparedQuery = preparedQuery.substring(0, preparedQuery.indexOf(" offset"));
-            preparedStmtList.remove(preparedStmtList.size() - 1);
-        }
-        if (preparedQuery.contains(" limit")) {
-            preparedQuery = preparedQuery.substring(0, preparedQuery.indexOf(" limit"));
-            preparedStmtList.remove(preparedStmtList.size() - 1);
-        }
 
         StringBuilder builder = new StringBuilder(preparedQuery);
 
@@ -107,18 +101,25 @@ class TransactionQueryBuilder {
             }
         }
 
-        builder.append(" order by pg.created_time desc ");
+        return builder.toString();
+    }
 
+    private static String addPagination(String query, TransactionCriteria transactionCriteria, List<Object>
+            preparedStmtList){
         if (transactionCriteria.getLimit() > 0) {
-            builder.append(" limit ? ");
+            query = query + " limit ? ";
             preparedStmtList.add(transactionCriteria.getLimit());
         }
         if (transactionCriteria.getOffset() > 0) {
-            builder.append(" offset ? ");
+            query = query + " offset ? ";
             preparedStmtList.add(transactionCriteria.getOffset());
         }
 
-        return builder.toString();
+        return query;
+    }
+
+    private static String addOrderByClause(String query){
+        return query + " order by pg.created_time desc ";
     }
 
 }

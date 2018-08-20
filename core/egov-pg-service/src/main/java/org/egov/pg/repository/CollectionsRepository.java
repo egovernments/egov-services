@@ -42,7 +42,8 @@ public class CollectionsRepository {
             throw new ServiceCallException(e.getResponseBodyAsString());
         } catch (Exception e) {
             log.error("Unknown error occurred while generating receipt.", e);
-            throw new CustomException("COLLECTION_SERVICE_ERROR", "Unknown error occurred while generating receipt");
+            throw new CustomException("COLLECTION_SERVICE_CREATE_ERROR", "Unknown error occurred while generating " +
+                    "receipt");
         }
     }
 

@@ -54,7 +54,7 @@ public class BillingRepository {
             throw new ServiceCallException(e.getResponseBodyAsString());
         } catch (Exception e) {
             log.error("Unable to fetch bill for Bill ID: {} in tenant {}", billId, tenantId, e);
-            throw new CustomException("BILLING_SERVICE_ERROR", "Failed to fetch bill, unknown error occurred");
+            throw new CustomException("BILLING_SERVICE_SEARCH_ERROR", "Failed to fetch bill, unknown error occurred");
         }
     }
 

@@ -59,11 +59,11 @@ public class CollectionService {
             List<Receipt> receipts = collectionsRepository.generateReceipt(receiptReq).getReceipts();
             if (receipts.isEmpty()) {
                 log.error("Unable to generate receipt");
-                throw new CustomException("RECEIPT_GEN_FAILED", "Receipt generation failed");
+                throw new CustomException("RECEIPT_GEN_COLLECTION_ERROR", "Receipt generation failed");
             } else
                 return receipts;
         } else {
-            throw new CustomException("RECEIPT_GEN_FAILED", "Bill not found");
+            throw new CustomException("RECEIPT_GEN_INVALID_BILL", "Bill not found");
         }
     }
 

@@ -72,7 +72,7 @@ public class TransactionValidator {
         Optional<String> optional = gatewayService.getTxnId(requestParams);
 
         if (!optional.isPresent())
-            throw new CustomException("MISSING_TXN_ID", "Cannot process request, missing transaction id");
+            throw new CustomException("MISSING_UPDATE_TXN_ID", "Cannot process request, missing transaction id");
 
         TransactionCriteria criteria = TransactionCriteria.builder()
                 .txnId(optional.get())
@@ -82,7 +82,7 @@ public class TransactionValidator {
 
         //TODO Add to error queue
         if (statuses.isEmpty()) {
-            throw new CustomException("TXN_NOT_FOUND", "Transaction not found");
+            throw new CustomException("TXN_UPDATE_NOT_FOUND", "Transaction not found");
         }
 
         return statuses.get(0);
@@ -150,11 +150,11 @@ public class TransactionValidator {
 
         if (bills.isEmpty()) {
             log.error("Bill ID provided does not exist " + txn.getBillId());
-            errorMap.put("INVALID_BILL_ID", "Bill ID does not exist in billing system");
+            errorMap.put("TXN_CREATE_INVALID_BILL_ID", "Bill ID does not exist in billing system");
         } else {
             if (bills.get(0).getBillDetails().isEmpty()) {
                 log.error("Bill ID provided does not contain any bill details" + txn.getBillId());
-                errorMap.put("INVALID_BILL_ID", "No bill details exist for provided bill");
+                errorMap.put("TXN_CREATE_INVALID_BILL_DETAIL", "No bill details exist for provided bill");
                 return;
             }
 
@@ -187,7 +187,7 @@ public class TransactionValidator {
         for (Transaction curr : existingTxns) {
             if (curr.getTxnStatus().equals(Transaction.TxnStatusEnum.PENDING) || curr
                     .getTxnStatus().equals(Transaction.TxnStatusEnum.SUCCESS)) {
-                errorMap.put("BILL_ALREADY_PAID", "Bill has already been paid or is in pending state");
+                errorMap.put("TXN_CREATE_BILL_ALREADY_PAID", "Bill has already been paid or is in pending state");
             }
         }
 
@@ -214,13 +214,13 @@ public class TransactionValidator {
         BigDecimal totalAmount = billDetail.getTotalAmount();
 
         if(!isIntegerValue(txnAmount))
-            errorMap.put("INVALID_TXN_AMOUNT", "Transaction amount is invalid, cannot have fractions");
+            errorMap.put("TXN_CREATE_INVALID_TXN_AMOUNT", "Transaction amount is invalid, cannot have fractions");
 
         if(!isIntegerValue(totalAmount))
-            errorMap.put("INVALID_BILL_AMOUNT", "Bill amount is invalid, cannot have fractions");
+            errorMap.put("TXN_CREATE_INVALID_BILL_AMOUNT", "Bill amount is invalid, cannot have fractions");
 
         if(txnAmount.compareTo(BigDecimal.ZERO) == 0 && totalAmount.compareTo(BigDecimal.ZERO) != 0)
-            errorMap.put("INVALID_TXN_AMOUNT", "Transaction amount cannot be zero unless bill to be paid is also zero");
+            errorMap.put("TXN_CREATE_INVALID_TXN_AMOUNT", "Transaction amount cannot be zero unless bill to be paid is also zero");
 
 
         if (billDetail.getPartPaymentAllowed()) {
@@ -228,20 +228,20 @@ public class TransactionValidator {
             if(txnAmount.compareTo(BigDecimal.ZERO) != 0 && txnAmount.compareTo(billDetail.getMinimumAmount()) < 0 ){
                 log.error("Amount paid of {} cannot be lesser than minimum payable amount of {} for bill detail " +
                         "{}", billDetail.getAmountPaid(), billDetail.getMinimumAmount(), billDetail.getId());
-                errorMap.put("AMOUNT_MISMATCH", "Amount paid cannot be greater than bill amount");
+                errorMap.put("TXN_CREATE_PART_PAY_AMT_INVALID", "Amount paid cannot be greater than bill amount");
             }
 
             if (totalAmount.compareTo(txnAmount) < 0) {
                 log.error("Transaction Amount of {} cannot be greater than bill amount of {}", newTxn.getTxnAmount()
                         , totalAmount);
-                errorMap.put("TXN_AMOUNT_MISMATCH", "Transaction Amount cannot be greater than bill amount");
+                errorMap.put("TXN_CREATE_PART_PAY_AMT_INVALID", "Transaction Amount cannot be greater than bill amount");
             }
 
         } else {
             if (!(billDetail.getTotalAmount().compareTo(txnAmount) == 0)) {
                 log.error("Transaction Amount of {} has to be equal to bill amount of {}", newTxn.getTxnAmount(),
                         billDetail.getTotalAmount());
-                errorMap.put("TXN_AMOUNT_MISMATCH", "Transaction Amount has to be equal to bill amount");
+                errorMap.put("TXN_CREATE_AMOUNT_MISMATCH", "Transaction Amount has to be equal to bill amount");
             }
         }
     }

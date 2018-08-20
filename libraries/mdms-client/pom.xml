@@ -86,15 +86,12 @@
 			<version>1.1.4-SNAPSHOT</version>
 		</dependency>
 	</dependencies>
-	<distributionManagement>
-        
-        <snapshotRepository>
-            <id>repo.egovernments.org</id>
+    <repositories>
+    <repository>
+            <id>repo.egovernments.org.snapshots</id>
             <name>eGov ERP Snapshots Repository</name>
             <url>https://nexus-repo.egovernments.org/nexus/content/repositories/snapshots/</url>
-        </snapshotRepository>
-    </distributionManagement>
-    <repositories>
+        </repository>
     <repository>
             <id>repo.egovernments.org</id>
             <name>eGov ERP Releases Repository</name>

@@ -1,7 +1,6 @@
 package org.egov.user.security;
 
 import org.egov.user.security.oauth2.custom.CustomTokenEnhancer;
-import org.egov.user.security.oauth2.custom.CustomUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -12,8 +11,9 @@ import org.springframework.security.oauth2.config.annotation.configurers.ClientD
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
+import org.springframework.security.oauth2.provider.ClientDetailsService;
+import org.springframework.security.oauth2.provider.token.DefaultTokenServices;
 import org.springframework.security.oauth2.provider.token.TokenStore;
-
 import redis.clients.jedis.JedisShardInfo;
 
 @Configuration
@@ -30,13 +30,13 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
 	private int refreshTokenValidityInMinutes;
 
 	@Autowired
-	private AuthenticationManager authenticationManager;
+	private AuthenticationManager customAuthenticationManager;
 
 	@Autowired
 	private CustomTokenEnhancer customTokenEnhancer;
 
-	@Autowired
-	private CustomUserDetailsService userDetailsService;
+    @Autowired
+    private ClientDetailsService clientDetailsService;
 
 	@Autowired
 	private TokenStore tokenStore;
@@ -52,14 +52,27 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
 				.accessTokenValiditySeconds(accessTokenValidityInSeconds);
 	}
 
-	@Override
-	public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
-		endpoints.tokenStore(tokenStore).authenticationManager(authenticationManager)
-				.userDetailsService(userDetailsService).tokenEnhancer(customTokenEnhancer);
-	}
 
-	@Bean
-	public JedisConnectionFactory connectionFactory() throws Exception {
-		return new JedisConnectionFactory(new JedisShardInfo(host));
-	}
+    @Override
+    public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
+        endpoints.tokenServices(customTokenServices())
+                .authenticationManager(customAuthenticationManager);
+    }
+
+    @Bean
+    public JedisConnectionFactory connectionFactory() throws Exception {
+        return new JedisConnectionFactory(new JedisShardInfo(host));
+    }
+
+    @Bean
+    public DefaultTokenServices customTokenServices() {
+        DefaultTokenServices tokenServices = new DefaultTokenServices();
+        tokenServices.setTokenEnhancer(customTokenEnhancer);
+        tokenServices.setTokenStore(tokenStore);
+        tokenServices.setSupportRefreshToken(true);
+        tokenServices.setReuseRefreshToken(true);
+        tokenServices.setAuthenticationManager(customAuthenticationManager);
+        tokenServices.setClientDetailsService(clientDetailsService);
+        return tokenServices;
+    }
 }

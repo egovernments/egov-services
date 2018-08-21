@@ -42,7 +42,7 @@ public class ErrorHandler {
 		errorResponse.setResponseInfo(responseInfo);
 		errorResponse.setError(error);
 
-		return new ResponseEntity<org.egov.common.contract.response.ErrorResponse>(errorResponse, HttpStatus.BAD_REQUEST);
+		return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
 	}
 
 	public ResponseEntity<org.egov.common.contract.response.ErrorResponse> getErrorResponseEntityForMissingParameters(BindingResult bindingResult,
@@ -67,7 +67,7 @@ public class ErrorHandler {
 		errorResponse.setResponseInfo(responseInfo);
 		errorResponse.setError(error);
 
-		return new ResponseEntity<org.egov.common.contract.response.ErrorResponse>(errorResponse, HttpStatus.BAD_REQUEST);
+		return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
 	}
 
 	public ResponseEntity<org.egov.common.contract.response.ErrorResponse> getResponseEntityForUnexpectedErrors(RequestInfo requestInfo) {
@@ -82,6 +82,6 @@ public class ErrorHandler {
 		errorResponse.setResponseInfo(responseInfo);
 		errorResponse.setError(error);
 
-		return new ResponseEntity<org.egov.common.contract.response.ErrorResponse>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+		return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 }

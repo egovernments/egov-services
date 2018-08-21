@@ -18,7 +18,6 @@ public class CustomTokenEnhancer extends TokenEnhancerChain {
         final DefaultOAuth2AccessToken token = (DefaultOAuth2AccessToken) accessToken;
 
         SecureUser su = (SecureUser) authentication.getUserAuthentication().getPrincipal();
-        System.out.println("tenantId in enhance------->" + su.getTenantId());
         final Map<String, Object> info = new LinkedHashMap<String, Object>();
         final Map<String, Object> responseInfo = new LinkedHashMap<String, Object>();
 

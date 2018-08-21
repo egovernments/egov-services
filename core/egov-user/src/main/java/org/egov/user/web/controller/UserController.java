@@ -1,33 +1,23 @@
 package org.egov.user.web.controller;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.stream.Collectors;
-
+import lombok.extern.slf4j.Slf4j;
 import org.egov.common.contract.response.ResponseInfo;
 import org.egov.user.domain.model.User;
 import org.egov.user.domain.model.UserDetail;
 import org.egov.user.domain.service.TokenService;
 import org.egov.user.domain.service.UserService;
-import org.egov.user.web.contract.CreateUserRequest;
-import org.egov.user.web.contract.UserDetailResponse;
-import org.egov.user.web.contract.UserRequest;
-import org.egov.user.web.contract.UserSearchRequest;
-import org.egov.user.web.contract.UserSearchResponse;
-import org.egov.user.web.contract.UserSearchResponseContent;
+import org.egov.user.web.contract.*;
 import org.egov.user.web.contract.auth.CustomUserDetails;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import lombok.extern.slf4j.Slf4j;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @Slf4j
@@ -42,11 +32,12 @@ public class UserController {
 	
 	@Value("${otp.validation.register.mandatory}")
 	private boolean IsValidationMandatory;
-	
+
 	@Value("${citizen.registration.withlogin.enabled}")
 	private boolean isRegWithLoginEnabled;
 
 
+	@Autowired
 	public UserController(UserService userService, TokenService tokenService) {
 		this.userService = userService;
 		this.tokenService = tokenService;
@@ -68,8 +59,8 @@ public class UserController {
 			Object object = userService.registerWithLogin(user);
 			return new ResponseEntity<>(object, HttpStatus.OK);
 		}
-		final User newUser = userService.createCitizen(user);
-		return createResponse(newUser);
+		User createdUser = userService.createCitizen(user);
+		return createResponse(createdUser);
 	}
 
 	/**
@@ -132,19 +123,16 @@ public class UserController {
 
 	/**
 	 * end-point to update the user details without otp validations.
-	 * 
-	 * @param id
+	 *
 	 * @param createUserRequest
 	 * @param headers
 	 * @return
 	 */
-	@PostMapping("/users/{id}/_updatenovalidate")
-	public UserDetailResponse updateUserWithoutValidation(@PathVariable final Long id,
-			@RequestBody final CreateUserRequest createUserRequest, @RequestHeader HttpHeaders headers) {
+	@PostMapping("/users/_updatenovalidate")
+	public UserDetailResponse updateUserWithoutValidation(@RequestBody final CreateUserRequest createUserRequest, @RequestHeader HttpHeaders headers) {
 		User user = createUserRequest.toDomain(false);
 		user.setMobileValidationMandatory(isMobileValidationRequired(headers));
-		user.setId(id);
-		final User updatedUser = userService.updateWithoutOtpValidation(id, user);
+		final User updatedUser = userService.updateWithoutOtpValidation( user);
 		return createResponse(updatedUser);
 	}
 

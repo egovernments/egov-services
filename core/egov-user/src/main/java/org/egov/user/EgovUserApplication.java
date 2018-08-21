@@ -1,12 +1,9 @@
 package org.egov.user;
 
 
-import java.text.SimpleDateFormat;
-import java.util.Locale;
-import java.util.TimeZone;
-
-import javax.annotation.PostConstruct;
-
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.MapperFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.egov.tracer.config.TracerConfiguration;
 import org.egov.user.security.CustomAuthenticationKeyGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,12 +21,12 @@ import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.redis.RedisTokenStore;
 import org.springframework.web.servlet.config.annotation.ContentNegotiationConfigurer;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
-
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.MapperFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import redis.clients.jedis.JedisShardInfo;
+
+import javax.annotation.PostConstruct;
+import java.text.SimpleDateFormat;
+import java.util.Locale;
+import java.util.TimeZone;
 
 @SpringBootApplication
 @Import(TracerConfiguration.class)
@@ -76,7 +73,7 @@ public class EgovUserApplication {
 	}
 	
 	@Bean
-	public ObjectMapper getObjectMapper(){
+	public ObjectMapper objectMapper(){
 		
 		ObjectMapper objectMapper = new ObjectMapper();
 		objectMapper.setTimeZone(TimeZone.getTimeZone(timeZone));
@@ -90,9 +87,9 @@ public class EgovUserApplication {
 
 	@Bean
 	public TokenStore tokenStore() {
-	RedisTokenStore redisTokenStore =  new RedisTokenStore(connectionFactory());
-	redisTokenStore.setAuthenticationKeyGenerator(customAuthenticationKeyGenerator);
-	return redisTokenStore;
+		RedisTokenStore redisTokenStore =  new RedisTokenStore(connectionFactory());
+		redisTokenStore.setAuthenticationKeyGenerator(customAuthenticationKeyGenerator);
+		return redisTokenStore;
 	}
 
 	@Bean

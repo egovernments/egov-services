@@ -25,7 +25,7 @@ public class InvalidLoggedInUserUpdatePasswordRequestErrorHandlerTest {
 	@Test
 	public void test_should_return_error_when_user_id_is_not_present() {
 		final LoggedInUserUpdatePasswordRequest updatePassword = mock(LoggedInUserUpdatePasswordRequest.class);
-		when(updatePassword.isUserIdAbsent()).thenReturn(true);
+		when(updatePassword.isUsernameAbsent()).thenReturn(true);
 
 		final ErrorResponse errorResponse = errorHandler.adapt(updatePassword);
 

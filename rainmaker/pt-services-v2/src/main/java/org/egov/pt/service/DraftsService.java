@@ -82,8 +82,6 @@ public class DraftsService {
 	public DraftResponse searchDrafts(RequestInfo requestInfo, DraftSearchCriteria draftSearchCriteria) {
 		draftSearchCriteria.setOffset(draftSearchCriteria.getOffset() > 0 ? draftSearchCriteria.getOffset() : 0);
 		draftSearchCriteria.setLimit(draftSearchCriteria.getLimit() > 0 ? draftSearchCriteria.getLimit() : 5);
-		draftSearchCriteria.setUserId(requestInfo.getUserInfo().getUuid());
-		draftSearchCriteria.setTenantId(requestInfo.getUserInfo().getTenantId());
 		if (!isEmpty(draftSearchCriteria.getAssessmentNumber()))
 			draftSearchCriteria.setIsActive(false);
 		else

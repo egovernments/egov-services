@@ -484,6 +484,8 @@ public class EstimationService {
 
 		final String all = configs.getSlabValueAll();
 
+		List<BillingSlab> matchingList = new ArrayList<>();
+
 		for (BillingSlab billSlb : billingSlabs) {
 
 			Double floorNo = Double.parseDouble(unit.getFloorNo());
@@ -507,11 +509,16 @@ public class EstimationService {
 
 			if (isMajorMatching && isMinorMatching && isSubMinorMatching && isDetailsMatching && isFloorMatching
 					&& isOccupancyTypeMatching) {
+
+				matchingList.add(billSlb);
 				log.debug(" The Id of the matching slab : " + billSlb.getId());
-				return billSlb;
 			}
 		}
-		return null;
+		if (matchingList.size() == 1)
+			return matchingList.get(0);
+		else if (matchingList.size() == 0)
+			return null;
+		else throw new CustomException(PT_ESTIMATE_BILLINGSLABS_UNMATCH, PT_ESTIMATE_BILLINGSLABS_UNMATCH_MSG + unit);
 	}
 
 	/**

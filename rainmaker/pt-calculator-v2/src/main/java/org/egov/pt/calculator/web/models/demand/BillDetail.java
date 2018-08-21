@@ -34,6 +34,8 @@ public class BillDetail {
 
 	private BigDecimal totalAmount;
 
+	private BigDecimal collectedAmount;
+
 	private List<String> collectionModesNotAllowed;
 
 	private String tenantId;

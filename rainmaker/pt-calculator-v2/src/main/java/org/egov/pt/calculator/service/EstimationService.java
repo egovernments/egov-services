@@ -45,6 +45,9 @@ public class EstimationService {
 	@Autowired
 	private MasterDataService mDataService;
 
+	@Autowired
+	private DemandService demandService;
+
 	/**
 	 * Generates a map with assessment-number of property as key and estimation
 	 * map(taxhead code as key, amount to be paid as value) as value
@@ -380,7 +383,6 @@ public class EstimationService {
 			}
 		}
 		TaxHeadEstimate decimalEstimate = payService.roundOfDecimals(taxAmt.add(penalty), rebate.add(exemption));
-
         if (null != decimalEstimate) {
 
             estimates.add(decimalEstimate);
@@ -390,8 +392,16 @@ public class EstimationService {
                 rebate = rebate.add(decimalEstimate.getEstimateAmount());
         }
 
+		BigDecimal totalAmount = taxAmt.add(penalty).subtract(rebate).subtract(exemption);
+		BigDecimal collectedAmtForOldDemand = demandService.getCarryForwardAndCancelOldDemand(totalAmount, criteria, requestInfo);
+
+		if(collectedAmtForOldDemand.compareTo(BigDecimal.ZERO) > 0)
+			estimates.add(TaxHeadEstimate.builder()
+					.taxHeadCode(PT_ADVANCE_CARRYFORWARD)
+					.estimateAmount(collectedAmtForOldDemand).build());
+
 		return Calculation.builder()
-				.totalAmount(taxAmt.add(penalty).subtract(rebate).subtract(exemption))
+				.totalAmount(totalAmount.subtract(collectedAmtForOldDemand))
 				.taxAmount(taxAmt)
 				.penalty(penalty)
 				.exemption(exemption)
@@ -490,7 +500,8 @@ public class EstimationService {
 
 			boolean isFloorMatching = billSlb.getFromFloor() <= floorNo && billSlb.getToFloor() >= floorNo;
 
-			boolean isOccupancyTypeMatching = billSlb.getOccupancyType().equalsIgnoreCase(unit.getOccupancyType());
+			boolean isOccupancyTypeMatching = billSlb.getOccupancyType().equalsIgnoreCase(unit.getOccupancyType())
+					|| (billSlb.getOccupancyType().equalsIgnoreCase(all));
 
 			if (isMajorMatching && isMinorMatching && isSubMinorMatching && isDetailsMatching && isFloorMatching
 					&& isOccupancyTypeMatching) {
@@ -587,15 +598,14 @@ public class EstimationService {
 					usageMajors.get(unit.getUsageCategoryMajor()));
 
 		if (null != applicableUsageMasterExemption)
-			return (Map<String, Object>) applicableUsageMasterExemption.get(EXEMPTION_FIELD_NAME);
+			applicableUsageMasterExemption = (Map<String, Object>) applicableUsageMasterExemption.get(EXEMPTION_FIELD_NAME);
 
 		return applicableUsageMasterExemption;
 	}
 
 	private boolean isExemptionNull(Map<String, Object> applicableUsageMasterExemption) {
 
-		return (null != applicableUsageMasterExemption
-				&& null == applicableUsageMasterExemption.get(EXEMPTION_FIELD_NAME))
-				|| null == applicableUsageMasterExemption;
+		return !(null != applicableUsageMasterExemption
+				&& null != applicableUsageMasterExemption.get(EXEMPTION_FIELD_NAME));
 	}
 }

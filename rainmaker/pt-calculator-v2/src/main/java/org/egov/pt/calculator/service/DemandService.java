@@ -208,7 +208,7 @@ public class DemandService {
 	 * @param criteria
 	 * @return
 	 */
-	private BigDecimal getCarryForwardAndCancelOldDemand(BigDecimal newTax, CalculationCriteria criteria, RequestInfo requestInfo) {
+	protected BigDecimal getCarryForwardAndCancelOldDemand(BigDecimal newTax, CalculationCriteria criteria, RequestInfo requestInfo) {
 
 		Property property = criteria.getProperty();
 
@@ -224,7 +224,7 @@ public class DemandService {
 		if (CollectionUtils.isEmpty(assessments)) return carryForward;
 
 		Assessment latestAssessment = assessments.get(0);
-		log.debug(" the lates assessment : " + latestAssessment);
+		log.debug(" the latest assessment : " + latestAssessment);
 
 		DemandResponse res = mapper.convertValue(
 				repository.fetchResult(utils.getDemandSearchUrl(latestAssessment), new RequestInfoWrapper(requestInfo)),

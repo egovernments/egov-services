@@ -7,6 +7,7 @@ import org.apache.log4j.Logger;
 import org.egov.lams.config.PropertiesManager;
 import org.egov.lams.exceptions.CollectionExceedException;
 import org.egov.lams.model.Agreement;
+import org.egov.lams.model.AgreementCriteria;
 import org.egov.lams.model.Allottee;
 import org.egov.lams.model.Demand;
 import org.egov.lams.model.DemandDetails;
@@ -32,6 +33,7 @@ import org.egov.lams.web.contract.LamsConfigurationGetRequest;
 import org.egov.lams.web.contract.ReceiptAccountInfo;
 import org.egov.lams.web.contract.ReceiptAmountInfo;
 import org.egov.lams.web.contract.RequestInfo;
+import org.egov.lams.web.contract.RequestInfoWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
@@ -204,14 +206,8 @@ public class PaymentService {
             LOGGER.info("before Bill Number" + billNumberService.generateBillNumber());
             billInfo.setBillNumber(billNumberService.generateBillNumber());
             LOGGER.info("after Bill Number" + billNumberService.generateBillNumber());
-            DemandSearchCriteria demandSearchCriteria = new DemandSearchCriteria();
-            demandSearchCriteria.setDemandId(Long.valueOf(agreement.getDemands().get(0)));
-
-            LOGGER.info("demand before>>>>>>>" + demandSearchCriteria);
-
-            Demand demand = demandRepository.getDemandBySearch(demandSearchCriteria, requestInfo).getDemands().get(0);
-            LOGGER.info("demand>>>>>>>" + demand);
-
+            List<Demand> demands =  agreement.getLegacyDemands();
+            Demand demand = demands.get(0);
             if ("SYSTEM".equalsIgnoreCase(agreement.getSource().toString())) {
                 for (DemandDetails demandDetails : demand.getDemandDetails()) {
                     BigDecimal balance = demandDetails.getTaxAmount().subtract(demandDetails.getCollectionAmount());
@@ -248,25 +244,24 @@ public class PaymentService {
                     .distinct().collect(Collectors.toList());
 
             for (DemandDetails demandDetail : demandDetails) {
-                if(demandDetail!=null){
-                    LOGGER.info("the reason for demanddetail : "+ demandDetail.getTaxReason());
+                if (demandDetail != null) {
+                    LOGGER.info("the reason for demanddetail : " + demandDetail.getTaxReason());
                     if (ADVANCE_TAX.equalsIgnoreCase(demandDetail.getTaxReasonCode())
                             || GOODWILL_AMOUNT.equalsIgnoreCase(demandDetail.getTaxReasonCode())
                             || (demandDetail.getPeriodStartDate().compareTo(new Date()) <= 0)) {
                         orderNo++;
                         totalAmount = totalAmount
                                 .add(demandDetail.getTaxAmount().subtract(demandDetail.getCollectionAmount()));
-                        LOGGER.info("the amount added to bill : "+totalAmount);
+                        LOGGER.info("the amount added to bill : " + totalAmount);
 
-                        for(Date date : installmentDates){
-                            if(date.compareTo(demandDetail.getPeriodStartDate())==0
-                                    && RENT.equalsIgnoreCase(demandDetail.getTaxReasonCode())){
+                        for (Date date : installmentDates) {
+                            if (date.compareTo(demandDetail.getPeriodStartDate()) == 0
+                                    && RENT.equalsIgnoreCase(demandDetail.getTaxReasonCode())) {
                                 groupId++;
                             }
 
                         }
-                        billDetailInfos
-                                .addAll(getBilldetails(demandDetail, functionCode, orderNo, groupId,requestInfo, purposeMap,installmentDates));
+                        billDetailInfos.addAll(getBilldetails(demandDetail, functionCode, orderNo, groupId, requestInfo, purposeMap, installmentDates));
                     }
                 }
             }
@@ -293,6 +288,45 @@ public class PaymentService {
         return collectXML;
     }
 
+    public Agreement getDemandDetails(String agreementNo, String ackNo, String tenantId, final RequestInfoWrapper requestInfoWrapper) {
+
+        DemandSearchCriteria demandSearchCriteria = new DemandSearchCriteria();
+        AgreementCriteria agreementCriteria = new AgreementCriteria();
+        BigDecimal balance = BigDecimal.ZERO;
+        List<DemandDetails> demandDetails = new ArrayList<>();
+        List<Demand> demands = new ArrayList<>();
+
+        if (StringUtils.isNotBlank(agreementNo))
+            agreementCriteria.setAgreementNumber(agreementNo);
+        else if (StringUtils.isNotBlank(ackNo))
+            agreementCriteria.setAcknowledgementNumber(ackNo);
+
+        agreementCriteria.setTenantId(tenantId);
+        Agreement agreement = agreementService.searchAgreement(
+                agreementCriteria, requestInfoWrapper.getRequestInfo()).get(0);
+
+        if (agreement.getDemands() != null && !agreement.getDemands().isEmpty()) {
+            demandSearchCriteria.setDemandId(Long.valueOf(agreement.getDemands().get(0)));
+        }
+        Demand demand = demandRepository.getDemandBySearch(demandSearchCriteria, requestInfoWrapper.getRequestInfo()).getDemands().get(0);
+        if(demand != null && !demands.isEmpty()) {
+            for (DemandDetails details : demand.getDemandDetails()) {
+                if (details != null ) {
+                    balance = details.getTaxAmount().subtract(details.getCollectionAmount());
+                    if (balance.compareTo(BigDecimal.ZERO) > 0
+                            && details.getPeriodStartDate().compareTo(new Date()) <= 0) {
+                        demandDetails.add(details);
+                    }
+                }
+            }
+        }
+
+        demand.setDemandDetails(demandDetails);
+        demands.add(demand);
+        agreement.setLegacyDemands(demands);
+
+        return agreement;
+    }
 
 
     public List<BillDetailInfo> getBilldetails(final DemandDetails demandDetail, String functionCode, int orderNo,int groupId,

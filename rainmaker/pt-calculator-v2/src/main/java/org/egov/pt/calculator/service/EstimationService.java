@@ -399,6 +399,8 @@ public class EstimationService {
 			estimates.add(TaxHeadEstimate.builder()
 					.taxHeadCode(PT_ADVANCE_CARRYFORWARD)
 					.estimateAmount(collectedAmtForOldDemand).build());
+		else if(collectedAmtForOldDemand.compareTo(BigDecimal.ZERO) < 0)
+			throw new CustomException(EG_PT_DEPRECIATING_ASSESSMENT_ERROR, EG_PT_DEPRECIATING_ASSESSMENT_ERROR_MSG_ESTIMATE);
 
 		return Calculation.builder()
 				.totalAmount(totalAmount.subtract(collectedAmtForOldDemand))

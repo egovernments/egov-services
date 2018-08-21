@@ -215,6 +215,8 @@ public class DemandService {
 		BigDecimal carryForward = BigDecimal.ZERO;
 		BigDecimal oldTaxAmt = BigDecimal.ZERO;
 
+		if(null == property.getPropertyId()) return carryForward;
+
 		Assessment assessment = Assessment.builder().propertyId(property.getPropertyId())
 				.tenantId(property.getTenantId())
 				.assessmentYear(property.getPropertyDetails().get(0).getFinancialYear()).build();

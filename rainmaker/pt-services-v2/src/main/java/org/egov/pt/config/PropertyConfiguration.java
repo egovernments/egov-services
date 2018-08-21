@@ -94,5 +94,12 @@ public class PropertyConfiguration {
     private Boolean isSMSNotificationEnabled;
 
 
+    //Property Search Params
+    @Value("${citizen.allowed.search.params}")
+    private String citizenSearchParams;
+
+    @Value("${employee.allowed.search.params}")
+    private String employeeSearchParams;
+
 
 }

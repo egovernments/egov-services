@@ -63,8 +63,9 @@ public class PropertyService {
 	 * @param criteria PropertyCriteria containing fields on which search is based
 	 * @return list of properties satisfying the containing fields in criteria
 	 */
-	public List<Property> searchProperty(PropertyCriteria criteria,RequestInfo requestInfo) {
+		public List<Property> searchProperty(PropertyCriteria criteria,RequestInfo requestInfo) {
 		List<Property> properties;
+		propertyValidator.validatePropertyCriteria(criteria,requestInfo);
 		if(criteria.getMobileNumber()!=null || criteria.getName()!=null)
 		{   UserDetailResponse userDetailResponse = userService.getUser(criteria,requestInfo);
 			// If user not found with given user fields return empty list
@@ -96,7 +97,7 @@ public class PropertyService {
 	 * @param requestInfo RequestInfo object of the request
 	 * @return properties with owner information added from user service
 	 */
-	private List<Property> getPropertiesWithOwnerInfo(PropertyCriteria criteria,RequestInfo requestInfo){
+	 List<Property> getPropertiesWithOwnerInfo(PropertyCriteria criteria,RequestInfo requestInfo){
 		List<Property> properties = repository.getProperties(criteria);
 		enrichmentService.enrichPropertyCriteriaWithOwnerids(criteria,properties);
 		UserDetailResponse userDetailResponse = userService.getUser(criteria,requestInfo);

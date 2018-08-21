@@ -211,7 +211,7 @@ public class PaymentNotificationService {
         PropertyCriteria propertyCriteria = new PropertyCriteria();
         propertyCriteria.setPropertyDetailids(Collections.singleton(valMap.get("assessmentNumber")));
         propertyCriteria.setTenantId(valMap.get("tenantId"));
-        List<Property> properties = propertyService.searchProperty(propertyCriteria,requestInfo);
+        List<Property> properties = propertyService.getPropertiesWithOwnerInfo(propertyCriteria,requestInfo);
 
         if(CollectionUtils.isEmpty(properties))
             throw new CustomException("ASSESSMENT NOT FOUND","The assessment for the given consumer code is not available");

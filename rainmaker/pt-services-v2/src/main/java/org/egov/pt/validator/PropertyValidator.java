@@ -4,6 +4,7 @@ import com.jayway.jsonpath.JsonPath;
 import lombok.extern.slf4j.Slf4j;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.mdms.model.MdmsCriteriaReq;
+import org.egov.pt.config.PropertyConfiguration;
 import org.egov.pt.repository.PropertyRepository;
 import org.egov.pt.repository.ServiceRequestRepository;
 import org.egov.pt.util.ErrorConstants;
@@ -30,6 +31,9 @@ public class PropertyValidator {
 
     @Autowired
     private PropertyRepository propertyRepository;
+
+    @Autowired
+    private PropertyConfiguration propertyConfiguration;
 
     @Autowired
     private ServiceRequestRepository serviceRequestRepository;
@@ -488,6 +492,10 @@ public class PropertyValidator {
             throw new CustomException(errorMap);
     }
 
+    /**
+     * Validates the mobileNumber of owners
+     * @param request The propertyRequest received for create or update
+     */
     private void validateMobileNumber(PropertyRequest request){
         Map<String,String > errorMap = new HashMap<>();
         request.getProperties().forEach(property -> {
@@ -513,6 +521,80 @@ public class PropertyValidator {
             throw new CustomException(errorMap);
 
     }
+
+    public void validatePropertyCriteria(PropertyCriteria propertyCriteria,RequestInfo requestInfo){
+        List<String> allowedParams = null;
+
+        if(requestInfo.getUserInfo().getType().equalsIgnoreCase("CITIZEN"))
+            allowedParams = Arrays.asList(propertyConfiguration.getCitizenSearchParams().split(","));
+        else
+            allowedParams = Arrays.asList(propertyConfiguration.getEmployeeSearchParams().split(","));
+
+        if(propertyCriteria.getTenantId()==null)
+            throw new CustomException("INVALID SEARCH","TenantId cannot be null in search");
+
+        if(propertyCriteria.getName()!=null && !allowedParams.contains("name"))
+            throw new CustomException("INVALID SEARCH","Search based on name is not available");
+
+        if(propertyCriteria.getUserName()!=null && !allowedParams.contains("userName"))
+            throw new CustomException("INVALID SEARCH","Search based on userName is not available");
+
+        if(propertyCriteria.getMobileNumber()!=null && !allowedParams.contains("mobileNumber"))
+            throw new CustomException("INVALID SEARCH","Search based on mobileNumber is not available");
+
+        if(propertyCriteria.getDoorNo()!=null && !allowedParams.contains("doorNo"))
+            throw new CustomException("INVALID SEARCH","Search based on doorNo is not available");
+
+        if(propertyCriteria.getLocality()!=null && !allowedParams.contains("locality"))
+            throw new CustomException("INVALID SEARCH","Search based on locality is not available");
+
+        if(propertyCriteria.getAccountId()!=null && !allowedParams.contains("accountId"))
+            throw new CustomException("INVALID SEARCH","Search based on accountId is not available");
+
+        if(!CollectionUtils.isEmpty(propertyCriteria.getIds()) && !allowedParams.contains("ids"))
+            throw new CustomException("INVALID SEARCH","Search based on ids is not available");
+
+        if(!CollectionUtils.isEmpty(propertyCriteria.getPropertyDetailids()) && !allowedParams.contains("propertyDetailids"))
+            throw new CustomException("INVALID SEARCH","Search based on assessmentNumber is not available");
+
+        if(!CollectionUtils.isEmpty(propertyCriteria.getOldpropertyids()) && !allowedParams.contains("oldpropertyids"))
+            throw new CustomException("INVALID SEARCH","Search based on oldPropertyId is not available");
+
+        if(!CollectionUtils.isEmpty(propertyCriteria.getAddressids()) && !allowedParams.contains("addressids"))
+            throw new CustomException("INVALID SEARCH","Search based on addressId is not available");
+
+        if(!CollectionUtils.isEmpty(propertyCriteria.getUnitids()) && !allowedParams.contains("unitids"))
+            throw new CustomException("INVALID SEARCH","Search based on unitId is not available");
+
+        if(!CollectionUtils.isEmpty(propertyCriteria.getDocumentids()) && !allowedParams.contains("documentids"))
+            throw new CustomException("INVALID SEARCH","Search based on documentId is not available");
+
+        if(!CollectionUtils.isEmpty(propertyCriteria.getOwnerids()) && !allowedParams.contains("ownerids"))
+            throw new CustomException("INVALID SEARCH","Search based on ownerId is not available");
+
+
+        // Search on locality is allowed only with doorNo.
+        if((propertyCriteria.getLocality()!=null && propertyCriteria.getDoorNo()==null) ||
+                (propertyCriteria.getLocality()==null && propertyCriteria.getDoorNo()!=null))
+            throw new CustomException("INVALID SEARCH","For search based on address locality and doorno are both mandatory");
+
+
+        // Search Based only on tenantId is not allowed
+         Boolean emptySearch = (propertyCriteria.getAccountId()==null && propertyCriteria.getName()==null
+         && propertyCriteria.getLocality()==null && propertyCriteria.getDoorNo()==null
+         && propertyCriteria.getMobileNumber()==null && propertyCriteria.getUserName()==null
+         && CollectionUtils.isEmpty(propertyCriteria.getIds()) && CollectionUtils.isEmpty(propertyCriteria.getOldpropertyids())
+         && CollectionUtils.isEmpty(propertyCriteria.getAddressids()) && CollectionUtils.isEmpty(propertyCriteria.getUnitids())
+                 && CollectionUtils.isEmpty(propertyCriteria.getOwnerids()) && CollectionUtils.isEmpty(propertyCriteria.getPropertyDetailids())
+                 && CollectionUtils.isEmpty(propertyCriteria.getDocumentids()));
+        if(emptySearch)
+            throw new CustomException("INVALID SEARCH","Search is not allowed on tenantId alone");
+
+
+    }
+
+
+
 
 
 

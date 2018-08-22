@@ -197,6 +197,7 @@ public class ReceiptEnricher {
                         receipt.getTenantId());
                 String transactionDate = simpleDateFormat.format(new Date());
                 instrument.setTransactionDate(simpleDateFormat.parse(transactionDate));
+                instrument.setTransactionDateInput(System.currentTimeMillis());
 
                 if(instrument.getInstrumentType().getName().equalsIgnoreCase(InstrumentTypesEnum.CARD.name()))
                     instrument.setTransactionNumber(transactionId + "-"+instrument.getTransactionNumber());

@@ -44,14 +44,7 @@ import org.egov.eis.config.PropertiesManager;
 import org.egov.eis.model.enums.MovementStatus;
 import org.egov.eis.model.enums.TypeOfMovement;
 import org.egov.eis.service.helper.WorkFlowSearchURLHelper;
-import org.egov.eis.web.contract.MovementRequest;
-import org.egov.eis.web.contract.Position;
-import org.egov.eis.web.contract.ProcessInstance;
-import org.egov.eis.web.contract.ProcessInstanceRequest;
-import org.egov.eis.web.contract.ProcessInstanceResponse;
-import org.egov.eis.web.contract.Task;
-import org.egov.eis.web.contract.TaskRequest;
-import org.egov.eis.web.contract.TaskResponse;
+import org.egov.eis.web.contract.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -70,9 +63,13 @@ public class WorkFlowService {
     @Autowired
     private PropertiesManager propertiesManager;
 
+    @Autowired
+    private EmployeeService employeeService;
+
     public ProcessInstance start(final MovementRequest movementRequest) {
         final ProcessInstanceRequest processInstanceRequest = new ProcessInstanceRequest();
         final ProcessInstance processInstance = new ProcessInstance();
+        Employee employee = employeeService.getEmployeeById(movementRequest);
         LOGGER.info("propertiesManager::" + propertiesManager);
         if (movementRequest.getMovement().get(0).getTypeOfMovement().equals(TypeOfMovement.PROMOTION)) {
             processInstance.setBusinessKey(propertiesManager.getWorkflowServicePromotionBusinessKey());
@@ -87,6 +84,7 @@ public class WorkFlowService {
         LOGGER.info("movementRequest::" + movementRequest);
         assignee.setId(movementRequest.getMovement().get(0).getWorkflowDetails().getAssignee());
         processInstance.setAssignee(assignee);
+        processInstance.setDetails(employee.getCode() + "-" + movementRequest.getMovement().get(0).getTypeOfMovement().toString());
         processInstanceRequest.setRequestInfo(movementRequest.getRequestInfo());
         processInstanceRequest.setProcessInstance(processInstance);
         final String url = workFlowSearchURLHelper.startURL();
@@ -105,6 +103,7 @@ public class WorkFlowService {
     public Task update(final MovementRequest movementRequest) {
         final TaskRequest taskRequest = new TaskRequest();
         final Task task = new Task();
+        Employee employee = employeeService.getEmployeeById(movementRequest);
         final String workFlowAction = movementRequest.getMovement().get(0).getWorkflowDetails().getAction();
         task.setId(movementRequest.getMovement().get(0).getStateId().toString());
         if (movementRequest.getMovement().get(0).getTypeOfMovement().equals(TypeOfMovement.PROMOTION)) {
@@ -127,7 +126,9 @@ public class WorkFlowService {
         task.setTenantId(movementRequest.getMovement().get(0).getTenantId());
         final Position assignee = new Position();
         assignee.setId(movementRequest.getMovement().get(0).getWorkflowDetails().getAssignee());
+        task.setDetails(employee.getCode()+"-"+movementRequest.getMovement().get(0).getTypeOfMovement());
         task.setAssignee(assignee);
+
         taskRequest.setRequestInfo(movementRequest.getRequestInfo());
         taskRequest.setTask(task);
         final String url = workFlowSearchURLHelper.updateURL(movementRequest.getMovement().get(0).getStateId());

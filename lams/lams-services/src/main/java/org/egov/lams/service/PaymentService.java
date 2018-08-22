@@ -309,7 +309,7 @@ public class PaymentService {
             demandSearchCriteria.setDemandId(Long.valueOf(agreement.getDemands().get(0)));
         }
         Demand demand = demandRepository.getDemandBySearch(demandSearchCriteria, requestInfoWrapper.getRequestInfo()).getDemands().get(0);
-        if(demand != null && !demands.isEmpty()) {
+        if(demand != null ) {
             for (DemandDetails details : demand.getDemandDetails()) {
                 if (details != null ) {
                     balance = details.getTaxAmount().subtract(details.getCollectionAmount());

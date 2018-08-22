@@ -144,7 +144,7 @@ public class CollectionsQueryBuilder {
         MapSqlParameterSource sqlParameterSource = new MapSqlParameterSource();
         sqlParameterSource.addValue("id", instrument.getId());
         sqlParameterSource.addValue("transactionnumber", instrument.getTransactionNumber());
-        sqlParameterSource.addValue("transactiondate", instrument.getTransactionDateInput());
+        sqlParameterSource.addValue("transactiondate", instrument.getTransactionDate());
         sqlParameterSource.addValue("amount", instrument.getAmount());
         sqlParameterSource.addValue("instrumenttype", instrument.getInstrumentType().getName());
         sqlParameterSource.addValue("instrumentstatus", instrument.getInstrumentStatus().toString());

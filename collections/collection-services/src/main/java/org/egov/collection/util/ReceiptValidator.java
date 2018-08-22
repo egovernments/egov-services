@@ -70,8 +70,8 @@ public class ReceiptValidator {
             throw new CustomException("INVALID_INSTRUMENT_TYPE", "Invalid instrument type provided");
         }
 
-        if(isNull(receipt.getInstrument().getTransactionDateInput()))
-            errorMap.put("INSTRUMENT_DATE_INPUT_INVALID", "Instrument Date Input cannot be empty");
+//        if(isNull(receipt.getInstrument().getTransactionDateInput()))
+//            errorMap.put("INSTRUMENT_DATE_INPUT_INVALID", "Instrument Date Input cannot be empty");
 
 //      Compute total amount paid by summing all billDetail amounts and compare with instrument amount
         BigDecimal totalAmountPaid = BigDecimal.ZERO;
@@ -89,6 +89,7 @@ public class ReceiptValidator {
                 errorMap.put("INVALID_BILL_AMOUNT", "Invalid bill amount! Amount should be  greater than 0 and " +
                         "without fractions");
             }
+
             if (!isNull(amountPaid) && (amountPaid.compareTo(BigDecimal.ZERO) == 0 && totalAmount.compareTo
                     (BigDecimal.ZERO) != 0)) {
                 errorMap.put("INVALID_ZERO_AMOUNT", "Invalid amount paid, amount paid can only be 0 if bill amount is" +

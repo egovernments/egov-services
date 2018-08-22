@@ -12,6 +12,8 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 
 import java.util.*;
 
+import static java.util.Objects.isNull;
+
 public class CollectionsQueryBuilder {
 
     public static final String INSERT_RECEIPT_HEADER_SQL ="INSERT INTO egcl_receiptheader(id, payeename, payeeaddress, payeeemail, paidby, referencenumber, "
@@ -146,9 +148,10 @@ public class CollectionsQueryBuilder {
         sqlParameterSource.addValue("amount", instrument.getAmount());
         sqlParameterSource.addValue("instrumenttype", instrument.getInstrumentType().getName());
         sqlParameterSource.addValue("instrumentstatus", instrument.getInstrumentStatus().toString());
-        sqlParameterSource.addValue("bankid", instrument.getBank().getId());
+        sqlParameterSource.addValue("bankid", isNull(instrument.getBank()) ? null : instrument.getBank().getId());
         sqlParameterSource.addValue("branchname", instrument.getBranchName());
-        sqlParameterSource.addValue("bankaccountid", null);
+        sqlParameterSource.addValue("bankaccountid", isNull(instrument.getBankAccount()) ? null : instrument
+                .getBankAccount().getAccountNumber());
         sqlParameterSource.addValue("ifsccode", instrument.getIfscCode());
         sqlParameterSource.addValue("financialstatus", null);
         sqlParameterSource.addValue("transactiontype", instrument.getTransactionType().toString());
@@ -200,7 +203,7 @@ public class CollectionsQueryBuilder {
             preparedStatementValues.put("receiptNumbers", searchCriteria.getReceiptNumbers());
         }
 
-        if (!Objects.isNull(searchCriteria.getConsumerCode()) && !searchCriteria.getConsumerCode().isEmpty()) {
+        if (!isNull(searchCriteria.getConsumerCode()) && !searchCriteria.getConsumerCode().isEmpty()) {
 
             addClauseIfRequired(preparedStatementValues, selectQuery);
             selectQuery.append(" rh.consumerCode in (:consumerCodes)");

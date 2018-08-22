@@ -480,47 +480,57 @@ class AgreementSearch extends React.Component {
           "fullscreen=yes"
         );
         break;
-      case "collTax":
-        $.ajax({
-          url:
-            "/lams-services/payment/_create?tenantId=" +
-            tenantId +
-            "&" +
-            (acknowledgementNumber
-              ? "acknowledgementNumber=" + acknowledgementNumber
-              : "agreementNumber=" + number),
-          type: "POST",
-          contentType: "application/json",
-          data: JSON.stringify({
-            RequestInfo: requestInfo
-          }),
-          success: function(data) {
-            jQuery("<form>.")
-              .attr({
-                method: "post",
-                action: "/collection/receipts/receipt-newform.action",
-                target: "_self"
-              })
-              .append(
-                jQuery("<input>").attr({
-                  type: "hidden",
-                  id: "collectXML",
-                  name: "collectXML",
-                  value: data
-                })
-              )
-              .appendTo(document.body)
-              .submit();
-          },
-          error: function(data) {
-            console.log(data);
-            showError(
-              data.responseJSON.error
-                ? data.responseJSON.error.message
-                : data.responseJSON.message
-            );
-          }
-        });
+        case "collTax":
+        window.open(
+          "app/search-agreement/partial-payment.html?" +
+            (number
+              ? "&agreementNumber=" + number
+              : "&acknowledgementNumber=" + acknowledgementNumber) +
+            (status ? "&status=" + status : "") +
+            (action ? "&action=" + action : "") +
+            (agreementId ? "&id=" + agreementId : "") +
+            "&assetId=" +
+            id,
+          "fs",
+          "fullscreen=yes"
+        );
+        // $.ajax({
+        //   url:
+        //     "/lams-services/payment/_partialpaymentview?tenantId=" +
+        //     tenantId +
+        //     "&" +
+        //     (acknowledgementNumber
+        //       ? "acknowledgementNumber=" + acknowledgementNumber
+        //       : "agreementNumber=" + number),
+        //   type: "POST",
+        //   contentType: "application/json",
+        //   data: JSON.stringify({
+        //     RequestInfo: requestInfo
+        //   }),
+        //   success: function(data) {
+        //     window.open(
+        //       "app/search-agreement/partial-payment.html?" +
+        //         (number
+        //           ? "&agreementNumber=" + number
+        //           : "&acknowledgementNumber=" + acknowledgementNumber) +
+        //         (status ? "&status=" + status : "") +
+        //         (action ? "&action=" + action : "") +
+        //         (agreementId ? "&id=" + agreementId : "") +
+        //         "&assetId=" +
+        //         id,
+        //       "fs",
+        //       "fullscreen=yes"
+        //     );
+        //   },
+        //   error: function(data) {
+        //     console.log(data);
+        //     showError(
+        //       data.responseJSON.error
+        //         ? data.responseJSON.error.message
+        //         : data.responseJSON.message
+        //     );
+        //   }
+        // });
         break;
         case "view":
         window.open(

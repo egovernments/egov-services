@@ -34,6 +34,7 @@ import org.egov.lams.web.contract.ReceiptAccountInfo;
 import org.egov.lams.web.contract.ReceiptAmountInfo;
 import org.egov.lams.web.contract.RequestInfo;
 import org.egov.lams.web.contract.RequestInfoWrapper;
+import org.egov.lams.web.validator.AgreementValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
@@ -80,6 +81,11 @@ public class PaymentService {
     private static final String ST_ON_GOODWILL = "GW_ST";
     private static final String ST_ON_ADVANCE = "ADV_ST";
     private static final String ADVANCE_COLLECTION = "Advance Collection";
+    private static final String EVENT_RECEIPT_CREATED = "RECEIPT_CREATED";
+    private static final String EVENT_RECEIPT_CANCELLED = "RECEIPT_CANCELLED";
+    public static final String RCPT_CANCEL_STATUS = "C";
+
+
 
     @Autowired
     PropertiesManager propertiesManager;
@@ -107,6 +113,9 @@ public class PaymentService {
 
     @Autowired
     FinancialsRepository financialsRepository;
+
+    @Autowired
+    private AgreementValidator agreementValidator;
 
     public String generateBillXml(Agreement agreement, RequestInfo requestInfo) {
         String collectXML = "";
@@ -309,7 +318,7 @@ public class PaymentService {
             demandSearchCriteria.setDemandId(Long.valueOf(agreement.getDemands().get(0)));
         }
         Demand demand = demandRepository.getDemandBySearch(demandSearchCriteria, requestInfoWrapper.getRequestInfo()).getDemands().get(0);
-        if(demand != null ) {
+        if(demand != null && !demands.isEmpty()) {
             for (DemandDetails details : demand.getDemandDetails()) {
                 if (details != null ) {
                     balance = details.getTaxAmount().subtract(details.getCollectionAmount());
@@ -414,7 +423,7 @@ public class PaymentService {
         return billDetails;
     }
 
-    public ResponseEntity<ReceiptAmountInfo> updateDemand(BillReceiptInfoReq billReceiptInfoReq) {
+    public ResponseEntity<ReceiptAmountInfo> updateDemand(BillReceiptInfoReq billReceiptInfoReq) throws Exception {
         LOGGER.info("PaymentService- updateDemand - billReceiptInfoReq::: - "
                 + billReceiptInfoReq.getBillReceiptInfo().getBillReferenceNum());
 
@@ -429,21 +438,33 @@ public class PaymentService {
         Demand currentDemand = demandRepository.getDemandBySearch(demandSearchCriteria, requestInfo).getDemands()
                 .get(0);
         LOGGER.info("PaymentService- updateDemand - currentDemand - " + currentDemand.getId());
-        if (currentDemand.getMinAmountPayable() != null && currentDemand.getMinAmountPayable() > 0)
             currentDemand.setMinAmountPayable(0d);
+            currentDemand.setPaymentInfos(setPaymentInfos(billReceiptInfo));
 
-        updateDemandDetailForReceiptCreate(currentDemand, billReceiptInfoReq.getBillReceiptInfo());
-        LOGGER.info("PaymentService- updateDemand - updateDemandDetailForReceiptCreate done");
-        LOGGER.info("The amount collected from citizen is ::: " + currentDemand.getCollectionAmount());
-        currentDemand.setPaymentInfos(setPaymentInfos(billReceiptInfo));
-        demandRepository.updateDemandForCollection(Arrays.asList(currentDemand), requestInfo).getDemands().get(0);
+        if(billReceiptInfoReq.getBillReceiptInfo().getEvent().equalsIgnoreCase(EVENT_RECEIPT_CREATED)){
+            updateDemandDetailForReceiptCreate(currentDemand, billReceiptInfoReq.getBillReceiptInfo());
+            LOGGER.info("PaymentService- updateDemand - updateDemandDetailForReceiptCreate done");
+            LOGGER.info("The amount collected from citizen is ::: " + currentDemand.getCollectionAmount());
+            updateWorkflow(billInfo.getConsumerCode(), requestInfo);
+            isAdvanceCollection(billInfo.getConsumerCode(),currentDemand);
+            LOGGER.info("the consumer code from bill object ::: " + billInfo.getConsumerCode());
+            demandRepository.updateDemandForCollection(Arrays.asList(currentDemand), requestInfo).getDemands().get(0);
+
+        }
+        else if (billReceiptInfoReq.getBillReceiptInfo().getEvent().equalsIgnoreCase(EVENT_RECEIPT_CANCELLED)){
+            updateDemandDetailForReceiptCancel(currentDemand, billReceiptInfoReq.getBillReceiptInfo(),billInfo);
+            for (PaymentInfo info : currentDemand.getPaymentInfos()){
+                info.setStatus(RCPT_CANCEL_STATUS);
+            }
+            billRepository.updateBill(Arrays.asList(billInfo), requestInfo).getBillInfos().get(0);
+            demandRepository.updateDemandForCollectionWithCancelReceipt(Arrays.asList(currentDemand), requestInfo).getDemands().get(0);
+        }
+        //TODO : implement for instrument bounced
+
         LOGGER.info("PaymentService- updateDemand - setPaymentInfos done");
 
         // / FIXME put update workflow here
 
-        updateWorkflow(billInfo.getConsumerCode(), requestInfo);
-        isAdvanceCollection(billInfo.getConsumerCode(),currentDemand);
-        LOGGER.info("the consumer code from bill object ::: " + billInfo.getConsumerCode());
         return receiptAmountBifurcation(billReceiptInfo, billInfo);
     }
 
@@ -509,7 +530,7 @@ public class PaymentService {
         prepareDemandDetailsForCollectionUpdate(demand);
         for (final ReceiptAccountInfo rcptAccInfo : billReceiptInfo.getAccountDetails()) {
 
-            totalAmountCollected = totalAmountCollected.add(updateDemandDetails(demand, rcptAccInfo));
+            totalAmountCollected = totalAmountCollected.add(updateDmdDetForRcptCreate(demand, rcptAccInfo));
         }
         LOGGER.info("updateDemandDetailForReceiptCreate  ::: totalAmountCollected " + totalAmountCollected);
         demand.setCollectionAmount(totalAmountCollected);
@@ -526,7 +547,7 @@ public class PaymentService {
         }
 
     }
-    private BigDecimal updateDemandDetails(Demand demand, final ReceiptAccountInfo rcptAccInfo) {
+    private BigDecimal updateDmdDetForRcptCreate(Demand demand, final ReceiptAccountInfo rcptAccInfo) {
 
         BigDecimal totalAmountCollected = BigDecimal.ZERO;
 
@@ -590,6 +611,57 @@ public class PaymentService {
         return receiptAmountInfoResponse;
     }
 
+
+    // Receipt cancellation ,updating bill,demand details,demand
+    public void updateDemandDetailForReceiptCancel(Demand demand, BillReceiptReq billReceiptInfo, BillInfo billInfo) throws Exception {
+        LOGGER.debug("reconcileCollForRcptCancel : Updating Collection Started For Demand : " + demand
+                + " with BillReceiptInfo - " + billReceiptInfo);
+        try {
+            if (billInfo.getId() != null)
+                billInfo.setCancelled("Y");
+            updateDmdDetForRcptCancel(demand, billReceiptInfo);
+            LOGGER.debug("reconcileCollForRcptCancel : Updating Collection finished For Demand : " + demand);
+        } catch (final Exception e) {
+            throw new RuntimeException("Error occured during back update of DCB : " + e.getMessage());
+        }
+    }
+
+
+
+    private void updateDmdDetForRcptCancel(Demand demand, BillReceiptReq billReceiptInfo) throws Exception {
+
+        for (final ReceiptAccountInfo rcptAccInfo : billReceiptInfo.getAccountDetails())
+            if (rcptAccInfo.getCrAmount() != null && rcptAccInfo.getCrAmount() > 0
+                    && !rcptAccInfo.isRevenueAccount() && rcptAccInfo.getDescription() != null) {
+
+                String[] description = rcptAccInfo.getDescription().split(":");
+                String taxPeriod = description[0];
+                String taxReason = description[1];
+                LOGGER.info("taxPeriod  ::: " + taxPeriod + "taxReason ::::::" + taxReason);
+                // updating the existing demand detail..
+                for (final DemandDetails demandDetail : demand.getDemandDetails()) {
+                    LOGGER.info("demandDetail.getTaxPeriod()  ::: " + demandDetail.getTaxPeriod()
+                            + "demandDetail.getTaxReason() ::::::" + demandDetail.getTaxReason());
+                    if (demandDetail.getTaxPeriod() != null && demandDetail.getTaxPeriod().equalsIgnoreCase(taxPeriod)
+                            && demandDetail.getTaxReason() != null
+                            && demandDetail.getTaxReason().equalsIgnoreCase(taxReason)) {
+                        if (demandDetail.getCollectionAmount().compareTo(BigDecimal.valueOf(rcptAccInfo.getCrAmount())) < 0)
+                            throw new RuntimeException(
+                                    "updateDmdDetForRcptCancel : Exception while updating cancel receipt, "
+                                            + "to be deducted amount " + rcptAccInfo.getCrAmount()
+                                            + " is greater than the collected amount " + demandDetail.getCollectionAmount()
+                                            + " for demandDetail " + demandDetail);
+
+                        demandDetail
+                                .setCollectionAmount(demandDetail.getCollectionAmount().subtract(BigDecimal.valueOf(rcptAccInfo.getCrAmount())));
+                        demand.setCollectionAmount(demand.getCollectionAmount().subtract(BigDecimal.valueOf(rcptAccInfo.getCrAmount())));
+                        LOGGER.info("Deducted Collected amount Rs." + rcptAccInfo.getCrAmount() + " for tax : " + taxReason
+                        );
+                    }
+                }
+            }
+    }
+
     private String getGlcodeById(Long id, String tenantId, RequestInfo requestInfo) {
         ChartOfAccountContract chartOfAccountContract = new ChartOfAccountContract();
         chartOfAccountContract.setId(id);
@@ -636,7 +708,6 @@ public class PaymentService {
                 if ("ADVANCE_TAX".equalsIgnoreCase(demandDetail.getTaxReasonCode())) {
                     isAdvanceTax = true;
                 }
-
             }
             if (isAdvanceTax
                     && (Action.CREATE.equals(agreement.getAction()) || Action.RENEWAL.equals(agreement.getAction()))) {

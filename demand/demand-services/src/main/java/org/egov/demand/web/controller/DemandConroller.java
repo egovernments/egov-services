@@ -39,11 +39,6 @@
  */
 package org.egov.demand.web.controller;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.validation.Valid;
-
 import org.apache.log4j.Logger;
 import org.egov.demand.domain.service.DemandService;
 import org.egov.demand.persistence.entity.EgDemand;
@@ -71,6 +66,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
+import java.util.ArrayList;
+import java.util.List;
+
 @RestController
 @RequestMapping("/demand")
 public class DemandConroller {
@@ -89,7 +88,7 @@ public class DemandConroller {
 	@PostMapping("_search")
 	@ResponseBody
 	public ResponseEntity<?> search(@ModelAttribute @Valid DemandSearchCriteria demandSearchCriteria,@RequestBody RequestInfo requestInfo,
-			 BindingResult bindingResult) {
+									BindingResult bindingResult) {
 
 		LOGGER.info("the request info object : "+requestInfo + "the modelatribute values ::: "+demandSearchCriteria);
 		List<Demand> demands = new ArrayList<Demand>();
@@ -118,12 +117,12 @@ public class DemandConroller {
 		}
 		return getSuccessResponseForSearch(demands, requestInfo);
 	}
-	
+
 	@PostMapping("/_create")
 	@ResponseStatus(HttpStatus.CREATED)
 	public ResponseEntity<?> create(@RequestBody @Valid DemandRequest demandRequest, BindingResult bindingResult) {
 		EgDemand egDemand = null;
-		
+
 		LOGGER.info("DemandConroller.create - demandRequest - "+demandRequest);
 		if (bindingResult.hasErrors()) {
 			return errHandler.getErrorResponseEntityForBindingErrors(bindingResult, demandRequest.getRequestInfo());
@@ -136,7 +135,7 @@ public class DemandConroller {
 		demandRequest.getDemand().get(0).setId(egDemand.getId());
 		return getSuccessResponse(demandRequest.getDemand().get(0), demandRequest.getRequestInfo());
 	}
-	
+
 	@PostMapping("/{id}/_update")
 	@ResponseStatus(HttpStatus.CREATED)
 	public ResponseEntity<?> update(@PathVariable final Long id, @RequestBody @Valid DemandRequest demandRequest, BindingResult bindingResult) {
@@ -152,7 +151,7 @@ public class DemandConroller {
 		demandRequest.getDemand().get(0).setId(egDemand.getId());
 		return getSuccessResponse(demandRequest.getDemand().get(0), demandRequest.getRequestInfo());
 	}
-	
+
 	@PostMapping("/_update")
 	@ResponseStatus(HttpStatus.CREATED)
 	public ResponseEntity<?> update(@RequestBody @Valid DemandRequest demandRequest, BindingResult bindingResult) {
@@ -169,9 +168,25 @@ public class DemandConroller {
 		return getSuccessResponse(demandRequest.getDemand().get(0), demandRequest.getRequestInfo());
 	}
 
+	@PostMapping("/_cancelreceipt")
+	@ResponseStatus(HttpStatus.CREATED)
+	public ResponseEntity<?> cancelReceipt(@RequestBody @Valid DemandRequest demandRequest, BindingResult bindingResult) {
+		EgDemand egDemand = null;
+		if (bindingResult.hasErrors()) {
+			return errHandler.getErrorResponseEntityForBindingErrors(bindingResult, demandRequest.getRequestInfo());
+		}
+		try {
+			egDemand = demandService.updateDemandForCollectionWithCancelReceipt(demandRequest.getDemand().get(0));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		demandRequest.getDemand().get(0).setId(egDemand.getId());
+		return getSuccessResponse(demandRequest.getDemand().get(0), demandRequest.getRequestInfo());
+	}
+
 	/**
 	 * Populate Response object and return Demand List
-	 * 
+	 *
 	 * @param employeesList
 	 * @return
 	 */

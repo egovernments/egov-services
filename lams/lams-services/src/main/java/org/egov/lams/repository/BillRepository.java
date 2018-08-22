@@ -1,9 +1,5 @@
 package org.egov.lams.repository;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-
 import org.apache.log4j.Logger;
 import org.egov.lams.config.ApplicationProperties;
 import org.egov.lams.config.PropertiesManager;
@@ -18,6 +14,10 @@ import org.springframework.stereotype.Repository;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+
 @Repository
 public class BillRepository {
 
@@ -28,8 +28,8 @@ public class BillRepository {
 
 	@Autowired
 	private PropertiesManager propertiesManager;
-	
-	@Autowired 
+
+	@Autowired
 	ApplicationProperties applicationProperties;
 
 	public String createBillAndGetXml(List<BillInfo> billInfos, RequestInfo requestInfo) {
@@ -48,6 +48,28 @@ public class BillRepository {
 		} else
 			return billResponse.getBillXmls().get(0);
 	}
+
+
+	public BillResponse updateBill(List<BillInfo> billInfos, RequestInfo requestInfo) {
+
+		BillRequest billRequest = new BillRequest();
+		billRequest.setRequestInfo(requestInfo);
+		billRequest.setBillInfos(billInfos);
+
+		String url = propertiesManager.getDemandServiceHostName() + propertiesManager.getDemandBillUpdateService();
+		LOGGER.info("the url for update demand API call is  ::: " + url);
+
+		BillResponse billResponse = null;
+		try {
+			billResponse = restTemplate.postForObject(url, billRequest, BillResponse.class);
+		} catch (Exception e) {
+
+			LOGGER.info("the exception raised during update demand API call ::: " + e);
+		}
+		LOGGER.info("the exception raised during update demand API call ::: " + billResponse);
+		return billResponse;
+	}
+
 
 	public BillInfo searchBill(BillSearchCriteria billSearchCriteria, RequestInfo requestInfo) {
 		String url = propertiesManager.getDemandServiceHostName() + propertiesManager.getDemandBillSearchService()
@@ -76,7 +98,7 @@ public class BillRepository {
 	}
 
 	public Map getPurpose(String tenantId) {
-		
+
 		Map purpose = null;
 		try {
 			String url = applicationProperties.getHostNameForMonolith(tenantId) + propertiesManager.getPurposeService();

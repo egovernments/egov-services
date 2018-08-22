@@ -39,10 +39,12 @@
  */
 package org.egov.demand.persistence.entity;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.egov.demand.web.contract.BillDetailInfo;
+import org.egov.demand.web.contract.BillInfo;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -56,15 +58,10 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
-
-import org.egov.demand.web.contract.Bill;
-import org.egov.demand.web.contract.BillDetailInfo;
-import org.egov.demand.web.contract.BillInfo;
-
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 /**
  * EgBill entity.
@@ -194,14 +191,15 @@ public class EgBill implements java.io.Serializable {
 	}
 
 	public BillInfo toDomain() {
-		
+
 		List<BillDetailInfo> billDetailInfos = new ArrayList<>();
 		for (EgBillDetails egBillDetailInfo : egBillDetails) {
-			billDetailInfos.add(egBillDetailInfo.toDomain());			
+			billDetailInfos.add(egBillDetailInfo.toDomain());
 		}
-		return BillInfo.builder().id(id).demandId(egDemand).citizenName(citizenName).citizenAddress(citizenAddress).billNumber(billNo).billDetailInfos(billDetailInfos).build();
+		return BillInfo.builder().id(id).demandId(egDemand).citizenName(citizenName).citizenAddress(citizenAddress).billNumber(billNo).billDetailInfos(billDetailInfos)
+				.cancelled(is_Cancelled).consumerCode(consumerId).tenantId(tenantId).build();
 	}
-	
+
 	@Override
 	public String toString() {
 		final StringBuilder sb = new StringBuilder();
@@ -211,7 +209,7 @@ public class EgBill implements java.io.Serializable {
 
 	/**
 	 * Checks if the given GL code exists in the bill details for this bill.
-	 * 
+	 *
 	 * @param glCode
 	 * @return
 	 */

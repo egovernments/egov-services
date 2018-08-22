@@ -1,10 +1,5 @@
 package org.egov.demand.web.controller;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.validation.Valid;
-
 import org.apache.log4j.Logger;
 import org.egov.demand.domain.service.BillService;
 import org.egov.demand.persistence.entity.EgBill;
@@ -30,12 +25,16 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
+import java.util.ArrayList;
+import java.util.List;
+
 @RestController
 @RequestMapping("demand/bill")
 public class BillController {
-	
+
 	private static final Logger LOGGER = Logger.getLogger(BillController.class);
-	
+
 	@Autowired
 	private ResponseInfoFactory responseInfoFactory;
 
@@ -44,14 +43,14 @@ public class BillController {
 
 	@Autowired
 	private BillService billService;
-	
+
 	@Autowired
 	private BillRepository billRepository;
 
 	@PostMapping("_search")
 	@ResponseBody
 	public ResponseEntity<?> search(@ModelAttribute @Valid BillSearchCriteria billSearchCriteria,
-			@RequestBody RequestInfo requestInfo, BindingResult bindingResult) {
+									@RequestBody RequestInfo requestInfo, BindingResult bindingResult) {
 		LOGGER.info("BillController  search billSearchCriteria : "+billSearchCriteria);
 		org.egov.demand.web.contract.BillInfo billContract = null;
 		List<org.egov.demand.web.contract.BillInfo> billContracts = new ArrayList<org.egov.demand.web.contract.BillInfo>();
@@ -69,7 +68,7 @@ public class BillController {
 		}
 		return getSuccessResponseForSearch(billContracts, requestInfo);
 	}
-	
+
 	@PostMapping("_create")
 	@ResponseStatus(HttpStatus.CREATED)
 	public ResponseEntity<?> create(@RequestBody @Valid BillRequest billRequest, BindingResult bindingResult) {
@@ -93,9 +92,33 @@ public class BillController {
 		return getSuccessResponse(bills, billRequest.getRequestInfo());
 	}
 
+	@PostMapping("_update")
+	@ResponseStatus(HttpStatus.CREATED)
+	public ResponseEntity<?> update(@RequestBody @Valid BillRequest billRequest, BindingResult bindingResult) {
+
+		List<EgBill> bills = new ArrayList<EgBill>();
+		if (bindingResult.hasErrors()) {
+			return errHandler.getErrorResponseEntityForBindingErrors(bindingResult, billRequest.getRequestInfo());
+		}
+		if ((billRequest.getBillInfos() == null || billRequest.getBillInfos().size() == 0)
+				&& billRequest.getBillInfos() == null) {
+			return errHandler.getErrorResponseEntityForMissingRequestInfo(billRequest.getRequestInfo());
+		}
+		try {
+			BillInfo billInfo=billRequest.getBillInfos().get(0);
+
+			EgBill bill = billRepository.findOne(billRequest.getBillInfos().get(0).getId());
+			billService.updateBill(bill, billInfo);
+			bills.add(bill);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return getSuccessResponseForUpdate(bills, billRequest.getRequestInfo());
+	}
+
 	/**
 	 * Populate Response object and return Demand List
-	 * 
+	 *
 	 * @param employeesList
 	 * @return
 	 */
@@ -108,6 +131,24 @@ public class BillController {
 		}
 		billResponse.setBillXmls(billxmls);
 
+		ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
+		responseInfo.setStatus(HttpStatus.OK.toString());
+		billResponse.setResponseInfo(responseInfo);
+		return new ResponseEntity<BillResponse>(billResponse, HttpStatus.OK);
+	}
+
+	private ResponseEntity<?> getSuccessResponseForUpdate(List<EgBill> bills, RequestInfo requestInfo) {
+		BillResponse billResponse = new BillResponse();
+		List<BillInfo> billInfs = new ArrayList<BillInfo>();
+		BillInfo billInfo = null;
+
+		for (EgBill bill : bills) {
+			billInfo = bill.toDomain();
+			billInfo.setConsumerCode(bill.getConsumerId());
+			billInfs.add(billInfo);
+		}
+
+		billResponse.setBillInfos(billInfs);
 		ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
 		responseInfo.setStatus(HttpStatus.OK.toString());
 		billResponse.setResponseInfo(responseInfo);

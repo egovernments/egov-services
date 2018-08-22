@@ -29,7 +29,9 @@ public class PaymentController {
 	@Autowired
 	AgreementService agreementService;
 
+
 	public static final Logger LOGGER = LoggerFactory.getLogger(PaymentController.class);
+	private static final String EVENT_RECEIPT_CANCELLED = "RECEIPT_CANCELLED";
 
 	@PostMapping("/_create")
 	@ResponseBody
@@ -57,9 +59,7 @@ public class PaymentController {
 
 	@PostMapping("/_update")
 	@ResponseBody
-	public ResponseEntity<?> update(@RequestBody BillReceiptInfoReq billReceiptInfoReq) {
-
-//		System.out.print("lams-services PaymentController update request info  ::: "+billReceiptInfoReq.getRequestInfo());
+	public ResponseEntity<?> update(@RequestBody BillReceiptInfoReq billReceiptInfoReq) throws Exception {
 		return paymentService.updateDemand(billReceiptInfoReq);
 	}
 

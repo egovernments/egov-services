@@ -39,10 +39,11 @@
  */
 package org.egov.demand.persistence.entity;
 
-import java.math.BigDecimal;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.egov.demand.web.contract.Demand;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -56,13 +57,10 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
-
-import org.egov.demand.web.contract.Demand;
-
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import java.math.BigDecimal;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * EgDemand entity.
@@ -111,9 +109,9 @@ public class EgDemand implements java.io.Serializable {
 
 	public Demand toDomain() {
 		return Demand.builder().id(id).installment(egInstallmentMaster.getDescription())
-				.moduleName("Leases And Agreements").build();
+				.moduleName("Leases And Agreements").collectionAmount(amtCollected).build();
 	}
-    
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;

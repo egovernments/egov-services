@@ -1,11 +1,5 @@
 package org.egov.demand.domain.service;
 
-import java.math.BigDecimal;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
 import org.apache.log4j.Logger;
 import org.egov.demand.persistence.entity.EgDemand;
 import org.egov.demand.persistence.entity.EgDemandDetails;
@@ -19,9 +13,16 @@ import org.egov.demand.web.contract.PaymentInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 @Service
 public class DemandService {
 	private static final Logger LOGGER = Logger.getLogger(DemandService.class);
+	private static final String CANCELLED_RECEIPT = "CANCELLED_RECEIPT";
 	@Autowired
 	private DemandRepository demandRepository;
 	@Autowired
@@ -90,7 +91,31 @@ public class DemandService {
 				}
 			}
 		}
+
 		egDemand.addCollected(demand.getCollectionAmount());
+		return demandRepository.save(egDemand);
+	}
+	public EgDemand updateDemandForCollectionWithCancelReceipt(Demand demand) throws Exception {
+		EgDemand egDemand = demandRepository.findOne(demand.getId());
+
+		LOGGER.info("demandDetails :" + demand.getDemandDetails().toString());
+		for (DemandDetails demandDetails : demand.getDemandDetails()) {
+			for (EgDemandDetails egDemandDetail : egDemand.getEgDemandDetails()) {
+				if (egDemandDetail.getId().equals(demandDetails.getId())) {
+					LOGGER.info("match is occuring in update service");
+					LOGGER.info("collection :" + demandDetails.getCollectionAmount());
+					egDemandDetail.setAmtCollected(demandDetails.getCollectionAmount());//cancel
+					LOGGER.info("payment info to update receipts" + demand.getPaymentInfos());
+					if (!demand.getPaymentInfos().isEmpty()) {
+						egDemandDetail.setEgdmCollectedReceipts(getCollectedReceipts(demand.getPaymentInfos(), demandDetails,egDemandDetail));
+						LOGGER.info("back end receipt details" + egDemandDetail.getEgdmCollectedReceipts());
+					}
+				}
+			}
+		}
+
+		egDemand.setAmtCollected(demand.getCollectionAmount());
+
 		return demandRepository.save(egDemand);
 	}
 
@@ -115,7 +140,7 @@ public class DemandService {
 			if (!isDemandDetailExists) {
 				demandReason = demandReasonService.findByCodeInstModule(demandDetails.getTaxReasonCode(),
 						demandDetails.getTaxPeriod(), demand.getModuleName(), demand.getTenantId());
-				
+
 				LOGGER.info("new demand reason :" + demandReason);
 				egDemandDetails = EgDemandDetails.fromReasonAndAmounts(demandDetails.getTaxAmount(), demandReason,
 						demandDetails.getCollectionAmount()!=null ? demandDetails.getCollectionAmount() : BigDecimal.ZERO);
@@ -130,7 +155,7 @@ public class DemandService {
 	}
 
 	private Set<EgdmCollectedReceipt> getCollectedReceipts(List<PaymentInfo> paymentInfo, DemandDetails demandDetails,
-			EgDemandDetails egDemandDetails) {
+														   EgDemandDetails egDemandDetails) {
 		Set<EgdmCollectedReceipt> egdmCollectedReceipts = new HashSet<>();
 
 		for (PaymentInfo info : paymentInfo) {
@@ -154,5 +179,34 @@ public class DemandService {
 		}
 		return egdmCollectedReceipts;
 	}
-	
+
+	/**
+	 * When receipt is cancelled the status of the receipt in EgdmCollectedReceipts is updated as Cancelled.
+	 *
+	 * @param egDmCollectedReceipt
+	 */
+
+
+	private Set<EgdmCollectedReceipt> updateReceiptStatusWhenCancelled(List<PaymentInfo> paymentInfo, DemandDetails demandDetails,
+																	   EgDemandDetails egDemandDetails) {
+		Set<EgdmCollectedReceipt> egdmCollectedReceipts = new HashSet<>();
+
+		for (PaymentInfo info : paymentInfo) {
+			EgdmCollectedReceipt receipt = new EgdmCollectedReceipt();
+
+			if (info.getTaxReason() != null && info.getTaxPeriod() != null
+					&& info.getTaxPeriod().equalsIgnoreCase(demandDetails.getTaxPeriod())
+					&& info.getTaxReason().equalsIgnoreCase(demandDetails.getTaxReason())) {
+
+				receipt.setStatus(CANCELLED_RECEIPT.charAt(0));
+
+				egdmCollectedReceipts.add(receipt);
+				LOGGER.info("adding receipt details " + receipt);
+			}
+
+		}
+		return egdmCollectedReceipts;
+	}
+
+
 }

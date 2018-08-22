@@ -1,10 +1,9 @@
 package org.egov.lams.config;
 
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Configuration;
-
 import lombok.Getter;
 import lombok.ToString;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Configuration;
 
 @Configuration
 @Getter
@@ -104,6 +103,9 @@ public class PropertiesManager {
     @Value("${egov.services.demand_service.bill.create}")
     private String demandBillCreateService;
 
+    @Value("${egov.services.demand_service.bill.update}")
+    private String demandBillUpdateService;
+
     @Value("${egov.services.lams.billnumber_sequence}")
     private String billNumberSequence;
 
@@ -115,6 +117,9 @@ public class PropertiesManager {
 
     @Value("${egov.services.demand_service.updatedemand}")
     private String updateDemandService;
+
+    @Value("${egov.services.demand_service.cancelreceipt}")
+    private String cancelReceiptWithCollectionService;
 
     @Value("${egov.services.demand_service.bill.search}")
     private String demandBillSearchService;

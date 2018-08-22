@@ -1,8 +1,8 @@
 package org.egov.collection.repository.rowmapper;
 
-import org.egov.collection.model.AuditDetails;
-import org.egov.collection.model.Instrument;
+import org.egov.collection.model.*;
 import org.egov.collection.model.enums.CollectionType;
+import org.egov.collection.model.enums.InstrumentStatusEnum;
 import org.egov.collection.web.contract.*;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.ResultSetExtractor;
@@ -12,15 +12,15 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
 
-public class ReceiptResultSetExtractor implements ResultSetExtractor<List<Receipt>> {
+public class CollectionResultSetExtractor implements ResultSetExtractor<List<Receipt>> {
 
     @Override
     public List<Receipt> extractData(ResultSet resultSet) throws SQLException, DataAccessException {
 
-        Map<Long, Receipt> receipts = new LinkedHashMap<>();
+        Map<String, Receipt> receipts = new LinkedHashMap<>();
 
         while(resultSet.next()){
-            Long receiptHeader = resultSet.getLong("rh_id");
+            String receiptHeader = resultSet.getString("rh_id");
             Receipt receipt;
 
             if(!receipts.containsKey(receiptHeader)){
@@ -61,8 +61,28 @@ public class ReceiptResultSetExtractor implements ResultSetExtractor<List<Receip
                         .billDetails(Collections.singletonList(billDetail))
                         .build();
 
+                AuditDetails auditDetailsIns = AuditDetails.builder()
+                        .createdBy(resultSet.getLong("rh_createdBy"))
+                        .createdDate(resultSet.getLong("rh_createdDate"))
+                        .lastModifiedBy(resultSet.getLong("rh_lastModifiedBy"))
+                        .lastModifiedDate(resultSet.getLong("rh_lastModifiedDate"))
+                        .build();
+
                 Instrument instrument = Instrument.builder()
                         .id(resultSet.getString("ins_instrumentheader"))
+                        .amount(resultSet.getBigDecimal("ins_amount"))
+                        .transactionDateInput(resultSet.getLong("ins_transactiondate"))
+                        .transactionNumber(resultSet.getString("ins_transactionNumber"))
+                        .instrumentType(InstrumentType.builder().name(resultSet.getString("ins_instrumenttype"))
+                                .build())
+                        .instrumentStatus(InstrumentStatusEnum.valueOf(resultSet.getString("ins_instrumentstatus")))
+                        .ifscCode(resultSet.getString("ins_ifsccode"))
+                        .transactionType(TransactionType.valueOf(resultSet.getString("ins_transactiontype")))
+                        .payee(resultSet.getString("ins_payee"))
+                        .drawer(resultSet.getString("ins_drawer"))
+                        .surrenderReason(SurrenderReason.builder().name(resultSet.getString("ins_surrenderreason")).build())
+                        .serialNo(resultSet.getString("ins_serialno"))
+                        .auditDetails(auditDetailsIns)
                         .build();
 
                 AuditDetails auditDetails = AuditDetails.builder()
@@ -104,7 +124,7 @@ public class ReceiptResultSetExtractor implements ResultSetExtractor<List<Receip
         return BillAccountDetail.builder()
                     .isActualDemand((Boolean) resultSet.getObject("rd_isActualDemand"))
                     .tenantId(resultSet.getString("rd_tenantId"))
-                    .billDetail(String.valueOf(resultSet.getLong("rh_id")))
+                    .billDetail(resultSet.getString("rh_id"))
                     .creditAmount(crAmount)
                     .crAmountToBePaid(getBigDecimalValue(resultSet.getBigDecimal("rd_actualcramountToBePaid")))
                     .accountDescription(resultSet.getString("rd_description"))

@@ -1,7 +1,0 @@
-alter table egcl_legacy_receipt_details drop constraint pk_legacy_egcl_receipt_detail;
-alter table egcl_legacy_receipt_details drop constraint fk_legacy_detail_header;
-alter table egcl_legacy_receipt_header drop constraint PK_legacy_egcl_receipt_header;
-alter table egcl_legacy_receipt_details add constraint pk_legacy_egcl_receipt_detail PRIMARY KEY(id);
-alter table egcl_legacy_receipt_header add constraint PK_legacy_egcl_receipt_header PRIMARY KEY(id);
-alter table egcl_legacy_receipt_details add constraint fk_legacy_detail_header
-FOREIGN KEY (id_receipt_header) REFERENCES egcl_legacy_receipt_header(id) ;

@@ -1,1 +1,0 @@
-ALTER TABLE egcl_receiptheader ALTER COLUMN status TYPE character varying(50);

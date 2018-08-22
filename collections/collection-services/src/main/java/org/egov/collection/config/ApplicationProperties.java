@@ -88,23 +88,11 @@ public class ApplicationProperties {
     @Value("${coa.search.uri}")
     private String chartOfAccountsSearch;
     
-    @Value("${egov.statuscode.hostname}")
-    private String statuscodeHost;
-    
-    @Value("${statuscode.search.uri}")
-    private String statusCodeSearch;
-    
     @Value("${egov.idgen.hostname}")
     private String idGenServiceHost;
     
     @Value("${rcptno.gen.uri}")
     private String idGeneration;
-    
-    @Value("${egov.hremployee.hostname}")
-    private String hremployeeServiceHost;
-    
-    @Value("${positionforuser.get.uri}")
-    private String getPosition;
     
     @Value("${egov.instrument.hostname}")
     private String instrumentServiceHost;
@@ -129,9 +117,6 @@ public class ApplicationProperties {
     
     @Value("${egov.services.billing_service.search}")
     private String searchBill;
-    
-    @Value("${positionforuser.get.uri.append}")
-    private String getPositionAppend;
 
     @Value("${kafka.topics.update.receipt.workflowdetails}")
     private String kafkaUpdateWorkFlowDetailsTopic;

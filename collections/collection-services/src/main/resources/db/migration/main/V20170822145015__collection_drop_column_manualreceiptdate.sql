@@ -1,1 +1,0 @@
-ALTER TABLE egcl_receiptheader DROP COLUMN manualreceiptdate;

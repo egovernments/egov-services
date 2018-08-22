@@ -50,7 +50,7 @@ import java.util.List;
 @EqualsAndHashCode
 @NoArgsConstructor
 public class ReceiptSearchCriteria {
-    private List<Long> ids;
+    private List<String> ids;
 	
     private List<String> receiptNumbers;
 

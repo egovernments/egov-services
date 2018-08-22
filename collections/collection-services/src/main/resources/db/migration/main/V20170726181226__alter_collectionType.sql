@@ -1,1 +1,0 @@
-ALTER TABLE EGCL_RECEIPTHEADER ALTER COLUMN collectionType TYPE character varying (50);

@@ -39,28 +39,21 @@
  */
 package org.egov.collection.model;
 
-import java.math.BigDecimal;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.*;
+import org.egov.collection.model.enums.InstrumentStatusEnum;
+import org.egov.collection.web.contract.BankAccountContract;
+import org.egov.collection.web.contract.BankContract;
+import org.hibernate.validator.constraints.NotBlank;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-
-import org.egov.collection.web.contract.BankAccountContract;
-import org.egov.collection.web.contract.BankContract;
-import org.hibernate.validator.constraints.NotBlank;
-
-import com.fasterxml.jackson.annotation.JsonFormat;
-
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import java.math.BigDecimal;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -135,6 +128,11 @@ public class Instrument{
 	 */
 	private BankAccountContract bankAccount;
 
+	/**
+	 * IFSC Code of the bank branch
+	 */
+	private String ifscCode;
+
 
 	/*
 	 * transactionType are of two kinds -Debit and Credit. When its a receipt
@@ -142,6 +140,11 @@ public class Instrument{
 	 */
 	@NotNull
 	private TransactionType transactionType;
+
+	/**
+	 * Status of the instrument, newly added
+	 */
+	private InstrumentStatusEnum instrumentStatus;
 
 	/*
 	 * payee is the entity who is making the payment via instrument
@@ -156,11 +159,11 @@ public class Instrument{
 	private String drawer;
 
 	/*
-	 * surrendarReason is the reason from the defined list seleted while
+	 * surrenderReason is the reason from the defined list seleted while
 	 * surrendering a payment cheque. Depending on the reason, the cheque can be
 	 * re-used or not is decided.
 	 */
-	private SurrenderReason surrendarReason;
+	private SurrenderReason surrenderReason;
 
 	/*
 	 * serialNo is the series of the cheque numbers from which the instrument is
@@ -178,6 +181,8 @@ public class Instrument{
 	// @DrillDownTable
 	private Set<InstrumentVoucher> instrumentVouchers = new HashSet<InstrumentVoucher>(0);
 
-    private String tenantId;
+    private AuditDetails auditDetails;
+
+	private String tenantId;
 
 }

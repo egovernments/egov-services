@@ -5,6 +5,7 @@ import org.egov.collection.model.AuditDetails;
 import org.egov.collection.model.Instrument;
 import org.egov.collection.model.TransactionType;
 import org.egov.collection.model.enums.CollectionType;
+import org.egov.collection.model.enums.InstrumentStatusEnum;
 import org.egov.collection.model.enums.InstrumentTypesEnum;
 import org.egov.collection.model.enums.ReceiptStatus;
 import org.egov.collection.repository.BillingServiceRepository;
@@ -159,14 +160,15 @@ public class ReceiptEnricher {
         Receipt receipt = receiptReq.getReceipt().get(0);
         Bill bill = receipt.getBill().get(0);
 
-        enrichInstrument(receiptReq);
-
         for (BillDetail billDetail : bill.getBillDetails()) {
+            billDetail.setId(UUID.randomUUID().toString());
             billDetail.setStatus(ReceiptStatus.APPROVED.toString());
 
             String receiptNumber = idGenRepository.generateReceiptNumber(receiptReq.getRequestInfo(), billDetail.getTenantId());
             billDetail.setReceiptNumber(receiptNumber);
         }
+
+        enrichInstrument(receiptReq);
 
     }
 
@@ -180,9 +182,11 @@ public class ReceiptEnricher {
     private void enrichInstrument(ReceiptReq receiptReq){
         Receipt receipt = receiptReq.getReceipt().get(0);
         Instrument instrument = receipt.getInstrument();
+        instrument.setId(UUID.randomUUID().toString());
         instrument.setTransactionType(TransactionType.Debit);
         instrument.setTenantId(receipt.getTenantId());
         instrument.setPayee(receipt.getBill().get(0).getPayeeName());
+        instrument.setInstrumentStatus(InstrumentStatusEnum.NEW);
 
         try {
 

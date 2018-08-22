@@ -70,6 +70,8 @@ public class ReceiptValidator {
             throw new CustomException("INVALID_INSTRUMENT_TYPE", "Invalid instrument type provided");
         }
 
+        if(isNull(receipt.getInstrument().getTransactionDateInput()))
+            errorMap.put("INSTRUMENT_DATE_INPUT_INVALID", "Instrument Date Input cannot be empty");
 
 //      Compute total amount paid by summing all billDetail amounts and compare with instrument amount
         BigDecimal totalAmountPaid = BigDecimal.ZERO;
@@ -206,8 +208,7 @@ public class ReceiptValidator {
 
             if (totalAmount.compareTo(amountPaid) < 0) {
                 log.error("Amount paid of {} cannot be greater than bill amount of {} for bill detail {}", billDetail
-                                .getAmountPaid()
-                        , totalAmount, billDetail.getId());
+                                .getAmountPaid(), totalAmount, billDetail.getId());
                 errorMap.put("AMOUNT_MISMATCH_HIGH", "Amount paid cannot be greater than bill amount");
             }
 

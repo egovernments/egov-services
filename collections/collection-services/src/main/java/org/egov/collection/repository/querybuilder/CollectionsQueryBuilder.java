@@ -32,43 +32,55 @@ public class CollectionsQueryBuilder {
             + "VALUES (NEXTVAL('SEQ_EGCL_RECEIPTDETAILS'), :chartofaccount, :dramount, :cramount, :ordernumber, :receiptheader, :actualcramounttobepaid, "
             + ":description, :financialyear, :isactualdemand, :purpose, :tenantid)";
 
-    public static final String INSERT_INSTRUMENT_SQL = "insert into egcl_receiptinstrument(instrumentheader, " +
-            "receiptheader, tenantid) values (:instrumentheader, :receiptheader, :tenantid)";
+    public static final String INSERT_INSTRUMENT_HEADER_SQL = "INSERT INTO egcl_instrumentheader(id, transactionnumber, transactiondate, amount, instrumenttype, " +
+            "instrumentstatus, bankid, branchname, bankaccountid, ifsccode, financialstatus, transactiontype, payee, drawer, surrenderreason, serialno, createdby," +
+            " createddate, lastmodifiedby, lastmodifieddate, tenantid)\n" +
+            " VALUES " +
+            " (:id, :transactionnumber, :transactiondate, :amount, :instrumenttype, :instrumentstatus, :bankid, :branchname, :bankaccountid, :ifsccode, :financialstatus, :transactiontype, :payee, :drawer, :surrenderreason, :serialno, :createdby, :createddate, :lastmodifiedby, :lastmodifieddate, :tenantid) ";
 
-    public static final String SELECT_RECEIPT_HEADER_SEQ_NEXT = "select NEXTVAL('SEQ_EGCL_RECEIPTHEADER')";
+    public static final String INSERT_INSTRUMENT_SQL = "insert into egcl_receiptinstrument(instrumentheader, " +
+            "receiptheader) values (:instrumentheader, :receiptheader)";
 
     private static final String SELECT_RECEIPTS_SQL = "Select rh.id as rh_id,rh.payeename as rh_payeename,rh" +
-            ".payeeAddress as rh_payeeAddress,rh.payeeEmail as rh_payeeEmail,rh.paidBy as rh_paidBy,rh" +
+            ".payeeAddress as rh_payeeAddress, rh.payeeEmail as rh_payeeEmail,rh.paidBy as rh_paidBy, rh" +
             ".referenceNumber as rh_referenceNumber, rh.referenceDate as rh_referenceDate,rh.receiptType as " +
-            "rh_receiptType,rh.receiptNumber as rh_receiptNumber, rh.receiptDate as rh_receiptDate,rh.referenceDesc " +
-            "as rh_referenceDesc, rh.manualReceiptNumber as rh_manualReceiptNumber, rh.businessDetails as " +
-            "rh_businessDetails, rh.collectionType as rh_collectionType,rh.stateId as rh_stateId,rh.location as " +
-            "rh_location, rh.isReconciled as rh_isReconciled,rh.status as rh_status,rh.reasonForCancellation as " +
-            "rh_reasonForCancellation ,rh.minimumAmount as rh_minimumAmount,rh.totalAmount as rh_totalAmount, rh" +
+            "rh_receiptType, rh.receiptNumber as rh_receiptNumber, rh.receiptDate as rh_receiptDate, rh.referenceDesc" +
+            " as rh_referenceDesc, rh.manualReceiptNumber as rh_manualReceiptNumber, rh.businessDetails as " +
+            "rh_businessDetails,  rh.collectionType as rh_collectionType,rh.stateId as rh_stateId,rh.location as " +
+            "rh_location,  rh.isReconciled as rh_isReconciled,rh.status as rh_status,rh.reasonForCancellation as " +
+            "rh_reasonForCancellation , rh.minimumAmount as rh_minimumAmount,rh.totalAmount as rh_totalAmount,  rh" +
             ".collModesNotAllwd as rh_collModesNotAllwd,rh.consumerCode as rh_consumerCode,rh.function as " +
-            "rh_function, rh.version as rh_version,rh.channel as rh_channel,rh.reference_ch_id as rh_reference_ch_id," +
-            " rh.consumerType as rh_consumerType,rh.fund as rh_fund,rh.fundSource as rh_fundSource,rh.boundary as " +
-            "rh_boundary, rh.department as rh_department,rh.depositedBranch as rh_depositedBranch,rh.tenantId as " +
-            "rh_tenantId, rh.displayMsg as rh_displayMsg,rh.voucherheader as rh_voucherheader,rh.cancellationRemarks " +
-            "as rh_cancellationRemarks, rh.createdBy as rh_createdBy,rh.createdDate as rh_createdDate,rh" +
-            ".lastModifiedBy as rh_lastModifiedBy, rh.lastModifiedDate as rh_lastModifiedDate,rh.transactionid as " +
-            "rh_transactionid, rd.id as rd_id,  rd.dramount as rd_dramount,rd.cramount as rd_cramount,rd" +
-            ".actualcramountToBePaid as  rd_actualcramountToBePaid,rd.ordernumber as rd_ordernumber,  rd.description " +
-            "as rd_description,rd.chartOfAccount as rd_chartOfAccount,rd.isActualDemand  as rd_isActualDemand, rd" +
-            ".financialYear as rd_financialYear,rd.purpose as rd_purpose,  rd.tenantId as rd_tenantId,  ins" +
-            ".instrumentheader as ins_instrumentheader  " +
-            "from egcl_receiptheader rh LEFT OUTER JOIN egcl_receiptdetails rd ON rh.id=rd.receiptheader" +
-            " LEFT OUTER JOIN egcl_receiptinstrument ins ON rh.id=ins.receiptheader ";
+            "rh_function,  rh.version as rh_version,rh.channel as rh_channel,rh.reference_ch_id as " +
+            "rh_reference_ch_id,  rh.consumerType as rh_consumerType,rh.fund as rh_fund,rh.fundSource as " +
+            "rh_fundSource, rh.boundary as rh_boundary, rh.department as rh_department,rh.depositedBranch as " +
+            "rh_depositedBranch, rh.tenantId as rh_tenantId, rh.displayMsg as rh_displayMsg,rh.voucherheader as " +
+            "rh_voucherheader, rh.cancellationRemarks as rh_cancellationRemarks, rh.createdBy as rh_createdBy, rh" +
+            ".createdDate as rh_createdDate,rh.lastModifiedBy as rh_lastModifiedBy, rh.lastModifiedDate as " +
+            "rh_lastModifiedDate, rh.transactionid as rh_transactionid, rd.id as rd_id,  rd.dramount as rd_dramount, " +
+            "rd.cramount as rd_cramount,rd.actualcramountToBePaid as  rd_actualcramountToBePaid,rd.ordernumber as " +
+            "rd_ordernumber,  rd.description as rd_description,rd.chartOfAccount as rd_chartOfAccount,rd" +
+            ".isActualDemand  as rd_isActualDemand,  rd.financialYear as rd_financialYear,rd.purpose as rd_purpose,  " +
+            "rd.tenantId as rd_tenantId,   ins.id as ins_instrumentheader, ins.amount as ins_amount, ins" +
+            ".transactionDate as ins_transactiondate, ins.transactionNumber as ins_transactionNumber, ins" +
+            ".instrumenttype as ins_instrumenttype, ins .instrumentstatus" +
+            " as ins_instrumentstatus,  ins.bankid as ins_bankid , ins.branchname as ins_branchname , ins" +
+            ".bankaccountid as ins_bankaccountid,  ins.ifsccode as ins_ifsccode , ins.financialstatus as " +
+            "ins_financialstatus ,  ins.transactiontype as ins_transactiontype , ins.payee as ins_payee , ins.drawer " +
+            "as ins_drawer ,  ins.surrenderreason as ins_surrenderreason , ins.serialno as ins_serialno , ins" +
+            ".createdby as ins_createdby ,  ins.createddate as ins_createddate , ins.lastmodifiedby as " +
+            "ins_lastmodifiedby ,  ins.lastmodifieddate as ins_lastmodifieddate , ins.tenantid as ins_tenantid  " +
+            "from egcl_receiptheader rh LEFT OUTER JOIN egcl_receiptdetails rd ON rh.id=rd.receiptheader " +
+            "LEFT OUTER JOIN egcl_receiptinstrument recins ON rh.id=recins.receiptheader " +
+            "LEFT JOIN egcl_instrumentheader ins ON recins.instrumentheader=ins.id ";
     
-    public static MapSqlParameterSource getParametersForReceiptHeader(Receipt receipt, BillDetail billDetail, Long
-            receiptHeaderId){
+    public static MapSqlParameterSource getParametersForReceiptHeader(Receipt receipt, BillDetail billDetail){
         MapSqlParameterSource sqlParameterSource = new MapSqlParameterSource();
         AuditDetails auditDetails = receipt.getAuditDetails();
         Bill bill = receipt.getBill().get(0);
 
         String collectionModesNotAllowed = String.join(",", billDetail.getCollectionModesNotAllowed());
 
-        sqlParameterSource.addValue("id", receiptHeaderId);
+        sqlParameterSource.addValue("id", billDetail.getId());
         sqlParameterSource.addValue("payeename", bill.getPayeeName());
         sqlParameterSource.addValue("payeeaddress", bill.getPayeeAddress());
         sqlParameterSource.addValue("payeeemail", bill.getPayeeEmail());
@@ -109,7 +121,7 @@ public class CollectionsQueryBuilder {
 
 
     public static MapSqlParameterSource getParametersForReceiptDetails(BillAccountDetail billAccountDetails,
-                                                                             Long receiptHeaderId){
+                                                                             String receiptHeaderId){
         MapSqlParameterSource sqlParameterSource = new MapSqlParameterSource();
         sqlParameterSource.addValue("chartofaccount", billAccountDetails.getGlcode());
         sqlParameterSource.addValue("dramount", billAccountDetails.getDebitAmount());
@@ -126,11 +138,37 @@ public class CollectionsQueryBuilder {
 
     }
 
-    public static MapSqlParameterSource getParametersForInstrument(Instrument instrument, Long receiptHeaderId){
+    public static MapSqlParameterSource getParametersForInstrumentHeader(Instrument instrument, AuditDetails auditDetails){
+        MapSqlParameterSource sqlParameterSource = new MapSqlParameterSource();
+        sqlParameterSource.addValue("id", instrument.getId());
+        sqlParameterSource.addValue("transactionnumber", instrument.getTransactionNumber());
+        sqlParameterSource.addValue("transactiondate", instrument.getTransactionDateInput());
+        sqlParameterSource.addValue("amount", instrument.getAmount());
+        sqlParameterSource.addValue("instrumenttype", instrument.getInstrumentType().getName());
+        sqlParameterSource.addValue("instrumentstatus", instrument.getInstrumentStatus().toString());
+        sqlParameterSource.addValue("bankid", instrument.getBank().getId());
+        sqlParameterSource.addValue("branchname", instrument.getBranchName());
+        sqlParameterSource.addValue("bankaccountid", null);
+        sqlParameterSource.addValue("ifsccode", instrument.getIfscCode());
+        sqlParameterSource.addValue("financialstatus", null);
+        sqlParameterSource.addValue("transactiontype", instrument.getTransactionType().toString());
+        sqlParameterSource.addValue("payee", instrument.getPayee());
+        sqlParameterSource.addValue("drawer", instrument.getDrawer());
+        sqlParameterSource.addValue("surrenderreason", instrument.getSurrenderReason());
+        sqlParameterSource.addValue("serialno", instrument.getSerialNo());
+        sqlParameterSource.addValue("createdby", auditDetails.getCreatedBy());
+        sqlParameterSource.addValue("createddate", auditDetails.getCreatedDate());
+        sqlParameterSource.addValue("lastmodifiedby", auditDetails.getLastModifiedBy());
+        sqlParameterSource.addValue("lastmodifieddate", auditDetails.getLastModifiedDate());
+        sqlParameterSource.addValue("tenantid", instrument.getTenantId());
+        return sqlParameterSource;
+
+    }
+
+    public static MapSqlParameterSource getParametersForInstrument(Instrument instrument, String receiptHeaderId){
         MapSqlParameterSource sqlParameterSource = new MapSqlParameterSource();
         sqlParameterSource.addValue("instrumentheader", instrument.getId());
         sqlParameterSource.addValue("receiptheader", receiptHeaderId);
-        sqlParameterSource.addValue("tenantid", instrument.getTenantId());
         return sqlParameterSource;
     }
 

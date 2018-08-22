@@ -3,7 +3,7 @@ package org.egov.collection.repository;
 import lombok.extern.slf4j.Slf4j;
 import org.egov.collection.model.ReceiptSearchCriteria;
 import org.egov.collection.repository.querybuilder.CollectionsQueryBuilder;
-import org.egov.collection.repository.rowmapper.ReceiptResultSetExtractor;
+import org.egov.collection.repository.rowmapper.CollectionResultSetExtractor;
 import org.egov.collection.web.contract.Bill;
 import org.egov.collection.web.contract.BillAccountDetail;
 import org.egov.collection.web.contract.BillDetail;
@@ -24,30 +24,35 @@ public class CollectionRepository {
 
     @Autowired
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
-    private ReceiptResultSetExtractor receiptResultSetExtractor = new ReceiptResultSetExtractor();
+    private CollectionResultSetExtractor collectionResultSetExtractor = new CollectionResultSetExtractor();
 
 
     public void saveReceipt(Receipt receipt){
         Bill bill = receipt.getBill().get(0);
         try {
 
+            namedParameterJdbcTemplate.update(INSERT_INSTRUMENT_HEADER_SQL, getParametersForInstrumentHeader(receipt
+                    .getInstrument(), receipt.getAuditDetails()));
+
             List<MapSqlParameterSource> receiptHeaderSource = new ArrayList<>();
             List<MapSqlParameterSource> receiptDetailSource = new ArrayList<>();
+            List<MapSqlParameterSource> instrumentSource = new ArrayList<>();
 
             for (BillDetail billDetail : bill.getBillDetails()) {
-                Long receiptHeaderId = namedParameterJdbcTemplate.queryForObject(SELECT_RECEIPT_HEADER_SEQ_NEXT, Collections
-                        .emptyMap(), Long.class);
-                receiptHeaderSource.add(getParametersForReceiptHeader(receipt, billDetail, receiptHeaderId));
-                billDetail.setId(String.valueOf(receiptHeaderId));
+                receiptHeaderSource.add(getParametersForReceiptHeader(receipt, billDetail));
+                instrumentSource.add(getParametersForInstrument(receipt.getInstrument(), billDetail
+                        .getId()));
+
 
                 for (BillAccountDetail billAccountDetail : billDetail.getBillAccountDetails()) {
-                    receiptDetailSource.add(getParametersForReceiptDetails(billAccountDetail, receiptHeaderId));
+                    receiptDetailSource.add(getParametersForReceiptDetails(billAccountDetail, billDetail.getId()));
                 }
 
             }
 
             namedParameterJdbcTemplate.batchUpdate(INSERT_RECEIPT_HEADER_SQL, receiptHeaderSource.toArray(new MapSqlParameterSource[0]));
             namedParameterJdbcTemplate.batchUpdate(INSERT_RECEIPT_DETAILS_SQL,  receiptDetailSource.toArray(new MapSqlParameterSource[0]));
+            namedParameterJdbcTemplate.batchUpdate(INSERT_INSTRUMENT_SQL, instrumentSource.toArray(new MapSqlParameterSource[0]));
 
         }catch (Exception e){
             log.error("Failed to persist receipt to database", e);
@@ -62,8 +67,8 @@ public class CollectionRepository {
             List<MapSqlParameterSource> instrumentSource = new ArrayList<>();
 
             for (BillDetail billDetail : bill.getBillDetails()) {
-                instrumentSource.add(getParametersForInstrument(receipt.getInstrument(), Long.valueOf(billDetail
-                        .getId())));
+                instrumentSource.add(getParametersForInstrument(receipt.getInstrument(), billDetail
+                        .getId()));
             }
 
             namedParameterJdbcTemplate.batchUpdate(INSERT_INSTRUMENT_SQL, instrumentSource.toArray(new MapSqlParameterSource[0]));
@@ -77,7 +82,7 @@ public class CollectionRepository {
         Map<String, Object> preparedStatementValues = new HashMap<>();
         String query = CollectionsQueryBuilder.getReceiptSearchQuery(receiptSearchCriteria, preparedStatementValues);
         List<Receipt> receipts = namedParameterJdbcTemplate.query(query, preparedStatementValues,
-                receiptResultSetExtractor);
+                collectionResultSetExtractor);
         return receipts;
     }
 

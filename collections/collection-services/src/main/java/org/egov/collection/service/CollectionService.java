@@ -57,8 +57,8 @@ public class CollectionService {
      */
     public List<Receipt> getReceipts(RequestInfo requestInfo, ReceiptSearchCriteria receiptSearchCriteria){
         List<Receipt> receipts = collectionRepository.fetchReceipts(receiptSearchCriteria);
-        if(!receipts.isEmpty())
-            receiptEnricher.enrichReceiptsWithInstruments(requestInfo, receipts);
+//        if(!receipts.isEmpty())
+//            receiptEnricher.enrichReceiptsWithInstruments(requestInfo, receipts);
         return receipts;
     }
 
@@ -92,8 +92,8 @@ public class CollectionService {
         if (receipt.getInstrument().getAmount().compareTo(BigDecimal.ZERO) > 0) {
             Instrument instrument = instrumentRepository.createInstrument(receiptReq.getRequestInfo(), receipt
                     .getInstrument());
-            receipt.getInstrument().setId(instrument.getId());
-            collectionRepository.saveInstrument(receipt);
+//            receipt.getInstrument().setId(instrument.getId());
+//            collectionRepository.saveInstrument(receipt);
         }
 
         collectionProducer.producer(applicationProperties.getCreateReceiptTopicName(), applicationProperties

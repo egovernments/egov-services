@@ -1,1 +1,0 @@
-ALTER TABLE egcl_receiptheader  ALTER COLUMN receipttype TYPE character varying(32);

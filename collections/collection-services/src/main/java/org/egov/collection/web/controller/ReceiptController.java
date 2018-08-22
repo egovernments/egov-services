@@ -69,8 +69,7 @@ public class ReceiptController {
 
     @RequestMapping(value = "/_search", method = RequestMethod.POST)
     @ResponseBody
-    public ResponseEntity<ReceiptRes> search(
-            @ModelAttribute ReceiptSearchCriteria receiptSearchCriteria,
+    public ResponseEntity<ReceiptRes> search(@ModelAttribute ReceiptSearchCriteria receiptSearchCriteria,
             @RequestBody @Valid final RequestInfoWrapper requestInfoWrapper) {
 
         final RequestInfo requestInfo = requestInfoWrapper.getRequestInfo();

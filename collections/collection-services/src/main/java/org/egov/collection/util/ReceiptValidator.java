@@ -21,6 +21,7 @@ import org.springframework.stereotype.Component;
 import java.math.BigDecimal;
 import java.util.*;
 
+import static java.util.Collections.singletonList;
 import static java.util.Objects.isNull;
 import static org.apache.commons.lang3.StringUtils.*;
 import static org.egov.collection.config.CollectionServiceConstants.*;
@@ -99,7 +100,7 @@ public class ReceiptValidator {
 
             ReceiptSearchCriteria criteria = ReceiptSearchCriteria.builder()
                     .tenantId(billDetails.getTenantId())
-                    .billIds(Collections.singletonList(billDetails.getId()))
+                    .billIds(singletonList(billDetails.getId()))
                     .build();
 
             List<Receipt> receipts = collectionRepository.fetchReceipts(criteria);
@@ -139,6 +140,25 @@ public class ReceiptValidator {
 
         if (!errorMap.isEmpty())
             throw new CustomException(errorMap);
+    }
+
+    public void validateReceiptsForCancellation(List<Receipt> receipts){
+        for(Receipt receipt : receipts){
+            BillDetail currentBillDetail = receipt.getBill().get(0).getBillDetails().get(0);
+            String consumerCode = currentBillDetail.getConsumerCode();
+            Receipt latestReceipt = collectionRepository.fetchReceipts(ReceiptSearchCriteria.builder()
+                    .consumerCode(singletonList(consumerCode)).build()).get(0);
+
+            if(! currentBillDetail.getReceiptNumber().equalsIgnoreCase(latestReceipt.getBill().get(0).getBillDetails()
+                    .get(0).getReceiptNumber())) {
+                log.error("Cancellation of receipts only allowed for the latest receipt. Latest receipt for consumer " +
+                        "code {} is {}", consumerCode, latestReceipt.getBill().get(0).getBillDetails()
+                        .get(0).getReceiptNumber());
+                throw new CustomException("RECEIPT_CANCELLATION_FAILED", "Cancellation of receipts only allowed for " +
+                        "the latest receipt");
+            }
+        }
+
     }
 
 
@@ -255,7 +275,7 @@ public class ReceiptValidator {
      */
     private void validateBusinessServiceCode(RequestInfo requestInfo, BillDetail billDetail, Map<String, String>
             errorMap) {
-        BusinessDetailsResponse businessDetailsResponse = businessDetailsRepository.getBusinessDetails(Collections.singletonList(billDetail.getBusinessService()),
+        BusinessDetailsResponse businessDetailsResponse = businessDetailsRepository.getBusinessDetails(singletonList(billDetail.getBusinessService()),
                         billDetail.getTenantId(), requestInfo);
 
         if (Objects.isNull(businessDetailsResponse.getBusinessDetails()) || businessDetailsResponse

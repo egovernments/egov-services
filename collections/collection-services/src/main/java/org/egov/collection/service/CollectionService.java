@@ -103,12 +103,14 @@ public class CollectionService {
     }
 
 
-//    public List<Receipt> cancelReceipt(RequestInfo requestInfo, String transactionNumber){
-//        ReceiptSearchCriteria receiptSearchCriteria = ReceiptSearchCriteria.builder().transactionId
-//                (transactionNumber).build();
-//        List<Receipt> receipts = getReceipts(requestInfo, receiptSearchCriteria);
-//        receiptValidator.validateReceiptsForCancellation(receipts);
-//    }
+    public List<Receipt> cancelReceipt(RequestInfo requestInfo, String transactionNumber){
+        ReceiptSearchCriteria receiptSearchCriteria = ReceiptSearchCriteria.builder().transactionId
+                (transactionNumber).build();
+        List<Receipt> receipts = getReceipts(requestInfo, receiptSearchCriteria);
+        receiptValidator.validateReceiptsForCancellation(receipts);
+
+        return receipts;
+    }
 
     /**
      * Apportions the paid amount by,

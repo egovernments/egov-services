@@ -89,9 +89,7 @@ public class ReceiptController {
 
     @RequestMapping(value = "/_cancel", method = RequestMethod.POST)
     @ResponseBody
-    public ResponseEntity<?> cancelReceipt(
-            @RequestBody ReceiptReq receiptRequest) {
-
+    public ResponseEntity<?> cancelReceipt(@RequestBody ReceiptReq receiptRequest) {
 
         return getSuccessResponse(receiptRequest.getReceipt(), receiptRequest.getRequestInfo());
     }

@@ -46,7 +46,8 @@ public class BillingServiceRepository {
             BillResponse response = restTemplate.postForObject(uriForApportion.toString(),
                     billRequest, BillResponse.class);
 
-            if (!isNull(response.getBill()) && !isNull(response.getBill().get(0).getBillDetails()))
+            if (!isNull(response.getBill()) && !isNull(response.getBill().get(0).getBillDetails()) && !response
+                    .getBill().get(0).getBillDetails().isEmpty())
                 return response;
             else
                 throw new CustomException("APPORTION_FAILED", "Apportioning from billing service failed");

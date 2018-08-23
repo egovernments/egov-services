@@ -2,6 +2,7 @@ package org.egov.demand.helper;
 
 import java.util.List;
 
+import org.egov.common.contract.request.RequestInfo;
 import org.egov.demand.web.contract.Receipt;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -16,7 +17,7 @@ import lombok.NoArgsConstructor;
 public class CollectionReceiptRequest {
 
 	@JsonProperty("RequestInfo")
-	private CollectionRequestInfo RequestInfo;
+	private RequestInfo RequestInfo;
 	
 	private String tenantId;
 

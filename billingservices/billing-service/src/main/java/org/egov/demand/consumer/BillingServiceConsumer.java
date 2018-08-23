@@ -99,7 +99,7 @@ public class BillingServiceConsumer {
 				demandService.updateMIS(objectMapper.convertValue(consumerRecord, DemandUpdateMisRequest.class));
 			else if(applicationProperties.getUpdateDemandFromReceipt().equals(topic)){
 				CollectionReceiptRequest collectionReceiptRequest = objectMapper.convertValue(consumerRecord, CollectionReceiptRequest.class);
-				RequestInfo requestInfo = collectionReceiptRequest.getRequestInfo().toRequestInfo();
+				RequestInfo requestInfo = collectionReceiptRequest.getRequestInfo();
 				List<Receipt> receipts = collectionReceiptRequest.getReceipt();
 				
 				ReceiptRequest receiptRequest = ReceiptRequest.builder()

@@ -450,9 +450,10 @@ public class MovementRepository {
 		Long movementStatusId = employeeService.getHRStatuses(objectName, MovementStatus.CANCELLED.toString(), null,
 				movement.getTenantId(), requestInfo).get(0).getId();
 		status = movementStatusId.toString();
-		movementStatusId = employeeService.getHRStatuses(objectName, MovementStatus.APPROVED.toString(), null,
+		if (!movement.getTransferType().equals(TransferType.TRANSFER_OUTSIDE_CORPORATION_OR_ULB))
+		     movementStatusId = employeeService.getHRStatuses(objectName, MovementStatus.APPROVED.toString(), null,
 				movement.getTenantId(), requestInfo).get(0).getId();
-		if (movementStatusId != null)
+		if (movementStatusId != null && !movement.getTransferType().equals(TransferType.TRANSFER_OUTSIDE_CORPORATION_OR_ULB))
 			status = status + "," + movementStatusId.toString();
 		LOGGER.debug("STATUS:" + status);
 		final List<Object> preparedStatementValues = new ArrayList<>();

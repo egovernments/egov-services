@@ -117,7 +117,7 @@ public class PaymentService {
     @Autowired
     private AgreementValidator agreementValidator;
 
-    /*public String generateBillXml(Agreement agreement, RequestInfo requestInfo) {
+    public String generateBillXml(Agreement agreement, RequestInfo requestInfo) {
         String collectXML = "";
         try {
 
@@ -296,9 +296,8 @@ public class PaymentService {
         }
         return collectXML;
     }
-*/
 
-    public String generateBillXml(Agreement agreement, RequestInfo requestInfo) {
+    /*public String generateBillXml(Agreement agreement, RequestInfo requestInfo) {
         String collectXML = "";
         try {
 
@@ -483,7 +482,7 @@ public class PaymentService {
             e.printStackTrace();
         }
         return collectXML;
-    }
+    }*/
     public Agreement getDemandDetails(String agreementNo, String ackNo, String tenantId, final RequestInfoWrapper requestInfoWrapper) {
 
         DemandSearchCriteria demandSearchCriteria = new DemandSearchCriteria();

@@ -163,19 +163,22 @@ public class MovementService {
 	private List<Movement> validate(final MovementRequest movementRequest) throws ParseException {
 		for (final Movement movement : movementRequest.getMovement()) {
 			String message = "";
-			final Employee employee = employeeService.getEmployeeById(movementRequest);
 
-			Date dor ;
+			final EmployeeInfo employee = employeeService.getEmployee(movement, movementRequest.getRequestInfo());
+
+			Date dor = new Date();
+			String formattedDOB = null;
 
 			final SimpleDateFormat inputDOB = new SimpleDateFormat("yyyy-MM-dd");
 			final SimpleDateFormat output = new SimpleDateFormat("dd/MM/yyyy");
-			if (employee.getUser().getDob() != null)
-				employee.getUser().setDob(output.format(inputDOB.parse(employee.getUser().getDob())));
+			if (employee.getDob() != null) {
+				 formattedDOB = output.format(inputDOB.parse(employee.getDob()));
+			}
 
 			if(employee.getDateOfRetirement()!=null){
 				dor = employee.getDateOfRetirement();
-			}else{
-				String dob = employee.getUser().getDob();
+			}else if(!formattedDOB.isEmpty()){
+				String dob = formattedDOB;
 				dor = output.parse(dob);
 				Calendar cal = Calendar.getInstance();
 				cal.setTime(dor);
@@ -183,7 +186,7 @@ public class MovementService {
 				dor = cal.getTime();
 			}
 			// validateEmployeeNextPositionWithCurrent
-			if (employee != null && employee.getId() != null) {
+			if (employee != null && employee.getId() != null && !formattedDOB.isEmpty() ) {
 				for (Assignment assignment : employee.getAssignments()) {
 					if(((assignment.getFromDate().after(movement.getEffectiveFrom()) && assignment.getFromDate().before(dor)) ||
 							(assignment.getToDate().after(movement.getEffectiveFrom()) && assignment.getToDate().before(dor)) ||

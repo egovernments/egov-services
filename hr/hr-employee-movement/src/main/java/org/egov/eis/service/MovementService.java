@@ -185,9 +185,9 @@ public class MovementService {
 			// validateEmployeeNextPositionWithCurrent
 			if (employee != null && employee.getId() != null) {
 				for (Assignment assignment : employee.getAssignments()) {
-					if((assignment.getFromDate().after(movement.getEffectiveFrom()) && assignment.getFromDate().before(dor)) ||
+					if(((assignment.getFromDate().after(movement.getEffectiveFrom()) && assignment.getFromDate().before(dor)) ||
 							(assignment.getToDate().after(movement.getEffectiveFrom()) && assignment.getToDate().before(dor)) ||
-							(assignment.getFromDate().before(movement.getEffectiveFrom()) && assignment.getToDate().after(dor)) &&
+							(assignment.getFromDate().before(movement.getEffectiveFrom()) && assignment.getToDate().after(dor))) &&
 									movement.getPositionAssigned().equals(assignment.getPosition())) {
 						message = message + applicationConstants
 								.getErrorMessage(applicationConstants.ERR_MOVEMENT_EMPLOYEE_POSITION_VALIDATE) + ", ";

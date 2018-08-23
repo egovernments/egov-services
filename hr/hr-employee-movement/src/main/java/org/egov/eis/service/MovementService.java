@@ -116,9 +116,9 @@ public class MovementService {
 		final Boolean isExcelUpload = type != null && "upload".equalsIgnoreCase(type);
 
 		movementRequest.setType(type);
-		final List<Movement> movementsList = new ArrayList<>();
+		List<Movement> movementsList = new ArrayList<>();
 		try {
-			validate(movementRequest);
+			movementsList = validate(movementRequest);
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}

@@ -40,7 +40,10 @@
 
 package org.egov.eis.service;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -113,7 +116,12 @@ public class MovementService {
 		final Boolean isExcelUpload = type != null && "upload".equalsIgnoreCase(type);
 
 		movementRequest.setType(type);
-		final List<Movement> movementsList = validate(movementRequest);
+		final List<Movement> movementsList = new ArrayList<>();
+		try {
+			validate(movementRequest);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
 		final List<Movement> successMovementsList = new ArrayList<>();
 		final List<Movement> errorMovementsList = new ArrayList<>();
 		for (final Movement movement : movementsList)
@@ -152,16 +160,35 @@ public class MovementService {
 			return getSuccessResponseForCreate(movementsList, movementRequest.getRequestInfo());
 	}
 
-	private List<Movement> validate(final MovementRequest movementRequest) {
+	private List<Movement> validate(final MovementRequest movementRequest) throws ParseException {
 		for (final Movement movement : movementRequest.getMovement()) {
 			String message = "";
-			final EmployeeInfo employee = employeeService.getEmployee(movement, movementRequest.getRequestInfo());
-			// validateEmployeeNextDesignationWithCurrent
+			final Employee employee = employeeService.getEmployeeById(movementRequest);
+
+			Date dor ;
+
+			final SimpleDateFormat inputDOB = new SimpleDateFormat("yyyy-MM-dd");
+			final SimpleDateFormat output = new SimpleDateFormat("dd/MM/yyyy");
+			if (employee.getUser().getDob() != null)
+				employee.getUser().setDob(output.format(inputDOB.parse(employee.getUser().getDob())));
+
+			if(employee.getDateOfRetirement()!=null){
+				dor = employee.getDateOfRetirement();
+			}else{
+				String dob = employee.getUser().getDob();
+				dor = output.parse(dob);
+				Calendar cal = Calendar.getInstance();
+				cal.setTime(dor);
+				cal.add(Calendar.YEAR,60);
+				dor = cal.getTime();
+			}
+			// validateEmployeeNextPositionWithCurrent
 			if (employee != null && employee.getId() != null) {
 				for (Assignment assignment : employee.getAssignments()) {
-					if (assignment.getFromDate().before(movement.getEffectiveFrom())
-							&& assignment.getToDate().after(movement.getEffectiveFrom())
-							&& movement.getPositionAssigned().equals(assignment.getPosition())) {
+					if((assignment.getFromDate().after(movement.getEffectiveFrom()) && assignment.getFromDate().before(dor)) ||
+							(assignment.getToDate().after(movement.getEffectiveFrom()) && assignment.getToDate().before(dor)) ||
+							(assignment.getFromDate().before(movement.getEffectiveFrom()) && assignment.getToDate().after(dor)) &&
+									movement.getPositionAssigned().equals(assignment.getPosition())) {
 						message = message + applicationConstants
 								.getErrorMessage(applicationConstants.ERR_MOVEMENT_EMPLOYEE_POSITION_VALIDATE) + ", ";
 					}

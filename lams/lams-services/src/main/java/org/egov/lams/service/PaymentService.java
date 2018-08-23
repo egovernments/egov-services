@@ -117,7 +117,7 @@ public class PaymentService {
     @Autowired
     private AgreementValidator agreementValidator;
 
-    public String generateBillXml(Agreement agreement, RequestInfo requestInfo) {
+    /*public String generateBillXml(Agreement agreement, RequestInfo requestInfo) {
         String collectXML = "";
         try {
 
@@ -296,7 +296,194 @@ public class PaymentService {
         }
         return collectXML;
     }
+*/
 
+    public String generateBillXml(Agreement agreement, RequestInfo requestInfo) {
+        String collectXML = "";
+        try {
+
+            Allottee allottee = agreement.getAllottee();
+            LamsConfigurationGetRequest lamsGetRequest = new LamsConfigurationGetRequest();
+            List<BillInfo> billInfos = new ArrayList<>();
+            BillInfo billInfo = new BillInfo();
+            billInfo.setId(null);
+            LOGGER.info("the demands for a agreement object" + agreement.getDemands());
+            if (agreement.getDemands() != null && !agreement.getDemands().isEmpty()) {
+                LOGGER.info("the demand id from agreement object" + agreement.getDemands().get(0));
+                billInfo.setDemandId(Long.valueOf(agreement.getDemands().get(0)));
+            }
+            billInfo.setCitizenName(allottee.getName());
+            billInfo.setTenantId(agreement.getTenantId());
+            // billInfo.setCitizenAddress(agreement.getAllottee().getAddress());
+            // TODO: Fix me after the issue is fixed by user service
+
+            if (allottee.getAddress() != null)
+                billInfo.setCitizenAddress(allottee.getAddress());
+            else
+                billInfo.setCitizenAddress("NA");
+            billInfo.setBillType("AUTO");
+            billInfo.setIssuedDate(new Date());
+            billInfo.setLastDate(new Date());
+            lamsGetRequest.setName("MODULE_NAME");
+            LOGGER.info("before moduleName>>>>>>>");
+
+            String moduleName = lamsConfigurationService.getLamsConfigurations(lamsGetRequest).get("MODULE_NAME")
+                    .get(0);
+            LOGGER.info("after moduleName>>>>>>>" + moduleName);
+            billInfo.setModuleName(moduleName);
+            lamsGetRequest.setTenantId(agreement.getTenantId());
+            lamsGetRequest.setName("FUND_CODE");
+            String fundCode = lamsConfigurationService.getLamsConfigurations(lamsGetRequest).get("FUND_CODE").get(0);
+            billInfo.setFundCode(fundCode);
+            LOGGER.info("after fundCode>>>>>>>" + fundCode);
+
+            lamsGetRequest.setName("FUNCTIONARY_CODE");
+            String functionaryCode = lamsConfigurationService.getLamsConfigurations(lamsGetRequest)
+                    .get("FUNCTIONARY_CODE").get(0);
+            LOGGER.info("after functionaryCode>>>>>>>" + functionaryCode);
+
+            billInfo.setFunctionaryCode(Long.valueOf(functionaryCode));
+            lamsGetRequest.setName("FUNDSOURCE_CODE");
+            String fundSourceCode = lamsConfigurationService.getLamsConfigurations(lamsGetRequest)
+                    .get("FUNDSOURCE_CODE").get(0);
+            LOGGER.info("after fundSourceCode>>>>>>>" + fundSourceCode);
+
+            billInfo.setFundSourceCode(fundSourceCode);
+            lamsGetRequest.setName("DEPARTMENT_CODE");
+            String departmentCode = lamsConfigurationService.getLamsConfigurations(lamsGetRequest)
+                    .get("DEPARTMENT_CODE").get(0);
+            billInfo.setDepartmentCode(departmentCode);
+            LOGGER.info("after departmentCode>>>>>>>" + departmentCode);
+
+            billInfo.setCollModesNotAllowed("");
+            if (agreement.getAsset().getLocationDetails().getElectionWard() != null) {
+                LOGGER.info("setting boundary details with Election ward");
+                LOGGER.info("Election ward is: " +agreement.getAsset().getLocationDetails().getElectionWard());
+                BoundaryResponse boundaryResponse = getBoundariesById(
+                        agreement.getAsset().getLocationDetails().getElectionWard(),agreement.getTenantId());
+                billInfo.setBoundaryNumber(boundaryResponse.getBoundarys().get(0).getBoundaryNum());
+                lamsGetRequest.setName("BOUNDARY_TYPE");
+                String boundaryType = lamsConfigurationService.getLamsConfigurations(lamsGetRequest)
+                        .get("BOUNDARY_TYPE").get(0);
+                LOGGER.info("after boundaryType>>>>>>>" + boundaryType);
+
+                billInfo.setBoundaryType(boundaryType);
+            } else {
+                // Passing Admin City boundary details when election ward is not
+                // available
+                billInfo.setBoundaryType("City");
+                billInfo.setBoundaryNumber(1l);
+            }
+            lamsGetRequest.setName("SERVICE_CODE");
+            String serviceCode = lamsConfigurationService.getLamsConfigurations(lamsGetRequest).get("SERVICE_CODE")
+                    .get(0);
+            LOGGER.info("after serviceCode>>>>>>>" + serviceCode);
+
+            billInfo.setServiceCode(serviceCode);
+
+            billInfo.setOverrideAccHeadAllowed('N');
+            String description = String.format("Asset Name : %s,  Asset Code : %s", agreement.getAsset().getName(),agreement.getAsset().getCode());
+            billInfo.setDescription(description);
+            LOGGER.info("after billInfo.setDescription>>>>>>>" + billInfo.getDescription());
+
+            billInfo.setConsumerCode(StringUtils.isBlank(agreement.getAgreementNumber())
+                    ? agreement.getAcknowledgementNumber() : agreement.getAgreementNumber());
+            billInfo.setCallbackForApportion('N');
+            LOGGER.info("after billInfo.setConsumerCode>>>>>>>" + billInfo.getConsumerCode());
+
+            billInfo.setEmailId(agreement.getAllottee().getEmailId());
+            billInfo.setConsumerType("Agreement");
+            LOGGER.info("before Bill Number" + billNumberService.generateBillNumber());
+            billInfo.setBillNumber(billNumberService.generateBillNumber());
+            LOGGER.info("after Bill Number" + billNumberService.generateBillNumber());
+            DemandSearchCriteria demandSearchCriteria = new DemandSearchCriteria();
+            demandSearchCriteria.setDemandId(Long.valueOf(agreement.getDemands().get(0)));
+
+            LOGGER.info("demand before>>>>>>>" + demandSearchCriteria);
+
+            Demand demand = demandRepository.getDemandBySearch(demandSearchCriteria, requestInfo).getDemands().get(0);
+            LOGGER.info("demand>>>>>>>" + demand);
+
+            if ("SYSTEM".equalsIgnoreCase(agreement.getSource().toString())) {
+                for (DemandDetails demandDetails : demand.getDemandDetails()) {
+                    BigDecimal balance = demandDetails.getTaxAmount().subtract(demandDetails.getCollectionAmount());
+                    if (balance.compareTo(BigDecimal.ZERO) > 0 && ADVANCE_TAX.equalsIgnoreCase(demandDetails.getTaxReasonCode())
+                            || GOODWILL_AMOUNT.equalsIgnoreCase(demandDetails.getTaxReasonCode())
+                            || CGST_ON_GOODWILL.equalsIgnoreCase(demandDetails.getTaxReasonCode())
+                            || SGST_ON_GOODWILL.equalsIgnoreCase(demandDetails.getTaxReasonCode())
+                            || CGST_ON_ADVANCE.equalsIgnoreCase(demandDetails.getTaxReasonCode())
+                            || SGST_ON_ADVANCE.equalsIgnoreCase(demandDetails.getTaxReasonCode())) {
+                        billInfo.setPartPaymentAllowed('N');
+
+                    } else {
+                        billInfo.setPartPaymentAllowed('Y');
+                        billInfo.setMinAmountPayable(calculateMinAmount(demand).doubleValue());
+                    }
+                }
+            } else {
+                billInfo.setPartPaymentAllowed('Y');
+            }
+
+            billInfo.setDisplayMessage(demand.getModuleName());
+            lamsGetRequest.setName("FUNCTION_CODE");
+            String functionCode = lamsConfigurationService.getLamsConfigurations(lamsGetRequest).get("FUNCTION_CODE")
+                    .get(0);
+            BigDecimal totalAmount = BigDecimal.ZERO;
+            List<BillDetailInfo> billDetailInfos = new ArrayList<>();
+            List<DemandDetails> demandDetails = getOrderedDemandDetails(demand.getDemandDetails());
+
+            int orderNo = 0;
+            int groupId =2;
+            LOGGER.info("PaymentService- generateBillXml - getting purpose");
+            Map<String, String> purposeMap = billRepository.getPurpose(billInfo.getTenantId());
+            List<Date> installmentDates = demandDetails.stream().map(demandDetail -> demandDetail.getPeriodStartDate())
+                    .distinct().collect(Collectors.toList());
+
+            for (DemandDetails demandDetail : demandDetails) {
+                if(demandDetail!=null){
+                    LOGGER.info("the reason for demanddetail : "+ demandDetail.getTaxReason());
+                    if (ADVANCE_TAX.equalsIgnoreCase(demandDetail.getTaxReasonCode())
+                            || GOODWILL_AMOUNT.equalsIgnoreCase(demandDetail.getTaxReasonCode())
+                            || (demandDetail.getPeriodStartDate().compareTo(new Date()) <= 0)) {
+                        orderNo++;
+                        totalAmount = totalAmount
+                                .add(demandDetail.getTaxAmount().subtract(demandDetail.getCollectionAmount()));
+                        LOGGER.info("the amount added to bill : "+totalAmount);
+
+                        for(Date date : installmentDates){
+                            if(date.compareTo(demandDetail.getPeriodStartDate())==0
+                                    && RENT.equalsIgnoreCase(demandDetail.getTaxReasonCode())){
+                                groupId++;
+                            }
+
+                        }
+                        billDetailInfos
+                                .addAll(getBilldetails(demandDetail, functionCode, orderNo, groupId,requestInfo, purposeMap,installmentDates));
+                    }
+                }
+            }
+            billDetailInfos.sort((b1, b2) -> b1.getPeriod().compareTo(b2.getPeriod()));
+            billInfo.setTotalAmount(totalAmount.doubleValue());
+            billInfo.setBillAmount(totalAmount.doubleValue());
+            if (billDetailInfos.isEmpty()) {
+                LOGGER.info("No bill details for collection");
+                throw new CollectionExceedException();
+            } else
+                billInfo.setBillDetailInfos(billDetailInfos);
+            LOGGER.info("billInfo before>>>>>>>" + billInfo);
+            billInfos.add(billInfo);
+            final String billXml = billRepository.createBillAndGetXml(billInfos, requestInfo);
+
+            try {
+                collectXML = URLEncoder.encode(billXml, "UTF-8");
+            } catch (final UnsupportedEncodingException e) {
+                throw new RuntimeException(e.getMessage());
+            }
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+        }
+        return collectXML;
+    }
     public Agreement getDemandDetails(String agreementNo, String ackNo, String tenantId, final RequestInfoWrapper requestInfoWrapper) {
 
         DemandSearchCriteria demandSearchCriteria = new DemandSearchCriteria();

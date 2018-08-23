@@ -638,7 +638,9 @@ public class PaymentService {
 
         }
         else if (billReceiptInfoReq.getBillReceiptInfo().getEvent().equalsIgnoreCase(EVENT_RECEIPT_CANCELLED)){
+            LOGGER.info("PaymentService- updateDemand - updateDemandDetailFor Receipt cancel ");
             updateDemandDetailForReceiptCancel(currentDemand, billReceiptInfoReq.getBillReceiptInfo(),billInfo);
+            LOGGER.info("PaymentService- updateDemand - updateDemandDetailFor Receipt cancel done");
             for (PaymentInfo info : currentDemand.getPaymentInfos()){
                 info.setStatus(RCPT_CANCEL_STATUS);
             }
@@ -800,7 +802,7 @@ public class PaymentService {
 
     // Receipt cancellation ,updating bill,demand details,demand
     public void updateDemandDetailForReceiptCancel(Demand demand, BillReceiptReq billReceiptInfo, BillInfo billInfo) throws Exception {
-        LOGGER.debug("reconcileCollForRcptCancel : Updating Collection Started For Demand : " + demand
+        LOGGER.debug("reconcileCollForRcpt Cancel : Updating Collection Started For Demand : " + demand
                 + " with BillReceiptInfo - " + billReceiptInfo);
         try {
             if (billInfo.getId() != null)
@@ -815,6 +817,8 @@ public class PaymentService {
 
 
     private void updateDmdDetForRcptCancel(Demand demand, BillReceiptReq billReceiptInfo) throws Exception {
+        LOGGER.debug("reconcileCollForRcpt Cancel : Updating Collection Started For Demand : " + demand
+                + " with BillReceiptInfo - " + billReceiptInfo);
 
         for (final ReceiptAccountInfo rcptAccInfo : billReceiptInfo.getAccountDetails())
             if (rcptAccInfo.getCrAmount() != null && rcptAccInfo.getCrAmount() > 0

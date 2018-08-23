@@ -98,14 +98,14 @@ public class DemandService {
 	public EgDemand updateDemandForCollectionWithCancelReceipt(Demand demand) throws Exception {
 		EgDemand egDemand = demandRepository.findOne(demand.getId());
 
-		LOGGER.info("demandDetails :" + demand.getDemandDetails().toString());
+		LOGGER.info("demandDetails  for cancel receipt:" + demand.getDemandDetails().toString());
 		for (DemandDetails demandDetails : demand.getDemandDetails()) {
 			for (EgDemandDetails egDemandDetail : egDemand.getEgDemandDetails()) {
 				if (egDemandDetail.getId().equals(demandDetails.getId())) {
 					LOGGER.info("match is occuring in update service");
 					LOGGER.info("collection :" + demandDetails.getCollectionAmount());
 					egDemandDetail.setAmtCollected(demandDetails.getCollectionAmount());//cancel
-					LOGGER.info("payment info to update receipts" + demand.getPaymentInfos());
+					LOGGER.info("payment info to update cancel receipts" + demand.getPaymentInfos());
 					if (!demand.getPaymentInfos().isEmpty()) {
 						egDemandDetail.setEgdmCollectedReceipts(getCollectedReceipts(demand.getPaymentInfos(), demandDetails,egDemandDetail));
 						LOGGER.info("back end receipt details" + egDemandDetail.getEgdmCollectedReceipts());

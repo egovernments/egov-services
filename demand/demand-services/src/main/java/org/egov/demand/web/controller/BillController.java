@@ -95,6 +95,7 @@ public class BillController {
 	@PostMapping("_update")
 	@ResponseStatus(HttpStatus.CREATED)
 	public ResponseEntity<?> update(@RequestBody @Valid BillRequest billRequest, BindingResult bindingResult) {
+	    LOGGER.info("the response of bill update : "+billRequest);
 
 		List<EgBill> bills = new ArrayList<EgBill>();
 		if (bindingResult.hasErrors()) {
@@ -110,6 +111,7 @@ public class BillController {
 			EgBill bill = billRepository.findOne(billRequest.getBillInfos().get(0).getId());
 			billService.updateBill(bill, billInfo);
 			bills.add(bill);
+			LOGGER.info("the getting bill update : "+billRequest);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

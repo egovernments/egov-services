@@ -171,12 +171,14 @@ public class DemandConroller {
 	@PostMapping("/_cancelreceipt")
 	@ResponseStatus(HttpStatus.CREATED)
 	public ResponseEntity<?> cancelReceipt(@RequestBody @Valid DemandRequest demandRequest, BindingResult bindingResult) {
+	    LOGGER.info("cancel receipt hit the api");
 		EgDemand egDemand = null;
 		if (bindingResult.hasErrors()) {
 			return errHandler.getErrorResponseEntityForBindingErrors(bindingResult, demandRequest.getRequestInfo());
 		}
 		try {
 			egDemand = demandService.updateDemandForCollectionWithCancelReceipt(demandRequest.getDemand().get(0));
+			LOGGER.info("update Demand For Collection With Cancel Receipt");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

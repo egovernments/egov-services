@@ -86,6 +86,7 @@ public class PaymentController {
 	@PostMapping("/_update")
 	@ResponseBody
 	public ResponseEntity<?> update(@RequestBody BillReceiptInfoReq billReceiptInfoReq) throws Exception {
+	    LOGGER.info("Payment controller receipt - billReceiptInfoReq - "+billReceiptInfoReq);
 		return paymentService.updateDemand(billReceiptInfoReq);
 	}
 

@@ -89,12 +89,12 @@ public class CollectionService {
 
         collectionRepository.saveReceipt(receipt);
 
-        if (receipt.getInstrument().getAmount().compareTo(BigDecimal.ZERO) > 0) {
-            Instrument instrument = instrumentRepository.createInstrument(receiptReq.getRequestInfo(), receipt
-                    .getInstrument());
+//        if (receipt.getInstrument().getAmount().compareTo(BigDecimal.ZERO) > 0) {
+//            Instrument instrument = instrumentRepository.createInstrument(receiptReq.getRequestInfo(), receipt
+//                    .getInstrument());
 //            receipt.getInstrument().setId(instrument.getId());
 //            collectionRepository.saveInstrument(receipt);
-        }
+//        }
 
         collectionProducer.producer(applicationProperties.getCreateReceiptTopicName(), applicationProperties
                 .getCreateReceiptTopicKey(), receiptReq);
@@ -102,6 +102,13 @@ public class CollectionService {
         return receipt;
     }
 
+
+//    public List<Receipt> cancelReceipt(RequestInfo requestInfo, String transactionNumber){
+//        ReceiptSearchCriteria receiptSearchCriteria = ReceiptSearchCriteria.builder().transactionId
+//                (transactionNumber).build();
+//        List<Receipt> receipts = getReceipts(requestInfo, receiptSearchCriteria);
+//        receiptValidator.validateReceiptsForCancellation(receipts);
+//    }
 
     /**
      * Apportions the paid amount by,

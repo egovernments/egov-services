@@ -1,0 +1,487 @@
+swagger: "2.0"
+info:
+  version: 0.0.0
+  title: Collection System  
+  description: Collection Management System serves as revenue collection platform for all the billing systems through cash, cheque, dd, swipe machine. 
+  contact:
+    name: eGovernments Foundation
+    email: contact@egovernments.org
+
+schemes:
+  - https
+basePath: '/receipts'
+x-common-path: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml'
+
+paths: 
+  /_search:
+    post:
+      summary: Get the receipt(s) info for the consumer code/status/receipt numbers and business details etc.
+      description: This API returns list of receipts created for the given servicecode and list of billNumbers/instrument numbers/receipt numbers.
+      parameters:
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo"
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
+        - $ref: "#/parameters/pageSize"
+        - $ref: "#/parameters/pageNumber"
+        - $ref: "#/parameters/sortReceipt"
+        - name: consumerCode
+          in: query
+          required: false
+          description: Consumer Code .
+          type: array
+          items:
+            type: string
+        - name: classification
+          in: query
+          required: false
+          description: Classification of receipt.
+          type: string
+          enum:
+           - BillBased
+           - Miscelleneous
+           - Challan
+        - name: receiptNumbers
+          in: query
+          required: false
+          description: List of receipt numbers.
+          type: array
+          items:
+            type: string
+        - name: fromDate
+          in: query
+          description: Receipt date, here search will happen as Receipt date is greater or equal to given fromDate.
+          required: false
+          type: string
+          format: varchar
+        - name: toDate
+          in: query
+          description: Receipt date, here search will happen as Receipt date is lesser or equal to given toDate.
+          required: false
+          type: string
+          format: varchar
+        - name: collectedBy
+          in: query
+          description: Search based on the User who created the Receipt.
+          required: false
+          type: string
+          format: varchar
+        - name: status
+          in: query
+          description: Search based on the status of the Receipt.
+          required: false
+          type: string
+          format: varchar
+        - name: paymentType
+          in: query
+          description: Search based on the Payment type such as cash, cheque, dd etc.
+          required: false
+          type: string
+          format: varchar
+        - name: businessCode
+          in: query
+          required: true
+          description: The unique Business Service Details code.
+          type: string
+          minLength: 0
+          maxLength: 64
+          exclusiveMinimum: true
+          exclusiveMaximum: false
+        - name: transactionId
+          in: query
+          required: false
+          description: Unique tansaction id for multiple receipts created in one transaction. This is 14 digit code with first 4 digit as city code and 10 digit random number.
+          type: string
+          minLength: 0
+          maxLength: 64
+        - name: manualReceiptNumbers
+          in: query
+          required: false
+          description: List of manual receipt numbers to search legacy receipts.
+          type: array
+          items:
+            type: string
+        - name: billIds
+          in: query
+          required: false
+          description: List of bill ids to search receipts.Business details code is mandatory for searching with this criteria.
+          type: array
+          items:
+            type: string
+     
+      responses:
+        200:
+          description: Successful response
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/ReceiptRes'
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+      tags:
+        - Receipt
+        
+  
+  
+  /_create:
+    post:
+      summary: Validate and persist receipt with receipt number.
+      description: This API generates a receipt number and persists the receipt. The receipt information is then pushed to queue for further processing.
+      parameters:
+        - name: receipt
+          in: body
+          description: Receipt Creation Details passed with bill info and instrument info along with common request info.
+          required: true
+          schema:
+            $ref: '#/definitions/ReceiptReq'
+      tags:
+        - Receipt
+      responses:
+        '201':
+          description: Receipt created sucessfully.
+          schema:
+            $ref: '#/definitions/ReceiptRes'
+        '400':
+          description: Invalid input.
+          
+
+definitions:
+  ReceiptReq:
+    type: object
+    description: Receipt Request with Request Info.
+    properties:
+      tenantId:
+        type: string
+        description: Unique id of tenant.
+        format: varchar
+      requestInfo:
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
+      Receipt:
+        $ref: '#/definitions/Receipt'
+        
+  ReceiptRes:
+    type: object
+    description: Receipt Request with Request Info.
+    properties:
+      tenantId:
+        type: string
+        description: Unique id of tenant.
+        format: varchar
+      responseInfo:
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
+      receipt:
+        $ref: '#/definitions/Receipt'
+  
+  BillInfo:
+    type: object
+    properties:
+      id:
+        type: number
+        description: id of the billInfo object    
+      payeeName:
+        type: string
+        description: Owner/User which needs to be referred from UserService.
+      payeeAddress:
+        type: string
+        description: Consumer address defined in bill.
+      payeeEmail:
+        type: string
+        description: Consumer email defined in bill.
+      paidBy:
+        type: string
+        description: Name of the Person who is making payment.
+      isActive:
+        type: boolean
+        description: active status of the bill.
+      isCancelled:
+        type: boolean
+        description: cancellation state of the bill.
+      tenantId:
+        type: string
+        description: Tenant Id.
+      mobileNumber:
+        type: string
+        description: Consumer mobileNumber defined in bill.
+      auditDetails:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails'
+      billDetails:
+        type: array
+        items:
+          $ref: '#/definitions/BillDetails'
+      
+  BillDetails:
+    type: object
+    properties:
+      id:
+        type: number
+        description: id of the BillDetails object 
+      businessDetailsCode:
+        type: string
+        description: BusinessDetails code.
+      refNo:
+        type: string
+        description: Bill number.
+      bill:
+        type: string
+        description: Bill.
+      billDate:
+        type: string
+        format: date
+        description: Bill date.
+      billNumber:
+        type: string
+        format: date
+        description: Bill Number.
+      consumerCode:
+        type: string
+        description: Consumer code defined in bill.
+      consumerType:
+        type: string
+        description: Consumer type defined in bill.
+      billDescription:
+        type: string
+        description: Summarized bill description.
+      minimumAmount:
+        type: number
+        format: bigdecimal
+        description: Minimum bill amount to be paid.
+      totalAmount:
+        type: number
+        format: bigdecimal
+        description: Total bill amount to be paid.
+      amountPaid:
+        type: number
+        format: double
+        description: Amount paid by the citizen.
+      collectionModesNotAllowed:
+        type: array
+        items: 
+          type: string
+        description: List of collection modes not allowed.
+      event: 
+        type: string
+        description: CREATED, CANCELLED, INSTRUMENT_BOUNCED
+      receiptNumber:
+        type: string
+        description: Receipt Number generated in Collection system.
+      receiptDate:
+        type: string
+        format: date
+        description: Receipt Date.
+      receiptType:
+        description: Type of Receipt.
+        items:
+          type: string
+          enum:
+           - ADHOC
+           - BILLBASED
+           - CHALLAN
+      collectionType:
+        description: Type of collection.
+        items:
+          type: string
+          enum:
+           - COUNTER
+           - FIELD
+           - ONLINE
+      channel:
+        type: string
+        description: To be used by third party applications, to send the channel name.
+      voucherHeader:
+        description: Voucher header  need to refer from Finanicals.
+      boundary:
+        description: Boundary need to refer from Core services.
+        items:
+          type: string
+      reasonForCancellation:
+        description: Remarks to describe Reason For Cancellation.
+        items:
+          type: string
+      displayMessage:
+        type: string
+        description: Remarks to be displayed on receipt.
+      tenantId:
+        type: string
+        description: Tenant Id.
+      businessService:
+        type: string
+        description: businessService details of the bill details.
+      callBackForApportioning:
+        type: boolean
+        description: apportioning call based on this value.
+      partPaymentAllowed:
+        type: boolean
+        description: decides if partpayment is allowed
+      manualReceiptNumber:
+        type: string
+        description: Manual Receipt Number for legacy reciepts.
+      stateId:
+        type: integer
+        description: State id of receipt. Value is set while pushing to kafka from collection workflow and to read in collection services.
+      billAccountDetails:
+        type: array
+        items:
+          $ref: '#/definitions/BillAccountDetails'
+  
+  BillAccountDetails:
+    type: object
+    properties:
+      id:
+        type: number
+        description: id of the BillAccountDetails object 
+      glcode:
+        type: string
+        description: Chart of account code.
+      order:
+        type: integer
+        format: int32
+        description : Order number used for apportioning amount in case of part payment.
+      accountDescription:
+        type: string
+        description : Account description to be printed on receipt.
+      creditAmount:
+        type: number
+        format: bigdecimal
+        description: Credit account head amount.
+      debitAmount:
+        type: number
+        format: bigdecimal
+        description: Debit account head amount.
+      functionCode:
+        type: string
+        description: Funtion Code
+      isActualDemand:
+        type: boolean
+        description: True for tax/charges/penalty. False for advances(if any).
+      tenantId:
+        type: string
+        description: Tenant Id.
+      billDetail:
+        type: string
+        description: Bill Details.
+      purpose:
+        description: Purpose of Account head.
+        items:
+          type: string
+          enum:
+           - ARREAR_AMOUNT
+           - CURRENT_AMOUNT
+           - ADVANCE_AMOUNT
+           - ARREAR_LATEPAYMENT_CHARGES
+           - CURRENT_LATEPAYMENT_CHARGES
+           - CHEQUE_BOUNCE_PENALTY
+           - REBATE
+           - OTHERS
+        
+        
+  Receipt:
+    type: object
+    properties:
+      tenantId:
+        type: string
+        description: Unique id of tenant.
+        format: varchar
+      transactionId:
+        type: string
+        description: Unique tansaction id for multiple receipts created in one transaction. This is 14 digit code with first 4 digit as city code and 10 digit random number.
+        format: varchar
+      id:
+        type: string
+        description: Receipt Header Id which needs to be set during search and the same will be used for update also.
+      instrument:
+        type: string
+        description: Instrument needs to be referred from financials.
+      auditDetails:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails'
+      billInfo:
+        $ref: '#/definitions/BillInfo'
+      workflowDetails:
+        $ref: '#/definitions/WorkflowDetails'
+        
+        
+  WorkflowDetails:
+    type: object
+    description: workflow details related to connection
+    properties: 
+      department: 
+        type: integer
+        description: ID to define the Department .
+        minLength: 1
+        maxLength: 100
+      designation: 
+        type: integer
+        description: ID to define the Designation.
+        minLength: 1
+        maxLength: 100
+      approver: 
+        type: integer
+        description: ID to define the Approver ID.
+        minLength: 1
+        maxLength: 100
+      initiatorPosition:
+        type: integer
+        description: ID of the User who initiates the workflow.
+        minLength: 1
+        maxLength: 100
+      assignee:
+        type: integer
+        description: assignee of the Task
+        minLength: 1
+        maxLength: 100
+      action:
+        type: string
+        description: action of the Task
+        maxLength: 128
+      comments: 
+        type: string
+        description: Notes that has been added by the clerk or engineer.
+        minLength: 1
+        maxLength: 100
+      status:
+        type: string
+        description: Enumeration of Connection Request statuses.
+        enum:
+          - ACTIVE
+          - INPROGRESS
+          - DISCONNECTED
+          - HOLDING
+          - CLOSED
+          - INACTIVE            
+    required:
+     - department
+     - designation
+     - approver
+  
+        
+parameters:
+  pageSize:
+    name: pageSize
+    in: query
+    description: Number of records returned.
+    type: integer
+    minimum: 0
+    exclusiveMinimum: true
+    maximum: 100
+    exclusiveMaximum: false
+    multipleOf: 10
+    default: 20
+  pageNumber:
+    name: pageNumber
+    in: query
+    description: Page number
+    type: integer
+    default: 1
+  sortReceipt:
+    name: sort
+    in: query
+    description: Receipt results will be sorted by receiptnumber ascending by default.
+    type: array
+    uniqueItems: true
+    minItems: 1
+    maxItems: 3
+    collectionFormat: pipes
+    items:
+      type: string
+      pattern: '[-+](receiptNumber|receiptDate)'
+    default:
+      - +receiptNumber

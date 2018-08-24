@@ -8,8 +8,7 @@ info:
     * The Demand Bill data with period and head wise dues and its payment details.
     * Service APIs supports single tenant only
   contact:
-    name: Ramakrishna (Ramki)
-host: phoenix-qa.egovernments.org
+    name: eGovernments Foundation
 schemes:
   - https
 basePath: /billingservice/v1
@@ -448,7 +447,7 @@ paths:
           format: double
         - name: receiptRequired
           in: query
-          description: 
+          description: indicates whether receipt is required or not
           required: false
           type: boolean
         - name: demandTo

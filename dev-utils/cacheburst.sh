@@ -1,7 +1,7 @@
 #!/bin/bash
 
 set -ex
-echo "Which environment you want to burst cache? :"
+echo "Enter the kube context you want to burst cache :"
 
 read kubeenv
 

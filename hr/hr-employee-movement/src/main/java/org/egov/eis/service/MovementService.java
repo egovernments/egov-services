@@ -164,15 +164,15 @@ public class MovementService {
 		for (final Movement movement : movementRequest.getMovement()) {
 			String message = "";
 
-			final EmployeeInfo employee = employeeService.getEmployee(movement, movementRequest.getRequestInfo());
+			final Employee employee = employeeService.getEmployeeById(movementRequest);
 
 			Date dor = new Date();
 			String formattedDOB = null;
 
 			final SimpleDateFormat inputDOB = new SimpleDateFormat("yyyy-MM-dd");
 			final SimpleDateFormat output = new SimpleDateFormat("dd/MM/yyyy");
-			if (employee.getDob() != null) {
-				 formattedDOB = output.format(inputDOB.parse(employee.getDob()));
+			if (employee.getUser().getDob() != null) {
+				 formattedDOB = output.format(inputDOB.parse(employee.getUser().getDob()));
 			}
 
 			if(employee.getDateOfRetirement()!=null){
@@ -199,9 +199,12 @@ public class MovementService {
 				}
 				if ((employee.getDateOfRetirement() == null
 						|| (employee.getDateOfRetirement() != null && employee.getDateOfRetirement().equals("")))
-						&& (employee.getDob() == null || (employee.getDob() != null && employee.getDob().equals(""))))
+						&& (employee.getUser().getDob() == null || (employee.getUser().getDob() != null && employee.getUser().getDob().equals(""))))
 					message = message + applicationConstants
 							.getErrorMessage(applicationConstants.ERR_MOVEMENT_EMPLOYEE_DOB_VALIDATE) + ", ";
+
+				if (employee.getUser().getRoles().isEmpty())
+					message = message + applicationConstants.getErrorMessage(applicationConstants.ERR_MOVEMENT_EMPLOYEE_ROLE_VALIDATE);
 			} else {
 				message = message
 						+ applicationConstants.getErrorMessage(applicationConstants.ERR_MOVEMENT_EMPLOYEE_VALIDATE)

@@ -201,12 +201,23 @@ class PartialPayment extends React.Component {
             headers: {
                 'auth-token': authToken
             },
-            success: function (res) {
-                console.log(res)
-                window.location.href = 
-                    "app/dataentry/edit-demand.html?" +
-                    "agreementNumber=" + getUrlVars()["agreementNumber"] +
-                    "&assetId=" + body.asset.id;
+            success: function (data) {
+                jQuery("<form>.")
+             .attr({
+               method: "post",
+               action: "/collection/receipts/receipt-newform.action",
+               target: "_self"
+             })
+             .append(
+               jQuery("<input>").attr({
+                 type: "hidden",
+                 id: "collectXML",
+                 name: "collectXML",
+                 value: data
+               })
+             )
+             .appendTo(document.body)
+             .submit();
 
             },
             error: function (err) {

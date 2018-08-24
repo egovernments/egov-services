@@ -226,7 +226,7 @@ public class MovementRepository {
     }
 
 	private void promoteEmployee(final MovementRequest movementRequest) throws ParseException {
-		final EmployeeInfo employeeInfo = employeeService.getEmployee(movementRequest.getMovement().get(0).getEmployeeId(), null, movementRequest.getMovement().get(0).getTenantId(),movementRequest.getRequestInfo());
+		final Employee employeeInfo = employeeService.getEmployeeById(movementRequest);
 		final Movement movement = movementRequest.getMovement().get(0);
 		final Date effectiveFromDate = movement.getEffectiveFrom();
 		LOGGER.debug("effectiveFromDate:" + effectiveFromDate);
@@ -291,11 +291,12 @@ public class MovementRepository {
 
 		final User user = new User();
 		user.setId(employeeInfo.getId());
-		user.setName(employeeInfo.getName());
-		user.setDob(output.format(inputDOB.parse(employeeInfo.getDob())));
-		user.setActive(employeeInfo.getActive());
-		user.setGender(employeeInfo.getGender());
+		user.setName(employeeInfo.getUser().getName());
+		user.setDob(output.format(inputDOB.parse(employeeInfo.getUser().getDob())));
+		user.setActive(employeeInfo.getUser().getActive());
+		user.setGender(employeeInfo.getUser().getGender());
 		user.setTenantId(employeeInfo.getTenantId());
+		user.setRoles(employeeInfo.getUser().getRoles());
 		employee.setUser(user);
 		LOGGER.debug("Employee List:" + employee);
 		employeeService.updateEmployee(employee, movement.getTenantId(), movementRequest.getRequestInfo());

@@ -14,6 +14,7 @@ import org.egov.lams.model.DemandDetails;
 import org.egov.lams.model.PaymentInfo;
 import org.egov.lams.model.enums.Action;
 import org.egov.lams.model.enums.Source;
+import org.egov.lams.model.enums.Status;
 import org.egov.lams.repository.BillRepository;
 import org.egov.lams.repository.DemandRepository;
 import org.egov.lams.repository.FinancialsRepository;
@@ -805,10 +806,10 @@ public class PaymentService {
         LOGGER.debug("reconcileCollForRcpt Cancel : Updating Collection Started For Demand : " + demand
                 + " with BillReceiptInfo - " + billReceiptInfo);
         try {
+            updateDmdDetForRcptCancel(demand, billReceiptInfo,billInfo);
+            LOGGER.debug("reconcileCollForRcptCancel : Updating Collection finished For Demand : " + demand);
             if (billInfo.getId() != null)
                 billInfo.setCancelled("Y");
-            updateDmdDetForRcptCancel(demand, billReceiptInfo);
-            LOGGER.debug("reconcileCollForRcptCancel : Updating Collection finished For Demand : " + demand);
         } catch (final Exception e) {
             throw new RuntimeException("Error occured during back update of DCB : " + e.getMessage());
         }
@@ -816,10 +817,28 @@ public class PaymentService {
 
 
 
-    private void updateDmdDetForRcptCancel(Demand demand, BillReceiptReq billReceiptInfo) throws Exception {
+    private void updateDmdDetForRcptCancel(Demand demand, BillReceiptReq billReceiptInfo,BillInfo billInfo) throws Exception {
+        Boolean activeAgreement =Boolean.FALSE;
+        LOGGER.debug("validation for cancellation receipt ");
+        String consumerCode = billInfo.getConsumerCode();
+        
+        String sql = AgreementQueryBuilder.BASE_SEARCH_QUERY + " where agreement.acknowledgementnumber='"
+                + consumerCode + "' OR agreement.agreement_no='" + consumerCode + "' ";
+        List<Agreement> agreements = null;
+        Agreement agreement;
+        try {
+            agreements = jdbcTemplate.query(sql, new AgreementRowMapper());
+        } catch (DataAccessException e) {
+            throw new RuntimeException("exception while fetching agreemment to update advance" + e);
+        }
+        
+        if (agreements != null && !agreements.isEmpty()) {
+            agreement = agreements.get(0);
+            if (Source.SYSTEM.equals(agreement.getSource()) && Status.ACTIVE.equals(agreement.getStatus()))
+                activeAgreement = Boolean.TRUE;
+        }
         LOGGER.debug("reconcileCollForRcpt Cancel : Updating Collection Started For Demand : " + demand
                 + " with BillReceiptInfo - " + billReceiptInfo);
-
         for (final ReceiptAccountInfo rcptAccInfo : billReceiptInfo.getAccountDetails())
             if (rcptAccInfo.getCrAmount() != null && rcptAccInfo.getCrAmount() > 0
                     && !rcptAccInfo.isRevenueAccount() && rcptAccInfo.getDescription() != null) {
@@ -835,6 +854,9 @@ public class PaymentService {
                     if (demandDetail.getTaxPeriod() != null && demandDetail.getTaxPeriod().equalsIgnoreCase(taxPeriod)
                             && demandDetail.getTaxReason() != null
                             && demandDetail.getTaxReason().equalsIgnoreCase(taxReason)) {
+                        LOGGER.info("validating Advance Tax and Good will Amount");
+                        if (activeAgreement &&(ADVANCE_TAX.equalsIgnoreCase(demandDetail.getTaxReasonCode())||(GOODWILL_AMOUNT.equalsIgnoreCase(demandDetail.getTaxReasonCode()))))
+                          throw new RuntimeException("Cannot cancel receipt as agreement number is already generated.");
                         if (demandDetail.getCollectionAmount().compareTo(BigDecimal.valueOf(rcptAccInfo.getCrAmount())) < 0)
                             throw new RuntimeException(
                                     "updateDmdDetForRcptCancel : Exception while updating cancel receipt, "

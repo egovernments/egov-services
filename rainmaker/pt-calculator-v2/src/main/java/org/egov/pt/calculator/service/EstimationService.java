@@ -200,8 +200,8 @@ public class EstimationService {
 			 * special case to handle property with one unit
 			 */
 			if (detail.getUnits().size() == 1)
-				usageExemption = usageExemption.add(getExemption(detail.getUnits().get(0), taxAmt, assessmentYear,
-						propertyBasedExemptionMasterMap));
+				usageExemption = getExemption(detail.getUnits().get(0), taxAmt, assessmentYear,
+						propertyBasedExemptionMasterMap);
 		}
 		return getEstimatesForTax(assessmentYear, taxAmt, usageExemption, detail, propertyBasedExemptionMasterMap,
 				timeBasedExemptionMasterMap);

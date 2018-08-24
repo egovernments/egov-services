@@ -191,27 +191,26 @@ class PartialPayment extends React.Component {
         
 
         $.ajax({
-            url: baseUrl + "/lams-services/payment/_create?tenantId=" + tenantId,
+            url: baseUrl + "/lams-services/payment/_create",
             type: 'POST',
-            dataType: 'json',
-            data: JSON.stringify(body),
+            data: JSON.stringify({
+                'RequestInfo': requestInfo,
+                'Agreement':body
+            }),
             contentType: 'application/json',
             headers: {
                 'auth-token': authToken
             },
             success: function (res) {
-
-                window.open(
+                console.log(res)
+                window.location.href = 
                     "app/dataentry/edit-demand.html?" +
                     "agreementNumber=" + getUrlVars()["agreementNumber"] +
-                    "&assetId=" + this.state.partialPayment.asset.id,
-                    "fs",
-                    "fullscreen=yes"
-                );
+                    "&assetId=" + body.asset.id;
 
             },
             error: function (err) {
-                if (err.responseJSON.Error && err.responseJSON.Error.message)
+                if (err.responseJSON && err.responseJSON.Error && err.responseJSON.Error.message)
                     showError(err.responseJSON.Error.message);
                 else
                     showError("Something went wrong. Please contact Administrator");

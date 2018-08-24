@@ -218,7 +218,7 @@ public class CalculatorConstants {
 
 	
 	public static final String PT_ESTIMATE_AREA_NULL = "PT_ESTIMATE_AREA_NULL";
-	public static final String PT_ESTIMATE_AREA_NULL_MSG = "At least one area value of buildUpArea Or ground floor units area is mandatory";
+	public static final String PT_ESTIMATE_AREA_NULL_MSG = "At least one area value either buildUpArea Or landArea should be provided";
 
 
 	public static final String PT_ESTIMATE_GROUND_AREA_ZERO = "PT_ESTIMATE_GROUND_AREA_ZERO";

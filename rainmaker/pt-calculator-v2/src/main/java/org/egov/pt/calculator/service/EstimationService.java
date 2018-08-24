@@ -1,13 +1,55 @@
 package org.egov.pt.calculator.service;
 
+import static org.egov.pt.calculator.util.CalculatorConstants.BILLING_SLAB_MATCH_AREA;
+import static org.egov.pt.calculator.util.CalculatorConstants.BILLING_SLAB_MATCH_ERROR_CODE;
+import static org.egov.pt.calculator.util.CalculatorConstants.BILLING_SLAB_MATCH_ERROR_MESSAGE;
+import static org.egov.pt.calculator.util.CalculatorConstants.BILLING_SLAB_MATCH_FLOOR;
+import static org.egov.pt.calculator.util.CalculatorConstants.BILLING_SLAB_MATCH_USAGE_DETAIL;
+import static org.egov.pt.calculator.util.CalculatorConstants.EG_PT_DEPRECIATING_ASSESSMENT_ERROR;
+import static org.egov.pt.calculator.util.CalculatorConstants.EG_PT_DEPRECIATING_ASSESSMENT_ERROR_MSG_ESTIMATE;
+import static org.egov.pt.calculator.util.CalculatorConstants.EG_PT_ESTIMATE_ARV_NULL;
+import static org.egov.pt.calculator.util.CalculatorConstants.EG_PT_ESTIMATE_ARV_NULL_MSG;
+import static org.egov.pt.calculator.util.CalculatorConstants.EXEMPTION_FIELD_NAME;
+import static org.egov.pt.calculator.util.CalculatorConstants.FINANCIAL_YEAR_ENDING_DATE;
+import static org.egov.pt.calculator.util.CalculatorConstants.FINANCIAL_YEAR_STARTING_DATE;
+import static org.egov.pt.calculator.util.CalculatorConstants.OWNER_TYPE_MASTER;
+import static org.egov.pt.calculator.util.CalculatorConstants.PT_ADHOC_PENALTY;
+import static org.egov.pt.calculator.util.CalculatorConstants.PT_ADHOC_REBATE;
+import static org.egov.pt.calculator.util.CalculatorConstants.PT_ADHOC_REBATE_INVALID_AMOUNT;
+import static org.egov.pt.calculator.util.CalculatorConstants.PT_ADHOC_REBATE_INVALID_AMOUNT_MSG;
+import static org.egov.pt.calculator.util.CalculatorConstants.PT_ADVANCE_CARRYFORWARD;
+import static org.egov.pt.calculator.util.CalculatorConstants.PT_DECIMAL_CEILING_CREDIT;
+import static org.egov.pt.calculator.util.CalculatorConstants.PT_ESTIMATE_BILLINGSLABS_UNMATCH;
+import static org.egov.pt.calculator.util.CalculatorConstants.PT_ESTIMATE_BILLINGSLABS_UNMATCH_MSG;
+import static org.egov.pt.calculator.util.CalculatorConstants.PT_ESTIMATE_BILLINGSLABS_UNMATCH_VACANCT;
+import static org.egov.pt.calculator.util.CalculatorConstants.PT_ESTIMATE_BILLINGSLABS_UNMATCH_VACANT_MSG;
+import static org.egov.pt.calculator.util.CalculatorConstants.PT_ESTIMATE_BILLINGSLABS_UNMATCH_replace_id;
+import static org.egov.pt.calculator.util.CalculatorConstants.PT_FIRE_CESS;
+import static org.egov.pt.calculator.util.CalculatorConstants.PT_OWNER_EXEMPTION;
+import static org.egov.pt.calculator.util.CalculatorConstants.PT_TAX;
+import static org.egov.pt.calculator.util.CalculatorConstants.PT_TIME_INTEREST;
+import static org.egov.pt.calculator.util.CalculatorConstants.PT_TIME_PENALTY;
+import static org.egov.pt.calculator.util.CalculatorConstants.PT_TIME_REBATE;
+import static org.egov.pt.calculator.util.CalculatorConstants.PT_TYPE_VACANT_LAND;
+import static org.egov.pt.calculator.util.CalculatorConstants.PT_UNIT_USAGE_EXEMPTION;
+import static org.egov.pt.calculator.util.CalculatorConstants.USAGE_DETAIL_MASTER;
+import static org.egov.pt.calculator.util.CalculatorConstants.USAGE_MAJOR_MASTER;
+import static org.egov.pt.calculator.util.CalculatorConstants.USAGE_MINOR_MASTER;
+import static org.egov.pt.calculator.util.CalculatorConstants.USAGE_SUB_MINOR_MASTER;
+
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
-import static org.egov.pt.calculator.util.CalculatorConstants.*;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ResponseInfo;
 import org.egov.pt.calculator.util.Configurations;
+import org.egov.pt.calculator.validator.CalculationValidator;
 import org.egov.pt.calculator.web.models.BillingSlab;
 import org.egov.pt.calculator.web.models.BillingSlabSearchCriteria;
 import org.egov.pt.calculator.web.models.Calculation;
@@ -24,7 +66,6 @@ import org.egov.pt.calculator.web.models.property.Unit;
 import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
 
 import lombok.extern.slf4j.Slf4j;
 import net.minidev.json.JSONArray;
@@ -47,6 +88,9 @@ public class EstimationService {
 
 	@Autowired
 	private DemandService demandService;
+	
+	@Autowired
+	CalculationValidator calcValidator;
 
 	/**
 	 * Generates a map with assessment-number of property as key and estimation
@@ -63,7 +107,9 @@ public class EstimationService {
 		Map<String, Calculation> calculationPropertyMap = new HashMap<>();
 		for (CalculationCriteria criteria : criteriaList) {
 			Property property = criteria.getProperty();
-			String assessmentNumber = property.getPropertyDetails().get(0).getAssessmentNumber();
+			PropertyDetail detail = property.getPropertyDetails().get(0);
+			calcValidator.validatePropertyForCalculation(detail);
+			String assessmentNumber = detail.getAssessmentNumber();
 			Calculation calculation = getCalculation(requestInfo, criteria, getEstimationMap(criteria, requestInfo));
 			calculation.setServiceNumber(assessmentNumber);
 			calculationPropertyMap.put(assessmentNumber, calculation);
@@ -83,28 +129,7 @@ public class EstimationService {
         CalculationCriteria criteria = request.getCalculationCriteria().get(0);
         Property property = criteria.getProperty();
         PropertyDetail detail = property.getPropertyDetails().get(0);
-        Map<String, String> error = new HashMap<>();
-
-        boolean isVacantLand = PT_TYPE_VACANT_LAND.equalsIgnoreCase(detail.getPropertyType());
-
-        if (isVacantLand && null == detail.getLandArea())
-            error.put(PT_ESTIMATE_VACANT_LAND_NULL, PT_ESTIMATE_VACANT_LAND_NULL_MSG);
-
-        if (!isVacantLand && CollectionUtils.isEmpty(detail.getUnits()))
-            error.put(PT_ESTIMATE_NON_VACANT_LAND_UNITS, PT_ESTIMATE_NON_VACANT_LAND_UNITS_MSG);
-            // error throw altered to accommodate flat/shared building issues arising from allowing multi units in screen suddenly.
-        else if (!isVacantLand && null == detail.getBuildUpArea() && !CollectionUtils.isEmpty(detail.getUnits())) {
-
-            double builtUp = detail.getUnits().stream().filter(
-                    unit -> unit.getFloorNo().equals("0")).mapToDouble(Unit::getUnitArea).sum();
-            if (builtUp == 0.0)
-                error.put(PT_ESTIMATE_GROUND_AREA_ZERO, PT_ESTIMATE_GROUND_AREA_ZERO_MSG);
-            detail.setBuildUpArea(builtUp);
-        }
-
-        if (!CollectionUtils.isEmpty(error))
-            throw new CustomException(error);
-
+        calcValidator.validatePropertyForCalculation(detail);
         return new CalculationRes(new ResponseInfo(), Collections.singletonList(getCalculation(request.getRequestInfo(), criteria,
                 getEstimationMap(criteria, request.getRequestInfo()))));
     }
@@ -170,6 +195,13 @@ public class EstimationService {
 			 * making call to get unbuilt area tax estimate
 			 */
 			taxAmt = taxAmt.add(getUnBuiltRate(detail, unBuiltRate, groundUnitsCount, groundUnitsArea));
+
+			/*
+			 * special case to handle property with one unit
+			 */
+			if (detail.getUnits().size() == 1)
+				usageExemption = usageExemption.add(getExemption(detail.getUnits().get(0), taxAmt, assessmentYear,
+						propertyBasedExemptionMasterMap));
 		}
 		return getEstimatesForTax(assessmentYear, taxAmt, usageExemption, detail, propertyBasedExemptionMasterMap,
 				timeBasedExemptionMasterMap);

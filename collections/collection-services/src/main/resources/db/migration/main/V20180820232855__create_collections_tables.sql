@@ -1,4 +1,4 @@
-DROP TABLE IF EXISTS "egcl_receiptheader" CASCADE;
+DROP TABLE IF EXISTS "egcl_receiptheader";
 DROP INDEX IF EXISTS idx_rcpthd_consumercode;
 DROP INDEX IF EXISTS idx_rcpthd_createdby;
 DROP INDEX IF EXISTS idx_rcpthd_createddate;

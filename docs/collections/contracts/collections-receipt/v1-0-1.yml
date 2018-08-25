@@ -1,6 +1,6 @@
 swagger: "2.0"
 info:
-  version: 0.0.0
+  version: 1.0.1
   title: Collection System  
   description: Collection Management System serves as revenue collection platform for all the billing systems through cash, cheque, dd, swipe machine. 
   contact:

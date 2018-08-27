@@ -84,6 +84,8 @@ public class AxisGateway implements Gateway {
 
     @Override
     public URI generateRedirectURI(Transaction transaction) {
+        String customTxnId = transaction.getModule() + "-" +transaction.getTxnId();
+        transaction.setTxnId(customTxnId);
         Map<String, String> fields = new HashMap<>();
         fields.put("vpc_Version", VPC_VERSION);
         fields.put("vpc_Command", VPC_COMMAND_PAY);
@@ -92,7 +94,7 @@ public class AxisGateway implements Gateway {
         fields.put("vpc_Locale", LOCALE);
         fields.put("vpc_Currency", CURRENCY);
         fields.put("vpc_ReturnURL", transaction.getCallbackUrl());
-        fields.put("vpc_MerchTxnRef", transaction.getModule() + "-" +transaction.getTxnId());
+        fields.put("vpc_MerchTxnRef", transaction.getTxnId());
         fields.put("vpc_OrderInfo", (String) transaction.getAdditionalFields().get(BANK_ACCOUNT_NUMBER));
         fields.put("vpc_Amount", String.valueOf(Utils.formatAmtAsPaise(transaction.getTxnAmount())));
 

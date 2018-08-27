@@ -40,7 +40,7 @@ public class Transaction {
      */
     @JsonProperty("billId")
     @NotNull
-    @Size(min = 2)
+    @Size(min = 1)
     private String billId;
 
 

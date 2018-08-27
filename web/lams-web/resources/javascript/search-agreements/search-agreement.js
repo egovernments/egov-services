@@ -1067,7 +1067,7 @@ class AgreementSearch extends React.Component {
         !hideCollectTaxOption &&
         !(item.action == "CREATE" && item.status == "REJECTED")
       ) {
-        return <option value="collTax">Collect Tax</option>;
+        return (<option value="collTax">Collect Tax</option>);
       }
     };
 
@@ -1151,7 +1151,7 @@ class AgreementSearch extends React.Component {
                     category_name == "Land" || category_name == "shop",
                     item
                   )}
-                  ;
+                  
                 </div>
               </td>
             </tr>
@@ -1179,7 +1179,7 @@ class AgreementSearch extends React.Component {
         agreement.source === "DATA_ENTRY" &&
         agreement.status === "ACTIVE"
       ) {
-        return <option value="addeditdemand">Add / Edit Demand </option>;
+        return <option value="addeditdemand">Add / Edit Demand </option>
       }
     };
     const getNoticeOption = function(agreement) {
@@ -1187,7 +1187,7 @@ class AgreementSearch extends React.Component {
         if (agreement.source === "DATA_ENTRY") {
           return <option value="generateNotice">Allotment Notice </option>;
         } else if (agreement.source === "SYSTEM") {
-          return <option value="showNotice">Allotment Notice </option>;
+          return <option value="showNotice">Allotment Notice </option>
         }
       }
     };

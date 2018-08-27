@@ -261,7 +261,7 @@ class PartialPayment extends React.Component {
 
         for (var j = 0; j < lastChecked; j++) {
             if (!document.getElementById("checkbox_" + j).checked)
-                return showError("Please select from Top");
+                return showError("Kindly select check boxes to collect tax in sequence to proceed further");
         }
 
         let demandDetails = this.state.partialPayment.legacyDemands[0].demandDetails;
@@ -312,9 +312,30 @@ class PartialPayment extends React.Component {
 
     render() {
         //onChange={() => this.handleChange(index, data.reason, data.taxPeriod)} 
+        
         let partialPayment = this.state.partialPaymentRows;
-        console.log("objectItem", partialPayment)
-        let tableBody = (
+
+
+        const renderOption = function (data) {
+            if (data) {
+              return data.map((item, ind) => {
+                return (<option key={ind} value={typeof item == "object" ? item.id : item}>
+                  {typeof item == "object" ? item.name : item}
+                </option>)
+              })
+            }
+          }
+
+
+
+          const tableBody = function () { 
+
+            if(partialPayment.length === 0 ){
+
+                return <tr> No Legacy demands to display. Please click on proceed </tr>
+
+            }
+            
             partialPayment.map((data, index) => {
                 //console.log("data from map",data);
                 if (data.reason === 'rent') {
@@ -326,7 +347,8 @@ class PartialPayment extends React.Component {
                             <td>{data.penalty ? data.penalty : 0}</td>
                             <td>{data.CENTRAL_GST}</td>
                             <td>{data.STATE_GST}</td>
-                            <td>{data.STATE_GST + data.CENTRAL_GST + data.RENT}</td>
+                            <td>{0}</td>
+                            <td>{data.STATE_GST?data.STATE_GST: 0+ data.CENTRAL_GST? data.CENTRAL_GST:0 + data.RENT?  data.RENT:0}</td>
                         </tr>
                     )
                 }
@@ -339,7 +361,8 @@ class PartialPayment extends React.Component {
                             <td>{0}</td>
                             <td>{data['GW_CGST']}</td>
                             <td>{data['GW_SGST']}</td>
-                            <td>{data['GOODWILL_AMOUNT'] + data['GW_CGST'] + data["GW_SGST"]}</td>
+                            <td>{0}</td>
+                            <td>{data['GOODWILL_AMOUNT']?data['GOODWILL_AMOUNT']:0 + data['GW_CGST']?data['GW_CGST']:0 + data["GW_SGST"]?data["GW_SGST"]:0}</td>
                         </tr>
                     )
                 }
@@ -352,12 +375,13 @@ class PartialPayment extends React.Component {
                             <td>{0}</td>
                             <td>{data['ADV_CGST']}</td>
                             <td>{data['ADV_SGST']}</td>
-                            <td>{data['ADVANCE_TAX'] + data['ADV_CGST'] + data["ADV_SGST"]}</td>
+                            <td>{0}</td>
+                            <td>{data['ADVANCE_TAX']?data['ADVANCE_TAX']:0 + data['ADV_CGST']?data['ADV_CGST']:0 + data["ADV_SGST"]? data["ADV_SGST"]:0}</td>
                         </tr>
                     )
                 }
             })
-        )
+        }
         return (
             <div>
                 <table className="table table-bordered">
@@ -369,6 +393,7 @@ class PartialPayment extends React.Component {
                             <th>Penalty</th>
                             <th>CGST</th>
                             <th>SGST</th>
+                            <th>SERVICE TAX</th>
                             <th>Total</th>
                         </tr>
                     </thead>

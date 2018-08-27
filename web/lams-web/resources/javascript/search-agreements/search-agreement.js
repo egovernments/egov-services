@@ -464,8 +464,7 @@ class AgreementSearch extends React.Component {
     agreementId,
     assetCategory,
     acknowledgementNumber,
-    status,
-    demandDetails
+    status
   ) {
     switch (type) {
       case "renew":
@@ -483,6 +482,8 @@ class AgreementSearch extends React.Component {
         break;
         case "collTax":
 
+        var data = commonApiPost("lams-services", "payment", "_partialpaymentview", {agreementNumber:number, tenantId});
+        let demandDetails = data.responseJSON.legacyDemands && data.responseJSON.legacyDemands[0].demandDetails? data.responseJSON.legacyDemands[0].demandDetails.length : 0;
         if(demandDetails > 0)
         window.open(
           "app/search-agreement/partial-payment.html?" +
@@ -498,7 +499,7 @@ class AgreementSearch extends React.Component {
           "fullscreen=yes"
         )
         else
-          return showError("Rent is fully paid or no demand details found for collection");
+        return showError("Rent is fully paid or no demand details found for collection");
         // $.ajax({
         //   url:
         //     "/lams-services/payment/_partialpaymentview?tenantId=" +
@@ -1198,7 +1199,6 @@ class AgreementSearch extends React.Component {
     };
 
     const getOption = function(isShopOrLand, item) {
-      let demandDetails = item.legacyDemands && item.legacyDemands[0].demandDetails? item.legacyDemands[0].demandDetails.length : 0;
        if (item.status === "INACTIVE" || item.status === "HISTORY") {
           return (
               <select
@@ -1212,8 +1212,7 @@ class AgreementSearch extends React.Component {
                           item.id,
                           getValueByName("name", item.asset.assetCategory.id),
                           item.acknowledgementNumber,
-                          item.status,
-                          demandDetails
+                          item.status
                       );
                   }}
               >
@@ -1234,8 +1233,7 @@ class AgreementSearch extends React.Component {
                   item.id,
                   getValueByName("name", item.asset.assetCategory.id),
                 item.acknowledgementNumber,
-                item.status,
-                demandDetails
+                item.status
               );
             }}
           >
@@ -1260,8 +1258,7 @@ class AgreementSearch extends React.Component {
                   item.id,
                   getValueByName("name", item.asset.assetCategory.id),
                 item.acknowledgementNumber,
-                item.status,
-                demandDetails
+                item.status
               );
             }}
           >

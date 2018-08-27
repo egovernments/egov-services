@@ -36,7 +36,7 @@ public class PaymentController {
 	private static final String EVENT_RECEIPT_CANCELLED = "RECEIPT_CANCELLED";
 
 
-	@PostMapping("/_create")
+	/*@PostMapping("/_create")
 	@ResponseBody
 	public ResponseEntity<?> create(
 			@RequestBody RequestInfoWrapper requestInfoWrapper,
@@ -56,17 +56,17 @@ public class PaymentController {
 		System.out.print("PaymentController - create - agreement - "+agreement);
 		return new ResponseEntity<>(paymentService.generateBillXml(agreement,
 				requestInfoWrapper.getRequestInfo()), HttpStatus.OK);
-	}
+	}*/
 
 
-	/*@PostMapping("/_create")
+	@PostMapping("/_create")
 	@ResponseBody
-	public ResponseEntity<?> create(@RequestBody AgreementRequest agreementRequest, BindingResult errors) {
+	public ResponseEntity<?> create(@RequestBody AgreementRequest agreementRequest) {
 		Agreement agreement= agreementRequest.getAgreement();
 
 		return new ResponseEntity<>(paymentService.generateBillXml(agreement,
 				agreementRequest.getRequestInfo()), HttpStatus.OK);
-	}*/
+	}
 
 	@PostMapping("/_partialpaymentview")
 	@ResponseBody

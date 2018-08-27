@@ -169,17 +169,17 @@ class DueNotice extends React.Component {
     doc.setFontSize(11);
     doc.text(20,60, 'Roc.No.');
     doc.setFontType("bold");
-    doc.text(35,60, noticeNumber? agreement.noticeNumber : "");
+    doc.text(35,60, agreement.noticeNumber? agreement.noticeNumber : "");
     doc.setFontType("normal");
     doc.text(165,60, 'Dt. ');
     doc.setFontType("bold");
-    doc.text(171,60,noticeDate ? noticeDate : date);
+    doc.text(171,60,agreement.noticeDate ? agreement.noticeDate : date);
 
     doc.fromHTML("Sub:Leases-Revenu Section-Shop No <b>" + referenceNumber + " </b> in <b>" + assetName + "</b> Complex, <b> <br>"+
     locality + "</b>- Notice for dues - Reg.",20,70);
 
 
-    doc.fromHTML("Ref: 1. Lease agreement No <b>" + agreementNumber +"</b> dt <b>" + commencementDate +"</b>",20,90);
+    doc.fromHTML("Ref: 1. Lease agreement No <b>" + agreement.agreementNumber +"</b> dt <b>" + agreement.commencementDate +"</b>",20,90);
     doc.fromHTML("2. Roc No........................................dt.......................of this office",29,95);
     doc.fromHTML("3. Resolution No.................................dt.......................of Municipal Council/Standing Committee ",29,100);
 
@@ -191,7 +191,7 @@ class DueNotice extends React.Component {
 
     //doc.autoTable(columns, rows, autoTableOptions);
 
-    doc.fromHTML("You are hereby instructed to pay <b>" + totalBalance + " /- </b> within 7 days of receipt of this notice failing which" ,40,150)
+    doc.fromHTML("You are hereby instructed to pay <b>" + agreement.totalBalance + " /- </b> within 7 days of receipt of this notice failing which" ,40,150)
     doc.fromHTML("exiting lease for the said shop will be cancelled without any further correspondence,",20,155)
 
     doc.setFontType("normal");

@@ -336,10 +336,15 @@ public class UserService {
         request.validate();
         // validateOtp(request.getOtpValidationRequest());
         final User user = getUniqueUser(request.getUserName(), request.getTenantId(), request.getType());
-        if (user.getType().toString().equals(UserType.CITIZEN.toString()) && isCitizenLoginOtpBased)
+        if (user.getType().toString().equals(UserType.CITIZEN.toString()) && isCitizenLoginOtpBased) {
+        	log.info("CITIZEN forgot password flow is disabled");
             throw new InvalidUpdatePasswordRequestException();
-        if (user.getType().toString().equals(UserType.EMPLOYEE.toString()) && isEmployeeLoginOtpBased)
+        }
+        if (user.getType().toString().equals(UserType.EMPLOYEE.toString()) && isEmployeeLoginOtpBased) {
+        	log.info("EMPLOYEE forgot password flow is disabled");
             throw new InvalidUpdatePasswordRequestException();
+        }
+        user.setOtpReference(request.getOtpReference());
         validateOtp(user);
         user.updatePassword(encryptPwd(request.getNewPassword()));
         userRepository.update(user, user);

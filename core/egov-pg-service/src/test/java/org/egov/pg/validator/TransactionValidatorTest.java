@@ -2,10 +2,9 @@ package org.egov.pg.validator;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.request.User;
-import org.egov.pg.models.Bill;
-import org.egov.pg.models.BillDetail;
-import org.egov.pg.models.Transaction;
+import org.egov.pg.models.*;
 import org.egov.pg.repository.BillingRepository;
+import org.egov.pg.repository.BusinessDetailsRepository;
 import org.egov.pg.repository.TransactionRepository;
 import org.egov.pg.service.GatewayService;
 import org.egov.pg.web.models.TransactionCriteria;
@@ -38,13 +37,16 @@ public class TransactionValidatorTest {
     @Mock
     private BillingRepository billingRepository;
 
+    @Mock
+    private BusinessDetailsRepository businessDetailsRepository;
+
     private TransactionValidator validator;
     private List<Bill> bills;
     private Transaction txn;
 
     @Before
     public void setUp() {
-        validator = new TransactionValidator(gatewayService, transactionRepository, billingRepository);
+        validator = new TransactionValidator(gatewayService, transactionRepository, billingRepository, businessDetailsRepository);
         txn = Transaction.builder().txnAmount("100")
                 .txnStatus(Transaction.TxnStatusEnum.PENDING)
                 .billId("ORDER0012")
@@ -63,12 +65,15 @@ public class TransactionValidatorTest {
         User user = User.builder().userName("").name("XYZ").uuid("").tenantId("").build();
         RequestInfo requestInfo = RequestInfo.builder().userInfo(user).build();
         TransactionRequest transactionRequest = new TransactionRequest(requestInfo, txn);
+        BusinessDetailsRequestInfo businessDetails = BusinessDetailsRequestInfo.builder().code("PT").build();
 
 
         when(transactionRepository.fetchTransactions(any(TransactionCriteria.class))).thenReturn(Collections.emptyList());
         when(gatewayService.isGatewayActive(txn.getGateway())).thenReturn(true);
         when(billingRepository.fetchBill(any(RequestInfo.class), any(String.class), any(String.class))).thenReturn
                 (bills);
+        when(businessDetailsRepository.getBusinessDetails(any(), any(), any())).thenReturn(Collections.singletonList
+                (businessDetails));
 
         validator.validateCreateTxn(transactionRequest);
 
@@ -82,6 +87,7 @@ public class TransactionValidatorTest {
         User user = User.builder().userName("").name("XYZ").uuid("").tenantId("").build();
         RequestInfo requestInfo = RequestInfo.builder().userInfo(user).build();
         TransactionRequest transactionRequest = new TransactionRequest(requestInfo, txn);
+        BusinessDetailsRequestInfo businessDetails = BusinessDetailsRequestInfo.builder().code("PT").build();
 
         BillDetail billDetail = BillDetail.builder().partPaymentAllowed(true).totalAmount(new BigDecimal(10)).build();
         Bill bill = Bill.builder().billDetails(Collections.singletonList(billDetail)).build();
@@ -90,6 +96,9 @@ public class TransactionValidatorTest {
         when(gatewayService.isGatewayActive(txn.getGateway())).thenReturn(true);
         when(billingRepository.fetchBill(any(RequestInfo.class), any(String.class), any(String.class))).thenReturn
                 (bills);
+        when(businessDetailsRepository.getBusinessDetails(any(), any(), any())).thenReturn(Collections.singletonList
+                (businessDetails));
+
 
         validator.validateCreateTxn(transactionRequest);
 
@@ -103,12 +112,15 @@ public class TransactionValidatorTest {
         User user = User.builder().userName("").name("").uuid("").tenantId("").build();
         RequestInfo requestInfo = RequestInfo.builder().userInfo(user).build();
         TransactionRequest transactionRequest = new TransactionRequest(requestInfo, txn);
-
+        BusinessDetailsRequestInfo businessDetails = BusinessDetailsRequestInfo.builder().code("PT").build();
 
         when(transactionRepository.fetchTransactions(any(TransactionCriteria.class))).thenReturn(Collections.singletonList(txn));
         when(gatewayService.isGatewayActive(txn.getGateway())).thenReturn(true);
         when(billingRepository.fetchBill(any(RequestInfo.class), any(String.class), any(String.class))).thenReturn
                 (bills);
+        when(businessDetailsRepository.getBusinessDetails(any(), any(), any())).thenReturn(Collections.singletonList
+                (businessDetails));
+
 
         validator.validateCreateTxn(transactionRequest);
 
@@ -122,11 +134,13 @@ public class TransactionValidatorTest {
         User user = User.builder().userName("").name("").uuid("").tenantId("").build();
         RequestInfo requestInfo = RequestInfo.builder().userInfo(user).build();
         TransactionRequest transactionRequest = new TransactionRequest(requestInfo, txn);
-
+        BusinessDetailsRequestInfo businessDetails = BusinessDetailsRequestInfo.builder().code("PT").build();
 
         when(gatewayService.isGatewayActive(txn.getGateway())).thenReturn(false);
         when(billingRepository.fetchBill(any(RequestInfo.class), any(String.class), any(String.class))).thenReturn
                 (bills);
+        when(businessDetailsRepository.getBusinessDetails(any(), any(), any())).thenReturn(Collections.singletonList
+                (businessDetails));
 
         validator.validateCreateTxn(transactionRequest);
 

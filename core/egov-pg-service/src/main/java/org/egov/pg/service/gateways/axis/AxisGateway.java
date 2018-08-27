@@ -24,6 +24,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+import static org.egov.pg.constants.TransactionAdditionalFields.BANK_ACCOUNT_NUMBER;
+
 /**
  * AXIS Gateway implementation
  */
@@ -90,8 +92,8 @@ public class AxisGateway implements Gateway {
         fields.put("vpc_Locale", LOCALE);
         fields.put("vpc_Currency", CURRENCY);
         fields.put("vpc_ReturnURL", transaction.getCallbackUrl());
-        fields.put("vpc_MerchTxnRef", transaction.getTxnId());
-        fields.put("vpc_OrderInfo", transaction.getProductInfo());
+        fields.put("vpc_MerchTxnRef", transaction.getModule() + "-" +transaction.getTxnId());
+        fields.put("vpc_OrderInfo", (String) transaction.getAdditionalFields().get(BANK_ACCOUNT_NUMBER));
         fields.put("vpc_Amount", String.valueOf(Utils.formatAmtAsPaise(transaction.getTxnAmount())));
 
         String secureHash = AxisUtils.SHAhashAllFields(fields, SECURE_SECRET);

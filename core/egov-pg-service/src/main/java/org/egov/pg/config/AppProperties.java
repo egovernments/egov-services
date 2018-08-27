@@ -39,6 +39,14 @@ public class AppProperties {
 
     private final String collectionServicePath;
 
+    private final String bankAccountHost;
+
+    private final String bankAccountPath;
+
+    private final String businessDetailsHost;
+
+    private final String businessDetailsPath;
+
     @Autowired
     public AppProperties(Environment environment){
         this.earlyReconcileJobRunInterval = Integer.valueOf(environment.getRequiredProperty("pg.earlyReconcileJobRunInterval.mins"));
@@ -54,6 +62,10 @@ public class AppProperties {
         this.billingServicePath = environment.getRequiredProperty("egov.billingservice.path");
         this.collectionServiceHost = environment.getRequiredProperty("egov.collectionservice.host");
         this.collectionServicePath = environment.getRequiredProperty("egov.collectionservice.path");
+        this.bankAccountHost = environment.getRequiredProperty("egov.bankaccountservice.host");
+        this.bankAccountPath = environment.getRequiredProperty("egov.bankaccountservice.path");
+        this.businessDetailsHost = environment.getRequiredProperty("egov.businessdetailsservice.host");
+        this.businessDetailsPath = environment.getRequiredProperty("egov.businessdetailsservice.path");
     }
 
 }

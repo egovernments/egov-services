@@ -3,10 +3,9 @@ package org.egov.pg.validator;
 import lombok.extern.slf4j.Slf4j;
 import org.egov.common.contract.request.User;
 import org.egov.pg.constants.PgConstants;
-import org.egov.pg.models.Bill;
-import org.egov.pg.models.BillDetail;
-import org.egov.pg.models.Transaction;
+import org.egov.pg.models.*;
 import org.egov.pg.repository.BillingRepository;
+import org.egov.pg.repository.BusinessDetailsRepository;
 import org.egov.pg.repository.TransactionRepository;
 import org.egov.pg.service.GatewayService;
 import org.egov.pg.web.models.TransactionCriteria;
@@ -16,11 +15,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
+import static java.util.Collections.singletonList;
 import static java.util.Objects.isNull;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 
@@ -31,14 +28,16 @@ public class TransactionValidator {
     private GatewayService gatewayService;
     private TransactionRepository transactionRepository;
     private BillingRepository billingRepository;
+    private BusinessDetailsRepository businessDetailsRepository;
 
 
     @Autowired
     public TransactionValidator(GatewayService gatewayService, TransactionRepository transactionRepository,
-                                BillingRepository billingRepository) {
+                                BillingRepository billingRepository, BusinessDetailsRepository businessDetailsRepository) {
         this.gatewayService = gatewayService;
         this.transactionRepository = transactionRepository;
         this.billingRepository = billingRepository;
+        this.businessDetailsRepository = businessDetailsRepository;
     }
 
     /**
@@ -52,6 +51,7 @@ public class TransactionValidator {
         Map<String, String> errorMap = new HashMap<>();
         isUserDetailPresent(transaction, errorMap);
         isGatewayActive(transaction.getTransaction(), errorMap);
+        validateModule(transaction, errorMap);
         validateBillAndAddModuleId(transaction, errorMap);
 
         if (!errorMap.isEmpty())
@@ -127,6 +127,19 @@ public class TransactionValidator {
     private void isGatewayActive(Transaction transaction, Map<String, String> errorMap) {
         if (!gatewayService.isGatewayActive(transaction.getGateway()))
             errorMap.put("INVALID_PAYMENT_GATEWAY", "Invalid or inactive payment gateway provided");
+    }
+
+    private void validateModule(TransactionRequest transactionRequest, Map<String, String>
+            errorMap) {
+        Transaction transaction = transactionRequest.getTransaction();
+        List<BusinessDetailsRequestInfo> businessDetails = businessDetailsRepository.getBusinessDetails(singletonList
+                        (transaction.getModule()), transaction.getTenantId(), transactionRequest.getRequestInfo());
+
+        if (Objects.isNull(businessDetails) || businessDetails.isEmpty()) {
+            log.error("Module not found for {} and tenant {}", transaction.getModule(), transaction
+                    .getTenantId());
+            errorMap.put("INVALID_MODULE", "Invalid module provided");
+        }
     }
 
     /**

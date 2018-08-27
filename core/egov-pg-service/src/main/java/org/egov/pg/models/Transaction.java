@@ -5,10 +5,12 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
 import lombok.*;
+import org.egov.pg.constants.TransactionAdditionalFields;
 import org.egov.pg.web.models.User;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.Map;
 
 /**
  * Transaction object representing a transaction
@@ -151,6 +153,9 @@ public class Transaction {
      */
     @JsonIgnore
     private Object responseJson;
+
+    @JsonIgnore
+    private Map<TransactionAdditionalFields, Object> additionalFields;
 
 
     /**

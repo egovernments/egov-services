@@ -3,8 +3,11 @@ package org.egov.pg.service;
 import lombok.extern.slf4j.Slf4j;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.pg.constants.PgConstants;
+import org.egov.pg.constants.TransactionAdditionalFields;
 import org.egov.pg.models.AuditDetails;
+import org.egov.pg.models.BankAccount;
 import org.egov.pg.models.Transaction;
+import org.egov.pg.repository.BankAccountRepository;
 import org.egov.pg.web.models.TransactionRequest;
 import org.egov.pg.web.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,20 +17,27 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.Collections;
 
+import static java.util.Collections.singletonMap;
+
 @Slf4j
 @Service
 public class EnrichmentService {
 
     private IdGenService idGenService;
+    private BankAccountRepository bankAccountRepository;
 
     @Autowired
-    EnrichmentService(IdGenService idGenService) {
+    EnrichmentService(IdGenService idGenService, BankAccountRepository bankAccountRepository) {
         this.idGenService = idGenService;
+        this.bankAccountRepository = bankAccountRepository;
     }
 
     void enrichCreateTransaction(TransactionRequest transactionRequest) {
         Transaction transaction = transactionRequest.getTransaction();
         RequestInfo requestInfo = transactionRequest.getRequestInfo();
+
+        BankAccount bankAccount = bankAccountRepository.getBankAccountsById(requestInfo, transaction.getTenantId());
+        transaction.setAdditionalFields(singletonMap(TransactionAdditionalFields.BANK_ACCOUNT_NUMBER, bankAccount.getAccountNumber()));
 
         // Generate ID from ID Gen service and assign to txn object
         String txnId = idGenService.generateTxnId(transactionRequest);
@@ -39,7 +49,7 @@ public class EnrichmentService {
 
         String uri = UriComponentsBuilder
                 .fromHttpUrl(transaction.getCallbackUrl())
-                .queryParams(new LinkedMultiValueMap<>(Collections.singletonMap(PgConstants.PG_TXN_IN_LABEL,
+                .queryParams(new LinkedMultiValueMap<>(singletonMap(PgConstants.PG_TXN_IN_LABEL,
                         Collections.singletonList(txnId))))
                 .build()
                 .toUriString();

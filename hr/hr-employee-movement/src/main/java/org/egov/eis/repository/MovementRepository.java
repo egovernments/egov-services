@@ -233,7 +233,7 @@ public class MovementRepository {
 
 		final SimpleDateFormat inputDOB = new SimpleDateFormat("yyyy-MM-dd");
 		final SimpleDateFormat output = new SimpleDateFormat("dd/MM/yyyy");
-		Date effectiveToDate = inputDOB.parse(employeeInfo.getDob());
+		Date effectiveToDate = inputDOB.parse(employeeInfo.getUser().getDob());
 		final Calendar calendar = Calendar.getInstance();
 
 		calendar.setTime(effectiveFromDate);

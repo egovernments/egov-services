@@ -2,7 +2,6 @@ package org.egov.pg.service.gateways.axis;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
-import org.egov.pg.constants.PgConstants;
 import org.egov.pg.models.Transaction;
 import org.egov.pg.service.Gateway;
 import org.egov.pg.utils.Utils;
@@ -20,9 +19,11 @@ import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
-import static java.util.Collections.singletonMap;
 import static org.egov.pg.constants.TransactionAdditionalFields.BANK_ACCOUNT_NUMBER;
 
 /**
@@ -83,16 +84,7 @@ public class AxisGateway implements Gateway {
 
     @Override
     public URI generateRedirectURI(Transaction transaction) {
-        String customTxnId = transaction.getModule() + "-" +transaction.getTxnId();
-        String uri = UriComponentsBuilder
-                .fromHttpUrl(transaction.getCallbackUrl())
-                .queryParams(new LinkedMultiValueMap<>(singletonMap(PgConstants.PG_TXN_IN_LABEL,
-                        Collections.singletonList(customTxnId))))
-                .build()
-                .toUriString();
-        transaction.setCallbackUrl(uri);
 
-        transaction.setTxnId(customTxnId);
         Map<String, String> fields = new HashMap<>();
         fields.put("vpc_Version", VPC_VERSION);
         fields.put("vpc_Command", VPC_COMMAND_PAY);
@@ -101,7 +93,7 @@ public class AxisGateway implements Gateway {
         fields.put("vpc_Locale", LOCALE);
         fields.put("vpc_Currency", CURRENCY);
         fields.put("vpc_ReturnURL", transaction.getCallbackUrl());
-        fields.put("vpc_MerchTxnRef", transaction.getTxnId());
+        fields.put("vpc_MerchTxnRef", transaction.getModule() + "-" +transaction.getTxnId());
         fields.put("vpc_OrderInfo", (String) transaction.getAdditionalFields().get(BANK_ACCOUNT_NUMBER));
         fields.put("vpc_Amount", String.valueOf(Utils.formatAmtAsPaise(transaction.getTxnAmount())));
 
@@ -162,7 +154,7 @@ public class AxisGateway implements Gateway {
         fields.put("vpc_Command", VPC_COMMAND_STATUS);
         fields.put("vpc_AccessCode", VPC_ACCESS_CODE);
         fields.put("vpc_Merchant", MERCHANT_ID);
-        fields.put("vpc_MerchTxnRef", currentStatus.getTxnId());
+        fields.put("vpc_MerchTxnRef", currentStatus.getModule() + "-" +currentStatus.getTxnId());
         fields.put("vpc_User", AMA_USER);
         fields.put("vpc_Password", AMA_PWD);
 

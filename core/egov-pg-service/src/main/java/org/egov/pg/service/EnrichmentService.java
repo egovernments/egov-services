@@ -12,6 +12,10 @@ import org.egov.pg.web.models.TransactionRequest;
 import org.egov.pg.web.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.web.util.UriComponentsBuilder;
+
+import java.util.Collections;
 
 import static java.util.Collections.singletonMap;
 
@@ -42,15 +46,13 @@ public class EnrichmentService {
         transaction.setTxnStatus(Transaction.TxnStatusEnum.PENDING);
         transaction.setTxnStatusMsg(PgConstants.TXN_INITIATED);
 
-        // Move callback url to Gateways for now
-
-//        String uri = UriComponentsBuilder
-//                .fromHttpUrl(transaction.getCallbackUrl())
-//                .queryParams(new LinkedMultiValueMap<>(singletonMap(PgConstants.PG_TXN_IN_LABEL,
-//                        Collections.singletonList(txnId))))
-//                .build()
-//                .toUriString();
-//        transaction.setCallbackUrl(uri);
+        String uri = UriComponentsBuilder
+                .fromHttpUrl(transaction.getCallbackUrl())
+                .queryParams(new LinkedMultiValueMap<>(singletonMap(PgConstants.PG_TXN_IN_LABEL,
+                        Collections.singletonList(txnId))))
+                .build()
+                .toUriString();
+        transaction.setCallbackUrl(uri);
 
         AuditDetails auditDetails = AuditDetails.builder()
                 .createdBy(requestInfo.getUserInfo() != null ? requestInfo.getUserInfo().getUuid() : null)

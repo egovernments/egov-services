@@ -93,6 +93,52 @@ class DueNotice extends React.Component {
     var ulbType = "MUNICIPALITY/MUNICIPAL CORPORATION";
     var cityGrade = !localStorage.getItem("city_grade") || localStorage.getItem("city_grade") == "undefined" ? (localStorage.setItem("city_grade", JSON.stringify(commonApiPost("tenant", "v1/tenant", "_search", { code: tenantId }).responseJSON["tenant"][0]["city"]["ulbGrade"] || {})), JSON.parse(localStorage.getItem("city_grade"))) : JSON.parse(localStorage.getItem("city_grade"));
 
+    var autoTableOptions = {
+      tableLineColor: [0, 0, 0],
+      tableLineWidth: 0.2,
+      styles: {
+          lineColor: [0, 0, 0],
+          lineWidth: 0.2,
+      },
+      headerStyles: {
+          textColor: [0, 0, 0],
+          fillColor: [255, 255, 255],
+          overflow: 'linebreak',
+          columnWidth: 'wrap'
+      },
+      bodyStyles: {
+          fillColor: [255, 255, 255],
+          textColor: [0, 0, 0],
+          overflow: 'linebreak',
+          columnWidth: 'wrap'
+      },
+      alternateRowStyles: {
+          fillColor: [255, 255, 255]
+      }, startY: 135
+  };
+
+
+  var columns = [
+      { title: "Due Month-Year", dataKey: "dueYear" },
+      { title: "Due Date", dataKey: "dueDate" },
+      { title: "Demand/Rent", dataKey: "rent" },
+      { title: "SGST", dataKey: "sgst" },
+      { title: "CGST", dataKey: "cgst" },
+      { title: "Penalty/Interest if any on rent", dataKey: "penalty" },
+      { title: "Total", dataKey: "total" },
+  ];
+
+  var rows = [
+      { "dueYear": agreement.installmentFromDate,
+       "dueDate": agreement.installmentToDate,
+       "rent":agreement.rent,
+       "sgst":agreement.sgst,
+       "cgst":agreement.cgst,
+       "penalty":agreement.penalty,
+       "total":agreement.totalBalance
+      },
+  ];
+
     if (cityGrade.toLowerCase() === 'corp') {
         ulbType = "MUNICIPAL CORPORATION";
     }
@@ -123,17 +169,17 @@ class DueNotice extends React.Component {
     doc.setFontSize(11);
     doc.text(20,60, 'Roc.No.');
     doc.setFontType("bold");
-    doc.text(35,60, agreement.noticeNumber? agreement.noticeNumber : "");
+    doc.text(35,60, noticeNumber? agreement.noticeNumber : "");
     doc.setFontType("normal");
     doc.text(165,60, 'Dt. ');
     doc.setFontType("bold");
-    doc.text(171,60, agreement.noticeDate ? agreement.noticeDate : date);
+    doc.text(171,60,noticeDate ? noticeDate : date);
 
     doc.fromHTML("Sub:Leases-Revenu Section-Shop No <b>" + referenceNumber + " </b> in <b>" + assetName + "</b> Complex, <b> <br>"+
     locality + "</b>- Notice for dues - Reg.",20,70);
 
 
-    doc.fromHTML("Ref: 1. Lease agreement No <b>" + agreement.agreementNumber +"</b> dt <b>" + agreement.commencementDate +"</b>",20,90);
+    doc.fromHTML("Ref: 1. Lease agreement No <b>" + agreementNumber +"</b> dt <b>" + commencementDate +"</b>",20,90);
     doc.fromHTML("2. Roc No........................................dt.......................of this office",29,95);
     doc.fromHTML("3. Resolution No.................................dt.......................of Municipal Council/Standing Committee ",29,100);
 
@@ -143,20 +189,22 @@ class DueNotice extends React.Component {
     doc.fromHTML(" Shopping Complex  are to be paid by 5th of succeeding month."+
     "But it is observed that rental payments <br> are pending for the said lease since <b>" +lastPaid  + "</b>",20,132);
 
-    doc.fromHTML("You are hereby instructed to pay <b>" + agreement.totalBalance + " /- </b> within 7 days of receipt of this notice failing which" ,40,150)
-    doc.fromHTML("exiting lease for the said shop will be cancelled without any further correspondence,",20,155)
+    doc.autoTable(columns, rows, autoTableOptions);
+
+    doc.fromHTML("You are hereby instructed to pay <b>" + totalBalance + " /- </b> within 7 days of receipt of this notice failing which" ,40,150)
+    doc.fromHTML("exiting lease for the said shop will be cancelled without any further correspondence,",20,185)
 
     doc.setFontType("normal");
     doc.setFontSize(11)
-    doc.text(165,187, "Commissioner",'center');
-    doc.text(165,192, tenantId.split(".")[1].toUpperCase(),'center');
-    doc.text(163,197,"(Municipality/Municipal Corporation)",'center')
+    doc.text(165,217, "Commissioner",'center');
+    doc.text(165,222, tenantId.split(".")[1].toUpperCase(),'center');
+    doc.text(163,227,"(Municipality/Municipal Corporation)",'center')
 
     doc.setFontType("normal");
     doc.setFontSize(11)
-    doc.text(22,207, "To");
-    doc.text(22,212, "The Leaseholder");
-    doc.text(22,217,"Copy to the concerned officials for necessary action");
+    doc.text(22,237, "To");
+    doc.text(22,242, "The Leaseholder");
+    doc.text(22,247,"Copy to the concerned officials for necessary action");
 
     var blob = doc.output('blob');
 

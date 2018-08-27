@@ -449,20 +449,13 @@ class JudgementAgreement extends React.Component {
       var department = [];
     }
 
-
-    var cityGrade = !localStorage.getItem("city_grade") || localStorage.getItem("city_grade") == "undefined" ? (localStorage.setItem("city_grade", JSON.stringify(commonApiPost("tenant", "v1/tenant", "_search", { code: tenantId }).responseJSON["tenant"][0]["city"]["ulbGrade"] || {})), JSON.parse(localStorage.getItem("city_grade"))) : JSON.parse(localStorage.getItem("city_grade"));
-    var agreementType = "Judgement Municipality Agreement";
-    if (cityGrade.toLowerCase() === 'corp') {
-      agreementType = "Judgement Corporation Agreement";
-    }
-
-    getDesignations(null, function (designations) {
+  getDesignations(null,null, function (designations) {
       _this.setState({
         ..._this.state,
         designationList: designations
       });
 
-    }, agreementType);
+    }, "Judgement LeaseAgreement");
 
 
     var agreement = commonApiPost("lams-services",

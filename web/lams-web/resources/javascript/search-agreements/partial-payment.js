@@ -252,10 +252,23 @@ class PartialPayment extends React.Component {
 
         let length = document.getElementsByClassName("checkbox").length;
         let lastChecked;
+        let alteastOneChecked = false;
 
         for (var i = length - 1; i >= 0; i--) {
             if (document.getElementById("checkbox_" + i).checked) {
+                alteastOneChecked = true;
+            }
+        }
+
+        if (!alteastOneChecked && length > 0) {
+            return showError("Kindly select atleast one checkboxe to collect tax");
+        }
+
+        for (var i = length - 1; i >= 0; i--) {
+            console.log("Lastchecked ", i , document.getElementById("checkbox_" + i).checked)
+            if (document.getElementById("checkbox_" + i).checked) {
                 lastChecked = i;
+                break;
             }
         }
 
@@ -266,7 +279,10 @@ class PartialPayment extends React.Component {
 
         let demandDetails = this.state.partialPayment.legacyDemands[0].demandDetails;
 
-        body.legacyDemands[0].demandDetails = this.getSelectedDemands(demandDetails, this.state.partialPaymentRows[lastChecked].reason, this.state.partialPaymentRows[lastChecked].taxPeriod);
+        if (length > 0) {
+            console.log("lastChecked", lastChecked)
+            body.legacyDemands[0].demandDetails = this.getSelectedDemands(demandDetails, this.state.partialPaymentRows[lastChecked].reason, this.state.partialPaymentRows[lastChecked].taxPeriod);
+        }
 
         $.ajax({
             url: baseUrl + "/lams-services/payment/_create?tenantId=" + tenantId,
@@ -314,16 +330,30 @@ class PartialPayment extends React.Component {
         //onChange={() => this.handleChange(index, data.reason, data.taxPeriod)} 
 
         let partialPayment = this.state.partialPaymentRows;
+        let { proceed} = this;
+
+        const dispalyButton = function () {
+
+            if (partialPayment.length > 0) {
+                return (<button type="submit" className="btn btn-submit" onClick={proceed}>
+                    Proceed
+                    </button>)
+            } else {
+                return (<button type="submit" className="btn btn-submit" onClick={proceed} disabled>
+                    Proceed
+                    </button>)
+            }
+
+
+        }
 
         const tableBody = function () {
 
             if (partialPayment.length === 0) {
-
-                return <tr> No Legacy demands to display. Please click on proceed </tr>
-
+                return (<tr> <td colSpan="8" style={{ textAlign: "center" }}> No Legacy demands to display. Please click on proceed </td></tr>);
             }
 
-           return partialPayment.map((data, index) => {
+            return partialPayment.map((data, index) => {
                 //console.log("data from map",data);
                 if (data.reason === 'rent') {
                     return (
@@ -385,13 +415,11 @@ class PartialPayment extends React.Component {
                         </tr>
                     </thead>
                     <tbody>
-                        {tableBody}
+                        {tableBody()}
                     </tbody>
                 </table>
                 <div className="text-center">
-                    <button type="submit" className="btn btn-submit" onClick={this.proceed}>
-                        Proceed
-                    </button>
+                    {dispalyButton()}
                     &nbsp;&nbsp;
                     <button
                         type="button"

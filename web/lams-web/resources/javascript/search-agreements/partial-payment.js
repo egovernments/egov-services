@@ -12,15 +12,15 @@ class PartialPayment extends React.Component {
     }
 
     componentWillMount() {
+    
+        try{
         var data = commonApiPost("lams-services", "payment", "_partialpaymentview", {
             agreementNumber: getUrlVars()["agreementNumber"],
             //agreementNumber: "LA-18-10160487",
             tenantId
         });
 
-
         var demandDetails = data.responseJSON.legacyDemands[0].demandDetails;
-
 
         var demands = [];
         var rentDemands = [];
@@ -117,7 +117,7 @@ class PartialPayment extends React.Component {
             if (data.taxReasonCode.toLowerCase() === "rent" ||
                 data.taxReasonCode.toLowerCase() === "penalty" ||
                 data.taxReasonCode.toLowerCase() === "state_gst" ||
-                data.taxReasonCode.toLowerCase() === "central_gst"||
+                data.taxReasonCode.toLowerCase() === "central_gst" ||
                 data.taxReasonCode.toLowerCase() === "service_tax"
             ) {
                 var tempKey = 'rent' + data.taxPeriod
@@ -178,6 +178,13 @@ class PartialPayment extends React.Component {
         });
 
         console.log("data", Object.values(objectItem));
+    }catch(e){
+        this.setState({
+            ...this.state,
+            partialPayment: {},
+            partialPaymentRows:[]
+        });
+    }
     }
 
     close() {
@@ -250,11 +257,11 @@ class PartialPayment extends React.Component {
 
         let body = this.state.partialPayment;
 
-
         let length = document.getElementsByClassName("checkbox").length;
         let lastChecked;
         let alteastOneChecked = false;
 
+        //Check atleast one is checked
         for (var i = length - 1; i >= 0; i--) {
             if (document.getElementById("checkbox_" + i).checked) {
                 alteastOneChecked = true;
@@ -265,8 +272,15 @@ class PartialPayment extends React.Component {
             return showError("Kindly select atleast one checkboxe to collect tax");
         }
 
+        //If the source is system then check for goodwill and adv tax
+        if(body.source === "SYSTEM"){
+            if(!document.getElementById("checkbox_1").checked){
+                return showError("Please select Advanced tax and Good will Amount.");
+            }
+        }
+        
         for (var i = length - 1; i >= 0; i--) {
-            console.log("Lastchecked ", i , document.getElementById("checkbox_" + i).checked)
+            console.log("Lastchecked ", i, document.getElementById("checkbox_" + i).checked)
             if (document.getElementById("checkbox_" + i).checked) {
                 lastChecked = i;
                 break;
@@ -331,7 +345,7 @@ class PartialPayment extends React.Component {
         //onChange={() => this.handleChange(index, data.reason, data.taxPeriod)} 
 
         let partialPayment = this.state.partialPaymentRows;
-        let { proceed} = this;
+        let { proceed } = this;
 
         const dispalyButton = function () {
 
@@ -353,20 +367,20 @@ class PartialPayment extends React.Component {
             if (partialPayment.length === 0) {
                 return (<tr> <td colSpan="8" style={{ textAlign: "center" }}> No Legacy demands to display.</td></tr>);
             }
-
+            else {
             return partialPayment.map((data, index) => {
                 //console.log("data from map",data);
                 if (data.reason === 'rent') {
                     return (
                         <tr>
                             <td><input type="checkbox" className="checkbox" id={"checkbox_" + index} /></td>
-                            <td>{"Rent, "+data.taxPeriod}</td>
-                            <td>{data.RENT?data.RENT:0}</td>
+                            <td>{"Rent, " + data.taxPeriod}</td>
+                            <td>{data.RENT ? data.RENT : 0}</td>
                             <td>{data.penalty ? data.penalty : 0}</td>
-                            <td>{data.CENTRAL_GST?data.CENTRAL_GST:0}</td>
-                            <td>{data.STATE_GST?data.STATE_GST:0}</td>
-                            <td>{data.SERVICE_TAX?data.SERVICE_TAX:0}</td>
-                            <td>{(data.STATE_GST ? data.STATE_GST : 0) + (data.CENTRAL_GST ? data.CENTRAL_GST : 0) + (data.RENT ? data.RENT : 0) + (data.SERVICE_TAX?data.SERVICE_TAX:0) }</td>
+                            <td>{data.CENTRAL_GST ? data.CENTRAL_GST : 0}</td>
+                            <td>{data.STATE_GST ? data.STATE_GST : 0}</td>
+                            <td>{data.SERVICE_TAX ? data.SERVICE_TAX : 0}</td>
+                            <td>{(data.STATE_GST ? data.STATE_GST : 0) + (data.CENTRAL_GST ? data.CENTRAL_GST : 0) + (data.RENT ? data.RENT : 0) + (data.SERVICE_TAX ? data.SERVICE_TAX : 0)}</td>
                         </tr>
                     )
                 }
@@ -375,10 +389,10 @@ class PartialPayment extends React.Component {
                         <tr>
                             <td><input type="checkbox" className="checkbox" id={"checkbox_" + index} /></td>
                             <td>{"Goodwill Amount, " + data.taxPeriod}</td>
-                            <td>{data["GOODWILL_AMOUNT"]?data["GOODWILL_AMOUNT"]:0}</td>
+                            <td>{data["GOODWILL_AMOUNT"] ? data["GOODWILL_AMOUNT"] : 0}</td>
                             <td>{0}</td>
-                            <td>{data['GW_CGST']?data['GW_CGST']:0}</td>
-                            <td>{data['GW_SGST']?data['GW_SGST']:0}</td>
+                            <td>{data['GW_CGST'] ? data['GW_CGST'] : 0}</td>
+                            <td>{data['GW_SGST'] ? data['GW_SGST'] : 0}</td>
                             <td>{0}</td>
                             <td>{(data['GOODWILL_AMOUNT'] ? data['GOODWILL_AMOUNT'] : 0) + (data['GW_CGST'] ? data['GW_CGST'] : 0) + (data["GW_SGST"] ? data["GW_SGST"] : 0)}</td>
                         </tr>
@@ -389,16 +403,16 @@ class PartialPayment extends React.Component {
                         <tr>
                             <td><input type="checkbox" className="checkbox" id={"checkbox_" + index} /></td>
                             <td>{"Advanced Tax, " + data.taxPeriod}</td>
-                            <td>{data["ADVANCE_TAX"]?data["ADVANCE_TAX"]:0}</td>
+                            <td>{data["ADVANCE_TAX"] ? data["ADVANCE_TAX"] : 0}</td>
                             <td>{0}</td>
-                            <td>{data['ADV_CGST']?data['ADV_CGST']:0}</td>
-                            <td>{data['ADV_SGST']?data['ADV_SGST']:0}</td>
+                            <td>{data['ADV_CGST'] ? data['ADV_CGST'] : 0}</td>
+                            <td>{data['ADV_SGST'] ? data['ADV_SGST'] : 0}</td>
                             <td>{0}</td>
                             <td>{(data['ADVANCE_TAX'] ? data['ADVANCE_TAX'] : 0) + (data['ADV_CGST'] ? data['ADV_CGST'] : 0) + (data["ADV_SGST"] ? data["ADV_SGST"] : 0)}</td>
                         </tr>
                     )
                 }
-            })
+            })}
         }
         return (
             <div>

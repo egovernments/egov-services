@@ -350,7 +350,7 @@ class PartialPayment extends React.Component {
         const tableBody = function () {
 
             if (partialPayment.length === 0) {
-                return (<tr> <td colSpan="8" style={{ textAlign: "center" }}> No Legacy demands to display. Please click on proceed </td></tr>);
+                return (<tr> <td colSpan="8" style={{ textAlign: "center" }}> No Legacy demands to display.</td></tr>);
             }
 
             return partialPayment.map((data, index) => {
@@ -360,10 +360,10 @@ class PartialPayment extends React.Component {
                         <tr>
                             <td><input type="checkbox" className="checkbox" id={"checkbox_" + index} /></td>
                             <td>{data.taxPeriod}</td>
-                            <td>{data.RENT}</td>
+                            <td>{data.RENT?data.RENT:0}</td>
                             <td>{data.penalty ? data.penalty : 0}</td>
-                            <td>{data.CENTRAL_GST}</td>
-                            <td>{data.STATE_GST}</td>
+                            <td>{data.CENTRAL_GST?data.CENTRAL_GST:0}</td>
+                            <td>{data.STATE_GST?data.STATE_GST:0}</td>
                             <td>{0}</td>
                             <td>{data.STATE_GST ? data.STATE_GST : 0 + data.CENTRAL_GST ? data.CENTRAL_GST : 0 + data.RENT ? data.RENT : 0}</td>
                         </tr>
@@ -374,10 +374,10 @@ class PartialPayment extends React.Component {
                         <tr>
                             <td><input type="checkbox" className="checkbox" id={"checkbox_" + index} /></td>
                             <td>{"Goodwill Amount, " + data.taxPeriod.split(',')[1]}</td>
-                            <td>{data["GOODWILL_AMOUNT"]}</td>
+                            <td>{data["GOODWILL_AMOUNT"]?data["GOODWILL_AMOUNT"]:0}</td>
                             <td>{0}</td>
-                            <td>{data['GW_CGST']}</td>
-                            <td>{data['GW_SGST']}</td>
+                            <td>{data['GW_CGST']?data['GW_CGST']:0}</td>
+                            <td>{data['GW_SGST']?data['GW_SGST']:0}</td>
                             <td>{0}</td>
                             <td>{data['GOODWILL_AMOUNT'] ? data['GOODWILL_AMOUNT'] : 0 + data['GW_CGST'] ? data['GW_CGST'] : 0 + data["GW_SGST"] ? data["GW_SGST"] : 0}</td>
                         </tr>
@@ -388,10 +388,10 @@ class PartialPayment extends React.Component {
                         <tr>
                             <td><input type="checkbox" className="checkbox" id={"checkbox_" + index} /></td>
                             <td>{"Advanced Tax, " + data.taxPeriod.split(',')[1]}</td>
-                            <td>{data["ADVANCE_TAX"]}</td>
+                            <td>{data["ADVANCE_TAX"]?data["ADVANCE_TAX"]:0}</td>
                             <td>{0}</td>
-                            <td>{data['ADV_CGST']}</td>
-                            <td>{data['ADV_SGST']}</td>
+                            <td>{data['ADV_CGST']?data['ADV_CGST']:0}</td>
+                            <td>{data['ADV_SGST']?data['ADV_SGST']:0}</td>
                             <td>{0}</td>
                             <td>{data['ADVANCE_TAX'] ? data['ADVANCE_TAX'] : 0 + data['ADV_CGST'] ? data['ADV_CGST'] : 0 + data["ADV_SGST"] ? data["ADV_SGST"] : 0}</td>
                         </tr>

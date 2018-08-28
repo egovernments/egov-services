@@ -80,7 +80,8 @@ public ColumnDetail(String label, TypeEnum type, String name) {
     SINGLEVALUELIST("singlevaluelist"),
     SINGLEVALUELISTAC("singlevaluelistac"),
     MULTIVALUELIST("multivaluelist"),
-    MULTIVALUELISTAC("multivaluelistac");
+    MULTIVALUELISTAC("multivaluelistac"),
+    BOUNDARYLIST("boundarylist");
 
     private String value;
 

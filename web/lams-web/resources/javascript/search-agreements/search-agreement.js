@@ -482,11 +482,12 @@ class AgreementSearch extends React.Component {
         break;
         case "collTax":
 
-        var data = commonApiPost("lams-services", "payment", "_partialpaymentview", {agreementNumber:number, tenantId});
+        var data = commonApiPost("lams-services", "payment", "_partialpaymentview", {agreementNumber:number, tenantId, acknowledgementNumber});
         let demandDetails = data.responseJSON.legacyDemands && data.responseJSON.legacyDemands[0].demandDetails? data.responseJSON.legacyDemands[0].demandDetails.length : 0;
-        if(demandDetails > 0 && number)
+        if(demandDetails > 0)
         window.open(
-          "app/search-agreement/partial-payment.html?agreementNumber=" + number,
+          (number?"app/search-agreement/partial-payment.html?agreementNumber=" + number + "&acknowledgementNumber=" + acknowledgementNumber:
+          "app/search-agreement/partial-payment.html?acknowledgementNumber=" + acknowledgementNumber),
           "fs",
           "width=800,height=650,fullscreen=yes"
         );
@@ -1062,7 +1063,7 @@ class AgreementSearch extends React.Component {
     } = this.state.searchSet;
     const showCollectTaxOption = function(item) {
       if (
-        !hideCollectTaxOption &&
+        hideCollectTaxOption &&
         !(item.action == "CREATE" && item.status == "REJECTED")
       ) {
         return (<option value="collTax">Collect Tax</option>);

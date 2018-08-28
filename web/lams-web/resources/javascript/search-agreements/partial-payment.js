@@ -15,7 +15,8 @@ class PartialPayment extends React.Component {
 
         try {
             var data = commonApiPost("lams-services", "payment", "_partialpaymentview", {
-                agreementNumber: getUrlVars()["agreementNumber"],
+                agreementNumber:getUrlVars()["agreementNumber"], 
+                acknowledgementNumber:getUrlVars()["acknowledgementNumber"],
                 tenantId
             });
 
@@ -185,7 +186,7 @@ class PartialPayment extends React.Component {
             });
         }
 
-        if (!getUrlVars()["agreementNumber"]) {
+        if (!getUrlVars()["agreementNumber"] && !getUrlVars()["acknowledgementNumber"]) {
             this.setState({
                 ...this.state,
                 partialPayment: {},

@@ -488,7 +488,7 @@ class AgreementSearch extends React.Component {
         window.open(
           "app/search-agreement/partial-payment.html?agreementNumber=" + number,
           "fs",
-          "width=800,fullscreen=yes"
+          "width=800,height=650,fullscreen=yes"
         );
         else
         return showError("Rent is fully paid or no demand details found for collection");

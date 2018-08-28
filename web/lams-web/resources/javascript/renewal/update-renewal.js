@@ -726,6 +726,13 @@ class UpdateRenewal extends React.Component {
             defaultDate: ""
         });
 
+        $('#renewalFromDate').datepicker({
+            format: 'dd/mm/yyyy',
+            startDate : _this.state.agreement.renewalDate,
+            autoclose: true,
+            defaultDate: ""
+          });
+
         $('#renewalOrderDate').on('change blur', function (e) {
             _this.setState({
                 agreement: {
@@ -1352,6 +1359,32 @@ class UpdateRenewal extends React.Component {
                                 </div>
                             </div>
                         </div>
+                        <div className="row">
+                            <div className="col-sm-6">
+                                <div className="row">
+                                    <div className="col-sm-6 label-text">
+                                        <label htmlFor="commencementDate">Allotment Date :</label>
+                                    </div>
+                                    <div className="col-sm-6 label-view-text">
+                                        <label id="commencementDate" name="commencementDate">
+                                            {agreement.commencementDate ? agreement.commencementDate : "N/A"}
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="col-sm-6">
+                                <div className="row">
+                                    <div className="col-sm-6 label-text">
+                                        <label htmlFor="expiryDate">Expiry Date :</label>
+                                    </div>
+                                    <div className="col-sm-6 label-view-text">
+                                        <label id="expiryDate" name="expiryDate">
+                                            {agreement.expiryDate ? agreement.expiryDate: "N/A"}
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             );
@@ -1395,7 +1428,43 @@ class UpdateRenewal extends React.Component {
                                 </div>
                             </div>
                         </div>
-
+                        <div className="row">
+                            <div className="col-sm-6">
+                                <div className="row">
+                                    <div className="col-sm-6 label-text">
+                                        <label for="renewalFromDate">Renewal From Date
+                                                <span>*</span>
+                                        </label>
+                                    </div>
+                                    <div className="col-sm-6">
+                                    <div className="text-no-ui">
+                                        <span className="glyphicon glyphicon-calendar"></span>
+                                        <input type="text" className="datepicker" name="renewalFromDate" id="renewalFromDate" value={agreement.renewalDate}
+                                             required disabled/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="col-sm-6">
+                                <div className="row">
+                                    <div className="col-sm-6 label-text">
+                                        <label for="timePeriod">Time Period
+                                    <span>*</span>
+                                        </label>
+                                    </div>
+                                    <div className="col-sm-6">
+                                        <select name="timePeriod" id="timePeriod" className="selectStyle" value={agreement.timePeriod} onChange={(e) => { handleChange(e, "timePeriod") }} required disabled >
+                                            <option value="">Select </option>
+                                            <option value="1">1</option>
+                                            <option value="2">2</option>
+                                            <option value="3">3 </option>
+                                            <option value="4">4 </option>
+                                            <option value="5">5 </option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         <div className="row">
                             <div className="col-sm-6">
                                 <div className="row">
@@ -1416,18 +1485,14 @@ class UpdateRenewal extends React.Component {
                             <div className="col-sm-6">
                                 <div className="row">
                                     <div className="col-sm-6 label-text">
-                                        <label for="timePeriod">Time Period
+                                        <label for="rentIncrementMethod">Method by increase in rent calculated during Renewal
                                     <span>*</span>
                                         </label>
                                     </div>
                                     <div className="col-sm-6">
-                                        <select name="timePeriod" id="timePeriod" className="selectStyle" value={agreement.timePeriod} onChange={(e) => { handleChange(e, "timePeriod") }} required disabled >
-                                            <option value="">Select </option>
-                                            <option value="1">1</option>
-                                            <option value="2">2</option>
-                                            <option value="3">3 </option>
-                                            <option value="4">4 </option>
-                                            <option value="5">5 </option>
+                                        <select name="rentIncrementMethod" id="rentIncrementMethod" value={agreement.rentIncrementMethod.id} className="selectStyle" onChange={(e) => { handleChangeTwoLevel(e, "rentIncrementMethod", "id") }} required disabled >
+                                            <option value="">Choose Percentage</option>
+                                            {renderOptionForRentInc(rentInc)}
                                         </select>
                                     </div>
                                 </div>
@@ -1494,19 +1559,7 @@ class UpdateRenewal extends React.Component {
 
                         <div className="row">
                             <div className="col-sm-6" id="rentCalculatedMethod">
-                                <div className="row">
-                                    <div className="col-sm-6 label-text">
-                                        <label for="rentIncrementMethod">Method by increase in rent calculated during Renewal
-                                    <span>*</span>
-                                        </label>
-                                    </div>
-                                    <div className="col-sm-6">
-                                        <select name="rentIncrementMethod" id="rentIncrementMethod" value={agreement.rentIncrementMethod.id} className="selectStyle" onChange={(e) => { handleChangeTwoLevel(e, "rentIncrementMethod", "id") }} required disabled >
-                                            <option value="">Choose Percentage</option>
-                                            {renderOptionForRentInc(rentInc)}
-                                        </select>
-                                    </div>
-                                </div>
+                                
                             </div>
                             <div className="col-sm-6">
                                 <div className="row">

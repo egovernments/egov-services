@@ -188,9 +188,12 @@ public class MovementService {
 			// validateEmployeeNextPositionWithCurrent
 			if (employee != null && employee.getId() != null && formattedDOB != null ) {
 				for (Assignment assignment : employee.getAssignments()) {
-					if(((assignment.getFromDate().after(movement.getEffectiveFrom()) && assignment.getFromDate().before(dor)) ||
-							(assignment.getToDate().after(movement.getEffectiveFrom()) && assignment.getToDate().before(dor)) ||
-							(assignment.getFromDate().before(movement.getEffectiveFrom()) && assignment.getToDate().after(dor))) &&
+					Date formattedFD = output.parse(assignment.getFromDate());
+					Date formattedTD = output.parse(assignment.getToDate());
+
+					if(((formattedFD.after(movement.getEffectiveFrom()) && formattedFD.before(dor)) ||
+							(formattedTD.after(movement.getEffectiveFrom()) && formattedTD.before(dor)) ||
+							(formattedFD.before(movement.getEffectiveFrom()) && formattedTD.after(dor))) &&
 									movement.getPositionAssigned().equals(assignment.getPosition())) {
 						message = message + applicationConstants
 								.getErrorMessage(applicationConstants.ERR_MOVEMENT_EMPLOYEE_POSITION_VALIDATE) + ", ";
@@ -375,6 +378,8 @@ public class MovementService {
 	}
 
 	private List<Movement> validateUpdate(final MovementRequest movementRequest) {
+		final SimpleDateFormat output = new SimpleDateFormat("dd/MM/yyyy");
+		try {
 		for (final Movement movement : movementRequest.getMovement()) {
 			String errorMsg = "";
 			String message = "";
@@ -386,11 +391,14 @@ public class MovementService {
 				final EmployeeInfo employee = employeeService.getEmployee(movement, movementRequest.getRequestInfo());
 				List<Assignment> assignments = employee.getAssignments().stream().filter(assignment -> assignment.getIsPrimary().equals(true)).collect(Collectors.toList());
 				for (Assignment assign : assignments) {
-					if (assign.getFromDate().after(movement.getEffectiveFrom())) {
+					Date FormatFD = output.parse(assign.getFromDate());
+
+					if (FormatFD.after(movement.getEffectiveFrom())) {
 						message = applicationConstants
 								.getErrorMessage(ApplicationConstants.ERR_MOVEMENT_OVERLAP_ASSIGNMENTDATE) + ", ";
 					}
 					setErrorMessage(movement, message);
+
 				}
 				Date retirementDate = null;
 				if (employee.getDateOfRetirement() != null && !employee.getDateOfRetirement().equals(""))
@@ -416,8 +424,10 @@ public class MovementService {
 				// validateEmployeeNextDesignationWithCurrent
 				if (employee != null) {
 					for (Assignment assignment : employee.getAssignments()) {
-						if (assignment.getFromDate().before(movement.getEffectiveFrom())
-								&& assignment.getToDate().after(movement.getEffectiveFrom())
+						Date formatFD = output.parse(assignment.getFromDate());
+						Date formatTD = output.parse(assignment.getToDate());
+						if (formatFD.before(movement.getEffectiveFrom())
+								&& formatTD.after(movement.getEffectiveFrom())
 								&& movement.getPositionAssigned().equals(assignment.getPosition())) {
 							message = message + applicationConstants.ERR_MOVEMENT_EMPLOYEE_POSITION_VALIDATE + ", ";
 						}
@@ -445,7 +455,8 @@ public class MovementService {
 				if (!movement.getCheckEmployeeExists() && employeeInfo != null && !employeeInfo.equals("")) {
 					List<Assignment> assignments = employee.getAssignments().stream().filter(assignment -> assignment.getIsPrimary().equals(true)).collect(Collectors.toList());
 					for (Assignment assign : assignments) {
-						if (assign.getFromDate().after(movement.getEffectiveFrom())) {
+						Date formatDate = output.parse(assign.getFromDate());
+						if (formatDate.after(movement.getEffectiveFrom())) {
 							message = applicationConstants
 									.getErrorMessage(ApplicationConstants.ERR_MOVEMENT_OVERLAP_ASSIGNMENTDATE) + ", ";
 						}
@@ -455,6 +466,9 @@ public class MovementService {
 
 				movement.setErrorMsg(errorMsg.replace(", ", ","));
 			}
+		}
+		} catch (ParseException e) {
+			e.printStackTrace();
 		}
 		return movementRequest.getMovement();
 	}

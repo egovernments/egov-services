@@ -233,7 +233,8 @@ public class MovementRepository {
 
 		final SimpleDateFormat inputDOB = new SimpleDateFormat("yyyy-MM-dd");
 		final SimpleDateFormat output = new SimpleDateFormat("dd/MM/yyyy");
-		Date effectiveToDate = inputDOB.parse(employeeInfo.getUser().getDob());
+
+        Date effectiveToDate = inputDOB.parse(employeeInfo.getUser().getDob());
 		final Calendar calendar = Calendar.getInstance();
 
 		calendar.setTime(effectiveFromDate);
@@ -241,7 +242,10 @@ public class MovementRepository {
 		final Date yesterday = calendar.getTime();
 		final Employee employee = new Employee();
 
-		if (employeeInfo.getDateOfRetirement() != null && !employeeInfo.getDateOfRetirement().equals(""))
+        String formattedFromDate = output.format(effectiveFromDate);
+        String formattedToDate = output.format(yesterday);
+
+        if (employeeInfo.getDateOfRetirement() != null && !employeeInfo.getDateOfRetirement().equals(""))
 			effectiveToDate = employeeInfo.getDateOfRetirement();
 		else {
 			Calendar c = Calendar.getInstance();
@@ -259,9 +263,12 @@ public class MovementRepository {
 		employee.getAssignments().addAll(employeeInfo.getAssignments());
 
 		for (final Assignment employeeAssignment : employee.getAssignments()) {
-			if (employeeAssignment.getFromDate().before(effectiveFromDate)
-					&& employeeAssignment.getToDate().after(effectiveFromDate))
-				employeeAssignment.setToDate(yesterday);
+            Date formattedFD = output.parse(employeeAssignment.getFromDate());
+            Date formattedTD = output.parse(employeeAssignment.getToDate());
+
+            if (formattedFD.before(effectiveFromDate)
+					&& formattedTD.after(effectiveFromDate))
+				employeeAssignment.setToDate(formattedToDate);
 			//employeeAssignment.setIsPrimary(false);
 		}
 		if (movement.getTypeOfMovement().equals(TypeOfMovement.PROMOTION) || (movement.getTypeOfMovement().equals(TypeOfMovement.TRANSFER) &&
@@ -278,11 +285,11 @@ public class MovementRepository {
 			assignment.setDepartment(movement.getDepartmentAssigned());
 			assignment.setDesignation(movement.getDesignationAssigned());
 			assignment.setIsPrimary(true);
-			assignment.setFromDate(effectiveFromDate);
+			assignment.setFromDate(formattedFromDate);
 			LOGGER.debug("effectiveFromDate:" + effectiveFromDate);
-			LOGGER.debug("effectiveToDate:" + effectiveToDate);
+			LOGGER.debug("effectiveToDate:" + output.format(effectiveToDate));
 
-			assignment.setToDate(effectiveToDate);
+			assignment.setToDate(output.format(effectiveToDate));
 			assignment.setTenantId(movement.getTenantId());
 			employee.getAssignments().add(assignment);
 		}
@@ -380,8 +387,8 @@ public class MovementRepository {
 		assignment.setDepartment(movement.getDepartmentAssigned());
 		assignment.setDesignation(movement.getDesignationAssigned());
 		assignment.setIsPrimary(true);
-		assignment.setFromDate(effectiveFromDate);
-		assignment.setToDate(dor);
+		assignment.setFromDate(output.format(effectiveFromDate));
+		assignment.setToDate(output.format(dor));
 		assignment.setTenantId(destination);
 		employee.getAssignments().add(assignment);
         LOGGER.debug("Create Employee Request :" +employee);

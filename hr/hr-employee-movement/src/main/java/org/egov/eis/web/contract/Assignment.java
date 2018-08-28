@@ -90,14 +90,10 @@ public class Assignment {
     private Boolean isPrimary;
 
     @NotNull
-    @DateTimeFormat(pattern = "dd/MM/yyyy")
-    @JsonFormat(pattern = "dd/MM/yyyy")
-    private Date fromDate;
+    private String fromDate;
 
     @NotNull
-    @DateTimeFormat(pattern = "dd/MM/yyyy")
-    @JsonFormat(pattern = "dd/MM/yyyy")
-    private Date toDate;
+    private String toDate;
 
     private Long grade;
 

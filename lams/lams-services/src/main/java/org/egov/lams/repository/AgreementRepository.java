@@ -776,8 +776,7 @@ public class AgreementRepository {
             final Renewal renewal = agreement.getRenewal();
             orderNumber = renewal.getRenewalOrderNumber();
             orderDate = renewal.getRenewalOrderDate();
-            reason = renewal.getReasonForRenewal();
-
+            
         } else if (Action.OBJECTION.equals(action)) {
             final Objection objection = agreement.getObjection();
             courtCaseNo = objection.getCourtCaseNo();

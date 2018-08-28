@@ -191,21 +191,13 @@ public class AgreementValidator {
 				agreement.getTenantId()).get(0);
 		calendar.add(Calendar.MONTH, -Integer.valueOf(beforeExpiryMonth));
 		calendar.add(Calendar.DATE, 1);
-		Date beforeExpiry = calendar.getTime();
+		Date beforeExpiryDate = calendar.getTime();
 
-		calendar.setTime(agreement.getExpiryDate());
-		String afterExpiryMonth = getConfigurations(propertiesManager.getRenewalTimeAfterExpiry(),
-				agreement.getTenantId()).get(0);
-		calendar.add(Calendar.MONTH, Integer.valueOf(afterExpiryMonth));
-		Date afterExpiry = calendar.getTime();
+		if (today.compareTo(beforeExpiryDate) < 0) {
 
-		if (!(today.compareTo(beforeExpiry) >= 0 && today.compareTo(afterExpiry) <= 0)) {
-			if (today.compareTo(beforeExpiry) < 0)
-				errors.reject(ERROR_FIELD_AGREEMENT_NO,
-						"agreement can be renewed only in the period of " + 3 + " months before expiry date");
-			else if (today.compareTo(afterExpiry) > 0)
-				errors.reject(ERROR_FIELD_AGREEMENT_NO,
-						"agreement can be renewed only in the period of " + 3 + " months after expiry date");
+			errors.reject(ERROR_FIELD_AGREEMENT_NO,
+					"agreement can be renewed only in the period of " + 3 + " months before expiry date");
+
 		}
 	}
 

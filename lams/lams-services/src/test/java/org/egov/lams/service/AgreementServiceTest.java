@@ -21,6 +21,7 @@ import org.egov.lams.model.Asset;
 import org.egov.lams.model.AssetCategory;
 import org.egov.lams.model.Demand;
 import org.egov.lams.model.Location;
+import org.egov.lams.model.Renewal;
 import org.egov.lams.model.WorkflowDetails;
 import org.egov.lams.model.enums.Action;
 import org.egov.lams.model.enums.Source;
@@ -143,6 +144,7 @@ public class AgreementServiceTest {
     @Test
     public void test_for_renewal_of_agreement() {
         final AgreementRequest agreementRequest = getAgreementRequest();
+        agreementRequest.getAgreement().setRenewal(getRenewalDatails());
         when(allotteeRepository.getAllottees(agreementRequest.getAgreement().getAllottee(),
                 agreementRequest.getRequestInfo())).thenReturn(getAllotteeResponse());
         when(positionRestRepository.getPositions(any(), any(), any()))
@@ -673,4 +675,9 @@ public class AgreementServiceTest {
 
         return Arrays.asList(demand);
     }
+    
+	private Renewal getRenewalDatails() {
+		return Renewal.builder().renewalFromDate(new Date()).renewalOrderDate(new Date()).renewalOrderNumber("RN123")
+				.build();
+	}
 }

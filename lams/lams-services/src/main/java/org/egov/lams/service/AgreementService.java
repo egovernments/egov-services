@@ -301,9 +301,10 @@ public class AgreementService {
         log.info("create Renewal of agreement::" + agreementRequest.getAgreement());
         final Agreement agreement = enrichAgreement(agreementRequest);
         // Renewal date = existing expiry date + 1
-        final Date renewalStartDate = DateUtils.addDays(agreement.getExpiryDate(), 1);
+        final Date renewalStartDate = agreement.getRenewal().getRenewalFromDate();
         agreement.setAdjustmentStartDate(getAdjustmentDate(agreement));
         agreement.setRenewalDate(renewalStartDate);
+        agreement.setCommencementDate(renewalStartDate);
         final List<Demand> demands = demandService.prepareDemandsForRenewal(agreementRequest, false);
         final DemandResponse demandResponse = demandRepository.createDemand(demands, agreementRequest.getRequestInfo());
         final List<String> demandIdList = demandResponse.getDemands().stream().map(Demand::getId)

@@ -179,7 +179,6 @@ public class AgreementRowMapper implements ResultSetExtractor<List<Agreement>> {
 			Renewal renewal = new Renewal();
 			renewal.setRenewalOrderNumber(orderNo);
 			renewal.setRenewalOrderDate(orderDate);
-			renewal.setReasonForRenewal(reason);
 
 			agreement.setRenewal(renewal);
 			return agreement;

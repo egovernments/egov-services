@@ -1,6 +1,7 @@
 package org.egov.lams.service;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -325,18 +326,21 @@ public class AgreementServiceTest {
     }
 
     @Test
-    public void test_for_update_renewal_of_agreement() {
-        final AgreementRequest agreementRequest = getAgreementRequest();
-        agreementRequest.getAgreement().getWorkflowDetails().setAction("Approve");
-        when(demandService.prepareDemands(any())).thenReturn(getDemands());
-        when(demandRepository.createDemand(any(), any())).thenReturn(getDemandResponse());
-        when(demandRepository.updateDemand(any(), any())).thenReturn(getDemandResponse());
+	public void test_for_update_renewal_of_agreement() {
+		final AgreementRequest agreementRequest = getAgreementRequest();
+		agreementRequest.getAgreement().getWorkflowDetails().setAction("Approve");
+		agreementRequest.getAgreement().setAction(Action.RENEWAL);
+		agreementRequest.getAgreement().setRenewalDate(new Date());
+		when(demandService.prepareDemands(any())).thenReturn(getDemands());
+		when(demandRepository.createDemand(any(), any())).thenReturn(getDemandResponse());
+		when(demandRepository.updateDemand(any(), any())).thenReturn(getDemandResponse());
 
-        final Agreement agreement = agreementService.updateRenewal(agreementRequest);
+		final Agreement agreement = agreementService.updateRenewal(agreementRequest);
 
-        assertEquals("454", agreement.getCouncilNumber());
-        assertEquals(Status.ACTIVE, agreement.getStatus());
-    }
+		assertEquals("454", agreement.getCouncilNumber());
+		assertTrue(Status.ACTIVE.equals(agreement.getStatus()) || Status.RENEWED.equals(agreement.getStatus()));
+
+	}
 
     @Test
     public void test_for_update_renewal_of_agreement_with_status_cancel() {

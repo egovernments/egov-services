@@ -527,7 +527,8 @@ public class DemandRepository {
 		String taxReason;
 		Date effectiveInstDate;
 		Date expiryDate = agreement.getExpiryDate();
-		Instant instant = Instant.ofEpochMilli(expiryDate.getTime());
+		Date renewalDate = agreement.getRenewal().getRenewalFromDate();
+		Instant instant = Instant.ofEpochMilli(renewalDate.getTime());
 		LocalDateTime localDateTime = LocalDateTime.ofInstant(instant, ZoneId.systemDefault());
 		LocalDate startDate = localDateTime.toLocalDate();
 		startDate = startDate.plusDays(1);
@@ -558,14 +559,7 @@ public class DemandRepository {
 			demandReasons.addAll(getDemandReasonsForTaxReason(agreementRequest, effectiveInstDate, taxReason));
 			taxReason = propertiesManager.getTaxReasonSGSTOnAdvance();
 			demandReasons.addAll(getDemandReasonsForTaxReason(agreementRequest, effectiveInstDate, taxReason));
-			if (agreement.getGoodWillAmount() > 0) {
-				taxReason = propertiesManager.getTaxReasonGoodWillAmount();
-				demandReasons.addAll(getDemandReasonsForTaxReason(agreementRequest, effectiveInstDate, taxReason));
-				taxReason = propertiesManager.getTaxReasonCGSTOnGoodwill();
-				demandReasons.addAll(getDemandReasonsForTaxReason(agreementRequest, effectiveInstDate, taxReason));
-				taxReason = propertiesManager.getTaxReasonSGSTOnGoodwill();
-				demandReasons.addAll(getDemandReasonsForTaxReason(agreementRequest, effectiveInstDate, taxReason));
-			}
+			
 		}
 
 		return demandReasons;

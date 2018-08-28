@@ -39,9 +39,24 @@
  */
 package org.egov.lams.service;
 
-import lombok.extern.slf4j.Slf4j;
+import java.math.BigDecimal;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.time.DateUtils;
 import org.egov.lams.model.Agreement;
 import org.egov.lams.model.AgreementCriteria;
 import org.egov.lams.model.Allottee;
@@ -74,22 +89,7 @@ import org.egov.lams.web.contract.TaskResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Slf4j
@@ -304,14 +304,11 @@ public class AgreementService {
         final Date renewalStartDate = agreement.getRenewal().getRenewalFromDate();
         agreement.setAdjustmentStartDate(getAdjustmentDate(agreement));
         agreement.setRenewalDate(renewalStartDate);
-        agreement.setCommencementDate(renewalStartDate);
         final List<Demand> demands = demandService.prepareDemandsForRenewal(agreementRequest, false);
         final DemandResponse demandResponse = demandRepository.createDemand(demands, agreementRequest.getRequestInfo());
         final List<String> demandIdList = demandResponse.getDemands().stream().map(Demand::getId)
                 .collect(Collectors.toList());
         agreement.setDemands(demandIdList);
-        agreement.setExpiryDate(getExpiryDate(agreement));
-
         final ProcessInstance processInstanceResponse = workFlowRepository.startWorkflow(agreementRequest);
         log.info("the processInstanceresponse from workflow statrt : " + processInstanceResponse);
         return agreement;
@@ -505,27 +502,36 @@ public class AgreementService {
     }
 
     public Agreement updateRenewal(final AgreementRequest agreementRequest) {
+    	Date toDay = new Date();
         final Agreement agreement = agreementRequest.getAgreement();
+        final Date renewalDate = agreement.getRenewalDate();
         log.info("update renewal agreement ::" + agreement);
         final RequestInfo requestInfo = agreementRequest.getRequestInfo();
         final String userId = requestInfo.getUserInfo().getId().toString();
         final WorkflowDetails workFlowDetails = agreement.getWorkflowDetails();
         updateAuditDetails(agreement, requestInfo);
         if (workFlowDetails != null)
-            if (WF_ACTION_APPROVE.equalsIgnoreCase(workFlowDetails.getAction())) {
-                agreementRepository.updateExistingAgreementAsHistory(agreement, userId);
-                agreement.setAgreementNumber(
-                        agreementNumberService.generateAgrementNumber(agreement.getCommencementDate(), agreement.getTenantId()));
-                agreement.setStatus(Status.ACTIVE);
-                agreement.setAgreementDate(new Date());
-                agreement.setAdjustmentStartDate(getAdjustmentDate(agreement));
-                final List<Demand> demands = prepareDemandsForRenewalApproval(agreementRequest);
-                updateDemand(agreement.getDemands(), demands,
-                        agreementRequest.getRequestInfo());
-                agreement.setNoticeNumber(
-                        noticeNumberUtil.getNoticeNumber(agreement.getAction(), agreement.getTenantId(), requestInfo));
+			if (WF_ACTION_APPROVE.equalsIgnoreCase(workFlowDetails.getAction())) {
 
-            } else if (WF_ACTION_REJECT.equalsIgnoreCase(workFlowDetails.getAction()))
+				if (toDay.compareTo(agreement.getExpiryDate()) > 0) {
+					agreementRepository.updateExistingAgreementAsHistory(agreement, userId); //updating the status if agreement is expired 
+					agreement.setStatus(Status.ACTIVE);
+				} else {
+					agreement.setStatus(Status.RENEWED);
+				}
+				agreement.setCommencementDate(renewalDate);
+				agreement.setExpiryDate(getExpiryDate(agreement));
+				agreement.setAgreementNumber(
+						agreementNumberService.generateAgrementNumber(renewalDate, agreement.getTenantId()));
+
+				agreement.setAgreementDate(new Date());
+				agreement.setAdjustmentStartDate(getAdjustmentDate(agreement));
+				final List<Demand> demands = prepareDemandsForRenewalApproval(agreementRequest);
+				updateDemand(agreement.getDemands(), demands, agreementRequest.getRequestInfo());
+				agreement.setNoticeNumber(
+						noticeNumberUtil.getNoticeNumber(agreement.getAction(), agreement.getTenantId(), requestInfo));
+
+			} else if (WF_ACTION_REJECT.equalsIgnoreCase(workFlowDetails.getAction()))
                 agreement.setStatus(Status.REJECTED);
             else if (WF_ACTION_CANCEL.equalsIgnoreCase(workFlowDetails.getAction())) {
                 agreement.setStatus(Status.CANCELLED);

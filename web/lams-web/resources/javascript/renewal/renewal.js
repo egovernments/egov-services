@@ -120,7 +120,9 @@ class RenewalAgreement extends React.Component {
       designationList: [],
       userList: [],
       rentInc: [],
+      rentPercentageMap: {},
       existingRent:0,
+      renewalRent:0,
       renewalDeposit:0
 
     }
@@ -371,6 +373,7 @@ class RenewalAgreement extends React.Component {
       _this.setState({
         ..._this.state,
         renewalDeposit: renewalDeposit,
+        renewalRent : e.target.value,
         agreement: {
           ..._this.state.agreement,
           [name]: e.target.value,
@@ -394,6 +397,8 @@ class RenewalAgreement extends React.Component {
   handleChangeTwoLevel(e, pName, name) {
 
     var _this = this;
+    var updatedRenewalRent = _this.state.renewalRent;
+    var updatedSecurityDeposit = _this.state.renewalDeposit;
 
     switch (name) {
       case "department":
@@ -414,12 +419,21 @@ class RenewalAgreement extends React.Component {
         break;
 
     }
-
+     if(pName==="rentIncrementMethod") {
+        var rent = _this.state.existingRent;
+        var rentIncrPercentage = _this.state.rentPercentageMap[e.target.value];
+        updatedRenewalRent = Math.round(rent + (rent * rentIncrPercentage)/100);
+        updatedSecurityDeposit = Math.round(updatedRenewalRent * 3);
+     }
 
     _this.setState({
       ..._this.state,
+      renewalDeposit: updatedSecurityDeposit,
+      renewalRent : updatedRenewalRent,
       agreement: {
         ..._this.state.agreement,
+        rent: updatedRenewalRent,
+        securityDeposit:updatedSecurityDeposit,
         [pName]: {
           ..._this.state.agreement[pName],
           [name]: e.target.value
@@ -547,15 +561,29 @@ class RenewalAgreement extends React.Component {
     }
 
     var existingRent = agreement.rent;
+    var rentIncrement = agreement.rentIncrementMethod.percentage;
+
+    var renewalRent = existingRent + (existingRent * rentIncrement)/100;
+    var renewalSecurityDeposit = 3 * renewalRent;
 
     var rentInc = commonApiPost("lams-services", "getrentincrements", "", {tenantId, basisOfAllotment:agreement.basisOfAllotment}).responseJSON;
+
+
+   var rentPercentageMap = {};
+   rentInc.forEach((item) => {
+        rentPercentageMap[item.id]=item.percentage;
+
+   });
 
     this.setState({
       ...this.state,
       agreement: agreement,
       departmentList: departmentList,
       rentInc,
-      existingRent
+      rentPercentageMap,
+      existingRent,
+      renewalRent,
+      renewalDeposit:renewalSecurityDeposit
     });
 
   }
@@ -624,7 +652,7 @@ class RenewalAgreement extends React.Component {
   render() {
     var _this = this;
     let { handleChange, handleChangeTwoLevel, addOrUpdate,onBlur} = this;
-    let { agreement, renewalReasons, rentInc, existingRent,renewalDeposit } = _this.state;
+    let { agreement, renewalReasons, rentInc, existingRent,renewalRent,renewalDeposit } = _this.state;
     let { allottee, asset, rentIncrementMethod, workflowDetails, cancellation,
       renewal, eviction, objection, judgement, remission, remarks, documents } = this.state.agreement;
     let { assetCategory, locationDetails } = this.state.agreement.asset;
@@ -1064,14 +1092,14 @@ class RenewalAgreement extends React.Component {
                 <div className="row">
                   <div className="col-sm-6 label-text">
 
-                    <label for="renewalRent" className="categoryType">Renewal Rent
+                    <label for="renewalRent" className="categoryType">Renewal Rent (with % in increase)
                               <span>*</span>
                     </label>
                   </div>
                   <div className="col-sm-6">
                     <div className="text-no-ui">
                       <span>₹</span>
-                      <input type="number" min="0" name="renewalRent" id="renewalRent"
+                      <input type="number" min="0" name="renewalRent" id="renewalRent" value={renewalRent}
                         onChange={(e) => { handleChange(e, "rent") }} required />
                     </div>
                   </div>

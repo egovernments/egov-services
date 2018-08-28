@@ -414,7 +414,7 @@ class PartialPayment extends React.Component {
                                 <td>{data.CENTRAL_GST ? data.CENTRAL_GST : 0}</td>
                                 <td>{data.STATE_GST ? data.STATE_GST : 0}</td>
                                 <td>{data.SERVICE_TAX ? data.SERVICE_TAX : 0}</td>
-                                <td>{(data.STATE_GST ? data.STATE_GST : 0) + (data.CENTRAL_GST ? data.CENTRAL_GST : 0) + (data.RENT ? data.RENT : 0) + (data.SERVICE_TAX ? data.SERVICE_TAX : 0)}</td>
+                                <td>{(data.STATE_GST ? data.STATE_GST : 0) + (data.CENTRAL_GST ? data.CENTRAL_GST : 0) + (data.RENT ? data.RENT : 0) + (data.SERVICE_TAX ? data.SERVICE_TAX : 0) + (data.PENALTY ? data.PENALTY : 0)}</td>
                             </tr>
                         )
                     }

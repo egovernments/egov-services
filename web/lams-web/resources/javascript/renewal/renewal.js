@@ -426,8 +426,8 @@ class RenewalAgreement extends React.Component {
     }
      if(pName==="rentIncrementMethod") {
         var rent = _this.state.existingRent;
-        var sgst = _this.state.renewalRent * 0.09;
-        var cgst = _this.state.renewalRent * 0.09;
+        var sgst = Math.round(_this.state.renewalRent * 0.09);
+        var cgst = Math.round(_this.state.renewalRent * 0.09);
         var rentIncrPercentage = _this.state.rentPercentageMap[e.target.value];
         updatedRenewalRent = Math.round(rent + (rent * rentIncrPercentage)/100);
         updatedSecurityDeposit = Math.round(updatedRenewalRent * 3);
@@ -573,8 +573,8 @@ class RenewalAgreement extends React.Component {
     var rentIncrement = agreement.rentIncrementMethod.percentage;
 
     var renewalRent = existingRent + (existingRent * rentIncrement)/100;
-    var sgst = renewalRent * 0.09;
-    var cgst = renewalRent * 0.09;
+    var sgst = Math.round(renewalRent * 0.09);
+    var cgst = Math.round(renewalRent * 0.09);
     var renewalSecurityDeposit = 3 * renewalRent;
 
     var rentInc = commonApiPost("lams-services", "getrentincrements", "", {tenantId, basisOfAllotment:agreement.basisOfAllotment}).responseJSON;
@@ -588,11 +588,7 @@ class RenewalAgreement extends React.Component {
 
     this.setState({
       ...this.state,
-      agreement:{ 
-        ...this.state.agreement,
-        sgst:sgst,
-        cgst:cgst
-      },
+      agreement:agreement,
       departmentList: departmentList,
       rentInc,
       rentPercentageMap,

@@ -4,7 +4,7 @@ ServiceMaps:
  mappings:
   - topic: save-pgr-service
     indexes:
-    - name: grievancecreate
+    - name: rainmakerpgr
       type: grievancecreate
       id: $.serviceRequestId, $.tenantId
       isBulk: true
@@ -12,7 +12,7 @@ ServiceMaps:
 
   - topic: update-pgr-service
     indexes:
-    - name: grievanceupdate
+    - name: rainmakerpgr
       type: grievanceupdate
       id: $.serviceRequestId, $.tenantId
       isBulk: true

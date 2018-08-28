@@ -112,7 +112,9 @@ class RenewalAgreement extends React.Component {
         lastmodifiedDate: "",
         lastmodifiedBy: "",
         isAdvancePaid: "",
-        adjustmentStartDate: ""
+        adjustmentStartDate: "",
+        sgst:0,
+        cgst:0
       },
       renewalReasons: ["Reason 1", "Reason 2", "Reason 3", "Reason 4", "Others"],
       positionList: [],
@@ -123,8 +125,6 @@ class RenewalAgreement extends React.Component {
       rentPercentageMap: {},
       existingRent:0,
       renewalRent:0,
-      sgst:0,
-      cgst:0,
       renewalDeposit:0
     }
     this.handleChangeTwoLevel = this.handleChangeTwoLevel.bind(this);
@@ -372,34 +372,20 @@ class RenewalAgreement extends React.Component {
       var renewalDeposit = 3 * e.target.value;
       var sgst = Math.round(e.target.value * 0.09);
       var cgst = Math.round(e.target.value * 0.09);
-      console.log("s",sgst);
-
       _this.setState({
         ..._this.state,
         renewalDeposit: renewalDeposit,
         renewalRent : e.target.value,
-        sgst:sgst,
-        cgst:cgst,
         agreement: {
           ..._this.state.agreement,
+          sgst:sgst,
+          cgst:cgst,
           [name]: e.target.value,
           securityDeposit:renewalDeposit
 
         }
       })
-    }else if(name === "sgst"){
-      let renewalRent = this.state.renewalRent;
-      let sgst = Math.round(renewalRent * 0.09);
-      let cgst = Math.round(renewalRent * 0.09);
-
-      _this.setState({
-        ..._this.state,
-        agreement: {
-          ..._this.state.agreement,
-          sgst:sgst,
-          cgst:cgst,
-        }
-      })
+      console.log("this",_this);
     } else  {
 
       _this.setState({
@@ -440,8 +426,8 @@ class RenewalAgreement extends React.Component {
     }
      if(pName==="rentIncrementMethod") {
         var rent = _this.state.existingRent;
-        var sgst = rent * 0.09;
-        var cgst = rent * 0.09;
+        var sgst = _this.state.renewalRent * 0.09;
+        var cgst = _this.state.renewalRent * 0.09;
         var rentIncrPercentage = _this.state.rentPercentageMap[e.target.value];
         updatedRenewalRent = Math.round(rent + (rent * rentIncrPercentage)/100);
         updatedSecurityDeposit = Math.round(updatedRenewalRent * 3);
@@ -451,10 +437,10 @@ class RenewalAgreement extends React.Component {
       ..._this.state,
       renewalDeposit: updatedSecurityDeposit,
       renewalRent : updatedRenewalRent,
-      sgst:sgst,
-      cgst:cgst,
       agreement: {
         ..._this.state.agreement,
+        sgst:sgst,
+        cgst:cgst,
         rent: updatedRenewalRent,
         securityDeposit:updatedSecurityDeposit,
         [pName]: {
@@ -602,14 +588,16 @@ class RenewalAgreement extends React.Component {
 
     this.setState({
       ...this.state,
-      agreement: agreement,
+      agreement:{ 
+        ...this.state.agreement,
+        sgst:sgst,
+        cgst:cgst
+      },
       departmentList: departmentList,
       rentInc,
       rentPercentageMap,
       existingRent,
       renewalRent,
-      sgst:sgst,
-      cgst,cgst,
       renewalDeposit:renewalSecurityDeposit
     });
 
@@ -679,9 +667,9 @@ class RenewalAgreement extends React.Component {
   render() {
     var _this = this;
     let { handleChange, handleChangeTwoLevel, addOrUpdate,onBlur} = this;
-    let { agreement, renewalReasons, rentInc, existingRent,renewalRent,renewalDeposit,sgst,cgst} = _this.state;
+    let { agreement, renewalReasons, rentInc, existingRent,renewalRent,renewalDeposit} = _this.state;
     let { allottee, asset, rentIncrementMethod, workflowDetails, cancellation,
-      renewal, eviction, objection, judgement, remission, remarks, documents } = this.state.agreement;
+      renewal, eviction, objection, judgement, remission, remarks, documents,sgst,cgst} = this.state.agreement;
     let { assetCategory, locationDetails } = this.state.agreement.asset;
     const renderOption = function (data) {
       if (data) {
@@ -1130,7 +1118,20 @@ class RenewalAgreement extends React.Component {
                   </div>
                 </div>
               </div>
-              <div className="col-sm-6">
+              <div className="col-sm-6" id="rentCalculatedMethod">
+                <div className="row">
+                  <div className="col-sm-6 label-text">
+                    <label for="rentIncrementMethod">Method by increase in rent calculated during Renewal
+                              <span>*</span>
+                    </label>
+                  </div>
+                  <div className="col-sm-6">
+                    <select name="rentIncrementMethod" id="rentIncrementMethod" className="selectStyle" onChange={(e) => { handleChangeTwoLevel(e, "rentIncrementMethod","id") }} value={agreement.rentIncrementMethod.id} required >
+                      <option value="">Choose Percentage</option>
+                      {renderOptionForRentInc(rentInc)}
+                    </select>
+                  </div>
+                </div>
                 {/* <div className="row">
                   <div className="col-sm-6 label-text">
                     <label for="reasonForRenewal">Renewal Reason
@@ -1207,21 +1208,6 @@ class RenewalAgreement extends React.Component {
               </div>
              </div>
              <div className="row">
-              <div className="col-sm-6" id="rentCalculatedMethod">
-                <div className="row">
-                  <div className="col-sm-6 label-text">
-                    <label for="rentIncrementMethod">Method by increase in rent calculated during Renewal
-                              <span>*</span>
-                    </label>
-                  </div>
-                  <div className="col-sm-6">
-                    <select name="rentIncrementMethod" id="rentIncrementMethod" className="selectStyle" onChange={(e) => { handleChangeTwoLevel(e, "rentIncrementMethod","id") }} value={agreement.rentIncrementMethod.id} required >
-                      <option value="">Choose Percentage</option>
-                      {renderOptionForRentInc(rentInc)}
-                    </select>
-                  </div>
-                </div>
-              </div>
               <div className="col-sm-6">
                 <div className="row">
                   <div className="col-sm-6 label-text">
@@ -1233,10 +1219,6 @@ class RenewalAgreement extends React.Component {
                   </div>
                 </div>
               </div>
-             </div>
-             <div className="row">
-             </div>
-             <div className="row">
               <div className="col-sm-6">
                 <div className="row">
                   <div className="col-sm-6 label-text">
@@ -1248,9 +1230,8 @@ class RenewalAgreement extends React.Component {
                     </div>
                   </div>
                 </div>
-              </div>
              </div>
-
+            </div>
           </div>
         </div>
       );

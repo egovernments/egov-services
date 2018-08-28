@@ -607,7 +607,7 @@ class AgreementDetails extends React.Component {
                             <div className="col-sm-6">
                                 <div className="row">
                                     <div className="col-sm-6 label-text">
-                                        <label htmlFor="agreementNumber"> Agreement Number :</label>
+                                        <label htmlFor="agreementNumber"> Agreement Number asdasdd:</label>
                                     </div>
                                     <div className="col-sm-6 label-view-text">
                                         <label id="agreementNumber" name="agreementNumber">
@@ -1072,6 +1072,22 @@ class AgreementDetails extends React.Component {
                               </div>
                           </div>
                         </div>
+                        <div className="row">
+                            <div className="col-sm-6">
+                                <div className="row">
+                                    <div className="col-sm-6 label-text">
+                                        <label htmlFor="history">History Agreement :</label>
+                                    </div>
+                                    <div className="col-sm-6 label-view-text">
+                                        <label id="history" name="history">
+                                            {agreement.isHistory == true ? "Yes" : "No"}
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="col-sm-6">
+                            </div>
+                        </div>
                     </div>
                 </div>
             );
@@ -1087,7 +1103,7 @@ class AgreementDetails extends React.Component {
                             <div className="col-sm-6">
                                 <div className="row">
                                     <div className="col-sm-6 label-text">
-                                        <label htmlFor="agreementNumber"> Agreement Number :</label>
+                                        <label htmlFor="agreementNumber"> Agreement Number:</label>
                                     </div>
                                     <div className="col-sm-6 label-view-text">
                                         <label id="agreementNumber" name="agreementNumber">
@@ -1109,7 +1125,6 @@ class AgreementDetails extends React.Component {
                                 </div>
                             </div>
                         </div>
-
                         <div className="row">
                             <div className="col-sm-6">
                                 <div className="row">

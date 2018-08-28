@@ -450,9 +450,9 @@ class UpdateRenewal extends React.Component {
                 "rentSft": "",
                 "aRent": "",
                 "bRent": "",
-                "cRent": "",
-                "gst": "",
-                "totalRent": "",
+                "cRent": agreement.securityDeposit,
+                "gst": agreement.sgst + agreement.cgst,
+                "totalRent":agreement.renewalRent,
                 "renewalPeriod": agreement.timePeriod
             }
         ];
@@ -489,9 +489,10 @@ class UpdateRenewal extends React.Component {
         ];
 
         var rows1 = [
-            { "particulars": "Goodwill", "amount": agreement.goodWillAmount, "leaseHolderName": "" },
             { "particulars": "3 Months Rental Deposits", "amount": agreement.securityDeposit, "leaseHolderName": "" },
-            { "particulars": "Total", "amount": "", "leaseHolderName": "" }
+            { "particulars": "CGST", "amount": agreement.cgst, "leaseHolderName": "" },
+            { "particulars": "SGST", "amount": agreement.sgst, "leaseHolderName": "" },
+            { "particulars": "Total", "amount": agreement.securityDeposit + agreement.cgst + agreement.sgst, "leaseHolderName": "" },
         ];
 
         var autoTableOptions1 = {
@@ -525,7 +526,8 @@ class UpdateRenewal extends React.Component {
 
         var rows2 = [
             { "particulars": "Monthly Rental", "amount": agreement.rent },
-            { "particulars": "GST", "amount": "" },
+            { "particulars": "CGST", "amount": agreement.cgst },
+            { "particulars": "SGST", "amount": agreement.cgst },
         ];
 
         var autoTableOptions2 = {
@@ -1398,8 +1400,7 @@ class UpdateRenewal extends React.Component {
                             <div className="col-sm-6">
                                 <div className="row">
                                     <div className="col-sm-6 label-text">
-
-                                        <label for="renewalRent" className="categoryType">Rent
+                                        <label for="renewalRent" className="categoryType">Renewal Rent (with % in increase)
                                     <span>*</span>
                                         </label>
                                     </div>
@@ -1433,7 +1434,34 @@ class UpdateRenewal extends React.Component {
                             </div>
 
                         </div>
-
+                        <div className="row">
+                            <div className="col-sm-6">
+                                <div className="row">
+                                    <div className="col-sm-6 label-text">
+                                        <label for="renewalRent" className="categoryType">SGST</label>
+                                    </div>
+                                    <div className="col-sm-6">
+                                        <div className="text-no-ui">
+                                        <span>₹</span>
+                                        <input type="number" min="0" name="sgst"  id="sgst" value={agreement.sgst} disabled/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="col-sm-6">
+                                <div className="row">
+                                    <div className="col-sm-6 label-text">
+                                        <label for="reasonForRenewal">CGST</label>
+                                    </div>
+                                    <div className="col-sm-6">
+                                        <div className="text-no-ui">
+                                        <span>₹</span>
+                                        <input type="number" min="0" name="cgst" id="cgst" value={agreement.cgst} disabled/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         <div className="row">
                             <div className="col-sm-6">
                                 <div className="row">
@@ -1483,6 +1511,15 @@ class UpdateRenewal extends React.Component {
                             <div className="col-sm-6">
                                 <div className="row">
                                     <div className="col-sm-6 label-text">
+                                        <label for="remarks">Remarks </label>
+                                    </div>
+                                    <div className="col-sm-6">
+                                        <textarea name="remarks" id="remarks" value={remarks}
+                                            onChange={(e) => { handleChange(e, "remarks") }} disabled ></textarea>
+                                    </div>
+                                </div>
+                                {/* <div className="row">
+                                    <div className="col-sm-6 label-text">
                                         <label for="reasonForRenewal">Renewal Reason
                                     <span>*</span>
                                         </label>
@@ -1493,7 +1530,7 @@ class UpdateRenewal extends React.Component {
                                             {renderOption(renewalReasons)}
                                         </select>
                                     </div>
-                                </div>
+                                </div> */}
                             </div>
                         </div>
                         <div className="row">
@@ -1513,15 +1550,7 @@ class UpdateRenewal extends React.Component {
                                 </div>
                             </div>
                             <div className="col-sm-6">
-                                <div className="row">
-                                    <div className="col-sm-6 label-text">
-                                        <label for="remarks">Remarks </label>
-                                    </div>
-                                    <div className="col-sm-6">
-                                        <textarea name="remarks" id="remarks" value={remarks}
-                                            onChange={(e) => { handleChange(e, "remarks") }} disabled ></textarea>
-                                    </div>
-                                </div>
+    
                             </div>
                         </div>
 

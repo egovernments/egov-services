@@ -441,6 +441,16 @@ class UpdateRemission extends React.Component {
             ulbType = "Municipal Corporation";
         }
 
+        //Diffirence between remission dates
+        let rFrom = agreement.remission.remissionFromDate; 
+        rFrom = new Date(rFrom.split("/")[2], rFrom.split("/")[1], rFrom.split("/")[0])
+        let rTo = agreement.remission.remissionToDate;
+        rTo = new Date(rTo.split("/")[2], rTo.split("/")[1], rTo.split("/")[0])
+
+        let months = (rTo.getFullYear() - rFrom.getFullYear()) * 12;
+        months -= rFrom.getMonth();
+        months += rTo.getMonth() + 1  ;
+
         var today = new Date();
         var dd = today.getDate();
         var mm = today.getMonth() + 1;
@@ -461,8 +471,8 @@ class UpdateRemission extends React.Component {
             { title: "Net Amount Due", dataKey: "nad" },
         ];
         var rows = [
-            { "p": "Lease Rentals", "ea": "100", "d": "200", "rs": "100", "nad": "100" },
-            { "p": "Total", "ea": "100", "d": "200", "rs": "100", "nad": "100" }
+            { "p": "Lease Rentals", "ea": agreement.rent, "d": months * agreement.rent, "rs": months * (agreement.rent - agreement.remission.remissionRent), "nad":  months * agreement.remission.remissionRent },
+            { "p": "Total", "ea": agreement.rent, "d": months * agreement.rent, "rs": months * (agreement.rent - agreement.remission.remissionRent), "nad":  months * agreement.remission.remissionRent },
         ];
 
         var autoTableOptions = {
@@ -503,7 +513,7 @@ class UpdateRemission extends React.Component {
         doc.text(15, 65, lines);
 
         doc.text(15, 80, "Ref: 1. Request Letter by the leaseholder");
-        doc.text(23, 85, "2. Resolution No " + agreement.remissionOrder + " dt " + agreement.remissionDate + " of Municipal Council/Standing Committee");
+        doc.text(23, 85, "2. Resolution No " + agreement.remission.remissionOrder + " dt " + agreement.remission.remissionDate + " of Municipal Council/Standing Committee");
 
         doc.text(105, 95, "><><><", 'center');
 

@@ -230,12 +230,12 @@ public class PaymentService {
                         billInfo.setPartPaymentAllowed('N');
 
                     } else {
-                        billInfo.setPartPaymentAllowed('Y');
+                        billInfo.setPartPaymentAllowed('N');
                         billInfo.setMinAmountPayable(calculateMinAmount(demand).doubleValue());
                     }
                 }
             } else {
-                billInfo.setPartPaymentAllowed('Y');
+                billInfo.setPartPaymentAllowed('N');
             }
 
             billInfo.setDisplayMessage(demand.getModuleName());

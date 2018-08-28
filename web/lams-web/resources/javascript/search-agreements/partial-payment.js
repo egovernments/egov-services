@@ -410,7 +410,7 @@ class PartialPayment extends React.Component {
                                 <td><input type="checkbox" className="checkbox" id={"checkbox_" + index} /></td>
                                 <td>{"Rent: " + data.taxPeriod}</td>
                                 <td>{data.RENT ? data.RENT : 0}</td>
-                                <td>{data.penalty ? data.penalty : 0}</td>
+                                <td>{data.PENALTY ? data.PENALTY : 0}</td>
                                 <td>{data.CENTRAL_GST ? data.CENTRAL_GST : 0}</td>
                                 <td>{data.STATE_GST ? data.STATE_GST : 0}</td>
                                 <td>{data.SERVICE_TAX ? data.SERVICE_TAX : 0}</td>

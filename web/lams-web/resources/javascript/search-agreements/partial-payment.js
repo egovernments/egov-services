@@ -201,6 +201,16 @@ class PartialPayment extends React.Component {
         open(location, "_self").close();
     }
 
+
+    componentDidMount() {
+        if (window.opener && window.opener.document) {
+          var logo_ele = window.opener.document.getElementsByClassName("homepage_logo");
+          if (logo_ele && logo_ele[0]) {
+            document.getElementsByClassName("homepage_logo")[0].src = (logo_ele[0].getAttribute("src") && logo_ele[0].getAttribute("src").indexOf("http") > -1) ? logo_ele[0].getAttribute("src") : window.location.origin + logo_ele[0].getAttribute("src");
+          }
+        }
+    }
+
     selectAll() {
 
         let length = document.getElementsByClassName("checkbox").length;
@@ -441,6 +451,8 @@ class PartialPayment extends React.Component {
         }
         return (
             <div>
+                <h3>Partial Payment </h3>
+            <div>
                 <table className="table table-bordered">
                     <thead>
                         <tr>
@@ -471,6 +483,7 @@ class PartialPayment extends React.Component {
                         Close
                     </button>
                 </div>
+            </div>
             </div>
         )
     }

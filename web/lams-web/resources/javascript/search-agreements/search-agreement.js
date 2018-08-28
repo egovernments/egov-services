@@ -484,20 +484,12 @@ class AgreementSearch extends React.Component {
 
         var data = commonApiPost("lams-services", "payment", "_partialpaymentview", {agreementNumber:number, tenantId});
         let demandDetails = data.responseJSON.legacyDemands && data.responseJSON.legacyDemands[0].demandDetails? data.responseJSON.legacyDemands[0].demandDetails.length : 0;
-        if(demandDetails > 0)
+        if(demandDetails > 0 && number)
         window.open(
-          "app/search-agreement/partial-payment.html?" +
-            (number
-              ? "&agreementNumber=" + number
-              : "&acknowledgementNumber=" + acknowledgementNumber) +
-            (status ? "&status=" + status : "") +
-            (action ? "&action=" + action : "") +
-            (agreementId ? "&id=" + agreementId : "") +
-            "&assetId=" +
-            id,
+          "app/search-agreement/partial-payment.html?agreementNumber=" + number,
           "fs",
-          "fullscreen=yes"
-        )
+          "width=800,fullscreen=yes"
+        );
         else
         return showError("Rent is fully paid or no demand details found for collection");
         // $.ajax({

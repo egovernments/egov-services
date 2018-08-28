@@ -12,179 +12,187 @@ class PartialPayment extends React.Component {
     }
 
     componentWillMount() {
-    
-        try{
-        var data = commonApiPost("lams-services", "payment", "_partialpaymentview", {
-            agreementNumber: getUrlVars()["agreementNumber"],
-            //agreementNumber: "LA-18-10160487",
-            tenantId
-        });
 
-        var demandDetails = data.responseJSON.legacyDemands[0].demandDetails;
-
-        var demands = [];
-        var rentDemands = [];
-        var penaltyDemands = [];
-        var sgstDemands = [];
-        var cgstDemands = [];
-        var serviceTaxDemands = [];
-        var advanceTaxDemands = [];
-        var goodwillTaxDemands = [];
-        var gstOnAdvanceDemands = [];
-        var gstOnGoodWillDemands = [];
-
-        demandDetails.forEach((demand) => {
-
-            if (demand.taxReasonCode.toLowerCase() === "rent")
-                rentDemands.push(demand);
-            else if (demand.taxReasonCode.toLowerCase() === "penalty")
-                penaltyDemands.push(demand);
-            else if (demand.taxReasonCode.toLowerCase() === "state_gst")
-                cgstDemands.push(demand);
-            else if (demand.taxReasonCode.toLowerCase() === "central_gst")
-                sgstDemands.push(demand);
-            else if (demand.taxReasonCode.toLowerCase() === "service_tax")
-                serviceTaxDemands.push(demand);
-            else if (demand.taxReasonCode.toLowerCase() === "advance_tax")
-                advanceTaxDemands.push(demand);
-            else if (demand.taxReasonCode.toLowerCase() === "goodwill_amount")
-                goodwillTaxDemands.push(demand);
-            else if (demand.taxReasonCode.toLowerCase() === "adv_cgst" || demand.taxReasonCode.toLowerCase() === "adv_sgst")
-                gstOnAdvanceDemands.push(demand);
-            else if (demand.taxReasonCode.toLowerCase() === "gw_cgst" || demand.taxReasonCode.toLowerCase() === "gw_sgst")
-                gstOnGoodWillDemands.push(demand);
-
-        });
-
-        var index = 0;
-        if (advanceTaxDemands.length > 0) {
-            demands.splice(index, 0, advanceTaxDemands[0]);
-            index++;
-        }
-        if (gstOnAdvanceDemands.length > 0) {
-            demands.splice(index, 0, gstOnAdvanceDemands[0]);
-            index++;
-            demands.splice(index, 0, gstOnAdvanceDemands[1]);
-            index++;
-        }
-        if (goodwillTaxDemands.length > 0) {
-            demands.splice(index, 0, goodwillTaxDemands[0]);
-            index++;
-        }
-        if (goodwillTaxDemands.length > 0 && gstOnGoodWillDemands.length > 0) {
-            demands.splice(index, 0, gstOnGoodWillDemands[0]);
-            index++;
-            demands.splice(index, 0, gstOnGoodWillDemands[1]);
-            index++;
-        }
-
-        for (var i = 0; i < rentDemands.length; i++) {
-            demands.splice(index, 0, rentDemands[i]);
-            index++;
-            penaltyDemands.forEach((pDemand) => {
-                if (pDemand.taxPeriod === rentDemands[i].taxPeriod) {
-                    demands.splice(index, 0, pDemand);
-                    index++;
-                }
+        try {
+            var data = commonApiPost("lams-services", "payment", "_partialpaymentview", {
+                agreementNumber: getUrlVars()["agreementNumber"],
+                tenantId
             });
-            sgstDemands.forEach((pDemand) => {
-                if (pDemand.taxPeriod === rentDemands[i].taxPeriod) {
-                    demands.splice(index, 0, pDemand);
-                    index++;
-                }
+
+            var demandDetails = data.responseJSON.legacyDemands[0].demandDetails;
+
+            var demands = [];
+            var rentDemands = [];
+            var penaltyDemands = [];
+            var sgstDemands = [];
+            var cgstDemands = [];
+            var serviceTaxDemands = [];
+            var advanceTaxDemands = [];
+            var goodwillTaxDemands = [];
+            var gstOnAdvanceDemands = [];
+            var gstOnGoodWillDemands = [];
+
+            demandDetails.forEach((demand) => {
+
+                if (demand.taxReasonCode.toLowerCase() === "rent")
+                    rentDemands.push(demand);
+                else if (demand.taxReasonCode.toLowerCase() === "penalty")
+                    penaltyDemands.push(demand);
+                else if (demand.taxReasonCode.toLowerCase() === "state_gst")
+                    cgstDemands.push(demand);
+                else if (demand.taxReasonCode.toLowerCase() === "central_gst")
+                    sgstDemands.push(demand);
+                else if (demand.taxReasonCode.toLowerCase() === "service_tax")
+                    serviceTaxDemands.push(demand);
+                else if (demand.taxReasonCode.toLowerCase() === "advance_tax")
+                    advanceTaxDemands.push(demand);
+                else if (demand.taxReasonCode.toLowerCase() === "goodwill_amount")
+                    goodwillTaxDemands.push(demand);
+                else if (demand.taxReasonCode.toLowerCase() === "adv_cgst" || demand.taxReasonCode.toLowerCase() === "adv_sgst")
+                    gstOnAdvanceDemands.push(demand);
+                else if (demand.taxReasonCode.toLowerCase() === "gw_cgst" || demand.taxReasonCode.toLowerCase() === "gw_sgst")
+                    gstOnGoodWillDemands.push(demand);
+
             });
-            cgstDemands.forEach((pDemand) => {
-                if (pDemand.taxPeriod === rentDemands[i].taxPeriod) {
-                    demands.splice(index, 0, pDemand);
-                    index++;
-                }
-            });
-            serviceTaxDemands.forEach((pDemand) => {
-                if (pDemand.taxPeriod === rentDemands[i].taxPeriod) {
-                    demands.splice(index, 0, pDemand);
-                    index++;
-                }
-            });
-        }
 
-        data.responseJSON.legacyDemands[0].demandDetails = demands;
-
-        demandDetails = demands;
-        let objectItem = new Object();
-        demandDetails.forEach((data, index) => {
-
-            //filtering rents taxes
-            if (data.taxReasonCode.toLowerCase() === "rent" ||
-                data.taxReasonCode.toLowerCase() === "penalty" ||
-                data.taxReasonCode.toLowerCase() === "state_gst" ||
-                data.taxReasonCode.toLowerCase() === "central_gst" ||
-                data.taxReasonCode.toLowerCase() === "service_tax"
-            ) {
-                var tempKey = 'rent' + data.taxPeriod
-                if (objectItem.hasOwnProperty(tempKey)) {
-                    objectItem[tempKey][data.taxReasonCode] = data.taxAmount;
-                } else {
-                    objectItem[tempKey] = new Object();
-                    objectItem[tempKey].taxPeriod = data.taxPeriod;
-                    objectItem[tempKey][data.taxReasonCode] = data.taxAmount;
-                    objectItem[tempKey]['reason'] = "rent";
-
-                    //console.log(objectItem); 
-                }
+            var index = 0;
+            if (advanceTaxDemands.length > 0) {
+                demands.splice(index, 0, advanceTaxDemands[0]);
+                index++;
+            }
+            if (gstOnAdvanceDemands.length > 0) {
+                demands.splice(index, 0, gstOnAdvanceDemands[0]);
+                index++;
+                demands.splice(index, 0, gstOnAdvanceDemands[1]);
+                index++;
+            }
+            if (goodwillTaxDemands.length > 0) {
+                demands.splice(index, 0, goodwillTaxDemands[0]);
+                index++;
+            }
+            if (goodwillTaxDemands.length > 0 && gstOnGoodWillDemands.length > 0) {
+                demands.splice(index, 0, gstOnGoodWillDemands[0]);
+                index++;
+                demands.splice(index, 0, gstOnGoodWillDemands[1]);
+                index++;
             }
 
-            //filtering advanced taxes
-            if (data.taxReasonCode.toLowerCase() === "advance_tax" ||
-                data.taxReasonCode.toLowerCase() === "adv_cgst" ||
-                data.taxReasonCode.toLowerCase() === "adv_sgst"
-            ) {
-                var tempKey = 'adv' + data.taxPeriod
-                if (objectItem.hasOwnProperty(tempKey)) {
-                    objectItem[tempKey][data.taxReasonCode] = data.taxAmount;
-                } else {
-                    objectItem[tempKey] = new Object();
-                    objectItem[tempKey].taxPeriod = data.taxPeriod;
-                    objectItem[tempKey][data.taxReasonCode] = data.taxAmount;
-                    objectItem[tempKey]['reason'] = "advanced";
-
-                    //console.log(objectItem); 
-                }
+            for (var i = 0; i < rentDemands.length; i++) {
+                demands.splice(index, 0, rentDemands[i]);
+                index++;
+                penaltyDemands.forEach((pDemand) => {
+                    if (pDemand.taxPeriod === rentDemands[i].taxPeriod) {
+                        demands.splice(index, 0, pDemand);
+                        index++;
+                    }
+                });
+                sgstDemands.forEach((pDemand) => {
+                    if (pDemand.taxPeriod === rentDemands[i].taxPeriod) {
+                        demands.splice(index, 0, pDemand);
+                        index++;
+                    }
+                });
+                cgstDemands.forEach((pDemand) => {
+                    if (pDemand.taxPeriod === rentDemands[i].taxPeriod) {
+                        demands.splice(index, 0, pDemand);
+                        index++;
+                    }
+                });
+                serviceTaxDemands.forEach((pDemand) => {
+                    if (pDemand.taxPeriod === rentDemands[i].taxPeriod) {
+                        demands.splice(index, 0, pDemand);
+                        index++;
+                    }
+                });
             }
 
-            //filtering service taxes
-            if (data.taxReasonCode.toLowerCase() === "goodwill_amount" ||
-                data.taxReasonCode.toLowerCase() === "gw_cgst" ||
-                data.taxReasonCode.toLowerCase() === "gw_sgst"
-            ) {
-                var tempKey = 'gw' + data.taxPeriod
-                if (objectItem.hasOwnProperty(tempKey)) {
-                    objectItem[tempKey][data.taxReasonCode] = data.taxAmount;
-                } else {
-                    objectItem[tempKey] = new Object();
-                    objectItem[tempKey].taxPeriod = data.taxPeriod;
-                    objectItem[tempKey][data.taxReasonCode] = data.taxAmount;
-                    objectItem[tempKey]['reason'] = "goodwill";
+            data.responseJSON.legacyDemands[0].demandDetails = demands;
 
-                    //console.log(objectItem); 
+            demandDetails = demands;
+            let objectItem = new Object();
+            demandDetails.forEach((data, index) => {
+
+                //filtering rents taxes
+                if (data.taxReasonCode.toLowerCase() === "rent" ||
+                    data.taxReasonCode.toLowerCase() === "penalty" ||
+                    data.taxReasonCode.toLowerCase() === "state_gst" ||
+                    data.taxReasonCode.toLowerCase() === "central_gst" ||
+                    data.taxReasonCode.toLowerCase() === "service_tax"
+                ) {
+                    var tempKey = 'rent' + data.taxPeriod
+                    if (objectItem.hasOwnProperty(tempKey)) {
+                        objectItem[tempKey][data.taxReasonCode] = data.taxAmount;
+                    } else {
+                        objectItem[tempKey] = new Object();
+                        objectItem[tempKey].taxPeriod = data.taxPeriod;
+                        objectItem[tempKey][data.taxReasonCode] = data.taxAmount;
+                        objectItem[tempKey]['reason'] = "rent";
+
+                        //console.log(objectItem); 
+                    }
                 }
-            }
 
-        });
+                //filtering advanced taxes
+                if (data.taxReasonCode.toLowerCase() === "advance_tax" ||
+                    data.taxReasonCode.toLowerCase() === "adv_cgst" ||
+                    data.taxReasonCode.toLowerCase() === "adv_sgst"
+                ) {
+                    var tempKey = 'adv' + data.taxPeriod
+                    if (objectItem.hasOwnProperty(tempKey)) {
+                        objectItem[tempKey][data.taxReasonCode] = data.taxAmount;
+                    } else {
+                        objectItem[tempKey] = new Object();
+                        objectItem[tempKey].taxPeriod = data.taxPeriod;
+                        objectItem[tempKey][data.taxReasonCode] = data.taxAmount;
+                        objectItem[tempKey]['reason'] = "advanced";
 
-        this.setState({
-            ...this.state,
-            partialPayment: data.responseJSON,
-            partialPaymentRows: Object.values(objectItem)
-        });
+                        //console.log(objectItem); 
+                    }
+                }
 
-        console.log("data", Object.values(objectItem));
-    }catch(e){
-        this.setState({
-            ...this.state,
-            partialPayment: {},
-            partialPaymentRows:[]
-        });
-    }
+                //filtering service taxes
+                if (data.taxReasonCode.toLowerCase() === "goodwill_amount" ||
+                    data.taxReasonCode.toLowerCase() === "gw_cgst" ||
+                    data.taxReasonCode.toLowerCase() === "gw_sgst"
+                ) {
+                    var tempKey = 'gw' + data.taxPeriod
+                    if (objectItem.hasOwnProperty(tempKey)) {
+                        objectItem[tempKey][data.taxReasonCode] = data.taxAmount;
+                    } else {
+                        objectItem[tempKey] = new Object();
+                        objectItem[tempKey].taxPeriod = data.taxPeriod;
+                        objectItem[tempKey][data.taxReasonCode] = data.taxAmount;
+                        objectItem[tempKey]['reason'] = "goodwill";
+
+                        //console.log(objectItem); 
+                    }
+                }
+
+            });
+
+            this.setState({
+                ...this.state,
+                partialPayment: data.responseJSON,
+                partialPaymentRows: Object.values(objectItem)
+            });
+
+            console.log("data", Object.values(objectItem));
+        } catch (e) {
+            this.setState({
+                ...this.state,
+                partialPayment: {},
+                partialPaymentRows: []
+            });
+        }
+
+        if (!getUrlVars()["agreementNumber"]) {
+            this.setState({
+                ...this.state,
+                partialPayment: {},
+                partialPaymentRows: []
+            });
+        }
+
     }
 
     close() {
@@ -269,16 +277,31 @@ class PartialPayment extends React.Component {
         }
 
         if (!alteastOneChecked && length > 0) {
-            return showError("Kindly select atleast one checkboxe to collect tax");
+            return showError("Kindly select atleast one checkbox to collect tax");
         }
 
         //If the source is system then check for goodwill and adv tax
-        if(body.source === "SYSTEM"){
-            if(!document.getElementById("checkbox_1").checked){
+        if (body.source === "SYSTEM") {
+
+            let systemAdvPosition, systemGWPosition;
+
+            this.state.partialPaymentRows.forEach((item, index) => {
+                if (item.reason === "advanced")
+                    systemAdvPosition = index;
+                if (item.reason === "goodwill")
+                    systemGWPosition = index;
+            });
+
+
+            if (systemGWPosition && !document.getElementById("checkbox_" + systemGWPosition).checked) {
+                return showError("Please select Advanced tax and Good will Amount.");
+            }
+
+            if (systemAdvPosition && !document.getElementById("checkbox_" + systemAdvPosition).checked) {
                 return showError("Please select Advanced tax and Good will Amount.");
             }
         }
-        
+
         for (var i = length - 1; i >= 0; i--) {
             console.log("Lastchecked ", i, document.getElementById("checkbox_" + i).checked)
             if (document.getElementById("checkbox_" + i).checked) {
@@ -368,51 +391,52 @@ class PartialPayment extends React.Component {
                 return (<tr> <td colSpan="8" style={{ textAlign: "center" }}> No Legacy demands to display.</td></tr>);
             }
             else {
-            return partialPayment.map((data, index) => {
-                //console.log("data from map",data);
-                if (data.reason === 'rent') {
-                    return (
-                        <tr>
-                            <td><input type="checkbox" className="checkbox" id={"checkbox_" + index} /></td>
-                            <td>{"Rent, " + data.taxPeriod}</td>
-                            <td>{data.RENT ? data.RENT : 0}</td>
-                            <td>{data.penalty ? data.penalty : 0}</td>
-                            <td>{data.CENTRAL_GST ? data.CENTRAL_GST : 0}</td>
-                            <td>{data.STATE_GST ? data.STATE_GST : 0}</td>
-                            <td>{data.SERVICE_TAX ? data.SERVICE_TAX : 0}</td>
-                            <td>{(data.STATE_GST ? data.STATE_GST : 0) + (data.CENTRAL_GST ? data.CENTRAL_GST : 0) + (data.RENT ? data.RENT : 0) + (data.SERVICE_TAX ? data.SERVICE_TAX : 0)}</td>
-                        </tr>
-                    )
-                }
-                if (data.reason === 'goodwill') {
-                    return (
-                        <tr>
-                            <td><input type="checkbox" className="checkbox" id={"checkbox_" + index} /></td>
-                            <td>{"Goodwill Amount, " + data.taxPeriod}</td>
-                            <td>{data["GOODWILL_AMOUNT"] ? data["GOODWILL_AMOUNT"] : 0}</td>
-                            <td>{0}</td>
-                            <td>{data['GW_CGST'] ? data['GW_CGST'] : 0}</td>
-                            <td>{data['GW_SGST'] ? data['GW_SGST'] : 0}</td>
-                            <td>{0}</td>
-                            <td>{(data['GOODWILL_AMOUNT'] ? data['GOODWILL_AMOUNT'] : 0) + (data['GW_CGST'] ? data['GW_CGST'] : 0) + (data["GW_SGST"] ? data["GW_SGST"] : 0)}</td>
-                        </tr>
-                    )
-                }
-                if (data.reason === 'advanced') {
-                    return (
-                        <tr>
-                            <td><input type="checkbox" className="checkbox" id={"checkbox_" + index} /></td>
-                            <td>{"Advanced Tax, " + data.taxPeriod}</td>
-                            <td>{data["ADVANCE_TAX"] ? data["ADVANCE_TAX"] : 0}</td>
-                            <td>{0}</td>
-                            <td>{data['ADV_CGST'] ? data['ADV_CGST'] : 0}</td>
-                            <td>{data['ADV_SGST'] ? data['ADV_SGST'] : 0}</td>
-                            <td>{0}</td>
-                            <td>{(data['ADVANCE_TAX'] ? data['ADVANCE_TAX'] : 0) + (data['ADV_CGST'] ? data['ADV_CGST'] : 0) + (data["ADV_SGST"] ? data["ADV_SGST"] : 0)}</td>
-                        </tr>
-                    )
-                }
-            })}
+                return partialPayment.map((data, index) => {
+                    //console.log("data from map",data);
+                    if (data.reason === 'rent') {
+                        return (
+                            <tr>
+                                <td><input type="checkbox" className="checkbox" id={"checkbox_" + index} /></td>
+                                <td>{"Rent: " + data.taxPeriod}</td>
+                                <td>{data.RENT ? data.RENT : 0}</td>
+                                <td>{data.penalty ? data.penalty : 0}</td>
+                                <td>{data.CENTRAL_GST ? data.CENTRAL_GST : 0}</td>
+                                <td>{data.STATE_GST ? data.STATE_GST : 0}</td>
+                                <td>{data.SERVICE_TAX ? data.SERVICE_TAX : 0}</td>
+                                <td>{(data.STATE_GST ? data.STATE_GST : 0) + (data.CENTRAL_GST ? data.CENTRAL_GST : 0) + (data.RENT ? data.RENT : 0) + (data.SERVICE_TAX ? data.SERVICE_TAX : 0)}</td>
+                            </tr>
+                        )
+                    }
+                    if (data.reason === 'goodwill') {
+                        return (
+                            <tr>
+                                <td><input type="checkbox" className="checkbox" id={"checkbox_" + index} /></td>
+                                <td>{"Goodwill Amount: " + data.taxPeriod}</td>
+                                <td>{data["GOODWILL_AMOUNT"] ? data["GOODWILL_AMOUNT"] : 0}</td>
+                                <td>{0}</td>
+                                <td>{data['GW_CGST'] ? data['GW_CGST'] : 0}</td>
+                                <td>{data['GW_SGST'] ? data['GW_SGST'] : 0}</td>
+                                <td>{0}</td>
+                                <td>{(data['GOODWILL_AMOUNT'] ? data['GOODWILL_AMOUNT'] : 0) + (data['GW_CGST'] ? data['GW_CGST'] : 0) + (data["GW_SGST"] ? data["GW_SGST"] : 0)}</td>
+                            </tr>
+                        )
+                    }
+                    if (data.reason === 'advanced') {
+                        return (
+                            <tr>
+                                <td><input type="checkbox" className="checkbox" id={"checkbox_" + index} /></td>
+                                <td>{"Advanced Tax: " + data.taxPeriod}</td>
+                                <td>{data["ADVANCE_TAX"] ? data["ADVANCE_TAX"] : 0}</td>
+                                <td>{0}</td>
+                                <td>{data['ADV_CGST'] ? data['ADV_CGST'] : 0}</td>
+                                <td>{data['ADV_SGST'] ? data['ADV_SGST'] : 0}</td>
+                                <td>{0}</td>
+                                <td>{(data['ADVANCE_TAX'] ? data['ADVANCE_TAX'] : 0) + (data['ADV_CGST'] ? data['ADV_CGST'] : 0) + (data["ADV_SGST"] ? data["ADV_SGST"] : 0)}</td>
+                            </tr>
+                        )
+                    }
+                })
+            }
         }
         return (
             <div>

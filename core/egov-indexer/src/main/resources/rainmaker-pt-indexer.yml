@@ -4,7 +4,7 @@ ServiceMaps:
  mappings:
   - topic: save-pt-property
     indexes:
-    - name: propertycreate
+    - name: rainmakerpt
       type: propertycreate
       id: $.propertyId, $.tenantId
       isBulk: true
@@ -12,7 +12,7 @@ ServiceMaps:
 
   - topic: update-pt-property
     indexes:
-    - name: propertycreate
+    - name: rainmakerpt
       type: propertycreate
       id: $.propertyId, $.tenantId
       isBulk: true

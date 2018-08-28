@@ -123,8 +123,9 @@ class RenewalAgreement extends React.Component {
       rentPercentageMap: {},
       existingRent:0,
       renewalRent:0,
+      sgst:0,
+      cgst:0,
       renewalDeposit:0
-
     }
     this.handleChangeTwoLevel = this.handleChangeTwoLevel.bind(this);
     this.handleChange = this.handleChange.bind(this);
@@ -369,16 +370,34 @@ class RenewalAgreement extends React.Component {
     } else if(name === "rent"){
 
       var renewalDeposit = 3 * e.target.value;
+      var sgst = Math.round(e.target.value * 0.09);
+      var cgst = Math.round(e.target.value * 0.09);
+      console.log("s",sgst);
 
       _this.setState({
         ..._this.state,
         renewalDeposit: renewalDeposit,
         renewalRent : e.target.value,
+        sgst:sgst,
+        cgst:cgst,
         agreement: {
           ..._this.state.agreement,
           [name]: e.target.value,
           securityDeposit:renewalDeposit
 
+        }
+      })
+    }else if(name === "sgst"){
+      let renewalRent = this.state.renewalRent;
+      let sgst = Math.round(renewalRent * 0.09);
+      let cgst = Math.round(renewalRent * 0.09);
+
+      _this.setState({
+        ..._this.state,
+        agreement: {
+          ..._this.state.agreement,
+          sgst:sgst,
+          cgst:cgst,
         }
       })
     } else  {
@@ -421,6 +440,8 @@ class RenewalAgreement extends React.Component {
     }
      if(pName==="rentIncrementMethod") {
         var rent = _this.state.existingRent;
+        var sgst = rent * 0.09;
+        var cgst = rent * 0.09;
         var rentIncrPercentage = _this.state.rentPercentageMap[e.target.value];
         updatedRenewalRent = Math.round(rent + (rent * rentIncrPercentage)/100);
         updatedSecurityDeposit = Math.round(updatedRenewalRent * 3);
@@ -430,6 +451,8 @@ class RenewalAgreement extends React.Component {
       ..._this.state,
       renewalDeposit: updatedSecurityDeposit,
       renewalRent : updatedRenewalRent,
+      sgst:sgst,
+      cgst:cgst,
       agreement: {
         ..._this.state.agreement,
         rent: updatedRenewalRent,
@@ -564,6 +587,8 @@ class RenewalAgreement extends React.Component {
     var rentIncrement = agreement.rentIncrementMethod.percentage;
 
     var renewalRent = existingRent + (existingRent * rentIncrement)/100;
+    var sgst = renewalRent * 0.09;
+    var cgst = renewalRent * 0.09;
     var renewalSecurityDeposit = 3 * renewalRent;
 
     var rentInc = commonApiPost("lams-services", "getrentincrements", "", {tenantId, basisOfAllotment:agreement.basisOfAllotment}).responseJSON;
@@ -583,6 +608,8 @@ class RenewalAgreement extends React.Component {
       rentPercentageMap,
       existingRent,
       renewalRent,
+      sgst:sgst,
+      cgst,cgst,
       renewalDeposit:renewalSecurityDeposit
     });
 
@@ -652,12 +679,10 @@ class RenewalAgreement extends React.Component {
   render() {
     var _this = this;
     let { handleChange, handleChangeTwoLevel, addOrUpdate,onBlur} = this;
-    let { agreement, renewalReasons, rentInc, existingRent,renewalRent,renewalDeposit } = _this.state;
+    let { agreement, renewalReasons, rentInc, existingRent,renewalRent,renewalDeposit,sgst,cgst} = _this.state;
     let { allottee, asset, rentIncrementMethod, workflowDetails, cancellation,
       renewal, eviction, objection, judgement, remission, remarks, documents } = this.state.agreement;
     let { assetCategory, locationDetails } = this.state.agreement.asset;
-    //agreement.rent;
-
     const renderOption = function (data) {
       if (data) {
         return data.map((item, ind) => {
@@ -1106,7 +1131,7 @@ class RenewalAgreement extends React.Component {
                 </div>
               </div>
               <div className="col-sm-6">
-                <div className="row">
+                {/* <div className="row">
                   <div className="col-sm-6 label-text">
                     <label for="reasonForRenewal">Renewal Reason
                               <span>*</span>
@@ -1117,6 +1142,36 @@ class RenewalAgreement extends React.Component {
                       <option>Select</option>
                       {renderOption(renewalReasons)}
                     </select>
+                  </div>
+                </div> */}
+              </div>
+             </div>
+             <div className="row">
+              <div className="col-sm-6">
+                <div className="row">
+                  <div className="col-sm-6 label-text">
+                    <label for="renewalRent" className="categoryType">SGST</label>
+                  </div>
+                  <div className="col-sm-6">
+                    <div className="text-no-ui">
+                      <span>₹</span>
+                      <input type="number" min="0" name="sgst"  id="sgst" value={sgst}
+                      onChange={(e) => { handleChange(e, "sgst") }} disabled/>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="col-sm-6">
+                <div className="row">
+                  <div className="col-sm-6 label-text">
+                    <label for="reasonForRenewal">CGST</label>
+                  </div>
+                  <div className="col-sm-6">
+                    <div className="text-no-ui">
+                      <span>₹</span>
+                      <input type="number" min="0" name="cgst" id="cgst" value={cgst}
+                      onChange={(e) => { handleChange(e, "cgst") }} disabled/>
+                    </div>
                   </div>
                 </div>
               </div>

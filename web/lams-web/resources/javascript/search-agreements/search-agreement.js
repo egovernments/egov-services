@@ -1063,7 +1063,7 @@ class AgreementSearch extends React.Component {
     } = this.state.searchSet;
     const showCollectTaxOption = function(item) {
       if (
-        hideCollectTaxOption &&
+        !hideCollectTaxOption &&
         !(item.action == "CREATE" && item.status == "REJECTED")
       ) {
         return (<option value="collTax">Collect Tax</option>);

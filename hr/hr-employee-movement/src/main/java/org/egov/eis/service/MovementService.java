@@ -177,7 +177,7 @@ public class MovementService {
 
 			if(employee.getDateOfRetirement()!=null){
 				dor = employee.getDateOfRetirement();
-			}else if(!formattedDOB.isEmpty()){
+			}else if(formattedDOB != null){
 				String dob = formattedDOB;
 				dor = output.parse(dob);
 				Calendar cal = Calendar.getInstance();
@@ -186,7 +186,7 @@ public class MovementService {
 				dor = cal.getTime();
 			}
 			// validateEmployeeNextPositionWithCurrent
-			if (employee != null && employee.getId() != null && !formattedDOB.isEmpty() ) {
+			if (employee != null && employee.getId() != null && formattedDOB != null ) {
 				for (Assignment assignment : employee.getAssignments()) {
 					if(((assignment.getFromDate().after(movement.getEffectiveFrom()) && assignment.getFromDate().before(dor)) ||
 							(assignment.getToDate().after(movement.getEffectiveFrom()) && assignment.getToDate().before(dor)) ||
@@ -207,7 +207,7 @@ public class MovementService {
 					message = message + applicationConstants.getErrorMessage(applicationConstants.ERR_MOVEMENT_EMPLOYEE_ROLE_VALIDATE);
 			} else {
 				message = message
-						+ applicationConstants.getErrorMessage(applicationConstants.ERR_MOVEMENT_EMPLOYEE_VALIDATE)
+						+ applicationConstants.getErrorMessage(applicationConstants.ERR_MOVEMENT_EMPLOYEE_DOB_VALIDATE)
 						+ ", ";
 			}
 

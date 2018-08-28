@@ -58,6 +58,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.springframework.format.annotation.DateTimeFormat;
 
 @AllArgsConstructor
 @Builder
@@ -87,6 +88,7 @@ public class Movement {
     private TransferReason reason;
 
     @NotNull
+    @DateTimeFormat(pattern = "dd/MM/yyyy")
     @JsonFormat(pattern = "dd/MM/yyyy")
     private Date effectiveFrom;
 

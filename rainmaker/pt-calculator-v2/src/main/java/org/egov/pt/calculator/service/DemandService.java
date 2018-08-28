@@ -245,6 +245,9 @@ public class DemandService {
 
 		carryForward = utils.getTotalCollectedAmountAndSetTaxAmt(demand);
 
+		log.debug(oldTaxAmt.toPlainString());
+		log.debug(newTax.toPlainString());
+		
 		if (oldTaxAmt.compareTo(newTax) > 0)
 			carryForward = BigDecimal.valueOf(-1);
 

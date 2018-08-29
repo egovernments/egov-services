@@ -477,42 +477,49 @@ class UpdateCancellation extends React.Component {
 
         doc.setFontType("normal");
         doc.setFontSize(11);
-        doc.text(15, 50, 'Roc.No. ' + agreement.noticeNumber);
-        doc.text(140, 50, 'Dt. ' + agreement.agreementDate);
+        doc.fromHTML( 'Roc.No. <b>' + agreement.noticeNumber + '</b>', 15, 50);
+        doc.fromHTML('Dt. <b>' + agreement.agreementDate + '</b>', 140, 50);
 
-        var paragraph = "Sub: Leases – Revenue Section – Shop No " + agreement.referenceNumber + " in " + agreement.asset.name + " Complex, " + locality + " - Lease cancellation – Orders  - Issued";
+        var paragraph = "Sub: Leases – Revenue Section – Shop No <b>" + agreement.referenceNumber + "</b> in <b>" + agreement.asset.name + "<b> Complex, <b>" + locality + "<b> - Lease cancellation – Orders  - Issued";
         var lines = doc.splitTextToSize(paragraph, 180);
-        doc.text(15, 60, lines);
+        lines.forEach((element,index) => {
+            doc.fromHTML(element.trim(),15, 60+(index*5));
+         });
 
-        doc.text(15, 75, "Ref: 1. Lease agreement No " + agreement.agreementNumber + " dt " + agreement.agreementDate);
-        doc.text(24, 80, "2. Roc No " + agreement.noticeNumber + " dt " + agreement.agreementDate + " of this office");
-        doc.text(24, 85, "3. Resolution No " + agreement.cancellation.orderNo + " dt " + agreement.cancellation.orderDate + " of Municipal Council/Standing Committee");
-        doc.text(105, 100, "><><><", 'center');
+         doc.fromHTML("Ref: 1. Lease agreement No <b>" + agreement.agreementNumber + "</b> dt <b>" + agreement.agreementDate +"</b>", 15, 75);
+         doc.fromHTML("2. Roc No <b>" + agreement.noticeNumber + "</b> dt <b>" + agreement.agreementDate + "</b> of this office", 24, 80);
+         doc.fromHTML("3. Resolution No <b>" + agreement.cancellation.orderNo + "</b> dt <b>" + agreement.cancellation.orderDate + "</b> of Municipal Council/Standing Committee", 24, 85,);
+         doc.text(105, 100, "><><><", 'center');
 
-        doc.text(15, 110, "Orders:");
-        doc.setLineWidth(0.5);
-        doc.line(15, 111, 30, 111);
+         doc.text(15, 110, "Orders:");
+         doc.setLineWidth(0.5);
+         doc.line(15, 111, 30, 111);
 
-        var paragraph1 = "In the reference 1st cited, an agreement was concluded with you for leasing Shop No " + agreement.referenceNumber + " in the " + agreement.asset.name + " Shopping Complex and the lease is subject to the terms and conditions prescribed therein. Due to non observance of the same, your lease for the said shop is being cancelled. (Reasons as cited below).";
-        var lines = doc.splitTextToSize(paragraph1, 180);
-        doc.text(15, 120, lines);
+         var paragraph1 = "In the reference 1st cited, an agreement was concluded with you for leasing Shop No <b>" + agreement.referenceNumber + "</b> in the <b>" + agreement.asset.name + "</b> Shopping Complex and the lease is subject to the terms and conditions prescribed therein. Due to non observance of the same, your lease for the said shop is being cancelled. (Reasons as cited below).";
+         var lines = doc.splitTextToSize(paragraph1, 180);
+         lines.forEach((element,index) => {
+             doc.fromHTML(element,15, 120+(index*5));
+         });
+         //doc.text(15, 120, lines);
 
-        doc.autoTable(columns, rows, autoTableOptions);
+         doc.autoTable(columns, rows, autoTableOptions);
 
-        var paragraph2 = "In pursuance of the same you are hereby instructed to clear all the dues and vacate the premises with immediate effect and handover the premises to the Municipal officials as it is, failing which civil and criminal action will be initiated under relevant provisions of " + municipalact + " and rules issued there upon. No correspondence will be entertained in this ";
-        var lines = doc.splitTextToSize(paragraph2, 180);
-        doc.text(15, 220, lines);
+         var paragraph2 = "In pursuance of the same you are hereby instructed to clear all the dues and vacate the premises with immediate effect and handover the premises to the Municipal officials as it is, failing which civil and criminal action will be initiated under relevant provisions of <b>" + municipalact + "</b> and rules issued there upon. No correspondence will be entertained in this ";
+         var lines = doc.splitTextToSize(paragraph2, 180);
+         lines.forEach((element,index) => {
+             doc.fromHTML(element,15, 220+(index*5));
+         });
 
-        doc.text(120, 250, "Commissioner");
-        doc.text(120, 255, tenantId.split(".")[1].charAt(0).toUpperCase() + tenantId.split(".")[1].slice(1) + ",");
-        doc.text(120, 260, ulbType);
+         doc.text(120, 250, "Commissioner");
+         doc.text(120, 255, tenantId.split(".")[1].charAt(0).toUpperCase() + tenantId.split(".")[1].slice(1) + ",");
+         doc.text(120, 260, ulbType);
 
-        doc.text(15, 265, "To");
-        doc.text(15, 270, "The Leaseholder");
-        doc.text(15, 275, "Copy to the concerned officials for necessary action");
+         doc.text(15, 265, "To");
+         doc.text(15, 270, "The Leaseholder");
+         doc.text(15, 275, "Copy to the concerned officials for necessary action");
 
-        doc.save('CancellationNotice-' + agreement.agreementNumber + '.pdf');
-        var blob = doc.output('blob');
+         doc.save('CancellationNotice-' + agreement.agreementNumber + '.pdf');
+         var blob = doc.output('blob');
 
         this.createFileStore(agreement, blob).then(this.createNotice, this.errorHandler);
     }

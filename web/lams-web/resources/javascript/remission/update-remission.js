@@ -433,6 +433,15 @@ class UpdateRemission extends React.Component {
 
     printNotice(agreement) {
 
+        var commDesignation = commonApiPost("hr-masters", "designations", "_search", {name:"Commissioner", active:true,tenantId }).responseJSON["Designation"];
+        var commDesignationId = commDesignation[0].id;
+        var commissioners =  commonApiPost("hr-employee", "employees", "_search", {
+                        tenantId,
+                        designationId: commDesignationId,
+                        active: true,
+                        asOnDate: moment(new Date()).format("DD/MM/YYYY")
+                        }).responseJSON["Employee"] || [];
+        var commissionerName =commissioners[0].name;
         var LocalityData = commonApiPost("egov-location/boundarys", "boundariesByBndryTypeNameAndHierarchyTypeName", "", { boundaryTypeName: "LOCALITY", hierarchyTypeName: "LOCATION", tenantId });
         var locality = getNameById(LocalityData["responseJSON"]["Boundary"], agreement.asset.locationDetails.locality);
         var cityGrade = !localStorage.getItem("city_grade") || localStorage.getItem("city_grade") == "undefined" ? (localStorage.setItem("city_grade", JSON.stringify(commonApiPost("tenant", "v1/tenant", "_search", { code: tenantId }).responseJSON["tenant"][0]["city"]["ulbGrade"] || {})), JSON.parse(localStorage.getItem("city_grade"))) : JSON.parse(localStorage.getItem("city_grade"));
@@ -492,7 +501,7 @@ class UpdateRemission extends React.Component {
             },
             alternateRowStyles: {
                 fillColor: [255, 255, 255]
-            }, startY: 135
+            }, startY: 150
         };
 
         var doc = new jsPDF();
@@ -500,47 +509,53 @@ class UpdateRemission extends React.Component {
         doc.setFontType("bold");
         doc.setFontSize(13);
         doc.text(105, 20, "PROCEEDINGS OF THE COMMISSIONER, " + tenantId.split(".")[1].toUpperCase(), 'center');
-        doc.text(105, 27, "NAGAR PANCHAYATHY/MUNICIPALITY/MUNICIPAL CORPORATION TODO", 'center');
-        doc.text(105, 34, "Present: S Ravindra Babu", 'center');
+        doc.text(105, 27, ulbType.toUpperCase(), 'center');
+        doc.text(105, 34, "Present: " + commissionerName, 'center');
 
         doc.setFontType("normal");
         doc.setFontSize(11);
-        doc.text(15, 50, 'Roc.No. ' + agreement.agreementNumber);
-        doc.text(140, 50, 'Dt. ' + today);
+        doc.fromHTML('Roc.No. <b>' + agreement.noticeNumber + '</b>', 15, 50);
+        doc.fromHTML('Dt. <b>' + agreement.agreementDate + '</b>', 140, 50);
 
-        var paragraph = "Sub: Leases – Revenue Section – Shop No " + agreement.referenceNumber + " in " + agreement.asset.name + " Complex, " + locality + " - Remission of lease – Orders  - Issued";
+
+        var paragraph = "Sub: Leases – Revenue Section – Shop No <b>" + agreement.referenceNumber + "</b> in <b>" + agreement.asset.name + "<b> Complex, <b>" + locality + "<b> - Remission of lease – Orders  - Issued";
         var lines = doc.splitTextToSize(paragraph, 180);
-        doc.text(15, 65, lines);
+        lines.forEach((element, index) => {
+            doc.fromHTML(element.trim(), 15, 65 + (index * 5));
+        });
 
-        doc.text(15, 80, "Ref: 1. Request Letter by the leaseholder");
-        doc.text(23, 85, "2. Resolution No " + agreement.remission.remissionOrder + " dt " + agreement.remission.remissionDate + " of Municipal Council/Standing Committee");
 
-        doc.text(105, 95, "><><><", 'center');
+        doc.fromHTML("Ref: 1. Request Letter by the leaseholder", 15, 80);
+        doc.fromHTML("2. Resolution No <b>" + agreement.remission.remissionOrder + "</b> dt <b>" + agreement.remission.remissionDate + "</b> of Municipal Council/Standing Committee", 23, 85);
 
-        doc.text(15, 105, "Orders:");
+        doc.text(105, 105, "><><><", 'center');
+
+        doc.text(15, 115, "Orders:");
         doc.setLineWidth(0.5);
-        doc.line(15, 106, 28, 106);
+        doc.line(15, 116, 28, 116);
 
 
-        var paragraph1 = "In the reference 1st cited, a request for remission of lease amount of existing lease for Shop No " + agreement.referenceNumber + " in the " + agreement.asset.name + " Shopping Complex was received by this office and your application for remission of lease amount was accepted by the Municipal Council/Standing Committee vide reference 2nd cited with the as per the rates mentioned below";
+        var paragraph1 = "In the reference 1st cited, a request for remission of lease amount of existing lease for Shop No <b>" + agreement.referenceNumber + "</b> in the <b>" + agreement.asset.name + "</b> Shopping Complex was received by this office and your application for remission of lease amount was accepted by the Municipal Council/Standing Committee vide reference 2nd cited with the as per the rates mentioned below";
         var lines = doc.splitTextToSize(paragraph1, 180);
-        doc.text(15, 115, lines);
+        lines.forEach((element, index) => {
+            doc.fromHTML(element.trim(), 15, 125 + (index * 5));
+        });
 
         doc.autoTable(columns, rows, autoTableOptions);
 
         var paragraph2 = "In pursuance of the Municipal Council/Standing Committee resolution and vide GO MS No 56 dt. 05.02.2011, you are requested to pay all the dues for the said lease mentioned above immediately failing which action will be initiated as per the agreement conditions.";
         var lines = doc.splitTextToSize(paragraph2, 180);
-        doc.text(15, 170, lines);
+        doc.text(15, 180, lines);
 
 
-        doc.text(120, 190, "Commissioner");
-        doc.text(120, 195, tenantId.split(".")[1].charAt(0).toUpperCase() + tenantId.split(".")[1].slice(1) + ",");
-        doc.text(120, 200, ulbType);
+        doc.text(120, 200, "Commissioner");
+        doc.text(120, 205, tenantId.split(".")[1].charAt(0).toUpperCase() + tenantId.split(".")[1].slice(1) + ",");
+        doc.text(120, 210, ulbType);
 
 
-        doc.text(15, 205, "To");
-        doc.text(15, 210, "The Leaseholder");
-        doc.text(15, 215, "Copy to the concerned officials for necessary action");
+        doc.text(15, 215, "To");
+        doc.text(15, 220, "The Leaseholder");
+        doc.text(15, 225, "Copy to the concerned officials for necessary action");
 
         doc.save('Notice-' + agreement.agreementNumber + '.pdf');
         var blob = doc.output('blob');

@@ -1842,7 +1842,7 @@ class AgreementDetails extends React.Component {
           }
         }
         
-        if ( agreement.status == 'HISTORY') {
+        if ( agreement.status == 'HISTORY' || agreement.status == 'INACTIVE') {
 
             return (<div>
                 <h3>Agreement Details</h3>

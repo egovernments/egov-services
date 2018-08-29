@@ -132,6 +132,10 @@ public class PropertyDetail   {
         private String usageCategoryMajor;
 
         @Size(max=64)
+        @JsonProperty("usageCategoryMinor")
+        private String usageCategoryMinor;
+
+        @Size(max=64)
         @JsonProperty("ownershipCategory")
         private String ownershipCategory;
 

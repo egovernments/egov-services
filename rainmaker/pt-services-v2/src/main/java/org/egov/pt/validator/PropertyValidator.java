@@ -590,6 +590,12 @@ public class PropertyValidator {
         if(emptySearch)
             throw new CustomException("INVALID SEARCH","Search is not allowed on tenantId alone");
 
+        if(requestInfo.getUserInfo().getType().equalsIgnoreCase("CITIZEN")){
+            if(propertyCriteria.getAccountId()!=null
+                    && requestInfo.getUserInfo().getUuid()!=propertyCriteria.getAccountId())
+                throw new CustomException("INVALID SEARCH","Unauthorized search on others uuid");
+        }
+
 
     }
 

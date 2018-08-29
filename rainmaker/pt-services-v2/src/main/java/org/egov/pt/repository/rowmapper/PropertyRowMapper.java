@@ -116,6 +116,7 @@ public class PropertyRowMapper implements ResultSetExtractor<List<Property>> {
 					.ownershipCategory(rs.getString("ownershipCategory"))
 					.subOwnershipCategory(rs.getString("subOwnershipCategory"))
 					.usageCategoryMajor(rs.getString("usageCategoryMajor"))
+					.usageCategoryMinor(rs.getString("usageCategoryMinor"))
 					.adhocExemption(rs.getBigDecimal("adhocExemption"))
 					.adhocExemptionReason(rs.getString("adhocExemptionReason"))
 					.adhocPenalty(rs.getBigDecimal("adhocPenalty"))

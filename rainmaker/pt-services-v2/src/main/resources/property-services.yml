@@ -33,7 +33,7 @@ serviceMaps:
           - jsonPath: $.Properties.*.auditDetails.lastModifiedTime
 
 
-       - query: INSERT INTO eg_pt_propertydetail_v2(tenantId,assessmentNumber,property,accountId,ownershipCategory,subOwnershipCategory,source,usage,noOfFloors,landArea,buildUpArea,additionalDetails,channel,financialYear,propertyType,propertySubType,usageCategoryMajor,assessmentDate,adhocExemption,adhocPenalty,adhocExemptionReason,adhocPenaltyReason,createdby, lastmodifiedby, createdtime, lastmodifiedtime) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);
+       - query: INSERT INTO eg_pt_propertydetail_v2(tenantId,assessmentNumber,property,accountId,ownershipCategory,subOwnershipCategory,source,usage,noOfFloors,landArea,buildUpArea,additionalDetails,channel,financialYear,propertyType,propertySubType,usageCategoryMajor,usageCategoryMinor,assessmentDate,adhocExemption,adhocPenalty,adhocExemptionReason,adhocPenaltyReason,createdby, lastmodifiedby, createdtime, lastmodifiedtime) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);
          basePath: Properties.*.propertyDetails.*
          jsonMaps:
 
@@ -72,6 +72,8 @@ serviceMaps:
            - jsonPath: $.Properties.*.propertyDetails.*.propertySubType
 
            - jsonPath: $.Properties.*.propertyDetails.*.usageCategoryMajor
+
+           - jsonPath: $.Properties.*.propertyDetails.*.usageCategoryMinor
 
            - jsonPath: $.Properties.*.propertyDetails.*.assessmentDate
 
@@ -342,7 +344,7 @@ serviceMaps:
 
 
 
-        - query: INSERT INTO eg_pt_propertydetail_v2(tenantId,assessmentNumber,property,accountId,ownershipCategory,subOwnershipCategory,source,usage,noOfFloors,landArea,buildUpArea,additionalDetails,channel,financialYear,propertyType,propertySubType,usageCategoryMajor,assessmentDate,adhocExemption,adhocPenalty,adhocExemptionReason,adhocPenaltyReason,createdby, lastmodifiedby, createdtime,lastmodifiedtime) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?) ON CONFLICT (assessmentNumber) DO UPDATE SET accountId=?,financialYear=?, propertyType=?, propertySubType=?,usageCategoryMajor=?, assessmentDate=?,ownershipCategory=?,subOwnershipCategory=?,source=?,usage=?,noOfFloors=?,landArea=?,buildUpArea=?,additionalDetails=?,channel=?,adhocExemption=?,adhocPenalty=?,adhocExemptionReason=?,adhocPenaltyReason=?,lastModifiedBy=?, lastModifiedTime=?;
+        - query: INSERT INTO eg_pt_propertydetail_v2(tenantId,assessmentNumber,property,accountId,ownershipCategory,subOwnershipCategory,source,usage,noOfFloors,landArea,buildUpArea,additionalDetails,channel,financialYear,propertyType,propertySubType,usageCategoryMajor,usageCategoryMinor,assessmentDate,adhocExemption,adhocPenalty,adhocExemptionReason,adhocPenaltyReason,createdby, lastmodifiedby, createdtime,lastmodifiedtime) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?) ON CONFLICT (assessmentNumber) DO UPDATE SET accountId=?,financialYear=?, propertyType=?, propertySubType=?,usageCategoryMajor=?,usageCategoryMinor=?, assessmentDate=?,ownershipCategory=?,subOwnershipCategory=?,source=?,usage=?,noOfFloors=?,landArea=?,buildUpArea=?,additionalDetails=?,channel=?,adhocExemption=?,adhocPenalty=?,adhocExemptionReason=?,adhocPenaltyReason=?,lastModifiedBy=?, lastModifiedTime=?;
           basePath: Properties.*.propertyDetails.*
           jsonMaps:
 
@@ -382,6 +384,8 @@ serviceMaps:
 
             - jsonPath: $.Properties.*.propertyDetails.*.usageCategoryMajor
 
+            - jsonPath: $.Properties.*.propertyDetails.*.usageCategoryMinor
+
             - jsonPath: $.Properties.*.propertyDetails.*.assessmentDate
 
             - jsonPath: $.Properties.*.propertyDetails.*.adhocExemption
@@ -409,6 +413,8 @@ serviceMaps:
             - jsonPath: $.Properties.*.propertyDetails.*.propertySubType
 
             - jsonPath: $.Properties.*.propertyDetails.*.usageCategoryMajor
+
+            - jsonPath: $.Properties.*.propertyDetails.*.usageCategoryMinor
 
             - jsonPath: $.Properties.*.propertyDetails.*.assessmentDate
 

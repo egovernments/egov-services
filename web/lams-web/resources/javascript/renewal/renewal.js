@@ -116,7 +116,6 @@ class RenewalAgreement extends React.Component {
         sgst:0,
         cgst:0
       },
-      renewalReasons: ["Reason 1", "Reason 2", "Reason 3", "Reason 4", "Others"],
       positionList: [],
       departmentList: [],
       designationList: [],
@@ -369,7 +368,7 @@ class RenewalAgreement extends React.Component {
 
     } else if(name === "rent"){
 
-      var renewalDeposit = Math.round(3 * e.target.value);
+      var renewalDeposit = 3 * e.target.value;
       var sgst = Math.round(e.target.value * 0.09);
       var cgst = Math.round(e.target.value * 0.09);
       _this.setState({
@@ -402,6 +401,8 @@ class RenewalAgreement extends React.Component {
   handleChangeTwoLevel(e, pName, name) {
 
     var _this = this;
+    var cgst = _this.state.agreement.cgst;
+    var sgst = _this.state.agreement.sgst;
     var updatedRenewalRent = _this.state.renewalRent;
     var updatedSecurityDeposit = _this.state.renewalDeposit;
 
@@ -426,8 +427,8 @@ class RenewalAgreement extends React.Component {
     }
      if(pName==="rentIncrementMethod") {
         var rent = _this.state.existingRent;
-        var sgst = Math.round(_this.state.renewalRent * 0.09);
-        var cgst = Math.round(_this.state.renewalRent * 0.09);
+        sgst = Math.round(_this.state.renewalRent * 0.09);
+        cgst = Math.round(_this.state.renewalRent * 0.09);
         var rentIncrPercentage = _this.state.rentPercentageMap[e.target.value];
         updatedRenewalRent = Math.round(rent + (rent * rentIncrPercentage)/100);
         updatedSecurityDeposit = Math.round(updatedRenewalRent * 3);
@@ -439,6 +440,7 @@ class RenewalAgreement extends React.Component {
       renewalRent : updatedRenewalRent,
       agreement: {
         ..._this.state.agreement,
+        serviceTax:0,
         sgst:sgst,
         cgst:cgst,
         rent: updatedRenewalRent,
@@ -572,10 +574,10 @@ class RenewalAgreement extends React.Component {
     var existingRent = agreement.rent;
     var rentIncrement = agreement.rentIncrementMethod.percentage;
 
-    var renewalRent = Math.round(existingRent + (existingRent * rentIncrement)/100);
+    var renewalRent = existingRent + (existingRent * rentIncrement)/100;
     var sgst = Math.round(renewalRent * 0.09);
     var cgst = Math.round(renewalRent * 0.09);
-    var renewalSecurityDeposit = Math.round(3 * renewalRent);
+    var renewalSecurityDeposit = 3 * renewalRent;
 
     var rentInc = commonApiPost("lams-services", "getrentincrements", "", {tenantId, basisOfAllotment:agreement.basisOfAllotment}).responseJSON;
 
@@ -663,7 +665,7 @@ class RenewalAgreement extends React.Component {
   render() {
     var _this = this;
     let { handleChange, handleChangeTwoLevel, addOrUpdate,onBlur} = this;
-    let { agreement, renewalReasons, rentInc, existingRent,renewalRent,renewalDeposit} = _this.state;
+    let { agreement, rentInc, existingRent,renewalRent,renewalDeposit} = _this.state;
     let { allottee, asset, rentIncrementMethod, workflowDetails, cancellation,
       renewal, eviction, objection, judgement, remission, remarks, documents,sgst,cgst} = this.state.agreement;
     let { assetCategory, locationDetails } = this.state.agreement.asset;
@@ -1128,19 +1130,7 @@ class RenewalAgreement extends React.Component {
                     </select>
                   </div>
                 </div>
-                {/* <div className="row">
-                  <div className="col-sm-6 label-text">
-                    <label for="reasonForRenewal">Renewal Reason
-                              <span>*</span>
-                    </label>
-                  </div>
-                  <div className="col-sm-6">
-                    <select name="reasonForRenewal" id="reasonForRenewal" className="selectStyle" onChange={(e) => { handleChangeTwoLevel(e, "renewal", "reasonForRenewal") }} required>
-                      <option>Select</option>
-                      {renderOption(renewalReasons)}
-                    </select>
-                  </div>
-                </div> */}
+
               </div>
              </div>
              <div className="row">

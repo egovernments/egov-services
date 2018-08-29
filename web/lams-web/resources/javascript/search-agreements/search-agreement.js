@@ -667,8 +667,13 @@ class AgreementSearch extends React.Component {
         leaseHolderName: agreement.name
       },
       {
-        particulars: "GST for Advance Tax",
-        amount: gstOnAdvance,
+        particulars: "SGST for Advance Tax",
+        amount: Math.round(gstOnAdvance / 2),
+        leaseHolderName: agreement.name
+      },
+      {
+        particulars: "CGST for Advance Tax",
+        amount: Math.round(gstOnAdvance / 2),
         leaseHolderName: agreement.name
       },
       {
@@ -677,8 +682,13 @@ class AgreementSearch extends React.Component {
         leaseHolderName: agreement.name
       },
       {
-        particulars: "GST for Goodwill Amount",
-        amount: gstOnGoodWill,
+        particulars: "SGST for Goodwill Amount",
+        amount: Math.round(gstOnGoodWill / 2),
+        leaseHolderName: agreement.name
+      },
+      {
+        particulars: "CGST for Goodwill Amount",
+        amount: Math.round(gstOnGoodWill / 2),
         leaseHolderName: agreement.name
       },
       {
@@ -725,8 +735,12 @@ class AgreementSearch extends React.Component {
     var rentDetails = [
       { particulars: "Monthly Rental", amount: agreement.rent },
       {
-        particulars: "GST",
-        amount: Number(agreement.sgst) + Number(agreement.cgst)
+        particulars: "SGST",
+        amount: Number(agreement.sgst)
+      },
+      {
+        particulars: "CGST",
+        amount: Number(agreement.cgst)
       }
     ];
 

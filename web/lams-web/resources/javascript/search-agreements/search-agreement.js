@@ -480,8 +480,8 @@ class AgreementSearch extends React.Component {
           "fullscreen=yes"
         );
         break;
-        case "collTax":
 
+        case "collTax":
         var data = commonApiPost("lams-services", "payment", "_partialpaymentview", {agreementNumber:number, tenantId, acknowledgementNumber});
         let demandDetails = data.responseJSON.legacyDemands && data.responseJSON.legacyDemands[0].demandDetails? data.responseJSON.legacyDemands[0].demandDetails.length : 0;
         if(demandDetails > 0)
@@ -493,44 +493,8 @@ class AgreementSearch extends React.Component {
         );
         else
         return showError("Rent is fully paid or no demand details found for collection");
-        // $.ajax({
-        //   url:
-        //     "/lams-services/payment/_partialpaymentview?tenantId=" +
-        //     tenantId +
-        //     "&" +
-        //     (acknowledgementNumber
-        //       ? "acknowledgementNumber=" + acknowledgementNumber
-        //       : "agreementNumber=" + number),
-        //   type: "POST",
-        //   contentType: "application/json",
-        //   data: JSON.stringify({
-        //     RequestInfo: requestInfo
-        //   }),
-        //   success: function(data) {
-        //     window.open(
-        //       "app/search-agreement/partial-payment.html?" +
-        //         (number
-        //           ? "&agreementNumber=" + number
-        //           : "&acknowledgementNumber=" + acknowledgementNumber) +
-        //         (status ? "&status=" + status : "") +
-        //         (action ? "&action=" + action : "") +
-        //         (agreementId ? "&id=" + agreementId : "") +
-        //         "&assetId=" +
-        //         id,
-        //       "fs",
-        //       "fullscreen=yes"
-        //     );
-        //   },
-        //   error: function(data) {
-        //     console.log(data);
-        //     showError(
-        //       data.responseJSON.error
-        //         ? data.responseJSON.error.message
-        //         : data.responseJSON.message
-        //     );
-        //   }
-        // });
         break;
+
         case "view":
         window.open(
           "app/search-agreement/view-agreement-details.html?" +
@@ -538,7 +502,7 @@ class AgreementSearch extends React.Component {
               ? "&agreementNumber=" + number
               : "&acknowledgementNumber=" + acknowledgementNumber) +
             (status ? "&status=" + status : "") +
-            (action ? "&action=" + action : "") +
+            ("&action=view") +
             (agreementId ? "&id=" + agreementId : "") +
             "&assetId=" +
             id,

@@ -219,18 +219,19 @@ public class ReceiptValidator {
         BigDecimal amountPaid = billDetail.getAmountPaid();
 
         if (billDetail.getPartPaymentAllowed()) {
+            if (!(totalAmount.compareTo(amountPaid) == 0)) {
+                if (amountPaid.compareTo(BigDecimal.ZERO) != 0 && amountPaid.compareTo(billDetail
+                        .getMinimumAmount()) < 0) {
+                    log.error("Amount paid of {} cannot be lesser than minimum payable amount of {} for bill detail " +
+                            "{}", amountPaid, billDetail.getMinimumAmount(), billDetail.getId());
+                    errorMap.put("AMOUNT_MISMATCH_LOW", "Amount paid cannot be lesser than minimum payable amount");
+                }
 
-            if(amountPaid.compareTo(BigDecimal.ZERO) != 0 && amountPaid.compareTo(billDetail
-                    .getMinimumAmount()) < 0 ){
-                log.error("Amount paid of {} cannot be lesser than minimum payable amount of {} for bill detail " +
-                                "{}", amountPaid, billDetail.getMinimumAmount(), billDetail.getId());
-                errorMap.put("AMOUNT_MISMATCH_LOW", "Amount paid cannot be lesser than minimum payable amount");
-            }
-
-            if (totalAmount.compareTo(amountPaid) < 0) {
-                log.error("Amount paid of {} cannot be greater than bill amount of {} for bill detail {}", billDetail
-                                .getAmountPaid(), totalAmount, billDetail.getId());
-                errorMap.put("AMOUNT_MISMATCH_HIGH", "Amount paid cannot be greater than bill amount");
+                if (amountPaid.compareTo(totalAmount) > 0) {
+                    log.error("Amount paid of {} cannot be greater than bill amount of {} for bill detail {}", billDetail
+                            .getAmountPaid(), totalAmount, billDetail.getId());
+                    errorMap.put("AMOUNT_MISMATCH_HIGH", "Amount paid cannot be greater than bill amount");
+                }
             }
 
         } else {

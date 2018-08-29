@@ -238,16 +238,18 @@ public class TransactionValidator {
 
         if (billDetail.getPartPaymentAllowed()) {
 
-            if(txnAmount.compareTo(BigDecimal.ZERO) != 0 && txnAmount.compareTo(billDetail.getMinimumAmount()) < 0 ){
-                log.error("Amount paid of {} cannot be lesser than minimum payable amount of {} for bill detail " +
-                        "{}", billDetail.getAmountPaid(), billDetail.getMinimumAmount(), billDetail.getId());
-                errorMap.put("TXN_CREATE_PART_PAY_AMT_INVALID", "Amount paid cannot be greater than bill amount");
-            }
+            if (!(billDetail.getTotalAmount().compareTo(txnAmount) == 0)) {
+                if (txnAmount.compareTo(BigDecimal.ZERO) != 0 && txnAmount.compareTo(billDetail.getMinimumAmount()) < 0) {
+                    log.error("Amount paid of {} cannot be lesser than minimum payable amount of {} for bill detail " +
+                            "{}", billDetail.getAmountPaid(), billDetail.getMinimumAmount(), billDetail.getId());
+                    errorMap.put("TXN_CREATE_PART_PAY_AMT_INVALID", "Amount paid cannot be lesser than minimum payable amount");
+                }
 
-            if (totalAmount.compareTo(txnAmount) < 0) {
-                log.error("Transaction Amount of {} cannot be greater than bill amount of {}", newTxn.getTxnAmount()
-                        , totalAmount);
-                errorMap.put("TXN_CREATE_PART_PAY_AMT_INVALID", "Transaction Amount cannot be greater than bill amount");
+                if (txnAmount.compareTo(totalAmount) > 0) {
+                    log.error("Transaction Amount of {} cannot be greater than bill amount of {}", newTxn.getTxnAmount()
+                            , totalAmount);
+                    errorMap.put("TXN_CREATE_PART_PAY_AMT_INVALID", "Transaction Amount cannot be greater than bill amount");
+                }
             }
 
         } else {

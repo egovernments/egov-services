@@ -592,9 +592,10 @@ public class PropertyValidator {
 
         if(requestInfo.getUserInfo().getType().equalsIgnoreCase("CITIZEN")){
             if(propertyCriteria.getAccountId()!=null
-                    && requestInfo.getUserInfo().getUuid()!=propertyCriteria.getAccountId())
+                    && !requestInfo.getUserInfo().getUuid().equalsIgnoreCase(propertyCriteria.getAccountId()))
                 throw new CustomException("INVALID SEARCH","Unauthorized search on others uuid");
         }
+
 
 
     }

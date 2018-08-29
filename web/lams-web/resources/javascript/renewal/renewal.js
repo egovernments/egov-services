@@ -572,10 +572,10 @@ class RenewalAgreement extends React.Component {
     var existingRent = agreement.rent;
     var rentIncrement = agreement.rentIncrementMethod.percentage;
 
-    var renewalRent = existingRent + (existingRent * rentIncrement)/100;
+    var renewalRent = Math.round(existingRent + (existingRent * rentIncrement)/100);
     var sgst = Math.round(renewalRent * 0.09);
     var cgst = Math.round(renewalRent * 0.09);
-    var renewalSecurityDeposit = 3 * renewalRent;
+    var renewalSecurityDeposit = Math.round(3 * renewalRent);
 
     var rentInc = commonApiPost("lams-services", "getrentincrements", "", {tenantId, basisOfAllotment:agreement.basisOfAllotment}).responseJSON;
 

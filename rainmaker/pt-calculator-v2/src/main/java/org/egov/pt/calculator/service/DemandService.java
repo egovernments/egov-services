@@ -111,8 +111,9 @@ public class DemandService {
 
 			BigDecimal newTax = propertyCalculationMap.get(assessmentNumber).getTotalAmount().add(collectedAmtForOldDemand);
 			
+			// true represents that the demand should be updated from this call
 			BigDecimal carryForwardCollectedAmount = getCarryForwardAndCancelOldDemand(newTax, criteria,
-					request.getRequestInfo());
+					request.getRequestInfo(), true);
 
 			if (carryForwardCollectedAmount.doubleValue() >= 0.0) {
 				Property property = criteria.getProperty();
@@ -122,7 +123,7 @@ public class DemandService {
 
 /*				if (carryForwardCollectedAmount.doubleValue() > 0.0)
 					demand.getDemandDetails()
-							.add(DemandDetail.builder()//.taxAmount(carryForwardCollectedAmount.negate())
+							.add(DemandDetail.builder().taxAmount(carryForwardCollectedAmount)
 									.tenantId(criteria.getTenantId()).demandId(demand.getId())
 									.taxHeadMasterCode(CalculatorConstants.PT_ADVANCE_CARRYFORWARD).build());*/
 				
@@ -220,7 +221,8 @@ public class DemandService {
 	 * @param criteria
 	 * @return
 	 */
-	protected BigDecimal getCarryForwardAndCancelOldDemand(BigDecimal newTax, CalculationCriteria criteria, RequestInfo requestInfo) {
+	protected BigDecimal getCarryForwardAndCancelOldDemand(BigDecimal newTax, CalculationCriteria criteria, RequestInfo requestInfo
+			, boolean cancelDemand) {
 
 		Property property = criteria.getProperty();
 
@@ -263,7 +265,7 @@ public class DemandService {
 		if (oldTaxAmt.compareTo(newTax) > 0)
 			carryForward = BigDecimal.valueOf(-1);
 
-		if (BigDecimal.ZERO.compareTo(carryForward) >= 0) return carryForward;
+		if (BigDecimal.ZERO.compareTo(carryForward) >= 0 || !cancelDemand) return carryForward;
 		
 		demand.setStatus(DemandStatus.CANCELLED);
 		DemandRequest request = DemandRequest.builder().demands(Arrays.asList(demand)).requestInfo(requestInfo).build();

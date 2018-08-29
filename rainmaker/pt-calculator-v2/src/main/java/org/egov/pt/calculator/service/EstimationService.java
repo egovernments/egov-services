@@ -425,7 +425,8 @@ public class EstimationService {
         }
 
 		BigDecimal totalAmount = taxAmt.add(penalty).subtract(rebate).subtract(exemption);
-		BigDecimal collectedAmtForOldDemand = demandService.getCarryForwardAndCancelOldDemand(totalAmount, criteria, requestInfo);
+		// false in the argument represents that the demand shouldn't be updated from this call
+		BigDecimal collectedAmtForOldDemand = demandService.getCarryForwardAndCancelOldDemand(totalAmount, criteria, requestInfo, false);
 
 		if(collectedAmtForOldDemand.compareTo(BigDecimal.ZERO) > 0)
 			estimates.add(TaxHeadEstimate.builder()

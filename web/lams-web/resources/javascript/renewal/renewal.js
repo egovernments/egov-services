@@ -369,7 +369,7 @@ class RenewalAgreement extends React.Component {
 
     } else if(name === "rent"){
 
-      var renewalDeposit = 3 * e.target.value;
+      var renewalDeposit = Math.round(3 * e.target.value);
       var sgst = Math.round(e.target.value * 0.09);
       var cgst = Math.round(e.target.value * 0.09);
       _this.setState({

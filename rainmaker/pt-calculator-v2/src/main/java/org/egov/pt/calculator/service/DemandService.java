@@ -1,11 +1,7 @@
 package org.egov.pt.calculator.service;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import org.egov.common.contract.request.RequestInfo;
@@ -43,6 +39,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.extern.slf4j.Slf4j;
 import net.minidev.json.JSONArray;
+
+import static org.egov.pt.calculator.util.CalculatorConstants.PT_ADVANCE_CARRYFORWARD;
 
 @Service
 @Slf4j
@@ -101,7 +99,17 @@ public class DemandService {
 			PropertyDetail detail = criteria.getProperty().getPropertyDetails().get(0);
 			
 			String assessmentNumber = detail.getAssessmentNumber();
-			BigDecimal newTax = propertyCalculationMap.get(assessmentNumber).getTotalAmount();
+
+			//Getting the amount paid in previous assessment
+			BigDecimal collectedAmtForOldDemand =  BigDecimal.ZERO;
+			Optional<TaxHeadEstimate> advanceCarryforwardEstimate = propertyCalculationMap.get(assessmentNumber).getTaxHeadEstimates()
+			.stream().filter(estimate -> estimate.getTaxHeadCode().equalsIgnoreCase(PT_ADVANCE_CARRYFORWARD))
+				.findAny();
+			if(advanceCarryforwardEstimate.isPresent())
+				collectedAmtForOldDemand = advanceCarryforwardEstimate.get().getEstimateAmount();
+
+
+			BigDecimal newTax = propertyCalculationMap.get(assessmentNumber).getTotalAmount().add(collectedAmtForOldDemand);
 			
 			BigDecimal carryForwardCollectedAmount = getCarryForwardAndCancelOldDemand(newTax, criteria,
 					request.getRequestInfo());

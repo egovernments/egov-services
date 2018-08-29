@@ -391,7 +391,6 @@ class UpdateRenewal extends React.Component {
 
 
     printNotice(agreement) {
-
         var commDesignation = commonApiPost("hr-masters", "designations", "_search", {name:"Commissioner", active:true,tenantId }).responseJSON["Designation"];
         var commDesignationId = commDesignation[0].id;
         var commissioners =  commonApiPost("hr-employee", "employees", "_search", {
@@ -410,7 +409,6 @@ class UpdateRenewal extends React.Component {
         }
 
         var renewalToDate = agreement.renewalDate.split("/")[0]+"/"+ agreement.renewalDate.split("/")[1]+"/" + (Number(agreement.renewalDate.split("/")[2]) + Number(agreement.timePeriod));
-
         var today = new Date();
         var dd = today.getDate();
         var mm = today.getMonth() + 1;
@@ -424,16 +422,11 @@ class UpdateRenewal extends React.Component {
         var today = dd + '/' + mm + '/' + yyyy;
 
         var columns = [
-            { title: "S No", dataKey: "sNo" },
             { title: "Shop No", dataKey: "shopNo" },
+            {title:"Agreement No", dataKey:"AgrNo"},
             { title: "Name of the Leaseholder", dataKey: "leaseHolderName" },
             { title: "Current Rent", dataKey: "currentRent" },
             { title: "Shop Area", dataKey: "shopArea" },
-            { title: "Land Area", dataKey: "landArea" },
-            { title: "Rent per Sft", dataKey: "rentSft" },
-            { title: "\"A\" Rent as per Regn Value  (1)", dataKey: "aRent" },
-            { title: "\"B\" Rent of shops in the vicinity  (2)", dataKey: "bRent" },
-            { title: "\"C\" 33% increase in current rent  (3)", dataKey: "cRent" },
             { title: "GST", dataKey: "gst" },
             { title: "Total Rent", dataKey: "totalRent" },
             { title: "Renewal Period", dataKey: "renewalPeriod" }
@@ -441,16 +434,11 @@ class UpdateRenewal extends React.Component {
 
         var rows = [
             {
-                "sNo": "1",
                 "shopNo": agreement.referenceNumber,
+                "AgrNo":agreement.agreementNumber,
                 "leaseHolderName": agreement.allottee.name,
                 "currentRent": agreement.rent,
                 "shopArea": "",
-                "landArea": "",
-                "rentSft": "",
-                "aRent": "",
-                "bRent": "",
-                "cRent": agreement.securityDeposit,
                 "gst": agreement.sgst + agreement.cgst,
                 "totalRent":agreement.renewalRent,
                 "renewalPeriod": agreement.timePeriod
@@ -463,22 +451,23 @@ class UpdateRenewal extends React.Component {
             styles: {
                 lineColor: [0, 0, 0],
                 lineWidth: 0.2,
+                columnWidth:'auto'
             },
             headerStyles: {
                 textColor: [0, 0, 0],
                 fillColor: [255, 255, 255],
                 overflow: 'linebreak',
-                columnWidth: 'wrap'
+                columnWidth:'wrap'
             },
             bodyStyles: {
                 fillColor: [255, 255, 255],
                 textColor: [0, 0, 0],
                 overflow: 'linebreak',
-                columnWidth: 'wrap'
+                columnWidth:'wrap'
             },
             alternateRowStyles: {
                 fillColor: [255, 255, 255]
-            }, startY: 135
+            }, startY: 160
         };
 
         var columns1 = [
@@ -516,7 +505,7 @@ class UpdateRenewal extends React.Component {
             },
             alternateRowStyles: {
                 fillColor: [255, 255, 255]
-            }, startY: 180
+            }, startY: 195
         };
 
         var columns2 = [
@@ -551,7 +540,7 @@ class UpdateRenewal extends React.Component {
             },
             alternateRowStyles: {
                 fillColor: [255, 255, 255]
-            }, startY: 240
+            }, startY: 20
         };
 
         var doc = new jsPDF();
@@ -563,40 +552,66 @@ class UpdateRenewal extends React.Component {
         doc.text(105, 34, "Present: " + commissionerName, 'center');
 
         doc.setFontType("normal");
-        doc.setFontSize(11);
-        doc.text(15, 50, 'Roc.No. ' + agreement.noticeNumber);
-        doc.text(140, 50, 'Dt. ' + agreement.agreementDate);
+        doc.fromHTML(
+            "Roc.No.<b>" + 
+            agreement.noticeNumber,
+            20,50
+        );
+        doc.fromHTML(
+            "Dt.<b>" + 
+            agreement.agreementDate,
+            165,50
+        );
 
-        var paragraph = "Sub: Leases – Revenue Section – Shop No " + agreement.referenceNumber + " in " + agreement.asset.name + " Complex, " + locality + " - Remission of lease – Orders  - Issued";
-        var lines = doc.splitTextToSize(paragraph, 180);
-        doc.text(15, 65, lines);
+        doc.fromHTML(
+                "Sub:Leases - Revenue Section - Shop No <b>" +
+                agreement.referenceNumber +"</b> in <b>"+
+                agreement.asset.name +"</b> Complex, <br><b>" +
+                locality +
+                "</b> Remission of lease - Orders - Issued",
+                20,60
+        );  
+        doc.fromHTML(
+            "Ref: 1. Request Letter by the leaseholder",
+            20,80
+        );
+        doc.fromHTML("2. Resolution No:<b>" +
+            agreement.renewal.renewalOrderNumber + 
+            "</b> dt: <b>" + agreement.renewal.renewalOrderDate +
+            "</b> of Municipal Council/Standing Committee",
+            29,85
+        );
 
-        doc.text(15, 80, "Ref: 1. Request Letter by the leaseholder");
-        doc.text(23, 85, "2. Resolution No " + agreement.renewal.renewalOrderNumber + " dt " + agreement.renewal.renewalOrderDate + " of Municipal Council/Standing Committee");
+        doc.text(105,110, "><><><", 'center');
 
-        doc.text(105, 95, "><><><", 'center');
-
-        doc.text(15, 105, "Orders:");
+        doc.text(20, 125, "Orders:");
         doc.setLineWidth(0.5);
-        doc.line(15, 106, 28, 106);
+        doc.line(20, 126, 33, 126);
 
-        var paragraph1 = "In the reference 1st cited, a request for renewal of existing lease Shop No " + agreement.referenceNumber + " in the " + agreement.asset.name + " Shopping Complex was received by this office and your application for renewal of lease was accepted by the Municipal Council/Standing Committee wide reference 2nd cited with the as per the rates mentioned below";
-        var lines = doc.splitTextToSize(paragraph1, 180);
-        doc.text(15, 115, lines);
+        doc.fromHTML(
+            "In the reference 1st cited "+ 
+            "a request for renewal of existing lease Shop No " +
+            "<b>"+agreement.referenceNumber+"</b> in the <br><b>"+agreement.asset.name+" </b>"+
+            "Shopping Complex was received by this office and your application for<br>"+
+            "renewal of lease was accepted by the Municipal Council/Standing "+
+            "Committee wide reference 2nd<br>cited with the as per the rates mentioned below",
+            15,123
+        );
 
         doc.autoTable(columns, rows, autoTableOptions);
 
-        doc.text(15, 175, "Please fill (1)(2)(3) Manually");
-
         doc.autoTable(columns1, rows1, autoTableOptions1);
 
-        var paragraph2 = "In pursuance of the Municipal Council/Standing Committee resolution and vide GO MS No 56 dt. 05.02.2011, existing lease of the said shop is being renewed for the period " + agreement.renewalDate + " to " + renewalToDate + " at following rates of rentals and taxes thereon.";
-        var lines = doc.splitTextToSize(paragraph2, 180);
-        doc.text(15, 220, lines);
-
-        doc.autoTable(columns2, rows2, autoTableOptions2);
-
+        doc.fromHTML(
+            "In pursuance of the Municipal Council/Standing Committee resolution "+
+             "and vide GO MS No 56 <br>dt. 05.02.2011,existing lease of the said shop"+
+             "is being renewed for the period <b>" + agreement.renewalDate + "</b> to <b>" + 
+             renewalToDate + "</b><br> at following rates<br>of rentals and taxes thereon.",
+             15,230
+        )
+        
         doc.addPage();
+        doc.autoTable(columns2, rows2, autoTableOptions2);
         var paragraph3 = "The following terms and conditions are applicable for the renewal of lease."
 
             + "\n\t1. The leaseholder shall pay rent by 5th of the succeeding month"
@@ -610,15 +625,18 @@ class UpdateRenewal extends React.Component {
             + "\n\nHence you are requested to conclude an agreement duly registered with the SRO for the above mentioned lease within 15 days of receipt of this renewal letter without fail unless the renewal will stand cancelled without any further correspondence."
 
         var lines = doc.splitTextToSize(paragraph3, 180);
-        doc.text(15, 30, lines);
+        doc.setFontSize(11);
+        doc.text(20, 60, lines);
 
-        doc.text(120, 100, "Commissioner");
-        doc.text(120, 105, tenantId.split(".")[1].charAt(0).toUpperCase() + tenantId.split(".")[1].slice(1) + ",");
-        doc.text(120, 110, ulbType);
+        doc.text(125, 155, "Commissioner");
+        doc.setFontType("bold");
+        doc.text(125, 160, tenantId.split(".")[1].charAt(0).toUpperCase() + tenantId.split(".")[1].slice(1) + ",");
+        doc.text(125, 165, ulbType);
 
-        doc.text(15, 115, "To");
-        doc.text(15, 120, "The Leaseholder");
-        doc.text(15, 125, "Copy to the concerned officials for necessary action");
+        doc.setFontType("normal");
+        doc.text(20, 170, "To");
+        doc.text(20, 175, "The Leaseholder");
+        doc.text(20, 180, "Copy to the concerned officials for necessary action");
 
         doc.save('RenewalNotice-' + agreement.agreementNumber + '.pdf');
         var blob = doc.output('blob');
@@ -1061,7 +1079,7 @@ class UpdateRenewal extends React.Component {
                     return (<span key={ind}> <button key={ind} id={btn.key} type='button' className='btn btn-submit' onClick={(e) => { handleProcess(e) }} >
                         {btn.name}
                     </button> &nbsp; </span>)
-                })
+                   })
             }
         }
 

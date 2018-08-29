@@ -120,11 +120,15 @@ public class DemandService {
 				Demand demand = prepareDemand(property,
 						propertyCalculationMap.get(property.getPropertyDetails().get(0).getAssessmentNumber()));
 
-				if (carryForwardCollectedAmount.doubleValue() > 0.0)
+/*				if (carryForwardCollectedAmount.doubleValue() > 0.0)
 					demand.getDemandDetails()
-							.add(DemandDetail.builder().taxAmount(carryForwardCollectedAmount.negate())
+							.add(DemandDetail.builder()//.taxAmount(carryForwardCollectedAmount.negate())
 									.tenantId(criteria.getTenantId()).demandId(demand.getId())
-									.taxHeadMasterCode(CalculatorConstants.PT_ADVANCE_CARRYFORWARD).build());
+									.taxHeadMasterCode(CalculatorConstants.PT_ADVANCE_CARRYFORWARD).build());*/
+				
+				/* ADVANCE_CARRYFORWARD case has already been handled while generating the estimate for this property, the above code is a redundant code that is 
+				nullifying the effect of the same (commenting the code as asked by kavi.)*/ 
+				
 				demands.add(demand);
 				consumerCodeFinYearMap.put(demand.getConsumerCode(), detail.getFinancialYear());
 				

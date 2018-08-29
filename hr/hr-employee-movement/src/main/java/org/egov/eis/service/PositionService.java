@@ -58,11 +58,11 @@ public class PositionService {
     @Autowired
     private PositionSearchURLHelper positionSearchURLHelper;
 
-    public List<Long> getPositions(final Movement movement, final RequestInfo requestInfo) {
+    public List<Long> getPositions(final Movement movement, final RequestInfo requestInfo, final String destinationTenant) {
         final String url = positionSearchURLHelper.searchURL(movement.getEffectiveFrom(),
                 movement.getDepartmentAssigned(),
                 movement.getDesignationAssigned(),
-                movement.getTenantId());
+                movement.getTenantId(),destinationTenant);
 
         final RestTemplate restTemplate = new RestTemplate();
         final RequestInfoWrapper wrapper = new RequestInfoWrapper();

@@ -99,7 +99,6 @@ public class MovementServiceTest {
         when(objectMapper.writeValueAsString(Mockito.any())).thenReturn("");
         when(responseInfoFactory.createResponseInfoFromRequestInfo(Mockito.any(RequestInfo.class), Mockito.anyBoolean()))
                 .thenReturn(responseInfo);
-        when(positionService.getPositions(Mockito.any(Movement.class), Mockito.any(RequestInfo.class))).thenReturn(positions);
         when(applicationConstants.getErrorMessage(Mockito.anyString())).thenReturn("Error");
         when(propertiesManager.getHrMastersServiceStatusesKey()).thenReturn("");
     }

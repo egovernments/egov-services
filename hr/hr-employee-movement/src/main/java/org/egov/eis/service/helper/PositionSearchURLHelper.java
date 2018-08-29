@@ -17,7 +17,7 @@ public class PositionSearchURLHelper {
     @Autowired
     private PropertiesManager propertiesManager;
 
-    public String searchURL(final Date asOnDate, final Long departmentId, final Long designationId, final String tenantId) {
+    public String searchURL(final Date asOnDate, final Long departmentId, final Long designationId, final String tenantId, final String destinationTenant) {
         final String baseUrl = propertiesManager.getHrEmployeeServiceHostName()
                 + propertiesManager.getHrEmployeeServiceVacantPositionsBasePath()
                 + propertiesManager.getHrEmployeeServiceEmployeesSearchPath();
@@ -37,6 +37,9 @@ public class PositionSearchURLHelper {
 
         if (departmentId != null)
             searchURL.append("&departmentId=" + departmentId);
+
+        if (destinationTenant != null)
+            searchURL.append("&destinationTenant=" + destinationTenant);
 
         searchURL.append("&pageSize=" + applicationProperties.employeeMovementSearchPageSizeMax());
 

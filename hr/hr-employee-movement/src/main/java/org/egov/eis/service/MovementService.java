@@ -216,10 +216,10 @@ public class MovementService {
 
 			setErrorMessage(movement, message);
 
-			if (movement.getTypeOfMovement().equals(TypeOfMovement.PROMOTION)) {
+			if (movement.getTypeOfMovement().equals(TypeOfMovement.PROMOTION) || (movement.getTypeOfMovement().equals(TypeOfMovement.TRANSFER) && movement.getTransferType().equals(TransferType.TRANSFER_WITHIN_DEPARTMENT_OR_CORPORATION_OR_ULB))) {
 
 				// validateEmployeeForPromotion
-				final List<Long> positions = positionService.getPositions(movement, movementRequest.getRequestInfo());
+				final List<Long> positions = positionService.getPositions(movement, movementRequest.getRequestInfo(),null);
 				if (positions.contains(movement.getPositionAssigned()))
 					message = applicationConstants.getErrorMessage(ApplicationConstants.ERR_POSITION_NOT_VACANT) + ", ";
 				setErrorMessage(movement, message);
@@ -250,6 +250,11 @@ public class MovementService {
 
 				setErrorMessage(movement, message);
 			}
+			else if(movement.getTypeOfMovement().equals(TypeOfMovement.TRANSFER) && movement.getTransferType().equals(TransferType.TRANSFER_OUTSIDE_CORPORATION_OR_ULB)){
+				final List<Long> positions = positionService.getPositions(movement, movementRequest.getRequestInfo(), movement.getTransferedLocation());
+				if (positions.contains(movement.getPositionAssigned()))
+					message = applicationConstants.getErrorMessage(ApplicationConstants.ERR_POSITION_NOT_VACANT) + ", ";
+			}
 			if (movement.getTypeOfMovement().equals(TypeOfMovement.TRANSFER) && movement.getReason() == null) {
 
 				message = message + applicationConstants
@@ -269,13 +274,19 @@ public class MovementService {
 			List<Movement> existingMovements = movementRepository.findForExistingMovement(movement,
 					movementRequest.getRequestInfo());
 
+			List<Movement> transferOutULB = existingMovements.stream().filter(existingmov -> existingmov.getTransferType().equals(TransferType.TRANSFER_OUTSIDE_CORPORATION_OR_ULB)).collect(Collectors.toList());
+
 			LOGGER.info("EXISTING MOVEMENTS::" + existingMovements);
 
-			if (!existingMovements.isEmpty()) {
+			if (!existingMovements.isEmpty() && !transferOutULB.isEmpty()) {
 				message = message + applicationConstants
-						.getErrorMessage(ApplicationConstants.ERR_MOVEMENT_EXISTING_EMPLOYEE_VALIDATE) + ", ";
+						.getErrorMessage(ApplicationConstants.ERR_MOVEMENT_EMPLOYEE_TRANSFER_VALIDATE) + ", ";
+				setErrorMessage(movement, message);
 			}
-			setErrorMessage(movement, message);
+			else if (!existingMovements.isEmpty()) {
+				message = message + applicationConstants.getErrorMessage(ApplicationConstants.ERR_MOVEMENT_EMPLOYEE_VALIDATE);
+				setErrorMessage(movement, message);
+			}
 
 			if (movement.getEmployeeAcceptance() != null && !movement.getEmployeeAcceptance()
 					&& "Approve".equalsIgnoreCase(movement.getWorkflowDetails().getAction())) {
@@ -416,7 +427,7 @@ public class MovementService {
 					setErrorMessage(movement, message);
 				}
 				// validateEmployeeForPromotion
-				final List<Long> positions = positionService.getPositions(movement, movementRequest.getRequestInfo());
+				final List<Long> positions = positionService.getPositions(movement, movementRequest.getRequestInfo(), null);
 				if (positions.contains(movement.getPositionAssigned()))
 					message = applicationConstants.getErrorMessage(ApplicationConstants.ERR_POSITION_NOT_VACANT) + ", ";
 				setErrorMessage(movement, message);
@@ -452,6 +463,11 @@ public class MovementService {
 				setErrorMessage(movement, message);
 				if (employeeInfo == null || (employeeInfo != null && employeeInfo.equals("")))
 					movement.setCheckEmployeeExists(false);
+				final List<Long> positions = positionService.getPositions(movement, movementRequest.getRequestInfo(), movement.getTransferedLocation());
+				if (positions.contains(movement.getPositionAssigned())) {
+                    message = applicationConstants.getErrorMessage(ApplicationConstants.ERR_POSITION_NOT_VACANT) + ", ";
+                    setErrorMessage(movement, message);
+                }
 				if (!movement.getCheckEmployeeExists() && employeeInfo != null && !employeeInfo.equals("")) {
 					List<Assignment> assignments = employee.getAssignments().stream().filter(assignment -> assignment.getIsPrimary().equals(true)).collect(Collectors.toList());
 					for (Assignment assign : assignments) {

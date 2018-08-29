@@ -57,6 +57,9 @@ public class NonVacantPositionsService {
 	public List<Long> getNonVacantPositions(NonVacantPositionsGetRequest nonVacantPositionsGetRequest,
 			RequestInfo requestInfo) {
 
+		if(nonVacantPositionsGetRequest.getDestinationTenant() != null && !nonVacantPositionsGetRequest.getDestinationTenant().equals(""))
+            nonVacantPositionsGetRequest.setTenantId(nonVacantPositionsGetRequest.getDestinationTenant());
+
 		List<Long> positionIds = nonVacantPositionsRepository.findForCriteria(nonVacantPositionsGetRequest);
 
 		return positionIds;

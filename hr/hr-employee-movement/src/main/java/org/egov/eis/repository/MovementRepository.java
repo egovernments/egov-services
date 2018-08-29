@@ -266,7 +266,7 @@ public class MovementRepository {
             Date formattedFD = output.parse(employeeAssignment.getFromDate());
             Date formattedTD = output.parse(employeeAssignment.getToDate());
 
-            if (formattedFD.before(effectiveFromDate)
+            if ((formattedFD.before(effectiveFromDate) || formattedFD.compareTo(effectiveFromDate) == 0)
 					&& formattedTD.after(effectiveFromDate))
 				employeeAssignment.setToDate(formattedToDate);
 			//employeeAssignment.setIsPrimary(false);

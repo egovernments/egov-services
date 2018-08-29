@@ -78,4 +78,7 @@ public class NonVacantPositionsGetRequest {
 	@Size(min=1, max=256)
 	private String tenantId;
 
+	private String destinationTenant;
+
+
 }

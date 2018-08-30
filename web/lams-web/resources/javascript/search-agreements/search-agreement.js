@@ -486,8 +486,8 @@ class AgreementSearch extends React.Component {
         let demandDetails = data.responseJSON.legacyDemands && data.responseJSON.legacyDemands[0].demandDetails? data.responseJSON.legacyDemands[0].demandDetails.length : 0;
         if(demandDetails > 0)
         window.open(
-          (number?"app/search-agreement/partial-payment.html?agreementNumber=" + number + "&acknowledgementNumber=" + acknowledgementNumber:
-          "app/search-agreement/partial-payment.html?acknowledgementNumber=" + acknowledgementNumber),
+          (number?"app/search-agreement/partial-payment.html?agreementNumber=" + number + "&acknowledgementNumber=" + acknowledgementNumber? acknowledgementNumber :"":
+          "app/search-agreement/partial-payment.html?acknowledgementNumber=" + acknowledgementNumber? acknowledgementNumber :"" ),
           "fs",
           "width=800,height=650,fullscreen=yes"
         );

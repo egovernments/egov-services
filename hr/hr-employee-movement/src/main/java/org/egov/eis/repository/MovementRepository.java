@@ -176,11 +176,11 @@ public class MovementRepository {
 				movement.getStatus(), movement.getStateId(), userResponse.getUsers().get(0).getId(), now,
 				userResponse.getUsers().get(0).getId(), now, movement.getId(), movement.getTenantId() };
 		jdbcTemplate.update(MovementQueryBuilder.updateMovementQuery(), obj);
-        updateMovementDocuments(movement);
-        if (movement.getDocuments() != null && !movement.getDocuments().isEmpty())
-            documentsRepository.save(movement.getId(), movement.getDocuments(), movement.getTenantId());
+		updateMovementDocuments(movement);
+		if (movement.getDocuments() != null && !movement.getDocuments().isEmpty())
+			documentsRepository.save(movement.getId(), movement.getDocuments(), movement.getTenantId());
 
-        if (movement.getTypeOfMovement().equals(TypeOfMovement.PROMOTION) || (movement.getTypeOfMovement().equals(TypeOfMovement.TRANSFER) &&
+		if (movement.getTypeOfMovement().equals(TypeOfMovement.PROMOTION) || (movement.getTypeOfMovement().equals(TypeOfMovement.TRANSFER_CUM_PROMOTION) &&
 				movement.getTransferType().equals(TransferType.TRANSFER_WITHIN_DEPARTMENT_OR_CORPORATION_OR_ULB))
 				&& movement.getStatus()
 						.equals(employeeService.getHRStatuses(propertiesManager.getHrMastersServiceStatusesKey(),
@@ -271,7 +271,7 @@ public class MovementRepository {
 				employeeAssignment.setToDate(formattedToDate);
 			//employeeAssignment.setIsPrimary(false);
 		}
-		if (movement.getTypeOfMovement().equals(TypeOfMovement.PROMOTION) || (movement.getTypeOfMovement().equals(TypeOfMovement.TRANSFER) &&
+		if (movement.getTypeOfMovement().equals(TypeOfMovement.PROMOTION) || (movement.getTypeOfMovement().equals(TypeOfMovement.TRANSFER_CUM_PROMOTION) &&
 				movement.getTransferType().equals(TransferType.TRANSFER_WITHIN_DEPARTMENT_OR_CORPORATION_OR_ULB))
 				&& movement.getStatus()
 						.equals(employeeService.getHRStatuses(propertiesManager.getHrMastersServiceStatusesKey(),

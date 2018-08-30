@@ -284,7 +284,7 @@ public class MovementService {
 				setErrorMessage(movement, message);
 			}
 			else if (!existingMovements.isEmpty()) {
-				message = message + applicationConstants.getErrorMessage(ApplicationConstants.ERR_MOVEMENT_EMPLOYEE_VALIDATE);
+				message = message + applicationConstants.getErrorMessage(ApplicationConstants.ERR_MOVEMENT_EXISTING_EMPLOYEE_VALIDATE);
 				setErrorMessage(movement, message);
 			}
 
@@ -396,7 +396,7 @@ public class MovementService {
 			String message = "";
 
 			if (movement.getId() != null && (movement.getTypeOfMovement().equals(TypeOfMovement.PROMOTION) ||
-					(movement.getTypeOfMovement().equals(TypeOfMovement.TRANSFER) &&
+					(movement.getTypeOfMovement().equals(TypeOfMovement.TRANSFER_CUM_PROMOTION) &&
 							movement.getTransferType().equals(TransferType.TRANSFER_WITHIN_DEPARTMENT_OR_CORPORATION_OR_ULB)))
 					&& "Approve".equalsIgnoreCase(movement.getWorkflowDetails().getAction())) {
 				final EmployeeInfo employee = employeeService.getEmployee(movement, movementRequest.getRequestInfo());

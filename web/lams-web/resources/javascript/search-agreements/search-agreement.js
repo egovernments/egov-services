@@ -486,8 +486,8 @@ class AgreementSearch extends React.Component {
         let demandDetails = data.responseJSON.legacyDemands && data.responseJSON.legacyDemands[0].demandDetails? data.responseJSON.legacyDemands[0].demandDetails.length : 0;
         if(demandDetails > 0)
         window.open(
-          (number?"app/search-agreement/partial-payment.html?agreementNumber=" + number + "&acknowledgementNumber=" + acknowledgementNumber? acknowledgementNumber :"":
-          "app/search-agreement/partial-payment.html?acknowledgementNumber=" + acknowledgementNumber? acknowledgementNumber :"" ),
+          (number?"app/search-agreement/partial-payment.html?agreementNumber=" + number + "&acknowledgementNumber=" + acknowledgementNumber:
+           "app/search-agreement/partial-payment.html?acknowledgementNumber=" + acknowledgementNumber),
           "fs",
           "width=800,height=650,fullscreen=yes"
         );
@@ -1127,7 +1127,7 @@ class AgreementSearch extends React.Component {
                     category_name == "Land" || category_name == "shop",
                     item
                   )}
-                  
+
                 </div>
               </td>
             </tr>
@@ -1181,7 +1181,7 @@ class AgreementSearch extends React.Component {
                           item.action,
                           item.id,
                           getValueByName("name", item.asset.assetCategory.id),
-                          item.acknowledgementNumber,
+                          item.acknowledgementNumber ? item.acknowledgementNumber:"",
                           item.status
                       );
                   }}
@@ -1202,7 +1202,7 @@ class AgreementSearch extends React.Component {
                   item.action,
                   item.id,
                   getValueByName("name", item.asset.assetCategory.id),
-                item.acknowledgementNumber,
+                item.acknowledgementNumber ? item.acknowledgementNumber:"",
                 item.status
               );
             }}
@@ -1227,7 +1227,7 @@ class AgreementSearch extends React.Component {
                   item.action,
                   item.id,
                   getValueByName("name", item.asset.assetCategory.id),
-                item.acknowledgementNumber,
+                item.acknowledgementNumber ? item.acknowledgementNumber:"",
                 item.status
               );
             }}

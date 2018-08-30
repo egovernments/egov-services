@@ -1,42 +1,5 @@
 package org.egov.pt.calculator.service;
 
-import static org.egov.pt.calculator.util.CalculatorConstants.BILLING_SLAB_MATCH_AREA;
-import static org.egov.pt.calculator.util.CalculatorConstants.BILLING_SLAB_MATCH_ERROR_CODE;
-import static org.egov.pt.calculator.util.CalculatorConstants.BILLING_SLAB_MATCH_ERROR_MESSAGE;
-import static org.egov.pt.calculator.util.CalculatorConstants.BILLING_SLAB_MATCH_FLOOR;
-import static org.egov.pt.calculator.util.CalculatorConstants.BILLING_SLAB_MATCH_USAGE_DETAIL;
-import static org.egov.pt.calculator.util.CalculatorConstants.EG_PT_DEPRECIATING_ASSESSMENT_ERROR;
-import static org.egov.pt.calculator.util.CalculatorConstants.EG_PT_DEPRECIATING_ASSESSMENT_ERROR_MSG_ESTIMATE;
-import static org.egov.pt.calculator.util.CalculatorConstants.EG_PT_ESTIMATE_ARV_NULL;
-import static org.egov.pt.calculator.util.CalculatorConstants.EG_PT_ESTIMATE_ARV_NULL_MSG;
-import static org.egov.pt.calculator.util.CalculatorConstants.EXEMPTION_FIELD_NAME;
-import static org.egov.pt.calculator.util.CalculatorConstants.FINANCIAL_YEAR_ENDING_DATE;
-import static org.egov.pt.calculator.util.CalculatorConstants.FINANCIAL_YEAR_STARTING_DATE;
-import static org.egov.pt.calculator.util.CalculatorConstants.OWNER_TYPE_MASTER;
-import static org.egov.pt.calculator.util.CalculatorConstants.PT_ADHOC_PENALTY;
-import static org.egov.pt.calculator.util.CalculatorConstants.PT_ADHOC_REBATE;
-import static org.egov.pt.calculator.util.CalculatorConstants.PT_ADHOC_REBATE_INVALID_AMOUNT;
-import static org.egov.pt.calculator.util.CalculatorConstants.PT_ADHOC_REBATE_INVALID_AMOUNT_MSG;
-import static org.egov.pt.calculator.util.CalculatorConstants.PT_ADVANCE_CARRYFORWARD;
-import static org.egov.pt.calculator.util.CalculatorConstants.PT_DECIMAL_CEILING_CREDIT;
-import static org.egov.pt.calculator.util.CalculatorConstants.PT_ESTIMATE_BILLINGSLABS_UNMATCH;
-import static org.egov.pt.calculator.util.CalculatorConstants.PT_ESTIMATE_BILLINGSLABS_UNMATCH_MSG;
-import static org.egov.pt.calculator.util.CalculatorConstants.PT_ESTIMATE_BILLINGSLABS_UNMATCH_VACANCT;
-import static org.egov.pt.calculator.util.CalculatorConstants.PT_ESTIMATE_BILLINGSLABS_UNMATCH_VACANT_MSG;
-import static org.egov.pt.calculator.util.CalculatorConstants.PT_ESTIMATE_BILLINGSLABS_UNMATCH_replace_id;
-import static org.egov.pt.calculator.util.CalculatorConstants.PT_FIRE_CESS;
-import static org.egov.pt.calculator.util.CalculatorConstants.PT_OWNER_EXEMPTION;
-import static org.egov.pt.calculator.util.CalculatorConstants.PT_TAX;
-import static org.egov.pt.calculator.util.CalculatorConstants.PT_TIME_INTEREST;
-import static org.egov.pt.calculator.util.CalculatorConstants.PT_TIME_PENALTY;
-import static org.egov.pt.calculator.util.CalculatorConstants.PT_TIME_REBATE;
-import static org.egov.pt.calculator.util.CalculatorConstants.PT_TYPE_VACANT_LAND;
-import static org.egov.pt.calculator.util.CalculatorConstants.PT_UNIT_USAGE_EXEMPTION;
-import static org.egov.pt.calculator.util.CalculatorConstants.USAGE_DETAIL_MASTER;
-import static org.egov.pt.calculator.util.CalculatorConstants.USAGE_MAJOR_MASTER;
-import static org.egov.pt.calculator.util.CalculatorConstants.USAGE_MINOR_MASTER;
-import static org.egov.pt.calculator.util.CalculatorConstants.USAGE_SUB_MINOR_MASTER;
-
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -48,6 +11,7 @@ import java.util.stream.Collectors;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ResponseInfo;
+import org.egov.pt.calculator.util.CalculatorConstants;
 import org.egov.pt.calculator.util.Configurations;
 import org.egov.pt.calculator.validator.CalculationValidator;
 import org.egov.pt.calculator.web.models.BillingSlab;
@@ -69,6 +33,8 @@ import org.springframework.stereotype.Service;
 
 import lombok.extern.slf4j.Slf4j;
 import net.minidev.json.JSONArray;
+
+import static org.egov.pt.calculator.util.CalculatorConstants.*;
 
 @Service
 @Slf4j
@@ -238,7 +204,7 @@ public class EstimationService {
             diffArea = diffArea < 0.0 ? 0.0 : diffArea;
             unBuiltAmt = unBuiltAmt.add(BigDecimal.valueOf((unBuiltRate / groundUnitsCount) * (diffArea)));
         }
-        return unBuiltAmt;
+			return unBuiltAmt;
     }
 
 	/**
@@ -323,9 +289,16 @@ public class EstimationService {
 		payableTax = payableTax.subtract(userExemption);
 
 		// Fire cess
-		BigDecimal fireCess = mDataService.getFireCess(payableTax, assessmentYear, timeBasedExemeptionMasterMap);
+		List<Object> fireCessMasterList = timeBasedExemeptionMasterMap.get(CalculatorConstants.FIRE_CESS_MASTER);
+		BigDecimal fireCess = mDataService.getCess(payableTax, assessmentYear, fireCessMasterList);
 		estimates.add(
 				TaxHeadEstimate.builder().taxHeadCode(PT_FIRE_CESS).estimateAmount(fireCess.setScale(2, 2)).build());
+
+		// Cancer cess
+		List<Object> cancerCessMasterList = timeBasedExemeptionMasterMap.get(CalculatorConstants.CANCER_CESS_MASTER);
+		BigDecimal cancerCess = mDataService.getCess(payableTax, assessmentYear, cancerCessMasterList);
+		estimates.add(
+				TaxHeadEstimate.builder().taxHeadCode(PT_CANCER_CESS).estimateAmount(cancerCess.setScale(2, 2)).build());
 
 		// get applicable rebate and penalty
 		Map<String, BigDecimal> rebatePenaltyMap = payService.applyPenaltyRebateAndInterest(payableTax, BigDecimal.ZERO,

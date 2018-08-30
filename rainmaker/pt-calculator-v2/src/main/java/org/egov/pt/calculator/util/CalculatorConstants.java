@@ -40,6 +40,8 @@ public class CalculatorConstants {
 
 	public static final String PT_FIRE_CESS = "PT_FIRE_CESS";
 
+	public static final String PT_CANCER_CESS = "PT_CANCER_CESS";
+
 	public static final String PT_ADHOC_PENALTY = "PT_ADHOC_PENALTY";
 
 	public static final String PT_ADHOC_REBATE = "PT_ADHOC_REBATE";
@@ -87,6 +89,8 @@ public class CalculatorConstants {
 	public static final String PENANLTY_MASTER = "Penalty";
 
 	public static final String FIRE_CESS_MASTER = "FireCess";
+
+	public static final String CANCER_CESS_MASTER = "CancerCess";
 
 	public static final String INTEREST_MASTER = "Interest";
 

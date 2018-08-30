@@ -184,21 +184,18 @@ public class MasterDataService {
 	 * Returns Zero if no data is found for the given criteria
 	 * 
 	 * @param payableTax
-	 * @param timeBasedMasterMap 
-	 * @param assessmentYear 
+	 * @param assessmentYear
 	 * @return
 	 */
-	public BigDecimal getFireCess(BigDecimal payableTax, String assessmentYear,
-			Map<String, JSONArray> timeBasedMasterMap) {
+	public BigDecimal getCess(BigDecimal payableTax, String assessmentYear,List<Object> masterList) {
 		BigDecimal fireCess = BigDecimal.ZERO;
 
 		if (payableTax.doubleValue() == 0.0)
 			return fireCess;
 
-		Map<String, Object> fireCessMap = getApplicableMaster(assessmentYear,
-				timeBasedMasterMap.get(CalculatorConstants.FIRE_CESS_MASTER));
+		Map<String, Object> CessMap = getApplicableMaster(assessmentYear,masterList);
 
-		return calculateApplicables(payableTax, fireCessMap);
+		return calculateApplicables(payableTax, CessMap);
 	}
 	
 	/**

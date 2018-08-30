@@ -492,10 +492,10 @@ public class PaymentService {
         List<DemandDetails> demandDetails = new ArrayList<>();
         List<Demand> demands = new ArrayList<>();
 
-        if (StringUtils.isNotBlank(agreementNo))
-            agreementCriteria.setAgreementNumber(agreementNo);
-        else if (StringUtils.isNotBlank(ackNo))
+         if (StringUtils.isNotBlank(ackNo))
             agreementCriteria.setAcknowledgementNumber(ackNo);
+         else if (StringUtils.isNotBlank(agreementNo))
+             agreementCriteria.setAgreementNumber(agreementNo);
 
         agreementCriteria.setTenantId(tenantId);
         Agreement agreement = agreementService.searchAgreement(

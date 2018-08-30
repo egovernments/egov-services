@@ -73,7 +73,7 @@ ServiceMaps:
         - inJsonPath: $.actionInfo
           outJsonPath: $.PGRIndex.actionInfo
         uriMapping:
-        - path: http://hr-employee:8080//hr-employee-v2/employees/_search
+        - path: http://hr-employee-v2:8080//hr-employee-v2/employees/_search
           queryParam: tenantId=$.services[0].tenantId,id=$.actionInfo[0].assignee
           apiRequest: {"RequestInfo": {"apiId": "org.egov.pt","ver": "1.0","ts": 1502890899493,"action": "asd","did": "4354648646","key": "xyz","msgId": "654654", "requesterId": "61",
           "authToken": "750d4aa9-2436-4bc4-a8f4-3796e3bfd465","userInfo":{"id":73}}}

@@ -6,6 +6,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+import org.apache.commons.lang3.StringUtils;
 import org.egov.infra.indexer.bulkindexer.BulkIndexer;
 import org.egov.infra.indexer.consumer.KafkaConsumerConfig;
 import org.egov.infra.indexer.web.contract.Index;
@@ -103,19 +104,25 @@ public class IndexerUtils {
 	public String buildUri(UriMapping uriMapping, String kafkaJson){
 		StringBuilder serviceCallUri = new StringBuilder();	
 		String uriWithPathParam = null;
-		if(null != uriMapping.getPath()){
+		if(!StringUtils.isEmpty(uriMapping.getPath())){
 			uriWithPathParam = uriMapping.getPath();
-			uriWithPathParam = uriWithPathParam.replace("$", 
-					JsonPath.read(kafkaJson, uriMapping.getPathParam()).toString());
-		}else if(null != uriMapping.getQueryParam()){
+			if(!StringUtils.isEmpty(uriMapping.getPathParam())) {
+				uriWithPathParam = uriWithPathParam.replace("$", JsonPath.read(kafkaJson, uriMapping.getPathParam()).toString());
+			}
+		}
+		if(!StringUtils.isEmpty(uriMapping.getQueryParam())){
 			String[] queryParamsArray = uriMapping.getQueryParam().split(",");
 			if(queryParamsArray.length == 0){
 				queryParamsArray[0] = uriMapping.getQueryParam();
 			}
 			for(int i = 0; i < queryParamsArray.length; i++){
 				String[] queryParamExpression = queryParamsArray[i].split("=");
-				logger.info("queryparam: "+queryParamExpression[1]);
-				String queryParam = JsonPath.read(kafkaJson, queryParamExpression[1]);
+				String queryParam = null;
+				try {
+					queryParam = JsonPath.read(kafkaJson, queryParamExpression[1]);
+				}catch(Exception e) {
+					continue;
+				}
 				queryParamExpression[1] = queryParam;
 				StringBuilder resolvedParam = new StringBuilder();
 				resolvedParam.append(queryParamExpression[0]).append("=").append(queryParamExpression[1]);
@@ -136,7 +143,6 @@ public class IndexerUtils {
 			logger.info("uri prepared for inter service call: "+serviceCallUri.toString());
 		}else{
 			serviceCallUri.append(uriMapping.getPath());
-			logger.info("The uri has no path params or query params, using the direct path: "+serviceCallUri.toString());
 		}
 		return serviceCallUri.toString();
 	}
@@ -149,7 +155,6 @@ public class IndexerUtils {
 				id.append(JsonPath.read(stringifiedObject, index.getId()).toString());
 			}else{
 				for(int j = 0; j < idFormat.length; j++){
-					logger.info("path: "+idFormat[j]);
 					id.append(JsonPath.read(stringifiedObject, idFormat[j]).toString());
 				} 
 			}

@@ -694,10 +694,10 @@ class AgreementSearch extends React.Component {
       {
         particulars: "Total",
         amount:
-          Number(agreement.goodWillAmount) +
+        Math.round(Number(agreement.goodWillAmount) +
           Number(gstOnGoodWill) +
           Number(agreement.securityDeposit) +
-          gstOnAdvance,
+          gstOnAdvance),
         leaseHolderName: agreement.name
       }
     ];
@@ -724,7 +724,7 @@ class AgreementSearch extends React.Component {
       alternateRowStyles: {
         fillColor: [255, 255, 255]
       },
-      startY: 135
+      startY: 145
     };
 
     var rentParticulars = [
@@ -766,7 +766,7 @@ class AgreementSearch extends React.Component {
       alternateRowStyles: {
         fillColor: [255, 255, 255]
       },
-      startY: 200
+      startY: 235
     };
 
     doc.setFontType("bold");
@@ -821,11 +821,11 @@ class AgreementSearch extends React.Component {
       85
     );
 
-    doc.text(100, 98, "><><><", "center");
+    doc.text(100, 105, "><><><", "center");
 
-    doc.text(15, 105, "Orders:");
+    doc.text(15, 115, "Orders:");
     doc.setLineWidth(0.5);
-    doc.line(15, 106, 28, 106);
+    doc.line(15, 116, 28, 116);
 
     doc.fromHTML(
       "In the reference 1st cited, an Open Auction for leasing Shop No <b>" +
@@ -838,7 +838,7 @@ class AgreementSearch extends React.Component {
         agreement.goodWillAmount +
         "/-  </b> ) was accepted by the Municipal Council/Standing Committee vide <br>reference 2nd cited with the following deposit amounts as received by this office.",
       15,
-      100
+      110
     );
 
     doc.autoTable(depositParticulars, depositDetails, depositTableStyle);
@@ -850,11 +850,12 @@ class AgreementSearch extends React.Component {
         endDate +
         "</b> at <br> following rates of rentals and taxes thereon.",
       15,
-      176
+      205
     );
 
     doc.autoTable(rentParticulars, rentDetails, rentTableStyle);
 
+    doc.addPage();
     doc.setFontType("normal");
     var termsAndConditions =
       "The following terms and conditions are applicable for the renewal of lease." +
@@ -867,15 +868,14 @@ class AgreementSearch extends React.Component {
       "\n\t7. The Goodwill and the Rental Deposits paid by the leaseholder shall be forfeited in the event of violation \t    of terms and conditions in the agreement.";
 
     var lines = doc.splitTextToSize(termsAndConditions, 183);
-    doc.text(12, 228, lines);
+    doc.text(15,20, lines);
 
-    doc.addPage();
     var declaration =
       "Hence you are requested to conclude an agreement duly registered with the SRO for the above mentioned lease within 15 days of receipt of this allotment letter without fail unless the allotment will stand cancelled without any further correspondence.";
     var lines = doc.splitTextToSize(declaration, 183);
-    doc.text(15, 30, lines);
+    doc.text(15, 70, lines);
 
-    doc.text(120, 50, "Commissioner");
+    doc.text(120, 100, "Commissioner");
     doc.fromHTML(
       "<b> " +
         tenantId
@@ -887,13 +887,12 @@ class AgreementSearch extends React.Component {
         ulbType +
         "</b>",
       120,
-      55
+      100
     );
 
-    doc.text(15, 60, "To");
-    doc.text(15, 65, "The Leaseholder");
-    doc.text(15, 70, "Copy to the concerned officials for necessary action");
-
+    doc.text(15, 110, "To");
+    doc.text(15, 115, "The Leaseholder");
+    doc.text(15, 120, "Copy to the concerned officials for necessary action");
     var blob = doc.output("blob");
 
     this.createFileStore(agreement, blob).then(
@@ -1673,8 +1672,7 @@ class AgreementSearch extends React.Component {
                   type="button"
                   className="btn btn-default"
                   data-dismiss="modal"
-                >
-                  Close
+                >Close
                 </button>
               </div>
             </div>

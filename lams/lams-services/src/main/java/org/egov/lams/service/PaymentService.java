@@ -497,9 +497,13 @@ public class PaymentService {
          else if (StringUtils.isNotBlank(agreementNo))
              agreementCriteria.setAgreementNumber(agreementNo);
 
+
         agreementCriteria.setTenantId(tenantId);
+        LOGGER.info("agreement criteria is ---------" + agreementCriteria );
         Agreement agreement = agreementService.searchAgreement(
                 agreementCriteria, requestInfoWrapper.getRequestInfo()).get(0);
+
+        LOGGER.info("after search agreement----- " + agreement);
 
         if (agreement.getDemands() != null && !agreement.getDemands().isEmpty()) {
             demandSearchCriteria.setDemandId(Long.valueOf(agreement.getDemands().get(0)));

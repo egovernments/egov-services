@@ -239,7 +239,11 @@ public class PaymentService {
                 if (demandDetail != null) {
                     LOGGER.info("the reason for demanddetail : " + demandDetail.getTaxReason());
                     if (ADVANCE_TAX.equalsIgnoreCase(demandDetail.getTaxReasonCode())
+                            || CGST_ON_ADVANCE.equalsIgnoreCase(demandDetail.getTaxReasonCode())
+                            || SGST_ON_ADVANCE.equalsIgnoreCase(demandDetail.getTaxReasonCode())
                             || GOODWILL_AMOUNT.equalsIgnoreCase(demandDetail.getTaxReasonCode())
+                            || CGST_ON_GOODWILL.equalsIgnoreCase(demandDetail.getTaxReasonCode())
+                            || SGST_ON_GOODWILL.equalsIgnoreCase(demandDetail.getTaxReasonCode())
                             || (demandDetail.getPeriodStartDate().compareTo(new Date()) <= 0)) {
                         orderNo++;
                         totalAmount = totalAmount

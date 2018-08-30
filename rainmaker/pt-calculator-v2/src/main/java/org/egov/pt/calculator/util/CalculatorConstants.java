@@ -58,8 +58,11 @@ public class CalculatorConstants {
 	public static final List<String> TAXES_TO_BE_SUBTRACTED_WHEN_CALCULATING_REBATE_AND_PENALTY = Collections.unmodifiableList(Arrays
 			.asList(PT_OWNER_EXEMPTION, PT_UNIT_USAGE_EXEMPTION ));
 	
+	/*
+	 * these lists has to be updated with every new additional taxes which will be applied on the principle tax(PT_TAX)  
+	 */
 	public static final List<String> ADDITIONAL_TAXES = Collections.unmodifiableList(Arrays
-			.asList(PT_FIRE_CESS, PT_ADHOC_PENALTY));
+			.asList(PT_FIRE_CESS, PT_ADHOC_PENALTY, PT_CANCER_CESS));
 					
 	public static final List<String> ADDITIONAL_DEBITS = Collections.unmodifiableList(Arrays
 							.asList( PT_ADHOC_REBATE));					

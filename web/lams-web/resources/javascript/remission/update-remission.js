@@ -518,7 +518,7 @@ class UpdateRemission extends React.Component {
         doc.fromHTML('Dt. <b>' + agreement.agreementDate + '</b>', 140, 50);
 
 
-        var paragraph = "Sub: Leases – Revenue Section – Shop No <b>" + agreement.referenceNumber + "</b> in <b>" + agreement.asset.name + "<b> Complex, <b>" + locality + "<b> - Remission of lease – Orders  - Issued";
+        var paragraph = "Sub: Leases - Revenue Section -Shop No <b>" + agreement.referenceNumber + "</b> in <b>" + agreement.asset.name + "</b> Complex, <b>" + locality + "</b> Remission of lease - Orders - Issued";
         var lines = doc.splitTextToSize(paragraph, 180);
         lines.forEach((element, index) => {
             doc.fromHTML(element.trim(), 15, 65 + (index * 5));
@@ -549,10 +549,11 @@ class UpdateRemission extends React.Component {
 
 
         doc.text(120, 200, "Commissioner");
+        doc.setFontType("bold");
         doc.text(120, 205, tenantId.split(".")[1].charAt(0).toUpperCase() + tenantId.split(".")[1].slice(1) + ",");
         doc.text(120, 210, ulbType);
 
-
+        doc.setFontType("normal");
         doc.text(15, 215, "To");
         doc.text(15, 220, "The Leaseholder");
         doc.text(15, 225, "Copy to the concerned officials for necessary action");

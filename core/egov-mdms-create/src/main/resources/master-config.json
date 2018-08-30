@@ -535,6 +535,12 @@
       "uniqueKeys": [
         "$.fromFY"
       ]
+    },
+    "CancerCess": {
+      "masterName": "CancerCess",
+      "isStateLevel": true,
+      "uniqueKeys": [
+      ]
     }
   }
 }

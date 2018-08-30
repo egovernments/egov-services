@@ -6,6 +6,8 @@ import org.egov.persistence.repository.MessageRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
+import lombok.extern.slf4j.Slf4j;
+
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -38,6 +40,7 @@ import java.util.stream.Stream;
  * 2) In validate cache entry for raw messages with key <locale>:default
  */
 @Service
+@Slf4j
 public class MessageService {
     private static final String ENGLISH_INDIA = "en_IN";
     private MessageRepository messageRepository;
@@ -68,18 +71,21 @@ public class MessageService {
     }
 
 	public List<Message> getFilteredMessages(MessageSearchCriteria searchCriteria) {
-		final List<Message> messages = getMessages(searchCriteria);
+		List<Message> messages = getMessages(searchCriteria);
 		if (searchCriteria.isModuleAbsent()) {
 			return messages.parallelStream()
 					.filter(e -> e.getLocale().equals(searchCriteria.getLocale())
 							&& e.getTenant().equals(searchCriteria.getTenantId().getTenantId()))
 					.collect(Collectors.toList());
+		}else {
+			List<String> modules = Arrays.asList(searchCriteria.getModule().split("[,]"));
+			messages = messages.stream()
+					.filter(message -> modules.contains(message.getModule())
+							&& message.getLocale().equals(searchCriteria.getLocale())
+							&& message.getTenant().equals(searchCriteria.getTenantId().getTenantId()))
+					.collect(Collectors.toList());
 		}
-		return messages.stream()
-				.filter(message -> searchCriteria.getModule().equals(message.getModule())
-						&& message.getLocale().equals(searchCriteria.getLocale())
-						&& message.getTenant().equals(searchCriteria.getTenantId().getTenantId()))
-				.collect(Collectors.toList());
+		return messages;
 	}
 
     public void delete(List<MessageIdentity> messageIdentities) {

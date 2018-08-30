@@ -218,26 +218,8 @@ public class PaymentService {
             LOGGER.info("after Bill Number" + billNumberService.generateBillNumber());
             List<Demand> demands =  agreement.getLegacyDemands();
             Demand demand = demands.get(0);
-            if ("SYSTEM".equalsIgnoreCase(agreement.getSource().toString())) {
-                for (DemandDetails demandDetails : demand.getDemandDetails()) {
-                    BigDecimal balance = demandDetails.getTaxAmount().subtract(demandDetails.getCollectionAmount());
-                    if (balance.compareTo(BigDecimal.ZERO) > 0 && ADVANCE_TAX.equalsIgnoreCase(demandDetails.getTaxReasonCode())
-                            || GOODWILL_AMOUNT.equalsIgnoreCase(demandDetails.getTaxReasonCode())
-                            || CGST_ON_GOODWILL.equalsIgnoreCase(demandDetails.getTaxReasonCode())
-                            || SGST_ON_GOODWILL.equalsIgnoreCase(demandDetails.getTaxReasonCode())
-                            || CGST_ON_ADVANCE.equalsIgnoreCase(demandDetails.getTaxReasonCode())
-                            || SGST_ON_ADVANCE.equalsIgnoreCase(demandDetails.getTaxReasonCode())) {
-                        billInfo.setPartPaymentAllowed('N');
-
-                    } else {
-                        billInfo.setPartPaymentAllowed('N');
-                        billInfo.setMinAmountPayable(calculateMinAmount(demand).doubleValue());
-                    }
-                }
-            } else {
-                billInfo.setPartPaymentAllowed('N');
-            }
-
+            billInfo.setMinAmountPayable(calculateMinAmount(demand).doubleValue());
+            billInfo.setPartPaymentAllowed('N');
             billInfo.setDisplayMessage(demand.getModuleName());
             lamsGetRequest.setName("FUNCTION_CODE");
             String functionCode = lamsConfigurationService.getLamsConfigurations(lamsGetRequest).get("FUNCTION_CODE")

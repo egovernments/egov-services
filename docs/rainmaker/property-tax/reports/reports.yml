@@ -1,7 +1,7 @@
 ---
 ReportDefinitions:
-- reportName: DailyCollectionsReport
-  summary: Daily Collections Report
+- reportName: UlbPtCollection
+  summary: ULB PT Collection
   version: 1.0.0
   moduleName: rainmaker-pt
   sourceColumns:
@@ -73,294 +73,64 @@ ReportDefinitions:
     source: pt
     isMandatory: false
     searchClause: AND createdtime <= $toDate
+  - name: zoneList
+    label: reports.pt.zoneList
+    type: boundarylist
+    source: pt
+    wrapper: true
+    isMandatory: false
   query: SELECT COUNT(*)::VARCHAR as assessments, sum(taxamount)::VARCHAR AS assessmentAmount, sum(collectionamount)::VARCHAR AS collectedAmount, sum(CASE WHEN taxheadcode LIKE 'PT_TAX' THEN collectionamount ELSE 0 END) AS ptCollected, sum(CASE WHEN taxheadcode LIKE 'PT_FIRE_CESS' THEN collectionamount ELSE 0 END) as fireCessCollected, sum(CASE WHEN taxheadcode LIKE '%PENALTY%' THEN collectionamount ELSE 0 END) AS penaltiesCollected, sum(CASE WHEN taxheadcode LIKE '%INTEREST%' THEN collectionamount ELSE 0 END) AS interestCollected, sum(CASE WHEN taxheadcode LIKE '%REBATE%' THEN taxamount ELSE 0 END) AS rebateGiven, sum(CASE WHEN taxheadcode LIKE '%EXEMPTION%' THEN taxamount ELSE 0 END) AS exemptionGiven, sum(CASE WHEN taxheadcode LIKE '%LATE_PENALTY%' THEN taxamount ELSE 0 END) AS paymentDues, to_char(to_timestamp(TRUNC(CAST(createdtime AS bigint) / 1000)), 'DD/MM/YYYY') as day FROM egbs_demanddetail WHERE tenantid LIKE $tenantid
   groupby: GROUP BY day
   orderby: ORDER BY day DESC
 
 
-- reportName: MonthlyCollectionsReport
-  summary: Monthly Collections Report
+- reportName: ReceiptRegister
+  summary: Receipt Register
   version: 1.0.0
   moduleName: rainmaker-pt
   sourceColumns:
-  - name: month
-    label: reports.pt.month
+  - name: receiptnumber
+    label: reports.pt.receiptNo
     type: string
     source: pt
     total: false
-  - name: assessments
-    label: reports.pt.assessments
-    type: string
-    source: pt
-    total: true
-  - name: assessmentAmount
-    label: reports.pt.assessmentAmount
-    type: string
-    source: pt
-    total: true
-  - name: collectedAmount
-    label: reports.pt.collectedAmount
-    type: string
-    source: pt
-    total: true
-  - name: ptCollected
-    label: reports.pt.ptCollected
-    type: string
-    source: pt
-    total: true
-  - name: firecessCollected
-    label: reports.pt.fireCessCollected
-    type: string
-    source: pt
-    total: true
-  - name: penaltiesCollected
-    label: reports.pt.penaltiesCollected
-    type: string
-    source: pt
-    total: true
-  - name: interestCollected
-    label: reports.pt.interestCollected
-    type: string
-    source: pt
-    total: true
-  - name: rebateGiven
-    label: reports.pt.rebateGiven
-    type: string
-    source: pt
-    total: true
-  - name: exemptionGiven
-    label: reports.pt.exemptionGiven
-    type: string
-    source: pt
-    total: true
-  - name: paymentDues
-    label: reports.pt.paymentDues
-    type: string
-    source: pt
-    total: true
-  searchParams:
-  - name: fromDate
-    label: reports.pt.fromDate
-    type: epoch
-    source: pt
-    isMandatory: false
-    searchClause: AND createdtime >= $fromDate
-  - name: toDate
-    label: reports.pt.toDate
-    type: epoch
-    source: pt
-    isMandatory: false
-    searchClause: AND createdtime <= $toDate
-  query: SELECT COUNT(*)::VARCHAR as assessments, sum(taxamount)::VARCHAR AS assessmentAmount, sum(collectionamount)::VARCHAR AS collectedAmount, sum(CASE WHEN taxheadcode LIKE 'PT_TAX' THEN collectionamount ELSE 0 END) AS ptCollected, sum(CASE WHEN taxheadcode LIKE 'PT_FIRE_CESS' THEN collectionamount ELSE 0 END) as fireCessCollected, sum(CASE WHEN taxheadcode LIKE '%PENALTY%' THEN collectionamount ELSE 0 END) AS penaltiesCollected, sum(CASE WHEN taxheadcode LIKE '%INTEREST%' THEN collectionamount ELSE 0 END) AS interestCollected, sum(CASE WHEN taxheadcode LIKE '%REBATE%' THEN taxamount ELSE 0 END) AS rebateGiven, sum(CASE WHEN taxheadcode LIKE '%EXEMPTION%' THEN taxamount ELSE 0 END) AS exemptionGiven, sum(CASE WHEN taxheadcode LIKE '%LATE_PENALTY%' THEN taxamount ELSE 0 END) AS paymentDues, to_char(to_timestamp(TRUNC(CAST(createdtime AS bigint) / 1000)), 'Month YYYY') AS month FROM egbs_demanddetail WHERE tenantid LIKE $tenantid
-  groupby: GROUP BY month
-  orderby: ORDER BY month DESC
-
-
-- reportName: OwnerBasedExemptionReport
-  summary: Owner Based Exemption Report
-  version: 1.0.0
-  moduleName: rainmaker-pt
-  externalService:
-  - entity: $.MdmsRes.PropertyTax.OwnerType
-    apiURL: http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=PropertyTax&masterName=OwnerType&tenantId=$tenantId
-    keyOrder: code,exemption
-    tableName: tbl_ownertype
-  sourceColumns:
-  - name: assessmentnumber
-    label: reports.pt.assessmentNo
-    type: string
-    source: pt
-  - name: exemptionamount
-    label: reports.pt.exemptionAmount
-    type: string
-    source: pt
-  - name: exemptionrate
-    label: reports.pt.exemptionRate
-    type: string
-    source: pt
-  - name: ownertype
-    label: reports.pt.ownerType
-    type: string
-    source: pt
-  - name: documenttype
-    label: reports.pt.documentType
-    type: string
-    source: pt
-  - name: documentuid
-    label: reports.pt.documentUid
-    type: string
-    source: pt
-  searchParams:
-  - name: fromDate
-    label: reports.pt.fromDate
-    type: epoch
-    source: pt
-    isMandatory: false
-    searchClause: AND createdtime >= $fromDate
-  - name: toDate
-    label: reports.pt.toDate
-    type: epoch
-    source: pt
-    isMandatory: false
-    searchClause: AND createdtime <= $toDate
-  query: SELECT assessmentnumber, (SELECT exemption::jsonb ->> ('flatAmount') FROM (VALUES tbl_ownertype) AS ext_owner (code, exemption) WHERE ext_owner.code=ownertype) AS exemptionamount, (SELECT CONCAT(exemption::jsonb ->> ('rate'), '%') FROM (VALUES tbl_ownertype) AS ext_owner (code, exemption) WHERE ext_owner.code=ownertype) AS exemptionrate, ownertype, documenttype, documentuid FROM eg_pt_propertydetail_v2 AS a, eg_pt_document_owner_v2 AS b, eg_pt_owner_v2 AS c WHERE a.assessmentnumber = b.propertydetail AND a.assessmentnumber = c.propertydetail AND a.tenantid LIKE $tenantid AND (SELECT exemption FROM (VALUES tbl_ownertype) AS ext_owner (code, exemption) WHERE ext_owner.code=ownertype) IS NOT NULL
-
-
-- reportName: UsageBasedExemptionReport
-  summary: Usage Based Exemption Report
-  version: 1.0.0
-  moduleName: rainmaker-pt
-  externalService:
-  - entity: $.MdmsRes.PropertyTax.UsageCategorySubMinor
-    apiURL: http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=PropertyTax&masterName=UsageCategorySubMinor&tenantId=$tenantId
-    keyOrder: code,exemption
-    tableName: tbl_usagetype
-  sourceColumns:
-  - name: propertydetail
-    label: reports.pt.assessmentNo
-    type: string
-    source: pt
-  - name: exemptionamount
-    label: reports.pt.exemptionAmount
-    type: string
-    source: pt
-  - name: exemptionrate
-    label: reports.pt.exemptionRate
-    type: string
-    source: pt
-  - name: usagecategorysubminor
-    label: reports.pt.subUsageType
-    type: string
-    source: pt
-  searchParams:
-  - name: fromDate
-    label: reports.pt.fromDate
-    type: epoch
-    source: pt
-    isMandatory: false
-    searchClause: AND createdtime >= $fromDate
-  - name: toDate
-    label: reports.pt.toDate
-    type: epoch
-    source: pt
-    isMandatory: false
-    searchClause:  AND createdtime <= $toDate
-  query: SELECT propertydetail, (SELECT exemption::jsonb ->> ('flatAmount') FROM (VALUES tbl_usagetype) AS ext_usage (code, exemption) WHERE ext_usage.code=usagecategorysubminor) AS exemptionamount, (SELECT CONCAT(exemption::jsonb ->> ('rate'), '%') FROM (VALUES tbl_usagetype) AS ext_usage (code, exemption) WHERE ext_usage.code=usagecategorysubminor) AS exemptionrate, usagecategorysubminor FROM eg_pt_unit_v2 WHERE usagecategorysubminor IS NOT NULL AND tenantid LIKE $tenantid AND (SELECT exemption FROM (VALUES tbl_usagetype) AS ext_usage (code, exemption) WHERE ext_usage.code=usagecategorysubminor) IS NOT NULL
-
-
-- reportName: AdditionalChargesReport
-  summary: Additional Charges Report
-  version: 1.0.0
-  moduleName: rainmaker-pt
-  sourceColumns:
-  - name: assessmentNo
-    label: reports.pt.assessmentNo
-    type: string
-    source: pt
   - name: amount
     label: reports.pt.amount
     type: string
     source: pt
-  - name: reason
-    label: reports.pt.reason
+    total: true
+  - name: instrumenttype
+    label: reports.pt.paymentMode
     type: string
     source: pt
-  - name: name
-    label: reports.pt.name
+    total: false
+  - name: transactionnumber
+    label: reports.pt.ddChequeTransactionNo
     type: string
     source: pt
+    total: false
+  - name: transactiondate
+    label: reports.pt.ddChequeTransactionDate
+    type: string
+    source: pt
+    total: false
   searchParams:
   - name: fromDate
     label: reports.pt.fromDate
     type: epoch
     source: pt
     isMandatory: false
-    searchClause: AND createdtime >= $fromDate
+    searchClause: AND tbl_rcpt.createddate >= $fromDate
   - name: toDate
     label: reports.pt.toDate
     type: epoch
     source: pt
     isMandatory: false
-    searchClause: AND createdtime <= $toDate
-  query: SELECT a.assessmentnumber as assessmentNo, a.adhocpenalty AS amount, a.adhocpenaltyreason AS reason, b.name AS name FROM eg_pt_propertydetail_v2 AS a, eg_user AS b WHERE a.createdby = b.uuid AND a.tenantid LIKE $tenantid AND a.adhocpenalty IS NOT NULL
-
-
-- reportName: AdditionalRebatesReport
-  summary: Additional Rebates Report
-  version: 1.0.0
-  moduleName: rainmaker-pt
-  sourceColumns:
-  - name: assessmentNo
-    label: reports.pt.assessmentNo
-    type: string
-    source: pt
-  - name: amount
-    label: reports.pt.amount
-    type: string
-    source: pt
-  - name: reason
-    label: reports.pt.reason
-    type: string
-    source: pt
-  - name: name
-    label: reports.pt.name
-    type: string
-    source: pt
-  searchParams:
-  - name: fromDate
-    label: reports.pt.fromDate
-    type: epoch
+    searchClause: AND tbl_rcpt.createddate <= $toDate
+  - name: zoneList
+    label: reports.pt.zoneList
+    type: boundarylist
     source: pt
     isMandatory: false
-    searchClause: AND createdtime >= $fromDate
-  - name: toDate
-    label: reports.pt.toDate
-    type: epoch
-    source: pt
-    isMandatory: false
-    searchClause: AND createdtime <= $toDate
-  query: SELECT a.assessmentnumber as assessmentNo, a.adhocexemption AS amount, a.adhocexemptionreason AS reason, b.name AS name FROM eg_pt_propertydetail_v2 AS a, eg_user AS b WHERE a.createdby = b.uuid AND a.tenantid LIKE $tenantid and a.adhocexemption IS NOT NULL
-
-
-- reportName: UlbWiseCollectionReport
-  summary: ULB Wise Collection Report
-  version: 1.0.0
-  moduleName: rainmaker-pt
-  externalService:
-  - entity: $.MdmsRes.tenant.tenants
-    apiURL: http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=tenant&masterName=tenants&tenantId=$tenantId
-    keyOrder: code,name
-    tableName: tbl_ulb
-  sourceColumns:
-  - name: ulb
-    label: reports.pt.ulb
-    type: string
-    source: pt
-  - name: totalAssessments
-    label: reports.pt.totalAssessments
-    type: string
-    source: pt
-  - name: totalAssessmentAmount
-    label: reports.pt.totalAssessmentAmount
-    type: string
-    source: pt
-  - name: totalCollectedAmount
-    label: reports.pt.totalCollectedAmount
-    type: string
-    source: pt
-  searchParams:
-  - name: fromDate
-    label: reports.pt.fromDate
-    type: epoch
-    source: pt
-    isMandatory: false
-    searchClause: AND createdtime >= $fromDate
-  - name: toDate
-    label: reports.pt.toDate
-    type: epoch
-    source: pt
-    isMandatory: false
-    searchClause: AND createdtime <= $toDate
-  query: SELECT (SELECT ulbmap.name FROM (VALUES tbl_ulb) AS ulbmap(code, name) WHERE ulbmap.code = tenantid) AS ulb, COUNT(*)::VARCHAR AS totalAssessments, SUM(taxamount)::VARCHAR AS totalAssessmentAmount, SUM(collectionamount)::VARCHAR AS totalCollectedAmount FROM egbs_demanddetail WHERE LEFT(tenantid, 3) = LEFT($tenantid, 3)
-  groupBy: GROUP BY ulb
-  orderBy: ORDER BY ulb
+  query: SELECT * FROM (SELECT consumercode, a.createddate, to_char(to_timestamp(a.createddate / 1000), 'DD/MM/YYYY') AS transactiondate, receiptnumber, amount, instrumenttype, transactionnumber FROM egcl_receiptheader AS a INNER JOIN egcl_receiptinstrument AS c ON a.id = c.receiptheader INNER JOIN egcl_instrumentheader AS b ON b.id = c.instrumentheader AND a.tenantid LIKE $tenantid) AS tbl_rcpt INNER JOIN (SELECT locality, CONCAT(a.property, ':', b.assessmentnumber) AS consumercode FROM eg_pt_address_v2 AS a INNER JOIN eg_pt_propertydetail_v2 AS b ON a.property = b.property WHERE locality IN ($localityArray)) AS tbl_lclty ON tbl_rcpt.consumercode = tbl_lclty.consumercode
+  orderby: ORDER BY tbl_rcpt.createddate DESC

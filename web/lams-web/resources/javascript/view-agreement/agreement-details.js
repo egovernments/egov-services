@@ -1625,10 +1625,100 @@ class AgreementDetails extends React.Component {
                                 <div className="col-sm-6">
                                     <div className="row">
                                         <div className="col-sm-6 label-text">
-                                            <label htmlFor="crNumber"> Renewal Reason :</label>
+                                            <label htmlFor="rndate"> Renewal Date :</label>
                                         </div>
                                         <div className="col-sm-6 label-view-text">
-                                            <label id="crNumber" name="crNumber">
+                                            <label id="rndate" name="rndate">
+                                                {agreement.renewalDate ? agreement.renewalDate : "N/A"}
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="row">
+                                    <div className="col-sm-6">
+                                        <div className="row">
+                                            <div className="col-sm-6 label-text">
+                                                <label htmlFor="rnrent"> Renewal Rent :</label>
+                                            </div>
+                                            <div className="col-sm-6 label-view-text">
+                                                <label id="rnrent" name="rnrent">
+                                                    {agreement.rent ? agreement.rent : "N/A"}
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="row">
+                                <div className="col-sm-6">
+                                    <div className="row">
+                                        <div className="col-sm-6 label-text">
+                                            <label htmlFor="timperiod"> Time Period :</label>
+                                        </div>
+                                        <div className="col-sm-6 label-view-text">
+                                            <label id="timperiod" name="timperiod">
+                                                {agreement.timePeriod ? agreement.timePeriod : "N/A"}
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="row">
+                                    <div className="col-sm-6">
+                                        <div className="row">
+                                            <div className="col-sm-6 label-text">
+                                                <label htmlFor="securityDeposit">Security Deposit :</label>
+                                            </div>
+                                            <div className="col-sm-6 label-view-text">
+                                                <label id="securityDeposit" name="securityDeposit">
+                                                    {agreement.securityDeposit ? agreement.securityDeposit : "N/A"}
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="row">
+                                <div className="col-sm-6">
+                                    <div className="row">
+                                        <div className="col-sm-6 label-text">
+                                            <label htmlFor="cgst"> CGST :</label>
+                                        </div>
+                                        <div className="col-sm-6 label-view-text">
+                                            <label id="cgst" name="cgst">
+                                                {agreement.cgst ? agreement.cgst : "N/A"}
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="row">
+                                    <div className="col-sm-6">
+                                        <div className="row">
+                                            <div className="col-sm-6 label-text">
+                                                <label htmlFor="sgst">SGST :</label>
+                                            </div>
+                                            <div className="col-sm-6 label-view-text">
+                                                <label id="sgst" name="sgst">
+                                                    {agreement.sgst ? agreement.sgst : "N/A"}
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+
+
+                            <div className="row">
+                                <div className="col-sm-6">
+                                    <div className="row">
+                                        <div className="col-sm-6 label-text">
+                                            <label htmlFor="rnreason"> Renewal Reason :</label>
+                                        </div>
+                                        <div className="col-sm-6 label-view-text">
+                                            <label id="rnreason" name="rnreason">
                                                 {agreement.renewal.reasonForRenewal ? agreement.renewal.reasonForRenewal : "N/A"}
                                             </label>
                                         </div>

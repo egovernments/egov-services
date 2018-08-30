@@ -10,6 +10,8 @@ class RenewalAgreement extends React.Component {
         stateId: "",
         action: "Renewal",
         agreementDate: "",
+          rent : "",
+          timePeriod : "",
         timePeriod: "",
         allottee: {
           id: "",
@@ -107,6 +109,7 @@ class RenewalAgreement extends React.Component {
         objection: "",
         judgement: "",
         remission: "",
+        renewalDate : "",
         createdDate: "",
         createdBy: "",
         lastmodifiedDate: "",

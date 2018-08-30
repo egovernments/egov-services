@@ -499,11 +499,8 @@ public class PaymentService {
 
 
         agreementCriteria.setTenantId(tenantId);
-        LOGGER.info("agreement criteria is ---------" + agreementCriteria );
         Agreement agreement = agreementService.searchAgreement(
                 agreementCriteria, requestInfoWrapper.getRequestInfo()).get(0);
-
-        LOGGER.info("after search agreement----- " + agreement);
 
         if (agreement.getDemands() != null && !agreement.getDemands().isEmpty()) {
             demandSearchCriteria.setDemandId(Long.valueOf(agreement.getDemands().get(0)));
@@ -514,7 +511,13 @@ public class PaymentService {
                 if (details != null ) {
                     balance = details.getTaxAmount().subtract(details.getCollectionAmount());
                     if (balance.compareTo(BigDecimal.ZERO) > 0
-                            && details.getPeriodStartDate().compareTo(new Date()) <= 0) {
+                            && (ADVANCE_TAX.equalsIgnoreCase(details.getTaxReasonCode())
+                            || CGST_ON_ADVANCE.equalsIgnoreCase(details.getTaxReasonCode())
+                            || SGST_ON_ADVANCE.equalsIgnoreCase(details.getTaxReasonCode())
+                            || GOODWILL_AMOUNT.equalsIgnoreCase(details.getTaxReasonCode())
+                            || CGST_ON_GOODWILL.equalsIgnoreCase(details.getTaxReasonCode())
+                            || SGST_ON_GOODWILL.equalsIgnoreCase(details.getTaxReasonCode())
+                            || (details.getPeriodStartDate().compareTo(new Date()) <= 0))) {
                         demandDetails.add(details);
                     }
                 }

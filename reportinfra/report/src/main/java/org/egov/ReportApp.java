@@ -72,7 +72,13 @@ public class ReportApp implements EnvironmentAware {
 	public static void main(String[] args) throws Exception {
 		SpringApplication.run(ReportApp.class, args);
 	}
-	
+
+	private static String locationspath;
+
+	@Value("${report.locationsfile.path}")
+	public void setLocationspath(String locationspath) {
+		ReportApp.locationspath = locationspath;
+	}
 	
 	@Bean("reportDefinitions")
 	@Value("common")
@@ -113,7 +119,7 @@ public class ReportApp implements EnvironmentAware {
 		br = new BufferedReader(fr);*/
 		
 		//Dev Testing
-		 URL url = new URL("https://raw.githubusercontent.com/egovernments/egov-services/master/docs/reportinfra/report/reportFileLocationsv1.txt");
+		 URL url = new URL(locationspath);
 		 URLConnection urlConnection = url.openConnection();
 		 br = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
 		 

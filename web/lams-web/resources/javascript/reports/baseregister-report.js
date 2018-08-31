@@ -296,7 +296,7 @@ class BaseRegister extends React.Component {
                               <label for="">Aadhar Number</label>
                           </div>
                           <div className="col-sm-6">
-                            <input type="text" id="aadharNo" pattern="[0-9]{12}" maxLength='12' onChange={(e) => { handleChange(e.target.value, "aadharNo") }}/>
+                            <input type="number" id="aadharNo" pattern="[0-9 ]+" maxLength='12' onChange={(e) => { handleChange(e.target.value, "aadharNo") }}/>
                           </div>
                       </div>
                   </div>

@@ -62,7 +62,9 @@ public class DraftsService {
 	}
 	
 	public DraftResponse updateDraft(DraftRequest draftRequest) {
-		DraftSearchCriteria criteria = DraftSearchCriteria.builder().id(draftRequest.getDraft().getId()).build();
+		DraftSearchCriteria criteria = DraftSearchCriteria.builder().id(draftRequest.getDraft().getId()).tenantId
+				(draftRequest.getDraft().getTenantId())
+				.build();
 		DraftResponse response = searchDraftsForValidation(draftRequest.getRequestInfo(), criteria);
 		if(response.getDrafts().isEmpty()) {
 			throw new CustomException("INVALID_UPDATE_REQUEST", "Draft being updated doesn't belong to this user");

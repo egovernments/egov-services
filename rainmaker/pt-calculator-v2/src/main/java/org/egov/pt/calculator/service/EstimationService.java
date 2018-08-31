@@ -358,6 +358,7 @@ public class EstimationService {
 		BigDecimal penalty = BigDecimal.ZERO;
 		BigDecimal exemption = BigDecimal.ZERO;
 		BigDecimal rebate = BigDecimal.ZERO;
+		BigDecimal ptTax = BigDecimal.ZERO;
 
 		for (TaxHeadEstimate estimate : estimates) {
 
@@ -368,6 +369,8 @@ public class EstimationService {
 
 			case TAX:
 				taxAmt = taxAmt.add(estimate.getEstimateAmount());
+				if(estimate.getTaxHeadCode().equalsIgnoreCase(PT_TAX))
+					ptTax = ptTax.add(estimate.getEstimateAmount());
 				break;
 
 			case PENALTY:
@@ -399,7 +402,7 @@ public class EstimationService {
 
 		BigDecimal totalAmount = taxAmt.add(penalty).subtract(rebate).subtract(exemption);
 		// false in the argument represents that the demand shouldn't be updated from this call
-		BigDecimal collectedAmtForOldDemand = demandService.getCarryForwardAndCancelOldDemand(totalAmount, criteria, requestInfo, false);
+		BigDecimal collectedAmtForOldDemand = demandService.getCarryForwardAndCancelOldDemand(ptTax, criteria, requestInfo, false);
 
 		if(collectedAmtForOldDemand.compareTo(BigDecimal.ZERO) > 0)
 			estimates.add(TaxHeadEstimate.builder()

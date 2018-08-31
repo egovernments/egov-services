@@ -1,8 +1,12 @@
 package org.egov.pt.calculator.service;
 
 import java.math.BigDecimal;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.pt.calculator.repository.Repository;
@@ -21,7 +25,6 @@ import org.egov.pt.calculator.web.models.demand.DemandDetail;
 import org.egov.pt.calculator.web.models.demand.DemandRequest;
 import org.egov.pt.calculator.web.models.demand.DemandResponse;
 import org.egov.pt.calculator.web.models.demand.DemandStatus;
-import org.egov.pt.calculator.web.models.demand.TaxHeadMaster;
 import org.egov.pt.calculator.web.models.demand.TaxPeriod;
 import org.egov.pt.calculator.web.models.property.OwnerInfo;
 import org.egov.pt.calculator.web.models.property.Property;
@@ -39,8 +42,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.extern.slf4j.Slf4j;
 import net.minidev.json.JSONArray;
-
-import static org.egov.pt.calculator.util.CalculatorConstants.PT_ADVANCE_CARRYFORWARD;
 
 @Service
 @Slf4j
@@ -100,17 +101,14 @@ public class DemandService {
 			
 			String assessmentNumber = detail.getAssessmentNumber();
 
-			//Getting the amount paid in previous assessment
-			BigDecimal collectedAmtForOldDemand =  BigDecimal.ZERO;
+			// pt_tax for the new assessment
+			BigDecimal newTax =  BigDecimal.ZERO;
 			Optional<TaxHeadEstimate> advanceCarryforwardEstimate = propertyCalculationMap.get(assessmentNumber).getTaxHeadEstimates()
-			.stream().filter(estimate -> estimate.getTaxHeadCode().equalsIgnoreCase(PT_ADVANCE_CARRYFORWARD))
+			.stream().filter(estimate -> estimate.getTaxHeadCode().equalsIgnoreCase(CalculatorConstants.PT_TAX))
 				.findAny();
 			if(advanceCarryforwardEstimate.isPresent())
-				collectedAmtForOldDemand = advanceCarryforwardEstimate.get().getEstimateAmount();
+				newTax = advanceCarryforwardEstimate.get().getEstimateAmount();
 
-
-			BigDecimal newTax = propertyCalculationMap.get(assessmentNumber).getTotalAmount().add(collectedAmtForOldDemand);
-			
 			// true represents that the demand should be updated from this call
 			BigDecimal carryForwardCollectedAmount = getCarryForwardAndCancelOldDemand(newTax, criteria,
 					request.getRequestInfo(), true);
@@ -247,20 +245,15 @@ public class DemandService {
 				DemandResponse.class);
 		Demand demand = res.getDemands().get(0);
 
-		Map<String, Boolean> isTaxHeadDebitMap = mstrDataService
-				.getTaxHeadMasterMap(requestInfo, property.getTenantId()).stream()
-				.collect(Collectors.toMap(TaxHeadMaster::getCode, TaxHeadMaster::getIsDebit));
-
-		for (DemandDetail detail : demand.getDemandDetails())
-			if (!isTaxHeadDebitMap.get(detail.getTaxHeadMasterCode()))
+		carryForward = utils.getTotalCollectedAmountAndPreviousCarryForward(demand);
+		
+		for (DemandDetail detail : demand.getDemandDetails()) {
+			if (detail.getTaxHeadMasterCode().equalsIgnoreCase(CalculatorConstants.PT_TAX))
 				oldTaxAmt = oldTaxAmt.add(detail.getTaxAmount());
-			else
-				oldTaxAmt = oldTaxAmt.subtract(detail.getTaxAmount());
+		}			
 
-		carryForward = utils.getTotalCollectedAmountAndSetTaxAmt(demand);
-
-		log.debug(oldTaxAmt.toPlainString());
-		log.debug(newTax.toPlainString());
+		log.debug("The old tax amount in string : " + oldTaxAmt.toPlainString());
+		log.debug("The new tax amount in string : " + newTax.toPlainString());
 		
 		if (oldTaxAmt.compareTo(newTax) > 0)
 			carryForward = BigDecimal.valueOf(-1);

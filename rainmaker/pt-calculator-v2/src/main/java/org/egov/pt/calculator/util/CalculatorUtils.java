@@ -18,7 +18,6 @@ import org.egov.pt.calculator.web.models.GetBillCriteria;
 import org.egov.pt.calculator.web.models.demand.Demand;
 import org.egov.pt.calculator.web.models.demand.DemandDetail;
 import org.egov.pt.calculator.web.models.property.AuditDetails;
-import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -318,16 +317,21 @@ public class CalculatorUtils {
 	}
 	
 	/**
-	 * Sums up the collection amount from the given demand and returns
+	 * Adds up the collection amount from the given demand 
+	 * and the previous advance carry forward together as new advance carry forward
 	 *
 	 * @param demand
 	 * @return carryForward
 	 */
-	public BigDecimal getTotalCollectedAmountAndSetTaxAmt(Demand demand) {
+	public BigDecimal getTotalCollectedAmountAndPreviousCarryForward(Demand demand) {
 
 		BigDecimal carryForward = BigDecimal.ZERO;
-		for (DemandDetail detail : demand.getDemandDetails())
+		for (DemandDetail detail : demand.getDemandDetails()) {
+
 			carryForward = carryForward.add(detail.getCollectionAmount());
+			if (detail.getTaxHeadMasterCode().equalsIgnoreCase(CalculatorConstants.PT_ADVANCE_CARRYFORWARD))
+				carryForward = carryForward.add(detail.getTaxAmount());
+		}
 		return carryForward;
 	}
 	

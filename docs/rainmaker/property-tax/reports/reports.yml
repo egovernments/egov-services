@@ -94,11 +94,41 @@ ReportDefinitions:
     type: string
     source: pt
     total: false
+  - name: transactiondate
+    label: reports.pt.receiptDate
+    type: string
+    source: pt
+    total: false
   - name: amount
     label: reports.pt.amount
     type: string
     source: pt
     total: true
+  - name: propertytax
+    label: reports.pt.propertyTax
+    type: string
+    source: pt
+    total: true
+  - name: firecess
+    label: reports.pt.fireCess
+    type: string
+    source: pt
+    total: true
+  - name: cancercess
+    label: reports.pt.cancerCess
+    type: string
+    source: pt
+    total: true
+  - name: assessmentnumber
+    label: reports.pt.assessmentNo
+    type: string
+    source: pt
+    total: false
+  - name: financialyear
+    label: reports.pt.financialYear
+    type: string
+    source: pt
+    total: false
   - name: instrumenttype
     label: reports.pt.paymentMode
     type: string
@@ -109,8 +139,8 @@ ReportDefinitions:
     type: string
     source: pt
     total: false
-  - name: transactiondate
-    label: reports.pt.ddChequeTransactionDate
+  - name: bankname
+    label: reports.pt.bankName
     type: string
     source: pt
     total: false
@@ -127,10 +157,51 @@ ReportDefinitions:
     source: pt
     isMandatory: false
     searchClause: AND tbl_rcpt.createddate <= $toDate
-  - name: zoneList
+  - name: paymentMode
+    label: reports.pt.paymentMode
+    type: singlevaluelist
+    pattern: 'list://Cash:Cash,Online:Online,Card:Card,DD:DD,Cheque:Cheque'
+    source: pt
+    isMandatory: false
+    searchClause: AND instrumenttype = $paymentMode
+  - name: financialyear
+    label: reports.pt.financialYear
+    type: singlevaluelist
+    pattern: 'list://17-18:17-18,18-19:18-19'
+    source: pt
+    isMandatory: false
+    searchClause: AND financialyear = $financialyear
+  - name: localityArray
     label: reports.pt.zoneList
     type: boundarylist
     source: pt
     isMandatory: false
-  query: SELECT * FROM (SELECT consumercode, a.createddate, to_char(to_timestamp(a.createddate / 1000), 'DD/MM/YYYY') AS transactiondate, receiptnumber, amount, instrumenttype, transactionnumber FROM egcl_receiptheader AS a INNER JOIN egcl_receiptinstrument AS c ON a.id = c.receiptheader INNER JOIN egcl_instrumentheader AS b ON b.id = c.instrumentheader AND a.tenantid LIKE $tenantid) AS tbl_rcpt INNER JOIN (SELECT locality, CONCAT(a.property, ':', b.assessmentnumber) AS consumercode FROM eg_pt_address_v2 AS a INNER JOIN eg_pt_propertydetail_v2 AS b ON a.property = b.property WHERE locality IN ($localityArray)) AS tbl_lclty ON tbl_rcpt.consumercode = tbl_lclty.consumercode
+    searchClause: AND locality IN ($localityArray)
+  query: SELECT * FROM (SELECT * FROM (SELECT a.tenantid as tenantid, (CASE WHEN to_char(to_timestamp(a.createddate/1000), 'MM')::INT < 4 THEN CONCAT((to_char(to_timestamp(a.createddate/1000), 'MM')::INT - 1)::VARCHAR, '-', to_char(to_timestamp(a.createddate/1000), 'MM')) ELSE CONCAT(to_char(to_timestamp(a.createddate/1000), 'YY'), '-', (to_char(to_timestamp(a.createddate/1000), 'YY')::int + 1))::VARCHAR END) AS financialyear, a.id, SUBSTRING(a.consumercode, ':(.*)') AS assessmentnumber, a.consumercode, a.createddate, to_char(to_timestamp(a.createddate / 1000), 'DD/MM/YYYY') AS transactiondate, d.name AS bankname, receiptnumber, amount, instrumenttype, transactionnumber FROM egcl_receiptheader AS a INNER JOIN egcl_receiptinstrument AS c ON a.id = c.receiptheader INNER JOIN egcl_instrumentheader AS b ON b.id = c.instrumentheader LEFT OUTER JOIN egf_bank as d ON b.bankid::BIGINT = d.id) AS aa LEFT OUTER JOIN (SELECT aaa.receiptheader, firecess, cancercess, propertytax FROM (SELECT SUM(cramount) AS firecess, receiptheader FROM egcl_receiptdetails WHERE description LIKE 'PT_FIRE_CESS%' GROUP BY receiptheader) AS aaa INNER JOIN (SELECT SUM(cramount) AS cancercess, receiptheader FROM egcl_receiptdetails WHERE description LIKE 'PT_CANCER_CESS%' GROUP BY receiptheader) AS bbb ON aaa.receiptheader = bbb.receiptheader INNER JOIN (SELECT SUM(cramount) AS propertytax, receiptheader FROM egcl_receiptdetails WHERE description LIKE 'PT_TAX%' GROUP BY receiptheader) AS ccc ON aaa.receiptheader = ccc.receiptheader) AS bb ON aa.id = bb.receiptheader) AS tbl_rcpt LEFT OUTER JOIN (SELECT locality, CONCAT(aa.property, ':', bb.assessmentnumber) AS consumercode FROM eg_pt_address_v2 AS aa RIGHT OUTER JOIN eg_pt_propertydetail_v2 AS bb ON aa.property = bb.property) AS tbl_lclty ON tbl_rcpt.consumercode = tbl_lclty.consumercode WHERE tenantid LIKE $tenantid
   orderby: ORDER BY tbl_rcpt.createddate DESC
+
+
+- reportName: UlbWisePtCollection
+  summary: ULB-wise PT Collection
+  version: 1.0.0
+  moduleName: rainmaker-pt
+  sourceColumns:
+  - name: receiptnumber
+    label: reports.pt.receiptNo
+    type: string
+    source: pt
+    total: false
+  searchParams:
+  - name: fromDate
+    label: reports.pt.fromDate
+    type: epoch
+    source: pt
+    isMandatory: false
+    searchClause: AND tbl_rcpt.createddate >= $fromDate
+  - name: toDate
+    label: reports.pt.toDate
+    type: epoch
+    source: pt
+    isMandatory: false
+    searchClause: AND tbl_rcpt.createddate <= $toDate
+  query:

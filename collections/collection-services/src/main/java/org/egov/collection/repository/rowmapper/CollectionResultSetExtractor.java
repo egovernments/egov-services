@@ -68,6 +68,8 @@ public class CollectionResultSetExtractor implements ResultSetExtractor<List<Rec
                         .lastModifiedDate(resultSet.getLong("rh_lastModifiedDate"))
                         .build();
 
+
+
                 Instrument instrument = Instrument.builder()
                         .id(resultSet.getString("ins_instrumentheader"))
                         .amount(resultSet.getBigDecimal("ins_amount"))
@@ -77,6 +79,7 @@ public class CollectionResultSetExtractor implements ResultSetExtractor<List<Rec
                                 .build())
                         .instrumentStatus(InstrumentStatusEnum.valueOf(resultSet.getString("ins_instrumentstatus")))
                         .ifscCode(resultSet.getString("ins_ifsccode"))
+                        .bank(BankContract.builder().name(resultSet.getString("ins_bankid")).build())
                         .transactionType(TransactionType.valueOf(resultSet.getString("ins_transactiontype")))
                         .payee(resultSet.getString("ins_payee"))
                         .drawer(resultSet.getString("ins_drawer"))

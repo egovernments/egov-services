@@ -148,7 +148,7 @@ public class CollectionsQueryBuilder {
         sqlParameterSource.addValue("amount", instrument.getAmount());
         sqlParameterSource.addValue("instrumenttype", instrument.getInstrumentType().getName());
         sqlParameterSource.addValue("instrumentstatus", instrument.getInstrumentStatus().toString());
-        sqlParameterSource.addValue("bankid", isNull(instrument.getBank()) ? null : instrument.getBank().getId());
+        sqlParameterSource.addValue("bankid", isNull(instrument.getBank()) ? null : instrument.getBank().getName());
         sqlParameterSource.addValue("branchname", instrument.getBranchName());
         sqlParameterSource.addValue("bankaccountid", isNull(instrument.getBankAccount()) ? null : instrument
                 .getBankAccount().getAccountNumber());

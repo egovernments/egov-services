@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.pt.calculator.repository.Repository;
@@ -25,6 +26,7 @@ import org.egov.pt.calculator.web.models.demand.DemandDetail;
 import org.egov.pt.calculator.web.models.demand.DemandRequest;
 import org.egov.pt.calculator.web.models.demand.DemandResponse;
 import org.egov.pt.calculator.web.models.demand.DemandStatus;
+import org.egov.pt.calculator.web.models.demand.TaxHeadMaster;
 import org.egov.pt.calculator.web.models.demand.TaxPeriod;
 import org.egov.pt.calculator.web.models.property.OwnerInfo;
 import org.egov.pt.calculator.web.models.property.Property;
@@ -189,17 +191,14 @@ public class DemandService {
 		for (DemandDetail detail : demand.getDemandDetails()) 
 			totalTax = totalTax.add(detail.getTaxAmount());
 
-/*		if (!isCurrentDemand && getBillCriteria.getAmountExpected().compareTo(totalTax) < 0)
-			throw new CustomException(CalculatorConstants.PT_GET_BILL_ARREAR_DEMAND,
-					CalculatorConstants.PT_GET_BILL_ARREAR_DEMAND_MSG);*/
-		
 		if (BigDecimal.ZERO.compareTo(getBillCriteria.getAmountExpected()) < 0
 				&& getBillCriteria.getAmountExpected().compareTo(totalTax) < 0)
 			demand.getDemandDetails().forEach(detail -> {
 				if (detail.getTaxHeadMasterCode().equalsIgnoreCase(CalculatorConstants.PT_TIME_REBATE))
 					detail.setTaxAmount(BigDecimal.ZERO);
 			});
-
+		
+		roundOffDecimalForDemand(demand, requestInfoWrapper);
 		DemandRequest request = DemandRequest.builder().demands(Arrays.asList(demand)).requestInfo(requestInfo).build();
 		StringBuilder updateDemandUrl = utils.getUpdateDemandUrl();
 		repository.fetchResult(updateDemandUrl, request);
@@ -318,7 +317,6 @@ public class DemandService {
 		Long lastCollectedTime = rcptService.getInterestLatestCollectedTime(demand, requestInfoWrapper);
 		
 		BigDecimal taxAmtForApplicableGeneration = utils.getTaxAmtFromDemandForApplicablesGeneration(demand);
-		BigDecimal totalTax = taxAmtForApplicableGeneration.add(utils.getTaxAmtFromDemandForAdditonalTaxes(demand));
 		BigDecimal collectedApplicableAmount = BigDecimal.ZERO;
 		BigDecimal totalCollectedAmount = BigDecimal.ZERO;
 		BigDecimal oldInterest = BigDecimal.ZERO;
@@ -333,7 +331,6 @@ public class DemandService {
 		boolean isRebateUpdated = false;
 		boolean isPenaltyUpdated = false;
 		boolean isInterestUpdated = false;
-		boolean isDecimalMathcing = false;
 		
 		List<DemandDetail> details = demand.getDemandDetails();
 		
@@ -357,19 +354,6 @@ public class DemandService {
 		if (lastCollectedTime > 0)
 			interest = oldInterest.add(rebatePenaltyEstimates.get(CalculatorConstants.PT_TIME_INTEREST));
 		
-		TaxHeadEstimate estimate = payService.roundOfDecimals(totalTax.add(penalty).add(interest).subtract(totalCollectedAmount),
-				rebate);
-
-		BigDecimal decimalCredit = null != estimate
-				&& estimate.getTaxHeadCode().equalsIgnoreCase(CalculatorConstants.PT_DECIMAL_CEILING_CREDIT)
-						? estimate.getEstimateAmount()
-						: BigDecimal.ZERO;
-
-		BigDecimal decimalDebit = null != estimate
-				&& estimate.getTaxHeadCode().equalsIgnoreCase(CalculatorConstants.PT_DECIMAL_CEILING_DEBIT)
-						? estimate.getEstimateAmount()
-						: BigDecimal.ZERO;
-
 		for (DemandDetail detail : details) {
 			if (detail.getTaxHeadMasterCode().equalsIgnoreCase(CalculatorConstants.PT_TIME_REBATE)) {
 				detail.setTaxAmount(rebate);
@@ -383,20 +367,8 @@ public class DemandService {
 				detail.setTaxAmount(interest);
 				isInterestUpdated = true;
 			}
-			
-			if (detail.getTaxHeadMasterCode().equalsIgnoreCase(CalculatorConstants.PT_DECIMAL_CEILING_CREDIT)) {
-				if (detail.getCollectionAmount().compareTo(BigDecimal.ZERO) == 0)
-					detail.setTaxAmount(decimalCredit);
-				if (null != estimate
-						&& CalculatorConstants.PT_DECIMAL_CEILING_CREDIT.equalsIgnoreCase(estimate.getTaxHeadCode()))
-					isDecimalMathcing = true;
-			}
-
-			if (detail.getTaxHeadMasterCode().equalsIgnoreCase(CalculatorConstants.PT_DECIMAL_CEILING_DEBIT)) {
-				detail.setTaxAmount(decimalDebit);
-				isDecimalMathcing = true;
-			}
 		}
+		
 		if (!isPenaltyUpdated && penalty.compareTo(BigDecimal.ZERO) > 0)
 			details.add(DemandDetail.builder().taxAmount(penalty).taxHeadMasterCode(CalculatorConstants.PT_TIME_PENALTY)
 					.demandId(demandId).tenantId(tenantId).build());
@@ -408,11 +380,77 @@ public class DemandService {
 			details.add(
 					DemandDetail.builder().taxAmount(interest).taxHeadMasterCode(CalculatorConstants.PT_TIME_INTEREST)
 							.demandId(demandId).tenantId(tenantId).build());
+		
+		return isCurrentDemand;
+	}
+
+	/**
+	 * @param demand
+	 * @param tenantId
+	 * @param demandId
+	 * @param totalTax
+	 * @param totalCollectedAmount
+	 * @param isDecimalMathcing
+	 * @param details
+	 * @param rebate
+	 * @param penalty
+	 * @param interest
+	 */
+	public void roundOffDecimalForDemand(Demand demand, RequestInfoWrapper requestInfoWrapper) {
+		
+		List<DemandDetail> details = demand.getDemandDetails();
+		String tenantId = demand.getTenantId();
+		String demandId = demand.getId();
+		boolean isDecimalMathcing = false;
+
+		BigDecimal creditAmt = BigDecimal.ZERO;
+		BigDecimal debitAmt = BigDecimal.ZERO;
+		BigDecimal totalCollectedAmount = BigDecimal.ZERO;
+		
+		Map<String, Boolean> isTaxHeadDebitMap = mstrDataService.getTaxHeadMasterMap(requestInfoWrapper.getRequestInfo(), tenantId).stream()
+				.collect(Collectors.toMap(TaxHeadMaster::getCode, TaxHeadMaster::getIsDebit));
+
+		for (DemandDetail detail : demand.getDemandDetails()) {
+
+			totalCollectedAmount = totalCollectedAmount.add(detail.getCollectionAmount());
+
+			if (!isTaxHeadDebitMap.get(detail.getTaxHeadMasterCode())
+					&& !detail.getTaxHeadMasterCode().equalsIgnoreCase(CalculatorConstants.PT_DECIMAL_CEILING_CREDIT))
+				creditAmt = creditAmt.add(detail.getTaxAmount());
+			else if (!detail.getTaxHeadMasterCode().equalsIgnoreCase(CalculatorConstants.PT_DECIMAL_CEILING_DEBIT))
+				debitAmt = debitAmt.add(detail.getTaxAmount());
+		}
+
+		TaxHeadEstimate estimate = payService.roundOfDecimals(creditAmt, debitAmt.add(totalCollectedAmount));
+
+		BigDecimal decimalCredit = null != estimate
+				&& estimate.getTaxHeadCode().equalsIgnoreCase(CalculatorConstants.PT_DECIMAL_CEILING_CREDIT)
+						? estimate.getEstimateAmount() : BigDecimal.ZERO;
+
+		BigDecimal decimalDebit = null != estimate
+				&& estimate.getTaxHeadCode().equalsIgnoreCase(CalculatorConstants.PT_DECIMAL_CEILING_DEBIT)
+						? estimate.getEstimateAmount() : BigDecimal.ZERO;
+
+		for (DemandDetail detail : demand.getDemandDetails()) {
+
+			if (detail.getTaxHeadMasterCode().equalsIgnoreCase(CalculatorConstants.PT_DECIMAL_CEILING_CREDIT)) {
+				if (detail.getCollectionAmount().compareTo(BigDecimal.ZERO) == 0)
+					detail.setTaxAmount(decimalCredit);
+				if (null != estimate
+						&& CalculatorConstants.PT_DECIMAL_CEILING_CREDIT.equalsIgnoreCase(estimate.getTaxHeadCode()))
+					isDecimalMathcing = true;
+			}
+
+			if (detail.getTaxHeadMasterCode().equalsIgnoreCase(CalculatorConstants.PT_DECIMAL_CEILING_DEBIT)) {
+				detail.setTaxAmount(decimalDebit);
+				if (null != estimate
+						&& CalculatorConstants.PT_DECIMAL_CEILING_DEBIT.equalsIgnoreCase(estimate.getTaxHeadCode()))
+				isDecimalMathcing = true;
+			}
+		}
 
 		if (!isDecimalMathcing && null != estimate && BigDecimal.ZERO.compareTo(estimate.getEstimateAmount()) <= 0)
 			details.add(DemandDetail.builder().taxAmount(estimate.getEstimateAmount())
 					.taxHeadMasterCode(estimate.getTaxHeadCode()).demandId(demandId).tenantId(tenantId).build());
-		
-		return isCurrentDemand;
 	}
 }

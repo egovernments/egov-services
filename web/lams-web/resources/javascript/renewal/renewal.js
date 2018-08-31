@@ -10,8 +10,7 @@ class RenewalAgreement extends React.Component {
         stateId: "",
         action: "Renewal",
         agreementDate: "",
-          rent : "",
-          timePeriod : "",
+        rent : "",
         timePeriod: "",
         allottee: {
           id: "",
@@ -109,7 +108,7 @@ class RenewalAgreement extends React.Component {
         objection: "",
         judgement: "",
         remission: "",
-        renewalDate : "",
+        renewalDate:"",
         createdDate: "",
         createdBy: "",
         lastmodifiedDate: "",
@@ -119,6 +118,7 @@ class RenewalAgreement extends React.Component {
         sgst:0,
         cgst:0
       },
+      renewalReasons: ["Reason 1", "Reason 2", "Reason 3", "Reason 4", "Others"],
       positionList: [],
       departmentList: [],
       designationList: [],
@@ -142,7 +142,7 @@ class RenewalAgreement extends React.Component {
   }
 
   addOrUpdate(e) {
-
+    console.log("agreement",agreement);
     e.preventDefault();
     var _this = this;
     var agreement = Object.assign({}, _this.state.agreement);
@@ -215,7 +215,7 @@ class RenewalAgreement extends React.Component {
                     success: function (res1) {
                       if (window.opener)
                         window.opener.location.reload();
-                      if (res1 && res1.Employee && res1.Employee[0].name)
+                      if (res1 && res1.Employee.length > 0)
                         window.location.href = `app/acknowledgement/common-ack.html?wftype=Renewal&action=${ID}&name=${res1.Employee[0].code}::${res1.Employee[0].name}&ackNo=${res.Agreements[0].acknowledgementNumber}`;
                       else
                         window.location.href = `app/acknowledgement/common-ack.html?wftype=Renewal&action=${ID}&name=&ackNo=${res.Agreements[0].acknowledgementNumber}`;
@@ -273,7 +273,7 @@ class RenewalAgreement extends React.Component {
             success: function (res1) {
               if (window.opener)
                 window.opener.location.reload();
-              if (res1 && res1.Employee && res1.Employee[0].name)
+              if (res1 && res1.Employee.length > 0)
                 window.location.href = `app/acknowledgement/common-ack.html?wftype=Renewal&action=${ID}&name=${res1.Employee[0].code}::${res1.Employee[0].name}&ackNo=${res.Agreements[0].acknowledgementNumber}`;
               else
                 window.location.href = `app/acknowledgement/common-ack.html?wftype=Renewal&action=${ID}&name=&ackNo=${res.Agreements[0].acknowledgementNumber}`;
@@ -331,7 +331,7 @@ class RenewalAgreement extends React.Component {
     }
   }
   handleChange(e, name) {
-
+    
     var _this = this;
 
     if (name === "documents") {
@@ -394,6 +394,8 @@ class RenewalAgreement extends React.Component {
         ..._this.state,
         agreement: {
           ..._this.state.agreement,
+          sgst:sgst,
+          cgst:cgst,
           [name]: e.target.value
         }
       })
@@ -430,8 +432,8 @@ class RenewalAgreement extends React.Component {
     }
      if(pName==="rentIncrementMethod") {
         var rent = _this.state.existingRent;
-        sgst = Math.round(_this.state.renewalRent * 0.09);
-        cgst = Math.round(_this.state.renewalRent * 0.09);
+        var sgst = Math.round(_this.state.renewalRent * 0.09);
+        var cgst = Math.round(_this.state.renewalRent * 0.09);
         var rentIncrPercentage = _this.state.rentPercentageMap[e.target.value];
         updatedRenewalRent = Math.round(rent + (rent * rentIncrPercentage)/100);
         updatedSecurityDeposit = Math.round(updatedRenewalRent * 3);
@@ -668,7 +670,7 @@ class RenewalAgreement extends React.Component {
   render() {
     var _this = this;
     let { handleChange, handleChangeTwoLevel, addOrUpdate,onBlur} = this;
-    let { agreement, rentInc, existingRent,renewalRent,renewalDeposit} = _this.state;
+    let { agreement, renewalReasons, rentInc, existingRent,renewalRent,renewalDeposit} = _this.state;
     let { allottee, asset, rentIncrementMethod, workflowDetails, cancellation,
       renewal, eviction, objection, judgement, remission, remarks, documents,sgst,cgst} = this.state.agreement;
     let { assetCategory, locationDetails } = this.state.agreement.asset;
@@ -1133,7 +1135,6 @@ class RenewalAgreement extends React.Component {
                     </select>
                   </div>
                 </div>
-
               </div>
              </div>
              <div className="row">

@@ -877,7 +877,7 @@ class UpdateRemission extends React.Component {
                                                     if (buttonAction.toLowerCase() === 'cancel') {
                                                         window.location.href = `app/acknowledgement/common-ack.html?wftype=Remission&action=${buttonAction}&ackNo=${res.Agreements[0].acknowledgementNumber}`;
                                                     }else {
-                                                        if (res1 && res1.Employee && res1.Employee[0].name)
+                                                        if (res1 && res1.Employee.length > 0)
                                                             window.location.href = `app/acknowledgement/common-ack.html?wftype=Remission&action=${buttonAction}&name=${res1.Employee[0].code}::${res1.Employee[0].name}&ackNo=${res.Agreements[0].acknowledgementNumber}`;
                                                         else
                                                             window.location.href = `app/acknowledgement/common-ack.html?wftype=Remission&action=${buttonAction}&name=&ackNo=${res.Agreements[0].acknowledgementNumber}`;
@@ -949,7 +949,7 @@ class UpdateRemission extends React.Component {
                                     if (buttonAction.toLowerCase() === 'cancel') {
                                         window.location.href = `app/acknowledgement/common-ack.html?wftype=Remission&action=${buttonAction}&ackNo=${res.Agreements[0].acknowledgementNumber}`;
                                     } else {
-                                        if (res1 && res1.Employee && res1.Employee[0].name)
+                                        if (res1 && res1.Employee.length > 0)
                                             window.location.href = `app/acknowledgement/common-ack.html?wftype=Remission&action=${buttonAction}&name=${res1.Employee[0].code}::${res1.Employee[0].name}&ackNo=${res.Agreements[0].acknowledgementNumber}`;
                                         else
                                             window.location.href = `app/acknowledgement/common-ack.html?wftype=Remission&action=${buttonAction}&name=&ackNo=${res.Agreements[0].acknowledgementNumber}`;

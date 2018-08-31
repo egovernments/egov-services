@@ -198,7 +198,7 @@ class JudgementAgreement extends React.Component {
                     success: function (res1) {
                       if (window.opener)
                         window.opener.location.reload();
-                      if (res1 && res1.Employee && res1.Employee[0].name)
+                      if (res1 && res1.Employee.length > 0)
                         window.location.href = `app/acknowledgement/common-ack.html?wftype=Judgement&action=${ID}&name=${res1.Employee[0].code}::${res1.Employee[0].name}&ackNo=${res.Agreements[0].acknowledgementNumber}`;
                       else
                         window.location.href = `app/acknowledgement/common-ack.html?wftype=Judgement&action=${ID}&name=&ackNo=${res.Agreements[0].acknowledgementNumber}`;
@@ -255,7 +255,7 @@ class JudgementAgreement extends React.Component {
             success: function (res1) {
               if (window.opener)
                 window.opener.location.reload();
-              if (res1 && res1.Employee && res1.Employee[0].name)
+              if (res1 && res1.Employee.length > 0)
                 window.location.href = `app/acknowledgement/common-ack.html?wftype=Judgement&action=${ID}&name=${res1.Employee[0].code}::${res1.Employee[0].name}&ackNo=${res.Agreements[0].acknowledgementNumber}`;
               else
                 window.location.href = `app/acknowledgement/common-ack.html?wftype=Judgement&action=${ID}&name=&ackNo=${res.Agreements[0].acknowledgementNumber}`;

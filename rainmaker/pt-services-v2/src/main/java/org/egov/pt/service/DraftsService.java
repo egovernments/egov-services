@@ -77,7 +77,7 @@ public class DraftsService {
 	private void enrichDraftsForUpdate(DraftRequest draftRequest) {
 		if (!isEmpty(draftRequest.getDraft().getAssessmentNumber()))
 			draftRequest.getDraft().setActive(false);
-		draftRequest.getDraft().setTenantId(draftRequest.getRequestInfo().getUserInfo().getTenantId());
+//		draftRequest.getDraft().setTenantId(draftRequest.getRequestInfo().getUserInfo().getTenantId());
 		draftRequest.getDraft().setAuditDetails(propertyUtil.getAuditDetails(draftRequest.getRequestInfo().getUserInfo().getId().toString(), false));
 	}
 
@@ -104,7 +104,7 @@ public class DraftsService {
 	
 	public DraftResponse searchDraftsForValidation(RequestInfo requestInfo, DraftSearchCriteria draftSearchCriteria) {
 		draftSearchCriteria.setUserId(requestInfo.getUserInfo().getUuid());
-		draftSearchCriteria.setTenantId(requestInfo.getUserInfo().getTenantId());
+//		draftSearchCriteria.setTenantId(requestInfo.getUserInfo().getTenantId());
 		List<Draft> drafts = new ArrayList<>();
 		try {
 			drafts = draftRepository.getDrafts(draftSearchCriteria);

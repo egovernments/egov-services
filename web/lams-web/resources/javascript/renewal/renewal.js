@@ -432,8 +432,8 @@ class RenewalAgreement extends React.Component {
     }
      if(pName==="rentIncrementMethod") {
         var rent = _this.state.existingRent;
-        var sgst = Math.round(_this.state.renewalRent * 0.09);
-        var cgst = Math.round(_this.state.renewalRent * 0.09);
+        sgst = Math.round(_this.state.renewalRent * 0.09);
+        cgst = Math.round(_this.state.renewalRent * 0.09);
         var rentIncrPercentage = _this.state.rentPercentageMap[e.target.value];
         updatedRenewalRent = Math.round(rent + (rent * rentIncrPercentage)/100);
         updatedSecurityDeposit = Math.round(updatedRenewalRent * 3);

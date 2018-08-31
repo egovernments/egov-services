@@ -30,6 +30,7 @@ public class BulkIndexer {
 	public void indexJsonOntoES(String url, String indexJson) throws Exception{
 		ObjectMapper mapper = new ObjectMapper();
 		try{
+			logger.info("Record being indexed: "+indexJson);
 			final HttpHeaders headers = new HttpHeaders();
 	        headers.setContentType(MediaType.APPLICATION_JSON);
 	        final HttpEntity<String> entity = new HttpEntity<>(indexJson, headers);

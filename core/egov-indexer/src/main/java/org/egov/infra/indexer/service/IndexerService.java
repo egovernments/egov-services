@@ -116,7 +116,6 @@ public class IndexerService {
 	    }catch(Exception e){
 	    	logger.error("Error while building jsonstring for indexing", e);
 	    }
-		logger.info("Json being indexed: "+result.toString());
         endTime = new Date().getTime();
 		logger.info("TIME TAKEN for building data to be indexed: "+(endTime - startTime)+"ms");
 
@@ -148,12 +147,9 @@ public class IndexerService {
 				}
 			}
 			result = jsonTobeIndexed.toString();
-	    }catch(JSONException e){
-	    	logger.error("Error while parsing the JSONArray", e);
 	    }catch(Exception e){
 	    	logger.error("Error while building jsonstring for indexing", e);
 	    }
-		logger.info("Json being indexed: "+result.toString());
         endTime = new Date().getTime();
 		logger.info("TIME TAKEN for building data to be indexed: "+(endTime - startTime)+"ms");
 		
@@ -186,12 +182,9 @@ public class IndexerService {
 				}
 			}
 			result = jsonTobeIndexed.toString();
-	    }catch(JSONException e){
-	    	logger.error("Error while parsing the JSONArray", e);
 	    }catch(Exception e){
 	    	logger.error("Error while building jsonstring for indexing", e);
 	    }
-		logger.info("Json being indexed: "+result.toString());
         endTime = new Date().getTime();
 		logger.info("TIME TAKEN for building data to be indexed: "+(endTime - startTime)+"ms");
 
@@ -207,7 +200,6 @@ public class IndexerService {
 		}else{
 			indexMap = bulkIndexer.getIndexMappingfromES(urlForMap);
 		}
-		logger.info("indexMapping: "+indexMap);
     	DocumentContext documentContext = JsonPath.parse(indexMap);
     	
     	if(!CollectionUtils.isEmpty(customJsonMappings.getFieldMapping())){
@@ -234,7 +226,6 @@ public class IndexerService {
 				String uri = null;
 				try{
 					uri = indexerUtils.buildUri(uriMapping, kafkaJson);
-					logger.info("uri: "+uri);
 					response = restTemplate.postForObject(uri, uriMapping.getRequest(), Map.class);
 				}catch(Exception e){
 					logger.error("Exception while trying to hit: "+uri, e);
@@ -263,7 +254,6 @@ public class IndexerService {
 			}
 		}
 		customJson = documentContext.jsonString(); 
-		logger.info("Json to be indexed: "+customJson);
 		return customJson.toString(); //jsonString has to be converted to string
 	}
 }

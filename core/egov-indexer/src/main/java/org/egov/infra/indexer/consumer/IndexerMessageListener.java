@@ -27,7 +27,6 @@ public class IndexerMessageListener implements MessageListener<String, String> {
         try{
         	indexerService.elasticIndexer(data.topic(), data.value()); 
         }catch(Exception e){
-        	logger.info("Forwarding error to the errohandler for posting on the ErrorQ....");
         	kafkaConsumerErrorHandller.handle(e, data);
         }
 	}

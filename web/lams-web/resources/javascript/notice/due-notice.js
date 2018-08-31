@@ -180,7 +180,7 @@ class DueNotice extends React.Component {
 
 
     doc.fromHTML("Ref: 1. Lease agreement No <b>" + agreement.agreementNumber +"</b> dt <b>" + agreement.commencementDate +"</b>",20,90);
-    doc.fromHTML("2. Roc No........................................dt.......................of this office",29,95);
+    doc.fromHTML("2. Roc No .......................................dt.......................of this office",29,95);
     doc.fromHTML("3. Resolution No.................................dt.......................of Municipal Council/Standing Committee ",29,100);
 
     doc.text(100, 120, "><><><", 'center');

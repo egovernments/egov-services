@@ -117,9 +117,6 @@ public class DemandService {
 	@Autowired
 	private DemandEnrichmentUtil demandEnrichmentUtil;
 	
-	@Autowired
-	private TaxPeriodService taxPeriodService;
-
 	public DemandResponse create(DemandRequest demandRequest) {
 
 		logger.info("the demand service : " + demandRequest);
@@ -370,7 +367,7 @@ public class DemandService {
 		for (DemandDetail demandDetail : newDemandDetails) {
 			demandDetail.setId(DemandDetailsId.get(i++));
 		}
-		kafkaTemplate.send(applicationProperties.getUpdateDemandTopic(), demandRequest);
+		update(demandRequest);
 		return new DemandResponse(responseInfoFactory.getResponseInfo(requestInfo, HttpStatus.CREATED), demands);
 	}
 

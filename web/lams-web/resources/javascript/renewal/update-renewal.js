@@ -827,7 +827,11 @@ class UpdateRenewal extends React.Component {
             var agreement = Object.assign({}, _this.state.agreement);
 
             if(agreement.renewal.reasonForRenewal == "Others" && !(agreement.remarks))
-            return(showError("Please enter remarks when selected reason as others"));        
+            return(showError("Please enter remarks when selected reason as others"));
+
+            if(!agreement.renewal.renewalFromDate)  {
+              agreement.renewal.renewalFromDate = _this.state.agreement.renewalDate;
+            }
 
             agreement.action = "renewal";
             agreement.workflowDetails.action = buttonAction;
@@ -939,7 +943,10 @@ class UpdateRenewal extends React.Component {
                                                 success: function (res1) {
                                                     if (window.opener)
                                                         window.opener.location.reload();
-                                                    if (res1 && res1.Employee && res1.Employee[0].name)
+                                                        if(res1.Employee){
+
+                                                        }
+                                                    if (res1 && res1.Employee.length>0)
                                                         window.location.href = `app/acknowledgement/common-ack.html?wftype=Renewal&action=${buttonAction}&name=${res1.Employee[0].code}::${res1.Employee[0].name}&ackNo=${ackNo}`;
                                                     else
                                                         window.location.href = `app/acknowledgement/common-ack.html?wftype=Renewal&action=${buttonAction}&name=&ackNo=${ackNo}`;
@@ -1011,7 +1018,7 @@ class UpdateRenewal extends React.Component {
                                 success: function (res1) {
                                     if (window.opener)
                                         window.opener.location.reload();
-                                    if (res1 && res1.Employee && res1.Employee[0].name){
+                                    if (res1 && res1.Employee.length>0){
                                         window.location.href = `app/acknowledgement/common-ack.html?wftype=Renewal&action=${buttonAction}&name=${res1.Employee[0].code}::${res1.Employee[0].name}&ackNo=${ackNo}`;
                                     }else
                                         window.location.href = `app/acknowledgement/common-ack.html?wftype=Renewal&action=${buttonAction}&name=&ackNo=${ackNo}`;

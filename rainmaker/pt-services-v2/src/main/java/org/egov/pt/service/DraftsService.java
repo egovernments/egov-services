@@ -15,9 +15,11 @@ import org.egov.pt.web.models.DraftSearchCriteria;
 import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.UUID;
 
 import static org.apache.commons.lang.StringUtils.isEmpty;
 
@@ -55,7 +57,7 @@ public class DraftsService {
 		draftRequest.getDraft().setId(UUID.randomUUID().toString());
 		draftRequest.getDraft().setActive(true);
 		draftRequest.getDraft().setUserId(draftRequest.getRequestInfo().getUserInfo().getUuid());
-		draftRequest.getDraft().setTenantId(draftRequest.getRequestInfo().getUserInfo().getTenantId());
+//		draftRequest.getDraft().setTenantId(draftRequest.getRequestInfo().getUserInfo().getTenantId());
 		draftRequest.getDraft().setAuditDetails(propertyUtil.getAuditDetails(draftRequest.getRequestInfo().getUserInfo().getId().toString(), true));
 	}
 	

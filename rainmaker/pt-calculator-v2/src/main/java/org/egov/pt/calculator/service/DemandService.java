@@ -417,7 +417,8 @@ public class DemandService {
 			if (!isTaxHeadDebitMap.get(detail.getTaxHeadMasterCode())
 					&& !detail.getTaxHeadMasterCode().equalsIgnoreCase(CalculatorConstants.PT_DECIMAL_CEILING_CREDIT))
 				creditAmt = creditAmt.add(detail.getTaxAmount());
-			else if (!detail.getTaxHeadMasterCode().equalsIgnoreCase(CalculatorConstants.PT_DECIMAL_CEILING_DEBIT))
+			else if (isTaxHeadDebitMap.get(detail.getTaxHeadMasterCode())
+					&& !detail.getTaxHeadMasterCode().equalsIgnoreCase(CalculatorConstants.PT_DECIMAL_CEILING_DEBIT))
 				debitAmt = debitAmt.add(detail.getTaxAmount());
 		}
 

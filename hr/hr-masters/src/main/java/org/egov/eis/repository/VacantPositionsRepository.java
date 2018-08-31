@@ -65,9 +65,6 @@ public class VacantPositionsRepository {
 
 	public List<Position> findForCriteria(VacantPositionsGetRequest vacantPositionsGetRequest) {
 		List<Object> preparedStatementValues = new ArrayList<Object>();
-		if(vacantPositionsGetRequest.getDestinationTenant()!=null && !vacantPositionsGetRequest.getDestinationTenant().equals(""))
-			vacantPositionsGetRequest.setTenantId(vacantPositionsGetRequest.getDestinationTenant());
-
 		String queryStr = vacantPositionsQueryBuilder.getQuery(vacantPositionsGetRequest, preparedStatementValues);
 		List<Position> positions = jdbcTemplate.query(queryStr, preparedStatementValues.toArray(), positionRowMapper);
 		return positions;

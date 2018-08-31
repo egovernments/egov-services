@@ -647,19 +647,27 @@ function handleSelect(){
     firstInput = document.getElementById("firstAllotment").value; //agreement.firstAllotment;
     secondInput = document.getElementById("subSeqRenewals[0].fromDate").value;  
     if(firstInput && secondInput){
-        monthFirst = firstInput.split("/") && firstInput.split("/")[0];
-        monthSecond = secondInput.split("/") && secondInput.split("/")[1];
-        yearFirst = firstInput.split("/") && firstInput.split("/")[1];
-        yearSecond = secondInput.split("/") && secondInput.split("/")[2];
-        //console.log("value",monthFirst);
-        if(monthFirst !== monthSecond || monthSecond !== monthFirst){
+        if(firstInput.split("/").length <=2 && firstInput.length <=7){
+            console.log("true")
+            monthFirst = firstInput.split("/") && firstInput.split("/")[0];
+            monthSecond = secondInput.split("/") && secondInput.split("/")[1];
+            yearFirst = firstInput.split("/") && firstInput.split("/")[1];
+            yearSecond = secondInput.split("/") && secondInput.split("/")[2];
+            //console.log("value",monthFirst);
+            if(monthFirst !== monthSecond || monthSecond !== monthFirst){
+                $('#alert-box').fadeIn(function(){
+                    $("#alert-box-content").html("Subsequent Renewal from date Should start from " + firstInput);
+                })
+            }
+            if(yearFirst !== yearSecond || yearSecond !== yearFirst){
+                $('#alert-box').fadeIn(function(){
+                    $("#alert-box-content").html("Subsequent Renewal from date Should start from " + firstInput);
+                })
+            }
+        }else{
+            console.log("false");
             $('#alert-box').fadeIn(function(){
-                $("#alert-box-content").html("Subsequent Renewal from date Should start from " + firstInput);
-            })
-        }
-        if(yearFirst !== yearSecond || yearSecond !== yearFirst){
-            $('#alert-box').fadeIn(function(){
-                $("#alert-box-content").html("Subsequent Renewal from date Should start from " + firstInput);
+                $("#alert-box-content").html("Please check the value enter in mm/yyyy format for history details");
             })
         }
     }
@@ -1179,7 +1187,11 @@ $('#commencementDate').datepicker({
                     autoclose:true
 
                 });
-
+// $('#firstAllotment').datepicker({
+//     format: 'mm/yyyy',
+//     endDate : new Date(),
+//     autoclose:true
+// })
 $('.datepicker').datepicker({
             format: 'dd/mm/yyyy',
             endDate : new Date(),

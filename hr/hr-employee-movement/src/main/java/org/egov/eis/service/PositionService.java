@@ -40,8 +40,6 @@
 
 package org.egov.eis.service;
 
-import java.util.List;
-
 import org.egov.eis.model.Movement;
 import org.egov.eis.service.helper.PositionSearchURLHelper;
 import org.egov.eis.web.contract.NonVacantPositionsResponse;
@@ -53,16 +51,19 @@ import org.springframework.http.converter.json.MappingJackson2HttpMessageConvert
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.Date;
+import java.util.List;
+
 @Service
 public class PositionService {
     @Autowired
     private PositionSearchURLHelper positionSearchURLHelper;
 
-    public List<Long> getPositions(final Movement movement, final RequestInfo requestInfo, final String destinationTenant) {
-        final String url = positionSearchURLHelper.searchURL(movement.getEffectiveFrom(),
+    public List<Long> getPositions(final Movement movement, final RequestInfo requestInfo, final Date toDate, final String destinationTenant) {
+        final String url = positionSearchURLHelper.searchURL(movement.getEffectiveFrom(), toDate,
                 movement.getDepartmentAssigned(),
                 movement.getDesignationAssigned(),
-                movement.getTenantId(),destinationTenant);
+                movement.getTenantId(), destinationTenant);
 
         final RestTemplate restTemplate = new RestTemplate();
         final RequestInfoWrapper wrapper = new RequestInfoWrapper();

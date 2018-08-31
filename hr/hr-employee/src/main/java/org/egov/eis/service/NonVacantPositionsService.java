@@ -40,28 +40,28 @@
 
 package org.egov.eis.service;
 
-import java.util.List;
-
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.eis.repository.NonVacantPositionsRepository;
 import org.egov.eis.web.contract.NonVacantPositionsGetRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class NonVacantPositionsService {
 
-	@Autowired
-	private NonVacantPositionsRepository nonVacantPositionsRepository;
+    @Autowired
+    private NonVacantPositionsRepository nonVacantPositionsRepository;
 
-	public List<Long> getNonVacantPositions(NonVacantPositionsGetRequest nonVacantPositionsGetRequest,
-			RequestInfo requestInfo) {
+    public List<Long> getNonVacantPositions(NonVacantPositionsGetRequest nonVacantPositionsGetRequest,
+                                            RequestInfo requestInfo) {
 
-		if(nonVacantPositionsGetRequest.getDestinationTenant() != null && !nonVacantPositionsGetRequest.getDestinationTenant().equals(""))
+        if (nonVacantPositionsGetRequest.getDestinationTenant() != null && !nonVacantPositionsGetRequest.getDestinationTenant().equals("")) {
             nonVacantPositionsGetRequest.setTenantId(nonVacantPositionsGetRequest.getDestinationTenant());
+            return nonVacantPositionsRepository.findForPositionCriteria(nonVacantPositionsGetRequest);
+        } else
+            return nonVacantPositionsRepository.findForCriteria(nonVacantPositionsGetRequest);
 
-		List<Long> positionIds = nonVacantPositionsRepository.findForCriteria(nonVacantPositionsGetRequest);
-
-		return positionIds;
-	}
+    }
 }

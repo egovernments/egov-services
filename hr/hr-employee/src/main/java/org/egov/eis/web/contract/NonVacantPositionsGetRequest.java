@@ -40,20 +40,12 @@
 
 package org.egov.eis.web.contract;
 
-import java.util.Date;
+import lombok.*;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-
-import org.springframework.format.annotation.DateTimeFormat;
-
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import java.util.Date;
 
 @Builder
 @Getter
@@ -64,21 +56,29 @@ import lombok.ToString;
 @EqualsAndHashCode
 public class NonVacantPositionsGetRequest {
 
-	@NotNull
-	@DateTimeFormat(pattern = "dd/MM/yyyy")
-	private Date asOnDate;
+    @NotNull
+    @DateTimeFormat(pattern = "dd/MM/yyyy")
+    private Date asOnDate;
 
-	@NotNull
-	private Long designationId;
+    @NotNull
+    @DateTimeFormat(pattern = "dd/MM/yyyy")
+    private Date fromDate;
 
-	@NotNull
-	private Long departmentId;
+    @NotNull
+    @DateTimeFormat(pattern = "dd/MM/yyyy")
+    private Date toDate;
 
-	@NotNull
-	@Size(min=1, max=256)
-	private String tenantId;
+    @NotNull
+    private Long designationId;
 
-	private String destinationTenant;
+    @NotNull
+    private Long departmentId;
+
+    @NotNull
+    @Size(min = 1, max = 256)
+    private String tenantId;
+
+    private String destinationTenant;
 
 
 }

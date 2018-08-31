@@ -40,70 +40,90 @@
 
 package org.egov.eis.repository;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.egov.eis.model.Assignment;
 import org.egov.eis.web.contract.NonVacantPositionsGetRequest;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 @Repository
 public class NonVacantPositionsRepository {
 
-	public static final String SEARCH_ASSIGNMENT_FOR_POSITION_IDS_QUERY = "SELECT DISTINCT positionId"
-			+ " FROM egeis_assignment"
-			+ " WHERE departmentId = ? AND designationId = ? AND ? BETWEEN fromDate AND toDate AND tenantId = ?";
+    public static final String SEARCH_ASSIGNMENT_FOR_POSITION_IDS_QUERY = "SELECT DISTINCT positionId"
+            + " FROM egeis_assignment"
+            + " WHERE departmentId = ? AND designationId = ? AND ? BETWEEN fromDate AND toDate AND tenantId = ?";
 
-	public static final String CHECK_IF_POSITION_IS_OCCUPIED_QUERY = "SELECT exists(SELECT positionId"
-			+ " FROM egeis_assignment"
-			+ " WHERE positionId = :positionId AND departmentId = :departmentId AND designationId = :designationId"
-			+ " AND (:fromDate BETWEEN fromDate AND toDate OR :toDate BETWEEN fromDate AND toDate"
-			+ " OR fromDate BETWEEN :fromDate AND :toDate OR toDate BETWEEN :fromDate AND :toDate)"
-			+ " AND isPrimary = true AND tenantId = :tenantId $employeeIdCheck)";
+    public static final String SEARCH_ASSIGNED_POSITION_FOR_DATERANGE_QUERY = "SELECT DISTINCT positionId"
+            + " FROM egeis_assignment"
+            + " WHERE departmentId = ? AND designationId = ? AND ((fromdate <= ? and todate <= ?)"
+            + " OR (fromdate >= ? and todate >= ?) OR (fromdate >= ? and todate <= ?) OR"
+            + " (fromdate <= ? and todate >= ?)) AND tenantId = ?";
 
-	@Autowired
-	private JdbcTemplate jdbcTemplate;
+    public static final String CHECK_IF_POSITION_IS_OCCUPIED_QUERY = "SELECT exists(SELECT positionId"
+            + " FROM egeis_assignment"
+            + " WHERE positionId = :positionId AND departmentId = :departmentId AND designationId = :designationId"
+            + " AND (:fromDate BETWEEN fromDate AND toDate OR :toDate BETWEEN fromDate AND toDate"
+            + " OR fromDate BETWEEN :fromDate AND :toDate OR toDate BETWEEN :fromDate AND :toDate)"
+            + " AND isPrimary = true AND tenantId = :tenantId $employeeIdCheck)";
 
-	@Autowired
-	private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
 
-	public List<Long> findForCriteria(NonVacantPositionsGetRequest nonVacantPositionsGetRequest) {
-		Object[] searchConditions = { nonVacantPositionsGetRequest.getDepartmentId(),
-									  nonVacantPositionsGetRequest.getDesignationId(),
-									  nonVacantPositionsGetRequest.getAsOnDate(),
-									  nonVacantPositionsGetRequest.getTenantId() };
+    @Autowired
+    private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
-		List<Long> positionIds = jdbcTemplate.queryForList(SEARCH_ASSIGNMENT_FOR_POSITION_IDS_QUERY,
-				searchConditions, Long.class);
+    public List<Long> findForCriteria(NonVacantPositionsGetRequest nonVacantPositionsGetRequest) {
+        Object[] searchConditions = {nonVacantPositionsGetRequest.getDepartmentId(),
+                nonVacantPositionsGetRequest.getDesignationId(),
+                nonVacantPositionsGetRequest.getAsOnDate(),
+                nonVacantPositionsGetRequest.getTenantId()};
 
-		return positionIds;
-	}
+        List<Long> positionIds = jdbcTemplate.queryForList(SEARCH_ASSIGNED_POSITION_FOR_DATERANGE_QUERY,
+                searchConditions, Long.class);
 
-	public Boolean checkIfPositionIsOccupied(Assignment assignment, Long employeeId, String tenantId, String requestType) {
-		Map<String, Object> namedParameters = new HashMap<String, Object>() {{
-			put("departmentId", assignment.getDepartment());
-			put("designationId", assignment.getDesignation());
-			put("positionId", assignment.getPosition());
-			put("fromDate", assignment.getFromDate());
-			put("toDate", assignment.getToDate());
-			put("tenantId", tenantId);
-			put("employeeId", employeeId);
-		}};
+        return positionIds;
+    }
 
-		if (requestType.equals("create")) {
-			Boolean aBoolean = namedParameterJdbcTemplate.queryForObject(
-					CHECK_IF_POSITION_IS_OCCUPIED_QUERY.replace(" $employeeIdCheck", ""),
-					namedParameters, Boolean.class);
-			return aBoolean;
-		} else {
-			return namedParameterJdbcTemplate.queryForObject(CHECK_IF_POSITION_IS_OCCUPIED_QUERY.replace(
-					" $employeeIdCheck", " AND employeeId != :employeeId"),
-					namedParameters, Boolean.class);
-		}
-	}
+    public List<Long> findForPositionCriteria(NonVacantPositionsGetRequest nonVacantPositionsGetRequest) {
+        Map<String, Object> namedParameters = new HashMap<String, Object>() {{
+            put("departmentId", nonVacantPositionsGetRequest.getDepartmentId());
+            put("designationId", nonVacantPositionsGetRequest.getDesignationId());
+            put("fromDate", nonVacantPositionsGetRequest.getFromDate());
+            put("toDate", nonVacantPositionsGetRequest.getToDate());
+            put("tenantId", nonVacantPositionsGetRequest.getTenantId());
+        }};
+
+        List<Long> positionIds = namedParameterJdbcTemplate.queryForList(SEARCH_ASSIGNMENT_FOR_POSITION_IDS_QUERY,
+                namedParameters, Long.class);
+
+        return positionIds;
+    }
+
+    public Boolean checkIfPositionIsOccupied(Assignment assignment, Long employeeId, String tenantId, String requestType) {
+        Map<String, Object> namedParameters = new HashMap<String, Object>() {{
+            put("departmentId", assignment.getDepartment());
+            put("designationId", assignment.getDesignation());
+            put("positionId", assignment.getPosition());
+            put("fromDate", assignment.getFromDate());
+            put("toDate", assignment.getToDate());
+            put("tenantId", tenantId);
+            put("employeeId", employeeId);
+        }};
+
+        if (requestType.equals("create")) {
+            Boolean aBoolean = namedParameterJdbcTemplate.queryForObject(
+                    CHECK_IF_POSITION_IS_OCCUPIED_QUERY.replace(" $employeeIdCheck", ""),
+                    namedParameters, Boolean.class);
+            return aBoolean;
+        } else {
+            return namedParameterJdbcTemplate.queryForObject(CHECK_IF_POSITION_IS_OCCUPIED_QUERY.replace(
+                    " $employeeIdCheck", " AND employeeId != :employeeId"),
+                    namedParameters, Boolean.class);
+        }
+    }
 }

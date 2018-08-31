@@ -116,6 +116,8 @@ public class Movement {
 
     private Boolean checkEmployeeExists;
 
+    private Boolean isPromotionBasis;
+
     private Long status;
 
     private Long stateId;

@@ -1,12 +1,12 @@
 package org.egov.eis.service.helper;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
 import org.egov.eis.config.ApplicationProperties;
 import org.egov.eis.config.PropertiesManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 @Component
 public class PositionSearchURLHelper {
@@ -17,7 +17,7 @@ public class PositionSearchURLHelper {
     @Autowired
     private PropertiesManager propertiesManager;
 
-    public String searchURL(final Date asOnDate, final Long departmentId, final Long designationId, final String tenantId, final String destinationTenant) {
+    public String searchURL(final Date asOnDate, final Date toDate, final Long departmentId, final Long designationId, final String tenantId, final String destinationTenant) {
         final String baseUrl = propertiesManager.getHrEmployeeServiceHostName()
                 + propertiesManager.getHrEmployeeServiceVacantPositionsBasePath()
                 + propertiesManager.getHrEmployeeServiceEmployeesSearchPath();
@@ -30,7 +30,10 @@ public class PositionSearchURLHelper {
             searchURL.append("tenantId=" + tenantId);
 
         if (asOnDate != null)
-            searchURL.append("&asOnDate=" + sdf.format(asOnDate));
+            searchURL.append("&fromDate=" + sdf.format(asOnDate));
+
+        if (toDate != null)
+            searchURL.append("&toDate=" + sdf.format(toDate));
 
         if (designationId != null)
             searchURL.append("&designationId=" + designationId);

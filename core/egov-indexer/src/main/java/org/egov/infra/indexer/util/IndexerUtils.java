@@ -102,42 +102,34 @@ public class IndexerUtils {
 	public String buildUri(UriMapping uriMapping, String kafkaJson){
 		StringBuilder serviceCallUri = new StringBuilder();	
 		String uriWithPathParam = null;
-		if(!StringUtils.isEmpty(uriMapping.getPath())){
+		if(!StringUtils.isEmpty(uriMapping.getPath())) {
 			uriWithPathParam = uriMapping.getPath();
 			if(!StringUtils.isEmpty(uriMapping.getPathParam())) {
 				uriWithPathParam = uriWithPathParam.replace("$", JsonPath.read(kafkaJson, uriMapping.getPathParam()).toString());
 			}
-		}
-		if(!StringUtils.isEmpty(uriMapping.getQueryParam())){
-			String[] queryParamsArray = uriMapping.getQueryParam().split(",");
-			if(queryParamsArray.length == 0){
-				queryParamsArray[0] = uriMapping.getQueryParam();
-			}
-			for(int i = 0; i < queryParamsArray.length; i++){
-				String[] queryParamExpression = queryParamsArray[i].split("=");
-				String queryParam = null;
-				try {
-					queryParam = JsonPath.read(kafkaJson, queryParamExpression[1]);
-				}catch(Exception e) {
-					continue;
+			serviceCallUri.append(uriWithPathParam);
+			if(!StringUtils.isEmpty(uriMapping.getQueryParam())){
+				String[] queryParamsArray = uriMapping.getQueryParam().split(",");
+				for(int i = 0; i < queryParamsArray.length; i++){
+					String[] queryParamExpression = queryParamsArray[i].trim().split("=");
+					String queryParam = null;
+					try {
+						queryParam = JsonPath.read(kafkaJson, queryParamExpression[1].trim());
+					}catch(Exception e) {
+						continue;
+					}
+					StringBuilder resolvedParam = new StringBuilder();
+					resolvedParam.append(queryParamExpression[0].trim()).append("=").append(queryParam.trim());
+					queryParamsArray[i] = resolvedParam.toString().trim();
 				}
-				queryParamExpression[1] = queryParam;
-				StringBuilder resolvedParam = new StringBuilder();
-				resolvedParam.append(queryParamExpression[0]).append("=").append(queryParamExpression[1]);
-				queryParamsArray[i] = resolvedParam.toString();
-			}
-			StringBuilder queryParams = new StringBuilder();
-			if(queryParamsArray.length >  1){
+				StringBuilder queryParams = new StringBuilder();
 				for(int i = 0; i < queryParamsArray.length; i++){
 					queryParams.append(queryParamsArray[i]);
 					if(i != queryParamsArray.length - 1)
 						queryParams.append("&");
 				}
-	
-			}else{
-				queryParams.append(queryParamsArray[0]);
+				serviceCallUri.append("?").append(queryParams.toString());
 			}
-			serviceCallUri.append(uriWithPathParam).append("?").append(queryParams.toString());
 		}else{
 			serviceCallUri.append(uriMapping.getPath());
 		}
@@ -162,7 +154,7 @@ public class IndexerUtils {
 		return id.toString();
 	}
 	
-	public JSONArray validateAndConstructJsonArray(String kafkaJson, Index index, boolean isBulk) throws Exception{
+	public JSONArray constructArrayForBulkIndex(String kafkaJson, Index index, boolean isBulk) throws Exception{
         String jsonArray = null;
         JSONArray kafkaJsonArray = null;
         ObjectMapper mapper = new ObjectMapper();
@@ -199,15 +191,13 @@ public class IndexerUtils {
 	}
 	
 	public void validateAndIndex(String finalJson, String url, Index index) throws Exception{
-		if(null == finalJson){
-			logger.info("Indexing will not be done, please modify the data and retry.");
-		    logger.info("Advice: Looks like isBulk = true in the config yaml but the record sent on the queue is a json object and not an array of objects. "
-		    		+ "In that case, change either of them.");
-		}else{
+		if(!StringUtils.isEmpty(finalJson)){
 			Long startTime = new Date().getTime();
 			doIndexing(finalJson, url.toString(), index);
 			Long endTime = new Date().getTime();
 			logger.info("TIME TAKEN for indexing on es: "+(endTime - startTime)+"ms");
+		}else{
+			logger.info("Indexing will not be done, please modify the data and retry.");
 		}
 	}
 	
@@ -220,10 +210,20 @@ public class IndexerUtils {
 	}
 	
 	public void indexWithESId(Index index, String finalJson) throws Exception{
-		logger.info("Non bulk indexing...");
 		StringBuilder urlForNonBulk = new StringBuilder();
 		urlForNonBulk.append(esHostUrl).append(index.getName()).append("/").append(index.getType()).append("/").append("_index");
 		bulkIndexer.indexJsonOntoES(urlForNonBulk.toString(), finalJson);
+	}
+	
+	public String getProcessedJsonPath(String jsonPath) {
+		String[] expressionArray = (jsonPath).split("[.]");
+		StringBuilder expression = new StringBuilder();
+		for(int i = 0; i < (expressionArray.length - 1) ; i++ ){
+			expression.append(expressionArray[i]);
+			if(i != expressionArray.length - 2)
+				expression.append(".");
+		}
+		return expression.toString();
 	}
 
 }

@@ -33,8 +33,6 @@ public class BulkIndexer {
 			final HttpHeaders headers = new HttpHeaders();
 	        headers.setContentType(MediaType.APPLICATION_JSON);
 	        final HttpEntity<String> entity = new HttpEntity<>(indexJson, headers);
-			logger.info("JSON entity for elasticsearch: " + entity);
-			logger.info("URI: "+url.toString());
 			Object response = restTemplate.postForObject(url.toString(), entity, Map.class);
 			if(url.contains("_bulk")){
 				if(JsonPath.read(mapper.writeValueAsString(response), "$.errors").equals(true)){
@@ -42,11 +40,9 @@ public class BulkIndexer {
 					logger.info("Response from ES: "+response);
 				}else{
 					logger.info("Indexing SUCCESSFULL!");
-					logger.info("Response from ES: "+response);
 				}
 			}else{
 				logger.info("Indexing SUCCESSFULL!");
-				logger.info("Response from ES: "+response);
 			}
 		}catch(final ResourceAccessException e){
 			logger.error("ES is DOWN, Pausing kafka listener.......");

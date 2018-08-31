@@ -74,7 +74,6 @@ public class IndexerService {
 		   .append("_bulk");	
         startTime = new Date().getTime();
 	    if (index.getJsonPath() != null) {
-				logger.info("Indexing IndexNode JSON to elasticsearch " + kafkaJson);
 				indexerUtils.validateAndIndex(buildIndexJsonWithJsonpath(index, kafkaJson, isBulk), 
 						url.toString(), index);
 		} else if(null != index.getCustomJsonMapping()){
@@ -114,8 +113,6 @@ public class IndexerService {
 				}
 			}
 			result = jsonTobeIndexed.toString();
-	    }catch(JSONException e){
-	    	logger.error("Error while parsing the JSONArray", e);
 	    }catch(Exception e){
 	    	logger.error("Error while building jsonstring for indexing", e);
 	    }

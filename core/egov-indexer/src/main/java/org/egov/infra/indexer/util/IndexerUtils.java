@@ -83,7 +83,6 @@ public class IndexerUtils {
 				jsonArray.append(":");
 		}
 		jsonArray.deleteCharAt(jsonArray.length() - 1);
-		logger.info("string for jsonArray: "+jsonArray.toString());
 		
 		return jsonArray.toString();
 	}
@@ -97,7 +96,6 @@ public class IndexerUtils {
 			if(i != array.length - 1)
 				jsonArray.append(":");
 		}
-		logger.info("string constructed from JSONObject: "+jsonArray.toString());
 		return jsonArray.toString();		
 	}
 	
@@ -140,7 +138,6 @@ public class IndexerUtils {
 				queryParams.append(queryParamsArray[0]);
 			}
 			serviceCallUri.append(uriWithPathParam).append("?").append(queryParams.toString());
-			logger.info("uri prepared for inter service call: "+serviceCallUri.toString());
 		}else{
 			serviceCallUri.append(uriMapping.getPath());
 		}
@@ -190,7 +187,6 @@ public class IndexerUtils {
 		        	jsonArray = "[" + kafkaJson + "]";
 	        	}else{
 		        	jsonArray = "[" + kafkaJson + "]";
-		        	logger.info("constructed json array out of input json object: "+jsonArray);
 	        	}
 				kafkaJsonArray = new JSONArray(jsonArray);
 	        }

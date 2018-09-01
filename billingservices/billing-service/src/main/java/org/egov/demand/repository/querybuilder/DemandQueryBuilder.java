@@ -62,7 +62,7 @@ public class DemandQueryBuilder {
 			+ "demand.taxperiodfrom AS dtaxperiodfrom,demand.taxperiodto AS dtaxperiodto,"
 			+ "demand.minimumamountpayable AS dminimumamountpayable,demand.createdby AS dcreatedby,"
 			+ "demand.lastmodifiedby AS dlastmodifiedby,demand.createdtime AS dcreatedtime,"
-			+ "demand.lastmodifiedtime AS dlastmodifiedtime,demand.tenantid AS dtenantid,demand.status"
+			+ "demand.lastmodifiedtime AS dlastmodifiedtime,demand.tenantid AS dtenantid,demand.status,"
 
 			+ "demanddetail.id AS dlid,demanddetail.demandid AS dldemandid,demanddetail.taxheadcode AS dltaxheadcode,"
 			+ "demanddetail.taxamount AS dltaxamount,demanddetail.collectionamount AS dlcollectionamount,"

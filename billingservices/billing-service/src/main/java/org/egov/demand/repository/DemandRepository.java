@@ -167,7 +167,9 @@ public class DemandRepository {
 		jdbcTemplate.batchUpdate(DemandQueryBuilder.DEMAND_INSERT_QUERY, new BatchPreparedStatementSetter() {
 			@Override
 			public void setValues(PreparedStatement ps, int rowNum) throws SQLException {
+				
 				Demand demand = newDemands.get(rowNum);
+				String status = demand.getStatus() != null ? demand.getStatus().toString() : null;
 				AuditDetail auditDetail = demand.getAuditDetail();
 				ps.setString(1, demand.getId());
 				ps.setString(2, demand.getConsumerCode());
@@ -182,6 +184,7 @@ public class DemandRepository {
 				ps.setLong(11, auditDetail.getCreatedTime());
 				ps.setLong(12, auditDetail.getLastModifiedTime());
 				ps.setString(13, demand.getTenantId());
+				ps.setString(14, status);
 			}
 
 			@Override
@@ -222,6 +225,8 @@ public class DemandRepository {
 			@Override
 			public void setValues(PreparedStatement ps, int rowNum) throws SQLException {
 				Demand demand = oldDemands.get(rowNum);
+				
+				String status = demand.getStatus() != null ? demand.getStatus().toString() : null;
 				AuditDetail auditDetail = demand.getAuditDetail();
 				ps.setString(1, demand.getId());
 				ps.setString(2, demand.getConsumerCode());
@@ -234,8 +239,9 @@ public class DemandRepository {
 				ps.setString(9, auditDetail.getLastModifiedBy());
 				ps.setLong(10, auditDetail.getLastModifiedTime());
 				ps.setString(11, demand.getTenantId());
-				ps.setString(12, demand.getId());
-				ps.setString(13, demand.getTenantId());
+				ps.setString(12, status);
+				ps.setString(13, demand.getId());
+				ps.setString(14, demand.getTenantId());
 			}
 
 			@Override

@@ -50,6 +50,7 @@ import org.egov.demand.model.AuditDetail;
 import org.egov.demand.model.Demand;
 import org.egov.demand.model.DemandDetail;
 import org.egov.demand.model.Owner;
+import org.egov.demand.model.enums.DemandStatus;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.ResultSetExtractor;
 
@@ -81,6 +82,7 @@ public class DemandRowMapper implements ResultSetExtractor<List<Demand>> {
 					demand.setTaxPeriodFrom(rs.getLong("dtaxPeriodFrom"));
 					demand.setTaxPeriodTo(rs.getLong("dtaxPeriodTo"));
 					demand.setTenantId(rs.getString("dtenantid"));
+					demand.setStatus(DemandStatus.fromValue(rs.getString("status")));
 
 					demand.setMinimumAmountPayable(rs.getBigDecimal("dminimumAmountPayable"));
 

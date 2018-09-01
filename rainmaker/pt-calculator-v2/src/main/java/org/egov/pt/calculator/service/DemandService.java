@@ -185,11 +185,27 @@ public class DemandService {
 			throw new CustomException(map);
 		}
 		Demand demand = res.getDemands().get(0);
+		
+		if (demand.getStatus() != null
+				&& CalculatorConstants.DEMAND_CANCELLED_STATUS.equalsIgnoreCase(demand.getStatus().toString()))
+			throw new CustomException(CalculatorConstants.EG_PT_INVALID_DEMAND_ERROR,
+					CalculatorConstants.EG_PT_INVALID_DEMAND_ERROR_MSG);
+
 		applytimeBasedApplicables(demand, requestInfoWrapper, timeBasedExmeptionMasterMap);
 		
+		Map<String, Boolean> isTaxHeadDebitMap = mstrDataService
+				.getTaxHeadMasterMap(requestInfoWrapper.getRequestInfo(), getBillCriteria.getTenantId()).stream()
+				.collect(Collectors.toMap(TaxHeadMaster::getCode, TaxHeadMaster::getIsDebit));
+
 		BigDecimal totalTax = BigDecimal.ZERO;
-		for (DemandDetail detail : demand.getDemandDetails()) 
-			totalTax = totalTax.add(detail.getTaxAmount());
+
+		for (DemandDetail detail : demand.getDemandDetails()) {
+
+			if (!isTaxHeadDebitMap.get(detail.getTaxHeadMasterCode()))
+				totalTax = totalTax.add(detail.getTaxAmount());
+			else
+				totalTax = totalTax.subtract(detail.getTaxAmount());
+		}
 
 		if (BigDecimal.ZERO.compareTo(getBillCriteria.getAmountExpected()) < 0
 				&& getBillCriteria.getAmountExpected().compareTo(totalTax) < 0)

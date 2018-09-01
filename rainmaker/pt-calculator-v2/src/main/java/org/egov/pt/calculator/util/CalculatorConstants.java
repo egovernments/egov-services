@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.List;
 
 import org.egov.pt.calculator.web.models.demand.Category;
+import org.egov.pt.calculator.web.models.demand.DemandStatus;
 
 public class CalculatorConstants {
 
@@ -182,6 +183,8 @@ public class CalculatorConstants {
 	public static final String CONSUMER_CODE_SEARCH_FIELD_NAME = "consumerCode=";
 
 	public static final String DEMAND_ID_SEARCH_FIELD_NAME = "demandId=";
+	
+	public static final String DEMAND_CANCELLED_STATUS = DemandStatus.CANCELLED.toString();
 
 	/*
 	 * queries
@@ -254,4 +257,7 @@ public class CalculatorConstants {
 
 	public static final String EG_PT_FINANCIAL_MASTER_NOT_FOUND = "EG_PT_FINANCIAL_MASTER_NOT_FOUND";
 	public static final String EG_PT_FINANCIAL_MASTER_NOT_FOUND_MSG = "No Financial Year data is available for the given year value of : ";
+	
+	public static final String EG_PT_INVALID_DEMAND_ERROR = "EG_PT_INVALID_DEMAND_ERROR";
+	public static final String EG_PT_INVALID_DEMAND_ERROR_MSG = " Bill cannot be generated for previous assessments in a year, please use the latest assesmment to pay";
 }

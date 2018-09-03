@@ -7,6 +7,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import org.egov.pt.calculator.util.CalculatorConstants;
 import org.egov.pt.calculator.util.CalculatorUtils;
@@ -146,7 +147,7 @@ public class PayService {
 		if (interestStart < current)
 			interestAmt = mDService.calculateApplicables(taxAmt, interestMap);
 
-		return interestAmt.multiply(BigDecimal.valueOf(((Double.valueOf(numberOfDays) / 1000 / 3600) / 24) / 365));
+		return interestAmt.multiply(BigDecimal.valueOf((TimeUnit.MILLISECONDS.toDays(Math.abs(numberOfDays))) / 365));
 	}
 	
 	/**

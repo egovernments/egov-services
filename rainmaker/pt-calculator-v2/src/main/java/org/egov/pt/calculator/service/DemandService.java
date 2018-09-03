@@ -342,6 +342,8 @@ public class DemandService {
 			totalCollectedAmount = totalCollectedAmount.add(detail.getCollectionAmount());
 			if (detail.getTaxHeadMasterCode().equalsIgnoreCase(CalculatorConstants.PT_TAX))
 				collectedApplicableAmount = collectedApplicableAmount.add(detail.getCollectionAmount());
+			if (detail.getTaxHeadMasterCode().equalsIgnoreCase(CalculatorConstants.PT_TIME_INTEREST))
+				oldInterest = detail.getTaxAmount();
 		}
 		
 		boolean isRebateUpdated = false;

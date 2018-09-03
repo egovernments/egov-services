@@ -103,6 +103,9 @@ public class ReceiptEnricher {
             validatedBill.getBillDetails().get(i).setAmountPaid(billFromRequest.getBillDetails().get(i).getAmountPaid
                     ());
 
+            validatedBill.getBillDetails().get(i).setManualReceiptNumber(billFromRequest.getBillDetails().get(i)
+                    .getManualReceiptNumber());
+
             if(receipt.getInstrument().getInstrumentType().getName().equalsIgnoreCase(InstrumentTypesEnum.ONLINE.name()))
                 validatedBill.getBillDetails().get(i).setCollectionType(CollectionType.ONLINE);
             else

@@ -4,7 +4,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URLDecoder;
 import java.util.Calendar;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
@@ -65,7 +65,7 @@ public class IntegrationService {
 				if(url != null && url.startsWith("list://")){
 					//consider this as fixed value and send this after removing list://
 					url = url.substring(7);
-					Map<Object, Object> map = new HashMap<>();
+					Map<Object, Object> map = new LinkedHashMap<>();
 					String[] pairs = url.split(",");
 					for(String str: pairs){
 						String[] keyValue = str.split(":");
@@ -108,7 +108,7 @@ public class IntegrationService {
 					
 					List<Object> values = JsonPath.read(document, patterns[2]);
 					
-					Map<Object, Object> map = new HashMap<>();
+					Map<Object, Object> map = new LinkedHashMap<>();
 					for(int i=0;i<keys.size();i++){
 						map.put(keys.get(i), values.get(i));
 					}

@@ -647,8 +647,7 @@ function handleSelect(){
     firstInput = document.getElementById("firstAllotment").value; //agreement.firstAllotment;
     secondInput = document.getElementById("subSeqRenewals[0].fromDate").value;  
     if(firstInput && secondInput){
-        if(firstInput.split("/").length <=2 && firstInput.length <=7){
-            console.log("true")
+        if(firstInput.length == 7 && firstInput.split("/").length == 2){
             monthFirst = firstInput.split("/") && firstInput.split("/")[0];
             monthSecond = secondInput.split("/") && secondInput.split("/")[1];
             yearFirst = firstInput.split("/") && firstInput.split("/")[1];
@@ -665,7 +664,6 @@ function handleSelect(){
                 })
             }
         }else{
-            console.log("false");
             $('#alert-box').fadeIn(function(){
                 $("#alert-box-content").html("Please check the value enter in mm/yyyy format for history details");
             })
@@ -1187,11 +1185,6 @@ $('#commencementDate').datepicker({
                     autoclose:true
 
                 });
-// $('#firstAllotment').datepicker({
-//     format: 'mm/yyyy',
-//     endDate : new Date(),
-//     autoclose:true
-// })
 $('.datepicker').datepicker({
             format: 'dd/mm/yyyy',
             endDate : new Date(),
@@ -1513,6 +1506,20 @@ function initDatepicker(){
               alert('From Date should not exceed To Date!');
               noOfyears ='0.0';
               $(this).val('');
+              if(fromDate.length !== 10){
+                $('.srFromDate').datepicker({
+                    format: 'dd/mm/yyyy',
+                    endDate : new Date(),
+                    autoclose:true
+                  })
+              }
+              if(toDate.length !== 10){
+                $('.srToDate').datepicker({
+                    format: 'dd/mm/yyyy',
+                    endDate : new Date(),
+                    autoclose:true
+                  })
+              }
             }else{
               //calculate no. of years
               let splitTo = toDate.split('/');

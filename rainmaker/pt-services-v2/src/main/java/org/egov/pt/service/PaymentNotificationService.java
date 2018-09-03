@@ -71,6 +71,9 @@ public class PaymentNotificationService {
             else
                 valMap = getValuesFromTransaction(documentContext);
 
+            if(!valMap.get("module").equalsIgnoreCase("PT"))
+                return;
+
             Map<String,List<String>> propertyAttributes = getPropertyAttributes(valMap,requestInfo);
             mobileNumbers = propertyAttributes.get("mobileNumbers");
             addUserNumber(topic,requestInfo,valMap,mobileNumbers);
@@ -128,7 +131,7 @@ public class PaymentNotificationService {
      */
     private Map<String,String> getValuesFromReceipt(DocumentContext documentContext){
         BigDecimal totalAmount,amountPaid;
-        String consumerCode,transactionId,paymentMode,tenantId,mobileNumber;
+        String consumerCode,transactionId,paymentMode,tenantId,mobileNumber,module;
         Map<String,String> valMap = new HashMap<>();
 
 
@@ -157,6 +160,9 @@ public class PaymentNotificationService {
 
             mobileNumber = documentContext.read("$.Receipt[0].Bill[0].mobileNumber");
             valMap.put("mobileNumber",mobileNumber);
+
+            module = documentContext.read("$.Receipt[0].Bill[0].billDetails[0].businessService");
+            valMap.put("module",module);
         }
         catch (Exception e)
         {
@@ -172,7 +178,7 @@ public class PaymentNotificationService {
      * @return The required values as key,value pair
      */
     private Map<String,String> getValuesFromTransaction(DocumentContext documentContext){
-        String txnStatus,txnAmount,moduleId,tenantId,mobileNumber;
+        String txnStatus,txnAmount,moduleId,tenantId,mobileNumber,module;
         HashMap<String,String> valMap = new HashMap<>();
 
         try{
@@ -192,6 +198,9 @@ public class PaymentNotificationService {
 
             mobileNumber = documentContext.read("$.Transaction.user.mobileNumber");
             valMap.put("mobileNumber",mobileNumber);
+
+            module = documentContext.read("$.Transaction.module");
+            valMap.put("module",module);
         }
         catch (Exception e)
         {   log.error("Transaction Object Parsing: ",e);
@@ -397,8 +406,5 @@ public class PaymentNotificationService {
             }
         }
     }
-
-
-
 
 }

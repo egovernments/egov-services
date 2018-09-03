@@ -23,7 +23,8 @@ public class PropertyQueryBuilder {
 			+ "ptdl.createdby as assesscreatedby,ptdl.lastModifiedBy as assesslastModifiedBy,ptdl.createdTime as assesscreatedTime,"
 			+ "ptdl.lastModifiedTime as assesslastModifiedTime,unit.occupancyDate as unitoccupancyDate,"
 			+ "insti.name as institutionname,insti.type as institutiontype,insti.tenantid as institenantId,"
-			+ "ownerdoc.userid as docuserid,ownerdoc.propertydetail as docassessmentnumber"
+			+ "ownerdoc.userid as docuserid,ownerdoc.propertydetail as docassessmentnumber,"
+			+ "unit.usagecategorymajor as unitusagecategorymajor,unit.usagecategoryminor as unitusagecategoryminor"
 			+ " FROM eg_pt_property_v2 pt "
 			+ INNER_JOIN_STRING
 			+ " eg_pt_propertydetail_v2 ptdl ON pt.propertyid =ptdl.property "

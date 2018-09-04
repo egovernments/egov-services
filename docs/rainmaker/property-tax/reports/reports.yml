@@ -1,89 +1,5 @@
 ---
 ReportDefinitions:
-- reportName: UlbPtCollection
-  summary: ULB PT Collection
-  version: 1.0.0
-  moduleName: rainmaker-pt
-  sourceColumns:
-  - name: day
-    label: reports.pt.day
-    type: string
-    source: pt
-    total: false
-  - name: assessments
-    label: reports.pt.assessments
-    type: string
-    source: pt
-    total: true
-  - name: assessmentAmount
-    label: reports.pt.assessmentAmount
-    type: string
-    source: pt
-    total: true
-  - name: collectedAmount
-    label: reports.pt.collectedAmount
-    type: string
-    source: pt
-    total: true
-  - name: ptCollected
-    label: reports.pt.ptCollected
-    type: string
-    source: pt
-    total: true
-  - name: firecessCollected
-    label: reports.pt.fireCessCollected
-    type: string
-    source: pt
-    total: true
-  - name: penaltiesCollected
-    label: reports.pt.penaltiesCollected
-    type: string
-    source: pt
-    total: true
-  - name: interestCollected
-    label: reports.pt.interestCollected
-    type: string
-    source: pt
-    total: true
-  - name: rebateGiven
-    label: reports.pt.rebateGiven
-    type: string
-    source: pt
-    total: true
-  - name: exemptionGiven
-    label: reports.pt.exemptionGiven
-    type: string
-    source: pt
-    total: true
-  - name: paymentDues
-    label: reports.pt.paymentDues
-    type: string
-    source: pt
-    total: true
-  searchParams:
-  - name: fromDate
-    label: reports.pt.fromDate
-    type: epoch
-    source: pt
-    isMandatory: false
-    searchClause: AND createdtime >= $fromDate
-  - name: toDate
-    label: reports.pt.toDate
-    type: epoch
-    source: pt
-    isMandatory: false
-    searchClause: AND createdtime <= $toDate
-  - name: zoneList
-    label: reports.pt.zoneList
-    type: boundarylist
-    source: pt
-    wrapper: true
-    isMandatory: false
-  query: SELECT COUNT(*)::VARCHAR as assessments, sum(taxamount)::VARCHAR AS assessmentAmount, sum(collectionamount)::VARCHAR AS collectedAmount, sum(CASE WHEN taxheadcode LIKE 'PT_TAX' THEN collectionamount ELSE 0 END) AS ptCollected, sum(CASE WHEN taxheadcode LIKE 'PT_FIRE_CESS' THEN collectionamount ELSE 0 END) as fireCessCollected, sum(CASE WHEN taxheadcode LIKE '%PENALTY%' THEN collectionamount ELSE 0 END) AS penaltiesCollected, sum(CASE WHEN taxheadcode LIKE '%INTEREST%' THEN collectionamount ELSE 0 END) AS interestCollected, sum(CASE WHEN taxheadcode LIKE '%REBATE%' THEN taxamount ELSE 0 END) AS rebateGiven, sum(CASE WHEN taxheadcode LIKE '%EXEMPTION%' THEN taxamount ELSE 0 END) AS exemptionGiven, sum(CASE WHEN taxheadcode LIKE '%LATE_PENALTY%' THEN taxamount ELSE 0 END) AS paymentDues, to_char(to_timestamp(TRUNC(CAST(createdtime AS bigint) / 1000)), 'DD/MM/YYYY') as day FROM egbs_demanddetail WHERE tenantid LIKE $tenantid
-  groupby: GROUP BY day
-  orderby: ORDER BY day DESC
-
-
 - reportName: ReceiptRegister
   summary: Receipt Register
   version: 1.0.0
@@ -187,22 +103,51 @@ ReportDefinitions:
   version: 1.0.0
   moduleName: rainmaker-pt
   sourceColumns:
-  - name: receiptnumber
-    label: reports.pt.receiptNo
+  - name: tenantid
+    label: reports.pt.ulbName
+    type: string
+    source: pt
+    total: false
+  - name: totalassessments
+    label: reports.pt.totalassessments
+    type: string
+    source: pt
+    total: false
+  - name: totalamountpaid
+    label: reports.pt.totalamountpaid
+    type: string
+    source: pt
+    total: false
+  - name: totalamountdue
+    label: reports.pt.totalamountdue
     type: string
     source: pt
     total: false
   searchParams:
-  - name: fromDate
-    label: reports.pt.fromDate
-    type: epoch
+  - name: ulb
+    label: reports.pt.ulb
+    type: singlevaluelist
+    pattern: http://egov-mdms-service:8080/egov-mdms-service/v1/_get?tenantId=$tenantid&moduleName=tenant&masterName=tenants|$.MdmsRes.tenant.tenants.*.code|$.MdmsRes.tenant.tenants.*.name
     source: pt
+    wrapper: true
     isMandatory: false
-    searchClause: AND tbl_rcpt.createddate >= $fromDate
-  - name: toDate
-    label: reports.pt.toDate
-    type: epoch
+    searchClause: AND tenantid = $ulb
+  - name: financialyear
+    label: reports.pt.financialYear
+    type: singlevaluelist
+    pattern: http://egov-mdms-service:8080/egov-mdms-service/v1/_get?tenantId=$tenantid&moduleName=egf-master&masterName=FinancialYear|$.MdmsRes.egf-master.FinancialYear.[?(@.module=='PT')].code|$.MdmsRes.egf-master.FinancialYear.[?(@.module=='PT')].name
     source: pt
+    wrapper: true
     isMandatory: false
-    searchClause: AND tbl_rcpt.createddate <= $toDate
-  query:
+    searchClause: AND financialyear = $financialyear
+  - name: usage
+    label: reports.pt.usage
+    type: singlevaluelist
+    pattern: http://egov-mdms-service:8080/egov-mdms-service/v1/_get?tenantId=$tenantid&moduleName=PropertyTax&masterName=UsageCategoryMajor|$..code|$..name
+    source: pt
+    wrapper: true
+    isMandatory: false
+    searchClause: AND usagecategorymajor = $usage
+  query: SELECT tenantid, COUNT(*) AS totalassessments, SUM(totalamount) AS totalamount, SUM(amount) AS totalamountpaid, (SUM(totalamount) - SUM(amount)) AS totalamountdue FROM eg_pt_propertydetail_v2 AS a LEFT OUTER JOIN (SELECT consumercode, totalamount, amount FROM egcl_receiptheader AS aa LEFT OUTER JOIN egcl_receiptinstrument AS bb ON aa.id = bb.receiptheader LEFT OUTER JOIN egcl_instrumentheader AS cc ON bb.instrumentheader = cc.id) AS b ON CONCAT(a.property, ':', a.assessmentnumber) = b.consumercode WHERE tenantid LIKE CONCAT(SPLIT_PART($tenantid, '.', 1), '%')
+  groupby: GROUP BY tenantid
+  orderby: ORDER BY totalamountpaid DESC NULLS LAST

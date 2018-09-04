@@ -73,6 +73,8 @@ public class BillDetail {
 	private BigDecimal minimumAmount;
 
 	private BigDecimal totalAmount;
+
+	private BigDecimal collectedAmount;
 	
     private List<String> collectionModesNotAllowed = new ArrayList<>();
 
@@ -110,6 +112,8 @@ public class BillDetail {
 	private List<BillAccountDetail> billAccountDetails = new ArrayList<>();
 
     private String manualReceiptNumber;
+
+    private Long manualReceiptDate;
 
     private Long stateId;
     

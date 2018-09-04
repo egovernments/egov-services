@@ -18,15 +18,15 @@ public class CollectionsQueryBuilder {
 
     public static final String INSERT_RECEIPT_HEADER_SQL ="INSERT INTO egcl_receiptheader(id, payeename, payeeaddress, payeeemail, paidby, referencenumber, "
             + " receipttype, receiptnumber, receiptdate, businessdetails, collectiontype, reasonforcancellation, minimumamount, totalamount, "
-            + "collmodesnotallwd, consumercode, channel,boundary, voucherheader, "
+            + " collectedamount, collmodesnotallwd, consumercode, channel,boundary, voucherheader, "
             + "depositedbranch, createdby, createddate, lastmodifiedby, lastmodifieddate, tenantid, referencedate, referencedesc, "
-            + "manualreceiptnumber, reference_ch_id, stateid, location, isreconciled, "
+            + " manualreceiptdate, manualreceiptnumber, reference_ch_id, stateid, location, isreconciled, "
             + "status, transactionid) "
             + "VALUES (:id, :payeename, :payeeaddress, :payeeemail, :paidby, :referencenumber, :receipttype, "
             + ":receiptnumber, :receiptdate, :businessdetails, :collectiontype, :reasonforcancellation, :minimumamount, :totalamount, "
-            + ":collmodesnotallwd, :consumercode, :channel, :boundary, :voucherheader, "
+            + " :collectedamount, :collmodesnotallwd, :consumercode, :channel, :boundary, :voucherheader, "
             + ":depositedbranch, :createdby, :createddate, :lastmodifiedby, :lastmodifieddate, :tenantid, :referencedate, :referencedesc, "
-            + ":manualreceiptnumber, :reference_ch_id, :stateid, :location, :isreconciled, "
+            + " :manualreceiptdate, :manualreceiptnumber, :reference_ch_id, :stateid, :location, :isreconciled, "
             + ":status, :transactionid)";
 
     public static final String INSERT_RECEIPT_DETAILS_SQL =  "INSERT INTO egcl_receiptdetails(id, chartofaccount, dramount, cramount, ordernumber, receiptheader, actualcramounttobepaid, "
@@ -47,12 +47,12 @@ public class CollectionsQueryBuilder {
             ".payeeAddress as rh_payeeAddress, rh.payeeEmail as rh_payeeEmail,rh.paidBy as rh_paidBy, rh" +
             ".referenceNumber as rh_referenceNumber, rh.referenceDate as rh_referenceDate,rh.receiptType as " +
             "rh_receiptType, rh.receiptNumber as rh_receiptNumber, rh.receiptDate as rh_receiptDate, rh.referenceDesc" +
-            " as rh_referenceDesc, rh.manualReceiptNumber as rh_manualReceiptNumber, rh.businessDetails as " +
-            "rh_businessDetails,  rh.collectionType as rh_collectionType,rh.stateId as rh_stateId,rh.location as " +
+            " as rh_referenceDesc, rh.manualReceiptNumber as rh_manualReceiptNumber, rh.manualreceiptdate as " +
+            "rh_manualreceiptdate, rh.businessDetails as rh_businessDetails,  rh.collectionType as rh_collectionType,rh.stateId as rh_stateId,rh.location as " +
             "rh_location,  rh.isReconciled as rh_isReconciled,rh.status as rh_status,rh.reasonForCancellation as " +
-            "rh_reasonForCancellation , rh.minimumAmount as rh_minimumAmount,rh.totalAmount as rh_totalAmount,  rh" +
-            ".collModesNotAllwd as rh_collModesNotAllwd,rh.consumerCode as rh_consumerCode,rh.function as " +
-            "rh_function,  rh.version as rh_version,rh.channel as rh_channel,rh.reference_ch_id as " +
+            "rh_reasonForCancellation , rh.minimumAmount as rh_minimumAmount,rh.totalAmount as rh_totalAmount, rh" +
+            ".collectedamount as rh_collectedamount, rh.collModesNotAllwd as rh_collModesNotAllwd,rh.consumerCode as " +
+            "rh_consumerCode,rh.function as rh_function,  rh.version as rh_version,rh.channel as rh_channel,rh.reference_ch_id as " +
             "rh_reference_ch_id,  rh.consumerType as rh_consumerType,rh.fund as rh_fund,rh.fundSource as " +
             "rh_fundSource, rh.boundary as rh_boundary, rh.department as rh_department,rh.depositedBranch as " +
             "rh_depositedBranch, rh.tenantId as rh_tenantId, rh.displayMsg as rh_displayMsg,rh.voucherheader as " +
@@ -96,6 +96,7 @@ public class CollectionsQueryBuilder {
         sqlParameterSource.addValue("reasonforcancellation",billDetail.getReasonForCancellation());
         sqlParameterSource.addValue("minimumamount", billDetail.getMinimumAmount());
         sqlParameterSource.addValue("totalamount", billDetail.getTotalAmount());
+        sqlParameterSource.addValue("collectedamount", billDetail.getCollectedAmount());
         sqlParameterSource.addValue("collmodesnotallwd", collectionModesNotAllowed);
         sqlParameterSource.addValue("consumercode", billDetail.getConsumerCode());
         sqlParameterSource.addValue("channel", billDetail.getChannel());
@@ -110,6 +111,7 @@ public class CollectionsQueryBuilder {
         sqlParameterSource.addValue("referencedate", billDetail.getBillDate());
         sqlParameterSource.addValue("referencedesc", billDetail.getBillDescription());
         sqlParameterSource.addValue("manualreceiptnumber", billDetail.getManualReceiptNumber());
+        sqlParameterSource.addValue("manualreceiptdate", billDetail.getManualReceiptDate());
         sqlParameterSource.addValue("reference_ch_id", null);
         sqlParameterSource.addValue("stateid", null);
         sqlParameterSource.addValue("location", null);

@@ -46,8 +46,10 @@ public class CollectionResultSetExtractor implements ResultSetExtractor<List<Rec
                         .receiptDate(resultSet.getLong("rh_receiptDate"))
                         .billDescription(resultSet.getString("rh_referenceDesc"))
                         .manualReceiptNumber(resultSet.getString("rh_manualReceiptNumber"))
+                        .manualReceiptDate(resultSet.getLong("rh_manualreceiptdate"))
                         .amountPaid(BigDecimal.ZERO)
                         .totalAmount(getBigDecimalValue(resultSet.getBigDecimal("rh_totalAmount")))
+                        .collectedAmount(getBigDecimalValue(resultSet.getBigDecimal("rh_collectedamount")))
                         .minimumAmount(getBigDecimalValue(resultSet.getBigDecimal("rh_minimumAmount")))
                         .billAccountDetails(new ArrayList<>())
                         .build();

@@ -373,9 +373,9 @@ public class DemandService {
 			interest = oldInterest.add(rebatePenaltyEstimates.get(CalculatorConstants.PT_TIME_INTEREST));
 		
 		for (DemandDetail detail : details) {
-			if (detail.getTaxHeadMasterCode().equalsIgnoreCase(CalculatorConstants.PT_TIME_REBATE)
-					&& BigDecimal.ZERO.compareTo(totalCollectedAmount) == 0) {
-				detail.setTaxAmount(rebate);
+			if (detail.getTaxHeadMasterCode().equalsIgnoreCase(CalculatorConstants.PT_TIME_REBATE)) {
+				if (BigDecimal.ZERO.compareTo(totalCollectedAmount) == 0)
+					detail.setTaxAmount(rebate);
 				isRebateUpdated = true;
 			}
 			if (detail.getTaxHeadMasterCode().equalsIgnoreCase(CalculatorConstants.PT_TIME_PENALTY)) {

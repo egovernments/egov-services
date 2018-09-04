@@ -83,7 +83,7 @@ public class NonVacantPositionsRepository {
                 nonVacantPositionsGetRequest.getAsOnDate(),
                 nonVacantPositionsGetRequest.getTenantId()};
 
-        List<Long> positionIds = jdbcTemplate.queryForList(SEARCH_ASSIGNED_POSITION_FOR_DATERANGE_QUERY,
+        List<Long> positionIds = jdbcTemplate.queryForList(SEARCH_ASSIGNMENT_FOR_POSITION_IDS_QUERY,
                 searchConditions, Long.class);
 
         return positionIds;
@@ -98,7 +98,7 @@ public class NonVacantPositionsRepository {
             put("tenantId", nonVacantPositionsGetRequest.getTenantId());
         }};
 
-        List<Long> positionIds = namedParameterJdbcTemplate.queryForList(SEARCH_ASSIGNMENT_FOR_POSITION_IDS_QUERY,
+        List<Long> positionIds = namedParameterJdbcTemplate.queryForList(SEARCH_ASSIGNED_POSITION_FOR_DATERANGE_QUERY,
                 namedParameters, Long.class);
 
         return positionIds;

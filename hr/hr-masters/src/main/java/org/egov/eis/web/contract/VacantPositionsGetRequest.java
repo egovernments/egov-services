@@ -40,6 +40,7 @@
 
 package org.egov.eis.web.contract;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -72,7 +73,12 @@ public class VacantPositionsGetRequest {
 
 	@NotNull
 	@DateTimeFormat(pattern = "dd/MM/yyyy")
-	private Date asOnDate;
+    @JsonFormat(pattern="dd/MM/yyyy")
+    private Date asOnDate;
+
+    @DateTimeFormat(pattern = "dd/MM/yyyy")
+    @JsonFormat(pattern="dd/MM/yyyy")
+    private Date toDate;
 
 	private String sortBy;
 

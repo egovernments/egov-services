@@ -60,9 +60,9 @@ public class NonVacantPositionsRepository {
 
     public static final String SEARCH_ASSIGNED_POSITION_FOR_DATERANGE_QUERY = "SELECT DISTINCT positionId"
             + " FROM egeis_assignment"
-            + " WHERE departmentId = ? AND designationId = ? AND ((fromdate <= ? and todate <= ?)"
-            + " OR (fromdate >= ? and todate >= ?) OR (fromdate >= ? and todate <= ?) OR"
-            + " (fromdate <= ? and todate >= ?)) AND tenantId = ?";
+            + " WHERE departmentId = :departmentId AND designationId = :designationId AND ((fromdate <= :fromDate and todate <= :toDate)"
+            + " OR (fromdate >= :fromDate and todate >= :toDate) OR (fromdate >= :fromDate and todate <= :toDate) OR"
+            + " (fromdate <= :fromDate and todate >= :toDate)) AND tenantId = :tenantId";
 
     public static final String CHECK_IF_POSITION_IS_OCCUPIED_QUERY = "SELECT exists(SELECT positionId"
             + " FROM egeis_assignment"

@@ -54,19 +54,22 @@ import java.util.List;
 @Repository
 public class VacantPositionsRepository {
 
-	@Autowired
-	private JdbcTemplate jdbcTemplate;
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
 
-	@Autowired
-	private PositionRowMapper positionRowMapper;
+    @Autowired
+    private PositionRowMapper positionRowMapper;
 
-	@Autowired
-	private VacantPositionsQueryBuilder vacantPositionsQueryBuilder;
+    @Autowired
+    private VacantPositionsQueryBuilder vacantPositionsQueryBuilder;
 
-	public List<Position> findForCriteria(VacantPositionsGetRequest vacantPositionsGetRequest) {
-		List<Object> preparedStatementValues = new ArrayList<Object>();
-		String queryStr = vacantPositionsQueryBuilder.getQuery(vacantPositionsGetRequest, preparedStatementValues);
-		List<Position> positions = jdbcTemplate.query(queryStr, preparedStatementValues.toArray(), positionRowMapper);
-		return positions;
-	}
+    public List<Position> findForCriteria(VacantPositionsGetRequest vacantPositionsGetRequest) {
+        List<Object> preparedStatementValues = new ArrayList<Object>();
+        if(vacantPositionsGetRequest.getDestinationTenant()!=null && !vacantPositionsGetRequest.getDestinationTenant().equals(""))
+            vacantPositionsGetRequest.setTenantId(vacantPositionsGetRequest.getDestinationTenant());
+
+        String queryStr = vacantPositionsQueryBuilder.getQuery(vacantPositionsGetRequest, preparedStatementValues);
+        List<Position> positions = jdbcTemplate.query(queryStr, preparedStatementValues.toArray(), positionRowMapper);
+        return positions;
+    }
 }

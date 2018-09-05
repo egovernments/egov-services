@@ -147,7 +147,7 @@ public class PayService {
 		if (interestStart < current)
 			interestAmt = mDService.calculateApplicables(taxAmt, interestMap);
 
-		return interestAmt.multiply(noOfDays.divide(BigDecimal.valueOf(365), 2, 2));
+		return interestAmt.multiply(noOfDays.divide(BigDecimal.valueOf(365), 6, 5));
 	}
 	
 	/**

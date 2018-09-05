@@ -69,9 +69,11 @@ class UpdateMovement extends React.Component {
         id: "",
         name: "",
         code: "",
+        dob:"",
+        positionId: "",
         departmentId: "",
         designationId: "",
-        positionId: ""
+        dateOfRetirement:"",
       },
       positionId: "",
       transferWithPromotion: false,
@@ -90,9 +92,8 @@ class UpdateMovement extends React.Component {
       userList: [],
       buttons: [],
       owner: "",
-      status: ""
-    }
-
+      status: "",
+    },
     this.handleChange = this.handleChange.bind(this);
     this.handleProcess = this.handleProcess.bind(this);
     this.setInitialState = this.setInitialState.bind(this);
@@ -189,10 +190,10 @@ class UpdateMovement extends React.Component {
             };
           }
           if (Movement.transferType === "TRANSFER_OUTSIDE_CORPORATION_OR_ULB") {
-            console.log("DEPT - DESIG - EFFDTE - ULB", Movement.transferedLocation);
+            //console.log("DEPT - DESIG - EFFDTE - ULB", Movement.transferedLocation);
             _this.getUlbDetails(Movement.transferedLocation);
             setTimeout(function () {
-              console.log("DEPT - DESIG - EFFDTE - ULB", Movement.departmentAssigned, Movement.designationAssigned, Movement.effectiveFrom, Movement.transferedLocation);
+              //console.log("DEPT - DESIG - EFFDTE - ULB", Movement.departmentAssigned, Movement.designationAssigned, Movement.effectiveFrom, Movement.transferedLocation);
               _this.vacantPositionFun(Movement.departmentAssigned, Movement.designationAssigned, Movement.effectiveFrom, Movement.transferedLocation);
             }, 400);
           }
@@ -219,9 +220,11 @@ class UpdateMovement extends React.Component {
                 employee: {
                   name: obj.name,
                   code: obj.code,
+                  dob:obj.dob,
                   departmentId: obj.assignments[ind].department,
                   designationId: obj.assignments[ind].designation,
-                  positionId: obj.assignments[ind].position
+                  positionId: obj.assignments[ind].position,
+                  dateOfRetirement:obj.dateOfRetirement
                 }
               })
             }
@@ -287,7 +290,7 @@ class UpdateMovement extends React.Component {
         var _department = _this.state.movement.departmentAssigned;
         var _effectiveFrom = _this.state.movement.effectiveFrom;
         var _ulb = _this.state.movement.transferedLocation;
-        _this.vacantPositionFun(_department, _designation, _effectiveFrom, _ulb);
+        _this.vacantPositionFun(_department, _designation, _effectiveFrom, _ulb, _this.state.employee,_this.state.movement.transferType);
       }
     });
 
@@ -338,27 +341,62 @@ class UpdateMovement extends React.Component {
       })
   }
 
-  vacantPositionFun(departmentId, designationId, effectiveFrom, ulb) {
+  vacantPositionFun(departmentId, designationId, effectiveFrom, ulb,employeeDetails,movement) {
     var _this = this;
-
-    commonApiPost("hr-masters", "vacantpositions", "_search", {
-      tenantId: tenantId,
-      departmentId: departmentId,
-      designationId: designationId,
-      asOnDate: effectiveFrom,
-      destinationTenant: ulb,
-      pageSize: 500
-    }, function (err, res) {
-      if (res) {
-        console.log("PSTNS", res.Position);
-        _this.setState({
-          movement: {
-            ..._this.state.movement,
-          },
-          pNameList: res.Position
-        })
+    var effectiveTo;
+    //console.log("employee",list);
+    if(movement !== "TRANSFER_OUTSIDE_CORPORATION_OR_ULB"){
+      commonApiPost("hr-masters", "vacantpositions", "_search", {
+        tenantId: tenantId,
+        departmentId: departmentId,
+        designationId: designationId,
+        asOnDate: effectiveFrom,
+        destinationTenant: ulb,
+        pageSize: 500
+      }, function (err, res) {
+        if (res) {
+          //console.log("PSTNS", res.Position);
+          _this.setState({
+            movement: {
+              ..._this.state.movement,
+            },
+            pNameList: res.Position
+          })
+        }
+      });
+    }else{
+      if(employeeDetails.dateOfRetirement){
+        effectiveTo = employeeDetails.dateOfRetirement;
+        vacantPositionFun();
+      }else if(employeeDetails.dob){
+        var dob = employeeDetails.dob.split("-");
+        effectiveTo = dob[0] + "-" + dob[1]+ "-"+ dob[2] + 60;
+        vacantPositionFun();
+      }else{
+        alert("Employee Date of birth is not availble");
       }
-    });
+      function vacantPositionFun(){
+        commonApiPost("hr-masters", "vacantpositions", "_search", {
+          tenantId: tenantId,
+          departmentId: departmentId,
+          designationId: designationId,
+          asOnDate: effectiveFrom,
+          toDate:effectiveTo,
+          destinationTenant: ulb,
+          pageSize: 500
+        },function (err,res) {
+          if (res) {
+            console.log("PSTNS", res.Position);
+            _this.setState({
+              movement: {
+                ..._this.state.movement,
+              },
+              pNameList: res.Position
+            })
+          }
+        });
+      }
+    }
   }
 
   getUlbDetails(ulb) {
@@ -687,7 +725,6 @@ class UpdateMovement extends React.Component {
                           designation = item.designation;
                       });
                       var ownerDetails = employee.name + " - " + employee.code + " - " + getNameById(_this.state.designationList, designation);
-
                       if (ID === "Submit")
                         window.location.href = `app/hr/movements/ack-page.html?type=TransferSubmit&owner=${ownerDetails}&employee=${employeeName.name}`;
                       if (ID === "Approve")
@@ -716,11 +753,6 @@ class UpdateMovement extends React.Component {
         // if (breakout == 1)
         //     return;
       } else {
-
-
-
-
-
         var body = {
           "RequestInfo": requestInfo,
           "Movement": [tempInfo]
@@ -1205,7 +1237,7 @@ class UpdateMovement extends React.Component {
               <div className="col-sm-6">
                 <div className="row">
                   <div className="col-sm-6 label-text">
-                    <label htmlFor="">Transfer/Promotion effective from <span>*</span></label>
+                    <label htmlFor="">Transfer/Promotion effective from<span>*</span></label>
                   </div>
                   <div className="col-sm-6">
                     <div className="text-no-ui">

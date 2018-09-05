@@ -90,8 +90,7 @@ class UpdateMovement extends React.Component {
       userList: [],
       buttons: [],
       owner: "",
-      status: "",
-      employeeName:""
+      status: ""
     }
 
     this.handleChange = this.handleChange.bind(this);
@@ -199,7 +198,6 @@ class UpdateMovement extends React.Component {
           }
 
           getCommonMasterById("hr-employee", "employees", res.Movement[0].employeeId, function (err, res) {
-            console.log("res from getCommonMasterById",res);
             if (res && res.Employee) {
               var obj = res.Employee[0];
               var ind = 0;
@@ -224,8 +222,7 @@ class UpdateMovement extends React.Component {
                   departmentId: obj.assignments[ind].department,
                   designationId: obj.assignments[ind].designation,
                   positionId: obj.assignments[ind].position
-                },
-                employeeName:obj.name
+                }
               })
             }
           });

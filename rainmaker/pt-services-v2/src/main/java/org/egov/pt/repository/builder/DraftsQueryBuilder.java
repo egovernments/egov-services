@@ -18,9 +18,8 @@ public class DraftsQueryBuilder {
                 "createdtime, lastmodifiedby, lastmodifiedtime" +
                 " FROM " +
                 "eg_pt_drafts_v2 WHERE " +
-                "tenantId = ? ");
-        preparedStatementList.add(searchCriteria.getTenantId());
-
+                "tenantId NOTNULL ");
+        
         if (!isEmpty(searchCriteria.getId())) {
             query.append(" AND id = ?");
             preparedStatementList.add(searchCriteria.getId());

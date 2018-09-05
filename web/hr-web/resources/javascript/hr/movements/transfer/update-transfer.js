@@ -90,7 +90,8 @@ class UpdateMovement extends React.Component {
       userList: [],
       buttons: [],
       owner: "",
-      status: ""
+      status: "",
+      employeeName:""
     }
 
     this.handleChange = this.handleChange.bind(this);
@@ -198,6 +199,7 @@ class UpdateMovement extends React.Component {
           }
 
           getCommonMasterById("hr-employee", "employees", res.Movement[0].employeeId, function (err, res) {
+            console.log("res from getCommonMasterById",res);
             if (res && res.Employee) {
               var obj = res.Employee[0];
               var ind = 0;
@@ -222,7 +224,8 @@ class UpdateMovement extends React.Component {
                   departmentId: obj.assignments[ind].department,
                   designationId: obj.assignments[ind].designation,
                   positionId: obj.assignments[ind].position
-                }
+                },
+                employeeName:obj.name
               })
             }
           });
@@ -591,15 +594,11 @@ class UpdateMovement extends React.Component {
   }
 
 
-  handleProcess(e) {
+  handleProcess(e,employeeName) {
     e.preventDefault();
-
     if (e.target.id.toLowerCase() == "cancel") {
       $('#department, #designation, #assignee').prop('required', false);
     }
-
-
-
     if ($('#update-transfer').valid()) {
       var ID = e.target.id, _this = this;
       var stateId = getUrlVars()["stateId"];
@@ -681,7 +680,7 @@ class UpdateMovement extends React.Component {
                     asOnDate = dd + '/' + mm + '/' + yyyy;
 
                     let _positionId = (ID === "Reject") ? _this.state.initiator : res.Movement[0].workflowDetails.assignee;
-                    console.log("res", _positionId);
+                    //console.log("res", _positionId);
                     commonApiPost("hr-employee", "employees", "_search", { tenantId, asOnDate, positionId: _positionId }, function (err, res2) {
                       if (res && res2.Employee && res2.Employee[0])
                         employee = res2.Employee[0];
@@ -693,9 +692,9 @@ class UpdateMovement extends React.Component {
                       var ownerDetails = employee.name + " - " + employee.code + " - " + getNameById(_this.state.designationList, designation);
 
                       if (ID === "Submit")
-                        window.location.href = `app/hr/movements/ack-page.html?type=TransferSubmit&owner=${ownerDetails}`;
+                        window.location.href = `app/hr/movements/ack-page.html?type=TransferSubmit&owner=${ownerDetails}&employee=${employeeName.name}`;
                       if (ID === "Approve")
-                        window.location.href = `app/hr/movements/ack-page.html?type=TransferApprove&owner=${ownerDetails}`;
+                        window.location.href = `app/hr/movements/ack-page.html?type=TransferApprove&owner=${ownerDetails}&employee=${employeeName.name}`;
                       if (ID === "Cancel")
                         window.location.href = `app/hr/movements/ack-page.html?type=TransferCancel&owner=${ownerDetails}`;
                       if (ID === "Reject")
@@ -768,7 +767,7 @@ class UpdateMovement extends React.Component {
 
             let _positionId = (ID === "Reject") ? _this.state.initiator : res.Movement[0].workflowDetails.assignee;
 
-            console.log("res", _positionId);
+            //console.log("res", _positionId);
             commonApiPost("hr-employee", "employees", "_search", { tenantId, asOnDate, positionId: _positionId }, function (err, res2) {
               if (res && res2.Employee && res2.Employee[0])
                 employee = res2.Employee[0];
@@ -778,11 +777,10 @@ class UpdateMovement extends React.Component {
                   designation = item.designation;
               });
               var ownerDetails = employee.name + " - " + employee.code + " - " + getNameById(_this.state.designationList, designation);
-
               if (ID === "Submit")
-                window.location.href = `app/hr/movements/ack-page.html?type=TransferSubmit&owner=${ownerDetails}`;
+                window.location.href = `app/hr/movements/ack-page.html?type=TransferSubmit&owner=${ownerDetails}&employee=${employeeName.name}`;
               if (ID === "Approve")
-                window.location.href = `app/hr/movements/ack-page.html?type=TransferApprove&owner=${ownerDetails}`;
+                window.location.href = `app/hr/movements/ack-page.html?type=TransferApprove&owner=${ownerDetails}&employee=${employeeName.name}`;
               if (ID === "Cancel")
                 window.location.href = `app/hr/movements/ack-page.html?type=TransferCancel&owner=${ownerDetails}`;
               if (ID === "Reject")
@@ -818,7 +816,7 @@ class UpdateMovement extends React.Component {
     const renderProcesedBtns = function () {
       if (buttons.length) {
         return buttons.map(function (btn, ind) {
-          return (<span key={ind}> <button key={ind} id={btn.key} type='button' className='btn btn-submit' onClick={(e) => { handleProcess(e) }} >
+          return (<span key={ind}> <button key={ind} id={btn.key} type='button' className='btn btn-submit' onClick={(e) => { handleProcess(e,employee) }} >
             {btn.name}
           </button> &nbsp; </span>)
         })

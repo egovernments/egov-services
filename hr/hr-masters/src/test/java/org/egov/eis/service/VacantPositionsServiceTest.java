@@ -57,7 +57,7 @@ public class VacantPositionsServiceTest {
 	    	ResponseInfo responseInfo = new ResponseInfo("emp", "1.0", "2017-01-18T07:18:23.130Z", "uief87324", "20170310130900", "200");
 	    	NonVacantPositionsResponse nonVacantPositionsResponse = new NonVacantPositionsResponse().builder().positionIds(positionIds).responseInfo(responseInfo).build();
 	        
-	    	VacantPositionsGetRequest criteria = new VacantPositionsGetRequest().builder().id(positionIds).asOnDate(new Date()).departmentId(10L).designationId(15L).tenantId("default").build();
+	    	VacantPositionsGetRequest criteria = new VacantPositionsGetRequest().builder().id(positionIds).asOnDate(new Date()).departmentId(10L).designationId(15L).tenantId("default").destinationTenant("").build();
 	    	
 	    	RequestInfo requestInfo = new RequestInfo().builder().apiId("emp").build();
 	    	RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper().builder().requestInfo(requestInfo).build();

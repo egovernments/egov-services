@@ -142,12 +142,12 @@ public class PayService {
 		setDateToCalendar(assessmentYear, time, cal);
 		long current = System.currentTimeMillis();
 		long interestStart = cal.getTimeInMillis();
-		long numberOfDays = 0 < lastCollectedTime ? current - lastCollectedTime : current - interestStart;
-
+		long numberOfDaysInMillies = 0 < lastCollectedTime ? current - lastCollectedTime : current - interestStart;
+		BigDecimal noOfDays = BigDecimal.valueOf((TimeUnit.MILLISECONDS.toDays(Math.abs(numberOfDaysInMillies))));
 		if (interestStart < current)
 			interestAmt = mDService.calculateApplicables(taxAmt, interestMap);
 
-		return interestAmt.multiply(BigDecimal.valueOf((TimeUnit.MILLISECONDS.toDays(Math.abs(numberOfDays))) / 365));
+		return interestAmt.multiply(noOfDays.divide(BigDecimal.valueOf(365), 2, 2));
 	}
 	
 	/**

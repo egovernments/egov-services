@@ -23,7 +23,7 @@ class AckPage extends React.Component {
                   </h4>)
           break;
           case "TransferApprove": return(<h4>
-                      <center><font color="black"> Transfer Application has been Approved </font> </center>
+                      <center><font color="black"> Transfer Application has been Approved for <strong style={{'fontWeight':700}}> {getUrlVars()["employee"] ?  decodeURIComponent(getUrlVars()["employee"]) : ""} </strong> </font> </center>
                   </h4>)
           break;
           case "TransferApply": return(<h4>

@@ -66,8 +66,10 @@ public enum Status {
 	WORKFLOW("WORKFLOW"),
 
 	INACTIVE("INACTIVE"),
-	
-	HISTORY("HISTORY");
+
+	HISTORY("HISTORY"),
+
+	EXPIRED("EXPIRED");
 
 	private String value;
 

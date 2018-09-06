@@ -367,15 +367,16 @@ class UpdateMovement extends React.Component {
     }else{
       if(employeeDetails.dateOfRetirement){
         effectiveTo = employeeDetails.dateOfRetirement;
-        vacantPositionFun();
+        vacantPositionApi();
       }else if(employeeDetails.dob){
         var dob = employeeDetails.dob.split("-");
-        effectiveTo = dob[0] + "-" + dob[1]+ "-"+ dob[2] + 60;
-        vacantPositionFun();
+        var rtrYear =  Number(dob[0]) + 60;
+        effectiveTo = dob[2] + "/" + dob[1]+ "/" + rtrYear;
+        vacantPositionApi();
       }else{
         alert("Employee Date of birth is not availble");
       }
-      function vacantPositionFun(){
+      function vacantPositionApi(){
         commonApiPost("hr-masters", "vacantpositions", "_search", {
           tenantId: tenantId,
           departmentId: departmentId,
@@ -726,13 +727,13 @@ class UpdateMovement extends React.Component {
                       });
                       var ownerDetails = employee.name + " - " + employee.code + " - " + getNameById(_this.state.designationList, designation);
                       if (ID === "Submit")
-                        window.location.href = `app/hr/movements/ack-page.html?type=TransferSubmit&owner=${ownerDetails}&employee=${employeeName.name}`;
+                        window.location.href = `app/hr/movements/ack-page.html?type=TransferSubmit&owner=${ownerDetails}p`;
                       if (ID === "Approve")
                         window.location.href = `app/hr/movements/ack-page.html?type=TransferApprove&owner=${ownerDetails}&employee=${employeeName.name}`;
                       if (ID === "Cancel")
-                        window.location.href = `app/hr/movements/ack-page.html?type=TransferCancel&owner=${ownerDetails}`;
+                        window.location.href = `app/hr/movements/ack-page.html?type=TransferCancel&owner=${ownerDetails}&employee=${employeeName.name}`;
                       if (ID === "Reject")
-                        window.location.href = `app/hr/movements/ack-page.html?type=TransferReject&owner=${ownerDetails}`;
+                        window.location.href = `app/hr/movements/ack-page.html?type=TransferReject&owner=${ownerDetails}&employee=${employeeName.name}`;
                     });
                   },
                   error: function (err) {
@@ -811,9 +812,9 @@ class UpdateMovement extends React.Component {
               if (ID === "Approve")
                 window.location.href = `app/hr/movements/ack-page.html?type=TransferApprove&owner=${ownerDetails}&employee=${employeeName.name}`;
               if (ID === "Cancel")
-                window.location.href = `app/hr/movements/ack-page.html?type=TransferCancel&owner=${ownerDetails}`;
+                window.location.href = `app/hr/movements/ack-page.html?type=TransferCancel&owner=${ownerDetails}&employee=${employeeName.name}`;
               if (ID === "Reject")
-                window.location.href = `app/hr/movements/ack-page.html?type=TransferReject&owner=${ownerDetails}`;
+                window.location.href = `app/hr/movements/ack-page.html?type=TransferReject&owner=${ownerDetails}&employee=${employeeName.name}`;
             });
           },
           error: function (err) {

@@ -1,4 +1,4 @@
-class EmployeeTransfer extends React.Component {
+  class EmployeeTransfer extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -35,9 +35,11 @@ class EmployeeTransfer extends React.Component {
         id: "",
         name: "",
         code: "",
+        dob:"",
+        positionId: "",
         departmentId: "",
         designationId: "",
-        positionId: ""
+        dateOfRetirement:"",
       },
       transferWithPromotion: false,
       positionList: [],
@@ -349,12 +351,11 @@ class EmployeeTransfer extends React.Component {
         var _department = _this.state.movement.departmentAssigned;
         var _effectiveFrom = _this.state.movement.effectiveFrom;
         var _ulb = _this.state.movement.transferedLocation;
-        _this.vacantPositionFun(_department, _designation, _effectiveFrom, _ulb);
+        _this.vacantPositionFun(_department, _designation, _effectiveFrom, _ulb,_this.state.employee,_this.state.movement.transferType);
       }
     });
 
     getCommonMasterById("hr-employee", "employees", id, function (err, res) {
-      console.log("Employee called");
       if (res && res.Employee) {
         var obj = res.Employee[0];
         var ind = 0;
@@ -373,9 +374,11 @@ class EmployeeTransfer extends React.Component {
           employee: {
             name: obj.name,
             code: obj.code,
+            dob:obj.dob,
             departmentId: obj.assignments[ind].department,
             designationId: obj.assignments[ind].designation,
-            positionId: obj.assignments[ind].position
+            positionId: obj.assignments[ind].position,
+            dateOfRetirement:obj.dateOfRetirement
           },
           movement: {
             ..._this.state.movement,
@@ -422,26 +425,62 @@ class EmployeeTransfer extends React.Component {
     })
   }
 
-  vacantPositionFun(departmentId, designationId, effectiveFrom, ulb) {
+  vacantPositionFun(departmentId, designationId, effectiveFrom, ulb,employeeDetails,movement) {
+    console.log("emp",employeeDetails);
     var _this = this;
-
-    commonApiPost("hr-masters", "vacantpositions", "_search", {
-      tenantId: tenantId,
-      departmentId: departmentId,
-      designationId: designationId,
-      asOnDate: effectiveFrom,
-      destinationTenant: ulb,
-      pageSize: 500
-    }, function (err, res) {
-      if (res) {
-        _this.setState({
-          movement: {
-            ..._this.state.movement,
-          },
-          pNameList: res.Position
-        })
+    var effectiveTo;
+    if(movement !== "TRANSFER_OUTSIDE_CORPORATION_OR_ULB"){
+      commonApiPost("hr-masters", "vacantpositions", "_search", {
+        tenantId: tenantId,
+        departmentId: departmentId,
+        designationId: designationId,
+        asOnDate: effectiveFrom,
+        destinationTenant: ulb,
+        pageSize: 500
+      }, function (err, res) {
+        if (res) {
+          _this.setState({
+            movement: {
+              ..._this.state.movement,
+            },
+            pNameList: res.Position
+          })
+        }
+      });
+    }else{
+      if(employeeDetails.dateOfRetirement){
+        effectiveTo = employeeDetails.dateOfRetirement;
+        vacantPositionApi();
+      }else if(employeeDetails.dob){
+        var dob = employeeDetails.dob.split("-");
+        var rtrYear =  Number(dob[0]) + 60;
+        effectiveTo = dob[2] + "/" + dob[1]+ "/" + rtrYear;
+        vacantPositionApi();
+      }else{
+        alert("Employee Date of birth is not availble");
       }
-    });
+      function vacantPositionApi(){
+        commonApiPost("hr-masters", "vacantpositions", "_search", {
+          tenantId: tenantId,
+          departmentId: departmentId,
+          designationId: designationId,
+          asOnDate: effectiveFrom,
+          toDate:effectiveTo,
+          destinationTenant: ulb,
+          pageSize: 500
+        },function (err,res) {
+          if (res) {
+            //console.log("PSTNS", res.Position);
+            _this.setState({
+              movement: {
+                ..._this.state.movement,
+              },
+              pNameList: res.Position
+            })
+          }
+        });
+      }
+    }
   }
 
   getUlbDetails(ulb) {

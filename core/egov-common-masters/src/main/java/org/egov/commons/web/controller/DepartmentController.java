@@ -104,7 +104,7 @@ public class DepartmentController {
 		// Call service
 		List<Department> departmentsList = null;
 		try {
-			departmentsList = departmentService.getDepartments(departmentGetRequest);
+			departmentsList = departmentService.getDepartmentsFromMDMS(requestInfoWrapper.getRequestInfo(), departmentGetRequest);
 		} catch (Exception exception) {
 			logger.error("Error while processing request " + departmentGetRequest, exception);
 			return errHandler.getResponseEntityForUnexpectedErrors(requestInfo);

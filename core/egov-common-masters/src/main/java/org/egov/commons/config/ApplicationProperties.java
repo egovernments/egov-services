@@ -64,8 +64,15 @@ public class ApplicationProperties {
 
     @Value("${kafka.topics.calendaryear.update.name}")
     private String updateCalendarYearTopicName;
+    
+    @Value("${egov.mdms.host}")
+    private String mdmsHost;
 
-    public String commonsSearchPageSizeDefault() {
+    @Value("${egov.mdms.search.endpoint}")
+    private String mdmsEndpoint;
+
+
+	public String commonsSearchPageSizeDefault() {
         return environment.getProperty(COMMONS_SEARCH_PAGESIZE_DEFAULT);
     }
 
@@ -84,5 +91,13 @@ public class ApplicationProperties {
     public String getUpdateCalendarYearTopicName() {
         return updateCalendarYearTopicName;
     }
+    
+    public String getMdmsHost() {
+		return mdmsHost;
+	}
+
+	public String getMdmsEndpoint() {
+		return mdmsEndpoint;
+	}
 
 }

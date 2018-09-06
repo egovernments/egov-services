@@ -40,22 +40,46 @@
 
 package org.egov.commons.service;
 
+import org.apache.commons.lang3.StringUtils;
+import org.egov.common.contract.request.RequestInfo;
+import org.egov.commons.config.ApplicationProperties;
 import org.egov.commons.model.Department;
 import org.egov.commons.repository.DepartmentRepository;
 import org.egov.commons.web.contract.DepartmentGetRequest;
 import org.egov.commons.web.contract.DepartmentRequest;
+import org.egov.mdms.model.MasterDetail;
+import org.egov.mdms.model.MdmsCriteria;
+import org.egov.mdms.model.MdmsCriteriaReq;
+import org.egov.mdms.model.ModuleDetail;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
+import org.springframework.web.client.RestTemplate;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.jayway.jsonpath.JsonPath;
+
+import lombok.extern.slf4j.Slf4j;
+
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
+@Slf4j
 public class DepartmentService {
 
 	private DepartmentRepository departmentRepository;
 
 	private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
+	
+	@Autowired
+	private RestTemplate restTemplate;
+	
+	@Autowired
+	private ApplicationProperties applicatioProperties;
 
 	@Autowired
 	public DepartmentService(DepartmentRepository departmentRepository,
@@ -88,6 +112,47 @@ public class DepartmentService {
 	}
 	public List<Department> getDepartments(DepartmentGetRequest departmentGetRequest) {
 		return departmentRepository.findForCriteria(departmentGetRequest);
+	}
+	
+	public List<Department> getDepartmentsFromMDMS(RequestInfo requestInfo, DepartmentGetRequest departmentGetRequest) {
+		log.info("RequestInfo: "+requestInfo);
+		StringBuilder uri = new StringBuilder();
+		List<Department> result = new ArrayList<>();
+		ObjectMapper mapper = new ObjectMapper();
+		uri.append(applicatioProperties.getMdmsHost()).append(applicatioProperties.getMdmsEndpoint());
+		log.info("URI: "+uri.toString());
+		try {
+			Object apiResponse = restTemplate.postForObject(uri.toString(), 
+						prepareSearchRequestForServiceCodes(departmentGetRequest.getTenantId(), requestInfo, departmentGetRequest), Map.class);
+			log.info("API response: "+apiResponse);
+			if(null != apiResponse) {
+				result = mapper.convertValue(JsonPath.read(apiResponse, "$.MdmsRes.common-masters.Department"), List.class);
+			}
+		}catch(Exception e) {
+			result = new ArrayList<>();
+		}
+		return result;
+	}
+	
+	public MdmsCriteriaReq prepareSearchRequestForServiceCodes(String tenantId, RequestInfo requestInfo, DepartmentGetRequest departmentGetRequest) {
+
+		MasterDetail masterDetail = org.egov.mdms.model.MasterDetail.builder().name("Department").build();
+		if(!StringUtils.isEmpty(departmentGetRequest.getCode()))
+			masterDetail.setFilter("[?(@.code=='" + departmentGetRequest.getCode() + "')]");
+		
+		if(!StringUtils.isEmpty(departmentGetRequest.getName()))
+			masterDetail.setFilter("[?(@.name=='" + departmentGetRequest.getName() + "')]");
+		
+		if(null != departmentGetRequest.getActive())
+			masterDetail.setFilter("[?(@.active=='" + departmentGetRequest.getActive() + "')]");
+		
+		List<MasterDetail> masterDetails = new ArrayList<>();
+		masterDetails.add(masterDetail);
+		ModuleDetail moduleDetail = ModuleDetail.builder().moduleName("common-masters").masterDetails(masterDetails).build();
+		List<ModuleDetail> moduleDetails = new ArrayList<>();
+		moduleDetails.add(moduleDetail);
+		MdmsCriteria mdmsCriteria = MdmsCriteria.builder().tenantId(tenantId).moduleDetails(moduleDetails).build();
+		return MdmsCriteriaReq.builder().mdmsCriteria(mdmsCriteria).build();
 	}
 
 	public boolean getDepartmentByNameAndTenantId(String name, String tenantId, Long id, Boolean isUpdate) {

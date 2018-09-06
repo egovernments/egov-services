@@ -65,6 +65,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -399,7 +400,9 @@ public class EmployeeService {
 	public void create(EmployeeRequest employeeRequest) {
 		Employee employee = employeeRequest.getEmployee();
 		employeeRepository.save(employee);
-		employeeJurisdictionRepository.save(employee);
+		if(!CollectionUtils.isEmpty(employeeRequest.getEmployee().getJurisdictions())) {
+			employeeJurisdictionRepository.save(employee);
+		}
 		if (!isEmpty(employee.getLanguagesKnown())) {
 			employeeLanguageRepository.save(employee);
 		}

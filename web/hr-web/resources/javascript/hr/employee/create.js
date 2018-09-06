@@ -2759,7 +2759,7 @@ function loadUI() {
 
                 $.validator.addMethod('dateCheck', function(value) {
                     var val=value.split("/");
-                    console.log(val);
+                    //console.log(val);
                     return (val && val.length>0 && val[2]) ? /^\d{4}$/.test(val[2]) : true;
                    
                 }, 'Year should have 4 digits.');
@@ -2779,7 +2779,9 @@ function loadUI() {
 
                 $("#addEmployee").on("click", function(e) {
                     e.preventDefault();
+                    employee.user.name = employee.user.name.trim();
                     $("#createEmployeeForm").submit();
+                    
                 });
 
 

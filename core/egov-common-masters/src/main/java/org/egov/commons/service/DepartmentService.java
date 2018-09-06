@@ -152,7 +152,8 @@ public class DepartmentService {
 		List<ModuleDetail> moduleDetails = new ArrayList<>();
 		moduleDetails.add(moduleDetail);
 		MdmsCriteria mdmsCriteria = MdmsCriteria.builder().tenantId(tenantId).moduleDetails(moduleDetails).build();
-		return MdmsCriteriaReq.builder().mdmsCriteria(mdmsCriteria).build();
+		requestInfo.setTs(null); //there's type mismatch in ts of RI, we cannot update the commons library version cuz that'll break existing code.
+		return MdmsCriteriaReq.builder().mdmsCriteria(mdmsCriteria).requestInfo(requestInfo).build();
 	}
 
 	public boolean getDepartmentByNameAndTenantId(String name, String tenantId, Long id, Boolean isUpdate) {

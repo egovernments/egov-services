@@ -218,6 +218,7 @@ class UpdateMovement extends React.Component {
                 docs: docs,
                 movement: Movement,
                 employee: {
+                  id:obj.id,
                   name: obj.name,
                   code: obj.code,
                   dob:obj.dob,
@@ -727,13 +728,13 @@ class UpdateMovement extends React.Component {
                       });
                       var ownerDetails = employee.name + " - " + employee.code + " - " + getNameById(_this.state.designationList, designation);
                       if (ID === "Submit")
-                        window.location.href = `app/hr/movements/ack-page.html?type=TransferSubmit&owner=${ownerDetails}p`;
+                        window.location.href = `app/hr/movements/ack-page.html?type=TransferSubmit&owner=${ownerDetails}&employeeId=${employeeName.id}`;
                       if (ID === "Approve")
-                        window.location.href = `app/hr/movements/ack-page.html?type=TransferApprove&owner=${ownerDetails}&employee=${employeeName.name}`;
+                        window.location.href = `app/hr/movements/ack-page.html?type=TransferApprove&owner=${ownerDetails}&employeeId=${employeeName.id}`;
                       if (ID === "Cancel")
-                        window.location.href = `app/hr/movements/ack-page.html?type=TransferCancel&owner=${ownerDetails}&employee=${employeeName.name}`;
+                        window.location.href = `app/hr/movements/ack-page.html?type=TransferCancel&owner=${ownerDetails}&employeeId=${employeeName.id}`;
                       if (ID === "Reject")
-                        window.location.href = `app/hr/movements/ack-page.html?type=TransferReject&owner=${ownerDetails}&employee=${employeeName.name}`;
+                        window.location.href = `app/hr/movements/ack-page.html?type=TransferReject&owner=${ownerDetails}&employeeId=${employeeName.id}`;
                     });
                   },
                   error: function (err) {
@@ -807,14 +808,15 @@ class UpdateMovement extends React.Component {
                   designation = item.designation;
               });
               var ownerDetails = employee.name + " - " + employee.code + " - " + getNameById(_this.state.designationList, designation);
+              console.log("emp",employeeName);
               if (ID === "Submit")
-                window.location.href = `app/hr/movements/ack-page.html?type=TransferSubmit&owner=${ownerDetails}&employee=${employeeName.name}`;
+                window.location.href = `app/hr/movements/ack-page.html?type=TransferSubmit&owner=${ownerDetails}&employeeId=${employeeName.id}`;
               if (ID === "Approve")
-                window.location.href = `app/hr/movements/ack-page.html?type=TransferApprove&owner=${ownerDetails}&employee=${employeeName.name}`;
+                window.location.href = `app/hr/movements/ack-page.html?type=TransferApprove&owner=${ownerDetails}&employeeId=${employeeName.id}`;
               if (ID === "Cancel")
-                window.location.href = `app/hr/movements/ack-page.html?type=TransferCancel&owner=${ownerDetails}&employee=${employeeName.name}`;
+                window.location.href = `app/hr/movements/ack-page.html?type=TransferCancel&owner=${ownerDetails}&employeeId=${employeeName.id}`;
               if (ID === "Reject")
-                window.location.href = `app/hr/movements/ack-page.html?type=TransferReject&owner=${ownerDetails}&employee=${employeeName.name}`;
+                window.location.href = `app/hr/movements/ack-page.html?type=TransferReject&owner=${ownerDetails}&employeeId=${employeeName.id}`;
             });
           },
           error: function (err) {

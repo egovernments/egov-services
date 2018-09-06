@@ -595,8 +595,6 @@ definitions:
       status:
         type: string
         description: status of the Property
-        maxLength: 64
-        minLength: 2
         enum:
           - ACTIVE
           - INACTIVE
@@ -613,8 +611,6 @@ definitions:
           creationReason:
             type: string
             description: New property comes into system either property is newly constructed or existing property got sub divided. Here the reason for creation will be captured.
-            maxLength: 256
-            minLength: 1
             enum:
               - NEWPROPERTY
               - SUBDIVISION
@@ -638,8 +634,7 @@ definitions:
       assessmentNumber:
         type: string
         description: unique assesment number for each financial year.
-        maxLength: 256
-        minLength: 2
+        maxLength: 64
         readOnly: true
       assessmentDate:
         type: integer
@@ -649,27 +644,39 @@ definitions:
         type: string
         description: 'Type of a property like Private, Vacant Land, State Government, Central Government etc.'
         maxLength: 64
-        minLength: 1
       propertySubType:
         type: string
         description: Sub Type of a property defined in mdms 'PropertySubType' Masetr.
         maxLength: 64
-        minLength: 1
       usageCategoryMajor:
         type: string
         description: 'This is about the usage of the property like Residential, Non-residential, Mixed(Property witch is gettiong used for Residential, Non-residential purpose)'
         maxLength: 64
-        minLength: 1
+      usageCategoryMinor:
+        type: string
+        description: Sub category of 'UsageCategoryMajor' defined in 'UsageCategoryMinor' master of mdms.
+        maxLength: 64
+      ownershipCategory:
+        type: string
+        description: The type of ownership of the property.
+        maxLength: 64
+      subOwnershipCategory:
+        type: string
+        description: Sub category of 'OwnershipCategory' defined in 'SubOwnershipCategory' master ofmdms.
+        maxLength: 64
       owners:
         description: 'Property owners, these will be citizen users in system.'
+        type: array
+        items:
+          $ref: '#/definitions/OwnerInfo'
+      citizenInfo:
+        description: 'The ownerInfo of the user to whose account the property is to be assigned in case of assessment done by employee.'
         type: array
         items:
           $ref: '#/definitions/OwnerInfo'
       source:
         type: string
         description: Source of a assessment data. The properties will be created in a system based on the data avaialble in their manual records or during field survey. There can be more from client to client.
-        maxLength: 64
-        minLength: 1
         enum:
           - MUNICIPAL_RECORDS
           - FIELD_SURVEY
@@ -685,6 +692,24 @@ definitions:
         type: number
         format: float
         description: Total built up area in sq ft
+      adhocExemption:
+        type: number
+        format: double
+        description: 'Exemption applied by the employee.'
+      adhocPenalty:
+        type: number
+        format: double
+        description: 'Penalty applied by the employee.'
+      adhocExemptionReason:
+        type: string
+        description: The reason for giving adhocExemption.
+        maxLength: 1024
+      adhocPenaltyReason:
+        type: string
+        description: The type of ownership of the property.
+        maxLength: 1024
+      auditDetails:
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails'
       units:
         description: 'List of Units in the property. E.g. A property might have 2 units in ground floor and 1 ion first floor. Unit can be Room, floor or any bounded area with a defined usage.'
         type: array
@@ -701,14 +726,45 @@ definitions:
       channel:
         type: string
         description: 'Property can be created from different channels Eg. System (properties created by ULB officials), CFC Counter (From citizen faciliation counters) etc. Here we are defining some known channels, there can be more client to client.'
-        maxLength: 64
-        minLength: 4
         enum:
           - SYSTEM
           - CFC_COUNTER
           - CITIZEN
           - DATA_ENTRY
           - MIGRATION
+      institution:
+        description: 'The details of institution if the ownershipCategory is institutional'
+        type: array
+        items:
+          $ref: '#/definitions/Institution'
+      calculation:
+        description: 'The calculation details of the property'
+        type: object
+        items:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/rainmaker/property-tax/property-calculation-service.yml#/definitions/Calculation'
+  Institution:
+    type: object
+    properties:
+      id:
+        type: string
+        maxLength: 64
+        description: Unique Identifier of the Property(UUID).
+      tenantId:
+        type: string
+        description: tenant id of the Property
+        maxLength: 256
+      name:
+        type: string
+        description: Name of the Instituion
+        maxLength: 64
+      type:
+        type: string
+        description: Institution type.
+        maxLength: 64
+      designation:
+        type: string
+        maxLength: 64
+        description: Designation of the person doing the assessment
   OwnerInfo:
     allOf:
       - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-user/contracts/v1-0-0.yml#/definitions/User'
@@ -725,13 +781,21 @@ definitions:
             type: string
             description: 'Type of owner, based on this option Exemptions will be applied. This is master data defined in mdms.'
             maxLength: 256
-            minLength: 4
+          institutionId:
+            type: string
+            description: 'The id of the institution if the owner is the authorized person for one'
+            maxLength: 64
           documents:
-            description: 'The documents attached by owner for exemption.'
+            description: The documents attached by owner for exemption.
             type: array
             items:
               $ref: '#/definitions/Document'
-
+          relationship:
+            type: string
+            description: 'The relationship of gaurdian.'
+            enum:
+              - FATHER
+              - HUSBAND
   Address:
     allOf:
       - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-1-0.yml#/definitions/Address'
@@ -755,15 +819,20 @@ definitions:
     description: This object holds list of documents attached during the transaciton for a property
     properties:
       id:
-        type: integer
-        format: int64
-        description: unique id of the Document.
+        type: string
+        maxLength: 64
+        description: system id of the Document.
       documentType:
         type: string
         description: 'unique document type code, should be validated with document type master'
       fileStore:
         type: string
         description: File store reference key.
+      documentUid:
+        type: string
+        maxLength: 64
+        description: The unique id(Pancard Number,Adhar etc.) of the given Document.
+        
   Unit:
     type: object
     properties:

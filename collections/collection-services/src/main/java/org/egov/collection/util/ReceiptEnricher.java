@@ -171,6 +171,10 @@ public class ReceiptEnricher {
 
             String receiptNumber = idGenRepository.generateReceiptNumber(receiptReq.getRequestInfo(), billDetail.getTenantId());
             billDetail.setReceiptNumber(receiptNumber);
+
+            for(BillAccountDetail billAccountDetail : billDetail.getBillAccountDetails()){
+                billAccountDetail.setId(UUID.randomUUID().toString());
+            }
         }
 
         enrichInstrument(receiptReq);

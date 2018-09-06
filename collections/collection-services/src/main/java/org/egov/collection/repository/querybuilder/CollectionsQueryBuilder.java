@@ -31,7 +31,8 @@ public class CollectionsQueryBuilder {
 
     public static final String INSERT_RECEIPT_DETAILS_SQL =  "INSERT INTO egcl_receiptdetails(id, chartofaccount, dramount, cramount, ordernumber, receiptheader, actualcramounttobepaid, "
             + "description, financialyear, isactualdemand, purpose, tenantid) "
-            + "VALUES (NEXTVAL('SEQ_EGCL_RECEIPTDETAILS'), :chartofaccount, :dramount, :cramount, :ordernumber, :receiptheader, :actualcramounttobepaid, "
+            + "VALUES (:id, :chartofaccount, :dramount, :cramount, :ordernumber, :receiptheader, " +
+            ":actualcramounttobepaid, "
             + ":description, :financialyear, :isactualdemand, :purpose, :tenantid)";
 
     public static final String INSERT_INSTRUMENT_HEADER_SQL = "INSERT INTO egcl_instrumentheader(id, transactionnumber, transactiondate, amount, instrumenttype, " +
@@ -127,6 +128,7 @@ public class CollectionsQueryBuilder {
     public static MapSqlParameterSource getParametersForReceiptDetails(BillAccountDetail billAccountDetails,
                                                                              String receiptHeaderId){
         MapSqlParameterSource sqlParameterSource = new MapSqlParameterSource();
+        sqlParameterSource.addValue("id", billAccountDetails.getId());
         sqlParameterSource.addValue("chartofaccount", billAccountDetails.getGlcode());
         sqlParameterSource.addValue("dramount", billAccountDetails.getDebitAmount());
         sqlParameterSource.addValue("cramount", billAccountDetails.getCreditAmount());

@@ -20,6 +20,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -171,7 +172,9 @@ public class CollectionService {
             for(BillAccountDetail billAccountDetail : billDetail.getBillAccountDetails())
                 drAmount = drAmount.add(billAccountDetail.getCreditAmount());
 
-            BillAccountDetail billAccountDetail = BillAccountDetail.builder().glcode(glCode)
+            BillAccountDetail billAccountDetail = BillAccountDetail.builder()
+                    .id(UUID.randomUUID().toString())
+                    .glcode(glCode)
                     .debitAmount(drAmount)
                     .creditAmount(BigDecimal.ZERO)
                     .crAmountToBePaid(BigDecimal.ZERO)

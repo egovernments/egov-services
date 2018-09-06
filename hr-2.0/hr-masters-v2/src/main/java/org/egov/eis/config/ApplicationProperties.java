@@ -57,7 +57,7 @@ public class ApplicationProperties {
 
 	@Autowired
 	private Environment environment;
-
+	
 	public String hrSearchPageSizeDefault() {
 		return this.environment.getProperty(HR_MASTERS_SEARCH_PAGESIZE_DEFAULT);
 	}
@@ -68,6 +68,6 @@ public class ApplicationProperties {
 
 	public String hrSearchPageSizeMax() {
 		return this.environment.getProperty(HR_MASTERS_SEARCH_PAGESIZE_MAX);
-	}
+	}	
 
 }

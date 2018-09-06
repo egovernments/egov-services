@@ -94,9 +94,11 @@ public class DesignationController {
 		if (requestBodyBindingResult.hasErrors()) {
 			return errHandler.getErrorResponseEntityForMissingRequestInfo(requestBodyBindingResult, requestInfo);
 		}
+		
+		List<Designation> designationsList = designationService.getDesignationsFromMDMS(requestInfoWrapper.getRequestInfo(), designationGetRequest);
 
 		// Call service
-		List<Designation> designationsList = null;
+/*		List<Designation> designationsList = null;
 		try {
 			//TODO Replace service call inside if condition to point to innovawe api
 			if(!isEmpty(designationGetRequest.getDepartmentCode()))
@@ -107,7 +109,7 @@ public class DesignationController {
 		} catch (Exception exception) {
 			logger.error("Error while processing request " + designationGetRequest, exception);
 			return errHandler.getResponseEntityForUnexpectedErrors(requestInfo);
-		}
+		}*/
 
 		return getSuccessResponse(designationsList, requestInfo);
 	}

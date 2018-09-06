@@ -40,11 +40,15 @@
 
 package org.egov.eis.service;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ResponseInfo;
+import org.egov.eis.config.ApplicationProperties;
 import org.egov.eis.model.Designation;
 import org.egov.eis.model.Sequence;
 import org.egov.eis.repository.DesignationRepository;
@@ -52,6 +56,10 @@ import org.egov.eis.web.contract.DesignationGetRequest;
 import org.egov.eis.web.contract.DesignationRequest;
 import org.egov.eis.web.contract.DesignationResponse;
 import org.egov.eis.web.contract.factory.ResponseInfoFactory;
+import org.egov.mdms.model.MasterDetail;
+import org.egov.mdms.model.MdmsCriteria;
+import org.egov.mdms.model.MdmsCriteriaReq;
+import org.egov.mdms.model.ModuleDetail;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -59,23 +67,29 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
-import lombok.extern.slf4j.Slf4j;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.jayway.jsonpath.JsonPath;
 
 @Service
-@Slf4j
 public class DesignationService {
 	
 
-	   private static final Logger LOGGER = LoggerFactory.getLogger(DesignationService.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(DesignationService.class);
 	
 	@Value("${kafka.topics.designation.create.name}")
 	private String designationCreateTopic;
 
 	@Value("${kafka.topics.designation.update.name}")
 	private String designationUpdateTopic;
+	
+    @Value("${egov.mdms.host}")
+    private String mdmsHost;
+
+    @Value("${egov.mdms.search.endpoint}")
+    private String mdmsEndpoint;
 
 	@Autowired
 	private ResponseInfoFactory responseInfoFactory;
@@ -89,9 +103,51 @@ public class DesignationService {
 	@Autowired
 	private CommonIdGenerationService commonIdGenerationService;
 	
-
+	@Autowired
+	private RestTemplate restTemplate;
+	
 	public List<Designation> getDesignations(DesignationGetRequest designationGetRequest) {
 		return designationRepository.findForCriteria(designationGetRequest);
+	}
+	
+	public List<Designation> getDesignationsFromMDMS(RequestInfo requestInfo, DesignationGetRequest designationGetRequest) {
+		StringBuilder uri = new StringBuilder();
+		List<Designation> result = new ArrayList<>();
+		ObjectMapper mapper = new ObjectMapper();
+		uri.append(mdmsHost).append(mdmsEndpoint);
+		try {
+			Object apiResponse = restTemplate.postForObject(uri.toString(), 
+						prepareSearchRequestForDesignation(requestInfo, designationGetRequest), Map.class);
+			if(null != apiResponse) {
+				result = mapper.convertValue(JsonPath.read(apiResponse, "$.MdmsRes.common-masters.Designation"), List.class);
+			}
+		}catch(Exception e) {
+			result = new ArrayList<>();
+		}
+		return result;	
+		
+	}
+	
+	public MdmsCriteriaReq prepareSearchRequestForDesignation(RequestInfo requestInfo, DesignationGetRequest designationGetRequest) {
+
+		MasterDetail masterDetail = org.egov.mdms.model.MasterDetail.builder().name("Designation").build();
+		if(!StringUtils.isEmpty(designationGetRequest.getCode()))
+			masterDetail.setFilter("[?(@.code=='" + designationGetRequest.getCode() + "')]");
+		
+		if(!StringUtils.isEmpty(designationGetRequest.getName()))
+			masterDetail.setFilter("[?(@.name=='" + designationGetRequest.getName() + "')]");
+		
+		if(null != designationGetRequest.getActive())
+			masterDetail.setFilter("[?(@.active=='" + designationGetRequest.getActive() + "')]");
+		
+		List<MasterDetail> masterDetails = new ArrayList<>();
+		masterDetails.add(masterDetail);
+		ModuleDetail moduleDetail = ModuleDetail.builder().moduleName("common-masters").masterDetails(masterDetails).build();
+		List<ModuleDetail> moduleDetails = new ArrayList<>();
+		moduleDetails.add(moduleDetail);
+		MdmsCriteria mdmsCriteria = MdmsCriteria.builder().tenantId(designationGetRequest.getTenantId()).moduleDetails(moduleDetails).build();
+		requestInfo.setTs(null); //there's type mismatch in ts of RI, we cannot update the commons library version cuz that'll break existing code.
+		return MdmsCriteriaReq.builder().mdmsCriteria(mdmsCriteria).requestInfo(requestInfo).build();
 	}
 	
 	public ResponseEntity<?> createDesignation(DesignationRequest designationRequest) {

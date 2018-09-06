@@ -115,16 +115,13 @@ public class DepartmentService {
 	}
 	
 	public List<Department> getDepartmentsFromMDMS(RequestInfo requestInfo, DepartmentGetRequest departmentGetRequest) {
-		log.info("RequestInfo: "+requestInfo);
 		StringBuilder uri = new StringBuilder();
 		List<Department> result = new ArrayList<>();
 		ObjectMapper mapper = new ObjectMapper();
 		uri.append(applicatioProperties.getMdmsHost()).append(applicatioProperties.getMdmsEndpoint());
-		log.info("URI: "+uri.toString());
 		try {
 			Object apiResponse = restTemplate.postForObject(uri.toString(), 
-						prepareSearchRequestForServiceCodes(departmentGetRequest.getTenantId(), requestInfo, departmentGetRequest), Map.class);
-			log.info("API response: "+apiResponse);
+						prepareSearchRequestForDept(requestInfo, departmentGetRequest), Map.class);
 			if(null != apiResponse) {
 				result = mapper.convertValue(JsonPath.read(apiResponse, "$.MdmsRes.common-masters.Department"), List.class);
 			}
@@ -134,7 +131,7 @@ public class DepartmentService {
 		return result;
 	}
 	
-	public MdmsCriteriaReq prepareSearchRequestForServiceCodes(String tenantId, RequestInfo requestInfo, DepartmentGetRequest departmentGetRequest) {
+	public MdmsCriteriaReq prepareSearchRequestForDept(RequestInfo requestInfo, DepartmentGetRequest departmentGetRequest) {
 
 		MasterDetail masterDetail = org.egov.mdms.model.MasterDetail.builder().name("Department").build();
 		if(!StringUtils.isEmpty(departmentGetRequest.getCode()))
@@ -151,7 +148,7 @@ public class DepartmentService {
 		ModuleDetail moduleDetail = ModuleDetail.builder().moduleName("common-masters").masterDetails(masterDetails).build();
 		List<ModuleDetail> moduleDetails = new ArrayList<>();
 		moduleDetails.add(moduleDetail);
-		MdmsCriteria mdmsCriteria = MdmsCriteria.builder().tenantId(tenantId).moduleDetails(moduleDetails).build();
+		MdmsCriteria mdmsCriteria = MdmsCriteria.builder().tenantId(departmentGetRequest.getTenantId()).moduleDetails(moduleDetails).build();
 		requestInfo.setTs(null); //there's type mismatch in ts of RI, we cannot update the commons library version cuz that'll break existing code.
 		return MdmsCriteriaReq.builder().mdmsCriteria(mdmsCriteria).requestInfo(requestInfo).build();
 	}

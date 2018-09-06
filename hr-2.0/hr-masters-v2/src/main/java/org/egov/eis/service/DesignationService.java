@@ -49,6 +49,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ResponseInfo;
 import org.egov.eis.config.ApplicationProperties;
+import org.egov.eis.config.PropertiesManager;
 import org.egov.eis.model.Designation;
 import org.egov.eis.model.Sequence;
 import org.egov.eis.repository.DesignationRepository;
@@ -85,12 +86,6 @@ public class DesignationService {
 	@Value("${kafka.topics.designation.update.name}")
 	private String designationUpdateTopic;
 	
-    @Value("${egov.mdms.host}")
-    private String mdmsHost;
-
-    @Value("${egov.mdms.search.endpoint}")
-    private String mdmsEndpoint;
-
 	@Autowired
 	private ResponseInfoFactory responseInfoFactory;
 
@@ -106,6 +101,9 @@ public class DesignationService {
 	@Autowired
 	private RestTemplate restTemplate;
 	
+	@Autowired
+	private PropertiesManager properties;
+	
 	public List<Designation> getDesignations(DesignationGetRequest designationGetRequest) {
 		return designationRepository.findForCriteria(designationGetRequest);
 	}
@@ -114,7 +112,7 @@ public class DesignationService {
 		StringBuilder uri = new StringBuilder();
 		List<Designation> result = new ArrayList<>();
 		ObjectMapper mapper = new ObjectMapper();
-		uri.append(mdmsHost).append(mdmsEndpoint);
+		uri.append(properties.getMdmsHost()).append(properties.getMdmsEndpoint());
 		try {
 			Object apiResponse = restTemplate.postForObject(uri.toString(), 
 						prepareSearchRequestForDesignation(requestInfo, designationGetRequest), Map.class);

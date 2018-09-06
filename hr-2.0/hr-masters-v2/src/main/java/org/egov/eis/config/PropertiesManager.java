@@ -75,6 +75,12 @@ public class PropertiesManager {
 
     @Value("${kafka.topics.position.sync.name}")
     private String savePositionTopic;
+    
+    @Value("${egov.mdms.host}")
+    private String mdmsHost;
+
+    @Value("${egov.mdms.search.endpoint}")
+    private String mdmsEndpoint;
 
 
 }

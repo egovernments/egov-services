@@ -109,8 +109,6 @@ public class Employee {
     @Size(min = 1)
     private List<Assignment> assignments = new ArrayList<>();
 
-    @NotNull
-    @Size(min = 1)
     private List<Long> jurisdictions = new ArrayList<>();
 
     private Long motherTongue;

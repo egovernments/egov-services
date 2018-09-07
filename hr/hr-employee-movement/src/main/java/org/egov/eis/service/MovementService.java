@@ -367,7 +367,8 @@ public class MovementService {
                 e.printStackTrace();
             }
             try {
-                update(movementRequest);
+                if(!checkEmployeeExists(movementRequest))
+                  update(movementRequest);
             } catch (final Exception ex) {
                 ex.printStackTrace();
             }

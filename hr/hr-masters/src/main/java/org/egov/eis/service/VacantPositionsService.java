@@ -75,7 +75,7 @@ public class VacantPositionsService {
 				+ vacantPositionsGetRequest.getDesignationId() + "&asOnDate="
 				+ new SimpleDateFormat("dd/MM/yyyy").format(vacantPositionsGetRequest.getAsOnDate());
 
-        if(!vacantPositionsGetRequest.getDestinationTenant().isEmpty()) {
+        if(vacantPositionsGetRequest.getDestinationTenant() != null && !vacantPositionsGetRequest.getDestinationTenant().isEmpty()) {
             url = url + "&destinationTenant=" + vacantPositionsGetRequest.getDestinationTenant()
                     + "&fromDate=" + new SimpleDateFormat("dd/MM/yyyy").format(vacantPositionsGetRequest.getAsOnDate())
                     + "&toDate=" + new SimpleDateFormat("dd/MM/yyyy").format(vacantPositionsGetRequest.getToDate());

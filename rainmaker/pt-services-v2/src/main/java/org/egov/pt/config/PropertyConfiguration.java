@@ -101,5 +101,8 @@ public class PropertyConfiguration {
     @Value("${employee.allowed.search.params}")
     private String employeeSearchParams;
 
+    @Value("${notification.url}")
+    private String notificationURL;
+
 
 }

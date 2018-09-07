@@ -51,8 +51,6 @@ public class PTConstants {
 
     public static final String NOTIFICATION_EMPLOYEE_UPDATE_CODE = "pt.property.en.update.employee";
 
-    public static final String NOTIFICATION_CITIZEN_URL = "www.egovernments.org/propertyTax";
-
     public static final String NOTIFICATION_PAYMENT_ONLINE = "pt.payment.online";
 
     public static final String NOTIFICATION_PAYMENT_OFFLINE = "pt.payment.offline";

@@ -343,7 +343,7 @@ public class PaymentNotificationService {
         message = message.replace("<amount>",valMap.get("amountPaid"));
         message = message.replace("<insert mode of payment>",valMap.get("paymentMode"));
         message = message.replace("<Enter pending amount>",valMap.get("amountDue"));
-        message = message.replace("<insert inactive citizen application web URL>.",PTConstants.NOTIFICATION_CITIZEN_URL);
+        message = message.replace("<insert inactive citizen application web URL>.",propertyConfiguration.getNotificationURL());
         message = message.replace("<Insert FY>",valMap.get("financialYear"));
         return message;
     }

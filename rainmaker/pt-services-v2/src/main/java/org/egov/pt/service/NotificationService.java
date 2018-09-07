@@ -40,6 +40,9 @@ public class NotificationService {
     @Value("${egov.localization.search.endpoint}")
     private String localizationSearchEndpoint;
 
+    @Value("${notification.url}")
+    private String notificationURL;
+
     /**
      * Processes the json and send the SMSRequest
      * @param request The propertyRequest for which notification has to be send
@@ -187,7 +190,7 @@ public class NotificationService {
      */
     private String getCustomizedUpdateMessageEmployee(Property property,String message){
         message = message.replace("<insert Property Tax Assessment ID>",property.getPropertyId());
-        message = message.replace("<insert inactive URL for Citizen Web application>.",PTConstants.NOTIFICATION_CITIZEN_URL);
+        message = message.replace("<insert inactive URL for Citizen Web application>.",notificationURL);
         return message;
     }
 

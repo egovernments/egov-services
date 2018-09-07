@@ -1,6 +1,30 @@
 
 package org.egov.lams.service;
 
+import java.io.UnsupportedEncodingException;
+import java.math.BigDecimal;
+import java.net.URLEncoder;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.Month;
+import java.time.ZoneId;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.text.WordUtils;
 import org.apache.log4j.Logger;
@@ -43,26 +67,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-
-import java.io.UnsupportedEncodingException;
-import java.math.BigDecimal;
-import java.net.URLEncoder;
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.Month;
-import java.time.ZoneId;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @Service
 public class PaymentService {
@@ -633,7 +637,7 @@ public class PaymentService {
         }
         else if (billReceiptInfoReq.getBillReceiptInfo().getEvent().equalsIgnoreCase(EVENT_RECEIPT_CANCELLED)){
             LOGGER.info("PaymentService- updateDemand - updateDemandDetailFor Receipt cancel ");
-            updateDemandDetailForReceiptCancel(currentDemand, billReceiptInfoReq.getBillReceiptInfo(),billInfo);
+            updateDemandDetailForReceiptCancel(currentDemand, billReceiptInfoReq.getBillReceiptInfo(),billInfo,requestInfo);
             LOGGER.info("PaymentService- updateDemand - updateDemandDetailFor Receipt cancel done");
             for (PaymentInfo info : currentDemand.getPaymentInfos()){
                 info.setStatus(RCPT_CANCEL_STATUS);
@@ -795,22 +799,24 @@ public class PaymentService {
 
 
     // Receipt cancellation ,updating bill,demand details,demand
-    public void updateDemandDetailForReceiptCancel(Demand demand, BillReceiptReq billReceiptInfo, BillInfo billInfo) throws Exception {
+    public void updateDemandDetailForReceiptCancel(Demand demand, BillReceiptReq billReceiptInfo, BillInfo billInfo,RequestInfo requestInfo) throws Exception {
         LOGGER.debug("reconcileCollForRcpt Cancel : Updating Collection Started For Demand : " + demand
                 + " with BillReceiptInfo - " + billReceiptInfo);
         try {
-            updateDmdDetForRcptCancel(demand, billReceiptInfo,billInfo);
+            updateDmdDetForRcptCancel(demand, billReceiptInfo,billInfo,requestInfo);
             LOGGER.debug("reconcileCollForRcptCancel : Updating Collection finished For Demand : " + demand);
+            demandRepository.updateDemand(Arrays.asList(demand), requestInfo).getDemands().get(0);
+            LOGGER.debug(" Updating penalty with demand details : " + demand);
             if (billInfo.getId() != null)
                 billInfo.setCancelled("Y");
-        } catch (final Exception e) {
-            throw new RuntimeException("Error occured during back update of DCB : " + e.getMessage());
+        } catch (Exception e) {
+            LOGGER.error("Error occured during back update of DCB : " ,e);
         }
     }
 
 
 
-    private void updateDmdDetForRcptCancel(Demand demand, BillReceiptReq billReceiptInfo,BillInfo billInfo) throws Exception {
+    private void updateDmdDetForRcptCancel(Demand demand, BillReceiptReq billReceiptInfo,BillInfo billInfo,RequestInfo requestInfo) throws Exception {
         Boolean activeAgreement =Boolean.FALSE;
         LOGGER.debug("validation for cancellation receipt ");
         String consumerCode = billInfo.getConsumerCode();
@@ -832,6 +838,7 @@ public class PaymentService {
         }
         LOGGER.debug("reconcileCollForRcpt Cancel : Updating Collection Started For Demand : " + demand
                 + " with BillReceiptInfo - " + billReceiptInfo);
+        List<DemandDetails> demandDetailsList;
         for (final ReceiptAccountInfo rcptAccInfo : billReceiptInfo.getAccountDetails())
             if (rcptAccInfo.getCrAmount() != null && rcptAccInfo.getCrAmount() > 0
                     && !rcptAccInfo.isRevenueAccount() && rcptAccInfo.getDescription() != null) {
@@ -865,8 +872,17 @@ public class PaymentService {
                     }
                 }
             }
+        demandDetailsList = addingPenalty(demand, billReceiptInfo);
+        demand.getDemandDetails().addAll(demandDetailsList);
+        LOGGER.info("adding demand details with penalty." + demand);
+
     }
 
+    private List<DemandDetails> addingPenalty(Demand demand, BillReceiptReq billReceiptInfo) {
+
+        return getTaxPeriodByDemandDetails(demand, billReceiptInfo);
+
+    }
     private String getGlcodeById(Long id, String tenantId, RequestInfo requestInfo) {
         ChartOfAccountContract chartOfAccountContract = new ChartOfAccountContract();
         chartOfAccountContract.setId(id);
@@ -1067,5 +1083,169 @@ public class PaymentService {
             }
         }
         return rentSum;
+    }
+    
+    private Date getPenaltyEffectiveDate(String tenantId, String taxPeriod) {
+        DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+        final Map<String, Integer> monthValuesMapnumber = getAllMonthsInNumber();
+        Long penaltyDateOfMonth;
+        Date penaltyDate;
+        LamsConfigurationGetRequest lamsConfigurationGetRequest = new LamsConfigurationGetRequest();
+        lamsConfigurationGetRequest.setName(propertiesManager.getPenaltyEffectiveDate());
+        lamsConfigurationGetRequest.setTenantId(tenantId);
+        List<String> penaltyDates = lamsConfigurationService.getLamsConfigurations(lamsConfigurationGetRequest)
+                .get(propertiesManager.getPenaltyEffectiveDate());
+
+        if (penaltyDates.isEmpty()) {
+
+            return null;
+        } else {
+            LocalDate penaltyEffectiveDate = null;
+            try {
+
+                String[] getMonthAndYear = taxPeriod.split(",");
+                String month = getMonthAndYear[0];
+                String year = getMonthAndYear[1];
+                final Integer monthName = monthValuesMapnumber.get(month);
+                penaltyDateOfMonth = Long.valueOf(penaltyDates.get(0));
+                final String monthYearStartDateStr = penaltyDateOfMonth.toString().concat("/")
+                        .concat(monthName.toString()).concat("/").concat(year);
+                penaltyDate = formatter.parse(monthYearStartDateStr);
+                final Instant instant = Instant.ofEpochMilli(penaltyDate.getTime());
+                final LocalDateTime localDateTime = LocalDateTime.ofInstant(instant, ZoneId.systemDefault());
+                penaltyEffectiveDate = localDateTime.toLocalDate();
+                penaltyEffectiveDate = penaltyEffectiveDate.plusDays(1);
+
+            } catch (ParseException e) {
+                LOGGER.error("exception in parsing penalty date  ::: " + e);
+            }
+            if (penaltyEffectiveDate == null) {
+                return null;
+            } else
+                return Date.from(penaltyEffectiveDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
+        }
+
+    }
+
+    public static Map<String, Integer> getAllMonthsInNumber() {
+        final Map<String, Integer> monthMap = new HashMap<>();
+        monthMap.put("JAN", 1);
+        monthMap.put("FEB", 2);
+        monthMap.put("MAR", 3);
+        monthMap.put("APR", 4);
+        monthMap.put("MAY", 5);
+        monthMap.put("JUN", 6);
+        monthMap.put("JUL", 7);
+        monthMap.put("AUG", 8);
+        monthMap.put("SEP", 9);
+        monthMap.put("OCT", 10);
+        monthMap.put("NOV", 11);
+        monthMap.put("DEC", 12);
+        return monthMap;
+    }
+
+    private List<DemandDetails> getTaxPeriodByDemandDetails(Demand demand, BillReceiptReq billReceiptInfo) {
+        demand.getDemandDetails().sort((d1, d2) -> d1.getTaxPeriod().compareTo(d2.getTaxPeriod()));
+        Date penaltyEffectiveDate;
+        Date currentDate = new Date();
+        List<DemandDetails> demandDetailsList = new LinkedList<>();
+        Map<String, List<DemandDetails>> demandDetailsMap = getDemandDetailsMapForTaxPeriod(demand.getDemandDetails());
+        Map<String, List<ReceiptAccountInfo>> accountDetailsMap = getTaxPeriodByAccountDetails(
+                billReceiptInfo.getAccountDetails());
+        Set<String> taxPeriods = accountDetailsMap.keySet();
+        for (String taxPeriod : taxPeriods) {
+            penaltyEffectiveDate = getPenaltyEffectiveDate(demand.getTenantId(), taxPeriod);
+            if (penaltyEffectiveDate != null && billReceiptInfo.getReceiptDate().before(penaltyEffectiveDate)
+                    && currentDate.after(penaltyEffectiveDate)) {
+
+                Set<DemandDetails> demandDetailsSet = new LinkedHashSet<>();
+                Map<String, DemandDetails> demandReasonMap = new HashMap<>();
+                List<DemandDetails> installmentDemands = demandDetailsMap.get(taxPeriod);
+
+                for (DemandDetails demandDetail : installmentDemands) {
+
+                    demandReasonMap.put(demandDetail.getTaxReasonCode(), demandDetail);
+
+                }
+                if (!demandReasonMap.containsKey(PENALTY)) {
+                    BigDecimal taxAmount;
+                    DemandDetails dt = new DemandDetails();
+                    if (demandReasonMap.containsKey(RENT)) {
+                        DemandDetails demanddetails = demandReasonMap.get(RENT);
+                        LamsConfigurationGetRequest lamsConfigurationGetRequest = new LamsConfigurationGetRequest();
+                        lamsConfigurationGetRequest.setName(propertiesManager.getPenaltyPercentage());
+                        lamsConfigurationGetRequest.setTenantId(demanddetails.getTenantId());
+                        List<String> penaltyPercentage = lamsConfigurationService
+                                .getLamsConfigurations(lamsConfigurationGetRequest)
+                                .get(propertiesManager.getPenaltyPercentage());
+                        taxAmount = demanddetails.getTaxAmount();
+                        if (penaltyPercentage.isEmpty()) {
+
+                            return Collections.emptyList();
+                        } else {
+
+                            BigDecimal penaltyAmount = BigDecimal
+                                    .valueOf(taxAmount.doubleValue() * (Double.valueOf(penaltyPercentage.get(0)) / 100));
+
+                            dt.setTaxAmount(penaltyAmount);
+                            dt.setTaxReasonCode(PENALTY);
+                            dt.setTaxReason("Penalty");
+                            dt.setPeriodEndDate(demanddetails.getPeriodEndDate());
+                            dt.setPeriodStartDate(demanddetails.getPeriodStartDate());
+                            dt.setIsActualDemand(demanddetails.getIsActualDemand());
+                            dt.setRebateAmount(demanddetails.getRebateAmount());
+                            dt.setCollectionAmount(demanddetails.getCollectionAmount());
+                            dt.setIsCollected(demanddetails.getIsCollected());
+                            dt.setTaxPeriod(demanddetails.getTaxPeriod());
+                            dt.setTenantId(demanddetails.getTenantId());
+                            demandDetailsSet.add(dt);
+
+                        }
+                    }
+                }
+
+                demandDetailsList.addAll(demandDetailsSet);
+            }
+
+        }
+        return demandDetailsList;
+
+    }
+
+    private Map<String, List<DemandDetails>> getDemandDetailsMapForTaxPeriod(List<DemandDetails> demandDetails) {
+        Map<String, List<DemandDetails>> demandDetailsMap = new LinkedHashMap<>();
+        for (DemandDetails demandDetail : demandDetails) {
+
+            if (!demandDetailsMap.containsKey(demandDetail.getTaxPeriod())) {
+                List<DemandDetails> demandDetailsList = new ArrayList<>();
+                demandDetailsList.add(demandDetail);
+                demandDetailsMap.put(demandDetail.getTaxPeriod(), demandDetailsList);
+
+            } else {
+                demandDetailsMap.get(demandDetail.getTaxPeriod()).add(demandDetail);
+            }
+
+        }
+        return demandDetailsMap;
+
+    }
+
+    private Map<String, List<ReceiptAccountInfo>> getTaxPeriodByAccountDetails(Set<ReceiptAccountInfo> accountDetailsList) {
+        Map<String, List<ReceiptAccountInfo>> accountDetailsMap = new LinkedHashMap<>();
+        for (ReceiptAccountInfo accountDetails : accountDetailsList) {
+            String[] descriptions = accountDetails.getDescription().split(":");
+            String taxPeriod = descriptions[0];
+            if (!accountDetailsMap.containsKey(taxPeriod)) {
+                List<ReceiptAccountInfo> accountList = new ArrayList<>();
+                accountList.add(accountDetails);
+                accountDetailsMap.put(taxPeriod, accountList);
+
+            } else {
+                accountDetailsMap.get(taxPeriod).add(accountDetails);
+            }
+
+        }
+        return accountDetailsMap;
+
     }
 }

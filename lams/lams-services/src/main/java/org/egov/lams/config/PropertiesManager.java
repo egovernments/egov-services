@@ -273,4 +273,10 @@ public class PropertiesManager {
 
     @Value("${egov.services.city.grade.corp}")
     private String cityGradeCorp;
+    
+    @Value("${egov.services.lams.penalty.effective.date}")
+    private String penaltyEffectiveDate;
+    
+    @Value("${egov.services.lams.penalty.percentage}")
+    private String penaltyPercentage;
 }

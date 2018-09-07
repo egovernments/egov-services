@@ -86,7 +86,26 @@ class AckPage extends React.Component {
                         </font> </center>
                     </h4>)
           break;
-
+          case "TransferEmpReject":  return(<h4>
+            <center><font color="black"> 
+            Transfer Application has been Rejected by  
+                {getUrlVars()["employeeId"]? 
+                     <strong style={{'fontWeight':700}}> {employee.name + " : " + employee.code} </strong>:""
+                }
+                </font>
+             </center>
+            </h4>)
+            break;
+            case "PromotionEmpReject":  return(<h4>
+                <center><font color="black"> 
+                Promotion Application has been Rejected by  
+                    {getUrlVars()["employeeId"]? 
+                         <strong style={{'fontWeight':700}}> {employee.name + " : " + employee.code} </strong>:""
+                    }
+                    </font>
+                 </center>
+                </h4>)
+                break;
           default:  return(<h4>
                       <center><font color="black">Application has been Cancelled </font> </center>
                   </h4>)

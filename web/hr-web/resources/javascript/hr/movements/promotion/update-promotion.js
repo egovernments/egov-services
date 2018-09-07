@@ -470,7 +470,7 @@ class UpdateMovement extends React.Component {
     open(location, '_self').close();
   }
 
-  handleProcess(e,employeeName) {
+  handleProcess(e,employeeName,movement) {
     e.preventDefault();
     
     if (e.target.id.toLowerCase() == "cancel") {
@@ -554,11 +554,23 @@ class UpdateMovement extends React.Component {
                           designation = item.designation;
                       });
                       var ownerDetails = employee.name + " - " + employee.code + " - " + getNameById(_this.state.designationList, designation);
-
-                      if (ID === "Submit")
-                        window.location.href = `app/hr/movements/ack-page.html?type=PromotionSubmit&owner=${ownerDetails}&employeeId=${employeeName.id}`;
-                      if (ID === "Approve")
-                        window.location.href = `app/hr/movements/ack-page.html?type=PromotionApprove&owner=${ownerDetails}&employeeId=${employeeName.id}`;
+                      employeeAcceptance = movement.employeeAcceptance;
+                      if(employeeAcceptance.toString() === "true"){
+                        if (ID === "Submit"){
+                          window.location.href = `app/hr/movements/ack-page.html?type=TransferSubmit&owner=${ownerDetails}&employeeId=${employeeName.id}`;
+                        }
+                        if (ID === "Approve"){
+                          window.location.href = `app/hr/movements/ack-page.html?type=TransferApprove&owner=${ownerDetails}&employeeId=${employeeName.id}`;
+                        }
+                      }
+                      if(employeeAcceptance.toString() === "false"){
+                        if (ID === "Submit"){
+                          window.location.href = `app/hr/movements/ack-page.html?type=TransferEmpReject&owner=${ownerDetails}&employeeId=${employeeName.id}`;
+                        }
+                        if (ID === "Approve"){
+                          window.location.href = `app/hr/movements/ack-page.html?type=TransferEmpReject&owner=${ownerDetails}&employeeId=${employeeName.id}`;
+                        }
+                      }                      
                       if (ID === "Cancel")
                         window.location.href = `app/hr/movements/ack-page.html?type=PromotionCancel&owner=${ownerDetails}&employeeId=${employeeName.id}`;
                       if (ID === "Reject")
@@ -632,11 +644,23 @@ class UpdateMovement extends React.Component {
                   designation = item.designation;
               });
               var ownerDetails = employee.name + " - " + employee.code + " - " + getNameById(_this.state.designationList, designation);
-
-              if (ID === "Submit")
-                window.location.href = `app/hr/movements/ack-page.html?type=PromotionSubmit&owner=${ownerDetails}&employeeId=${employeeName.id}`;
-              if (ID === "Approve")
-                window.location.href = `app/hr/movements/ack-page.html?type=PromotionApprove&owner=${ownerDetails}&employeeId=${employeeName.id}`;
+              employeeAcceptance = movement.employeeAcceptance;
+              if(employeeAcceptance.toString() === "true"){
+                if (ID === "Submit"){
+                  window.location.href = `app/hr/movements/ack-page.html?type=TransferSubmit&owner=${ownerDetails}&employeeId=${employeeName.id}`;
+                }
+                if (ID === "Approve"){
+                  window.location.href = `app/hr/movements/ack-page.html?type=TransferApprove&owner=${ownerDetails}&employeeId=${employeeName.id}`;
+                }
+              }
+              if(employeeAcceptance.toString() === "false"){
+                if (ID === "Submit"){
+                  window.location.href = `app/hr/movements/ack-page.html?type=TransferEmpReject&owner=${ownerDetails}&employeeId=${employeeName.id}`;
+                }
+                if (ID === "Approve"){
+                  window.location.href = `app/hr/movements/ack-page.html?type=TransferEmpReject&owner=${ownerDetails}&employeeId=${employeeName.id}`;
+                }
+              }              
               if (ID === "Cancel")
                 window.location.href = `app/hr/movements/ack-page.html?type=PromotionCancel&owner=${ownerDetails}&employeeId=${employeeName.id}`;
               if (ID === "Reject")
@@ -668,13 +692,13 @@ class UpdateMovement extends React.Component {
 
     let { employeeId, typeOfMovement, currentAssignment, transferType, promotionBasis, remarks, reason, effectiveFrom, transferedLocation,
       departmentAssigned, designationAssigned, positionAssigned, fundAssigned, functionAssigned, employeeAcceptance, workflowDetails, tenantId } = this.state.movement
-    let { isSearchClicked, employee, transferWithPromotion, buttons } = this.state;
+    let { isSearchClicked, employee, transferWithPromotion, buttons,movement} = this.state;
     let mode = getUrlVars()["type"];
 
     const renderProcesedBtns = function () {
       if (buttons.length) {
         return buttons.map(function (btn, ind) {
-          return (<span key={ind}> <button key={ind} id={btn.key} type='button' className='btn btn-submit' onClick={(e) => { handleProcess(e,employee) }} >
+          return (<span key={ind}> <button key={ind} id={btn.key} type='button' className='btn btn-submit' onClick={(e) => { handleProcess(e,employee,movement) }} >
             {btn.name}
           </button> &nbsp; </span>)
         })

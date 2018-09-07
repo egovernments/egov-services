@@ -88,7 +88,7 @@ class AckPage extends React.Component {
           break;
           case "TransferEmpReject":  return(<h4>
             <center><font color="black"> 
-            Transfer Application has been Rejected by  
+                Transfer cannot be initiated as the application is rejected by employee   
                 {getUrlVars()["employeeId"]? 
                      <strong style={{'fontWeight':700}}> {employee.name + " : " + employee.code} </strong>:""
                 }
@@ -98,7 +98,7 @@ class AckPage extends React.Component {
             break;
             case "PromotionEmpReject":  return(<h4>
                 <center><font color="black"> 
-                Promotion Application has been Rejected by  
+                    Promotion cannot be initiated as the application is rejected by employee  
                     {getUrlVars()["employeeId"]? 
                          <strong style={{'fontWeight':700}}> {employee.name + " : " + employee.code} </strong>:""
                     }

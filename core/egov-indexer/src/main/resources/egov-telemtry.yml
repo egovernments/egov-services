@@ -1,0 +1,12 @@
+ServiceMaps:
+ serviceName: Telemetry
+ version: 1.0.0
+ mappings:
+  - topic: telemetry-deduped-messages
+    indexes:
+    - name: egovtelemetry
+      type: general
+      id: $.mid
+      isBulk: true
+      jsonPath: $.events.*
+

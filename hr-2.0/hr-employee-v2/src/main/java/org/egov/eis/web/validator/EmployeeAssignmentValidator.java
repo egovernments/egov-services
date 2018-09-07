@@ -51,8 +51,11 @@ import org.egov.eis.web.contract.RequestInfoWrapper;
 import org.egov.eis.web.errorhandler.InvalidDataException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
+
+import lombok.extern.slf4j.Slf4j;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -60,6 +63,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Component
+@Slf4j
 public class EmployeeAssignmentValidator implements Validator {
 
 	@Autowired
@@ -118,8 +122,8 @@ public class EmployeeAssignmentValidator implements Validator {
 
 			List<Department> departments = Collections.singletonList(
 					departmentService.getDepartment(tenantId, department, requestInfoWrapper.getRequestInfo()));
-
-			if (departments == null || departments.size() < 1) {
+			
+			if (CollectionUtils.isEmpty(departments)) {
 				throw new InvalidDataException("department",
 						"the field {0} should have a valid value which exists in the system", "null");
 			}

@@ -296,13 +296,13 @@ public class EmployeeController {
 
 		Employee employee = null;
 		try {
-			if (!employeeRequest.getEmployee().getTransferredEmployee()) {
-				employeeService.setServiceHistoryDetails(employeeRequest, false);
-			}
 			ResponseEntity<?> errorResponseEntity = validateEmployeeRequest(employeeRequest, bindingResult, false);
 			if (errorResponseEntity != null)
 				return errorResponseEntity;
-
+			
+			if (!employeeRequest.getEmployee().getTransferredEmployee()) {
+				employeeService.setServiceHistoryDetails(employeeRequest, false);
+			}
 			employee = employeeService.createAsync(employeeRequest);
 		} catch (UserException ue) {
 			log.error("Error while processing request ", ue);

@@ -124,6 +124,12 @@ public class PropertiesManager {
     @Value("${egov.services.hr_masters_service.hr_configurations.searchpath}")
     private String hrMastersServiceHRConfigurationsSearchPath;
 
+    @Value("${egov.services.hr_masters_service.empstatus.searchpath}")
+    private String hrMastersEmployeeStatusSearchPath;
+
+    @Value("${egov.services.hr_masters_service.emptype.searchpath}")
+    private String hrMastersEmployeeTypeSearchPath;
+    
     @Value("${kafka.topics.assignment.update.name}")
     private String updateAssignmentTopic;
 

@@ -41,6 +41,7 @@
 package org.egov.eis.web.validator;
 
 import org.egov.common.contract.request.RequestInfo;
+import org.egov.eis.config.PropertiesManager;
 import org.egov.eis.model.Employee;
 import org.egov.eis.repository.EmployeeRepository;
 import org.egov.eis.service.HRMastersService;
@@ -50,14 +51,22 @@ import org.egov.eis.web.errorhandler.ErrorHandler;
 import org.egov.eis.web.errorhandler.InvalidDataException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
+import org.springframework.web.client.RestTemplate;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.jayway.jsonpath.JsonPath;
+
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
 import java.util.Map;
 
 @Component
+@Slf4j
 public class DataIntegrityValidatorForCreateEmployee extends EmployeeCommonValidator implements Validator {
 
     @Autowired
@@ -68,6 +77,12 @@ public class DataIntegrityValidatorForCreateEmployee extends EmployeeCommonValid
 
     @Autowired
     private ErrorHandler errorHandler;
+    
+    @Autowired
+    private PropertiesManager propertiesManager;
+    
+    @Autowired
+    private RestTemplate restTemplate;
 
     /**
      * This Validator validates *just* Employee instances
@@ -86,6 +101,8 @@ public class DataIntegrityValidatorForCreateEmployee extends EmployeeCommonValid
         Employee employee = employeeRequest.getEmployee();
         validateEmployee(employeeRequest, errors);
         validatePrimaryPositions(employee.getAssignments(), employee.getId(), employee.getTenantId(), errors, "create");
+        validateStatusOfEmployee(employeeRequest, errors);
+        validateTypeOfEmployee(employeeRequest, errors);
     }
 
     // FIXME Validate data existence of Religion, Languages etc. for every data in separate methods
@@ -136,6 +153,53 @@ public class DataIntegrityValidatorForCreateEmployee extends EmployeeCommonValid
             employee.setPassportNo(null);
         if (employee.getGpfNo() != null && employee.getGpfNo().equals(""))
             employee.setGpfNo(null);
+    }
+    
+    private void validateStatusOfEmployee(EmployeeRequest employeeRequest, Errors errors) {
+    	log.info("Validating employee status");
+    	ObjectMapper mapper = new ObjectMapper();
+    	Long employeeStatusId = employeeRequest.getEmployee().getEmployeeStatus();
+    	StringBuilder uri = new StringBuilder();
+    	RequestInfoWrapper request = new RequestInfoWrapper();
+    	uri.append(propertiesManager.getHrMastersServiceHostName()).append(propertiesManager.getHrMastersServiceBasePath());
+    	try {
+    		uri.append(propertiesManager.getHrMastersEmployeeStatusSearchPath())
+    		.append("?id=").append(employeeStatusId).append("&tenantId=").
+    		append(employeeRequest.getEmployee().getTenantId());
+    		Object response = restTemplate.postForObject(uri.toString(), request, Map.class);
+    		if(null != response) {
+    			List<Object> statuses = mapper.convertValue(JsonPath.read(response, "$.HRStatus"), List.class);
+    			if(CollectionUtils.isEmpty(statuses)) {
+    	            errors.rejectValue("employee.employeeStatus", "invalid", "The status entered for this employee is invalid");
+    			}
+    		}
+    	}catch(Exception e) {
+            errors.rejectValue("employee.employeeStatus", "invalid", "The status entered for this employee is invalid");
+    	}
+    	
+    }
+    
+    private void validateTypeOfEmployee(EmployeeRequest employeeRequest, Errors errors) {
+    	log.info("Validating employee type");
+    	ObjectMapper mapper = new ObjectMapper();
+    	Long employeeTypeId = employeeRequest.getEmployee().getEmployeeType();
+    	StringBuilder uri = new StringBuilder();
+    	RequestInfoWrapper request = new RequestInfoWrapper();
+    	uri.append(propertiesManager.getHrMastersServiceHostName()).append(propertiesManager.getHrMastersServiceBasePath());
+    	try {
+    		uri.append(propertiesManager.getHrMastersEmployeeTypeSearchPath())
+    		.append("?id=").append(employeeTypeId).append("&tenantId=").append(employeeRequest.getEmployee().getTenantId());
+    		Object response = restTemplate.postForObject(uri.toString(), request, Map.class);
+    		if(null != response) {
+    			List<Object> types = mapper.convertValue(JsonPath.read(response, "$.EmployeeType"), List.class);
+    			if(CollectionUtils.isEmpty(types)) {
+    	            errors.rejectValue("employee.employeeType", "invalid", "The employee type entered for this employee is invalid");
+    			}
+    		}
+    	}catch(Exception e) {
+            errors.rejectValue("employee.employeeType", "invalid", "The employee type entered for this employee is invalid");
+    	}
+    	
     }
 
     /**

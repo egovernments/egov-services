@@ -40,16 +40,24 @@
 
 package org.egov.eis.web.validator;
 
+import org.egov.eis.config.PropertiesManager;
 import org.egov.eis.model.*;
 import org.egov.eis.model.enums.EntityType;
 import org.egov.eis.repository.AssignmentRepository;
 import org.egov.eis.repository.EmployeeRepository;
 import org.egov.eis.web.contract.EmployeeRequest;
+import org.egov.eis.web.contract.RequestInfoWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
+import org.springframework.web.client.RestTemplate;
+
+import com.jayway.jsonpath.JsonPath;
+
+import lombok.extern.slf4j.Slf4j;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -60,6 +68,7 @@ import java.util.Map;
 import static org.springframework.util.ObjectUtils.isEmpty;
 
 @Component
+@Slf4j
 public class DataIntegrityValidatorForUpdateEmployee extends EmployeeCommonValidator implements Validator {
 
     @Autowired
@@ -67,6 +76,12 @@ public class DataIntegrityValidatorForUpdateEmployee extends EmployeeCommonValid
 
     @Autowired
     private AssignmentRepository assignmentRepository;
+    
+    @Autowired
+    private PropertiesManager propertiesManager;
+    
+    @Autowired
+    private RestTemplate restTemplate;
 
     @Override
     public boolean supports(Class<?> paramClass) {
@@ -106,6 +121,8 @@ public class DataIntegrityValidatorForUpdateEmployee extends EmployeeCommonValid
         validateServiceHistory(employee.getServiceHistory(), employeeId, tenantId, errors);
         validateTechnicalQualification(employee.getTechnical(), employeeId, tenantId, errors);
         validateAPRDetails(employee.getAprDetails(), employeeId, tenantId, errors);
+        validateStatusOfEmployee(employeeRequest, errors);
+        validateTypeOfEmployee(employeeRequest, errors);
     }
 
     // TODO
@@ -293,6 +310,52 @@ public class DataIntegrityValidatorForUpdateEmployee extends EmployeeCommonValid
         if (!idsMap.isEmpty())
             validateEntityId(idsMap, EntityType.APR_DETAILS, employeeId, tenantId, errors);
     }
+    
+    private void validateStatusOfEmployee(EmployeeRequest employeeRequest, Errors errors) {
+    	log.info("Validating employee status");
+    	Long employeeStatusId = employeeRequest.getEmployee().getEmployeeStatus();
+    	StringBuilder uri = new StringBuilder();
+    	RequestInfoWrapper request = new RequestInfoWrapper();
+    	uri.append(propertiesManager.getHrMastersServiceHostName()).append(propertiesManager.getHrMastersServiceBasePath());
+    	try {
+    		uri.append(propertiesManager.getHrMastersEmployeeStatusSearchPath())
+    		.append("?id=").append(employeeStatusId).append("&tenantId=").
+    		append(employeeRequest.getEmployee().getTenantId());
+    		Object response = restTemplate.postForObject(uri.toString(), request, Map.class);
+    		if(null != response) {
+    			List<Object> statuses = JsonPath.read(response, "$.HRStatus");
+    			if(CollectionUtils.isEmpty(statuses)) {
+    	            errors.rejectValue("employee.employeeStatus", "invalid", "The status entered for this employee is invalid");
+    			}
+    		}
+    	}catch(Exception e) {
+            errors.rejectValue("employee.employeeStatus", "invalid", "The status entered for this employee is invalid");
+    	}
+    	
+    }
+    
+    private void validateTypeOfEmployee(EmployeeRequest employeeRequest, Errors errors) {
+    	log.info("Validating employee type");
+    	Long employeeTypeId = employeeRequest.getEmployee().getEmployeeType();
+    	StringBuilder uri = new StringBuilder();
+    	RequestInfoWrapper request = new RequestInfoWrapper();
+    	uri.append(propertiesManager.getHrMastersServiceHostName()).append(propertiesManager.getHrMastersServiceBasePath());
+    	try {
+    		uri.append(propertiesManager.getHrMastersEmployeeTypeSearchPath())
+    		.append("?id=").append(employeeTypeId).append("&tenantId=").append(employeeRequest.getEmployee().getTenantId());
+    		Object response = restTemplate.postForObject(uri.toString(), request, Map.class);
+    		if(null != response) {
+    			List<Object> types = JsonPath.read(response, "$.EmployeeType");
+    			if(CollectionUtils.isEmpty(types)) {
+    	            errors.rejectValue("employee.employeeType", "invalid", "The employee type entered for this employee is invalid");
+    			}
+    		}
+    	}catch(Exception e) {
+            errors.rejectValue("employee.employeeType", "invalid", "The employee type entered for this employee is invalid");
+    	}
+    	
+    }
+
 
     /**
      * Checks if the given string is present in db for the given column and

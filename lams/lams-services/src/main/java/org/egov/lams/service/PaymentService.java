@@ -806,7 +806,7 @@ public class PaymentService {
             updateDmdDetForRcptCancel(demand, billReceiptInfo,billInfo,requestInfo);
             LOGGER.debug("reconcileCollForRcptCancel : Updating Collection finished For Demand : " + demand);
             demandRepository.updateDemand(Arrays.asList(demand), requestInfo).getDemands().get(0);
-            LOGGER.debug(" Updating penalty with demand details : " + demand);
+            LOGGER.debug(" Updated penalty with demand details : " + demand);
             if (billInfo.getId() != null)
                 billInfo.setCancelled("Y");
         } catch (Exception e) {
@@ -872,9 +872,10 @@ public class PaymentService {
                     }
                 }
             }
+        LOGGER.info("adding demand details with penalty." + demand);
         demandDetailsList = addingPenalty(demand, billReceiptInfo);
         demand.getDemandDetails().addAll(demandDetailsList);
-        LOGGER.info("adding demand details with penalty." + demand);
+        LOGGER.info("added demand details with penalty." + demand);
 
     }
 
@@ -1150,8 +1151,10 @@ public class PaymentService {
         Date currentDate = new Date();
         List<DemandDetails> demandDetailsList = new LinkedList<>();
         Map<String, List<DemandDetails>> demandDetailsMap = getDemandDetailsMapForTaxPeriod(demand.getDemandDetails());
+        LOGGER.info("get Demand Details map for tax period." + demandDetailsMap);
         Map<String, List<ReceiptAccountInfo>> accountDetailsMap = getTaxPeriodByAccountDetails(
                 billReceiptInfo.getAccountDetails());
+        LOGGER.info("get Receipt account details map for tax period." + accountDetailsMap);
         Set<String> taxPeriods = accountDetailsMap.keySet();
         for (String taxPeriod : taxPeriods) {
             penaltyEffectiveDate = getPenaltyEffectiveDate(demand.getTenantId(), taxPeriod);
@@ -1226,6 +1229,7 @@ public class PaymentService {
             }
 
         }
+        LOGGER.info("return demand details map." + demandDetailsMap);
         return demandDetailsMap;
 
     }
@@ -1233,6 +1237,8 @@ public class PaymentService {
     private Map<String, List<ReceiptAccountInfo>> getTaxPeriodByAccountDetails(Set<ReceiptAccountInfo> accountDetailsList) {
         Map<String, List<ReceiptAccountInfo>> accountDetailsMap = new LinkedHashMap<>();
         for (ReceiptAccountInfo accountDetails : accountDetailsList) {
+            if (accountDetails.getCrAmount() != null && accountDetails.getCrAmount() > 0
+                    && !accountDetails.isRevenueAccount() && accountDetails.getDescription() != null){
             String[] descriptions = accountDetails.getDescription().split(":");
             String taxPeriod = descriptions[0];
             if (!accountDetailsMap.containsKey(taxPeriod)) {
@@ -1245,6 +1251,8 @@ public class PaymentService {
             }
 
         }
+        }
+        LOGGER.info("return account details map." + accountDetailsMap);
         return accountDetailsMap;
 
     }

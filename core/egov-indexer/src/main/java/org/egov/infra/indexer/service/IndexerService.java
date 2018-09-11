@@ -82,7 +82,7 @@ public class IndexerService {
 		}else{
 				indexerUtils.validateAndIndex(buildIndexJsonWithoutJsonpath(index, kafkaJson, isBulk), url.toString(), index);
 		}
-		logger.info("TOTAL TIME TAKEN FOR INDEXING: "+((new Date().getTime()) - startTime)+"ms");
+		logger.info("Total time taken: "+((new Date().getTime()) - startTime)+"ms");
 	}
 	
 	public String buildIndexJsonWithJsonpath(Index index, String kafkaJson, boolean isBulk) throws Exception{

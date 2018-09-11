@@ -811,6 +811,7 @@ public class PaymentService {
                 billInfo.setCancelled("Y");
         } catch (Exception e) {
             LOGGER.error("Error occured during back update of DCB : " ,e);
+            throw new RuntimeException("Error occured during back update of DCB: ");
         }
     }
 

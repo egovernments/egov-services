@@ -192,10 +192,7 @@ public class IndexerUtils {
 	
 	public void validateAndIndex(String finalJson, String url, Index index) throws Exception{
 		if(!StringUtils.isEmpty(finalJson)){
-			Long startTime = new Date().getTime();
 			doIndexing(finalJson, url.toString(), index);
-			Long endTime = new Date().getTime();
-			logger.info("TIME TAKEN for indexing on es: "+(endTime - startTime)+"ms");
 		}else{
 			logger.info("Indexing will not be done, please modify the data and retry.");
 		}

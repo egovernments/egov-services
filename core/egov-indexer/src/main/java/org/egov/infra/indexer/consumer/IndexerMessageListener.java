@@ -22,8 +22,8 @@ public class IndexerMessageListener implements MessageListener<String, String> {
 	
 	@Override
 	public void onMessage(ConsumerRecord<String, String> data) {
-        logger.info("Topic: "+data.topic());
-        logger.info("Value: "+data.value());
+        logger.debug("Topic: "+data.topic());
+        logger.debug("Value: "+data.value());
         try{
         	indexerService.elasticIndexer(data.topic(), data.value()); 
         }catch(Exception e){

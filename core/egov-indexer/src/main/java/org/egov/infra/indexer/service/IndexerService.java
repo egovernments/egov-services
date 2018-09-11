@@ -53,7 +53,7 @@ public class IndexerService {
 		Map<String, Mapping> mappingsMap = runner.getMappingMaps();
 		if(null != mappingsMap.get(topic)){
 			Mapping mapping = mappingsMap.get(topic);
-			logger.info("Mapping to be used: "+mapping);
+			logger.debug("Mapping to be used: "+mapping);
 			try{				
 				for(Index index: mapping.getIndexes()){
 					indexProccessor(index, kafkaJson,
@@ -120,7 +120,7 @@ public class IndexerService {
 				String customIndexJson = buildCustomJsonForIndex(index.getCustomJsonMapping(), stringifiedObject, urlForMap);
 				if(null != index.getId()){
 					String id = indexerUtils.buildIndexId(index, stringifiedObject);
-					logger.info("Inserting id to the json being indexed, id = " + id);
+					logger.debug("Inserting id to the json being indexed, id = " + id);
 		            final String actionMetaData = String.format(IndexerConstants.ES_INDEX_HEADER_FORMAT, "" + id);
 		            jsonTobeIndexed.append(actionMetaData).append(customIndexJson).append("\n");
 				}else{
@@ -168,7 +168,7 @@ public class IndexerService {
 					logger.error("Exception while trying to hit: "+uri, e);
 					continue;
 				}
-				logger.info("Response: "+response+" from the URI: "+uriMapping.getPath());
+				logger.debug("Response: "+response+" from the URI: "+uriMapping.getPath());
 				for(FieldMapping fieldMapping: uriMapping.getUriResponseMapping()){
 					String[] expressionArray = (fieldMapping.getOutJsonPath()).split("[.]");
 					String expression = indexerUtils.getProcessedJsonPath(fieldMapping.getOutJsonPath());
@@ -195,7 +195,7 @@ public class IndexerService {
 				String stringifiedObject = indexerUtils.buildString(kafkaJsonArray.get(i));
 				if(null != index.getId()){
 					String id = indexerUtils.buildIndexId(index, stringifiedObject);
-					logger.info("Inserting id to the json being indexed, id = " + id);
+					logger.debug("Inserting id to the json being indexed, id = " + id);
 		            final String actionMetaData = String.format(IndexerConstants.ES_INDEX_HEADER_FORMAT, "" + id);
 		            jsonTobeIndexed.append(actionMetaData).append(stringifiedObject).append("\n");
 				}else{

@@ -17,13 +17,14 @@ class AckPage extends React.Component {
            document.getElementsByClassName("homepage_logo")[0].src = window.location.origin + logo_ele[0].getAttribute("src");
          }
        }
-       console.log("baseUrl",baseUrl);
-       commonApiPost("hr-employee", "employees", "_search", {
-        tenantId,
-        id:decodeURIComponent(getUrlVars()["employeeId"])
-        }, function (err, res) {
-          _this.setState({employee:res.Employee[0]});
-      })
+       if(getUrlVars()["employeeId"]){
+        commonApiPost("hr-employee", "employees", "_search", {
+            tenantId,
+            id:decodeURIComponent(getUrlVars()["employeeId"])
+            }, function (err, res) {
+              _this.setState({employee:res.Employee[0]});
+          })
+       }
     }
     render() {
       let employee = this.state.employee;
@@ -38,9 +39,8 @@ class AckPage extends React.Component {
           break;
           case "TransferApprove": return(<h4>
                       <center><font color="black"> 
-                      Transfer Application has been Approved 
-                      {getUrlVars()["employeeId"]? <label> for
-                       <strong style={{'fontWeight':700}}> {employee.name + " : " + employee.code} </strong> </label>: ""} </font> </center>
+                      Transfer Application has been Approved for
+                      <strong style={{'fontWeight':700}}> {employee.name + " : " + employee.code} </strong> </font> </center>
                   </h4>)
           break;
           case "TransferApply": return(<h4>
@@ -67,7 +67,8 @@ class AckPage extends React.Component {
                     </h4>)
           break;
           case "PromotionApprove": return(<h4>
-                        <center><font color="black"> Promotion Application has been Approved for <strong style={{'fontWeight':700}}> {getUrlVars()["employee"] ?  decodeURIComponent(getUrlVars()["employee"]) : ""} </strong> </font></center>
+                        <center><font color="black"> Promotion Application has been Approved for 
+                        <strong style={{'fontWeight':700}}> {employee.name + " : " + employee.code} </strong> </font></center>
                     </h4>)
           break;
           case "PromotionApply": return(<h4>

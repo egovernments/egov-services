@@ -299,12 +299,11 @@ class UpdateMovement extends React.Component {
 
 
   componentDidUpdate() {
-    if (this.state.status && this.state.status != "Rejected") {
-      $("input,select,textarea").prop("disabled", true);
-    }
+    // if (this.state.status && this.state.status != "Rejected") {
+    //   $("input,select,textarea").prop("disabled", true);
+    // }
 
-    $('#effectiveFrom').prop("disabled", false);
-
+    // $('#effectiveFrom').prop("disabled", false);
   }
 
 
@@ -632,6 +631,7 @@ class UpdateMovement extends React.Component {
 
   handleProcess(e,employeeName,movement) {
     e.preventDefault();
+    $('#transferWithPromotion').prop('required',false);
     if (e.target.id.toLowerCase() == "cancel") {
       $('#department, #designation, #assignee').prop('required', false);
     }
@@ -641,8 +641,6 @@ class UpdateMovement extends React.Component {
       var tempInfo = Object.assign({}, _this.state.movement);
       if (tempInfo.workflowDetails)
         tempInfo.workflowDetails.action = ID;
-
-
       if (_this.state.transferWithPromotion) {
         tempInfo.typeOfMovement = "TRANSFER_CUM_PROMOTION"
       } else {
@@ -662,7 +660,7 @@ class UpdateMovement extends React.Component {
         for (let i = 0, len = tempInfo.documents.length; i < len; i++) {
           this.makeAjaxUpload(tempInfo.documents[i], function (err, res) {
             if (breakout == 1) {
-              console.log("breakout", breakout);
+              //console.log("breakout", breakout);
               return;
             } else if (err) {
               showError("Error uploding the files. Please contact Administrator");
@@ -670,7 +668,7 @@ class UpdateMovement extends React.Component {
             } else {
               counter--;
               docs.push(res.files[0].fileStoreId);
-              console.log("docs", docs);
+              //console.log("docs", docs);
               if (counter == 0 && breakout == 0) {
                 tempInfo.documents = docs.concat(_this.state.docs);
 
@@ -1215,7 +1213,7 @@ class UpdateMovement extends React.Component {
                   </div>
                   <div className="col-sm-6">
                     <label className="radioUi">
-                      <input type="checkbox" name="transferWithPromotion" value="transferWithPromotion" checked={transferWithPromotion == "true" || transferWithPromotion == true}
+                      <input id="transferWithPromotion" type="checkbox" name="transferWithPromotion" value="transferWithPromotion" checked={transferWithPromotion == "true" || transferWithPromotion == true}
                         onChange={(e) => { handleChange(e, "transferWithPromotion") }} />
                     </label>
                   </div>

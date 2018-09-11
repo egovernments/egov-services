@@ -54,12 +54,12 @@ import javax.validation.constraints.Size;
 @ToString
 public class Position {
 
-	@NotNull
 	private Long id;
 
 	@Size(min=3, max=100)
 	private String name;
 
+	@NotNull
 	private DepartmentDesignation deptdesig;
 
 	private Boolean isPostOutsourced;

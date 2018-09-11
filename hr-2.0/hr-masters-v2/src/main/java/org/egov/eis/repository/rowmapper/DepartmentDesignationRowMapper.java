@@ -40,37 +40,25 @@
 
 package org.egov.eis.repository.rowmapper;
 
-import org.egov.eis.model.DepartmentDesignation;
-import org.egov.eis.model.Designation;
-import org.egov.eis.service.DesignationService;
-import org.egov.eis.web.contract.DesignationGetRequest;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.RowMapper;
-import org.springframework.stereotype.Component;
-
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
+
+import org.egov.eis.model.DepartmentDesignation;
+import org.egov.eis.model.Designation;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Component;
 
 @Component
 public class DepartmentDesignationRowMapper implements RowMapper<DepartmentDesignation> {
 
-	@Autowired
-	private DesignationService designationService;
-
 	public DepartmentDesignation mapRow(ResultSet rs, int rowNum) throws SQLException {
 		DepartmentDesignation departmentDesignation = new DepartmentDesignation();
 		departmentDesignation.setId(rs.getLong("id"));
-		departmentDesignation.setDepartmentId(rs.getLong("departmentId"));
-
-		DesignationGetRequest designationGetRequest = new DesignationGetRequest();
-		List<Long> designationID = new ArrayList<Long>();
-		designationID.add(rs.getLong("designationId"));
-		designationGetRequest.setId(designationID);
-		designationGetRequest.setTenantId(rs.getString("tenantId"));
+		departmentDesignation.setDepartmentCode(rs.getString("departmentCode"));
 		
-		Designation designation = designationService.getDesignations(designationGetRequest).get(0);
+		Designation designation = new Designation();
+		designation.setCode(rs.getString("designationCode"));
+	
 		departmentDesignation.setDesignation(designation);
 		departmentDesignation.setTenantId(rs.getString("tenantId"));
 		return departmentDesignation;

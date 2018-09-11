@@ -60,14 +60,10 @@ public class PositionQueryBuilder {
 
 	private static final String BASE_QUERY = "SELECT p.id AS p_id, p.name AS p_name,"
 			+ " p.isPostOutsourced AS p_isPostOutsourced, p.active AS p_active, p.tenantId AS p_tenantId,"
-			+ " depDes.id AS depDes_id, depDes.departmentId as depDes_departmentId,"
-			+ " des.id AS des_id, des.name AS des_name, des.code AS des_code,"
-			+ " des.description AS des_description, des.chartOfaccounts AS des_chartOfAccounts,"
-			+ " des.active AS des_active"
+			+ " depDes.id AS depDes_id, depDes.departmentCode as depDes_departmentCode, depDes.designationCode as depDes_designationCode"
 			+ " FROM egeis_position p"
-			+ " JOIN egeis_departmentDesignation depDes ON p.deptDesigId = depDes.id AND depDes.tenantId = p.tenantId"
-			+ " JOIN egeis_designation des ON depDes.designationid = des.id AND des.tenantId = p.tenantId";
-
+			+ " JOIN egeis_departmentDesignation depDes ON p.deptDesigId = depDes.id AND depDes.tenantId = p.tenantId";
+	
 	@SuppressWarnings("rawtypes")
 	public String getQuery(PositionGetRequest positionGetRequest,  Map<String, Object> preparedStatementValues) {
 		StringBuilder selectQuery = new StringBuilder(BASE_QUERY);
@@ -136,6 +132,18 @@ public class PositionQueryBuilder {
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
 			selectQuery.append(" p.active = :active");
 			preparedStatementValues.put("active",positionGetRequest.getActive());
+		}
+		
+		if (positionGetRequest.getDepartmentCode() != null) {
+			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+			selectQuery.append(" depDes.departmentCode = :deptCode");
+			preparedStatementValues.put("deptCode",positionGetRequest.getDepartmentCode());
+		}
+
+		if (positionGetRequest.getDesignationCode() != null) {
+			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+			selectQuery.append(" depDes.designationCode = :desigCode");
+			preparedStatementValues.put("desigCode",positionGetRequest.getDesignationCode());
 		}
 	}
 

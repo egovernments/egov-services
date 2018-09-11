@@ -73,7 +73,7 @@ public class PositionHierarchyRowMapper implements RowMapper<PositionHierarchy> 
 
 		DepartmentDesignation fromPositionDepartmentDesignation = new DepartmentDesignation();
 		fromPositionDepartmentDesignation.setId(rs.getLong("fpDepDes_id"));
-		fromPositionDepartmentDesignation.setDepartmentId((Long) rs.getObject("fpDepDes_departmentId"));
+		fromPositionDepartmentDesignation.setDepartmentCode(rs.getString("fpDepDes_departmentId"));
 		fromPositionDepartmentDesignation.setDesignation(fromPositionDesignation);
 		fromPositionDepartmentDesignation.setTenantId(rs.getString("ph_tenantId"));
 
@@ -96,7 +96,7 @@ public class PositionHierarchyRowMapper implements RowMapper<PositionHierarchy> 
 
 		DepartmentDesignation toPositionDepartmentDesignation = new DepartmentDesignation();
 		toPositionDepartmentDesignation.setId(rs.getLong("tpDepDes_id"));
-		toPositionDepartmentDesignation.setDepartmentId((Long) rs.getObject("tpDepDes_departmentId"));
+		toPositionDepartmentDesignation.setDepartmentCode(rs.getString("tpDepDes_departmentCode"));
 		toPositionDepartmentDesignation.setDesignation(toPositionDesignation);
 		toPositionDepartmentDesignation.setTenantId(rs.getString("ph_tenantId"));
 

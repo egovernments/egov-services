@@ -57,8 +57,8 @@ public class DepartmentDesignationService {
 		return departmentDesignationRepository.findForId(id);
 	}
 
-	public DepartmentDesignation getByDepartmentAndDesignation(Long department, Long designation, String tenantId) {
-		return departmentDesignationRepository.findByDepartmentAndDesignation(department, designation, tenantId);
+	public DepartmentDesignation getByDepartmentAndDesignation(String departmentCode, String designationCode, String tenantId) {
+		return departmentDesignationRepository.findByDepartmentAndDesignation(departmentCode, designationCode, tenantId);
 	}
 
 	public void create(DepartmentDesignation departmentDesignation) {

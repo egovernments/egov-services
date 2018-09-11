@@ -57,11 +57,17 @@ public class DepartmentDesignation {
 	@NotNull
 	private Long id;
 
-	@NotNull
 	@JsonProperty("department")
 	private Long departmentId;
 
+	@NotNull
+	@JsonProperty("designation")
 	private Designation designation;
+	
+    @NotNull
+	@JsonProperty("departmentCode")
+	private String departmentCode;
+	
 
 	@NotNull
 	private String tenantId;

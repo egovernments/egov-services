@@ -65,6 +65,10 @@ public class PositionGetRequest {
 	private Long departmentId;
 
 	private Long designationId;
+	
+	private String departmentCode;
+
+	private String designationCode;
 
 	private Boolean active;
 

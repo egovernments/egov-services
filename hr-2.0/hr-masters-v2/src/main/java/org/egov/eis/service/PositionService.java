@@ -50,6 +50,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.StringUtils;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ResponseInfo;
 import org.egov.eis.config.ApplicationProperties;
@@ -79,10 +80,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import lombok.extern.slf4j.Slf4j;
+
 @Service
+@Slf4j
 public class PositionService {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(PositionService.class);
@@ -209,7 +214,6 @@ public class PositionService {
 		List<Long> ids = positionRequest.getPosition().stream().map(Position::getId).collect(Collectors.toList());
 		int index = 1;
 		for (Position position : positionRequest.getPosition()) {
-
 			String name = positionRepository.generatePositionNameWithMultiplePosition(position.getName(),
 					position.getDeptdesig().getId(), position.getTenantId(), index);
 			position.setName(name);
@@ -246,40 +250,30 @@ public class PositionService {
 		List<Position> positions = positionRequest.getPosition();
 		RequestInfo requestInfo = positionRequest.getRequestInfo();
 		RequestInfoWrapper requestInfoWrapper = RequestInfoWrapper.builder().requestInfo(requestInfo).build();
+		ObjectMapper mapper = new ObjectMapper();
 		List<Position> positionsList = new ArrayList<>();
 		for (int i = 0; i < positions.size(); i++) {
 			DepartmentDesignation deptDesig = positions.get(i).getDeptdesig();
 			String tenantId = positions.get(i).getTenantId();
 			Designation designation = new Designation();
 			Department department = departmentService
-					.getDepartments(Arrays.asList(deptDesig.getDepartmentId()), tenantId, requestInfoWrapper).get(0);
+					.getDepartments(deptDesig.getDepartmentCode(), tenantId, requestInfoWrapper).get(0);
 
-			System.out.println("department Id" + department.getId());
-			System.out.println("department tenantId" + department.getTenantId());
-
-			if (null != deptDesig.getDesignation().getId()) {
+			if (!StringUtils.isEmpty(deptDesig.getDesignation().getCode())) {
 				DesignationGetRequest designationGetRequest = DesignationGetRequest.builder()
-						.id(Arrays.asList(deptDesig.getDesignation().getId())).tenantId(tenantId).build();
-				designation = designationService.getDesignations(designationGetRequest).get(0);
+						.code(deptDesig.getDesignation().getCode()).tenantId(tenantId).build();
+				designation = mapper.convertValue(designationService.getDesignationsFromMDMS(positionRequest.getRequestInfo(), designationGetRequest).get(0), Designation.class);
 			}
 
-			System.out.println("designation Id" + designation.getId());
-			System.out.println("designation tenantId" + designation.getTenantId());
-
-			deptDesig = deptDesigService.getByDepartmentAndDesignation(department.getId(), designation.getId(),
-					tenantId);
+			deptDesig = deptDesigService.getByDepartmentAndDesignation(department.getCode(), designation.getCode(), tenantId);
 
 			if (isEmpty(deptDesig)) {
-				deptDesig = DepartmentDesignation.builder().departmentId(department.getId()).designation(designation)
+				deptDesig = DepartmentDesignation.builder().departmentCode(department.getCode()).designation(designation)
 						.tenantId(tenantId).build();
 				deptDesigService.create(deptDesig);
 			}
-			deptDesig = deptDesigService.getByDepartmentAndDesignation(department.getId(), designation.getId(),
-					tenantId);
-
-			System.out.println("deptDesig Id" + deptDesig.getId());
-			System.out.println("deptDesig tenantId" + deptDesig.getTenantId());
-
+			deptDesig = deptDesigService.getByDepartmentAndDesignation(department.getCode(), designation.getCode(),tenantId);
+			
 			List<Long> sequences;
 			if (positions.get(i).getNoOfPositions() != null)
 				sequences = positionRepository.generateSequences(positions.get(i).getNoOfPositions());
@@ -329,7 +323,7 @@ public class PositionService {
 			}
 			final Designation designation = designations.get(0);
 			DepartmentDesignation deptDesig = DepartmentDesignation.builder().id(position.getDeptdesig().getId())
-					.departmentId(department.getId()).designation(designation)
+					.departmentCode(department.getCode()).designation(designation)
 					.tenantId(position.getDeptdesig().getTenantId()).build();
 
 			return Position.builder().id(position.getId()).name(position.getName()).active(position.getActive())
@@ -347,10 +341,8 @@ public class PositionService {
 		for (int i = 0; i < positions.size(); i++) {
 			DepartmentDesignation deptDesig = positions.get(i).getDeptdesig();
 			String tenantId = positions.get(i).getTenantId();
-
-			List<Department> departments = departmentService.getDepartments(Arrays.asList(deptDesig.getDepartmentId()),
-					tenantId, requestInfoWrapper);
-			if (departments == null || departments.size() < 1) {
+			List<Department> departments = departmentService.getDepartments(deptDesig.getDepartmentCode(), tenantId, requestInfoWrapper);
+			if (CollectionUtils.isEmpty(departments)) {
 				throw new InvalidDataException("department",
 						"The department should have a valid value which exists in the system", "null");
 			}
@@ -358,23 +350,22 @@ public class PositionService {
 	}
 
 	private void validateDesignation(PositionRequest positionRequest) {
-
+		log.info("Validating desg");
 		List<Position> positions = positionRequest.getPosition();
 		for (int i = 0; i < positions.size(); i++) {
-			if (null == positions.get(i).getDeptdesig().getDesignation().getId()) {
+			if (StringUtils.isEmpty(positions.get(i).getDeptdesig().getDesignation().getCode())) {
+				log.info("Break 1");
 				throw new InvalidDataException("designation",
 						"The designation should have a valid value which exists in the system", "null");
-
 			}
 			DepartmentDesignation deptDesig = positions.get(i).getDeptdesig();
 			String tenantId = positions.get(i).getTenantId();
-			if (null != deptDesig.getDesignation().getId()) {
-				DesignationGetRequest designationGetRequest = DesignationGetRequest.builder()
-						.id(Arrays.asList(deptDesig.getDesignation().getId())).tenantId(tenantId).build();
-				List<Designation> designations = designationService.getDesignations(designationGetRequest);
-
-				if (designations == null || designations.size() < 1) {
-
+			if (!StringUtils.isEmpty(deptDesig.getDesignation().getCode())) {
+				DesignationGetRequest designationGetRequest = DesignationGetRequest.builder().code(deptDesig.getDesignation().getCode()).tenantId(tenantId).build();
+				List<Designation> designations = designationService.getDesignationsFromMDMS(positionRequest.getRequestInfo(),designationGetRequest);
+				log.info("designations: "+designations);
+				if (CollectionUtils.isEmpty(designations)) {
+					log.info("Break 2");
 					throw new InvalidDataException("designations",
 							"designations should have a valid value which exists in the system", "null");
 				}

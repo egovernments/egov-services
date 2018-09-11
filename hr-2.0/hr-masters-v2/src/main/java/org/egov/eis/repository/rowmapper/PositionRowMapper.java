@@ -59,17 +59,12 @@ public class PositionRowMapper implements RowMapper<Position> {
 		position.setName(rs.getString("p_name"));
 
 		Designation designation = new Designation();
-		designation.setId(rs.getLong("des_id"));
-		designation.setName(rs.getString("des_name"));
-		designation.setCode(rs.getString("des_code"));
-		designation.setDescription(rs.getString("des_description"));
-		designation.setChartOfAccounts(rs.getString("des_chartOfAccounts"));
-		designation.setActive((Boolean) rs.getObject("des_active"));
+		designation.setCode(rs.getString("depDes_designationCode"));
 		designation.setTenantId(rs.getString("p_tenantId"));
 
 		DepartmentDesignation departmentDesignation = new DepartmentDesignation();
 		departmentDesignation.setId(rs.getLong("depDes_id"));
-		departmentDesignation.setDepartmentId((Long) rs.getObject("depDes_departmentId"));
+		departmentDesignation.setDepartmentCode(rs.getString("depDes_departmentCode"));
 		departmentDesignation.setDesignation(designation);
 		departmentDesignation.setTenantId(rs.getString("p_tenantId"));
 

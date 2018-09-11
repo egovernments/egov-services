@@ -2,10 +2,7 @@ package org.egov.eis.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.when;
-import static org.mockito.Mockito.verify;
 
 import java.net.URI;
 import java.util.ArrayList;
@@ -61,7 +58,7 @@ public class DepartmentServiceTest {
 	    	when(restTemplate.postForObject(any(URI.class), Matchers.<HttpEntity<?>>any(),
 	                Matchers.any(Class.class))).thenReturn(departmentResponse);	    
 
-	    	List<Department> result = departmentService.getDepartments(ids, tenantId, requestInfoWrapper);
+	    	List<Department> result = departmentService.getDepartments("code", tenantId, requestInfoWrapper);
 	    	assertThat(result).isEqualTo(departments);
 	    
 	    }

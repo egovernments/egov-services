@@ -55,14 +55,14 @@ import java.util.List;
 public class DepartmentDesignationRepository {
 
 	public static final String INSERT_DEPARTMENTDESIGNATION_QUERY = "INSERT INTO egeis_departmentDesignation"
-			+ " (id, departmentId, designationId,tenantId)"
+			+ " (id, departmentCode, designationCode,tenantId)"
 			+ " VALUES (nextval('seq_egeis_departmentDesignation'),?,?,?)";
 
-	private static final String BASE_QUERY = "SELECT id, departmentId, designationId, tenantId"
+	private static final String BASE_QUERY = "SELECT id, departmentCode, designationCode, tenantId"
 			+ " FROM egeis_departmentDesignation WHERE id = ?";
 
-	private static final String GET_BY_DEPT_AND_DESG_QUERY = "SELECT id, departmentId, designationId, tenantId"
-			+ " FROM egeis_departmentDesignation WHERE departmentId = ? AND designationId = ? AND tenantId = ?";
+	private static final String GET_BY_DEPT_AND_DESG_QUERY = "SELECT id, departmentCode, designationCode, tenantId"
+			+ " FROM egeis_departmentDesignation WHERE departmentCode = ? AND designationCode = ? AND tenantId = ?";
 
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
@@ -77,10 +77,10 @@ public class DepartmentDesignationRepository {
 		return jdbcTemplate.queryForObject(BASE_QUERY, deptDesigRowMapper, id);
 	}
 
-	public DepartmentDesignation findByDepartmentAndDesignation(Long department, Long designation, String tenantId) {
+	public DepartmentDesignation findByDepartmentAndDesignation(String departmentCode, String designationCode, String tenantId) {
 		List<Object> preparedStatementValues = new ArrayList<>();
-		preparedStatementValues.add(department);
-		preparedStatementValues.add(designation);
+		preparedStatementValues.add(departmentCode);
+		preparedStatementValues.add(designationCode);
 		preparedStatementValues.add(tenantId);
 		List<DepartmentDesignation> departmentDesignations = jdbcTemplate.query(GET_BY_DEPT_AND_DESG_QUERY,
 				preparedStatementValues.toArray(), deptDesigRowMapper);
@@ -89,8 +89,8 @@ public class DepartmentDesignationRepository {
 
 	public void create(DepartmentDesignation departmentDesignation) {
 		List<Object[]> batchArgs = new ArrayList<>();
-		Object[] deptDesgRecord = { departmentDesignation.getDepartmentId(),
-				departmentDesignation.getDesignation().getId(), departmentDesignation.getTenantId() };
+		Object[] deptDesgRecord = { departmentDesignation.getDepartmentCode(),
+				departmentDesignation.getDesignation().getCode(), departmentDesignation.getTenantId() };
 		batchArgs.add(deptDesgRecord);
 
 		try {

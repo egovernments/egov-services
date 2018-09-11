@@ -68,25 +68,18 @@ public class DepartmentService {
     @Autowired
     private RestTemplate restTemplate;
 
-    public List<Department> getDepartments(List<Long> ids, String tenantId, RequestInfoWrapper requestInfoWrapper) {
+    public List<Department> getDepartments(String code, String tenantId, RequestInfoWrapper requestInfoWrapper) {
         URI url = null;
-        if(null == ids.get(0) || ids.isEmpty())
-        {
-        	  log.error("Following exception occurred while accessing Department id is null");
-        	  return null;
-        }
-        String idsAsCSV = getIdsAsCSV(ids);
         DepartmentResponse departmentResponse = null;
         try {
             url = new URI(propertiesManager.getCommonMastersServiceHost()
                     + propertiesManager.getCommonMastersServiceBasePath()
                     + propertiesManager.getCommonMastersServiceDepartmentsSearch()
-                    + "?tenantId=" + tenantId + "&id=" + idsAsCSV);
+                    + "?tenantId=" + tenantId + "&code=" + code);
             log.debug(url.toString());
             departmentResponse = restTemplate.postForObject(url, getRequestInfoAsHttpEntity(requestInfoWrapper),
                     DepartmentResponse.class);
         } catch (Exception e) {
-            e.printStackTrace();
             log.error("Following exception occurred while accessing Department API : " + e.getMessage());
             return null;
         }

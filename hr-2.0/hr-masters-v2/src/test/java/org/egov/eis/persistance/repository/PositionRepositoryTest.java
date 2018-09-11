@@ -99,7 +99,7 @@ public class PositionRepositoryTest {
     @Test
     @Sql(scripts = {"/sql/clearposition.sql", "/sql/insertposition.sql"})
     public void test_should_genrate_name() {
-        assertEquals("Executive_Engineer_002",positionRepository.generatePositionNameWithMultiplePosition("Executive_Engineer_",1L,"default",1));
+        assertEquals("Executive_Engineer_1",positionRepository.generatePositionNameWithMultiplePosition("Executive_Engineer_", 1L,"default",1));
     }
 
     @Test

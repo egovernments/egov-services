@@ -48,7 +48,6 @@ public class User   {
 
         @NotNull
         @Size(max=100)
-        @Pattern(regexp = "[a-z-A-Z' ']*", message = "Name has invalid characters")
         @JsonProperty("name")
         private String name;
 

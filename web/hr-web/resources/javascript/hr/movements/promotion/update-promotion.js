@@ -554,7 +554,7 @@ class UpdateMovement extends React.Component {
                           designation = item.designation;
                       });
                       var ownerDetails = employee.name + " - " + employee.code + " - " + getNameById(_this.state.designationList, designation);
-                      employeeAcceptance = movement.employeeAcceptance;
+                      var employeeAcceptance = movement.employeeAcceptance;
                       if(employeeAcceptance.toString() === "true"){
                         if (ID === "Submit"){
                           window.location.href = `app/hr/movements/ack-page.html?type=TransferSubmit&owner=${ownerDetails}&employeeId=${employeeName.id}`;
@@ -644,7 +644,7 @@ class UpdateMovement extends React.Component {
                   designation = item.designation;
               });
               var ownerDetails = employee.name + " - " + employee.code + " - " + getNameById(_this.state.designationList, designation);
-              employeeAcceptance = movement.employeeAcceptance;
+              var employeeAcceptance = movement.employeeAcceptance;
               if(employeeAcceptance.toString() === "true"){
                 if (ID === "Submit"){
                   window.location.href = `app/hr/movements/ack-page.html?type=TransferSubmit&owner=${ownerDetails}&employeeId=${employeeName.id}`;

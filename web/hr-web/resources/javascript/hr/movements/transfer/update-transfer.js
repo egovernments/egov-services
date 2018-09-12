@@ -93,6 +93,7 @@ class UpdateMovement extends React.Component {
       buttons: [],
       owner: "",
       status: "",
+      currentUlb:"",
     },
     this.handleChange = this.handleChange.bind(this);
     this.handleProcess = this.handleProcess.bind(this);
@@ -197,7 +198,6 @@ class UpdateMovement extends React.Component {
               _this.vacantPositionFun(Movement.departmentAssigned, Movement.designationAssigned, Movement.effectiveFrom, Movement.transferedLocation);
             }, 400);
           }
-
           getCommonMasterById("hr-employee", "employees", res.Movement[0].employeeId, function (err, res) {
             if (res && res.Employee) {
               var obj = res.Employee[0];
@@ -723,7 +723,7 @@ class UpdateMovement extends React.Component {
                           designation = item.designation;
                       });
                       var ownerDetails = employee.name + " - " + employee.code + " - " + getNameById(_this.state.designationList, designation);
-                      employeeAcceptance = movement.employeeAcceptance;
+                      var employeeAcceptance = movement.employeeAcceptance;
                       if(employeeAcceptance.toString() === "true"){
                         if (ID === "Submit"){
                           window.location.href = `app/hr/movements/ack-page.html?type=TransferSubmit&owner=${ownerDetails}&employeeId=${employeeName.id}`;
@@ -789,7 +789,7 @@ class UpdateMovement extends React.Component {
 
             }
 
-            var employee,designation,employeeAcceptance;
+            var employee,designation;
             var asOnDate = new Date();
             var dd = asOnDate.getDate();
             var mm = asOnDate.getMonth() + 1;
@@ -816,7 +816,7 @@ class UpdateMovement extends React.Component {
                   designation = item.designation;
               });
               var ownerDetails = employee.name + " - " + employee.code + " - " + getNameById(_this.state.designationList, designation);
-              employeeAcceptance = movement.employeeAcceptance;
+              var employeeAcceptance = movement.employeeAcceptance;
               if(employeeAcceptance.toString() === "true"){
                 if (ID === "Submit"){
                   window.location.href = `app/hr/movements/ack-page.html?type=TransferSubmit&owner=${ownerDetails}&employeeId=${employeeName.id}`;
@@ -859,13 +859,18 @@ class UpdateMovement extends React.Component {
 
     let { handleChange, handleChangeThreeLevel, handleProcess } = this;
     let _this = this;
+    let currentUlb = this.state.movement.transferedLocation;
 
     let { employeeId, typeOfMovement, currentAssignment, transferType, promotionBasis, remarks, reason, effectiveFrom, transferedLocation,
       departmentAssigned, designationAssigned, positionAssigned, fundAssigned, functionAssigned, employeeAcceptance, workflowDetails, tenantId } = this.state.movement
     let { isSearchClicked, employee, transferWithPromotion, buttons,movement} = this.state;
     let mode = getUrlVars()["type"];
+    currentUlb = !transferedLocation? currentUlb = transferedLocation : currentUlb = currentUlb;
+    //console.log("currentUlb",currentUlb);
+    //console.log("employee",this.state);
+    // console.log("movement",movement);
 
-    const renderProcesedBtns = function () {
+    const renderProcesedBtns = function(){
       if (buttons.length) {
         return buttons.map(function (btn, ind) {
           return (<span key={ind}> <button key={ind} id={btn.key} type='button' className='btn btn-submit' onClick={(e) => { handleProcess(e,employee,movement) }} >
@@ -932,7 +937,7 @@ class UpdateMovement extends React.Component {
           <div className="col-sm-6">
             <div className="row">
               <div className="col-sm-6 label-text">
-                <label htmlFor="">District-ULB <span>*</span></label>
+                <label htmlFor="">District-ULB<span>*</span></label>
               </div>
               <div className="col-sm-6">
                 <div className="styled-select">

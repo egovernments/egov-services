@@ -226,24 +226,6 @@ public class MovementService {
                     message = applicationConstants.getErrorMessage(ApplicationConstants.ERR_POSITION_NOT_VACANT) + ", ";
                 setErrorMessage(movement, message);
 
-                if (movement.getTypeOfMovement() != null
-                        && movement.getTypeOfMovement().toString().equalsIgnoreCase(TypeOfMovement.TRANSFER.toString())
-                        && movement.getPromotionBasis() != null) {
-                    message = message
-                            + applicationConstants.getErrorMessage(ApplicationConstants.ERR_MOVEMENT_TYPE_VALIDATE)
-                            + ", ";
-                }
-
-                setErrorMessage(movement, message);
-
-                if (movement.getTypeOfMovement() != null
-                        && !movement.getTypeOfMovement().toString().equalsIgnoreCase(TypeOfMovement.TRANSFER.toString())
-                        && movement.getPromotionBasis() == null) {
-                    message = message + applicationConstants
-                            .getErrorMessage(ApplicationConstants.ERR_MOVEMENT_TYPE_VALIDATE_PROMOTION) + ", ";
-                }
-
-                setErrorMessage(movement, message);
 
                 if (movement.getTenantId() == null || movement.getTenantId().isEmpty()) {
                     message = message

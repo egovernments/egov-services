@@ -42,24 +42,33 @@ public class PropertyRowMapper implements ResultSetExtractor<List<Property>> {
 				 * id of the address table is being fetched as address key to avoid confusion
 				 * with addressId field
 				 */
+				Double latitude = rs.getDouble("latitude");
+				if(rs.wasNull()){latitude = null;}
+				Double longitude = rs.getDouble("longitude");
+				if(rs.wasNull()){longitude = null;}
+
 				Address address = Address.builder().addressId(rs.getString("addressId"))
 						.addressLine1(rs.getString("addressLine1")).addressLine2(rs.getString("addressLine2"))
 						.addressNumber(rs.getString("addressNumber")).buildingName(rs.getString("buildingName"))
 						.city(rs.getString("city")).detail(rs.getString("detail")).id(rs.getString("addresskeyid"))
-						.landmark(rs.getString("landmark")).latitude(rs.getDouble("latitude")).locality(locality)
-						.longitude(rs.getDouble("longitude")).pincode(rs.getString("pincode"))
+						.landmark(rs.getString("landmark")).latitude(latitude).locality(locality)
+						.longitude(longitude).pincode(rs.getString("pincode"))
 						.doorNo(rs.getString("doorno"))
 						.street(rs.getString("street")).tenantId(tenanId).type(rs.getString("type")).build();
 
+				Long lastModifiedTime = rs.getLong("lastModifiedTime");
+				if(rs.wasNull()){lastModifiedTime = null;}
 				AuditDetails auditdetails = AuditDetails.builder().createdBy(rs.getString("createdBy"))
 						.createdTime(rs.getLong("createdTime")).lastModifiedBy(rs.getString("lastModifiedBy"))
-						.lastModifiedTime(rs.getLong("lastModifiedTime"))
+						.lastModifiedTime(lastModifiedTime)
 						.build();
 
+				Long occupancyDate = rs.getLong("occupancyDate");
+				if(rs.wasNull()){occupancyDate = null;}
 				currentProperty = Property.builder().address(address)
 						.acknowldgementNumber(rs.getString("acknowldgementNumber"))
 						.creationReason(CreationReasonEnum.fromValue(rs.getString("creationReason")))
-						.occupancyDate(rs.getLong("occupancyDate")).propertyId(currentId)
+						.occupancyDate(occupancyDate).propertyId(currentId)
 						.oldPropertyId(rs.getString("oldPropertyId"))
 						.status(PropertyInfo.StatusEnum.fromValue(rs.getString("status")))
 						.tenantId(tenanId).auditDetails(auditdetails).build();
@@ -89,9 +98,11 @@ public class PropertyRowMapper implements ResultSetExtractor<List<Property>> {
 
 		// If assessmentNumber not found in previous loop new PropertyDetail is created
 		if(detail==null) {
+			Long assesslastModifiedTime = rs.getLong("assesslastModifiedTime");
+			if(rs.wasNull()){assesslastModifiedTime = null;}
 			AuditDetails assessAuditdetails = AuditDetails.builder().createdBy(rs.getString("assesscreatedBy"))
 					.createdTime(rs.getLong("assesscreatedTime")).lastModifiedBy(rs.getString("assesslastModifiedBy"))
-					.lastModifiedTime(rs.getLong("assesslastModifiedTime"))
+					.lastModifiedTime(assesslastModifiedTime)
 					.build();
 
 			Institution institution = null;
@@ -106,10 +117,20 @@ public class PropertyRowMapper implements ResultSetExtractor<List<Property>> {
 			}
 
 			OwnerInfo citizenInfo = OwnerInfo.builder().uuid(rs.getString("accountId")).build();
+
+			Float landArea = rs.getFloat("landArea");
+			if(rs.wasNull()){landArea = null;}
+			Float buildUpArea = rs.getFloat("buildUpArea");
+			if(rs.wasNull()){buildUpArea = null;}
+			Long noOfFloors = rs.getLong("noOfFloors");
+			if(rs.wasNull()){noOfFloors = null;}
+
 			detail = PropertyDetail.builder()
-					.additionalDetails(rs.getObject("additionalDetails")).buildUpArea(rs.getFloat("buildUpArea"))
-					.channel(ChannelEnum.fromValue(rs.getString("channel"))).landArea(rs.getFloat("landArea"))
-					.noOfFloors(rs.getLong("noOfFloors")).source(SourceEnum.fromValue(rs.getString("source")))
+					.additionalDetails(rs.getObject("additionalDetails"))
+					.buildUpArea(buildUpArea)
+					.landArea(landArea)
+					.channel(ChannelEnum.fromValue(rs.getString("channel")))
+					.noOfFloors(noOfFloors).source(SourceEnum.fromValue(rs.getString("source")))
 					.usage(rs.getString("usage")).assessmentDate(rs.getLong("assessmentDate"))
 					.assessmentNumber(rs.getString("assessmentNumber")).financialYear(rs.getString("financialYear"))
 					.propertyType(rs.getString("propertyType")).propertySubType(rs.getString("propertySubType"))
@@ -143,17 +164,22 @@ public class PropertyRowMapper implements ResultSetExtractor<List<Property>> {
 
 
 		if(rs.getString("unitid")!=null)
-		{Unit unit = Unit.builder().id(rs.getString("unitid"))
+		{   Float unitArea = rs.getFloat("unitArea");
+			if(rs.wasNull()){unitArea = null;}
+			Long unitoccupancyDate = rs.getLong("unitoccupancyDate");
+			if(rs.wasNull()){unitoccupancyDate = null;}
+
+			Unit unit = Unit.builder().id(rs.getString("unitid"))
 				.floorNo(rs.getString("floorNo"))
 				.tenantId(tenantId)
-				.unitArea(rs.getFloat("unitArea"))
+				.unitArea(unitArea)
 				.unitType(rs.getString("unitType"))
 				.usageCategoryMajor(rs.getString("unitusagecategorymajor"))
 				.usageCategoryMinor(rs.getString("unitusagecategoryminor"))
 				.usageCategorySubMinor(rs.getString("usageCategorySubMinor"))
 				.usageCategoryDetail(rs.getString("usageCategoryDetail"))
 				.occupancyType(rs.getString("occupancyType"))
-				.occupancyDate(rs.getLong("unitoccupancyDate"))
+				.occupancyDate(unitoccupancyDate)
 				.constructionType(rs.getString("constructionType"))
 				.constructionSubType(rs.getString("constructionSubType"))
 				.arv(rs.getBigDecimal("arv"))
@@ -169,10 +195,14 @@ public class PropertyRowMapper implements ResultSetExtractor<List<Property>> {
 				.documentUid(rs.getString("ownerdocuid"))
 				.build();
 
+		Double ownerShipPercentage = rs.getDouble("ownerShipPercentage");
+		if(rs.wasNull()){ ownerShipPercentage = null;}
+		Boolean isPrimaryOwner = rs.getBoolean("isPrimaryOwner");
+		if(rs.wasNull()){ isPrimaryOwner = null;}
 		OwnerInfo owner = OwnerInfo.builder().uuid(rs.getString("userid"))
-				.isPrimaryOwner(rs.getBoolean("isPrimaryOwner"))
+				.isPrimaryOwner(isPrimaryOwner)
 				.ownerType(rs.getString("ownerType"))
-				.ownerShipPercentage(rs.getDouble("ownerShipPercentage"))
+				.ownerShipPercentage(ownerShipPercentage)
 				.institutionId(rs.getString("institutionid"))
 				.relationship(OwnerInfo.RelationshipEnum.fromValue(rs.getString("relationship")))
 				.build();

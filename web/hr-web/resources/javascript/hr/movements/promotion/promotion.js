@@ -3,6 +3,7 @@ class EmployeePromotion extends React.Component {
       super(props);
       this.state = {
         movement: {
+          id:"",
           employee: "",
           typeOfMovement: "PROMOTION",
           currentAssignment: "",
@@ -33,10 +34,12 @@ class EmployeePromotion extends React.Component {
           id: "",
           name: "",
           code: "",
+          positionId:"",
           departmentId: "",
           designationId: "",
-          positionId: ""
+          dateOfRetirement:"",
         },
+        transferWithPromotion: false,
         accepted: "",
         positionList: [],
         departmentList: [],
@@ -48,7 +51,8 @@ class EmployeePromotion extends React.Component {
         transferList: [],
         reasonList: [],
         pNameList: [],
-        userList: []
+        userList: [],
+        employeeAcceptance:"true"
       }
       this.handleChange = this.handleChange.bind(this);
       this.addOrUpdate = this.addOrUpdate.bind(this);
@@ -59,158 +63,130 @@ class EmployeePromotion extends React.Component {
 
     }
 
-    addOrUpdate(e) {
+    addOrUpdate(e,employeeId,movement) {
 
       e.preventDefault();
-
       var _this = this;
       var movement = Object.assign({}, _this.state.movement);
-
-      if (movement.documents && movement.documents.constructor == FileList) {
-        let counter = movement.documents.length,
-          breakout = 0,
-          docs = [];
-        for (let i = 0, len = movement.documents.length; i < len; i++) {
-          this.makeAjaxUpload(movement.documents[i], function(err, res) {
-            if (breakout == 1) {
-              console.log("breakout", breakout);
-              return;
-            } else if (err) {
-              showError("Error uploding the files. Please contact Administrator");
-              breakout = 1;
-            } else {
-              counter--;
-              docs.push(res.files[0].fileStoreId);
-              console.log("docs", docs);
-              if (counter == 0 && breakout == 0) {
-                movement.documents = docs;
-
-                var body = {
-                  "RequestInfo": requestInfo,
-                  "Movement": [movement]
-                };
-
-                $.ajax({
-                  url: baseUrl + "/hr-employee-movement/movements/_create?tenantId=" + tenantId,
-                  type: 'POST',
-                  dataType: 'json',
-                  data: JSON.stringify(body),
-                  contentType: 'application/json',
-                  headers: {
-                    'auth-token': authToken
-                  },
-                  success: function(res) {
-
-                    var asOnDate = new Date();
-                    var dd = asOnDate.getDate();
-                    var mm = asOnDate.getMonth() + 1; 
-                    var yyyy = asOnDate.getFullYear();
-              
-                    if (dd < 10) {
-                      dd = '0' + dd
+      if(_this.state.employeeAcceptance === "true"){
+        if (movement.documents && movement.documents.constructor == FileList) {
+          let counter = movement.documents.length,
+            breakout = 0,
+            docs = [];  
+          for (let i = 0, len = movement.documents.length; i < len; i++) {
+            this.makeAjaxUpload(movement.documents[i], function(err, res) {
+              if (breakout == 1) {
+                console.log("breakout", breakout);
+                return;
+              } else if (err) {
+                showError("Error uploding the files. Please contact Administrator");
+                breakout = 1;
+              } else {
+                counter--;
+                docs.push(res.files[0].fileStoreId);
+                console.log("docs", docs);
+                if (counter == 0 && breakout == 0) {
+                  movement.documents = docs;
+  
+                  var body = {
+                    "RequestInfo": requestInfo,
+                    "Movement": [movement]
+                  };
+                  $.ajax({
+                    url: baseUrl + "/hr-employee-movement/movements/_create?tenantId=" + tenantId,
+                    type: 'POST',
+                    dataType: 'json',
+                    data: JSON.stringify(body),
+                    contentType: 'application/json',
+                    headers: {
+                      'auth-token': authToken
+                    },
+                    success: function(res) {
+                      commonApiPostCall();
+                    },
+                    error: function(err) {
+                      if (err["responseJSON"].message)
+                        showError(err["responseJSON"].message);
+                      else if (err["responseJSON"].Movement[0]) {
+                        showError(err["responseJSON"].Movement[0].errorMsg)
+                      } else {
+                        showError("Something went wrong. Please contact Administrator");
+                      }
                     }
-              
-                    if (mm < 10) {
-                      mm = '0' + mm
-                    }
-              
-                    asOnDate = dd + '/' + mm + '/' + yyyy;
-
-                    var employee, designation;
-                    commonApiPost("hr-employee", "employees", "_search", {
-                      tenantId,
-                      asOnDate,
-                      "positionId": movement.workflowDetails.assignee
-                    }, function(err, res) {
-                      if (res && res.Employee && res.Employee[0])
-                        employee = res.Employee[0];
-
-                      employee.assignments.forEach(function(item) {
-                        if (item.isPrimary)
-                          designation = item.designation;
-                      });
-                      var ownerDetails = employee.name + " - " + employee.code + " - " + getNameById(_this.state.designationList, designation);
-
-                      window.location.href = `app/hr/movements/ack-page.html?type=PromotionApply&owner=${ownerDetails}`;
-                    });
-                  },
-                  error: function(err) {
-                    if (err["responseJSON"].message)
-                      showError(err["responseJSON"].message);
-                    else if (err["responseJSON"].Movement[0]) {
-                      showError(err["responseJSON"].Movement[0].errorMsg)
-                    } else {
-                      showError("Something went wrong. Please contact Administrator");
-                    }
-                  }
-                })
+                  })
+                }
+              }
+            })
+          }
+        } else {
+  
+          var body = {
+            "RequestInfo": requestInfo,
+            "Movement": [movement]
+          };
+  
+          $.ajax({
+            url: baseUrl + "/hr-employee-movement/movements/_create?tenantId=" + tenantId,
+            type: 'POST',
+            dataType: 'json',
+            data: JSON.stringify(body),
+            contentType: 'application/json',
+            headers: {
+              'auth-token': authToken
+            },
+            success: function(res) {
+              commonApiPostCall();
+            },
+            error: function(err) {
+              if (err["responseJSON"].message)
+                showError(err["responseJSON"].message);
+              else if (err["responseJSON"].Movement[0]) {
+                showError(err["responseJSON"].Movement[0].errorMsg)
+              } else {
+                showError("Something went wrong. Please contact Administrator");
               }
             }
           })
         }
-        // if (breakout == 1)
-        //     return;
-      } else {
+      }else{
+        commonApiPostCall()
+      }
+      function commonApiPostCall(){
+        var employee,designation;
+        var asOnDate = new Date();
+        var dd = asOnDate.getDate();
+        var mm = asOnDate.getMonth() + 1; 
+        var yyyy = asOnDate.getFullYear();
+  
+        if (dd < 10) {
+          dd = '0' + dd
+        }
+  
+        if (mm < 10) {
+          mm = '0' + mm
+        }
+        asOnDate = dd + '/' + mm + '/' + yyyy;
+        commonApiPost("hr-employee", "employees", "_search", {
+          tenantId,
+          asOnDate,
+          "positionId": movement.workflowDetails.assignee
+        }, function(err, res) {
+          if (res && res.Employee && res.Employee[0])
+            employee = res.Employee[0];
 
-        var body = {
-          "RequestInfo": requestInfo,
-          "Movement": [movement]
-        };
-
-        $.ajax({
-          url: baseUrl + "/hr-employee-movement/movements/_create?tenantId=" + tenantId,
-          type: 'POST',
-          dataType: 'json',
-          data: JSON.stringify(body),
-          contentType: 'application/json',
-          headers: {
-            'auth-token': authToken
-          },
-          success: function(res) {
-
-            var asOnDate = new Date();
-            var dd = asOnDate.getDate();
-            var mm = asOnDate.getMonth() + 1; 
-            var yyyy = asOnDate.getFullYear();
-      
-            if (dd < 10) {
-              dd = '0' + dd
-            }
-      
-            if (mm < 10) {
-              mm = '0' + mm
-            }
-      
-            asOnDate = dd + '/' + mm + '/' + yyyy;
-      
-            var employee, designation;
-            commonApiPost("hr-employee", "employees", "_search", {
-              tenantId,
-              asOnDate,
-              "positionId": movement.workflowDetails.assignee
-            }, function(err, res) {
-              if (res && res.Employee && res.Employee[0])
-                employee = res.Employee[0];
-
-              employee.assignments.forEach(function(item) {
-                if (item.isPrimary)
-                  designation = item.designation;
-              });
-              var ownerDetails = employee.name + " - " + employee.code + " - " + getNameById(_this.state.designationList, designation);
-
-              window.location.href = `app/hr/movements/ack-page.html?type=PromotionApply&owner=${ownerDetails}`;
-            });
-          },
-          error: function(err) {
-            if (err["responseJSON"].message)
-              showError(err["responseJSON"].message);
-            else if (err["responseJSON"].Movement[0]) {
-              showError(err["responseJSON"].Movement[0].errorMsg)
-            } else {
-              showError("Something went wrong. Please contact Administrator");
-            }
+          employee.assignments.forEach(function(item) {
+            if (item.isPrimary)
+              designation = item.designation;
+          });
+          var ownerDetails = employee.name + " - " + employee.code + " - " + getNameById(_this.state.designationList, designation);
+          var employeeAcceptance = movement.employeeAcceptance;
+          employeeAcceptance.toString();
+          if(employeeAcceptance === "true"){
+            window.location.href = `app/hr/movements/ack-page.html?type=PromotionApply&owner=${ownerDetails}`;
+          }else{
+            window.location.href = `app/hr/movements/ack-page.html?type=PromotionEmpReject&owner=${ownerDetails}&employeeId=${employeeId}`;
           }
-        })
+        });
       }
     }
 
@@ -285,21 +261,51 @@ class EmployeePromotion extends React.Component {
      
       $('#effectiveFrom').val("");
       $('#effectiveFrom ').on('changeDate', function(e) {
-
-
-        _this.setState({
-          movement: {
-            ..._this.state.movement,
-            "effectiveFrom": $("#effectiveFrom").val()
+        let employee = _this.state.employee;
+        let transferType = _this.state.movement.transferType;
+        if(transferType === "TRANSFER_WITHIN_DEPARTMENT_OR_CORPORATION_OR_ULB"){
+          _this.setState({
+            movement: {
+              ..._this.state.movement,
+              "effectiveFrom": $("#effectiveFrom").val()
+            }
+          });
+          vacantPositionCall();
+        }else{
+          if(employee.dateOfRetirement){
+            _this.setState({
+              movement: {
+                ..._this.state.movement,
+                "effectiveFrom": $("#effectiveFrom").val()
+              }
+            });
+            vacantPositionCall();
+          }else if(employee.dob){
+            _this.setState({
+              movement: {
+                ..._this.state.movement,
+                "effectiveFrom": $("#effectiveFrom").val()
+              }
+            });
+            vacantPositionCall();
+          }else{
+            _this.setState({
+              movement: {
+                ..._this.state.movement,
+                effectiveFrom:"",
+              }
+            });
+            showError("Employee Date of birth is not availble");
           }
-        });
-        if (_this.state.movement.designationAssigned && _this.state.movement.departmentAssigned) {
-          var _designation = _this.state.movement.designationAssigned;
-          var _department = _this.state.movement.departmentAssigned;
-          var _effectiveFrom = _this.state.movement.effectiveFrom;
-          _this.vacantPositionFun(_department, _designation, _effectiveFrom);
         }
-
+        function vacantPositionCall(){
+          if (_this.state.movement.designationAssigned && _this.state.movement.departmentAssigned) {
+            var _designation = _this.state.movement.designationAssigned;
+            var _department = _this.state.movement.departmentAssigned;
+            var _effectiveFrom = _this.state.movement.effectiveFrom;
+            _this.vacantPositionFun(_department, _designation, _effectiveFrom,_this.state.employee,_this.state.movement.transferType);
+          }  
+        }
       });
 
 
@@ -321,11 +327,13 @@ class EmployeePromotion extends React.Component {
           _this.setState({
             ..._this.state,
             employee: {
+              id:obj.id,
               name: obj.name,
               code: obj.code,
               departmentId: obj.assignments[ind].department,
               designationId: obj.assignments[ind].designation,
-              positionId: obj.assignments[ind].position
+              positionId: obj.assignments[ind].position,
+              dateOfRetirement:obj.dateOfRetirement
             },
             movement: {
               ..._this.state.movement,
@@ -372,25 +380,60 @@ class EmployeePromotion extends React.Component {
       })
     }
 
-    vacantPositionFun(departmentId, designationId, effectiveFrom) {
+    vacantPositionFun(departmentId, designationId, effectiveFrom,employeeDetails,movement) {
       var _this = this;
-      commonApiPost("hr-masters", "vacantpositions", "_search", {
-        tenantId,
-        departmentId: departmentId,
-        designationId: designationId,
-        asOnDate: effectiveFrom,
-        pageSize: 500
-      }, function(err, res) {
-        if (res) {
-          _this.setState({
-            movement: {
-              ..._this.state.movement,
-            },
-            pNameList: res.Position
-          })
+      var effectiveTo;
+      if(movement !== "TRANSFER_OUTSIDE_CORPORATION_OR_ULB"){
+        commonApiPost("hr-masters", "vacantpositions", "_search", {
+          tenantId,
+          departmentId: departmentId,
+          designationId: designationId,
+          asOnDate: effectiveFrom,
+          pageSize: 500
+        }, function(err, res) {
+          if (res) {
+            _this.setState({
+              movement: {
+                ..._this.state.movement,
+              },
+              pNameList: res.Position
+            })
+          }
+        });
+      }else{
+        if(employeeDetails.dateOfRetirement){
+          effectiveTo = employeeDetails.dateOfRetirement;
+          vacantPositionApi();
+        }else if(employeeDetails.dob){
+          var dob = employeeDetails.dob.split("-");
+          var rtrYear =  Number(dob[0]) + 60;
+          effectiveTo = dob[2] + "/" + dob[1]+ "/" + rtrYear;
+          vacantPositionApi();
+        }else{
+          showError("Employee Date of birth is not availble");
         }
-      });
-
+        function vacantPositionApi(){
+          commonApiPost("hr-masters", "vacantpositions", "_search", {
+            tenantId: tenantId,
+            departmentId: departmentId,
+            designationId: designationId,
+            asOnDate: effectiveFrom,
+            toDate:effectiveTo,
+            destinationTenant: ulb,
+            pageSize: 500
+          },function (err,res) {
+            if (res) {
+              //console.log("PSTNS", res.Position);
+              _this.setState({
+                movement: {
+                  ..._this.state.movement,
+                },
+                pNameList: res.Position
+              })
+            }
+          });
+        }
+      }
     }
 
     makeAjaxUpload(file, cb) {
@@ -445,6 +488,9 @@ class EmployeePromotion extends React.Component {
             var _designation = this.state.movement.workflowDetails.designation;
             _this.getUsersFun(e.target.value, _designation);
           }
+          break;
+        case "employeeAcceptance":
+          this.setState({employeeAcceptance:e.target.value.toString()});
           break;
         case "designation":
           _this.state.movement.workflowDetails.assignee = "";
@@ -564,7 +610,7 @@ class EmployeePromotion extends React.Component {
 
     let {employeeId, typeOfMovement, currentAssignment, transferType, promotionBasis, remarks, reason, effectiveFrom, transferedLocation,
           departmentAssigned, designationAssigned, positionAssigned, fundAssigned, functionAssigned, employeeAcceptance, workflowDetails, tenantId} = this.state.movement
-    let {isSearchClicked,employee,assignments_designation,assignments_department,assignments_position,accepted}=this.state;
+    let {isSearchClicked,employee,assignments_designation,assignments_department,assignments_position,accepted,movement}=this.state;
 
     const renderOption=function(list) {
         if(list)
@@ -620,7 +666,7 @@ class EmployeePromotion extends React.Component {
 
     return (
       <div>
-        <form onSubmit={(e)=> {addOrUpdate(e)}}>
+        <form onSubmit={(e)=> {addOrUpdate(e,employee.id,movement)}}>
         <div className="form-section">
             <div className="row">
               <div className="col-md-8 col-sm-8">
@@ -962,7 +1008,11 @@ class EmployeePromotion extends React.Component {
 
           <br/>
             <div className="text-center">
-              <button id="sub" type="submit"  className="btn btn-submit">Create</button>&nbsp;&nbsp;
+              <button id="sub" type="submit"  className="btn btn-submit">
+              {
+                this.state.employeeAcceptance === "true"? "Create" :  "Submit"
+              }
+              </button>&nbsp;&nbsp;
               <button type="button" className="btn btn-close" onClick={(e)=>{this.close()}}>Close</button>
             </div>
           </form>

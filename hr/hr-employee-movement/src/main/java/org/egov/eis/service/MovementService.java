@@ -185,7 +185,7 @@ public class MovementService {
             }
             // validateEmployeeNextPositionWithCurrent
             if (employee != null && employee.getId() != null && formattedDOB != null) {
-                if (movement.getTypeOfMovement().equals(TypeOfMovement.PROMOTION) || (movement.getTypeOfMovement().equals(TypeOfMovement.TRANSFER_CUM_PROMOTION) && movement.getTransferType().equals(TransferType.TRANSFER_WITHIN_DEPARTMENT_OR_CORPORATION_OR_ULB))) {
+                if (movement.getTypeOfMovement().equals(TypeOfMovement.PROMOTION) || movement.getTransferType().equals(TransferType.TRANSFER_WITHIN_DEPARTMENT_OR_CORPORATION_OR_ULB)) {
 
                     for (Assignment assignment : employee.getAssignments()) {
                         Date formattedFD = output.parse(assignment.getFromDate());
@@ -218,7 +218,7 @@ public class MovementService {
 
             setErrorMessage(movement, message);
 
-            if (movement.getTypeOfMovement().equals(TypeOfMovement.PROMOTION) || (movement.getTypeOfMovement().equals(TypeOfMovement.TRANSFER_CUM_PROMOTION) && movement.getTransferType().equals(TransferType.TRANSFER_WITHIN_DEPARTMENT_OR_CORPORATION_OR_ULB))) {
+            if (movement.getTypeOfMovement().equals(TypeOfMovement.PROMOTION) || movement.getTransferType().equals(TransferType.TRANSFER_WITHIN_DEPARTMENT_OR_CORPORATION_OR_ULB)) {
 
                 // validateEmployeeForPromotion
                 final List<Long> positions = positionService.getPositions(movement, movementRequest.getRequestInfo(), dor, null);
@@ -251,7 +251,7 @@ public class MovementService {
                 }
 
                 setErrorMessage(movement, message);
-            } else if (movement.getTypeOfMovement().equals(TypeOfMovement.TRANSFER) && movement.getTransferType().equals(TransferType.TRANSFER_OUTSIDE_CORPORATION_OR_ULB)) {
+            } else if (movement.getTransferType().equals(TransferType.TRANSFER_OUTSIDE_CORPORATION_OR_ULB)) {
                 final List<Long> positions = positionService.getPositions(movement, movementRequest.getRequestInfo(), dor, movement.getTransferedLocation());
                 if (positions.contains(movement.getPositionAssigned()))
                     message = applicationConstants.getErrorMessage(ApplicationConstants.ERR_POSITION_NOT_VACANT) + ", ";
@@ -405,8 +405,7 @@ public class MovementService {
                 String message = "";
                 Date effectiveToDate = null;
                 if (movement.getId() != null && (movement.getTypeOfMovement().equals(TypeOfMovement.PROMOTION) ||
-                        (movement.getTypeOfMovement().equals(TypeOfMovement.TRANSFER_CUM_PROMOTION) &&
-                                movement.getTransferType().equals(TransferType.TRANSFER_WITHIN_DEPARTMENT_OR_CORPORATION_OR_ULB)))
+                         movement.getTransferType().equals(TransferType.TRANSFER_WITHIN_DEPARTMENT_OR_CORPORATION_OR_ULB))
                         && "Approve".equalsIgnoreCase(movement.getWorkflowDetails().getAction())) {
                     final EmployeeInfo employee = employeeService.getEmployee(movement, movementRequest.getRequestInfo());
                     final SimpleDateFormat inputDOB = new SimpleDateFormat("yyyy-MM-dd");
@@ -466,7 +465,7 @@ public class MovementService {
 
                     setErrorMessage(movement, message);
                     //movement.setErrorMsg(errorMsg.replace(", ", ","));
-                } else if (movement.getId() != null && movement.getTypeOfMovement().equals(TypeOfMovement.TRANSFER) &&
+                } else if (movement.getId() != null  &&
                         movement.getTransferType().equals(TransferType.TRANSFER_OUTSIDE_CORPORATION_OR_ULB)
                         && "Approve".equalsIgnoreCase(movement.getWorkflowDetails().getAction())) {
                     final Employee employee = employeeService.getEmployeeById(movementRequest);
@@ -510,8 +509,7 @@ public class MovementService {
         for (final Movement movement : movementRequest.getMovement()) {
             LOGGER.info("Employee exists:" + movement.getCheckEmployeeExists());
 
-            if (movement.getId() != null && movement.getTypeOfMovement().equals(TypeOfMovement.TRANSFER) &&
-                    movement.getTransferType().equals(TransferType.TRANSFER_OUTSIDE_CORPORATION_OR_ULB)
+            if (movement.getId() != null && movement.getTransferType().equals(TransferType.TRANSFER_OUTSIDE_CORPORATION_OR_ULB)
                     && "Approve".equalsIgnoreCase(movement.getWorkflowDetails().getAction())) {
                 final Employee employee = employeeService.getEmployeeById(movementRequest);
                 EmployeeInfo employeeInfo = employeeService.getEmployee(null, employee.getCode(), movementRequest.getMovement().get(0).getTransferedLocation(), movementRequest.getRequestInfo());

@@ -153,15 +153,15 @@ public class MovementRepository {
         if (movement.getDocuments() != null && !movement.getDocuments().isEmpty())
             documentsRepository.save(movement.getId(), movement.getDocuments(), movement.getTenantId());
 
-        if (movement.getTypeOfMovement().equals(TypeOfMovement.PROMOTION) || (movement.getTypeOfMovement().equals(TypeOfMovement.TRANSFER_CUM_PROMOTION) &&
-                movement.getTransferType().equals(TransferType.TRANSFER_WITHIN_DEPARTMENT_OR_CORPORATION_OR_ULB))
+        if (movement.getTypeOfMovement().equals(TypeOfMovement.PROMOTION) ||
+                movement.getTransferType().equals(TransferType.TRANSFER_WITHIN_DEPARTMENT_OR_CORPORATION_OR_ULB)
                 && movement.getStatus()
                 .equals(employeeService.getHRStatuses(propertiesManager.getHrMastersServiceStatusesKey(),
                         MovementStatus.APPROVED.toString(), null, movement.getTenantId(),
                         movementRequest.getRequestInfo()).get(0).getId())
                 && movement.getEmployeeAcceptance())
             try {
-                LOGGER.debug("Promotion Processing : Update employee Request : " + movementRequest);
+                LOGGER.info("Promotion Processing : Update employee Request : " + movementRequest);
                 promoteEmployee(movementRequest);
             } catch (ParseException e) {
                 e.printStackTrace();
@@ -174,9 +174,9 @@ public class MovementRepository {
                         movementRequest.getRequestInfo()).get(0).getId())
                 && movement.getEmployeeAcceptance())
             try {
-                LOGGER.debug("Transfer Processing : Update employee Request : " + movementRequest);
+                LOGGER.info("Transfer Processing : Update employee Request : " + movementRequest);
                 promoteEmployee(movementRequest);
-                LOGGER.debug("Transfer Processing : Create employee Request : " + movementRequest);
+                LOGGER.info("Transfer Processing : Create employee Request : " + movementRequest);
                 if(!movementService.checkEmployeeExists(movementRequest))
                   transferEmployee(movementRequest);
             } catch (ParseException e) {
@@ -203,7 +203,7 @@ public class MovementRepository {
         final Employee employeeInfo = employeeService.getEmployeeById(movementRequest);
         final Movement movement = movementRequest.getMovement().get(0);
         final Date effectiveFromDate = movement.getEffectiveFrom();
-        LOGGER.debug("effectiveFromDate:" + effectiveFromDate);
+        LOGGER.info("effectiveFromDate:" + effectiveFromDate);
 
         final SimpleDateFormat inputDOB = new SimpleDateFormat("yyyy-MM-dd");
         final SimpleDateFormat output = new SimpleDateFormat("dd/MM/yyyy");
@@ -246,8 +246,8 @@ public class MovementRepository {
             //employeeAssignment.setIsPrimary(false);
         }
 
-        if (movement.getTypeOfMovement().equals(TypeOfMovement.PROMOTION) || (movement.getTypeOfMovement().equals(TypeOfMovement.TRANSFER_CUM_PROMOTION) &&
-                movement.getTransferType().equals(TransferType.TRANSFER_WITHIN_DEPARTMENT_OR_CORPORATION_OR_ULB))
+        if (movement.getTypeOfMovement().equals(TypeOfMovement.PROMOTION) ||
+                movement.getTransferType().equals(TransferType.TRANSFER_WITHIN_DEPARTMENT_OR_CORPORATION_OR_ULB)
                 && movement.getStatus()
                 .equals(employeeService.getHRStatuses(propertiesManager.getHrMastersServiceStatusesKey(),
                         MovementStatus.APPROVED.toString(), null, movement.getTenantId(),
@@ -261,8 +261,8 @@ public class MovementRepository {
             assignment.setDesignation(movement.getDesignationAssigned());
             assignment.setIsPrimary(true);
             assignment.setFromDate(formattedFromDate);
-            LOGGER.debug("effectiveFromDate:" + effectiveFromDate);
-            LOGGER.debug("effectiveToDate:" + output.format(effectiveToDate));
+            LOGGER.info("effectiveFromDate:" + effectiveFromDate);
+            LOGGER.info("effectiveToDate:" + output.format(effectiveToDate));
 
             assignment.setToDate(output.format(effectiveToDate));
             assignment.setTenantId(movement.getTenantId());

@@ -50,6 +50,7 @@ import org.egov.eis.model.enums.TypeOfMovement;
 import org.egov.eis.repository.builder.MovementQueryBuilder;
 import org.egov.eis.repository.rowmapper.MovementRowMapper;
 import org.egov.eis.service.EmployeeService;
+import org.egov.eis.service.MovementService;
 import org.egov.eis.service.UserService;
 import org.egov.eis.service.WorkFlowService;
 import org.egov.eis.web.contract.*;
@@ -94,6 +95,9 @@ public class MovementRepository {
 
     @Autowired
     private MovementDocumentsRepository documentsRepository;
+
+    @Autowired
+    private MovementService movementService;
 
     public List<Movement> findForCriteria(final MovementSearchRequest movementSearchRequest,
                                           final RequestInfo requestInfo) {
@@ -173,7 +177,8 @@ public class MovementRepository {
                 LOGGER.debug("Transfer Processing : Update employee Request : " + movementRequest);
                 promoteEmployee(movementRequest);
                 LOGGER.debug("Transfer Processing : Create employee Request : " + movementRequest);
-                transferEmployee(movementRequest);
+                if(!movementService.checkEmployeeExists(movementRequest))
+                  transferEmployee(movementRequest);
             } catch (ParseException e) {
                 e.printStackTrace();
             }

@@ -53,7 +53,8 @@ class UpdateMovement extends React.Component {
       userList: [],
       buttons: [],
       owner: "",
-      status: ""
+      status: "",
+      employeeAcceptance:"",
     }
 
     this.handleChange = this.handleChange.bind(this);
@@ -80,7 +81,7 @@ class UpdateMovement extends React.Component {
 
 
     var type = getUrlVars()["type"],
-      _this = this;
+    _this = this;
     var stateId = getUrlVars()["stateId"];
     var process;
     var transferWithPromotion;
@@ -205,6 +206,7 @@ class UpdateMovement extends React.Component {
               designation: ""
             };
           }
+          _this.setState({employeeAcceptance:res.Movement[0].employeeAcceptance.toString()});
           getCommonMasterById("hr-employee", "employees", res.Movement[0].employeeId, function (err, res) {
             if (res && res.Employee) {
               var obj = res.Employee[0];
@@ -539,8 +541,7 @@ class UpdateMovement extends React.Component {
 
   handleProcess(e,employeeName,movement) {
     e.preventDefault();
-    
-    if (e.target.id.toLowerCase() == "cancel") {
+    if (e.target.id.toString() == "Cancel") {
       $('#department, #designation, #assignee').prop('required', false);
     }
 
@@ -716,7 +717,9 @@ class UpdateMovement extends React.Component {
     const renderProcesedBtns = function () {
       if (buttons.length) {
         return buttons.map(function (btn, ind) {
-          return (<span key={ind}> <button key={ind} id={btn.key} type='button' className='btn btn-submit' onClick={(e) => { handleProcess(e,employee,movement) }} >
+          return (<span key={ind}> <button key={ind} 
+          id={_this.state.employeeAcceptance && _this.state.employeeAcceptance === "true" ? btn.key : "Cancel"} 
+          type='button' className='btn btn-submit' onClick={(e) => { handleProcess(e,employee,movement) }} >
             {btn.name}
           </button> &nbsp; </span>)
         })

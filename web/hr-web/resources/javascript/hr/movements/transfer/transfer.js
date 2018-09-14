@@ -113,7 +113,7 @@
                 };
   
                 $.ajax({
-                  url: baseUrl + "/hr-employee-movement/movements/${status}?tenantId=" + tenantId,
+                  url: baseUrl + "/hr-employee-movement/movements/_create?tenantId=" + tenantId,
                   type: 'POST',
                   dataType: 'json',
                   data: JSON.stringify(body),
@@ -146,7 +146,7 @@
           "Movement": [movement]
         };
         $.ajax({
-          url: baseUrl + "/hr-employee-movement/movements/${status}?tenantId=" + tenantId,
+          url: baseUrl + "/hr-employee-movement/movements/_create?tenantId=" + tenantId,
           type: 'POST',
           dataType: 'json',
           data: JSON.stringify(body),

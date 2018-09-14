@@ -189,6 +189,7 @@ class UpdateMovement extends React.Component {
               designation: ""
             };
           }
+          _this.setState({employeeAcceptance:res.Movement[0].employeeAcceptance.toString()});
           if (Movement.transferType === "TRANSFER_OUTSIDE_CORPORATION_OR_ULB") {
             //console.log("DEPT - DESIG - EFFDTE - ULB", Movement.transferedLocation);
             _this.getUlbDetails(Movement.transferedLocation);
@@ -671,7 +672,7 @@ class UpdateMovement extends React.Component {
   handleProcess(e,employeeName,movement) {
     e.preventDefault();
     $('#transferWithPromotion').prop('required',false);
-    if (e.target.id.toLowerCase() == "cancel") {
+    if (e.target.id.toString() == "Cancel") {
       $('#department, #designation, #assignee').prop('required', false);
     }
     if($('#update-transfer').valid()) {
@@ -855,7 +856,10 @@ class UpdateMovement extends React.Component {
     const renderProcesedBtns = function(){
       if (buttons.length) {
         return buttons.map(function (btn, ind) {
-          return (<span key={ind}> <button key={ind} id={btn.key} type='button' className='btn btn-submit' onClick={(e) => { handleProcess(e,employee,movement) }} >
+          return (<span key={ind}> <button key={ind} 
+          id={_this.state.employeeAcceptance && _this.state.employeeAcceptance === "true" ? btn.key : "Cancel"}  
+          type='button' className='btn btn-submit' onClick={(e) => 
+          { handleProcess(e,employee,movement) }} >
             {btn.name}
           </button> &nbsp; </span>)
         })

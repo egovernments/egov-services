@@ -57,6 +57,7 @@
       reasonList: [],
       pNameList: [],
       userList: [],
+      currentUlb:"",
       employeeAcceptance:"true"
     }
     this.handleChange = this.handleChange.bind(this);

@@ -74,14 +74,14 @@ ReportDefinitions:
     isMandatory: false
     searchClause: AND tbl_rcpt.createddate <= $toDate
   - name: paymentMode
-    label: reports.pt.paymentMode
+    label: Payment Mode
     type: singlevaluelist
     pattern: 'list://Cash:Cash,Online:Online,Card:Card,DD:DD,Cheque:Cheque'
     source: pt
     isMandatory: false
     searchClause: AND instrumenttype = $paymentMode
   - name: financialyear
-    label: reports.pt.financialYear
+    label: Financial Year
     type: singlevaluelist
     pattern: http://egov-mdms-service:8080/egov-mdms-service/v1/_get?tenantId=$tenantid&moduleName=egf-master&masterName=FinancialYear|$.MdmsRes.egf-master.FinancialYear.[?(@.module=='PT')].code|$.MdmsRes.egf-master.FinancialYear.[?(@.module=='PT')].name
     source: pt
@@ -125,7 +125,7 @@ ReportDefinitions:
     total: false
   searchParams:
   - name: ulb
-    label: reports.pt.ulb
+    label: ULB
     type: singlevaluelist
     pattern: http://egov-mdms-service:8080/egov-mdms-service/v1/_get?tenantId=$tenantid&moduleName=tenant&masterName=tenants|$.MdmsRes.tenant.tenants.*.code|$.MdmsRes.tenant.tenants.*.name
     source: pt
@@ -133,7 +133,7 @@ ReportDefinitions:
     isMandatory: false
     searchClause: AND tenantid = $ulb
   - name: financialyear
-    label: reports.pt.financialYear
+    label: Financial Year
     type: singlevaluelist
     pattern: http://egov-mdms-service:8080/egov-mdms-service/v1/_get?tenantId=$tenantid&moduleName=egf-master&masterName=FinancialYear|$.MdmsRes.egf-master.FinancialYear.[?(@.module=='PT')].code|$.MdmsRes.egf-master.FinancialYear.[?(@.module=='PT')].name
     source: pt
@@ -141,7 +141,7 @@ ReportDefinitions:
     isMandatory: false
     searchClause: AND financialyear = $financialyear
   - name: usage
-    label: reports.pt.usage
+    label: Usage
     type: singlevaluelist
     pattern: http://egov-mdms-service:8080/egov-mdms-service/v1/_get?tenantId=$tenantid&moduleName=PropertyTax&masterName=UsageCategoryMajor|$..code|$..name
     source: pt

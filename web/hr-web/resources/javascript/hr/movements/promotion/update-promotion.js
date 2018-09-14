@@ -138,21 +138,51 @@ class UpdateMovement extends React.Component {
     });
     $('#effectiveFrom').val("");
     $('#effectiveFrom ').on('changeDate', function (e) {
-
-
-      _this.setState({
-        movement: {
-          ..._this.state.movement,
-          "effectiveFrom": $("#effectiveFrom").val()
+      let employee = _this.state.employee;
+      let transferType = _this.state.movement.transferType;
+      if(transferType === "TRANSFER_WITHIN_DEPARTMENT_OR_CORPORATION_OR_ULB"){
+        _this.setState({
+          movement: {
+            ..._this.state.movement,
+            "effectiveFrom": $("#effectiveFrom").val()
+          }
+        });
+        vacantPositionCall();
+      }else{
+        if(employee.dateOfRetirement){
+          _this.setState({
+            movement: {
+              ..._this.state.movement,
+              "effectiveFrom": $("#effectiveFrom").val()
+            }
+          });
+          vacantPositionCall();
+        }else if(employee.dob){
+          _this.setState({
+            movement: {
+              ..._this.state.movement,
+              "effectiveFrom": $("#effectiveFrom").val()
+            }
+          });
+          vacantPositionCall();
+        }else{
+          _this.setState({
+            movement: {
+              ..._this.state.movement,
+              effectiveFrom:"",
+            }
+          });
+          showError("Employee Date of birth is not availble");
         }
-      });
-      if (_this.state.movement.designationAssigned && _this.state.movement.departmentAssigned) {
-        var _designation = _this.state.movement.designationAssigned;
-        var _department = _this.state.movement.departmentAssigned;
-        var _effectiveFrom = _this.state.movement.effectiveFrom;
-        _this.vacantPositionFun(_department, _designation, _effectiveFrom);
       }
-
+      function vacantPositionCall(){
+        if (_this.state.movement.designationAssigned && _this.state.movement.departmentAssigned) {
+          var _designation = _this.state.movement.designationAssigned;
+          var _department = _this.state.movement.departmentAssigned;
+          var _effectiveFrom = _this.state.movement.effectiveFrom;
+          _this.vacantPositionFun(_department, _designation, _effectiveFrom,_this.state.employee,_this.state.movement.transferType);
+        }
+      }
     });
 
 
@@ -232,7 +262,7 @@ class UpdateMovement extends React.Component {
           if (process.status != "Rejected") 
             $("input,select,textarea").prop("disabled", true);
       
-          $('#effectiveFrom').prop("disabled", false);
+          $('#effectiveFrom').prop("disabled",true);
 
           _this.setState({
             ..._this.state,
@@ -283,23 +313,59 @@ class UpdateMovement extends React.Component {
 
   vacantPositionFun(departmentId, designationId, effectiveFrom) {
     var _this = this;
-    commonApiPost("hr-masters", "vacantpositions", "_search", {
-      tenantId,
-      departmentId: departmentId,
-      designationId: designationId,
-      asOnDate: effectiveFrom,
-      pageSize: 500
-    }, function (err, res) {
-      if (res) {
-        _this.setState({
-          movement: {
-            ..._this.state.movement,
-          },
-          pNameList: res.Position
-        })
+    var effectiveTo;
+    if(movement !== "TRANSFER_OUTSIDE_CORPORATION_OR_ULB"){
+      commonApiPost("hr-masters", "vacantpositions", "_search", {
+        tenantId,
+        departmentId: departmentId,
+        designationId: designationId,
+        asOnDate: effectiveFrom,
+        destinationTenant:ulb,
+        pageSize: 500
+      }, function (err, res) {
+        if (res) {
+          _this.setState({
+            movement: {
+              ..._this.state.movement,
+            },
+            pNameList: res.Position
+          })
+        }
+      });
+    }else{
+      if(employeeDetails.dateOfRetirement){
+        effectiveTo = employeeDetails.dateOfRetirement;
+        vacantPositionApi();
+      }else if(employeeDetails.dob){
+        var dob = employeeDetails.dob.split("-");
+        var rtrYear =  Number(dob[0]) + 60;
+        effectiveTo = dob[2] + "/" + dob[1]+ "/" + rtrYear;
+        vacantPositionApi();
+      }else{
+        showError("Employee Date of birth is not availble");
       }
-    });
-
+      function vacantPositionApi(){
+        commonApiPost("hr-masters", "vacantpositions", "_search", {
+          tenantId: tenantId,
+          departmentId: departmentId,
+          designationId: designationId,
+          asOnDate: effectiveFrom,
+          toDate:effectiveTo,
+          destinationTenant: ulb,
+          pageSize: 500
+        },function (err,res) {
+          if (res) {
+            //console.log("PSTNS", res.Position);
+            _this.setState({
+              movement: {
+                ..._this.state.movement,
+              },
+              pNameList: res.Position
+            })
+          }
+        });
+      }
+    }
   }
 
   makeAjaxUpload(file, cb) {
@@ -348,6 +414,9 @@ class UpdateMovement extends React.Component {
           _this.vacantPositionFun(e.target.value, _designation, _date);
         }
         break;
+      case "employeeAcceptance":
+        this.setState({employeeAcceptance:e.target.value.toString()});
+        break;
       case "department":
         _this.state.movement.workflowDetails.assignee = "";
         if (this.state.movement.workflowDetails.designation) {
@@ -362,9 +431,7 @@ class UpdateMovement extends React.Component {
           _this.getUsersFun(_department, e.target.value);
         }
         break;
-
     }
-
     if (name === "promotionBasis") {
       this.setState({
         movement: {
@@ -521,61 +588,8 @@ class UpdateMovement extends React.Component {
                     'auth-token': authToken
                   },
                   success: function (res) {
-                    console.log("res", res.Movement[0].workflowDetails.assignee);
-                    var employee, designation;
-
-                    var asOnDate = new Date();
-                    var dd = asOnDate.getDate();
-                    var mm = asOnDate.getMonth() + 1; 
-                    var yyyy = asOnDate.getFullYear();
-              
-                    if (dd < 10) {
-                      dd = '0' + dd
-                    }
-              
-                    if (mm < 10) {
-                      mm = '0' + mm
-                    }
-              
-                    asOnDate = dd + '/' + mm + '/' + yyyy;
-
-                    let _positionId = (ID === "Reject") ? _this.state.initiator : res.Movement[0].workflowDetails.assignee;
-                    //console.log("res", _positionId );
-                    commonApiPost("hr-employee", "employees", "_search", {
-                      tenantId,
-                      asOnDate,
-                      positionId: _positionId
-                    }, function (err, res2) {
-                      if (res2 && res2.Employee && res2.Employee[0])
-                        employee = res2.Employee[0];
-
-                      employee.assignments.forEach(function (item) {
-                        if (item.isPrimary)
-                          designation = item.designation;
-                      });
-                      var ownerDetails = employee.name + " - " + employee.code + " - " + getNameById(_this.state.designationList, designation);
-                      var employeeAcceptance = movement.employeeAcceptance;
-                      if(employeeAcceptance.toString() === "true"){
-                        if (ID === "Submit"){
-                          window.location.href = `app/hr/movements/ack-page.html?type=TransferSubmit&owner=${ownerDetails}&employeeId=${employeeName.id}`;
-                        }
-                        if (ID === "Approve"){
-                          window.location.href = `app/hr/movements/ack-page.html?type=TransferApprove&owner=${ownerDetails}&employeeId=${employeeName.id}`;
-                        }
-                      }
-                      if(employeeAcceptance.toString() === "false"){
-                        if (ID === "Submit"){
-                          window.location.href = `app/hr/movements/ack-page.html?type=TransferEmpReject&owner=${ownerDetails}&employeeId=${employeeName.id}`;
-                        }
-                        if (ID === "Approve"){
-                          window.location.href = `app/hr/movements/ack-page.html?type=TransferEmpReject&owner=${ownerDetails}&employeeId=${employeeName.id}`;
-                        }
-                      }                      
-                      if (ID === "Cancel")
-                        window.location.href = `app/hr/movements/ack-page.html?type=PromotionCancel&owner=${ownerDetails}&employeeId=${employeeName.id}`;
-                      if (ID === "Reject")
-                        window.location.href = `app/hr/movements/ack-page.html?type=PromotionReject&owner=${ownerDetails}&employeeId=${employeeName.id}`;
-                    });
+                    //console.log("res", res.Movement[0].workflowDetails.assignee);
+                    commonApiPostCall(res);
                   },
                   error: function (err) {
                     if (err["responseJSON"].message)
@@ -612,60 +626,8 @@ class UpdateMovement extends React.Component {
             'auth-token': authToken
           },
           success: function (res) {
-            console.log("res", res.Movement[0].workflowDetails.assignee);
-            var employee, designation;
-
-            var asOnDate = new Date();
-            var dd = asOnDate.getDate();
-            var mm = asOnDate.getMonth() + 1; 
-            var yyyy = asOnDate.getFullYear();
-      
-            if (dd < 10) {
-              dd = '0' + dd
-            }
-      
-            if (mm < 10) {
-              mm = '0' + mm
-            }
-      
-            asOnDate = dd + '/' + mm + '/' + yyyy;
-            let _positionId = (ID === "Reject") ? _this.state.initiator : res.Movement[0].workflowDetails.assignee;
-            console.log("res", _positionId );
-            commonApiPost("hr-employee", "employees", "_search", {
-              tenantId,
-              asOnDate,
-              positionId: _positionId
-            }, function (err, res2) {
-              if (res2 && res2.Employee && res2.Employee[0])
-                employee = res2.Employee[0];
-
-              employee.assignments.forEach(function (item) {
-                if (item.isPrimary)
-                  designation = item.designation;
-              });
-              var ownerDetails = employee.name + " - " + employee.code + " - " + getNameById(_this.state.designationList, designation);
-              var employeeAcceptance = movement.employeeAcceptance;
-              if(employeeAcceptance.toString() === "true"){
-                if (ID === "Submit"){
-                  window.location.href = `app/hr/movements/ack-page.html?type=TransferSubmit&owner=${ownerDetails}&employeeId=${employeeName.id}`;
-                }
-                if (ID === "Approve"){
-                  window.location.href = `app/hr/movements/ack-page.html?type=TransferApprove&owner=${ownerDetails}&employeeId=${employeeName.id}`;
-                }
-              }
-              if(employeeAcceptance.toString() === "false"){
-                if (ID === "Submit"){
-                  window.location.href = `app/hr/movements/ack-page.html?type=TransferEmpReject&owner=${ownerDetails}&employeeId=${employeeName.id}`;
-                }
-                if (ID === "Approve"){
-                  window.location.href = `app/hr/movements/ack-page.html?type=TransferEmpReject&owner=${ownerDetails}&employeeId=${employeeName.id}`;
-                }
-              }              
-              if (ID === "Cancel")
-                window.location.href = `app/hr/movements/ack-page.html?type=PromotionCancel&owner=${ownerDetails}&employeeId=${employeeName.id}`;
-              if (ID === "Reject")
-                window.location.href = `app/hr/movements/ack-page.html?type=PromotionReject&owner=${ownerDetails}&employeeId=${employeeName.id}`;
-            });
+            //console.log("res", res.Movement[0].workflowDetails.assignee);
+            commonApiPostCall(res)
           },
           error: function (err) {
             if (err["responseJSON"].message)
@@ -676,6 +638,62 @@ class UpdateMovement extends React.Component {
               showError("Something went wrong. Please contact Administrator");
             }
           }
+        });
+      }
+      function commonApiPostCall(res){
+        var employee, designation;
+
+        var asOnDate = new Date();
+        var dd = asOnDate.getDate();
+        var mm = asOnDate.getMonth() + 1; 
+        var yyyy = asOnDate.getFullYear();
+  
+        if (dd < 10) {
+          dd = '0' + dd
+        }
+  
+        if (mm < 10) {
+          mm = '0' + mm
+        }
+  
+        asOnDate = dd + '/' + mm + '/' + yyyy;
+
+        let _positionId = (ID === "Reject") ? _this.state.initiator : res.Movement[0].workflowDetails.assignee;
+        //console.log("res", _positionId );
+        commonApiPost("hr-employee", "employees", "_search", {
+          tenantId,
+          asOnDate,
+          positionId: _positionId
+        }, function (err, res2) {
+          if (res2 && res2.Employee && res2.Employee[0])
+            employee = res2.Employee[0];
+
+          employee.assignments.forEach(function (item) {
+            if (item.isPrimary)
+              designation = item.designation;
+          });
+          var ownerDetails = employee.name + " - " + employee.code + " - " + getNameById(_this.state.designationList, designation);
+          var employeeAcceptance = movement.employeeAcceptance;
+          if(employeeAcceptance.toString() === "true"){
+            if (ID === "Submit"){
+              window.location.href = `app/hr/movements/ack-page.html?type=TransferSubmit&owner=${ownerDetails}&employeeId=${employeeName.id}`;
+            }
+            if (ID === "Approve"){
+              window.location.href = `app/hr/movements/ack-page.html?type=TransferApprove&owner=${ownerDetails}&employeeId=${employeeName.id}`;
+            }
+          }
+          if(employeeAcceptance.toString() === "false"){
+            if (ID === "Submit"){
+              window.location.href = `app/hr/movements/ack-page.html?type=TransferEmpReject&owner=${ownerDetails}&employeeId=${employeeName.id}`;
+            }
+            if (ID === "Approve"){
+              window.location.href = `app/hr/movements/ack-page.html?type=TransferEmpReject&owner=${ownerDetails}&employeeId=${employeeName.id}`;
+            }
+          }                      
+          if (ID === "Cancel")
+            window.location.href = `app/hr/movements/ack-page.html?type=PromotionCancel&owner=${ownerDetails}&employeeId=${employeeName.id}`;
+          if (ID === "Reject")
+            window.location.href = `app/hr/movements/ack-page.html?type=PromotionReject&owner=${ownerDetails}&employeeId=${employeeName.id}`;
         });
       }
     } else {

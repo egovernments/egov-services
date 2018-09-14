@@ -499,9 +499,7 @@ class EmployeePromotion extends React.Component {
             _this.getUsersFun(_department, e.target.value);
           }
           break;
-
       }
-
       if (name === "promotionBasis") {
         this.setState({
           movement: {

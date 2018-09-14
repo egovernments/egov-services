@@ -1,12 +1,17 @@
 package org.egov.pt.repository.rowmapper;
 
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.egov.common.contract.request.User;
 import org.egov.pt.web.models.*;
 import org.egov.pt.web.models.Property.CreationReasonEnum;
 import org.egov.pt.web.models.PropertyDetail.ChannelEnum;
 import org.egov.pt.web.models.PropertyDetail.SourceEnum;
+import org.egov.tracer.model.CustomException;
+import org.postgresql.util.PGobject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.stereotype.Component;
@@ -21,6 +26,9 @@ import java.util.Map;
 @Slf4j
 @Component
 public class PropertyRowMapper implements ResultSetExtractor<List<Property>> {
+
+	@Autowired
+	private ObjectMapper mapper;
 
 	@Override
 	public List<Property> extractData(ResultSet rs) throws SQLException, DataAccessException {
@@ -125,29 +133,36 @@ public class PropertyRowMapper implements ResultSetExtractor<List<Property>> {
 			Long noOfFloors = rs.getLong("noOfFloors");
 			if(rs.wasNull()){noOfFloors = null;}
 
-			detail = PropertyDetail.builder()
-					.additionalDetails(rs.getObject("additionalDetails"))
-					.buildUpArea(buildUpArea)
-					.landArea(landArea)
-					.channel(ChannelEnum.fromValue(rs.getString("channel")))
-					.noOfFloors(noOfFloors).source(SourceEnum.fromValue(rs.getString("source")))
-					.usage(rs.getString("usage")).assessmentDate(rs.getLong("assessmentDate"))
-					.assessmentNumber(rs.getString("assessmentNumber")).financialYear(rs.getString("financialYear"))
-					.propertyType(rs.getString("propertyType")).propertySubType(rs.getString("propertySubType"))
-					.ownershipCategory(rs.getString("ownershipCategory"))
-					.subOwnershipCategory(rs.getString("subOwnershipCategory"))
-					.usageCategoryMajor(rs.getString("usageCategoryMajor"))
-					.usageCategoryMinor(rs.getString("usageCategoryMinor"))
-					.adhocExemption(rs.getBigDecimal("adhocExemption"))
-					.adhocExemptionReason(rs.getString("adhocExemptionReason"))
-					.adhocPenalty(rs.getBigDecimal("adhocPenalty"))
-					.adhocPenaltyReason(rs.getString("adhocPenaltyReason"))
-					.tenantId(rs.getString("tenantid"))
-					.institution(institution)
-					.citizenInfo(citizenInfo)
-					.auditDetails(assessAuditdetails)
-					.build();
-			property.addpropertyDetailsItem(detail);
+			try{
+				PGobject obj = (PGobject) rs.getObject("additionalDetails");
+				JsonNode additionalDetails = mapper.readTree( obj.getValue());
+				detail = PropertyDetail.builder()
+						.additionalDetails(additionalDetails)
+						.buildUpArea(buildUpArea)
+						.landArea(landArea)
+						.channel(ChannelEnum.fromValue(rs.getString("channel")))
+						.noOfFloors(noOfFloors).source(SourceEnum.fromValue(rs.getString("source")))
+						.usage(rs.getString("usage")).assessmentDate(rs.getLong("assessmentDate"))
+						.assessmentNumber(rs.getString("assessmentNumber")).financialYear(rs.getString("financialYear"))
+						.propertyType(rs.getString("propertyType")).propertySubType(rs.getString("propertySubType"))
+						.ownershipCategory(rs.getString("ownershipCategory"))
+						.subOwnershipCategory(rs.getString("subOwnershipCategory"))
+						.usageCategoryMajor(rs.getString("usageCategoryMajor"))
+						.usageCategoryMinor(rs.getString("usageCategoryMinor"))
+						.adhocExemption(rs.getBigDecimal("adhocExemption"))
+						.adhocExemptionReason(rs.getString("adhocExemptionReason"))
+						.adhocPenalty(rs.getBigDecimal("adhocPenalty"))
+						.adhocPenaltyReason(rs.getString("adhocPenaltyReason"))
+						.tenantId(rs.getString("tenantid"))
+						.institution(institution)
+						.citizenInfo(citizenInfo)
+						.auditDetails(assessAuditdetails)
+						.build();
+				property.addpropertyDetailsItem(detail);
+			   }
+			catch (Exception e){
+				throw new CustomException("PARSING ERROR","The additionalDetail json cannot be parsed");
+			}
 		}
 
 		String tenantId = property.getTenantId();

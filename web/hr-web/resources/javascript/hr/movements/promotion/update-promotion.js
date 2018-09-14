@@ -677,22 +677,25 @@ class UpdateMovement extends React.Component {
           var employeeAcceptance = movement.employeeAcceptance;
           if(employeeAcceptance.toString() === "true"){
             if (ID === "Submit"){
-              window.location.href = `app/hr/movements/ack-page.html?type=TransferSubmit&owner=${ownerDetails}&employeeId=${employeeName.id}`;
+              window.location.href = `app/hr/movements/ack-page.html?type=PromotionSubmit&owner=${ownerDetails}&employeeId=${employeeName.id}`;
             }
             if (ID === "Approve"){
-              window.location.href = `app/hr/movements/ack-page.html?type=TransferApprove&owner=${ownerDetails}&employeeId=${employeeName.id}`;
+              window.location.href = `app/hr/movements/ack-page.html?type=PromotionApprove&owner=${ownerDetails}&employeeId=${employeeName.id}`;
+            }
+            if (ID === "Cancel"){
+              window.location.href = `app/hr/movements/ack-page.html?type=PromotionCancel&owner=${ownerDetails}&employeeId=${employeeName.id}`;
             }
           }
           if(employeeAcceptance.toString() === "false"){
             if (ID === "Submit"){
-              window.location.href = `app/hr/movements/ack-page.html?type=TransferEmpReject&owner=${ownerDetails}&employeeId=${employeeName.id}`;
+              window.location.href = `app/hr/movements/ack-page.html?type=PromotionEmpReject&owner=${ownerDetails}&employeeId=${employeeName.id}`;
             }
             if (ID === "Approve"){
-              window.location.href = `app/hr/movements/ack-page.html?type=TransferEmpReject&owner=${ownerDetails}&employeeId=${employeeName.id}`;
+              window.location.href = `app/hr/movements/ack-page.html?type=PromotionEmpReject&owner=${ownerDetails}&employeeId=${employeeName.id}`;
             }
+            if (ID === "Cancel")
+              window.location.href = `app/hr/movements/ack-page.html?type=PromotionEmpReject&owner=${ownerDetails}&employeeId=${employeeName.id}`;
           }                      
-          if (ID === "Cancel")
-            window.location.href = `app/hr/movements/ack-page.html?type=PromotionCancel&owner=${ownerDetails}&employeeId=${employeeName.id}`;
           if (ID === "Reject")
             window.location.href = `app/hr/movements/ack-page.html?type=PromotionReject&owner=${ownerDetails}&employeeId=${employeeName.id}`;
         });

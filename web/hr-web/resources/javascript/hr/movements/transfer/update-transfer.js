@@ -818,6 +818,8 @@ class UpdateMovement extends React.Component {
             if (ID === "Approve"){
               window.location.href = `app/hr/movements/ack-page.html?type=TransferApprove&owner=${ownerDetails}&employeeId=${employeeName.id}`;
             }
+            if (ID === "Cancel")
+              window.location.href = `app/hr/movements/ack-page.html?type=TransferCancel&owner=${ownerDetails}&employeeId=${employeeName.id}`;
           }
           if(employeeAcceptance.toString() === "false"){
             if (ID === "Submit"){
@@ -826,9 +828,9 @@ class UpdateMovement extends React.Component {
             if (ID === "Approve"){
               window.location.href = `app/hr/movements/ack-page.html?type=TransferEmpReject&owner=${ownerDetails}&employeeId=${employeeName.id}`;
             }
+            if (ID === "Cancel")
+              window.location.href = `app/hr/movements/ack-page.html?type=TransferEmpReject&owner=${ownerDetails}&employeeId=${employeeName.id}`;
           }
-          if (ID === "Cancel")
-            window.location.href = `app/hr/movements/ack-page.html?type=TransferCancel&owner=${ownerDetails}&employeeId=${employeeName.id}`;
           if (ID === "Reject")
             window.location.href = `app/hr/movements/ack-page.html?type=TransferReject&owner=${ownerDetails}&employeeId=${employeeName.id}`;
         });

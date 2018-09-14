@@ -119,7 +119,8 @@ public class DemandService {
 				Property property = criteria.getProperty();
 
 				Demand demand = prepareDemand(property,
-						propertyCalculationMap.get(property.getPropertyDetails().get(0).getAssessmentNumber()));
+						propertyCalculationMap.get(property.getPropertyDetails().get(0).getAssessmentNumber()),
+						request.getRequestInfo());
 
 /*				if (carryForwardCollectedAmount.doubleValue() > 0.0)
 					demand.getDemandDetails()
@@ -244,21 +245,9 @@ public class DemandService {
 
 		if(null == property.getPropertyId()) return carryForward;
 
-		Assessment assessment = Assessment.builder().propertyId(property.getPropertyId())
-				.tenantId(property.getTenantId())
-				.assessmentYear(property.getPropertyDetails().get(0).getFinancialYear()).build();
-
-		List<Assessment> assessments = assessmentService.getMaxAssessment(assessment);
-
-		if (CollectionUtils.isEmpty(assessments)) return carryForward;
-
-		Assessment latestAssessment = assessments.get(0);
-		log.debug(" the latest assessment : " + latestAssessment);
-
-		DemandResponse res = mapper.convertValue(
-				repository.fetchResult(utils.getDemandSearchUrl(latestAssessment), new RequestInfoWrapper(requestInfo)),
-				DemandResponse.class);
-		Demand demand = res.getDemands().get(0);
+		Demand demand = getLatestDemandForCurrentFinancialYear(requestInfo, property);
+		
+		if(null == demand) return carryForward;
 
 		carryForward = utils.getTotalCollectedAmountAndPreviousCarryForward(demand);
 		
@@ -284,13 +273,39 @@ public class DemandService {
 	}
 
 	/**
+	 * @param requestInfo
+	 * @param property
+	 * @param carryForward
+	 * @return
+	 */
+	public Demand getLatestDemandForCurrentFinancialYear(RequestInfo requestInfo, Property property) {
+		
+		Assessment assessment = Assessment.builder().propertyId(property.getPropertyId())
+				.tenantId(property.getTenantId())
+				.assessmentYear(property.getPropertyDetails().get(0).getFinancialYear()).build();
+
+		List<Assessment> assessments = assessmentService.getMaxAssessment(assessment);
+
+		if (CollectionUtils.isEmpty(assessments))
+			return null;
+
+		Assessment latestAssessment = assessments.get(0);
+		log.debug(" the latest assessment : " + latestAssessment);
+
+		DemandResponse res = mapper.convertValue(
+				repository.fetchResult(utils.getDemandSearchUrl(latestAssessment), new RequestInfoWrapper(requestInfo)),
+				DemandResponse.class);
+		return res.getDemands().get(0);
+	}
+
+	/**
 	 * Prepares Demand object based on the incoming calculation object and property
 	 * 
 	 * @param property
 	 * @param calculation
 	 * @return
 	 */
-	private Demand prepareDemand(Property property, Calculation calculation) {
+	private Demand prepareDemand(Property property, Calculation calculation, RequestInfo requestInfo) {
 
 		String tenantId = property.getTenantId();
 		PropertyDetail detail = property.getPropertyDetails().get(0);
@@ -301,12 +316,27 @@ public class DemandService {
 			owner = detail.getCitizenInfo();
 		else
 			owner = detail.getOwners().iterator().next();
+		
+		Demand demand = getLatestDemandForCurrentFinancialYear(requestInfo, property);
+		Map<String, BigDecimal> detailCollectionMap = new HashMap<>();
+		if (null != demand)
+			detailCollectionMap = demand.getDemandDetails().stream()
+					.collect(Collectors.toMap(DemandDetail::getTaxHeadMasterCode, DemandDetail::getCollectionAmount));
 
 		List<DemandDetail> details = new ArrayList<>();
 
-		for (TaxHeadEstimate estimate : calculation.getTaxHeadEstimates())
-				details.add(DemandDetail.builder().taxHeadMasterCode(estimate.getTaxHeadCode())
-						.taxAmount(estimate.getEstimateAmount()).tenantId(tenantId).build());
+		for (TaxHeadEstimate estimate : calculation.getTaxHeadEstimates()) {
+
+			if (estimate.getTaxHeadCode().equalsIgnoreCase(CalculatorConstants.PT_ADVANCE_CARRYFORWARD))
+				continue;
+
+			details.add(DemandDetail.builder().taxHeadMasterCode(estimate.getTaxHeadCode())
+					.taxAmount(estimate.getEstimateAmount())
+					.collectionAmount(detailCollectionMap.get(estimate.getTaxHeadCode()) != null
+							? detailCollectionMap.get(estimate.getTaxHeadCode())
+							: BigDecimal.ZERO)
+					.tenantId(tenantId).build());
+		}
 
 		return Demand.builder().tenantId(tenantId).businessService(configs.getPtModuleCode()).consumerType(propertyType)
 				.consumerCode(consumerCode).owner(owner).taxPeriodFrom(calculation.getFromDate())

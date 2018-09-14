@@ -1,6 +1,6 @@
-function confirmEmployee(body) {
+function confirmEmployee(body,employeeName) {
   let userConfirm = confirm("Employee already exist in the given ULB. Do you want to continue?");
-  console.log("userConfirm: ", userConfirm);
+  //console.log("userConfirm: ", userConfirm);
   if (userConfirm) {
     console.log(body.Movement);
     body.Movement[0].checkEmployeeExists = false;
@@ -15,7 +15,7 @@ function confirmEmployee(body) {
         'auth-token': authToken
       },
       success: function (res) {
-        window.location.href = `app/hr/movements/ack-page.html?type=TransferApprove`;
+        window.location.href = `app/hr/movements/ack-page.html?type=TransferApprove&employeeId=${employeeName.id}`;
       },
       error: function (err) {
         if (err["responseJSON"].message)
@@ -729,7 +729,7 @@ class UpdateMovement extends React.Component {
                     console.log(res.Movement[0].checkEmployeeExists);
 
                     if (ID === "Approve" && res.Movement[0].checkEmployeeExists) {
-                      if (!confirmEmployee(body))
+                      if (!confirmEmployee(body,employeeName))
                         return showError("You cancelled the application. Please select other options");
                     }
                     commonApiPostCall(res);
@@ -770,8 +770,8 @@ class UpdateMovement extends React.Component {
             //console.log(res.Movement[0].checkEmployeeExists);
 
             if (ID === "Approve" && res.Movement[0].checkEmployeeExists) {
-              if (!confirmEmployee(body))
-                return showError("You cancelled the application. Please select other options");
+              if (!confirmEmployee(body,employeeName))
+                return //showError("You cancelled the application. Please select other options");
             }
             commonApiPostCall(res)
           },

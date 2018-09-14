@@ -200,7 +200,11 @@ public class UserService {
 		userGetRequest.setRoleCodes(employeeCriteria.getRoleCodes());
 		userGetRequest.setTenantId(employeeCriteria.getTenantId());
 		userGetRequest.setRequestInfo(requestInfo);
-		userGetRequest.setActive(employeeCriteria.getActive());
+		if(null == employeeCriteria.getActive()) {
+			userGetRequest.setActive(true);
+		}else {
+			userGetRequest.setActive(employeeCriteria.getActive());
+		}
 
 		if(!isEmpty(employeeCriteria.getUserName())) {
 			userGetRequest.setUserName(employeeCriteria.getUserName());

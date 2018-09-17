@@ -41,7 +41,7 @@ public class PropertyFilter extends ZuulFilter {
 		PostFilterRequest req = PostFilterRequest.builder().Request(reqDc.jsonString()).Response(resDc.jsonString()).build();
 		String response = null;
 		try {
-			response = updateFireCess(req);
+			response = updateFireCess(req, uri);
 		} catch (HttpClientErrorException e) {
 			System.err.println(" the error : " + e.getResponseBodyAsString());
 			e.printStackTrace();
@@ -52,9 +52,9 @@ public class PropertyFilter extends ZuulFilter {
 		return null;
 	}
 
-	private String updateFireCess(PostFilterRequest req) {
+	private String updateFireCess(PostFilterRequest req, String uri) {
 
-		return restTemplate.postForObject("http://localhost:8081/pn-calculator/propertytax/_recalculate", req,
+		return restTemplate.postForObject(UrlProvider.getUrlMap().get(uri), req,
 				String.class);
 	}
 

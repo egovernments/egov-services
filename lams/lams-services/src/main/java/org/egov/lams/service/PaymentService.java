@@ -1159,10 +1159,10 @@ public class PaymentService {
         Set<String> taxPeriods = accountDetailsMap.keySet();
         for (String taxPeriod : taxPeriods) {
             penaltyEffectiveDate = getPenaltyEffectiveDate(demand.getTenantId(), taxPeriod);
-            if ((penaltyEffectiveDate != null && billReceiptInfo.getReceiptDate().before(penaltyEffectiveDate)
+            if (penaltyEffectiveDate != null && ((billReceiptInfo.getReceiptDate().before(penaltyEffectiveDate)
                     && currentDate.after(penaltyEffectiveDate)) ||
-                    (penaltyEffectiveDate != null && billReceiptInfo.getReceiptDate().after(penaltyEffectiveDate)
-                    && currentDate.after(penaltyEffectiveDate) )) {
+                    (billReceiptInfo.getReceiptDate().after(penaltyEffectiveDate)
+                            && currentDate.after(penaltyEffectiveDate)))) {
 
                 Set<DemandDetails> demandDetailsSet = new LinkedHashSet<>();
                 Map<String, DemandDetails> demandReasonMap = new HashMap<>();

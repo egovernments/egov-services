@@ -626,10 +626,6 @@ public class GrievanceService {
 			else
 				throw e;
 		}
-		if (null != serviceReqSearchCriteria.getAssignedTo() && !serviceReqSearchCriteria.getAssignedTo().isEmpty()) {
-			return new CountResponse(factory.createResponseInfoFromRequestInfo(requestInfo, true),
-					Double.valueOf(serviceReqSearchCriteria.getServiceRequestId().size()));
-		}
 		searcherRequest = pGRUtils.prepareCountRequestWithDetails(uri, serviceReqSearchCriteria, requestInfo);
 		Object response = serviceRequestRepository.fetchResult(uri, searcherRequest);
 		log.info("Searcher response: " + response);

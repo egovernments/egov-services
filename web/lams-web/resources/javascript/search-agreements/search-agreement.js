@@ -1153,7 +1153,7 @@ class AgreementSearch extends React.Component {
       if (
         agreement.action === "CREATE" &&
         agreement.source === "DATA_ENTRY" &&
-        agreement.status === "ACTIVE"
+        (agreement.status === "ACTIVE" || agreement.status === "EXPIRED")
       ) {
         return <option value="addeditdemand">Add / Edit Demand </option>
       }

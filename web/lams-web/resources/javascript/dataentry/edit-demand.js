@@ -245,8 +245,8 @@ class EditDemand extends React.Component {
     } catch (e) {
       console.log(e);
     }
-
-    if(agreementDetail.source!='DATA_ENTRY' || agreementDetail.action!='CREATE' || agreementDetail.status!='ACTIVE' ){
+  
+    if(agreementDetail.source!='DATA_ENTRY' || agreementDetail.action!='CREATE' || (agreementDetail.status!='ACTIVE'&&agreementDetail.status!='EXPIRED')){
         $("#shopAssetDetailsBlock").remove();
       return showError("This is not a valid agreement number");
     }

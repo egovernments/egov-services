@@ -28,7 +28,7 @@ public class UrlProvider {
 		
 		for (int i = 0; i < urlArray.length; i++) {
 
-			String[] index = urlArray[i].split(":");
+			String[] index = urlArray[i].split(":", 1);
 			map.put(index[0], index[1]);
 		}
 		urlMap = Collections.unmodifiableMap(map);

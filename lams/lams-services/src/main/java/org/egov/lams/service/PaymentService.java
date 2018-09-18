@@ -257,6 +257,7 @@ public class PaymentService {
             }
         } catch (NumberFormatException e) {
             LOGGER.error("exception while generateBillXml" + e);
+            throw new RuntimeException("exception while generateBillXml: ");
         }
         return collectXML;
     }
@@ -388,6 +389,7 @@ public class PaymentService {
 
         } catch (Exception e) {
             LOGGER.error("exception while getting bill details " + e);
+            throw new RuntimeException("exception while getting bill details : ");
         }
         return billDetails;
     }

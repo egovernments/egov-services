@@ -29,7 +29,7 @@ class AckPage extends React.Component {
     render() {
       let employee = this.state.employee;
 
-      const renderType=function(type) {
+      const renderType=function(type) { 
 
         switch(type) {
 
@@ -53,9 +53,9 @@ class AckPage extends React.Component {
           break;
           case "TransferCancel":  return(<h4>
                         <center><font color="black"> 
-                        Transfer Application has been Cancelled 
+                        Transfer Application has been Cancelled for
                             {getUrlVars()["employeeId"]? 
-                                <label>for <strong style={{'fontWeight':700}}> {employee.name + " : " + employee.code} </strong> </label>:""
+                                <strong style={{'fontWeight':700}}> {employee.name + " : " + employee.code} </strong>:""
                             }
                             </font>
                          </center>
@@ -80,21 +80,21 @@ class AckPage extends React.Component {
                     </h4>)
           break;
           case "PromotionCancel":  return(<h4>
-                        <center><font color="black"> Promotion Application has been Cancelled 
+                        <center><font color="black"> Promotion Application has been Cancelled for
                             {getUrlVars()["employeeId"]? 
-                                <label>for <strong style={{'fontWeight':700}}> {employee.name + " : " + employee.code} </strong> </label>:""
+                               <strong style={{'fontWeight':700}}> {employee.name + " : " + employee.code} </strong>:""
                             }
                         </font> </center>
                     </h4>)
           break;
           case "TransferEmpReject":  return(<h4>
-            <center><font color="black"> 
-                Transfer cannot be initiated as the application is rejected by employee   
-                {getUrlVars()["employeeId"]? 
-                     <strong style={{'fontWeight':700}}> {employee.name + " : " + employee.code} </strong>:""
-                }
-                </font>
-             </center>
+                <center><font color="black"> 
+                    Transfer cannot be initiated as the application is rejected by employee 
+                    {getUrlVars()["employeeId"]? 
+                        <strong style={{'fontWeight':700}}> {employee.name + " : " + employee.code} </strong>:""
+                    }
+                    </font>
+                </center>   
             </h4>)
             break;
             case "PromotionEmpReject":  return(<h4>

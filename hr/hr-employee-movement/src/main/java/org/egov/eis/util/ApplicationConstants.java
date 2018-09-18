@@ -70,6 +70,7 @@ public class ApplicationConstants {
     public static final String ERR_MOVEMENT_EMPLOYEE_ROLE_VALIDATE= "error.movement.employee.validate.role";
     public static final String ERR_MOVEMENT_EMPLOYEE_TRANSFER_VALIDATE="error.movement.employee.transfer.validate";
     public static final String ERR_MOVEMENT_OVERLAP_FUTURE_ASSIGNMENTDATE="error.movement.overlap.future.assignmentdate";
+    public static final String ERR_MOVEMENT_OUTSIDE_VALIDATE="error.movement.outside.validate";
 
 
     @Autowired

@@ -237,6 +237,12 @@ public class MovementService {
                 final List<Long> positions = positionService.getPositions(movement, movementRequest.getRequestInfo(), dor, movement.getTransferedLocation());
                 if (positions.contains(movement.getPositionAssigned()))
                     message = applicationConstants.getErrorMessage(ApplicationConstants.ERR_POSITION_NOT_VACANT) + ", ";
+
+                if (movement.getTransferedLocation().equalsIgnoreCase(movement.getTenantId()))
+                    message = applicationConstants.getErrorMessage(ApplicationConstants.ERR_MOVEMENT_OUTSIDE_VALIDATE);
+
+                setErrorMessage(movement, message);
+
             }
             if (movement.getTypeOfMovement().equals(TypeOfMovement.TRANSFER) && movement.getReason() == null) {
 
@@ -450,6 +456,7 @@ public class MovementService {
                 } else if (movement.getId() != null  &&
                         movement.getTransferType().equals(TransferType.TRANSFER_OUTSIDE_CORPORATION_OR_ULB)
                         && "Approve".equalsIgnoreCase(movement.getWorkflowDetails().getAction())) {
+
                     final Employee employee = employeeService.getEmployeeById(movementRequest);
                     EmployeeInfo employeeInfo = employeeService.getEmployee(null, employee.getCode(), movementRequest.getMovement().get(0).getTenantId(), movementRequest.getRequestInfo());
 
@@ -479,6 +486,11 @@ public class MovementService {
                         }
                     }
                     movement.setErrorMsg(errorMsg.replace(", ", ","));
+                }
+                if (movement.getId() != null  &&
+                        movement.getTransferType().equals(TransferType.TRANSFER_OUTSIDE_CORPORATION_OR_ULB ) && movement.getTransferedLocation().equalsIgnoreCase(movement.getTenantId())){
+                    message = applicationConstants.getErrorMessage(ApplicationConstants.ERR_MOVEMENT_OUTSIDE_VALIDATE);
+                    setErrorMessage(movement, message);
                 }
             }
         } catch (ParseException e) {

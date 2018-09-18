@@ -59,7 +59,6 @@ import org.egov.lams.web.contract.ReceiptAccountInfo;
 import org.egov.lams.web.contract.ReceiptAmountInfo;
 import org.egov.lams.web.contract.RequestInfo;
 import org.egov.lams.web.contract.RequestInfoWrapper;
-import org.egov.lams.web.validator.AgreementValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
@@ -90,8 +89,6 @@ public class PaymentService {
     private static final String EVENT_RECEIPT_CANCELLED = "RECEIPT_CANCELLED";
     public static final String RCPT_CANCEL_STATUS = "C";
 
-
-
     @Autowired
     PropertiesManager propertiesManager;
 
@@ -119,9 +116,6 @@ public class PaymentService {
     @Autowired
     FinancialsRepository financialsRepository;
 
-    @Autowired
-    private AgreementValidator agreementValidator;
-
     public String generateBillXml(Agreement agreement, RequestInfo requestInfo) {
         String collectXML = "";
         try {
@@ -131,7 +125,6 @@ public class PaymentService {
             List<BillInfo> billInfos = new ArrayList<>();
             BillInfo billInfo = new BillInfo();
             billInfo.setId(null);
-            LOGGER.info("the demands for a agreement object" + agreement.getDemands());
             if (agreement.getDemands() != null && !agreement.getDemands().isEmpty()) {
                 LOGGER.info("the demand id from agreement object" + agreement.getDemands().get(0));
                 billInfo.setDemandId(Long.valueOf(agreement.getDemands().get(0)));
@@ -149,48 +142,36 @@ public class PaymentService {
             billInfo.setIssuedDate(new Date());
             billInfo.setLastDate(new Date());
             lamsGetRequest.setName("MODULE_NAME");
-            LOGGER.info("before moduleName>>>>>>>");
-
             String moduleName = lamsConfigurationService.getLamsConfigurations(lamsGetRequest).get("MODULE_NAME")
                     .get(0);
-            LOGGER.info("after moduleName>>>>>>>" + moduleName);
             billInfo.setModuleName(moduleName);
             lamsGetRequest.setTenantId(agreement.getTenantId());
             lamsGetRequest.setName("FUND_CODE");
             String fundCode = lamsConfigurationService.getLamsConfigurations(lamsGetRequest).get("FUND_CODE").get(0);
             billInfo.setFundCode(fundCode);
-            LOGGER.info("after fundCode>>>>>>>" + fundCode);
-
             lamsGetRequest.setName("FUNCTIONARY_CODE");
             String functionaryCode = lamsConfigurationService.getLamsConfigurations(lamsGetRequest)
                     .get("FUNCTIONARY_CODE").get(0);
-            LOGGER.info("after functionaryCode>>>>>>>" + functionaryCode);
 
             billInfo.setFunctionaryCode(Long.valueOf(functionaryCode));
             lamsGetRequest.setName("FUNDSOURCE_CODE");
             String fundSourceCode = lamsConfigurationService.getLamsConfigurations(lamsGetRequest)
                     .get("FUNDSOURCE_CODE").get(0);
-            LOGGER.info("after fundSourceCode>>>>>>>" + fundSourceCode);
-
             billInfo.setFundSourceCode(fundSourceCode);
             lamsGetRequest.setName("DEPARTMENT_CODE");
             String departmentCode = lamsConfigurationService.getLamsConfigurations(lamsGetRequest)
                     .get("DEPARTMENT_CODE").get(0);
             billInfo.setDepartmentCode(departmentCode);
-            LOGGER.info("after departmentCode>>>>>>>" + departmentCode);
-
+            
             billInfo.setCollModesNotAllowed("");
             if (agreement.getAsset().getLocationDetails().getElectionWard() != null) {
                 LOGGER.info("setting boundary details with Election ward");
-                LOGGER.info("Election ward is: " +agreement.getAsset().getLocationDetails().getElectionWard());
                 BoundaryResponse boundaryResponse = getBoundariesById(
                         agreement.getAsset().getLocationDetails().getElectionWard(),agreement.getTenantId());
                 billInfo.setBoundaryNumber(boundaryResponse.getBoundarys().get(0).getBoundaryNum());
                 lamsGetRequest.setName("BOUNDARY_TYPE");
                 String boundaryType = lamsConfigurationService.getLamsConfigurations(lamsGetRequest)
                         .get("BOUNDARY_TYPE").get(0);
-                LOGGER.info("after boundaryType>>>>>>>" + boundaryType);
-
                 billInfo.setBoundaryType(boundaryType);
             } else {
                 // Passing Admin City boundary details when election ward is not
@@ -201,25 +182,18 @@ public class PaymentService {
             lamsGetRequest.setName("SERVICE_CODE");
             String serviceCode = lamsConfigurationService.getLamsConfigurations(lamsGetRequest).get("SERVICE_CODE")
                     .get(0);
-            LOGGER.info("after serviceCode>>>>>>>" + serviceCode);
 
             billInfo.setServiceCode(serviceCode);
-
             billInfo.setOverrideAccHeadAllowed('N');
             String description = String.format("Asset Name : %s,  Asset Code : %s", agreement.getAsset().getName(),agreement.getAsset().getCode());
             billInfo.setDescription(description);
-            LOGGER.info("after billInfo.setDescription>>>>>>>" + billInfo.getDescription());
-
             billInfo.setConsumerCode(StringUtils.isBlank(agreement.getAgreementNumber())
                     ? agreement.getAcknowledgementNumber() : agreement.getAgreementNumber());
             billInfo.setCallbackForApportion('N');
-            LOGGER.info("after billInfo.setConsumerCode>>>>>>>" + billInfo.getConsumerCode());
 
             billInfo.setEmailId(agreement.getAllottee().getEmailId());
             billInfo.setConsumerType("Agreement");
-            LOGGER.info("before Bill Number" + billNumberService.generateBillNumber());
             billInfo.setBillNumber(billNumberService.generateBillNumber());
-            LOGGER.info("after Bill Number" + billNumberService.generateBillNumber());
             List<Demand> demands =  agreement.getLegacyDemands();
             Demand demand = demands.get(0);
             billInfo.setMinAmountPayable(calculateMinAmount(demand).doubleValue());
@@ -269,211 +243,25 @@ public class PaymentService {
             billInfo.setTotalAmount(totalAmount.doubleValue());
             billInfo.setBillAmount(totalAmount.doubleValue());
             if (billDetailInfos.isEmpty()) {
-                LOGGER.info("No bill details for collection");
                 throw new CollectionExceedException();
             } else
                 billInfo.setBillDetailInfos(billDetailInfos);
-            LOGGER.info("billInfo before>>>>>>>" + billInfo);
             billInfos.add(billInfo);
             final String billXml = billRepository.createBillAndGetXml(billInfos, requestInfo);
 
             try {
                 collectXML = URLEncoder.encode(billXml, "UTF-8");
-            } catch (final UnsupportedEncodingException e) {
-                throw new RuntimeException(e.getMessage());
+            } catch (UnsupportedEncodingException e) {
+                LOGGER.error("exception while encoding" + e);
+                throw new RuntimeException("exception while encoding" + e);
             }
         } catch (NumberFormatException e) {
-            e.printStackTrace();
+            LOGGER.error("exception while generateBillXml" + e);
         }
         return collectXML;
     }
 
-   /* public String generateBillXml(Agreement agreement, RequestInfo requestInfo) {
-        String collectXML = "";
-        try {
-
-            Allottee allottee = agreement.getAllottee();
-            LamsConfigurationGetRequest lamsGetRequest = new LamsConfigurationGetRequest();
-            List<BillInfo> billInfos = new ArrayList<>();
-            BillInfo billInfo = new BillInfo();
-            billInfo.setId(null);
-            LOGGER.info("the demands for a agreement object" + agreement.getDemands());
-            if (agreement.getDemands() != null && !agreement.getDemands().isEmpty()) {
-                LOGGER.info("the demand id from agreement object" + agreement.getDemands().get(0));
-                billInfo.setDemandId(Long.valueOf(agreement.getDemands().get(0)));
-            }
-            billInfo.setCitizenName(allottee.getName());
-            billInfo.setTenantId(agreement.getTenantId());
-            // billInfo.setCitizenAddress(agreement.getAllottee().getAddress());
-            // TODO: Fix me after the issue is fixed by user service
-
-            if (allottee.getAddress() != null)
-                billInfo.setCitizenAddress(allottee.getAddress());
-            else
-                billInfo.setCitizenAddress("NA");
-            billInfo.setBillType("AUTO");
-            billInfo.setIssuedDate(new Date());
-            billInfo.setLastDate(new Date());
-            lamsGetRequest.setName("MODULE_NAME");
-            LOGGER.info("before moduleName>>>>>>>");
-
-            String moduleName = lamsConfigurationService.getLamsConfigurations(lamsGetRequest).get("MODULE_NAME")
-                    .get(0);
-            LOGGER.info("after moduleName>>>>>>>" + moduleName);
-            billInfo.setModuleName(moduleName);
-            lamsGetRequest.setTenantId(agreement.getTenantId());
-            lamsGetRequest.setName("FUND_CODE");
-            String fundCode = lamsConfigurationService.getLamsConfigurations(lamsGetRequest).get("FUND_CODE").get(0);
-            billInfo.setFundCode(fundCode);
-            LOGGER.info("after fundCode>>>>>>>" + fundCode);
-
-            lamsGetRequest.setName("FUNCTIONARY_CODE");
-            String functionaryCode = lamsConfigurationService.getLamsConfigurations(lamsGetRequest)
-                    .get("FUNCTIONARY_CODE").get(0);
-            LOGGER.info("after functionaryCode>>>>>>>" + functionaryCode);
-
-            billInfo.setFunctionaryCode(Long.valueOf(functionaryCode));
-            lamsGetRequest.setName("FUNDSOURCE_CODE");
-            String fundSourceCode = lamsConfigurationService.getLamsConfigurations(lamsGetRequest)
-                    .get("FUNDSOURCE_CODE").get(0);
-            LOGGER.info("after fundSourceCode>>>>>>>" + fundSourceCode);
-
-            billInfo.setFundSourceCode(fundSourceCode);
-            lamsGetRequest.setName("DEPARTMENT_CODE");
-            String departmentCode = lamsConfigurationService.getLamsConfigurations(lamsGetRequest)
-                    .get("DEPARTMENT_CODE").get(0);
-            billInfo.setDepartmentCode(departmentCode);
-            LOGGER.info("after departmentCode>>>>>>>" + departmentCode);
-
-            billInfo.setCollModesNotAllowed("");
-            if (agreement.getAsset().getLocationDetails().getElectionWard() != null) {
-                LOGGER.info("setting boundary details with Election ward");
-                LOGGER.info("Election ward is: " +agreement.getAsset().getLocationDetails().getElectionWard());
-                BoundaryResponse boundaryResponse = getBoundariesById(
-                        agreement.getAsset().getLocationDetails().getElectionWard(),agreement.getTenantId());
-                billInfo.setBoundaryNumber(boundaryResponse.getBoundarys().get(0).getBoundaryNum());
-                lamsGetRequest.setName("BOUNDARY_TYPE");
-                String boundaryType = lamsConfigurationService.getLamsConfigurations(lamsGetRequest)
-                        .get("BOUNDARY_TYPE").get(0);
-                LOGGER.info("after boundaryType>>>>>>>" + boundaryType);
-
-                billInfo.setBoundaryType(boundaryType);
-            } else {
-                // Passing Admin City boundary details when election ward is not
-                // available
-                billInfo.setBoundaryType("City");
-                billInfo.setBoundaryNumber(1l);
-            }
-            lamsGetRequest.setName("SERVICE_CODE");
-            String serviceCode = lamsConfigurationService.getLamsConfigurations(lamsGetRequest).get("SERVICE_CODE")
-                    .get(0);
-            LOGGER.info("after serviceCode>>>>>>>" + serviceCode);
-
-            billInfo.setServiceCode(serviceCode);
-
-            billInfo.setOverrideAccHeadAllowed('N');
-            String description = String.format("Asset Name : %s,  Asset Code : %s", agreement.getAsset().getName(),agreement.getAsset().getCode());
-            billInfo.setDescription(description);
-            LOGGER.info("after billInfo.setDescription>>>>>>>" + billInfo.getDescription());
-
-            billInfo.setConsumerCode(StringUtils.isBlank(agreement.getAgreementNumber())
-                    ? agreement.getAcknowledgementNumber() : agreement.getAgreementNumber());
-            billInfo.setCallbackForApportion('N');
-            LOGGER.info("after billInfo.setConsumerCode>>>>>>>" + billInfo.getConsumerCode());
-
-            billInfo.setEmailId(agreement.getAllottee().getEmailId());
-            billInfo.setConsumerType("Agreement");
-            LOGGER.info("before Bill Number" + billNumberService.generateBillNumber());
-            billInfo.setBillNumber(billNumberService.generateBillNumber());
-            LOGGER.info("after Bill Number" + billNumberService.generateBillNumber());
-            DemandSearchCriteria demandSearchCriteria = new DemandSearchCriteria();
-            demandSearchCriteria.setDemandId(Long.valueOf(agreement.getDemands().get(0)));
-
-            LOGGER.info("demand before>>>>>>>" + demandSearchCriteria);
-
-            Demand demand = demandRepository.getDemandBySearch(demandSearchCriteria, requestInfo).getDemands().get(0);
-            LOGGER.info("demand>>>>>>>" + demand);
-
-            if ("SYSTEM".equalsIgnoreCase(agreement.getSource().toString())) {
-                for (DemandDetails demandDetails : demand.getDemandDetails()) {
-                    BigDecimal balance = demandDetails.getTaxAmount().subtract(demandDetails.getCollectionAmount());
-                    if (balance.compareTo(BigDecimal.ZERO) > 0 && ADVANCE_TAX.equalsIgnoreCase(demandDetails.getTaxReasonCode())
-                            || GOODWILL_AMOUNT.equalsIgnoreCase(demandDetails.getTaxReasonCode())
-                            || CGST_ON_GOODWILL.equalsIgnoreCase(demandDetails.getTaxReasonCode())
-                            || SGST_ON_GOODWILL.equalsIgnoreCase(demandDetails.getTaxReasonCode())
-                            || CGST_ON_ADVANCE.equalsIgnoreCase(demandDetails.getTaxReasonCode())
-                            || SGST_ON_ADVANCE.equalsIgnoreCase(demandDetails.getTaxReasonCode())) {
-                        billInfo.setPartPaymentAllowed('N');
-
-                    } else {
-                        billInfo.setPartPaymentAllowed('Y');
-                        billInfo.setMinAmountPayable(calculateMinAmount(demand).doubleValue());
-                    }
-                }
-            } else {
-                billInfo.setPartPaymentAllowed('Y');
-            }
-
-            billInfo.setDisplayMessage(demand.getModuleName());
-            lamsGetRequest.setName("FUNCTION_CODE");
-            String functionCode = lamsConfigurationService.getLamsConfigurations(lamsGetRequest).get("FUNCTION_CODE")
-                    .get(0);
-            BigDecimal totalAmount = BigDecimal.ZERO;
-            List<BillDetailInfo> billDetailInfos = new ArrayList<>();
-            List<DemandDetails> demandDetails = getOrderedDemandDetails(demand.getDemandDetails());
-
-            int orderNo = 0;
-            int groupId =2;
-            LOGGER.info("PaymentService- generateBillXml - getting purpose");
-            Map<String, String> purposeMap = billRepository.getPurpose(billInfo.getTenantId());
-            List<Date> installmentDates = demandDetails.stream().map(demandDetail -> demandDetail.getPeriodStartDate())
-                    .distinct().collect(Collectors.toList());
-
-            for (DemandDetails demandDetail : demandDetails) {
-                if(demandDetail!=null){
-                    LOGGER.info("the reason for demanddetail : "+ demandDetail.getTaxReason());
-                    if (ADVANCE_TAX.equalsIgnoreCase(demandDetail.getTaxReasonCode())
-                            || GOODWILL_AMOUNT.equalsIgnoreCase(demandDetail.getTaxReasonCode())
-                            || (demandDetail.getPeriodStartDate().compareTo(new Date()) <= 0)) {
-                        orderNo++;
-                        totalAmount = totalAmount
-                                .add(demandDetail.getTaxAmount().subtract(demandDetail.getCollectionAmount()));
-                        LOGGER.info("the amount added to bill : "+totalAmount);
-
-                        for(Date date : installmentDates){
-                            if(date.compareTo(demandDetail.getPeriodStartDate())==0
-                                    && RENT.equalsIgnoreCase(demandDetail.getTaxReasonCode())){
-                                groupId++;
-                            }
-
-                        }
-                        billDetailInfos
-                                .addAll(getBilldetails(demandDetail, functionCode, orderNo, groupId,requestInfo, purposeMap,installmentDates));
-                    }
-                }
-            }
-            billDetailInfos.sort((b1, b2) -> b1.getPeriod().compareTo(b2.getPeriod()));
-            billInfo.setTotalAmount(totalAmount.doubleValue());
-            billInfo.setBillAmount(totalAmount.doubleValue());
-            if (billDetailInfos.isEmpty()) {
-                LOGGER.info("No bill details for collection");
-                throw new CollectionExceedException();
-            } else
-                billInfo.setBillDetailInfos(billDetailInfos);
-            LOGGER.info("billInfo before>>>>>>>" + billInfo);
-            billInfos.add(billInfo);
-            final String billXml = billRepository.createBillAndGetXml(billInfos, requestInfo);
-
-            try {
-                collectXML = URLEncoder.encode(billXml, "UTF-8");
-            } catch (final UnsupportedEncodingException e) {
-                throw new RuntimeException(e.getMessage());
-            }
-        } catch (NumberFormatException e) {
-            e.printStackTrace();
-        }
-        return collectXML;
-    }*/
+   
     public Agreement getDemandDetails(String agreementNo, String ackNo, String tenantId, final RequestInfoWrapper requestInfoWrapper) {
 
         DemandSearchCriteria demandSearchCriteria = new DemandSearchCriteria();
@@ -526,16 +314,13 @@ public class PaymentService {
                                                RequestInfo requestInfo, Map<String, String> purpose,List<Date> instalmentDates) {
         final List<BillDetailInfo> billDetails = new ArrayList<>();
         BigDecimal balance = BigDecimal.ZERO;
-        LOGGER.info("paymentservice demand detail ::"+demandDetail);
         try {
             BillDetailInfo billdetail = new BillDetailInfo();
             balance=demandDetail.getTaxAmount().subtract(demandDetail.getCollectionAmount());
             billdetail.setOrderNo(orderNo);
             billdetail.setCreditAmount(balance);
             billdetail.setDebitAmount(BigDecimal.ZERO);
-            LOGGER.info("getGlCode before>>>>>>>" + demandDetail.getGlCode());
             billdetail.setGlCode(demandDetail.getGlCode());
-            LOGGER.info("getGlCode after >>>>>>>" + demandDetail.getGlCode());
             billdetail.setDescription(demandDetail.getTaxPeriod().concat(":").concat(demandDetail.getTaxReason()));
             billdetail.setPeriod(demandDetail.getTaxPeriod());
             if (ADVANCE_TAX.equalsIgnoreCase(demandDetail.getTaxReasonCode())) {
@@ -602,7 +387,7 @@ public class PaymentService {
             }
 
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.error("exception while getting bill details " + e);
         }
         return billDetails;
     }
@@ -622,30 +407,27 @@ public class PaymentService {
         Demand currentDemand = demandRepository.getDemandBySearch(demandSearchCriteria, requestInfo).getDemands()
                 .get(0);
         LOGGER.info("PaymentService- updateDemand - currentDemand - " + currentDemand.getId());
-            currentDemand.setMinAmountPayable(0d);
-            currentDemand.setPaymentInfos(setPaymentInfos(billReceiptInfo));
+        currentDemand.setMinAmountPayable(0d);
+        currentDemand.setPaymentInfos(setPaymentInfos(billReceiptInfo));
 
-        if(billReceiptInfoReq.getBillReceiptInfo().getEvent().equalsIgnoreCase(EVENT_RECEIPT_CREATED)){
+        if (billReceiptInfoReq.getBillReceiptInfo().getEvent().equalsIgnoreCase(EVENT_RECEIPT_CREATED)) {
             updateDemandDetailForReceiptCreate(currentDemand, billReceiptInfoReq.getBillReceiptInfo());
-            LOGGER.info("PaymentService- updateDemand - updateDemandDetailForReceiptCreate done");
             LOGGER.info("The amount collected from citizen is ::: " + currentDemand.getCollectionAmount());
             updateWorkflow(billInfo.getConsumerCode(), requestInfo);
-            isAdvanceCollection(billInfo.getConsumerCode(),currentDemand);
+            isAdvanceCollection(billInfo.getConsumerCode(), currentDemand);
             LOGGER.info("the consumer code from bill object ::: " + billInfo.getConsumerCode());
             demandRepository.updateDemandForCollection(Arrays.asList(currentDemand), requestInfo).getDemands().get(0);
 
-        }
-        else if (billReceiptInfoReq.getBillReceiptInfo().getEvent().equalsIgnoreCase(EVENT_RECEIPT_CANCELLED)){
-            LOGGER.info("PaymentService- updateDemand - updateDemandDetailFor Receipt cancel ");
-            updateDemandDetailForReceiptCancel(currentDemand, billReceiptInfoReq.getBillReceiptInfo(),billInfo,requestInfo);
-            LOGGER.info("PaymentService- updateDemand - updateDemandDetailFor Receipt cancel done");
-            for (PaymentInfo info : currentDemand.getPaymentInfos()){
+        } else if (billReceiptInfoReq.getBillReceiptInfo().getEvent().equalsIgnoreCase(EVENT_RECEIPT_CANCELLED)) {
+            updateDemandDetailForReceiptCancel(currentDemand, billReceiptInfoReq.getBillReceiptInfo(), billInfo, requestInfo);
+            for (PaymentInfo info : currentDemand.getPaymentInfos()) {
                 info.setStatus(RCPT_CANCEL_STATUS);
             }
             billRepository.updateBill(Arrays.asList(billInfo), requestInfo).getBillInfos().get(0);
-            demandRepository.updateDemandForCollectionWithCancelReceipt(Arrays.asList(currentDemand), requestInfo).getDemands().get(0);
+            demandRepository.updateDemandForCollectionWithCancelReceipt(Arrays.asList(currentDemand), requestInfo).getDemands()
+                    .get(0);
         }
-        //TODO : implement for instrument bounced
+        // TODO : implement for instrument bounced
 
         LOGGER.info("PaymentService- updateDemand - setPaymentInfos done");
 
@@ -664,11 +446,11 @@ public class PaymentService {
         try {
             agreements = jdbcTemplate.query(sql, new AgreementRowMapper());
         } catch (DataAccessException e) {
-            LOGGER.info("exception while fetching agreemment in paymentService"+e);
+            LOGGER.error("exception while fetching agreemment in paymentService" + e);
         }
         agreements.sort((agreement1, agreement2) -> agreement2.getId().compareTo(agreement1.getId()));
         Agreement agreement = agreements.get(0);
-        LOGGER.info("agreement under workflow --> "+agreement.getId());
+        LOGGER.info("agreement under workflow --> " + agreement.getId());
 
         if (!agreement.getIsAdvancePaid() && ((Source.SYSTEM.equals(agreement.getSource())
                 && (Action.CREATE.equals(agreement.getAction()) || Action.RENEWAL.equals(agreement.getAction())))
@@ -733,11 +515,10 @@ public class PaymentService {
         }
 
     }
+    
     private BigDecimal updateDmdDetForRcptCreate(Demand demand, final ReceiptAccountInfo rcptAccInfo) {
 
         BigDecimal totalAmountCollected = BigDecimal.ZERO;
-
-        LOGGER.info("updateDemandDetailForReceiptCreate rcptAccInfo ::: " + rcptAccInfo);
         if (rcptAccInfo.getCrAmount() != null && rcptAccInfo.getCrAmount() > 0 && !rcptAccInfo.isRevenueAccount()
 
                 && rcptAccInfo.getDescription() != null) {
@@ -765,8 +546,6 @@ public class PaymentService {
     public ResponseEntity<ReceiptAmountInfo> receiptAmountBifurcation(final BillReceiptReq billReceiptInfo,
                                                                       BillInfo billInfo) {
         ResponseEntity<ReceiptAmountInfo> receiptAmountInfoResponse = null;
-        LOGGER.info("PaymentService- receiptAmountBifurcation - billReceiptInfo - " + billReceiptInfo);
-        LOGGER.info("PaymentService- receiptAmountBifurcation - billInfo - " + billInfo);
         final ReceiptAmountInfo receiptAmountInfo = new ReceiptAmountInfo();
         BigDecimal currentInstallmentAmount = BigDecimal.ZERO;
         BigDecimal arrearAmount = BigDecimal.ZERO;
@@ -792,7 +571,6 @@ public class PaymentService {
                     receiptAmountInfoResponse = new ResponseEntity<>(receiptAmountInfo, HttpStatus.OK);
                 }
             }
-            LOGGER.info("PaymentService- receiptAmountBifurcation - receiptAmountInfo - " + receiptAmountInfo);
         }
         return receiptAmountInfoResponse;
     }
@@ -804,9 +582,7 @@ public class PaymentService {
                 + " with BillReceiptInfo - " + billReceiptInfo);
         try {
             updateDmdDetForRcptCancel(demand, billReceiptInfo,billInfo,requestInfo);
-            LOGGER.debug("reconcileCollForRcptCancel : Updating Collection finished For Demand : " + demand);
             demandRepository.updateDemand(Arrays.asList(demand), requestInfo).getDemands().get(0);
-            LOGGER.debug(" Updated penalty with demand details : " + demand);
             if (billInfo.getId() != null)
                 billInfo.setCancelled("Y");
         } catch (Exception e) {
@@ -817,11 +593,11 @@ public class PaymentService {
 
 
 
-    private void updateDmdDetForRcptCancel(Demand demand, BillReceiptReq billReceiptInfo,BillInfo billInfo,RequestInfo requestInfo) throws Exception {
-        Boolean activeAgreement =Boolean.FALSE;
-        LOGGER.debug("validation for cancellation receipt ");
+    private void updateDmdDetForRcptCancel(Demand demand, BillReceiptReq billReceiptInfo, BillInfo billInfo,
+            RequestInfo requestInfo) throws Exception {
+        Boolean activeAgreement = Boolean.FALSE;
         String consumerCode = billInfo.getConsumerCode();
-        
+
         String sql = AgreementQueryBuilder.BASE_SEARCH_QUERY + " where agreement.acknowledgementnumber='"
                 + consumerCode + "' OR agreement.agreement_no='" + consumerCode + "' ";
         List<Agreement> agreements = null;
@@ -829,9 +605,10 @@ public class PaymentService {
         try {
             agreements = jdbcTemplate.query(sql, new AgreementRowMapper());
         } catch (DataAccessException e) {
-            throw new RuntimeException("exception while fetching agreemment to update advance" + e);
+            LOGGER.error("exception while fetching agreemment to update advance" + e);
+            throw new RuntimeException("exception while fetching agreemment to update advance" );
         }
-        
+
         if (agreements != null && !agreements.isEmpty()) {
             agreement = agreements.get(0);
             if (Source.SYSTEM.equals(agreement.getSource()) && Status.ACTIVE.equals(agreement.getStatus()))
@@ -856,8 +633,9 @@ public class PaymentService {
                             && demandDetail.getTaxReason() != null
                             && demandDetail.getTaxReason().equalsIgnoreCase(taxReason)) {
                         LOGGER.info("validating Advance Tax and Good will Amount");
-                        if (activeAgreement &&(ADVANCE_TAX.equalsIgnoreCase(demandDetail.getTaxReasonCode())||(GOODWILL_AMOUNT.equalsIgnoreCase(demandDetail.getTaxReasonCode()))))
-                          throw new RuntimeException("Cannot cancel receipt as agreement number is already generated.");
+                        if (activeAgreement && (ADVANCE_TAX.equalsIgnoreCase(demandDetail.getTaxReasonCode())
+                                || (GOODWILL_AMOUNT.equalsIgnoreCase(demandDetail.getTaxReasonCode()))))
+                            throw new RuntimeException("Cannot cancel receipt as agreement number is already generated.");
                         if (demandDetail.getCollectionAmount().compareTo(BigDecimal.valueOf(rcptAccInfo.getCrAmount())) < 0)
                             throw new RuntimeException(
                                     "updateDmdDetForRcptCancel : Exception while updating cancel receipt, "
@@ -866,22 +644,20 @@ public class PaymentService {
                                             + " for demandDetail " + demandDetail);
 
                         demandDetail
-                                .setCollectionAmount(demandDetail.getCollectionAmount().subtract(BigDecimal.valueOf(rcptAccInfo.getCrAmount())));
-                        demand.setCollectionAmount(demand.getCollectionAmount().subtract(BigDecimal.valueOf(rcptAccInfo.getCrAmount())));
-                        LOGGER.info("Deducted Collected amount Rs." + rcptAccInfo.getCrAmount() + " for tax : " + taxReason
-                        );
+                                .setCollectionAmount(demandDetail.getCollectionAmount()
+                                        .subtract(BigDecimal.valueOf(rcptAccInfo.getCrAmount())));
+                        demand.setCollectionAmount(
+                                demand.getCollectionAmount().subtract(BigDecimal.valueOf(rcptAccInfo.getCrAmount())));
+                        LOGGER.info("Deducted Collected amount Rs." + rcptAccInfo.getCrAmount() + " for tax : " + taxReason);
                     }
                 }
             }
-        LOGGER.info("adding demand details with penalty." + demand);
         demandDetailsList = addingPenalty(demand, billReceiptInfo);
         demand.getDemandDetails().addAll(demandDetailsList);
-        LOGGER.info("added demand details with penalty." + demand);
 
     }
 
     private List<DemandDetails> addingPenalty(Demand demand, BillReceiptReq billReceiptInfo) {
-
         return getTaxPeriodByDemandDetails(demand, billReceiptInfo);
 
     }
@@ -904,10 +680,9 @@ public class PaymentService {
         try {
             boundaryResponse = restTemplate.getForObject(boundaryUrl, BoundaryResponse.class);
         } catch (Exception e) {
-            e.printStackTrace();
-            LOGGER.info("the exception thrown from boundary request is :: " + e);
+            LOGGER.error("the exception thrown from boundary request is :: " + e);
+            throw new RuntimeException("the exception thrown from boundary request is");
         }
-        LOGGER.info("the response from boundary ::"+boundaryResponse);
         return boundaryResponse;
     }
 
@@ -920,9 +695,8 @@ public class PaymentService {
         try {
             agreements = jdbcTemplate.query(sql, new AgreementRowMapper());
         } catch (DataAccessException e) {
-            LOGGER.info("exception while fetching agreemment to update advance" + e);
+            LOGGER.error("exception while fetching agreemment to update advance" + e);
         }
-        LOGGER.info("the result form jdbc query ::: " + agreements);
         if (agreements != null && !agreements.isEmpty()) {
             agreement = agreements.get(0);
 
@@ -1159,10 +933,9 @@ public class PaymentService {
         Set<String> taxPeriods = accountDetailsMap.keySet();
         for (String taxPeriod : taxPeriods) {
             penaltyEffectiveDate = getPenaltyEffectiveDate(demand.getTenantId(), taxPeriod);
-            if (penaltyEffectiveDate != null && ((billReceiptInfo.getReceiptDate().before(penaltyEffectiveDate)
-                    && currentDate.after(penaltyEffectiveDate)) ||
-                    (billReceiptInfo.getReceiptDate().after(penaltyEffectiveDate)
-                            && currentDate.after(penaltyEffectiveDate)))) {
+            if (penaltyEffectiveDate != null && currentDate.after(penaltyEffectiveDate) &&
+                    (billReceiptInfo.getReceiptDate().before(penaltyEffectiveDate) ||
+                            billReceiptInfo.getReceiptDate().after(penaltyEffectiveDate))) {
 
                 Set<DemandDetails> demandDetailsSet = new LinkedHashSet<>();
                 Map<String, DemandDetails> demandReasonMap = new HashMap<>();
@@ -1232,7 +1005,6 @@ public class PaymentService {
             }
 
         }
-        LOGGER.info("return demand details map." + demandDetailsMap);
         return demandDetailsMap;
 
     }
@@ -1241,21 +1013,20 @@ public class PaymentService {
         Map<String, List<ReceiptAccountInfo>> accountDetailsMap = new LinkedHashMap<>();
         for (ReceiptAccountInfo accountDetails : accountDetailsList) {
             if (accountDetails.getCrAmount() != null && accountDetails.getCrAmount() > 0
-                    && !accountDetails.isRevenueAccount() && accountDetails.getDescription() != null){
-            String[] descriptions = accountDetails.getDescription().split(":");
-            String taxPeriod = descriptions[0];
-            if (!accountDetailsMap.containsKey(taxPeriod)) {
-                List<ReceiptAccountInfo> accountList = new ArrayList<>();
-                accountList.add(accountDetails);
-                accountDetailsMap.put(taxPeriod, accountList);
+                    && !accountDetails.isRevenueAccount() && accountDetails.getDescription() != null) {
+                String[] descriptions = accountDetails.getDescription().split(":");
+                String taxPeriod = descriptions[0];
+                if (!accountDetailsMap.containsKey(taxPeriod)) {
+                    List<ReceiptAccountInfo> accountList = new ArrayList<>();
+                    accountList.add(accountDetails);
+                    accountDetailsMap.put(taxPeriod, accountList);
 
-            } else {
-                accountDetailsMap.get(taxPeriod).add(accountDetails);
+                } else {
+                    accountDetailsMap.get(taxPeriod).add(accountDetails);
+                }
+
             }
-
         }
-        }
-        LOGGER.info("return account details map." + accountDetailsMap);
         return accountDetailsMap;
 
     }

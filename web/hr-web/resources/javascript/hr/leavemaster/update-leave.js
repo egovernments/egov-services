@@ -1013,14 +1013,14 @@ class UpdateLeave extends React.Component {
         15,
         110,
         doc.splitTextToSize(
-          "2.     Certified that necessary entries have been made in the service Register of the individual."
+          "1)     Certified that necessary entries have been made in the service Register of the individual."
         )
       );
       doc.text(
         15,
         118,
         doc.splitTextToSize(
-          "3.     He/She is informed that, after sanction of the above leave is having (" +
+          "2)     He/She is informed that, after sanction of the above leave is having (" +
             noticeData.availableDays +
             ") days of "
         )
@@ -1164,14 +1164,14 @@ class UpdateLeave extends React.Component {
         15,
         130,
         doc.splitTextToSize(
-          "2.     Certified that necessary entries have been made in the service Register of the individual."
+          "1)    Certified that necessary entries have been made in the service Register of the individual."
         )
       );
       doc.text(
         15,
         139,
         doc.splitTextToSize(
-          "3.     He/She is informed that, after sanction of the above leave is having (" +
+          "2)     He/She is informed that, after sanction of the above leave is having (" +
             noticeData.availableDays +
             ") days of "
         )

@@ -291,6 +291,18 @@ definitions:
       detail:
         type: string
         description: more address detail as may be needed
+      buildingName:
+        type: string
+        description: Name of the building
+        maxLength: 64
+        minLength: 2
+      street:
+        type: string
+        description: Street Name
+        maxLength: 64
+        minLength: 2
+      locality:
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-location/contracts/v11-0-0.yml#/definitions/Boundary'
           
   AuditDetails:
     type: object

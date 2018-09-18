@@ -1,7 +1,12 @@
-package org.egov.infra.indexer.testcontrollerproducer;
+package org.egov.infra.indexer.controller;
 
 import org.egov.IndexerApplicationRunnerImpl;
 import org.egov.infra.indexer.consumer.KafkaConsumerConfig;
+import org.egov.infra.indexer.service.IndexerService;
+import org.egov.infra.indexer.testproducer.IndexerProducer;
+import org.egov.infra.indexer.util.ResponseInfoFactory;
+import org.egov.infra.indexer.web.contract.ESResponseWrapper;
+import org.egov.infra.indexer.web.contract.ESSearchCriteria;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +35,13 @@ public class IndexerController {
 	@Autowired
 	private IndexerApplicationRunnerImpl runner;
 	
+	@Autowired
+	private IndexerService service;
+	
+	@Autowired
+	private ResponseInfoFactory factory;
+	
+	//This is testing API 
     @PostMapping("/_index")
     @ResponseBody
     private ResponseEntity<?> produceIndexJson(@RequestParam(name = "topic") String topic, @RequestBody Object indexJson){
@@ -55,6 +67,17 @@ public class IndexerController {
     	}
     	response = "Reload Successful";
 		return new ResponseEntity<>(response ,HttpStatus.OK);
+
+    }
+    
+    @PostMapping("/_search")
+    @ResponseBody
+    private ResponseEntity<?> getIndexedData(@RequestBody ESSearchCriteria esSearchCriteria){
+    	Object response = service.getDataFromES(esSearchCriteria);
+    	ESResponseWrapper esResponseWrapper = ESResponseWrapper.builder()
+    			.responseInfo(factory.createResponseInfoFromRequestInfo(esSearchCriteria.getRequestInfo(), true))
+    			.esResponse(response).build();
+		return new ResponseEntity<>(esResponseWrapper ,HttpStatus.OK);
 
     }
 }

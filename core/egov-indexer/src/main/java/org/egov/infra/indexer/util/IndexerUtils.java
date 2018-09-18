@@ -1,6 +1,5 @@
 package org.egov.infra.indexer.util;
 
-import java.util.Date;
 import java.util.Map;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -9,6 +8,7 @@ import java.util.concurrent.TimeUnit;
 import org.apache.commons.lang3.StringUtils;
 import org.egov.infra.indexer.bulkindexer.BulkIndexer;
 import org.egov.infra.indexer.consumer.KafkaConsumerConfig;
+import org.egov.infra.indexer.web.contract.ESSearchCriteria;
 import org.egov.infra.indexer.web.contract.Index;
 import org.egov.infra.indexer.web.contract.UriMapping;
 import org.json.JSONArray;
@@ -17,6 +17,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -222,5 +223,19 @@ public class IndexerUtils {
 		}
 		return expression.toString();
 	}
+	
+	public String getESSearchURL(ESSearchCriteria esSearchCriteria) {
+		StringBuilder uri = new StringBuilder();
+		uri.append(esHostUrl).append("/"+esSearchCriteria.getIndex()).append("/"+esSearchCriteria.getType());
+		if(!StringUtils.isEmpty(esSearchCriteria.getId()))
+			uri.append("/"+esSearchCriteria.getId());
+		if(!CollectionUtils.isEmpty(esSearchCriteria.getFields())) {
+			uri.append("?_source=");
+			String fields = esSearchCriteria.getFields().toString().replaceAll("[", "").replaceAll("]", "");
+			uri.append(fields);
+		}
+		return uri.toString();
+	}
+	
 
 }

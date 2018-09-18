@@ -1,5 +1,6 @@
 package org.egov.infra.indexer.service;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Map;
 
@@ -9,6 +10,7 @@ import org.egov.infra.indexer.bulkindexer.BulkIndexer;
 import org.egov.infra.indexer.util.IndexerConstants;
 import org.egov.infra.indexer.util.IndexerUtils;
 import org.egov.infra.indexer.web.contract.CustomJsonMapping;
+import org.egov.infra.indexer.web.contract.ESSearchCriteria;
 import org.egov.infra.indexer.web.contract.FieldMapping;
 import org.egov.infra.indexer.web.contract.Index;
 import org.egov.infra.indexer.web.contract.Mapping;
@@ -209,4 +211,13 @@ public class IndexerService {
 		
 		return result;
   }
+	
+	public Object getDataFromES(ESSearchCriteria esSearchCriteria) {
+		Object response = null;
+		String uri = indexerUtils.getESSearchURL(esSearchCriteria);
+		response = bulkIndexer.getESResponse(uri);
+		if(null == response) 
+			response = new ArrayList<>();
+		return response;
+	}
 }

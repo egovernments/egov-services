@@ -70,5 +70,15 @@ public class BulkIndexer {
 		return response;
 
 	}
+	
+	public Object getESResponse(String url) {
+		Object response = null;
+		try {
+			response = restTemplate.getForObject(url, Map.class);
+		}catch(Exception e) {
+			logger.error("Exception while fetching from es: "+e);
+		}
+		return response;
+	}
 
 }

@@ -474,112 +474,65 @@ definitions:
       - code
       
 ##############################################
-OwnerInfo:
-    allOf:
-      - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-user/contracts/v1-0-0.yml#/definitions/User'
-      - type: object
-        properties:
-          isPrimaryOwner:
-            type: boolean
-            description: The owner is primary or not
-          ownerShipPercentage:
-            type: number
-            format: double
-            description: Ownership percentage.
-          ownerType:
-            type: string
-            description: 'Type of owner, based on this option Exemptions will be applied. This is master data defined in mdms.'
-            maxLength: 256
-            minLength: 4
-
-OwnerShipCategory:
+  OwnerInfo:
+      allOf:
+        - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-user/contracts/v1-0-0.yml#/definitions/User'
+        - type: object
+          properties:
+            isPrimaryOwner:
+              type: boolean
+              description: The owner is primary or not
+            ownerShipPercentage:
+              type: number
+              format: double
+              description: Ownership percentage.
+            ownerType:
+              type: string
+              description: 'Type of owner, based on this option Exemptions will be applied. This is master data defined in mdms.'
+              maxLength: 256
+              minLength: 4
+  
+  ################################################
+  
+  DocumentType:
+      type: object
+      description: A Object holds the basic data for a Trade License
+      properties:
+        tenantId:
+          type: string
+          description: Unique Identifier of ULB
+          maxLength: 128
+          minLength: 2
+        name:
+          type: string
+          minLength: 2
+          maxLength: 64
+          description: Unique Identifier of the Trade License (UUID)
+        code:
+          type: string
+          description: Unique License Number of the Trade. This is  unique in system for a tenant. This is mandatory but always be generated on the final approval. In Case of Legacy License User will enter the Old License Number.
+          maxLength: 32
+          minLength: 2
+        auditDetails:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails'
+      required:
+        - tenantId
+  ################################################  
+  Uom:
     type: object
     properties:
-      name:
-        type: string
-        description: name of the OwnerShipCategory
-        maxLength: 128
-        minLength: 2
-      code:
-        type: string
-        description: unique code for Ownership category.
-        maxLength: 64
-        minLength: 2
-      active:
-        type: boolean
-        description: if the value is true then only any transaction is applicable.
+        name:
+          type: string
+          description: Name of unit of measurement.
+          maxLength: 128
+          minLength: 2
+        code:
+          type: string
+          description: Unique code of uom.
+          maxLength: 64
+          minLength: 2
+        active:
+          type: boolean
+          description: if the value is true then only any transaction is applicable.
     required:
-      - code
-
-##############################################
-
-SubOwnerShipCategory:
-    type: object
-    properties:
-      name:
-        type: string
-        description: name of the SubOwnerShipCategory
-        maxLength: 128
-        minLength: 2
-      code:
-        type: string
-        description: code of the Owner Type.
-        maxLength: 64
-        minLength: 2
-      ownerShipCategoryCode:
-        $ref: '#/definitions/OwnerShipCategory'
-      active:
-        type: boolean
-        description: 'Whether UsageCategorySubMinor is Active or not. If the value is TRUE, then UsageCategorySubMinor is active, if the value is FALSE then UsageCategorySubMinor is inactive, default value is TRUE'
-    required:
-      - code
-      - ownerShipCategoryCode
-
-
-
-
-################################################
-
-DocumentType:
-    type: object
-    description: A Object holds the basic data for a Trade License
-    properties:
-      tenantId:
-        type: string
-        description: Unique Identifier of ULB
-        maxLength: 128
-        minLength: 2
-      name:
-        type: string
-        minLength: 2
-        maxLength: 64
-        description: Unique Identifier of the Trade License (UUID)
-      code:
-        type: string
-        description: Unique License Number of the Trade. This is  unique in system for a tenant. This is mandatory but always be generated on the final approval. In Case of Legacy License User will enter the Old License Number.
-        maxLength: 32
-        minLength: 2
-      auditDetails:
-        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails'
-    required:
-      - tenantId
-
-Uom:
-    type: object
-    properties:
-      name:
-        type: string
-        description: Name of unit of measurement.
-        maxLength: 128
-        minLength: 2
-      code:
-        type: string
-        description: Unique code of uom.
-        maxLength: 64
-        minLength: 2
-      active:
-        type: boolean
-        description: if the value is true then only any transaction is applicable.
-    required:
-      - code
-        
+        - code

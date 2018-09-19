@@ -66,6 +66,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Repository
 public class MovementRepository {
@@ -195,7 +196,8 @@ public class MovementRepository {
         }
 
         if (movement.getDocuments() != null && !movement.getDocuments().isEmpty()) {
-            movement.getDocuments().removeAll(documents);
+            List<String> movementDoc = documentsFromDB.stream().map(doc -> doc.getDocument()).collect(Collectors.toList());
+            movement.getDocuments().removeAll(movementDoc);
         }
     }
 

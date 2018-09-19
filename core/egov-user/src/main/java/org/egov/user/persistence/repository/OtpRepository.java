@@ -1,5 +1,6 @@
 package org.egov.user.persistence.repository;
 
+import org.egov.tracer.model.ServiceCallException;
 import org.egov.user.domain.model.OtpValidationRequest;
 import org.egov.user.persistence.dto.Otp;
 import org.egov.user.persistence.dto.OtpRequest;
@@ -59,8 +60,8 @@ public class OtpRepository {
 		try {
 		 otpResponse = restTemplate.postForObject(otpValidateEndpoint, request, OtpResponse.class);
 		}catch(HttpClientErrorException e){
-			System.out.println("exception body: "+ e.getResponseBodyAsString());
-			throw new Exception(e.getResponseBodyAsString());
+			log.error("Otp validation failed", e);
+			throw new ServiceCallException(e.getResponseBodyAsString());
 		}
 		if(null!=otpResponse && null!=otpResponse.getOtp())
 			return otpResponse.getOtp().isValidationSuccessful();

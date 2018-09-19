@@ -70,6 +70,7 @@ public class IndexerController {
 
     }
     
+    
     @PostMapping("/_search")
     @ResponseBody
     private ResponseEntity<?> getIndexedData(@RequestBody ESSearchCriteria esSearchCriteria){

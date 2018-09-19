@@ -10,7 +10,7 @@ ServiceMaps:
       isBulk: false
       jsonPath: 
       customJsonMapping:
-        indexMapping: {"PGRIndex":{"serviceRequestId":"serviceRequestId","tenantId":"tenantId","complainCategory":"complainCategory","firstName":"firstName","lastName":"lastName","phone":"phone","dateOfComplaint":123467891000,"description":"","address":"","status":"status","assignee":"assignee","gro":"gro", "actionInfo":{}}}
+        indexMapping: {"PGRIndex":{"serviceRequestId":"serviceRequestId","tenantId":"tenantId","complainCategory":"complainCategory","firstName":"firstName","lastName":"lastName","phone":"phone","dateOfComplaint":123467891000,"description":"","address":"","status":"status","assignee":"assignee","gro":"gro","source":"source","actionInfo":{}}}
         fieldMapping:
         - inJsonPath: $.services[0].serviceRequestId
           outJsonPath: $.PGRIndex.serviceRequestId
@@ -34,6 +34,8 @@ ServiceMaps:
           outJsonPath: $.PGRIndex.complainCategory
         - inJsonPath: $.actionInfo[0].by
           outJsonPath: $.PGRIndex.gro
+        - inJsonPath: $.services[0].source
+          outJsonPath: $.PGRIndex.source
         - inJsonPath: $.actionInfo
           outJsonPath: $.PGRIndex.actionInfo
 
@@ -46,7 +48,7 @@ ServiceMaps:
       isBulk: false
       jsonPath: 
       customJsonMapping:
-        indexMapping: {"PGRIndex":{"serviceRequestId":"serviceRequestId","tenantId":"tenantId","complainCategory":"complainCategory","firstName":"firstName","lastName":"lastName","phone":"phone","dateOfComplaint":123467891000,"description":"","address":"","status":"status","assignee":"assignee","gro":"gro", "actionInfo":{}}}
+        indexMapping: {"PGRIndex":{"serviceRequestId":"serviceRequestId","tenantId":"tenantId","complainCategory":"complainCategory","firstName":"firstName","lastName":"lastName","phone":"phone","dateOfComplaint":123467891000,"description":"","address":"","status":"status","assignee":"assignee","gro":"gro","source":"source","actionInfo":{}}}
         fieldMapping:
         - inJsonPath: $.services[0].serviceRequestId
           outJsonPath: $.PGRIndex.serviceRequestId
@@ -68,6 +70,8 @@ ServiceMaps:
           outJsonPath: $.PGRIndex.status
         - inJsonPath: $.services[0].serviceCode
           outJsonPath: $.PGRIndex.complainCategory
+        - inJsonPath: $.services[0].source
+          outJsonPath: $.PGRIndex.source
         - inJsonPath: $.actionInfo[0].by
           outJsonPath: $.PGRIndex.gro
         - inJsonPath: $.actionInfo

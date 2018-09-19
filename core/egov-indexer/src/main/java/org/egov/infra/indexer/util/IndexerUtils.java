@@ -226,7 +226,7 @@ public class IndexerUtils {
 	
 	public String getESSearchURL(ESSearchCriteria esSearchCriteria) {
 		StringBuilder uri = new StringBuilder();
-		uri.append(esHostUrl).append("/"+esSearchCriteria.getIndex()).append("/"+esSearchCriteria.getType());
+		uri.append(esHostUrl).append(esSearchCriteria.getIndex()).append("/"+esSearchCriteria.getType());
 		if(!StringUtils.isEmpty(esSearchCriteria.getId()))
 			uri.append("/"+esSearchCriteria.getId());
 		if(!CollectionUtils.isEmpty(esSearchCriteria.getFields())) {

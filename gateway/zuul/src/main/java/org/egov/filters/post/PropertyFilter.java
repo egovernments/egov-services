@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.beans.factory.annotation.Value;
 
 import com.google.common.io.CharStreams;
 import com.jayway.jsonpath.DocumentContext;
@@ -27,7 +28,10 @@ public class PropertyFilter extends ZuulFilter {
 	
 	@Autowired
 	private RestTemplate restTemplate;
-	
+
+	@Value("${custom.filter.property:false}")
+	private boolean loadPropertyFilter;
+
 	@Override
 	public Object run() {
 
@@ -60,6 +64,9 @@ public class PropertyFilter extends ZuulFilter {
 
 	@Override
 	public boolean shouldFilter() {
+		if (!loadPropertyFilter)
+			return false;
+
 		RequestContext ctx = RequestContext.getCurrentContext();
 		String uri = ctx.getRequest().getRequestURI();
 		return UrlProvider.getUrlMap().get(uri) != null;

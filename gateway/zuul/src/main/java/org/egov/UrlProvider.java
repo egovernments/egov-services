@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.annotation.PostConstruct;
-
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -22,6 +22,8 @@ public class UrlProvider {
 
 	@PostConstruct
 	public void loadUrl() {
+		if (StringUtils.isEmpty(url))
+			return;
 
 		Map<String, String> map = new HashMap<>();
 		String[] urlArray = url.split("\\|");

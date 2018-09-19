@@ -1,7 +1,7 @@
 package org.egov.user.security.oauth2.custom.authproviders;
 
-import com.jayway.jsonpath.JsonPath;
 import lombok.extern.slf4j.Slf4j;
+import org.egov.tracer.model.ServiceCallException;
 import org.egov.user.domain.exception.DuplicateUserNameException;
 import org.egov.user.domain.exception.UserNotFoundException;
 import org.egov.user.domain.model.SecureUser;
@@ -34,6 +34,8 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 	 * TO-Do:Need to remove this and provide authentication for web, based on
 	 * authentication_code.
 	 */
+
+    // TODO Remove default error handling provided by TokenEndpoint.class
 
 	private UserService userService;
 
@@ -88,7 +90,7 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 		}
 
 		boolean isCitizen = false;
-		if (user.getType() != null && user.getType().toString().equals("CITIZEN"))
+		if (user.getType() != null && user.getType().equals(UserType.CITIZEN))
 			isCitizen = true;
 
 		Boolean isPasswordMatched;
@@ -127,18 +129,19 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 		String isCallInternal = details.get("isInternal");
 		if (isOtpBased) {
 			if(null != isCallInternal && isCallInternal.equals("true")) {
-				log.info("Skipping otp validation during login.........");
+				log.debug("Skipping otp validation during login.........");
 				return true;
 			}
-			try {
 				user.setOtpReference(password);
+			try {
 				return userService.validateOtp(user);
-			} catch (Exception e) {
-				throw new OAuth2Exception(JsonPath.read(e.getMessage(), "$.error.message"));
+			}catch (ServiceCallException e){
+				log.error("OTP validation failed ");
+				return false;
 			}
 		} else {
 			if(null != isCallInternal && isCallInternal.equals("true")) {
-				log.info("Skipping password validation during login.........");
+				log.debug("Skipping password validation during login.........");
 				return true;
 			}
 			return bcrypt.matches(password, user.getPassword());

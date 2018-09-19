@@ -1,5 +1,6 @@
 package org.egov.user.persistence.repository;
 
+import lombok.extern.slf4j.Slf4j;
 import org.egov.tracer.model.ServiceCallException;
 import org.egov.user.domain.model.OtpValidationRequest;
 import org.egov.user.persistence.dto.Otp;
@@ -11,10 +12,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import lombok.extern.slf4j.Slf4j;
 
 @Repository
 @Slf4j
@@ -50,22 +47,18 @@ public class OtpRepository {
 	 * rest call to egov-otp to validate the otp.
 	 * @param request
 	 * @return
-	 * @throws Exception
 	 */
-	public boolean validateOtp(OtpValidateRequest request) throws Exception{
-		// TODO Auto-generated method stub
-		ObjectMapper mapper = new ObjectMapper();
-		log.info("otpValidationRequest: "+mapper.writeValueAsString(request));
-		OtpResponse otpResponse = null;
+	public boolean validateOtp(OtpValidateRequest request) {
 		try {
-		 otpResponse = restTemplate.postForObject(otpValidateEndpoint, request, OtpResponse.class);
+            OtpResponse otpResponse = restTemplate.postForObject(otpValidateEndpoint, request, OtpResponse.class);
+            if(null!=otpResponse && null!=otpResponse.getOtp())
+                return otpResponse.getOtp().isValidationSuccessful();
+            else
+                return false;
 		}catch(HttpClientErrorException e){
 			log.error("Otp validation failed", e);
 			throw new ServiceCallException(e.getResponseBodyAsString());
 		}
-		if(null!=otpResponse && null!=otpResponse.getOtp())
-			return otpResponse.getOtp().isValidationSuccessful();
-		return false;
 	}
 }
 

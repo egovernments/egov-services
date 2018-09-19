@@ -1,6 +1,5 @@
 package org.egov.user.domain.service;
 
-import com.jayway.jsonpath.JsonPath;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.egov.common.contract.request.RequestInfo;
@@ -252,13 +251,7 @@ public class UserService {
         RequestInfo requestInfo = RequestInfo.builder().action("validate").ts(new Date()).build();
         OtpValidateRequest otpValidationRequest = OtpValidateRequest.builder().requestInfo(requestInfo).otp(otp)
                 .build();
-        try {
             return otpRepository.validateOtp(otpValidationRequest);
-        } catch (Exception e) {
-            String errorMessage = JsonPath.read(e.getMessage(), "$.error.message");
-            System.out.println("message " + errorMessage);
-            throw new InvalidOtpException(errorMessage);
-        }
 
     }
 

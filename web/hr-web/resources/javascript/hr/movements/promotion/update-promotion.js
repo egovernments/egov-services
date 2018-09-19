@@ -261,11 +261,10 @@ class UpdateMovement extends React.Component {
             }
           }
           //Disabling all fields if it is not rejected
-          if (process.status != "Rejected") 
+          if (process.status != "Rejected"){
             $("input,select,textarea").prop("disabled", true);
-      
-          $('#effectiveFrom').prop("disabled",true);
-
+            $('#effectiveFrom').prop("disabled",true);
+          } 
           _this.setState({
             ..._this.state,
             buttons: _btns.length ? _btns : [],

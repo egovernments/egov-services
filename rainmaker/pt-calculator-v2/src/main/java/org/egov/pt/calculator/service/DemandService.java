@@ -194,7 +194,7 @@ public class DemandService {
 
 		applytimeBasedApplicables(demand, requestInfoWrapper, timeBasedExmeptionMasterMap);
 		
-		Map<String, Boolean> isTaxHeadDebitMap = mstrDataService
+/*		Map<String, Boolean> isTaxHeadDebitMap = mstrDataService
 				.getTaxHeadMasterMap(requestInfoWrapper.getRequestInfo(), getBillCriteria.getTenantId()).stream()
 				.collect(Collectors.toMap(TaxHeadMaster::getCode, TaxHeadMaster::getIsDebit));
 
@@ -214,7 +214,7 @@ public class DemandService {
 				if (detail.getTaxHeadMasterCode().equalsIgnoreCase(CalculatorConstants.PT_TIME_REBATE))
 					detail.setTaxAmount(BigDecimal.ZERO);
 			});
-		
+	*/	
 		roundOffDecimalForDemand(demand, requestInfoWrapper);
 		DemandRequest request = DemandRequest.builder().demands(Arrays.asList(demand)).requestInfo(requestInfo).build();
 		StringBuilder updateDemandUrl = utils.getUpdateDemandUrl();

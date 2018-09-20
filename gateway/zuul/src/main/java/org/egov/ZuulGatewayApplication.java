@@ -54,6 +54,11 @@ public class ZuulGatewayApplication {
     public RbacFilter rbacFilter() {
         return new RbacFilter();
     }
+    
+    @Bean
+    public RestTemplate restTemplate() {
+    	return new RestTemplate();
+    }
 
     @Bean
     public RbacPreCheckFilter rbacCheckFilter() {

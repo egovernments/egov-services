@@ -377,53 +377,21 @@ class UpdateMovement extends React.Component {
       })
   }
 
-  vacantPositionFun(departmentId, designationId, effectiveFrom, ulb,employeeDetails,movement) {
+  vacantPositionFun(departmentId, designationId, effectiveFrom,ulb,employeeDetails,movement) {
     var _this = this;
     var effectiveTo;
     //console.log("employee",list);
-    if(movement !== "TRANSFER_OUTSIDE_CORPORATION_OR_ULB"){
-      commonApiPost("hr-masters", "vacantpositions", "_search", {
-        tenantId: tenantId,
-        departmentId: departmentId,
-        designationId: designationId,
-        asOnDate: effectiveFrom,
-        destinationTenant:ulb,
-        pageSize: 500
-      }, function (err, res) {
-        if (res) {
-          //console.log("PSTNS", res.Position);
-          _this.setState({
-            movement: {
-              ..._this.state.movement,
-            },
-            pNameList: res.Position
-          })
-        }
-      });
-    }else{
-      if(employeeDetails.dateOfRetirement){
-        effectiveTo = employeeDetails.dateOfRetirement;
-        vacantPositionApi();
-      }else if(employeeDetails.dob){
-        var dob = employeeDetails.dob.split("-");
-        var rtrYear =  Number(dob[0]) + 60;
-        effectiveTo = dob[2] + "/" + dob[1]+ "/" + rtrYear;
-        vacantPositionApi();
-      }else{
-        alert("Employee Date of birth is not availble");
-      }
-      function vacantPositionApi(){
+    if(movement){
+      if(movement != "TRANSFER_OUTSIDE_CORPORATION_OR_ULB"){
         commonApiPost("hr-masters", "vacantpositions", "_search", {
           tenantId: tenantId,
           departmentId: departmentId,
           designationId: designationId,
           asOnDate: effectiveFrom,
-          toDate:effectiveTo,
-          destinationTenant: ulb,
           pageSize: 500
-        },function (err,res) {
+        }, function (err, res) {
           if (res) {
-            console.log("PSTNS", res.Position);
+            //console.log("PSTNS", res.Position);
             _this.setState({
               movement: {
                 ..._this.state.movement,
@@ -432,6 +400,39 @@ class UpdateMovement extends React.Component {
             })
           }
         });
+      }else{
+        if(employeeDetails.dateOfRetirement){
+          effectiveTo = employeeDetails.dateOfRetirement;
+          vacantPositionApi();
+        }else if(employeeDetails.dob){
+          var dob = employeeDetails.dob.split("-");
+          var rtrYear =  Number(dob[0]) + 60;
+          effectiveTo = dob[2] + "/" + dob[1]+ "/" + rtrYear;
+          vacantPositionApi();
+        }else{
+          alert("Employee Date of birth is not availble");
+        }
+        function vacantPositionApi(){
+          commonApiPost("hr-masters", "vacantpositions", "_search", {
+            tenantId: tenantId,
+            departmentId: departmentId,
+            designationId: designationId,
+            asOnDate: effectiveFrom,
+            toDate:effectiveTo,
+            destinationTenant: ulb,
+            pageSize: 500
+          },function (err,res) {
+            if (res) {
+              console.log("PSTNS", res.Position);
+              _this.setState({
+                movement: {
+                  ..._this.state.movement,
+                },
+                pNameList: res.Position
+              })
+            }
+          });
+        }
       }
     }
   }

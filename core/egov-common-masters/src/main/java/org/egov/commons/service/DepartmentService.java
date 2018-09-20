@@ -133,7 +133,13 @@ public class DepartmentService {
 	
 	public MdmsCriteriaReq prepareSearchRequestForDept(RequestInfo requestInfo, DepartmentGetRequest departmentGetRequest) {
 
-		MasterDetail masterDetail = org.egov.mdms.model.MasterDetail.builder().name("Department").build();		
+		MasterDetail masterDetail = org.egov.mdms.model.MasterDetail.builder().name("Department").build();
+		if(!StringUtils.isEmpty(departmentGetRequest.getName()))
+			masterDetail.setFilter("[?(@.name=='" + departmentGetRequest.getName() + "')]");
+		
+		if(!StringUtils.isEmpty(departmentGetRequest.getCode()))
+			masterDetail.setFilter("[?(@.code=='" + departmentGetRequest.getCode() + "')]");
+		
 		if(null != departmentGetRequest.getActive())
 			masterDetail.setFilter("[?(@.active=='" + departmentGetRequest.getActive() + "')]");
 		

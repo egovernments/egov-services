@@ -61,6 +61,10 @@ import java.util.List;
 public class DepartmentGetRequest {
 
 	private List<Long> id;
+	
+	private String name;
+
+    private String code;
 
 	@Size(min=8, max=64)
 	@JsonProperty("names")

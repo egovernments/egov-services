@@ -46,6 +46,9 @@ import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.List;
 
 @Getter
@@ -60,10 +63,12 @@ public class DepartmentGetRequest {
 	private List<Long> id;
 
 	@Size(min=8, max=64)
-	private String name;
+	@JsonProperty("names")
+	private List<String> names;
 
 	@Size(min=1, max=10)
-	private String code;
+	@JsonProperty("codes")
+	private List<String> codes;
 
 	private Boolean active;
 

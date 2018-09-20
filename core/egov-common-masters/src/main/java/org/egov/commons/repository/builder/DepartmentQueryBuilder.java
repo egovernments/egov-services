@@ -78,8 +78,8 @@ public class DepartmentQueryBuilder {
 	private void addWhereClause(StringBuilder selectQuery, List preparedStatementValues,
 								DepartmentGetRequest departmentGetRequest) {
 
-		if (departmentGetRequest.getId() == null && departmentGetRequest.getName() == null
-				&& departmentGetRequest.getCode() == null && departmentGetRequest.getActive() == null
+		if (departmentGetRequest.getId() == null && departmentGetRequest.getNames() == null
+				&& departmentGetRequest.getCodes() == null && departmentGetRequest.getActive() == null
 				&& departmentGetRequest.getTenantId() == null)
 			return;
 
@@ -97,16 +97,16 @@ public class DepartmentQueryBuilder {
 			selectQuery.append(" id IN " + getIdQuery(departmentGetRequest.getId()));
 		}
 
-		if (departmentGetRequest.getName() != null) {
+		if (departmentGetRequest.getNames() != null) {
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
 			selectQuery.append(" name = ?");
-			preparedStatementValues.add(departmentGetRequest.getName());
+			preparedStatementValues.add(departmentGetRequest.getNames());
 		}
 
-		if (departmentGetRequest.getCode() != null) {
+		if (departmentGetRequest.getCodes() != null) {
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
 			selectQuery.append(" code = ?");
-			preparedStatementValues.add(departmentGetRequest.getCode());
+			preparedStatementValues.add(departmentGetRequest.getCodes());
 		}
 
 		if (departmentGetRequest.getActive() != null) {

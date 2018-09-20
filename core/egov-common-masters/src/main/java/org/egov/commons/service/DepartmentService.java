@@ -133,15 +133,25 @@ public class DepartmentService {
 	
 	public MdmsCriteriaReq prepareSearchRequestForDept(RequestInfo requestInfo, DepartmentGetRequest departmentGetRequest) {
 
-		MasterDetail masterDetail = org.egov.mdms.model.MasterDetail.builder().name("Department").build();
-		if(!StringUtils.isEmpty(departmentGetRequest.getCode()))
-			masterDetail.setFilter("[?(@.code=='" + departmentGetRequest.getCode() + "')]");
-		
-		if(!StringUtils.isEmpty(departmentGetRequest.getName()))
-			masterDetail.setFilter("[?(@.name=='" + departmentGetRequest.getName() + "')]");
-		
+		MasterDetail masterDetail = org.egov.mdms.model.MasterDetail.builder().name("Department").build();		
 		if(null != departmentGetRequest.getActive())
 			masterDetail.setFilter("[?(@.active=='" + departmentGetRequest.getActive() + "')]");
+		
+		if(null != departmentGetRequest.getNames()) {
+			List<String> names = departmentGetRequest.getNames().parallelStream()
+					.map(obj -> {
+						return "'"+obj+"'";
+					}).collect(Collectors.toList());
+			masterDetail.setFilter("[?(@.name IN " + names + ")]");
+		}
+		
+		if(null != departmentGetRequest.getCodes()) {
+			List<String> codes = departmentGetRequest.getCodes().parallelStream()
+					.map(obj -> {
+						return "'"+obj+"'";
+					}).collect(Collectors.toList());
+			masterDetail.setFilter("[?(@.code IN " + codes + ")]");
+		}
 		
 		List<MasterDetail> masterDetails = new ArrayList<>();
 		masterDetails.add(masterDetail);

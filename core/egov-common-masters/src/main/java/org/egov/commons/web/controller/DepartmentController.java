@@ -92,11 +92,6 @@ public class DepartmentController {
 		RequestInfo requestInfo = requestInfoWrapper.getRequestInfo();
 
 		// validate input params
-		if (modelAttributeBindingResult.hasErrors()) {
-			return errHandler.getErrorResponseEntityForMissingParameters(modelAttributeBindingResult, requestInfo);
-		}
-
-		// validate input params
 		if (requestBodyBindingResult.hasErrors()) {
 			return errHandler.getErrorResponseEntityForMissingRequestInfo(requestBodyBindingResult, requestInfo);
 		}

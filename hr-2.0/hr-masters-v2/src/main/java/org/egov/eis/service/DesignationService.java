@@ -44,6 +44,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.egov.common.contract.request.RequestInfo;
@@ -137,6 +138,22 @@ public class DesignationService {
 		
 		if(null != designationGetRequest.getActive())
 			masterDetail.setFilter("[?(@.active=='" + designationGetRequest.getActive() + "')]");
+		
+		if(null != designationGetRequest.getNames()) {
+			List<String> names = designationGetRequest.getNames().parallelStream()
+					.map(obj -> {
+						return "'"+obj+"'";
+					}).collect(Collectors.toList());
+			masterDetail.setFilter("[?(@.name IN " + names + ")]");
+		}
+		
+		if(null != designationGetRequest.getCodes()) {
+			List<String> codes = designationGetRequest.getCodes().parallelStream()
+					.map(obj -> {
+						return "'"+obj+"'";
+					}).collect(Collectors.toList());
+			masterDetail.setFilter("[?(@.code IN " + codes + ")]");
+		}
 		
 		List<MasterDetail> masterDetails = new ArrayList<>();
 		masterDetails.add(masterDetail);

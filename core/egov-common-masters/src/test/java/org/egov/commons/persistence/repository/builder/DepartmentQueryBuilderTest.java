@@ -6,6 +6,7 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
@@ -30,7 +31,8 @@ public class DepartmentQueryBuilderTest {
         String searchPageSize = "500";
         DepartmentGetRequest departmentGetRequest = new DepartmentGetRequest();
         DepartmentQueryBuilder builder = new DepartmentQueryBuilder(searchPageSize);
-        departmentGetRequest.setName("Health");
+        List<String> names = new ArrayList<>(); names.add("Health");
+        departmentGetRequest.setNames(names);
         departmentGetRequest.setActive(true);
         departmentGetRequest.setId(Arrays.asList(1L));
         departmentGetRequest.setTenantId("default");

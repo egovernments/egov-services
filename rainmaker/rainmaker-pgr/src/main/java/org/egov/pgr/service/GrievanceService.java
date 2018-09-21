@@ -442,8 +442,9 @@ public class GrievanceService {
 					log.info("Setting assignee for employee........");
 					serviceReqSearchCriteria.setAssignedTo(requestInfo.getUserInfo().getId().toString());
 				}
+			} else if (precedentRole.equalsIgnoreCase(PGRConstants.ROLE_CSR)) {
+				serviceReqSearchCriteria.setTenantId(serviceReqSearchCriteria.getTenantId().split("[.]")[0]);
 			}
-
 		}
 		if (!StringUtils.isEmpty(serviceReqSearchCriteria.getAssignedTo())) {
 			log.info("Setting SRids based on assignedTo for assignedTo search........");

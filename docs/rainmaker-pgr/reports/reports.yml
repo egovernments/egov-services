@@ -113,12 +113,7 @@ ReportDefinitions:
     source: eg_pgr_service
     isMandatory: false
     searchClause: AND createdtime <= $toDate
-<<<<<<< Updated upstream
-  query: SELECT (SELECT deptmap.department FROM (VALUES tbl_dept) AS deptmap(serviceCode, department, slaHours) WHERE deptmap.serviceCode = eg_pgr_service.servicecode) AS department, eg_pgr_service.servicecode AS servicecode, servicerequestid AS complaintNo, to_char(to_timestamp(TRUNC(CAST(createdtime AS bigint) / 1000)), 'DD/MM/YYYY') AS date, eg_user.name, phone, landmark, address, description, CONCAT(((SELECT deptmap.slaHours FROM (VALUES tbl_dept) AS deptmap(serviceCode, department, slaHours) WHERE deptmap.serviceCode = eg_pgr_service.servicecode)::integer / 24) - (((select extract(epoch from now())) - eg_pgr_service.createdtime)::integer/24), ' days') AS slahours, status FROM eg_pgr_service, eg_user WHERE eg_pgr_service.accountid = eg_user.id::VARCHAR AND eg_pgr_service.tenantid LIKE $tenantid AND status IN ('open','assigned','reassigrequested','rejected')
-=======
   query: SELECT (SELECT deptmap.department FROM (VALUES tbl_dept) AS deptmap(serviceCode, department, slaHours) WHERE deptmap.serviceCode = eg_pgr_service.servicecode) AS department, eg_pgr_service.servicecode AS servicecode, servicerequestid AS complaintNo, to_char(to_timestamp(TRUNC(CAST(createdtime AS bigint) / 1000)), 'DD/MM/YYYY') AS date, eg_user.name, phone, landmark, address, description, CONCAT(((SELECT deptmap.slaHours FROM (VALUES tbl_dept) AS deptmap(serviceCode, department, slaHours) WHERE deptmap.serviceCode = eg_pgr_service.servicecode)::integer / 24) - ((((select extract(epoch from now())) - eg_pgr_service.createdtime)::bigint/3600000)::integer/24), ' days') AS slahours, status FROM eg_pgr_service, eg_user WHERE eg_pgr_service.accountid = eg_user.id::VARCHAR AND eg_pgr_service.tenantid LIKE $tenantid AND status IN ('open','assigned','reassigrequested','rejected')
->>>>>>> Stashed changes
-
 
 - reportName: EmployeeReport
   summary: Fetches complaints for employees

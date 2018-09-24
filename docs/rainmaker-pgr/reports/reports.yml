@@ -41,7 +41,7 @@ ReportDefinitions:
   moduleName: rainmaker-pgr
   externalService:
   - entity: $.MdmsRes.RAINMAKER-PGR.ServiceDefs
-    apiURL: https://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=RAINMAKER-PGR&masterName=ServiceDefs&tenantId=$tenantId
+    apiURL: http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=RAINMAKER-PGR&masterName=ServiceDefs&tenantId=$tenantId
     keyOrder: serviceCode,department,slaHours
     tableName: tbl_dept
   sourceColumns:

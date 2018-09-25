@@ -1,6 +1,5 @@
 package org.egov.pgr.utils;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -90,6 +89,7 @@ public class PGRConstants {
 	
 	/*  search on roles constant */
 	
+	public static final String ROLE_CITIZEN = "Citizen";
 	public static final String ROLE_EMPLOYEE = "Employee";
 	public static final String ROLE_GRO = "Grievance Routing Officer";
 	public static final String ROLE_DGRO = "Department Grievance Routing Officer";

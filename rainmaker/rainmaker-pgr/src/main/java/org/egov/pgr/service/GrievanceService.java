@@ -240,7 +240,11 @@ public class GrievanceService {
 
 		Map<String, List<String>> actioncurrentStatusMap = WorkFlowConfigs.getActionCurrentStatusMap();
 		Map<String, String> actionStatusMap = WorkFlowConfigs.getActionStatusMap();
-		String by = auditDetails.getLastModifiedBy() + ":" + requestInfo.getUserInfo().getRoles().get(0).getName();
+		String role = pGRUtils.getPrecedentRole(requestInfo.getUserInfo().getRoles().parallelStream().map(Role::getName)
+				.collect(Collectors.toList()));
+		if(StringUtils.isEmpty(role))
+			role = requestInfo.getUserInfo().getRoles().get(0).getName();
+		String by = auditDetails.getLastModifiedBy() + ":" + role;
 
 		actionInfo.setUuid(UUID.randomUUID().toString());
 		// FIXME TODO business key should be module name and currentid in future

@@ -160,7 +160,7 @@ public class ReportQueryBuilder {
 			queryBuilder.append("WHERE eg_pgr_service.tenantid = ").append("'" + reportRequest.getTenantId() + "'");
 		}
 		if (reportRequest.getReportName().equalsIgnoreCase(ReportConstants.AO_REPORT)) {
-			queryBuilder.append(" AND (by LIKE '%GRO' OR by LIKE '%Grievance Routing Officer') ");
+			queryBuilder.append(" AND (by LIKE '%Grievance Routing Officer' OR by LIKE '%Employee') ");
 			query = query.replace("$subwhere", "WHERE tenantid = '" + reportRequest.getTenantId() + "'");
 		}
 		if (!CollectionUtils.isEmpty(searchParams)) {

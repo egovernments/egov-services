@@ -32,7 +32,7 @@ public class ErrorConstants {
 	public static final String CREATE_ADDRESS_COMBO_ERROR_MSG = "Any one of the combinations of (address or addressId or lat/long) must be provided in the Grievance";
 	
 	public static final String ASSIGNEE_MISSING_FOR_ACTION_ASSIGN_REASSIGN_KEY = "EG_PGR_UPDATE_ASSIGN_REASSIGN";
-	public static final String ASSIGNEE_MISSING_FOR_ACTION_ASSIGN_REASSIGN_MSG = "The assignees are missing for the assign actions of services with ids : ";
+	public static final String ASSIGNEE_MISSING_FOR_ACTION_ASSIGN_REASSIGN_MSG = "The assignees are missing or are invalid for the services with ids : ";
 	
 	public static final String UNAUTHORIZED_USER_MSG = "This User is not authorized to access this information";
 	public static final String UNAUTHORIZED_USER_KEY = "EG_PGR_INVALID_USER";

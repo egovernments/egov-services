@@ -140,13 +140,14 @@ public class ReportQueryBuilder {
 	}
 
 	public String getFunctionaryWiseReportQuert(ReportRequest reportRequest) {
-		String query = "select assignee as employee_name, \n" + 
+		String query = "select \n" + 
+				"(SELECT (CASE WHEN assignee IN (select distinct assignee from eg_pgr_action where action = 'assign' and \"when\" = (select max(\"when\") from eg_pgr_action action where action.businesskey =  eg_pgr_action.businesskey and action = 'assign')) THEN CONCAT(assignee,'') END) as employee_name), \n" + 
 				"sum(case when eg_pgr_action.businesskey IN (select DISTINCT businesskey from eg_pgr_action where \"when\" IN (select max(\"when\") from eg_pgr_action where status = 'assigned' group by businesskey)) then 1 else 0 end) as total_complaints_received, \n" + 
 				"sum(case when eg_pgr_action.when IN (select max(\"when\") from eg_pgr_action where eg_pgr_action.status NOTNULL AND eg_pgr_action.status != 'resolved' group by businessKey) AND eg_pgr_action.status != 'resolved' then 1 else 0 end) as total_open_complaints,\n" + 
 				"sum(case when has_sla_crossed = 'Yes' then 1 else 0 end) as outside_sla,\n" + 
-				"avg(cast(rating as numeric)) as avg_citizen_rating \n" + 
-				"from eg_pgr_service INNER JOIN eg_pgr_action ON servicerequestid = eg_pgr_action.businesskey INNER JOIN slaservicerequestidview ON servicerequestid = slaservicerequestidview.businesskey\n" + 
-				"$where group by assignee";
+				"avg(cast(rating as numeric)) as avg_citizen_rating\n" + 
+				"from eg_pgr_service INNER JOIN eg_pgr_action ON servicerequestid = eg_pgr_action.businesskey INNER JOIN slaservicerequestidview ON servicerequestid = slaservicerequestidview.businesskey \n" + 
+				"where assginee NOTNULL $where group by assignee";
 
 		query = addWhereClause(query, reportRequest);
 		log.info("Functionary Wise report query: " + query);
@@ -156,12 +157,11 @@ public class ReportQueryBuilder {
 	public String addWhereClause(String query, ReportRequest reportRequest) {
 		List<ParamValue> searchParams = reportRequest.getSearchParams();
 		StringBuilder queryBuilder = new StringBuilder();
-		queryBuilder.append("WHERE eg_pgr_service.tenantid = ").append("'" + reportRequest.getTenantId() + "'");
-/*		if (reportRequest.getReportName().equalsIgnoreCase(ReportConstants.ULBEMPLOYEE_REPORT)) {
+		if (reportRequest.getReportName().equalsIgnoreCase(ReportConstants.ULBEMPLOYEE_REPORT)) {
 			queryBuilder.append(" AND eg_pgr_service.tenantid = ").append("'" + reportRequest.getTenantId() + "'");
 		} else {
 			queryBuilder.append("WHERE eg_pgr_service.tenantid = ").append("'" + reportRequest.getTenantId() + "'");
-		}*/
+		}
 		if (reportRequest.getReportName().equalsIgnoreCase(ReportConstants.AO_REPORT)) {
 			queryBuilder.append(" AND (by LIKE '%GRO' OR by LIKE '%Grievance Routing Officer') ");
 			query = query.replace("$subwhere", "WHERE tenantid = '" + reportRequest.getTenantId() + "'");

@@ -11,10 +11,12 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.request.Role;
 import org.egov.common.contract.request.User;
 import org.egov.mdms.model.MdmsCriteriaReq;
+import org.egov.pgr.contract.ReportRequest;
 import org.egov.pgr.contract.ServiceReqSearchCriteria;
 import org.egov.pgr.contract.ServiceRequest;
 import org.egov.pgr.contract.ServiceResponse;
@@ -27,6 +29,7 @@ import org.egov.pgr.model.user.UserSearchRequest;
 import org.egov.pgr.model.user.UserType;
 import org.egov.pgr.repository.ServiceRequestRepository;
 import org.egov.pgr.service.GrievanceService;
+import org.egov.pgr.service.ReportService;
 import org.egov.pgr.utils.ErrorConstants;
 import org.egov.pgr.utils.PGRConstants;
 import org.egov.pgr.utils.PGRUtils;
@@ -52,6 +55,9 @@ public class PGRRequestValidator {
 
 	@Autowired
 	private PGRUtils pgrUtils;
+	
+	@Autowired
+	private ReportService reportService;
 
 	@Value("${egov.mdms.host}")
 	private String mdmsHost;
@@ -295,7 +301,6 @@ public class PGRRequestValidator {
 
 		List<String> errorMsgForActionAssign = new ArrayList<>();
 		List<Service> services = serviceRequest.getServices();
-
 		List<ActionInfo> infos = serviceRequest.getActionInfo();
 
 		if (null != infos)
@@ -303,9 +308,24 @@ public class PGRRequestValidator {
 				ActionInfo info = infos.get(i);
 				if (null != info && null != info.getAction())
 					if ((WorkFlowConfigs.ACTION_ASSIGN.equalsIgnoreCase(info.getAction())
-							|| WorkFlowConfigs.ACTION_REASSIGN.equalsIgnoreCase(info.getAction()))
-							&& info.getAssignee() == null)
-						errorMsgForActionAssign.add(services.get(i).getServiceRequestId());
+							|| WorkFlowConfigs.ACTION_REASSIGN.equalsIgnoreCase(info.getAction()))) {
+						if(StringUtils.isEmpty(info.getAssignee())) {
+							errorMsgForActionAssign.add(services.get(i).getServiceRequestId());
+						}else {
+							ReportRequest request = ReportRequest.builder().requestInfo(serviceRequest.getRequestInfo())
+									.tenantId(serviceRequest.getServices().get(0).getTenantId()).build();
+							List<Long> employeeIds = new ArrayList<>();
+							try {
+								employeeIds.add(Long.valueOf(info.getAssignee()));
+							}catch(Exception e) {
+								errorMsgForActionAssign.add(services.get(i).getServiceRequestId());
+							}
+							Map<Long, String> result = reportService.getEmployeeDetails(request, employeeIds);
+							if(CollectionUtils.isEmpty(result.keySet())) {
+								errorMsgForActionAssign.add(services.get(i).getServiceRequestId());
+							}
+						}
+					}
 					else if (!WorkFlowConfigs.ACTION_ASSIGN.equalsIgnoreCase(info.getAction())
 							&& !WorkFlowConfigs.ACTION_REASSIGN.equalsIgnoreCase(info.getAction())
 							&& null != info.getAssignee())

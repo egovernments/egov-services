@@ -99,7 +99,7 @@ public class ReportQueryBuilder {
 	public String getAOWiseReportQuery(ReportRequest reportRequest) {
 		String query = "SELECT by as ao_name,          \n"
 				+ "       (select count(*) from eg_pgr_service $subwhere) as total_complaints_received,\n"
-				+ "       sum(case when action = 'assign' then 1 else 0 end) as complaints_assigned,\n"
+				+ "       sum(case when action = 'assign' OR action = 'requestforreassign' then 1 else 0 end) as complaints_assigned,\n"
 				+ "       sum(case when action = 'reject' then 1 else 0 end) as complaints_rejected \n"
 				+ "  FROM eg_pgr_service INNER JOIN eg_pgr_action ON eg_pgr_service.servicerequestid = eg_pgr_action.businesskey $where\n"
 				+ "  GROUP BY by";
@@ -113,10 +113,7 @@ public class ReportQueryBuilder {
 	public String getDepartmentWiseReportQuery(ReportRequest reportRequest) {
 		String query = "SELECT servicecode as department_name,          \n"
 				+ "       sum(case when tenantId NOTNULL then 1 else 0 end) as total_complaints,\n"
-				// + " sum(case when status IN ('closed','resolved','rejected') then 1 else 0
-				// end) as total_closed_complaints,\n"
 				+ "       sum(case when status IN ('open','assigned') then 1 else 0 end) as total_open_complaints,\n"
-				// + " sum(case when has_sla_crossed = 'No' then 1 else 0 end) as within_sla,\n"
 				+ "       sum(case when has_sla_crossed = 'Yes' then 1 else 0 end) as outside_sla, \n"
 				+ "       avg(cast(rating as numeric)) as avg_citizen_rating\n"
 				+ "  from eg_pgr_service INNER JOIN slaservicerequestidview ON servicerequestid = businesskey $where\n"

@@ -147,7 +147,7 @@ public class ReportQueryBuilder {
 				"sum(case when has_sla_crossed = 'Yes' then 1 else 0 end) as outside_sla,\n" + 
 				"avg(cast(rating as numeric)) as avg_citizen_rating\n" + 
 				"from eg_pgr_service INNER JOIN eg_pgr_action ON servicerequestid = eg_pgr_action.businesskey INNER JOIN slaservicerequestidview ON servicerequestid = slaservicerequestidview.businesskey \n" + 
-				"where assginee NOTNULL $where group by assignee";
+				"where eg_pgr_action.assginee NOTNULL $where group by eg_pgr_action.assginee";
 
 		query = addWhereClause(query, reportRequest);
 		log.info("Functionary Wise report query: " + query);

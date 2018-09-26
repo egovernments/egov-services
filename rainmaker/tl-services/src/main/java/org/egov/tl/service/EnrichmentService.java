@@ -33,7 +33,7 @@ public class EnrichmentService {
 
     public void enrichTLCreateRequest(TradeLicenseRequest tradeLicenseRequest) {
         RequestInfo requestInfo = tradeLicenseRequest.getRequestInfo();
-        AuditDetails auditDetails = tradeUtil.getAuditDetails(requestInfo.getUserInfo().getName(), true);
+        AuditDetails auditDetails = tradeUtil.getAuditDetails(requestInfo.getUserInfo().getUuid(), true);
         tradeLicenseRequest.getLicenses().forEach(tradeLicense -> {
             tradeLicense.setAuditDetails(auditDetails);
             tradeLicense.setId(UUID.randomUUID().toString());
@@ -193,7 +193,7 @@ public class EnrichmentService {
 
     public void enrichTLUpdateRequest(TradeLicenseRequest tradeLicenseRequest){
         RequestInfo requestInfo = tradeLicenseRequest.getRequestInfo();
-        AuditDetails auditDetails = tradeUtil.getAuditDetails(requestInfo.getUserInfo().getName(), false);
+        AuditDetails auditDetails = tradeUtil.getAuditDetails(requestInfo.getUserInfo().getUuid(), false);
         tradeLicenseRequest.getLicenses().forEach(tradeLicense -> {
             if(tradeLicense.getAction().equals(TradeLicense.ActionEnum.APPLY)
                     || tradeLicense.getAction().equals(TradeLicense.ActionEnum.INITIATE)) {

@@ -83,6 +83,8 @@ public class TradeLicenseService {
 
     List<TradeLicense> getLicensesWithOwnerInfo(TradeLicenseSearchCriteria criteria,RequestInfo requestInfo){
         List<TradeLicense> licenses = repository.getLicenses(criteria);
+        if(licenses.isEmpty())
+            return Collections.emptyList();
         enrichmentService.enrichTLSearchCriteriaWithOwnerids(criteria,licenses);
         UserDetailResponse userDetailResponse = userService.getUser(criteria,requestInfo);
         enrichmentService.enrichOwner(userDetailResponse,licenses);

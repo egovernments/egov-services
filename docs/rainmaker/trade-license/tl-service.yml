@@ -366,6 +366,8 @@ definitions:
           - APPROVED
           - REJECTED
           - CANCELED
+      tradeLicenseDetail:
+        $ref: '#/definitions/TradeLicenseDetail'
       auditDetails:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails'
     required:
@@ -375,9 +377,7 @@ definitions:
       - tradeLicenseDetail
   
   TradeLicenseDetail:
-    allOf:
-      - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-user/contracts/v1-0-0.yml#/definitions/User'
-      - type: object
+        type: object
         description: A Object holds the basic data for a Trade License
         properties:
           surveyNo:

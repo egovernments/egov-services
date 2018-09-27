@@ -3,8 +3,6 @@ nextval('seq_eg_businesscategory'),'Advertisement Tax','AT',true,'pb.amritsar',0
 insert into eg_businesscategory(id,name,code,active,tenantid,version,createdby,lastmodifiedby,createddate,lastmodifieddate) values(
 nextval('seq_eg_businesscategory'),'Water Tax','WT',true,'pb.amritsar',0,1,1,153327168499,1533271684996);
 insert into eg_businesscategory(id,name,code,active,tenantid,version,createdby,lastmodifiedby,createddate,lastmodifieddate) values(
-nextval('seq_eg_businesscategory'),'Property Tax','PT',true,'pb.amritsar',0,1,1,1533271684996,1533271684996);
-insert into eg_businesscategory(id,name,code,active,tenantid,version,createdby,lastmodifiedby,createddate,lastmodifieddate) values(
 nextval('seq_eg_businesscategory'),'Trade License','TL',true,'pb.amritsar',0,1,1,1533271684996,1533271684996);
 
 insert into eg_businessdetails(id,name,businessurl,isenabled,code,businesstype,fund,function,department,vouchercreation,

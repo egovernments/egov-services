@@ -3,6 +3,7 @@ package org.egov.tl.repository.builder;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
+import org.egov.tl.config.TLConfiguration;
 import org.egov.tl.web.models.*;
 import org.egov.tracer.model.CustomException;
 import org.postgresql.util.PGobject;
@@ -19,6 +20,13 @@ import java.util.*;
 @Slf4j
 @Component
 public class TLQueryBuilder {
+
+    private TLConfiguration config;
+
+    @Autowired
+    public TLQueryBuilder(TLConfiguration config) {
+        this.config = config;
+    }
 
     private static final String INNER_JOIN_STRING = " INNER JOIN ";
     private static final String LEFT_OUTER_JOIN_STRING = " LEFT OUTER JOIN ";
@@ -55,7 +63,11 @@ public class TLQueryBuilder {
             +" WHERE ";
 
 
-
+      private final String paginationWrapper = "SELECT * FROM " +
+              "(SELECT *, DENSE_RANK() OVER (ORDER BY tl_id) offset_ FROM " +
+              "({})" +
+              " result) result_offset " +
+              "WHERE offset_ > ? AND offset_ <= ?";
 
 
 
@@ -100,7 +112,7 @@ public class TLQueryBuilder {
             preparedStmtList.add(criteria.getOldLicenseNumber());
         }
 
-        return builder.toString();
+        return addPaginationWrapper(builder.toString(),preparedStmtList,criteria);
     }
 
 
@@ -117,8 +129,31 @@ public class TLQueryBuilder {
     }
 
     private void addToPreparedStatement(List<Object> preparedStmtList,List<String> ids)
-    { ids.forEach(id ->{ preparedStmtList.add(id);});
+    {
+        ids.forEach(id ->{ preparedStmtList.add(id);});
     }
 
 
+    private String addPaginationWrapper(String query,List<Object> preparedStmtList,
+                                      TradeLicenseSearchCriteria criteria){
+        int limit = config.getDefaultLimit();
+        int offset = config.getDefaultOffset();
+        String finalQuery = paginationWrapper.replace("{}",query);
+
+        if(criteria.getLimit()!=null)
+            limit = criteria.getLimit();
+
+        if(criteria.getOffset()!=null)
+            offset = criteria.getOffset();
+
+        preparedStmtList.add(offset);
+        preparedStmtList.add(limit+offset);
+
+       return finalQuery;
     }
+
+
+
+
+
+}

@@ -80,11 +80,20 @@ public class UserService{
                     uri=uri.append(config.getUserContextPath()).append(config.getUserUpdateEndpoint());
                     OwnerInfo user = new OwnerInfo();
                     user.addUserWithoutAuditDetail(owner);
+                    addNonUpdatableFields(user,userDetailResponse.getUser().get(0));
                     userDetailResponse = userCall( new CreateUserRequest(requestInfo,user),uri);
                     setOwnerFields(owner,userDetailResponse,requestInfo);
                 }
             });
         });
+    }
+
+
+    private void addNonUpdatableFields(User user,User userFromSearchResult){
+        user.setUserName(userFromSearchResult.getUserName());
+        user.setId(userFromSearchResult.getId());
+        user.setActive(userFromSearchResult.getActive());
+        user.setPassword(userFromSearchResult.getPassword());
     }
 
 

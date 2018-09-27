@@ -1,5 +1,6 @@
 package org.egov.tl.web.models;
 
+import java.math.BigDecimal;
 import java.util.LinkedList;
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -46,6 +47,29 @@ public class TradeLicenseDetail   {
 
         @JsonProperty("subOwnerShipCategory")
         private String subOwnerShipCategory = null;
+
+        @JsonProperty("structureType")
+        private String structureType;
+
+        @JsonProperty("operationalArea")
+        private Double operationalArea;
+
+        @JsonProperty("noOfEmployees")
+        private Integer noOfEmployees;
+
+        @JsonProperty("adhocExemption")
+        private BigDecimal adhocExemption;
+
+        @JsonProperty("adhocPenalty")
+        private BigDecimal adhocPenalty;
+
+        @Size(max=1024)
+        @JsonProperty("adhocExemptionReason")
+        private String adhocExemptionReason;
+
+        @Size(max=1024)
+        @JsonProperty("adhocPenaltyReason")
+        private String adhocPenaltyReason;
 
         @JsonProperty("owners")
         @Valid

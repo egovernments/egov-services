@@ -106,6 +106,12 @@ public class TLConfiguration {
     @Value("${egov.location.hierarchyTypeCode}")
     private String hierarchyTypeCode;
 
+    @Value("${egov.tl.default.limit}")
+    private Integer defaultLimit;
+
+    @Value("${egov.tl.default.offset}")
+    private Integer defaultOffset;
+
 
 
 

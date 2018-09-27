@@ -61,6 +61,7 @@ public class TLRowMapper  implements ResultSetExtractor<List<TradeLicense>> {
                         .applicationNumber(rs.getString("applicationnumber"))
                         .commencementDate(commencementDate)
                         .issuedDate(issuedDate)
+                        .accountId(rs.getString("accountId"))
                         .financialYear(rs.getString("financialyear"))
                         .validFrom(validFrom)
                         .validTo(validTo)
@@ -123,6 +124,8 @@ public class TLRowMapper  implements ResultSetExtractor<List<TradeLicense>> {
                     .lastModifiedTime(rs.getLong("tld_createdTime"))
                     .build();
 
+            Double operationalArea = (Double) rs.getObject("operationalArea");
+            Integer noOfEmployees = (Integer) rs.getObject("noOfEmployees");
             Object obj = rs.getObject("additionaldetail");
             PGobject pgObj = (PGobject) rs.getObject("additionaldetail");
             try {
@@ -135,6 +138,13 @@ public class TLRowMapper  implements ResultSetExtractor<List<TradeLicense>> {
                         .additionalDetail(additionalDetail)
                         .address(address)
                         .auditDetails(auditdetails)
+                        .structureType(rs.getString("structureType"))
+                        .operationalArea(operationalArea)
+                        .noOfEmployees(noOfEmployees)
+                        .adhocExemption(rs.getBigDecimal("adhocExemption"))
+                        .adhocPenalty(rs.getBigDecimal("adhocPenalty"))
+                        .adhocExemptionReason(rs.getString("adhocExemptionReason"))
+                        .adhocPenaltyReason(rs.getString("adhocPenaltyReason"))
                         .build();
                 tradeLicense.setTradeLicenseDetail(tradeLicenseDetail);
             }

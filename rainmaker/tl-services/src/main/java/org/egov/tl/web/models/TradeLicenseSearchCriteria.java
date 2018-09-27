@@ -17,9 +17,6 @@ public class TradeLicenseSearchCriteria {
     @JsonProperty("tenantId")
     private String tenantId;
 
-    @JsonProperty("pageNumber")
-    private int pageNumber;
-
     @JsonProperty("status")
     private String status;
 
@@ -45,8 +42,10 @@ public class TradeLicenseSearchCriteria {
     private String accountId;
 
     @JsonProperty("offset")
-    private String offset;
+    private Integer offset;
 
+    @JsonProperty("limit")
+    private Integer limit;
 
 
 }

@@ -7,15 +7,15 @@ info:
       - Calculate Trade License.
   contact:
     name: eGovernments Foundation
-    email: ghanshyam.rawat@egovernments.org
+    email: contacts@egovernments.org
 schemes:
   - https
 basePath: /tl-calculator/
 paths:
-  /tradelicense/_calculate:
+  /v1/_calculate:
     post:
       summary: Calculates Trade License and generates the respective demands in the system.
-      description: Calculate Trade License based on criteria.
+      description: Calculate Trade License Fee based on criteria.
       tags:
         - Trade License Calculation
       parameters:
@@ -33,32 +33,30 @@ paths:
         '400':
           description: Error response in case of failures.
           schema:
-            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
-            
-  /tradelicense/_getbill:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-1-1.yml#/definitions/ErrorRes'
+  /v1/_getbill:
     post:
       summary: Updates demand with time based penalty if applicable and Generates bill for the given criteria.
       description: Generates bill for payment.
       tags:
         - Trade License Bill
       parameters:
-        - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo'
-        - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId'
+        - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-1-1.yml#/parameters/requestInfo'
+        - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-1-1.yml#/parameters/tenantId'
         - name: applicationNumber
           in: query
-          description: Application number generated for the trade license application
+          description: Unique Trade application number.
           required: true
           type: string
       responses:
         '200':
           description: Success response calculated tax amount.
           schema:
-            $ref: '#/definitions/CalculationRes'
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/billingservice/contracts/v1-0-0.yml#/definitions/Bill'
         '400':
           description: Error response in case of failures.
           schema:
-            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
-            
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-1-1.yml#/definitions/ErrorRes'
   /billingslab/_search:
     post:
       summary: Get the list of properties defined in the system for trade license calculation.
@@ -67,7 +65,7 @@ paths:
       tags:
         - BillingSlab
       parameters:
-        - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo'
+        - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-1-1.yml#/parameters/requestInfo'
         - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId'
         - name: active
           in: query
@@ -106,15 +104,6 @@ paths:
           required: false
           type: integer
           format: int64
-        - name: acknowldgementNumber
-          in: query
-          required: false
-          description: The acknowldgement number no for a property.
-          type: string
-          minLength: 1
-          maxLength: 64
-          exclusiveMinimum: true
-          exclusiveMaximum: false
       responses:
         '200':
           description: Successful response
@@ -124,13 +113,12 @@ paths:
           description: Invalid input.
           schema:
             $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
-            
   /billingslab/_create:
     post:
       summary: Create new billing slabs for trade license calculation.
       description: API to billing slabs for trade license calculation.
       tags:
-        - BillingSlab      
+        - BillingSlab
       parameters:
         - name: billingSlab
           in: body
@@ -147,7 +135,6 @@ paths:
           description: Billing Slab(s) creation failed
           schema:
             $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
-            
   /billingslab/_update:
     post:
       summary: Update existing billing slabs.
@@ -187,12 +174,12 @@ definitions:
         maxLength: 256
     required:
       - tenantId
-      
   Calculation:
     type: object
     properties:
-      connectionNumber:
+      applicationNumber:
         type: string
+        description: TradeLicense application number.
       totalAmount:
         type: number
         format: double
@@ -200,26 +187,19 @@ definitions:
       penalty:
         type: number
         format: double
-        description: Penality if applicable
+        description: Total Penality if applicable.
       exemption:
         type: number
         format: double
-        description: Exemption amount if applicable.
+        description: Total Exemption amount if applicable.
       rebate:
         type: number
         format: double
-        description: Rebate amount if applicable.
-      fromDate:
-        type: integer
-        format: int64
-      toDate:
-        type: integer
-        format: int64
+        description: Total Rebate amount if applicable.
       tenantId:
         type: string
         minLength: 2
         maxLength: 256
-        
   BillingSlab:
     type: object
     properties:
@@ -233,83 +213,60 @@ definitions:
         description: unique identifier of the billing slab uuid
         maxLength: 64
         minLength: 2
-      propertyType:
+      licenseType:
         type: string
-        description: Based on property type charges will change.
+        description: LicenseType, is unique enum value for a license
+        enum:
+          - TEMPORARY
+          - PERMANENT
+      structureType:
+        type: string
+        description: StructureType and Structure subtype, this mdms data.
         maxLength: 64
         minLength: 2
-      propertySubType:
+      tradeType:
         type: string
-        description: Based on property type charges will change.
+        description: value from Trade type master of mdms .
         maxLength: 64
         minLength: 2
-      usageCategoryMajor:
+      accessoryCategory:
         type: string
-        description: Floor Number.
+        description: Accessory Category is a master from mdms .
         maxLength: 64
         minLength: 2
-      usageCategoryMinor:
+      type:
         type: string
-        description: Floor Number.
+        description:  Type will define the rate value is flat amount or rate.
+        enum:
+          - RATE
+          - FLAT
+      rate:
+        type: string
+        description: Rate of the trade license, this can be the rate of flat amount based on type.
         maxLength: 64
         minLength: 2
-      usageCategorySubMinor:
+      uom:
         type: string
-        description: Floor Number.
+        description: unit of measurement of trade type.
+        maxLength: 32
+        minLength: 2
+      from:
+        type: string
+        description: uom value lower bound.
         maxLength: 64
         minLength: 2
-      usageCategoryDetail:
+      to:
         type: string
-        description: Floor Number.
+        description: uom value upper bound.
         maxLength: 64
         minLength: 2
-      OwnerShipCategory:
-        type: string
-        description: Floor Number.
-        maxLength: 64
-        minLength: 2
-      SubOwnerShipCategory:
-        type: string
-        description: Floor Number.
-        maxLength: 64
-        minLength: 2
-      fromFloor:
-        type: string
-        description: Floor Number.
-        maxLength: 64
-        minLength: 2
-      toFloor:
-        type: string
-        description: Floor Number.
-        maxLength: 64
-        minLength: 2
-      area:
-        type: string
-        description: Floor Number.
-        maxLength: 64
-        minLength: 2
-      fromPlotSize:
-        type: string
-        description: Floor Number.
-        maxLength: 64
-        minLength: 2
-      toPlotSize:
-        type: string
-        description: Floor Number.
-        maxLength: 64
-        minLength: 2
-      unitRate:
-        description: Floor Number.
-        type: number
-        format: double
     required:
       - tenantId
-      
   CalculationReq:
     type: object
     properties:
       RequestInfo:
-        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-1-1.yml#/definitions/RequestInfo'
       CalulationCriteria:
         type: array
         maximum: 100
@@ -318,7 +275,6 @@ definitions:
     required:
       - RequestInfo
       - calulationCriteria
-      
   CalculationRes:
     type: object
     properties:
@@ -328,12 +284,11 @@ definitions:
         type: array
         items:
           $ref: '#/definitions/Calculation'
-
   BillingSlabReq:
     type: object
     properties:
       RequestInfo:
-        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-1-1.yml#/definitions/RequestInfo'
       BillingSlab:
         type: array
         maximum: 100
@@ -342,13 +297,13 @@ definitions:
     required:
       - RequestInfo
       - billingSlab
-
   BillingSlabRes:
     type: object
     properties:
       ResponseInfo:
-        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-1-1.yml#/definitions/ResponseInfo'
       BillingSlab:
         type: array
         items:
           $ref: '#/definitions/BillingSlab'
+          

@@ -88,6 +88,9 @@ public class  TradeLicense   {
         @JsonProperty("accountId")
         private String accountId = null;
 
+        @JsonProperty("tradeName")
+        private String tradeName = null;
+
         @JsonProperty("applicationDate")
         private Long applicationDate = null;
 

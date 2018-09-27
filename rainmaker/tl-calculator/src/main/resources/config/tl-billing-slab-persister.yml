@@ -1,0 +1,43 @@
+serviceMaps:
+ serviceName: TradeLicense Calculator
+ mappings:
+ - version: 1.0
+   name: tl-calculator
+   description: Persists the billing slabs of tl into db
+   fromTopic: save-tl-billingslab
+   isTransaction: true
+   queryMaps:
+    - query: INSERT INTO eg_tl_billingslab(id, tenantid, licensetype, structuretype, tradetype, accessorycategory, type, uom, from, to, rate, createdby, createdtime, lastmodifiedby, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+
+      basePath: BillingSlab.*
+      jsonMaps:
+
+       - jsonPath: $.BillingSlab.*.id
+
+       - jsonPath: $.BillingSlab.*.tenantId
+
+       - jsonPath: $.BillingSlab.*.licensetype
+
+       - jsonPath: $.BillingSlab.*.structuretype
+
+       - jsonPath: $.BillingSlab.*.tradetype
+
+       - jsonPath: $.BillingSlab.*.accessorycategory
+
+       - jsonPath: $.BillingSlab.*.type
+
+       - jsonPath: $.BillingSlab.*.uom
+
+       - jsonPath: $.BillingSlab.*.from
+
+       - jsonPath: $.BillingSlab.*.to
+
+       - jsonPath: $.BillingSlab.*.rate
+              
+       - jsonPath: $.BillingSlab.*.auditDetails.createdBy
+
+       - jsonPath: $.BillingSlab.*.auditDetails.createdTime
+
+       - jsonPath: $.BillingSlab.*.auditDetails.lastmodifiedBy
+
+       - jsonPath: $.BillingSlab.*.auditDetails.lastmodifiedTime

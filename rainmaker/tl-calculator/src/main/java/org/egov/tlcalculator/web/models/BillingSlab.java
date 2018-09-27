@@ -62,7 +62,9 @@ public class BillingSlab {
 
 	@JsonProperty("rate")
 	@Size(min = 2, max = 64)
-	private String rate = null;
+	private Double rate = null;
+	
+	private AuditDetails auditDetails;
 
 	
 	public enum LicenseTypeEnum {

@@ -1,22 +1,20 @@
 package org.egov.tlcalculator.web.models;
 
-import java.util.Objects;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
-import java.util.ArrayList;
 import java.util.List;
-import org.egov.tlcalculator.web.models.CalulationCriteria;
-import org.egov.tlcalculator.web.models.RequestInfo;
-import org.springframework.validation.annotation.Validated;
+
 import javax.validation.Valid;
-import javax.validation.constraints.*;
+import javax.validation.constraints.NotNull;
+
+import org.egov.common.contract.request.RequestInfo;
+import org.springframework.validation.annotation.Validated;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.Builder;
 
 /**
  * CalculationReq
@@ -29,15 +27,14 @@ import lombok.Builder;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class CalculationReq   {
-        @JsonProperty("RequestInfo")
-        @NotNull@Valid
-private RequestInfo requestInfo = null;
+public class CalculationReq {
+	@JsonProperty("RequestInfo")
+	@NotNull
+	@Valid
+	private RequestInfo requestInfo = null;
 
-        @JsonProperty("CalulationCriteria")
-        @Valid
-        private List<CalulationCriteria> calulationCriteria = null;
-
+	@JsonProperty("CalulationCriteria")
+	@Valid
+	private List<CalulationCriteria> calulationCriteria = null;
 
 }
-

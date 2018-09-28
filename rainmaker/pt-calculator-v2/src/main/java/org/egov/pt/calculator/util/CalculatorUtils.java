@@ -47,7 +47,7 @@ public class CalculatorUtils {
 
 	/**
 	 * Prepares and returns Mdms search request with financial master criteria
-	 * 
+	 *
 	 * @param requestInfo
 	 * @param assesmentYear
 	 * @return
@@ -90,7 +90,7 @@ public class CalculatorUtils {
 
 	/**
 	 * Returns the url for mdms search endpoint
-	 * 
+	 *
 	 * @return
 	 */
 	public StringBuilder getMdmsSearchUrl() {
@@ -100,7 +100,7 @@ public class CalculatorUtils {
 	/**
 	 * Returns the tax head search Url with tenantId and PropertyTax service name
 	 * parameters
-	 * 
+	 *
 	 * @param tenantId
 	 * @return
 	 */
@@ -116,7 +116,7 @@ public class CalculatorUtils {
 	/**
 	 * Returns the tax head search Url with tenantId and PropertyTax service name
 	 * parameters
-	 * 
+	 *
 	 * @param tenantId
 	 * @return
 	 */
@@ -128,11 +128,11 @@ public class CalculatorUtils {
 				.append(CalculatorConstants.SEPARATER).append(CalculatorConstants.SERVICE_FIELD_FOR_SEARCH_URL)
 				.append(CalculatorConstants.SERVICE_FIELD_VALUE_PT);
 	}
-	
+
 	/**
 	 * Returns the Receipt search Url with tenantId and cosumerCode service name
 	 * parameters
-	 * 
+	 *
 	 * @param tenantId
 	 * @return
 	 */
@@ -144,10 +144,10 @@ public class CalculatorUtils {
 				.append(CalculatorConstants.SEPARATER).append(CalculatorConstants.CONSUMER_CODE_SEARCH_FIELD_NAME)
 				.append(consumerCode);
 	}
-	
+
 	/**
 	 * method to create demandsearch url with demand criteria
-	 * 
+	 *
 	 * @param criteria
 	 * @return
 	 */
@@ -159,10 +159,10 @@ public class CalculatorUtils {
 				.append(CalculatorConstants.SEPARATER)
 				.append(CalculatorConstants.CONSUMER_CODE_SEARCH_FIELD_NAME).append(getBillCriteria.getPropertyId()+ CalculatorConstants.PT_CONSUMER_CODE_SEPARATOR +getBillCriteria.getAssessmentNumber());
 	}
-	
+
 	/**
 	 * method to create demandsearch url with demand criteria
-	 * 
+	 *
 	 * @param criteria
 	 * @return
 	 */
@@ -174,10 +174,10 @@ public class CalculatorUtils {
 				.append(CalculatorConstants.SEPARATER)
 				.append(CalculatorConstants.CONSUMER_CODE_SEARCH_FIELD_NAME).append(assessment.getPropertyId()+ CalculatorConstants.PT_CONSUMER_CODE_SEPARATOR +assessment.getAssessmentNumber());
 	}
-	
+
 	/**
 	 * Returns the applicable total tax amount to be paid on a demand
-	 * 
+	 *
 	 * @param demand
 	 * @return
 	 */
@@ -193,10 +193,10 @@ public class CalculatorUtils {
 		}
 		return taxAmt;
 	}
-	
+
 	/**
 	 * Returns the total tax amount to be paid on a demand
-	 * 
+	 *
 	 * @param demand
 	 * @return
 	 */
@@ -215,7 +215,7 @@ public class CalculatorUtils {
 
 	/**
 	 * Returns url for demand update Api
-	 *  
+	 *
 	 * @param tenantId
 	 * @param demandId
 	 * @return
@@ -226,7 +226,7 @@ public class CalculatorUtils {
 
 	/**
 	 * Returns url for Bill Gen Api
-	 * 
+	 *
 	 * @param tenantId
 	 * @param demandId
 	 * @return
@@ -244,7 +244,7 @@ public class CalculatorUtils {
 
 	/**
 	 * Query to fetch assessments for the given criteria
-	 * 
+	 *
 	 * @param assessment
 	 * @return
 	 */
@@ -276,17 +276,17 @@ public class CalculatorUtils {
 
 	/**
 	 * Query to fetch latest assessment for the given criteria
-	 * 
+	 *
 	 * @param assessment
 	 * @return
 	 */
-	public String getMaxAssessmentQuery(Assessment assessment, List<Object> preparedStmtList) {
+	 public String getMaxAssessmentQuery(Assessment assessment, List<Object> preparedStmtList) {
 
-		StringBuilder query = new StringBuilder("SELECT * FROM eg_pt_assessment a1 INNER JOIN "
+ 		StringBuilder query = new StringBuilder("SELECT * FROM eg_pt_assessment a1 INNER JOIN "
 
-				+ "(select Max(createdtime) as maxtime, propertyid from eg_pt_assessment group by propertyid) a2 "
+ 				+ "(select Max(createdtime) as maxtime, propertyid, assessmentyear from eg_pt_assessment group by propertyid, assessmentyear) a2 "
 
-				+ "ON a1.createdtime=a2.maxtime and a1.propertyid=a2.propertyid where a1.tenantId=? ");
+ 				+ "ON a1.createdtime=a2.maxtime and a1.propertyid=a2.propertyid where a1.tenantId=? ");
 
 		preparedStmtList.add(assessment.getTenantId());
 
@@ -299,7 +299,7 @@ public class CalculatorUtils {
 			query.append(" AND a1.propertyId=?");
 			preparedStmtList.add(assessment.getPropertyId());
 		}
-		
+
 		if(assessment.getAssessmentYear() != null) {
 			query.append(" AND a1.assessmentyear=?");
 			preparedStmtList.add(assessment.getAssessmentYear());
@@ -315,9 +315,9 @@ public class CalculatorUtils {
 	public String getAssessmentInsertQuery() {
 		return CalculatorConstants.QUERY_ASSESSMENT_INSERT;
 	}
-	
+
 	/**
-	 * Adds up the collection amount from the given demand 
+	 * Adds up the collection amount from the given demand
 	 * and the previous advance carry forward together as new advance carry forward
 	 *
 	 * @param demand
@@ -334,7 +334,7 @@ public class CalculatorUtils {
 		}
 		return carryForward;
 	}
-	
+
 	public AuditDetails getAuditDetails(String by, boolean isCreate) {
 		Long time = new Date().getTime();
 

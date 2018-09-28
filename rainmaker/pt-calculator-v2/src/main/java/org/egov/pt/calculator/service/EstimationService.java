@@ -54,7 +54,7 @@ public class EstimationService {
 
 	@Autowired
 	private DemandService demandService;
-	
+
 	@Autowired
 	CalculationValidator calcValidator;
 
@@ -474,7 +474,12 @@ public class EstimationService {
 			boolean isSubOwnerShipMatching = slabSubOwnerShipCat.equalsIgnoreCase(dtlSubOwnerShipCat)
 					|| all.equalsIgnoreCase(slabSubOwnerShipCat);
 
-			boolean isPlotMatching = slabAreaFrom <= plotSize && slabAreaTo >= plotSize;
+			boolean isPlotMatching = false;
+
+			if (plotSize == 0.0)
+				isPlotMatching = slabAreaFrom <= plotSize && slabAreaTo >= plotSize;
+			else
+				isPlotMatching = slabAreaFrom < plotSize && slabAreaTo >= plotSize;
 
 			return isPtTypeMatching && isPtSubTypeMatching && isOwnerShipMatching && isSubOwnerShipMatching
 					&& isPlotMatching && isAreaMatching && isPropertyMultiFloored;

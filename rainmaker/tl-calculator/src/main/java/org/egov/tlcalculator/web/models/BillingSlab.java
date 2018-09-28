@@ -12,6 +12,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 
 @Getter
@@ -19,11 +20,12 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@ToString
 public class BillingSlab {
 	
 	@JsonProperty("tenantId")
 	@NotNull
-	@Size(min = 4, max = 128)
+	@Size(min = 2, max = 128)
 	private String tenantId = null;
 
 	@JsonProperty("id")
@@ -53,15 +55,12 @@ public class BillingSlab {
 	private String uom = null;
 
 	@JsonProperty("from")
-	@Size(min = 2, max = 64)
-	private String from = null;
+	private Double from = null;
 
 	@JsonProperty("to")
-	@Size(min = 2, max = 64)
-	private String to = null;
+	private Double to = null;
 
 	@JsonProperty("rate")
-	@Size(min = 2, max = 64)
 	private Double rate = null;
 	
 	private AuditDetails auditDetails;

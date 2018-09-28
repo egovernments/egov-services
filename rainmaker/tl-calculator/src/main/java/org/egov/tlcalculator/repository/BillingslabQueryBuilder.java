@@ -1,0 +1,93 @@
+package org.egov.tlcalculator.repository;
+
+import java.util.List;
+
+import org.apache.commons.lang3.StringUtils;
+import org.egov.tlcalculator.web.models.BillingSlabSearchCriteria;
+import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
+
+import lombok.extern.slf4j.Slf4j;
+
+@Component
+@Slf4j
+public class BillingslabQueryBuilder {
+	
+	
+	public String getSearchQuery(BillingSlabSearchCriteria criteria, List<Object> preparedStmtList) {
+		StringBuilder queryBuilder = new StringBuilder();
+		queryBuilder.append("SELECT * from eg_tl_billingslab ");
+		addWhereClause(queryBuilder, criteria, preparedStmtList);
+		return queryBuilder.toString();
+	}
+	
+	public void addWhereClause(StringBuilder queryBuilder, BillingSlabSearchCriteria billingSlabSearcCriteria, List<Object> preparedStmtList) {
+		queryBuilder.append(" WHERE tenantid = ?");
+		preparedStmtList.add(billingSlabSearcCriteria.getTenantId());
+		List<String> ids = billingSlabSearcCriteria.getIds();
+		
+		if (!CollectionUtils.isEmpty(ids)) {
+			queryBuilder.append(" AND id IN ( ");
+			setValuesForList(queryBuilder, preparedStmtList, ids);
+			queryBuilder.append(")");
+		}
+
+		if (!StringUtils.isEmpty(billingSlabSearcCriteria.getAccessoryCategory())) {
+			queryBuilder.append(" AND accessorycategory = ?");
+			preparedStmtList.add(billingSlabSearcCriteria.getAccessoryCategory());
+		}
+
+		if (!StringUtils.isEmpty(billingSlabSearcCriteria.getLicenseType())) {
+			queryBuilder.append(" AND licensetype = ?");
+			preparedStmtList.add(billingSlabSearcCriteria.getLicenseType());
+		}
+
+		if (!StringUtils.isEmpty(billingSlabSearcCriteria.getStructureType())) {
+			queryBuilder.append(" AND structuretype = ?");
+			preparedStmtList.add(billingSlabSearcCriteria.getStructureType());
+		}
+
+		if (!StringUtils.isEmpty(billingSlabSearcCriteria.getTradeType())) {
+			queryBuilder.append(" AND tradetype = ?");
+			preparedStmtList.add(billingSlabSearcCriteria.getTradeType());
+		}
+		
+		if (!StringUtils.isEmpty(billingSlabSearcCriteria.getType())) {
+			queryBuilder.append(" AND type = ?");
+			preparedStmtList.add(billingSlabSearcCriteria.getType());
+		}
+
+		if (!StringUtils.isEmpty(billingSlabSearcCriteria.getUom())) {
+			queryBuilder.append(" AND uom = ?");
+			preparedStmtList.add(billingSlabSearcCriteria.getUom());
+		}
+
+		if (null != billingSlabSearcCriteria.getFrom()) {
+			queryBuilder.append(" AND \"from\" <= ?");
+			preparedStmtList.add(billingSlabSearcCriteria.getFrom());
+		}
+		
+		if (null != billingSlabSearcCriteria.getTo()) {
+			queryBuilder.append(" AND \"to\" >= ?");
+			preparedStmtList.add(billingSlabSearcCriteria.getTo());
+		}
+	}
+
+	/**
+	 * sets prepared statement for values for a list
+	 * 
+	 * @param queryBuilder
+	 * @param preparedStmtList
+	 * @param ids
+	 */
+	private void setValuesForList(StringBuilder queryBuilder, List<Object> preparedStmtList, List<String> ids) {
+		int len = ids.size();
+		for (int i = 0; i < ids.size(); i++) {
+			queryBuilder.append("?");
+			if (i != len - 1)
+				queryBuilder.append(", ");
+			preparedStmtList.add(ids.get(i));
+		}
+	}
+
+}

@@ -226,10 +226,10 @@ public class TransactionValidator {
         BigDecimal txnAmount = new BigDecimal(newTxn.getTxnAmount());
         BigDecimal totalAmount = billDetail.getTotalAmount();
 
-        if(!isIntegerValue(txnAmount))
+        if(!isPositiveInteger(txnAmount))
             errorMap.put("TXN_CREATE_INVALID_TXN_AMOUNT", "Transaction amount is invalid, cannot have fractions");
 
-        if(!isIntegerValue(totalAmount))
+        if(!isPositiveInteger(totalAmount))
             errorMap.put("TXN_CREATE_INVALID_BILL_AMOUNT", "Bill amount is invalid, cannot have fractions");
 
         if(txnAmount.compareTo(BigDecimal.ZERO) == 0 && totalAmount.compareTo(BigDecimal.ZERO) != 0)
@@ -261,8 +261,9 @@ public class TransactionValidator {
         }
     }
 
-    private boolean isIntegerValue(BigDecimal bd) {
-        return bd.signum() == 0 || bd.scale() <= 0 || bd.stripTrailingZeros().scale() <= 0;
+    private boolean isPositiveInteger(BigDecimal bd) {
+        return bd.compareTo(BigDecimal.ZERO) > 0 && (bd.signum() == 0 || bd.scale() <= 0 || bd.stripTrailingZeros()
+                .scale() <= 0);
     }
 
 }

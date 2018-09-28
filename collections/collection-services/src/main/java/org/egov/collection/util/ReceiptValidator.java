@@ -82,11 +82,11 @@ public class ReceiptValidator {
             BigDecimal amountPaid = billDetails.getAmountPaid();
             BigDecimal totalAmount = billDetails.getTotalAmount();
 
-            if (isNull(amountPaid) || !isIntegerValue(amountPaid)) {
+            if (isNull(amountPaid) || !isPositiveInteger(amountPaid) ) {
                 errorMap.put("INVALID_AMOUNT_PAID", "Invalid amount entered in amountPaid field. Amount should be greater than 0 and without fractions");
             }
 
-            if (isNull(totalAmount) || !isIntegerValue(totalAmount)) {
+            if (isNull(totalAmount) || !isPositiveInteger(totalAmount)) {
                 errorMap.put("INVALID_BILL_AMOUNT", "Invalid bill amount! Amount should be  greater than 0 and " +
                         "without fractions");
             }
@@ -369,8 +369,9 @@ public class ReceiptValidator {
         }
     }
 
-    private boolean isIntegerValue(BigDecimal bd) {
-        return bd.signum() == 0 || bd.scale() <= 0 || bd.stripTrailingZeros().scale() <= 0;
+    private boolean isPositiveInteger(BigDecimal bd) {
+        return bd.compareTo(BigDecimal.ZERO) > 0 && (bd.signum() == 0 || bd.scale() <= 0 || bd.stripTrailingZeros()
+                .scale() <= 0);
     }
 }
 

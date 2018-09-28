@@ -44,11 +44,13 @@ public class EnrichmentService {
             tradeLicense.getTradeLicenseDetail().getAddress().setTenantId(tradeLicense.getTenantId());
             tradeLicense.getTradeLicenseDetail().getAddress().setId(UUID.randomUUID().toString());
 
-            tradeLicense.getTradeLicenseDetail().getAccessories().forEach(accessory -> {
-                accessory.setTenantId(tradeLicense.getTenantId());
-                accessory.setId(UUID.randomUUID().toString());
-                accessory.setActive(true);
-            });
+            if(!CollectionUtils.isEmpty(tradeLicense.getTradeLicenseDetail().getAccessories()))
+                tradeLicense.getTradeLicenseDetail().getAccessories().forEach(accessory -> {
+                    accessory.setTenantId(tradeLicense.getTenantId());
+                    accessory.setId(UUID.randomUUID().toString());
+                    accessory.setActive(true);
+                });
+
 
             tradeLicense.getTradeLicenseDetail().getTradeUnits().forEach(tradeUnit -> {
                 tradeUnit.setTenantId(tradeLicense.getTenantId());
@@ -130,10 +132,10 @@ public class EnrichmentService {
 
 
     public void enrichTLCriteriaWithOwnerids(TradeLicenseSearchCriteria criteria, UserDetailResponse userDetailResponse){
-        if(CollectionUtils.isEmpty(criteria.getOwnerids())){
+        if(CollectionUtils.isEmpty(criteria.getOwnerIds())){
             List<String> ownerids = new ArrayList<>();
             userDetailResponse.getUser().forEach(owner -> ownerids.add(owner.getUuid()));
-            criteria.setOwnerids(ownerids);
+            criteria.setOwnerIds(ownerids);
         }
     }
 
@@ -156,7 +158,7 @@ public class EnrichmentService {
             ownerids.add(tradeLicense.getCitizenInfo().getUuid());
             });*/
 
-        criteria.setOwnerids(ownerids);
+        criteria.setOwnerIds(ownerids);
     }
 
 

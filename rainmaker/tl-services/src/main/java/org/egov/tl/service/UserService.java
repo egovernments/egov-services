@@ -250,8 +250,8 @@ public class UserService{
         userSearchRequest.setMobileNumber(criteria.getMobileNumber());
         userSearchRequest.setActive(true);
         userSearchRequest.setUserType("CITIZEN");
-        if(!CollectionUtils.isEmpty(criteria.getOwnerids()))
-            userSearchRequest.setUuid(criteria.getOwnerids());
+        if(!CollectionUtils.isEmpty(criteria.getOwnerIds()))
+            userSearchRequest.setUuid(criteria.getOwnerIds());
         return userSearchRequest;
     }
 

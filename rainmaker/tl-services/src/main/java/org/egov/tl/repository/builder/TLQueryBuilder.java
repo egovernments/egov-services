@@ -112,6 +112,20 @@ public class TLQueryBuilder {
             preparedStmtList.add(criteria.getOldLicenseNumber());
         }
 
+        if(criteria.getFromDate()!=null){
+            builder.append(" and tl.applicationDate >= ? ");
+            preparedStmtList.add(criteria.getFromDate());
+        }
+
+        if(criteria.getToDate()!=null){
+            builder.append(" and tl.applicationDate <= ? ");
+            preparedStmtList.add(criteria.getToDate());
+        }
+
+
+
+       // enrichCriteriaForUpdateSearch(builder,preparedStmtList,criteria);
+
         return addPaginationWrapper(builder.toString(),preparedStmtList,criteria);
     }
 
@@ -151,6 +165,8 @@ public class TLQueryBuilder {
 
        return finalQuery;
     }
+
+
 
 
 

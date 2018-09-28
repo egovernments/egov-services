@@ -61,6 +61,7 @@ import org.egov.demand.repository.OwnerRepository;
 import org.egov.demand.service.BusinessServDetailService;
 import org.egov.demand.service.TaxHeadMasterService;
 import org.egov.demand.service.TaxPeriodService;
+import org.egov.demand.util.DemandEnrichmentUtil;
 import org.egov.demand.web.contract.BusinessServiceDetailCriteria;
 import org.egov.demand.web.contract.DemandRequest;
 import org.egov.demand.web.contract.TaxPeriodCriteria;
@@ -90,6 +91,9 @@ public class DemandValidator implements Validator {
 
 	@Autowired
 	private DemandRepository demandRepository;
+	
+	@Autowired
+	private DemandEnrichmentUtil enrichmentUtil;
 
 	@Override
 	public boolean supports(Class<?> clazz) {
@@ -111,11 +115,12 @@ public class DemandValidator implements Validator {
 		for (Demand demand : demandRequest.getDemands()) {
 			demandDetails.addAll(demand.getDemandDetails());
 		}
-		validateDemandDetails(demandDetails, errors);
-		validateTaxHeadMaster(demandRequest, errors);
-		validateBusinessService(demandRequest, errors);
-		validateTaxPeriod(demandRequest, errors);
-		validateOwner(demandRequest, errors);
+//		validateDemandDetails(demandDetails, errors);
+//		validateTaxHeadMaster(demandRequest, errors);
+//		validateBusinessService(demandRequest, errors);
+//		validateTaxPeriod(demandRequest, errors);
+//		validateOwner(demandRequest, errors);
+		enrichmentUtil.ceilDecimal(demandRequest.getDemands());
 	}
 
 	public void validateForUpdate(Object target, Errors errors) {
@@ -130,6 +135,7 @@ public class DemandValidator implements Validator {
 		validateBusinessService(demandRequest, errors);
 		validateTaxPeriod(demandRequest, errors);
 		validateOwner(demandRequest, errors);
+		enrichmentUtil.ceilDecimal(demandRequest.getDemands());
 	}
 
 	private void validateDemandForUpdate(DemandRequest demandRequest, Errors errors) {

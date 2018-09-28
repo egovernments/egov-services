@@ -39,17 +39,31 @@
  */
 package org.egov.demand.util;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
+import org.egov.demand.config.Config;
 import org.egov.demand.model.Demand;
+import org.egov.demand.model.DemandDetail;
 import org.egov.demand.model.Owner;
+import org.egov.demand.model.TaxHeadMaster;
+import org.egov.demand.model.TaxHeadMasterCriteria;
+import org.egov.demand.repository.TaxHeadMasterRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class DemandEnrichmentUtil {
+	
+	@Autowired
+	TaxHeadMasterRepository taxHeadMasterRepository;
+	
+	@Autowired
+	private Config config;
 
 	public List<Demand> enrichOwners(List<Demand> demands, List<Owner> owners) {
 
@@ -67,21 +81,81 @@ public class DemandEnrichmentUtil {
 		}
 		return rsDemands;
 	}
-
-	/*public void enrichTaxHeadMAsters(List<DemandDetail> demandDetails, List<TaxHeadMaster> taxHeadMAsters) {
-
-		System.err.println("taxheadmaster list : "+taxHeadMAsters);
-		System.err.println("demanddetails list : "+demandDetails);
-
-		Map<String,TaxHeadMaster> map = new HashMap<>();
-		for (TaxHeadMaster taxHeadMaster : taxHeadMAsters) {
-			map.put(taxHeadMaster.getCode(), taxHeadMaster);
-		}
+	
+	/**
+	 * 
+	 * @param demands
+	 * @return
+	 */
+	public List<Demand> ceilDecimal(List<Demand> demands) {
 		
-		for (DemandDetail demandDetail : demandDetails) {
-			String code = demandDetail.getTaxHeadMaster().getCode();
-			if(map.containsKey(code))
-				demandDetail.setTaxHeadMaster(map.get(code));
+		String tenantId = demands.get(0).getTenantId();
+		String service = demands.get(0).getBusinessService();
+		
+		Map<String, Boolean> isTaxHeadDebitMap = taxHeadMasterRepository.findForCriteria(TaxHeadMasterCriteria.builder().tenantId(tenantId)
+				.service(service).build()).stream().collect(Collectors.toMap(TaxHeadMaster::getCode, TaxHeadMaster::getIsDebit));
+		
+		
+
+		for (Demand demand : demands) {
+			
+			BigDecimal totalTax = BigDecimal.ZERO;
+			BigDecimal collectedTax = BigDecimal.ZERO;
+			final List<DemandDetail> details = demand.getDemandDetails();
+			final List<Integer> indicesToBeRemoved = new ArrayList<>();
+			
+			for (DemandDetail detail : details) {
+
+				collectedTax = collectedTax.add(detail.getCollectionAmount());
+				if (detail.getTaxHeadMasterCode().toLowerCase().contains("decimal")) {
+					indicesToBeRemoved.add(details.indexOf(detail));
+				}
+				else if (!isTaxHeadDebitMap.get(detail.getTaxHeadMasterCode())) 
+					totalTax = totalTax.add(detail.getTaxAmount());
+				
+				else 
+					totalTax = totalTax.subtract(detail.getTaxAmount());
+				
+			}
+			
+			DemandDetail newDetail= roundOfDecimals(totalTax.subtract(collectedTax), service);
+			
+			System.err.println(" the new detail : " + newDetail);
+			if(null != newDetail) 
+				demand.getDemandDetails().add(newDetail);
+
+			indicesToBeRemoved.forEach(index -> details.remove(index.intValue()));
 		}
-	}*/
+		return demands;
+	}
+	
+	/**
+	 * Decimal is ceiled for all the tax heads
+	 * 
+	 * if the decimal is greater than 0.5 upper bound will be applied
+	 * 
+	 * else if decimal is lesser than 0.5 lower bound is applied
+	 * 
+	 * @param estimates
+	 */
+	public DemandDetail roundOfDecimals(BigDecimal result, String service) {
+		
+		Map<String, String> creditMap = config.getCreditDecimalMap();
+		Map<String, String> debitMap  = config.getDebitDecimalMap();
+
+		BigDecimal roundOffAmount = result.setScale(2, 2);
+		BigDecimal reminder = roundOffAmount.remainder(BigDecimal.ONE);
+
+		if(reminder.doubleValue() == 0.0)
+			return null;
+		
+		else if (reminder.doubleValue() >= 0.5)
+			return DemandDetail.builder().taxHeadMasterCode(creditMap.get(service))
+					.taxAmount(BigDecimal.ONE.subtract(reminder)).build();
+
+		else
+			return DemandDetail.builder().taxHeadMasterCode(debitMap.get(service))
+					.taxAmount(reminder).build();
+	}
+
 }

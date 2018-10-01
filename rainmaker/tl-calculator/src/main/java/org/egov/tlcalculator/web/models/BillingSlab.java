@@ -54,11 +54,11 @@ public class BillingSlab {
 	@Size(min = 2, max = 32)
 	private String uom = null;
 
-	@JsonProperty("from")
-	private Double from = null;
+	@JsonProperty("fromUom")
+	private Double fromUom = null;
 
-	@JsonProperty("to")
-	private Double to = null;
+	@JsonProperty("toUom")
+	private Double toUom = null;
 
 	@JsonProperty("rate")
 	private Double rate = null;

@@ -63,12 +63,12 @@ public class BillingslabQueryBuilder {
 		}
 
 		if (null != billingSlabSearcCriteria.getFrom()) {
-			queryBuilder.append(" AND \"from\" <= ?");
+			queryBuilder.append(" AND fromUom <= ?");
 			preparedStmtList.add(billingSlabSearcCriteria.getFrom());
 		}
 		
 		if (null != billingSlabSearcCriteria.getTo()) {
-			queryBuilder.append(" AND \"to\" >= ?");
+			queryBuilder.append(" AND toUom >= ?");
 			preparedStmtList.add(billingSlabSearcCriteria.getTo());
 		}
 	}

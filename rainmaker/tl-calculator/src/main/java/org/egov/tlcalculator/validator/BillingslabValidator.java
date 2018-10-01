@@ -65,7 +65,7 @@ public class BillingslabValidator {
 		billingSlabReq.getBillingSlab().parallelStream().forEach(slab -> {
 			BillingSlabSearchCriteria criteria = BillingSlabSearchCriteria.builder().tenantId(slab.getTenantId()).accessoryCategory(slab.getAccessoryCategory())
 					.tradeType(slab.getTradeType()).licenseType(slab.getLicenseType().toString()).structureType(slab.getStructureType()).uom(slab.getUom())
-					.type(slab.getType().toString()).from(slab.getFrom()).to(slab.getTo()).build();
+					.type(slab.getType().toString()).from(slab.getFromUom()).to(slab.getToUom()).build();
 			BillingSlabRes slabRes = service.searchSlabs(criteria, billingSlabReq.getRequestInfo());
 			if(!CollectionUtils.isEmpty(slabRes.getBillingSlab())) {
 				duplicateSlabs.add(slab);

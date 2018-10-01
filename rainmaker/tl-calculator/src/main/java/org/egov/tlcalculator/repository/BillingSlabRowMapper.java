@@ -31,14 +31,14 @@ public class BillingSlabRowMapper implements ResultSetExtractor<List<BillingSlab
 
 				currentBillingSlab = BillingSlab.builder().id(rs.getString("id"))
 						.accessoryCategory(rs.getString("accessorycategory"))
-						.from(rs.getDouble("from"))
+						.fromUom(rs.getDouble("fromUom"))
 						.licenseType(LicenseTypeEnum.fromValue(rs.getString("licensetype")))
 						.rate(rs.getDouble("rate"))
 						.structureType(rs.getString("structuretype"))
 						.tenantId(rs.getString("tenantid"))
 						.uom(rs.getString("uom"))
 						.tradeType(rs.getString("tradetype"))
-						.to(rs.getDouble("to"))
+						.toUom(rs.getDouble("toUom"))
 						.type(TypeEnum.valueOf(rs.getString("type")))
 						.auditDetails(auditDetails).build();
 

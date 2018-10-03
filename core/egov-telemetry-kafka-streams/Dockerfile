@@ -6,7 +6,7 @@ MAINTAINER Senthil<senthil.kalimuthu@tarento.com>
 # INSTRUCTIONS ON HOW TO BUILD JAR:
 # Move to the location where pom.xml is exist in project and build project using below command
 # "mvn clean package"
-COPY egov-telemetry-kafka-streams-0.0.1-SNAPSHOT.jar /opt/egov/egov-telemetry-kafka-streams.jar
+COPY target/egov-telemetry-kafka-streams-0.0.1-SNAPSHOT.jar /opt/egov/egov-telemetry-kafka-streams.jar
 
 COPY start.sh /usr/bin/start.sh
 

@@ -7,7 +7,7 @@ public class BillingslabConstants {
 	
 	private BillingslabConstants() {}
 	
-	public static final String TL_MDMS_MODULE_NAME = "TL";
+	public static final String TL_MDMS_MODULE_NAME = "TradeLicense";
 	public static final String COMMON_MASTERS_MDMS_MODULE_NAME = "common-masters";
 	public static final String TL_MDMS_TRADETYPE = "TradeType";
 	public static final String TL_MDMS_ACCESSORIESCATEGORY = "AccessoriesCategory";

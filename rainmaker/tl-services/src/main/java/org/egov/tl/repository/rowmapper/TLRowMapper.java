@@ -42,8 +42,8 @@ public class TLRowMapper  implements ResultSetExtractor<List<TradeLicense>> {
 
                 Long commencementDate = (Long) rs.getObject("commencementdate");
                 Long issuedDate = (Long) rs.getObject("issueddate");
-                Long validFrom = (Long) rs.getObject("validto");
-                Long validTo = (Long) rs.getObject("validfrom");
+                Long validFrom = (Long) rs.getObject("validfrom");
+                Long validTo = (Long) rs.getObject("validto");
                 Long applicationDate = (Long) rs.getObject("applicationdate");
 
                 AuditDetails auditdetails = AuditDetails.builder()

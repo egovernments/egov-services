@@ -14,13 +14,13 @@ import lombok.extern.slf4j.Slf4j;
 @Repository
 @Slf4j
 public class BillingslabRepository {
-	
+
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
-	
+
 	@Autowired
 	private BillingSlabRowMapper billingSlabRowMapper;
-	
+
 	public List<BillingSlab> getDataFromDB(String query, List<Object> preparedStmtList){
 		List<BillingSlab> slabs = new ArrayList<>();
 		try {
@@ -31,7 +31,7 @@ public class BillingslabRepository {
 			log.error("Exception while fetching from DB: " + e);
 			return slabs;
 		}
-		
+
 		return slabs;
 	}
 

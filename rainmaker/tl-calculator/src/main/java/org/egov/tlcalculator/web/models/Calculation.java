@@ -1,10 +1,15 @@
 package org.egov.tlcalculator.web.models;
 
+import java.math.BigDecimal;
+import java.util.List;
 import java.util.Objects;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import org.egov.tlcalculator.web.models.demand.TaxHeadEstimate;
 import org.springframework.validation.annotation.Validated;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
@@ -26,29 +31,18 @@ import lombok.Builder;
 @NoArgsConstructor
 @Builder
 public class Calculation   {
-        @JsonProperty("applicationNumber")
-        
+
+@NotNull
+@JsonProperty("applicationNumber")
 private String applicationNumber = null;
 
-        @JsonProperty("totalAmount")
-        
-private Double totalAmount = null;
-
-        @JsonProperty("penalty")
-        
-private Double penalty = null;
-
-        @JsonProperty("exemption")
-        
-private Double exemption = null;
-
-        @JsonProperty("rebate")
-        
-private Double rebate = null;
-
-        @JsonProperty("tenantId")
-        @Size(min=2,max=256) 
+@NotNull
+@JsonProperty("tenantId")
+@Size(min=2,max=256)
 private String tenantId = null;
+
+@JsonProperty("taxHeadEstimates")
+List<TaxHeadEstimate> taxHeadEstimates;
 
 
 }

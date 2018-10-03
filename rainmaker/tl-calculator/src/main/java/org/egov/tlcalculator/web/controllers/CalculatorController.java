@@ -1,15 +1,21 @@
 package org.egov.tlcalculator.web.controllers;
 
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.util.Collections;
+import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
+import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils;
 import org.egov.common.contract.request.RequestInfo;
-import org.egov.tlcalculator.web.models.Bill;
-import org.egov.tlcalculator.web.models.CalculationReq;
-import org.egov.tlcalculator.web.models.CalculationRes;
+import org.egov.tlcalculator.service.CalculationService;
+import org.egov.tlcalculator.web.models.*;
+import org.egov.tlcalculator.web.models.demand.Category;
+import org.egov.tlcalculator.web.models.demand.TaxHeadEstimate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,33 +33,40 @@ import io.swagger.annotations.ApiParam;
 
 @Controller
 @RequestMapping("/tl-calculator/")
-public class V1ApiController {
+public class CalculatorController {
 
-	private final ObjectMapper objectMapper;
+	private ObjectMapper objectMapper;
 
-	private final HttpServletRequest request;
+	private HttpServletRequest request;
+
+	private CalculationService calculationService;
 
 	@Autowired
-	public V1ApiController(ObjectMapper objectMapper, HttpServletRequest request) {
+	public CalculatorController(ObjectMapper objectMapper, HttpServletRequest request,
+								CalculationService calculationService) {
 		this.objectMapper = objectMapper;
 		this.request = request;
+		this.calculationService=calculationService;
 	}
 
 	@RequestMapping(value = "/v1/_calculate", method = RequestMethod.POST)
-	public ResponseEntity<CalculationRes> v1CalculatePost(
-			@ApiParam(value = "required parameters have to be populated", required = true) @Valid @RequestBody CalculationReq calculationReq) {
-		String accept = request.getHeader("Accept");
-		if (accept != null && accept.contains("application/json")) {
-			try {
-				return new ResponseEntity<CalculationRes>(objectMapper.readValue(
-						"{  \"ResponseInfo\" : {    \"ver\" : \"ver\",    \"resMsgId\" : \"resMsgId\",    \"msgId\" : \"msgId\",    \"apiId\" : \"apiId\",    \"ts\" : 0,    \"status\" : \"SUCCESSFUL\"  },  \"Calculation\" : [ {    \"totalAmount\" : 6.027456183070403,    \"applicationNumber\" : \"applicationNumber\",    \"penalty\" : 1.4658129805029452,    \"rebate\" : 5.637376656633329,    \"tenantId\" : \"tenantId\",    \"exemption\" : 5.962133916683182  }, {    \"totalAmount\" : 6.027456183070403,    \"applicationNumber\" : \"applicationNumber\",    \"penalty\" : 1.4658129805029452,    \"rebate\" : 5.637376656633329,    \"tenantId\" : \"tenantId\",    \"exemption\" : 5.962133916683182  } ]}",
-						CalculationRes.class), HttpStatus.NOT_IMPLEMENTED);
-			} catch (IOException e) {
-				return new ResponseEntity<CalculationRes>(HttpStatus.INTERNAL_SERVER_ERROR);
-			}
-		}
+	public ResponseEntity<CalculationRes> calculate(@Valid @RequestBody CalculationReq calculationReq) {
+       //   calculationService.calculate(calculationReq.getRequestInfo(),calculationReq.getCalulationCriteria());
 
-		return new ResponseEntity<CalculationRes>(HttpStatus.NOT_IMPLEMENTED);
+       List<Calculation> calculations = Collections.singletonList(Calculation.builder()
+				.applicationNumber(calculationReq.getCalulationCriteria().get(0).getApplicationNumber())
+		        .tenantId(calculationReq.getCalulationCriteria().get(0).getTenantId())
+				.taxHeadEstimates(Collections.singletonList(TaxHeadEstimate.builder()
+						.category(Category.TAX)
+						.estimateAmount(new BigDecimal(ThreadLocalRandom.current().nextInt(100, 1000 + 1)))
+						.taxHeadCode("TL_TAX")
+						.build())
+				).build());
+
+        CalculationRes response = CalculationRes.builder().calculation(calculations).build();
+
+
+		return new ResponseEntity<CalculationRes>(response,HttpStatus.OK);
 	}
 
 	@RequestMapping(value = "/v1/_getbill", method = RequestMethod.POST)

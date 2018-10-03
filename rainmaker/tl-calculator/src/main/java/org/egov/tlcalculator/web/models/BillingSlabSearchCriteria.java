@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.validation.constraints.NotNull;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
@@ -49,5 +50,9 @@ public class BillingSlabSearchCriteria {
 
 	@JsonProperty("to")
 	private Double to;
+
+	@JsonIgnore
+	private Double uomValue;
+
 
 }

@@ -2,174 +2,185 @@ package org.egov.tlcalculator.web.models;
 
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
-import java.time.LocalDate;
+
 import java.util.ArrayList;
 import java.util.List;
-import org.egov.tlcalculator.web.models.Role;
+
+import lombok.*;
+import org.egov.common.contract.request.Role;
 import org.springframework.validation.annotation.Validated;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.Builder;
 
 /**
  * User
  */
 @Validated
-@javax.annotation.Generated(value = "org.egov.codegen.SpringBootCodegen", date = "2018-09-27T14:56:03.454+05:30")
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
+@ToString
 public class User   {
         @JsonProperty("id")
-        
-private Long id = null;
+        private Long id;
 
+        @Size(max=64)
+        @JsonProperty("uuid")
+        private String uuid;
+
+        @Size(max=64)
         @JsonProperty("userName")
-        @NotNull@Size(min=1,max=64) 
-private String userName = null;
+        private String userName;
 
+        @Size(max=64)
         @JsonProperty("password")
-        @Size(max=64) 
-private String password = null;
+        private String password;
 
         @JsonProperty("salutation")
-        @Size(max=5) 
-private String salutation = null;
+        private String salutation;
 
+        @NotNull
+        @Size(max=100)
         @JsonProperty("name")
-        @NotNull@Size(min=3,max=100) 
-private String name = null;
+        private String name;
 
         @JsonProperty("gender")
-        @NotNull
-private String gender = null;
+        private String gender;
 
+        @Pattern(regexp = "^[0-9]{10}$", message = "MobileNumber should be 10 digit number")
         @JsonProperty("mobileNumber")
-        @NotNull@Size(max=10) 
-private String mobileNumber = null;
+        private String mobileNumber;
 
+        @Size(max=128)
         @JsonProperty("emailId")
-        @Size(max=128) 
-private String emailId = null;
+        private String emailId;
 
+        @Size(max=50)
         @JsonProperty("altContactNumber")
-        @Size(max=10) 
-private String altContactNumber = null;
+        private String altContactNumber;
 
+        @Size(max=10)
         @JsonProperty("pan")
-        @Size(max=10) 
-private String pan = null;
+        private String pan;
 
+        @Pattern(regexp = "^[0-9]{12}$", message = "AdharNumber should be 12 digit number")
         @JsonProperty("aadhaarNumber")
-        @Pattern(regexp="[0-9]") @Size(max=12) 
-private String aadhaarNumber = null;
+        private String aadhaarNumber;
 
+        @Size(max=300)
         @JsonProperty("permanentAddress")
-        @Size(max=300) 
-private String permanentAddress = null;
+        private String permanentAddress;
 
+        @Size(max=300)
         @JsonProperty("permanentCity")
-        @Size(max=300) 
-private String permanentCity = null;
+        private String permanentCity;
 
-        @JsonProperty("permanentPincode")
-        @Size(max=6) 
-private String permanentPincode = null;
+        @Size(max=10)
+        @JsonProperty("permanentPinCode")
+        private String permanentPincode;
 
+        @Size(max=300)
         @JsonProperty("correspondenceCity")
-        @Size(max=50) 
-private String correspondenceCity = null;
+        private String correspondenceCity;
 
-        @JsonProperty("correspondencePincode")
-        @Size(max=6) 
-private String correspondencePincode = null;
+        @Size(max=10)
+        @JsonProperty("correspondencePinCode")
+        private String correspondencePincode;
 
+        @Size(max=300)
         @JsonProperty("correspondenceAddress")
-        @Size(max=300) 
-private String correspondenceAddress = null;
+        private String correspondenceAddress;
 
         @JsonProperty("active")
-        @NotNull
-private Boolean active = null;
+        private Boolean active;
 
         @JsonProperty("dob")
-        @Valid
-private LocalDate dob = null;
+        private Long dob;
 
         @JsonProperty("pwdExpiryDate")
-        @Valid
-private LocalDate pwdExpiryDate = null;
+        private Long pwdExpiryDate;
 
+        @Size(max=16)
         @JsonProperty("locale")
-        @NotNull@Size(max=10) 
-private String locale = null;
+        private String locale;
 
+        @Size(max=50)
         @JsonProperty("type")
-        @NotNull@Size(max=20) 
-private String type = null;
+        private String type;
 
+        @Size(max=36)
         @JsonProperty("signature")
-        
-private String signature = null;
+        private String signature;
 
         @JsonProperty("accountLocked")
-        
-private Boolean accountLocked = null;
+        private Boolean accountLocked;
 
         @JsonProperty("roles")
         @Valid
-        private List<Role> roles = null;
+        private List<Role> roles;
 
+        @Size(max=100)
         @JsonProperty("fatherOrHusbandName")
-        @Size(max=100) 
-private String fatherOrHusbandName = null;
+        private String fatherOrHusbandName;
 
+        @Size(max=32)
         @JsonProperty("bloodGroup")
-        @Size(max=3) 
-private String bloodGroup = null;
+        private String bloodGroup;
 
+        @Size(max=300)
         @JsonProperty("identificationMark")
-        @Size(max=300) 
-private String identificationMark = null;
+        private String identificationMark;
 
+        @Size(max=36)
         @JsonProperty("photo")
-        
-private String photo = null;
+        private String photo;
 
+        @Size(max=64)
         @JsonProperty("createdBy")
-        
-private Long createdBy = null;
+        private String createdBy;
 
         @JsonProperty("createdDate")
-        @Valid
-private LocalDate createdDate = null;
+        private Long createdDate;
 
+        @Size(max=64)
         @JsonProperty("lastModifiedBy")
-        
-private Long lastModifiedBy = null;
+        private String lastModifiedBy;
 
         @JsonProperty("lastModifiedDate")
-        @Valid
-private LocalDate lastModifiedDate = null;
+        private Long lastModifiedDate;
 
         @JsonProperty("otpReference")
-        
-private String otpReference = null;
+        private String otpReference;
 
+        @Size(max=256)
         @JsonProperty("tenantId")
-        @NotNull
-private String tenantId = null;
+        private String tenantId;
 
 
+        public User addRolesItem(Role rolesItem) {
+                if (this.roles == null) {
+                        this.roles = new ArrayList<>();
+                }
+                this.roles.add(rolesItem);
+                return this;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+                if (this == o) return true;
+                if (o == null || getClass() != o.getClass()) return false;
+                User user = (User) o;
+                return Objects.equals(uuid, user.uuid) &&
+                        Objects.equals(name, user.name) &&
+                        Objects.equals(mobileNumber, user.mobileNumber);
+        }
+
+        @Override
+        public int hashCode() {
+
+                return Objects.hash(uuid, name, mobileNumber);
+        }
 }
 

@@ -123,7 +123,7 @@ public class TelemetryDeduplicator {
 
     }
 
-    public void shouldRemoveDuplicatesFromTheInput(Properties streamsConfiguration, String inputTopic, String outputTopic, Integer deDupeStorageTime) {
+    public void shouldRemoveDuplicatesFromTheInput(Properties streamsConfiguration, String inputTopic, String outputTopic, Integer deDupStorageTime) {
 
         StreamsBuilder builder = new StreamsBuilder();
 
@@ -131,7 +131,7 @@ public class TelemetryDeduplicator {
         streamsConfiguration.put(StreamsConfig.DEFAULT_KEY_SERDE_CLASS_CONFIG, Serdes.ByteArray().getClass().getName());
         streamsConfiguration.put(StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG, Serdes.String().getClass().getName());
 
-        long maintainDurationPerEventInMs = TimeUnit.MINUTES.toMillis(deDupeStorageTime);
+        long maintainDurationPerEventInMs = TimeUnit.MINUTES.toMillis(deDupStorageTime);
 
         // The number of segments has no impact on "correctness".
         // Using more segments implies larger overhead but allows for more fined grained record expiration

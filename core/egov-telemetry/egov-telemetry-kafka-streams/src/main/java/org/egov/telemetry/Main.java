@@ -25,7 +25,7 @@ public class Main {
         telemetryFormatChecker.validateInputMessages(streamsConfiguration, appProperties.getTelemetryRawInput(), appProperties.getTelemetryValidatedMessages());
 
         TelemetryDeduplicator telemetryDeduplicator = new TelemetryDeduplicator();
-        telemetryDeduplicator.shouldRemoveDuplicatesFromTheInput(streamsConfiguration, appProperties.getTelemetryValidatedMessages(), appProperties.getTelemetryDedupedMessages(), appProperties.getDeDupeStorageTime());
+        telemetryDeduplicator.shouldRemoveDuplicatesFromTheInput(streamsConfiguration, appProperties.getTelemetryValidatedMessages(), appProperties.getTelemetryDedupedMessages(), appProperties.getDeDupStorageTime());
 
         TelemetryFinalStream telemetryFinalStream = new TelemetryFinalStream();
         telemetryFinalStream.pushFinalMessages(streamsConfiguration, appProperties.getTelemetryDedupedMessages(), appProperties.getTelemetryFinalMessages());

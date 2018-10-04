@@ -2,7 +2,6 @@ package org.egov.tlcalculator.web.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
-
 import org.egov.tlcalculator.web.models.tradelicense.TradeLicense;
 import org.springframework.validation.annotation.Validated;
 import javax.validation.Valid;

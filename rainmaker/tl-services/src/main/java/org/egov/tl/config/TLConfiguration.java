@@ -113,6 +113,16 @@ public class TLConfiguration {
     private Integer defaultOffset;
 
 
+    // tradelicense Calculator
+    @Value("${egov.tl.calculator.host}")
+    private String calculatorHost;
+
+    @Value("${egov.tl.calculator.calculate.endpoint}")
+    private String calculateEndpoint;
+
+
+
+
 
 
 

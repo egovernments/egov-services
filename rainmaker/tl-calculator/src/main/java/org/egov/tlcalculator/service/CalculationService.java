@@ -1,5 +1,6 @@
 package org.egov.tlcalculator.service;
 
+import lombok.extern.slf4j.Slf4j;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.tlcalculator.config.TLCalculatorConfigs;
 import org.egov.tlcalculator.repository.BillingslabQueryBuilder;
@@ -7,11 +8,9 @@ import org.egov.tlcalculator.repository.BillingslabRepository;
 import org.egov.tlcalculator.repository.ServiceRequestRepository;
 import org.egov.tlcalculator.utils.CalculationUtils;
 import org.egov.tlcalculator.web.models.*;
-import org.egov.tlcalculator.web.models.demand.BillResponse;
-import org.egov.tlcalculator.web.models.demand.Category;
-import org.egov.tlcalculator.web.models.demand.GenerateBillCriteria;
-import org.egov.tlcalculator.web.models.demand.TaxHeadEstimate;
 import org.egov.tlcalculator.web.models.tradelicense.TradeLicense;
+import org.egov.tlcalculator.web.models.demand.Category;
+import org.egov.tlcalculator.web.models.demand.TaxHeadEstimate;
 import org.egov.tlcalculator.web.models.tradelicense.TradeUnit;
 import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +26,7 @@ import java.util.concurrent.ThreadLocalRandom;
 
 
 @Service
+@Slf4j
 public class CalculationService {
 
 
@@ -51,7 +51,7 @@ public class CalculationService {
       List<Calculation> calculations = new LinkedList<>();
       for(CalulationCriteria criteria : criterias) {
           TradeLicense license;
-          if (criteria.getApplicationNumber() != null) {
+          if (criteria.getTradelicense()==null && criteria.getApplicationNumber() != null) {
               license = utils.getTradeLicense(requestInfo, criteria.getApplicationNumber(), criteria.getTenantId());
               criteria.setTradelicense(license);
           }
@@ -123,10 +123,13 @@ public class CalculationService {
 
   private BigDecimal getTradeUnitFee(TradeLicense license,BillingSlabSearchCriteria searchCriteria){
       BigDecimal tradeUnitTotalFee = new BigDecimal(0);
+      List<TradeUnit> tradeUnits = license.getTradeLicenseDetail().getTradeUnits();
 
-      license.getTradeLicenseDetail().getTradeUnits().forEach(tradeUnit -> {
+       for(TradeUnit tradeUnit : tradeUnits)
+       {
           List<Object> preparedStmtList = new ArrayList<>();
           searchCriteria.setTradeType(tradeUnit.getTradeType());
+          searchCriteria.setType(config.getBillingSlabRateType());
           if(tradeUnit.getUomValue()!=null)
           {
               searchCriteria.setUomValue(Double.parseDouble(tradeUnit.getUomValue()));
@@ -134,6 +137,8 @@ public class CalculationService {
           }
           // Call the Search
           String query = queryBuilder.getSearchQuery(searchCriteria, preparedStmtList);
+          log.info("query "+query);
+          log.info("preparedStmtList "+preparedStmtList.toString());
           List<BillingSlab> billingSlabs = repository.getDataFromDB(query, preparedStmtList);
 
           if(billingSlabs.size()>1)
@@ -141,8 +146,8 @@ public class CalculationService {
           if(CollectionUtils.isEmpty(billingSlabs))
               throw new CustomException("BILLINGSLAB ERROR","No BillingSlab Found");
 
-          tradeUnitTotalFee.add(new BigDecimal(Double.toString(billingSlabs.get(0).getRate())));
-      });
+           tradeUnitTotalFee = tradeUnitTotalFee.add(new BigDecimal(Double.toString(billingSlabs.get(0).getRate())));
+      }
 
       return tradeUnitTotalFee;
   }
@@ -150,7 +155,9 @@ public class CalculationService {
 
   private BigDecimal getAccessoryFee(TradeLicense license,BillingSlabSearchCriteria searchCriteria){
       BigDecimal accessoryTotalFee = new BigDecimal(0);
-      license.getTradeLicenseDetail().getAccessories().forEach(accessory -> {
+      List<Accessory> accessories = license.getTradeLicenseDetail().getAccessories();
+       for(Accessory accessory : accessories)
+       {
           List<Object> preparedStmtList = new ArrayList<>();
           searchCriteria.setAccessoryCategory(accessory.getAccessoryCategory());
           if(accessory.getUomValue()!=null)
@@ -167,9 +174,8 @@ public class CalculationService {
           if(CollectionUtils.isEmpty(billingSlabs))
               throw new CustomException("BILLINGSLAB ERROR","No BillingSlab Found");
 
-          accessoryTotalFee.add(new BigDecimal(Double.toString(billingSlabs.get(0).getRate())));
-      });
-
+           accessoryTotalFee = accessoryTotalFee.add(new BigDecimal(Double.toString(billingSlabs.get(0).getRate())));
+      }
       return accessoryTotalFee;
   }
 

@@ -181,24 +181,7 @@ public class TLValidator {
             });
     }
 
-
-
-
-
-   /* private TradeLicenseSearchCriteria populateIds(String tenantId,TradeLicense license){
-        TradeLicenseSearchCriteria criteria = new TradeLicenseSearchCriteria();
-        criteria.setTenantId(tenantId);
-        criteria.setAddressId(license.getTradeLicenseDetail().getAddress().getId());
-        criteria.setTradeLicenseDetailId(license.getTradeLicenseDetail().getId());
-        criteria.setIds(Collections.singletonList(license.getId()));
-        criteria.setOwnerIds(getOwnerIds(license));
-        criteria.setOwnerDocIds(getOwnerDocIds(license));
-        criteria.setTradeUnitIds(getTradeUnitIds(license));
-        criteria.setAccessoryIds(getAccessoryIds(license));
-        criteria.setApplicationDocIds(getApplicationDocIds(license));
-        criteria.setVerificationDocIds(getVerficationDocIds(license));
-        return criteria;
-    }*/
+    
 
 
 

@@ -5,7 +5,6 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 import io.swagger.annotations.ApiModel;
 import org.egov.tlcalculator.web.models.AuditDetails;
-import org.egov.tlcalculator.web.models.tradelicense.TradeLicenseDetail;
 import org.springframework.validation.annotation.Validated;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

@@ -8,6 +8,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import org.egov.tl.web.models.AuditDetails;
 import org.egov.tl.web.models.TradeLicenseDetail;
+import org.egov.tl.web.models.calculation.Calculation;
 import org.springframework.validation.annotation.Validated;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
@@ -194,8 +195,8 @@ public class  TradeLicense   {
         @JsonProperty("tradeLicenseDetail")
         private TradeLicenseDetail tradeLicenseDetail = null;
 
-       /* @JsonProperty("citizenInfo")
-        private OwnerInfo citizenInfo;*/
+        @JsonProperty("calculation")
+        private Calculation calculation;
 
         @JsonProperty("auditDetails")
         private AuditDetails auditDetails = null;

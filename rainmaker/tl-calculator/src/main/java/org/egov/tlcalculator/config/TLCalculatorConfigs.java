@@ -40,9 +40,11 @@ public class TLCalculatorConfigs {
     @Value("${egov.demand.businessservice}")
     private String businessService;
 
+    @Value("${egov.billingslab.type}")
+    private String billingSlabRateType;
 
 
-    //TL Registry
+    //tradelicense Registry
     @Value("${egov.tradelicense.host}")
     private String tradeLicenseHost;
 

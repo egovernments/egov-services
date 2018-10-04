@@ -11,9 +11,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Contract class to send response. Array of TL items are used in case of search results or response for create, whereas single TL item is used for update
+ * Contract class to send response. Array of tradelicense items are used in case of search results or response for create, whereas single tradelicense item is used for update
  */
-@ApiModel(description = "Contract class to send response. Array of TL items are used in case of search results or response for create, whereas single TL item is used for update")
+@ApiModel(description = "Contract class to send response. Array of tradelicense items are used in case of search results or response for create, whereas single tradelicense item is used for update")
 @Validated
 @javax.annotation.Generated(value = "org.egov.codegen.SpringBootCodegen", date = "2018-09-18T17:06:11.263+05:30")
 

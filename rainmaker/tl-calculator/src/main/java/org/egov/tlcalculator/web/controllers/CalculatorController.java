@@ -43,7 +43,7 @@ public class CalculatorController {
 	@RequestMapping(value = "/_calculate", method = RequestMethod.POST)
 	public ResponseEntity<CalculationRes> calculate(@Valid @RequestBody CalculationReq calculationReq) {
 
-		 List<Calculation> calculations = calculationService.dummyCalculate(calculationReq.getRequestInfo(),
+		 List<Calculation> calculations = calculationService.calculate(calculationReq.getRequestInfo(),
 				 calculationReq.getCalulationCriteria());
 
 		 CalculationRes calculationRes = CalculationRes.builder().calculation(calculations).build();

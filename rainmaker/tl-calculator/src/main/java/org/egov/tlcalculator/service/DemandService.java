@@ -7,6 +7,8 @@ import org.egov.tlcalculator.repository.DemandRepository;
 import org.egov.tlcalculator.repository.ServiceRequestRepository;
 import org.egov.tlcalculator.utils.CalculationUtils;
 import org.egov.tlcalculator.web.models.*;
+import org.egov.tlcalculator.web.models.tradelicense.OwnerInfo;
+import org.egov.tlcalculator.web.models.tradelicense.TradeLicense;
 import org.egov.tlcalculator.web.models.demand.*;
 import org.egov.tlcalculator.web.models.tradelicense.OwnerInfo;
 import org.egov.tlcalculator.web.models.tradelicense.TradeLicense;
@@ -125,7 +127,7 @@ public class DemandService {
                     .tenantId(tenantId)
                     .taxPeriodFrom(license.getValidFrom())
                     .taxPeriodTo(license.getValidTo())
-                    .consumerType("TL")
+                    .consumerType("tradelicense")
                     .businessService(config.getBusinessService())
                     .build());
         }

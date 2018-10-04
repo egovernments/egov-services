@@ -1,33 +1,21 @@
 package org.egov.tlcalculator.web.controllers;
 
-import java.io.IOException;
-import java.math.BigDecimal;
-import java.util.Collections;
-import java.util.List;
-import java.util.concurrent.ThreadLocalRandom;
 
+import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
-
-import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils;
-import org.egov.common.contract.request.RequestInfo;
 import org.egov.tlcalculator.service.CalculationService;
 import org.egov.tlcalculator.service.DemandService;
 import org.egov.tlcalculator.web.models.*;
 import org.egov.tlcalculator.web.models.demand.BillResponse;
-import org.egov.tlcalculator.web.models.demand.Category;
 import org.egov.tlcalculator.web.models.demand.GenerateBillCriteria;
-import org.egov.tlcalculator.web.models.demand.TaxHeadEstimate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import io.swagger.annotations.ApiParam;
 
 @javax.annotation.Generated(value = "org.egov.codegen.SpringBootCodegen", date = "2018-09-27T14:56:03.454+05:30")
 

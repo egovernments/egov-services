@@ -1,5 +1,5 @@
 serviceMaps:
- serviceName: TradeLicense Calculator
+ serviceName: TL Calculator
  mappings:
  - version: 1.0
    name: tl-calculator
@@ -7,7 +7,7 @@ serviceMaps:
    fromTopic: save-tl-billingslab
    isTransaction: true
    queryMaps:
-    - query: INSERT INTO eg_tl_billingSlab(id, tenantid, licensetype, structuretype, tradetype, accessorycategory, type, uom, fromUom, toUom, rate, createdby, createdtime, lastmodifiedby, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+    - query: INSERT INTO eg_tl_billingSlab(id, tenantid, licensetype, structuretype, tradetype, accessorycategory, type, uom, fromUom, toUom, rate, createdby, createdtime, lastmodifiedby, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, cast(? as double precision), cast(? as double precision), ?, ?, ?, ?, ?);
 
       basePath: billingSlab.*
       jsonMaps:

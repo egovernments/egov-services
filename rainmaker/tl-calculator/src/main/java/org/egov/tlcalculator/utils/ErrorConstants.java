@@ -26,5 +26,8 @@ public class ErrorConstants {
 	public static final String INVALID_IDS_CODE = "INVALID_IDS_UPDATE";
 	public static final String INVALID_IDS_MSG = "The following Billing slabs are not available in the system, IDS";
 	
+	public static final String INVALID_SLAB_CODE = "INVALID_SLAB";
+	public static final String INVALID_SLAB_MSG = "Billing slab must contain either TradeType OR AccesoriesCategory, not both.";
+	
 
 }

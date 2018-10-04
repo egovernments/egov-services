@@ -92,7 +92,12 @@ public class CalculationService {
       }
 
       TaxHeadEstimate estimate = new TaxHeadEstimate();
-      estimate.setEstimateAmount(tradeUnitFee.add(accessoryFee));
+      BigDecimal totalTax = tradeUnitFee.add(accessoryFee);
+      if(license.getTradeLicenseDetail().getAdhocExemption()!=null)
+          totalTax = totalTax.subtract(license.getTradeLicenseDetail().getAdhocExemption());
+      if(license.getTradeLicenseDetail().getAdhocPenalty()!=null)
+          totalTax = totalTax.subtract(license.getTradeLicenseDetail().getAdhocPenalty());
+      estimate.setEstimateAmount(totalTax);
       estimate.setCategory(Category.TAX);
       estimate.setTaxHeadCode(config.getBaseTaxHead());
       return estimate;

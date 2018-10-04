@@ -10,6 +10,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import org.egov.tlcalculator.web.models.demand.TaxHeadEstimate;
+import org.egov.tlcalculator.web.models.tradelicense.TradeLicense;
 import org.springframework.validation.annotation.Validated;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
@@ -32,9 +33,11 @@ import lombok.Builder;
 @Builder
 public class Calculation {
 
-	@NotNull
 	@JsonProperty("applicationNumber")
 	private String applicationNumber = null;
+
+	@JsonProperty("tradeLicense")
+	private TradeLicense tradeLicense = null;
 
 	@NotNull
 	@JsonProperty("tenantId")

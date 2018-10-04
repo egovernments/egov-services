@@ -52,7 +52,7 @@ public class CalculationService {
         List<Calculation> calculations = response.getCalculation();
         Map<String,Calculation> applicationNumberToCalculation = new HashMap<>();
         calculations.forEach(calculation -> {
-            applicationNumberToCalculation.put(calculation.getApplicationNumber(),calculation);
+            applicationNumberToCalculation.put(calculation.getTradeLicense().getApplicationNumber(),calculation);
         });
 
         licenses.forEach(license ->{

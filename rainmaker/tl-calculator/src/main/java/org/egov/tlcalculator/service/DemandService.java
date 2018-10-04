@@ -58,7 +58,7 @@ public class DemandService {
             for(Calculation calculation : calculations)
             {
                     if(CollectionUtils.isEmpty(searchDemand(calculation.getTenantId(),
-                            calculation.getApplicationNumber(),requestInfo)))
+                            calculation.getTradeLicense().getApplicationNumber(),requestInfo)))
                         createCalculations.add(calculation);
                     else
                         updateCalculations.add(calculation);
@@ -84,7 +84,7 @@ public class DemandService {
          CalulationCriteria calulationCriteria = new CalulationCriteria();
          calulationCriteria.setApplicationNumber(consumerCode);
          calulationCriteria.setTenantId(tenantId);
-         List<Calculation> calculations = calculationService.dummyCalculate(requestInfo,Collections.singletonList(calulationCriteria));
+         List<Calculation> calculations = calculationService.calculate(requestInfo,Collections.singletonList(calulationCriteria));
 
          //Demand Updated
          updateDemand(requestInfo,calculations);
@@ -98,15 +98,22 @@ public class DemandService {
     private List<Demand> createDemand(RequestInfo requestInfo,List<Calculation> calculations){
         List<Demand> demands = new LinkedList<>();
         for(Calculation calculation : calculations) {
-            TradeLicense license = utils.getTradeLicense(requestInfo, calculation.getApplicationNumber()
-                    , calculation.getTenantId());
+            TradeLicense license = null;
+
+            if(calculation.getTradeLicense()!=null)
+                license = calculation.getTradeLicense();
+
+            else if(calculation.getTradeLicense()==null && calculation.getApplicationNumber()!=null)
+                license = utils.getTradeLicense(requestInfo, calculation.getApplicationNumber()
+                        , calculation.getTenantId());
+
 
             if (license == null)
                 throw new CustomException("INVALID APPLICATIONNUMBER", "Demand cannot be generated for applicationNumber " +
                         calculation.getApplicationNumber() + " TradeLicense with this number does not exist ");
 
             String tenantId = calculation.getTenantId();
-            String consumerCode = calculation.getApplicationNumber();
+            String consumerCode = calculation.getTradeLicense().getApplicationNumber();
 
             OwnerInfo owner = license.getTradeLicenseDetail().getOwners().get(0);
 
@@ -139,7 +146,7 @@ public class DemandService {
         List<Demand> demands = new LinkedList<>();
         for(Calculation calculation : calculations) {
 
-            List<Demand> searchResult = searchDemand(calculation.getTenantId(), calculation.getApplicationNumber()
+            List<Demand> searchResult = searchDemand(calculation.getTenantId(), calculation.getTradeLicense().getApplicationNumber()
                     , requestInfo);
 
             Demand demand = searchResult.get(0);

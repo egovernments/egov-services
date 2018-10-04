@@ -56,33 +56,13 @@ public class CalculationService {
               criteria.setTradelicense(license);
           }
           Calculation calculation = new Calculation();
-          calculation.setApplicationNumber(criteria.getApplicationNumber());
+          calculation.setTradeLicense(criteria.getTradelicense());
           calculation.setTenantId(criteria.getTenantId());
           calculation.setTaxHeadEstimates(getTaxHeadEstimates(criteria));
           calculations.add(calculation);
       }
       return calculations;
   }
-
-
-  public List<Calculation> dummyCalculate(RequestInfo requestInfo,List<CalulationCriteria> criterias){
-      List<Calculation> calculations = new LinkedList<>();
-
-      for(CalulationCriteria criteria : criterias){
-              calculations.add(Calculation.builder()
-              .applicationNumber(criteria.getApplicationNumber())
-              .tenantId(criteria.getTenantId())
-              .taxHeadEstimates(Collections.singletonList(TaxHeadEstimate.builder()
-                      .category(Category.TAX)
-                      .estimateAmount(new BigDecimal(ThreadLocalRandom.current().nextInt(100, 1000 + 1)))
-                      .taxHeadCode("TL_TAX")
-                      .build())
-              ).build());
-      }
-
-      return calculations;
-  }
-
 
 
 

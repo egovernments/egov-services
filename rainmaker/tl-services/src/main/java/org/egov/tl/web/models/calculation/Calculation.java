@@ -2,6 +2,7 @@ package org.egov.tl.web.models.calculation;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
+import org.egov.tl.web.models.TradeLicense;
 import org.springframework.validation.annotation.Validated;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -20,9 +21,11 @@ import java.util.List;
 @Builder
 public class Calculation {
 
-@NotNull
 @JsonProperty("applicationNumber")
 private String applicationNumber = null;
+
+@JsonProperty("tradeLicense")
+private TradeLicense tradeLicense = null;
 
 @NotNull
 @JsonProperty("tenantId")

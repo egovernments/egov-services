@@ -55,8 +55,8 @@ public class TradeLicenseService {
         actionValidator.validateCreateRequest(tradeLicenseRequest);
         enrichmentService.enrichTLCreateRequest(tradeLicenseRequest);
         userService.createUser(tradeLicenseRequest);
-        repository.save(tradeLicenseRequest);
         calculationService.addCalculation(tradeLicenseRequest);
+        repository.save(tradeLicenseRequest);
         return tradeLicenseRequest.getLicenses();
     }
 
@@ -101,8 +101,8 @@ public class TradeLicenseService {
         enrichmentService.enrichTLUpdateRequest(tradeLicenseRequest);
         workflowService.updateStatus(tradeLicenseRequest);
         userService.createUser(tradeLicenseRequest);
-        repository.update(tradeLicenseRequest);
         calculationService.addCalculation(tradeLicenseRequest);
+        repository.update(tradeLicenseRequest);
         return tradeLicenseRequest.getLicenses();
     }
 

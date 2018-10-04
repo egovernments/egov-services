@@ -30,20 +30,18 @@ import lombok.Builder;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class Calculation   {
+public class Calculation {
 
-@NotNull
-@JsonProperty("applicationNumber")
-private String applicationNumber = null;
+	@NotNull
+	@JsonProperty("applicationNumber")
+	private String applicationNumber = null;
 
-@NotNull
-@JsonProperty("tenantId")
-@Size(min=2,max=256)
-private String tenantId = null;
+	@NotNull
+	@JsonProperty("tenantId")
+	@Size(min = 2, max = 256)
+	private String tenantId = null;
 
-@JsonProperty("taxHeadEstimates")
-List<TaxHeadEstimate> taxHeadEstimates;
-
+	@JsonProperty("taxHeadEstimates")
+	List<TaxHeadEstimate> taxHeadEstimates;
 
 }
-

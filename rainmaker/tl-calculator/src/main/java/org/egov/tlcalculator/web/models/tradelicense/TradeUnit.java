@@ -1,4 +1,4 @@
-package org.egov.tlcalculator.web.models.TL;
+package org.egov.tlcalculator.web.models.tradelicense;
 
 
 import java.util.Objects;

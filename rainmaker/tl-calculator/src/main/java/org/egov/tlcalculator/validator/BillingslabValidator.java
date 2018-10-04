@@ -29,7 +29,13 @@ public class BillingslabValidator {
 	@Autowired
 	private BillingslabService service;
 	
-	
+	/**
+	 * Validates the create request for billing slabs. The validation involves:
+	 * 1. Checking if all the billing slabs belong to a same tenant
+	 * 2. Checking if the billing slab being created already exists in the system.
+	 * 3. Checking if all the provided MDMS codes are valid or not.
+	 * @param billingSlabReq
+	 */
 	public void validateCreate(BillingSlabReq billingSlabReq) {
 		Map<String, String> errorMap = new HashMap<>();
 		tenantIdCheck(billingSlabReq, errorMap);
@@ -39,8 +45,16 @@ public class BillingslabValidator {
 		if(!CollectionUtils.isEmpty(errorMap.keySet())) {
 			throw new CustomException(errorMap);
 		}
+		log.info("All validations passed.");
 	}
 	
+	/**
+	 * Validates the update request for billing slabs. The validation involves:
+	 * 1. Checking if all the billing slabs belong to a same tenant
+	 * 2. Checking if the billing slab being created are existing in the system.
+	 * 3. Checking if all the provided MDMS codes are valid or not.
+	 * @param billingSlabReq
+	 */
 	public void validateUpdate(BillingSlabReq billingSlabReq) {
 		Map<String, String> errorMap = new HashMap<>();
 		tenantIdCheck(billingSlabReq, errorMap);
@@ -50,8 +64,14 @@ public class BillingslabValidator {
 		if(!CollectionUtils.isEmpty(errorMap.keySet())) {
 			throw new CustomException(errorMap);
 		}
+		log.info("All validations passed.");
 	}
 	
+	/**
+	 * Checks if all billing slabs belong to the same tenant
+	 * @param billingSlabReq
+	 * @param errorMap
+	 */
 	public void tenantIdCheck(BillingSlabReq billingSlabReq, Map<String, String> errorMap) {
 		Set<String> tenantIds = billingSlabReq.getBillingSlab().parallelStream().map(BillingSlab::getTenantId).collect(Collectors.toSet());
 		if(tenantIds.size() > 1) {
@@ -60,6 +80,11 @@ public class BillingslabValidator {
 		}
 	}
 	
+	/**
+	 * Checks if the billing slabs being created are duplicate.
+	 * @param billingSlabReq
+	 * @param errorMap
+	 */
 	public void duplicateCheck(BillingSlabReq billingSlabReq, Map<String, String> errorMap) {
 		List<BillingSlab> duplicateSlabs = new ArrayList<>();
 		billingSlabReq.getBillingSlab().parallelStream().forEach(slab -> {
@@ -77,6 +102,11 @@ public class BillingslabValidator {
 		}
 	}
 	
+	/**
+	 * Verifies if the billing slabs being updated are there in the system.
+	 * @param billingSlabReq
+	 * @param errorMap
+	 */
 	public void areRecordsExisiting(BillingSlabReq billingSlabReq, Map<String, String> errorMap) {
 		BillingSlabSearchCriteria criteria = BillingSlabSearchCriteria.builder().tenantId(billingSlabReq.getBillingSlab().get(0).getTenantId())
 				.ids(billingSlabReq.getBillingSlab().parallelStream().map(BillingSlab :: getId).collect(Collectors.toList())).build();
@@ -93,6 +123,13 @@ public class BillingslabValidator {
 		}
 		
 	}
+	
+	/**
+	 * Validates MDMS codes present in the create/update request 
+	 * @param billingSlab
+	 * @param mdmsDataMap
+	 * @param errorMap
+	 */
 	public void validateMDMSCodes(BillingSlab billingSlab, Map<String, List<String>> mdmsDataMap, Map<String, String> errorMap) {
 		if(!StringUtils.isEmpty(billingSlab.getTradeType())) {
 			if(!mdmsDataMap.get(BillingslabConstants.TL_MDMS_TRADETYPE).contains(billingSlab.getTradeType()))

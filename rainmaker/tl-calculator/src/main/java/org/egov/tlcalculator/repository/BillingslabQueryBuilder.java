@@ -13,7 +13,12 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class BillingslabQueryBuilder {
 	
-	
+	/**
+	 * Builds search query for searching billing slabs from db
+	 * @param criteria
+	 * @param preparedStmtList
+	 * @return
+	 */
 	public String getSearchQuery(BillingSlabSearchCriteria criteria, List<Object> preparedStmtList) {
 		StringBuilder queryBuilder = new StringBuilder();
 		queryBuilder.append("SELECT * from eg_tl_billingslab ");
@@ -21,6 +26,12 @@ public class BillingslabQueryBuilder {
 		return queryBuilder.toString();
 	}
 	
+	/**
+	 * Builds the where clause for the search query. 
+	 * @param queryBuilder
+	 * @param billingSlabSearcCriteria
+	 * @param preparedStmtList
+	 */
 	public void addWhereClause(StringBuilder queryBuilder, BillingSlabSearchCriteria billingSlabSearcCriteria, List<Object> preparedStmtList) {
 		queryBuilder.append(" WHERE tenantid = ?");
 		preparedStmtList.add(billingSlabSearcCriteria.getTenantId());
@@ -84,7 +95,7 @@ public class BillingslabQueryBuilder {
 	}
 
 	/**
-	 * sets prepared statement for values for a list
+	 * Sets prepared statement for values for a list
 	 * 
 	 * @param queryBuilder
 	 * @param preparedStmtList

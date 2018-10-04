@@ -20,7 +20,13 @@ public class BillingslabRepository {
 
 	@Autowired
 	private BillingSlabRowMapper billingSlabRowMapper;
-
+	
+	/**
+	 * Queries the db with search query using a connection abstracted within the jdbctemplate.
+	 * @param query
+	 * @param preparedStmtList
+	 * @return List<BillingSlab>
+	 */
 	public List<BillingSlab> getDataFromDB(String query, List<Object> preparedStmtList){
 		List<BillingSlab> slabs = new ArrayList<>();
 		try {

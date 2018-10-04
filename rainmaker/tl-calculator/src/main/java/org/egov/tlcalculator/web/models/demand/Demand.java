@@ -51,7 +51,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.egov.tlcalculator.web.models.AuditDetails;
-import org.egov.tlcalculator.web.models.TL.OwnerInfo;
+import org.egov.tlcalculator.web.models.tradelicense.OwnerInfo;
 
 @Data
 @NoArgsConstructor

@@ -18,6 +18,9 @@ import org.springframework.stereotype.Component;
 @Component
 public class BillingSlabRowMapper implements ResultSetExtractor<List<BillingSlab>> {
 
+	/**
+	 * Rowmapper that maps every column of the search result set to a key in the model.
+	 */
 	@Override
 	public List<BillingSlab> extractData(ResultSet rs) throws SQLException, DataAccessException {
 		Map<String, BillingSlab> billingSlabMap = new HashMap<>();

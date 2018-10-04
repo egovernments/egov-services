@@ -27,6 +27,11 @@ public class BillingslabController {
 	@Autowired
 	private BillingslabService service;
 	
+	/**
+	 * Creates Billing Slabs for TradeLicense
+	 * @param billingSlabReq
+	 * @return
+	 */
 	@RequestMapping(value = "/_create", method = RequestMethod.POST)
 	public ResponseEntity<BillingSlabRes> billingslabCreatePost(@Valid @RequestBody BillingSlabReq billingSlabReq) {
 		billingslabValidator.validateCreate(billingSlabReq);
@@ -34,6 +39,11 @@ public class BillingslabController {
 		return new ResponseEntity<BillingSlabRes>(response, HttpStatus.OK);
 	}
 	
+	/**
+	 * Updates Billing Slabs of TradeLicense
+	 * @param billingSlabReq
+	 * @return
+	 */
 	@RequestMapping(value = "/_update", method = RequestMethod.POST)
 	public ResponseEntity<BillingSlabRes> billingslabUpdatePost(@Valid @RequestBody BillingSlabReq billingSlabReq) {
 		billingslabValidator.validateUpdate(billingSlabReq);
@@ -41,6 +51,12 @@ public class BillingslabController {
 		return new ResponseEntity<BillingSlabRes>(response, HttpStatus.OK);
 	}
 
+	/**
+	 * Searches Billing Slabs belonging TradeLicense based on criteria
+	 * @param billingSlabSearchCriteria
+	 * @param requestInfo
+	 * @return
+	 */
 	@RequestMapping(value = "/_search", method = RequestMethod.POST)
 	public ResponseEntity<BillingSlabRes> billingslabSearchPost(@ModelAttribute @Valid BillingSlabSearchCriteria billingSlabSearchCriteria,
 			@Valid @RequestBody RequestInfo requestInfo) {

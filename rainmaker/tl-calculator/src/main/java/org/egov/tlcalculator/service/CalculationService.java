@@ -20,8 +20,10 @@ import org.springframework.util.CollectionUtils;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 
 
 @Service
@@ -62,7 +64,29 @@ public class CalculationService {
       return calculations;
   }
 
-  private List<TaxHeadEstimate> getTaxHeadEstimates(CalulationCriteria calulationCriteria){
+
+  public List<Calculation> dummyCalculate(RequestInfo requestInfo,List<CalulationCriteria> criterias){
+      List<Calculation> calculations = new LinkedList<>();
+
+      for(CalulationCriteria criteria : criterias){
+              calculations.add(Calculation.builder()
+              .applicationNumber(criteria.getApplicationNumber())
+              .tenantId(criteria.getTenantId())
+              .taxHeadEstimates(Collections.singletonList(TaxHeadEstimate.builder()
+                      .category(Category.TAX)
+                      .estimateAmount(new BigDecimal(ThreadLocalRandom.current().nextInt(100, 1000 + 1)))
+                      .taxHeadCode("TL_TAX")
+                      .build())
+              ).build());
+      }
+
+      return calculations;
+  }
+
+
+
+
+    private List<TaxHeadEstimate> getTaxHeadEstimates(CalulationCriteria calulationCriteria){
       List<TaxHeadEstimate> estimates = new LinkedList<>();
 
       estimates.add(getBaseTax(calulationCriteria));

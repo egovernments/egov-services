@@ -56,6 +56,22 @@ public class CalculationUtils {
         return url.toString();
     }
 
+    public String getBillGenerateURI(){
+        StringBuilder url = new StringBuilder(config.getBillingHost());
+        url.append(config.getBillGenerateEndpoint());
+        url.append("?");
+        url.append("tenantId=");
+        url.append("{1}");
+        url.append("&");
+        url.append("consumerCode=");
+        url.append("{2}");
+        url.append("&");
+        url.append("businessService=");
+        url.append("{3}");
+
+        return url.toString();
+    }
+
     public AuditDetails getAuditDetails(String by, Boolean isCreate) {
         Long time = System.currentTimeMillis();
         if(isCreate)

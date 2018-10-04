@@ -3,6 +3,7 @@ package org.egov.tlcalculator.service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.tlcalculator.config.TLCalculatorConfigs;
+import org.egov.tlcalculator.repository.DemandRepository;
 import org.egov.tlcalculator.repository.ServiceRequestRepository;
 import org.egov.tlcalculator.utils.CalculationUtils;
 import org.egov.tlcalculator.web.models.*;
@@ -14,13 +15,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
+import java.math.BigDecimal;
 import java.util.*;
 
 
 @Service
 public class DemandService {
 
-
+   @Autowired
+   private CalculationService calculationService;
 
     @Autowired
     private CalculationUtils utils;
@@ -34,97 +37,134 @@ public class DemandService {
     @Autowired
     private ObjectMapper mapper;
 
+    @Autowired
+    private DemandRepository demandRepository;
 
 
 
-    public List<Demand> generateDemand(RequestInfo requestInfo,CalculationRes response){
+
+    public void generateDemand(RequestInfo requestInfo,CalculationRes response){
         List<Calculation> calculations = response.getCalculation();
-        List<Demand> demands = new LinkedList<>();
+
+        //List that will contain Calculation for new demands
+        List<Calculation> createCalculations = new LinkedList<>();
+
+        //List that will contain Calculation for old demands
+        List<Calculation> updateCalculations = new LinkedList<>();
 
         if(!CollectionUtils.isEmpty(calculations)){
-            calculations.forEach(calculation -> {
-                    demands.add(createDemand(requestInfo,calculation));
-            });
-         StringBuilder url = new StringBuilder(config.getBillingHost());
-         url.append(config.getDemandCreateEndpoint());
-         DemandRequest request = new DemandRequest(requestInfo,demands);
-         serviceRequestRepository.fetchResult(url,request);
+            for(Calculation calculation : calculations)
+            {
+                    if(CollectionUtils.isEmpty(searchDemand(calculation.getTenantId(),
+                            calculation.getApplicationNumber(),requestInfo)))
+                        createCalculations.add(calculation);
+                    else
+                        updateCalculations.add(calculation);
+            }
         }
-        return demands;
+        if(!CollectionUtils.isEmpty(createCalculations))
+            createDemand(requestInfo,createCalculations);
+
+        if(!CollectionUtils.isEmpty(updateCalculations))
+            updateDemand(requestInfo,updateCalculations);
+    }
+
+    public BillResponse getBill(RequestInfo requestInfo,GenerateBillCriteria billCriteria){
+         String consumerCode = billCriteria.getConsumerCode();
+         String tenantId = billCriteria.getTenantId();
+
+         List<Demand> demands = searchDemand(tenantId,consumerCode,requestInfo);
+
+         if(CollectionUtils.isEmpty(demands))
+             throw new CustomException("INVALID CONSUMERCODE","No demand exists for this consumer code");
+
+         //Recalculating using ConsumerCode used as applicationNumber
+         CalulationCriteria calulationCriteria = new CalulationCriteria();
+         calulationCriteria.setApplicationNumber(consumerCode);
+         calulationCriteria.setTenantId(tenantId);
+         List<Calculation> calculations = calculationService.dummyCalculate(requestInfo,Collections.singletonList(calulationCriteria));
+
+         //Demand Updated
+         updateDemand(requestInfo,calculations);
+
+         BillResponse response = generateBill(requestInfo,billCriteria);
+         return response;
     }
 
 
-    private Demand createDemand(RequestInfo requestInfo,Calculation calculation){
 
-        TradeLicense license = utils.getTradeLicense(requestInfo,calculation.getApplicationNumber()
-                ,calculation.getTenantId());
+    private List<Demand> createDemand(RequestInfo requestInfo,List<Calculation> calculations){
+        List<Demand> demands = new LinkedList<>();
+        for(Calculation calculation : calculations) {
+            TradeLicense license = utils.getTradeLicense(requestInfo, calculation.getApplicationNumber()
+                    , calculation.getTenantId());
 
-        if(license==null)
-            throw new CustomException("INVALID APPLICATIONNUMBER","Demand cannot be generated for applicationNumber " +
-                    calculation.getApplicationNumber()+" TradeLicense with this number does not exist ");
+            if (license == null)
+                throw new CustomException("INVALID APPLICATIONNUMBER", "Demand cannot be generated for applicationNumber " +
+                        calculation.getApplicationNumber() + " TradeLicense with this number does not exist ");
 
-        String tenantId = calculation.getTenantId();
-        String consumerCode = calculation.getApplicationNumber();
+            String tenantId = calculation.getTenantId();
+            String consumerCode = calculation.getApplicationNumber();
 
-        OwnerInfo owner = license.getTradeLicenseDetail().getOwners().get(0);
+            OwnerInfo owner = license.getTradeLicenseDetail().getOwners().get(0);
 
-        List<DemandDetail> demandDetails = new LinkedList<>();
+            List<DemandDetail> demandDetails = new LinkedList<>();
 
-        calculation.getTaxHeadEstimates().forEach(taxHeadEstimate -> {
-            demandDetails.add(DemandDetail.builder().taxAmount(taxHeadEstimate.getEstimateAmount())
-                    .taxHeadMasterCode(taxHeadEstimate.getTaxHeadCode())
-                    .tenantId(tenantId)
-                    .build());
-        });
-
-        return Demand.builder()
-                .consumerCode(consumerCode)
-                .owner(owner)
-                .minimumAmountPayable(config.getMinimumPayableAmount())
-                .tenantId(tenantId)
-                .taxPeriodFrom(license.getValidFrom())
-                .taxPeriodTo(license.getValidTo())
-                .businessService(config.getBusinessService())
-                .build();
-    }
-
-
-    private Demand updateDemand(RequestInfo requestInfo,Calculation calculation,String consumerCode){
-
-        List<Demand> demands = searchDemand(calculation.getTenantId(),consumerCode,requestInfo);
-
-        if(CollectionUtils.isEmpty(demands))
-            throw new CustomException("INVALID CONSUMERCODE","No demand exists for the given consumerCode");
-
-        Demand demand = demands.get(0);
-        List<DemandDetail> demandDetails = demand.getDemandDetails();
-
-        Map<String,DemandDetail> taxHeadToDemandDetail = new HashMap<>();
-
-        demandDetails.forEach(demandDetail -> {
-            taxHeadToDemandDetail.put(demandDetail.getTaxHeadMasterCode(),demandDetail);
-        });
-
-        calculation.getTaxHeadEstimates().forEach(taxHeadEstimate -> {
-            if(taxHeadToDemandDetail.containsKey(taxHeadEstimate.getTaxHeadCode()))
-                taxHeadToDemandDetail.get(taxHeadEstimate.getTaxHeadCode()).setTaxAmount(taxHeadEstimate.getEstimateAmount());
-            else
-                taxHeadToDemandDetail.put(taxHeadEstimate.getTaxHeadCode(),
-                        DemandDetail.builder()
-                        .taxAmount(taxHeadEstimate.getEstimateAmount())
+            calculation.getTaxHeadEstimates().forEach(taxHeadEstimate -> {
+                demandDetails.add(DemandDetail.builder().taxAmount(taxHeadEstimate.getEstimateAmount())
                         .taxHeadMasterCode(taxHeadEstimate.getTaxHeadCode())
-                        .tenantId(calculation.getTenantId())
+                        .collectionAmount(BigDecimal.ZERO)
+                        .tenantId(tenantId)
                         .build());
-        });
+            });
+            demands.add(Demand.builder()
+                    .consumerCode(consumerCode)
+                    .demandDetails(demandDetails)
+                    .owner(owner)
+                    .minimumAmountPayable(config.getMinimumPayableAmount())
+                    .tenantId(tenantId)
+                    .taxPeriodFrom(license.getValidFrom())
+                    .taxPeriodTo(license.getValidTo())
+                    .consumerType("TL")
+                    .businessService(config.getBusinessService())
+                    .build());
+        }
+        return demandRepository.saveDemand(requestInfo,demands);
+    }
 
-        demand.setDemandDetails(new LinkedList<>(taxHeadToDemandDetail.values()));
 
-        StringBuilder url = new StringBuilder(config.getBillingHost());
-        url.append(config.getDemandUpdateEndpoint());
-        DemandRequest request = new DemandRequest(requestInfo,Collections.singletonList(demand));
-        serviceRequestRepository.fetchResult(url,request);
+    private List<Demand> updateDemand(RequestInfo requestInfo,List<Calculation> calculations){
+        List<Demand> demands = new LinkedList<>();
+        for(Calculation calculation : calculations) {
 
-        return demand;
+            List<Demand> searchResult = searchDemand(calculation.getTenantId(), calculation.getApplicationNumber()
+                    , requestInfo);
+
+            Demand demand = searchResult.get(0);
+            List<DemandDetail> demandDetails = demand.getDemandDetails();
+
+            Map<String, DemandDetail> taxHeadToDemandDetail = new HashMap<>();
+
+            demandDetails.forEach(demandDetail -> {
+                taxHeadToDemandDetail.put(demandDetail.getTaxHeadMasterCode(), demandDetail);
+            });
+
+            calculation.getTaxHeadEstimates().forEach(taxHeadEstimate -> {
+                if (taxHeadToDemandDetail.containsKey(taxHeadEstimate.getTaxHeadCode()))
+                    taxHeadToDemandDetail.get(taxHeadEstimate.getTaxHeadCode()).setTaxAmount(taxHeadEstimate.getEstimateAmount());
+                else
+                    taxHeadToDemandDetail.put(taxHeadEstimate.getTaxHeadCode(),
+                            DemandDetail.builder()
+                                    .taxAmount(taxHeadEstimate.getEstimateAmount())
+                                    .taxHeadMasterCode(taxHeadEstimate.getTaxHeadCode())
+                                    .tenantId(calculation.getTenantId())
+                                    .build());
+            });
+            demand.setDemandDetails(new LinkedList<>(taxHeadToDemandDetail.values()));
+
+            demands.add(demand);
+        }
+         return demandRepository.updateDemand(requestInfo,demands);
     }
 
 
@@ -154,7 +194,7 @@ public class DemandService {
 
 
 
-/*    public BillResponse generateBill(RequestInfo requestInfo,GenerateBillCriteria billCriteria){
+    private BillResponse generateBill(RequestInfo requestInfo,GenerateBillCriteria billCriteria){
 
         String consumerCode = billCriteria.getConsumerCode();
         String tenantId = billCriteria.getTenantId();
@@ -164,10 +204,22 @@ public class DemandService {
         if(CollectionUtils.isEmpty(demands))
             throw new CustomException("INVALID CONSUMERCODE","Bill cannot be generated.No demand exists for the given consumerCode");
 
+        String uri = utils.getBillGenerateURI();
+        uri = uri.replace("{1}",billCriteria.getTenantId());
+        uri = uri.replace("{2}",billCriteria.getConsumerCode());
+        uri = uri.replace("{3}",billCriteria.getBusinessService());
 
-
-
-    }*/
+        Object result = serviceRequestRepository.fetchResult(new StringBuilder(uri),RequestInfoWrapper.builder()
+                                                             .requestInfo(requestInfo).build());
+        BillResponse response = null;
+         try{
+              response = mapper.convertValue(result,BillResponse.class);
+         }
+         catch (IllegalArgumentException e){
+            throw new CustomException("PARSING ERROR","Unable to parse response of generate bill");
+         }
+         return response;
+    }
 
 
 

@@ -99,6 +99,46 @@
       "uniqueKeys": [
         "$.code"
       ]
+    },
+    "OwnerShipCategory": {
+      "masterName": "OwnerShipCategory",
+      "moduleDefinition": null,
+      "isStateLevel": true,
+      "uniqueKeys": [
+        "$.code"
+      ]
+    },
+    "OwnerType": {
+      "masterName": "OwnerType",
+      "moduleDefinition": null,
+      "isStateLevel": true,
+      "uniqueKeys": [
+        "$.code"
+      ]
+    },
+    "UOM": {
+      "masterName": "UOM",
+      "moduleDefinition": null,
+      "isStateLevel": true,
+      "uniqueKeys": [
+        "$.code"
+      ]
+    },
+    "StructureType": {
+      "masterName": "StructureType",
+      "moduleDefinition": null,
+      "isStateLevel": true,
+      "uniqueKeys": [
+        "$.code"
+      ]
+    },
+    "DocumentType": {
+      "masterName": "StructureType",
+      "moduleDefinition": null,
+      "isStateLevel": true,
+      "uniqueKeys": [
+        "$.code"
+      ]
     }
   },
   "egf-master": {
@@ -428,8 +468,7 @@
     "FireCess": {
       "masterName": "FireCess",
       "isStateLevel": true,
-      "uniqueKeys": [
-      ]
+      "uniqueKeys": []
     },
     "Floor": {
       "masterName": "Floor",
@@ -539,7 +578,22 @@
     "CancerCess": {
       "masterName": "CancerCess",
       "isStateLevel": true,
+      "uniqueKeys": []
+    }
+  },
+  "TradeLicense": {
+    "TradeType": {
+      "masterName": "TradeType",
+      "isStateLevel": true,
       "uniqueKeys": [
+        "$.code"
+      ]
+    },
+    "AccessoriesCategory": {
+      "masterName": "AccessoriesCategory",
+      "isStateLevel": true,
+      "uniqueKeys": [
+        "$.code"
       ]
     }
   }

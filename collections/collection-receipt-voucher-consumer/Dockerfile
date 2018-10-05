@@ -1,12 +1,12 @@
 FROM egovio/apline-jre:8u121
 
-MAINTAINER Senthil<senthil.kalimuthu@tarento.com>
+MAINTAINER Sivaprakash Ramasamy<sivaprakash.ramasamy@tarento.com>
 
 
 # INSTRUCTIONS ON HOW TO BUILD JAR:
 # Move to the location where pom.xml is exist in project and build project using below command
 # "mvn clean package"
-COPY /target/collection-receipt-voucher-consumer-0.0.1-SNAPSHOT.jar /opt/egov/collection-receipt-voucher-consumer	.jar
+COPY /target/collection-receipt-voucher-consumer-0.0.1-SNAPSHOT.jar /opt/egov/collection-receipt-voucher-consumer.jar
 
 COPY start.sh /usr/bin/start.sh
 

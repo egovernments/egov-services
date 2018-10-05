@@ -32,7 +32,7 @@ public class AppProperties {
         telemetryFinalMessages = System.getenv("TELEMETRY_FINAL_MESSAGES");
 
         if(System.getenv("DEDUP_STORAGE_TIME") != null)
-            deDupStorageTime = Integer.parseInt(System.getenv("DEDUPE_STORAGE_TIME"));
+            deDupStorageTime = Integer.parseInt(System.getenv("DEDUP_STORAGE_TIME"));
 
 //        Properties properties = new Properties();
 //        try {

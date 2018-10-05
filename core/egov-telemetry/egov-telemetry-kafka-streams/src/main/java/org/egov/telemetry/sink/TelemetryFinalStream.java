@@ -1,13 +1,17 @@
 package org.egov.telemetry.sink;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.common.serialization.Serdes;
 import org.apache.kafka.streams.KafkaStreams;
 import org.apache.kafka.streams.StreamsBuilder;
 import org.apache.kafka.streams.StreamsConfig;
 import org.apache.kafka.streams.kstream.KStream;
+import org.apache.kafka.streams.kstream.ValueMapper;
 
 import java.util.Properties;
 
+
+@Slf4j
 public class TelemetryFinalStream {
 
     public void pushFinalMessages(Properties streamsConfiguration, String inputTopic, String outputTopic) {
@@ -19,7 +23,14 @@ public class TelemetryFinalStream {
 
         KStream<String, String> inputStream = builder.stream(inputTopic);
 
-        inputStream.mapValues((value) -> value).to(outputTopic);
+//        inputStream.mapValues((value) -> value).to(outputTopic);
+        inputStream.mapValues(new ValueMapper<String, String>() {
+            @Override
+            public String apply(String value) {
+                log.info("Message pushed to telemetry-final-messages");
+                return value;
+            }
+        }).to(outputTopic);
 
         final KafkaStreams streams = new KafkaStreams(builder.build(), streamsConfiguration);
         streams.cleanUp();

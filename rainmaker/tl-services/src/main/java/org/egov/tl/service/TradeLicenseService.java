@@ -52,6 +52,7 @@ public class TradeLicenseService {
 
 
     public List<TradeLicense> create(TradeLicenseRequest tradeLicenseRequest){
+        tlValidator.validateCreate(tradeLicenseRequest);
         actionValidator.validateCreateRequest(tradeLicenseRequest);
         enrichmentService.enrichTLCreateRequest(tradeLicenseRequest);
         userService.createUser(tradeLicenseRequest);

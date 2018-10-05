@@ -118,6 +118,17 @@ public class TLRowMapper  implements ResultSetExtractor<List<TradeLicense>> {
                     .type(rs.getString("type"))
                     .build();
 
+            Institution institution = null;
+            if(rs.getString("instiid")!=null)
+            { institution = Institution.builder()
+                    .id(rs.getString("instiid"))
+                    .tenantId(rs.getString("institenantId"))
+                    .name(rs.getString("institutionName"))
+                    .type(rs.getString("institutionType"))
+                    .designation(rs.getString("designation"))
+                    .build();
+            }
+
             AuditDetails auditdetails = AuditDetails.builder()
                     .createdBy(rs.getString("tld_createdBy"))
                     .createdTime(rs.getLong("tld_createdTime"))
@@ -146,6 +157,7 @@ public class TLRowMapper  implements ResultSetExtractor<List<TradeLicense>> {
                         .adhocPenalty(rs.getBigDecimal("adhocPenalty"))
                         .adhocExemptionReason(rs.getString("adhocExemptionReason"))
                         .adhocPenaltyReason(rs.getString("adhocPenaltyReason"))
+                        .institution(institution)
                         .build();
                 tradeLicense.setTradeLicenseDetail(tradeLicenseDetail);
             }
@@ -198,6 +210,7 @@ public class TLRowMapper  implements ResultSetExtractor<List<TradeLicense>> {
                     .ownerType(rs.getString("ownerType"))
                     .ownerShipPercentage(ownerShipPercentage)
                     .active(rs.getBoolean("useractive"))
+                    .institutionId(rs.getString("institutionid"))
                     .build();
             tradeLicense.getTradeLicenseDetail().addOwnersItem(owner);
         }

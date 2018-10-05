@@ -32,7 +32,7 @@ public class TLQueryBuilder {
     private static final String LEFT_OUTER_JOIN_STRING = " LEFT OUTER JOIN ";
 
     private static final String QUERY = "SELECT tl.*,tld.*,tlunit.*,tlacc.*,tlowner.*," +
-            "tladdress.*,tlapldoc.*,tlverdoc.*,tlownerdoc.*,tl.id as tl_id,tl.tenantid as tl_tenantId,tl.lastModifiedTime as " +
+            "tladdress.*,tlapldoc.*,tlverdoc.*,tlownerdoc.*,tlinsti.*,tl.id as tl_id,tl.tenantid as tl_tenantId,tl.lastModifiedTime as " +
             "tl_lastModifiedTime,tl.createdBy as tl_createdBy,tl.lastModifiedBy as tl_lastModifiedBy,tl.createdTime as " +
             "tl_createdTime,tld.id as tld_id,tladdress.id as tl_ad_id,tld.createdBy as tld_createdBy," +
             "tlowner.id as userid,tlowner.active as useractive," +
@@ -42,7 +42,8 @@ public class TLQueryBuilder {
             "tlapldoc.id as tl_ap_doc_id,tlapldoc.documenttype as tl_ap_doc_documenttype,tlapldoc.filestoreid as tl_ap_doc_filestoreid,tlapldoc.active as tl_ap_doc_active," +
             "tlverdoc.id as tl_ver_doc_id,tlverdoc.documenttype as tl_ver_doc_documenttype,tlverdoc.filestoreid as tl_ver_doc_filestoreid,tlverdoc.active as tl_ver_doc_active," +
             "tlownerdoc.userid as docuserid,tlownerdoc.tradeLicenseDetailId as doctradelicensedetailid,tlownerdoc.id as ownerdocid,"+
-            "tlownerdoc.documenttype as ownerdocType,tlownerdoc.filestoreid as ownerfileStoreId,tlownerdoc.documentuid as ownerdocuid,tlownerdoc.active as ownerdocactive "+
+            "tlownerdoc.documenttype as ownerdocType,tlownerdoc.filestoreid as ownerfileStoreId,tlownerdoc.documentuid as ownerdocuid,tlownerdoc.active as ownerdocactive," +
+            " tlinsti.id as instiid,tlinsti.name as institutionname,tlinsti.type as institutiontype,tlinsti.tenantid as institenantId "+
             " FROM eg_tl_tradelicense tl"
             +INNER_JOIN_STRING
             +"eg_tl_tradelicensedetail tld ON tld.tradelicenseid = tl.id"
@@ -60,6 +61,8 @@ public class TLQueryBuilder {
             +"eg_tl_applicationdocument tlapldoc ON tlapldoc.tradelicensedetailid = tld.id"
             +LEFT_OUTER_JOIN_STRING
             +"eg_tl_verificationdocument tlverdoc ON tlverdoc.tradelicensedetailid = tld.id"
+            +LEFT_OUTER_JOIN_STRING
+            +"eg_tl_institution tlinsti ON tlinsti.tradelicensedetailid = tld.id"
             +" WHERE ";
 
 

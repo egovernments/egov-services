@@ -97,6 +97,10 @@ public class CalculationService {
           totalTax = totalTax.subtract(license.getTradeLicenseDetail().getAdhocExemption());
       if(license.getTradeLicenseDetail().getAdhocPenalty()!=null)
           totalTax = totalTax.add(license.getTradeLicenseDetail().getAdhocPenalty());
+
+      if(totalTax.compareTo(BigDecimal.ZERO)==-1)
+          throw new CustomException("INVALID AMOUNT","Tax amount is negative");
+
       estimate.setEstimateAmount(totalTax);
       estimate.setCategory(Category.TAX);
       estimate.setTaxHeadCode(config.getBaseTaxHead());

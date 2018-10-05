@@ -1,6 +1,7 @@
 package org.egov.tl.validator;
 
 import org.egov.common.contract.request.RequestInfo;
+import org.egov.tl.config.TLConfiguration;
 import org.egov.tl.repository.TLRepository;
 import org.egov.tl.service.TradeLicenseService;
 import org.egov.tl.web.models.TradeLicense;
@@ -19,11 +20,41 @@ public class TLValidator {
 
     private TLRepository tlRepository;
 
+    private TLConfiguration config;
+
+
     @Autowired
-    public TLValidator(TLRepository tlRepository) {
+    public TLValidator(TLRepository tlRepository, TLConfiguration config) {
         this.tlRepository = tlRepository;
+        this.config = config;
     }
 
+
+
+
+    public void validateCreate(TradeLicenseRequest request){
+        validateInstitution(request);
+
+
+
+    }
+
+
+    private void validateInstitution(TradeLicenseRequest request){
+        List<TradeLicense> licenses = request.getLicenses();
+        licenses.forEach(license -> {
+            if(license.getTradeLicenseDetail().getInstitution()!=null &&
+                    !license.getTradeLicenseDetail().getSubOwnerShipCategory().contains(config.getInstitutional()))
+                throw new CustomException("INVALID REQUEST","The institution object should be null for ownershipCategory "
+                        +license.getTradeLicenseDetail().getSubOwnerShipCategory());
+
+            if(license.getTradeLicenseDetail().getInstitution()==null &&
+                    license.getTradeLicenseDetail().getSubOwnerShipCategory().contains(config.getInstitutional()))
+                throw new CustomException("INVALID REQUEST","The institution object cannot be null for ownershipCategory "
+                        +license.getTradeLicenseDetail().getSubOwnerShipCategory());
+
+        });
+    }
 
 
 

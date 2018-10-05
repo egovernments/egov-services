@@ -121,6 +121,11 @@ public class TLConfiguration {
     private String calculateEndpoint;
 
 
+    //Institutional key word
+    @Value("${egov.ownershipcategory.institutional}")
+    private String institutional;
+
+
 
 
 

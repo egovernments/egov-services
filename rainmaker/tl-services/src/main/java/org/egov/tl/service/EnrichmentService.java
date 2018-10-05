@@ -75,6 +75,15 @@ public class EnrichmentService {
                     });
             });
 
+            if(tradeLicense.getTradeLicenseDetail().getSubOwnerShipCategory()!=null &&
+                    tradeLicense.getTradeLicenseDetail().getSubOwnerShipCategory().contains(config.getInstitutional())){
+                tradeLicense.getTradeLicenseDetail().getInstitution().setId(UUID.randomUUID().toString());
+                tradeLicense.getTradeLicenseDetail().getInstitution().setTenantId(tradeLicense.getTenantId());
+                tradeLicense.getTradeLicenseDetail().getOwners().forEach(owner -> {
+                    owner.setInstitutionId(tradeLicense.getTradeLicenseDetail().getInstitution().getId());
+                });
+            }
+
         });
         setIdgenIds(tradeLicenseRequest);
         setStatusForCreate(tradeLicenseRequest);

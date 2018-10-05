@@ -126,6 +126,9 @@ public class TLConfiguration {
     private String institutional;
 
 
+    @Value("${egov.receipt.businessservice}")
+    private String businessService;
+
 
 
 

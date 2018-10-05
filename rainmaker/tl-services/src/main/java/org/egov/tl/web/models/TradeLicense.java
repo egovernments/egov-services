@@ -119,7 +119,7 @@ public class  TradeLicense   {
     APPLY("APPLY"),
     
     APPROVE("APPROVE"),
-    
+
     REJECT("REJECT"),
 
     CANCEL("CANCEL");
@@ -164,7 +164,7 @@ public class  TradeLicense   {
     
     REJECTED("REJECTED"),
 
-    CANCELED("CANCELED");
+    CANCELLED("CANCELLED");
 
     private String value;
 

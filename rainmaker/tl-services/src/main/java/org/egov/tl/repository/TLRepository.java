@@ -69,7 +69,8 @@ public class TLRepository {
             }
             if(license.getAction().equals(TradeLicense.ActionEnum.APPROVE)
                     || license.getAction().equals(TradeLicense.ActionEnum.REJECT)
-                     || license.getAction().equals(TradeLicense.ActionEnum.CANCEL)){
+                     || license.getAction().equals(TradeLicense.ActionEnum.CANCEL)
+                    || license.getAction().equals(TradeLicense.StatusEnum.PAID)){
                 licesnsesForStatusUpdate.add(license);
             }
         });

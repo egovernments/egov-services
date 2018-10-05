@@ -32,9 +32,10 @@ public class BillingslabValidator {
 	/**
 	 * Validates the create request for billing slabs. The validation involves:
 	 * 1. Checking if all the billing slabs belong to a same tenant
-	 * 2. Checking if the billing slab being created already exists in the system.
+	 * 2. Checking if the billing slab being created already exist in the system.
 	 * 3. Checking if the slab is valid with respect to business rules.
-	 * 4. Checking if all the provided MDMS codes are valid or not.
+	 * 4. Checking if all the provided MDMS codes are valid.
+	 * 
 	 * @param billingSlabReq
 	 */
 	public void validateCreate(BillingSlabReq billingSlabReq) {
@@ -55,7 +56,9 @@ public class BillingslabValidator {
 	 * 1. Checking if all the billing slabs belong to a same tenant
 	 * 2. Checking if the billing slab being created are existing in the system.
 	 * 3. Checking if the slab is valid with respect to business rules.
-	 * 4. Checking if all the provided MDMS codes are valid or not.
+	 * 4. Checking if an existing slab is being updated to a slab that is duplicate.
+	 * 5. Checking if all the provided MDMS codes are valid.
+	 * 
 	 * @param billingSlabReq
 	 */
 	public void validateUpdate(BillingSlabReq billingSlabReq) {
@@ -63,6 +66,7 @@ public class BillingslabValidator {
 		tenantIdCheck(billingSlabReq, errorMap);
 		areRecordsExisiting(billingSlabReq, errorMap);
 		dataIntegrityCheck(billingSlabReq, errorMap);
+		duplicateCheck(billingSlabReq, errorMap); //Suppose slab s is being updated to s'. If that s' is already available, the update shouldn't be allowed.
 		Map<String, List<String>> mdmsDataMap = service.getMDMSDataForValidation(billingSlabReq);
 		billingSlabReq.getBillingSlab().parallelStream().forEach(slab -> validateMDMSCodes(slab, mdmsDataMap, errorMap));
 		if(!CollectionUtils.isEmpty(errorMap.keySet())) {

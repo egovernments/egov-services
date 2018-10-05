@@ -20,7 +20,7 @@ public class ErrorConstants {
 	public static final String INVALID_UOM_CODE = "INVALID_UOM";
 	public static final String INVALID_UOM_MSG = "The following UOM is invalid";
 	
-	public static final String DUPLICATE_SLABS_CODE = "DUPLICATE_BILLINGSLABS_CREATE";
+	public static final String DUPLICATE_SLABS_CODE = "DUPLICATE_BILLINGSLABS";
 	public static final String DUPLICATE_SLABS_MSG = "The following Billing slabs are already available in the system";
 	
 	public static final String INVALID_IDS_CODE = "INVALID_IDS_UPDATE";

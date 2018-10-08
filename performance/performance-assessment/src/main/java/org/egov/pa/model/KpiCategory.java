@@ -2,6 +2,11 @@ package org.egov.pa.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+
+@AllArgsConstructor
+@NoArgsConstructor
 public class KpiCategory {
 	
 	@JsonProperty("name")

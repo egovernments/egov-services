@@ -11,8 +11,8 @@ EXPOSE 8080 9990
 # Move to the location where pom.xml is exist in project and build project using below command
 # "mvn clean package"
 COPY /target/egov-user-0.0.1-SNAPSHOT.jar /opt/egov/egov-user.jar
-COPY /target/newrelic.jar /opt/egov/newrelic.jar
-COPY /target/newrelic.yml /opt/egov/newrelic.yml
+#COPY /target/newrelic.jar /opt/egov/newrelic.jar
+#COPY /target/newrelic.yml /opt/egov/newrelic.yml
 
 COPY start.sh /usr/bin/start.sh
 

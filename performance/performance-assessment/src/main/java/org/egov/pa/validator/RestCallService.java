@@ -57,6 +57,8 @@ import org.springframework.http.HttpEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import lombok.extern.slf4j.Slf4j;
 
 @Service
@@ -64,8 +66,12 @@ import lombok.extern.slf4j.Slf4j;
 public class RestCallService {
 	
 	public static Map<String, Tenant> tenantMap = new HashMap<>();
+	
 	@Autowired
 	private ApplicationProperties applicationProperties; 
+	
+	@Autowired
+	private RestTemplate restTemplate;
 	
 	
 	public boolean getULBNameFromTenant(final String tenantId) {
@@ -80,7 +86,7 @@ public class RestCallService {
         final HttpEntity<RequestInfoBody> request = new HttpEntity<>(requestInfoBody);
         log.info("URL to invoke Tenant Service : " + url.toString());
         log.info("Request Info to invoke the URL : " + request);
-        final TenantResponse tr = new RestTemplate().postForObject(url.toString(), request, TenantResponse.class);
+        final TenantResponse tr = restTemplate.postForObject(url.toString(), request, TenantResponse.class);
         if (null != tr) {
             log.info("Tenant Response : " + tr);
             if (null != tr.getTenant() && tr.getTenant().size() > 0) {
@@ -105,7 +111,7 @@ public class RestCallService {
 		final HttpEntity<RequestInfoBody> request = new HttpEntity<>(requestInfoBody);
 		log.info("URL to invoke MDMS Service : " + url.toString());
 		log.info("Request Info to invoke the URL : " + request);
-		MDMSResponse dr = new RestTemplate().postForObject(url.toString(), request, MDMSResponse.class);
+		MDMSResponse dr = restTemplate.postForObject(url.toString(), request, MDMSResponse.class);
 		log.info("Response from MDMS : " + dr);
 		if (null != dr && null != dr.getMdmsRes() && null != dr.getMdmsRes().getCommonMasters()
 				&& null != dr.getMdmsRes().getCommonMasters().getDepartments()) {
@@ -115,6 +121,7 @@ public class RestCallService {
 	}
 	
 	public Map<String, KpiCategory> getCategory(final String tenantId) {
+		ObjectMapper mapper = new ObjectMapper();
 		Map<String, KpiCategory> kpiCategoryMap = new HashMap<>();
 		final StringBuilder url = new StringBuilder(
 				applicationProperties.getMdmsServiceHostName() + applicationProperties.getMdmsServiceSearchPath()
@@ -123,12 +130,11 @@ public class RestCallService {
 			url.append("&tenantId=" + tenantId.split("\\.")[0]);
 		final RequestInfo requestInfo = RequestInfo.builder().ts(11111111l).build();
 		final RequestInfoBody requestInfoBody = new RequestInfoBody(requestInfo);
-		final HttpEntity<RequestInfoBody> request = new HttpEntity<>(requestInfoBody);
 		log.info("URL to invoke MDMS Service : " + url.toString());
-		log.info("Request Info to invoke the URL : " + request);
-		MDMSResponse dr = new RestTemplate().postForObject(url.toString(), request, MDMSResponse.class);
-		log.info("Response from MDMS : " + dr);
-		
+		log.info("Request Info to invoke the URL : " + requestInfoBody);
+		Map<String, Object> response = restTemplate.postForObject(url.toString(), requestInfoBody, Map.class);
+		log.info("Response from MDMS : " + response);
+		MDMSResponse dr = mapper.convertValue(response, MDMSResponse.class);
 		if (null != dr && null != dr.getMdmsRes() && null != dr.getMdmsRes().getKpiCategoryList()
 				&& null != dr.getMdmsRes().getKpiCategoryList().getCategoryList()) {
 			for(KpiCategory category : dr.getMdmsRes().getKpiCategoryList().getCategoryList()) { 
@@ -148,7 +154,7 @@ public class RestCallService {
 		final HttpEntity<RequestInfoBody> request = new HttpEntity<>(requestInfoBody);
 		log.info("URL to invoke MDMS Service : " + url.toString());
 		log.info("Request Info to invoke the URL : " + request);
-		MDMSResponse dr = new RestTemplate().postForObject(url.toString(), request, MDMSResponse.class);
+		MDMSResponse dr = restTemplate.postForObject(url.toString(), request, MDMSResponse.class);
 		log.info("Response from MDMS : " + dr);
 		if (null != dr && null != dr.getMdmsRes() && null != dr.getMdmsRes().getTenantList()
 				&& null != dr.getMdmsRes().getTenantList().getTenantList()) {

@@ -14,6 +14,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.math.BigDecimal;
+
 
 @Getter
 @Setter
@@ -61,7 +63,7 @@ public class BillingSlab {
 	private Double toUom = null;
 
 	@JsonProperty("rate")
-	private Double rate = null;
+	private BigDecimal rate = null;
 	
 	private AuditDetails auditDetails;
 

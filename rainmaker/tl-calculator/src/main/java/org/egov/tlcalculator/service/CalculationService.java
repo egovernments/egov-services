@@ -71,12 +71,18 @@ public class CalculationService {
 
       estimates.add(getBaseTax(calulationCriteria));
 
+      if(calulationCriteria.getTradelicense().getTradeLicenseDetail().getAdhocPenalty()!=null)
+          estimates.add(getAdhocPenalty(calulationCriteria));
+
+      if(calulationCriteria.getTradelicense().getTradeLicenseDetail().getAdhocExemption()!=null)
+          estimates.add(getAdhocExemption(calulationCriteria));
+
       return estimates;
   }
 
 
 
-  public TaxHeadEstimate getBaseTax(CalulationCriteria calulationCriteria){
+  private TaxHeadEstimate getBaseTax(CalulationCriteria calulationCriteria){
       TradeLicense license = calulationCriteria.getTradelicense();
 
       BillingSlabSearchCriteria searchCriteria = new BillingSlabSearchCriteria();
@@ -84,19 +90,20 @@ public class CalculationService {
       searchCriteria.setStructureType(license.getTradeLicenseDetail().getStructureType());
       searchCriteria.setLicenseType(license.getLicenseType().toString());
 
-      BigDecimal tradeUnitFee = getTradeUnitFee(license,searchCriteria);
+      BigDecimal tradeUnitFee = getTradeUnitFee(license);
       BigDecimal accessoryFee = new BigDecimal(0);
 
       if(!CollectionUtils.isEmpty(license.getTradeLicenseDetail().getAccessories())){
-           accessoryFee = getAccessoryFee(license,searchCriteria);
+           accessoryFee = getAccessoryFee(license);
       }
 
       TaxHeadEstimate estimate = new TaxHeadEstimate();
       BigDecimal totalTax = tradeUnitFee.add(accessoryFee);
-      if(license.getTradeLicenseDetail().getAdhocExemption()!=null)
+
+      /*if(license.getTradeLicenseDetail().getAdhocExemption()!=null)
           totalTax = totalTax.subtract(license.getTradeLicenseDetail().getAdhocExemption());
       if(license.getTradeLicenseDetail().getAdhocPenalty()!=null)
-          totalTax = totalTax.add(license.getTradeLicenseDetail().getAdhocPenalty());
+          totalTax = totalTax.add(license.getTradeLicenseDetail().getAdhocPenalty());*/
 
       if(totalTax.compareTo(BigDecimal.ZERO)==-1)
           throw new CustomException("INVALID AMOUNT","Tax amount is negative");
@@ -108,9 +115,35 @@ public class CalculationService {
   }
 
 
+  private TaxHeadEstimate getAdhocPenalty(CalulationCriteria calulationCriteria){
+      TradeLicense license = calulationCriteria.getTradelicense();
+      TaxHeadEstimate estimate = new TaxHeadEstimate();
+      estimate.setEstimateAmount(license.getTradeLicenseDetail().getAdhocPenalty());
+      estimate.setTaxHeadCode(config.getAdhocPenaltyTaxHead());
+      estimate.setCategory(Category.PENALTY);
+      return estimate;
+  }
 
 
-  private BigDecimal getTradeUnitFee(TradeLicense license,BillingSlabSearchCriteria searchCriteria){
+    private TaxHeadEstimate getAdhocExemption(CalulationCriteria calulationCriteria){
+        TradeLicense license = calulationCriteria.getTradelicense();
+        TaxHeadEstimate estimate = new TaxHeadEstimate();
+        estimate.setEstimateAmount(license.getTradeLicenseDetail().getAdhocExemption());
+        estimate.setTaxHeadCode(config.getAdhocExemptionTaxHead());
+        estimate.setCategory(Category.EXEMPTION);
+        return estimate;
+    }
+
+
+
+
+  private BigDecimal getTradeUnitFee(TradeLicense license){
+
+      BillingSlabSearchCriteria searchCriteria = new BillingSlabSearchCriteria();
+      searchCriteria.setTenantId(license.getTenantId());
+      searchCriteria.setStructureType(license.getTradeLicenseDetail().getStructureType());
+      searchCriteria.setLicenseType(license.getLicenseType().toString());
+
       BigDecimal tradeUnitTotalFee = new BigDecimal(0);
       List<TradeUnit> tradeUnits = license.getTradeLicenseDetail().getTradeUnits();
 
@@ -131,18 +164,22 @@ public class CalculationService {
           List<BillingSlab> billingSlabs = repository.getDataFromDB(query, preparedStmtList);
 
           if(billingSlabs.size()>1)
-              throw new CustomException("BILLINGSLAB ERROR","Found multiple BillingSlabs for the given calculation critera");
+              throw new CustomException("BILLINGSLAB ERROR","Found multiple BillingSlabs for the given TradeType");
           if(CollectionUtils.isEmpty(billingSlabs))
-              throw new CustomException("BILLINGSLAB ERROR","No BillingSlab Found");
+              throw new CustomException("BILLINGSLAB ERROR","No BillingSlab Found for the given tradeType");
 
-           tradeUnitTotalFee = tradeUnitTotalFee.add(new BigDecimal(Double.toString(billingSlabs.get(0).getRate())));
+           tradeUnitTotalFee = tradeUnitTotalFee.add(billingSlabs.get(0).getRate());
       }
 
       return tradeUnitTotalFee;
   }
 
 
-  private BigDecimal getAccessoryFee(TradeLicense license,BillingSlabSearchCriteria searchCriteria){
+  private BigDecimal getAccessoryFee(TradeLicense license){
+      BillingSlabSearchCriteria searchCriteria = new BillingSlabSearchCriteria();
+      searchCriteria.setTenantId(license.getTenantId());
+      searchCriteria.setLicenseType(license.getLicenseType().toString());
+
       BigDecimal accessoryTotalFee = new BigDecimal(0);
       List<Accessory> accessories = license.getTradeLicenseDetail().getAccessories();
        for(Accessory accessory : accessories)
@@ -159,11 +196,11 @@ public class CalculationService {
           List<BillingSlab> billingSlabs = repository.getDataFromDB(query, preparedStmtList);
 
           if(billingSlabs.size()>1)
-              throw new CustomException("BILLINGSLAB ERROR","Found multiple BillingSlabs for the given calculation critera");
+              throw new CustomException("BILLINGSLAB ERROR","Found multiple BillingSlabs for the given accessories ");
           if(CollectionUtils.isEmpty(billingSlabs))
-              throw new CustomException("BILLINGSLAB ERROR","No BillingSlab Found");
+              throw new CustomException("BILLINGSLAB ERROR","No BillingSlab Found for the given accessory");
 
-           accessoryTotalFee = accessoryTotalFee.add(new BigDecimal(Double.toString(billingSlabs.get(0).getRate())));
+           accessoryTotalFee = accessoryTotalFee.add(billingSlabs.get(0).getRate());
       }
       return accessoryTotalFee;
   }

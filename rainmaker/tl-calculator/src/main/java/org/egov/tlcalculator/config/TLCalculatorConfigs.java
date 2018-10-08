@@ -65,5 +65,11 @@ public class TLCalculatorConfigs {
     @Value("${egov.taxhead.basetax}")
     private String baseTaxHead;
 
+    @Value("${egov.taxhead.adhoc.penalty}")
+    private String adhocPenaltyTaxHead;
+
+    @Value("${egov.taxhead.adhoc.exemption}")
+    private String adhocExemptionTaxHead;
+
 
 }

@@ -1,11 +1,9 @@
 package org.egov.tlcalculator.repository;
 
+import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import org.egov.tlcalculator.web.models.AuditDetails;
 import org.egov.tlcalculator.web.models.BillingSlab;
@@ -36,7 +34,7 @@ public class BillingSlabRowMapper implements ResultSetExtractor<List<BillingSlab
 						.accessoryCategory(rs.getString("accessorycategory"))
 						.fromUom(rs.getDouble("fromUom"))
 						.licenseType(LicenseTypeEnum.fromValue(rs.getString("licensetype")))
-						.rate(rs.getDouble("rate"))
+						.rate(getBigDecimalValue(rs.getBigDecimal("rate")))
 						.structureType(rs.getString("structuretype"))
 						.tenantId(rs.getString("tenantid"))
 						.uom(rs.getString("uom"))
@@ -52,6 +50,10 @@ public class BillingSlabRowMapper implements ResultSetExtractor<List<BillingSlab
 
 		return new ArrayList<>(billingSlabMap.values());
 
+	}
+
+	private BigDecimal getBigDecimalValue(BigDecimal amount){
+		return Objects.isNull(amount) ? BigDecimal.ZERO : amount;
 	}
 
 }

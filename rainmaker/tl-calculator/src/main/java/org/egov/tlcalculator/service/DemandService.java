@@ -167,6 +167,7 @@ public class DemandService {
                                     .taxAmount(taxHeadEstimate.getEstimateAmount())
                                     .taxHeadMasterCode(taxHeadEstimate.getTaxHeadCode())
                                     .tenantId(calculation.getTenantId())
+                                    .collectionAmount(BigDecimal.ZERO)
                                     .build());
             });
             demand.setDemandDetails(new LinkedList<>(taxHeadToDemandDetail.values()));

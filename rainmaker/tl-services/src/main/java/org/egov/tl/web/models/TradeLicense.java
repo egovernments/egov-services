@@ -147,6 +147,7 @@ public class  TradeLicense   {
     }
   }
 
+        @NotNull
         @JsonProperty("action")
         private ActionEnum action = null;
 

@@ -22,11 +22,14 @@ public class TLValidator {
 
     private TLConfiguration config;
 
+    private PropertyValidator propertyValidator;
+
 
     @Autowired
-    public TLValidator(TLRepository tlRepository, TLConfiguration config) {
+    public TLValidator(TLRepository tlRepository, TLConfiguration config, PropertyValidator propertyValidator) {
         this.tlRepository = tlRepository;
         this.config = config;
+        this.propertyValidator = propertyValidator;
     }
 
 
@@ -34,8 +37,7 @@ public class TLValidator {
 
     public void validateCreate(TradeLicenseRequest request){
         validateInstitution(request);
-
-
+        propertyValidator.validateProperty(request);
 
     }
 

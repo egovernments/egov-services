@@ -144,7 +144,7 @@ public class TLRowMapper  implements ResultSetExtractor<List<TradeLicense>> {
                 JsonNode additionalDetail = mapper.readTree(pgObj.getValue());
                 TradeLicenseDetail tradeLicenseDetail = TradeLicenseDetail.builder()
                         .surveyNo(rs.getString("surveyno"))
-                        .channel(TradeLicenseDetail.ChannelEnum.valueOf(rs.getString("channel")))
+                        .channel(TradeLicenseDetail.ChannelEnum.fromValue(rs.getString("channel")))
                         .subOwnerShipCategory(rs.getString("subownershipcategory"))
                         .id(tradeLicenseDetailId)
                         .additionalDetail(additionalDetail)
@@ -203,13 +203,13 @@ public class TLRowMapper  implements ResultSetExtractor<List<TradeLicense>> {
         Boolean isPrimaryOwner = (Boolean) rs.getObject("isprimaryowner");
         Double ownerShipPercentage = (Double) rs.getObject("ownershippercentage") ;
 
-        if(rs.getBoolean("useractive"))
+        if(rs.getBoolean("useractive") && rs.getString("tlowner_uuid")!=null)
         {   OwnerInfo owner = OwnerInfo.builder()
-                    .uuid(rs.getString("userid"))
+                    .uuid(rs.getString("tlowner_uuid"))
                     .isPrimaryOwner(isPrimaryOwner)
                     .ownerType(rs.getString("ownerType"))
                     .ownerShipPercentage(ownerShipPercentage)
-                    .active(rs.getBoolean("useractive"))
+                    .userActive(rs.getBoolean("useractive"))
                     .institutionId(rs.getString("institutionid"))
                     .build();
             tradeLicense.getTradeLicenseDetail().addOwnersItem(owner);

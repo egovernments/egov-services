@@ -181,9 +181,14 @@ public class UserService{
      * @return Response from user service as parsed as userDetailResponse
      */
     private UserDetailResponse userCall(Object userRequest, StringBuilder uri) {
+        String dobFormat = null;
+        if(uri.toString().contains(config.getUserSearchEndpoint()) || uri.toString().contains(config.getUserUpdateEndpoint()))
+            dobFormat="yyyy-MM-dd";
+        else if(uri.toString().contains(config.getUserCreateEndpoint()))
+            dobFormat = "dd/MM/yyyy";
         try{
             LinkedHashMap responseMap = (LinkedHashMap)serviceRequestRepository.fetchResult(uri, userRequest);
-            parseResponse(responseMap);
+            parseResponse(responseMap,dobFormat);
             UserDetailResponse userDetailResponse = mapper.convertValue(responseMap,UserDetailResponse.class);
             return userDetailResponse;
         }
@@ -199,18 +204,18 @@ public class UserService{
      * Parses date formats to long for all users in responseMap
      * @param responeMap LinkedHashMap got from user api response
      */
-    private void parseResponse(LinkedHashMap responeMap){
+    private void parseResponse(LinkedHashMap responeMap,String dobFormat){
         List<LinkedHashMap> users = (List<LinkedHashMap>)responeMap.get("user");
-        String format = "dd-MM-yyyy HH:mm:ss";
+        String format1 = "dd-MM-yyyy HH:mm:ss";
         if(users!=null){
             users.forEach( map -> {
-                        map.put("createdDate",dateTolong((String)map.get("createdDate"),format));
+                        map.put("createdDate",dateTolong((String)map.get("createdDate"),format1));
                         if((String)map.get("lastModifiedDate")!=null)
-                            map.put("lastModifiedDate",dateTolong((String)map.get("lastModifiedDate"),format));
+                            map.put("lastModifiedDate",dateTolong((String)map.get("lastModifiedDate"),format1));
                         if((String)map.get("dob")!=null)
-                            map.put("dob",dateTolong((String)map.get("dob"),format));
+                            map.put("dob",dateTolong((String)map.get("dob"),dobFormat));
                         if((String)map.get("pwdExpiryDate")!=null)
-                            map.put("pwdExpiryDate",dateTolong((String)map.get("pwdExpiryDate"),format));
+                            map.put("pwdExpiryDate",dateTolong((String)map.get("pwdExpiryDate"),format1));
                     }
             );
         }

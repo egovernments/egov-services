@@ -67,7 +67,7 @@ public class EnrichmentService {
             }
 
             tradeLicense.getTradeLicenseDetail().getOwners().forEach(owner -> {
-                owner.setActive(true);
+                owner.setUserActive(true);
                 if(!CollectionUtils.isEmpty(owner.getDocuments()))
                     owner.getDocuments().forEach(document -> {
                         document.setId(UUID.randomUUID().toString());
@@ -236,6 +236,8 @@ public class EnrichmentService {
                 }
 
                 tradeLicense.getTradeLicenseDetail().getOwners().forEach(owner -> {
+                    if(owner.getUuid()==null)
+                        owner.setUserActive(true);
                     if (!CollectionUtils.isEmpty(owner.getDocuments()))
                         owner.getDocuments().forEach(document -> {
                             if (document.getId() == null) {

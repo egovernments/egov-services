@@ -33,6 +33,19 @@ public class TradeUtil {
         return uri;
     }
 
+    public String getPropertySearchURL(){
+        StringBuilder url = new StringBuilder(config.getPropertyHost());
+        url.append(config.getPropertyContextPath());
+        url.append(config.getPropertySearchEndpoint());
+        url.append("?");
+        url.append("tenantId=");
+        url.append("{1}");
+        url.append("&");
+        url.append("ids=");
+        url.append("{2}");
+        return url.toString();
+    }
+
 
 
 }

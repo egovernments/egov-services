@@ -139,17 +139,16 @@ public class CalculationService {
 
   private BigDecimal getTradeUnitFee(TradeLicense license){
 
-      BillingSlabSearchCriteria searchCriteria = new BillingSlabSearchCriteria();
-      searchCriteria.setTenantId(license.getTenantId());
-      searchCriteria.setStructureType(license.getTradeLicenseDetail().getStructureType());
-      searchCriteria.setLicenseType(license.getLicenseType().toString());
-
       BigDecimal tradeUnitTotalFee = new BigDecimal(0);
       List<TradeUnit> tradeUnits = license.getTradeLicenseDetail().getTradeUnits();
 
        for(TradeUnit tradeUnit : tradeUnits)
        {
           List<Object> preparedStmtList = new ArrayList<>();
+          BillingSlabSearchCriteria searchCriteria = new BillingSlabSearchCriteria();
+          searchCriteria.setTenantId(license.getTenantId());
+          searchCriteria.setStructureType(license.getTradeLicenseDetail().getStructureType());
+          searchCriteria.setLicenseType(license.getLicenseType().toString());
           searchCriteria.setTradeType(tradeUnit.getTradeType());
           searchCriteria.setType(config.getBillingSlabRateType());
           if(tradeUnit.getUomValue()!=null)
@@ -176,16 +175,15 @@ public class CalculationService {
 
 
   private BigDecimal getAccessoryFee(TradeLicense license){
-      BillingSlabSearchCriteria searchCriteria = new BillingSlabSearchCriteria();
-      searchCriteria.setTenantId(license.getTenantId());
-      searchCriteria.setLicenseType(license.getLicenseType().toString());
 
       BigDecimal accessoryTotalFee = new BigDecimal(0);
       List<Accessory> accessories = license.getTradeLicenseDetail().getAccessories();
        for(Accessory accessory : accessories)
        {
-          List<Object> preparedStmtList = new ArrayList<>();
-          searchCriteria.setAccessoryCategory(accessory.getAccessoryCategory());
+           List<Object> preparedStmtList = new ArrayList<>();
+           BillingSlabSearchCriteria searchCriteria = new BillingSlabSearchCriteria();
+           searchCriteria.setTenantId(license.getTenantId());
+           searchCriteria.setAccessoryCategory(accessory.getAccessoryCategory());
           if(accessory.getUomValue()!=null)
           {
               searchCriteria.setUomValue(Double.parseDouble(accessory.getUomValue()));
@@ -193,6 +191,8 @@ public class CalculationService {
           }
           // Call the Search
           String query = queryBuilder.getSearchQuery(searchCriteria, preparedStmtList);
+           log.info("query "+query);
+           log.info("preparedStmtList "+preparedStmtList.toString());
           List<BillingSlab> billingSlabs = repository.getDataFromDB(query, preparedStmtList);
 
           if(billingSlabs.size()>1)

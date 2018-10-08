@@ -9,6 +9,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class KpiCategory {
 	
+	@JsonProperty("id")
+	private Integer id;
+	
 	@JsonProperty("name")
 	private String name;
 	
@@ -41,6 +44,16 @@ public class KpiCategory {
 	public void setTenantId(String tenantId) {
 		this.tenantId = tenantId;
 	}
+
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+	
+	
 	
 	
 

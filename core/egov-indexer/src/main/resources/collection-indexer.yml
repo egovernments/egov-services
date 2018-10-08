@@ -1,0 +1,11 @@
+ServiceMaps:
+ serviceName: Collection Services
+ version: 1.0.0
+ mappings:
+  - topic: egov.collection.receipt-create
+    indexes:
+    - name: egovcollections
+      type: receipts
+      id: $.Bill[0].billDetails[0].receiptNumber
+      isBulk: true
+      jsonPath: $.Receipt

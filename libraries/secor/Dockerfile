@@ -1,5 +1,4 @@
-#FROM egovio/apline-jre:8u121
-FROM egovio/ci:0.0.4
+FROM openjdk:8
 
 MAINTAINER Sivaprakash Ramasamy<sivaprakash.ramasamy@tarento.com>
 

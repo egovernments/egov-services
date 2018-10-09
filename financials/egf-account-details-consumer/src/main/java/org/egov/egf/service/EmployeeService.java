@@ -42,23 +42,28 @@ package org.egov.egf.service;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
+import java.util.HashMap;
 
 import org.egov.egf.config.PropertiesManager;
 import org.egov.egf.domain.model.contract.AccountDetailKeyContract;
 import org.egov.egf.domain.model.contract.AccountDetailKeyContractRequest;
 import org.egov.egf.domain.model.contract.AccountDetailKeyContractResponse;
-import org.egov.egf.domain.model.contract.AccountDetailTypeContract;
-import org.egov.egf.domain.model.contract.AccountDetailTypeContractResponse;
 import org.egov.egf.domain.model.contract.RequestInfo;
+import org.egov.egf.domain.model.contract.RestErrorHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.RestClientException;
+import org.springframework.beans.factory.annotation.Value;
 
 @Service
 public class EmployeeService {
@@ -66,77 +71,61 @@ public class EmployeeService {
 	@Autowired
 	private PropertiesManager propertiesManager;
 
+	@Value("${si.microservice.user}")
+	private String siUser;
+
+	@Value("${si.microservice.password}")
+	private String siPassword;
+
+	@Value("${si.microservice.usertype}")
+	private String siUserType;
+
+	@Value("${si.microservice.scope}")
+	private String siScope;
+
+	@Value("${si.microservice.granttype}")
+	private String siGrantType;
+
+	@Value("${egov.services.user.token.url}")
+	private String tokenGenUrl;
+
 	public static final Logger LOGGER = LoggerFactory.getLogger(EmployeeService.class);
 
 	public void processRequest(int employeeId, String tenantId, RequestInfo requestInfo) {
 		try {
-			AccountDetailTypeContract accDetailType = getAccountDetailType(tenantId, requestInfo);
-			AccountDetailKeyContractResponse accDetailKeyResponse = createAccountDetailKey(employeeId, accDetailType,
-					requestInfo, tenantId);
+			// AccountDetailTypeContract accDetailType =
+			// getAccountDetailType(tenantId, requestInfo);
+			AccountDetailKeyContractResponse accDetailKeyResponse = createAccountDetailKey(employeeId, requestInfo);
 			LOGGER.debug("Created AccountDetailKeyContractResponse : " + accDetailKeyResponse);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
-	private AccountDetailTypeContract getAccountDetailType(String tenantId, RequestInfo requestInfo) throws URISyntaxException {
-		URI url = null;
-		String urlStr = null;
-		try {
-			urlStr = propertiesManager.getEgfMastersServiceHostname()
-					+ propertiesManager.getEgfMastersServiceBasepath()
-					+ propertiesManager.getEgfMastersServiceAccountdetailtypesBasepath()
-					+ propertiesManager.getEgfMastersServiceAccountdetailtypesSearchpath()
-					+ "?name=Employee&tenantId=" + tenantId;
-			url = new URI(urlStr);
-
-			LOGGER.debug(url.toString());
-		} catch (URISyntaxException e) {
-			LOGGER.error("Exception Occurred While Creating URI: " + urlStr);
-			throw e;
-		}
-
-		AccountDetailTypeContractResponse accountDetailTypeResponse = null;
-		try {
-			accountDetailTypeResponse = new RestTemplate().postForObject(url, requestInfo,
-					AccountDetailTypeContractResponse.class);
-		} catch (Exception e) {
-			LOGGER.error("Exception Occurred While Accessing Searching AccountDetailType At URI: " + url
-					+ " With Payload: " + requestInfo);
-			throw e;
-		}
-		LOGGER.debug("AccountDetailTypeResponse returned from egf-masters : " + accountDetailTypeResponse);
-		return accountDetailTypeResponse.getAccountDetailTypes().get(0);
-	}
-
-	private AccountDetailKeyContractResponse createAccountDetailKey(int employeeId,
-			AccountDetailTypeContract accDetailType, RequestInfo requestInfo, String tenantId) throws URISyntaxException {
+	private AccountDetailKeyContractResponse createAccountDetailKey(int employeeId, RequestInfo requestInfo)
+			throws URISyntaxException {
 
 		AccountDetailKeyContract accDetailKey = new AccountDetailKeyContract();
-			accDetailKey.setKey(employeeId);
-			accDetailKey.setAccountDetailType(accDetailType);
-			accDetailKey.setCreatedBy(Long.parseLong(requestInfo.getRequesterId()));
-			accDetailKey.setCreatedDate(new Date());
-			accDetailKey.setLastModifiedBy(Long.parseLong(requestInfo.getRequesterId()));
-			accDetailKey.setLastModifiedDate(new Date());
-			accDetailKey.setTenantId(tenantId);
+		accDetailKey.setKey(employeeId);
+		// accDetailKey.setAccountDetailType(accDetailType);
+		// accDetailKey.setCreatedBy(Long.parseLong(requestInfo.getRequesterId()));
+		accDetailKey.setCreatedDate(new Date());
+		// accDetailKey.setLastModifiedBy(Long.parseLong(requestInfo.getRequesterId()));
+		accDetailKey.setLastModifiedDate(new Date());
+		// accDetailKey.setTenantId(tenantId);
 
-		List<AccountDetailKeyContract> accDetailKeyContracts = new ArrayList<>();
-		accDetailKeyContracts.add(accDetailKey);
-
+		requestInfo.setAuthToken(generateAdminToken());
 		AccountDetailKeyContractRequest accDetailKeyRequest = AccountDetailKeyContractRequest.builder()
-				.requestInfo(requestInfo).accountDetailKeys(accDetailKeyContracts).build();
+				.RequestInfo(requestInfo).accountDetailKey(accDetailKey).build();
 
 		LOGGER.debug("AccountDetailKeyContractRequest : " + accDetailKeyRequest);
 
 		URI url = null;
 		String urlStr = null;
 		try {
-			urlStr = propertiesManager.getEgfMastersServiceHostname()
-					+ propertiesManager.getEgfMastersServiceBasepath()
+			urlStr = propertiesManager.getEgfMastersServiceHostname() + propertiesManager.getEgfMastersServiceBasepath()
 					+ propertiesManager.getEgfMastersServiceAccountdetailkeysBasepath()
-					+ propertiesManager.getEgfMastersServiceAccountdetailkeysCreatepath()
-					+ "?tenantId=" + tenantId;
+					+ propertiesManager.getEgfMastersServiceAccountdetailkeysCreatepath();
 			url = new URI(urlStr);
 
 			LOGGER.debug(url.toString());
@@ -160,6 +149,43 @@ public class EmployeeService {
 		}
 		LOGGER.debug("AccountDetailKeyResponse returned from egf-masters : " + accountDetailKeyResponse);
 		return accountDetailKeyResponse;
+	}
+
+	public RestTemplate createRestTemplate() {
+		RestTemplate restTemplate = new RestTemplate();
+		restTemplate.setErrorHandler(new RestErrorHandler());
+
+		return restTemplate;
+	}
+
+	public String generateAdminToken() {
+		final RestTemplate restTemplate = createRestTemplate();
+
+		HttpHeaders header = new HttpHeaders();
+		header.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+		header.add("Authorization", "Basic ZWdvdi11c2VyLWNsaWVudDplZ292LXVzZXItc2VjcmV0");
+
+		MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
+		map.add("username", this.siUser);
+		map.add("scope", this.siScope);
+		map.add("password", this.siPassword);
+		map.add("grant_type", this.siGrantType);
+		// TOD-DO - Mani : why this hard coding ?
+		map.add("tenantId", "pb.jalandhar");
+		map.add("userType", this.siUserType);
+
+		HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(map, header);
+
+		try {
+			LOGGER.info("call:" + tokenGenUrl);
+			Object response = restTemplate.postForObject(tokenGenUrl, request, Object.class);
+			if (response != null)
+				return String.valueOf(((HashMap) response).get("access_token"));
+		} catch (RestClientException e) {
+			LOGGER.info("Eror while getting admin authtoken", e);
+			return null;
+		}
+		return null;
 	}
 
 }

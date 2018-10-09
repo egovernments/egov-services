@@ -75,7 +75,7 @@ public class RequestInfoFactory {
 				.did(requestInfoJSONObject.isNull("did") ? null : requestInfoJSONObject.getString("did"))
 				.key(requestInfoJSONObject.isNull("key") ? null : requestInfoJSONObject.getString("key"))
 				.msgId(requestInfoJSONObject.isNull("msgId") ? null : requestInfoJSONObject.getString("msgId"))
-				.requesterId(requestInfoJSONObject.isNull("requesterId") ? null : requestInfoJSONObject.getString("requesterId"))
+				//.requesterId(requestInfoJSONObject.isNull("requesterId") ? null : requestInfoJSONObject.getString("requesterId"))
 				.authToken(requestInfoJSONObject.isNull("authToken") ? null : requestInfoJSONObject.getString("authToken"))
 				.tenantId(tenantId)
 				.build();

@@ -56,7 +56,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @Setter
 @ToString
-@JsonPropertyOrder({ "id", "groupId", "name", "key", "accountDetailType" })
+@JsonPropertyOrder({ "id", "groupId", "name", "key" })
 public class AccountDetailKeyContract extends AuditableContract {
 
     private Long id;
@@ -65,6 +65,6 @@ public class AccountDetailKeyContract extends AuditableContract {
 
     private Integer key;
    
-    private AccountDetailTypeContract accountDetailType = new AccountDetailTypeContract();
+  //  private AccountDetailTypeContract accountDetailType = new AccountDetailTypeContract();
 
 }

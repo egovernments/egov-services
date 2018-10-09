@@ -40,9 +40,6 @@
 
 package org.egov.egf.domain.model.contract;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 import lombok.AllArgsConstructor;
@@ -61,12 +58,12 @@ import lombok.ToString;
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 public class AccountDetailKeyContractRequest {
 
-	private RequestInfo requestInfo = new RequestInfo();
+	private RequestInfo RequestInfo = new RequestInfo();
 
-	private List<AccountDetailKeyContract> accountDetailKeys = new ArrayList<AccountDetailKeyContract>();
+//	private List<AccountDetailKeyContract> accountDetailKeys = new ArrayList<AccountDetailKeyContract>();
 
 	private AccountDetailKeyContract accountDetailKey = new AccountDetailKeyContract();
 
-	private Pagination page = new Pagination();
+//	private Pagination page = new Pagination();
 
 }

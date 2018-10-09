@@ -462,7 +462,7 @@ public class InstrumentServiceTest {
     public final void test_update_() {
 
         List<Instrument> expextedResult = getInstrumentss();
-
+        expextedResult.get(0).setId("1");
         when(instrumentRepository.uniqueCheck(any(String.class), any(Instrument.class))).thenReturn(true);
         when(instrumentRepository.update(any(List.class), any(RequestInfo.class))).thenReturn(expextedResult);
 

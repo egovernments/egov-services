@@ -40,7 +40,9 @@
 package org.egov.egf.instrument.domain.model;
 
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
@@ -163,6 +165,15 @@ public class Instrument extends Auditable {
 	@Size(max = 50, min = 2)
 	private String serialNo;
 
+	@Size(max = 256)
+        private String payinSlipId;
+	
+	@Min(value = 1)
+        @Max(value = 999999999)
+        private BigDecimal reconciledAmount;
+	
+	private Date reconciledOn;
+	
 	/*
 	 * instrumentVouchers is the reference to the payment vouchers for which the
 	 * instrument is attached.

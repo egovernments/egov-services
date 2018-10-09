@@ -55,6 +55,9 @@ public class InstrumentMapper {
         instrument.setTransactionNumber(contract.getTransactionNumber());
         instrument.setTransactionType(contract.getTransactionType() != null
                 ? TransactionType.valueOf(contract.getTransactionType().name()) : null);
+        instrument.setPayinSlipId(contract.getPayinSlipId());
+        instrument.setReconciledAmount(contract.getReconciledAmount());
+        instrument.setReconciledOn(contract.getReconciledOn());
         instrument.setCreatedBy(contract.getCreatedBy());
         instrument.setCreatedDate(contract.getCreatedDate());
         instrument.setLastModifiedBy(contract.getLastModifiedBy());
@@ -94,7 +97,8 @@ public class InstrumentMapper {
             if (instrument.getInstrumentVouchers() != null)
                 for (InstrumentVoucher iv : instrument.getInstrumentVouchers()) {
                     instrumentVouchers
-                            .add(InstrumentVoucherContract.builder().instrument(contract.getId()).voucherHeaderId(iv.getVoucherHeaderId()).build());
+                            .add(InstrumentVoucherContract.builder().instrument(contract.getId())
+                                    .voucherHeaderId(iv.getVoucherHeaderId()).build());
                 }
 
             contract.setInstrumentVouchers(instrumentVouchers);
@@ -107,6 +111,9 @@ public class InstrumentMapper {
         contract.setTransactionNumber(instrument.getTransactionNumber());
         contract.setTransactionType(instrument.getTransactionType() != null
                 ? TransactionTypeContract.valueOf(instrument.getTransactionType().name()) : null);
+        contract.setPayinSlipId(instrument.getPayinSlipId());
+        contract.setReconciledAmount(instrument.getReconciledAmount());
+        contract.setReconciledOn(instrument.getReconciledOn());
         contract.setCreatedBy(instrument.getCreatedBy());
         contract.setCreatedDate(instrument.getCreatedDate());
         contract.setLastModifiedBy(instrument.getLastModifiedBy());
@@ -152,6 +159,9 @@ public class InstrumentMapper {
         instrumentSearch.setTransactionNumber(contract.getTransactionNumber());
         instrumentSearch.setTransactionType(contract.getTransactionType() != null
                 ? TransactionType.valueOf(contract.getTransactionType().name()) : null);
+        instrumentSearch.setPayinSlipId(contract.getPayinSlipId());
+        instrumentSearch.setReconciledAmount(contract.getReconciledAmount());
+        instrumentSearch.setReconciledOn(contract.getReconciledOn());
         instrumentSearch.setCreatedBy(contract.getCreatedBy());
         instrumentSearch.setCreatedDate(contract.getCreatedDate());
         instrumentSearch.setLastModifiedBy(contract.getLastModifiedBy());
@@ -196,7 +206,8 @@ public class InstrumentMapper {
             if (instrumentSearch.getInstrumentVouchers() != null)
                 for (InstrumentVoucher iv : instrumentSearch.getInstrumentVouchers()) {
                     instrumentVouchers
-                            .add(InstrumentVoucherContract.builder().instrument(contract.getId()).voucherHeaderId(iv.getVoucherHeaderId()).build());
+                            .add(InstrumentVoucherContract.builder().instrument(contract.getId())
+                                    .voucherHeaderId(iv.getVoucherHeaderId()).build());
                 }
 
             contract.setInstrumentVouchers(instrumentVouchers);
@@ -209,6 +220,9 @@ public class InstrumentMapper {
         contract.setTransactionNumber(instrumentSearch.getTransactionNumber());
         contract.setTransactionType(instrumentSearch.getTransactionType() != null
                 ? TransactionTypeContract.valueOf(instrumentSearch.getTransactionType().name()) : null);
+        contract.setPayinSlipId(instrumentSearch.getPayinSlipId());
+        contract.setReconciledAmount(instrumentSearch.getReconciledAmount());
+        contract.setReconciledOn(instrumentSearch.getReconciledOn());
         contract.setCreatedBy(instrumentSearch.getCreatedBy());
         contract.setCreatedDate(instrumentSearch.getCreatedDate());
         contract.setLastModifiedBy(instrumentSearch.getLastModifiedBy());

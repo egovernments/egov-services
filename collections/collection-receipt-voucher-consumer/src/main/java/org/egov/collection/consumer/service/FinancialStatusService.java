@@ -41,8 +41,8 @@
 package org.egov.collection.consumer.service;
 
 import org.egov.collection.consumer.config.PropertiesManager;
-import org.egov.collection.consumer.model.BusinessDetails;
-import org.egov.collection.consumer.model.BusinessDetailsResponse;
+import org.egov.collection.consumer.model.FinancialStatus;
+import org.egov.collection.consumer.model.FinancialStatusResponse;
 import org.egov.collection.consumer.model.RequestInfoWrapper;
 import org.egov.common.contract.request.RequestInfo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,7 +50,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 @Service
-public class BusinessDetailsService {
+public class FinancialStatusService {
 
     @Autowired
     private RestTemplate restTemplate;
@@ -61,9 +61,9 @@ public class BusinessDetailsService {
     @Autowired
     private TokenService tokenService;
 
-    public BusinessDetails getBusinessDetailsByCode(String code, String tenantId) {
+    public FinancialStatus getByCode(String code, String tenantId) {
 
-        final String bd_url = propertiesManager.getHostUrl() + propertiesManager.getBusinessDetailsServiceUrl() + "?tenantId="
+        final String bd_url = propertiesManager.getHostUrl() + propertiesManager.getFinancialStatusesSearch() + "?tenantId="
                 + tenantId + "&code=" + code;
 
         RequestInfo requestInfo = new RequestInfo();
@@ -72,9 +72,9 @@ public class BusinessDetailsService {
         requestInfo.setAuthToken(tokenService.generateAdminToken(tenantId));
         reqWrapper.setRequestInfo(requestInfo);
 
-        BusinessDetailsResponse bcResponse = restTemplate.postForObject(bd_url, reqWrapper, BusinessDetailsResponse.class);
-        if (bcResponse.getBusinessDetails() != null && !bcResponse.getBusinessDetails().isEmpty())
-            return bcResponse.getBusinessDetails().get(0);
+        FinancialStatusResponse response = restTemplate.postForObject(bd_url, reqWrapper, FinancialStatusResponse.class);
+        if (response.getFinancialStatuses() != null && !response.getFinancialStatuses().isEmpty())
+            return response.getFinancialStatuses().get(0);
         else
             return null;
     }

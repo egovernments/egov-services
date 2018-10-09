@@ -5,7 +5,7 @@
  *  Copyright (C) 2016  eGovernments Foundation
  *
  *  The updated version of eGov suite of products as by eGovernments Foundation
- *  is available at http://www.empernments.org
+ *  is available at http://www.egovernments.org
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -35,59 +35,36 @@
  *         with regards to rights under trademark law for use of the trade names
  *         or trademarks of eGovernments Foundation.
  *
- *  In case of any queries, you can reach eGovernments Foundation at contact@empernments.org.
+ *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.collection.consumer.config;
+package org.egov.collection.consumer.model;
 
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
 
-@Component
+@Builder
 @Getter
 @Setter
-@NoArgsConstructor
 @AllArgsConstructor
-@ToString
-public class PropertiesManager {
+@NoArgsConstructor
 
-    @Value("${egov.services.host}")
-    private String hostUrl;
+@JsonPropertyOrder({ "id", "moduleType", "code", "description" })
+public class FinancialStatus {
 
-    @Value("${egov.services.common.masters.businessdetails.url}")
-    private String businessDetailsServiceUrl;
+    private String id;
 
-    @Value("${egov.services.egf_voucher_service.basepath}")
-    private String voucherCreateUrl;
+    private String moduleType;
 
-    @Value("${si.microservice.user}")
-    private String siUser;
+    private String code;
 
-    @Value("${si.microservice.password}")
-    private String siPassword;
+    private String name;
 
-    @Value("${si.microservice.usertype}")
-    private String siUserType;
-
-    @Value("${si.microservice.scope}")
-    private String siScope;
-
-    @Value("${si.microservice.granttype}")
-    private String siGrantType;
-
-    @Value("${egov.services.user.token.url}")
-    private String tokenGenUrl;
-
-    @Value("${egov.services.egf.master.financialstatuses.search}")
-    private String financialStatusesSearch;
-
-    @Value("${egov.services.egf.instrument.instruments.create}")
-    private String instrumentCreate;
+    private String description;
 
 }

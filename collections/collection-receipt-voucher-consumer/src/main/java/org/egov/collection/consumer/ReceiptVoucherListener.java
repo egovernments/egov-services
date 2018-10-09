@@ -8,6 +8,7 @@ import org.egov.collection.consumer.model.BusinessDetails;
 import org.egov.collection.consumer.model.ReceiptRequest;
 import org.egov.collection.consumer.model.VoucherResponse;
 import org.egov.collection.consumer.service.BusinessDetailsService;
+import org.egov.collection.consumer.service.InstrumentService;
 import org.egov.collection.consumer.service.VoucherService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,6 +32,9 @@ public class ReceiptVoucherListener {
     @Autowired
     private VoucherService voucherService;
 
+    @Autowired
+    private InstrumentService instrumentService;
+
     @KafkaListener(id = "${egov.collection.receipt.voucher.save.id}", topics = "${egov.collection.receipt.voucher.save.topic}", group = "${egov.collection.receipt.voucher.save.group}")
     public void process(ConsumerRecord<String, String> record) {
         ReceiptRequest request = null;
@@ -45,7 +49,7 @@ public class ReceiptVoucherListener {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
+        instrumentService.createInstruemtn(request, response);
         System.out.println(response);
     }
 

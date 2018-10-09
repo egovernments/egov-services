@@ -31,52 +31,39 @@
  *            is required that all modified versions of this material be marked in
  *            reasonable ways as different from the original version.
  *
- *         3) This license does not grant any rights to any Long of the program
+ *         3) This license does not grant any rights to any user of the program
  *            with regards to rights under trademark law for use of the trade names
  *            or trademarks of eGovernments Foundation.
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
+package org.egov.collection.consumer.model;
 
-package org.egov.collection.consumer.service;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
-import org.egov.collection.consumer.config.PropertiesManager;
-import org.egov.collection.consumer.model.BusinessDetails;
-import org.egov.collection.consumer.model.BusinessDetailsResponse;
-import org.egov.collection.consumer.model.RequestInfoWrapper;
-import org.egov.common.contract.request.RequestInfo;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-@Service
-public class BusinessDetailsService {
+@Builder
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 
-    @Autowired
-    private RestTemplate restTemplate;
+@JsonPropertyOrder({ "instrument", "voucherHeaderId" })
+public class InstrumentVoucherContract {
 
-    @Autowired
-    private PropertiesManager propertiesManager;
+    /*
+     * instrumentHeaderId is the reference of the instrument attached to a voucher
+     */
+    private String instrument;
 
-    @Autowired
-    private TokenService tokenService;
-
-    public BusinessDetails getBusinessDetailsByCode(String code, String tenantId) {
-
-        final String bd_url = propertiesManager.getHostUrl() + propertiesManager.getBusinessDetailsServiceUrl() + "?tenantId="
-                + tenantId + "&code=" + code;
-
-        RequestInfo requestInfo = new RequestInfo();
-        RequestInfoWrapper reqWrapper = new RequestInfoWrapper();
-
-        requestInfo.setAuthToken(tokenService.generateAdminToken(tenantId));
-        reqWrapper.setRequestInfo(requestInfo);
-
-        BusinessDetailsResponse bcResponse = restTemplate.postForObject(bd_url, reqWrapper, BusinessDetailsResponse.class);
-        if (bcResponse.getBusinessDetails() != null && !bcResponse.getBusinessDetails().isEmpty())
-            return bcResponse.getBusinessDetails().get(0);
-        else
-            return null;
-    }
+    /*
+     * voucherHeaderId is the reference of the voucher attached to a instrument.
+     */
+    private String voucherHeaderId;
 
 }

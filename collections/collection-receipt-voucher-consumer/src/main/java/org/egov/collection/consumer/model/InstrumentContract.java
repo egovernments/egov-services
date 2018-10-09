@@ -42,64 +42,67 @@ package org.egov.collection.consumer.model;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
+import org.hibernate.validator.constraints.NotBlank;
+
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
 
-@NoArgsConstructor
-@AllArgsConstructor
+@Builder
 @Getter
 @Setter
-@Builder
-@ToString
-public class Instrument {
+@AllArgsConstructor
+@NoArgsConstructor
+
+@JsonPropertyOrder({ "id", "transactionNumber", "transactionDate", "amount", "instrumentType", "bank", "branchName",
+        "bankAccount", "financialStatus", "remittanceVoucherId", "transactionType", "payee", "drawer", "surrendarReason",
+        "serialNo",
+        "instrumentVouchers" })
+public class InstrumentContract {
 
     /*
-     * id is the unique reference to Instrument Header entered in the system.
+     * id is the unique reference to InstrumentContract Header entered in the system.
      */
     private String id;
+
+    private String tenantId;
 
     /*
      * transactionNumber unique number of the instrument. For cheque type this is cheque date. For DD type it is DD number
      */
+    @NotBlank
+    @Size(max = 50, min = 6)
     private String transactionNumber;
 
     /*
      * transactionDate is the date of instrument . For cheque type it is cheque date. for DD it is DD date
      */
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
+    @NotNull
     private Date transactionDate;
-
-    /**
-     * Transaction date as long comes from UI in case of cheque and DD
-     */
-    private Long transactionDateInput;
 
     /*
      * amount is the instrument amount. For cheque type it is cheque amount.
      */
+    @NotNull
+    @Min(value = 1)
+    @Max(value = 999999999)
     private BigDecimal amount;
 
     /*
      * instrumentType specifies the type of the instrument - The folowing are the different types Cash,Cheque,DD,POC
      */
     private InstrumentType instrumentType;
-
-    private Long instrumentDate;
-
-    private String instrumentNumber;
 
     /*
      * bank references to the bank from which the payment/Receipt is made.
@@ -118,10 +121,12 @@ public class Instrument {
      */
     private BankAccount bankAccount;
 
-    /**
-     * IFSC Code of the bank branch
+    /*
+     * instrumentStatus gives the current status of the instrument.
      */
-    private String ifscCode;
+    private FinancialStatus financialStatus;
+
+    private String remittanceVoucherId;
 
     /*
      * transactionType are of two kinds -Debit and Credit. When its a receipt instrument it is Debit and in case of payment
@@ -130,19 +135,16 @@ public class Instrument {
     @NotNull
     private TransactionType transactionType;
 
-    /**
-     * Status of the instrument, newly added
-     */
-    private InstrumentStatus instrumentStatus;
-
     /*
      * payee is the entity who is making the payment via instrument
      */
+    @Size(max = 50)
     private String payee;
 
     /*
      * drawer is the entity to which the payment is made.
      */
+    @Size(max = 100)
     private String drawer;
 
     /*
@@ -155,49 +157,21 @@ public class Instrument {
      * serialNo is the series of the cheque numbers from which the instrument is assigned from. The cheque numbers in an account
      * is defined based on Year, Bank account and tagged to a department.
      */
-    // @NotBlank
+    @NotBlank
+    @Size(max = 50, min = 2)
     private String serialNo;
+
+    private String payinSlipId;
+
+    @Min(value = 1)
+    @Max(value = 999999999)
+    private BigDecimal reconciledAmount;
+
+    private Date reconciledOn;
 
     /*
      * instrumentVouchers is the reference to the payment vouchers for which the instrument is attached.
      */
-    // @DrillDownTable
-    private Set<InstrumentVoucher> instrumentVouchers = new HashSet<InstrumentVoucher>(0);
-
-    private String tenantId;
-
-    public InstrumentContract toContract() {
-
-        InstrumentContract contract = new InstrumentContract();
-
-        contract.setId(this.getId());
-        contract.setAmount(this.getAmount());
-        contract.setBank(this.getBank());
-        contract.setBankAccount(this.getBankAccount());
-        contract.setBranchName(this.getBranchName());
-        contract.setDrawer(this.getDrawer());
-        contract.setInstrumentType(this.getInstrumentType());
-        contract.setSurrenderReason(this.getSurrenderReason());
-        if (this.getInstrumentVouchers() != null) {
-
-            List<InstrumentVoucherContract> instrumentVouchers = new ArrayList<>();
-
-            if (this.getInstrumentVouchers() != null)
-                for (InstrumentVoucher iv : this.getInstrumentVouchers())
-                    instrumentVouchers
-                            .add(InstrumentVoucherContract.builder().instrument(contract.getId())
-                                    .voucherHeaderId(iv.getVoucherHeaderId()).build());
-
-            contract.setInstrumentVouchers(instrumentVouchers);
-
-        }
-        contract.setPayee(this.getPayee());
-        contract.setSerialNo(this.getSerialNo());
-        contract.setTransactionDate(this.getTransactionDate());
-        contract.setTransactionNumber(this.getTransactionNumber());
-        contract.setTransactionType(this.getTransactionType());
-        contract.setTenantId(this.getTenantId());
-        return contract;
-    }
+    private List<InstrumentVoucherContract> instrumentVouchers = new ArrayList<>();
 
 }

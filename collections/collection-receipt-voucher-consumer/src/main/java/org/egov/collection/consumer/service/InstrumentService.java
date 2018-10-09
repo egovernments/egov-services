@@ -40,43 +40,65 @@
 
 package org.egov.collection.consumer.service;
 
+import java.util.Collections;
+
 import org.egov.collection.consumer.config.PropertiesManager;
-import org.egov.collection.consumer.model.BusinessDetails;
-import org.egov.collection.consumer.model.BusinessDetailsResponse;
-import org.egov.collection.consumer.model.RequestInfoWrapper;
+import org.egov.collection.consumer.model.FinancialStatus;
+import org.egov.collection.consumer.model.Instrument;
+import org.egov.collection.consumer.model.InstrumentContract;
+import org.egov.collection.consumer.model.InstrumentRequest;
+import org.egov.collection.consumer.model.InstrumentResponse;
+import org.egov.collection.consumer.model.InstrumentVoucherContract;
+import org.egov.collection.consumer.model.Receipt;
+import org.egov.collection.consumer.model.ReceiptRequest;
+import org.egov.collection.consumer.model.VoucherResponse;
 import org.egov.common.contract.request.RequestInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 @Service
-public class BusinessDetailsService {
+public class InstrumentService {
 
     @Autowired
     private RestTemplate restTemplate;
 
     @Autowired
+    private TokenService tokenService;
+
+    @Autowired
     private PropertiesManager propertiesManager;
 
     @Autowired
-    private TokenService tokenService;
+    private FinancialStatusService financialStatusService;
 
-    public BusinessDetails getBusinessDetailsByCode(String code, String tenantId) {
+    public InstrumentResponse createInstruemtn(ReceiptRequest receiptRequest, VoucherResponse voucherResponse) {
 
-        final String bd_url = propertiesManager.getHostUrl() + propertiesManager.getBusinessDetailsServiceUrl() + "?tenantId="
-                + tenantId + "&code=" + code;
-
+        FinancialStatus status = financialStatusService.getByCode("New", receiptRequest.getTenantId());
         RequestInfo requestInfo = new RequestInfo();
-        RequestInfoWrapper reqWrapper = new RequestInfoWrapper();
+        requestInfo.setAuthToken(tokenService.generateAdminToken(receiptRequest.getTenantId()));
 
-        requestInfo.setAuthToken(tokenService.generateAdminToken(tenantId));
-        reqWrapper.setRequestInfo(requestInfo);
+        Receipt receipt = receiptRequest.getReceipt().get(0);
+        Instrument instrument = receipt.getInstrument();
+        InstrumentContract instrumentContract = instrument.toContract();
+        instrumentContract.setFinancialStatus(status);
+        if (voucherResponse != null) {
+            prepareInstrumentVoucher(instrumentContract, voucherResponse);
+        }
+        InstrumentRequest request = new InstrumentRequest();
 
-        BusinessDetailsResponse bcResponse = restTemplate.postForObject(bd_url, reqWrapper, BusinessDetailsResponse.class);
-        if (bcResponse.getBusinessDetails() != null && !bcResponse.getBusinessDetails().isEmpty())
-            return bcResponse.getBusinessDetails().get(0);
-        else
-            return null;
+        request.setInstruments(Collections.singletonList(instrumentContract));
+
+        request.setRequestInfo(requestInfo);
+
+        return restTemplate.postForObject(propertiesManager.getInstrumentCreate(), request, InstrumentResponse.class);
+    }
+
+    private void prepareInstrumentVoucher(InstrumentContract instrumentContract, VoucherResponse voucherResponse) {
+
+        InstrumentVoucherContract ivContract = new InstrumentVoucherContract();
+        ivContract.setVoucherHeaderId(voucherResponse.getVouchers().get(0).getVoucherNumber());
+        instrumentContract.setInstrumentVouchers(Collections.singletonList(ivContract));
     }
 
 }

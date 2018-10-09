@@ -10,46 +10,40 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class InstrumentVoucherRepository {
 
-	@Autowired
-	private InstrumentVoucherJdbcRepository instrumentVoucherJdbcRepository;
+    @Autowired
+    private InstrumentVoucherJdbcRepository instrumentVoucherJdbcRepository;
 
-	public InstrumentVoucher findById(InstrumentVoucher instrumentVoucher) {
-		InstrumentVoucherEntity entity = instrumentVoucherJdbcRepository
-				.findById(new InstrumentVoucherEntity().toEntity(instrumentVoucher));
-		if (entity != null)
-			return entity.toDomain();
+    public InstrumentVoucher findById(InstrumentVoucher instrumentVoucher) {
+        InstrumentVoucherEntity entity = instrumentVoucherJdbcRepository
+                .findById(new InstrumentVoucherEntity().toEntity(instrumentVoucher));
+        if (entity != null)
+            return entity.toDomain();
 
-		return null;
+        return null;
 
+    }
 
-	}
+    @Transactional
+    public InstrumentVoucher save(InstrumentVoucher instrumentVoucher) {
+        InstrumentVoucherEntity entity = instrumentVoucherJdbcRepository
+                .create(new InstrumentVoucherEntity().toEntity(instrumentVoucher));
+        return entity.toDomain();
+    }
 
-	@Transactional
-	public InstrumentVoucher save(InstrumentVoucher instrumentVoucher) {
-		InstrumentVoucherEntity entity = instrumentVoucherJdbcRepository
-				.create(new InstrumentVoucherEntity().toEntity(instrumentVoucher));
-		return entity.toDomain();
-	}
+    @Transactional
+    public InstrumentVoucher update(InstrumentVoucher instrumentVoucher) {
+        InstrumentVoucherEntity entity = instrumentVoucherJdbcRepository
+                .update(new InstrumentVoucherEntity().toEntity(instrumentVoucher));
+        return entity.toDomain();
+    }
 
-	@Transactional
-	public InstrumentVoucher update(InstrumentVoucher instrumentVoucher) {
-		InstrumentVoucherEntity entity = instrumentVoucherJdbcRepository
-				.update(new InstrumentVoucherEntity().toEntity(instrumentVoucher));
-		return entity.toDomain();
-	}
+    /*
+     * public void add(CommonRequest<InstrumentVoucherContract> request) { instrumentVoucherQueueRepository.add(request); }
+     */
 
-	/*
-	 * public void add(CommonRequest<InstrumentVoucherContract> request) {
-	 * instrumentVoucherQueueRepository.add(request); }
-	 */
-
-	/*
-	 * public Pagination<InstrumentVoucher> search(InstrumentVoucherSearch
-	 * domain) {
-	 * 
-	 * return instrumentVoucherJdbcRepository.search(domain);
-	 * 
-	 * }
-	 */
+    /*
+     * public Pagination<InstrumentVoucher> search(InstrumentVoucherSearch domain) { return
+     * instrumentVoucherJdbcRepository.search(domain); }
+     */
 
 }

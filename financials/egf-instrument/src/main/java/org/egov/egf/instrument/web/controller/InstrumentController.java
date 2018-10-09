@@ -31,191 +31,190 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/instruments")
 public class InstrumentController {
 
-	public static final String ACTION_CREATE = "create";
-	public static final String ACTION_UPDATE = "update";
-	public static final String ACTION_DELETE = "delete";
-	public static final String PLACEHOLDER = "placeholder";
+    public static final String ACTION_CREATE = "create";
+    public static final String ACTION_UPDATE = "update";
+    public static final String ACTION_DELETE = "delete";
+    public static final String PLACEHOLDER = "placeholder";
 
-	@Autowired
-	private InstrumentService instrumentService;
+    @Autowired
+    private InstrumentService instrumentService;
 
-	@PostMapping("/_create")
-	@ResponseStatus(HttpStatus.CREATED)
-	public InstrumentResponse create(@RequestBody InstrumentRequest instrumentRequest, BindingResult errors) {
+    @PostMapping("/_create")
+    @ResponseStatus(HttpStatus.CREATED)
+    public InstrumentResponse create(@RequestBody InstrumentRequest instrumentRequest, BindingResult errors) {
 
-		InstrumentMapper mapper = new InstrumentMapper();
-		InstrumentResponse instrumentResponse = new InstrumentResponse();
-		instrumentResponse.setResponseInfo(getResponseInfo(instrumentRequest.getRequestInfo()));
-		List<Instrument> instruments = new ArrayList<>();
-		Instrument instrument;
-		List<InstrumentContract> instrumentContracts = new ArrayList<>();
-		InstrumentContract contract;
+        InstrumentMapper mapper = new InstrumentMapper();
+        InstrumentResponse instrumentResponse = new InstrumentResponse();
+        instrumentResponse.setResponseInfo(getResponseInfo(instrumentRequest.getRequestInfo()));
+        List<Instrument> instruments = new ArrayList<>();
+        Instrument instrument;
+        List<InstrumentContract> instrumentContracts = new ArrayList<>();
+        InstrumentContract contract;
 
-		instrumentRequest.getRequestInfo().setAction(ACTION_CREATE);
+        instrumentRequest.getRequestInfo().setAction(ACTION_CREATE);
 
-		for (InstrumentContract instrumentContract : instrumentRequest.getInstruments()) {
-			instrument = mapper.toDomain(instrumentContract);
-			instrument.setCreatedDate(new Date());
-			instrument.setCreatedBy(instrumentRequest.getRequestInfo().getUserInfo());
-			instrument.setLastModifiedBy(instrumentRequest.getRequestInfo().getUserInfo());
-			instruments.add(instrument);
-		}
+        for (InstrumentContract instrumentContract : instrumentRequest.getInstruments()) {
+            instrument = mapper.toDomain(instrumentContract);
+            instrument.setCreatedDate(new Date());
+            instrument.setCreatedBy(instrumentRequest.getRequestInfo().getUserInfo());
+            instrument.setLastModifiedBy(instrumentRequest.getRequestInfo().getUserInfo());
+            instruments.add(instrument);
+        }
 
-		instruments = instrumentService.create(instruments, errors, instrumentRequest.getRequestInfo());
+        instruments = instrumentService.create(instruments, errors, instrumentRequest.getRequestInfo());
 
-		for (Instrument i : instruments) {
-			contract = mapper.toContract(i);
-			instrumentContracts.add(contract);
-		}
+        for (Instrument i : instruments) {
+            contract = mapper.toContract(i);
+            instrumentContracts.add(contract);
+        }
 
-		instrumentResponse.setInstruments(instrumentContracts);
+        instrumentResponse.setInstruments(instrumentContracts);
 
-		return instrumentResponse;
-	}
+        return instrumentResponse;
+    }
 
-	@PostMapping("/_update")
-	@ResponseStatus(HttpStatus.CREATED)
-	public InstrumentResponse update(@RequestBody InstrumentRequest instrumentRequest, BindingResult errors) {
+    @PostMapping("/_update")
+    @ResponseStatus(HttpStatus.CREATED)
+    public InstrumentResponse update(@RequestBody InstrumentRequest instrumentRequest, BindingResult errors) {
 
-		InstrumentMapper mapper = new InstrumentMapper();
-		instrumentRequest.getRequestInfo().setAction(ACTION_UPDATE);
-		InstrumentResponse instrumentResponse = new InstrumentResponse();
-		List<Instrument> instruments = new ArrayList<>();
-		instrumentResponse.setResponseInfo(getResponseInfo(instrumentRequest.getRequestInfo()));
-		Instrument instrument;
-		InstrumentContract contract;
-		List<InstrumentContract> instrumentContracts = new ArrayList<>();
+        InstrumentMapper mapper = new InstrumentMapper();
+        instrumentRequest.getRequestInfo().setAction(ACTION_UPDATE);
+        InstrumentResponse instrumentResponse = new InstrumentResponse();
+        List<Instrument> instruments = new ArrayList<>();
+        instrumentResponse.setResponseInfo(getResponseInfo(instrumentRequest.getRequestInfo()));
+        Instrument instrument;
+        InstrumentContract contract;
+        List<InstrumentContract> instrumentContracts = new ArrayList<>();
 
-		for (InstrumentContract instrumentContract : instrumentRequest.getInstruments()) {
-			instrument = mapper.toDomain(instrumentContract);
-			instrument.setLastModifiedBy(instrumentRequest.getRequestInfo().getUserInfo());
-			instrument.setLastModifiedDate(new Date());
-			instruments.add(instrument);
-		}
+        for (InstrumentContract instrumentContract : instrumentRequest.getInstruments()) {
+            instrument = mapper.toDomain(instrumentContract);
+            instrument.setLastModifiedBy(instrumentRequest.getRequestInfo().getUserInfo());
+            instrument.setLastModifiedDate(new Date());
+            instruments.add(instrument);
+        }
 
-		instruments = instrumentService.update(instruments, errors, instrumentRequest.getRequestInfo());
+        instruments = instrumentService.update(instruments, errors, instrumentRequest.getRequestInfo());
 
-		for (Instrument i : instruments) {
-			contract = mapper.toContract(i);
-			instrumentContracts.add(contract);
-		}
+        for (Instrument i : instruments) {
+            contract = mapper.toContract(i);
+            instrumentContracts.add(contract);
+        }
 
-		instrumentResponse.setInstruments(instrumentContracts);
+        instrumentResponse.setInstruments(instrumentContracts);
 
-		return instrumentResponse;
-	}
-	
-	@PostMapping("/_delete")
-	@ResponseStatus(HttpStatus.CREATED)
-	public InstrumentResponse delete(@RequestBody InstrumentRequest instrumentRequest, BindingResult errors) {
+        return instrumentResponse;
+    }
 
-		InstrumentMapper mapper = new InstrumentMapper();
-		instrumentRequest.getRequestInfo().setAction(ACTION_DELETE);
-		InstrumentResponse instrumentResponse = new InstrumentResponse();
-		List<Instrument> instruments = new ArrayList<>();
-		instrumentResponse.setResponseInfo(getResponseInfo(instrumentRequest.getRequestInfo()));
-		Instrument instrument;
-		InstrumentContract contract;
-		List<InstrumentContract> instrumentContracts = new ArrayList<>();
+    @PostMapping("/_delete")
+    @ResponseStatus(HttpStatus.CREATED)
+    public InstrumentResponse delete(@RequestBody InstrumentRequest instrumentRequest, BindingResult errors) {
 
-		for (InstrumentContract instrumentContract : instrumentRequest.getInstruments()) {
-			instrument = mapper.toDomain(instrumentContract);
-			instruments.add(instrument);
-		}
+        InstrumentMapper mapper = new InstrumentMapper();
+        instrumentRequest.getRequestInfo().setAction(ACTION_DELETE);
+        InstrumentResponse instrumentResponse = new InstrumentResponse();
+        List<Instrument> instruments = new ArrayList<>();
+        instrumentResponse.setResponseInfo(getResponseInfo(instrumentRequest.getRequestInfo()));
+        Instrument instrument;
+        InstrumentContract contract;
+        List<InstrumentContract> instrumentContracts = new ArrayList<>();
 
-		instruments = instrumentService.delete(instruments, errors, instrumentRequest.getRequestInfo());
+        for (InstrumentContract instrumentContract : instrumentRequest.getInstruments()) {
+            instrument = mapper.toDomain(instrumentContract);
+            instruments.add(instrument);
+        }
 
-		for (Instrument i : instruments) {
-			contract = mapper.toContract(i);
-			instrumentContracts.add(contract);
-		}
+        instruments = instrumentService.delete(instruments, errors, instrumentRequest.getRequestInfo());
 
-		instrumentResponse.setInstruments(instrumentContracts);
+        for (Instrument i : instruments) {
+            contract = mapper.toContract(i);
+            instrumentContracts.add(contract);
+        }
 
-		return instrumentResponse;
-	}
+        instrumentResponse.setInstruments(instrumentContracts);
 
-	@PostMapping("/_search")
-	@ResponseBody
-	@ResponseStatus(HttpStatus.OK)
-	public InstrumentResponse search(@ModelAttribute InstrumentSearchContract instrumentSearchContract,
-			RequestInfo requestInfo, BindingResult errors) {
+        return instrumentResponse;
+    }
 
-		InstrumentMapper mapper = new InstrumentMapper();
-		InstrumentSearch domain = mapper.toSearchDomain(instrumentSearchContract);
-		InstrumentContract contract;
-		List<InstrumentContract> instrumentContracts = new ArrayList<>();
-		Pagination<Instrument> instruments = instrumentService.search(domain);
+    @PostMapping("/_search")
+    @ResponseBody
+    @ResponseStatus(HttpStatus.OK)
+    public InstrumentResponse search(@ModelAttribute InstrumentSearchContract instrumentSearchContract,
+            RequestInfo requestInfo, BindingResult errors) {
 
-		if (instruments.getPagedData() != null) {
-			for (Instrument instrument : instruments.getPagedData()) {
-				contract = mapper.toContract(instrument);
-				instrumentContracts.add(contract);
-			}
-		}
+        InstrumentMapper mapper = new InstrumentMapper();
+        InstrumentSearch domain = mapper.toSearchDomain(instrumentSearchContract);
+        InstrumentContract contract;
+        List<InstrumentContract> instrumentContracts = new ArrayList<>();
+        Pagination<Instrument> instruments = instrumentService.search(domain);
 
-		InstrumentResponse response = new InstrumentResponse();
-		response.setInstruments(instrumentContracts);
-		response.setPage(new PaginationContract(instruments));
-		response.setResponseInfo(getResponseInfo(requestInfo));
+        if (instruments.getPagedData() != null)
+            for (Instrument instrument : instruments.getPagedData()) {
+                contract = mapper.toContract(instrument);
+                instrumentContracts.add(contract);
+            }
 
-		return response;
+        InstrumentResponse response = new InstrumentResponse();
+        response.setInstruments(instrumentContracts);
+        response.setPage(new PaginationContract(instruments));
+        response.setResponseInfo(getResponseInfo(requestInfo));
 
-	}
-	
-	@PostMapping("/_deposit")
-	@ResponseStatus(HttpStatus.CREATED)
-	public InstrumentResponse depositInstrument(@RequestBody InstrumentRequest instrumentDepositRequest, BindingResult errors) {
+        return response;
 
-		InstrumentMapper mapper = new InstrumentMapper();
-		InstrumentResponse instrumentResponse = new InstrumentResponse();
-		instrumentResponse.setResponseInfo(getResponseInfo(instrumentDepositRequest.getRequestInfo()));
-		List<Instrument> instruments = new ArrayList<>();
-		List<InstrumentContract> instrumentContracts = new ArrayList<>();
-		InstrumentContract contract;
+    }
 
-		instrumentDepositRequest.getRequestInfo().setAction(ACTION_UPDATE);
+    @PostMapping("/_deposit")
+    @ResponseStatus(HttpStatus.CREATED)
+    public InstrumentResponse depositInstrument(@RequestBody InstrumentRequest instrumentDepositRequest, BindingResult errors) {
 
-		instruments = instrumentService.deposit(instrumentDepositRequest, errors, instrumentDepositRequest.getRequestInfo());
+        InstrumentMapper mapper = new InstrumentMapper();
+        InstrumentResponse instrumentResponse = new InstrumentResponse();
+        instrumentResponse.setResponseInfo(getResponseInfo(instrumentDepositRequest.getRequestInfo()));
+        List<Instrument> instruments = new ArrayList<>();
+        List<InstrumentContract> instrumentContracts = new ArrayList<>();
+        InstrumentContract contract;
 
-		for (Instrument i : instruments) {
-			contract = mapper.toContract(i);
-			instrumentContracts.add(contract);
-		}
+        instrumentDepositRequest.getRequestInfo().setAction(ACTION_UPDATE);
 
-		instrumentResponse.setInstruments(instrumentContracts);
+        instruments = instrumentService.deposit(instrumentDepositRequest, errors, instrumentDepositRequest.getRequestInfo());
 
-		return instrumentResponse;
-	}
-	
-	@PostMapping("/_dishonor")
-	@ResponseStatus(HttpStatus.CREATED)
-	public InstrumentResponse dishonorInstrument(@RequestBody InstrumentRequest instrumentDepositRequest, BindingResult errors) {
+        for (Instrument i : instruments) {
+            contract = mapper.toContract(i);
+            instrumentContracts.add(contract);
+        }
 
-		InstrumentMapper mapper = new InstrumentMapper();
-		InstrumentResponse instrumentResponse = new InstrumentResponse();
-		instrumentResponse.setResponseInfo(getResponseInfo(instrumentDepositRequest.getRequestInfo()));
-		List<Instrument> instruments = new ArrayList<>();
-		List<InstrumentContract> instrumentContracts = new ArrayList<>();
-		InstrumentContract contract;
+        instrumentResponse.setInstruments(instrumentContracts);
 
-		instrumentDepositRequest.getRequestInfo().setAction(ACTION_UPDATE);
+        return instrumentResponse;
+    }
 
-		instruments = instrumentService.dishonor(instrumentDepositRequest, errors, instrumentDepositRequest.getRequestInfo());
+    @PostMapping("/_dishonor")
+    @ResponseStatus(HttpStatus.CREATED)
+    public InstrumentResponse dishonorInstrument(@RequestBody InstrumentRequest instrumentDepositRequest, BindingResult errors) {
 
-		for (Instrument i : instruments) {
-			contract = mapper.toContract(i);
-			instrumentContracts.add(contract);
-		}
+        InstrumentMapper mapper = new InstrumentMapper();
+        InstrumentResponse instrumentResponse = new InstrumentResponse();
+        instrumentResponse.setResponseInfo(getResponseInfo(instrumentDepositRequest.getRequestInfo()));
+        List<Instrument> instruments = new ArrayList<>();
+        List<InstrumentContract> instrumentContracts = new ArrayList<>();
+        InstrumentContract contract;
 
-		instrumentResponse.setInstruments(instrumentContracts);
+        instrumentDepositRequest.getRequestInfo().setAction(ACTION_UPDATE);
 
-		return instrumentResponse;
-	}
+        instruments = instrumentService.dishonor(instrumentDepositRequest, errors, instrumentDepositRequest.getRequestInfo());
 
-	private ResponseInfo getResponseInfo(RequestInfo requestInfo) {
-		return ResponseInfo.builder().apiId(requestInfo.getApiId()).ver(requestInfo.getVer())
-				.resMsgId(requestInfo.getMsgId()).resMsgId(PLACEHOLDER).status(PLACEHOLDER).build();
-	}
+        for (Instrument i : instruments) {
+            contract = mapper.toContract(i);
+            instrumentContracts.add(contract);
+        }
+
+        instrumentResponse.setInstruments(instrumentContracts);
+
+        return instrumentResponse;
+    }
+
+    private ResponseInfo getResponseInfo(RequestInfo requestInfo) {
+        return ResponseInfo.builder().apiId(requestInfo.getApiId()).ver(requestInfo.getVer())
+                .resMsgId(requestInfo.getMsgId()).resMsgId(PLACEHOLDER).status(PLACEHOLDER).build();
+    }
 
 }

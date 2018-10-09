@@ -1,5 +1,12 @@
 package org.egov.egf.instrument.domain.service;
 
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.when;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.domain.exception.CustomBindException;
 import org.egov.common.domain.exception.InvalidDataException;
@@ -22,13 +29,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.SmartValidator;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.when;
 
 @Import(TestConfiguration.class)
 @RunWith(SpringRunner.class)
@@ -270,7 +270,8 @@ public class InstrumentAccountCodeServiceTest {
 
         when(instrumentTypeRepository.findById(any(InstrumentType.class))).thenReturn(expextedResult);
 
-        List<InstrumentAccountCode> actualResult = instrumentAccountCodeService.fetchRelated(instrumentAccountCodes, new RequestInfo());
+        List<InstrumentAccountCode> actualResult = instrumentAccountCodeService.fetchRelated(instrumentAccountCodes,
+                new RequestInfo());
 
         assertEquals(expextedResult, actualResult.get(0).getInstrumentType());
     }
@@ -284,9 +285,11 @@ public class InstrumentAccountCodeServiceTest {
 
         instrumentAccountCodes.get(0).setAccountCode(expextedResult);
 
-        when(chartOfAccountContractRepository.findByGlcode(any(ChartOfAccountContract.class), Matchers.anyObject())).thenReturn(expextedResult);
+        when(chartOfAccountContractRepository.findByGlcode(any(ChartOfAccountContract.class), Matchers.anyObject()))
+                .thenReturn(expextedResult);
 
-        List<InstrumentAccountCode> actualResult = instrumentAccountCodeService.fetchRelated(instrumentAccountCodes, new RequestInfo());
+        List<InstrumentAccountCode> actualResult = instrumentAccountCodeService.fetchRelated(instrumentAccountCodes,
+                new RequestInfo());
 
         assertEquals(expextedResult, actualResult.get(0).getAccountCode());
     }
@@ -303,7 +306,8 @@ public class InstrumentAccountCodeServiceTest {
 
         when(instrumentTypeRepository.findById(null)).thenReturn(expextedResult);
 
-        List<InstrumentAccountCode> actualResult = instrumentAccountCodeService.fetchRelated(instrumentAccountCodes, new RequestInfo());
+        List<InstrumentAccountCode> actualResult = instrumentAccountCodeService.fetchRelated(instrumentAccountCodes,
+                new RequestInfo());
 
         assertEquals(expextedResult, actualResult.get(0).getInstrumentType());
     }
@@ -319,7 +323,8 @@ public class InstrumentAccountCodeServiceTest {
 
         when(chartOfAccountContractRepository.findByGlcode(null, new RequestInfo())).thenReturn(expextedResult);
 
-        List<InstrumentAccountCode> actualResult = instrumentAccountCodeService.fetchRelated(instrumentAccountCodes, new RequestInfo());
+        List<InstrumentAccountCode> actualResult = instrumentAccountCodeService.fetchRelated(instrumentAccountCodes,
+                new RequestInfo());
 
         assertEquals(expextedResult, actualResult.get(0).getAccountCode());
     }

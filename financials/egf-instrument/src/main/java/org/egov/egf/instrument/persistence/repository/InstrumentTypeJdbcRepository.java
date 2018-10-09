@@ -20,171 +20,153 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class InstrumentTypeJdbcRepository extends JdbcRepository {
-	private static final Logger LOG = LoggerFactory.getLogger(InstrumentTypeJdbcRepository.class);
+    private static final Logger LOG = LoggerFactory.getLogger(InstrumentTypeJdbcRepository.class);
 
-	static {
-		LOG.debug("init instrumentType");
-		init(InstrumentTypeEntity.class);
-		LOG.debug("end init instrumentType");
-	}
+    static {
+        LOG.debug("init instrumentType");
+        init(InstrumentTypeEntity.class);
+        LOG.debug("end init instrumentType");
+    }
 
-	public InstrumentTypeJdbcRepository(NamedParameterJdbcTemplate namedParameterJdbcTemplate, JdbcTemplate jdbcTemplate) {
-		this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
-		this.jdbcTemplate = jdbcTemplate;
-	}
+    public InstrumentTypeJdbcRepository(NamedParameterJdbcTemplate namedParameterJdbcTemplate, JdbcTemplate jdbcTemplate) {
+        this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
+        this.jdbcTemplate = jdbcTemplate;
+    }
 
-	public InstrumentTypeEntity create(InstrumentTypeEntity entity) {
+    public InstrumentTypeEntity create(InstrumentTypeEntity entity) {
 
-		// entity.setId(UUID.randomUUID().toString().replace("-", ""));
-		super.create(entity);
-		return entity;
-	}
+        // entity.setId(UUID.randomUUID().toString().replace("-", ""));
+        super.create(entity);
+        return entity;
+    }
 
-	public InstrumentTypeEntity update(InstrumentTypeEntity entity) {
-		super.update(entity);
-		return entity;
+    public InstrumentTypeEntity update(InstrumentTypeEntity entity) {
+        super.update(entity);
+        return entity;
 
-	}
-	
-	public InstrumentTypeEntity delete(InstrumentTypeEntity entity) {
-		super.delete(entity.TABLE_NAME, entity.getId());
-		return entity;
-	}
+    }
 
-	public Pagination<InstrumentType> search(InstrumentTypeSearch domain) {
-		InstrumentTypeSearchEntity instrumentTypeSearchEntity = new InstrumentTypeSearchEntity();
-		instrumentTypeSearchEntity.toEntity(domain);
+    public InstrumentTypeEntity delete(InstrumentTypeEntity entity) {
+        super.delete(InstrumentTypeEntity.TABLE_NAME, entity.getId());
+        return entity;
+    }
 
-		String searchQuery = "select :selectfields from :tablename :condition  :orderby   ";
+    public Pagination<InstrumentType> search(InstrumentTypeSearch domain) {
+        InstrumentTypeSearchEntity instrumentTypeSearchEntity = new InstrumentTypeSearchEntity();
+        instrumentTypeSearchEntity.toEntity(domain);
 
-		Map<String, Object> paramValues = new HashMap<>();
-		StringBuffer params = new StringBuffer();
+        String searchQuery = "select :selectfields from :tablename :condition  :orderby   ";
 
-		if (instrumentTypeSearchEntity.getSortBy() != null && !instrumentTypeSearchEntity.getSortBy().isEmpty()) {
-			validateSortByOrder(instrumentTypeSearchEntity.getSortBy());
-			validateEntityFieldName(instrumentTypeSearchEntity.getSortBy(), InstrumentTypeEntity.class);
-		}
+        Map<String, Object> paramValues = new HashMap<>();
+        StringBuffer params = new StringBuffer();
 
-		String orderBy = "order by id";
-		if (instrumentTypeSearchEntity.getSortBy() != null && !instrumentTypeSearchEntity.getSortBy().isEmpty()) {
-			orderBy = "order by " + instrumentTypeSearchEntity.getSortBy();
-		}
+        if (instrumentTypeSearchEntity.getSortBy() != null && !instrumentTypeSearchEntity.getSortBy().isEmpty()) {
+            validateSortByOrder(instrumentTypeSearchEntity.getSortBy());
+            validateEntityFieldName(instrumentTypeSearchEntity.getSortBy(), InstrumentTypeEntity.class);
+        }
 
-		searchQuery = searchQuery.replace(":tablename", InstrumentTypeEntity.TABLE_NAME);
+        String orderBy = "order by id";
+        if (instrumentTypeSearchEntity.getSortBy() != null && !instrumentTypeSearchEntity.getSortBy().isEmpty())
+            orderBy = "order by " + instrumentTypeSearchEntity.getSortBy();
 
-		searchQuery = searchQuery.replace(":selectfields", " * ");
+        searchQuery = searchQuery.replace(":tablename", InstrumentTypeEntity.TABLE_NAME);
 
-		// implement jdbc specfic search
-		if (instrumentTypeSearchEntity.getTenantId() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
-			params.append("tenantId =:tenantId");
-			paramValues.put("tenantId", instrumentTypeSearchEntity.getTenantId());
-		}
-		if (instrumentTypeSearchEntity.getId() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
-			params.append("id =:id");
-			paramValues.put("id", instrumentTypeSearchEntity.getId());
-		}
-		if (instrumentTypeSearchEntity.getName() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
-			params.append("name =:name");
-			paramValues.put("name", instrumentTypeSearchEntity.getName());
-		}
-		if (instrumentTypeSearchEntity.getDescription() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
-			params.append("description =:description");
-			paramValues.put("description", instrumentTypeSearchEntity.getDescription());
-		}
-		if (instrumentTypeSearchEntity.getActive() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
-			params.append("active =:active");
-			paramValues.put("active", instrumentTypeSearchEntity.getActive());
-		}
+        searchQuery = searchQuery.replace(":selectfields", " * ");
 
-		if (instrumentTypeSearchEntity.getIds() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
-			params.append("id in (:ids)");
-			paramValues.put("ids", instrumentTypeSearchEntity.getIds());
-		}
+        // implement jdbc specfic search
+        if (instrumentTypeSearchEntity.getTenantId() != null) {
+            if (params.length() > 0)
+                params.append(" and ");
+            params.append("tenantId =:tenantId");
+            paramValues.put("tenantId", instrumentTypeSearchEntity.getTenantId());
+        }
+        if (instrumentTypeSearchEntity.getId() != null) {
+            if (params.length() > 0)
+                params.append(" and ");
+            params.append("id =:id");
+            paramValues.put("id", instrumentTypeSearchEntity.getId());
+        }
+        if (instrumentTypeSearchEntity.getName() != null) {
+            if (params.length() > 0)
+                params.append(" and ");
+            params.append("name =:name");
+            paramValues.put("name", instrumentTypeSearchEntity.getName());
+        }
+        if (instrumentTypeSearchEntity.getDescription() != null) {
+            if (params.length() > 0)
+                params.append(" and ");
+            params.append("description =:description");
+            paramValues.put("description", instrumentTypeSearchEntity.getDescription());
+        }
+        if (instrumentTypeSearchEntity.getActive() != null) {
+            if (params.length() > 0)
+                params.append(" and ");
+            params.append("active =:active");
+            paramValues.put("active", instrumentTypeSearchEntity.getActive());
+        }
 
-		Pagination<InstrumentType> page = new Pagination<>();
-		if (instrumentTypeSearchEntity.getOffset() != null) {
-			page.setOffset(instrumentTypeSearchEntity.getOffset());
-		}
-		if (instrumentTypeSearchEntity.getPageSize() != null) {
-			page.setPageSize(instrumentTypeSearchEntity.getPageSize());
-		}
+        if (instrumentTypeSearchEntity.getIds() != null) {
+            if (params.length() > 0)
+                params.append(" and ");
+            params.append("id in (:ids)");
+            paramValues.put("ids", instrumentTypeSearchEntity.getIds());
+        }
 
-		if (params.length() > 0) {
+        Pagination<InstrumentType> page = new Pagination<>();
+        if (instrumentTypeSearchEntity.getOffset() != null)
+            page.setOffset(instrumentTypeSearchEntity.getOffset());
+        if (instrumentTypeSearchEntity.getPageSize() != null)
+            page.setPageSize(instrumentTypeSearchEntity.getPageSize());
 
-			searchQuery = searchQuery.replace(":condition", " where " + params.toString());
+        if (params.length() > 0)
+            searchQuery = searchQuery.replace(":condition", " where " + params.toString());
+        else
+            searchQuery = searchQuery.replace(":condition", "");
 
-		} else {
+        searchQuery = searchQuery.replace(":orderby", orderBy);
 
-			searchQuery = searchQuery.replace(":condition", "");
-		}
+        page = (Pagination<InstrumentType>) getPagination(searchQuery, page, paramValues);
+        searchQuery = searchQuery + " :pagination";
 
-		searchQuery = searchQuery.replace(":orderby", orderBy);
+        searchQuery = searchQuery.replace(":pagination",
+                "limit " + page.getPageSize() + " offset " + page.getOffset() * page.getPageSize());
 
-		page = (Pagination<InstrumentType>) getPagination(searchQuery, page, paramValues);
-		searchQuery = searchQuery + " :pagination";
+        BeanPropertyRowMapper row = new BeanPropertyRowMapper(InstrumentTypeEntity.class);
 
-		searchQuery = searchQuery.replace(":pagination",
-				"limit " + page.getPageSize() + " offset " + page.getOffset() * page.getPageSize());
+        /*
+         * searchQuery= "select * from egf_instrumenttype egf_instrumenttype, egf_instrumenttypeproperty properties where " +
+         * "egf_instrumenttype.name=properties.instrumentTypeId";
+         */
 
-		BeanPropertyRowMapper row = new BeanPropertyRowMapper(InstrumentTypeEntity.class);
+        List<InstrumentTypeEntity> instrumentTypeEntities = namedParameterJdbcTemplate.query(searchQuery.toString(),
+                paramValues, row);
 
-		/*
-		 * searchQuery=
-		 * "select * from egf_instrumenttype egf_instrumenttype, egf_instrumenttypeproperty properties where "
-		 * + "egf_instrumenttype.name=properties.instrumentTypeId";
-		 */
+        page.setTotalResults(instrumentTypeEntities.size());
 
-		List<InstrumentTypeEntity> instrumentTypeEntities = namedParameterJdbcTemplate.query(searchQuery.toString(),
-				paramValues, row);
+        List<InstrumentType> instrumenttypes = new ArrayList<>();
+        for (InstrumentTypeEntity instrumentTypeEntity : instrumentTypeEntities)
+            instrumenttypes.add(instrumentTypeEntity.toDomain());
+        page.setPagedData(instrumenttypes);
 
-		page.setTotalResults(instrumentTypeEntities.size());
+        return page;
+    }
 
-		List<InstrumentType> instrumenttypes = new ArrayList<>();
-		for (InstrumentTypeEntity instrumentTypeEntity : instrumentTypeEntities) {
+    public InstrumentTypeEntity findById(InstrumentTypeEntity entity) {
+        List<String> list = allIdentitiferFields.get(entity.getClass().getSimpleName());
 
-			instrumenttypes.add(instrumentTypeEntity.toDomain());
-		}
-		page.setPagedData(instrumenttypes);
+        Map<String, Object> paramValues = new HashMap<>();
 
-		return page;
-	}
+        for (String s : list)
+            paramValues.put(s, getValue(getField(entity, s), entity));
 
-	public InstrumentTypeEntity findById(InstrumentTypeEntity entity) {
-		List<String> list = allIdentitiferFields.get(entity.getClass().getSimpleName());
+        List<InstrumentTypeEntity> instrumenttypes = namedParameterJdbcTemplate.query(
+                getByIdQuery.get(entity.getClass().getSimpleName()).toString(), paramValues,
+                new BeanPropertyRowMapper(InstrumentTypeEntity.class));
+        if (instrumenttypes.isEmpty())
+            return null;
+        else
+            return instrumenttypes.get(0);
 
-		Map<String, Object> paramValues = new HashMap<>();
-
-		for (String s : list) {
-			paramValues.put(s, getValue(getField(entity, s), entity));
-		}
-
-		List<InstrumentTypeEntity> instrumenttypes = namedParameterJdbcTemplate.query(
-				getByIdQuery.get(entity.getClass().getSimpleName()).toString(), paramValues,
-				new BeanPropertyRowMapper(InstrumentTypeEntity.class));
-		if (instrumenttypes.isEmpty()) {
-			return null;
-		} else {
-			return instrumenttypes.get(0);
-		}
-
-	}
+    }
 
 }

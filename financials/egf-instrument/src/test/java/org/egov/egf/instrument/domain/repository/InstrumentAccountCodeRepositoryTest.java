@@ -54,10 +54,12 @@ public class InstrumentAccountCodeRepositoryTest {
     @Before
     public void setup() {
         instrumentAccountCodeRepositoryWithKafka = new InstrumentAccountCodeRepository(
-                instrumentAccountCodeJdbcRepository, instrumentAccountCodeQueueRepository, "yes",instrumentAccountCodeESRepository,financialConfigurationContractRepository);
+                instrumentAccountCodeJdbcRepository, instrumentAccountCodeQueueRepository, "yes",
+                instrumentAccountCodeESRepository, financialConfigurationContractRepository);
 
         instrumentAccountCodeRepositoryWithOutKafka = new InstrumentAccountCodeRepository(
-                instrumentAccountCodeJdbcRepository, instrumentAccountCodeQueueRepository, "no",instrumentAccountCodeESRepository,financialConfigurationContractRepository);
+                instrumentAccountCodeJdbcRepository, instrumentAccountCodeQueueRepository, "no",
+                instrumentAccountCodeESRepository, financialConfigurationContractRepository);
     }
 
     @Test
@@ -146,7 +148,7 @@ public class InstrumentAccountCodeRepositoryTest {
         assertEquals(expectedResult.get(0).getTenantId(),
                 actualRequest.getInstrumentAccountCodes().get(0).getTenantId());
     }
-    
+
     @Test
     public void test_delete_with_kafka() {
 
@@ -188,7 +190,7 @@ public class InstrumentAccountCodeRepositoryTest {
         assertEquals(expectedResult.get(0).getTenantId(),
                 actualRequest.getInstrumentAccountCodes().get(0).getTenantId());
     }
-    
+
     @Test
     public void test_delete_with_out_kafka() {
 

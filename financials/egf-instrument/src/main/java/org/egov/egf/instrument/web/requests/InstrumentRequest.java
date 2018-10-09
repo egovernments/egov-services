@@ -9,6 +9,6 @@ import org.egov.egf.instrument.web.contract.InstrumentContract;
 import lombok.Data;
 
 public @Data class InstrumentRequest {
-	private RequestInfo requestInfo = new RequestInfo();
-	private List<InstrumentContract> instruments = new ArrayList<InstrumentContract>();
+    private RequestInfo requestInfo = new RequestInfo();
+    private List<InstrumentContract> instruments = new ArrayList<InstrumentContract>();
 }

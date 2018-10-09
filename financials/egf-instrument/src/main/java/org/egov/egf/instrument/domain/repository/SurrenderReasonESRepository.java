@@ -22,7 +22,7 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
-public class SurrenderReasonESRepository  extends ESRepository {
+public class SurrenderReasonESRepository extends ESRepository {
 
     private TransportClient esClient;
     private ElasticSearchQueryFactory elasticSearchQueryFactory;
@@ -41,9 +41,8 @@ public class SurrenderReasonESRepository  extends ESRepository {
     @SuppressWarnings("deprecation")
     private Pagination<SurrenderReason> mapToSurrenderReasonList(SearchResponse searchResponse) {
         Pagination<SurrenderReason> page = new Pagination<>();
-        if (searchResponse.getHits() == null || searchResponse.getHits().getTotalHits() == 0L) {
+        if (searchResponse.getHits() == null || searchResponse.getHits().getTotalHits() == 0L)
             return page;
-        }
         List<SurrenderReason> surrenderReasons = new ArrayList<SurrenderReason>();
         SurrenderReason surrenderReason = null;
         for (SearchHit hit : searchResponse.getHits()) {
@@ -83,12 +82,10 @@ public class SurrenderReasonESRepository  extends ESRepository {
         final BoolQueryBuilder boolQueryBuilder = elasticSearchQueryFactory.searchSurrenderReason(criteria);
         SearchRequestBuilder searchRequestBuilder = esClient.prepareSearch(SurrenderReason.class.getSimpleName().toLowerCase())
                 .setTypes(SurrenderReason.class.getSimpleName().toLowerCase());
-        if (!orderByList.isEmpty()) {
-            for (String orderBy : orderByList) {
+        if (!orderByList.isEmpty())
+            for (String orderBy : orderByList)
                 searchRequestBuilder = searchRequestBuilder.addSort(orderBy.split(" ")[0],
                         orderBy.split(" ")[1].equalsIgnoreCase("asc") ? SortOrder.ASC : SortOrder.DESC);
-            }
-        }
 
         searchRequestBuilder.setQuery(boolQueryBuilder);
         return searchRequestBuilder;

@@ -21,156 +21,142 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class SurrenderReasonJdbcRepository extends JdbcRepository {
-	private static final Logger LOG = LoggerFactory.getLogger(SurrenderReasonJdbcRepository.class);
+    private static final Logger LOG = LoggerFactory.getLogger(SurrenderReasonJdbcRepository.class);
 
-	static {
-		LOG.debug("init surrenderReason");
-		init(SurrenderReasonEntity.class);
-		LOG.debug("end init surrenderReason");
-	}
+    static {
+        LOG.debug("init surrenderReason");
+        init(SurrenderReasonEntity.class);
+        LOG.debug("end init surrenderReason");
+    }
 
-	public SurrenderReasonJdbcRepository(NamedParameterJdbcTemplate namedParameterJdbcTemplate, JdbcTemplate jdbcTemplate) {
-		this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
-		this.jdbcTemplate = jdbcTemplate;
-	}
+    public SurrenderReasonJdbcRepository(NamedParameterJdbcTemplate namedParameterJdbcTemplate, JdbcTemplate jdbcTemplate) {
+        this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
+        this.jdbcTemplate = jdbcTemplate;
+    }
 
-	public SurrenderReasonEntity create(SurrenderReasonEntity entity) {
+    public SurrenderReasonEntity create(SurrenderReasonEntity entity) {
 
-		entity.setId(UUID.randomUUID().toString().replace("-", ""));
-		super.create(entity);
-		return entity;
-	}
+        entity.setId(UUID.randomUUID().toString().replace("-", ""));
+        super.create(entity);
+        return entity;
+    }
 
-	public SurrenderReasonEntity update(SurrenderReasonEntity entity) {
-		super.update(entity);
-		return entity;
+    public SurrenderReasonEntity update(SurrenderReasonEntity entity) {
+        super.update(entity);
+        return entity;
 
-	}
-	
-	public SurrenderReasonEntity delete(SurrenderReasonEntity entity) {
-		super.delete(entity.TABLE_NAME, entity.getId());
-		return entity;
-	}
+    }
 
-	public Pagination<SurrenderReason> search(SurrenderReasonSearch domain) {
-		SurrenderReasonSearchEntity surrenderReasonSearchEntity = new SurrenderReasonSearchEntity();
-		surrenderReasonSearchEntity.toEntity(domain);
+    public SurrenderReasonEntity delete(SurrenderReasonEntity entity) {
+        super.delete(SurrenderReasonEntity.TABLE_NAME, entity.getId());
+        return entity;
+    }
 
-		String searchQuery = "select :selectfields from :tablename :condition  :orderby   ";
+    public Pagination<SurrenderReason> search(SurrenderReasonSearch domain) {
+        SurrenderReasonSearchEntity surrenderReasonSearchEntity = new SurrenderReasonSearchEntity();
+        surrenderReasonSearchEntity.toEntity(domain);
 
-		Map<String, Object> paramValues = new HashMap<>();
-		StringBuffer params = new StringBuffer();
+        String searchQuery = "select :selectfields from :tablename :condition  :orderby   ";
 
-		if (surrenderReasonSearchEntity.getSortBy() != null && !surrenderReasonSearchEntity.getSortBy().isEmpty()) {
-			validateSortByOrder(surrenderReasonSearchEntity.getSortBy());
-			validateEntityFieldName(surrenderReasonSearchEntity.getSortBy(), SurrenderReasonEntity.class);
-		}
+        Map<String, Object> paramValues = new HashMap<>();
+        StringBuffer params = new StringBuffer();
 
-		String orderBy = "order by id";
-		if (surrenderReasonSearchEntity.getSortBy() != null && !surrenderReasonSearchEntity.getSortBy().isEmpty()) {
-			orderBy = "order by " + surrenderReasonSearchEntity.getSortBy();
-		}
+        if (surrenderReasonSearchEntity.getSortBy() != null && !surrenderReasonSearchEntity.getSortBy().isEmpty()) {
+            validateSortByOrder(surrenderReasonSearchEntity.getSortBy());
+            validateEntityFieldName(surrenderReasonSearchEntity.getSortBy(), SurrenderReasonEntity.class);
+        }
 
-		searchQuery = searchQuery.replace(":tablename", SurrenderReasonEntity.TABLE_NAME);
+        String orderBy = "order by id";
+        if (surrenderReasonSearchEntity.getSortBy() != null && !surrenderReasonSearchEntity.getSortBy().isEmpty())
+            orderBy = "order by " + surrenderReasonSearchEntity.getSortBy();
 
-		searchQuery = searchQuery.replace(":selectfields", " * ");
+        searchQuery = searchQuery.replace(":tablename", SurrenderReasonEntity.TABLE_NAME);
 
-		// implement jdbc specfic search
-		if (surrenderReasonSearchEntity.getTenantId() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
-			params.append("tenantId =:tenantId");
-			paramValues.put("tenantId", surrenderReasonSearchEntity.getTenantId());
-		}
-		if (surrenderReasonSearchEntity.getId() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
-			params.append("id =:id");
-			paramValues.put("id", surrenderReasonSearchEntity.getId());
-		}
-		if (surrenderReasonSearchEntity.getName() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
-			params.append("name =:name");
-			paramValues.put("name", surrenderReasonSearchEntity.getName());
-		}
-		if (surrenderReasonSearchEntity.getDescription() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
-			params.append("description =:description");
-			paramValues.put("description", surrenderReasonSearchEntity.getDescription());
-		}
-		if (surrenderReasonSearchEntity.getIds() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
-			params.append("id in (:ids)");
-			paramValues.put("ids", surrenderReasonSearchEntity.getIds());
-		}
+        searchQuery = searchQuery.replace(":selectfields", " * ");
 
-		Pagination<SurrenderReason> page = new Pagination<>();
-		if (surrenderReasonSearchEntity.getOffset() != null) {
-			page.setOffset(surrenderReasonSearchEntity.getOffset());
-		}
-		if (surrenderReasonSearchEntity.getPageSize() != null) {
-			page.setPageSize(surrenderReasonSearchEntity.getPageSize());
-		}
+        // implement jdbc specfic search
+        if (surrenderReasonSearchEntity.getTenantId() != null) {
+            if (params.length() > 0)
+                params.append(" and ");
+            params.append("tenantId =:tenantId");
+            paramValues.put("tenantId", surrenderReasonSearchEntity.getTenantId());
+        }
+        if (surrenderReasonSearchEntity.getId() != null) {
+            if (params.length() > 0)
+                params.append(" and ");
+            params.append("id =:id");
+            paramValues.put("id", surrenderReasonSearchEntity.getId());
+        }
+        if (surrenderReasonSearchEntity.getName() != null) {
+            if (params.length() > 0)
+                params.append(" and ");
+            params.append("name =:name");
+            paramValues.put("name", surrenderReasonSearchEntity.getName());
+        }
+        if (surrenderReasonSearchEntity.getDescription() != null) {
+            if (params.length() > 0)
+                params.append(" and ");
+            params.append("description =:description");
+            paramValues.put("description", surrenderReasonSearchEntity.getDescription());
+        }
+        if (surrenderReasonSearchEntity.getIds() != null) {
+            if (params.length() > 0)
+                params.append(" and ");
+            params.append("id in (:ids)");
+            paramValues.put("ids", surrenderReasonSearchEntity.getIds());
+        }
 
-		if (params.length() > 0) {
+        Pagination<SurrenderReason> page = new Pagination<>();
+        if (surrenderReasonSearchEntity.getOffset() != null)
+            page.setOffset(surrenderReasonSearchEntity.getOffset());
+        if (surrenderReasonSearchEntity.getPageSize() != null)
+            page.setPageSize(surrenderReasonSearchEntity.getPageSize());
 
-			searchQuery = searchQuery.replace(":condition", " where " + params.toString());
+        if (params.length() > 0)
+            searchQuery = searchQuery.replace(":condition", " where " + params.toString());
+        else
 
-		} else
+            searchQuery = searchQuery.replace(":condition", "");
 
-			searchQuery = searchQuery.replace(":condition", "");
+        searchQuery = searchQuery.replace(":orderby", orderBy);
 
-		searchQuery = searchQuery.replace(":orderby", orderBy);
+        page = (Pagination<SurrenderReason>) getPagination(searchQuery, page, paramValues);
+        searchQuery = searchQuery + " :pagination";
 
-		page = (Pagination<SurrenderReason>) getPagination(searchQuery, page, paramValues);
-		searchQuery = searchQuery + " :pagination";
+        searchQuery = searchQuery.replace(":pagination",
+                "limit " + page.getPageSize() + " offset " + page.getOffset() * page.getPageSize());
 
-		searchQuery = searchQuery.replace(":pagination",
-				"limit " + page.getPageSize() + " offset " + page.getOffset() * page.getPageSize());
+        BeanPropertyRowMapper row = new BeanPropertyRowMapper(SurrenderReasonEntity.class);
 
-		BeanPropertyRowMapper row = new BeanPropertyRowMapper(SurrenderReasonEntity.class);
+        List<SurrenderReasonEntity> surrenderReasonEntities = namedParameterJdbcTemplate.query(searchQuery.toString(),
+                paramValues, row);
 
-		List<SurrenderReasonEntity> surrenderReasonEntities = namedParameterJdbcTemplate.query(searchQuery.toString(),
-				paramValues, row);
+        page.setTotalResults(surrenderReasonEntities.size());
 
-		page.setTotalResults(surrenderReasonEntities.size());
+        List<SurrenderReason> surrenderreasons = new ArrayList<>();
+        for (SurrenderReasonEntity surrenderReasonEntity : surrenderReasonEntities)
+            surrenderreasons.add(surrenderReasonEntity.toDomain());
+        page.setPagedData(surrenderreasons);
 
-		List<SurrenderReason> surrenderreasons = new ArrayList<>();
-		for (SurrenderReasonEntity surrenderReasonEntity : surrenderReasonEntities) {
+        return page;
+    }
 
-			surrenderreasons.add(surrenderReasonEntity.toDomain());
-		}
-		page.setPagedData(surrenderreasons);
+    public SurrenderReasonEntity findById(SurrenderReasonEntity entity) {
+        List<String> list = allIdentitiferFields.get(entity.getClass().getSimpleName());
 
-		return page;
-	}
+        Map<String, Object> paramValues = new HashMap<>();
 
-	public SurrenderReasonEntity findById(SurrenderReasonEntity entity) {
-		List<String> list = allIdentitiferFields.get(entity.getClass().getSimpleName());
+        for (String s : list)
+            paramValues.put(s, getValue(getField(entity, s), entity));
 
-		Map<String, Object> paramValues = new HashMap<>();
+        List<SurrenderReasonEntity> surrenderreasons = namedParameterJdbcTemplate.query(
+                getByIdQuery.get(entity.getClass().getSimpleName()).toString(), paramValues,
+                new BeanPropertyRowMapper(SurrenderReasonEntity.class));
+        if (surrenderreasons.isEmpty())
+            return null;
+        else
+            return surrenderreasons.get(0);
 
-		for (String s : list) {
-			paramValues.put(s, getValue(getField(entity, s), entity));
-		}
-
-		List<SurrenderReasonEntity> surrenderreasons = namedParameterJdbcTemplate.query(
-				getByIdQuery.get(entity.getClass().getSimpleName()).toString(), paramValues,
-				new BeanPropertyRowMapper(SurrenderReasonEntity.class));
-		if (surrenderreasons.isEmpty()) {
-			return null;
-		} else {
-			return surrenderreasons.get(0);
-		}
-
-	}
+    }
 
 }

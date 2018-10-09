@@ -58,32 +58,30 @@ import lombok.Setter;
 @Builder
 public class InstrumentType extends Auditable {
 
-	/*
-	 * id is the unique reference to instrument type entered in the system.
-	 */
-	private String id;
+    /*
+     * id is the unique reference to instrument type entered in the system.
+     */
+    private String id;
 
-	/*
-	 * type specifies the mode/type of transaction that can be made - i.e
-	 * Cheque,DD,RTGS. For receipt - Cheque,DD,RTGS
-	 */
-	@NotNull
-	@NotBlank
-	@Size(max = 50, min = 2)
-	private String name;
+    /*
+     * type specifies the mode/type of transaction that can be made - i.e Cheque,DD,RTGS. For receipt - Cheque,DD,RTGS
+     */
+    @NotNull
+    @NotBlank
+    @Size(max = 50, min = 2)
+    private String name;
 
-	/*
-	 * description specifies details of the instrument type . For example type DD
-	 * description may be Demand Draft
-	 */
+    /*
+     * description specifies details of the instrument type . For example type DD description may be Demand Draft
+     */
 
-	@Size(max = 100)
-	private String description;
+    @Size(max = 100)
+    private String description;
 
-	/*
-	 * active specifies whether the type is active for transacting.
-	 */
-	@NotNull
-	private Boolean active;
+    /*
+     * active specifies whether the type is active for transacting.
+     */
+    @NotNull
+    private Boolean active;
 
 }

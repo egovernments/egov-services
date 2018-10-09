@@ -11,63 +11,63 @@ import org.springframework.stereotype.Service;
 @Service
 public class InstrumentTypeQueueRepository {
 
-	private FinancialInstrumentProducer financialInstrumentProducer;
+    private FinancialInstrumentProducer financialInstrumentProducer;
 
-	private String validatedTopic;
+    private String validatedTopic;
 
-	private String instrumentTypeValidatedKey;
+    private String instrumentTypeValidatedKey;
 
-	private String completedTopic;
+    private String completedTopic;
 
-	private String instrumentTypeCompletedKey;
+    private String instrumentTypeCompletedKey;
 
-	@Autowired
-	public InstrumentTypeQueueRepository(FinancialInstrumentProducer financialInstrumentProducer,
-			@Value("${kafka.topics.egf.instrument.validated.topic}") String validatedTopic,
-			@Value("${kafka.topics.egf.instrument.instrument.type.validated.key}") String instrumentTypeValidatedKey,
-			@Value("${kafka.topics.egf.instrument.completed.topic}") String completedTopic,
-			@Value("${kafka.topics.egf.instrument.instrument.type.completed.key}") String instrumentTypeCompletedKey) {
+    @Autowired
+    public InstrumentTypeQueueRepository(FinancialInstrumentProducer financialInstrumentProducer,
+            @Value("${kafka.topics.egf.instrument.validated.topic}") String validatedTopic,
+            @Value("${kafka.topics.egf.instrument.instrument.type.validated.key}") String instrumentTypeValidatedKey,
+            @Value("${kafka.topics.egf.instrument.completed.topic}") String completedTopic,
+            @Value("${kafka.topics.egf.instrument.instrument.type.completed.key}") String instrumentTypeCompletedKey) {
 
-		this.financialInstrumentProducer = financialInstrumentProducer;
-		this.validatedTopic = validatedTopic;
-		this.instrumentTypeValidatedKey = instrumentTypeValidatedKey;
-		this.completedTopic = completedTopic;
-		this.instrumentTypeCompletedKey = instrumentTypeCompletedKey;
-	}
+        this.financialInstrumentProducer = financialInstrumentProducer;
+        this.validatedTopic = validatedTopic;
+        this.instrumentTypeValidatedKey = instrumentTypeValidatedKey;
+        this.completedTopic = completedTopic;
+        this.instrumentTypeCompletedKey = instrumentTypeCompletedKey;
+    }
 
-	public void addToQue(InstrumentTypeRequest request) {
-		HashMap<String, Object> topicMap = new HashMap<String, Object>();
+    public void addToQue(InstrumentTypeRequest request) {
+        HashMap<String, Object> topicMap = new HashMap<String, Object>();
 
-		switch (request.getRequestInfo().getAction().toLowerCase()) {
+        switch (request.getRequestInfo().getAction().toLowerCase()) {
 
-		case "create":
-			topicMap.put("instrumenttype_create", request);
-			System.out.println("push create topic" + request);
-			break;
-		case "update":
-			topicMap.put("instrumenttype_update", request);
-			break;
-		case "delete":
-			topicMap.put("instrumenttype_delete", request);
-			break;
+        case "create":
+            topicMap.put("instrumenttype_create", request);
+            System.out.println("push create topic" + request);
+            break;
+        case "update":
+            topicMap.put("instrumenttype_update", request);
+            break;
+        case "delete":
+            topicMap.put("instrumenttype_delete", request);
+            break;
 
-		}
-		financialInstrumentProducer.sendMessage(validatedTopic, instrumentTypeValidatedKey, topicMap);
-	}
+        }
+        financialInstrumentProducer.sendMessage(validatedTopic, instrumentTypeValidatedKey, topicMap);
+    }
 
-	public void addToSearchQue(InstrumentTypeRequest request) {
+    public void addToSearchQue(InstrumentTypeRequest request) {
 
-		HashMap<String, Object> topicMap = new HashMap<String, Object>();
+        HashMap<String, Object> topicMap = new HashMap<String, Object>();
 
-		if (!request.getInstrumentTypes().isEmpty()) {
+        if (!request.getInstrumentTypes().isEmpty()) {
 
-			topicMap.put("instrumenttype_persisted", request);
+            topicMap.put("instrumenttype_persisted", request);
 
-			System.out.println("push search topic" + request);
+            System.out.println("push search topic" + request);
 
-		}
+        }
 
-		financialInstrumentProducer.sendMessage(completedTopic, instrumentTypeCompletedKey, topicMap);
+        financialInstrumentProducer.sendMessage(completedTopic, instrumentTypeCompletedKey, topicMap);
 
-	}
+    }
 }

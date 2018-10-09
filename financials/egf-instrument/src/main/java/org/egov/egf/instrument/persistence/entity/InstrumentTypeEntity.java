@@ -16,29 +16,29 @@ import lombok.Setter;
 
 @Builder
 public class InstrumentTypeEntity extends AuditableEntity {
-	public static final String TABLE_NAME = "egf_instrumenttype";
-	private String id;
-	private String name;
-	private String description;
-	private Boolean active;
+    public static final String TABLE_NAME = "egf_instrumenttype";
+    private String id;
+    private String name;
+    private String description;
+    private Boolean active;
 
-	public InstrumentType toDomain() {
-		InstrumentType instrumentType = new InstrumentType();
-		super.toDomain(instrumentType);
-		instrumentType.setId(this.id);
-		instrumentType.setName(this.name);
-		instrumentType.setDescription(this.description);
-		instrumentType.setActive(this.active);
-		return instrumentType;
-	}
+    public InstrumentType toDomain() {
+        InstrumentType instrumentType = new InstrumentType();
+        super.toDomain(instrumentType);
+        instrumentType.setId(id);
+        instrumentType.setName(name);
+        instrumentType.setDescription(description);
+        instrumentType.setActive(active);
+        return instrumentType;
+    }
 
-	public InstrumentTypeEntity toEntity(InstrumentType instrumentType) {
-		super.toEntity(instrumentType);
-		this.id = instrumentType.getId();
-		this.name = instrumentType.getName();
-		this.description = instrumentType.getDescription();
-		this.active = instrumentType.getActive();
-		return this;
-	}
+    public InstrumentTypeEntity toEntity(InstrumentType instrumentType) {
+        super.toEntity(instrumentType);
+        id = instrumentType.getId();
+        name = instrumentType.getName();
+        description = instrumentType.getDescription();
+        active = instrumentType.getActive();
+        return this;
+    }
 
 }

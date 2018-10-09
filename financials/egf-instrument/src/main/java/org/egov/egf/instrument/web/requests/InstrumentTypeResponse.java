@@ -13,7 +13,7 @@ import lombok.Data;
 
 @JsonInclude(value = Include.NON_NULL)
 public @Data class InstrumentTypeResponse {
-	private ResponseInfo responseInfo;
-	private List<InstrumentTypeContract> instrumentTypes;
-	private PaginationContract page;
+    private ResponseInfo responseInfo;
+    private List<InstrumentTypeContract> instrumentTypes;
+    private PaginationContract page;
 }

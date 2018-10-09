@@ -31,145 +31,144 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/surrenderreasons")
 public class SurrenderReasonController {
 
-	public static final String ACTION_CREATE = "create";
-	public static final String ACTION_UPDATE = "update";
-	public static final String ACTION_DELETE = "delete";
-	public static final String PLACEHOLDER = "placeholder";
+    public static final String ACTION_CREATE = "create";
+    public static final String ACTION_UPDATE = "update";
+    public static final String ACTION_DELETE = "delete";
+    public static final String PLACEHOLDER = "placeholder";
 
-	@Autowired
-	private SurrenderReasonService surrenderReasonService;
+    @Autowired
+    private SurrenderReasonService surrenderReasonService;
 
-	@PostMapping("/_create")
-	@ResponseStatus(HttpStatus.CREATED)
-	public SurrenderReasonResponse create(@RequestBody SurrenderReasonRequest surrenderReasonRequest,
-			BindingResult errors) {
+    @PostMapping("/_create")
+    @ResponseStatus(HttpStatus.CREATED)
+    public SurrenderReasonResponse create(@RequestBody SurrenderReasonRequest surrenderReasonRequest,
+            BindingResult errors) {
 
-		SurrenderReasonMapper mapper = new SurrenderReasonMapper();
-		SurrenderReasonResponse surrenderReasonResponse = new SurrenderReasonResponse();
-		surrenderReasonResponse.setResponseInfo(getResponseInfo(surrenderReasonRequest.getRequestInfo()));
-		List<SurrenderReason> surrenderreasons = new ArrayList<>();
-		SurrenderReason surrenderReason;
-		List<SurrenderReasonContract> surrenderReasonContracts = new ArrayList<>();
-		SurrenderReasonContract contract;
+        SurrenderReasonMapper mapper = new SurrenderReasonMapper();
+        SurrenderReasonResponse surrenderReasonResponse = new SurrenderReasonResponse();
+        surrenderReasonResponse.setResponseInfo(getResponseInfo(surrenderReasonRequest.getRequestInfo()));
+        List<SurrenderReason> surrenderreasons = new ArrayList<>();
+        SurrenderReason surrenderReason;
+        List<SurrenderReasonContract> surrenderReasonContracts = new ArrayList<>();
+        SurrenderReasonContract contract;
 
-		surrenderReasonRequest.getRequestInfo().setAction(ACTION_CREATE);
+        surrenderReasonRequest.getRequestInfo().setAction(ACTION_CREATE);
 
-		for (SurrenderReasonContract surrenderReasonContract : surrenderReasonRequest.getSurrenderReasons()) {
-			surrenderReason = mapper.toDomain(surrenderReasonContract);
-			surrenderReason.setCreatedDate(new Date());
-			surrenderReason.setCreatedBy(surrenderReasonRequest.getRequestInfo().getUserInfo());
-			surrenderReason.setLastModifiedBy(surrenderReasonRequest.getRequestInfo().getUserInfo());
-			surrenderreasons.add(surrenderReason);
-		}
+        for (SurrenderReasonContract surrenderReasonContract : surrenderReasonRequest.getSurrenderReasons()) {
+            surrenderReason = mapper.toDomain(surrenderReasonContract);
+            surrenderReason.setCreatedDate(new Date());
+            surrenderReason.setCreatedBy(surrenderReasonRequest.getRequestInfo().getUserInfo());
+            surrenderReason.setLastModifiedBy(surrenderReasonRequest.getRequestInfo().getUserInfo());
+            surrenderreasons.add(surrenderReason);
+        }
 
-		surrenderreasons = surrenderReasonService.create(surrenderreasons, errors,
-				surrenderReasonRequest.getRequestInfo());
+        surrenderreasons = surrenderReasonService.create(surrenderreasons, errors,
+                surrenderReasonRequest.getRequestInfo());
 
-		for (SurrenderReason sr : surrenderreasons) {
-			contract = mapper.toContract(sr);
-			surrenderReasonContracts.add(contract);
-		}
+        for (SurrenderReason sr : surrenderreasons) {
+            contract = mapper.toContract(sr);
+            surrenderReasonContracts.add(contract);
+        }
 
-		surrenderReasonResponse.setSurrenderReasons(surrenderReasonContracts);
+        surrenderReasonResponse.setSurrenderReasons(surrenderReasonContracts);
 
-		return surrenderReasonResponse;
-	}
+        return surrenderReasonResponse;
+    }
 
-	@PostMapping("/_update")
-	@ResponseStatus(HttpStatus.CREATED)
-	public SurrenderReasonResponse update(@RequestBody SurrenderReasonRequest surrenderReasonRequest,
-			BindingResult errors) {
+    @PostMapping("/_update")
+    @ResponseStatus(HttpStatus.CREATED)
+    public SurrenderReasonResponse update(@RequestBody SurrenderReasonRequest surrenderReasonRequest,
+            BindingResult errors) {
 
-		SurrenderReasonMapper mapper = new SurrenderReasonMapper();
-		surrenderReasonRequest.getRequestInfo().setAction(ACTION_UPDATE);
-		SurrenderReasonResponse surrenderReasonResponse = new SurrenderReasonResponse();
-		List<SurrenderReason> surrenderreasons = new ArrayList<>();
-		surrenderReasonResponse.setResponseInfo(getResponseInfo(surrenderReasonRequest.getRequestInfo()));
-		SurrenderReason surrenderReason;
-		SurrenderReasonContract contract;
-		List<SurrenderReasonContract> surrenderReasonContracts = new ArrayList<>();
+        SurrenderReasonMapper mapper = new SurrenderReasonMapper();
+        surrenderReasonRequest.getRequestInfo().setAction(ACTION_UPDATE);
+        SurrenderReasonResponse surrenderReasonResponse = new SurrenderReasonResponse();
+        List<SurrenderReason> surrenderreasons = new ArrayList<>();
+        surrenderReasonResponse.setResponseInfo(getResponseInfo(surrenderReasonRequest.getRequestInfo()));
+        SurrenderReason surrenderReason;
+        SurrenderReasonContract contract;
+        List<SurrenderReasonContract> surrenderReasonContracts = new ArrayList<>();
 
-		for (SurrenderReasonContract surrenderReasonContract : surrenderReasonRequest.getSurrenderReasons()) {
-			surrenderReason = mapper.toDomain(surrenderReasonContract);
-			surrenderReason.setLastModifiedBy(surrenderReasonRequest.getRequestInfo().getUserInfo());
-			surrenderReason.setLastModifiedDate(new Date());
-			surrenderreasons.add(surrenderReason);
-		}
+        for (SurrenderReasonContract surrenderReasonContract : surrenderReasonRequest.getSurrenderReasons()) {
+            surrenderReason = mapper.toDomain(surrenderReasonContract);
+            surrenderReason.setLastModifiedBy(surrenderReasonRequest.getRequestInfo().getUserInfo());
+            surrenderReason.setLastModifiedDate(new Date());
+            surrenderreasons.add(surrenderReason);
+        }
 
-		surrenderreasons = surrenderReasonService.update(surrenderreasons, errors,
-				surrenderReasonRequest.getRequestInfo());
+        surrenderreasons = surrenderReasonService.update(surrenderreasons, errors,
+                surrenderReasonRequest.getRequestInfo());
 
-		for (SurrenderReason sr : surrenderreasons) {
-			contract = mapper.toContract(sr);
-			surrenderReasonContracts.add(contract);
-		}
-		surrenderReasonResponse.setSurrenderReasons(surrenderReasonContracts);
+        for (SurrenderReason sr : surrenderreasons) {
+            contract = mapper.toContract(sr);
+            surrenderReasonContracts.add(contract);
+        }
+        surrenderReasonResponse.setSurrenderReasons(surrenderReasonContracts);
 
-		return surrenderReasonResponse;
-	}
-	
-	@PostMapping("/_delete")
-	@ResponseStatus(HttpStatus.CREATED)
-	public SurrenderReasonResponse delete(@RequestBody SurrenderReasonRequest surrenderReasonRequest,
-			BindingResult errors) {
+        return surrenderReasonResponse;
+    }
 
-		SurrenderReasonMapper mapper = new SurrenderReasonMapper();
-		surrenderReasonRequest.getRequestInfo().setAction(ACTION_DELETE);
-		SurrenderReasonResponse surrenderReasonResponse = new SurrenderReasonResponse();
-		List<SurrenderReason> surrenderreasons = new ArrayList<>();
-		surrenderReasonResponse.setResponseInfo(getResponseInfo(surrenderReasonRequest.getRequestInfo()));
-		SurrenderReason surrenderReason;
-		SurrenderReasonContract contract;
-		List<SurrenderReasonContract> surrenderReasonContracts = new ArrayList<>();
+    @PostMapping("/_delete")
+    @ResponseStatus(HttpStatus.CREATED)
+    public SurrenderReasonResponse delete(@RequestBody SurrenderReasonRequest surrenderReasonRequest,
+            BindingResult errors) {
 
-		for (SurrenderReasonContract surrenderReasonContract : surrenderReasonRequest.getSurrenderReasons()) {
-			surrenderReason = mapper.toDomain(surrenderReasonContract);
-			surrenderreasons.add(surrenderReason);
-		}
+        SurrenderReasonMapper mapper = new SurrenderReasonMapper();
+        surrenderReasonRequest.getRequestInfo().setAction(ACTION_DELETE);
+        SurrenderReasonResponse surrenderReasonResponse = new SurrenderReasonResponse();
+        List<SurrenderReason> surrenderreasons = new ArrayList<>();
+        surrenderReasonResponse.setResponseInfo(getResponseInfo(surrenderReasonRequest.getRequestInfo()));
+        SurrenderReason surrenderReason;
+        SurrenderReasonContract contract;
+        List<SurrenderReasonContract> surrenderReasonContracts = new ArrayList<>();
 
-		surrenderreasons = surrenderReasonService.delete(surrenderreasons, errors,
-				surrenderReasonRequest.getRequestInfo());
+        for (SurrenderReasonContract surrenderReasonContract : surrenderReasonRequest.getSurrenderReasons()) {
+            surrenderReason = mapper.toDomain(surrenderReasonContract);
+            surrenderreasons.add(surrenderReason);
+        }
 
-		for (SurrenderReason sr : surrenderreasons) {
-			contract = mapper.toContract(sr);
-			surrenderReasonContracts.add(contract);
-		}
-		surrenderReasonResponse.setSurrenderReasons(surrenderReasonContracts);
+        surrenderreasons = surrenderReasonService.delete(surrenderreasons, errors,
+                surrenderReasonRequest.getRequestInfo());
 
-		return surrenderReasonResponse;
-	}
+        for (SurrenderReason sr : surrenderreasons) {
+            contract = mapper.toContract(sr);
+            surrenderReasonContracts.add(contract);
+        }
+        surrenderReasonResponse.setSurrenderReasons(surrenderReasonContracts);
 
-	@PostMapping("/_search")
-	@ResponseBody
-	@ResponseStatus(HttpStatus.OK)
-	public SurrenderReasonResponse search(@ModelAttribute SurrenderReasonSearchContract surrenderReasonSearchContract,
-			RequestInfo requestInfo, BindingResult errors) {
+        return surrenderReasonResponse;
+    }
 
-		SurrenderReasonMapper mapper = new SurrenderReasonMapper();
-		SurrenderReasonSearch domain = mapper.toSearchDomain(surrenderReasonSearchContract);
-		SurrenderReasonContract contract;
-		List<SurrenderReasonContract> surrenderReasonContracts = new ArrayList<>();
-		Pagination<SurrenderReason> surrenderreasons = surrenderReasonService.search(domain);
+    @PostMapping("/_search")
+    @ResponseBody
+    @ResponseStatus(HttpStatus.OK)
+    public SurrenderReasonResponse search(@ModelAttribute SurrenderReasonSearchContract surrenderReasonSearchContract,
+            RequestInfo requestInfo, BindingResult errors) {
 
-		if (surrenderreasons.getPagedData() != null) {
-			for (SurrenderReason surrenderReason : surrenderreasons.getPagedData()) {
-				contract = mapper.toContract(surrenderReason);
-				surrenderReasonContracts.add(contract);
-			}
-		}
+        SurrenderReasonMapper mapper = new SurrenderReasonMapper();
+        SurrenderReasonSearch domain = mapper.toSearchDomain(surrenderReasonSearchContract);
+        SurrenderReasonContract contract;
+        List<SurrenderReasonContract> surrenderReasonContracts = new ArrayList<>();
+        Pagination<SurrenderReason> surrenderreasons = surrenderReasonService.search(domain);
 
-		SurrenderReasonResponse response = new SurrenderReasonResponse();
-		response.setSurrenderReasons(surrenderReasonContracts);
-		response.setPage(new PaginationContract(surrenderreasons));
-		response.setResponseInfo(getResponseInfo(requestInfo));
+        if (surrenderreasons.getPagedData() != null)
+            for (SurrenderReason surrenderReason : surrenderreasons.getPagedData()) {
+                contract = mapper.toContract(surrenderReason);
+                surrenderReasonContracts.add(contract);
+            }
 
-		return response;
+        SurrenderReasonResponse response = new SurrenderReasonResponse();
+        response.setSurrenderReasons(surrenderReasonContracts);
+        response.setPage(new PaginationContract(surrenderreasons));
+        response.setResponseInfo(getResponseInfo(requestInfo));
 
-	}
+        return response;
 
-	private ResponseInfo getResponseInfo(RequestInfo requestInfo) {
-		return ResponseInfo.builder().apiId(requestInfo.getApiId()).ver(requestInfo.getVer())
-				.resMsgId(requestInfo.getMsgId()).resMsgId(PLACEHOLDER).status(PLACEHOLDER).build();
-	}
+    }
+
+    private ResponseInfo getResponseInfo(RequestInfo requestInfo) {
+        return ResponseInfo.builder().apiId(requestInfo.getApiId()).ver(requestInfo.getVer())
+                .resMsgId(requestInfo.getMsgId()).resMsgId(PLACEHOLDER).status(PLACEHOLDER).build();
+    }
 
 }

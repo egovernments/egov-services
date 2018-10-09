@@ -53,22 +53,20 @@ import lombok.Setter;
 @Builder
 public class ECSType {
 
-	/*
-	 * id is the unique reference to ECS type entered in the system.
-	 */
-	private String id;
+    /*
+     * id is the unique reference to ECS type entered in the system.
+     */
+    private String id;
 
-	/*
-	 *
-	 * type will give you name of the ECSType of ECS receipt made. Ex - ICICI,
-	 * ONLINE, etc,.
-	 */
-	private String type;
+    /*
+     * type will give you name of the ECSType of ECS receipt made. Ex - ICICI, ONLINE, etc,.
+     */
+    private String type;
 
-	/*
-	 * active specifies whether the type is active for transacting.
-	 */
+    /*
+     * active specifies whether the type is active for transacting.
+     */
 
-	private String active;
+    private String active;
 
 }

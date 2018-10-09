@@ -11,8 +11,8 @@ import lombok.Setter;
 @NoArgsConstructor
 
 public class InstrumentAccountCodeSearch extends InstrumentAccountCode {
-	private String ids;
-	private String sortBy;
-	private Integer pageSize;
-	private Integer offset;
+    private String ids;
+    private String sortBy;
+    private Integer pageSize;
+    private Integer offset;
 }

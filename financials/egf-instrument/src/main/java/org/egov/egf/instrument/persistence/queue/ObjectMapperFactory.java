@@ -5,14 +5,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class ObjectMapperFactory {
 
-	private ObjectMapper objectMapper;
-	
-	public ObjectMapperFactory(ObjectMapper objectMapper) {
-		this.objectMapper = objectMapper;
-	}
+    private ObjectMapper objectMapper;
 
-	public ObjectMapper create() {
-		objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
-		return objectMapper;
-	}
+    public ObjectMapperFactory(ObjectMapper objectMapper) {
+        this.objectMapper = objectMapper;
+    }
+
+    public ObjectMapper create() {
+        objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+        return objectMapper;
+    }
 }

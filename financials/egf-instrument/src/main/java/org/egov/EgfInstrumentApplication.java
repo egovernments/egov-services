@@ -26,72 +26,72 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-@Import({TracerConfiguration.class})
+@Import({ TracerConfiguration.class })
 @SpringBootApplication
 public class EgfInstrumentApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(EgfInstrumentApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(EgfInstrumentApplication.class, args);
+    }
 
-	private static final String CLUSTER_NAME = "cluster.name";
+    private static final String CLUSTER_NAME = "cluster.name";
 
-	@Value("${app.timezone}")
-	private String timeZone;
+    @Value("${app.timezone}")
+    private String timeZone;
 
-	@Value("${es.host}")
-	private String elasticSearchHost;
+    @Value("${es.host}")
+    private String elasticSearchHost;
 
-	@Value("${es.transport.port}")
-	private Integer elasticSearchTransportPort;
+    @Value("${es.transport.port}")
+    private Integer elasticSearchTransportPort;
 
-	@Value("${es.cluster.name}")
-	private String elasticSearchClusterName;
+    @Value("${es.cluster.name}")
+    private String elasticSearchClusterName;
 
-	private TransportClient client;
+    private TransportClient client;
 
-	@PostConstruct
-	public void init() throws UnknownHostException {
-		TimeZone.setDefault(TimeZone.getTimeZone(timeZone));
-		Settings settings = Settings.builder().put(CLUSTER_NAME, elasticSearchClusterName).build();
-		final InetAddress esAddress = InetAddress.getByName(elasticSearchHost);
-		final InetSocketTransportAddress transportAddress = new InetSocketTransportAddress(esAddress,
-				elasticSearchTransportPort);
-		client = new PreBuiltTransportClient(settings).addTransportAddress(transportAddress);
-	}
+    @PostConstruct
+    public void init() throws UnknownHostException {
+        TimeZone.setDefault(TimeZone.getTimeZone(timeZone));
+        Settings settings = Settings.builder().put(CLUSTER_NAME, elasticSearchClusterName).build();
+        final InetAddress esAddress = InetAddress.getByName(elasticSearchHost);
+        final InetSocketTransportAddress transportAddress = new InetSocketTransportAddress(esAddress,
+                elasticSearchTransportPort);
+        client = new PreBuiltTransportClient(settings).addTransportAddress(transportAddress);
+    }
 
-	@Bean
-	public MappingJackson2HttpMessageConverter jacksonConverter() {
-		MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter();
-		ObjectMapper mapper = new ObjectMapper();
-		mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
-		// mapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS,
-		// false);
-		mapper.setDateFormat(new SimpleDateFormat("dd-MM-yyyy"));
-		mapper.setTimeZone(TimeZone.getTimeZone(timeZone));
-		converter.setObjectMapper(mapper);
-		return converter;
-	}
+    @Bean
+    public MappingJackson2HttpMessageConverter jacksonConverter() {
+        MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter();
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+        // mapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS,
+        // false);
+        mapper.setDateFormat(new SimpleDateFormat("dd-MM-yyyy"));
+        mapper.setTimeZone(TimeZone.getTimeZone(timeZone));
+        converter.setObjectMapper(mapper);
+        return converter;
+    }
 
-	@Bean
-	public WebMvcConfigurerAdapter webMvcConfigurerAdapter() {
-		return new WebMvcConfigurerAdapter() {
+    @Bean
+    public WebMvcConfigurerAdapter webMvcConfigurerAdapter() {
+        return new WebMvcConfigurerAdapter() {
 
-			@Override
-			public void configureContentNegotiation(ContentNegotiationConfigurer configurer) {
-				configurer.defaultContentType(MediaType.APPLICATION_JSON_UTF8);
-			}
+            @Override
+            public void configureContentNegotiation(ContentNegotiationConfigurer configurer) {
+                configurer.defaultContentType(MediaType.APPLICATION_JSON_UTF8);
+            }
 
-		};
-	}
+        };
+    }
 
-	@Bean
-	public TransportClient getTransportClient() {
-		return client;
-	}
+    @Bean
+    public TransportClient getTransportClient() {
+        return client;
+    }
 
-	@Bean
-	public RestTemplate restTemplate() {
-		return new RestTemplate();
-	}
+    @Bean
+    public RestTemplate restTemplate() {
+        return new RestTemplate();
+    }
 }

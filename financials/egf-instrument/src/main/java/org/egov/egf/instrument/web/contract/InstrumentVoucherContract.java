@@ -58,15 +58,14 @@ import lombok.Setter;
 @JsonPropertyOrder({ "instrument", "voucherHeaderId" })
 public class InstrumentVoucherContract extends AuditableContract {
 
-	/*
-	 * instrumentHeaderId is the reference of the instrument attached to a
-	 * voucher
-	 */
-	private String instrument;
+    /*
+     * instrumentHeaderId is the reference of the instrument attached to a voucher
+     */
+    private String instrument;
 
-	/*
-	 * voucherHeaderId is the reference of the voucher attached to a instrument.
-	 */
-	private String voucherHeaderId;
+    /*
+     * voucherHeaderId is the reference of the voucher attached to a instrument.
+     */
+    private String voucherHeaderId;
 
 }

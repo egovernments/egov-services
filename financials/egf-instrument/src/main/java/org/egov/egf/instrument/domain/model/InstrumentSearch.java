@@ -13,12 +13,12 @@ import lombok.Setter;
 @NoArgsConstructor
 
 public class InstrumentSearch extends Instrument {
-	private String ids;
-	private String sortBy;
-	private Integer pageSize;
-	private Integer offset;
-	private String instrumentTypes;
-	private String financialStatuses;
-	private Date transactionFromDate;
-	private Date transactionToDate;
+    private String ids;
+    private String sortBy;
+    private Integer pageSize;
+    private Integer offset;
+    private String instrumentTypes;
+    private String financialStatuses;
+    private Date transactionFromDate;
+    private Date transactionToDate;
 }

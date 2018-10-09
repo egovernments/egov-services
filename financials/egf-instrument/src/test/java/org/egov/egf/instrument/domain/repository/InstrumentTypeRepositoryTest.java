@@ -1,5 +1,13 @@
 package org.egov.egf.instrument.domain.repository;
 
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.domain.model.Pagination;
 import org.egov.egf.instrument.domain.model.InstrumentType;
@@ -17,276 +25,267 @@ import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
 @RunWith(MockitoJUnitRunner.class)
 public class InstrumentTypeRepositoryTest {
 
-	@Mock
-	private InstrumentTypeJdbcRepository instrumentTypeJdbcRepository;
+    @Mock
+    private InstrumentTypeJdbcRepository instrumentTypeJdbcRepository;
 
-	private InstrumentTypeRepository instrumentTypeRepositoryWithKafka;
+    private InstrumentTypeRepository instrumentTypeRepositoryWithKafka;
 
-	private InstrumentTypeRepository instrumentTypeRepositoryWithOutKafka;
+    private InstrumentTypeRepository instrumentTypeRepositoryWithOutKafka;
 
-	@Mock
-	private InstrumentTypeQueueRepository instrumentTypeQueueRepository;
+    @Mock
+    private InstrumentTypeQueueRepository instrumentTypeQueueRepository;
 
-	@Mock
-	private FinancialConfigurationContractRepository financialConfigurationContractRepository;
+    @Mock
+    private FinancialConfigurationContractRepository financialConfigurationContractRepository;
 
-	@Captor
-	private ArgumentCaptor<InstrumentTypeRequest> captor;
+    @Captor
+    private ArgumentCaptor<InstrumentTypeRequest> captor;
 
-	private RequestInfo requestInfo = new RequestInfo();
+    private RequestInfo requestInfo = new RequestInfo();
 
-	@Mock
-	private InstrumentTypeESRepository instrumentTypeESRepository;
+    @Mock
+    private InstrumentTypeESRepository instrumentTypeESRepository;
 
-	@Before
-	public void setup() {
-		instrumentTypeRepositoryWithKafka = new InstrumentTypeRepository(instrumentTypeJdbcRepository,
-				instrumentTypeQueueRepository, "yes",financialConfigurationContractRepository,instrumentTypeESRepository);
+    @Before
+    public void setup() {
+        instrumentTypeRepositoryWithKafka = new InstrumentTypeRepository(instrumentTypeJdbcRepository,
+                instrumentTypeQueueRepository, "yes", financialConfigurationContractRepository, instrumentTypeESRepository);
 
-		instrumentTypeRepositoryWithOutKafka = new InstrumentTypeRepository(instrumentTypeJdbcRepository,
-				instrumentTypeQueueRepository, "no",financialConfigurationContractRepository,instrumentTypeESRepository);
-	}
+        instrumentTypeRepositoryWithOutKafka = new InstrumentTypeRepository(instrumentTypeJdbcRepository,
+                instrumentTypeQueueRepository, "no", financialConfigurationContractRepository, instrumentTypeESRepository);
+    }
 
-	@Test
-	public void test_find_by_id() {
-		InstrumentTypeEntity entity = getInstrumentTypeEntity();
-		InstrumentType expectedResult = entity.toDomain();
+    @Test
+    public void test_find_by_id() {
+        InstrumentTypeEntity entity = getInstrumentTypeEntity();
+        InstrumentType expectedResult = entity.toDomain();
 
-		when(instrumentTypeJdbcRepository.findById(any(InstrumentTypeEntity.class))).thenReturn(entity);
+        when(instrumentTypeJdbcRepository.findById(any(InstrumentTypeEntity.class))).thenReturn(entity);
 
-		InstrumentType actualResult = instrumentTypeRepositoryWithKafka.findById(getInstrumentTypeDomin());
+        InstrumentType actualResult = instrumentTypeRepositoryWithKafka.findById(getInstrumentTypeDomin());
 
-		assertEquals(expectedResult.getActive(), actualResult.getActive());
-		assertEquals(expectedResult.getName(), actualResult.getName());
-		assertEquals(expectedResult.getDescription(), actualResult.getDescription());
-		assertEquals(expectedResult.getTenantId(), actualResult.getTenantId());
-	}
+        assertEquals(expectedResult.getActive(), actualResult.getActive());
+        assertEquals(expectedResult.getName(), actualResult.getName());
+        assertEquals(expectedResult.getDescription(), actualResult.getDescription());
+        assertEquals(expectedResult.getTenantId(), actualResult.getTenantId());
+    }
 
-	@Test
-	public void test_find_by_id_return_null() {
-		InstrumentTypeEntity entity = getInstrumentTypeEntity();
+    @Test
+    public void test_find_by_id_return_null() {
+        InstrumentTypeEntity entity = getInstrumentTypeEntity();
 
-		when(instrumentTypeJdbcRepository.findById(null)).thenReturn(entity);
+        when(instrumentTypeJdbcRepository.findById(null)).thenReturn(entity);
 
-		InstrumentType actualResult = instrumentTypeRepositoryWithKafka.findById(getInstrumentTypeDomin());
+        InstrumentType actualResult = instrumentTypeRepositoryWithKafka.findById(getInstrumentTypeDomin());
 
-		assertEquals(null, actualResult);
-	}
+        assertEquals(null, actualResult);
+    }
 
-	@Test
-	public void test_save_with_kafka() {
+    @Test
+    public void test_save_with_kafka() {
 
-		List<InstrumentType> expectedResult = getInstrumentTypes();
+        List<InstrumentType> expectedResult = getInstrumentTypes();
 
-		instrumentTypeRepositoryWithKafka.save(expectedResult, requestInfo);
+        instrumentTypeRepositoryWithKafka.save(expectedResult, requestInfo);
 
-		verify(instrumentTypeQueueRepository).addToQue(captor.capture());
+        verify(instrumentTypeQueueRepository).addToQue(captor.capture());
 
-		final InstrumentTypeRequest actualRequest = captor.getValue();
+        final InstrumentTypeRequest actualRequest = captor.getValue();
 
-		assertEquals(expectedResult.get(0).getActive(), actualRequest.getInstrumentTypes().get(0).getActive());
-		assertEquals(expectedResult.get(0).getName(), actualRequest.getInstrumentTypes().get(0).getName());
-		assertEquals(expectedResult.get(0).getDescription(),
-				actualRequest.getInstrumentTypes().get(0).getDescription());
-		assertEquals(expectedResult.get(0).getTenantId(), actualRequest.getInstrumentTypes().get(0).getTenantId());
+        assertEquals(expectedResult.get(0).getActive(), actualRequest.getInstrumentTypes().get(0).getActive());
+        assertEquals(expectedResult.get(0).getName(), actualRequest.getInstrumentTypes().get(0).getName());
+        assertEquals(expectedResult.get(0).getDescription(),
+                actualRequest.getInstrumentTypes().get(0).getDescription());
+        assertEquals(expectedResult.get(0).getTenantId(), actualRequest.getInstrumentTypes().get(0).getTenantId());
 
-	}
+    }
 
-	@Test
-	public void test_save_with_out_kafka() {
+    @Test
+    public void test_save_with_out_kafka() {
 
-		List<InstrumentType> expectedResult = getInstrumentTypes();
+        List<InstrumentType> expectedResult = getInstrumentTypes();
 
-		InstrumentTypeEntity entity = new InstrumentTypeEntity().toEntity(expectedResult.get(0));
+        InstrumentTypeEntity entity = new InstrumentTypeEntity().toEntity(expectedResult.get(0));
 
-		when(instrumentTypeJdbcRepository.create(any(InstrumentTypeEntity.class))).thenReturn(entity);
+        when(instrumentTypeJdbcRepository.create(any(InstrumentTypeEntity.class))).thenReturn(entity);
 
-		instrumentTypeRepositoryWithOutKafka.save(expectedResult, requestInfo);
+        instrumentTypeRepositoryWithOutKafka.save(expectedResult, requestInfo);
 
-		verify(instrumentTypeQueueRepository).addToSearchQue(captor.capture());
+        verify(instrumentTypeQueueRepository).addToSearchQue(captor.capture());
 
-		final InstrumentTypeRequest actualRequest = captor.getValue();
+        final InstrumentTypeRequest actualRequest = captor.getValue();
 
-		assertEquals(expectedResult.get(0).getActive(), actualRequest.getInstrumentTypes().get(0).getActive());
-		assertEquals(expectedResult.get(0).getName(), actualRequest.getInstrumentTypes().get(0).getName());
-		assertEquals(expectedResult.get(0).getDescription(),
-				actualRequest.getInstrumentTypes().get(0).getDescription());
-		assertEquals(expectedResult.get(0).getTenantId(), actualRequest.getInstrumentTypes().get(0).getTenantId());
-	}
+        assertEquals(expectedResult.get(0).getActive(), actualRequest.getInstrumentTypes().get(0).getActive());
+        assertEquals(expectedResult.get(0).getName(), actualRequest.getInstrumentTypes().get(0).getName());
+        assertEquals(expectedResult.get(0).getDescription(),
+                actualRequest.getInstrumentTypes().get(0).getDescription());
+        assertEquals(expectedResult.get(0).getTenantId(), actualRequest.getInstrumentTypes().get(0).getTenantId());
+    }
 
-	@Test
-	public void test_update_with_kafka() {
+    @Test
+    public void test_update_with_kafka() {
 
-		List<InstrumentType> expectedResult = getInstrumentTypes();
+        List<InstrumentType> expectedResult = getInstrumentTypes();
 
-		instrumentTypeRepositoryWithKafka.update(expectedResult, requestInfo);
+        instrumentTypeRepositoryWithKafka.update(expectedResult, requestInfo);
 
-		verify(instrumentTypeQueueRepository).addToQue(captor.capture());
+        verify(instrumentTypeQueueRepository).addToQue(captor.capture());
 
-		final InstrumentTypeRequest actualRequest = captor.getValue();
+        final InstrumentTypeRequest actualRequest = captor.getValue();
 
-		assertEquals(expectedResult.get(0).getActive(), actualRequest.getInstrumentTypes().get(0).getActive());
-		assertEquals(expectedResult.get(0).getName(), actualRequest.getInstrumentTypes().get(0).getName());
-		assertEquals(expectedResult.get(0).getDescription(),
-				actualRequest.getInstrumentTypes().get(0).getDescription());
-		assertEquals(expectedResult.get(0).getTenantId(), actualRequest.getInstrumentTypes().get(0).getTenantId());
-	}
-	
-	@Test
-	public void test_delete_with_kafka() {
+        assertEquals(expectedResult.get(0).getActive(), actualRequest.getInstrumentTypes().get(0).getActive());
+        assertEquals(expectedResult.get(0).getName(), actualRequest.getInstrumentTypes().get(0).getName());
+        assertEquals(expectedResult.get(0).getDescription(),
+                actualRequest.getInstrumentTypes().get(0).getDescription());
+        assertEquals(expectedResult.get(0).getTenantId(), actualRequest.getInstrumentTypes().get(0).getTenantId());
+    }
 
-		List<InstrumentType> expectedResult = getInstrumentTypes();
+    @Test
+    public void test_delete_with_kafka() {
 
-		instrumentTypeRepositoryWithKafka.delete(expectedResult, requestInfo);
+        List<InstrumentType> expectedResult = getInstrumentTypes();
 
-		verify(instrumentTypeQueueRepository).addToQue(captor.capture());
+        instrumentTypeRepositoryWithKafka.delete(expectedResult, requestInfo);
 
-		final InstrumentTypeRequest actualRequest = captor.getValue();
+        verify(instrumentTypeQueueRepository).addToQue(captor.capture());
 
-		assertEquals(expectedResult.get(0).getActive(), actualRequest.getInstrumentTypes().get(0).getActive());
-		assertEquals(expectedResult.get(0).getName(), actualRequest.getInstrumentTypes().get(0).getName());
-		assertEquals(expectedResult.get(0).getDescription(),
-				actualRequest.getInstrumentTypes().get(0).getDescription());
-		assertEquals(expectedResult.get(0).getTenantId(), actualRequest.getInstrumentTypes().get(0).getTenantId());
-	}
+        final InstrumentTypeRequest actualRequest = captor.getValue();
 
-	@Test
-	public void test_update_with_out_kafka() {
+        assertEquals(expectedResult.get(0).getActive(), actualRequest.getInstrumentTypes().get(0).getActive());
+        assertEquals(expectedResult.get(0).getName(), actualRequest.getInstrumentTypes().get(0).getName());
+        assertEquals(expectedResult.get(0).getDescription(),
+                actualRequest.getInstrumentTypes().get(0).getDescription());
+        assertEquals(expectedResult.get(0).getTenantId(), actualRequest.getInstrumentTypes().get(0).getTenantId());
+    }
 
-		List<InstrumentType> expectedResult = getInstrumentTypes();
+    @Test
+    public void test_update_with_out_kafka() {
 
-		InstrumentTypeEntity entity = new InstrumentTypeEntity().toEntity(expectedResult.get(0));
+        List<InstrumentType> expectedResult = getInstrumentTypes();
 
-		when(instrumentTypeJdbcRepository.update(any(InstrumentTypeEntity.class))).thenReturn(entity);
+        InstrumentTypeEntity entity = new InstrumentTypeEntity().toEntity(expectedResult.get(0));
 
-		instrumentTypeRepositoryWithOutKafka.update(expectedResult, requestInfo);
+        when(instrumentTypeJdbcRepository.update(any(InstrumentTypeEntity.class))).thenReturn(entity);
 
-		verify(instrumentTypeQueueRepository).addToSearchQue(captor.capture());
+        instrumentTypeRepositoryWithOutKafka.update(expectedResult, requestInfo);
 
-		final InstrumentTypeRequest actualRequest = captor.getValue();
+        verify(instrumentTypeQueueRepository).addToSearchQue(captor.capture());
 
-		assertEquals(expectedResult.get(0).getActive(), actualRequest.getInstrumentTypes().get(0).getActive());
-		assertEquals(expectedResult.get(0).getName(), actualRequest.getInstrumentTypes().get(0).getName());
-		assertEquals(expectedResult.get(0).getDescription(),
-				actualRequest.getInstrumentTypes().get(0).getDescription());
-		assertEquals(expectedResult.get(0).getTenantId(), actualRequest.getInstrumentTypes().get(0).getTenantId());
-	}
-	
-	@Test
-	public void test_delete_with_out_kafka() {
+        final InstrumentTypeRequest actualRequest = captor.getValue();
 
-		List<InstrumentType> expectedResult = getInstrumentTypes();
+        assertEquals(expectedResult.get(0).getActive(), actualRequest.getInstrumentTypes().get(0).getActive());
+        assertEquals(expectedResult.get(0).getName(), actualRequest.getInstrumentTypes().get(0).getName());
+        assertEquals(expectedResult.get(0).getDescription(),
+                actualRequest.getInstrumentTypes().get(0).getDescription());
+        assertEquals(expectedResult.get(0).getTenantId(), actualRequest.getInstrumentTypes().get(0).getTenantId());
+    }
 
-		InstrumentTypeEntity entity = new InstrumentTypeEntity().toEntity(expectedResult.get(0));
+    @Test
+    public void test_delete_with_out_kafka() {
 
-		when(instrumentTypeJdbcRepository.delete(any(InstrumentTypeEntity.class))).thenReturn(entity);
+        List<InstrumentType> expectedResult = getInstrumentTypes();
 
-		instrumentTypeRepositoryWithOutKafka.delete(expectedResult, requestInfo);
+        InstrumentTypeEntity entity = new InstrumentTypeEntity().toEntity(expectedResult.get(0));
 
-		verify(instrumentTypeQueueRepository).addToSearchQue(captor.capture());
+        when(instrumentTypeJdbcRepository.delete(any(InstrumentTypeEntity.class))).thenReturn(entity);
 
-		final InstrumentTypeRequest actualRequest = captor.getValue();
+        instrumentTypeRepositoryWithOutKafka.delete(expectedResult, requestInfo);
 
-		assertEquals(expectedResult.get(0).getActive(), actualRequest.getInstrumentTypes().get(0).getActive());
-		assertEquals(expectedResult.get(0).getName(), actualRequest.getInstrumentTypes().get(0).getName());
-		assertEquals(expectedResult.get(0).getDescription(),
-				actualRequest.getInstrumentTypes().get(0).getDescription());
-		assertEquals(expectedResult.get(0).getTenantId(), actualRequest.getInstrumentTypes().get(0).getTenantId());
-	}
+        verify(instrumentTypeQueueRepository).addToSearchQue(captor.capture());
 
-	@Test
-	public void test_save() {
+        final InstrumentTypeRequest actualRequest = captor.getValue();
 
-		InstrumentTypeEntity entity = getInstrumentTypeEntity();
-		InstrumentType expectedResult = entity.toDomain();
+        assertEquals(expectedResult.get(0).getActive(), actualRequest.getInstrumentTypes().get(0).getActive());
+        assertEquals(expectedResult.get(0).getName(), actualRequest.getInstrumentTypes().get(0).getName());
+        assertEquals(expectedResult.get(0).getDescription(),
+                actualRequest.getInstrumentTypes().get(0).getDescription());
+        assertEquals(expectedResult.get(0).getTenantId(), actualRequest.getInstrumentTypes().get(0).getTenantId());
+    }
 
-		when(instrumentTypeJdbcRepository.create(any(InstrumentTypeEntity.class))).thenReturn(entity);
+    @Test
+    public void test_save() {
 
-		InstrumentType actualResult = instrumentTypeRepositoryWithKafka.save(getInstrumentTypeDomin());
+        InstrumentTypeEntity entity = getInstrumentTypeEntity();
+        InstrumentType expectedResult = entity.toDomain();
 
-		assertEquals(expectedResult.getActive(), actualResult.getActive());
-		assertEquals(expectedResult.getName(), actualResult.getName());
-		assertEquals(expectedResult.getDescription(), actualResult.getDescription());
-		assertEquals(expectedResult.getTenantId(), actualResult.getTenantId());
+        when(instrumentTypeJdbcRepository.create(any(InstrumentTypeEntity.class))).thenReturn(entity);
 
-	}
+        InstrumentType actualResult = instrumentTypeRepositoryWithKafka.save(getInstrumentTypeDomin());
 
-	@Test
-	public void test_update() {
+        assertEquals(expectedResult.getActive(), actualResult.getActive());
+        assertEquals(expectedResult.getName(), actualResult.getName());
+        assertEquals(expectedResult.getDescription(), actualResult.getDescription());
+        assertEquals(expectedResult.getTenantId(), actualResult.getTenantId());
 
-		InstrumentTypeEntity entity = getInstrumentTypeEntity();
-		InstrumentType expectedResult = entity.toDomain();
+    }
 
-		when(instrumentTypeJdbcRepository.update(any(InstrumentTypeEntity.class))).thenReturn(entity);
+    @Test
+    public void test_update() {
 
-		InstrumentType actualResult = instrumentTypeRepositoryWithKafka.update(getInstrumentTypeDomin());
+        InstrumentTypeEntity entity = getInstrumentTypeEntity();
+        InstrumentType expectedResult = entity.toDomain();
 
-		assertEquals(expectedResult.getActive(), actualResult.getActive());
-		assertEquals(expectedResult.getName(), actualResult.getName());
-		assertEquals(expectedResult.getDescription(), actualResult.getDescription());
-		assertEquals(expectedResult.getTenantId(), actualResult.getTenantId());
-	}
+        when(instrumentTypeJdbcRepository.update(any(InstrumentTypeEntity.class))).thenReturn(entity);
 
-	@Test
-	public void test_search() {
+        InstrumentType actualResult = instrumentTypeRepositoryWithKafka.update(getInstrumentTypeDomin());
 
-		Pagination<InstrumentType> expectedResult = new Pagination<>();
-		expectedResult.setPageSize(500);
-		expectedResult.setOffset(0);
+        assertEquals(expectedResult.getActive(), actualResult.getActive());
+        assertEquals(expectedResult.getName(), actualResult.getName());
+        assertEquals(expectedResult.getDescription(), actualResult.getDescription());
+        assertEquals(expectedResult.getTenantId(), actualResult.getTenantId());
+    }
 
+    @Test
+    public void test_search() {
 
-		when(financialConfigurationContractRepository.fetchDataFrom()).thenReturn("db");
-		when(instrumentTypeJdbcRepository.search(any(InstrumentTypeSearch.class))).thenReturn(expectedResult);
+        Pagination<InstrumentType> expectedResult = new Pagination<>();
+        expectedResult.setPageSize(500);
+        expectedResult.setOffset(0);
 
-		Pagination<InstrumentType> actualResult = instrumentTypeRepositoryWithKafka.search(getInstrumentTypeSearch());
+        when(financialConfigurationContractRepository.fetchDataFrom()).thenReturn("db");
+        when(instrumentTypeJdbcRepository.search(any(InstrumentTypeSearch.class))).thenReturn(expectedResult);
 
-		assertEquals(expectedResult, actualResult);
+        Pagination<InstrumentType> actualResult = instrumentTypeRepositoryWithKafka.search(getInstrumentTypeSearch());
 
-	}
+        assertEquals(expectedResult, actualResult);
 
-	private InstrumentType getInstrumentTypeDomin() {
-		InstrumentType instrumentTypeDetail = new InstrumentType();
-		instrumentTypeDetail.setActive(true);
-		instrumentTypeDetail.setName("name");
-		instrumentTypeDetail.setDescription("description");
-		instrumentTypeDetail.setTenantId("default");
-		return instrumentTypeDetail;
-	}
+    }
 
-	private InstrumentTypeEntity getInstrumentTypeEntity() {
-		InstrumentTypeEntity entity = new InstrumentTypeEntity();
-		entity.setActive(true);
-		entity.setName("name");
-		entity.setDescription("description");
-		entity.setTenantId("default");
-		return entity;
-	}
+    private InstrumentType getInstrumentTypeDomin() {
+        InstrumentType instrumentTypeDetail = new InstrumentType();
+        instrumentTypeDetail.setActive(true);
+        instrumentTypeDetail.setName("name");
+        instrumentTypeDetail.setDescription("description");
+        instrumentTypeDetail.setTenantId("default");
+        return instrumentTypeDetail;
+    }
 
-	private InstrumentTypeSearch getInstrumentTypeSearch() {
-		InstrumentTypeSearch instrumentTypeSearch = new InstrumentTypeSearch();
-		instrumentTypeSearch.setPageSize(500);
-		instrumentTypeSearch.setOffset(0);
-		return instrumentTypeSearch;
+    private InstrumentTypeEntity getInstrumentTypeEntity() {
+        InstrumentTypeEntity entity = new InstrumentTypeEntity();
+        entity.setActive(true);
+        entity.setName("name");
+        entity.setDescription("description");
+        entity.setTenantId("default");
+        return entity;
+    }
 
-	}
+    private InstrumentTypeSearch getInstrumentTypeSearch() {
+        InstrumentTypeSearch instrumentTypeSearch = new InstrumentTypeSearch();
+        instrumentTypeSearch.setPageSize(500);
+        instrumentTypeSearch.setOffset(0);
+        return instrumentTypeSearch;
 
-	private List<InstrumentType> getInstrumentTypes() {
-		List<InstrumentType> instrumentTypes = new ArrayList<InstrumentType>();
-		InstrumentType instrumentType = InstrumentType.builder().name("name").description("description").active(true)
-				.build();
-		instrumentType.setTenantId("default");
-		instrumentTypes.add(instrumentType);
-		return instrumentTypes;
-	}
+    }
+
+    private List<InstrumentType> getInstrumentTypes() {
+        List<InstrumentType> instrumentTypes = new ArrayList<InstrumentType>();
+        InstrumentType instrumentType = InstrumentType.builder().name("name").description("description").active(true)
+                .build();
+        instrumentType.setTenantId("default");
+        instrumentTypes.add(instrumentType);
+        return instrumentTypes;
+    }
 }

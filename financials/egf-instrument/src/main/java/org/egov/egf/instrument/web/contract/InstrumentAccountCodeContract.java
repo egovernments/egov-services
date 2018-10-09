@@ -38,6 +38,7 @@
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 package org.egov.egf.instrument.web.contract;
+
 import org.egov.common.web.contract.AuditableContract;
 import org.egov.egf.master.web.contract.ChartOfAccountContract;
 
@@ -48,31 +49,29 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
 @Builder
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 
-@JsonPropertyOrder({ "id","instrumentType","accountCode"})
-public class InstrumentAccountCodeContract extends AuditableContract{
+@JsonPropertyOrder({ "id", "instrumentType", "accountCode" })
+public class InstrumentAccountCodeContract extends AuditableContract {
 
-	/*
-	 * id is the unique reference to Instrument AccountCodes entered in the
-	 * system.
-	 */
-	private String id;
+    /*
+     * id is the unique reference to Instrument AccountCodes entered in the system.
+     */
+    private String id;
 
-	/*
-	 * instrumentType specifies the mode/type of transaction that can be made -
-	 * i.e Cheque,DD,RTGS. For receipt - Cheque,DD,RTGS
-	 */
-	private InstrumentTypeContract instrumentType;
+    /*
+     * instrumentType specifies the mode/type of transaction that can be made - i.e Cheque,DD,RTGS. For receipt - Cheque,DD,RTGS
+     */
+    private InstrumentTypeContract instrumentType;
 
-	/*
-	 * accountCode is the COA that is tagged to a instrument type used in ledger
-	 * posting.
-	 */
-	private ChartOfAccountContract  accountCode;
+    /*
+     * accountCode is the COA that is tagged to a instrument type used in ledger posting.
+     */
+    private ChartOfAccountContract accountCode;
 
 }

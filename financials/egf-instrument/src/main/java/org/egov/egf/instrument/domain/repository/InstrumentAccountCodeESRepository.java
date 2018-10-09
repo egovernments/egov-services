@@ -22,7 +22,7 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
-public class InstrumentAccountCodeESRepository  extends ESRepository {
+public class InstrumentAccountCodeESRepository extends ESRepository {
 
     private TransportClient esClient;
     private ElasticSearchQueryFactory elasticSearchQueryFactory;
@@ -41,9 +41,8 @@ public class InstrumentAccountCodeESRepository  extends ESRepository {
     @SuppressWarnings("deprecation")
     private Pagination<InstrumentAccountCode> mapToInstrumentAccountCodeList(SearchResponse searchResponse) {
         Pagination<InstrumentAccountCode> page = new Pagination<>();
-        if (searchResponse.getHits() == null || searchResponse.getHits().getTotalHits() == 0L) {
+        if (searchResponse.getHits() == null || searchResponse.getHits().getTotalHits() == 0L)
             return page;
-        }
         List<InstrumentAccountCode> instrumentAccountCodes = new ArrayList<InstrumentAccountCode>();
         InstrumentAccountCode instrumentAccountCode = null;
         for (SearchHit hit : searchResponse.getHits()) {
@@ -81,14 +80,13 @@ public class InstrumentAccountCodeESRepository  extends ESRepository {
         }
 
         final BoolQueryBuilder boolQueryBuilder = elasticSearchQueryFactory.searchInstrumentAccountCode(criteria);
-        SearchRequestBuilder searchRequestBuilder = esClient.prepareSearch(InstrumentAccountCode.class.getSimpleName().toLowerCase())
+        SearchRequestBuilder searchRequestBuilder = esClient
+                .prepareSearch(InstrumentAccountCode.class.getSimpleName().toLowerCase())
                 .setTypes(InstrumentAccountCode.class.getSimpleName().toLowerCase());
-        if (!orderByList.isEmpty()) {
-            for (String orderBy : orderByList) {
+        if (!orderByList.isEmpty())
+            for (String orderBy : orderByList)
                 searchRequestBuilder = searchRequestBuilder.addSort(orderBy.split(" ")[0],
                         orderBy.split(" ")[1].equalsIgnoreCase("asc") ? SortOrder.ASC : SortOrder.DESC);
-            }
-        }
 
         searchRequestBuilder.setQuery(boolQueryBuilder);
         return searchRequestBuilder;

@@ -14,25 +14,25 @@ import lombok.Setter;
 @NoArgsConstructor
 
 public class InstrumentAccountCodeSearchEntity extends InstrumentAccountCodeEntity {
-	private String ids;
-	private String sortBy;
-	private Integer pageSize;
-	private Integer offset;
+    private String ids;
+    private String sortBy;
+    private Integer pageSize;
+    private Integer offset;
 
-	@Override
-	public InstrumentAccountCode toDomain() {
-		InstrumentAccountCode instrumentAccountCode = new InstrumentAccountCode();
-		super.toDomain(instrumentAccountCode);
-		return instrumentAccountCode;
-	}
+    @Override
+    public InstrumentAccountCode toDomain() {
+        InstrumentAccountCode instrumentAccountCode = new InstrumentAccountCode();
+        super.toDomain(instrumentAccountCode);
+        return instrumentAccountCode;
+    }
 
-	public InstrumentAccountCodeSearchEntity toEntity(InstrumentAccountCodeSearch instrumentAccountCodeSearch) {
-		super.toEntity(instrumentAccountCodeSearch);
-		this.pageSize = instrumentAccountCodeSearch.getPageSize();
-		this.offset = instrumentAccountCodeSearch.getOffset();
-		this.sortBy = instrumentAccountCodeSearch.getSortBy();
-		this.ids = instrumentAccountCodeSearch.getIds();
-		return this;
-	}
+    public InstrumentAccountCodeSearchEntity toEntity(InstrumentAccountCodeSearch instrumentAccountCodeSearch) {
+        super.toEntity(instrumentAccountCodeSearch);
+        pageSize = instrumentAccountCodeSearch.getPageSize();
+        offset = instrumentAccountCodeSearch.getOffset();
+        sortBy = instrumentAccountCodeSearch.getSortBy();
+        ids = instrumentAccountCodeSearch.getIds();
+        return this;
+    }
 
 }

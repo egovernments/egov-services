@@ -41,7 +41,7 @@ public class InstrumentRepositoryTest {
 
     @Mock
     private InstrumentJdbcRepository instrumentJdbcRepository;
-    
+
     @Mock
     private InstrumentVoucherJdbcRepository instrumentVoucherJdbcRepository;
 
@@ -59,10 +59,10 @@ public class InstrumentRepositoryTest {
     @Before
     public void setup() {
         instrumentRepositoryWithKafka = new InstrumentRepository(instrumentJdbcRepository, instrumentQueueRepository,
-                "yes", instrumentESRepository, financialConfigurationContractRepository,instrumentVoucherJdbcRepository);
+                "yes", instrumentESRepository, financialConfigurationContractRepository, instrumentVoucherJdbcRepository);
 
         instrumentRepositoryWithOutKafka = new InstrumentRepository(instrumentJdbcRepository, instrumentQueueRepository,
-                "no", instrumentESRepository, financialConfigurationContractRepository,instrumentVoucherJdbcRepository);
+                "no", instrumentESRepository, financialConfigurationContractRepository, instrumentVoucherJdbcRepository);
     }
 
     @Test
@@ -159,7 +159,7 @@ public class InstrumentRepositoryTest {
         assertEquals(expectedResult.get(0).getInstrumentType().getId(),
                 actualRequest.getInstruments().get(0).getInstrumentType().getId());
     }
-    
+
     @Test
     public void test_delete_with_kafka() {
 
@@ -205,7 +205,7 @@ public class InstrumentRepositoryTest {
         assertEquals(expectedResult.get(0).getInstrumentType().getId(),
                 actualRequest.getInstruments().get(0).getInstrumentType().getId());
     }
-    
+
     @Test
     public void test_delete_with_out_kafka() {
 

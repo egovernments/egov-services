@@ -20,43 +20,43 @@ import org.springframework.web.client.RestTemplate;
 @RunWith(MockitoJUnitRunner.class)
 public class InstrumentAccountCodeContractRepositoryTest {
 
-	private InstrumentAccountCodeContractRepository instrumentAccountCodeContractRepository;
+    private InstrumentAccountCodeContractRepository instrumentAccountCodeContractRepository;
 
-	private static final String HOST = "http://host";
+    private static final String HOST = "http://host";
 
-	private MockRestServiceServer server;
+    private MockRestServiceServer server;
 
-	private RequestJsonReader resources = new RequestJsonReader();
+    private RequestJsonReader resources = new RequestJsonReader();
 
-	@Before
-	public void setup() {
-		final RestTemplate restTemplate = new RestTemplate();
-		instrumentAccountCodeContractRepository = new InstrumentAccountCodeContractRepository(HOST, restTemplate);
-		server = MockRestServiceServer.bindTo(restTemplate).build();
-	}
+    @Before
+    public void setup() {
+        final RestTemplate restTemplate = new RestTemplate();
+        instrumentAccountCodeContractRepository = new InstrumentAccountCodeContractRepository(HOST, restTemplate);
+        server = MockRestServiceServer.bindTo(restTemplate).build();
+    }
 
-	@Test
-	public void test_find_by_id() throws Exception {
+    @Test
+    public void test_find_by_id() throws Exception {
 
-		server.expect(once(),
-				requestTo("http://host/egf-instrument/instrumentaccountcodes/_search?id=1&tenantId=default"))
-				.andExpect(method(HttpMethod.POST))
-				.andRespond(withSuccess(resources.getFileContents("instrumentaccountcode/search_by_id_response.json"),
-						MediaType.APPLICATION_JSON_UTF8));
+        server.expect(once(),
+                requestTo("http://host/egf-instrument/instrumentaccountcodes/_search?id=1&tenantId=default"))
+                .andExpect(method(HttpMethod.POST))
+                .andRespond(withSuccess(resources.getFileContents("instrumentaccountcode/search_by_id_response.json"),
+                        MediaType.APPLICATION_JSON_UTF8));
 
-		InstrumentAccountCodeContract instrumentAccountCodeContract = new InstrumentAccountCodeContract();
+        InstrumentAccountCodeContract instrumentAccountCodeContract = new InstrumentAccountCodeContract();
 
-		instrumentAccountCodeContract.setId("1");
-		instrumentAccountCodeContract.setTenantId("default");
+        instrumentAccountCodeContract.setId("1");
+        instrumentAccountCodeContract.setTenantId("default");
 
-		final InstrumentAccountCodeContract response = instrumentAccountCodeContractRepository
-				.findById(instrumentAccountCodeContract);
+        final InstrumentAccountCodeContract response = instrumentAccountCodeContractRepository
+                .findById(instrumentAccountCodeContract);
 
-		server.verify();
+        server.verify();
 
-		assertEquals("1", response.getId());
-		assertEquals("default", response.getTenantId());
+        assertEquals("1", response.getId());
+        assertEquals("default", response.getTenantId());
 
-	}
+    }
 
 }

@@ -57,22 +57,19 @@ import lombok.Setter;
 @EqualsAndHashCode(exclude = { "instrumentType" }, callSuper = false)
 public class InstrumentAccountCode extends Auditable {
 
-	/*
-	 * id is the unique reference to Instrument AccountCodes entered in the
-	 * system.
-	 */
-	private String id;
+    /*
+     * id is the unique reference to Instrument AccountCodes entered in the system.
+     */
+    private String id;
 
-	/*
-	 * instrumentType specifies the mode/type of transaction that can be made -
-	 * i.e Cheque,DD,RTGS. For receipt - Cheque,DD,RTGS
-	 */
-	private InstrumentType instrumentType;
+    /*
+     * instrumentType specifies the mode/type of transaction that can be made - i.e Cheque,DD,RTGS. For receipt - Cheque,DD,RTGS
+     */
+    private InstrumentType instrumentType;
 
-	/*
-	 * accountCode is the COA that is tagged to a instrument type used in ledger
-	 * posting.
-	 */
-	private ChartOfAccountContract accountCode;
+    /*
+     * accountCode is the COA that is tagged to a instrument type used in ledger posting.
+     */
+    private ChartOfAccountContract accountCode;
 
 }

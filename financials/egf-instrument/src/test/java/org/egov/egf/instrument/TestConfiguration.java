@@ -9,10 +9,10 @@ import org.springframework.kafka.core.KafkaTemplate;
 @Configuration
 public class TestConfiguration {
 
-	@Bean
-	@SuppressWarnings("unchecked")
-	public KafkaTemplate<String, Object> kafkaTemplate() {
-		return mock(KafkaTemplate.class);
-	}
+    @Bean
+    @SuppressWarnings("unchecked")
+    public KafkaTemplate<String, Object> kafkaTemplate() {
+        return mock(KafkaTemplate.class);
+    }
 
 }

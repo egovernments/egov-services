@@ -48,53 +48,53 @@ public class InstrumentEntity extends AuditableEntity {
     public Instrument toDomain() {
         Instrument instrument = new Instrument();
         super.toDomain(instrument);
-        instrument.setId(this.id);
-        instrument.setTransactionNumber(this.transactionNumber);
-        instrument.setTransactionDate(this.transactionDate);
-        instrument.setAmount(this.amount);
-        instrument.setInstrumentType(InstrumentType.builder().name(this.instrumentTypeId).build());
+        instrument.setId(id);
+        instrument.setTransactionNumber(transactionNumber);
+        instrument.setTransactionDate(transactionDate);
+        instrument.setAmount(amount);
+        instrument.setInstrumentType(InstrumentType.builder().name(instrumentTypeId).build());
         instrument.setBank(BankContract.builder().id(bankId).build());
-        instrument.setBranchName(this.branchName);
+        instrument.setBranchName(branchName);
         instrument.setBankAccount(BankAccountContract.builder().accountNumber(bankAccountId).build());
         instrument.setFinancialStatus(FinancialStatusContract.builder().id(financialStatusId).build());
-        instrument.setRemittanceVoucherId(this.remittanceVoucherId);
-        if (this.transactionType != null)
-            instrument.setTransactionType(TransactionType.valueOf(this.transactionType));
-        instrument.setPayee(this.payee);
-        instrument.setDrawer(this.drawer);
+        instrument.setRemittanceVoucherId(remittanceVoucherId);
+        if (transactionType != null)
+            instrument.setTransactionType(TransactionType.valueOf(transactionType));
+        instrument.setPayee(payee);
+        instrument.setDrawer(drawer);
         instrument.setSurrenderReason(SurrenderReason.builder().id(surrenderReasonId).build());
-        instrument.setSerialNo(this.serialNo);
-        instrument.setPayinSlipId(this.payinSlipId);
-        instrument.setReconciledAmount(this.reconciledAmount);
-        instrument.setReconciledOn(this.reconciledOn);
+        instrument.setSerialNo(serialNo);
+        instrument.setPayinSlipId(payinSlipId);
+        instrument.setReconciledAmount(reconciledAmount);
+        instrument.setReconciledOn(reconciledOn);
         return instrument;
     }
 
     public InstrumentEntity toEntity(Instrument instrument) {
         super.toEntity(instrument);
-        this.id = instrument.getId();
-        this.transactionNumber = instrument.getTransactionNumber();
-        this.transactionDate = instrument.getTransactionDate();
-        this.amount = instrument.getAmount();
-        this.instrumentTypeId = instrument.getInstrumentType() != null ? instrument.getInstrumentType().getName()
+        id = instrument.getId();
+        transactionNumber = instrument.getTransactionNumber();
+        transactionDate = instrument.getTransactionDate();
+        amount = instrument.getAmount();
+        instrumentTypeId = instrument.getInstrumentType() != null ? instrument.getInstrumentType().getName()
                 : null;
-        this.bankId = instrument.getBank() != null ? instrument.getBank().getId() : null;
-        this.branchName = instrument.getBranchName();
-        this.bankAccountId = instrument.getBankAccount() != null ? instrument.getBankAccount().getAccountNumber()
+        bankId = instrument.getBank() != null ? instrument.getBank().getId() : null;
+        branchName = instrument.getBranchName();
+        bankAccountId = instrument.getBankAccount() != null ? instrument.getBankAccount().getAccountNumber()
                 : null;
-        this.financialStatusId = instrument.getFinancialStatus() != null ? instrument.getFinancialStatus().getId()
+        financialStatusId = instrument.getFinancialStatus() != null ? instrument.getFinancialStatus().getId()
                 : null;
-        this.remittanceVoucherId = instrument.getRemittanceVoucherId();
-        this.transactionType = instrument.getTransactionType() != null ? instrument.getTransactionType().toString()
+        remittanceVoucherId = instrument.getRemittanceVoucherId();
+        transactionType = instrument.getTransactionType() != null ? instrument.getTransactionType().toString()
                 : null;
-        this.payee = instrument.getPayee();
-        this.drawer = instrument.getDrawer();
-        this.surrenderReasonId = instrument.getSurrenderReason() != null ? instrument.getSurrenderReason().getId()
+        payee = instrument.getPayee();
+        drawer = instrument.getDrawer();
+        surrenderReasonId = instrument.getSurrenderReason() != null ? instrument.getSurrenderReason().getId()
                 : null;
-        this.serialNo = instrument.getSerialNo();
-        this.payinSlipId = instrument.getPayinSlipId();
-        this.reconciledAmount = instrument.getReconciledAmount();
-        this.reconciledOn = instrument.getReconciledOn();
+        serialNo = instrument.getSerialNo();
+        payinSlipId = instrument.getPayinSlipId();
+        reconciledAmount = instrument.getReconciledAmount();
+        reconciledOn = instrument.getReconciledOn();
         return this;
     }
 

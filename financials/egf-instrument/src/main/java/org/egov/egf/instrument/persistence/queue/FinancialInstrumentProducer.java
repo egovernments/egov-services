@@ -9,15 +9,15 @@ import org.springframework.stereotype.Service;
 @Service
 public class FinancialInstrumentProducer {
 
-	private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
+    private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
 
-	@Autowired
-	public FinancialInstrumentProducer(LogAwareKafkaTemplate<String, Object> kafkaTemplate) {
-		this.kafkaTemplate = kafkaTemplate;
-	}
+    @Autowired
+    public FinancialInstrumentProducer(LogAwareKafkaTemplate<String, Object> kafkaTemplate) {
+        this.kafkaTemplate = kafkaTemplate;
+    }
 
-	public void sendMessage(String topic, String key, Map<String, Object> message) {
-		kafkaTemplate.send(topic, key, message);
-	}
+    public void sendMessage(String topic, String key, Map<String, Object> message) {
+        kafkaTemplate.send(topic, key, message);
+    }
 
 }

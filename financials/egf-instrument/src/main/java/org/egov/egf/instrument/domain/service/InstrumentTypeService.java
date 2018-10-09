@@ -22,166 +22,155 @@ import org.springframework.validation.SmartValidator;
 @Transactional(readOnly = true)
 public class InstrumentTypeService {
 
-	public static final String ACTION_CREATE = "create";
-	public static final String ACTION_UPDATE = "update";
-	public static final String ACTION_DELETE = "delete";
-	public static final String ACTION_VIEW = "view";
-	public static final String ACTION_EDIT = "edit";
-	public static final String ACTION_SEARCH = "search";
+    public static final String ACTION_CREATE = "create";
+    public static final String ACTION_UPDATE = "update";
+    public static final String ACTION_DELETE = "delete";
+    public static final String ACTION_VIEW = "view";
+    public static final String ACTION_EDIT = "edit";
+    public static final String ACTION_SEARCH = "search";
 
-	private InstrumentTypeRepository instrumentTypeRepository;
+    private InstrumentTypeRepository instrumentTypeRepository;
 
-	private SmartValidator validator;
+    private SmartValidator validator;
 
-	@Autowired
-	public InstrumentTypeService(SmartValidator validator, InstrumentTypeRepository instrumentTypeRepository) {
-		this.validator = validator;
-		this.instrumentTypeRepository = instrumentTypeRepository;
-	}
+    @Autowired
+    public InstrumentTypeService(SmartValidator validator, InstrumentTypeRepository instrumentTypeRepository) {
+        this.validator = validator;
+        this.instrumentTypeRepository = instrumentTypeRepository;
+    }
 
-	@Transactional
-	public List<InstrumentType> create(List<InstrumentType> instrumentTypes, BindingResult errors,
-			RequestInfo requestInfo) {
+    @Transactional
+    public List<InstrumentType> create(List<InstrumentType> instrumentTypes, BindingResult errors,
+            RequestInfo requestInfo) {
 
-		try {
+        try {
 
-			instrumentTypes = fetchRelated(instrumentTypes);
+            instrumentTypes = fetchRelated(instrumentTypes);
 
-			validate(instrumentTypes, ACTION_CREATE, errors);
+            validate(instrumentTypes, ACTION_CREATE, errors);
 
-			if (errors.hasErrors()) {
-				throw new CustomBindException(errors);
-			}
+            if (errors.hasErrors())
+                throw new CustomBindException(errors);
 
-		} catch (CustomBindException e) {
+        } catch (CustomBindException e) {
 
-			throw new CustomBindException(errors);
-		}
+            throw new CustomBindException(errors);
+        }
 
-		return instrumentTypeRepository.save(instrumentTypes, requestInfo);
+        return instrumentTypeRepository.save(instrumentTypes, requestInfo);
 
-	}
+    }
 
-	@Transactional
-	public List<InstrumentType> update(List<InstrumentType> instrumentTypes, BindingResult errors,
-			RequestInfo requestInfo) {
+    @Transactional
+    public List<InstrumentType> update(List<InstrumentType> instrumentTypes, BindingResult errors,
+            RequestInfo requestInfo) {
 
-		try {
+        try {
 
-			instrumentTypes = fetchRelated(instrumentTypes);
+            instrumentTypes = fetchRelated(instrumentTypes);
 
-			validate(instrumentTypes, ACTION_UPDATE, errors);
+            validate(instrumentTypes, ACTION_UPDATE, errors);
 
-			if (errors.hasErrors()) {
-				throw new CustomBindException(errors);
-			}
+            if (errors.hasErrors())
+                throw new CustomBindException(errors);
 
-		} catch (CustomBindException e) {
+        } catch (CustomBindException e) {
 
-			throw new CustomBindException(errors);
-		}
+            throw new CustomBindException(errors);
+        }
 
-		return instrumentTypeRepository.update(instrumentTypes, requestInfo);
+        return instrumentTypeRepository.update(instrumentTypes, requestInfo);
 
-	}
+    }
 
-	@Transactional
-	public List<InstrumentType> delete(List<InstrumentType> instrumentTypes, BindingResult errors,
-			RequestInfo requestInfo) {
+    @Transactional
+    public List<InstrumentType> delete(List<InstrumentType> instrumentTypes, BindingResult errors,
+            RequestInfo requestInfo) {
 
-		try {
+        try {
 
-			validate(instrumentTypes, ACTION_DELETE, errors);
+            validate(instrumentTypes, ACTION_DELETE, errors);
 
-			if (errors.hasErrors()) {
-				throw new CustomBindException(errors);
-			}
+            if (errors.hasErrors())
+                throw new CustomBindException(errors);
 
-		} catch (CustomBindException e) {
+        } catch (CustomBindException e) {
 
-			throw new CustomBindException(errors);
-		}
+            throw new CustomBindException(errors);
+        }
 
-		return instrumentTypeRepository.delete(instrumentTypes, requestInfo);
+        return instrumentTypeRepository.delete(instrumentTypes, requestInfo);
 
-	}
+    }
 
-	private BindingResult validate(List<InstrumentType> instrumenttypes, String method, BindingResult errors) {
+    private BindingResult validate(List<InstrumentType> instrumenttypes, String method, BindingResult errors) {
 
-		try {
-			switch (method) {
-			case ACTION_VIEW:
-				// validator.validate(instrumentTypeContractRequest.getInstrumentType(),
-				// errors);
-				break;
-			case ACTION_CREATE:
-				if (instrumenttypes == null) {
+        try {
+            switch (method) {
+            case ACTION_VIEW:
+                // validator.validate(instrumentTypeContractRequest.getInstrumentType(),
+                // errors);
+                break;
+            case ACTION_CREATE:
+                if (instrumenttypes == null)
                     throw new InvalidDataException("instruments", ErrorCode.NOT_NULL.getCode(), null);
-                }
-				for (InstrumentType instrumentType : instrumenttypes) {
-					validator.validate(instrumentType, errors);
-					if (!instrumentTypeRepository.uniqueCheck("name", instrumentType)) {
+                for (InstrumentType instrumentType : instrumenttypes) {
+                    validator.validate(instrumentType, errors);
+                    if (!instrumentTypeRepository.uniqueCheck("name", instrumentType))
                         errors.addError(new FieldError("instrumentType", "name", instrumentType.getName(), false,
                                 new String[] { ErrorCode.NON_UNIQUE_VALUE.getCode() }, null, null));
-                    }
-				}
-				break;
-			case ACTION_UPDATE:
-				if (instrumenttypes == null) {
-                    throw new InvalidDataException("instruments", ErrorCode.NOT_NULL.getCode(), null);
                 }
-				for (InstrumentType instrumentType : instrumenttypes) {
-					if (instrumentType.getId() == null) {
+                break;
+            case ACTION_UPDATE:
+                if (instrumenttypes == null)
+                    throw new InvalidDataException("instruments", ErrorCode.NOT_NULL.getCode(), null);
+                for (InstrumentType instrumentType : instrumenttypes) {
+                    if (instrumentType.getId() == null)
                         throw new InvalidDataException("id", ErrorCode.MANDATORY_VALUE_MISSING.getCode(), instrumentType.getId());
-                    }
-					validator.validate(instrumentType, errors);
-					if (!instrumentTypeRepository.uniqueCheck("name", instrumentType)) {
+                    validator.validate(instrumentType, errors);
+                    if (!instrumentTypeRepository.uniqueCheck("name", instrumentType))
                         errors.addError(new FieldError("instrumentType", "name", instrumentType.getName(), false,
                                 new String[] { ErrorCode.NON_UNIQUE_VALUE.getCode() }, null, null));
-                    }
-				}
-				break;
-			case ACTION_DELETE:
-				if (instrumenttypes == null) {
-                    throw new InvalidDataException("instruments", ErrorCode.NOT_NULL.getCode(), null);
                 }
-				for (InstrumentType instrumenttype : instrumenttypes) {
-					if (instrumenttype.getId() == null) {
+                break;
+            case ACTION_DELETE:
+                if (instrumenttypes == null)
+                    throw new InvalidDataException("instruments", ErrorCode.NOT_NULL.getCode(), null);
+                for (InstrumentType instrumenttype : instrumenttypes)
+                    if (instrumenttype.getId() == null)
                         throw new InvalidDataException("id", ErrorCode.MANDATORY_VALUE_MISSING.getCode(), instrumenttype.getId());
-                    }
-				}
-			default:
+            default:
 
-			}
-		} catch (IllegalArgumentException e) {
-			errors.addError(new ObjectError("Missing data", e.getMessage()));
-		}
-		return errors;
+            }
+        } catch (IllegalArgumentException e) {
+            errors.addError(new ObjectError("Missing data", e.getMessage()));
+        }
+        return errors;
 
-	}
+    }
 
-	@Transactional
-	public InstrumentType delete(InstrumentType instrumentType) {
-		return instrumentTypeRepository.delete(instrumentType);
-	}
+    @Transactional
+    public InstrumentType delete(InstrumentType instrumentType) {
+        return instrumentTypeRepository.delete(instrumentType);
+    }
 
-	public List<InstrumentType> fetchRelated(List<InstrumentType> instrumenttypes) {
+    public List<InstrumentType> fetchRelated(List<InstrumentType> instrumenttypes) {
 
-		return instrumenttypes;
-	}
+        return instrumenttypes;
+    }
 
-	public Pagination<InstrumentType> search(InstrumentTypeSearch instrumentTypeSearch) {
-		return instrumentTypeRepository.search(instrumentTypeSearch);
-	}
+    public Pagination<InstrumentType> search(InstrumentTypeSearch instrumentTypeSearch) {
+        return instrumentTypeRepository.search(instrumentTypeSearch);
+    }
 
-	@Transactional
-	public InstrumentType save(InstrumentType instrumentType) {
-		return instrumentTypeRepository.save(instrumentType);
-	}
+    @Transactional
+    public InstrumentType save(InstrumentType instrumentType) {
+        return instrumentTypeRepository.save(instrumentType);
+    }
 
-	@Transactional
-	public InstrumentType update(InstrumentType instrumentType) {
-		return instrumentTypeRepository.update(instrumentType);
-	}
+    @Transactional
+    public InstrumentType update(InstrumentType instrumentType) {
+        return instrumentTypeRepository.update(instrumentType);
+    }
 
 }

@@ -22,222 +22,197 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class InstrumentTypeRepository {
 
-	private InstrumentTypeJdbcRepository instrumentTypeJdbcRepository;
+    private InstrumentTypeJdbcRepository instrumentTypeJdbcRepository;
 
-	private InstrumentTypeQueueRepository instrumentTypeQueueRepository;
+    private InstrumentTypeQueueRepository instrumentTypeQueueRepository;
 
-	private String persistThroughKafka;
+    private String persistThroughKafka;
 
-	private FinancialConfigurationContractRepository financialConfigurationContractRepository;
+    private FinancialConfigurationContractRepository financialConfigurationContractRepository;
 
-	private InstrumentTypeESRepository instrumentTypeESRepository;
+    private InstrumentTypeESRepository instrumentTypeESRepository;
 
-	@Autowired
-	public InstrumentTypeRepository(InstrumentTypeJdbcRepository instrumentTypeJdbcRepository,
-			InstrumentTypeQueueRepository instrumentTypeQueueRepository,
-			@Value("${persist.through.kafka}") String persistThroughKafka,
-			FinancialConfigurationContractRepository financialConfigurationContractRepository,
-			InstrumentTypeESRepository instrumentTypeESRepository) {
-		this.instrumentTypeJdbcRepository = instrumentTypeJdbcRepository;
-		this.instrumentTypeQueueRepository = instrumentTypeQueueRepository;
-		this.persistThroughKafka = persistThroughKafka;
-		this.financialConfigurationContractRepository = financialConfigurationContractRepository;
-		this.instrumentTypeESRepository = instrumentTypeESRepository;
+    @Autowired
+    public InstrumentTypeRepository(InstrumentTypeJdbcRepository instrumentTypeJdbcRepository,
+            InstrumentTypeQueueRepository instrumentTypeQueueRepository,
+            @Value("${persist.through.kafka}") String persistThroughKafka,
+            FinancialConfigurationContractRepository financialConfigurationContractRepository,
+            InstrumentTypeESRepository instrumentTypeESRepository) {
+        this.instrumentTypeJdbcRepository = instrumentTypeJdbcRepository;
+        this.instrumentTypeQueueRepository = instrumentTypeQueueRepository;
+        this.persistThroughKafka = persistThroughKafka;
+        this.financialConfigurationContractRepository = financialConfigurationContractRepository;
+        this.instrumentTypeESRepository = instrumentTypeESRepository;
 
-	}
+    }
 
-	public InstrumentType findById(InstrumentType instrumentType) {
-		InstrumentTypeEntity entity = instrumentTypeJdbcRepository
-				.findById(new InstrumentTypeEntity().toEntity(instrumentType));
-		if (entity != null)
-			return entity.toDomain();
+    public InstrumentType findById(InstrumentType instrumentType) {
+        InstrumentTypeEntity entity = instrumentTypeJdbcRepository
+                .findById(new InstrumentTypeEntity().toEntity(instrumentType));
+        if (entity != null)
+            return entity.toDomain();
 
-		return null;
+        return null;
 
-	}
+    }
 
-	@Transactional
-	public List<InstrumentType> save(List<InstrumentType> instrumentTypes, RequestInfo requestInfo) {
+    @Transactional
+    public List<InstrumentType> save(List<InstrumentType> instrumentTypes, RequestInfo requestInfo) {
 
-		InstrumentTypeMapper mapper = new InstrumentTypeMapper();
+        InstrumentTypeMapper mapper = new InstrumentTypeMapper();
 
-		if (persistThroughKafka != null && !persistThroughKafka.isEmpty()
-				&& persistThroughKafka.equalsIgnoreCase("yes")) {
+        if (persistThroughKafka != null && !persistThroughKafka.isEmpty()
+                && persistThroughKafka.equalsIgnoreCase("yes")) {
 
-			InstrumentTypeRequest request = new InstrumentTypeRequest();
-			request.setRequestInfo(requestInfo);
-			request.setInstrumentTypes(new ArrayList<>());
+            InstrumentTypeRequest request = new InstrumentTypeRequest();
+            request.setRequestInfo(requestInfo);
+            request.setInstrumentTypes(new ArrayList<>());
 
-			for (InstrumentType iac : instrumentTypes) {
+            for (InstrumentType iac : instrumentTypes)
+                request.getInstrumentTypes().add(mapper.toContract(iac));
 
-				request.getInstrumentTypes().add(mapper.toContract(iac));
+            instrumentTypeQueueRepository.addToQue(request);
 
-			}
+            return instrumentTypes;
+        } else {
 
-			instrumentTypeQueueRepository.addToQue(request);
+            List<InstrumentType> resultList = new ArrayList<InstrumentType>();
 
-			return instrumentTypes;
-		} else {
+            for (InstrumentType iac : instrumentTypes)
+                resultList.add(save(iac));
 
-			List<InstrumentType> resultList = new ArrayList<InstrumentType>();
+            InstrumentTypeRequest request = new InstrumentTypeRequest();
+            request.setRequestInfo(requestInfo);
+            request.setInstrumentTypes(new ArrayList<>());
 
-			for (InstrumentType iac : instrumentTypes) {
+            for (InstrumentType iac : resultList)
+                request.getInstrumentTypes().add(mapper.toContract(iac));
 
-				resultList.add(save(iac));
-			}
+            instrumentTypeQueueRepository.addToSearchQue(request);
 
-			InstrumentTypeRequest request = new InstrumentTypeRequest();
-			request.setRequestInfo(requestInfo);
-			request.setInstrumentTypes(new ArrayList<>());
+            return resultList;
+        }
 
-			for (InstrumentType iac : resultList) {
+    }
 
-				request.getInstrumentTypes().add(mapper.toContract(iac));
+    @Transactional
+    public List<InstrumentType> update(List<InstrumentType> instrumentTypes, RequestInfo requestInfo) {
 
-			}
+        InstrumentTypeMapper mapper = new InstrumentTypeMapper();
 
-			instrumentTypeQueueRepository.addToSearchQue(request);
+        if (persistThroughKafka != null && !persistThroughKafka.isEmpty()
+                && persistThroughKafka.equalsIgnoreCase("yes")) {
 
-			return resultList;
-		}
+            InstrumentTypeRequest request = new InstrumentTypeRequest();
+            request.setRequestInfo(requestInfo);
+            request.setInstrumentTypes(new ArrayList<>());
 
-	}
+            for (InstrumentType iac : instrumentTypes)
+                request.getInstrumentTypes().add(mapper.toContract(iac));
 
-	@Transactional
-	public List<InstrumentType> update(List<InstrumentType> instrumentTypes, RequestInfo requestInfo) {
+            instrumentTypeQueueRepository.addToQue(request);
 
-		InstrumentTypeMapper mapper = new InstrumentTypeMapper();
+            return instrumentTypes;
+        } else {
 
-		if (persistThroughKafka != null && !persistThroughKafka.isEmpty()
-				&& persistThroughKafka.equalsIgnoreCase("yes")) {
+            List<InstrumentType> resultList = new ArrayList<InstrumentType>();
 
-			InstrumentTypeRequest request = new InstrumentTypeRequest();
-			request.setRequestInfo(requestInfo);
-			request.setInstrumentTypes(new ArrayList<>());
+            for (InstrumentType iac : instrumentTypes)
+                resultList.add(update(iac));
 
-			for (InstrumentType iac : instrumentTypes) {
+            InstrumentTypeRequest request = new InstrumentTypeRequest();
+            request.setRequestInfo(requestInfo);
+            request.setInstrumentTypes(new ArrayList<>());
 
-				request.getInstrumentTypes().add(mapper.toContract(iac));
+            for (InstrumentType iac : resultList)
+                request.getInstrumentTypes().add(mapper.toContract(iac));
 
-			}
+            instrumentTypeQueueRepository.addToSearchQue(request);
 
-			instrumentTypeQueueRepository.addToQue(request);
+            return resultList;
+        }
 
-			return instrumentTypes;
-		} else {
+    }
 
-			List<InstrumentType> resultList = new ArrayList<InstrumentType>();
+    @Transactional
+    public List<InstrumentType> delete(List<InstrumentType> instrumentTypes, RequestInfo requestInfo) {
 
-			for (InstrumentType iac : instrumentTypes) {
+        InstrumentTypeMapper mapper = new InstrumentTypeMapper();
 
-				resultList.add(update(iac));
-			}
+        if (persistThroughKafka != null && !persistThroughKafka.isEmpty()
+                && persistThroughKafka.equalsIgnoreCase("yes")) {
 
-			InstrumentTypeRequest request = new InstrumentTypeRequest();
-			request.setRequestInfo(requestInfo);
-			request.setInstrumentTypes(new ArrayList<>());
+            InstrumentTypeRequest request = new InstrumentTypeRequest();
+            request.setRequestInfo(requestInfo);
+            request.setInstrumentTypes(new ArrayList<>());
 
-			for (InstrumentType iac : resultList) {
+            for (InstrumentType iac : instrumentTypes)
+                request.getInstrumentTypes().add(mapper.toContract(iac));
 
-				request.getInstrumentTypes().add(mapper.toContract(iac));
+            instrumentTypeQueueRepository.addToQue(request);
 
-			}
+            return instrumentTypes;
+        } else {
 
-			instrumentTypeQueueRepository.addToSearchQue(request);
+            List<InstrumentType> resultList = new ArrayList<InstrumentType>();
 
-			return resultList;
-		}
+            for (InstrumentType iac : instrumentTypes)
+                resultList.add(delete(iac));
 
-	}
+            InstrumentTypeRequest request = new InstrumentTypeRequest();
+            request.setRequestInfo(requestInfo);
+            request.setInstrumentTypes(new ArrayList<>());
 
-	@Transactional
-	public List<InstrumentType> delete(List<InstrumentType> instrumentTypes, RequestInfo requestInfo) {
+            for (InstrumentType iac : resultList)
+                request.getInstrumentTypes().add(mapper.toContract(iac));
 
-		InstrumentTypeMapper mapper = new InstrumentTypeMapper();
+            instrumentTypeQueueRepository.addToSearchQue(request);
 
-		if (persistThroughKafka != null && !persistThroughKafka.isEmpty()
-				&& persistThroughKafka.equalsIgnoreCase("yes")) {
+            return resultList;
+        }
 
-			InstrumentTypeRequest request = new InstrumentTypeRequest();
-			request.setRequestInfo(requestInfo);
-			request.setInstrumentTypes(new ArrayList<>());
+    }
 
-			for (InstrumentType iac : instrumentTypes) {
+    @Transactional
+    public InstrumentType save(InstrumentType instrumentType) {
+        InstrumentTypeEntity entity = instrumentTypeJdbcRepository
+                .create(new InstrumentTypeEntity().toEntity(instrumentType));
+        return entity.toDomain();
+    }
 
-				request.getInstrumentTypes().add(mapper.toContract(iac));
+    @Transactional
+    public InstrumentType update(InstrumentType instrumentType) {
+        InstrumentTypeEntity entity = instrumentTypeJdbcRepository
+                .update(new InstrumentTypeEntity().toEntity(instrumentType));
+        return entity.toDomain();
+    }
 
-			}
+    @Transactional
+    public InstrumentType delete(InstrumentType instrumentType) {
+        InstrumentTypeEntity entity = instrumentTypeJdbcRepository.delete(new InstrumentTypeEntity().toEntity(instrumentType));
+        return entity.toDomain();
+    }
 
-			instrumentTypeQueueRepository.addToQue(request);
+    public Pagination<InstrumentType> search(InstrumentTypeSearch domain) {
 
-			return instrumentTypes;
-		} else {
+        if (financialConfigurationContractRepository.fetchDataFrom() != null
+                && financialConfigurationContractRepository.fetchDataFrom().equalsIgnoreCase("es")) {
 
-			List<InstrumentType> resultList = new ArrayList<InstrumentType>();
+            InstrumentTypeSearchContract instrumentTypeSearchContract = new InstrumentTypeSearchContract();
+            InstrumentTypeMapper mapper = new InstrumentTypeMapper();
+            instrumentTypeSearchContract = mapper.toSearchContract(domain);
+            Pagination<InstrumentType> instrumenttypes = instrumentTypeESRepository
+                    .search(instrumentTypeSearchContract);
 
-			for (InstrumentType iac : instrumentTypes) {
+            return instrumenttypes;
 
-				resultList.add(delete(iac));
-			}
+        } else
+            return instrumentTypeJdbcRepository.search(domain);
 
-			InstrumentTypeRequest request = new InstrumentTypeRequest();
-			request.setRequestInfo(requestInfo);
-			request.setInstrumentTypes(new ArrayList<>());
+    }
 
-			for (InstrumentType iac : resultList) {
-
-				request.getInstrumentTypes().add(mapper.toContract(iac));
-
-			}
-
-			instrumentTypeQueueRepository.addToSearchQue(request);
-
-			return resultList;
-		}
-
-	}
-	
-	@Transactional
-	public InstrumentType save(InstrumentType instrumentType) {
-		InstrumentTypeEntity entity = instrumentTypeJdbcRepository
-				.create(new InstrumentTypeEntity().toEntity(instrumentType));
-		return entity.toDomain();
-	}
-
-	@Transactional
-	public InstrumentType update(InstrumentType instrumentType) {
-		InstrumentTypeEntity entity = instrumentTypeJdbcRepository
-				.update(new InstrumentTypeEntity().toEntity(instrumentType));
-		return entity.toDomain();
-	}
-
-	@Transactional
-	public InstrumentType delete(InstrumentType instrumentType) {
-		InstrumentTypeEntity entity = instrumentTypeJdbcRepository.delete(new InstrumentTypeEntity().toEntity(instrumentType));
-		return entity.toDomain();
-	}
-	
-	public Pagination<InstrumentType> search(InstrumentTypeSearch domain) {
-
-		if (financialConfigurationContractRepository.fetchDataFrom() != null
-				&& financialConfigurationContractRepository.fetchDataFrom().equalsIgnoreCase("es")) {
-
-			InstrumentTypeSearchContract instrumentTypeSearchContract = new InstrumentTypeSearchContract();
-			InstrumentTypeMapper mapper = new InstrumentTypeMapper();
-			instrumentTypeSearchContract = mapper.toSearchContract(domain);
-			Pagination<InstrumentType> instrumenttypes = instrumentTypeESRepository
-					.search(instrumentTypeSearchContract);
-
-			return instrumenttypes;
-
-		} else {
-			return instrumentTypeJdbcRepository.search(domain);
-		}
-
-	}
-
-	public boolean uniqueCheck(String fieldName, InstrumentType instrumentType) {
-		return	instrumentTypeJdbcRepository.uniqueCheck(fieldName, new InstrumentTypeEntity().toEntity(instrumentType));
-	}
+    public boolean uniqueCheck(String fieldName, InstrumentType instrumentType) {
+        return instrumentTypeJdbcRepository.uniqueCheck(fieldName, new InstrumentTypeEntity().toEntity(instrumentType));
+    }
 
 }

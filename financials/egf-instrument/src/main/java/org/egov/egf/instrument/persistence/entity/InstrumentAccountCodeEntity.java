@@ -18,28 +18,28 @@ import lombok.Setter;
 
 @Builder
 public class InstrumentAccountCodeEntity extends AuditableEntity {
-	public static final String TABLE_NAME = "egf_instrumentaccountcode";
-	private String id;
-	private String instrumentTypeId;
-	private String accountCodeId;
+    public static final String TABLE_NAME = "egf_instrumentaccountcode";
+    private String id;
+    private String instrumentTypeId;
+    private String accountCodeId;
 
-	public InstrumentAccountCode toDomain() {
-		InstrumentAccountCode instrumentAccountCode = new InstrumentAccountCode();
-		super.toDomain(instrumentAccountCode);
-		instrumentAccountCode.setId(this.id);
-		instrumentAccountCode.setInstrumentType(InstrumentType.builder().name(instrumentTypeId).build());
-		instrumentAccountCode.setAccountCode(ChartOfAccountContract.builder().glcode(accountCodeId).build());
-		return instrumentAccountCode;
-	}
+    public InstrumentAccountCode toDomain() {
+        InstrumentAccountCode instrumentAccountCode = new InstrumentAccountCode();
+        super.toDomain(instrumentAccountCode);
+        instrumentAccountCode.setId(id);
+        instrumentAccountCode.setInstrumentType(InstrumentType.builder().name(instrumentTypeId).build());
+        instrumentAccountCode.setAccountCode(ChartOfAccountContract.builder().glcode(accountCodeId).build());
+        return instrumentAccountCode;
+    }
 
-	public InstrumentAccountCodeEntity toEntity(InstrumentAccountCode instrumentAccountCode) {
-		super.toEntity(instrumentAccountCode);
-		this.id = instrumentAccountCode.getId();
-		this.instrumentTypeId = instrumentAccountCode.getInstrumentType() != null
-				? instrumentAccountCode.getInstrumentType().getName() : null;
-		this.accountCodeId = instrumentAccountCode.getAccountCode() != null
-				? instrumentAccountCode.getAccountCode().getGlcode() : null;
-		return this;
-	}
+    public InstrumentAccountCodeEntity toEntity(InstrumentAccountCode instrumentAccountCode) {
+        super.toEntity(instrumentAccountCode);
+        id = instrumentAccountCode.getId();
+        instrumentTypeId = instrumentAccountCode.getInstrumentType() != null
+                ? instrumentAccountCode.getInstrumentType().getName() : null;
+        accountCodeId = instrumentAccountCode.getAccountCode() != null
+                ? instrumentAccountCode.getAccountCode().getGlcode() : null;
+        return this;
+    }
 
 }

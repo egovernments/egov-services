@@ -38,130 +38,130 @@ import org.springframework.validation.BindingResult;
 @Import(TestConfiguration.class)
 public class InstrumentAccountCodeControllerTest {
 
-	@Autowired
-	private MockMvc mockMvc;
+    @Autowired
+    private MockMvc mockMvc;
 
-	@MockBean
-	private InstrumentAccountCodeService instrumentAccountCodeService;
+    @MockBean
+    private InstrumentAccountCodeService instrumentAccountCodeService;
 
-	@Captor
-	private ArgumentCaptor<InstrumentAccountCodeRequest> captor;
+    @Captor
+    private ArgumentCaptor<InstrumentAccountCodeRequest> captor;
 
-	private RequestJsonReader resources = new RequestJsonReader();
+    private RequestJsonReader resources = new RequestJsonReader();
 
-	@Test
-	public void test_create() throws IOException, Exception {
+    @Test
+    public void test_create() throws IOException, Exception {
 
-		when(instrumentAccountCodeService.create(any(List.class), any(BindingResult.class), any(RequestInfo.class)))
-				.thenReturn(getInstrumentAccountCodes());
+        when(instrumentAccountCodeService.create(any(List.class), any(BindingResult.class), any(RequestInfo.class)))
+                .thenReturn(getInstrumentAccountCodes());
 
-		mockMvc.perform(post("/instrumentaccountcodes/_create")
-				.content(resources.readRequest("instrumentaccountcode/instrumentaccountcode_create_valid_request.json"))
-				.contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().is(201))
-				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(content().json(resources
-						.readResponse("instrumentaccountcode/instrumentaccountcode_create_valid_response.json")));
-	}
+        mockMvc.perform(post("/instrumentaccountcodes/_create")
+                .content(resources.readRequest("instrumentaccountcode/instrumentaccountcode_create_valid_request.json"))
+                .contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().is(201))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(content().json(resources
+                        .readResponse("instrumentaccountcode/instrumentaccountcode_create_valid_response.json")));
+    }
 
-	@Test
-	public void test_create_error() throws IOException, Exception {
+    @Test
+    public void test_create_error() throws IOException, Exception {
 
-		when(instrumentAccountCodeService.create(any(List.class), any(BindingResult.class), any(RequestInfo.class)))
-				.thenReturn(getInstrumentAccountCodes());
+        when(instrumentAccountCodeService.create(any(List.class), any(BindingResult.class), any(RequestInfo.class)))
+                .thenReturn(getInstrumentAccountCodes());
 
-		mockMvc.perform(post("/instrumentaccountcodes/_create")
-				.content(resources
-						.readRequest("instrumentaccountcode/instrumentaccountcode_create_invalid_field_value.json"))
-				.contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().is5xxServerError());
+        mockMvc.perform(post("/instrumentaccountcodes/_create")
+                .content(resources
+                        .readRequest("instrumentaccountcode/instrumentaccountcode_create_invalid_field_value.json"))
+                .contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().is5xxServerError());
 
-	}
+    }
 
-	@Test
-	public void test_update() throws IOException, Exception {
+    @Test
+    public void test_update() throws IOException, Exception {
 
-		List<InstrumentAccountCode> instrumentAccountCodes = getInstrumentAccountCodes();
-		instrumentAccountCodes.get(0).setId("1");
+        List<InstrumentAccountCode> instrumentAccountCodes = getInstrumentAccountCodes();
+        instrumentAccountCodes.get(0).setId("1");
 
-		when(instrumentAccountCodeService.update(any(List.class), any(BindingResult.class), any(RequestInfo.class)))
-				.thenReturn(instrumentAccountCodes);
+        when(instrumentAccountCodeService.update(any(List.class), any(BindingResult.class), any(RequestInfo.class)))
+                .thenReturn(instrumentAccountCodes);
 
-		mockMvc.perform(post("/instrumentaccountcodes/_update")
-				.content(resources.readRequest("instrumentaccountcode/instrumentaccountcode_update_valid_request.json"))
-				.contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().is(201))
-				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(content().json(resources
-						.readResponse("instrumentaccountcode/instrumentaccountcode_update_valid_response.json")));
+        mockMvc.perform(post("/instrumentaccountcodes/_update")
+                .content(resources.readRequest("instrumentaccountcode/instrumentaccountcode_update_valid_request.json"))
+                .contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().is(201))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(content().json(resources
+                        .readResponse("instrumentaccountcode/instrumentaccountcode_update_valid_response.json")));
 
-	}
-	
-	@Test
-	public void test_delete() throws IOException, Exception {
+    }
 
-		List<InstrumentAccountCode> instrumentAccountCodes = getInstrumentAccountCodes();
-		instrumentAccountCodes.get(0).setId("1");
+    @Test
+    public void test_delete() throws IOException, Exception {
 
-		when(instrumentAccountCodeService.delete(any(List.class), any(BindingResult.class), any(RequestInfo.class)))
-				.thenReturn(instrumentAccountCodes);
+        List<InstrumentAccountCode> instrumentAccountCodes = getInstrumentAccountCodes();
+        instrumentAccountCodes.get(0).setId("1");
 
-		mockMvc.perform(post("/instrumentaccountcodes/_delete")
-				.content(resources.readRequest("instrumentaccountcode/instrumentaccountcode_delete_valid_request.json"))
-				.contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().is(201))
-				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(content().json(resources
-						.readResponse("instrumentaccountcode/instrumentaccountcode_delete_valid_response.json")));
+        when(instrumentAccountCodeService.delete(any(List.class), any(BindingResult.class), any(RequestInfo.class)))
+                .thenReturn(instrumentAccountCodes);
 
-	}
+        mockMvc.perform(post("/instrumentaccountcodes/_delete")
+                .content(resources.readRequest("instrumentaccountcode/instrumentaccountcode_delete_valid_request.json"))
+                .contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().is(201))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(content().json(resources
+                        .readResponse("instrumentaccountcode/instrumentaccountcode_delete_valid_response.json")));
 
-	@Test
-	public void test_update_error() throws IOException, Exception {
+    }
 
-		when(instrumentAccountCodeService.update(any(List.class), any(BindingResult.class), any(RequestInfo.class)))
-				.thenReturn(getInstrumentAccountCodes());
+    @Test
+    public void test_update_error() throws IOException, Exception {
 
-		mockMvc.perform(post("/instrumentaccountcodes/_update")
-				.content(resources
-						.readRequest("instrumentaccountcode/instrumentaccountcode_create_invalid_field_value.json"))
-				.contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().is5xxServerError());
+        when(instrumentAccountCodeService.update(any(List.class), any(BindingResult.class), any(RequestInfo.class)))
+                .thenReturn(getInstrumentAccountCodes());
 
-	}
-	
-	@Test
-	public void test_delete_error() throws IOException, Exception {
+        mockMvc.perform(post("/instrumentaccountcodes/_update")
+                .content(resources
+                        .readRequest("instrumentaccountcode/instrumentaccountcode_create_invalid_field_value.json"))
+                .contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().is5xxServerError());
 
-		when(instrumentAccountCodeService.delete(any(List.class), any(BindingResult.class), any(RequestInfo.class)))
-				.thenReturn(getInstrumentAccountCodes());
+    }
 
-		mockMvc.perform(post("/instrumentaccountcodes/_delete")
-				.content(resources
-						.readRequest("instrumentaccountcode/instrumentaccountcode_delete_invalid_field_value.json"))
-				.contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().is5xxServerError());
+    @Test
+    public void test_delete_error() throws IOException, Exception {
 
-	}
+        when(instrumentAccountCodeService.delete(any(List.class), any(BindingResult.class), any(RequestInfo.class)))
+                .thenReturn(getInstrumentAccountCodes());
 
-	@Test
-	public void test_search() throws IOException, Exception {
+        mockMvc.perform(post("/instrumentaccountcodes/_delete")
+                .content(resources
+                        .readRequest("instrumentaccountcode/instrumentaccountcode_delete_invalid_field_value.json"))
+                .contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().is5xxServerError());
 
-		Pagination<InstrumentAccountCode> page = new Pagination<>();
-		page.setTotalPages(1);
-		page.setTotalResults(1);
-		page.setCurrentPage(0);
-		page.setPagedData(getInstrumentAccountCodes());
-		page.getPagedData().get(0).setId("1");
+    }
 
-		when(instrumentAccountCodeService.search(any(InstrumentAccountCodeSearch.class))).thenReturn(page);
+    @Test
+    public void test_search() throws IOException, Exception {
 
-		mockMvc.perform(post("/instrumentaccountcodes/_search").content(resources.getRequestInfo())
-				.contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().is(200))
-				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(content().json(resources
-						.readResponse("instrumentaccountcode/instrumentaccountcode_search_valid_response.json")));
+        Pagination<InstrumentAccountCode> page = new Pagination<>();
+        page.setTotalPages(1);
+        page.setTotalResults(1);
+        page.setCurrentPage(0);
+        page.setPagedData(getInstrumentAccountCodes());
+        page.getPagedData().get(0).setId("1");
 
-	}
+        when(instrumentAccountCodeService.search(any(InstrumentAccountCodeSearch.class))).thenReturn(page);
 
-	private List<InstrumentAccountCode> getInstrumentAccountCodes() {
-		List<InstrumentAccountCode> instrumentAccountCodes = new ArrayList<InstrumentAccountCode>();
-		InstrumentAccountCode instrumentAccountCode = InstrumentAccountCode.builder()
-				.instrumentType(InstrumentType.builder().active(true).name("instrumenttype").build())
-				.accountCode(ChartOfAccountContract.builder().glcode("glcode").build()).build();
-		instrumentAccountCode.setTenantId("default");
-		instrumentAccountCodes.add(instrumentAccountCode);
-		return instrumentAccountCodes;
-	}
+        mockMvc.perform(post("/instrumentaccountcodes/_search").content(resources.getRequestInfo())
+                .contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().is(200))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(content().json(resources
+                        .readResponse("instrumentaccountcode/instrumentaccountcode_search_valid_response.json")));
+
+    }
+
+    private List<InstrumentAccountCode> getInstrumentAccountCodes() {
+        List<InstrumentAccountCode> instrumentAccountCodes = new ArrayList<InstrumentAccountCode>();
+        InstrumentAccountCode instrumentAccountCode = InstrumentAccountCode.builder()
+                .instrumentType(InstrumentType.builder().active(true).name("instrumenttype").build())
+                .accountCode(ChartOfAccountContract.builder().glcode("glcode").build()).build();
+        instrumentAccountCode.setTenantId("default");
+        instrumentAccountCodes.add(instrumentAccountCode);
+        return instrumentAccountCodes;
+    }
 
 }

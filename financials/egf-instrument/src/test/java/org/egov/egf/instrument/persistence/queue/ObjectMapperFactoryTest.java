@@ -15,25 +15,25 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @RunWith(MockitoJUnitRunner.class)
 public class ObjectMapperFactoryTest {
 
-	@Mock
-	private ObjectMapper objectMapper;
+    @Mock
+    private ObjectMapper objectMapper;
 
-	private ObjectMapperFactory objectMapperFactory;
+    private ObjectMapperFactory objectMapperFactory;
 
-	@Before
-	public void setup() {
-		objectMapperFactory = new ObjectMapperFactory(objectMapper);
-	}
+    @Before
+    public void setup() {
+        objectMapperFactory = new ObjectMapperFactory(objectMapper);
+    }
 
-	@Test
-	public void test_create() {
+    @Test
+    public void test_create() {
 
-		ObjectMapper actualRequest = objectMapperFactory.create();
+        ObjectMapper actualRequest = objectMapperFactory.create();
 
-		verify(objectMapper).disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+        verify(objectMapper).disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
 
-		assertEquals(objectMapper, actualRequest);
+        assertEquals(objectMapper, actualRequest);
 
-	}
+    }
 
 }

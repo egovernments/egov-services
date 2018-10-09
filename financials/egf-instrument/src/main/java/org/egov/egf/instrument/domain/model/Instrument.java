@@ -68,117 +68,108 @@ import lombok.Setter;
 @Builder
 public class Instrument extends Auditable {
 
-	/*
-	 * id is the unique reference to Instrument Header entered in the system.
-	 */
-	private String id;
+    /*
+     * id is the unique reference to Instrument Header entered in the system.
+     */
+    private String id;
 
-	/*
-	 * transactionNumber unique number of the instrument. For cheque type this
-	 * is cheque date. For DD type it is DD number
-	 *
-	 */
-	@NotBlank
-	@Size(max = 50, min = 6)
-	private String transactionNumber;
+    /*
+     * transactionNumber unique number of the instrument. For cheque type this is cheque date. For DD type it is DD number
+     */
+    @NotBlank
+    @Size(max = 50, min = 6)
+    private String transactionNumber;
 
-	/*
-	 * transactionDate is the date of instrument . For cheque type it is cheque
-	 * date. for DD it is DD date
-	 */
-	@NotNull
-	private Date transactionDate;
+    /*
+     * transactionDate is the date of instrument . For cheque type it is cheque date. for DD it is DD date
+     */
+    @NotNull
+    private Date transactionDate;
 
-	/*
-	 * amount is the instrument amount. For cheque type it is cheque amount.
-	 */
-	@NotNull
-	@Min(value = 1)
-	@Max(value = 999999999)
-	private BigDecimal amount;
+    /*
+     * amount is the instrument amount. For cheque type it is cheque amount.
+     */
+    @NotNull
+    @Min(value = 1)
+    @Max(value = 999999999)
+    private BigDecimal amount;
 
-	/*
-	 * instrumentType specifies the type of the instrument - The folowing are
-	 * the different types Cash,Cheque,DD,POC
-	 *
-	 */
-	@NotNull	
-	private InstrumentType instrumentType;
+    /*
+     * instrumentType specifies the type of the instrument - The folowing are the different types Cash,Cheque,DD,POC
+     */
+    @NotNull
+    private InstrumentType instrumentType;
 
-	/*
-	 * bank references to the bank from which the payment/Receipt is made.
-	 */
-	private BankContract bank;
+    /*
+     * bank references to the bank from which the payment/Receipt is made.
+     */
+    private BankContract bank;
 
-	/*
-	 * branchName is the branch name entered in the collection Receipt.
-	 */
+    /*
+     * branchName is the branch name entered in the collection Receipt.
+     */
 
-	@Size(max = 50)
-	private String branchName;
+    @Size(max = 50)
+    private String branchName;
 
-	/*
-	 * bankAccount is the reference of the Bank account from which the payment
-	 * instrument is assigned
-	 */
-	private BankAccountContract bankAccount;
+    /*
+     * bankAccount is the reference of the Bank account from which the payment instrument is assigned
+     */
+    private BankAccountContract bankAccount;
 
-	/*
-	 * instrumentStatus gives the current status of the instrument.
-	 */
-	private FinancialStatusContract financialStatus;
-	
-	private String remittanceVoucherId;
+    /*
+     * instrumentStatus gives the current status of the instrument.
+     */
+    private FinancialStatusContract financialStatus;
 
-	/*
-	 * transactionType are of two kinds -Debit and Credit. When its a receipt
-	 * instrument it is Debit and in case of payment instrument its credit.
-	 */
-	@NotNull
-	private TransactionType transactionType;
+    private String remittanceVoucherId;
 
-	/*
-	 * payee is the entity who is making the payment via instrument
-	 */
-	@Size(max = 50)
-	private String payee;
+    /*
+     * transactionType are of two kinds -Debit and Credit. When its a receipt instrument it is Debit and in case of payment
+     * instrument its credit.
+     */
+    @NotNull
+    private TransactionType transactionType;
 
-	/*
-	 * drawer is the entity to which the payment is made.
-	 */
-	@Size(max = 100)
-	private String drawer;
+    /*
+     * payee is the entity who is making the payment via instrument
+     */
+    @Size(max = 50)
+    private String payee;
 
-	/*
-	 * surrendarReason is the reason from the defined list seleted while
-	 * surrendering a payment cheque. Depending on the reason, the cheque can be
-	 * re-used or not is decided.
-	 */
-	private SurrenderReason surrenderReason;
+    /*
+     * drawer is the entity to which the payment is made.
+     */
+    @Size(max = 100)
+    private String drawer;
 
-	/*
-	 * serialNo is the series of the cheque numbers from which the instrument is
-	 * assigned from. The cheque numbers in an account is defined based on Year,
-	 * Bank account and tagged to a department.
-	 */
-	//@NotBlank
-	@Size(max = 50, min = 2)
-	private String serialNo;
+    /*
+     * surrendarReason is the reason from the defined list seleted while surrendering a payment cheque. Depending on the reason,
+     * the cheque can be re-used or not is decided.
+     */
+    private SurrenderReason surrenderReason;
 
-	@Size(max = 256)
-        private String payinSlipId;
-	
-	@Min(value = 1)
-        @Max(value = 999999999)
-        private BigDecimal reconciledAmount;
-	
-	private Date reconciledOn;
-	
-	/*
-	 * instrumentVouchers is the reference to the payment vouchers for which the
-	 * instrument is attached.
-	 */
-	// @DrillDownTable
-	private List<InstrumentVoucher> instrumentVouchers = new ArrayList<>();
+    /*
+     * serialNo is the series of the cheque numbers from which the instrument is assigned from. The cheque numbers in an account
+     * is defined based on Year, Bank account and tagged to a department.
+     */
+    // @NotBlank
+    @Size(max = 50, min = 2)
+    private String serialNo;
+
+    @Size(max = 256)
+    private String payinSlipId;
+
+    @Min(value = 1)
+    @Max(value = 999999999)
+    private BigDecimal reconciledAmount;
+
+    private Date reconciledOn;
+
+    /*
+     * instrumentVouchers is the reference to the payment vouchers for which the instrument is attached.
+     */
+    // @DrillDownTable
+    private List<InstrumentVoucher> instrumentVouchers = new ArrayList<>();
 
 }

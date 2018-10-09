@@ -41,9 +41,8 @@ public class InstrumentMapper {
             List<InstrumentVoucher> instrumentVouchers = new ArrayList<>();
 
             if (contract.getInstrumentVouchers() != null)
-                for (InstrumentVoucherContract ivc : contract.getInstrumentVouchers()) {
+                for (InstrumentVoucherContract ivc : contract.getInstrumentVouchers())
                     instrumentVouchers.add(InstrumentVoucher.builder().voucherHeaderId(ivc.getVoucherHeaderId()).build());
-                }
 
             instrument.setInstrumentVouchers(instrumentVouchers);
 
@@ -95,11 +94,10 @@ public class InstrumentMapper {
             List<InstrumentVoucherContract> instrumentVouchers = new ArrayList<>();
 
             if (instrument.getInstrumentVouchers() != null)
-                for (InstrumentVoucher iv : instrument.getInstrumentVouchers()) {
+                for (InstrumentVoucher iv : instrument.getInstrumentVouchers())
                     instrumentVouchers
                             .add(InstrumentVoucherContract.builder().instrument(contract.getId())
                                     .voucherHeaderId(iv.getVoucherHeaderId()).build());
-                }
 
             contract.setInstrumentVouchers(instrumentVouchers);
 
@@ -146,9 +144,8 @@ public class InstrumentMapper {
 
             List<InstrumentVoucher> instrumentVouchers = new ArrayList<>();
             if (contract.getInstrumentVouchers() != null)
-                for (InstrumentVoucherContract ivc : contract.getInstrumentVouchers()) {
+                for (InstrumentVoucherContract ivc : contract.getInstrumentVouchers())
                     instrumentVouchers.add(InstrumentVoucher.builder().voucherHeaderId(ivc.getVoucherHeaderId()).build());
-                }
 
             instrumentSearch.setInstrumentVouchers(instrumentVouchers);
 
@@ -204,11 +201,10 @@ public class InstrumentMapper {
             List<InstrumentVoucherContract> instrumentVouchers = new ArrayList<>();
 
             if (instrumentSearch.getInstrumentVouchers() != null)
-                for (InstrumentVoucher iv : instrumentSearch.getInstrumentVouchers()) {
+                for (InstrumentVoucher iv : instrumentSearch.getInstrumentVouchers())
                     instrumentVouchers
                             .add(InstrumentVoucherContract.builder().instrument(contract.getId())
                                     .voucherHeaderId(iv.getVoucherHeaderId()).build());
-                }
 
             contract.setInstrumentVouchers(instrumentVouchers);
 

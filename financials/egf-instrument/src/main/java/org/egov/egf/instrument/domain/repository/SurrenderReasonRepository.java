@@ -22,222 +22,196 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class SurrenderReasonRepository {
 
-	private SurrenderReasonJdbcRepository surrenderReasonJdbcRepository;
+    private SurrenderReasonJdbcRepository surrenderReasonJdbcRepository;
 
-	private SurrenderReasonQueueRepository surrenderReasonQueueRepository;
+    private SurrenderReasonQueueRepository surrenderReasonQueueRepository;
 
-	private String persistThroughKafka;
+    private String persistThroughKafka;
 
-	private FinancialConfigurationContractRepository financialConfigurationContractRepository;
+    private FinancialConfigurationContractRepository financialConfigurationContractRepository;
 
-	private SurrenderReasonESRepository surrenderReasonESRepository;
+    private SurrenderReasonESRepository surrenderReasonESRepository;
 
-	@Autowired
-	public SurrenderReasonRepository(SurrenderReasonJdbcRepository surrenderReasonJdbcRepository,
-			SurrenderReasonQueueRepository surrenderReasonQueueRepository,
-			@Value("${persist.through.kafka}") String persistThroughKafka,
-			FinancialConfigurationContractRepository financialConfigurationContractRepository,
-			SurrenderReasonESRepository surrenderReasonESRepository) {
-		this.surrenderReasonJdbcRepository = surrenderReasonJdbcRepository;
-		this.surrenderReasonQueueRepository = surrenderReasonQueueRepository;
-		this.persistThroughKafka = persistThroughKafka;
-		this.financialConfigurationContractRepository = financialConfigurationContractRepository;
-		this.surrenderReasonESRepository = surrenderReasonESRepository;
+    @Autowired
+    public SurrenderReasonRepository(SurrenderReasonJdbcRepository surrenderReasonJdbcRepository,
+            SurrenderReasonQueueRepository surrenderReasonQueueRepository,
+            @Value("${persist.through.kafka}") String persistThroughKafka,
+            FinancialConfigurationContractRepository financialConfigurationContractRepository,
+            SurrenderReasonESRepository surrenderReasonESRepository) {
+        this.surrenderReasonJdbcRepository = surrenderReasonJdbcRepository;
+        this.surrenderReasonQueueRepository = surrenderReasonQueueRepository;
+        this.persistThroughKafka = persistThroughKafka;
+        this.financialConfigurationContractRepository = financialConfigurationContractRepository;
+        this.surrenderReasonESRepository = surrenderReasonESRepository;
 
-	}
+    }
 
-	public SurrenderReason findById(SurrenderReason surrenderReason) {
-		SurrenderReasonEntity entity = surrenderReasonJdbcRepository
-				.findById(new SurrenderReasonEntity().toEntity(surrenderReason));
-		if (entity != null)
-			return entity.toDomain();
+    public SurrenderReason findById(SurrenderReason surrenderReason) {
+        SurrenderReasonEntity entity = surrenderReasonJdbcRepository
+                .findById(new SurrenderReasonEntity().toEntity(surrenderReason));
+        if (entity != null)
+            return entity.toDomain();
 
-		return null;
+        return null;
 
-	}
+    }
 
-	@Transactional
-	public List<SurrenderReason> save(List<SurrenderReason> surrenderReasons, RequestInfo requestInfo) {
+    @Transactional
+    public List<SurrenderReason> save(List<SurrenderReason> surrenderReasons, RequestInfo requestInfo) {
 
-		SurrenderReasonMapper mapper = new SurrenderReasonMapper();
+        SurrenderReasonMapper mapper = new SurrenderReasonMapper();
 
-		if (persistThroughKafka != null && !persistThroughKafka.isEmpty()
-				&& persistThroughKafka.equalsIgnoreCase("yes")) {
+        if (persistThroughKafka != null && !persistThroughKafka.isEmpty()
+                && persistThroughKafka.equalsIgnoreCase("yes")) {
 
-			SurrenderReasonRequest request = new SurrenderReasonRequest();
-			request.setRequestInfo(requestInfo);
-			request.setSurrenderReasons(new ArrayList<>());
+            SurrenderReasonRequest request = new SurrenderReasonRequest();
+            request.setRequestInfo(requestInfo);
+            request.setSurrenderReasons(new ArrayList<>());
 
-			for (SurrenderReason iac : surrenderReasons) {
+            for (SurrenderReason iac : surrenderReasons)
+                request.getSurrenderReasons().add(mapper.toContract(iac));
 
-				request.getSurrenderReasons().add(mapper.toContract(iac));
+            surrenderReasonQueueRepository.addToQue(request);
 
-			}
+            return surrenderReasons;
+        } else {
 
-			surrenderReasonQueueRepository.addToQue(request);
+            List<SurrenderReason> resultList = new ArrayList<SurrenderReason>();
 
-			return surrenderReasons;
-		} else {
+            for (SurrenderReason iac : surrenderReasons)
+                resultList.add(save(iac));
 
-			List<SurrenderReason> resultList = new ArrayList<SurrenderReason>();
+            SurrenderReasonRequest request = new SurrenderReasonRequest();
+            request.setRequestInfo(requestInfo);
+            request.setSurrenderReasons(new ArrayList<>());
 
-			for (SurrenderReason iac : surrenderReasons) {
+            for (SurrenderReason iac : resultList)
+                request.getSurrenderReasons().add(mapper.toContract(iac));
 
-				resultList.add(save(iac));
-			}
+            surrenderReasonQueueRepository.addToSearchQue(request);
 
-			SurrenderReasonRequest request = new SurrenderReasonRequest();
-			request.setRequestInfo(requestInfo);
-			request.setSurrenderReasons(new ArrayList<>());
+            return resultList;
+        }
 
-			for (SurrenderReason iac : resultList) {
+    }
 
-				request.getSurrenderReasons().add(mapper.toContract(iac));
+    @Transactional
+    public List<SurrenderReason> update(List<SurrenderReason> surrenderReasons, RequestInfo requestInfo) {
 
-			}
+        SurrenderReasonMapper mapper = new SurrenderReasonMapper();
 
-			surrenderReasonQueueRepository.addToSearchQue(request);
+        if (persistThroughKafka != null && !persistThroughKafka.isEmpty()
+                && persistThroughKafka.equalsIgnoreCase("yes")) {
 
-			return resultList;
-		}
+            SurrenderReasonRequest request = new SurrenderReasonRequest();
+            request.setRequestInfo(requestInfo);
+            request.setSurrenderReasons(new ArrayList<>());
 
-	}
+            for (SurrenderReason iac : surrenderReasons)
+                request.getSurrenderReasons().add(mapper.toContract(iac));
 
-	@Transactional
-	public List<SurrenderReason> update(List<SurrenderReason> surrenderReasons, RequestInfo requestInfo) {
+            surrenderReasonQueueRepository.addToQue(request);
 
-		SurrenderReasonMapper mapper = new SurrenderReasonMapper();
+            return surrenderReasons;
+        } else {
 
-		if (persistThroughKafka != null && !persistThroughKafka.isEmpty()
-				&& persistThroughKafka.equalsIgnoreCase("yes")) {
+            List<SurrenderReason> resultList = new ArrayList<SurrenderReason>();
 
-			SurrenderReasonRequest request = new SurrenderReasonRequest();
-			request.setRequestInfo(requestInfo);
-			request.setSurrenderReasons(new ArrayList<>());
+            for (SurrenderReason iac : surrenderReasons)
+                resultList.add(update(iac));
 
-			for (SurrenderReason iac : surrenderReasons) {
+            SurrenderReasonRequest request = new SurrenderReasonRequest();
+            request.setRequestInfo(requestInfo);
+            request.setSurrenderReasons(new ArrayList<>());
 
-				request.getSurrenderReasons().add(mapper.toContract(iac));
+            for (SurrenderReason iac : resultList)
+                request.getSurrenderReasons().add(mapper.toContract(iac));
 
-			}
+            surrenderReasonQueueRepository.addToSearchQue(request);
 
-			surrenderReasonQueueRepository.addToQue(request);
+            return resultList;
+        }
 
-			return surrenderReasons;
-		} else {
+    }
 
-			List<SurrenderReason> resultList = new ArrayList<SurrenderReason>();
+    @Transactional
+    public List<SurrenderReason> delete(List<SurrenderReason> surrenderReasons, RequestInfo requestInfo) {
 
-			for (SurrenderReason iac : surrenderReasons) {
+        SurrenderReasonMapper mapper = new SurrenderReasonMapper();
 
-				resultList.add(update(iac));
-			}
+        if (persistThroughKafka != null && !persistThroughKafka.isEmpty()
+                && persistThroughKafka.equalsIgnoreCase("yes")) {
 
-			SurrenderReasonRequest request = new SurrenderReasonRequest();
-			request.setRequestInfo(requestInfo);
-			request.setSurrenderReasons(new ArrayList<>());
+            SurrenderReasonRequest request = new SurrenderReasonRequest();
+            request.setRequestInfo(requestInfo);
+            request.setSurrenderReasons(new ArrayList<>());
 
-			for (SurrenderReason iac : resultList) {
+            for (SurrenderReason iac : surrenderReasons)
+                request.getSurrenderReasons().add(mapper.toContract(iac));
 
-				request.getSurrenderReasons().add(mapper.toContract(iac));
+            surrenderReasonQueueRepository.addToQue(request);
 
-			}
+            return surrenderReasons;
+        } else {
 
-			surrenderReasonQueueRepository.addToSearchQue(request);
+            List<SurrenderReason> resultList = new ArrayList<SurrenderReason>();
 
-			return resultList;
-		}
+            for (SurrenderReason iac : surrenderReasons)
+                resultList.add(delete(iac));
 
-	}
-	
-	@Transactional
-	public List<SurrenderReason> delete(List<SurrenderReason> surrenderReasons, RequestInfo requestInfo) {
+            SurrenderReasonRequest request = new SurrenderReasonRequest();
+            request.setRequestInfo(requestInfo);
+            request.setSurrenderReasons(new ArrayList<>());
 
-		SurrenderReasonMapper mapper = new SurrenderReasonMapper();
+            for (SurrenderReason iac : resultList)
+                request.getSurrenderReasons().add(mapper.toContract(iac));
 
-		if (persistThroughKafka != null && !persistThroughKafka.isEmpty()
-				&& persistThroughKafka.equalsIgnoreCase("yes")) {
+            surrenderReasonQueueRepository.addToSearchQue(request);
 
-			SurrenderReasonRequest request = new SurrenderReasonRequest();
-			request.setRequestInfo(requestInfo);
-			request.setSurrenderReasons(new ArrayList<>());
+            return resultList;
+        }
 
-			for (SurrenderReason iac : surrenderReasons) {
+    }
 
-				request.getSurrenderReasons().add(mapper.toContract(iac));
+    @Transactional
+    public SurrenderReason save(SurrenderReason surrenderReason) {
+        SurrenderReasonEntity entity = surrenderReasonJdbcRepository
+                .create(new SurrenderReasonEntity().toEntity(surrenderReason));
+        return entity.toDomain();
+    }
 
-			}
+    @Transactional
+    public SurrenderReason update(SurrenderReason surrenderReason) {
+        SurrenderReasonEntity entity = surrenderReasonJdbcRepository
+                .update(new SurrenderReasonEntity().toEntity(surrenderReason));
+        return entity.toDomain();
+    }
 
-			surrenderReasonQueueRepository.addToQue(request);
+    @Transactional
+    public SurrenderReason delete(SurrenderReason surrenderReason) {
+        SurrenderReasonEntity entity = surrenderReasonJdbcRepository
+                .delete(new SurrenderReasonEntity().toEntity(surrenderReason));
+        return entity.toDomain();
+    }
 
-			return surrenderReasons;
-		} else {
+    public Pagination<SurrenderReason> search(SurrenderReasonSearch domain) {
 
-			List<SurrenderReason> resultList = new ArrayList<SurrenderReason>();
+        if (financialConfigurationContractRepository.fetchDataFrom() != null
+                && financialConfigurationContractRepository.fetchDataFrom().equalsIgnoreCase("es")) {
 
-			for (SurrenderReason iac : surrenderReasons) {
+            SurrenderReasonMapper mapper = new SurrenderReasonMapper();
+            SurrenderReasonSearchContract surrenderReasonSearchContract = new SurrenderReasonSearchContract();
+            surrenderReasonSearchContract = mapper.toSearchContract(domain);
 
-				resultList.add(delete(iac));
-			}
+            return surrenderReasonESRepository.search(surrenderReasonSearchContract);
 
-			SurrenderReasonRequest request = new SurrenderReasonRequest();
-			request.setRequestInfo(requestInfo);
-			request.setSurrenderReasons(new ArrayList<>());
+        } else
+            return surrenderReasonJdbcRepository.search(domain);
 
-			for (SurrenderReason iac : resultList) {
+    }
 
-				request.getSurrenderReasons().add(mapper.toContract(iac));
-
-			}
-
-			surrenderReasonQueueRepository.addToSearchQue(request);
-
-			return resultList;
-		}
-
-	}
-
-	@Transactional
-	public SurrenderReason save(SurrenderReason surrenderReason) {
-		SurrenderReasonEntity entity = surrenderReasonJdbcRepository
-				.create(new SurrenderReasonEntity().toEntity(surrenderReason));
-		return entity.toDomain();
-	}
-
-	@Transactional
-	public SurrenderReason update(SurrenderReason surrenderReason) {
-		SurrenderReasonEntity entity = surrenderReasonJdbcRepository
-				.update(new SurrenderReasonEntity().toEntity(surrenderReason));
-		return entity.toDomain();
-	}
-	
-	@Transactional
-	public SurrenderReason delete(SurrenderReason surrenderReason) {
-		SurrenderReasonEntity entity = surrenderReasonJdbcRepository
-				.delete(new SurrenderReasonEntity().toEntity(surrenderReason));
-		return entity.toDomain();
-	}
-
-	public Pagination<SurrenderReason> search(SurrenderReasonSearch domain) {
-
-		if (financialConfigurationContractRepository.fetchDataFrom() != null
-				&& financialConfigurationContractRepository.fetchDataFrom().equalsIgnoreCase("es")) {
-
-			SurrenderReasonMapper mapper = new SurrenderReasonMapper();
-			SurrenderReasonSearchContract surrenderReasonSearchContract = new SurrenderReasonSearchContract();
-			surrenderReasonSearchContract = mapper.toSearchContract(domain);
-
-			return surrenderReasonESRepository.search(surrenderReasonSearchContract);
-
-		} else {
-
-			return surrenderReasonJdbcRepository.search(domain);
-		}
-
-	}
-
-	public boolean uniqueCheck(String fieldName, SurrenderReason surrenderReason) {
-		return	surrenderReasonJdbcRepository.uniqueCheck(fieldName, new SurrenderReasonEntity().toEntity(surrenderReason));
-	}
+    public boolean uniqueCheck(String fieldName, SurrenderReason surrenderReason) {
+        return surrenderReasonJdbcRepository.uniqueCheck(fieldName, new SurrenderReasonEntity().toEntity(surrenderReason));
+    }
 
 }

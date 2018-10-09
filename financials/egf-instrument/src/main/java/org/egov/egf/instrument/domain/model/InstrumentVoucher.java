@@ -54,15 +54,14 @@ import lombok.Setter;
 @Builder
 public class InstrumentVoucher extends Auditable {
 
-	/*
-	 * instrumentHeaderId is the reference of the instrument attached to a
-	 * voucher
-	 */
-	private Instrument instrument;
+    /*
+     * instrumentHeaderId is the reference of the instrument attached to a voucher
+     */
+    private Instrument instrument;
 
-	/*
-	 * voucherHeaderId is the reference of the voucher attached to a instrument.
-	 */
-	private String voucherHeaderId;
+    /*
+     * voucherHeaderId is the reference of the voucher attached to a instrument.
+     */
+    private String voucherHeaderId;
 
 }

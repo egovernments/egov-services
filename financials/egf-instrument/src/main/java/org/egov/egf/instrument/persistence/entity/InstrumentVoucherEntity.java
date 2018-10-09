@@ -17,25 +17,25 @@ import lombok.Setter;
 
 @Builder
 public class InstrumentVoucherEntity extends AuditableEntity {
-	public static final String TABLE_NAME = "egf_instrumentvoucher";
-	private String id;
-	private String instrumentId;
-	private String voucherHeaderId;
+    public static final String TABLE_NAME = "egf_instrumentvoucher";
+    private String id;
+    private String instrumentId;
+    private String voucherHeaderId;
 
-	public InstrumentVoucher toDomain() {
-		InstrumentVoucher instrumentVoucher = new InstrumentVoucher();
-		super.toDomain(instrumentVoucher);
-		instrumentVoucher.setInstrument(Instrument.builder().id(instrumentId).build());
-		instrumentVoucher.setVoucherHeaderId(this.voucherHeaderId);
-		return instrumentVoucher;
-	}
+    public InstrumentVoucher toDomain() {
+        InstrumentVoucher instrumentVoucher = new InstrumentVoucher();
+        super.toDomain(instrumentVoucher);
+        instrumentVoucher.setInstrument(Instrument.builder().id(instrumentId).build());
+        instrumentVoucher.setVoucherHeaderId(voucherHeaderId);
+        return instrumentVoucher;
+    }
 
-	public InstrumentVoucherEntity toEntity(InstrumentVoucher instrumentVoucher) {
-		super.toEntity(instrumentVoucher);
-		this.instrumentId = instrumentVoucher.getInstrument() != null ? instrumentVoucher.getInstrument().getId()
-				: null;
-		this.voucherHeaderId = instrumentVoucher.getVoucherHeaderId();
-		return this;
-	}
+    public InstrumentVoucherEntity toEntity(InstrumentVoucher instrumentVoucher) {
+        super.toEntity(instrumentVoucher);
+        instrumentId = instrumentVoucher.getInstrument() != null ? instrumentVoucher.getInstrument().getId()
+                : null;
+        voucherHeaderId = instrumentVoucher.getVoucherHeaderId();
+        return this;
+    }
 
 }

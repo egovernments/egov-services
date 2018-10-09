@@ -95,6 +95,12 @@ public class TLQueryBuilder {
             addToPreparedStatement(preparedStmtList,ids);
         }
 
+        List<String> ownerIds = criteria.getOwnerIds();
+        if(!CollectionUtils.isEmpty(ownerIds)) {
+            builder.append("and tlowner.id IN (").append(createQuery(ownerIds)).append(")");
+            addToPreparedStatement(preparedStmtList,ownerIds);
+        }
+
         if(criteria.getApplicationNumber()!=null){
             builder.append(" and tl.applicationnumber = ? ");
             preparedStmtList.add(criteria.getApplicationNumber());

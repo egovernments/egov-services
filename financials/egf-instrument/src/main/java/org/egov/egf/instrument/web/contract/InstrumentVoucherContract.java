@@ -62,7 +62,7 @@ public class InstrumentVoucherContract extends AuditableContract {
 	 * instrumentHeaderId is the reference of the instrument attached to a
 	 * voucher
 	 */
-	private InstrumentContract instrument;
+	private String instrument;
 
 	/*
 	 * voucherHeaderId is the reference of the voucher attached to a instrument.

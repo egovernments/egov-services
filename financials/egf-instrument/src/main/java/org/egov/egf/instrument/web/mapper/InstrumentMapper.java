@@ -1,5 +1,8 @@
 package org.egov.egf.instrument.web.mapper;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.egov.egf.instrument.domain.model.Instrument;
 import org.egov.egf.instrument.domain.model.InstrumentSearch;
 import org.egov.egf.instrument.domain.model.InstrumentVoucher;
@@ -8,9 +11,6 @@ import org.egov.egf.instrument.web.contract.InstrumentContract;
 import org.egov.egf.instrument.web.contract.InstrumentSearchContract;
 import org.egov.egf.instrument.web.contract.InstrumentVoucherContract;
 import org.egov.egf.instrument.web.contract.TransactionTypeContract;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class InstrumentMapper {
 
@@ -42,8 +42,7 @@ public class InstrumentMapper {
 
             if (contract.getInstrumentVouchers() != null)
                 for (InstrumentVoucherContract ivc : contract.getInstrumentVouchers()) {
-                    instrumentVouchers.add(InstrumentVoucher.builder().instrument(toDomain(ivc.getInstrument()))
-                            .voucherHeaderId(ivc.getVoucherHeaderId()).build());
+                    instrumentVouchers.add(InstrumentVoucher.builder().voucherHeaderId(ivc.getVoucherHeaderId()).build());
                 }
 
             instrument.setInstrumentVouchers(instrumentVouchers);
@@ -62,7 +61,10 @@ public class InstrumentMapper {
         instrument.setLastModifiedDate(contract.getLastModifiedDate());
         instrument.setTenantId(contract.getTenantId());
         instrument.setDeleteReason(contract.getDeleteReason());
-
+        for (InstrumentVoucher iv : instrument.getInstrumentVouchers()) {
+            iv.setInstrument(instrument);
+            iv.setTenantId(instrument.getTenantId());
+        }
         return instrument;
     }
 
@@ -92,8 +94,7 @@ public class InstrumentMapper {
             if (instrument.getInstrumentVouchers() != null)
                 for (InstrumentVoucher iv : instrument.getInstrumentVouchers()) {
                     instrumentVouchers
-                            .add(InstrumentVoucherContract.builder().instrument(toContract(iv.getInstrument()))
-                                    .voucherHeaderId(iv.getVoucherHeaderId()).build());
+                            .add(InstrumentVoucherContract.builder().instrument(contract.getId()).voucherHeaderId(iv.getVoucherHeaderId()).build());
                 }
 
             contract.setInstrumentVouchers(instrumentVouchers);
@@ -112,7 +113,6 @@ public class InstrumentMapper {
         contract.setLastModifiedDate(instrument.getLastModifiedDate());
         contract.setTenantId(instrument.getTenantId());
         contract.setDeleteReason(instrument.getDeleteReason());
-
         return contract;
     }
 
@@ -140,8 +140,7 @@ public class InstrumentMapper {
             List<InstrumentVoucher> instrumentVouchers = new ArrayList<>();
             if (contract.getInstrumentVouchers() != null)
                 for (InstrumentVoucherContract ivc : contract.getInstrumentVouchers()) {
-                    instrumentVouchers.add(InstrumentVoucher.builder().instrument(toDomain(ivc.getInstrument()))
-                            .voucherHeaderId(ivc.getVoucherHeaderId()).build());
+                    instrumentVouchers.add(InstrumentVoucher.builder().voucherHeaderId(ivc.getVoucherHeaderId()).build());
                 }
 
             instrumentSearch.setInstrumentVouchers(instrumentVouchers);
@@ -197,8 +196,7 @@ public class InstrumentMapper {
             if (instrumentSearch.getInstrumentVouchers() != null)
                 for (InstrumentVoucher iv : instrumentSearch.getInstrumentVouchers()) {
                     instrumentVouchers
-                            .add(InstrumentVoucherContract.builder().instrument(toContract(iv.getInstrument()))
-                                    .voucherHeaderId(iv.getVoucherHeaderId()).build());
+                            .add(InstrumentVoucherContract.builder().instrument(contract.getId()).voucherHeaderId(iv.getVoucherHeaderId()).build());
                 }
 
             contract.setInstrumentVouchers(instrumentVouchers);

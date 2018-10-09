@@ -7,9 +7,12 @@ import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.domain.model.Pagination;
 import org.egov.egf.instrument.domain.model.Instrument;
 import org.egov.egf.instrument.domain.model.InstrumentSearch;
+import org.egov.egf.instrument.domain.model.InstrumentVoucher;
 import org.egov.egf.instrument.persistence.entity.InstrumentEntity;
+import org.egov.egf.instrument.persistence.entity.InstrumentVoucherEntity;
 import org.egov.egf.instrument.persistence.queue.repository.InstrumentQueueRepository;
 import org.egov.egf.instrument.persistence.repository.InstrumentJdbcRepository;
+import org.egov.egf.instrument.persistence.repository.InstrumentVoucherJdbcRepository;
 import org.egov.egf.instrument.web.contract.InstrumentSearchContract;
 import org.egov.egf.instrument.web.mapper.InstrumentMapper;
 import org.egov.egf.instrument.web.requests.InstrumentRequest;
@@ -23,6 +26,8 @@ import org.springframework.transaction.annotation.Transactional;
 public class InstrumentRepository {
 
 	private InstrumentJdbcRepository instrumentJdbcRepository;
+	
+	private InstrumentVoucherJdbcRepository instrumentVoucherJdbcRepository;
 
 	private InstrumentQueueRepository instrumentQueueRepository;
 
@@ -37,12 +42,14 @@ public class InstrumentRepository {
 			InstrumentQueueRepository instrumentQueueRepository,
 			@Value("${persist.through.kafka}") String persistThroughKafka,
 			InstrumentESRepository instrumentESRepository,
-			FinancialConfigurationContractRepository financialConfigurationContractRepository) {
+			FinancialConfigurationContractRepository financialConfigurationContractRepository,
+			InstrumentVoucherJdbcRepository instrumentVoucherJdbcRepository) {
 		this.instrumentJdbcRepository = instrumentJdbcRepository;
 		this.instrumentQueueRepository = instrumentQueueRepository;
 		this.persistThroughKafka = persistThroughKafka;
 		this.instrumentESRepository = instrumentESRepository;
 		this.financialConfigurationContractRepository = financialConfigurationContractRepository;
+		this.instrumentVoucherJdbcRepository = instrumentVoucherJdbcRepository;
 
 	}
 
@@ -199,12 +206,21 @@ public class InstrumentRepository {
 	@Transactional
 	public Instrument save(Instrument instrument) {
 		InstrumentEntity entity = instrumentJdbcRepository.create(new InstrumentEntity().toEntity(instrument));
+		if(instrument.getInstrumentVouchers()!=null)
+        		for(InstrumentVoucher iv:instrument.getInstrumentVouchers()){
+        		    instrumentVoucherJdbcRepository.create(new InstrumentVoucherEntity().toEntity(iv));
+        		}
 		return entity.toDomain();
 	}
 
 	@Transactional
 	public Instrument update(Instrument instrument) {
 		InstrumentEntity entity = instrumentJdbcRepository.update(new InstrumentEntity().toEntity(instrument));
+		instrumentVoucherJdbcRepository.delete(instrument.getTenantId(), instrument.getId());
+		if(instrument.getInstrumentVouchers()!=null)
+	                for(InstrumentVoucher iv:instrument.getInstrumentVouchers()){
+	                    instrumentVoucherJdbcRepository.create(new InstrumentVoucherEntity().toEntity(iv));
+	                }
 		return entity.toDomain();
 	}
 	

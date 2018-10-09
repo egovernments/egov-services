@@ -72,8 +72,8 @@ public class InstrumentMapperTest {
 		assertEquals(expectedContract.getFinancialStatus().getCode(), contract().getFinancialStatus().getCode());
 		assertEquals(expectedContract.getInstrumentType().getId(), contract().getInstrumentType().getId());
 		assertEquals(expectedContract.getSurrenderReason().getId(), contract().getSurrenderReason().getId());
-		assertEquals(expectedContract.getInstrumentVouchers().iterator().next().getInstrument().getId(),
-				contract().getInstrumentVouchers().iterator().next().getInstrument().getId());
+		assertEquals(expectedContract.getInstrumentVouchers().iterator().next().getInstrument(),
+				contract().getInstrumentVouchers().iterator().next().getInstrument());
 
 		assertEquals(expectedContract.getInstrumentVouchers().iterator().next().getVoucherHeaderId(),
 				contract().getInstrumentVouchers().iterator().next().getVoucherHeaderId());
@@ -102,8 +102,6 @@ public class InstrumentMapperTest {
 				searchDomain().getFinancialStatus().getCode());
 		assertEquals(expectedSearchDomain.getInstrumentType().getId(), searchDomain().getInstrumentType().getId());
 		assertEquals(expectedSearchDomain.getSurrenderReason().getId(), searchDomain().getSurrenderReason().getId());
-		assertEquals(expectedSearchDomain.getInstrumentVouchers().iterator().next().getInstrument().getId(),
-				searchDomain().getInstrumentVouchers().iterator().next().getInstrument().getId());
 
 		assertEquals(expectedSearchDomain.getInstrumentVouchers().iterator().next().getVoucherHeaderId(),
 				searchDomain().getInstrumentVouchers().iterator().next().getVoucherHeaderId());
@@ -134,8 +132,8 @@ public class InstrumentMapperTest {
 		assertEquals(expectedSearchContract.getInstrumentType().getId(), searchContract().getInstrumentType().getId());
 		assertEquals(expectedSearchContract.getSurrenderReason().getId(),
 				searchContract().getSurrenderReason().getId());
-		assertEquals(expectedSearchContract.getInstrumentVouchers().iterator().next().getInstrument().getId(),
-				searchContract().getInstrumentVouchers().iterator().next().getInstrument().getId());
+		assertEquals(expectedSearchContract.getInstrumentVouchers().iterator().next().getInstrument(),
+				searchContract().getInstrumentVouchers().iterator().next().getInstrument());
 
 		assertEquals(expectedSearchContract.getInstrumentVouchers().iterator().next().getVoucherHeaderId(),
 				searchContract().getInstrumentVouchers().iterator().next().getVoucherHeaderId());
@@ -200,7 +198,7 @@ public class InstrumentMapperTest {
 		List<InstrumentVoucherContract> instrumentVouchers = new ArrayList<>();
 
 		instrumentVouchers.add(InstrumentVoucherContract.builder()
-				.instrument(InstrumentContract.builder().id("id").build()).voucherHeaderId("voucherHeaderId").build());
+				.instrument(("id")).voucherHeaderId("voucherHeaderId").build());
 
 		contract.setInstrumentVouchers(instrumentVouchers);
 
@@ -266,7 +264,7 @@ public class InstrumentMapperTest {
 		List<InstrumentVoucherContract> instrumentVouchers = new ArrayList<>();
 
 		instrumentVouchers.add(InstrumentVoucherContract.builder()
-				.instrument(InstrumentContract.builder().id("id").build()).voucherHeaderId("voucherHeaderId").build());
+				.instrument("id").voucherHeaderId("voucherHeaderId").build());
 
 		contract.setInstrumentVouchers(instrumentVouchers);
 

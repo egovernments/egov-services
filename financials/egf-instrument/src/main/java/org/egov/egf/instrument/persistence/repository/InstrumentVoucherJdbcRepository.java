@@ -26,6 +26,10 @@ public class InstrumentVoucherJdbcRepository extends JdbcRepository {
 	public InstrumentVoucherJdbcRepository(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
 		this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
 	}
+	
+	public void delete(final String tenantId, final String instrumentId) {
+	        super.delete(InstrumentVoucherEntity.TABLE_NAME, tenantId, "instrumentId", instrumentId);
+	 }
 
 	public InstrumentVoucherEntity create(InstrumentVoucherEntity entity) {
 

@@ -249,7 +249,8 @@ public class InstrumentService {
         if (instruments != null)
             for (Instrument instrument : instruments) {
 
-                instrument.setId(UUID.randomUUID().toString().replace("-", ""));
+                if("create".equalsIgnoreCase(requestInfo.getAction()))
+                    instrument.setId(UUID.randomUUID().toString().replace("-", ""));
 
                 // fetch related items
 

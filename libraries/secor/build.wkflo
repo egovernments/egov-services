@@ -1,7 +1,7 @@
 def build(path, ci_image) {
     stage("Build"){
         docker.image("sivaprakash123/ci:0.0.5").inside {
-            sh "wget  https://github.com/pinterest/secor/archive/master.zip -O master.zip &&  unzip master.zip && cd secor-master && mvn package";
+            sh "rm -rf secor-master master.zip && wget  https://github.com/pinterest/secor/archive/master.zip -O master.zip &&  unzip master.zip && cd secor-master && mvn clean package";
         }
     }
  }

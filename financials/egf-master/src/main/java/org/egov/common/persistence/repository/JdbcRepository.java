@@ -331,6 +331,15 @@ public abstract class JdbcRepository {
         String delQuery = "delete from " + tableName + " where id = '" + id + "'";
         jdbcTemplate.execute(delQuery);
     }
+    
+    @Transactional
+    public void delete(final String tableName, final String tenantId, final String fieldName, final String fieldValue) {
+
+        final String delQuery = "delete from " + tableName + " where tenantId = '" + tenantId + "' and " + fieldName + " = '"
+                + fieldValue + "'";
+        System.out.println("Delete query" + "----" + delQuery);
+        jdbcTemplate.execute(delQuery);
+    }
 
     public String getSequence(String seqName) {
         String seqQuery = "select nextval('" + seqName + "')";

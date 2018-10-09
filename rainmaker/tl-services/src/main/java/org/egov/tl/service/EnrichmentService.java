@@ -211,13 +211,15 @@ public class EnrichmentService {
                 tradeLicense.setAuditDetails(auditDetails);
                 tradeLicense.getTradeLicenseDetail().setAuditDetails(auditDetails);
 
-                tradeLicense.getTradeLicenseDetail().getAccessories().forEach(accessory -> {
-                    if (accessory.getId() == null) {
-                        accessory.setTenantId(tradeLicense.getTenantId());
-                        accessory.setId(UUID.randomUUID().toString());
-                        accessory.setActive(true);
-                    }
-                });
+                if(!CollectionUtils.isEmpty(tradeLicense.getTradeLicenseDetail().getAccessories())){
+                    tradeLicense.getTradeLicenseDetail().getAccessories().forEach(accessory -> {
+                        if (accessory.getId() == null) {
+                            accessory.setTenantId(tradeLicense.getTenantId());
+                            accessory.setId(UUID.randomUUID().toString());
+                            accessory.setActive(true);
+                        }
+                    });
+                }
 
                 tradeLicense.getTradeLicenseDetail().getTradeUnits().forEach(tradeUnit -> {
                     if (tradeUnit.getId() == null) {

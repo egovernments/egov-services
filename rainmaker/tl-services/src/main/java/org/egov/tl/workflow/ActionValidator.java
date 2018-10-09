@@ -6,6 +6,7 @@ import org.egov.tl.web.models.TradeLicense;
 import org.egov.tl.web.models.TradeLicenseRequest;
 import org.egov.tracer.model.CustomException;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -116,11 +117,13 @@ public class ActionValidator {
                 license.getTradeLicenseDetail().getOwners().forEach(owner -> {
                     if(owner.getUuid()==null)
                         errorMap.put("INVALID UPDATE", "Id of owner cannot be null");
-                    owner.getDocuments().forEach(document -> {
-                        if(document.getId()==null)
-                            errorMap.put("INVALID UPDATE", "Id of owner document cannot be null");
+                    if(!CollectionUtils.isEmpty(owner.getDocuments())){
+                        owner.getDocuments().forEach(document -> {
+                            if(document.getId()==null)
+                                errorMap.put("INVALID UPDATE", "Id of owner document cannot be null");
+                        });
+                      }
                     });
-                });
                 license.getTradeLicenseDetail().getTradeUnits().forEach(tradeUnit -> {
                     if(tradeUnit.getId()==null)
                         errorMap.put("INVALID UPDATE", "Id of tradeUnit cannot be null");

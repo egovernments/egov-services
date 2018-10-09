@@ -1,8 +1,8 @@
 def app = "";
 def commit_id="";
-def module_name = "${env.JOB_NAME}".split("/")[-2];
+def module_name = "${env.JOB_NAME}";
 def service_name = "${env.JOB_BASE_NAME}";
-def path = "${module_name}/${service_name}"
+def path = "${module_name}"
 def build_wkflo;
 def ci_image = "egovio/ci:0.0.4"
 def notifier = "";

@@ -42,8 +42,8 @@ public class OwnerInfo extends User  {
         @Valid
         private List<Document> documents;
 
-        @JsonProperty("active")
-        private Boolean active;
+        @JsonProperty("userActive")
+        private Boolean userActive;
 
         public enum RelationshipEnum {
                 FATHER("FATHER"),
@@ -89,11 +89,13 @@ public class OwnerInfo extends User  {
                          String identificationMark, String photo, String createdBy, Long createdDate,
                          String lastModifiedBy, Long lastModifiedDate, String otpReference, String tenantId,
                          Boolean isPrimaryOwner, Double ownerShipPercentage, String ownerType,
-                         String institutionId,List<Document> documents,RelationshipEnum relationship) {
+                         String institutionId,List<Document> documents,RelationshipEnum relationship,
+                         Boolean userActive) {
                 super(id,uuid, userName, password, salutation, name, gender, mobileNumber, emailId, altContactNumber, pan, aadhaarNumber, permanentAddress, permanentCity, permanentPincode, correspondenceCity, correspondencePincode, correspondenceAddress, active, dob, pwdExpiryDate, locale, type, signature, accountLocked, roles, fatherOrHusbandName, bloodGroup, identificationMark, photo, createdBy, createdDate, lastModifiedBy, lastModifiedDate, otpReference, tenantId);
                 this.isPrimaryOwner = isPrimaryOwner;
                 this.ownerShipPercentage = ownerShipPercentage;
                 this.ownerType = ownerType;
+                this.userActive = userActive;
                 this.relationship=relationship;
                 this.institutionId=institutionId;
                 this.documents=documents;

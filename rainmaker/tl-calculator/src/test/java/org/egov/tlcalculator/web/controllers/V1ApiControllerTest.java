@@ -15,11 +15,11 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
 /**
-* API tests for V1ApiController
+* API tests for CalculatorController
 */
 @Ignore
 @RunWith(SpringRunner.class)
-@WebMvcTest(V1ApiController.class)
+@WebMvcTest(CalculatorController.class)
 @Import(TestConfiguration.class)
 public class V1ApiControllerTest {
 

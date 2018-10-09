@@ -44,7 +44,8 @@ import javax.servlet.http.HttpServletRequest;
 
         @PostMapping("/_create")
         public ResponseEntity<TradeLicenseResponse> create(@Valid @RequestBody TradeLicenseRequest tradeLicenseRequest)
-        {   List<TradeLicense> licenses = tradeLicenseService.create(tradeLicenseRequest);
+        {
+             List<TradeLicense> licenses = tradeLicenseService.create(tradeLicenseRequest);
                 TradeLicenseResponse response = TradeLicenseResponse.builder().licenses(licenses).responseInfo(
                     responseInfoFactory.createResponseInfoFromRequestInfo(tradeLicenseRequest.getRequestInfo(), true))
                     .build();

@@ -1,5 +1,8 @@
 package org.egov.egf.instrument.web.mapper;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.egov.egf.instrument.domain.model.Instrument;
 import org.egov.egf.instrument.domain.model.InstrumentSearch;
 import org.egov.egf.instrument.domain.model.InstrumentVoucher;
@@ -8,9 +11,6 @@ import org.egov.egf.instrument.web.contract.InstrumentContract;
 import org.egov.egf.instrument.web.contract.InstrumentSearchContract;
 import org.egov.egf.instrument.web.contract.InstrumentVoucherContract;
 import org.egov.egf.instrument.web.contract.TransactionTypeContract;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class InstrumentMapper {
 
@@ -41,10 +41,8 @@ public class InstrumentMapper {
             List<InstrumentVoucher> instrumentVouchers = new ArrayList<>();
 
             if (contract.getInstrumentVouchers() != null)
-                for (InstrumentVoucherContract ivc : contract.getInstrumentVouchers()) {
-                    instrumentVouchers.add(InstrumentVoucher.builder().instrument(toDomain(ivc.getInstrument()))
-                            .voucherHeaderId(ivc.getVoucherHeaderId()).build());
-                }
+                for (InstrumentVoucherContract ivc : contract.getInstrumentVouchers())
+                    instrumentVouchers.add(InstrumentVoucher.builder().voucherHeaderId(ivc.getVoucherHeaderId()).build());
 
             instrument.setInstrumentVouchers(instrumentVouchers);
 
@@ -56,13 +54,19 @@ public class InstrumentMapper {
         instrument.setTransactionNumber(contract.getTransactionNumber());
         instrument.setTransactionType(contract.getTransactionType() != null
                 ? TransactionType.valueOf(contract.getTransactionType().name()) : null);
+        instrument.setPayinSlipId(contract.getPayinSlipId());
+        instrument.setReconciledAmount(contract.getReconciledAmount());
+        instrument.setReconciledOn(contract.getReconciledOn());
         instrument.setCreatedBy(contract.getCreatedBy());
         instrument.setCreatedDate(contract.getCreatedDate());
         instrument.setLastModifiedBy(contract.getLastModifiedBy());
         instrument.setLastModifiedDate(contract.getLastModifiedDate());
         instrument.setTenantId(contract.getTenantId());
         instrument.setDeleteReason(contract.getDeleteReason());
-
+        for (InstrumentVoucher iv : instrument.getInstrumentVouchers()) {
+            iv.setInstrument(instrument);
+            iv.setTenantId(instrument.getTenantId());
+        }
         return instrument;
     }
 
@@ -90,11 +94,10 @@ public class InstrumentMapper {
             List<InstrumentVoucherContract> instrumentVouchers = new ArrayList<>();
 
             if (instrument.getInstrumentVouchers() != null)
-                for (InstrumentVoucher iv : instrument.getInstrumentVouchers()) {
+                for (InstrumentVoucher iv : instrument.getInstrumentVouchers())
                     instrumentVouchers
-                            .add(InstrumentVoucherContract.builder().instrument(toContract(iv.getInstrument()))
+                            .add(InstrumentVoucherContract.builder().instrument(contract.getId())
                                     .voucherHeaderId(iv.getVoucherHeaderId()).build());
-                }
 
             contract.setInstrumentVouchers(instrumentVouchers);
 
@@ -106,13 +109,15 @@ public class InstrumentMapper {
         contract.setTransactionNumber(instrument.getTransactionNumber());
         contract.setTransactionType(instrument.getTransactionType() != null
                 ? TransactionTypeContract.valueOf(instrument.getTransactionType().name()) : null);
+        contract.setPayinSlipId(instrument.getPayinSlipId());
+        contract.setReconciledAmount(instrument.getReconciledAmount());
+        contract.setReconciledOn(instrument.getReconciledOn());
         contract.setCreatedBy(instrument.getCreatedBy());
         contract.setCreatedDate(instrument.getCreatedDate());
         contract.setLastModifiedBy(instrument.getLastModifiedBy());
         contract.setLastModifiedDate(instrument.getLastModifiedDate());
         contract.setTenantId(instrument.getTenantId());
         contract.setDeleteReason(instrument.getDeleteReason());
-
         return contract;
     }
 
@@ -139,10 +144,8 @@ public class InstrumentMapper {
 
             List<InstrumentVoucher> instrumentVouchers = new ArrayList<>();
             if (contract.getInstrumentVouchers() != null)
-                for (InstrumentVoucherContract ivc : contract.getInstrumentVouchers()) {
-                    instrumentVouchers.add(InstrumentVoucher.builder().instrument(toDomain(ivc.getInstrument()))
-                            .voucherHeaderId(ivc.getVoucherHeaderId()).build());
-                }
+                for (InstrumentVoucherContract ivc : contract.getInstrumentVouchers())
+                    instrumentVouchers.add(InstrumentVoucher.builder().voucherHeaderId(ivc.getVoucherHeaderId()).build());
 
             instrumentSearch.setInstrumentVouchers(instrumentVouchers);
 
@@ -153,6 +156,9 @@ public class InstrumentMapper {
         instrumentSearch.setTransactionNumber(contract.getTransactionNumber());
         instrumentSearch.setTransactionType(contract.getTransactionType() != null
                 ? TransactionType.valueOf(contract.getTransactionType().name()) : null);
+        instrumentSearch.setPayinSlipId(contract.getPayinSlipId());
+        instrumentSearch.setReconciledAmount(contract.getReconciledAmount());
+        instrumentSearch.setReconciledOn(contract.getReconciledOn());
         instrumentSearch.setCreatedBy(contract.getCreatedBy());
         instrumentSearch.setCreatedDate(contract.getCreatedDate());
         instrumentSearch.setLastModifiedBy(contract.getLastModifiedBy());
@@ -195,11 +201,10 @@ public class InstrumentMapper {
             List<InstrumentVoucherContract> instrumentVouchers = new ArrayList<>();
 
             if (instrumentSearch.getInstrumentVouchers() != null)
-                for (InstrumentVoucher iv : instrumentSearch.getInstrumentVouchers()) {
+                for (InstrumentVoucher iv : instrumentSearch.getInstrumentVouchers())
                     instrumentVouchers
-                            .add(InstrumentVoucherContract.builder().instrument(toContract(iv.getInstrument()))
+                            .add(InstrumentVoucherContract.builder().instrument(contract.getId())
                                     .voucherHeaderId(iv.getVoucherHeaderId()).build());
-                }
 
             contract.setInstrumentVouchers(instrumentVouchers);
 
@@ -211,6 +216,9 @@ public class InstrumentMapper {
         contract.setTransactionNumber(instrumentSearch.getTransactionNumber());
         contract.setTransactionType(instrumentSearch.getTransactionType() != null
                 ? TransactionTypeContract.valueOf(instrumentSearch.getTransactionType().name()) : null);
+        contract.setPayinSlipId(instrumentSearch.getPayinSlipId());
+        contract.setReconciledAmount(instrumentSearch.getReconciledAmount());
+        contract.setReconciledOn(instrumentSearch.getReconciledOn());
         contract.setCreatedBy(instrumentSearch.getCreatedBy());
         contract.setCreatedDate(instrumentSearch.getCreatedDate());
         contract.setLastModifiedBy(instrumentSearch.getLastModifiedBy());

@@ -38,22 +38,22 @@ paths:
             in: query
             maxItems: 50
             description: comma seperated list of Ids 
-          - name: instrumentNumber
+          - name: transactionNumber
             type: string
             in: query
             description: |
-              instrumentNumber is the Cheque numbers assigned for the payment which is
+              transactionNumber is the Cheque numbers assigned for the payment which is
               unique for a given bank account number and financial year. In case of
               receipt, it the cheque number entered in the receipt which is having no
               unique constraints as it will repeat. This will be null in case of RTGS
               payment.
               
-          - name: instrumentDate
+          - name: transactionDate
             type: string
             format: date
             in: query
             description: |
-              instrumentDate is the cheque date of instrument assigned in
+              transactionDate is the cheque date of instrument assigned in
               paymentreceipt.
               
           - name: instrumentAmount
@@ -149,13 +149,6 @@ paths:
               ECSType is the type of ECS receipt made. Ex - ICICI, ONLINE, etc,.
               
 
-          - name: instrumentDetails
-            type: integer
-            format: int64
-            in: query
-            description: |
-              
-              
           - name: pageSize
             type: integer
             format: int32
@@ -498,20 +491,20 @@ definitions:
           description: |
             id is the unique reference to Instrument Header entered in the system.
             
-        instrumentNumber:
+        transactionNumber:
           type: string
           description: |
-            instrumentNumber is the Cheque numbers assigned for the payment which is
+            transactionNumber is the Cheque numbers assigned for the payment which is
             unique for a given bank account number and financial year. In case of
             receipt, it the cheque number entered in the receipt which is having no
             unique constraints as it will repeat. This will be null in case of RTGS
             payment.
             
-        instrumentDate:
+        transactionDate:
           type: string
           format: date
           description: |
-            instrumentDate is the cheque date of instrument assigned in
+            transactionDate is the cheque date of instrument assigned in
             paymentreceipt.
             
         instrumentAmount:
@@ -568,19 +561,34 @@ definitions:
           type: string
           description: |
             
+        payinSlipId:
+          type: string
+          description: | 
+            Referencing VoucherHeader
             
+        reconciledAmount:
+          type: number
+          format: double
+          description: |
+            Amount reconciled from Bank
+            
+        reconciledOn:
+          type: string
+          format: date
+          description: |
+            Bank reconciliation date
+   
         ECSType:
           $ref: "#/definitions/ECSType"
+
         instrumentVouchers:
           type:  array
           description:  |
             instrumentVouchers is the reference to the payment vouchers for which
             the instrument is attached.
-            
           items:
             $ref: "#/definitions/InstrumentVoucher"
-        instrumentDetails:
-          $ref: "#/definitions/InstrumentDetails"
+
     InstrumentVoucher:
       type: object
       properties:
@@ -591,42 +599,6 @@ definitions:
           description: |
             voucherHeaderId is the reference of the voucher attached to a instrument.
             
-    InstrumentDetails:
-      type: object
-      properties:
-        instrumentHeader:
-          $ref: "#/definitions/InstrumentHeader"
-        payinSlipId:
-          type: string
-          description: | 
-            Referencing InstrumentHeader
-            
-            
-        instrumentStatusDate:
-          type: string
-          format: date
-          description: | 
-            Date last when instrument is undergone change
-            
-            
-        reconciledAmount:
-          type: number
-          format: double
-          description: |
-            Amount reconciled from Bank
-            
-            
-        reconciledOn:
-          type: string
-          format: date
-          description: |
-            Bank reconciliation date
-            
-            
-        dishonorBankRefNo:
-          type: string
-          description: |
-            If instrument is dishonored then it is the reference number from bank.
             
     InstrumentHeaderRequest:
       description: Contract class to receive request. Array of InstrumentHeader items  are used in case of create . Where as single InstrumentHeader item is used for update

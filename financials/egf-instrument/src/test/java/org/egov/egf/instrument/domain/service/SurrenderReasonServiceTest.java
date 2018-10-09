@@ -29,220 +29,220 @@ import org.springframework.validation.SmartValidator;
 @RunWith(SpringRunner.class)
 public class SurrenderReasonServiceTest {
 
-	private SurrenderReasonService surrenderReasonService;
+    private SurrenderReasonService surrenderReasonService;
 
-	@Mock
-	private SmartValidator validator;
+    @Mock
+    private SmartValidator validator;
 
-	@Mock
-	private SurrenderReasonRepository surrenderReasonRepository;
+    @Mock
+    private SurrenderReasonRepository surrenderReasonRepository;
 
-	private BindingResult errors = new BeanPropertyBindingResult(null, null);
+    private BindingResult errors = new BeanPropertyBindingResult(null, null);
 
-	private RequestInfo requestInfo = new RequestInfo();
+    private RequestInfo requestInfo = new RequestInfo();
 
-	@Before
-	public void setup() {
-		surrenderReasonService = new SurrenderReasonService(validator, surrenderReasonRepository);
-	}
+    @Before
+    public void setup() {
+        surrenderReasonService = new SurrenderReasonService(validator, surrenderReasonRepository);
+    }
 
-	@Test
-	public final void test_save_with_out_kafka() {
+    @Test
+    public final void test_save_with_out_kafka() {
 
-		List<SurrenderReason> expextedResult = getSurrenderReasons();
+        List<SurrenderReason> expextedResult = getSurrenderReasons();
 
-		when(surrenderReasonRepository.uniqueCheck(any(String.class), any(SurrenderReason.class))).thenReturn(true);
-		when(surrenderReasonRepository.save(any(List.class), any(RequestInfo.class))).thenReturn(expextedResult);
+        when(surrenderReasonRepository.uniqueCheck(any(String.class), any(SurrenderReason.class))).thenReturn(true);
+        when(surrenderReasonRepository.save(any(List.class), any(RequestInfo.class))).thenReturn(expextedResult);
 
-		List<SurrenderReason> actualResult = surrenderReasonService.create(expextedResult, errors, requestInfo);
+        List<SurrenderReason> actualResult = surrenderReasonService.create(expextedResult, errors, requestInfo);
 
-		assertEquals(expextedResult, actualResult);
+        assertEquals(expextedResult, actualResult);
 
-	}
-	
-	@Test(expected=CustomBindException.class)
-	public final void test_save_with_out_kafka_unique_false() {
+    }
 
-		List<SurrenderReason> expextedResult = getSurrenderReasons();
+    @Test(expected = CustomBindException.class)
+    public final void test_save_with_out_kafka_unique_false() {
 
-		when(surrenderReasonRepository.uniqueCheck(any(String.class), any(SurrenderReason.class))).thenReturn(false);
-		when(surrenderReasonRepository.save(any(List.class), any(RequestInfo.class))).thenReturn(expextedResult);
+        List<SurrenderReason> expextedResult = getSurrenderReasons();
 
-		List<SurrenderReason> actualResult = surrenderReasonService.create(expextedResult, errors, requestInfo);
+        when(surrenderReasonRepository.uniqueCheck(any(String.class), any(SurrenderReason.class))).thenReturn(false);
+        when(surrenderReasonRepository.save(any(List.class), any(RequestInfo.class))).thenReturn(expextedResult);
 
-		assertEquals(expextedResult, actualResult);
+        List<SurrenderReason> actualResult = surrenderReasonService.create(expextedResult, errors, requestInfo);
 
-	}
+        assertEquals(expextedResult, actualResult);
 
-	@Test(expected = InvalidDataException.class)
-	public final void test_save_with_out_kafka_and_with_null_req() {
+    }
 
-		List<SurrenderReason> expextedResult = getSurrenderReasons();
+    @Test(expected = InvalidDataException.class)
+    public final void test_save_with_out_kafka_and_with_null_req() {
 
-		when(surrenderReasonRepository.uniqueCheck(any(String.class), any(SurrenderReason.class))).thenReturn(false);
-		when(surrenderReasonRepository.save(any(List.class), any(RequestInfo.class))).thenReturn(expextedResult);
+        List<SurrenderReason> expextedResult = getSurrenderReasons();
 
-		List<SurrenderReason> actualResult = surrenderReasonService.create(null, errors, requestInfo);
+        when(surrenderReasonRepository.uniqueCheck(any(String.class), any(SurrenderReason.class))).thenReturn(false);
+        when(surrenderReasonRepository.save(any(List.class), any(RequestInfo.class))).thenReturn(expextedResult);
 
-		assertEquals(expextedResult, actualResult);
+        List<SurrenderReason> actualResult = surrenderReasonService.create(null, errors, requestInfo);
 
-	}
+        assertEquals(expextedResult, actualResult);
 
-	@Test
-	public final void test_update_with_out_kafka() {
+    }
 
-		List<SurrenderReason> expextedResult = getSurrenderReasons();
+    @Test
+    public final void test_update_with_out_kafka() {
 
-		when(surrenderReasonRepository.update(any(List.class), any(RequestInfo.class))).thenReturn(expextedResult);
-		when(surrenderReasonRepository.uniqueCheck(any(String.class), any(SurrenderReason.class))).thenReturn(true);
-		List<SurrenderReason> actualResult = surrenderReasonService.update(expextedResult, errors, requestInfo);
+        List<SurrenderReason> expextedResult = getSurrenderReasons();
 
-		assertEquals(expextedResult, actualResult);
+        when(surrenderReasonRepository.update(any(List.class), any(RequestInfo.class))).thenReturn(expextedResult);
+        when(surrenderReasonRepository.uniqueCheck(any(String.class), any(SurrenderReason.class))).thenReturn(true);
+        List<SurrenderReason> actualResult = surrenderReasonService.update(expextedResult, errors, requestInfo);
 
-	}
-	
-	@Test(expected=CustomBindException.class)
-	public final void test_update_with_out_kafka_unique_false() {
+        assertEquals(expextedResult, actualResult);
 
-		List<SurrenderReason> expextedResult = getSurrenderReasons();
+    }
 
-		when(surrenderReasonRepository.update(any(List.class), any(RequestInfo.class))).thenReturn(expextedResult);
-		when(surrenderReasonRepository.uniqueCheck(any(String.class), any(SurrenderReason.class))).thenReturn(false);
-		List<SurrenderReason> actualResult = surrenderReasonService.update(expextedResult, errors, requestInfo);
+    @Test(expected = CustomBindException.class)
+    public final void test_update_with_out_kafka_unique_false() {
 
-		assertEquals(expextedResult, actualResult);
+        List<SurrenderReason> expextedResult = getSurrenderReasons();
 
-	}
-	
-	@Test
-	public final void test_delete_with_out_kafka() {
+        when(surrenderReasonRepository.update(any(List.class), any(RequestInfo.class))).thenReturn(expextedResult);
+        when(surrenderReasonRepository.uniqueCheck(any(String.class), any(SurrenderReason.class))).thenReturn(false);
+        List<SurrenderReason> actualResult = surrenderReasonService.update(expextedResult, errors, requestInfo);
 
-		List<SurrenderReason> expextedResult = getSurrenderReasons();
+        assertEquals(expextedResult, actualResult);
 
-		when(surrenderReasonRepository.delete(any(List.class), any(RequestInfo.class))).thenReturn(expextedResult);
+    }
 
-		List<SurrenderReason> actualResult = surrenderReasonService.delete(expextedResult, errors, requestInfo);
+    @Test
+    public final void test_delete_with_out_kafka() {
 
-		assertEquals(expextedResult, actualResult);
+        List<SurrenderReason> expextedResult = getSurrenderReasons();
 
-	}
+        when(surrenderReasonRepository.delete(any(List.class), any(RequestInfo.class))).thenReturn(expextedResult);
 
-	@Test(expected = InvalidDataException.class)
-	public final void test_update_with_out_kafka_and_with_null_req() {
+        List<SurrenderReason> actualResult = surrenderReasonService.delete(expextedResult, errors, requestInfo);
 
-		List<SurrenderReason> expextedResult = getSurrenderReasons();
+        assertEquals(expextedResult, actualResult);
 
-		when(surrenderReasonRepository.update(any(List.class), any(RequestInfo.class))).thenReturn(expextedResult);
+    }
 
-		List<SurrenderReason> actualResult = surrenderReasonService.update(null, errors, requestInfo);
+    @Test(expected = InvalidDataException.class)
+    public final void test_update_with_out_kafka_and_with_null_req() {
 
-		assertEquals(expextedResult, actualResult);
+        List<SurrenderReason> expextedResult = getSurrenderReasons();
 
-	}
-	
-	@Test(expected = InvalidDataException.class)
-	public final void test_update_without_id() {
+        when(surrenderReasonRepository.update(any(List.class), any(RequestInfo.class))).thenReturn(expextedResult);
 
-		List<SurrenderReason> expextedResult = getSurrenderReasons();
-		expextedResult.get(0).setId(null);
+        List<SurrenderReason> actualResult = surrenderReasonService.update(null, errors, requestInfo);
 
-		when(surrenderReasonRepository.update(any(List.class), any(RequestInfo.class))).thenReturn(expextedResult);
+        assertEquals(expextedResult, actualResult);
 
-		List<SurrenderReason> actualResult = surrenderReasonService.update(expextedResult, errors, requestInfo);
+    }
 
-		assertEquals(expextedResult, actualResult);
+    @Test(expected = InvalidDataException.class)
+    public final void test_update_without_id() {
 
-	}
+        List<SurrenderReason> expextedResult = getSurrenderReasons();
+        expextedResult.get(0).setId(null);
 
-	@Test
-	public final void test_search() {
+        when(surrenderReasonRepository.update(any(List.class), any(RequestInfo.class))).thenReturn(expextedResult);
 
-		List<SurrenderReason> surrenderReasons = getSurrenderReasons();
-		SurrenderReasonSearch surrenderReasonSearch = new SurrenderReasonSearch();
-		Pagination<SurrenderReason> expextedResult = new Pagination<>();
+        List<SurrenderReason> actualResult = surrenderReasonService.update(expextedResult, errors, requestInfo);
 
-		expextedResult.setPagedData(surrenderReasons);
+        assertEquals(expextedResult, actualResult);
 
-		when(surrenderReasonRepository.search(surrenderReasonSearch)).thenReturn(expextedResult);
+    }
 
-		Pagination<SurrenderReason> actualResult = surrenderReasonService.search(surrenderReasonSearch);
+    @Test
+    public final void test_search() {
 
-		assertEquals(expextedResult, actualResult);
-	}
+        List<SurrenderReason> surrenderReasons = getSurrenderReasons();
+        SurrenderReasonSearch surrenderReasonSearch = new SurrenderReasonSearch();
+        Pagination<SurrenderReason> expextedResult = new Pagination<>();
 
-	@Test
-	public final void test_save() {
+        expextedResult.setPagedData(surrenderReasons);
 
-		SurrenderReason expextedResult = getSurrenderReasons().get(0);
+        when(surrenderReasonRepository.search(surrenderReasonSearch)).thenReturn(expextedResult);
 
-		when(surrenderReasonRepository.save(any(SurrenderReason.class))).thenReturn(expextedResult);
+        Pagination<SurrenderReason> actualResult = surrenderReasonService.search(surrenderReasonSearch);
 
-		SurrenderReason actualResult = surrenderReasonService.save(expextedResult);
+        assertEquals(expextedResult, actualResult);
+    }
 
-		assertEquals(expextedResult, actualResult);
-	}
+    @Test
+    public final void test_save() {
 
-	@Test
-	public final void test_update() {
+        SurrenderReason expextedResult = getSurrenderReasons().get(0);
 
-		SurrenderReason expextedResult = getSurrenderReasons().get(0);
+        when(surrenderReasonRepository.save(any(SurrenderReason.class))).thenReturn(expextedResult);
 
-		when(surrenderReasonRepository.update(any(SurrenderReason.class))).thenReturn(expextedResult);
+        SurrenderReason actualResult = surrenderReasonService.save(expextedResult);
 
-		SurrenderReason actualResult = surrenderReasonService.update(expextedResult);
+        assertEquals(expextedResult, actualResult);
+    }
 
-		assertEquals(expextedResult, actualResult);
-	}
-	
-	@Test
-	public final void test_delete() {
+    @Test
+    public final void test_update() {
 
-		SurrenderReason expextedResult = getSurrenderReasons().get(0);
+        SurrenderReason expextedResult = getSurrenderReasons().get(0);
 
-		when(surrenderReasonRepository.delete(any(SurrenderReason.class))).thenReturn(expextedResult);
+        when(surrenderReasonRepository.update(any(SurrenderReason.class))).thenReturn(expextedResult);
 
-		SurrenderReason actualResult = surrenderReasonService.delete(expextedResult);
+        SurrenderReason actualResult = surrenderReasonService.update(expextedResult);
 
-		assertEquals(expextedResult, actualResult);
-	}
+        assertEquals(expextedResult, actualResult);
+    }
 
-	@Test(expected = InvalidDataException.class)
-	public final void test_delete_with_out_surrenderreasons() {
+    @Test
+    public final void test_delete() {
 
-		List<SurrenderReason> expextedResult = getSurrenderReasons();
-		expextedResult.get(0).setId(null);
+        SurrenderReason expextedResult = getSurrenderReasons().get(0);
 
-		when(surrenderReasonRepository.delete(any(List.class), any(RequestInfo.class))).thenReturn(expextedResult);
+        when(surrenderReasonRepository.delete(any(SurrenderReason.class))).thenReturn(expextedResult);
 
-		List<SurrenderReason> actualResult = surrenderReasonService.delete(null, errors, requestInfo);
+        SurrenderReason actualResult = surrenderReasonService.delete(expextedResult);
 
-		assertEquals(expextedResult, actualResult);
+        assertEquals(expextedResult, actualResult);
+    }
 
-	}
-	
-	@Test(expected = InvalidDataException.class)
-	public final void test_delete_with_out_id() {
+    @Test(expected = InvalidDataException.class)
+    public final void test_delete_with_out_surrenderreasons() {
 
-		List<SurrenderReason> expextedResult = getSurrenderReasons();
-		expextedResult.get(0).setId(null);
+        List<SurrenderReason> expextedResult = getSurrenderReasons();
+        expextedResult.get(0).setId(null);
 
-		when(surrenderReasonRepository.delete(any(List.class), any(RequestInfo.class))).thenReturn(expextedResult);
+        when(surrenderReasonRepository.delete(any(List.class), any(RequestInfo.class))).thenReturn(expextedResult);
 
-		List<SurrenderReason> actualResult = surrenderReasonService.delete(expextedResult, errors, requestInfo);
+        List<SurrenderReason> actualResult = surrenderReasonService.delete(null, errors, requestInfo);
 
-		assertEquals(expextedResult, actualResult);
+        assertEquals(expextedResult, actualResult);
 
-	}
+    }
 
-	private List<SurrenderReason> getSurrenderReasons() {
-		List<SurrenderReason> surrenderReasons = new ArrayList<SurrenderReason>();
-		SurrenderReason surrenderReason = SurrenderReason.builder().id("1").name("name").build();
-		surrenderReason.setTenantId("default");
-		SurrenderReason surrenderReason1 = SurrenderReason.builder().id("1").name("name").build();
-		surrenderReason.setTenantId("default");
-		surrenderReasons.add(surrenderReason);
-		surrenderReasons.add(surrenderReason1);
-		return surrenderReasons;
-	}
+    @Test(expected = InvalidDataException.class)
+    public final void test_delete_with_out_id() {
+
+        List<SurrenderReason> expextedResult = getSurrenderReasons();
+        expextedResult.get(0).setId(null);
+
+        when(surrenderReasonRepository.delete(any(List.class), any(RequestInfo.class))).thenReturn(expextedResult);
+
+        List<SurrenderReason> actualResult = surrenderReasonService.delete(expextedResult, errors, requestInfo);
+
+        assertEquals(expextedResult, actualResult);
+
+    }
+
+    private List<SurrenderReason> getSurrenderReasons() {
+        List<SurrenderReason> surrenderReasons = new ArrayList<SurrenderReason>();
+        SurrenderReason surrenderReason = SurrenderReason.builder().id("1").name("name").build();
+        surrenderReason.setTenantId("default");
+        SurrenderReason surrenderReason1 = SurrenderReason.builder().id("1").name("name").build();
+        surrenderReason.setTenantId("default");
+        surrenderReasons.add(surrenderReason);
+        surrenderReasons.add(surrenderReason1);
+        return surrenderReasons;
+    }
 
 }

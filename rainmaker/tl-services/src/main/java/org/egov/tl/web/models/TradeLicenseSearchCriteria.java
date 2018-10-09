@@ -1,5 +1,6 @@
 package org.egov.tl.web.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
@@ -23,9 +24,6 @@ public class TradeLicenseSearchCriteria {
     @JsonProperty("ids")
     private List<String> ids;
 
-    @JsonProperty("ownerids")
-    private List<String> ownerids;
-
     @JsonProperty("applicationNumber")
     private String applicationNumber;
 
@@ -41,11 +39,25 @@ public class TradeLicenseSearchCriteria {
     @JsonProperty("accountId")
     private String accountId;
 
+
+    @JsonProperty("fromDate")
+    private Long fromDate = null;
+
+    @JsonProperty("toDate")
+    private Long toDate = null;
+
+
     @JsonProperty("offset")
     private Integer offset;
 
     @JsonProperty("limit")
     private Integer limit;
+
+    @JsonIgnore
+    private List<String> ownerIds;
+
+
+
 
 
 }

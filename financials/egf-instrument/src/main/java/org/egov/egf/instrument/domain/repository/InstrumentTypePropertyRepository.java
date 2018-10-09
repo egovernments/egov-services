@@ -10,41 +10,36 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class InstrumentTypePropertyRepository {
 
-	@Autowired
-	private InstrumentTypePropertyJdbcRepository instrumentTypePropertyJdbcRepository;
+    @Autowired
+    private InstrumentTypePropertyJdbcRepository instrumentTypePropertyJdbcRepository;
 
-	public InstrumentTypeProperty findById(InstrumentTypeProperty instrumentTypeProperty) {
-		InstrumentTypePropertyEntity entity = instrumentTypePropertyJdbcRepository
-				.findById(new InstrumentTypePropertyEntity().toEntity(instrumentTypeProperty));
-		if (entity != null)
-			return entity.toDomain();
+    public InstrumentTypeProperty findById(InstrumentTypeProperty instrumentTypeProperty) {
+        InstrumentTypePropertyEntity entity = instrumentTypePropertyJdbcRepository
+                .findById(new InstrumentTypePropertyEntity().toEntity(instrumentTypeProperty));
+        if (entity != null)
+            return entity.toDomain();
 
-		return null;
+        return null;
 
+    }
 
-	}
+    @Transactional
+    public InstrumentTypeProperty save(InstrumentTypeProperty instrumentTypeProperty) {
+        InstrumentTypePropertyEntity entity = instrumentTypePropertyJdbcRepository
+                .create(new InstrumentTypePropertyEntity().toEntity(instrumentTypeProperty));
+        return entity.toDomain();
+    }
 
-	@Transactional
-	public InstrumentTypeProperty save(InstrumentTypeProperty instrumentTypeProperty) {
-		InstrumentTypePropertyEntity entity = instrumentTypePropertyJdbcRepository
-				.create(new InstrumentTypePropertyEntity().toEntity(instrumentTypeProperty));
-		return entity.toDomain();
-	}
+    @Transactional
+    public InstrumentTypeProperty update(InstrumentTypeProperty instrumentTypeProperty) {
+        InstrumentTypePropertyEntity entity = instrumentTypePropertyJdbcRepository
+                .update(new InstrumentTypePropertyEntity().toEntity(instrumentTypeProperty));
+        return entity.toDomain();
+    }
 
-	@Transactional
-	public InstrumentTypeProperty update(InstrumentTypeProperty instrumentTypeProperty) {
-		InstrumentTypePropertyEntity entity = instrumentTypePropertyJdbcRepository
-				.update(new InstrumentTypePropertyEntity().toEntity(instrumentTypeProperty));
-		return entity.toDomain();
-	}
-
-	/*
-	 * public Pagination<InstrumentTypeProperty>
-	 * search(InstrumentTypePropertySearch domain) {
-	 * 
-	 * return instrumentTypePropertyJdbcRepository.search(domain);
-	 * 
-	 * }
-	 */
+    /*
+     * public Pagination<InstrumentTypeProperty> search(InstrumentTypePropertySearch domain) { return
+     * instrumentTypePropertyJdbcRepository.search(domain); }
+     */
 
 }

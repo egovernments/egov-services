@@ -2,7 +2,15 @@ package org.egov.pa.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+
+@AllArgsConstructor
+@NoArgsConstructor
 public class KpiCategory {
+	
+	@JsonProperty("id")
+	private Integer id;
 	
 	@JsonProperty("name")
 	private String name;
@@ -36,6 +44,16 @@ public class KpiCategory {
 	public void setTenantId(String tenantId) {
 		this.tenantId = tenantId;
 	}
+
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+	
+	
 	
 	
 

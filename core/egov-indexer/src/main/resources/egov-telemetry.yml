@@ -2,7 +2,7 @@ ServiceMaps:
  serviceName: Telemetry
  version: 1.0.0
  mappings:
-  - topic: telemetry-raw-input
+  - topic: telemetry-final-messages
     indexes:
     - name: egovtelemetry
       type: general

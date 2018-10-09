@@ -32,152 +32,151 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/instrumentaccountcodes")
 public class InstrumentAccountCodeController {
 
-	public static final String ACTION_CREATE = "create";
-	public static final String ACTION_UPDATE = "update";
-	public static final String ACTION_DELETE = "delete";
-	public static final String PLACEHOLDER = "placeholder";
+    public static final String ACTION_CREATE = "create";
+    public static final String ACTION_UPDATE = "update";
+    public static final String ACTION_DELETE = "delete";
+    public static final String PLACEHOLDER = "placeholder";
 
-	@Autowired
-	private InstrumentAccountCodeService instrumentAccountCodeService;
+    @Autowired
+    private InstrumentAccountCodeService instrumentAccountCodeService;
 
-	@PostMapping("/_create")
-	@ResponseStatus(HttpStatus.CREATED)
-	public InstrumentAccountCodeResponse create(@RequestBody InstrumentAccountCodeRequest instrumentAccountCodeRequest,
-			BindingResult errors) {
+    @PostMapping("/_create")
+    @ResponseStatus(HttpStatus.CREATED)
+    public InstrumentAccountCodeResponse create(@RequestBody InstrumentAccountCodeRequest instrumentAccountCodeRequest,
+            BindingResult errors) {
 
-		InstrumentAccountCodeMapper mapper = new InstrumentAccountCodeMapper();
-		InstrumentAccountCodeResponse instrumentAccountCodeResponse = new InstrumentAccountCodeResponse();
-		instrumentAccountCodeResponse.setResponseInfo(getResponseInfo(instrumentAccountCodeRequest.getRequestInfo()));
-		List<InstrumentAccountCode> instrumentaccountcodes = new ArrayList<>();
-		InstrumentAccountCode instrumentAccountCode;
-		List<InstrumentAccountCodeContract> instrumentAccountCodeContracts = new ArrayList<>();
-		InstrumentAccountCodeContract contract;
+        InstrumentAccountCodeMapper mapper = new InstrumentAccountCodeMapper();
+        InstrumentAccountCodeResponse instrumentAccountCodeResponse = new InstrumentAccountCodeResponse();
+        instrumentAccountCodeResponse.setResponseInfo(getResponseInfo(instrumentAccountCodeRequest.getRequestInfo()));
+        List<InstrumentAccountCode> instrumentaccountcodes = new ArrayList<>();
+        InstrumentAccountCode instrumentAccountCode;
+        List<InstrumentAccountCodeContract> instrumentAccountCodeContracts = new ArrayList<>();
+        InstrumentAccountCodeContract contract;
 
-		instrumentAccountCodeRequest.getRequestInfo().setAction(ACTION_CREATE);
+        instrumentAccountCodeRequest.getRequestInfo().setAction(ACTION_CREATE);
 
-		for (InstrumentAccountCodeContract instrumentAccountCodeContract : instrumentAccountCodeRequest
-				.getInstrumentAccountCodes()) {
-			instrumentAccountCode = mapper.toDomain(instrumentAccountCodeContract);
-			instrumentAccountCode.setCreatedDate(new Date());
-			instrumentAccountCode.setCreatedBy(instrumentAccountCodeRequest.getRequestInfo().getUserInfo());
-			instrumentAccountCode.setLastModifiedBy(instrumentAccountCodeRequest.getRequestInfo().getUserInfo());
-			instrumentaccountcodes.add(instrumentAccountCode);
-		}
+        for (InstrumentAccountCodeContract instrumentAccountCodeContract : instrumentAccountCodeRequest
+                .getInstrumentAccountCodes()) {
+            instrumentAccountCode = mapper.toDomain(instrumentAccountCodeContract);
+            instrumentAccountCode.setCreatedDate(new Date());
+            instrumentAccountCode.setCreatedBy(instrumentAccountCodeRequest.getRequestInfo().getUserInfo());
+            instrumentAccountCode.setLastModifiedBy(instrumentAccountCodeRequest.getRequestInfo().getUserInfo());
+            instrumentaccountcodes.add(instrumentAccountCode);
+        }
 
-		instrumentaccountcodes = instrumentAccountCodeService.create(instrumentaccountcodes, errors,
-				instrumentAccountCodeRequest.getRequestInfo());
+        instrumentaccountcodes = instrumentAccountCodeService.create(instrumentaccountcodes, errors,
+                instrumentAccountCodeRequest.getRequestInfo());
 
-		for (InstrumentAccountCode iac : instrumentaccountcodes) {
-			contract = mapper.toContract(iac);
-			instrumentAccountCodeContracts.add(contract);
-		}
+        for (InstrumentAccountCode iac : instrumentaccountcodes) {
+            contract = mapper.toContract(iac);
+            instrumentAccountCodeContracts.add(contract);
+        }
 
-		instrumentAccountCodeResponse.setInstrumentAccountCodes(instrumentAccountCodeContracts);
+        instrumentAccountCodeResponse.setInstrumentAccountCodes(instrumentAccountCodeContracts);
 
-		return instrumentAccountCodeResponse;
-	}
+        return instrumentAccountCodeResponse;
+    }
 
-	@PostMapping("/_update")
-	@ResponseStatus(HttpStatus.CREATED)
-	public InstrumentAccountCodeResponse update(@RequestBody InstrumentAccountCodeRequest instrumentAccountCodeRequest,
-			BindingResult errors) {
+    @PostMapping("/_update")
+    @ResponseStatus(HttpStatus.CREATED)
+    public InstrumentAccountCodeResponse update(@RequestBody InstrumentAccountCodeRequest instrumentAccountCodeRequest,
+            BindingResult errors) {
 
-		InstrumentAccountCodeMapper mapper = new InstrumentAccountCodeMapper();
-		instrumentAccountCodeRequest.getRequestInfo().setAction(ACTION_UPDATE);
-		InstrumentAccountCodeResponse instrumentAccountCodeResponse = new InstrumentAccountCodeResponse();
-		List<InstrumentAccountCode> instrumentaccountcodes = new ArrayList<>();
-		instrumentAccountCodeResponse.setResponseInfo(getResponseInfo(instrumentAccountCodeRequest.getRequestInfo()));
-		InstrumentAccountCode instrumentAccountCode;
-		InstrumentAccountCodeContract contract;
-		List<InstrumentAccountCodeContract> instrumentAccountCodeContracts = new ArrayList<>();
+        InstrumentAccountCodeMapper mapper = new InstrumentAccountCodeMapper();
+        instrumentAccountCodeRequest.getRequestInfo().setAction(ACTION_UPDATE);
+        InstrumentAccountCodeResponse instrumentAccountCodeResponse = new InstrumentAccountCodeResponse();
+        List<InstrumentAccountCode> instrumentaccountcodes = new ArrayList<>();
+        instrumentAccountCodeResponse.setResponseInfo(getResponseInfo(instrumentAccountCodeRequest.getRequestInfo()));
+        InstrumentAccountCode instrumentAccountCode;
+        InstrumentAccountCodeContract contract;
+        List<InstrumentAccountCodeContract> instrumentAccountCodeContracts = new ArrayList<>();
 
-		for (InstrumentAccountCodeContract instrumentAccountCodeContract : instrumentAccountCodeRequest
-				.getInstrumentAccountCodes()) {
-			instrumentAccountCode = mapper.toDomain(instrumentAccountCodeContract);
-			instrumentAccountCode.setLastModifiedBy(instrumentAccountCodeRequest.getRequestInfo().getUserInfo());
-			instrumentAccountCode.setLastModifiedDate(new Date());
-			instrumentaccountcodes.add(instrumentAccountCode);
-		}
+        for (InstrumentAccountCodeContract instrumentAccountCodeContract : instrumentAccountCodeRequest
+                .getInstrumentAccountCodes()) {
+            instrumentAccountCode = mapper.toDomain(instrumentAccountCodeContract);
+            instrumentAccountCode.setLastModifiedBy(instrumentAccountCodeRequest.getRequestInfo().getUserInfo());
+            instrumentAccountCode.setLastModifiedDate(new Date());
+            instrumentaccountcodes.add(instrumentAccountCode);
+        }
 
-		instrumentaccountcodes = instrumentAccountCodeService.update(instrumentaccountcodes, errors,
-				instrumentAccountCodeRequest.getRequestInfo());
+        instrumentaccountcodes = instrumentAccountCodeService.update(instrumentaccountcodes, errors,
+                instrumentAccountCodeRequest.getRequestInfo());
 
-		for (InstrumentAccountCode iac : instrumentaccountcodes) {
-			contract = mapper.toContract(iac);
-			instrumentAccountCodeContracts.add(contract);
-		}
+        for (InstrumentAccountCode iac : instrumentaccountcodes) {
+            contract = mapper.toContract(iac);
+            instrumentAccountCodeContracts.add(contract);
+        }
 
-		instrumentAccountCodeResponse.setInstrumentAccountCodes(instrumentAccountCodeContracts);
+        instrumentAccountCodeResponse.setInstrumentAccountCodes(instrumentAccountCodeContracts);
 
-		return instrumentAccountCodeResponse;
-	}
-	
-	@PostMapping("/_delete")
-	@ResponseStatus(HttpStatus.CREATED)
-	public InstrumentAccountCodeResponse delete(@RequestBody InstrumentAccountCodeRequest instrumentAccountCodeRequest,
-			BindingResult errors) {
+        return instrumentAccountCodeResponse;
+    }
 
-		InstrumentAccountCodeMapper mapper = new InstrumentAccountCodeMapper();
-		instrumentAccountCodeRequest.getRequestInfo().setAction(ACTION_DELETE);
-		InstrumentAccountCodeResponse instrumentAccountCodeResponse = new InstrumentAccountCodeResponse();
-		List<InstrumentAccountCode> instrumentaccountcodes = new ArrayList<>();
-		instrumentAccountCodeResponse.setResponseInfo(getResponseInfo(instrumentAccountCodeRequest.getRequestInfo()));
-		InstrumentAccountCode instrumentAccountCode;
-		InstrumentAccountCodeContract contract;
-		List<InstrumentAccountCodeContract> instrumentAccountCodeContracts = new ArrayList<>();
+    @PostMapping("/_delete")
+    @ResponseStatus(HttpStatus.CREATED)
+    public InstrumentAccountCodeResponse delete(@RequestBody InstrumentAccountCodeRequest instrumentAccountCodeRequest,
+            BindingResult errors) {
 
-		for (InstrumentAccountCodeContract instrumentAccountCodeContract : instrumentAccountCodeRequest
-				.getInstrumentAccountCodes()) {
-			instrumentAccountCode = mapper.toDomain(instrumentAccountCodeContract);
-			instrumentaccountcodes.add(instrumentAccountCode);
-		}
+        InstrumentAccountCodeMapper mapper = new InstrumentAccountCodeMapper();
+        instrumentAccountCodeRequest.getRequestInfo().setAction(ACTION_DELETE);
+        InstrumentAccountCodeResponse instrumentAccountCodeResponse = new InstrumentAccountCodeResponse();
+        List<InstrumentAccountCode> instrumentaccountcodes = new ArrayList<>();
+        instrumentAccountCodeResponse.setResponseInfo(getResponseInfo(instrumentAccountCodeRequest.getRequestInfo()));
+        InstrumentAccountCode instrumentAccountCode;
+        InstrumentAccountCodeContract contract;
+        List<InstrumentAccountCodeContract> instrumentAccountCodeContracts = new ArrayList<>();
 
-		instrumentaccountcodes = instrumentAccountCodeService.delete(instrumentaccountcodes, errors,
-				instrumentAccountCodeRequest.getRequestInfo());
+        for (InstrumentAccountCodeContract instrumentAccountCodeContract : instrumentAccountCodeRequest
+                .getInstrumentAccountCodes()) {
+            instrumentAccountCode = mapper.toDomain(instrumentAccountCodeContract);
+            instrumentaccountcodes.add(instrumentAccountCode);
+        }
 
-		for (InstrumentAccountCode iac : instrumentaccountcodes) {
-			contract = mapper.toContract(iac);
-			instrumentAccountCodeContracts.add(contract);
-		}
+        instrumentaccountcodes = instrumentAccountCodeService.delete(instrumentaccountcodes, errors,
+                instrumentAccountCodeRequest.getRequestInfo());
 
-		instrumentAccountCodeResponse.setInstrumentAccountCodes(instrumentAccountCodeContracts);
+        for (InstrumentAccountCode iac : instrumentaccountcodes) {
+            contract = mapper.toContract(iac);
+            instrumentAccountCodeContracts.add(contract);
+        }
 
-		return instrumentAccountCodeResponse;
-	}
+        instrumentAccountCodeResponse.setInstrumentAccountCodes(instrumentAccountCodeContracts);
 
-	@PostMapping("/_search")
-	@ResponseBody
-	@ResponseStatus(HttpStatus.OK)
-	public InstrumentAccountCodeResponse search(
-			@ModelAttribute InstrumentAccountCodeSearchContract instrumentAccountCodeSearchContract,
-			RequestInfo requestInfo, BindingResult errors) {
+        return instrumentAccountCodeResponse;
+    }
 
-		InstrumentAccountCodeMapper mapper = new InstrumentAccountCodeMapper();
-		InstrumentAccountCodeSearch domain = mapper.toSearchDomain(instrumentAccountCodeSearchContract);
-		InstrumentAccountCodeContract contract;
-		List<InstrumentAccountCodeContract> instrumentAccountCodeContracts = new ArrayList<>();
-		Pagination<InstrumentAccountCode> instrumentaccountcodes = instrumentAccountCodeService.search(domain);
+    @PostMapping("/_search")
+    @ResponseBody
+    @ResponseStatus(HttpStatus.OK)
+    public InstrumentAccountCodeResponse search(
+            @ModelAttribute InstrumentAccountCodeSearchContract instrumentAccountCodeSearchContract,
+            RequestInfo requestInfo, BindingResult errors) {
 
-		if (instrumentaccountcodes.getPagedData() != null) {
-			for (InstrumentAccountCode instrumentAccountCode : instrumentaccountcodes.getPagedData()) {
-				contract = mapper.toContract(instrumentAccountCode);
-				instrumentAccountCodeContracts.add(contract);
-			}
-		}
+        InstrumentAccountCodeMapper mapper = new InstrumentAccountCodeMapper();
+        InstrumentAccountCodeSearch domain = mapper.toSearchDomain(instrumentAccountCodeSearchContract);
+        InstrumentAccountCodeContract contract;
+        List<InstrumentAccountCodeContract> instrumentAccountCodeContracts = new ArrayList<>();
+        Pagination<InstrumentAccountCode> instrumentaccountcodes = instrumentAccountCodeService.search(domain);
 
-		InstrumentAccountCodeResponse response = new InstrumentAccountCodeResponse();
-		response.setInstrumentAccountCodes(instrumentAccountCodeContracts);
-		response.setPage(new PaginationContract(instrumentaccountcodes));
-		response.setResponseInfo(getResponseInfo(requestInfo));
+        if (instrumentaccountcodes.getPagedData() != null)
+            for (InstrumentAccountCode instrumentAccountCode : instrumentaccountcodes.getPagedData()) {
+                contract = mapper.toContract(instrumentAccountCode);
+                instrumentAccountCodeContracts.add(contract);
+            }
 
-		return response;
+        InstrumentAccountCodeResponse response = new InstrumentAccountCodeResponse();
+        response.setInstrumentAccountCodes(instrumentAccountCodeContracts);
+        response.setPage(new PaginationContract(instrumentaccountcodes));
+        response.setResponseInfo(getResponseInfo(requestInfo));
 
-	}
+        return response;
 
-	private ResponseInfo getResponseInfo(RequestInfo requestInfo) {
-		return ResponseInfo.builder().apiId(requestInfo.getApiId()).ver(requestInfo.getVer())
-				.ts(new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format(new Date())).resMsgId(requestInfo.getMsgId())
-				.resMsgId(PLACEHOLDER).status(PLACEHOLDER).build();
-	}
+    }
+
+    private ResponseInfo getResponseInfo(RequestInfo requestInfo) {
+        return ResponseInfo.builder().apiId(requestInfo.getApiId()).ver(requestInfo.getVer())
+                .ts(new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format(new Date())).resMsgId(requestInfo.getMsgId())
+                .resMsgId(PLACEHOLDER).status(PLACEHOLDER).build();
+    }
 
 }

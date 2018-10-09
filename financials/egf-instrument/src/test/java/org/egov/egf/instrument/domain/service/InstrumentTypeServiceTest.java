@@ -29,218 +29,218 @@ import org.springframework.validation.SmartValidator;
 @RunWith(SpringRunner.class)
 public class InstrumentTypeServiceTest {
 
-	private InstrumentTypeService instrumentTypeService;
+    private InstrumentTypeService instrumentTypeService;
 
-	@Mock
-	private SmartValidator validator;
+    @Mock
+    private SmartValidator validator;
 
-	@Mock
-	private InstrumentTypeRepository instrumentTypeRepository;
+    @Mock
+    private InstrumentTypeRepository instrumentTypeRepository;
 
-	private RequestInfo requestInfo = new RequestInfo();
+    private RequestInfo requestInfo = new RequestInfo();
 
-	private BindingResult errors = new BeanPropertyBindingResult(null, null);
+    private BindingResult errors = new BeanPropertyBindingResult(null, null);
 
-	@Before
-	public void setup() {
-		instrumentTypeService = new InstrumentTypeService(validator, instrumentTypeRepository);
-	}
+    @Before
+    public void setup() {
+        instrumentTypeService = new InstrumentTypeService(validator, instrumentTypeRepository);
+    }
 
-	@Test
-	public final void test_save_with_out_kafka() {
+    @Test
+    public final void test_save_with_out_kafka() {
 
-		List<InstrumentType> expextedResult = getInstrumentTypes();
-		
-		when(instrumentTypeRepository.uniqueCheck(any(String.class), any(InstrumentType.class))).thenReturn(true);
-		when(instrumentTypeRepository.save(any(List.class), any(RequestInfo.class))).thenReturn(expextedResult);
+        List<InstrumentType> expextedResult = getInstrumentTypes();
 
-		List<InstrumentType> actualResult = instrumentTypeService.create(expextedResult, errors, requestInfo);
+        when(instrumentTypeRepository.uniqueCheck(any(String.class), any(InstrumentType.class))).thenReturn(true);
+        when(instrumentTypeRepository.save(any(List.class), any(RequestInfo.class))).thenReturn(expextedResult);
 
-		assertEquals(expextedResult, actualResult);
+        List<InstrumentType> actualResult = instrumentTypeService.create(expextedResult, errors, requestInfo);
 
-	}
-	
-	@Test(expected=CustomBindException.class)
-	public final void test_save_with_out_kafka_unique_false() {
+        assertEquals(expextedResult, actualResult);
 
-		List<InstrumentType> expextedResult = getInstrumentTypes();
-		
-		when(instrumentTypeRepository.uniqueCheck(any(String.class), any(InstrumentType.class))).thenReturn(false);
-		when(instrumentTypeRepository.save(any(List.class), any(RequestInfo.class))).thenReturn(expextedResult);
+    }
 
-		List<InstrumentType> actualResult = instrumentTypeService.create(expextedResult, errors, requestInfo);
+    @Test(expected = CustomBindException.class)
+    public final void test_save_with_out_kafka_unique_false() {
 
-		assertEquals(expextedResult, actualResult);
+        List<InstrumentType> expextedResult = getInstrumentTypes();
 
-	}
+        when(instrumentTypeRepository.uniqueCheck(any(String.class), any(InstrumentType.class))).thenReturn(false);
+        when(instrumentTypeRepository.save(any(List.class), any(RequestInfo.class))).thenReturn(expextedResult);
 
-	@Test(expected = InvalidDataException.class)
-	public final void test_save_with_out_kafka_and_with_null_req() {
+        List<InstrumentType> actualResult = instrumentTypeService.create(expextedResult, errors, requestInfo);
 
-		List<InstrumentType> expextedResult = getInstrumentTypes();
+        assertEquals(expextedResult, actualResult);
 
-		when(instrumentTypeRepository.save(any(List.class), any(RequestInfo.class))).thenReturn(expextedResult);
+    }
 
-		List<InstrumentType> actualResult = instrumentTypeService.create(null, errors, requestInfo);
+    @Test(expected = InvalidDataException.class)
+    public final void test_save_with_out_kafka_and_with_null_req() {
 
-		assertEquals(expextedResult, actualResult);
+        List<InstrumentType> expextedResult = getInstrumentTypes();
 
-	}
+        when(instrumentTypeRepository.save(any(List.class), any(RequestInfo.class))).thenReturn(expextedResult);
 
-	@Test
-	public final void test_update_with_out_kafka() {
+        List<InstrumentType> actualResult = instrumentTypeService.create(null, errors, requestInfo);
 
-		List<InstrumentType> expextedResult = getInstrumentTypes();
+        assertEquals(expextedResult, actualResult);
 
-		when(instrumentTypeRepository.uniqueCheck(any(String.class), any(InstrumentType.class))).thenReturn(true);
-		when(instrumentTypeRepository.update(any(List.class), any(RequestInfo.class))).thenReturn(expextedResult);
+    }
 
-		List<InstrumentType> actualResult = instrumentTypeService.update(expextedResult, errors, requestInfo);
+    @Test
+    public final void test_update_with_out_kafka() {
 
-		assertEquals(expextedResult, actualResult);
+        List<InstrumentType> expextedResult = getInstrumentTypes();
 
-	}
-	
-	@Test(expected=InvalidDataException.class)
-	public final void test_update_with_out_kafka_null_id() {
+        when(instrumentTypeRepository.uniqueCheck(any(String.class), any(InstrumentType.class))).thenReturn(true);
+        when(instrumentTypeRepository.update(any(List.class), any(RequestInfo.class))).thenReturn(expextedResult);
 
-		List<InstrumentType> expextedResult = getInstrumentTypes();
-		expextedResult.get(0).setId(null);
+        List<InstrumentType> actualResult = instrumentTypeService.update(expextedResult, errors, requestInfo);
 
-		when(instrumentTypeRepository.uniqueCheck(any(String.class), any(InstrumentType.class))).thenReturn(true);
-		when(instrumentTypeRepository.update(any(List.class), any(RequestInfo.class))).thenReturn(expextedResult);
+        assertEquals(expextedResult, actualResult);
 
-		List<InstrumentType> actualResult = instrumentTypeService.update(expextedResult, errors, requestInfo);
+    }
 
-		assertEquals(expextedResult, actualResult);
+    @Test(expected = InvalidDataException.class)
+    public final void test_update_with_out_kafka_null_id() {
 
-	}
-	
-	@Test(expected=CustomBindException.class)
-	public final void test_update_with_out_kafka_unique_false() {
+        List<InstrumentType> expextedResult = getInstrumentTypes();
+        expextedResult.get(0).setId(null);
 
-		List<InstrumentType> expextedResult = getInstrumentTypes();
+        when(instrumentTypeRepository.uniqueCheck(any(String.class), any(InstrumentType.class))).thenReturn(true);
+        when(instrumentTypeRepository.update(any(List.class), any(RequestInfo.class))).thenReturn(expextedResult);
 
-		when(instrumentTypeRepository.uniqueCheck(any(String.class), any(InstrumentType.class))).thenReturn(false);
-		when(instrumentTypeRepository.update(any(List.class), any(RequestInfo.class))).thenReturn(expextedResult);
+        List<InstrumentType> actualResult = instrumentTypeService.update(expextedResult, errors, requestInfo);
 
-		List<InstrumentType> actualResult = instrumentTypeService.update(expextedResult, errors, requestInfo);
+        assertEquals(expextedResult, actualResult);
 
-		assertEquals(expextedResult, actualResult);
+    }
 
-	}
-	
-	@Test
-	public final void test_delete_with_out_kafka() {
+    @Test(expected = CustomBindException.class)
+    public final void test_update_with_out_kafka_unique_false() {
 
-		List<InstrumentType> expextedResult = getInstrumentTypes();
+        List<InstrumentType> expextedResult = getInstrumentTypes();
 
-		when(instrumentTypeRepository.delete(any(List.class), any(RequestInfo.class))).thenReturn(expextedResult);
+        when(instrumentTypeRepository.uniqueCheck(any(String.class), any(InstrumentType.class))).thenReturn(false);
+        when(instrumentTypeRepository.update(any(List.class), any(RequestInfo.class))).thenReturn(expextedResult);
 
-		List<InstrumentType> actualResult = instrumentTypeService.delete(expextedResult, errors, requestInfo);
+        List<InstrumentType> actualResult = instrumentTypeService.update(expextedResult, errors, requestInfo);
 
-		assertEquals(expextedResult, actualResult);
+        assertEquals(expextedResult, actualResult);
 
-	}
-	
-	@Test(expected=InvalidDataException.class)
-	public final void test_delete_with_out_kafka_nullrequest() {
+    }
 
-		List<InstrumentType> expextedResult = getInstrumentTypes();
+    @Test
+    public final void test_delete_with_out_kafka() {
 
-		when(instrumentTypeRepository.delete(any(List.class), any(RequestInfo.class))).thenReturn(expextedResult);
+        List<InstrumentType> expextedResult = getInstrumentTypes();
 
-		List<InstrumentType> actualResult = instrumentTypeService.delete(null, errors, requestInfo);
+        when(instrumentTypeRepository.delete(any(List.class), any(RequestInfo.class))).thenReturn(expextedResult);
 
-		assertEquals(expextedResult, actualResult);
+        List<InstrumentType> actualResult = instrumentTypeService.delete(expextedResult, errors, requestInfo);
 
-	}
-	
-	@Test(expected=InvalidDataException.class)
-	public final void test_delete_with_out_kafka_null_id() {
+        assertEquals(expextedResult, actualResult);
 
-		List<InstrumentType> expextedResult = getInstrumentTypes();
-		expextedResult.get(0).setId(null);
+    }
 
-		when(instrumentTypeRepository.delete(any(List.class), any(RequestInfo.class))).thenReturn(expextedResult);
+    @Test(expected = InvalidDataException.class)
+    public final void test_delete_with_out_kafka_nullrequest() {
 
-		List<InstrumentType> actualResult = instrumentTypeService.delete(expextedResult, errors, requestInfo);
+        List<InstrumentType> expextedResult = getInstrumentTypes();
 
-		assertEquals(expextedResult, actualResult);
+        when(instrumentTypeRepository.delete(any(List.class), any(RequestInfo.class))).thenReturn(expextedResult);
 
-	}
+        List<InstrumentType> actualResult = instrumentTypeService.delete(null, errors, requestInfo);
 
-	@Test(expected = InvalidDataException.class)
-	public final void test_update_with_out_kafka_and_with_null_req() {
+        assertEquals(expextedResult, actualResult);
 
-		List<InstrumentType> expextedResult = getInstrumentTypes();
+    }
 
-		when(instrumentTypeRepository.update(any(List.class), any(RequestInfo.class))).thenReturn(expextedResult);
+    @Test(expected = InvalidDataException.class)
+    public final void test_delete_with_out_kafka_null_id() {
 
-		List<InstrumentType> actualResult = instrumentTypeService.update(null, errors, requestInfo);
+        List<InstrumentType> expextedResult = getInstrumentTypes();
+        expextedResult.get(0).setId(null);
 
-		assertEquals(expextedResult, actualResult);
+        when(instrumentTypeRepository.delete(any(List.class), any(RequestInfo.class))).thenReturn(expextedResult);
 
-	}
+        List<InstrumentType> actualResult = instrumentTypeService.delete(expextedResult, errors, requestInfo);
 
-	@Test
-	public final void test_search() {
+        assertEquals(expextedResult, actualResult);
 
-		List<InstrumentType> instrumentTypes = getInstrumentTypes();
-		InstrumentTypeSearch instrumentTypeSearch = new InstrumentTypeSearch();
-		Pagination<InstrumentType> expextedResult = new Pagination<>();
+    }
 
-		expextedResult.setPagedData(instrumentTypes);
+    @Test(expected = InvalidDataException.class)
+    public final void test_update_with_out_kafka_and_with_null_req() {
 
-		when(instrumentTypeRepository.search(instrumentTypeSearch)).thenReturn(expextedResult);
+        List<InstrumentType> expextedResult = getInstrumentTypes();
 
-		Pagination<InstrumentType> actualResult = instrumentTypeService.search(instrumentTypeSearch);
+        when(instrumentTypeRepository.update(any(List.class), any(RequestInfo.class))).thenReturn(expextedResult);
 
-		assertEquals(expextedResult, actualResult);
-	}
+        List<InstrumentType> actualResult = instrumentTypeService.update(null, errors, requestInfo);
 
-	@Test
-	public final void test_save() {
+        assertEquals(expextedResult, actualResult);
 
-		InstrumentType expextedResult = getInstrumentTypes().get(0);
+    }
 
-		when(instrumentTypeRepository.save(any(InstrumentType.class))).thenReturn(expextedResult);
+    @Test
+    public final void test_search() {
 
-		InstrumentType actualResult = instrumentTypeService.save(expextedResult);
+        List<InstrumentType> instrumentTypes = getInstrumentTypes();
+        InstrumentTypeSearch instrumentTypeSearch = new InstrumentTypeSearch();
+        Pagination<InstrumentType> expextedResult = new Pagination<>();
 
-		assertEquals(expextedResult, actualResult);
-	}
+        expextedResult.setPagedData(instrumentTypes);
 
-	@Test
-	public final void test_update() {
+        when(instrumentTypeRepository.search(instrumentTypeSearch)).thenReturn(expextedResult);
 
-		InstrumentType expextedResult = getInstrumentTypes().get(0);
+        Pagination<InstrumentType> actualResult = instrumentTypeService.search(instrumentTypeSearch);
 
-		when(instrumentTypeRepository.update(any(InstrumentType.class))).thenReturn(expextedResult);
+        assertEquals(expextedResult, actualResult);
+    }
 
-		InstrumentType actualResult = instrumentTypeService.update(expextedResult);
+    @Test
+    public final void test_save() {
 
-		assertEquals(expextedResult, actualResult);
-	}
-	
-	@Test
-	public final void test_delete() {
+        InstrumentType expextedResult = getInstrumentTypes().get(0);
 
-		InstrumentType expextedResult = getInstrumentTypes().get(0);
+        when(instrumentTypeRepository.save(any(InstrumentType.class))).thenReturn(expextedResult);
 
-		when(instrumentTypeRepository.delete(any(InstrumentType.class))).thenReturn(expextedResult);
+        InstrumentType actualResult = instrumentTypeService.save(expextedResult);
 
-		InstrumentType actualResult = instrumentTypeService.delete(expextedResult);
+        assertEquals(expextedResult, actualResult);
+    }
 
-		assertEquals(expextedResult, actualResult);
-	}
+    @Test
+    public final void test_update() {
 
-	private List<InstrumentType> getInstrumentTypes() {
-		List<InstrumentType> instrumentTypes = new ArrayList<InstrumentType>();
-		InstrumentType instrumentType = InstrumentType.builder().id("1").build();
-		instrumentType.setTenantId("default");
-		instrumentTypes.add(instrumentType);
-		return instrumentTypes;
-	}
+        InstrumentType expextedResult = getInstrumentTypes().get(0);
+
+        when(instrumentTypeRepository.update(any(InstrumentType.class))).thenReturn(expextedResult);
+
+        InstrumentType actualResult = instrumentTypeService.update(expextedResult);
+
+        assertEquals(expextedResult, actualResult);
+    }
+
+    @Test
+    public final void test_delete() {
+
+        InstrumentType expextedResult = getInstrumentTypes().get(0);
+
+        when(instrumentTypeRepository.delete(any(InstrumentType.class))).thenReturn(expextedResult);
+
+        InstrumentType actualResult = instrumentTypeService.delete(expextedResult);
+
+        assertEquals(expextedResult, actualResult);
+    }
+
+    private List<InstrumentType> getInstrumentTypes() {
+        List<InstrumentType> instrumentTypes = new ArrayList<InstrumentType>();
+        InstrumentType instrumentType = InstrumentType.builder().id("1").build();
+        instrumentType.setTenantId("default");
+        instrumentTypes.add(instrumentType);
+        return instrumentTypes;
+    }
 
 }

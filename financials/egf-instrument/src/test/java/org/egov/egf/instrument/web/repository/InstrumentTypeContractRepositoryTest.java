@@ -20,41 +20,41 @@ import org.springframework.web.client.RestTemplate;
 @RunWith(MockitoJUnitRunner.class)
 public class InstrumentTypeContractRepositoryTest {
 
-	private InstrumentTypeContractRepository instrumentTypeContractRepository;
+    private InstrumentTypeContractRepository instrumentTypeContractRepository;
 
-	private static final String HOST = "http://host";
+    private static final String HOST = "http://host";
 
-	private MockRestServiceServer server;
+    private MockRestServiceServer server;
 
-	private RequestJsonReader resources = new RequestJsonReader();
+    private RequestJsonReader resources = new RequestJsonReader();
 
-	@Before
-	public void setup() {
-		final RestTemplate restTemplate = new RestTemplate();
-		instrumentTypeContractRepository = new InstrumentTypeContractRepository(HOST, restTemplate);
-		server = MockRestServiceServer.bindTo(restTemplate).build();
-	}
+    @Before
+    public void setup() {
+        final RestTemplate restTemplate = new RestTemplate();
+        instrumentTypeContractRepository = new InstrumentTypeContractRepository(HOST, restTemplate);
+        server = MockRestServiceServer.bindTo(restTemplate).build();
+    }
 
-	@Test
-	public void test_find_by_id() throws Exception {
+    @Test
+    public void test_find_by_id() throws Exception {
 
-		server.expect(once(), requestTo("http://host/egf-instrument/instrumenttypes/_search?id=1&tenantId=default"))
-				.andExpect(method(HttpMethod.POST))
-				.andRespond(withSuccess(resources.getFileContents("instrumenttype/search_by_id_response.json"),
-						MediaType.APPLICATION_JSON_UTF8));
+        server.expect(once(), requestTo("http://host/egf-instrument/instrumenttypes/_search?id=1&tenantId=default"))
+                .andExpect(method(HttpMethod.POST))
+                .andRespond(withSuccess(resources.getFileContents("instrumenttype/search_by_id_response.json"),
+                        MediaType.APPLICATION_JSON_UTF8));
 
-		InstrumentTypeContract instrumentTypeContract = new InstrumentTypeContract();
+        InstrumentTypeContract instrumentTypeContract = new InstrumentTypeContract();
 
-		instrumentTypeContract.setId("1");
-		instrumentTypeContract.setTenantId("default");
+        instrumentTypeContract.setId("1");
+        instrumentTypeContract.setTenantId("default");
 
-		final InstrumentTypeContract response = instrumentTypeContractRepository.findById(instrumentTypeContract);
+        final InstrumentTypeContract response = instrumentTypeContractRepository.findById(instrumentTypeContract);
 
-		server.verify();
+        server.verify();
 
-		assertEquals("1", response.getId());
-		assertEquals("default", response.getTenantId());
+        assertEquals("1", response.getId());
+        assertEquals("default", response.getTenantId());
 
-	}
+    }
 
 }

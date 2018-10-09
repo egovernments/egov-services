@@ -658,33 +658,27 @@ public class GrievanceService {
 				if (!CollectionUtils.isEmpty(media))
 					fileStoreIds.addAll(media);
 			}));
-			Map<String, String> urlIdMap = null;
+			Map<String, String> computeUriIdMap = new HashMap<>();
 			try {
-				urlIdMap = fileStoreRepo.getUrlMaps(tenantId.split("\\.")[0], fileStoreIds);
+				computeUriIdMap = fileStoreRepo.getUrlMaps(tenantId.split("\\.")[0], fileStoreIds);
 			} catch (Exception e) {
 				log.error(" exception while connecting to filestore : " + e);
 			}
-			if (null != urlIdMap) {
-				for (int i = 0; i < historyList.size(); i++) {
-					ActionHistory history = historyList.get(i);
-					for (int j = 0; j < history.getActions().size(); j++) {
-						List<ActionInfo> actionList = history.getActions();
-						ActionInfo info = actionList.get(j);
-						if (null == info.getMedia())
-							continue;
+			final Map<String, String> urlIdMap = computeUriIdMap;
+			log.info("urlIdMap: "+urlIdMap);
+			if(!CollectionUtils.isEmpty(urlIdMap.keySet())) {
+				historyList.parallelStream().forEach(history -> {
+					history.getActions().parallelStream().forEach(action -> {
 						List<String> mediaList = new ArrayList<>();
-						for (int k = 0; k < info.getMedia().size(); k++) {
-							List<String> oldMedia = info.getMedia();
-							String fileStoreId = oldMedia.get(k);
-							String url = urlIdMap.get(fileStoreId);
-							if (null != url)
-								mediaList.add(url);
-							else
-								mediaList.add(fileStoreId);
-						}
-						info.setMedia(mediaList);
-					}
-				}
+						action.getMedia().forEach(media -> {
+							media = StringUtils.isEmpty(urlIdMap.get(media)) ? media : urlIdMap.get(media);
+							mediaList.add(media);
+						});
+						action.setMedia(mediaList);
+					});
+				});
+			}else {
+				log.info("uriIdMap obtained from filestore is null");
 			}
 		} catch (Exception e) {
 			log.error("Exception while replacing s3 links: " + e);

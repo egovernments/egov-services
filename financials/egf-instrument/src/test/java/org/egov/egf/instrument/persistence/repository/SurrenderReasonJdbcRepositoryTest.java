@@ -32,189 +32,189 @@ import org.springframework.test.context.junit4.SpringRunner;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 public class SurrenderReasonJdbcRepositoryTest {
 
-	private SurrenderReasonJdbcRepository surrenderReasonJdbcRepository;
+    private SurrenderReasonJdbcRepository surrenderReasonJdbcRepository;
 
-	@Autowired
-	private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
-	
-	@Autowired
-	private JdbcTemplate jdbcTemplate;
+    @Autowired
+    private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
-	@Before
-	public void setUp() throws Exception {
-		surrenderReasonJdbcRepository = new SurrenderReasonJdbcRepository(namedParameterJdbcTemplate, jdbcTemplate);
-	}
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
 
-	@Test
-	@Sql(scripts = { "/sql/surrenderreason/clearSurrenderReason.sql" })
-	public void test_create() {
+    @Before
+    public void setUp() throws Exception {
+        surrenderReasonJdbcRepository = new SurrenderReasonJdbcRepository(namedParameterJdbcTemplate, jdbcTemplate);
+    }
 
-		SurrenderReasonEntity surrenderReason = SurrenderReasonEntity.builder().id("1").name("name")
-				.description("description").build();
-		surrenderReason.setTenantId("default");
-		SurrenderReasonEntity actualResult = surrenderReasonJdbcRepository.create(surrenderReason);
+    @Test
+    @Sql(scripts = { "/sql/surrenderreason/clearSurrenderReason.sql" })
+    public void test_create() {
 
-		List<Map<String, Object>> result = namedParameterJdbcTemplate.query("SELECT * FROM egf_surrenderReason",
-				new SurrenderReasonResultExtractor());
-		Map<String, Object> row = result.get(0);
-		assertThat(row.get("name")).isEqualTo(actualResult.getName());
-		assertThat(row.get("description")).isEqualTo(actualResult.getDescription());
+        SurrenderReasonEntity surrenderReason = SurrenderReasonEntity.builder().id("1").name("name")
+                .description("description").build();
+        surrenderReason.setTenantId("default");
+        SurrenderReasonEntity actualResult = surrenderReasonJdbcRepository.create(surrenderReason);
 
-	}
+        List<Map<String, Object>> result = namedParameterJdbcTemplate.query("SELECT * FROM egf_surrenderReason",
+                new SurrenderReasonResultExtractor());
+        Map<String, Object> row = result.get(0);
+        assertThat(row.get("name")).isEqualTo(actualResult.getName());
+        assertThat(row.get("description")).isEqualTo(actualResult.getDescription());
 
-	@Test
-	@Sql(scripts = { "/sql/surrenderreason/clearSurrenderReason.sql",
-			"/sql/surrenderreason/insertSurrenderReasonData.sql" })
-	public void test_update() {
+    }
 
-		SurrenderReasonEntity surrenderReason = SurrenderReasonEntity.builder().id("1").name("name")
-				.description("description").build();
-		surrenderReason.setTenantId("default");
-		SurrenderReasonEntity actualResult = surrenderReasonJdbcRepository.update(surrenderReason);
+    @Test
+    @Sql(scripts = { "/sql/surrenderreason/clearSurrenderReason.sql",
+            "/sql/surrenderreason/insertSurrenderReasonData.sql" })
+    public void test_update() {
 
-		List<Map<String, Object>> result = namedParameterJdbcTemplate.query("SELECT * FROM egf_surrenderReason",
-				new SurrenderReasonResultExtractor());
-		Map<String, Object> row = result.get(0);
-		assertThat(row.get("name")).isEqualTo(actualResult.getName());
-		assertThat(row.get("description")).isEqualTo(actualResult.getDescription());
+        SurrenderReasonEntity surrenderReason = SurrenderReasonEntity.builder().id("1").name("name")
+                .description("description").build();
+        surrenderReason.setTenantId("default");
+        SurrenderReasonEntity actualResult = surrenderReasonJdbcRepository.update(surrenderReason);
 
-	}
-	
-	@Test
-	@Sql(scripts = { "/sql/surrenderreason/clearSurrenderReason.sql",
-			"/sql/surrenderreason/insertSurrenderReasonData.sql" })
-	public void test_delete() {
+        List<Map<String, Object>> result = namedParameterJdbcTemplate.query("SELECT * FROM egf_surrenderReason",
+                new SurrenderReasonResultExtractor());
+        Map<String, Object> row = result.get(0);
+        assertThat(row.get("name")).isEqualTo(actualResult.getName());
+        assertThat(row.get("description")).isEqualTo(actualResult.getDescription());
 
-		SurrenderReasonEntity surrenderReason = SurrenderReasonEntity.builder().id("1").name("name")
-				.description("description").build();
-		surrenderReason.setTenantId("default");
-		SurrenderReasonEntity actualResult = surrenderReasonJdbcRepository.delete(surrenderReason);
+    }
 
-		List<Map<String, Object>> result = namedParameterJdbcTemplate.query("SELECT * FROM egf_surrenderReason",
-				new SurrenderReasonResultExtractor());
-		assertTrue("Result set length is zero", result.size() == 0);
-	}
+    @Test
+    @Sql(scripts = { "/sql/surrenderreason/clearSurrenderReason.sql",
+            "/sql/surrenderreason/insertSurrenderReasonData.sql" })
+    public void test_delete() {
 
-	@Test
-	@Sql(scripts = { "/sql/surrenderreason/clearSurrenderReason.sql",
-			"/sql/surrenderreason/insertSurrenderReasonData.sql" })
-	public void test_search() {
+        SurrenderReasonEntity surrenderReason = SurrenderReasonEntity.builder().id("1").name("name")
+                .description("description").build();
+        surrenderReason.setTenantId("default");
+        SurrenderReasonEntity actualResult = surrenderReasonJdbcRepository.delete(surrenderReason);
 
-		Pagination<SurrenderReason> page = (Pagination<SurrenderReason>) surrenderReasonJdbcRepository
-				.search(getSurrenderReasonSearch());
-		assertThat(page.getPagedData().get(0).getName()).isEqualTo("name");
-		assertThat(page.getPagedData().get(0).getDescription()).isEqualTo("description");
+        List<Map<String, Object>> result = namedParameterJdbcTemplate.query("SELECT * FROM egf_surrenderReason",
+                new SurrenderReasonResultExtractor());
+        assertTrue("Result set length is zero", result.size() == 0);
+    }
 
-	}
+    @Test
+    @Sql(scripts = { "/sql/surrenderreason/clearSurrenderReason.sql",
+            "/sql/surrenderreason/insertSurrenderReasonData.sql" })
+    public void test_search() {
 
-	@Test
-	@Sql(scripts = { "/sql/surrenderreason/clearSurrenderReason.sql",
-			"/sql/surrenderreason/insertSurrenderReasonData.sql" })
-	public void test_invalid_search() {
+        Pagination<SurrenderReason> page = (Pagination<SurrenderReason>) surrenderReasonJdbcRepository
+                .search(getSurrenderReasonSearch());
+        assertThat(page.getPagedData().get(0).getName()).isEqualTo("name");
+        assertThat(page.getPagedData().get(0).getDescription()).isEqualTo("description");
 
-		Pagination<SurrenderReason> page = (Pagination<SurrenderReason>) surrenderReasonJdbcRepository
-				.search(getSurrenderReasonSearch1());
-		assertThat(page.getPagedData().size()).isEqualTo(0);
+    }
 
-	}
+    @Test
+    @Sql(scripts = { "/sql/surrenderreason/clearSurrenderReason.sql",
+            "/sql/surrenderreason/insertSurrenderReasonData.sql" })
+    public void test_invalid_search() {
 
-	@Test
-	@Sql(scripts = { "/sql/surrenderreason/clearSurrenderReason.sql",
-			"/sql/surrenderreason/insertSurrenderReasonData.sql" })
-	public void test_find_by_id() {
+        Pagination<SurrenderReason> page = (Pagination<SurrenderReason>) surrenderReasonJdbcRepository
+                .search(getSurrenderReasonSearch1());
+        assertThat(page.getPagedData().size()).isEqualTo(0);
 
-		SurrenderReasonEntity surrenderReasonEntity = SurrenderReasonEntity.builder().id("1").build();
-		surrenderReasonEntity.setTenantId("default");
-		SurrenderReasonEntity result = surrenderReasonJdbcRepository.findById(surrenderReasonEntity);
-		assertThat(result.getName()).isEqualTo("name");
-		assertThat(result.getDescription()).isEqualTo("description");
+    }
 
-	}
+    @Test
+    @Sql(scripts = { "/sql/surrenderreason/clearSurrenderReason.sql",
+            "/sql/surrenderreason/insertSurrenderReasonData.sql" })
+    public void test_find_by_id() {
 
-	@Test
-	@Sql(scripts = { "/sql/surrenderreason/clearSurrenderReason.sql",
-			"/sql/surrenderreason/insertSurrenderReasonData.sql" })
-	public void test_find_by_invalid_id_should_return_null() {
+        SurrenderReasonEntity surrenderReasonEntity = SurrenderReasonEntity.builder().id("1").build();
+        surrenderReasonEntity.setTenantId("default");
+        SurrenderReasonEntity result = surrenderReasonJdbcRepository.findById(surrenderReasonEntity);
+        assertThat(result.getName()).isEqualTo("name");
+        assertThat(result.getDescription()).isEqualTo("description");
 
-		SurrenderReasonEntity surrenderReasonEntity = SurrenderReasonEntity.builder().id("5").build();
-		surrenderReasonEntity.setTenantId("default");
-		SurrenderReasonEntity result = surrenderReasonJdbcRepository.findById(surrenderReasonEntity);
-		assertNull(result);
+    }
 
-	}
+    @Test
+    @Sql(scripts = { "/sql/surrenderreason/clearSurrenderReason.sql",
+            "/sql/surrenderreason/insertSurrenderReasonData.sql" })
+    public void test_find_by_invalid_id_should_return_null() {
 
-	@Test(expected = InvalidDataException.class)
-	@Sql(scripts = { "/sql/surrenderreason/clearSurrenderReason.sql",
-			"/sql/surrenderreason/insertSurrenderReasonData.sql" })
-	public void test_search_invalid_sort_option() {
+        SurrenderReasonEntity surrenderReasonEntity = SurrenderReasonEntity.builder().id("5").build();
+        surrenderReasonEntity.setTenantId("default");
+        SurrenderReasonEntity result = surrenderReasonJdbcRepository.findById(surrenderReasonEntity);
+        assertNull(result);
 
-		SurrenderReasonSearch search = getSurrenderReasonSearch();
-		search.setSortBy("desc");
-		surrenderReasonJdbcRepository.search(search);
+    }
 
-	}
+    @Test(expected = InvalidDataException.class)
+    @Sql(scripts = { "/sql/surrenderreason/clearSurrenderReason.sql",
+            "/sql/surrenderreason/insertSurrenderReasonData.sql" })
+    public void test_search_invalid_sort_option() {
 
-	@Test
-	@Sql(scripts = { "/sql/surrenderreason/clearSurrenderReason.sql",
-			"/sql/surrenderreason/insertSurrenderReasonData.sql" })
-	public void test_search_without_pagesize_offset_sortby() {
+        SurrenderReasonSearch search = getSurrenderReasonSearch();
+        search.setSortBy("desc");
+        surrenderReasonJdbcRepository.search(search);
 
-		SurrenderReasonSearch search = getSurrenderReasonSearch();
-		search.setSortBy(null);
-		search.setPageSize(null);
-		search.setOffset(null);
-		Pagination<SurrenderReason> page = (Pagination<SurrenderReason>) surrenderReasonJdbcRepository
-				.search(getSurrenderReasonSearch());
-		assertThat(page.getPagedData().get(0).getName()).isEqualTo("name");
-		assertThat(page.getPagedData().get(0).getDescription()).isEqualTo("description");
+    }
 
-	}
+    @Test
+    @Sql(scripts = { "/sql/surrenderreason/clearSurrenderReason.sql",
+            "/sql/surrenderreason/insertSurrenderReasonData.sql" })
+    public void test_search_without_pagesize_offset_sortby() {
 
-	class SurrenderReasonResultExtractor implements ResultSetExtractor<List<Map<String, Object>>> {
-		@Override
-		public List<Map<String, Object>> extractData(ResultSet resultSet) throws SQLException, DataAccessException {
-			List<Map<String, Object>> rows = new ArrayList<>();
-			while (resultSet.next()) {
-				Map<String, Object> row = new HashMap<String, Object>() {
-					{
-						put("id", resultSet.getString("id"));
-						put("name", resultSet.getString("name"));
-						put("description", resultSet.getString("description"));
-						put("createdBy", resultSet.getString("createdBy"));
-						put("createdDate", resultSet.getString("createdDate"));
-						put("lastModifiedBy", resultSet.getString("lastModifiedBy"));
-						put("lastModifiedDate", resultSet.getString("lastModifiedDate"));
+        SurrenderReasonSearch search = getSurrenderReasonSearch();
+        search.setSortBy(null);
+        search.setPageSize(null);
+        search.setOffset(null);
+        Pagination<SurrenderReason> page = (Pagination<SurrenderReason>) surrenderReasonJdbcRepository
+                .search(getSurrenderReasonSearch());
+        assertThat(page.getPagedData().get(0).getName()).isEqualTo("name");
+        assertThat(page.getPagedData().get(0).getDescription()).isEqualTo("description");
 
-					}
-				};
+    }
 
-				rows.add(row);
-			}
-			return rows;
-		}
-	}
+    class SurrenderReasonResultExtractor implements ResultSetExtractor<List<Map<String, Object>>> {
+        @Override
+        public List<Map<String, Object>> extractData(ResultSet resultSet) throws SQLException, DataAccessException {
+            List<Map<String, Object>> rows = new ArrayList<>();
+            while (resultSet.next()) {
+                Map<String, Object> row = new HashMap<String, Object>() {
+                    {
+                        put("id", resultSet.getString("id"));
+                        put("name", resultSet.getString("name"));
+                        put("description", resultSet.getString("description"));
+                        put("createdBy", resultSet.getString("createdBy"));
+                        put("createdDate", resultSet.getString("createdDate"));
+                        put("lastModifiedBy", resultSet.getString("lastModifiedBy"));
+                        put("lastModifiedDate", resultSet.getString("lastModifiedDate"));
 
-	private SurrenderReasonSearch getSurrenderReasonSearch1() {
-		SurrenderReasonSearch surrenderReasonSearch = new SurrenderReasonSearch();
-		surrenderReasonSearch.setId("id");
-		surrenderReasonSearch.setName("name");
-		surrenderReasonSearch.setDescription("description");
-		surrenderReasonSearch.setTenantId("tenantId");
-		surrenderReasonSearch.setPageSize(500);
-		surrenderReasonSearch.setOffset(0);
-		surrenderReasonSearch.setSortBy("name desc");
-		return surrenderReasonSearch;
-	}
+                    }
+                };
 
-	private SurrenderReasonSearch getSurrenderReasonSearch() {
-		SurrenderReasonSearch surrenderReasonSearch = new SurrenderReasonSearch();
-		surrenderReasonSearch.setId("1");
-		surrenderReasonSearch.setIds("1");
-		surrenderReasonSearch.setName("name");
-		surrenderReasonSearch.setDescription("description");
-		surrenderReasonSearch.setPageSize(500);
-		surrenderReasonSearch.setOffset(0);
-		surrenderReasonSearch.setSortBy("name desc");
-		return surrenderReasonSearch;
-	}
+                rows.add(row);
+            }
+            return rows;
+        }
+    }
+
+    private SurrenderReasonSearch getSurrenderReasonSearch1() {
+        SurrenderReasonSearch surrenderReasonSearch = new SurrenderReasonSearch();
+        surrenderReasonSearch.setId("id");
+        surrenderReasonSearch.setName("name");
+        surrenderReasonSearch.setDescription("description");
+        surrenderReasonSearch.setTenantId("tenantId");
+        surrenderReasonSearch.setPageSize(500);
+        surrenderReasonSearch.setOffset(0);
+        surrenderReasonSearch.setSortBy("name desc");
+        return surrenderReasonSearch;
+    }
+
+    private SurrenderReasonSearch getSurrenderReasonSearch() {
+        SurrenderReasonSearch surrenderReasonSearch = new SurrenderReasonSearch();
+        surrenderReasonSearch.setId("1");
+        surrenderReasonSearch.setIds("1");
+        surrenderReasonSearch.setName("name");
+        surrenderReasonSearch.setDescription("description");
+        surrenderReasonSearch.setPageSize(500);
+        surrenderReasonSearch.setOffset(0);
+        surrenderReasonSearch.setSortBy("name desc");
+        return surrenderReasonSearch;
+    }
 }

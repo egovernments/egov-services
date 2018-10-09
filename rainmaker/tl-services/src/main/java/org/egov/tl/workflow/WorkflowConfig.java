@@ -19,7 +19,7 @@ public class WorkflowConfig {
     public static String STATUS_PAID = TradeLicense.StatusEnum.PAID.toString();
     public static String STATUS_APPROVED = TradeLicense.StatusEnum.APPROVED.toString();
     public static String STATUS_REJECTED = TradeLicense.StatusEnum.REJECTED.toString();
-    public static String STATUS_CANCELLED = TradeLicense.StatusEnum.CANCELED.toString();
+    public static String STATUS_CANCELLED = TradeLicense.StatusEnum.CANCELLED.toString();
 
     public static String ROLE_CITIZEN = "CITIZEN";
     public static String ROLE_EMPLOYEE = "EMPLOYEE";

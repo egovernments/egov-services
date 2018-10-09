@@ -32,27 +32,31 @@ public class TradeLicenseService {
 
     private TLWorkflowService workflowService;
 
+    private CalculationService calculationService;
+
 
     @Autowired
     public TradeLicenseService(EnrichmentService enrichmentService, UserService userService,
                                TLRepository repository, ActionValidator actionValidator,
-                               TLValidator tlValidator, TLWorkflowService workflowService) {
+                               TLValidator tlValidator, TLWorkflowService workflowService,
+                               CalculationService calculationService) {
         this.enrichmentService = enrichmentService;
         this.userService = userService;
         this.repository = repository;
         this.actionValidator = actionValidator;
         this.tlValidator = tlValidator;
         this.workflowService = workflowService;
+        this.calculationService = calculationService;
     }
 
 
 
-
-
     public List<TradeLicense> create(TradeLicenseRequest tradeLicenseRequest){
+        tlValidator.validateCreate(tradeLicenseRequest);
         actionValidator.validateCreateRequest(tradeLicenseRequest);
         enrichmentService.enrichTLCreateRequest(tradeLicenseRequest);
         userService.createUser(tradeLicenseRequest);
+        calculationService.addCalculation(tradeLicenseRequest);
         repository.save(tradeLicenseRequest);
         return tradeLicenseRequest.getLicenses();
     }
@@ -98,6 +102,7 @@ public class TradeLicenseService {
         enrichmentService.enrichTLUpdateRequest(tradeLicenseRequest);
         workflowService.updateStatus(tradeLicenseRequest);
         userService.createUser(tradeLicenseRequest);
+        calculationService.addCalculation(tradeLicenseRequest);
         repository.update(tradeLicenseRequest);
         return tradeLicenseRequest.getLicenses();
     }

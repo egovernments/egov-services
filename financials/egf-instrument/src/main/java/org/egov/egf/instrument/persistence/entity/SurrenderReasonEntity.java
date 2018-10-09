@@ -16,26 +16,26 @@ import lombok.Setter;
 
 @Builder
 public class SurrenderReasonEntity extends AuditableEntity {
-	public static final String TABLE_NAME = "egf_surrenderreason";
-	private String id;
-	private String name;
-	private String description;
+    public static final String TABLE_NAME = "egf_surrenderreason";
+    private String id;
+    private String name;
+    private String description;
 
-	public SurrenderReason toDomain() {
-		SurrenderReason surrenderReason = new SurrenderReason();
-		super.toDomain(surrenderReason);
-		surrenderReason.setId(this.id);
-		surrenderReason.setName(this.name);
-		surrenderReason.setDescription(this.description);
-		return surrenderReason;
-	}
+    public SurrenderReason toDomain() {
+        SurrenderReason surrenderReason = new SurrenderReason();
+        super.toDomain(surrenderReason);
+        surrenderReason.setId(id);
+        surrenderReason.setName(name);
+        surrenderReason.setDescription(description);
+        return surrenderReason;
+    }
 
-	public SurrenderReasonEntity toEntity(SurrenderReason surrenderReason) {
-		super.toEntity(surrenderReason);
-		this.id = surrenderReason.getId();
-		this.name = surrenderReason.getName();
-		this.description = surrenderReason.getDescription();
-		return this;
-	}
+    public SurrenderReasonEntity toEntity(SurrenderReason surrenderReason) {
+        super.toEntity(surrenderReason);
+        id = surrenderReason.getId();
+        name = surrenderReason.getName();
+        description = surrenderReason.getDescription();
+        return this;
+    }
 
 }

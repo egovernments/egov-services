@@ -1,10 +1,10 @@
 def build(module_name, service_name, commit_id){
     stage("Build docker image") {
-	build_image("${module_name}/${service_name}", "egovio/${service_name}", commit_id)
+	build_image("${module_name}", "egovio/${service_name}", commit_id)
 
-	def migration_exists = fileExists "${module_name}/${service_name}/src/main/resources/db/Dockerfile"
+	def migration_exists = fileExists "${module_name}/src/main/resources/db/Dockerfile"
 	if (migration_exists) {
-		build_image("${module_name}/${service_name}/src/main/resources/db", "egovio/${service_name}-db", commit_id)
+		build_image("${module_name}/src/main/resources/db", "egovio/${service_name}-db", commit_id)
 	}
     }
 }

@@ -370,7 +370,7 @@ public class ReceiptValidator {
     }
 
     private boolean isPositiveInteger(BigDecimal bd) {
-        return bd.compareTo(BigDecimal.ZERO) > 0 && (bd.signum() == 0 || bd.scale() <= 0 || bd.stripTrailingZeros()
+        return bd.compareTo(BigDecimal.ZERO) >= 0 && (bd.signum() == 0 || bd.scale() <= 0 || bd.stripTrailingZeros()
                 .scale() <= 0);
     }
 }

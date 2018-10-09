@@ -22,92 +22,92 @@ import org.mockito.runners.MockitoJUnitRunner;
 @RunWith(MockitoJUnitRunner.class)
 public class InstrumentTypeQueueRepositoryTest {
 
-	@Mock
-	private InstrumentTypeQueueRepository instrumentTypeQueueRepository;
+    @Mock
+    private InstrumentTypeQueueRepository instrumentTypeQueueRepository;
 
-	@Mock
-	private FinancialInstrumentProducer financialInstrumentProducer;
+    @Mock
+    private FinancialInstrumentProducer financialInstrumentProducer;
 
-	private static final String TOPIC_NAME = "topic";
+    private static final String TOPIC_NAME = "topic";
 
-	private static final String KEY_NAME = "key";
+    private static final String KEY_NAME = "key";
 
-	@Before
-	public void setup() {
-		instrumentTypeQueueRepository = new InstrumentTypeQueueRepository(financialInstrumentProducer, TOPIC_NAME,
-				KEY_NAME, TOPIC_NAME, KEY_NAME);
-	}
+    @Before
+    public void setup() {
+        instrumentTypeQueueRepository = new InstrumentTypeQueueRepository(financialInstrumentProducer, TOPIC_NAME,
+                KEY_NAME, TOPIC_NAME, KEY_NAME);
+    }
 
-	@Test
-	public void test_add_to_queue_while_create() {
+    @Test
+    public void test_add_to_queue_while_create() {
 
-		InstrumentTypeRequest request = new InstrumentTypeRequest();
+        InstrumentTypeRequest request = new InstrumentTypeRequest();
 
-		request.setInstrumentTypes(getInstrumentTypes());
-		request.setRequestInfo(new RequestInfo());
-		request.getRequestInfo().setAction("create");
+        request.setInstrumentTypes(getInstrumentTypes());
+        request.setRequestInfo(new RequestInfo());
+        request.getRequestInfo().setAction("create");
 
-		instrumentTypeQueueRepository.addToQue(request);
+        instrumentTypeQueueRepository.addToQue(request);
 
-		final ArgumentCaptor<HashMap> argumentCaptor = ArgumentCaptor.forClass(HashMap.class);
+        final ArgumentCaptor<HashMap> argumentCaptor = ArgumentCaptor.forClass(HashMap.class);
 
-		verify(financialInstrumentProducer).sendMessage(any(String.class), any(String.class), argumentCaptor.capture());
+        verify(financialInstrumentProducer).sendMessage(any(String.class), any(String.class), argumentCaptor.capture());
 
-		final HashMap<String, Object> actualRequest = argumentCaptor.getValue();
+        final HashMap<String, Object> actualRequest = argumentCaptor.getValue();
 
-		assertEquals(request, actualRequest.get("instrumenttype_create"));
+        assertEquals(request, actualRequest.get("instrumenttype_create"));
 
-	}
+    }
 
-	@Test
-	public void test_add_to_queue_while_update() {
+    @Test
+    public void test_add_to_queue_while_update() {
 
-		InstrumentTypeRequest request = new InstrumentTypeRequest();
+        InstrumentTypeRequest request = new InstrumentTypeRequest();
 
-		request.setInstrumentTypes(getInstrumentTypes());
-		request.setRequestInfo(new RequestInfo());
-		request.getRequestInfo().setAction("update");
+        request.setInstrumentTypes(getInstrumentTypes());
+        request.setRequestInfo(new RequestInfo());
+        request.getRequestInfo().setAction("update");
 
-		instrumentTypeQueueRepository.addToQue(request);
+        instrumentTypeQueueRepository.addToQue(request);
 
-		final ArgumentCaptor<HashMap> argumentCaptor = ArgumentCaptor.forClass(HashMap.class);
+        final ArgumentCaptor<HashMap> argumentCaptor = ArgumentCaptor.forClass(HashMap.class);
 
-		verify(financialInstrumentProducer).sendMessage(any(String.class), any(String.class), argumentCaptor.capture());
+        verify(financialInstrumentProducer).sendMessage(any(String.class), any(String.class), argumentCaptor.capture());
 
-		final HashMap<String, Object> actualRequest = argumentCaptor.getValue();
+        final HashMap<String, Object> actualRequest = argumentCaptor.getValue();
 
-		assertEquals(request, actualRequest.get("instrumenttype_update"));
+        assertEquals(request, actualRequest.get("instrumenttype_update"));
 
-	}
+    }
 
-	@Test
-	public void test_add_to_search_queue() {
+    @Test
+    public void test_add_to_search_queue() {
 
-		InstrumentTypeRequest request = new InstrumentTypeRequest();
+        InstrumentTypeRequest request = new InstrumentTypeRequest();
 
-		request.setInstrumentTypes(getInstrumentTypes());
+        request.setInstrumentTypes(getInstrumentTypes());
 
-		instrumentTypeQueueRepository.addToSearchQue(request);
+        instrumentTypeQueueRepository.addToSearchQue(request);
 
-		final ArgumentCaptor<HashMap> argumentCaptor = ArgumentCaptor.forClass(HashMap.class);
+        final ArgumentCaptor<HashMap> argumentCaptor = ArgumentCaptor.forClass(HashMap.class);
 
-		verify(financialInstrumentProducer).sendMessage(any(String.class), any(String.class), argumentCaptor.capture());
+        verify(financialInstrumentProducer).sendMessage(any(String.class), any(String.class), argumentCaptor.capture());
 
-		final HashMap<String, Object> actualRequest = argumentCaptor.getValue();
+        final HashMap<String, Object> actualRequest = argumentCaptor.getValue();
 
-		assertEquals(request, actualRequest.get("instrumenttype_persisted"));
+        assertEquals(request, actualRequest.get("instrumenttype_persisted"));
 
-	}
+    }
 
-	private List<InstrumentTypeContract> getInstrumentTypes() {
+    private List<InstrumentTypeContract> getInstrumentTypes() {
 
-		List<InstrumentTypeContract> instrumentTypes = new ArrayList<InstrumentTypeContract>();
+        List<InstrumentTypeContract> instrumentTypes = new ArrayList<InstrumentTypeContract>();
 
-		InstrumentTypeContract instrumentType = InstrumentTypeContract.builder().name("name").description("description")
-				.active(true).build();
-		instrumentType.setTenantId("default");
-		instrumentTypes.add(instrumentType);
-		return instrumentTypes;
-	}
+        InstrumentTypeContract instrumentType = InstrumentTypeContract.builder().name("name").description("description")
+                .active(true).build();
+        instrumentType.setTenantId("default");
+        instrumentTypes.add(instrumentType);
+        return instrumentTypes;
+    }
 
 }

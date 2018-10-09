@@ -71,6 +71,7 @@ public class TradeLicenseDetail   {
         @JsonProperty("adhocPenaltyReason")
         private String adhocPenaltyReason;
 
+        @NotNull
         @JsonProperty("owners")
         @Valid
         private List<OwnerInfo> owners = new ArrayList<>();
@@ -111,9 +112,11 @@ public class TradeLicenseDetail   {
         @JsonProperty("channel")
         private ChannelEnum channel = null;
 
+        @NotNull
         @JsonProperty("address")
         private Address address = null;
 
+        @NotNull
         @JsonProperty("tradeUnits")
         @Valid
         private List<TradeUnit> tradeUnits = new ArrayList<>();
@@ -132,6 +135,9 @@ public class TradeLicenseDetail   {
 
         @JsonProperty("additionalDetail")
         private Object additionalDetail = null;
+
+        @JsonProperty("institution")
+        private Institution institution = null;
 
         @JsonProperty("auditDetails")
         private AuditDetails auditDetails = null;

@@ -17,19 +17,19 @@ import lombok.Setter;
 @Setter
 @Builder
 public class InstrumentTypeProperty extends Auditable {
-	
-	private String id;
-	@NotNull
-	private TransactionType transactionType;
-	@NotNull
-	private Boolean reconciledOncreate;
-	@NotNull
-	private FinancialStatusContract statusOnCreate;
-	@NotNull
-	private FinancialStatusContract statusOnUpdate;
-	@NotNull
-	private FinancialStatusContract statusOnReconcile;
-	@NotNull
-	private InstrumentType instrumentType;
+
+    private String id;
+    @NotNull
+    private TransactionType transactionType;
+    @NotNull
+    private Boolean reconciledOncreate;
+    @NotNull
+    private FinancialStatusContract statusOnCreate;
+    @NotNull
+    private FinancialStatusContract statusOnUpdate;
+    @NotNull
+    private FinancialStatusContract statusOnReconcile;
+    @NotNull
+    private InstrumentType instrumentType;
 
 }

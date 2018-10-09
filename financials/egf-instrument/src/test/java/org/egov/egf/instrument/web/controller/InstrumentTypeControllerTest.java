@@ -36,126 +36,126 @@ import org.springframework.validation.BindingResult;
 @Import(TestConfiguration.class)
 public class InstrumentTypeControllerTest {
 
-	@Autowired
-	private MockMvc mockMvc;
+    @Autowired
+    private MockMvc mockMvc;
 
-	@MockBean
-	private InstrumentTypeService instrumentTypeService;
+    @MockBean
+    private InstrumentTypeService instrumentTypeService;
 
-	@Captor
-	private ArgumentCaptor<InstrumentTypeRequest> captor;
+    @Captor
+    private ArgumentCaptor<InstrumentTypeRequest> captor;
 
-	private RequestJsonReader resources = new RequestJsonReader();
+    private RequestJsonReader resources = new RequestJsonReader();
 
-	@Test
-	public void test_create() throws IOException, Exception {
+    @Test
+    public void test_create() throws IOException, Exception {
 
-		when(instrumentTypeService.create(any(List.class), any(BindingResult.class), any(RequestInfo.class)))
-				.thenReturn(getInstrumentTypes());
+        when(instrumentTypeService.create(any(List.class), any(BindingResult.class), any(RequestInfo.class)))
+                .thenReturn(getInstrumentTypes());
 
-		mockMvc.perform(post("/instrumenttypes/_create")
-				.content(resources.readRequest("instrumenttype/instrumenttype_create_valid_request.json"))
-				.contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().is(201))
-				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(content()
-						.json(resources.readResponse("instrumenttype/instrumenttype_create_valid_response.json")));
-	}
+        mockMvc.perform(post("/instrumenttypes/_create")
+                .content(resources.readRequest("instrumenttype/instrumenttype_create_valid_request.json"))
+                .contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().is(201))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(content()
+                        .json(resources.readResponse("instrumenttype/instrumenttype_create_valid_response.json")));
+    }
 
-	@Test
-	public void test_create_error() throws IOException, Exception {
+    @Test
+    public void test_create_error() throws IOException, Exception {
 
-		when(instrumentTypeService.create(any(List.class), any(BindingResult.class), any(RequestInfo.class)))
-				.thenReturn((getInstrumentTypes()));
+        when(instrumentTypeService.create(any(List.class), any(BindingResult.class), any(RequestInfo.class)))
+                .thenReturn(getInstrumentTypes());
 
-		mockMvc.perform(post("/instrumenttypes/_create")
-				.content(resources.readRequest("instrumenttype/instrumenttype_create_invalid_field_value.json"))
-				.contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().is5xxServerError());
+        mockMvc.perform(post("/instrumenttypes/_create")
+                .content(resources.readRequest("instrumenttype/instrumenttype_create_invalid_field_value.json"))
+                .contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().is5xxServerError());
 
-	}
+    }
 
-	@Test
-	public void test_update() throws IOException, Exception {
+    @Test
+    public void test_update() throws IOException, Exception {
 
-		List<InstrumentType> instrumentTypes = getInstrumentTypes();
-		instrumentTypes.get(0).setId("1");
+        List<InstrumentType> instrumentTypes = getInstrumentTypes();
+        instrumentTypes.get(0).setId("1");
 
-		when(instrumentTypeService.update(any(List.class), any(BindingResult.class), any(RequestInfo.class)))
-				.thenReturn(instrumentTypes);
+        when(instrumentTypeService.update(any(List.class), any(BindingResult.class), any(RequestInfo.class)))
+                .thenReturn(instrumentTypes);
 
-		mockMvc.perform(post("/instrumenttypes/_update")
-				.content(resources.readRequest("instrumenttype/instrumenttype_update_valid_request.json"))
-				.contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().is(201))
-				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(content()
-						.json(resources.readResponse("instrumenttype/instrumenttype_update_valid_response.json")));
+        mockMvc.perform(post("/instrumenttypes/_update")
+                .content(resources.readRequest("instrumenttype/instrumenttype_update_valid_request.json"))
+                .contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().is(201))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(content()
+                        .json(resources.readResponse("instrumenttype/instrumenttype_update_valid_response.json")));
 
-	}
-	
-	@Test
-	public void test_delete() throws IOException, Exception {
+    }
 
-		List<InstrumentType> instrumentTypes = getInstrumentTypes();
-		instrumentTypes.get(0).setId("1");
+    @Test
+    public void test_delete() throws IOException, Exception {
 
-		when(instrumentTypeService.delete(any(List.class), any(BindingResult.class), any(RequestInfo.class)))
-				.thenReturn(instrumentTypes);
+        List<InstrumentType> instrumentTypes = getInstrumentTypes();
+        instrumentTypes.get(0).setId("1");
 
-		mockMvc.perform(post("/instrumenttypes/_delete")
-				.content(resources.readRequest("instrumenttype/instrumenttype_delete_valid_request.json"))
-				.contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().is(201))
-				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(content()
-						.json(resources.readResponse("instrumenttype/instrumenttype_delete_valid_response.json")));
+        when(instrumentTypeService.delete(any(List.class), any(BindingResult.class), any(RequestInfo.class)))
+                .thenReturn(instrumentTypes);
 
-	}
+        mockMvc.perform(post("/instrumenttypes/_delete")
+                .content(resources.readRequest("instrumenttype/instrumenttype_delete_valid_request.json"))
+                .contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().is(201))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(content()
+                        .json(resources.readResponse("instrumenttype/instrumenttype_delete_valid_response.json")));
 
-	@Test
-	public void test_update_error() throws IOException, Exception {
+    }
 
-		when(instrumentTypeService.update(any(List.class), any(BindingResult.class), any(RequestInfo.class)))
-				.thenReturn((getInstrumentTypes()));
+    @Test
+    public void test_update_error() throws IOException, Exception {
 
-		mockMvc.perform(post("/instrumenttypes/_update")
-				.content(resources.readRequest("instrumenttype/instrumenttype_create_invalid_field_value.json"))
-				.contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().is5xxServerError());
+        when(instrumentTypeService.update(any(List.class), any(BindingResult.class), any(RequestInfo.class)))
+                .thenReturn(getInstrumentTypes());
 
-	}
-	
-	@Test
-	public void test_delete_error() throws IOException, Exception {
+        mockMvc.perform(post("/instrumenttypes/_update")
+                .content(resources.readRequest("instrumenttype/instrumenttype_create_invalid_field_value.json"))
+                .contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().is5xxServerError());
 
-		when(instrumentTypeService.delete(any(List.class), any(BindingResult.class), any(RequestInfo.class)))
-				.thenReturn((getInstrumentTypes()));
+    }
 
-		mockMvc.perform(post("/instrumenttypes/_delete")
-				.content(resources.readRequest("instrumenttype/instrumenttype_delete_invalid_field_value.json"))
-				.contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().is5xxServerError());
+    @Test
+    public void test_delete_error() throws IOException, Exception {
 
-	}
+        when(instrumentTypeService.delete(any(List.class), any(BindingResult.class), any(RequestInfo.class)))
+                .thenReturn(getInstrumentTypes());
 
-	@Test
-	public void test_search() throws IOException, Exception {
+        mockMvc.perform(post("/instrumenttypes/_delete")
+                .content(resources.readRequest("instrumenttype/instrumenttype_delete_invalid_field_value.json"))
+                .contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().is5xxServerError());
 
-		Pagination<InstrumentType> page = new Pagination<>();
-		page.setTotalPages(1);
-		page.setTotalResults(1);
-		page.setCurrentPage(0);
-		page.setPagedData(getInstrumentTypes());
-		page.getPagedData().get(0).setId("1");
+    }
 
-		when(instrumentTypeService.search(any(InstrumentTypeSearch.class))).thenReturn(page);
+    @Test
+    public void test_search() throws IOException, Exception {
 
-		mockMvc.perform(post("/instrumenttypes/_search").content(resources.getRequestInfo())
-				.contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().is(200))
-				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(content()
-						.json(resources.readResponse("instrumenttype/instrumenttype_search_valid_response.json")));
+        Pagination<InstrumentType> page = new Pagination<>();
+        page.setTotalPages(1);
+        page.setTotalResults(1);
+        page.setCurrentPage(0);
+        page.setPagedData(getInstrumentTypes());
+        page.getPagedData().get(0).setId("1");
 
-	}
+        when(instrumentTypeService.search(any(InstrumentTypeSearch.class))).thenReturn(page);
 
-	private List<InstrumentType> getInstrumentTypes() {
-		List<InstrumentType> instrumentTypes = new ArrayList<InstrumentType>();
-		InstrumentType instrumentType = InstrumentType.builder().name("name").description("description").active(true)
-				.build();
-		instrumentType.setTenantId("default");
-		instrumentTypes.add(instrumentType);
-		return instrumentTypes;
-	}
+        mockMvc.perform(post("/instrumenttypes/_search").content(resources.getRequestInfo())
+                .contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().is(200))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(content()
+                        .json(resources.readResponse("instrumenttype/instrumenttype_search_valid_response.json")));
+
+    }
+
+    private List<InstrumentType> getInstrumentTypes() {
+        List<InstrumentType> instrumentTypes = new ArrayList<InstrumentType>();
+        InstrumentType instrumentType = InstrumentType.builder().name("name").description("description").active(true)
+                .build();
+        instrumentType.setTenantId("default");
+        instrumentTypes.add(instrumentType);
+        return instrumentTypes;
+    }
 
 }

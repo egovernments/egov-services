@@ -12,6 +12,9 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
+
+import java.math.BigDecimal;
 
 
 @Getter
@@ -19,11 +22,12 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@ToString
 public class BillingSlab {
 	
 	@JsonProperty("tenantId")
 	@NotNull
-	@Size(min = 4, max = 128)
+	@Size(min = 2, max = 128)
 	private String tenantId = null;
 
 	@JsonProperty("id")
@@ -52,17 +56,14 @@ public class BillingSlab {
 	@Size(min = 2, max = 32)
 	private String uom = null;
 
-	@JsonProperty("from")
-	@Size(min = 2, max = 64)
-	private String from = null;
+	@JsonProperty("fromUom")
+	private Double fromUom = null;
 
-	@JsonProperty("to")
-	@Size(min = 2, max = 64)
-	private String to = null;
+	@JsonProperty("toUom")
+	private Double toUom = null;
 
 	@JsonProperty("rate")
-	@Size(min = 2, max = 64)
-	private Double rate = null;
+	private BigDecimal rate = null;
 	
 	private AuditDetails auditDetails;
 

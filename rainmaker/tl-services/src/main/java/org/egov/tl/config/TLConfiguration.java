@@ -113,6 +113,35 @@ public class TLConfiguration {
     private Integer defaultOffset;
 
 
+    // tradelicense Calculator
+    @Value("${egov.tl.calculator.host}")
+    private String calculatorHost;
+
+    @Value("${egov.tl.calculator.calculate.endpoint}")
+    private String calculateEndpoint;
+
+
+    //Institutional key word
+    @Value("${egov.ownershipcategory.institutional}")
+    private String institutional;
+
+
+    @Value("${egov.receipt.businessservice}")
+    private String businessService;
+
+
+    //Property Service
+    @Value("${egov.property.service.host}")
+    private String propertyHost;
+
+    @Value("${egov.property.service.context.path}")
+    private String propertyContextPath;
+
+    @Value("${egov.property.endpoint}")
+    private String propertySearchEndpoint;
+
+
+
 
 
 

@@ -7,107 +7,99 @@ import org.egov.egf.instrument.web.contract.InstrumentAccountCodeSearchContract;
 
 public class InstrumentAccountCodeMapper {
 
-	private InstrumentTypeMapper typeMapper = new InstrumentTypeMapper();
+    private InstrumentTypeMapper typeMapper = new InstrumentTypeMapper();
 
-	public InstrumentAccountCode toDomain(InstrumentAccountCodeContract contract) {
+    public InstrumentAccountCode toDomain(InstrumentAccountCodeContract contract) {
 
-		InstrumentAccountCode instrumentAccountCode = new InstrumentAccountCode();
+        InstrumentAccountCode instrumentAccountCode = new InstrumentAccountCode();
 
-		instrumentAccountCode.setId(contract.getId());
+        instrumentAccountCode.setId(contract.getId());
 
-		if (contract.getInstrumentType() != null)
-			instrumentAccountCode.setInstrumentType(typeMapper.toDomain(contract.getInstrumentType()));
+        if (contract.getInstrumentType() != null)
+            instrumentAccountCode.setInstrumentType(typeMapper.toDomain(contract.getInstrumentType()));
 
-		if (contract.getAccountCode() != null) {
+        if (contract.getAccountCode() != null)
+            instrumentAccountCode.setAccountCode(contract.getAccountCode());
 
-			instrumentAccountCode.setAccountCode(contract.getAccountCode());
-		}
+        instrumentAccountCode.setCreatedBy(contract.getCreatedBy());
+        instrumentAccountCode.setCreatedDate(contract.getCreatedDate());
+        instrumentAccountCode.setLastModifiedBy(contract.getLastModifiedBy());
+        instrumentAccountCode.setLastModifiedDate(contract.getLastModifiedDate());
+        instrumentAccountCode.setTenantId(contract.getTenantId());
 
-		instrumentAccountCode.setCreatedBy(contract.getCreatedBy());
-		instrumentAccountCode.setCreatedDate(contract.getCreatedDate());
-		instrumentAccountCode.setLastModifiedBy(contract.getLastModifiedBy());
-		instrumentAccountCode.setLastModifiedDate(contract.getLastModifiedDate());
-		instrumentAccountCode.setTenantId(contract.getTenantId());
+        return instrumentAccountCode;
+    }
 
-		return instrumentAccountCode;
-	}
+    public InstrumentAccountCodeContract toContract(InstrumentAccountCode instrumentAccountCode) {
 
-	public InstrumentAccountCodeContract toContract(InstrumentAccountCode instrumentAccountCode) {
+        InstrumentAccountCodeContract contract = new InstrumentAccountCodeContract();
 
-		InstrumentAccountCodeContract contract = new InstrumentAccountCodeContract();
+        contract.setId(instrumentAccountCode.getId());
 
-		contract.setId(instrumentAccountCode.getId());
+        if (instrumentAccountCode.getInstrumentType() != null)
+            contract.setInstrumentType(typeMapper.toContract(instrumentAccountCode.getInstrumentType()));
 
-		if (instrumentAccountCode.getInstrumentType() != null)
-			contract.setInstrumentType(typeMapper.toContract(instrumentAccountCode.getInstrumentType()));
+        if (instrumentAccountCode.getAccountCode() != null)
+            contract.setAccountCode(instrumentAccountCode.getAccountCode());
 
-		if (instrumentAccountCode.getAccountCode() != null) {
+        contract.setCreatedBy(instrumentAccountCode.getCreatedBy());
+        contract.setCreatedDate(instrumentAccountCode.getCreatedDate());
+        contract.setLastModifiedBy(instrumentAccountCode.getLastModifiedBy());
+        contract.setLastModifiedDate(instrumentAccountCode.getLastModifiedDate());
+        contract.setTenantId(instrumentAccountCode.getTenantId());
 
-			contract.setAccountCode(instrumentAccountCode.getAccountCode());
-		}
+        return contract;
+    }
 
-		contract.setCreatedBy(instrumentAccountCode.getCreatedBy());
-		contract.setCreatedDate(instrumentAccountCode.getCreatedDate());
-		contract.setLastModifiedBy(instrumentAccountCode.getLastModifiedBy());
-		contract.setLastModifiedDate(instrumentAccountCode.getLastModifiedDate());
-		contract.setTenantId(instrumentAccountCode.getTenantId());
+    public InstrumentAccountCodeSearch toSearchDomain(InstrumentAccountCodeSearchContract contract) {
 
-		return contract;
-	}
+        InstrumentAccountCodeSearch instrumentAccountCodeSearch = new InstrumentAccountCodeSearch();
 
-	public InstrumentAccountCodeSearch toSearchDomain(InstrumentAccountCodeSearchContract contract) {
+        instrumentAccountCodeSearch.setId(contract.getId());
 
-		InstrumentAccountCodeSearch instrumentAccountCodeSearch = new InstrumentAccountCodeSearch();
+        if (contract.getInstrumentType() != null)
+            instrumentAccountCodeSearch.setInstrumentType(typeMapper.toDomain(contract.getInstrumentType()));
 
-		instrumentAccountCodeSearch.setId(contract.getId());
+        if (contract.getAccountCode() != null)
+            instrumentAccountCodeSearch.setAccountCode(contract.getAccountCode());
 
-		if (contract.getInstrumentType() != null)
-			instrumentAccountCodeSearch.setInstrumentType(typeMapper.toDomain(contract.getInstrumentType()));
+        instrumentAccountCodeSearch.setCreatedBy(contract.getCreatedBy());
+        instrumentAccountCodeSearch.setCreatedDate(contract.getCreatedDate());
+        instrumentAccountCodeSearch.setLastModifiedBy(contract.getLastModifiedBy());
+        instrumentAccountCodeSearch.setLastModifiedDate(contract.getLastModifiedDate());
+        instrumentAccountCodeSearch.setTenantId(contract.getTenantId());
+        instrumentAccountCodeSearch.setPageSize(contract.getPageSize());
+        instrumentAccountCodeSearch.setOffset(contract.getOffset());
+        instrumentAccountCodeSearch.setSortBy(contract.getSortBy());
+        instrumentAccountCodeSearch.setIds(contract.getIds());
 
-		if (contract.getAccountCode() != null) {
+        return instrumentAccountCodeSearch;
+    }
 
-			instrumentAccountCodeSearch.setAccountCode(contract.getAccountCode());
-		}
+    public InstrumentAccountCodeSearchContract toSearchContract(
+            InstrumentAccountCodeSearch instrumentAccountCodeSearch) {
 
-		instrumentAccountCodeSearch.setCreatedBy(contract.getCreatedBy());
-		instrumentAccountCodeSearch.setCreatedDate(contract.getCreatedDate());
-		instrumentAccountCodeSearch.setLastModifiedBy(contract.getLastModifiedBy());
-		instrumentAccountCodeSearch.setLastModifiedDate(contract.getLastModifiedDate());
-		instrumentAccountCodeSearch.setTenantId(contract.getTenantId());
-		instrumentAccountCodeSearch.setPageSize(contract.getPageSize());
-		instrumentAccountCodeSearch.setOffset(contract.getOffset());
-		instrumentAccountCodeSearch.setSortBy(contract.getSortBy());
-		instrumentAccountCodeSearch.setIds(contract.getIds());
+        InstrumentAccountCodeSearchContract contract = new InstrumentAccountCodeSearchContract();
 
-		return instrumentAccountCodeSearch;
-	}
+        contract.setId(instrumentAccountCodeSearch.getId());
 
-	public InstrumentAccountCodeSearchContract toSearchContract(
-			InstrumentAccountCodeSearch instrumentAccountCodeSearch) {
+        if (instrumentAccountCodeSearch.getInstrumentType() != null)
+            contract.setInstrumentType(typeMapper.toContract(instrumentAccountCodeSearch.getInstrumentType()));
 
-		InstrumentAccountCodeSearchContract contract = new InstrumentAccountCodeSearchContract();
+        if (instrumentAccountCodeSearch.getAccountCode() != null)
+            contract.setAccountCode(instrumentAccountCodeSearch.getAccountCode());
 
-		contract.setId(instrumentAccountCodeSearch.getId());
+        contract.setCreatedBy(instrumentAccountCodeSearch.getCreatedBy());
+        contract.setCreatedDate(instrumentAccountCodeSearch.getCreatedDate());
+        contract.setLastModifiedBy(instrumentAccountCodeSearch.getLastModifiedBy());
+        contract.setLastModifiedDate(instrumentAccountCodeSearch.getLastModifiedDate());
+        contract.setTenantId(instrumentAccountCodeSearch.getTenantId());
+        contract.setPageSize(instrumentAccountCodeSearch.getPageSize());
+        contract.setOffset(instrumentAccountCodeSearch.getOffset());
+        contract.setSortBy(instrumentAccountCodeSearch.getSortBy());
+        contract.setIds(instrumentAccountCodeSearch.getIds());
 
-		if (instrumentAccountCodeSearch.getInstrumentType() != null)
-			contract.setInstrumentType(typeMapper.toContract(instrumentAccountCodeSearch.getInstrumentType()));
-
-		if (instrumentAccountCodeSearch.getAccountCode() != null) {
-
-			contract.setAccountCode(instrumentAccountCodeSearch.getAccountCode());
-		}
-
-		contract.setCreatedBy(instrumentAccountCodeSearch.getCreatedBy());
-		contract.setCreatedDate(instrumentAccountCodeSearch.getCreatedDate());
-		contract.setLastModifiedBy(instrumentAccountCodeSearch.getLastModifiedBy());
-		contract.setLastModifiedDate(instrumentAccountCodeSearch.getLastModifiedDate());
-		contract.setTenantId(instrumentAccountCodeSearch.getTenantId());
-		contract.setPageSize(instrumentAccountCodeSearch.getPageSize());
-		contract.setOffset(instrumentAccountCodeSearch.getOffset());
-		contract.setSortBy(instrumentAccountCodeSearch.getSortBy());
-		contract.setIds(instrumentAccountCodeSearch.getIds());
-
-		return contract;
-	}
+        return contract;
+    }
 
 }

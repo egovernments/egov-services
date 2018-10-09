@@ -1,5 +1,5 @@
 serviceMaps:
- serviceName: TradeLicense Calculator
+ serviceName: TL Calculator
  mappings:
  - version: 1.0
    name: tl-calculator
@@ -7,37 +7,75 @@ serviceMaps:
    fromTopic: save-tl-billingslab
    isTransaction: true
    queryMaps:
-    - query: INSERT INTO eg_tl_billingslab(id, tenantid, licensetype, structuretype, tradetype, accessorycategory, type, uom, from, to, rate, createdby, createdtime, lastmodifiedby, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+    - query: INSERT INTO eg_tl_billingSlab(id, tenantid, licensetype, structuretype, tradetype, accessorycategory, type, uom, fromUom, toUom, rate, createdby, createdtime, lastmodifiedby, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, cast(? as double precision), cast(? as double precision), ?, ?, ?, ?, ?);
 
-      basePath: BillingSlab.*
+      basePath: billingSlab.*
       jsonMaps:
 
-       - jsonPath: $.BillingSlab.*.id
+       - jsonPath: $.billingSlab.*.id
 
-       - jsonPath: $.BillingSlab.*.tenantId
+       - jsonPath: $.billingSlab.*.tenantId
 
-       - jsonPath: $.BillingSlab.*.licensetype
+       - jsonPath: $.billingSlab.*.licenseType
 
-       - jsonPath: $.BillingSlab.*.structuretype
+       - jsonPath: $.billingSlab.*.structureType
 
-       - jsonPath: $.BillingSlab.*.tradetype
+       - jsonPath: $.billingSlab.*.tradeType
 
-       - jsonPath: $.BillingSlab.*.accessorycategory
+       - jsonPath: $.billingSlab.*.accessoryCategory
 
-       - jsonPath: $.BillingSlab.*.type
+       - jsonPath: $.billingSlab.*.type
 
-       - jsonPath: $.BillingSlab.*.uom
+       - jsonPath: $.billingSlab.*.uom
 
-       - jsonPath: $.BillingSlab.*.from
+       - jsonPath: $.billingSlab.*.fromUom
 
-       - jsonPath: $.BillingSlab.*.to
+       - jsonPath: $.billingSlab.*.toUom
 
-       - jsonPath: $.BillingSlab.*.rate
+       - jsonPath: $.billingSlab.*.rate
               
-       - jsonPath: $.BillingSlab.*.auditDetails.createdBy
+       - jsonPath: $.billingSlab.*.auditDetails.createdBy
 
-       - jsonPath: $.BillingSlab.*.auditDetails.createdTime
+       - jsonPath: $.billingSlab.*.auditDetails.createdTime
 
-       - jsonPath: $.BillingSlab.*.auditDetails.lastmodifiedBy
+       - jsonPath: $.billingSlab.*.auditDetails.lastModifiedBy
 
-       - jsonPath: $.BillingSlab.*.auditDetails.lastmodifiedTime
+       - jsonPath: $.billingSlab.*.auditDetails.lastModifiedTime
+       
+       
+ - version: 1.0
+   name: tl-calculator
+   description: Updates the billing slabs of tl into db
+   fromTopic: update-tl-billingslab
+   isTransaction: true
+   queryMaps:
+    - query: UPDATE eg_tl_billingSlab SET licensetype=?, structuretype=?, tradetype=?, accessorycategory=?, type=?, uom=?, fromUom=?, toUom=?, rate=?, lastmodifiedby=?, lastmodifiedtime=? WHERE id=? AND tenantid=?;
+
+      basePath: billingSlab.*
+      jsonMaps:
+
+       - jsonPath: $.billingSlab.*.licenseType
+
+       - jsonPath: $.billingSlab.*.structureType
+
+       - jsonPath: $.billingSlab.*.tradeType
+
+       - jsonPath: $.billingSlab.*.accessoryCategory
+
+       - jsonPath: $.billingSlab.*.type
+
+       - jsonPath: $.billingSlab.*.uom
+
+       - jsonPath: $.billingSlab.*.fromUom
+
+       - jsonPath: $.billingSlab.*.toUom
+
+       - jsonPath: $.billingSlab.*.rate
+
+       - jsonPath: $.billingSlab.*.auditDetails.lastModifiedBy
+
+       - jsonPath: $.billingSlab.*.auditDetails.lastModifiedTime
+       
+       - jsonPath: $.billingSlab.*.id
+
+       - jsonPath: $.billingSlab.*.tenantId

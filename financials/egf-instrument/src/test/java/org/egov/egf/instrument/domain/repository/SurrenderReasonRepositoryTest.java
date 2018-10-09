@@ -138,7 +138,7 @@ public class SurrenderReasonRepositoryTest {
                 actualRequest.getSurrenderReasons().get(0).getDescription());
         assertEquals(expectedResult.get(0).getTenantId(), actualRequest.getSurrenderReasons().get(0).getTenantId());
     }
-    
+
     @Test
     public void test_delete_with_kafka() {
 
@@ -176,7 +176,7 @@ public class SurrenderReasonRepositoryTest {
                 actualRequest.getSurrenderReasons().get(0).getDescription());
         assertEquals(expectedResult.get(0).getTenantId(), actualRequest.getSurrenderReasons().get(0).getTenantId());
     }
-    
+
     @Test
     public void test_delete_with_out_kafka() {
 

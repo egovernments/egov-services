@@ -1,8 +1,9 @@
 package org.egov.egf.instrument.domain.repository;
 
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.egov.common.domain.model.Pagination;
 import org.egov.common.persistence.repository.ESRepository;
 import org.egov.egf.instrument.domain.model.Instrument;
@@ -16,12 +17,12 @@ import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.sort.SortOrder;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
-public class InstrumentESRepository  extends ESRepository {
+public class InstrumentESRepository extends ESRepository {
 
     private TransportClient esClient;
     private ElasticSearchQueryFactory elasticSearchQueryFactory;
@@ -40,9 +41,8 @@ public class InstrumentESRepository  extends ESRepository {
     @SuppressWarnings("deprecation")
     protected Pagination<Instrument> mapToInstrumentList(SearchResponse searchResponse) {
         Pagination<Instrument> page = new Pagination<>();
-        if (searchResponse.getHits() == null || searchResponse.getHits().getTotalHits() == 0L) {
+        if (searchResponse.getHits() == null || searchResponse.getHits().getTotalHits() == 0L)
             return page;
-        }
         List<Instrument> instruments = new ArrayList<Instrument>();
         Instrument instrument = null;
         for (SearchHit hit : searchResponse.getHits()) {
@@ -82,12 +82,10 @@ public class InstrumentESRepository  extends ESRepository {
         final BoolQueryBuilder boolQueryBuilder = elasticSearchQueryFactory.searchInstrument(criteria);
         SearchRequestBuilder searchRequestBuilder = esClient.prepareSearch(Instrument.class.getSimpleName().toLowerCase())
                 .setTypes(Instrument.class.getSimpleName().toLowerCase());
-        if (!orderByList.isEmpty()) {
-            for (String orderBy : orderByList) {
+        if (!orderByList.isEmpty())
+            for (String orderBy : orderByList)
                 searchRequestBuilder = searchRequestBuilder.addSort(orderBy.split(" ")[0],
                         orderBy.split(" ")[1].equalsIgnoreCase("asc") ? SortOrder.ASC : SortOrder.DESC);
-            }
-        }
 
         searchRequestBuilder.setQuery(boolQueryBuilder);
         return searchRequestBuilder;

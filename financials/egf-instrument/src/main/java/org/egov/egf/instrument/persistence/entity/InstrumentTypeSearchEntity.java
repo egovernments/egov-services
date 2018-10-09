@@ -14,25 +14,25 @@ import lombok.Setter;
 @NoArgsConstructor
 
 public class InstrumentTypeSearchEntity extends InstrumentTypeEntity {
-	private String ids;
-	private String sortBy;
-	private Integer pageSize;
-	private Integer offset;
+    private String ids;
+    private String sortBy;
+    private Integer pageSize;
+    private Integer offset;
 
-	@Override
-	public InstrumentType toDomain() {
-		InstrumentType instrumentType = new InstrumentType();
-		super.toDomain(instrumentType);
-		return instrumentType;
-	}
+    @Override
+    public InstrumentType toDomain() {
+        InstrumentType instrumentType = new InstrumentType();
+        super.toDomain(instrumentType);
+        return instrumentType;
+    }
 
-	public InstrumentTypeSearchEntity toEntity(InstrumentTypeSearch instrumentTypeSearch) {
-		super.toEntity(instrumentTypeSearch);
-		this.pageSize = instrumentTypeSearch.getPageSize();
-		this.offset = instrumentTypeSearch.getOffset();
-		this.sortBy = instrumentTypeSearch.getSortBy();
-		this.ids = instrumentTypeSearch.getIds();
-		return this;
-	}
+    public InstrumentTypeSearchEntity toEntity(InstrumentTypeSearch instrumentTypeSearch) {
+        super.toEntity(instrumentTypeSearch);
+        pageSize = instrumentTypeSearch.getPageSize();
+        offset = instrumentTypeSearch.getOffset();
+        sortBy = instrumentTypeSearch.getSortBy();
+        ids = instrumentTypeSearch.getIds();
+        return this;
+    }
 
 }

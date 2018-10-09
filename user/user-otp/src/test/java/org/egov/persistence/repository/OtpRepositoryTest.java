@@ -6,6 +6,7 @@ import org.egov.domain.model.OtpRequest;
 import org.egov.persistence.contract.Otp;
 import org.egov.web.contract.OtpResponse;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.runners.MockitoJUnitRunner;
@@ -41,6 +42,7 @@ public class OtpRepositoryTest {
         server = MockRestServiceServer.bindTo(restTemplate).build();
     }
 
+    @Ignore
     @Test
     public void test_should_return_otp_for_given_request() {
         server.expect(once(), requestTo("http://host/otp/_create"))

@@ -2,6 +2,7 @@ package org.egov.tl.validator;
 
 import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
+import org.apache.commons.lang3.StringUtils;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.tl.repository.ServiceRequestRepository;
 import org.egov.tl.util.TradeUtil;
@@ -38,7 +39,7 @@ public class PropertyValidator {
         RequestInfo requestInfo = request.getRequestInfo();
 
         request.getLicenses().forEach(license -> {
-            if(license.getPropertyId()!=null) {
+            if(!StringUtils.isEmpty(license.getPropertyId())) {
                 String url = util.getPropertySearchURL();
                 url = url.replace("{1}", license.getTenantId());
                 url = url.replace("{2}", license.getPropertyId());

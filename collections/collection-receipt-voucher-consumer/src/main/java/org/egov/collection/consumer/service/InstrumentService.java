@@ -57,6 +57,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 @Service
 public class InstrumentService {
 
@@ -91,7 +94,18 @@ public class InstrumentService {
 
         request.setRequestInfo(requestInfo);
 
-        return restTemplate.postForObject(propertiesManager.getInstrumentCreate(), request, InstrumentResponse.class);
+        ObjectMapper mapper = new ObjectMapper();
+        String jsonInString = "";
+
+        try {
+            jsonInString = mapper.writeValueAsString(request);
+        } catch (JsonProcessingException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        System.out.println(jsonInString);
+
+        return restTemplate.postForObject(propertiesManager.getHostUrl() + propertiesManager.getInstrumentCreate(), request, InstrumentResponse.class);
     }
 
     private void prepareInstrumentVoucher(InstrumentContract instrumentContract, VoucherResponse voucherResponse,

@@ -49,6 +49,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 @Service
 public class FinancialStatusService {
 
@@ -71,7 +74,16 @@ public class FinancialStatusService {
 
         requestInfo.setAuthToken(tokenService.generateAdminToken(tenantId));
         reqWrapper.setRequestInfo(requestInfo);
+        ObjectMapper mapper = new ObjectMapper();
+        String jsonInString = "";
 
+        try {
+            jsonInString = mapper.writeValueAsString(reqWrapper);
+        } catch (JsonProcessingException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        System.out.println(jsonInString);
         FinancialStatusResponse response = restTemplate.postForObject(bd_url, reqWrapper, FinancialStatusResponse.class);
         if (response.getFinancialStatuses() != null && !response.getFinancialStatuses().isEmpty())
             return response.getFinancialStatuses().get(0);

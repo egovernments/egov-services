@@ -10,8 +10,7 @@ nextval('seq_eg_user'), 'title', null, '1990-07-23 00:00:00', 'en_IN', 'SIWATER'
 null, 'A_POSITIVE', null, 'identificationmark','pb.mohali');
  -- password is sifinance123@
 INSERT INTO eg_user (
-id, title, salutation, dob, locale, username, password, pwdexpirydate, mobilenumber, altcontactnu
-mber, emailid, createddate,
+id, title, salutation, dob, locale, username, password, pwdexpirydate, mobilenumber, altcontactnumber, emailid, createddate,
 lastmodifieddate, createdby, lastmodifiedby, active, name, gender, pan, aadhaarnumber, type, version, guardian, guardianrelation,
 signature, bloodgroup, photo, identificationmark,tenantid)
 VALUES (

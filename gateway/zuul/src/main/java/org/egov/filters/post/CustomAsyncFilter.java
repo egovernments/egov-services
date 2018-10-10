@@ -4,17 +4,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.List;
-import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
 import org.egov.model.CustomAsyncRequest;
-import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.egov.wrapper.CustomRequestWrapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import org.springframework.web.client.RestTemplate;
 
 import com.google.common.io.CharStreams;
 import com.netflix.zuul.ZuulFilter;
@@ -26,27 +22,24 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class CustomAsyncFilter extends ZuulFilter {
 	
-	@Autowired
-	private RestTemplate restTemplate;
-
 	@Value("#{'${egov.custom.async.uris}'.split(',')}")
 	private List<String> sourceUri;
 	
 	@Value("${egov.custom.async.filter.topic}")
 	private String topic;
 	
-	@Autowired
-	private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
+//	@Autowired
+	//private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
 
 	@Override
 	public Object run() {
-		
+		log.info("Executing CustomAsyncFilter");
 		RequestContext ctx = RequestContext.getCurrentContext();
 		HttpServletRequest request = ctx.getRequest();
 		try	{
 		CustomAsyncRequest customAsyncRequest = CustomAsyncRequest.builder().request(readRequestBody(request)).
 				response(readResponseBody(ctx)).sourceUri(request.getRequestURI()).queryParamMap(ctx.getRequestQueryParams()).build();
-		kafkaTemplate.send(topic, customAsyncRequest);
+	//	kafkaTemplate.send(topic, customAsyncRequest);
 		} catch(Exception ex) {
 			ex.printStackTrace();
 		}

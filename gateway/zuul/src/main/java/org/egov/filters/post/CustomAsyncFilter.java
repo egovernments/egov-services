@@ -40,11 +40,16 @@ public class CustomAsyncFilter extends ZuulFilter {
 
 	@Override
 	public Object run() {
+		
 		RequestContext ctx = RequestContext.getCurrentContext();
 		HttpServletRequest request = ctx.getRequest();
+		try	{
 		CustomAsyncRequest customAsyncRequest = CustomAsyncRequest.builder().request(readRequestBody(request)).
 				response(readResponseBody(ctx)).sourceUri(request.getRequestURI()).queryParamMap(ctx.getRequestQueryParams()).build();
 		kafkaTemplate.send(topic, customAsyncRequest);
+		} catch(Exception ex) {
+			ex.printStackTrace();
+		}
 		return null;
 	}
 
@@ -57,7 +62,7 @@ public class CustomAsyncFilter extends ZuulFilter {
 
 	@Override
 	public int filterOrder() {
-		return 1;
+		return 1000;
 	}
 
 	@Override

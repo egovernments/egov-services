@@ -75,7 +75,7 @@ public class ActionValidator {
 
        List<String> actions = new LinkedList<>();
        roles.forEach(role -> {
-           if(!roleActionMap.get(role.getCode()).isEmpty())
+           if(!CollectionUtils.isEmpty(roleActionMap.get(role.getCode())))
            {
                actions.addAll(roleActionMap.get(role.getCode()));}
        });

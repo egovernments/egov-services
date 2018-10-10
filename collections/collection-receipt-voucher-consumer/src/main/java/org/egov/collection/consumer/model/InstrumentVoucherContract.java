@@ -53,7 +53,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 
-@JsonPropertyOrder({ "instrument", "voucherHeaderId" })
+@JsonPropertyOrder({ "instrument", "voucherHeaderId", "receiptHeaderId" })
 public class InstrumentVoucherContract {
 
     /*
@@ -65,5 +65,10 @@ public class InstrumentVoucherContract {
      * voucherHeaderId is the reference of the voucher attached to a instrument.
      */
     private String voucherHeaderId;
+
+    /*
+     * receiptHeaderId is the reference of the receipt attached to a instrument.
+     */
+    private String receiptHeaderId;
 
 }

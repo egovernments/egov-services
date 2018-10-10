@@ -83,7 +83,7 @@ public class InstrumentService {
         InstrumentContract instrumentContract = instrument.toContract();
         instrumentContract.setFinancialStatus(status);
         if (voucherResponse != null) {
-            prepareInstrumentVoucher(instrumentContract, voucherResponse);
+            prepareInstrumentVoucher(instrumentContract, voucherResponse, receipt);
         }
         InstrumentRequest request = new InstrumentRequest();
 
@@ -94,10 +94,12 @@ public class InstrumentService {
         return restTemplate.postForObject(propertiesManager.getInstrumentCreate(), request, InstrumentResponse.class);
     }
 
-    private void prepareInstrumentVoucher(InstrumentContract instrumentContract, VoucherResponse voucherResponse) {
+    private void prepareInstrumentVoucher(InstrumentContract instrumentContract, VoucherResponse voucherResponse,
+            Receipt receipt) {
 
         InstrumentVoucherContract ivContract = new InstrumentVoucherContract();
         ivContract.setVoucherHeaderId(voucherResponse.getVouchers().get(0).getVoucherNumber());
+        ivContract.setReceiptHeaderId(receipt.getBill().get(0).getBillDetails().get(0).getId());
         instrumentContract.setInstrumentVouchers(Collections.singletonList(ivContract));
     }
 

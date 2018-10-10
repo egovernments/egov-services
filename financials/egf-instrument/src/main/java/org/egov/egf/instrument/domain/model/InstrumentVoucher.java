@@ -64,4 +64,9 @@ public class InstrumentVoucher extends Auditable {
      */
     private String voucherHeaderId;
 
+    /*
+     * receiptHeaderId is the reference of the receipt attached to a instrument.
+     */
+    private String receiptHeaderId;
+
 }

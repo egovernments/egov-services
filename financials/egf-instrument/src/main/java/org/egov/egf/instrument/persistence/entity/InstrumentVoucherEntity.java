@@ -21,12 +21,14 @@ public class InstrumentVoucherEntity extends AuditableEntity {
     private String id;
     private String instrumentId;
     private String voucherHeaderId;
+    private String receiptHeaderId;
 
     public InstrumentVoucher toDomain() {
         InstrumentVoucher instrumentVoucher = new InstrumentVoucher();
         super.toDomain(instrumentVoucher);
         instrumentVoucher.setInstrument(Instrument.builder().id(instrumentId).build());
         instrumentVoucher.setVoucherHeaderId(voucherHeaderId);
+        instrumentVoucher.setReceiptHeaderId(receiptHeaderId);
         return instrumentVoucher;
     }
 
@@ -35,6 +37,7 @@ public class InstrumentVoucherEntity extends AuditableEntity {
         instrumentId = instrumentVoucher.getInstrument() != null ? instrumentVoucher.getInstrument().getId()
                 : null;
         voucherHeaderId = instrumentVoucher.getVoucherHeaderId();
+        receiptHeaderId = instrumentVoucher.getReceiptHeaderId();
         return this;
     }
 

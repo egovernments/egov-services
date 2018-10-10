@@ -42,7 +42,8 @@ public class InstrumentMapper {
 
             if (contract.getInstrumentVouchers() != null)
                 for (InstrumentVoucherContract ivc : contract.getInstrumentVouchers())
-                    instrumentVouchers.add(InstrumentVoucher.builder().voucherHeaderId(ivc.getVoucherHeaderId()).build());
+                    instrumentVouchers.add(InstrumentVoucher.builder().voucherHeaderId(ivc.getVoucherHeaderId())
+                            .receiptHeaderId(ivc.getReceiptHeaderId()).build());
 
             instrument.setInstrumentVouchers(instrumentVouchers);
 
@@ -97,7 +98,7 @@ public class InstrumentMapper {
                 for (InstrumentVoucher iv : instrument.getInstrumentVouchers())
                     instrumentVouchers
                             .add(InstrumentVoucherContract.builder().instrument(contract.getId())
-                                    .voucherHeaderId(iv.getVoucherHeaderId()).build());
+                                    .voucherHeaderId(iv.getVoucherHeaderId()).receiptHeaderId(iv.getReceiptHeaderId()).build());
 
             contract.setInstrumentVouchers(instrumentVouchers);
 
@@ -145,7 +146,8 @@ public class InstrumentMapper {
             List<InstrumentVoucher> instrumentVouchers = new ArrayList<>();
             if (contract.getInstrumentVouchers() != null)
                 for (InstrumentVoucherContract ivc : contract.getInstrumentVouchers())
-                    instrumentVouchers.add(InstrumentVoucher.builder().voucherHeaderId(ivc.getVoucherHeaderId()).build());
+                    instrumentVouchers.add(InstrumentVoucher.builder().voucherHeaderId(ivc.getVoucherHeaderId())
+                            .receiptHeaderId(ivc.getReceiptHeaderId()).build());
 
             instrumentSearch.setInstrumentVouchers(instrumentVouchers);
 
@@ -204,7 +206,7 @@ public class InstrumentMapper {
                 for (InstrumentVoucher iv : instrumentSearch.getInstrumentVouchers())
                     instrumentVouchers
                             .add(InstrumentVoucherContract.builder().instrument(contract.getId())
-                                    .voucherHeaderId(iv.getVoucherHeaderId()).build());
+                                    .voucherHeaderId(iv.getVoucherHeaderId()).receiptHeaderId(iv.getReceiptHeaderId()).build());
 
             contract.setInstrumentVouchers(instrumentVouchers);
 

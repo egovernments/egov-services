@@ -41,7 +41,7 @@ public class InstrumentVoucherJdbcRepositoryTest {
     public void test_create() {
 
         InstrumentVoucherEntity instrumentVoucher = InstrumentVoucherEntity.builder().id("1").instrumentId("1")
-                .voucherHeaderId("1").build();
+                .voucherHeaderId("1").receiptHeaderId("1").build();
         instrumentVoucher.setTenantId("default");
         InstrumentVoucherEntity actualResult = instrumentVoucherJdbcRepository.create(instrumentVoucher);
 
@@ -51,6 +51,7 @@ public class InstrumentVoucherJdbcRepositoryTest {
 
         assertThat(row.get("instrumentId")).isEqualTo(actualResult.getInstrumentId());
         assertThat(row.get("voucherHeaderId")).isEqualTo(actualResult.getVoucherHeaderId());
+        assertThat(row.get("receiptHeaderId")).isEqualTo(actualResult.getReceiptHeaderId());
 
     }
 
@@ -60,7 +61,7 @@ public class InstrumentVoucherJdbcRepositoryTest {
     public void test_update() {
 
         InstrumentVoucherEntity instrumentVoucher = InstrumentVoucherEntity.builder().id("1").instrumentId("1")
-                .voucherHeaderId("1").build();
+                .voucherHeaderId("1").receiptHeaderId("1").build();
         instrumentVoucher.setTenantId("default");
         InstrumentVoucherEntity actualResult = instrumentVoucherJdbcRepository.update(instrumentVoucher);
 
@@ -70,6 +71,7 @@ public class InstrumentVoucherJdbcRepositoryTest {
 
         assertThat(row.get("instrumentId")).isEqualTo(actualResult.getInstrumentId());
         assertThat(row.get("voucherHeaderId")).isEqualTo(actualResult.getVoucherHeaderId());
+        assertThat(row.get("receiptHeaderId")).isEqualTo(actualResult.getReceiptHeaderId());
 
     }
 
@@ -84,6 +86,7 @@ public class InstrumentVoucherJdbcRepositoryTest {
 
         assertThat(result.getInstrumentId()).isEqualTo("1");
         assertThat(result.getVoucherHeaderId()).isEqualTo("1");
+        assertThat(result.getReceiptHeaderId()).isEqualTo("1");
 
     }
 
@@ -144,6 +147,7 @@ public class InstrumentVoucherJdbcRepositoryTest {
                         put("id", resultSet.getString("id"));
                         put("instrumentId", resultSet.getString("instrumentId"));
                         put("voucherHeaderId", resultSet.getString("voucherHeaderId"));
+                        put("receiptHeaderId", resultSet.getString("receiptHeaderId"));
                         put("createdBy", resultSet.getString("createdBy"));
                         put("createdDate", resultSet.getString("createdDate"));
                         put("lastModifiedBy", resultSet.getString("lastModifiedBy"));

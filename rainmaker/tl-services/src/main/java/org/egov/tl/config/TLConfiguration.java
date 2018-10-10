@@ -141,6 +141,30 @@ public class TLConfiguration {
     private String propertySearchEndpoint;
 
 
+    //SMS
+    @Value("${kafka.topics.notification.sms}")
+    private String smsNotifTopic;
+
+    @Value("${notification.sms.enabled}")
+    private Boolean isSMSEnabled;
+
+
+
+    //Localization
+    @Value("${egov.localization.host}")
+    private String localizationHost;
+
+    @Value("${egov.localization.context.path}")
+    private String localizationContextPath;
+
+    @Value("${egov.localization.search.endpoint}")
+    private String localizationSearchEndpoint;
+
+    @Value("${egov.localization.statelevel}")
+    private Boolean isLocalizationStateLevel;
+
+
+
 
 
 

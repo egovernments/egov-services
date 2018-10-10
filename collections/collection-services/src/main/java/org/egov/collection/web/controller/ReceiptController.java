@@ -96,9 +96,11 @@ public class ReceiptController {
 
     @RequestMapping(value = "/_update", method = RequestMethod.POST)
     @ResponseBody
-    public ResponseEntity<?> update(@RequestBody @Valid ReceiptReq receiptReq) {
-
-        return getSuccessResponse(receiptReq.getReceipt(), receiptReq.getRequestInfo());
+    public ResponseEntity<?> update(@RequestBody @Valid ReceiptReq receiptRequest) {
+        
+        Receipt receiptInfo = collectionService.updateReceipt(receiptRequest);
+        
+        return getSuccessResponse(Collections.singletonList(receiptInfo),receiptRequest.getRequestInfo());
     }
 
 

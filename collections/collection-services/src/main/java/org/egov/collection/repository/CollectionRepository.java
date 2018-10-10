@@ -59,6 +59,24 @@ public class CollectionRepository {
             throw new CustomException("RECEIPT_CREATION_FAILED", "Unable to create receipt");
         }
     }
+    
+    public void updateReceipt(Receipt receipt){
+        Bill bill = receipt.getBill().get(0);
+        try {
+
+            List<MapSqlParameterSource> receiptHeaderSource = new ArrayList<>();
+
+            for (BillDetail billDetail : bill.getBillDetails()) {
+                receiptHeaderSource.add(getParametersForReceiptHeaderUpdate(receipt, billDetail));
+            }
+
+            namedParameterJdbcTemplate.batchUpdate(UPDATE_RECEIPT_HEADER_SQL, receiptHeaderSource.toArray(new MapSqlParameterSource[0]));
+
+        }catch (Exception e){
+            log.error("Failed to update receipt to database", e);
+            throw new CustomException("RECEIPT_UPDATION_FAILED", "Unable to update receipt");
+        }
+    }
 
     public void saveInstrument(Receipt receipt){
         Bill bill = receipt.getBill().get(0);

@@ -76,6 +76,8 @@ public class CollectionsQueryBuilder {
             "LEFT OUTER JOIN egcl_receiptinstrument recins ON rh.id=recins.receiptheader " +
             "LEFT JOIN egcl_instrumentheader ins ON recins.instrumentheader=ins.id ";
     
+    public static final String UPDATE_RECEIPT_HEADER_SQL ="UPDATE egcl_receiptheader set voucherheader=:voucherheader where id=:id";
+    
     public static MapSqlParameterSource getParametersForReceiptHeader(Receipt receipt, BillDetail billDetail){
         MapSqlParameterSource sqlParameterSource = new MapSqlParameterSource();
         AuditDetails auditDetails = receipt.getAuditDetails();
@@ -119,6 +121,16 @@ public class CollectionsQueryBuilder {
         sqlParameterSource.addValue("isreconciled", false);
         sqlParameterSource.addValue("status", billDetail.getStatus());
         sqlParameterSource.addValue("transactionid", receipt.getInstrument().getTransactionNumber());
+
+        return sqlParameterSource;
+
+    }
+    
+    public static MapSqlParameterSource getParametersForReceiptHeaderUpdate(Receipt receipt, BillDetail billDetail){
+        MapSqlParameterSource sqlParameterSource = new MapSqlParameterSource();
+
+        sqlParameterSource.addValue("id", billDetail.getId());
+        sqlParameterSource.addValue("voucherheader", billDetail.getVoucherHeader());
 
         return sqlParameterSource;
 

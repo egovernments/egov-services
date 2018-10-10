@@ -103,6 +103,21 @@ public class CollectionService {
         return receipt;
     }
 
+    
+    
+    @Transactional
+    public Receipt updateReceipt(ReceiptReq receiptReq) {
+
+
+        Receipt receipt = receiptReq.getReceipt().get(0);
+
+        collectionRepository.updateReceipt(receipt);
+
+        collectionProducer.producer(applicationProperties.getUpdateReceiptTopicName(), applicationProperties
+                .getUpdateReceiptTopicKey(), receiptReq);
+
+        return receipt;
+    }
 
     public List<Receipt> cancelReceipt(RequestInfo requestInfo, String transactionNumber){
         ReceiptSearchCriteria receiptSearchCriteria = ReceiptSearchCriteria.builder().transactionId

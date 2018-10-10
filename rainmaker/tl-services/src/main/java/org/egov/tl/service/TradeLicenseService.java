@@ -85,7 +85,7 @@ public class TradeLicenseService {
     }
 
 
-    List<TradeLicense> getLicensesWithOwnerInfo(TradeLicenseSearchCriteria criteria,RequestInfo requestInfo){
+    public List<TradeLicense> getLicensesWithOwnerInfo(TradeLicenseSearchCriteria criteria,RequestInfo requestInfo){
         List<TradeLicense> licenses = repository.getLicenses(criteria);
         if(licenses.isEmpty())
             return Collections.emptyList();

@@ -645,7 +645,7 @@ serviceMaps:
    isTransaction: true
    queryMaps:
 
-       - query: INSERT INTO eg_tl_verificationdocument( id, tenantid, active, documenttype, tradecategorydetail, filestoreid, createdby, lastmodifiedby, createdtime, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ON CONFLICT (id) DO UPDATE SET active = ?,documenttype =?, tradecategorydetail =?, filestoreid =?, tradelicensedetailid =?, lastmodifiedby =?, lastmodifiedtime =?;
+       - query: INSERT INTO eg_tl_verificationdocument( id, tenantid, active, documenttype, tradecategorydetail, filestoreid,tradelicensedetailid, createdby, lastmodifiedby, createdtime, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ON CONFLICT (id) DO UPDATE SET active = ?,documenttype =?, tradecategorydetail =?, filestoreid =?, lastmodifiedby =?, lastmodifiedtime =?;
          basePath: Licenses.*.tradeLicenseDetail.verificationDocuments.*
          jsonMaps:
           - jsonPath: $.Licenses.*.tradeLicenseDetail.verificationDocuments.*.id

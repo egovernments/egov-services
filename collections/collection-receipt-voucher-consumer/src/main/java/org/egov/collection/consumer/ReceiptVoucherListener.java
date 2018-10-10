@@ -9,6 +9,7 @@ import org.egov.collection.consumer.model.ReceiptRequest;
 import org.egov.collection.consumer.model.VoucherResponse;
 import org.egov.collection.consumer.service.BusinessDetailsService;
 import org.egov.collection.consumer.service.InstrumentService;
+import org.egov.collection.consumer.service.ReceiptService;
 import org.egov.collection.consumer.service.VoucherService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,22 +36,28 @@ public class ReceiptVoucherListener {
     @Autowired
     private InstrumentService instrumentService;
 
+    @Autowired
+    private ReceiptService receiptService;
+
     @KafkaListener(id = "${egov.collection.receipt.voucher.save.id}", topics = "${egov.collection.receipt.voucher.save.topic}", group = "${egov.collection.receipt.voucher.save.group}")
     public void process(ConsumerRecord<String, String> record) {
         ReceiptRequest request = null;
         LOGGER.info("key : " + record.key() + "\t\t" + "value : " + record.value());
-        VoucherResponse response = null;
+        VoucherResponse voucherResponse = null;
         try {
             request = objectMapper.readValue(record.value(), ReceiptRequest.class);
             if (checkVoucherCreation(request)) {
 
-                response = voucherService.createVoucher(request);
+                voucherResponse = voucherService.createVoucher(request);
+                receiptService.updateReceipt(request, voucherResponse);
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
-        instrumentService.createInstruemtn(request, response);
-        System.out.println(response);
+        voucherResponse = voucherService.createVoucher(request);
+        receiptService.updateReceipt(request, voucherResponse);
+        instrumentService.createInstruemt(request, voucherResponse);
+        System.out.println(voucherResponse);
     }
 
     public Boolean checkVoucherCreation(final ReceiptRequest request) {

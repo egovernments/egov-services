@@ -90,4 +90,7 @@ public class PropertiesManager {
     @Value("${egov.services.egf.instrument.instruments.create}")
     private String instrumentCreate;
 
+    @Value("${egov.services.collection.services.receipts.update}")
+    private String receiptsUpdate;
+
 }

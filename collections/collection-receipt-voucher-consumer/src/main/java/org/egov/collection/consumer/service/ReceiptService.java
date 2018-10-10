@@ -40,17 +40,10 @@
 
 package org.egov.collection.consumer.service;
 
-import java.util.Collections;
-
 import org.egov.collection.consumer.config.PropertiesManager;
-import org.egov.collection.consumer.model.FinancialStatus;
-import org.egov.collection.consumer.model.Instrument;
-import org.egov.collection.consumer.model.InstrumentContract;
-import org.egov.collection.consumer.model.InstrumentRequest;
-import org.egov.collection.consumer.model.InstrumentResponse;
-import org.egov.collection.consumer.model.InstrumentVoucherContract;
 import org.egov.collection.consumer.model.Receipt;
 import org.egov.collection.consumer.model.ReceiptRequest;
+import org.egov.collection.consumer.model.ReceiptResponse;
 import org.egov.collection.consumer.model.VoucherResponse;
 import org.egov.common.contract.request.RequestInfo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,7 +54,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
-public class InstrumentService {
+public class ReceiptService {
 
     @Autowired
     private RestTemplate restTemplate;
@@ -72,49 +65,29 @@ public class InstrumentService {
     @Autowired
     private PropertiesManager propertiesManager;
 
-    @Autowired
-    private FinancialStatusService financialStatusService;
+    public ReceiptResponse updateReceipt(ReceiptRequest receiptRequest, VoucherResponse voucherResponse) {
 
-    public InstrumentResponse createInstruemt(ReceiptRequest receiptRequest, VoucherResponse voucherResponse) {
-
-        FinancialStatus status = financialStatusService.getByCode("New", receiptRequest.getTenantId());
         RequestInfo requestInfo = new RequestInfo();
         requestInfo.setAuthToken(tokenService.generateAdminToken(receiptRequest.getTenantId()));
 
         Receipt receipt = receiptRequest.getReceipt().get(0);
-        Instrument instrument = receipt.getInstrument();
-        InstrumentContract instrumentContract = instrument.toContract();
-        instrumentContract.setFinancialStatus(status);
-        if (voucherResponse != null) {
-            prepareInstrumentVoucher(instrumentContract, voucherResponse, receipt);
-        }
-        InstrumentRequest request = new InstrumentRequest();
+        receipt.getBill().get(0).getBillDetails().get(0)
+                .setVoucherHeader(voucherResponse.getVouchers().get(0).getVoucherNumber());
 
-        request.setInstruments(Collections.singletonList(instrumentContract));
-
-        request.setRequestInfo(requestInfo);
+        receiptRequest.setRequestInfo(requestInfo);
 
         ObjectMapper mapper = new ObjectMapper();
         String jsonInString = "";
 
         try {
-            jsonInString = mapper.writeValueAsString(request);
+            jsonInString = mapper.writeValueAsString(receiptRequest);
         } catch (JsonProcessingException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
         System.out.println(jsonInString);
 
-        return restTemplate.postForObject(propertiesManager.getHostUrl() + propertiesManager.getInstrumentCreate(), request, InstrumentResponse.class);
-    }
-
-    private void prepareInstrumentVoucher(InstrumentContract instrumentContract, VoucherResponse voucherResponse,
-            Receipt receipt) {
-
-        InstrumentVoucherContract ivContract = new InstrumentVoucherContract();
-        ivContract.setVoucherHeaderId(voucherResponse.getVouchers().get(0).getVoucherNumber());
-        ivContract.setReceiptHeaderId(receipt.getBill().get(0).getBillDetails().get(0).getId());
-        instrumentContract.setInstrumentVouchers(Collections.singletonList(ivContract));
+        return restTemplate.postForObject(propertiesManager.getHostUrl() + propertiesManager.getReceiptsUpdate(), receiptRequest,
+                ReceiptResponse.class);
     }
 
 }

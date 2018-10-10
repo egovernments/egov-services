@@ -9,7 +9,9 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.egov.model.CustomAsyncRequest;
 import org.egov.wrapper.CustomRequestWrapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
 
 import com.google.common.io.CharStreams;
@@ -28,8 +30,8 @@ public class CustomAsyncFilter extends ZuulFilter {
 	@Value("${egov.custom.async.filter.topic}")
 	private String topic;
 	
-//	@Autowired
-	//private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
+	@Autowired
+	private KafkaTemplate<String, Object> kafkaTemplate;
 
 	@Override
 	public Object run() {
@@ -38,8 +40,10 @@ public class CustomAsyncFilter extends ZuulFilter {
 		HttpServletRequest request = ctx.getRequest();
 		try	{
 		CustomAsyncRequest customAsyncRequest = CustomAsyncRequest.builder().request(readRequestBody(request)).
-				response(readResponseBody(ctx)).sourceUri(request.getRequestURI()).queryParamMap(ctx.getRequestQueryParams()).build();
-	//	kafkaTemplate.send(topic, customAsyncRequest);
+				response(readResponseBody(ctx)).
+				sourceUri(request.getRequestURI()).
+				queryParamMap(ctx.getRequestQueryParams()).build();
+		kafkaTemplate.send(topic, customAsyncRequest);
 		} catch(Exception ex) {
 			ex.printStackTrace();
 		}
@@ -55,7 +59,7 @@ public class CustomAsyncFilter extends ZuulFilter {
 
 	@Override
 	public int filterOrder() {
-		return 1000;
+		return 2;
 	}
 
 	@Override
@@ -69,7 +73,7 @@ public class CustomAsyncFilter extends ZuulFilter {
 			
 			if(responseDataStream != null)
 			responseBody = CharStreams.toString(new InputStreamReader(responseDataStream, "UTF-8"));
-			//ctx.setResponseBody(responseBody);
+			ctx.setResponseBody(responseBody);
 		} catch (IOException e) {
 			log.info("Error reading body", e);
 		}catch (Exception e) {

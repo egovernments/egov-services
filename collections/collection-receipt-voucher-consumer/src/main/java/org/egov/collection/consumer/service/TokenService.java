@@ -78,7 +78,7 @@ public class TokenService {
         map.add("scope", propertiesManager.getSiScope());
         map.add("password", propertiesManager.getSiPassword());
         map.add("grant_type", propertiesManager.getSiGrantType());
-        map.add("tenantId", "pb.jalandhar");
+        map.add("tenantId", tenantId);
         map.add("userType", propertiesManager.getSiUserType());
 
         HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(map, header);

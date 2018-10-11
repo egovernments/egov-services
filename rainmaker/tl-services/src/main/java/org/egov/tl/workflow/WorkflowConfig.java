@@ -67,7 +67,7 @@ public class WorkflowConfig {
         Map<String, List<String>> map = new HashMap<>();
 
         map.put(STATUS_INITIALIZED, Arrays.asList(ACTION_APPLY,ACTION_INITIATE));
-        map.put(STATUS_APPLIED, Arrays.asList(ACTION_APPLY,ACTION_APPROVE, ACTION_REJECT)); // FIXME PUT THE ACTIONS IN PLACE
+        map.put(STATUS_APPLIED, Arrays.asList(ACTION_APPLY)); // FIXME PUT THE ACTIONS IN PLACE
         map.put(STATUS_PAID, Arrays.asList(ACTION_APPROVE, ACTION_REJECT));
         map.put(STATUS_APPROVED, Arrays.asList(ACTION_CANCEL));
         map.put(STATUS_REJECTED, Arrays.asList()); // FIXME PUT THE ACTIONS IN PLACE

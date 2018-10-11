@@ -32,6 +32,39 @@ public class TLConstants {
 
 
 
+    // MDMS
+
+    public static final String TRADE_LICENSE_MODULE = "TradeLicense";
+
+    public static final String TRADE_LICENSE_MODULE_CODE = "TL";
+
+    public static final String COMMON_MASTERS_MODULE = "common-masters";
+
+
+    // mdms master names
+
+    public static final String OWNERSHIP_CATEGORY = "OwnerShipCategory";
+
+    public static final String TRADE_TYPE = "TradeType";
+
+    public static final String ACCESSORIES_CATEGORY = "AccessoriesCategory";
+
+    public static final String STRUCTURE_TYPE = "StructureType";
+
+    // mdms path codes
+
+    public static final String TL_JSONPATH_CODE = "$.MdmsRes.TradeLicense";
+
+    public static final String COMMON_MASTER_JSONPATH_CODE = "$.MdmsRes.common-masters";
+
+
+    // error constants
+
+    public static final String INVALID_TENANT_ID_MDMS_KEY = "INVALID TENANTID";
+    public static final String INVALID_TENANT_ID_MDMS_MSG = "No data found for this tenentID";
+
+
+
 
 
 }

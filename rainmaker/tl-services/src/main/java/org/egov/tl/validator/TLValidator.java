@@ -24,21 +24,25 @@ public class TLValidator {
 
     private PropertyValidator propertyValidator;
 
+    private MDMSValidator mdmsValidator;
+
+
 
     @Autowired
-    public TLValidator(TLRepository tlRepository, TLConfiguration config, PropertyValidator propertyValidator) {
+    public TLValidator(TLRepository tlRepository, TLConfiguration config,
+                       PropertyValidator propertyValidator, MDMSValidator mdmsValidator) {
         this.tlRepository = tlRepository;
         this.config = config;
         this.propertyValidator = propertyValidator;
+        this.mdmsValidator = mdmsValidator;
     }
-
 
 
 
     public void validateCreate(TradeLicenseRequest request){
         validateInstitution(request);
         propertyValidator.validateProperty(request);
-
+        mdmsValidator.validateMdmsData(request);
     }
 
 
@@ -85,6 +89,7 @@ public class TLValidator {
           throw new CustomException("INVALID UPDATE","The license to be updated is not in database");
 
       validateAllIds(searchResult,licenses);
+      mdmsValidator.validateMdmsData(request);
 
       setFieldsFromSearch(request,searchResult);
    }

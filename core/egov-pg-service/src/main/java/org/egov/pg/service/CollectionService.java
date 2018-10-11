@@ -37,6 +37,7 @@ public class CollectionService {
                 .tenantId(transaction.getTenantId())
                 .mobileNumber(transaction.getUser().getMobileNumber())
                 .paidBy(transaction.getUser().getName())
+                .id(transaction.getBillId())
                 .billDetails(Collections.singletonList(billDetail))
                 .build();
 
@@ -84,6 +85,7 @@ public class CollectionService {
                 .tenantId(transaction.getTenantId())
                 .mobileNumber(transactionRequest.getRequestInfo().getUserInfo().getMobileNumber())
                 .paidBy(transactionRequest.getRequestInfo().getUserInfo().getName())
+                .id(transaction.getBillId())
                 .billDetails(Collections.singletonList(billDetail))
                 .build();
 

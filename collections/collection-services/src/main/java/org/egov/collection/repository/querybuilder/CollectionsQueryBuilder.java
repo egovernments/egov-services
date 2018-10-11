@@ -1,5 +1,6 @@
 package org.egov.collection.repository.querybuilder;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import org.apache.commons.lang3.StringUtils;
 import org.egov.collection.model.AuditDetails;
 import org.egov.collection.model.Instrument;
@@ -8,45 +9,54 @@ import org.egov.collection.web.contract.Bill;
 import org.egov.collection.web.contract.BillAccountDetail;
 import org.egov.collection.web.contract.BillDetail;
 import org.egov.collection.web.contract.Receipt;
+import org.egov.tracer.model.CustomException;
+import org.postgresql.util.PGobject;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 
-import java.util.*;
+import java.sql.SQLException;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Map;
+import java.util.Objects;
 
 import static java.util.Objects.isNull;
 
 public class CollectionsQueryBuilder {
 
-    public static final String INSERT_RECEIPT_HEADER_SQL ="INSERT INTO egcl_receiptheader(id, payeename, payeeaddress, payeeemail, paidby, referencenumber, "
+    public static final String INSERT_RECEIPT_HEADER_SQL ="INSERT INTO egcl_receiptheader(id, payeename, payeeaddress, payeeemail, payeemobile, paidby, referencenumber, "
             + " receipttype, receiptnumber, receiptdate, businessdetails, collectiontype, reasonforcancellation, minimumamount, totalamount, "
             + " collectedamount, collmodesnotallwd, consumercode, channel,boundary, voucherheader, "
             + "depositedbranch, createdby, createddate, lastmodifiedby, lastmodifieddate, tenantid, referencedate, referencedesc, "
             + " manualreceiptdate, manualreceiptnumber, reference_ch_id, stateid, location, isreconciled, "
-            + "status, transactionid) "
-            + "VALUES (:id, :payeename, :payeeaddress, :payeeemail, :paidby, :referencenumber, :receipttype, "
+            + "status, transactionid, additionalDetails) "
+            + "VALUES (:id, :payeename, :payeeaddress, :payeeemail, :payeemobile , :paidby, :referencenumber, :receipttype, "
             + ":receiptnumber, :receiptdate, :businessdetails, :collectiontype, :reasonforcancellation, :minimumamount, :totalamount, "
             + " :collectedamount, :collmodesnotallwd, :consumercode, :channel, :boundary, :voucherheader, "
             + ":depositedbranch, :createdby, :createddate, :lastmodifiedby, :lastmodifieddate, :tenantid, :referencedate, :referencedesc, "
             + " :manualreceiptdate, :manualreceiptnumber, :reference_ch_id, :stateid, :location, :isreconciled, "
-            + ":status, :transactionid)";
+            + ":status, :transactionid, :additionalDetails )";
 
     public static final String INSERT_RECEIPT_DETAILS_SQL =  "INSERT INTO egcl_receiptdetails(id, chartofaccount, dramount, cramount, ordernumber, receiptheader, actualcramounttobepaid, "
-            + "description, financialyear, isactualdemand, purpose, tenantid) "
+            + "description, financialyear, isactualdemand, purpose, tenantid, additionalDetails) "
             + "VALUES (:id, :chartofaccount, :dramount, :cramount, :ordernumber, :receiptheader, " +
             ":actualcramounttobepaid, "
-            + ":description, :financialyear, :isactualdemand, :purpose, :tenantid)";
+            + ":description, :financialyear, :isactualdemand, :purpose, :tenantid, :additionalDetails)";
 
     public static final String INSERT_INSTRUMENT_HEADER_SQL = "INSERT INTO egcl_instrumentheader(id, transactionnumber, transactiondate, amount, instrumenttype, " +
             "instrumentstatus, bankid, branchname, bankaccountid, ifsccode, financialstatus, transactiontype, payee, drawer, surrenderreason, serialno, createdby," +
-            " createddate, lastmodifiedby, lastmodifieddate, tenantid)\n" +
+            " createddate, lastmodifiedby, lastmodifieddate, tenantid, additionalDetails, instrumentDate, instrumentNumber)\n" +
             " VALUES " +
-            " (:id, :transactionnumber, :transactiondate, :amount, :instrumenttype, :instrumentstatus, :bankid, :branchname, :bankaccountid, :ifsccode, :financialstatus, :transactiontype, :payee, :drawer, :surrenderreason, :serialno, :createdby, :createddate, :lastmodifiedby, :lastmodifieddate, :tenantid) ";
+            " (:id, :transactionnumber, :transactiondate, :amount, :instrumenttype, :instrumentstatus, :bankid, " +
+            ":branchname, :bankaccountid, :ifsccode, :financialstatus, :transactiontype, :payee, :drawer, " +
+            ":surrenderreason, :serialno, :createdby, :createddate, :lastmodifiedby, :lastmodifieddate, :tenantid, " +
+            ":additionalDetails, :instrumentDate, :instrumentNumber) ";
 
     public static final String INSERT_INSTRUMENT_SQL = "insert into egcl_receiptinstrument(instrumentheader, " +
             "receiptheader) values (:instrumentheader, :receiptheader)";
 
     private static final String SELECT_RECEIPTS_SQL = "Select rh.id as rh_id,rh.payeename as rh_payeename,rh" +
-            ".payeeAddress as rh_payeeAddress, rh.payeeEmail as rh_payeeEmail,rh.paidBy as rh_paidBy, rh" +
-            ".referenceNumber as rh_referenceNumber, rh.referenceDate as rh_referenceDate,rh.receiptType as " +
+            ".payeeAddress as rh_payeeAddress, rh.payeeEmail as rh_payeeEmail, rh.payeemobile as rh_payeemobile, rh" +
+            ".paidBy as rh_paidBy, rh.referenceNumber as rh_referenceNumber, rh.referenceDate as rh_referenceDate,rh.receiptType as " +
             "rh_receiptType, rh.receiptNumber as rh_receiptNumber, rh.receiptDate as rh_receiptDate, rh.referenceDesc" +
             " as rh_referenceDesc, rh.manualReceiptNumber as rh_manualReceiptNumber, rh.manualreceiptdate as " +
             "rh_manualreceiptdate, rh.businessDetails as rh_businessDetails,  rh.collectionType as rh_collectionType,rh.stateId as rh_stateId,rh.location as " +
@@ -57,24 +67,32 @@ public class CollectionsQueryBuilder {
             "rh_reference_ch_id,  rh.consumerType as rh_consumerType,rh.fund as rh_fund,rh.fundSource as " +
             "rh_fundSource, rh.boundary as rh_boundary, rh.department as rh_department,rh.depositedBranch as " +
             "rh_depositedBranch, rh.tenantId as rh_tenantId, rh.displayMsg as rh_displayMsg,rh.voucherheader as " +
-            "rh_voucherheader, rh.cancellationRemarks as rh_cancellationRemarks, rh.createdBy as rh_createdBy, rh" +
-            ".createdDate as rh_createdDate,rh.lastModifiedBy as rh_lastModifiedBy, rh.lastModifiedDate as " +
+            "rh_voucherheader, rh.cancellationRemarks as rh_cancellationRemarks, rh.additionalDetails as " +
+            "rh_additionalDetails, rh.createdBy as  rh_createdBy, rh.createdDate as rh_createdDate,rh.lastModifiedBy " +
+            "as rh_lastModifiedBy, rh.lastModifiedDate as " +
             "rh_lastModifiedDate, rh.transactionid as rh_transactionid, rd.id as rd_id,  rd.dramount as rd_dramount, " +
             "rd.cramount as rd_cramount,rd.actualcramountToBePaid as  rd_actualcramountToBePaid,rd.ordernumber as " +
             "rd_ordernumber,  rd.description as rd_description,rd.chartOfAccount as rd_chartOfAccount,rd" +
-            ".isActualDemand  as rd_isActualDemand,  rd.financialYear as rd_financialYear,rd.purpose as rd_purpose,  " +
-            "rd.tenantId as rd_tenantId,   ins.id as ins_instrumentheader, ins.amount as ins_amount, ins" +
-            ".transactionDate as ins_transactiondate, ins.transactionNumber as ins_transactionNumber, ins" +
-            ".instrumenttype as ins_instrumenttype, ins .instrumentstatus" +
+            ".isActualDemand  as rd_isActualDemand,  rd.financialYear as rd_financialYear,rd.purpose as rd_purpose, " +
+            "rd.additionalDetails as rd_additionalDetails, rd.tenantId as rd_tenantId,   ins.id as ins_instrumentheader, " +
+            "ins.amount as ins_amount, ins.transactionDate as ins_transactiondate, ins.transactionNumber as " +
+            "ins_transactionNumber, ins.instrumenttype as ins_instrumenttype, ins .instrumentstatus" +
             " as ins_instrumentstatus,  ins.bankid as ins_bankid , ins.branchname as ins_branchname , ins" +
             ".bankaccountid as ins_bankaccountid,  ins.ifsccode as ins_ifsccode , ins.financialstatus as " +
             "ins_financialstatus ,  ins.transactiontype as ins_transactiontype , ins.payee as ins_payee , ins.drawer " +
             "as ins_drawer ,  ins.surrenderreason as ins_surrenderreason , ins.serialno as ins_serialno , ins" +
-            ".createdby as ins_createdby ,  ins.createddate as ins_createddate , ins.lastmodifiedby as " +
-            "ins_lastmodifiedby ,  ins.lastmodifieddate as ins_lastmodifieddate , ins.tenantid as ins_tenantid  " +
+            ".additionalDetails as ins_additionalDetails, ins.createdby as ins_createdby ,  ins.createddate as ins_createddate , ins.lastmodifiedby as " +
+            "ins_lastmodifiedby ,  ins.lastmodifieddate as ins_lastmodifieddate , ins.tenantid as ins_tenantid , " +
+            " ins.instrumentDate as ins_instrumentDate, ins.instrumentNumber as ins_instrumentNumber " +
             "from egcl_receiptheader rh LEFT OUTER JOIN egcl_receiptdetails rd ON rh.id=rd.receiptheader " +
             "LEFT OUTER JOIN egcl_receiptinstrument recins ON rh.id=recins.receiptheader " +
             "LEFT JOIN egcl_instrumentheader ins ON recins.instrumentheader=ins.id ";
+
+    private static final String PAGINATION_WRAPPER = "SELECT * FROM " +
+            "(SELECT *, DENSE_RANK() OVER (ORDER BY rh_id) offset_ FROM " +
+            "({baseQuery})" +
+            " result) result_offset " +
+            "WHERE offset_ > :offset AND offset_ <= :limit";
     
     public static final String UPDATE_RECEIPT_HEADER_SQL ="UPDATE egcl_receiptheader set voucherheader=:voucherheader where id=:id";
     
@@ -89,6 +107,7 @@ public class CollectionsQueryBuilder {
         sqlParameterSource.addValue("payeename", bill.getPayeeName());
         sqlParameterSource.addValue("payeeaddress", bill.getPayeeAddress());
         sqlParameterSource.addValue("payeeemail", bill.getPayeeEmail());
+        sqlParameterSource.addValue("payeemobile", bill.getMobileNumber());
         sqlParameterSource.addValue("paidby", bill.getPaidBy());
         sqlParameterSource.addValue("referencenumber", billDetail.getBillNumber());
         sqlParameterSource.addValue("receipttype", billDetail.getReceiptType());
@@ -121,6 +140,7 @@ public class CollectionsQueryBuilder {
         sqlParameterSource.addValue("isreconciled", false);
         sqlParameterSource.addValue("status", billDetail.getStatus());
         sqlParameterSource.addValue("transactionid", receipt.getInstrument().getTransactionNumber());
+        sqlParameterSource.addValue("additionalDetails", getJsonb(billDetail.getAdditionalDetails()));
 
         return sqlParameterSource;
 
@@ -152,6 +172,8 @@ public class CollectionsQueryBuilder {
         sqlParameterSource.addValue("purpose", billAccountDetails.getPurpose().toString());
         sqlParameterSource.addValue("tenantid", billAccountDetails.getTenantId());
         sqlParameterSource.addValue("receiptheader", receiptHeaderId);
+        sqlParameterSource.addValue("additionalDetails", getJsonb(billAccountDetails.getAdditionalDetails()));
+
         return sqlParameterSource;
 
     }
@@ -180,6 +202,10 @@ public class CollectionsQueryBuilder {
         sqlParameterSource.addValue("lastmodifiedby", auditDetails.getLastModifiedBy());
         sqlParameterSource.addValue("lastmodifieddate", auditDetails.getLastModifiedDate());
         sqlParameterSource.addValue("tenantid", instrument.getTenantId());
+        sqlParameterSource.addValue("additionalDetails", getJsonb(instrument.getAdditionalDetails()));
+        sqlParameterSource.addValue("instrumentNumber", instrument.getInstrumentNumber());
+        sqlParameterSource.addValue("instrumentDate", instrument.getInstrumentDate());
+
         return sqlParameterSource;
 
     }
@@ -199,7 +225,8 @@ public class CollectionsQueryBuilder {
         addWhereClause(selectQuery, preparedStatementValues, searchCriteria);
         addOrderByClause(selectQuery, searchCriteria);
 
-        return selectQuery.toString();
+
+        return addPaginationClause(selectQuery, preparedStatementValues, searchCriteria);
     }
 
     @SuppressWarnings({ "unchecked", "rawtypes", "deprecation" })
@@ -304,6 +331,35 @@ public class CollectionsQueryBuilder {
         String sortOrder = (criteria.getSortOrder() == null ? "DESC" : criteria
                 .getSortOrder());
         selectQuery.append(" ORDER BY ").append(sortBy).append(" ").append(sortOrder);
+    }
+
+    private static String addPaginationClause(StringBuilder selectQuery, Map<String, Object> preparedStatementValues,
+                                            ReceiptSearchCriteria criteria){
+
+        if(criteria.getLimit() != 0) {
+            String finalQuery = PAGINATION_WRAPPER.replace("{baseQuery}", selectQuery);
+            preparedStatementValues.put("offset", criteria.getOffset());
+            preparedStatementValues.put("limit", criteria.getOffset() + criteria.getLimit());
+
+            return finalQuery;
+        }
+        else
+            return selectQuery.toString();
+    }
+
+    private static PGobject getJsonb(JsonNode node){
+        if(Objects.isNull(node))
+            return null;
+
+        PGobject pgObject = new PGobject();
+        pgObject.setType("jsonb");
+        try {
+            pgObject.setValue(node.toString());
+            return pgObject;
+        } catch (SQLException e) {
+            throw new CustomException("UNABLE_TO_CREATE_RECEIPT", "Invalid JSONB value provided");
+        }
+
     }
     
 }

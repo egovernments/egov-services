@@ -40,9 +40,13 @@
 package org.egov.collection.web.contract;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.JsonNode;
 import lombok.*;
 import org.egov.collection.model.enums.CollectionType;
 
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -102,6 +106,9 @@ public class BillDetail {
 
 	private String reasonForCancellation;
 
+	@NotNull
+	@Min(value = 0)
+	@Max(value = 999999999)
 	private BigDecimal amountPaid;
 
 	private String cancellationRemarks;
@@ -118,5 +125,7 @@ public class BillDetail {
     private Long stateId;
     
 	private Boolean partPaymentAllowed;
+
+	private JsonNode additionalDetails;
     
 }

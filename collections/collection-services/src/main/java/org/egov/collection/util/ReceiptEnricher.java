@@ -81,7 +81,8 @@ public class ReceiptEnricher {
         List<Bill> validatedBills = billingRepository.fetchBill(receiptReq.getRequestInfo(), receipt.getTenantId(), billFromRequest.getId
                 ());
 
-        if (validatedBills.isEmpty() || validatedBills.get(0).getBillDetails().isEmpty()) {
+        if (validatedBills.isEmpty() || Objects.isNull(validatedBills.get(0).getBillDetails()) || validatedBills.get(0)
+                .getBillDetails().isEmpty()) {
             log.error("Bill ID provided does not exist or is in an invalid state " + billFromRequest.getId());
             throw new CustomException("INVALID_BILL_ID", "Bill ID provided does not exist or is in an invalid state");
         }
@@ -98,6 +99,9 @@ public class ReceiptEnricher {
         Bill validatedBill = validatedBills.get(0);
         validatedBill.setPaidBy(billFromRequest.getPaidBy());
         validatedBill.setMobileNumber(billFromRequest.getMobileNumber());
+
+        validatedBill.getBillDetails().sort(Comparator.comparing(BillDetail::getId));
+        billFromRequest.getBillDetails().sort(Comparator.comparing(BillDetail::getId));
 
         for(int i = 0; i < validatedBill.getBillDetails().size(); i++){
             validatedBill.getBillDetails().get(i).setAmountPaid(billFromRequest.getBillDetails().get(i).getAmountPaid
@@ -118,6 +122,11 @@ public class ReceiptEnricher {
 
             // Business service enrichment called in loop as they're always unique for a bill
             enrichBusinessService(receiptReq.getRequestInfo(), validatedBill.getBillDetails().get(i));
+
+            validatedBill.getBillDetails().get(i).setAdditionalDetails(billFromRequest.getBillDetails().get(i).getAdditionalDetails());
+
+            enrichBillAccountDetails(validatedBill.getBillDetails().get(i), billFromRequest.getBillDetails().get(i));
+
         }
 
         AuditDetails auditDetails = AuditDetails.builder().createdBy(receiptReq.getRequestInfo().getUserInfo().getId
@@ -196,22 +205,24 @@ public class ReceiptEnricher {
         instrument.setTenantId(receipt.getTenantId());
         instrument.setPayee(receipt.getBill().get(0).getPayeeName());
         instrument.setInstrumentStatus(InstrumentStatusEnum.NEW);
+        instrument.setInstrumentDate(instrument.getTransactionDateInput());
 
         try {
+
+            if(instrument.getInstrumentType().getName().equalsIgnoreCase(InstrumentTypesEnum.CASH.name())){
+                String transactionId = idGenRepository.generateTransactionNumber(receiptReq.getRequestInfo(),
+                        receipt.getTenantId());
+                instrument.setTransactionNumber(transactionId);
+            }
 
             if (instrument.getInstrumentType().getName().equalsIgnoreCase(InstrumentTypesEnum.CASH.name()) || instrument
                     .getInstrumentType().getName().equalsIgnoreCase(InstrumentTypesEnum.CARD.name())) {
 
-                String transactionId = idGenRepository.generateTransactionNumber(receiptReq.getRequestInfo(),
-                        receipt.getTenantId());
+
                 String transactionDate = simpleDateFormat.format(new Date());
                 instrument.setTransactionDate(simpleDateFormat.parse(transactionDate));
                 instrument.setTransactionDateInput(System.currentTimeMillis());
 
-                if(instrument.getInstrumentType().getName().equalsIgnoreCase(InstrumentTypesEnum.CARD.name()))
-                    instrument.setTransactionNumber(transactionId + "-"+instrument.getTransactionNumber());
-                else
-                    instrument.setTransactionNumber(transactionId);
 
             } else {
                 DateTime transactionDate = new DateTime(instrument.getTransactionDateInput());
@@ -222,4 +233,26 @@ public class ReceiptEnricher {
 
         }catch (ParseException ignored){}
     }
+
+    /**
+     * Enrich the bill account details object
+     *  - Copy over additional details received part of request to validated bill
+     *
+     * @param validatedBillDetail Validated bill detail from billing service
+     * @param billDetailFromRequest Bill detail from request
+     */
+    private void enrichBillAccountDetails(BillDetail validatedBillDetail, BillDetail billDetailFromRequest){
+        if(!Objects.isNull(billDetailFromRequest.getBillAccountDetails()) && billDetailFromRequest
+                .getBillAccountDetails().size() == validatedBillDetail.getBillAccountDetails().size()) {
+
+            billDetailFromRequest.getBillAccountDetails().sort(Comparator.comparing(BillAccountDetail::getId));
+            validatedBillDetail.getBillAccountDetails().sort(Comparator.comparing(BillAccountDetail::getId));
+
+            for (int i = 0; i < validatedBillDetail.getBillAccountDetails().size(); i++) {
+                validatedBillDetail.getBillAccountDetails().get(i).setAdditionalDetails(billDetailFromRequest
+                        .getBillAccountDetails().get(i).getAdditionalDetails());
+            }
+        }
+    }
+
 }

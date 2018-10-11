@@ -5,6 +5,7 @@ import lombok.*;
 import org.egov.collection.model.AuditDetails;
 import org.egov.collection.model.Instrument;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.ArrayList;
@@ -26,12 +27,13 @@ public class Receipt {
 
 	@NotNull
     @Size(min = 1, max = 1)
+	@Valid
 	@JsonProperty("Bill")
 	private List<Bill> bill = new ArrayList<>();
 
 	private AuditDetails auditDetails;
 
-	@NotNull
+	@Valid
 	private Instrument instrument;
 
 }

@@ -57,6 +57,9 @@ public class CollectionService {
      * @return List of matching receipts
      */
     public List<Receipt> getReceipts(RequestInfo requestInfo, ReceiptSearchCriteria receiptSearchCriteria){
+        receiptSearchCriteria.setOffset(0);
+        receiptSearchCriteria.setLimit(25);
+
         List<Receipt> receipts = collectionRepository.fetchReceipts(receiptSearchCriteria);
 //        if(!receipts.isEmpty())
 //            receiptEnricher.enrichReceiptsWithInstruments(requestInfo, receipts);
@@ -71,7 +74,7 @@ public class CollectionService {
      *   - Enrich receipt with receipt numbers, coll type etc
      *   - Apportion paid amount
      *   - Persist the receipt object
-     *   - Create instrument if the amount collected is > 0
+     *   - Create instrument
      *
      * @param receiptReq Receipt request for which receipt has to be created
      * @return Created receipt
@@ -126,6 +129,21 @@ public class CollectionService {
         receiptValidator.validateReceiptsForCancellation(receipts);
 
         return receipts;
+    }
+
+    /**
+     * Validates a provisional receipt,
+     *   - Enriches receipt from billing service using bill id
+     *   - Validates the receipt object
+     *
+     * @param receiptReq Receipt request for which receipt has to be validated
+     * @return Validated receipt
+     */
+    public List<Receipt> validateReceipt(ReceiptReq receiptReq){
+        receiptEnricher.enrichReceiptPreValidate(receiptReq);
+        receiptValidator.validateReceiptForCreate(receiptReq);
+
+        return receiptReq.getReceipt();
     }
 
     /**

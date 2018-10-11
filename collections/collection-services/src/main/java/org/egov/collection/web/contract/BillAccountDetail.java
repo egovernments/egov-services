@@ -1,16 +1,10 @@
 package org.egov.collection.web.contract;
 
 
+import com.fasterxml.jackson.databind.JsonNode;
+import lombok.*;
+
 import java.math.BigDecimal;
-
-
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
 
 
 @Setter
@@ -43,6 +37,8 @@ public class BillAccountDetail   {
 	private BigDecimal debitAmount = BigDecimal.ZERO;
 	
 	private Purpose purpose;
+
+	private JsonNode additionalDetails;
 	  
 }
 

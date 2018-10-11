@@ -73,18 +73,17 @@ public class ReceiptController {
             @RequestBody @Valid final RequestInfoWrapper requestInfoWrapper) {
 
         final RequestInfo requestInfo = requestInfoWrapper.getRequestInfo();
-
         List<Receipt> receipts = collectionService.getReceipts(requestInfo, receiptSearchCriteria);
-
         return getSuccessResponse(receipts, requestInfo);
     }
 
     @RequestMapping(value = "/_create", method = RequestMethod.POST)
     @ResponseBody
-    public ResponseEntity<ReceiptRes> create(@RequestBody ReceiptReq receiptRequest) {
-        Receipt receiptInfo = collectionService.createReceipt(receiptRequest);
+    public ResponseEntity<ReceiptRes> create(@RequestBody @Valid ReceiptReq receiptRequest) {
 
+        Receipt receiptInfo = collectionService.createReceipt(receiptRequest);
         return getSuccessResponse(Collections.singletonList(receiptInfo), receiptRequest.getRequestInfo());
+
     }
 
     @RequestMapping(value = "/_cancel", method = RequestMethod.POST)
@@ -101,6 +100,15 @@ public class ReceiptController {
         Receipt receiptInfo = collectionService.updateReceipt(receiptRequest);
         
         return getSuccessResponse(Collections.singletonList(receiptInfo),receiptRequest.getRequestInfo());
+    }
+
+    @RequestMapping(value = "/_validate", method = RequestMethod.POST)
+    @ResponseBody
+    public ResponseEntity<?> validate(@RequestBody @Valid ReceiptReq receiptReq) {
+
+        List<Receipt> receipt = collectionService.validateReceipt(receiptReq);
+        return getSuccessResponse(receipt, receiptReq.getRequestInfo());
+
     }
 
 

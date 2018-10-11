@@ -24,7 +24,9 @@ public class CollectionRepository {
 
     @Autowired
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
-    private CollectionResultSetExtractor collectionResultSetExtractor = new CollectionResultSetExtractor();
+
+    @Autowired
+    private CollectionResultSetExtractor collectionResultSetExtractor;
 
 
     public void saveReceipt(Receipt receipt){
@@ -99,6 +101,7 @@ public class CollectionRepository {
     public List<Receipt> fetchReceipts(ReceiptSearchCriteria receiptSearchCriteria){
         Map<String, Object> preparedStatementValues = new HashMap<>();
         String query = CollectionsQueryBuilder.getReceiptSearchQuery(receiptSearchCriteria, preparedStatementValues);
+        log.debug(query);
         List<Receipt> receipts = namedParameterJdbcTemplate.query(query, preparedStatementValues,
                 collectionResultSetExtractor);
         return receipts;

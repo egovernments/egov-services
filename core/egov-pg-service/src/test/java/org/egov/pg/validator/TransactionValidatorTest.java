@@ -3,9 +3,8 @@ package org.egov.pg.validator;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.request.User;
 import org.egov.pg.models.*;
-import org.egov.pg.repository.BillingRepository;
-import org.egov.pg.repository.BusinessDetailsRepository;
 import org.egov.pg.repository.TransactionRepository;
+import org.egov.pg.service.CollectionService;
 import org.egov.pg.service.GatewayService;
 import org.egov.pg.web.models.TransactionCriteria;
 import org.egov.pg.web.models.TransactionRequest;
@@ -35,10 +34,7 @@ public class TransactionValidatorTest {
     private GatewayService gatewayService;
 
     @Mock
-    private BillingRepository billingRepository;
-
-    @Mock
-    private BusinessDetailsRepository businessDetailsRepository;
+    private CollectionService collectionService;
 
     private TransactionValidator validator;
     private List<Bill> bills;
@@ -46,7 +42,7 @@ public class TransactionValidatorTest {
 
     @Before
     public void setUp() {
-        validator = new TransactionValidator(gatewayService, transactionRepository, billingRepository, businessDetailsRepository);
+        validator = new TransactionValidator(gatewayService, transactionRepository, collectionService);
         txn = Transaction.builder().txnAmount("100")
                 .txnStatus(Transaction.TxnStatusEnum.PENDING)
                 .billId("ORDER0012")
@@ -62,18 +58,14 @@ public class TransactionValidatorTest {
 
     @Test
     public void validateCreateTxnSuccess() {
-        User user = User.builder().userName("").name("XYZ").uuid("").tenantId("").build();
+        User user = User.builder().userName("").name("XYZ").uuid("").tenantId("").mobileNumber("9999999999").build();
         RequestInfo requestInfo = RequestInfo.builder().userInfo(user).build();
         TransactionRequest transactionRequest = new TransactionRequest(requestInfo, txn);
-        BusinessDetailsRequestInfo businessDetails = BusinessDetailsRequestInfo.builder().code("PT").build();
 
 
         when(transactionRepository.fetchTransactions(any(TransactionCriteria.class))).thenReturn(Collections.emptyList());
         when(gatewayService.isGatewayActive(txn.getGateway())).thenReturn(true);
-        when(billingRepository.fetchBill(any(RequestInfo.class), any(String.class), any(String.class))).thenReturn
-                (bills);
-        when(businessDetailsRepository.getBusinessDetails(any(), any(), any())).thenReturn(Collections.singletonList
-                (businessDetails));
+        when(collectionService.validateProvisionalReceipt(transactionRequest)).thenReturn(Collections.singletonList(new Receipt()));
 
         validator.validateCreateTxn(transactionRequest);
 
@@ -82,22 +74,15 @@ public class TransactionValidatorTest {
     /**
      * Txn Amount lesser than bill amount but partial payment is enabled
      */
-    @Test
-    public void validateCreateTxnSuccessAmtLower() {
-        User user = User.builder().userName("").name("XYZ").uuid("").tenantId("").build();
+    @Test(expected = CustomException.class)
+    public void validateCreateTxnByValidatingProvReceipt() {
+        User user = User.builder().userName("").name("XYZ").uuid("").tenantId("").mobileNumber("9999999999").build();
         RequestInfo requestInfo = RequestInfo.builder().userInfo(user).build();
         TransactionRequest transactionRequest = new TransactionRequest(requestInfo, txn);
-        BusinessDetailsRequestInfo businessDetails = BusinessDetailsRequestInfo.builder().code("PT").build();
-
-        BillDetail billDetail = BillDetail.builder().partPaymentAllowed(true).totalAmount(new BigDecimal(10)).build();
-        Bill bill = Bill.builder().billDetails(Collections.singletonList(billDetail)).build();
 
         when(transactionRepository.fetchTransactions(any(TransactionCriteria.class))).thenReturn(Collections.emptyList());
         when(gatewayService.isGatewayActive(txn.getGateway())).thenReturn(true);
-        when(billingRepository.fetchBill(any(RequestInfo.class), any(String.class), any(String.class))).thenReturn
-                (bills);
-        when(businessDetailsRepository.getBusinessDetails(any(), any(), any())).thenReturn(Collections.singletonList
-                (businessDetails));
+        when(collectionService.validateProvisionalReceipt(transactionRequest)).thenThrow(new CustomException());
 
 
         validator.validateCreateTxn(transactionRequest);
@@ -109,17 +94,13 @@ public class TransactionValidatorTest {
      */
     @Test(expected = CustomException.class)
     public void validateCreateTxnDuplicateOrder() {
-        User user = User.builder().userName("").name("").uuid("").tenantId("").build();
+        User user = User.builder().userName("").name("XYZ").uuid("").tenantId("").mobileNumber("9999999999").build();
         RequestInfo requestInfo = RequestInfo.builder().userInfo(user).build();
         TransactionRequest transactionRequest = new TransactionRequest(requestInfo, txn);
-        BusinessDetailsRequestInfo businessDetails = BusinessDetailsRequestInfo.builder().code("PT").build();
 
         when(transactionRepository.fetchTransactions(any(TransactionCriteria.class))).thenReturn(Collections.singletonList(txn));
         when(gatewayService.isGatewayActive(txn.getGateway())).thenReturn(true);
-        when(billingRepository.fetchBill(any(RequestInfo.class), any(String.class), any(String.class))).thenReturn
-                (bills);
-        when(businessDetailsRepository.getBusinessDetails(any(), any(), any())).thenReturn(Collections.singletonList
-                (businessDetails));
+        when(collectionService.validateProvisionalReceipt(transactionRequest)).thenReturn(Collections.singletonList(new Receipt()));
 
 
         validator.validateCreateTxn(transactionRequest);
@@ -131,57 +112,12 @@ public class TransactionValidatorTest {
      */
     @Test(expected = CustomException.class)
     public void validateCreateTxnInvalidGateway() {
-        User user = User.builder().userName("").name("").uuid("").tenantId("").build();
+        User user = User.builder().userName("").name("XYZ").uuid("").tenantId("").mobileNumber("9999999999").build();
         RequestInfo requestInfo = RequestInfo.builder().userInfo(user).build();
         TransactionRequest transactionRequest = new TransactionRequest(requestInfo, txn);
-        BusinessDetailsRequestInfo businessDetails = BusinessDetailsRequestInfo.builder().code("PT").build();
 
         when(gatewayService.isGatewayActive(txn.getGateway())).thenReturn(false);
-        when(billingRepository.fetchBill(any(RequestInfo.class), any(String.class), any(String.class))).thenReturn
-                (bills);
-        when(businessDetailsRepository.getBusinessDetails(any(), any(), any())).thenReturn(Collections.singletonList
-                (businessDetails));
-
-        validator.validateCreateTxn(transactionRequest);
-
-    }
-
-    /**
-     * Order ID doesn't exist in billing service
-     */
-    @Test(expected = CustomException.class)
-    public void validateCreateTxnInvalidOrderId() {
-        User user = User.builder().userName("").name("").uuid("").tenantId("").build();
-        RequestInfo requestInfo = RequestInfo.builder().userInfo(user).build();
-        TransactionRequest transactionRequest = new TransactionRequest(requestInfo, txn);
-
-
-        when(transactionRepository.fetchTransactions(any(TransactionCriteria.class))).thenReturn(Collections.emptyList());
-        when(gatewayService.isGatewayActive(txn.getGateway())).thenReturn(true);
-        when(billingRepository.fetchBill(any(RequestInfo.class), any(String.class), any(String.class))).thenReturn
-                (Collections.emptyList());
-
-
-        validator.validateCreateTxn(transactionRequest);
-
-    }
-
-    /**
-     * Txn Amount lesser than bill amount when partial payment is disabled
-     */
-    @Test(expected = CustomException.class)
-    public void validateCreateTxnInvalidAmt() {
-        User user = User.builder().userName("").name("").uuid("").tenantId("").build();
-        RequestInfo requestInfo = RequestInfo.builder().userInfo(user).build();
-        TransactionRequest transactionRequest = new TransactionRequest(requestInfo, txn);
-
-        BillDetail billDetail = BillDetail.builder().partPaymentAllowed(false).totalAmount(new BigDecimal(10)).build();
-        Bill bill = Bill.builder().billDetails(Collections.singletonList(billDetail)).build();
-
-        when(transactionRepository.fetchTransactions(any(TransactionCriteria.class))).thenReturn(Collections.emptyList());
-        when(gatewayService.isGatewayActive(txn.getGateway())).thenReturn(true);
-        when(billingRepository.fetchBill(any(RequestInfo.class), any(String.class), any(String.class))).thenReturn
-                (Collections.singletonList(bill));
+        when(collectionService.validateProvisionalReceipt(transactionRequest)).thenReturn(Collections.singletonList(new Receipt()));
 
         validator.validateCreateTxn(transactionRequest);
 
@@ -201,8 +137,6 @@ public class TransactionValidatorTest {
         when(gatewayService.getTxnId(any(Map.class))).thenReturn(Optional.of("PB_PG_001"));
         when(transactionRepository.fetchTransactions(any(TransactionCriteria.class))).thenReturn(Collections.singletonList
                 (txnStatus));
-        when(billingRepository.fetchBill(any(RequestInfo.class), any(String.class), any(String.class))).thenReturn
-                (bills);
 
         validator.validateUpdateTxn(Collections.singletonMap("transactionId", "PB_PG_001"));
 
@@ -215,8 +149,6 @@ public class TransactionValidatorTest {
     public void validateUpdateTxnIdNotFound() {
 
         when(gatewayService.getTxnId(any(Map.class))).thenReturn(Optional.empty());
-        when(billingRepository.fetchBill(any(RequestInfo.class), any(String.class), any(String.class))).thenReturn
-                (bills);
 
         validator.validateUpdateTxn(Collections.singletonMap("transactionId", "PB_PG_001"));
     }
@@ -229,8 +161,6 @@ public class TransactionValidatorTest {
 
         when(gatewayService.getTxnId(any(Map.class))).thenReturn(Optional.of("PB_PG_001"));
         when(transactionRepository.fetchTransactions(any(TransactionCriteria.class))).thenReturn(Collections.emptyList());
-        when(billingRepository.fetchBill(any(RequestInfo.class), any(String.class), any(String.class))).thenReturn
-                (bills);
 
         validator.validateUpdateTxn(Collections.singletonMap("transactionId", "PB_PG_001"));
     }

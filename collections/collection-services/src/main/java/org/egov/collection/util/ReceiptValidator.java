@@ -19,7 +19,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static java.util.Collections.singletonList;
 import static java.util.Objects.isNull;
@@ -66,10 +69,8 @@ public class ReceiptValidator {
         if (isEmpty(receipt.getBill().get(0).getPaidBy()))
             errorMap.put(PAID_BY_MISSING_CODE, PAID_BY_MISSING_MESSAGE);
 
-        String instrumentType = receipt.getInstrument().getInstrumentType().getName();
-        if(!InstrumentTypesEnum.contains(instrumentType)){
-            throw new CustomException("INVALID_INSTRUMENT_TYPE", "Invalid instrument type provided");
-        }
+        validateInstrument(receipt.getInstrument(), errorMap);
+
 
 //        if(isNull(receipt.getInstrument().getTransactionDateInput()))
 //            errorMap.put("INSTRUMENT_DATE_INPUT_INVALID", "Instrument Date Input cannot be empty");
@@ -125,6 +126,8 @@ public class ReceiptValidator {
                 errorMap.put("INVALID_BUSINESS_DETAILS", "Business details code cannot be empty");
             }
 
+
+            String instrumentType = receipt.getInstrument().getInstrumentType().getName();
             if (instrumentType.equalsIgnoreCase(InstrumentTypesEnum.CHEQUE.name()) || instrumentType.equalsIgnoreCase
                     (InstrumentTypesEnum.DD.name())) {
                 validateChequeDD(billDetails, receipt.getInstrument(), errorMap);
@@ -162,11 +165,43 @@ public class ReceiptValidator {
     }
 
 
+
+    private void validateInstrument(Instrument instrument, Map<String, String> errorMap){
+
+        String instrumentType = instrument.getInstrumentType().getName();
+        if(!InstrumentTypesEnum.contains(instrumentType)){
+            throw new CustomException("INVALID_INSTRUMENT_TYPE", "Invalid instrument type provided");
+        }
+
+        if (instrumentType.equalsIgnoreCase(InstrumentTypesEnum.CHEQUE.name()) || instrumentType.equalsIgnoreCase
+                (InstrumentTypesEnum.DD.name())) {
+
+            if(isNull(instrument.getTransactionDateInput()))
+                errorMap.put("INVALID_TXN_DATE", "Transaction Date Input is mandatory for cheque and DD");
+
+            if(isNull(instrument.getTransactionNumber()) || instrument.getTransactionNumber().isEmpty())
+                errorMap.put("INVALID_TXN_NUMBER", "Transaction Number is mandatory for Cheque, DD, Card");
+
+        }
+
+        if(instrumentType.equalsIgnoreCase(InstrumentTypesEnum.CARD.name())){
+            if(isEmpty(instrument.getTransactionNumber()) )
+                errorMap.put("INVALID_TXN_NUMBER", "Transaction Number is mandatory for Cheque, DD, Card");
+
+            if(isEmpty(instrument.getInstrumentNumber()) )
+                errorMap.put("INVALID_INSTRUMENT_NUMBER", "Instrument Number is mandatory for Card");
+
+        }
+
+
+    }
+
+
     private void validateChequeDD(BillDetail billDetails, Instrument instrument, Map<String, String> errorMap) {
 
         DateTime instrumentDate = new DateTime(instrument.getTransactionDateInput());
 
-        if (!Objects.isNull(billDetails.getReceiptDate()) && isNotEmpty(billDetails.getManualReceiptNumber())) {
+        if (!isNull(billDetails.getReceiptDate()) && isNotEmpty(billDetails.getManualReceiptNumber())) {
             if (instrumentDate.isAfter(billDetails.getReceiptDate())) {
                 errorMap.put(RECEIPT_CHEQUE_OR_DD_DATE, RECEIPT_CHEQUE_OR_DD_DATE_MESSAGE);
             }
@@ -279,7 +314,7 @@ public class ReceiptValidator {
         BusinessDetailsResponse businessDetailsResponse = businessDetailsRepository.getBusinessDetails(singletonList(billDetail.getBusinessService()),
                         billDetail.getTenantId(), requestInfo);
 
-        if (Objects.isNull(businessDetailsResponse.getBusinessDetails()) || businessDetailsResponse
+        if (isNull(businessDetailsResponse.getBusinessDetails()) || businessDetailsResponse
                 .getBusinessDetails().isEmpty()) {
             log.error("Business detail not found for {} and tenant {}", billDetail.getBusinessService(), billDetail
                     .getTenantId());

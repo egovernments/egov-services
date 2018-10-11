@@ -1,18 +1,33 @@
 package org.egov.collection.repository.rowmapper;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.egov.collection.model.*;
 import org.egov.collection.model.enums.CollectionType;
 import org.egov.collection.model.enums.InstrumentStatusEnum;
 import org.egov.collection.web.contract.*;
+import org.egov.tracer.model.CustomException;
+import org.postgresql.util.PGobject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.ResultSetExtractor;
+import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
 
+@Service
 public class CollectionResultSetExtractor implements ResultSetExtractor<List<Receipt>> {
+
+    private ObjectMapper objectMapper;
+
+    @Autowired
+    CollectionResultSetExtractor(ObjectMapper objectMapper){
+        this.objectMapper = objectMapper;
+    }
 
     @Override
     public List<Receipt> extractData(ResultSet resultSet) throws SQLException, DataAccessException {
@@ -51,6 +66,7 @@ public class CollectionResultSetExtractor implements ResultSetExtractor<List<Rec
                         .totalAmount(getBigDecimalValue(resultSet.getBigDecimal("rh_totalAmount")))
                         .collectedAmount(getBigDecimalValue(resultSet.getBigDecimal("rh_collectedamount")))
                         .minimumAmount(getBigDecimalValue(resultSet.getBigDecimal("rh_minimumAmount")))
+                        .additionalDetails(getJsonValue((PGobject) resultSet.getObject("rh_additionalDetails")))
                         .billAccountDetails(new ArrayList<>())
                         .build();
 
@@ -58,6 +74,7 @@ public class CollectionResultSetExtractor implements ResultSetExtractor<List<Rec
                         .payeeName(resultSet.getString("rh_payeename"))
                         .payeeAddress(resultSet.getString("rh_payeeAddress"))
                         .payeeEmail(resultSet.getString("rh_payeeEmail"))
+                        .mobileNumber(resultSet.getString("rh_payeemobile"))
                         .paidBy(resultSet.getString("rh_paidBy"))
                         .tenantId(resultSet.getString("rh_tenantId"))
                         .billDetails(Collections.singletonList(billDetail))
@@ -87,7 +104,10 @@ public class CollectionResultSetExtractor implements ResultSetExtractor<List<Rec
                         .drawer(resultSet.getString("ins_drawer"))
                         .surrenderReason(SurrenderReason.builder().name(resultSet.getString("ins_surrenderreason")).build())
                         .serialNo(resultSet.getString("ins_serialno"))
+                        .additionalDetails(getJsonValue((PGobject) resultSet.getObject("ins_additionalDetails")))
                         .auditDetails(auditDetailsIns)
+                        .instrumentDate(resultSet.getLong("ins_instrumentDate"))
+                        .instrumentNumber(resultSet.getString("ins_instrumentNumber"))
                         .build();
 
                 AuditDetails auditDetails = AuditDetails.builder()
@@ -137,11 +157,24 @@ public class CollectionResultSetExtractor implements ResultSetExtractor<List<Rec
                     .debitAmount(getBigDecimalValue(resultSet.getBigDecimal("rd_dramount")))
                     .glcode(resultSet.getString("rd_chartOfAccount"))
                     .purpose(Purpose.valueOf(resultSet.getString("rd_purpose")))
+                    .additionalDetails(getJsonValue((PGobject) resultSet.getObject("rd_additionalDetails")))
                     .build();
     }
 
     private BigDecimal getBigDecimalValue(BigDecimal amount){
         return Objects.isNull(amount) ? BigDecimal.ZERO : amount;
+    }
+
+    private JsonNode getJsonValue(PGobject pGobject){
+        try {
+            if(Objects.isNull(pGobject) || Objects.isNull(pGobject.getValue()))
+                return null;
+            else
+                return objectMapper.readTree( pGobject.getValue());
+        } catch (IOException e) {
+            throw new CustomException("SERVER_ERROR","Exception occurred while parsing the draft json : "+ e
+                    .getMessage());
+        }
     }
 
 }

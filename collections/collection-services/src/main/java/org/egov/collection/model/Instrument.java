@@ -40,11 +40,11 @@
 package org.egov.collection.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.JsonNode;
 import lombok.*;
 import org.egov.collection.model.enums.InstrumentStatusEnum;
 import org.egov.collection.web.contract.BankAccountContract;
 import org.egov.collection.web.contract.BankContract;
-import org.hibernate.validator.constraints.NotBlank;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
@@ -73,15 +73,12 @@ public class Instrument{
 	 * is cheque date. For DD type it is DD number
 	 *
 	 */
-	@NotBlank
-	@Size(max = 50, min = 6)
 	private String transactionNumber;
 
 	/*
 	 * transactionDate is the date of instrument . For cheque type it is cheque
 	 * date. for DD it is DD date
 	 */
-	@NotNull
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
 	private Date transactionDate;
 
@@ -94,7 +91,7 @@ public class Instrument{
 	 * amount is the instrument amount. For cheque type it is cheque amount.
 	 */
 	@NotNull
-	@Min(value = 1)
+	@Min(value = 0)
 	@Max(value = 999999999)
 	private BigDecimal amount;
 
@@ -138,7 +135,6 @@ public class Instrument{
 	 * transactionType are of two kinds -Debit and Credit. When its a receipt
 	 * instrument it is Debit and in case of payment instrument its credit.
 	 */
-	@NotNull
 	private TransactionType transactionType;
 
 	/**
@@ -183,6 +179,9 @@ public class Instrument{
 
     private AuditDetails auditDetails;
 
+    private JsonNode additionalDetails;
+
+    @NotNull
 	private String tenantId;
 
 }

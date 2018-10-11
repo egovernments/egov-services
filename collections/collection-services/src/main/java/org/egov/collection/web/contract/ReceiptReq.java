@@ -2,20 +2,12 @@ package org.egov.collection.web.contract;
 
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-
-import java.util.List;
-
-import javax.validation.constraints.NotNull;
-
+import lombok.*;
 import org.egov.common.contract.request.RequestInfo;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+import java.util.List;
 
 @Setter
 @Getter
@@ -24,7 +16,8 @@ import lombok.ToString;
 @EqualsAndHashCode
 @AllArgsConstructor
 @NoArgsConstructor
-public class ReceiptReq   {
+public class
+ReceiptReq   {
   @JsonProperty("tenantId")
   private String tenantId = null;
   
@@ -34,6 +27,7 @@ public class ReceiptReq   {
   
   @NotNull
   @JsonProperty("Receipt")
+  @Valid
   private List<Receipt> receipt = null;
   
   @JsonProperty("WorkflowDetails")

@@ -30,20 +30,34 @@ public class CollectionsRepository {
     public ReceiptRes generateReceipt(ReceiptReq receiptReq) {
         String uri = UriComponentsBuilder
                 .fromHttpUrl(appProperties.getCollectionServiceHost())
-                .path(appProperties.getCollectionServicePath())
+                .path(appProperties.getCollectionServiceCreatePath())
                 .build()
                 .toUriString();
 
 
+        return fetchReceipt(receiptReq, uri);
+    }
+
+    public ReceiptRes validateReceipt(ReceiptReq receiptReq){
+        String uri = UriComponentsBuilder
+                .fromHttpUrl(appProperties.getCollectionServiceHost())
+                .path(appProperties.getCollectionServiceValidatePath())
+                .build()
+                .toUriString();
+
+        return fetchReceipt(receiptReq, uri);
+    }
+
+    private ReceiptRes fetchReceipt(ReceiptReq receiptReq, String uri){
         try {
             return restTemplate.postForObject(uri, receiptReq, ReceiptRes.class);
         } catch (HttpClientErrorException e) {
-            log.error("Error occurred while persisting receipt", e);
+            log.error("Error occurred during collections API call", e);
             throw new ServiceCallException(e.getResponseBodyAsString());
         } catch (Exception e) {
-            log.error("Unknown error occurred while generating receipt.", e);
-            throw new CustomException("COLLECTION_SERVICE_CREATE_ERROR", "Unknown error occurred while generating " +
-                    "receipt");
+            log.error("Unknown error occurred during collections API call", e);
+            throw new CustomException("COLLECTION_SERVICE_ERROR", "Unknown error occurred during collections " +
+                    "API call");
         }
     }
 

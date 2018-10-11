@@ -84,8 +84,11 @@ public class ReceiptSearchCriteria {
 
     private boolean receiptDetailsRequired;
 
-    private Integer pageSize;
+    //Deprecated
+//    private Integer pageSize;
 
-    private Integer offset;
+    private int offset;
+
+    private int limit;
 
 }

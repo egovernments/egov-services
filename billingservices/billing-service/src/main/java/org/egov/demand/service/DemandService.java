@@ -69,6 +69,7 @@ import org.egov.demand.model.DemandDueCriteria;
 import org.egov.demand.model.DemandUpdateMisRequest;
 import org.egov.demand.model.Owner;
 import org.egov.demand.model.enums.Status;
+import org.egov.demand.producer.Producer;
 import org.egov.demand.repository.DemandRepository;
 import org.egov.demand.repository.OwnerRepository;
 import org.egov.demand.util.DemandEnrichmentUtil;
@@ -117,6 +118,9 @@ public class DemandService {
 	@Autowired
 	private DemandEnrichmentUtil demandEnrichmentUtil;
 	
+	@Autowired
+	private Producer producer;
+	
 	public DemandResponse create(DemandRequest demandRequest) {
 
 		logger.info("the demand service : " + demandRequest);
@@ -154,6 +158,7 @@ public class DemandService {
 			demandDetail.setId(demandDetailIds.get(currentDetailId++));
 		}
 		save(demandRequest);
+		producer.push(applicationProperties.getDemandIndexTopic(), demandRequest);
 		return new DemandResponse(responseInfoFactory.getResponseInfo(requestInfo, HttpStatus.CREATED), demands);
 	}
 	
@@ -368,6 +373,7 @@ public class DemandService {
 			demandDetail.setId(DemandDetailsId.get(i++));
 		}
 		update(demandRequest);
+		producer.push(applicationProperties.getDemandIndexTopic(), demandRequest);
 		return new DemandResponse(responseInfoFactory.getResponseInfo(requestInfo, HttpStatus.CREATED), demands);
 	}
 

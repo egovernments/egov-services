@@ -26,6 +26,7 @@ import org.egov.demand.model.DemandDue;
 import org.egov.demand.model.DemandDueCriteria;
 import org.egov.demand.model.DemandUpdateMisRequest;
 import org.egov.demand.model.Owner;
+import org.egov.demand.producer.Producer;
 import org.egov.demand.repository.DemandRepository;
 import org.egov.demand.repository.OwnerRepository;
 import org.egov.demand.util.DemandEnrichmentUtil;
@@ -41,6 +42,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -71,6 +73,9 @@ public class DemandServiceTest {
 	@Mock
 	private DemandEnrichmentUtil demandEnrichmentUtil;
 	
+	@Mock
+	private Producer producer;
+	
 	@Test
 	public void methodShouldCreateDemand(){
 		
@@ -97,7 +102,7 @@ public class DemandServiceTest {
 		when(applicationProperties.getDemandDetailSeqName()).thenReturn(demandDemanddetailSequnece);
 		when(sequenceGenService.getIds(demands.size(),demandsequence)).thenReturn(strings);
 		when(sequenceGenService.getIds(details.size(),demandDemanddetailSequnece)).thenReturn(strings);
-		
+		Mockito.doNothing().when(producer).push("create-demand-index", demandRequest);
 		when(responseInfoFactory.getResponseInfo(requestInfo, HttpStatus.CREATED)).thenReturn(getResponseInfo(requestInfo));
 		
 		assertEquals(demandService.create(demandRequest), new DemandResponse(getResponseInfo(requestInfo),demands));
@@ -126,7 +131,8 @@ public class DemandServiceTest {
 		when(sequenceGenService.getIds(demands.size(),"seq_egbs_demand")).thenReturn(strings);
 		when(sequenceGenService.getIds(details.size(),"seq_egbs_demanddetail")).thenReturn(strings);
 		when(responseInfoFactory.getResponseInfo(requestInfo, HttpStatus.CREATED)).thenReturn(getResponseInfo(requestInfo));
-		
+		Mockito.doNothing().when(producer).push("create-demand-index", demandRequest);
+
 		assertEquals(demandService.updateAsync(demandRequest), new DemandResponse(getResponseInfo(requestInfo),demands));
 	}
 	

@@ -185,6 +185,10 @@ public class ApplicationProperties {
 	@Value("${kafka.topics.receipt.cancel.name}")
 	private String receiptCancellationTopic;
 	
+	@Value("${kafka.topics.demand.index.name}")
+	private String demandIndexTopic;
+	
+	
 	public String commonsSearchPageSizeDefault() {
 		return environment.getProperty(SEARCH_PAGESIZE_DEFAULT);
 	}

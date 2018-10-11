@@ -46,7 +46,6 @@ public class Bill   {
 	@Size(min = 1)
 	private String tenantId;
 
-	@NotNull
 	@Size(min = 1)
     private String mobileNumber;
 	

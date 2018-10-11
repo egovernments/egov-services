@@ -232,7 +232,7 @@ serviceMaps:
           - jsonPath: $.Licenses[*][?({id} in @.tradeLicenseDetail.applicationDocuments[*].id)].auditDetails.lastModifiedTime
 
 
-       - query: INSERT INTO eg_tl_address( id, tenantid, doorno, latitude, longitude, addressid, addressnumber,locality, type, addressline1, addressline2, landmark, city, pincode, detail, tradelicensedetailid, createdby, lastmodifiedby, createdtime, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+       - query: INSERT INTO eg_tl_address( id, tenantid, doorno,street,buildingName, latitude,longitude, addressid, addressnumber,locality, type, addressline1, addressline2, landmark, city, pincode, detail, tradelicensedetailid, createdby, lastmodifiedby, createdtime, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
          basePath: Licenses.*.tradeLicenseDetail.address
          jsonMaps:
           - jsonPath: $.Licenses.*.tradeLicenseDetail.address.id
@@ -240,6 +240,10 @@ serviceMaps:
           - jsonPath: $.Licenses.*.tradeLicenseDetail.address.tenantId
 
           - jsonPath: $.Licenses.*.tradeLicenseDetail.address.doorNo
+
+          - jsonPath: $.Licenses.*.tradeLicenseDetail.address.street
+
+          - jsonPath: $.Licenses.*.tradeLicenseDetail.address.buildingName
 
           - jsonPath: $.Licenses.*.tradeLicenseDetail.address.latitude
 
@@ -584,10 +588,14 @@ serviceMaps:
 
 
 
-       - query: UPDATE eg_tl_address SET doorno =?, latitude =?, longitude =?, addressid =?, addressnumber =?,locality =?, type =?, addressline1 =?, addressline2 =?, landmark =?, city =?, pincode =?, detail =?,lastmodifiedby =?, lastmodifiedtime =? WHERE id =?;
+       - query: UPDATE eg_tl_address SET doorno =?,street = ?,buildingName = ?, latitude =?, longitude =?, addressid =?, addressnumber =?,locality =?, type =?, addressline1 =?, addressline2 =?, landmark =?, city =?, pincode =?, detail =?,lastmodifiedby =?, lastmodifiedtime =? WHERE id =?;
          basePath: Licenses.*.tradeLicenseDetail.address
          jsonMaps:
           - jsonPath: $.Licenses.*.tradeLicenseDetail.address.doorNo
+
+          - jsonPath: $.Licenses.*.tradeLicenseDetail.address.street
+
+          - jsonPath: $.Licenses.*.tradeLicenseDetail.address.buildingName
 
           - jsonPath: $.Licenses.*.tradeLicenseDetail.address.latitude
 

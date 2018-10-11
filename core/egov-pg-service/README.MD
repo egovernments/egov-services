@@ -36,7 +36,7 @@ Module acts as a liaison between eGov apps and external payment gateways. It fac
 - Additional gateways can be added by implementing the [Gateway](https://raw.githubusercontent.com/egovernments/egov-services/master/core/egov-pg-service/src/main/java/org/egov/pg/service/Gateway.java) interface.
 
 ### Resources
-- Granular details about the API's can be found in the [swagger api definition](https://raw.githubusercontent.com/egovernments/egov-services/master/core/egov-pg-service/egov-pg-service.yml)
+- Granular details about the API's can be found in the [swagger api definition](https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-pg-service/contract/v1-0-0.yml)
 - Postman collection for all the API's can be found in the [postman collection](https://raw.githubusercontent.com/egovernments/egov-services/master/core/egov-pg-service/postman/Egov-PG-Service.postman_collection.json)
 
 ### Gateways Supported

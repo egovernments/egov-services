@@ -43,12 +43,6 @@ values(nextval('seq_eg_businessdetails'),'Playgrounds Entry Fees','/receipts/rec
 (select id from eg_businesscategory where code='ETY' and tenantid='pb.jalandhar'),false,1,1,1,0,'pb.jalandhar',false,1533271684996,1533271684996);
 
 --------------------------------
-insert into eg_businessdetails(id,name,businessurl,isenabled,code,businesstype,fund,function,department,vouchercreation,
-businesscategory,isvoucherapproved,createdby,
-lastmodifiedby,ordernumber,version,tenantid,callbackforapportioning,createddate,lastmodifieddate)
-values(nextval('seq_eg_businessdetails'),'Advt Tax on hoardings','/receipts/receipt-create.action',true,'ATH','ADHOC','01','909100','DEPT_1',false,
-(select id from eg_businesscategory where code='AT' and tenantid='pb.amritsar'),false,1,1,1,0,'pb.amritsar',false,1533271684996,1533271684996);
-
 update eg_businessdetails set vouchercreation=true where code='ATH' and tenantid='pb.amritsar';
 update eg_businessdetails set vouchercreation=true where code='ATH' and tenantid='pb.jalandhar';
 

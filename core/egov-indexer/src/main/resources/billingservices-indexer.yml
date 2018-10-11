@@ -1,0 +1,11 @@
+ServiceMaps:
+ serviceName: Billing Service
+ version: 1.0.0
+ mappings:
+  - topic: egov.collection.receipt-create
+    indexes:
+    - name: billingservice
+      type: demand
+      id: $.id, $.tenantId
+      isBulk: true
+      jsonPath: $.Demands

@@ -31,10 +31,6 @@ public class AppProperties {
 
     private final String idGenFormat;
 
-    private final String billingServiceHost;
-
-    private final String billingServicePath;
-
     private final String collectionServiceHost;
 
     private final String collectionServiceCreatePath;
@@ -44,10 +40,6 @@ public class AppProperties {
     private final String bankAccountHost;
 
     private final String bankAccountPath;
-
-    private final String businessDetailsHost;
-
-    private final String businessDetailsPath;
 
     @Autowired
     public AppProperties(Environment environment){
@@ -60,15 +52,11 @@ public class AppProperties {
         this.idGenPath = environment.getRequiredProperty("egov.idgen.path");
         this.idGenName = environment.getRequiredProperty("egov.idgen.ack.name");
         this.idGenFormat = environment.getRequiredProperty("egov.idgen.ack.format");
-        this.billingServiceHost = environment.getRequiredProperty("egov.billingservice.host");
-        this.billingServicePath = environment.getRequiredProperty("egov.billingservice.path");
         this.collectionServiceHost = environment.getRequiredProperty("egov.collectionservice.host");
         this.collectionServiceCreatePath = environment.getRequiredProperty("egov.collectionservice.create.path");
         this.collectionServiceValidatePath = environment.getRequiredProperty("egov.collectionservice.validate.path");
         this.bankAccountHost = environment.getRequiredProperty("egov.bankaccountservice.host");
         this.bankAccountPath = environment.getRequiredProperty("egov.bankaccountservice.path");
-        this.businessDetailsHost = environment.getRequiredProperty("egov.businessdetailsservice.host");
-        this.businessDetailsPath = environment.getRequiredProperty("egov.businessdetailsservice.path");
     }
 
 }

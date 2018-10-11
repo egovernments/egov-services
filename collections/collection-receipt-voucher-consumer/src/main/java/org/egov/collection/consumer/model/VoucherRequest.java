@@ -67,6 +67,9 @@ import lombok.Setter;
 @NoArgsConstructor
 public class VoucherRequest {
 
+    @JsonProperty("tenantId")
+    private String tenantId;
+
     @JsonProperty("RequestInfo")
     private RequestInfo requestInfo;
 

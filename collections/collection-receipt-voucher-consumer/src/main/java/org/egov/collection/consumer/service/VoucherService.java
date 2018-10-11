@@ -90,13 +90,15 @@ public class VoucherService {
 
         BusinessDetails servcie = null;
 
+        String tenantId = receiptRequest.getTenantId();
+
         if (receiptRequest != null && receiptRequest.getReceipt() != null && !receiptRequest.getReceipt().isEmpty()
                 && receiptRequest.getReceipt().get(0).getBill() != null
                 && !receiptRequest.getReceipt().get(0).getBill().isEmpty()) {
 
             servcie = businessDetailsService.getBusinessDetailsByCode(
                     receiptRequest.getReceipt().get(0).getBill().get(0).getBillDetails().get(0).getBusinessService(),
-                    receiptRequest.getTenantId());
+                    tenantId);
         }
 
         Receipt receipt = receiptRequest.getReceipt().get(0);
@@ -106,13 +108,13 @@ public class VoucherService {
         LOGGER.info("voucher_create_url:" + voucher_create_url);
 
         RequestInfo requestInfo = new RequestInfo();
-        requestInfo.setAuthToken(tokenService.generateAdminToken(receiptRequest.getTenantId()));
+        requestInfo.setAuthToken(tokenService.generateAdminToken(tenantId));
 
         VoucherRequest voucherRequest = new VoucherRequest();
 
         Voucher voucher = new Voucher();
 
-        voucher.setTenantId(receiptRequest.getTenantId());
+        voucher.setTenantId(tenantId);
         voucher.setName(RECEIPTS_VOUCHER_NAME);
         voucher.setType(RECEIPTS_VOUCHER_TYPE);
         voucher.setFund(new Fund());
@@ -142,6 +144,7 @@ public class VoucherService {
 
         voucherRequest.setVouchers(Collections.singletonList(voucher));
         voucherRequest.setRequestInfo(requestInfo);
+        voucherRequest.setTenantId(tenantId);
         return restTemplate.postForObject(voucher_create_url, voucherRequest, VoucherResponse.class);
     }
 

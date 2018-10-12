@@ -63,6 +63,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 @Service
 public class VoucherService {
 
@@ -145,6 +148,17 @@ public class VoucherService {
         voucherRequest.setVouchers(Collections.singletonList(voucher));
         voucherRequest.setRequestInfo(requestInfo);
         voucherRequest.setTenantId(tenantId);
+        LOGGER.info("call:" + voucher_create_url);
+        ObjectMapper mapper = new ObjectMapper();
+        String jsonInString = "";
+
+        try {
+            jsonInString = mapper.writeValueAsString(voucherRequest);
+        } catch (JsonProcessingException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        LOGGER.info("voucherRequest:" + jsonInString);
         return restTemplate.postForObject(voucher_create_url, voucherRequest, VoucherResponse.class);
     }
 

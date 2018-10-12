@@ -45,12 +45,16 @@ import org.egov.collection.consumer.model.BusinessDetails;
 import org.egov.collection.consumer.model.BusinessDetailsResponse;
 import org.egov.collection.consumer.model.RequestInfoWrapper;
 import org.egov.common.contract.request.RequestInfo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 @Service
 public class BusinessDetailsService {
+
+    public static final Logger LOGGER = LoggerFactory.getLogger(TokenService.class);
 
     @Autowired
     private RestTemplate restTemplate;
@@ -71,7 +75,7 @@ public class BusinessDetailsService {
 
         requestInfo.setAuthToken(tokenService.generateAdminToken(tenantId));
         reqWrapper.setRequestInfo(requestInfo);
-
+        LOGGER.info("call:" + bd_url);
         BusinessDetailsResponse bcResponse = restTemplate.postForObject(bd_url, reqWrapper, BusinessDetailsResponse.class);
         if (bcResponse.getBusinessDetails() != null && !bcResponse.getBusinessDetails().isEmpty())
             return bcResponse.getBusinessDetails().get(0);

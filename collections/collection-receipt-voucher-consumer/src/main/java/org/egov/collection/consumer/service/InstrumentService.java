@@ -53,6 +53,8 @@ import org.egov.collection.consumer.model.Receipt;
 import org.egov.collection.consumer.model.ReceiptRequest;
 import org.egov.collection.consumer.model.VoucherResponse;
 import org.egov.common.contract.request.RequestInfo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -62,6 +64,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
 public class InstrumentService {
+
+    public static final Logger LOGGER = LoggerFactory.getLogger(TokenService.class);
 
     @Autowired
     private RestTemplate restTemplate;
@@ -104,8 +108,9 @@ public class InstrumentService {
             e.printStackTrace();
         }
         System.out.println(jsonInString);
-
-        return restTemplate.postForObject(propertiesManager.getHostUrl() + propertiesManager.getInstrumentCreate(), request, InstrumentResponse.class);
+        LOGGER.info("call:" + propertiesManager.getHostUrl() + propertiesManager.getInstrumentCreate());
+        return restTemplate.postForObject(propertiesManager.getHostUrl() + propertiesManager.getInstrumentCreate(), request,
+                InstrumentResponse.class);
     }
 
     private void prepareInstrumentVoucher(InstrumentContract instrumentContract, VoucherResponse voucherResponse,

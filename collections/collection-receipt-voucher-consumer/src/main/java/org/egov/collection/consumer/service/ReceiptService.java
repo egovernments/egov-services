@@ -46,6 +46,8 @@ import org.egov.collection.consumer.model.ReceiptRequest;
 import org.egov.collection.consumer.model.ReceiptResponse;
 import org.egov.collection.consumer.model.VoucherResponse;
 import org.egov.common.contract.request.RequestInfo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -56,6 +58,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @Service
 public class ReceiptService {
 
+    public static final Logger LOGGER = LoggerFactory.getLogger(TokenService.class);
+    
     @Autowired
     private RestTemplate restTemplate;
 
@@ -75,17 +79,7 @@ public class ReceiptService {
                 .setVoucherHeader(voucherResponse.getVouchers().get(0).getVoucherNumber());
 
         receiptRequest.setRequestInfo(requestInfo);
-
-        ObjectMapper mapper = new ObjectMapper();
-        String jsonInString = "";
-
-        try {
-            jsonInString = mapper.writeValueAsString(receiptRequest);
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-        }
-        System.out.println(jsonInString);
-
+        LOGGER.info("call:" + propertiesManager.getHostUrl() + propertiesManager.getReceiptsUpdate());
         return restTemplate.postForObject(propertiesManager.getHostUrl() + propertiesManager.getReceiptsUpdate(), receiptRequest,
                 ReceiptResponse.class);
     }

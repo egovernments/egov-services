@@ -1,7 +1,8 @@
 package org.egov.tracer;
 
-import java.io.*;
-import java.net.ConnectException;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -39,7 +40,6 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.ResourceAccessException;
-import org.springframework.web.context.request.WebRequest;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -48,7 +48,6 @@ import com.jayway.jsonpath.JsonPath;
 
 import lombok.extern.slf4j.Slf4j;
 
-//import org.springframework.validation.ObjectError;
 
 @ControllerAdvice
 @Slf4j
@@ -72,16 +71,14 @@ public class ExceptionAdvise {
 		log.info("ExceptionAdvise exception  webRequest:");
 		String contentType = request.getContentType();
 		boolean isJsonContentType = (contentType != null && contentType.toLowerCase().contains("application/json"));
-
-		System.out.println(ex instanceof BindException);
-		ex.printStackTrace();
+		
 		String body = "";
 		try {
 			ServletInputStream stream = request.getInputStream();
 			body = IOUtils.toString(stream, "UTF-8");
 			
 		} catch (IOException e) {
-			e.printStackTrace();
+			log.error("Exception: "+e);
 		}
 		ErrorRes errorRes = new ErrorRes();
 		List<Error> errors = new ArrayList<>();
@@ -129,25 +126,25 @@ public class ExceptionAdvise {
 				errors.add(err);
 				errorRes.setErrors(errors);
 			} else if (ex instanceof MethodArgumentNotValidException) {
-				log.info("MethodArgumentNotValidException ");
+				log.error("MethodArgumentNotValidException ");
 				MethodArgumentNotValidException argumentNotValidException = (MethodArgumentNotValidException) ex;
 				errorRes.setErrors(getBindingErrors(argumentNotValidException.getBindingResult(), errors));
 	
 			} else if (ex instanceof CustomBindingResultExceprion) {
-				log.info("CustomBindingResultExceprion block");
+				log.error("CustomBindingResultExceprion block");
 				CustomBindingResultExceprion customBindingResultExceprion = (CustomBindingResultExceprion) ex;
 				errorRes.setErrors(getBindingErrors(customBindingResultExceprion.getBindingResult(), errors));
 			} else if (ex instanceof CustomException) {
-				log.info("CustomException block");
+				log.error("CustomException block");
 				CustomException customException = (CustomException) ex;
 				populateCustomErrros(customException, errors);
 				errorRes.setErrors(errors);
 			} else if (ex instanceof ServiceCallException) {
-				log.info("ServiceCallException block");
+				log.error("ServiceCallException block");
 				ServiceCallException serviceCallException = (ServiceCallException) ex;
 				sendErrorMessage(body, ex, request.getRequestURL().toString(),errorRes, isJsonContentType);
 				DocumentContext documentContext = JsonPath.parse(serviceCallException.getError());
-				log.info("exceptionHandler:"+documentContext);
+				log.error("exceptionHandler:"+documentContext);
 				LinkedHashMap<Object, Object> linkedHashMap = documentContext.json();
 				return new ResponseEntity<>(linkedHashMap, HttpStatus.BAD_REQUEST);
 				
@@ -165,8 +162,8 @@ public class ExceptionAdvise {
 			} else if (ex instanceof BindException) {
 				BindException bindException = (BindException) ex;
 				bindException.getBindingResult();
-				log.info("bindException block:"+bindException);
-				log.info("bindException.getBindingResult() block:"+bindException.getBindingResult());
+				log.error("bindException block:"+bindException);
+				log.error("bindException.getBindingResult() block:"+bindException.getBindingResult());
 	
 				errorRes.setErrors(getBindingErrors(bindException.getBindingResult(), errors));
 	
@@ -234,10 +231,10 @@ public class ExceptionAdvise {
             try {
                 documentContext = JsonPath.parse(body);
                 bodyJSON = documentContext.json().toString();
-                log.info("sendErrorMessage documentContext: " + bodyJSON);
+                log.error("sendErrorMessage documentContext: " + bodyJSON);
             } catch (Exception exception) {
                 bodyJSON = body;
-                log.info("sendErrorMessage documentContext: Failed to parse JSON");
+                log.error("sendErrorMessage documentContext: Failed to parse JSON");
             }
         }
 
@@ -247,7 +244,7 @@ public class ExceptionAdvise {
             ErrorQueueContract errorQueueContract = ErrorQueueContract.builder().body(bodyJSON).source(source).
                 ts(new Date().getTime()).errorRes(errorRes).exception(Arrays.asList(elements)).message(ex.getMessage()).build();
 
-            log.info("sendErrorMessage errorQueueContract:" + errorQueueContract);
+            log.error("sendErrorMessage errorQueueContract:" + errorQueueContract);
             errorQueueProducer.sendMessage(errorQueueContract);
         }
 	}

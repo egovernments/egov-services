@@ -315,6 +315,7 @@ serviceMaps:
    isTransaction: true
    queryMaps:
 
+
        - query: UPDATE eg_tl_tradelicense SET accountid = ?,tradeName = ?,licenseNumber = ?,licensetype = ?, oldlicensenumber = ?, propertyid = ?, oldpropertyid = ?, applicationdate = ?, commencementdate = ?, issueddate = ?, financialyear = ?, validfrom = ?, validto = ?, action = ?, status = ?,  lastmodifiedby = ?,  lastmodifiedtime = ? WHERE id=?;
          basePath: Licenses.*
          jsonMaps:
@@ -464,6 +465,7 @@ serviceMaps:
           - jsonPath: $.Licenses[*][?({id} in @.tradeLicenseDetail.accessories[*].id)].auditDetails.lastModifiedBy
 
           - jsonPath: $.Licenses[*][?({id} in @.tradeLicenseDetail.accessories[*].id)].auditDetails.lastModifiedTime
+
 
 
        - query: INSERT INTO eg_tl_owner( id, tenantid, active, tradelicensedetailid, isprimaryowner, ownertype, ownershippercentage, relationship, createdby,lastmodifiedby, createdtime, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ON CONFLICT ON CONSTRAINT pk_eg_tl_owner DO UPDATE SET active = ?, isprimaryowner = ?, ownertype = ?, ownershippercentage = ?, relationship = ?, lastmodifiedby = ?,  lastmodifiedtime = ?;
@@ -691,16 +693,12 @@ serviceMaps:
           - jsonPath: $.Licenses[*][?({id} in @.tradeLicenseDetail.verificationDocuments[*].id)].auditDetails.lastModifiedTime
 
 
-       - query: UPDATE eg_tl_tradelicense SET licenseNumber =?, issueddate = ?, validfrom = ?, validto = ?, action = ?, status = ?,  lastmodifiedby = ?,  lastmodifiedtime = ? WHERE id=?;
+       - query: UPDATE eg_tl_tradelicense SET licenseNumber =?, issueddate = ?, action = ?, status = ?,  lastmodifiedby = ?,  lastmodifiedtime = ? WHERE id=?;
          basePath: Licenses.*
          jsonMaps:
           - jsonPath: $.Licenses.*.licenseNumber
 
           - jsonPath: $.Licenses.*.issuedDate
-
-          - jsonPath: $.Licenses.*.validFrom
-
-          - jsonPath: $.Licenses.*.validTo
 
           - jsonPath: $.Licenses.*.action
 
@@ -711,3 +709,17 @@ serviceMaps:
           - jsonPath: $.Licenses.*.auditDetails.lastModifiedTime
 
           - jsonPath: $.Licenses.*.id
+
+
+       - query: UPDATE eg_tl_tradelicensedetail SET additionaldetail = ?,lastmodifiedby = ?,  lastmodifiedtime = ? WHERE id = ?;
+         basePath: Licenses.*.tradeLicenseDetail
+         jsonMaps:
+          - jsonPath: $.Licenses.*.tradeLicenseDetail.additionalDetail
+            type: JSON
+            dbType: JSONB
+
+          - jsonPath: $.Licenses.*.auditDetails.lastModifiedBy
+
+          - jsonPath: $.Licenses.*.auditDetails.lastModifiedTime
+
+          - jsonPath: $.Licenses.*.tradeLicenseDetail.id

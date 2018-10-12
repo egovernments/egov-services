@@ -10,7 +10,7 @@ public class TLConstants {
 
     public static final String PROPERTY_JSONPATH = "$.Properties[0].propertyId";
 
-    public static final String MODULE = "tl-services";
+    public static final String MODULE = "rainmaker-tl";
 
     public static final String NOTIFICATION_LOCALE = "en_IN";
 

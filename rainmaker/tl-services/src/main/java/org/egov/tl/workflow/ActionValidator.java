@@ -5,6 +5,7 @@ import org.egov.common.contract.request.Role;
 import org.egov.tl.web.models.TradeLicense;
 import org.egov.tl.web.models.TradeLicenseRequest;
 import org.egov.tracer.model.CustomException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
@@ -17,7 +18,12 @@ import java.util.Map;
 public class ActionValidator {
 
 
+    private WorkflowConfig workflowConfig;
 
+    @Autowired
+    public ActionValidator(WorkflowConfig workflowConfig) {
+        this.workflowConfig = workflowConfig;
+    }
 
     public void validateCreateRequest(TradeLicenseRequest request){
         Map<String,String> errorMap = new HashMap<>();
@@ -67,7 +73,7 @@ public class ActionValidator {
     }
 
     private void validateRole(TradeLicenseRequest request){
-       Map<String,List<String>> roleActionMap = WorkflowConfig.getRoleActionMap();
+       Map<String,List<String>> roleActionMap = workflowConfig.getRoleActionMap();
        Map<String,String> errorMap = new HashMap<>();
        List<TradeLicense> licenses = request.getLicenses();
        RequestInfo requestInfo = request.getRequestInfo();
@@ -90,7 +96,7 @@ public class ActionValidator {
 
 
     private void validateAction(TradeLicenseRequest request){
-       Map<String,List<String>> actionStatusMap = WorkflowConfig.getActionCurrentStatusMap();
+       Map<String,List<String>> actionStatusMap = workflowConfig.getActionCurrentStatusMap();
         Map<String,String> errorMap = new HashMap<>();
 
         request.getLicenses().forEach(license -> {

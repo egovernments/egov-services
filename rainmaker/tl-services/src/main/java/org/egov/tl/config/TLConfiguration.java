@@ -173,6 +173,12 @@ public class TLConfiguration {
     private String mdmsEndPoint;
 
 
+    //Role
+    @Value("${egov.tl.citizen.role}")
+    public String ROLE_CITIZEN ;
+
+    @Value("${egov.tl.employee.role}")
+    public String ROLE_EMPLOYEE ;
 
 
 

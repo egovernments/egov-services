@@ -58,9 +58,8 @@ import org.springframework.web.client.RestTemplate;
 @Service
 public class TokenService {
 
-
     public static final Logger LOGGER = LoggerFactory.getLogger(TokenService.class);
-    
+
     @Autowired
     private RestTemplate restTemplate;
 
@@ -84,15 +83,16 @@ public class TokenService {
         HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(map, header);
 
         try {
-                LOGGER.info("call:" + propertiesManager.getTokenGenUrl());
-                Object response = restTemplate.postForObject(propertiesManager.getTokenGenUrl(), request, Object.class);
-                if (response != null)
-                        return String.valueOf(((HashMap) response).get("access_token"));
+            LOGGER.info("call:" + propertiesManager.getTokenGenUrl());
+            Object response = restTemplate.postForObject(propertiesManager.getHostUrl() + propertiesManager.getTokenGenUrl(),
+                    request, Object.class);
+            if (response != null)
+                return String.valueOf(((HashMap) response).get("access_token"));
         } catch (RestClientException e) {
-                LOGGER.info("Eror while getting admin authtoken", e);
-                return null;
+            LOGGER.info("Eror while getting admin authtoken", e);
+            return null;
         }
         return null;
-}
+    }
 
 }

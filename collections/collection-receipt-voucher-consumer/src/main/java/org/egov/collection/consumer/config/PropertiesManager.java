@@ -57,13 +57,25 @@ import lombok.ToString;
 @ToString
 public class PropertiesManager {
 
+    @Value("${jalandhar.egov.fin.coe.erp.host}")
+    private String jalandharErpHostUrl;
+
+    @Value("${mohali.egov.fin.coe.erp.host}")
+    private String mohaliErpHostUrl;
+
+    @Value("${nayagaon.egov.fin.coe.erp.host}")
+    private String nayagaonErpHostUrl;
+
+    @Value("${amritsar.egov.fin.coe.erp.host}")
+    private String amritsarErpHostUrl;
+
     @Value("${egov.services.host}")
     private String hostUrl;
 
     @Value("${egov.services.common.masters.businessdetails.url}")
     private String businessDetailsServiceUrl;
 
-    @Value("${egov.services.egf_voucher_service.basepath}")
+    @Value("${egov.services.egf.voucher.create}")
     private String voucherCreateUrl;
 
     @Value("${si.microservice.user}")
@@ -92,5 +104,33 @@ public class PropertiesManager {
 
     @Value("${egov.services.collection.services.receipts.update}")
     private String receiptsUpdate;
+
+    public String getErpURLBytenantId(String tenantId) {
+        String url = null;
+
+        switch (tenantId) {
+        case "pb.jalandhar":
+            url = jalandharErpHostUrl;
+            break;
+
+        case "pb.mohali":
+            url = mohaliErpHostUrl;
+            break;
+
+        case "pb.nayagaon":
+            url = nayagaonErpHostUrl;
+            break;
+
+        case "pb.amritsar":
+            url = amritsarErpHostUrl;
+            break;
+
+        default:
+            break;
+        }
+
+        return url;
+
+    }
 
 }

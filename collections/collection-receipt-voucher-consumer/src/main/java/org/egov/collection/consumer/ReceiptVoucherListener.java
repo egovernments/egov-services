@@ -54,8 +54,6 @@ public class ReceiptVoucherListener {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        voucherResponse = voucherService.createVoucher(request);
-        receiptService.updateReceipt(request, voucherResponse);
         instrumentService.createInstruemt(request, voucherResponse);
         System.out.println(voucherResponse);
     }

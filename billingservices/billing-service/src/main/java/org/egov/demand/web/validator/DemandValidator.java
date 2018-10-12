@@ -362,7 +362,7 @@ public class DemandValidator implements Validator {
 		Set<String> types = demands.stream().map(demand -> demand.getOwner().getUserType()).collect(Collectors.toSet());
 		String userType = null;
 		
-		if (CollectionUtils.isEmpty(types)) {
+		if (!CollectionUtils.isEmpty(types)) {
 
 			if (types.size() == 1)
 				userType = types.iterator().next();

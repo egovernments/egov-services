@@ -23,7 +23,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -130,4 +129,14 @@ public class BillController {
 		BillResponse billResponse = billService.apportion(billRequest);
 		return new ResponseEntity<>(billResponse, HttpStatus.CREATED);
 	}
+	
+	@PostMapping("_fetchBill")
+	@ResponseBody
+	public ResponseEntity<?> fetchBill(@RequestBody RequestInfoWrapper requestInfoWrapper, 
+			@ModelAttribute @Valid GenerateBillCriteria generateBillCriteria){
+		
+		BillResponse billResponse = billService.generateBill(generateBillCriteria, requestInfoWrapper.getRequestInfo());
+		return new ResponseEntity<>(billResponse, HttpStatus.CREATED);
+	}
+	
 }

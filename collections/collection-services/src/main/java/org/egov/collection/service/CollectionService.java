@@ -1,6 +1,12 @@
 package org.egov.collection.service;
 
-import lombok.extern.slf4j.Slf4j;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+import java.util.stream.Collectors;
+
 import org.egov.collection.config.ApplicationProperties;
 import org.egov.collection.model.Instrument;
 import org.egov.collection.model.ReceiptSearchCriteria;
@@ -10,18 +16,19 @@ import org.egov.collection.repository.CollectionRepository;
 import org.egov.collection.repository.InstrumentRepository;
 import org.egov.collection.util.ReceiptEnricher;
 import org.egov.collection.util.ReceiptValidator;
-import org.egov.collection.web.contract.*;
+import org.egov.collection.web.contract.Bill;
+import org.egov.collection.web.contract.BillAccountDetail;
+import org.egov.collection.web.contract.BillDetail;
+import org.egov.collection.web.contract.BillResponse;
+import org.egov.collection.web.contract.Purpose;
+import org.egov.collection.web.contract.Receipt;
+import org.egov.collection.web.contract.ReceiptReq;
 import org.egov.common.contract.request.RequestInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-import java.util.stream.Collectors;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Slf4j
@@ -37,9 +44,9 @@ public class CollectionService {
 
     @Autowired
     public CollectionService(CollectionRepository collectionRepository, InstrumentRepository instrumentRepository,
-                             BillingServiceRepository billingServiceRepository, ReceiptEnricher receiptEnricher,
-                             ReceiptValidator receiptValidator, CollectionProducer collectionProducer,
-                             ApplicationProperties applicationProperties) {
+            BillingServiceRepository billingServiceRepository, ReceiptEnricher receiptEnricher,
+            ReceiptValidator receiptValidator, CollectionProducer collectionProducer,
+            ApplicationProperties applicationProperties) {
         this.collectionRepository = collectionRepository;
         this.instrumentRepository = instrumentRepository;
         this.billingServiceRepository = billingServiceRepository;
@@ -56,25 +63,20 @@ public class CollectionService {
      * @param receiptSearchCriteria Criteria against which search has to be performed
      * @return List of matching receipts
      */
-    public List<Receipt> getReceipts(RequestInfo requestInfo, ReceiptSearchCriteria receiptSearchCriteria){
+    public List<Receipt> getReceipts(RequestInfo requestInfo, ReceiptSearchCriteria receiptSearchCriteria) {
         receiptSearchCriteria.setOffset(0);
         receiptSearchCriteria.setLimit(25);
 
         List<Receipt> receipts = collectionRepository.fetchReceipts(receiptSearchCriteria);
-//        if(!receipts.isEmpty())
-//            receiptEnricher.enrichReceiptsWithInstruments(requestInfo, receipts);
+        // if(!receipts.isEmpty())
+        // receiptEnricher.enrichReceiptsWithInstruments(requestInfo, receipts);
         return receipts;
     }
 
-
     /**
-     * Handles creation of a receipt, including multi-service, involves the following steps,
-     *   - Enrich receipt from billing service using bill id
-     *   - Validate the receipt object
-     *   - Enrich receipt with receipt numbers, coll type etc
-     *   - Apportion paid amount
-     *   - Persist the receipt object
-     *   - Create instrument
+     * Handles creation of a receipt, including multi-service, involves the following steps, - Enrich receipt from billing service
+     * using bill id - Validate the receipt object - Enrich receipt with receipt numbers, coll type etc - Apportion paid amount -
+     * Persist the receipt object - Create instrument
      *
      * @param receiptReq Receipt request for which receipt has to be created
      * @return Created receipt
@@ -93,12 +95,12 @@ public class CollectionService {
 
         collectionRepository.saveReceipt(receipt);
 
-//        if (receipt.getInstrument().getAmount().compareTo(BigDecimal.ZERO) > 0) {
-//            Instrument instrument = instrumentRepository.createInstrument(receiptReq.getRequestInfo(), receipt
-//                    .getInstrument());
-//            receipt.getInstrument().setId(instrument.getId());
-//            collectionRepository.saveInstrument(receipt);
-//        }
+        // if (receipt.getInstrument().getAmount().compareTo(BigDecimal.ZERO) > 0) {
+        // Instrument instrument = instrumentRepository.createInstrument(receiptReq.getRequestInfo(), receipt
+        // .getInstrument());
+        // receipt.getInstrument().setId(instrument.getId());
+        // collectionRepository.saveInstrument(receipt);
+        // }
 
         collectionProducer.producer(applicationProperties.getCreateReceiptTopicName(), applicationProperties
                 .getCreateReceiptTopicKey(), receiptReq);
@@ -106,11 +108,8 @@ public class CollectionService {
         return receipt;
     }
 
-    
-    
     @Transactional
     public Receipt updateReceipt(ReceiptReq receiptReq) {
-
 
         Receipt receipt = receiptReq.getReceipt().get(0);
 
@@ -122,9 +121,8 @@ public class CollectionService {
         return receipt;
     }
 
-    public List<Receipt> cancelReceipt(RequestInfo requestInfo, String transactionNumber){
-        ReceiptSearchCriteria receiptSearchCriteria = ReceiptSearchCriteria.builder().transactionId
-                (transactionNumber).build();
+    public List<Receipt> cancelReceipt(RequestInfo requestInfo, String transactionNumber) {
+        ReceiptSearchCriteria receiptSearchCriteria = ReceiptSearchCriteria.builder().transactionId(transactionNumber).build();
         List<Receipt> receipts = getReceipts(requestInfo, receiptSearchCriteria);
         receiptValidator.validateReceiptsForCancellation(receipts);
 
@@ -132,14 +130,12 @@ public class CollectionService {
     }
 
     /**
-     * Validates a provisional receipt,
-     *   - Enriches receipt from billing service using bill id
-     *   - Validates the receipt object
+     * Validates a provisional receipt, - Enriches receipt from billing service using bill id - Validates the receipt object
      *
      * @param receiptReq Receipt request for which receipt has to be validated
      * @return Validated receipt
      */
-    public List<Receipt> validateReceipt(ReceiptReq receiptReq){
+    public List<Receipt> validateReceipt(ReceiptReq receiptReq) {
         receiptEnricher.enrichReceiptPreValidate(receiptReq);
         receiptValidator.validateReceiptForCreate(receiptReq);
 
@@ -147,10 +143,9 @@ public class CollectionService {
     }
 
     /**
-     * Apportions the paid amount by,
-     *   Calling the billing service OR by using inbuilt collection apportioner
+     * Apportions the paid amount by, Calling the billing service OR by using inbuilt collection apportioner
      *
-     * Adds a debit bill account detail against the paid amount     *
+     * Adds a debit bill account detail against the paid amount *
      *
      * @param requestInfo Request info of the search
      * @param receipt Receipt that has to be apportioned, looks for bill details & bill account details
@@ -160,8 +155,8 @@ public class CollectionService {
 
         Bill bill = receipt.getBill().get(0);
 
-        Map<Boolean, List<BillDetail>> billDetailsByApportionCallBack = bill.getBillDetails().stream().collect
-                (Collectors.partitioningBy(BillDetail::getCallBackForApportioning));
+        Map<Boolean, List<BillDetail>> billDetailsByApportionCallBack = bill.getBillDetails().stream()
+                .collect(Collectors.partitioningBy(BillDetail::getCallBackForApportioning));
 
         List<BillDetail> apportionedBillDetails = new ArrayList<>();
 
@@ -184,25 +179,23 @@ public class CollectionService {
     }
 
     /**
-     * For each bill detail representing a module,
-     *  - Fetches module specific account code from financial service
-     *  - Computes the total apportioned credit amounts & adds a debit
-     *          bill account detail against the bill detail
+     * For each bill detail representing a module, - Fetches module specific account code from financial service - Computes the
+     * total apportioned credit amounts & adds a debit bill account detail against the bill detail
      *
      * @param requestInfo Request info of the search
      * @param billDetails Bill Details
      * @param instrument Instrument for which debit detail should be added
      */
-    //TODO Make sure bill details are all from the same tenant in one receipt create request
+    // TODO Make sure bill details are all from the same tenant in one receipt create request
     private void addDebitAccountHeadDetails(RequestInfo requestInfo, List<BillDetail> billDetails,
-                                                         Instrument instrument) {
+            Instrument instrument) {
 
         String glCode = instrumentRepository.getAccountCodeId(requestInfo, instrument, instrument.getTenantId());
-        for(BillDetail billDetail : billDetails) {
+        for (BillDetail billDetail : billDetails) {
 
             BigDecimal drAmount = BigDecimal.ZERO;
 
-            for(BillAccountDetail billAccountDetail : billDetail.getBillAccountDetails())
+            for (BillAccountDetail billAccountDetail : billDetail.getBillAccountDetails())
                 drAmount = drAmount.add(billAccountDetail.getCreditAmount());
 
             BillAccountDetail billAccountDetail = BillAccountDetail.builder()
@@ -220,6 +213,5 @@ public class CollectionService {
 
         }
     }
-
 
 }

@@ -37,57 +37,57 @@
  *
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
+package org.egov.collection.service;
 
-package org.egov.collection.consumer;
-
-import java.util.HashMap;
 import java.util.List;
 
 import org.egov.collection.config.ApplicationProperties;
 import org.egov.collection.model.BankAccountServiceMapping;
-import org.egov.collection.service.BankAccountMappingService;
+import org.egov.collection.model.BankAccountServiceMappingSearchCriteria;
+import org.egov.collection.repository.BankAccountMappingRepository;
 import org.egov.collection.web.contract.BankAccountServiceMappingReq;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.kafka.annotation.KafkaListener;
-import org.springframework.kafka.support.KafkaHeaders;
-import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.stereotype.Service;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 @Service
-public class CollectionConsumer {
+public class BankAccountMappingService {
 
-    public static final Logger logger = LoggerFactory.getLogger(CollectionConsumer.class);
+    private BankAccountMappingRepository bankAccountMappingRepository;
+
+    private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
 
     @Autowired
     private ApplicationProperties applicationProperties;
 
     @Autowired
-    private ObjectMapper objectMapper;
+    public BankAccountMappingService(BankAccountMappingRepository bankAccountMappingRepository,
+            LogAwareKafkaTemplate<String, Object> kafkaTemplate) {
 
-    @Autowired
-    private BankAccountMappingService bankAccountMappingService;
+        this.bankAccountMappingRepository = bankAccountMappingRepository;
+        this.kafkaTemplate = kafkaTemplate;
 
-    @KafkaListener(topics = { "${kafka.topics.bankaccountservicemapping.create.name}" })
-    public void listen(final HashMap<String, Object> record, @Header(KafkaHeaders.RECEIVED_TOPIC) String topic) {
-        logger.info("Record: " + record.toString());
-        try {
-            if (topic.equals(applicationProperties.getCreateBankAccountServiceMappingTopicName())) {
-                logger.info("Consuming cancel Receipt request");
-                BankAccountServiceMappingReq bankAccountServiceMappingReq = objectMapper.convertValue(record,
-                        BankAccountServiceMappingReq.class);
-                List<BankAccountServiceMapping> modelBankAccountServiceMappings = new BankAccountServiceMapping()
-                        .toDomainModelList(bankAccountServiceMappingReq.getBankAccountServiceMapping(),
-                                bankAccountServiceMappingReq.getRequestInfo());
-                bankAccountMappingService.createBankAccountToServiceMapping(modelBankAccountServiceMappings);
-            }
-
-        } catch (final Exception e) {
-            logger.error("Error while listening to value: " + record + " on topic: " + topic + ": ", e.getMessage());
-        }
     }
 
+    public List<BankAccountServiceMapping> createBankAccountToServiceMapping(
+            List<BankAccountServiceMapping> bankServiceMappings) {
+        bankAccountMappingRepository.persistBankAccountServiceMapping(bankServiceMappings);
+        return bankServiceMappings;
+    }
+
+    public BankAccountServiceMappingReq createBankAccountServiceMappingAsync(
+            final BankAccountServiceMappingReq bankAccountServiceMappingReq) {
+        kafkaTemplate.send(applicationProperties.getCreateBankAccountServiceMappingTopicName(), bankAccountServiceMappingReq);
+        return bankAccountServiceMappingReq;
+    }
+
+    public List<BankAccountServiceMapping> searchBankAccountService(
+            final BankAccountServiceMappingSearchCriteria searchcriteria) {
+        return bankAccountMappingRepository.searchBankAccountServicemapping(searchcriteria);
+
+    }
+
+    public List<Long> searchBankAccountsMappedToServices(final String tenantId) {
+        return bankAccountMappingRepository.searchBankAccountBranches(tenantId);
+    }
 }

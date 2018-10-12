@@ -22,7 +22,7 @@ import static com.jayway.jsonpath.JsonPath.read;
 
 @Slf4j
 @Service
-public class enrichmentService {
+public class MDMSService {
 
 
     private TLCalculatorConfigs config;
@@ -31,7 +31,7 @@ public class enrichmentService {
 
 
     @Autowired
-    public enrichmentService(TLCalculatorConfigs config,ServiceRequestRepository serviceRequestRepository) {
+    public MDMSService(TLCalculatorConfigs config, ServiceRequestRepository serviceRequestRepository) {
         this.config = config;
         this.serviceRequestRepository = serviceRequestRepository;
     }
@@ -67,17 +67,19 @@ public class enrichmentService {
     }
 
 
-    public Map<String,String> getTaxPeriods(RequestInfo requestInfo,TradeLicense license){
-        Map<String,String> taxPeriods = new HashMap<>();
+    public Map<String,Long> getTaxPeriods(RequestInfo requestInfo,TradeLicense license){
+        Map<String,Long> taxPeriods = new HashMap<>();
 
         MdmsCriteriaReq mdmsCriteriaReq = getFinancialYearRequest(requestInfo,license.getTenantId());
         try {
             Object result = serviceRequestRepository.fetchResult(getMdmsSearchUrl(), mdmsCriteriaReq);
             String jsonPath = TLCalculatorConstants.MDMS_FINACIALYEAR_PATH.replace("{}",license.getFinancialYear());
-            List<Map<String,String>> jsonOutput =  JsonPath.read(result, jsonPath);
-            Map<String,String> financialYearProperties = jsonOutput.get(0);
-            taxPeriods.put("taxPeriodFrom",financialYearProperties.get(TLCalculatorConstants.MDMS_STARTDATE));
-            taxPeriods.put("taxPeriodTo",financialYearProperties.get(TLCalculatorConstants.MDMS_ENDDATE));
+            List<Map<String,Object>> jsonOutput =  JsonPath.read(result, jsonPath);
+            Map<String,Object> financialYearProperties = jsonOutput.get(0);
+            Object startDate = financialYearProperties.get(TLCalculatorConstants.MDMS_STARTDATE);
+            Object endDate = financialYearProperties.get(TLCalculatorConstants.MDMS_ENDDATE);
+            taxPeriods.put(TLCalculatorConstants.MDMS_STARTDATE,(Long) startDate);
+            taxPeriods.put(TLCalculatorConstants.MDMS_ENDDATE,(Long) endDate);
 
         } catch (Exception e) {
             log.error("Error while fetvhing MDMS data", e);

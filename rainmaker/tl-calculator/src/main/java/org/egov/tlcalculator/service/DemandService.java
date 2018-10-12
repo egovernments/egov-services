@@ -6,6 +6,7 @@ import org.egov.tlcalculator.config.TLCalculatorConfigs;
 import org.egov.tlcalculator.repository.DemandRepository;
 import org.egov.tlcalculator.repository.ServiceRequestRepository;
 import org.egov.tlcalculator.utils.CalculationUtils;
+import org.egov.tlcalculator.utils.TLCalculatorConstants;
 import org.egov.tlcalculator.web.models.*;
 import org.egov.tlcalculator.web.models.tradelicense.OwnerInfo;
 import org.egov.tlcalculator.web.models.tradelicense.TradeLicense;
@@ -41,6 +42,9 @@ public class DemandService {
 
     @Autowired
     private DemandRepository demandRepository;
+
+    @Autowired
+    private MDMSService mdmsService;
 
 
 
@@ -126,14 +130,17 @@ public class DemandService {
                         .tenantId(tenantId)
                         .build());
             });
+
+             Map<String,Long> taxPeriods = mdmsService.getTaxPeriods(requestInfo,license);
+
             demands.add(Demand.builder()
                     .consumerCode(consumerCode)
                     .demandDetails(demandDetails)
                     .owner(owner)
                     .minimumAmountPayable(config.getMinimumPayableAmount())
                     .tenantId(tenantId)
-                    .taxPeriodFrom(license.getValidFrom())
-                    .taxPeriodTo(license.getValidTo())
+                    .taxPeriodFrom(taxPeriods.get(TLCalculatorConstants.MDMS_STARTDATE))
+                    .taxPeriodTo(taxPeriods.get(TLCalculatorConstants.MDMS_ENDDATE))
                     .consumerType("tradelicense")
                     .businessService(config.getBusinessService())
                     .build());

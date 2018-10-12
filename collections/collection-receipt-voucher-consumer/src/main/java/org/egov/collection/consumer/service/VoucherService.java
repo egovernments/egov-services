@@ -126,7 +126,7 @@ public class VoucherService {
         voucher.setFunctionary(new Functionary());
         voucher.getFunctionary().setCode(servcie != null ? servcie.getFunctionary() : null);
         voucher.setDescription(RECEIPTS_VOUCHER_DESCRIPTION);
-        voucher.setVoucherDate(format.format(new Date()));
+        voucher.setVoucherDate(format.format(new Date(receipt.getBill().get(0).getBillDetails().get(0).getReceiptDate())));
         voucher.setModuleId(Long.valueOf(COLLECTIONS_EG_MODULES_ID));
         voucher.setSource(RECEIPT_VIEW_SOURCEPATH + receipt.getTransactionId());
         AccountDetail accountDetail = null;

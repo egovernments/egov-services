@@ -34,6 +34,7 @@ public class  TradeLicense   {
         @JsonProperty("id")
         private String id = null;
 
+        @NotNull
         @JsonProperty("tenantId")
         private String tenantId = null;
 
@@ -101,6 +102,7 @@ public class  TradeLicense   {
         @JsonProperty("issuedDate")
         private Long issuedDate = null;
 
+        @NotNull
         @JsonProperty("financialYear")
         private String financialYear = null;
 
@@ -193,6 +195,8 @@ public class  TradeLicense   {
         @JsonProperty("status")
         private StatusEnum status = null;
 
+        @Valid
+        @NotNull
         @JsonProperty("tradeLicenseDetail")
         private TradeLicenseDetail tradeLicenseDetail = null;
 

@@ -45,9 +45,11 @@ public class TradeLicenseDetail   {
         @JsonProperty("surveyNo")
         private String surveyNo = null;
 
+        @NotNull
         @JsonProperty("subOwnerShipCategory")
         private String subOwnerShipCategory = null;
 
+        @NotNull
         @JsonProperty("structureType")
         private String structureType;
 
@@ -112,7 +114,9 @@ public class TradeLicenseDetail   {
         @JsonProperty("channel")
         private ChannelEnum channel = null;
 
+
         @NotNull
+        @Valid
         @JsonProperty("address")
         private Address address = null;
 

@@ -77,6 +77,7 @@ public class Address   {
         @JsonProperty("street")
         private String street = null;
 
+        @Valid
         @JsonProperty("locality")
         private Boundary locality = null;
 

@@ -1,3 +1,7 @@
+DROP TABLE egcl_bankaccountservicemapping;
+
+DROP SEQUENCE seq_egcl_bankaccountservicemapping;
+
 CREATE TABLE egcl_bankaccountservicemapping
 (
   id bigint NOT NULL,

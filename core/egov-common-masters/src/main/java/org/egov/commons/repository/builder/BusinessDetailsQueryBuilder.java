@@ -112,6 +112,12 @@ public class BusinessDetailsQueryBuilder {
 			selectQuery.append(" bc.code = ?");
 			preparedStatementValues.add(criteria.getBusinessCategoryCode());
 		}
+		
+		if (criteria.getBusinessType() != null) {
+                    isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+                    selectQuery.append(" bd.businesstype = ?");
+                    preparedStatementValues.add(criteria.getBusinessType());
+                }
 
 		if (criteria.getActive() != null) {
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);

@@ -25,6 +25,8 @@ private Boolean active;
 	
 	private String businessCategoryCode;
 	
+	private String businessType;
+	
 	private String sortBy;
 	
 	private String sortOrder;

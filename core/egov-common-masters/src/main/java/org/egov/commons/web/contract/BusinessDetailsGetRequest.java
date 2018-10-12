@@ -30,6 +30,8 @@ public class BusinessDetailsGetRequest {
 	private List<String> businessDetailsCodes;
 
 	private String businessCategoryCode;
+	
+	private String businessType;
 
 	private String sortBy;
 

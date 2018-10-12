@@ -110,7 +110,6 @@ public class User   {
         @JsonProperty("type")
         private String type;
 
-        @Size(max=36)
         @JsonProperty("signature")
         private String signature;
 
@@ -129,11 +128,9 @@ public class User   {
         @JsonProperty("bloodGroup")
         private String bloodGroup;
 
-        @Size(max=300)
         @JsonProperty("identificationMark")
         private String identificationMark;
 
-        @Size(max=36)
         @JsonProperty("photo")
         private String photo;
 

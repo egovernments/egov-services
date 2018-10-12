@@ -67,6 +67,7 @@ import org.egov.demand.web.contract.TaxPeriodCriteria;
 import org.egov.demand.web.contract.UserSearchRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
@@ -358,12 +359,26 @@ public class DemandValidator implements Validator {
 	private void validateOwner(DemandRequest demandRequest, Errors errors) {
 
 		List<Demand> demands = demandRequest.getDemands();
+		Set<String> types = demands.stream().map(demand -> demand.getOwner().getUserType()).collect(Collectors.toSet());
+		String userType = null;
+		
+		if (CollectionUtils.isEmpty(types)) {
+
+			if (types.size() == 1)
+				userType = types.iterator().next();
+			else if (types.size() > 1)
+				throw new RuntimeException(
+						"more than user type cannot be provided for the onwer of demand in a bulk request, make sure all the "
+								+ "users are either citizen or employee altogether");
+		}
+			
 		List<Long> ownerIds = new ArrayList<>(
 				demands.stream().map(demand -> demand.getOwner().getId()).collect(Collectors.toSet()));
-		// demands should never be created for employee
+
 		UserSearchRequest userSearchRequest = UserSearchRequest.builder().requestInfo(demandRequest.getRequestInfo())
-				.id(ownerIds).tenantId(demands.get(0).getTenantId()).userType("CITIZEN").pageSize(500).build();
-		
+				.id(ownerIds).tenantId(demands.get(0).getTenantId()).userType(null != userType ? userType : "CITIZEN")
+				.pageSize(500).build();
+
 		log.info("The user search req : " + userSearchRequest);
 		Map<Long, Long> ownerMap = new HashMap<>();
 		List<Owner> owners = ownerRepository.getOwners(userSearchRequest);

@@ -80,6 +80,8 @@ public class Owner {
 
 	@JsonProperty("aadhaarNumber")
 	private String aadhaarNumber;
+	
+	private String userType;
 
 	public UserSearchRequest toUserSearchRequest() {
 

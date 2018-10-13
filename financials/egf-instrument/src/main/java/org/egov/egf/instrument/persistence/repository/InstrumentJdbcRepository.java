@@ -2,6 +2,7 @@ package org.egov.egf.instrument.persistence.repository;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -10,10 +11,13 @@ import org.egov.common.domain.model.Pagination;
 import org.egov.common.persistence.repository.JdbcRepository;
 import org.egov.egf.instrument.domain.model.Instrument;
 import org.egov.egf.instrument.domain.model.InstrumentSearch;
+import org.egov.egf.instrument.domain.model.InstrumentVoucher;
+import org.egov.egf.instrument.domain.model.InstrumentVoucherSearch;
 import org.egov.egf.instrument.persistence.entity.InstrumentEntity;
 import org.egov.egf.instrument.persistence.entity.InstrumentSearchEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -22,6 +26,9 @@ import org.springframework.stereotype.Service;
 @Service
 public class InstrumentJdbcRepository extends JdbcRepository {
     private static final Logger LOG = LoggerFactory.getLogger(InstrumentJdbcRepository.class);
+
+    @Autowired
+    private InstrumentVoucherJdbcRepository instrumentVoucherJdbcRepository;
 
     static {
         LOG.debug("init instrument");
@@ -228,11 +235,42 @@ public class InstrumentJdbcRepository extends JdbcRepository {
         page.setTotalResults(instrumentEntities.size());
 
         List<Instrument> instruments = new ArrayList<>();
-        for (InstrumentEntity instrumentEntity : instrumentEntities)
+        StringBuffer ids = new StringBuffer();
+        for (InstrumentEntity instrumentEntity : instrumentEntities) {
+            if (ids != null && ids.length() > 0) {
+                ids.append(",");
+            }
+            ids.append(instrumentEntity.getId());
             instruments.add(instrumentEntity.toDomain());
+        }
+        populateInstrumentVouchers(instruments, ids, domain.getTenantId());
         page.setPagedData(instruments);
 
         return page;
+    }
+
+    private void populateInstrumentVouchers(List<Instrument> instruments, StringBuffer ids, String tenantId) {
+        InstrumentVoucherSearch ivs = new InstrumentVoucherSearch();
+        ivs.setTenantId(tenantId);
+        ivs.setInstruments(ids.toString());
+        Map<String, List<InstrumentVoucher>> instrumentVoucherMap = new HashMap<>();
+        Pagination<InstrumentVoucher> instrumentVouchers = instrumentVoucherJdbcRepository.search(ivs);
+        if (instrumentVouchers != null && instrumentVouchers.getPagedData() != null) {
+            for (InstrumentVoucher iv : instrumentVouchers.getPagedData()) {
+                if (instrumentVoucherMap.get(iv.getInstrument().getId()) == null) {
+                    instrumentVoucherMap.put(iv.getInstrument().getId(), Collections.singletonList(iv));
+                } else {
+                    instrumentVoucherMap.get(iv.getInstrument().getId()).add(iv);
+                }
+            }
+        }
+
+        for (Instrument i : instruments) {
+            if (instrumentVoucherMap.get(i.getId()) != null) {
+                i.setInstrumentVouchers(instrumentVoucherMap.get(i.getId()));
+            }
+        }
+
     }
 
     public InstrumentEntity findById(InstrumentEntity entity) {

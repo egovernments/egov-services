@@ -80,19 +80,6 @@ public class InstrumentVoucherJdbcRepository extends JdbcRepository {
             params.append("tenantId =:tenantId");
             paramValues.put("tenantId", instrumentVoucherSearchEntity.getTenantId());
         }
-        if (instrumentVoucherSearchEntity.getId() != null) {
-            if (params.length() > 0)
-                params.append(" and ");
-            params.append("id =:id");
-            paramValues.put("id", instrumentVoucherSearchEntity.getId());
-        }
-        if (instrumentVoucherSearchEntity.getIds() != null) {
-            if (params.length() > 0)
-                params.append(" and ");
-            params.append("id in (:ids)");
-            paramValues.put("ids", new ArrayList<String>(Arrays.asList(instrumentVoucherSearchEntity.getIds().split(","))));
-        }
-
         if (instrumentVoucherSearchEntity.getInstruments() != null) {
             if (params.length() > 0)
                 params.append(" and ");

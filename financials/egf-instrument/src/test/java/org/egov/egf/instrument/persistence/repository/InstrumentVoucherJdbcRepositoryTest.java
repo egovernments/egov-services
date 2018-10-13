@@ -10,6 +10,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.egov.common.domain.exception.InvalidDataException;
+import org.egov.common.domain.model.Pagination;
+import org.egov.egf.instrument.domain.model.Instrument;
+import org.egov.egf.instrument.domain.model.InstrumentVoucher;
+import org.egov.egf.instrument.domain.model.InstrumentVoucherSearch;
 import org.egov.egf.instrument.persistence.entity.InstrumentVoucherEntity;
 import org.junit.Before;
 import org.junit.Test;
@@ -102,40 +107,48 @@ public class InstrumentVoucherJdbcRepositoryTest {
 
     }
 
-    /*
-     * @Test
-     * @Sql(scripts = { "/sql/instrumentvoucher/clearInstrumentVoucher.sql",
-     * "/sql/instrumentvoucher/insertInstrumentVoucherData.sql" }) public void test_search() { Pagination<InstrumentVoucher> page
-     * = (Pagination<InstrumentVoucher>) instrumentVoucherJdbcRepository .search(getInstrumentVoucherSearch());
-     * assertThat(page.getPagedData().get(0).getActive()).isEqualTo(true);
-     * assertThat(page.getPagedData().get(0).getName()).isEqualTo("name");
-     * assertThat(page.getPagedData().get(0).getDescription()).isEqualTo( "description"); }
-     */
+    @Test
+    @Sql(scripts = { "/sql/instrumentvoucher/clearInstrumentVoucher.sql",
+            "/sql/instrumentvoucher/insertInstrumentVoucherData.sql" })
+    public void test_search() {
+        Pagination<InstrumentVoucher> page = (Pagination<InstrumentVoucher>) instrumentVoucherJdbcRepository
+                .search(getInstrumentVoucherSearch());
+        assertThat(page.getPagedData().get(0).getReceiptHeaderId()).isEqualTo("1");
+        assertThat(page.getPagedData().get(0).getVoucherHeaderId()).isEqualTo("1");
+    }
 
-    /*
-     * @Test
-     * @Sql(scripts = { "/sql/instrumentvoucher/clearInstrumentVoucher.sql",
-     * "/sql/instrumentvoucher/insertInstrumentVoucherData.sql" }) public void test_invalid_search() {
-     * Pagination<InstrumentVoucher> page = (Pagination<InstrumentVoucher>) instrumentVoucherJdbcRepository
-     * .search(getInstrumentVoucherSearch1()); assertThat(page.getPagedData().size()).isEqualTo(0); }
-     */
+    @Test
+    @Sql(scripts = { "/sql/instrumentvoucher/clearInstrumentVoucher.sql",
+            "/sql/instrumentvoucher/insertInstrumentVoucherData.sql" })
+    public void test_invalid_search() {
+        Pagination<InstrumentVoucher> page = (Pagination<InstrumentVoucher>) instrumentVoucherJdbcRepository
+                .search(getInstrumentVoucherSearch1());
+        assertThat(page.getPagedData().size()).isEqualTo(0);
+    }
 
-    /*
-     * @Test(expected = InvalidDataException.class)
-     * @Sql(scripts = { "/sql/instrumentvoucher/clearInstrumentVoucher.sql",
-     * "/sql/instrumentvoucher/insertInstrumentVoucherData.sql" }) public void test_search_invalid_sort_option() {
-     * InstrumentVoucherSearch search = getInstrumentVoucherSearch(); search.setSortBy("desc");
-     * instrumentVoucherJdbcRepository.search(search); }
-     * @Test
-     * @Sql(scripts = { "/sql/instrumentvoucher/clearInstrumentVoucher.sql",
-     * "/sql/instrumentvoucher/insertInstrumentVoucherData.sql" }) public void test_search_without_pagesize_offset_sortby() {
-     * InstrumentVoucherSearch search = getInstrumentVoucherSearch(); search.setSortBy(null); search.setPageSize(null);
-     * search.setOffset(null); Pagination<InstrumentVoucher> page = (Pagination<InstrumentVoucher>)
-     * instrumentVoucherJdbcRepository .search(getInstrumentVoucherSearch());
-     * assertThat(page.getPagedData().get(0).getActive()).isEqualTo(true);
-     * assertThat(page.getPagedData().get(0).getName()).isEqualTo("name");
-     * assertThat(page.getPagedData().get(0).getDescription()).isEqualTo( "description"); }
-     */
+    @Test(expected = InvalidDataException.class)
+    @Sql(scripts = { "/sql/instrumentvoucher/clearInstrumentVoucher.sql",
+            "/sql/instrumentvoucher/insertInstrumentVoucherData.sql" })
+    public void test_search_invalid_sort_option() {
+        InstrumentVoucherSearch search = getInstrumentVoucherSearch();
+        search.setSortBy("desc");
+        instrumentVoucherJdbcRepository.search(search);
+    }
+
+    @Test
+    @Sql(scripts = { "/sql/instrumentvoucher/clearInstrumentVoucher.sql",
+            "/sql/instrumentvoucher/insertInstrumentVoucherData.sql" })
+    public void test_search_without_pagesize_offset_sortby() {
+        InstrumentVoucherSearch search = getInstrumentVoucherSearch();
+        search.setSortBy(null);
+        search.setPageSize(null);
+        search.setOffset(null);
+        Pagination<InstrumentVoucher> page = (Pagination<InstrumentVoucher>) instrumentVoucherJdbcRepository
+                .search(getInstrumentVoucherSearch());
+        assertThat(page.getPagedData().get(0).getInstrument().getId()).isEqualTo("1");
+        assertThat(page.getPagedData().get(0).getReceiptHeaderId()).isEqualTo("1");
+        assertThat(page.getPagedData().get(0).getVoucherHeaderId()).isEqualTo("1");
+    }
 
     class InstrumentVoucherResultExtractor implements ResultSetExtractor<List<Map<String, Object>>> {
         @Override
@@ -162,15 +175,25 @@ public class InstrumentVoucherJdbcRepositoryTest {
         }
     }
 
-    /*
-     * private InstrumentVoucherSearch getInstrumentVoucherSearch1() { InstrumentVoucherSearch instrumentVoucherSearch = new
-     * InstrumentVoucherSearch(); instrumentVoucherSearch.setId("id"); instrumentVoucherSearch.setName("name");
-     * instrumentVoucherSearch.setDescription("description"); instrumentVoucherSearch.setActive(true);
-     * instrumentVoucherSearch.setTenantId("tenantId"); instrumentVoucherSearch.setPageSize(500);
-     * instrumentVoucherSearch.setOffset(0); instrumentVoucherSearch.setSortBy( "name desc"); return instrumentVoucherSearch; }
-     * private InstrumentVoucherSearch getInstrumentVoucherSearch() { InstrumentVoucherSearch instrumentVoucherSearch = new
-     * InstrumentVoucherSearch(); instrumentVoucherSearch.setName("name"); instrumentVoucherSearch.setDescription("description");
-     * instrumentVoucherSearch.setActive(true); instrumentVoucherSearch.setPageSize(500); instrumentVoucherSearch.setOffset(0);
-     * instrumentVoucherSearch.setSortBy( "name desc"); return instrumentVoucherSearch; }
-     */
+    private InstrumentVoucherSearch getInstrumentVoucherSearch1() {
+        InstrumentVoucherSearch instrumentVoucherSearch = new InstrumentVoucherSearch();
+        instrumentVoucherSearch.setInstrument(Instrument.builder().id("id").build());
+        instrumentVoucherSearch.setReceiptHeaderId("receiptHeaderId");
+        instrumentVoucherSearch.setVoucherHeaderId("voucherHeaderId");
+        instrumentVoucherSearch.setTenantId("tenantId");
+        instrumentVoucherSearch.setPageSize(500);
+        instrumentVoucherSearch.setOffset(0);
+        instrumentVoucherSearch.setSortBy("id desc");
+        return instrumentVoucherSearch;
+    }
+
+    private InstrumentVoucherSearch getInstrumentVoucherSearch() {
+        InstrumentVoucherSearch instrumentVoucherSearch = new InstrumentVoucherSearch();
+        instrumentVoucherSearch.setReceiptHeaderId("1");
+        instrumentVoucherSearch.setVoucherHeaderId("1");
+        instrumentVoucherSearch.setPageSize(500);
+        instrumentVoucherSearch.setOffset(0);
+        instrumentVoucherSearch.setSortBy("id desc");
+        return instrumentVoucherSearch;
+    }
 }

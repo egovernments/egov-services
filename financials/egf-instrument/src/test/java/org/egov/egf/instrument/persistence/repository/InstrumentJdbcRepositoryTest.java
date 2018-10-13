@@ -2,7 +2,6 @@ package org.egov.egf.instrument.persistence.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
 
 import java.math.BigDecimal;
 import java.sql.ResultSet;
@@ -27,7 +26,6 @@ import org.egov.egf.master.web.contract.BankAccountContract;
 import org.egov.egf.master.web.contract.BankContract;
 import org.egov.egf.master.web.contract.FinancialStatusContract;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,6 +41,9 @@ import org.springframework.test.context.junit4.SpringRunner;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 public class InstrumentJdbcRepositoryTest {
 
+    @Autowired
+    private InstrumentVoucherJdbcRepository instrumentVoucherJdbcRepository;
+
     private InstrumentJdbcRepository instrumentJdbcRepository;
 
     @Autowired
@@ -53,7 +54,8 @@ public class InstrumentJdbcRepositoryTest {
 
     @Before
     public void setUp() throws Exception {
-        instrumentJdbcRepository = new InstrumentJdbcRepository(namedParameterJdbcTemplate, jdbcTemplate);
+        instrumentJdbcRepository = new InstrumentJdbcRepository(namedParameterJdbcTemplate, jdbcTemplate,
+                instrumentVoucherJdbcRepository);
     }
 
     @Test

@@ -17,7 +17,6 @@ import org.egov.egf.instrument.persistence.entity.InstrumentEntity;
 import org.egov.egf.instrument.persistence.entity.InstrumentSearchEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -27,8 +26,7 @@ import org.springframework.stereotype.Service;
 public class InstrumentJdbcRepository extends JdbcRepository {
     private static final Logger LOG = LoggerFactory.getLogger(InstrumentJdbcRepository.class);
 
-    @Autowired
-    private InstrumentVoucherJdbcRepository instrumentVoucherJdbcRepository;
+    private final InstrumentVoucherJdbcRepository instrumentVoucherJdbcRepository;
 
     static {
         LOG.debug("init instrument");
@@ -36,9 +34,11 @@ public class InstrumentJdbcRepository extends JdbcRepository {
         LOG.debug("end init instrument");
     }
 
-    public InstrumentJdbcRepository(NamedParameterJdbcTemplate namedParameterJdbcTemplate, JdbcTemplate jdbcTemplate) {
+    public InstrumentJdbcRepository(NamedParameterJdbcTemplate namedParameterJdbcTemplate, JdbcTemplate jdbcTemplate,
+            InstrumentVoucherJdbcRepository instrumentVoucherJdbcRepository) {
         this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
         this.jdbcTemplate = jdbcTemplate;
+        this.instrumentVoucherJdbcRepository = instrumentVoucherJdbcRepository;
     }
 
     public InstrumentEntity create(InstrumentEntity entity) {

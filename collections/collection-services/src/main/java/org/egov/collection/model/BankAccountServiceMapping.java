@@ -74,6 +74,8 @@ public class BankAccountServiceMapping {
     public BankAccountServiceMapping(org.egov.collection.web.contract.BankAccountServiceMapping bankAccountServiceMapping,
             RequestInfo requestInfo) {
         this.bankAccount = bankAccountServiceMapping.getBankAccount();
+        this.bank = bankAccountServiceMapping.getBank();
+        this.bankBranch = bankAccountServiceMapping.getBankBranch();
         this.businessDetails = bankAccountServiceMapping.getBusinessDetails();
         this.createdBy = requestInfo.getUserInfo().getId();
         this.lastModifiedBy = requestInfo.getUserInfo().getId();

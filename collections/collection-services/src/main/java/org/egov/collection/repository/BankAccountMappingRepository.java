@@ -78,7 +78,10 @@ public class BankAccountMappingRepository {
         for (BankAccountServiceMapping bankAccountServiceMapping : bankAccountServiceMappings) {
             bankAccountServiceBatchValues
                     .add(new MapSqlParameterSource("businessdetails", bankAccountServiceMapping.getBusinessDetails())
-                            .addValue("bankaccount", bankAccountServiceMapping.getBankAccount()).addValue("active", true)
+                            .addValue("bankaccount", bankAccountServiceMapping.getBankAccount())
+                            .addValue("bank", bankAccountServiceMapping.getBank())
+                            .addValue("bankbranch", bankAccountServiceMapping.getBankBranch())
+                            .addValue("active", true)
                             .addValue("createdby", bankAccountServiceMapping.getCreatedBy())
                             .addValue("lastmodifiedby", bankAccountServiceMapping.getLastModifiedBy())
                             .addValue("createddate", new Date().getTime())

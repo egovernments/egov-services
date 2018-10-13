@@ -16,5 +16,9 @@ public class BankAccountServiceMappingSearchCriteria {
     private List<String> businessDetails;
 
     private String bankAccount;
+    
+    private String bank;
+    
+    private String bankBranch;
 
 }

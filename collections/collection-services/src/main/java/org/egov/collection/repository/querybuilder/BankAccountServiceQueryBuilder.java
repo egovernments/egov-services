@@ -49,8 +49,8 @@ import org.springframework.stereotype.Component;
 public class BankAccountServiceQueryBuilder {
 
     public String insertBankAccountServiceDetailsQuery() {
-        return "INSERT INTO egcl_bankaccountservicemapping (id, businessdetails, bankaccount, active, createdby, lastmodifiedby, createddate, lastmodifieddate, tenantid) values"
-                + "(nextval('seq_egcl_bankaccountservicemapping'), :businessdetails, :bankaccount, :active, :createdby, :lastmodifiedby, :createddate, :lastmodifieddate, :tenantid)";
+        return "INSERT INTO egcl_bankaccountservicemapping (id, businessdetails, bankaccount, bank, bankbranch, active, createdby, lastmodifiedby, createddate, lastmodifieddate, tenantid) values"
+                + "(nextval('seq_egcl_bankaccountservicemapping'), :businessdetails, :bankaccount, :bank, :bankbranch, :active, :createdby, :lastmodifiedby, :createddate, :lastmodifieddate, :tenantid)";
     }
 
     public String BankAccountServiceMappingSearchQuery(final BankAccountServiceMappingSearchCriteria searchCriteria,
@@ -65,8 +65,18 @@ public class BankAccountServiceQueryBuilder {
         }
 
         if (searchCriteria.getBankAccount() != null) {
-            searchQuery.append(" and bankaccount =:bankId");
-            paramValues.put("bankId", searchCriteria.getBankAccount());
+            searchQuery.append(" and bankaccount =:bankaccount");
+            paramValues.put("bankaccount", searchCriteria.getBankAccount());
+        }
+        
+        if (searchCriteria.getBank() != null) {
+            searchQuery.append(" and bank =:bank");
+            paramValues.put("bank", searchCriteria.getBank());
+        }
+        
+        if (searchCriteria.getBankBranch() != null) {
+            searchQuery.append(" and bankBranch =:bankBranch");
+            paramValues.put("bankBranch", searchCriteria.getBankBranch());
         }
 
         searchQuery.append(" order by businessdetails");

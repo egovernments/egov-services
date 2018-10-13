@@ -77,7 +77,7 @@ public class Instrument extends Auditable {
      * transactionNumber unique number of the instrument. For cheque type this is cheque date. For DD type it is DD number
      */
     @NotBlank
-    @Size(max = 50, min = 6)
+    @Size(max = 50)
     private String transactionNumber;
 
     /*

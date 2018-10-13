@@ -291,6 +291,12 @@ public class CollectionsQueryBuilder {
             preparedStatementValues.put("businessCode", searchCriteria.getBusinessCode());
         }
 
+        if (searchCriteria.getBusinessCodes() != null && !searchCriteria.getBusinessCodes().isEmpty()) {
+            addClauseIfRequired(preparedStatementValues, selectQuery);
+            selectQuery.append(" rh.businessDetails IN (:businessCodes)  ");
+            preparedStatementValues.put("businessCodes", searchCriteria.getBusinessCodes());
+        }
+        
         if (searchCriteria.getIds() != null) {
             addClauseIfRequired(preparedStatementValues, selectQuery);
             selectQuery.append(" rh.id IN (:ids)");

@@ -69,6 +69,8 @@ public class ReceiptSearchCriteria {
     private String classification;
 
     private String businessCode;
+    
+    private List<String> businessCodes;
 
     private String tenantId;
     

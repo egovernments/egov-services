@@ -221,7 +221,7 @@ public class ReceiptEnricher {
 
                 String transactionDate = simpleDateFormat.format(new Date());
                 instrument.setTransactionDate(simpleDateFormat.parse(transactionDate));
-                instrument.setTransactionDateInput(System.currentTimeMillis());
+                instrument.setTransactionDateInput(new Date().getTime());
 
 
             } else {

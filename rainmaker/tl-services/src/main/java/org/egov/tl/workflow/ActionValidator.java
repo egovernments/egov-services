@@ -42,6 +42,7 @@ public class ActionValidator {
                 errorMap.put("INVALID STATUS","Status can only be APPLY or INITIATE during create");
             }
         });
+        validateRole(request);
 
         if(!errorMap.isEmpty())
             throw new CustomException(errorMap);

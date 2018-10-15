@@ -295,6 +295,13 @@ public class EnrichmentService {
     }
 
 
+    public void enrichSearchCriteriaWithAccountId(RequestInfo requestInfo,TradeLicenseSearchCriteria criteria){
+        if(criteria.isEmpty() && requestInfo.getUserInfo().getType().equalsIgnoreCase("CITIZEN"))
+            criteria.setAccountId(requestInfo.getUserInfo().getUuid());
+
+    }
+
+
 
 
 

@@ -220,6 +220,12 @@ public class TLValidator {
     }
 
 
+    public void validateSearch(RequestInfo requestInfo,TradeLicenseSearchCriteria criteria){
+        if(!requestInfo.getUserInfo().getType().equalsIgnoreCase("CITIZEN" )&& criteria.tenantIdOnly()==true)
+            throw new CustomException("INVALID SEARCH","Search based only on tenantId is not allowed");
+    }
+
+
 
 
 

@@ -80,14 +80,14 @@ public class TLQueryBuilder {
 
         StringBuilder builder = new StringBuilder(QUERY);
 
-        builder.append(" tl.tenantid=? ");
-        preparedStmtList.add(criteria.getTenantId());
-
         if(criteria.getAccountId()!=null){
-            builder.append(" and tl.accountid = ? ");
+            builder.append(" tl.accountid = ? ");
             preparedStmtList.add(criteria.getAccountId());
             return builder.toString();
         }
+
+        builder.append(" tl.tenantid=? ");
+        preparedStmtList.add(criteria.getTenantId());
 
         List<String> ids = criteria.getIds();
         if(!CollectionUtils.isEmpty(ids)) {
@@ -163,8 +163,11 @@ public class TLQueryBuilder {
         int offset = config.getDefaultOffset();
         String finalQuery = paginationWrapper.replace("{}",query);
 
-        if(criteria.getLimit()!=null)
+        if(criteria.getLimit()!=null && criteria.getLimit()<=config.getMaxSearchLimit())
             limit = criteria.getLimit();
+
+        if(criteria.getLimit()!=null && criteria.getLimit()>config.getMaxSearchLimit())
+            limit = config.getMaxSearchLimit();
 
         if(criteria.getOffset()!=null)
             offset = criteria.getOffset();

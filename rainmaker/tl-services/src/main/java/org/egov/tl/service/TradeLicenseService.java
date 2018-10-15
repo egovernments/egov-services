@@ -63,6 +63,8 @@ public class TradeLicenseService {
 
     public List<TradeLicense> search(TradeLicenseSearchCriteria criteria, RequestInfo requestInfo){
         List<TradeLicense> licenses;
+        tlValidator.validateSearch(requestInfo,criteria);
+        enrichmentService.enrichSearchCriteriaWithAccountId(requestInfo,criteria);
          if(criteria.getMobileNumber()!=null){
              UserDetailResponse userDetailResponse = userService.getUser(criteria,requestInfo);
              // If user not found with given user fields return empty list

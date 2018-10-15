@@ -112,6 +112,10 @@ public class TLConfiguration {
     @Value("${egov.tl.default.offset}")
     private Integer defaultOffset;
 
+    @Value("${egov.tl.max.limit}")
+    private Integer maxSearchLimit;
+
+
 
     // tradelicense Calculator
     @Value("${egov.tl.calculator.host}")

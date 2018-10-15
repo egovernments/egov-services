@@ -2,7 +2,7 @@ delete from egf_instrumentaccountcode where instrumenttypeid in ('Cash','Cheque'
 
 insert into egf_instrumentaccountcode(id,instrumenttypeid, accountcodeid, createdby, tenantid) values(nextval('seq_egf_instrumentaccountcode'),'Cash', 4501001, 1, 'pb.mohali');
 
-insert into egf_instrumentaccountcode(id,instrumenttypeid, accountcodeid, mohali, tenantid) values(nextval('seq_egf_instrumentaccountcode'),'Cheque', 4501051, 1, 'pb.jalandhar');
+insert into egf_instrumentaccountcode(id,instrumenttypeid, accountcodeid, createdby, tenantid) values(nextval('seq_egf_instrumentaccountcode'),'Cheque', 4501051, 1, 'pb.mohali');
 
 insert into egf_instrumentaccountcode(id,instrumenttypeid, accountcodeid, createdby, tenantid) values(nextval('seq_egf_instrumentaccountcode'),'DD', 4501051, 1, 'pb.mohali');
 

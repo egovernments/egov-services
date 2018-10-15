@@ -1,6 +1,19 @@
 package org.egov.collection.util;
 
-import lombok.extern.slf4j.Slf4j;
+import static java.util.Objects.isNull;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
+import java.util.UUID;
+import java.util.stream.Collectors;
+
 import org.egov.collection.model.AuditDetails;
 import org.egov.collection.model.Instrument;
 import org.egov.collection.model.TransactionType;
@@ -12,19 +25,19 @@ import org.egov.collection.repository.BillingServiceRepository;
 import org.egov.collection.repository.BusinessDetailsRepository;
 import org.egov.collection.repository.IdGenRepository;
 import org.egov.collection.repository.InstrumentRepository;
-import org.egov.collection.web.contract.*;
+import org.egov.collection.web.contract.Bill;
+import org.egov.collection.web.contract.BillAccountDetail;
+import org.egov.collection.web.contract.BillDetail;
+import org.egov.collection.web.contract.BusinessDetailsResponse;
+import org.egov.collection.web.contract.Receipt;
+import org.egov.collection.web.contract.ReceiptReq;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.tracer.model.CustomException;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.*;
-import java.util.stream.Collectors;
-
-import static java.util.Objects.isNull;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Slf4j
@@ -219,9 +232,9 @@ public class ReceiptEnricher {
                     .getInstrumentType().getName().equalsIgnoreCase(InstrumentTypesEnum.CARD.name())) {
 
 
-                String transactionDate = simpleDateFormat.format(new Date());
-                instrument.setTransactionDate(simpleDateFormat.parse(transactionDate));
                 instrument.setTransactionDateInput(new Date().getTime());
+                DateTime transactionDate = new DateTime(instrument.getTransactionDateInput());
+                instrument.setTransactionDate(simpleDateFormat.parse(transactionDate.toString("dd/MM/yyyy")));
 
 
             } else {

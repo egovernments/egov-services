@@ -20,7 +20,6 @@ import org.egov.egf.instrument.domain.repository.InstrumentTypeRepository;
 import org.egov.egf.instrument.domain.repository.SurrenderReasonRepository;
 import org.egov.egf.instrument.web.requests.InstrumentRequest;
 import org.egov.egf.master.web.contract.BankAccountContract;
-import org.egov.egf.master.web.contract.BankContract;
 import org.egov.egf.master.web.contract.FinancialStatusContract;
 import org.egov.egf.master.web.repository.BankAccountContractRepository;
 import org.egov.egf.master.web.repository.BankContractRepository;
@@ -246,6 +245,7 @@ public class InstrumentService {
                                 " Invalid instrumentType");
                     instrument.setInstrumentType(response.getPagedData().get(0));
                 }
+                bankContractRepository.getClass();
                /* if (instrument.getBank() != null && instrument.getBank().getId() != null) {
                     instrument.getBank().setTenantId(instrument.getTenantId());
                     BankContract bank = bankContractRepository.findById(instrument.getBank(), requestInfo);

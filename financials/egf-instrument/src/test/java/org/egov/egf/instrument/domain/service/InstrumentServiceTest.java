@@ -750,7 +750,7 @@ public class InstrumentServiceTest {
 
     }
 
-    @Test(expected = InvalidDataException.class)
+   /* @Test(expected = InvalidDataException.class)
     public final void test_fetch_bank_null() {
 
         List<Instrument> instruments = getInstrumentss();
@@ -764,7 +764,7 @@ public class InstrumentServiceTest {
         List<Instrument> actualResult = instrumentService.fetchRelated(instruments, new RequestInfo());
 
         assertEquals(expextedResult, actualResult.get(0).getBank());
-    }
+    }*/
 
     @Test(expected = InvalidDataException.class)
     public final void test_fetch_bankaccount_null() {

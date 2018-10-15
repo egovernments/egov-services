@@ -62,8 +62,8 @@ public class DemandEnrichmentUtil {
 			Long ownerId = demand.getOwner().getId();
 			if (map.containsKey(ownerId)) {
 				demand.setOwner(map.get(ownerId));
-				rsDemands.add(demand);
 			}
+			rsDemands.add(demand);
 		}
 		return rsDemands;
 	}

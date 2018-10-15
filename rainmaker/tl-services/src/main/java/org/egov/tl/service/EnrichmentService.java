@@ -84,6 +84,9 @@ public class EnrichmentService {
                 });
             }
 
+            if(requestInfo.getUserInfo().getType().equalsIgnoreCase("CITIZEN"))
+                tradeLicense.setAccountId(requestInfo.getUserInfo().getUuid());
+
         });
         setIdgenIds(tradeLicenseRequest);
         setStatusForCreate(tradeLicenseRequest);

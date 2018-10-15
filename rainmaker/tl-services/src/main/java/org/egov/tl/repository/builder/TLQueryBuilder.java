@@ -84,8 +84,8 @@ public class TLQueryBuilder {
         preparedStmtList.add(criteria.getTenantId());
 
         if(criteria.getAccountId()!=null){
-            builder.append(" and tl.oldlicensenumber = ? ");
-            preparedStmtList.add(criteria.getOldLicenseNumber());
+            builder.append(" and tl.accountid = ? ");
+            preparedStmtList.add(criteria.getAccountId());
             return builder.toString();
         }
 

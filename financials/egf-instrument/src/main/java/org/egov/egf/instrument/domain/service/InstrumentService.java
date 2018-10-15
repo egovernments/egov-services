@@ -246,13 +246,13 @@ public class InstrumentService {
                                 " Invalid instrumentType");
                     instrument.setInstrumentType(response.getPagedData().get(0));
                 }
-                if (instrument.getBank() != null && instrument.getBank().getId() != null) {
+               /* if (instrument.getBank() != null && instrument.getBank().getId() != null) {
                     instrument.getBank().setTenantId(instrument.getTenantId());
                     BankContract bank = bankContractRepository.findById(instrument.getBank(), requestInfo);
                     if (bank == null)
                         throw new InvalidDataException("bank", "bank.invalid", " Invalid bank");
                     instrument.setBank(bank);
-                }
+                }*/
                 if (instrument.getBankAccount() != null && instrument.getBankAccount().getAccountNumber() != null) {
                     instrument.getBankAccount().setTenantId(instrument.getTenantId());
                     BankAccountContract bankAccount = bankAccountContractRepository

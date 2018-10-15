@@ -2,7 +2,6 @@ package org.egov.collection.util;
 
 import static java.util.Objects.isNull;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.Comparator;
@@ -33,7 +32,6 @@ import org.egov.collection.web.contract.Receipt;
 import org.egov.collection.web.contract.ReceiptReq;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.tracer.model.CustomException;
-import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -220,31 +218,23 @@ public class ReceiptEnricher {
         instrument.setInstrumentStatus(InstrumentStatusEnum.NEW);
         instrument.setInstrumentDate(instrument.getTransactionDateInput());
 
-        try {
+        if(instrument.getInstrumentType().getName().equalsIgnoreCase(InstrumentTypesEnum.CASH.name())){
+            String transactionId = idGenRepository.generateTransactionNumber(receiptReq.getRequestInfo(),
+                    receipt.getTenantId());
+            instrument.setTransactionNumber(transactionId);
+        }
 
-            if(instrument.getInstrumentType().getName().equalsIgnoreCase(InstrumentTypesEnum.CASH.name())){
-                String transactionId = idGenRepository.generateTransactionNumber(receiptReq.getRequestInfo(),
-                        receipt.getTenantId());
-                instrument.setTransactionNumber(transactionId);
-            }
+        if (instrument.getInstrumentType().getName().equalsIgnoreCase(InstrumentTypesEnum.CASH.name()) || instrument
+                .getInstrumentType().getName().equalsIgnoreCase(InstrumentTypesEnum.CARD.name())) {
 
-            if (instrument.getInstrumentType().getName().equalsIgnoreCase(InstrumentTypesEnum.CASH.name()) || instrument
-                    .getInstrumentType().getName().equalsIgnoreCase(InstrumentTypesEnum.CARD.name())) {
+            instrument.setTransactionDateInput(new Date().getTime());
+            instrument.setTransactionDate(new Date());
 
+        } else {
+            instrument.setTransactionDate(new Date(instrument.getTransactionDateInput()));
+        }
 
-                instrument.setTransactionDateInput(new Date().getTime());
-                DateTime transactionDate = new DateTime(instrument.getTransactionDateInput());
-                instrument.setTransactionDate(simpleDateFormat.parse(transactionDate.toString("dd/MM/yyyy")));
-
-
-            } else {
-                DateTime transactionDate = new DateTime(instrument.getTransactionDateInput());
-                instrument.setTransactionDate(simpleDateFormat.parse(transactionDate.toString("dd/MM/yyyy")));
-            }
-
-            receipt.setTransactionId(instrument.getTransactionNumber());
-
-        }catch (ParseException ignored){}
+        receipt.setTransactionId(instrument.getTransactionNumber());
     }
 
     /**

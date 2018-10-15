@@ -3,6 +3,7 @@ package org.egov.cosumer;
 import java.util.HashMap;
 
 import org.egov.service.SignOutService;
+import org.egov.utils.JsonPathConstant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.support.KafkaHeaders;
@@ -30,11 +31,14 @@ public class CustomConsumer {
 
 		log.info("CustomConsumer received request from topic: " + topic);
 		log.info("data: " + record);
+		log.info(record.keySet().toString());
 		
 		try {
-			String inputJson = objectMapper.writeValueAsString(record);
-			DocumentContext documentContext = JsonPath.parse(inputJson);
-			String sourceUri = documentContext.read("$.sourceUri");
+		    //String inputJson = objectMapper.writeValueAsString(record);
+			DocumentContext documentContext = JsonPath.parse(record);
+			String sourceUri = documentContext.read(JsonPathConstant.signOutUriJsonPath);
+			
+			if(sourceUri.equals(JsonPathConstant.signOutUri))
 			signOutService.callFinanceForSignOut(documentContext);
 			
 		} catch (Exception ex) {

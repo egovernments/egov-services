@@ -17,8 +17,8 @@ import lombok.extern.slf4j.Slf4j;
 @Builder
 public class CustomAsyncRequest {
 
-	private String request;
-	private String response;
+	private Map<String, Object> request;
+	private Map<String, Object> response;
 	private String sourceUri;
 	Map<String, List<String>> queryParamMap = new HashMap<>();
 	

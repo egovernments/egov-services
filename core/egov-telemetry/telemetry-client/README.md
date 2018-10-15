@@ -30,5 +30,5 @@ npm install
 npx webpack --config webpack.config.js
 ```
 
-This will generate a transpiled ES5 JavaScript file “main.js” in the build folder.
+This will generate a transpiled ES5 JavaScript file "egov-telemetry.js” in the build folder.
 ​

@@ -74,6 +74,12 @@ public class BillingServiceApplication {
 		return converter;
 	}
 
+	@Bean
+	public io.opentracing.Tracer jaegerTracer() {
+		return io.jaegertracing.Configuration.fromEnv()
+				.getTracer();
+	}
+
 	public static void main(String[] args) {
 		SpringApplication.run(BillingServiceApplication.class, args);
 	}

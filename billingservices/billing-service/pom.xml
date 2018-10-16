@@ -51,7 +51,51 @@
 			<artifactId>spring-kafka</artifactId>
 		</dependency>
 
-<!-- 	Added for power mock -->
+		<!--  TRACING -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-actuator</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>io.opentracing.contrib</groupId>
+			<artifactId>opentracing-spring-cloud-starter</artifactId>
+			<version>0.1.16</version>
+		</dependency>
+
+		<dependency>
+			<groupId>io.opentracing.contrib</groupId>
+			<artifactId>opentracing-spring-jaeger-starter</artifactId>
+			<version>0.2.2</version>
+		</dependency>
+
+		<dependency>
+			<groupId>io.micrometer</groupId>
+			<artifactId>micrometer-core</artifactId>
+			<version>1.0.6</version>
+		</dependency>
+
+
+		<dependency>
+			<groupId>io.micrometer</groupId>
+			<artifactId>micrometer-spring-legacy</artifactId>
+			<version>1.0.6</version>
+		</dependency>
+
+		<dependency>
+			<groupId>io.micrometer</groupId>
+			<artifactId>micrometer-registry-prometheus</artifactId>
+			<version>1.0.6</version>
+		</dependency>
+
+		<dependency>
+			<groupId>io.jaegertracing</groupId>
+			<artifactId>jaeger-client</artifactId>
+			<version>0.31.0</version>
+		</dependency>
+
+
+		<!-- 	Added for power mock -->
 		<dependency>
 			<groupId>org.powermock</groupId>
 			<artifactId>powermock-api-mockito</artifactId>

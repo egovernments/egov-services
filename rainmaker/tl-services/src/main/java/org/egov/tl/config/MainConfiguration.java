@@ -1,16 +1,16 @@
 package org.egov.tl.config;
 
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Import;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.egov.tracer.config.TracerConfiguration;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.MediaType;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import java.util.TimeZone;
+
 import javax.annotation.PostConstruct;
-    import com.fasterxml.jackson.databind.DeserializationFeature;
-    import com.fasterxml.jackson.databind.ObjectMapper;
-import org.egov.tracer.config.TracerConfiguration;
+import java.util.TimeZone;
 
 
 @Import({TracerConfiguration.class})
@@ -35,5 +35,11 @@ public class MainConfiguration {
     MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter();
     converter.setObjectMapper(objectMapper);
     return converter;
+    }
+
+    @Bean
+    public io.opentracing.Tracer jaegerTracer() {
+        return io.jaegertracing.Configuration.fromEnv()
+                .getTracer();
     }
 }

@@ -121,4 +121,10 @@ public class ApplicationProperties {
     @Value("${kafka.topics.update.receipt.workflowdetails}")
     private String kafkaUpdateWorkFlowDetailsTopic;
 
+    @Value("${receiptnumber.idname}")
+    private String receiptNumberIdName;
+
+    @Value("${receiptnumber.service}")
+    private boolean receiptNumberByService;
+
 }

@@ -27,11 +27,29 @@ public class IdGenRepository {
     
 	@Autowired
 	private ApplicationProperties applicationProperties;
-	
-	public String generateReceiptNumber(RequestInfo requestInfo, String tenantId) {
-        log.debug("Attempting to generate Receipt Number from ID Gen");
 
-        return getId(requestInfo, tenantId, COLL_ID_NAME, COLL_ID_FORMAT, 1);
+    /**
+     * Generates a receipt number
+     *  - If isReceiptNumberByService flag is set to true,
+     *      generates receipt number by business service and tenant id
+     *  - Else generates by tenant id only
+     *
+     * @param requestInfo
+     * @param businessService
+     * @param tenantId
+     * @return
+     */
+	public String generateReceiptNumber(RequestInfo requestInfo, String businessService ,String tenantId) {
+        String idName = "";
+	    log.debug("Attempting to generate Receipt Number from ID Gen");
+
+        if(applicationProperties.isReceiptNumberByService()){
+            idName = idName + businessService.toLowerCase() + "." + applicationProperties.getReceiptNumberIdName();
+        } else{
+            idName = applicationProperties.getReceiptNumberIdName();
+        }
+
+        return getId(requestInfo, tenantId, idName, null, 1);
 	}
 
     public String generateTransactionNumber(RequestInfo requestInfo, String tenantId) {
@@ -42,12 +60,6 @@ public class IdGenRepository {
 
 
         return getId(requestInfo, tenantId, COLL_TRANSACTION_ID_NAME, tenantFormat, 1);
-
-    }
-
-    public String generateRemittanceNumber(RequestInfo requestInfo, String tenantId) {
-        log.info("Attempting to generate Remittance Number from ID Gen");
-        return getId(requestInfo, tenantId, COLL_REMITTENACE_ID_NAME, COLL_REMITTENACE_ID_FORMAT, 1);
 
     }
 

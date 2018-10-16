@@ -112,10 +112,10 @@ public class DemandValidator implements Validator {
 		for (Demand demand : demandRequest.getDemands()) {
 			demandDetails.addAll(demand.getDemandDetails());
 		}
-//		validateDemandDetails(demandDetails, errors);
-//		validateTaxHeadMaster(demandRequest, errors);
-//		validateBusinessService(demandRequest, errors);
-//		validateTaxPeriod(demandRequest, errors);
+		validateDemandDetails(demandDetails, errors);
+		validateTaxHeadMaster(demandRequest, errors);
+		validateBusinessService(demandRequest, errors);
+		validateTaxPeriod(demandRequest, errors);
 		validateOwner(demandRequest, errors);
 	}
 

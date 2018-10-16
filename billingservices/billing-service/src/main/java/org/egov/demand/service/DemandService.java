@@ -159,7 +159,7 @@ public class DemandService {
 			demandDetail.setId(demandDetailIds.get(currentDetailId++));
 		}
 		save(demandRequest);
-		//producer.push(applicationProperties.getDemandIndexTopic(), demandRequest);
+		producer.push(applicationProperties.getDemandIndexTopic(), demandRequest);
 		return new DemandResponse(responseInfoFactory.getResponseInfo(requestInfo, HttpStatus.CREATED), demands);
 	}
 	

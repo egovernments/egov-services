@@ -743,6 +743,49 @@ paths:
           description: Invalid input
           schema:
             $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+  /bill/_fetchBill:
+    post:
+      description: 'Creates a Bill for collections. By default active bill will be created. Along with tenantId, any one parameter is mandatory. Trigers bill generate internally, wrap over the bill generate api.'
+      parameters:
+        - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo'
+        - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId'
+        - name: demandId
+          in: query
+          description: Primary key of Demand object.
+          required: false
+          type: integer
+          format: int64
+        - name: consumerCode
+          in: query
+          description: A unique identification for a billing entity.
+          required: false
+          type: string
+        - name: businessService
+          in: query
+          description: 'Billing system details e.g., PropertyTax,Water Charges etc.'
+          required: false
+          type: string
+        - name: email
+          in: query
+          description: Email Id of Primary owner of business detail.
+          required: false
+          type: string
+        - name: mobileNumber
+          in: query
+          description: Mobile number of Primary owner of business detail.
+          required: false
+          type: string
+      tags:
+        - Bill
+      responses:
+        '201':
+          description: 'Creates a Bill along with its bill details. Ex- If search is done using mobile number, combined bill will be generated, having information for each of the services(ex-Property tax, Water charges)'
+          schema:
+            $ref: '#/definitions/BillResponse'
+        '400':
+          description: Invalid input
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'  
   /bill/_create:
     post:
       description: Creates a bill along with its list of bill details. The bill type is MANUAL here.
@@ -821,11 +864,11 @@ definitions:
       taxPeriodFrom:
         type: integer
         format: int64
-        description: 'start date from when the tax is applicable.'
+        description: start date from when the tax is applicable.
       taxPeriodTo:
         type: integer
         format: int64
-        description: 'end date till when the tax is applicable.'
+        description: end date till when the tax is applicable.
       demandDetails:
         type: array
         items:
@@ -978,11 +1021,11 @@ definitions:
       validFrom:
         type: integer
         format: int64
-        description: 'start date from when the tax is applicable.'
+        description: start date from when the tax is applicable.
       validTill:
         type: integer
         format: int64
-        description: 'end date till when the tax is applicable.'
+        description: end date till when the tax is applicable.
       auditDetails:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails'
     required:
@@ -1125,7 +1168,7 @@ definitions:
         minLength: 4
       bill:
         type: string
-        description: Id of bill 
+        description: Id of bill
       businessService:
         type: string
         description: BusinessService code.
@@ -1202,7 +1245,7 @@ definitions:
         minLength: 4
       billDetail:
         type: string
-        description: Id of billdetail 
+        description: Id of billdetail
       glcode:
         type: string
         description: Chart of account code.
@@ -1364,7 +1407,7 @@ definitions:
     properties:
       ResponseInfo:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
-      BillInfos:
+      Bill:
         type: array
         maximum: 500
         items:

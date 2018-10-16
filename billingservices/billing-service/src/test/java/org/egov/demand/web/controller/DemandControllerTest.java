@@ -1,28 +1,9 @@
 package org.egov.demand.web.controller;
 
-import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
-import java.io.IOException;
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
-
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ResponseInfo;
 import org.egov.demand.TestConfiguration;
-import org.egov.demand.model.ConsolidatedTax;
-import org.egov.demand.model.Demand;
-import org.egov.demand.model.DemandCriteria;
-import org.egov.demand.model.DemandDetail;
-import org.egov.demand.model.DemandDetailCriteria;
-import org.egov.demand.model.DemandDue;
-import org.egov.demand.model.DemandDueCriteria;
-import org.egov.demand.model.DemandUpdateMisRequest;
-import org.egov.demand.model.Owner;
+import org.egov.demand.model.*;
 import org.egov.demand.service.DemandService;
 import org.egov.demand.util.FileUtils;
 import org.egov.demand.web.contract.DemandDetailResponse;
@@ -37,14 +18,26 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+
+import java.io.IOException;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(DemandController.class)
 @Import(TestConfiguration.class)
+@ActiveProfiles("test")
 public class DemandControllerTest {
 
 	@Autowired

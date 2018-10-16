@@ -1,11 +1,5 @@
 package org.egov.demand.repository;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import org.egov.demand.TestConfiguration;
 import org.egov.demand.config.ApplicationProperties;
 import org.egov.demand.model.BillSearchCriteria;
@@ -19,11 +13,19 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(BillQueryBuilder.class)
 @Import(TestConfiguration.class)
+@ActiveProfiles("test")
 public class BillQueryBuilderTest {
 
 	@InjectMocks

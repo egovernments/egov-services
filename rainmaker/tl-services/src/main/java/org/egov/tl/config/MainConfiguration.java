@@ -37,9 +37,4 @@ public class MainConfiguration {
     return converter;
     }
 
-    @Bean
-    public io.opentracing.Tracer jaegerTracer() {
-        return io.jaegertracing.Configuration.fromEnv()
-                .getTracer();
-    }
 }

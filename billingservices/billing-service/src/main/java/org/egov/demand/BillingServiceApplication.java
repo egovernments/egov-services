@@ -45,6 +45,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.Primary;
+import org.springframework.context.annotation.Profile;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -75,6 +76,7 @@ public class BillingServiceApplication {
 	}
 
 	@Bean
+	@Profile("!test")
 	public io.opentracing.Tracer jaegerTracer() {
 		return io.jaegertracing.Configuration.fromEnv()
 				.getTracer();

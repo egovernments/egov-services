@@ -177,6 +177,20 @@ public class TLConfiguration {
     private String mdmsEndPoint;
 
 
+    //Allowed Search Parameters
+    @Value("${citizen.allowed.search.params}")
+    private String allowedCitizenSearchParameters;
+
+    @Value("${employee.allowed.search.params}")
+    private String allowedEmployeeSearchParameters;
+
+
+    //FinancialYear End Date
+    @Value("${egov.tl.financialyear.end}")
+    private Long financialYearEndDate;
+
+    @Value("${egov.tl.previous.allowed}")
+    private Boolean isPreviousTLAllowed;
 
 
 

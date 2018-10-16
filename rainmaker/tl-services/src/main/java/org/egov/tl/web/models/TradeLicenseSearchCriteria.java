@@ -66,7 +66,7 @@ public class TradeLicenseSearchCriteria {
     }
 
     public boolean tenantIdOnly() {
-        return (this.status == null && this.ids == null && this.applicationNumber == null
+        return (this.tenantId != null && this.status == null && this.ids == null && this.applicationNumber == null
                 && this.licenseNumber == null && this.oldLicenseNumber == null && this.mobileNumber == null &&
                 this.fromDate == null && this.toDate == null && this.offset == null && this.limit == null
                 && this.ownerIds == null

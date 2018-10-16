@@ -1,12 +1,15 @@
 package org.egov.tl.validator;
 
+import org.apache.commons.lang.StringUtils;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.tl.config.TLConfiguration;
 import org.egov.tl.repository.TLRepository;
 import org.egov.tl.service.TradeLicenseService;
+import org.egov.tl.util.TradeUtil;
 import org.egov.tl.web.models.TradeLicense;
 import org.egov.tl.web.models.TradeLicenseRequest;
 import org.egov.tl.web.models.TradeLicenseSearchCriteria;
+import org.egov.tl.web.models.TradeUnit;
 import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -40,10 +43,34 @@ public class TLValidator {
 
 
     public void validateCreate(TradeLicenseRequest request){
+     //   valideDates(request);
         validateInstitution(request);
         propertyValidator.validateProperty(request);
         mdmsValidator.validateMdmsData(request);
     }
+
+
+    private void valideDates(TradeLicenseRequest request){
+        request.getLicenses().forEach(license -> {
+            if(license.getValidTo()!=null && license.getValidTo()>config.getFinancialYearEndDate()){
+                Date expiry = new Date(license.getValidTo());
+                throw new CustomException("INVALID END DATE"," Validto cannot be greater than: "+expiry);
+            }
+            if(!config.getIsPreviousTLAllowed() && license.getValidFrom()!=null
+                    && license.getValidFrom()<getStartOfDay())
+                throw new CustomException("INVALID START DATE","The validFrom date cannot be less than CurrentDate");
+        });
+    }
+
+    private Long getStartOfDay(){
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.HOUR_OF_DAY, 0);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.SECOND, 0);
+        cal.set(Calendar.MILLISECOND,0);
+        return cal.getTimeInMillis();
+    }
+
 
 
     private void validateInstitution(TradeLicenseRequest request){
@@ -90,8 +117,31 @@ public class TLValidator {
 
       validateAllIds(searchResult,licenses);
       mdmsValidator.validateMdmsData(request);
+      validateTradeUnits(request);
 
       setFieldsFromSearch(request,searchResult);
+   }
+
+   private void validateTradeUnits(TradeLicenseRequest request){
+        Map<String,String> errorMap = new HashMap<>();
+        List<TradeLicense> licenses = request.getLicenses();
+
+        for(TradeLicense license : licenses)
+        {
+            Boolean flag = false;
+            List<TradeUnit> units = license.getTradeLicenseDetail().getTradeUnits();
+            for(TradeUnit unit : units) {
+                if(unit.getActive())
+                    flag = true;
+                else if(unit.getId()==null)
+                    flag = true;
+            }
+            if(!flag)
+                errorMap.put("INVALID UPDATE","All TradeUnits are inactive in the tradeLicense: "+license.getApplicationNumber());
+        }
+
+        if(!errorMap.isEmpty())
+            throw new CustomException(errorMap);
    }
 
 
@@ -220,12 +270,75 @@ public class TLValidator {
     }
 
 
+
+
     public void validateSearch(RequestInfo requestInfo,TradeLicenseSearchCriteria criteria){
-        if(!requestInfo.getUserInfo().getType().equalsIgnoreCase("CITIZEN" )&& criteria.tenantIdOnly()==true)
+        if(!requestInfo.getUserInfo().getType().equalsIgnoreCase("CITIZEN" )&& criteria.isEmpty())
+            throw new CustomException("INVALID SEARCH","Search without any paramters is not allowed");
+
+        if(!requestInfo.getUserInfo().getType().equalsIgnoreCase("CITIZEN" )&& criteria.tenantIdOnly())
             throw new CustomException("INVALID SEARCH","Search based only on tenantId is not allowed");
+
+        if(!requestInfo.getUserInfo().getType().equalsIgnoreCase("CITIZEN" )&& !criteria.tenantIdOnly()
+                && criteria.getTenantId()==null)
+            throw new CustomException("INVALID SEARCH","TenantId is mandatory in search");
+
+        String allowedParamStr = null;
+
+        if(requestInfo.getUserInfo().getType().equalsIgnoreCase("CITIZEN" ))
+            allowedParamStr = config.getAllowedCitizenSearchParameters();
+        else if(requestInfo.getUserInfo().getType().equalsIgnoreCase("EMPLOYEE" ))
+            allowedParamStr = config.getAllowedEmployeeSearchParameters();
+        else throw new CustomException("INVALID SEARCH","The userType: "+requestInfo.getUserInfo().getType()+
+                    " does not have any search config");
+
+        if(StringUtils.isEmpty(allowedParamStr) && !criteria.isEmpty())
+            throw new CustomException("INVALID SEARCH","No search parameters are expected");
+        else {
+            List<String> allowedParams = Arrays.asList(allowedParamStr.split(","));
+            validateSearchParams(criteria, allowedParams);
+        }
     }
 
 
+
+
+    private void validateSearchParams(TradeLicenseSearchCriteria criteria,List<String> allowedParams){
+
+        if(criteria.getApplicationNumber()!=null && !allowedParams.contains("applicationNumber"))
+            throw new CustomException("INVALID SEARCH","Search on applicationNumber is not allowed");
+
+        if(criteria.getTenantId()!=null && !allowedParams.contains("tenantId"))
+            throw new CustomException("INVALID SEARCH","Search on tenantId is not allowed");
+
+        if(criteria.getToDate()!=null && !allowedParams.contains("toDate"))
+            throw new CustomException("INVALID SEARCH","Search on toDate is not allowed");
+
+        if(criteria.getFromDate()!=null && !allowedParams.contains("fromDate"))
+            throw new CustomException("INVALID SEARCH","Search on fromDate is not allowed");
+
+        if(criteria.getStatus()!=null && !allowedParams.contains("status"))
+            throw new CustomException("INVALID SEARCH","Search on Status is not allowed");
+
+        if(criteria.getIds()!=null && !allowedParams.contains("ids"))
+            throw new CustomException("INVALID SEARCH","Search on ids is not allowed");
+
+        if(criteria.getMobileNumber()!=null && !allowedParams.contains("mobileNumber"))
+            throw new CustomException("INVALID SEARCH","Search on mobileNumber is not allowed");
+
+        if(criteria.getLicenseNumber()!=null && !allowedParams.contains("licenseNumber"))
+            throw new CustomException("INVALID SEARCH","Search on licenseNumber is not allowed");
+
+        if(criteria.getOldLicenseNumber()!=null && !allowedParams.contains("oldLicenseNumber"))
+            throw new CustomException("INVALID SEARCH","Search on oldLicenseNumber is not allowed");
+
+        if(criteria.getOffset()!=null && !allowedParams.contains("offset"))
+            throw new CustomException("INVALID SEARCH","Search on offset is not allowed");
+
+        if(criteria.getLimit()!=null && !allowedParams.contains("limit"))
+            throw new CustomException("INVALID SEARCH","Search on limit is not allowed");
+
+    }
 
 
 

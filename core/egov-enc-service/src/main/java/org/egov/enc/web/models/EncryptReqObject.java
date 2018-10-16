@@ -34,6 +34,7 @@ import lombok.Builder;
 @NoArgsConstructor
 @Builder
 public class EncryptReqObject {
+
     @JsonProperty("tenantId")
     private String tenantId = null;
 

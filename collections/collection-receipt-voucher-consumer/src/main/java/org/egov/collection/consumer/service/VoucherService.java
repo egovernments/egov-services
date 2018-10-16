@@ -72,7 +72,7 @@ public class VoucherService {
     public static final String RECEIPTS_VOUCHER_TYPE = "Receipt";
     public static final String RECEIPTS_VOUCHER_DESCRIPTION = "Collection Module";;
     public static final String COLLECTIONS_EG_MODULES_ID = "10";
-    public static final String RECEIPT_VIEW_SOURCEPATH = "/collection/receipts/receipt-viewReceipts.action?selectedReceipts=";
+    public static final String RECEIPT_VIEW_SOURCEPATH = "/services/collection/receipts/receipt-viewReceipts.action?selectedReceipts=";
 
     @Autowired
     private RestTemplate restTemplate;
@@ -128,7 +128,7 @@ public class VoucherService {
         voucher.setDescription(RECEIPTS_VOUCHER_DESCRIPTION);
         voucher.setVoucherDate(format.format(new Date(receipt.getBill().get(0).getBillDetails().get(0).getReceiptDate())));
         voucher.setModuleId(Long.valueOf(COLLECTIONS_EG_MODULES_ID));
-        voucher.setSource(RECEIPT_VIEW_SOURCEPATH + receipt.getTransactionId());
+        voucher.setSource(RECEIPT_VIEW_SOURCEPATH + receipt.getBill().get(0).getBillDetails().get(0).getId());
         AccountDetail accountDetail = null;
         voucher.setLedgers(new ArrayList<>());
 

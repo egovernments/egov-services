@@ -3,6 +3,7 @@ package org.egov.enc.services;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.egov.enc.models.AsymmetricKey;
 import org.egov.enc.models.Ciphertext;
+import org.egov.enc.models.MethodEnum;
 import org.egov.enc.models.Plaintext;
 import org.egov.enc.utils.RSAUtil;
 import org.egov.enc.keymanagement.KeyStore;
@@ -18,7 +19,7 @@ import java.security.spec.InvalidKeySpecException;
 import java.util.Base64;
 
 @Service
-public class RSAEncryptionService extends EncryptionService {
+public class RSAEncryptionService {
 
     private KeyStore keyStore;
 
@@ -34,7 +35,7 @@ public class RSAEncryptionService extends EncryptionService {
 
         byte[] cipherBytes = RSAUtil.encrypt(plaintext.getPlaintext().getBytes(StandardCharsets.UTF_8), publicKey);
 
-        Ciphertext ciphertext = new Ciphertext("RSA", asymmetricKey.getId(), Base64.getEncoder().encodeToString(cipherBytes));
+        Ciphertext ciphertext = new Ciphertext(MethodEnum.RSA, asymmetricKey.getId(), Base64.getEncoder().encodeToString(cipherBytes));
 
         return ciphertext;
     }

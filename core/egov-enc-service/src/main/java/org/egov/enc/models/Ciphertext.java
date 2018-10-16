@@ -7,7 +7,7 @@ import lombok.Getter;
 @Getter
 public class Ciphertext {
 
-    private String method;
+    private MethodEnum method;
 
     private int keyId;
 
@@ -15,7 +15,7 @@ public class Ciphertext {
 
     public Ciphertext(String ciphertext) {
         String[] cipherArray = ciphertext.split("\\|");
-        method = cipherArray[0];
+        method = MethodEnum.fromValue(cipherArray[0]);
         keyId = Integer.parseInt(cipherArray[1]);
         this.ciphertext = cipherArray[2];
     }

@@ -9,6 +9,7 @@ import io.swagger.annotations.ApiModelProperty;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.egov.enc.models.MethodEnum;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.validation.annotation.Validated;
@@ -32,40 +33,9 @@ import lombok.Builder;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class CryptObject   {
+public class EncryptReqObject {
     @JsonProperty("tenantId")
     private String tenantId = null;
-
-    /**
-     * Method to be used for encryption / decryption ( AES / RSA )
-     */
-    public enum MethodEnum {
-        AES("AES"),
-
-        RSA("RSA");
-
-        private String value;
-
-        MethodEnum(String value) {
-            this.value = value;
-        }
-
-        @Override
-        @JsonValue
-        public String toString() {
-            return String.valueOf(value);
-        }
-
-        @JsonCreator
-        public static MethodEnum fromValue(String text) {
-            for (MethodEnum b : MethodEnum.values()) {
-                if (String.valueOf(b.value).equals(text)) {
-                    return b;
-                }
-            }
-            return null;
-        }
-    }
 
     @JsonProperty("method")
     private MethodEnum method = null;

@@ -131,7 +131,7 @@ public class TLValidator {
             Boolean flag = false;
             List<TradeUnit> units = license.getTradeLicenseDetail().getTradeUnits();
             for(TradeUnit unit : units) {
-                if(unit.getActive())
+                if(unit.getId()!=null && unit.getActive())
                     flag = true;
                 else if(unit.getId()==null)
                     flag = true;

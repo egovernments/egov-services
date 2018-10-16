@@ -86,9 +86,6 @@ public class CollectionServiceConstants {
     public static final String COLLECTIONTYPE_MISSING_FIELD = "collectionType";
     public static final String COLLECTIONTYPE_MISSING_MESSAGE = "Collection type can only be: Counter, Field, Online";
 
-    public static final String COLL_ID_NAME = "collection.receiptno";
-    public static final String COLL_ID_FORMAT = "[cy:MM]/[fy:yyyy-yy]/[SEQ_COLL_RCPT_NUM]";
-
     public static final String COLL_REMITTENACE_ID_NAME = "collection.remittanceno";
     public static final String COLL_REMITTENACE_ID_FORMAT = "REM/[[SEQ_COLL_REMITTENCE]/[cy:MM]/[fy:yyyy-yy]";
 

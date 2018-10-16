@@ -122,5 +122,10 @@ public class ApplicationProperties {
 
     @Value("${kafka.topics.bankaccountservicemapping.create.name}")
     private String createBankAccountServiceMappingTopicName;
+    @Value("${receiptnumber.idname}")
+    private String receiptNumberIdName;
+
+    @Value("${receiptnumber.service}")
+    private boolean receiptNumberByService;
 
 }

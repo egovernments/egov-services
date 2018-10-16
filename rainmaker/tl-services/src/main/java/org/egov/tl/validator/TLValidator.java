@@ -158,7 +158,8 @@ public class TLValidator {
         List<String> ownerIds = new LinkedList<>();
         if(!CollectionUtils.isEmpty(license.getTradeLicenseDetail().getOwners())){
             license.getTradeLicenseDetail().getOwners().forEach(owner -> {
-                ownerIds.add(owner.getUuid());
+                if(owner.getUserActive()!=null)
+                    ownerIds.add(owner.getUuid());
             });
         }
         return ownerIds;

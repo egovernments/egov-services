@@ -77,10 +77,13 @@ public class MDMSValidator {
                    if (!masterData.get(TLConstants.TRADE_TYPE).contains(unit.getTradeType()))
                     errorMap.put("INVALID TRADETYPE", "The Trade type '" + unit.getTradeType() + "' does not exists");
 
-                   else if(unit.getUom()!=null){
+                    if(unit.getUom()!=null){
                        int index = masterData.get(TLConstants.TRADE_TYPE).indexOf(unit.getTradeType());
                        if(!unit.getUom().equalsIgnoreCase(uomMasterData.get(TLConstants.TRADE_TYPE).get(index)))
                            errorMap.put("INVALID UOM","The UOM: "+unit.getUom()+" is not valid for tradeType: "+unit.getTradeType());
+                       else if(unit.getUom().equalsIgnoreCase(uomMasterData.get(TLConstants.TRADE_TYPE).get(index))
+                               && unit.getUomValue()==null)
+                           throw new CustomException("INVALID UOMVALUE","The uomValue cannot be null");
                    }
 
                    else if(unit.getUom()==null){
@@ -96,11 +99,14 @@ public class MDMSValidator {
                             errorMap.put("INVALID ACCESORRYCATEGORY",
                                     "The Accessory Category '" + accessory.getAccessoryCategory() + "' does not exists");
 
-                        else if(accessory.getUom()!=null){
+                         if(accessory.getUom()!=null){
                             int index = masterData.get(TLConstants.ACCESSORIES_CATEGORY).indexOf(accessory.getAccessoryCategory());
                             if(!accessory.getUom().equalsIgnoreCase(uomMasterData.get(TLConstants.ACCESSORIES_CATEGORY).get(index)))
                                 errorMap.put("INVALID UOM","The UOM: "+accessory.getUom()+" is not valid for accessoryCategory: "
                                         +accessory.getAccessoryCategory());
+                            else if(accessory.getUom().equalsIgnoreCase(uomMasterData.get(TLConstants.ACCESSORIES_CATEGORY).get(index))
+                                    && accessory.getUomValue()==null)
+                                throw new CustomException("INVALID UOMVALUE","The uomValue cannot be null");
                         }
 
                         else if(accessory.getUom()==null){

@@ -9,6 +9,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 
 import javax.sql.DataSource;
 
+
 @Configuration
 public class MainConfig {
 
@@ -37,5 +38,16 @@ public class MainConfig {
 //        return clientHttpRequestFactory;
 //    }
 
+    @Bean
+    public io.opentracing.Tracer jaegerTracer() {
+//        Sampler sampler = new ConstSampler(true);
+//        Sender sender = new UdpSender();
+//        Reporter reporter = new RemoteReporter.Builder().withMaxQueueSize(1).withSender(sender).build();
 
+
+        return io.jaegertracing.Configuration.fromEnv()
+                .getTracer();
+
+
+    }
 }

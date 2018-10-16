@@ -40,17 +40,18 @@
 package org.egov.demand.model;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 import org.egov.demand.model.enums.DemandStatus;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Builder.Default;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -74,7 +75,6 @@ public class Demand {
 	@NotNull
 	private String businessService;
 
-	@NotNull
 	private Owner owner;
 
 	@NotNull
@@ -85,10 +85,12 @@ public class Demand {
 	
 	@Valid
 	@NotNull
-	private List<DemandDetail> demandDetails = new ArrayList<>();
+	@Size(min = 1)
+	private List<DemandDetail> demandDetails;
 
 	@NotNull
 	@Min(1)
+	@Default
 	private BigDecimal minimumAmountPayable = BigDecimal.ZERO;
 
 	private AuditDetail auditDetail;

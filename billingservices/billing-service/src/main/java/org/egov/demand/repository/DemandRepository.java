@@ -171,11 +171,12 @@ public class DemandRepository {
 				Demand demand = newDemands.get(rowNum);
 				String status = demand.getStatus() != null ? demand.getStatus().toString() : null;
 				AuditDetail auditDetail = demand.getAuditDetail();
+				Long ownerId = null != demand.getOwner() ? demand.getOwner().getId() : null;
 				ps.setString(1, demand.getId());
 				ps.setString(2, demand.getConsumerCode());
 				ps.setString(3, demand.getConsumerType());
 				ps.setString(4, demand.getBusinessService());
-				ps.setLong(5, demand.getOwner().getId());
+				ps.setObject(5, ownerId);
 				ps.setLong(6, demand.getTaxPeriodFrom());
 				ps.setLong(7, demand.getTaxPeriodTo());
 				ps.setBigDecimal(8, demand.getMinimumAmountPayable());

@@ -88,6 +88,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -158,7 +159,7 @@ public class DemandService {
 			demandDetail.setId(demandDetailIds.get(currentDetailId++));
 		}
 		save(demandRequest);
-		producer.push(applicationProperties.getDemandIndexTopic(), demandRequest);
+		//producer.push(applicationProperties.getDemandIndexTopic(), demandRequest);
 		return new DemandResponse(responseInfoFactory.getResponseInfo(requestInfo, HttpStatus.CREATED), demands);
 	}
 	
@@ -391,26 +392,31 @@ public class DemandService {
 			owners = ownerRepository.getOwners(userSearchRequest);
 			Set<String> ownerIds = owners.stream().map(owner -> owner.getId().toString()).collect(Collectors.toSet());
 			demands = demandRepository.getDemands(demandCriteria, ownerIds);
-		demands.sort(Comparator.comparing(Demand::getTaxPeriodFrom));
+			demands.sort(Comparator.comparing(Demand::getTaxPeriodFrom));
 		} else {
 			demands = demandRepository.getDemands(demandCriteria, null);
-			if(!demands.isEmpty()) {
+			if (!demands.isEmpty()) {
 				demands.sort(Comparator.comparing(Demand::getTaxPeriodFrom));
-				List<Long> ownerIds = new ArrayList<>(
-						demands.stream().map(demand -> demand.getOwner().getId()).collect(Collectors.toSet()));
-				userSearchRequest = UserSearchRequest.builder().requestInfo(requestInfo)
-						.tenantId(demandCriteria.getTenantId()).id(ownerIds).userType("CITIZEN").pageSize(500).build();
-				owners = ownerRepository.getOwners(userSearchRequest);
+				List<Long> ownerIds = new ArrayList<>(demands.stream().filter(demand -> null != demand.getOwner().getId())
+						.map(demand -> demand.getOwner().getId()).collect(Collectors.toSet()));
+
+				if (!CollectionUtils.isEmpty(ownerIds)) {
+
+					userSearchRequest = UserSearchRequest.builder().requestInfo(requestInfo)
+							.tenantId(demandCriteria.getTenantId()).id(ownerIds).userType("CITIZEN").pageSize(500)
+							.build();
+					owners = ownerRepository.getOwners(userSearchRequest);
+				}
 			}
 		}
-		if (demands!=null && !demands.isEmpty())
+		if (!CollectionUtils.isEmpty(demands) && !CollectionUtils.isEmpty(owners))
 			demands = demandEnrichmentUtil.enrichOwners(demands, owners);
-		for(Demand demand:demands){
+		for (Demand demand : demands) {
 			demand.getDemandDetails().sort(Comparator.comparing(DemandDetail::getTaxHeadMasterCode));
 		}
-		if(demandCriteria.getReceiptRequired())
-			receipts=demandRepository.getCollectedReceipts(demandCriteria);
-		return new DemandResponse(responseInfoFactory.getResponseInfo(requestInfo, HttpStatus.OK), demands,receipts);
+		if (demandCriteria.getReceiptRequired())
+			receipts = demandRepository.getCollectedReceipts(demandCriteria);
+		return new DemandResponse(responseInfoFactory.getResponseInfo(requestInfo, HttpStatus.OK), demands, receipts);
 	}
 
 	public DemandDetailResponse getDemandDetails(DemandDetailCriteria demandDetailCriteria, RequestInfo requestInfo) {

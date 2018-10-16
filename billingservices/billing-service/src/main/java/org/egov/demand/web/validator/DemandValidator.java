@@ -112,10 +112,10 @@ public class DemandValidator implements Validator {
 		for (Demand demand : demandRequest.getDemands()) {
 			demandDetails.addAll(demand.getDemandDetails());
 		}
-		validateDemandDetails(demandDetails, errors);
-		validateTaxHeadMaster(demandRequest, errors);
-		validateBusinessService(demandRequest, errors);
-		validateTaxPeriod(demandRequest, errors);
+//		validateDemandDetails(demandDetails, errors);
+//		validateTaxHeadMaster(demandRequest, errors);
+//		validateBusinessService(demandRequest, errors);
+//		validateTaxPeriod(demandRequest, errors);
 		validateOwner(demandRequest, errors);
 	}
 
@@ -174,7 +174,7 @@ public class DemandValidator implements Validator {
 		for (Demand demand : oldDemands) {
 			Demand dbDemand = demandMap.get(demand.getId());
 			if (dbDemand == null)
-				errors.rejectValue("Demands["+index+"].id", "DEMAND_INVALID_ID",
+				errors.rejectValue("Demands[" + index + "].id", "DEMAND_INVALID_ID",
 						"the given demandId value is invalid and cannot be updated");
 			else {
 				for (DemandDetail demandDetail : dbDemand.getDemandDetails()) {
@@ -186,8 +186,8 @@ public class DemandValidator implements Validator {
 
 		for (DemandDetail demandDetail : olddemandDetails) {
 			if (dbDemandDetailMap.get(demandDetail.getId()) == null)
-				errors.rejectValue("Demands", "DEMAND_DETAIL_INVALID_ID", "the given demandDetailId value  : " + demandDetail.getId()
-						+ " is invalid and cannot be updated");
+				errors.rejectValue("Demands", "DEMAND_DETAIL_INVALID_ID", "the given demandDetailId value  : "
+						+ demandDetail.getId() + " is invalid and cannot be updated");
 		}
 	}
 
@@ -217,7 +217,7 @@ public class DemandValidator implements Validator {
 				for (Demand demandFromMap : dbDemandMap.get(demand.getConsumerCode())) {
 					if (demand.getTaxPeriodFrom().equals(demandFromMap.getTaxPeriodFrom())
 							&& demand.getTaxPeriodTo().equals(demandFromMap.getTaxPeriodTo()))
-						errors.rejectValue("Demands["+index+"].consumerCode", "DEMAND_DUPLICATE_CONSUMERCODE",
+						errors.rejectValue("Demands[" + index + "].consumerCode", "DEMAND_DUPLICATE_CONSUMERCODE",
 								"the consumerCode value : " + demand.getConsumerCode() + " with tax period from "
 										+ demand.getTaxPeriodFrom() + " and tax period to " + demand.getTaxPeriodTo()
 										+ " already exists for businessService: " + demand.getBusinessService());
@@ -229,16 +229,15 @@ public class DemandValidator implements Validator {
 
 	private void validateDemandDetails(List<DemandDetail> demandDetails, Errors errors) {
 
-/*		for (DemandDetail demandDetail : demandDetails) {
-			if(!"ADVANCE".equalsIgnoreCase(demandDetail.getTaxHeadMasterCode())){
-				BigDecimal tax = demandDetail.getTaxAmount();
-				BigDecimal collection = demandDetail.getCollectionAmount();
-				int i = tax.compareTo(collection);
-				if (i < 0)
-					errors.rejectValue("Demands", "", "DEMAND_DETAIL_COLLECTIONAMOUNT : " + collection
-							+ " should not be greater than taxAmount : " + tax + " for demandDetail");
-			}
-		}*/
+		/*
+		 * for (DemandDetail demandDetail : demandDetails) {
+		 * if(!"ADVANCE".equalsIgnoreCase(demandDetail.getTaxHeadMasterCode())){
+		 * BigDecimal tax = demandDetail.getTaxAmount(); BigDecimal collection =
+		 * demandDetail.getCollectionAmount(); int i = tax.compareTo(collection); if (i
+		 * < 0) errors.rejectValue("Demands", "", "DEMAND_DETAIL_COLLECTIONAMOUNT : " +
+		 * collection + " should not be greater than taxAmount : " + tax +
+		 * " for demandDetail"); } }
+		 */
 	}
 
 	private void validateTaxPeriod(DemandRequest demandRequest, Errors errors) {
@@ -266,31 +265,32 @@ public class DemandValidator implements Validator {
 		int index = 0;
 		for (Demand demand : demands) {
 			List<TaxPeriod> taxPeriods = taxPeriodMap.get(demand.getBusinessService());
-			if (taxPeriods != null) {				
+			if (taxPeriods != null) {
 				TaxPeriod taxPeriod = taxPeriods.stream()
 						.filter(t -> demand.getTaxPeriodFrom().compareTo(t.getFromDate()) >= 0
 								&& demand.getTaxPeriodTo().compareTo(t.getToDate()) <= 0)
 						.findAny().orElse(null);
 				if (taxPeriod == null) {
-					
+
 					boolean isFromPeriodAvailable = false;
 					boolean isToPeriodAvailable = false;
-					
-					for(TaxPeriod tp : taxPeriods) {
-						if(tp.getFromDate().equals(demand.getTaxPeriodFrom()))
-							isFromPeriodAvailable=true;
-						if(tp.getToDate().equals(demand.getTaxPeriodTo()))
-							isToPeriodAvailable=true;
+
+					for (TaxPeriod tp : taxPeriods) {
+						if (tp.getFromDate().equals(demand.getTaxPeriodFrom()))
+							isFromPeriodAvailable = true;
+						if (tp.getToDate().equals(demand.getTaxPeriodTo()))
+							isToPeriodAvailable = true;
 					}
-					if(!(isFromPeriodAvailable && isToPeriodAvailable))
-						errors.rejectValue("Demands["+index+"]", "DEMAND_BAD_TAXPERIOD",
+					if (!(isFromPeriodAvailable && isToPeriodAvailable))
+						errors.rejectValue("Demands[" + index + "]", "DEMAND_BAD_TAXPERIOD",
 								"the given taxPeriod value periodFrom : '" + demand.getTaxPeriodFrom()
 										+ "and periodTo : " + demand.getTaxPeriodTo()
-										+ "'in Demand is invalid, please give a valid taxPeriod");	
-			}
+										+ "'in Demand is invalid, please give a valid taxPeriod");
+				}
 			} else {
-				errors.rejectValue("Demands["+index+"].businessService", "DEMAND_BAD_BUSINESS_SERVICE_TAXPERIOD", "no taxperiods found for value of Demand.businessService : "
-						+ demand.getBusinessService() + " please give a valid businessService code");
+				errors.rejectValue("Demands[" + index + "].businessService", "DEMAND_BAD_BUSINESS_SERVICE_TAXPERIOD",
+						"no taxperiods found for value of Demand.businessService : " + demand.getBusinessService()
+								+ " please give a valid businessService code");
 			}
 			index++;
 		}
@@ -313,7 +313,8 @@ public class DemandValidator implements Validator {
 					.collect(Collectors.toMap(BusinessServiceDetail::getBusinessService, Function.identity()));
 			for (String businessService : businessServiceSet) {
 				if (map.get(businessService) == null)
-					errors.rejectValue("Demands", "DEMAND_INVALID_BUSINESS_SERVICE", "the given businessService value '" + businessService
+					errors.rejectValue("Demands", "DEMAND_INVALID_BUSINESS_SERVICE", "the given businessService value '"
+							+ businessService
 							+ "'of Demand.businessService is invalid, please give a valid businessService code");
 			}
 		}
@@ -348,9 +349,10 @@ public class DemandValidator implements Validator {
 									&& demand.getTaxPeriodTo().compareTo(t.getValidTill()) <= 0)
 							.findAny().orElse(null);
 					if (taxHeadMaster == null)
-						errors.rejectValue("Demands", "DEMAND_INVALID_TAXHEADMASTERS_TAXPERIOD", " No TaxHeadMaster found for given code value '" + code
-								+ "' and from date'"+demand.getTaxPeriodFrom()
-								+ "' and To date '"+demand.getTaxPeriodTo()+"', please give valid code and period");
+						errors.rejectValue("Demands", "DEMAND_INVALID_TAXHEADMASTERS_TAXPERIOD",
+								" No TaxHeadMaster found for given code value '" + code + "' and from date'"
+										+ demand.getTaxPeriodFrom() + "' and To date '" + demand.getTaxPeriodTo()
+										+ "', please give valid code and period");
 				}
 			}
 		}
@@ -359,52 +361,42 @@ public class DemandValidator implements Validator {
 	private void validateOwner(DemandRequest demandRequest, Errors errors) {
 
 		List<Demand> demands = demandRequest.getDemands();
-		Set<String> types = demands.stream().map(demand -> demand.getOwner().getUserType()).collect(Collectors.toSet());
-		String userType = null;
-		
-		if (!CollectionUtils.isEmpty(types)) {
+		List<Owner> owners = null;
+		List<Long> ownerIds = new ArrayList<>(demands.stream().filter(demand -> null != demand.getOwner())
+				.map(demand -> demand.getOwner().getId()).collect(Collectors.toSet()));
 
-			if (types.size() == 1)
-				userType = types.iterator().next();
-			else if (types.size() > 1)
-				throw new RuntimeException(
-						"more than user type cannot be provided for the onwer of demand in a bulk request, make sure all the "
-								+ "users are either citizen or employee altogether");
+		if (!CollectionUtils.isEmpty(ownerIds)) {
+
+			UserSearchRequest userSearchRequest = UserSearchRequest.builder()
+					.requestInfo(demandRequest.getRequestInfo()).id(ownerIds).tenantId(demands.get(0).getTenantId())
+					.userType("CITIZEN").pageSize(500).build();
+
+			log.info("The user search req : " + userSearchRequest);
+			owners = ownerRepository.getOwners(userSearchRequest);
 		}
-			
-		List<Long> ownerIds = new ArrayList<>(
-				demands.stream().map(demand -> demand.getOwner().getId()).collect(Collectors.toSet()));
 
-		UserSearchRequest userSearchRequest = UserSearchRequest.builder().requestInfo(demandRequest.getRequestInfo())
-				.id(ownerIds).tenantId(demands.get(0).getTenantId()).userType(null != userType ? userType : "CITIZEN")
-				.pageSize(500).build();
+		if (!CollectionUtils.isEmpty(owners)) {
 
-		log.info("The user search req : " + userSearchRequest);
-		Map<Long, Long> ownerMap = new HashMap<>();
-		List<Owner> owners = ownerRepository.getOwners(userSearchRequest);
-		if (owners.isEmpty())
-			errors.rejectValue("demands", "DEMAND_INVALID_OWNER",
-					"no user found for the given criteria in Owner.id, please give a valid user id");
-		else {
-			for (Owner owner : owners) {
-				ownerMap.put(owner.getId(), owner.getId());
-			}
+			Map<Long, Long> ownerMap = owners.stream().collect(Collectors.toMap(Owner::getId, Owner::getId));
 			for (Long rsId : ownerIds) {
-				if (ownerMap.get(rsId) == null)
+				if (null != rsId && ownerMap.get(rsId) == null)
 					errors.rejectValue("demands", "DEMAND_INVALID_OWNER", "the given user id value '" + rsId
 							+ "' in Owner.id is invalid, please give a valid user id");
 			}
 		}
 	}
-	
-	public void validateDemandCriteria(DemandCriteria demandCriteria,Errors errors){
-	
-		if(demandCriteria.getDemandId()== null && demandCriteria.getConsumerCode() == null && demandCriteria.getEmail() == null && 
-				demandCriteria.getMobileNumber() == null && demandCriteria.getBusinessService() == null && demandCriteria.getDemandFrom() == null && 
-				demandCriteria.getDemandTo() == null && demandCriteria.getType() == null)
-			errors.rejectValue("businessService",""," Any one of the fields additional to tenantId is mandatory");
-		else if(demandCriteria.getReceiptRequired() && (demandCriteria.getBusinessService()==null || demandCriteria.getConsumerCode()==null))
-			errors.rejectValue("businessService", "","For searching collected receipts, businessService and consumerCode are mandatory");
+
+	public void validateDemandCriteria(DemandCriteria demandCriteria, Errors errors) {
+
+		if (demandCriteria.getDemandId() == null && demandCriteria.getConsumerCode() == null
+				&& demandCriteria.getEmail() == null && demandCriteria.getMobileNumber() == null
+				&& demandCriteria.getBusinessService() == null && demandCriteria.getDemandFrom() == null
+				&& demandCriteria.getDemandTo() == null && demandCriteria.getType() == null)
+			errors.rejectValue("businessService", "", " Any one of the fields additional to tenantId is mandatory");
+		else if (demandCriteria.getReceiptRequired()
+				&& (demandCriteria.getBusinessService() == null || demandCriteria.getConsumerCode() == null))
+			errors.rejectValue("businessService", "",
+					"For searching collected receipts, businessService and consumerCode are mandatory");
 	}
 
 }

@@ -35,7 +35,6 @@ public class BillingslabValidator {
 	 * 2. Checking if the billing slab being created already exist in the system.
 	 * 3. Checking if the slab is valid with respect to business rules.
 	 * 4. Checking if all the provided MDMS codes are valid.
-	 * 
 	 * @param billingSlabReq
 	 */
 	public void validateCreate(BillingSlabReq billingSlabReq) {

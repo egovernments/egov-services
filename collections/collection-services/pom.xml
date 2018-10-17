@@ -31,7 +31,7 @@
 		<dependency>
 			<groupId>org.egov.services</groupId>
 			<artifactId>tracer</artifactId>
-            <version>1.1.4-SNAPSHOT</version>
+            <version>1.1.5-SNAPSHOT</version>
 		</dependency>
 
 		<dependency>
@@ -47,49 +47,6 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
-		</dependency>
-
-		<!--  TRACING -->
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-actuator</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>io.opentracing.contrib</groupId>
-			<artifactId>opentracing-spring-cloud-starter</artifactId>
-			<version>0.1.16</version>
-		</dependency>
-
-		<dependency>
-			<groupId>io.opentracing.contrib</groupId>
-			<artifactId>opentracing-spring-jaeger-starter</artifactId>
-			<version>0.2.2</version>
-		</dependency>
-
-		<dependency>
-			<groupId>io.micrometer</groupId>
-			<artifactId>micrometer-core</artifactId>
-			<version>1.0.6</version>
-		</dependency>
-
-
-		<dependency>
-			<groupId>io.micrometer</groupId>
-			<artifactId>micrometer-spring-legacy</artifactId>
-			<version>1.0.6</version>
-		</dependency>
-
-		<dependency>
-			<groupId>io.micrometer</groupId>
-			<artifactId>micrometer-registry-prometheus</artifactId>
-			<version>1.0.6</version>
-		</dependency>
-
-		<dependency>
-			<groupId>io.jaegertracing</groupId>
-			<artifactId>jaeger-client</artifactId>
-			<version>0.31.0</version>
 		</dependency>
 
 		<dependency>
@@ -108,12 +65,6 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-jdbc</artifactId>
 		</dependency>
-
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-devtools</artifactId>
-		</dependency>
-
 
 		<dependency>
 			<groupId>org.flywaydb</groupId>

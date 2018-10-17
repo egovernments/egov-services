@@ -82,8 +82,10 @@ public class StorageController {
 	@ResponseStatus(HttpStatus.CREATED)
 	@ResponseBody
 	public StorageResponse storeFiles(@RequestParam("file") List<MultipartFile> files,
-			@RequestParam(value = "tenantId") String tenantId, @RequestParam("module") String module,
+			@RequestParam(value = "tenantId") String tenantId,
+			@RequestParam(value = "module", required = true) String module,
 			@RequestParam(value = "tag", required = false) String tag) {
+		
 		final List<String> fileStoreIds = storageService.save(files, module, tag, tenantId);
 		return getStorageResponse(fileStoreIds, tenantId);
 	}

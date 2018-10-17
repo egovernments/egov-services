@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
@@ -117,17 +118,17 @@
 			<name>eGov ERP Releases Repository</name>
 			<url>https://nexus-repo.egovernments.org/nexus/content/repositories/releases/</url>
 		</repository>
+		<repository>
+			<id>repo.egovernments.org.snapshots</id>
+			<name>eGov ERP Releases Repository</name>
+			<url>https://nexus-repo.egovernments.org/nexus/content/repositories/snapshots/</url>
+		</repository>
+		<repository>
+			<id>repo.egovernments.org.public</id>
+			<name>eGov Public Repository Group</name>
+			<url>https://nexus-repo.egovernments.org/nexus/content/groups/public/</url>
+		</repository>
 	</repositories>
-	<repository>
-		<id>repo.egovernments.org.snapshots</id>
-		<name>eGov ERP Releases Repository</name>
-		<url>https://nexus-repo.egovernments.org/nexus/content/repositories/snapshots/</url>
-	</repository>
-	<repository>
-		<id>repo.egovernments.org.public</id>
-		<name>eGov Public Repository Group</name>
-		<url>https://nexus-repo.egovernments.org/nexus/content/groups/public/</url>
-	</repository>
 	<build>
 		<plugins>
 
@@ -136,84 +137,25 @@
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
 
-<!-- 			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-pmd-plugin</artifactId>
-				<version>3.7</version>
-				<configuration>
-					<linkXRef>false</linkXRef>
-					<skipEmptyReport>false</skipEmptyReport>
-				</configuration>
-				<executions>
-					<execution>
-						<phase>verify</phase>
-						<goals>
-							<goal>check</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-
-			<plugin>
-				<groupId>org.jacoco</groupId>
-				<artifactId>jacoco-maven-plugin</artifactId>
-				<version>0.7.9</version>
-				<executions>
-					<execution>
-						<id>default-prepare-agent</id>
-						<goals>
-							<goal>prepare-agent</goal>
-						</goals>
-					</execution>
-					<execution>
-						<id>default-report</id>
-						<phase>prepare-package</phase>
-						<goals>
-							<goal>report</goal>
-						</goals>
-					</execution>
-					<execution>
-						<id>default-check</id>
-						<goals>
-							<goal>check</goal>
-						</goals>
-						<configuration>
-							<rules>
-								<rule>
-									<element>CLASS</element>
-									<excludes>
-										<exclude>*Test</exclude>
-										<exclude>org.egov.filestore.FileStoreApplication</exclude>
-										<exclude>org.egov.filestore.persistence.repository.FileRepository</exclude>
-										<exclude>org.egov.filestore.persistence.entity.AbstractPersistable</exclude>
-										<exclude>org.egov.filestore.persistence.entity.Artifact</exclude>
-										<exclude>org.egov.filestore.domain.model.Resource</exclude>
-										<exclude>org.egov.filestore.web.controller.StorageController</exclude>
-									</excludes>
-									<limits>
-										<limit>
-											<counter>LINE</counter>
-											<value>COVEREDRATIO</value>
-											<minimum>0.60</minimum>
-										</limit>
-									</limits>
-								</rule>
-								<rule>
-									<element>BUNDLE</element>
-									<limits>
-										<limit>
-											<counter>COMPLEXITY</counter>
-											<value>COVEREDRATIO</value>
-											<minimum>0.65</minimum>
-										</limit>
-									</limits>
-								</rule>
-							</rules>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
- -->
+			<!-- <plugin> <groupId>org.apache.maven.plugins</groupId> <artifactId>maven-pmd-plugin</artifactId> 
+				<version>3.7</version> <configuration> <linkXRef>false</linkXRef> <skipEmptyReport>false</skipEmptyReport> 
+				</configuration> <executions> <execution> <phase>verify</phase> <goals> <goal>check</goal> 
+				</goals> </execution> </executions> </plugin> <plugin> <groupId>org.jacoco</groupId> 
+				<artifactId>jacoco-maven-plugin</artifactId> <version>0.7.9</version> <executions> 
+				<execution> <id>default-prepare-agent</id> <goals> <goal>prepare-agent</goal> 
+				</goals> </execution> <execution> <id>default-report</id> <phase>prepare-package</phase> 
+				<goals> <goal>report</goal> </goals> </execution> <execution> <id>default-check</id> 
+				<goals> <goal>check</goal> </goals> <configuration> <rules> <rule> <element>CLASS</element> 
+				<excludes> <exclude>*Test</exclude> <exclude>org.egov.filestore.FileStoreApplication</exclude> 
+				<exclude>org.egov.filestore.persistence.repository.FileRepository</exclude> 
+				<exclude>org.egov.filestore.persistence.entity.AbstractPersistable</exclude> 
+				<exclude>org.egov.filestore.persistence.entity.Artifact</exclude> <exclude>org.egov.filestore.domain.model.Resource</exclude> 
+				<exclude>org.egov.filestore.web.controller.StorageController</exclude> </excludes> 
+				<limits> <limit> <counter>LINE</counter> <value>COVEREDRATIO</value> <minimum>0.60</minimum> 
+				</limit> </limits> </rule> <rule> <element>BUNDLE</element> <limits> <limit> 
+				<counter>COMPLEXITY</counter> <value>COVEREDRATIO</value> <minimum>0.65</minimum> 
+				</limit> </limits> </rule> </rules> </configuration> </execution> </executions> 
+				</plugin> -->
 		</plugins>
 	</build>
 </project>

@@ -65,7 +65,7 @@ public class ExceptionAdvise {
 			body = IOUtils.toString(stream, "UTF-8");
 			
 		} catch (IOException e) {
-			log.error("Error occurred while getting input stream " , e);
+			log.error("Error occurred while getting input stream ");
 		}
 		ErrorRes errorRes = new ErrorRes();
 		List<Error> errors = new ArrayList<>();

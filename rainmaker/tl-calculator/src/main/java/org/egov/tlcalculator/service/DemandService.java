@@ -90,8 +90,6 @@ public class DemandService {
          calulationCriteria.setTenantId(tenantId);
          List<Calculation> calculations = calculationService.calculate(requestInfo,Collections.singletonList(calulationCriteria));
 
-         //Demand Updated
-         updateDemand(requestInfo,calculations);
 
          BillResponse response = generateBill(requestInfo,billCriteria);
          return response;

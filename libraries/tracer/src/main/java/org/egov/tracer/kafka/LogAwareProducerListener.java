@@ -28,7 +28,7 @@ public class LogAwareProducerListener<K, V> implements ProducerListener<K, V> {
     public LogAwareProducerListener(TracerProperties tracerProperties,
                                     ObjectMapperFactory objectMapperFactory) {
         this.tracerProperties = tracerProperties;
-        this.objectMapper = objectMapperFactory.create();
+        this.objectMapper = objectMapperFactory.getObjectMapper();
     }
 
     @Override

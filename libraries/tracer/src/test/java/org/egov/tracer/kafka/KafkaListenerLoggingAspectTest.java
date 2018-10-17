@@ -2,7 +2,6 @@ package org.egov.tracer.kafka;
 
 import org.egov.tracer.config.TracerConfiguration;
 import org.egov.tracer.config.TracerProperties;
-import org.egov.tracer.model.RequestContext;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -21,8 +20,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.HashMap;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -55,7 +52,6 @@ public class KafkaListenerLoggingAspectTest {
     @Before
     public void before() {
         systemOutRule.clearLog();
-        RequestContext.setId(null);
     }
 
     @Test
@@ -67,7 +63,6 @@ public class KafkaListenerLoggingAspectTest {
 
         kafkaListenerWithOnlyPayloadAnnotatedHashMap.bar(payload);
 
-        assertEquals(TEST_CORRELATION_ID, RequestContext.getId());
     }
 
     @Test
@@ -79,7 +74,6 @@ public class KafkaListenerLoggingAspectTest {
 
         kafkaListenerWithOnlyPayloadAnnotatedHashMap.bar(payload);
 
-        assertNotNull(RequestContext.getId());
     }
 
     @Test
@@ -116,7 +110,6 @@ public class KafkaListenerLoggingAspectTest {
 
         kafkaListenerStringPayloadWithTopicHeaderAnnotation.bar(payload, "actualTopic");
 
-        assertEquals(TEST_CORRELATION_ID, RequestContext.getId());
     }
 
     @Test
@@ -125,7 +118,6 @@ public class KafkaListenerLoggingAspectTest {
 
         kafkaListenerStringPayloadWithTopicHeaderAnnotation.bar(payload, "actualTopic");
 
-        assertNotNull(RequestContext.getId());
     }
 
     @Test
@@ -147,7 +139,6 @@ public class KafkaListenerLoggingAspectTest {
 
         kafkaListenerWithoutPayloadAnnotationAndWithoutTopicHeaderAnnotation.bar(payload);
 
-        assertNotNull(RequestContext.getId());
     }
 
     @Test

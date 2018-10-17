@@ -1,28 +1,14 @@
 package org.egov.tracer;
 
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import javax.servlet.ServletInputStream;
-import javax.servlet.http.HttpServletRequest;
-
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.jayway.jsonpath.DocumentContext;
+import com.jayway.jsonpath.JsonPath;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
 import org.egov.tracer.kafka.ErrorQueueProducer;
-import org.egov.tracer.model.CustomBindingResultExceprion;
-import org.egov.tracer.model.CustomException;
+import org.egov.tracer.model.*;
 import org.egov.tracer.model.Error;
-import org.egov.tracer.model.ErrorQueueContract;
-import org.egov.tracer.model.ErrorRes;
-import org.egov.tracer.model.ServiceCallException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.Ordered;
@@ -41,12 +27,14 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.ResourceAccessException;
 
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.jayway.jsonpath.DocumentContext;
-import com.jayway.jsonpath.JsonPath;
-
-import lombok.extern.slf4j.Slf4j;
+import javax.servlet.ServletInputStream;
+import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 @ControllerAdvice
@@ -68,7 +56,6 @@ public class ExceptionAdvise {
 	@ResponseBody
 	public ResponseEntity<?> exceptionHandler(HttpServletRequest request ,Exception ex) {
 
-		log.info("ExceptionAdvise exception  webRequest:");
 		String contentType = request.getContentType();
 		boolean isJsonContentType = (contentType != null && contentType.toLowerCase().contains("application/json"));
 		
@@ -78,18 +65,18 @@ public class ExceptionAdvise {
 			body = IOUtils.toString(stream, "UTF-8");
 			
 		} catch (IOException e) {
-			log.error("Exception: "+e);
+			log.error("Error occurred while getting input stream " , e);
 		}
 		ErrorRes errorRes = new ErrorRes();
 		List<Error> errors = new ArrayList<>();
 
 		try {
 			if (ex instanceof HttpMediaTypeNotSupportedException) {
-				errorRes.setErrors(new ArrayList<>(Arrays.asList(new Error("UnsupportedMediaType", "An unssuporrted media Type was used - " + request.getContentType(), null, null))));
+				errorRes.setErrors(new ArrayList<>(Collections.singletonList(new Error("UnsupportedMediaType", "An unssuporrted media Type was used - " + request.getContentType(), null, null))));
 			} else if (ex instanceof ResourceAccessException) {
 				Error err = new Error();
 				err.setCode("ResourceAccessError");
-				err.setMessage("An error occured while accessing a underlying resource");
+				err.setMessage("An error occurred while accessing a underlying resource");
 				errors.add(err);
 				errorRes.setErrors(errors);
 			} else if (ex instanceof HttpMessageNotReadableException) {
@@ -105,7 +92,7 @@ public class ExceptionAdvise {
 					if (matched) {
 						err.setMessage("Failed to parse field - " + match.group("objectname") + ". Expected type is " + match.group("objecttype"));
 					} else {
-						err.setMessage("Failed to deseriliaze certain JSON fields");
+						err.setMessage("Failed to deserialize certain JSON fields");
 					}
 					
 					err.setCode("JsonMappingException");
@@ -119,7 +106,7 @@ public class ExceptionAdvise {
 						err.setMessage("JSON body has errors or is missing");
 						JsonPath.parse(request).json();
 					} catch (Exception jsonParseException) {
-						ex.printStackTrace();
+						log.error("Error while parsing JSON", jsonParseException);
 					}
  					err.setCode("MissingJsonException");
 				}
@@ -174,18 +161,18 @@ public class ExceptionAdvise {
 			String exceptionMessage = ex.getMessage();
 
 			if (errorRes.getErrors() == null || errorRes.getErrors().size() == 0) {
-				errorRes.setErrors(new ArrayList<>(Arrays.asList(new Error(exceptionName, "An unhandled exception occurred on the server", exceptionMessage, null))));
+				errorRes.setErrors(new ArrayList<>(Collections.singletonList(new Error(exceptionName, "An unhandled exception occurred on the server", exceptionMessage, null))));
 			} else if (provideExceptionInDetails && errorRes.getErrors() != null && errorRes.getErrors().size() > 0) {
                 StringWriter sw = new StringWriter();
                 PrintWriter pw = new PrintWriter(sw);
-                ex.printStackTrace(pw);
+                log.error("Errors exist", pw);
                 errorRes.getErrors().get(0).setDescription(sw.toString());
             }
 
 			sendErrorMessage(body, ex, request.getRequestURL().toString(),errorRes, isJsonContentType);
 		} catch (Exception tracerException) {
-			tracerException.printStackTrace();
-			errorRes.setErrors(new ArrayList<>(Arrays.asList(new Error("TracerException", "An unhandled exception occurred in tracer handler", null, null))));
+			log.error("Unknown error occurred ", tracerException);
+			errorRes.setErrors(new ArrayList<>(Collections.singletonList(new Error("TracerException", "An unhandled exception occurred in tracer handler", null, null))));
 		}
 		return new ResponseEntity<>(errorRes, HttpStatus.BAD_REQUEST);
 	}

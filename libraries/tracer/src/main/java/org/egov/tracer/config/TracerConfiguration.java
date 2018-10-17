@@ -1,15 +1,12 @@
 package org.egov.tracer.config;
 
-import org.egov.tracer.http.CorrelationIdFilter;
+import io.opentracing.noop.NoopTracerFactory;
 import org.egov.tracer.http.LogAwareRestTemplate;
 import org.egov.tracer.kafka.KafkaListenerLoggingAspect;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.boot.web.servlet.FilterRegistrationBean;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.EnableAspectJAutoProxy;
+import org.springframework.context.annotation.*;
 import org.springframework.core.env.Environment;
+import org.springframework.http.client.ClientHttpRequestFactory;
+import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 
 @Configuration
 @EnableAspectJAutoProxy
@@ -44,29 +41,30 @@ public class TracerConfiguration {
         return new LoggingKafkaTemplateFactory(tracerProperties, objectMapperFactory);
     }
 
-    @Bean(name = "logAwareRestTemplate")
-    public LogAwareRestTemplate logAwareRestTemplate(TracerProperties tracerProperties) {
-        return new LogAwareRestTemplate(tracerProperties);
+    private ClientHttpRequestFactory getClientHttpRequestFactory() {
+        int timeout = 5000;
+        HttpComponentsClientHttpRequestFactory clientHttpRequestFactory
+            = new HttpComponentsClientHttpRequestFactory();
+        clientHttpRequestFactory.setConnectTimeout(timeout);
+        return clientHttpRequestFactory;
     }
 
-   /* @Bean
-    public UnhandledExceptionControllerAdvice unhandledExceptionControllerAdvice() {
-        return new UnhandledExceptionControllerAdvice();
-    }*/
+    @Bean(name = "logAwareRestTemplate")
+    public LogAwareRestTemplate logAwareRestTemplate(TracerProperties tracerProperties) {
+        return new LogAwareRestTemplate(getClientHttpRequestFactory() ,tracerProperties);
+    }
 
     @Bean
-    @ConditionalOnProperty(name = "org.egov.correlation.body.filter.disabled",
-        havingValue = "false", matchIfMissing = true)
-    public FilterRegistrationBean correlationIdFilter(ObjectMapperFactory objectMapperFactory,
-                                                      TracerProperties tracerProperties) {
-        FilterRegistrationBean registration = new FilterRegistrationBean();
-        final CorrelationIdFilter correlationIdFilter =
-            new CorrelationIdFilter(tracerProperties.isDetailedTracingEnabled(), objectMapperFactory);
-        registration.setFilter(correlationIdFilter);
-        registration.addUrlPatterns("/*");
-        registration.setName("correlationIdFilter");
-        registration.setOrder(1);
-        return registration;
+    @Profile("monitoring")
+    public io.opentracing.Tracer jaegerTracer() {
+        return io.jaegertracing.Configuration.fromEnv()
+            .getTracer();
+    }
+
+    @Bean
+    @Profile("!monitoring")
+    public io.opentracing.Tracer tracer() {
+        return NoopTracerFactory.create();
     }
 
 }

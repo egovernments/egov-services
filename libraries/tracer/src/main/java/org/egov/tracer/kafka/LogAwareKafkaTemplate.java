@@ -37,7 +37,7 @@ public class LogAwareKafkaTemplate<K, V> {
                                  ObjectMapperFactory objectMapperFactory) {
         this.tracerProperties = tracerProperties;
         this.kafkaTemplate = kafkaTemplate;
-        this.objectMapper = objectMapperFactory.create();
+        this.objectMapper = objectMapperFactory.getObjectMapper();
     }
 
     public SendResult<K, V> send(String topic, V value) {

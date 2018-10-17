@@ -3,11 +3,11 @@ package org.egov.tracer.http;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
 import org.egov.tracer.config.TracerProperties;
-import org.egov.tracer.model.RequestContext;
 import org.springframework.http.HttpMessage;
 import org.springframework.http.HttpRequest;
 import org.springframework.http.MediaType;
 import org.springframework.http.client.ClientHttpRequestExecution;
+import org.springframework.http.client.ClientHttpRequestFactory;
 import org.springframework.http.client.ClientHttpRequestInterceptor;
 import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.web.client.RestTemplate;
@@ -34,18 +34,15 @@ public class LogAwareRestTemplate extends RestTemplate {
         Arrays.asList(MediaType.APPLICATION_JSON_UTF8_VALUE, MediaType.APPLICATION_JSON_VALUE);
     private TracerProperties tracerProperties;
 
-    public LogAwareRestTemplate(TracerProperties tracerProperties) {
+    public LogAwareRestTemplate(ClientHttpRequestFactory requestFactory, TracerProperties tracerProperties) {
+        super(requestFactory);
         this.tracerProperties = tracerProperties;
         this.setInterceptors(Collections.singletonList(logRequestAndResponse()));
     }
 
-    private void addCorrelationIdHeader(HttpRequest httpRequest) {
-        httpRequest.getHeaders().add(RequestHeader.CORRELATION_ID, RequestContext.getId());
-    }
 
     private ClientHttpRequestInterceptor logRequestAndResponse() {
         return (httpRequest, body, clientHttpRequestExecution) -> {
-            addCorrelationIdHeader(httpRequest);
             logRequest(httpRequest, body);
             return executeAndLogResponse(httpRequest, body, clientHttpRequestExecution);
         };

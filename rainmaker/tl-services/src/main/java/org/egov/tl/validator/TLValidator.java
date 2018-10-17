@@ -118,7 +118,7 @@ public class TLValidator {
       validateAllIds(searchResult,licenses);
       mdmsValidator.validateMdmsData(request);
       validateTradeUnits(request);
-
+      valideDates(request);
       setFieldsFromSearch(request,searchResult);
    }
 

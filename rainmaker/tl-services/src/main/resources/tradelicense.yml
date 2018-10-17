@@ -280,11 +280,13 @@ serviceMaps:
           - jsonPath: $.Licenses.*.auditDetails.lastModifiedTime
 
 
-       - query: INSERT INTO eg_tl_institution(tenantId,id, tradelicensedetailid, name, type,designation, createdby, lastmodifiedby, createdtime, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ;
+       - query: INSERT INTO eg_tl_institution(tenantId,active,id, tradelicensedetailid, name, type,designation, createdby, lastmodifiedby, createdtime, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ;
          basePath: Licenses.*.tradeLicenseDetail.institution
          jsonMaps:
 
            - jsonPath: $.Licenses.*.tradeLicenseDetail.institution.tenantId
+
+           - jsonPath: $.Licenses.*.tradeLicenseDetail.institution.active
 
            - jsonPath: $.Licenses.*.tradeLicenseDetail.institution.id
 
@@ -640,9 +642,33 @@ serviceMaps:
           - jsonPath: $.Licenses.*.tradeLicenseDetail.address.id
 
 
-       - query: UPDATE eg_tl_institution SET name = ?,type = ?,designation = ?, lastmodifiedby = ?,lastmodifiedtime = ? WHERE id =?;
+       - query: INSERT INTO eg_tl_institution(tenantId,active,id, tradelicensedetailid, name, type,designation, createdby, lastmodifiedby, createdtime, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ON CONFLICT (id) DO UPDATE SET active = ?,name = ?,type = ?,designation = ?, lastmodifiedby = ?,lastmodifiedtime = ?;
          basePath: Licenses.*.tradeLicenseDetail.institution
          jsonMaps:
+           - jsonPath: $.Licenses.*.tradeLicenseDetail.institution.tenantId
+
+           - jsonPath: $.Licenses.*.tradeLicenseDetail.institution.active
+
+           - jsonPath: $.Licenses.*.tradeLicenseDetail.institution.id
+
+           - jsonPath: $.Licenses.*.tradeLicenseDetail.id
+
+           - jsonPath: $.Licenses.*.tradeLicenseDetail.institution.name
+
+           - jsonPath: $.Licenses.*.tradeLicenseDetail.institution.type
+
+           - jsonPath: $.Licenses.*.tradeLicenseDetail.institution.designation
+
+           - jsonPath: $.Licenses.*.auditDetails.createdBy
+
+           - jsonPath: $.Licenses.*.auditDetails.lastModifiedBy
+
+           - jsonPath: $.Licenses.*.auditDetails.createdTime
+
+           - jsonPath: $.Licenses.*.auditDetails.lastModifiedTime
+
+           - jsonPath: $.Licenses.*.tradeLicenseDetail.institution.active
+
            - jsonPath: $.Licenses.*.tradeLicenseDetail.institution.name
 
            - jsonPath: $.Licenses.*.tradeLicenseDetail.institution.type
@@ -652,8 +678,6 @@ serviceMaps:
            - jsonPath: $.Licenses.*.auditDetails.lastModifiedBy
 
            - jsonPath: $.Licenses.*.auditDetails.lastModifiedTime
-
-           - jsonPath: $.Licenses.*.tradeLicenseDetail.institution.id
 
 
 

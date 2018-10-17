@@ -76,23 +76,28 @@ public class DemandService {
     }
 
     public BillResponse getBill(RequestInfo requestInfo,GenerateBillCriteria billCriteria){
-         String consumerCode = billCriteria.getConsumerCode();
+        /* String consumerCode = billCriteria.getConsumerCode();
          String tenantId = billCriteria.getTenantId();
 
          List<Demand> demands = searchDemand(tenantId,consumerCode,requestInfo);
 
          if(CollectionUtils.isEmpty(demands))
-             throw new CustomException("INVALID CONSUMERCODE","No demand exists for this consumer code");
+             throw new CustomException("INVALID CONSUMERCODE","No demand exists for this consumer code");*/
 
-         //Recalculating using ConsumerCode used as applicationNumber
+        /* //Recalculating using ConsumerCode used as applicationNumber
          CalulationCriteria calulationCriteria = new CalulationCriteria();
          calulationCriteria.setApplicationNumber(consumerCode);
          calulationCriteria.setTenantId(tenantId);
          List<Calculation> calculations = calculationService.calculate(requestInfo,Collections.singletonList(calulationCriteria));
 
+         //Demand Updated
+         updateDemand(requestInfo,calculations);*/
 
-         BillResponse response = generateBill(requestInfo,billCriteria);
-         return response;
+        /*
+        Put logic for penalty or rebate update here
+         */
+
+         return generateBill(requestInfo,billCriteria);
     }
 
 

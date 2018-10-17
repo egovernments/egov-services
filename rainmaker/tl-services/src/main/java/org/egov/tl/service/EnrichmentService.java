@@ -75,9 +75,9 @@ public class EnrichmentService {
                     });
             });
 
-            if(tradeLicense.getTradeLicenseDetail().getSubOwnerShipCategory()!=null &&
-                    tradeLicense.getTradeLicenseDetail().getSubOwnerShipCategory().contains(config.getInstitutional())){
+            if(tradeLicense.getTradeLicenseDetail().getSubOwnerShipCategory().contains(config.getInstitutional())){
                 tradeLicense.getTradeLicenseDetail().getInstitution().setId(UUID.randomUUID().toString());
+                tradeLicense.getTradeLicenseDetail().getInstitution().setActive(true);
                 tradeLicense.getTradeLicenseDetail().getInstitution().setTenantId(tradeLicense.getTenantId());
                 tradeLicense.getTradeLicenseDetail().getOwners().forEach(owner -> {
                     owner.setInstitutionId(tradeLicense.getTradeLicenseDetail().getInstitution().getId());
@@ -251,6 +251,16 @@ public class EnrichmentService {
                             }
                         });
                 });
+
+                if(tradeLicense.getTradeLicenseDetail().getSubOwnerShipCategory().contains(config.getInstitutional())
+                        && tradeLicense.getTradeLicenseDetail().getInstitution().getId()==null){
+                    tradeLicense.getTradeLicenseDetail().getInstitution().setId(UUID.randomUUID().toString());
+                    tradeLicense.getTradeLicenseDetail().getInstitution().setActive(true);
+                    tradeLicense.getTradeLicenseDetail().getInstitution().setTenantId(tradeLicense.getTenantId());
+                    tradeLicense.getTradeLicenseDetail().getOwners().forEach(owner -> {
+                        owner.setInstitutionId(tradeLicense.getTradeLicenseDetail().getInstitution().getId());
+                    });
+                }
             }
             else {
                 if(!CollectionUtils.isEmpty(tradeLicense.getTradeLicenseDetail().getVerificationDocuments())){

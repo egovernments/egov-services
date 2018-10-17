@@ -43,7 +43,7 @@ public class TLQueryBuilder {
             "tlverdoc.id as tl_ver_doc_id,tlverdoc.documenttype as tl_ver_doc_documenttype,tlverdoc.filestoreid as tl_ver_doc_filestoreid,tlverdoc.active as tl_ver_doc_active," +
             "tlownerdoc.userid as docuserid,tlownerdoc.tradeLicenseDetailId as doctradelicensedetailid,tlownerdoc.id as ownerdocid,"+
             "tlownerdoc.documenttype as ownerdocType,tlownerdoc.filestoreid as ownerfileStoreId,tlownerdoc.documentuid as ownerdocuid,tlownerdoc.active as ownerdocactive," +
-            " tlinsti.id as instiid,tlinsti.name as institutionname,tlinsti.type as institutiontype,tlinsti.tenantid as institenantId "+
+            " tlinsti.id as instiid,tlinsti.name as institutionname,tlinsti.type as institutiontype,tlinsti.tenantid as institenantId,tlinsti.active as instiactive "+
             " FROM eg_tl_tradelicense tl"
             +INNER_JOIN_STRING
             +"eg_tl_tradelicensedetail tld ON tld.tradelicenseid = tl.id"

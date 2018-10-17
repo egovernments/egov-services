@@ -9,6 +9,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.ApplicationArguments;
+import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -28,7 +30,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 @Component
-public class KeyManagementApplication {
+public class KeyManagementApplication implements ApplicationRunner {
 
     private KeyRepository keyRepository;
     private KeyGenerator keyGenerator;
@@ -40,6 +42,9 @@ public class KeyManagementApplication {
         this.keyRepository = keyRepository;
         this.keyStore = keyStore;
         this.keyGenerator = keyGenerator;
+    }
+
+    public void init() {
         tenantIdsFromDB = (ArrayList<String>) this.keyRepository.fetchDistinctTenantIds();
     }
 
@@ -140,4 +145,8 @@ public class KeyManagementApplication {
         return tenantIds;
     }
 
+    @Override
+    public void run(ApplicationArguments applicationArguments) throws Exception {
+        init();
+    }
 }

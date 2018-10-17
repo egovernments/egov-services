@@ -7,6 +7,8 @@ import org.egov.enc.models.SymmetricKey;
 import org.egov.enc.repository.KeyRepository;
 import org.egov.enc.utils.AESUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.ApplicationArguments;
+import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Component;
@@ -26,7 +28,7 @@ import java.util.Base64;
 import java.util.HashMap;
 
 @Component
-public class KeyStore {
+public class KeyStore implements ApplicationRunner {
 
     private AppProperties appProperties;
 
@@ -54,14 +56,7 @@ public class KeyStore {
         this.appProperties = appProperties;
         this.keyRepository = keyRepository;
 
-        symmetricKeyHashMap = new HashMap<>();
-        asymmetricKeyHashMap = new HashMap<>();
-        activeSymmetricKeys = new HashMap<>();
-        activeAsymmetricKeys = new HashMap<>();
-
         initializeMasterKey();
-
-        refreshKeys();
 
     }
 
@@ -94,7 +89,14 @@ public class KeyStore {
 
         decryptAllKeys();
 
+        symmetricKeyHashMap = new HashMap<>();
+        asymmetricKeyHashMap = new HashMap<>();
+
         initializeKeys();
+
+        activeSymmetricKeys = new HashMap<>();
+        activeAsymmetricKeys = new HashMap<>();
+
         initializeActiveKeys();
     }
 
@@ -192,4 +194,8 @@ public class KeyStore {
     }
 
 
+    @Override
+    public void run(ApplicationArguments applicationArguments) throws Exception {
+        refreshKeys();
+    }
 }

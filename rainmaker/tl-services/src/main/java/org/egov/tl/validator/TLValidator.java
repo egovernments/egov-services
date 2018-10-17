@@ -54,16 +54,20 @@ public class TLValidator {
         request.getLicenses().forEach(license -> {
             if(license.getValidTo()!=null && license.getValidTo()>config.getFinancialYearEndDate()){
                 Date expiry = new Date(license.getValidTo());
-                throw new CustomException("INVALID END DATE"," Validto cannot be greater than: "+expiry);
+                throw new CustomException("INVALID TO DATE"," Validto cannot be greater than: "+expiry);
             }
+            Long startOfDay = getStartOfDay();
             if(!config.getIsPreviousTLAllowed() && license.getValidFrom()!=null
-                    && license.getValidFrom()<getStartOfDay())
-                throw new CustomException("INVALID START DATE","The validFrom date cannot be less than CurrentDate");
+                    && license.getValidFrom()<startOfDay)
+                throw new CustomException("INVALID FROM DATE","The validFrom date cannot be less than CurrentDate");
+            if((license.getValidTo()-license.getValidFrom())<config.getMinPeriod())
+                throw new CustomException("INVALID PERIOD","The license should be applied for minimum of 30 days");
+
         });
     }
 
     private Long getStartOfDay(){
-        Calendar cal = Calendar.getInstance();
+        Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("IST"));
         cal.set(Calendar.HOUR_OF_DAY, 0);
         cal.set(Calendar.MINUTE, 0);
         cal.set(Calendar.SECOND, 0);

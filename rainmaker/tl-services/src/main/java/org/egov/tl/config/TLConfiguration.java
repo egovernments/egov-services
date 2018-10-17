@@ -192,6 +192,10 @@ public class TLConfiguration {
     @Value("${egov.tl.previous.allowed}")
     private Boolean isPreviousTLAllowed;
 
+    @Value("${egov.tl.min.period}")
+    private Long minPeriod;
+
+
 
 
 }

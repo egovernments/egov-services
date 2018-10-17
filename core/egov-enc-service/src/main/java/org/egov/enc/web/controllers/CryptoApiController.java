@@ -41,15 +41,13 @@ public class CryptoApiController{
     }
 
     @RequestMapping(value="/crypto/v1/_encrypt", method = RequestMethod.POST)
-    public ResponseEntity<Object> cryptoV1EncryptPost(@Valid @RequestBody EncryptionRequest encryptionRequest) {
-        try {
+    public ResponseEntity<Object> cryptoV1EncryptPost(@Valid @RequestBody EncryptionRequest encryptionRequest) throws Exception {
+
 //            if(!keyManagementApplication.checkTenant(encryptionRequest.getTenantId())) {
 //                throw new CustomException("Tenant Does Not Exist", "Tenant Does Not Exist");
 //            }
             return new ResponseEntity<>(encryptionService.encrypt(encryptionRequest), HttpStatus.OK );
-        } catch (Exception e) {
-            return new ResponseEntity<Object>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+
     }
 
 

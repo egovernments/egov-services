@@ -1,0 +1,193 @@
+swagger: '2.0'
+info:
+  version: 1.0.0
+  title: eGov Encryption Service.
+  description: >
+    This module is used for encrypting / decrypting data, and can be used for signing / verifying value
+  contact:
+    name: Egovernments Foundation
+    email: contact@egovernments.org
+schemes:
+  - https
+basePath: /egov-enc-service
+x-common-path: >-
+  https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml
+paths:
+######################################### 
+  /crypto/v1/_encrypt:
+    post:
+      summary: Encrypts the given input value/s OR values of the object
+      description: |
+        Returns the encrypted value with the key of given tenantId.
+      parameters:
+        - name: CryptObject
+          in: "body"
+          schema:
+            $ref: '#/definitions/CryptObject'
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/CryptObject'
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: >-
+              https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes
+      tags:
+        - Crypto
+
+########################################
+
+  /crypto/v1/_decrypt:
+    post:
+      summary: Decrypts the given input value/s OR values of the object
+      description: |
+        Returns the decrypted value.
+      parameters:
+        - name: CryptObject
+          in: "body"
+          schema:
+            $ref: '#/definitions/CryptObject'
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/CryptObject'
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: >-
+              https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes
+      tags:
+        - Crypto
+
+########################################
+
+  /crypto/v1/_sign:
+    post:
+      summary: Signs the given input value OR object.
+      description: |
+        Returns the decrypted value.
+      parameters:
+        - name: SignRequest
+          in: "body"
+          schema:
+            $ref: '#/definitions/SignRequest'
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/Signature'
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: >-
+              https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes
+      tags:
+        - Crypto
+
+
+########################################
+
+  /crypto/v1/_verify:
+    post:
+      summary: Verify the given input claim and signature value.
+      description: |
+        Returns the decrypted value.
+      parameters:
+        - name: VerifyRequest
+          in: "body"
+          schema:
+            $ref: '#/definitions/VerifyRequest'
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            type: object
+            properties:
+              verified:
+                type: boolean
+                description: Returns true if the claim is be verified by the signature
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: >-
+              https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes
+      tags:
+        - Crypto
+
+
+
+#########################################
+definitions:
+
+  CryptObject:
+    type: object
+    description: Object containing data to be Encrypted / Decrypted and required meta-data.
+    properties:
+      tenantId:
+        type: string
+        description: Encryption / Decryption Key will be decided on tenant id
+      method:
+        type: string
+        description: Method to be used for encryption / decryption ( AES / RSA )
+        enum:
+        - AES
+        - RSA
+      value:
+        type: array
+        description: Value/s to be encrypted. Can be a string or object or array
+        items: {}
+    
+      
+  Signature:
+    type: object
+    description: Object with signature value and meta data to verify the signature
+    properties:
+      signatureValue:
+        type: string
+        description: The generated signature value.
+      keyId: 
+        type: integer
+        description: Identifier of the Key used for generating the signature.
+  
+  SignRequest:
+    type: object
+    description: Object with the value to be signed
+    properties:
+      tenantId: 
+        type: string
+        description: Key will be decided based on tenant id
+
+      typeOfValue: 
+        type: string
+        description: Type of the value to be encrypted value / object. Sign object as a whole or sign values seperately inside that object.
+        enum:
+          - VALUE
+          - OBJECT
+      value:
+        type: array
+        description: Value/s to be signed. Can be a string or object or array
+        items: {}
+
+        
+  VerifyRequest:
+    type: object
+    description: Object with the claim and signature to be verified
+    properties:
+      Signature:
+        $ref: '#/definitions/Signature'
+    
+      value:
+        type: array
+        description: Value/s to be verified. Can be a string or object or array
+        items: {}
+
+      typeOfValue: 
+        type: string
+        description: Type of the value to be encrypted value / object. Sign object as a whole or sign values seperately inside that object.
+        enum:
+          - VALUE
+          - OBJECT
+

@@ -60,7 +60,7 @@ public class TLValidator {
             if(!config.getIsPreviousTLAllowed() && license.getValidFrom()!=null
                     && license.getValidFrom()<startOfDay)
                 throw new CustomException("INVALID FROM DATE","The validFrom date cannot be less than CurrentDate");
-            if((license.getValidTo()-license.getValidFrom())<config.getMinPeriod())
+            if((license.getValidFrom()!=null && license.getValidTo()!=null) && (license.getValidTo()-license.getValidFrom())<config.getMinPeriod())
                 throw new CustomException("INVALID PERIOD","The license should be applied for minimum of 30 days");
 
         });

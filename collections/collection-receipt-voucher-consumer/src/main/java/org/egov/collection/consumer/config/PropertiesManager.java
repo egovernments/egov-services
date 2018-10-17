@@ -69,6 +69,12 @@ public class PropertiesManager {
     @Value("${amritsar.egov.fin.coe.erp.host}")
     private String amritsarErpHostUrl;
 
+    @Value("${kharar.egov.fin.coe.erp.host}")
+    private String khararErpHostUrl;
+
+    @Value("${zirakpur.egov.fin.coe.erp.host}")
+    private String zirakpurErpHostUrl;
+
     @Value("${egov.services.host}")
     private String hostUrl;
 
@@ -123,6 +129,14 @@ public class PropertiesManager {
 
         case "pb.amritsar":
             url = amritsarErpHostUrl;
+            break;
+
+        case "pb.kharar":
+            url = khararErpHostUrl;
+            break;
+
+        case "pb.zirakpur":
+            url = zirakpurErpHostUrl;
             break;
 
         default:

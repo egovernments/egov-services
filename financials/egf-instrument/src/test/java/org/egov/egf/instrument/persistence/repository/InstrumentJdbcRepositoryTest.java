@@ -280,6 +280,7 @@ public class InstrumentJdbcRepositoryTest {
         instrumentSearch.setSurrenderReason(SurrenderReason.builder().id("1").build());
         instrumentSearch.setTransactionNumber("transactionNumber");
         instrumentSearch.setTransactionType(TransactionType.Credit);
+        instrumentSearch.setReceiptIds("1");
         instrumentSearch.setTenantId("default");
         instrumentSearch.setPageSize(500);
         instrumentSearch.setOffset(0);

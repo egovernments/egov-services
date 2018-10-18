@@ -179,6 +179,26 @@ public class InstrumentJdbcRepository extends JdbcRepository {
             paramValues.put("serialNo", instrumentSearchEntity.getSerialNo());
         }
 
+        if (instrumentSearchEntity.getReceiptIds() != null) {
+            InstrumentVoucherSearch ivs = new InstrumentVoucherSearch();
+            ivs.setTenantId(instrumentSearchEntity.getTenantId());
+            ivs.setReceiptIds(instrumentSearchEntity.getReceiptIds());
+            Pagination<InstrumentVoucher> instrumentVoucherList = instrumentVoucherJdbcRepository.search(ivs);
+            if (instrumentVoucherList != null && instrumentVoucherList.getPagedData() != null
+                    && !instrumentVoucherList.getPagedData().isEmpty()) {
+                List<String> idList = new ArrayList<>();
+                for (InstrumentVoucher iv : instrumentVoucherList.getPagedData()) {
+                    idList.add(iv.getInstrument().getId());
+                }
+                if (!idList.isEmpty()) {
+                    if (params.length() > 0)
+                        params.append(" and ");
+                    params.append("id in (:ids)");
+                    paramValues.put("ids", idList);
+                }
+            }
+        }
+
         if (instrumentSearchEntity.getIds() != null) {
             if (params.length() > 0)
                 params.append(" and ");

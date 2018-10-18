@@ -21,4 +21,5 @@ public class InstrumentSearch extends Instrument {
     private String financialStatuses;
     private Date transactionFromDate;
     private Date transactionToDate;
+    private String receiptIds;
 }

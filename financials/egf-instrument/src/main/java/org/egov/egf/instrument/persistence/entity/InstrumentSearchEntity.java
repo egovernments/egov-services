@@ -24,6 +24,7 @@ public class InstrumentSearchEntity extends InstrumentEntity {
     private String financialStatuses;
     private Date transactionFromDate;
     private Date transactionToDate;
+    private String receiptIds;
 
     @Override
     public Instrument toDomain() {
@@ -42,6 +43,7 @@ public class InstrumentSearchEntity extends InstrumentEntity {
         instrumentTypes = instrumentSearch.getInstrumentTypes();
         transactionFromDate = instrumentSearch.getTransactionFromDate();
         transactionToDate = instrumentSearch.getTransactionToDate();
+        receiptIds = instrumentSearch.getReceiptIds();
         return this;
     }
 

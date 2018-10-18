@@ -19,6 +19,7 @@ public class InstrumentVoucherSearchEntity extends InstrumentVoucherEntity {
     private Integer pageSize;
     private Integer offset;
     private String instruments;
+    private String receiptIds;
 
     @Override
     public InstrumentVoucher toDomain() {
@@ -34,6 +35,7 @@ public class InstrumentVoucherSearchEntity extends InstrumentVoucherEntity {
         sortBy = instrumentVoucherSearch.getSortBy();
         ids = instrumentVoucherSearch.getIds();
         instruments = instrumentVoucherSearch.getInstruments();
+        receiptIds = instrumentVoucherSearch.getReceiptIds();
         return this;
     }
 

@@ -80,12 +80,21 @@ public class InstrumentVoucherJdbcRepository extends JdbcRepository {
             params.append("tenantId =:tenantId");
             paramValues.put("tenantId", instrumentVoucherSearchEntity.getTenantId());
         }
+
         if (instrumentVoucherSearchEntity.getInstruments() != null) {
             if (params.length() > 0)
                 params.append(" and ");
             params.append("instrumentId in (:instruments)");
             paramValues.put("instruments",
                     new ArrayList<String>(Arrays.asList(instrumentVoucherSearchEntity.getInstruments().split(","))));
+        }
+
+        if (instrumentVoucherSearchEntity.getReceiptIds() != null) {
+            if (params.length() > 0)
+                params.append(" and ");
+            params.append("receiptHeaderId in (:receiptIds)");
+            paramValues.put("receiptIds",
+                    new ArrayList<String>(Arrays.asList(instrumentVoucherSearchEntity.getReceiptIds().split(","))));
         }
 
         Pagination<InstrumentVoucher> page = new Pagination<>();

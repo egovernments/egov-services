@@ -16,4 +16,5 @@ public class InstrumentVoucherSearch extends InstrumentVoucher {
     private Integer pageSize;
     private Integer offset;
     private String instruments;
+    private String receiptIds;
 }

@@ -37,3 +37,4 @@ tradelicense_masters: 'https://raw.githubusercontent.com/egovernments/egov-servi
 tradelicense_services: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/tradelicense/contracts/services/V1.0.0.yaml'
 lcms: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/lcms/contracts/lcms-services/v1-0-0.yml'
 swm_v1.0.0: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/swm/contract/v1-0-0.yaml'
+Birth_And_Death: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/BirthAndDeath/BnD_v1.3.yaml'

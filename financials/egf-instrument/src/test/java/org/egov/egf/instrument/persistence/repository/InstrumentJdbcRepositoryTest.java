@@ -77,7 +77,7 @@ public class InstrumentJdbcRepositoryTest {
 
         assertThat(row.get("amount").toString()).isEqualTo("1.00");
         assertThat(row.get("bankId")).isEqualTo(actualResult.getBankId());
-        assertThat(row.get("bankAccountId")).isEqualTo(actualResult.getBankAccountId());
+        assertThat(row.get("bankAccountId")).isEqualTo(actualResult.getBankAccountId()); 
         assertThat(row.get("branchName")).isEqualTo(actualResult.getBranchName());
         assertThat(row.get("drawer")).isEqualTo(actualResult.getDrawer());
         assertThat(row.get("financialStatusId")).isEqualTo(actualResult.getFinancialStatusId());
@@ -118,20 +118,6 @@ public class InstrumentJdbcRepositoryTest {
         assertThat(row.get("transactionNumber")).isEqualTo(actualResult.getTransactionNumber());
         assertThat(row.get("transactionType")).isEqualTo(actualResult.getTransactionType());
 
-    }
-
-    @Test
-    @Sql(scripts = { "/sql/instrument/clearInstrument.sql", "/sql/instrument/insertInstrumentData.sql" })
-    public void test_delete() {
-        InstrumentEntity instrument = InstrumentEntity.builder().id("1").amount(BigDecimal.ONE).bankAccountId("1")
-                .bankId("1").branchName("branchName").drawer("drawer").financialStatusId("1").instrumentTypeId("1")
-                .payee("payee").serialNo("serialNo").surrenderReasonId("1").transactionNumber("transactionNumber")
-                .transactionDate(new Date()).transactionType("Credit").build();
-        instrument.setTenantId("default");
-        InstrumentEntity actualResult = instrumentJdbcRepository.delete(instrument);
-        List<Map<String, Object>> result = namedParameterJdbcTemplate.query(
-                "SELECT * FROM egf_instrument", new InstrumentResultExtractor());
-        assertTrue("Result set length is zero", result.size() == 0);
     }
 
     @Test

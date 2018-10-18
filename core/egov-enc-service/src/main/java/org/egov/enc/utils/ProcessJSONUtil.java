@@ -6,13 +6,10 @@ import org.egov.enc.models.ModeEnum;
 import org.egov.enc.models.Plaintext;
 import org.egov.enc.services.AESEncryptionService;
 import org.egov.enc.services.RSAEncryptionService;
-import org.egov.enc.web.models.EncryptReqObject;
-import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.BadPaddingException;
-import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 import java.security.InvalidAlgorithmParameterException;
@@ -20,7 +17,6 @@ import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.util.*;
-import java.util.function.BiFunction;
 
 @Component
 public class ProcessJSONUtil {

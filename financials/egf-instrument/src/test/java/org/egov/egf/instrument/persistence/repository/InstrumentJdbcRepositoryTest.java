@@ -306,6 +306,7 @@ public class InstrumentJdbcRepositoryTest {
         instrumentSearch.setSurrenderReason(SurrenderReason.builder().id("1").build());
         instrumentSearch.setTransactionNumber("transactionNumber");
         instrumentSearch.setTransactionType(TransactionType.Credit);
+        instrumentSearch.setReceiptIds("1");
         try {
             String startDateString = "07/27/2017";
             DateFormat df = new SimpleDateFormat("MM/dd/yyyy");

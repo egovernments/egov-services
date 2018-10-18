@@ -191,6 +191,8 @@ public class InstrumentVoucherJdbcRepositoryTest {
         InstrumentVoucherSearch instrumentVoucherSearch = new InstrumentVoucherSearch();
         instrumentVoucherSearch.setReceiptHeaderId("1");
         instrumentVoucherSearch.setVoucherHeaderId("1");
+        instrumentVoucherSearch.setInstruments("1");
+        instrumentVoucherSearch.setReceiptIds("1");
         instrumentVoucherSearch.setPageSize(500);
         instrumentVoucherSearch.setOffset(0);
         instrumentVoucherSearch.setSortBy("id desc");

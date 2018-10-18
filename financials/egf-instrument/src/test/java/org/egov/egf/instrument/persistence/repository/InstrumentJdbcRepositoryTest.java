@@ -2,6 +2,7 @@ package org.egov.egf.instrument.persistence.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 import java.math.BigDecimal;
 import java.sql.ResultSet;
@@ -119,18 +120,19 @@ public class InstrumentJdbcRepositoryTest {
 
     }
 
-    // todo-have to fix build failure.
-    /*
-     * @Test
-     * @Sql(scripts = { "/sql/instrument/clearInstrument.sql", "/sql/instrument/insertInstrumentData.sql" }) public void
-     * test_delete() { InstrumentEntity instrument = InstrumentEntity.builder().id("1").amount(BigDecimal.ONE).bankAccountId("1")
-     * .bankId("1").branchName("branchName").drawer("drawer").financialStatusId("1").instrumentTypeId("1")
-     * .payee("payee").serialNo("serialNo").surrenderReasonId("1").transactionNumber("transactionNumber") .transactionDate(new
-     * Date()).transactionType("Credit").build(); instrument.setTenantId("default"); InstrumentEntity actualResult =
-     * instrumentJdbcRepository.delete(instrument); List<Map<String, Object>> result = namedParameterJdbcTemplate.query(
-     * "SELECT * FROM egf_instrument", new InstrumentResultExtractor()); assertTrue("Result set length is zero", result.size() ==
-     * 0); }
-     */
+    @Test
+    @Sql(scripts = { "/sql/instrument/clearInstrument.sql", "/sql/instrument/insertInstrumentData.sql" })
+    public void test_delete() {
+        InstrumentEntity instrument = InstrumentEntity.builder().id("1").amount(BigDecimal.ONE).bankAccountId("1")
+                .bankId("1").branchName("branchName").drawer("drawer").financialStatusId("1").instrumentTypeId("1")
+                .payee("payee").serialNo("serialNo").surrenderReasonId("1").transactionNumber("transactionNumber")
+                .transactionDate(new Date()).transactionType("Credit").build();
+        instrument.setTenantId("default");
+        InstrumentEntity actualResult = instrumentJdbcRepository.delete(instrument);
+        List<Map<String, Object>> result = namedParameterJdbcTemplate.query(
+                "SELECT * FROM egf_instrument", new InstrumentResultExtractor());
+        assertTrue("Result set length is zero", result.size() == 0);
+    }
 
     @Test
     @Sql(scripts = { "/sql/instrument/clearInstrument.sql", "/sql/instrument/insertInstrumentData.sql" })

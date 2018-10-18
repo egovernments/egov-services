@@ -259,6 +259,20 @@ public class CollectionsQueryBuilder {
             selectQuery.append(" rh.status = :status");
             preparedStatementValues.put("status", searchCriteria.getStatus());
         }
+        
+        if (StringUtils.isNotBlank(searchCriteria.getFund())) {
+
+            addClauseIfRequired(preparedStatementValues, selectQuery);
+            selectQuery.append(" rh.fund = :fund");
+            preparedStatementValues.put("fund", searchCriteria.getFund());
+        }
+        
+        if (StringUtils.isNotBlank(searchCriteria.getDepartment())) {
+
+            addClauseIfRequired(preparedStatementValues, selectQuery);
+            selectQuery.append(" rh.department = :department");
+            preparedStatementValues.put("department", searchCriteria.getDepartment());
+        }
 
         if (StringUtils.isNotBlank(searchCriteria.getCollectedBy())) {
 

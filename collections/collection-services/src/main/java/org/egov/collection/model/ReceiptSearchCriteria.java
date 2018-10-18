@@ -63,6 +63,10 @@ public class ReceiptSearchCriteria {
     private String collectedBy;
 
     private String status;
+    
+    private String fund;
+    
+    private String department;
 
     private String paymentType;
 

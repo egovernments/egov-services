@@ -18,8 +18,8 @@ info:
   description: |
     Rest APIs for Birth and death Management system. The system handles birth and death registration, modification and  name inclusion of birth registration operations. 
   contact:
-    name: Pradeep Kumar C M
-    email: pradeep@egovernments.org
+    name: eGovernments Foundation
+    email: info@egovernments.org
 schemes:
   - https
 consumes:
@@ -536,40 +536,12 @@ definitions:
         description: Deliverty method master code.
       person:
         $ref: "#/definitions/Person"
-        example:
-          id:1
-          name:Shashank
-          gender:MALE
-          mobileNumber:9999999999
-          email:test@gmail.com
-        description: Child information 
       father:
         $ref: "#/definitions/Person"
-        example:
-          id:1
-          name:Father Name
-          gender:MALE
-          mobileNumber:9999999999
-          email:test@gmail.com
-        description: father information  
       mother:
         $ref: "#/definitions/Person"
-        example:
-          id:1
-          name:Mother Name
-          gender:FEMALE
-          mobileNumber:9999999999
-          email:test@gmail.com
-        description: mother information     
       informant:
         $ref: "#/definitions/Person"
-        example:
-          id:1
-          name:INFORMANT NAME
-          gender:MALE
-          mobileNumber:9999999999
-          email:test@gmail.com
-        description: Informant person details. In case of hospital, this field is not mandatory.  
       methodOfDelivery:
         type: string
         description: Method of delivery  code
@@ -600,14 +572,6 @@ definitions:
           description: Pregnancy duration. The range should be in weeks.
       birthAddress:
         $ref: "#/definitions/Address"
-        description: Birth address. In case informant is the hospital, hospital address will be considered. In cases where the birth takes place in a house or any other place, this field is mandatory.
-        example:
-          cityOrVillageCode:01
-          building:1333,2nd cross
-          street:3rd main
-          locality:hsr layout
-          city:cityname
-          addressType:EVENTADDRESS
       birthPlaceType:
         type: string
         description: Place of birth
@@ -661,14 +625,6 @@ definitions:
            - Village
       motherUsualAddress:
         $ref: "#/definitions/Address"
-        description: Town or village of residence of the mother. Save town/village, district and state information using address.
-        example:
-          cityOrVillageCode:01
-          building:45,3nd cross
-          street:7th main
-          locality:shantinagar
-          city:cityname
-          addressType:USUALADDRESS
       status:
         type: string
         description: Status of birth registation
@@ -740,28 +696,20 @@ definitions:
             
       hospital:
         $ref: "#/definitions/Hospital"
-        description: Reference to Hospital. If birth place is hospital, then this field is mandatory. 
       attentionAtDelivery:
         $ref: "#/definitions/AttentionAtDelivery"
-        description: Deliverty method used in birth.
       person:
         $ref: "#/definitions/Person"
-        description: Child information 
       father:
         $ref: "#/definitions/Person"
-        description: father information  
       mother:
         $ref: "#/definitions/Person"
-        description: mother information     
       informant:
         $ref: "#/definitions/Person"
-        description: Informant person details. In case of hospital, this field is not mandatory.  
       methodOfDelivery:
         $ref: "#/definitions/MethodOfDelivery"
-        description: Delivery method
       registrationUnit:
         $ref: "#/definitions/RegistrationUnit"
-        description: Registration  unit of birth registration
       registrar:
         type: string
         pattern: "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]+"
@@ -786,7 +734,6 @@ definitions:
           description: Pregnancy duration. The range should be in months.
       birthAddress:
         $ref: "#/definitions/Address"
-        description: Birth address. In case informant is the hospital, hospital address will be considered. In cases where the birth takes place in a house or any other place, this field is mandatory.
       birthPlaceType:
         type: string
         description: Place of birth
@@ -799,19 +746,14 @@ definitions:
            - NOTSTATED
       motherOccupation: 
         $ref: "#/definitions/Occupation"
-        description: Reference to code of Mother's occupation
       fatherOccupation: 
         $ref: "#/definitions/Occupation"
-        description: Reference to code of Father's occupation
       religion:
         $ref: "#/definitions/Religion"
-        description: Religion of deceased.
       motherEducation:
         $ref: "#/definitions/Education"
-        description: Education of mother  
       fatherEducation:
         $ref: "#/definitions/Education"
-        description: Education of father 
       motherAgeAtMarriage:
         type: integer
         format: int64
@@ -826,10 +768,8 @@ definitions:
         description: Age of mother at the time of child birth.Maximum value and minimum value check required.
       fatherNationality: 
         $ref: "#/definitions/Nationality"
-        description: Reference to Nationality. Nationality of father
       motherNationality: 
         $ref: "#/definitions/Nationality"
-        description: Reference to Nationality. Nationality of mother  
       motherUsualResidenceType:
         type: string
         description: Mother usual residence place. Select either town or village.
@@ -840,7 +780,6 @@ definitions:
            - Village
       motherUsualAddress:
         $ref: "#/definitions/Address"
-        description: Town or village of residence of the mother. Save town/village, district and state informaion using address.
       status:
         type: string
         description: Status of birth registation
@@ -916,15 +855,12 @@ definitions:
         description: Attention code reference.
       deathPerson:
         $ref: "#/definitions/Person"
-        description: Death person information 
       relative:
         $ref: "#/definitions/Person"
-        description: Relative information will be collected. Either wife/father/mother/husband information will be collected along with death person. 
       relationShipType:  
         $ref: "#/definitions/RelationShipType"
       informant:
         $ref: "#/definitions/Person"
-        description: Informant person details. In case of hospital, this field is not mandatory.  
       registrationUnit:
         type: string
         description: Code of the Registration unit code.
@@ -944,10 +880,8 @@ definitions:
         maxLength: 10
       deceasedAddress:
         $ref: "#/definitions/Address"
-        description: Death person permanent address.
       deathAddress:
         $ref: "#/definitions/Address"
-        description: Death address. In case of informant is hospital, hospital address will be consider.Incase of death happened in house or other place, this field is mandatory.
       deathPlaceType:
         type: string
         description: Place of death
@@ -1046,7 +980,6 @@ definitions:
             Death date of death record in epoch time.
       hospital:
         $ref: "#/definitions/Hospital"
-        description: Reference to Hospital. If death place is hospital, then this field is mandatory. 
       deathMedicallyCertified:
         type: boolean
         description: Boolean value. Is death medically certified by doctor.
@@ -1073,21 +1006,16 @@ definitions:
            - Not STATED
       attentionAtDeath:
         $ref: "#/definitions/AttentionAtDeath"
-        description: Attention code reference.
       deathPerson:
         $ref: "#/definitions/Person"
-        description: Death person information 
       relative:
         $ref: "#/definitions/Person"
-        description: Relative information will be collected. Either wife/father/mother/husband information will be collected along with death person. 
       relationShipType:  
         $ref: "#/definitions/RelationShipType"
       informant:
         $ref: "#/definitions/Person"
-        description: Informant person details. In case of hospital, this field is not mandatory.  
       registrationUnit:
         $ref: "#/definitions/RegistrationUnit"
-        description: Registration  unit code .
       registrar:
         type: string
         maxLength: 100
@@ -1104,10 +1032,8 @@ definitions:
         maxLength: 10
       deceasedAddress:
         $ref: "#/definitions/Address"
-        description: Death person permanent address.
       deathAddress:
         $ref: "#/definitions/Address"
-        description: Death address. In case of informant is hospital, hospital address will be consider.Incase of death happened in house or other place, this field is mandatory.
       deathPlaceType:
         type: string
         description: Place of death
@@ -1120,16 +1046,12 @@ definitions:
            - NOTSTATED
       icdClasification:
         $ref: "#/definitions/ICDMajorGroup"
-        description: ICD clasification reference to define cause of death.
       occupation: 
         $ref: "#/definitions/Occupation"
-        description: Reference to occupation. Occupation code of death person
       nationality: 
         $ref: "#/definitions/Nationality"
-        description: Reference to Nationality. Nationality code of death person 
       religion:
         $ref: "#/definitions/Religion"
-        description: Religion code.
       maritalStatus:
           type: string
           enum:
@@ -1190,16 +1112,9 @@ definitions:
           format: float
           description: Number of years addicted
       addiction:
-        $ref: '#/definitions/Addiction'    
-        description: Addiction reference.
-        example:
-          code:01
-          addictionType:SMOKE
+        $ref: '#/definitions/Addiction'
       deathRegistration:
         $ref: '#/definitions/DeathRegistration'
-        description: death record reference 
-        example:
-          registrationNumber:2017-D-198
     example:
       addictionInYears:1
     required:      
@@ -1618,7 +1533,6 @@ definitions:
     required:
      - registrationType
      - description
-     
   Addiction:
     type: object
     description: |

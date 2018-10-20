@@ -1,5 +1,6 @@
 asset: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/asset/contracts/v1-0-0.yml'
 billing_service: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/billingservice/contracts/v1-0-0.yml'
+birth_and_death: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/BirthAndDeath/BnD_v1.3.yaml'
 collections_masters: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/collections/contracts/collections-masters/v1-0-0.yml'
 collections_service: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/collections/contracts/collections-receipt/v1-0-1.yml'
 common: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml'
@@ -37,4 +38,4 @@ tradelicense_masters: 'https://raw.githubusercontent.com/egovernments/egov-servi
 tradelicense_services: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/tradelicense/contracts/services/V1.0.0.yaml'
 lcms: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/lcms/contracts/lcms-services/v1-0-0.yml'
 swm_v1.0.0: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/swm/contract/v1-0-0.yaml'
-Birth_And_Death: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/BirthAndDeath/BnD_v1.3.yaml'
+

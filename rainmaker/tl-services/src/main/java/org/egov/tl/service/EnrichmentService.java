@@ -209,9 +209,9 @@ public class EnrichmentService {
         RequestInfo requestInfo = tradeLicenseRequest.getRequestInfo();
         AuditDetails auditDetails = tradeUtil.getAuditDetails(requestInfo.getUserInfo().getUuid(), false);
         tradeLicenseRequest.getLicenses().forEach(tradeLicense -> {
+            tradeLicense.setAuditDetails(auditDetails);
             if(tradeLicense.getAction().equals(TradeLicense.ActionEnum.APPLY)
                     || tradeLicense.getAction().equals(TradeLicense.ActionEnum.INITIATE)) {
-                tradeLicense.setAuditDetails(auditDetails);
                 tradeLicense.getTradeLicenseDetail().setAuditDetails(auditDetails);
 
                 if(!CollectionUtils.isEmpty(tradeLicense.getTradeLicenseDetail().getAccessories())){

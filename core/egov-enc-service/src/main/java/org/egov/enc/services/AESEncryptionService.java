@@ -22,12 +22,12 @@ import java.util.Base64;
 @Service
 public class AESEncryptionService {
 
+    @Autowired
     private KeyStore keyStore;
 
     @Autowired
-    public AESEncryptionService(KeyStore keyStore) throws Exception {
+    public AESEncryptionService() {
         Security.addProvider(new BouncyCastleProvider());
-        this.keyStore = keyStore;
     }
 
     public Ciphertext encrypt(Plaintext plaintext) throws NoSuchPaddingException, InvalidKeyException, NoSuchAlgorithmException, IllegalBlockSizeException, BadPaddingException, InvalidAlgorithmParameterException, InvalidKeySpecException {

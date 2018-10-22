@@ -9,8 +9,6 @@ import org.egov.enc.utils.AESUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -27,37 +25,42 @@ import java.util.ArrayList;
 import java.util.Base64;
 import java.util.HashMap;
 
+
+
+/*
+    KeyStore fetches keys from database.
+    All Keys will be stored inside the HashMaps.
+    Keys can be extracted from these maps based on Key_ID.
+    Active Key for a given Tenant can be got by providing Tenant_ID.
+*/
+
+
 @Component
 public class KeyStore implements ApplicationRunner {
 
+    @Autowired
     private AppProperties appProperties;
-
+    @Autowired
     private KeyRepository keyRepository;
 
     private ArrayList<String> tenantIds;
 
-    private ArrayList<SymmetricKey> symmetricKeys;
-    private ArrayList<AsymmetricKey> asymmetricKeys;
+    private static ArrayList<SymmetricKey> symmetricKeys;
+    private static ArrayList<AsymmetricKey> asymmetricKeys;
 
-    private HashMap<Integer, SymmetricKey> symmetricKeyHashMap;
-    private HashMap<Integer, AsymmetricKey> asymmetricKeyHashMap;
+    private static HashMap<Integer, SymmetricKey> symmetricKeyHashMap;
+    private static HashMap<Integer, AsymmetricKey> asymmetricKeyHashMap;
 
-    private HashMap<String, Integer> activeSymmetricKeys;
-    private HashMap<String, Integer> activeAsymmetricKeys;
+    private static HashMap<String, Integer> activeSymmetricKeys;
+    private static HashMap<String, Integer> activeAsymmetricKeys;
 
     private SecretKey masterKey;
     private byte[] masterInitialVector;
 
 
     @Autowired
-    public KeyStore(AppProperties appProperties, KeyRepository keyRepository) throws NoSuchAlgorithmException, InvalidKeySpecException, IllegalBlockSizeException, NoSuchPaddingException, InvalidAlgorithmParameterException, InvalidKeyException, BadPaddingException {
+    public KeyStore()  {
         Security.addProvider(new BouncyCastleProvider());
-
-        this.appProperties = appProperties;
-        this.keyRepository = keyRepository;
-
-        initializeMasterKey();
-
     }
 
     private void initializeMasterKey() throws NoSuchAlgorithmException, InvalidKeySpecException {
@@ -196,6 +199,7 @@ public class KeyStore implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments applicationArguments) throws Exception {
+        initializeMasterKey();
         refreshKeys();
     }
 }

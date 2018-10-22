@@ -21,12 +21,12 @@ import org.egov.enc.web.models.Signature;
 @Service
 public class RSASignatureService {
 
+    @Autowired
     private KeyStore keyStore;
 
     @Autowired
-    public RSASignatureService(KeyStore keyStore) {
+    public RSASignatureService() {
         Security.addProvider(new BouncyCastleProvider());
-        this.keyStore = keyStore;
     }
 
     public Signature hashAndSign(Plaintext plaintext) throws InvalidKeySpecException, NoSuchAlgorithmException, SignatureException, InvalidKeyException, IllegalBlockSizeException, NoSuchPaddingException, InvalidAlgorithmParameterException, BadPaddingException {

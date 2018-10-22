@@ -17,8 +17,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
-@javax.annotation.Generated(value = "org.egov.codegen.SpringBootCodegen", date = "2018-10-11T17:31:52.360+05:30")
-
 @Slf4j
 @Controller
 public class CryptoApiController{
@@ -26,16 +24,15 @@ public class CryptoApiController{
     private final ObjectMapper objectMapper;
     private final HttpServletRequest request;
 
+    @Autowired
     private EncryptionService encryptionService;
+    @Autowired
     private KeyManagementApplication keyManagementApplication;
 
     @Autowired
-    public CryptoApiController(ObjectMapper objectMapper, HttpServletRequest request, EncryptionService encryptionService, KeyManagementApplication keyManagementApplication) {
+    public CryptoApiController(ObjectMapper objectMapper, HttpServletRequest request) {
         this.objectMapper = objectMapper;
         this.request = request;
-
-        this.encryptionService = encryptionService;
-        this.keyManagementApplication = keyManagementApplication;
     }
 
     @RequestMapping(value="/crypto/v1/_encrypt", method = RequestMethod.POST)

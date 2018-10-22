@@ -32,23 +32,21 @@ import java.util.Collection;
 @Component
 public class KeyManagementApplication implements ApplicationRunner {
 
+    @Autowired
     private KeyRepository keyRepository;
-    private KeyGenerator keyGenerator;
-    private KeyStore keyStore;
-    private ArrayList<String> tenantIdsFromDB;
 
     @Autowired
-    public KeyManagementApplication(KeyRepository keyRepository, KeyStore keyStore, KeyGenerator keyGenerator) throws InvalidKeySpecException, NoSuchAlgorithmException, JSONException {
-        this.keyRepository = keyRepository;
-        this.keyStore = keyStore;
-        this.keyGenerator = keyGenerator;
-    }
+    private KeyGenerator keyGenerator;
+    @Autowired
+    private KeyStore keyStore;
+
+    private ArrayList<String> tenantIdsFromDB;
 
     public void init() {
         tenantIdsFromDB = (ArrayList<String>) this.keyRepository.fetchDistinctTenantIds();
     }
 
-    public boolean checkTenant(String tenant) throws BadPaddingException, InvalidKeyException, NoSuchAlgorithmException, IllegalBlockSizeException, NoSuchPaddingException, InvalidAlgorithmParameterException, InvalidKeySpecException {
+    public boolean checkIfTenantExists(String tenant) throws BadPaddingException, InvalidKeyException, NoSuchAlgorithmException, IllegalBlockSizeException, NoSuchPaddingException, InvalidAlgorithmParameterException, InvalidKeySpecException {
         if(tenantIdsFromDB.contains(tenant)) {
             return true;
         }
@@ -146,7 +144,7 @@ public class KeyManagementApplication implements ApplicationRunner {
     }
 
     @Override
-    public void run(ApplicationArguments applicationArguments) throws Exception {
+    public void run(ApplicationArguments applicationArguments) {
         init();
     }
 }

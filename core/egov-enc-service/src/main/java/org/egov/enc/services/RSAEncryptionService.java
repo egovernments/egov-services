@@ -21,12 +21,12 @@ import java.util.Base64;
 @Service
 public class RSAEncryptionService {
 
+    @Autowired
     private KeyStore keyStore;
 
     @Autowired
-    public RSAEncryptionService(KeyStore keyStore) {
+    public RSAEncryptionService() {
         Security.addProvider(new BouncyCastleProvider());
-        this.keyStore = keyStore;
     }
 
     public Ciphertext encrypt(Plaintext plaintext) throws InvalidKeySpecException, NoSuchAlgorithmException, IllegalBlockSizeException, InvalidKeyException, BadPaddingException, NoSuchPaddingException, InvalidAlgorithmParameterException {

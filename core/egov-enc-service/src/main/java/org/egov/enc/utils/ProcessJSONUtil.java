@@ -21,54 +21,50 @@ import java.util.*;
 @Component
 public class ProcessJSONUtil {
 
-    private AESEncryptionService aesEncryptionService;
-    private RSAEncryptionService rsaEncryptionService;
-
     @Autowired
-    public ProcessJSONUtil(AESEncryptionService aesEncryptionService, RSAEncryptionService rsaEncryptionService) {
-        this.aesEncryptionService = aesEncryptionService;
-        this.rsaEncryptionService = rsaEncryptionService;
-    }
+    private AESEncryptionService aesEncryptionService;
+    @Autowired
+    private RSAEncryptionService rsaEncryptionService;
 
     public Object processJSON(Object inputObject, ModeEnum mode, MethodEnum method, String tenantId) throws Exception {
         Object outputObject;
 
         if(inputObject instanceof Map) {
-            outputObject = processJSONObject((Map) inputObject, mode, method, tenantId);
+            outputObject = processJSONMap((Map) inputObject, mode, method, tenantId);
         } else if(inputObject instanceof List) {
-            outputObject = processJSONArray((List) inputObject, mode, method, tenantId);
+            outputObject = processJSONList((List) inputObject, mode, method, tenantId);
         } else {
             outputObject = processValue(inputObject, mode, method, tenantId);
         }
         return outputObject;
     }
 
-    private Map processJSONObject(Map jsonObject, ModeEnum mode, MethodEnum method, String tenantId) throws Exception {
+    private Map processJSONMap(Map jsonMap, ModeEnum mode, MethodEnum method, String tenantId) throws Exception {
         HashMap outputJSONObject = new HashMap();
-        Set<String> keySet = jsonObject.keySet();
+        Set<String> keySet = jsonMap.keySet();
         Iterator<String> keyNames = keySet.iterator();
         for(int i = 0; keyNames.hasNext(); i++) {
             String key = keyNames.next();
-            if(jsonObject.get(key) instanceof List) {
-                outputJSONObject.put(key, processJSONArray((List) jsonObject.get(key), mode, method, tenantId));
-            } else if(jsonObject.get(key) instanceof Map) {
-                outputJSONObject.put(key, processJSONObject((Map) jsonObject.get(key), mode, method, tenantId));
+            if(jsonMap.get(key) instanceof List) {
+                outputJSONObject.put(key, processJSONList((List) jsonMap.get(key), mode, method, tenantId));
+            } else if(jsonMap.get(key) instanceof Map) {
+                outputJSONObject.put(key, processJSONMap((Map) jsonMap.get(key), mode, method, tenantId));
             } else {
-                outputJSONObject.put(key, processValue(jsonObject.get(key), mode, method, tenantId));
+                outputJSONObject.put(key, processValue(jsonMap.get(key), mode, method, tenantId));
             }
         }
         return outputJSONObject;
     }
 
-    private List processJSONArray(List jsonArray, ModeEnum mode, MethodEnum method, String tenantId) throws Exception {
+    private List processJSONList(List jsonList, ModeEnum mode, MethodEnum method, String tenantId) throws Exception {
         LinkedList outputArray = new LinkedList();
-        for(int i = 0; i < jsonArray.size(); i++) {
-            if(jsonArray.get(i) instanceof List) {
-                outputArray.add(i, processJSONArray((List) jsonArray.get(i), mode, method, tenantId));
-            } else if(jsonArray.get(i) instanceof Map) {
-                outputArray.add(i, processJSONObject((Map) jsonArray.get(i), mode, method, tenantId));
+        for(int i = 0; i < jsonList.size(); i++) {
+            if(jsonList.get(i) instanceof List) {
+                outputArray.add(i, processJSONList((List) jsonList.get(i), mode, method, tenantId));
+            } else if(jsonList.get(i) instanceof Map) {
+                outputArray.add(i, processJSONMap((Map) jsonList.get(i), mode, method, tenantId));
             } else {
-                outputArray.add(i, processValue(jsonArray.get(i), mode, method, tenantId));
+                outputArray.add(i, processValue(jsonList.get(i), mode, method, tenantId));
             }
         }
         return outputArray;

@@ -3,6 +3,7 @@ package org.egov.enc.services;
 import lombok.extern.slf4j.Slf4j;
 import org.egov.enc.KeyManagementApplication;
 import org.egov.enc.models.ModeEnum;
+import org.egov.enc.utils.Constants;
 import org.egov.enc.utils.ProcessJSONUtil;
 import org.egov.enc.web.models.EncryptionRequestObject;
 import org.egov.enc.web.models.EncryptionRequest;
@@ -17,20 +18,16 @@ import java.util.*;
 @Service
 public class EncryptionService {
 
-    private ProcessJSONUtil processJSONUtil;
-    private KeyManagementApplication keyManagementApplication;
-
     @Autowired
-    public EncryptionService(ProcessJSONUtil processJSONUtil, KeyManagementApplication keyManagementApplication) {
-        this.processJSONUtil = processJSONUtil;
-        this.keyManagementApplication = keyManagementApplication;
-    }
+    private ProcessJSONUtil processJSONUtil;
+    @Autowired
+    private KeyManagementApplication keyManagementApplication;
 
     public Object encrypt(EncryptionRequest encryptionRequest) throws Exception {
         LinkedList<Object> outputList = new LinkedList<>();
         for(EncryptionRequestObject encryptionRequestObject : encryptionRequest.getEncryptionRequestObjects()) {
-            if(!keyManagementApplication.checkTenant(encryptionRequestObject.getTenantId())) {
-                throw new CustomException("Tenant Does Not Exist", encryptionRequestObject.getTenantId() + " Tenant Does Not Exist");
+            if(!keyManagementApplication.checkIfTenantExists(encryptionRequestObject.getTenantId())) {
+                throw new CustomException(Constants.TENANT_NOT_FOUND, Constants.TENANT_NOT_FOUND );
             }
             outputList.add(processJSONUtil.processJSON(encryptionRequestObject.getValue(), ModeEnum.ENCRYPT, encryptionRequestObject.getMethod(), encryptionRequestObject.getTenantId()));
         }

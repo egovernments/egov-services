@@ -15,16 +15,16 @@ public class KeyRepository {
 
     private JdbcTemplate jdbcTemplate;
 
-    private String selectSymmetricKeyQuery = "SELECT * FROM eg_enc_symmetric_keys";
-    private String selectAsymmetricKeyQuery = "SELECT * FROM eg_enc_asymmetric_keys";
+    private static final String selectSymmetricKeyQuery = "SELECT * FROM eg_enc_symmetric_keys";
+    private static final String selectAsymmetricKeyQuery = "SELECT * FROM eg_enc_asymmetric_keys";
 
-    private String insertSymmetricKeyQuery = "INSERT INTO eg_enc_symmetric_keys (secret_key, initial_vector, active, tenant_id) VALUES (? ,?, ?, ?)";
-    private String insertAsymmetricKeyQuery = "INSERT INTO eg_enc_asymmetric_keys (public_key, private_key, active, tenant_id) VALUES (? ,?, ?, ?)";
+    private static final String insertSymmetricKeyQuery = "INSERT INTO eg_enc_symmetric_keys (secret_key, initial_vector, active, tenant_id) VALUES (? ,?, ?, ?)";
+    private static final String insertAsymmetricKeyQuery = "INSERT INTO eg_enc_asymmetric_keys (public_key, private_key, active, tenant_id) VALUES (? ,?, ?, ?)";
 
-    private String deactivateSymmetricKeyQuery = "UPDATE eg_enc_symmetric_keys SET active='false'";
-    private String deactivateAsymmetricKeyQuery = "UPDATE eg_enc_asymmetric_keys SET active='false'";
+    private static final String deactivateSymmetricKeyQuery = "UPDATE eg_enc_symmetric_keys SET active='false'";
+    private static final String deactivateAsymmetricKeyQuery = "UPDATE eg_enc_asymmetric_keys SET active='false'";
 
-    private String distinctTenantIdsQuery = "SELECT DISTINCT tenant_id FROM eg_enc_symmetric_keys WHERE active='true'";
+    private static final String distinctTenantIdsQuery = "SELECT DISTINCT tenant_id FROM eg_enc_symmetric_keys WHERE active='true'";
 
 
     @Autowired

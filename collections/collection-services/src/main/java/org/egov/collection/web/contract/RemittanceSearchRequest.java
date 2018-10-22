@@ -1,6 +1,5 @@
 package org.egov.collection.web.contract;
 
-import java.util.Date;
 import java.util.List;
 
 import javax.validation.constraints.NotNull;
@@ -14,9 +13,13 @@ import lombok.ToString;
 @ToString
 public class RemittanceSearchRequest {
 
+    private List<String> ids;
+
     private List<String> referenceNumbers;
 
-    private Date referenceDate;
+    private Long fromDate;
+
+    private Long toDate;
 
     private String voucherHeader;
 
@@ -35,7 +38,13 @@ public class RemittanceSearchRequest {
     @NotNull
     private String tenantId;
 
+    private String sortBy;
+
+    private String sortOrder;
+
     private Integer pageSize;
+
+    private Integer limit;
 
     private Integer offset;
 

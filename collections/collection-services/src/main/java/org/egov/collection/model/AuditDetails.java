@@ -41,7 +41,15 @@
 package org.egov.collection.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.*;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+
 @Builder
 @Setter
 @Getter
@@ -50,17 +58,17 @@ import lombok.*;
 @AllArgsConstructor
 @EqualsAndHashCode
 public class AuditDetails {
-	
-	  @JsonProperty("createdBy")
-	  private Long createdBy = null;
-	  
-	  @JsonProperty("createdDate")
-	  private Long createdDate = null;
-	  
-	  @JsonProperty("lastModifiedBy")
-	  private Long lastModifiedBy = null;
-	  
-	  @JsonProperty("lastModifiedDate")
-	  private Long lastModifiedDate = null;
+
+    @JsonProperty("createdBy")
+    private Long createdBy = null;
+
+    @JsonProperty("createdDate")
+    private Long createdDate = null;
+
+    @JsonProperty("lastModifiedBy")
+    private Long lastModifiedBy = null;
+
+    @JsonProperty("lastModifiedDate")
+    private Long lastModifiedDate = null;
 
 }

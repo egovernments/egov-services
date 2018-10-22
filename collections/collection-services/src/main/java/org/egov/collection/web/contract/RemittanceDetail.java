@@ -70,9 +70,9 @@ public class RemittanceDetail {
 
     private String tenantId;
 
-    private Long id;
+    private String id;
 
-    private Remittance remittance;
+    private String remittance;
 
     @NotNull
     private String chartOfAccount;

@@ -68,7 +68,9 @@ public class RemittanceInstrument {
 
     private String tenantId;
 
-    private Remittance remittance;
+    private String id;
+
+    private String remittance;
 
     @NotNull
     private String instrument;

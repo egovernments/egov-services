@@ -26,9 +26,6 @@ import lombok.ToString;
 @NoArgsConstructor
 public class RemittanceRequest {
 
-    @JsonProperty("tenantId")
-    private String tenantId = null;
-
     @NotNull
     @JsonProperty("RequestInfo")
     private RequestInfo requestInfo;

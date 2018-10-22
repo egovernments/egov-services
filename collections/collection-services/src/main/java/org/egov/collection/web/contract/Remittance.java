@@ -1,10 +1,11 @@
 package org.egov.collection.web.contract;
 
-import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
 import javax.validation.constraints.NotNull;
+
+import org.egov.collection.model.AuditDetails;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -32,7 +33,7 @@ public class Remittance {
     private String referenceNumber;
 
     @NotNull
-    private Date referenceDate;
+    private Long referenceDate;
 
     private String voucherHeader;
 
@@ -49,13 +50,7 @@ public class Remittance {
 
     private String bankaccount;
 
-    private Long createdBy;
-
-    private Long lastModifiedBy;
-
-    private Long createdDate;
-
-    private Long lastModifiedDate;
+    private AuditDetails auditDetails;
 
     private Set<RemittanceDetail> remittanceDetails = new HashSet<>();
 

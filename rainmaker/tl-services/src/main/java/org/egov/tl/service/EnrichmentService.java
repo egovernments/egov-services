@@ -173,6 +173,10 @@ public class EnrichmentService {
         criteria.setOwnerIds(ownerids);
     }
 
+    public void enrichBoundary(TradeLicenseRequest tradeLicenseRequest){
+        boundaryService.getAreaType(tradeLicenseRequest,config.getHierarchyTypeCode());
+    }
+
 
     public void enrichOwner(UserDetailResponse userDetailResponse, List<TradeLicense> licenses){
         List<OwnerInfo> users = userDetailResponse.getUser();

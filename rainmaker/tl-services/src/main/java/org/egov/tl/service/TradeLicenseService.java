@@ -92,6 +92,7 @@ public class TradeLicenseService {
         if(licenses.isEmpty())
             return Collections.emptyList();
         enrichmentService.enrichTLSearchCriteriaWithOwnerids(criteria,licenses);
+        enrichmentService.enrichBoundary(new TradeLicenseRequest(requestInfo,licenses));
         UserDetailResponse userDetailResponse = userService.getUser(criteria,requestInfo);
         enrichmentService.enrichOwner(userDetailResponse,licenses);
         return licenses;

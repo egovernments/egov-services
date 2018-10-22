@@ -24,11 +24,6 @@ public class RSASignatureService {
     @Autowired
     private KeyStore keyStore;
 
-    @Autowired
-    public RSASignatureService() {
-        Security.addProvider(new BouncyCastleProvider());
-    }
-
     public Signature hashAndSign(Plaintext plaintext) throws InvalidKeySpecException, NoSuchAlgorithmException, SignatureException, InvalidKeyException, IllegalBlockSizeException, NoSuchPaddingException, InvalidAlgorithmParameterException, BadPaddingException {
         AsymmetricKey asymmetricKey = keyStore.getAsymmetricKey(plaintext.getTenantId());
         PrivateKey privateKey = keyStore.generatePrivateKey(asymmetricKey);

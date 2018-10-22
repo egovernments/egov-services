@@ -1,12 +1,12 @@
 package org.egov.enc.services;
 
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
+import org.egov.enc.keymanagement.KeyStore;
 import org.egov.enc.models.Ciphertext;
 import org.egov.enc.models.MethodEnum;
 import org.egov.enc.models.Plaintext;
 import org.egov.enc.models.SymmetricKey;
 import org.egov.enc.utils.AESUtil;
-import org.egov.enc.keymanagement.KeyStore;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,20 +15,18 @@ import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
-import java.security.*;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.security.Security;
 import java.security.spec.InvalidKeySpecException;
 import java.util.Base64;
 
 @Service
-public class AESEncryptionService {
+public class AESEncryptionService implements EncryptionServiceInterface {
 
     @Autowired
     private KeyStore keyStore;
-
-    @Autowired
-    public AESEncryptionService() {
-        Security.addProvider(new BouncyCastleProvider());
-    }
 
     public Ciphertext encrypt(Plaintext plaintext) throws NoSuchPaddingException, InvalidKeyException, NoSuchAlgorithmException, IllegalBlockSizeException, BadPaddingException, InvalidAlgorithmParameterException, InvalidKeySpecException {
         SymmetricKey symmetricKey = keyStore.getSymmetricKey(plaintext.getTenantId());

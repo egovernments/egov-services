@@ -15,6 +15,7 @@ public class AESUtil {
         init();
     }
 
+    //Initialize Security Provider to BouncyCastleProvider
     public static void init() { Security.addProvider(new BouncyCastleProvider()); }
 
     public static byte[] encrypt(byte[] plaintext, SecretKey secretKey, byte[] initialVector) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidAlgorithmParameterException, InvalidKeyException, BadPaddingException, IllegalBlockSizeException {

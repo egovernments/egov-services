@@ -18,6 +18,12 @@ import java.security.spec.KeySpec;
 import java.util.ArrayList;
 import java.util.Base64;
 
+/*
+    KeyGenerator is used to generate random keys.
+    Keys will be encrypted with a master password.
+*/
+
+
 @Component
 public class KeyGenerator {
 
@@ -37,6 +43,7 @@ public class KeyGenerator {
         initializeMasterKey();
     }
 
+    //Master Key will be used to encrypt the geenrated keys before returning them to the caller
     private void initializeMasterKey() throws NoSuchAlgorithmException, InvalidKeySpecException {
         String masterPassword = appProperties.getMasterPassword();
 
@@ -58,13 +65,16 @@ public class KeyGenerator {
         masterKey = new SecretKeySpec(tmp.getEncoded(), "AES");
     }
 
-
+    //Generate random bytes with use of SecureRandom
+    //Being used to generate Initial Vector and Symmetric Key
     private byte[] getRandomBytes(int size) {
         byte[] randomBytes = new byte[size];
         secureRandom.nextBytes(randomBytes);
         return randomBytes;
     }
 
+    //Returns a list of Symmetric Keys corresponding to the list of input tenants
+    //The returned keys will be encrypted with the master password
     public ArrayList<SymmetricKey> generateSymmetricKeys(ArrayList<String> tenantIds) throws BadPaddingException, InvalidAlgorithmParameterException, NoSuchAlgorithmException, IllegalBlockSizeException, NoSuchPaddingException, InvalidKeyException, InvalidKeySpecException {
         int numberOfKeys = tenantIds.size();
         SecretKey[] keys = new SecretKey[numberOfKeys];
@@ -84,7 +94,8 @@ public class KeyGenerator {
         return symmetricKeyArrayList;
     }
 
-
+    //Returns a list of Asymmetric Keys corresponding to the list of input tenants
+    //The returned keys will be encrypted with the master password
     public ArrayList<AsymmetricKey> generateAsymmetricKeys(ArrayList<String> tenantIds) throws NoSuchAlgorithmException, BadPaddingException, InvalidAlgorithmParameterException, IllegalBlockSizeException, NoSuchPaddingException, InvalidKeyException, InvalidKeySpecException {
         int numberOfKeys = tenantIds.size();
         KeyPair[] keys = new KeyPair[numberOfKeys];
@@ -105,14 +116,9 @@ public class KeyGenerator {
         return asymmetricKeyArrayList;
     }
 
+    //All keys will get encrypted before returning to the caller
     private String encryptWithMasterPassword(String key) throws NoSuchAlgorithmException, IllegalBlockSizeException, InvalidKeyException, BadPaddingException, InvalidAlgorithmParameterException, NoSuchPaddingException {
         byte[] encryptedKey = AESUtil.encrypt(key.getBytes(StandardCharsets.UTF_8), masterKey, masterInitialVector);
         return Base64.getEncoder().encodeToString(encryptedKey);
     }
-
-    private String decryptWithMasterPassword(String encryptedKey) throws NoSuchAlgorithmException, IllegalBlockSizeException, InvalidKeyException, BadPaddingException, InvalidAlgorithmParameterException, NoSuchPaddingException {
-        byte[] decryptedKey = AESUtil.decrypt(Base64.getDecoder().decode(encryptedKey), masterKey, masterInitialVector);
-        return new String(decryptedKey, StandardCharsets.UTF_8);
-    }
-
 }

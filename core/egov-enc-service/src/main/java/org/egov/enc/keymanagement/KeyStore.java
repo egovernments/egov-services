@@ -63,6 +63,7 @@ public class KeyStore implements ApplicationRunner {
         Security.addProvider(new BouncyCastleProvider());
     }
 
+    //Master Key will be used to decrypt the keys read from the database
     private void initializeMasterKey() throws NoSuchAlgorithmException, InvalidKeySpecException {
         String masterPassword = appProperties.getMasterPassword();
 
@@ -84,6 +85,7 @@ public class KeyStore implements ApplicationRunner {
         masterKey = new SecretKeySpec(tmp.getEncoded(), "AES");
     }
 
+    //Reset and Initialize all the keys and HashMaps from the database
     public void refreshKeys() throws BadPaddingException, InvalidKeyException, NoSuchAlgorithmException, IllegalBlockSizeException, NoSuchPaddingException, InvalidAlgorithmParameterException, InvalidKeySpecException {
         tenantIds = (ArrayList<String>) keyRepository.fetchDistinctTenantIds();
 
@@ -103,6 +105,8 @@ public class KeyStore implements ApplicationRunner {
         initializeActiveKeys();
     }
 
+
+    //Create HashMap to store keys indexed with keyId
     private void initializeKeys() {
         for(SymmetricKey symmetricKey : symmetricKeys) {
             symmetricKeyHashMap.put(symmetricKey.getId(), symmetricKey);
@@ -112,6 +116,7 @@ public class KeyStore implements ApplicationRunner {
         }
     }
 
+    //Create HashMap to store active keys indexed with tenantId
     private void initializeActiveKeys() {
 
         for(String tenant : tenantIds) {
@@ -131,28 +136,34 @@ public class KeyStore implements ApplicationRunner {
         }
     }
 
+    //Get currently active symmetric key for given tenanId
     public SymmetricKey getSymmetricKey(String tenantId) {
         return getSymmetricKey(activeSymmetricKeys.get(tenantId));
     }
 
+    //Get currently active asymmetric key for given tenanId
     public AsymmetricKey getAsymmetricKey(String tenantId) {
         return getAsymmetricKey(activeAsymmetricKeys.get(tenantId));
     }
 
+    //Get symmetric key based on given keyId
     public SymmetricKey getSymmetricKey(int keyId) {
         return symmetricKeyHashMap.get(keyId);
     }
 
+    //Get asymmetric key based on given keyId
     public AsymmetricKey getAsymmetricKey(int keyId) {
         return asymmetricKeyHashMap.get(keyId);
     }
 
+    //Generate Secret Key to be used by AES from custom object SymmetricKey
     public SecretKey generateSecretKey(SymmetricKey symmetricKey) {
         String encodedKey = symmetricKey.getSecretKey();
         byte[] decodedKey = Base64.getDecoder().decode(encodedKey);
         return new SecretKeySpec(decodedKey, "AES");
     }
 
+    //Generate PublicKey to be used by RSA from custom object AsymmetricKey
     public PublicKey generatePublicKey(AsymmetricKey asymmetricKey) throws NoSuchAlgorithmException, InvalidKeySpecException {
         String encodedPublicKey = asymmetricKey.getPublicKey();
         byte[] decodedPublicKey = Base64.getDecoder().decode(encodedPublicKey);
@@ -162,6 +173,7 @@ public class KeyStore implements ApplicationRunner {
         return keyFactory.generatePublic(keySpec);
     }
 
+    //Generate PrivateKey to be used by RSA from custom object AsymmetricKey
     public PrivateKey generatePrivateKey(AsymmetricKey asymmetricKey) throws NoSuchAlgorithmException, InvalidKeySpecException {
         String encodedPrivateKey = asymmetricKey.getPrivateKey();
         byte[] decodedPrivateKey = Base64.getDecoder().decode(encodedPrivateKey);
@@ -171,20 +183,18 @@ public class KeyStore implements ApplicationRunner {
         return keyFactory.generatePrivate(keySpec);
     }
 
+    //Generate Initial Vecctor to be used by AES from custom object SymmetricKey
     public byte[] generateInitialVector(SymmetricKey symmetricKey) {
         return Base64.getDecoder().decode(symmetricKey.getInitialVector());
     }
 
-    private String encryptWithMasterPassword(String key) throws NoSuchAlgorithmException, IllegalBlockSizeException, InvalidKeyException, BadPaddingException, InvalidAlgorithmParameterException, NoSuchPaddingException {
-        byte[] encryptedKey = AESUtil.encrypt(key.getBytes(StandardCharsets.UTF_8), masterKey, masterInitialVector);
-        return Base64.getEncoder().encodeToString(encryptedKey);
-    }
-
+    //Decrypt the key read from the database with the use of master password
     private String decryptWithMasterPassword(String encryptedKey) throws NoSuchAlgorithmException, IllegalBlockSizeException, InvalidKeyException, BadPaddingException, InvalidAlgorithmParameterException, NoSuchPaddingException {
         byte[] decryptedKey = AESUtil.decrypt(Base64.getDecoder().decode(encryptedKey), masterKey, masterInitialVector);
         return new String(decryptedKey, StandardCharsets.UTF_8);
     }
 
+    //Decrypt all keys
     private void decryptAllKeys() throws BadPaddingException, InvalidAlgorithmParameterException, NoSuchAlgorithmException, IllegalBlockSizeException, NoSuchPaddingException, InvalidKeyException, InvalidKeySpecException {
         for(int i = 0; i < symmetricKeys.size(); i++) {
             symmetricKeys.get(i).setSecretKey(decryptWithMasterPassword(symmetricKeys.get(i).getSecretKey()));
@@ -197,6 +207,7 @@ public class KeyStore implements ApplicationRunner {
     }
 
 
+    //Initialize keys after application has finished loading
     @Override
     public void run(ApplicationArguments applicationArguments) throws Exception {
         initializeMasterKey();

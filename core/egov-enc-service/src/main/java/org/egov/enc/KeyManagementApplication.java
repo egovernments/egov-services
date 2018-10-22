@@ -42,10 +42,12 @@ public class KeyManagementApplication implements ApplicationRunner {
 
     private ArrayList<String> tenantIdsFromDB;
 
+    //Initialize active tenant id list
     public void init() {
         tenantIdsFromDB = (ArrayList<String>) this.keyRepository.fetchDistinctTenantIds();
     }
 
+    //Check if a given tenantId exists
     public boolean checkIfTenantExists(String tenant) throws BadPaddingException, InvalidKeyException, NoSuchAlgorithmException, IllegalBlockSizeException, NoSuchPaddingException, InvalidAlgorithmParameterException, InvalidKeySpecException {
         if(tenantIdsFromDB.contains(tenant)) {
             return true;
@@ -60,6 +62,7 @@ public class KeyManagementApplication implements ApplicationRunner {
         return false;
     }
 
+    //Generate Symmetric and Asymmetric Keys for each of the TenantId in the given input list
     public void generateKeys(ArrayList<String> tenantIds) throws BadPaddingException, InvalidKeyException, NoSuchAlgorithmException, IllegalBlockSizeException, NoSuchPaddingException, InvalidAlgorithmParameterException, InvalidKeySpecException {
 
         ArrayList<SymmetricKey> symmetricKeys = keyGenerator.generateSymmetricKeys(tenantIds);
@@ -73,6 +76,8 @@ public class KeyManagementApplication implements ApplicationRunner {
         }
     }
 
+    //Generate keys if there are any new tenants
+    //Returns the number of tenants for which the keys have been generated
     public int generateKeyForNewTenants() throws JSONException, BadPaddingException, InvalidAlgorithmParameterException, NoSuchAlgorithmException, IllegalBlockSizeException, NoSuchPaddingException, InvalidKeyException, InvalidKeySpecException {
         Collection<String> tenantIds = getTenantIds();
         Collection<String> tenantIdsFromDB = keyRepository.fetchDistinctTenantIds();
@@ -84,11 +89,13 @@ public class KeyManagementApplication implements ApplicationRunner {
         return tenantIds.size();
     }
 
+    //Used to deactivate old keys at the time of key rotation
     public void deactivateOldKeys() {
         keyRepository.deactivateSymmetricKeys();
         keyRepository.deactivateAsymmetricKeys();
     }
 
+    //Deactivate old keys and generate new keys for every tenantId
     public void rotateKeys() throws JSONException, BadPaddingException, InvalidKeyException, NoSuchAlgorithmException, IllegalBlockSizeException, NoSuchPaddingException, InvalidAlgorithmParameterException, InvalidKeySpecException {
         deactivateOldKeys();
         generateKeys(getTenantIds());

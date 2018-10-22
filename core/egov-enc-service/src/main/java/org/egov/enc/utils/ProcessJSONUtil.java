@@ -18,6 +18,12 @@ import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.util.*;
 
+/*
+    ProcessJSONUtil is used to navigate through a JSON Object.
+    All the values will be encrypted, keys will remain as it is.
+*/
+
+
 @Component
 public class ProcessJSONUtil {
 
@@ -26,6 +32,7 @@ public class ProcessJSONUtil {
     @Autowired
     private RSAEncryptionService rsaEncryptionService;
 
+    //The input object may be JSON Object or a JSON Array
     public Object processJSON(Object inputObject, ModeEnum mode, MethodEnum method, String tenantId) throws Exception {
         Object outputObject;
 
@@ -39,37 +46,40 @@ public class ProcessJSONUtil {
         return outputObject;
     }
 
+    //Navigate through JSON Object
     private Map processJSONMap(Map jsonMap, ModeEnum mode, MethodEnum method, String tenantId) throws Exception {
-        HashMap outputJSONObject = new HashMap();
+        HashMap outputJSONMap = new HashMap();
         Set<String> keySet = jsonMap.keySet();
         Iterator<String> keyNames = keySet.iterator();
         for(int i = 0; keyNames.hasNext(); i++) {
             String key = keyNames.next();
             if(jsonMap.get(key) instanceof List) {
-                outputJSONObject.put(key, processJSONList((List) jsonMap.get(key), mode, method, tenantId));
+                outputJSONMap.put(key, processJSONList((List) jsonMap.get(key), mode, method, tenantId));
             } else if(jsonMap.get(key) instanceof Map) {
-                outputJSONObject.put(key, processJSONMap((Map) jsonMap.get(key), mode, method, tenantId));
+                outputJSONMap.put(key, processJSONMap((Map) jsonMap.get(key), mode, method, tenantId));
             } else {
-                outputJSONObject.put(key, processValue(jsonMap.get(key), mode, method, tenantId));
+                outputJSONMap.put(key, processValue(jsonMap.get(key), mode, method, tenantId));
             }
         }
-        return outputJSONObject;
+        return outputJSONMap;
     }
 
+    //Navigate through JSON Array
     private List processJSONList(List jsonList, ModeEnum mode, MethodEnum method, String tenantId) throws Exception {
-        LinkedList outputArray = new LinkedList();
+        LinkedList outputJSONList = new LinkedList();
         for(int i = 0; i < jsonList.size(); i++) {
             if(jsonList.get(i) instanceof List) {
-                outputArray.add(i, processJSONList((List) jsonList.get(i), mode, method, tenantId));
+                outputJSONList.add(i, processJSONList((List) jsonList.get(i), mode, method, tenantId));
             } else if(jsonList.get(i) instanceof Map) {
-                outputArray.add(i, processJSONMap((Map) jsonList.get(i), mode, method, tenantId));
+                outputJSONList.add(i, processJSONMap((Map) jsonList.get(i), mode, method, tenantId));
             } else {
-                outputArray.add(i, processValue(jsonList.get(i), mode, method, tenantId));
+                outputJSONList.add(i, processValue(jsonList.get(i), mode, method, tenantId));
             }
         }
-        return outputArray;
+        return outputJSONList;
     }
 
+    //Each value in the object will be encrypted
     private String processValue(Object value, ModeEnum mode, MethodEnum method, String tenantId) throws NoSuchPaddingException, InvalidAlgorithmParameterException, NoSuchAlgorithmException, IllegalBlockSizeException, BadPaddingException, InvalidKeyException, InvalidKeySpecException {
         if(mode.equals(ModeEnum.ENCRYPT)) {
             Ciphertext ciphertext;

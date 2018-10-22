@@ -8,6 +8,7 @@ public class SignUtil {
 
     public SignUtil() { init(); }
 
+    //Initialize Security Provider to BouncyCastleProvider
     public static void init() {
         Security.addProvider(new BouncyCastleProvider());
     }

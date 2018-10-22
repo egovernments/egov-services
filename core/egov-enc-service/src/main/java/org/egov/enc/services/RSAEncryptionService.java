@@ -19,15 +19,10 @@ import java.security.spec.InvalidKeySpecException;
 import java.util.Base64;
 
 @Service
-public class RSAEncryptionService {
+public class RSAEncryptionService implements EncryptionServiceInterface {
 
     @Autowired
     private KeyStore keyStore;
-
-    @Autowired
-    public RSAEncryptionService() {
-        Security.addProvider(new BouncyCastleProvider());
-    }
 
     public Ciphertext encrypt(Plaintext plaintext) throws InvalidKeySpecException, NoSuchAlgorithmException, IllegalBlockSizeException, InvalidKeyException, BadPaddingException, NoSuchPaddingException, InvalidAlgorithmParameterException {
         AsymmetricKey asymmetricKey = keyStore.getAsymmetricKey(plaintext.getTenantId());

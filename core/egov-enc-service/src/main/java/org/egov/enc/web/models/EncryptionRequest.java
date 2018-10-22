@@ -12,7 +12,7 @@ import java.util.LinkedList;
 @Builder
 public class EncryptionRequest {
 
-    @JsonProperty("encryptionRequestObjects")
-    private LinkedList<EncryptionRequestObject> encryptionRequestObjects;
+    @JsonProperty("encryptionRequests")
+    private LinkedList<EncReqObject> encryptionRequests;
 
 }

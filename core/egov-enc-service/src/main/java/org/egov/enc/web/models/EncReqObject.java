@@ -33,7 +33,7 @@ import lombok.Builder;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class EncryptionRequestObject {
+public class EncReqObject {
 
     @JsonProperty("tenantId")
     private String tenantId = null;

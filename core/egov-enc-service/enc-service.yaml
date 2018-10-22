@@ -132,7 +132,7 @@ components:
 
     EncReqObject:
       type: object
-      description: EncryptionRequestObject contains data to be encrypted and meta-data required to perform the encryption.
+      description: EncReqObject contains data to be encrypted and meta-data required to perform the encryption.
       properties:
         tenantId:
           type: string

@@ -60,16 +60,14 @@ public class TradeLicenseSearchCriteria {
     public boolean isEmpty() {
         return (this.tenantId == null && this.status == null && this.ids == null && this.applicationNumber == null
                 && this.licenseNumber == null && this.oldLicenseNumber == null && this.mobileNumber == null &&
-                this.fromDate == null && this.toDate == null && this.offset == null && this.limit == null
-                && this.ownerIds == null
+                this.fromDate == null && this.toDate == null && this.ownerIds == null
         );
     }
 
     public boolean tenantIdOnly() {
         return (this.tenantId != null && this.status == null && this.ids == null && this.applicationNumber == null
                 && this.licenseNumber == null && this.oldLicenseNumber == null && this.mobileNumber == null &&
-                this.fromDate == null && this.toDate == null && this.offset == null && this.limit == null
-                && this.ownerIds == null
+                this.fromDate == null && this.toDate == null && this.ownerIds == null
         );
     }
 

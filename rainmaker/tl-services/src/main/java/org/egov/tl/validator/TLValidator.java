@@ -5,6 +5,7 @@ import org.egov.common.contract.request.RequestInfo;
 import org.egov.tl.config.TLConfiguration;
 import org.egov.tl.repository.TLRepository;
 import org.egov.tl.service.TradeLicenseService;
+import org.egov.tl.util.TLConstants;
 import org.egov.tl.util.TradeUtil;
 import org.egov.tl.web.models.TradeLicense;
 import org.egov.tl.web.models.TradeLicenseRequest;
@@ -29,16 +30,20 @@ public class TLValidator {
 
     private MDMSValidator mdmsValidator;
 
+    private TradeUtil tradeUtil;
 
 
     @Autowired
-    public TLValidator(TLRepository tlRepository, TLConfiguration config,
-                       PropertyValidator propertyValidator, MDMSValidator mdmsValidator) {
+    public TLValidator(TLRepository tlRepository, TLConfiguration config, PropertyValidator propertyValidator,
+                       MDMSValidator mdmsValidator, TradeUtil tradeUtil) {
         this.tlRepository = tlRepository;
         this.config = config;
         this.propertyValidator = propertyValidator;
         this.mdmsValidator = mdmsValidator;
+        this.tradeUtil = tradeUtil;
     }
+
+
 
 
 
@@ -52,17 +57,19 @@ public class TLValidator {
 
     private void valideDates(TradeLicenseRequest request){
         request.getLicenses().forEach(license -> {
-            if(license.getValidTo()!=null && license.getValidTo()>config.getFinancialYearEndDate()){
+            Map<String,Long> taxPeriods = tradeUtil.getTaxPeriods(request.getRequestInfo(),license);
+            if(license.getValidTo()!=null && license.getValidTo()>taxPeriods.get(TLConstants.MDMS_ENDDATE)){
                 Date expiry = new Date(license.getValidTo());
                 throw new CustomException("INVALID TO DATE"," Validto cannot be greater than: "+expiry);
             }
-            Long startOfDay = getStartOfDay();
-            if(!config.getIsPreviousTLAllowed() && license.getValidFrom()!=null
-                    && license.getValidFrom()<startOfDay)
-                throw new CustomException("INVALID FROM DATE","The validFrom date cannot be less than CurrentDate");
-            if((license.getValidFrom()!=null && license.getValidTo()!=null) && (license.getValidTo()-license.getValidFrom())<config.getMinPeriod())
-                throw new CustomException("INVALID PERIOD","The license should be applied for minimum of 30 days");
-
+            if(license.getLicenseType().toString().equalsIgnoreCase(TradeLicense.LicenseTypeEnum.TEMPORARY.toString())) {
+                Long startOfDay = getStartOfDay();
+                if (!config.getIsPreviousTLAllowed() && license.getValidFrom() != null
+                        && license.getValidFrom() < startOfDay)
+                    throw new CustomException("INVALID FROM DATE", "The validFrom date cannot be less than CurrentDate");
+                if ((license.getValidFrom() != null && license.getValidTo() != null) && (license.getValidTo() - license.getValidFrom()) < config.getMinPeriod())
+                    throw new CustomException("INVALID PERIOD", "The license should be applied for minimum of 30 days");
+            }
         });
     }
 

@@ -185,9 +185,6 @@ public class TLConfiguration {
     private String allowedEmployeeSearchParameters;
 
 
-    //FinancialYear End Date
-    @Value("${egov.tl.financialyear.end}")
-    private Long financialYearEndDate;
 
     @Value("${egov.tl.previous.allowed}")
     private Boolean isPreviousTLAllowed;

@@ -3,6 +3,7 @@ package org.egov.tl.service;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.tl.config.TLConfiguration;
 import org.egov.tl.repository.IdGenRepository;
+import org.egov.tl.util.TLConstants;
 import org.egov.tl.util.TradeUtil;
 import org.egov.tl.web.models.*;
 import org.egov.tl.web.models.Idgen.IdResponse;
@@ -40,6 +41,11 @@ public class EnrichmentService {
             tradeLicense.setApplicationDate(auditDetails.getCreatedTime());
             tradeLicense.getTradeLicenseDetail().setId(UUID.randomUUID().toString());
             tradeLicense.getTradeLicenseDetail().setAuditDetails(auditDetails);
+
+            Map<String,Long> taxPeriods = tradeUtil.getTaxPeriods(requestInfo,tradeLicense);
+            if(tradeLicense.getValidTo()==null)
+                tradeLicense.setValidTo(taxPeriods.get(TLConstants.MDMS_ENDDATE));
+            
 
             tradeLicense.getTradeLicenseDetail().getAddress().setTenantId(tradeLicense.getTenantId());
             tradeLicense.getTradeLicenseDetail().getAddress().setId(UUID.randomUUID().toString());

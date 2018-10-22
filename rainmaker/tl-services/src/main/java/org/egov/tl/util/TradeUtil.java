@@ -1,29 +1,38 @@
 package org.egov.tl.util;
 
+import com.jayway.jsonpath.JsonPath;
+import lombok.extern.slf4j.Slf4j;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.mdms.model.MasterDetail;
 import org.egov.mdms.model.MdmsCriteria;
 import org.egov.mdms.model.MdmsCriteriaReq;
 import org.egov.mdms.model.ModuleDetail;
 import org.egov.tl.config.TLConfiguration;
+import org.egov.tl.repository.ServiceRequestRepository;
 import org.egov.tl.web.models.AuditDetails;
+import org.egov.tl.web.models.TradeLicense;
+import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 import static org.egov.tl.util.TLConstants.*;
 import static org.egov.tl.util.TLConstants.COMMON_MASTERS_MODULE;
 
 @Component
+@Slf4j
 public class TradeUtil {
 
-    @Autowired
     private TLConfiguration config;
 
+    private ServiceRequestRepository serviceRequestRepository;
+
+    @Autowired
+    public TradeUtil(TLConfiguration config, ServiceRequestRepository serviceRequestRepository) {
+        this.config = config;
+        this.serviceRequestRepository = serviceRequestRepository;
+    }
 
     /**
      * Method to return auditDetails for create/update flows
@@ -123,6 +132,52 @@ public class TradeUtil {
     public StringBuilder getMdmsSearchUrl() {
         return new StringBuilder().append(config.getMdmsHost()).append(config.getMdmsEndPoint());
     }
+
+
+
+    public Map<String,Long> getTaxPeriods(RequestInfo requestInfo, TradeLicense license){
+        Map<String,Long> taxPeriods = new HashMap<>();
+
+        MdmsCriteriaReq mdmsCriteriaReq = getFinancialYearRequest(requestInfo,license.getTenantId());
+        try {
+            Object result = serviceRequestRepository.fetchResult(getMdmsSearchUrl(), mdmsCriteriaReq);
+            String jsonPath = TLConstants.MDMS_FINACIALYEAR_PATH.replace("{}",license.getFinancialYear());
+            List<Map<String,Object>> jsonOutput =  JsonPath.read(result, jsonPath);
+            Map<String,Object> financialYearProperties = jsonOutput.get(0);
+            Object startDate = financialYearProperties.get(TLConstants.MDMS_STARTDATE);
+            Object endDate = financialYearProperties.get(TLConstants.MDMS_ENDDATE);
+            taxPeriods.put(TLConstants.MDMS_STARTDATE,(Long) startDate);
+            taxPeriods.put(TLConstants.MDMS_ENDDATE,(Long) endDate);
+
+        } catch (Exception e) {
+            log.error("Error while fetvhing MDMS data", e);
+            throw new CustomException("INVALID FINANCIALYEAR", "No data found for the financialYear: "+license.getFinancialYear());
+        }
+        return taxPeriods;
+    }
+
+    private MdmsCriteriaReq getFinancialYearRequest(RequestInfo requestInfo, String tenantId) {
+
+        // master details for TL module
+        List<MasterDetail> tlMasterDetails = new ArrayList<>();
+
+        // filter to only get code field from master data
+
+        final String filterCodeForUom = "$.[?(@.active==true)]";
+
+        tlMasterDetails.add(MasterDetail.builder().name(TLConstants.MDMS_FINANCIALYEAR).filter(filterCodeForUom).build());
+
+        ModuleDetail tlModuleDtls = ModuleDetail.builder().masterDetails(tlMasterDetails)
+                .moduleName(TLConstants.MDMS_EGF_MASTER).build();
+
+
+        MdmsCriteria mdmsCriteria = MdmsCriteria.builder().moduleDetails(Collections.singletonList(tlModuleDtls)).tenantId(tenantId)
+                .build();
+
+        return MdmsCriteriaReq.builder().requestInfo(requestInfo).mdmsCriteria(mdmsCriteria).build();
+    }
+
+
 
 
 

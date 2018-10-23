@@ -132,7 +132,7 @@ components:
 
     EncReqObject:
       type: object
-      description: EncReqObject contains data to be encrypted and meta-data required to perform the encryption.
+      description: EncrReqObject contains data to be encrypted and meta-data required to perform the encryption.
       properties:
         tenantId:
           type: string
@@ -155,12 +155,12 @@ components:
           value: {
             "key": "secret"
           }
-  
-  
-      
+
+
+
     EncryptionRequest:
       type: object
-      description: An encryption request can contain multiple EncryptioRequestObject. This will help to encrypt bulk requests which may have different tenant-id and/or method ( AES / RSA ).
+      description: An encryption request can contain multiple EncReqObject. This will help to encrypt bulk requests which may have different tenant-id and/or method ( AES / RSA ).
       properties:
         encryptionRequests:
           type: array

@@ -4,7 +4,7 @@ module.exports = {
   
   entry: './src/egov-telemetry.js',
   output: {
-    filename: 'egov-telemetry-1539671124.js',
+    filename: 'egov-telemetry-1540294236.js',
     path: path.resolve(__dirname, 'build')
   }
 };

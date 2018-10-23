@@ -17,7 +17,7 @@ class ConfigData {
       channel: "org.egov",
       did: "",
       authtoken: "XXXX",
-      uid: "citizen",
+      uid: getUserUUID(),
       sid: "",
       batchsize: 10,
       mode: "",
@@ -43,6 +43,15 @@ class TelemetryData {
   constructor() {
     this.data = {};
     this.options = {};
+  }
+}
+
+
+function getUserUUID() {
+  if(localStorage.getItem("user-info")) {
+    return JSON.parse(localStorage.getItem("user-info"))["uuid"];
+  } else {
+    return "UserNotFound";
   }
 }
 

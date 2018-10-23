@@ -28,13 +28,13 @@ public class CollectionsQueryBuilder {
             + " collectedamount, collmodesnotallwd, consumercode, channel,boundary, voucherheader, "
             + "depositedbranch, createdby, createddate, lastmodifiedby, lastmodifieddate, tenantid, referencedate, referencedesc, "
             + " manualreceiptdate, manualreceiptnumber, reference_ch_id, stateid, location, isreconciled, "
-            + "status, transactionid, additionalDetails) "
+            + "status, transactionid, fund, function, department, additionalDetails) "
             + "VALUES (:id, :payeename, :payeeaddress, :payeeemail, :payeemobile , :paidby, :referencenumber, :receipttype, "
             + ":receiptnumber, :receiptdate, :businessdetails, :collectiontype, :reasonforcancellation, :minimumamount, :totalamount, "
             + " :collectedamount, :collmodesnotallwd, :consumercode, :channel, :boundary, :voucherheader, "
             + ":depositedbranch, :createdby, :createddate, :lastmodifiedby, :lastmodifieddate, :tenantid, :referencedate, :referencedesc, "
             + " :manualreceiptdate, :manualreceiptnumber, :reference_ch_id, :stateid, :location, :isreconciled, "
-            + ":status, :transactionid, :additionalDetails )";
+            + ":status, :transactionid, :fund, :function, :department, :additionalDetails )";
 
     public static final String INSERT_RECEIPT_DETAILS_SQL =  "INSERT INTO egcl_receiptdetails(id, chartofaccount, dramount, cramount, ordernumber, receiptheader, actualcramounttobepaid, "
             + "description, financialyear, isactualdemand, purpose, tenantid, additionalDetails) "
@@ -140,6 +140,9 @@ public class CollectionsQueryBuilder {
         sqlParameterSource.addValue("isreconciled", false);
         sqlParameterSource.addValue("status", billDetail.getStatus());
         sqlParameterSource.addValue("transactionid", receipt.getInstrument().getTransactionNumber());
+        sqlParameterSource.addValue("fund", billDetail.getFund());
+        sqlParameterSource.addValue("function", billDetail.getFunction());
+        sqlParameterSource.addValue("department", billDetail.getDepartment());
         sqlParameterSource.addValue("additionalDetails", getJsonb(billDetail.getAdditionalDetails()));
 
         return sqlParameterSource;

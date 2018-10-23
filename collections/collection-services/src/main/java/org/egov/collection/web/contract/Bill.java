@@ -1,14 +1,21 @@
 package org.egov.collection.web.contract;
 
-
-import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.*;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.util.ArrayList;
-import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 @Getter
 @Setter
@@ -17,37 +24,36 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode
-public class Bill   {
-	//TODO some of the fields are mandatory in yml, lets discuss billdetail and billaccountdetail also for more clarity
-	private String id;
+public class Bill {
+    // TODO some of the fields are mandatory in yml, lets discuss billdetail and billaccountdetail also for more clarity
+    private String id;
 
-	@NotNull
-	@Size(min = 1)
-	private String payeeName;
+    @NotNull
+    @Size(min = 1)
+    private String payeeName;
 
-	private String payeeAddress;
+    private String payeeAddress;
 
-	private String payeeEmail;
-	
-	private Boolean isActive;
+    private String payeeEmail;
 
-	private Boolean isCancelled;
+    private Boolean isActive;
 
-	@NotNull
-	@Size(min = 1)
+    private Boolean isCancelled;
+
+    @NotNull
+    @Size(min = 1)
     private String paidBy;
 
-	@JsonProperty("billDetails")
-	@Size(min = 1)
-	@Valid
-	private List<BillDetail> billDetails = new ArrayList<>(); //for billing-service
+    @JsonProperty("billDetails")
+    @Size(min = 1)
+    @Valid
+    private List<BillDetail> billDetails = new ArrayList<>(); // for billing-service
 
-	@NotNull
-	@Size(min = 1)
-	private String tenantId;
+    @NotNull
+    @Size(min = 1)
+    private String tenantId;
 
-	@Size(min = 1)
+    @Size(min = 1)
     private String mobileNumber;
-	
-}
 
+}

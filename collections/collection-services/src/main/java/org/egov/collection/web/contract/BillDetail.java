@@ -39,17 +39,26 @@
  */
 package org.egov.collection.web.contract;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.JsonNode;
-import lombok.*;
-import org.egov.collection.model.enums.CollectionType;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
+
+import org.egov.collection.model.enums.CollectionType;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.JsonNode;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 @Setter
 @Getter
@@ -60,72 +69,78 @@ import java.util.List;
 @EqualsAndHashCode
 public class BillDetail {
 
-	private String id;
+    private String id;
 
-	private String bill;
+    private String bill;
 
-	private Long billDate;
+    private Long billDate;
 
-	private String billDescription;
+    private String billDescription;
 
-	private String billNumber; // refNo
+    private String billNumber; // refNo
 
-	private String consumerCode;
-	
-	private String consumerType;
+    private String consumerCode;
 
-	private BigDecimal minimumAmount;
+    private String consumerType;
 
-	private BigDecimal totalAmount;
+    private BigDecimal minimumAmount;
 
-	private BigDecimal collectedAmount;
-	
+    private BigDecimal totalAmount;
+
+    private BigDecimal collectedAmount;
+
     private List<String> collectionModesNotAllowed = new ArrayList<>();
 
-	private String tenantId;
+    private String tenantId;
 
-	private String businessService; // buisnessDetailsCode
+    private String businessService; // buisnessDetailsCode
 
-	private String displayMessage;
+    private String displayMessage;
 
-	private Boolean callBackForApportioning;
+    private Boolean callBackForApportioning;
 
-	private String receiptNumber;
+    private String receiptNumber;
 
-	private Long receiptDate;
+    private Long receiptDate;
 
-	private String receiptType;
+    private String receiptType;
 
-	private String channel;
+    private String channel;
 
-	private String voucherHeader;
+    private String fund;
 
-	private CollectionType collectionType;
+    private String department;
 
-	private String boundary;
+    private String function;
 
-	private String reasonForCancellation;
+    private String voucherHeader;
 
-	@NotNull
-	@Min(value = 0)
-	@Max(value = 999999999)
-	private BigDecimal amountPaid;
+    private CollectionType collectionType;
 
-	private String cancellationRemarks;
+    private String boundary;
 
-	private String status;
+    private String reasonForCancellation;
 
-	@JsonProperty("billAccountDetails")
-	private List<BillAccountDetail> billAccountDetails = new ArrayList<>();
+    @NotNull
+    @Min(value = 0)
+    @Max(value = 999999999)
+    private BigDecimal amountPaid;
+
+    private String cancellationRemarks;
+
+    private String status;
+
+    @JsonProperty("billAccountDetails")
+    private List<BillAccountDetail> billAccountDetails = new ArrayList<>();
 
     private String manualReceiptNumber;
 
     private Long manualReceiptDate;
 
     private Long stateId;
-    
-	private Boolean partPaymentAllowed;
 
-	private JsonNode additionalDetails;
-    
+    private Boolean partPaymentAllowed;
+
+    private JsonNode additionalDetails;
+
 }

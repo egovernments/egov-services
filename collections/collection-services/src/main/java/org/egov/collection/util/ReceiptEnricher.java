@@ -167,6 +167,9 @@ public class ReceiptEnricher {
         }
         else {
             billDetail.setReceiptType(businessDetailsResponse.getBusinessDetails().get(0).getBusinessType());
+            billDetail.setFund(businessDetailsResponse.getBusinessDetails().get(0).getFund());
+            billDetail.setFunction(businessDetailsResponse.getBusinessDetails().get(0).getFunction());
+            billDetail.setDepartment(businessDetailsResponse.getBusinessDetails().get(0).getDepartment());
         }
     }
 

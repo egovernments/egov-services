@@ -3,7 +3,6 @@ package org.egov.enc.repository;
 import org.egov.enc.models.AsymmetricKey;
 import org.egov.enc.models.SymmetricKey;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.DependsOn;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;

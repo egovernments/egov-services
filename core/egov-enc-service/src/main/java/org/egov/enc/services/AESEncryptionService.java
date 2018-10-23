@@ -1,6 +1,5 @@
 package org.egov.enc.services;
 
-import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.egov.enc.keymanagement.KeyStore;
 import org.egov.enc.models.Ciphertext;
 import org.egov.enc.models.MethodEnum;
@@ -18,7 +17,6 @@ import java.nio.charset.StandardCharsets;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
-import java.security.Security;
 import java.security.spec.InvalidKeySpecException;
 import java.util.Base64;
 

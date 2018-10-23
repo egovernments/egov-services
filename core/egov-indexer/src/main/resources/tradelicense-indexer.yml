@@ -6,7 +6,7 @@ ServiceMaps:
     indexes:
     - name: tradelicense
       type: licenses
-      id: $.propertyId, $.tenantId
+      id: $.applicationNumber, $.tenantId
       isBulk: true
       jsonPath: $.Licenses
       
@@ -14,6 +14,6 @@ ServiceMaps:
     indexes:
     - name: tradelicense
       type: licenses
-      id: $.propertyId, $.tenantId
+      id: $.applicationNumber, $.tenantId
       isBulk: true
       jsonPath: $.Licenses

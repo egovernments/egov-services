@@ -4,16 +4,16 @@ ServiceMaps:
  mappings:
   - topic: save-tl-tradelicense
     indexes:
-    - name: tradelicense
-      type: licenses
-      id: $.applicationNumber, $.tenantId
+    - name: tl-index
+      type: tradelicenses
+      id: $.id, $.tenantId
       isBulk: true
       jsonPath: $.Licenses
       
   - topic: update-tl-tradelicense
     indexes:
-    - name: tradelicense
-      type: licenses
-      id: $.applicationNumber, $.tenantId
+    - name: tl-index
+      type: tradelicenses
+      id: $.id, $.tenantId
       isBulk: true
       jsonPath: $.Licenses

@@ -16,6 +16,7 @@ import org.egov.collection.model.AuditDetails;
 import org.egov.collection.web.contract.Remittance;
 import org.egov.collection.web.contract.RemittanceDetail;
 import org.egov.collection.web.contract.RemittanceInstrument;
+import org.egov.collection.web.contract.RemittanceReceipt;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.stereotype.Service;
@@ -33,6 +34,7 @@ public class RemittanceResultSetExtractor implements ResultSetExtractor<List<Rem
             Remittance remittance;
             Set<RemittanceDetail> remittanceDetails;
             Set<RemittanceInstrument> remittanceInstruments;
+            Set<RemittanceReceipt> remittanceReceipts;
             if (!remittances.containsKey(id)) {
 
                 AuditDetails auditDetails = AuditDetails.builder()
@@ -41,8 +43,10 @@ public class RemittanceResultSetExtractor implements ResultSetExtractor<List<Rem
                         .lastModifiedBy(resultSet.getLong("rem_lastModifiedBy"))
                         .lastModifiedDate(resultSet.getLong("rem_lastModifiedDate"))
                         .build();
+
                 BigDecimal creditAmount = getBigDecimalValue(resultSet.getBigDecimal("remDet_creditAmount"));
                 BigDecimal debitAmount = getBigDecimalValue(resultSet.getBigDecimal("remDet_debitAmount"));
+
                 RemittanceDetail details = RemittanceDetail.builder().chartOfAccount(resultSet.getString("remDet_chartOfAccount"))
                         .remittance(resultSet.getString("remDet_remittance"))
                         .creditAmount(creditAmount).debitAmount(debitAmount).id(resultSet.getString("remDet_id"))
@@ -55,6 +59,12 @@ public class RemittanceResultSetExtractor implements ResultSetExtractor<List<Rem
                         .reconciled(resultSet.getBoolean("remIsm_reconciled"))
                         .tenantId(resultSet.getString("remIsm_tenantId")).build();
 
+                RemittanceReceipt receipt = RemittanceReceipt.builder()
+                        .receipt(resultSet.getString("remRec_receipt"))
+                        .remittance(resultSet.getString("remRec_remittance"))
+                        .id(resultSet.getString("remRec_id"))
+                        .tenantId(resultSet.getString("remRec_tenantId")).build();
+
                 remittance = Remittance.builder().bankaccount(resultSet.getString("rem_bankaccount"))
                         .function(resultSet.getString("rem_function")).fund(resultSet.getString("rem_fund"))
                         .id(resultSet.getString("rem_id")).reasonForDelay(resultSet.getString("rem_reasonForDelay"))
@@ -63,7 +73,8 @@ public class RemittanceResultSetExtractor implements ResultSetExtractor<List<Rem
                         .status(resultSet.getString("rem_status")).tenantId(resultSet.getString("rem_tenantId"))
                         .voucherHeader(resultSet.getString("rem_voucherHeader")).auditDetails(auditDetails)
                         .remittanceDetails(Collections.singleton(details))
-                        .remittanceInstruments(Collections.singleton(instrument)).build();
+                        .remittanceInstruments(Collections.singleton(instrument))
+                        .remittanceReceipts(Collections.singleton(receipt)).build();
 
                 remittances.put(id, remittance);
 
@@ -79,6 +90,7 @@ public class RemittanceResultSetExtractor implements ResultSetExtractor<List<Rem
                 remittanceDetails = new HashSet<>(remittance.getRemittanceDetails());
                 remittanceDetails.add(details);
                 remittance.setRemittanceDetails(remittanceDetails);
+
                 RemittanceInstrument instrument = RemittanceInstrument.builder()
                         .instrument(resultSet.getString("remIsm_instrument"))
                         .remittance(resultSet.getString("remIsm_remittance"))
@@ -89,6 +101,16 @@ public class RemittanceResultSetExtractor implements ResultSetExtractor<List<Rem
                 remittanceInstruments = new HashSet<>(remittance.getRemittanceInstruments());
                 remittanceInstruments.add(instrument);
                 remittance.setRemittanceInstruments(remittanceInstruments);
+
+                RemittanceReceipt receipt = RemittanceReceipt.builder()
+                        .receipt(resultSet.getString("remRec_receipt"))
+                        .remittance(resultSet.getString("remRec_remittance"))
+                        .id(resultSet.getString("remRec_id"))
+                        .tenantId(resultSet.getString("remRec_tenantId")).build();
+
+                remittanceReceipts = new HashSet<>(remittance.getRemittanceReceipts());
+                remittanceReceipts.add(receipt);
+                remittance.setRemittanceReceipts(remittanceReceipts);
             }
 
         }

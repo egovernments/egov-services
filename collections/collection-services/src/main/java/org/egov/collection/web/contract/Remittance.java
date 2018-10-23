@@ -52,6 +52,8 @@ public class Remittance {
 
     private AuditDetails auditDetails;
 
+    private Set<RemittanceReceipt> remittanceReceipts = new HashSet<>();
+
     private Set<RemittanceDetail> remittanceDetails = new HashSet<>();
 
     private Set<RemittanceInstrument> remittanceInstruments = new HashSet<>();

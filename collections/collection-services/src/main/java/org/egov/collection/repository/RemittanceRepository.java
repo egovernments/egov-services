@@ -10,6 +10,7 @@ import org.egov.collection.repository.rowmapper.RemittanceResultSetExtractor;
 import org.egov.collection.web.contract.Remittance;
 import org.egov.collection.web.contract.RemittanceDetail;
 import org.egov.collection.web.contract.RemittanceInstrument;
+import org.egov.collection.web.contract.RemittanceReceipt;
 import org.egov.collection.web.contract.RemittanceSearchRequest;
 import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +38,7 @@ public class RemittanceRepository {
 
             List<MapSqlParameterSource> remittanceDetailSource = new ArrayList<>();
             List<MapSqlParameterSource> remittanceInstrumentSource = new ArrayList<>();
+            List<MapSqlParameterSource> remittanceReceiptSource = new ArrayList<>();
 
             for (RemittanceDetail detail : remittance.getRemittanceDetails()) {
                 remittanceDetailSource.add(RemittanceQueryBuilder.getParametersForRemittanceDetails(detail));
@@ -46,10 +48,16 @@ public class RemittanceRepository {
                 remittanceInstrumentSource.add(RemittanceQueryBuilder.getParametersForRemittanceInstrument(instrument));
             }
 
+            for (RemittanceReceipt receipt : remittance.getRemittanceReceipts()) {
+                remittanceReceiptSource.add(RemittanceQueryBuilder.getParametersForRemittanceReceipt(receipt));
+            }
+
             namedParameterJdbcTemplate.batchUpdate(RemittanceQueryBuilder.INSERT_REMITTANCE_DETAILS_SQL,
                     remittanceDetailSource.toArray(new MapSqlParameterSource[0]));
             namedParameterJdbcTemplate.batchUpdate(RemittanceQueryBuilder.INSERT_REMITTANCE_INSTRUMENT_SQL,
                     remittanceInstrumentSource.toArray(new MapSqlParameterSource[0]));
+            namedParameterJdbcTemplate.batchUpdate(RemittanceQueryBuilder.INSERT_REMITTANCE_RECEIPT_SQL,
+                    remittanceReceiptSource.toArray(new MapSqlParameterSource[0]));
 
         } catch (Exception e) {
             log.error("Failed to persist remittance to database", e);

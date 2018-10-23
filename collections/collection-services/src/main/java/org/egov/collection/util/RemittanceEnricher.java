@@ -6,6 +6,7 @@ import org.egov.collection.model.AuditDetails;
 import org.egov.collection.web.contract.Remittance;
 import org.egov.collection.web.contract.RemittanceDetail;
 import org.egov.collection.web.contract.RemittanceInstrument;
+import org.egov.collection.web.contract.RemittanceReceipt;
 import org.egov.collection.web.contract.RemittanceRequest;
 import org.springframework.stereotype.Service;
 
@@ -34,6 +35,12 @@ public class RemittanceEnricher {
             ri.setId(UUID.randomUUID().toString().replace("-", ""));
             ri.setRemittance(remittance.getId());
             ri.setTenantId(remittance.getTenantId());
+        }
+
+        for (RemittanceReceipt rr : remittance.getRemittanceReceipts()) {
+            rr.setId(UUID.randomUUID().toString().replace("-", ""));
+            rr.setRemittance(remittance.getId());
+            rr.setTenantId(remittance.getTenantId());
         }
     }
 

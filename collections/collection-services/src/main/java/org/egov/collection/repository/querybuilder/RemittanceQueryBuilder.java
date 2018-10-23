@@ -8,6 +8,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.egov.collection.web.contract.Remittance;
 import org.egov.collection.web.contract.RemittanceDetail;
 import org.egov.collection.web.contract.RemittanceInstrument;
+import org.egov.collection.web.contract.RemittanceReceipt;
 import org.egov.collection.web.contract.RemittanceSearchRequest;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 
@@ -21,6 +22,9 @@ public class RemittanceQueryBuilder {
 
     public static final String INSERT_REMITTANCE_INSTRUMENT_SQL = "INSERT INTO egcl_remittanceinstrument(id, remittance, instrument, reconciled, tenantid)  "
             + "VALUES (:id, :remittance, :instrument, :reconciled, :tenantid)";
+    
+    public static final String INSERT_REMITTANCE_RECEIPT_SQL = "INSERT INTO egcl_remittancereceipt(id, remittance, receipt, tenantid)  "
+            + "VALUES (:id, :remittance, :receipt, :tenantid)";
 
     private static final String SELECT_REMITTANCES_SQL = "Select rem.bankaccount as rem_bankaccount,rem.function as rem_function,"
             + "rem.fund as rem_fund, rem.id as rem_id, rem.reasonForDelay as rem_reasonForDelay, rem.referenceDate as rem_referenceDate,"
@@ -34,10 +38,14 @@ public class RemittanceQueryBuilder {
             + "remDet.tenantId as remDet_tenantId, remDet.id as remDet_id,"
 
             + "remIsm.remittance as remIsm_remittance, remIsm.instrument as remIsm_instrument, remIsm.reconciled as remIsm_reconciled,"
-            + "remIsm.tenantId as remIsm_tenantId, remIsm.id as remIsm_id"
+            + "remIsm.tenantId as remIsm_tenantId, remIsm.id as remIsm_id,"
+            
+            + "remRec.remittance as remRec_remittance, remRec.receipt as remRec_receipt,"
+            + "remRec.tenantId as remRec_tenantId, remRec.id as remRec_id"
 
             + " from egcl_remittance rem LEFT OUTER JOIN egcl_remittancedetails remDet ON rem.id=remDet.remittance " +
-            "LEFT OUTER JOIN egcl_remittanceinstrument remIsm ON rem.id=remIsm.remittance ";
+            "LEFT OUTER JOIN egcl_remittanceinstrument remIsm ON rem.id=remIsm.remittance " +
+            "LEFT OUTER JOIN egcl_remittancereceipt remRec ON rem.id=remRec.remittance ";
 
     private static final String PAGINATION_WRAPPER = "SELECT * FROM " +
             "(SELECT *, DENSE_RANK() OVER (ORDER BY rem_id) offset_ FROM " +
@@ -90,6 +98,18 @@ public class RemittanceQueryBuilder {
         sqlParameterSource.addValue("instrument", remittanceInstrument.getInstrument());
         sqlParameterSource.addValue("reconciled", remittanceInstrument.getReconciled());
         sqlParameterSource.addValue("tenantid", remittanceInstrument.getTenantId());
+
+        return sqlParameterSource;
+
+    }
+
+    public static MapSqlParameterSource getParametersForRemittanceReceipt(RemittanceReceipt remittanceReceipt) {
+        MapSqlParameterSource sqlParameterSource = new MapSqlParameterSource();
+
+        sqlParameterSource.addValue("id", remittanceReceipt.getId());
+        sqlParameterSource.addValue("remittance", remittanceReceipt.getRemittance());
+        sqlParameterSource.addValue("receipt", remittanceReceipt.getReceipt());
+        sqlParameterSource.addValue("tenantid", remittanceReceipt.getTenantId());
 
         return sqlParameterSource;
 

@@ -183,7 +183,12 @@ public class MDMSValidator {
     }
 
 
-
+    /**
+     * Fetches map of UOM to UOMValues
+     * @param tenantId tenantId of the tradeLicense
+     * @param requestInfo The requestInfo of the request
+     * @return
+     */
     private Map<String, List<String>> getUomMap(String tenantId, RequestInfo requestInfo) {
 
         List<String> modulepaths = Arrays.asList(TLConstants.TL_JSONPATH_CODE);

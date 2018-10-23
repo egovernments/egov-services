@@ -44,9 +44,10 @@ public class TLValidator {
     }
 
 
-
-
-
+    /**
+     *  Validate the create Requesr
+     * @param request The input TradeLicenseRequest Object
+     */
     public void validateCreate(TradeLicenseRequest request){
         valideDates(request);
         validateInstitution(request);
@@ -55,6 +56,10 @@ public class TLValidator {
     }
 
 
+    /**
+     *  Validates the fromDate and toDate of the request
+     * @param request The input TradeLicenseRequest Object
+     */
     private void valideDates(TradeLicenseRequest request){
         request.getLicenses().forEach(license -> {
             Map<String,Long> taxPeriods = tradeUtil.getTaxPeriods(request.getRequestInfo(),license);
@@ -73,6 +78,10 @@ public class TLValidator {
         });
     }
 
+    /**
+     * Returns the start of the current day in millis
+     * @return time in millis
+     */
     private Long getStartOfDay(){
         Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("IST"));
         cal.set(Calendar.HOUR_OF_DAY, 0);
@@ -83,7 +92,10 @@ public class TLValidator {
     }
 
 
-
+    /**
+     *  Validates the details if subOwnersipCategory is institutional
+     * @param request The input TradeLicenseRequest Object
+     */
     private void validateInstitution(TradeLicenseRequest request){
         List<TradeLicense> licenses = request.getLicenses();
         licenses.forEach(license -> {
@@ -101,7 +113,10 @@ public class TLValidator {
     }
 
 
-
+    /**
+     *  Validates the update request
+     * @param request The input TradeLicenseRequest Object
+     */
     public void validateUpdate(TradeLicenseRequest request){
       List<TradeLicense> licenses = request.getLicenses();
 
@@ -133,6 +148,11 @@ public class TLValidator {
       setFieldsFromSearch(request,searchResult);
    }
 
+
+    /**
+     * Validates that atleast one tradeUnit is active equal true or new tradeUnit
+     * @param request The input TradeLicenseRequest Object
+     */
    private void validateTradeUnits(TradeLicenseRequest request){
         Map<String,String> errorMap = new HashMap<>();
         List<TradeLicense> licenses = request.getLicenses();
@@ -156,6 +176,12 @@ public class TLValidator {
    }
 
 
+    /**
+     *  Adds tradeLicense for the particular tenantId in the list
+     * @param tenantId tenantId of the license
+     * @param ids ids of licenses with the given tenantId
+     * @param searchResult The list containing multitenant licenses
+     */
    private void addTradeLicenseFromSearch(String tenantId,List<String> ids,
                                           List<TradeLicense> searchResult){
          TradeLicenseSearchCriteria criteria = new TradeLicenseSearchCriteria();
@@ -165,6 +191,11 @@ public class TLValidator {
    }
 
 
+    /**
+     * Returns the list of ids of all owners as list for the given tradelicense
+     * @param license TradeLicense whose ownerIds are to be extracted
+     * @return list od OwnerIds
+     */
     private List<String> getOwnerIds(TradeLicense license){
         List<String> ownerIds = new LinkedList<>();
         if(!CollectionUtils.isEmpty(license.getTradeLicenseDetail().getOwners())){
@@ -176,6 +207,11 @@ public class TLValidator {
         return ownerIds;
     }
 
+    /**
+     * Returns the list of ids of all tradeUnits as list for the given tradelicense
+     * @param license TradeLicense whose tradeUnitIds are to be extracted
+     * @return list od tradeUnitIdss
+     */
     private List<String> getTradeUnitIds(TradeLicense license){
         List<String> tradeUnitIds = new LinkedList<>();
         if(!CollectionUtils.isEmpty(license.getTradeLicenseDetail().getTradeUnits())){
@@ -186,6 +222,11 @@ public class TLValidator {
         return tradeUnitIds;
     }
 
+    /**
+     * Returns the list of ids of all accessories as list for the given tradelicense
+     * @param license TradeLicense whose accessoryIds are to be extracted
+     * @return list od accessoryIds
+     */
     private List<String> getAccessoryIds(TradeLicense license){
         List<String> accessoryIds = new LinkedList<>();
         if(!CollectionUtils.isEmpty(license.getTradeLicenseDetail().getAccessories())){
@@ -196,6 +237,11 @@ public class TLValidator {
         return accessoryIds;
     }
 
+    /**
+     * Returns the list of ids of all ownerDocs as list for the given tradelicense
+     * @param license TradeLicense whose ownerDocIds are to be extracted
+     * @return list od ownerDocIds
+     */
     private List<String> getOwnerDocIds(TradeLicense license){
         List<String> ownerDocIds = new LinkedList<>();
         if(!CollectionUtils.isEmpty(license.getTradeLicenseDetail().getOwners())){
@@ -210,6 +256,11 @@ public class TLValidator {
         return ownerDocIds;
     }
 
+    /**
+     * Returns the list of ids of all applicationDoc as list for the given tradelicense
+     * @param license TradeLicense whose applicationDocIds are to be extracted
+     * @return list od applicationDocIds
+     */
     private List<String> getApplicationDocIds(TradeLicense license){
         List<String> applicationDocIds = new LinkedList<>();
         if(!CollectionUtils.isEmpty(license.getTradeLicenseDetail().getApplicationDocuments())){
@@ -220,6 +271,11 @@ public class TLValidator {
         return applicationDocIds;
     }
 
+    /**
+     * Returns the list of ids of all verficationDoc as list for the given tradelicense
+     * @param license TradeLicense whose VerficationDocIds are to be extracted
+     * @return list od VerficationDocIds
+     */
     private List<String> getVerficationDocIds(TradeLicense license){
         List<String> verficationDocIds = new LinkedList<>();
         if(!CollectionUtils.isEmpty(license.getTradeLicenseDetail().getVerificationDocuments())) {
@@ -231,6 +287,11 @@ public class TLValidator {
     }
 
 
+    /**
+     * Enriches the immutable fields from database
+     * @param request The input TradeLicenseRequest
+     * @param searchResult The list of searched licenses
+     */
     private void setFieldsFromSearch(TradeLicenseRequest request,List<TradeLicense> searchResult){
         Map<String,TradeLicense> idToTradeLicenseFromSearch = new HashMap<>();
         searchResult.forEach(tradeLicense -> {
@@ -242,6 +303,11 @@ public class TLValidator {
         });
     }
 
+    /**
+     * Validates if all ids are same as obtained from search result
+     * @param searchResult The license from search
+     * @param licenses The licenses from the update Request
+     */
     private void validateAllIds(List<TradeLicense> searchResult,List<TradeLicense> licenses){
 
         Map<String,TradeLicense> idToTradeLicenseFromSearch = new HashMap<>();
@@ -273,6 +339,12 @@ public class TLValidator {
     }
 
 
+    /**
+     * Checks if the ids are present in the searchedIds
+     * @param searchIds Ids got from search
+     * @param updateIds The ids received from update Request
+     * @param errorMap The map for collecting errors
+     */
     private void compareIdList(List<String> searchIds,List<String> updateIds,Map<String,String> errorMap){
         if(!CollectionUtils.isEmpty(searchIds))
             updateIds.forEach(id -> {
@@ -282,8 +354,11 @@ public class TLValidator {
     }
 
 
-
-
+    /**
+     * Validates if the search parameters are valid
+     * @param requestInfo The requestInfo of the incoming request
+     * @param criteria The TradeLicenseSearch Criteria
+     */
     public void validateSearch(RequestInfo requestInfo,TradeLicenseSearchCriteria criteria){
         if(!requestInfo.getUserInfo().getType().equalsIgnoreCase("CITIZEN" )&& criteria.isEmpty())
             throw new CustomException("INVALID SEARCH","Search without any paramters is not allowed");
@@ -316,8 +391,11 @@ public class TLValidator {
     }
 
 
-
-
+    /**
+     * Validates if the paramters coming in search are allowed
+     * @param criteria TradeLicense search criteria
+     * @param allowedParams Allowed Params for search
+     */
     private void validateSearchParams(TradeLicenseSearchCriteria criteria,List<String> allowedParams){
 
         if(criteria.getApplicationNumber()!=null && !allowedParams.contains("applicationNumber"))

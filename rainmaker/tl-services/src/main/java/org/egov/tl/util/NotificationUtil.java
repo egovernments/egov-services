@@ -49,7 +49,12 @@ public class NotificationUtil {
     final String amountPaidKey = "amountPaid";
 
 
-
+    /**
+     * Creates customized message based on tradelicense
+     * @param license The tradeLicense for which message is to be sent
+     * @param localizationMessage The messages from localization
+     * @return customized message based on tradelicense
+     */
     public String getCustomizedMsg(TradeLicense license, String localizationMessage){
         String message = null,messageTemplate;
         switch (license.getStatus()){
@@ -89,8 +94,12 @@ public class NotificationUtil {
     }
 
 
-
-
+    /**
+     * Extracts message for the specific code
+     * @param notificationCode The code for which message is required
+     * @param localizationMessage The localization messages
+     * @return message for the specific code
+     */
     private String getMessageTemplate(String notificationCode,String localizationMessage){
         String path = "$..messages[?(@.code==\"{}\")].message";
         path = path.replace("{}",notificationCode);
@@ -127,7 +136,12 @@ public class NotificationUtil {
     }
 
 
-
+    /**
+     * Fetches messages from localization service
+     * @param tenantId tenantId of the tradeLicense
+     * @param requestInfo The requestInfo of the request
+     * @return Localization messages for the module
+     */
     public String getLocalizationMessages(String tenantId, RequestInfo requestInfo){
         LinkedHashMap responseMap = (LinkedHashMap)serviceRequestRepository.fetchResult(getUri(tenantId),requestInfo);
         String jsonString = new JSONObject(responseMap).toString();
@@ -135,7 +149,12 @@ public class NotificationUtil {
     }
 
 
-
+    /**
+     * Creates customized message for initiate
+     * @param license tenantId of the tradeLicense
+     * @param message Message from localization for initiate
+     * @return customized message for initiate
+     */
     private String getInitiatedMsg(TradeLicense license,String message){
       //  message = message.replace("<1>",license.);
         message = message.replace("<2>",license.getTradeName());
@@ -144,6 +163,13 @@ public class NotificationUtil {
        return message;
     }
 
+
+    /**
+     Creates customized message for apply
+     * @param license tenantId of the tradeLicense
+     * @param message Message from localization for apply
+     * @return customized message for apply
+     */
     private String getAppliedMsg(TradeLicense license,String message){
       //  message = message.replace("<1>",);
         message = message.replace("<2>",license.getTradeName());
@@ -152,6 +178,13 @@ public class NotificationUtil {
         return message;
     }
 
+
+    /**
+      Creates customized message for submitted
+     * @param license tenantId of the tradeLicense
+     * @param message Message from localization for submitted
+     * @return customized message for submitted
+     */
     private String getApprovalPendingMsg(TradeLicense license,String message){
      //   message = message.replace("<1>",);
         message = message.replace("<2>",license.getTradeName());
@@ -159,6 +192,13 @@ public class NotificationUtil {
         return message;
     }
 
+
+    /**
+      Creates customized message for approved
+     * @param license tenantId of the tradeLicense
+     * @param message Message from localization for approved
+     * @return customized message for approved
+     */
     private String getApprovedMsg(TradeLicense license,String message){
       //  message = message.replace("<1>",);
 
@@ -173,6 +213,13 @@ public class NotificationUtil {
         return message;
     }
 
+
+    /**
+     Creates customized message for rejected
+     * @param license tenantId of the tradeLicense
+     * @param message Message from localization for rejected
+     * @return customized message for rejected
+     */
     private String getRejectedMsg(TradeLicense license,String message){
       //  message = message.replace("<1>",);
         message = message.replace("<2>",license.getTradeName());
@@ -181,7 +228,12 @@ public class NotificationUtil {
     }
 
 
-
+    /**
+     Creates customized message for cancelled
+     * @param license tenantId of the tradeLicense
+     * @param message Message from localization for cancelled
+     * @return customized message for cancelled
+     */
     private String getCancelledMsg(TradeLicense license,String message){
      //   message = message.replace("<1>",);
         message = message.replace("<2>",license.getTradeName());
@@ -191,11 +243,12 @@ public class NotificationUtil {
     }
 
 
-
-
-
-
-
+    /**
+     * Creates message for completed payment for owners
+     * @param valMap The map containing required values from receipt
+     * @param localizationMessages Message from localization
+     * @return message for completed payment for owners
+     */
     public String getOwnerPaymentMsg(Map<String,String> valMap, String localizationMessages){
         String messageTemplate = getMessageTemplate(TLConstants.NOTIFICATION_PAYMENT_OWNER,localizationMessages);
         messageTemplate = messageTemplate.replace("<2>",valMap.get(amountPaidKey));
@@ -204,6 +257,12 @@ public class NotificationUtil {
     }
 
 
+    /**
+     * Creates message for completed payment for payer
+     * @param valMap The map containing required values from receipt
+     * @param localizationMessages Message from localization
+     * @return message for completed payment for payer
+     */
     public String getPayerPaymentMsg(Map<String,String> valMap, String localizationMessages){
         String messageTemplate = getMessageTemplate(TLConstants.NOTIFICATION_PAYMENT_PAYER,localizationMessages);
         messageTemplate = messageTemplate.replace("<2>",valMap.get(amountPaidKey));

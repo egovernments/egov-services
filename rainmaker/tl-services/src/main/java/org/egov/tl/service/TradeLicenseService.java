@@ -50,7 +50,11 @@ public class TradeLicenseService {
     }
 
 
-
+    /**
+     * creates the tradeLicense for the given request
+     * @param tradeLicenseRequest The TradeLicense Create Request
+     * @return The list of created traddeLicense
+     */
     public List<TradeLicense> create(TradeLicenseRequest tradeLicenseRequest){
         tlValidator.validateCreate(tradeLicenseRequest);
         actionValidator.validateCreateRequest(tradeLicenseRequest);
@@ -61,6 +65,14 @@ public class TradeLicenseService {
         return tradeLicenseRequest.getLicenses();
     }
 
+
+    /**
+     *  Searches the tradeLicense for the given criteria if search is on owner paramter then first user service
+     *  is called followed by query to db
+     * @param criteria The object containing the paramters on which to search
+     * @param requestInfo The search request's requestInfo
+     * @return List of tradeLicense for the given criteria
+     */
     public List<TradeLicense> search(TradeLicenseSearchCriteria criteria, RequestInfo requestInfo){
         List<TradeLicense> licenses;
         tlValidator.validateSearch(requestInfo,criteria);
@@ -87,6 +99,12 @@ public class TradeLicenseService {
     }
 
 
+    /**
+     * Returns the tradeLicense with enrivhed owners from user servise
+     * @param criteria The object containing the paramters on which to search
+     * @param requestInfo The search request's requestInfo
+     * @return List of tradeLicense for the given criteria
+     */
     public List<TradeLicense> getLicensesWithOwnerInfo(TradeLicenseSearchCriteria criteria,RequestInfo requestInfo){
         List<TradeLicense> licenses = repository.getLicenses(criteria);
         if(licenses.isEmpty())
@@ -99,6 +117,11 @@ public class TradeLicenseService {
     }
 
 
+    /**
+     * Updates the tradeLicenses
+     * @param tradeLicenseRequest The update Request
+     * @return Updated TradeLcienses
+     */
     public List<TradeLicense> update(TradeLicenseRequest tradeLicenseRequest){
         tlValidator.validateUpdate(tradeLicenseRequest);
         actionValidator.validateUpdateRequest(tradeLicenseRequest);

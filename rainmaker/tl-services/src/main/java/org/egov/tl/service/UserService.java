@@ -40,10 +40,11 @@ public class UserService{
     }
 
 
-
-
-
-
+    /**
+     * Creates users with uuid as username if uuid is already present for the user
+     * in the request then the user is updated
+     * @param request TradeLciense create or update request
+     */
 
     public void createUser(TradeLicenseRequest request){
         List<TradeLicense> licenses = request.getLicenses();
@@ -89,6 +90,11 @@ public class UserService{
     }
 
 
+    /**
+     * Sets the immutable fields from search to update request
+     * @param user The user to be updated
+     * @param userFromSearchResult The current user details according to searcvh
+     */
     private void addNonUpdatableFields(User user,User userFromSearchResult){
         user.setUserName(userFromSearchResult.getUserName());
         user.setId(userFromSearchResult.getId());
@@ -97,6 +103,12 @@ public class UserService{
     }
 
 
+    /**
+     * Checks if the user exists in the database
+     * @param owner The owner from the tradeLicense
+     * @param requestInfo The requestInfo of the request
+     * @return The search response from the user service
+     */
     private UserDetailResponse userExists(OwnerInfo owner,RequestInfo requestInfo){
         UserSearchRequest userSearchRequest =new UserSearchRequest();
         userSearchRequest.setTenantId(owner.getTenantId());
@@ -112,7 +124,10 @@ public class UserService{
     }
 
 
-
+    /**
+     * Sets the username as uuid
+     * @param owner The owner to whom the username is to assigned
+     */
     private void setUserName(OwnerInfo owner){
             String username = UUID.randomUUID().toString();
             owner.setUserName(username);
@@ -140,6 +155,12 @@ public class UserService{
     }
 
 
+    /**
+     * Sets ownerfields from the userResponse
+     * @param owner The owner from tradeLicense
+     * @param userDetailResponse The response from user search
+     * @param requestInfo The requestInfo of the request
+     */
     private void setOwnerFields(OwnerInfo owner, UserDetailResponse userDetailResponse,RequestInfo requestInfo){
         owner.setUuid(userDetailResponse.getUser().get(0).getUuid());
         owner.setId(userDetailResponse.getUser().get(0).getId());
@@ -165,6 +186,11 @@ public class UserService{
         owner.setType("CITIZEN");
     }
 
+
+    /**
+     * Creates citizen role
+     * @return Role object for citizen
+     */
     private Role getCitizenRole(){
         Role role = new Role();
         role.setCode("CITIZEN");
@@ -239,7 +265,12 @@ public class UserService{
     }
 
 
-
+    /**
+     * Call search in user service based on ownerids from criteria
+     * @param criteria The search criteria containing the ownerids
+     * @param requestInfo The requestInfo of the request
+     * @return Search response from user service based on ownerIds
+     */
     public UserDetailResponse getUser(TradeLicenseSearchCriteria criteria,RequestInfo requestInfo){
         UserSearchRequest userSearchRequest = getUserSearchRequest(criteria,requestInfo);
         StringBuilder uri = new StringBuilder(config.getUserHost()).append(config.getUserSearchEndpoint());
@@ -248,6 +279,12 @@ public class UserService{
     }
 
 
+    /**
+     * Creates userSearchRequest from tradeLicenseSearchCriteria
+     * @param criteria The tradeLcienseSearch criteria
+     * @param requestInfo The requestInfo of the request
+     * @return The UserSearchRequest based on ownerIds
+     */
     private UserSearchRequest getUserSearchRequest(TradeLicenseSearchCriteria criteria, RequestInfo requestInfo){
         UserSearchRequest userSearchRequest = new UserSearchRequest();
         userSearchRequest.setRequestInfo(requestInfo);

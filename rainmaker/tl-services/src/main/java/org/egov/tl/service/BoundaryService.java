@@ -38,7 +38,7 @@ public class BoundaryService {
 
     /**
      *  Enriches the locality object by calling the location service
-     * @param request PropertyRequest for create
+     * @param request TradeLicenseRequest for create
      * @param hierarchyTypeCode HierarchyTypeCode of the boundaries
      */
     public void getAreaType(TradeLicenseRequest request, String hierarchyTypeCode){
@@ -96,9 +96,9 @@ public class BoundaryService {
 
 
     /**
-     *  Prepares map of propertyId to jsonpath which contains the code of the property
-     * @param request PropertyRequest for create
-     * @return Map of propertyId to jsonPath with properties locality code
+     *  Prepares map of tradeLicenseId to jsonpath which contains the code of the tradeLicense
+     * @param request TradeLicenseRequest for create
+     * @return Map of tradeLcienseId to jsonPath with tradeLcienses locality code
      */
     private Map<String,String> getJsonpath(TradeLicenseRequest request){
         Map<String,String> idToJsonPath = new LinkedHashMap<>();

@@ -37,6 +37,10 @@ public class TLNotificationService {
         this.util = util;
     }
 
+    /**
+     * Creates and send the sms based on the tradeLicenseRequest
+     * @param request The tradeLicenseRequest listenend on the kafka topic
+     */
     public void process(TradeLicenseRequest request){
         List<SMSRequest> smsRequests = new LinkedList<>();
         enrichSMSRequest(request,smsRequests);
@@ -44,6 +48,11 @@ public class TLNotificationService {
     }
 
 
+    /**
+     * Enriches the smsRequest with the customized messages
+     * @param request The tradeLicenseRequest from kafka topic
+     * @param smsRequests List of SMSRequets
+     */
     private void enrichSMSRequest(TradeLicenseRequest request,List<SMSRequest> smsRequests){
         String tenantId = request.getLicenses().get(0).getTenantId();
         String localizationMessages = util.getLocalizationMessages(tenantId,request.getRequestInfo());
@@ -61,7 +70,12 @@ public class TLNotificationService {
     }
 
 
-
+    /**
+     * Creates sms request for the each owners
+     * @param message The message for the specific tradeLicense
+     * @param mobileNumberToOwnerName Map of mobileNumber to OwnerName
+     * @return List of SMSRequest
+     */
     private List<SMSRequest> createSMSRequest(String message,Map<String,String> mobileNumberToOwnerName){
         List<SMSRequest> smsRequest = new LinkedList<>();
         for(Map.Entry<String,String> entryset : mobileNumberToOwnerName.entrySet()) {

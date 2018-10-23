@@ -33,8 +33,10 @@ public class PropertyValidator {
     }
 
 
-
-
+    /**
+     * Validates if the propertyId provided in request exists in database
+     * @param request The create request for the tradeLicense
+     */
     public void validateProperty(TradeLicenseRequest request){
         RequestInfo requestInfo = request.getRequestInfo();
 

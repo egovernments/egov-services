@@ -25,21 +25,26 @@ public class ActionValidator {
         this.workflowConfig = workflowConfig;
     }
 
+
+    /**
+     * Validates create request
+     * @param request The tradeLicense Create request
+     */
     public void validateCreateRequest(TradeLicenseRequest request){
         Map<String,String> errorMap = new HashMap<>();
 
         request.getLicenses().forEach(license -> {
             if(TradeLicense.ActionEnum.INITIATE.equals(license.getAction())){
                 if(license.getTradeLicenseDetail().getApplicationDocuments()!=null)
-                    errorMap.put("INVALID STATUS","Status should be APPLIED when application document are provided");
+                    errorMap.put("INVALID ACTION","Action should be APPLY when application document are provided");
             }
             if(TradeLicense.ActionEnum.APPLY.equals(license.getAction())){
                 if(license.getTradeLicenseDetail().getApplicationDocuments()==null)
-                    errorMap.put("INVALID STATUS","Status cannot be changed to APPLIED. Application document are not provided");
+                    errorMap.put("INVALID ACTION","Action cannot be changed to APPLY. Application document are not provided");
             }
             if(!TradeLicense.ActionEnum.APPLY.equals(license.getAction()) &&
                     !TradeLicense.ActionEnum.INITIATE.equals(license.getAction())){
-                errorMap.put("INVALID STATUS","Status can only be APPLY or INITIATE during create");
+                errorMap.put("INVALID ACTION","Action can only be APPLY or INITIATE during create");
             }
         });
         validateRole(request);
@@ -49,6 +54,10 @@ public class ActionValidator {
     }
 
 
+    /**
+     * Validates the update request
+     * @param request The tradeLciense update request
+     */
     public void validateUpdateRequest(TradeLicenseRequest request){
         validateDocumentsForUpdate(request);
         validateRole(request);
@@ -56,6 +65,11 @@ public class ActionValidator {
         validateIds(request);
     }
 
+
+    /**
+     * Validates the applicationDocument
+     * @param request The tradeLciense create or update request
+     */
     private void validateDocumentsForUpdate(TradeLicenseRequest request){
         Map<String,String> errorMap = new HashMap<>();
         request.getLicenses().forEach(license -> {
@@ -73,6 +87,11 @@ public class ActionValidator {
             throw new CustomException(errorMap);
     }
 
+
+    /**
+     * Validates if the role of the logged in user can perform the given action
+     * @param request The tradeLciense create or update request
+     */
     private void validateRole(TradeLicenseRequest request){
        Map<String,List<String>> roleActionMap = workflowConfig.getRoleActionMap();
        Map<String,String> errorMap = new HashMap<>();
@@ -96,6 +115,10 @@ public class ActionValidator {
     }
 
 
+    /**
+     * Validate if the action can be performed on the current status
+     * @param request The tradeLciense update request
+     */
     private void validateAction(TradeLicenseRequest request){
        Map<String,List<String>> actionStatusMap = workflowConfig.getActionCurrentStatusMap();
         Map<String,String> errorMap = new HashMap<>();
@@ -110,6 +133,11 @@ public class ActionValidator {
             throw new CustomException(errorMap);
     }
 
+
+    /**
+     * Validates if the any new object is added in the request
+     * @param request The tradeLciense update request
+     */
     private void validateIds(TradeLicenseRequest request){
         Map<String,String> errorMap = new HashMap<>();
         request.getLicenses().forEach(license -> {

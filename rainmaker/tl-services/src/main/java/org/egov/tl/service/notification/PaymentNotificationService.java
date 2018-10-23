@@ -59,7 +59,10 @@ public class PaymentNotificationService {
     final String receiptNumberKey = "receiptNumber";
 
 
-
+    /**
+     * Generates sms from the input record and Sends smsRequest to SMSService
+     * @param record The kafka message from receipt create topic
+     */
     public void process(HashMap<String, Object> record){
         try{
             String jsonString = new JSONObject(record).toString();
@@ -81,7 +84,13 @@ public class PaymentNotificationService {
     }
 
 
-
+    /**
+     * Creates the SMSRequest
+     * @param license The TradeLicense for which the receipt is generated
+     * @param valMap The valMap containing the values from receipt
+     * @param localizationMessages The localization message to be sent
+     * @return
+     */
     private List<SMSRequest> getSMSRequests(TradeLicense license, Map<String,String> valMap,String localizationMessages){
             List<SMSRequest> ownersSMSRequest = getOwnerSMSRequest(license,valMap,localizationMessages);
             SMSRequest payerSMSRequest = getPayerSMSRequest(valMap,localizationMessages);
@@ -94,6 +103,13 @@ public class PaymentNotificationService {
     }
 
 
+    /**
+     * Creates SMSRequest for the owners
+     * @param license The tradeLicense for which the receipt is created
+     * @param valMap The Map containing the values from receipt
+     * @param localizationMessages The localization message to be sent
+     * @return The list of the SMS Requests
+     */
     private List<SMSRequest> getOwnerSMSRequest(TradeLicense license, Map<String,String> valMap,String localizationMessages){
         String message = util.getOwnerPaymentMsg(valMap,localizationMessages);
 
@@ -113,6 +129,12 @@ public class PaymentNotificationService {
     }
 
 
+    /**
+     * Creates SMSRequest to be send to the payer
+     * @param valMap The Map containing the values from receipt
+     * @param localizationMessages The localization message to be sent
+     * @return
+     */
     private SMSRequest getPayerSMSRequest(Map<String,String> valMap,String localizationMessages){
         String message = util.getPayerPaymentMsg(valMap,localizationMessages);
         String customizedMsg = message.replace("<1>",valMap.get(paidByKey));
@@ -121,10 +143,11 @@ public class PaymentNotificationService {
     }
 
 
-
-
-
-
+    /**
+     * Enriches the map with values from receipt
+     * @param context The documentContext of the receipt
+     * @return The map containing required fields from receipt
+     */
     private Map<String,String> enrichValMap(DocumentContext context){
         Map<String,String> valMap = new HashMap<>();
         try{
@@ -146,9 +169,13 @@ public class PaymentNotificationService {
     }
 
 
-
-
-
+    /**
+     * Searches the tradeLicense based on the consumer code as applicationNumber
+     * @param tenantId tenantId of the tradeLicense
+     * @param consumerCode The consumerCode of the receipt
+     * @param requestInfo The requestInfo of the request
+     * @return TradeLicense for the particular consumerCode
+     */
     private TradeLicense getTradeLicenseFromConsumerCode(String tenantId,String consumerCode,RequestInfo requestInfo){
 
         TradeLicenseSearchCriteria searchCriteria = new TradeLicenseSearchCriteria();

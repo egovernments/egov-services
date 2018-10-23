@@ -49,12 +49,22 @@ public class TradeUtil {
             return AuditDetails.builder().lastModifiedBy(by).lastModifiedTime(time).build();
     }
 
+
+    /**
+     * Creates url for tl-calculator service
+     * @return url for tl-calculator service
+     */
     public StringBuilder getCalculationURI(){
         StringBuilder uri = new StringBuilder(config.getCalculatorHost());
         uri.append(config.getCalculateEndpoint());
         return uri;
     }
 
+
+    /**
+     * Creates search url for pt-services-v2 service
+     * @return url for pt-services-v2 service search
+     */
     public String getPropertySearchURL(){
         StringBuilder url = new StringBuilder(config.getPropertyHost());
         url.append(config.getPropertyContextPath());
@@ -70,7 +80,10 @@ public class TradeUtil {
 
 
     /**
-     * Methods provides all the master data needed for TL module
+     * Creates request to search UOM from MDMS
+     * @param requestInfo The requestInfo of the request
+     * @param tenantId The tenantId of the tradeLicense
+     * @return request to search UOM from MDMS
      */
     public MdmsCriteriaReq getTradeModuleRequest(RequestInfo requestInfo, String tenantId) {
 
@@ -100,7 +113,12 @@ public class TradeUtil {
     }
 
 
-
+    /**
+     * Creates request to search UOM from MDMS
+     * @param requestInfo The requestInfo of the request
+     * @param tenantId The tenantId of the tradeLicense
+     * @return request to search UOM from MDMS
+     */
     public MdmsCriteriaReq getTradeUomRequest(RequestInfo requestInfo, String tenantId) {
 
         // master details for TL module
@@ -127,14 +145,19 @@ public class TradeUtil {
     /**
      * Returns the url for mdms search endpoint
      *
-     * @return
+     * @return url for mdms search endpoint
      */
     public StringBuilder getMdmsSearchUrl() {
         return new StringBuilder().append(config.getMdmsHost()).append(config.getMdmsEndPoint());
     }
 
 
-
+    /**
+     * Creates map containing the startTime and endTime of the given tradeLicense
+     * @param requestInfo The requestInfo of the request
+     * @param license The create or update TradeLicense request
+     * @return Map containing startTime and endTime
+     */
     public Map<String,Long> getTaxPeriods(RequestInfo requestInfo, TradeLicense license){
         Map<String,Long> taxPeriods = new HashMap<>();
 
@@ -156,6 +179,13 @@ public class TradeUtil {
         return taxPeriods;
     }
 
+
+    /**
+     * Creates request to search financialYear in mdms
+     * @param requestInfo The requestInfo of the request
+     * @param tenantId The tenantId of the tradeLicense
+     * @return MDMS request for financialYear
+     */
     private MdmsCriteriaReq getFinancialYearRequest(RequestInfo requestInfo, String tenantId) {
 
         // master details for TL module

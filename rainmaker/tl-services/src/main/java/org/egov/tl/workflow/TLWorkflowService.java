@@ -27,12 +27,20 @@ public class TLWorkflowService {
     }
 
 
-
+    /**
+     * Validates and updates the status
+     * @param request The update tradeLicense Request
+     */
     public void updateStatus(TradeLicenseRequest request){
         actionValidator.validateUpdateRequest(request);
         changeStatus(request);
     }
 
+
+    /**
+     * Changes the status of the tradeLicense according to action status mapping
+     * @param request The update tradeLicenseRequest
+     */
     private void changeStatus(TradeLicenseRequest request){
        Map<String,String> actionToStatus =  workflowConfig.getActionStatusMap();
        request.getLicenses().forEach(license -> {

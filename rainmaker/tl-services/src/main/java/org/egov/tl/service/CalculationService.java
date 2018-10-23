@@ -39,8 +39,11 @@ public class CalculationService {
     }
 
 
-
-
+    /**
+     * Adds the calculation object to the request
+     * @param request The input create or update request
+     * @return request with calculation object added
+     */
     public List<TradeLicense> addCalculation(TradeLicenseRequest request){
         RequestInfo requestInfo = request.getRequestInfo();
         List<TradeLicense> licenses = request.getLicenses();
@@ -62,6 +65,13 @@ public class CalculationService {
         return licenses;
     }
 
+
+    /**
+     * Call tl-calculator to get the calculation Object for the given license
+     * @param requestInfo The requestInfo of the incoming request
+     * @param licenses The tradeLicense to whom the calculation object has to be added
+     * @return CalculationRes from the tl-calculator
+     */
     private CalculationRes getCalculation(RequestInfo requestInfo,List<TradeLicense> licenses){
         StringBuilder uri = utils.getCalculationURI();
         List<CalulationCriteria> criterias = new LinkedList<>();

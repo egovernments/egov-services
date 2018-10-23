@@ -45,6 +45,10 @@ public class PaymentUpdateService {
     final String consumerCode = "consumerCode";
 
 
+    /**
+     * Process the message from kafka and updates the status to paid
+     * @param record The incoming message from receipt create consumer
+     */
     public void process(HashMap<String, Object> record){
 
         try{
@@ -77,8 +81,12 @@ public class PaymentUpdateService {
         }
     }
 
-    
 
+    /**
+     * Extracts the required fields as map
+     * @param context The documentcontext of the incoming receipt
+     * @return Map containing values of required fields
+     */
     private Map<String,String> enrichValMap(DocumentContext context){
         Map<String,String> valMap = new HashMap<>();
         try{

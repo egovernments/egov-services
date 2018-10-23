@@ -34,6 +34,15 @@ public class IdGenRepository {
     }
 
 
+    /**
+     * Call iDgen to generateIds
+     * @param requestInfo The rquestInfo of the request
+     * @param tenantId The tenantiD of the tradeLicense
+     * @param name Name of the foramt
+     * @param format Format of the ids
+     * @param count Total Number of idGen ids required
+     * @return
+     */
     public IdGenerationResponse getId(RequestInfo requestInfo, String tenantId, String name, String format, int count) {
 
         List<IdRequest> reqList = new ArrayList<>();

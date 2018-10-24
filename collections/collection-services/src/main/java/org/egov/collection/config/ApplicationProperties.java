@@ -125,7 +125,10 @@ public class ApplicationProperties {
     @Value("${receiptnumber.idname}")
     private String receiptNumberIdName;
 
-    @Value("${receiptnumber.service}")
+    @Value("${receiptnumber.servicebased}")
     private boolean receiptNumberByService;
+
+    @Value("${receiptnumber.state.level.format}")
+    private String receiptNumberStateLevelFormat;
 
 }

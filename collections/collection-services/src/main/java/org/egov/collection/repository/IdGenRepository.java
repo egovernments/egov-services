@@ -41,15 +41,17 @@ public class IdGenRepository {
      */
 	public String generateReceiptNumber(RequestInfo requestInfo, String businessService ,String tenantId) {
         String idName = "";
+        String format = null;
 	    log.debug("Attempting to generate Receipt Number from ID Gen");
 
         if(applicationProperties.isReceiptNumberByService()){
             idName = idName + businessService.toLowerCase() + "." + applicationProperties.getReceiptNumberIdName();
         } else{
             idName = applicationProperties.getReceiptNumberIdName();
+            format = applicationProperties.getReceiptNumberStateLevelFormat();
         }
 
-        return getId(requestInfo, tenantId, idName, null, 1);
+        return getId(requestInfo, tenantId, idName, format, 1);
 	}
 
     public String generateTransactionNumber(RequestInfo requestInfo, String tenantId) {

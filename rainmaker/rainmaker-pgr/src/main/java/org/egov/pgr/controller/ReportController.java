@@ -13,10 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import lombok.extern.slf4j.Slf4j;
-
 @Controller
-@Slf4j
 @RequestMapping(value = "/v1/reports/")
 public class ReportController {
 	
@@ -26,7 +23,6 @@ public class ReportController {
 	@PostMapping("_get")
 	@ResponseBody
 	public ResponseEntity<?> getReports(@RequestBody @Valid ReportRequest reportRequest) {
-		log.info("Request..........: "+reportRequest);
 		Object response = service.getReports(reportRequest);
 		return new ResponseEntity<>(response, HttpStatus.OK);
 

@@ -1,12 +1,10 @@
 package org.egov.pgr.validator;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -14,20 +12,12 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.request.Role;
-import org.egov.common.contract.request.User;
-import org.egov.mdms.model.MdmsCriteriaReq;
 import org.egov.pgr.contract.ReportRequest;
 import org.egov.pgr.contract.ServiceReqSearchCriteria;
 import org.egov.pgr.contract.ServiceRequest;
 import org.egov.pgr.contract.ServiceResponse;
 import org.egov.pgr.model.ActionInfo;
 import org.egov.pgr.model.Service;
-import org.egov.pgr.model.user.Citizen;
-import org.egov.pgr.model.user.CreateUserRequest;
-import org.egov.pgr.model.user.UserResponse;
-import org.egov.pgr.model.user.UserSearchRequest;
-import org.egov.pgr.model.user.UserType;
-import org.egov.pgr.repository.ServiceRequestRepository;
 import org.egov.pgr.service.GrievanceService;
 import org.egov.pgr.service.ReportService;
 import org.egov.pgr.utils.ErrorConstants;
@@ -38,9 +28,6 @@ import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.jayway.jsonpath.JsonPath;
-
 import lombok.extern.slf4j.Slf4j;
 
 @org.springframework.stereotype.Service
@@ -49,9 +36,6 @@ public class PGRRequestValidator {
 
 	@Autowired
 	private GrievanceService requestService;
-
-	@Autowired
-	private ServiceRequestRepository serviceRequestRepository;
 
 	@Autowired
 	private PGRUtils pgrUtils;
@@ -86,64 +70,13 @@ public class PGRRequestValidator {
 	 * @param serviceRequest
 	 */
 	public void validateCreate(ServiceRequest serviceRequest) {
-
 		Map<String, String> errorMap = new HashMap<>();
 		validateUserRBACProxy(errorMap, serviceRequest.getRequestInfo());
 		validateIfArraysEqual(serviceRequest, errorMap);
-		overRideCitizenAccountId(serviceRequest);
 		vaidateServiceCodes(serviceRequest, errorMap);
 		validateAddressCombo(serviceRequest, errorMap);
-		validateAndCreateUser(serviceRequest, errorMap);
-
 		if (!errorMap.isEmpty())
 			throw new CustomException(errorMap);
-	}
-
-	private void validateAndCreateUser(ServiceRequest serviceRequest, Map<String, String> errorMap) {
-		RequestInfo requestInfo = serviceRequest.getRequestInfo();
-		List<String> roleNames = requestInfo.getUserInfo().getRoles().parallelStream().map(Role::getName)
-				.collect(Collectors.toList());
-		if(roleNames.contains("Citizen Service Representative") || roleNames.contains("CSR")) {
-			List<Service> services = serviceRequest.getServices();
-			for (Service service : services) {
-				Citizen citizen = service.getCitizen();
-				String accId = null;
-				if (null != citizen) {
-					accId = isUserPresent(citizen,requestInfo,service.getTenantId());
-					if (null == accId) {
-						accId = createUser(citizen,requestInfo,service.getTenantId());
-					}
-					service.setAccountId(accId);
-				}
-			}	
-		}
-	}
-
-	private String createUser(Citizen citizen, RequestInfo requestInfo, String tenantId) {
-		ObjectMapper mapper = pgrUtils.getObjectMapper();
-		citizen.setUserName(citizen.getMobileNumber());
-		citizen.setActive(true);
-		citizen.setTenantId(tenantId);
-		citizen.setType(UserType.CITIZEN);
-		citizen.setRoles(Arrays.asList(org.egov.pgr.model.user.Role.builder().code(WorkFlowConfigs.ROLE_CITIZEN).build()));
-		//Role role = Role.builder().
-		
-		StringBuilder url = new StringBuilder(userBasePath+userCreateEndPoint); 
-		CreateUserRequest req = CreateUserRequest.builder().citizen(citizen).requestInfo(requestInfo).build();
-		UserResponse res = mapper.convertValue(serviceRequestRepository.fetchResult(url, req), UserResponse.class);
-		return res.getUser().get(0).getId().toString();
-	}
-
-	private String isUserPresent(Citizen citizen, RequestInfo requestInfo, String tenantId) {
-		ObjectMapper mapper = pgrUtils.getObjectMapper();
-		UserSearchRequest searchRequest = UserSearchRequest.builder().userName(citizen.getMobileNumber())
-				.tenantId(tenantId).userType(WorkFlowConfigs.ROLE_CITIZEN).requestInfo(requestInfo).build();
-		StringBuilder url = new StringBuilder(userBasePath+userSearchEndPoint); 
-		UserResponse res = mapper.convertValue(serviceRequestRepository.fetchResult(url, searchRequest), UserResponse.class);
-		if(CollectionUtils.isEmpty(res.getUser())) {
-			return null;
-		}
-		return res.getUser().get(0).getId().toString();
 	}
 
 	/**
@@ -159,16 +92,12 @@ public class PGRRequestValidator {
 	 * @param serviceRequest
 	 */
 	public void validateUpdate(ServiceRequest serviceRequest) {
-
 		Map<String, String> errorMap = new HashMap<>();
-
 		validateIfArraysEqual(serviceRequest, errorMap);
 		vaidateServiceCodes(serviceRequest, errorMap);
-		overRideCitizenAccountId(serviceRequest);
 		validateAssignments(serviceRequest, errorMap);
 		validateAction(serviceRequest, errorMap);
 		validateIfServicesExists(serviceRequest, errorMap);
-
 		if (!errorMap.isEmpty())
 			throw new CustomException(errorMap);
 	}
@@ -184,18 +113,14 @@ public class PGRRequestValidator {
 				.tenantId(serviceRequest.getServices().get(0).getTenantId()).serviceRequestId(serviceRequest
 						.getServices().stream().map(Service::getServiceRequestId).collect(Collectors.toList()))
 				.build();
-
 		Map<String, Service> map = ((ServiceResponse) requestService
 				.getServiceRequestDetails(serviceRequest.getRequestInfo(), serviceReqSearchCriteria)).getServices()
 						.stream().collect(Collectors.toMap(Service::getServiceRequestId, Function.identity()));
-
 		List<String> errorList = new ArrayList<>();
 		serviceRequest.getServices().forEach(a -> {
-
 			if (map.get(a.getServiceRequestId()) == null)
 				errorList.add(a.getServiceRequestId());
 		});
-
 		if (!errorList.isEmpty())
 			errorMap.put(ErrorConstants.INVALID_SERVICEREQUESTID_CODE, ErrorConstants.INVALID_SERVICEREQUESTID_MSG + errorList);
 	}
@@ -238,57 +163,18 @@ public class PGRRequestValidator {
 	private void vaidateServiceCodes(ServiceRequest serviceRequest, Map<String, String> errorMap) {
 
 		String tenantId = serviceRequest.getServices().get(0).getTenantId();
-		List<String> serviceCodes = getServiceCodes(tenantId,
+		List<String> serviceCodes = pgrUtils.getServiceCodes(tenantId,
 				serviceRequest.getServices().parallelStream().map(Service::getServiceCode).collect(Collectors.toSet()),
 				serviceRequest.getRequestInfo());
-
 		List<String> errorList = new ArrayList<>();
 		serviceRequest.getServices().forEach(a -> {
-
 			if (!serviceCodes.contains(a.getServiceCode()))
 				errorList.add(a.getServiceCode());
 		});
-
 		if (!errorList.isEmpty())
 			errorMap.put(ErrorConstants.INVALID_SERVICECODE_CODE, ErrorConstants.INVALID_SERVICECODE_MSG + errorList);
 	}
 
-	/**
-	 * helper method which collects the service code from services obtained by
-	 * databse call
-	 * 
-	 * @param tenantId
-	 * @param inputCodes
-	 * @param requestInfo
-	 * @return
-	 */
-	private List<String> getServiceCodes(String tenantId, Set<String> inputCodes, RequestInfo requestInfo) {
-
-		StringBuilder uri = new StringBuilder(mdmsHost).append(mdmsEndpoint);
-		MdmsCriteriaReq criteriaReq = pgrUtils.prepareMdMsRequest(tenantId.split("\\.")[0], PGRConstants.SERVICE_CODES,
-				inputCodes.toString(), requestInfo);
-		try {
-			Object result = serviceRequestRepository.fetchResult(uri, criteriaReq);
-			return JsonPath.read(result, PGRConstants.JSONPATH_SERVICE_CODES);
-		} catch (Exception e) {
-			throw new CustomException(ErrorConstants.INVALID_TENANT_ID_MDMS_SERVICE_CODE_KEY,
-					ErrorConstants.INVALID_TENANT_ID_MDMS_SERVICE_CODE_MSG);
-		}
-	}
-
-	/**
-	 * overrides the accoundId field with the current user Id if the user is a
-	 * CITIZEN
-	 * 
-	 * @param serviceRequest
-	 */
-	private void overRideCitizenAccountId(ServiceRequest serviceRequest) {
-
-		User user = serviceRequest.getRequestInfo().getUserInfo();
-		List<String> codes = user.getRoles().parallelStream().map(Role::getName).collect(Collectors.toList());
-		if (codes.contains("CITIZEN") || codes.contains("Citizen"))
-			serviceRequest.getServices().forEach(service -> service.setAccountId(String.valueOf(user.getId())));
-	}
 
 	/**
 	 * validates if the assignee has been given for proper action and not provided
@@ -392,7 +278,7 @@ public class PGRRequestValidator {
 		List<String> roles = serviceRequest.getRequestInfo().getUserInfo().getRoles().parallelStream()
 				.map(Role::getName).collect(Collectors.toList());
 		List<String> actions = null;
-		if (roles.contains("Citizen") || roles.contains("CITIZEN"))
+		if (roles.contains(PGRConstants.ROLE_NAME_CITIZEN) || roles.contains(PGRConstants.ROLE_CITIZEN))
 			actions = roleActionMap.get(serviceRequest.getRequestInfo().getUserInfo().getRoles().get(0).getName().toUpperCase());
 		else
 			actions = roleActionMap.get(pgrUtils.getPrecedentRole(serviceRequest.getRequestInfo().getUserInfo()

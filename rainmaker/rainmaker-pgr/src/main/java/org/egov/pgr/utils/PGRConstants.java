@@ -65,6 +65,10 @@ public class PGRConstants {
 	public static final String EMPLOYEE_PHNO_JSONPATH = "$.Employee[0].mobileNumber";
 	public static final String DEPARTMENTNAME_EMPLOYEE_JSONPATH = "$.Department[0].name";
 	
+	public static final String LOCALIZATION_CODES_JSONPATH = "$.messages.*.code";
+	public static final String LOCALIZATION_MSGS_JSONPATH = "$.messages.*.message";
+
+	
 	public static final String SEARCHER_RESPONSE_TEXT = "Searcher response : ";
 		
 	public static final String SMS_NOTIFICATION_STATUS_KEY = "<status>";
@@ -89,11 +93,21 @@ public class PGRConstants {
 	
 	/*  search on roles constant */
 	
-	public static final String ROLE_CITIZEN = "Citizen";
-	public static final String ROLE_EMPLOYEE = "Employee";
-	public static final String ROLE_GRO = "Grievance Routing Officer";
-	public static final String ROLE_DGRO = "Department Grievance Routing Officer";
-	public static final String ROLE_CSR = "Citizen Service Representative";
+	
+	
+	public static final String ROLE_EMPLOYEE = "EMPLOYEE";
+	public static final String ROLE_CITIZEN = "CITIZEN";
+	public static final String ROLE_GRO = "GRO";
+	public static final String ROLE_DGRO = "DGRO";
+	public static final String ROLE_CSR = "CSR";
+	
+	
+	public static final String ROLE_NAME_CITIZEN = "Citizen";
+	public static final String ROLE_NAME_EMPLOYEE = "Employee";
+	public static final String ROLE_NAME_GRO = "Grievance Routing Officer";
+	public static final String ROLE_NAME_DGRO = "Department Grievance Routing Officer";
+	public static final String ROLE_NAME_CSR = "Citizen Service Representative";
+	
 
 	
 	private static Map<String, String> statusNotifKeyMap = prepareStatusNotifKeyMap();
@@ -128,15 +142,15 @@ public class PGRConstants {
 	private static Map<String, String> prepareStatusRoleLocalizationKeyMap() {
 
 		Map<String, String> map = new HashMap<>();
-		map.put(WorkFlowConfigs.STATUS_OPENED + "|" + WorkFlowConfigs.ROLE_CITIZEN, LOCALIZATION_CODE_SUBMIT_CITIZEN);
+		map.put(WorkFlowConfigs.STATUS_OPENED + "|" + PGRConstants.ROLE_CITIZEN, LOCALIZATION_CODE_SUBMIT_CITIZEN);
 		
-		map.put(WorkFlowConfigs.STATUS_ASSIGNED + "|" + WorkFlowConfigs.ROLE_CITIZEN, LOCALIZATION_CODE_ASSIGN_CITIZEN);
-		map.put(WorkFlowConfigs.STATUS_ASSIGNED + "|" + WorkFlowConfigs.ROLE_EMPLOYEE, LOCALIZATION_CODE_ASSIGN_EMPLOYEE);
+		map.put(WorkFlowConfigs.STATUS_ASSIGNED + "|" + PGRConstants.ROLE_CITIZEN, LOCALIZATION_CODE_ASSIGN_CITIZEN);
+		map.put(WorkFlowConfigs.STATUS_ASSIGNED + "|" + PGRConstants.ROLE_EMPLOYEE, LOCALIZATION_CODE_ASSIGN_EMPLOYEE);
 
-		map.put(WorkFlowConfigs.STATUS_REJECTED + "|" + WorkFlowConfigs.ROLE_CITIZEN, LOCALIZATION_CODE_REJECT_CITIZEN);
-		map.put(WorkFlowConfigs.STATUS_RESOLVED + "|" + WorkFlowConfigs.ROLE_CITIZEN, LOCALIZATION_CODE_RESOLVE_CITIZEN);
+		map.put(WorkFlowConfigs.STATUS_REJECTED + "|" + PGRConstants.ROLE_CITIZEN, LOCALIZATION_CODE_REJECT_CITIZEN);
+		map.put(WorkFlowConfigs.STATUS_RESOLVED + "|" + PGRConstants.ROLE_CITIZEN, LOCALIZATION_CODE_RESOLVE_CITIZEN);
 		
-		map.put(WorkFlowConfigs.STATUS_CLOSED + "|" + WorkFlowConfigs.ROLE_EMPLOYEE, LOCALIZATION_CODE_CLOSE_EMPLOYEE);
+		map.put(WorkFlowConfigs.STATUS_CLOSED + "|" + PGRConstants.ROLE_EMPLOYEE, LOCALIZATION_CODE_CLOSE_EMPLOYEE);
 	
 		return map;
 	}
@@ -144,9 +158,9 @@ public class PGRConstants {
 	private static Map<String, String> prepareActionRoleLocalizationKeyMap() {
 
 		Map<String, String> map = new HashMap<>();
-		map.put(WorkFlowConfigs.ACTION_REOPEN + "|" + WorkFlowConfigs.ROLE_EMPLOYEE, LOCALIZATION_CODE_REOPEN_EMPLOYEE);
-		map.put(WorkFlowConfigs.ACTION_REASSIGN + "|" + WorkFlowConfigs.ROLE_CITIZEN, LOCALIZATION_CODE_REASSIGN_CITIZEN);
-		map.put(WorkFlowConfigs.ACTION_REASSIGN + "|" + WorkFlowConfigs.ROLE_EMPLOYEE, LOCALIZATION_CODE_REASSIGN_EMPLOYEE);
+		map.put(WorkFlowConfigs.ACTION_REOPEN + "|" + PGRConstants.ROLE_EMPLOYEE, LOCALIZATION_CODE_REOPEN_EMPLOYEE);
+		map.put(WorkFlowConfigs.ACTION_REASSIGN + "|" + PGRConstants.ROLE_CITIZEN, LOCALIZATION_CODE_REASSIGN_CITIZEN);
+		map.put(WorkFlowConfigs.ACTION_REASSIGN + "|" + PGRConstants.ROLE_EMPLOYEE, LOCALIZATION_CODE_REASSIGN_EMPLOYEE);
 
 	
 		return map;

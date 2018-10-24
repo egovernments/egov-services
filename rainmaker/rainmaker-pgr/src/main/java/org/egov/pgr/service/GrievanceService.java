@@ -3,6 +3,7 @@ package org.egov.pgr.service;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -12,6 +13,7 @@ import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.request.Role;
+import org.egov.common.contract.request.User;
 import org.egov.mdms.model.MdmsCriteriaReq;
 import org.egov.pgr.contract.CountResponse;
 import org.egov.pgr.contract.IdResponse;
@@ -27,8 +29,10 @@ import org.egov.pgr.model.AuditDetails;
 import org.egov.pgr.model.Service;
 import org.egov.pgr.model.Service.StatusEnum;
 import org.egov.pgr.model.user.Citizen;
+import org.egov.pgr.model.user.CreateUserRequest;
 import org.egov.pgr.model.user.UserResponse;
 import org.egov.pgr.model.user.UserSearchRequest;
+import org.egov.pgr.model.user.UserType;
 import org.egov.pgr.producer.PGRProducer;
 import org.egov.pgr.repository.FileStoreRepo;
 import org.egov.pgr.repository.IdGenRepo;
@@ -72,6 +76,9 @@ public class GrievanceService {
 	
 	@Value("${egov.user.search.endpoint}")
 	private String userSearchEndPoint;
+	
+	@Value("${egov.user.create.endpoint}")
+	private String userCreateEndPoint;
 
 	@Autowired
 	private ResponseInfoFactory factory;
@@ -98,11 +105,8 @@ public class GrievanceService {
 	 * @param request
 	 */
 	public ServiceResponse create(ServiceRequest request) {
-
-		log.debug(" the incoming request obj in service : {}", request);
 		enrichserviceRequestForcreate(request);
 		pGRProducer.push(saveTopic, request);
-
 		return getServiceResponse(request);
 	}
 
@@ -113,8 +117,6 @@ public class GrievanceService {
 	 * @param request
 	 */
 	public ServiceResponse update(ServiceRequest request) {
-
-		log.debug(" the incoming request obj in service : {}", request);
 		enrichServiceRequestForUpdate(request);
 		if (null == request.getActionInfo())
 			request.setActionInfo(new ArrayList<ActionInfo>());
@@ -129,51 +131,89 @@ public class GrievanceService {
 	 * @param serviceRequest
 	 */
 	private void enrichserviceRequestForcreate(ServiceRequest serviceRequest) {
-
 		Map<String, String> actionStatusMap = WorkFlowConfigs.getActionStatusMap();
 		RequestInfo requestInfo = serviceRequest.getRequestInfo();
 		List<Service> serviceReqs = serviceRequest.getServices();
 		String tenantId = serviceReqs.get(0).getTenantId();
-
-		Integer servReqLen = serviceReqs.size();
-		List<String> servReqIdList = getIdList(requestInfo, tenantId, servReqLen, PGRConstants.SERV_REQ_ID_NAME,
+		overRideCitizenAccountId(serviceRequest);
+		validateAndCreateUser(serviceRequest);
+		List<String> servReqIdList = getIdList(requestInfo, tenantId, serviceReqs.size(), PGRConstants.SERV_REQ_ID_NAME,
 				PGRConstants.SERV_REQ_ID_FORMAT);
-
-		List<ActionInfo> actionInfos = serviceRequest.getActionInfo();
-		if (null == actionInfos)
-			actionInfos = new ArrayList<>(Arrays.asList(new ActionInfo[serviceReqs.size()]));
-
 		AuditDetails auditDetails = pGRUtils.getAuditDetails(String.valueOf(requestInfo.getUserInfo().getId()), true);
-
 		String by = auditDetails.getCreatedBy() + ":" + requestInfo.getUserInfo().getRoles().get(0).getName();
-
+		List<ActionInfo> actionInfos = new LinkedList<>();
 		for (int servReqCount = 0; servReqCount < serviceReqs.size(); servReqCount++) {
-
 			Service servReq = serviceReqs.get(servReqCount);
-			ActionInfo actionInfo = actionInfos.get(servReqCount);
-			if (null == actionInfo) {
-				actionInfo = new ActionInfo();
-				actionInfos.set(servReqCount, actionInfo);
-			}
 			String currentId = servReqIdList.get(servReqCount);
-			servReq.setAuditDetails(auditDetails);
-			servReq.setServiceRequestId(currentId);
-			servReq.setStatus(StatusEnum.OPEN);
-			servReq.setFeedback(null);
-			servReq.setRating(null);
-
-			// FIXME TODO business key should be module name and currentid in future
-			actionInfo.setUuid(UUID.randomUUID().toString());
-			actionInfo.setBusinessKey(currentId);
-			actionInfo.setAction(WorkFlowConfigs.ACTION_OPEN);
-			actionInfo.setAssignee(null);
-			actionInfo.setBy(by);
-			actionInfo.setWhen(auditDetails.getCreatedTime());
-			actionInfo.setTenantId(tenantId);
-			actionInfo.setStatus(actionStatusMap.get(WorkFlowConfigs.ACTION_OPEN));
-
+			servReq.setAuditDetails(auditDetails); servReq.setServiceRequestId(currentId);
+			servReq.setStatus(StatusEnum.OPEN);servReq.setFeedback(null);servReq.setRating(null);
+			ActionInfo actionInfo = ActionInfo.builder().uuid(UUID.randomUUID().toString()).businessKey(currentId)
+					.action(WorkFlowConfigs.ACTION_OPEN).assignee(null).by(by).when(auditDetails.getCreatedTime()).tenantId(tenantId)
+					.status(actionStatusMap.get(WorkFlowConfigs.ACTION_OPEN)).build();
+			actionInfos.add(actionInfo);
 		}
 		serviceRequest.setActionInfo(actionInfos);
+	}
+	
+	/**
+	 * Override the accountId of every request with the user id
+	 * @param serviceRequest
+	 */
+	private void overRideCitizenAccountId(ServiceRequest serviceRequest) {
+		User user = serviceRequest.getRequestInfo().getUserInfo();
+		List<String> codes = user.getRoles().parallelStream().map(Role::getName).collect(Collectors.toList());
+		if (codes.contains(PGRConstants.ROLE_CITIZEN) || codes.contains(PGRConstants.ROLE_NAME_CITIZEN))
+			serviceRequest.getServices().forEach(service -> service.setAccountId(String.valueOf(user.getId())));
+	}
+	
+	/**
+	 * When CSR files a complaint, this method captures the user information if the user exists otherwise creates the user.
+	 * 
+	 * @param serviceRequest
+	 * @param errorMap
+	 */
+	private void validateAndCreateUser(ServiceRequest serviceRequest) {
+		RequestInfo requestInfo = serviceRequest.getRequestInfo();
+		List<String> roleNames = requestInfo.getUserInfo().getRoles().parallelStream().map(Role::getName)
+				.collect(Collectors.toList());
+		if(roleNames.contains(PGRConstants.ROLE_NAME_CSR) || roleNames.contains(PGRConstants.ROLE_CSR)) {
+			serviceRequest.getServices().parallelStream().forEach(request -> {
+				String accId = null;
+				if (null != request.getCitizen()) {
+					accId = isUserPresent(request.getCitizen(),requestInfo,request.getTenantId());
+					if (StringUtils.isEmpty(accId)) {
+						accId = createUser(request.getCitizen(),requestInfo,request.getTenantId());
+					}
+					request.setAccountId(accId);
+				}
+			});	
+		}
+	}
+	
+	private String isUserPresent(Citizen citizen, RequestInfo requestInfo, String tenantId) {
+		ObjectMapper mapper = pGRUtils.getObjectMapper();
+		UserSearchRequest searchRequest = UserSearchRequest.builder().userName(citizen.getMobileNumber())
+				.tenantId(tenantId).userType(PGRConstants.ROLE_CITIZEN).requestInfo(requestInfo).build();
+		StringBuilder url = new StringBuilder(userBasePath+userSearchEndPoint); 
+		UserResponse res = mapper.convertValue(serviceRequestRepository.fetchResult(url, searchRequest), UserResponse.class);
+		if(CollectionUtils.isEmpty(res.getUser())) {
+			return null;
+		}
+		return res.getUser().get(0).getId().toString();
+	}
+	
+	private String createUser(Citizen citizen, RequestInfo requestInfo, String tenantId) {
+		ObjectMapper mapper = pGRUtils.getObjectMapper();
+		citizen.setUserName(citizen.getMobileNumber());
+		citizen.setActive(true);
+		citizen.setTenantId(tenantId);
+		citizen.setType(UserType.CITIZEN);
+		citizen.setRoles(Arrays.asList(org.egov.pgr.model.user.Role.builder().code(PGRConstants.ROLE_CITIZEN).build()));
+		
+		StringBuilder url = new StringBuilder(userBasePath+userCreateEndPoint); 
+		CreateUserRequest req = CreateUserRequest.builder().citizen(citizen).requestInfo(requestInfo).build();
+		UserResponse res = mapper.convertValue(serviceRequestRepository.fetchResult(url, req), UserResponse.class);
+		return res.getUser().get(0).getId().toString();
 	}
 
 	/**
@@ -183,33 +223,22 @@ public class GrievanceService {
 	 */
 	private void enrichServiceRequestForUpdate(ServiceRequest request) {
 		Map<String, List<String>> errorMap = new HashMap<>();
-
 		RequestInfo requestInfo = request.getRequestInfo();
 		List<Service> serviceReqs = request.getServices();
 		List<ActionInfo> actionInfos = request.getActionInfo();
 		String tenantId = serviceReqs.get(0).getTenantId();
-
-		List<String> servicerequestIds = serviceReqs.parallelStream().map(Service::getServiceRequestId)
-				.collect(Collectors.toList());
+		List<String> servicerequestIds = serviceReqs.parallelStream().map(Service::getServiceRequestId).collect(Collectors.toList());
 		ServiceReqSearchCriteria serviceReqSearchCriteria = ServiceReqSearchCriteria.builder().tenantId(tenantId)
 				.serviceRequestId(servicerequestIds).build();
-
 		List<ActionHistory> historys = ((ServiceResponse) getServiceRequestDetails(requestInfo,
 				serviceReqSearchCriteria)).getActionHistory();
 		Map<String, ActionHistory> historyMap = new HashMap<>();
 		historys.forEach(a -> historyMap.put(a.getActions().get(0).getBusinessKey(), a));
-
-		int serviceLen = serviceReqs.size();
-		for (int index = 0; index < serviceLen; index++) {
-
+		for (int index = 0; index < serviceReqs.size(); index++) {
 			Service service = serviceReqs.get(index);
-			ActionInfo currentInfo = null;
-			if (null != actionInfos)
-				currentInfo = actionInfos.get(index);
 			ActionHistory history = historyMap.get(service.getServiceRequestId());
-			validateAndEnrichActionInfoForUpdate(errorMap, requestInfo, service, currentInfo, history);
+			validateAndEnrichActionInfoForUpdate(errorMap, requestInfo, service, actionInfos.get(index), history);
 		}
-
 		if (!errorMap.isEmpty()) {
 			Map<String, String> newMap = new HashMap<>();
 			errorMap.keySet().forEach(key -> newMap.put(key, errorMap.get(key).toString()));
@@ -229,48 +258,34 @@ public class GrievanceService {
 	 */
 	private void validateAndEnrichActionInfoForUpdate(Map<String, List<String>> errorMap, RequestInfo requestInfo,
 			Service service, ActionInfo actionInfo, ActionHistory history) {
-
-		final AuditDetails auditDetails = pGRUtils.getAuditDetails(String.valueOf(requestInfo.getUserInfo().getId()),
-				false);
+		final AuditDetails auditDetails = pGRUtils.getAuditDetails(String.valueOf(requestInfo.getUserInfo().getId()),false);
 		service.setAuditDetails(auditDetails);
 		String currentStatus = getCurrentStatus(history);
 		service.setStatus(StatusEnum.fromValue(currentStatus));
-		if (null == actionInfo) 
-			return;
-
 		Map<String, List<String>> actioncurrentStatusMap = WorkFlowConfigs.getActionCurrentStatusMap();
 		Map<String, String> actionStatusMap = WorkFlowConfigs.getActionStatusMap();
 		String role = pGRUtils.getPrecedentRole(requestInfo.getUserInfo().getRoles().parallelStream().map(Role::getName)
 				.collect(Collectors.toList()));
 		if(StringUtils.isEmpty(role))
 			role = requestInfo.getUserInfo().getRoles().get(0).getName();
-		String by = auditDetails.getLastModifiedBy() + ":" + role;
-
-		actionInfo.setUuid(UUID.randomUUID().toString());
-		// FIXME TODO business key should be module name and currentid in future
-		actionInfo.setBusinessKey(service.getServiceRequestId());
-		actionInfo.setBy(by);
-		actionInfo.setWhen(auditDetails.getLastModifiedTime());
-		actionInfo.setTenantId(service.getTenantId());
-		actionInfo.setStatus(actionInfo.getAction());
+		actionInfo = ActionInfo.builder().uuid(UUID.randomUUID().toString()).businessKey(service.getServiceRequestId())
+				.by(auditDetails.getLastModifiedBy() + ":" + role).when(auditDetails.getLastModifiedTime()).tenantId(service.getTenantId()).status(actionInfo.getAction()).build();
 		if (null != actionInfo.getAction() && actionStatusMap.get(actionInfo.getAction()) != null) {
 			if (!WorkFlowConfigs.ACTION_CLOSE.equals(actionInfo.getAction())
-					&& (null != service.getFeedback() || null != service.getRating()))
+					&& (!StringUtils.isEmpty(service.getFeedback()) || !StringUtils.isEmpty(service.getRating())))
 				addError(ErrorConstants.UPDATE_FEEDBACK_ERROR_MSG + actionInfo.getAction() + ", with service Id : "
 						+ service.getServiceRequestId(), ErrorConstants.UPDATE_FEEDBACK_ERROR_KEY, errorMap);
 			List<String> validStatusList = actioncurrentStatusMap.get(actionInfo.getAction());
-			if (null != currentStatus && validStatusList.contains(currentStatus)) {
-				String resultStatus = actionStatusMap.get(actionInfo.getAction());
-				actionInfo.setStatus(resultStatus);
-				service.setStatus(StatusEnum.fromValue(resultStatus));
+			if (!StringUtils.isEmpty(currentStatus) && validStatusList.contains(currentStatus)) {
+				actionInfo.setStatus(actionStatusMap.get(actionInfo.getAction()));
+				service.setStatus(StatusEnum.fromValue(actionStatusMap.get(actionInfo.getAction())));
 			} else {
-
 				String errorMsg = " The Given Action " + actionInfo.getAction()
 						+ "cannot be applied for the Current status of the Grievance with ServiceRequestId "
 						+ service.getServiceRequestId();
 				addError(errorMsg, ErrorConstants.UPDATE_ERROR_KEY, errorMap);
 			}
-		} else if (null != actionInfo.getAction()) {
+		} else if (!StringUtils.isEmpty(actionInfo.getAction())) {
 			String errorMsg = "The given action " + actionInfo.getAction() + " is invalid for the current status: "
 					+ service.getStatus();
 			addError(errorMsg, ErrorConstants.UPDATE_ERROR_KEY, errorMap);
@@ -397,7 +412,7 @@ public class GrievanceService {
 		if(CollectionUtils.isEmpty(serviceResponse.getServices()))
 			return serviceResponse;
 		else
-			return enrichSearchResWithUserInfo(requestInfo, prepareResult(response, requestInfo));
+			return enrichSearchResWithUserInfo(requestInfo, serviceResponse);
 	}
 
 	/**
@@ -407,28 +422,23 @@ public class GrievanceService {
 	 * @param serviceReqSearchCriteria
 	 */
 	public void enrichRequest(RequestInfo requestInfo, ServiceReqSearchCriteria serviceReqSearchCriteria) {
-		log.info("Enriching request.........: " + serviceReqSearchCriteria);
-		List<String> roleNames = requestInfo.getUserInfo().getRoles().parallelStream().map(Role::getName)
-				.collect(Collectors.toList());
-		String precedentRole = pGRUtils.getPrecedentRole(roleNames);
-		String userType = requestInfo.getUserInfo().getType();
-		if (userType.equalsIgnoreCase("CITIZEN")) {
-			log.info("Setting tenant for citizen........");
+		String precedentRole = pGRUtils.getPrecedentRole(requestInfo.getUserInfo().getRoles().parallelStream().map(Role::getName)
+				.collect(Collectors.toList()));
+		if (requestInfo.getUserInfo().getType().equalsIgnoreCase(PGRConstants.ROLE_CITIZEN)) {
 			serviceReqSearchCriteria.setAccountId(requestInfo.getUserInfo().getId().toString());
-			String[] tenant = serviceReqSearchCriteria.getTenantId().split("[.]");
-			if (tenant.length > 1)
-				serviceReqSearchCriteria.setTenantId(tenant[0]);
-		} else if (userType.equalsIgnoreCase("EMPLOYEE")) {
-			if(null == precedentRole) {
+		    serviceReqSearchCriteria.setTenantId(serviceReqSearchCriteria.getTenantId().split("[.]")[0]); //citizen can search his complaints across state.
+		} else if (requestInfo.getUserInfo().getType().equalsIgnoreCase(PGRConstants.ROLE_EMPLOYEE)) {
+			if(StringUtils.isEmpty(precedentRole)) {
 				throw new CustomException(ErrorConstants.UNAUTHORIZED_USER_KEY, ErrorConstants.UNAUTHORIZED_USER_MSG);
 			}
-			if (precedentRole.equalsIgnoreCase(PGRConstants.ROLE_DGRO)) {
-				log.info("Setting default info for DGRO........");
-				String departmenCode = getDepartmentCode(serviceReqSearchCriteria, requestInfo);
-				String department = getDepartment(serviceReqSearchCriteria, requestInfo, departmenCode);
-				Object response = fetchServiceCodes(requestInfo, serviceReqSearchCriteria.getTenantId(), department);
+			/**
+			 * DGRO belongs to a department and that department takes care of certain complaint types.
+			 * A DGRO can address/see only the complaints belonging to those complaint types.
+			 */
+			if (precedentRole.equalsIgnoreCase(PGRConstants.ROLE_NAME_DGRO)) { 
+				Object response = fetchServiceCodes(requestInfo, serviceReqSearchCriteria.getTenantId(), 
+						getDepartment(serviceReqSearchCriteria, requestInfo, getDepartmentCode(serviceReqSearchCriteria, requestInfo)));
 				if (null == response) {
-					log.error("Searcher returned zero serviceCodes for dept: " + department);
 					throw new CustomException(ErrorConstants.NO_DATA_KEY, ErrorConstants.NO_DATA_MSG);
 				}
 				try {
@@ -437,32 +447,31 @@ public class GrievanceService {
 						throw new CustomException(ErrorConstants.NO_DATA_KEY, ErrorConstants.NO_DATA_MSG);
 					serviceReqSearchCriteria.setServiceCodes(serviceCodes);
 				} catch (Exception e) {
-					log.error("Exception while parsing serviceCodes: ", e);
 					throw new CustomException(ErrorConstants.NO_DATA_KEY, ErrorConstants.NO_DATA_MSG);
 				}
-
-			} else if (precedentRole.equalsIgnoreCase(PGRConstants.ROLE_EMPLOYEE)) {
+				/**
+				 * An Employee can by default search only the complaints assigned to him.
+				 */
+			} else if (precedentRole.equalsIgnoreCase(PGRConstants.ROLE_NAME_EMPLOYEE)) {
 				if (StringUtils.isEmpty(serviceReqSearchCriteria.getAssignedTo()) && CollectionUtils.isEmpty(serviceReqSearchCriteria.getServiceRequestId())) {
-					log.info("Setting assignee for employee........");
 					serviceReqSearchCriteria.setAssignedTo(requestInfo.getUserInfo().getId().toString());
 				}
-			} else if (precedentRole.equalsIgnoreCase(PGRConstants.ROLE_CSR)) {
-				serviceReqSearchCriteria.setTenantId(serviceReqSearchCriteria.getTenantId().split("[.]")[0]);
+				/**
+				 * CSR can search complaints across the state.
+				 */
+			} else if (precedentRole.equalsIgnoreCase(PGRConstants.ROLE_NAME_CSR)) {
+				serviceReqSearchCriteria.setTenantId(serviceReqSearchCriteria.getTenantId().split("[.]")[0]); //state-level
 			}
 		}
 		if (!StringUtils.isEmpty(serviceReqSearchCriteria.getAssignedTo())) {
-			log.info("Setting SRids based on assignedTo for assignedTo search........");
 			List<String> serviceRequestIds = getServiceRequestIdsOnAssignedTo(requestInfo, serviceReqSearchCriteria);
 			if (serviceRequestIds.isEmpty())
-				throw new CustomException("400", "No Data");
+				throw new CustomException(ErrorConstants.NO_DATA_KEY, ErrorConstants.NO_DATA_MSG);
 			serviceReqSearchCriteria.setServiceRequestId(serviceRequestIds);
 		}
-	
 		if(!StringUtils.isEmpty(serviceReqSearchCriteria.getGroup()) && CollectionUtils.isEmpty(serviceReqSearchCriteria.getServiceCodes())) {
-			log.info("Setting Service Codes for group based search........");
 			Object response = fetchServiceCodes(requestInfo, serviceReqSearchCriteria.getTenantId(), serviceReqSearchCriteria.getGroup());
 			if (null == response) {
-				log.error("Searcher returned zero serviceCodes for dept: " + serviceReqSearchCriteria.getGroup());
 				throw new CustomException(ErrorConstants.NO_DATA_KEY, ErrorConstants.NO_DATA_MSG);
 			}
 			try {
@@ -471,15 +480,18 @@ public class GrievanceService {
 					throw new CustomException(ErrorConstants.NO_DATA_KEY, ErrorConstants.NO_DATA_MSG);
 				serviceReqSearchCriteria.setServiceCodes(serviceCodes);
 			} catch (Exception e) {
-				log.error("Exception while parsing serviceCodes: ", e);
 				throw new CustomException(ErrorConstants.NO_DATA_KEY, ErrorConstants.NO_DATA_MSG);
 			}
 		}
-
-		log.info("Enriched request: " + serviceReqSearchCriteria);
-
 	}
 
+	/**
+	 * This method fetches all the codes of departments that the employee belongs to.
+	 * 
+	 * @param serviceReqSearchCriteria
+	 * @param requestInfo
+	 * @return
+	 */
 	public String getDepartmentCode(ServiceReqSearchCriteria serviceReqSearchCriteria, RequestInfo requestInfo) {
 		StringBuilder uri = new StringBuilder();
 		RequestInfoWrapper requestInfoWrapper = pGRUtils.prepareRequestForEmployeeSearch(uri, requestInfo,
@@ -511,8 +523,7 @@ public class GrievanceService {
 	 * @param departmentCode
 	 * @return String
 	 */
-	public String getDepartment(ServiceReqSearchCriteria serviceReqSearchCriteria, RequestInfo requestInfo,
-			String departmentCode) {
+	public String getDepartment(ServiceReqSearchCriteria serviceReqSearchCriteria, RequestInfo requestInfo, String departmentCode) {
 		StringBuilder deptUri = new StringBuilder();
 		String department = null;
 		Object response = null;
@@ -585,27 +596,27 @@ public class GrievanceService {
 
 	}
 
+	/**
+	 * This method formats the search result according to the contract.
+	 * 
+	 * @param response
+	 * @param requestInfo
+	 * @return
+	 */
 	public ServiceResponse prepareResult(Object response, RequestInfo requestInfo) {
 		ObjectMapper mapper = pGRUtils.getObjectMapper();
 		List<Service> services = new ArrayList<>();
 		List<ActionHistory> actionHistory = new ArrayList<>();
-
 		List<ServiceRequestDetails> result = new ArrayList<>();
 		List<Object> list = JsonPath.read(response, "$.services");
-		for (Object entry : list) {
-			ServiceRequestDetails object = mapper.convertValue(entry, ServiceRequestDetails.class);
-			result.add(object);
-			log.debug("Object: " + object);
-		}
-		for (ServiceRequestDetails obj : result) {
-			List<ActionInfo> action = obj.getActionhistory();
+		list.parallelStream().forEach(entry -> result.add(mapper.convertValue(entry, ServiceRequestDetails.class)));
+		result.parallelStream().forEach(obj -> {
 			ActionHistory actionHis = new ActionHistory();
-			actionHis.setActions(action);
+			actionHis.setActions(obj.getActionhistory());
 			actionHistory.add(actionHis);
-
 			obj.setActionhistory(null);
 			services.add(obj.getServices());
-		}
+		});
 		replaceIdsWithUrls(actionHistory);
 
 		return ServiceResponse.builder().responseInfo(factory.createResponseInfoFromRequestInfo(requestInfo, true))
@@ -652,7 +663,6 @@ public class GrievanceService {
 		try {
 			String tenantId = historyList.get(0).getActions().get(0).getTenantId();
 			List<String> fileStoreIds = new ArrayList<>();
-
 			historyList.forEach(history -> history.getActions().forEach(action -> {
 				List<String> media = action.getMedia();
 				if (!CollectionUtils.isEmpty(media))
@@ -665,7 +675,6 @@ public class GrievanceService {
 				log.error(" exception while connecting to filestore : " + e);
 			}
 			final Map<String, String> urlIdMap = computeUriIdMap;
-			log.info("urlIdMap: "+urlIdMap);
 			if(!CollectionUtils.isEmpty(urlIdMap.keySet())) {
 				historyList.parallelStream().forEach(history -> {
 					history.getActions().parallelStream().forEach(action -> {
@@ -677,14 +686,19 @@ public class GrievanceService {
 						action.setMedia(mediaList);
 					});
 				});
-			}else {
-				log.info("uriIdMap obtained from filestore is null");
 			}
 		} catch (Exception e) {
 			log.error("Exception while replacing s3 links: " + e);
 		}
 	}
 	
+	/**
+	 * This method populates timeline information of the service request with user details of the actors on the complaint
+	 * 
+	 * @param requestInfo
+	 * @param response
+	 * @return
+	 */
 	public ServiceResponse enrichSearchResWithUserInfo(RequestInfo requestInfo, ServiceResponse response) {
 		List<Long> userIds = response.getServices().parallelStream()
 				.map(a -> {
@@ -710,10 +724,18 @@ public class GrievanceService {
 		return response;
 	}
 	
+	/**
+	 * Fetches Users to be populated in the response
+	 * 
+	 * @param requestInfo
+	 * @param tenantId
+	 * @param userIds
+	 * @return
+	 */
 	public UserResponse getUsers(RequestInfo requestInfo, String tenantId, List<Long> userIds) {
 		ObjectMapper mapper = pGRUtils.getObjectMapper();
 		UserSearchRequest searchRequest = UserSearchRequest.builder().id(userIds).tenantId(tenantId)
-				.userType("CITIZEN").requestInfo(requestInfo).build();
+				.userType(PGRConstants.ROLE_CITIZEN).requestInfo(requestInfo).build();
 		StringBuilder url = new StringBuilder();
 		url.append(userBasePath).append(userSearchEndPoint);
 		try {

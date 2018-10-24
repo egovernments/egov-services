@@ -26,6 +26,8 @@ import org.egov.pgr.contract.ServiceResponse;
 import org.egov.pgr.model.ActionHistory;
 import org.egov.pgr.model.AuditDetails;
 import org.egov.pgr.model.Service;
+import org.egov.pgr.repository.ServiceRequestRepository;
+import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -34,6 +36,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.jayway.jsonpath.JsonPath;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -85,6 +88,9 @@ public class PGRUtils {
 	@Autowired
 	private ResponseInfoFactory factory;
 
+	@Autowired
+	private ServiceRequestRepository serviceRequestRepository;
+	
 	private static final String MODULE_NAME = "{moduleName}";
 
 	private static final String SEARCH_NAME = "{searchName}";
@@ -310,7 +316,7 @@ public class PGRUtils {
 		userServiceRequest.put("RequestInfo", requestInfo);
 		userServiceRequest.put("tenantId", tenantId);
 		userServiceRequest.put("id", Arrays.asList(userIds));
-		userServiceRequest.put("userType", WorkFlowConfigs.ROLE_CITIZEN);
+		userServiceRequest.put("userType", PGRConstants.ROLE_CITIZEN);
 
 		uri.append(egovUserHost).append(egovUserSearchEndpoint);
 
@@ -362,10 +368,10 @@ public class PGRUtils {
 
 		Map<Integer, String> map = new TreeMap<>();
 
-		map.put(3, PGRConstants.ROLE_EMPLOYEE);
-		map.put(2, PGRConstants.ROLE_DGRO);
-		map.put(1, PGRConstants.ROLE_GRO);
-		map.put(0, PGRConstants.ROLE_CSR);
+		map.put(3, PGRConstants.ROLE_NAME_EMPLOYEE);
+		map.put(2, PGRConstants.ROLE_NAME_DGRO);
+		map.put(1, PGRConstants.ROLE_NAME_GRO);
+		map.put(0, PGRConstants.ROLE_NAME_CSR);
 
 		return map;
 	}
@@ -430,6 +436,29 @@ public class PGRUtils {
 		Long milliseconds = TimeUnit.SECONDS.toMillis(TimeUnit.HOURS.toSeconds(hours));
 		log.info("SLA in ms: "+milliseconds);
 		return milliseconds;
+	}
+	
+	/**
+	 * helper method which collects the service code from services obtained by
+	 * databse call
+	 * 
+	 * @param tenantId
+	 * @param inputCodes
+	 * @param requestInfo
+	 * @return
+	 */
+	public List<String> getServiceCodes(String tenantId, Set<String> inputCodes, RequestInfo requestInfo) {
+
+		StringBuilder uri = new StringBuilder(mdmsHost).append(mdmsEndpoint);
+		MdmsCriteriaReq criteriaReq = prepareMdMsRequest(tenantId.split("\\.")[0], PGRConstants.SERVICE_CODES,
+				inputCodes.toString(), requestInfo);
+		try {
+			Object result = serviceRequestRepository.fetchResult(uri, criteriaReq);
+			return JsonPath.read(result, PGRConstants.JSONPATH_SERVICE_CODES);
+		} catch (Exception e) {
+			throw new CustomException(ErrorConstants.INVALID_TENANT_ID_MDMS_SERVICE_CODE_KEY,
+					ErrorConstants.INVALID_TENANT_ID_MDMS_SERVICE_CODE_MSG);
+		}
 	}
 
 }

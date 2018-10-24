@@ -19,7 +19,6 @@ import org.egov.pgr.model.user.UserResponse;
 import org.egov.pgr.repository.ServiceRequestRepository;
 import org.egov.pgr.utils.PGRConstants;
 import org.egov.pgr.utils.PGRUtils;
-import org.egov.pgr.utils.WorkFlowConfigs;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 
@@ -77,7 +76,7 @@ public class NotificationService {
 				getLocalisedMessages(requestInfo, tenantId, locale, PGRConstants.LOCALIZATION_MODULE_NAME);
 			serviceType = localizedMessageMap.get(locale + "|" + tenantId).get(PGRConstants.LOCALIZATION_COMP_CATEGORY_PREFIX + serviceTypes.get(0)); //resultset is always of size one.
 			if(StringUtils.isEmpty(serviceType))
-				serviceType = pGRUtils.splitCamelCase(serviceTypes.get(0));
+				serviceType = PGRUtils.splitCamelCase(serviceTypes.get(0));
 		} catch (Exception e) {
 			return null;
 		}
@@ -116,7 +115,6 @@ public class NotificationService {
 		List<String> departmemts = null;
 		try {
 			Object result = serviceRequestRepository.fetchResult(uri, mdmsCriteriaReq);
-			log.info("Dept result: " + result);
 			departmemts = JsonPath.read(result, PGRConstants.JSONPATH_DEPARTMENTS);
 			if (null == departmemts || departmemts.isEmpty())
 				return null;
@@ -134,7 +132,6 @@ public class NotificationService {
 		List<String> designations = null;
 		try {
 			Object result = serviceRequestRepository.fetchResult(uri, mdmsCriteriaReq);
-			log.info("Designation result: " + result);
 			designations = JsonPath.read(result, PGRConstants.JSONPATH_DESIGNATIONS);
 			if (null == designations || designations.isEmpty())
 				return null;
@@ -155,8 +152,8 @@ public class NotificationService {
 		Object result = null;
 		try {
 			result = serviceRequestRepository.fetchResult(uri, requestInfoWrapper);
-			codes = JsonPath.read(result, "$.messages.*.code");
-			messages = JsonPath.read(result, "$.messages.*.message");
+			codes = JsonPath.read(result, PGRConstants.LOCALIZATION_CODES_JSONPATH);
+			messages = JsonPath.read(result, PGRConstants.LOCALIZATION_MSGS_JSONPATH);
 		} catch (Exception e) {
 			log.error("Exception while fetching from localization: " + e);
 		}
@@ -174,7 +171,7 @@ public class NotificationService {
 		ObjectMapper mapper = pGRUtils.getObjectMapper();
 		StringBuilder uri = new StringBuilder();
 		Object request = new HashMap<>();
-		if(role.equals(WorkFlowConfigs.ROLE_CITIZEN)) {
+		if(role.equals(PGRConstants.ROLE_CITIZEN)) {
 			request = pGRUtils.prepareRequestForUserSearch(uri, requestInfo, userId, tenantId);
 			try {
 				response = serviceRequestRepository.fetchResult(uri, request);
@@ -186,7 +183,7 @@ public class NotificationService {
 				log.error("Couldn't fetch user for id: "+userId+" error: " + e);
 			}
 			return phoneNumber;
-		}else if(role.equals(WorkFlowConfigs.ROLE_EMPLOYEE)) {
+		}else if(role.equals(PGRConstants.ROLE_EMPLOYEE)) {
 			Map<String, String> employeeDetails = getEmployeeDetails(tenantId, assignee, requestInfo);
 			if(!StringUtils.isEmpty(employeeDetails.get("phone"))) {
 				phoneNumber = employeeDetails.get("phone");

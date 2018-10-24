@@ -3,7 +3,6 @@ package org.egov.pgr.consumer;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -121,7 +120,7 @@ public class PGRNotificationConsumer {
 	public void process(ServiceRequest serviceReqRequest) {
 		if (!CollectionUtils.isEmpty(serviceReqRequest.getActionInfo())) {
 			for (ActionInfo actionInfo : serviceReqRequest.getActionInfo()) {
-				if (null != actionInfo && (null != actionInfo.getStatus() || null != actionInfo.getComment())) {
+				if (null != actionInfo && (!StringUtils.isEmpty(actionInfo.getStatus()) || !StringUtils.isEmpty(actionInfo.getComment()))) {
 					Service service = serviceReqRequest.getServices()
 							.get(serviceReqRequest.getActionInfo().indexOf(actionInfo));
 					if (isNotificationEnabled(actionInfo.getStatus(), serviceReqRequest.getRequestInfo().getUserInfo().getType(), actionInfo.getComment(), actionInfo.getAction())) {
@@ -132,7 +131,6 @@ public class PGRNotificationConsumer {
 								continue;
 							}
 							for(SMSRequest smsRequest: smsRequests) {
-								log.info("SMS: " + smsRequest.getMessage() + " | MOBILE: " + smsRequest.getMobileNumber());
 								pGRProducer.push(smsNotifTopic, smsRequest);
 							}
 						}
@@ -146,7 +144,6 @@ public class PGRNotificationConsumer {
 						continue;
 					}
 				} else {
-					log.info("No Action!");
 					continue;
 				}
 			}
@@ -162,9 +159,8 @@ public class PGRNotificationConsumer {
 			String phoneNumberRetrived = notificationService.getPhoneNumberForNotificationService(requestInfo, serviceReq.getAccountId(), serviceReq.getTenantId(), actionInfo.getAssignee(), role);
 			String phone = StringUtils.isEmpty(phoneNumberRetrived) ? serviceReq.getPhone() : phoneNumberRetrived;
 			String message = getMessageForSMS(serviceReq, actionInfo, requestInfo, role);
-			if (null == message)
+			if (StringUtils.isEmpty(message))
 				continue;
-			
 			smsRequestsTobeSent.add(SMSRequest.builder().mobileNumber(phone).message(message).build());
 		}
 		return smsRequestsTobeSent;
@@ -266,7 +262,7 @@ public class PGRNotificationConsumer {
 				.replaceAll(PGRConstants.SMS_NOTIFICATION_DATE_KEY, date)
 				.replaceAll(PGRConstants.SMS_NOTIFICATION_APP_LINK_KEY, uiAppHost + uiFeedbackUrl + serviceReq.getServiceRequestId())
 				.replaceAll(PGRConstants.SMS_NOTIFICATION_APP_DOWNLOAD_LINK_KEY, appDownloadLink)
-				.replaceAll(PGRConstants.SMS_NOTIFICATION_AO_DESIGNATION, PGRConstants.ROLE_GRO)
+				.replaceAll(PGRConstants.SMS_NOTIFICATION_AO_DESIGNATION, PGRConstants.ROLE_NAME_GRO)
 				.replaceAll(PGRConstants.SMS_NOTIFICATION_ULB_NAME, ulb);
 			}
 			return text;

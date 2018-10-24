@@ -12,15 +12,6 @@ import java.util.Map;
  */
 public class WorkFlowConfigs {
 
-	public static final String ROLE_EMPLOYEE = "EMPLOYEE";
-	public static final String ROLE_CITIZEN = "CITIZEN";
-	public static final String ROLE_GRO = "GRO";
-	public static final String ROLE_DGRO = "DGRO";
-	public static final String ROLE_NAME_GRO = "GRIEVANCE ROUTING OFFICER";
-	public static final String ROLE_NAME_DGRO = "DEPARTMENT GRIEVANCE ROUTING OFFICER";
-	public static final String ROLE_CSR = "CSR";
-	public static final String ROLE_NAME_CSR = "CITIZEN SERVICE REPRESENTATIVE";
-
 	public static final String ACTION_OPEN = "open";
 	public static final String ACTION_ASSIGN = "assign";
 	public static final String ACTION_CLOSE = "close";
@@ -82,25 +73,25 @@ public class WorkFlowConfigs {
 	private static Map<String, List<String>> prepareRoleActionMap() {
 
 		Map<String, List<String>> map = new HashMap<>();
-		map.put(ROLE_EMPLOYEE, Arrays.asList(ACTION_RESOLVE, ACTION_REQUEST_FOR_REASSIGN));
-		map.put(ROLE_CITIZEN, Arrays.asList(ACTION_OPEN, ACTION_CLOSE, ACTION_REOPEN));
-		map.put(ROLE_GRO, Arrays.asList(ACTION_ASSIGN, ACTION_REJECT, ACTION_REASSIGN));
-		map.put(ROLE_DGRO, Arrays.asList(ACTION_ASSIGN, ACTION_REJECT, ACTION_REASSIGN));
-		map.put(ROLE_NAME_GRO, Arrays.asList(ACTION_ASSIGN, ACTION_REJECT, ACTION_REASSIGN));
-		map.put(ROLE_NAME_DGRO, Arrays.asList(ACTION_ASSIGN, ACTION_REJECT, ACTION_REASSIGN));
-		map.put(ROLE_CSR, Arrays.asList(ACTION_OPEN, ACTION_CLOSE, ACTION_REOPEN));
-		map.put(ROLE_NAME_CSR, Arrays.asList(ACTION_OPEN, ACTION_CLOSE, ACTION_REOPEN));
+		map.put(PGRConstants.ROLE_EMPLOYEE, Arrays.asList(ACTION_RESOLVE, ACTION_REQUEST_FOR_REASSIGN));
+		map.put(PGRConstants.ROLE_CITIZEN, Arrays.asList(ACTION_OPEN, ACTION_CLOSE, ACTION_REOPEN));
+		map.put(PGRConstants.ROLE_GRO, Arrays.asList(ACTION_ASSIGN, ACTION_REJECT, ACTION_REASSIGN));
+		map.put(PGRConstants.ROLE_DGRO, Arrays.asList(ACTION_ASSIGN, ACTION_REJECT, ACTION_REASSIGN));
+		map.put(PGRConstants.ROLE_NAME_GRO, Arrays.asList(ACTION_ASSIGN, ACTION_REJECT, ACTION_REASSIGN));
+		map.put(PGRConstants.ROLE_NAME_DGRO, Arrays.asList(ACTION_ASSIGN, ACTION_REJECT, ACTION_REASSIGN));
+		map.put(PGRConstants.ROLE_CSR, Arrays.asList(ACTION_OPEN, ACTION_CLOSE, ACTION_REOPEN));
+		map.put(PGRConstants.ROLE_NAME_CSR, Arrays.asList(ACTION_OPEN, ACTION_CLOSE, ACTION_REOPEN));
 		return map;
 	}
 	
 	private static Map<String, List<String>> prepareMapOfStatusAndNotificationReceptors(){
 		Map<String, List<String>> map = new HashMap<>();
 		
-		map.put(WorkFlowConfigs.STATUS_ASSIGNED, Arrays.asList(WorkFlowConfigs.ROLE_CITIZEN, WorkFlowConfigs.ROLE_EMPLOYEE));
-		map.put(WorkFlowConfigs.STATUS_OPENED, Arrays.asList(WorkFlowConfigs.ROLE_CITIZEN));
-		map.put(WorkFlowConfigs.STATUS_REJECTED, Arrays.asList(WorkFlowConfigs.ROLE_CITIZEN));
-		map.put(WorkFlowConfigs.STATUS_RESOLVED, Arrays.asList(WorkFlowConfigs.ROLE_CITIZEN));
-		map.put(WorkFlowConfigs.STATUS_CLOSED, Arrays.asList(WorkFlowConfigs.ROLE_EMPLOYEE));
+		map.put(WorkFlowConfigs.STATUS_ASSIGNED, Arrays.asList(PGRConstants.ROLE_CITIZEN, PGRConstants.ROLE_EMPLOYEE));
+		map.put(WorkFlowConfigs.STATUS_OPENED, Arrays.asList(PGRConstants.ROLE_CITIZEN));
+		map.put(WorkFlowConfigs.STATUS_REJECTED, Arrays.asList(PGRConstants.ROLE_CITIZEN));
+		map.put(WorkFlowConfigs.STATUS_RESOLVED, Arrays.asList(PGRConstants.ROLE_CITIZEN));
+		map.put(WorkFlowConfigs.STATUS_CLOSED, Arrays.asList(PGRConstants.ROLE_EMPLOYEE));
 		
 		return map;
 	}
@@ -108,8 +99,8 @@ public class WorkFlowConfigs {
 	private static Map<String, List<String>> prepareMapOfActionAndNotificationReceptors(){
 		Map<String, List<String>> map = new HashMap<>();
 		
-		map.put(WorkFlowConfigs.ACTION_REASSIGN, Arrays.asList(WorkFlowConfigs.ROLE_CITIZEN, WorkFlowConfigs.ROLE_EMPLOYEE));
-		map.put(WorkFlowConfigs.ACTION_REOPEN, Arrays.asList(WorkFlowConfigs.ROLE_EMPLOYEE));
+		map.put(WorkFlowConfigs.ACTION_REASSIGN, Arrays.asList(PGRConstants.ROLE_CITIZEN, PGRConstants.ROLE_EMPLOYEE));
+		map.put(WorkFlowConfigs.ACTION_REOPEN, Arrays.asList(PGRConstants.ROLE_EMPLOYEE));
 		
 		return map;
 	}

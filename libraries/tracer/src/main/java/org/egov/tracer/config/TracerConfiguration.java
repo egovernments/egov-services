@@ -11,6 +11,7 @@ import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 @Configuration
 @EnableAspectJAutoProxy
 @ComponentScan(basePackages = {"org.egov.tracer"})
+@PropertySource("classpath:tracer.properties")
 public class TracerConfiguration {
 
     @Bean

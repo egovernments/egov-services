@@ -3,6 +3,7 @@ package org.egov.collection.util;
 import java.util.UUID;
 
 import org.egov.collection.model.AuditDetails;
+import org.egov.collection.model.enums.RemittanceStatus;
 import org.egov.collection.web.contract.Remittance;
 import org.egov.collection.web.contract.RemittanceDetail;
 import org.egov.collection.web.contract.RemittanceInstrument;
@@ -20,6 +21,7 @@ public class RemittanceEnricher {
         Remittance remittance = remittanceRequest.getRemittances().get(0);
 
         remittance.setId(UUID.randomUUID().toString().replace("-", ""));
+        remittance.setStatus(RemittanceStatus.APPROVED.name());
         AuditDetails auditDetails = AuditDetails.builder().createdBy(remittanceRequest.getRequestInfo().getUserInfo().getId())
                 .createdDate(System.currentTimeMillis()).lastModifiedBy(remittanceRequest.getRequestInfo().getUserInfo().getId())
                 .lastModifiedDate(System.currentTimeMillis()).build();

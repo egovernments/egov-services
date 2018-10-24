@@ -1,6 +1,13 @@
 package org.egov.collection.repository.querybuilder;
 
-import com.fasterxml.jackson.databind.JsonNode;
+import static java.util.Objects.isNull;
+
+import java.sql.SQLException;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Map;
+import java.util.Objects;
+
 import org.apache.commons.lang3.StringUtils;
 import org.egov.collection.model.AuditDetails;
 import org.egov.collection.model.Instrument;
@@ -13,17 +20,11 @@ import org.egov.tracer.model.CustomException;
 import org.postgresql.util.PGobject;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 
-import java.sql.SQLException;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Map;
-import java.util.Objects;
-
-import static java.util.Objects.isNull;
+import com.fasterxml.jackson.databind.JsonNode;
 
 public class CollectionsQueryBuilder {
 
-    public static final String INSERT_RECEIPT_HEADER_SQL ="INSERT INTO egcl_receiptheader(id, payeename, payeeaddress, payeeemail, payeemobile, paidby, referencenumber, "
+    public static final String INSERT_RECEIPT_HEADER_SQL = "INSERT INTO egcl_receiptheader(id, payeename, payeeaddress, payeeemail, payeemobile, paidby, referencenumber, "
             + " receipttype, receiptnumber, receiptdate, businessdetails, collectiontype, reasonforcancellation, minimumamount, totalamount, "
             + " collectedamount, collmodesnotallwd, consumercode, channel,boundary, voucherheader, "
             + "depositedbranch, createdby, createddate, lastmodifiedby, lastmodifieddate, tenantid, referencedate, referencedesc, "
@@ -36,14 +37,16 @@ public class CollectionsQueryBuilder {
             + " :manualreceiptdate, :manualreceiptnumber, :reference_ch_id, :stateid, :location, :isreconciled, "
             + ":status, :transactionid, :fund, :function, :department, :additionalDetails )";
 
-    public static final String INSERT_RECEIPT_DETAILS_SQL =  "INSERT INTO egcl_receiptdetails(id, chartofaccount, dramount, cramount, ordernumber, receiptheader, actualcramounttobepaid, "
+    public static final String INSERT_RECEIPT_DETAILS_SQL = "INSERT INTO egcl_receiptdetails(id, chartofaccount, dramount, cramount, ordernumber, receiptheader, actualcramounttobepaid, "
             + "description, financialyear, isactualdemand, purpose, tenantid, additionalDetails) "
             + "VALUES (:id, :chartofaccount, :dramount, :cramount, :ordernumber, :receiptheader, " +
             ":actualcramounttobepaid, "
             + ":description, :financialyear, :isactualdemand, :purpose, :tenantid, :additionalDetails)";
 
-    public static final String INSERT_INSTRUMENT_HEADER_SQL = "INSERT INTO egcl_instrumentheader(id, transactionnumber, transactiondate, amount, instrumenttype, " +
-            "instrumentstatus, bankid, branchname, bankaccountid, ifsccode, financialstatus, transactiontype, payee, drawer, surrenderreason, serialno, createdby," +
+    public static final String INSERT_INSTRUMENT_HEADER_SQL = "INSERT INTO egcl_instrumentheader(id, transactionnumber, transactiondate, amount, instrumenttype, "
+            +
+            "instrumentstatus, bankid, branchname, bankaccountid, ifsccode, financialstatus, transactiontype, payee, drawer, surrenderreason, serialno, createdby,"
+            +
             " createddate, lastmodifiedby, lastmodifieddate, tenantid, additionalDetails, instrumentDate, instrumentNumber)\n" +
             " VALUES " +
             " (:id, :transactionnumber, :transactiondate, :amount, :instrumenttype, :instrumentstatus, :bankid, " +
@@ -56,14 +59,18 @@ public class CollectionsQueryBuilder {
 
     private static final String SELECT_RECEIPTS_SQL = "Select rh.id as rh_id,rh.payeename as rh_payeename,rh" +
             ".payeeAddress as rh_payeeAddress, rh.payeeEmail as rh_payeeEmail, rh.payeemobile as rh_payeemobile, rh" +
-            ".paidBy as rh_paidBy, rh.referenceNumber as rh_referenceNumber, rh.referenceDate as rh_referenceDate,rh.receiptType as " +
+            ".paidBy as rh_paidBy, rh.referenceNumber as rh_referenceNumber, rh.referenceDate as rh_referenceDate,rh.receiptType as "
+            +
             "rh_receiptType, rh.receiptNumber as rh_receiptNumber, rh.receiptDate as rh_receiptDate, rh.referenceDesc" +
-            " as rh_referenceDesc, rh.manualReceiptNumber as rh_manualReceiptNumber, rh.fund as rh_fund, rh.function as rh_function, rh.department as rh_department,  rh.manualreceiptdate as " +
-            "rh_manualreceiptdate, rh.businessDetails as rh_businessDetails,  rh.collectionType as rh_collectionType,rh.stateId as rh_stateId,rh.location as " +
+            " as rh_referenceDesc, rh.manualReceiptNumber as rh_manualReceiptNumber, rh.fund as rh_fund, rh.function as rh_function, rh.department as rh_department,  rh.manualreceiptdate as "
+            +
+            "rh_manualreceiptdate, rh.businessDetails as rh_businessDetails,  rh.collectionType as rh_collectionType,rh.stateId as rh_stateId,rh.location as "
+            +
             "rh_location,  rh.isReconciled as rh_isReconciled,rh.status as rh_status,rh.reasonForCancellation as " +
             "rh_reasonForCancellation , rh.minimumAmount as rh_minimumAmount,rh.totalAmount as rh_totalAmount, rh" +
             ".collectedamount as rh_collectedamount, rh.collModesNotAllwd as rh_collModesNotAllwd,rh.consumerCode as " +
-            "rh_consumerCode,rh.function as rh_function,  rh.version as rh_version,rh.channel as rh_channel,rh.reference_ch_id as " +
+            "rh_consumerCode,rh.function as rh_function,  rh.version as rh_version,rh.channel as rh_channel,rh.reference_ch_id as "
+            +
             "rh_reference_ch_id,  rh.consumerType as rh_consumerType,rh.fund as rh_fund,rh.fundSource as " +
             "rh_fundSource, rh.boundary as rh_boundary, rh.department as rh_department,rh.depositedBranch as " +
             "rh_depositedBranch, rh.tenantId as rh_tenantId, rh.displayMsg as rh_displayMsg,rh.voucherheader as " +
@@ -81,7 +88,8 @@ public class CollectionsQueryBuilder {
             ".bankaccountid as ins_bankaccountid,  ins.ifsccode as ins_ifsccode , ins.financialstatus as " +
             "ins_financialstatus ,  ins.transactiontype as ins_transactiontype , ins.payee as ins_payee , ins.drawer " +
             "as ins_drawer ,  ins.surrenderreason as ins_surrenderreason , ins.serialno as ins_serialno , ins" +
-            ".additionalDetails as ins_additionalDetails, ins.createdby as ins_createdby ,  ins.createddate as ins_createddate , ins.lastmodifiedby as " +
+            ".additionalDetails as ins_additionalDetails, ins.createdby as ins_createdby ,  ins.createddate as ins_createddate , ins.lastmodifiedby as "
+            +
             "ins_lastmodifiedby ,  ins.lastmodifieddate as ins_lastmodifieddate , ins.tenantid as ins_tenantid , " +
             " ins.instrumentDate as ins_instrumentDate, ins.instrumentNumber as ins_instrumentNumber " +
             "from egcl_receiptheader rh LEFT OUTER JOIN egcl_receiptdetails rd ON rh.id=rd.receiptheader " +
@@ -93,10 +101,10 @@ public class CollectionsQueryBuilder {
             "({baseQuery})" +
             " result) result_offset " +
             "WHERE offset_ > :offset AND offset_ <= :limit";
-    
-    public static final String UPDATE_RECEIPT_HEADER_SQL ="UPDATE egcl_receiptheader set voucherheader=:voucherheader where id=:id";
-    
-    public static MapSqlParameterSource getParametersForReceiptHeader(Receipt receipt, BillDetail billDetail){
+
+    public static final String UPDATE_RECEIPT_HEADER_SQL = "UPDATE egcl_receiptheader set voucherheader=:voucherheader,status=:status where id=:id";
+
+    public static MapSqlParameterSource getParametersForReceiptHeader(Receipt receipt, BillDetail billDetail) {
         MapSqlParameterSource sqlParameterSource = new MapSqlParameterSource();
         AuditDetails auditDetails = receipt.getAuditDetails();
         Bill bill = receipt.getBill().get(0);
@@ -115,7 +123,7 @@ public class CollectionsQueryBuilder {
         sqlParameterSource.addValue("receiptdate", billDetail.getReceiptDate());
         sqlParameterSource.addValue("businessdetails", billDetail.getBusinessService());
         sqlParameterSource.addValue("collectiontype", billDetail.getCollectionType().toString());
-        sqlParameterSource.addValue("reasonforcancellation",billDetail.getReasonForCancellation());
+        sqlParameterSource.addValue("reasonforcancellation", billDetail.getReasonForCancellation());
         sqlParameterSource.addValue("minimumamount", billDetail.getMinimumAmount());
         sqlParameterSource.addValue("totalamount", billDetail.getTotalAmount());
         sqlParameterSource.addValue("collectedamount", billDetail.getCollectedAmount());
@@ -148,20 +156,20 @@ public class CollectionsQueryBuilder {
         return sqlParameterSource;
 
     }
-    
-    public static MapSqlParameterSource getParametersForReceiptHeaderUpdate(Receipt receipt, BillDetail billDetail){
+
+    public static MapSqlParameterSource getParametersForReceiptHeaderUpdate(Receipt receipt, BillDetail billDetail) {
         MapSqlParameterSource sqlParameterSource = new MapSqlParameterSource();
 
         sqlParameterSource.addValue("id", billDetail.getId());
         sqlParameterSource.addValue("voucherheader", billDetail.getVoucherHeader());
+        sqlParameterSource.addValue("status", billDetail.getStatus());
 
         return sqlParameterSource;
 
     }
 
-
     public static MapSqlParameterSource getParametersForReceiptDetails(BillAccountDetail billAccountDetails,
-                                                                             String receiptHeaderId){
+            String receiptHeaderId) {
         MapSqlParameterSource sqlParameterSource = new MapSqlParameterSource();
         sqlParameterSource.addValue("id", billAccountDetails.getId());
         sqlParameterSource.addValue("chartofaccount", billAccountDetails.getGlcode());
@@ -181,7 +189,7 @@ public class CollectionsQueryBuilder {
 
     }
 
-    public static MapSqlParameterSource getParametersForInstrumentHeader(Instrument instrument, AuditDetails auditDetails){
+    public static MapSqlParameterSource getParametersForInstrumentHeader(Instrument instrument, AuditDetails auditDetails) {
         MapSqlParameterSource sqlParameterSource = new MapSqlParameterSource();
         sqlParameterSource.addValue("id", instrument.getId());
         sqlParameterSource.addValue("transactionnumber", instrument.getTransactionNumber());
@@ -213,7 +221,7 @@ public class CollectionsQueryBuilder {
 
     }
 
-    public static MapSqlParameterSource getParametersForInstrument(Instrument instrument, String receiptHeaderId){
+    public static MapSqlParameterSource getParametersForInstrument(Instrument instrument, String receiptHeaderId) {
         MapSqlParameterSource sqlParameterSource = new MapSqlParameterSource();
         sqlParameterSource.addValue("instrumentheader", instrument.getId());
         sqlParameterSource.addValue("receiptheader", receiptHeaderId);
@@ -221,20 +229,19 @@ public class CollectionsQueryBuilder {
     }
 
     @SuppressWarnings("rawtypes")
-    public static String getReceiptSearchQuery(ReceiptSearchCriteria searchCriteria, Map<String, Object>
-            preparedStatementValues) {
+    public static String getReceiptSearchQuery(ReceiptSearchCriteria searchCriteria,
+            Map<String, Object> preparedStatementValues) {
         StringBuilder selectQuery = new StringBuilder(SELECT_RECEIPTS_SQL);
 
         addWhereClause(selectQuery, preparedStatementValues, searchCriteria);
         addOrderByClause(selectQuery, searchCriteria);
-
 
         return addPaginationClause(selectQuery, preparedStatementValues, searchCriteria);
     }
 
     @SuppressWarnings({ "unchecked", "rawtypes", "deprecation" })
     private static void addWhereClause(StringBuilder selectQuery, Map<String, Object> preparedStatementValues,
-                                ReceiptSearchCriteria searchCriteria) {
+            ReceiptSearchCriteria searchCriteria) {
 
         if (StringUtils.isNotBlank(searchCriteria.getTenantId())) {
             addClauseIfRequired(preparedStatementValues, selectQuery);
@@ -262,14 +269,14 @@ public class CollectionsQueryBuilder {
             selectQuery.append(" rh.status = :status");
             preparedStatementValues.put("status", searchCriteria.getStatus());
         }
-        
+
         if (StringUtils.isNotBlank(searchCriteria.getFund())) {
 
             addClauseIfRequired(preparedStatementValues, selectQuery);
             selectQuery.append(" rh.fund = :fund");
             preparedStatementValues.put("fund", searchCriteria.getFund());
         }
-        
+
         if (StringUtils.isNotBlank(searchCriteria.getDepartment())) {
 
             addClauseIfRequired(preparedStatementValues, selectQuery);
@@ -281,7 +288,7 @@ public class CollectionsQueryBuilder {
 
             addClauseIfRequired(preparedStatementValues, selectQuery);
             selectQuery.append(" rh.createdBy = :collectedBy");
-            preparedStatementValues.put("collectedBy",new Long(searchCriteria
+            preparedStatementValues.put("collectedBy", new Long(searchCriteria
                     .getCollectedBy()));
         }
 
@@ -313,7 +320,7 @@ public class CollectionsQueryBuilder {
             selectQuery.append(" rh.businessDetails IN (:businessCodes)  ");
             preparedStatementValues.put("businessCodes", searchCriteria.getBusinessCodes());
         }
-        
+
         if (searchCriteria.getIds() != null) {
             addClauseIfRequired(preparedStatementValues, selectQuery);
             selectQuery.append(" rh.id IN (:ids)");
@@ -326,13 +333,13 @@ public class CollectionsQueryBuilder {
             preparedStatementValues.put("transactionId", searchCriteria.getTransactionId());
         }
 
-        if(searchCriteria.getManualReceiptNumbers() != null && !searchCriteria.getManualReceiptNumbers().isEmpty()) {
+        if (searchCriteria.getManualReceiptNumbers() != null && !searchCriteria.getManualReceiptNumbers().isEmpty()) {
             addClauseIfRequired(preparedStatementValues, selectQuery);
             selectQuery.append(" rh.manualreceiptnumber IN (:manualReceiptNumbers) ");
             preparedStatementValues.put("manualReceiptNumbers", searchCriteria.getManualReceiptNumbers());
         }
 
-        if(searchCriteria.getBillIds() != null && !searchCriteria.getBillIds().isEmpty()) {
+        if (searchCriteria.getBillIds() != null && !searchCriteria.getBillIds().isEmpty()) {
             addClauseIfRequired(preparedStatementValues, selectQuery);
             selectQuery.append(" rh.referencenumber IN (:billIds) ");
             preparedStatementValues.put("billIds", searchCriteria.getBillIds());
@@ -340,16 +347,15 @@ public class CollectionsQueryBuilder {
     }
 
     private static void addClauseIfRequired(Map<String, Object> values, StringBuilder queryString) {
-        if(values.isEmpty())
+        if (values.isEmpty())
             queryString.append(" WHERE ");
-        else{
+        else {
             queryString.append(" AND");
         }
     }
 
-
     private static void addOrderByClause(StringBuilder selectQuery,
-                                  ReceiptSearchCriteria criteria) {
+            ReceiptSearchCriteria criteria) {
         String sortBy = (criteria.getSortBy() == null ? "rh.receiptDate" : "rh." + criteria.getSortBy());
         String sortOrder = (criteria.getSortOrder() == null ? "DESC" : criteria
                 .getSortOrder());
@@ -357,21 +363,20 @@ public class CollectionsQueryBuilder {
     }
 
     private static String addPaginationClause(StringBuilder selectQuery, Map<String, Object> preparedStatementValues,
-                                            ReceiptSearchCriteria criteria){
+            ReceiptSearchCriteria criteria) {
 
-        if(criteria.getLimit() != 0) {
+        if (criteria.getLimit() != 0) {
             String finalQuery = PAGINATION_WRAPPER.replace("{baseQuery}", selectQuery);
             preparedStatementValues.put("offset", criteria.getOffset());
             preparedStatementValues.put("limit", criteria.getOffset() + criteria.getLimit());
 
             return finalQuery;
-        }
-        else
+        } else
             return selectQuery.toString();
     }
 
-    private static PGobject getJsonb(JsonNode node){
-        if(Objects.isNull(node))
+    private static PGobject getJsonb(JsonNode node) {
+        if (Objects.isNull(node))
             return null;
 
         PGobject pgObject = new PGobject();
@@ -384,5 +389,5 @@ public class CollectionsQueryBuilder {
         }
 
     }
-    
+
 }

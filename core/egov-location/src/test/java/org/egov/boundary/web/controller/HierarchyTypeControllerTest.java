@@ -69,7 +69,8 @@ public class HierarchyTypeControllerTest {
 	@Test
 	public void testShouldGetBadRequestWhenUpdatingWithoutCode() throws Exception {
 		when(hierarchyTypeService.updateHierarchyType(any(HierarchyType.class))).thenReturn(getHierarchyType());
-		mockMvc.perform(put("/hierarchytypes").contentType(MediaType.APPLICATION_JSON_UTF8).param("tenantId", "default")).andExpect(status().isMethodNotAllowed());
+		mockMvc.perform(put("/hierarchytypes").contentType(MediaType.APPLICATION_JSON_UTF8).param("tenantId",
+				"default")).andExpect(status().isBadRequest());
 	}
 	
 	@Test

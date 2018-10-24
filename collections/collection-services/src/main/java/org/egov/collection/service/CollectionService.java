@@ -109,16 +109,15 @@ public class CollectionService {
     }
 
     @Transactional
-    public Receipt updateReceipt(ReceiptReq receiptReq) {
+    public List<Receipt> updateReceipt(ReceiptReq receiptReq) {
 
-        Receipt receipt = receiptReq.getReceipt().get(0);
-
-        collectionRepository.updateReceipt(receipt);
-
+        for (Receipt receipt : receiptReq.getReceipt()) {
+            collectionRepository.updateReceipt(receipt);
+        }
         collectionProducer.producer(applicationProperties.getUpdateReceiptTopicName(), applicationProperties
                 .getUpdateReceiptTopicKey(), receiptReq);
 
-        return receipt;
+        return receiptReq.getReceipt();
     }
 
     public List<Receipt> cancelReceipt(RequestInfo requestInfo, String transactionNumber) {

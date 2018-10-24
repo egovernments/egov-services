@@ -104,9 +104,9 @@ public class ReceiptController {
     @ResponseBody
     public ResponseEntity<?> update(@RequestBody @Valid ReceiptReq receiptRequest) {
 
-        Receipt receiptInfo = collectionService.updateReceipt(receiptRequest);
+        List<Receipt> receiptInfo = collectionService.updateReceipt(receiptRequest);
 
-        return getSuccessResponse(Collections.singletonList(receiptInfo), receiptRequest.getRequestInfo());
+        return getSuccessResponse(receiptInfo, receiptRequest.getRequestInfo());
     }
 
     @RequestMapping(value = "/_validate", method = RequestMethod.POST)

@@ -63,7 +63,7 @@ public class OwnerInfo extends User  {
                 @JsonCreator
                 public static RelationshipEnum fromValue(String text) {
                         for (RelationshipEnum b : RelationshipEnum.values()) {
-                                if (String.valueOf(b.value).equals(text)) {
+                                if (String.valueOf(b.value).equalsIgnoreCase(text)) {
                                         return b;
                                 }
                         }

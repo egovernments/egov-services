@@ -25,9 +25,11 @@ import org.egov.id.model.IdResponse;
 import org.egov.id.model.InvalidIDFormatException;
 import org.egov.id.model.RequestInfo;
 import org.egov.id.model.ResponseInfoFactory;
+import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.datasource.DataSourceUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 /**
  * Description : IdGenerationService have methods related to the IdGeneration
@@ -106,10 +108,12 @@ public class IdGenerationService {
 	 * @throws Exception
 	 */
 	private String getGeneratedId(IdRequest idRequest, RequestInfo requestInfo) throws Exception {
-		String IdFormat = getIdFormat(idRequest, requestInfo);
-		idRequest.setFormat(IdFormat);
-		String generatedId = getFormattedId(idRequest, requestInfo);
-		return generatedId;
+		String idFormat = getIdFormat(idRequest, requestInfo);
+		if (StringUtils.isEmpty(idFormat))
+			throw new CustomException("ID_NOT_FOUND",
+					"No Format/sequence is avavilable in the db for the given name and tenant");
+		idRequest.setFormat(idFormat);
+		return getFormattedId(idRequest, requestInfo);
 	}
 
 	/**

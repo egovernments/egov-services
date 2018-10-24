@@ -1,5 +1,6 @@
 package org.egov.enc.utils;
 
+import lombok.extern.slf4j.Slf4j;
 import org.egov.enc.models.Ciphertext;
 import org.egov.enc.models.MethodEnum;
 import org.egov.enc.models.ModeEnum;
@@ -23,7 +24,7 @@ import java.util.*;
     All the values will be encrypted, keys will remain as it is.
 */
 
-
+@Slf4j
 @Component
 public class ProcessJSONUtil {
 
@@ -81,6 +82,9 @@ public class ProcessJSONUtil {
 
     //Each value in the object will be encrypted
     private String processValue(Object value, ModeEnum mode, MethodEnum method, String tenantId) throws NoSuchPaddingException, InvalidAlgorithmParameterException, NoSuchAlgorithmException, IllegalBlockSizeException, BadPaddingException, InvalidKeyException, InvalidKeySpecException {
+        if(value == null) {
+            return null;
+        }
         if(mode.equals(ModeEnum.ENCRYPT)) {
             Ciphertext ciphertext;
             Plaintext plaintext = new Plaintext(tenantId, value.toString());

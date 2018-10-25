@@ -239,7 +239,8 @@ public class GrievanceService {
 		for (int index = 0; index < serviceReqs.size(); index++) {
 			Service service = serviceReqs.get(index);
 			ActionHistory history = historyMap.get(service.getServiceRequestId());
-			validateAndEnrichActionInfoForUpdate(errorMap, requestInfo, service, actionInfos.get(index), history);
+			ActionInfo actionInfo = actionInfos.get(index);
+			validateAndEnrichActionInfoForUpdate(errorMap, requestInfo, service, actionInfo, history);
 		}
 		if (!errorMap.isEmpty()) {
 			Map<String, String> newMap = new HashMap<>();
@@ -270,8 +271,9 @@ public class GrievanceService {
 				.collect(Collectors.toList()));
 		if(StringUtils.isEmpty(role))
 			role = requestInfo.getUserInfo().getRoles().get(0).getName();
-		actionInfo = ActionInfo.builder().uuid(UUID.randomUUID().toString()).businessKey(service.getServiceRequestId())
-				.by(auditDetails.getLastModifiedBy() + ":" + role).when(auditDetails.getLastModifiedTime()).tenantId(service.getTenantId()).status(actionInfo.getAction()).build();
+		actionInfo.setUuid(UUID.randomUUID().toString()); actionInfo.setBusinessKey(service.getServiceRequestId()); 
+		actionInfo.setBy(auditDetails.getLastModifiedBy() + ":" + role); actionInfo.setWhen(auditDetails.getLastModifiedTime());
+		actionInfo.setTenantId(service.getTenantId()); actionInfo.status(actionInfo.getAction()); 
 		if (null != actionInfo.getAction() && actionStatusMap.get(actionInfo.getAction()) != null) {
 			if (!WorkFlowConfigs.ACTION_CLOSE.equals(actionInfo.getAction())
 					&& (!StringUtils.isEmpty(service.getFeedback()) || !StringUtils.isEmpty(service.getRating())))

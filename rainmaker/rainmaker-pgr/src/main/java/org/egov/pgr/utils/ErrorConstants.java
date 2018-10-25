@@ -65,6 +65,6 @@ public class ErrorConstants {
 	public static final String INVALID_ACTION_ON_STATUS_MSG = "Action being performed $action is invalid on the current status $status";
 	
 	public static final String INVALID_ACTION_FOR_ROLE_CODE = "EG_PGR_INVALID_ACTION_FOR_ROLE";
-	public static final String INVALID_ACTION_FOR_ROLE_MSG = "Action being performed $action is not allowd for a user with role $role";
+	public static final String INVALID_ACTION_FOR_ROLE_MSG = "Action being performed $action is not allowed for a user with role $role";
 	
 }

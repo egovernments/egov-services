@@ -276,8 +276,8 @@ public class PGRRequestValidator {
 				infos.parallelStream().forEach(action -> {
 					if(!StringUtils.isEmpty(action.getAction())) {
 						if(!actionsAllowedForTheRole.contains(action.getAction())) {
-							String errorMsg = ErrorConstants.INVALID_ACTION_FOR_ROLE_MSG.replaceAll("$action", action.getAction())
-									.replaceAll("$role", serviceRequest.getRequestInfo().getUserInfo().getRoles().get(0).getName());
+							String errorMsg = ErrorConstants.INVALID_ACTION_FOR_ROLE_MSG;
+							errorMsg = errorMsg.replaceAll("$action", action.getAction()).replaceAll("$role", serviceRequest.getRequestInfo().getUserInfo().getRoles().get(0).getName());
 							errorMap.put(ErrorConstants.INVALID_ACTION_FOR_ROLE_CODE, errorMsg);
 						}else {
 							validateActionsOnCurrentStatus(serviceRequest, errorMap) ;
@@ -315,7 +315,8 @@ public class PGRRequestValidator {
 			String currentStatus = pgrUtils.getCurrentStatus(history);
 			List<String> validStatusList = actioncurrentStatusMap.get(actionInfo.getAction());
 			if (!StringUtils.isEmpty(currentStatus) && !validStatusList.contains(currentStatus)) {
-				String errorMsg = ErrorConstants.INVALID_ACTION_FOR_ROLE_MSG.replaceAll("$action", actionInfo.getAction()).replaceAll("$status", currentStatus);
+				String errorMsg = ErrorConstants.INVALID_ACTION_FOR_ROLE_MSG;
+				errorMsg = errorMsg.replaceAll("$action", actionInfo.getAction()).replaceAll("$status", currentStatus);
 				errorMap.put(ErrorConstants.INVALID_ACTION_ON_STATUS_CODE, errorMsg + "for serviceRequest: "+service.getServiceRequestId());
 			}
 			if (!WorkFlowConfigs.ACTION_CLOSE.equals(actionInfo.getAction())

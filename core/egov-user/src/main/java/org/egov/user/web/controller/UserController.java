@@ -15,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -88,7 +89,10 @@ public class UserController {
 	 * @return
 	 */
 	@PostMapping("/_search")
-	public UserSearchResponse get(@RequestBody UserSearchRequest request) {
+	public UserSearchResponse get(@RequestBody UserSearchRequest request, HttpServletRequest servletRequest){
+
+		log.info(servletRequest.getRemoteAddr());
+		log.info(servletRequest.getHeader("X-FORWARDED-FOR"));
 		log.info("Received User search Request  " +  request);
 		if (request.getActive() == null) {
 			request.setActive(true);

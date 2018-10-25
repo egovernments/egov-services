@@ -16,8 +16,10 @@ import org.egov.pgr.contract.ReportRequest;
 import org.egov.pgr.contract.ServiceReqSearchCriteria;
 import org.egov.pgr.contract.ServiceRequest;
 import org.egov.pgr.contract.ServiceResponse;
+import org.egov.pgr.model.ActionHistory;
 import org.egov.pgr.model.ActionInfo;
 import org.egov.pgr.model.Service;
+import org.egov.pgr.model.Service.StatusEnum;
 import org.egov.pgr.service.GrievanceService;
 import org.egov.pgr.service.ReportService;
 import org.egov.pgr.utils.ErrorConstants;
@@ -99,33 +101,8 @@ public class PGRRequestValidator {
 		vaidateServiceCodes(serviceRequest, errorMap);
 		validateAssignments(serviceRequest, errorMap);
 		validateAction(serviceRequest, errorMap);
-		validateIfServicesExists(serviceRequest, errorMap);
 		if (!errorMap.isEmpty())
 			throw new CustomException(errorMap);
-	}
-
-	/**
-	 * validates the services by fetching the service ids from the database
-	 * 
-	 * @param serviceRequest
-	 * @param errorMap
-	 */
-	private void validateIfServicesExists(ServiceRequest serviceRequest, Map<String, String> errorMap) {
-		log.info("Validating if servicerequests exist");
-		ServiceReqSearchCriteria serviceReqSearchCriteria = ServiceReqSearchCriteria.builder()
-				.tenantId(serviceRequest.getServices().get(0).getTenantId()).serviceRequestId(serviceRequest
-						.getServices().stream().map(Service::getServiceRequestId).collect(Collectors.toList()))
-				.build();
-		Map<String, Service> map = ((ServiceResponse) requestService
-				.getServiceRequestDetails(serviceRequest.getRequestInfo(), serviceReqSearchCriteria)).getServices()
-						.stream().collect(Collectors.toMap(Service::getServiceRequestId, Function.identity()));
-		List<String> errorList = new ArrayList<>();
-		serviceRequest.getServices().forEach(a -> {
-			if (map.get(a.getServiceRequestId()) == null)
-				errorList.add(a.getServiceRequestId());
-		});
-		if (!errorList.isEmpty())
-			errorMap.put(ErrorConstants.INVALID_SERVICEREQUESTID_CODE, ErrorConstants.INVALID_SERVICEREQUESTID_MSG + errorList);
 	}
 
 	/**
@@ -272,7 +249,11 @@ public class PGRRequestValidator {
 	}
 
 	/**
-	 * validates of the action can be peformed by the user with the given role
+	 * validates of the action as follows:
+	 * 1. Does the user trying to perform the action have rights of that action.
+	 * 2. Is the action being performed valid for the current status.
+	 * 
+	 * This method also checks if the service requests being updated are available in the system. Since it is already a part of the action validation flow.
 	 * 
 	 * @param serviceRequest
 	 * @param errorMap
@@ -287,25 +268,87 @@ public class PGRRequestValidator {
 		else
 			actions = roleActionMap.get(pgrUtils.getPrecedentRole(serviceRequest.getRequestInfo().getUserInfo()
 					.getRoles().parallelStream().map(Role::getName).collect(Collectors.toList())));
-		log.info("actions: " + actions);
-		if (null != actions && !actions.isEmpty()) {
+		final List<String> actionsAllowedForTheRole = actions;
+		log.info("actions: " + actionsAllowedForTheRole);
+		if (!CollectionUtils.isEmpty(actions)) {
 			List<ActionInfo> infos = serviceRequest.getActionInfo();
-			if (!CollectionUtils.isEmpty(infos))
-				for (int i = 0; i <= infos.size() - 1; i++) {
-					ActionInfo info = infos.get(i);
-					if (null != info && null != info.getAction() && !info.getAction().isEmpty()
-							&& !actions.contains(info.getAction())) {
-						errorMap.put(ErrorConstants.INVALID_ROLE_CODE,
-								"Invalid Action: " + info.getAction() + " " + "for Role: " + serviceRequest
-										.getRequestInfo().getUserInfo().getRoles().get(0).getName().toUpperCase());
+			if (!CollectionUtils.isEmpty(infos)) {
+				infos.parallelStream().forEach(action -> {
+					if(!StringUtils.isEmpty(action.getAction())) {
+						if(!actionsAllowedForTheRole.contains(action.getAction())) {
+							String errorMsg = ErrorConstants.INVALID_ACTION_FOR_ROLE_MSG.replaceAll("$action", action.getAction())
+									.replaceAll("$role", serviceRequest.getRequestInfo().getUserInfo().getRoles().get(0).getName());
+							errorMap.put(ErrorConstants.INVALID_ACTION_FOR_ROLE_CODE, errorMsg);
+						}else {
+							validateActionsOnCurrentStatus(serviceRequest, errorMap) ;
+						}
 					}
-				}
+				});
+			}
 		} else {
 			errorMap.put(ErrorConstants.INVALID_ROLE_CODE, ErrorConstants.INVALID_ROLE_MSG
 					+ serviceRequest.getRequestInfo().getUserInfo().getRoles().get(0).getName().toUpperCase());
 		}
-
 		if (!errorMap.isEmpty())
 			throw new CustomException(errorMap);
+	}
+	
+	 /**
+	  * This method valiates if the action being performed is valid on the current status of the sevice request.
+	  * NOTE - It also checks if the service requests being validated are available in the system. As part of the action validation.
+	  * 
+	  * @param serviceRequest
+	  * @param errorMap
+	  */
+	public void validateActionsOnCurrentStatus(ServiceRequest serviceRequest, Map<String, String> errorMap) {
+		Map<String, List<String>> actioncurrentStatusMap = WorkFlowConfigs.getActionCurrentStatusMap();
+		Map<String, Service> serviceRequests = getServiceRequests(serviceRequest, errorMap);
+		if (!errorMap.isEmpty())
+			return;
+		List<ActionHistory> historys = ((ServiceResponse) serviceRequests).getActionHistory();
+		Map<String, ActionHistory> historyMap = new HashMap<>();
+		historys.forEach(a -> historyMap.put(a.getActions().get(0).getBusinessKey(), a));
+		for (int index = 0; index < ((ServiceResponse) serviceRequests).getServices().size(); index++) {
+			Service service = serviceRequest.getServices().get(index);
+			ActionHistory history = historyMap.get(service.getServiceRequestId());
+			ActionInfo actionInfo = serviceRequest.getActionInfo().get(index);
+			String currentStatus = pgrUtils.getCurrentStatus(history);
+			List<String> validStatusList = actioncurrentStatusMap.get(actionInfo.getAction());
+			if (!StringUtils.isEmpty(currentStatus) && !validStatusList.contains(currentStatus)) {
+				String errorMsg = ErrorConstants.INVALID_ACTION_FOR_ROLE_MSG.replaceAll("$action", actionInfo.getAction()).replaceAll("$status", currentStatus);
+				errorMap.put(ErrorConstants.INVALID_ACTION_ON_STATUS_CODE, errorMsg + "for serviceRequest: "+service.getServiceRequestId());
+			}
+			if (!WorkFlowConfigs.ACTION_CLOSE.equals(actionInfo.getAction())
+					&& (!StringUtils.isEmpty(service.getFeedback()) || !StringUtils.isEmpty(service.getRating()))) {
+				errorMap.put(ErrorConstants.UPDATE_FEEDBACK_ERROR_KEY, ErrorConstants.UPDATE_FEEDBACK_ERROR_MSG);
+			}
+		}		
+
+	}
+	
+	/**
+	 * validates the services by fetching the service ids from the database
+	 * 
+	 * @param serviceRequest
+	 * @param errorMap
+	 */
+	private Map<String, Service> getServiceRequests(ServiceRequest serviceRequest, Map<String, String> errorMap) {
+		log.info("Validating if servicerequests exist");
+		ServiceReqSearchCriteria serviceReqSearchCriteria = ServiceReqSearchCriteria.builder()
+				.tenantId(serviceRequest.getServices().get(0).getTenantId()).serviceRequestId(serviceRequest
+						.getServices().stream().map(Service::getServiceRequestId).collect(Collectors.toList()))
+				.build();
+		Map<String, Service> map = ((ServiceResponse) requestService
+				.getServiceRequestDetails(serviceRequest.getRequestInfo(), serviceReqSearchCriteria)).getServices()
+						.stream().collect(Collectors.toMap(Service::getServiceRequestId, Function.identity()));
+		List<String> errorList = new ArrayList<>();
+		serviceRequest.getServices().forEach(a -> {
+			if (map.get(a.getServiceRequestId()) == null)
+				errorList.add(a.getServiceRequestId());
+		});
+		if (!errorList.isEmpty())
+			errorMap.put(ErrorConstants.INVALID_SERVICEREQUESTID_CODE, ErrorConstants.INVALID_SERVICEREQUESTID_MSG + errorList);
+		
+		return map;
 	}
 }

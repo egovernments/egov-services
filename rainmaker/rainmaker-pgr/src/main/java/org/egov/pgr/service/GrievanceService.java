@@ -211,7 +211,6 @@ public class GrievanceService {
 		citizen.setTenantId(tenantId);
 		citizen.setType(UserType.CITIZEN);
 		citizen.setRoles(Arrays.asList(org.egov.pgr.model.user.Role.builder().code(PGRConstants.ROLE_CITIZEN).build()));
-		
 		StringBuilder url = new StringBuilder(userBasePath+userCreateEndPoint); 
 		CreateUserRequest req = CreateUserRequest.builder().citizen(citizen).requestInfo(requestInfo).build();
 		UserResponse res = mapper.convertValue(serviceRequestRepository.fetchResult(url, req), UserResponse.class);
@@ -228,19 +227,10 @@ public class GrievanceService {
 		RequestInfo requestInfo = request.getRequestInfo();
 		List<Service> serviceReqs = request.getServices();
 		List<ActionInfo> actionInfos = request.getActionInfo();
-		String tenantId = serviceReqs.get(0).getTenantId();
-		List<String> servicerequestIds = serviceReqs.parallelStream().map(Service::getServiceRequestId).collect(Collectors.toList());
-		ServiceReqSearchCriteria serviceReqSearchCriteria = ServiceReqSearchCriteria.builder().tenantId(tenantId)
-				.serviceRequestId(servicerequestIds).build();
-		List<ActionHistory> historys = ((ServiceResponse) getServiceRequestDetails(requestInfo,
-				serviceReqSearchCriteria)).getActionHistory();
-		Map<String, ActionHistory> historyMap = new HashMap<>();
-		historys.forEach(a -> historyMap.put(a.getActions().get(0).getBusinessKey(), a));
 		for (int index = 0; index < serviceReqs.size(); index++) {
 			Service service = serviceReqs.get(index);
-			ActionHistory history = historyMap.get(service.getServiceRequestId());
 			ActionInfo actionInfo = actionInfos.get(index);
-			validateAndEnrichActionInfoForUpdate(errorMap, requestInfo, service, actionInfo, history);
+			enrichActionInfoForUpdate(errorMap, requestInfo, service, actionInfo);
 		}
 		if (!errorMap.isEmpty()) {
 			Map<String, String> newMap = new HashMap<>();
@@ -259,14 +249,12 @@ public class GrievanceService {
 	 * @param service
 	 * @param actionInfo
 	 */
-	private void validateAndEnrichActionInfoForUpdate(Map<String, List<String>> errorMap, RequestInfo requestInfo,
-			Service service, ActionInfo actionInfo, ActionHistory history) {
+	private void enrichActionInfoForUpdate(Map<String, List<String>> errorMap, RequestInfo requestInfo,
+			Service service, ActionInfo actionInfo) {
 		final AuditDetails auditDetails = pGRUtils.getAuditDetails(String.valueOf(requestInfo.getUserInfo().getId()),false);
-		service.setAuditDetails(auditDetails);
-		String currentStatus = getCurrentStatus(history);
-		service.setStatus(StatusEnum.fromValue(currentStatus));
-		Map<String, List<String>> actioncurrentStatusMap = WorkFlowConfigs.getActionCurrentStatusMap();
 		Map<String, String> actionStatusMap = WorkFlowConfigs.getActionStatusMap();
+		service.setAuditDetails(auditDetails);
+		service.setStatus(StatusEnum.fromValue(actionStatusMap.get(actionInfo.getAction())));
 		String role = pGRUtils.getPrecedentRole(requestInfo.getUserInfo().getRoles().parallelStream().map(Role::getName)
 				.collect(Collectors.toList()));
 		if(StringUtils.isEmpty(role))
@@ -274,65 +262,7 @@ public class GrievanceService {
 		actionInfo.setUuid(UUID.randomUUID().toString()); actionInfo.setBusinessKey(service.getServiceRequestId()); 
 		actionInfo.setBy(auditDetails.getLastModifiedBy() + ":" + role); actionInfo.setWhen(auditDetails.getLastModifiedTime());
 		actionInfo.setTenantId(service.getTenantId()); actionInfo.status(actionInfo.getAction()); 
-		if (null != actionInfo.getAction() && actionStatusMap.get(actionInfo.getAction()) != null) {
-			if (!WorkFlowConfigs.ACTION_CLOSE.equals(actionInfo.getAction())
-					&& (!StringUtils.isEmpty(service.getFeedback()) || !StringUtils.isEmpty(service.getRating())))
-				addError(ErrorConstants.UPDATE_FEEDBACK_ERROR_MSG + actionInfo.getAction() + ", with service Id : "
-						+ service.getServiceRequestId(), ErrorConstants.UPDATE_FEEDBACK_ERROR_KEY, errorMap);
-			List<String> validStatusList = actioncurrentStatusMap.get(actionInfo.getAction());
-			if (!StringUtils.isEmpty(currentStatus) && validStatusList.contains(currentStatus)) {
-				actionInfo.setStatus(actionStatusMap.get(actionInfo.getAction()));
-				service.setStatus(StatusEnum.fromValue(actionStatusMap.get(actionInfo.getAction())));
-			} else {
-				String errorMsg = " The Given Action " + actionInfo.getAction()
-						+ "cannot be applied for the Current status of the Grievance with ServiceRequestId "
-						+ service.getServiceRequestId();
-				addError(errorMsg, ErrorConstants.UPDATE_ERROR_KEY, errorMap);
-			}
-		} else if (!StringUtils.isEmpty(actionInfo.getAction())) {
-			String errorMsg = "The given action " + actionInfo.getAction() + " is invalid for the current status: "
-					+ service.getStatus();
-			addError(errorMsg, ErrorConstants.UPDATE_ERROR_KEY, errorMap);
-		}
-	}
-
-	/**
-	 * helper method to add the errors to the error map
-	 * 
-	 * @param errorMsg
-	 * @param key
-	 * @param errorMap
-	 */
-	private void addError(String errorMsg, String key, Map<String, List<String>> errorMap) {
-
-		List<String> errors = errorMap.get(key);
-		if (null == errors) {
-			errors = Arrays.asList(errorMsg);
-			errorMap.put(key, errors);
-		} else
-			errors.add(errorMsg);
-	}
-
-	/**
-	 * returns the current status of the service
-	 * 
-	 * @param requestInfo
-	 * @param actionInfo
-	 * @param currentStatusList
-	 * @return
-	 */
-	private String getCurrentStatus(ActionHistory history) {
-
-		List<ActionInfo> infos = history.getActions();
-		//FIXME pickup latest status another way which is not hardocoded, put query to searcher to pick latest status
-		// or use status from service object
-		for (int i = 0; i <= infos.size() - 1; i++) {
-			String status = infos.get(i).getStatus();
-			if (null != status) {
-				return status;
-			}
-		}
-		return null;
+		actionInfo.setStatus(actionStatusMap.get(actionInfo.getAction()));
 	}
 
 	/**

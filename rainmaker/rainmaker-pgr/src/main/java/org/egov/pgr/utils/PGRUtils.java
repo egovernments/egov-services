@@ -24,6 +24,7 @@ import org.egov.pgr.contract.SearcherRequest;
 import org.egov.pgr.contract.ServiceReqSearchCriteria;
 import org.egov.pgr.contract.ServiceResponse;
 import org.egov.pgr.model.ActionHistory;
+import org.egov.pgr.model.ActionInfo;
 import org.egov.pgr.model.AuditDetails;
 import org.egov.pgr.model.Service;
 import org.egov.pgr.repository.ServiceRequestRepository;
@@ -459,6 +460,44 @@ public class PGRUtils {
 			throw new CustomException(ErrorConstants.INVALID_TENANT_ID_MDMS_SERVICE_CODE_KEY,
 					ErrorConstants.INVALID_TENANT_ID_MDMS_SERVICE_CODE_MSG);
 		}
+	}
+	
+	/**
+	 * returns the current status of the service
+	 * 
+	 * @param requestInfo
+	 * @param actionInfo
+	 * @param currentStatusList
+	 * @return
+	 */
+	public String getCurrentStatus(ActionHistory history) {
+		List<ActionInfo> infos = history.getActions();
+		//FIXME pickup latest status another way which is not hardocoded, put query to searcher to pick latest status
+		// or use status from service object
+		for (int i = 0; i <= infos.size() - 1; i++) {
+			String status = infos.get(i).getStatus();
+			if (null != status) {
+				return status;
+			}
+		}
+		return null;
+	}
+	
+	/**
+	 * helper method to add the errors to the error map
+	 * 
+	 * @param errorMsg
+	 * @param key
+	 * @param errorMap
+	 */
+	private void addError(String errorMsg, String key, Map<String, List<String>> errorMap) {
+
+		List<String> errors = errorMap.get(key);
+		if (null == errors) {
+			errors = Arrays.asList(errorMsg);
+			errorMap.put(key, errors);
+		} else
+			errors.add(errorMsg);
 	}
 
 }

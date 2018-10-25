@@ -282,11 +282,11 @@ public class PGRRequestValidator {
 		List<String> roles = serviceRequest.getRequestInfo().getUserInfo().getRoles().parallelStream()
 				.map(Role::getName).collect(Collectors.toList());
 		List<String> actions = null;
-		if (roles.contains(PGRConstants.ROLE_NAME_CITIZEN) || roles.contains(PGRConstants.ROLE_CITIZEN))
-			actions = roleActionMap.get(serviceRequest.getRequestInfo().getUserInfo().getRoles().get(0).getName().toUpperCase());
+		if (roles.contains(PGRConstants.ROLE_NAME_CITIZEN))
+			actions = roleActionMap.get(PGRConstants.ROLE_NAME_CITIZEN);
 		else
 			actions = roleActionMap.get(pgrUtils.getPrecedentRole(serviceRequest.getRequestInfo().getUserInfo()
-					.getRoles().parallelStream().map(Role::getName).collect(Collectors.toList())).toUpperCase());
+					.getRoles().parallelStream().map(Role::getName).collect(Collectors.toList())));
 		log.info("actions: " + actions);
 		if (null != actions && !actions.isEmpty()) {
 			List<ActionInfo> infos = serviceRequest.getActionInfo();

@@ -45,7 +45,6 @@ public class Remittance {
 
     private String reasonForDelay;
 
-    @NotNull
     private String status;
 
     private String bankaccount;

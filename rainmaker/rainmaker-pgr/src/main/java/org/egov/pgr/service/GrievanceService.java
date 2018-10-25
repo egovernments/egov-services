@@ -105,6 +105,7 @@ public class GrievanceService {
 	 * @param request
 	 */
 	public ServiceResponse create(ServiceRequest request) {
+		log.info("Service layer for createss");
 		enrichserviceRequestForcreate(request);
 		pGRProducer.push(saveTopic, request);
 		return getServiceResponse(request);
@@ -131,6 +132,7 @@ public class GrievanceService {
 	 * @param serviceRequest
 	 */
 	private void enrichserviceRequestForcreate(ServiceRequest serviceRequest) {
+		log.info("enriching service request create.");
 		Map<String, String> actionStatusMap = WorkFlowConfigs.getActionStatusMap();
 		RequestInfo requestInfo = serviceRequest.getRequestInfo();
 		List<Service> serviceReqs = serviceRequest.getServices();
@@ -422,6 +424,7 @@ public class GrievanceService {
 	 * @param serviceReqSearchCriteria
 	 */
 	public void enrichRequest(RequestInfo requestInfo, ServiceReqSearchCriteria serviceReqSearchCriteria) {
+		log.info("Enriching request for search");
 		String precedentRole = pGRUtils.getPrecedentRole(requestInfo.getUserInfo().getRoles().parallelStream().map(Role::getName)
 				.collect(Collectors.toList()));
 		if (requestInfo.getUserInfo().getType().equalsIgnoreCase(PGRConstants.ROLE_CITIZEN)) {

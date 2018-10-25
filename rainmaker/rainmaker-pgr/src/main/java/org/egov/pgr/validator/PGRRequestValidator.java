@@ -70,6 +70,7 @@ public class PGRRequestValidator {
 	 * @param serviceRequest
 	 */
 	public void validateCreate(ServiceRequest serviceRequest) {
+		log.info("Validating create request");
 		Map<String, String> errorMap = new HashMap<>();
 		validateUserRBACProxy(errorMap, serviceRequest.getRequestInfo());
 		validateIfArraysEqual(serviceRequest, errorMap);
@@ -92,6 +93,7 @@ public class PGRRequestValidator {
 	 * @param serviceRequest
 	 */
 	public void validateUpdate(ServiceRequest serviceRequest) {
+		log.info("Validating update request");
 		Map<String, String> errorMap = new HashMap<>();
 		validateIfArraysEqual(serviceRequest, errorMap);
 		vaidateServiceCodes(serviceRequest, errorMap);
@@ -109,6 +111,7 @@ public class PGRRequestValidator {
 	 * @param errorMap
 	 */
 	private void validateIfServicesExists(ServiceRequest serviceRequest, Map<String, String> errorMap) {
+		log.info("Validating if servicerequests exist");
 		ServiceReqSearchCriteria serviceReqSearchCriteria = ServiceReqSearchCriteria.builder()
 				.tenantId(serviceRequest.getServices().get(0).getTenantId()).serviceRequestId(serviceRequest
 						.getServices().stream().map(Service::getServiceRequestId).collect(Collectors.toList()))
@@ -133,6 +136,7 @@ public class PGRRequestValidator {
 	 * @param errorMap
 	 */
 	private void validateIfArraysEqual(ServiceRequest serviceRequest, Map<String, String> errorMap) {
+		log.info("Array equal check");
 		if (null != serviceRequest.getActionInfo()
 				&& serviceRequest.getServices().size() != serviceRequest.getActionInfo().size())
 			errorMap.put(ErrorConstants.UNEQUAL_REQUEST_SIZE_KEY, ErrorConstants.UNEQUAL_REQUEST_SIZE_MSG);
@@ -161,7 +165,7 @@ public class PGRRequestValidator {
 	 * @param errorMap
 	 */
 	private void vaidateServiceCodes(ServiceRequest serviceRequest, Map<String, String> errorMap) {
-
+		log.info("Service code check");
 		String tenantId = serviceRequest.getServices().get(0).getTenantId();
 		List<String> serviceCodes = pgrUtils.getServiceCodes(tenantId,
 				serviceRequest.getServices().parallelStream().map(Service::getServiceCode).collect(Collectors.toSet()),

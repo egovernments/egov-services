@@ -91,9 +91,7 @@ public class UserController {
 	@PostMapping("/_search")
 	public UserSearchResponse get(@RequestBody UserSearchRequest request, HttpServletRequest servletRequest){
 
-		log.info(servletRequest.getRemoteAddr());
-		log.info(servletRequest.getHeader("X-FORWARDED-FOR"));
-		log.info("Received User search Request  " +  request);
+		log.debug("Received User search Request  " +  request);
 		if (request.getActive() == null) {
 			request.setActive(true);
 		}

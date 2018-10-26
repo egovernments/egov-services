@@ -19,7 +19,6 @@ import org.egov.egf.instrument.domain.repository.InstrumentRepository;
 import org.egov.egf.instrument.domain.repository.InstrumentTypeRepository;
 import org.egov.egf.instrument.domain.repository.SurrenderReasonRepository;
 import org.egov.egf.instrument.web.requests.InstrumentRequest;
-import org.egov.egf.master.web.contract.BankAccountContract;
 import org.egov.egf.master.web.contract.FinancialStatusContract;
 import org.egov.egf.master.web.repository.BankAccountContractRepository;
 import org.egov.egf.master.web.repository.BankContractRepository;
@@ -253,14 +252,15 @@ public class InstrumentService {
                         throw new InvalidDataException("bank", "bank.invalid", " Invalid bank");
                     instrument.setBank(bank);
                 }*/
-                if (instrument.getBankAccount() != null && instrument.getBankAccount().getAccountNumber() != null) {
+               /* if (instrument.getBankAccount() != null && instrument.getBankAccount().getAccountNumber() != null) {
                     instrument.getBankAccount().setTenantId(instrument.getTenantId());
                     BankAccountContract bankAccount = bankAccountContractRepository
                             .findByAccountNumber(instrument.getBankAccount(), requestInfo);
                     if (bankAccount == null)
                         throw new InvalidDataException("bankAccount", "bankAccount.invalid", " Invalid bankAccount");
                     instrument.setBankAccount(bankAccount);
-                }
+                }*/
+                bankAccountContractRepository.getClass();
                 if (instrument.getFinancialStatus() != null) {
                     instrument.getFinancialStatus().setTenantId(instrument.getTenantId());
                     FinancialStatusContract financialStatus = financialStatusContractRepository

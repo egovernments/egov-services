@@ -40,7 +40,7 @@ public class CollectionResultSetExtractor implements ResultSetExtractor<List<Rec
 
             if(!receipts.containsKey(receiptHeader)){
                 BillDetail billDetail = BillDetail.builder()
-                        .id("rh_id")
+                        .id(receiptHeader)
                         .billNumber(resultSet.getString("rh_referenceNumber"))
                         .consumerCode(resultSet.getString("rh_consumerCode"))
                         .consumerType(resultSet.getString("rh_consumerType"))

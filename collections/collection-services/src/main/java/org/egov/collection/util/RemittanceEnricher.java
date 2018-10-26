@@ -22,8 +22,10 @@ public class RemittanceEnricher {
 
         remittance.setId(UUID.randomUUID().toString().replace("-", ""));
         remittance.setStatus(RemittanceStatus.APPROVED.name());
-        AuditDetails auditDetails = AuditDetails.builder().createdBy(remittanceRequest.getRequestInfo().getUserInfo().getId())
-                .createdDate(System.currentTimeMillis()).lastModifiedBy(remittanceRequest.getRequestInfo().getUserInfo().getId())
+        AuditDetails auditDetails = AuditDetails.builder().createdBy(remittanceRequest.getRequestInfo().getUserInfo() != null
+                ? remittanceRequest.getRequestInfo().getUserInfo().getId() : null)
+                .createdDate(System.currentTimeMillis()).lastModifiedBy(remittanceRequest.getRequestInfo().getUserInfo() != null
+                        ? remittanceRequest.getRequestInfo().getUserInfo().getId() : null)
                 .lastModifiedDate(System.currentTimeMillis()).build();
         remittance.setAuditDetails(auditDetails);
 

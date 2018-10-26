@@ -122,7 +122,6 @@ public class GrievanceService {
 		if (null == request.getActionInfo())
 			request.setActionInfo(new ArrayList<ActionInfo>());
 		pGRProducer.push(updateTopic, request);
-		
 		return getServiceResponse(request);
 	}
 	
@@ -169,6 +168,26 @@ public class GrievanceService {
 	}
 	
 	/**
+	 * Checks if the user is present for the given citizen object.
+	 * 
+	 * @param citizen
+	 * @param requestInfo
+	 * @param tenantId
+	 * @return
+	 */
+	private String isUserPresent(Citizen citizen, RequestInfo requestInfo, String tenantId) {
+		ObjectMapper mapper = pGRUtils.getObjectMapper();
+		UserSearchRequest searchRequest = UserSearchRequest.builder().userName(citizen.getMobileNumber())
+				.tenantId(tenantId).userType(PGRConstants.ROLE_CITIZEN).requestInfo(requestInfo).build();
+		StringBuilder url = new StringBuilder(userBasePath+userSearchEndPoint); 
+		UserResponse res = mapper.convertValue(serviceRequestRepository.fetchResult(url, searchRequest), UserResponse.class);
+		if(CollectionUtils.isEmpty(res.getUser())) {
+			return null;
+		}
+		return res.getUser().get(0).getId().toString();
+	}
+	
+	/**
 	 * When CSR files a complaint, this method captures the user information if the user exists otherwise creates the user.
 	 * 
 	 * @param serviceRequest
@@ -192,18 +211,6 @@ public class GrievanceService {
 		}
 	}
 	
-	private String isUserPresent(Citizen citizen, RequestInfo requestInfo, String tenantId) {
-		ObjectMapper mapper = pGRUtils.getObjectMapper();
-		UserSearchRequest searchRequest = UserSearchRequest.builder().userName(citizen.getMobileNumber())
-				.tenantId(tenantId).userType(PGRConstants.ROLE_CITIZEN).requestInfo(requestInfo).build();
-		StringBuilder url = new StringBuilder(userBasePath+userSearchEndPoint); 
-		UserResponse res = mapper.convertValue(serviceRequestRepository.fetchResult(url, searchRequest), UserResponse.class);
-		if(CollectionUtils.isEmpty(res.getUser())) {
-			return null;
-		}
-		return res.getUser().get(0).getId().toString();
-	}
-	
 	private String createUser(Citizen citizen, RequestInfo requestInfo, String tenantId) {
 		ObjectMapper mapper = pGRUtils.getObjectMapper();
 		citizen.setUserName(citizen.getMobileNumber());
@@ -223,46 +230,31 @@ public class GrievanceService {
 	 * @param request
 	 */
 	private void enrichServiceRequestForUpdate(ServiceRequest request) {
+		Map<String, String> actionStatusMap = WorkFlowConfigs.getActionStatusMap(); 
 		Map<String, List<String>> errorMap = new HashMap<>();
 		RequestInfo requestInfo = request.getRequestInfo();
 		List<Service> serviceReqs = request.getServices();
 		List<ActionInfo> actionInfos = request.getActionInfo();
+		final AuditDetails auditDetails = pGRUtils.getAuditDetails(String.valueOf(requestInfo.getUserInfo().getId()),false);
 		for (int index = 0; index < serviceReqs.size(); index++) {
 			Service service = serviceReqs.get(index);
 			ActionInfo actionInfo = actionInfos.get(index);
-			enrichActionInfoForUpdate(errorMap, requestInfo, service, actionInfo);
+			service.setAuditDetails(auditDetails);
+			service.setStatus(StatusEnum.fromValue(actionStatusMap.get(actionInfo.getAction())));
+			String role = pGRUtils.getPrecedentRole(requestInfo.getUserInfo().getRoles().parallelStream().map(Role::getName)
+					.collect(Collectors.toList()));
+			if(StringUtils.isEmpty(role))
+				role = requestInfo.getUserInfo().getRoles().get(0).getName();
+			actionInfo.setUuid(UUID.randomUUID().toString()); actionInfo.setBusinessKey(service.getServiceRequestId()); 
+			actionInfo.setBy(auditDetails.getLastModifiedBy() + ":" + role); actionInfo.setWhen(auditDetails.getLastModifiedTime());
+			actionInfo.setTenantId(service.getTenantId()); actionInfo.status(actionInfo.getAction()); 
+			actionInfo.setStatus(actionStatusMap.get(actionInfo.getAction()));			
 		}
 		if (!errorMap.isEmpty()) {
 			Map<String, String> newMap = new HashMap<>();
 			errorMap.keySet().forEach(key -> newMap.put(key, errorMap.get(key).toString()));
 			throw new CustomException(newMap);
 		}
-	}
-
-	/**
-	 * validates if the given action is applicable for the current status of the
-	 * object and enriches the actionInfo object
-	 * 
-	 * @param errorMap
-	 * @param requestInfo
-	 * @param auditDetails
-	 * @param service
-	 * @param actionInfo
-	 */
-	private void enrichActionInfoForUpdate(Map<String, List<String>> errorMap, RequestInfo requestInfo,
-			Service service, ActionInfo actionInfo) {
-		final AuditDetails auditDetails = pGRUtils.getAuditDetails(String.valueOf(requestInfo.getUserInfo().getId()),false);
-		Map<String, String> actionStatusMap = WorkFlowConfigs.getActionStatusMap();
-		service.setAuditDetails(auditDetails);
-		service.setStatus(StatusEnum.fromValue(actionStatusMap.get(actionInfo.getAction())));
-		String role = pGRUtils.getPrecedentRole(requestInfo.getUserInfo().getRoles().parallelStream().map(Role::getName)
-				.collect(Collectors.toList()));
-		if(StringUtils.isEmpty(role))
-			role = requestInfo.getUserInfo().getRoles().get(0).getName();
-		actionInfo.setUuid(UUID.randomUUID().toString()); actionInfo.setBusinessKey(service.getServiceRequestId()); 
-		actionInfo.setBy(auditDetails.getLastModifiedBy() + ":" + role); actionInfo.setWhen(auditDetails.getLastModifiedTime());
-		actionInfo.setTenantId(service.getTenantId()); actionInfo.status(actionInfo.getAction()); 
-		actionInfo.setStatus(actionStatusMap.get(actionInfo.getAction()));
 	}
 
 	/**
@@ -278,7 +270,6 @@ public class GrievanceService {
 	 */
 	private List<String> getIdList(RequestInfo requestInfo, String tenantId, Integer length, String idKey,
 			String idformat) {
-
 		return idGenRepo.getId(requestInfo, tenantId, length, idKey, idformat).getIdResponses().stream()
 				.map(IdResponse::getId).collect(Collectors.toList());
 	}
@@ -291,7 +282,6 @@ public class GrievanceService {
 	 * @return serviceReqResponse
 	 */
 	public ServiceResponse getServiceResponse(ServiceRequest serviceReqRequest) {
-
 			return ServiceResponse.builder()
 					.responseInfo(factory.createResponseInfoFromRequestInfo(serviceReqRequest.getRequestInfo(), true))
 					.services(serviceReqRequest.getServices())
@@ -305,9 +295,7 @@ public class GrievanceService {
 	 * @return
 	 */
 	private List<ActionHistory> convertActionInfosToHistorys(List<ActionInfo> actionInfos) {
-
 		List<ActionHistory> historys = new ArrayList<>();
-
 		if (!CollectionUtils.isEmpty(actionInfos))
 			actionInfos.forEach(a -> {
 				List<ActionInfo> infos = new ArrayList<>();

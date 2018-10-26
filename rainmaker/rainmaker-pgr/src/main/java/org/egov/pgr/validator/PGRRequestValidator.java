@@ -30,6 +30,8 @@ import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import lombok.extern.slf4j.Slf4j;
 
 @org.springframework.stereotype.Service
@@ -302,13 +304,13 @@ public class PGRRequestValidator {
 	  */
 	public void validateActionsOnCurrentStatus(ServiceRequest serviceRequest, Map<String, String> errorMap) {
 		Map<String, List<String>> actioncurrentStatusMap = WorkFlowConfigs.getActionCurrentStatusMap();
-		Map<String, Service> serviceRequests = getServiceRequests(serviceRequest, errorMap);
+		ServiceResponse serviceResponse = getServiceRequests(serviceRequest, errorMap);
 		if (!errorMap.isEmpty())
 			return;
-		List<ActionHistory> historys = ((ServiceResponse) serviceRequests).getActionHistory();
+		List<ActionHistory> historys = serviceResponse.getActionHistory();
 		Map<String, ActionHistory> historyMap = new HashMap<>();
 		historys.forEach(a -> historyMap.put(a.getActions().get(0).getBusinessKey(), a));
-		for (int index = 0; index < ((ServiceResponse) serviceRequests).getServices().size(); index++) {
+		for (int index = 0; index < serviceResponse.getServices().size(); index++) {
 			Service service = serviceRequest.getServices().get(index);
 			ActionHistory history = historyMap.get(service.getServiceRequestId());
 			ActionInfo actionInfo = serviceRequest.getActionInfo().get(index);
@@ -333,15 +335,16 @@ public class PGRRequestValidator {
 	 * @param serviceRequest
 	 * @param errorMap
 	 */
-	private Map<String, Service> getServiceRequests(ServiceRequest serviceRequest, Map<String, String> errorMap) {
+	private ServiceResponse getServiceRequests(ServiceRequest serviceRequest, Map<String, String> errorMap) {
 		log.info("Validating if servicerequests exist");
+		ObjectMapper mapper = pgrUtils.getObjectMapper();
 		ServiceReqSearchCriteria serviceReqSearchCriteria = ServiceReqSearchCriteria.builder()
 				.tenantId(serviceRequest.getServices().get(0).getTenantId()).serviceRequestId(serviceRequest
 						.getServices().stream().map(Service::getServiceRequestId).collect(Collectors.toList()))
 				.build();
-		Map<String, Service> map = ((ServiceResponse) requestService
-				.getServiceRequestDetails(serviceRequest.getRequestInfo(), serviceReqSearchCriteria)).getServices()
-						.stream().collect(Collectors.toMap(Service::getServiceRequestId, Function.identity()));
+		ServiceResponse serviceResponse = mapper.convertValue(requestService
+				.getServiceRequestDetails(serviceRequest.getRequestInfo(), serviceReqSearchCriteria), ServiceResponse.class);
+		Map<String, Service> map = serviceResponse.getServices().stream().collect(Collectors.toMap(Service::getServiceRequestId, Function.identity()));
 		List<String> errorList = new ArrayList<>();
 		serviceRequest.getServices().forEach(a -> {
 			if (map.get(a.getServiceRequestId()) == null)
@@ -350,6 +353,6 @@ public class PGRRequestValidator {
 		if (!errorList.isEmpty())
 			errorMap.put(ErrorConstants.INVALID_SERVICEREQUESTID_CODE, ErrorConstants.INVALID_SERVICEREQUESTID_MSG + errorList);
 		
-		return map;
+		return serviceResponse;
 	}
 }

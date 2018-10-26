@@ -18,6 +18,7 @@ public class InstrumentSearchContract extends InstrumentContract {
     private Integer pageSize;
     private Integer offset;
     private String instrumentTypes;
+    private String receiptIds;
     private String financialStatuses;
     private Date transactionFromDate;
     private Date transactionToDate;

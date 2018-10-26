@@ -175,7 +175,7 @@ public class InstrumentMapper {
         instrumentSearch.setTransactionFromDate(contract.getTransactionFromDate());
         instrumentSearch.setTransactionToDate(contract.getTransactionToDate());
         instrumentSearch.setDeleteReason(contract.getDeleteReason());
-
+        instrumentSearch.setReceiptIds(contract.getReceiptIds());
         return instrumentSearch;
     }
 

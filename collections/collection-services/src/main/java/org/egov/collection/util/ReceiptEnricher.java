@@ -111,6 +111,7 @@ public class ReceiptEnricher {
         validatedBill.setPaidBy(billFromRequest.getPaidBy());
         validatedBill.setPayeeName(billFromRequest.getPayeeName());
         validatedBill.setMobileNumber(billFromRequest.getMobileNumber());
+        validatedBill.setPayeeAddress(billFromRequest.getPayeeAddress());
 
         validatedBill.getBillDetails().sort(Comparator.comparing(BillDetail::getId));
         billFromRequest.getBillDetails().sort(Comparator.comparing(BillDetail::getId));

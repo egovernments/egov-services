@@ -18,8 +18,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import lombok.extern.slf4j.Slf4j;
-
 @Controller
 @RequestMapping(value = "/v1/requests/")
 public class ServiceController {
@@ -40,7 +38,6 @@ public class ServiceController {
 	@PostMapping("_create")
 	@ResponseBody
 	private ResponseEntity<?> create(@RequestBody @Valid ServiceRequest serviceRequest) {
-
 		pgrRequestValidator.validateCreate(serviceRequest);
 		ServiceResponse response = service.create(serviceRequest);
 		return new ResponseEntity<>(response, HttpStatus.CREATED);
@@ -55,7 +52,6 @@ public class ServiceController {
 	@PostMapping("_update")
 	@ResponseBody
 	private ResponseEntity<?> update(@RequestBody @Valid ServiceRequest serviceRequest) {
-
 		pgrRequestValidator.validateUpdate(serviceRequest);
 		ServiceResponse response = service.update(serviceRequest);
 		return new ResponseEntity<>(response, HttpStatus.OK);
@@ -74,7 +70,6 @@ public class ServiceController {
 	@ResponseBody
 	private ResponseEntity<?> search(@RequestBody @Valid RequestInfoWrapper requestInfoWrapper,
 			@ModelAttribute @Valid ServiceReqSearchCriteria serviceReqSearchCriteria) {
-
 		pgrRequestValidator.validateSearch(serviceReqSearchCriteria, requestInfoWrapper.getRequestInfo());
 		Object serviceReqResponse = service.getServiceRequestDetails(requestInfoWrapper.getRequestInfo(),
 				serviceReqSearchCriteria);

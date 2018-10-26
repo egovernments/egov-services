@@ -19,7 +19,6 @@ import org.egov.pgr.contract.ServiceResponse;
 import org.egov.pgr.model.ActionInfo;
 import org.egov.pgr.model.Service;
 import org.egov.pgr.producer.PGRProducer;
-import org.egov.pgr.repository.ServiceRequestRepository;
 import org.egov.pgr.service.GrievanceService;
 import org.egov.pgr.service.NotificationService;
 import org.egov.pgr.utils.PGRConstants;
@@ -89,10 +88,6 @@ public class PGRNotificationConsumer {
 	
 	@Value("${egov.pgr.app.playstore.link}")
 	private String appDownloadLink;
-	
-
-	@Autowired
-	private ServiceRequestRepository serviceRequestRepository;
 
 	@Autowired
 	private PGRUtils pGRUtils;

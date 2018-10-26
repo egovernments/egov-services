@@ -19,7 +19,6 @@ import org.egov.pgr.contract.ServiceResponse;
 import org.egov.pgr.model.ActionHistory;
 import org.egov.pgr.model.ActionInfo;
 import org.egov.pgr.model.Service;
-import org.egov.pgr.model.Service.StatusEnum;
 import org.egov.pgr.service.GrievanceService;
 import org.egov.pgr.service.ReportService;
 import org.egov.pgr.utils.ErrorConstants;
@@ -280,7 +279,7 @@ public class PGRRequestValidator {
 						if(!actionsAllowedForTheRole.contains(action.getAction())) {
 							String errorMsg = ErrorConstants.INVALID_ACTION_FOR_ROLE_MSG;
 							errorMsg = errorMsg.replace("$action", action.getAction()).replace("$role", serviceRequest.getRequestInfo().getUserInfo().getRoles().get(0).getName());
-							errorMap.put(ErrorConstants.INVALID_ACTION_FOR_ROLE_CODE, errorMsg);
+							errorMap.put(ErrorConstants.INVALID_ACTION_FOR_ROLE_CODE, errorMsg + "for serviceRequest: "+action.getBusinessKey());
 						}else {
 							validateActionsOnCurrentStatus(serviceRequest, errorMap) ;
 						}
@@ -317,7 +316,7 @@ public class PGRRequestValidator {
 			String currentStatus = pgrUtils.getCurrentStatus(history);
 			List<String> validStatusList = actioncurrentStatusMap.get(actionInfo.getAction());
 			if (!StringUtils.isEmpty(currentStatus) && !validStatusList.contains(currentStatus)) {
-				String errorMsg = ErrorConstants.INVALID_ACTION_FOR_ROLE_MSG;
+				String errorMsg = ErrorConstants.INVALID_ACTION_ON_STATUS_MSG;
 				errorMsg = errorMsg.replace("$action", actionInfo.getAction()).replace("$status", currentStatus);
 				errorMap.put(ErrorConstants.INVALID_ACTION_ON_STATUS_CODE, errorMsg + "for serviceRequest: "+service.getServiceRequestId());
 			}

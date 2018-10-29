@@ -1,11 +1,9 @@
 package org.egov.pt.repository.builder;
 
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import org.egov.pt.web.models.PropertyCriteria;
+import org.egov.pt.web.models.PropertyInfo;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
@@ -46,13 +44,20 @@ public class PropertyQueryBuilder {
 
 		StringBuilder builder = new StringBuilder(QUERY);
 
+		Set<String> statuses =new HashSet<>();
+		criteria.getStatuses().forEach(statusEnum -> {statuses.add(statusEnum.toString());});
+		if(!CollectionUtils.isEmpty(statuses)) {
+			builder.append(" pt.status IN (").append(createQuery(statuses)).append(")");
+			addToPreparedStatement(preparedStmtList,statuses);
+		}
+
 		if(criteria.getAccountId()!=null) {
-			builder.append(" ptdl.accountid = ? ");
+			builder.append(" and ptdl.accountid = ? ");
 			preparedStmtList.add(criteria.getAccountId());
 			return builder.toString();
 		}
 
-		builder.append(" pt.tenantid=? ");
+		builder.append(" and pt.tenantid=? ");
 		preparedStmtList.add(criteria.getTenantId());
 
 		Set<String> ids = criteria.getIds();

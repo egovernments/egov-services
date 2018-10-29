@@ -1,5 +1,6 @@
 package org.egov.pt.web.models;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
@@ -8,6 +9,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.util.CollectionUtils;
 
 @Data
 @NoArgsConstructor
@@ -43,5 +45,15 @@ public class PropertyCriteria {
 
 	private String accountId;
 
+	private List<PropertyInfo.StatusEnum> statuses;
 
+
+
+
+
+	public List<PropertyInfo.StatusEnum> getStatuses() {
+		if(!CollectionUtils.isEmpty(this.statuses))
+			return statuses;
+        else return Collections.singletonList(PropertyInfo.StatusEnum.ACTIVE);
+	}
 }

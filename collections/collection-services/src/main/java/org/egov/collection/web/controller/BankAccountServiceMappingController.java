@@ -43,6 +43,7 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import org.egov.collection.exception.CustomBindException;
 import org.egov.collection.model.BankAccountServiceMappingSearchCriteria;
 import org.egov.collection.service.BankAccountMappingService;
 import org.egov.collection.util.CollectionMastersRequestValidator;
@@ -84,9 +85,13 @@ public class BankAccountServiceMappingController {
 
     @PostMapping(value = "/_create")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<?> create(@RequestBody BankAccountServiceMappingReq bankAccountServiceMappingReq,
+    public ResponseEntity<?> create(@RequestBody @Valid BankAccountServiceMappingReq bankAccountServiceMappingReq,
             final BindingResult errors) {
 
+        if (errors.hasErrors()) {
+            throw new CustomBindException(errors);
+        }
+        
         log.info("BankAccountServiceMapping Request::" + bankAccountServiceMappingReq);
         final ErrorResponse errorResponse = collectionMastersRequestValidator
                 .validateBankAccountServiceRequest(bankAccountServiceMappingReq);

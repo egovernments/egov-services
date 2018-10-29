@@ -40,6 +40,7 @@
 package org.egov.collection.util;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
@@ -132,6 +133,7 @@ public class CollectionMastersRequestValidator {
                     && StringUtils.isNotBlank(bankAccountServiceMapping.getBankAccount())) {
                 BankAccountServiceMappingSearchCriteria searchCriteria = new BankAccountServiceMappingSearchCriteria();
                 searchCriteria.setTenantId(bankAccountServiceMapping.getTenantId());
+                searchCriteria.setBusinessDetails(Collections.singletonList(bankAccountServiceMapping.getBusinessDetails()));
                 searchCriteria.setBankAccount(bankAccountServiceMapping.getBankAccount());
                 List<org.egov.collection.model.BankAccountServiceMapping> bankAccountServiceMappings = bankAccountMappingService
                         .searchBankAccountService(searchCriteria);

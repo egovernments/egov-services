@@ -41,6 +41,9 @@ package org.egov.collection.web.contract;
 
 import java.util.List;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+
 import org.egov.common.contract.request.RequestInfo;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -52,9 +55,12 @@ import lombok.Setter;
 @Getter
 public class BankAccountServiceMappingReq {
 
+    @Valid
+    @NotNull
     @JsonProperty("BankAccountServiceMapping")
     private List<BankAccountServiceMapping> bankAccountServiceMapping;
 
+    @NotNull
     @JsonProperty("RequestInfo")
     private RequestInfo requestInfo;
 }

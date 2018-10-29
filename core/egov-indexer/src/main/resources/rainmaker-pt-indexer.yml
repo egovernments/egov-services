@@ -17,3 +17,11 @@ ServiceMaps:
       id: $.propertyId, $.tenantId
       isBulk: true
       jsonPath: $.Properties.*
+      
+  - topic: save-pt-property-reindex-test
+    indexes:
+    - name: ptreindextest
+      type: propertycreate
+      id: $.propertyId, $.tenantId
+      isBulk: true
+      jsonPath: $.Properties.*

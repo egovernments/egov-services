@@ -88,7 +88,7 @@ ServiceMaps:
             
   - topic: save-pgr-service-reindex-test
     indexes:
-    - name: rainmakerpgr
+    - name: pgrreindextest
       type: reindexedcomplaints
       id: $.services.servicerequestid, $.services.tenantid
       isBulk: true

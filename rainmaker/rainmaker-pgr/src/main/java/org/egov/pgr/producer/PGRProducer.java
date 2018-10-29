@@ -13,8 +13,8 @@ public class PGRProducer {
     private KafkaTemplate<String, Object> kafkaTemplate;
 	
     public void push(String topic, Object value) {
-    	log.info("Value: "+value.toString());
-    	log.info("Topic: "+topic);
+		log.info("Value: " + value.toString());
+		log.info("Topic: "+topic);
     		kafkaTemplate.send(topic, value);
     	
     }

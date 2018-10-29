@@ -8,7 +8,6 @@ import org.egov.common.contract.request.RequestInfo;
 import org.egov.mdms.model.MdmsCriteriaReq;
 import org.egov.pgr.contract.SearcherRequest;
 import org.egov.pgr.contract.ServiceReqSearchCriteria;
-import org.egov.tracer.http.LogAwareRestTemplate;
 import org.egov.tracer.model.ServiceCallException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -18,14 +17,14 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.http.HttpStatus;
-import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.RestTemplate;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ServiceRequestRepositoryTest {
 	
 	@Mock
-	private LogAwareRestTemplate restTemplate;
+	private RestTemplate restTemplate;
 	
 	
 	@InjectMocks

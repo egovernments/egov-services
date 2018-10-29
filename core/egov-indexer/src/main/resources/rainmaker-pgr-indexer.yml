@@ -91,6 +91,6 @@ ServiceMaps:
     - name: rainmakerpgr
       type: reindexedcomplaints
       id: $.services.servicerequestid, $.services.tenantid
-      isBulk: false
+      isBulk: true
       jsonPath: $.serviceRequests
           

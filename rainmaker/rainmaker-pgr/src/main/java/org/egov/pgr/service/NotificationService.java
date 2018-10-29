@@ -68,7 +68,7 @@ public class NotificationService {
 				serviceReq.getServiceCode(), requestInfo);
 		String serviceType = null;
 		List<String> serviceTypes = null;
-		List<String> slaHours = null;
+		List<Integer> slaHours = null;
 		String tenantId = serviceReq.getTenantId().split("[.]")[0]; // localization values are for now state-level.
 		try {
 			Object result = serviceRequestRepository.fetchResult(uri, mdmsCriteriaReq);
@@ -84,7 +84,7 @@ public class NotificationService {
 		} catch (Exception e) {
 			return null;
 		}
-		Long sla = Long.valueOf(slaHours.get(0)) / 24; //converting hours to days.
+		Integer sla = slaHours.get(0) / 24; //converting hours to days.
 		listOfValues.add(serviceType); listOfValues.add(sla);
 		return listOfValues;
 	}

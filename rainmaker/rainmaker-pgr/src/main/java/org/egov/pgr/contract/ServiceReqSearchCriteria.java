@@ -59,6 +59,9 @@ public class ServiceReqSearchCriteria {
 	@JsonProperty("createdBy")
 	private String createdBy;
 	
+	@JsonProperty("noOfRecords")
+	private Long noOfRecords;
+	
 	
 
 }

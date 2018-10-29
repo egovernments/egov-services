@@ -27,7 +27,7 @@ We have used Sunbird’s Telemetry JS Library to send the telemetry signals to t
 
 ```
 npm install
-npx webpack --config webpack.config.js
+npx run build
 ```
 
 This will generate a transpiled ES5 JavaScript file "egov-telemetry.js” in the build folder.

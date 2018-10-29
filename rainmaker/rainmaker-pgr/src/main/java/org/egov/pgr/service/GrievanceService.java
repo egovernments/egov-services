@@ -365,7 +365,7 @@ public class GrievanceService {
 					throw new CustomException(ErrorConstants.NO_DATA_KEY, ErrorConstants.NO_DATA_MSG);
 				}
 				try {
-					List<String> serviceCodes = JsonPath.read(response, PGRConstants.JSONPATH_SERVICE_CODES);
+					List<String> serviceCodes = JsonPath.read(response, PGRConstants.JSONPATH_SERVICEDEFS);
 					if(serviceCodes.isEmpty())
 						throw new CustomException(ErrorConstants.NO_DATA_KEY, ErrorConstants.NO_DATA_MSG);
 					serviceReqSearchCriteria.setServiceCodes(serviceCodes);
@@ -398,7 +398,7 @@ public class GrievanceService {
 				throw new CustomException(ErrorConstants.NO_DATA_KEY, ErrorConstants.NO_DATA_MSG);
 			}
 			try {
-				List<String> serviceCodes = JsonPath.read(response, PGRConstants.JSONPATH_SERVICE_CODES);
+				List<String> serviceCodes = JsonPath.read(response, PGRConstants.JSONPATH_SERVICEDEFS);
 				if(serviceCodes.isEmpty())
 					throw new CustomException(ErrorConstants.NO_DATA_KEY, ErrorConstants.NO_DATA_MSG);
 				serviceReqSearchCriteria.setServiceCodes(serviceCodes);

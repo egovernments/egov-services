@@ -56,6 +56,7 @@ public class PGRConstants {
 
 
 	public static final String SERVICE_CODES = "serviceCode";
+	public static final String JSONPATH_SERVICEDEFS = "$.MdmsRes.RAINMAKER-PGR.ServiceDefs";
 	public static final String JSONPATH_SERVICE_CODES = "$.MdmsRes.RAINMAKER-PGR.ServiceDefs.*.serviceCode";
 	public static final String JSONPATH_SLA = "$.MdmsRes.RAINMAKER-PGR.ServiceDefs.*.slaHours";
 	public static final String JSONPATH_DEPARTMENTS = "$.MdmsRes.common-masters.Department";

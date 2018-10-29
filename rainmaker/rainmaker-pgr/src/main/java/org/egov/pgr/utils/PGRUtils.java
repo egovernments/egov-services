@@ -455,7 +455,7 @@ public class PGRUtils {
 				inputCodes.toString(), requestInfo);
 		try {
 			Object result = serviceRequestRepository.fetchResult(uri, criteriaReq);
-			return JsonPath.read(result, PGRConstants.JSONPATH_SERVICE_CODES);
+			return JsonPath.read(result, PGRConstants.JSONPATH_SERVICEDEFS);
 		} catch (Exception e) {
 			throw new CustomException(ErrorConstants.INVALID_TENANT_ID_MDMS_SERVICE_CODE_KEY,
 					ErrorConstants.INVALID_TENANT_ID_MDMS_SERVICE_CODE_MSG);

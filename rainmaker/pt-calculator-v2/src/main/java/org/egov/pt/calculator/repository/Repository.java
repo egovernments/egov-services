@@ -17,13 +17,14 @@ import org.springframework.web.client.ResourceAccessException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.client.RestTemplate;
 
 @org.springframework.stereotype.Repository
 @Slf4j
 public class Repository {
 
 	@Autowired
-	private LogAwareRestTemplate restTemplate;
+	private RestTemplate restTemplate;
 	
 	@Autowired
 	@Qualifier("secondaryMapper")

@@ -3,11 +3,11 @@ package org.egov.tlcalculator.repository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import lombok.extern.slf4j.Slf4j;
-import org.egov.tracer.http.LogAwareRestTemplate;
 import org.egov.tracer.model.ServiceCallException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.Map;
 
@@ -17,7 +17,7 @@ public class ServiceRequestRepository {
 
 
     @Autowired
-    private LogAwareRestTemplate restTemplate;
+    private RestTemplate restTemplate;
 
 
     public Object fetchResult(StringBuilder uri, Object request) {

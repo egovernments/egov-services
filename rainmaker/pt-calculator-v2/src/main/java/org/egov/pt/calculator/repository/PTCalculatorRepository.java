@@ -12,12 +12,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.client.RestTemplate;
 
 @Repository
 @Slf4j
 public class PTCalculatorRepository {
 	@Autowired
-	private LogAwareRestTemplate restTemplate;
+	private RestTemplate restTemplate;
 		
 	/**
 	 * Fetches/Posts results based on the uri and request.

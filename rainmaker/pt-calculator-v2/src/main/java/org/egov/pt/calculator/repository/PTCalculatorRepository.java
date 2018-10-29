@@ -2,7 +2,6 @@ package org.egov.pt.calculator.repository;
 
 import java.util.Map;
 
-import org.egov.tracer.http.LogAwareRestTemplate;
 import org.egov.tracer.model.ServiceCallException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;

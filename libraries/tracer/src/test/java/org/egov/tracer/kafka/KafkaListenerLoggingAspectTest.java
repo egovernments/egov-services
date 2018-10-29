@@ -27,7 +27,6 @@ import static org.mockito.Mockito.when;
 
 @RunWith(SpringRunner.class)
 @ContextConfiguration(classes = {TracerConfiguration.class, TestConfiguration.class})
-@Ignore
 public class KafkaListenerLoggingAspectTest {
 
     private static final String TEST_CORRELATION_ID = "testCorrelationId";
@@ -79,6 +78,7 @@ public class KafkaListenerLoggingAspectTest {
     }
 
     @Test
+    @Ignore
     public void test_simple_log_message_should_mention_topic_name_is_unavailable_when_topic_header_annotation_is_not_present() {
         final HashMap<String, Object> payload = new HashMap<>();
         final HashMap<String, Object> requestInfo = new HashMap<>();
@@ -92,6 +92,7 @@ public class KafkaListenerLoggingAspectTest {
     }
 
     @Test
+    @Ignore
     public void test_detail_message_should_print_unavailable_topic_name_and_stringified_payload() {
         final HashMap<String, Object> payload = new HashMap<>();
         final HashMap<String, Object> requestInfo = new HashMap<>();
@@ -123,6 +124,7 @@ public class KafkaListenerLoggingAspectTest {
     }
 
     @Test
+    @Ignore
     public void test_should_print_detailed_log_with_stringified_body_and_topic_name() {
         final String payload = "{\"RequestInfo\": { \"foo\": \"bar\"}}";
         when(tracerProperties.isDetailedTracingEnabled()).thenReturn(true);
@@ -133,6 +135,7 @@ public class KafkaListenerLoggingAspectTest {
     }
 
     @Test
+    @Ignore
     public void test_should_set_random_correlation_id_when_payload_parameter_is_not_annotated() {
         final HashMap<String, Object> payload = new HashMap<>();
         final HashMap<String, Object> requestInfo = new HashMap<>();
@@ -144,6 +147,7 @@ public class KafkaListenerLoggingAspectTest {
     }
 
     @Test
+    @Ignore
     public void test_should_print_detailed_log_with_unavailable_body_and_unavailable_topic_name() {
         final HashMap<String, Object> payload = new HashMap<>();
         final HashMap<String, Object> requestInfo = new HashMap<>();
@@ -157,6 +161,7 @@ public class KafkaListenerLoggingAspectTest {
     }
 
     @Test
+    @Ignore
     public void test_should_print_detailed_log_with_stringified_body_and_unavailable_topic_name() {
         final String payload = "{\"RequestInfo\": { \"foo\": \"bar\"}}";
         when(tracerProperties.isDetailedTracingEnabled()).thenReturn(true);

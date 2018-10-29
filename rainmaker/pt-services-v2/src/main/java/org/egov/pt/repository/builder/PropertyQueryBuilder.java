@@ -65,7 +65,7 @@ public class PropertyQueryBuilder {
 			+ " eg_pt_document_owner_v2 ownerdoc ON ownerdoc.userid=owner.userid "
 			+ LEFT_OUTER_JOIN_STRING
 			+ " eg_pt_institution_v2 insti ON ptdl.assessmentnumber=insti.propertydetail "
-			+ " WHERE tenantid LIKE '%pb%'";
+			+ " WHERE pt.tenantid LIKE '%pb%'";
 	
 	
 	public String getPropertyLikeQuery() {

@@ -20,7 +20,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import static java.util.Objects.isNull;
-import static org.apache.commons.lang3.StringUtils.isEmpty;
+import static org.springframework.util.StringUtils.isEmpty;
 
 @Slf4j
 @Service

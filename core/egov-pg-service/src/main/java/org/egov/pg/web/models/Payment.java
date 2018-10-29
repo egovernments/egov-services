@@ -2,7 +2,6 @@ package org.egov.pg.web.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import io.swagger.annotations.ApiModel;
 import lombok.*;
 import org.springframework.validation.annotation.Validated;
 
@@ -12,7 +11,6 @@ import javax.validation.constraints.Size;
 /**
  * Details of the payment object.
  */
-@ApiModel(description = "Details of the payment object.")
 @Validated
 @javax.annotation.Generated(value = "org.egov.codegen.SpringBootCodegen", date = "2018-06-05T12:58:12.679+05:30")
 

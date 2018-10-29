@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.io.IOUtils;
 import org.egov.tracer.kafka.ErrorQueueProducer;
 import org.egov.tracer.model.*;
 import org.egov.tracer.model.Error;
@@ -27,9 +26,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.ResourceAccessException;
 
-import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
-import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.*;
@@ -56,23 +53,16 @@ public class ExceptionAdvise {
 	@ResponseBody
 	public ResponseEntity<?> exceptionHandler(HttpServletRequest request ,Exception ex) {
 
-		String contentType = request.getContentType();
-		boolean isJsonContentType = (contentType != null && contentType.toLowerCase().contains("application/json"));
-		
-		String body = "";
-		try {
-			ServletInputStream stream = request.getInputStream();
-			body = IOUtils.toString(stream, "UTF-8");
-			
-		} catch (IOException e) {
-			log.error("Error occurred while getting input stream ");
-		}
+//		String contentType = request.getContentType();
+//		boolean isJsonContentType = (contentType != null && contentType.toLowerCase().contains("application/json"));
+        log.error("Exception caught in tracer ", ex);
 		ErrorRes errorRes = new ErrorRes();
 		List<Error> errors = new ArrayList<>();
 
 		try {
 			if (ex instanceof HttpMediaTypeNotSupportedException) {
-				errorRes.setErrors(new ArrayList<>(Collections.singletonList(new Error("UnsupportedMediaType", "An unssuporrted media Type was used - " + request.getContentType(), null, null))));
+				errorRes.setErrors(new ArrayList<>(Collections.singletonList(new Error("UnsupportedMediaType", "An " +
+                    "unsupported media Type was used - " + request.getContentType(), null, null))));
 			} else if (ex instanceof ResourceAccessException) {
 				Error err = new Error();
 				err.setCode("ResourceAccessError");
@@ -106,32 +96,27 @@ public class ExceptionAdvise {
 						err.setMessage("JSON body has errors or is missing");
 						JsonPath.parse(request).json();
 					} catch (Exception jsonParseException) {
-						log.error("Error while parsing JSON", jsonParseException);
+						log.warn("Error while parsing JSON", jsonParseException);
 					}
  					err.setCode("MissingJsonException");
 				}
 				errors.add(err);
 				errorRes.setErrors(errors);
 			} else if (ex instanceof MethodArgumentNotValidException) {
-				log.error("MethodArgumentNotValidException ");
 				MethodArgumentNotValidException argumentNotValidException = (MethodArgumentNotValidException) ex;
 				errorRes.setErrors(getBindingErrors(argumentNotValidException.getBindingResult(), errors));
 	
 			} else if (ex instanceof CustomBindingResultExceprion) {
-				log.error("CustomBindingResultExceprion block");
 				CustomBindingResultExceprion customBindingResultExceprion = (CustomBindingResultExceprion) ex;
 				errorRes.setErrors(getBindingErrors(customBindingResultExceprion.getBindingResult(), errors));
 			} else if (ex instanceof CustomException) {
-				log.error("CustomException block");
 				CustomException customException = (CustomException) ex;
 				populateCustomErrros(customException, errors);
 				errorRes.setErrors(errors);
 			} else if (ex instanceof ServiceCallException) {
-				log.error("ServiceCallException block");
 				ServiceCallException serviceCallException = (ServiceCallException) ex;
-				sendErrorMessage(body, ex, request.getRequestURL().toString(),errorRes, isJsonContentType);
+//				sendErrorMessage(body, ex, request.getRequestURL().toString(),errorRes, isJsonContentType);
 				DocumentContext documentContext = JsonPath.parse(serviceCallException.getError());
-				log.error("exceptionHandler:"+documentContext);
 				LinkedHashMap<Object, Object> linkedHashMap = documentContext.json();
 				return new ResponseEntity<>(linkedHashMap, HttpStatus.BAD_REQUEST);
 				
@@ -148,9 +133,6 @@ public class ExceptionAdvise {
 				errorRes.setErrors(errors);
 			} else if (ex instanceof BindException) {
 				BindException bindException = (BindException) ex;
-				bindException.getBindingResult();
-				log.error("bindException block:"+bindException);
-				log.error("bindException.getBindingResult() block:"+bindException.getBindingResult());
 	
 				errorRes.setErrors(getBindingErrors(bindException.getBindingResult(), errors));
 	
@@ -165,13 +147,11 @@ public class ExceptionAdvise {
 			} else if (provideExceptionInDetails && errorRes.getErrors() != null && errorRes.getErrors().size() > 0) {
                 StringWriter sw = new StringWriter();
                 PrintWriter pw = new PrintWriter(sw);
-                log.error("Errors exist", pw);
                 errorRes.getErrors().get(0).setDescription(sw.toString());
             }
 
-			sendErrorMessage(body, ex, request.getRequestURL().toString(),errorRes, isJsonContentType);
+//			sendErrorMessage(body, ex, request.getRequestURL().toString(),errorRes, isJsonContentType);
 		} catch (Exception tracerException) {
-			log.error("Unknown error occurred ", tracerException);
 			errorRes.setErrors(new ArrayList<>(Collections.singletonList(new Error("TracerException", "An unhandled exception occurred in tracer handler", null, null))));
 		}
 		return new ResponseEntity<>(errorRes, HttpStatus.BAD_REQUEST);
@@ -210,7 +190,7 @@ public class ExceptionAdvise {
 
 	}
 		
-	public void sendErrorMessage(String body, Exception ex, String source, ErrorRes errorRes, boolean isJsonContentType) {
+	void sendErrorMessage(String body, Exception ex, String source, ErrorRes errorRes, boolean isJsonContentType) {
 		DocumentContext documentContext;
 		String bodyJSON = body;
 

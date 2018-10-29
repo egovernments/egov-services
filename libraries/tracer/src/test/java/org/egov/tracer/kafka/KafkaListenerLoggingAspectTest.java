@@ -3,6 +3,7 @@ package org.egov.tracer.kafka;
 import org.egov.tracer.config.TracerConfiguration;
 import org.egov.tracer.config.TracerProperties;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.contrib.java.lang.system.SystemOutRule;
@@ -26,6 +27,7 @@ import static org.mockito.Mockito.when;
 
 @RunWith(SpringRunner.class)
 @ContextConfiguration(classes = {TracerConfiguration.class, TestConfiguration.class})
+@Ignore
 public class KafkaListenerLoggingAspectTest {
 
     private static final String TEST_CORRELATION_ID = "testCorrelationId";

@@ -1,12 +1,16 @@
 package org.egov.tracer.config;
 
 import io.opentracing.noop.NoopTracerFactory;
-import org.egov.tracer.http.LogAwareRestTemplate;
-import org.egov.tracer.kafka.KafkaListenerLoggingAspect;
+import org.egov.tracer.http.RestTemplateLoggingInterceptor;
 import org.springframework.context.annotation.*;
 import org.springframework.core.env.Environment;
+import org.springframework.http.client.BufferingClientHttpRequestFactory;
 import org.springframework.http.client.ClientHttpRequestFactory;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
+import org.springframework.http.client.SimpleClientHttpRequestFactory;
+import org.springframework.web.client.RestTemplate;
+
+import java.util.Collections;
 
 @Configuration
 @EnableAspectJAutoProxy
@@ -19,27 +23,10 @@ public class TracerConfiguration {
         return new TracerProperties(environment);
     }
 
-    @Bean
-    public KafkaListenerLoggingAspect kafkaListenerLoggingAspect(TracerProperties tracerProperties,
-                                                                 ObjectMapperFactory objectMapperFactory) {
-        return new KafkaListenerLoggingAspect(tracerProperties, objectMapperFactory);
-    }
-
-    @Bean
-    public LoggingListenerFactory loggingListenerFactory(TracerProperties tracerProperties,
-                                                         ObjectMapperFactory objectMapperFactory) {
-        return new LoggingListenerFactory(tracerProperties, objectMapperFactory);
-    }
 
     @Bean
     public ObjectMapperFactory objectMapperFactory(TracerProperties tracerProperties) {
         return new ObjectMapperFactory(tracerProperties);
-    }
-
-    @Bean
-    public LoggingKafkaTemplateFactory loggingKafkaTemplateFactory(TracerProperties tracerProperties,
-                                                                   ObjectMapperFactory objectMapperFactory) {
-        return new LoggingKafkaTemplateFactory(tracerProperties, objectMapperFactory);
     }
 
     private ClientHttpRequestFactory getClientHttpRequestFactory() {
@@ -51,8 +38,11 @@ public class TracerConfiguration {
     }
 
     @Bean(name = "logAwareRestTemplate")
-    public LogAwareRestTemplate logAwareRestTemplate(TracerProperties tracerProperties) {
-        return new LogAwareRestTemplate(getClientHttpRequestFactory() ,tracerProperties);
+    public RestTemplate logAwareRestTemplate(TracerProperties tracerProperties) {
+        RestTemplate restTemplate =
+            new RestTemplate(new BufferingClientHttpRequestFactory(new SimpleClientHttpRequestFactory()));
+        restTemplate.setInterceptors(Collections.singletonList(new RestTemplateLoggingInterceptor()));
+        return restTemplate;
     }
 
     @Bean

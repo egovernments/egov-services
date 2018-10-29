@@ -30,16 +30,10 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
-		
+
         <dependency>
             <groupId>org.springframework.kafka</groupId>
             <artifactId>spring-kafka</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.aspectj</groupId>
-            <artifactId>aspectjweaver</artifactId>
-            <version>1.8.10</version>
         </dependency>
 
         <dependency>
@@ -64,6 +58,12 @@
             <artifactId>json-path</artifactId>
             <version>2.2.0</version>
         </dependency>
+        <dependency>
+            <groupId>org.aspectj</groupId>
+            <artifactId>aspectjweaver</artifactId>
+            <version>1.8.13</version>
+        </dependency>
+
 
         <!--  TRACING -->
         <dependency>
@@ -73,8 +73,14 @@
 
         <dependency>
             <groupId>io.opentracing.contrib</groupId>
-            <artifactId>opentracing-spring-cloud-starter</artifactId>
-            <version>0.1.16</version>
+            <artifactId>opentracing-spring-web-starter</artifactId>
+            <version>0.3.3</version>
+        </dependency>
+
+        <dependency>
+            <groupId>io.opentracing.contrib</groupId>
+            <artifactId>opentracing-jdbc</artifactId>
+            <version>0.0.6</version>
         </dependency>
 
         <dependency>

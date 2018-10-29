@@ -1,16 +1,12 @@
 package org.egov.tracer.model;
 
-import java.util.Map;
-
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
+
+import java.util.Map;
 
 @Setter
 @Getter
-@ToString
 public class CustomException extends RuntimeException{
 	
 	private static final long serialVersionUID = 8859144435338793971L;
@@ -29,6 +25,7 @@ public class CustomException extends RuntimeException{
 	}
 	public CustomException(Map<String, String> errors) {
 		super();
+		this.message = errors.toString();
 		this.errors = errors;
 	}
 	

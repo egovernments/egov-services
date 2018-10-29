@@ -149,6 +149,7 @@ public class PGRRequestValidator {
 				serviceRequest.getServices().parallelStream().map(Service::getServiceCode).collect(Collectors.toSet()),
 				serviceRequest.getRequestInfo());
 		List<String> errorList = new ArrayList<>();
+		log.info("serviceCodes: "+serviceCodes);
 		serviceRequest.getServices().forEach(a -> {
 			if (!serviceCodes.contains(a.getServiceCode()))
 				errorList.add(a.getServiceCode());

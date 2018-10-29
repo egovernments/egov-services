@@ -84,7 +84,7 @@ public class EmployeeListener {
 		RequestInfo requestInfo = requestInfoFactory.getRequestInfo(requestInfoJSONObject, tenantId);
 
 		// FIXME : Parse id in long once egf-masters update their AccountDetailKey Contract & table schema.
-		employeeService.processRequest(employeeJSONObject.getInt("id"), tenantId, requestInfo);
+		employeeService.processRequest(employeeJSONObject.getString("id"),employeeJSONObject.getString("name"), tenantId, requestInfo);
 	}
 
 }

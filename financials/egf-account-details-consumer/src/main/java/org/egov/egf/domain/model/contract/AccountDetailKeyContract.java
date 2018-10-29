@@ -43,8 +43,6 @@ package org.egov.egf.domain.model.contract;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -56,15 +54,12 @@ import lombok.ToString;
 @NoArgsConstructor
 @Setter
 @ToString
-@JsonPropertyOrder({ "id", "groupId", "name", "key" })
 public class AccountDetailKeyContract extends AuditableContract {
 
-    private Long id;
+    private String keyId;
 
     private List<Long> ids = new ArrayList<Long>();
 
-    private Integer key;
-   
-  //  private AccountDetailTypeContract accountDetailType = new AccountDetailTypeContract();
+    private String keyName;
 
 }

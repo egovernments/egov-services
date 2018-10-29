@@ -91,28 +91,29 @@ public class EmployeeService {
 
 	public static final Logger LOGGER = LoggerFactory.getLogger(EmployeeService.class);
 
-	public void processRequest(int employeeId, String tenantId, RequestInfo requestInfo) {
+	public void processRequest(String employeeId, String employeeName,String tenantId, RequestInfo requestInfo) {
 		try {
 			// AccountDetailTypeContract accDetailType =
 			// getAccountDetailType(tenantId, requestInfo);
-			AccountDetailKeyContractResponse accDetailKeyResponse = createAccountDetailKey(employeeId, requestInfo);
+			AccountDetailKeyContractResponse accDetailKeyResponse = createAccountDetailKey(employeeId,employeeName, requestInfo);
 			LOGGER.debug("Created AccountDetailKeyContractResponse : " + accDetailKeyResponse);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
-	private AccountDetailKeyContractResponse createAccountDetailKey(int employeeId, RequestInfo requestInfo)
+	private AccountDetailKeyContractResponse createAccountDetailKey(String employeeId, String employeeName, RequestInfo requestInfo)
 			throws URISyntaxException {
 
 		AccountDetailKeyContract accDetailKey = new AccountDetailKeyContract();
-		accDetailKey.setKey(employeeId);
+		accDetailKey.setKeyId(employeeId);
 		// accDetailKey.setAccountDetailType(accDetailType);
 		// accDetailKey.setCreatedBy(Long.parseLong(requestInfo.getRequesterId()));
 		accDetailKey.setCreatedDate(new Date());
 		// accDetailKey.setLastModifiedBy(Long.parseLong(requestInfo.getRequesterId()));
 		accDetailKey.setLastModifiedDate(new Date());
 		// accDetailKey.setTenantId(tenantId);
+		accDetailKey.setKeyName(employeeName);
 
 		requestInfo.setAuthToken(generateAdminToken());
 		AccountDetailKeyContractRequest accDetailKeyRequest = AccountDetailKeyContractRequest.builder()

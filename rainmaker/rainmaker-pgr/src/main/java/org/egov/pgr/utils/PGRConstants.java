@@ -33,17 +33,20 @@ public class PGRConstants {
 	
 
 	public static final String LOCALIZATION_CODE_SUBMIT_CITIZEN = "pgr.sms.notification.submit.citizen";
+	
 	public static final String LOCALIZATION_CODE_REOPEN_CITIZEN = "pgr.sms.notification.reopen.citizen";
 	public static final String LOCALIZATION_CODE_REOPEN_EMPLOYEE = "pgr.sms.notification.reopen.employee";
 
 	public static final String LOCALIZATION_CODE_ASSIGN_CITIZEN = "pgr.sms.notification.assign.citizen";
-	public static final String LOCALIZATION_CODE_REASSIGN_CITIZEN = "pgr.sms.notification.reassign.citizen";
-	
 	public static final String LOCALIZATION_CODE_ASSIGN_EMPLOYEE = "pgr.sms.notification.assign.employee";
+
+	public static final String LOCALIZATION_CODE_REASSIGN_CITIZEN = "pgr.sms.notification.reassign.citizen";
 	public static final String LOCALIZATION_CODE_REASSIGN_EMPLOYEE = "pgr.sms.notification.reassign.employee";
 	
 	public static final String LOCALIZATION_CODE_REJECT_CITIZEN = "pgr.sms.notification.reject.citizen";
+	
 	public static final String LOCALIZATION_CODE_RESOLVE_CITIZEN = "pgr.sms.notification.resolve.citizen";
+	
 	public static final String LOCALIZATION_CODE_CLOSE_EMPLOYEE = "pgr.sms.notification.close.employee";
 	
 	public static final String LOCALIZATION_CODE_COMMENT = "pgr.sms.notification.comment";
@@ -53,7 +56,8 @@ public class PGRConstants {
 
 
 	public static final String SERVICE_CODES = "serviceCode";
-	public static final String JSONPATH_SERVICE_CODES = "$.MdmsRes.RAINMAKER-PGR.ServiceDefs";
+	public static final String JSONPATH_SERVICE_CODES = "$.MdmsRes.RAINMAKER-PGR.ServiceDefs.*.serviceCode";
+	public static final String JSONPATH_SLA = "$.MdmsRes.RAINMAKER-PGR.ServiceDefs.*.slaHours";
 	public static final String JSONPATH_DEPARTMENTS = "$.MdmsRes.common-masters.Department";
 	public static final String JSONPATH_DESIGNATIONS = "$.MdmsRes.common-masters.Designation";
 
@@ -86,6 +90,7 @@ public class PGRConstants {
 	public static final String SMS_NOTIFICATION_APP_DOWNLOAD_LINK_KEY = "<download_link>";
 	public static final String SMS_NOTIFICATION_AO_DESIGNATION = "<ao_designation>";
 	public static final String SMS_NOTIFICATION_ULB_NAME = "<ulb>";
+	public static final String SMS_NOTIFICATION_SLA_NAME = "<sla>";
 	public static final String SMS_NOTIFICATION_RATING_KEY = "<rating>";
 	
 
@@ -138,27 +143,33 @@ public class PGRConstants {
 
 		return map;
 	}
-		
+	
+	/**
+	 * Mapping between which messages are to be sent to which actor and on what status.
+	 * @return
+	 */
 	private static Map<String, String> prepareStatusRoleLocalizationKeyMap() {
 
 		Map<String, String> map = new HashMap<>();
 		map.put(WorkFlowConfigs.STATUS_OPENED + "|" + PGRConstants.ROLE_CITIZEN, LOCALIZATION_CODE_SUBMIT_CITIZEN);
-		
 		map.put(WorkFlowConfigs.STATUS_ASSIGNED + "|" + PGRConstants.ROLE_CITIZEN, LOCALIZATION_CODE_ASSIGN_CITIZEN);
 		map.put(WorkFlowConfigs.STATUS_ASSIGNED + "|" + PGRConstants.ROLE_EMPLOYEE, LOCALIZATION_CODE_ASSIGN_EMPLOYEE);
-
 		map.put(WorkFlowConfigs.STATUS_REJECTED + "|" + PGRConstants.ROLE_CITIZEN, LOCALIZATION_CODE_REJECT_CITIZEN);
 		map.put(WorkFlowConfigs.STATUS_RESOLVED + "|" + PGRConstants.ROLE_CITIZEN, LOCALIZATION_CODE_RESOLVE_CITIZEN);
-		
 		map.put(WorkFlowConfigs.STATUS_CLOSED + "|" + PGRConstants.ROLE_EMPLOYEE, LOCALIZATION_CODE_CLOSE_EMPLOYEE);
 	
 		return map;
 	}
 	
+	/**
+     * Mapping between which messages are to be sent to which actor and on what action. 
+	 * @return
+	 */
 	private static Map<String, String> prepareActionRoleLocalizationKeyMap() {
 
 		Map<String, String> map = new HashMap<>();
 		map.put(WorkFlowConfigs.ACTION_REOPEN + "|" + PGRConstants.ROLE_EMPLOYEE, LOCALIZATION_CODE_REOPEN_EMPLOYEE);
+		map.put(WorkFlowConfigs.ACTION_REOPEN + "|" + PGRConstants.ROLE_CITIZEN, LOCALIZATION_CODE_REOPEN_CITIZEN);
 		map.put(WorkFlowConfigs.ACTION_REASSIGN + "|" + PGRConstants.ROLE_CITIZEN, LOCALIZATION_CODE_REASSIGN_CITIZEN);
 		map.put(WorkFlowConfigs.ACTION_REASSIGN + "|" + PGRConstants.ROLE_EMPLOYEE, LOCALIZATION_CODE_REASSIGN_EMPLOYEE);
 

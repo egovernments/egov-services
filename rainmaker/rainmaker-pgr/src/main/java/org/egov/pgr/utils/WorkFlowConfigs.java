@@ -85,6 +85,10 @@ public class WorkFlowConfigs {
 		return map;
 	}
 	
+	/**
+	 * Mapping between the actors that are to receive notification and the status on which they do so.
+	 * @return
+	 */
 	private static Map<String, List<String>> prepareMapOfStatusAndNotificationReceptors(){
 		Map<String, List<String>> map = new HashMap<>();
 		
@@ -97,11 +101,15 @@ public class WorkFlowConfigs {
 		return map;
 	}
 	
+	/**
+	 * Mapping between the actors that are to receive notification and the action on which they do so.
+	 * @return
+	 */
 	private static Map<String, List<String>> prepareMapOfActionAndNotificationReceptors(){
 		Map<String, List<String>> map = new HashMap<>();
 		
 		map.put(WorkFlowConfigs.ACTION_REASSIGN, Arrays.asList(PGRConstants.ROLE_CITIZEN, PGRConstants.ROLE_EMPLOYEE));
-		map.put(WorkFlowConfigs.ACTION_REOPEN, Arrays.asList(PGRConstants.ROLE_EMPLOYEE));
+		map.put(WorkFlowConfigs.ACTION_REOPEN, Arrays.asList(PGRConstants.ROLE_CITIZEN, PGRConstants.ROLE_EMPLOYEE));
 		
 		return map;
 	}

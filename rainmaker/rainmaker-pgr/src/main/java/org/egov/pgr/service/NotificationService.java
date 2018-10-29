@@ -1,5 +1,6 @@
 package org.egov.pgr.service;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -60,28 +61,32 @@ public class NotificationService {
 	
 	public static Map<String, Map<String, String>> localizedMessageMap = new HashMap<>();
 
-	public String getServiceType(Service serviceReq, RequestInfo requestInfo, String locale) {
+	public List<Object> getServiceType(Service serviceReq, RequestInfo requestInfo, String locale) {
 		StringBuilder uri = new StringBuilder();
+		List<Object> listOfValues = new ArrayList<>();
 		MdmsCriteriaReq mdmsCriteriaReq = pGRUtils.prepareSearchRequestForServiceType(uri, serviceReq.getTenantId(),
 				serviceReq.getServiceCode(), requestInfo);
 		String serviceType = null;
 		List<String> serviceTypes = null;
+		List<String> slaHours = null;
 		String tenantId = serviceReq.getTenantId().split("[.]")[0]; // localization values are for now state-level.
 		try {
 			Object result = serviceRequestRepository.fetchResult(uri, mdmsCriteriaReq);
 			serviceTypes = JsonPath.read(result, PGRConstants.JSONPATH_SERVICE_CODES);
-			if (CollectionUtils.isEmpty(serviceTypes))
+			slaHours = JsonPath.read(result, PGRConstants.JSONPATH_SLA);
+			if (CollectionUtils.isEmpty(serviceTypes) || CollectionUtils.isEmpty(slaHours))
 				return null;
 			if (null == localizedMessageMap.get(locale + "|" + tenantId)) // static map that saves code-message pair against locale | tenantId.
 				getLocalisedMessages(requestInfo, tenantId, locale, PGRConstants.LOCALIZATION_MODULE_NAME);
-			serviceType = localizedMessageMap.get(locale + "|" + tenantId).get(PGRConstants.LOCALIZATION_COMP_CATEGORY_PREFIX + serviceTypes.get(0)); //resultset is always of size one.
+			serviceType = localizedMessageMap.get(locale + "|" + tenantId).get(PGRConstants.LOCALIZATION_COMP_CATEGORY_PREFIX + serviceTypes.get(0)); //result set is always of size one.
 			if(StringUtils.isEmpty(serviceType))
 				serviceType = PGRUtils.splitCamelCase(serviceTypes.get(0));
 		} catch (Exception e) {
 			return null;
 		}
-
-		return serviceType;
+		Long sla = Long.valueOf(slaHours.get(0)) / 24; //converting hours to days.
+		listOfValues.add(serviceType); listOfValues.add(sla);
+		return listOfValues;
 	}
 
 	public Map<String, String> getEmployeeDetails(String tenantId, String id, RequestInfo requestInfo) {

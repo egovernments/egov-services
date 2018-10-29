@@ -178,13 +178,14 @@ public class PGRNotificationConsumer {
 		Map<String, String> messageMap = NotificationService.localizedMessageMap.get(locale + "|" + tenantId);
 		if (null == messageMap)
 			return null;
-		String serviceType = notificationService.getServiceType(serviceReq, requestInfo, locale);
-		return getMessage(serviceType, date, serviceReq, actionInfo, requestInfo, messageMap, role);
+		List<Object> listOfValues = notificationService.getServiceType(serviceReq, requestInfo, locale);
+		
+		return getMessage(listOfValues, date, serviceReq, actionInfo, requestInfo, messageMap, role);
 
 	}
 	
-	public String getMessage(String serviceType, String date, Service serviceReq, ActionInfo actionInfo, RequestInfo requestInfo, Map<String, String> messageMap, String role) {
-		if (null == serviceType) {
+	public String getMessage(List<Object> listOfValues, String date, Service serviceReq, ActionInfo actionInfo, RequestInfo requestInfo, Map<String, String> messageMap, String role) {
+		if (null == listOfValues.get(0)) {
 			return getDefaultMessage(messageMap, actionInfo.getStatus(), actionInfo.getAction(), actionInfo.getComment());
 		}
 		String text = null;
@@ -252,13 +253,15 @@ public class PGRNotificationConsumer {
 			else {
 				ulb = StringUtils.capitalize(serviceReq.getTenantId().split("[.]")[1]);
 			}
-			return text.replaceAll(PGRConstants.SMS_NOTIFICATION_COMPLAINT_TYPE_KEY, serviceType)
+			return text.replaceAll(PGRConstants.SMS_NOTIFICATION_COMPLAINT_TYPE_KEY, listOfValues.get(0).toString()) 
 				.replaceAll(PGRConstants.SMS_NOTIFICATION_ID_KEY, serviceReq.getServiceRequestId())
 				.replaceAll(PGRConstants.SMS_NOTIFICATION_DATE_KEY, date)
 				.replaceAll(PGRConstants.SMS_NOTIFICATION_APP_LINK_KEY, uiAppHost + uiFeedbackUrl + serviceReq.getServiceRequestId())
 				.replaceAll(PGRConstants.SMS_NOTIFICATION_APP_DOWNLOAD_LINK_KEY, appDownloadLink)
 				.replaceAll(PGRConstants.SMS_NOTIFICATION_AO_DESIGNATION, PGRConstants.ROLE_NAME_GRO)
-				.replaceAll(PGRConstants.SMS_NOTIFICATION_ULB_NAME, ulb);
+				.replaceAll(PGRConstants.SMS_NOTIFICATION_ULB_NAME, ulb)
+			    .replaceAll(PGRConstants.SMS_NOTIFICATION_SLA_NAME, listOfValues.get(1).toString());
+
 			}
 			return text;
 	}

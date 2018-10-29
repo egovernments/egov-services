@@ -154,7 +154,7 @@ public class PGRUtils {
 		uri.append(mdmsHost).append(mdmsEndpoint);
 		MasterDetail masterDetail = org.egov.mdms.model.MasterDetail.builder()
 				.name(PGRConstants.MDMS_SERVICETYPE_MASTER_NAME)
-				.filter("[?(@.serviceCode=='" + serviceCode + "')]." + PGRConstants.SERVICE_CODES).build();
+				.filter("[?(@.serviceCode=='" + serviceCode + "')].").build();
 		List<MasterDetail> masterDetails = new ArrayList<>();
 		masterDetails.add(masterDetail);
 		ModuleDetail moduleDetail = ModuleDetail.builder().moduleName(PGRConstants.MDMS_PGR_MOD_NAME)

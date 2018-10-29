@@ -1,3 +1,4 @@
+import "babel-polyfill";
 global.jQuery = require('jquery');
 import exec from 'script-loader!../vendor/telemetryLibrary.js';
 import TelemetryManager from './telemetry-class'

@@ -86,12 +86,11 @@ ServiceMaps:
             outJsonPath: $.PGRIndex.assignee
             
             
-            
   - topic: save-pgr-service-reindex-test
     indexes:
     - name: rainmakerpgr
       type: reindexedcomplaints
-      id: $.services[0].serviceRequestId, $.services[0].tenantId
+      id: $.services.servicerequestid, $.services.tenantid
       isBulk: false
-      jsonPath: $.service
-           
+      jsonPath: $.serviceRequests
+          

@@ -93,4 +93,3 @@ ServiceMaps:
       id: $.services.servicerequestid, $.services.tenantid
       isBulk: true
       jsonPath: $.serviceRequests
-          

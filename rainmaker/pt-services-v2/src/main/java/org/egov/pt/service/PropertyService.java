@@ -90,6 +90,12 @@ public class PropertyService {
 		enrichmentService.enrichBoundary(new PropertyRequest(requestInfo,properties));
 		return properties;
 	}
+	
+	public List<Property> searchPropertyPlainSearch(PropertyCriteria criteria,RequestInfo requestInfo) {
+		List<Property> properties = getPropertiesPlainSearch(criteria,requestInfo);
+		enrichmentService.enrichBoundary(new PropertyRequest(requestInfo,properties));
+		return properties;
+	}
 
 	/**
 	 * Returns list of properties based on the given propertyCriteria with owner fields populated from user service
@@ -99,6 +105,14 @@ public class PropertyService {
 	 */
 	 List<Property> getPropertiesWithOwnerInfo(PropertyCriteria criteria,RequestInfo requestInfo){
 		List<Property> properties = repository.getProperties(criteria);
+		enrichmentService.enrichPropertyCriteriaWithOwnerids(criteria,properties);
+		UserDetailResponse userDetailResponse = userService.getUser(criteria,requestInfo);
+		enrichmentService.enrichOwner(userDetailResponse,properties);
+		return properties;
+	}
+	 
+	 List<Property> getPropertiesPlainSearch(PropertyCriteria criteria,RequestInfo requestInfo){
+		List<Property> properties = repository.getPropertiesPlainSearch(criteria);
 		enrichmentService.enrichPropertyCriteriaWithOwnerids(criteria,properties);
 		UserDetailResponse userDetailResponse = userService.getUser(criteria,requestInfo);
 		enrichmentService.enrichOwner(userDetailResponse,properties);

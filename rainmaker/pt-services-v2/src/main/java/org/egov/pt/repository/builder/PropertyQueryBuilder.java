@@ -39,6 +39,38 @@ public class PropertyQueryBuilder {
 			+ LEFT_OUTER_JOIN_STRING
 			+ " eg_pt_institution_v2 insti ON ptdl.assessmentnumber=insti.propertydetail "
 			+ " WHERE ";
+	
+	private static final String LIKE_QUERY = "SELECT pt.*,ptdl.*,address.*,owner.*,doc.*,unit.*,insti.*,"
+			+ " pt.propertyid as propertyid,ptdl.assessmentnumber as propertydetailid,doc.id as documentid,unit.id as unitid,"
+			+ "address.id as addresskeyid,insti.id as instiid,"
+			+ "ownerdoc.id as ownerdocid,ownerdoc.documenttype as ownerdocType,ownerdoc.filestore as ownerfileStore,"
+			+ "ownerdoc.documentuid as ownerdocuid,"
+			+ "ptdl.createdby as assesscreatedby,ptdl.lastModifiedBy as assesslastModifiedBy,ptdl.createdTime as assesscreatedTime,"
+			+ "ptdl.lastModifiedTime as assesslastModifiedTime,unit.occupancyDate as unitoccupancyDate,"
+			+ "insti.name as institutionname,insti.type as institutiontype,insti.tenantid as institenantId,"
+			+ "ownerdoc.userid as docuserid,ownerdoc.propertydetail as docassessmentnumber,"
+			+ "unit.usagecategorymajor as unitusagecategorymajor,unit.usagecategoryminor as unitusagecategoryminor"
+			+ " FROM eg_pt_property_v2 pt "
+			+ INNER_JOIN_STRING
+			+ " eg_pt_propertydetail_v2 ptdl ON pt.propertyid =ptdl.property "
+			+ INNER_JOIN_STRING
+			+ " eg_pt_owner_v2 owner ON ptdl.assessmentnumber=owner.propertydetail "
+			+ INNER_JOIN_STRING
+			+" eg_pt_address_v2 address on address.property=pt.propertyid "
+			+ LEFT_OUTER_JOIN_STRING
+			+ " eg_pt_unit_v2 unit ON ptdl.assessmentnumber=unit.propertydetail "
+			+ LEFT_OUTER_JOIN_STRING
+			+ " eg_pt_document_propertydetail_v2 doc ON ptdl.assessmentnumber=doc.propertydetail "
+			+ LEFT_OUTER_JOIN_STRING
+			+ " eg_pt_document_owner_v2 ownerdoc ON ownerdoc.userid=owner.userid "
+			+ LEFT_OUTER_JOIN_STRING
+			+ " eg_pt_institution_v2 insti ON ptdl.assessmentnumber=insti.propertydetail "
+			+ " WHERE tenantid LIKE '%pb%'";
+	
+	
+	public String getPropertyLikeQuery() {
+		return LIKE_QUERY;
+	}
 
 	public String getPropertySearchQuery(PropertyCriteria criteria, List<Object> preparedStmtList) {
 

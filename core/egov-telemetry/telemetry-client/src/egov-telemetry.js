@@ -1,26 +1,7 @@
 global.jQuery = require("jquery");
 import exec from "script-loader!../vendor/telemetryLibrary.js";
 import TelemetryManager from "./telemetry-class";
-
-(function() {
-  if (typeof window.CustomEvent === "function") return false; //If not IE
-
-  function CustomEvent(event, params) {
-    params = params || { bubbles: false, cancelable: false, detail: undefined };
-    var evt = document.createEvent("CustomEvent");
-    evt.initCustomEvent(
-      event,
-      params.bubbles,
-      params.cancelable,
-      params.detail
-    );
-    return evt;
-  }
-
-  CustomEvent.prototype = window.Event.prototype;
-
-  window.CustomEvent = CustomEvent;
-})();
+import "./polyfill";
 
 function findParent(element, elementType) {
   if (element === null) {

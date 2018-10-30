@@ -46,6 +46,12 @@ public class PropertyCriteria {
 	private String accountId;
 
 	private List<PropertyInfo.StatusEnum> statuses;
+	
+    @JsonProperty("offset")
+    private Long offset;
+
+    @JsonProperty("limit")
+    private Long limit;
 
 
 

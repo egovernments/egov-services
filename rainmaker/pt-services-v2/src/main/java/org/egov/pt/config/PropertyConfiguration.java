@@ -103,6 +103,15 @@ public class PropertyConfiguration {
 
     @Value("${notification.url}")
     private String notificationURL;
+    
+    @Value("${pt.search.pagination.default.limit}")
+    private Long defaultLimit;
+
+    @Value("${pt.search.pagination.default.offset}")
+    private Long defaultOffset;
+    
+    @Value("${pt.search.pagination.max.search.limit}")
+    private Long maxSearchLimit;
 
 
 }

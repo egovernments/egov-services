@@ -33,7 +33,9 @@ public class PropertyRepository {
 	}
 	
 	public List<Property> getPropertiesPlainSearch(PropertyCriteria criteria){
-		String query = queryBuilder.getPropertyLikeQuery();
+		List<Object> preparedStmtList = new ArrayList<>();
+		String query = queryBuilder.getPropertyLikeQuery(criteria, preparedStmtList);
+		log.info("Query: "+query);
 		return jdbcTemplate.query(query, rowMapper);
 	}
 }

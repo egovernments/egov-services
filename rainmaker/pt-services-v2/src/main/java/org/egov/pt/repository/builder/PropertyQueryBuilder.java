@@ -5,7 +5,6 @@ import java.util.*;
 import org.apache.commons.lang3.StringUtils;
 import org.egov.pt.config.PropertyConfiguration;
 import org.egov.pt.web.models.PropertyCriteria;
-import org.egov.pt.web.models.PropertyInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;

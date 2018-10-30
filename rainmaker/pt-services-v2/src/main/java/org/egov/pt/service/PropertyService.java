@@ -23,9 +23,6 @@ public class PropertyService {
 	private PropertyConfiguration config;
 
 	@Autowired
-	private ResponseInfoFactory responseInfoFactory;
-
-	@Autowired
 	private PropertyRepository repository;
 
 	@Autowired

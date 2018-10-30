@@ -9,3 +9,11 @@ ServiceMaps:
       id: $.Bill[0].billDetails[0].receiptNumber
       isBulk: true
       jsonPath: $.Receipt
+
+  - topic: egov.collection.receipt-create-reindex-test
+    indexes:
+    - name: egovcollectionsreindextest
+      type: receipts
+      id: $.Bill[0].billDetails[0].receiptNumber
+      isBulk: true
+      jsonPath: $.Receipt

@@ -119,7 +119,7 @@ window.addEventListener("load", event => {
   urlChanged(window.location.href);
 });
 window.addEventListener("beforeunload", event => {
-  urlChanged(_, true); //end = true
+  urlChanged(); //end = true
 });
 
 // Window background and foreground event

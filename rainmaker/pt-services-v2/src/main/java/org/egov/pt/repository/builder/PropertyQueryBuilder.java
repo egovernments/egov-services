@@ -39,7 +39,7 @@ public class PropertyQueryBuilder {
 			+ " WHERE ";
 
 	private static final String LIKE_QUERY = "SELECT pt.*,ptdl.*,address.*,owner.*,doc.*,unit.*,insti.*,"
-			+ " pt.propertyid as propertyid,ptdl.assessmentnumber as propertydetailid,doc.id as documentid,unit.id as unitid,"
+			+ " pt.propertyid as propid,ptdl.assessmentnumber as propertydetailid,doc.id as documentid,unit.id as unitid,"
 			+ "address.id as addresskeyid,insti.id as instiid,"
 			+ "ownerdoc.id as ownerdocid,ownerdoc.documenttype as ownerdocType,ownerdoc.filestore as ownerfileStore,"
 			+ "ownerdoc.documentuid as ownerdocuid,"
@@ -59,7 +59,7 @@ public class PropertyQueryBuilder {
 			+ " WHERE ";
 
 	private final String paginationWrapper = "SELECT * FROM "
-			+ "(SELECT *, DENSE_RANK() OVER (ORDER BY assesscreatedTime) offset_ FROM " + "({})" + " result) result_offset "
+			+ "(SELECT *, DENSE_RANK() OVER (ORDER BY propid) offset_ FROM " + "({})" + " result) result_offset "
 			+ "WHERE offset_ > ? AND offset_ <= ?";
 
 	public String getPropertyLikeQuery(PropertyCriteria criteria, List<Object> preparedStmtList) {

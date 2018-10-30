@@ -59,32 +59,33 @@ import org.springframework.stereotype.Service;
 @Service
 public class EmployeeListener {
 
-	public static final Logger LOGGER = LoggerFactory.getLogger(EmployeeListener.class);
+    public static final Logger LOGGER = LoggerFactory.getLogger(EmployeeListener.class);
 
-	@Autowired
-	private EmployeeService employeeService;
+    @Autowired
+    private EmployeeService employeeService;
 
-	@Autowired
-	private RequestInfoFactory requestInfoFactory;
+    @Autowired
+    private RequestInfoFactory requestInfoFactory;
 
-	@KafkaListener(topics = "${kafka.topics.employee.savedb.name}")
-	public void listen(ConsumerRecord<String, String> record) {
-		LOGGER.info("key : " + record.key() + "\t\t" + "value : " + record.value());
+    @KafkaListener(topics = "${kafka.topics.employee.savedb.name}")
+    public void listen(ConsumerRecord<String, String> record) {
+        LOGGER.info("key : " + record.key() + "\t\t" + "value : " + record.value());
 
-		JsonReader jsonReader = Json.createReader(new StringReader(record.value()));
-		JsonObject jsonObject = jsonReader.readObject();
-		jsonReader.close();
-		JsonObject requestInfoJSONObject = jsonObject.getJsonObject("RequestInfo");
-		LOGGER.info("requestInfoJSONObject : " + requestInfoJSONObject);
-		JsonObject employeeJSONObject = jsonObject.getJsonObject("Employee");
-		LOGGER.info("employeeJSONObject : " + employeeJSONObject);
-		String tenantId = employeeJSONObject.isNull("tenantId") ? null : employeeJSONObject.getString("tenantId");
-		LOGGER.info("tenantId : " + tenantId);
+        JsonReader jsonReader = Json.createReader(new StringReader(record.value()));
+        JsonObject jsonObject = jsonReader.readObject();
+        jsonReader.close();
+        JsonObject requestInfoJSONObject = jsonObject.getJsonObject("RequestInfo");
+        LOGGER.info("requestInfoJSONObject : " + requestInfoJSONObject);
+        JsonObject employeeJSONObject = jsonObject.getJsonObject("Employee");
+        LOGGER.info("employeeJSONObject : " + employeeJSONObject);
+        String tenantId = employeeJSONObject.isNull("tenantId") ? null : employeeJSONObject.getString("tenantId");
+        LOGGER.info("tenantId : " + tenantId);
 
-		RequestInfo requestInfo = requestInfoFactory.getRequestInfo(requestInfoJSONObject, tenantId);
+        RequestInfo requestInfo = requestInfoFactory.getRequestInfo(requestInfoJSONObject, tenantId);
 
-		// FIXME : Parse id in long once egf-masters update their AccountDetailKey Contract & table schema.
-		employeeService.processRequest(employeeJSONObject.getString("id"),employeeJSONObject.getString("name"), tenantId, requestInfo);
-	}
+        // FIXME : Parse id in long once egf-masters update their AccountDetailKey Contract & table schema.
+        employeeService.processRequest(employeeJSONObject.getString("id"),
+                employeeJSONObject.getString("code") + "-" + employeeJSONObject.getString("name"), tenantId, requestInfo);
+    }
 
 }

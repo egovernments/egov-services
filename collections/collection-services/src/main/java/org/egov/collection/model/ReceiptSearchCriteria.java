@@ -93,8 +93,8 @@ public class ReceiptSearchCriteria {
     //Deprecated
 //    private Integer pageSize;
 
-    private int offset;
+    private Integer offset;
 
-    private int limit;
+    private Integer limit;
 
 }

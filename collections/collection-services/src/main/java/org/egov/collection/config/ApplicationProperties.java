@@ -131,4 +131,10 @@ public class ApplicationProperties {
     @Value("${receiptnumber.state.level.format}")
     private String receiptNumberStateLevelFormat;
 
+    @Value("${collection.receipts.search.paginate}")
+    private boolean receiptsSearchPaginationEnabled;
+
+    @Value("${collection.receipts.search.default.size}")
+    private Integer receiptsSearchDefaultLimit;
+
 }

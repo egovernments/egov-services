@@ -75,7 +75,7 @@ public class PropertyQueryBuilder {
 				preparedStmtList.add(criteria.getTenantId());
 			}
 		}else {
-			builder.append("pt.tenantid = ? ");
+			builder.append("pt.tenantid LIKE ? ");
 			preparedStmtList.add("pb%");
 		}
 		

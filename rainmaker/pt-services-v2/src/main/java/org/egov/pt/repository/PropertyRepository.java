@@ -28,15 +28,14 @@ public class PropertyRepository {
 	public List<Property> getProperties(PropertyCriteria criteria){
 		List<Object> preparedStmtList = new ArrayList<>();
 		String query = queryBuilder.getPropertySearchQuery(criteria, preparedStmtList);
-		//log.info("Query: "+query);
 		return jdbcTemplate.query(query, preparedStmtList.toArray(), rowMapper);
 	}
 	
 	public List<Property> getPropertiesPlainSearch(PropertyCriteria criteria){
 		List<Object> preparedStmtList = new ArrayList<>();
 		String query = queryBuilder.getPropertyLikeQuery(criteria, preparedStmtList);
-		log.info("Query: "+query);
-		log.info("PS: "+preparedStmtList);
+		log.debug("Query: "+query);
+		log.debug("PS: "+preparedStmtList);
 		return jdbcTemplate.query(query, preparedStmtList.toArray(), rowMapper);
 	}
 }

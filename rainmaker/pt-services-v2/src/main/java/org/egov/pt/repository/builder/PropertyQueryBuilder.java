@@ -60,11 +60,12 @@ public class PropertyQueryBuilder {
 			+ " WHERE ";
 
 	private final String paginationWrapper = "SELECT * FROM "
-			+ "(SELECT *, DENSE_RANK() OVER (ORDER BY tl_id) offset_ FROM " + "({})" + " result) result_offset "
+			+ "(SELECT *, DENSE_RANK() OVER (ORDER BY assesscreatedTime) offset_ FROM " + "({})" + " result) result_offset "
 			+ "WHERE offset_ > ? AND offset_ <= ?";
 
 	public String getPropertyLikeQuery(PropertyCriteria criteria, List<Object> preparedStmtList) {
-		StringBuilder builder = new StringBuilder(LIKE_QUERY);
+		StringBuilder builder = new StringBuilder(LIKE_QUERY);	
+		
 		if(!StringUtils.isEmpty(criteria.getTenantId())) {
 			if(criteria.getTenantId().equals("pb")) {
 				builder.append("pt.tenantid LIKE ? ");
@@ -74,7 +75,7 @@ public class PropertyQueryBuilder {
 				preparedStmtList.add(criteria.getTenantId());
 			}
 		}else {
-			builder.append("pt.tenantid LIKE ? ");
+			builder.append("pt.tenantid = ? ");
 			preparedStmtList.add("pb%");
 		}
 		

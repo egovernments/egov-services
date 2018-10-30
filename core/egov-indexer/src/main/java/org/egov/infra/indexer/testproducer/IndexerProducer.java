@@ -15,9 +15,6 @@ public class IndexerProducer {
     private KafkaTemplate<String, Object> kafkaTemplate;
 	
     public void producer(String topicName, Object value) {
-    	logger.info("Value being pushed to the queue: "+value.toString());
-    	logger.info("On topic: "+topicName.toString());
-
     	kafkaTemplate.send(topicName, value);
     }
 

@@ -22,6 +22,6 @@ ServiceMaps:
     indexes:
     - name: ptreindextest
       type: propertycreate
-      id: $.id
+      id: $.propertyId, $.tenantId
       isBulk: true
       jsonPath: $.Properties.*

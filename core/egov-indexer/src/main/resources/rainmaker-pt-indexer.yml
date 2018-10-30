@@ -20,7 +20,7 @@ ServiceMaps:
       
   - topic: save-pt-property-reindex-test
     indexes:
-    - name: rainmakerptreindextest
+    - name: ptreindextest
       type: propertycreate
       id: $.propertyId, $.tenantId
       isBulk: true

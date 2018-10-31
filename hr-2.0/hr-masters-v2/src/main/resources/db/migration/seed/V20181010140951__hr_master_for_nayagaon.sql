@@ -1,29 +1,29 @@
 insert into egeis_hrstatus(id,objectname,code,description,tenantid) values (nextval('seq_egeis_hrStatus'),'Employee Master',
-'EMPLOYED','Currently employee of the system','pb.nayagaon');
+'EMPLOYED','Currently employee of the system','pb.nayagaon') ON CONFLICT DO NOTHING;
 insert into egeis_hrstatus(id,objectname,code,description,tenantid) values (nextval('seq_egeis_hrStatus'),'Employee Master',
-'RETIRED','Employee who is currently retired','pb.nayagaon');
+'RETIRED','Employee who is currently retired','pb.nayagaon') ON CONFLICT DO NOTHING;
 insert into egeis_hrstatus(id,objectname,code,description,tenantid) values (nextval('seq_egeis_hrStatus'),'Employee Master',
-'DECEASED','Employee who is deceased when in service','pb.nayagaon');
+'DECEASED','Employee who is deceased when in service','pb.nayagaon') ON CONFLICT DO NOTHING;
 insert into egeis_hrstatus(id,objectname,code,description,tenantid) values (nextval('seq_egeis_hrStatus'),'Employee Master',
-'SUSPENDED','Employee who is suspended','pb.nayagaon');
+'SUSPENDED','Employee who is suspended','pb.nayagaon') ON CONFLICT DO NOTHING;
 insert into egeis_hrstatus(id,objectname,code,description,tenantid) values (nextval('seq_egeis_hrStatus'),'Employee Master',
-'TRANSFERRED','Employee who is transferred','pb.nayagaon');
+'TRANSFERRED','Employee who is transferred','pb.nayagaon') ON CONFLICT DO NOTHING;
 
-insert into egeis_hrConfiguration(id,keyname,description,createdby,createddate,lastmodifiedby,lastmodifieddate,tenantid) values(nextval('seq_egeis_hrConfiguration'),'Autogenerate_employeecode','This will define if employee code needs to be system generated or manually captured',1,now(),1,now(),'pb.nayagaon');
+insert into egeis_hrConfiguration(id,keyname,description,createdby,createddate,lastmodifiedby,lastmodifieddate,tenantid) values(nextval('seq_egeis_hrConfiguration'),'Autogenerate_employeecode','This will define if employee code needs to be system generated or manually captured',1,now(),1,now(),'pb.nayagaon') ON CONFLICT DO NOTHING;
 
 insert into egeis_hrConfigurationValues(id,keyid,value,effectivefrom,createdby,createddate,lastmodifiedby,lastmodifieddate,tenantid)
 values(nextval('seq_egeis_hrConfigurationValues'),(select id from egeis_hrconfiguration where keyname='Autogenerate_employeecode' and tenantid='pb.nayagaon'),'N',
-'2016-01-01',1,now(),1,now(),'pb.nayagaon');
+'2016-01-01',1,now(),1,now(),'pb.nayagaon') ON CONFLICT DO NOTHING;
 
-INSERT INTO egeis_employeetype (id, name, chartofaccounts, tenantid) VALUES (nextval('seq_egeis_employeeType'), 'Temporary', NULL, 'pb.nayagaon');
-INSERT INTO egeis_employeetype (id, name, chartofaccounts, tenantid) VALUES (nextval('seq_egeis_employeeType'), 'Deputation', NULL, 'pb.nayagaon');
-INSERT INTO egeis_employeetype (id, name, chartofaccounts, tenantid) VALUES (nextval('seq_egeis_employeeType'), 'Outsourced', NULL, 'pb.nayagaon');
-INSERT INTO egeis_employeetype (id, name, chartofaccounts, tenantid) VALUES (nextval('seq_egeis_employeeType'), 'Permanent', NULL, 'pb.nayagaon');
+INSERT INTO egeis_employeetype (id, name, chartofaccounts, tenantid) VALUES (nextval('seq_egeis_employeeType'), 'Temporary', NULL, 'pb.nayagaon') ON CONFLICT DO NOTHING;
+INSERT INTO egeis_employeetype (id, name, chartofaccounts, tenantid) VALUES (nextval('seq_egeis_employeeType'), 'Deputation', NULL, 'pb.nayagaon') ON CONFLICT DO NOTHING;
+INSERT INTO egeis_employeetype (id, name, chartofaccounts, tenantid) VALUES (nextval('seq_egeis_employeeType'), 'Outsourced', NULL, 'pb.nayagaon') ON CONFLICT DO NOTHING;
+INSERT INTO egeis_employeetype (id, name, chartofaccounts, tenantid) VALUES (nextval('seq_egeis_employeeType'), 'Permanent', NULL, 'pb.nayagaon') ON CONFLICT DO NOTHING;
 
-insert into egeis_recruitmentMode(id,name,description,tenantid) values(nextval('seq_egeis_recruitmentMode'),'APPSC','Andhra Public Service','pb.nayagaon');
-insert into egeis_recruitmentMode(id,name,description,tenantid) values(nextval('seq_egeis_recruitmentMode'),'Compassionate','Compassionate','pb.nayagaon');
+insert into egeis_recruitmentMode(id,name,description,tenantid) values(nextval('seq_egeis_recruitmentMode'),'APPSC','Andhra Public Service','pb.nayagaon') ON CONFLICT DO NOTHING;
+insert into egeis_recruitmentMode(id,name,description,tenantid) values(nextval('seq_egeis_recruitmentMode'),'Compassionate','Compassionate','pb.nayagaon') ON CONFLICT DO NOTHING;
 
-insert into egeis_recruitmentMode(id,name,description,tenantid) values(nextval('seq_egeis_recruitmentMode'),'Others','Others','pb.nayagaon');
+insert into egeis_recruitmentMode(id,name,description,tenantid) values(nextval('seq_egeis_recruitmentMode'),'Others','Others','pb.nayagaon') ON CONFLICT DO NOTHING;
 
 delete from egeis_group where name in ('State','Central','Local') and tenantid = 'pb.nayagaon' ;
 delete from egeis_recruitmenttype where name in ('Direct','Transfer','Compensatory') and tenantid='pb.nayagaon' ;
@@ -56,8 +56,8 @@ insert into egeis_grade values (nextval('seq_egeis_grade'),'G','General Level',3
 
 
 INSERT INTO egeis_hrConfiguration (id, keyname, description, createdby, createddate, lastmodifiedby, lastmodifieddate, tenantid)
-    VALUES (nextval('seq_egeis_hrConfiguration'), 'Autogenerate_username', 'This will define if username for employee needs to be system generated or manually captured', 1, now(), 1, now(), 'pb.nayagaon');
+    VALUES (nextval('seq_egeis_hrConfiguration'), 'Autogenerate_username', 'This will define if username for employee needs to be system generated or manually captured', 1, now(), 1, now(), 'pb.nayagaon') ON CONFLICT DO NOTHING;
 
 INSERT INTO egeis_hrConfigurationValues (id, keyid, value, effectivefrom, createdby, createddate, lastmodifiedby, lastmodifieddate, tenantid)
-    VALUES(nextval('seq_egeis_hrConfigurationValues'), (SELECT id FROM egeis_hrconfiguration WHERE keyname='Autogenerate_username' AND tenantid='pb.nayagaon'), 'Y', '2016-01-01', 1, now(), 1, now(), 'pb.nayagaon');
+    VALUES(nextval('seq_egeis_hrConfigurationValues'), (SELECT id FROM egeis_hrconfiguration WHERE keyname='Autogenerate_username' AND tenantid='pb.nayagaon'), 'Y', '2016-01-01', 1, now(), 1, now(), 'pb.nayagaon') ON CONFLICT DO NOTHING;
 

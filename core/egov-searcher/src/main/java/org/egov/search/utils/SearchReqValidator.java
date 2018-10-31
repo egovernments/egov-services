@@ -40,7 +40,6 @@ public class SearchReqValidator {
 		}catch(CustomException e){
 			throw e;
 		}
-		logger.info("Definition being used for process: "+searchDefinition);
 		validateSearchDefAgainstReq(searchDefinition, searchRequest);
 		logger.info("All validations passed!");
 	}

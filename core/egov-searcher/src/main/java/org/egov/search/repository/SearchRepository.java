@@ -9,7 +9,6 @@ import org.egov.search.model.Definition;
 import org.egov.search.model.SearchRequest;
 import org.egov.search.utils.SearchUtils;
 import org.egov.tracer.model.CustomException;
-import org.json.JSONArray;
 import org.postgresql.util.PGobject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,7 +44,6 @@ public class SearchRepository {
 		}
 		Long startTime = new Date().getTime();
 		List<PGobject> maps = jdbcTemplate.queryForList(query,PGobject.class);
-		//LOGGER.info("query result: "+maps);
 		Long endTime = new Date().getTime();
 		Long totalExecutionTime = endTime - startTime;
 		LOGGER.info("Query execution time in millisec: "+totalExecutionTime);

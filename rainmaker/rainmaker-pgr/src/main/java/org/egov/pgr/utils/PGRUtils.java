@@ -37,6 +37,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
 
 import lombok.extern.slf4j.Slf4j;
@@ -237,7 +238,19 @@ public class PGRUtils {
 		String endPoint = searcherEndpoint.replace(MODULE_NAME, PGRConstants.SEARCHER_PGR_MOD_NAME).replace(SEARCH_NAME,
 				PGRConstants.SEARCHER_SRSEARCH_DEF_NAME);
 		uri.append(endPoint);
-		return SearcherRequest.builder().requestInfo(requestInfo).searchCriteria(serviceReqSearchCriteria).build();
+		/**
+		 * This if block is to support substring search on servicerequestid without changing the contract. 
+		 * Query uses an IN clause which doesn't support substring search, therefore a new temp variable is added.
+		 */
+		if(serviceReqSearchCriteria.getServiceRequestId().size() == 1) {
+			DocumentContext context = JsonPath.parse(serviceReqSearchCriteria);
+			context.put("$", "complaintid", serviceReqSearchCriteria.getServiceRequestId().get(0));
+			serviceReqSearchCriteria.getServiceRequestId().clear();
+			log.info("modified search criteria: "+serviceReqSearchCriteria);
+			return SearcherRequest.builder().requestInfo(requestInfo).searchCriteria(context.jsonString().toString()).build();
+		}else {
+			return SearcherRequest.builder().requestInfo(requestInfo).searchCriteria(serviceReqSearchCriteria).build();
+		}
 	}
 
 	/**

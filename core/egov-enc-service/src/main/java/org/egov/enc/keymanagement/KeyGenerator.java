@@ -75,16 +75,16 @@ public class KeyGenerator {
 
     //Returns a list of Symmetric Keys corresponding to the list of input tenants
     //The returned keys will be encrypted with the master password
-    public ArrayList<SymmetricKey> generateSymmetricKeys(ArrayList<String> tenantIds) throws BadPaddingException, InvalidAlgorithmParameterException, NoSuchAlgorithmException, IllegalBlockSizeException, NoSuchPaddingException, InvalidKeyException, InvalidKeySpecException {
+    public ArrayList<SymmetricKey> generateSymmetricKeys(ArrayList<String> tenantIds) throws BadPaddingException, InvalidAlgorithmParameterException, NoSuchAlgorithmException, IllegalBlockSizeException, NoSuchPaddingException, InvalidKeyException {
         int numberOfKeys = tenantIds.size();
         SecretKey[] keys = new SecretKey[numberOfKeys];
         byte[][] initialVectors = new byte[numberOfKeys][16];
         for(int i = 0; i < numberOfKeys; i++) {
-            keys[i] = new SecretKeySpec(getRandomBytes(256/8), "AES");
+            keys[i] = new SecretKeySpec(getRandomBytes(appProperties.getSymmetricKeySize()/8), "AES");
             initialVectors[i] = getRandomBytes(16);
         }
 
-        ArrayList<SymmetricKey> symmetricKeyArrayList = new ArrayList<SymmetricKey>();
+        ArrayList<SymmetricKey> symmetricKeyArrayList = new ArrayList<>();
 
         for(int i = 0; i < keys.length; i++) {
             String keyAsString = encryptWithMasterPassword(Base64.getEncoder().encodeToString(keys[i].getEncoded()));
@@ -96,16 +96,16 @@ public class KeyGenerator {
 
     //Returns a list of Asymmetric Keys corresponding to the list of input tenants
     //The returned keys will be encrypted with the master password
-    public ArrayList<AsymmetricKey> generateAsymmetricKeys(ArrayList<String> tenantIds) throws NoSuchAlgorithmException, BadPaddingException, InvalidAlgorithmParameterException, IllegalBlockSizeException, NoSuchPaddingException, InvalidKeyException, InvalidKeySpecException {
+    public ArrayList<AsymmetricKey> generateAsymmetricKeys(ArrayList<String> tenantIds) throws NoSuchAlgorithmException, BadPaddingException, InvalidAlgorithmParameterException, IllegalBlockSizeException, NoSuchPaddingException, InvalidKeyException {
         int numberOfKeys = tenantIds.size();
         KeyPair[] keys = new KeyPair[numberOfKeys];
-        KeyPairGenerator keyGenerator = KeyPairGenerator.getInstance("RSA");
-        keyGenerator.initialize(1024);
+        KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
+        keyPairGenerator.initialize(appProperties.getAsymmetricKeySize());
         for(int i = 0; i < numberOfKeys; i++) {
-            keys[i] = keyGenerator.generateKeyPair();
+            keys[i] = keyPairGenerator.generateKeyPair();
         }
 
-        ArrayList<AsymmetricKey> asymmetricKeyArrayList = new ArrayList<AsymmetricKey>();
+        ArrayList<AsymmetricKey> asymmetricKeyArrayList = new ArrayList<>();
 
         for(int i = 0; i < keys.length; i++) {
             String publicKey = encryptWithMasterPassword(Base64.getEncoder().encodeToString(keys[i].getPublic().getEncoded()));

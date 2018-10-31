@@ -85,7 +85,7 @@ public class KeyStore implements ApplicationRunner {
     }
 
     //Reset and Initialize all the keys and HashMaps from the database
-    public void refreshKeys() throws BadPaddingException, InvalidKeyException, NoSuchAlgorithmException, IllegalBlockSizeException, NoSuchPaddingException, InvalidAlgorithmParameterException, InvalidKeySpecException {
+    public void refreshKeys() throws BadPaddingException, InvalidKeyException, NoSuchAlgorithmException, IllegalBlockSizeException, NoSuchPaddingException, InvalidAlgorithmParameterException {
         tenantIds = (ArrayList<String>) keyRepository.fetchDistinctTenantIds();
 
         symmetricKeys = (ArrayList<SymmetricKey>) this.keyRepository.fetchSymmetricKeys();
@@ -194,14 +194,14 @@ public class KeyStore implements ApplicationRunner {
     }
 
     //Decrypt all keys
-    private void decryptAllKeys() throws BadPaddingException, InvalidAlgorithmParameterException, NoSuchAlgorithmException, IllegalBlockSizeException, NoSuchPaddingException, InvalidKeyException, InvalidKeySpecException {
-        for(int i = 0; i < symmetricKeys.size(); i++) {
-            symmetricKeys.get(i).setSecretKey(decryptWithMasterPassword(symmetricKeys.get(i).getSecretKey()));
-            symmetricKeys.get(i).setInitialVector(decryptWithMasterPassword(symmetricKeys.get(i).getInitialVector()));
+    private void decryptAllKeys() throws BadPaddingException, InvalidAlgorithmParameterException, NoSuchAlgorithmException, IllegalBlockSizeException, NoSuchPaddingException, InvalidKeyException {
+        for (SymmetricKey symmetricKey : symmetricKeys) {
+            symmetricKey.setSecretKey(decryptWithMasterPassword(symmetricKey.getSecretKey()));
+            symmetricKey.setInitialVector(decryptWithMasterPassword(symmetricKey.getInitialVector()));
         }
-        for(int i = 0; i < asymmetricKeys.size(); i++) {
-            asymmetricKeys.get(i).setPublicKey(decryptWithMasterPassword(asymmetricKeys.get(i).getPublicKey()));
-            asymmetricKeys.get(i).setPrivateKey(decryptWithMasterPassword(asymmetricKeys.get(i).getPrivateKey()));
+        for (AsymmetricKey asymmetricKey : asymmetricKeys) {
+            asymmetricKey.setPublicKey(decryptWithMasterPassword(asymmetricKey.getPublicKey()));
+            asymmetricKey.setPrivateKey(decryptWithMasterPassword(asymmetricKey.getPrivateKey()));
         }
     }
 

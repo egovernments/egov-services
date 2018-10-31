@@ -19,13 +19,13 @@ public class AESUtil {
     public static void init() { Security.addProvider(new BouncyCastleProvider()); }
 
     public static byte[] encrypt(byte[] plaintext, SecretKey secretKey, byte[] initialVector) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidAlgorithmParameterException, InvalidKeyException, BadPaddingException, IllegalBlockSizeException {
-        Cipher cipher = Cipher.getInstance("AES/CBC/PKCS7Padding");
+        Cipher cipher = Cipher.getInstance("AES/GCM/NoPadding");
         cipher.init(Cipher.ENCRYPT_MODE, secretKey, new IvParameterSpec(initialVector));
         return cipher.doFinal(plaintext);
     }
 
     public static byte[] decrypt(byte[] ciphertext, SecretKey secretKey, byte[] initialVector) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidAlgorithmParameterException, InvalidKeyException, BadPaddingException, IllegalBlockSizeException {
-        Cipher cipher = Cipher.getInstance("AES/CBC/PKCS7Padding");
+        Cipher cipher = Cipher.getInstance("AES/GCM/NoPadding");
         cipher.init(Cipher.DECRYPT_MODE, secretKey, new IvParameterSpec(initialVector));
         return cipher.doFinal(ciphertext);
     }

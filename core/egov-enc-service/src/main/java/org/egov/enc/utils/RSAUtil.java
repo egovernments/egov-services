@@ -20,13 +20,13 @@ public class RSAUtil {
     }
 
     public static byte[] encrypt(byte[] plaintext, PublicKey publicKey) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException, BadPaddingException, IllegalBlockSizeException {
-        Cipher cipher = Cipher.getInstance("RSA/NONE/NoPadding");
+        Cipher cipher = Cipher.getInstance("RSA/NONE/OAEPWithSHA3-256AndMGF1Padding");
         cipher.init(Cipher.ENCRYPT_MODE, publicKey);
         return cipher.doFinal(plaintext);
     }
 
     public static byte[] decrypt(byte[] ciphertext, PrivateKey privateKey) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException, BadPaddingException, IllegalBlockSizeException {
-        Cipher cipher = Cipher.getInstance("RSA/NONE/NoPadding");
+        Cipher cipher = Cipher.getInstance("RSA/NONE/OAEPWithSHA3-256AndMGF1Padding");
         cipher.init(Cipher.DECRYPT_MODE, privateKey);
         return cipher.doFinal(ciphertext);
     }

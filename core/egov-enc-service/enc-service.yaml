@@ -24,7 +24,7 @@ paths:
                   {
                     "tenantId": "pb.amritsar",
                     "method": "RSA",
-                    "value": "My Password"
+                    "value": "My email"
                   },
                   {
                     "tenantId": "pb.jalandhar",
@@ -43,7 +43,7 @@ paths:
                   }
                 ]
               }
-      
+
       responses:
         '200':
           description: The returned encrypted value will have the same structure as the input value.
@@ -51,10 +51,10 @@ paths:
             application/json:
               schema:
                 type: array
-                items: 
+                items:
                   type: object
               example:
-                  [ 
+                  [
                     "RSA|3|BHLPVVOVOc7riJW4Gs4gLKUaqXIqNkvUKy30rWeEkMbukF8SfaFGJ9YaYSHv0a1lVv2iwRr26kN0QxKZsJJ3YEU+k/jlkWca+u+2T8M4MOvIRbpsrnYYw4hVE20WT4+8WbH39aAPGkMFXTwU7M+LNpCiAl+NxJPUiq7i8QJhIsc=",
                     [
                       "AES|1|xOWbq7hJ2wFxy+oM3O3/dQ==",
@@ -67,11 +67,11 @@ paths:
                       }
                     }
                   ]
-                
+
 
       tags:
         - Crypto
-  
+
   /crypto/v1/_decrypt:
     post:
       summary: Decrypts the given input value/s OR values of the object.
@@ -84,20 +84,19 @@ paths:
               items:
                 type: object
             example:
-               [ 
-                    "RSA|3|BHLPVVOVOc7riJW4Gs4gLKUaqXIqNkvUKy30rWeEkMbukF8SfaFGJ9YaYSHv0a1lVv2iwRr26kN0QxKZsJJ3YEU+k/jlkWca+u+2T8M4MOvIRbpsrnYYw4hVE20WT4+8WbH39aAPGkMFXTwU7M+LNpCiAl+NxJPUiq7i8QJhIsc=",
-                    [
-                      "AES|1|xOWbq7hJ2wFxy+oM3O3/dQ==",
-                      "AES|1|w7xMbg4NjAiFMHwGODkjUQ=="
-                    ],
+               [
                     {
                       "userObject1": {
                           "mobileNumber": "AES|5|AUKQyq2zI8zRs5XBNItmqA==",
                           "name": "AES|5|BYUUZld7gXDYvfSIKCHbSw=="
                       }
-                    }
+                    },
+                    [
+                      "AES|1|xOWbq7hJ2wFxy+oM3O3/dQ==",
+                      "AES|1|w7xMbg4NjAiFMHwGODkjUQ=="
+                    ]
                   ]
-      
+
       responses:
         '200':
           description: The response to a decryption request will have the same structure as the input.
@@ -109,24 +108,23 @@ paths:
                   type: object
               example:
                 [
-                  "My Password",
-                  [
-                      "Personal",
-                      "Private"
-                  ],
                   {
                       "userObject1": {
                           "mobileNumber": "98989121234",
                           "name": "John Doe"
                       }
-                  }
+                  },
+                  [
+                      "Personal",
+                      "Private"
+                  ]
                 ]
-                
-      
-      tags: 
+
+
+      tags:
         - Crypto
 
-      
+
 components:
   schemas:
 

@@ -20,7 +20,7 @@ SearchDefinitions:
       jsonPath: $.searchCriteria.serviceRequestId
     - name: servicerequestid
       isMandatory: false
-      jsonPath: $.searchCriteria.complaintid
+      jsonPath: $.searchCriteria.complaintId
       operator: LIKE
     - name: accountid
       isMandatory: false

@@ -62,6 +62,4 @@ public class ServiceReqSearchCriteria {
 	@JsonProperty("noOfRecords")
 	private Long noOfRecords;
 	
-	
-
 }

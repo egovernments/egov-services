@@ -33,6 +33,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -231,9 +232,10 @@ public class PGRUtils {
 	 * @param requestInfo
 	 * @return SearcherRequest
 	 * @author vishal
+	 * @throws JsonProcessingException 
 	 */
 	public SearcherRequest prepareSearchRequestWithDetails(StringBuilder uri,
-			ServiceReqSearchCriteria serviceReqSearchCriteria, RequestInfo requestInfo) {
+			ServiceReqSearchCriteria serviceReqSearchCriteria, RequestInfo requestInfo){
 		uri.append(searcherHost);
 		String endPoint = searcherEndpoint.replace(MODULE_NAME, PGRConstants.SEARCHER_PGR_MOD_NAME).replace(SEARCH_NAME,
 				PGRConstants.SEARCHER_SRSEARCH_DEF_NAME);
@@ -241,13 +243,14 @@ public class PGRUtils {
 		/**
 		 * This if block is to support substring search on servicerequestid without changing the contract. 
 		 * Query uses an IN clause which doesn't support substring search, therefore a new temp variable is added.
-		 */
+		 */		
 		if(serviceReqSearchCriteria.getServiceRequestId().size() == 1) {
-			DocumentContext context = JsonPath.parse(serviceReqSearchCriteria);
-			context.put("$", "complaintid", serviceReqSearchCriteria.getServiceRequestId().get(0));
-			serviceReqSearchCriteria.getServiceRequestId().clear();
-			log.info("modified search criteria: "+serviceReqSearchCriteria);
-			return SearcherRequest.builder().requestInfo(requestInfo).searchCriteria(context.jsonString().toString()).build();
+			ObjectMapper mapper = getObjectMapper();
+			Map<String, Object> mapOfValues = mapper.convertValue(serviceReqSearchCriteria, Map.class);
+			mapOfValues.put("complaintId", serviceReqSearchCriteria.getServiceRequestId().get(0));
+			mapOfValues.put("serviceRequestId", null);
+			log.info("map: "+mapOfValues.toString());
+			return SearcherRequest.builder().requestInfo(requestInfo).searchCriteria(mapOfValues).build();
 		}else {
 			return SearcherRequest.builder().requestInfo(requestInfo).searchCriteria(serviceReqSearchCriteria).build();
 		}

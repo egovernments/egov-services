@@ -32,6 +32,7 @@ import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -244,12 +245,12 @@ public class PGRUtils {
 		 * This if block is to support substring search on servicerequestid without changing the contract. 
 		 * Query uses an IN clause which doesn't support substring search, therefore a new temp variable is added.
 		 */		
-		if(serviceReqSearchCriteria.getServiceRequestId().size() == 1) {
+		if(!CollectionUtils.isEmpty(serviceReqSearchCriteria.getServiceRequestId()) &&
+				serviceReqSearchCriteria.getServiceRequestId().size() == 1) {
 			ObjectMapper mapper = getObjectMapper();
 			Map<String, Object> mapOfValues = mapper.convertValue(serviceReqSearchCriteria, Map.class);
 			mapOfValues.put("complaintId", serviceReqSearchCriteria.getServiceRequestId().get(0));
 			mapOfValues.put("serviceRequestId", null);
-			log.info("map: "+mapOfValues.toString());
 			return SearcherRequest.builder().requestInfo(requestInfo).searchCriteria(mapOfValues).build();
 		}else {
 			return SearcherRequest.builder().requestInfo(requestInfo).searchCriteria(serviceReqSearchCriteria).build();

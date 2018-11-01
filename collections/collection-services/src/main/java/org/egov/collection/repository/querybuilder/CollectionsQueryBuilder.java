@@ -363,7 +363,7 @@ public class CollectionsQueryBuilder {
     private static String addPaginationClause(StringBuilder selectQuery, Map<String, Object> preparedStatementValues,
             ReceiptSearchCriteria criteria) {
 
-        if (criteria.getLimit() != 0) {
+        if (criteria.getLimit()!=null && criteria.getLimit() != 0) {
             String finalQuery = PAGINATION_WRAPPER.replace("{baseQuery}", selectQuery);
             preparedStatementValues.put("offset", criteria.getOffset());
             preparedStatementValues.put("limit", criteria.getOffset() + criteria.getLimit());

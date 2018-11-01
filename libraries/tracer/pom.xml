@@ -79,9 +79,10 @@
 
         <dependency>
             <groupId>io.opentracing.contrib</groupId>
-            <artifactId>opentracing-jdbc</artifactId>
-            <version>0.0.6</version>
+            <artifactId>opentracing-spring-cloud-jdbc-starter</artifactId>
+            <version>0.1.16</version>
         </dependency>
+
 
         <dependency>
             <groupId>io.opentracing.contrib</groupId>

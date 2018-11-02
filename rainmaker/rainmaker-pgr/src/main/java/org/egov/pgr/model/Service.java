@@ -35,9 +35,11 @@ public class Service   {
   @JsonProperty("citizen")
   private Citizen citizen;
   
+  @NotNull
   @JsonProperty("tenantId")
   private String tenantId;
 
+  @NotNull
   @JsonProperty("serviceCode")
   private String serviceCode;
 

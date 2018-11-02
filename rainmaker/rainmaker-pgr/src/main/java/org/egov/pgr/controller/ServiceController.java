@@ -38,7 +38,7 @@ public class ServiceController {
 	@PostMapping("_create")
 	@ResponseBody
 	private ResponseEntity<?> create(@RequestBody @Valid ServiceRequest serviceRequest) {
-		//pgrRequestValidator.validateCreate(serviceRequest);
+		pgrRequestValidator.validateCreate(serviceRequest);
 		ServiceResponse response = service.create(serviceRequest);
 		return new ResponseEntity<>(response, HttpStatus.CREATED);
 	}

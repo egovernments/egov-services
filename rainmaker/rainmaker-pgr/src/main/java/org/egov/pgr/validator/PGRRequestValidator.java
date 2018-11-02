@@ -78,7 +78,7 @@ public class PGRRequestValidator {
 		validateUserRBACProxy(errorMap, serviceRequest.getRequestInfo());
 		validateIfArraysEqual(serviceRequest, errorMap);
 		vaidateServiceCodes(serviceRequest, errorMap);
-		validateAddressCombo(serviceRequest, errorMap);
+		//validateAddressCombo(serviceRequest, errorMap);
 		if (!errorMap.isEmpty())
 			throw new CustomException(errorMap);
 	}
@@ -127,14 +127,14 @@ public class PGRRequestValidator {
 	 * @param serviceRequest
 	 * @param errorMap
 	 */
-	private void validateAddressCombo(ServiceRequest serviceRequest, Map<String, String> errorMap) {
+/*	private void validateAddressCombo(ServiceRequest serviceRequest, Map<String, String> errorMap) {
 
 		if (serviceRequest.getServices().size() != serviceRequest.getServices().parallelStream()
 				.filter(a -> (a.getAddress() != null || a.getAddressId() != null
 						|| (a.getLat() != null && a.getLongitutde() != null)))
 				.map(Service::getServiceRequestId).collect(Collectors.toList()).size())
 			errorMap.put(ErrorConstants.CREATE_ADDRESS_COMBO_ERROR_KEY, ErrorConstants.CREATE_ADDRESS_COMBO_ERROR_MSG);
-	}
+	}*/
 
 	/**
 	 * validates if the given service codes in the request objects are admissible

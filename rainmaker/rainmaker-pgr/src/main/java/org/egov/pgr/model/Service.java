@@ -55,6 +55,9 @@ public class Service   {
 
   @JsonProperty("addressId")
   private String addressId;
+  
+  @JsonProperty("address")
+  private String address;
 
   @JsonProperty("email")
   @Email
@@ -81,8 +84,8 @@ public class Service   {
   private Object attributes;
   
   @NotNull
-  @JsonProperty("address")
-  private Address address;
+  @JsonProperty("addressDetail")
+  private Address addressDetail;
 
   /**
    * The current status of the service request.

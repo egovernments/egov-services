@@ -7,7 +7,7 @@ serviceMaps:
    fromTopic: save-pgr-service
    isTransaction: true
    queryMaps:
-    - query: INSERT INTO eg_pgr_service(tenantid, servicecode, servicerequestid, description, lat, "long", addressid, email, deviceid, accountid, firstname, lastname, phone, attributes, status, source, expectedtime, rating, feedback, landmark, createdby, createdtime, lastmodifiedby, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+    - query: INSERT INTO eg_pgr_service(tenantid, servicecode, servicerequestid, description, lat, "long", addressid, address, email, deviceid, accountid, firstname, lastname, phone, attributes, status, source, expectedtime, rating, feedback, landmark, createdby, createdtime, lastmodifiedby, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
 
       basePath: services.*
       jsonMaps:
@@ -26,6 +26,8 @@ serviceMaps:
        - jsonPath: $.services.*.long
 
        - jsonPath: $.services.*.addressId
+       
+       - jsonPath: $.services.*.address
 
        - jsonPath: $.services.*.email
 
@@ -99,29 +101,29 @@ serviceMaps:
       basePath: services.*
       jsonMaps:
 
-       - jsonPath: $.services.*.address.uuid
+       - jsonPath: $.services.*.addressDetail.uuid
        
-       - jsonPath: $.services.*.address.houseNoAndStreetName
+       - jsonPath: $.services.*.addressDetail.houseNoAndStreetName
 
-       - jsonPath: $.services.*.address.mohalla
+       - jsonPath: $.services.*.addressDetail.mohalla
        
-       - jsonPath: $.services.*.address.landmark
+       - jsonPath: $.services.*.addressDetail.landmark
 
-       - jsonPath: $.services.*.address.latitude
+       - jsonPath: $.services.*.addressDetail.latitude
 
-       - jsonPath: $.services.*.address.longitude
+       - jsonPath: $.services.*.addressDetail.longitude
 
-       - jsonPath: $.services.*.address.city
+       - jsonPath: $.services.*.addressDetail.city
 
-       - jsonPath: $.services.*.address.tenantId
+       - jsonPath: $.services.*.addressDetail.tenantId
 
-       - jsonPath: $.services.*.address.auditDetails.createdBy
+       - jsonPath: $.services.*.addressDetail.auditDetails.createdBy
 
-       - jsonPath: $.services.*.address.auditDetails.createdTime
+       - jsonPath: $.services.*.addressDetail.auditDetails.createdTime
 
-       - jsonPath: $.services.*.address.auditDetails.lastModifiedBy
+       - jsonPath: $.services.*.addressDetail.auditDetails.lastModifiedBy
 
-       - jsonPath: $.services.*.address.auditDetails.lastModifiedTime
+       - jsonPath: $.services.*.addressDetail.auditDetails.lastModifiedTime
        
 
  - version: 1.0
@@ -131,7 +133,7 @@ serviceMaps:
    isTransaction: true
    queryMaps:
 
-    - query: UPDATE eg_pgr_service SET servicecode=?, description=?,lat=?, "long"=?, addressid=?, email=?, deviceid=?, firstname=?, lastname=?, phone=?, attributes=?,  status=?, source=?, expectedtime=?, feedback=?, rating=?, landmark=?, lastmodifiedby=?, lastmodifiedtime=? WHERE tenantid=? AND servicerequestid=?;
+    - query: UPDATE eg_pgr_service SET servicecode=?, description=?,lat=?, "long"=?, addressid=?, address=?, email=?, deviceid=?, firstname=?, lastname=?, phone=?, attributes=?,  status=?, source=?, expectedtime=?, feedback=?, rating=?, landmark=?, lastmodifiedby=?, lastmodifiedtime=? WHERE tenantid=? AND servicerequestid=?;
 
       basePath: services.*
       jsonMaps:
@@ -145,6 +147,8 @@ serviceMaps:
        - jsonPath: $.services.*.long
 
        - jsonPath: $.services.*.addressId
+       
+       - jsonPath: $.services.*.address
 
        - jsonPath: $.services.*.email
 

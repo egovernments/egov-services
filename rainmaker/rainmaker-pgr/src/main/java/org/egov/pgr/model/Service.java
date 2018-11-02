@@ -2,12 +2,14 @@ package org.egov.pgr.model;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
-import org.egov.common.contract.request.User;
 import org.egov.pgr.model.user.Citizen;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
+
+import org.egov.pgr.contract.Address;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -51,9 +53,6 @@ public class Service   {
   @JsonProperty("long")
   private Double longitutde;
 
-  @JsonProperty("address")
-  private String address;
-
   @JsonProperty("addressId")
   private String addressId;
 
@@ -80,6 +79,10 @@ public class Service   {
 
   @JsonProperty("attributes")
   private Object attributes;
+  
+  @NotNull
+  @JsonProperty("address")
+  private Address address;
 
   /**
    * The current status of the service request.

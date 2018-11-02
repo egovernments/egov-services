@@ -149,6 +149,10 @@ public class GrievanceService {
 					.action(WorkFlowConfigs.ACTION_OPEN).assignee(null).by(by).when(auditDetails.getCreatedTime()).tenantId(tenantId)
 					.status(actionStatusMap.get(WorkFlowConfigs.ACTION_OPEN)).build();
 			actionInfos.add(actionInfo);
+			servReq.getAddress().setUuid(UUID.randomUUID().toString());
+			servReq.getAddress().setAuditDetails(auditDetails);
+			servReq.getAddress().setTenantId(tenantId);
+			servReq.setAddressId(servReq.getAddress().getUuid());
 		}
 		serviceRequest.setActionInfo(actionInfos);
 	}

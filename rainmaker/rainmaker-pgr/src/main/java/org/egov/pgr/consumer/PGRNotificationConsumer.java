@@ -40,9 +40,6 @@ public class PGRNotificationConsumer {
 
 	@Autowired
 	private PGRProducer pGRProducer;
-
-	@Value("${egov.hr.employee.host}")
-	private String hrEmployeeHost;
 	
 	@Value("${egov.hr.employee.v2.host}")
 	private String hrEmployeeV2Host;
@@ -208,12 +205,13 @@ public class PGRNotificationConsumer {
 			}else if(actionInfo.getStatus().equals(WorkFlowConfigs.STATUS_ASSIGNED)) {
 				employeeDetails = notificationService.getEmployeeDetails(serviceReq.getTenantId(), actionInfo.getAssignee(), requestInfo);
 				if(null != employeeDetails) {
-					department = notificationService.getDepartment(serviceReq, employeeDetails.get("department"), requestInfo);
+					List<String> deptCodes = new ArrayList<>(); deptCodes.add(employeeDetails.get("department"));
+					department = notificationService.getDepartmentForNotification(serviceReq, deptCodes, requestInfo);
 					designation = notificationService.getDesignation(serviceReq, employeeDetails.get("designation"), requestInfo);
 				}else {
 					return getDefaultMessage(messageMap, actionInfo.getStatus(), actionInfo.getAction(), actionInfo.getComment());	
 				}
-				if(null == department || null == designation || null == employeeDetails.get("name"))
+				if(StringUtils.isEmpty(department) || StringUtils.isEmpty(designation) || StringUtils.isEmpty(employeeDetails.get("name")))
 					return getDefaultMessage(messageMap, actionInfo.getStatus(), actionInfo.getAction(), actionInfo.getComment());
 					
 				text = 	text.replaceAll(PGRConstants.SMS_NOTIFICATION_EMP_NAME_KEY, employeeDetails.get("name"))

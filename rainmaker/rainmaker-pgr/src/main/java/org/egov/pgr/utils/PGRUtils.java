@@ -62,13 +62,10 @@ public class PGRUtils {
 	@Value("${egov.mdms.search.endpoint}")
 	private String mdmsEndpoint;
 
-	@Value("${egov.hr.employee.host}")
-	private String hrEmployeeHost;
-
 	@Value("${egov.hr.employee.v2.host}")
 	private String hrEmployeeV2Host;
 
-	@Value("${egov.hr.employee.search.endpoint}")
+	@Value("${egov.hr.employee.v2.search.endpoint}")
 	private String hrEmployeeSearchEndpoint;
 
 	@Value("${egov.common.masters.host}")
@@ -109,13 +106,20 @@ public class PGRUtils {
 	 * @return MdmsCriteriaReq
 	 * @author vishal
 	 */
-	public MdmsCriteriaReq prepareSearchRequestForServiceCodes(StringBuilder uri, String tenantId, String department,
+	public MdmsCriteriaReq prepareSearchRequestForServiceCodes(StringBuilder uri, String tenantId, List<String> departments,
 			RequestInfo requestInfo) {
-
 		uri.append(mdmsHost).append(mdmsEndpoint);
+		StringBuilder depts = new StringBuilder();
+		depts.append("[");
+		for(int i = 0; i < departments.size() ; i++) {
+			depts.append("'" + departments.get(i) + "'");
+			if(i < departments.size() - 1)
+				depts.append(",");
+		}
+		depts.append("]");
 		MasterDetail masterDetail = org.egov.mdms.model.MasterDetail.builder()
 				.name(PGRConstants.MDMS_SERVICETYPE_MASTER_NAME)
-				.filter("[?(@.department=='" + department + "')]." + PGRConstants.SERVICE_CODES).build();
+				.filter("[?(@.department IN " + depts.toString() + ")]").build();
 		List<MasterDetail> masterDetails = new ArrayList<>();
 		masterDetails.add(masterDetail);
 		ModuleDetail moduleDetail = ModuleDetail.builder().moduleName(PGRConstants.MDMS_PGR_MOD_NAME)
@@ -194,11 +198,11 @@ public class PGRUtils {
 		return MdmsCriteriaReq.builder().requestInfo(requestInfo).mdmsCriteria(mdmsCriteria).build();
 	}
 
-	public MdmsCriteriaReq prepareMdMsRequestForDept(StringBuilder uri, String tenantId, String code,
+	public MdmsCriteriaReq prepareMdMsRequestForDept(StringBuilder uri, String tenantId, List<String> codes,
 			RequestInfo requestInfo) {
 		uri.append(mdmsHost).append(mdmsEndpoint);
 		MasterDetail masterDetail = org.egov.mdms.model.MasterDetail.builder()
-				.name(PGRConstants.MDMS_DEPT_MASTERS_MASTER_NAME).filter("[?(@.code=='" + code + "')].name").build();
+				.name(PGRConstants.MDMS_DEPT_MASTERS_MASTER_NAME).filter("[?(@.code IN " + codes + ")].name").build();
 		List<MasterDetail> masterDetails = new ArrayList<>();
 		masterDetails.add(masterDetail);
 		ModuleDetail moduleDetail = ModuleDetail.builder().moduleName(PGRConstants.MDMS_COMMON_MASTERS_MODULE_NAME)

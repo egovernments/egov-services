@@ -18,8 +18,10 @@ import org.egov.pgr.model.ActionInfo;
 import org.egov.pgr.model.Service;
 import org.egov.pgr.model.user.UserResponse;
 import org.egov.pgr.repository.ServiceRequestRepository;
+import org.egov.pgr.utils.ErrorConstants;
 import org.egov.pgr.utils.PGRConstants;
 import org.egov.pgr.utils.PGRUtils;
+import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 
@@ -31,10 +33,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @org.springframework.stereotype.Service
 public class NotificationService {
-	
-	@Value("${egov.hr.employee.host}")
-	private String hrEmployeeHost;
-	
+		
 	@Value("${egov.hr.employee.v2.host}")
 	private String hrEmployeeV2Host;
 
@@ -113,21 +112,44 @@ public class NotificationService {
 		return employeeDetails;
 	}
 
-	public String getDepartment(Service serviceReq, String code, RequestInfo requestInfo) {
+	/**
+	 * An employee might belong to different departments, This method fetches all his departments and returns only that department to which is current assigned complaint belongs to.
+	 *  
+	 * @param serviceReq
+	 * @param codes
+	 * @param requestInfo
+	 * @return
+	 */
+	public String getDepartmentForNotification(Service serviceReq, List<String> codes, RequestInfo requestInfo) {
 		StringBuilder uri = new StringBuilder();
-		MdmsCriteriaReq mdmsCriteriaReq = pGRUtils.prepareMdMsRequestForDept(uri, serviceReq.getTenantId(), code,
-				requestInfo);
+		String department = null;
+		MdmsCriteriaReq mdmsCriteriaReq = pGRUtils.prepareMdMsRequestForDept(uri, serviceReq.getTenantId(), codes, requestInfo);
 		List<String> departmemts = null;
 		try {
 			Object result = serviceRequestRepository.fetchResult(uri, mdmsCriteriaReq);
 			departmemts = JsonPath.read(result, PGRConstants.JSONPATH_DEPARTMENTS);
-			if (null == departmemts || departmemts.isEmpty())
-				return null;
-		} catch (Exception e) {
-			return null;
+			if (CollectionUtils.isEmpty(departmemts))
+				 return department;
+			else {
+				Object response = requestService.fetchServiceDefs(requestInfo, serviceReq.getTenantId(), departmemts);
+				if (null == response) {
+					 return department;
+				}
+				try {
+					List<String> departments = JsonPath.read(response, "$.MdmsRes.RAINMAKER-PGR.ServiceDefs.[?(@.serviceCode=='" + serviceReq.getServiceCode() + "')].department");
+					if(CollectionUtils.isEmpty(departments)) {
+						 return department;
+					}else {
+						department = departments.get(0); //Every serviceCode is mapped to always only one dept.
+					}
+				} catch (Exception e) {
+					 return department;
+				}
+			}
+		}catch (Exception e) {
+		    return department;
 		}
-
-		return departmemts.get(0);
+		 return department;
 	}
 
 	public String getDesignation(Service serviceReq, String code, RequestInfo requestInfo) {

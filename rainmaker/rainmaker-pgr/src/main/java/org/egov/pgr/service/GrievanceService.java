@@ -62,15 +62,12 @@ public class GrievanceService {
 	@Value("${kafka.topics.update.service}")
 	private String updateTopic;
 	
-	@Value("${egov.hr.employee.host}")
+	@Value("${egov.hr.employee.v2.host}")
 	private String hrEmployeeHost;
 
 	@Value("${egov.hr.employee.v2.search.endpoint}")
 	private String hrEmployeeV2SearchEndpoint;
-	
-	@Value("${egov.hr.employee.search.endpoint}")
-	private String hrEmployeeSearchEndpoint;
-	
+		
 	@Value("${egov.user.host}")
 	private String userBasePath;
 	
@@ -359,13 +356,13 @@ public class GrievanceService {
 			 * A DGRO can address/see only the complaints belonging to those complaint types.
 			 */
 			if (precedentRole.equalsIgnoreCase(PGRConstants.ROLE_NAME_DGRO)) { 
-				Object response = fetchServiceCodes(requestInfo, serviceReqSearchCriteria.getTenantId(), 
+				Object response = fetchServiceDefs(requestInfo, serviceReqSearchCriteria.getTenantId(), 
 						getDepartment(serviceReqSearchCriteria, requestInfo, getDepartmentCode(serviceReqSearchCriteria, requestInfo)));
 				if (null == response) {
 					throw new CustomException(ErrorConstants.NO_DATA_KEY, ErrorConstants.NO_DATA_MSG);
 				}
 				try {
-					List<String> serviceCodes = JsonPath.read(response, PGRConstants.JSONPATH_SERVICEDEFS);
+					List<String> serviceCodes = JsonPath.read(response, PGRConstants.JSONPATH_SERVICE_CODES);
 					if(serviceCodes.isEmpty())
 						throw new CustomException(ErrorConstants.NO_DATA_KEY, ErrorConstants.NO_DATA_MSG);
 					serviceReqSearchCriteria.setServiceCodes(serviceCodes);
@@ -393,12 +390,13 @@ public class GrievanceService {
 			serviceReqSearchCriteria.setServiceRequestId(serviceRequestIds);
 		}
 		if(!StringUtils.isEmpty(serviceReqSearchCriteria.getGroup()) && CollectionUtils.isEmpty(serviceReqSearchCriteria.getServiceCodes())) {
-			Object response = fetchServiceCodes(requestInfo, serviceReqSearchCriteria.getTenantId(), serviceReqSearchCriteria.getGroup());
+			List<String> departments = new ArrayList<>(); departments.add(serviceReqSearchCriteria.getGroup());
+			Object response = fetchServiceDefs(requestInfo, serviceReqSearchCriteria.getTenantId(), departments);
 			if (null == response) {
 				throw new CustomException(ErrorConstants.NO_DATA_KEY, ErrorConstants.NO_DATA_MSG);
 			}
 			try {
-				List<String> serviceCodes = JsonPath.read(response, PGRConstants.JSONPATH_SERVICEDEFS);
+				List<String> serviceCodes = JsonPath.read(response, PGRConstants.JSONPATH_SERVICE_CODES);
 				if(serviceCodes.isEmpty())
 					throw new CustomException(ErrorConstants.NO_DATA_KEY, ErrorConstants.NO_DATA_MSG);
 				serviceReqSearchCriteria.setServiceCodes(serviceCodes);
@@ -415,13 +413,13 @@ public class GrievanceService {
 	 * @param requestInfo
 	 * @return
 	 */
-	public String getDepartmentCode(ServiceReqSearchCriteria serviceReqSearchCriteria, RequestInfo requestInfo) {
+	public List<String> getDepartmentCode(ServiceReqSearchCriteria serviceReqSearchCriteria, RequestInfo requestInfo) {
 		StringBuilder uri = new StringBuilder();
 		RequestInfoWrapper requestInfoWrapper = pGRUtils.prepareRequestForEmployeeSearch(uri, requestInfo,
 				serviceReqSearchCriteria);
 		Object response = null;
 		log.debug("Employee: " + response);
-		String departmenCode = null;
+		List<String> departmenCodes = null;
 		try {
 			response = serviceRequestRepository.fetchResult(uri, requestInfoWrapper);
 			if (null == response) {
@@ -429,13 +427,13 @@ public class GrievanceService {
 						ErrorConstants.UNAUTHORIZED_EMPLOYEE_TENANT_MSG);
 			}
 			log.debug("Employee: " + response);
-			departmenCode = JsonPath.read(response, PGRConstants.EMPLOYEE_DEPTCODE_JSONPATH);
+			departmenCodes = JsonPath.read(response, PGRConstants.EMPLOYEE_DEPTCODES_JSONPATH);
 		} catch (Exception e) {
 			log.error("Exception: " + e);
 			throw new CustomException(ErrorConstants.UNAUTHORIZED_EMPLOYEE_TENANT_KEY,
 					ErrorConstants.UNAUTHORIZED_EMPLOYEE_TENANT_MSG);
 		}
-		return departmenCode;
+		return departmenCodes;
 	}	
 
 	/**
@@ -446,28 +444,30 @@ public class GrievanceService {
 	 * @param departmentCode
 	 * @return String
 	 */
-	public String getDepartment(ServiceReqSearchCriteria serviceReqSearchCriteria, RequestInfo requestInfo, String departmentCode) {
+	public List<String> getDepartment(ServiceReqSearchCriteria serviceReqSearchCriteria, RequestInfo requestInfo, List<String> departmentCodes) {
 		StringBuilder deptUri = new StringBuilder();
-		String department = null;
+		List<String> departments = null;
 		Object response = null;
-		MdmsCriteriaReq mdmsCriteriaReq = pGRUtils.prepareMdMsRequestForDept(deptUri, serviceReqSearchCriteria.getTenantId(), departmentCode, requestInfo);
+		MdmsCriteriaReq mdmsCriteriaReq = pGRUtils.prepareMdMsRequestForDept(deptUri, serviceReqSearchCriteria.getTenantId(), departmentCodes, requestInfo);
 		try {
 			response = serviceRequestRepository.fetchResult(deptUri, mdmsCriteriaReq);
 			if (null == response) {
-				throw new CustomException(ErrorConstants.INVALID_DEPARTMENT_TENANT_KEY,
-						ErrorConstants.INVALID_DEPARTMENT_TENANT_MSG);
+				throw new CustomException(ErrorConstants.INVALID_DEPARTMENT_TENANT_KEY, ErrorConstants.INVALID_DEPARTMENT_TENANT_MSG);
 			}
-			department = JsonPath.read(response, PGRConstants.JSONPATH_DEPARTMENTS);
+			departments = JsonPath.read(response, PGRConstants.JSONPATH_DEPARTMENTS);
+			if(CollectionUtils.isEmpty(departments)) {
+				throw new CustomException(ErrorConstants.INVALID_DEPARTMENT_TENANT_KEY, ErrorConstants.INVALID_DEPARTMENT_TENANT_MSG);
+			}
 		} catch (Exception e) {
 			log.error("Exception: " + e);
 			throw new CustomException(ErrorConstants.INVALID_DEPARTMENT_TENANT_KEY,
 					ErrorConstants.INVALID_DEPARTMENT_TENANT_MSG);
 		}
-		return department;
+		return departments;
 	}
 
 	/**
-	 * method to fetch service codes from mdms based on dept
+	 * method to fetch service defs from mdms based on dept
 	 * 
 	 * @param requestInfo
 	 * @param tenantId
@@ -475,9 +475,9 @@ public class GrievanceService {
 	 * @return Object
 	 * @author vishal
 	 */
-	public Object fetchServiceCodes(RequestInfo requestInfo, String tenantId, String department) {
+	public Object fetchServiceDefs(RequestInfo requestInfo, String tenantId, List<String> departments) {
 		StringBuilder uri = new StringBuilder();
-		MdmsCriteriaReq mdmsCriteriaReq = pGRUtils.prepareSearchRequestForServiceCodes(uri, tenantId, department,
+		MdmsCriteriaReq mdmsCriteriaReq = pGRUtils.prepareSearchRequestForServiceCodes(uri, tenantId, departments,
 				requestInfo);
 		Object response = null;
 		try {

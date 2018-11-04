@@ -144,7 +144,7 @@ public class GrievanceService {
 			Service servReq = serviceReqs.get(servReqCount);
 			String currentId = servReqIdList.get(servReqCount);
 			servReq.setAuditDetails(auditDetails); servReq.setServiceRequestId(currentId);
-			servReq.setStatus(StatusEnum.OPEN);servReq.setFeedback(null);servReq.setRating(null);
+			servReq.setStatus(StatusEnum.OPEN);servReq.setFeedback(null);servReq.setRating(null); 
 			ActionInfo actionInfo = ActionInfo.builder().uuid(UUID.randomUUID().toString()).businessKey(currentId)
 					.action(WorkFlowConfigs.ACTION_OPEN).assignee(null).by(by).when(auditDetails.getCreatedTime()).tenantId(tenantId)
 					.status(actionStatusMap.get(WorkFlowConfigs.ACTION_OPEN)).build();
@@ -241,7 +241,9 @@ public class GrievanceService {
 			Service service = serviceReqs.get(index);
 			ActionInfo actionInfo = actionInfos.get(index);
 			service.setAuditDetails(auditDetails);
-			service.setStatus(StatusEnum.fromValue(actionStatusMap.get(actionInfo.getAction())));
+			if(!StringUtils.isEmpty(actionInfo.getAction())) {
+				service.setStatus(StatusEnum.fromValue(actionStatusMap.get(actionInfo.getAction())));
+			}
 			String role = pGRUtils.getPrecedentRole(requestInfo.getUserInfo().getRoles().parallelStream().map(Role::getName)
 					.collect(Collectors.toList()));
 			if(StringUtils.isEmpty(role))
@@ -384,7 +386,7 @@ public class GrievanceService {
 				 * CSR can search complaints across the state.
 				 */
 			} else if (precedentRole.equalsIgnoreCase(PGRConstants.ROLE_NAME_CSR)) {
-				serviceReqSearchCriteria.setTenantId(serviceReqSearchCriteria.getTenantId().split("[.]")[0]); //state-level
+				serviceReqSearchCriteria.setTenantId(serviceReqSearchCriteria.getTenantId().split("[.]")[0]); //csr can search his complaints across state.
 			}
 		}
 		if (!StringUtils.isEmpty(serviceReqSearchCriteria.getAssignedTo())) {

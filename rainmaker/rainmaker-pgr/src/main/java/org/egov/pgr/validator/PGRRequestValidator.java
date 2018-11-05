@@ -280,6 +280,12 @@ public class PGRRequestValidator {
 				.getRoles().parallelStream().map(Role::getName).collect(Collectors.toList()));
 		List<String> serviceCodes = new ArrayList<>();
 		if(role.equals(PGRConstants.ROLE_NAME_DGRO)) {
+			log.info("Validating for DGRO actions");
+			Map<String, String> employeeDetails = notificationService.getEmployeeDetails(serviceRequest.getServices().get(0).getTenantId(), 
+					serviceRequest.getRequestInfo().getUserInfo().getId().toString(), serviceRequest.getRequestInfo());
+			log.info("fetched employee details: "+employeeDetails);
+			if(employeeDetails.keySet().isEmpty())
+				errorMap.put(ErrorConstants.INVALID_ACTION_FOR_GRO_CODE, ErrorConstants.INVALID_ACTION_FOR_GRO_MSG);
 			ServiceReqSearchCriteria serviceReqSearchCriteria = ServiceReqSearchCriteria.builder()
 					.tenantId(serviceRequest.getServices().get(0).getTenantId()).build();
 			List<String> departmentCodes = requestService.getDepartmentCode(serviceReqSearchCriteria, serviceRequest.getRequestInfo());
@@ -287,6 +293,7 @@ public class PGRRequestValidator {
 			Object response = requestService.fetchServiceDefs(serviceRequest.getRequestInfo(), serviceRequest.getServices().get(0).getTenantId(), departments);
 			try {
 				serviceCodes = JsonPath.read(response, PGRConstants.JSONPATH_SERVICE_CODES);
+				log.info("serviceCodes: "+serviceCodes);
 				if(CollectionUtils.isEmpty(serviceCodes))
 					errorMap.put(ErrorConstants.INVALID_ACTION_FOR_DGRO_CODE, ErrorConstants.INVALID_ACTION_FOR_DGRO_MSG);
 			}catch(Exception e) {
@@ -298,8 +305,10 @@ public class PGRRequestValidator {
 				}
 			}
 		}else if(role.equals(PGRConstants.ROLE_NAME_GRO)) {
+			log.info("Validating for GRO actions");
 			Map<String, String> employeeDetails = notificationService.getEmployeeDetails(serviceRequest.getServices().get(0).getTenantId(), 
 					serviceRequest.getRequestInfo().getUserInfo().getId().toString(), serviceRequest.getRequestInfo());
+			log.info("fetched employee details: "+employeeDetails);
 			if(employeeDetails.keySet().isEmpty())
 				errorMap.put(ErrorConstants.INVALID_ACTION_FOR_GRO_CODE, ErrorConstants.INVALID_ACTION_FOR_GRO_MSG);
 		}

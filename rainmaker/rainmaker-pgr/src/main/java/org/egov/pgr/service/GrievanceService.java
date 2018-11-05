@@ -372,6 +372,7 @@ public class GrievanceService {
 					List<String> serviceCodes = JsonPath.read(response, PGRConstants.JSONPATH_SERVICE_CODES);
 					if(serviceCodes.isEmpty())
 						throw new CustomException(ErrorConstants.NO_DATA_KEY, ErrorConstants.NO_DATA_MSG);
+					log.info("serviceCodes: "+serviceCodes);
 					serviceReqSearchCriteria.setServiceCodes(serviceCodes);
 				} catch (Exception e) {
 					throw new CustomException(ErrorConstants.NO_DATA_KEY, ErrorConstants.NO_DATA_MSG);

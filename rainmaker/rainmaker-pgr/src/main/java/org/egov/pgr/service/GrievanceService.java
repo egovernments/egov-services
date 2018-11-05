@@ -359,10 +359,16 @@ public class GrievanceService {
 				throw new CustomException(ErrorConstants.UNAUTHORIZED_USER_KEY, ErrorConstants.UNAUTHORIZED_USER_MSG);
 			}
 			/**
-			 * DGRO belongs to a department and that department takes care of certain complaint types.
-			 * A DGRO can address/see only the complaints belonging to those complaint types.
+			 * GRO can search complaints belonging to only his tenant.
 			 */
-			if (precedentRole.equalsIgnoreCase(PGRConstants.ROLE_NAME_DGRO)) { 
+			if(precedentRole.equalsIgnoreCase(PGRConstants.ROLE_NAME_GRO)) {
+				serviceReqSearchCriteria.setTenantId(requestInfo.getUserInfo().getTenantId());
+			}
+			/**
+			 * DGRO belongs to a department and that department takes care of certain complaint types.
+			 * A DGRO can address/see only the complaints belonging to those complaint types and to his tenant.
+			 */
+			else if (precedentRole.equalsIgnoreCase(PGRConstants.ROLE_NAME_DGRO)) { 
 				Object response = fetchServiceDefs(requestInfo, serviceReqSearchCriteria.getTenantId(), 
 						getDepartment(serviceReqSearchCriteria, requestInfo, getDepartmentCode(serviceReqSearchCriteria, requestInfo)));
 				if (null == response) {
@@ -377,17 +383,20 @@ public class GrievanceService {
 				} catch (Exception e) {
 					throw new CustomException(ErrorConstants.NO_DATA_KEY, ErrorConstants.NO_DATA_MSG);
 				}
-				/**
-				 * An Employee can by default search only the complaints assigned to him.
-				 */
-			} else if (precedentRole.equalsIgnoreCase(PGRConstants.ROLE_NAME_EMPLOYEE)) {
+				serviceReqSearchCriteria.setTenantId(requestInfo.getUserInfo().getTenantId());
+			}
+			/**
+			 * An Employee can by default search only the complaints assigned to him.
+			 */
+			else if (precedentRole.equalsIgnoreCase(PGRConstants.ROLE_NAME_EMPLOYEE)) {
 				if (StringUtils.isEmpty(serviceReqSearchCriteria.getAssignedTo()) && CollectionUtils.isEmpty(serviceReqSearchCriteria.getServiceRequestId())) {
 					serviceReqSearchCriteria.setAssignedTo(requestInfo.getUserInfo().getId().toString());
 				}
-				/**
-				 * CSR can search complaints across the state.
-				 */
-			} else if (precedentRole.equalsIgnoreCase(PGRConstants.ROLE_NAME_CSR)) {
+			} 
+			/**
+			 * CSR can search complaints across the state.
+			 */
+			else if (precedentRole.equalsIgnoreCase(PGRConstants.ROLE_NAME_CSR)) {
 				serviceReqSearchCriteria.setTenantId(serviceReqSearchCriteria.getTenantId().split("[.]")[0]); //csr can search his complaints across state.
 			}
 		}

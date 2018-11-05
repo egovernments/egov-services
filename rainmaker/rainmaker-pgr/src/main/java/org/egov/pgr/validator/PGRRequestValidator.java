@@ -281,11 +281,11 @@ public class PGRRequestValidator {
 		List<String> serviceCodes = new ArrayList<>();
 		if(role.equals(PGRConstants.ROLE_NAME_DGRO)) {
 			log.info("Validating for DGRO actions");
-			Map<String, String> employeeDetails = notificationService.getEmployeeDetails(serviceRequest.getServices().get(0).getTenantId(), 
-					serviceRequest.getRequestInfo().getUserInfo().getId().toString(), serviceRequest.getRequestInfo());
-			log.info("fetched employee details: "+employeeDetails);
-			if(employeeDetails.keySet().isEmpty())
+			if(!serviceRequest.getServices().get(0).getTenantId().equals(serviceRequest.getRequestInfo().getUserInfo().getTenantId())) {
 				errorMap.put(ErrorConstants.INVALID_ACTION_FOR_GRO_CODE, ErrorConstants.INVALID_ACTION_FOR_GRO_MSG);
+			}
+			if (!errorMap.isEmpty())
+				throw new CustomException(errorMap);
 			ServiceReqSearchCriteria serviceReqSearchCriteria = ServiceReqSearchCriteria.builder()
 					.tenantId(serviceRequest.getServices().get(0).getTenantId()).build();
 			List<String> departmentCodes = requestService.getDepartmentCode(serviceReqSearchCriteria, serviceRequest.getRequestInfo());
@@ -306,11 +306,9 @@ public class PGRRequestValidator {
 			}
 		}else if(role.equals(PGRConstants.ROLE_NAME_GRO)) {
 			log.info("Validating for GRO actions");
-			Map<String, String> employeeDetails = notificationService.getEmployeeDetails(serviceRequest.getServices().get(0).getTenantId(), 
-					serviceRequest.getRequestInfo().getUserInfo().getId().toString(), serviceRequest.getRequestInfo());
-			log.info("fetched employee details: "+employeeDetails);
-			if(employeeDetails.keySet().isEmpty())
+			if(!serviceRequest.getServices().get(0).getTenantId().equals(serviceRequest.getRequestInfo().getUserInfo().getTenantId())) {
 				errorMap.put(ErrorConstants.INVALID_ACTION_FOR_GRO_CODE, ErrorConstants.INVALID_ACTION_FOR_GRO_MSG);
+			}
 		}
 
 		if (!errorMap.isEmpty())

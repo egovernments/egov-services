@@ -309,7 +309,7 @@ public class PGRRequestValidator {
 					&& (!StringUtils.isEmpty(service.getFeedback()) || !StringUtils.isEmpty(service.getRating()))) {
 				errorMap.put(ErrorConstants.UPDATE_FEEDBACK_ERROR_KEY, ErrorConstants.UPDATE_FEEDBACK_ERROR_MSG);
 			}
-			service.setStatus(StatusEnum.valueOf(currentStatus)); //This will be updated according to the action performed in service layer.
+			service.setStatus(StatusEnum.fromValue(currentStatus)); //This will be updated according to the action performed in service layer.
 		}		
 
 	}

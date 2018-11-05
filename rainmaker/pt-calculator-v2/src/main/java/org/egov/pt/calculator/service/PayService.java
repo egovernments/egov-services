@@ -44,7 +44,6 @@ public class PayService {
 	 * 
 	 * If the demand details are not already present then new demand details will be added
 	 * 
-	 * @param demand
 	 * @param assessmentYear
 	 * @return
 	 */
@@ -143,7 +142,7 @@ public class PayService {
 		long current = System.currentTimeMillis();
 		long interestStart = cal.getTimeInMillis();
 		long numberOfDaysInMillies = 0 < lastCollectedTime ? current - lastCollectedTime : current - interestStart;
-		BigDecimal noOfDays = BigDecimal.valueOf((TimeUnit.MILLISECONDS.toDays(Math.abs(numberOfDaysInMillies))));
+		BigDecimal noOfDays = BigDecimal.valueOf((TimeUnit.MILLISECONDS.toDays(Math.abs(numberOfDaysInMillies)))).add(BigDecimal.ONE);
 		if (interestStart < current)
 			interestAmt = mDService.calculateApplicables(taxAmt, interestMap);
 
@@ -247,7 +246,6 @@ public class PayService {
 	 * 
 	 * else if decimal is lesser than 0.5 lower bound is applied
 	 * 
-	 * @param estimates
 	 */
 	public TaxHeadEstimate roundOfDecimals(BigDecimal creditAmount, BigDecimal debitAmount) {
 

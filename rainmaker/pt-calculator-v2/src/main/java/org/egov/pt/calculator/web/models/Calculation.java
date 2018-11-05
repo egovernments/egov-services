@@ -51,5 +51,8 @@ public class Calculation   {
         private BigDecimal rebate;
 
         List<TaxHeadEstimate> taxHeadEstimates;
+
+        @JsonProperty("billingSlabIds")
+        private List<String> billingSlabIds;
 }
 

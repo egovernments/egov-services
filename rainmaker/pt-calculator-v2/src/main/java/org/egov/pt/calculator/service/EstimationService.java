@@ -1,12 +1,7 @@
 package org.egov.pt.calculator.service;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import org.egov.common.contract.request.RequestInfo;
@@ -108,7 +103,7 @@ public class EstimationService {
      * @param requestInfo request info from incoming request.
 	 * @return Map<String, Double>
 	 */
-	private List<TaxHeadEstimate> getEstimationMap(CalculationCriteria criteria, RequestInfo requestInfo) {
+	private Map<String,List> getEstimationMap(CalculationCriteria criteria, RequestInfo requestInfo) {
 
 		BigDecimal taxAmt = BigDecimal.ZERO;
 		BigDecimal usageExemption = BigDecimal.ZERO;
@@ -124,6 +119,8 @@ public class EstimationService {
 		mDataService.setPropertyMasterValues(requestInfo, tenantId, propertyBasedExemptionMasterMap,
 				timeBasedExemptionMasterMap);
 
+		List<String> billingSlabIds = new LinkedList<>();
+
 		/*
 		 * by default land should get only one slab from database per tenantId
 		 */
@@ -135,32 +132,51 @@ public class EstimationService {
 			taxAmt = taxAmt.add(BigDecimal.valueOf(filteredBillingSlabs.get(0).getUnitRate() * detail.getLandArea()));
 		} else {
 
-			double unBuiltRate = 0.0;
+			Double totalUnitsArea = 0.0;
+
+			for (Unit unit : detail.getUnits()) {
+				totalUnitsArea += unit.getUnitArea();
+			}
+
+
 			int groundUnitsCount = 0;
 			Double groundUnitsArea = 0.0;
+			int i = 0;
 
 			for (Unit unit : detail.getUnits()) {
 
 				BillingSlab slab = getSlabForCalc(filteredBillingSlabs, unit);
+                billingSlabIds.add(slab.getId()+"|"+i);
+
+				if (unit.getFloorNo().equalsIgnoreCase("0")) {
+					groundUnitsCount += 1;
+					groundUnitsArea += unit.getUnitArea();
+				}
+
 				BigDecimal currentUnitTax = getTaxForUnit(slab, unit);
 				/*
 				 * counting the number of units & total area in ground floor for unbuilt area
 				 * tax calculation
 				 */
-				if (unit.getFloorNo().equalsIgnoreCase("0")) {
-					groundUnitsCount += 1;
-					groundUnitsArea += unit.getUnitArea();
-					if (null != slab.getUnBuiltUnitRate())
-						unBuiltRate += slab.getUnBuiltUnitRate();
-				}
+
 				taxAmt = taxAmt.add(currentUnitTax);
+
+				boolean isUnitCommercial = unit.getUsageCategoryMajor().equalsIgnoreCase(configs.getUsageMajorNonResidential());
+				boolean isUnitRented = unit.getOccupancyType().equalsIgnoreCase(configs.getOccupancyTypeRented());
+                BigDecimal unBuiltTaxForUnit = BigDecimal.ZERO;
+				if (!(isUnitCommercial && isUnitRented)) {
+					Double ratio = (unit.getUnitArea()/totalUnitsArea);
+					unBuiltTaxForUnit = getUnBuiltRate(detail,slab.getUnBuiltUnitRate(),groundUnitsCount,ratio,groundUnitsArea);
+					taxAmt = taxAmt.add(unBuiltTaxForUnit);
+				}
+
 				usageExemption = usageExemption
-						.add(getExemption(unit, currentUnitTax, assessmentYear, propertyBasedExemptionMasterMap));
+						.add(getExemption(unit, currentUnitTax.add(unBuiltTaxForUnit), assessmentYear, propertyBasedExemptionMasterMap));
+				i++;
 			}
 			/*
 			 * making call to get unbuilt area tax estimate
 			 */
-			taxAmt = taxAmt.add(getUnBuiltRate(detail, unBuiltRate, groundUnitsCount, groundUnitsArea));
 
 			/*
 			 * special case to handle property with one unit
@@ -169,8 +185,14 @@ public class EstimationService {
 				usageExemption = getExemption(detail.getUnits().get(0), taxAmt, assessmentYear,
 						propertyBasedExemptionMasterMap);
 		}
-		return getEstimatesForTax(assessmentYear, taxAmt, usageExemption, detail, propertyBasedExemptionMasterMap,
+		List<TaxHeadEstimate> taxHeadEstimates =  getEstimatesForTax(assessmentYear, taxAmt, usageExemption, detail, propertyBasedExemptionMasterMap,
 				timeBasedExemptionMasterMap);
+
+		Map<String,List> estimatesAndBillingSlabs = new HashMap<>();
+		estimatesAndBillingSlabs.put("estimates",taxHeadEstimates);
+		estimatesAndBillingSlabs.put("billingSlabIds",billingSlabIds);
+
+		return estimatesAndBillingSlabs;
 	}
 
 	/**
@@ -192,7 +214,7 @@ public class EstimationService {
 	 * @param groundUnitsArea Sum of ground floor units area
 	 * @return calculated tax for un-built area in the property detail.
 	 */
-	private BigDecimal getUnBuiltRate(PropertyDetail detail, double unBuiltRate, int groundUnitsCount, Double groundUnitsArea) {
+	private BigDecimal getUnBuiltRate(PropertyDetail detail, double unBuiltRate, int groundUnitsCount,Double ratio, Double groundUnitsArea) {
 
         BigDecimal unBuiltAmt = BigDecimal.ZERO;
         if (0.0 < unBuiltRate && null != detail.getLandArea() && groundUnitsCount > 0) {
@@ -202,7 +224,7 @@ public class EstimationService {
             // ignoring if land Area is lesser than buildUpArea/groundUnitsAreaSum in estimate instead of throwing error
             // since property service validates the same for calculation
             diffArea = diffArea < 0.0 ? 0.0 : diffArea;
-            unBuiltAmt = unBuiltAmt.add(BigDecimal.valueOf((unBuiltRate / groundUnitsCount) * (diffArea)));
+            unBuiltAmt = unBuiltAmt.add(BigDecimal.valueOf((diffArea * ratio) * (unBuiltRate)));
         }
 			return unBuiltAmt;
     }
@@ -226,8 +248,6 @@ public class EstimationService {
 	 */
 	private BigDecimal getTaxForUnit(BillingSlab slab, Unit unit) {
 
-		boolean isUnitCommercial = unit.getUsageCategoryMajor().equalsIgnoreCase(configs.getUsageMajorNonResidential());
-		boolean isUnitRented = unit.getOccupancyType().equalsIgnoreCase(configs.getOccupancyTypeRented());
 		BigDecimal currentUnitTax;
 
         if (null == slab) {
@@ -238,6 +258,10 @@ public class EstimationService {
                      null != unit.getUsageCategoryDetail() ? unit.getUsageCategoryDetail() : "nill");
             throw new CustomException(BILLING_SLAB_MATCH_ERROR_CODE, msg);
         }
+
+
+		boolean isUnitCommercial = unit.getUsageCategoryMajor().equalsIgnoreCase(configs.getUsageMajorNonResidential());
+		boolean isUnitRented = unit.getOccupancyType().equalsIgnoreCase(configs.getOccupancyTypeRented());
 
 		if (isUnitCommercial && isUnitRented) {
 
@@ -253,6 +277,29 @@ public class EstimationService {
 		} else {
 			currentUnitTax = BigDecimal.valueOf(unit.getUnitArea() * slab.getUnitRate());
 		}
+		return currentUnitTax;
+	}
+
+
+
+	private BigDecimal getUnBuiltTax(BillingSlab slab, Unit unit,Double totalUnitArea) {
+
+
+
+		BigDecimal currentUnitTax;
+
+		if (null == slab) {
+			String msg = BILLING_SLAB_MATCH_ERROR_MESSAGE
+					.replace(BILLING_SLAB_MATCH_AREA, unit.getUnitArea().toString())
+					.replace(BILLING_SLAB_MATCH_FLOOR, unit.getFloorNo())
+					.replace(BILLING_SLAB_MATCH_USAGE_DETAIL,
+							null != unit.getUsageCategoryDetail() ? unit.getUsageCategoryDetail() : "nill");
+			throw new CustomException(BILLING_SLAB_MATCH_ERROR_CODE, msg);
+		}
+
+
+			currentUnitTax = BigDecimal.valueOf(totalUnitArea * slab.getUnBuiltUnitRate());
+
 		return currentUnitTax;
 	}
 
@@ -340,7 +387,10 @@ public class EstimationService {
 	 * @return Calculation object constructed based on the resulting tax amount and other applicables(rebate/penalty)
 	 */
     private Calculation getCalculation(RequestInfo requestInfo, CalculationCriteria criteria,
-                                       List<TaxHeadEstimate> estimates) {
+                                       Map<String,List> estimatesAndBillingSlabs) {
+
+		List<TaxHeadEstimate> estimates = estimatesAndBillingSlabs.get("estimates");
+		List<String> billingSlabIds = estimatesAndBillingSlabs.get("billingSlabIds");
 
         Property property = criteria.getProperty();
         PropertyDetail detail = property.getPropertyDetails().get(0);
@@ -422,6 +472,7 @@ public class EstimationService {
 				.tenantId(tenantId)
 				.serviceNumber(assessmentNumber)
 				.taxHeadEstimates(estimates)
+				.billingSlabIds(billingSlabIds)
 				.build();
 	}
 

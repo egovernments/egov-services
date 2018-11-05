@@ -49,13 +49,13 @@ public class User   {
 
         @NotNull
         @Size(max=100)
+        @Pattern(regexp = "^[a-zA-Z0-9 \\-'`\\.]*$", message = "Invalid name. Only alphabets and special characters -, ',`, .")
         @JsonProperty("name")
         private String name;
 
         @JsonProperty("gender")
         private String gender;
 
-        @Pattern(regexp = "^[0-9]{10}$", message = "MobileNumber should be 10 digit number")
         @JsonProperty("mobileNumber")
         private String mobileNumber;
 

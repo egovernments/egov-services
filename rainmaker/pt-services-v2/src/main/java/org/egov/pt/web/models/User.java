@@ -47,6 +47,7 @@ public class User   {
         private String salutation;
 
         @NotNull
+        @Pattern(regexp = "^[a-zA-Z0-9 \\-'`\\.]*$", message = "Invalid name. Only alphabets and special characters -, ',`, .")
         @Size(max=100)
         @JsonProperty("name")
         private String name;
@@ -54,7 +55,7 @@ public class User   {
         @JsonProperty("gender")
         private String gender;
 
-        @Pattern(regexp = "^[0-9]{10}$", message = "MobileNumber should be 10 digit number")
+        @Pattern(regexp = "^[5-9]{1}[0-9]{9}$", message = "MobileNumber should be 10 digit number and should start with 5 or higher digit")
         @JsonProperty("mobileNumber")
         private String mobileNumber;
 

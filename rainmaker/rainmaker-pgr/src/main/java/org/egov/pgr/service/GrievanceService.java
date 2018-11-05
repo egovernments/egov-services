@@ -143,7 +143,7 @@ public class GrievanceService {
 		for (int servReqCount = 0; servReqCount < serviceReqs.size(); servReqCount++) {
 			Service servReq = serviceReqs.get(servReqCount);
 			String currentId = servReqIdList.get(servReqCount);
-			servReq.setAuditDetails(auditDetails); servReq.setServiceRequestId(currentId);
+			servReq.setAuditDetails(auditDetails); servReq.setServiceRequestId(currentId);servReq.setActive(true);
 			servReq.setStatus(StatusEnum.OPEN);servReq.setFeedback(null);servReq.setRating(null); 
 			ActionInfo actionInfo = ActionInfo.builder().uuid(UUID.randomUUID().toString()).businessKey(currentId)
 					.action(WorkFlowConfigs.ACTION_OPEN).assignee(null).by(by).when(auditDetails.getCreatedTime()).tenantId(tenantId)
@@ -240,7 +240,8 @@ public class GrievanceService {
 		for (int index = 0; index < serviceReqs.size(); index++) {
 			Service service = serviceReqs.get(index);
 			ActionInfo actionInfo = actionInfos.get(index);
-			service.setAuditDetails(auditDetails);
+			service.setAuditDetails(auditDetails); 
+			if(service.getActive() == null) service.setActive(true);
 			if(!StringUtils.isEmpty(actionInfo.getAction())) {
 				service.setStatus(StatusEnum.fromValue(actionStatusMap.get(actionInfo.getAction())));
 			}
@@ -410,6 +411,7 @@ public class GrievanceService {
 				throw new CustomException(ErrorConstants.NO_DATA_KEY, ErrorConstants.NO_DATA_MSG);
 			}
 		}
+		serviceReqSearchCriteria.setActive(true);
 	}
 
 	/**
@@ -573,7 +575,6 @@ public class GrievanceService {
 		}
 		searcherRequest = pGRUtils.prepareCountRequestWithDetails(uri, serviceReqSearchCriteria, requestInfo);
 		Object response = serviceRequestRepository.fetchResult(uri, searcherRequest);
-		log.info("Searcher response: " + response);
 		if (null == response)
 			return pGRUtils.getDefaultServiceResponse(requestInfo);
 		Double count = JsonPath.read(response, PGRConstants.PG_JSONPATH_COUNT);

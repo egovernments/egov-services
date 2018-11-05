@@ -88,6 +88,9 @@ public class Service   {
   @NotNull
   @JsonProperty("addressDetail")
   private Address addressDetail;
+  
+  @JsonProperty("active")
+  private Boolean active;
 
   /**
    * The current status of the service request.

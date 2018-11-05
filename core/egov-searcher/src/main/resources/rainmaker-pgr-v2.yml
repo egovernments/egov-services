@@ -48,6 +48,9 @@ SearchDefinitions:
     - name: createdby
       isMandatory: false
       jsonPath: $.searchCriteria.createdBy
+    - name: active
+      isMandatory: false
+      jsonPath: $.searchCriteria.active
     pagination:
       noOfRecords: $.searchCriteria.noOfRecords
       offset: $.searchCriteria.offset
@@ -117,6 +120,9 @@ SearchDefinitions:
     - name: phone
       isMandatory: false
       jsonPath: $.searchCriteria.phone
+    - name: active
+      isMandatory: false
+      jsonPath: $.searchCriteria.active
       
    output:
     jsonFormat: {"ResponseInfo": {}}

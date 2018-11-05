@@ -5,7 +5,9 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.function.Function;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import org.apache.commons.collections.CollectionUtils;
@@ -21,6 +23,7 @@ import org.egov.pgr.model.ActionInfo;
 import org.egov.pgr.model.Service;
 import org.egov.pgr.model.Service.StatusEnum;
 import org.egov.pgr.service.GrievanceService;
+import org.egov.pgr.service.NotificationService;
 import org.egov.pgr.service.ReportService;
 import org.egov.pgr.utils.ErrorConstants;
 import org.egov.pgr.utils.PGRConstants;
@@ -31,6 +34,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.jayway.jsonpath.JsonPath;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -46,6 +50,9 @@ public class PGRRequestValidator {
 	
 	@Autowired
 	private ReportService reportService;
+	
+	@Autowired
+	private NotificationService notificationService;
 
 	@Value("${egov.mdms.host}")
 	private String mdmsHost;
@@ -76,6 +83,7 @@ public class PGRRequestValidator {
 	public void validateCreate(ServiceRequest serviceRequest) {
 		log.info("Validating create request");
 		Map<String, String> errorMap = new HashMap<>();
+		validateTenantIdSanity(serviceRequest, errorMap);
 		validateUserRBACProxy(errorMap, serviceRequest.getRequestInfo());
 		validateIfArraysEqual(serviceRequest, errorMap);
 		vaidateServiceCodes(serviceRequest, errorMap);
@@ -98,10 +106,28 @@ public class PGRRequestValidator {
 	public void validateUpdate(ServiceRequest serviceRequest) {
 		log.info("Validating update request");
 		Map<String, String> errorMap = new HashMap<>();
+		validateTenantIdSanity(serviceRequest, errorMap);
 		validateIfArraysEqual(serviceRequest, errorMap);
 		vaidateServiceCodes(serviceRequest, errorMap);
 		validateAssignments(serviceRequest, errorMap);
 		validateAction(serviceRequest, errorMap);
+		if (!errorMap.isEmpty())
+			throw new CustomException(errorMap);
+	}
+	
+	/**
+	 * It is a convention that all the complaints being filed/updated in one API call must belong to the same tenant.
+	 * 
+	 * TODO: Later, to the same API checking the validity of a tenantId can also be added.
+	 * 
+	 * @param serviceRequest
+	 * @param errorMap
+	 */
+	public void validateTenantIdSanity(ServiceRequest serviceRequest, Map<String, String> errorMap) {
+		Set<String> tenants = serviceRequest.getServices().parallelStream().map(Service::getTenantId).collect(Collectors.toSet());
+		if(tenants.size() > 1) {
+			errorMap.put(ErrorConstants.INVALID_REQUESTS_ON_TENANT_CODE, ErrorConstants.INVALID_REQUESTS_ON_TENANT_MSG);
+		}
 		if (!errorMap.isEmpty())
 			throw new CustomException(errorMap);
 	}
@@ -114,7 +140,6 @@ public class PGRRequestValidator {
 	 * @param errorMap
 	 */
 	private void validateIfArraysEqual(ServiceRequest serviceRequest, Map<String, String> errorMap) {
-		log.info("Array equal check");
 		if (null != serviceRequest.getActionInfo()
 				&& serviceRequest.getServices().size() != serviceRequest.getActionInfo().size())
 			errorMap.put(ErrorConstants.UNEQUAL_REQUEST_SIZE_KEY, ErrorConstants.UNEQUAL_REQUEST_SIZE_MSG);
@@ -127,13 +152,11 @@ public class PGRRequestValidator {
 	 * @param errorMap
 	 */
 	private void vaidateServiceCodes(ServiceRequest serviceRequest, Map<String, String> errorMap) {
-		log.info("Service code check");
 		String tenantId = serviceRequest.getServices().get(0).getTenantId();
 		List<String> serviceCodes = pgrUtils.getServiceCodes(tenantId,
 				serviceRequest.getServices().parallelStream().map(Service::getServiceCode).collect(Collectors.toSet()),
 				serviceRequest.getRequestInfo());
 		List<String> errorList = new ArrayList<>();
-		log.info("serviceCodes: "+serviceCodes);
 		serviceRequest.getServices().forEach(a -> {
 			if (!serviceCodes.contains(a.getServiceCode()))
 				errorList.add(a.getServiceCode());
@@ -197,7 +220,6 @@ public class PGRRequestValidator {
 	 * @param requestInfo
 	 */
 	public void validateSearch(ServiceReqSearchCriteria criteria, RequestInfo requestInfo) {
-		log.info("Validating search request...");
 		Map<String, String> errorMap = new HashMap<>();
 		validateUserRBACProxy(errorMap, requestInfo);
 		if ((criteria.getStartDate() != null && criteria.getStartDate() > new Date().getTime())
@@ -211,8 +233,6 @@ public class PGRRequestValidator {
 
 		if (!errorMap.isEmpty())
 			throw new CustomException(errorMap);
-
-		log.info("All Validations passed!");
 	}
 
 	public void validateUserRBACProxy(Map<String, String> errorMap, RequestInfo requestInfo) {
@@ -238,8 +258,9 @@ public class PGRRequestValidator {
 	 * validates of the action as follows:
 	 * 1. Does the user trying to perform the action have rights of that action.
 	 * 2. Is the action being performed valid for the current status.
+	 * 3. If a DGRO is trying to update the complaint then it checks if the complaint belongs to is department, if it doesn't then he isn't allowed to.
 	 * 
-	 * This method also checks if the service requests being updated are available in the system. Since it is already a part of the action validation flow.
+	 * 4. This method also checks if the service requests being updated are available in the system. Since it is already a part of the action validation flow.
 	 * 
 	 * @param serviceRequest
 	 * @param errorMap
@@ -255,7 +276,37 @@ public class PGRRequestValidator {
 			actions = roleActionMap.get(pgrUtils.getPrecedentRole(serviceRequest.getRequestInfo().getUserInfo()
 					.getRoles().parallelStream().map(Role::getName).collect(Collectors.toList())));
 		final List<String> actionsAllowedForTheRole = actions;
-		log.info("actions: " + actionsAllowedForTheRole);
+		String role = pgrUtils.getPrecedentRole(serviceRequest.getRequestInfo().getUserInfo()
+				.getRoles().parallelStream().map(Role::getName).collect(Collectors.toList()));
+		List<String> serviceCodes = new ArrayList<>();
+		if(role.equals(PGRConstants.ROLE_NAME_DGRO)) {
+			ServiceReqSearchCriteria serviceReqSearchCriteria = ServiceReqSearchCriteria.builder()
+					.tenantId(serviceRequest.getServices().get(0).getTenantId()).build();
+			List<String> departmentCodes = requestService.getDepartmentCode(serviceReqSearchCriteria, serviceRequest.getRequestInfo());
+			List<String> departments = requestService.getDepartment(serviceReqSearchCriteria, serviceRequest.getRequestInfo(), departmentCodes);
+			Object response = requestService.fetchServiceDefs(serviceRequest.getRequestInfo(), serviceRequest.getServices().get(0).getTenantId(), departments);
+			try {
+				serviceCodes = JsonPath.read(response, PGRConstants.JSONPATH_SERVICE_CODES);
+				if(CollectionUtils.isEmpty(serviceCodes))
+					errorMap.put(ErrorConstants.INVALID_ACTION_FOR_DGRO_CODE, ErrorConstants.INVALID_ACTION_FOR_DGRO_MSG);
+			}catch(Exception e) {
+				errorMap.put(ErrorConstants.INVALID_ACTION_FOR_DGRO_CODE, ErrorConstants.INVALID_ACTION_FOR_DGRO_MSG);
+			}
+			for(Service service: serviceRequest.getServices()) {
+				if(!serviceCodes.contains(service.getServiceCode())) {
+					errorMap.put(ErrorConstants.INVALID_ACTION_FOR_DGRO_CODE, ErrorConstants.INVALID_ACTION_FOR_DGRO_MSG+ " for serviceRequest: "+service.getServiceRequestId());
+				}
+			}
+		}else if(role.equals(PGRConstants.ROLE_NAME_GRO)) {
+			Map<String, String> employeeDetails = notificationService.getEmployeeDetails(serviceRequest.getServices().get(0).getTenantId(), 
+					serviceRequest.getRequestInfo().getUserInfo().getId().toString(), serviceRequest.getRequestInfo());
+			if(employeeDetails.keySet().isEmpty())
+				errorMap.put(ErrorConstants.INVALID_ACTION_FOR_GRO_CODE, ErrorConstants.INVALID_ACTION_FOR_GRO_MSG);
+		}
+
+		if (!errorMap.isEmpty())
+			throw new CustomException(errorMap);
+		
 		if (!CollectionUtils.isEmpty(actions)) {
 			List<ActionInfo> infos = serviceRequest.getActionInfo();
 			if (!CollectionUtils.isEmpty(infos)) {

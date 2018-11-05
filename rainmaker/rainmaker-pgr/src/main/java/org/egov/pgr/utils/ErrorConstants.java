@@ -67,4 +67,12 @@ public class ErrorConstants {
 	public static final String INVALID_ACTION_FOR_ROLE_CODE = "EG_PGR_INVALID_ACTION_FOR_ROLE";
 	public static final String INVALID_ACTION_FOR_ROLE_MSG = "Action being performed: $action, is not allowed for a user with role: $role";
 	
+	public static final String INVALID_ACTION_FOR_DGRO_CODE = "EG_PGR_INVALID_ACTION_FOR_DGRO";
+	public static final String INVALID_ACTION_FOR_DGRO_MSG = "The DGRO trying to update this complaint belongs to other department, hence access restricted.";
+	
+	public static final String INVALID_ACTION_FOR_GRO_CODE = "EG_PGR_INVALID_ACTION_FOR_GRO";
+	public static final String INVALID_ACTION_FOR_GRO_MSG = "The GRO trying to update this complaint belongs to different tenant(city), hence access restricted.";
+	
+	public static final String INVALID_REQUESTS_ON_TENANT_CODE = "EG_PGR_INVALID_REQUESTS_ON_TENANT";
+	public static final String INVALID_REQUESTS_ON_TENANT_MSG = "All the complaints being filed/updated must belong to the same tenantId.";
 }

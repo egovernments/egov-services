@@ -176,6 +176,7 @@ public class ReportQueryBuilder {
 				}
 			}
 		}
+		queryBuilder.append(" AND eg_pgr_service.active = true");
 		query = query.replace("$where", queryBuilder.toString());
 		return query;
 	}

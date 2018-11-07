@@ -83,7 +83,7 @@ public class PGRRequestValidator {
 	public void validateCreate(ServiceRequest serviceRequest) {
 		log.info("Validating create request");
 		Map<String, String> errorMap = new HashMap<>();
-		validateTenantIdSanity(serviceRequest, errorMap);
+		validateDataSanity(serviceRequest, errorMap);
 		validateUserRBACProxy(errorMap, serviceRequest.getRequestInfo());
 		validateIfArraysEqual(serviceRequest, errorMap);
 		vaidateServiceCodes(serviceRequest, errorMap);
@@ -106,7 +106,7 @@ public class PGRRequestValidator {
 	public void validateUpdate(ServiceRequest serviceRequest) {
 		log.info("Validating update request");
 		Map<String, String> errorMap = new HashMap<>();
-		validateTenantIdSanity(serviceRequest, errorMap);
+		validateDataSanity(serviceRequest, errorMap);
 		validateIfArraysEqual(serviceRequest, errorMap);
 		vaidateServiceCodes(serviceRequest, errorMap);
 		validateAssignments(serviceRequest, errorMap);
@@ -117,16 +117,22 @@ public class PGRRequestValidator {
 	
 	/**
 	 * It is a convention that all the complaints being filed/updated in one API call must belong to the same tenant.
+	 * 1. This method checks if all complaints belong the same tenant.
+	 * 2. Checks if the complaints being updated are all active.
 	 * 
 	 * TODO: Later, to the same API checking the validity of a tenantId can also be added.
 	 * 
 	 * @param serviceRequest
 	 * @param errorMap
 	 */
-	public void validateTenantIdSanity(ServiceRequest serviceRequest, Map<String, String> errorMap) {
+	public void validateDataSanity(ServiceRequest serviceRequest, Map<String, String> errorMap) {
 		Set<String> tenants = serviceRequest.getServices().parallelStream().map(Service::getTenantId).collect(Collectors.toSet());
 		if(tenants.size() > 1) {
 			errorMap.put(ErrorConstants.INVALID_REQUESTS_ON_TENANT_CODE, ErrorConstants.INVALID_REQUESTS_ON_TENANT_MSG);
+		}
+		Set<Boolean> activeComplaints = serviceRequest.getServices().parallelStream().map(Service::getActive).collect(Collectors.toSet());
+		if(activeComplaints.isEmpty() || activeComplaints.contains(false)) {
+			errorMap.put(ErrorConstants.INACTIVE_COMPLAINTS_FOR_UPDATE_CODE, ErrorConstants.INACTIVE_COMPLAINTS_FOR_UPDATE_MSG);
 		}
 		if (!errorMap.isEmpty())
 			throw new CustomException(errorMap);

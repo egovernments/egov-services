@@ -196,7 +196,7 @@ public class ReportService {
 				mapOfIdAndName.put(Long.parseLong(employee.get("id").toString()), employee.get("name").toString());
 			}
 		}
-		log.info("mapOfIdAndName: " + mapOfIdAndName);
+		log.debug("mapOfIdAndName: " + mapOfIdAndName);
 		return mapOfIdAndName;
 	}
 

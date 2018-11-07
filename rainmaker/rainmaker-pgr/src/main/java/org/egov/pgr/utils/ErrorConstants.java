@@ -75,4 +75,7 @@ public class ErrorConstants {
 	
 	public static final String INVALID_REQUESTS_ON_TENANT_CODE = "EG_PGR_INVALID_REQUESTS_ON_TENANT";
 	public static final String INVALID_REQUESTS_ON_TENANT_MSG = "All the complaints being filed/updated must belong to the same tenantId.";
+	
+	public static final String INACTIVE_COMPLAINTS_FOR_UPDATE_CODE = "EG_PGR_INACTIVE_COMPLAINTS_FOR_UPDATE";
+	public static final String INACTIVE_COMPLAINTS_FOR_UPDATE_MSG = "All the complaints being updated should be active complaints";
 }

@@ -247,8 +247,6 @@ public class GrievanceService {
 			}
 			String role = pGRUtils.getPrecedentRole(requestInfo.getUserInfo().getRoles().parallelStream().map(Role::getName)
 					.collect(Collectors.toList()));
-			if(StringUtils.isEmpty(role))
-				role = requestInfo.getUserInfo().getRoles().get(0).getName();
 			actionInfo.setUuid(UUID.randomUUID().toString()); actionInfo.setBusinessKey(service.getServiceRequestId()); 
 			actionInfo.setBy(auditDetails.getLastModifiedBy() + ":" + role); actionInfo.setWhen(auditDetails.getLastModifiedTime());
 			actionInfo.setTenantId(service.getTenantId()); actionInfo.status(actionInfo.getAction()); 

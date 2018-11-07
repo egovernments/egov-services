@@ -74,16 +74,15 @@ public class PGRRequestValidator {
 	 * validates the create Request based on the following cirtera:
 	 * 
 	 * 1. Checks if the length of actionInfo and services are same.
-	 * 2. Overrides accountId field of the request with the id of the logged in user.
+	 * 2. Checks if all the complaints belong to the same tenant and are active.
 	 * 3. Services codes mentioned in the request are validated against the mdms records.
-	 * 4. Validates address. 
 	 * 
 	 * @param serviceRequest
 	 */
 	public void validateCreate(ServiceRequest serviceRequest) {
 		log.info("Validating create request");
 		Map<String, String> errorMap = new HashMap<>();
-		validateDataSanity(serviceRequest, errorMap);
+		validateDataSanity(serviceRequest, errorMap, true);
 		validateUserRBACProxy(errorMap, serviceRequest.getRequestInfo());
 		validateIfArraysEqual(serviceRequest, errorMap);
 		vaidateServiceCodes(serviceRequest, errorMap);
@@ -95,7 +94,7 @@ public class PGRRequestValidator {
 	 * validates the update Request based on the following criteria:
 	 * 
 	 * 1. Checks if the length of actionInfo and services are same.
-	 * 2. Overrides accountId field of the request with the id of the logged in user.
+	 * 2. Checks if the complaints being updated are all belonging to the same tenant and active.
 	 * 3. Services codes mentioned in the request are validated against the mdms records.
 	 * 4. Validates assignment of service requests based on various roles.
 	 * 5. Validates the action performed on the service request based on the role.
@@ -106,7 +105,7 @@ public class PGRRequestValidator {
 	public void validateUpdate(ServiceRequest serviceRequest) {
 		log.info("Validating update request");
 		Map<String, String> errorMap = new HashMap<>();
-		validateDataSanity(serviceRequest, errorMap);
+		validateDataSanity(serviceRequest, errorMap, false);
 		validateIfArraysEqual(serviceRequest, errorMap);
 		vaidateServiceCodes(serviceRequest, errorMap);
 		validateAssignments(serviceRequest, errorMap);
@@ -125,14 +124,16 @@ public class PGRRequestValidator {
 	 * @param serviceRequest
 	 * @param errorMap
 	 */
-	public void validateDataSanity(ServiceRequest serviceRequest, Map<String, String> errorMap) {
+	public void validateDataSanity(ServiceRequest serviceRequest, Map<String, String> errorMap, Boolean isCreate) {
 		Set<String> tenants = serviceRequest.getServices().parallelStream().map(Service::getTenantId).collect(Collectors.toSet());
 		if(tenants.size() > 1) {
 			errorMap.put(ErrorConstants.INVALID_REQUESTS_ON_TENANT_CODE, ErrorConstants.INVALID_REQUESTS_ON_TENANT_MSG);
 		}
-		Set<Boolean> activeComplaints = serviceRequest.getServices().parallelStream().map(Service::getActive).collect(Collectors.toSet());
-		if(activeComplaints.isEmpty() || activeComplaints.contains(false)) {
-			errorMap.put(ErrorConstants.INACTIVE_COMPLAINTS_FOR_UPDATE_CODE, ErrorConstants.INACTIVE_COMPLAINTS_FOR_UPDATE_MSG);
+		if(!isCreate) {
+			Set<Boolean> activeComplaints = serviceRequest.getServices().parallelStream().map(Service::getActive).collect(Collectors.toSet());
+			if(activeComplaints.isEmpty() || activeComplaints.contains(false)) {
+				errorMap.put(ErrorConstants.INACTIVE_COMPLAINTS_FOR_UPDATE_CODE, ErrorConstants.INACTIVE_COMPLAINTS_FOR_UPDATE_MSG);
+			}
 		}
 		if (!errorMap.isEmpty())
 			throw new CustomException(errorMap);
@@ -241,6 +242,19 @@ public class PGRRequestValidator {
 			throw new CustomException(errorMap);
 	}
 
+	/**
+	 * Checks the following in regard to role based authentication:
+	 * 
+	 * 1. Checks if the userInfo of the requester is present in the request
+	 * 2. Checks if the details like id, role and tenant are available of the requester
+	 * 3. Checks if the requester has a valid role to perform any action on the complaint.
+	 * 
+	 * NOTE: We go with an assumption that zuul always replaces this info, but sometimes when port forwarding or any such bypass is done,
+	 * This information will be missing and application will not function.
+	 * 
+	 * @param errorMap
+	 * @param requestInfo
+	 */
 	public void validateUserRBACProxy(Map<String, String> errorMap, RequestInfo requestInfo) {
 
 		if (null != requestInfo.getUserInfo()) {
@@ -248,10 +262,17 @@ public class PGRRequestValidator {
 				errorMap.put(ErrorConstants.MISSING_USERTYPE_CODE, ErrorConstants.MISSING_USERTYPE_MSG);
 				return;
 			}
-			if (null == requestInfo.getUserInfo().getId() || (null == requestInfo.getUserInfo().getRoles()
-					|| requestInfo.getUserInfo().getRoles().isEmpty())) {
+			if ((null == requestInfo.getUserInfo().getId()) || 
+					(CollectionUtils.isEmpty(requestInfo.getUserInfo().getRoles())) || (StringUtils.isEmpty(requestInfo.getUserInfo().getTenantId()))) {
 				errorMap.put(ErrorConstants.MISSING_ROLE_USERID_CODE, ErrorConstants.MISSING_ROLE_USERID_MSG);
 				return;
+			}else {
+				String role = pgrUtils.getPrecedentRole(requestInfo.getUserInfo()
+						.getRoles().parallelStream().map(Role::getName).collect(Collectors.toList()));
+				if(StringUtils.isEmpty(role)) {
+					errorMap.put(ErrorConstants.INVALID_ROLE_CODE, ErrorConstants.INVALID_ROLE_MSG+ requestInfo.getUserInfo()
+							.getRoles().parallelStream().map(Role::getName).collect(Collectors.toList()));
+				}
 			}
 		} else {
 			errorMap.put(ErrorConstants.MISSING_USERINFO_CODE, ErrorConstants.MISSING_USERINFO_MSG);
@@ -261,7 +282,7 @@ public class PGRRequestValidator {
 	}
 
 	/**
-	 * validates of the action as follows:
+	 * Validates of the action as follows:
 	 * 1. Does the user trying to perform the action have rights of that action.
 	 * 2. Is the action being performed valid for the current status.
 	 * 3. If a DGRO is trying to update the complaint then it checks if the complaint belongs to is department, if it doesn't then he isn't allowed to.
@@ -276,14 +297,10 @@ public class PGRRequestValidator {
 		List<String> roles = serviceRequest.getRequestInfo().getUserInfo().getRoles().parallelStream()
 				.map(Role::getName).collect(Collectors.toList());
 		List<String> actions = null;
-		if (roles.contains(PGRConstants.ROLE_NAME_CITIZEN))
-			actions = roleActionMap.get(PGRConstants.ROLE_NAME_CITIZEN);
-		else
-			actions = roleActionMap.get(pgrUtils.getPrecedentRole(serviceRequest.getRequestInfo().getUserInfo()
-					.getRoles().parallelStream().map(Role::getName).collect(Collectors.toList())));
+		actions = roleActionMap.get(pgrUtils.getPrecedentRole(serviceRequest.getRequestInfo().getUserInfo()
+				.getRoles().parallelStream().map(Role::getName).collect(Collectors.toList())));
 		final List<String> actionsAllowedForTheRole = actions;
-		String role = pgrUtils.getPrecedentRole(serviceRequest.getRequestInfo().getUserInfo()
-				.getRoles().parallelStream().map(Role::getName).collect(Collectors.toList()));
+		String role = pgrUtils.getPrecedentRole(roles);
 		List<String> serviceCodes = new ArrayList<>();
 		if(role.equals(PGRConstants.ROLE_NAME_DGRO)) {
 			log.info("Validating for DGRO actions");

@@ -40,8 +40,8 @@ public class ErrorConstants {
 	public static final String MISSING_USERTYPE_CODE = "EG_PGR_REQUESTINFO_USERTYPE_MISSING";
 	public static final String MISSING_USERTYPE_MSG = "Unauthenticated user, user type is missing in the request.";
 	
-	public static final String MISSING_ROLE_USERID_CODE = "EG_PGR_REQUESTINFO_USERTYPE_MISSING";
-	public static final String MISSING_ROLE_USERID_MSG = "Unauthenticated user, user type is missing in the request.";
+	public static final String MISSING_ROLE_USERID_CODE = "EG_PGR_USER_DATA_MISSING";
+	public static final String MISSING_ROLE_USERID_MSG = "Unauthenticated user. The combination Id, Roles and Tenant is invalid .";
 	
 	public static final String MISSING_USERINFO_CODE = "EG_PGR_USERINFO_MISSING";
 	public static final String MISSING_USERINFO_MSG = "Unauthenticated user, userInfo missing in the request.";

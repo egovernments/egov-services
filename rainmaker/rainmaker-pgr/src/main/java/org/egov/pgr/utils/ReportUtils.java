@@ -3,6 +3,7 @@ package org.egov.pgr.utils;
 import java.text.DecimalFormat;
 import java.util.*;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.WordUtils;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.mdms.model.MasterDetail;
@@ -13,10 +14,15 @@ import org.egov.pgr.contract.ColumnDetail;
 import org.egov.pgr.contract.ReportRequest;
 import org.egov.pgr.contract.ReportResponse;
 import org.egov.pgr.contract.RequestInfoWrapper;
+import org.egov.pgr.producer.PGRProducer;
+import org.egov.pgr.repository.FileStoreRepo;
+import org.egov.pgr.repository.ServiceRequestRepository;
 import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+
+import com.jayway.jsonpath.JsonPath;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -38,6 +44,12 @@ public class ReportUtils {
 
 	@Value("${egov.mdms.search.endpoint}")
 	private String mdmsEndpoint;
+	
+	@Autowired
+	private PGRUtils pGRUtils;
+
+	@Autowired
+	private ServiceRequestRepository serviceRequestRepository;
 
 	/**
 	 * Formats the DB Response according to the existing Report Framework response for the ease of UI intgeration
@@ -159,6 +171,36 @@ public class ReportUtils {
 		moduleDetails.add(moduleDetail);
 		MdmsCriteria mdmsCriteria = MdmsCriteria.builder().tenantId(tenantId).moduleDetails(moduleDetails).build();
 		return MdmsCriteriaReq.builder().requestInfo(requestInfo).mdmsCriteria(mdmsCriteria).build();
+	}
+	
+	/**
+	 * Get department on department code
+	 * 
+	 * @param serviceReqSearchCriteria
+	 * @param requestInfo
+	 * @param departmentCode
+	 * @return String
+	 */
+	public List<String> getDepartment(RequestInfo requestInfo, List<String> departmentCodes, String tenantId) {
+		StringBuilder deptUri = new StringBuilder();
+		List<String> departments = null;
+		Object response = null;
+		MdmsCriteriaReq mdmsCriteriaReq = pGRUtils.prepareMdMsRequestForDept(deptUri, tenantId, departmentCodes, requestInfo);
+		try {
+			response = serviceRequestRepository.fetchResult(deptUri, mdmsCriteriaReq);
+			if (null == response) {
+				throw new CustomException(ErrorConstants.INVALID_DEPARTMENT_TENANT_KEY, ErrorConstants.INVALID_DEPARTMENT_TENANT_MSG);
+			}
+			departments = JsonPath.read(response, PGRConstants.JSONPATH_DEPARTMENTS);
+			if(CollectionUtils.isEmpty(departments)) {
+				throw new CustomException(ErrorConstants.INVALID_DEPARTMENT_TENANT_KEY, ErrorConstants.INVALID_DEPARTMENT_TENANT_MSG);
+			}
+		} catch (Exception e) {
+			log.error("Exception: " + e);
+			throw new CustomException(ErrorConstants.INVALID_DEPARTMENT_TENANT_KEY,
+					ErrorConstants.INVALID_DEPARTMENT_TENANT_MSG);
+		}
+		return departments;
 	}
 	
 	

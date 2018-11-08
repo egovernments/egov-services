@@ -312,8 +312,7 @@ public class PGRRequestValidator {
 			ServiceReqSearchCriteria serviceReqSearchCriteria = ServiceReqSearchCriteria.builder()
 					.tenantId(serviceRequest.getServices().get(0).getTenantId()).build();
 			List<String> departmentCodes = requestService.getDepartmentCode(serviceReqSearchCriteria, serviceRequest.getRequestInfo());
-			List<String> departments = requestService.getDepartment(serviceReqSearchCriteria, serviceRequest.getRequestInfo(), departmentCodes);
-			Object response = requestService.fetchServiceDefs(serviceRequest.getRequestInfo(), serviceRequest.getServices().get(0).getTenantId(), departments);
+			Object response = requestService.fetchServiceDefs(serviceRequest.getRequestInfo(), serviceRequest.getServices().get(0).getTenantId(), departmentCodes);
 			try {
 				serviceCodes = JsonPath.read(response, PGRConstants.JSONPATH_SERVICE_CODES);
 				log.info("serviceCodes: "+serviceCodes);

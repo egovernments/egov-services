@@ -368,7 +368,7 @@ public class GrievanceService {
 			 */
 			else if (precedentRole.equalsIgnoreCase(PGRConstants.ROLE_NAME_DGRO)) { 
 				Object response = fetchServiceDefs(requestInfo, serviceReqSearchCriteria.getTenantId(), 
-						getDepartment(serviceReqSearchCriteria, requestInfo, getDepartmentCode(serviceReqSearchCriteria, requestInfo)));
+						getDepartmentCode(serviceReqSearchCriteria, requestInfo));
 				if (null == response) {
 					throw new CustomException(ErrorConstants.NO_DATA_KEY, ErrorConstants.NO_DATA_MSG);
 				}
@@ -405,8 +405,8 @@ public class GrievanceService {
 			serviceReqSearchCriteria.setServiceRequestId(serviceRequestIds);
 		}
 		if(!StringUtils.isEmpty(serviceReqSearchCriteria.getGroup()) && CollectionUtils.isEmpty(serviceReqSearchCriteria.getServiceCodes())) {
-			List<String> departments = new ArrayList<>(); departments.add(serviceReqSearchCriteria.getGroup());
-			Object response = fetchServiceDefs(requestInfo, serviceReqSearchCriteria.getTenantId(), departments);
+			List<String> departmentCodes = new ArrayList<>(); departmentCodes.add(serviceReqSearchCriteria.getGroup());
+			Object response = fetchServiceDefs(requestInfo, serviceReqSearchCriteria.getTenantId(), departmentCodes);
 			if (null == response) {
 				throw new CustomException(ErrorConstants.NO_DATA_KEY, ErrorConstants.NO_DATA_MSG);
 			}
@@ -451,36 +451,6 @@ public class GrievanceService {
 		}
 		return departmenCodes;
 	}	
-
-	/**
-	 * Get department on department code
-	 * 
-	 * @param serviceReqSearchCriteria
-	 * @param requestInfo
-	 * @param departmentCode
-	 * @return String
-	 */
-	public List<String> getDepartment(ServiceReqSearchCriteria serviceReqSearchCriteria, RequestInfo requestInfo, List<String> departmentCodes) {
-		StringBuilder deptUri = new StringBuilder();
-		List<String> departments = null;
-		Object response = null;
-		MdmsCriteriaReq mdmsCriteriaReq = pGRUtils.prepareMdMsRequestForDept(deptUri, serviceReqSearchCriteria.getTenantId(), departmentCodes, requestInfo);
-		try {
-			response = serviceRequestRepository.fetchResult(deptUri, mdmsCriteriaReq);
-			if (null == response) {
-				throw new CustomException(ErrorConstants.INVALID_DEPARTMENT_TENANT_KEY, ErrorConstants.INVALID_DEPARTMENT_TENANT_MSG);
-			}
-			departments = JsonPath.read(response, PGRConstants.JSONPATH_DEPARTMENTS);
-			if(CollectionUtils.isEmpty(departments)) {
-				throw new CustomException(ErrorConstants.INVALID_DEPARTMENT_TENANT_KEY, ErrorConstants.INVALID_DEPARTMENT_TENANT_MSG);
-			}
-		} catch (Exception e) {
-			log.error("Exception: " + e);
-			throw new CustomException(ErrorConstants.INVALID_DEPARTMENT_TENANT_KEY,
-					ErrorConstants.INVALID_DEPARTMENT_TENANT_MSG);
-		}
-		return departments;
-	}
 
 	/**
 	 * method to fetch service defs from mdms based on dept

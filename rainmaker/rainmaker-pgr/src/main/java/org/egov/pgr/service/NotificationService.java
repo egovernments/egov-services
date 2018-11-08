@@ -119,17 +119,12 @@ public class NotificationService {
 	 * @return
 	 */
 	public String getDepartmentForNotification(Service serviceReq, List<String> codes, RequestInfo requestInfo) {
-		StringBuilder uri = new StringBuilder();
 		String department = null;
-		MdmsCriteriaReq mdmsCriteriaReq = pGRUtils.prepareMdMsRequestForDept(uri, serviceReq.getTenantId(), codes, requestInfo);
-		List<String> departmemts = null;
 		try {
-			Object result = serviceRequestRepository.fetchResult(uri, mdmsCriteriaReq);
-			departmemts = JsonPath.read(result, PGRConstants.JSONPATH_DEPARTMENTS);
-			if (CollectionUtils.isEmpty(departmemts))
+			if (CollectionUtils.isEmpty(codes))
 				 return department;
 			else {
-				Object response = requestService.fetchServiceDefs(requestInfo, serviceReq.getTenantId(), departmemts);
+				Object response = requestService.fetchServiceDefs(requestInfo, serviceReq.getTenantId(), codes);
 				if (null == response) {
 					 return department;
 				}

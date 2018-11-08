@@ -209,13 +209,26 @@ public class ReportService {
 				reportRequest.getRequestInfo());
 		Object response = serviceRequestRepository.fetchResult(uri, request);
 		if (null != response) {
+			Map<String, String> deptCodeAndNameMap = new HashMap<>();
 			List<Map<String, Object>> resultCast = mapper.convertValue(JsonPath.read(response, "$.MdmsRes.RAINMAKER-PGR.ServiceDefs"), List.class);
 			for (Map<String, Object> serviceDef : resultCast) {
-				mapOfServiceCodesAndDepts.put(serviceDef.get("serviceCode").toString(),
-						serviceDef.get("department").toString());
+				if(StringUtils.isEmpty(deptCodeAndNameMap.get(serviceDef.get("department").toString()))) {
+					List<String> departmentCodes = new ArrayList<>();
+					departmentCodes.add(serviceDef.get("department").toString());
+					List<String> depts = reportUtils.getDepartment(reportRequest.getRequestInfo(), departmentCodes, reportRequest.getTenantId());
+					if(!CollectionUtils.isEmpty(depts)) {
+						deptCodeAndNameMap.put(serviceDef.get("department").toString(), depts.get(0));
+					}
+					mapOfServiceCodesAndDepts.put(serviceDef.get("serviceCode").toString(), "NA");
+				}else {
+					mapOfServiceCodesAndDepts.put(serviceDef.get("serviceCode").toString(), 
+							deptCodeAndNameMap.get(serviceDef.get("department").toString()));
+				}
 				mapOfServiceCodesAndSLA.put(serviceDef.get("serviceCode").toString(),
 						serviceDef.get("slaHours").toString());
 			}
+			
+			
 		}
 		log.info("mapOfServiceCodesAndDepts: " + mapOfServiceCodesAndDepts);
 		if (iWantSlahours)

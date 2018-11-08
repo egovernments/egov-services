@@ -1,12 +1,8 @@
 FROM egovio/apline-jre:8u121
 
-MAINTAINER "Rajat Kaushal"<rajat.kaushal@riflexions.com>
+MAINTAINER Sivaprakash Ramasamy<sivaprakash.ramasamy@tarento.com>
 
-# advertise jboss service port
-EXPOSE 8080 9990
 
-# copy pre-built JAR into image
-#
 # INSTRUCTIONS ON HOW TO BUILD JAR:
 # Move to the location where pom.xml is exist in project and build project using below command
 # "mvn clean package"

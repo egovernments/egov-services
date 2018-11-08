@@ -5,7 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.io.Serializable;
-import java.util.List;
+import java.util.Set;
 
 @Setter
 @Getter
@@ -21,7 +21,7 @@ public class User implements Serializable {
 	private String emailId;
 	private String locale;
 	private String type;
-	private List<Role> roles;
+	private Set<Role> roles;
 	private boolean active;
 	private String tenantId;
 }

@@ -169,7 +169,7 @@ public class UserController {
 
 	private boolean isMobileValidationRequired(HttpHeaders headers) {
 		String x_pass_through_gatewayStr = headers.getFirst(X_PASS_THROUGH_GATEWAY_KEY);
-		Boolean x_pass_through_gateway = false;
+		boolean x_pass_through_gateway = false;
 		if (x_pass_through_gatewayStr != null && x_pass_through_gatewayStr.equalsIgnoreCase("true")) {
 			x_pass_through_gateway = true;
 		}

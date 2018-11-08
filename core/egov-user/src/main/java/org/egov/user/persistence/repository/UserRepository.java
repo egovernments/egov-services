@@ -9,7 +9,8 @@ import org.egov.user.domain.model.UserSearchCriteria;
 import org.egov.user.domain.model.enums.*;
 import org.egov.user.repository.builder.RoleQueryBuilder;
 import org.egov.user.repository.builder.UserTypeQueryBuilder;
-import org.egov.user.repository.rowmapper.UserRowMapper;
+import org.egov.user.repository.rowmapper.UserResultSetExtractor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -31,13 +32,17 @@ public class UserRepository {
 	private JdbcTemplate jdbcTemplate;
 	private UserTypeQueryBuilder userTypeQueryBuilder;
 	private RoleRepository roleRepository;
-	private UserRowMapper userRowMapper = new UserRowMapper();
+	private UserResultSetExtractor userResultSetExtractor;
 
-	UserRepository(RoleRepository roleRepository, UserTypeQueryBuilder userTypeQueryBuilder, AddressRepository addressRepository, JdbcTemplate jdbcTemplate,
-				   NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
+	@Autowired
+	UserRepository(RoleRepository roleRepository, UserTypeQueryBuilder userTypeQueryBuilder,
+                   AddressRepository addressRepository, UserResultSetExtractor userResultSetExtractor,
+                   JdbcTemplate jdbcTemplate,
+                   NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
 		this.addressRepository = addressRepository;
 		this.roleRepository = roleRepository;
 		this.userTypeQueryBuilder = userTypeQueryBuilder;
+		this.userResultSetExtractor = userResultSetExtractor;
 		this.jdbcTemplate = jdbcTemplate;
 		this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
 	}
@@ -53,56 +58,10 @@ public class UserRepository {
         final List<Object> preparedStatementValues = new ArrayList<>();
         String queryStr = userTypeQueryBuilder.getQuery(userSearch, preparedStatementValues);
         log.debug(queryStr);
-        List<User> userEntities = jdbcTemplate.query(queryStr, preparedStatementValues.toArray(), userRowMapper);
-        return userEntities.stream()
-                .map(this::getRolesAndMap)
-                .map(this::getAddressAndMapToDomain)
-                .collect(Collectors.toList());
+
+        return jdbcTemplate.query(queryStr, preparedStatementValues.toArray(), userResultSetExtractor);
     }
 
-    /**
-     * api will get the user roles and set it to the user.
-     *
-     * @param user
-     * @return
-     */
-    private User getRolesAndMap(User user) {
-        List<Role> roles = roleRepository.getUserRoles(user.getId(), user.getTenantId());
-        user.setRoles(roles);
-        return user;
-    }
-
-    /**
-     * api will get the addresses and map into the user object.
-     *
-     * @param user
-     * @return
-     */
-    private User getAddressAndMapToDomain(User user) {
-        final List<Address> addresses = addressRepository.find(user.getId(), user.getTenantId());
-        final Address correspondenceAddress = filter(addresses, AddressType.CORRESPONDENCE);
-        final Address permanentAddress = filter(addresses, AddressType.PERMANENT);
-        user.setCorrespondenceAddress(correspondenceAddress);
-        user.setPermanentAddress(permanentAddress);
-        return user;
-    }
-
-    /**
-     * api will filter the address by address type (Address Type can be
-     * PERMANANT , CORROSPONDANCE)
-     *
-     * @param addresses
-     * @param addressType
-     * @return
-     */
-    // TODO Multiple addresses for each address type is a possibility?
-    private Address filter(List<Address> addresses, AddressType addressType) {
-        if (addresses == null) {
-            return null;
-        }
-        return addresses.stream().filter(address -> addressType.toString().equals(address.getAddressType())).findFirst()
-                .orElse(null);
-    }
 
     /**
      * Get the list of roles by user role code.
@@ -110,8 +69,8 @@ public class UserRepository {
      * @param user
      * @return
      */
-    private List<Role> fetchRolesByCode(User user) {
-        return user.getRoles().stream().map((role) -> fetchRole(user, role)).collect(Collectors.toList());
+    private Set<Role> fetchRolesByCode(User user) {
+        return user.getRoles().stream().map((role) -> fetchRole(user, role)).collect(Collectors.toSet());
     }
 
     /**
@@ -472,8 +431,8 @@ public class UserRepository {
 			setEnrichedRolesToUser(user);
 			updateRoles(user);
 		}
-		if (user.getAddresses() != null) {
-			addressRepository.update(user.getAddresses(), user.getId(), user.getTenantId());
+		if (user.getPermanentAndCorrespondenceAddresses() != null) {
+			addressRepository.update(user.getPermanentAndCorrespondenceAddresses(), user.getId(), user.getTenantId());
 		}
 	}
 

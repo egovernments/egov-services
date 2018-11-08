@@ -13,10 +13,7 @@ import org.egov.user.domain.model.enums.GuardianRelation;
 import org.egov.user.domain.model.enums.UserType;
 import org.springframework.util.CollectionUtils;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 import static org.springframework.util.ObjectUtils.isEmpty;
 
@@ -44,8 +41,9 @@ public class User {
 	private String aadhaarNumber;
 	private Address permanentAddress;
 	private Address correspondenceAddress;
+	private Set<Address> addresses;
 	private Boolean active;
-	private List<Role> roles = new ArrayList<>();
+	private Set<Role> roles;
 	private Date dob;
 	private Date passwordExpiryDate;
 	private String locale = "en_IN";
@@ -63,6 +61,22 @@ public class User {
 	private Long loggedInUserId;
 	private boolean otpValidationMandatory;
 	private boolean mobileValidationMandatory = true;
+
+	public User addAddressItem(Address addressItem) {
+		if (this.addresses == null) {
+			this.addresses = new HashSet<>();
+		}
+		this.addresses.add(addressItem);
+		return this;
+	}
+
+	public User addRolesItem(Role roleItem) {
+		if (this.roles == null) {
+			this.roles = new HashSet<>();
+		}
+		this.roles.add(roleItem);
+		return this;
+	}
 
 	public void validateNewUser() {
 		if (isUsernameAbsent()
@@ -151,7 +165,7 @@ public class User {
 
 	public void setRoleToCitizen() {
 		type = UserType.CITIZEN;
-		roles = Collections.singletonList(Role.getCitizenRole());
+		roles = Collections.singleton(Role.getCitizenRole());
 	}
 
 	public void updatePassword(String newPassword) {
@@ -166,7 +180,7 @@ public class User {
 				.build();
 	}
 
-	public List<Address> getAddresses() {
+	public List<Address> getPermanentAndCorrespondenceAddresses() {
 		final ArrayList<Address> addresses = new ArrayList<>();
 		if (correspondenceAddress != null && correspondenceAddress.isNotEmpty()) {
 			addresses.add(correspondenceAddress);

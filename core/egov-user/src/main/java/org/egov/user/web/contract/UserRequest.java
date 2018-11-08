@@ -11,9 +11,9 @@ import org.egov.user.domain.model.enums.BloodGroup;
 import org.egov.user.domain.model.enums.Gender;
 import org.egov.user.domain.model.enums.UserType;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Setter
@@ -53,7 +53,7 @@ public class UserRequest {
 	private String otpReference;
 	private Long lastModifiedBy;
 	private String tenantId;
-	private List<RoleRequest> roles;
+	private Set<RoleRequest> roles;
 	
 	private String uuid;
 
@@ -117,9 +117,9 @@ public class UserRequest {
 		}
 	}
 
-	private List<RoleRequest> convertDomainRoleToContract(List<Role> domainRoles) {
-		if (domainRoles == null) return new ArrayList<>();
-		return domainRoles.stream().map(RoleRequest::new).collect(Collectors.toList());
+	private Set<RoleRequest> convertDomainRoleToContract(Set<Role> roleEntities) {
+		if (roleEntities == null) return new HashSet<>();
+		return roleEntities.stream().map(RoleRequest::new).collect(Collectors.toSet());
 	}
 
 	@JsonIgnore
@@ -198,12 +198,12 @@ public class UserRequest {
 				.build();
 	}
 
-	private List<Role> toDomainRoles() {
+	private Set<Role> toDomainRoles() {
 		return this.roles != null
 				? this.roles.stream()
 				.map(RoleRequest::toDomain)
 				.distinct()
-				.collect(Collectors.toList())
+				.collect(Collectors.toSet())
 				: null;
 	}
 }

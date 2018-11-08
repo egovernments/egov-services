@@ -46,8 +46,7 @@ public class UserRequestTest {
         assertThat(userRequestContract.getBloodGroup()).isEqualTo(domainUser.getBloodGroup().getValue());
         assertThat(userRequestContract.getPhoto()).isEqualTo(domainUser.getPhoto());
         assertThat(userRequestContract.getIdentificationMark()).isEqualTo(domainUser.getIdentificationMark());
-        assertThat(userRequestContract.getRoles().get(0).getName()).isEqualTo("name of the role 1");
-        assertThat(userRequestContract.getRoles().get(1).getName()).isEqualTo("name of the role 2");
+        assertThat(userRequestContract.getRoles().iterator().next().getName()).isEqualTo("name of the role 1");
         assertThat(userRequestContract.getCreatedBy()).isEqualTo(1L);
         assertThat(userRequestContract.getCreatedDate()).isEqualTo(domainUser.getCreatedDate());
         assertThat(userRequestContract.getLastModifiedBy()).isEqualTo(2L);
@@ -89,22 +88,22 @@ public class UserRequestTest {
         assertNotNull(userForCreate.getCreatedDate());
         assertNotEquals(expectedDate, userForCreate.getLastModifiedDate().toString());
         assertNotEquals(expectedDate, userForCreate.getCreatedDate().toString());
-		final List<Role> roles = userForCreate.getRoles();
+		final Set<Role> roles = userForCreate.getRoles();
 		assertEquals(1, roles.size());
-		assertEquals("CITIZEN", roles.get(0).getCode());
+		assertEquals("CITIZEN", roles.iterator().next().getCode());
         assertEquals("ap.public", userForCreate.getTenantId());
         assertEquals("otpreference1", userForCreate.getOtpReference());
         assertEquals("!abcd1234", userForCreate.getPassword());
     }
 
 	private UserRequest buildUserRequest() {
-        List<RoleRequest> roles = new ArrayList<>();
+        Set<RoleRequest> roles = new HashSet<>();
         roles.add(RoleRequest.builder().code("CITIZEN").build());
         roles.add(RoleRequest.builder().code("CITIZEN").build());
         return getUserBuilder(roles).build();
     }
 
-    private UserRequest.UserRequestBuilder getUserBuilder(List<RoleRequest> roles) {
+    private UserRequest.UserRequestBuilder getUserBuilder(Set<RoleRequest> roles) {
         Calendar c = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
         c.set(2017, 1, 1, 1, 1, 1);
         Date dateToTest = c.getTime();
@@ -192,7 +191,7 @@ public class UserRequestTest {
 				.build();
 	}
 
-    private List<Role> getListOfRoles() {
+    private Set<Role> getListOfRoles() {
         Calendar calendar = Calendar.getInstance();
         calendar.set(1990, Calendar.JULY, 1);
 
@@ -216,6 +215,6 @@ public class UserRequestTest {
                 .lastModifiedDate(calendar.getTime())
                 .build();
 
-        return Arrays.asList(role1, role2);
+        return new HashSet<>(Arrays.asList(role1, role2));
     }
 }

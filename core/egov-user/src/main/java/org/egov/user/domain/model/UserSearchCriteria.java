@@ -26,8 +26,8 @@ public class UserSearchCriteria {
     private String emailId;
     private boolean fuzzyLogic;
     private Boolean active;
-    private int pageSize;
-    private int pageNumber;
+    private Integer offset;
+    private Integer limit;
     private List<String> sort;
     private UserType type;
     private String tenantId;

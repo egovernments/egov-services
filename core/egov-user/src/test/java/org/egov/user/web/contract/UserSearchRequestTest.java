@@ -38,8 +38,8 @@ public class UserSearchRequestTest {
         assertThat(userSearch.getPan()).isEqualTo("pan");
         assertThat(userSearch.isFuzzyLogic()).isFalse();
         assertThat(userSearch.getActive()).isTrue();
-        assertThat(userSearch.getPageSize()).isEqualTo(0);
-        assertThat(userSearch.getPageNumber()).isEqualTo(0);
+        assertThat(userSearch.getLimit()).isEqualTo(0);
+        assertThat(userSearch.getOffset()).isEqualTo(0);
         assertThat(userSearch.getSort()).isEqualTo(Collections.singletonList("name"));
         assertThat(userSearch.getType()).isEqualTo(UserType.CITIZEN);
     }

@@ -5,13 +5,12 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.egov.user.domain.model.Address;
 import org.egov.user.domain.model.Role;
 import org.egov.user.domain.model.User;
 import org.egov.user.domain.model.enums.UserType;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Setter
@@ -36,6 +35,7 @@ public class UserSearchResponseContent {
     private String correspondenceAddress;
     private String correspondenceCity;
     private String correspondencePinCode;
+    private Set<Address> addresses;
     private Boolean active;
     private String locale;
     private UserType type;
@@ -48,7 +48,7 @@ public class UserSearchResponseContent {
     private Long createdBy;
     private Long lastModifiedBy;
     private String tenantId;
-    private List<RoleRequest> roles;
+    private Set<RoleRequest> roles;
     private String uuid;
 
     @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss")
@@ -90,6 +90,7 @@ public class UserSearchResponseContent {
         this.roles = convertDomainRolesToContract(user.getRoles());
 		this.fatherOrHusbandName = user.getGuardian();
 		this.uuid = user.getUuid();
+		this.addresses = user.getAddresses();
 		mapPermanentAddress(user);
 		mapCorrespondenceAddress(user);
     }
@@ -111,9 +112,9 @@ public class UserSearchResponseContent {
 	}
 
 
-	private List<RoleRequest> convertDomainRolesToContract(List<Role> roleEntities) {
-        if (roleEntities == null) return new ArrayList<>();
-        return roleEntities.stream().map(RoleRequest::new).collect(Collectors.toList());
+	private Set<RoleRequest> convertDomainRolesToContract(Set<Role> roleEntities) {
+        if (roleEntities == null) return new HashSet<>();
+        return roleEntities.stream().map(RoleRequest::new).collect(Collectors.toSet());
     }
 
 }

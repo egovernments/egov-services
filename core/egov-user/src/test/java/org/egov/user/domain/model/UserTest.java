@@ -2,15 +2,11 @@ package org.egov.user.domain.model;
 
 import org.egov.user.domain.exception.InvalidUserCreateException;
 import org.egov.user.domain.exception.InvalidUserUpdateException;
-import org.egov.user.domain.model.enums.AddressType;
 import org.egov.user.domain.model.enums.Gender;
 import org.egov.user.domain.model.enums.UserType;
 import org.junit.Test;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
@@ -121,7 +117,7 @@ public class UserTest {
 				.gender(Gender.FEMALE)
 				.type(UserType.CITIZEN)
 				.tenantId("default")
-				.roles(Arrays.asList(role1, role2))
+				.roles(new HashSet<>(Arrays.asList(role1, role2)))
 				.build();
 
 		assertTrue(user.isRolesAbsent());
@@ -258,7 +254,7 @@ public class UserTest {
 				.gender(Gender.FEMALE)
 				.type(UserType.CITIZEN)
 				.tenantId("default")
-				.roles(Collections.singletonList(role1))
+				.roles(Collections.singleton(role1))
 				.build();
 
 		user.validateNewUser();
@@ -298,15 +294,15 @@ public class UserTest {
 		User user = User.builder()
 				.id(1L)
 				.type(UserType.CITIZEN)
-				.roles(Collections.singletonList(Role.builder().code("ADMIN").build()))
+				.roles(Collections.singleton(Role.builder().code("ADMIN").build()))
 				.build();
 
 		user.setRoleToCitizen();
 
 		assertEquals(UserType.CITIZEN, user.getType());
-		final List<Role> roles = user.getRoles();
+		final Set<Role> roles = user.getRoles();
 		assertEquals(1, roles.size());
-		assertEquals("CITIZEN", roles.get(0).getCode());
+		assertEquals("CITIZEN", roles.iterator().next().getCode());
 	}
 
 	@Test
@@ -318,7 +314,7 @@ public class UserTest {
 				.mobileNumber("mobileNumber")
 				.password("password")
 				.passwordExpiryDate(new Date())
-				.roles(Arrays.asList(role1, role2))
+				.roles(new HashSet<>(Arrays.asList(role1, role2)))
 				.build();
 
 		user.nullifySensitiveFields();

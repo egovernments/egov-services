@@ -40,15 +40,16 @@
 package org.egov.user.repository.builder;
 
 import lombok.extern.slf4j.Slf4j;
-import org.egov.user.domain.model.Role;
 import org.egov.user.domain.model.UserSearchCriteria;
 import org.egov.user.persistence.repository.RoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.util.CollectionUtils;
 
-import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+
+import static java.util.Objects.isNull;
+import static org.springframework.util.CollectionUtils.isEmpty;
 
 @Component
 @Slf4j
@@ -57,40 +58,40 @@ public class UserTypeQueryBuilder {
     @Autowired
     private RoleRepository roleRepository;
 
+    private static final String SELECT_USER_QUERY = "SELECT u.title, u.salutation, u.dob, u.locale, u.username, u" +
+            ".password, u.pwdexpirydate,  u.mobilenumber, u.altcontactnumber, u.emailid, u.createddate, u" +
+            ".lastmodifieddate,  u.createdby, u.lastmodifiedby, u.active, u.name, u.gender, u.pan, u.aadhaarnumber, u" +
+            ".type,  u.version, u.guardian, u.guardianrelation, u.signature, u.accountlocked, u.bloodgroup, u.photo, " +
+            "u.identificationmark,  u.tenantid, u.id, u.uuid, addr.id as addr_id, addr.type as addr_type, addr" +
+            ".address as addr_address,  addr.city as addr_city, addr.pincode as addr_pincode, addr.tenantid as " +
+            "addr_tenantid, addr.userid as addr_userid, r.code as role_code, r.name as role_name,  r.description as role_description " +
+            ", r.id as role_id, r.tenantid as role_tenantid \n" +
+            "\tFROM eg_user u LEFT OUTER JOIN eg_user_address addr ON u.id = addr.userid AND u.tenantid = addr" +
+            ".tenantid LEFT OUTER JOIN eg_userrole ur ON u.id = ur.userid AND u.tenantid = ur.tenantid LEFT OUTER " +
+            "JOIN eg_role r ON ur.roleid = r.id AND ur.roleidtenantid = r.tenantid ";
+
+    private static final String PAGINATION_WRAPPER = "SELECT * FROM " +
+            "(SELECT *, DENSE_RANK() OVER (ORDER BY id) offset_ FROM " +
+            "({baseQuery})" +
+            " result) result_offset " +
+            "WHERE offset_ > ? AND offset_ <= ?";
+
     private static final String BASE_QUERY = "SELECT * from eg_user u ";
 
     public static final String SELECT_NEXT_SEQUENCE_USER = "select nextval('seq_eg_user')";
 
     @SuppressWarnings("rawtypes")
     public String getQuery(final UserSearchCriteria userSearchCriteria, final List preparedStatementValues) {
-        final StringBuilder selectQuery = new StringBuilder(BASE_QUERY);
-        List<Long> roleIds = getRoleIds(userSearchCriteria);
-        if (userSearchCriteria.getRoleCodes() != null && userSearchCriteria.getRoleCodes().size() > 0
-                && !roleIds.isEmpty()) {
-            selectQuery.append(",eg_userrole ur");
-        }
+        final StringBuilder selectQuery = new StringBuilder(SELECT_USER_QUERY);
+
         addWhereClause(selectQuery, preparedStatementValues, userSearchCriteria);
-        if (!roleIds.isEmpty())
-            selectQuery.append("And ur.roleid IN").append(getIdQuery(roleIds)).append(" And ur.userid = u.id");
+
+//        selectQuery.append("And ur.roleid IN").append(getIdQuery(roleIds)).append(" And ur.userid = u.id");
+
         addOrderByClause(selectQuery, userSearchCriteria);
-        addPagingClause(selectQuery, preparedStatementValues, userSearchCriteria);
-        log.debug("Query : " + selectQuery);
-        return selectQuery.toString();
+        return addPagingClause(selectQuery, preparedStatementValues, userSearchCriteria);
     }
 
-    private List<Long> getRoleIds(final UserSearchCriteria userSearchCriteria) {
-
-        List<Long> roleIdList = new ArrayList<Long>();
-        if (userSearchCriteria.getRoleCodes() != null && userSearchCriteria.getRoleCodes().size() > 0) {
-            for (String roleCode : userSearchCriteria.getRoleCodes()) {
-                Role role = roleRepository.findByTenantIdAndCode(userSearchCriteria.getTenantId(), roleCode);
-                if (role != null) {
-                    roleIdList.add(role.getId());
-                }
-            }
-        }
-        return roleIdList;
-    }
 
     @SuppressWarnings({"unchecked", "rawtypes"})
     private void addWhereClause(final StringBuilder selectQuery, final List preparedStatementValues,
@@ -109,7 +110,8 @@ public class UserTypeQueryBuilder {
 
         if (userSearchCriteria.getId() != null && !userSearchCriteria.getId().isEmpty()) {
             isAppendAndClause = addAndClauseIfRequired(false, selectQuery);
-            selectQuery.append(" u.id IN ").append(getIdQuery(userSearchCriteria.getId()));
+            selectQuery.append(" u.id IN ( ").append(getQueryForCollection(userSearchCriteria.getId(),
+                    preparedStatementValues)).append(" )");
         }
 
         if (userSearchCriteria.getTenantId() != null) {
@@ -171,9 +173,16 @@ public class UserTypeQueryBuilder {
             selectQuery.append(" u.name like " + "'%").append(userSearchCriteria.getName().trim()).append("%'");
         }
 
-        if (!CollectionUtils.isEmpty(userSearchCriteria.getUuid())) {
+        if (!isEmpty(userSearchCriteria.getUuid())) {
             isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-            selectQuery.append(" u.uuid IN ").append(getUUIDQuery(userSearchCriteria.getUuid()));
+            selectQuery.append(" u.uuid IN (").append(getQueryForCollection(userSearchCriteria.getUuid(),
+                    preparedStatementValues)).append(" )");
+        }
+
+        if(!isEmpty(userSearchCriteria.getRoleCodes())){
+            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+            selectQuery.append(" r.code IN (").append(getQueryForCollection(userSearchCriteria.getRoleCodes(),
+                    preparedStatementValues)).append(" )");
         }
     }
 
@@ -184,37 +193,54 @@ public class UserTypeQueryBuilder {
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})
-    private void addPagingClause(final StringBuilder selectQuery, final List preparedStatementValues,
-                                 final UserSearchCriteria userSearchCriteria) {
-        // handle limit(also called pageSize) here
-        selectQuery.append(" LIMIT ?");
-        int pageSize = userSearchCriteria.getPageSize();
-        if (pageSize != 0) {
-            pageSize = userSearchCriteria.getPageSize();
-        } else {
-            pageSize = 500;
-        }
-        preparedStatementValues.add(pageSize); // Set limit to pageSize
+    private String addPagingClause(final StringBuilder selectQuery, final List preparedStatementValues,
+                                 final UserSearchCriteria criteria) {
+
+        if(isNull(criteria.getOffset()))
+            criteria.setOffset(0);
+
+        if (criteria.getLimit()!=null && criteria.getLimit() != 0) {
+            String finalQuery = PAGINATION_WRAPPER.replace("{baseQuery}", selectQuery);
+            preparedStatementValues.add(criteria.getOffset());
+            preparedStatementValues.add( criteria.getOffset() + criteria.getLimit());
+
+            return finalQuery;
+        } else
+            return selectQuery.toString();
+
     }
 
-    private static String getIdQuery(final List<Long> idList) {
-        final StringBuilder query = new StringBuilder("(");
-        if (idList.size() >= 1) {
-            query.append(idList.get(0).toString());
-            for (int i = 1; i < idList.size(); i++)
-                query.append(", ").append(idList.get(i));
-        }
-        return query.append(")").toString();
-    }
+//    private static String getIdQuery(final List<Long> idList) {
+//        final StringBuilder query = new StringBuilder("(");
+//        if (idList.size() >= 1) {
+//            query.append(idList.get(0).toString());
+//            for (int i = 1; i < idList.size(); i++)
+//                query.append(", ").append(idList.get(i));
+//        }
+//        return query.append(")").toString();
+//    }
+//
+//    private static String getUUIDQuery(final List<String> idList) {
+//        final StringBuilder query = new StringBuilder("(");
+//        if (idList.size() >= 1) {
+//            query.append("'").append(idList.get(0)).append("'");
+//            for (int i = 1; i < idList.size(); i++)
+//                query.append(", '").append(idList.get(i)).append("'");
+//        }
+//        return query.append(")").toString();
+//    }
 
-    private static String getUUIDQuery(final List<String> idList) {
-        final StringBuilder query = new StringBuilder("(");
-        if (idList.size() >= 1) {
-            query.append("'").append(idList.get(0)).append("'");
-            for (int i = 1; i < idList.size(); i++)
-                query.append(", '").append(idList.get(i)).append("'");
+    private String getQueryForCollection(List<?> ids, List<Object> preparedStmtList) {
+        StringBuilder builder = new StringBuilder();
+        Iterator<?> iterator = ids.iterator();
+        while (iterator.hasNext()){
+            builder.append(" ?");
+            preparedStmtList.add(iterator.next());
+
+            if(iterator.hasNext())
+                builder.append(",");
         }
-        return query.append(")").toString();
+        return builder.toString();
     }
 
     /**

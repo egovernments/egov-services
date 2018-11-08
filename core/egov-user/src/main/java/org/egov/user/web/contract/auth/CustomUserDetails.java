@@ -6,6 +6,7 @@ import org.egov.user.domain.model.SecureUser;
 import org.egov.user.domain.model.UserDetail;
 
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Getter
@@ -18,7 +19,7 @@ public class CustomUserDetails {
 	private String emailId;
 	private String locale;
 	private String type;
-	private List<Role> roles;
+	private Set<Role> roles;
 	private boolean active;
 	private List<Action> actions;
 	private String tenantId;

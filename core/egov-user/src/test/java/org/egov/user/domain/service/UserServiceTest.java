@@ -549,7 +549,7 @@ public class UserServiceTest {
 	private org.egov.user.domain.model.User validDomainUser(boolean otpValidationMandatory) {
 		return User.builder().username("supandi_rocks").name("Supandi").gender(Gender.MALE).type(UserType.CITIZEN)
 				.active(Boolean.TRUE).mobileNumber("9988776655").tenantId("tenantId").otpReference("12312")
-				.password("password").roles(Collections.singletonList(Role.builder().code("roleCode1").build()))
+				.password("password").roles(Collections.singleton(Role.builder().code("roleCode1").build()))
 				.accountLocked(false).otpValidationMandatory(otpValidationMandatory).build();
 	}
 

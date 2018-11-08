@@ -10,6 +10,7 @@ import org.egov.user.domain.model.enums.BloodGroup;
 import org.egov.user.domain.model.enums.Gender;
 import org.egov.user.domain.model.enums.UserType;
 import org.egov.user.repository.builder.UserTypeQueryBuilder;
+import org.egov.user.repository.rowmapper.UserResultSetExtractor;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -22,9 +23,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertFalse;
@@ -52,11 +51,15 @@ public class UserRepositoryTest {
 	@Autowired
 	private UserTypeQueryBuilder userTypeQueryBuilder;
 
+	@Autowired
+	private UserResultSetExtractor userResultSetExtractor;
+
 	private UserRepository userRepository;
 
 	@Before
 	public void before() {
 		userRepository = new UserRepository(roleRepository, userTypeQueryBuilder,  addressRepository,
+                userResultSetExtractor,
 				jdbcTemplate, namedParameterJdbcTemplate);
 	}
 
@@ -76,7 +79,8 @@ public class UserRepositoryTest {
 	}
 
 	@Test
-	@Sql(scripts = { "/sql/clearUserRoles.sql","/sql/clearUsers.sql", "/sql/createUsers.sql" })
+	@Sql(scripts = { "/sql/clearUserRoles.sql","/sql/clearUsers.sql", "/sql/createUsers.sql", "/sql/createUserRoles" +
+            ".sql" })
 	public void test_get_user_by_userName() {
         User user = userRepository.findAll(UserSearchCriteria.builder().userName("bigcat399")
                 .tenantId("ap.public").type(UserType.EMPLOYEE).build()).get(0);
@@ -91,7 +95,7 @@ public class UserRepositoryTest {
 	@Test
 	@Sql(scripts = { "/sql/clearUserRoles.sql", "/sql/clearUsers.sql", "/sql/clearRoles.sql", "/sql/createRoles.sql" })
 	public void test_should_save_entity_user() {
-		final List<Role> roles = new ArrayList<>();
+		final Set<Role> roles = new HashSet<>();
 		final String roleCode = "EMP";
 		roles.add(Role.builder().code(roleCode).build());
 		User domainUser = User.builder().roles(roles).name("test1").username("TestUserName").password("password")
@@ -119,7 +123,7 @@ public class UserRepositoryTest {
 	public void test_should_save_correspondence_address_on_creating_new_user() {
 		Address correspondenceAddress = Address.builder().address("address").type(AddressType.CORRESPONDENCE)
 				.addressType("CORRESPONDENCE").city("city").pinCode("123").build();
-		final List<Role> roles = new ArrayList<>();
+		final Set<Role> roles = new HashSet<>();
 		final String roleCode = "EMP";
 		roles.add(Role.builder().code(roleCode).build());
 		User domainUser = User.builder().roles(roles)
@@ -145,7 +149,7 @@ public class UserRepositoryTest {
 	public void test_should_save_permanent_address_on_creating_new_user() {
 		Address permanentAddress = Address.builder().address("address").type(AddressType.PERMANENT)
 				.addressType("PERMANENT").city("city").pinCode("123").build();
-		final List<Role> roles = new ArrayList<>();
+		final Set<Role> roles = new HashSet<>();
 		final String roleCode = "EMP";
 		roles.add(Role.builder().code(roleCode).build());
 		User domainUser = User.builder().roles(roles)
@@ -171,7 +175,7 @@ public class UserRepositoryTest {
 		final org.egov.user.domain.model.Role domainRole = org.egov.user.domain.model.Role.builder().name(roleCode)
 				.build();
 		User domainUser = User.builder()
-				.roles(Collections.singletonList(domainRole)).build();
+				.roles(Collections.singleton(domainRole)).build();
 		userRepository.create(domainUser);
 	}
 
@@ -179,7 +183,7 @@ public class UserRepositoryTest {
 	@Sql(scripts = { "/sql/clearUserRoles.sql", "/sql/clearUsers.sql", "/sql/clearRoles.sql", "/sql/createRoles.sql",
 			"/sql/clearAddresses.sql" })
 	public void test_should_set_encrypted_password_to_new_user() {
-		final List<org.egov.user.domain.model.Role> roles = new ArrayList<>();
+		final Set<Role> roles = new HashSet<>();
 		final String roleCode = "EMP";
 		roles.add(org.egov.user.domain.model.Role.builder().code(roleCode).build());
 		final String rawPassword = "rawPassword";
@@ -196,7 +200,7 @@ public class UserRepositoryTest {
 			"/sql/clearAddresses.sql" })
 	public void test_should_save_new_user_when_enriched_roles() {
 
-		final List<org.egov.user.domain.model.Role> roles = new ArrayList<>();
+		final Set<Role> roles = new HashSet<>();
 		roles.add(Role.builder().code("EMP").tenantId("ap.public").build());
 		roles.add(Role.builder().code("EADMIN").tenantId("ap.public").build());
 		User domainUser = User.builder().roles(roles).username("Test UserName").password("pasword")
@@ -306,7 +310,7 @@ public class UserRepositoryTest {
 			"/sql/clearAddresses.sql", "/sql/createUsers.sql" })
 	public void test_search_user_bytenantid() {
 
-		UserSearchCriteria userSearch = UserSearchCriteria.builder().tenantId("ap.public").pageSize(2).build();
+		UserSearchCriteria userSearch = UserSearchCriteria.builder().tenantId("ap.public").limit(2).build();
 		List<User> actualList = userRepository.findAll(userSearch);
 		assertThat(actualList.size() == 2);
 	}
@@ -314,7 +318,7 @@ public class UserRepositoryTest {
 	@Ignore
 	@Test
 	public void test_should_update_entity_user() {
-		final List<Role> roles = new ArrayList<>();
+		final Set<Role> roles = new HashSet<>();
 		final String roleCode = "EMP";
 		roles.add(Role.builder().code(roleCode).build());
 		User domainUser = User.builder().roles(roles).name("test1").id(1L).username("TestUserName").password("password")
@@ -345,7 +349,7 @@ public class UserRepositoryTest {
 		final org.egov.user.domain.model.Role domainRole = org.egov.user.domain.model.Role.builder().name(roleCode)
 				.build();
 		User domainUser = User.builder()
-				.roles(Collections.singletonList(domainRole)).id(1L).tenantId("ap.public").build();
+				.roles(Collections.singleton(domainRole)).id(1L).tenantId("ap.public").build();
 		userRepository.update(domainUser, domainUser);
 	}
 

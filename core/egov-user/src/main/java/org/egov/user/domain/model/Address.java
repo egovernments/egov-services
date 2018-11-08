@@ -1,17 +1,18 @@
 package org.egov.user.domain.model;
 
-import java.util.Date;
-
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
 import org.egov.user.domain.model.enums.AddressType;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import java.util.Date;
 
 @Getter
 @Setter
 @Builder
+@EqualsAndHashCode(of = {"id"})
 public class Address {
     private String pinCode;
     private String city;
@@ -24,27 +25,27 @@ public class Address {
 	private Long LastModifiedBy;
 	private Date LastModifiedDate;
 
-    public boolean isInvalid() {
+    boolean isInvalid() {
     	return isPinCodeInvalid()
 				|| isCityInvalid()
 				|| isAddressInvalid();
 	}
 
-	public boolean isNotEmpty() {
+	boolean isNotEmpty() {
     	return StringUtils.isNotEmpty(pinCode)
 				|| StringUtils.isNotEmpty(city)
 				|| StringUtils.isNotEmpty(address) ;
 	}
 
-	public boolean isPinCodeInvalid() {
+	boolean isPinCodeInvalid() {
     	return pinCode != null && pinCode.length() > 10;
 	}
 
-	public boolean isCityInvalid() {
+	boolean isCityInvalid() {
     	return city != null && city.length() > 300;
 	}
 
-	public boolean isAddressInvalid() {
+	boolean isAddressInvalid() {
     	return address != null && address.length() > 300;
 	}
 }

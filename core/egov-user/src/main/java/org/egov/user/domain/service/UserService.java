@@ -30,6 +30,7 @@ import java.util.stream.Collectors;
 
 import static java.util.Objects.isNull;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
+import static org.springframework.util.CollectionUtils.isEmpty;
 
 @Service
 @Slf4j
@@ -121,6 +122,9 @@ public class UserService {
      */
     public List<org.egov.user.domain.model.User> searchUsers(UserSearchCriteria searchCriteria) {
         searchCriteria.validate();
+
+        if(isEmpty(searchCriteria.getId()) && isEmpty(searchCriteria.getUuid()) && searchCriteria.getLimit() > 50)
+            searchCriteria.setLimit(50);
 
         searchCriteria.setTenantId(getStateLevelTenantForCitizen(searchCriteria.getTenantId(), searchCriteria.getType()));
         List<org.egov.user.domain.model.User> list = userRepository.findAll(searchCriteria);
@@ -409,7 +413,7 @@ public class UserService {
     private void setFileStoreUrlsByFileStoreIds(List<User> userList) {
         List<String> fileStoreIds = userList.parallelStream().filter(p -> p.getPhoto() != null).map(User::getPhoto)
                 .collect(Collectors.toList());
-        if (fileStoreIds != null && fileStoreIds.size() > 0) {
+        if ( !isEmpty(fileStoreIds)) {
             Map<String, String> fileStoreUrlList = null;
             try {
                 fileStoreUrlList = fileRepository.getUrlByFileStoreId(userList.get(0).getTenantId(), fileStoreIds);

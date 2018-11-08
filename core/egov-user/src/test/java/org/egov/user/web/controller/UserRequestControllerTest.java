@@ -113,7 +113,7 @@ public class UserRequestControllerTest {
                 .name("CITIZEN")
                 .description("Citizen role")
                 .build();
-        List<Role> roles = new ArrayList<>();
+        Set<Role> roles = new HashSet<>();
         roles.add(role);
         return User.builder()
                 .id(12L)

@@ -7,6 +7,7 @@ import org.egov.user.domain.model.SecureUser;
 import org.egov.user.domain.model.User;
 import org.egov.user.domain.model.enums.UserType;
 import org.egov.user.domain.service.UserService;
+import org.egov.user.web.contract.auth.Role;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -18,9 +19,7 @@ import org.springframework.security.oauth2.common.exceptions.OAuth2Exception;
 import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationToken;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static java.util.Objects.isNull;
@@ -89,9 +88,9 @@ public class CustomPreAuthenticatedProvider implements AuthenticationProvider {
                 .roles(toAuthRole(user.getRoles())).tenantId(user.getTenantId()).build();
     }
 
-    private List<org.egov.user.web.contract.auth.Role> toAuthRole(List<org.egov.user.domain.model.Role> domainRoles) {
+    private Set<Role> toAuthRole(Set<org.egov.user.domain.model.Role> domainRoles) {
         if (domainRoles == null)
-            return new ArrayList<>();
-        return domainRoles.stream().map(org.egov.user.web.contract.auth.Role::new).collect(Collectors.toList());
+            return new HashSet<>();
+        return domainRoles.stream().map(org.egov.user.web.contract.auth.Role::new).collect(Collectors.toSet());
     }
 }

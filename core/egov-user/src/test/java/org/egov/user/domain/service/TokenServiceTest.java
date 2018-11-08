@@ -18,6 +18,7 @@ import org.springframework.security.oauth2.provider.token.TokenStore;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import static org.junit.Assert.assertEquals;
@@ -78,7 +79,7 @@ public class TokenServiceTest {
 				.build();
 	}
 
-	private List<Role> getRoles() {
+	private Set<Role> getRoles() {
 		org.egov.user.domain.model.Role roleModel = org.egov.user.domain.model.Role.builder()
 				.id(15L)
 				.name("Employee")
@@ -86,7 +87,7 @@ public class TokenServiceTest {
 				.tenantId("default")
 				.build();
 
-		return Collections.singletonList(new Role(roleModel));
+		return Collections.singleton(new Role(roleModel));
 	}
 
 	private List<Action> getActions() {

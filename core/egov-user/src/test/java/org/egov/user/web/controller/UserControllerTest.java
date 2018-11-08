@@ -269,8 +269,8 @@ public class UserControllerTest {
 				.emailId("emailId")
 				.fuzzyLogic(true)
 				.active(true)
-				.pageSize(0)
-				.pageNumber(0)
+				.limit(0)
+				.offset(0)
 				.sort(singletonList("name"))
 				.type(UserType.CITIZEN)
 				.roleCodes(Arrays.asList("roleCode1", "roleCode2"))
@@ -338,7 +338,7 @@ public class UserControllerTest {
 				.build();
 	}
 
-	private List<org.egov.user.domain.model.Role> getListOfRoles() {
+	private Set<org.egov.user.domain.model.Role> getListOfRoles() {
 		Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("IST"));
 		calendar.set(1990, Calendar.JULY, 1, 16, 41, 11);
 
@@ -353,7 +353,7 @@ public class UserControllerTest {
 				.lastModifiedDate(calendar.getTime())
 				.build();
 
-		return Collections.singletonList(role1);
+		return Collections.singleton(role1);
 	}
 
 	private String getFileContents(String fileName) {
@@ -385,8 +385,8 @@ public class UserControllerTest {
 					userSearch.isFuzzyLogic() == expectedUserSearch.isFuzzyLogic() &&
 					userSearch.getActive() == expectedUserSearch.getActive() &&
 					isEquals(userSearch.getRoleCodes(), expectedUserSearch.getRoleCodes()) &&
-					userSearch.getPageSize() == expectedUserSearch.getPageSize() &&
-					userSearch.getPageNumber() == expectedUserSearch.getPageNumber() &&
+					userSearch.getLimit().equals(expectedUserSearch.getLimit()) &&
+					userSearch.getOffset().equals(expectedUserSearch.getOffset()) &&
 					userSearch.getSort().equals(expectedUserSearch.getSort()) &&
 					userSearch.getType().equals(expectedUserSearch.getType());
 		}
@@ -422,8 +422,8 @@ public class UserControllerTest {
 				.build();
 	}
 
-	private List<Role> getRoles() {
-		List<Role> roles = new ArrayList<Role>();
+	private Set<Role> getRoles() {
+		Set<Role> roles = new HashSet<>();
 		org.egov.user.domain.model.Role roleModel = org.egov.user.domain.model.Role.builder()
 				.id(15L)
 				.name("Employee")

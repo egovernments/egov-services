@@ -7,6 +7,7 @@ import java.util.Set;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Max;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 import lombok.*;
@@ -46,6 +47,7 @@ import io.swagger.annotations.ApiModel;
     public String acknowldgementNumber;
 
     @Size(max=256)
+    @Pattern(regexp = "^[//a-zA-Z0-9#://-]*$", message = "Invalid existing property Id. should be AlphaNumeric with -, /, #, : special characters allowed")
     @JsonProperty("oldPropertyId")
     public String oldPropertyId;
 

@@ -1,12 +1,7 @@
 package org.egov.pt.calculator.service;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import org.egov.common.contract.request.RequestInfo;
@@ -108,7 +103,7 @@ public class EstimationService {
      * @param requestInfo request info from incoming request.
 	 * @return Map<String, Double>
 	 */
-	private List<TaxHeadEstimate> getEstimationMap(CalculationCriteria criteria, RequestInfo requestInfo) {
+	private Map<String,List> getEstimationMap(CalculationCriteria criteria, RequestInfo requestInfo) {
 
 		BigDecimal taxAmt = BigDecimal.ZERO;
 		BigDecimal usageExemption = BigDecimal.ZERO;
@@ -124,6 +119,8 @@ public class EstimationService {
 		mDataService.setPropertyMasterValues(requestInfo, tenantId, propertyBasedExemptionMasterMap,
 				timeBasedExemptionMasterMap);
 
+		List<String> billingSlabIds = new LinkedList<>();
+
 		/*
 		 * by default land should get only one slab from database per tenantId
 		 */
@@ -138,10 +135,12 @@ public class EstimationService {
 			double unBuiltRate = 0.0;
 			int groundUnitsCount = 0;
 			Double groundUnitsArea = 0.0;
+			int i = 0;
 
 			for (Unit unit : detail.getUnits()) {
 
 				BillingSlab slab = getSlabForCalc(filteredBillingSlabs, unit);
+				billingSlabIds.add(slab.getId()+"|"+i);
 				BigDecimal currentUnitTax = getTaxForUnit(slab, unit);
 				/*
 				 * counting the number of units & total area in ground floor for unbuilt area
@@ -156,6 +155,7 @@ public class EstimationService {
 				taxAmt = taxAmt.add(currentUnitTax);
 				usageExemption = usageExemption
 						.add(getExemption(unit, currentUnitTax, assessmentYear, propertyBasedExemptionMasterMap));
+				i++;
 			}
 			/*
 			 * making call to get unbuilt area tax estimate
@@ -169,8 +169,15 @@ public class EstimationService {
 				usageExemption = getExemption(detail.getUnits().get(0), taxAmt, assessmentYear,
 						propertyBasedExemptionMasterMap);
 		}
-		return getEstimatesForTax(assessmentYear, taxAmt, usageExemption, detail, propertyBasedExemptionMasterMap,
+		List<TaxHeadEstimate> taxHeadEstimates =  getEstimatesForTax(assessmentYear, taxAmt, usageExemption, detail, propertyBasedExemptionMasterMap,
 				timeBasedExemptionMasterMap);
+
+		Map<String,List> estimatesAndBillingSlabs = new HashMap<>();
+		estimatesAndBillingSlabs.put("estimates",taxHeadEstimates);
+		estimatesAndBillingSlabs.put("billingSlabIds",billingSlabIds);
+
+		return estimatesAndBillingSlabs;
+
 	}
 
 	/**
@@ -340,7 +347,10 @@ public class EstimationService {
 	 * @return Calculation object constructed based on the resulting tax amount and other applicables(rebate/penalty)
 	 */
     private Calculation getCalculation(RequestInfo requestInfo, CalculationCriteria criteria,
-                                       List<TaxHeadEstimate> estimates) {
+									   Map<String,List> estimatesAndBillingSlabs) {
+
+		List<TaxHeadEstimate> estimates = estimatesAndBillingSlabs.get("estimates");
+		List<String> billingSlabIds = estimatesAndBillingSlabs.get("billingSlabIds");
 
         Property property = criteria.getProperty();
         PropertyDetail detail = property.getPropertyDetails().get(0);
@@ -422,6 +432,7 @@ public class EstimationService {
 				.tenantId(tenantId)
 				.serviceNumber(assessmentNumber)
 				.taxHeadEstimates(estimates)
+				.billingSlabIds(billingSlabIds)
 				.build();
 	}
 

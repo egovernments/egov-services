@@ -143,7 +143,7 @@ public class PayService {
 		long current = System.currentTimeMillis();
 		long interestStart = cal.getTimeInMillis();
 		long numberOfDaysInMillies = 0 < lastCollectedTime ? current - lastCollectedTime : current - interestStart;
-		BigDecimal noOfDays = BigDecimal.valueOf((TimeUnit.MILLISECONDS.toDays(Math.abs(numberOfDaysInMillies))));
+		BigDecimal noOfDays = BigDecimal.valueOf((TimeUnit.MILLISECONDS.toDays(Math.abs(numberOfDaysInMillies)))).add(BigDecimal.ONE);
 		if (interestStart < current)
 			interestAmt = mDService.calculateApplicables(taxAmt, interestMap);
 

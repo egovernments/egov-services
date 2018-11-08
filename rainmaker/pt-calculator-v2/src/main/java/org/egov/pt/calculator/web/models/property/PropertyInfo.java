@@ -1,6 +1,7 @@
 package org.egov.pt.calculator.web.models.property;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Pattern;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -30,8 +31,9 @@ public class PropertyInfo   {
         @JsonProperty("acknowldgementNumber")
         public String acknowldgementNumber;
 
-        @JsonProperty("oldPropertyId")
-        public String oldPropertyId;
+    @JsonProperty("oldPropertyId")
+    @Pattern(regexp = "^[//a-zA-Z0-9#://-]*$", message = "Invalid existing property Id. should be AlphaNumeric with -, /, #, : special characters allowed")
+    public String oldPropertyId;
 
               /**
    * status of the Property

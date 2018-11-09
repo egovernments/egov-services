@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.egov.common.contract.response.ResponseInfo;
 import org.egov.user.domain.model.User;
 import org.egov.user.domain.model.UserDetail;
+import org.egov.user.domain.model.UserSearchCriteria;
 import org.egov.user.domain.service.TokenService;
 import org.egov.user.domain.service.UserService;
 import org.egov.user.web.contract.*;
@@ -15,10 +16,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static org.egov.tracer.http.HttpUtils.isInterServiceCall;
+import static org.springframework.util.CollectionUtils.isEmpty;
 
 @RestController
 @Slf4j
@@ -29,13 +32,15 @@ public class UserController {
 
 	@Value("${mobile.number.validation.workaround.enabled}")
 	private String mobileValidationWorkaroundEnabled;
-	private static final String X_PASS_THROUGH_GATEWAY_KEY = "x-pass-through-gateway";
 	
 	@Value("${otp.validation.register.mandatory}")
 	private boolean IsValidationMandatory;
 
 	@Value("${citizen.registration.withlogin.enabled}")
 	private boolean isRegWithLoginEnabled;
+
+    @Value("${egov.user.search.default.size}")
+    private Integer defaultSearchSize;
 
 
 	@Autowired
@@ -89,13 +94,13 @@ public class UserController {
 	 * @return
 	 */
 	@PostMapping("/_search")
-	public UserSearchResponse get(@RequestBody UserSearchRequest request, HttpServletRequest servletRequest){
+	public UserSearchResponse get(@RequestBody UserSearchRequest request, @RequestHeader HttpHeaders headers){
 
 		log.debug("Received User search Request  " +  request);
 		if (request.getActive() == null) {
 			request.setActive(true);
 		}
-		return searchUsers(request);
+		return searchUsers(request, headers);
 	}
 
 	/**
@@ -107,8 +112,8 @@ public class UserController {
 	 * @return
 	 */
 	@PostMapping("/v1/_search")
-	public UserSearchResponse getV1(@RequestBody UserSearchRequest request) {
-		return searchUsers(request);
+	public UserSearchResponse getV1(@RequestBody UserSearchRequest request, @RequestHeader HttpHeaders headers) {
+		return searchUsers(request, headers);
 	}
 
 	/**
@@ -158,8 +163,18 @@ public class UserController {
 		return new UserDetailResponse(responseInfo, Collections.singletonList(userRequest));
 	}
 
-	private UserSearchResponse searchUsers(@RequestBody UserSearchRequest request) {
-		List<User> userModels = userService.searchUsers(request.toDomain());
+	private UserSearchResponse searchUsers(@RequestBody UserSearchRequest request, HttpHeaders headers) {
+
+        UserSearchCriteria searchCriteria = request.toDomain();
+
+        if(!isInterServiceCall(headers)){
+            if((isEmpty(searchCriteria.getId()) && isEmpty(searchCriteria.getUuid())) && (searchCriteria.getLimit() > defaultSearchSize
+                    || searchCriteria.getLimit() == 0))
+                searchCriteria.setLimit(defaultSearchSize);
+        }
+
+		List<User> userModels = userService.searchUsers(searchCriteria);
+
 
 		List<UserSearchResponseContent> userContracts = userModels.stream().map(UserSearchResponseContent::new)
 				.collect(Collectors.toList());
@@ -168,11 +183,7 @@ public class UserController {
 	}
 
 	private boolean isMobileValidationRequired(HttpHeaders headers) {
-		String x_pass_through_gatewayStr = headers.getFirst(X_PASS_THROUGH_GATEWAY_KEY);
-		boolean x_pass_through_gateway = false;
-		if (x_pass_through_gatewayStr != null && x_pass_through_gatewayStr.equalsIgnoreCase("true")) {
-			x_pass_through_gateway = true;
-		}
+		boolean x_pass_through_gateway = !isInterServiceCall(headers);
 		if (mobileValidationWorkaroundEnabled != null && Boolean.valueOf(mobileValidationWorkaroundEnabled)
 				&& !x_pass_through_gateway) {
 			return false;

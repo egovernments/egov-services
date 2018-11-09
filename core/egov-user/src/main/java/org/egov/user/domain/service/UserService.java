@@ -123,9 +123,6 @@ public class UserService {
     public List<org.egov.user.domain.model.User> searchUsers(UserSearchCriteria searchCriteria) {
         searchCriteria.validate();
 
-        if(isEmpty(searchCriteria.getId()) && isEmpty(searchCriteria.getUuid()) && searchCriteria.getLimit() > 50)
-            searchCriteria.setLimit(50);
-
         searchCriteria.setTenantId(getStateLevelTenantForCitizen(searchCriteria.getTenantId(), searchCriteria.getType()));
         List<org.egov.user.domain.model.User> list = userRepository.findAll(searchCriteria);
         setFileStoreUrlsByFileStoreIds(list);

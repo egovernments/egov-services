@@ -78,4 +78,10 @@ public class ErrorConstants {
 	
 	public static final String INACTIVE_COMPLAINTS_FOR_UPDATE_CODE = "EG_PGR_INACTIVE_COMPLAINTS_FOR_UPDATE";
 	public static final String INACTIVE_COMPLAINTS_FOR_UPDATE_MSG = "All the complaints being updated should be active complaints";
+	
+	public static final String INVALID_ADDRESS_DETAIL_CODE = "EG_PGR_INVALID_ADDRESS_DETAIL_CODE";
+	public static final String INVALID_ADDRESS_DETAIL_MSG = "service.addressDetail cannot be null";
+	
+	public static final String INVALID_MOHALLA_CITY_CODE = "EG_PGR_INVALID_MOHALLA_CITY_CODE";
+	public static final String INVALID_MOHALLA_CITY_MSG = "service.addressDetail.mohalla & service.addressDetail.city  cannot be null";
 }

@@ -85,7 +85,6 @@ public class Service   {
   @JsonProperty("attributes")
   private Object attributes;
   
-  @NotNull
   @JsonProperty("addressDetail")
   private Address addressDetail;
   

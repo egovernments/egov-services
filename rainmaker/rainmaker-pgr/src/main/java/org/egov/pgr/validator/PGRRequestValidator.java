@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import org.apache.commons.collections.CollectionUtils;
@@ -85,6 +84,7 @@ public class PGRRequestValidator {
 		validateDataSanity(serviceRequest, errorMap, true);
 		validateUserRBACProxy(errorMap, serviceRequest.getRequestInfo());
 		validateIfArraysEqual(serviceRequest, errorMap);
+		validateAddressDetail(serviceRequest, errorMap);
 		vaidateServiceCodes(serviceRequest, errorMap);
 		if (!errorMap.isEmpty())
 			throw new CustomException(errorMap);
@@ -137,6 +137,18 @@ public class PGRRequestValidator {
 		}
 		if (!errorMap.isEmpty())
 			throw new CustomException(errorMap);
+	}
+	
+	public void validateAddressDetail(ServiceRequest serviceRequest, Map<String, String> errorMap) {
+		for(Service service: serviceRequest.getServices()) {
+			if(null == service.getAddressDetail()) {
+				errorMap.put(ErrorConstants.INVALID_ADDRESS_DETAIL_CODE, ErrorConstants.INVALID_ADDRESS_DETAIL_MSG);
+			}else {
+				if(StringUtils.isEmpty(service.getAddressDetail().getMohalla()) || StringUtils.isEmpty(service.getAddressDetail().getCity())) {
+					errorMap.put(ErrorConstants.INVALID_MOHALLA_CITY_CODE, ErrorConstants.INVALID_MOHALLA_CITY_MSG);
+				}
+			}
+		}
 	}
 
 	/**

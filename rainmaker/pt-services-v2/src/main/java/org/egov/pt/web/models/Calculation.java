@@ -43,5 +43,8 @@ public class Calculation {
         private String tenantId;
 
         List<TaxHeadEstimate> taxHeadEstimates;
+
+        @JsonProperty("billingSlabIds")
+        private List<String> billingSlabIds;
 }
 

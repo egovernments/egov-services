@@ -1,10 +1,9 @@
 package org.egov.pt.calculator.service;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 import java.util.Map.Entry;
 
 import org.egov.common.contract.request.RequestInfo;
@@ -161,21 +160,60 @@ public class MasterDataService {
 		
 		Map<String, Object> objToBeReturned = null;
 		String maxYearFromTheList = "0";
+		Long maxStartTime = 0l;
 
 		for (Object object : masterList) {
 
 			Map<String, Object> objMap = (Map<String, Object>) object;
 			String objFinYear = ((String) objMap.get(CalculatorConstants.FROMFY_FIELD_NAME)).split("-")[0];
+			if(!objMap.containsKey(CalculatorConstants.STARTING_DATE_APPLICABLES)){
+				if (objFinYear.compareTo(assessmentYear.split("-")[0]) == 0)
+					return  objMap;
 
-			if (objFinYear.compareTo(assessmentYear.split("-")[0]) == 0) 
-				return  objMap;
-				
-			else if (assessmentYear.split("-")[0].compareTo(objFinYear) > 0 && maxYearFromTheList.compareTo(objFinYear) <= 0) {
-				maxYearFromTheList = objFinYear;
-				objToBeReturned = objMap;
+				else if (assessmentYear.split("-")[0].compareTo(objFinYear) > 0 && maxYearFromTheList.compareTo(objFinYear) <= 0) {
+					maxYearFromTheList = objFinYear;
+					objToBeReturned = objMap;
+				}
+			}
+			else{
+				String objStartDay = ((String) objMap.get(CalculatorConstants.STARTING_DATE_APPLICABLES));
+				Long startTime = getStartDayInMillis(objStartDay,objFinYear);
+				if (assessmentYear.split("-")[0].compareTo(objFinYear) >= 0 && maxYearFromTheList.compareTo(objFinYear) <= 0) {
+					maxYearFromTheList = objFinYear;
+					Long currentTime = System.currentTimeMillis();
+					if(startTime < currentTime && maxStartTime < startTime){
+						objToBeReturned = objMap;
+						maxStartTime = startTime;
+					}
 			}
 		}
+	   }
 		return objToBeReturned;
+	}
+
+	private Long getStartDayInMillis(String startDay,String fromFY){
+		String day = startDay.split("/")[0];
+		String month = startDay.split("/")[1];
+		String financialYear;
+		if(month.compareTo("04")>=0)
+			financialYear = fromFY;
+		else {
+			Integer nextYear = (Integer.parseInt(fromFY)+1);
+			financialYear = nextYear.toString();
+		}
+
+		String startDate = day+"-"+month+"-"+financialYear;
+		Long startTime = null;
+		try{
+			SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy");
+			Date date = df.parse(startDate);
+			startTime = date.getTime();
+		}
+		 catch (ParseException e) {
+			throw new CustomException("INVALID STARTDAY","The startDate of the penalty cannot be parsed");
+		}
+
+       return startTime;
 	}
 	
 	/**

@@ -133,14 +133,18 @@ public class EstimationService {
 		} else {
 
 			Double totalUnitsArea = 0.0;
+			int groundUnitsCount = 0;
+			Double groundUnitsArea = 0.0;
 
 			for (Unit unit : detail.getUnits()) {
 				totalUnitsArea += unit.getUnitArea();
+				if (unit.getFloorNo().equalsIgnoreCase("0")) {
+					groundUnitsCount += 1;
+					groundUnitsArea += unit.getUnitArea();
+				}
 			}
 
 
-			int groundUnitsCount = 0;
-			Double groundUnitsArea = 0.0;
 			int i = 0;
 
 			for (Unit unit : detail.getUnits()) {
@@ -148,10 +152,6 @@ public class EstimationService {
 				BillingSlab slab = getSlabForCalc(filteredBillingSlabs, unit);
                 billingSlabIds.add(slab.getId()+"|"+i);
 
-				if (unit.getFloorNo().equalsIgnoreCase("0")) {
-					groundUnitsCount += 1;
-					groundUnitsArea += unit.getUnitArea();
-				}
 
 				BigDecimal currentUnitTax = getTaxForUnit(slab, unit);
 				/*

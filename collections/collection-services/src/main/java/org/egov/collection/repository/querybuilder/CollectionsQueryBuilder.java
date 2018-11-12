@@ -1,13 +1,6 @@
 package org.egov.collection.repository.querybuilder;
 
-import static java.util.Objects.isNull;
-
-import java.sql.SQLException;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Map;
-import java.util.Objects;
-
+import com.fasterxml.jackson.databind.JsonNode;
 import org.apache.commons.lang3.StringUtils;
 import org.egov.collection.model.AuditDetails;
 import org.egov.collection.model.Instrument;
@@ -20,7 +13,13 @@ import org.egov.tracer.model.CustomException;
 import org.postgresql.util.PGobject;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 
-import com.fasterxml.jackson.databind.JsonNode;
+import java.sql.SQLException;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Map;
+import java.util.Objects;
+
+import static java.util.Objects.isNull;
 
 public class CollectionsQueryBuilder {
 
@@ -234,7 +233,6 @@ public class CollectionsQueryBuilder {
         StringBuilder selectQuery = new StringBuilder(SELECT_RECEIPTS_SQL);
 
         addWhereClause(selectQuery, preparedStatementValues, searchCriteria);
-        addOrderByClause(selectQuery, searchCriteria);
 
         return addPaginationClause(selectQuery, preparedStatementValues, searchCriteria);
     }
@@ -354,12 +352,12 @@ public class CollectionsQueryBuilder {
         }
     }
 
-    private static void addOrderByClause(StringBuilder selectQuery,
+    private static String addOrderByClause(String selectQuery,
             ReceiptSearchCriteria criteria) {
-        String sortBy = (criteria.getSortBy() == null ? "rh.receiptDate" : "rh." + criteria.getSortBy());
-        String sortOrder = (criteria.getSortOrder() == null ? "DESC" : criteria
-                .getSortOrder());
-        selectQuery.append(" ORDER BY ").append(sortBy).append(" ").append(sortOrder);
+//        String sortBy = (criteria.getSortBy() == null ? "receiptDate" : "rh." + criteria.getSortBy());
+//        String sortOrder = (criteria.getSortOrder() == null ? "DESC" : criteria
+//                .getSortOrder());
+        return selectQuery + " ORDER BY rh_receiptDate DESC ";
     }
 
     private static String addPaginationClause(StringBuilder selectQuery, Map<String, Object> preparedStatementValues,
@@ -370,9 +368,10 @@ public class CollectionsQueryBuilder {
             preparedStatementValues.put("offset", criteria.getOffset());
             preparedStatementValues.put("limit", criteria.getOffset() + criteria.getLimit());
 
-            return finalQuery;
+            return addOrderByClause(finalQuery, criteria);
+
         } else
-            return selectQuery.toString();
+            return addOrderByClause(selectQuery.toString(), criteria);
     }
 
     private static PGobject getJsonb(JsonNode node) {

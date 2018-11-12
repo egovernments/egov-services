@@ -79,4 +79,9 @@ public class Configurations {
 	
 	@Value("${pt.module.minpayable.amount}")
 	private Integer ptMinAmountPayable;
+
+
+	@Value("${pt.financialyear.start.month}")
+	private String financialYearStartMonth;
+
 }

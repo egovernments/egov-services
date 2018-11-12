@@ -12,6 +12,7 @@ import org.egov.mdms.model.MdmsResponse;
 import org.egov.pt.calculator.repository.Repository;
 import org.egov.pt.calculator.util.CalculatorConstants;
 import org.egov.pt.calculator.util.CalculatorUtils;
+import org.egov.pt.calculator.util.Configurations;
 import org.egov.pt.calculator.web.models.demand.TaxHeadMaster;
 import org.egov.pt.calculator.web.models.demand.TaxHeadMasterResponse;
 import org.egov.pt.calculator.web.models.demand.TaxPeriod;
@@ -36,7 +37,9 @@ public class MasterDataService {
 	
 	@Autowired
 	private CalculatorUtils calculatorUtils;
-	
+
+	@Autowired
+	private Configurations config;
 	/**
 	 * Fetches Financial Year from Mdms Api
 	 * 
@@ -195,7 +198,7 @@ public class MasterDataService {
 		String day = startDay.split("/")[0];
 		String month = startDay.split("/")[1];
 		String financialYear;
-		if(month.compareTo("04")>=0)
+		if(month.compareTo(config.getFinancialYearStartMonth())>=0)
 			financialYear = fromFY;
 		else {
 			Integer nextYear = (Integer.parseInt(fromFY)+1);

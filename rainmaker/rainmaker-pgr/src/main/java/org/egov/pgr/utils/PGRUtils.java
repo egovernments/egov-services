@@ -244,6 +244,7 @@ public class PGRUtils {
 		String endPoint = searcherEndpoint.replace(MODULE_NAME, PGRConstants.SEARCHER_PGR_MOD_NAME).replace(SEARCH_NAME,
 				PGRConstants.SEARCHER_SRSEARCH_DEF_NAME);
 		uri.append(endPoint);
+		serviceReqSearchCriteria.setNoOfRecords(200l); //be default we retrieve 2oo records.
 		/**
 		 * This if block is to support substring search on servicerequestid without changing the contract. 
 		 * Query uses an IN clause which doesn't support substring search, therefore a new temp variable is added.

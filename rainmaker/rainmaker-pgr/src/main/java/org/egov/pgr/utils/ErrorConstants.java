@@ -55,8 +55,11 @@ public class ErrorConstants {
 	public static final String INVALID_START_DATE_CODE = "EG_PGR_INVALID_START_DATE";
 	public static final String INVALID_START_DATE_MSG = "startDate cannot be greater than endDate";
 	
+	public static final String INVALID_PARTIAL_SERVICEREQUESTID_CODE = "EG_PGR_INVALID_PARTIAL_SERVICEREQUESTID";
+	public static final String INVALID_PARTIAL_SERVICEREQUESTID_MSG = "Search on partial serviceRequestId is allowed on atleast last 6 digits of the id. Entered value is less than 6 characters in length.";
+	
 	public static final String INVALID_SERVICEREQUESTID_CODE = "EG_PGR_INVALID_SERVICEREQUESTID";
-	public static final String INVALID_SERVICEREQUESTID_MSG = "request object does not exist for the given ids: ";
+	public static final String INVALID_SERVICEREQUESTID_MSG = "Request object does not exist for the given ids: ";
 	
 	public static final String INVALID_SERVICECODE_CODE = "EG_PGR_INVALID_SERVICECODE";
 	public static final String INVALID_SERVICECODE_MSG = "Following Service codes are invalid: ";

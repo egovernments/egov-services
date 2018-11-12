@@ -520,11 +520,13 @@ public class GrievanceService {
 		List<Object> list = JsonPath.read(response, "$.services");
 		list.parallelStream().forEach(entry -> result.add(mapper.convertValue(entry, ServiceRequestDetails.class)));
 		result.parallelStream().forEach(obj -> {
-			ActionHistory actionHis = new ActionHistory();
-			actionHis.setActions(obj.getActionhistory());
-			actionHistory.add(actionHis);
-			obj.setActionhistory(null);
-			services.add(obj.getServices());
+			if(null != obj) {
+				ActionHistory actionHis = new ActionHistory();
+				actionHis.setActions(obj.getActionhistory());
+				actionHistory.add(actionHis);
+				obj.setActionhistory(null);
+				services.add(obj.getServices());
+			}
 		});
 		replaceIdsWithUrls(actionHistory);
 

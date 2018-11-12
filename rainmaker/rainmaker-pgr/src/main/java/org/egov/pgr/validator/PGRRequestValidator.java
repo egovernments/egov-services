@@ -14,6 +14,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.request.Role;
 import org.egov.pgr.contract.ReportRequest;
+import org.egov.pgr.contract.SearcherRequest;
 import org.egov.pgr.contract.ServiceReqSearchCriteria;
 import org.egov.pgr.contract.ServiceRequest;
 import org.egov.pgr.contract.ServiceResponse;
@@ -248,6 +249,12 @@ public class PGRRequestValidator {
 		if ((criteria.getStartDate() != null && criteria.getEndDate() != null)
 				&& criteria.getStartDate().compareTo(criteria.getEndDate()) > 0) {
 			errorMap.put(ErrorConstants.INVALID_START_DATE_CODE, ErrorConstants.INVALID_START_DATE_MSG);
+		}
+		if(!CollectionUtils.isEmpty(criteria.getServiceRequestId()) &&
+				criteria.getServiceRequestId().size() == 1) {
+			if(criteria.getServiceRequestId().get(0).length() < 6) {
+				errorMap.put(ErrorConstants.INVALID_PARTIAL_SERVICEREQUESTID_CODE, ErrorConstants.INVALID_PARTIAL_SERVICEREQUESTID_MSG);
+			}
 		}
 
 		if (!errorMap.isEmpty())

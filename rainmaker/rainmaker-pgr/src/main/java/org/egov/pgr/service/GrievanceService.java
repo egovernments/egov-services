@@ -353,9 +353,6 @@ public class GrievanceService {
 			serviceReqSearchCriteria.setAccountId(requestInfo.getUserInfo().getId().toString());
 		    serviceReqSearchCriteria.setTenantId(serviceReqSearchCriteria.getTenantId().split("[.]")[0]); //citizen can search his complaints across state.
 		} else if (requestInfo.getUserInfo().getType().equalsIgnoreCase(PGRConstants.ROLE_EMPLOYEE)) {
-			if(StringUtils.isEmpty(precedentRole)) {
-				throw new CustomException(ErrorConstants.UNAUTHORIZED_USER_KEY, ErrorConstants.UNAUTHORIZED_USER_MSG);
-			}
 			/**
 			 * GRO can search complaints belonging to only his tenant.
 			 */
@@ -364,7 +361,7 @@ public class GrievanceService {
 			}
 			/**
 			 * DGRO belongs to a department and that department takes care of certain complaint types.
-			 * A DGRO can address/see only the complaints belonging to those complaint types and to his tenant.
+			 * A DGRO can address/see only the complaints belonging to those complaint types and to only his tenant.
 			 */
 			else if (precedentRole.equalsIgnoreCase(PGRConstants.ROLE_NAME_DGRO)) { 
 				Object response = fetchServiceDefs(requestInfo, serviceReqSearchCriteria.getTenantId(), 

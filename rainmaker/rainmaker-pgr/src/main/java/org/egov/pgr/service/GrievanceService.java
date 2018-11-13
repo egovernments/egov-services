@@ -140,15 +140,26 @@ public class GrievanceService {
 		AuditDetails auditDetails = pGRUtils.getAuditDetails(String.valueOf(requestInfo.getUserInfo().getId()), true);
 		String by = auditDetails.getCreatedBy() + ":" + requestInfo.getUserInfo().getRoles().get(0).getName();
 		List<ActionInfo> actionInfos = new LinkedList<>();
+		if(!CollectionUtils.isEmpty(serviceRequest.getActionInfo())) {
+			actionInfos = serviceRequest.getActionInfo();
+		}
 		for (int servReqCount = 0; servReqCount < serviceReqs.size(); servReqCount++) {
 			Service servReq = serviceReqs.get(servReqCount);
+			ActionInfo actionInfo = actionInfos.get(servReqCount);
 			String currentId = servReqIdList.get(servReqCount);
+			if(null == actionInfo) {
+				ActionInfo newActionInfo = ActionInfo.builder().uuid(UUID.randomUUID().toString()).businessKey(currentId)
+						.action(WorkFlowConfigs.ACTION_OPEN).assignee(null).by(by).when(auditDetails.getCreatedTime()).tenantId(tenantId)
+						.status(actionStatusMap.get(WorkFlowConfigs.ACTION_OPEN)).build();
+				actionInfos.add(newActionInfo);
+			}else {
+				actionInfo.setUuid(UUID.randomUUID().toString()); actionInfo.setBusinessKey(currentId);
+				actionInfo.setAction(WorkFlowConfigs.ACTION_OPEN); actionInfo.setAssignee(null); actionInfo.setBy(by);
+				actionInfo.setWhen(auditDetails.getCreatedTime()); actionInfo.setTenantId(tenantId); actionInfo.setStatus(actionStatusMap.get(WorkFlowConfigs.ACTION_OPEN));
+				actionInfos.add(actionInfo);
+			}
 			servReq.setAuditDetails(auditDetails); servReq.setServiceRequestId(currentId);servReq.setActive(true);
 			servReq.setStatus(StatusEnum.OPEN);servReq.setFeedback(null);servReq.setRating(null); 
-			ActionInfo actionInfo = ActionInfo.builder().uuid(UUID.randomUUID().toString()).businessKey(currentId)
-					.action(WorkFlowConfigs.ACTION_OPEN).assignee(null).by(by).when(auditDetails.getCreatedTime()).tenantId(tenantId)
-					.status(actionStatusMap.get(WorkFlowConfigs.ACTION_OPEN)).build();
-			actionInfos.add(actionInfo);
 			servReq.getAddressDetail().setUuid(UUID.randomUUID().toString());
 			servReq.getAddressDetail().setAuditDetails(auditDetails);
 			servReq.getAddressDetail().setTenantId(tenantId);

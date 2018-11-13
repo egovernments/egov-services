@@ -2,7 +2,6 @@ package org.egov.collection.util;
 
 import static java.util.Objects.isNull;
 
-import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.Comparator;
@@ -238,11 +237,7 @@ public class ReceiptEnricher {
             instrument.setTransactionDate(new Date());
 
         } else {
-            System.out.println("instrument.getTransactionDateInput(): "+instrument.getTransactionDateInput());
-            Timestamp ts=new Timestamp(instrument.getTransactionDateInput());  
-            System.out.println("ts.getTime(): "+ts.getTime());
-            System.out.println("new Date(ts.getTime()): "+new Date(ts.getTime()));
-            instrument.setTransactionDate(new Date(ts.getTime()));
+            instrument.setTransactionDate(new Date(instrument.getTransactionDateInput()));
         }
 
         receipt.setTransactionId(instrument.getTransactionNumber());

@@ -193,7 +193,8 @@ public class Instrument {
         }
         contract.setPayee(this.getPayee());
         contract.setSerialNo(this.getSerialNo());
-        contract.setTransactionDate(this.getTransactionDate());
+        contract.setTransactionDate(new Date(this.getTransactionDateInput()));
+        System.out.println("contract.getTransactionDate()" + contract.getTransactionDate());
         contract.setTransactionNumber(this.getTransactionNumber());
         contract.setTransactionType(this.getTransactionType());
         contract.setTenantId(this.getTenantId());

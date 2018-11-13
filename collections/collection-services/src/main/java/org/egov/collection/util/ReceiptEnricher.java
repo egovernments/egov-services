@@ -240,6 +240,8 @@ public class ReceiptEnricher {
         } else {
             System.out.println("instrument.getTransactionDateInput(): "+instrument.getTransactionDateInput());
             Timestamp ts=new Timestamp(instrument.getTransactionDateInput());  
+            System.out.println("ts.getTime(): "+ts.getTime());
+            System.out.println("new Date(ts.getTime()): "+new Date(ts.getTime()));
             instrument.setTransactionDate(new Date(ts.getTime()));
         }
 

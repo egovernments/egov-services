@@ -44,7 +44,16 @@ ReportDefinitions:
     apiURL: http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=RAINMAKER-PGR&masterName=ServiceDefs&tenantId=$tenantId
     keyOrder: serviceCode,department,slaHours
     tableName: tbl_dept
+  - entity: $.MdmsRes.common-masters.Department
+    apiURL: http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=common-masters&masterName=Department&tenantId=$tenantId
+    keyOrder: name,code
+    tableName: tbl_codes
   sourceColumns:
+  - name: tenantid
+    label: reports.rainmaker-pgr.tenant
+    type: string
+    source: eg_pgr_service
+    total: false
   - name: department
     label: reports.rainmaker-pgr.department
     type: string
@@ -101,6 +110,14 @@ ReportDefinitions:
     source: eg_pgr_service
     total: false
   searchParams:
+  - name: ulb
+    label: ULB
+    type: singlevaluelist
+    pattern: http://egov-mdms-service:8080/egov-mdms-service/v1/_get?tenantId=$tenantid&moduleName=tenant&masterName=tenants|$.MdmsRes.tenant.tenants.*.code|$.MdmsRes.tenant.tenants.*.name
+    source: eg_pgr_service
+    wrapper: true
+    isMandatory: false
+    searchClause: AND eg_pgr_service.tenantid = $ulb
   - name: fromDate
     label: reports.rainmaker-pgr.datefrom
     type: epoch
@@ -113,7 +130,7 @@ ReportDefinitions:
     source: eg_pgr_service
     isMandatory: false
     searchClause: AND createdtime <= $toDate
-  query: SELECT (SELECT deptmap.department FROM (VALUES tbl_dept) AS deptmap(serviceCode, department, slaHours) WHERE deptmap.serviceCode = eg_pgr_service.servicecode) AS department, eg_pgr_service.servicecode AS servicecode, servicerequestid AS complaintNo, to_char(to_timestamp(TRUNC(CAST(createdtime AS bigint) / 1000)), 'DD/MM/YYYY') AS date, eg_user.name, phone, landmark, address, description, (SELECT (CASE WHEN (((SELECT deptmap.slaHours FROM (VALUES tbl_dept) AS deptmap(serviceCode, department, slaHours) WHERE deptmap.serviceCode = eg_pgr_service.servicecode)::integer / 24) - ((((select extract(epoch from now())) * 1000) - eg_pgr_service.createdtime)::bigint/86400000)) < 1 THEN CONCAT('Overdue by ', ((((select extract(epoch from now())) * 1000) - eg_pgr_service.createdtime)::bigint/86400000) - ((SELECT deptmap.slaHours FROM (VALUES tbl_dept) AS deptmap(serviceCode, department, slaHours) WHERE deptmap.serviceCode = eg_pgr_service.servicecode)::integer / 24), ' days') ELSE CONCAT(((SELECT deptmap.slaHours FROM (VALUES tbl_dept) AS deptmap(serviceCode, department, slaHours) WHERE deptmap.serviceCode = eg_pgr_service.servicecode)::integer / 24) - ((((select extract(epoch from now())) * 1000) - eg_pgr_service.createdtime)::bigint/86400000), ' days remaining') END) as slaHours), status FROM eg_pgr_service, eg_user WHERE eg_pgr_service.accountid = eg_user.id::VARCHAR AND eg_pgr_service.tenantid LIKE $tenantid AND status IN ('open','assigned','reassigrequested','rejected')
+  query: SELECT INITCAP(SUBSTRING(eg_pgr_service.tenantid, '\.(.*)')) AS tenantid, (SELECT name FROM (VALUES tbl_dept) AS deptmap(serviceCode, department, slaHours) LEFT OUTER JOIN (VALUES tbl_codes) AS deptcode(name, code) ON deptmap.department = deptcode.code WHERE deptmap.serviceCode = eg_pgr_service.servicecode) AS department, eg_pgr_service.servicecode AS servicecode, servicerequestid AS complaintNo, to_char(to_timestamp(TRUNC(CAST(createdtime AS bigint) / 1000)), 'DD/MM/YYYY') AS date, eg_user.name, phone, landmark, address, description, (SELECT (CASE WHEN (((SELECT deptmap.slaHours FROM (VALUES tbl_dept) AS deptmap(serviceCode, department, slaHours) WHERE deptmap.serviceCode = eg_pgr_service.servicecode)::integer / 24) - ((((select extract(epoch from now())) * 1000) - eg_pgr_service.createdtime)::bigint/86400000)) < 1 THEN CONCAT('Overdue by ', ((((select extract(epoch from now())) * 1000) - eg_pgr_service.createdtime)::bigint/86400000) - ((SELECT deptmap.slaHours FROM (VALUES tbl_dept) AS deptmap(serviceCode, department, slaHours) WHERE deptmap.serviceCode = eg_pgr_service.servicecode)::integer / 24), ' days') ELSE CONCAT(((SELECT deptmap.slaHours FROM (VALUES tbl_dept) AS deptmap(serviceCode, department, slaHours) WHERE deptmap.serviceCode = eg_pgr_service.servicecode)::integer / 24) - ((((select extract(epoch from now())) * 1000) - eg_pgr_service.createdtime)::bigint/86400000), ' days remaining') END) as slaHours), status FROM eg_pgr_service, eg_user WHERE eg_pgr_service.accountid = eg_user.id::VARCHAR AND status IN ('open','assigned','reassigrequested','rejected')
 
 - reportName: EmployeeReport
   summary: Fetches complaints for employees
@@ -193,4 +210,4 @@ ReportDefinitions:
     source: eg_pgr_service
     isMandatory: false
     searchClause: AND createdtime <= $toDate
-  query: SELECT (SELECT deptmap.department FROM (VALUES tbl_dept) AS deptmap(serviceCode, department, slaHours) WHERE deptmap.serviceCode = eg_pgr_service.servicecode) AS department, eg_pgr_service.servicecode AS servicecode, servicerequestid AS complaintNo, to_char(to_timestamp(TRUNC(CAST(createdtime AS bigint) / 1000)), 'DD/MM/YYYY') AS date, eg_user.name, phone, landmark, address, description, (SELECT (CASE WHEN (((SELECT deptmap.slaHours FROM (VALUES tbl_dept) AS deptmap(serviceCode, department, slaHours) WHERE deptmap.serviceCode = eg_pgr_service.servicecode)::integer / 24) - ((((select extract(epoch from now())) * 1000) - eg_pgr_service.createdtime)::bigint/86400000)) < 1 THEN CONCAT('Overdue by ', ((((select extract(epoch from now())) * 1000) - eg_pgr_service.createdtime)::bigint/86400000) - ((SELECT deptmap.slaHours FROM (VALUES tbl_dept) AS deptmap(serviceCode, department, slaHours) WHERE deptmap.serviceCode = eg_pgr_service.servicecode)::integer / 24), ' days') ELSE CONCAT(((SELECT deptmap.slaHours FROM (VALUES tbl_dept) AS deptmap(serviceCode, department, slaHours) WHERE deptmap.serviceCode = eg_pgr_service.servicecode)::integer / 24) - ((((select extract(epoch from now())) * 1000) - eg_pgr_service.createdtime)::bigint/86400000), ' days remaining') END) as slaHours), status FROM eg_pgr_service INNER JOIN eg_user ON eg_pgr_service.accountid = eg_user.id::VARCHAR WHERE eg_pgr_service.status = 'assigned' AND servicerequestid IN (SELECT DISTINCT businesskey FROM eg_pgr_action WHERE status = 'assigned' AND "when" IN (select max("when") FROM eg_pgr_action WHERE assignee NOTNULL GROUP BY businesskey) AND assignee = $userid) 
+  query: SELECT (SELECT deptmap.department FROM (VALUES tbl_dept) AS deptmap(serviceCode, department, slaHours) WHERE deptmap.serviceCode = eg_pgr_service.servicecode) AS department, eg_pgr_service.servicecode AS servicecode, servicerequestid AS complaintNo, to_char(to_timestamp(TRUNC(CAST(createdtime AS bigint) / 1000)), 'DD/MM/YYYY') AS date, eg_user.name, phone, landmark, address, description, (SELECT (CASE WHEN (((SELECT deptmap.slaHours FROM (VALUES tbl_dept) AS deptmap(serviceCode, department, slaHours) WHERE deptmap.serviceCode = eg_pgr_service.servicecode)::integer / 24) - ((((select extract(epoch from now())) * 1000) - eg_pgr_service.createdtime)::bigint/86400000)) < 1 THEN CONCAT('Overdue by ', ((((select extract(epoch from now())) * 1000) - eg_pgr_service.createdtime)::bigint/86400000) - ((SELECT deptmap.slaHours FROM (VALUES tbl_dept) AS deptmap(serviceCode, department, slaHours) WHERE deptmap.serviceCode = eg_pgr_service.servicecode)::integer / 24), ' days') ELSE CONCAT(((SELECT deptmap.slaHours FROM (VALUES tbl_dept) AS deptmap(serviceCode, department, slaHours) WHERE deptmap.serviceCode = eg_pgr_service.servicecode)::integer / 24) - ((((select extract(epoch from now())) * 1000) - eg_pgr_service.createdtime)::bigint/86400000), ' days remaining') END) as slaHours), status FROM eg_pgr_service INNER JOIN eg_user ON eg_pgr_service.accountid = eg_user.id::VARCHAR WHERE eg_pgr_service.status = 'assigned' AND servicerequestid IN (SELECT DISTINCT businesskey FROM eg_pgr_action WHERE status = 'assigned' AND "when" IN (select max("when") FROM eg_pgr_action WHERE assignee NOTNULL GROUP BY businesskey) AND assignee = $userid)

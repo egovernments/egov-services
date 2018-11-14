@@ -140,8 +140,9 @@ public class EstimationService {
 			for (Unit unit : detail.getUnits()) {
 
 				BillingSlab slab = getSlabForCalc(filteredBillingSlabs, unit);
-				billingSlabIds.add(slab.getId()+"|"+i);
 				BigDecimal currentUnitTax = getTaxForUnit(slab, unit);
+				billingSlabIds.add(slab.getId()+"|"+i);
+
 				/*
 				 * counting the number of units & total area in ground floor for unbuilt area
 				 * tax calculation

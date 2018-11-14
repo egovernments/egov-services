@@ -1,20 +1,11 @@
 package org.egov.access.web.controller;
 
-import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.validation.Valid;
-
 import org.egov.access.domain.model.Action;
 import org.egov.access.domain.model.ActionValidation;
+import org.egov.access.domain.model.AuthorizationRequestWrapper;
 import org.egov.access.domain.service.ActionService;
 import org.egov.access.util.AccessControlConstants;
-import org.egov.access.web.contract.action.ActionContract;
-import org.egov.access.web.contract.action.ActionRequest;
-import org.egov.access.web.contract.action.ActionResponse;
-import org.egov.access.web.contract.action.ActionSearchResponse;
-import org.egov.access.web.contract.action.Module;
+import org.egov.access.web.contract.action.*;
 import org.egov.access.web.contract.factory.ResponseInfoFactory;
 import org.egov.access.web.contract.validateaction.ActionValidationContract;
 import org.egov.access.web.contract.validateaction.ValidateActionRequest;
@@ -36,6 +27,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import javax.validation.Valid;
+import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 @RequestMapping("/v1/actions")
@@ -108,6 +104,16 @@ public class ActionController {
 	public ValidateActionResponse validateAction(@RequestBody ValidateActionRequest validateActionRequest) {
 		ActionValidation actionValidation = actionService.validate(validateActionRequest.toDomain());
 		return getValidateActionResponse(actionValidation);
+	}
+
+	@PostMapping(value = "_authorize")
+	public ResponseEntity<Void> authorize(@RequestBody @Valid AuthorizationRequestWrapper authorizationRequestWrapper) {
+		boolean authorized = actionService.isAuthorized(authorizationRequestWrapper.getAuthorizationRequest());
+
+		if(authorized)
+			return new ResponseEntity<>(HttpStatus.OK);
+		else
+			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 	}
 
 	private ResponseEntity<?> getListSuccessResponse(final RequestInfo requestInfo, final List<Module> moduleList) {

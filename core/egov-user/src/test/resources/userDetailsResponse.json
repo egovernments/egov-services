@@ -14,15 +14,5 @@
   ],
   "active": true,
   "tenantId": "default",
-  "actions": [
-    {
-      "name": "ReceivingMode",
-      "url": "/pgr/receivingmode",
-      "displayName": "ReceivingMode",
-      "orderNumber": 0,
-      "queryParams": "tenantId=",
-      "parentModule": "1",
-      "serviceCode": "PGR"
-    }
-  ]
+  "actions": null
 }

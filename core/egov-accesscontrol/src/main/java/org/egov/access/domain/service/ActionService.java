@@ -1,35 +1,44 @@
 package org.egov.access.domain.service;
 
-import java.io.UnsupportedEncodingException;
-import java.util.List;
-
+import lombok.extern.slf4j.Slf4j;
 import org.egov.access.domain.criteria.ActionSearchCriteria;
 import org.egov.access.domain.criteria.ValidateActionCriteria;
 import org.egov.access.domain.model.Action;
+import org.egov.access.domain.model.ActionContainer;
 import org.egov.access.domain.model.ActionValidation;
+import org.egov.access.domain.model.AuthorizationRequest;
 import org.egov.access.persistence.repository.ActionRepository;
 import org.egov.access.persistence.repository.BaseRepository;
+import org.egov.access.persistence.repository.MdmsRepository;
 import org.egov.access.persistence.repository.querybuilder.ActionFinderQueryBuilder;
 import org.egov.access.persistence.repository.querybuilder.ValidateActionQueryBuilder;
 import org.egov.access.persistence.repository.rowmapper.ActionRowMapper;
 import org.egov.access.persistence.repository.rowmapper.ActionValidationRowMapper;
+import org.egov.access.util.Utils;
 import org.egov.access.web.contract.action.ActionRequest;
 import org.egov.access.web.contract.action.Module;
 import org.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.UnsupportedEncodingException;
+import java.util.*;
+
 @Service
+@Slf4j
 public class ActionService {
 
 	private BaseRepository repository;
 
 	private ActionRepository actionRepository;
 
+	private MdmsRepository mdmsRepository;
+
 	@Autowired
-	public ActionService(BaseRepository repository, ActionRepository actionRepository) {
+	public ActionService(BaseRepository repository, ActionRepository actionRepository, MdmsRepository mdmsRepository) {
 		this.repository = repository;
 		this.actionRepository = actionRepository;
+		this.mdmsRepository = mdmsRepository;
 	}
 
 	public List<Action> getActions(ActionSearchCriteria actionSearchCriteria) {
@@ -77,4 +86,44 @@ public class ActionService {
         
 		return actionRepository.getAllMDMSActions(actionRequest);
 	}
+
+    /**
+     * Authorize the request
+     *
+     * @param authorizeRequest URI and role to be authorized
+     * @return true when authorized, false when unauthorized
+     */
+	public boolean isAuthorized(AuthorizationRequest authorizeRequest){
+
+		Map<String, ActionContainer>  roleActions = mdmsRepository.fetchRoleActionData(getStateLevelTenant
+                (authorizeRequest.getTenantId()));
+
+		String uriToBeAuthorized = authorizeRequest.getUri();
+		Set<String> uris = new HashSet<>();
+		List<String> regexUris = new ArrayList<>();
+
+		for(String roleCode : authorizeRequest.getRoleCodes()){
+			uris.addAll(roleActions.get(roleCode).getUris());
+			regexUris.addAll(roleActions.get(roleCode).getRegexUris());
+		}
+
+		boolean isAuthorized = uris.contains(uriToBeAuthorized) || containsRegexUri(regexUris, uriToBeAuthorized);
+
+		log.info("Role {} has access to requested URI {} : {}", authorizeRequest.getRoleCodes(), uriToBeAuthorized,
+                isAuthorized);
+
+		return isAuthorized;
+	}
+
+	private boolean containsRegexUri(List<String> actionUris, String requestUri){
+	    for(String actionUri : actionUris){
+            if(Utils.isRegexUriMatch(actionUri, requestUri))
+                return true;
+        }
+        return false;
+    }
+
+    private String getStateLevelTenant(String tenantId){
+            return tenantId.split("\\.")[0];
+    }
 }

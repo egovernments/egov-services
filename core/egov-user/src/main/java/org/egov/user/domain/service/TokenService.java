@@ -1,8 +1,8 @@
 package org.egov.user.domain.service;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.egov.user.domain.exception.InvalidAccessTokenException;
-import org.egov.user.domain.model.Action;
 import org.egov.user.domain.model.SecureUser;
 import org.egov.user.domain.model.UserDetail;
 import org.egov.user.persistence.repository.ActionRestRepository;
@@ -10,10 +10,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.stereotype.Service;
-
-import lombok.extern.slf4j.Slf4j;
-
-import java.util.List;
 
 @Service
 @Slf4j
@@ -49,14 +45,15 @@ public class TokenService {
 		}
 
 		SecureUser secureUser = ((SecureUser) authentication.getPrincipal());
-		String tenantId = null;
-		if (isRoleStateLevel && (secureUser.getTenantId() != null && secureUser.getTenantId().contains(".")))
-			tenantId = secureUser.getTenantId().split("\\.")[0];
-		else
-			tenantId = secureUser.getTenantId();
-		
-		List<Action> actions = actionRestRepository.getActionByRoleCodes(secureUser.getRoleCodes(), tenantId);
-		log.info("returning STATE-LEVEL roleactions for tenant: "+tenantId);
-		return new UserDetail(secureUser, actions);
+		return new UserDetail(secureUser, null);
+//		String tenantId = null;
+//		if (isRoleStateLevel && (secureUser.getTenantId() != null && secureUser.getTenantId().contains(".")))
+//			tenantId = secureUser.getTenantId().split("\\.")[0];
+//		else
+//			tenantId = secureUser.getTenantId();
+//
+//		List<Action> actions = actionRestRepository.getActionByRoleCodes(secureUser.getRoleCodes(), tenantId);
+//		log.info("returning STATE-LEVEL roleactions for tenant: "+tenantId);
+//		return new UserDetail(secureUser, actions);
 	}
 }

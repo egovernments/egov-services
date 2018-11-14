@@ -10,6 +10,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.netflix.zuul.EnableZuulProxy;
 import org.springframework.cloud.netflix.zuul.filters.ProxyRequestHelper;
 import org.springframework.context.annotation.Bean;
+import org.springframework.http.client.BufferingClientHttpRequestFactory;
+import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Arrays;
@@ -37,6 +39,9 @@ public class ZuulGatewayApplication {
     @Value("${egov.auth-service-uri}")
     private String authServiceUri;
 
+    @Value("${egov.authorize.access.control.host}${egov.authorize.access.control.uri}")
+    private String authorizationUrl;
+
     @Bean
     public AuthPreCheckFilter authCheckFilter() {
         return new AuthPreCheckFilter(new HashSet<>(Arrays.asList(openEndpointsWhitelist)),
@@ -45,19 +50,18 @@ public class ZuulGatewayApplication {
 
     @Bean
     public AuthFilter authFilter() {
-        RestTemplate restTemplate = new RestTemplate();
         final ProxyRequestHelper proxyRequestHelper = new ProxyRequestHelper();
-        return new AuthFilter(proxyRequestHelper, restTemplate, authServiceHost, authServiceUri);
+        return new AuthFilter(proxyRequestHelper, restTemplate(), authServiceHost, authServiceUri);
     }
 
     @Bean
     public RbacFilter rbacFilter() {
-        return new RbacFilter();
+        return new RbacFilter(restTemplate(), authorizationUrl);
     }
     
     @Bean
     public RestTemplate restTemplate() {
-    	return new RestTemplate();
+    	return  new RestTemplate(new BufferingClientHttpRequestFactory(new SimpleClientHttpRequestFactory()));
     }
 
     @Bean

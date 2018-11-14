@@ -7,7 +7,6 @@ import org.egov.user.domain.model.UserDetail;
 
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @Getter
 @Setter
@@ -38,7 +37,7 @@ public class CustomUserDetails {
 		this.active = secureUser.getUser().isActive();
 		this.tenantId = secureUser.getUser().getTenantId();
 		this.uuid = secureUser.getUser().getUuid();
-		this.actions = userDetail.getActions().stream().map(Action::new).collect(Collectors.toList());
+//		this.actions = userDetail.getActions().stream().map(Action::new).collect(Collectors.toList());
 	}
 }
 

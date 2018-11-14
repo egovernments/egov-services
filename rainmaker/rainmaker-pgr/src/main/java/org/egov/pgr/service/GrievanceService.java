@@ -696,14 +696,11 @@ public class GrievanceService {
 		Map<String, String> map = new HashMap<>();
 		try {
 			Object response = serviceRequestRepository.fetchResult(uri, request);
-			log.info("response: "+response);
 			if(null != response) {
 				List<String> names = JsonPath.read(response, PGRConstants.LOCATION__BOUNDARY_NAMES_JSONPATH);
 				List<String> codes = JsonPath.read(response, PGRConstants.LOCATION__BOUNDARY_CODES_JSONPATH);
-				log.info("names: "+names);
-				log.info("codes: "+codes);
 				for(int i = 0; i < names.size(); i++) {
-					map.put(names.get(i), codes.get(i));
+					map.put(codes.get(i), names.get(i));
 				}
 			}
 		}catch(Exception e) {

@@ -87,4 +87,7 @@ public class ErrorConstants {
 	
 	public static final String INVALID_MOHALLA_CITY_CODE = "EG_PGR_INVALID_MOHALLA_CITY_CODE";
 	public static final String INVALID_MOHALLA_CITY_MSG = "service.addressDetail.mohalla & service.addressDetail.city  cannot be null";
+	
+	public static final String INVALID_ACTION_REOPEN_EXPIRED_CODE = "EG_PGR_INVALID_ACTION_REOPEN_EXPIRED_CODE";
+	public static final String INVALID_ACTION_REOPEN_EXPIRED_MSG = "Complaint has to be reopened only within $days days of resolution. This complaint is past that range.";
 }

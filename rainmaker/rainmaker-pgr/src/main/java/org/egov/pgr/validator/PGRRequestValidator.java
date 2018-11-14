@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -14,7 +15,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.request.Role;
 import org.egov.pgr.contract.ReportRequest;
-import org.egov.pgr.contract.SearcherRequest;
 import org.egov.pgr.contract.ServiceReqSearchCriteria;
 import org.egov.pgr.contract.ServiceRequest;
 import org.egov.pgr.contract.ServiceResponse;
@@ -68,6 +68,9 @@ public class PGRRequestValidator {
 	
 	@Value("${egov.user.search.endpoint}")
 	private String userSearchEndPoint;
+	
+	@Value("${egov.default.expiry.time.before.reopen.in.hours}")
+	private Long defaultExpiryTimeBeforeReopen;
 	
 	
 	/**
@@ -408,6 +411,17 @@ public class PGRRequestValidator {
 					&& (!StringUtils.isEmpty(service.getFeedback()) || !StringUtils.isEmpty(service.getRating()))) {
 				errorMap.put(ErrorConstants.UPDATE_FEEDBACK_ERROR_KEY, ErrorConstants.UPDATE_FEEDBACK_ERROR_MSG);
 			}
+			/**
+			 * Code to check if the reopen happens within defaultExpiryTimeBeforeReopen no of days after resolve. 
+			 */
+/*			if(WorkFlowConfigs.ACTION_REOPEN.equals(actionInfo.getAction())) {
+				Long timeDifference = System.currentTimeMillis() - service.getAuditDetails().getCreatedTime();
+				if(TimeUnit.MILLISECONDS.toHours(timeDifference) > defaultExpiryTimeBeforeReopen) {
+					String error = ErrorConstants.INVALID_ACTION_REOPEN_EXPIRED_MSG.replaceAll("$days", defaultExpiryTimeBeforeReopen.toString());
+					errorMap.put(ErrorConstants.INVALID_ACTION_REOPEN_EXPIRED_CODE, error);
+				}
+			}*/
+			
 			service.setStatus(StatusEnum.fromValue(currentStatus)); //This will be updated according to the action performed in service layer.
 		}		
 

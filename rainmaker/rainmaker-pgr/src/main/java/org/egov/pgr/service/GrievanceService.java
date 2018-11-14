@@ -145,17 +145,25 @@ public class GrievanceService {
 		}
 		for (int servReqCount = 0; servReqCount < serviceReqs.size(); servReqCount++) {
 			Service servReq = serviceReqs.get(servReqCount);
-			ActionInfo actionInfo = actionInfos.get(servReqCount);
 			String currentId = servReqIdList.get(servReqCount);
-			if(null == actionInfo) {
+			ActionInfo actionInfo = null;
+			try {
+				actionInfo = actionInfos.get(servReqCount);
+				if(null != actionInfo) {
+					actionInfo.setUuid(UUID.randomUUID().toString()); actionInfo.setBusinessKey(currentId);
+					actionInfo.setAction(WorkFlowConfigs.ACTION_OPEN); actionInfo.setAssignee(null); actionInfo.setBy(by);
+					actionInfo.setWhen(auditDetails.getCreatedTime()); actionInfo.setTenantId(tenantId); actionInfo.setStatus(actionStatusMap.get(WorkFlowConfigs.ACTION_OPEN));	
+				}else {
+					ActionInfo newActionInfo = ActionInfo.builder().uuid(UUID.randomUUID().toString()).businessKey(currentId)
+							.action(WorkFlowConfigs.ACTION_OPEN).assignee(null).by(by).when(auditDetails.getCreatedTime()).tenantId(tenantId)
+							.status(actionStatusMap.get(WorkFlowConfigs.ACTION_OPEN)).build();
+					actionInfos.add(newActionInfo);
+				}
+			}catch(Exception e) {
 				ActionInfo newActionInfo = ActionInfo.builder().uuid(UUID.randomUUID().toString()).businessKey(currentId)
 						.action(WorkFlowConfigs.ACTION_OPEN).assignee(null).by(by).when(auditDetails.getCreatedTime()).tenantId(tenantId)
 						.status(actionStatusMap.get(WorkFlowConfigs.ACTION_OPEN)).build();
 				actionInfos.add(newActionInfo);
-			}else {
-				actionInfo.setUuid(UUID.randomUUID().toString()); actionInfo.setBusinessKey(currentId);
-				actionInfo.setAction(WorkFlowConfigs.ACTION_OPEN); actionInfo.setAssignee(null); actionInfo.setBy(by);
-				actionInfo.setWhen(auditDetails.getCreatedTime()); actionInfo.setTenantId(tenantId); actionInfo.setStatus(actionStatusMap.get(WorkFlowConfigs.ACTION_OPEN));
 			}
 			servReq.setAuditDetails(auditDetails); servReq.setServiceRequestId(currentId);servReq.setActive(true);
 			servReq.setStatus(StatusEnum.OPEN);servReq.setFeedback(null);servReq.setRating(null); 

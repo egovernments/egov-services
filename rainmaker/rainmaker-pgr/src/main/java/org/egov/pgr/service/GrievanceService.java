@@ -628,21 +628,33 @@ public class GrievanceService {
 	 */
 	public ServiceResponse enrichResult(RequestInfo requestInfo, ServiceResponse response) {
 		List<Long> userIds = response.getServices().parallelStream().map(a -> {
-					try {return Long.parseLong(a.getAccountId());}catch(Exception e) {return null;}
-				}).collect(Collectors.toList());
+					try {return Long.parseLong(a.getAccountId());}catch(Exception e) {return null;} }).collect(Collectors.toList());
 		List<Address> addresses = response.getServices().parallelStream().map(Service :: getAddressDetail).collect(Collectors.toList());
-		List<String> mohallaCodes = addresses.parallelStream().map(Address :: getMohalla).collect(Collectors.toList());
+		Map<String, String> mapOfMohallaCodesAndNames = new HashMap<>();
+		if(!CollectionUtils.isEmpty(addresses)) {
+			List<String> mohallaCodes = new ArrayList<>();
+			addresses.stream().forEach(address -> { if(null != address) mohallaCodes.add(address.getMohalla()); });
+			if(!CollectionUtils.isEmpty(mohallaCodes)) {
+				mapOfMohallaCodesAndNames = getMohallNames(requestInfo, response.getServices().get(0).getTenantId(), mohallaCodes, 
+						PGRConstants.LOCATION__BOUNDARY_HIERARCHYTYPE_ADMIN, PGRConstants.LOCATION__BOUNDARY_BOUNDARYTYPE_LOCALITY);
+			}
+		}
+		if(!CollectionUtils.isEmpty(mapOfMohallaCodesAndNames.keySet())) {
+			for(Service service: response.getServices()) {
+				if(null != service.getAddressDetail()) {
+					if(!StringUtils.isEmpty(mapOfMohallaCodesAndNames.get(service.getAddressDetail().getMohalla()))) {
+						service.getAddressDetail().setLocality(mapOfMohallaCodesAndNames.get(service.getAddressDetail().getMohalla()));
+					}
+				}
+			}
+			
+		}
 		String tenantId = response.getServices().get(0).getTenantId().split("[.]")[0]; //citizen is state-level no point in sending ulb level tenant.
 		UserResponse userResponse = getUsers(requestInfo, tenantId, userIds);
-		Map<String, String> mapOfMohallaCodesAndNames = getMohallNames(requestInfo, response.getServices().get(0).getTenantId(), mohallaCodes, 
-				PGRConstants.LOCATION__BOUNDARY_HIERARCHYTYPE_ADMIN, PGRConstants.LOCATION__BOUNDARY_BOUNDARYTYPE_LOCALITY);
 		if(null != userResponse) {
 			Map<Long, Citizen> userResponseMap = userResponse.getUser().parallelStream()
 					.collect(Collectors.toMap(Citizen :: getId, Function.identity()));
 			for(Service service: response.getServices()) {
-				if(!StringUtils.isEmpty(mapOfMohallaCodesAndNames.get(service.getAddressDetail().getMohalla()))) {
-					service.getAddressDetail().setLocality(mapOfMohallaCodesAndNames.get(service.getAddressDetail().getMohalla()));
-				}
 				Long id = null;
 				try {
 					id = Long.parseLong(service.getAccountId());

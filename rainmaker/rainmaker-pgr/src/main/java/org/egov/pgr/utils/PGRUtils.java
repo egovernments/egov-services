@@ -84,6 +84,12 @@ public class PGRUtils {
 
 	@Value("${egov.user.search.endpoint}")
 	private String egovUserSearchEndpoint;
+	
+	@Value("${egov.location.host}")
+	private String locationHost;
+
+	@Value("${egov.location.search.endpoint}")
+	private String locationSearchEndpoint;
 
 	@Autowired
 	private ResponseInfoFactory factory;
@@ -327,6 +333,17 @@ public class PGRUtils {
 		requestInfoWrapper.setRequestInfo(requestInfo);
 		uri.append(localizationHost).append(localizationSearchEndpoint).append("?tenantId=" + tenantId)
 				.append("&module=" + module).append("&locale=" + locale);
+
+		return requestInfoWrapper;
+	}
+	
+	public RequestInfoWrapper prepareRequestForLocation(StringBuilder uri, RequestInfo requestInfo, String boundaryType,
+			String tenantId, String hierarchyType, List<String> mohallaCodes) {
+		RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
+		requestInfoWrapper.setRequestInfo(requestInfo);
+		String codes = mohallaCodes.toString().substring(1, mohallaCodes.toString().length() - 1);
+		uri.append(locationHost).append(locationSearchEndpoint).append("?tenantId=" + tenantId)
+				.append("&hierarchyTypeCode=" + hierarchyType).append("&boundaryType=" + boundaryType).append("&codes=" + codes);
 
 		return requestInfoWrapper;
 	}

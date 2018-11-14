@@ -15,6 +15,7 @@ import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.request.Role;
 import org.egov.common.contract.request.User;
 import org.egov.mdms.model.MdmsCriteriaReq;
+import org.egov.pgr.contract.Address;
 import org.egov.pgr.contract.CountResponse;
 import org.egov.pgr.contract.IdResponse;
 import org.egov.pgr.contract.RequestInfoWrapper;
@@ -354,7 +355,7 @@ public class GrievanceService {
 		if(CollectionUtils.isEmpty(serviceResponse.getServices()))
 			return serviceResponse;
 		else
-			return enrichSearchResWithUserInfo(requestInfo, serviceResponse);
+			return enrichResult(requestInfo, serviceResponse);
 	}
 
 	/**
@@ -619,26 +620,29 @@ public class GrievanceService {
 	
 	/**
 	 * This method populates timeline information of the service request with user details of the actors on the complaint
+	 * This method populates the locality field of the addressDetail object with name of the mohalla.
 	 * 
 	 * @param requestInfo
 	 * @param response
 	 * @return
 	 */
-	public ServiceResponse enrichSearchResWithUserInfo(RequestInfo requestInfo, ServiceResponse response) {
-		List<Long> userIds = response.getServices().parallelStream()
-				.map(a -> {
-					try {
-						return Long.parseLong(a.getAccountId());
-					}catch(Exception e) {
-						return null;
-					}
+	public ServiceResponse enrichResult(RequestInfo requestInfo, ServiceResponse response) {
+		List<Long> userIds = response.getServices().parallelStream().map(a -> {
+					try {return Long.parseLong(a.getAccountId());}catch(Exception e) {return null;}
 				}).collect(Collectors.toList());
+		List<Address> addresses = response.getServices().parallelStream().map(Service :: getAddressDetail).collect(Collectors.toList());
+		List<String> mohallaCodes = addresses.parallelStream().map(Address :: getMohalla).collect(Collectors.toList());
 		String tenantId = response.getServices().get(0).getTenantId().split("[.]")[0]; //citizen is state-level no point in sending ulb level tenant.
 		UserResponse userResponse = getUsers(requestInfo, tenantId, userIds);
+		Map<String, String> mapOfMohallaCodesAndNames = getMohallNames(requestInfo, response.getServices().get(0).getTenantId(), mohallaCodes, 
+				PGRConstants.LOCATION__BOUNDARY_HIERARCHYTYPE_ADMIN, PGRConstants.LOCATION__BOUNDARY_BOUNDARYTYPE_LOCALITY);
 		if(null != userResponse) {
 			Map<Long, Citizen> userResponseMap = userResponse.getUser().parallelStream()
 					.collect(Collectors.toMap(Citizen :: getId, Function.identity()));
 			for(Service service: response.getServices()) {
+				if(!StringUtils.isEmpty(mapOfMohallaCodesAndNames.get(service.getAddressDetail().getMohalla()))) {
+					service.getAddressDetail().setLocality(mapOfMohallaCodesAndNames.get(service.getAddressDetail().getMohalla()));
+				}
 				Long id = null;
 				try {
 					id = Long.parseLong(service.getAccountId());
@@ -674,6 +678,35 @@ public class GrievanceService {
 			return null;
 		}
 		
+	}
+	
+	/**
+	 * Method fetches a map of code vs name of the boundary types as per the request.
+	 * 
+	 * @param requestInfo
+	 * @param tenantId
+	 * @param mohallaCodes
+	 * @param hierarchyType
+	 * @param boundaryType
+	 * @return
+	 */
+	public Map<String, String> getMohallNames(RequestInfo requestInfo, String tenantId, List<String> mohallaCodes, String hierarchyType, String boundaryType){
+		StringBuilder uri = new StringBuilder();
+		RequestInfoWrapper request = pGRUtils.prepareRequestForLocation(uri, requestInfo, boundaryType, tenantId, hierarchyType, mohallaCodes);
+		Map<String, String> map = new HashMap<>();
+		try {
+			Object response = serviceRequestRepository.fetchResult(uri, request);
+			if(null != response) {
+				List<String> names = JsonPath.read(response, PGRConstants.LOCATION__BOUNDARY_NAMES_JSONPATH);
+				List<String> codes = JsonPath.read(response, PGRConstants.LOCATION__BOUNDARY_CODES_JSONPATH);
+				for(int i = 0; i < names.size(); i++) {
+					map.put(names.get(i), codes.get(i));
+				}
+			}
+		}catch(Exception e) {
+			log.error("Couldn't fetch mohalla names: "+e);
+		}
+		return map;
 	}
 
 }

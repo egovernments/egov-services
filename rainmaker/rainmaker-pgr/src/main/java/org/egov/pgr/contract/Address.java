@@ -26,6 +26,9 @@ public class Address {
 	@NotNull
 	@JsonProperty("mohalla")
 	public String mohalla;
+	
+	@JsonProperty("locality")
+	public String locality;
 
 	@NotNull
 	@JsonProperty("city")

@@ -40,16 +40,7 @@
 
 package org.egov.access.persistence.repository;
 
-import java.io.UnsupportedEncodingException;
-import java.sql.Date;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
-
+import com.jayway.jsonpath.JsonPath;
 import org.egov.access.domain.model.Action;
 import org.egov.access.persistence.repository.querybuilder.ActionQueryBuilder;
 import org.egov.access.persistence.repository.rowmapper.ActionSearchRowMapper;
@@ -74,8 +65,10 @@ import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.client.RestTemplate;
 
-
-import com.jayway.jsonpath.JsonPath;
+import java.io.UnsupportedEncodingException;
+import java.sql.Date;
+import java.util.*;
+import java.util.Map.Entry;
 
 @Repository
 public class ActionRepository {
@@ -528,8 +521,6 @@ public List<Action> getAllMDMSActions(ActionRequest actionRequest) throws JSONEx
 		
 		rFilter = rFilter.replaceAll("\\$rolecode", rolecodelist.toString());
 		MdmsCriteriaReq mcq = getRoleActionMDMSCriteria(actionRequest, rFilter);
-		LOGGER.info("Role Filter: "+rFilter.toString());
-		LOGGER.info("The URL is: "+ url);
 		
 		try {
 		res = restTemplate.postForObject(url, mcq, String.class);
@@ -539,7 +530,6 @@ public List<Action> getAllMDMSActions(ActionRequest actionRequest) throws JSONEx
 
 		Object jsonObject = JsonPath.read(res,roleActionPath);
 		JSONArray mdmsArray = new JSONArray(jsonObject.toString());
-		LOGGER.info("Role Action ID from MDMS: "+jsonObject.toString());
 		StringBuffer actionids = new StringBuffer();
 		for (int i = 0; i < mdmsArray.length(); i++) {
 			
@@ -549,10 +539,8 @@ public List<Action> getAllMDMSActions(ActionRequest actionRequest) throws JSONEx
 				actionids.append(",");
 			
 		}
-		LOGGER.info("Action Id is "+actionids.toString());
 		actFilter = actFilter.replaceAll("\\$actionid", actionids.toString());
 		actSearchFilter = actSearchFilter.replaceAll("\\$actionid", actionids.toString());
-		System.out.println("The Value of eanbled is "+enabled);
 		actFilter = actFilter.replaceAll("\\$enabled", enabled.toString());
 		
 
@@ -564,7 +552,6 @@ public List<Action> getAllMDMSActions(ActionRequest actionRequest) throws JSONEx
 			MdmsCriteria actionmc = new MdmsCriteria();
 			 if(tenantid.contains(".")){
 				 String[] stateid = tenantid.split("\\.");
-				 LOGGER.info("State IDs are :"+stateid);
 				 actionmc.setTenantId(stateid[0]);
 				 
 			 } else {
@@ -572,11 +559,9 @@ public List<Action> getAllMDMSActions(ActionRequest actionRequest) throws JSONEx
 				 
 			 }
 			 if(actionRequest.getEnabled() != null){
-				 LOGGER.info("Filter is enabled not null "+actFilter); 
 			getMdmsActionCriteria(actionRequest, actFilter, actionmcq, actionmasterDetails, actionmoduleDetail,
 					actionmc);
 			 } else {
-				 LOGGER.info("Filter is enabled null"+actSearchFilter);
 				 getMdmsActionCriteria(actionRequest, actSearchFilter, actionmcq, actionmasterDetails, actionmoduleDetail,
 							actionmc); 
 			 }
@@ -591,7 +576,6 @@ public List<Action> getAllMDMSActions(ActionRequest actionRequest) throws JSONEx
 		
 		
 		Object action  = JsonPath.read(actionres,jsonpath);
-		LOGGER.info("Actions from MDMS: "+action.toString());
 		
 		JSONArray actionsArray = new JSONArray();
 		actionsArray = new JSONArray(action.toString());

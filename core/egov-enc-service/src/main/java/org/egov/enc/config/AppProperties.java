@@ -26,6 +26,10 @@ public class AppProperties {
 
     private String masterInitialVector;
 
+    private String symmetricMethod;
+
+    private String asymmetricMethod;
+
     @Autowired
     public AppProperties(Environment environment) {
         this.symmetricKeySize = Integer.parseInt(environment.getRequiredProperty("size.key.symmetric"));
@@ -33,6 +37,8 @@ public class AppProperties {
         this.masterPassword = environment.getRequiredProperty("master.password");
         this.masterSalt = environment.getRequiredProperty("master.salt");
         this.masterInitialVector = environment.getRequiredProperty("master.initialvector");
+        this.symmetricMethod = environment.getRequiredProperty("method.symmetric");
+        this.asymmetricMethod = environment.getRequiredProperty("method.asymmetric");
     }
 
 }

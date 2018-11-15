@@ -594,6 +594,7 @@ public class GrievanceService {
 				if (!CollectionUtils.isEmpty(media))
 					fileStoreIds.addAll(media);
 			}));
+			log.info("historyList: "+historyList);
 			Map<String, String> computeUriIdMap = new HashMap<>();
 			try {
 				computeUriIdMap = fileStoreRepo.getUrlMaps(tenantId.split("\\.")[0], fileStoreIds);
@@ -601,20 +602,25 @@ public class GrievanceService {
 				log.error(" exception while connecting to filestore : " + e);
 			}
 			final Map<String, String> urlIdMap = computeUriIdMap;
+			log.info("urlIdMap: "+urlIdMap);
 			if(!CollectionUtils.isEmpty(urlIdMap.keySet())) {
 				historyList.parallelStream().forEach(history -> {
-					history.getActions().parallelStream().forEach(action -> {
-						List<String> mediaList = new ArrayList<>();
-						action.getMedia().forEach(media -> {
-							media = StringUtils.isEmpty(urlIdMap.get(media)) ? media : urlIdMap.get(media);
-							mediaList.add(media);
+					if(null != history) {
+						history.getActions().parallelStream().forEach(action -> {
+							if(null != action) {
+								List<String> mediaList = new ArrayList<>();
+								action.getMedia().forEach(media -> {
+									media = StringUtils.isEmpty(urlIdMap.get(media)) ? media : urlIdMap.get(media);
+									mediaList.add(media);
+								});
+								action.setMedia(mediaList);
+							}
 						});
-						action.setMedia(mediaList);
-					});
+					}
 				});
 			}
 		} catch (Exception e) {
-			log.error("Exception while replacing s3 links: " + e);
+			log.error("Exception while replacing s3 links: ", e);
 		}
 	}
 	

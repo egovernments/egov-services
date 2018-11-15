@@ -90,6 +90,9 @@ public class PGRUtils {
 
 	@Value("${egov.location.search.endpoint}")
 	private String locationSearchEndpoint;
+	
+	@Value("${are.inactive.complaintcategories.enabled}")
+	private Boolean areInactiveComplaintCategoriesEnabled;	
 
 	@Autowired
 	private ResponseInfoFactory factory;
@@ -124,7 +127,10 @@ public class PGRUtils {
 		depts.append("]");
 		MasterDetail masterDetail = org.egov.mdms.model.MasterDetail.builder()
 				.name(PGRConstants.MDMS_SERVICETYPE_MASTER_NAME)
-				.filter("[?((@.department IN " + depts.toString() + ") && (@.active == true))]").build();
+				.filter("[?(@.department IN " + depts.toString() + ")]").build();
+		if(!areInactiveComplaintCategoriesEnabled) {
+			masterDetail.setFilter("[?((@.department IN " + depts.toString() + ") && (@.active == true))]");
+		}
 		List<MasterDetail> masterDetails = new ArrayList<>();
 		masterDetails.add(masterDetail);
 		ModuleDetail moduleDetail = ModuleDetail.builder().moduleName(PGRConstants.MDMS_PGR_MOD_NAME)
@@ -166,7 +172,10 @@ public class PGRUtils {
 		uri.append(mdmsHost).append(mdmsEndpoint);
 		MasterDetail masterDetail = org.egov.mdms.model.MasterDetail.builder()
 				.name(PGRConstants.MDMS_SERVICETYPE_MASTER_NAME)
-				.filter("[?((@.serviceCode=='" + serviceCode + "') && (@.active == true))]").build();
+				.filter("[?(@.serviceCode=='" + serviceCode + "')]").build();
+		if(!areInactiveComplaintCategoriesEnabled) {
+			masterDetail.setFilter("[?((@.serviceCode=='" + serviceCode + "') && (@.active == true))]");
+		}
 		List<MasterDetail> masterDetails = new ArrayList<>();
 		masterDetails.add(masterDetail);
 		ModuleDetail moduleDetail = ModuleDetail.builder().moduleName(PGRConstants.MDMS_PGR_MOD_NAME)
@@ -192,7 +201,10 @@ public class PGRUtils {
 
 		MasterDetail masterDetail = org.egov.mdms.model.MasterDetail.builder()
 				.name(PGRConstants.MDMS_SERVICETYPE_MASTER_NAME)
-				.filter("[?((@." + fieldName + " IN " + values + ") && ?(@.active == true))]." + PGRConstants.SERVICE_CODES).build();
+				.filter("[?(@." + fieldName + " IN " + values + ")]." + PGRConstants.SERVICE_CODES).build();
+		if(!areInactiveComplaintCategoriesEnabled) {
+			masterDetail.setFilter("[?((@." + fieldName + " IN " + values + ") && (@.active == true))]." + PGRConstants.SERVICE_CODES);
+		}
 		List<MasterDetail> masterDetails = new ArrayList<>();
 		masterDetails.add(masterDetail);
 		ModuleDetail moduleDetail = ModuleDetail.builder().moduleName(PGRConstants.MDMS_PGR_MOD_NAME)
@@ -307,8 +319,10 @@ public class PGRUtils {
 		uri.append(mdmsHost).append(mdmsEndpoint);
 		MasterDetail masterDetail = org.egov.mdms.model.MasterDetail.builder()
 				.name(PGRConstants.MDMS_SERVICETYPE_MASTER_NAME)
-				.filter("[?(@.active == true)]")
 				.build();
+		if(!areInactiveComplaintCategoriesEnabled) {
+			masterDetail.setFilter("[?(@.active == true)]");
+		}		
 		List<MasterDetail> masterDetails = new ArrayList<>();
 		masterDetails.add(masterDetail);
 		ModuleDetail moduleDetail = ModuleDetail.builder().moduleName(PGRConstants.MDMS_PGR_MOD_NAME)

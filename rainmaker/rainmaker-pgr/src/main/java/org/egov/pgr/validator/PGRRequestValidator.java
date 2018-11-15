@@ -6,7 +6,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -72,6 +71,9 @@ public class PGRRequestValidator {
 	@Value("${egov.default.expiry.time.before.reopen.in.hours}")
 	private Long defaultExpiryTimeBeforeReopen;
 	
+	@Value("${is.update.on.inactive.categories.enabled}")
+	private Boolean isUpdateOnInactiveCategoriessEnabled;
+	
 	
 	/**
 	 * validates the create Request based on the following cirtera:
@@ -111,7 +113,9 @@ public class PGRRequestValidator {
 		Map<String, String> errorMap = new HashMap<>();
 		validateDataSanity(serviceRequest, errorMap, false);
 		validateIfArraysEqual(serviceRequest, errorMap);
-		vaidateServiceCodes(serviceRequest, errorMap);
+		if(!isUpdateOnInactiveCategoriessEnabled) {
+			vaidateServiceCodes(serviceRequest, errorMap);
+		}
 		validateAssignments(serviceRequest, errorMap);
 		validateAction(serviceRequest, errorMap);
 		if (!errorMap.isEmpty())

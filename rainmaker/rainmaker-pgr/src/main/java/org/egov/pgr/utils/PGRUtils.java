@@ -124,7 +124,7 @@ public class PGRUtils {
 		depts.append("]");
 		MasterDetail masterDetail = org.egov.mdms.model.MasterDetail.builder()
 				.name(PGRConstants.MDMS_SERVICETYPE_MASTER_NAME)
-				.filter("[?(@.department IN " + depts.toString() + ")]").build();
+				.filter("[?((@.department IN " + depts.toString() + ") && (@.active == true))]").build();
 		List<MasterDetail> masterDetails = new ArrayList<>();
 		masterDetails.add(masterDetail);
 		ModuleDetail moduleDetail = ModuleDetail.builder().moduleName(PGRConstants.MDMS_PGR_MOD_NAME)
@@ -166,7 +166,7 @@ public class PGRUtils {
 		uri.append(mdmsHost).append(mdmsEndpoint);
 		MasterDetail masterDetail = org.egov.mdms.model.MasterDetail.builder()
 				.name(PGRConstants.MDMS_SERVICETYPE_MASTER_NAME)
-				.filter("[?(@.serviceCode=='" + serviceCode + "')]").build();
+				.filter("[?((@.serviceCode=='" + serviceCode + "') && (@.active == true))]").build();
 		List<MasterDetail> masterDetails = new ArrayList<>();
 		masterDetails.add(masterDetail);
 		ModuleDetail moduleDetail = ModuleDetail.builder().moduleName(PGRConstants.MDMS_PGR_MOD_NAME)
@@ -192,7 +192,7 @@ public class PGRUtils {
 
 		MasterDetail masterDetail = org.egov.mdms.model.MasterDetail.builder()
 				.name(PGRConstants.MDMS_SERVICETYPE_MASTER_NAME)
-				.filter("[?(@." + fieldName + " IN " + values + ")]." + PGRConstants.SERVICE_CODES).build();
+				.filter("[?((@." + fieldName + " IN " + values + ") && ?(@.active == true))]." + PGRConstants.SERVICE_CODES).build();
 		List<MasterDetail> masterDetails = new ArrayList<>();
 		masterDetails.add(masterDetail);
 		ModuleDetail moduleDetail = ModuleDetail.builder().moduleName(PGRConstants.MDMS_PGR_MOD_NAME)
@@ -306,7 +306,9 @@ public class PGRUtils {
 	public MdmsCriteriaReq prepareServiceDefSearchMdmsRequest(StringBuilder uri, String tenantId, RequestInfo requestInfo) {
 		uri.append(mdmsHost).append(mdmsEndpoint);
 		MasterDetail masterDetail = org.egov.mdms.model.MasterDetail.builder()
-				.name(PGRConstants.MDMS_SERVICETYPE_MASTER_NAME).build();
+				.name(PGRConstants.MDMS_SERVICETYPE_MASTER_NAME)
+				.filter("[?(@.active == true)]")
+				.build();
 		List<MasterDetail> masterDetails = new ArrayList<>();
 		masterDetails.add(masterDetail);
 		ModuleDetail moduleDetail = ModuleDetail.builder().moduleName(PGRConstants.MDMS_PGR_MOD_NAME)

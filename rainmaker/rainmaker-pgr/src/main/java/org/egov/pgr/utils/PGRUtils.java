@@ -512,6 +512,7 @@ public class PGRUtils {
 			Object result = serviceRequestRepository.fetchResult(uri, criteriaReq);
 			return JsonPath.read(result, PGRConstants.JSONPATH_SERVICEDEFS);
 		} catch (Exception e) {
+			log.info("Exception while fetching serviceDefs: ",e);
 			throw new CustomException(ErrorConstants.INVALID_TENANT_ID_MDMS_SERVICE_CODE_KEY,
 					ErrorConstants.INVALID_TENANT_ID_MDMS_SERVICE_CODE_MSG);
 		}

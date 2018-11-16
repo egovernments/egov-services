@@ -5,6 +5,7 @@ This doc contains the changes done in the rainmaker-pgr service for the v1.1 rel
 Note - The artifact id of this service is updated to 0.0.2-SNAPSHOT from 0.0.1-SNAPSHOT. The updates listed below are part of 0.0.2-SNAPSHOT.
 
 **PRD**: https://docs.google.com/document/d/1eQr1qOz6Dz6uy_ki20BKCMTePbiY5T4WNFnQqU8hA4o/edit
+
 **Task List**: https://docs.google.com/spreadsheets/d/1rpaZz3Fi_D1rMboM47G-FgwGT5B-HDPmEXtaENMq7L8/edit#gid=1549455843
 
 **Changes in pom.xml:**
@@ -106,5 +107,6 @@ Note - The artifact id of this service is updated to 0.0.2-SNAPSHOT from 0.0.1-S
 3. A new flag 'active' is added in the ServiceDefs.json to support activation and deactivation of complaint categories.
 4. 'are.inactive.complaintcategories.enabled' boolean key has been added. If it is true, validation of servicecodes will check for both active and inactive complaint categories, if it is false validation of servicecodes will check for only active complaint categories
 5. 'is.update.on.inactive.categories.enabled' boolean key has been added. If it is true, validation of servicecodes will be disabled for update flow. if it is false, validation of servicecodes happens for the update flow.
+
     **Why?:**
         The key (a) has been added to support the functionality of searching servicodes as per the need. The key (b) is added because, v1.1 came up with a feature of disabling 'NoStreetlight' caategory from the system. However, there were a few complaints already filed under this category, if we mark all these complaints as invalid, it would be a bad UX to the users who have filed these complaints suddenly dissapear from their inbox. Therefore, the product decision was to allow these old complaints to go through the normal workflow but creating any new complaints under this category should be disabled. Since 'NoStreetlight' is marked as an inactive category in MDMS, if validation of servicecodes was allowed for update, no update could be performed on the old complaints. Also, bypassing the validation for update is wrong, therefore a boolean flag is added to enable and disable it 

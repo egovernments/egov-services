@@ -590,11 +590,16 @@ public class GrievanceService {
 		try {
 			String tenantId = historyList.get(0).getActions().get(0).getTenantId();
 			List<String> fileStoreIds = new ArrayList<>();
-			historyList.forEach(history -> history.getActions().forEach(action -> {
-				List<String> media = action.getMedia();
-				if (!CollectionUtils.isEmpty(media))
-					fileStoreIds.addAll(media);
-			}));
+			historyList.parallelStream().forEach(history -> {
+			if(null != history) {
+				history.getActions().parallelStream().forEach(action -> {
+					if(null != action) {
+						List<String> media = action.getMedia();
+						if (!CollectionUtils.isEmpty(media))
+							fileStoreIds.addAll(media);
+					}
+				});
+			}});
 			Map<String, String> computeUriIdMap = new HashMap<>();
 			try {
 				computeUriIdMap = fileStoreRepo.getUrlMaps(tenantId.split("\\.")[0], fileStoreIds);

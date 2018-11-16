@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 import java.util.function.Function;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
@@ -651,8 +652,14 @@ public class GrievanceService {
 					try {return Long.parseLong(a.getAccountId());}catch(Exception e) {return null;} }).collect(Collectors.toList());
 		List<Address> addresses = response.getServices().parallelStream().map(Service :: getAddressDetail).collect(Collectors.toList());
 		Map<String, String> mapOfMohallaCodesAndNames = new HashMap<>();
+		/**
+		 * Populating locality field.
+		 */
 		if(!CollectionUtils.isEmpty(addresses)) {
 			Map<String, List<String>> mapOfTenantIdAndMohallaCodes = new HashMap<>();
+			/**
+			 * When CSR searches, complaints in the result belong to multiple tenants. Inorder to populate mohalla value, we need tenant of every complaint.
+			 */
 			for(Address address: addresses) {
 				if(null != address) {
 					if(CollectionUtils.isEmpty(mapOfTenantIdAndMohallaCodes.get(address.getTenantId()))){
@@ -666,14 +673,18 @@ public class GrievanceService {
 					}
 				}
 			}
-			Set<String> tenantIds = addresses.parallelStream().map(Address :: getTenantId).collect(Collectors.toSet());
+			Set<String> tenantIds = addresses.parallelStream().map(obj -> {
+				if(null != obj)  return obj.getTenantId(); else return null;
+			}).collect(Collectors.toSet());
 			for(String tenantId: tenantIds) {
-				Map<String, String> tenantWiseMap = new HashMap<>();
-				if(!CollectionUtils.isEmpty(mapOfTenantIdAndMohallaCodes.get(tenantId))) {
-					tenantWiseMap = getMohallNames(requestInfo, tenantId, mapOfTenantIdAndMohallaCodes.get(tenantId), 
-							PGRConstants.LOCATION__BOUNDARY_HIERARCHYTYPE_ADMIN, PGRConstants.LOCATION__BOUNDARY_BOUNDARYTYPE_LOCALITY);
+				if(!StringUtils.isEmpty(tenantId)) {
+					Map<String, String> tenantWiseMap = new HashMap<>();
+					if(!CollectionUtils.isEmpty(mapOfTenantIdAndMohallaCodes.get(tenantId))) {
+						tenantWiseMap = getMohallNames(requestInfo, tenantId, mapOfTenantIdAndMohallaCodes.get(tenantId), 
+								PGRConstants.LOCATION__BOUNDARY_HIERARCHYTYPE_ADMIN, PGRConstants.LOCATION__BOUNDARY_BOUNDARYTYPE_LOCALITY);
+					}
+					mapOfMohallaCodesAndNames.putAll(tenantWiseMap);
 				}
-				mapOfMohallaCodesAndNames.putAll(tenantWiseMap);
 			}
 		}
 		if(!CollectionUtils.isEmpty(mapOfMohallaCodesAndNames.keySet())) {

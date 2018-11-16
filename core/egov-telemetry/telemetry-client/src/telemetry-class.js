@@ -34,7 +34,11 @@ class ConfigData {
       stageid: "",
       duration: "0"
     };
-    this.options = {};
+    this.options = {
+      actor: {
+        id: getUserUUID()
+      }
+    };
   }
 }
 

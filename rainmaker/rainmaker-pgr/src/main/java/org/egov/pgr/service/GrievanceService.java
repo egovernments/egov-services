@@ -592,13 +592,16 @@ public class GrievanceService {
 			List<String> fileStoreIds = new ArrayList<>();
 			historyList.parallelStream().forEach(history -> {
 			if(null != history) {
-				history.getActions().parallelStream().forEach(action -> {
-					if(null != action) {
-						List<String> media = action.getMedia();
-						if (!CollectionUtils.isEmpty(media))
-							fileStoreIds.addAll(media);
-					}
-				});
+				List<ActionInfo> actions = history.getActions();
+				if(!CollectionUtils.isEmpty(actions)) {
+					actions.parallelStream().forEach(action -> {
+						if(null != action) {
+							List<String> media = action.getMedia();
+							if (!CollectionUtils.isEmpty(media))
+								fileStoreIds.addAll(media);
+						}
+					});
+				}
 			}});
 			Map<String, String> computeUriIdMap = new HashMap<>();
 			try {
@@ -651,14 +654,16 @@ public class GrievanceService {
 		if(!CollectionUtils.isEmpty(addresses)) {
 			Map<String, List<String>> mapOfTenantIdAndMohallaCodes = new HashMap<>();
 			for(Address address: addresses) {
-				if(CollectionUtils.isEmpty(mapOfTenantIdAndMohallaCodes.get(address.getTenantId()))){
-					List<String> mohCodes = new ArrayList();
-					mohCodes.add(address.getMohalla());
-					mapOfTenantIdAndMohallaCodes.put(address.getTenantId(), mohCodes);
-				}else {
-					List<String> codes = mapOfTenantIdAndMohallaCodes.get(address.getTenantId());
-					codes.add(address.getMohalla());
-					mapOfTenantIdAndMohallaCodes.put(address.getTenantId(), codes);
+				if(null != address) {
+					if(CollectionUtils.isEmpty(mapOfTenantIdAndMohallaCodes.get(address.getTenantId()))){
+						List<String> mohCodes = new ArrayList();
+						mohCodes.add(address.getMohalla());
+						mapOfTenantIdAndMohallaCodes.put(address.getTenantId(), mohCodes);
+					}else {
+						List<String> codes = mapOfTenantIdAndMohallaCodes.get(address.getTenantId());
+						codes.add(address.getMohalla());
+						mapOfTenantIdAndMohallaCodes.put(address.getTenantId(), codes);
+					}
 				}
 			}
 			Set<String> tenantIds = addresses.parallelStream().map(Address :: getTenantId).collect(Collectors.toSet());

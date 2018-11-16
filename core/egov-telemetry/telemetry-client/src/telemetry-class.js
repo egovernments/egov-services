@@ -29,7 +29,7 @@ class ConfigData {
     this.content_id = "1";
     this.content_ver = "1.0";
     this.data = {
-      type: "page",
+      type: "",
       mode: "",
       stageid: "",
       duration: "0"
@@ -42,7 +42,11 @@ class ConfigData {
 class TelemetryData {
   constructor() {
     this.data = {};
-    this.options = {};
+    this.options = {
+      actor: {
+        id: getUserUUID()
+      }
+    };
   }
 }
 
@@ -297,7 +301,7 @@ class BaseTelemetry {
   summary(inputData, inputOptions) {
     var data = this.addDefaultData(inputData);
     var options = this.addDefaultOptions(inputOptions);
-    this.addType(data);
+    this.addBaseInfo(data);
     this.timeTracker.pause();
     this.timeTracker.addSummary(data);
     EkTelemetry.summary(data, options);
@@ -306,7 +310,7 @@ class BaseTelemetry {
   end(inputData, inputOptions) {
     var data = this.addDefaultData(inputData);
     var options = this.addDefaultOptions(options);
-    this.addType(data);
+    this.addBaseInfo(data);
     EkTelemetry.end(data, options);
   }
 }

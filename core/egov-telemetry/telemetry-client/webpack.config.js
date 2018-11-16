@@ -3,7 +3,7 @@ const path = require("path");
 module.exports = {
   entry: "./src/egov-telemetry.js",
   output: {
-    filename: "egov-telemetry-1540882842.js",
+    filename: "egov-telemetry-1542366346.js",
     path: path.resolve(__dirname, "build")
   },
   module: {

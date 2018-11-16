@@ -1,16 +1,9 @@
 package org.egov;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.URL;
-import java.net.URLConnection;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.annotation.PostConstruct;
-
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.MapperFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import org.egov.domain.model.ReportDefinitions;
 import org.egov.swagger.model.ReportDefinition;
 import org.slf4j.Logger;
@@ -26,13 +19,12 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
-import org.springframework.web.client.RestTemplate;
 
-import com.fasterxml.jackson.annotation.JsonInclude.Include;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.MapperFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
+import java.io.*;
+import java.net.URL;
+import java.net.URLConnection;
+import java.util.ArrayList;
+import java.util.List;
 
 
 
@@ -64,11 +56,8 @@ public class ReportApp implements EnvironmentAware {
 	public ReportApp(ResourceLoader resourceLoader) {
     	this.resourceLoader = resourceLoader;
     }
-    
-    @Bean
-    public RestTemplate restTemplate(){
-    	return new RestTemplate();
-    }
+
+
 	public static void main(String[] args) throws Exception {
 		SpringApplication.run(ReportApp.class, args);
 	}

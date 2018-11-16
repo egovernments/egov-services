@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -329,7 +330,6 @@ public class PGRRequestValidator {
 		String role = pgrUtils.getPrecedentRole(roles);
 		List<String> serviceCodes = new ArrayList<>();
 		if(role.equals(PGRConstants.ROLE_NAME_DGRO)) {
-			log.info("Validating for DGRO actions");
 			if(!serviceRequest.getServices().get(0).getTenantId().equals(serviceRequest.getRequestInfo().getUserInfo().getTenantId())) {
 				errorMap.put(ErrorConstants.INVALID_ACTION_FOR_GRO_CODE, ErrorConstants.INVALID_ACTION_FOR_GRO_MSG);
 			}
@@ -353,7 +353,6 @@ public class PGRRequestValidator {
 				}
 			}
 		}else if(role.equals(PGRConstants.ROLE_NAME_GRO)) {
-			log.info("Validating for GRO actions");
 			if(!serviceRequest.getServices().get(0).getTenantId().equals(serviceRequest.getRequestInfo().getUserInfo().getTenantId())) {
 				errorMap.put(ErrorConstants.INVALID_ACTION_FOR_GRO_CODE, ErrorConstants.INVALID_ACTION_FOR_GRO_MSG);
 			}
@@ -418,14 +417,16 @@ public class PGRRequestValidator {
 			/**
 			 * Code to check if the reopen happens within defaultExpiryTimeBeforeReopen no of days after resolve. 
 			 */
-/*			if(WorkFlowConfigs.ACTION_REOPEN.equals(actionInfo.getAction())) {
-				Long timeDifference = System.currentTimeMillis() - service.getAuditDetails().getCreatedTime();
+			if(WorkFlowConfigs.ACTION_REOPEN.equals(actionInfo.getAction()) && currentStatus.equals(WorkFlowConfigs.STATUS_RESOLVED)) {
+				Long timeDifference = System.currentTimeMillis() - service.getAuditDetails().getLastModifiedTime();
+				log.info("timeDifference: "+timeDifference);
+				log.info("hours: "+TimeUnit.MILLISECONDS.toHours(timeDifference));
 				if(TimeUnit.MILLISECONDS.toHours(timeDifference) > defaultExpiryTimeBeforeReopen) {
-					String error = ErrorConstants.INVALID_ACTION_REOPEN_EXPIRED_MSG.replaceAll("$days", defaultExpiryTimeBeforeReopen.toString());
+					Long days = defaultExpiryTimeBeforeReopen / 24;
+					String error = ErrorConstants.INVALID_ACTION_REOPEN_EXPIRED_MSG.replaceAll("$days", days.toString());
 					errorMap.put(ErrorConstants.INVALID_ACTION_REOPEN_EXPIRED_CODE, error);
 				}
-			}*/
-			
+			}
 			service.setStatus(StatusEnum.fromValue(currentStatus)); //This will be updated according to the action performed in service layer.
 		}		
 

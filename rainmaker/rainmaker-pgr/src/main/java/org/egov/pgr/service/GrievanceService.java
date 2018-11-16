@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -631,7 +632,7 @@ public class GrievanceService {
 	
 	/**
 	 * This method populates timeline information of the service request with user details of the actors on the complaint
-	 * This method populates the locality field of the addressDetail object with name of the mohalla.
+	 * This method populates the locality field of the addressDetail object with name (english) of the mohalla.
 	 * 
 	 * @param requestInfo
 	 * @param response
@@ -643,11 +644,26 @@ public class GrievanceService {
 		List<Address> addresses = response.getServices().parallelStream().map(Service :: getAddressDetail).collect(Collectors.toList());
 		Map<String, String> mapOfMohallaCodesAndNames = new HashMap<>();
 		if(!CollectionUtils.isEmpty(addresses)) {
-			List<String> mohallaCodes = new ArrayList<>();
-			addresses.stream().forEach(address -> { if(null != address) mohallaCodes.add(address.getMohalla()); });
-			if(!CollectionUtils.isEmpty(mohallaCodes)) {
-				mapOfMohallaCodesAndNames = getMohallNames(requestInfo, response.getServices().get(0).getTenantId(), mohallaCodes, 
-						PGRConstants.LOCATION__BOUNDARY_HIERARCHYTYPE_ADMIN, PGRConstants.LOCATION__BOUNDARY_BOUNDARYTYPE_LOCALITY);
+			Map<String, List<String>> mapOfTenantIdAndMohallaCodes = new HashMap<>();
+			for(Address address: addresses) {
+				if(CollectionUtils.isEmpty(mapOfTenantIdAndMohallaCodes.get(address.getTenantId()))){
+					List<String> mohCodes = new ArrayList();
+					mohCodes.add(address.getMohalla());
+					mapOfTenantIdAndMohallaCodes.put(address.getTenantId(), mohCodes);
+				}else {
+					List<String> codes = mapOfTenantIdAndMohallaCodes.get(address.getTenantId());
+					codes.add(address.getMohalla());
+					mapOfTenantIdAndMohallaCodes.put(address.getTenantId(), codes);
+				}
+			}
+			Set<String> tenantIds = addresses.parallelStream().map(Address :: getTenantId).collect(Collectors.toSet());
+			for(String tenantId: tenantIds) {
+				Map<String, String> tenantWiseMap = new HashMap<>();
+				if(!CollectionUtils.isEmpty(mapOfTenantIdAndMohallaCodes.get(tenantId))) {
+					tenantWiseMap = getMohallNames(requestInfo, tenantId, mapOfTenantIdAndMohallaCodes.get(tenantId), 
+							PGRConstants.LOCATION__BOUNDARY_HIERARCHYTYPE_ADMIN, PGRConstants.LOCATION__BOUNDARY_BOUNDARYTYPE_LOCALITY);
+				}
+				mapOfMohallaCodesAndNames.putAll(tenantWiseMap);
 			}
 		}
 		if(!CollectionUtils.isEmpty(mapOfMohallaCodesAndNames.keySet())) {

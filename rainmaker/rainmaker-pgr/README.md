@@ -4,10 +4,6 @@ This doc contains the changes done in the rainmaker-pgr service for the v1.1 rel
 
 Note - The artifact id of this service is updated to 0.0.2-SNAPSHOT from 0.0.1-SNAPSHOT. The updates listed below are part of 0.0.2-SNAPSHOT.
 
-**PRD**: https://docs.google.com/document/d/1eQr1qOz6Dz6uy_ki20BKCMTePbiY5T4WNFnQqU8hA4o/edit
-
-**Task List**: https://docs.google.com/spreadsheets/d/1rpaZz3Fi_D1rMboM47G-FgwGT5B-HDPmEXtaENMq7L8/edit#gid=1549455843
-
 **Changes in pom.xml:**
 1. artifact id updated to 0.0.2-SNAPSHOT from 0.0.1-SNAPSHOT
 2. tracer version updated to 1.1.5-SNAPSHOT from 1.1.4-SNAPSHOT.

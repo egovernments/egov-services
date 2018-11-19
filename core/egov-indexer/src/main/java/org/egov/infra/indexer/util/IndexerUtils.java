@@ -251,7 +251,9 @@ public class IndexerUtils {
 		StringBuilder uriForUpdateMapping = new StringBuilder();
 		uriForUpdateMapping.append(esHostUrl).append("/").append(index.getName());
 		try {
-			restTemplate.put(uriForUpdateMapping.toString(), docContext.jsonString(), Map.class);
+			logger.info("request for update: "+docContext.jsonString());
+			logger.info("url for update: "+uriForUpdateMapping.toString());
+			restTemplate.put(uriForUpdateMapping.toString(), docContext.jsonString().toString(), Map.class);
 			return "OK";
 		}catch(Exception e) {
 			logger.error("Updating mapping failed for index: "+index.getName()+" and type: "+index.getType());

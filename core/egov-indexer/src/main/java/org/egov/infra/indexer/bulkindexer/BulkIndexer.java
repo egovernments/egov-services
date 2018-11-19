@@ -74,7 +74,6 @@ public class BulkIndexer {
 			logger.error("Exception while trying to fetch index mapping from ES. Note: ES is not Down.",e);
 			return response;
 		}
-		logger.info("Index Map from ES: "+response);
 		return response;
 
 	}

@@ -420,11 +420,10 @@ public class PGRRequestValidator {
 			if(WorkFlowConfigs.ACTION_REOPEN.equals(actionInfo.getAction()) && currentStatus.equals(WorkFlowConfigs.STATUS_RESOLVED)) {
 				if(null != getLastModifiedTime(service, history)) {
 					Long timeDifference = new Date().getTime() - getLastModifiedTime(service, history);
-					log.info("timeDifference: "+timeDifference);
-					log.info("hours: "+TimeUnit.MILLISECONDS.toHours(timeDifference));
 					if(TimeUnit.MILLISECONDS.toHours(timeDifference) > defaultExpiryTimeBeforeReopen) {
 						Long days = defaultExpiryTimeBeforeReopen / 24;
-						String error = ErrorConstants.INVALID_ACTION_REOPEN_EXPIRED_MSG.replaceAll("$days", days.toString());
+						String error = ErrorConstants.INVALID_ACTION_REOPEN_EXPIRED_MSG;
+						error = error.replaceAll("$days", days.toString());
 						errorMap.put(ErrorConstants.INVALID_ACTION_REOPEN_EXPIRED_CODE, error);
 					}
 					

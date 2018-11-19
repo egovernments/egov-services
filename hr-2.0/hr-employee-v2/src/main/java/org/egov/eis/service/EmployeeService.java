@@ -433,7 +433,8 @@ public class EmployeeService {
 		if (!isEmpty(employee.getAprDetails())) {
 			aprDetailRepository.save(employeeRequest);
 		}
-
+		kafkaTemplate.send(propertiesManager.getFinanceEmployeeTopic(),
+				propertiesManager.getFinanceEmployeeKey(), employeeRequest);
 		/*
 		 * EmployeeSync employeeSync =
 		 * EmployeeSync.builder().code(employee.getCode()).tenantId(employee.

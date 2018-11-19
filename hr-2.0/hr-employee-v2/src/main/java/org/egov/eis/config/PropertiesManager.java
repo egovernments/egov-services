@@ -54,6 +54,9 @@ public class PropertiesManager {
 
     @Value("${kafka.topics.employee.savedb.name}")
     private String saveEmployeeTopic;
+    
+    @Value("${kafka.topics.employee.finance.name}")
+    private String financeEmployeeTopic;
 
     @Value("${kafka.topics.employee.updatedb.name}")
     private String updateEmployeeTopic;
@@ -61,6 +64,9 @@ public class PropertiesManager {
     @Value("${kafka.topics.employee.savedb.key}")
     private String employeeSaveKey;
 
+    @Value("${kafka.topics.employee.finance.key}")
+    private String financeEmployeeKey;
+    
     @Value("${kafka.topics.nominee.savedb.name}")
     private String saveNomineeTopic;
 

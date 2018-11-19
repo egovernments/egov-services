@@ -23,7 +23,6 @@ import org.egov.pgr.model.ActionInfo;
 import org.egov.pgr.model.Service;
 import org.egov.pgr.model.Service.StatusEnum;
 import org.egov.pgr.service.GrievanceService;
-import org.egov.pgr.service.NotificationService;
 import org.egov.pgr.service.ReportService;
 import org.egov.pgr.utils.ErrorConstants;
 import org.egov.pgr.utils.PGRConstants;
@@ -50,9 +49,6 @@ public class PGRRequestValidator {
 	
 	@Autowired
 	private ReportService reportService;
-	
-	@Autowired
-	private NotificationService notificationService;
 
 	@Value("${egov.mdms.host}")
 	private String mdmsHost;
@@ -418,7 +414,8 @@ public class PGRRequestValidator {
 			 * Code to check if the reopen happens within defaultExpiryTimeBeforeReopen no of days after resolve. 
 			 */
 			if(WorkFlowConfigs.ACTION_REOPEN.equals(actionInfo.getAction()) && currentStatus.equals(WorkFlowConfigs.STATUS_RESOLVED)) {
-				Long timeDifference = System.currentTimeMillis() - service.getAuditDetails().getLastModifiedTime();
+				log.info(service.toString());
+				Long timeDifference = new Date().getTime() - service.getAuditDetails().getLastModifiedTime();
 				log.info("timeDifference: "+timeDifference);
 				log.info("hours: "+TimeUnit.MILLISECONDS.toHours(timeDifference));
 				if(TimeUnit.MILLISECONDS.toHours(timeDifference) > defaultExpiryTimeBeforeReopen) {

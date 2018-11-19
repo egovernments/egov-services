@@ -697,6 +697,9 @@ public class GrievanceService {
 			}
 			
 		}
+		/**
+		 * User details enrichment
+		 */
 		String tenantId = response.getServices().get(0).getTenantId().split("[.]")[0]; //citizen is state-level no point in sending ulb level tenant.
 		UserResponse userResponse = getUsers(requestInfo, tenantId, userIds);
 		if(null != userResponse) {

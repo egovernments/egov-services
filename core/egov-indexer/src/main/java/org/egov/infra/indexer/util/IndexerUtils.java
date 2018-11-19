@@ -247,7 +247,7 @@ public class IndexerUtils {
 		Object allMappingsForIndex = JsonPath.read(indexMapping, "$."+index.getName());
 		DocumentContext docContext = JsonPath.parse(allMappingsForIndex);
 		docContext.put("$.mappings."+index.getType(), "dynamic", "true");*/
-		String requestTwo = "{\"index.mapper.dynamic\": true}";
+		String requestTwo = "{\"index.mapping.ignore_malformed\": true}";
 		StringBuilder uriForUpdateMapping = new StringBuilder();
 		uriForUpdateMapping.append(esHostUrl).append(index.getName()).append("/_settings");
 		try {

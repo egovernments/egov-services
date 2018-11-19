@@ -713,7 +713,6 @@ public class GrievanceService {
 				service.setCitizen(userResponseMap.get(id));
 			}
 		}
-		log.info("response for lmt debug: "+response);
 		return response;
 	}
 	

@@ -5,6 +5,8 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+import javax.swing.text.Document;
+
 import org.apache.commons.lang3.StringUtils;
 import org.egov.infra.indexer.bulkindexer.BulkIndexer;
 import org.egov.infra.indexer.consumer.KafkaConsumerConfig;
@@ -21,6 +23,7 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
 
 @Service
@@ -201,7 +204,7 @@ public class IndexerUtils {
 	
 	public void doIndexing(String finalJson, String url, Index index) throws Exception{
 		if(finalJson.startsWith("{ \"index\""))
-			bulkIndexer.indexJsonOntoES(url.toString(), finalJson);
+			bulkIndexer.indexJsonOntoES(url.toString(), finalJson, index);
 		else{
 			indexWithESId(index, finalJson);
 		}
@@ -210,7 +213,7 @@ public class IndexerUtils {
 	public void indexWithESId(Index index, String finalJson) throws Exception{
 		StringBuilder urlForNonBulk = new StringBuilder();
 		urlForNonBulk.append(esHostUrl).append(index.getName()).append("/").append(index.getType()).append("/").append("_index");
-		bulkIndexer.indexJsonOntoES(urlForNonBulk.toString(), finalJson);
+		bulkIndexer.indexJsonOntoES(urlForNonBulk.toString(), finalJson, index);
 	}
 	
 	public String getProcessedJsonPath(String jsonPath) {
@@ -235,6 +238,27 @@ public class IndexerUtils {
 			uri.append(fields);
 		}
 		return uri.toString();
+	}
+	
+	
+	public String setDynamicMapping(Index index) {
+		StringBuilder uri = new StringBuilder();
+		uri.append(esHostUrl).append("/").append(index.getName()).append("/").append(index.getType()).append("/_mapping");
+		Object indexMapping = bulkIndexer.getIndexMappingfromES(uri.toString());
+		Object allMappingsForIndex = JsonPath.read(indexMapping, "$."+index.getName());
+		DocumentContext docContext = JsonPath.parse(allMappingsForIndex);
+		docContext.put("$.mappings."+index.getType(), "dynamic", "true");
+		StringBuilder uriForUpdateMapping = new StringBuilder();
+		uriForUpdateMapping.append(esHostUrl).append("/").append(index.getName());
+		try {
+			restTemplate.put(uriForUpdateMapping.toString(), docContext.jsonString(), Map.class);
+			return "OK";
+		}catch(Exception e) {
+			logger.error("Updating mapping failed for index: "+index.getName()+" and type: "+index.getType());
+			logger.error("Trace: ", e);
+			return null;
+		}
+		
 	}
 	
 

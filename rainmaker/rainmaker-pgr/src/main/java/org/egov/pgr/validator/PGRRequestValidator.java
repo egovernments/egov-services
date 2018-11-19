@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import org.apache.commons.collections.CollectionUtils;
@@ -390,19 +391,20 @@ public class PGRRequestValidator {
 	public void validateActionsOnCurrentStatus(ServiceRequest serviceRequest, Map<String, String> errorMap) {
 		Map<String, List<String>> actioncurrentStatusMap = WorkFlowConfigs.getActionCurrentStatusMap();
 		ServiceResponse serviceResponse = getServiceRequests(serviceRequest, errorMap);
-		log.info("serviceResponse: "+serviceResponse);
 		if (!errorMap.isEmpty())
 			return;
 		List<ActionHistory> historys = serviceResponse.getActionHistory();
 		Map<String, ActionHistory> historyMap = new HashMap<>();
 		historys.forEach(a -> historyMap.put(a.getActions().get(0).getBusinessKey(), a));
-		for (int index = 0; index < serviceResponse.getServices().size(); index++) {
+		for (int index = 0; index < serviceRequest.getServices().size(); index++) {
 			Service service = serviceRequest.getServices().get(index);
-			log.info("service 1: "+service);
 			ActionHistory history = historyMap.get(service.getServiceRequestId());
 			ActionInfo actionInfo = serviceRequest.getActionInfo().get(index);
 			String currentStatus = pgrUtils.getCurrentStatus(history);
 			List<String> validStatusList = actioncurrentStatusMap.get(actionInfo.getAction());
+			/**
+			 * if currenstatus isn't available in the validstatus list of that action, then the action is invalid.
+			 */
 			if (!StringUtils.isEmpty(currentStatus) && !validStatusList.contains(currentStatus)) {
 				String errorMsg = ErrorConstants.INVALID_ACTION_ON_STATUS_MSG;
 				errorMsg = errorMsg.replace("$action", actionInfo.getAction()).replace("$status", currentStatus);
@@ -416,14 +418,16 @@ public class PGRRequestValidator {
 			 * Code to check if the reopen happens within defaultExpiryTimeBeforeReopen no of days after resolve. 
 			 */
 			if(WorkFlowConfigs.ACTION_REOPEN.equals(actionInfo.getAction()) && currentStatus.equals(WorkFlowConfigs.STATUS_RESOLVED)) {
-				log.info("service 2: " + service.toString());
-				Long timeDifference = new Date().getTime() - service.getAuditDetails().getLastModifiedTime();
-				log.info("timeDifference: "+timeDifference);
-				log.info("hours: "+TimeUnit.MILLISECONDS.toHours(timeDifference));
-				if(TimeUnit.MILLISECONDS.toHours(timeDifference) > defaultExpiryTimeBeforeReopen) {
-					Long days = defaultExpiryTimeBeforeReopen / 24;
-					String error = ErrorConstants.INVALID_ACTION_REOPEN_EXPIRED_MSG.replaceAll("$days", days.toString());
-					errorMap.put(ErrorConstants.INVALID_ACTION_REOPEN_EXPIRED_CODE, error);
+				if(null != getLastModifiedTime(service, history)) {
+					Long timeDifference = new Date().getTime() - getLastModifiedTime(service, history);
+					log.info("timeDifference: "+timeDifference);
+					log.info("hours: "+TimeUnit.MILLISECONDS.toHours(timeDifference));
+					if(TimeUnit.MILLISECONDS.toHours(timeDifference) > defaultExpiryTimeBeforeReopen) {
+						Long days = defaultExpiryTimeBeforeReopen / 24;
+						String error = ErrorConstants.INVALID_ACTION_REOPEN_EXPIRED_MSG.replaceAll("$days", days.toString());
+						errorMap.put(ErrorConstants.INVALID_ACTION_REOPEN_EXPIRED_CODE, error);
+					}
+					
 				}
 			}
 			service.setStatus(StatusEnum.fromValue(currentStatus)); //This will be updated according to the action performed in service layer.
@@ -456,5 +460,17 @@ public class PGRRequestValidator {
 			errorMap.put(ErrorConstants.INVALID_SERVICEREQUESTID_CODE, ErrorConstants.INVALID_SERVICEREQUESTID_MSG + errorList);
 		
 		return serviceResponse;
+	}
+	
+	private Long getLastModifiedTime(Service service, ActionHistory history) {
+		Long lasModifiedTime = null;
+		//Search will always return actions in the order of latest action - oldest action.
+		if(null == service.getAuditDetails().getLastModifiedTime())
+			lasModifiedTime = history.getActions().get(0).getWhen(); //time when the latest action was taken
+		else
+			lasModifiedTime = service.getAuditDetails().getLastModifiedTime();
+		
+		return lasModifiedTime;
+		
 	}
 }

@@ -1,7 +1,10 @@
 package org.egov.infra.indexer.bulkindexer;
 
 import java.util.Map;
+
+import org.apache.commons.lang3.StringUtils;
 import org.egov.infra.indexer.util.IndexerUtils;
+import org.egov.infra.indexer.web.contract.Index;
 import org.egov.tracer.model.CustomException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,7 +30,7 @@ public class BulkIndexer {
 	@Autowired
 	private IndexerUtils indexerUtils;
 			
-	public void indexJsonOntoES(String url, String indexJson) throws Exception{
+	public void indexJsonOntoES(String url, String indexJson, Index index) throws Exception{
 		ObjectMapper mapper = new ObjectMapper();
 		try{
 			logger.debug("Record being indexed: "+indexJson);
@@ -37,8 +40,12 @@ public class BulkIndexer {
 			Object response = restTemplate.postForObject(url.toString(), entity, Map.class);
 			if(url.contains("_bulk")){
 				if(JsonPath.read(mapper.writeValueAsString(response), "$.errors").equals(true)){
-					logger.info("Indexing FAILED, Check ES response and modify your data.");
-					logger.info("Response from ES: "+response);
+					if(StringUtils.isEmpty(indexerUtils.setDynamicMapping(index))) {
+						logger.info("Indexing FAILED!!!!");
+						logger.info("Response from ES: "+response);
+					}else {
+						logger.info("mapping updated, retry!!");
+					}
 				}else{
 					logger.info("Indexing SUCCESSFULL!");
 				}
@@ -53,6 +60,7 @@ public class BulkIndexer {
 			throw new CustomException("500", "Exception while trying to index to ES. Note: ES is not Down.");
 		}
 	}
+	
 	
 	public Object getIndexMappingfromES(String url){
 		Object response = null;

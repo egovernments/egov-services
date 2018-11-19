@@ -5,7 +5,7 @@ ServiceMaps:
   - topic: telemetry-final-messages
     indexes:
     - name: egovtelemetry
-      type: generalnew
+      type: general
       id: $.mid
       isBulk: true
       jsonPath: $.events.*

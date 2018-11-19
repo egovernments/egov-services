@@ -445,6 +445,7 @@ public class PGRRequestValidator {
 		ServiceResponse serviceResponse = mapper.convertValue(requestService
 				.getServiceRequestDetails(serviceRequest.getRequestInfo(), serviceReqSearchCriteria), ServiceResponse.class);
 		Map<String, Service> map = serviceResponse.getServices().stream().collect(Collectors.toMap(Service::getServiceRequestId, Function.identity()));
+		log.info("serviceResponse: "+serviceResponse);
 		List<String> errorList = new ArrayList<>();
 		serviceRequest.getServices().forEach(a -> {
 			if (map.get(a.getServiceRequestId()) == null)

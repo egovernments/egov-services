@@ -9,6 +9,7 @@ import org.egov.enc.utils.AESUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.*;
@@ -35,6 +36,7 @@ import java.util.HashMap;
 
 
 @Component
+@Order(1)
 public class KeyStore implements ApplicationRunner {
 
     @Autowired
@@ -108,10 +110,10 @@ public class KeyStore implements ApplicationRunner {
     //Create HashMap to store keys indexed with keyId
     private void initializeKeys() {
         for(SymmetricKey symmetricKey : symmetricKeys) {
-            symmetricKeyHashMap.put(symmetricKey.getId(), symmetricKey);
+            symmetricKeyHashMap.put(symmetricKey.getKeyId(), symmetricKey);
         }
         for(AsymmetricKey asymmetricKey : asymmetricKeys) {
-            asymmetricKeyHashMap.put(asymmetricKey.getId(), asymmetricKey);
+            asymmetricKeyHashMap.put(asymmetricKey.getKeyId(), asymmetricKey);
         }
     }
 
@@ -121,14 +123,14 @@ public class KeyStore implements ApplicationRunner {
         for(String tenant : tenantIds) {
             for(SymmetricKey symmetricKey : symmetricKeys) {
                 if(symmetricKey.getTenantId().equalsIgnoreCase(tenant) && symmetricKey.isActive()) {
-                    activeSymmetricKeys.put(tenant, symmetricKey.getId());
+                    activeSymmetricKeys.put(tenant, symmetricKey.getKeyId());
                     break;
                 }
             }
 
             for(AsymmetricKey asymmetricKey : asymmetricKeys) {
                 if(asymmetricKey.getTenantId().equalsIgnoreCase(tenant) && asymmetricKey.isActive()) {
-                    activeAsymmetricKeys.put(tenant, asymmetricKey.getId());
+                    activeAsymmetricKeys.put(tenant, asymmetricKey.getKeyId());
                     break;
                 }
             }
@@ -212,4 +214,12 @@ public class KeyStore implements ApplicationRunner {
         initializeMasterKey();
         refreshKeys();
     }
+
+    public ArrayList<Integer> getKeyIds() {
+        ArrayList<Integer> keyIds = new ArrayList<>();
+        keyIds.addAll(symmetricKeyHashMap.keySet());
+        keyIds.addAll(asymmetricKeyHashMap.keySet());
+        return keyIds;
+    }
+
 }

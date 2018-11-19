@@ -1,6 +1,7 @@
 package org.egov.enc;
 
 import org.egov.enc.keymanagement.KeyGenerator;
+import org.egov.enc.keymanagement.KeyIdGenerator;
 import org.egov.enc.keymanagement.KeyStore;
 import org.egov.enc.models.AsymmetricKey;
 import org.egov.enc.models.SymmetricKey;
@@ -38,6 +39,8 @@ public class KeyManagementApplication implements ApplicationRunner {
     private KeyGenerator keyGenerator;
     @Autowired
     private KeyStore keyStore;
+    @Autowired
+    private KeyIdGenerator keyIdGenerator;
 
     private ArrayList<String> tenantIdsFromDB;
 
@@ -53,6 +56,7 @@ public class KeyManagementApplication implements ApplicationRunner {
         }
         if(generateKeyForNewTenants() != 0) {
             keyStore.refreshKeys();
+            keyIdGenerator.refreshKeyIds();
             tenantIdsFromDB = (ArrayList<String>) keyRepository.fetchDistinctTenantIds();
             if(tenantIdsFromDB.contains(tenant)) {
                 return true;

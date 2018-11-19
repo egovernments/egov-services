@@ -34,7 +34,8 @@ public class AESEncryptionService implements EncryptionServiceInterface {
 
         byte[] cipherBytes = AESUtil.encrypt(plaintext.getPlaintext().getBytes(StandardCharsets.UTF_8), secretKey, initialVectorsBytes);
 
-        Ciphertext ciphertext = new Ciphertext(MethodEnum.AES, symmetricKey.getId(), Base64.getEncoder().encodeToString(cipherBytes));
+        Ciphertext ciphertext = new Ciphertext(MethodEnum.AES, symmetricKey.getKeyId(), Base64.getEncoder().encodeToString
+                (cipherBytes));
 
         return ciphertext;
     }

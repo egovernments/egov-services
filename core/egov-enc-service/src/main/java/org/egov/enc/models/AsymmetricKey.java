@@ -14,6 +14,8 @@ public class AsymmetricKey {
 
     private int id;
 
+    private Integer keyId;
+
     private String publicKey;
 
     private String privateKey;

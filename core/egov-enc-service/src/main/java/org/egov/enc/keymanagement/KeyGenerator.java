@@ -34,6 +34,9 @@ public class KeyGenerator {
     private AppProperties appProperties;
 
     @Autowired
+    private KeyIdGenerator keyIdGenerator;
+
+    @Autowired
     public KeyGenerator(AppProperties appProperties) throws NoSuchAlgorithmException, InvalidKeySpecException {
         this.appProperties = appProperties;
 
@@ -89,7 +92,8 @@ public class KeyGenerator {
         for(int i = 0; i < keys.length; i++) {
             String keyAsString = encryptWithMasterPassword(Base64.getEncoder().encodeToString(keys[i].getEncoded()));
             String initialVectorAsString = encryptWithMasterPassword(Base64.getEncoder().encodeToString(initialVectors[i]));
-            symmetricKeyArrayList.add(new SymmetricKey(i, keyAsString, initialVectorAsString, true, tenantIds.get(i)));
+            symmetricKeyArrayList.add(new SymmetricKey(i, keyIdGenerator.generateKeyId(), keyAsString,
+                    initialVectorAsString, true, tenantIds.get(i)));
         }
         return symmetricKeyArrayList;
     }
@@ -110,7 +114,7 @@ public class KeyGenerator {
         for(int i = 0; i < keys.length; i++) {
             String publicKey = encryptWithMasterPassword(Base64.getEncoder().encodeToString(keys[i].getPublic().getEncoded()));
             String privateKey = encryptWithMasterPassword(Base64.getEncoder().encodeToString(keys[i].getPrivate().getEncoded()));
-            asymmetricKeyArrayList.add(new AsymmetricKey(i, publicKey, privateKey, true, tenantIds.get(i)));
+            asymmetricKeyArrayList.add(new AsymmetricKey(i, keyIdGenerator.generateKeyId(), publicKey, privateKey, true, tenantIds.get(i)));
         }
 
         return asymmetricKeyArrayList;

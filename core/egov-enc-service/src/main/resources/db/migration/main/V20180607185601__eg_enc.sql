@@ -5,6 +5,7 @@ DROP TABLE IF EXISTS  eg_enc_asymmetric_keys;
 CREATE TABLE public."eg_enc_symmetric_keys"
 (
   id SERIAL,
+  key_id integer NOT NULL,
   secret_key text NOT NULL,
   initial_vector text NOT NULL,
   active boolean NOT NULL DEFAULT true,
@@ -17,6 +18,7 @@ CREATE UNIQUE INDEX active_tenant_symmetric_keys ON eg_enc_symmetric_keys (tenan
 CREATE TABLE public."eg_enc_asymmetric_keys"
 (
   id SERIAL,
+  key_id integer NOT NULL,
   public_key text NOT NULL,
   private_key text NOT NULL,
   active boolean NOT NULL DEFAULT true,

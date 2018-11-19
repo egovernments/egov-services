@@ -30,10 +30,13 @@ public class AppProperties {
 
     private String asymmetricMethod;
 
+    private Integer keyIdLength;
+
     @Autowired
     public AppProperties(Environment environment) {
         this.symmetricKeySize = Integer.parseInt(environment.getRequiredProperty("size.key.symmetric"));
         this.asymmetricKeySize = Integer.parseInt(environment.getRequiredProperty("size.key.asymmetric"));
+        this.keyIdLength = Integer.parseInt(environment.getRequiredProperty("length.keyid"));
         this.masterPassword = environment.getRequiredProperty("master.password");
         this.masterSalt = environment.getRequiredProperty("master.salt");
         this.masterInitialVector = environment.getRequiredProperty("master.initialvector");

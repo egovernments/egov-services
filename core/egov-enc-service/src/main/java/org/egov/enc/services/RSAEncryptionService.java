@@ -29,7 +29,8 @@ public class RSAEncryptionService implements EncryptionServiceInterface {
 
         byte[] cipherBytes = RSAUtil.encrypt(plaintext.getPlaintext().getBytes(StandardCharsets.UTF_8), publicKey);
 
-        Ciphertext ciphertext = new Ciphertext(MethodEnum.RSA, asymmetricKey.getId(), Base64.getEncoder().encodeToString(cipherBytes));
+        Ciphertext ciphertext = new Ciphertext(MethodEnum.RSA, asymmetricKey.getKeyId(), Base64.getEncoder().encodeToString
+                (cipherBytes));
 
         return ciphertext;
     }

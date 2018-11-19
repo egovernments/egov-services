@@ -14,6 +14,8 @@ public class SymmetricKey {
 
     private int id;
 
+    private Integer keyId;
+
     private String secretKey;
 
     private String initialVector;

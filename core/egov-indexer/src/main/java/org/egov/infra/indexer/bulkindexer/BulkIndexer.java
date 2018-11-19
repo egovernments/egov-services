@@ -44,7 +44,8 @@ public class BulkIndexer {
 						logger.info("Indexing FAILED!!!!");
 						logger.info("Response from ES: "+response);
 					}else {
-						logger.info("mapping updated, retry!!");
+						logger.info("mapping updated, retrying...");
+						indexJsonOntoES(url, indexJson, index);
 					}
 				}else{
 					logger.info("Indexing SUCCESSFULL!");
@@ -74,6 +75,7 @@ public class BulkIndexer {
 			logger.error("Exception while trying to fetch index mapping from ES. Note: ES is not Down.",e);
 			return response;
 		}
+		logger.info("Mapping from ES: "+response);
 		return response;
 
 	}

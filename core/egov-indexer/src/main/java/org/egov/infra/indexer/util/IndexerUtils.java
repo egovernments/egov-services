@@ -23,7 +23,6 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
 
 @Service
@@ -242,18 +241,17 @@ public class IndexerUtils {
 	
 	
 	public String setDynamicMapping(Index index) {
-		StringBuilder uri = new StringBuilder();
-		uri.append(esHostUrl).append("/").append(index.getName()).append("/").append(index.getType()).append("/_mapping");
+/*		StringBuilder uri = new StringBuilder();
+		uri.append(esHostUrl).append(index.getName()).append("/").append(index.getType()).append("/_mapping");
 		Object indexMapping = bulkIndexer.getIndexMappingfromES(uri.toString());
 		Object allMappingsForIndex = JsonPath.read(indexMapping, "$."+index.getName());
 		DocumentContext docContext = JsonPath.parse(allMappingsForIndex);
-		docContext.put("$.mappings."+index.getType(), "dynamic", "true");
+		docContext.put("$.mappings."+index.getType(), "dynamic", "true");*/
+		String requestTwo = "{\"index.mapper.dynamic\": true}";
 		StringBuilder uriForUpdateMapping = new StringBuilder();
-		uriForUpdateMapping.append(esHostUrl).append("/").append(index.getName());
+		uriForUpdateMapping.append(esHostUrl).append(index.getName()).append("/_settings");
 		try {
-			logger.info("request for update: "+docContext.jsonString());
-			logger.info("url for update: "+uriForUpdateMapping.toString());
-			restTemplate.put(uriForUpdateMapping.toString(), docContext.jsonString().toString(), Map.class);
+			restTemplate.put(uriForUpdateMapping.toString(), requestTwo, Map.class);
 			return "OK";
 		}catch(Exception e) {
 			logger.error("Updating mapping failed for index: "+index.getName()+" and type: "+index.getType());

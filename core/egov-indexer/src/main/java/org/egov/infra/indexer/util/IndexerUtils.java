@@ -241,13 +241,7 @@ public class IndexerUtils {
 	
 	
 	public String setDynamicMapping(Index index) {
-/*		StringBuilder uri = new StringBuilder();
-		uri.append(esHostUrl).append(index.getName()).append("/").append(index.getType()).append("/_mapping");
-		Object indexMapping = bulkIndexer.getIndexMappingfromES(uri.toString());
-		Object allMappingsForIndex = JsonPath.read(indexMapping, "$."+index.getName());
-		DocumentContext docContext = JsonPath.parse(allMappingsForIndex);
-		docContext.put("$.mappings."+index.getType(), "dynamic", "true");*/
-		String requestTwo = "{\"index.mapping.ignore_malformed\": true}";
+		String requestTwo = "{ \"settings\": {\"index.mapping.ignore_malformed\": true}}";
 		StringBuilder uriForUpdateMapping = new StringBuilder();
 		uriForUpdateMapping.append(esHostUrl).append(index.getName()).append("/_settings");
 		try {

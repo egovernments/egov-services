@@ -40,7 +40,9 @@
 
 package org.egov.egf.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
 import lombok.AllArgsConstructor;
@@ -75,4 +77,11 @@ public class PropertiesManager {
 	@Value("${egov.services.egf_masters_service.accountdetailkeys.createpath}")
 	private String egfMastersServiceAccountdetailkeysCreatepath;
 
+	@Autowired
+	Environment environment;
+	
+	public String getFainanceErpHostname(String tenantId){
+		
+		return environment.getProperty(tenantId);
+	}
 }

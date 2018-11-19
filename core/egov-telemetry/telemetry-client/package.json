@@ -20,6 +20,7 @@
     "webpack-cli": "^3.1.2"
   },
   "dependencies": {
-    "jquery": "^3.3.1"
+    "jquery": "^3.3.1",
+    "ua-parser-js": "^0.7.19"
   }
 }

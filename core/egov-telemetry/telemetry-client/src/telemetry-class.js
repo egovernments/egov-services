@@ -3,6 +3,12 @@
 * @author Rushang Dhanesha
 */
 
+if(navigator){
+  var ua_parser = require("ua-parser-js");
+  var parser = new ua_parser(navigator.userAgent);
+  var ua_result = parser.getResult();
+}
+
 //Default Config Data
 class ConfigData {
   constructor() {
@@ -239,7 +245,10 @@ class BaseTelemetry {
   addDeviceInfo(data) {
     if (navigator) {
       data["userAgent"] = navigator.userAgent;
-      data["platform"] = navigator.platform;
+      if(ua_result) {
+        data["web-client"] = ua_result.browser.name;
+        data["platform"] = ua_result.os.name;
+      }
     }
   }
 

@@ -390,6 +390,7 @@ public class PGRRequestValidator {
 	public void validateActionsOnCurrentStatus(ServiceRequest serviceRequest, Map<String, String> errorMap) {
 		Map<String, List<String>> actioncurrentStatusMap = WorkFlowConfigs.getActionCurrentStatusMap();
 		ServiceResponse serviceResponse = getServiceRequests(serviceRequest, errorMap);
+		log.info("serviceResponse: "+serviceResponse);
 		if (!errorMap.isEmpty())
 			return;
 		List<ActionHistory> historys = serviceResponse.getActionHistory();
@@ -397,6 +398,7 @@ public class PGRRequestValidator {
 		historys.forEach(a -> historyMap.put(a.getActions().get(0).getBusinessKey(), a));
 		for (int index = 0; index < serviceResponse.getServices().size(); index++) {
 			Service service = serviceRequest.getServices().get(index);
+			log.info("service 1: "+service);
 			ActionHistory history = historyMap.get(service.getServiceRequestId());
 			ActionInfo actionInfo = serviceRequest.getActionInfo().get(index);
 			String currentStatus = pgrUtils.getCurrentStatus(history);
@@ -414,7 +416,7 @@ public class PGRRequestValidator {
 			 * Code to check if the reopen happens within defaultExpiryTimeBeforeReopen no of days after resolve. 
 			 */
 			if(WorkFlowConfigs.ACTION_REOPEN.equals(actionInfo.getAction()) && currentStatus.equals(WorkFlowConfigs.STATUS_RESOLVED)) {
-				log.info(service.toString());
+				log.info("service 2: " + service.toString());
 				Long timeDifference = new Date().getTime() - service.getAuditDetails().getLastModifiedTime();
 				log.info("timeDifference: "+timeDifference);
 				log.info("hours: "+TimeUnit.MILLISECONDS.toHours(timeDifference));
@@ -445,7 +447,6 @@ public class PGRRequestValidator {
 		ServiceResponse serviceResponse = mapper.convertValue(requestService
 				.getServiceRequestDetails(serviceRequest.getRequestInfo(), serviceReqSearchCriteria), ServiceResponse.class);
 		Map<String, Service> map = serviceResponse.getServices().stream().collect(Collectors.toMap(Service::getServiceRequestId, Function.identity()));
-		log.info("serviceResponse: "+serviceResponse);
 		List<String> errorList = new ArrayList<>();
 		serviceRequest.getServices().forEach(a -> {
 			if (map.get(a.getServiceRequestId()) == null)

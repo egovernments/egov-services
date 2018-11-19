@@ -67,10 +67,9 @@ public class EmployeeListener {
     @Autowired
     private RequestInfoFactory requestInfoFactory;
 
-    @KafkaListener(topics = "${kafka.topics.employee.savedb.name}")
+    @KafkaListener(topics = "${kafka.topics.employee.finance.name}")
     public void listen(ConsumerRecord<String, String> record) {
         LOGGER.info("key : " + record.key() + "\t\t" + "value : " + record.value());
-
         JsonReader jsonReader = Json.createReader(new StringReader(record.value()));
         JsonObject jsonObject = jsonReader.readObject();
         jsonReader.close();

@@ -124,7 +124,7 @@ public class EmployeeService {
 		URI url = null;
 		String urlStr = null;
 		try {
-			urlStr = propertiesManager.getEgfMastersServiceHostname() + propertiesManager.getEgfMastersServiceBasepath()
+			urlStr = propertiesManager.getFainanceErpHostname(requestInfo.getTenantId()) + propertiesManager.getEgfMastersServiceBasepath()
 					+ propertiesManager.getEgfMastersServiceAccountdetailkeysBasepath()
 					+ propertiesManager.getEgfMastersServiceAccountdetailkeysCreatepath();
 			url = new URI(urlStr);

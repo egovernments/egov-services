@@ -23,7 +23,6 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
 
 @Service
@@ -242,16 +241,11 @@ public class IndexerUtils {
 	
 	
 	public String setDynamicMapping(Index index) {
-		StringBuilder uri = new StringBuilder();
-		uri.append(esHostUrl).append("/").append(index.getName()).append("/").append(index.getType()).append("/_mapping");
-		Object indexMapping = bulkIndexer.getIndexMappingfromES(uri.toString());
-		Object allMappingsForIndex = JsonPath.read(indexMapping, "$."+index.getName());
-		DocumentContext docContext = JsonPath.parse(allMappingsForIndex);
-		docContext.put("$.mappings."+index.getType(), "dynamic", "true");
+		String requestTwo = "{ \"settings\": {\"index.mapping.ignore_malformed\": true}}";
 		StringBuilder uriForUpdateMapping = new StringBuilder();
-		uriForUpdateMapping.append(esHostUrl).append("/").append(index.getName());
+		uriForUpdateMapping.append(esHostUrl).append(index.getName()).append("/_settings");
 		try {
-			restTemplate.put(uriForUpdateMapping.toString(), docContext.jsonString(), Map.class);
+			restTemplate.put(uriForUpdateMapping.toString(), requestTwo, Map.class);
 			return "OK";
 		}catch(Exception e) {
 			logger.error("Updating mapping failed for index: "+index.getName()+" and type: "+index.getType());

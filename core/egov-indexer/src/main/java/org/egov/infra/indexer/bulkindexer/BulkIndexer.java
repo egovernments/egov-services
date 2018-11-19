@@ -40,12 +40,8 @@ public class BulkIndexer {
 			Object response = restTemplate.postForObject(url.toString(), entity, Map.class);
 			if(url.contains("_bulk")){
 				if(JsonPath.read(mapper.writeValueAsString(response), "$.errors").equals(true)){
-					if(StringUtils.isEmpty(indexerUtils.setDynamicMapping(index))) {
-						logger.info("Indexing FAILED!!!!");
-						logger.info("Response from ES: "+response);
-					}else {
-						logger.info("mapping updated, retry!!");
-					}
+					logger.info("Indexing FAILED!!!!");
+					logger.info("Response from ES: "+response);
 				}else{
 					logger.info("Indexing SUCCESSFULL!");
 				}
@@ -74,7 +70,7 @@ public class BulkIndexer {
 			logger.error("Exception while trying to fetch index mapping from ES. Note: ES is not Down.",e);
 			return response;
 		}
-		logger.info("Index Map from ES: "+response);
+		logger.info("Mapping from ES: "+response);
 		return response;
 
 	}

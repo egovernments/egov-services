@@ -8,8 +8,6 @@ import org.egov.tracer.model.CustomException;
 @Getter
 public class Ciphertext {
 
-    private MethodEnum method;
-
     private int keyId;
 
     private String ciphertext;
@@ -17,9 +15,8 @@ public class Ciphertext {
     public Ciphertext(String ciphertext) {
         try{
             String[] cipherArray = ciphertext.split("\\|");
-            method = MethodEnum.fromValue(cipherArray[0]);
-            keyId = Integer.parseInt(cipherArray[1]);
-            this.ciphertext = cipherArray[2];
+            keyId = Integer.parseInt(cipherArray[0]);
+            this.ciphertext = cipherArray[1];
         } catch (Exception e) {
             throw new CustomException(ciphertext + ": Invalid Ciphertext", ciphertext + ": Invalid Ciphertext");
         }
@@ -27,7 +24,7 @@ public class Ciphertext {
 
     @Override
     public String toString() {
-        return method + "|" + String.valueOf(keyId) + "|" + ciphertext;
+        return String.valueOf(keyId) + "|" + ciphertext;
     }
 
 }

@@ -18,7 +18,7 @@ import java.security.spec.InvalidKeySpecException;
 import java.util.Base64;
 
 @Service
-public class RSAEncryptionService implements EncryptionServiceInterface {
+public class AsymmetricEncryptionService implements EncryptionServiceInterface {
 
     @Autowired
     private KeyStore keyStore;
@@ -29,7 +29,7 @@ public class RSAEncryptionService implements EncryptionServiceInterface {
 
         byte[] cipherBytes = RSAUtil.encrypt(plaintext.getPlaintext().getBytes(StandardCharsets.UTF_8), publicKey);
 
-        Ciphertext ciphertext = new Ciphertext(MethodEnum.RSA, asymmetricKey.getKeyId(), Base64.getEncoder().encodeToString
+        Ciphertext ciphertext = new Ciphertext(asymmetricKey.getKeyId(), Base64.getEncoder().encodeToString
                 (cipherBytes));
 
         return ciphertext;

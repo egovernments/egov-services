@@ -4,9 +4,9 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
 public enum MethodEnum {
-    AES("AES"),
+    SYM("SYM"),
 
-    RSA("RSA");
+    ASY("ASY");
 
     private String value;
 

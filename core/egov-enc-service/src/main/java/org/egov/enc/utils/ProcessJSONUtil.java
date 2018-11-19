@@ -1,12 +1,13 @@
 package org.egov.enc.utils;
 
 import lombok.extern.slf4j.Slf4j;
+import org.egov.enc.keymanagement.KeyStore;
 import org.egov.enc.models.Ciphertext;
 import org.egov.enc.models.MethodEnum;
 import org.egov.enc.models.ModeEnum;
 import org.egov.enc.models.Plaintext;
-import org.egov.enc.services.AESEncryptionService;
-import org.egov.enc.services.RSAEncryptionService;
+import org.egov.enc.services.SymmetricEncryptionService;
+import org.egov.enc.services.AsymmetricEncryptionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -29,9 +30,11 @@ import java.util.*;
 public class ProcessJSONUtil {
 
     @Autowired
-    private AESEncryptionService aesEncryptionService;
+    private SymmetricEncryptionService symmetricEncryptionService;
     @Autowired
-    private RSAEncryptionService rsaEncryptionService;
+    private AsymmetricEncryptionService asymmetricEncryptionService;
+    @Autowired
+    private KeyStore keyStore;
 
     //The input object may be JSON Object or a JSON Array
     public Object processJSON(Object inputObject, ModeEnum mode, MethodEnum method, String tenantId) throws Exception {
@@ -88,20 +91,21 @@ public class ProcessJSONUtil {
         if(mode.equals(ModeEnum.ENCRYPT)) {
             Ciphertext ciphertext;
             Plaintext plaintext = new Plaintext(tenantId, value.toString());
-            if(method.equals(MethodEnum.AES)) {
-                ciphertext = aesEncryptionService.encrypt(plaintext);
+            if(method.equals(MethodEnum.SYM)) {
+                ciphertext = symmetricEncryptionService.encrypt(plaintext);
             } else {
-                ciphertext = rsaEncryptionService.encrypt(plaintext);
+                ciphertext = asymmetricEncryptionService.encrypt(plaintext);
             }
             return ciphertext.toString();
         }
         else {
             Plaintext plaintext;
             Ciphertext ciphertext = new Ciphertext(value.toString());
-            if(ciphertext.getMethod().equals(MethodEnum.AES)) {
-                plaintext = aesEncryptionService.decrypt(ciphertext);
+            method = keyStore.getTypeOfKey(ciphertext.getKeyId());
+            if(method.equals(MethodEnum.SYM)) {
+                plaintext = symmetricEncryptionService.decrypt(ciphertext);
             } else {
-                plaintext = rsaEncryptionService.decrypt(ciphertext);
+                plaintext = asymmetricEncryptionService.decrypt(ciphertext);
             }
             return plaintext.toString();
         }

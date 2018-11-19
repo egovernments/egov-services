@@ -21,7 +21,7 @@ import java.security.spec.InvalidKeySpecException;
 import java.util.Base64;
 
 @Service
-public class AESEncryptionService implements EncryptionServiceInterface {
+public class SymmetricEncryptionService implements EncryptionServiceInterface {
 
     @Autowired
     private KeyStore keyStore;
@@ -34,7 +34,7 @@ public class AESEncryptionService implements EncryptionServiceInterface {
 
         byte[] cipherBytes = AESUtil.encrypt(plaintext.getPlaintext().getBytes(StandardCharsets.UTF_8), secretKey, initialVectorsBytes);
 
-        Ciphertext ciphertext = new Ciphertext(MethodEnum.AES, symmetricKey.getKeyId(), Base64.getEncoder().encodeToString
+        Ciphertext ciphertext = new Ciphertext(symmetricKey.getKeyId(), Base64.getEncoder().encodeToString
                 (cipherBytes));
 
         return ciphertext;

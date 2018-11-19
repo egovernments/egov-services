@@ -3,6 +3,7 @@ package org.egov.enc.keymanagement;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.egov.enc.config.AppProperties;
 import org.egov.enc.models.AsymmetricKey;
+import org.egov.enc.models.MethodEnum;
 import org.egov.enc.models.SymmetricKey;
 import org.egov.enc.repository.KeyRepository;
 import org.egov.enc.utils.AESUtil;
@@ -156,6 +157,17 @@ public class KeyStore implements ApplicationRunner {
     public AsymmetricKey getAsymmetricKey(int keyId) {
         return asymmetricKeyHashMap.get(keyId);
     }
+
+
+    //Return type of encryption method based on key id
+    public MethodEnum getTypeOfKey(Integer keyId) {
+        if(symmetricKeyHashMap.containsKey(keyId)) {
+            return MethodEnum.SYM;
+        } else {
+            return MethodEnum.ASY;
+        }
+    }
+
 
     //Generate Secret Key to be used by AES from custom object SymmetricKey
     public SecretKey generateSecretKey(SymmetricKey symmetricKey) {

@@ -246,7 +246,7 @@ class BaseTelemetry {
     if (navigator) {
       data["userAgent"] = navigator.userAgent;
       if(ua_result) {
-        data["web-client"] = ua_result.browser.name;
+        data["web-browser"] = ua_result.browser.name;
         data["platform"] = ua_result.os.name;
       }
     }

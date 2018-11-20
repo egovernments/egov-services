@@ -32,6 +32,9 @@ public class Index {
 	  @JsonProperty("jsonPath")
 	  private String jsonPath;
 	  
+	  @JsonProperty("timeStampField")
+	  private String timeStampField;
+	  
 	  @JsonProperty("customJsonMapping")
 	  CustomJsonMapping customJsonMapping;
 }

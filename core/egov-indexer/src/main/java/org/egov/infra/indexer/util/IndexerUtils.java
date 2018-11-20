@@ -1,6 +1,11 @@
 package org.egov.infra.indexer.util;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 import java.util.Map;
+import java.util.TimeZone;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -14,6 +19,7 @@ import org.egov.infra.indexer.web.contract.ESSearchCriteria;
 import org.egov.infra.indexer.web.contract.Index;
 import org.egov.infra.indexer.web.contract.UriMapping;
 import org.json.JSONArray;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +28,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.client.RestTemplate;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
 
 @Service
@@ -189,8 +199,7 @@ public class IndexerUtils {
         	logger.error("Exception while constructing json array for bulk index: ", e);
         	throw e;
         }
-    	
-    	return kafkaJsonArray;
+    	return addTimeStamp(index, kafkaJsonArray);
 	}
 	
 	public void validateAndIndex(String finalJson, String url, Index index) throws Exception{
@@ -253,6 +262,44 @@ public class IndexerUtils {
 			return null;
 		}
 		
+	}
+	
+	public JSONArray addTimeStamp(Index index, JSONArray kafkaJsonArray) {
+		JSONArray tranformedArray = new JSONArray();
+		ObjectMapper mapper = getObjectMapper();
+		for(int i = 0; i < kafkaJsonArray.length();  i++) {
+			try {
+				String epochValue = mapper.writeValueAsString(JsonPath.read(kafkaJsonArray.get(i).toString(), index.getTimeStampField()));
+				Date date = new Date(Long.valueOf(epochValue));
+				SimpleDateFormat formatter = new SimpleDateFormat( "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US); 
+				formatter.setTimeZone(TimeZone.getTimeZone("UTC"));				
+				DocumentContext context = JsonPath.parse(kafkaJsonArray.get(i).toString());
+				context.put("$","@timestamp", formatter.format(date));
+				tranformedArray.put(context.jsonString());
+			}catch(Exception e) {
+				logger.error("Exception while adding timestamp: ", e);
+				continue;
+			}
+		}
+		if(tranformedArray.length() != kafkaJsonArray.length()) {
+			return kafkaJsonArray;
+		}
+		return tranformedArray;
+	}
+	
+	/**
+	 * Returns mapper with all the appropriate properties reqd in our
+	 * functionalities.
+	 * 
+	 * @return ObjectMapper
+	 */
+	public ObjectMapper getObjectMapper() {
+		ObjectMapper mapper = new ObjectMapper();
+		mapper.configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true);
+		mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+		mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
+
+		return mapper;
 	}
 	
 

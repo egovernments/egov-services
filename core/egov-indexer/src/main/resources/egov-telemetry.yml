@@ -9,4 +9,5 @@ ServiceMaps:
       id: $.mid
       isBulk: true
       jsonPath: $.events.*
+      timeStampField: $.ets
 

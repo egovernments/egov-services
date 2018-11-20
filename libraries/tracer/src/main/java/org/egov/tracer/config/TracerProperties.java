@@ -1,29 +1,28 @@
 package org.egov.tracer.config;
 
-import org.springframework.core.env.Environment;
+import lombok.Data;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.annotation.Configuration;
 
+@Data
+@ConfigurationProperties("tracer")
+@Configuration
 public class TracerProperties {
 
-    private static final String DETAILED_TRACING_FLAG = "tracer.detailed.tracing.enabled";
-    private static final String UTC = "UTC";
-    private static final String TIME_ZONE_PROPERTY = "app.timezone";
+    // Enable request body and query parameters logging
+    private boolean requestLoggingEnabled;
 
-    private Environment environment;
+    // Enable kafka message body logging on send
+    private boolean kafkaMessageLoggingEnabled;
 
-    public TracerProperties(Environment environment) {
-        this.environment = environment;
-    }
+    // Enable request and response body logging on all rest template calls
+    private boolean restTemplateDetailedLoggingEnabled;
 
-    public boolean isDetailedTracingEnabled() {
-        return environment.getProperty(DETAILED_TRACING_FLAG, Boolean.class, true);
-    }
+    // Enable errors publishing on a kafka topic
+    private boolean errorsPublish;
 
-    public String getTimeZone() {
-        return environment.getProperty(TIME_ZONE_PROPERTY, UTC);
-    }
-
-    public boolean isDetailedTracingDisabled() {
-        return !isDetailedTracingEnabled();
-    }
+    // Topic to which errors need to be published
+    private String errorsTopic;
 
 }
+

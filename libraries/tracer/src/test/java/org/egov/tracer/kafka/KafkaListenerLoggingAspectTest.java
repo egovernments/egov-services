@@ -84,7 +84,7 @@ public class KafkaListenerLoggingAspectTest {
         final HashMap<String, Object> requestInfo = new HashMap<>();
         requestInfo.put("foo", "abc");
         payload.put("RequestInfo", requestInfo);
-        when(tracerProperties.isDetailedTracingEnabled()).thenReturn(false);
+        when(tracerProperties.isRequestLoggingEnabled()).thenReturn(false);
 
         kafkaListenerWithOnlyPayloadAnnotatedHashMap.bar(payload);
 
@@ -98,7 +98,7 @@ public class KafkaListenerLoggingAspectTest {
         final HashMap<String, Object> requestInfo = new HashMap<>();
         requestInfo.put("foo", "abc");
         payload.put("RequestInfo", requestInfo);
-        when(tracerProperties.isDetailedTracingEnabled()).thenReturn(true);
+        when(tracerProperties.isRequestLoggingEnabled()).thenReturn(true);
 
         kafkaListenerWithOnlyPayloadAnnotatedHashMap.bar(payload);
 
@@ -127,7 +127,7 @@ public class KafkaListenerLoggingAspectTest {
     @Ignore
     public void test_should_print_detailed_log_with_stringified_body_and_topic_name() {
         final String payload = "{\"RequestInfo\": { \"foo\": \"bar\"}}";
-        when(tracerProperties.isDetailedTracingEnabled()).thenReturn(true);
+        when(tracerProperties.isRequestLoggingEnabled()).thenReturn(true);
         kafkaListenerStringPayloadWithTopicHeaderAnnotation.bar(payload, "actualTopic");
 
         final String expectedMessage = "Received message from topic: actualTopic with body " + payload;
@@ -164,7 +164,7 @@ public class KafkaListenerLoggingAspectTest {
     @Ignore
     public void test_should_print_detailed_log_with_stringified_body_and_unavailable_topic_name() {
         final String payload = "{\"RequestInfo\": { \"foo\": \"bar\"}}";
-        when(tracerProperties.isDetailedTracingEnabled()).thenReturn(true);
+        when(tracerProperties.isRequestLoggingEnabled()).thenReturn(true);
 
         kafkaListenerStringPayloadWithNonTopicHeaderAnnotation.bar(payload, 3);
 
@@ -207,8 +207,7 @@ class TestConfiguration {
     @Bean
     public TracerProperties tracerProperties() {
         final TracerProperties tracerProperties = mock(TracerProperties.class);
-        when(tracerProperties.getTimeZone()).thenReturn("UTC");
-        when(tracerProperties.isDetailedTracingEnabled()).thenReturn(true);
+        when(tracerProperties.isRequestLoggingEnabled()).thenReturn(true);
         return tracerProperties;
     }
 }

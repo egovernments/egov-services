@@ -5,11 +5,16 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.IOUtils;
+import org.egov.tracer.config.TracerProperties;
+import org.egov.tracer.http.filters.MultiReadRequestWrapper;
 import org.egov.tracer.kafka.ErrorQueueProducer;
 import org.egov.tracer.model.*;
 import org.egov.tracer.model.Error;
+import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
@@ -26,36 +31,53 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.ResourceAccessException;
 
+import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static org.egov.tracer.constants.TracerConstants.MDC_CORRELATION_ID;
+
 
 @ControllerAdvice
 @Slf4j
 @Order(Ordered.LOWEST_PRECEDENCE)
+@EnableConfigurationProperties({TracerProperties.class})
 public class ExceptionAdvise {
 
-	@Autowired
-	private ErrorQueueProducer  errorQueueProducer;
-
-	@Value("${tracer.errors.sendToKafka:false}")
-    boolean sendErrorsToKafka;
-
     @Value("${tracer.errors.provideExceptionInDetails:false}")
-    boolean provideExceptionInDetails;
+    private boolean provideExceptionInDetails;
 
+	@Autowired
+	private ErrorQueueProducer errorQueueProducer;
+
+	@Autowired
+    private TracerProperties tracerProperties;
 
     @ExceptionHandler(value = Exception.class)
 	@ResponseBody
 	public ResponseEntity<?> exceptionHandler(HttpServletRequest request ,Exception ex) {
 
-//		String contentType = request.getContentType();
-//		boolean isJsonContentType = (contentType != null && contentType.toLowerCase().contains("application/json"));
+		String contentType = request.getContentType();
+		boolean isJsonContentType = (contentType != null && contentType.toLowerCase().contains("application/json"));
         log.error("Exception caught in tracer ", ex);
+        String body = "";
+
+        try {
+            if(request instanceof MultiReadRequestWrapper) {
+                ServletInputStream stream = request.getInputStream();
+                body = IOUtils.toString(stream, "UTF-8");
+            } else
+                body = "Unable to retrieve request body";
+
+        } catch (IOException ignored) {
+            body = "Unable to retrieve request body";
+        }
+
 		ErrorRes errorRes = new ErrorRes();
 		List<Error> errors = new ArrayList<>();
 
@@ -115,7 +137,7 @@ public class ExceptionAdvise {
 				errorRes.setErrors(errors);
 			} else if (ex instanceof ServiceCallException) {
 				ServiceCallException serviceCallException = (ServiceCallException) ex;
-//				sendErrorMessage(body, ex, request.getRequestURL().toString(),errorRes, isJsonContentType);
+				sendErrorMessage(body, ex, request.getRequestURL().toString(),errorRes, isJsonContentType);
 				DocumentContext documentContext = JsonPath.parse(serviceCallException.getError());
 				LinkedHashMap<Object, Object> linkedHashMap = documentContext.json();
 				return new ResponseEntity<>(linkedHashMap, HttpStatus.BAD_REQUEST);
@@ -150,8 +172,9 @@ public class ExceptionAdvise {
                 errorRes.getErrors().get(0).setDescription(sw.toString());
             }
 
-//			sendErrorMessage(body, ex, request.getRequestURL().toString(),errorRes, isJsonContentType);
+			sendErrorMessage(body, ex, request.getRequestURL().toString(),errorRes, isJsonContentType);
 		} catch (Exception tracerException) {
+		    log.error("Error in tracer", tracerException);
 			errorRes.setErrors(new ArrayList<>(Collections.singletonList(new Error("TracerException", "An unhandled exception occurred in tracer handler", null, null))));
 		}
 		return new ResponseEntity<>(errorRes, HttpStatus.BAD_REQUEST);
@@ -194,26 +217,31 @@ public class ExceptionAdvise {
 		DocumentContext documentContext;
 		String bodyJSON = body;
 
-		if (isJsonContentType) {
-            try {
-                documentContext = JsonPath.parse(body);
-                bodyJSON = documentContext.json().toString();
-                log.error("sendErrorMessage documentContext: " + bodyJSON);
-            } catch (Exception exception) {
-                bodyJSON = body;
-                log.error("sendErrorMessage documentContext: Failed to parse JSON");
+        if (tracerProperties.isErrorsPublish()) {
+            if (isJsonContentType) {
+                try {
+                    documentContext = JsonPath.parse(body);
+                    bodyJSON = documentContext.json().toString();
+                } catch (Exception exception) {
+                    bodyJSON = body;
+                }
             }
-        }
 
-		if (sendErrorsToKafka) {
             StackTraceElement elements[] = ex.getStackTrace();
 
-            ErrorQueueContract errorQueueContract = ErrorQueueContract.builder().body(bodyJSON).source(source).
-                ts(new Date().getTime()).errorRes(errorRes).exception(Arrays.asList(elements)).message(ex.getMessage()).build();
+            ErrorQueueContract errorQueueContract = ErrorQueueContract.builder()
+                .correlationId(MDC.get(MDC_CORRELATION_ID))
+                .body(bodyJSON)
+                .source(source)
+                .ts(new Date().getTime())
+                .errorRes(errorRes).exception(Arrays.asList(elements))
+                .message(ex.getMessage())
+                .build();
 
             log.error("sendErrorMessage errorQueueContract:" + errorQueueContract);
             errorQueueProducer.sendMessage(errorQueueContract);
         }
+
 	}
 	
 }

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <include resource="org/springframework/boot/logging/logback/defaults.xml" />
+    <property name="CONSOLE_LOG_PATTERN"
+              value="%clr(%d{yyyy-MM-dd HH:mm:ss.SSSZZ}){faint} %clr(${LOG_LEVEL_PATTERN:-%5p}) %clr(---){faint} %clr([%10.10t]){faint} %clr(%-40.40logger{36}){cyan} %clr(--){faint} %mdc %clr(:){faint} %m %n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}"/>
+    <springProperty scope="context" name="rootLoggingLevel" source="logging.level.root" defaultValue="INFO"/>
+    <springProperty scope="context" name="egovLoggingLevel" source="logging.level.org.egov" defaultValue="INFO"/>
+    <include resource="org/springframework/boot/logging/logback/console-appender.xml" />
+
+    <root level="${rootLoggingLevel}">
+        <appender-ref ref="CONSOLE" />
+    </root>
+
+    <logger name="org.egov" additivity="false" level="${egovLoggingLevel}">
+        <appender-ref ref="CONSOLE" />
+    </logger>
+
+</configuration>

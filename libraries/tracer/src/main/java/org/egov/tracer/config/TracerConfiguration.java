@@ -1,17 +1,16 @@
 package org.egov.tracer.config;
 
 import io.opentracing.noop.NoopTracerFactory;
-import org.apache.http.impl.client.HttpClientBuilder;
-import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.egov.tracer.http.RestTemplateLoggingInterceptor;
+import org.egov.tracer.http.filters.TracerFilter;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.*;
 import org.springframework.core.env.Environment;
 import org.springframework.http.client.BufferingClientHttpRequestFactory;
-import org.springframework.http.client.ClientHttpRequestFactory;
-import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.web.client.RestTemplate;
-import org.apache.http.client.HttpClient;
 
 import java.util.Collections;
 
@@ -19,55 +18,61 @@ import java.util.Collections;
 @EnableAspectJAutoProxy
 @ComponentScan(basePackages = {"org.egov.tracer"})
 @PropertySource("classpath:tracer.properties")
+@EnableConfigurationProperties({TracerProperties.class})
+@Import(OpenTracingConfiguration.class)
 public class TracerConfiguration {
 
     @Bean
-    public TracerProperties tracerProperties(Environment environment) {
-        return new TracerProperties(environment);
-    }
-
-
-    @Bean
-    public ObjectMapperFactory objectMapperFactory(TracerProperties tracerProperties) {
-        return new ObjectMapperFactory(tracerProperties);
-    }
-
-    private ClientHttpRequestFactory getClientHttpRequestFactory() {
-        int timeout = 5000;
-        HttpClient httpClient = HttpClientBuilder
-            .create()
-            .setConnectionManager(new PoolingHttpClientConnectionManager() {{
-                setDefaultMaxPerRoute(20);
-                setMaxTotal(50);
-            }}).build();
-
-        HttpComponentsClientHttpRequestFactory clientHttpRequestFactory
-            = new HttpComponentsClientHttpRequestFactory(httpClient);
-
-        clientHttpRequestFactory.setConnectTimeout(timeout);
-        return clientHttpRequestFactory;
+    public ObjectMapperFactory objectMapperFactory(TracerProperties tracerProperties, Environment environment) {
+        return new ObjectMapperFactory(tracerProperties, environment);
     }
 
     @Bean(name = "logAwareRestTemplate")
     public RestTemplate logAwareRestTemplate(TracerProperties tracerProperties) {
+        SimpleClientHttpRequestFactory requestFactory = new SimpleClientHttpRequestFactory();
+        requestFactory.setOutputStreaming(false);
         RestTemplate restTemplate =
-            new RestTemplate(new BufferingClientHttpRequestFactory(new SimpleClientHttpRequestFactory()));
-        restTemplate.setInterceptors(Collections.singletonList(new RestTemplateLoggingInterceptor()));
+            new RestTemplate(new BufferingClientHttpRequestFactory(requestFactory));
+        restTemplate.setInterceptors(Collections.singletonList(new RestTemplateLoggingInterceptor(tracerProperties)));
         return restTemplate;
     }
 
+    /**
+     * Configure tracer filter with order one
+     *
+     * @param objectMapperFactory Object mapper
+     * @param tracerProperties configuration for the filter
+     * @return Filter
+     */
     @Bean
-    @Profile("monitoring")
-    public io.opentracing.Tracer jaegerTracer() {
-        return io.jaegertracing.Configuration.fromEnv()
-            .getTracer();
+    @ConditionalOnProperty(name = "tracer.filter.enabled",
+        havingValue = "true", matchIfMissing = true)
+    public FilterRegistrationBean tracerFilter(ObjectMapperFactory objectMapperFactory,
+                                                      TracerProperties tracerProperties) {
+        final TracerFilter tracerFilter =
+            new TracerFilter(tracerProperties, objectMapperFactory);
+        FilterRegistrationBean registration = new FilterRegistrationBean(tracerFilter);
+        registration.addUrlPatterns("/*");
+        registration.setName("TracerFilter");
+        registration.setOrder(1);
+        return registration;
     }
 
+    /**
+     * Disable open tracing by injecting a Noop
+     *
+     * @return Noop tracer
+     */
     @Bean
-    @Profile("!monitoring")
+    @ConditionalOnProperty(
+        name = {"tracer.opentracing.enabled"},
+        havingValue = "false",
+        matchIfMissing = true
+    )
     public io.opentracing.Tracer tracer() {
         return NoopTracerFactory.create();
     }
+
 
 }
 

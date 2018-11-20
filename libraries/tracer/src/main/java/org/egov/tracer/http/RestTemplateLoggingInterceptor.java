@@ -2,6 +2,8 @@ package org.egov.tracer.http;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
+import org.egov.tracer.config.TracerProperties;
+import org.slf4j.MDC;
 import org.springframework.http.HttpMessage;
 import org.springframework.http.HttpRequest;
 import org.springframework.http.MediaType;
@@ -12,6 +14,9 @@ import org.springframework.http.client.ClientHttpResponse;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+
+import static org.egov.tracer.constants.TracerConstants.CORRELATION_ID_HEADER;
+import static org.egov.tracer.constants.TracerConstants.MDC_CORRELATION_ID;
 
 @Slf4j
 public class RestTemplateLoggingInterceptor implements ClientHttpRequestInterceptor {
@@ -27,14 +32,32 @@ public class RestTemplateLoggingInterceptor implements ClientHttpRequestIntercep
     private static final List<String> JSON_MEDIA_TYPES =
         Arrays.asList(MediaType.APPLICATION_JSON_UTF8_VALUE, MediaType.APPLICATION_JSON_VALUE);
 
+    private TracerProperties tracerProperties;
+
+    public RestTemplateLoggingInterceptor(TracerProperties tracerProperties) {
+        this.tracerProperties = tracerProperties;
+    }
+
+    /**
+     * Intercept all rest template calls
+     *  - Add correlation id header from MDC
+     *  - Log request and responses based on config
+     *
+     * @param request being made
+     * @param body of the request
+     * @param execution execute the rest template call
+     * @return response of the rest call
+     * @throws IOException
+     */
     @Override
     public ClientHttpResponse intercept(HttpRequest request, byte[] body, ClientHttpRequestExecution execution) throws IOException {
         try {
+            request.getHeaders().add(CORRELATION_ID_HEADER, MDC.get(MDC_CORRELATION_ID));
             logRequest(request, body);
 
             final ClientHttpResponse rawResponse = execution.execute(request, body);
 
-            if(log.isDebugEnabled() && isBodyCompatibleForParsing(request)){
+            if(tracerProperties.isRestTemplateDetailedLoggingEnabled() && isBodyCompatibleForParsing(request)){
                 logResponse(rawResponse, request);
             } else{
                 log.info(RESPONSE_MESSAGE, request.getURI());
@@ -48,9 +71,9 @@ public class RestTemplateLoggingInterceptor implements ClientHttpRequestIntercep
 
     private void logResponse(ClientHttpResponse response, HttpRequest httpRequest) throws IOException {
 
-        if(log.isDebugEnabled() && isBodyCompatibleForParsing(httpRequest)){
+        if(tracerProperties.isRestTemplateDetailedLoggingEnabled() && isBodyCompatibleForParsing(httpRequest)){
             String body = getBodyString(response);
-            log.debug(RESPONSE_MESSAGE_WITH_BODY, httpRequest.getURI(), response.getStatusCode(), body);
+            log.info(RESPONSE_MESSAGE_WITH_BODY, httpRequest.getURI(), response.getStatusCode(), body);
         } else{
             log.info(RESPONSE_MESSAGE, httpRequest.getURI());
         }
@@ -58,8 +81,8 @@ public class RestTemplateLoggingInterceptor implements ClientHttpRequestIntercep
     }
 
     private void logRequest(HttpRequest httpRequest, byte[] body) {
-        if(log.isDebugEnabled() && isBodyCompatibleForParsing(httpRequest)){
-            log.debug(REQUEST_MESSAGE_WITH_BODY, httpRequest.getURI(), httpRequest.getMethod().name(), getBody(body));
+        if(tracerProperties.isRestTemplateDetailedLoggingEnabled() && isBodyCompatibleForParsing(httpRequest)){
+            log.info(REQUEST_MESSAGE_WITH_BODY, httpRequest.getURI(), httpRequest.getMethod().name(), getBody(body));
         }
         else {
             log.info(REQUEST_MESSAGE, httpRequest.getURI(), httpRequest.getMethod().name());

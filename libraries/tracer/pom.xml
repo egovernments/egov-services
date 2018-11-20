@@ -64,7 +64,6 @@
             <version>1.8.13</version>
         </dependency>
 
-
         <!--  TRACING -->
         <dependency>
             <groupId>org.springframework.boot</groupId>

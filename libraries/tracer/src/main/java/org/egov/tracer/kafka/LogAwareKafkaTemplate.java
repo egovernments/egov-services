@@ -77,7 +77,7 @@ public class LogAwareKafkaTemplate<K, V> {
         final String topic = result.getProducerRecord().topic();
         final Integer partition = result.getProducerRecord().partition();
         final String key = ObjectUtils.nullSafeToString(result.getProducerRecord().key());
-        if (tracerProperties.isDetailedTracingEnabled()) {
+        if (tracerProperties.isKafkaMessageLoggingEnabled()) {
 			final String bodyAsJsonString = getMessageBodyAsJsonString(message);
 			log.info(SEND_SUCCESS_MESSAGE_WITH_BODY, topic, partition, bodyAsJsonString, key);
 		} else {

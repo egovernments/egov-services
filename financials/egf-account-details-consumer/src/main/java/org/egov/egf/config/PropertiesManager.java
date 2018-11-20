@@ -44,6 +44,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -77,11 +78,15 @@ public class PropertiesManager {
 	@Value("${egov.services.egf_masters_service.accountdetailkeys.createpath}")
 	private String egfMastersServiceAccountdetailkeysCreatepath;
 
-	@Autowired
-	Environment environment;
+	@Value("${financeUrl}")
+	private String financeErpUrl;
 	
 	public String getFainanceErpHostname(String tenantId){
 		
-		return environment.getProperty(tenantId);
+		String fin_url = financeErpUrl;
+		String[] tenantparts = tenantId.split("\\.");
+		
+		fin_url = StringUtils.replace(fin_url, "tenantid", tenantparts[1]);
+		return fin_url;
 	}
 }

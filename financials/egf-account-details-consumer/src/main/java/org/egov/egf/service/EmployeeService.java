@@ -117,7 +117,7 @@ public class EmployeeService {
 
 		requestInfo.setAuthToken(generateAdminToken());
 		AccountDetailKeyContractRequest accDetailKeyRequest = AccountDetailKeyContractRequest.builder()
-				.RequestInfo(requestInfo).accountDetailKey(accDetailKey).build();
+				.requestInfo(requestInfo).accountDetailKey(accDetailKey).tenantId(requestInfo.getTenantId()).build();
 
 		LOGGER.debug("AccountDetailKeyContractRequest : " + accDetailKeyRequest);
 

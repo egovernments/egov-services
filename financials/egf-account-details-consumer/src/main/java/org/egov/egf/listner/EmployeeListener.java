@@ -43,8 +43,10 @@ package org.egov.egf.listner;
 import java.io.StringReader;
 
 import javax.json.Json;
+import javax.json.JsonNumber;
 import javax.json.JsonObject;
 import javax.json.JsonReader;
+import javax.json.JsonValue;
 
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.egov.egf.domain.model.contract.RequestInfo;
@@ -79,12 +81,19 @@ public class EmployeeListener {
         LOGGER.info("employeeJSONObject : " + employeeJSONObject);
         String tenantId = employeeJSONObject.isNull("tenantId") ? null : employeeJSONObject.getString("tenantId");
         LOGGER.info("tenantId : " + tenantId);
-
+        
         RequestInfo requestInfo = requestInfoFactory.getRequestInfo(requestInfoJSONObject, tenantId);
 
         // FIXME : Parse id in long once egf-masters update their AccountDetailKey Contract & table schema.
-        employeeService.processRequest(employeeJSONObject.getString("id"),
-                employeeJSONObject.getString("code") + "-" + employeeJSONObject.getString("name"), tenantId, requestInfo);
+        	if(!employeeJSONObject.isNull("id")&&!employeeJSONObject.isNull("user")){
+        		JsonObject user = employeeJSONObject.getJsonObject("user");
+        		if(!user.isNull("name")){
+        			employeeService.processRequest(String.valueOf(employeeJSONObject.getJsonNumber("id").longValue()),
+        	                employeeJSONObject.getString("code") + "-" + user.getString("name"), tenantId, requestInfo);
+        		}
+        	}
+        
+        
     }
 
 }

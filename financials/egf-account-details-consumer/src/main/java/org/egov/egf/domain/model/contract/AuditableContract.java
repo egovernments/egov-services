@@ -55,7 +55,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @Setter
 @ToString
-@JsonPropertyOrder({ "createdBy", "createdDate", "lastModifiedBy", "lastModifiedDate", "tenantId" })
+@JsonPropertyOrder({ "createdBy", "createdDate", "lastModifiedBy", "lastModifiedDate"})
 public class AuditableContract {
 
     private Long createdBy;
@@ -66,6 +66,6 @@ public class AuditableContract {
 
     private Date lastModifiedDate;
 
-    private String tenantId;
+//    private String tenantId;
 
 }

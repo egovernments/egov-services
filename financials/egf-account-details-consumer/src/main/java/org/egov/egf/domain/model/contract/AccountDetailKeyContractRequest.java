@@ -40,7 +40,9 @@
 
 package org.egov.egf.domain.model.contract;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -56,13 +58,17 @@ import lombok.ToString;
 @Setter
 @ToString
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
+@JsonAutoDetect(fieldVisibility=JsonAutoDetect.Visibility.ANY, getterVisibility=JsonAutoDetect.Visibility.NONE,
+setterVisibility=JsonAutoDetect.Visibility.NONE, creatorVisibility=JsonAutoDetect.Visibility.NONE)
 public class AccountDetailKeyContractRequest {
 
-	private RequestInfo RequestInfo = new RequestInfo();
+	@JsonProperty("RequestInfo")
+	private RequestInfo requestInfo;
 
 //	private List<AccountDetailKeyContract> accountDetailKeys = new ArrayList<AccountDetailKeyContract>();
 
-	private AccountDetailKeyContract accountDetailKey = new AccountDetailKeyContract();
+	private AccountDetailKeyContract accountDetailKey;
+	private String tenantId;
 
 //	private Pagination page = new Pagination();
 

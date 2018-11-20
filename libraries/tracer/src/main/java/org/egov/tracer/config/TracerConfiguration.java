@@ -49,8 +49,7 @@ public class TracerConfiguration {
         havingValue = "true", matchIfMissing = true)
     public FilterRegistrationBean tracerFilter(ObjectMapperFactory objectMapperFactory,
                                                       TracerProperties tracerProperties) {
-        final TracerFilter tracerFilter =
-            new TracerFilter(tracerProperties, objectMapperFactory);
+        final TracerFilter tracerFilter = new TracerFilter(tracerProperties, objectMapperFactory);
         FilterRegistrationBean registration = new FilterRegistrationBean(tracerFilter);
         registration.addUrlPatterns("/*");
         registration.setName("TracerFilter");

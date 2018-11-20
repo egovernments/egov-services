@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.*;
+import java.util.regex.Pattern;
 
 import static java.util.Objects.isNull;
 import static org.egov.tracer.constants.TracerConstants.*;
@@ -35,11 +36,13 @@ public class TracerFilter implements Filter {
 
     private final ObjectMapper objectMapper;
     private TracerProperties tracerProperties;
+    private Pattern skipPattern;
 
-    public TracerFilter(TracerProperties tracerProperties,
-                        ObjectMapperFactory objectMapperFactory) {
+    public TracerFilter(TracerProperties tracerProperties, ObjectMapperFactory objectMapperFactory) {
         this.tracerProperties = tracerProperties;
         this.objectMapper = objectMapperFactory.getObjectMapper();
+        this.skipPattern = isNull(tracerProperties.getFilterSkipPattern()) ? null :
+            Pattern.compile(tracerProperties.getFilterSkipPattern());
     }
 
     @Override
@@ -70,32 +73,46 @@ public class TracerFilter implements Filter {
         String correlationId = null;
         HttpServletRequest httpRequest = (HttpServletRequest) servletRequest;
 
-
-        if (isBodyCompatibleForParsing(httpRequest)) {
-            final MultiReadRequestWrapper wrappedRequest = new MultiReadRequestWrapper(httpRequest);
-            correlationId = getCorrelationId(wrappedRequest);
-            MDC.put(MDC_CORRELATION_ID, correlationId);
-            logRequestURI(httpRequest);
-
-            if (tracerProperties.isRequestLoggingEnabled()) {
-                logRequestBodyAndParams(wrappedRequest);
-            }
-
-            filterChain.doFilter(wrappedRequest, servletResponse);
-
-        } else {
-            correlationId = getCorrelationId(httpRequest);
-            MDC.put(MDC_CORRELATION_ID, correlationId);
-            logRequestURI(httpRequest);
+        if (!this.isTraced(httpRequest)) {
             filterChain.doFilter(httpRequest, servletResponse);
         }
+        else {
 
-        logResponse(servletResponse);
+            if (isBodyCompatibleForParsing(httpRequest)) {
+                final MultiReadRequestWrapper wrappedRequest = new MultiReadRequestWrapper(httpRequest);
+                correlationId = getCorrelationId(wrappedRequest);
+                MDC.put(MDC_CORRELATION_ID, correlationId);
+                logRequestURI(httpRequest);
+
+                if (tracerProperties.isRequestLoggingEnabled()) {
+                    logRequestBodyAndParams(wrappedRequest);
+                }
+
+                filterChain.doFilter(wrappedRequest, servletResponse);
+
+            } else {
+                correlationId = getCorrelationId(httpRequest);
+                MDC.put(MDC_CORRELATION_ID, correlationId);
+                logRequestURI(httpRequest);
+                filterChain.doFilter(httpRequest, servletResponse);
+            }
+
+            logResponse(servletResponse);
+        }
     }
 
     @Override
     public void destroy() {
         MDC.clear();
+    }
+
+    private boolean isTraced(HttpServletRequest httpServletRequest) {
+        if (this.skipPattern != null) {
+            String url = httpServletRequest.getRequestURI().substring(httpServletRequest.getContextPath().length());
+            return !this.skipPattern.matcher(url).matches();
+        } else {
+            return true;
+        }
     }
 
     private void logResponse(ServletResponse servletResponse) {
@@ -173,5 +190,6 @@ public class TracerFilter implements Filter {
     private String getRandomCorrelationId() {
         return UUID.randomUUID().toString();
     }
+
 
 }

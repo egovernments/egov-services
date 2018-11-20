@@ -34,7 +34,7 @@ public class EncryptionService {
         return outputList;
     }
 
-    public Object decrypt(Object decryptReq) throws Exception {
-        return processJSONUtil.processJSON(decryptReq, ModeEnum.DECRYPT, null, null);
+    public Object decrypt(Object decryptionRequest) throws Exception {
+        return processJSONUtil.processJSON(decryptionRequest, ModeEnum.DECRYPT, null, null);
     }
 }

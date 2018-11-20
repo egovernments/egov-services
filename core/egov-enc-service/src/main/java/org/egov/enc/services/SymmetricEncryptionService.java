@@ -2,10 +2,9 @@ package org.egov.enc.services;
 
 import org.egov.enc.keymanagement.KeyStore;
 import org.egov.enc.models.Ciphertext;
-import org.egov.enc.models.MethodEnum;
 import org.egov.enc.models.Plaintext;
 import org.egov.enc.models.SymmetricKey;
-import org.egov.enc.utils.AESUtil;
+import org.egov.enc.utils.SymmetricEncryptionUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -32,7 +31,7 @@ public class SymmetricEncryptionService implements EncryptionServiceInterface {
 
         byte[] initialVectorsBytes = keyStore.generateInitialVector(symmetricKey);
 
-        byte[] cipherBytes = AESUtil.encrypt(plaintext.getPlaintext().getBytes(StandardCharsets.UTF_8), secretKey, initialVectorsBytes);
+        byte[] cipherBytes = SymmetricEncryptionUtil.encrypt(plaintext.getPlaintext().getBytes(StandardCharsets.UTF_8), secretKey, initialVectorsBytes);
 
         Ciphertext ciphertext = new Ciphertext(symmetricKey.getKeyId(), Base64.getEncoder().encodeToString
                 (cipherBytes));
@@ -46,7 +45,7 @@ public class SymmetricEncryptionService implements EncryptionServiceInterface {
 
         byte[] initialVectorsBytes = keyStore.generateInitialVector(symmetricKey);
 
-        byte[] plainBytes = AESUtil.decrypt(Base64.getDecoder().decode(ciphertext.getCiphertext()), secretKey, initialVectorsBytes);
+        byte[] plainBytes = SymmetricEncryptionUtil.decrypt(Base64.getDecoder().decode(ciphertext.getCiphertext()), secretKey, initialVectorsBytes);
         String plain = new String(plainBytes, StandardCharsets.UTF_8);
 
         Plaintext plaintext = new Plaintext(plain);

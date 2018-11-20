@@ -34,43 +34,42 @@ public class SignRequest   {
     /**
      * Type of the value to be encrypted value / object. Sign object as a whole or sign values seperately inside that object.
      */
-    public enum TypeOfValueEnum {
-        VALUE("VALUE"),
-
-        OBJECT("OBJECT");
-
-        private String value;
-
-        TypeOfValueEnum(String value) {
-            this.value = value;
-        }
-
-        @Override
-        @JsonValue
-        public String toString() {
-            return String.valueOf(value);
-        }
-
-        @JsonCreator
-        public static TypeOfValueEnum fromValue(String text) {
-            for (TypeOfValueEnum b : TypeOfValueEnum.values()) {
-                if (String.valueOf(b.value).equals(text)) {
-                    return b;
-                }
-            }
-            return null;
-        }
-    }
-
-    @JsonProperty("typeOfValue")
-    private TypeOfValueEnum typeOfValue = null;
+//    public enum TypeOfValueEnum {
+//        VALUE("VALUE"),
+//
+//        OBJECT("OBJECT");
+//
+//        private String value;
+//
+//        TypeOfValueEnum(String value) {
+//            this.value = value;
+//        }
+//
+//        @Override
+//        @JsonValue
+//        public String toString() {
+//            return String.valueOf(value);
+//        }
+//
+//        @JsonCreator
+//        public static TypeOfValueEnum fromValue(String text) {
+//            for (TypeOfValueEnum b : TypeOfValueEnum.values()) {
+//                if (String.valueOf(b.value).equals(text)) {
+//                    return b;
+//                }
+//            }
+//            return null;
+//        }
+//    }
+//
+//    @JsonProperty("typeOfValue")
+//    private TypeOfValueEnum typeOfValue = null;
 
     @JsonProperty("tenantId")
     private String tenantId = null;
 
     @JsonProperty("value")
-    private Object value = null;
-
+    private String value = null;
 
 }
 

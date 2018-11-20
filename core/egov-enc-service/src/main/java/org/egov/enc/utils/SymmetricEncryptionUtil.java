@@ -16,7 +16,7 @@ import java.security.Security;
 
 @Slf4j
 @Component
-public class AESUtil {
+public class SymmetricEncryptionUtil {
 
     public static String symmetricEncryptionMethod;
 
@@ -25,7 +25,7 @@ public class AESUtil {
         symmetricEncryptionMethod = method;
     }
 
-    public AESUtil() { init(); }
+    public SymmetricEncryptionUtil() { init(); }
 
     //Initialize Security Provider to BouncyCastleProvider
     public static void init() { Security.addProvider(new BouncyCastleProvider()); }

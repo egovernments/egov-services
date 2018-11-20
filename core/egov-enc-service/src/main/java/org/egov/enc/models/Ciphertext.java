@@ -15,7 +15,7 @@ public class Ciphertext {
     public Ciphertext(String ciphertext) {
         try{
             String[] cipherArray = ciphertext.split("\\|");
-            keyId = Integer.parseInt(cipherArray[0]);
+            this.keyId = Integer.parseInt(cipherArray[0]);
             this.ciphertext = cipherArray[1];
         } catch (Exception e) {
             throw new CustomException(ciphertext + ": Invalid Ciphertext", ciphertext + ": Invalid Ciphertext");

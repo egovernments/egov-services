@@ -3,9 +3,8 @@ package org.egov.enc.services;
 import org.egov.enc.keymanagement.KeyStore;
 import org.egov.enc.models.AsymmetricKey;
 import org.egov.enc.models.Ciphertext;
-import org.egov.enc.models.MethodEnum;
 import org.egov.enc.models.Plaintext;
-import org.egov.enc.utils.RSAUtil;
+import org.egov.enc.utils.AsymmetricEncryptionUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -27,7 +26,7 @@ public class AsymmetricEncryptionService implements EncryptionServiceInterface {
         AsymmetricKey asymmetricKey = keyStore.getAsymmetricKey(plaintext.getTenantId());
         PublicKey publicKey = keyStore.generatePublicKey(asymmetricKey);
 
-        byte[] cipherBytes = RSAUtil.encrypt(plaintext.getPlaintext().getBytes(StandardCharsets.UTF_8), publicKey);
+        byte[] cipherBytes = AsymmetricEncryptionUtil.encrypt(plaintext.getPlaintext().getBytes(StandardCharsets.UTF_8), publicKey);
 
         Ciphertext ciphertext = new Ciphertext(asymmetricKey.getKeyId(), Base64.getEncoder().encodeToString
                 (cipherBytes));
@@ -40,7 +39,7 @@ public class AsymmetricEncryptionService implements EncryptionServiceInterface {
         AsymmetricKey asymmetricKey = keyStore.getAsymmetricKey(ciphertext.getKeyId());
         PrivateKey privateKey = keyStore.generatePrivateKey(asymmetricKey);
 
-        byte[] plainBytes = RSAUtil.decrypt(Base64.getDecoder().decode(ciphertext.getCiphertext()), privateKey);
+        byte[] plainBytes = AsymmetricEncryptionUtil.decrypt(Base64.getDecoder().decode(ciphertext.getCiphertext()), privateKey);
         String plain = new String(plainBytes, StandardCharsets.UTF_8);
 
         Plaintext plaintext = new Plaintext(plain);

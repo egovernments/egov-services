@@ -4,7 +4,7 @@ import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.egov.enc.config.AppProperties;
 import org.egov.enc.models.AsymmetricKey;
 import org.egov.enc.models.SymmetricKey;
-import org.egov.enc.utils.AESUtil;
+import org.egov.enc.utils.SymmetricEncryptionUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -122,7 +122,7 @@ public class KeyGenerator {
 
     //All keys will get encrypted before returning to the caller
     private String encryptWithMasterPassword(String key) throws NoSuchAlgorithmException, IllegalBlockSizeException, InvalidKeyException, BadPaddingException, InvalidAlgorithmParameterException, NoSuchPaddingException {
-        byte[] encryptedKey = AESUtil.encrypt(key.getBytes(StandardCharsets.UTF_8), masterKey, masterInitialVector);
+        byte[] encryptedKey = SymmetricEncryptionUtil.encrypt(key.getBytes(StandardCharsets.UTF_8), masterKey, masterInitialVector);
         return Base64.getEncoder().encodeToString(encryptedKey);
     }
 }

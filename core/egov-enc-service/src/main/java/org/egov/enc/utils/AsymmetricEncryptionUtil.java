@@ -15,7 +15,7 @@ import java.security.*;
 
 @Slf4j
 @Component
-public class RSAUtil {
+public class AsymmetricEncryptionUtil {
 
     public static String asymmetricEncryptionMethod;
 
@@ -25,7 +25,7 @@ public class RSAUtil {
     }
 
     @Autowired
-    public RSAUtil() { init(); }
+    public AsymmetricEncryptionUtil() { init(); }
 
     //Initialize Security Provider to BouncyCastleProvider
     public static void init() {

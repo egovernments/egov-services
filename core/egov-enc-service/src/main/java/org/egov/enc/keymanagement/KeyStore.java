@@ -6,7 +6,7 @@ import org.egov.enc.models.AsymmetricKey;
 import org.egov.enc.models.MethodEnum;
 import org.egov.enc.models.SymmetricKey;
 import org.egov.enc.repository.KeyRepository;
-import org.egov.enc.utils.AESUtil;
+import org.egov.enc.utils.SymmetricEncryptionUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
@@ -203,7 +203,7 @@ public class KeyStore implements ApplicationRunner {
 
     //Decrypt the key read from the database with the use of master password
     private String decryptWithMasterPassword(String encryptedKey) throws NoSuchAlgorithmException, IllegalBlockSizeException, InvalidKeyException, BadPaddingException, InvalidAlgorithmParameterException, NoSuchPaddingException {
-        byte[] decryptedKey = AESUtil.decrypt(Base64.getDecoder().decode(encryptedKey), masterKey, masterInitialVector);
+        byte[] decryptedKey = SymmetricEncryptionUtil.decrypt(Base64.getDecoder().decode(encryptedKey), masterKey, masterInitialVector);
         return new String(decryptedKey, StandardCharsets.UTF_8);
     }
 

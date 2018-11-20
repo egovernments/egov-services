@@ -5,8 +5,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.egov.enc.KeyManagementApplication;
 import org.egov.enc.services.EncryptionService;
-import org.egov.enc.web.models.EncryptionRequest;
+import org.egov.enc.services.SignatureService;
+import org.egov.enc.web.models.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -27,7 +29,7 @@ public class CryptoApiController{
     @Autowired
     private EncryptionService encryptionService;
     @Autowired
-    private KeyManagementApplication keyManagementApplication;
+    private SignatureService signatureService;
 
     @Autowired
     public CryptoApiController(ObjectMapper objectMapper, HttpServletRequest request) {
@@ -41,8 +43,18 @@ public class CryptoApiController{
     }
 
     @RequestMapping(value="/crypto/v1/_decrypt", method = RequestMethod.POST)
-    public ResponseEntity<Object> cryptoV1DecryptPost(@Valid @RequestBody Object decryptReqObject) throws Exception {
-        return new ResponseEntity<>(encryptionService.decrypt(decryptReqObject), HttpStatus.OK );
+    public ResponseEntity<Object> cryptoV1DecryptPost(@Valid @RequestBody Object decryptionRequest) throws Exception {
+        return new ResponseEntity<>(encryptionService.decrypt(decryptionRequest), HttpStatus.OK );
+    }
+
+    @RequestMapping(value="/crypto/v1/_sign", method = RequestMethod.POST)
+    public ResponseEntity<SignResponse> cryptoV1SignPost(@Valid @RequestBody SignRequest signRequest) throws Exception {
+        return new ResponseEntity<>(signatureService.hashAndSign(signRequest), HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/crypto/v1/_verify", method = RequestMethod.POST)
+    public ResponseEntity<VerifyResponse> cryptoV1VerifyPost(@Valid @RequestBody VerifyRequest verifyRequest) throws Exception {
+        return new ResponseEntity<>(signatureService.hashAndVerify(verifyRequest), HttpStatus.OK);
     }
 
 }

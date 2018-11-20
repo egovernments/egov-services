@@ -29,7 +29,7 @@ serviceMaps:
           - jsonPath: $.Calculations.*.tradeLicense.auditDetails.lastModifiedTime
 
 
-       - query: INSERT INTO eg_tl_calculator_accessory(id,tenantId,consumercode,accessoryFeeAndBillingSlabIds,createdby, lastmodifiedby, createdtime, lastmodifiedtime) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?);
+       - query: INSERT INTO eg_tl_calculator_accessory(id,tenantId,consumercode,accessoryFeeAndBillingSlabIds,createdby,lastmodifiedby, createdtime, lastmodifiedtime) SELECT * FROM (VALUES ( ?, ?, ?, ?::JSONB, ?, ?, ?::BIGINT, ?::BIGINT)) AS t WHERE (NOT (SELECT coalesce(field, '') = '' FROM (VALUES (?))sub(field)));
          basePath: Calculations.*.tradeLicense
          jsonMaps:
           - jsonPath: $.Calculations.*.accessoryBillingIds.id
@@ -49,3 +49,5 @@ serviceMaps:
           - jsonPath: $.Calculations.*.tradeLicense.auditDetails.createdTime
 
           - jsonPath: $.Calculations.*.tradeLicense.auditDetails.lastModifiedTime
+
+          - jsonPath: $.Calculations.*.accessoryBillingIds.id

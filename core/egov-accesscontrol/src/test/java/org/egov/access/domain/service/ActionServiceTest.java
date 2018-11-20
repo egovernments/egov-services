@@ -1,20 +1,12 @@
 package org.egov.access.domain.service;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.when;
-
-import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import org.egov.access.domain.criteria.ActionSearchCriteria;
 import org.egov.access.domain.criteria.ValidateActionCriteria;
 import org.egov.access.domain.model.Action;
 import org.egov.access.domain.model.ActionValidation;
 import org.egov.access.persistence.repository.ActionRepository;
 import org.egov.access.persistence.repository.BaseRepository;
+import org.egov.access.persistence.repository.MdmsRepository;
 import org.egov.access.persistence.repository.querybuilder.ActionFinderQueryBuilder;
 import org.egov.access.persistence.repository.querybuilder.ValidateActionQueryBuilder;
 import org.egov.access.persistence.repository.rowmapper.ActionRowMapper;
@@ -32,6 +24,15 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
+import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.when;
+
 @RunWith(MockitoJUnitRunner.class)
 public class ActionServiceTest {
 
@@ -40,6 +41,9 @@ public class ActionServiceTest {
 
 	@Mock
 	private ActionRepository actionRepository;
+
+	@Mock
+	private MdmsRepository mdmsRepository;
 
 	private ActionService actionService;
 
@@ -52,7 +56,7 @@ public class ActionServiceTest {
 	@Before
 	public void before() {
 
-		actionService = new ActionService(repository, actionRepository);
+		actionService = new ActionService(repository, actionRepository, mdmsRepository);
 	}
 
 	@Test

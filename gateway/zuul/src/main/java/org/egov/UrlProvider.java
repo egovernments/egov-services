@@ -34,7 +34,7 @@ public class UrlProvider {
 			map.put(index[0], index[1]);
 		}
 		urlMap = Collections.unmodifiableMap(map);
-		log.info(" the urls : " + urlMap);
+		log.info(" the uris : " + urlMap);
 	}
 	
 	public static Map<String, String> getUrlMap() {

@@ -43,7 +43,7 @@ public class CorrelationIdFilter extends ZuulFilter {
         final String correlationId = UUID.randomUUID().toString();
         MDC.put(CORRELATION_ID_KEY, correlationId);
         ctx.set(CORRELATION_ID_KEY, correlationId);
-        logger.info(RECEIVED_REQUEST_MESSAGE, ctx.getRequest().getRequestURI());
+        logger.debug(RECEIVED_REQUEST_MESSAGE, ctx.getRequest().getRequestURI());
         return null;
     }
 

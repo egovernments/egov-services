@@ -2,24 +2,29 @@ package org.egov.access;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.cache2k.extra.spring.SpringCache2kCacheManager;
 import org.egov.tracer.config.TracerConfiguration;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cache.CacheManager;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
+import org.springframework.context.annotation.Profile;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.servlet.config.annotation.ContentNegotiationConfigurer;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
+import javax.annotation.PostConstruct;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
 import java.util.TimeZone;
-
-import javax.annotation.PostConstruct;
+import java.util.concurrent.TimeUnit;
 
 @SpringBootApplication
+@EnableCaching
 @Import(TracerConfiguration.class)
 public class EgovAccesscontrolApplication {
 
@@ -27,6 +32,9 @@ public class EgovAccesscontrolApplication {
 
 	@Value("${app.timezone}")
 	private String timeZone;
+
+    @Value("${cache.expiry.role.action.minutes}")
+    private int roleActionExpiry;
 
 	@PostConstruct
 	public void initialize() {
@@ -50,7 +58,7 @@ public class EgovAccesscontrolApplication {
 
 	@Bean
 	public ObjectMapper getObjectMapper() {
-		ObjectMapper objectMapper = new ObjectMapper();
+		ObjectMapper objectMapper = new ObjectMapper().disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
 		objectMapper.setTimeZone(TimeZone.getTimeZone(timeZone));
 		return objectMapper;
 	}
@@ -65,5 +73,12 @@ public class EgovAccesscontrolApplication {
 			}
 
 		};
+	}
+
+	@Bean
+    @Profile("!test")
+	public CacheManager cacheManager() {
+		return new SpringCache2kCacheManager()
+				.addCaches(b->b.name("roleActions").expireAfterWrite(roleActionExpiry, TimeUnit.MINUTES).entryCapacity(10));
 	}
 }

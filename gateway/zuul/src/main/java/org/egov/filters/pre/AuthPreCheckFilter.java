@@ -84,7 +84,6 @@ public class AuthPreCheckFilter extends ZuulFilter {
             return null;
         }
         RequestContext.getCurrentContext().set(AUTH_TOKEN_KEY, authToken);
-        logger.info(RETRIEVED_AUTH_TOKEN_MESSAGE, authToken);
         if (authToken == null) {
             if (mixedModeEndpointsWhitelist.contains(getRequestURI())) {
                 logger.info(ROUTING_TO_ANONYMOUS_ENDPOINT_MESSAGE, getRequestURI());
@@ -103,10 +102,10 @@ public class AuthPreCheckFilter extends ZuulFilter {
 
     private String getAuthTokenFromRequest() throws IOException {
         if (GET.equalsIgnoreCase(getRequestMethod()) || getRequestURI().matches(FILESTORE_REGEX)) {
-            logger.info(AUTH_TOKEN_HEADER_MESSAGE, getRequestURI());
+            logger.debug(AUTH_TOKEN_HEADER_MESSAGE, getRequestURI());
             return getAuthTokenFromRequestHeader();
         } else {
-            logger.info(AUTH_TOKEN_BODY_MESSAGE, getRequestURI());
+            logger.debug(AUTH_TOKEN_BODY_MESSAGE, getRequestURI());
             return getAuthTokenFromRequestBody();
         }
     }

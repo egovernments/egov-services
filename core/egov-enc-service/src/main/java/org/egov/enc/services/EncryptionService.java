@@ -2,6 +2,8 @@ package org.egov.enc.services;
 
 import lombok.extern.slf4j.Slf4j;
 import org.egov.enc.KeyManagementApplication;
+import org.egov.enc.config.AppProperties;
+import org.egov.enc.models.MethodEnum;
 import org.egov.enc.models.ModeEnum;
 import org.egov.enc.utils.Constants;
 import org.egov.enc.utils.ProcessJSONUtil;
@@ -19,6 +21,8 @@ import java.util.LinkedList;
 public class EncryptionService {
 
     @Autowired
+    private AppProperties appProperties;
+    @Autowired
     private ProcessJSONUtil processJSONUtil;
     @Autowired
     private KeyManagementApplication keyManagementApplication;
@@ -29,7 +33,8 @@ public class EncryptionService {
             if(!keyManagementApplication.checkIfTenantExists(encReqObject.getTenantId())) {
                 throw new CustomException(Constants.TENANT_NOT_FOUND, Constants.TENANT_NOT_FOUND );
             }
-            outputList.add(processJSONUtil.processJSON(encReqObject.getValue(), ModeEnum.ENCRYPT, encReqObject.getMethod(), encReqObject.getTenantId()));
+            outputList.add(processJSONUtil.processJSON(encReqObject.getValue(), ModeEnum.ENCRYPT,
+                    MethodEnum.fromValue(appProperties.getTypeToMethodMap().get(encReqObject.getDataType())), encReqObject.getTenantId()));
         }
         return outputList;
     }

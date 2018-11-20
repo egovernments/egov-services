@@ -40,9 +40,6 @@ public class TLCalculatorConfigs {
     @Value("${egov.demand.businessservice}")
     private String businessService;
 
-    @Value("${egov.billingslab.type}")
-    private String billingSlabRateType;
-
 
     //tradelicense Registry
     @Value("${egov.tradelicense.host}")
@@ -78,6 +75,19 @@ public class TLCalculatorConfigs {
 
     @Value("${egov.mdms.search.endpoint}")
     private String mdmsSearchEndpoint;
+
+
+    //Kafka Topics
+    @Value("${persister.save.tl.calculation.topic}")
+    private String saveTopic;
+
+
+    //CalculaterType Default Values
+    @Value("${egov.tl.calculationtype.tradetype.default}")
+    private String defaultTradeUnitCalculationType;
+
+    @Value("${egov.tl.calculationtype.accessory.default}")
+    private String defaultAccessoryCalculationType;
 
 
 }

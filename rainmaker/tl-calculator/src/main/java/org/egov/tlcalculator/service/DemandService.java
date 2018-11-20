@@ -3,16 +3,16 @@ package org.egov.tlcalculator.service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.tlcalculator.config.TLCalculatorConfigs;
+import org.egov.tlcalculator.repository.CalculationRepository;
 import org.egov.tlcalculator.repository.DemandRepository;
 import org.egov.tlcalculator.repository.ServiceRequestRepository;
+import org.egov.tlcalculator.repository.builder.CalculationQueryBuilder;
 import org.egov.tlcalculator.utils.CalculationUtils;
 import org.egov.tlcalculator.utils.TLCalculatorConstants;
 import org.egov.tlcalculator.web.models.*;
 import org.egov.tlcalculator.web.models.tradelicense.OwnerInfo;
 import org.egov.tlcalculator.web.models.tradelicense.TradeLicense;
 import org.egov.tlcalculator.web.models.demand.*;
-import org.egov.tlcalculator.web.models.tradelicense.OwnerInfo;
-import org.egov.tlcalculator.web.models.tradelicense.TradeLicense;
 import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -46,11 +46,16 @@ public class DemandService {
     @Autowired
     private MDMSService mdmsService;
 
+    @Autowired
+    private CalculationRepository calculationRepository;
+
+    @Autowired
+    private CalculationQueryBuilder calculationQueryBuilder;
 
 
 
-    public void generateDemand(RequestInfo requestInfo,CalculationRes response){
-        List<Calculation> calculations = response.getCalculation();
+
+    public void generateDemand(RequestInfo requestInfo,List<Calculation> calculations){
 
         //List that will contain Calculation for new demands
         List<Calculation> createCalculations = new LinkedList<>();
@@ -61,7 +66,7 @@ public class DemandService {
         if(!CollectionUtils.isEmpty(calculations)){
             for(Calculation calculation : calculations)
             {
-                    if(CollectionUtils.isEmpty(searchDemand(calculation.getTenantId(),
+                                                                                                                                                                                                            if(CollectionUtils.isEmpty(searchDemand(calculation.getTenantId(),
                             calculation.getTradeLicense().getApplicationNumber(),requestInfo)))
                         createCalculations.add(calculation);
                     else
@@ -75,29 +80,26 @@ public class DemandService {
             updateDemand(requestInfo,updateCalculations);
     }
 
-    public BillResponse getBill(RequestInfo requestInfo,GenerateBillCriteria billCriteria){
-        /* String consumerCode = billCriteria.getConsumerCode();
-         String tenantId = billCriteria.getTenantId();
+    public BillAndCalculations getBill(RequestInfo requestInfo, GenerateBillCriteria billCriteria){
+        BillResponse billResponse = generateBill(requestInfo,billCriteria);
+        BillingSlabIds billingSlabIds = getBillingSlabIds(billCriteria);
+        BillAndCalculations getBillResponse = new BillAndCalculations();
+        getBillResponse.setBillingSlabIds(billingSlabIds);
+        getBillResponse.setBillResponse(billResponse);
+        return getBillResponse;
+    }
 
-         List<Demand> demands = searchDemand(tenantId,consumerCode,requestInfo);
+    private BillingSlabIds getBillingSlabIds(GenerateBillCriteria billCriteria){
+        List<Object> preparedStmtList = new ArrayList<>();
+        CalculationSearchCriteria criteria = new CalculationSearchCriteria();
+        criteria.setTenantId(billCriteria.getTenantId());
+        criteria.setAplicationNumber(billCriteria.getConsumerCode());
 
-         if(CollectionUtils.isEmpty(demands))
-             throw new CustomException("INVALID CONSUMERCODE","No demand exists for this consumer code");*/
-
-        /* //Recalculating using ConsumerCode used as applicationNumber
-         CalulationCriteria calulationCriteria = new CalulationCriteria();
-         calulationCriteria.setApplicationNumber(consumerCode);
-         calulationCriteria.setTenantId(tenantId);
-         List<Calculation> calculations = calculationService.calculate(requestInfo,Collections.singletonList(calulationCriteria));
-
-         //Demand Updated
-         updateDemand(requestInfo,calculations);*/
-
-        /*
-        Put logic for penalty or rebate update here
-         */
-
-         return generateBill(requestInfo,billCriteria);
+        String query = calculationQueryBuilder.getSearchQuery(criteria,preparedStmtList);
+        System.out.println("query: "+query);
+        System.out.println("preparedStatement: "+preparedStmtList);
+        BillingSlabIds billingSlabIds = calculationRepository.getDataFromDB(query,preparedStmtList);
+        return billingSlabIds;
     }
 
 

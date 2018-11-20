@@ -9,8 +9,8 @@ import org.egov.mdms.model.MdmsCriteriaReq;
 import org.egov.mdms.model.ModuleDetail;
 import org.egov.tlcalculator.config.TLCalculatorConfigs;
 import org.egov.tlcalculator.repository.ServiceRequestRepository;
-import org.egov.tlcalculator.utils.BillingslabConstants;
 import org.egov.tlcalculator.utils.TLCalculatorConstants;
+import org.egov.tlcalculator.web.models.enums.CalculationType;
 import org.egov.tlcalculator.web.models.tradelicense.TradeLicense;
 import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,22 +45,30 @@ public class MDMSService {
 
 
 
-    private MdmsCriteriaReq getFinancialYearRequest(RequestInfo requestInfo, String tenantId) {
+    private MdmsCriteriaReq getMDMSRequest(RequestInfo requestInfo, String tenantId) {
 
         // master details for TL module
-        List<MasterDetail> tlMasterDetails = new ArrayList<>();
-
+        List<MasterDetail> fyMasterDetails = new ArrayList<>();
         // filter to only get code field from master data
 
         final String filterCodeForUom = "$.[?(@.active==true)]";
 
-        tlMasterDetails.add(MasterDetail.builder().name(TLCalculatorConstants.MDMS_FINANCIALYEAR).filter(filterCodeForUom).build());
+        fyMasterDetails.add(MasterDetail.builder().name(TLCalculatorConstants.MDMS_FINANCIALYEAR).filter(filterCodeForUom).build());
 
-        ModuleDetail tlModuleDtls = ModuleDetail.builder().masterDetails(tlMasterDetails)
+        ModuleDetail fyModuleDtls = ModuleDetail.builder().masterDetails(fyMasterDetails)
                 .moduleName(TLCalculatorConstants.MDMS_EGF_MASTER).build();
 
+        List<MasterDetail> tlMasterDetails = new ArrayList<>();
+        tlMasterDetails.add(MasterDetail.builder().name(TLCalculatorConstants.MDMS_CALCULATIONTYPE)
+                .filter(filterCodeForUom).build());
+        ModuleDetail tlModuleDtls = ModuleDetail.builder().masterDetails(tlMasterDetails)
+                .moduleName(TLCalculatorConstants.MDMS_TRADELICENSE).build();
 
-        MdmsCriteria mdmsCriteria = MdmsCriteria.builder().moduleDetails(Collections.singletonList(tlModuleDtls)).tenantId(tenantId)
+        List<ModuleDetail> moduleDetails = new ArrayList<>();
+        moduleDetails.add(fyModuleDtls);
+        moduleDetails.add(tlModuleDtls);
+
+        MdmsCriteria mdmsCriteria = MdmsCriteria.builder().moduleDetails(moduleDetails).tenantId(tenantId)
                 .build();
 
         return MdmsCriteriaReq.builder().requestInfo(requestInfo).mdmsCriteria(mdmsCriteria).build();
@@ -70,7 +78,7 @@ public class MDMSService {
     public Map<String,Long> getTaxPeriods(RequestInfo requestInfo,TradeLicense license){
         Map<String,Long> taxPeriods = new HashMap<>();
 
-        MdmsCriteriaReq mdmsCriteriaReq = getFinancialYearRequest(requestInfo,license.getTenantId());
+        MdmsCriteriaReq mdmsCriteriaReq = getMDMSRequest(requestInfo,license.getTenantId());
         try {
             Object result = serviceRequestRepository.fetchResult(getMdmsSearchUrl(), mdmsCriteriaReq);
             String jsonPath = TLCalculatorConstants.MDMS_FINACIALYEAR_PATH.replace("{}",license.getFinancialYear());
@@ -89,6 +97,54 @@ public class MDMSService {
     }
 
 
+    public Map getCalculationType( RequestInfo requestInfo,TradeLicense license){
+
+        MdmsCriteriaReq mdmsCriteriaReq = getMDMSRequest(requestInfo,license.getTenantId());
+        HashMap<String,Object> calculationType = new HashMap<>();
+        try {
+            Object result = serviceRequestRepository.fetchResult(getMdmsSearchUrl(), mdmsCriteriaReq);
+
+            if(((Map)result).get(TLCalculatorConstants.MDMS_TRADELICENSE)==null)
+                return defaultMap();
+
+            List jsonOutput = JsonPath.read(result, TLCalculatorConstants.MDMS_CALCULATIONTYPE_PATH);
+            String financialYear = license.getFinancialYear().split("-")[0];
+            String maxClosestYear = "0";
+            for(Object entry : jsonOutput) {
+                HashMap<String,Object> map = (HashMap<String,Object>)entry;
+                String year = (String)map.get(TLCalculatorConstants.MDMS_CALCULATIONTYPE_FINANCIALYEAR);
+                if(year.compareTo(financialYear)<0 && year.compareTo(maxClosestYear)>0){
+                    maxClosestYear = year;
+                }
+                if(year.compareTo(financialYear)==0){
+                    maxClosestYear = year;
+                    break;
+                }
+            }
+            String jsonPath = TLCalculatorConstants.MDMS_CALCULATIONTYPE_FINANCIALYEAR_PATH.replace("{}",maxClosestYear);
+            List<HashMap> output = JsonPath.read(result,jsonPath);
+            calculationType = output.get(0);
+        }
+        catch (Exception e){
+            throw new CustomException("MDMS ERROR","Failed to get calculationType");
+        }
+
+        return calculationType;
+    }
+
+    private Map defaultMap(){
+        Map defaultMap = new HashMap();
+        defaultMap.put(TLCalculatorConstants.MDMS_CALCULATIONTYPE_TRADETYPE,config.getDefaultTradeUnitCalculationType());
+        defaultMap.put(TLCalculatorConstants.MDMS_CALCULATIONTYPE_ACCESSORY,config.getDefaultAccessoryCalculationType());
+        return defaultMap;
+    }
+
+
+    public Object mDMSCall(RequestInfo requestInfo,TradeLicense license){
+        MdmsCriteriaReq mdmsCriteriaReq = getMDMSRequest(requestInfo,license.getTenantId());
+        Object result = serviceRequestRepository.fetchResult(getMdmsSearchUrl(), mdmsCriteriaReq);
+        return result;
+    }
 
 
 

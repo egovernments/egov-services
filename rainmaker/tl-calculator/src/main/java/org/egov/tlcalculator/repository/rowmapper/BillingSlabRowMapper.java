@@ -1,4 +1,4 @@
-package org.egov.tlcalculator.repository;
+package org.egov.tlcalculator.repository.rowmapper;
 
 import java.math.BigDecimal;
 import java.sql.ResultSet;

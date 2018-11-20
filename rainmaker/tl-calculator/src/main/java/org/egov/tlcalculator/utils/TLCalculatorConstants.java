@@ -13,4 +13,22 @@ public class TLCalculatorConstants {
 
     public static final String MDMS_ENDDATE  = "endingDate";
 
+    public static final String MDMS_CALCULATIONTYPE = "CalculationType";
+
+    public static final String MDMS_CALCULATIONTYPE_PATH = "$.MdmsRes.TradeLicense.CalculationType";
+
+    public static final String MDMS_TRADELICENSE = "TradeLicense";
+
+    public static final String MDMS_CALCULATIONTYPE_FINANCIALYEAR= "financialYear";
+
+    public static final String MDMS_CALCULATIONTYPE_TRADETYPE= "tradeType";
+
+    public static final String MDMS_CALCULATIONTYPE_ACCESSORY= "accessory";
+
+    public static final String MDMS_CALCULATIONTYPE_FINANCIALYEAR_PATH = "$.MdmsRes.TradeLicense.CalculationType[?(@.financialYear=='{}')]";
+
+
+
+
+
 }

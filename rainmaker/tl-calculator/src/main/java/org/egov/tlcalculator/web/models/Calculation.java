@@ -47,4 +47,10 @@ public class Calculation {
 	@JsonProperty("taxHeadEstimates")
 	List<TaxHeadEstimate> taxHeadEstimates;
 
+	@JsonProperty("tradeTypeBillingIds")
+	FeeAndBillingSlabIds tradeTypeBillingIds;
+
+	@JsonProperty("accessoryBillingIds")
+	FeeAndBillingSlabIds accessoryBillingIds;
+
 }

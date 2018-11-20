@@ -1,13 +1,9 @@
 package org.egov.tl.web.models;
 
-import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
-import org.egov.tl.web.models.AuditDetails;
-import org.egov.tl.web.models.TradeLicenseDetail;
 import org.egov.tl.web.models.calculation.Calculation;
 import org.springframework.validation.annotation.Validated;
 import javax.validation.Valid;

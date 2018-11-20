@@ -52,7 +52,7 @@ public class CalculationService {
             throw new CustomException("INVALID REQUEST","The request for calculation cannot be empty or null");
 
         CalculationRes response = getCalculation(requestInfo,licenses);
-        List<Calculation> calculations = response.getCalculation();
+        List<Calculation> calculations = response.getCalculations();
         Map<String,Calculation> applicationNumberToCalculation = new HashMap<>();
         calculations.forEach(calculation -> {
             applicationNumberToCalculation.put(calculation.getTradeLicense().getApplicationNumber(),calculation);

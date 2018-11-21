@@ -12,6 +12,7 @@ import java.util.List;
 @AllArgsConstructor
 public class ErrorQueueContract {
 
+    private String id;
 	private String source;
 	private Object body;
 	private Long ts;

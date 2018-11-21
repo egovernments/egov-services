@@ -133,7 +133,7 @@ public class ExceptionAdvise {
 				errorRes.setErrors(getBindingErrors(customBindingResultExceprion.getBindingResult(), errors));
 			} else if (ex instanceof CustomException) {
 				CustomException customException = (CustomException) ex;
-				populateCustomErrros(customException, errors);
+				populateCustomErrors(customException, errors);
 				errorRes.setErrors(errors);
 			} else if (ex instanceof ServiceCallException) {
 				ServiceCallException serviceCallException = (ServiceCallException) ex;
@@ -195,7 +195,7 @@ public class ExceptionAdvise {
 		return errors;
 	}
 
-	private void populateCustomErrros(CustomException customException, List<Error> errors) {
+	private void populateCustomErrors(CustomException customException, List<Error> errors) {
 		Map<String, String> map = customException.getErrors();
 		if (map != null && !map.isEmpty()) {
 			for (Map.Entry<String, String> entry : map.entrySet()) {
@@ -215,30 +215,31 @@ public class ExceptionAdvise {
 		
 	void sendErrorMessage(String body, Exception ex, String source, ErrorRes errorRes, boolean isJsonContentType) {
 		DocumentContext documentContext;
-		String bodyJSON = body;
 
         if (tracerProperties.isErrorsPublish()) {
+            Object requestBody = body;
             if (isJsonContentType) {
                 try {
                     documentContext = JsonPath.parse(body);
-                    bodyJSON = documentContext.json().toString();
+                    requestBody = documentContext.json();
                 } catch (Exception exception) {
-                    bodyJSON = body;
+                    requestBody = body;
                 }
             }
 
             StackTraceElement elements[] = ex.getStackTrace();
 
             ErrorQueueContract errorQueueContract = ErrorQueueContract.builder()
+                .id(UUID.randomUUID().toString())
                 .correlationId(MDC.get(MDC_CORRELATION_ID))
-                .body(bodyJSON)
+                .body(requestBody)
                 .source(source)
                 .ts(new Date().getTime())
-                .errorRes(errorRes).exception(Arrays.asList(elements))
+                .errorRes(errorRes)
+                .exception(Arrays.asList(elements))
                 .message(ex.getMessage())
                 .build();
 
-            log.error("sendErrorMessage errorQueueContract:" + errorQueueContract);
             errorQueueProducer.sendMessage(errorQueueContract);
         }
 

@@ -17,6 +17,9 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.egov.tracer.constants.TracerConstants.CORRELATION_ID_OPENTRACING_FORMAT;
+import static org.egov.tracer.constants.TracerConstants.MDC_CORRELATION_ID;
+
 @Configuration
 @ConditionalOnWebApplication
 @AutoConfigureAfter({TracerAutoConfiguration.class})
@@ -53,7 +56,7 @@ public class OpenTracingConfiguration {
         decorators.add(new ServletFilterSpanDecorator() {
             @Override
             public void onRequest(HttpServletRequest httpServletRequest, Span span) {
-                span.setTag("correlation-id", MDC.get("CORRELATION_ID"));
+                span.setTag(CORRELATION_ID_OPENTRACING_FORMAT, MDC.get(MDC_CORRELATION_ID));
             }
 
             @Override

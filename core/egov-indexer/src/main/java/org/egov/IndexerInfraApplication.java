@@ -20,7 +20,6 @@ import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 @SpringBootApplication
 @Configuration
 @PropertySource("classpath:application.properties")
-
 public class IndexerInfraApplication
 {	
     @Autowired

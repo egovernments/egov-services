@@ -2,7 +2,6 @@ package org.egov.infra.indexer.bulkindexer;
 
 import java.util.Map;
 
-import org.apache.commons.lang3.StringUtils;
 import org.egov.infra.indexer.util.IndexerUtils;
 import org.egov.infra.indexer.web.contract.Index;
 import org.egov.tracer.model.CustomException;
@@ -75,12 +74,20 @@ public class BulkIndexer {
 
 	}
 	
-	public Object getESResponse(String url) {
+	public Object getESResponse(String url, Object body) {
 		Object response = null;
-		try {
-			response = restTemplate.getForObject(url, Map.class);
-		}catch(Exception e) {
-			logger.error("Exception while fetching from es: "+e);
+		if(null != body) {
+			try {
+				response = restTemplate.postForObject(url, body, Map.class);
+			}catch(Exception e) {
+				logger.error("Exception while fetching from es: "+e);
+			}
+		}else {
+			try {
+				response = restTemplate.getForObject(url, Map.class);
+			}catch(Exception e) {
+				logger.error("Exception while fetching from es: "+e);
+			}
 		}
 		return response;
 	}

@@ -1,12 +1,17 @@
 package org.egov.infra.indexer.controller;
 
+import javax.validation.Valid;
+
 import org.egov.IndexerApplicationRunnerImpl;
 import org.egov.infra.indexer.consumer.KafkaConsumerConfig;
 import org.egov.infra.indexer.service.IndexerService;
 import org.egov.infra.indexer.testproducer.IndexerProducer;
 import org.egov.infra.indexer.util.ResponseInfoFactory;
+import org.egov.infra.indexer.validator.Validator;
 import org.egov.infra.indexer.web.contract.ESResponseWrapper;
 import org.egov.infra.indexer.web.contract.ESSearchCriteria;
+import org.egov.infra.indexer.web.contract.ReindexRequest;
+import org.egov.infra.indexer.web.contract.ReindexResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +46,9 @@ public class IndexerController {
 	@Autowired
 	private ResponseInfoFactory factory;
 	
+	@Autowired
+	private Validator validator;
+	
 	//This is testing API 
     @PostMapping("/_index")
     @ResponseBody
@@ -71,7 +79,7 @@ public class IndexerController {
     }
     
     
-    @PostMapping("/_search")
+/*    @PostMapping("/_search")
     @ResponseBody
     private ResponseEntity<?> getIndexedData(@RequestBody ESSearchCriteria esSearchCriteria){
     	Object response = service.getDataFromES(esSearchCriteria);
@@ -79,6 +87,15 @@ public class IndexerController {
     			.responseInfo(factory.createResponseInfoFromRequestInfo(esSearchCriteria.getRequestInfo(), true))
     			.esResponse(response).build();
 		return new ResponseEntity<>(esResponseWrapper ,HttpStatus.OK);
+
+    }*/
+    
+    @PostMapping("/_reindex")
+    @ResponseBody
+    private ResponseEntity<?> getIndexedData(@Valid @RequestBody ReindexRequest reindexRequest){
+    	validator.validaterReindexRequest(reindexRequest);
+    	ReindexResponse response = service.createReindexJob(reindexRequest);
+		return new ResponseEntity<>(response ,HttpStatus.OK);
 
     }
 }

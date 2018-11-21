@@ -10,4 +10,13 @@ ServiceMaps:
       isBulk: true
       jsonPath: $.events.*
       timeStampField: $.ets
+      
+  - topic: telemetry-reindex
+    indexes:
+    - name: egovtelemetryreindex
+      type: general
+      id: $.mid
+      isBulk: true
+      jsonPath: $.hits
+      timeStampField: $.ets
 

@@ -2,18 +2,29 @@ package org.egov.infra.indexer.service;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
 
 import org.apache.commons.lang3.StringUtils;
 import org.egov.IndexerApplicationRunnerImpl;
 import org.egov.infra.indexer.bulkindexer.BulkIndexer;
+import org.egov.infra.indexer.models.IndexJob;
+import org.egov.infra.indexer.models.IndexJobWrapper;
+import org.egov.infra.indexer.models.IndexJob.StatusEnum;
+import org.egov.infra.indexer.testproducer.IndexerProducer;
 import org.egov.infra.indexer.util.IndexerConstants;
 import org.egov.infra.indexer.util.IndexerUtils;
+import org.egov.infra.indexer.util.ResponseInfoFactory;
 import org.egov.infra.indexer.web.contract.CustomJsonMapping;
-import org.egov.infra.indexer.web.contract.ESSearchCriteria;
 import org.egov.infra.indexer.web.contract.FieldMapping;
 import org.egov.infra.indexer.web.contract.Index;
 import org.egov.infra.indexer.web.contract.Mapping;
+import org.egov.infra.indexer.web.contract.Mapping.ConfigKeyEnum;
+import org.egov.infra.indexer.web.contract.ReindexRequest;
+import org.egov.infra.indexer.web.contract.ReindexResponse;
 import org.egov.infra.indexer.web.contract.UriMapping;
 import org.json.JSONArray;
 import org.slf4j.Logger;
@@ -46,6 +57,24 @@ public class IndexerService {
 	
 	@Autowired
 	private IndexerUtils indexerUtils;
+	
+	@Autowired
+	private ResponseInfoFactory factory;
+	
+	@Autowired
+	private IndexerProducer indexerProducer;
+	
+	@Value("${egov.core.reindex.topic.name}")
+	private String reindexTopic;
+	
+	@Value("${egov.indexer.persister.create.topic}")
+	private String persisterCreate;
+	
+	@Value("${egov.indexer.persister.update.topic}")
+	private String persisterUpdate;
+	
+	@Value("${reindex.pagination.size.default}")
+	private Integer defaultPageSizeForReindex;
 	
 	
 	@Value("${egov.infra.indexer.host}")
@@ -212,12 +241,94 @@ public class IndexerService {
 		return result;
   }
 	
-	public Object getDataFromES(ESSearchCriteria esSearchCriteria) {
-		Object response = null;
-		String uri = indexerUtils.getESSearchURL(esSearchCriteria);
-		response = bulkIndexer.getESResponse(uri);
-		if(null == response) 
-			response = new ArrayList<>();
-		return response;
+	public ReindexResponse createReindexJob(ReindexRequest reindexRequest) {
+		Map<String, Mapping> mappingsMap = runner.getMappingMaps();
+		ReindexResponse reindexResponse = null;
+		String uri = indexerUtils.getESSearchURL(reindexRequest);
+		Object response = bulkIndexer.getESResponse(uri, null);
+		Integer total = JsonPath.read(response, "$.hits.total");
+		StringBuilder url = new StringBuilder();
+		Index index = mappingsMap.get(reindexRequest.getReindexTopic()).getIndexes().get(0);
+		url.append(esHostUrl).append(index.getName()).append("/").append(index.getType()).append("/_search");
+		reindexResponse = ReindexResponse.builder().totalRecordsToBeIndexed(total).estimatedTime("10 mins")
+				.message("Please hit the url for the newly indexed data after the mentioned estimated time.")
+				.url(url.toString())
+				.responseInfo(factory.createResponseInfoFromRequestInfo(reindexRequest.getRequestInfo(), true))
+				.build();
+		IndexJob job = IndexJob.builder().jobId(UUID.randomUUID().toString()).jobStatus(StatusEnum.INPROGRESS).typeOfJob(ConfigKeyEnum.REINDEX)
+				.oldIndex(reindexRequest.getIndex() + "/" + reindexRequest.getType())
+				.requesterId(reindexRequest.getRequestInfo().getUserInfo().getUuid()).newIndex(index.getName() + "/" + index.getType())
+				.totalTimeTakenInMS(0L).tenantId(reindexRequest.getTenantId())
+				.auditDetails(indexerUtils.getAuditDetails(reindexRequest.getRequestInfo().getUserInfo().getUuid(), true)).build();
+		reindexRequest.setJobId(job.getJobId()); reindexRequest.setStartTime(new Date().getTime());
+		IndexJobWrapper wrapper = IndexJobWrapper.builder().requestInfo(reindexRequest.getRequestInfo()).job(job).build();
+		indexerProducer.producer(reindexTopic, reindexRequest);
+		indexerProducer.producer(persisterCreate, wrapper);
+
+				
+		return reindexResponse;
 	}
+	
+	public void reindexInPages(ReindexRequest reindexRequest) {
+		String uri = indexerUtils.getESSearchURL(reindexRequest);
+		Integer from = 0; Integer size = defaultPageSizeForReindex;
+		while(true) {
+			Object request = indexerUtils.getESSearchBody(from, size);
+			Object response = bulkIndexer.getESResponse(uri, request);
+			if(null != response) {
+				List<Object> hits = JsonPath.read(response, "$.hits.hits");
+				if(CollectionUtils.isEmpty(hits))
+					break;
+				else {
+					List<Object> modifiedHits = new ArrayList<>();
+					hits.parallelStream().forEach(hit -> {
+						if(!isHitAMetaData(JsonPath.read(hit, "$._source"))) {
+							modifiedHits.add(JsonPath.read(hit, "$._source"));
+						}
+					});
+					Map<String, Object> requestToReindex = new HashMap<>();
+					requestToReindex.put("hits", modifiedHits);
+					indexerProducer.producer(reindexRequest.getReindexTopic(), requestToReindex);
+					from += defaultPageSizeForReindex;
+				}
+			}else {
+				IndexJob job = IndexJob.builder().jobId(reindexRequest.getJobId())
+						.auditDetails(indexerUtils.getAuditDetails(reindexRequest.getRequestInfo().getUserInfo().getUuid(), false))
+						.totalTimeTakenInMS(new Date().getTime() - reindexRequest.getStartTime()).jobStatus(StatusEnum.FAILED).build();
+				IndexJobWrapper wrapper = IndexJobWrapper.builder().requestInfo(reindexRequest.getRequestInfo()).job(job).build();
+				indexerProducer.producer(persisterUpdate, wrapper);
+				logger.info("Porcess failed!");
+				return;
+			}
+		}
+		IndexJob job = IndexJob.builder().jobId(reindexRequest.getJobId())
+				.auditDetails(indexerUtils.getAuditDetails(reindexRequest.getRequestInfo().getUserInfo().getUuid(), false))
+				.totalTimeTakenInMS(new Date().getTime() - reindexRequest.getStartTime()).jobStatus(StatusEnum.COMPLETED).build();
+		IndexJobWrapper wrapper = IndexJobWrapper.builder().requestInfo(reindexRequest.getRequestInfo()).job(job).build();
+		indexerProducer.producer(persisterUpdate, wrapper);
+		
+		logger.info("Process completed successfully!");
+		
+	}
+	
+	public boolean isHitAMetaData(Object hit) {
+		ObjectMapper mapper = indexerUtils.getObjectMapper();
+		boolean isMetaData = false;
+		Map<String, Object> map = mapper.convertValue(hit, Map.class);
+		Set<String> keySet = map.keySet();
+		if(keySet.size() == 2) {
+			if(keySet.contains("from") && keySet.contains("size"))
+				isMetaData = true;
+			else {
+				isMetaData = false;
+			}
+		}else {
+			isMetaData = false;
+		}
+		return isMetaData;
+	}
+	
+	
+	
+	
 }

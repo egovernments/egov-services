@@ -3,6 +3,7 @@ package org.egov.infra.indexer.util;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.TimeZone;
@@ -15,8 +16,10 @@ import javax.swing.text.Document;
 import org.apache.commons.lang3.StringUtils;
 import org.egov.infra.indexer.bulkindexer.BulkIndexer;
 import org.egov.infra.indexer.consumer.KafkaConsumerConfig;
+import org.egov.infra.indexer.models.AuditDetails;
 import org.egov.infra.indexer.web.contract.ESSearchCriteria;
 import org.egov.infra.indexer.web.contract.Index;
+import org.egov.infra.indexer.web.contract.ReindexRequest;
 import org.egov.infra.indexer.web.contract.UriMapping;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -235,17 +238,16 @@ public class IndexerUtils {
 		return expression.toString();
 	}
 	
-	public String getESSearchURL(ESSearchCriteria esSearchCriteria) {
+	public String getESSearchURL(ReindexRequest reindexRequest) {
 		StringBuilder uri = new StringBuilder();
-		uri.append(esHostUrl).append(esSearchCriteria.getIndex()).append("/"+esSearchCriteria.getType());
-		if(!StringUtils.isEmpty(esSearchCriteria.getId()))
-			uri.append("/"+esSearchCriteria.getId());
-		if(!CollectionUtils.isEmpty(esSearchCriteria.getFields())) {
-			uri.append("?_source=");
-			String fields = esSearchCriteria.getFields().toString().replaceAll("[", "").replaceAll("]", "");
-			uri.append(fields);
-		}
+		uri.append(esHostUrl).append(reindexRequest.getIndex()).append("/"+reindexRequest.getType()).append("/_search");
 		return uri.toString();
+	}
+	
+	public Object getESSearchBody(Integer from, Integer size) {
+		Map<String, Integer> searchBody = new HashMap<>();
+		searchBody.put("from", from); searchBody.put("size", size); 
+		return searchBody;
 	}
 	
 	
@@ -300,6 +302,21 @@ public class IndexerUtils {
 		mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
 
 		return mapper;
+	}
+	
+	/**
+	 * Util method to return Auditdetails for create and update processes
+	 * 
+	 * @param by
+	 * @param isCreate
+	 * @return
+	 */
+	public AuditDetails getAuditDetails(String by, Boolean isCreate) {
+		Long dt = new Date().getTime();
+		if (isCreate)
+			return AuditDetails.builder().createdBy(by).createdTime(dt).lastModifiedBy(by).lastModifiedTime(dt).build();
+		else
+			return AuditDetails.builder().lastModifiedBy(by).lastModifiedTime(dt).build();
 	}
 	
 

@@ -2,7 +2,10 @@ package org.egov.infra.indexer.consumer;
 
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
@@ -43,6 +46,9 @@ public class KafkaConsumerConfig implements ApplicationRunner {
 	
 	@Value("${spring.kafka.consumer.group}")
     private String consumerGroup;
+	
+	@Value("${egov.core.reindex.topic.name}")
+	private String reindexTopic;
         
     @Autowired
     private StoppingErrorHandler stoppingErrorHandler;
@@ -68,12 +74,13 @@ public class KafkaConsumerConfig implements ApplicationRunner {
     
     public String setTopics(){
     	Map<String, Mapping> mappings = runner.getMappingMaps();
-    	String[] topics = new String[mappings.size()];
+    	String[] topics = new String[mappings.size() + 1];
     	int i = 0;
     	for(Map.Entry<String, Mapping> map: mappings.entrySet()){
     		topics[i] = map.getKey();
     		i++;
     	}
+    	topics[i] = reindexTopic;
     	this.topics = topics;  
     	
     	logger.info("Topics intialized..");

@@ -97,14 +97,14 @@ public class MDMSService {
     }
 
 
-    public Map getCalculationType( RequestInfo requestInfo,TradeLicense license){
+    public Map getCalculationType(RequestInfo requestInfo,TradeLicense license){
 
         MdmsCriteriaReq mdmsCriteriaReq = getMDMSRequest(requestInfo,license.getTenantId());
         HashMap<String,Object> calculationType = new HashMap<>();
         try {
             Object result = serviceRequestRepository.fetchResult(getMdmsSearchUrl(), mdmsCriteriaReq);
-
-            if(((Map)result).get(TLCalculatorConstants.MDMS_TRADELICENSE)==null)
+            LinkedHashMap tradeLicenseData = JsonPath.read(result,TLCalculatorConstants.MDMS_TRADELICENSE_PATH);
+            if(tradeLicenseData.size()==0)
                 return defaultMap();
 
             List jsonOutput = JsonPath.read(result, TLCalculatorConstants.MDMS_CALCULATIONTYPE_PATH);
@@ -112,12 +112,13 @@ public class MDMSService {
             String maxClosestYear = "0";
             for(Object entry : jsonOutput) {
                 HashMap<String,Object> map = (HashMap<String,Object>)entry;
-                String year = (String)map.get(TLCalculatorConstants.MDMS_CALCULATIONTYPE_FINANCIALYEAR);
-                if(year.compareTo(financialYear)<0 && year.compareTo(maxClosestYear)>0){
-                    maxClosestYear = year;
+                String mdmsFinancialYear = ((String)map.get(TLCalculatorConstants.MDMS_CALCULATIONTYPE_FINANCIALYEAR));
+                String year = mdmsFinancialYear.split("-")[0];
+                if(year.compareTo(financialYear)<0 && year.compareTo(maxClosestYear.split("-")[0])>0){
+                    maxClosestYear = mdmsFinancialYear;
                 }
                 if(year.compareTo(financialYear)==0){
-                    maxClosestYear = year;
+                    maxClosestYear = mdmsFinancialYear;
                     break;
                 }
             }

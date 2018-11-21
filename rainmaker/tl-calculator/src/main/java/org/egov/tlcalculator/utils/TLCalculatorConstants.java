@@ -17,6 +17,8 @@ public class TLCalculatorConstants {
 
     public static final String MDMS_CALCULATIONTYPE_PATH = "$.MdmsRes.TradeLicense.CalculationType";
 
+    public static final String MDMS_TRADELICENSE_PATH = "$.MdmsRes.TradeLicense";
+
     public static final String MDMS_TRADELICENSE = "TradeLicense";
 
     public static final String MDMS_CALCULATIONTYPE_FINANCIALYEAR= "financialYear";

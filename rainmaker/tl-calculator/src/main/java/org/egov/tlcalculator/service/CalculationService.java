@@ -58,7 +58,7 @@ public class CalculationService {
 
 
    public List<Calculation> calculate(CalculationReq calculationReq){
-       List<Calculation> calculations = getcalculation(calculationReq.getRequestInfo(),
+       List<Calculation> calculations = getCalculation(calculationReq.getRequestInfo(),
                calculationReq.getCalulationCriteria());
        demandService.generateDemand(calculationReq.getRequestInfo(),calculations);
        CalculationRes calculationRes = CalculationRes.builder().calculations(calculations).build();
@@ -67,7 +67,7 @@ public class CalculationService {
    }
 
 
-  public List<Calculation> getcalculation(RequestInfo requestInfo,List<CalulationCriteria> criterias){
+  public List<Calculation> getCalculation(RequestInfo requestInfo, List<CalulationCriteria> criterias){
       List<Calculation> calculations = new LinkedList<>();
       for(CalulationCriteria criteria : criterias) {
           TradeLicense license;

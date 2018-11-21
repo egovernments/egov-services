@@ -22,5 +22,8 @@ public class ReindexResponse {
 	public String estimatedTime;
 	
 	public String message;
+	
+	public String jobId;
+
 
 }

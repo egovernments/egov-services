@@ -264,7 +264,7 @@ public class IndexerService {
 		IndexJobWrapper wrapper = IndexJobWrapper.builder().requestInfo(reindexRequest.getRequestInfo()).job(job).build();
 		indexerProducer.producer(reindexTopic, reindexRequest);
 		indexerProducer.producer(persisterCreate, wrapper);
-
+		reindexResponse.setJobId(job.getJobId());
 				
 		return reindexResponse;
 	}

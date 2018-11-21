@@ -272,18 +272,26 @@ public class IndexerUtils {
 		JSONArray tranformedArray = new JSONArray();
 		ObjectMapper mapper = getObjectMapper();
 		for(int i = 0; i < kafkaJsonArray.length();  i++) {
-			DocumentContext context = null;
 			try {
-				String epochValue = mapper.writeValueAsString(JsonPath.read(kafkaJsonArray.get(i).toString(), index.getTimeStampField()));
-				Date date = new Date(Long.valueOf(epochValue));
-				SimpleDateFormat formatter = new SimpleDateFormat( "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US); 
-				formatter.setTimeZone(TimeZone.getTimeZone("UTC"));				
-				context = JsonPath.parse(kafkaJsonArray.get(i).toString());
-				context.put("$","@timestamp", formatter.format(date));
-				tranformedArray.put(context.jsonString());
+				if(null != kafkaJsonArray.get(i)) {
+					DocumentContext context = null;
+					try {
+						String epochValue = mapper.writeValueAsString(JsonPath.read(kafkaJsonArray.get(i).toString(), index.getTimeStampField()));
+						Date date = new Date(Long.valueOf(epochValue));
+						SimpleDateFormat formatter = new SimpleDateFormat( "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US); 
+						formatter.setTimeZone(TimeZone.getTimeZone("UTC"));				
+						context = JsonPath.parse(kafkaJsonArray.get(i).toString());
+						context.put("$","@timestamp", formatter.format(date));
+						tranformedArray.put(context.jsonString());
+					}catch(Exception e) {
+						logger.error("Exception while adding timestamp: ", e);
+						logger.error("Value: "+context);
+						continue;
+					}
+				}else
+					continue;
 			}catch(Exception e) {
 				logger.error("Exception while adding timestamp: ", e);
-				logger.error("Value: "+context.jsonString().toString());
 				continue;
 			}
 		}

@@ -258,7 +258,7 @@ public class IndexerService {
 		IndexJob job = IndexJob.builder().jobId(UUID.randomUUID().toString()).jobStatus(StatusEnum.INPROGRESS).typeOfJob(ConfigKeyEnum.REINDEX)
 				.oldIndex(reindexRequest.getIndex() + "/" + reindexRequest.getType())
 				.requesterId(reindexRequest.getRequestInfo().getUserInfo().getUuid()).newIndex(index.getName() + "/" + index.getType())
-				.totalTimeTakenInMS(0L).tenantId(reindexRequest.getTenantId())
+				.totalTimeTakenInMS(0L).tenantId(reindexRequest.getTenantId()).recordsToBeIndexed(total).totalRecordsIndexed(0)
 				.auditDetails(indexerUtils.getAuditDetails(reindexRequest.getRequestInfo().getUserInfo().getUuid(), true)).build();
 		reindexRequest.setJobId(job.getJobId()); reindexRequest.setStartTime(new Date().getTime());
 		IndexJobWrapper wrapper = IndexJobWrapper.builder().requestInfo(reindexRequest.getRequestInfo()).job(job).build();
@@ -300,9 +300,14 @@ public class IndexerService {
 				logger.info("Porcess failed!");
 				return;
 			}
+			IndexJob job = IndexJob.builder().jobId(reindexRequest.getJobId())
+					.auditDetails(indexerUtils.getAuditDetails(reindexRequest.getRequestInfo().getUserInfo().getUuid(), false))
+					.totalTimeTakenInMS(new Date().getTime() - reindexRequest.getStartTime()).jobStatus(StatusEnum.INPROGRESS).totalRecordsIndexed(from).build();
+			IndexJobWrapper wrapper = IndexJobWrapper.builder().requestInfo(reindexRequest.getRequestInfo()).job(job).build();
+			indexerProducer.producer(persisterUpdate, wrapper);
 		}
 		IndexJob job = IndexJob.builder().jobId(reindexRequest.getJobId())
-				.auditDetails(indexerUtils.getAuditDetails(reindexRequest.getRequestInfo().getUserInfo().getUuid(), false))
+				.auditDetails(indexerUtils.getAuditDetails(reindexRequest.getRequestInfo().getUserInfo().getUuid(), false)).totalRecordsIndexed(from)
 				.totalTimeTakenInMS(new Date().getTime() - reindexRequest.getStartTime()).jobStatus(StatusEnum.COMPLETED).build();
 		IndexJobWrapper wrapper = IndexJobWrapper.builder().requestInfo(reindexRequest.getRequestInfo()).job(job).build();
 		indexerProducer.producer(persisterUpdate, wrapper);

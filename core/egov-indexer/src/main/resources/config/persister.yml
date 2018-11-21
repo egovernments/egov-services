@@ -7,7 +7,7 @@ serviceMaps:
    fromTopic: save-index-jobs
    isTransaction: true
    queryMaps:
-    - query: INSERT INTO eg_indexer_job(tenantid, jobid, requesterid, typeofjob, oldindex, newindex, jobstatus, totaltimetakeninms, createdby, createdtime, lastmodifiedby, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+    - query: INSERT INTO eg_indexer_job(tenantid, jobid, requesterid, typeofjob, oldindex, newindex, jobstatus, totaltimetakeninms, recordstobeindexed, totalrecordsindexed, createdby, createdtime, lastmodifiedby, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
       basePath: job
       jsonMaps:
 
@@ -27,6 +27,10 @@ serviceMaps:
        - jsonPath: $.job.jobStatus
        
        - jsonPath: $.job.totalTimeTakenInMS
+       
+       - jsonPath: $.job.recordsToBeIndexed
+       
+       - jsonPath: $.job.totalRecordsIndexed
 
        - jsonPath: $.job.auditDetails.createdBy
 
@@ -44,7 +48,7 @@ serviceMaps:
    fromTopic: update-index-jobs
    isTransaction: true
    queryMaps:
-    - query: UPDATE eg_indexer_job SET jobStatus = ?, totalTimeTakenInMS = ?, lastmodifiedby =?, lastmodifiedtime = ? WHERE jobid = ?
+    - query: UPDATE eg_indexer_job SET jobStatus = ?, totalTimeTakenInMS = ?, totalrecordsindexed = ?,  lastmodifiedby = ?, lastmodifiedtime = ? WHERE jobid = ?
       basePath: job
       jsonMaps:
 
@@ -52,6 +56,8 @@ serviceMaps:
        - jsonPath: $.job.jobStatus
        
        - jsonPath: $.job.totalTimeTakenInMS
+       
+       - jsonPath: $.job.totalRecordsIndexed
 
        - jsonPath: $.job.auditDetails.lastModifiedBy
 

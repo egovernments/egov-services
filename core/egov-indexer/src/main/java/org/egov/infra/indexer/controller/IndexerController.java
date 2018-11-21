@@ -78,18 +78,6 @@ public class IndexerController {
 
     }
     
-    
-/*    @PostMapping("/_search")
-    @ResponseBody
-    private ResponseEntity<?> getIndexedData(@RequestBody ESSearchCriteria esSearchCriteria){
-    	Object response = service.getDataFromES(esSearchCriteria);
-    	ESResponseWrapper esResponseWrapper = ESResponseWrapper.builder()
-    			.responseInfo(factory.createResponseInfoFromRequestInfo(esSearchCriteria.getRequestInfo(), true))
-    			.esResponse(response).build();
-		return new ResponseEntity<>(esResponseWrapper ,HttpStatus.OK);
-
-    }*/
-    
     @PostMapping("/_reindex")
     @ResponseBody
     private ResponseEntity<?> getIndexedData(@Valid @RequestBody ReindexRequest reindexRequest){

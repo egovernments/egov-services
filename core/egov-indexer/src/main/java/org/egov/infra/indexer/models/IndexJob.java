@@ -32,6 +32,11 @@ public class IndexJob {
 	
 	public Long totalTimeTakenInMS;
 	
+	public Integer recordsToBeIndexed;
+	
+	public Integer totalRecordsIndexed;
+
+	
 	public enum StatusEnum {
 		  
 			INPROGRESS("INPROGRESS"),

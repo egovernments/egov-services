@@ -31,10 +31,15 @@ public class EncryptionService {
         LinkedList<Object> outputList = new LinkedList<>();
         for(EncReqObject encReqObject : encryptionRequest.getEncryptionRequests()) {
             if(!keyManagementApplication.checkIfTenantExists(encReqObject.getTenantId())) {
-                throw new CustomException(Constants.TENANT_NOT_FOUND, Constants.TENANT_NOT_FOUND );
+                throw new CustomException(encReqObject.getTenantId() + Constants.TENANT_NOT_FOUND,
+                        encReqObject.getTenantId() + Constants.TENANT_NOT_FOUND );
             }
-            outputList.add(processJSONUtil.processJSON(encReqObject.getValue(), ModeEnum.ENCRYPT,
-                    MethodEnum.fromValue(appProperties.getTypeToMethodMap().get(encReqObject.getDataType())), encReqObject.getTenantId()));
+            MethodEnum encryptionMethod = MethodEnum.fromValue(appProperties.getTypeToMethodMap().get(encReqObject.getDataType()));
+            if(encryptionMethod == null) {
+                throw new CustomException(encReqObject.getDataType() + Constants.INVALD_DATA_TYPE,
+                        encReqObject.getDataType() + Constants.INVALD_DATA_TYPE);
+            }
+            outputList.add(processJSONUtil.processJSON(encReqObject.getValue(), ModeEnum.ENCRYPT, encryptionMethod, encReqObject.getTenantId()));
         }
         return outputList;
     }

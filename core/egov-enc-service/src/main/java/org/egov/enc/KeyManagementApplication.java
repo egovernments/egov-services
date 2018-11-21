@@ -28,6 +28,8 @@ import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 @Component
 public class KeyManagementApplication implements ApplicationRunner {
@@ -82,14 +84,32 @@ public class KeyManagementApplication implements ApplicationRunner {
     //Generate keys if there are any new tenants
     //Returns the number of tenants for which the keys have been generated
     public int generateKeyForNewTenants() throws JSONException, BadPaddingException, InvalidAlgorithmParameterException, NoSuchAlgorithmException, IllegalBlockSizeException, NoSuchPaddingException, InvalidKeyException, InvalidKeySpecException {
-        Collection<String> tenantIds = getTenantIds();
+        Collection<String> tenantIds = getComprehensiveListOfTenantIds();
         Collection<String> tenantIdsFromDB = keyRepository.fetchDistinctTenantIds();
 
         tenantIds.removeAll(tenantIdsFromDB);
 
-        generateKeys((ArrayList<String>) tenantIds);
+        ArrayList<String> tenantIdList = new ArrayList<String>();
+        tenantIdList.addAll(tenantIds);
+
+        generateKeys(tenantIdList);
 
         return tenantIds.size();
+    }
+
+    private Set<String> getComprehensiveListOfTenantIds() {
+        ArrayList<String> tenantIds = getTenantIds();
+        Set<String> comprehensiveTenantIdsSet = new HashSet<>(tenantIds);
+
+        for (String tenantId: tenantIds) {
+            int index = tenantId.indexOf(".");
+            while(index > 0) {
+                comprehensiveTenantIdsSet.add(tenantId.substring(0, index));
+                index = tenantId.indexOf(".", index + 1);
+            }
+        }
+
+        return comprehensiveTenantIdsSet;
     }
 
     //Used to deactivate old keys at the time of key rotation

@@ -4,7 +4,7 @@ ServiceMaps:
  mappings:
   - topic: telemetry-final-messages
     indexes:
-    - name: egovtelemetry
+    - name: egovtelemetryreindex #intial index was egov-telemetry
       type: general
       id: $.mid
       isBulk: true
@@ -13,10 +13,9 @@ ServiceMaps:
       
   - topic: telemetry-reindex
     indexes:
-    - name: egovtelemetryreindex
+    - name: egovtelemetryreindexnew #intial index was egovtelemetryreindex
       type: general
       id: $.mid
       isBulk: true
       jsonPath: $.hits
       timeStampField: $.ets
-

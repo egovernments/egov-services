@@ -51,6 +51,7 @@ public class TLValidator {
     public void validateCreate(TradeLicenseRequest request){
         valideDates(request);
         validateInstitution(request);
+        validateDuplicateDocuments(request);
         propertyValidator.validateProperty(request);
         mdmsValidator.validateMdmsData(request);
     }
@@ -145,6 +146,7 @@ public class TLValidator {
       mdmsValidator.validateMdmsData(request);
       validateTradeUnits(request);
       valideDates(request);
+      validateDuplicateDocuments(request);
       setFieldsFromSearch(request,searchResult);
    }
 
@@ -431,6 +433,26 @@ public class TLValidator {
         if(criteria.getLimit()!=null && !allowedParams.contains("limit"))
             throw new CustomException("INVALID SEARCH","Search on limit is not allowed");
 
+    }
+
+
+    /**
+     * Validates application documents for duplicates
+     * @param request The tradeLcienseRequest
+     */
+    private void validateDuplicateDocuments(TradeLicenseRequest request){
+        List<String> documentTypes = new LinkedList();
+        request.getLicenses().forEach(license -> {
+            if(license.getTradeLicenseDetail().getApplicationDocuments()!=null){
+                license.getTradeLicenseDetail().getApplicationDocuments().forEach(
+                    document -> {
+                        if(documentTypes.contains(document.getDocumentType()))
+                            throw new CustomException("DUPLICATE_DOCUMENT ERROR","Same document cannot be used multiple times");
+                        else documentTypes.add(document.getDocumentType());
+                    }
+                );
+            }
+        });
     }
 
 

@@ -74,13 +74,22 @@ public class BulkIndexer {
 
 	}
 	
-	public Object getESResponse(String url, Object body) {
+	public Object getESResponse(String url, Object body, String httpMethod) {
 		Object response = null;
 		if(null != body) {
-			try {
-				response = restTemplate.postForObject(url, body, Map.class);
-			}catch(Exception e) {
-				logger.error("POST: Exception while fetching from es: "+e);
+			if(httpMethod.equals("POST")) {
+				try {
+					response = restTemplate.postForObject(url, body, Map.class);
+				}catch(Exception e) {
+					logger.error("POST: Exception while fetching from es: "+e);
+				}
+			}else if(httpMethod.equals("PUT")) {
+				try {
+					restTemplate.put(url, body);
+					response = "OK";
+				}catch(Exception e) {
+					logger.error("PUT: Exception while updating settings on es: "+e);
+				}
 			}
 		}else {
 			try {

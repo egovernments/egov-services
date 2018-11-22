@@ -42,6 +42,8 @@ public class ReindexRequest {
 	
 	public Long startTime;
 	
+	public Integer totalRecords;
+	
 }
 
 

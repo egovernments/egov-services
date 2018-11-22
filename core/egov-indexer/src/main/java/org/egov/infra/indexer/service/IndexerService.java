@@ -265,7 +265,7 @@ public class IndexerService {
 		Map<String, Mapping> mappingsMap = runner.getMappingMaps();
 		ReindexResponse reindexResponse = null;
 		String uri = indexerUtils.getESSearchURL(reindexRequest);
-		Object response = bulkIndexer.getESResponse(uri, null);
+		Object response = bulkIndexer.getESResponse(uri, null, null);
 		Integer total = JsonPath.read(response, "$.hits.total");
 		StringBuilder url = new StringBuilder();
 		Index index = mappingsMap.get(reindexRequest.getReindexTopic()).getIndexes().get(0);
@@ -280,7 +280,7 @@ public class IndexerService {
 				.requesterId(reindexRequest.getRequestInfo().getUserInfo().getUuid()).newIndex(index.getName() + "/" + index.getType())
 				.totalTimeTakenInMS(0L).tenantId(reindexRequest.getTenantId()).recordsToBeIndexed(total).totalRecordsIndexed(0)
 				.auditDetails(indexerUtils.getAuditDetails(reindexRequest.getRequestInfo().getUserInfo().getUuid(), true)).build();
-		reindexRequest.setJobId(job.getJobId()); reindexRequest.setStartTime(new Date().getTime());
+		reindexRequest.setJobId(job.getJobId()); reindexRequest.setStartTime(new Date().getTime()); reindexRequest.setTotalRecords(total);
 		IndexJobWrapper wrapper = IndexJobWrapper.builder().requestInfo(reindexRequest.getRequestInfo()).job(job).build();
 		indexerProducer.producer(reindexTopic, reindexRequest);
 		indexerProducer.producer(persisterCreate, wrapper);
@@ -290,11 +290,12 @@ public class IndexerService {
 	}
 	
 	public void reindexInPages(ReindexRequest reindexRequest) {
+		increaseMaxResultWindow(reindexRequest, reindexRequest.getTotalRecords());
 		String uri = indexerUtils.getESSearchURL(reindexRequest);
 		Integer from = 0; Integer size = defaultPageSizeForReindex;
 		while(true) {
 			Object request = indexerUtils.getESSearchBody(from, size);
-			Object response = bulkIndexer.getESResponse(uri, request);
+			Object response = bulkIndexer.getESResponse(uri, request, "POST");
 			if(null != response) {
 				List<Object> hits = JsonPath.read(response, "$.hits.hits");
 				if(CollectionUtils.isEmpty(hits))
@@ -312,13 +313,13 @@ public class IndexerService {
 					from += defaultPageSizeForReindex;
 				}
 			}else {
-/*				IndexJob job = IndexJob.builder().jobId(reindexRequest.getJobId())
+				IndexJob job = IndexJob.builder().jobId(reindexRequest.getJobId())
 						.auditDetails(indexerUtils.getAuditDetails(reindexRequest.getRequestInfo().getUserInfo().getUuid(), false)).totalRecordsIndexed(from)
 						.totalTimeTakenInMS(new Date().getTime() - reindexRequest.getStartTime()).jobStatus(StatusEnum.FAILED).build();
 				IndexJobWrapper wrapper = IndexJobWrapper.builder().requestInfo(reindexRequest.getRequestInfo()).job(job).build();
-				indexerProducer.producer(persisterUpdate, wrapper);*/
+				indexerProducer.producer(persisterUpdate, wrapper);
 				logger.info("Porcess failed! for data from: "+from+ "and size: "+size);
-				continue;
+				return;
 			}
 			IndexJob job = IndexJob.builder().jobId(reindexRequest.getJobId())
 					.auditDetails(indexerUtils.getAuditDetails(reindexRequest.getRequestInfo().getUserInfo().getUuid(), false))
@@ -351,6 +352,15 @@ public class IndexerService {
 			isMetaData = false;
 		}
 		return isMetaData;
+	}
+	
+	public void increaseMaxResultWindow(ReindexRequest reindexRequest, Integer totalRecords) {
+		String uri = indexerUtils.getESSettingsURL(reindexRequest);
+		Object body = indexerUtils.getESSettingsBody(totalRecords);
+		Object response = bulkIndexer.getESResponse(uri, body, "PUT");
+		if(response.toString().equals("OK")) {
+			logger.info("Max window set to "+(totalRecords + 50000)+" for index: "+reindexRequest.getIndex());
+		}
 	}
 	
 	

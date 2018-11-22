@@ -244,10 +244,25 @@ public class IndexerUtils {
 		return uri.toString();
 	}
 	
+	public String getESSettingsURL(ReindexRequest reindexRequest) {
+		StringBuilder uri = new StringBuilder();
+		uri.append(esHostUrl).append(reindexRequest.getIndex()).append("/_settings");
+		return uri.toString();
+	}
+	
 	public Object getESSearchBody(Integer from, Integer size) {
 		Map<String, Integer> searchBody = new HashMap<>();
 		searchBody.put("from", from); searchBody.put("size", size); 
 		return searchBody;
+	}
+	
+	public Object getESSettingsBody(Integer totalRecords) {
+		Map<String, Map<String, Long>> settingsBody = new HashMap<>();
+		Map<String, Long> innerBody = new HashMap<>();
+		Long window = Long.valueOf(totalRecords.toString()) + 50000L;
+		innerBody.put("max_result_window", window);
+		settingsBody.put("index", innerBody);
+		return settingsBody;
 	}
 	
 	

@@ -43,7 +43,7 @@ public class Validator {
 				throw new CustomException("EG_INDEXER_INVALID_REINDEX_CONFIG","Currently more than one reindex configs aren't allowed");
 			}
 			String uri = indexerUtils.getESSearchURL(reindexRequest);
-			Object response = bulkIndexer.getESResponse(uri, null);
+			Object response = bulkIndexer.getESResponse(uri, null, null);
 			if(null == response) {
 				throw new CustomException("EG_INDEXER_INAVLID_INDEX","There is no data for this index on elasticsearch!");
 			}else {

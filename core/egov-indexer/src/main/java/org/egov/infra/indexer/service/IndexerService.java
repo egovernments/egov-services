@@ -138,7 +138,7 @@ public class IndexerService {
 						jsonTobeIndexed.append(stringifiedObject);
 					}
 				}else {
-					logger.info("buildIndex id, null json in kafkajsonarrya, index: "+i);
+					logger.info("buildIndexJsonWithJsonpath, null json in kafkajsonarrya, index: "+i);
 					continue;
 				}
 			}
@@ -157,15 +157,20 @@ public class IndexerService {
         try {
         	kafkaJsonArray = indexerUtils.constructArrayForBulkIndex(kafkaJson, index, isBulk);
 			for(int i = 0; i < kafkaJsonArray.length() ; i++){
-				String stringifiedObject = indexerUtils.buildString(kafkaJsonArray.get(i));
-				String customIndexJson = buildCustomJsonForIndex(index.getCustomJsonMapping(), stringifiedObject, urlForMap);
-				if(null != index.getId()){
-					String id = indexerUtils.buildIndexId(index, stringifiedObject);
-					logger.debug("Inserting id to the json being indexed, id = " + id);
-		            final String actionMetaData = String.format(IndexerConstants.ES_INDEX_HEADER_FORMAT, "" + id);
-		            jsonTobeIndexed.append(actionMetaData).append(customIndexJson).append("\n");
-				}else{
-					jsonTobeIndexed.append(customIndexJson);
+				if(null != kafkaJsonArray.get(i)) {
+					String stringifiedObject = indexerUtils.buildString(kafkaJsonArray.get(i));
+					String customIndexJson = buildCustomJsonForIndex(index.getCustomJsonMapping(), stringifiedObject, urlForMap);
+					if(null != index.getId()){
+						String id = indexerUtils.buildIndexId(index, stringifiedObject);
+						logger.debug("Inserting id to the json being indexed, id = " + id);
+			            final String actionMetaData = String.format(IndexerConstants.ES_INDEX_HEADER_FORMAT, "" + id);
+			            jsonTobeIndexed.append(actionMetaData).append(customIndexJson).append("\n");
+					}else{
+						jsonTobeIndexed.append(customIndexJson);
+					}
+				}else {
+					logger.info("buildIndexJsonWithJsonpath, null json in kafkajsonarrya, index: "+i);
+					continue;
 				}
 			}
 			result = jsonTobeIndexed.toString();
@@ -233,14 +238,19 @@ public class IndexerService {
         try {
         	kafkaJsonArray = indexerUtils.constructArrayForBulkIndex(kafkaJson, index, isBulk);
 			for(int i = 0; i < kafkaJsonArray.length() ; i++){
-				String stringifiedObject = indexerUtils.buildString(kafkaJsonArray.get(i));
-				if(null != index.getId()){
-					String id = indexerUtils.buildIndexId(index, stringifiedObject);
-					logger.debug("Inserting id to the json being indexed, id = " + id);
-		            final String actionMetaData = String.format(IndexerConstants.ES_INDEX_HEADER_FORMAT, "" + id);
-		            jsonTobeIndexed.append(actionMetaData).append(stringifiedObject).append("\n");
-				}else{
-					jsonTobeIndexed.append(stringifiedObject);
+				if(null != kafkaJsonArray.get(i)) {
+					String stringifiedObject = indexerUtils.buildString(kafkaJsonArray.get(i));
+					if(null != index.getId()){
+						String id = indexerUtils.buildIndexId(index, stringifiedObject);
+						logger.debug("Inserting id to the json being indexed, id = " + id);
+			            final String actionMetaData = String.format(IndexerConstants.ES_INDEX_HEADER_FORMAT, "" + id);
+			            jsonTobeIndexed.append(actionMetaData).append(stringifiedObject).append("\n");
+					}else{
+						jsonTobeIndexed.append(stringifiedObject);
+					}
+				}else {
+					logger.info("buildIndexJsonWithJsonpath, null json in kafkajsonarrya, index: "+i);
+					continue;
 				}
 			}
 			result = jsonTobeIndexed.toString();
@@ -302,13 +312,13 @@ public class IndexerService {
 					from += defaultPageSizeForReindex;
 				}
 			}else {
-				IndexJob job = IndexJob.builder().jobId(reindexRequest.getJobId())
+/*				IndexJob job = IndexJob.builder().jobId(reindexRequest.getJobId())
 						.auditDetails(indexerUtils.getAuditDetails(reindexRequest.getRequestInfo().getUserInfo().getUuid(), false)).totalRecordsIndexed(from)
 						.totalTimeTakenInMS(new Date().getTime() - reindexRequest.getStartTime()).jobStatus(StatusEnum.FAILED).build();
 				IndexJobWrapper wrapper = IndexJobWrapper.builder().requestInfo(reindexRequest.getRequestInfo()).job(job).build();
-				indexerProducer.producer(persisterUpdate, wrapper);
-				logger.info("Porcess failed!");
-				return;
+				indexerProducer.producer(persisterUpdate, wrapper);*/
+				logger.info("Porcess failed! for data from: "+from+ "and size: "+size);
+				continue;
 			}
 			IndexJob job = IndexJob.builder().jobId(reindexRequest.getJobId())
 					.auditDetails(indexerUtils.getAuditDetails(reindexRequest.getRequestInfo().getUserInfo().getUuid(), false))

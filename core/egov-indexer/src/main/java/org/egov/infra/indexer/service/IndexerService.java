@@ -270,8 +270,8 @@ public class IndexerService {
 		StringBuilder url = new StringBuilder();
 		Index index = mappingsMap.get(reindexRequest.getReindexTopic()).getIndexes().get(0);
 		url.append(esHostUrl).append(index.getName()).append("/").append(index.getType()).append("/_search");
-		reindexResponse = ReindexResponse.builder().totalRecordsToBeIndexed(total).estimatedTime("10 mins")
-				.message("Please hit the url for the newly indexed data after the mentioned estimated time.")
+		reindexResponse = ReindexResponse.builder().totalRecordsToBeIndexed(total).estimatedTime(indexerUtils.fetchEstimatedTime(total))
+				.message("Please hit the 'url' for the newly indexed data after the mentioned 'estimated time'.")
 				.url(url.toString())
 				.responseInfo(factory.createResponseInfoFromRequestInfo(reindexRequest.getRequestInfo(), true))
 				.build();
@@ -328,7 +328,7 @@ public class IndexerService {
 			indexerProducer.producer(persisterUpdate, wrapper);
 		}
 		IndexJob job = IndexJob.builder().jobId(reindexRequest.getJobId())
-				.auditDetails(indexerUtils.getAuditDetails(reindexRequest.getRequestInfo().getUserInfo().getUuid(), false)).totalRecordsIndexed(from)
+				.auditDetails(indexerUtils.getAuditDetails(reindexRequest.getRequestInfo().getUserInfo().getUuid(), false)).totalRecordsIndexed(reindexRequest.getTotalRecords())
 				.totalTimeTakenInMS(new Date().getTime() - reindexRequest.getStartTime()).jobStatus(StatusEnum.COMPLETED).build();
 		IndexJobWrapper wrapper = IndexJobWrapper.builder().requestInfo(reindexRequest.getRequestInfo()).job(job).build();
 		indexerProducer.producer(persisterUpdate, wrapper);

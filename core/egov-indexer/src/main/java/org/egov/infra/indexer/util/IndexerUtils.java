@@ -346,5 +346,20 @@ public class IndexerUtils {
 			return AuditDetails.builder().lastModifiedBy(by).lastModifiedTime(dt).build();
 	}
 	
+	public String fetchEstimatedTime(Integer totalRecords) {
+		StringBuilder estimatedTime = new StringBuilder();
+		Double actualTime = totalRecords * 0.000250; //on an avg one record gets reindexed in 0.000125s.
+		if(actualTime > 60) {
+			Double mins = actualTime / 60 ;
+			Double seconds = actualTime % 60;
+			estimatedTime.append(mins).append("mins ").append(seconds).append("secs");
+		}else if(actualTime < 1) {
+			estimatedTime.append("less than a second");
+		}else {
+			estimatedTime.append(actualTime).append("secs");
+		}
+		return estimatedTime.toString();
+	}
+	
 
 }

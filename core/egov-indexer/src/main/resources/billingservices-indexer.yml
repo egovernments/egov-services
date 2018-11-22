@@ -9,3 +9,5 @@ ServiceMaps:
       id: $.id, $.tenantId
       isBulk: true
       jsonPath: $.Demands
+      timeStampField: $.auditDetail.createdTime
+

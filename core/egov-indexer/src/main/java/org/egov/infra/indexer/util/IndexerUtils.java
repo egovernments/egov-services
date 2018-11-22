@@ -165,9 +165,9 @@ public class IndexerUtils {
 			}
 		}catch(Exception e){
 			logger.error("No id found at the given jsonpath: ", e);
-			logger.error("idFormat: "+idFormat);
+			logger.error("idFormat: "+idFormat.toString());
 			logger.error("stringifiedObject: "+stringifiedObject);
-			throw e;
+			return null;
 		}
 		return id.toString();
 	}
@@ -279,7 +279,8 @@ public class IndexerUtils {
 						String epochValue = mapper.writeValueAsString(JsonPath.read(kafkaJsonArray.get(i).toString(), index.getTimeStampField()));
 						Date date = new Date(Long.valueOf(epochValue));
 						SimpleDateFormat formatter = new SimpleDateFormat( "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US); 
-						formatter.setTimeZone(TimeZone.getTimeZone("UTC"));				
+						formatter.setTimeZone(TimeZone.getTimeZone("UTC"));	
+						logger.info("kafkaJsonArray.get(i): "+kafkaJsonArray.get(i));
 						context = JsonPath.parse(kafkaJsonArray.get(i).toString());
 						context.put("$","@timestamp", formatter.format(date));
 						tranformedArray.put(context.jsonString());
@@ -288,8 +289,10 @@ public class IndexerUtils {
 						logger.error("Value: "+context);
 						continue;
 					}
-				}else
+				}else {
+					logger.info("null json in kafkaJsonArray, index: "+i);
 					continue;
+				}
 			}catch(Exception e) {
 				logger.error("Exception while adding timestamp: ", e);
 				continue;

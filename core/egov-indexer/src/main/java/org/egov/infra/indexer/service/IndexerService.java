@@ -123,13 +123,23 @@ public class IndexerService {
         try {
         	kafkaJsonArray = indexerUtils.constructArrayForBulkIndex(kafkaJson, index, isBulk);
 			for(int i = 0; i < kafkaJsonArray.length() ; i++){
-				String stringifiedObject = indexerUtils.buildString(kafkaJsonArray.get(i));
-				if(!StringUtils.isEmpty(index.getId())){
-					String id = indexerUtils.buildIndexId(index, stringifiedObject);
-		            final String actionMetaData = String.format(IndexerConstants.ES_INDEX_HEADER_FORMAT, "" + id);
-		            jsonTobeIndexed.append(actionMetaData).append(stringifiedObject).append("\n");
-				}else{
-					jsonTobeIndexed.append(stringifiedObject);
+				if(null != kafkaJsonArray.get(i)) {
+					String stringifiedObject = indexerUtils.buildString(kafkaJsonArray.get(i));
+					if(!StringUtils.isEmpty(index.getId())){
+						String id = indexerUtils.buildIndexId(index, stringifiedObject);
+						if(StringUtils.isEmpty(id)) {
+							logger.info("building own id......");
+							jsonTobeIndexed.append(stringifiedObject);
+						}else {
+				            final String actionMetaData = String.format(IndexerConstants.ES_INDEX_HEADER_FORMAT, "" + id);
+				            jsonTobeIndexed.append(actionMetaData).append(stringifiedObject).append("\n");
+						}
+					}else{
+						jsonTobeIndexed.append(stringifiedObject);
+					}
+				}else {
+					logger.info("buildIndex id, null json in kafkajsonarrya, index: "+i);
+					continue;
 				}
 			}
 			result = jsonTobeIndexed.toString();

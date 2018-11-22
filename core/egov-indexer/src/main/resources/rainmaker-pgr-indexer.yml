@@ -2,104 +2,33 @@ ServiceMaps:
  serviceName: PGR - rainmaker
  version: 1.0.0
  mappings:
+                   
   - topic: save-pgr-service
     indexes:
-    - name: rainmakerpgr
-      type: grievancecreate
-      id: $.services[0].serviceRequestId, $.services[0].tenantId
-      isBulk: false
-      jsonPath: 
-      customJsonMapping:
-        indexMapping: {"PGRIndex":{"serviceRequestId":"serviceRequestId","tenantId":"tenantId","complainCategory":"complainCategory","firstName":"firstName","lastName":"lastName","phone":"phone","dateOfComplaint":123467891000,"description":"","address":"","status":"status","assignee":"assignee","gro":"gro","source":"source","actionInfo":{}}}
-        fieldMapping:
-        - inJsonPath: $.services[0].serviceRequestId
-          outJsonPath: $.PGRIndex.serviceRequestId
-        - inJsonPath: $.services[0].tenantId
-          outJsonPath: $.PGRIndex.tenantId
-        - inJsonPath: $.services[0].firstName
-          outJsonPath: $.PGRIndex.firstName
-        - inJsonPath: $.services[0].lastName
-          outJsonPath: $.PGRIndex.lastName
-        - inJsonPath: $.services[0].phone
-          outJsonPath: $.PGRIndex.phone
-        - inJsonPath: $.services[0].auditDetails.createdTime
-          outJsonPath: $.PGRIndex.dateOfComplaint
-        - inJsonPath: $.services[0].description
-          outJsonPath: $.PGRIndex.description
-        - inJsonPath: $.services[0].address
-          outJsonPath: $.PGRIndex.address
-        - inJsonPath: $.services[0].status
-          outJsonPath: $.PGRIndex.status
-        - inJsonPath: $.services[0].serviceCode
-          outJsonPath: $.PGRIndex.complainCategory
-        - inJsonPath: $.actionInfo[0].by
-          outJsonPath: $.PGRIndex.gro
-        - inJsonPath: $.services[0].source
-          outJsonPath: $.PGRIndex.source
-        - inJsonPath: $.actionInfo
-          outJsonPath: $.PGRIndex.actionInfo
-
-          
-  - topic: update-pgr-service
-    indexes:
-    - name: rainmakerpgr
-      type: grievancecreate
-      id: $.services[0].serviceRequestId, $.services[0].tenantId
-      isBulk: false
-      jsonPath: 
-      customJsonMapping:
-        indexMapping: {"PGRIndex":{"serviceRequestId":"serviceRequestId","tenantId":"tenantId","complainCategory":"complainCategory","firstName":"firstName","lastName":"lastName","phone":"phone","dateOfComplaint":123467891000,"description":"","address":"","status":"status","assignee":"assignee","gro":"gro","source":"source","actionInfo":{}}}
-        fieldMapping:
-        - inJsonPath: $.services[0].serviceRequestId
-          outJsonPath: $.PGRIndex.serviceRequestId
-        - inJsonPath: $.services[0].tenantId
-          outJsonPath: $.PGRIndex.tenantId
-        - inJsonPath: $.services[0].firstName
-          outJsonPath: $.PGRIndex.firstName
-        - inJsonPath: $.services[0].lastName
-          outJsonPath: $.PGRIndex.lastName
-        - inJsonPath: $.services[0].phone
-          outJsonPath: $.PGRIndex.phone
-        - inJsonPath: $.services[0].auditDetails.createdTime
-          outJsonPath: $.PGRIndex.dateOfComplaint
-        - inJsonPath: $.services[0].description
-          outJsonPath: $.PGRIndex.description
-        - inJsonPath: $.services[0].address
-          outJsonPath: $.PGRIndex.address
-        - inJsonPath: $.services[0].status
-          outJsonPath: $.PGRIndex.status
-        - inJsonPath: $.services[0].serviceCode
-          outJsonPath: $.PGRIndex.complainCategory
-        - inJsonPath: $.services[0].source
-          outJsonPath: $.PGRIndex.source
-        - inJsonPath: $.actionInfo[0].by
-          outJsonPath: $.PGRIndex.gro
-        - inJsonPath: $.actionInfo
-          outJsonPath: $.PGRIndex.actionInfo
-        uriMapping:
-        - path: http://hr-employee-v2:8080//hr-employee-v2/employees/_search
-          queryParam: tenantId=$.services[0].tenantId,id=$.actionInfo[0].assignee
-          apiRequest: {"RequestInfo": {"apiId": "org.egov.pt","ver": "1.0","ts": 1502890899493,"action": "asd","did": "4354648646","key": "xyz","msgId": "654654", "requesterId": "61",
-          "authToken": "750d4aa9-2436-4bc4-a8f4-3796e3bfd465","userInfo":{"id":73}}}
-          uriResponseMapping:
-          - inJsonPath: $.Employee[0].name
-            outJsonPath: $.PGRIndex.assignee
-            
-            
-  - topic: save-pgr-service-reindex-test
-    indexes:
-    - name: pgrreindextest
-      type: reindexedcomplaints
+    - name: pgrreindex #intial index was pgrreindextest/reindexedcomplaints
+      type: grievances
       id: $.services.servicerequestid, $.services.tenantid
       isBulk: true
       jsonPath: $.serviceRequests
+      timeStampField: $.services.createdtime
       
-      
-  - topic: save-pgr-service-reindex #reindex config to data on index pgrreindextest/reindexedcomplaints
+  - topic: update-pgr-service
     indexes:
-    - name: pgrreindex
+    - name: pgrreindex #intial index was pgrreindextest/reindexedcomplaints
       type: grievances
+      id: $.services.servicerequestid, $.services.tenantid
+      isBulk: true
+      jsonPath: $.serviceRequests
+      timeStampField: $.services.createdtime
+   
+  - topic:   #reindex config to data on index pgrreindex/grievances
+    indexes:
+    - name: pgrreindexnew
+      type: grievancesnew
       id: $.services.servicerequestid, $.services.tenantid
       isBulk: true
       jsonPath: $.hits
       timeStampField: $.services.createdtime
+      
+      
+#there was custom mapping config for this index, that needs to be redesigned so has been removed for now. Take from any commit before 22/11/2018.

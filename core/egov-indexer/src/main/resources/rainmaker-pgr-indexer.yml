@@ -93,3 +93,13 @@ ServiceMaps:
       id: $.services.servicerequestid, $.services.tenantid
       isBulk: true
       jsonPath: $.serviceRequests
+      
+      
+  - topic: save-pgr-service-reindex #reindex config to data on index pgrreindextest/reindexedcomplaints
+    indexes:
+    - name: pgrreindex
+      type: grievances
+      id: $.services.servicerequestid, $.services.tenantid
+      isBulk: true
+      jsonPath: $.hits
+      timeStampField: $.services.createdtime

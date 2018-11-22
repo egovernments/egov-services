@@ -20,6 +20,12 @@ public class ServiceRequestRepository {
     private RestTemplate restTemplate;
 
 
+    /**
+     * Makes a RestTemplate Call on the input uri with thegiven request
+     * @param uri The uri to be called
+     * @param request The request body
+     * @return The reponse of the call
+     */
     public Object fetchResult(StringBuilder uri, Object request) {
         ObjectMapper mapper = new ObjectMapper();
         mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);

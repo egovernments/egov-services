@@ -3,7 +3,7 @@ package org.egov.tlcalculator.service;
 import lombok.extern.slf4j.Slf4j;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.tlcalculator.config.TLCalculatorConfigs;
-import org.egov.tlcalculator.producer.Producer;
+import org.egov.tlcalculator.kafka.broker.TLCalculatorProducer;
 import org.egov.tlcalculator.repository.builder.BillingslabQueryBuilder;
 import org.egov.tlcalculator.repository.BillingslabRepository;
 import org.egov.tlcalculator.repository.ServiceRequestRepository;
@@ -50,13 +50,17 @@ public class CalculationService {
     private DemandService demandService;
 
     @Autowired
-    private Producer producer;
+    private TLCalculatorProducer producer;
 
     @Autowired
     private MDMSService mdmsService;
 
 
-
+    /**
+     * Calculates tax estimates and creates demand
+     * @param calculationReq The calculationCriteria request
+     * @return List of calculations for all applicationNumbers or tradeLicenses in calculationReq
+     */
    public List<Calculation> calculate(CalculationReq calculationReq){
        List<Calculation> calculations = getCalculation(calculationReq.getRequestInfo(),
                calculationReq.getCalulationCriteria());
@@ -67,6 +71,12 @@ public class CalculationService {
    }
 
 
+    /***
+     * Calculates tax estimates
+     * @param requestInfo The requestInfo of the calculation request
+     * @param criterias list of CalculationCriteria containing the tradeLicense or applicationNumber
+     * @return  List of calculations for all applicationNumbers or tradeLicenses in criterias
+     */
   public List<Calculation> getCalculation(RequestInfo requestInfo, List<CalulationCriteria> criterias){
       List<Calculation> calculations = new LinkedList<>();
       for(CalulationCriteria criteria : criterias) {
@@ -99,7 +109,12 @@ public class CalculationService {
   }
 
 
-
+    /**
+     * Creates TacHeadEstimates
+     * @param calulationCriteria CalculationCriteria containing the tradeLicense or applicationNumber
+     * @param requestInfo The requestInfo of the calculation request
+     * @return TaxHeadEstimates and the billingSlabs used to calculate it
+     */
     private EstimatesAndSlabs getTaxHeadEstimates(CalulationCriteria calulationCriteria, RequestInfo requestInfo){
       List<TaxHeadEstimate> estimates = new LinkedList<>();
       EstimatesAndSlabs  estimatesAndSlabs = getBaseTax(calulationCriteria,requestInfo);
@@ -118,7 +133,12 @@ public class CalculationService {
   }
 
 
-
+    /**
+     * Calculates base tax and cretaes its taxHeadEstimate
+     * @param calulationCriteria CalculationCriteria containing the tradeLicense or applicationNumber
+     * @param requestInfo The requestInfo of the calculation request
+     * @return BaseTax taxHeadEstimate and billingSlabs used to calculate it
+     */
   private EstimatesAndSlabs getBaseTax(CalulationCriteria calulationCriteria, RequestInfo requestInfo){
       TradeLicense license = calulationCriteria.getTradelicense();
       EstimatesAndSlabs estimatesAndSlabs = new EstimatesAndSlabs();
@@ -162,6 +182,11 @@ public class CalculationService {
   }
 
 
+    /**
+     *  Creates taxHeadEstimates for AdhocPenalty
+     * @param calulationCriteria CalculationCriteria containing the tradeLicense or applicationNumber
+     * @return AdhocPenalty taxHeadEstimates
+     */
   private TaxHeadEstimate getAdhocPenalty(CalulationCriteria calulationCriteria){
       TradeLicense license = calulationCriteria.getTradelicense();
       TaxHeadEstimate estimate = new TaxHeadEstimate();
@@ -172,6 +197,11 @@ public class CalculationService {
   }
 
 
+    /**
+     *  Creates taxHeadEstimates for AdhocRebate
+     * @param calulationCriteria CalculationCriteria containing the tradeLicense or applicationNumber
+     * @return AdhocRebate taxHeadEstimates
+     */
     private TaxHeadEstimate getAdhocExemption(CalulationCriteria calulationCriteria){
         TradeLicense license = calulationCriteria.getTradelicense();
         TaxHeadEstimate estimate = new TaxHeadEstimate();
@@ -182,8 +212,11 @@ public class CalculationService {
     }
 
 
-
-
+    /**
+     * @param license TradeLicense for which fee has to be calculated
+     * @param calculationType Calculation logic to be used
+     * @return TradeUnit Fee and billingSlab used to calculate it
+     */
   private FeeAndBillingSlabIds getTradeUnitFeeAndBillingSlabIds(TradeLicense license, CalculationType calculationType){
 
       List<BigDecimal> tradeUnitFees = new LinkedList<>();
@@ -242,6 +275,11 @@ public class CalculationService {
   }
 
 
+    /**
+     * @param license TradeLicense for which fee has to be calculated
+     * @param calculationType Calculation logic to be used
+     * @return Accessory Fee and billingSlab used to calculate it
+     */
   private FeeAndBillingSlabIds getAccessoryFeeAndBillingSlabIds(TradeLicense license, CalculationType calculationType){
 
       List<BigDecimal> accessoryFees = new LinkedList<>();
@@ -297,8 +335,12 @@ public class CalculationService {
   }
 
 
-
-
+    /**
+     * Calculates total fee of by applying logic on list based on calculationType
+     * @param fees List of fee for different tradeType or accessories
+     * @param calculationType Calculation logic to be used
+     * @return Total Fee
+     */
   private BigDecimal getTotalFee(List<BigDecimal> fees,CalculationType calculationType){
       BigDecimal totalFee = BigDecimal.ZERO;
       //Summation

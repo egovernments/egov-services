@@ -29,7 +29,12 @@ public class DemandRepository {
     private ObjectMapper mapper;
 
 
-
+    /**
+     * Creates demand
+     * @param requestInfo The RequestInfo of the calculation Request
+     * @param demands The demands to be created
+     * @return The list of demand created
+     */
     public List<Demand> saveDemand(RequestInfo requestInfo,List<Demand> demands){
         StringBuilder url = new StringBuilder(config.getBillingHost());
         url.append(config.getDemandCreateEndpoint());
@@ -46,7 +51,12 @@ public class DemandRepository {
     }
 
 
-
+    /**
+     * Updates the demand
+     * @param requestInfo The RequestInfo of the calculation Request
+     * @param demands The demands to be updated
+     * @return The list of demand updated
+     */
     public List<Demand> updateDemand(RequestInfo requestInfo, List<Demand> demands){
         StringBuilder url = new StringBuilder(config.getBillingHost());
         url.append(config.getDemandUpdateEndpoint());

@@ -53,8 +53,11 @@ public class DemandService {
     private CalculationQueryBuilder calculationQueryBuilder;
 
 
-
-
+    /**
+     * Creates or updates Demand
+     * @param requestInfo The RequestInfo of the calculation request
+     * @param calculations The Calculation Objects for which demand has to be generated or updated
+     */
     public void generateDemand(RequestInfo requestInfo,List<Calculation> calculations){
 
         //List that will contain Calculation for new demands
@@ -80,6 +83,13 @@ public class DemandService {
             updateDemand(requestInfo,updateCalculations);
     }
 
+
+    /**
+     * Generates bill
+     * @param requestInfo The RequestInfo of the calculation request
+     * @param billCriteria The criteria for bill generation
+     * @return The generate bill response along with ids of slab used for calculation
+     */
     public BillAndCalculations getBill(RequestInfo requestInfo, GenerateBillCriteria billCriteria){
         BillResponse billResponse = generateBill(requestInfo,billCriteria);
         BillingSlabIds billingSlabIds = getBillingSlabIds(billCriteria);
@@ -89,6 +99,12 @@ public class DemandService {
         return getBillResponse;
     }
 
+
+    /**
+     * Gets the billingSlabs from the db
+     * @param billCriteria The criteria on which bill has to be generated
+     * @return The billingSlabIds used for calculation
+     */
     private BillingSlabIds getBillingSlabIds(GenerateBillCriteria billCriteria){
         List<Object> preparedStmtList = new ArrayList<>();
         CalculationSearchCriteria criteria = new CalculationSearchCriteria();
@@ -103,7 +119,12 @@ public class DemandService {
     }
 
 
-
+    /**
+     * Creates demand for the given list of calculations
+     * @param requestInfo The RequestInfo of the calculation request
+     * @param calculations List of calculation object
+     * @return Demands that are created
+     */
     private List<Demand> createDemand(RequestInfo requestInfo,List<Calculation> calculations){
         List<Demand> demands = new LinkedList<>();
         for(Calculation calculation : calculations) {
@@ -154,6 +175,13 @@ public class DemandService {
     }
 
 
+
+    /**
+     * Updates demand for the given list of calculations
+     * @param requestInfo The RequestInfo of the calculation request
+     * @param calculations List of calculation object
+     * @return Demands that are updated
+     */
     private List<Demand> updateDemand(RequestInfo requestInfo,List<Calculation> calculations){
         List<Demand> demands = new LinkedList<>();
         for(Calculation calculation : calculations) {
@@ -190,6 +218,13 @@ public class DemandService {
     }
 
 
+    /**
+     * Searches demand for the given consumerCode and tenantIDd
+     * @param tenantId The tenantId of the tradeLicense
+     * @param consumerCode The consumerCode of the demand
+     * @param requestInfo The RequestInfo of the incoming request
+     * @return Lis to demands for the given consumerCode
+     */
     private List<Demand> searchDemand(String tenantId,String consumerCode,RequestInfo requestInfo){
         String uri = utils.getDemandSearchURL();
         uri = uri.replace("{1}",tenantId);
@@ -215,7 +250,12 @@ public class DemandService {
     }
 
 
-
+    /**
+     * Generates bill by calling BillingService
+     * @param requestInfo The RequestInfo of the getBill request
+     * @param billCriteria The criteria for bill generation
+     * @return The response of the bill generate
+     */
     private BillResponse generateBill(RequestInfo requestInfo,GenerateBillCriteria billCriteria){
 
         String consumerCode = billCriteria.getConsumerCode();

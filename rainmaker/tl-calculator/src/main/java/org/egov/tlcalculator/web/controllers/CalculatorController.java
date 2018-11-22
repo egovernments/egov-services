@@ -40,6 +40,11 @@ public class CalculatorController {
 		this.demandService=demandService;
 	}
 
+	/**
+	 * Calulates the tradeLicense fee and creates Demand
+	 * @param calculationReq The calculation Request
+	 * @return Calculation Response
+	 */
 	@RequestMapping(value = "/_calculate", method = RequestMethod.POST)
 	public ResponseEntity<CalculationRes> calculate(@Valid @RequestBody CalculationReq calculationReq) {
 
@@ -48,6 +53,13 @@ public class CalculatorController {
 		 return new ResponseEntity<CalculationRes>(calculationRes,HttpStatus.OK);
 	}
 
+
+	/**
+	 * Generates Bill for the given criteria
+	 * @param requestInfoWrapper Wrapper containg the requestInfo
+	 * @param generateBillCriteria The criteria to generate bill
+	 * @return The response of generate bill
+	 */
 	@RequestMapping(value = "/_getbill", method = RequestMethod.POST)
 	public ResponseEntity<BillAndCalculations> getBill(@Valid @RequestBody RequestInfoWrapper requestInfoWrapper,
 										@ModelAttribute @Valid GenerateBillCriteria generateBillCriteria) {

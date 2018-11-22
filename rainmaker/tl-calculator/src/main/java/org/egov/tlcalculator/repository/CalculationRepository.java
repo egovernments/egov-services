@@ -25,6 +25,12 @@ public class CalculationRepository {
     @Autowired
     private CalculationRowMapper calculationRowMapper;
 
+    /**
+     * Executes the argument query on db
+     * @param query The query to be executed
+     * @param preparedStmtList The parameter values for the query
+     * @return BillingSlabIds
+     */
     public BillingSlabIds getDataFromDB(String query, List<Object> preparedStmtList){
         BillingSlabIds billingSlabIds = null;
         try {

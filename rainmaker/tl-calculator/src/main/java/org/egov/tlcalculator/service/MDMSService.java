@@ -37,14 +37,12 @@ public class MDMSService {
     }
 
 
-
-
-
-
-
-
-
-
+    /**
+     * Creates MDMS request
+     * @param requestInfo The RequestInfo of the calculationRequest
+     * @param tenantId The tenantId of the tradeLicense
+     * @return MDMSCriteria Request
+     */
     private MdmsCriteriaReq getMDMSRequest(RequestInfo requestInfo, String tenantId) {
 
         // master details for TL module
@@ -75,6 +73,12 @@ public class MDMSService {
     }
 
 
+    /**
+     * Gets the startDate and the endDate of the financialYear
+     * @param requestInfo The RequestInfo of the calculationRequest
+     * @param license The tradeLicense for which calculation is done
+     * @return Map containing the startDate and endDate
+     */
     public Map<String,Long> getTaxPeriods(RequestInfo requestInfo,TradeLicense license){
         Map<String,Long> taxPeriods = new HashMap<>();
 
@@ -97,6 +101,14 @@ public class MDMSService {
     }
 
 
+    /**
+     * Gets the calculationType for the city for a particular financialYear
+     * If for particular financialYear entry is not there previous year is taken
+     * If MDMS data is not available default values are returned
+     * @param requestInfo The RequestInfo of the calculationRequest
+     * @param license The tradeLicense for which calculation is done
+     * @return Map contianing the calculationType for TradeUnit and accessory
+     */
     public Map getCalculationType(RequestInfo requestInfo,TradeLicense license){
 
         MdmsCriteriaReq mdmsCriteriaReq = getMDMSRequest(requestInfo,license.getTenantId());
@@ -133,6 +145,10 @@ public class MDMSService {
         return calculationType;
     }
 
+    /**
+     * Creates and return default calculationType values as map
+     * @return default calculationType Map
+     */
     private Map defaultMap(){
         Map defaultMap = new HashMap();
         defaultMap.put(TLCalculatorConstants.MDMS_CALCULATIONTYPE_TRADETYPE,config.getDefaultTradeUnitCalculationType());
@@ -150,9 +166,9 @@ public class MDMSService {
 
 
     /**
-     * Returns the url for mdms search endpoint
+     * Creates and returns the url for mdms search endpoint
      *
-     * @return
+     * @return MDMS Search URL
      */
     private StringBuilder getMdmsSearchUrl() {
         return new StringBuilder().append(config.getMdmsHost()).append(config.getMdmsSearchEndpoint());

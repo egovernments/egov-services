@@ -19,6 +19,12 @@ public class CalculationQueryBuilder {
             " WHERE ";
 
 
+    /**
+     * Creates query to search billingSlabs based on tenantId and consumerCode ordered by lastModifiedTime
+     * @param criteria The Search criteria
+     * @param preparedStmtList The list of object containing the query parameter values
+     * @return Search query for billingSlabs
+     */
     public String getSearchQuery(CalculationSearchCriteria criteria, List<Object> preparedStmtList){
         StringBuilder builder = new StringBuilder(QUERY);
 

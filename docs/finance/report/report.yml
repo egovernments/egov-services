@@ -30,11 +30,11 @@ ReportDefinitions:
         type: epoch
         source: pt
         isMandatory: false
-        searchClause: AND receiptdate >= $fromDate
+        searchClause: receiptdate >= $fromDate
       - name: toDate
         label: reports.pt.toDate
         type: epoch
         source: pt
         isMandatory: false
         searchClause: AND receiptdate <= $toDate
-    query: select receiptdate,receiptnumber,businessdetails,department,createdby from egcl_receiptheader
+    query: select receiptdate,receiptnumber,businessdetails,department,createdby from egcl_receiptheader where

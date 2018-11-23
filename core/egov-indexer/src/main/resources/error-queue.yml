@@ -22,6 +22,6 @@ ServiceMaps:
       timeStampField: $.ts
       
       
-#JOURNEY: egovtelemetry -> egovtelemetryreindex
+#JOURNEY: egovtracer
 #configKey=INDEX: Index that currently receives live data from the services
 #configKey=REINDEX: Configuration for reindexing that will be enabled only during reindexing activity.

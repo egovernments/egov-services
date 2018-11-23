@@ -1,0 +1,40 @@
+ReportDefinitions:
+  - reportName: ReceiptRegister
+    summary: Receipt Register
+    version: 1.0.0
+    moduleName: finance
+    sourceColumns:
+      - name: receiptnumber
+        label: reports.pt.receiptNo
+        type: string
+        source: pt
+        total: false
+      - name: transactiondate
+        label: reports.pt.receiptDate
+        type: string
+        source: pt
+        total: false
+      - name: businessdetails
+        label: reports.pt.businessdetails
+        type: string
+        source: pt
+        total: false
+      - name: department
+        label: reports.pt.department
+        type: string
+        source: pt
+        total: false
+    searchParams:
+      - name: fromDate
+        label: reports.pt.fromDate
+        type: epoch
+        source: pt
+        isMandatory: false
+        searchClause: AND receiptdate >= $fromDate
+      - name: toDate
+        label: reports.pt.toDate
+        type: epoch
+        source: pt
+        isMandatory: false
+        searchClause: AND receiptdate <= $toDate
+    query: select receiptdate,receiptnumber,businessdetails,department,createdby from egcl_receiptheader

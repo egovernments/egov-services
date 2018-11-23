@@ -50,9 +50,7 @@ public class MDMSValidator {
         Map<String, String> errorMap = new HashMap<>();
 
         Map<String, List<String>> masterData = getAttributeValues(mdmsData);
-
-        Map<String, List<String>> uomMasterData = getUomMap(mdmsData);
-
+        
         String[] masterArray = { TLConstants.ACCESSORIES_CATEGORY, TLConstants.TRADE_TYPE,
                                  TLConstants.OWNERSHIP_CATEGORY, TLConstants.STRUCTURE_TYPE};
 

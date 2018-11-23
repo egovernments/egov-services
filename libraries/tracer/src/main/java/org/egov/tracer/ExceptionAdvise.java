@@ -40,7 +40,7 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static org.egov.tracer.constants.TracerConstants.MDC_CORRELATION_ID;
+import static org.egov.tracer.constants.TracerConstants.CORRELATION_ID_MDC;
 
 
 @ControllerAdvice
@@ -231,7 +231,7 @@ public class ExceptionAdvise {
 
             ErrorQueueContract errorQueueContract = ErrorQueueContract.builder()
                 .id(UUID.randomUUID().toString())
-                .correlationId(MDC.get(MDC_CORRELATION_ID))
+                .correlationId(MDC.get(CORRELATION_ID_MDC))
                 .body(requestBody)
                 .source(source)
                 .ts(new Date().getTime())

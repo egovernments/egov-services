@@ -31,8 +31,6 @@ public class TracerFilter implements Filter {
     private static final String REQUEST_URI_LOG_MESSAGE = "Received request URI: {} ";
     private static final String REQUEST_PARAMS_LOG_MESSAGE = "Request Query params: {} ";
     private static final String LOG_RESPONSE_CODE_MESSAGE = "Response code sent: {}";
-    private static final String REQUEST_INFO_FIELD_NAME_IN_JAVA_CLASS_CASE = "RequestInfo";
-    private static final String REQUEST_INFO_IN_CAMEL_CASE = "requestInfo";
 
     private final ObjectMapper objectMapper;
     private TracerProperties tracerProperties;
@@ -81,7 +79,7 @@ public class TracerFilter implements Filter {
             if (isBodyCompatibleForParsing(httpRequest)) {
                 final MultiReadRequestWrapper wrappedRequest = new MultiReadRequestWrapper(httpRequest);
                 correlationId = getCorrelationId(wrappedRequest);
-                MDC.put(MDC_CORRELATION_ID, correlationId);
+                MDC.put(CORRELATION_ID_MDC, correlationId);
                 logRequestURI(httpRequest);
 
                 if (tracerProperties.isRequestLoggingEnabled()) {
@@ -92,7 +90,7 @@ public class TracerFilter implements Filter {
 
             } else {
                 correlationId = getCorrelationId(httpRequest);
-                MDC.put(MDC_CORRELATION_ID, correlationId);
+                MDC.put(CORRELATION_ID_MDC, correlationId);
                 logRequestURI(httpRequest);
                 filterChain.doFilter(httpRequest, servletResponse);
             }

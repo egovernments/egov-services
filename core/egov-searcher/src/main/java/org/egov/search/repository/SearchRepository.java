@@ -53,7 +53,6 @@ public class SearchRepository {
 					"Query Execution Timeout! Json query is taking more time than the max exec time, query: "+query);
 		}
 		result = searchUtils.convertPGOBjects(maps);
-		LOGGER.debug("RESULT:"+result);
 		return result;
 	}
 

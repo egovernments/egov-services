@@ -1,6 +1,8 @@
 package org.egov.infra.indexer.consumer;
 
 import org.apache.kafka.clients.consumer.ConsumerRecord;
+import org.egov.infra.indexer.custom.pgr.models.PGRCustomDecorator;
+import org.egov.infra.indexer.custom.pgr.models.ServiceResponse;
 import org.egov.infra.indexer.service.IndexerService;
 import org.egov.infra.indexer.util.IndexerUtils;
 import org.egov.infra.indexer.web.contract.ReindexRequest;
@@ -23,6 +25,9 @@ public class IndexerMessageListener implements MessageListener<String, String> {
 
 	@Autowired
 	private IndexerUtils indexerUtils;
+	
+	@Autowired
+	private PGRCustomDecorator pgrCustomDecorator;
 
 	@Value("${egov.core.reindex.topic.name}")
 	private String reindexTopic;
@@ -32,6 +37,8 @@ public class IndexerMessageListener implements MessageListener<String, String> {
 
 	@Value("${egov.indexer.pgr.update.topic.name}")
 	private String pgrUpdateTopic;
+	
+
 
 	@Override
 	public void onMessage(ConsumerRecord<String, String> data) {
@@ -45,7 +52,15 @@ public class IndexerMessageListener implements MessageListener<String, String> {
 			} catch (Exception e) {
 				logger.error("Couldn't parse reindex request: ", e);
 			}
-		} else {
+		}else if(data.topic().equals(pgrCreateTopic) || data.topic().equals(pgrUpdateTopic)) {
+			ObjectMapper mapper = indexerUtils.getObjectMapper();
+			try {
+				ServiceResponse serviceResponse = mapper.readValue(data.value(), ServiceResponse.class);
+				pgrCustomDecorator.dataTransformationForPGR(serviceResponse);
+			} catch (Exception e) {
+				logger.error("Couldn't parse reindex request: ", e);
+			}
+		}else {
 			try {
 				indexerService.elasticIndexer(data.topic(), data.value());
 			} catch (Exception e) {

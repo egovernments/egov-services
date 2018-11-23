@@ -11,6 +11,7 @@ import java.util.UUID;
 import org.apache.commons.lang3.StringUtils;
 import org.egov.IndexerApplicationRunnerImpl;
 import org.egov.infra.indexer.bulkindexer.BulkIndexer;
+import org.egov.infra.indexer.custom.pgr.models.ServiceResponse;
 import org.egov.infra.indexer.models.IndexJob;
 import org.egov.infra.indexer.models.IndexJobWrapper;
 import org.egov.infra.indexer.models.IndexJob.StatusEnum;
@@ -260,7 +261,7 @@ public class IndexerService {
 		
 		return result;
   }
-	
+		
 	public ReindexResponse createReindexJob(ReindexRequest reindexRequest) {
 		Map<String, Mapping> mappingsMap = runner.getMappingMaps();
 		ReindexResponse reindexResponse = null;

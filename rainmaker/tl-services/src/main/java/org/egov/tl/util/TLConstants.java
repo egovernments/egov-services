@@ -51,11 +51,21 @@ public class TLConstants {
 
     public static final String STRUCTURE_TYPE = "StructureType";
 
+
+
     // mdms path codes
 
     public static final String TL_JSONPATH_CODE = "$.MdmsRes.TradeLicense";
 
     public static final String COMMON_MASTER_JSONPATH_CODE = "$.MdmsRes.common-masters";
+
+    public static final String TRADETYPE_JSONPATH_CODE = "$.MdmsRes.TradeLicense.TradeType.*.code";
+
+    public static final String TRADETYPE_JSONPATH_UOM = "$.MdmsRes.TradeLicense.TradeType.*.uom";
+
+    public static final String ACCESSORY_JSONPATH_CODE = "$.MdmsRes.TradeLicense.AccessoriesCategory.*.code";
+
+    public static final String ACCESSORY_JSONPATH_UOM = "$.MdmsRes.TradeLicense.AccessoriesCategory.*.uom";
 
 
     //FINANCIAL YEAR

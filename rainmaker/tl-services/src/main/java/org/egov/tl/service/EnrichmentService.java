@@ -37,7 +37,7 @@ public class EnrichmentService {
      * Enriches the incoming createRequest
      * @param tradeLicenseRequest The create request for the tradeLicense
      */
-    public void enrichTLCreateRequest(TradeLicenseRequest tradeLicenseRequest) {
+    public void enrichTLCreateRequest(TradeLicenseRequest tradeLicenseRequest,Object mdmsData) {
         RequestInfo requestInfo = tradeLicenseRequest.getRequestInfo();
         AuditDetails auditDetails = tradeUtil.getAuditDetails(requestInfo.getUserInfo().getUuid(), true);
         tradeLicenseRequest.getLicenses().forEach(tradeLicense -> {
@@ -47,7 +47,7 @@ public class EnrichmentService {
             tradeLicense.getTradeLicenseDetail().setId(UUID.randomUUID().toString());
             tradeLicense.getTradeLicenseDetail().setAuditDetails(auditDetails);
 
-            Map<String,Long> taxPeriods = tradeUtil.getTaxPeriods(requestInfo,tradeLicense);
+            Map<String,Long> taxPeriods = tradeUtil.getTaxPeriods(tradeLicense,mdmsData);
             if(tradeLicense.getValidTo()==null)
                 tradeLicense.setValidTo(taxPeriods.get(TLConstants.MDMS_ENDDATE));
             

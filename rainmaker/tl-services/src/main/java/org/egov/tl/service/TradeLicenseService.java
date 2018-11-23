@@ -4,6 +4,7 @@ import org.egov.common.contract.request.RequestInfo;
 import org.egov.tl.config.TLConfiguration;
 import org.egov.tl.producer.Producer;
 import org.egov.tl.repository.TLRepository;
+import org.egov.tl.util.TradeUtil;
 import org.egov.tl.validator.TLValidator;
 import org.egov.tl.web.models.TradeLicense;
 import org.egov.tl.web.models.TradeLicenseRequest;
@@ -34,12 +35,14 @@ public class TradeLicenseService {
 
     private CalculationService calculationService;
 
+    private TradeUtil util;
+
 
     @Autowired
     public TradeLicenseService(EnrichmentService enrichmentService, UserService userService,
                                TLRepository repository, ActionValidator actionValidator,
                                TLValidator tlValidator, TLWorkflowService workflowService,
-                               CalculationService calculationService) {
+                               CalculationService calculationService,TradeUtil util) {
         this.enrichmentService = enrichmentService;
         this.userService = userService;
         this.repository = repository;
@@ -47,6 +50,7 @@ public class TradeLicenseService {
         this.tlValidator = tlValidator;
         this.workflowService = workflowService;
         this.calculationService = calculationService;
+        this.util = util;
     }
 
 
@@ -56,9 +60,10 @@ public class TradeLicenseService {
      * @return The list of created traddeLicense
      */
     public List<TradeLicense> create(TradeLicenseRequest tradeLicenseRequest){
-        tlValidator.validateCreate(tradeLicenseRequest);
+        Object mdmsData = util.mDMSCall(tradeLicenseRequest);
+        tlValidator.validateCreate(tradeLicenseRequest,mdmsData);
         actionValidator.validateCreateRequest(tradeLicenseRequest);
-        enrichmentService.enrichTLCreateRequest(tradeLicenseRequest);
+        enrichmentService.enrichTLCreateRequest(tradeLicenseRequest,mdmsData);
         userService.createUser(tradeLicenseRequest);
         calculationService.addCalculation(tradeLicenseRequest);
         repository.save(tradeLicenseRequest);
@@ -123,7 +128,8 @@ public class TradeLicenseService {
      * @return Updated TradeLcienses
      */
     public List<TradeLicense> update(TradeLicenseRequest tradeLicenseRequest){
-        tlValidator.validateUpdate(tradeLicenseRequest);
+        Object mdmsData = util.mDMSCall(tradeLicenseRequest);
+        tlValidator.validateUpdate(tradeLicenseRequest,mdmsData);
         actionValidator.validateUpdateRequest(tradeLicenseRequest);
         enrichmentService.enrichTLUpdateRequest(tradeLicenseRequest);
         workflowService.updateStatus(tradeLicenseRequest);

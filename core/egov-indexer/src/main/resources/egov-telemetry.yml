@@ -3,8 +3,9 @@ ServiceMaps:
  version: 1.0.0
  mappings:
   - topic: telemetry-final-messages
+    configKey: INDEX
     indexes:
-    - name: egovtelemetryreindex #intial index was egov-telemetry
+    - name: egovtelemetryreindex
       type: general
       id: $.mid
       isBulk: true
@@ -12,10 +13,16 @@ ServiceMaps:
       timeStampField: $.ets
       
   - topic: telemetry-reindex
+    configKey: REINDEX
     indexes:
-    - name: egovtelemetryreindexnew #intial index was egovtelemetryreindex
+    - name: egovtelemetryreindexnew
       type: general
       id: $.mid
       isBulk: true
       jsonPath: $.hits
       timeStampField: $.ets
+      
+      
+#JOURNEY: egovtelemetry -> egovtelemetryreindex
+#configKey=INDEX: Index that currently receives live data from the services
+#configKey=REINDEX: Configuration for reindexing that will be enabled only during reindexing activity.

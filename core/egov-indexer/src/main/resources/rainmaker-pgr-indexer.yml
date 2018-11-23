@@ -4,8 +4,9 @@ ServiceMaps:
  mappings:
                    
   - topic: save-pgr-service
+    configKey: INDEX
     indexes:
-    - name: pgrreindex #intial index was pgrreindextest/reindexedcomplaints
+    - name: pgrreindex
       type: grievances
       id: $.services.servicerequestid, $.services.tenantid
       isBulk: true
@@ -13,15 +14,17 @@ ServiceMaps:
       timeStampField: $.services.createdtime
       
   - topic: update-pgr-service
+    configKey: INDEX
     indexes:
-    - name: pgrreindex #intial index was pgrreindextest/reindexedcomplaints
+    - name: pgrreindex
       type: grievances
       id: $.services.servicerequestid, $.services.tenantid
       isBulk: true
       jsonPath: $.serviceRequests
       timeStampField: $.services.createdtime
    
-  - topic:   #reindex config to data on index pgrreindex/grievances
+  - topic: save-pgr-service-reindex
+    configKey: REINDEX
     indexes:
     - name: pgrreindexnew
       type: grievancesnew
@@ -29,6 +32,11 @@ ServiceMaps:
       isBulk: true
       jsonPath: $.hits
       timeStampField: $.services.createdtime
+      
+      
+#JOURNEY: rainmakerpgr -> pgrreindextest -> pgrreindex
+#configKey=INDEX: Index that currently receives live data from the services
+#configKey=REINDEX: Configuration for reindexing that will be enabled only during reindexing activity.
       
       
 #there was custom mapping config for this index, that needs to be redesigned so has been removed for now. Take from any commit before 22/11/2018.

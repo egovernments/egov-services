@@ -32,6 +32,21 @@ public class UriMapping {
 	  @JsonProperty("pathParam")
 	  private String pathParam;
 	  
+	  @JsonProperty("moduleName")
+	  private String moduleName;
+	  
+	  @JsonProperty("masterName")
+	  private String masterName;
+	  
+	  @JsonProperty("tenantId")
+	  private String tenantId;
+	  
+	  @JsonProperty("filter")
+	  private String filter;
+	  
+	  @JsonProperty("filterMapping")
+	  private List<FilterMapping> filterMapping;
+	  
 	  @JsonProperty("uriResponseMapping")
 	  private List<FieldMapping> uriResponseMapping;
 }

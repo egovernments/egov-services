@@ -2,41 +2,53 @@ ServiceMaps:
  serviceName: PGR - rainmaker
  version: 1.0.0
  mappings:
-                   
-  - topic: save-pgr-service
+                         
+  - topic: save-pgr-index-service
     configKey: INDEX
     indexes:
-    - name: pgrreindex
+    - name: pgrnew
       type: grievances
-      id: $.services.servicerequestid, $.services.tenantid
+      id: $.serviceRequestId, $.tenantId
       isBulk: true
       jsonPath: $.serviceRequests
-      timeStampField: $.services.createdtime
+      timeStampField: $.auditDetails.createdTime
       
-  - topic: update-pgr-service
+  - topic: update-pgr-index-service
     configKey: INDEX
     indexes:
-    - name: pgrreindex
+    - name: pgrnew
       type: grievances
-      id: $.services.servicerequestid, $.services.tenantid
+      id: $.serviceRequestId, $.tenantId
       isBulk: true
       jsonPath: $.serviceRequests
-      timeStampField: $.services.createdtime
+      timeStampField: $.auditDetails.createdTime
    
-  - topic: save-pgr-service-reindex
+  - topic: pgr-service-reindex
     configKey: REINDEX
     indexes:
-    - name: pgrreindexnew
-      type: grievancesnew
-      id: $.services.servicerequestid, $.services.tenantid
+    - name: pgrnewreindex
+      type: grievances
+      id: $.serviceRequestId, $.tenantId
       isBulk: true
       jsonPath: $.hits
-      timeStampField: $.services.createdtime
+      timeStampField: $.auditDetails.createdTime
+      
+  - topic: pgr-service-legacyindex
+    configKey: LEGACYINDEX
+    indexes:
+    - name: pgrnew
+      type: grievances
+      id: $.serviceRequestId, $.tenantId
+      isBulk: true
+      jsonPath: $.serviceRequests
+      timeStampField: $.auditDetails.createdTime
       
       
-#JOURNEY: rainmakerpgr -> pgrreindextest -> pgrreindex
+#JOURNEY: rainmakerpgr -> pgrreindextest -> pgrreindex -> pgrnew
 #configKey=INDEX: Index that currently receives live data from the services
 #configKey=REINDEX: Configuration for reindexing that will be enabled only during reindexing activity.
+#configKey=LEGACYINDEX: Configuration for reindexing the database to es that will be enabled only during reindexing activity.
+
       
       
 #there was custom mapping config for this index, that needs to be redesigned so has been removed for now. Take from any commit before 22/11/2018.

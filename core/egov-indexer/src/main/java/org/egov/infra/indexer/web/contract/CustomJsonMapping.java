@@ -26,8 +26,11 @@ public class CustomJsonMapping {
 	  @JsonProperty("fieldMapping")
 	  private List<FieldMapping> fieldMapping;
 	  
-	  @JsonProperty("uriMapping")
-	  private List<UriMapping> uriMapping;
+	  @JsonProperty("externalUriMapping")
+	  private List<UriMapping> externalUriMapping;
+	  
+	  @JsonProperty("mdmsMapping")
+	  private List<UriMapping> mdmsMapping;
 	  
 	  
 }

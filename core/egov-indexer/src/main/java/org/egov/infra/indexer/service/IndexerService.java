@@ -82,6 +82,7 @@ public class IndexerService {
 	private String esHostUrl;
 		
 	public void elasticIndexer(String topic, String kafkaJson) throws Exception{
+		logger.info("kafka Data: "+kafkaJson);
 		Map<String, Mapping> mappingsMap = runner.getMappingMaps();
 		if(null != mappingsMap.get(topic)){
 			Mapping mapping = mappingsMap.get(topic);
@@ -202,9 +203,12 @@ public class IndexerService {
 				}
 			
 			}
-    	}		
-		if(!CollectionUtils.isEmpty(customJsonMappings.getUriMapping())){
-			for(UriMapping uriMapping: customJsonMappings.getUriMapping()){
+    	}
+    	/**
+    	 * This block denormalizes data from external services
+    	 */
+		if(!CollectionUtils.isEmpty(customJsonMappings.getExternalUriMapping())){
+			for(UriMapping uriMapping: customJsonMappings.getExternalUriMapping()){
 				Object response = null;
 				String uri = null;
 				try{
@@ -229,6 +233,37 @@ public class IndexerService {
 					
 			}
 		}
+		
+		/**
+		 * This block denormalizes data from MDMS.
+		 */
+		if(!CollectionUtils.isEmpty(customJsonMappings.getMdmsMapping())) {
+			for(UriMapping uriMapping: customJsonMappings.getMdmsMapping()){
+				Object response = null;
+				StringBuilder uri = new StringBuilder();
+				try{
+					Object request = indexerUtils.prepareMDMSSearchReq(uri, null, kafkaJson, uriMapping);
+					response = restTemplate.postForObject(uri.toString(), request, Map.class);
+					if(null == response) continue;
+				}catch(Exception e){
+					logger.error("Exception while trying to hit: "+uri, e);
+					continue;
+				}
+				logger.debug("Response: "+response+" from the URI: "+uriMapping.getPath());
+				for(FieldMapping fieldMapping: uriMapping.getUriResponseMapping()){
+					String[] expressionArray = (fieldMapping.getOutJsonPath()).split("[.]");
+					String expression = indexerUtils.getProcessedJsonPath(fieldMapping.getOutJsonPath());
+					try{
+						documentContext.put(expression, expressionArray[expressionArray.length - 1], JsonPath.read(mapper.writeValueAsString(response), fieldMapping.getInjsonpath()));
+					}catch(Exception e){
+						logger.error("Value: "+fieldMapping.getInjsonpath()+" is not found in the uri: "+uriMapping.getPath()+" response", e);
+						continue;
+					}
+				}
+					
+			}
+		}
+		
 		return documentContext.jsonString().toString(); //jsonString has to be converted to string
 	}
 	

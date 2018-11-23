@@ -58,7 +58,7 @@ public class DemandService {
      * @param requestInfo The RequestInfo of the calculation request
      * @param calculations The Calculation Objects for which demand has to be generated or updated
      */
-    public void generateDemand(RequestInfo requestInfo,List<Calculation> calculations){
+    public void generateDemand(RequestInfo requestInfo,List<Calculation> calculations,Object mdmsData){
 
         //List that will contain Calculation for new demands
         List<Calculation> createCalculations = new LinkedList<>();
@@ -77,7 +77,7 @@ public class DemandService {
             }
         }
         if(!CollectionUtils.isEmpty(createCalculations))
-            createDemand(requestInfo,createCalculations);
+            createDemand(requestInfo,createCalculations,mdmsData);
 
         if(!CollectionUtils.isEmpty(updateCalculations))
             updateDemand(requestInfo,updateCalculations);
@@ -125,7 +125,7 @@ public class DemandService {
      * @param calculations List of calculation object
      * @return Demands that are created
      */
-    private List<Demand> createDemand(RequestInfo requestInfo,List<Calculation> calculations){
+    private List<Demand> createDemand(RequestInfo requestInfo,List<Calculation> calculations,Object mdmsData){
         List<Demand> demands = new LinkedList<>();
         for(Calculation calculation : calculations) {
             TradeLicense license = null;
@@ -157,7 +157,7 @@ public class DemandService {
                         .build());
             });
 
-             Map<String,Long> taxPeriods = mdmsService.getTaxPeriods(requestInfo,license);
+             Map<String,Long> taxPeriods = mdmsService.getTaxPeriods(requestInfo,license,mdmsData);
 
             demands.add(Demand.builder()
                     .consumerCode(consumerCode)

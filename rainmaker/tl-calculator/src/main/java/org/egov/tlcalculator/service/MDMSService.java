@@ -79,14 +79,11 @@ public class MDMSService {
      * @param license The tradeLicense for which calculation is done
      * @return Map containing the startDate and endDate
      */
-    public Map<String,Long> getTaxPeriods(RequestInfo requestInfo,TradeLicense license){
+    public Map<String,Long> getTaxPeriods(RequestInfo requestInfo,TradeLicense license,Object mdmsData){
         Map<String,Long> taxPeriods = new HashMap<>();
-
-        MdmsCriteriaReq mdmsCriteriaReq = getMDMSRequest(requestInfo,license.getTenantId());
         try {
-            Object result = serviceRequestRepository.fetchResult(getMdmsSearchUrl(), mdmsCriteriaReq);
             String jsonPath = TLCalculatorConstants.MDMS_FINACIALYEAR_PATH.replace("{}",license.getFinancialYear());
-            List<Map<String,Object>> jsonOutput =  JsonPath.read(result, jsonPath);
+            List<Map<String,Object>> jsonOutput =  JsonPath.read(mdmsData, jsonPath);
             Map<String,Object> financialYearProperties = jsonOutput.get(0);
             Object startDate = financialYearProperties.get(TLCalculatorConstants.MDMS_STARTDATE);
             Object endDate = financialYearProperties.get(TLCalculatorConstants.MDMS_ENDDATE);
@@ -109,17 +106,14 @@ public class MDMSService {
      * @param license The tradeLicense for which calculation is done
      * @return Map contianing the calculationType for TradeUnit and accessory
      */
-    public Map getCalculationType(RequestInfo requestInfo,TradeLicense license){
-
-        MdmsCriteriaReq mdmsCriteriaReq = getMDMSRequest(requestInfo,license.getTenantId());
+    public Map getCalculationType(RequestInfo requestInfo,TradeLicense license,Object mdmsData){
         HashMap<String,Object> calculationType = new HashMap<>();
         try {
-            Object result = serviceRequestRepository.fetchResult(getMdmsSearchUrl(), mdmsCriteriaReq);
-            LinkedHashMap tradeLicenseData = JsonPath.read(result,TLCalculatorConstants.MDMS_TRADELICENSE_PATH);
+            LinkedHashMap tradeLicenseData = JsonPath.read(mdmsData,TLCalculatorConstants.MDMS_TRADELICENSE_PATH);
             if(tradeLicenseData.size()==0)
                 return defaultMap();
 
-            List jsonOutput = JsonPath.read(result, TLCalculatorConstants.MDMS_CALCULATIONTYPE_PATH);
+            List jsonOutput = JsonPath.read(mdmsData, TLCalculatorConstants.MDMS_CALCULATIONTYPE_PATH);
             String financialYear = license.getFinancialYear().split("-")[0];
             String maxClosestYear = "0";
             for(Object entry : jsonOutput) {
@@ -135,7 +129,7 @@ public class MDMSService {
                 }
             }
             String jsonPath = TLCalculatorConstants.MDMS_CALCULATIONTYPE_FINANCIALYEAR_PATH.replace("{}",maxClosestYear);
-            List<HashMap> output = JsonPath.read(result,jsonPath);
+            List<HashMap> output = JsonPath.read(mdmsData,jsonPath);
             calculationType = output.get(0);
         }
         catch (Exception e){
@@ -157,8 +151,8 @@ public class MDMSService {
     }
 
 
-    public Object mDMSCall(RequestInfo requestInfo,TradeLicense license){
-        MdmsCriteriaReq mdmsCriteriaReq = getMDMSRequest(requestInfo,license.getTenantId());
+    public Object mDMSCall(RequestInfo requestInfo,String tenantId){
+        MdmsCriteriaReq mdmsCriteriaReq = getMDMSRequest(requestInfo,tenantId);
         Object result = serviceRequestRepository.fetchResult(getMdmsSearchUrl(), mdmsCriteriaReq);
         return result;
     }

@@ -62,9 +62,11 @@ public class CalculationService {
      * @return List of calculations for all applicationNumbers or tradeLicenses in calculationReq
      */
    public List<Calculation> calculate(CalculationReq calculationReq){
+       String tenantId = calculationReq.getCalulationCriteria().get(0).getTenantId();
+       Object mdmsData = mdmsService.mDMSCall(calculationReq.getRequestInfo(),tenantId);
        List<Calculation> calculations = getCalculation(calculationReq.getRequestInfo(),
-               calculationReq.getCalulationCriteria());
-       demandService.generateDemand(calculationReq.getRequestInfo(),calculations);
+               calculationReq.getCalulationCriteria(),mdmsData);
+       demandService.generateDemand(calculationReq.getRequestInfo(),calculations,mdmsData);
        CalculationRes calculationRes = CalculationRes.builder().calculations(calculations).build();
        producer.push(config.getSaveTopic(),calculationRes);
        return calculations;
@@ -77,7 +79,7 @@ public class CalculationService {
      * @param criterias list of CalculationCriteria containing the tradeLicense or applicationNumber
      * @return  List of calculations for all applicationNumbers or tradeLicenses in criterias
      */
-  public List<Calculation> getCalculation(RequestInfo requestInfo, List<CalulationCriteria> criterias){
+  public List<Calculation> getCalculation(RequestInfo requestInfo, List<CalulationCriteria> criterias,Object mdmsData){
       List<Calculation> calculations = new LinkedList<>();
       for(CalulationCriteria criteria : criterias) {
           TradeLicense license;
@@ -86,7 +88,7 @@ public class CalculationService {
               criteria.setTradelicense(license);
           }
 
-          EstimatesAndSlabs estimatesAndSlabs = getTaxHeadEstimates(criteria,requestInfo);
+          EstimatesAndSlabs estimatesAndSlabs = getTaxHeadEstimates(criteria,requestInfo,mdmsData);
           List<TaxHeadEstimate> taxHeadEstimates = estimatesAndSlabs.getEstimates();
           FeeAndBillingSlabIds tradeTypeFeeAndBillingSlabIds = estimatesAndSlabs.getTradeTypeFeeAndBillingSlabIds();
           FeeAndBillingSlabIds accessoryFeeAndBillingSlabIds = null;
@@ -115,9 +117,9 @@ public class CalculationService {
      * @param requestInfo The requestInfo of the calculation request
      * @return TaxHeadEstimates and the billingSlabs used to calculate it
      */
-    private EstimatesAndSlabs getTaxHeadEstimates(CalulationCriteria calulationCriteria, RequestInfo requestInfo){
+    private EstimatesAndSlabs getTaxHeadEstimates(CalulationCriteria calulationCriteria, RequestInfo requestInfo,Object mdmsData){
       List<TaxHeadEstimate> estimates = new LinkedList<>();
-      EstimatesAndSlabs  estimatesAndSlabs = getBaseTax(calulationCriteria,requestInfo);
+      EstimatesAndSlabs  estimatesAndSlabs = getBaseTax(calulationCriteria,requestInfo,mdmsData);
 
       estimates.addAll(estimatesAndSlabs.getEstimates());
 
@@ -139,7 +141,7 @@ public class CalculationService {
      * @param requestInfo The requestInfo of the calculation request
      * @return BaseTax taxHeadEstimate and billingSlabs used to calculate it
      */
-  private EstimatesAndSlabs getBaseTax(CalulationCriteria calulationCriteria, RequestInfo requestInfo){
+  private EstimatesAndSlabs getBaseTax(CalulationCriteria calulationCriteria, RequestInfo requestInfo,Object mdmsData){
       TradeLicense license = calulationCriteria.getTradelicense();
       EstimatesAndSlabs estimatesAndSlabs = new EstimatesAndSlabs();
       BillingSlabSearchCriteria searchCriteria = new BillingSlabSearchCriteria();
@@ -148,7 +150,7 @@ public class CalculationService {
       searchCriteria.setLicenseType(license.getLicenseType().toString());
 
 
-      Map calculationTypeMap = mdmsService.getCalculationType(requestInfo,license);
+      Map calculationTypeMap = mdmsService.getCalculationType(requestInfo,license,mdmsData);
       String tradeUnitCalculationType = (String)calculationTypeMap.get(TLCalculatorConstants.MDMS_CALCULATIONTYPE_TRADETYPE);
       String accessoryCalculationType  = (String)calculationTypeMap.get(TLCalculatorConstants.MDMS_CALCULATIONTYPE_ACCESSORY);
 

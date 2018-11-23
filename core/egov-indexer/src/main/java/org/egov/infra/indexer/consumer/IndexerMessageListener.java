@@ -15,37 +15,43 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
 public class IndexerMessageListener implements MessageListener<String, String> {
-	
+
 	public static final Logger logger = LoggerFactory.getLogger(IndexerMessageListener.class);
 
 	@Autowired
 	private IndexerService indexerService;
-	
+
 	@Autowired
 	private IndexerUtils indexerUtils;
-	
+
 	@Value("${egov.core.reindex.topic.name}")
 	private String reindexTopic;
-	
+
+	@Value("${egov.indexer.pgr.create.topic.name}")
+	private String pgrCreateTopic;
+
+	@Value("${egov.indexer.pgr.update.topic.name}")
+	private String pgrUpdateTopic;
+
 	@Override
 	public void onMessage(ConsumerRecord<String, String> data) {
-        logger.info("Topic: "+data.topic());
-        logger.debug("Value: "+data.value());
-        if(data.topic().equals(reindexTopic)) {
-        	ObjectMapper mapper = indexerUtils.getObjectMapper();
-        	try {
-            	ReindexRequest reindexRequest = mapper.readValue(data.value(), ReindexRequest.class);
-            	indexerService.reindexInPages(reindexRequest);
-        	}catch(Exception e) {
-        		logger.error("Couldn't parse reindex request: ",e);
-        	}
-        }else {
-            try{
-            	indexerService.elasticIndexer(data.topic(), data.value()); 
-            }catch(Exception e){
-            	logger.error("error while indexing: ", e);
-            }
-        }
+		logger.info("Topic: " + data.topic());
+		logger.debug("Value: " + data.value());
+		if (data.topic().equals(reindexTopic)) {
+			ObjectMapper mapper = indexerUtils.getObjectMapper();
+			try {
+				ReindexRequest reindexRequest = mapper.readValue(data.value(), ReindexRequest.class);
+				indexerService.reindexInPages(reindexRequest);
+			} catch (Exception e) {
+				logger.error("Couldn't parse reindex request: ", e);
+			}
+		} else {
+			try {
+				indexerService.elasticIndexer(data.topic(), data.value());
+			} catch (Exception e) {
+				logger.error("error while indexing: ", e);
+			}
+		}
 	}
 
 }

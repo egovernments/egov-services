@@ -65,6 +65,12 @@ public class GrievanceService {
 	@Value("${kafka.topics.update.service}")
 	private String updateTopic;
 	
+	@Value("${kafka.topics.save.index.service}")
+	private String saveIndexTopic;
+
+	@Value("${kafka.topics.update.index.service}")
+	private String updateIndexTopic;
+	
 	@Value("${egov.hr.employee.v2.host}")
 	private String hrEmployeeHost;
 
@@ -108,6 +114,7 @@ public class GrievanceService {
 		log.info("Service layer for createss");
 		enrichserviceRequestForcreate(request);
 		pGRProducer.push(saveTopic, request);
+		pGRProducer.push(saveIndexTopic, dataTranformationForIndexer(request, true));
 		return getServiceResponse(request);
 	}
 
@@ -122,6 +129,7 @@ public class GrievanceService {
 		if (null == request.getActionInfo())
 			request.setActionInfo(new ArrayList<ActionInfo>());
 		pGRProducer.push(updateTopic, request);
+		pGRProducer.push(updateIndexTopic, dataTranformationForIndexer(request, false));
 		return getServiceResponse(request);
 	}
 	
@@ -233,6 +241,14 @@ public class GrievanceService {
 		}
 	}
 	
+	/**
+	 * This method creates user in user svc.
+	 * 
+	 * @param citizen
+	 * @param requestInfo
+	 * @param tenantId
+	 * @return
+	 */
 	private String createUser(Citizen citizen, RequestInfo requestInfo, String tenantId) {
 		ObjectMapper mapper = pGRUtils.getObjectMapper();
 		citizen.setUserName(citizen.getMobileNumber());
@@ -244,6 +260,56 @@ public class GrievanceService {
 		CreateUserRequest req = CreateUserRequest.builder().citizen(citizen).requestInfo(requestInfo).build();
 		UserResponse res = mapper.convertValue(serviceRequestRepository.fetchResult(url, req), UserResponse.class);
 		return res.getUser().get(0).getId().toString();
+	}
+	/**
+	 * Since the request and response formats of PGR are different, indexer operations of INDEX and LEGACYINDEX will be affected.
+	 * This method ensures the following:
+	 * 1. Data format being sent to indexer is of the same type for create, update as that of search as LEGACYINDEX makes use of search
+	 * 2. Data during update, takes the entire actionhistory alongwith the currently performed action.
+	 * 
+	 * @param request
+	 * @param isCreate
+	 * @return
+	 */
+	private ServiceResponse dataTranformationForIndexer(ServiceRequest request, boolean isCreate) {
+		/**
+		 * This might seem inefficient but in our use-case, create and update happen for just one compliant 95% of the times, so loop runs just once.
+		 */
+		if(isCreate) {
+			List<Service> services = new ArrayList<Service>();
+			List<ActionHistory> actionHistoryList = new ArrayList<ActionHistory>();
+			for(int i = 0; i < request.getServices().size(); i++) {
+				ActionHistory actionHistory = new ActionHistory();
+				List<ActionInfo> actions = new ArrayList<>();
+				actions.add(request.getActionInfo().get(i));
+				actionHistory.setActions(actions);
+				actionHistoryList.add(actionHistory);
+				services.add(request.getServices().get(i));
+			}
+			return ServiceResponse.builder().services(services).actionHistory(actionHistoryList).build();
+		}else {
+			List<Service> services = new ArrayList<Service>();
+			List<ActionHistory> actionHistoryList = new ArrayList<ActionHistory>();
+			for(int i = 0; i < request.getServices().size(); i++) {
+				ObjectMapper mapper = pGRUtils.getObjectMapper();
+				ActionHistory actionHistory = new ActionHistory();
+				List<ActionInfo> actions = new ArrayList<>();
+				List<String> serviceRequestIds = new ArrayList<String>();
+				serviceRequestIds.add(request.getServices().get(i).getServiceRequestId());
+				ServiceReqSearchCriteria serviceReqSearchCriteria = ServiceReqSearchCriteria.builder()
+						.tenantId(request.getServices().get(i).getTenantId()).serviceRequestId(serviceRequestIds).build();
+				ServiceResponse serviceResponse = mapper.convertValue(getServiceRequestDetails(request.getRequestInfo(), serviceReqSearchCriteria), ServiceResponse.class);
+				actionHistory = serviceResponse.getActionHistory().get(0);
+				actions.addAll(actionHistory.getActions());
+				actions.add(request.getActionInfo().get(i));
+				actionHistory.setActions(actions);
+				
+				services.add(serviceResponse.getServices().get(0));
+				actionHistoryList.add(actionHistory);
+
+			}
+			return ServiceResponse.builder().services(services).actionHistory(actionHistoryList).build();
+		}
 	}
 
 	/**

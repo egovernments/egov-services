@@ -46,6 +46,9 @@ public class ReceiptVoucherListener {
         VoucherResponse voucherResponse = null;
         try {
             request = objectMapper.readValue(record.value(), ReceiptRequest.class);
+            if (request.getTenantId() == null) {
+                request.setTenantId(request.getReceipt().get(0).getTenantId());
+            }
             if (checkVoucherCreation(request)) {
 
                 voucherResponse = voucherService.createVoucher(request);

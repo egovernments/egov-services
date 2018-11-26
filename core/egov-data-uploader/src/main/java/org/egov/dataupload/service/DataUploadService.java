@@ -65,7 +65,9 @@ public class DataUploadService {
 
     @Value("${template.download.prefix}")
     private String templateFilePrefix;
-
+    
+	@Value("${property.module.name}")
+	private String propertyModuleName;
 
 
     private static final Logger logger = LoggerFactory.getLogger(DataUploadService.class);
@@ -107,6 +109,11 @@ public class DataUploadService {
     }
 
     private void validateJob(UploadJob uploadJob) {
+    	
+    	
+    	if(uploadJob.getModuleName().equalsIgnoreCase(propertyModuleName))
+    		return;
+    	
         if (Objects.isNull(uploadJob.getRequestFileName())) {
             throw new CustomException(HttpStatus.BAD_REQUEST.toString(),
                     "Please provide the requestFileName.");
@@ -447,7 +454,7 @@ public class DataUploadService {
     }
 
 
-    private Object hitApi(String request, String url) throws RestClientException {
+    public Object hitApi(String request, String url) throws RestClientException {
         logger.info("Request: " + request);
         logger.info("URI: " + url);
         try {
@@ -485,7 +492,7 @@ public class DataUploadService {
                         } catch (JsonProcessingException e1) {
                             logger.debug("Unable to parse error object");
                         }
-                        failureMessage.append(JsonPath.read(errorObject, "$.message").toString());
+                        failureMessage.append(JsonPath.read(errorObject, "$.code").toString());
                         failureMessage.append(", ");
                     }
                     failureMessage.deleteCharAt(failureMessage.toString().length() - 2); //removing last comma
@@ -500,7 +507,7 @@ public class DataUploadService {
 
     }
 
-    private String getFileStoreId(String tenantId, String module, String filePath) throws RestClientException, JsonProcessingException {
+    public String getFileStoreId(String tenantId, String module, String filePath) throws RestClientException, JsonProcessingException {
         logger.info("Uploading result excel to filestore....");
         Map<String, Object> result = dataUploadRepository.postFileContents(tenantId, module, filePath);
         List<Object> objects = (List<Object>) result.get("files");

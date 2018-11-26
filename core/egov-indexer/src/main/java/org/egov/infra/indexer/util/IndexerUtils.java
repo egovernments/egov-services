@@ -1,8 +1,5 @@
 package org.egov.infra.indexer.util;
 
-import static org.hamcrest.CoreMatchers.instanceOf;
-
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -15,16 +12,12 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-import javax.swing.text.Document;
-
 import org.apache.commons.lang3.StringUtils;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.infra.indexer.bulkindexer.BulkIndexer;
 import org.egov.infra.indexer.consumer.KafkaConsumerConfig;
 import org.egov.infra.indexer.models.AuditDetails;
 import org.egov.infra.indexer.web.contract.APIDetails;
-import org.egov.infra.indexer.web.contract.CustomJsonMapping;
-import org.egov.infra.indexer.web.contract.ESSearchCriteria;
 import org.egov.infra.indexer.web.contract.FilterMapping;
 import org.egov.infra.indexer.web.contract.Index;
 import org.egov.infra.indexer.web.contract.ReindexRequest;
@@ -34,13 +27,11 @@ import org.egov.mdms.model.MdmsCriteria;
 import org.egov.mdms.model.MdmsCriteriaReq;
 import org.egov.mdms.model.ModuleDetail;
 import org.json.JSONArray;
-import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
 import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;

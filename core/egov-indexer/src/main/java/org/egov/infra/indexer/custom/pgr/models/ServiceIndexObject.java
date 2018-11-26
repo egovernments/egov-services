@@ -15,6 +15,18 @@ import lombok.ToString;
 @ToString
 public class ServiceIndexObject extends Service {
 	
+	  @JsonProperty("gro")
+	  private String gro;
+	  
+	  @JsonProperty("assignee")
+	  private String assignee;
+	  
+	  @JsonProperty("department")
+	  private String department;
+	  
+	  @JsonProperty("sla")
+	  private Integer sla;
+	
 	  @JsonProperty("actionHistory")
 	  @Valid
 	  private ActionHistory actionHistory = null;

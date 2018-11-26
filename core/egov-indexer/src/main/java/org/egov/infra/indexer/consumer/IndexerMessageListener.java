@@ -6,6 +6,7 @@ import org.egov.infra.indexer.custom.pgr.models.PGRIndexObject;
 import org.egov.infra.indexer.custom.pgr.models.ServiceResponse;
 import org.egov.infra.indexer.service.IndexerService;
 import org.egov.infra.indexer.util.IndexerUtils;
+import org.egov.infra.indexer.web.contract.LegacyIndexRequest;
 import org.egov.infra.indexer.web.contract.ReindexRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,6 +33,9 @@ public class IndexerMessageListener implements MessageListener<String, String> {
 
 	@Value("${egov.core.reindex.topic.name}")
 	private String reindexTopic;
+	
+	@Value("${egov.core.legacyindex.topic.name}")
+	private String legacyIndexTopic;
 
 	@Value("${egov.indexer.pgr.create.topic.name}")
 	private String pgrCreateTopic;
@@ -39,12 +43,16 @@ public class IndexerMessageListener implements MessageListener<String, String> {
 	@Value("${egov.indexer.pgr.update.topic.name}")
 	private String pgrUpdateTopic;
 	
+	@Value("${egov.indexer.pgr.legacyindex.topic.name}")
+	private String pgrLegacyTopic;
+	
 
 
 	@Override
 	public void onMessage(ConsumerRecord<String, String> data) {
 		logger.info("Topic: " + data.topic());
 		logger.debug("Value: " + data.value());
+		
 		ObjectMapper mapper = indexerUtils.getObjectMapper();
 		if (data.topic().equals(reindexTopic)) {
 			try {
@@ -53,7 +61,15 @@ public class IndexerMessageListener implements MessageListener<String, String> {
 			} catch (Exception e) {
 				logger.error("Couldn't parse reindex request: ", e);
 			}
-		}else if(data.topic().equals(pgrCreateTopic) || data.topic().equals(pgrUpdateTopic)) {
+		}else if(data.topic().equals(legacyIndexTopic)) {
+			try {
+				LegacyIndexRequest legacyIndexRequest = mapper.readValue(data.value(), LegacyIndexRequest.class);
+				indexerService.legacyIndexInPages(legacyIndexRequest);
+			}catch(Exception e) {
+				logger.error("Couldn't parse legacyindex request: ", e);
+			}
+			
+		}else if(data.topic().equals(pgrCreateTopic) || data.topic().equals(pgrUpdateTopic) || data.topic().equals(pgrLegacyTopic)) {
 			try {
 				ServiceResponse serviceResponse = mapper.readValue(data.value(), ServiceResponse.class);
 				PGRIndexObject indexObject = pgrCustomDecorator.dataTransformationForPGR(serviceResponse);

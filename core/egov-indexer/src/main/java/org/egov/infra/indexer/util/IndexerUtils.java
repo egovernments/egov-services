@@ -22,6 +22,7 @@ import org.egov.common.contract.request.RequestInfo;
 import org.egov.infra.indexer.bulkindexer.BulkIndexer;
 import org.egov.infra.indexer.consumer.KafkaConsumerConfig;
 import org.egov.infra.indexer.models.AuditDetails;
+import org.egov.infra.indexer.web.contract.APIDetails;
 import org.egov.infra.indexer.web.contract.CustomJsonMapping;
 import org.egov.infra.indexer.web.contract.ESSearchCriteria;
 import org.egov.infra.indexer.web.contract.FilterMapping;
@@ -75,6 +76,9 @@ public class IndexerUtils {
 
 	@Value("${egov.mdms.search.endpoint}")
 	private String mdmsEndpoint;
+	
+	@Value("${egov.service.host}")
+	private String serviceHost;
 	
     private final ScheduledExecutorService scheduler =
     	       Executors.newScheduledThreadPool(1);
@@ -196,15 +200,16 @@ public class IndexerUtils {
 	
 	public String buildFilter(String filter, UriMapping mdmsMppings, String kafkaJson) {
 		String modifiedFilter = mdmsMppings.getFilter();
+		logger.debug("buildfilter, kafkaJson: "+kafkaJson);
 		for(FilterMapping mdmsMapping: mdmsMppings.getFilterMapping()) {
 			Object value = JsonPath.read(kafkaJson, mdmsMapping.getValueJsonpath());
 			if(null == value) {
 				logger.info("MDMS filter, No value found at: "+ mdmsMapping.getValueJsonpath());
 				continue;
-			}else if(value instanceof List) {
+			}else if(value.toString().startsWith("[") && value.toString().endsWith("]")) {
 				value = value.toString().substring(1, value.toString().length() - 1);
 			}
-			modifiedFilter = modifiedFilter.replaceAll(mdmsMapping.getVariable(), value.toString());
+			modifiedFilter = modifiedFilter.replace(mdmsMapping.getVariable(), "'"+value.toString()+"'");
 		}
 		return modifiedFilter;
 	}
@@ -416,6 +421,21 @@ public class IndexerUtils {
 			estimatedTime.append(actualTime).append("secs");
 		}
 		return estimatedTime.toString();
+	}
+	
+	public String buildPagedUriForLegacyIndex(APIDetails apiDetails, Integer offset, Integer size) {
+		StringBuilder url = new StringBuilder();
+		if(apiDetails.getUri().contains("http://"))
+			url.append(apiDetails.getUri());
+		else
+			url.append(serviceHost).append(apiDetails.getUri());
+			
+		String offsetKey = null; String sizeKey = null;
+		offsetKey = null != apiDetails.getPaginationDetails().getOffsetKey() ? apiDetails.getPaginationDetails().getOffsetKey() : "offset";
+		sizeKey = null != apiDetails.getPaginationDetails().getSizeKey() ? apiDetails.getPaginationDetails().getSizeKey() : "size";
+		url.append("?tenantId=").append(apiDetails.getTenantIdForOpenSearch()).append("&"+offsetKey+"="+offset).append("&"+sizeKey+"="+size);
+		
+		return url.toString();
 	}
 	
 

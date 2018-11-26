@@ -8,6 +8,7 @@ import org.egov.IndexerApplicationRunnerImpl;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.infra.indexer.bulkindexer.BulkIndexer;
 import org.egov.infra.indexer.util.IndexerUtils;
+import org.egov.infra.indexer.web.contract.LegacyIndexRequest;
 import org.egov.infra.indexer.web.contract.Mapping;
 import org.egov.infra.indexer.web.contract.ReindexRequest;
 import org.egov.tracer.model.CustomException;
@@ -51,6 +52,19 @@ public class Validator {
 				if(total == 0L) {
 					throw new CustomException("EG_INDEXER_INAVLID_INDEX","There is no data for this index on elasticsearch!");
 				}
+			}
+		}
+	}
+	
+	public void validaterLegacyindexRequest(LegacyIndexRequest legacyIndexRequest) {
+		Map<String, String> errorMap = new HashMap<>();
+		validateUserRBACProxy(errorMap, legacyIndexRequest.getRequestInfo());
+		Map<String, Mapping> mappingsMap = runner.getMappingMaps();
+		if(null == mappingsMap.get(legacyIndexRequest.getLegacyIndexTopic())) {
+			throw new CustomException("EG_INDEXER_MISSING_CONFIG","There is no configuration for this index!");
+		}else {
+			if(mappingsMap.get(legacyIndexRequest.getLegacyIndexTopic()).getIndexes().size() > 1) {
+				throw new CustomException("EG_INDEXER_INVALID_REINDEX_CONFIG","Currently more than one reindex configs aren't allowed");
 			}
 		}
 	}

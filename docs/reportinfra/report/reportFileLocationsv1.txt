@@ -8,3 +8,4 @@ swm=https://raw.githubusercontent.com/egovernments/egov-services/master/docs/swm
 works=https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/reports/report.yml
 rainmaker-pgr=https://raw.githubusercontent.com/egovernments/egov-services/master/docs/rainmaker-pgr/reports/reports.yml
 rainmaker-pt=https://raw.githubusercontent.com/egovernments/egov-services/master/docs/rainmaker/property-tax/reports/reports.yml
+rainmaker-tl=https://raw.githubusercontent.com/egovernments/egov-services/master/docs/rainmaker/trade-license/reports/report.yml

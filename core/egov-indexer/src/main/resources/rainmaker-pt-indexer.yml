@@ -9,6 +9,7 @@ ServiceMaps:
       type: property
       id: $.propertyId, $.tenantId
       isBulk: true
+      timeStampField: $.auditDetails.createdTime
       jsonPath: $.Properties.*
 
   - topic: update-pt-property
@@ -18,6 +19,7 @@ ServiceMaps:
       type: property
       id: $.propertyId, $.tenantId
       isBulk: true
+      timeStampField: $.auditDetails.createdTime
       jsonPath: $.Properties.*
       
   - topic: pt-property-reindex
@@ -27,6 +29,7 @@ ServiceMaps:
       type: property
       id: $.propertyId, $.tenantId
       isBulk: true
+      timeStampField: $.auditDetails.createdTime
       jsonPath: $.hits.*
       
   - topic: pt-property-legacyindex
@@ -36,6 +39,7 @@ ServiceMaps:
       type: property
       id: $.propertyId, $.tenantId
       isBulk: true
+      timeStampField: $.auditDetails.createdTime
       jsonPath: $.Properties.*
       
       

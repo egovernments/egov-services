@@ -76,7 +76,7 @@ public class KeyStore implements ApplicationRunner {
         }
 
         char[] masterIV = appProperties.getMasterInitialVector().toCharArray();
-        masterInitialVector = new byte[16];
+        masterInitialVector = new byte[appProperties.getInitialVectorSize()];
         for(int i = 0; i < masterInitialVector.length; i++) {
             masterInitialVector[i] = (byte) masterIV[i];
         }

@@ -57,7 +57,7 @@ public class KeyGenerator {
         }
 
         char[] masterIV = appProperties.getMasterInitialVector().toCharArray();
-        masterInitialVector = new byte[16];
+        masterInitialVector = new byte[appProperties.getInitialVectorSize()];
         for(int i = 0; i < masterInitialVector.length; i++) {
             masterInitialVector[i] = (byte) masterIV[i];
         }
@@ -81,10 +81,10 @@ public class KeyGenerator {
     public ArrayList<SymmetricKey> generateSymmetricKeys(ArrayList<String> tenantIds) throws BadPaddingException, InvalidAlgorithmParameterException, NoSuchAlgorithmException, IllegalBlockSizeException, NoSuchPaddingException, InvalidKeyException {
         int numberOfKeys = tenantIds.size();
         SecretKey[] keys = new SecretKey[numberOfKeys];
-        byte[][] initialVectors = new byte[numberOfKeys][16];
+        byte[][] initialVectors = new byte[numberOfKeys][appProperties.getInitialVectorSize()];
         for(int i = 0; i < numberOfKeys; i++) {
             keys[i] = new SecretKeySpec(getRandomBytes(appProperties.getSymmetricKeySize()/8), "AES");
-            initialVectors[i] = getRandomBytes(16);
+            initialVectors[i] = getRandomBytes(appProperties.getInitialVectorSize());
         }
 
         ArrayList<SymmetricKey> symmetricKeyArrayList = new ArrayList<>();

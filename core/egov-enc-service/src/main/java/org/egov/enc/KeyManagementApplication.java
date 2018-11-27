@@ -47,12 +47,12 @@ public class KeyManagementApplication implements ApplicationRunner {
     private ArrayList<String> tenantIdsFromDB;
 
     //Initialize active tenant id list
-    public void init() {
+    private void init() {
         tenantIdsFromDB = (ArrayList<String>) this.keyRepository.fetchDistinctTenantIds();
     }
 
     //Check if a given tenantId exists
-    public boolean checkIfTenantExists(String tenant) throws BadPaddingException, InvalidKeyException, NoSuchAlgorithmException, IllegalBlockSizeException, NoSuchPaddingException, InvalidAlgorithmParameterException, InvalidKeySpecException {
+    public boolean checkIfTenantExists(String tenant) throws BadPaddingException, InvalidKeyException, NoSuchAlgorithmException, IllegalBlockSizeException, NoSuchPaddingException, InvalidAlgorithmParameterException {
         if(tenantIdsFromDB.contains(tenant)) {
             return true;
         }
@@ -60,15 +60,13 @@ public class KeyManagementApplication implements ApplicationRunner {
             keyStore.refreshKeys();
             keyIdGenerator.refreshKeyIds();
             tenantIdsFromDB = (ArrayList<String>) keyRepository.fetchDistinctTenantIds();
-            if(tenantIdsFromDB.contains(tenant)) {
-                return true;
-            }
+            return tenantIdsFromDB.contains(tenant);
         }
         return false;
     }
 
     //Generate Symmetric and Asymmetric Keys for each of the TenantId in the given input list
-    public void generateKeys(ArrayList<String> tenantIds) throws BadPaddingException, InvalidKeyException, NoSuchAlgorithmException, IllegalBlockSizeException, NoSuchPaddingException, InvalidAlgorithmParameterException, InvalidKeySpecException {
+    public void generateKeys(ArrayList<String> tenantIds) throws BadPaddingException, InvalidKeyException, NoSuchAlgorithmException, IllegalBlockSizeException, NoSuchPaddingException, InvalidAlgorithmParameterException {
 
         ArrayList<SymmetricKey> symmetricKeys = keyGenerator.generateSymmetricKeys(tenantIds);
         for(SymmetricKey symmetricKey : symmetricKeys) {
@@ -83,7 +81,7 @@ public class KeyManagementApplication implements ApplicationRunner {
 
     //Generate keys if there are any new tenants
     //Returns the number of tenants for which the keys have been generated
-    public int generateKeyForNewTenants() throws JSONException, BadPaddingException, InvalidAlgorithmParameterException, NoSuchAlgorithmException, IllegalBlockSizeException, NoSuchPaddingException, InvalidKeyException, InvalidKeySpecException {
+    public int generateKeyForNewTenants() throws JSONException, BadPaddingException, InvalidAlgorithmParameterException, NoSuchAlgorithmException, IllegalBlockSizeException, NoSuchPaddingException, InvalidKeyException {
         Collection<String> tenantIds = getComprehensiveListOfTenantIds();
         Collection<String> tenantIdsFromDB = keyRepository.fetchDistinctTenantIds();
 

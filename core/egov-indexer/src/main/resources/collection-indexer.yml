@@ -3,17 +3,31 @@ ServiceMaps:
  version: 1.0.0
  mappings:
   - topic: egov.collection.receipt-create
+    configKey: INDEX
     indexes:
-    - name: egovcollections
+    - name: egovcollectionslegacyindex
       type: receipts
       id: $.Bill[0].billDetails[0].receiptNumber
       isBulk: true
+      timeStampField: $.auditDetails.createdDate
       jsonPath: $.Receipt
 
-  - topic: egov.collection.receipt-create-reindex-test
+  - topic: egov.collection.receipt-create-reindex
+    configKey: INDEX
     indexes:
-    - name: egovcollectionsreindextest
+    - name: egovcollectionsreindex
       type: receipts
       id: $.Bill[0].billDetails[0].receiptNumber
       isBulk: true
+      timeStampField: $.auditDetails.createdDate
+      jsonPath: $.hits
+ 
+  - topic: egov.collection.receipt-create-legacyindex
+    configKey: INDEX
+    indexes:
+    - name: egovcollectionslegacyindex
+      type: receipts
+      id: $.Bill[0].billDetails[0].receiptNumber
+      isBulk: true
+      timeStampField: $.auditDetails.createdDate
       jsonPath: $.Receipt

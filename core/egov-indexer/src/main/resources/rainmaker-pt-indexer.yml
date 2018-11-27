@@ -5,7 +5,7 @@ ServiceMaps:
   - topic: save-pt-property
     configKey: INDEX
     indexes:
-    - name: rainmakerpt
+    - name: rainmakerptlegacyindex
       type: property
       id: $.propertyId, $.tenantId
       isBulk: true
@@ -15,7 +15,7 @@ ServiceMaps:
   - topic: update-pt-property
     configKey: INDEX
     indexes:
-    - name: rainmakerpt
+    - name: rainmakerptlegacyindex
       type: property
       id: $.propertyId, $.tenantId
       isBulk: true

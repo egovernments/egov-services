@@ -6,7 +6,7 @@ ServiceMaps:
   - topic: save-pgr-index-service
     configKey: INDEX
     indexes:
-    - name: pgrupdated
+    - name: pgrlegacyreindex
       type: grievances
       id: $.serviceRequestId, $.tenantId
       isBulk: true
@@ -97,7 +97,7 @@ ServiceMaps:
   - topic: update-pgr-index-service
     configKey: INDEX
     indexes:
-    - name: pgrupdated
+    - name: pgrlegacyreindex
       type: grievances
       id: $.serviceRequestId, $.tenantId
       isBulk: true
@@ -211,7 +211,7 @@ ServiceMaps:
   - topic: pgr-service-legacyindex
     configKey: LEGACYINDEX
     indexes:
-    - name: pgrupdated
+    - name: pgrlegacyreindex
       type: grievances
       id: $.serviceRequestId, $.tenantId
       isBulk: true

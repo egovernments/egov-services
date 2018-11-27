@@ -227,11 +227,11 @@ public class IndexerService {
     	 */
 		if(!CollectionUtils.isEmpty(customJsonMappings.getExternalUriMapping())){
 			for(UriMapping uriMapping: customJsonMappings.getExternalUriMapping()){
-				logger.info("EXTERNAL URI Mapping......");
 				Object response = null;
 				String uri = null;
 				try{
 					uri = indexerUtils.buildUri(uriMapping, kafkaJson);
+					logger.info("request: "+uriMapping.getRequest());
 					response = restTemplate.postForObject(uri, uriMapping.getRequest(), Map.class);
 					if(null == response) continue;
 				}catch(Exception e){

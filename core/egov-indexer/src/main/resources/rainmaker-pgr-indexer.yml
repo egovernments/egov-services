@@ -13,7 +13,7 @@ ServiceMaps:
       jsonPath: $.serviceRequests
       timeStampField: $.auditDetails.createdTime
       customJsonMapping:
-        indexMapping: {"PGRIndex":{"serviceRequestId":"serviceRequestId","tenantId":"tenantId","complainCategory":"complainCategory","citizen":{},"firstName":"firstName","lastName":"lastName","phone":"phone","dateOfComplaint":123467891000,"address":"","addressDetail":{},"status":"status","assignee":"assignee","gro":"gro","department":"department","complaintWard":"complaintWard","source":"source","description":"","slaHours":"slaHours","tenantData":{},"actionHistory":{}}}
+        indexMapping: {"PGRIndex":{"serviceRequestId":"serviceRequestId","tenantId":"tenantId","complainCategory":"complainCategory","citizen":{},"firstName":"firstName","lastName":"lastName","phone":"phone","dateOfComplaint":123467891000,"address":"","addressDetail":{},"status":"status","assignee":"assignee","gro":"gro","department":"department","complaintWard":{},"source":"source","description":"","slaHours":"slaHours","tenantData":{},"actionHistory":{}}}
         fieldMapping:
         - inJsonPath: $.serviceRequestId
           outJsonPath: $.PGRIndex.serviceRequestId
@@ -35,10 +35,27 @@ ServiceMaps:
           outJsonPath: $.PGRIndex.addressDetail
         - inJsonPath: $.status
           outJsonPath: $.PGRIndex.status
+        - inJsonPath: $.serviceCode
+          outJsonPath: $.PGRIndex.complainCategory
         - inJsonPath: $.source
           outJsonPath: $.PGRIndex.source
         - inJsonPath: $.actionHistory
           outJsonPath: $.PGRIndex.actionHistory
+        externalUriMapping:
+        - path: http://egov-location:8080/egov-location/location/v11/boundarys/_search
+          queryParam: hierarchyTypeCode=ADMIN,boundaryType=locality,codes=$.addressDetail.mohalla,tenantId=$.tenantId
+          apiRequest: {"RequestInfo": {"apiId": "org.egov.pt","ver": "1.0","ts": 1502890899493,"action": "asd","did": "4354648646","key": "xyz","msgId": "654654", "requesterId": "61",
+          "authToken": "750d4aa9-2436-4bc4-a8f4-3796e3bfd465","userInfo":{"id":73}}}
+          uriResponseMapping:
+          - inJsonPath: $.TenantBoundary[0].boundary[0].name
+            outJsonPath: $.PGRIndex.addressDetail.locality
+        - path: http://egov-location:8080/egov-location/location/v11/boundarys/_search
+          queryParam: hierarchyTypeCode=ADMIN,boundaryType=Block,codes=$.addressDetail.mohalla,tenantId=$.tenantId
+          apiRequest: {"RequestInfo": {"apiId": "org.egov.pt","ver": "1.0","ts": 1502890899493,"action": "asd","did": "4354648646","key": "xyz","msgId": "654654", "requesterId": "61",
+          "authToken": "750d4aa9-2436-4bc4-a8f4-3796e3bfd465","userInfo":{"id":73}}}
+          uriResponseMapping:
+          - inJsonPath: $.TenantBoundary[0].boundary[0]
+            outJsonPath: $.PGRIndex.complaintWard
         mdmsMapping:
         - path: http://egov-mdms:8080/egov-mdms-service/v1/_search
           moduleName: common-masters
@@ -85,7 +102,7 @@ ServiceMaps:
       jsonPath: $.serviceRequests
       timeStampField: $.auditDetails.createdTime
       customJsonMapping:
-        indexMapping: {"PGRIndex":{"serviceRequestId":"serviceRequestId","tenantId":"tenantId","complainCategory":"complainCategory","citizen":{},"firstName":"firstName","lastName":"lastName","phone":"phone","dateOfComplaint":123467891000,"address":"","addressDetail":{},"status":"status","assignee":"assignee","gro":"gro","department":"department","source":"source","description":"","actionHistory":{}}}
+        indexMapping: {"PGRIndex":{"serviceRequestId":"serviceRequestId","tenantId":"tenantId","complainCategory":"complainCategory","citizen":{},"firstName":"firstName","lastName":"lastName","phone":"phone","dateOfComplaint":123467891000,"address":"","addressDetail":{},"status":"status","assignee":"assignee","gro":"gro","department":"department","complaintWard":{},"source":"source","description":"","slaHours":"slaHours","tenantData":{},"actionHistory":{}}}
         fieldMapping:
         - inJsonPath: $.serviceRequestId
           outJsonPath: $.PGRIndex.serviceRequestId
@@ -126,6 +143,20 @@ ServiceMaps:
           uriResponseMapping:
           - inJsonPath: $.Employee[0].name
             outJsonPath: $.PGRIndex.gro
+        - path: http://egov-location:8080/egov-location/location/v11/boundarys/_search
+          queryParam: hierarchyTypeCode=ADMIN,boundaryType=locality,codes=$.addressDetail.mohalla,tenantId=$.tenantId
+          apiRequest: {"RequestInfo": {"apiId": "org.egov.pt","ver": "1.0","ts": 1502890899493,"action": "asd","did": "4354648646","key": "xyz","msgId": "654654", "requesterId": "61",
+          "authToken": "750d4aa9-2436-4bc4-a8f4-3796e3bfd465","userInfo":{"id":73}}}
+          uriResponseMapping:
+          - inJsonPath: $.TenantBoundary[0].boundary[0].name
+            outJsonPath: $.PGRIndex.addressDetail.locality
+        - path: http://egov-location:8080/egov-location/location/v11/boundarys/_search
+          queryParam: hierarchyTypeCode=ADMIN,boundaryType=Block,codes=$.addressDetail.mohalla,tenantId=$.tenantId
+          apiRequest: {"RequestInfo": {"apiId": "org.egov.pt","ver": "1.0","ts": 1502890899493,"action": "asd","did": "4354648646","key": "xyz","msgId": "654654", "requesterId": "61",
+          "authToken": "750d4aa9-2436-4bc4-a8f4-3796e3bfd465","userInfo":{"id":73}}}
+          uriResponseMapping:
+          - inJsonPath: $.TenantBoundary[0].boundary[0]
+            outJsonPath: $.PGRIndex.complaintWard
         mdmsMapping:
         - path: http://egov-mdms:8080/egov-mdms-service/v1/_search
           moduleName: common-masters
@@ -181,7 +212,7 @@ ServiceMaps:
       jsonPath: $.serviceRequests
       timeStampField: $.auditDetails.createdTime
       customJsonMapping:
-        indexMapping: {"PGRIndex":{"serviceRequestId":"serviceRequestId","tenantId":"tenantId","complainCategory":"complainCategory","citizen":{},"firstName":"firstName","lastName":"lastName","phone":"phone","dateOfComplaint":123467891000,"address":"","addressDetail":{},"status":"status","assignee":"assignee","gro":"gro","department":"department","source":"source","description":"","actionHistory":{}}}
+        indexMapping: {"PGRIndex":{"serviceRequestId":"serviceRequestId","tenantId":"tenantId","complainCategory":"complainCategory","citizen":{},"firstName":"firstName","lastName":"lastName","phone":"phone","dateOfComplaint":123467891000,"address":"","addressDetail":{},"status":"status","assignee":"assignee","gro":"gro","department":"department","complaintWard":{},"source":"source","description":"","slaHours":"slaHours","tenantData":{},"actionHistory":{}}}
         fieldMapping:
         - inJsonPath: $.serviceRequestId
           outJsonPath: $.PGRIndex.serviceRequestId
@@ -221,7 +252,21 @@ ServiceMaps:
           "authToken": "750d4aa9-2436-4bc4-a8f4-3796e3bfd465","userInfo":{"id":73}}}
           uriResponseMapping:
           - inJsonPath: $.Employee[0].name
-            outJsonPath: $.gro
+            outJsonPath: $.PGRIndex.gro
+        - path: http://egov-location:8080/egov-location/location/v11/boundarys/_search
+          queryParam: hierarchyTypeCode=ADMIN,boundaryType=locality,codes=$.addressDetail.mohalla,tenantId=$.tenantId
+          apiRequest: {"RequestInfo": {"apiId": "org.egov.pt","ver": "1.0","ts": 1502890899493,"action": "asd","did": "4354648646","key": "xyz","msgId": "654654", "requesterId": "61",
+          "authToken": "750d4aa9-2436-4bc4-a8f4-3796e3bfd465","userInfo":{"id":73}}}
+          uriResponseMapping:
+          - inJsonPath: $.TenantBoundary[0].boundary[0].name
+            outJsonPath: $.PGRIndex.addressDetail.locality
+        - path: http://egov-location:8080/egov-location/location/v11/boundarys/_search
+          queryParam: hierarchyTypeCode=ADMIN,boundaryType=Block,codes=$.addressDetail.mohalla,tenantId=$.tenantId
+          apiRequest: {"RequestInfo": {"apiId": "org.egov.pt","ver": "1.0","ts": 1502890899493,"action": "asd","did": "4354648646","key": "xyz","msgId": "654654", "requesterId": "61",
+          "authToken": "750d4aa9-2436-4bc4-a8f4-3796e3bfd465","userInfo":{"id":73}}}
+          uriResponseMapping:
+          - inJsonPath: $.TenantBoundary[0].boundary[0]
+            outJsonPath: $.PGRIndex.complaintWard
         mdmsMapping:
         - path: http://egov-mdms:8080/egov-mdms-service/v1/_search
           moduleName: common-masters

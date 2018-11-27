@@ -13,7 +13,7 @@ ServiceMaps:
       jsonPath: $.serviceRequests
       timeStampField: $.auditDetails.createdTime
       customJsonMapping:
-        indexMapping: {"PGRIndex":{"serviceRequestId":"serviceRequestId","tenantId":"tenantId","complainCategory":"complainCategory","citizen":{},"firstName":"firstName","lastName":"lastName","phone":"phone","dateOfComplaint":123467891000,"address":"","addressDetail":{},"status":"status","assignee":"assignee","gro":"gro","department":"department","complaintWard":{},"source":"source","description":"","slaHours":"slaHours","tenantData":{},"actionHistory":{}}}
+        indexMapping: {"PGRIndex":{"serviceRequestId":"serviceRequestId","tenantId":"tenantId","complainCategory":"complainCategory","citizen":{},"firstName":"firstName","lastName":"lastName","phone":"phone","dateOfComplaint":123467891000,"address":"","addressDetail":{},"status":"status","assignee":"assignee","gro":"gro","department":"department","complaintWard":{},"source":"source","description":"","slaHours":"slaHours","tenantData":{},"actionHistory":{},"@timestamp":"timestamp"}}
         fieldMapping:
         - inJsonPath: $.serviceRequestId
           outJsonPath: $.PGRIndex.serviceRequestId
@@ -41,6 +41,8 @@ ServiceMaps:
           outJsonPath: $.PGRIndex.source
         - inJsonPath: $.actionHistory
           outJsonPath: $.PGRIndex.actionHistory
+        - inJsonPath: $.@timestamp
+          outJsonPath: $.PGRIndex.@timestamp
         externalUriMapping:
         - path: http://egov-location:8080/egov-location/location/v11/boundarys/_search
           queryParam: hierarchyTypeCode=ADMIN,boundaryType=locality,codes=$.addressDetail.mohalla,tenantId=$.tenantId
@@ -102,7 +104,7 @@ ServiceMaps:
       jsonPath: $.serviceRequests
       timeStampField: $.auditDetails.createdTime
       customJsonMapping:
-        indexMapping: {"PGRIndex":{"serviceRequestId":"serviceRequestId","tenantId":"tenantId","complainCategory":"complainCategory","citizen":{},"firstName":"firstName","lastName":"lastName","phone":"phone","dateOfComplaint":123467891000,"address":"","addressDetail":{},"status":"status","assignee":"assignee","gro":"gro","department":"department","complaintWard":{},"source":"source","description":"","slaHours":"slaHours","tenantData":{},"actionHistory":{}}}
+        indexMapping: {"PGRIndex":{"serviceRequestId":"serviceRequestId","tenantId":"tenantId","complainCategory":"complainCategory","citizen":{},"firstName":"firstName","lastName":"lastName","phone":"phone","dateOfComplaint":123467891000,"address":"","addressDetail":{},"status":"status","assignee":"assignee","gro":"gro","department":"department","complaintWard":{},"source":"source","description":"","slaHours":"slaHours","tenantData":{},"actionHistory":{},"@timestamp":"timestamp"}}
         fieldMapping:
         - inJsonPath: $.serviceRequestId
           outJsonPath: $.PGRIndex.serviceRequestId
@@ -124,10 +126,14 @@ ServiceMaps:
           outJsonPath: $.PGRIndex.addressDetail
         - inJsonPath: $.status
           outJsonPath: $.PGRIndex.status
+        - inJsonPath: $.serviceCode
+          outJsonPath: $.PGRIndex.complainCategory
         - inJsonPath: $.source
           outJsonPath: $.PGRIndex.source
         - inJsonPath: $.actionHistory
           outJsonPath: $.PGRIndex.actionHistory
+        - inJsonPath: $.@timestamp
+          outJsonPath: $.PGRIndex.@timestamp
         externalUriMapping:
         - path: http://hr-employee-v2:8080/hr-employee-v2/employees/_search
           queryParam: tenantId=$.tenantId,id=$.assignee
@@ -212,7 +218,7 @@ ServiceMaps:
       jsonPath: $.serviceRequests
       timeStampField: $.auditDetails.createdTime
       customJsonMapping:
-        indexMapping: {"PGRIndex":{"serviceRequestId":"serviceRequestId","tenantId":"tenantId","complainCategory":"complainCategory","citizen":{},"firstName":"firstName","lastName":"lastName","phone":"phone","dateOfComplaint":123467891000,"address":"","addressDetail":{},"status":"status","assignee":"assignee","gro":"gro","department":"department","complaintWard":{},"source":"source","description":"","slaHours":"slaHours","tenantData":{},"actionHistory":{}}}
+        indexMapping: {"PGRIndex":{"serviceRequestId":"serviceRequestId","tenantId":"tenantId","complainCategory":"complainCategory","citizen":{},"firstName":"firstName","lastName":"lastName","phone":"phone","dateOfComplaint":123467891000,"address":"","addressDetail":{},"status":"status","assignee":"assignee","gro":"gro","department":"department","complaintWard":{},"source":"source","description":"","slaHours":"slaHours","tenantData":{},"actionHistory":{},"@timestamp":"timestamp"}}
         fieldMapping:
         - inJsonPath: $.serviceRequestId
           outJsonPath: $.PGRIndex.serviceRequestId
@@ -234,10 +240,14 @@ ServiceMaps:
           outJsonPath: $.PGRIndex.addressDetail
         - inJsonPath: $.status
           outJsonPath: $.PGRIndex.status
+        - inJsonPath: $.serviceCode
+          outJsonPath: $.PGRIndex.complainCategory
         - inJsonPath: $.source
           outJsonPath: $.PGRIndex.source
         - inJsonPath: $.actionHistory
           outJsonPath: $.PGRIndex.actionHistory
+        - inJsonPath: $.@timestamp
+          outJsonPath: $.PGRIndex.@timestamp
         externalUriMapping:
         - path: http://hr-employee-v2:8080/hr-employee-v2/employees/_search
           queryParam: tenantId=$.tenantId,id=$.assignee

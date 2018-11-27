@@ -278,6 +278,11 @@ public class IndexerService {
 					String expression = indexerUtils.getProcessedJsonPath(fieldMapping.getOutJsonPath());
 					try{
 						Object value = JsonPath.read(mapper.writeValueAsString(response), fieldMapping.getInjsonpath());
+						if(value instanceof List) {
+							if(((List) value).size() == 1) {
+								value = ((List) value).get(0);
+							}
+						}
 						documentContext.put(expression, expressionArray[expressionArray.length - 1], value);
 					}catch(Exception e){
 						logger.error("Value: "+fieldMapping.getInjsonpath()+" is not found in the uri: "+uriMapping.getPath()+" response", e);
@@ -419,6 +424,7 @@ public class IndexerService {
 	}
 	
 	public void legacyIndexInPages(LegacyIndexRequest legacyIndexRequest) {
+		ObjectMapper mapper = indexerUtils.getObjectMapper();
 		Integer offset = 0; 
 		Integer size = null != legacyIndexRequest.getApiDetails().getPaginationDetails().getMaxPageSize() ? 
 				legacyIndexRequest.getApiDetails().getPaginationDetails().getMaxPageSize() : defaultPageSizeForLegacyindex;
@@ -432,6 +438,8 @@ public class IndexerService {
 					map.put("RequestInfo", legacyIndexRequest.getRequestInfo());
 					request = map;
 				}
+				logger.debug("Request: "+mapper.writeValueAsString(request));
+				logger.debug("URI: "+uri);
 				Object response = restTemplate.postForObject(uri, request, Map.class);
 				if(null == response) {
 					logger.info("Error while fetching from: "+offset+" and size: "+size);
@@ -463,7 +471,7 @@ public class IndexerService {
 		}
 		if(isProccessDone) {
 			IndexJob job = IndexJob.builder().jobId(legacyIndexRequest.getJobId())
-					.auditDetails(indexerUtils.getAuditDetails(legacyIndexRequest.getRequestInfo().getUserInfo().getUuid(), false)).totalRecordsIndexed(legacyIndexRequest.getTotalRecords())
+					.auditDetails(indexerUtils.getAuditDetails(legacyIndexRequest.getRequestInfo().getUserInfo().getUuid(), false)).totalRecordsIndexed(offset)
 					.totalTimeTakenInMS(new Date().getTime() - legacyIndexRequest.getStartTime()).jobStatus(StatusEnum.COMPLETED).build();
 			IndexJobWrapper wrapper = IndexJobWrapper.builder().requestInfo(legacyIndexRequest.getRequestInfo()).job(job).build();
 			indexerProducer.producer(persisterUpdate, wrapper);

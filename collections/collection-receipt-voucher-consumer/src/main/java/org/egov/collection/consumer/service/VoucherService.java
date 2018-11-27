@@ -40,6 +40,7 @@
 
 package org.egov.collection.consumer.service;
 
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -128,19 +129,22 @@ public class VoucherService {
         voucher.setDescription(RECEIPTS_VOUCHER_DESCRIPTION);
         voucher.setVoucherDate(format.format(new Date(receipt.getBill().get(0).getBillDetails().get(0).getReceiptDate())));
         voucher.setModuleId(Long.valueOf(COLLECTIONS_EG_MODULES_ID));
-        /*voucher.setSource(RECEIPT_VIEW_SOURCEPATH + receipt.getBill().get(0).getBillDetails().get(0).getId());*/
+        /* voucher.setSource(RECEIPT_VIEW_SOURCEPATH + receipt.getBill().get(0).getBillDetails().get(0).getId()); */
         AccountDetail accountDetail = null;
         voucher.setLedgers(new ArrayList<>());
 
         for (BillAccountDetail bad : receipt.getBill().get(0).getBillDetails().get(0).getBillAccountDetails()) {
-
-            accountDetail = new AccountDetail();
-            accountDetail.setGlcode(bad.getGlcode());
-            accountDetail.setCreditAmount(bad.getCreditAmount() != null ? bad.getCreditAmount().doubleValue() : 0);
-            accountDetail.setDebitAmount(bad.getDebitAmount() != null ? bad.getDebitAmount().doubleValue() : 0);
-            accountDetail.setFunction(new Function());
-            accountDetail.getFunction().setCode(servcie != null ? servcie.getFunction() : null);
-            voucher.getLedgers().add(accountDetail);
+            if (bad != null && bad.getCreditAmount() != null && bad.getDebitAmount() != null
+                    && (bad.getCreditAmount().compareTo(BigDecimal.ZERO) > 0
+                            || bad.getDebitAmount().compareTo(BigDecimal.ZERO) > 0)) {
+                accountDetail = new AccountDetail();
+                accountDetail.setGlcode(bad.getGlcode());
+                accountDetail.setCreditAmount(bad.getCreditAmount() != null ? bad.getCreditAmount().doubleValue() : 0);
+                accountDetail.setDebitAmount(bad.getDebitAmount() != null ? bad.getDebitAmount().doubleValue() : 0);
+                accountDetail.setFunction(new Function());
+                accountDetail.getFunction().setCode(servcie != null ? servcie.getFunction() : null);
+                voucher.getLedgers().add(accountDetail);
+            }
         }
 
         voucherRequest.setVouchers(Collections.singletonList(voucher));

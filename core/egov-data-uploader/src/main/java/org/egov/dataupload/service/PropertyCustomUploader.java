@@ -33,6 +33,8 @@ import org.springframework.web.client.RestClientException;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.jayway.jsonpath.DocumentContext;
+import com.jayway.jsonpath.JsonPath;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -65,10 +67,13 @@ public class PropertyCustomUploader {
 	private String internalFolderPath;
 	
 	private String responseString = "Response";
+	
+	public static String SUCCESSSTRING = "SUCCESS";
 
 	public void uploadPropertyData(UploaderRequest uploaderRequest) {
 
 		RequestInfo requestInfo = uploaderRequest.getRequestInfo();
+		requestInfo.setTs(null);
 		UploadJob job = uploaderRequest.getUploadJobs().get(0);
 		String loc = job.getLocalFilePath();
 		Map<String, Property> map = null;
@@ -116,6 +121,7 @@ public class PropertyCustomUploader {
 					failCnt++;
 				} else {
 					sucCnt++;
+					failureMessage = SUCCESSSTRING + "--" + getPropertyId(response);
 				}
 				responses.add(failureMessage);
 			}
@@ -153,6 +159,14 @@ public class PropertyCustomUploader {
 		log.info(" the id of s3 data : " + s3Id);
 	}
 
+	private String getPropertyId(Object response) {
+
+		DocumentContext propRes = JsonPath.parse(response);
+		String propertyId = propRes.read("$.Properties[0].propertyId");
+		String assMentNum = propRes.read("$.Properties[0].propertyDetails[0].assessmentNumber");
+		return "propertyId : " + propertyId + " AND " + "assessmentNumber : " + assMentNum;
+	}
+
 	/**
 	 * method to write the responses from the API in to the excel sheet
 	 * 
@@ -186,7 +200,6 @@ public class PropertyCustomUploader {
 
 			int fixedResNum = firstRow.getLastCellNum();
 			Cell lastCell = firstRow.getCell(fixedResNum);
-			Cell lastCellPlus = firstRow.getCell(fixedResNum+1);
 
 			if (null != lastCell)
 				lastCell.setCellValue(responseString);
@@ -202,9 +215,9 @@ public class PropertyCustomUploader {
 				Cell resCell = currRow.createCell(fixedResNum);
 				Cell msgCell = currRow.createCell(fixedResNum+1);
 				String value = resopnses.get(i);
-				if (value.contains("-")) {
+				if (value.contains("--")) {
 
-					String[] valueArr = value.split("-");
+					String[] valueArr = value.split("--");
 					resCell.setCellValue(valueArr[0]);
 					msgCell.setCellValue(valueArr[1]);
 				} else {

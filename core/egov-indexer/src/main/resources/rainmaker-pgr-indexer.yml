@@ -125,7 +125,7 @@ ServiceMaps:
           "authToken": "750d4aa9-2436-4bc4-a8f4-3796e3bfd465","userInfo":{"id":73}}}
           uriResponseMapping:
           - inJsonPath: $.Employee[0].name
-            outJsonPath: $.gro
+            outJsonPath: $.PGRIndex.gro
         mdmsMapping:
         - path: http://egov-mdms:8080/egov-mdms-service/v1/_search
           moduleName: common-masters

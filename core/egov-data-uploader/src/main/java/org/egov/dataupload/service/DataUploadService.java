@@ -1,14 +1,29 @@
 package org.egov.dataupload.service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.jayway.jsonpath.DocumentContext;
-import com.jayway.jsonpath.JsonPath;
-import com.jayway.jsonpath.PathNotFoundException;
-import net.minidev.json.JSONArray;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Objects;
+import java.util.Optional;
+
 import org.egov.DataUploadApplicationRunnerImpl;
-import org.egov.dataupload.model.*;
+import org.egov.dataupload.model.Definition;
+import org.egov.dataupload.model.Defs;
+import org.egov.dataupload.model.Document;
+import org.egov.dataupload.model.JobSearchRequest;
+import org.egov.dataupload.model.ModuleDefs;
+import org.egov.dataupload.model.Request;
+import org.egov.dataupload.model.UploadDefinition;
+import org.egov.dataupload.model.UploadJob;
 import org.egov.dataupload.model.UploadJob.StatusEnum;
+import org.egov.dataupload.model.UploaderRequest;
 import org.egov.dataupload.producer.DataUploadProducer;
 import org.egov.dataupload.repository.DataUploadRepository;
 import org.egov.dataupload.repository.UploadRegistryRepository;
@@ -24,11 +39,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestClientException;
 
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.*;
-import java.util.Map.Entry;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.jayway.jsonpath.DocumentContext;
+import com.jayway.jsonpath.JsonPath;
+import com.jayway.jsonpath.PathNotFoundException;
+
+import net.minidev.json.JSONArray;
 
 @Service
 public class DataUploadService {
@@ -493,6 +510,8 @@ public class DataUploadService {
                             logger.debug("Unable to parse error object");
                         }
                         failureMessage.append(JsonPath.read(errorObject, "$.code").toString());
+                        failureMessage.append("-");
+                        failureMessage.append(JsonPath.read(errorObject, "$.message").toString());
                         failureMessage.append(", ");
                     }
                     failureMessage.deleteCharAt(failureMessage.toString().length() - 2); //removing last comma

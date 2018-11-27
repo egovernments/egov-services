@@ -127,7 +127,7 @@ public class PropertyCustomUploader {
 		// Upload to s3 and set result file path to job
 		String s3Id = null;
 		try {
-			s3Id = dataUploadService.getFileStoreId(job.getTenantId(), job.getModuleName(), job.getResponseFilePath());
+			s3Id = dataUploadService.getFileStoreId(job.getTenantId(), job.getModuleName(), internalFolderPath + File.separator + job.getResponseFilePath());
 		} catch (RestClientException | JsonProcessingException e) {
 
 			log.error(" upload of the excel sheet failed : ", e);
@@ -186,18 +186,30 @@ public class PropertyCustomUploader {
 
 			int fixedResNum = firstRow.getLastCellNum();
 			Cell lastCell = firstRow.getCell(fixedResNum);
+			Cell lastCellPlus = firstRow.getCell(fixedResNum+1);
 
 			if (null != lastCell)
 				lastCell.setCellValue(responseString);
 			else
-				firstRow.createCell(fixedResNum).setCellValue(responseString);
+				firstRow.createCell(fixedResNum).setCellValue("Code");
+
+			firstRow.createCell(fixedResNum + 1).setCellValue("Message");
+			
 
 			for (int i = 0; i < resopnses.size(); i++) {
 
 				Row currRow = propertySheet.getRow(i + 1);
 				Cell resCell = currRow.createCell(fixedResNum);
+				Cell msgCell = currRow.createCell(fixedResNum+1);
 				String value = resopnses.get(i);
-				resCell.setCellValue(value);
+				if (value.contains("-")) {
+
+					String[] valueArr = value.split("-");
+					resCell.setCellValue(valueArr[0]);
+					msgCell.setCellValue(valueArr[1]);
+				} else {
+					resCell.setCellValue(value);
+				}
 			}
 
 			myxls.close();

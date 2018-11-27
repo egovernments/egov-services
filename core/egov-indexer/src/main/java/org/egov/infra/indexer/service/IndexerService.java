@@ -231,8 +231,9 @@ public class IndexerService {
 				String uri = null;
 				try{
 					uri = indexerUtils.buildUri(uriMapping, kafkaJson);
-					logger.info("request: "+uriMapping.getRequest());
+					logger.debug("request: "+mapper.writeValueAsString(uriMapping.getRequest()));
 					response = restTemplate.postForObject(uri, uriMapping.getRequest(), Map.class);
+					logger.debug("response: "+mapper.writeValueAsString(response));
 					if(null == response) continue;
 				}catch(Exception e){
 					logger.error("Exception while trying to hit: "+uri, e);
@@ -263,8 +264,9 @@ public class IndexerService {
 				StringBuilder uri = new StringBuilder();
 				try{
 					Object request = indexerUtils.prepareMDMSSearchReq(uri, new RequestInfo(), kafkaJson, uriMapping);
-					logger.info("Request: "+mapper.writeValueAsString(request));
+					logger.debug("request: "+mapper.writeValueAsString(uriMapping.getRequest()));
 					response = restTemplate.postForObject(uri.toString(), request, Map.class);
+					logger.debug("response: "+mapper.writeValueAsString(response));
 					if(null == response) continue;
 				}catch(Exception e){
 					logger.error("Exception while trying to hit: "+uri, e);

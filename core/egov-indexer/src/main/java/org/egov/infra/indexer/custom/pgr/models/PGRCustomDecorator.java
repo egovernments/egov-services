@@ -60,7 +60,7 @@ public class PGRCustomDecorator {
 				}
 			}
 			object.setDepartment(getDepartment(serviceResponse.getServices().get(i)));
-			object.setServiceCode(indexerUtils.splitCamelCase(serviceResponse.getServices().get(i).getServiceCode()));
+			object.setComplaintCategory(indexerUtils.splitCamelCase(serviceResponse.getServices().get(i).getServiceCode()));
 			indexObjects.add(object);
 		}
 		indexObject.setServiceRequests(indexObjects);

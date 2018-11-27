@@ -24,6 +24,9 @@ public class ServiceIndexObject extends Service {
 	  @JsonProperty("department")
 	  private String department;
 	  
+	  @JsonProperty("complaintCategory")
+	  private String complaintCategory;
+	  
 	  @JsonProperty("sla")
 	  private Integer sla;
 	

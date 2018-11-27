@@ -35,7 +35,7 @@ ServiceMaps:
           outJsonPath: $.PGRIndex.addressDetail
         - inJsonPath: $.status
           outJsonPath: $.PGRIndex.status
-        - inJsonPath: $.serviceCode
+        - inJsonPath: $.complaintCategory
           outJsonPath: $.PGRIndex.complainCategory
         - inJsonPath: $.source
           outJsonPath: $.PGRIndex.source
@@ -126,7 +126,7 @@ ServiceMaps:
           outJsonPath: $.PGRIndex.addressDetail
         - inJsonPath: $.status
           outJsonPath: $.PGRIndex.status
-        - inJsonPath: $.serviceCode
+        - inJsonPath: $.complaintCategory
           outJsonPath: $.PGRIndex.complainCategory
         - inJsonPath: $.source
           outJsonPath: $.PGRIndex.source
@@ -240,7 +240,7 @@ ServiceMaps:
           outJsonPath: $.PGRIndex.addressDetail
         - inJsonPath: $.status
           outJsonPath: $.PGRIndex.status
-        - inJsonPath: $.serviceCode
+        - inJsonPath: $.complaintCategory
           outJsonPath: $.PGRIndex.complainCategory
         - inJsonPath: $.source
           outJsonPath: $.PGRIndex.source

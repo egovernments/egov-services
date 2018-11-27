@@ -425,7 +425,8 @@ public class IndexerService {
 	
 	public void legacyIndexInPages(LegacyIndexRequest legacyIndexRequest) {
 		ObjectMapper mapper = indexerUtils.getObjectMapper();
-		Integer offset = 0; 
+		Integer offset = 0;
+		Integer count = 0;
 		Integer size = null != legacyIndexRequest.getApiDetails().getPaginationDetails().getMaxPageSize() ? 
 				legacyIndexRequest.getApiDetails().getPaginationDetails().getMaxPageSize() : defaultPageSizeForLegacyindex;
 		Boolean isProccessDone = false;
@@ -447,6 +448,7 @@ public class IndexerService {
 				}else {
 					List<Object> searchResponse = JsonPath.read(response, legacyIndexRequest.getApiDetails().getResponseJsonPath());
 					if(!CollectionUtils.isEmpty(searchResponse)) {
+						count+=searchResponse.size();
 						indexerProducer.producer(legacyIndexRequest.getLegacyIndexTopic(), response);
 					}else {
 						isProccessDone = true;
@@ -456,22 +458,22 @@ public class IndexerService {
 			}catch(Exception e) {
 				logger.error("Exception: ",e);
 				IndexJob job = IndexJob.builder().jobId(legacyIndexRequest.getJobId())
-						.auditDetails(indexerUtils.getAuditDetails(legacyIndexRequest.getRequestInfo().getUserInfo().getUuid(), false)).totalRecordsIndexed(offset)
+						.auditDetails(indexerUtils.getAuditDetails(legacyIndexRequest.getRequestInfo().getUserInfo().getUuid(), false)).totalRecordsIndexed(count)
 						.totalTimeTakenInMS(new Date().getTime() - legacyIndexRequest.getStartTime()).jobStatus(StatusEnum.FAILED).build();
 				IndexJobWrapper wrapper = IndexJobWrapper.builder().requestInfo(legacyIndexRequest.getRequestInfo()).job(job).build();
 				indexerProducer.producer(persisterUpdate, wrapper);
 				break;
 			}
-			offset+=size;
 			IndexJob job = IndexJob.builder().jobId(legacyIndexRequest.getJobId())
 					.auditDetails(indexerUtils.getAuditDetails(legacyIndexRequest.getRequestInfo().getUserInfo().getUuid(), false))
-					.totalTimeTakenInMS(new Date().getTime() - legacyIndexRequest.getStartTime()).jobStatus(StatusEnum.INPROGRESS).totalRecordsIndexed(offset).build();
+					.totalTimeTakenInMS(new Date().getTime() - legacyIndexRequest.getStartTime()).jobStatus(StatusEnum.INPROGRESS).totalRecordsIndexed(count).build();
 			IndexJobWrapper wrapper = IndexJobWrapper.builder().requestInfo(legacyIndexRequest.getRequestInfo()).job(job).build();
 			indexerProducer.producer(persisterUpdate, wrapper);
+			offset+=size;
 		}
 		if(isProccessDone) {
 			IndexJob job = IndexJob.builder().jobId(legacyIndexRequest.getJobId())
-					.auditDetails(indexerUtils.getAuditDetails(legacyIndexRequest.getRequestInfo().getUserInfo().getUuid(), false)).totalRecordsIndexed(offset)
+					.auditDetails(indexerUtils.getAuditDetails(legacyIndexRequest.getRequestInfo().getUserInfo().getUuid(), false)).totalRecordsIndexed(count)
 					.totalTimeTakenInMS(new Date().getTime() - legacyIndexRequest.getStartTime()).jobStatus(StatusEnum.COMPLETED).build();
 			IndexJobWrapper wrapper = IndexJobWrapper.builder().requestInfo(legacyIndexRequest.getRequestInfo()).job(job).build();
 			indexerProducer.producer(persisterUpdate, wrapper);

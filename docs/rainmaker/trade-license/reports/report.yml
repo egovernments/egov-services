@@ -1,0 +1,67 @@
+---
+ReportDefinitions:
+- reportName: TLReport
+  summary: TL Basic Report
+  version: 1.0.0
+  moduleName: rainmaker-tl
+  externalService:
+- entity: $.messages[*]
+  apiURL: https://egov-localization:8080/localization/messages/v1/_search?locale=en_IN&tenantId=pb&module=rainmaker-tl
+  keyOrder: code,message
+  tableName: tbl_localization
+  sourceColumns:
+  - name: licensenumber
+    label: report.tl.licensenumber
+    type: string
+    source: tl
+    total: false
+  - name: formattedIssuedDate
+    label: report.tl.issueddate
+    type: string
+    source: tl
+    total: false
+  - name: tradeName
+    label: report.tl.tradeName
+    type: string
+    source: tl
+    total: true
+  - name: tradetype
+    label: report.tl.tradetype
+    type: string
+    source: tl
+    total: true
+  - name: acc
+    label: report.tl.accessorycategories
+    type: string
+    source: tl
+    total: false
+  - name: name
+    label: report.tl.user.name
+    type: string
+    source: tl
+    total: false
+  - name: mobilenumber
+    label: report.tl.user.mobilenumber
+    type: string
+    source: tl
+    total: false
+  - name: totalamount
+    label: report.tl.receipt.totalamount
+    type: string
+    source: tl
+    total: false
+  searchParams:
+  - name: fromDate
+    label: reports.tl.fromDate
+    type: epoch
+    source: tl
+    isMandatory: false
+    searchClause: AND issueddate >= $fromDate
+  - name: toDate
+    label: reports.tl.toDate
+    type: epoch
+    source: tl
+    isMandatory: false
+    searchClause: AND issueddate <= $toDate
+  query: SELECT licensenumber,to_timestamp(issueddate/1000) as formattedIssuedDate,tradeName,tradetype,acc, name,mobilenumber,totalamount FROM eg_tl_tradelicense tl INNER JOIN eg_tl_tradelicensedetail tld ON tld.tradelicenseid = tl.id INNER JOIN eg_tl_owner tlowner ON tlowner.tradelicensedetailid = tld.id INNER JOIN eg_tl_tradeunit tlunit ON tlunit.tradelicensedetailid = tld.id INNER JOIN eg_user tluser ON tluser.uuid = tlowner.id LEFT OUTER JOIN egcl_receiptheader receipt ON receipt.consumercode = tl.applicationnumber LEFT OUTER JOIN (SELECT tradelicensedetailid,array_to_string(array_agg(message),',') AS acc FROM eg_tl_accessory INNER JOIN (SELECT DISTINCT code,message from (VALUES tbl_localization) AS loc(code,message)) as tbl ON split_part(tbl.code,'_',2) = accessorycategory GROUP BY 1 ) tlacc ON tlacc.tradelicensedetailid = tld.id WHERE tenantid LIKE $tenantid
+

@@ -40,7 +40,7 @@ ServiceMaps:
         - inJsonPath: $.actionHistory
           outJsonPath: $.PGRIndex.actionHistory
         mdmsMapping:
-        - path: https://egov-micro-dev.egovernments.org//egov-mdms-service/v1/_search
+        - path: http://egov-mdms:8080/egov-mdms-service/v1/_search
           moduleName: common-masters
           masterName: Department
           tenantId: pb
@@ -51,7 +51,7 @@ ServiceMaps:
           uriResponseMapping:
           - inJsonPath: $.MdmsRes.common-masters.Department.*.name
             outJsonPath: $.PGRIndex.department
-        - path: https://egov-micro-dev.egovernments.org//egov-mdms-service/v1/_search
+        - path: http://egov-mdms:8080/egov-mdms-service/v1/_search
           moduleName: RAINMAKER-PGR
           masterName: ServiceDefs
           tenantId: pb
@@ -62,7 +62,7 @@ ServiceMaps:
           uriResponseMapping:
           - inJsonPath: $.MdmsRes.RAINMAKER-PGR.ServiceDefs.*.slaHours
             outJsonPath: $.PGRIndex.slaHours
-        - path: https://egov-micro-dev.egovernments.org//egov-mdms-service/v1/_search
+        - path: http://egov-mdms:8080/egov-mdms-service/v1/_search
           moduleName: tenant
           masterName: tenants
           tenantId: pb
@@ -112,14 +112,14 @@ ServiceMaps:
         - inJsonPath: $.actionHistory
           outJsonPath: $.PGRIndex.actionHistory
         externalUriMapping:
-        - path: https://egov-micro-dev.egovernments.org/hr-employee-v2/employees/_search
+        - path: https://hr-employee-v2:8080/hr-employee-v2/employees/_search
           queryParam: tenantId=$.tenantId,id=$.assignee
           apiRequest: {"RequestInfo": {"apiId": "org.egov.pt","ver": "1.0","ts": 1502890899493,"action": "asd","did": "4354648646","key": "xyz","msgId": "654654", "requesterId": "61",
           "authToken": "750d4aa9-2436-4bc4-a8f4-3796e3bfd465","userInfo":{"id":73}}}
           uriResponseMapping:
           - inJsonPath: $.Employee[0].name
             outJsonPath: $.PGRIndex.assignee
-        - path: https://egov-micro-dev.egovernments.org/hr-employee-v2/employees/_search
+        - path: https://hr-employee-v2:8080/hr-employee-v2/employees/_search
           queryParam: tenantId=$.tenantId,id=$.gro
           apiRequest: {"RequestInfo": {"apiId": "org.egov.pt","ver": "1.0","ts": 1502890899493,"action": "asd","did": "4354648646","key": "xyz","msgId": "654654", "requesterId": "61",
           "authToken": "750d4aa9-2436-4bc4-a8f4-3796e3bfd465","userInfo":{"id":73}}}
@@ -127,7 +127,7 @@ ServiceMaps:
           - inJsonPath: $.Employee[0].name
             outJsonPath: $.gro
         mdmsMapping:
-        - path: https://egov-micro-dev.egovernments.org//egov-mdms-service/v1/_search
+        - path: http://egov-mdms:8080/egov-mdms-service/v1/_search
           moduleName: common-masters
           masterName: Department
           tenantId: pb
@@ -138,7 +138,7 @@ ServiceMaps:
           uriResponseMapping:
           - inJsonPath: $.MdmsRes.common-masters.Department.*.name
             outJsonPath: $.PGRIndex.department
-        - path: https://egov-micro-dev.egovernments.org//egov-mdms-service/v1/_search
+        - path: http://egov-mdms:8080/egov-mdms-service/v1/_search
           moduleName: RAINMAKER-PGR
           masterName: ServiceDefs
           tenantId: pb
@@ -149,7 +149,7 @@ ServiceMaps:
           uriResponseMapping:
           - inJsonPath: $.MdmsRes.RAINMAKER-PGR.ServiceDefs.*.slaHours
             outJsonPath: $.PGRIndex.slaHours
-        - path: https://egov-micro-dev.egovernments.org//egov-mdms-service/v1/_search
+        - path: http://egov-mdms:8080/egov-mdms-service/v1/_search
           moduleName: tenant
           masterName: tenants
           tenantId: pb
@@ -208,14 +208,14 @@ ServiceMaps:
         - inJsonPath: $.actionHistory
           outJsonPath: $.PGRIndex.actionHistory
         externalUriMapping:
-        - path: https://egov-micro-dev.egovernments.org/hr-employee-v2/employees/_search
+        - path: https://hr-employee-v2:8080/hr-employee-v2/employees/_search
           queryParam: tenantId=$.tenantId,id=$.assignee
           apiRequest: {"RequestInfo": {"apiId": "org.egov.pt","ver": "1.0","ts": 1502890899493,"action": "asd","did": "4354648646","key": "xyz","msgId": "654654", "requesterId": "61",
           "authToken": "750d4aa9-2436-4bc4-a8f4-3796e3bfd465","userInfo":{"id":73}}}
           uriResponseMapping:
           - inJsonPath: $.Employee[0].name
             outJsonPath: $.PGRIndex.assignee
-        - path: https://egov-micro-dev.egovernments.org/hr-employee-v2/employees/_search
+        - path: https://hr-employee-v2:8080/hr-employee-v2/employees/_search
           queryParam: tenantId=$.tenantId,id=$.gro
           apiRequest: {"RequestInfo": {"apiId": "org.egov.pt","ver": "1.0","ts": 1502890899493,"action": "asd","did": "4354648646","key": "xyz","msgId": "654654", "requesterId": "61",
           "authToken": "750d4aa9-2436-4bc4-a8f4-3796e3bfd465","userInfo":{"id":73}}}
@@ -223,7 +223,7 @@ ServiceMaps:
           - inJsonPath: $.Employee[0].name
             outJsonPath: $.gro
         mdmsMapping:
-        - path: https://egov-micro-dev.egovernments.org//egov-mdms-service/v1/_search
+        - path: http://egov-mdms:8080/egov-mdms-service/v1/_search
           moduleName: common-masters
           masterName: Department
           tenantId: pb
@@ -234,7 +234,7 @@ ServiceMaps:
           uriResponseMapping:
           - inJsonPath: $.MdmsRes.common-masters.Department.*.name
             outJsonPath: $.PGRIndex.department
-        - path: https://egov-micro-dev.egovernments.org//egov-mdms-service/v1/_search
+        - path: http://egov-mdms:8080/egov-mdms-service/v1/_search
           moduleName: RAINMAKER-PGR
           masterName: ServiceDefs
           tenantId: pb
@@ -245,7 +245,7 @@ ServiceMaps:
           uriResponseMapping:
           - inJsonPath: $.MdmsRes.RAINMAKER-PGR.ServiceDefs.*.slaHours
             outJsonPath: $.PGRIndex.slaHours
-        - path: https://egov-micro-dev.egovernments.org//egov-mdms-service/v1/_search
+        - path: http://egov-mdms:8080/egov-mdms-service/v1/_search
           moduleName: tenant
           masterName: tenants
           tenantId: pb

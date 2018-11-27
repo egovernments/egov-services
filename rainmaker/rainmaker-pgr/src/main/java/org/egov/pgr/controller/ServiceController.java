@@ -75,6 +75,23 @@ public class ServiceController {
 				serviceReqSearchCriteria);
 		return new ResponseEntity<>(serviceReqResponse, HttpStatus.OK);
 	}
+	
+	/**
+	 * Controller endpoint to fetch service requests irrespective of role
+	 * 
+	 * @param requestInfoWrapper
+	 * @param serviceReqSearchCriteria
+	 * @return ResponseEntity<?>
+	 * @author vishal
+	 */
+	@PostMapping("_plainsearch")
+	@ResponseBody
+	private ResponseEntity<?> plainsearch(@RequestBody @Valid RequestInfoWrapper requestInfoWrapper,
+			@ModelAttribute @Valid ServiceReqSearchCriteria serviceReqSearchCriteria) {
+		Object serviceReqResponse = service.getServiceRequestDetails(requestInfoWrapper.getRequestInfo(),
+				serviceReqSearchCriteria);
+		return new ResponseEntity<>(serviceReqResponse, HttpStatus.OK);
+	}
 
 	 /**
 	 * Controller to fetch count of service requests based on a given criteria

@@ -359,7 +359,7 @@ public class IndexerService {
 				.url(url.toString()).responseInfo(factory.createResponseInfoFromRequestInfo(legacyindexRequest.getRequestInfo(), true)).build();
 		IndexJob job = IndexJob.builder().jobId(UUID.randomUUID().toString()).jobStatus(StatusEnum.INPROGRESS).typeOfJob(ConfigKeyEnum.LEGACYINDEX)
 				.requesterId(legacyindexRequest.getRequestInfo().getUserInfo().getUuid()).newIndex(index.getName() + "/" + index.getType())
-				.tenantId(legacyindexRequest.getTenantId()).totalRecordsIndexed(0)
+				.tenantId(legacyindexRequest.getTenantId()).totalRecordsIndexed(0).totalTimeTakenInMS(0L)
 				.auditDetails(indexerUtils.getAuditDetails(legacyindexRequest.getRequestInfo().getUserInfo().getUuid(), true)).build();
 		legacyindexRequest.setJobId(job.getJobId()); legacyindexRequest.setStartTime(new Date().getTime());
 		IndexJobWrapper wrapper = IndexJobWrapper.builder().requestInfo(legacyindexRequest.getRequestInfo()).job(job).build();

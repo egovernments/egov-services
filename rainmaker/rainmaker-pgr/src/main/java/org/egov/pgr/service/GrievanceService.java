@@ -425,6 +425,32 @@ public class GrievanceService {
 		else
 			return enrichResult(requestInfo, serviceResponse);
 	}
+	
+	
+	
+	/**
+	 * Method to return service requests along with details to plain search
+	 * 
+	 * @param requestInfo
+	 * @param serviceReqSearchCriteria
+	 * @return ServiceReqResponse
+	 * @author vishal
+	 */
+	public Object getServiceRequestDetailsForPlainSearch(RequestInfo requestInfo, ServiceReqSearchCriteria serviceReqSearchCriteria) {
+		StringBuilder uri = new StringBuilder();
+		SearcherRequest searcherRequest = null;
+		searcherRequest = pGRUtils.prepareSearchRequestWithDetails(uri, serviceReqSearchCriteria, requestInfo);
+		Object response = serviceRequestRepository.fetchResult(uri, searcherRequest);
+		log.debug(PGRConstants.SEARCHER_RESPONSE_TEXT + response);
+		if (null == response)
+			return pGRUtils.getDefaultServiceResponse(requestInfo);
+		ServiceResponse serviceResponse = prepareResult(response, requestInfo);
+		if(CollectionUtils.isEmpty(serviceResponse.getServices()))
+			return serviceResponse;
+		else
+			return enrichResult(requestInfo, serviceResponse);
+	}
+	
 
 	/**
 	 * Method to enrich the request for search based on roles.

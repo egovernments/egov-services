@@ -112,14 +112,14 @@ ServiceMaps:
         - inJsonPath: $.actionHistory
           outJsonPath: $.PGRIndex.actionHistory
         externalUriMapping:
-        - path: https://hr-employee-v2:8080/hr-employee-v2/employees/_search
+        - path: http://hr-employee-v2:8080/hr-employee-v2/employees/_search
           queryParam: tenantId=$.tenantId,id=$.assignee
           apiRequest: {"RequestInfo": {"apiId": "org.egov.pt","ver": "1.0","ts": 1502890899493,"action": "asd","did": "4354648646","key": "xyz","msgId": "654654", "requesterId": "61",
           "authToken": "750d4aa9-2436-4bc4-a8f4-3796e3bfd465","userInfo":{"id":73}}}
           uriResponseMapping:
           - inJsonPath: $.Employee[0].name
             outJsonPath: $.PGRIndex.assignee
-        - path: https://hr-employee-v2:8080/hr-employee-v2/employees/_search
+        - path: http://hr-employee-v2:8080/hr-employee-v2/employees/_search
           queryParam: tenantId=$.tenantId,id=$.gro
           apiRequest: {"RequestInfo": {"apiId": "org.egov.pt","ver": "1.0","ts": 1502890899493,"action": "asd","did": "4354648646","key": "xyz","msgId": "654654", "requesterId": "61",
           "authToken": "750d4aa9-2436-4bc4-a8f4-3796e3bfd465","userInfo":{"id":73}}}
@@ -208,14 +208,14 @@ ServiceMaps:
         - inJsonPath: $.actionHistory
           outJsonPath: $.PGRIndex.actionHistory
         externalUriMapping:
-        - path: https://hr-employee-v2:8080/hr-employee-v2/employees/_search
+        - path: http://hr-employee-v2:8080/hr-employee-v2/employees/_search
           queryParam: tenantId=$.tenantId,id=$.assignee
           apiRequest: {"RequestInfo": {"apiId": "org.egov.pt","ver": "1.0","ts": 1502890899493,"action": "asd","did": "4354648646","key": "xyz","msgId": "654654", "requesterId": "61",
           "authToken": "750d4aa9-2436-4bc4-a8f4-3796e3bfd465","userInfo":{"id":73}}}
           uriResponseMapping:
           - inJsonPath: $.Employee[0].name
             outJsonPath: $.PGRIndex.assignee
-        - path: https://hr-employee-v2:8080/hr-employee-v2/employees/_search
+        - path: http://hr-employee-v2:8080/hr-employee-v2/employees/_search
           queryParam: tenantId=$.tenantId,id=$.gro
           apiRequest: {"RequestInfo": {"apiId": "org.egov.pt","ver": "1.0","ts": 1502890899493,"action": "asd","did": "4354648646","key": "xyz","msgId": "654654", "requesterId": "61",
           "authToken": "750d4aa9-2436-4bc4-a8f4-3796e3bfd465","userInfo":{"id":73}}}

@@ -68,7 +68,7 @@ public class PropertyCustomUploader {
 	
 	private String responseString = "Response";
 	
-	public static String SUCCESSSTRING = "SUCCESS";
+	public static final String SUCCESSSTRING = "SUCCESS";
 
 	public void uploadPropertyData(UploaderRequest uploaderRequest) {
 

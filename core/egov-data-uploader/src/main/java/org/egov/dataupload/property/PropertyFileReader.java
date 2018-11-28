@@ -204,8 +204,20 @@ public class PropertyFileReader {
 		case 6:
 			unit.setArv(new BigDecimal(cell.getNumericCellValue(), MathContext.DECIMAL64));
 			break;
+		case 7:
+			if (!StringUtils.isEmpty(cell.getStringCellValue()))
+				unit.setUsageCategoryMinor(cell.getStringCellValue());
+			break;
+		case 8:
+			if (!StringUtils.isEmpty(cell.getStringCellValue()))
+				unit.setUsageCategorySubMinor(cell.getStringCellValue());
+			break;
+		case 9:
+			if (!StringUtils.isEmpty(cell.getStringCellValue()))
+				unit.setUsageCategoryDetail(cell.getStringCellValue());
+			break;
 		default:
-			System.out.print("");
+			log.info("In default case of unit switch");
 		}
 
 		System.out.print("\t");
@@ -276,7 +288,8 @@ public class PropertyFileReader {
 				ownerInfo.setEmailId(cell.getStringCellValue());
 			break;
 		case 8:
-			ownerInfo.setOwnerType(cell.getStringCellValue());
+			if (!StringUtils.isEmpty(cell.getStringCellValue()))
+				ownerInfo.setOwnerType(cell.getStringCellValue());
 			break;
 		case 9:
 			if (!StringUtils.isEmpty(cell.getStringCellValue()))

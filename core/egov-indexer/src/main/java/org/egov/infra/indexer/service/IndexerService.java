@@ -10,10 +10,11 @@ import java.util.UUID;
 
 import org.apache.commons.lang3.StringUtils;
 import org.egov.IndexerApplicationRunnerImpl;
+import org.egov.common.contract.request.RequestInfo;
 import org.egov.infra.indexer.bulkindexer.BulkIndexer;
 import org.egov.infra.indexer.models.IndexJob;
-import org.egov.infra.indexer.models.IndexJobWrapper;
 import org.egov.infra.indexer.models.IndexJob.StatusEnum;
+import org.egov.infra.indexer.models.IndexJobWrapper;
 import org.egov.infra.indexer.testproducer.IndexerProducer;
 import org.egov.infra.indexer.util.IndexerConstants;
 import org.egov.infra.indexer.util.IndexerUtils;
@@ -21,6 +22,8 @@ import org.egov.infra.indexer.util.ResponseInfoFactory;
 import org.egov.infra.indexer.web.contract.CustomJsonMapping;
 import org.egov.infra.indexer.web.contract.FieldMapping;
 import org.egov.infra.indexer.web.contract.Index;
+import org.egov.infra.indexer.web.contract.LegacyIndexRequest;
+import org.egov.infra.indexer.web.contract.LegacyIndexResponse;
 import org.egov.infra.indexer.web.contract.Mapping;
 import org.egov.infra.indexer.web.contract.Mapping.ConfigKeyEnum;
 import org.egov.infra.indexer.web.contract.ReindexRequest;
@@ -67,6 +70,9 @@ public class IndexerService {
 	@Value("${egov.core.reindex.topic.name}")
 	private String reindexTopic;
 	
+	@Value("${egov.core.legacyindex.topic.name}")
+	private String legacyIndexTopic;
+	
 	@Value("${egov.indexer.persister.create.topic}")
 	private String persisterCreate;
 	
@@ -76,11 +82,18 @@ public class IndexerService {
 	@Value("${reindex.pagination.size.default}")
 	private Integer defaultPageSizeForReindex;
 	
+	@Value("${legacyindex.pagination.size.default}")
+	private Integer defaultPageSizeForLegacyindex;
+	
+	@Value("${egov.service.host}")
+	private String serviceHost;
+	
 	
 	@Value("${egov.infra.indexer.host}")
 	private String esHostUrl;
 		
 	public void elasticIndexer(String topic, String kafkaJson) throws Exception{
+		logger.debug("kafka Data: "+kafkaJson);
 		Map<String, Mapping> mappingsMap = runner.getMappingMaps();
 		if(null != mappingsMap.get(topic)){
 			Mapping mapping = mappingsMap.get(topic);
@@ -100,17 +113,24 @@ public class IndexerService {
 	
 	public void indexProccessor(Index index, String kafkaJson, boolean isBulk) throws Exception {
         Long startTime = null;
+        logger.debug("index: "+index.getCustomJsonMapping());
 		StringBuilder url = new StringBuilder();
 		url.append(esHostUrl).append(index.getName()).append("/").append(index.getType()).append("/")
 		   .append("_bulk");	
         startTime = new Date().getTime();
-	    if (!StringUtils.isEmpty(index.getJsonPath())) {
-				indexerUtils.validateAndIndex(buildIndexJsonWithJsonpath(index, kafkaJson, isBulk), url.toString(), index);
-		}else if(null != index.getCustomJsonMapping()){
+        if(!StringUtils.isEmpty(index.getJsonPath())) {
+        	if(null != index.getCustomJsonMapping()) {
 			    StringBuilder urlForMap = new StringBuilder();
 			    urlForMap.append(esHostUrl).append(index.getName()).append("/").append("_mapping").append("/").append(index.getType());	
-			    indexerUtils.validateAndIndex(buildCustomJsonForBulk(index, kafkaJson, urlForMap.toString(), isBulk), url.toString(), index);		
-		}else{
+			    indexerUtils.validateAndIndex(buildCustomJsonForBulk(index, kafkaJson, urlForMap.toString(), isBulk), url.toString(), index);
+        	}else {
+				indexerUtils.validateAndIndex(buildIndexJsonWithJsonpath(index, kafkaJson, isBulk), url.toString(), index);
+        	}
+        }else if(null != index.getCustomJsonMapping()) {
+		    StringBuilder urlForMap = new StringBuilder();
+		    urlForMap.append(esHostUrl).append(index.getName()).append("/").append("_mapping").append("/").append(index.getType());	
+		    indexerUtils.validateAndIndex(buildCustomJsonForBulk(index, kafkaJson, urlForMap.toString(), isBulk), url.toString(), index);
+        }else{
 				indexerUtils.validateAndIndex(buildIndexJsonWithoutJsonpath(index, kafkaJson, isBulk), url.toString(), index);
 		}
 		logger.info("Total time taken: "+((new Date().getTime()) - startTime)+"ms");
@@ -155,7 +175,7 @@ public class IndexerService {
         String result = null;
         JSONArray kafkaJsonArray = null;
         try {
-        	kafkaJsonArray = indexerUtils.constructArrayForBulkIndex(kafkaJson, index, isBulk);
+        	kafkaJsonArray = indexerUtils.constructArrayForBulkIndex(kafkaJson.toString(), index, isBulk);
 			for(int i = 0; i < kafkaJsonArray.length() ; i++){
 				if(null != kafkaJsonArray.get(i)) {
 					String stringifiedObject = indexerUtils.buildString(kafkaJsonArray.get(i));
@@ -201,14 +221,19 @@ public class IndexerService {
 				}
 			
 			}
-    	}		
-		if(!CollectionUtils.isEmpty(customJsonMappings.getUriMapping())){
-			for(UriMapping uriMapping: customJsonMappings.getUriMapping()){
+    	}
+    	/**
+    	 * This block denormalizes data from external services
+    	 */
+		if(!CollectionUtils.isEmpty(customJsonMappings.getExternalUriMapping())){
+			for(UriMapping uriMapping: customJsonMappings.getExternalUriMapping()){
 				Object response = null;
 				String uri = null;
 				try{
 					uri = indexerUtils.buildUri(uriMapping, kafkaJson);
+					logger.debug("request: "+mapper.writeValueAsString(uriMapping.getRequest()));
 					response = restTemplate.postForObject(uri, uriMapping.getRequest(), Map.class);
+					logger.debug("response: "+mapper.writeValueAsString(response));
 					if(null == response) continue;
 				}catch(Exception e){
 					logger.error("Exception while trying to hit: "+uri, e);
@@ -219,7 +244,8 @@ public class IndexerService {
 					String[] expressionArray = (fieldMapping.getOutJsonPath()).split("[.]");
 					String expression = indexerUtils.getProcessedJsonPath(fieldMapping.getOutJsonPath());
 					try{
-						documentContext.put(expression, expressionArray[expressionArray.length - 1], JsonPath.read(mapper.writeValueAsString(response), fieldMapping.getInjsonpath()));
+						Object value = JsonPath.read(mapper.writeValueAsString(response), fieldMapping.getInjsonpath());
+						documentContext.put(expression, expressionArray[expressionArray.length - 1], value);					
 					}catch(Exception e){
 						logger.error("Value: "+fieldMapping.getInjsonpath()+" is not found in the uri: "+uriMapping.getPath()+" response", e);
 						continue;
@@ -228,6 +254,45 @@ public class IndexerService {
 					
 			}
 		}
+		
+		/**
+		 * This block denormalizes data from MDMS.
+		 */
+		if(!CollectionUtils.isEmpty(customJsonMappings.getMdmsMapping())) {
+			for(UriMapping uriMapping: customJsonMappings.getMdmsMapping()){
+				Object response = null;
+				StringBuilder uri = new StringBuilder();
+				try{
+					Object request = indexerUtils.prepareMDMSSearchReq(uri, new RequestInfo(), kafkaJson, uriMapping);
+					logger.debug("request: "+mapper.writeValueAsString(uriMapping.getRequest()));
+					response = restTemplate.postForObject(uri.toString(), request, Map.class);
+					logger.debug("response: "+mapper.writeValueAsString(response));
+					if(null == response) continue;
+				}catch(Exception e){
+					logger.error("Exception while trying to hit: "+uri, e);
+					continue;
+				}
+				logger.debug("Response: "+response+" from the URI: "+uriMapping.getPath());
+				for(FieldMapping fieldMapping: uriMapping.getUriResponseMapping()){
+					String[] expressionArray = (fieldMapping.getOutJsonPath()).split("[.]");
+					String expression = indexerUtils.getProcessedJsonPath(fieldMapping.getOutJsonPath());
+					try{
+						Object value = JsonPath.read(mapper.writeValueAsString(response), fieldMapping.getInjsonpath());
+						if(value instanceof List) {
+							if(((List) value).size() == 1) {
+								value = ((List) value).get(0);
+							}
+						}
+						documentContext.put(expression, expressionArray[expressionArray.length - 1], value);
+					}catch(Exception e){
+						logger.error("Value: "+fieldMapping.getInjsonpath()+" is not found in the uri: "+uriMapping.getPath()+" response", e);
+						continue;
+					}
+				}
+					
+			}
+		}
+		
 		return documentContext.jsonString().toString(); //jsonString has to be converted to string
 	}
 	
@@ -260,7 +325,7 @@ public class IndexerService {
 		
 		return result;
   }
-	
+		
 	public ReindexResponse createReindexJob(ReindexRequest reindexRequest) {
 		Map<String, Mapping> mappingsMap = runner.getMappingMaps();
 		ReindexResponse reindexResponse = null;
@@ -287,6 +352,27 @@ public class IndexerService {
 		reindexResponse.setJobId(job.getJobId());
 				
 		return reindexResponse;
+	}
+	
+	public LegacyIndexResponse createLegacyindexJob(LegacyIndexRequest legacyindexRequest) {
+		Map<String, Mapping> mappingsMap = runner.getMappingMaps();
+		LegacyIndexResponse legacyindexResponse = null;
+		StringBuilder url = new StringBuilder();
+		Index index = mappingsMap.get(legacyindexRequest.getLegacyIndexTopic()).getIndexes().get(0);
+		url.append(esHostUrl).append(index.getName()).append("/").append(index.getType()).append("/_search");
+		legacyindexResponse = LegacyIndexResponse.builder().message("Please hit the 'url' after the legacy index job is complete.")
+				.url(url.toString()).responseInfo(factory.createResponseInfoFromRequestInfo(legacyindexRequest.getRequestInfo(), true)).build();
+		IndexJob job = IndexJob.builder().jobId(UUID.randomUUID().toString()).jobStatus(StatusEnum.INPROGRESS).typeOfJob(ConfigKeyEnum.LEGACYINDEX)
+				.requesterId(legacyindexRequest.getRequestInfo().getUserInfo().getUuid()).newIndex(index.getName() + "/" + index.getType())
+				.tenantId(legacyindexRequest.getTenantId()).totalRecordsIndexed(0).totalTimeTakenInMS(0L)
+				.auditDetails(indexerUtils.getAuditDetails(legacyindexRequest.getRequestInfo().getUserInfo().getUuid(), true)).build();
+		legacyindexRequest.setJobId(job.getJobId()); legacyindexRequest.setStartTime(new Date().getTime());
+		IndexJobWrapper wrapper = IndexJobWrapper.builder().requestInfo(legacyindexRequest.getRequestInfo()).job(job).build();
+		indexerProducer.producer(legacyIndexTopic, legacyindexRequest);
+		indexerProducer.producer(persisterCreate, wrapper);
+		legacyindexResponse.setJobId(job.getJobId());
+				
+		return legacyindexResponse;
 	}
 	
 	public void reindexInPages(ReindexRequest reindexRequest) {
@@ -335,6 +421,64 @@ public class IndexerService {
 		
 		logger.info("Process completed successfully!");
 		
+	}
+	
+	public void legacyIndexInPages(LegacyIndexRequest legacyIndexRequest) {
+		ObjectMapper mapper = indexerUtils.getObjectMapper();
+		Integer offset = 0;
+		Integer count = 0;
+		Integer size = null != legacyIndexRequest.getApiDetails().getPaginationDetails().getMaxPageSize() ? 
+				legacyIndexRequest.getApiDetails().getPaginationDetails().getMaxPageSize() : defaultPageSizeForLegacyindex;
+		Boolean isProccessDone = false;
+		while (true) {
+			String uri = indexerUtils.buildPagedUriForLegacyIndex(legacyIndexRequest.getApiDetails(), offset, size);
+			try {
+				Object request = legacyIndexRequest.getApiDetails().getRequest();
+				if(null == legacyIndexRequest.getApiDetails().getRequest()) {
+					HashMap<String, Object> map = new HashMap<>();
+					map.put("RequestInfo", legacyIndexRequest.getRequestInfo());
+					request = map;
+				}
+				logger.debug("Request: "+mapper.writeValueAsString(request));
+				logger.debug("URI: "+uri);
+				Object response = restTemplate.postForObject(uri, request, Map.class);
+				if(null == response) {
+					logger.info("Error while fetching from: "+offset+" and size: "+size);
+					continue;
+				}else {
+					List<Object> searchResponse = JsonPath.read(response, legacyIndexRequest.getApiDetails().getResponseJsonPath());
+					if(!CollectionUtils.isEmpty(searchResponse)) {
+						count+=searchResponse.size();
+						indexerProducer.producer(legacyIndexRequest.getLegacyIndexTopic(), response);
+					}else {
+						isProccessDone = true;
+						break;
+					}
+				}
+			}catch(Exception e) {
+				logger.error("Exception: ",e);
+				IndexJob job = IndexJob.builder().jobId(legacyIndexRequest.getJobId())
+						.auditDetails(indexerUtils.getAuditDetails(legacyIndexRequest.getRequestInfo().getUserInfo().getUuid(), false)).totalRecordsIndexed(count)
+						.totalTimeTakenInMS(new Date().getTime() - legacyIndexRequest.getStartTime()).jobStatus(StatusEnum.FAILED).build();
+				IndexJobWrapper wrapper = IndexJobWrapper.builder().requestInfo(legacyIndexRequest.getRequestInfo()).job(job).build();
+				indexerProducer.producer(persisterUpdate, wrapper);
+				break;
+			}
+			IndexJob job = IndexJob.builder().jobId(legacyIndexRequest.getJobId())
+					.auditDetails(indexerUtils.getAuditDetails(legacyIndexRequest.getRequestInfo().getUserInfo().getUuid(), false))
+					.totalTimeTakenInMS(new Date().getTime() - legacyIndexRequest.getStartTime()).jobStatus(StatusEnum.INPROGRESS).totalRecordsIndexed(count).build();
+			IndexJobWrapper wrapper = IndexJobWrapper.builder().requestInfo(legacyIndexRequest.getRequestInfo()).job(job).build();
+			indexerProducer.producer(persisterUpdate, wrapper);
+			offset+=size;
+		}
+		if(isProccessDone) {
+			IndexJob job = IndexJob.builder().jobId(legacyIndexRequest.getJobId())
+					.auditDetails(indexerUtils.getAuditDetails(legacyIndexRequest.getRequestInfo().getUserInfo().getUuid(), false)).totalRecordsIndexed(count)
+					.totalTimeTakenInMS(new Date().getTime() - legacyIndexRequest.getStartTime()).jobStatus(StatusEnum.COMPLETED).build();
+			IndexJobWrapper wrapper = IndexJobWrapper.builder().requestInfo(legacyIndexRequest.getRequestInfo()).job(job).build();
+			indexerProducer.producer(persisterUpdate, wrapper);
+		}
+
 	}
 	
 	public boolean isHitAMetaData(Object hit) {

@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.*;
+import javax.crypto.spec.GCMParameterSpec;
 import javax.crypto.spec.IvParameterSpec;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
@@ -18,7 +19,7 @@ import java.security.Security;
 @Component
 public class SymmetricEncryptionUtil {
 
-    public static String symmetricEncryptionMethod;
+    private static String symmetricEncryptionMethod;
 
     @Autowired
     public void setSymmetricEncryptionMethod(@Value("${method.symmetric}") String method) {
@@ -32,13 +33,13 @@ public class SymmetricEncryptionUtil {
 
     public static byte[] encrypt(byte[] plaintext, SecretKey secretKey, byte[] initialVector) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidAlgorithmParameterException, InvalidKeyException, BadPaddingException, IllegalBlockSizeException {
         Cipher cipher = Cipher.getInstance(symmetricEncryptionMethod);
-        cipher.init(Cipher.ENCRYPT_MODE, secretKey, new IvParameterSpec(initialVector));
+        cipher.init(Cipher.ENCRYPT_MODE, secretKey, new GCMParameterSpec(128, initialVector));
         return cipher.doFinal(plaintext);
     }
 
     public static byte[] decrypt(byte[] ciphertext, SecretKey secretKey, byte[] initialVector) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidAlgorithmParameterException, InvalidKeyException, BadPaddingException, IllegalBlockSizeException {
         Cipher cipher = Cipher.getInstance(symmetricEncryptionMethod);
-        cipher.init(Cipher.DECRYPT_MODE, secretKey, new IvParameterSpec(initialVector));
+        cipher.init(Cipher.DECRYPT_MODE, secretKey, new GCMParameterSpec(128, initialVector));
         return cipher.doFinal(ciphertext);
     }
 

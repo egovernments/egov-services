@@ -16,7 +16,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.egov.tracer.constants.TracerConstants.CORRELATION_ID_HEADER;
-import static org.egov.tracer.constants.TracerConstants.MDC_CORRELATION_ID;
+import static org.egov.tracer.constants.TracerConstants.CORRELATION_ID_MDC;
 
 @Slf4j
 public class RestTemplateLoggingInterceptor implements ClientHttpRequestInterceptor {
@@ -52,7 +52,7 @@ public class RestTemplateLoggingInterceptor implements ClientHttpRequestIntercep
     @Override
     public ClientHttpResponse intercept(HttpRequest request, byte[] body, ClientHttpRequestExecution execution) throws IOException {
         try {
-            request.getHeaders().add(CORRELATION_ID_HEADER, MDC.get(MDC_CORRELATION_ID));
+            request.getHeaders().add(CORRELATION_ID_HEADER, MDC.get(CORRELATION_ID_MDC));
             logRequest(request, body);
 
             final ClientHttpResponse rawResponse = execution.execute(request, body);

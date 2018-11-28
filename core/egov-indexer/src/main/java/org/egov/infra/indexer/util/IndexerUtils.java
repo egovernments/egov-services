@@ -1,9 +1,10 @@
 package org.egov.infra.indexer.util;
 
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.TimeZone;
@@ -11,24 +12,26 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-import javax.swing.text.Document;
-
 import org.apache.commons.lang3.StringUtils;
+import org.egov.common.contract.request.RequestInfo;
 import org.egov.infra.indexer.bulkindexer.BulkIndexer;
 import org.egov.infra.indexer.consumer.KafkaConsumerConfig;
 import org.egov.infra.indexer.models.AuditDetails;
-import org.egov.infra.indexer.web.contract.ESSearchCriteria;
+import org.egov.infra.indexer.web.contract.APIDetails;
+import org.egov.infra.indexer.web.contract.FilterMapping;
 import org.egov.infra.indexer.web.contract.Index;
 import org.egov.infra.indexer.web.contract.ReindexRequest;
 import org.egov.infra.indexer.web.contract.UriMapping;
+import org.egov.mdms.model.MasterDetail;
+import org.egov.mdms.model.MdmsCriteria;
+import org.egov.mdms.model.MdmsCriteriaReq;
+import org.egov.mdms.model.ModuleDetail;
 import org.json.JSONArray;
-import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
 import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -58,6 +61,15 @@ public class IndexerUtils {
 	
 	@Autowired
 	private BulkIndexer bulkIndexer;
+	
+	@Value("${egov.mdms.host}")
+	private String mdmsHost;
+
+	@Value("${egov.mdms.search.endpoint}")
+	private String mdmsEndpoint;
+	
+	@Value("${egov.service.host}")
+	private String serviceHost;
 	
     private final ScheduledExecutorService scheduler =
     	       Executors.newScheduledThreadPool(1);
@@ -130,7 +142,11 @@ public class IndexerUtils {
 					String[] queryParamExpression = queryParamsArray[i].trim().split("=");
 					String queryParam = null;
 					try {
-						queryParam = JsonPath.read(kafkaJson, queryParamExpression[1].trim());
+						if(queryParamExpression[1].trim().contains("$.")) {
+							queryParam = JsonPath.read(kafkaJson, queryParamExpression[1].trim());
+						}else {
+							queryParam = queryParamExpression[1].trim();
+						}
 					}catch(Exception e) {
 						continue;
 					}
@@ -150,6 +166,47 @@ public class IndexerUtils {
 			serviceCallUri.append(uriMapping.getPath());
 		}
 		return serviceCallUri.toString();
+	}
+	
+	/**
+	 * A common method that builds MDMS request for searching master data.
+	 * 
+	 * @param uri
+	 * @param tenantId
+	 * @param module
+	 * @param master
+	 * @param filter
+	 * @param requestInfo
+	 * @return
+	 */
+	public MdmsCriteriaReq prepareMDMSSearchReq(StringBuilder uri, RequestInfo requestInfo, String kafkaJson, UriMapping mdmsMppings) {
+
+		uri.append(mdmsHost).append(mdmsEndpoint);
+		String filter = buildFilter(mdmsMppings.getFilter(), mdmsMppings, kafkaJson);
+		MasterDetail masterDetail = org.egov.mdms.model.MasterDetail.builder().name(mdmsMppings.getMasterName()).filter(filter).build();
+		List<MasterDetail> masterDetails = new ArrayList<>();
+		masterDetails.add(masterDetail);
+		ModuleDetail moduleDetail = ModuleDetail.builder().moduleName(mdmsMppings.getModuleName()).masterDetails(masterDetails).build();
+		List<ModuleDetail> moduleDetails = new ArrayList<>();
+		moduleDetails.add(moduleDetail);
+		MdmsCriteria mdmsCriteria = MdmsCriteria.builder().tenantId(mdmsMppings.getTenantId()).moduleDetails(moduleDetails).build();
+		return MdmsCriteriaReq.builder().requestInfo(requestInfo).mdmsCriteria(mdmsCriteria).build();
+	}
+	
+	public String buildFilter(String filter, UriMapping mdmsMppings, String kafkaJson) {
+		String modifiedFilter = mdmsMppings.getFilter();
+		logger.debug("buildfilter, kafkaJson: "+kafkaJson);
+		for(FilterMapping mdmsMapping: mdmsMppings.getFilterMapping()) {
+			Object value = JsonPath.read(kafkaJson, mdmsMapping.getValueJsonpath());
+			if(null == value) {
+				logger.info("MDMS filter, No value found at: "+ mdmsMapping.getValueJsonpath());
+				continue;
+			}else if(value.toString().startsWith("[") && value.toString().endsWith("]")) {
+				value = value.toString().substring(1, value.toString().length() - 1);
+			}
+			modifiedFilter = modifiedFilter.replace(mdmsMapping.getVariable(), "'"+value.toString()+"'");
+		}
+		return modifiedFilter;
 	}
 	
 	public String buildIndexId(Index index, String stringifiedObject){
@@ -359,6 +416,26 @@ public class IndexerUtils {
 			estimatedTime.append(actualTime).append("secs");
 		}
 		return estimatedTime.toString();
+	}
+	
+	public String buildPagedUriForLegacyIndex(APIDetails apiDetails, Integer offset, Integer size) {
+		StringBuilder url = new StringBuilder();
+		if(apiDetails.getUri().contains("http://"))
+			url.append(apiDetails.getUri());
+		else
+			url.append(serviceHost).append(apiDetails.getUri());
+			
+		String offsetKey = null; String sizeKey = null;
+		offsetKey = null != apiDetails.getPaginationDetails().getOffsetKey() ? apiDetails.getPaginationDetails().getOffsetKey() : "offset";
+		sizeKey = null != apiDetails.getPaginationDetails().getSizeKey() ? apiDetails.getPaginationDetails().getSizeKey() : "size";
+		url.append("?tenantId=").append(apiDetails.getTenantIdForOpenSearch()).append("&"+offsetKey+"="+offset).append("&"+sizeKey+"="+size);
+		
+		return url.toString();
+	}
+	
+	public String splitCamelCase(String s) {
+		return s.replaceAll(String.format("%s|%s|%s", "(?<=[A-Z])(?=[A-Z][a-z])", "(?<=[^A-Z])(?=[A-Z])",
+				"(?<=[A-Za-z])(?=[^A-Za-z])"), " ");
 	}
 	
 

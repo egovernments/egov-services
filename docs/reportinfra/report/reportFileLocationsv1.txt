@@ -9,3 +9,4 @@ works=https://raw.githubusercontent.com/egovernments/egov-services/master/docs/w
 rainmaker-pgr=https://raw.githubusercontent.com/egovernments/egov-services/master/docs/rainmaker-pgr/reports/reports.yml
 rainmaker-pt=https://raw.githubusercontent.com/egovernments/egov-services/master/docs/rainmaker/property-tax/reports/reports.yml
 finance=https://raw.githubusercontent.com/egovernments/egov-services/finance-coexistence/docs/finance/report/report.yml
+rainmaker-tl=https://raw.githubusercontent.com/egovernments/egov-services/master/docs/rainmaker/trade-license/reports/report.yml

@@ -1,6 +1,7 @@
 package org.egov.dataupload.producer;
 
 
+import org.egov.dataupload.model.UploaderRequest;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,9 +23,9 @@ public class DataUploadProducer {
     @Value("${kafka.topics.dataupload.key}")
     private String key;
 
-    public void producer(Object value) {
-    	logger.info("Value being pushed to the queue: "+value.toString());
-    	kafkaTemplate.send(topic, key, value);
-    	
-    }
+	public void producer(UploaderRequest value) {
+		
+		logger.info("Value being pushed to the queue: {}", value);
+		kafkaTemplate.send(topic, key , value);
+	}
 }

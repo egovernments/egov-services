@@ -11,10 +11,14 @@ import org.apache.kafka.clients.producer.ProducerInterceptor;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.clients.producer.RecordMetadata;
 import org.apache.kafka.common.TopicPartition;
+import org.slf4j.MDC;
 import org.springframework.util.ObjectUtils;
 
 import java.util.Map;
-import java.util.Objects;
+
+import static java.util.Objects.isNull;
+import static org.egov.tracer.constants.TracerConstants.*;
+import static org.springframework.util.StringUtils.isEmpty;
 
 @Slf4j
 public class KafkaTemplateLoggingInterceptors<K,V> implements ConsumerInterceptor<K,V>, ProducerInterceptor<K,V> {
@@ -40,6 +44,11 @@ public class KafkaTemplateLoggingInterceptors<K,V> implements ConsumerIntercepto
     public ConsumerRecords<K, V> onConsume(ConsumerRecords<K, V> consumerRecords) {
         for (ConsumerRecord<K, V> consumerRecord : consumerRecords) {
             final String keyAsString = ObjectUtils.nullSafeToString(consumerRecord.key());
+            String correlationId = getCorrelationIdFromBody(consumerRecord.value());
+
+            if(!isEmpty(correlationId))
+                MDC.put(CORRELATION_ID_MDC, correlationId);
+
             if (log.isDebugEnabled()) {
                 final String bodyAsJsonString = getMessageBodyAsJsonString(consumerRecord.value());
                 log.debug(RECEIVED_MESSAGE_WITH_BODY, consumerRecord.topic(), consumerRecord.partition(), bodyAsJsonString,
@@ -59,6 +68,7 @@ public class KafkaTemplateLoggingInterceptors<K,V> implements ConsumerIntercepto
     @Override
     public ProducerRecord<K, V> onSend(ProducerRecord<K, V> producerRecord) {
         final String keyAsString = ObjectUtils.nullSafeToString(producerRecord.key());
+
         if (log.isDebugEnabled()) {
             final String bodyAsJsonString = getMessageBodyAsJsonString(producerRecord.value());
             log.debug(SEND_SUCCESS_MESSAGE_WITH_BODY, producerRecord.topic(), producerRecord.partition(), bodyAsJsonString,
@@ -71,7 +81,7 @@ public class KafkaTemplateLoggingInterceptors<K,V> implements ConsumerIntercepto
 
     @Override
     public void onAcknowledgement(RecordMetadata recordMetadata, Exception e) {
-        if (!Objects.isNull(e)) {
+        if (!isNull(e)) {
             final String message =
                 String.format(SEND_FAILURE_MESSAGE, recordMetadata.topic(), recordMetadata.partition());
             log.error(message, e);
@@ -95,6 +105,27 @@ public class KafkaTemplateLoggingInterceptors<K,V> implements ConsumerIntercepto
             log.warn(BODY_JSON_SERIALIZATION_ERROR);
             return EMPTY_BODY;
         }
+    }
+
+    @SuppressWarnings("unchecked")
+    private String getCorrelationIdFromBody(Object value) {
+        String correlationId = null;
+        try {
+            Map<String, Object> requestMap = objectMapper.convertValue(value, Map.class);
+
+            Object requestInfo = requestMap.containsKey(REQUEST_INFO_FIELD_NAME_IN_JAVA_CLASS_CASE) ? requestMap.get
+                (REQUEST_INFO_FIELD_NAME_IN_JAVA_CLASS_CASE) : requestMap.get(REQUEST_INFO_IN_CAMEL_CASE);
+
+            if (isNull(requestInfo))
+                return null;
+            else {
+                if (requestInfo instanceof Map) {
+                    correlationId = (String) ((Map) requestInfo).get(CORRELATION_ID_FIELD_NAME);
+                }
+            }
+        } catch (Exception ignored){}
+
+        return correlationId;
     }
 
 }

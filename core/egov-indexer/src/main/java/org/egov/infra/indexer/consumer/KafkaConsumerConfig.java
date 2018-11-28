@@ -49,6 +49,9 @@ public class KafkaConsumerConfig implements ApplicationRunner {
 	
 	@Value("${egov.core.reindex.topic.name}")
 	private String reindexTopic;
+	
+	@Value("${egov.core.legacyindex.topic.name}")
+	private String legacyIndexTopic;
         
     @Autowired
     private StoppingErrorHandler stoppingErrorHandler;
@@ -74,13 +77,14 @@ public class KafkaConsumerConfig implements ApplicationRunner {
     
     public String setTopics(){
     	Map<String, Mapping> mappings = runner.getMappingMaps();
-    	String[] topics = new String[mappings.size() + 1];
+    	String[] topics = new String[mappings.size() + 2];
     	int i = 0;
     	for(Map.Entry<String, Mapping> map: mappings.entrySet()){
     		topics[i] = map.getKey();
     		i++;
     	}
     	topics[i] = reindexTopic;
+    	topics[i + 1] = legacyIndexTopic;
     	this.topics = topics;  
     	
     	logger.info("Topics intialized..");

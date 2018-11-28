@@ -17,7 +17,7 @@ import java.security.*;
 @Component
 public class AsymmetricEncryptionUtil {
 
-    public static String asymmetricEncryptionMethod;
+    private static String asymmetricEncryptionMethod;
 
     @Autowired
     public void setAsymmetricEncryptionMethod(@Value("${method.asymmetric}") String method) {

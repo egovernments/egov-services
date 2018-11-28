@@ -10,6 +10,8 @@ import org.egov.infra.indexer.util.ResponseInfoFactory;
 import org.egov.infra.indexer.validator.Validator;
 import org.egov.infra.indexer.web.contract.ESResponseWrapper;
 import org.egov.infra.indexer.web.contract.ESSearchCriteria;
+import org.egov.infra.indexer.web.contract.LegacyIndexRequest;
+import org.egov.infra.indexer.web.contract.LegacyIndexResponse;
 import org.egov.infra.indexer.web.contract.ReindexRequest;
 import org.egov.infra.indexer.web.contract.ReindexResponse;
 import org.slf4j.Logger;
@@ -80,9 +82,18 @@ public class IndexerController {
     
     @PostMapping("/_reindex")
     @ResponseBody
-    private ResponseEntity<?> getIndexedData(@Valid @RequestBody ReindexRequest reindexRequest){
+    private ResponseEntity<?> reIndexData(@Valid @RequestBody ReindexRequest reindexRequest){
     	validator.validaterReindexRequest(reindexRequest);
     	ReindexResponse response = service.createReindexJob(reindexRequest);
+		return new ResponseEntity<>(response ,HttpStatus.OK);
+
+    }
+    
+    @PostMapping("/_legacyindex")
+    @ResponseBody
+    private ResponseEntity<?> legacyIndexData(@Valid @RequestBody LegacyIndexRequest legacyIndexRequest){
+    	validator.validaterLegacyindexRequest(legacyIndexRequest);
+    	LegacyIndexResponse response = service.createLegacyindexJob(legacyIndexRequest);
 		return new ResponseEntity<>(response ,HttpStatus.OK);
 
     }

@@ -1,14 +1,29 @@
 package org.egov.dataupload.service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.jayway.jsonpath.DocumentContext;
-import com.jayway.jsonpath.JsonPath;
-import com.jayway.jsonpath.PathNotFoundException;
-import net.minidev.json.JSONArray;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Objects;
+import java.util.Optional;
+
 import org.egov.DataUploadApplicationRunnerImpl;
-import org.egov.dataupload.model.*;
+import org.egov.dataupload.model.Definition;
+import org.egov.dataupload.model.Defs;
+import org.egov.dataupload.model.Document;
+import org.egov.dataupload.model.JobSearchRequest;
+import org.egov.dataupload.model.ModuleDefs;
+import org.egov.dataupload.model.Request;
+import org.egov.dataupload.model.UploadDefinition;
+import org.egov.dataupload.model.UploadJob;
 import org.egov.dataupload.model.UploadJob.StatusEnum;
+import org.egov.dataupload.model.UploaderRequest;
 import org.egov.dataupload.producer.DataUploadProducer;
 import org.egov.dataupload.repository.DataUploadRepository;
 import org.egov.dataupload.repository.UploadRegistryRepository;
@@ -24,11 +39,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestClientException;
 
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.*;
-import java.util.Map.Entry;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.jayway.jsonpath.DocumentContext;
+import com.jayway.jsonpath.JsonPath;
+import com.jayway.jsonpath.PathNotFoundException;
+
+import net.minidev.json.JSONArray;
 
 @Service
 public class DataUploadService {
@@ -65,7 +82,9 @@ public class DataUploadService {
 
     @Value("${template.download.prefix}")
     private String templateFilePrefix;
-
+    
+	@Value("${property.module.name}")
+	private String propertyModuleName;
 
 
     private static final Logger logger = LoggerFactory.getLogger(DataUploadService.class);
@@ -107,6 +126,11 @@ public class DataUploadService {
     }
 
     private void validateJob(UploadJob uploadJob) {
+    	
+    	
+    	if(uploadJob.getModuleName().equalsIgnoreCase(propertyModuleName))
+    		return;
+    	
         if (Objects.isNull(uploadJob.getRequestFileName())) {
             throw new CustomException(HttpStatus.BAD_REQUEST.toString(),
                     "Please provide the requestFileName.");
@@ -447,7 +471,7 @@ public class DataUploadService {
     }
 
 
-    private Object hitApi(String request, String url) throws RestClientException {
+    public Object hitApi(String request, String url) throws RestClientException {
         logger.info("Request: " + request);
         logger.info("URI: " + url);
         try {
@@ -485,6 +509,8 @@ public class DataUploadService {
                         } catch (JsonProcessingException e1) {
                             logger.debug("Unable to parse error object");
                         }
+                        failureMessage.append(JsonPath.read(errorObject, "$.code").toString());
+                        failureMessage.append("--");
                         failureMessage.append(JsonPath.read(errorObject, "$.message").toString());
                         failureMessage.append(", ");
                     }
@@ -500,7 +526,7 @@ public class DataUploadService {
 
     }
 
-    private String getFileStoreId(String tenantId, String module, String filePath) throws RestClientException, JsonProcessingException {
+    public String getFileStoreId(String tenantId, String module, String filePath) throws RestClientException, JsonProcessingException {
         logger.info("Uploading result excel to filestore....");
         Map<String, Object> result = dataUploadRepository.postFileContents(tenantId, module, filePath);
         List<Object> objects = (List<Object>) result.get("files");

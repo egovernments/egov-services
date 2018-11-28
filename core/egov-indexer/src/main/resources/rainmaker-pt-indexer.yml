@@ -3,25 +3,47 @@ ServiceMaps:
  version: 1.0.0
  mappings:
   - topic: save-pt-property
+    configKey: INDEX
     indexes:
-    - name: rainmakerpt
-      type: propertycreate
+    - name: rainmakerptlegacyindex
+      type: property
       id: $.propertyId, $.tenantId
       isBulk: true
+      timeStampField: $.auditDetails.createdTime
       jsonPath: $.Properties.*
 
   - topic: update-pt-property
+    configKey: INDEX
     indexes:
-    - name: rainmakerpt
-      type: propertycreate
+    - name: rainmakerptlegacyindex
+      type: property
       id: $.propertyId, $.tenantId
       isBulk: true
+      timeStampField: $.auditDetails.createdTime
       jsonPath: $.Properties.*
       
-  - topic: save-pt-property-reindex-test
+  - topic: pt-property-reindex
+    configKey: REINDEX
     indexes:
-    - name: rainmakerptreindextest
-      type: propertycreate
+    - name: rainmakerptreindex
+      type: property
       id: $.propertyId, $.tenantId
       isBulk: true
+      timeStampField: $.auditDetails.createdTime
+      jsonPath: $.hits.*
+      
+  - topic: pt-property-legacyindex
+    configKey: LEGACYINDEX
+    indexes:
+    - name: rainmakerptlegacyindex
+      type: property
+      id: $.propertyId, $.tenantId
+      isBulk: true
+      timeStampField: $.auditDetails.createdTime
       jsonPath: $.Properties.*
+      
+      
+#JOURNEY: rainmakerpt -> rainmakerptlegacyindex
+#configKey=INDEX: Index that currently receives live data from the services
+#configKey=REINDEX: Configuration for reindexing that will be enabled only during reindexing activity.
+#configKey=LEGACYINDEX: Configuration for reindexing the database to es that will be enabled only during reindexing activity.

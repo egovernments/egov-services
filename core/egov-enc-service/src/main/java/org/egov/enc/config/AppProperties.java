@@ -22,6 +22,9 @@ public class AppProperties {
     @Value("${size.key.symmetric}")
     private int symmetricKeySize;
 
+    @Value("${size.initialvector}")
+    private int initialVectorSize;
+
     @Value("${size.key.asymmetric}")
     private int asymmetricKeySize;
 

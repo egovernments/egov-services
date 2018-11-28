@@ -4,25 +4,65 @@ ReportDefinitions:
     version: 1.0.0
     moduleName: finance
     sourceColumns:
+      - name: sno
+        label: reports.fin.erp.sno
+        type: number
+        source: fin
+        total: false
       - name: receiptnumber
-        label: reports.pt.receiptNo
+        label: reports.fin.erp.receiptnumber
         type: string
-        source: pt
+        source: fin
         total: false
-      - name: transactiondate
-        label: reports.pt.receiptDate
+      - name: receiptdate
+        label: reports.fin.erp.receiptdate
         type: string
-        source: pt
+        source: fin
         total: false
-      - name: businessdetails
-        label: reports.pt.businessdetails
+      - name: service
+        label: reports.fin.erp.service
         type: string
-        source: pt
+        source: fin
         total: false
       - name: department
-        label: reports.pt.department
+        label: reports.fin.erp.department
         type: string
-        source: pt
+        source: fin
+        total: false
+      - name: username
+        label: reports.fin.erp.username
+        type: string
+        source: fin
+        total: false
+      - name: cash
+        label: reports.fin.erp.cash
+        type: number
+        source: fin
+        total: false
+      - name: chequenumber
+        label: reports.fin.erp.chequenumber
+        type: number
+        source: fin
+        total: false
+      - name: cheque
+        label: reports.fin.erp.cheque
+        type: number
+        source: fin
+        total: false
+      - name: online
+        label: reports.fin.erp.online
+        type: number
+        source: fin
+        total: false
+      - name: card
+        label: reports.fin.erp.card
+        type: number
+        source: fin
+        total: false
+      - name: status
+        label: reports.fin.erp.status
+        type: string
+        source: fin
         total: false
     searchParams:
       - name: fromDate
@@ -30,11 +70,11 @@ ReportDefinitions:
         type: epoch
         source: pt
         isMandatory: false
-        searchClause: receiptdate >= $fromDate
+        searchClause: AND receiptdate >= $fromDate
       - name: toDate
         label: reports.pt.toDate
         type: epoch
         source: pt
         isMandatory: false
         searchClause: AND receiptdate <= $toDate
-    query: select receiptdate,receiptnumber,businessdetails,department,createdby from egcl_receiptheader where
+    query: select row_number() over (ORDER BY rt.id) as sno, to_char(to_timestamp(rt.receiptdate/1000),'DD/MM/YYYY') as receiptdate, rt.receiptnumber as receiptnumber, bd.name as Service, rt.department as department, rt.createdby as username, (case when instrumenttype='Cash' then ins.amount end) as cash, (case when instrumenttype='Cheque' then ins.amount when instrumenttype='DD' then ins.amount end) as cheque, (case when instrumenttype='Cheque' then ins.instrumentnumber when instrumenttype='DD' then ins.instrumentnumber end) as chequenumber, (case when instrumenttype='Online' then ins.amount end) as online, (case when instrumenttype='Card' then amount end) as card, rt.status as status from egcl_receiptheader rt, eg_businessdetails bd, egcl_instrumentheader ins where ins.id = (select instrumentheader from egcl_receiptinstrument where receiptheader = rt.id) and rt.tenantid = bd.tenantid and rt.businessdetails = bd.code

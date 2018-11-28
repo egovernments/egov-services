@@ -788,9 +788,11 @@ public class GrievanceService {
 		}
 		if(!CollectionUtils.isEmpty(mapOfMohallaCodesAndNames.keySet())) {
 			for(Service service: response.getServices()) {
-				if(null != service.getAddressDetail()) {
-					if(!StringUtils.isEmpty(mapOfMohallaCodesAndNames.get(service.getAddressDetail().getMohalla()))) {
-						service.getAddressDetail().setLocality(mapOfMohallaCodesAndNames.get(service.getAddressDetail().getMohalla()));
+				if(null != service) {
+					if(null != service.getAddressDetail()) {
+						if(!StringUtils.isEmpty(mapOfMohallaCodesAndNames.get(service.getAddressDetail().getMohalla()))) {
+							service.getAddressDetail().setLocality(mapOfMohallaCodesAndNames.get(service.getAddressDetail().getMohalla()));
+						}
 					}
 				}
 			}

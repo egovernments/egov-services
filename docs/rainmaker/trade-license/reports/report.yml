@@ -5,10 +5,10 @@ ReportDefinitions:
   version: 1.0.0
   moduleName: rainmaker-tl
   externalService:
-- entity: $.messages[*]
-  apiURL: http://egov-localization:8080/localization/messages/v1/_search?locale=en_IN&tenantId=pb&module=rainmaker-tl
-  keyOrder: code,message
-  tableName: tbl_localization
+  - entity: $.messages[*]
+    apiURL: http://egov-localization:8080/localization/messages/v1/_search?locale=en_IN&tenantId=pb&module=rainmaker-tl
+    keyOrder: code,message
+    tableName: tbl_localization
   sourceColumns:
   - name: licensenumber
     label: report.tl.licensenumber
@@ -73,10 +73,10 @@ ReportDefinitions:
   version: 1.0.0
   moduleName: rainmaker-tl
   externalService:
-- entity: $.messages[*]
-  apiURL: http://egov-localization:8080/localization/messages/v1/_search?locale=en_IN&tenantId=pb&module=rainmaker-tl
-  keyOrder: code,message
-  tableName: tbl_localization
+  - entity: $.messages[*]
+    apiURL: http://egov-localization:8080/localization/messages/v1/_search?locale=en_IN&tenantId=pb&module=rainmaker-tl
+    keyOrder: code,message
+    tableName: tbl_localization
   sourceColumns:
   - name: transactionNumber
     label: report.tl.totalTransaction
@@ -120,10 +120,10 @@ ReportDefinitions:
   version: 1.0.0
   moduleName: rainmaker-tl
   externalService:
-- entity: $.messages[*]
-  apiURL: http://egov-localization:8080/localization/messages/v1/_search?locale=en_IN&tenantId=pb&module=rainmaker-tl
-  keyOrder: code,message
-  tableName: tbl_localization
+  - entity: $.messages[*]
+    apiURL: http://egov-localization:8080/localization/messages/v1/_search?locale=en_IN&tenantId=pb&module=rainmaker-tl
+    keyOrder: code,message
+    tableName: tbl_localization
   sourceColumns:
   - name: total
     label: report.tl.total

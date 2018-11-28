@@ -148,8 +148,7 @@ public class IndexerService {
 					if(!StringUtils.isEmpty(index.getId())){
 						String id = indexerUtils.buildIndexId(index, stringifiedObject);
 						if(StringUtils.isEmpty(id)) {
-							logger.info("building own id......");
-							jsonTobeIndexed.append(stringifiedObject);
+							continue;
 						}else {
 				            final String actionMetaData = String.format(IndexerConstants.ES_INDEX_HEADER_FORMAT, "" + id);
 				            jsonTobeIndexed.append(actionMetaData).append(stringifiedObject).append("\n");
@@ -448,8 +447,10 @@ public class IndexerService {
 				}else {
 					List<Object> searchResponse = JsonPath.read(response, legacyIndexRequest.getApiDetails().getResponseJsonPath());
 					if(!CollectionUtils.isEmpty(searchResponse)) {
-						count+=searchResponse.size();
 						indexerProducer.producer(legacyIndexRequest.getLegacyIndexTopic(), response);
+						offset+=size;
+						count = offset;
+						logger.info("Size: "+searchResponse.size());
 					}else {
 						isProccessDone = true;
 						break;
@@ -469,8 +470,7 @@ public class IndexerService {
 					.totalTimeTakenInMS(new Date().getTime() - legacyIndexRequest.getStartTime()).jobStatus(StatusEnum.INPROGRESS).totalRecordsIndexed(count).build();
 			IndexJobWrapper wrapper = IndexJobWrapper.builder().requestInfo(legacyIndexRequest.getRequestInfo()).job(job).build();
 			indexerProducer.producer(persisterUpdate, wrapper);
-			offset+=size;
-		}
+					}
 		if(isProccessDone) {
 			IndexJob job = IndexJob.builder().jobId(legacyIndexRequest.getJobId())
 					.auditDetails(indexerUtils.getAuditDetails(legacyIndexRequest.getRequestInfo().getUserInfo().getUuid(), false)).totalRecordsIndexed(count)

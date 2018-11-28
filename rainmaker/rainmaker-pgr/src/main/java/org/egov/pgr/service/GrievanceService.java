@@ -742,7 +742,14 @@ public class GrievanceService {
 	public ServiceResponse enrichResult(RequestInfo requestInfo, ServiceResponse response) {
 		List<Long> userIds = response.getServices().parallelStream().map(a -> {
 					try {return Long.parseLong(a.getAccountId());}catch(Exception e) {return null;} }).collect(Collectors.toList());
-		List<Address> addresses = response.getServices().parallelStream().map(Service :: getAddressDetail).collect(Collectors.toList());
+		List<Address> addresses = new ArrayList<>();
+		response.getServices().forEach(service -> {
+			if(null != service) {
+				if(null != service.getAddressDetail()) {
+					addresses.add(service.getAddressDetail());
+				}
+			}
+		});
 		Map<String, String> mapOfMohallaCodesAndNames = new HashMap<>();
 		/**
 		 * Populating locality field.

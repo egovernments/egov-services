@@ -448,9 +448,11 @@ public class IndexerService {
 					List<Object> searchResponse = JsonPath.read(response, legacyIndexRequest.getApiDetails().getResponseJsonPath());
 					if(!CollectionUtils.isEmpty(searchResponse)) {
 						indexerProducer.producer(legacyIndexRequest.getLegacyIndexTopic(), response);
-						offset+=size;
-						count = offset;
-						logger.info("Size: "+searchResponse.size());
+						if(searchResponse.size() >= size && searchResponse.size() < 0)
+							count+=size;
+						else
+							count+=searchResponse.size();
+						logger.info("Size of res: "+searchResponse.size()+" and Count: "+count+" and offset: "+offset);
 					}else {
 						isProccessDone = true;
 						break;
@@ -470,7 +472,9 @@ public class IndexerService {
 					.totalTimeTakenInMS(new Date().getTime() - legacyIndexRequest.getStartTime()).jobStatus(StatusEnum.INPROGRESS).totalRecordsIndexed(count).build();
 			IndexJobWrapper wrapper = IndexJobWrapper.builder().requestInfo(legacyIndexRequest.getRequestInfo()).job(job).build();
 			indexerProducer.producer(persisterUpdate, wrapper);
-					}
+			
+			offset+=size;
+		}
 		if(isProccessDone) {
 			IndexJob job = IndexJob.builder().jobId(legacyIndexRequest.getJobId())
 					.auditDetails(indexerUtils.getAuditDetails(legacyIndexRequest.getRequestInfo().getUserInfo().getUuid(), false)).totalRecordsIndexed(count)

@@ -148,9 +148,7 @@ ReportDefinitions:
     source: tl
     isMandatory: false
     searchClause: AND issueddate <= $toDate
-  query: SELECT COUNT(applicationnumber) as total,status from eg_tl_tradelicense tl
- INNER JOIN (SELECT DISTINCT code,message from (VALUES tbl_localization) AS loc(code,message)) as tbl
-ON split_part(tbl.code,'_',2) = status WHERE tenantid LIKE $tenantid
+  query: SELECT COUNT(applicationnumber) as total,status from eg_tl_tradelicense tl INNER JOIN (SELECT DISTINCT code,message from (VALUES tbl_localization) AS loc(code,message)) as tbl ON split_part(tbl.code,'_',2) = status WHERE tenantid LIKE $tenantid
   groupby: GROUP BY status
 
 

@@ -111,7 +111,7 @@ ReportDefinitions:
     source: tl
     isMandatory: false
     searchClause: AND issueddate <= $toDate
-  query:  SELECT COUNT(applicationNumber) as transactionNumber,tradeSubType,SUM(onl.totalAmount) as online,SUM(offl.totalAmount) as offline,tl.tenantId FROM eg_tl_tradelicense tl INNER JOIN eg_tl_tradelicensedetail tld ON tld.tradelicenseid = tl.id INNER JOIN (SELECT tradelicensedetailid,message as tradeSubType FROM eg_tl_tradeunit INNER JOIN (SELECT DISTINCT code,message from (VALUES tbl_localization) AS loc(code,message)) as tbl ON split_part(tbl.code,'_',2) = split_part(tradeType, '.', 2)) tlunit ON tlunit.tradelicensedetailid = tld.id LEFT OUTER JOIN (SELECT * FROM egcl_receiptheader WHERE collectiontype = 'ONLINE') AS onl ON onl.consumercode = tl.applicationnumber LEFT OUTER JOIN (SELECT * FROM egcl_receiptheader WHERE collectiontype = 'COUNTER') AS offl ON offl.consumercode = tl.applicationnumber WHERE tl.status IN ('APPROVED','PAID','REJECTED') AND tl.tenantid LIKE $tenantid
+  query:  SELECT COUNT(applicationNumber) as transactionNumber,tradeSubType,SUM(onl.totalAmount) as online,SUM(offl.totalAmount) as offline FROM eg_tl_tradelicense tl INNER JOIN eg_tl_tradelicensedetail tld ON tld.tradelicenseid = tl.id INNER JOIN (SELECT tradelicensedetailid,message as tradeSubType FROM eg_tl_tradeunit INNER JOIN (SELECT DISTINCT code,message from (VALUES tbl_localization) AS loc(code,message)) as tbl ON split_part(tbl.code,'_',2) = split_part(tradeType, '.', 2)) tlunit ON tlunit.tradelicensedetailid = tld.id LEFT OUTER JOIN (SELECT * FROM egcl_receiptheader WHERE collectiontype = 'ONLINE') AS onl ON onl.consumercode = tl.applicationnumber LEFT OUTER JOIN (SELECT * FROM egcl_receiptheader WHERE collectiontype = 'COUNTER') AS offl ON offl.consumercode = tl.applicationnumber WHERE tl.status IN ('APPROVED','PAID','REJECTED') AND tl.tenantid LIKE $tenantid
   groupby: GROUP BY tradeSubType
 
 
@@ -235,8 +235,8 @@ ReportDefinitions:
     isMandatory: false
     searchClause: AND issueddate <= $toDate
   query:  SELECT COUNT(applicationNumber) as transactionNumber,tradeSubType,SUM(onl.totalAmount) as online,SUM(offl.totalAmount) as offline,tl.tenantId FROM eg_tl_tradelicense tl INNER JOIN eg_tl_tradelicensedetail tld ON tld.tradelicenseid = tl.id INNER JOIN (SELECT tradelicensedetailid,message as tradeSubType FROM eg_tl_tradeunit INNER JOIN (SELECT DISTINCT code,message from (VALUES tbl_localization) AS loc(code,message)) as tbl ON split_part(tbl.code,'_',2) = split_part(tradeType, '.', 2)) tlunit ON tlunit.tradelicensedetailid = tld.id LEFT OUTER JOIN (SELECT * FROM egcl_receiptheader WHERE collectiontype = 'ONLINE') AS onl ON onl.consumercode = tl.applicationnumber LEFT OUTER JOIN (SELECT * FROM egcl_receiptheader WHERE collectiontype = 'COUNTER') AS offl ON offl.consumercode = tl.applicationnumber WHERE tl.status IN ('APPROVED','PAID','REJECTED')
-  groupby: GROUP BY tradeSubType,tl.tenantId
-
+  groupby: GROUP BY tradeSubType
+  orderby: ORDER BY tl.tenantId asc
 
 
 - reportName: StateLevelTLReport
@@ -303,5 +303,5 @@ ReportDefinitions:
     isMandatory: false
     searchClause: AND issueddate <= $toDate
   query: SELECT licensenumber,to_timestamp(issueddate/1000) as formattedIssuedDate,tl.tradeName,tradeTypeName,acc, name,mobilenumber,totalamount FROM eg_tl_tradelicense tl INNER JOIN eg_tl_tradelicensedetail tld ON tld.tradelicenseid = tl.id INNER JOIN eg_tl_owner tlowner ON tlowner.tradelicensedetailid = tld.id INNER JOIN (SELECT tradelicensedetailid,message as tradeTypeName FROM eg_tl_tradeunit INNER JOIN (SELECT DISTINCT code,message from (VALUES tbl_localization) AS loc(code,message)) as tbl ON split_part(tbl.code,'_',2) = tradeType) tlunit ON tlunit.tradelicensedetailid = tld.id INNER JOIN eg_user tluser ON tluser.uuid = tlowner.id LEFT OUTER JOIN egcl_receiptheader receipt ON receipt.consumercode = tl.applicationnumber LEFT OUTER JOIN (SELECT tradelicensedetailid,array_to_string(array_agg(message),',') AS acc FROM eg_tl_accessory INNER JOIN (SELECT DISTINCT code,message from (VALUES tbl_localization) AS loc(code,message)) as tbl ON split_part(tbl.code,'_',2) = accessorycategory GROUP BY 1 ) tlacc ON tlacc.tradelicensedetailid = tld.id WHERE 1=1
-  groupby: GROUP BY tl.tenantId
+  orderby: ORDER BY tl.tenantId asc
 

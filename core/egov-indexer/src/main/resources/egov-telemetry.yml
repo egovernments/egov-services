@@ -15,7 +15,7 @@ ServiceMaps:
   - topic: telemetry-reindex
     configKey: REINDEX
     indexes:
-    - name: egovtelemetryreindexnew
+    - name: egovtelemetryreindex
       type: general
       id: $.mid
       isBulk: true

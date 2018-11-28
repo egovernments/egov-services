@@ -34,10 +34,10 @@ public class EncryptionService {
                 throw new CustomException(encReqObject.getTenantId() + Constants.TENANT_NOT_FOUND,
                         encReqObject.getTenantId() + Constants.TENANT_NOT_FOUND );
             }
-            MethodEnum encryptionMethod = MethodEnum.fromValue(appProperties.getTypeToMethodMap().get(encReqObject.getDataType()));
+            MethodEnum encryptionMethod = MethodEnum.fromValue(appProperties.getTypeToMethodMap().get(encReqObject.getType()));
             if(encryptionMethod == null) {
-                throw new CustomException(encReqObject.getDataType() + Constants.INVALD_DATA_TYPE,
-                        encReqObject.getDataType() + Constants.INVALD_DATA_TYPE);
+                throw new CustomException(encReqObject.getType() + Constants.INVALD_DATA_TYPE,
+                        encReqObject.getType() + Constants.INVALD_DATA_TYPE);
             }
             outputList.add(processJSONUtil.processJSON(encReqObject.getValue(), ModeEnum.ENCRYPT, encryptionMethod, encReqObject.getTenantId()));
         }

@@ -38,8 +38,8 @@ public class EncReqObject {
     @JsonProperty("tenantId")
     private String tenantId = null;
 
-    @JsonProperty("dataType")
-    private String dataType = null;
+    @JsonProperty("type")
+    private String type = null;
 
     @JsonProperty("value")
     @Valid

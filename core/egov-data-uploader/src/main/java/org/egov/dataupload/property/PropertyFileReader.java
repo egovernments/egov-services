@@ -186,6 +186,10 @@ public class PropertyFileReader {
 
 			String propertyId = row.getCell(1).getStringCellValue();
 			Property property = propertyIdMap.get(propertyId);
+
+			if (null == property)
+				continue;
+			
 			Unit unit = new Unit();
 
 			for (int i = 0; i < row.getLastCellNum(); i++) {
@@ -258,6 +262,8 @@ public class PropertyFileReader {
 
 			String propertyId = row.getCell(1).getStringCellValue();
 			Property property = propertyIdMap.get(propertyId);
+			if (null == property)
+				continue;
 			PropertyDetail dtl = property.getPropertyDetails().get(0);
 			OwnerInfo owner = new OwnerInfo();
 			Document ownerDoc = new Document();

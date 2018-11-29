@@ -195,7 +195,7 @@ public class PropertyCustomUploader {
 
 			myxls = new FileInputStream(job.getLocalFilePath());
 			propertyExcel = new XSSFWorkbook(myxls);
-			XSSFSheet propertySheet = propertyExcel.getSheetAt(0);
+			XSSFSheet propertySheet = propertyExcel.getSheet("Property_Detail");
 			Row firstRow = propertySheet.getRow(0);
 
 			int fixedResNum = firstRow.getLastCellNum();

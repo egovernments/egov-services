@@ -459,7 +459,8 @@ public class IndexerService {
 						count+=size; 
 						logger.info("Size of res: "+searchResponse.size()+" and Count: "+count+" and offset: "+offset);
 					}else {
-						count+=presentCount;
+						count = (count - size) + presentCount;
+						logger.info("Size Count FINAL: "+count);
 						isProccessDone = true;
 						break;
 					}

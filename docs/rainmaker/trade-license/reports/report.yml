@@ -137,7 +137,7 @@ ReportDefinitions:
     source: tl
     isMandatory: false
     searchClause: AND issueddate <= $toDate
-  query: SELECT COUNT(applicationnumber) as total,message.message as status from eg_tl_tradelicense LEFT OUTER JOIN message ON split_part(message.code,'_',2) = status AND message.locale = 'en_IN' WHERE tenantid LIKE $tenantid 
+  query: SELECT COUNT(applicationnumber) as total,message.message as status from eg_tl_tradelicense LEFT OUTER JOIN message ON split_part(message.code,'_',2) = status AND message.locale = 'en_IN' WHERE tl.tenantid LIKE $tenantid 
   groupby: GROUP BY message.message
 
 

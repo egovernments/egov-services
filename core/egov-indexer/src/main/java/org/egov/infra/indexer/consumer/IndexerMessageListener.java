@@ -75,7 +75,7 @@ public class IndexerMessageListener implements MessageListener<String, String> {
 				PGRIndexObject indexObject = pgrCustomDecorator.dataTransformationForPGR(serviceResponse);
 				indexerService.elasticIndexer(data.topic(), mapper.writeValueAsString(indexObject));
 			} catch (Exception e) {
-				logger.error("Couldn't parse reindex request: ", e);
+				logger.error("Couldn't parse pgrindex request: ", e);
 			}
 		}else {
 			try {

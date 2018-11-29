@@ -39,6 +39,7 @@ public class PGRCustomDecorator {
 	private RestTemplate restTemplate;
 	
 	public PGRIndexObject dataTransformationForPGR(ServiceResponse serviceResponse) {
+		log.info("Modifying data!");
 		PGRIndexObject indexObject = new PGRIndexObject();
 		ObjectMapper mapper = indexerUtils.getObjectMapper();
 		List<ServiceIndexObject> indexObjects = new ArrayList<>();
@@ -69,6 +70,7 @@ public class PGRCustomDecorator {
 	}
 	
 	public String getDepartment(Service service) {
+		log.info("Getting dept!");
 		StringBuilder uri = new StringBuilder();
 		MdmsCriteriaReq request = prepareMdMsRequestForDept(uri, "pb", service.getServiceCode(), new RequestInfo());
 		try {

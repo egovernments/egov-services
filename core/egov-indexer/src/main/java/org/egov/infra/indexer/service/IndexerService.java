@@ -93,6 +93,7 @@ public class IndexerService {
 	private String esHostUrl;
 		
 	public void elasticIndexer(String topic, String kafkaJson) throws Exception{
+		logger.info("elasticIndexer.....");
 		logger.debug("kafka Data: "+kafkaJson);
 		Map<String, Mapping> mappingsMap = runner.getMappingMaps();
 		if(null != mappingsMap.get(topic)){
@@ -368,6 +369,7 @@ public class IndexerService {
 		legacyindexRequest.setJobId(job.getJobId()); legacyindexRequest.setStartTime(new Date().getTime());
 		IndexJobWrapper wrapper = IndexJobWrapper.builder().requestInfo(legacyindexRequest.getRequestInfo()).job(job).build();
 		indexerProducer.producer(legacyIndexTopic, legacyindexRequest);
+		logger.info("Job created!");
 		indexerProducer.producer(persisterCreate, wrapper);
 		legacyindexResponse.setJobId(job.getJobId());
 				

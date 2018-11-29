@@ -75,7 +75,7 @@ ReportDefinitions:
       - name: dept
         label: Department
         type: singlevaluelist
-        pattern: http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=common-masters&masterName=Department&tenantId=$tenantId
+        pattern: http://egov-mdms-service:8080/egov-mdms-service/v1/_get?tenantId=$tenantid&moduleName=common-masters&masterName=Department
         source: fin
         wrapper: true
         isMandatory: false

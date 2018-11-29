@@ -73,13 +73,13 @@ ReportDefinitions:
         isMandatory: false
         searchClause: AND receiptdate <= $toDate
       - name: dept
-        label: Department,
+        label: Department
         type: singlevaluelist
         pattern: http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=common-masters&masterName=Department&tenantId=$tenantId
-        source: fin,
-        wrapper: true,
-        isMandatory: false,
+        source: fin
+        wrapper: true
+        isMandatory: false
         searchClause: And department = $dept
 
     query: select to_char(to_timestamp(rt.receiptdate/1000),'DD/MM/YYYY') as receiptdate, rt.receiptnumber as receiptnumber, bd.name as Service,(select deptmap_def.name FROM (VALUES tbl_def_dept) AS deptmap_def(name,code) where deptmap_def.code=rt.department) as department, (case when instrumenttype='Cash' then ins.amount end) as cash, (case when instrumenttype='Cheque' then ins.amount when instrumenttype='DD' then ins.amount end) as cheque, (case when instrumenttype='Cheque' then ins.instrumentnumber when instrumenttype='DD' then ins.instrumentnumber end) as chequenumber, (case when instrumenttype='Online' then ins.amount end) as online, (case when instrumenttype='Card' then amount end) as card, rt.status as status from egcl_receiptheader rt, eg_businessdetails bd, egcl_instrumentheader ins where ins.id = (select instrumentheader from egcl_receiptinstrument where receiptheader = rt.id) and rt.tenantid = bd.tenantid and rt.businessdetails = bd.code
-orderby: ORDER BY receiptdate DESC NULLS label;
+orderby: ORDER BY receiptdate DESC NULLS LAST

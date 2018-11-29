@@ -246,7 +246,7 @@ public class IndexerService {
 						documentContext.put(expression, expressionArray[expressionArray.length - 1], value);					
 					}catch(Exception e){
 						logger.error("Value: "+fieldMapping.getInjsonpath()+" is not found!");
-						logger.info("Request: "+uriMapping.getRequest());
+						//logger.info("Request: "+uriMapping.getRequest());
 						logger.info("Response: "+response);
 						continue;
 					}
@@ -284,7 +284,7 @@ public class IndexerService {
 						documentContext.put(expression, expressionArray[expressionArray.length - 1], value);
 					}catch(Exception e){
 						logger.error("Value: "+fieldMapping.getInjsonpath()+" is not found!");
-						logger.info("Request: "+uriMapping.getRequest());
+						//logger.info("Request: "+uriMapping.getRequest());
 						logger.info("Response: "+response);						
 						continue;
 					}
@@ -444,7 +444,7 @@ public class IndexerService {
 				}
 				Object response = restTemplate.postForObject(uri, request, Map.class);
 				if(null == response) {
-					logger.info("Response: "+response);
+					//logger.info("Response: "+response);
 					logger.info("Request: "+request);
 					logger.info("URI: "+uri);
 					IndexJob job = IndexJob.builder().jobId(legacyIndexRequest.getJobId())

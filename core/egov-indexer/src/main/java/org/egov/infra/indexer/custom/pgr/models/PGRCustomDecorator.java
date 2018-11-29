@@ -70,7 +70,6 @@ public class PGRCustomDecorator {
 	}
 	
 	public String getDepartment(Service service) {
-		log.info("Getting dept!");
 		StringBuilder uri = new StringBuilder();
 		MdmsCriteriaReq request = prepareMdMsRequestForDept(uri, "pb", service.getServiceCode(), new RequestInfo());
 		try {

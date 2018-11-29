@@ -426,6 +426,7 @@ public class IndexerService {
 		logger.info("Operation for: "+legacyIndexRequest.getJobId());
 		Integer offset = 0;
 		Integer count = 0;
+		Integer presentCount = 0;
 		Integer size = null != legacyIndexRequest.getApiDetails().getPaginationDetails().getMaxPageSize() ? 
 				legacyIndexRequest.getApiDetails().getPaginationDetails().getMaxPageSize() : defaultPageSizeForLegacyindex;
 		Boolean isProccessDone = false;
@@ -441,7 +442,7 @@ public class IndexerService {
 				}
 				Object response = restTemplate.postForObject(uri, request, Map.class);
 				if(null == response) {
-					logger.info("Response was null from external service!");
+					logger.info("Response: "+response);
 					logger.info("Request: "+request);
 					logger.info("URI: "+uri);
 					IndexJob job = IndexJob.builder().jobId(legacyIndexRequest.getJobId())
@@ -454,12 +455,11 @@ public class IndexerService {
 					List<Object> searchResponse = JsonPath.read(response, legacyIndexRequest.getApiDetails().getResponseJsonPath());
 					if(!CollectionUtils.isEmpty(searchResponse)) {
 						indexerProducer.producer(legacyIndexRequest.getLegacyIndexTopic(), response);
-						if(searchResponse.size() >= size && searchResponse.size() < 0)
-							count+=size;
-						else
-							count+=searchResponse.size();
+						presentCount = searchResponse.size();
+						count+=size; 
 						logger.info("Size of res: "+searchResponse.size()+" and Count: "+count+" and offset: "+offset);
 					}else {
+						count+=presentCount;
 						isProccessDone = true;
 						break;
 					}

@@ -12,52 +12,52 @@ ReportDefinitions:
       - name: receiptnumber
         label: reports.fin.erp.receiptnumber
         type: string
-        source: fin
+        source: finance-erp
         total: false
       - name: receiptdate
         label: reports.fin.erp.receiptdate
         type: string
-        source: fin
+        source: finance-erp
         total: false
       - name: service
         label: reports.fin.erp.service
         type: string
-        source: fin
+        source: finance-erp
         total: false
       - name: department
         label: reports.fin.erp.department
         type: string
-        source: fin
+        source: finance-erp
         total: false
       - name: cash
         label: reports.fin.erp.cash
         type: number
-        source: fin
+        source: finance-erp
         total: false
       - name: chequenumber
         label: reports.fin.erp.chequenumber
         type: number
-        source: fin
+        source: finance-erp
         total: false
       - name: cheque
         label: reports.fin.erp.cheque
         type: number
-        source: fin
+        source: finance-erp
         total: false
       - name: online
         label: reports.fin.erp.online
         type: number
-        source: fin
+        source: finance-erp
         total: false
       - name: card
         label: reports.fin.erp.card
         type: number
-        source: fin
+        source: finance-erp
         total: false
       - name: status
         label: reports.fin.erp.status
         type: string
-        source: fin
+        source: finance-erp
         total: false
     searchParams:
       - name: fromDate

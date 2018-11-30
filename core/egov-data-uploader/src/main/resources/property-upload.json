@@ -1,0 +1,20 @@
+{
+  "moduleName": "property-upload",
+  "Definitions": [
+    {
+      "name": "property-create",
+      "templateFileName": "",
+      "uniqueParentKeys": [],
+      "isParentChild": false,
+      "requests": [
+        {
+          "url": "",
+          "apiRequest": {},
+          "excelHeadersToRequestMap": {},
+          "additionalResFields": {},
+          "tenantIdPaths": []
+        }
+      ]
+    }
+  ]
+}

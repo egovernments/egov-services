@@ -209,9 +209,8 @@ public class ReindexService {
 					}catch(Exception e) {
 						threadRun = false;
 					}
-				}else {
-					threadRun = false;
 				}
+				threadRun = false;
                }
             };
          scheduler.schedule(legacyIndexer, 20L, TimeUnit.MILLISECONDS);

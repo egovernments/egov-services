@@ -96,7 +96,7 @@ public class LegacyIndexService {
 	@Value("${egov.core.index.thread.poll.ms}")
 	private Long indexThreadPollInterval;
 
-	private ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(2);
+	private ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(5);
 
 	public LegacyIndexResponse createLegacyindexJob(LegacyIndexRequest legacyindexRequest) {
 		Map<String, Mapping> mappingsMap = runner.getMappingMaps();
@@ -129,123 +129,121 @@ public class LegacyIndexService {
 	}
 
 	public Boolean beginLegacyIndex(LegacyIndexRequest legacyIndexRequest) {
-		legacyIndexInPages(legacyIndexRequest);
+		indexThread(legacyIndexRequest);
 		return true;
 	}
 
-	public void legacyIndexInPages(LegacyIndexRequest legacyIndexRequest) {
-		log.info("Operation for: " + legacyIndexRequest.getJobId());
-		ObjectMapper mapper = indexerUtils.getObjectMapper();
-		Integer offset = 0;
-		Integer count = 0;
-		Integer presentCount = 0;
-		Integer size = null != legacyIndexRequest.getApiDetails().getPaginationDetails().getMaxPageSize()
-				? legacyIndexRequest.getApiDetails().getPaginationDetails().getMaxPageSize()
-				: defaultPageSizeForLegacyindex;
-		Boolean isProccessDone = false;
-		while (!isProccessDone) {
-			String uri = indexerUtils.buildPagedUriForLegacyIndex(legacyIndexRequest.getApiDetails(), offset, size);
-			Object request = null;
-			try {
-				request = legacyIndexRequest.getApiDetails().getRequest();
-				if (null == legacyIndexRequest.getApiDetails().getRequest()) {
-					HashMap<String, Object> map = new HashMap<>();
-					map.put("RequestInfo", legacyIndexRequest.getRequestInfo());
-					request = map;
-				}
-				Object response = restTemplate.postForObject(uri, request, Map.class);
-				if (null == response) {
-					log.info("Request: " + request);
-					log.info("URI: " + uri);
-					IndexJob job = IndexJob.builder().jobId(legacyIndexRequest.getJobId())
-							.auditDetails(indexerUtils.getAuditDetails(
-									legacyIndexRequest.getRequestInfo().getUserInfo().getUuid(), false))
-							.totalRecordsIndexed(count)
-							.totalTimeTakenInMS(new Date().getTime() - legacyIndexRequest.getStartTime())
-							.jobStatus(StatusEnum.FAILED).build();
-					IndexJobWrapper wrapper = IndexJobWrapper.builder().requestInfo(legacyIndexRequest.getRequestInfo())
-							.job(job).build();
-					indexerProducer.producer(persisterUpdate, wrapper);
-					break;
-				} else {
-					List<Object> searchResponse = JsonPath.read(response,
-							legacyIndexRequest.getApiDetails().getResponseJsonPath());
-					if (!CollectionUtils.isEmpty(searchResponse)) {
-						indexThread(legacyIndexRequest, mapper, searchResponse);
-						presentCount = searchResponse.size();
-						count += size;
-						log.info("Size of res: " + searchResponse.size() + " and Count: " + count + " and offset: "
-								+ offset);
-					} else {
-						count = (count - size) + presentCount;
-						log.info("Size Count FINAL: " + count);
-						isProccessDone = true;
-						break;
-					}
-				}
-			} catch (Exception e) {
-				log.info("Request: " + request);
-				log.info("URI: " + uri);
-				log.error("Exception: ", e);
-				IndexJob job = IndexJob.builder().jobId(legacyIndexRequest.getJobId())
-						.auditDetails(indexerUtils
-								.getAuditDetails(legacyIndexRequest.getRequestInfo().getUserInfo().getUuid(), false))
-						.totalRecordsIndexed(count)
-						.totalTimeTakenInMS(new Date().getTime() - legacyIndexRequest.getStartTime())
-						.jobStatus(StatusEnum.FAILED).build();
-				IndexJobWrapper wrapper = IndexJobWrapper.builder().requestInfo(legacyIndexRequest.getRequestInfo())
-						.job(job).build();
-				indexerProducer.producer(persisterUpdate, wrapper);
-				break;
-			}
-			
-			IndexJob job = IndexJob.builder().jobId(legacyIndexRequest.getJobId())
-					.auditDetails(indexerUtils
-							.getAuditDetails(legacyIndexRequest.getRequestInfo().getUserInfo().getUuid(), false))
-					.totalTimeTakenInMS(new Date().getTime() - legacyIndexRequest.getStartTime())
-					.jobStatus(StatusEnum.INPROGRESS).totalRecordsIndexed(count).build();
-			IndexJobWrapper wrapper = IndexJobWrapper.builder().requestInfo(legacyIndexRequest.getRequestInfo())
-					.job(job).build();
-			indexerProducer.producer(persisterUpdate, wrapper);
-
-			offset += size;
-		}
-		if (isProccessDone) {
-			IndexJob job = IndexJob.builder().jobId(legacyIndexRequest.getJobId())
-					.auditDetails(indexerUtils
-							.getAuditDetails(legacyIndexRequest.getRequestInfo().getUserInfo().getUuid(), false))
-					.totalRecordsIndexed(count)
-					.totalTimeTakenInMS(new Date().getTime() - legacyIndexRequest.getStartTime())
-					.jobStatus(StatusEnum.COMPLETED).build();
-			IndexJobWrapper wrapper = IndexJobWrapper.builder().requestInfo(legacyIndexRequest.getRequestInfo())
-					.job(job).build();
-			indexerProducer.producer(persisterUpdate, wrapper);
-		}
-
-	}
-
-	private void indexThread(LegacyIndexRequest legacyIndexRequest, ObjectMapper mapper, Object response) {
+	private void indexThread(LegacyIndexRequest legacyIndexRequest) {
 		final Runnable legacyIndexer = new Runnable() {
 			boolean threadRun = true;
-
 			public void run() {
 				if (threadRun) {
-					try {
-						if (legacyIndexRequest.getLegacyIndexTopic().equals(pgrLegacyTopic)) {
-							ServiceResponse serviceResponse = mapper.readValue(mapper.writeValueAsString(response),
-									ServiceResponse.class);
-							PGRIndexObject indexObject = pgrCustomDecorator.dataTransformationForPGR(serviceResponse);
-							indexerService.elasticIndexer(legacyIndexRequest.getLegacyIndexTopic(), mapper.writeValueAsString(indexObject));
-						} else {
-							if(legacyIndexRequest.getLegacyIndexTopic().equals(ptLegacyTopic)) {
-								indexerProducer.producer(legacyIndexRequest.getLegacyIndexTopic(), response);
-							}else {
-								indexerService.elasticIndexer(legacyIndexRequest.getLegacyIndexTopic(), mapper.writeValueAsString(response));
+					log.info("Operation for: " + legacyIndexRequest.getJobId());
+					ObjectMapper mapper = indexerUtils.getObjectMapper();
+					Integer offset = 0;
+					Integer count = 0;
+					Integer presentCount = 0;
+					Integer size = null != legacyIndexRequest.getApiDetails().getPaginationDetails().getMaxPageSize()
+							? legacyIndexRequest.getApiDetails().getPaginationDetails().getMaxPageSize()
+							: defaultPageSizeForLegacyindex;
+					Boolean isProccessDone = false;
+					while (!isProccessDone) {
+						String uri = indexerUtils.buildPagedUriForLegacyIndex(legacyIndexRequest.getApiDetails(), offset, size);
+						Object request = null;
+						try {
+							request = legacyIndexRequest.getApiDetails().getRequest();
+							if (null == legacyIndexRequest.getApiDetails().getRequest()) {
+								HashMap<String, Object> map = new HashMap<>();
+								map.put("RequestInfo", legacyIndexRequest.getRequestInfo());
+								request = map;
 							}
+							Object response = restTemplate.postForObject(uri, request, Map.class);
+							if (null == response) {
+								log.info("Request: " + request);
+								log.info("URI: " + uri);
+								IndexJob job = IndexJob.builder().jobId(legacyIndexRequest.getJobId())
+										.auditDetails(indexerUtils.getAuditDetails(
+												legacyIndexRequest.getRequestInfo().getUserInfo().getUuid(), false))
+										.totalRecordsIndexed(count)
+										.totalTimeTakenInMS(new Date().getTime() - legacyIndexRequest.getStartTime())
+										.jobStatus(StatusEnum.FAILED).build();
+								IndexJobWrapper wrapper = IndexJobWrapper.builder().requestInfo(legacyIndexRequest.getRequestInfo())
+										.job(job).build();
+								indexerProducer.producer(persisterUpdate, wrapper);
+								threadRun = false;
+								break;
+							} else {
+								List<Object> searchResponse = JsonPath.read(response,
+										legacyIndexRequest.getApiDetails().getResponseJsonPath());
+								if (!CollectionUtils.isEmpty(searchResponse)) {
+									try {
+										if (legacyIndexRequest.getLegacyIndexTopic().equals(pgrLegacyTopic)) {
+											ServiceResponse serviceResponse = mapper.readValue(mapper.writeValueAsString(response),
+													ServiceResponse.class);
+											PGRIndexObject indexObject = pgrCustomDecorator.dataTransformationForPGR(serviceResponse);
+											indexerService.elasticIndexer(legacyIndexRequest.getLegacyIndexTopic(), mapper.writeValueAsString(indexObject));
+										} else {
+											if(legacyIndexRequest.getLegacyIndexTopic().equals(ptLegacyTopic)) {
+												indexerProducer.producer(legacyIndexRequest.getLegacyIndexTopic(), response);
+											}else {
+												indexerService.elasticIndexer(legacyIndexRequest.getLegacyIndexTopic(), mapper.writeValueAsString(response));
+											}
+										}
+									} catch (Exception e) {
+										threadRun = false;
+									}
+									presentCount = searchResponse.size();
+									count += size;
+									log.info("Size of res: " + searchResponse.size() + " and Count: " + count + " and offset: "
+											+ offset);
+								} else {
+									count = (count - size) + presentCount;
+									log.info("Size Count FINAL: " + count);
+									isProccessDone = true;
+									threadRun = false;
+									break;
+								}
+							}
+						} catch (Exception e) {
+							log.info("Request: " + request);
+							log.info("URI: " + uri);
+							log.error("Exception: ", e);
+							IndexJob job = IndexJob.builder().jobId(legacyIndexRequest.getJobId())
+									.auditDetails(indexerUtils
+											.getAuditDetails(legacyIndexRequest.getRequestInfo().getUserInfo().getUuid(), false))
+									.totalRecordsIndexed(count)
+									.totalTimeTakenInMS(new Date().getTime() - legacyIndexRequest.getStartTime())
+									.jobStatus(StatusEnum.FAILED).build();
+							IndexJobWrapper wrapper = IndexJobWrapper.builder().requestInfo(legacyIndexRequest.getRequestInfo())
+									.job(job).build();
+							indexerProducer.producer(persisterUpdate, wrapper);
+							threadRun = false;
+							break;
 						}
-					} catch (Exception e) {
-						threadRun = false;
+						
+						IndexJob job = IndexJob.builder().jobId(legacyIndexRequest.getJobId())
+								.auditDetails(indexerUtils
+										.getAuditDetails(legacyIndexRequest.getRequestInfo().getUserInfo().getUuid(), false))
+								.totalTimeTakenInMS(new Date().getTime() - legacyIndexRequest.getStartTime())
+								.jobStatus(StatusEnum.INPROGRESS).totalRecordsIndexed(count).build();
+						IndexJobWrapper wrapper = IndexJobWrapper.builder().requestInfo(legacyIndexRequest.getRequestInfo())
+								.job(job).build();
+						indexerProducer.producer(persisterUpdate, wrapper);
+
+						offset += size;
 					}
+					if (isProccessDone) {
+						IndexJob job = IndexJob.builder().jobId(legacyIndexRequest.getJobId())
+								.auditDetails(indexerUtils
+										.getAuditDetails(legacyIndexRequest.getRequestInfo().getUserInfo().getUuid(), false))
+								.totalRecordsIndexed(count)
+								.totalTimeTakenInMS(new Date().getTime() - legacyIndexRequest.getStartTime())
+								.jobStatus(StatusEnum.COMPLETED).build();
+						IndexJobWrapper wrapper = IndexJobWrapper.builder().requestInfo(legacyIndexRequest.getRequestInfo())
+								.job(job).build();
+						indexerProducer.producer(persisterUpdate, wrapper);
+					}
+
 				}
 				threadRun = false;
 			}

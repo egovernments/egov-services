@@ -130,8 +130,12 @@ public class PropertyFileReader {
 			if (!StringUtils.isEmpty(cell.getStringCellValue()))
 				property.getPropertyDetails().get(0).setUsageCategoryMinor(cell.getStringCellValue());
 			break;
+			// in case of shared property value should go to built up area else land area
 		case 10:
-			property.getPropertyDetails().get(0).setLandArea((float) cell.getNumericCellValue());
+			if ("SHAREDPROPERTY".equalsIgnoreCase(property.getPropertyDetails().get(0).getPropertySubType()))
+				property.getPropertyDetails().get(0).setBuildUpArea((float) cell.getNumericCellValue());
+			else
+				property.getPropertyDetails().get(0).setLandArea((float) cell.getNumericCellValue());
 			break;
 		case 11:
 			property.getPropertyDetails().get(0).setNoOfFloors((long) cell.getNumericCellValue());

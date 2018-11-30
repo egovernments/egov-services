@@ -173,9 +173,7 @@ public class LegacyIndexService {
 								threadRun = false;
 								break;
 							} else {
-								log.info("Response: "+response);
 								List<Object> searchResponse = JsonPath.read(response, legacyIndexRequest.getApiDetails().getResponseJsonPath());
-								log.info("Searchresponse: "+searchResponse);
 								if (!CollectionUtils.isEmpty(searchResponse)) {
 									try {
 										if (legacyIndexRequest.getLegacyIndexTopic().equals(pgrLegacyTopic)) {
@@ -198,7 +196,12 @@ public class LegacyIndexService {
 									log.info("Size of res: " + searchResponse.size() + " and Count: " + count + " and offset: "
 											+ offset);
 								} else {
-									count = (count - size) + presentCount;
+									log.info("Request: " + request);
+									log.info("URI: " + uri);
+									log.info("Response: "+response);
+									if(count > size) {
+										count = (count - size) + presentCount;
+									}
 									log.info("Size Count FINAL: " + count);
 									isProccessDone = true;
 									threadRun = false;

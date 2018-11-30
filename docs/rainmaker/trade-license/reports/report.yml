@@ -15,11 +15,16 @@ ReportDefinitions:
     type: string
     source: tl
     total: false
-  - name: tradeName
-    label: report.tl.tradeName
+  - name: name
+    label: report.tl.user.name
     type: string
     source: tl
-    total: true
+    total: false
+  - name: mobilenumber
+    label: report.tl.user.mobilenumber
+    type: string
+    source: tl
+    total: false
   - name: tradeTypeName
     label: report.tl.tradetype
     type: string
@@ -30,13 +35,8 @@ ReportDefinitions:
     type: string
     source: tl
     total: false
-  - name: name
-    label: report.tl.user.name
-    type: string
-    source: tl
-    total: false
-  - name: mobilenumber
-    label: report.tl.user.mobilenumber
+  - name: tradeName
+    label: report.tl.tradeName
     type: string
     source: tl
     total: false
@@ -119,16 +119,16 @@ ReportDefinitions:
     keyOrder: code,message
     tableName: tbl_localization
   sourceColumns:
-  - name: total
-    label: report.tl.total
-    type: string
-    source: tl
-    total: false
   - name: status
     label: report.tl.status
     type: string
     source: tl
     total: false
+  - name: total
+    label: report.tl.total
+    type: string
+    source: tl
+    total: true
   searchParams:
   - name: fromDate
     label: reports.tl.fromDate
@@ -157,8 +157,8 @@ ReportDefinitions:
     keyOrder: code,message
     tableName: tbl_localization
   sourceColumns:
-  - name: total
-    label: report.tl.total
+  - name: tenantId
+    label: report.tl.tenantId
     type: string
     source: tl
     total: false
@@ -167,6 +167,11 @@ ReportDefinitions:
     type: string
     source: tl
     total: false
+  - name: total
+    label: report.tl.total
+    type: string
+    source: tl
+    total: true
   searchParams:
   - name: fromDate
     label: reports.tl.fromDate
@@ -180,8 +185,9 @@ ReportDefinitions:
     source: tl
     isMandatory: false
     searchClause: AND issueddate <= $toDate
-  query: SELECT COUNT(applicationnumber) as total,message.message as status,tl.tenantId from eg_tl_tradelicense tl LEFT OUTER JOIN message ON split_part(message.code,'_',2) = status AND message.locale = 'en_IN' WHERE 1=1
+  query: SELECT COUNT(applicationnumber) as total,message.message as status,tl.tenantId as tenantId from eg_tl_tradelicense tl LEFT OUTER JOIN message ON split_part(message.code,'_',2) = status AND message.locale = 'en_IN' WHERE 1=1
   groupby: GROUP BY tl.tenantId,message.message
+  orderby: ORDER BY tl.tenantId asc
 
 
 
@@ -258,21 +264,6 @@ ReportDefinitions:
     type: string
     source: tl
     total: false
-  - name: tradeName
-    label: report.tl.tradeName
-    type: string
-    source: tl
-    total: true
-  - name: tradeTypeName
-    label: report.tl.tradetype
-    type: string
-    source: tl
-    total: true
-  - name: acc
-    label: report.tl.accessorycategories
-    type: string
-    source: tl
-    total: false
   - name: name
     label: report.tl.user.name
     type: string
@@ -283,13 +274,23 @@ ReportDefinitions:
     type: string
     source: tl
     total: false
-  - name: totalamount
-    label: report.tl.receipt.totalamount
+  - name: tradeTypeName
+    label: report.tl.tradetype
+    type: string
+    source: tl
+    total: true
+  - name: acc
+    label: report.tl.accessorycategories
     type: string
     source: tl
     total: false
-  - name: tenantId
-    label: report.tl.tenantId
+  - name: tradeName
+    label: report.tl.tradeName
+    type: string
+    source: tl
+    total: false
+  - name: totalamount
+    label: report.tl.receipt.totalamount
     type: string
     source: tl
     total: false

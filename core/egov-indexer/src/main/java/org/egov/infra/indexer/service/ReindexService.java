@@ -90,7 +90,7 @@ public class ReindexService {
 	@Value("${egov.core.index.thread.poll.ms}")
 	private Long indexThreadPollInterval;
 
-	private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(2);
+	private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 
 	public ReindexResponse createReindexJob(ReindexRequest reindexRequest) {
 		Map<String, Mapping> mappingsMap = runner.getMappingMaps();

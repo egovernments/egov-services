@@ -94,7 +94,7 @@ public class LegacyIndexService {
 	@Value("${egov.core.index.thread.poll.ms}")
 	private Long indexThreadPollInterval;
 
-	private ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(2);
+	private ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 
 	public LegacyIndexResponse createLegacyindexJob(LegacyIndexRequest legacyindexRequest) {
 		Map<String, Mapping> mappingsMap = runner.getMappingMaps();

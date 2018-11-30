@@ -4,10 +4,10 @@ import javax.validation.Valid;
 
 import org.egov.IndexerApplicationRunnerImpl;
 import org.egov.infra.indexer.consumer.KafkaConsumerConfig;
+import org.egov.infra.indexer.producer.IndexerProducer;
 import org.egov.infra.indexer.service.IndexerService;
 import org.egov.infra.indexer.service.LegacyIndexService;
 import org.egov.infra.indexer.service.ReindexService;
-import org.egov.infra.indexer.testproducer.IndexerProducer;
 import org.egov.infra.indexer.util.ResponseInfoFactory;
 import org.egov.infra.indexer.validator.Validator;
 import org.egov.infra.indexer.web.contract.ESResponseWrapper;

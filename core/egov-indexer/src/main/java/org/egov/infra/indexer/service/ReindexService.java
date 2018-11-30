@@ -13,21 +13,17 @@ import java.util.concurrent.TimeUnit;
 
 import org.egov.IndexerApplicationRunnerImpl;
 import org.egov.infra.indexer.bulkindexer.BulkIndexer;
-import org.egov.infra.indexer.custom.pgr.models.PGRIndexObject;
-import org.egov.infra.indexer.custom.pgr.models.ServiceResponse;
 import org.egov.infra.indexer.models.IndexJob;
-import org.egov.infra.indexer.models.IndexJobWrapper;
 import org.egov.infra.indexer.models.IndexJob.StatusEnum;
-import org.egov.infra.indexer.testproducer.IndexerProducer;
+import org.egov.infra.indexer.models.IndexJobWrapper;
+import org.egov.infra.indexer.producer.IndexerProducer;
 import org.egov.infra.indexer.util.IndexerUtils;
 import org.egov.infra.indexer.util.ResponseInfoFactory;
 import org.egov.infra.indexer.web.contract.Index;
-import org.egov.infra.indexer.web.contract.LegacyIndexRequest;
-import org.egov.infra.indexer.web.contract.LegacyIndexResponse;
 import org.egov.infra.indexer.web.contract.Mapping;
+import org.egov.infra.indexer.web.contract.Mapping.ConfigKeyEnum;
 import org.egov.infra.indexer.web.contract.ReindexRequest;
 import org.egov.infra.indexer.web.contract.ReindexResponse;
-import org.egov.infra.indexer.web.contract.Mapping.ConfigKeyEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -42,55 +38,60 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 @Slf4j
 public class ReindexService {
-	
+
 	@Autowired
 	private BulkIndexer bulkIndexer;
-	
+
 	@Autowired
 	private IndexerApplicationRunnerImpl runner;
-	
+
 	@Autowired
 	private RestTemplate restTemplate;
-	
+
 	@Autowired
 	private IndexerUtils indexerUtils;
-	
+
 	@Autowired
 	private ResponseInfoFactory factory;
-	
+
 	@Autowired
 	private IndexerProducer indexerProducer;
-	
+
 	@Autowired
 	private IndexerService indexerService;
-	
+
 	@Value("${egov.core.reindex.topic.name}")
 	private String reindexTopic;
-	
+
 	@Value("${egov.core.legacyindex.topic.name}")
 	private String legacyIndexTopic;
-	
+
 	@Value("${egov.indexer.persister.create.topic}")
 	private String persisterCreate;
-	
+
 	@Value("${egov.indexer.persister.update.topic}")
 	private String persisterUpdate;
-	
+
 	@Value("${reindex.pagination.size.default}")
 	private Integer defaultPageSizeForReindex;
-	
+
 	@Value("${legacyindex.pagination.size.default}")
 	private Integer defaultPageSizeForLegacyindex;
-	
+
 	@Value("${egov.service.host}")
 	private String serviceHost;
-	
+
 	@Value("${egov.infra.indexer.host}")
 	private String esHostUrl;
-	
-    private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
-	
-	
+
+	@Value("${egov.core.no.of.index.threads}")
+	private Integer noOfIndexThreads;
+
+	@Value("${egov.core.index.thread.poll.ms}")
+	private Long indexThreadPollInterval;
+
+	private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(2);
+
 	public ReindexResponse createReindexJob(ReindexRequest reindexRequest) {
 		Map<String, Mapping> mappingsMap = runner.getMappingMaps();
 		ReindexResponse reindexResponse = null;
@@ -100,46 +101,53 @@ public class ReindexService {
 		StringBuilder url = new StringBuilder();
 		Index index = mappingsMap.get(reindexRequest.getReindexTopic()).getIndexes().get(0);
 		url.append(esHostUrl).append(index.getName()).append("/").append(index.getType()).append("/_search");
-		reindexResponse = ReindexResponse.builder().totalRecordsToBeIndexed(total).estimatedTime(indexerUtils.fetchEstimatedTime(total))
+		reindexResponse = ReindexResponse.builder().totalRecordsToBeIndexed(total)
+				.estimatedTime(indexerUtils.fetchEstimatedTime(total))
 				.message("Please hit the 'url' for the newly indexed data after the mentioned 'estimated time'.")
 				.url(url.toString())
-				.responseInfo(factory.createResponseInfoFromRequestInfo(reindexRequest.getRequestInfo(), true))
+				.responseInfo(factory.createResponseInfoFromRequestInfo(reindexRequest.getRequestInfo(), true)).build();
+		IndexJob job = IndexJob.builder().jobId(UUID.randomUUID().toString()).jobStatus(StatusEnum.INPROGRESS)
+				.typeOfJob(ConfigKeyEnum.REINDEX).oldIndex(reindexRequest.getIndex() + "/" + reindexRequest.getType())
+				.requesterId(reindexRequest.getRequestInfo().getUserInfo().getUuid())
+				.newIndex(index.getName() + "/" + index.getType()).totalTimeTakenInMS(0L)
+				.tenantId(reindexRequest.getTenantId()).recordsToBeIndexed(total).totalRecordsIndexed(0)
+				.auditDetails(
+						indexerUtils.getAuditDetails(reindexRequest.getRequestInfo().getUserInfo().getUuid(), true))
 				.build();
-		IndexJob job = IndexJob.builder().jobId(UUID.randomUUID().toString()).jobStatus(StatusEnum.INPROGRESS).typeOfJob(ConfigKeyEnum.REINDEX)
-				.oldIndex(reindexRequest.getIndex() + "/" + reindexRequest.getType())
-				.requesterId(reindexRequest.getRequestInfo().getUserInfo().getUuid()).newIndex(index.getName() + "/" + index.getType())
-				.totalTimeTakenInMS(0L).tenantId(reindexRequest.getTenantId()).recordsToBeIndexed(total).totalRecordsIndexed(0)
-				.auditDetails(indexerUtils.getAuditDetails(reindexRequest.getRequestInfo().getUserInfo().getUuid(), true)).build();
-		reindexRequest.setJobId(job.getJobId()); reindexRequest.setStartTime(new Date().getTime()); reindexRequest.setTotalRecords(total);
-		IndexJobWrapper wrapper = IndexJobWrapper.builder().requestInfo(reindexRequest.getRequestInfo()).job(job).build();
+		reindexRequest.setJobId(job.getJobId());
+		reindexRequest.setStartTime(new Date().getTime());
+		reindexRequest.setTotalRecords(total);
+		IndexJobWrapper wrapper = IndexJobWrapper.builder().requestInfo(reindexRequest.getRequestInfo()).job(job)
+				.build();
 		indexerProducer.producer(reindexTopic, reindexRequest);
 		indexerProducer.producer(persisterCreate, wrapper);
 		reindexResponse.setJobId(job.getJobId());
-				
+
 		return reindexResponse;
 	}
-	
+
 	public Boolean beginReindex(ReindexRequest reindexRequest) {
 		reindexInPages(reindexRequest);
 		return true;
 	}
-		
+
 	public void reindexInPages(ReindexRequest reindexRequest) {
 		increaseMaxResultWindow(reindexRequest, reindexRequest.getTotalRecords());
 		String uri = indexerUtils.getESSearchURL(reindexRequest);
 		ObjectMapper mapper = indexerUtils.getObjectMapper();
-		Integer from = 0; Integer size = defaultPageSizeForReindex;
-		while(true) {
+		Integer from = 0;
+		Integer size = defaultPageSizeForReindex;
+		while (true) {
 			Object request = indexerUtils.getESSearchBody(from, size);
 			Object response = bulkIndexer.getESResponse(uri, request, "POST");
-			if(null != response) {
+			if (null != response) {
 				List<Object> hits = JsonPath.read(response, "$.hits.hits");
-				if(CollectionUtils.isEmpty(hits))
+				if (CollectionUtils.isEmpty(hits))
 					break;
 				else {
 					List<Object> modifiedHits = new ArrayList<>();
 					hits.parallelStream().forEach(hit -> {
-						if(!isHitAMetaData(JsonPath.read(hit, "$._source"))) {
+						if (!isHitAMetaData(JsonPath.read(hit, "$._source"))) {
 							modifiedHits.add(JsonPath.read(hit, "$._source"));
 						}
 					});
@@ -148,72 +156,85 @@ public class ReindexService {
 					indexThread(reindexRequest, mapper, requestToReindex);
 					from += defaultPageSizeForReindex;
 				}
-			}else {
+			} else {
 				IndexJob job = IndexJob.builder().jobId(reindexRequest.getJobId())
-						.auditDetails(indexerUtils.getAuditDetails(reindexRequest.getRequestInfo().getUserInfo().getUuid(), false)).totalRecordsIndexed(from)
-						.totalTimeTakenInMS(new Date().getTime() - reindexRequest.getStartTime()).jobStatus(StatusEnum.FAILED).build();
-				IndexJobWrapper wrapper = IndexJobWrapper.builder().requestInfo(reindexRequest.getRequestInfo()).job(job).build();
+						.auditDetails(indexerUtils
+								.getAuditDetails(reindexRequest.getRequestInfo().getUserInfo().getUuid(), false))
+						.totalRecordsIndexed(from)
+						.totalTimeTakenInMS(new Date().getTime() - reindexRequest.getStartTime())
+						.jobStatus(StatusEnum.FAILED).build();
+				IndexJobWrapper wrapper = IndexJobWrapper.builder().requestInfo(reindexRequest.getRequestInfo())
+						.job(job).build();
 				indexerProducer.producer(persisterUpdate, wrapper);
-				log.info("Porcess failed! for data from: "+from+ "and size: "+size);
+				log.info("Porcess failed! for data from: " + from + "and size: " + size);
 				return;
 			}
 			IndexJob job = IndexJob.builder().jobId(reindexRequest.getJobId())
-					.auditDetails(indexerUtils.getAuditDetails(reindexRequest.getRequestInfo().getUserInfo().getUuid(), false))
-					.totalTimeTakenInMS(new Date().getTime() - reindexRequest.getStartTime()).jobStatus(StatusEnum.INPROGRESS).totalRecordsIndexed(from).build();
-			IndexJobWrapper wrapper = IndexJobWrapper.builder().requestInfo(reindexRequest.getRequestInfo()).job(job).build();
+					.auditDetails(indexerUtils.getAuditDetails(reindexRequest.getRequestInfo().getUserInfo().getUuid(),
+							false))
+					.totalTimeTakenInMS(new Date().getTime() - reindexRequest.getStartTime())
+					.jobStatus(StatusEnum.INPROGRESS).totalRecordsIndexed(from).build();
+			IndexJobWrapper wrapper = IndexJobWrapper.builder().requestInfo(reindexRequest.getRequestInfo()).job(job)
+					.build();
 			indexerProducer.producer(persisterUpdate, wrapper);
 		}
 		IndexJob job = IndexJob.builder().jobId(reindexRequest.getJobId())
-				.auditDetails(indexerUtils.getAuditDetails(reindexRequest.getRequestInfo().getUserInfo().getUuid(), false)).totalRecordsIndexed(reindexRequest.getTotalRecords())
-				.totalTimeTakenInMS(new Date().getTime() - reindexRequest.getStartTime()).jobStatus(StatusEnum.COMPLETED).build();
-		IndexJobWrapper wrapper = IndexJobWrapper.builder().requestInfo(reindexRequest.getRequestInfo()).job(job).build();
+				.auditDetails(
+						indexerUtils.getAuditDetails(reindexRequest.getRequestInfo().getUserInfo().getUuid(), false))
+				.totalRecordsIndexed(reindexRequest.getTotalRecords())
+				.totalTimeTakenInMS(new Date().getTime() - reindexRequest.getStartTime())
+				.jobStatus(StatusEnum.COMPLETED).build();
+		IndexJobWrapper wrapper = IndexJobWrapper.builder().requestInfo(reindexRequest.getRequestInfo()).job(job)
+				.build();
 		indexerProducer.producer(persisterUpdate, wrapper);
-		
+
 		log.info("Process completed successfully!");
-		
+
 	}
-	
+
 	public boolean isHitAMetaData(Object hit) {
 		ObjectMapper mapper = indexerUtils.getObjectMapper();
 		boolean isMetaData = false;
 		Map<String, Object> map = mapper.convertValue(hit, Map.class);
 		Set<String> keySet = map.keySet();
-		if(keySet.size() == 2) {
-			if(keySet.contains("from") && keySet.contains("size"))
+		if (keySet.size() == 2) {
+			if (keySet.contains("from") && keySet.contains("size"))
 				isMetaData = true;
 			else {
 				isMetaData = false;
 			}
-		}else {
+		} else {
 			isMetaData = false;
 		}
 		return isMetaData;
 	}
-	
+
 	public void increaseMaxResultWindow(ReindexRequest reindexRequest, Integer totalRecords) {
 		String uri = indexerUtils.getESSettingsURL(reindexRequest);
 		Object body = indexerUtils.getESSettingsBody(totalRecords);
 		Object response = bulkIndexer.getESResponse(uri, body, "PUT");
-		if(response.toString().equals("OK")) {
-			log.info("Max window set to "+(totalRecords + 50000)+" for index: "+reindexRequest.getIndex());
+		if (response.toString().equals("OK")) {
+			log.info("Max window set to " + (totalRecords + 50000) + " for index: " + reindexRequest.getIndex());
 		}
 	}
-	
-	private void indexThread(ReindexRequest reindexRequest, ObjectMapper mapper, Object requestToReindex){
-        final Runnable legacyIndexer = new Runnable() {
-    		boolean threadRun = true;
-                public void run() {
-                	if(threadRun){						
-                		try {
-    						indexerService.elasticIndexer(reindexRequest.getReindexTopic(), mapper.writeValueAsString(requestToReindex));
-					}catch(Exception e) {
+
+	private void indexThread(ReindexRequest reindexRequest, ObjectMapper mapper, Object requestToReindex) {
+		final Runnable legacyIndexer = new Runnable() {
+			boolean threadRun = true;
+
+			public void run() {
+				if (threadRun) {
+					try {
+						indexerService.elasticIndexer(reindexRequest.getReindexTopic(),
+								mapper.writeValueAsString(requestToReindex));
+					} catch (Exception e) {
 						threadRun = false;
 					}
 				}
 				threadRun = false;
-               }
-            };
-         scheduler.schedule(legacyIndexer, 20L, TimeUnit.MILLISECONDS);
+			}
+		};
+		scheduler.schedule(legacyIndexer, indexThreadPollInterval, TimeUnit.MILLISECONDS);
 	}
 
 }

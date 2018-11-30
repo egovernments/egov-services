@@ -10,8 +10,6 @@ import org.egov.infra.indexer.service.ReindexService;
 import org.egov.infra.indexer.util.IndexerUtils;
 import org.egov.infra.indexer.web.contract.LegacyIndexRequest;
 import org.egov.infra.indexer.web.contract.ReindexRequest;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.listener.MessageListener;
@@ -19,10 +17,11 @@ import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-@Service
-public class IndexerMessageListener implements MessageListener<String, String> {
+import lombok.extern.slf4j.Slf4j;
 
-	public static final Logger logger = LoggerFactory.getLogger(IndexerMessageListener.class);
+@Service
+@Slf4j
+public class IndexerMessageListener implements MessageListener<String, String> {
 
 	@Autowired
 	private IndexerService indexerService;
@@ -58,21 +57,21 @@ public class IndexerMessageListener implements MessageListener<String, String> {
 
 	@Override
 	public void onMessage(ConsumerRecord<String, String> data) {
-		logger.info("Topic: " + data.topic());		
+		log.info("Topic: " + data.topic());		
 		ObjectMapper mapper = indexerUtils.getObjectMapper();
 		if (data.topic().equals(reindexTopic)) {
 			try {
 				ReindexRequest reindexRequest = mapper.readValue(data.value(), ReindexRequest.class);
 				reindexService.beginReindex(reindexRequest);
 			} catch (Exception e) {
-				logger.error("Couldn't parse reindex request: ", e);
+				log.error("Couldn't parse reindex request: ", e);
 			}
 		}else if(data.topic().equals(legacyIndexTopic)) {
 			try {
 				LegacyIndexRequest legacyIndexRequest = mapper.readValue(data.value(), LegacyIndexRequest.class);
 				legacyIndexService.beginLegacyIndex(legacyIndexRequest);
 			}catch(Exception e) {
-				logger.error("Couldn't parse legacyindex request: ", e);
+				log.error("Couldn't parse legacyindex request: ", e);
 			}
 			
 		}else if(data.topic().equals(pgrCreateTopic) || data.topic().equals(pgrUpdateTopic)) {
@@ -81,13 +80,13 @@ public class IndexerMessageListener implements MessageListener<String, String> {
 				PGRIndexObject indexObject = pgrCustomDecorator.dataTransformationForPGR(serviceResponse);
 				indexerService.elasticIndexer(data.topic(), mapper.writeValueAsString(indexObject));
 			} catch (Exception e) {
-				logger.error("Couldn't parse pgrindex request: ", e);
+				log.error("Couldn't parse pgrindex request: ", e);
 			}
 		}else {
 			try {
 				indexerService.elasticIndexer(data.topic(), data.value());
 			} catch (Exception e) {
-				logger.error("error while indexing: ", e);
+				log.error("error while indexing: ", e);
 			}
 		}
 	}

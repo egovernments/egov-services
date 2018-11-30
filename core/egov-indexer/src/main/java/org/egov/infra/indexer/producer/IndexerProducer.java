@@ -1,4 +1,4 @@
-package org.egov.infra.indexer.testproducer;
+package org.egov.infra.indexer.producer;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

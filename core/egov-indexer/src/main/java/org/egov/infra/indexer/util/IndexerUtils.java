@@ -27,8 +27,6 @@ import org.egov.mdms.model.MdmsCriteria;
 import org.egov.mdms.model.MdmsCriteriaReq;
 import org.egov.mdms.model.ModuleDetail;
 import org.json.JSONArray;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -41,12 +39,12 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
 
-@Service
-public class IndexerUtils {
-	
-	public static final Logger logger = LoggerFactory.getLogger(IndexerUtils.class);
+import lombok.extern.slf4j.Slf4j;
 
-	
+@Service
+@Slf4j
+public class IndexerUtils {
+		
 	@Autowired
 	private RestTemplate restTemplate;
 	
@@ -77,7 +75,7 @@ public class IndexerUtils {
 	
 	public void orchestrateListenerOnESHealth(){
 		kafkaConsumerConfig.pauseContainer();
-		logger.info("Polling ES....");
+		log.info("Polling ES....");
         final Runnable esPoller = new Runnable() {
     		boolean threadRun = true;
                 public void run() {
@@ -89,10 +87,10 @@ public class IndexerUtils {
         					.append("/_search");
         				response = restTemplate.getForObject(url.toString(), Map.class);
         			}catch(Exception e){
-        				logger.error("ES is DOWN..");
+        				log.error("ES is DOWN..");
         			}
         			if(response != null){
-        				logger.info("ES is UP!");
+        				log.info("ES is UP!");
         				kafkaConsumerConfig.startContainer();
         				threadRun = false;
         			}
@@ -195,11 +193,11 @@ public class IndexerUtils {
 	
 	public String buildFilter(String filter, UriMapping mdmsMppings, String kafkaJson) {
 		String modifiedFilter = mdmsMppings.getFilter();
-		logger.debug("buildfilter, kafkaJson: "+kafkaJson);
+		log.debug("buildfilter, kafkaJson: "+kafkaJson);
 		for(FilterMapping mdmsMapping: mdmsMppings.getFilterMapping()) {
 			Object value = JsonPath.read(kafkaJson, mdmsMapping.getValueJsonpath());
 			if(null == value) {
-				logger.info("MDMS filter, No value found at: "+ mdmsMapping.getValueJsonpath());
+				log.info("MDMS filter, No value found at: "+ mdmsMapping.getValueJsonpath());
 				continue;
 			}else if(value.toString().startsWith("[") && value.toString().endsWith("]")) {
 				value = value.toString().substring(1, value.toString().length() - 1);
@@ -221,7 +219,7 @@ public class IndexerUtils {
 				} 
 			}
 		}catch(Exception e){
-			logger.error("No id found at the given jsonpath: ", e);
+			log.error("No id found at the given jsonpath: ", e);
 			return null;
 		}
 		return id.toString();
@@ -243,7 +241,7 @@ public class IndexerUtils {
 	    		}else if((jsonArray.startsWith("[") && jsonArray.endsWith("]"))){
 	    			kafkaJsonArray = new JSONArray(jsonArray);
 		        }else{
-					logger.info("Invalid request for a json array!");
+					log.info("Invalid request for a json array!");
 					return null;
 		        }
 	        }else{
@@ -256,7 +254,7 @@ public class IndexerUtils {
 				kafkaJsonArray = new JSONArray(jsonArray);
 	        }
         }catch(Exception e){
-        	logger.error("Exception while constructing json array for bulk index: ", e);
+        	log.error("Exception while constructing json array for bulk index: ", e);
         	throw e;
         }
     	return addTimeStamp(index, kafkaJsonArray);
@@ -266,7 +264,7 @@ public class IndexerUtils {
 		if(!StringUtils.isEmpty(finalJson)){
 			doIndexing(finalJson, url.toString(), index);
 		}else{
-			logger.info("Indexing will not be done, please modify the data and retry.");
+			log.info("Indexing will not be done, please modify the data and retry.");
 		}
 	}
 	
@@ -331,8 +329,8 @@ public class IndexerUtils {
 			restTemplate.put(uriForUpdateMapping.toString(), requestTwo, Map.class);
 			return "OK";
 		}catch(Exception e) {
-			logger.error("Updating mapping failed for index: "+index.getName()+" and type: "+index.getType());
-			logger.error("Trace: ", e);
+			log.error("Updating mapping failed for index: "+index.getName()+" and type: "+index.getType());
+			log.error("Trace: ", e);
 			return null;
 		}
 		
@@ -354,16 +352,16 @@ public class IndexerUtils {
 						context.put("$","@timestamp", formatter.format(date));
 						tranformedArray.put(context.jsonString());
 					}catch(Exception e) {
-						logger.error("Exception while adding timestamp: ", e);
-						logger.info("kafkaJsonArray.get(i): "+kafkaJsonArray.get(i));
+						log.error("Exception while adding timestamp: ", e);
+						log.info("kafkaJsonArray.get(i): "+kafkaJsonArray.get(i));
 						continue;
 					}
 				}else {
-					logger.info("null json in kafkaJsonArray, index: "+i);
+					log.info("null json in kafkaJsonArray, index: "+i);
 					continue;
 				}
 			}catch(Exception e) {
-				logger.error("Exception while adding timestamp: ", e);
+				log.error("Exception while adding timestamp: ", e);
 				continue;
 			}
 		}

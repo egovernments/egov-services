@@ -173,8 +173,9 @@ public class LegacyIndexService {
 								threadRun = false;
 								break;
 							} else {
-								List<Object> searchResponse = JsonPath.read(response,
-										legacyIndexRequest.getApiDetails().getResponseJsonPath());
+								log.info("Response: "+response);
+								List<Object> searchResponse = JsonPath.read(response, legacyIndexRequest.getApiDetails().getResponseJsonPath());
+								log.info("Searchresponse: "+searchResponse);
 								if (!CollectionUtils.isEmpty(searchResponse)) {
 									try {
 										if (legacyIndexRequest.getLegacyIndexTopic().equals(pgrLegacyTopic)) {

@@ -10,7 +10,6 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 import org.egov.IndexerApplicationRunnerImpl;
-import org.egov.infra.indexer.bulkindexer.BulkIndexer;
 import org.egov.infra.indexer.custom.pgr.models.PGRCustomDecorator;
 import org.egov.infra.indexer.custom.pgr.models.PGRIndexObject;
 import org.egov.infra.indexer.custom.pgr.models.ServiceResponse;
@@ -81,7 +80,10 @@ public class LegacyIndexService {
 
 	@Value("${egov.indexer.pgr.legacyindex.topic.name}")
 	private String pgrLegacyTopic;
-
+	
+	@Value("${egov.indexer.pt.legacyindex.topic.name}")
+	private String ptLegacyTopic;
+	
 	@Value("${egov.infra.indexer.host}")
 	private String esHostUrl;
 
@@ -94,7 +96,7 @@ public class LegacyIndexService {
 	@Value("${egov.core.index.thread.poll.ms}")
 	private Long indexThreadPollInterval;
 
-	private ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+	private ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(2);
 
 	public LegacyIndexResponse createLegacyindexJob(LegacyIndexRequest legacyindexRequest) {
 		Map<String, Mapping> mappingsMap = runner.getMappingMaps();
@@ -233,12 +235,13 @@ public class LegacyIndexService {
 							ServiceResponse serviceResponse = mapper.readValue(mapper.writeValueAsString(response),
 									ServiceResponse.class);
 							PGRIndexObject indexObject = pgrCustomDecorator.dataTransformationForPGR(serviceResponse);
-							indexerService.elasticIndexer(legacyIndexRequest.getLegacyIndexTopic(),
-									mapper.writeValueAsString(indexObject));
+							indexerService.elasticIndexer(legacyIndexRequest.getLegacyIndexTopic(), mapper.writeValueAsString(indexObject));
 						} else {
-							log.info("Property: "+mapper.writeValueAsString(response));
-//							indexerProducer.producer(legacyIndexRequest.getLegacyIndexTopic(), response);
-							indexerService.elasticIndexer(legacyIndexRequest.getLegacyIndexTopic(), response.toString());
+							if(legacyIndexRequest.getLegacyIndexTopic().equals(ptLegacyTopic)) {
+								indexerProducer.producer(legacyIndexRequest.getLegacyIndexTopic(), response);
+							}else {
+								indexerService.elasticIndexer(legacyIndexRequest.getLegacyIndexTopic(), mapper.writeValueAsString(response));
+							}
 						}
 					} catch (Exception e) {
 						threadRun = false;

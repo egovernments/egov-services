@@ -2,8 +2,8 @@
   "moduleName": "property-upload",
   "Definitions": [
     {
-      "name": "property-create",
-      "templateFileName": "",
+      "name": "property-residential-create",
+      "templateFileName": "property-residential.xlsx",
       "uniqueParentKeys": [],
       "isParentChild": false,
       "requests": [

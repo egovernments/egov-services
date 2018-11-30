@@ -226,25 +226,24 @@ public class IndexerUtils {
 	}
 	
 	public JSONArray constructArrayForBulkIndex(String kafkaJson, Index index, boolean isBulk) throws Exception{
-        String jsonArray = null;
         JSONArray kafkaJsonArray = null;
         ObjectMapper mapper = new ObjectMapper();
         try{
 	    	if(isBulk){
 	    		//Validating if the request is a valid json array.
-				jsonArray = pullArrayOutOfString(kafkaJson);   
 				if(null != index.getJsonPath()){
-		    		if(JsonPath.read(kafkaJson.toString(), index.getJsonPath()) instanceof net.minidev.json.JSONArray){
+		    		if(JsonPath.read(kafkaJson, index.getJsonPath()) instanceof net.minidev.json.JSONArray){
 		    			String inputArray = mapper.writeValueAsString(JsonPath.read(kafkaJson, index.getJsonPath()));
 		    			kafkaJsonArray = new JSONArray(inputArray);
 		    		}
-	    		}else if((jsonArray.startsWith("[") && jsonArray.endsWith("]"))){
-	    			kafkaJsonArray = new JSONArray(jsonArray);
+	    		}else if(pullArrayOutOfString(kafkaJson).startsWith("[") && pullArrayOutOfString(kafkaJson).endsWith("]")){
+	    			kafkaJsonArray = new JSONArray(pullArrayOutOfString(kafkaJson));
 		        }else{
 					log.info("Invalid request for a json array!");
 					return null;
 		        }
 	        }else{
+	        	String jsonArray = null;
 	        	if(null != index.getJsonPath()){
 	        		kafkaJson = mapper.writeValueAsString(JsonPath.read(kafkaJson, index.getJsonPath()));
 		        	jsonArray = "[" + kafkaJson + "]";

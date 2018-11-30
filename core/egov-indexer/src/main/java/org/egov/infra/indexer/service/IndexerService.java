@@ -253,6 +253,7 @@ public class IndexerService {
 			for (UriMapping uriMapping : customJsonMappings.getMdmsMapping()) {
 				Object response = null;
 				StringBuilder uri = new StringBuilder();
+				uri.append(uriMapping.getPath());
 				try {
 					Object request = indexerUtils.prepareMDMSSearchReq(uri, new RequestInfo(), kafkaJson, uriMapping);
 					response = restTemplate.postForObject(uri.toString(), request, Map.class);

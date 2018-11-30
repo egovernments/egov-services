@@ -178,8 +178,8 @@ public class IndexerUtils {
 	 * @return
 	 */
 	public MdmsCriteriaReq prepareMDMSSearchReq(StringBuilder uri, RequestInfo requestInfo, String kafkaJson, UriMapping mdmsMppings) {
-
-		uri.append(mdmsHost).append(mdmsEndpoint);
+		if(uri.toString().length() < 1)
+			uri.append(mdmsHost).append(mdmsEndpoint);
 		String filter = buildFilter(mdmsMppings.getFilter(), mdmsMppings, kafkaJson);
 		MasterDetail masterDetail = org.egov.mdms.model.MasterDetail.builder().name(mdmsMppings.getMasterName()).filter(filter).build();
 		List<MasterDetail> masterDetails = new ArrayList<>();

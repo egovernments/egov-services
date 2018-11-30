@@ -237,9 +237,8 @@ public class LegacyIndexService {
 									mapper.writeValueAsString(indexObject));
 						} else {
 							log.info("Property: "+mapper.writeValueAsString(response));
-							indexerProducer.producer(legacyIndexRequest.getLegacyIndexTopic(), response);
-/*							indexerService.elasticIndexer(legacyIndexRequest.getLegacyIndexTopic(),
-									mapper.writeValueAsString(response));*/
+//							indexerProducer.producer(legacyIndexRequest.getLegacyIndexTopic(), response);
+							indexerService.elasticIndexer(legacyIndexRequest.getLegacyIndexTopic(), response.toString());
 						}
 					} catch (Exception e) {
 						threadRun = false;

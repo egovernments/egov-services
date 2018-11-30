@@ -169,7 +169,7 @@ public class LegacyIndexService {
 					List<Object> searchResponse = JsonPath.read(response,
 							legacyIndexRequest.getApiDetails().getResponseJsonPath());
 					if (!CollectionUtils.isEmpty(searchResponse)) {
-						indexThread(legacyIndexRequest, mapper, searchResponse);
+						indexThread(legacyIndexRequest, mapper, searchResponse.toString());
 						presentCount = searchResponse.size();
 						count += size;
 						log.info("Size of res: " + searchResponse.size() + " and Count: " + count + " and offset: "

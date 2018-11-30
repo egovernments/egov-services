@@ -234,7 +234,7 @@ public class IndexerUtils {
 	    		//Validating if the request is a valid json array.
 				jsonArray = pullArrayOutOfString(kafkaJson);   
 				if(null != index.getJsonPath()){
-		    		if(JsonPath.read(kafkaJson, index.getJsonPath()) instanceof net.minidev.json.JSONArray){
+		    		if(JsonPath.read(kafkaJson.toString(), index.getJsonPath()) instanceof net.minidev.json.JSONArray){
 		    			String inputArray = mapper.writeValueAsString(JsonPath.read(kafkaJson, index.getJsonPath()));
 		    			kafkaJsonArray = new JSONArray(inputArray);
 		    		}
@@ -418,7 +418,7 @@ public class IndexerUtils {
 	
 	public String buildPagedUriForLegacyIndex(APIDetails apiDetails, Integer offset, Integer size) {
 		StringBuilder url = new StringBuilder();
-		if(apiDetails.getUri().contains("http://"))
+		if(apiDetails.getUri().contains("http://") || apiDetails.getUri().contains("https://"))
 			url.append(apiDetails.getUri());
 		else
 			url.append(serviceHost).append(apiDetails.getUri());

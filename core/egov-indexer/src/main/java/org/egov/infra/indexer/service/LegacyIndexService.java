@@ -80,10 +80,10 @@ public class LegacyIndexService {
 
 	@Value("${egov.indexer.pgr.legacyindex.topic.name}")
 	private String pgrLegacyTopic;
-	
+
 	@Value("${egov.indexer.pt.legacyindex.topic.name}")
 	private String ptLegacyTopic;
-	
+
 	@Value("${egov.infra.indexer.host}")
 	private String esHostUrl;
 
@@ -97,6 +97,7 @@ public class LegacyIndexService {
 	private Long indexThreadPollInterval;
 
 	private ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(5);
+	private final ScheduledExecutorService schedulerofChildThreads = Executors.newScheduledThreadPool(5);
 
 	public LegacyIndexResponse createLegacyindexJob(LegacyIndexRequest legacyindexRequest) {
 		Map<String, Mapping> mappingsMap = runner.getMappingMaps();
@@ -136,6 +137,7 @@ public class LegacyIndexService {
 	private void indexThread(LegacyIndexRequest legacyIndexRequest) {
 		final Runnable legacyIndexer = new Runnable() {
 			boolean threadRun = true;
+
 			public void run() {
 				if (threadRun) {
 					log.info("Operation for: " + legacyIndexRequest.getJobId());
@@ -148,7 +150,8 @@ public class LegacyIndexService {
 							: defaultPageSizeForLegacyindex;
 					Boolean isProccessDone = false;
 					while (!isProccessDone) {
-						String uri = indexerUtils.buildPagedUriForLegacyIndex(legacyIndexRequest.getApiDetails(), offset, size);
+						String uri = indexerUtils.buildPagedUriForLegacyIndex(legacyIndexRequest.getApiDetails(),
+								offset, size);
 						Object request = null;
 						try {
 							request = legacyIndexRequest.getApiDetails().getRequest();
@@ -167,39 +170,25 @@ public class LegacyIndexService {
 										.totalRecordsIndexed(count)
 										.totalTimeTakenInMS(new Date().getTime() - legacyIndexRequest.getStartTime())
 										.jobStatus(StatusEnum.FAILED).build();
-								IndexJobWrapper wrapper = IndexJobWrapper.builder().requestInfo(legacyIndexRequest.getRequestInfo())
-										.job(job).build();
+								IndexJobWrapper wrapper = IndexJobWrapper.builder()
+										.requestInfo(legacyIndexRequest.getRequestInfo()).job(job).build();
 								indexerProducer.producer(persisterUpdate, wrapper);
 								threadRun = false;
 								break;
 							} else {
-								List<Object> searchResponse = JsonPath.read(response, legacyIndexRequest.getApiDetails().getResponseJsonPath());
+								List<Object> searchResponse = JsonPath.read(response,
+										legacyIndexRequest.getApiDetails().getResponseJsonPath());
 								if (!CollectionUtils.isEmpty(searchResponse)) {
-									try {
-										if (legacyIndexRequest.getLegacyIndexTopic().equals(pgrLegacyTopic)) {
-											ServiceResponse serviceResponse = mapper.readValue(mapper.writeValueAsString(response),
-													ServiceResponse.class);
-											PGRIndexObject indexObject = pgrCustomDecorator.dataTransformationForPGR(serviceResponse);
-											indexerService.elasticIndexer(legacyIndexRequest.getLegacyIndexTopic(), mapper.writeValueAsString(indexObject));
-										} else {
-											if(legacyIndexRequest.getLegacyIndexTopic().equals(ptLegacyTopic)) {
-												indexerProducer.producer(legacyIndexRequest.getLegacyIndexTopic(), response);
-											}else {
-												indexerService.elasticIndexer(legacyIndexRequest.getLegacyIndexTopic(), mapper.writeValueAsString(response));
-											}
-										}
-									} catch (Exception e) {
-										threadRun = false;
-									}
+									childThreadExecutor(legacyIndexRequest, mapper, response);
 									presentCount = searchResponse.size();
 									count += size;
-									log.info("Size of res: " + searchResponse.size() + " and Count: " + count + " and offset: "
-											+ offset);
+									log.info("Size of res: " + searchResponse.size() + " and Count: " + count
+											+ " and offset: " + offset);
 								} else {
 									log.info("Request: " + request);
 									log.info("URI: " + uri);
-									log.info("Response: "+response);
-									if(count > size) {
+									log.info("Response: " + response);
+									if (count > size) {
 										count = (count - size) + presentCount;
 									}
 									log.info("Size Count FINAL: " + count);
@@ -213,38 +202,38 @@ public class LegacyIndexService {
 							log.info("URI: " + uri);
 							log.error("Exception: ", e);
 							IndexJob job = IndexJob.builder().jobId(legacyIndexRequest.getJobId())
-									.auditDetails(indexerUtils
-											.getAuditDetails(legacyIndexRequest.getRequestInfo().getUserInfo().getUuid(), false))
+									.auditDetails(indexerUtils.getAuditDetails(
+											legacyIndexRequest.getRequestInfo().getUserInfo().getUuid(), false))
 									.totalRecordsIndexed(count)
 									.totalTimeTakenInMS(new Date().getTime() - legacyIndexRequest.getStartTime())
 									.jobStatus(StatusEnum.FAILED).build();
-							IndexJobWrapper wrapper = IndexJobWrapper.builder().requestInfo(legacyIndexRequest.getRequestInfo())
-									.job(job).build();
+							IndexJobWrapper wrapper = IndexJobWrapper.builder()
+									.requestInfo(legacyIndexRequest.getRequestInfo()).job(job).build();
 							indexerProducer.producer(persisterUpdate, wrapper);
 							threadRun = false;
 							break;
 						}
-						
+
 						IndexJob job = IndexJob.builder().jobId(legacyIndexRequest.getJobId())
-								.auditDetails(indexerUtils
-										.getAuditDetails(legacyIndexRequest.getRequestInfo().getUserInfo().getUuid(), false))
+								.auditDetails(indexerUtils.getAuditDetails(
+										legacyIndexRequest.getRequestInfo().getUserInfo().getUuid(), false))
 								.totalTimeTakenInMS(new Date().getTime() - legacyIndexRequest.getStartTime())
 								.jobStatus(StatusEnum.INPROGRESS).totalRecordsIndexed(count).build();
-						IndexJobWrapper wrapper = IndexJobWrapper.builder().requestInfo(legacyIndexRequest.getRequestInfo())
-								.job(job).build();
+						IndexJobWrapper wrapper = IndexJobWrapper.builder()
+								.requestInfo(legacyIndexRequest.getRequestInfo()).job(job).build();
 						indexerProducer.producer(persisterUpdate, wrapper);
 
 						offset += size;
 					}
 					if (isProccessDone) {
 						IndexJob job = IndexJob.builder().jobId(legacyIndexRequest.getJobId())
-								.auditDetails(indexerUtils
-										.getAuditDetails(legacyIndexRequest.getRequestInfo().getUserInfo().getUuid(), false))
+								.auditDetails(indexerUtils.getAuditDetails(
+										legacyIndexRequest.getRequestInfo().getUserInfo().getUuid(), false))
 								.totalRecordsIndexed(count)
 								.totalTimeTakenInMS(new Date().getTime() - legacyIndexRequest.getStartTime())
 								.jobStatus(StatusEnum.COMPLETED).build();
-						IndexJobWrapper wrapper = IndexJobWrapper.builder().requestInfo(legacyIndexRequest.getRequestInfo())
-								.job(job).build();
+						IndexJobWrapper wrapper = IndexJobWrapper.builder()
+								.requestInfo(legacyIndexRequest.getRequestInfo()).job(job).build();
 						indexerProducer.producer(persisterUpdate, wrapper);
 					}
 
@@ -253,6 +242,35 @@ public class LegacyIndexService {
 			}
 		};
 		scheduler.schedule(legacyIndexer, indexThreadPollInterval, TimeUnit.MILLISECONDS);
+	}
+
+	public void childThreadExecutor(LegacyIndexRequest legacyIndexRequest, ObjectMapper mapper, Object response) {
+		final Runnable childThreadJob = new Runnable() {
+			boolean threadRun = true;
+			public void run() {
+				if (threadRun) {									
+					try {
+					if (legacyIndexRequest.getLegacyIndexTopic().equals(pgrLegacyTopic)) {
+						ServiceResponse serviceResponse = mapper.readValue(mapper.writeValueAsString(response),
+								ServiceResponse.class);
+						PGRIndexObject indexObject = pgrCustomDecorator.dataTransformationForPGR(serviceResponse);
+						indexerService.elasticIndexer(legacyIndexRequest.getLegacyIndexTopic(), mapper.writeValueAsString(indexObject));
+					} else {
+						if(legacyIndexRequest.getLegacyIndexTopic().equals(ptLegacyTopic)) {
+							indexerProducer.producer(legacyIndexRequest.getLegacyIndexTopic(), response);
+						}else {
+							indexerService.elasticIndexer(legacyIndexRequest.getLegacyIndexTopic(), mapper.writeValueAsString(response));
+						}
+					}
+				} catch (Exception e) {
+					threadRun = false;
+				}
+				threadRun = false;
+			}
+				threadRun = false;
+			}
+		};
+		schedulerofChildThreads.scheduleAtFixedRate(childThreadJob, 0, indexThreadPollInterval - 10, TimeUnit.MILLISECONDS);
 	}
 
 }

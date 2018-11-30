@@ -134,7 +134,7 @@ public class PropertyCustomUploader {
 		String s3Id = null;
 		try {
 			s3Id = dataUploadService.getFileStoreId(job.getTenantId(), job.getModuleName(), internalFolderPath + File.separator + job.getResponseFilePath());
-		} catch (RestClientException | JsonProcessingException e) {
+		} catch (Exception e) {
 
 			log.error(" upload of the excel sheet failed : ", e);
 

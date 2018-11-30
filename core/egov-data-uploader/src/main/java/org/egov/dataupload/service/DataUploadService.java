@@ -522,6 +522,8 @@ public class DataUploadService {
             }
             logger.error(failureMessage.toString());
             return failureMessage.toString();
+        }catch (Exception e) {
+        	return e.getClass().getSimpleName().concat("--").concat(e.getMessage());
         }
 
     }

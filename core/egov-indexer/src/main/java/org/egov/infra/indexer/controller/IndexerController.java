@@ -5,6 +5,8 @@ import javax.validation.Valid;
 import org.egov.IndexerApplicationRunnerImpl;
 import org.egov.infra.indexer.consumer.KafkaConsumerConfig;
 import org.egov.infra.indexer.service.IndexerService;
+import org.egov.infra.indexer.service.LegacyIndexService;
+import org.egov.infra.indexer.service.ReindexService;
 import org.egov.infra.indexer.testproducer.IndexerProducer;
 import org.egov.infra.indexer.util.ResponseInfoFactory;
 import org.egov.infra.indexer.validator.Validator;
@@ -46,6 +48,12 @@ public class IndexerController {
 	private IndexerService service;
 	
 	@Autowired
+	private ReindexService reindexService;
+	
+	@Autowired
+	private LegacyIndexService legacyIndexService;
+	
+	@Autowired
 	private ResponseInfoFactory factory;
 	
 	@Autowired
@@ -84,7 +92,7 @@ public class IndexerController {
     @ResponseBody
     private ResponseEntity<?> reIndexData(@Valid @RequestBody ReindexRequest reindexRequest){
     	validator.validaterReindexRequest(reindexRequest);
-    	ReindexResponse response = service.createReindexJob(reindexRequest);
+    	ReindexResponse response = reindexService.createReindexJob(reindexRequest);
 		return new ResponseEntity<>(response ,HttpStatus.OK);
 
     }
@@ -93,7 +101,7 @@ public class IndexerController {
     @ResponseBody
     private ResponseEntity<?> legacyIndexData(@Valid @RequestBody LegacyIndexRequest legacyIndexRequest){
     	validator.validaterLegacyindexRequest(legacyIndexRequest);
-    	LegacyIndexResponse response = service.createLegacyindexJob(legacyIndexRequest);
+    	LegacyIndexResponse response = legacyIndexService.createLegacyindexJob(legacyIndexRequest);
 		return new ResponseEntity<>(response ,HttpStatus.OK);
 
     }

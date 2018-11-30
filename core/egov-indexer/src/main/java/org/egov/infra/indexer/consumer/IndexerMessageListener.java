@@ -5,6 +5,8 @@ import org.egov.infra.indexer.custom.pgr.models.PGRCustomDecorator;
 import org.egov.infra.indexer.custom.pgr.models.PGRIndexObject;
 import org.egov.infra.indexer.custom.pgr.models.ServiceResponse;
 import org.egov.infra.indexer.service.IndexerService;
+import org.egov.infra.indexer.service.LegacyIndexService;
+import org.egov.infra.indexer.service.ReindexService;
 import org.egov.infra.indexer.util.IndexerUtils;
 import org.egov.infra.indexer.web.contract.LegacyIndexRequest;
 import org.egov.infra.indexer.web.contract.ReindexRequest;
@@ -29,6 +31,12 @@ public class IndexerMessageListener implements MessageListener<String, String> {
 	private IndexerUtils indexerUtils;
 	
 	@Autowired
+	private ReindexService reindexService;
+	
+	@Autowired
+	private LegacyIndexService legacyIndexService;
+	
+	@Autowired
 	private PGRCustomDecorator pgrCustomDecorator;
 
 	@Value("${egov.core.reindex.topic.name}")
@@ -50,26 +58,24 @@ public class IndexerMessageListener implements MessageListener<String, String> {
 
 	@Override
 	public void onMessage(ConsumerRecord<String, String> data) {
-		logger.info("Topic: " + data.topic());
-		logger.debug("Value: " + data.value());
-		
+		logger.info("Topic: " + data.topic());		
 		ObjectMapper mapper = indexerUtils.getObjectMapper();
 		if (data.topic().equals(reindexTopic)) {
 			try {
 				ReindexRequest reindexRequest = mapper.readValue(data.value(), ReindexRequest.class);
-				indexerService.reindexInPages(reindexRequest);
+				reindexService.beginReindex(reindexRequest);
 			} catch (Exception e) {
 				logger.error("Couldn't parse reindex request: ", e);
 			}
 		}else if(data.topic().equals(legacyIndexTopic)) {
 			try {
 				LegacyIndexRequest legacyIndexRequest = mapper.readValue(data.value(), LegacyIndexRequest.class);
-				indexerService.legacyIndexInPages(legacyIndexRequest);
+				legacyIndexService.beginLegacyIndex(legacyIndexRequest);
 			}catch(Exception e) {
 				logger.error("Couldn't parse legacyindex request: ", e);
 			}
 			
-		}else if(data.topic().equals(pgrCreateTopic) || data.topic().equals(pgrUpdateTopic) || data.topic().equals(pgrLegacyTopic)) {
+		}else if(data.topic().equals(pgrCreateTopic) || data.topic().equals(pgrUpdateTopic)) {
 			try {
 				ServiceResponse serviceResponse = mapper.readValue(data.value(), ServiceResponse.class);
 				PGRIndexObject indexObject = pgrCustomDecorator.dataTransformationForPGR(serviceResponse);

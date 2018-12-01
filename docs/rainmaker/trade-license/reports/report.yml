@@ -157,11 +157,6 @@ ReportDefinitions:
     keyOrder: code,message
     tableName: tbl_localization
   sourceColumns:
-  - name: tenantId
-    label: report.tl.tenantId
-    type: string
-    source: tl
-    total: false
   - name: status
     label: report.tl.status
     type: string
@@ -185,9 +180,8 @@ ReportDefinitions:
     source: tl
     isMandatory: false
     searchClause: AND tl.lastmodifiedtime <= $toDate
-  query: SELECT COUNT(applicationnumber) as total,message.message as status,tl.tenantId as tenantId from eg_tl_tradelicense tl LEFT OUTER JOIN message ON split_part(message.code,'_',2) = status AND message.locale = 'en_IN' WHERE 1=1
+  query: SELECT COUNT(applicationnumber) as total,message.message as status from eg_tl_tradelicense tl LEFT OUTER JOIN message ON split_part(message.code,'_',2) = status AND message.locale = 'en_IN' WHERE 1=1
   groupby: GROUP BY tl.tenantId,message.message
-  orderby: ORDER BY tl.tenantId asc
 
 
 

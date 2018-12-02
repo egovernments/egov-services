@@ -238,6 +238,11 @@ ReportDefinitions:
   version: 1.0.0
   moduleName: rainmaker-tl
   sourceColumns:
+  - name: tenantId
+    label: report.tl.tenantId
+    type: string
+    source: tl
+    total: false
   - name: licensenumber
     label: report.tl.licensenumber
     type: string

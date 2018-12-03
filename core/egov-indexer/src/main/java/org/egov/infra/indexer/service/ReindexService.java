@@ -162,7 +162,6 @@ public class ReindexService {
 								Map<String, Object> requestToReindex = new HashMap<>();
 								requestToReindex.put("hits", modifiedHits);
 								childThreadExecutor(reindexRequest, mapper, requestToReindex);
-								from += defaultPageSizeForReindex;
 							}
 						} else {
 							IndexJob job = IndexJob.builder().jobId(reindexRequest.getJobId())
@@ -187,6 +186,8 @@ public class ReindexService {
 						IndexJobWrapper wrapper = IndexJobWrapper.builder().requestInfo(reindexRequest.getRequestInfo())
 								.job(job).build();
 						indexerProducer.producer(persisterUpdate, wrapper);
+						
+						from += size;
 					}
 					if (isProccessDone) {
 						IndexJob job = IndexJob.builder().jobId(reindexRequest.getJobId())

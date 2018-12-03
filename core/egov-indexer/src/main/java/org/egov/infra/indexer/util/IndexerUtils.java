@@ -254,6 +254,7 @@ public class IndexerUtils {
 	        }
         }catch(Exception e){
         	log.error("Exception while constructing json array for bulk index: ", e);
+        	log.error("Object: "+kafkaJson);
         	throw e;
         }
     	return addTimeStamp(index, kafkaJsonArray);
@@ -264,6 +265,7 @@ public class IndexerUtils {
 			doIndexing(finalJson, url.toString(), index);
 		}else{
 			log.info("Indexing will not be done, please modify the data and retry.");
+        	log.error("Object: "+finalJson);
 		}
 	}
 	

@@ -50,7 +50,7 @@
           "tenantIdPaths": [
             "$.messages.*.tenantId"
           ],
-          "uri": "/localization/messages/v1/_create",
+          "url": "/localization/messages/v1/_create",
           "additionalResFields": null
         }
       ]

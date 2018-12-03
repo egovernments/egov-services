@@ -161,7 +161,7 @@ public class ReindexService {
 								});
 								Map<String, Object> requestToReindex = new HashMap<>();
 								requestToReindex.put("hits", modifiedHits);
-								childThreadExecutor(reindexRequest, mapper, reindexRequest);
+								childThreadExecutor(reindexRequest, mapper, requestToReindex);
 								from += defaultPageSizeForReindex;
 							}
 						} else {

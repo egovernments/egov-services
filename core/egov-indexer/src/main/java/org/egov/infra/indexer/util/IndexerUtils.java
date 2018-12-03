@@ -428,8 +428,9 @@ public class IndexerUtils {
 		offsetKey = null != apiDetails.getPaginationDetails().getOffsetKey() ? apiDetails.getPaginationDetails().getOffsetKey() : "offset";
 		sizeKey = null != apiDetails.getPaginationDetails().getSizeKey() ? apiDetails.getPaginationDetails().getSizeKey() : "size";
 		if(null != apiDetails.getTenantIdForOpenSearch())
-			url.append("?tenantId=").append(apiDetails.getTenantIdForOpenSearch());		
-		url.append("&"+offsetKey+"="+offset).append("&"+sizeKey+"="+size);
+			url.append("?tenantId=").append(apiDetails.getTenantIdForOpenSearch()).append("&"+offsetKey+"="+offset).append("&"+sizeKey+"="+size);
+		else
+		 url.append("?"+offsetKey+"="+offset).append("&"+sizeKey+"="+size);
 		
 		return url.toString();
 	}

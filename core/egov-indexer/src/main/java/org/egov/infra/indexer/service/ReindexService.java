@@ -143,7 +143,7 @@ public class ReindexService {
 					String uri = indexerUtils.getESSearchURL(reindexRequest);
 					ObjectMapper mapper = indexerUtils.getObjectMapper();
 					Integer from = 0;
-					Integer size = defaultPageSizeForReindex;
+					Integer size = null == reindexRequest.getBatchSize() ? defaultPageSizeForReindex : reindexRequest.getBatchSize();
 					while (!isProccessDone) {
 						Object request = indexerUtils.getESSearchBody(from, size);
 						Object response = bulkIndexer.getESResponse(uri, request, "POST");
@@ -179,14 +179,14 @@ public class ReindexService {
 							break;
 						}
 						log.info("Records indexed: "+from);
-/*						IndexJob job = IndexJob.builder().jobId(reindexRequest.getJobId())
+						IndexJob job = IndexJob.builder().jobId(reindexRequest.getJobId())
 								.auditDetails(indexerUtils.getAuditDetails(
 										reindexRequest.getRequestInfo().getUserInfo().getUuid(), false))
 								.totalTimeTakenInMS(new Date().getTime() - reindexRequest.getStartTime())
 								.jobStatus(StatusEnum.INPROGRESS).totalRecordsIndexed(from).build();
 						IndexJobWrapper wrapper = IndexJobWrapper.builder().requestInfo(reindexRequest.getRequestInfo())
 								.job(job).build();
-						indexerProducer.producer(persisterUpdate, wrapper);*/
+						indexerProducer.producer(persisterUpdate, wrapper);
 					}
 					if (isProccessDone) {
 						IndexJob job = IndexJob.builder().jobId(reindexRequest.getJobId())

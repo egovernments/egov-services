@@ -38,6 +38,9 @@ public class ReindexRequest {
 	@JsonProperty("tenantId")
 	public String tenantId;
 	
+	@JsonProperty("batchSize")
+	public Integer batchSize;
+	
 	public String jobId;
 	
 	public Long startTime;

@@ -178,14 +178,15 @@ public class ReindexService {
 							log.info("Porcess failed! for data from: " + from + "and size: " + size);
 							break;
 						}
-						IndexJob job = IndexJob.builder().jobId(reindexRequest.getJobId())
+						log.info("Records indexed: "+from);
+/*						IndexJob job = IndexJob.builder().jobId(reindexRequest.getJobId())
 								.auditDetails(indexerUtils.getAuditDetails(
 										reindexRequest.getRequestInfo().getUserInfo().getUuid(), false))
 								.totalTimeTakenInMS(new Date().getTime() - reindexRequest.getStartTime())
 								.jobStatus(StatusEnum.INPROGRESS).totalRecordsIndexed(from).build();
 						IndexJobWrapper wrapper = IndexJobWrapper.builder().requestInfo(reindexRequest.getRequestInfo())
 								.job(job).build();
-						indexerProducer.producer(persisterUpdate, wrapper);
+						indexerProducer.producer(persisterUpdate, wrapper);*/
 					}
 					if (isProccessDone) {
 						IndexJob job = IndexJob.builder().jobId(reindexRequest.getJobId())

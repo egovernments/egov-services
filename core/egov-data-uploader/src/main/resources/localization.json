@@ -46,7 +46,6 @@
               "$.tenantId"
             ]
           },
-          "isBulkApi": true,
           "arrayPath": "$.messages.*",
           "tenantIdPaths": [
             "$.messages.*.tenantId"

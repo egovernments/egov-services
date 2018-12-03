@@ -17,6 +17,7 @@ import java.util.List;
 
 public class ExceptionUtils {
     private static final Logger logger = LoggerFactory.getLogger(ExceptionUtils.class);
+    private static final String SEND_ERROR_FILTER_RAN = "sendErrorFilter.ran";
 
     private static String getObjectJSONString(Object obj) throws JsonProcessingException {
         return new ObjectMapper().writeValueAsString(obj);
@@ -72,6 +73,8 @@ public class ExceptionUtils {
             body = "{}";
         ctx.setResponseBody(body);
         ctx.remove("error.status_code");
+        ctx.set(SEND_ERROR_FILTER_RAN);
+        ctx.remove("throwable");
     }
 
     public static void RaiseException(Throwable ex) {

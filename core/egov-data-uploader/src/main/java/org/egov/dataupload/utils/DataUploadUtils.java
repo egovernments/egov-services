@@ -331,9 +331,10 @@ public class DataUploadUtils {
 
 	public String getURI(String endPoint){
 		logger.info("endpoint: "+endPoint);
-
-        return businessModuleHost + endPoint;
-
+		if(endPoint.contains("http://") || endPoint.contains("https://"))
+			return endPoint;
+		else
+			return businessModuleHost + endPoint;
 	}
 	
 	public List<List<Object>> filter(List<List<Object>> excelData, List<Integer> indexes, List<Object> row){

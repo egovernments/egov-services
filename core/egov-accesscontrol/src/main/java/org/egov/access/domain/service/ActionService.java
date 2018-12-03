@@ -103,8 +103,11 @@ public class ActionService {
 		List<String> regexUris = new ArrayList<>();
 
 		for(String roleCode : authorizeRequest.getRoleCodes()){
-			uris.addAll(roleActions.get(roleCode).getUris());
-			regexUris.addAll(roleActions.get(roleCode).getRegexUris());
+			if(roleActions.containsKey(roleCode))
+				uris.addAll(roleActions.get(roleCode).getUris());
+
+			if(roleActions.containsKey(roleCode))
+				regexUris.addAll(roleActions.get(roleCode).getRegexUris());
 		}
 
 		boolean isAuthorized = uris.contains(uriToBeAuthorized) || containsRegexUri(regexUris, uriToBeAuthorized);

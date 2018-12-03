@@ -28,7 +28,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
-import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.JsonPath;
@@ -46,9 +45,6 @@ public class ReindexService {
 	private IndexerApplicationRunnerImpl runner;
 
 	@Autowired
-	private RestTemplate restTemplate;
-
-	@Autowired
 	private IndexerUtils indexerUtils;
 
 	@Autowired
@@ -59,7 +55,8 @@ public class ReindexService {
 
 	@Autowired
 	private IndexerService indexerService;
-
+	
+	
 	@Value("${egov.core.reindex.topic.name}")
 	private String reindexTopic;
 
@@ -212,7 +209,7 @@ public class ReindexService {
 			boolean threadRun = true;
 			public void run() {
 				if (threadRun) {
-					try {
+					try {						
 						indexerService.elasticIndexer(reindexRequest.getReindexTopic(),
 								mapper.writeValueAsString(requestToReindex));
 					} catch (Exception e) {

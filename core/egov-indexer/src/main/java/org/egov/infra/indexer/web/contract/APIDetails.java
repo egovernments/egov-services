@@ -22,7 +22,6 @@ public class APIDetails {
 	@JsonProperty("request")
 	public Object request;
 	
-	@NotNull
 	@JsonProperty("tenantIdForOpenSearch")
 	public String tenantIdForOpenSearch;
 

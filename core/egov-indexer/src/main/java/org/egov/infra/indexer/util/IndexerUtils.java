@@ -427,7 +427,9 @@ public class IndexerUtils {
 		String offsetKey = null; String sizeKey = null;
 		offsetKey = null != apiDetails.getPaginationDetails().getOffsetKey() ? apiDetails.getPaginationDetails().getOffsetKey() : "offset";
 		sizeKey = null != apiDetails.getPaginationDetails().getSizeKey() ? apiDetails.getPaginationDetails().getSizeKey() : "size";
-		url.append("?tenantId=").append(apiDetails.getTenantIdForOpenSearch()).append("&"+offsetKey+"="+offset).append("&"+sizeKey+"="+size);
+		if(null != apiDetails.getTenantIdForOpenSearch())
+			url.append("?tenantId=").append(apiDetails.getTenantIdForOpenSearch());		
+		url.append("&"+offsetKey+"="+offset).append("&"+sizeKey+"="+size);
 		
 		return url.toString();
 	}

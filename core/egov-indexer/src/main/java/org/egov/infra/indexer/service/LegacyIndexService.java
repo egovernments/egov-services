@@ -97,7 +97,7 @@ public class LegacyIndexService {
 	private Long indexThreadPollInterval;
 
 	private ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(5);
-	private final ScheduledExecutorService schedulerofChildThreads = Executors.newScheduledThreadPool(5);
+	private final ScheduledExecutorService schedulerofChildThreads = Executors.newScheduledThreadPool(1);
 
 	public LegacyIndexResponse createLegacyindexJob(LegacyIndexRequest legacyindexRequest) {
 		Map<String, Mapping> mappingsMap = runner.getMappingMaps();

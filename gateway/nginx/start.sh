@@ -13,4 +13,5 @@ echo "sub_filter  '<head>' '" >> /etc/nginx/conf.d/sub_filter.conf
 echo "<"/"head>';" >> /etc/nginx/conf.d/sub_filter.conf
 echo "sub_filter_once on;" >> /etc/nginx/conf.d/sub_filter.conf
 fi
+echo "$JAEGER_CREDENTIALS" > /etc/nginx/.jaegerhtpasswd
 nginx -g "daemon off;"

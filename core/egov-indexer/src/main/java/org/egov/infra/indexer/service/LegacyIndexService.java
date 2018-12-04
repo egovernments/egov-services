@@ -205,6 +205,7 @@ public class LegacyIndexService {
 								}
 							}
 						} catch (Exception e) {
+							log.info("JOBFAILED!!! Offset: "+offset+" Size: "+size);
 							log.info("Request: " + request);
 							log.info("URI: " + uri);
 							log.error("Exception: ", e);

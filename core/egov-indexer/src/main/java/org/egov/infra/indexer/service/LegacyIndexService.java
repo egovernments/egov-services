@@ -140,7 +140,7 @@ public class LegacyIndexService {
 
 			public void run() {
 				if (threadRun) {
-					log.info("Operation for: " + legacyIndexRequest.getJobId());
+					log.info("JobStarted: " + legacyIndexRequest.getJobId());
 					ObjectMapper mapper = indexerUtils.getObjectMapper();
 					Integer offset = 0;
 					Integer count = 0;
@@ -178,6 +178,13 @@ public class LegacyIndexService {
 							} else {
 								List<Object> searchResponse = JsonPath.read(response,
 										legacyIndexRequest.getApiDetails().getResponseJsonPath());
+								if(searchResponse.size() < size) {
+									for(long i = 0; i < 10000000; i++) {i = i;}
+									log.info("Retrying Offset: "+offset+" and Size: "+size);
+									response = restTemplate.postForObject(uri, request, Map.class);
+									searchResponse = JsonPath.read(response,
+											legacyIndexRequest.getApiDetails().getResponseJsonPath());
+								}
 								if (!CollectionUtils.isEmpty(searchResponse)) {
 									childThreadExecutor(legacyIndexRequest, mapper, response);
 									presentCount = searchResponse.size();
@@ -270,7 +277,7 @@ public class LegacyIndexService {
 				threadRun = false;
 			}
 		};
-		schedulerofChildThreads.scheduleAtFixedRate(childThreadJob, 0, indexThreadPollInterval + 50, TimeUnit.MILLISECONDS);
+		schedulerofChildThreads.scheduleAtFixedRate(childThreadJob, 0, indexThreadPollInterval + 20, TimeUnit.MILLISECONDS);
 	}
 
 }

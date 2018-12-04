@@ -239,6 +239,7 @@ public class IndexerService {
 					} catch (Exception e) {
 						log.error("Value: " + fieldMapping.getInjsonpath() + " is not found!");
 						log.info("URI: " + uri);
+						documentContext.put(expression, expressionArray[expressionArray.length - 1], null);
 						log.info("context: " + documentContext.jsonString().toString());
 						continue;
 					}
@@ -281,6 +282,7 @@ public class IndexerService {
 					} catch (Exception e) {
 						log.error("Value: " + fieldMapping.getInjsonpath() + " is not found!");
 						log.info("MDMS Request: " + uriMapping.getRequest());
+						documentContext.put(expression, expressionArray[expressionArray.length - 1], null);
 						continue;
 					}
 				}

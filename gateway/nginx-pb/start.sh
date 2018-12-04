@@ -14,4 +14,5 @@ echo "sub_filter_once on;" >> /etc/nginx/conf.d/sub_filter.conf
 fi
 #sed "s#ULB_JS_URL#$ULB_JS_URL#g";"s#TELEMETRY_JS_URL#$ULB_JS_URL#g" /tmp/sub_filter.conf > /etc/nginx/conf.d/sub_filter.conf
 echo "$KIBANA_CREDENTIALS" > /etc/nginx/.htpasswd
+echo "$JAEGER_CREDENTIALS" > /etc/nginx/.jaegerhtpasswd
 nginx -g "daemon off;"

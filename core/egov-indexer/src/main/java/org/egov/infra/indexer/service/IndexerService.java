@@ -265,7 +265,8 @@ public class IndexerService {
 					continue;
 				}
 				if(uriMapping.getModuleName().equals("tenant")) {
-					log.info("ResponseMDMS: " + response + " Request: "+request);
+					log.info("ResponseMDMS: " + JsonPath.read(response,"$.tenant.tenants.*.city.name") + 
+							" Request: "+JsonPath.read(request, "$.MdmsCriteria.moduleDetails.*.masterDetails.*.filter"));
 				}
 				log.debug("Response: " + response + " from the URI: " + uriMapping.getPath());
 				for (FieldMapping fieldMapping : uriMapping.getUriResponseMapping()) {

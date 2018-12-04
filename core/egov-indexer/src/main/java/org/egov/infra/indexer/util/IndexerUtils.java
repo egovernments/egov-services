@@ -203,6 +203,7 @@ public class IndexerUtils {
 			}else if(value.toString().startsWith("[") && value.toString().endsWith("]")) {
 				value = value.toString().substring(1, value.toString().length() - 1);
 			}
+			log.info("Tenant");
 			modifiedFilter = modifiedFilter.replace(mdmsMapping.getVariable(), "'"+value.toString()+"'");
 		}
 		return modifiedFilter;

@@ -254,14 +254,18 @@ public class IndexerService {
 				Object response = null;
 				StringBuilder uri = new StringBuilder();
 				uri.append(uriMapping.getPath());
+				Object request = null;
 				try {
-					Object request = indexerUtils.prepareMDMSSearchReq(uri, new RequestInfo(), kafkaJson, uriMapping);
+					request = indexerUtils.prepareMDMSSearchReq(uri, new RequestInfo(), kafkaJson, uriMapping);
 					response = restTemplate.postForObject(uri.toString(), request, Map.class);
 					if (null == response)
 						continue;
 				} catch (Exception e) {
 					log.error("Exception while trying to hit: " + uri, e);
 					continue;
+				}
+				if(uriMapping.getModuleName().equals("tenant")) {
+					log.info("ResponseMDMS: " + response + " Request: "+request);
 				}
 				log.debug("Response: " + response + " from the URI: " + uriMapping.getPath());
 				for (FieldMapping fieldMapping : uriMapping.getUriResponseMapping()) {

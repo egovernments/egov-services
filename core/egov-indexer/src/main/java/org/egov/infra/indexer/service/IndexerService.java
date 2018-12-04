@@ -263,6 +263,7 @@ public class IndexerService {
 				} catch (Exception e) {
 					log.error("Exception while trying to hit: " + uri, e);
 					log.info("Request: " + uriMapping.getRequest());
+					log.info("context: " + documentContext.jsonString().toString());
 					continue;
 				}
 				log.debug("Response: " + response + " from the URI: " + uriMapping.getPath());

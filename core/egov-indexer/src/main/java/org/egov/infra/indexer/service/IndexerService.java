@@ -262,10 +262,8 @@ public class IndexerService {
 						continue;
 				} catch (Exception e) {
 					log.error("Exception while trying to hit: " + uri, e);
+					log.info("Request: " + uriMapping.getRequest());
 					continue;
-				}
-				if(uriMapping.getModuleName().equals("tenant")) {
-					log.info("ResponseMDMS: " + response + " Request: "+request);
 				}
 				log.debug("Response: " + response + " from the URI: " + uriMapping.getPath());
 				for (FieldMapping fieldMapping : uriMapping.getUriResponseMapping()) {

@@ -108,7 +108,7 @@ public class NomineeControllerTest {
     public void testCreate_forValidRequest() throws Exception {
         List<Nominee> expectedNominees = seedHelper.getNominees();
         ResponseInfo expectedResponseInfo = seedHelper.getResponseInfo();
-        doNothing().when(ValidationUtils.class, "invokeValidator", any(), any(), any());
+        doNothing().when(ValidationUtils.class, "invokeValidator", any(), any(), any(), any());
         doReturn(expectedNominees).when(nomineeService).createAsync(any(NomineeRequest.class));
         doReturn(expectedResponseInfo).when(responseInfoFactory)
                 .createResponseInfoFromRequestInfo(any(RequestInfo.class), any(Boolean.class));
@@ -134,7 +134,7 @@ public class NomineeControllerTest {
         List<Nominee> expectedNominees = seedHelper.getNominees();
         ResponseInfo expectedResponseInfo = seedHelper.getResponseInfo();
 
-        doNothing().when(ValidationUtils.class, "invokeValidator", any(), any(), any());
+        doNothing().when(ValidationUtils.class, "invokeValidator", any(), any(), any(), any());
         doReturn(expectedNominees).when(nomineeService).updateAsync(any(NomineeRequest.class));
         doReturn(expectedResponseInfo).when(responseInfoFactory)
                 .createResponseInfoFromRequestInfo(any(RequestInfo.class), any(Boolean.class));

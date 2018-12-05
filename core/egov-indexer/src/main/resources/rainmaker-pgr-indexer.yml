@@ -12,18 +12,14 @@ ServiceMaps:
       isBulk: true
       jsonPath: $.serviceRequests
       timeStampField: $.auditDetails.createdTime
-      fieldsToBeMasked: ["$.phone"]
+      fieldsToBeMasked: ["$.phone", "$.citizen.mobileNumber", "$.citizen.address", "$.citizen.aadhaarNumber", "$.citizen.pan", "$.citizen.emailId", "$.citizen.password"]
       customJsonMapping:
-        indexMapping: {"PGRIndex":{"serviceRequestId":"serviceRequestId","tenantId":"tenantId","complainCategory":"complainCategory","citizen":{},"firstName":"firstName","lastName":"lastName","phone":"phone","dateOfComplaint":123467891000,"address":"","addressDetail":{},"status":"status","assignee":"assignee","gro":"gro","department":"department","complaintWard":{},"source":"source","description":"","slaHours":"slaHours","tenantData":{},"actionHistory":{},"@timestamp":"timestamp"}}
+        indexMapping: {"PGRIndex":{"serviceRequestId":"serviceRequestId","tenantId":"tenantId","complainCategory":"complainCategory","citizen":{},"phone":"phone","dateOfComplaint":null,"address":"","addressDetail":{},"status":"status","assignee":"assignee","gro":"gro","department":"department","complaintWard":{},"source":"source","description":"","slaHours":"slaHours","tenantData":{},"actionHistory":{},"@timestamp":"timestamp"}}
         fieldMapping:
         - inJsonPath: $.serviceRequestId
           outJsonPath: $.PGRIndex.serviceRequestId
         - inJsonPath: $.tenantId
           outJsonPath: $.PGRIndex.tenantId
-        - inJsonPath: $.firstName
-          outJsonPath: $.PGRIndex.firstName
-        - inJsonPath: $.lastName
-          outJsonPath: $.PGRIndex.lastName
         - inJsonPath: $.phone
           outJsonPath: $.PGRIndex.phone
         - inJsonPath: $.auditDetails.createdTime
@@ -42,6 +38,8 @@ ServiceMaps:
           outJsonPath: $.PGRIndex.source
         - inJsonPath: $.actionHistory
           outJsonPath: $.PGRIndex.actionHistory
+        - inJsonPath: $.citizen
+          outJsonPath: $.PGRIndex.citizen
         - inJsonPath: $.@timestamp
           outJsonPath: $.PGRIndex.@timestamp
         externalUriMapping:
@@ -104,18 +102,14 @@ ServiceMaps:
       isBulk: true
       jsonPath: $.serviceRequests
       timeStampField: $.auditDetails.createdTime
-      fieldsToBeMasked: ["$.phone"]
+      fieldsToBeMasked: ["$.phone", "$.citizen.mobileNumber", "$.citizen.address", "$.citizen.aadhaarNumber", "$.citizen.pan", "$.citizen.emailId", "$.citizen.password"]
       customJsonMapping:
-        indexMapping: {"PGRIndex":{"serviceRequestId":"serviceRequestId","tenantId":"tenantId","complainCategory":"complainCategory","citizen":{},"firstName":"firstName","lastName":"lastName","phone":"phone","dateOfComplaint":123467891000,"address":"","addressDetail":{},"status":"status","assignee":"assignee","gro":"gro","department":"department","complaintWard":{},"source":"source","description":"","slaHours":"slaHours","tenantData":{},"actionHistory":{},"@timestamp":"timestamp"}}
+        indexMapping: {"PGRIndex":{"serviceRequestId":"serviceRequestId","tenantId":"tenantId","complainCategory":"complainCategory","citizen":{},"phone":"phone","dateOfComplaint":null,"address":"","addressDetail":{},"status":"status","assignee":"assignee","gro":"gro","department":"department","complaintWard":{},"source":"source","description":"","slaHours":"slaHours","tenantData":{},"actionHistory":{},"@timestamp":"timestamp"}}
         fieldMapping:
         - inJsonPath: $.serviceRequestId
           outJsonPath: $.PGRIndex.serviceRequestId
         - inJsonPath: $.tenantId
           outJsonPath: $.PGRIndex.tenantId
-        - inJsonPath: $.firstName
-          outJsonPath: $.PGRIndex.firstName
-        - inJsonPath: $.lastName
-          outJsonPath: $.PGRIndex.lastName
         - inJsonPath: $.phone
           outJsonPath: $.PGRIndex.phone
         - inJsonPath: $.auditDetails.createdTime
@@ -134,6 +128,8 @@ ServiceMaps:
           outJsonPath: $.PGRIndex.source
         - inJsonPath: $.actionHistory
           outJsonPath: $.PGRIndex.actionHistory
+        - inJsonPath: $.citizen
+          outJsonPath: $.PGRIndex.citizen
         - inJsonPath: $.@timestamp
           outJsonPath: $.PGRIndex.@timestamp
         externalUriMapping:
@@ -218,19 +214,15 @@ ServiceMaps:
       id: $.serviceRequestId, $.tenantId
       isBulk: true
       jsonPath: $.serviceRequests
-      fieldsToBeMasked: ["$.phone"]
+      fieldsToBeMasked: ["$.phone", "$.citizen.mobileNumber", "$.citizen.address", "$.citizen.aadhaarNumber", "$.citizen.pan", "$.citizen.emailId", "$.citizen.password"]
       timeStampField: $.auditDetails.createdTime
       customJsonMapping:
-        indexMapping: {"PGRIndex":{"serviceRequestId":"serviceRequestId","tenantId":"tenantId","complainCategory":"complainCategory","citizen":{},"firstName":"firstName","lastName":"lastName","phone":"phone","dateOfComplaint":123467891000,"address":"","addressDetail":{},"status":"status","assignee":"assignee","gro":"gro","department":"department","complaintWard":{},"source":"source","description":"","slaHours":"slaHours","tenantData":{},"actionHistory":{},"@timestamp":"timestamp"}}
+        indexMapping: {"PGRIndex":{"serviceRequestId":"serviceRequestId","tenantId":"tenantId","complainCategory":"complainCategory","citizen":{},"phone":"phone","dateOfComplaint":null,"address":"","addressDetail":{},"status":"status","assignee":"assignee","gro":"gro","department":"department","complaintWard":{},"source":"source","description":"","slaHours":"slaHours","tenantData":{},"actionHistory":{},"@timestamp":"timestamp"}}
         fieldMapping:
         - inJsonPath: $.serviceRequestId
           outJsonPath: $.PGRIndex.serviceRequestId
         - inJsonPath: $.tenantId
           outJsonPath: $.PGRIndex.tenantId
-        - inJsonPath: $.firstName
-          outJsonPath: $.PGRIndex.firstName
-        - inJsonPath: $.lastName
-          outJsonPath: $.PGRIndex.lastName
         - inJsonPath: $.phone
           outJsonPath: $.PGRIndex.phone
         - inJsonPath: $.auditDetails.createdTime
@@ -249,6 +241,8 @@ ServiceMaps:
           outJsonPath: $.PGRIndex.source
         - inJsonPath: $.actionHistory
           outJsonPath: $.PGRIndex.actionHistory
+        - inJsonPath: $.citizen
+          outJsonPath: $.PGRIndex.citizen
         - inJsonPath: $.@timestamp
           outJsonPath: $.PGRIndex.@timestamp
         externalUriMapping:

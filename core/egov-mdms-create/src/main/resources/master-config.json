@@ -74,6 +74,13 @@
     }
   },
   "common-masters": {
+    "Ui-Common-Config": {
+      "masterName": "Ui-Common-Config",
+      "moduleDefinition": null,
+      "isStateLevel": true,
+      "uniqueKeys": [
+      ]
+    },
     "Department": {
       "masterName": "Department",
       "moduleDefinition": null,

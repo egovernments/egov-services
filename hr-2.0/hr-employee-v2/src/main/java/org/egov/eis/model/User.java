@@ -63,7 +63,8 @@ import java.util.List;
 public class User {
 
 	private Long id;
-
+	private String uuid;
+	
 	@Size(min=1, max=100)
 	private String userName;
 

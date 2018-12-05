@@ -40,24 +40,31 @@ public class CalculatorController {
 		this.demandService=demandService;
 	}
 
+	/**
+	 * Calulates the tradeLicense fee and creates Demand
+	 * @param calculationReq The calculation Request
+	 * @return Calculation Response
+	 */
 	@RequestMapping(value = "/_calculate", method = RequestMethod.POST)
 	public ResponseEntity<CalculationRes> calculate(@Valid @RequestBody CalculationReq calculationReq) {
 
-		 List<Calculation> calculations = calculationService.calculate(calculationReq.getRequestInfo(),
-				 calculationReq.getCalulationCriteria());
-
-		 CalculationRes calculationRes = CalculationRes.builder().calculation(calculations).build();
-
-		 demandService.generateDemand(calculationReq.getRequestInfo(),calculationRes);
-
+		 List<Calculation> calculations = calculationService.calculate(calculationReq);
+		 CalculationRes calculationRes = CalculationRes.builder().calculations(calculations).build();
 		 return new ResponseEntity<CalculationRes>(calculationRes,HttpStatus.OK);
 	}
 
+
+	/**
+	 * Generates Bill for the given criteria
+	 * @param requestInfoWrapper Wrapper containg the requestInfo
+	 * @param generateBillCriteria The criteria to generate bill
+	 * @return The response of generate bill
+	 */
 	@RequestMapping(value = "/_getbill", method = RequestMethod.POST)
-	public ResponseEntity<BillResponse> getBill(@Valid @RequestBody RequestInfoWrapper requestInfoWrapper,
+	public ResponseEntity<BillAndCalculations> getBill(@Valid @RequestBody RequestInfoWrapper requestInfoWrapper,
 										@ModelAttribute @Valid GenerateBillCriteria generateBillCriteria) {
-		BillResponse response = demandService.getBill(requestInfoWrapper.getRequestInfo(),generateBillCriteria);
-		return new ResponseEntity<BillResponse>(response,HttpStatus.OK);
+		BillAndCalculations response = demandService.getBill(requestInfoWrapper.getRequestInfo(),generateBillCriteria);
+		return new ResponseEntity<BillAndCalculations>(response,HttpStatus.OK);
 	}
 
 }

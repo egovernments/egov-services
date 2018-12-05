@@ -27,7 +27,10 @@ public class CalculationUtils {
     private ObjectMapper mapper;
 
 
-
+    /**
+     * Creates tradeLicense search url based on tenantId and applicationNumber
+     * @return tradeLicense search url
+     */
   private String getTradeLicenseSearchURL(){
       StringBuilder url = new StringBuilder(config.getTradeLicenseHost());
       url.append(config.getTradeLicenseContextPath());
@@ -41,6 +44,11 @@ public class CalculationUtils {
       return url.toString();
   }
 
+
+    /**
+     * Creates demand Search url based on tenanatId,businessService and ConsumerCode
+     * @return demand search url
+     */
     public String getDemandSearchURL(){
         StringBuilder url = new StringBuilder(config.getBillingHost());
         url.append(config.getDemandSearchEndpoint());
@@ -56,6 +64,11 @@ public class CalculationUtils {
         return url.toString();
     }
 
+
+    /**
+     * Creates generate bill url using tenantId,consumerCode and businessService
+     * @return Bill Generate url
+     */
     public String getBillGenerateURI(){
         StringBuilder url = new StringBuilder(config.getBillingHost());
         url.append(config.getBillGenerateEndpoint());
@@ -81,6 +94,13 @@ public class CalculationUtils {
     }
 
 
+    /**
+     * Call tl-services to get tradeLicense for the given applicationNumber and tenantID
+     * @param requestInfo The RequestInfo of the incoming request
+     * @param applicationNumber The applicationNumber whose tradeLicense has to be fetched
+     * @param tenantId The tenantId of the tradeLicense
+     * @return The tradeLicense fo the particular applicationNumber
+     */
     public TradeLicense getTradeLicense(RequestInfo requestInfo, String applicationNumber, String tenantId){
         String url = getTradeLicenseSearchURL();
         url = url.replace("{1}",tenantId).replace("{2}",applicationNumber);

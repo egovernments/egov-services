@@ -3,16 +3,16 @@ package org.egov.tlcalculator.service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.tlcalculator.config.TLCalculatorConfigs;
+import org.egov.tlcalculator.repository.CalculationRepository;
 import org.egov.tlcalculator.repository.DemandRepository;
 import org.egov.tlcalculator.repository.ServiceRequestRepository;
+import org.egov.tlcalculator.repository.builder.CalculationQueryBuilder;
 import org.egov.tlcalculator.utils.CalculationUtils;
 import org.egov.tlcalculator.utils.TLCalculatorConstants;
 import org.egov.tlcalculator.web.models.*;
 import org.egov.tlcalculator.web.models.tradelicense.OwnerInfo;
 import org.egov.tlcalculator.web.models.tradelicense.TradeLicense;
 import org.egov.tlcalculator.web.models.demand.*;
-import org.egov.tlcalculator.web.models.tradelicense.OwnerInfo;
-import org.egov.tlcalculator.web.models.tradelicense.TradeLicense;
 import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -46,11 +46,19 @@ public class DemandService {
     @Autowired
     private MDMSService mdmsService;
 
+    @Autowired
+    private CalculationRepository calculationRepository;
+
+    @Autowired
+    private CalculationQueryBuilder calculationQueryBuilder;
 
 
-
-    public void generateDemand(RequestInfo requestInfo,CalculationRes response){
-        List<Calculation> calculations = response.getCalculation();
+    /**
+     * Creates or updates Demand
+     * @param requestInfo The RequestInfo of the calculation request
+     * @param calculations The Calculation Objects for which demand has to be generated or updated
+     */
+    public void generateDemand(RequestInfo requestInfo,List<Calculation> calculations,Object mdmsData){
 
         //List that will contain Calculation for new demands
         List<Calculation> createCalculations = new LinkedList<>();
@@ -61,7 +69,7 @@ public class DemandService {
         if(!CollectionUtils.isEmpty(calculations)){
             for(Calculation calculation : calculations)
             {
-                    if(CollectionUtils.isEmpty(searchDemand(calculation.getTenantId(),
+                                                                                                                                                                                                            if(CollectionUtils.isEmpty(searchDemand(calculation.getTenantId(),
                             calculation.getTradeLicense().getApplicationNumber(),requestInfo)))
                         createCalculations.add(calculation);
                     else
@@ -69,40 +77,55 @@ public class DemandService {
             }
         }
         if(!CollectionUtils.isEmpty(createCalculations))
-            createDemand(requestInfo,createCalculations);
+            createDemand(requestInfo,createCalculations,mdmsData);
 
         if(!CollectionUtils.isEmpty(updateCalculations))
             updateDemand(requestInfo,updateCalculations);
     }
 
-    public BillResponse getBill(RequestInfo requestInfo,GenerateBillCriteria billCriteria){
-        /* String consumerCode = billCriteria.getConsumerCode();
-         String tenantId = billCriteria.getTenantId();
 
-         List<Demand> demands = searchDemand(tenantId,consumerCode,requestInfo);
-
-         if(CollectionUtils.isEmpty(demands))
-             throw new CustomException("INVALID CONSUMERCODE","No demand exists for this consumer code");*/
-
-        /* //Recalculating using ConsumerCode used as applicationNumber
-         CalulationCriteria calulationCriteria = new CalulationCriteria();
-         calulationCriteria.setApplicationNumber(consumerCode);
-         calulationCriteria.setTenantId(tenantId);
-         List<Calculation> calculations = calculationService.calculate(requestInfo,Collections.singletonList(calulationCriteria));
-
-         //Demand Updated
-         updateDemand(requestInfo,calculations);*/
-
-        /*
-        Put logic for penalty or rebate update here
-         */
-
-         return generateBill(requestInfo,billCriteria);
+    /**
+     * Generates bill
+     * @param requestInfo The RequestInfo of the calculation request
+     * @param billCriteria The criteria for bill generation
+     * @return The generate bill response along with ids of slab used for calculation
+     */
+    public BillAndCalculations getBill(RequestInfo requestInfo, GenerateBillCriteria billCriteria){
+        BillResponse billResponse = generateBill(requestInfo,billCriteria);
+        BillingSlabIds billingSlabIds = getBillingSlabIds(billCriteria);
+        BillAndCalculations getBillResponse = new BillAndCalculations();
+        getBillResponse.setBillingSlabIds(billingSlabIds);
+        getBillResponse.setBillResponse(billResponse);
+        return getBillResponse;
     }
 
 
+    /**
+     * Gets the billingSlabs from the db
+     * @param billCriteria The criteria on which bill has to be generated
+     * @return The billingSlabIds used for calculation
+     */
+    private BillingSlabIds getBillingSlabIds(GenerateBillCriteria billCriteria){
+        List<Object> preparedStmtList = new ArrayList<>();
+        CalculationSearchCriteria criteria = new CalculationSearchCriteria();
+        criteria.setTenantId(billCriteria.getTenantId());
+        criteria.setAplicationNumber(billCriteria.getConsumerCode());
 
-    private List<Demand> createDemand(RequestInfo requestInfo,List<Calculation> calculations){
+        String query = calculationQueryBuilder.getSearchQuery(criteria,preparedStmtList);
+        System.out.println("query: "+query);
+        System.out.println("preparedStatement: "+preparedStmtList);
+        BillingSlabIds billingSlabIds = calculationRepository.getDataFromDB(query,preparedStmtList);
+        return billingSlabIds;
+    }
+
+
+    /**
+     * Creates demand for the given list of calculations
+     * @param requestInfo The RequestInfo of the calculation request
+     * @param calculations List of calculation object
+     * @return Demands that are created
+     */
+    private List<Demand> createDemand(RequestInfo requestInfo,List<Calculation> calculations,Object mdmsData){
         List<Demand> demands = new LinkedList<>();
         for(Calculation calculation : calculations) {
             TradeLicense license = null;
@@ -134,7 +157,7 @@ public class DemandService {
                         .build());
             });
 
-             Map<String,Long> taxPeriods = mdmsService.getTaxPeriods(requestInfo,license);
+             Map<String,Long> taxPeriods = mdmsService.getTaxPeriods(requestInfo,license,mdmsData);
 
             demands.add(Demand.builder()
                     .consumerCode(consumerCode)
@@ -152,6 +175,13 @@ public class DemandService {
     }
 
 
+
+    /**
+     * Updates demand for the given list of calculations
+     * @param requestInfo The RequestInfo of the calculation request
+     * @param calculations List of calculation object
+     * @return Demands that are updated
+     */
     private List<Demand> updateDemand(RequestInfo requestInfo,List<Calculation> calculations){
         List<Demand> demands = new LinkedList<>();
         for(Calculation calculation : calculations) {
@@ -188,6 +218,13 @@ public class DemandService {
     }
 
 
+    /**
+     * Searches demand for the given consumerCode and tenantIDd
+     * @param tenantId The tenantId of the tradeLicense
+     * @param consumerCode The consumerCode of the demand
+     * @param requestInfo The RequestInfo of the incoming request
+     * @return Lis to demands for the given consumerCode
+     */
     private List<Demand> searchDemand(String tenantId,String consumerCode,RequestInfo requestInfo){
         String uri = utils.getDemandSearchURL();
         uri = uri.replace("{1}",tenantId);
@@ -213,7 +250,12 @@ public class DemandService {
     }
 
 
-
+    /**
+     * Generates bill by calling BillingService
+     * @param requestInfo The RequestInfo of the getBill request
+     * @param billCriteria The criteria for bill generation
+     * @return The response of the bill generate
+     */
     private BillResponse generateBill(RequestInfo requestInfo,GenerateBillCriteria billCriteria){
 
         String consumerCode = billCriteria.getConsumerCode();

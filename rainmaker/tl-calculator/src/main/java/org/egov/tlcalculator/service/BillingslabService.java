@@ -12,7 +12,7 @@ import org.egov.common.contract.request.RequestInfo;
 import org.egov.mdms.model.MdmsCriteriaReq;
 import org.egov.tlcalculator.config.BillingSlabConfigs;
 import org.egov.tlcalculator.kafka.broker.TLCalculatorProducer;
-import org.egov.tlcalculator.repository.BillingslabQueryBuilder;
+import org.egov.tlcalculator.repository.builder.BillingslabQueryBuilder;
 import org.egov.tlcalculator.repository.BillingslabRepository;
 import org.egov.tlcalculator.utils.BillingslabConstants;
 import org.egov.tlcalculator.utils.BillingslabUtils;

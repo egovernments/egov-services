@@ -48,11 +48,12 @@ public class TLValidator {
      *  Validate the create Requesr
      * @param request The input TradeLicenseRequest Object
      */
-    public void validateCreate(TradeLicenseRequest request){
-        valideDates(request);
+    public void validateCreate(TradeLicenseRequest request,Object mdmsData){
+        valideDates(request,mdmsData);
         validateInstitution(request);
+        validateDuplicateDocuments(request);
         propertyValidator.validateProperty(request);
-        mdmsValidator.validateMdmsData(request);
+        mdmsValidator.validateMdmsData(request,mdmsData);
     }
 
 
@@ -60,9 +61,9 @@ public class TLValidator {
      *  Validates the fromDate and toDate of the request
      * @param request The input TradeLicenseRequest Object
      */
-    private void valideDates(TradeLicenseRequest request){
+    private void valideDates(TradeLicenseRequest request,Object mdmsData){
         request.getLicenses().forEach(license -> {
-            Map<String,Long> taxPeriods = tradeUtil.getTaxPeriods(request.getRequestInfo(),license);
+            Map<String,Long> taxPeriods = tradeUtil.getTaxPeriods(license,mdmsData);
             if(license.getValidTo()!=null && license.getValidTo()>taxPeriods.get(TLConstants.MDMS_ENDDATE)){
                 Date expiry = new Date(license.getValidTo());
                 throw new CustomException("INVALID TO DATE"," Validto cannot be greater than: "+expiry);
@@ -117,7 +118,7 @@ public class TLValidator {
      *  Validates the update request
      * @param request The input TradeLicenseRequest Object
      */
-    public void validateUpdate(TradeLicenseRequest request){
+    public void validateUpdate(TradeLicenseRequest request,Object mdmsData){
       List<TradeLicense> licenses = request.getLicenses();
 
       Map<String,List<String>> tenantIdToIds= new HashMap<>();
@@ -142,9 +143,10 @@ public class TLValidator {
           throw new CustomException("INVALID UPDATE","The license to be updated is not in database");
 
       validateAllIds(searchResult,licenses);
-      mdmsValidator.validateMdmsData(request);
+      mdmsValidator.validateMdmsData(request,mdmsData);
       validateTradeUnits(request);
-      valideDates(request);
+      valideDates(request,mdmsData);
+      validateDuplicateDocuments(request);
       setFieldsFromSearch(request,searchResult);
    }
 
@@ -431,6 +433,26 @@ public class TLValidator {
         if(criteria.getLimit()!=null && !allowedParams.contains("limit"))
             throw new CustomException("INVALID SEARCH","Search on limit is not allowed");
 
+    }
+
+
+    /**
+     * Validates application documents for duplicates
+     * @param request The tradeLcienseRequest
+     */
+    private void validateDuplicateDocuments(TradeLicenseRequest request){
+        List<String> documentTypes = new LinkedList();
+        request.getLicenses().forEach(license -> {
+            if(license.getTradeLicenseDetail().getApplicationDocuments()!=null){
+                license.getTradeLicenseDetail().getApplicationDocuments().forEach(
+                    document -> {
+                        if(documentTypes.contains(document.getDocumentType()))
+                            throw new CustomException("DUPLICATE_DOCUMENT ERROR","Same document cannot be used multiple times");
+                        else documentTypes.add(document.getDocumentType());
+                    }
+                );
+            }
+        });
     }
 
 

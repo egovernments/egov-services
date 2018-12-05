@@ -1,4 +1,4 @@
-package org.egov.tlcalculator.repository;
+package org.egov.tlcalculator.repository.builder;
 
 import java.util.List;
 
@@ -49,12 +49,12 @@ public class BillingslabQueryBuilder {
 		}
 
 		if (!StringUtils.isEmpty(billingSlabSearcCriteria.getLicenseType())) {
-			queryBuilder.append(" AND licensetype = ?");
+			queryBuilder.append(" AND (licensetype = ? OR licensetype = 'ALL')");
 			preparedStmtList.add(billingSlabSearcCriteria.getLicenseType());
 		}
 
 		if (!StringUtils.isEmpty(billingSlabSearcCriteria.getStructureType())) {
-			queryBuilder.append(" AND structuretype = ?");
+			queryBuilder.append(" AND (structuretype = ? OR structuretype = 'ALL')");
 			preparedStmtList.add(billingSlabSearcCriteria.getStructureType());
 		}
 

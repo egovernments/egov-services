@@ -12,8 +12,8 @@ public class TLCalculatorProducer {
 	
 	/**
 	 * Listener method to push records to kafka queue.
-	 * @param topic
-	 * @param value
+	 * @param topic The kafka topic to push to
+	 * @param value The object to be pushed
 	 */
 	public void push(String topic, Object value) {
 		kafkaTemplate.send(topic, value);

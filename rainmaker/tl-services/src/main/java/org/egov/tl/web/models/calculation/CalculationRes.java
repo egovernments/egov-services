@@ -18,8 +18,8 @@ public class CalculationRes {
 	@Valid
 	private ResponseInfo responseInfo = null;
 
-	@JsonProperty("Calculation")
+	@JsonProperty("Calculations")
 	@Valid
-	private List<Calculation> calculation = null;
+	private List<Calculation> calculations = null;
 
 }

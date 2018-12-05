@@ -13,11 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
+import java.util.*;
 
 
 @Component
@@ -29,11 +25,15 @@ public class MDMSValidator {
 
     private TradeUtil util;
 
+    private ServiceRequestRepository serviceRequestRepository;
+
 
     @Autowired
-    public MDMSValidator(ServiceRequestRepository requestRepository, TradeUtil util) {
+    public MDMSValidator(ServiceRequestRepository requestRepository, TradeUtil util,
+                         ServiceRequestRepository serviceRequestRepository) {
         this.requestRepository = requestRepository;
         this.util = util;
+        this.serviceRequestRepository = serviceRequestRepository;
     }
 
 
@@ -45,21 +45,19 @@ public class MDMSValidator {
      *
      * @param licenseRequest
      */
-    public void validateMdmsData(TradeLicenseRequest licenseRequest) {
+    public void validateMdmsData(TradeLicenseRequest licenseRequest,Object mdmsData) {
 
         Map<String, String> errorMap = new HashMap<>();
 
-        String tenantId = licenseRequest.getLicenses().get(0).getTenantId();
-        RequestInfo requestInfo = licenseRequest.getRequestInfo();
-
-        Map<String, List<String>> masterData = getAttributeValues(tenantId, requestInfo);
-
-        Map<String, List<String>> uomMasterData = getUomMap(tenantId, requestInfo);
-
+        Map<String, List<String>> masterData = getAttributeValues(mdmsData);
+        
         String[] masterArray = { TLConstants.ACCESSORIES_CATEGORY, TLConstants.TRADE_TYPE,
                                  TLConstants.OWNERSHIP_CATEGORY, TLConstants.STRUCTURE_TYPE};
 
         validateIfMasterPresent(masterArray, masterData);
+
+        Map<String,String> tradeTypeUomMap = getTradeTypeUomMap(mdmsData);
+        Map<String,String> accessoryeUomMap = getAccessoryUomMap(mdmsData);
 
         licenseRequest.getLicenses().forEach(license -> {
 
@@ -74,44 +72,40 @@ public class MDMSValidator {
                         + license.getTradeLicenseDetail().getStructureType() + "' does not exists");
 
                license.getTradeLicenseDetail().getTradeUnits().forEach(unit -> {
-                   if (!masterData.get(TLConstants.TRADE_TYPE).contains(unit.getTradeType()))
+                   if (!tradeTypeUomMap.containsKey(unit.getTradeType()))
                     errorMap.put("INVALID TRADETYPE", "The Trade type '" + unit.getTradeType() + "' does not exists");
 
                     if(unit.getUom()!=null){
-                       int index = masterData.get(TLConstants.TRADE_TYPE).indexOf(unit.getTradeType());
-                       if(!unit.getUom().equalsIgnoreCase(uomMasterData.get(TLConstants.TRADE_TYPE).get(index)))
+                       if(!unit.getUom().equalsIgnoreCase(tradeTypeUomMap.get(unit.getTradeType())))
                            errorMap.put("INVALID UOM","The UOM: "+unit.getUom()+" is not valid for tradeType: "+unit.getTradeType());
-                       else if(unit.getUom().equalsIgnoreCase(uomMasterData.get(TLConstants.TRADE_TYPE).get(index))
+                       else if(unit.getUom().equalsIgnoreCase(tradeTypeUomMap.get(unit.getTradeType()))
                                && unit.getUomValue()==null)
                            throw new CustomException("INVALID UOMVALUE","The uomValue cannot be null");
                    }
 
                    else if(unit.getUom()==null){
-                       int index = masterData.get(TLConstants.TRADE_TYPE).indexOf(unit.getTradeType());
-                       if(uomMasterData.get(TLConstants.TRADE_TYPE).get(index)!=null)
+                       if(tradeTypeUomMap.get(unit.getTradeType())!=null)
                            errorMap.put("INVALID UOM","The UOM cannot be null for tradeType: "+unit.getTradeType());
                    }
                 });
 
                if(!CollectionUtils.isEmpty(license.getTradeLicenseDetail().getAccessories())){
                     license.getTradeLicenseDetail().getAccessories().forEach(accessory -> {
-                        if (!masterData.get(TLConstants.ACCESSORIES_CATEGORY).contains(accessory.getAccessoryCategory()))
+                        if (!accessoryeUomMap.containsKey(accessory.getAccessoryCategory()))
                             errorMap.put("INVALID ACCESORRYCATEGORY",
                                     "The Accessory Category '" + accessory.getAccessoryCategory() + "' does not exists");
 
                          if(accessory.getUom()!=null){
-                            int index = masterData.get(TLConstants.ACCESSORIES_CATEGORY).indexOf(accessory.getAccessoryCategory());
-                            if(!accessory.getUom().equalsIgnoreCase(uomMasterData.get(TLConstants.ACCESSORIES_CATEGORY).get(index)))
+                            if(!accessory.getUom().equalsIgnoreCase(accessoryeUomMap.get(accessory.getAccessoryCategory())))
                                 errorMap.put("INVALID UOM","The UOM: "+accessory.getUom()+" is not valid for accessoryCategory: "
                                         +accessory.getAccessoryCategory());
-                            else if(accessory.getUom().equalsIgnoreCase(uomMasterData.get(TLConstants.ACCESSORIES_CATEGORY).get(index))
+                            else if(accessory.getUom().equalsIgnoreCase(accessoryeUomMap.get(accessory.getAccessoryCategory()))
                                     && accessory.getUomValue()==null)
                                 throw new CustomException("INVALID UOMVALUE","The uomValue cannot be null");
                         }
 
                         else if(accessory.getUom()==null){
-                            int index = masterData.get(TLConstants.ACCESSORIES_CATEGORY).indexOf(accessory.getAccessoryCategory());
-                            if(uomMasterData.get(TLConstants.ACCESSORIES_CATEGORY).get(index)!=null)
+                            if(accessoryeUomMap.get(accessory.getAccessoryCategory())!=null)
                                 errorMap.put("INVALID UOM","The UOM cannot be null for tradeType: "+accessory.getAccessoryCategory());
                         }
                     });
@@ -153,25 +147,18 @@ public class MDMSValidator {
      *
      *  will lead to overriding of the earlier one by the latest one added to the map
      *
-     * @param tenantId    tenantId of properties in PropertyRequest
-     * @param requestInfo RequestInfo of the received PropertyRequest
      * @return Map of MasterData name to the list of code in the MasterData
      *
      */
-    private Map<String, List<String>> getAttributeValues(String tenantId, RequestInfo requestInfo) {
+    private Map<String, List<String>> getAttributeValues(Object mdmsData) {
 
         List<String> modulepaths = Arrays.asList(TLConstants.TL_JSONPATH_CODE,
                 TLConstants.COMMON_MASTER_JSONPATH_CODE);
 
-        StringBuilder uri = util.getMdmsSearchUrl();
-        MdmsCriteriaReq criteriaReq = util.getTradeModuleRequest(requestInfo, tenantId);
         final Map<String, List<String>> mdmsResMap = new HashMap<>();
-
-
         modulepaths.forEach( modulepath -> {
             try {
-                Object result = requestRepository.fetchResult(uri, criteriaReq);
-                mdmsResMap.putAll(JsonPath.read(result, modulepath));
+                mdmsResMap.putAll(JsonPath.read(mdmsData, modulepath));
             } catch (Exception e) {
                 log.error("Error while fetvhing MDMS data", e);
                 throw new CustomException(TLConstants.INVALID_TENANT_ID_MDMS_KEY, TLConstants.INVALID_TENANT_ID_MDMS_MSG);
@@ -185,22 +172,17 @@ public class MDMSValidator {
 
     /**
      * Fetches map of UOM to UOMValues
-     * @param tenantId tenantId of the tradeLicense
-     * @param requestInfo The requestInfo of the request
+     * @param mdmsData The MDMS data
      * @return
      */
-    private Map<String, List<String>> getUomMap(String tenantId, RequestInfo requestInfo) {
+    private Map<String, List<String>> getUomMap(Object mdmsData) {
 
         List<String> modulepaths = Arrays.asList(TLConstants.TL_JSONPATH_CODE);
-
-        StringBuilder uri = util.getMdmsSearchUrl();
-        MdmsCriteriaReq criteriaReq = util.getTradeUomRequest(requestInfo, tenantId);
         final Map<String, List<String>> mdmsResMap = new HashMap<>();
 
         modulepaths.forEach( modulepath -> {
             try {
-                Object result = requestRepository.fetchResult(uri, criteriaReq);
-                mdmsResMap.putAll(JsonPath.read(result, modulepath));
+                mdmsResMap.putAll(JsonPath.read(mdmsData, modulepath));
             } catch (Exception e) {
                 log.error("Error while fetvhing MDMS data", e);
                 throw new CustomException(TLConstants.INVALID_TENANT_ID_MDMS_KEY, TLConstants.INVALID_TENANT_ID_MDMS_MSG);
@@ -210,6 +192,39 @@ public class MDMSValidator {
         System.err.println(" the mdms response is : " + mdmsResMap);
         return mdmsResMap;
     }
+
+
+    private Map getTradeTypeUomMap(Object mdmsData){
+
+        List<String> tradeTypes = JsonPath.read(mdmsData,TLConstants.TRADETYPE_JSONPATH_CODE);
+        List<String> tradeTypeUOM = JsonPath.read(mdmsData,TLConstants.TRADETYPE_JSONPATH_UOM);
+
+        Map<String,String> tradeTypeToUOM = new HashMap<>();
+
+        for (int i = 0;i < tradeTypes.size();i++){
+            tradeTypeToUOM.put(tradeTypes.get(i),tradeTypeUOM.get(i));
+        }
+
+        return tradeTypeToUOM;
+    }
+
+
+    private Map getAccessoryUomMap(Object mdmsData){
+
+        List<String> accessories = JsonPath.read(mdmsData,TLConstants.ACCESSORY_JSONPATH_CODE);
+        List<String> accessoryUOM = JsonPath.read(mdmsData,TLConstants.ACCESSORY_JSONPATH_UOM);
+
+        Map<String,String> accessoryToUOM = new HashMap<>();
+
+        for (int i = 0;i < accessories.size();i++){
+            accessoryToUOM.put(accessories.get(i),accessoryUOM.get(i));
+        }
+
+        return accessoryToUOM;
+    }
+
+
+
 
 
 

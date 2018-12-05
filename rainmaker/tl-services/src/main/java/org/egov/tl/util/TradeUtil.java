@@ -11,6 +11,7 @@ import org.egov.tl.config.TLConfiguration;
 import org.egov.tl.repository.ServiceRequestRepository;
 import org.egov.tl.web.models.AuditDetails;
 import org.egov.tl.web.models.TradeLicense;
+import org.egov.tl.web.models.TradeLicenseRequest;
 import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -85,7 +86,7 @@ public class TradeUtil {
      * @param tenantId The tenantId of the tradeLicense
      * @return request to search UOM from MDMS
      */
-    public MdmsCriteriaReq getTradeModuleRequest(RequestInfo requestInfo, String tenantId) {
+    public List<ModuleDetail> getTradeModuleRequest() {
 
         // master details for TL module
         List<MasterDetail> tlMasterDetails = new ArrayList<>();
@@ -93,8 +94,8 @@ public class TradeUtil {
         // filter to only get code field from master data
         final String filterCode = "$.[?(@.active==true)].code";
 
-        tlMasterDetails.add(MasterDetail.builder().name(TRADE_TYPE).filter(filterCode).build());
-        tlMasterDetails.add(MasterDetail.builder().name(ACCESSORIES_CATEGORY).filter(filterCode).build());
+        tlMasterDetails.add(MasterDetail.builder().name(TRADE_TYPE).build());
+        tlMasterDetails.add(MasterDetail.builder().name(ACCESSORIES_CATEGORY).build());
 
         ModuleDetail tlModuleDtls = ModuleDetail.builder().masterDetails(tlMasterDetails)
                 .moduleName(TRADE_LICENSE_MODULE).build();
@@ -106,39 +107,38 @@ public class TradeUtil {
         ModuleDetail commonMasterMDtl = ModuleDetail.builder().masterDetails(commonMasterDetails)
                 .moduleName(COMMON_MASTERS_MODULE).build();
 
-        MdmsCriteria mdmsCriteria = MdmsCriteria.builder().moduleDetails(Arrays.asList(tlModuleDtls,commonMasterMDtl)).tenantId(tenantId)
-                .build();
 
-        return MdmsCriteriaReq.builder().requestInfo(requestInfo).mdmsCriteria(mdmsCriteria).build();
+        /*MdmsCriteria mdmsCriteria = MdmsCriteria.builder().moduleDetails(Arrays.asList(tlModuleDtls,commonMasterMDtl)).tenantId(tenantId)
+                .build();*/
+
+        return Arrays.asList(tlModuleDtls,commonMasterMDtl);
+
     }
 
 
     /**
      * Creates request to search UOM from MDMS
-     * @param requestInfo The requestInfo of the request
-     * @param tenantId The tenantId of the tradeLicense
      * @return request to search UOM from MDMS
      */
-    public MdmsCriteriaReq getTradeUomRequest(RequestInfo requestInfo, String tenantId) {
+    public ModuleDetail getTradeUomRequest() {
 
         // master details for TL module
         List<MasterDetail> tlMasterDetails = new ArrayList<>();
 
         // filter to only get code field from master data
 
-        final String filterCodeForUom = "$.[?(@.active==true)].uom";
 
-        tlMasterDetails.add(MasterDetail.builder().name(TRADE_TYPE).filter(filterCodeForUom).build());
-        tlMasterDetails.add(MasterDetail.builder().name(ACCESSORIES_CATEGORY).filter(filterCodeForUom).build());
+        tlMasterDetails.add(MasterDetail.builder().name(TRADE_TYPE).build());
+        tlMasterDetails.add(MasterDetail.builder().name(ACCESSORIES_CATEGORY).build());
 
         ModuleDetail tlModuleDtls = ModuleDetail.builder().masterDetails(tlMasterDetails)
                 .moduleName(TRADE_LICENSE_MODULE).build();
 
 
-        MdmsCriteria mdmsCriteria = MdmsCriteria.builder().moduleDetails(Collections.singletonList(tlModuleDtls)).tenantId(tenantId)
-                .build();
+        /*MdmsCriteria mdmsCriteria = MdmsCriteria.builder().moduleDetails(Collections.singletonList(tlModuleDtls)).tenantId(tenantId)
+                .build();*/
 
-        return MdmsCriteriaReq.builder().requestInfo(requestInfo).mdmsCriteria(mdmsCriteria).build();
+        return tlModuleDtls;
     }
 
 
@@ -154,18 +154,14 @@ public class TradeUtil {
 
     /**
      * Creates map containing the startTime and endTime of the given tradeLicense
-     * @param requestInfo The requestInfo of the request
      * @param license The create or update TradeLicense request
      * @return Map containing startTime and endTime
      */
-    public Map<String,Long> getTaxPeriods(RequestInfo requestInfo, TradeLicense license){
+    public Map<String,Long> getTaxPeriods(TradeLicense license,Object mdmsData){
         Map<String,Long> taxPeriods = new HashMap<>();
-
-        MdmsCriteriaReq mdmsCriteriaReq = getFinancialYearRequest(requestInfo,license.getTenantId());
         try {
-            Object result = serviceRequestRepository.fetchResult(getMdmsSearchUrl(), mdmsCriteriaReq);
             String jsonPath = TLConstants.MDMS_FINACIALYEAR_PATH.replace("{}",license.getFinancialYear());
-            List<Map<String,Object>> jsonOutput =  JsonPath.read(result, jsonPath);
+            List<Map<String,Object>> jsonOutput =  JsonPath.read(mdmsData, jsonPath);
             Map<String,Object> financialYearProperties = jsonOutput.get(0);
             Object startDate = financialYearProperties.get(TLConstants.MDMS_STARTDATE);
             Object endDate = financialYearProperties.get(TLConstants.MDMS_ENDDATE);
@@ -173,7 +169,7 @@ public class TradeUtil {
             taxPeriods.put(TLConstants.MDMS_ENDDATE,(Long) endDate);
 
         } catch (Exception e) {
-            log.error("Error while fetvhing MDMS data", e);
+            log.error("Error while fetching MDMS data", e);
             throw new CustomException("INVALID FINANCIALYEAR", "No data found for the financialYear: "+license.getFinancialYear());
         }
         return taxPeriods;
@@ -182,11 +178,9 @@ public class TradeUtil {
 
     /**
      * Creates request to search financialYear in mdms
-     * @param requestInfo The requestInfo of the request
-     * @param tenantId The tenantId of the tradeLicense
      * @return MDMS request for financialYear
      */
-    private MdmsCriteriaReq getFinancialYearRequest(RequestInfo requestInfo, String tenantId) {
+    private ModuleDetail getFinancialYearRequest() {
 
         // master details for TL module
         List<MasterDetail> tlMasterDetails = new ArrayList<>();
@@ -201,10 +195,37 @@ public class TradeUtil {
                 .moduleName(TLConstants.MDMS_EGF_MASTER).build();
 
 
-        MdmsCriteria mdmsCriteria = MdmsCriteria.builder().moduleDetails(Collections.singletonList(tlModuleDtls)).tenantId(tenantId)
+  /*      MdmsCriteria mdmsCriteria = MdmsCriteria.builder().moduleDetails(Collections.singletonList(tlModuleDtls)).tenantId(tenantId)
+                .build();*/
+
+        return tlModuleDtls;
+    }
+
+
+    private MdmsCriteriaReq getMDMSRequest(RequestInfo requestInfo,String tenantId){
+        ModuleDetail financialYearRequest = getFinancialYearRequest();
+        List<ModuleDetail> tradeModuleRequest = getTradeModuleRequest();
+
+        List<ModuleDetail> moduleDetails = new LinkedList<>();
+        moduleDetails.add(financialYearRequest);
+        moduleDetails.addAll(tradeModuleRequest);
+
+        MdmsCriteria mdmsCriteria = MdmsCriteria.builder().moduleDetails(moduleDetails).tenantId(tenantId)
                 .build();
 
-        return MdmsCriteriaReq.builder().requestInfo(requestInfo).mdmsCriteria(mdmsCriteria).build();
+        MdmsCriteriaReq mdmsCriteriaReq = MdmsCriteriaReq.builder().mdmsCriteria(mdmsCriteria)
+                .requestInfo(requestInfo).build();
+        return mdmsCriteriaReq;
+    }
+
+
+
+    public Object mDMSCall(TradeLicenseRequest tradeLicenseRequest){
+        RequestInfo requestInfo = tradeLicenseRequest.getRequestInfo();
+        String tenantId = tradeLicenseRequest.getLicenses().get(0).getTenantId();
+        MdmsCriteriaReq mdmsCriteriaReq = getMDMSRequest(requestInfo,tenantId);
+        Object result = serviceRequestRepository.fetchResult(getMdmsSearchUrl(), mdmsCriteriaReq);
+        return result;
     }
 
 

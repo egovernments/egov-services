@@ -37,7 +37,7 @@ public class EnrichmentService {
      * Enriches the incoming createRequest
      * @param tradeLicenseRequest The create request for the tradeLicense
      */
-    public void enrichTLCreateRequest(TradeLicenseRequest tradeLicenseRequest) {
+    public void enrichTLCreateRequest(TradeLicenseRequest tradeLicenseRequest,Object mdmsData) {
         RequestInfo requestInfo = tradeLicenseRequest.getRequestInfo();
         AuditDetails auditDetails = tradeUtil.getAuditDetails(requestInfo.getUserInfo().getUuid(), true);
         tradeLicenseRequest.getLicenses().forEach(tradeLicense -> {
@@ -47,7 +47,7 @@ public class EnrichmentService {
             tradeLicense.getTradeLicenseDetail().setId(UUID.randomUUID().toString());
             tradeLicense.getTradeLicenseDetail().setAuditDetails(auditDetails);
 
-            Map<String,Long> taxPeriods = tradeUtil.getTaxPeriods(requestInfo,tradeLicense);
+            Map<String,Long> taxPeriods = tradeUtil.getTaxPeriods(tradeLicense,mdmsData);
             if(tradeLicense.getValidTo()==null)
                 tradeLicense.setValidTo(taxPeriods.get(TLConstants.MDMS_ENDDATE));
             
@@ -202,13 +202,48 @@ public class EnrichmentService {
     }
 
 
+
     /**
      * Enriches the boundary object in address
      * @param tradeLicenseRequest The create request
      */
     public void enrichBoundary(TradeLicenseRequest tradeLicenseRequest){
-        boundaryService.getAreaType(tradeLicenseRequest,config.getHierarchyTypeCode());
+        List<TradeLicenseRequest> requests = getRequestByTenantId(tradeLicenseRequest);
+        requests.forEach(tenantWiseRequest -> {
+            boundaryService.getAreaType(tenantWiseRequest,config.getHierarchyTypeCode());
+        });
     }
+
+
+    /**
+     *
+     * @param request
+     * @return
+     */
+    private List<TradeLicenseRequest> getRequestByTenantId(TradeLicenseRequest request){
+        List<TradeLicense> licenses = request.getLicenses();
+        RequestInfo requestInfo = request.getRequestInfo();
+
+        Map<String,List<TradeLicense>> tenantIdToProperties = new HashMap<>();
+        if(!CollectionUtils.isEmpty(licenses)){
+            licenses.forEach(license -> {
+                if(tenantIdToProperties.containsKey(license.getTenantId()))
+                    tenantIdToProperties.get(license.getTenantId()).add(license);
+                else{
+                    List<TradeLicense> list = new ArrayList<>();
+                    list.add(license);
+                    tenantIdToProperties.put(license.getTenantId(),list);
+                }
+            });
+        }
+        List<TradeLicenseRequest> requests = new LinkedList<>();
+
+        tenantIdToProperties.forEach((key,value)-> {
+            requests.add(new TradeLicenseRequest(requestInfo,value));
+        });
+        return requests;
+    }
+
 
 
     /**

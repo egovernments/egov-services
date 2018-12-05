@@ -5,27 +5,94 @@ ServiceMaps:
   - topic: save-pt-property
     configKey: INDEX
     indexes:
-    - name: rainmakerptlegacyindex
+    - name: ptlegacyindex
       type: property
       id: $.propertyId, $.tenantId
       isBulk: true
       timeStampField: $.auditDetails.createdTime
       jsonPath: $.Properties.*
+      customJsonMapping:
+        indexMapping: {"PTIndex":{"propertyId":"","tenantId":"","propertyDetails":{},"address":{},"ward":{},"tenantData":{}, "@timetsamp":"timestamp"}}
+        fieldMapping:
+        - inJsonPath: $.propertyId
+          outJsonPath: $.PTIndex.propertyId
+        - inJsonPath: $.tenantId
+          outJsonPath: $.PTIndex.tenantId
+        - inJsonPath: $.propertyDetails
+          outJsonPath: $.PTIndex.propertyDetails
+        - inJsonPath: $.address
+          outJsonPath: $.PTIndex.address
+        - inJsonPath: $.@timestamp
+          outJsonPath: $.PTIndex.@timestamp
+        externalUriMapping:
+        - path: http://egov-location:8080/egov-location/location/v11/boundarys/_search
+          queryParam: hierarchyTypeCode=REVENUE,boundaryType=Block,codes=$.address.locality.code,tenantId=$.tenantId
+          apiRequest: {"RequestInfo": {"apiId": "org.egov.pt","ver": "1.0","ts": 1502890899493,"action": "asd","did": "4354648646","key": "xyz","msgId": "654654", "requesterId": "61",
+          "authToken": "02dbe5be-28df-4d82-954f-3d27c56cca7d","userInfo":{"id":73}}}
+          uriResponseMapping:
+          - inJsonPath: $.TenantBoundary[0].boundary[0]
+            outJsonPath: $.PTIndex.ward
+        mdmsMapping:
+        - path: http://egov-mdms-service:8080/egov-mdms-service/v1/_search
+          moduleName: tenant
+          masterName: tenants
+          tenantId: pb
+          filter: "[?(@.code == $tenant)]"
+          filterMapping:
+          - variable: $tenant
+            valueJsonpath: $.tenantId
+          uriResponseMapping:
+          - inJsonPath: $.MdmsRes.tenant.tenants
+            outJsonPath: $.PTIndex.tenantData
+
 
   - topic: update-pt-property
     configKey: INDEX
     indexes:
-    - name: rainmakerptlegacyindex
+    - name: ptlegacyindex
       type: property
       id: $.propertyId, $.tenantId
       isBulk: true
       timeStampField: $.auditDetails.createdTime
       jsonPath: $.Properties.*
+      customJsonMapping:
+        indexMapping: {"PTIndex":{"propertyId":"","tenantId":"","propertyDetails":{},"address":{},"ward":{},"tenantData":{}, "@timetsamp":"timestamp"}}
+        fieldMapping:
+        - inJsonPath: $.propertyId
+          outJsonPath: $.PTIndex.propertyId
+        - inJsonPath: $.tenantId
+          outJsonPath: $.PTIndex.tenantId
+        - inJsonPath: $.propertyDetails
+          outJsonPath: $.PTIndex.propertyDetails
+        - inJsonPath: $.address
+          outJsonPath: $.PTIndex.address
+        - inJsonPath: $.@timestamp
+          outJsonPath: $.PTIndex.@timestamp
+        externalUriMapping:
+        - path: http://egov-location:8080/egov-location/location/v11/boundarys/_search
+          queryParam: hierarchyTypeCode=REVENUE,boundaryType=Block,codes=$.address.locality.code,tenantId=$.tenantId
+          apiRequest: {"RequestInfo": {"apiId": "org.egov.pt","ver": "1.0","ts": 1502890899493,"action": "asd","did": "4354648646","key": "xyz","msgId": "654654", "requesterId": "61",
+          "authToken": "02dbe5be-28df-4d82-954f-3d27c56cca7d","userInfo":{"id":73}}}
+          uriResponseMapping:
+          - inJsonPath: $.TenantBoundary[0].boundary[0]
+            outJsonPath: $.PTIndex.ward
+        mdmsMapping:
+        - path: http://egov-mdms-service:8080/egov-mdms-service/v1/_search
+          moduleName: tenant
+          masterName: tenants
+          tenantId: pb
+          filter: "[?(@.code == $tenant)]"
+          filterMapping:
+          - variable: $tenant
+            valueJsonpath: $.tenantId
+          uriResponseMapping:
+          - inJsonPath: $.MdmsRes.tenant.tenants
+            outJsonPath: $.PTIndex.tenantData
       
   - topic: pt-property-reindex
     configKey: REINDEX
     indexes:
-    - name: rainmakerptreindex
+    - name: ptreindex
       type: property
       id: $.propertyId, $.tenantId
       isBulk: true
@@ -35,12 +102,45 @@ ServiceMaps:
   - topic: pt-property-legacyindex
     configKey: LEGACYINDEX
     indexes:
-    - name: rainmakerptlegacyindex
+    - name: ptlegacyindex
       type: property
       id: $.propertyId, $.tenantId
       isBulk: true
       timeStampField: $.auditDetails.createdTime
       jsonPath: $.Properties.*
+      customJsonMapping:
+        indexMapping: {"PTIndex":{"propertyId":"","tenantId":"","propertyDetails":{},"address":{},"ward":{},"tenantData":{}, "@timetsamp":"timestamp"}}
+        fieldMapping:
+        - inJsonPath: $.propertyId
+          outJsonPath: $.PTIndex.propertyId
+        - inJsonPath: $.tenantId
+          outJsonPath: $.PTIndex.tenantId
+        - inJsonPath: $.propertyDetails
+          outJsonPath: $.PTIndex.propertyDetails
+        - inJsonPath: $.address
+          outJsonPath: $.PTIndex.address
+        - inJsonPath: $.@timestamp
+          outJsonPath: $.PTIndex.@timestamp
+        externalUriMapping:
+        - path: http://egov-location:8080/egov-location/location/v11/boundarys/_search
+          queryParam: hierarchyTypeCode=REVENUE,boundaryType=Block,codes=$.address.locality.code,tenantId=$.tenantId
+          apiRequest: {"RequestInfo": {"apiId": "org.egov.pt","ver": "1.0","ts": 1502890899493,"action": "asd","did": "4354648646","key": "xyz","msgId": "654654", "requesterId": "61",
+          "authToken": "02dbe5be-28df-4d82-954f-3d27c56cca7d","userInfo":{"id":73}}}
+          uriResponseMapping:
+          - inJsonPath: $.TenantBoundary[0].boundary[0]
+            outJsonPath: $.PTIndex.ward
+        mdmsMapping:
+        - path: http://egov-mdms-service:8080/egov-mdms-service/v1/_search
+          moduleName: tenant
+          masterName: tenants
+          tenantId: pb
+          filter: "[?(@.code == $tenant)]"
+          filterMapping:
+          - variable: $tenant
+            valueJsonpath: $.tenantId
+          uriResponseMapping:
+          - inJsonPath: $.MdmsRes.tenant.tenants
+            outJsonPath: $.PTIndex.tenantData
       
       
 #JOURNEY: rainmakerpt -> rainmakerptlegacyindex

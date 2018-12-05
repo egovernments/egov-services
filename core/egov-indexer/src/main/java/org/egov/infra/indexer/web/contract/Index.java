@@ -1,5 +1,7 @@
 package org.egov.infra.indexer.web.contract;
 
+import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
@@ -36,6 +38,9 @@ public class Index {
 	  
 	  @JsonProperty("timeStampField")
 	  private String timeStampField;
+	  
+	  @JsonProperty("fieldsToBeMasked")
+	  private List<String> fieldsToBeMasked;
 	  
 	  @JsonProperty("customJsonMapping")
 	  public CustomJsonMapping customJsonMapping;

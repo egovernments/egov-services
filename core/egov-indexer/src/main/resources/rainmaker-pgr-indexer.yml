@@ -12,6 +12,7 @@ ServiceMaps:
       isBulk: true
       jsonPath: $.serviceRequests
       timeStampField: $.auditDetails.createdTime
+      fieldsToBeMasked: ["$.phone"]
       customJsonMapping:
         indexMapping: {"PGRIndex":{"serviceRequestId":"serviceRequestId","tenantId":"tenantId","complainCategory":"complainCategory","citizen":{},"firstName":"firstName","lastName":"lastName","phone":"phone","dateOfComplaint":123467891000,"address":"","addressDetail":{},"status":"status","assignee":"assignee","gro":"gro","department":"department","complaintWard":{},"source":"source","description":"","slaHours":"slaHours","tenantData":{},"actionHistory":{},"@timestamp":"timestamp"}}
         fieldMapping:
@@ -103,6 +104,7 @@ ServiceMaps:
       isBulk: true
       jsonPath: $.serviceRequests
       timeStampField: $.auditDetails.createdTime
+      fieldsToBeMasked: ["$.phone"]
       customJsonMapping:
         indexMapping: {"PGRIndex":{"serviceRequestId":"serviceRequestId","tenantId":"tenantId","complainCategory":"complainCategory","citizen":{},"firstName":"firstName","lastName":"lastName","phone":"phone","dateOfComplaint":123467891000,"address":"","addressDetail":{},"status":"status","assignee":"assignee","gro":"gro","department":"department","complaintWard":{},"source":"source","description":"","slaHours":"slaHours","tenantData":{},"actionHistory":{},"@timestamp":"timestamp"}}
         fieldMapping:
@@ -216,6 +218,7 @@ ServiceMaps:
       id: $.serviceRequestId, $.tenantId
       isBulk: true
       jsonPath: $.serviceRequests
+      fieldsToBeMasked: ["$.phone"]
       timeStampField: $.auditDetails.createdTime
       customJsonMapping:
         indexMapping: {"PGRIndex":{"serviceRequestId":"serviceRequestId","tenantId":"tenantId","complainCategory":"complainCategory","citizen":{},"firstName":"firstName","lastName":"lastName","phone":"phone","dateOfComplaint":123467891000,"address":"","addressDetail":{},"status":"status","assignee":"assignee","gro":"gro","department":"department","complaintWard":{},"source":"source","description":"","slaHours":"slaHours","tenantData":{},"actionHistory":{},"@timestamp":"timestamp"}}

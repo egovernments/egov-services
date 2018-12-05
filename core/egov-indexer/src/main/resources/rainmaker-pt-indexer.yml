@@ -12,7 +12,7 @@ ServiceMaps:
       timeStampField: $.auditDetails.createdTime
       jsonPath: $.Properties.*
       customJsonMapping:
-        indexMapping: {"PTIndex":{"propertyId":"","tenantId":"","propertyDetails":{},"address":{},"ward":{},"tenantData":{}, "@timetsamp":"timestamp"}}
+        indexMapping: {"PTIndex":{"propertyId":"","tenantId":"","propertyDetails":{},"address":{},"ward":{},"tenantData":{}, "@timestamp":"timestamp"}}
         fieldMapping:
         - inJsonPath: $.propertyId
           outJsonPath: $.PTIndex.propertyId
@@ -56,7 +56,7 @@ ServiceMaps:
       timeStampField: $.auditDetails.createdTime
       jsonPath: $.Properties.*
       customJsonMapping:
-        indexMapping: {"PTIndex":{"propertyId":"","tenantId":"","propertyDetails":{},"address":{},"ward":{},"tenantData":{}, "@timetsamp":"timestamp"}}
+        indexMapping: {"PTIndex":{"propertyId":"","tenantId":"","propertyDetails":{},"address":{},"ward":{},"tenantData":{}, "@timestamp":"timestamp"}}
         fieldMapping:
         - inJsonPath: $.propertyId
           outJsonPath: $.PTIndex.propertyId
@@ -109,7 +109,7 @@ ServiceMaps:
       timeStampField: $.auditDetails.createdTime
       jsonPath: $.Properties.*
       customJsonMapping:
-        indexMapping: {"PTIndex":{"propertyId":"","tenantId":"","propertyDetails":{},"address":{},"ward":{},"tenantData":{}, "@timetsamp":"timestamp"}}
+        indexMapping: {"PTIndex":{"propertyId":"","tenantId":"","propertyDetails":{},"address":{},"ward":{},"tenantData":{}, "@timestamp":"timestamp"}}
         fieldMapping:
         - inJsonPath: $.propertyId
           outJsonPath: $.PTIndex.propertyId

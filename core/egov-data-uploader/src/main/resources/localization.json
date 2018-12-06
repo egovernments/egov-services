@@ -1,8 +1,8 @@
 {
-  "moduleName": "localization",
+  "moduleName": "Localization",
   "Definitions": [
     {
-      "name": "create-localization-entries",
+      "name": "Upload-Localization-Messages",
       "uniqueParentKeys": [],
       "templateFileName": "localization_template.xls",
       "isParentChild": false,
@@ -51,7 +51,9 @@
             "$.messages.*.tenantId"
           ],
           "url": "http://egov-localization:8080/localization/messages/v1/_create",
-          "additionalResFields": null
+          "additionalResFields":{
+            "Response":"$.messages.*.code"
+          }
         }
       ]
     }

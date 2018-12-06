@@ -39,7 +39,6 @@ public class PGRCustomDecorator {
 	private RestTemplate restTemplate;
 	
 	public PGRIndexObject dataTransformationForPGR(ServiceResponse serviceResponse) {
-		log.info("Modifying data!");
 		PGRIndexObject indexObject = new PGRIndexObject();
 		ObjectMapper mapper = indexerUtils.getObjectMapper();
 		List<ServiceIndexObject> indexObjects = new ArrayList<>();

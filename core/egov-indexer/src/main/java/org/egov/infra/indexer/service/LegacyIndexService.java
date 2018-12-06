@@ -278,7 +278,7 @@ public class LegacyIndexService {
 				threadRun = false;
 			}
 		};
-		schedulerofChildThreads.scheduleAtFixedRate(childThreadJob, 0, indexThreadPollInterval + 20, TimeUnit.MILLISECONDS);
+		schedulerofChildThreads.scheduleAtFixedRate(childThreadJob, 0, indexThreadPollInterval - 10, TimeUnit.MILLISECONDS);
 	}
 
 }

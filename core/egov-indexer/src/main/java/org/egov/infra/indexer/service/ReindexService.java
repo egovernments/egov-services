@@ -151,7 +151,7 @@ public class ReindexService {
 								break;
 							} else {
 								List<Object> modifiedHits = new ArrayList<>();
-								hits.parallelStream().forEach(hit -> {
+								hits.stream().forEach(hit -> {
 									if (!isHitAnInvalidRecord(JsonPath.read(hit, "$._source"))) {
 										modifiedHits.add(JsonPath.read(hit, "$._source"));
 									}

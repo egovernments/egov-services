@@ -41,7 +41,7 @@ public class PTCustomService {
 			StringBuilder uri = new StringBuilder();
 			uri.append(ptHost).append(ptSearchEndPoint).append("?tenantId=").append(property.getTenantId()).append("&propertyId=").append(property.getPropertyId());
 			Map<String, Object> apiRequest = new HashMap<>();
-			apiRequest.put("RequestIndfo", request.getRequestInfo());
+			apiRequest.put("RequestInfo", request.getRequestInfo());
 			try {
 				PropertyResponse response = restTemplate.postForObject(uri.toString(), apiRequest, PropertyResponse.class);
 				if(null != response) {

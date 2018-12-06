@@ -46,7 +46,7 @@ ServiceMaps:
             outJsonPath: $.PTIndex.tenantData
 
 
-  - topic: update-pt-property
+  - topic: update-pt-property-index
     configKey: INDEX
     indexes:
     - name: ptlegacyindex

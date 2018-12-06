@@ -41,6 +41,9 @@ public class Index {
 	  
 	  @JsonProperty("fieldsToBeMasked")
 	  private List<String> fieldsToBeMasked;
+	 
+	  @JsonProperty("typeConfig")
+	  private TypeConfig typeConfig;
 	  
 	  @JsonProperty("customJsonMapping")
 	  public CustomJsonMapping customJsonMapping;

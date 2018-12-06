@@ -152,7 +152,7 @@ public class ReindexService {
 							} else {
 								List<Object> modifiedHits = new ArrayList<>();
 								hits.parallelStream().forEach(hit -> {
-									if (!isHitAMetaData(JsonPath.read(hit, "$._source"))) {
+									if (!isHitAnInvalidRecord(JsonPath.read(hit, "$._source"))) {
 										modifiedHits.add(JsonPath.read(hit, "$._source"));
 									}
 								});
@@ -225,21 +225,30 @@ public class ReindexService {
 
 	}
 
-	public boolean isHitAMetaData(Object hit) {
+	public boolean isHitAnInvalidRecord(Object hit) {
 		ObjectMapper mapper = indexerUtils.getObjectMapper();
-		boolean isMetaData = false;
+		boolean isInvalidRecord = false;
+		if(null == hit) {
+			isInvalidRecord = true;
+			return isInvalidRecord;
+		}else {
+			if(hit.toString().equalsIgnoreCase("null")) {
+				isInvalidRecord = true;
+				return isInvalidRecord;
+			}
+		}
 		Map<String, Object> map = mapper.convertValue(hit, Map.class);
 		Set<String> keySet = map.keySet();
 		if (keySet.size() == 2) {
 			if (keySet.contains("from") && keySet.contains("size"))
-				isMetaData = true;
+				isInvalidRecord = true;
 			else {
-				isMetaData = false;
+				isInvalidRecord = false;
 			}
 		} else {
-			isMetaData = false;
+			isInvalidRecord = false;
 		}
-		return isMetaData;
+		return isInvalidRecord;
 	}
 
 	public void increaseMaxResultWindow(ReindexRequest reindexRequest, Integer totalRecords) {

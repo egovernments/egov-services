@@ -351,15 +351,20 @@ public class IndexerUtils {
 		for (int i = 0; i < kafkaJsonArray.length(); i++) {
 			try {
 				if (null != kafkaJsonArray.get(i)) {
-					DocumentContext context = null;
-					try {
-						context = JsonPath.parse(kafkaJsonArray.get(i).toString());
-						context = maskFields(index, context);
-						context = addTimeStamp(index, context);
-						tranformedArray.put(context.jsonString());
-					} catch (Exception e) {
-						log.error("Exception while transforiming data: ", e);
-						log.info("Data: " + kafkaJsonArray.get(i));
+					if(!kafkaJsonArray.get(i).toString().equals("null")) {
+						DocumentContext context = null;
+						try {
+							context = JsonPath.parse(kafkaJsonArray.get(i).toString());
+							context = maskFields(index, context);
+							context = addTimeStamp(index, context);
+							tranformedArray.put(context.jsonString());
+						} catch (Exception e) {
+							log.error("Exception while transforiming data: ", e);
+							log.info("Data: " + kafkaJsonArray.get(i));
+							continue;
+						}
+					}else {
+						log.info("null json in kafkaJsonArray, index: " + i);
 						continue;
 					}
 				} else {

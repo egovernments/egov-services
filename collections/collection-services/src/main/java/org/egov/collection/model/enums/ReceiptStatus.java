@@ -43,16 +43,42 @@ package org.egov.collection.model.enums;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
+import java.util.HashSet;
+import java.util.Set;
+
 public enum ReceiptStatus {
-    APPROVED("Approved"),REMITTED("Remitted"), APPROVALPENDING("Approval Pending"),
-    REJECTED("Rejected"),CANCELLED("Cancelled"),TOBESUBMITTED("To be Submitted");
+    APPROVED("Approved", Category.OPEN),
+    APPROVALPENDING("Approval Pending",Category.OPEN),
+    TOBESUBMITTED("To be Submitted", Category.OPEN),
+    REJECTED("Rejected", Category.CLOSED),
+    CANCELLED("Cancelled",Category.CLOSED),
+    REMITTED("Remitted", Category.CLOSED),
+	DISHONOURED("Dishonoured", Category.CLOSED);
 
     
 	private String value;
 
-	ReceiptStatus(String value) {
+    private Category category;
+
+	ReceiptStatus(String value, Category category) {
 		this.value = value;
+		this.category = category;
 	}
+
+    public boolean isCategory(Category category) {
+        return this.category == category;
+    }
+
+    public static Set<String> statusesByCategory(Category category) {
+	    Set<String> statuses = new HashSet<>();
+        for (ReceiptStatus b : ReceiptStatus.values()) {
+            if (b.category == category) {
+                statuses.add(b.value);
+            }
+        }
+
+        return statuses;
+    }
 
 	@Override
 	@JsonValue
@@ -68,5 +94,10 @@ public enum ReceiptStatus {
 			}
 		}
 		return null;
+	}
+
+	public enum Category {
+		OPEN,
+		CLOSED;
 	}
 }

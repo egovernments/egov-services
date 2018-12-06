@@ -1,30 +1,22 @@
 package org.egov.collection.web.contract;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.*;
+import lombok.Data;
 import org.egov.common.contract.request.RequestInfo;
 
 import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.util.List;
 
-@Setter
-@Getter
-@ToString
-@Builder
-@EqualsAndHashCode
-@AllArgsConstructor
-@NoArgsConstructor
-public class ReceiptReq {
+@Data
+public class ReceiptWorkflowRequest {
 
-    @NotNull
     @JsonProperty("RequestInfo")
     private RequestInfo requestInfo;
 
-    @NotNull
-    @JsonProperty("Receipt")
+    @JsonProperty("ReceiptWorkflow")
+    @Size(min = 1)
     @Valid
-    private List<Receipt> receipt = null;
-
+    private List<ReceiptWorkflow> receiptWorkflow;
 
 }

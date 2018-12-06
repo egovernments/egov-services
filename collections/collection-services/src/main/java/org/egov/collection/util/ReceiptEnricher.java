@@ -1,41 +1,29 @@
 package org.egov.collection.util;
 
-import static java.util.Objects.isNull;
-
-import java.text.SimpleDateFormat;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
-import java.util.UUID;
-import java.util.stream.Collectors;
-
+import lombok.extern.slf4j.Slf4j;
 import org.egov.collection.model.AuditDetails;
 import org.egov.collection.model.Instrument;
 import org.egov.collection.model.TransactionType;
 import org.egov.collection.model.enums.CollectionType;
 import org.egov.collection.model.enums.InstrumentStatusEnum;
-import org.egov.collection.model.enums.InstrumentTypesEnum;
-import org.egov.collection.model.enums.ReceiptStatus;
 import org.egov.collection.repository.BillingServiceRepository;
 import org.egov.collection.repository.BusinessDetailsRepository;
 import org.egov.collection.repository.IdGenRepository;
 import org.egov.collection.repository.InstrumentRepository;
-import org.egov.collection.web.contract.Bill;
-import org.egov.collection.web.contract.BillAccountDetail;
-import org.egov.collection.web.contract.BillDetail;
-import org.egov.collection.web.contract.BusinessDetailsResponse;
-import org.egov.collection.web.contract.Receipt;
-import org.egov.collection.web.contract.ReceiptReq;
+import org.egov.collection.web.contract.*;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import lombok.extern.slf4j.Slf4j;
+import java.text.SimpleDateFormat;
+import java.util.*;
+import java.util.stream.Collectors;
+
+import static java.util.Objects.isNull;
+import static org.egov.collection.model.enums.InstrumentTypesEnum.*;
+import static org.egov.collection.model.enums.ReceiptStatus.APPROVED;
+import static org.egov.collection.model.enums.ReceiptStatus.REMITTED;
 
 @Service
 @Slf4j
@@ -125,7 +113,7 @@ public class ReceiptEnricher {
 
             validatedBill.getBillDetails().get(i).setManualReceiptDate(billFromRequest.getBillDetails().get(i).getManualReceiptDate());
 
-            if(receipt.getInstrument().getInstrumentType().getName().equalsIgnoreCase(InstrumentTypesEnum.ONLINE.name()))
+            if(receipt.getInstrument().getInstrumentType().getName().equalsIgnoreCase(ONLINE.name()))
                 validatedBill.getBillDetails().get(i).setCollectionType(CollectionType.ONLINE);
             else
                 validatedBill.getBillDetails().get(i).setCollectionType(CollectionType.COUNTER);
@@ -189,10 +177,15 @@ public class ReceiptEnricher {
     public void enrichReceiptPostValidate(ReceiptReq receiptReq){
         Receipt receipt = receiptReq.getReceipt().get(0);
         Bill bill = receipt.getBill().get(0);
+        String instrumentType = receipt.getInstrument().getInstrumentType().getName();
 
         for (BillDetail billDetail : bill.getBillDetails()) {
             billDetail.setId(UUID.randomUUID().toString());
-            billDetail.setStatus(ReceiptStatus.APPROVED.toString());
+
+            if(instrumentType.equalsIgnoreCase(ONLINE.name()) || instrumentType.equalsIgnoreCase(CARD.name()))
+                billDetail.setStatus(REMITTED.toString());
+            else
+                billDetail.setStatus(APPROVED.toString());
 
             String receiptNumber = idGenRepository.generateReceiptNumber(receiptReq.getRequestInfo(), billDetail.getBusinessService() ,
                     billDetail.getTenantId());
@@ -216,22 +209,24 @@ public class ReceiptEnricher {
      */
     private void enrichInstrument(ReceiptReq receiptReq){
         Receipt receipt = receiptReq.getReceipt().get(0);
+        String instrumentType = receipt.getInstrument().getInstrumentType().getName();
+
         Instrument instrument = receipt.getInstrument();
         instrument.setId(UUID.randomUUID().toString());
         instrument.setTransactionType(TransactionType.Debit);
         instrument.setTenantId(receipt.getTenantId());
         instrument.setPayee(receipt.getBill().get(0).getPayeeName());
-        instrument.setInstrumentStatus(InstrumentStatusEnum.NEW);
+
         instrument.setInstrumentDate(instrument.getTransactionDateInput());
 
-        if(instrument.getInstrumentType().getName().equalsIgnoreCase(InstrumentTypesEnum.CASH.name())){
+
+        if(instrumentType.equalsIgnoreCase(CASH.name())){
             String transactionId = idGenRepository.generateTransactionNumber(receiptReq.getRequestInfo(),
                     receipt.getTenantId());
             instrument.setTransactionNumber(transactionId);
         }
 
-        if (instrument.getInstrumentType().getName().equalsIgnoreCase(InstrumentTypesEnum.CASH.name()) || instrument
-                .getInstrumentType().getName().equalsIgnoreCase(InstrumentTypesEnum.CARD.name())) {
+        if (instrumentType.equalsIgnoreCase(CASH.name()) || instrumentType.equalsIgnoreCase(CARD.name())) {
 
             instrument.setTransactionDateInput(new Date().getTime());
             instrument.setTransactionDate(new Date());
@@ -239,6 +234,11 @@ public class ReceiptEnricher {
         } else {
             instrument.setTransactionDate(new Date(instrument.getTransactionDateInput()));
         }
+
+        if(instrumentType.equalsIgnoreCase(ONLINE.name()) || instrumentType.equalsIgnoreCase(CARD.name()))
+            instrument.setInstrumentStatus(InstrumentStatusEnum.DEPOSITED);
+        else
+            instrument.setInstrumentStatus(InstrumentStatusEnum.NEW);
 
         receipt.setTransactionId(instrument.getTransactionNumber());
     }

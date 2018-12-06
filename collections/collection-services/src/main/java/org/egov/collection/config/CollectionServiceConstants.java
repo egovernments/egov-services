@@ -233,4 +233,6 @@ public class CollectionServiceConstants {
 
     public static final String SEARCH_BANKACCOUNT_SERVICE_MAPPING_REQUEST = "Bank account service request is invalid";
 
+    public static final String VOUCHER_HEADER_KEY = "voucherHeader";
+
 }

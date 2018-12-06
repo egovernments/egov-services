@@ -1,6 +1,6 @@
 FROM egovio/apline-jre:8u121
 
-MAINTAINER Senthil<senthil.kalimuthu@tarento.com>
+MAINTAINER Sivaprakash <sivaprakash.ramasamy@tarento.com>
 
 
 # INSTRUCTIONS ON HOW TO BUILD JAR:

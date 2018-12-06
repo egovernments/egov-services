@@ -1,0 +1,67 @@
+{
+  "moduleName": "Collections",
+  "Definitions": [
+    {
+      "name": "Upload-Receipt-Workflow-Data",
+      "uniqueParentKeys": [],
+      "templateFileName": "collection_receipt_workflow_template.xls",
+      "isParentChild": false,
+      "requests": [
+        {
+          "apiRequest": {
+            "ReceiptWorkflow": [
+              {
+                "consumerCode": "PB-TL-2018-11-22-000969",
+                "receiptNumber": "11/2018-19/001562",
+                "action": "REMIT",
+                "reason": "Wrong information",
+                "additionalDetails": {
+                  "temp": ""
+                }
+              }
+            ],
+            "RequestInfo": {
+              "apiId": "Rainmaker",
+              "ver": ".01",
+              "ts": 0,
+              "action": "_create",
+              "did": "1",
+              "key": "",
+              "msgId": "20170310130900|en_IN",
+              "authToken": "8040b93b-03ea-4532-81b7-164538cee9d4",
+              "correlationId": "a2e4642e-8cb5-483b-8ea2-827cbe822c5f",
+              "userInfo": {
+                "id": 1
+              }
+            }
+          },
+          "excelHeadersToRequestMap": {
+            "Consumer Code": [
+              "$.ReceiptWorkflow.*.consumerCode"
+            ],
+            "Receipt Number": [
+              "$.ReceiptWorkflow.*.receiptNumber"
+            ],
+            "Action": [
+              "$.ReceiptWorkflow.*.action"
+            ],
+            "Reason": [
+              "$.ReceiptWorkflow.*.reason"
+            ],
+            "Additional Details": [
+              "$.ReceiptWorkflow.*.additionalDetails"
+            ]
+          },
+          "arrayPath": "$.ReceiptWorkflow.*",
+          "tenantIdPaths": [
+            "$.ReceiptWorkflow.*.tenantId"
+          ],
+          "url": "http://40729362.ngrok.io/collection-services/receipts/_workflow",
+          "additionalResFields": {
+            "$.ReceiptWorkflow.*.code[0]": "Response"
+          }
+        }
+      ]
+    }
+  ]
+}

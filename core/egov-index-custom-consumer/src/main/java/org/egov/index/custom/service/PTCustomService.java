@@ -66,6 +66,7 @@ public class PTCustomService {
 				return;
 			}
 		}
+		log.info("Pushing to consumer: "+request);
 		producer.producer(ptUpdateIndexTopic, request);
 		
 	}

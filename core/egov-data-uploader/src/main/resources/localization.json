@@ -52,7 +52,7 @@
           ],
           "url": "http://egov-localization:8080/localization/messages/v1/_create",
           "additionalResFields":{
-            "Response":"$.messages.*.code"
+            "$.messages.*.code":"Response"
           }
         }
       ]

@@ -59,6 +59,9 @@ public class IndexerMessageListener implements MessageListener<String, String> {
 	public void onMessage(ConsumerRecord<String, String> data) {
 		log.info("Topic: " + data.topic());		
 		ObjectMapper mapper = indexerUtils.getObjectMapper();
+		if(data.topic().equals("update-pt-property-index")) {
+			log.info("Value: "+data.value());
+		}
 		if (data.topic().equals(reindexTopic)) {
 			try {
 				ReindexRequest reindexRequest = mapper.readValue(data.value(), ReindexRequest.class);

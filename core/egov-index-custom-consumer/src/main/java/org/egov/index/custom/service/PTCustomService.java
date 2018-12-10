@@ -47,7 +47,8 @@ public class PTCustomService {
 				if(null != response) {
 					if(!CollectionUtils.isEmpty(response.getProperties())) {
 						property.getPropertyDetails().addAll(response.getProperties().get(0).getPropertyDetails()); //for search on propertyId, always just one property is returned.
-						log.info("Search Response: "+response.toString());
+						property.getAuditDetails().setCreatedTime(response.getProperties().get(0).getAuditDetails().getCreatedTime());
+						property.getAuditDetails().setCreatedBy((response.getProperties().get(0).getAuditDetails().getCreatedBy()));
 					}else {
 						log.info("Zero properties returned from the service!");
 						log.info("Request: "+apiRequest);
@@ -67,7 +68,6 @@ public class PTCustomService {
 				return;
 			}
 		}
-		log.info("Pushing to consumer: "+request.toString());
 		producer.producer(ptUpdateIndexTopic, request);
 		
 	}

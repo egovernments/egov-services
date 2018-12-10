@@ -1,4 +1,5 @@
 
+
 # Changelog
 All notable changes to this module will be documented in this file.
 
@@ -16,8 +17,11 @@ All notable changes to this module will be documented in this file.
 	- Dishonoring of instruments such as Cheque, DD.
 
 ### Changed
-- Search response to include fields such as receiptNumber, consumerCode
+- Receipt Search API
+	- Search response to include fields such as receiptNumber, consumerCode
 at Receipt root for easier access.
+	- Search by multiple receipt status and instrument types.
+
 
 ### Deprecated
 - Receipt status & voucher update via update API in favour of workflow API.

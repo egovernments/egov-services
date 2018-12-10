@@ -39,7 +39,7 @@ public class PTCustomService {
 	public void dataTransformForPTUpdate(PropertyRequest request) {
 		for(Property property: request.getProperties()) {
 			StringBuilder uri = new StringBuilder();
-			uri.append(ptHost).append(ptSearchEndPoint).append("?tenantId=").append(property.getTenantId()).append("&propertyId=").append(property.getPropertyId());
+			uri.append(ptHost).append(ptSearchEndPoint).append("?tenantId=").append(property.getTenantId()).append("&ids=").append(property.getPropertyId());
 			Map<String, Object> apiRequest = new HashMap<>();
 			apiRequest.put("RequestInfo", request.getRequestInfo());
 			try {

@@ -5,12 +5,39 @@ ServiceMaps:
   - topic: egov.collection.receipt-create
     configKey: INDEX
     indexes:
-    - name: egovcollectionslegacyindex
+    - name: collectionslegacyindex
       type: receipts
       id: $.Bill[0].billDetails[0].receiptNumber
       isBulk: true
       timeStampField: $.auditDetails.createdDate
-      jsonPath: $.Receipt
+      jsonPath: $.Receipt.*
+      customJsonMapping:
+        indexMapping: {"CollectionIndex":{"tenantId":"","transactionId":"","Bill":{},"auditDetails":{},"instrument":{},"tenantData":{},"@timestamp":"timestamp"}}
+        fieldMapping:
+        - inJsonPath: $.tenantId
+          outJsonPath: $.CollectionIndex.tenantId
+        - inJsonPath: $.transactionId
+          outJsonPath: $.CollectionIndex.transactionId
+        - inJsonPath: $.Bill
+          outJsonPath: $.CollectionIndex.Bill
+        - inJsonPath: $.auditDetails
+          outJsonPath: $.CollectionIndex.auditDetails
+        - inJsonPath: $.instrument
+          outJsonPath: $.CollectionIndex.instrument
+        - inJsonPath: $.@timestamp
+          outJsonPath: $.CollectionIndex.@timestamp
+        mdmsMapping:
+        - path: http://egov-mdms-service:8080/egov-mdms-service/v1/_search
+          moduleName: tenant
+          masterName: tenants
+          tenantId: pb
+          filter: "[?(@.code == $tenant)]"
+          filterMapping:
+          - variable: $tenant
+            valueJsonpath: $.tenantId
+          uriResponseMapping:
+          - inJsonPath: $.MdmsRes.tenant.tenants
+            outJsonPath: $.CollectionIndex.tenantData
 
   - topic: egov.collection.receipt-create-reindex
     configKey: INDEX
@@ -25,9 +52,36 @@ ServiceMaps:
   - topic: egov.collection.receipt-create-legacyindex
     configKey: INDEX
     indexes:
-    - name: egovcollectionslegacyindex
+    - name: collectionslegacyindex
       type: receipts
       id: $.Bill[0].billDetails[0].receiptNumber
       isBulk: true
       timeStampField: $.auditDetails.createdDate
-      jsonPath: $.Receipt
+      jsonPath: $.Receipt.*
+      customJsonMapping:
+        indexMapping: {"CollectionIndex":{"tenantId":"","transactionId":"","Bill":{},"auditDetails":{},"instrument":{},"tenantData":{},"@timestamp":"timestamp"}}
+        fieldMapping:
+        - inJsonPath: $.tenantId
+          outJsonPath: $.CollectionIndex.tenantId
+        - inJsonPath: $.transactionId
+          outJsonPath: $.CollectionIndex.transactionId
+        - inJsonPath: $.Bill
+          outJsonPath: $.CollectionIndex.Bill
+        - inJsonPath: $.auditDetails
+          outJsonPath: $.CollectionIndex.auditDetails
+        - inJsonPath: $.instrument
+          outJsonPath: $.CollectionIndex.instrument
+        - inJsonPath: $.@timestamp
+          outJsonPath: $.CollectionIndex.@timestamp
+        mdmsMapping:
+        - path: http://egov-mdms-service:8080/egov-mdms-service/v1/_search
+          moduleName: tenant
+          masterName: tenants
+          tenantId: pb
+          filter: "[?(@.code == $tenant)]"
+          filterMapping:
+          - variable: $tenant
+            valueJsonpath: $.tenantId
+          uriResponseMapping:
+          - inJsonPath: $.MdmsRes.tenant.tenants
+            outJsonPath: $.CollectionIndex.tenantData

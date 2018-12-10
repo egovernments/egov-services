@@ -89,6 +89,8 @@ public class ReindexService {
 
 	private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(5);
 	private final ScheduledExecutorService schedulerofChildThreads = Executors.newScheduledThreadPool(5);
+	
+	private static Long recordsIndexed = 0L;
 
 	public ReindexResponse createReindexJob(ReindexRequest reindexRequest) {
 		Map<String, Mapping> mappingsMap = runner.getMappingMaps();
@@ -158,7 +160,7 @@ public class ReindexService {
 								});
 								Map<String, Object> requestToReindex = new HashMap<>();
 								requestToReindex.put("hits", modifiedHits);
-								childThreadExecutor(reindexRequest, mapper, requestToReindex);
+								childThreadExecutor(reindexRequest, mapper, requestToReindex, modifiedHits.size());
 							}
 						} else {
 							IndexJob job = IndexJob.builder().jobId(reindexRequest.getJobId())
@@ -174,7 +176,6 @@ public class ReindexService {
 							log.info("Porcess failed! for data from: " + from + "and size: " + size);
 							break;
 						}
-						log.info("Records indexed: "+from);
 						IndexJob job = IndexJob.builder().jobId(reindexRequest.getJobId())
 								.auditDetails(indexerUtils.getAuditDetails(
 										reindexRequest.getRequestInfo().getUserInfo().getUuid(), false))
@@ -204,7 +205,7 @@ public class ReindexService {
 		scheduler.schedule(legacyIndexer, indexThreadPollInterval, TimeUnit.MILLISECONDS);
 	}
 
-	public void childThreadExecutor(ReindexRequest reindexRequest, ObjectMapper mapper, Object requestToReindex) {
+	public void childThreadExecutor(ReindexRequest reindexRequest, ObjectMapper mapper, Object requestToReindex, Integer resultSize) {
 		final Runnable childThreadJob = new Runnable() {
 			boolean threadRun = true;
 			public void run() {
@@ -212,6 +213,8 @@ public class ReindexService {
 					try {						
 						indexerService.elasticIndexer(reindexRequest.getReindexTopic(),
 								mapper.writeValueAsString(requestToReindex));
+						recordsIndexed+=resultSize;						
+						log.info("Records indexed: "+recordsIndexed);
 					} catch (Exception e) {
 						threadRun = false;
 					}
@@ -221,7 +224,7 @@ public class ReindexService {
 				return;
 			}
 		};
-		schedulerofChildThreads.scheduleAtFixedRate(childThreadJob, 0, indexThreadPollInterval - 10, TimeUnit.MILLISECONDS);
+		schedulerofChildThreads.scheduleAtFixedRate(childThreadJob, 0, indexThreadPollInterval + 50, TimeUnit.MILLISECONDS);
 
 	}
 

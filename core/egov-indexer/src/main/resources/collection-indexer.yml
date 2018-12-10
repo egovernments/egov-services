@@ -5,7 +5,7 @@ ServiceMaps:
   - topic: egov.collection.receipt-create
     configKey: INDEX
     indexes:
-    - name: collectionsindexv1
+    - name: collectionsindex-v1
       type: receipts
       id: $.Bill[0].billDetails[0].receiptNumber
       isBulk: true
@@ -42,7 +42,7 @@ ServiceMaps:
   - topic: egov.collection.receipt-create-reindex
     configKey: INDEX
     indexes:
-    - name: collectionsreindexv1
+    - name: collectionsreindex-v1
       type: receipts
       id: $.Bill[0].billDetails[0].receiptNumber
       isBulk: true
@@ -52,7 +52,7 @@ ServiceMaps:
   - topic: egov.collection.receipt-create-legacyindex
     configKey: INDEX
     indexes:
-    - name: collectionsindexv1
+    - name: collectionsindex-v1
       type: receipts
       id: $.Bill[0].billDetails[0].receiptNumber
       isBulk: true

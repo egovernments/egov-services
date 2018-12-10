@@ -56,7 +56,7 @@
           "tenantIdPaths": [
             "$.ReceiptWorkflow.*.tenantId"
           ],
-          "url": "http://40729362.ngrok.io/collection-services/receipts/_workflow",
+          "url": "http://collection-services:8080/collection-services/receipts/_workflow",
           "additionalResFields": {
             "$.ReceiptWorkflow.*.code[0]": "Response"
           }

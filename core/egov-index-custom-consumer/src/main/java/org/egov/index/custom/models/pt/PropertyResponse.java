@@ -15,6 +15,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 /**
  * Contract class to send response. Array of Property items  are used in case of search results or response for create. Where as single Property item is used for update
@@ -27,6 +28,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@ToString
 public class PropertyResponse   {
         @JsonProperty("ResponseInfo")
         private ResponseInfo responseInfo;

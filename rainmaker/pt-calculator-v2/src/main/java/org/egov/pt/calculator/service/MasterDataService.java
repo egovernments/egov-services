@@ -1,10 +1,9 @@
 package org.egov.pt.calculator.service;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 import java.util.Map.Entry;
 
 import org.egov.common.contract.request.RequestInfo;
@@ -13,6 +12,7 @@ import org.egov.mdms.model.MdmsResponse;
 import org.egov.pt.calculator.repository.Repository;
 import org.egov.pt.calculator.util.CalculatorConstants;
 import org.egov.pt.calculator.util.CalculatorUtils;
+import org.egov.pt.calculator.util.Configurations;
 import org.egov.pt.calculator.web.models.demand.TaxHeadMaster;
 import org.egov.pt.calculator.web.models.demand.TaxHeadMasterResponse;
 import org.egov.pt.calculator.web.models.demand.TaxPeriod;
@@ -37,6 +37,9 @@ public class MasterDataService {
 	
 	@Autowired
 	private CalculatorUtils calculatorUtils;
+
+	@Autowired
+	private Configurations config;
 	
 	/**
 	 * Fetches Financial Year from Mdms Api
@@ -141,43 +144,90 @@ public class MasterDataService {
 		return codeValueListMap;
 	}
 
-	
 	/**
 	 * Returns the 'APPLICABLE' master object from the list of inputs
-	 * 
-	 * filters the Input based on their effective financial year
-	 * 
+	 *
+	 * filters the Input based on their effective financial year and starting day
+	 *
 	 * If an object is found with effective year same as assessment year that master entity will be returned
-	 * 
+	 *
 	 * If exact match is not found then the entity with latest effective financial year which should be lesser than the assessment year
-	 * 
+	 *
 	 * NOTE : applicable points to single object  out of all the entries for a given master which fits the period of the property being assessed
-	 *  
+	 *
 	 * @param assessmentYear
 	 * @param masterList
 	 */
 	@SuppressWarnings("unchecked")
 	public Map<String, Object> getApplicableMaster(String assessmentYear, List<Object> masterList) {
-		
+
 		Map<String, Object> objToBeReturned = null;
 		String maxYearFromTheList = "0";
+		Long maxStartTime = 0l;
 
 		for (Object object : masterList) {
 
 			Map<String, Object> objMap = (Map<String, Object>) object;
 			String objFinYear = ((String) objMap.get(CalculatorConstants.FROMFY_FIELD_NAME)).split("-")[0];
+			if(!objMap.containsKey(CalculatorConstants.STARTING_DATE_APPLICABLES)){
+				if (objFinYear.compareTo(assessmentYear.split("-")[0]) == 0)
+					return  objMap;
 
-			if (objFinYear.compareTo(assessmentYear.split("-")[0]) == 0) 
-				return  objMap;
-				
-			else if (assessmentYear.split("-")[0].compareTo(objFinYear) > 0 && maxYearFromTheList.compareTo(objFinYear) <= 0) {
-				maxYearFromTheList = objFinYear;
-				objToBeReturned = objMap;
+				else if (assessmentYear.split("-")[0].compareTo(objFinYear) > 0 && maxYearFromTheList.compareTo(objFinYear) <= 0) {
+					maxYearFromTheList = objFinYear;
+					objToBeReturned = objMap;
+				}
+			}
+			else{
+				String objStartDay = ((String) objMap.get(CalculatorConstants.STARTING_DATE_APPLICABLES));
+				Long startTime = getStartDayInMillis(objStartDay,objFinYear);
+				if (assessmentYear.split("-")[0].compareTo(objFinYear) >= 0 && maxYearFromTheList.compareTo(objFinYear) <= 0) {
+					maxYearFromTheList = objFinYear;
+					Long currentTime = System.currentTimeMillis();
+					if(startTime < currentTime && maxStartTime < startTime){
+						objToBeReturned = objMap;
+						maxStartTime = startTime;
+					}
+				}
 			}
 		}
 		return objToBeReturned;
 	}
-	
+
+	/**
+	 * Converts startDay to epoch
+	 * @param startDay StartDay of applicable
+	 * @param fromFY starting financial year
+	 * @return
+	 */
+	private Long getStartDayInMillis(String startDay,String fromFY){
+		String day = startDay.split("/")[0];
+		if(day.length()==1)
+			day = "0"+day;
+		String month = startDay.split("/")[1];
+		if(month.length()==1)
+			month = "0"+month;
+		String financialYear;
+		if(month.compareTo(config.getFinancialYearStartMonth())>=0)
+			financialYear = fromFY;
+		else {
+			Integer nextYear = (Integer.parseInt(fromFY)+1);
+			financialYear = nextYear.toString();
+		}
+
+		String startDate = day+"-"+month+"-"+financialYear;
+		Long startTime = null;
+		try{
+			SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy");
+			Date date = df.parse(startDate);
+			startTime = date.getTime();
+		}
+		catch (ParseException e) {
+			throw new CustomException("INVALID STARTDAY","The startDate of the penalty cannot be parsed");
+		}
+
+		return startTime;
+	}
 	/**
 	 * Estimates the fire cess that needs to be paid for the given tax amount
 	 * 

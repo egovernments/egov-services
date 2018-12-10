@@ -180,9 +180,9 @@ public class MasterDataService {
 			}
 			else{
 				String objStartDay = ((String) objMap.get(CalculatorConstants.STARTING_DATE_APPLICABLES));
-				Long startTime = getStartDayInMillis(objStartDay,objFinYear);
 				if (assessmentYear.split("-")[0].compareTo(objFinYear) >= 0 && maxYearFromTheList.compareTo(objFinYear) <= 0) {
 					maxYearFromTheList = objFinYear;
+					Long startTime = getStartDayInMillis(objStartDay,objFinYear);
 					Long currentTime = System.currentTimeMillis();
 					if(startTime < currentTime && maxStartTime < startTime){
 						objToBeReturned = objMap;

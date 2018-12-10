@@ -20,6 +20,7 @@ import java.util.Map;
 import java.util.Objects;
 
 import static java.util.Objects.isNull;
+import static java.util.stream.Collectors.toSet;
 
 public class CollectionsQueryBuilder {
 
@@ -336,15 +337,25 @@ public class CollectionsQueryBuilder {
         if (!isNull(searchCriteria.getStatus()) && !searchCriteria.getStatus().isEmpty()) {
 
             addClauseIfRequired(preparedStatementValues, selectQuery);
-            selectQuery.append(" rh.status in (:status)");
-            preparedStatementValues.put("status", searchCriteria.getStatus());
+            selectQuery.append(" UPPER(rh.status) in (:status)");
+            preparedStatementValues.put("status",
+                    searchCriteria.getStatus()
+                        .stream()
+                        .map(String::toUpperCase)
+                        .collect(toSet())
+            );
         }
 
         if (!isNull(searchCriteria.getInstrumentType()) && !searchCriteria.getInstrumentType().isEmpty()) {
 
             addClauseIfRequired(preparedStatementValues, selectQuery);
             selectQuery.append(" UPPER(ins.instrumenttype) in (:instrumenttype)");
-            preparedStatementValues.put("instrumenttype", searchCriteria.getInstrumentType());
+            preparedStatementValues.put("instrumenttype",
+                    searchCriteria.getInstrumentType()
+                            .stream()
+                            .map(String::toUpperCase)
+                            .collect(toSet())
+            );
         }
 
         if (StringUtils.isNotBlank(searchCriteria.getFund())) {

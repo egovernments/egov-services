@@ -7,7 +7,7 @@ ServiceMaps:
     indexes:
     - name: collectionsindex-v1
       type: receipts
-      id: $.Bill[0].billDetails[0].receiptNumber
+      id: $.Bill[0].billDetails[0].id
       isBulk: true
       timeStampField: $.auditDetails.createdDate
       jsonPath: $.Receipt.*
@@ -44,7 +44,7 @@ ServiceMaps:
     indexes:
     - name: collectionsreindex-v1
       type: receipts
-      id: $.Bill[0].billDetails[0].receiptNumber
+      id: $.Bill[0].billDetails[0].id
       isBulk: true
       timeStampField: $.auditDetails.createdDate
       jsonPath: $.hits
@@ -54,7 +54,7 @@ ServiceMaps:
     indexes:
     - name: collectionsindex-v1
       type: receipts
-      id: $.Bill[0].billDetails[0].receiptNumber
+      id: $.Bill[0].billDetails[0].id
       isBulk: true
       timeStampField: $.auditDetails.createdDate
       jsonPath: $.Receipt.*

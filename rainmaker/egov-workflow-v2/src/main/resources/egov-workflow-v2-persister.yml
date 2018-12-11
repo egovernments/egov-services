@@ -1,0 +1,69 @@
+serviceMaps:
+ serviceName: egov-workflow-v2
+ mappings:
+ - version: 1.0
+   description: Persists workflow processInstance details in eg_workflow_v2  table
+   fromTopic: save-wf-transitions
+   isTransaction: true
+   queryMaps:
+
+       - query: INSERT INTO eg_wf_processinstance( id,tenantid,businessService,businessId,action,status,comment, assigner, assignee, sla, previousStatus, createdby, lastmodifiedby, createdtime, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+         basePath: ProcessInstances.*
+         jsonMaps:
+          - jsonPath: $.ProcessInstances.*.id
+
+          - jsonPath: $.ProcessInstances.*.tenantId
+
+          - jsonPath: $.ProcessInstances.*.businessService
+
+          - jsonPath: $.ProcessInstances.*.businessId
+
+          - jsonPath: $.ProcessInstances.*.action
+
+          - jsonPath: $.ProcessInstances.*.status
+
+          - jsonPath: $.ProcessInstances.*.comment
+
+          - jsonPath: $.ProcessInstances.*.assigner
+
+          - jsonPath: $.ProcessInstances.*.assignee
+
+          - jsonPath: $.ProcessInstances.*.sla
+
+          - jsonPath: $.ProcessInstances.*.previousStatus
+
+          - jsonPath: $.ProcessInstances.*.auditDetails.createdBy
+
+          - jsonPath: $.ProcessInstances.*.auditDetails.lastModifiedBy
+
+          - jsonPath: $.ProcessInstances.*.auditDetails.createdTime
+
+          - jsonPath: $.ProcessInstances.*.auditDetails.lastModifiedTime
+
+
+
+
+       - query: INSERT INTO eg_wf_document( id, tenantid, active, documenttype,documentUid, processinstanceid, filestoreid, createdby, lastmodifiedby, createdtime, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+         basePath: ProcessInstances.*.documents.*
+         jsonMaps:
+          - jsonPath: $.ProcessInstances.documents.*.id
+
+          - jsonPath: $.ProcessInstances.documents.*.tenantId
+
+          - jsonPath: $.ProcessInstances.documents.*.active
+
+          - jsonPath: $.ProcessInstances.documents.*.documentType
+
+          - jsonPath: $.ProcessInstances.documents.*.documentUid
+
+          - jsonPath: $.ProcessInstances[*][?({id} in @.documents[*].id)].id
+
+          - jsonPath: $.ProcessInstances.documents.*.fileStoreId
+
+          - jsonPath: $.ProcessInstances.documents.*.auditDetails.createdBy
+
+          - jsonPath: $.ProcessInstances.documents.*.auditDetails.lastModifiedBy
+
+          - jsonPath: $.ProcessInstances.documents.*.auditDetails.createdTime
+
+          - jsonPath: $.ProcessInstances.documents.*.auditDetails.lastModifiedTime

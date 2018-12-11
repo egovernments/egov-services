@@ -12,18 +12,18 @@ ServiceMaps:
       timeStampField: $.auditDetails.createdTime
       jsonPath: $.Properties.*
       customJsonMapping:
-        indexMapping: {"PTIndex":{"propertyId":"","tenantId":"","propertyDetails":{},"address":{},"ward":{},"tenantData":{}, "@timestamp":"timestamp"}}
+        indexMapping: {"Data":{"propertyId":"","tenantId":"","propertyDetails":{},"address":{},"ward":{},"tenantData":{}, "@timestamp":"timestamp"}}
         fieldMapping:
         - inJsonPath: $.propertyId
-          outJsonPath: $.PTIndex.propertyId
+          outJsonPath: $.Data.propertyId
         - inJsonPath: $.tenantId
-          outJsonPath: $.PTIndex.tenantId
+          outJsonPath: $.Data.tenantId
         - inJsonPath: $.propertyDetails
-          outJsonPath: $.PTIndex.propertyDetails
+          outJsonPath: $.Data.propertyDetails
         - inJsonPath: $.address
-          outJsonPath: $.PTIndex.address
+          outJsonPath: $.Data.address
         - inJsonPath: $.@timestamp
-          outJsonPath: $.PTIndex.@timestamp
+          outJsonPath: $.Data.@timestamp
         externalUriMapping:
         - path: http://egov-location:8080/egov-location/location/v11/boundarys/_search
           queryParam: hierarchyTypeCode=REVENUE,boundaryType=Block,codes=$.address.locality.code,tenantId=$.tenantId
@@ -31,7 +31,7 @@ ServiceMaps:
           "authToken": "02dbe5be-28df-4d82-954f-3d27c56cca7d","userInfo":{"id":73}}}
           uriResponseMapping:
           - inJsonPath: $.TenantBoundary[0].boundary[0]
-            outJsonPath: $.PTIndex.ward
+            outJsonPath: $.Data.ward
         mdmsMapping:
         - path: http://egov-mdms-service:8080/egov-mdms-service/v1/_search
           moduleName: tenant
@@ -43,7 +43,7 @@ ServiceMaps:
             valueJsonpath: $.tenantId
           uriResponseMapping:
           - inJsonPath: $.MdmsRes.tenant.tenants
-            outJsonPath: $.PTIndex.tenantData
+            outJsonPath: $.Data.tenantData
 
 
   - topic: update-pt-property-index
@@ -56,18 +56,18 @@ ServiceMaps:
       timeStampField: $.auditDetails.createdTime
       jsonPath: $.Properties.*
       customJsonMapping:
-        indexMapping: {"PTIndex":{"propertyId":"","tenantId":"","propertyDetails":{},"address":{},"ward":{},"tenantData":{}, "@timestamp":"timestamp"}}
+        indexMapping: {"Data":{"propertyId":"","tenantId":"","propertyDetails":{},"address":{},"ward":{},"tenantData":{}, "@timestamp":"timestamp"}}
         fieldMapping:
         - inJsonPath: $.propertyId
-          outJsonPath: $.PTIndex.propertyId
+          outJsonPath: $.Data.propertyId
         - inJsonPath: $.tenantId
-          outJsonPath: $.PTIndex.tenantId
+          outJsonPath: $.Data.tenantId
         - inJsonPath: $.propertyDetails
-          outJsonPath: $.PTIndex.propertyDetails
+          outJsonPath: $.Data.propertyDetails
         - inJsonPath: $.address
-          outJsonPath: $.PTIndex.address
+          outJsonPath: $.Data.address
         - inJsonPath: $.@timestamp
-          outJsonPath: $.PTIndex.@timestamp
+          outJsonPath: $.Data.@timestamp
         externalUriMapping:
         - path: http://egov-location:8080/egov-location/location/v11/boundarys/_search
           queryParam: hierarchyTypeCode=REVENUE,boundaryType=Block,codes=$.address.locality.code,tenantId=$.tenantId
@@ -75,7 +75,7 @@ ServiceMaps:
           "authToken": "02dbe5be-28df-4d82-954f-3d27c56cca7d","userInfo":{"id":73}}}
           uriResponseMapping:
           - inJsonPath: $.TenantBoundary[0].boundary[0]
-            outJsonPath: $.PTIndex.ward
+            outJsonPath: $.Data.ward
         mdmsMapping:
         - path: http://egov-mdms-service:8080/egov-mdms-service/v1/_search
           moduleName: tenant
@@ -87,7 +87,7 @@ ServiceMaps:
             valueJsonpath: $.tenantId
           uriResponseMapping:
           - inJsonPath: $.MdmsRes.tenant.tenants
-            outJsonPath: $.PTIndex.tenantData
+            outJsonPath: $.Data.tenantData
       
   - topic: pt-property-reindex
     configKey: REINDEX
@@ -102,7 +102,7 @@ ServiceMaps:
   - topic: pt-property-legacyindex
     configKey: LEGACYINDEX
     indexes:
-    - name: ptindex-v1.1
+    - name: ptindex-v1
       type: property
       id: $.propertyId, $.tenantId
       isBulk: true

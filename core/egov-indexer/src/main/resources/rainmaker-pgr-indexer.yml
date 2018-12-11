@@ -14,34 +14,34 @@ ServiceMaps:
       timeStampField: $.auditDetails.createdTime
       fieldsToBeMasked: ["$.phone", "$.citizen.mobileNumber", "$.citizen.address", "$.citizen.aadhaarNumber", "$.citizen.pan", "$.citizen.emailId", "$.citizen.password"]
       customJsonMapping:
-        indexMapping: {"PGRIndex":{"serviceRequestId":"serviceRequestId","tenantId":"tenantId","complainCategory":"complainCategory","citizen":{},"phone":"phone","dateOfComplaint":null,"address":"","addressDetail":{},"status":"status","assignee":"assignee","gro":"gro","department":"department","complaintWard":{},"source":"source","description":"","slaHours":"slaHours","tenantData":{},"actionHistory":{},"@timestamp":"timestamp"}}
+        indexMapping: {"Data":{"serviceRequestId":"serviceRequestId","tenantId":"tenantId","complainCategory":"complainCategory","citizen":{},"phone":"phone","dateOfComplaint":null,"address":"","addressDetail":{},"status":"status","assignee":"assignee","gro":"gro","department":"department","complaintWard":{},"source":"source","description":"","slaHours":"slaHours","tenantData":{},"actionHistory":{},"@timestamp":"timestamp"}}
         fieldMapping:
         - inJsonPath: $.serviceRequestId
-          outJsonPath: $.PGRIndex.serviceRequestId
+          outJsonPath: $.Data.serviceRequestId
         - inJsonPath: $.tenantId
-          outJsonPath: $.PGRIndex.tenantId
+          outJsonPath: $.Data.tenantId
         - inJsonPath: $.phone
-          outJsonPath: $.PGRIndex.phone
+          outJsonPath: $.Data.phone
         - inJsonPath: $.auditDetails.createdTime
-          outJsonPath: $.PGRIndex.dateOfComplaint
+          outJsonPath: $.Data.dateOfComplaint
         - inJsonPath: $.description
-          outJsonPath: $.PGRIndex.description
+          outJsonPath: $.Data.description
         - inJsonPath: $.address
-          outJsonPath: $.PGRIndex.address
+          outJsonPath: $.Data.address
         - inJsonPath: $.addressDetail
-          outJsonPath: $.PGRIndex.addressDetail
+          outJsonPath: $.Data.addressDetail
         - inJsonPath: $.status
-          outJsonPath: $.PGRIndex.status
+          outJsonPath: $.Data.status
         - inJsonPath: $.complaintCategory
-          outJsonPath: $.PGRIndex.complainCategory
+          outJsonPath: $.Data.complainCategory
         - inJsonPath: $.source
-          outJsonPath: $.PGRIndex.source
+          outJsonPath: $.Data.source
         - inJsonPath: $.actionHistory
-          outJsonPath: $.PGRIndex.actionHistory
+          outJsonPath: $.Data.actionHistory
         - inJsonPath: $.citizen
-          outJsonPath: $.PGRIndex.citizen
+          outJsonPath: $.Data.citizen
         - inJsonPath: $.@timestamp
-          outJsonPath: $.PGRIndex.@timestamp
+          outJsonPath: $.Data.@timestamp
         externalUriMapping:
         - path: http://egov-location:8080/egov-location/location/v11/boundarys/_search
           queryParam: hierarchyTypeCode=ADMIN,boundaryType=locality,codes=$.addressDetail.mohalla,tenantId=$.tenantId
@@ -49,14 +49,14 @@ ServiceMaps:
           "authToken": "02dbe5be-28df-4d82-954f-3d27c56cca7d","userInfo":{"id":73}}}
           uriResponseMapping:
           - inJsonPath: $.TenantBoundary[0].boundary[0].name
-            outJsonPath: $.PGRIndex.addressDetail.locality
+            outJsonPath: $.Data.addressDetail.locality
         - path: http://egov-location:8080/egov-location/location/v11/boundarys/_search
           queryParam: hierarchyTypeCode=ADMIN,boundaryType=Block,codes=$.addressDetail.mohalla,tenantId=$.tenantId
           apiRequest: {"RequestInfo": {"apiId": "org.egov.pt","ver": "1.0","ts": 1502890899493,"action": "asd","did": "4354648646","key": "xyz","msgId": "654654", "requesterId": "61",
           "authToken": "02dbe5be-28df-4d82-954f-3d27c56cca7d","userInfo":{"id":73}}}
           uriResponseMapping:
           - inJsonPath: $.TenantBoundary[0].boundary[0]
-            outJsonPath: $.PGRIndex.complaintWard
+            outJsonPath: $.Data.complaintWard
         mdmsMapping:
         - path: http://egov-mdms-service:8080/egov-mdms-service/v1/_search
           moduleName: common-masters
@@ -68,7 +68,7 @@ ServiceMaps:
             valueJsonpath: $.department
           uriResponseMapping:
           - inJsonPath: $.MdmsRes.common-masters.Department.*.name
-            outJsonPath: $.PGRIndex.department
+            outJsonPath: $.Data.department
         - path: http://egov-mdms-service:8080/egov-mdms-service/v1/_search
           moduleName: RAINMAKER-PGR
           masterName: ServiceDefs
@@ -79,7 +79,7 @@ ServiceMaps:
             valueJsonpath: $.serviceCode
           uriResponseMapping:
           - inJsonPath: $.MdmsRes.RAINMAKER-PGR.ServiceDefs.*.slaHours
-            outJsonPath: $.PGRIndex.slaHours
+            outJsonPath: $.Data.slaHours
         - path: http://egov-mdms-service:8080/egov-mdms-service/v1/_search
           moduleName: tenant
           masterName: tenants
@@ -90,7 +90,7 @@ ServiceMaps:
             valueJsonpath: $.tenantId
           uriResponseMapping:
           - inJsonPath: $.MdmsRes.tenant.tenants
-            outJsonPath: $.PGRIndex.tenantData
+            outJsonPath: $.Data.tenantData
             
       
   - topic: update-pgr-index-service
@@ -104,34 +104,34 @@ ServiceMaps:
       timeStampField: $.auditDetails.createdTime
       fieldsToBeMasked: ["$.phone", "$.citizen.mobileNumber", "$.citizen.address", "$.citizen.aadhaarNumber", "$.citizen.pan", "$.citizen.emailId", "$.citizen.password"]
       customJsonMapping:
-        indexMapping: {"PGRIndex":{"serviceRequestId":"serviceRequestId","tenantId":"tenantId","complainCategory":"complainCategory","citizen":{},"phone":"phone","dateOfComplaint":null,"address":"","addressDetail":{},"status":"status","assignee":"assignee","gro":"gro","department":"department","complaintWard":{},"source":"source","description":"","slaHours":"slaHours","tenantData":{},"actionHistory":{},"@timestamp":"timestamp"}}
+        indexMapping: {"Data":{"serviceRequestId":"serviceRequestId","tenantId":"tenantId","complainCategory":"complainCategory","citizen":{},"phone":"phone","dateOfComplaint":null,"address":"","addressDetail":{},"status":"status","assignee":"assignee","gro":"gro","department":"department","complaintWard":{},"source":"source","description":"","slaHours":"slaHours","tenantData":{},"actionHistory":{},"@timestamp":"timestamp"}}
         fieldMapping:
         - inJsonPath: $.serviceRequestId
-          outJsonPath: $.PGRIndex.serviceRequestId
+          outJsonPath: $.Data.serviceRequestId
         - inJsonPath: $.tenantId
-          outJsonPath: $.PGRIndex.tenantId
+          outJsonPath: $.Data.tenantId
         - inJsonPath: $.phone
-          outJsonPath: $.PGRIndex.phone
+          outJsonPath: $.Data.phone
         - inJsonPath: $.auditDetails.createdTime
-          outJsonPath: $.PGRIndex.dateOfComplaint
+          outJsonPath: $.Data.dateOfComplaint
         - inJsonPath: $.description
-          outJsonPath: $.PGRIndex.description
+          outJsonPath: $.Data.description
         - inJsonPath: $.address
-          outJsonPath: $.PGRIndex.address
+          outJsonPath: $.Data.address
         - inJsonPath: $.addressDetail
-          outJsonPath: $.PGRIndex.addressDetail
+          outJsonPath: $.Data.addressDetail
         - inJsonPath: $.status
-          outJsonPath: $.PGRIndex.status
+          outJsonPath: $.Data.status
         - inJsonPath: $.complaintCategory
-          outJsonPath: $.PGRIndex.complainCategory
+          outJsonPath: $.Data.complainCategory
         - inJsonPath: $.source
-          outJsonPath: $.PGRIndex.source
+          outJsonPath: $.Data.source
         - inJsonPath: $.actionHistory
-          outJsonPath: $.PGRIndex.actionHistory
+          outJsonPath: $.Data.actionHistory
         - inJsonPath: $.citizen
-          outJsonPath: $.PGRIndex.citizen
+          outJsonPath: $.Data.citizen
         - inJsonPath: $.@timestamp
-          outJsonPath: $.PGRIndex.@timestamp
+          outJsonPath: $.Data.@timestamp
         externalUriMapping:
         - path: http://hr-employee-v2:8080/hr-employee-v2/employees/_search
           queryParam: tenantId=$.tenantId,id=$.assignee
@@ -139,28 +139,28 @@ ServiceMaps:
           "authToken": "750d4aa9-2436-4bc4-a8f4-3796e3bfd465","userInfo":{"id":73}}}
           uriResponseMapping:
           - inJsonPath: $.Employee[0].name
-            outJsonPath: $.PGRIndex.assignee
+            outJsonPath: $.Data.assignee
         - path: http://hr-employee-v2:8080/hr-employee-v2/employees/_search
           queryParam: tenantId=$.tenantId,id=$.gro
           apiRequest: {"RequestInfo": {"apiId": "org.egov.pt","ver": "1.0","ts": 1502890899493,"action": "asd","did": "4354648646","key": "xyz","msgId": "654654", "requesterId": "61",
           "authToken": "750d4aa9-2436-4bc4-a8f4-3796e3bfd465","userInfo":{"id":73}}}
           uriResponseMapping:
           - inJsonPath: $.Employee[0].name
-            outJsonPath: $.PGRIndex.gro
+            outJsonPath: $.Data.gro
         - path: http://egov-location:8080/egov-location/location/v11/boundarys/_search
           queryParam: hierarchyTypeCode=ADMIN,boundaryType=locality,codes=$.addressDetail.mohalla,tenantId=$.tenantId
           apiRequest: {"RequestInfo": {"apiId": "org.egov.pt","ver": "1.0","ts": 1502890899493,"action": "asd","did": "4354648646","key": "xyz","msgId": "654654", "requesterId": "61",
           "authToken": "750d4aa9-2436-4bc4-a8f4-3796e3bfd465","userInfo":{"id":73}}}
           uriResponseMapping:
           - inJsonPath: $.TenantBoundary[0].boundary[0].name
-            outJsonPath: $.PGRIndex.addressDetail.locality
+            outJsonPath: $.Data.addressDetail.locality
         - path: http://egov-location:8080/egov-location/location/v11/boundarys/_search
           queryParam: hierarchyTypeCode=ADMIN,boundaryType=Block,codes=$.addressDetail.mohalla,tenantId=$.tenantId
           apiRequest: {"RequestInfo": {"apiId": "org.egov.pt","ver": "1.0","ts": 1502890899493,"action": "asd","did": "4354648646","key": "xyz","msgId": "654654", "requesterId": "61",
           "authToken": "750d4aa9-2436-4bc4-a8f4-3796e3bfd465","userInfo":{"id":73}}}
           uriResponseMapping:
           - inJsonPath: $.TenantBoundary[0].boundary[0]
-            outJsonPath: $.PGRIndex.complaintWard
+            outJsonPath: $.Data.complaintWard
         mdmsMapping:
         - path: http://egov-mdms-service:8080/egov-mdms-service/v1/_search
           moduleName: common-masters
@@ -172,7 +172,7 @@ ServiceMaps:
             valueJsonpath: $.department
           uriResponseMapping:
           - inJsonPath: $.MdmsRes.common-masters.Department.*.name
-            outJsonPath: $.PGRIndex.department
+            outJsonPath: $.Data.department
         - path: http://egov-mdms-service:8080/egov-mdms-service/v1/_search
           moduleName: RAINMAKER-PGR
           masterName: ServiceDefs
@@ -183,7 +183,7 @@ ServiceMaps:
             valueJsonpath: $.serviceCode
           uriResponseMapping:
           - inJsonPath: $.MdmsRes.RAINMAKER-PGR.ServiceDefs.*.slaHours
-            outJsonPath: $.PGRIndex.slaHours
+            outJsonPath: $.Data.slaHours
         - path: http://egov-mdms-service:8080/egov-mdms-service/v1/_search
           moduleName: tenant
           masterName: tenants
@@ -194,17 +194,17 @@ ServiceMaps:
             valueJsonpath: $.tenantId
           uriResponseMapping:
           - inJsonPath: $.MdmsRes.tenant.tenants
-            outJsonPath: $.PGRIndex.tenantData
+            outJsonPath: $.Data.tenantData
    
   - topic: pgr-service-reindex
     configKey: REINDEX
     indexes:
     - name: pgrreindex-v1
       type: grievances
-      id: $.PGRIndex.serviceRequestId, $.PGRIndex.tenantId
+      id: $.Data.serviceRequestId, $.Data.tenantId
       isBulk: true
       jsonPath: $.hits
-      timeStampField: $.PGRIndex.auditDetails.createdTime
+      timeStampField: $.Data.auditDetails.createdTime
       
   - topic: pgr-service-legacyindex
     configKey: LEGACYINDEX
@@ -217,34 +217,34 @@ ServiceMaps:
       fieldsToBeMasked: ["$.phone", "$.citizen.mobileNumber", "$.citizen.address", "$.citizen.aadhaarNumber", "$.citizen.pan", "$.citizen.emailId", "$.citizen.password"]
       timeStampField: $.auditDetails.createdTime
       customJsonMapping:
-        indexMapping: {"PGRIndex":{"serviceRequestId":"serviceRequestId","tenantId":"tenantId","complainCategory":"complainCategory","citizen":{},"phone":"phone","dateOfComplaint":null,"address":"","addressDetail":{},"status":"status","assignee":"assignee","gro":"gro","department":"department","complaintWard":{},"source":"source","description":"","slaHours":"slaHours","tenantData":{},"actionHistory":{},"@timestamp":"timestamp"}}
+        indexMapping: {"Data":{"serviceRequestId":"serviceRequestId","tenantId":"tenantId","complainCategory":"complainCategory","citizen":{},"phone":"phone","dateOfComplaint":null,"address":"","addressDetail":{},"status":"status","assignee":"assignee","gro":"gro","department":"department","complaintWard":{},"source":"source","description":"","slaHours":"slaHours","tenantData":{},"actionHistory":{},"@timestamp":"timestamp"}}
         fieldMapping:
         - inJsonPath: $.serviceRequestId
-          outJsonPath: $.PGRIndex.serviceRequestId
+          outJsonPath: $.Data.serviceRequestId
         - inJsonPath: $.tenantId
-          outJsonPath: $.PGRIndex.tenantId
+          outJsonPath: $.Data.tenantId
         - inJsonPath: $.phone
-          outJsonPath: $.PGRIndex.phone
+          outJsonPath: $.Data.phone
         - inJsonPath: $.auditDetails.createdTime
-          outJsonPath: $.PGRIndex.dateOfComplaint
+          outJsonPath: $.Data.dateOfComplaint
         - inJsonPath: $.description
-          outJsonPath: $.PGRIndex.description
+          outJsonPath: $.Data.description
         - inJsonPath: $.address
-          outJsonPath: $.PGRIndex.address
+          outJsonPath: $.Data.address
         - inJsonPath: $.addressDetail
-          outJsonPath: $.PGRIndex.addressDetail
+          outJsonPath: $.Data.addressDetail
         - inJsonPath: $.status
-          outJsonPath: $.PGRIndex.status
+          outJsonPath: $.Data.status
         - inJsonPath: $.complaintCategory
-          outJsonPath: $.PGRIndex.complainCategory
+          outJsonPath: $.Data.complainCategory
         - inJsonPath: $.source
-          outJsonPath: $.PGRIndex.source
+          outJsonPath: $.Data.source
         - inJsonPath: $.actionHistory
-          outJsonPath: $.PGRIndex.actionHistory
+          outJsonPath: $.Data.actionHistory
         - inJsonPath: $.citizen
-          outJsonPath: $.PGRIndex.citizen
+          outJsonPath: $.Data.citizen
         - inJsonPath: $.@timestamp
-          outJsonPath: $.PGRIndex.@timestamp
+          outJsonPath: $.Data.@timestamp
         externalUriMapping:
         - path: http://hr-employee-v2:8080/hr-employee-v2/employees/_search
           queryParam: tenantId=$.tenantId,id=$.assignee
@@ -252,28 +252,28 @@ ServiceMaps:
           "authToken": "750d4aa9-2436-4bc4-a8f4-3796e3bfd465","userInfo":{"id":73}}}
           uriResponseMapping:
           - inJsonPath: $.Employee[0].name
-            outJsonPath: $.PGRIndex.assignee
+            outJsonPath: $.Data.assignee
         - path: http://hr-employee-v2:8080/hr-employee-v2/employees/_search
           queryParam: tenantId=$.tenantId,id=$.gro
           apiRequest: {"RequestInfo": {"apiId": "org.egov.pt","ver": "1.0","ts": 1502890899493,"action": "asd","did": "4354648646","key": "xyz","msgId": "654654", "requesterId": "61",
           "authToken": "750d4aa9-2436-4bc4-a8f4-3796e3bfd465","userInfo":{"id":73}}}
           uriResponseMapping:
           - inJsonPath: $.Employee[0].name
-            outJsonPath: $.PGRIndex.gro
+            outJsonPath: $.Data.gro
         - path: http://egov-location:8080/egov-location/location/v11/boundarys/_search
           queryParam: hierarchyTypeCode=ADMIN,boundaryType=locality,codes=$.addressDetail.mohalla,tenantId=$.tenantId
           apiRequest: {"RequestInfo": {"apiId": "org.egov.pt","ver": "1.0","ts": 1502890899493,"action": "asd","did": "4354648646","key": "xyz","msgId": "654654", "requesterId": "61",
           "authToken": "750d4aa9-2436-4bc4-a8f4-3796e3bfd465","userInfo":{"id":73}}}
           uriResponseMapping:
           - inJsonPath: $.TenantBoundary[0].boundary[0].name
-            outJsonPath: $.PGRIndex.addressDetail.locality
+            outJsonPath: $.Data.addressDetail.locality
         - path: http://egov-location:8080/egov-location/location/v11/boundarys/_search
           queryParam: hierarchyTypeCode=ADMIN,boundaryType=Block,codes=$.addressDetail.mohalla,tenantId=$.tenantId
           apiRequest: {"RequestInfo": {"apiId": "org.egov.pt","ver": "1.0","ts": 1502890899493,"action": "asd","did": "4354648646","key": "xyz","msgId": "654654", "requesterId": "61",
           "authToken": "750d4aa9-2436-4bc4-a8f4-3796e3bfd465","userInfo":{"id":73}}}
           uriResponseMapping:
           - inJsonPath: $.TenantBoundary[0].boundary[0]
-            outJsonPath: $.PGRIndex.complaintWard
+            outJsonPath: $.Data.complaintWard
         mdmsMapping:
         - path: http://egov-mdms-service:8080/egov-mdms-service/v1/_search
           moduleName: common-masters
@@ -285,7 +285,7 @@ ServiceMaps:
             valueJsonpath: $.department
           uriResponseMapping:
           - inJsonPath: $.MdmsRes.common-masters.Department.*.name
-            outJsonPath: $.PGRIndex.department
+            outJsonPath: $.Data.department
         - path: http://egov-mdms-service:8080/egov-mdms-service/v1/_search
           moduleName: RAINMAKER-PGR
           masterName: ServiceDefs
@@ -296,7 +296,7 @@ ServiceMaps:
             valueJsonpath: $.serviceCode
           uriResponseMapping:
           - inJsonPath: $.MdmsRes.RAINMAKER-PGR.ServiceDefs.*.slaHours
-            outJsonPath: $.PGRIndex.slaHours
+            outJsonPath: $.Data.slaHours
         - path: http://egov-mdms-service:8080/egov-mdms-service/v1/_search
           moduleName: tenant
           masterName: tenants
@@ -307,7 +307,7 @@ ServiceMaps:
             valueJsonpath: $.tenantId
           uriResponseMapping:
           - inJsonPath: $.MdmsRes.tenant.tenants
-            outJsonPath: $.PGRIndex.tenantData
+            outJsonPath: $.Data.tenantData
       
       
 #JOURNEY: rainmakerpgr -> pgrreindextest -> pgrreindex -> pgrnew

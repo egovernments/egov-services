@@ -12,20 +12,20 @@ ServiceMaps:
       timeStampField: $.auditDetails.createdDate
       jsonPath: $.Receipt.*
       customJsonMapping:
-        indexMapping: {"CollectionIndex":{"tenantId":"","transactionId":"","Bill":{},"auditDetails":{},"instrument":{},"tenantData":{},"@timestamp":"timestamp"}}
+        indexMapping: {"Data":{"tenantId":"","transactionId":"","Bill":{},"auditDetails":{},"instrument":{},"tenantData":{},"@timestamp":"timestamp"}}
         fieldMapping:
         - inJsonPath: $.tenantId
-          outJsonPath: $.CollectionIndex.tenantId
+          outJsonPath: $.Data.tenantId
         - inJsonPath: $.transactionId
-          outJsonPath: $.CollectionIndex.transactionId
+          outJsonPath: $.Data.transactionId
         - inJsonPath: $.Bill
-          outJsonPath: $.CollectionIndex.Bill
+          outJsonPath: $.Data.Bill
         - inJsonPath: $.auditDetails
-          outJsonPath: $.CollectionIndex.auditDetails
+          outJsonPath: $.Data.auditDetails
         - inJsonPath: $.instrument
-          outJsonPath: $.CollectionIndex.instrument
+          outJsonPath: $.Data.instrument
         - inJsonPath: $.@timestamp
-          outJsonPath: $.CollectionIndex.@timestamp
+          outJsonPath: $.Data.@timestamp
         mdmsMapping:
         - path: http://egov-mdms-service:8080/egov-mdms-service/v1/_search
           moduleName: tenant
@@ -37,7 +37,7 @@ ServiceMaps:
             valueJsonpath: $.tenantId
           uriResponseMapping:
           - inJsonPath: $.MdmsRes.tenant.tenants
-            outJsonPath: $.CollectionIndex.tenantData
+            outJsonPath: $.Data.tenantData
 
   - topic: egov.collection.receipt-create-reindex
     configKey: INDEX
@@ -52,7 +52,7 @@ ServiceMaps:
   - topic: egov.collection.receipt-create-legacyindex
     configKey: INDEX
     indexes:
-    - name: collectionsindex-v1.1
+    - name: collectionsindex-v1
       type: receipts
       id: $.Bill[0].billDetails[0].id
       isBulk: true

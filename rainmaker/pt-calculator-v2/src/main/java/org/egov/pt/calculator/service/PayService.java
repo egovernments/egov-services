@@ -233,6 +233,7 @@ public class PayService {
 	 */
 	private void setDateToCalendar(String assessmentYear, String[] time, Calendar cal) {
 		
+		cal.clear();
 		Integer day = Integer.valueOf(time[0]);
 		Integer month = Integer.valueOf(time[1])-1;
 		// One is subtracted because calender reads january as 0

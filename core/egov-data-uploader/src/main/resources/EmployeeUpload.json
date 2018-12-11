@@ -4,7 +4,7 @@
     {
       "name": "Upload-Employee-Data",
       "uniqueParentKeys": ["$.code"],
-      "templateFileName": "employee_upload_template.xls",
+      "templateFileName": "employee_template.xlsx",
       "isParentChild": true,
       "requests": [
         {

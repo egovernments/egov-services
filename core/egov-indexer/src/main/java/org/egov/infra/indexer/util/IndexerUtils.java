@@ -151,7 +151,15 @@ public class IndexerUtils {
 					}
 					StringBuilder resolvedParam = new StringBuilder();
 					if(queryParam instanceof List) {
-						queryParam = queryParam.toString().substring(1, queryParam.toString().length() - 1);
+						StringBuilder values = new StringBuilder();
+						for(Object param: (List) queryParam) {
+							if(StringUtils.isEmpty(values.toString())) {
+								values.append(param.toString());
+							}else {
+								values.append(",").append(param.toString());
+							}
+						}
+						queryParam = values.toString();
 					}
 					resolvedParam.append(queryParamExpression[0].trim()).append("=").append(queryParam.toString().trim());
 					queryParamsArray[i] = resolvedParam.toString().trim();

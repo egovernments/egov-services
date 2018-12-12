@@ -38,7 +38,7 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.infra.indexer.custom.pgr.models;
+package org.egov.infra.indexer.custom.pgr;
 
 public enum UserType {
     CITIZEN, EMPLOYEE, SYSTEM, BUSINESS;

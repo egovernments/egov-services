@@ -139,7 +139,7 @@ public class IndexerUtils {
 				String[] queryParamsArray = uriMapping.getQueryParam().split(",");
 				for (int i = 0; i < queryParamsArray.length; i++) {
 					String[] queryParamExpression = queryParamsArray[i].trim().split("=");
-					String queryParam = null;
+					Object queryParam = null;
 					try {
 						if (queryParamExpression[1].trim().contains("$.")) {
 							queryParam = JsonPath.read(kafkaJson, queryParamExpression[1].trim());
@@ -150,7 +150,10 @@ public class IndexerUtils {
 						continue;
 					}
 					StringBuilder resolvedParam = new StringBuilder();
-					resolvedParam.append(queryParamExpression[0].trim()).append("=").append(queryParam.trim());
+					if(queryParam instanceof List) {
+						queryParam = queryParam.toString().substring(1, queryParam.toString().length() - 1);
+					}
+					resolvedParam.append(queryParamExpression[0].trim()).append("=").append(queryParam.toString().trim());
 					queryParamsArray[i] = resolvedParam.toString().trim();
 				}
 				StringBuilder queryParams = new StringBuilder();

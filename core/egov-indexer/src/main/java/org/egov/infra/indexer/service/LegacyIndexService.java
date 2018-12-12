@@ -10,9 +10,11 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 import org.egov.IndexerApplicationRunnerImpl;
-import org.egov.infra.indexer.custom.pgr.models.PGRCustomDecorator;
-import org.egov.infra.indexer.custom.pgr.models.PGRIndexObject;
-import org.egov.infra.indexer.custom.pgr.models.ServiceResponse;
+import org.egov.infra.indexer.custom.pgr.PGRCustomDecorator;
+import org.egov.infra.indexer.custom.pgr.PGRIndexObject;
+import org.egov.infra.indexer.custom.pgr.ServiceResponse;
+import org.egov.infra.indexer.custom.pt.PTCustomDecorator;
+import org.egov.infra.indexer.custom.pt.PropertyResponse;
 import org.egov.infra.indexer.models.IndexJob;
 import org.egov.infra.indexer.models.IndexJob.StatusEnum;
 import org.egov.infra.indexer.producer.IndexerProducer;
@@ -26,6 +28,7 @@ import org.egov.infra.indexer.web.contract.Mapping;
 import org.egov.infra.indexer.web.contract.Mapping.ConfigKeyEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.env.PropertyResolver;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.client.RestTemplate;
@@ -89,6 +92,9 @@ public class LegacyIndexService {
 
 	@Autowired
 	private PGRCustomDecorator pgrCustomDecorator;
+	
+	@Autowired
+	private PTCustomDecorator ptCustomDecorator;
 
 	@Value("${egov.core.no.of.index.threads}")
 	private Integer noOfIndexThreads;
@@ -265,7 +271,9 @@ public class LegacyIndexService {
 						indexerService.elasticIndexer(legacyIndexRequest.getLegacyIndexTopic(), mapper.writeValueAsString(indexObject));
 					} else {
 						if(legacyIndexRequest.getLegacyIndexTopic().equals(ptLegacyTopic)) {
-							indexerProducer.producer(legacyIndexRequest.getLegacyIndexTopic(), response);
+							PropertyResponse propertyResponse = mapper.readValue(mapper.writeValueAsString(response), PropertyResponse.class);
+							propertyResponse.setProperties(ptCustomDecorator.transformData(propertyResponse.getProperties()));
+							indexerService.elasticIndexer(legacyIndexRequest.getLegacyIndexTopic(), mapper.writeValueAsString(propertyResponse));
 						}else {
 							indexerService.elasticIndexer(legacyIndexRequest.getLegacyIndexTopic(), mapper.writeValueAsString(response));
 						}
@@ -278,7 +286,7 @@ public class LegacyIndexService {
 				threadRun = false;
 			}
 		};
-		schedulerofChildThreads.scheduleAtFixedRate(childThreadJob, 0, indexThreadPollInterval - 10, TimeUnit.MILLISECONDS);
+		schedulerofChildThreads.scheduleAtFixedRate(childThreadJob, 0, indexThreadPollInterval + 50, TimeUnit.MILLISECONDS);
 	}
 
 }

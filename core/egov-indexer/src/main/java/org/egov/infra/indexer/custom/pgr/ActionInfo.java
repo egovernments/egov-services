@@ -1,4 +1,4 @@
-package org.egov.infra.indexer.custom.pgr.models;
+package org.egov.infra.indexer.custom.pgr;
 
 import java.util.ArrayList;
 import java.util.List;

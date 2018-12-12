@@ -1,4 +1,4 @@
-package org.egov.infra.indexer.custom.pgr.models;
+package org.egov.infra.indexer.custom.pgr;
 
 import javax.validation.Valid;
 

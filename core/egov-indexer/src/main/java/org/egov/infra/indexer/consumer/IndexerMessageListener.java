@@ -1,9 +1,11 @@
 package org.egov.infra.indexer.consumer;
 
 import org.apache.kafka.clients.consumer.ConsumerRecord;
-import org.egov.infra.indexer.custom.pgr.models.PGRCustomDecorator;
-import org.egov.infra.indexer.custom.pgr.models.PGRIndexObject;
-import org.egov.infra.indexer.custom.pgr.models.ServiceResponse;
+import org.egov.infra.indexer.custom.pgr.PGRCustomDecorator;
+import org.egov.infra.indexer.custom.pgr.PGRIndexObject;
+import org.egov.infra.indexer.custom.pgr.ServiceResponse;
+import org.egov.infra.indexer.custom.pt.PTCustomDecorator;
+import org.egov.infra.indexer.custom.pt.PropertyRequest;
 import org.egov.infra.indexer.service.IndexerService;
 import org.egov.infra.indexer.service.LegacyIndexService;
 import org.egov.infra.indexer.service.ReindexService;
@@ -37,6 +39,9 @@ public class IndexerMessageListener implements MessageListener<String, String> {
 	
 	@Autowired
 	private PGRCustomDecorator pgrCustomDecorator;
+	
+	@Autowired
+	private PTCustomDecorator ptCustomDecorator;
 
 	@Value("${egov.core.reindex.topic.name}")
 	private String reindexTopic;
@@ -50,9 +55,11 @@ public class IndexerMessageListener implements MessageListener<String, String> {
 	@Value("${egov.indexer.pgr.update.topic.name}")
 	private String pgrUpdateTopic;
 	
-	@Value("${egov.indexer.pgr.legacyindex.topic.name}")
-	private String pgrLegacyTopic;
-	
+	@Value("${egov.indexer.pt.create.topic.name}")
+	private String ptCreateTopic;
+
+	@Value("${egov.indexer.pt.update.topic.name}")
+	private String ptUpdateTopic;
 
 
 	@Override
@@ -79,6 +86,16 @@ public class IndexerMessageListener implements MessageListener<String, String> {
 				ServiceResponse serviceResponse = mapper.readValue(data.value(), ServiceResponse.class);
 				PGRIndexObject indexObject = pgrCustomDecorator.dataTransformationForPGR(serviceResponse);
 				indexerService.elasticIndexer(data.topic(), mapper.writeValueAsString(indexObject));
+			} catch (Exception e) {
+				log.error("Couldn't parse pgrindex request: ", e);
+			}
+		}else if(data.topic().equals(ptCreateTopic) || data.topic().equals(ptUpdateTopic)){
+			try {
+				PropertyRequest propertyRequest = mapper.readValue(data.value(), PropertyRequest.class);
+				if(data.topic().equals(ptUpdateTopic))
+					propertyRequest = ptCustomDecorator.dataTransformForPTUpdate(propertyRequest);
+				propertyRequest.setProperties(ptCustomDecorator.transformData(propertyRequest.getProperties()));
+				indexerService.elasticIndexer(data.topic(), mapper.writeValueAsString(propertyRequest));
 			} catch (Exception e) {
 				log.error("Couldn't parse pgrindex request: ", e);
 			}

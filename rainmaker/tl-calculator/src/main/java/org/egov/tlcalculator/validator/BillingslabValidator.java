@@ -103,6 +103,8 @@ public class BillingslabValidator {
 					.from(slab.getFromUom()).to(slab.getToUom()).build();
 			BillingSlabRes slabRes = service.searchSlabs(criteria, billingSlabReq.getRequestInfo());
 			if(!CollectionUtils.isEmpty(slabRes.getBillingSlab())) {
+				if(!(slabRes.getBillingSlab().size()==1 &&
+						slabRes.getBillingSlab().get(0).getId().equalsIgnoreCase(slab.getId())))
 				duplicateSlabs.add(slab);
 			}
 		});

@@ -78,8 +78,7 @@
       "masterName": "Ui-Common-Config",
       "moduleDefinition": null,
       "isStateLevel": true,
-      "uniqueKeys": [
-      ]
+      "uniqueKeys": []
     },
     "Department": {
       "masterName": "Department",
@@ -601,6 +600,15 @@
       "isStateLevel": true,
       "uniqueKeys": [
         "$.code"
+      ]
+    }
+  },
+  "Workflow": {
+    "BusinessService": {
+      "masterName": "BusinessService",
+      "isStateLevel": true,
+      "uniqueKeys": [
+        "$.businessService"
       ]
     }
   }

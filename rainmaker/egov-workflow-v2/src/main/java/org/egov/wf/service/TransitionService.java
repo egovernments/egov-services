@@ -1,20 +1,16 @@
 package org.egov.wf.service;
 
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.jayway.jsonpath.JsonPath;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.egov.tracer.model.CustomException;
 import org.egov.wf.repository.WorKflowRepository;
 import org.egov.wf.web.models.*;
-import org.json.JSONArray;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import java.util.*;
-import static org.egov.wf.util.WorkflowConstants.*;
 
 @Slf4j
 @Service

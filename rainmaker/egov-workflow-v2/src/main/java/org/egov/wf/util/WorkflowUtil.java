@@ -67,7 +67,7 @@ public class WorkflowUtil {
      * @return All roles in the business service
      */
     public List<String> rolesAllowedInService(Object mdmsData,String jsonPath){
-        List<String> roles = null;
+        List<String> roles;
         try {
           roles = JsonPath.read(mdmsData,jsonPath);
         }
@@ -86,7 +86,7 @@ public class WorkflowUtil {
      * @return BusinessService object for the given business service
      */
     public BusinessService getBusinessService(Object mdmsData,String businessServiceName){
-        BusinessService businessService = null;
+        BusinessService businessService;
         try {
             String jsonpath = WF_JSONPATH_CODE.replace("{name}",businessServiceName);
             List<Object> objects  = JsonPath.read(mdmsData,jsonpath);
@@ -110,8 +110,7 @@ public class WorkflowUtil {
     public List<BusinessService> getAllBusinessServices(Object mdmsData){
         List<BusinessService> businessServices;
         try {
-            String jsonpath = ALL_WF_JSONPATH_CODE;
-            List<Object> objects  = JsonPath.read(mdmsData,jsonpath);
+            List<Object> objects  = JsonPath.read(mdmsData,ALL_WF_JSONPATH_CODE);
             String jsonString = new JSONArray(objects).toString();
             businessServices =
                     mapper.readValue(jsonString, new TypeReference<List<BusinessService>>(){});

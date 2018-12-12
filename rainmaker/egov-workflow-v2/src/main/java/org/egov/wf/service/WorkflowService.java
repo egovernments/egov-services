@@ -45,13 +45,11 @@ public class WorkflowService {
     }
 
 
-
-
-
-
-
-
-
+    /**
+     * Creates or updates the processInstance
+     * @param request The incoming request for workflow transition
+     * @return The list of processInstance objects after taking action
+     */
     public List<ProcessInstance> transition(ProcessInstanceRequest request){
         RequestInfo requestInfo = request.getRequestInfo();
         Object mdmsData = mdmsService.mdmsCall(request);
@@ -65,17 +63,30 @@ public class WorkflowService {
     }
 
 
+    /**
+     * Fetches ProcessInstances from db based on processSearchCriteria
+     * @param requestInfo The RequestInfo of the search request
+     * @param criteria The object containing Search params
+     * @return List of processInstances based on search criteria
+     */
     public List<ProcessInstance> search(RequestInfo requestInfo,ProcessInstanceSearchCriteria criteria){
-        List<ProcessInstance> processInstances = new LinkedList<>();
+        Set<ProcessInstance> processInstances = new HashSet<>();
         Object mdmsData = mdmsService.mdmsCall(requestInfo,criteria.getTenantId());
         if(criteria.isNull())
             processInstances = getUserBasedProcessInstances(requestInfo,criteria,mdmsData);
 
-        return processInstances;
+        return new LinkedList<>(processInstances);
     }
 
 
-    private List<ProcessInstance> getUserBasedProcessInstances(RequestInfo requestInfo,ProcessInstanceSearchCriteria criteria,Object mdmsData){
+    /**
+     * Searches the processInstances based on user and its roles
+     * @param requestInfo The RequestInfo of the search request
+     * @param criteria The object containing Search params
+     * @param mdmsData The data fetched from MDMS search
+     * @return List of processInstances based on search criteria
+     */
+    private Set<ProcessInstance> getUserBasedProcessInstances(RequestInfo requestInfo,ProcessInstanceSearchCriteria criteria,Object mdmsData){
         List<BusinessService> businessServices = util.getAllBusinessServices(mdmsData);
         List<String> actionableStatuses = util.getActionableStatusesForRole(requestInfo,businessServices);
         criteria.setAssignee(requestInfo.getUserInfo().getUuid());
@@ -84,8 +95,7 @@ public class WorkflowService {
         List<ProcessInstance> processInstancesForStatus = workflowRepository.getProcessInstancesForStatus(criteria);
         Set<ProcessInstance> processInstanceSet = new LinkedHashSet<>(processInstancesForStatus);
         processInstanceSet.addAll(processInstancesForAssignee);
-        List<ProcessInstance> totalProcessInstances = new ArrayList<>(processInstanceSet);
-        return totalProcessInstances;
+        return processInstanceSet;
     }
 
 

@@ -33,7 +33,7 @@ ServiceMaps:
           - inJsonPath: $.TenantBoundary[0].boundary[0]
             outJsonPath: $.Data.ward
         - path: http://collection-services:8080/collection-services/receipts/_search
-          queryParam: consumerCodes=$.consumerCodes
+          queryParam: consumerCode=$.consumerCodes
           apiRequest: {"RequestInfo": {"apiId": "org.egov.pt","ver": "1.0","ts": 1502890899493,"action": "asd","did": "4354648646","key": "xyz","msgId": "654654", "requesterId": "61",
           "authToken": "02dbe5be-28df-4d82-954f-3d27c56cca7d","userInfo":{"id":73}}}
           uriResponseMapping:
@@ -91,7 +91,7 @@ ServiceMaps:
           - inJsonPath: $.TenantBoundary[0].boundary[0]
             outJsonPath: $.Data.ward
         - path: http://collection-services:8080/collection-services/receipts/_search
-          queryParam: consumerCodes=$.consumerCodes
+          queryParam: consumerCode=$.consumerCodes
           apiRequest: {"RequestInfo": {"apiId": "org.egov.pt","ver": "1.0","ts": 1502890899493,"action": "asd","did": "4354648646","key": "xyz","msgId": "654654", "requesterId": "61",
           "authToken": "02dbe5be-28df-4d82-954f-3d27c56cca7d","userInfo":{"id":73}}}
           uriResponseMapping:
@@ -158,7 +158,7 @@ ServiceMaps:
           - inJsonPath: $.TenantBoundary[0].boundary[0]
             outJsonPath: $.Data.ward
         - path: http://collection-services:8080/collection-services/receipts/_search
-          queryParam: consumerCodes=$.consumerCodes
+          queryParam: consumerCode=$.consumerCodes
           apiRequest: {"RequestInfo": {"apiId": "org.egov.pt","ver": "1.0","ts": 1502890899493,"action": "asd","did": "4354648646","key": "xyz","msgId": "654654", "requesterId": "61",
           "authToken": "02dbe5be-28df-4d82-954f-3d27c56cca7d","userInfo":{"id":73}}}
           uriResponseMapping:

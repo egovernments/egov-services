@@ -5,7 +5,7 @@ ServiceMaps:
   - topic: telemetry-final-messages
     configKey: INDEX
     indexes:
-    - name: egovtelemetryreindex
+    - name: telemetryindex-v1
       type: general
       id: $.mid
       isBulk: true
@@ -15,7 +15,7 @@ ServiceMaps:
   - topic: telemetry-reindex
     configKey: REINDEX
     indexes:
-    - name: telemetryreindex
+    - name: telemetryindex-v1.1
       type: general
       id: $.mid
       isBulk: true

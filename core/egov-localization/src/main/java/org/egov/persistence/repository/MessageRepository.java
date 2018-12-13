@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 import org.egov.domain.model.AuthenticatedUser;
 import org.egov.domain.model.Message;
 import org.egov.domain.model.Tenant;
+import org.egov.tracer.model.CustomException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -132,7 +133,11 @@ public class MessageRepository {
 	}
 
 	private Map<String, Message> getCodeToMessageMap(List<Message> messages) {
-		return messages.stream().collect(Collectors.toMap(Message::getCode, message -> message));
+		try{
+			return messages.stream().collect(Collectors.toMap(Message::getCode, message -> message));
+		}catch (Exception e){
+			throw new CustomException("DUPLICATE_RECORDS",e.getMessage());
+		}
 	}
 
 	private List<String> getCodes(List<Message> messages) {

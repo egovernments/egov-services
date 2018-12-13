@@ -27,7 +27,7 @@ import javax.validation.constraints.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@EqualsAndHashCode
+@EqualsAndHashCode(of = {"id"})
 public class ProcessInstance   {
         @JsonProperty("id")
         private String id = null;

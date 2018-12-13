@@ -8,6 +8,5 @@ import java.util.List;
 @Getter
 @AllArgsConstructor
 public class MessagesResponse {
-    private List<Message> messages;
+	private List<Message> messages;
 }
-

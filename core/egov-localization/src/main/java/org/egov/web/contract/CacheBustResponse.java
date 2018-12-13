@@ -8,7 +8,7 @@ import org.egov.common.contract.response.ResponseInfo;
 @Getter
 @AllArgsConstructor
 public class CacheBustResponse {
-    private ResponseInfo responseInfo;
-    @JsonProperty("isSuccessful")
-    private boolean isSuccessful;
+	private ResponseInfo responseInfo;
+	@JsonProperty("isSuccessful")
+	private boolean isSuccessful;
 }

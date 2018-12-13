@@ -14,19 +14,14 @@ import java.util.stream.Collectors;
 @Setter
 @Getter
 public class MessageCacheEntry implements Serializable {
-    private List<MessageDTO> messages;
+	private List<MessageDTO> messages;
 
-    public MessageCacheEntry(List<Message> domainMessages) {
-        this.messages = domainMessages.stream()
-            .map(MessageDTO::new)
-            .collect(Collectors.toList());
-    }
+	public MessageCacheEntry(List<Message> domainMessages) {
+		this.messages = domainMessages.stream().map(MessageDTO::new).collect(Collectors.toList());
+	}
 
-    @JsonIgnore
-    public List<Message> getDomainMessages() {
-        return messages.stream()
-            .map(MessageDTO::toDomainMessage)
-            .collect(Collectors.toList());
-    }
+	@JsonIgnore
+	public List<Message> getDomainMessages() {
+		return messages.stream().map(MessageDTO::toDomainMessage).collect(Collectors.toList());
+	}
 }
-

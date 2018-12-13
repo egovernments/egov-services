@@ -10,8 +10,8 @@ import lombok.ToString;
 @EqualsAndHashCode
 @ToString
 public class MessageIdentity {
-    private String code;
-    private Tenant tenant;
-    private String locale;
-    private String module;
+	private String code;
+	private Tenant tenant;
+	private String locale;
+	private String module;
 }

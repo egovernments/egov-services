@@ -62,42 +62,14 @@ public class MessageRepository {
 	public void upsert(String tenant, String locale, String module, List<Message> domainMessages,
 			AuthenticatedUser authenticatedUser) {
 		final List<String> codes = getCodes(domainMessages);
-
-		final List<org.egov.persistence.entity.Message> entityMessages = 
-				fetchMatchEntityMessages(tenant, locale,module, codes);
-
+		final List<org.egov.persistence.entity.Message> entityMessages = fetchMatchEntityMessages(tenant, locale,
+				module, codes);
 		List<String> newCodes = getNewCodes(entityMessages);
-		
-		List<Message> newMsgList =  domainMessages.stream()
-        		.filter(msg -> !newCodes.contains(msg.getCode()))
-        		.collect(Collectors.toList());
-		
-		save(newMsgList,authenticatedUser);
-        
-	    updateMessages(domainMessages, entityMessages, authenticatedUser);
-		
-		/*Map<String, org.egov.persistence.entity.Message> availableMsg = new HashMap<>();
+		List<Message> newMsgList = domainMessages.stream().filter(msg -> !newCodes.contains(msg.getCode()))
+				.collect(Collectors.toList());
+		save(newMsgList, authenticatedUser);
 
-		for (int i = 0; i < entityMessages.size(); i++) {
-			org.egov.persistence.entity.Message message = entityMessages.get(i);
-			availableMsg.put(message.getCode(), entityMessages.get(i));
-		}
-
-		List<Message> saveMsgList = new ArrayList<>();
-		List<Message> updateMsgList = new ArrayList<>();
-
-		List<? extends Message> newMsgList1 = domainMessages.stream()
-				.map((Function<? super Message, ? extends Message>) msg -> {
-					if (availableMsg.containsKey(msg.getCode())) {
-						updateMsgList.add(msg);
-					} else {
-						saveMsgList.add(msg);
-					}
-					return msg;
-				}).collect(Collectors.toList());
-
-
-		saveOrUpdate(saveMsgList, updateMsgList, entityMessages, authenticatedUser);*/
+		updateMessages(domainMessages, entityMessages, authenticatedUser);
 
 	}
 
@@ -166,9 +138,8 @@ public class MessageRepository {
 	private List<String> getCodes(List<Message> messages) {
 		return messages.stream().map(Message::getCode).collect(Collectors.toList());
 	}
-	
+
 	private List<String> getNewCodes(List<org.egov.persistence.entity.Message> messages) {
 		return messages.stream().map(org.egov.persistence.entity.Message::getCode).collect(Collectors.toList());
 	}
-
 }

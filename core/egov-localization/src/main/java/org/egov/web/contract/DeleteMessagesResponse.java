@@ -6,5 +6,5 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public class DeleteMessagesResponse {
-    private boolean successful;
+	private boolean successful;
 }

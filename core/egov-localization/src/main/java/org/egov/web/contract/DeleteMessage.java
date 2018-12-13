@@ -9,10 +9,10 @@ import org.hibernate.validator.constraints.NotEmpty;
 @Getter
 @AllArgsConstructor
 public class DeleteMessage {
-    @NotEmpty
-    private String code;
-    @NotEmpty
-    private String module;
-    @NotEmpty
-    private String locale;
+	@NotEmpty
+	private String code;
+	@NotEmpty
+	private String module;
+	@NotEmpty
+	private String locale;
 }

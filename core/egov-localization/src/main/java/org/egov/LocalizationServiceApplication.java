@@ -17,42 +17,42 @@ import javax.annotation.PostConstruct;
 import java.util.TimeZone;
 
 @SpringBootApplication
-@Import({TracerConfiguration.class})
+@Import({ TracerConfiguration.class })
 public class LocalizationServiceApplication {
 
-    @Value("${app.timezone}")
-    private String timeZone;
+	@Value("${app.timezone}")
+	private String timeZone;
 
-    @PostConstruct
-    public void initialize() {
-        TimeZone.setDefault(TimeZone.getTimeZone(timeZone));
-    }
+	@PostConstruct
+	public void initialize() {
+		TimeZone.setDefault(TimeZone.getTimeZone(timeZone));
+	}
 
-    @Bean
-    public WebMvcConfigurerAdapter webMvcConfigurerAdapter() {
-        return new WebMvcConfigurerAdapter() {
+	@Bean
+	public WebMvcConfigurerAdapter webMvcConfigurerAdapter() {
+		return new WebMvcConfigurerAdapter() {
 
-            @Override
-            public void configureContentNegotiation(ContentNegotiationConfigurer configurer) {
-                configurer.defaultContentType(MediaType.APPLICATION_JSON_UTF8);
-            }
-        };
-    }
+			@Override
+			public void configureContentNegotiation(ContentNegotiationConfigurer configurer) {
+				configurer.defaultContentType(MediaType.APPLICATION_JSON_UTF8);
+			}
+		};
+	}
 
-    @Bean
-    public ObjectMapper objectMapper() {
-        return new ObjectMapper();
-    }
+	@Bean
+	public ObjectMapper objectMapper() {
+		return new ObjectMapper();
+	}
 
-    @Bean
-    public MappingJackson2HttpMessageConverter jacksonConverter(ObjectMapper objectMapper) {
-        MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter();
-        objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
-        converter.setObjectMapper(objectMapper);
-        return converter;
-    }
+	@Bean
+	public MappingJackson2HttpMessageConverter jacksonConverter(ObjectMapper objectMapper) {
+		MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter();
+		objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+		converter.setObjectMapper(objectMapper);
+		return converter;
+	}
 
-    public static void main(String[] args) {
-        SpringApplication.run(LocalizationServiceApplication.class, args);
-    }
+	public static void main(String[] args) {
+		SpringApplication.run(LocalizationServiceApplication.class, args);
+	}
 }

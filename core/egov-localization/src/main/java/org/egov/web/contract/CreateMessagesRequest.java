@@ -19,8 +19,10 @@ import java.util.stream.Collectors;
 public class CreateMessagesRequest {
     @JsonProperty("RequestInfo")
     private RequestInfo requestInfo;
+    
     @NotEmpty
     private String tenantId;
+    
     @Size(min = 1)
     @Valid
     private List<Message> messages;

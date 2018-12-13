@@ -42,10 +42,29 @@ public class MessageController {
         return createResponse(domainMessages);
     }
 
+    
+    @PostMapping("/v1/_upsert")
+    public MessagesResponse upsertMessages(@Valid @RequestBody CreateMessagesRequest messageRequest,
+    			BindingResult bindingResult){
+    	
+    	System.out.println(messageRequest.getTenantId());
+    	System.out.println(messageRequest.getRequestInfo());
+    	System.out.println(messageRequest.getMessages());
+    	
+    	if (bindingResult.hasErrors())
+            throw new InvalidMessageRequest(bindingResult.getFieldErrors());
+    	
+        final List<org.egov.domain.model.Message> messages = messageRequest.toDomainMessages();
+        messageService.upsert(messageRequest.getTenant(), messages, messageRequest.getAuthenticatedUser());
+        return createResponse(messages);
+    }
+    
+ 
     @PostMapping("/v1/_create")
     public MessagesResponse createMessages(@Valid @RequestBody CreateMessagesRequest messageRequest,
                                            BindingResult bindingResult) {
-        if (bindingResult.hasErrors())
+    	
+    	if (bindingResult.hasErrors())
             throw new InvalidMessageRequest(bindingResult.getFieldErrors());
 
         final List<org.egov.domain.model.Message> messages = messageRequest.toDomainMessages();
@@ -63,6 +82,10 @@ public class MessageController {
         return new MessagesResponse(domainMessages.stream().map(Message::new).collect(Collectors.toList()));
     }
 
+    
+    
+    
+    
     @PostMapping(value = "/v1/_update")
     public MessagesResponse update(@RequestBody @Valid final UpdateMessageRequest messageRequest,
                                    final BindingResult bindingResult) {

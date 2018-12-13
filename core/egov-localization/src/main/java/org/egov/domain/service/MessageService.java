@@ -1,16 +1,25 @@
 package org.egov.domain.service;
 
-import org.egov.domain.model.*;
+//import lombok.extern.slf4j.Slf4j;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import org.egov.domain.model.AuthenticatedUser;
+import org.egov.domain.model.Message;
+import org.egov.domain.model.MessageIdentity;
+import org.egov.domain.model.MessageSearchCriteria;
+import org.egov.domain.model.Tenant;
 import org.egov.persistence.repository.MessageCacheRepository;
 import org.egov.persistence.repository.MessageRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
-
-import lombok.extern.slf4j.Slf4j;
-
-import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * Responsible for creating, updating and computing localization message list.
@@ -40,7 +49,7 @@ import java.util.stream.Stream;
  * 2) In validate cache entry for raw messages with key <locale>:default
  */
 @Service
-@Slf4j
+//@Slf4j
 public class MessageService {
     private static final String ENGLISH_INDIA = "en_IN";
     private MessageRepository messageRepository;
@@ -51,10 +60,18 @@ public class MessageService {
         this.messageRepository = messageRepository;
         this.messageCacheRepository = messageCacheRepository;
     }
+    
+    public void upsert(Tenant tenant, List<Message> messages, AuthenticatedUser user) {
 
+    	Message message = messages.get(0);
+    	messageRepository.upsert(message.getTenant(), message.getLocale(), message.getModule(), messages, user);
+    	bustCacheEntriesForMessages(tenant, messages);
+    }
+    
     public void create(Tenant tenant, List<Message> messages, AuthenticatedUser user) {
-        messageRepository.save(messages, user);
-        bustCacheEntriesForMessages(tenant, messages);
+
+    	messageRepository.save(messages, user);
+    	bustCacheEntriesForMessages(tenant, messages);
     }
 
     public void updateMessagesForModule(Tenant tenant, List<Message> messages, AuthenticatedUser user) {

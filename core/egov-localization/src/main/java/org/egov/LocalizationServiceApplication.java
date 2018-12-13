@@ -36,7 +36,6 @@ public class LocalizationServiceApplication {
             public void configureContentNegotiation(ContentNegotiationConfigurer configurer) {
                 configurer.defaultContentType(MediaType.APPLICATION_JSON_UTF8);
             }
-
         };
     }
 

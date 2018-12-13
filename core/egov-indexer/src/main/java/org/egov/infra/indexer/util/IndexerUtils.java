@@ -72,6 +72,12 @@ public class IndexerUtils {
 
 	private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 
+	/**
+	 * A Poll thread that polls es for its status and keeps the kafka container
+	 * paused until ES is back up. Once ES is up, container is resumed and all the
+	 * stacked up records in the queue are processed.
+	 * 
+	 */
 	public void orchestrateListenerOnESHealth() {
 		kafkaConsumerConfig.pauseContainer();
 		log.info("Polling ES....");
@@ -99,6 +105,12 @@ public class IndexerUtils {
 		scheduler.scheduleAtFixedRate(esPoller, 0, Long.valueOf(pollInterval), TimeUnit.SECONDS);
 	}
 
+	/**
+	 * Helper method in data transformation
+	 * 
+	 * @param jsonString
+	 * @return
+	 */
 	public String pullArrayOutOfString(String jsonString) {
 		String[] array = jsonString.split(":");
 		StringBuilder jsonArray = new StringBuilder();
@@ -112,6 +124,12 @@ public class IndexerUtils {
 		return jsonArray.toString();
 	}
 
+	/**
+	 * Helper method in data transformation
+	 * 
+	 * @param jsonString
+	 * @return
+	 */
 	public String buildString(Object object) {
 		// JsonPath cannot be applied on the type JSONObject. String has to be built of
 		// it and then used.
@@ -125,6 +143,14 @@ public class IndexerUtils {
 		return jsonArray.toString();
 	}
 
+	/**
+	 * A part of use-case where custom object it to be indexed. This method builds
+	 * the uri for external service call based on config.
+	 * 
+	 * @param uriMapping
+	 * @param kafkaJson
+	 * @return
+	 */
 	public String buildUri(UriMapping uriMapping, String kafkaJson) {
 		StringBuilder serviceCallUri = new StringBuilder();
 		String uriWithPathParam = null;
@@ -150,18 +176,19 @@ public class IndexerUtils {
 						continue;
 					}
 					StringBuilder resolvedParam = new StringBuilder();
-					if(queryParam instanceof List) {
+					if (queryParam instanceof List) {
 						StringBuilder values = new StringBuilder();
-						for(Object param: (List) queryParam) {
-							if(StringUtils.isEmpty(values.toString())) {
+						for (Object param : (List) queryParam) {
+							if (StringUtils.isEmpty(values.toString())) {
 								values.append(param.toString());
-							}else {
+							} else {
 								values.append(",").append(param.toString());
 							}
 						}
 						queryParam = values.toString();
 					}
-					resolvedParam.append(queryParamExpression[0].trim()).append("=").append(queryParam.toString().trim());
+					resolvedParam.append(queryParamExpression[0].trim()).append("=")
+							.append(queryParam.toString().trim());
 					queryParamsArray[i] = resolvedParam.toString().trim();
 				}
 				StringBuilder queryParams = new StringBuilder();
@@ -208,6 +235,14 @@ public class IndexerUtils {
 		return MdmsCriteriaReq.builder().requestInfo(requestInfo).mdmsCriteria(mdmsCriteria).build();
 	}
 
+	/**
+	 * Method that builds filter for mdms.
+	 * 
+	 * @param filter
+	 * @param mdmsMppings
+	 * @param kafkaJson
+	 * @return
+	 */
 	public String buildFilter(String filter, UriMapping mdmsMppings, String kafkaJson) {
 		String modifiedFilter = mdmsMppings.getFilter();
 		log.debug("buildfilter, kafkaJson: " + kafkaJson);
@@ -224,6 +259,13 @@ public class IndexerUtils {
 		return modifiedFilter;
 	}
 
+	/**
+	 * Helper method that builds id for the index while bulk indexing.
+	 * 
+	 * @param index
+	 * @param stringifiedObject
+	 * @return
+	 */
 	public String buildIndexId(Index index, String stringifiedObject) {
 		String[] idFormat = index.getId().split("[,]");
 		StringBuilder id = new StringBuilder();
@@ -242,6 +284,15 @@ public class IndexerUtils {
 		return id.toString();
 	}
 
+	/**
+	 * Helper method for data transformation.
+	 * 
+	 * @param kafkaJson
+	 * @param index
+	 * @param isBulk
+	 * @return
+	 * @throws Exception
+	 */
 	public JSONArray constructArrayForBulkIndex(String kafkaJson, Index index, boolean isBulk) throws Exception {
 		JSONArray kafkaJsonArray = null;
 		ObjectMapper mapper = new ObjectMapper();
@@ -278,6 +329,14 @@ public class IndexerUtils {
 		return transformData(index, kafkaJsonArray);
 	}
 
+	/**
+	 * Method to index
+	 * 
+	 * @param finalJson
+	 * @param url
+	 * @param index
+	 * @throws Exception
+	 */
 	public void validateAndIndex(String finalJson, String url, Index index) throws Exception {
 		if (!StringUtils.isEmpty(finalJson)) {
 			doIndexing(finalJson, url.toString(), index);
@@ -287,6 +346,14 @@ public class IndexerUtils {
 		}
 	}
 
+	/**
+	 * Method to index
+	 * 
+	 * @param finalJson
+	 * @param url
+	 * @param index
+	 * @throws Exception
+	 */
 	public void doIndexing(String finalJson, String url, Index index) throws Exception {
 		if (finalJson.startsWith("{ \"index\""))
 			bulkIndexer.indexJsonOntoES(url.toString(), finalJson, index);
@@ -295,6 +362,14 @@ public class IndexerUtils {
 		}
 	}
 
+	/**
+	 * Method to index
+	 * 
+	 * @param finalJson
+	 * @param url
+	 * @param index
+	 * @throws Exception
+	 */
 	public void indexWithESId(Index index, String finalJson) throws Exception {
 		StringBuilder urlForNonBulk = new StringBuilder();
 		urlForNonBulk.append(esHostUrl).append(index.getName()).append("/").append(index.getType()).append("/")
@@ -302,6 +377,11 @@ public class IndexerUtils {
 		bulkIndexer.indexJsonOntoES(urlForNonBulk.toString(), finalJson, index);
 	}
 
+	/**
+	 * Helper method that returns jsonpath and key from a given jsonpath string. This reqd while using DocumentContext
+	 * @param jsonPath
+	 * @return
+	 */
 	public String getProcessedJsonPath(String jsonPath) {
 		String[] expressionArray = (jsonPath).split("[.]");
 		StringBuilder expression = new StringBuilder();
@@ -313,6 +393,11 @@ public class IndexerUtils {
 		return expression.toString();
 	}
 
+	/**
+	 * Helper method to get search url for es
+	 * @param reindexRequest
+	 * @return
+	 */
 	public String getESSearchURL(ReindexRequest reindexRequest) {
 		StringBuilder uri = new StringBuilder();
 		uri.append(esHostUrl).append(reindexRequest.getIndex()).append("/" + reindexRequest.getType())
@@ -320,12 +405,23 @@ public class IndexerUtils {
 		return uri.toString();
 	}
 
+	/**
+	 * Helper method to get settings url for es
+	 * @param reindexRequest
+	 * @return
+	 */
 	public String getESSettingsURL(ReindexRequest reindexRequest) {
 		StringBuilder uri = new StringBuilder();
 		uri.append(esHostUrl).append(reindexRequest.getIndex()).append("/_settings");
 		return uri.toString();
 	}
 
+	/**
+	 * Helper method to get search body
+	 * @param from
+	 * @param size
+	 * @return
+	 */
 	public Object getESSearchBody(Integer from, Integer size) {
 		Map<String, Integer> searchBody = new HashMap<>();
 		searchBody.put("from", from);
@@ -333,6 +429,11 @@ public class IndexerUtils {
 		return searchBody;
 	}
 
+	/**
+	 * Helper method to get settings body
+	 * @param totalRecords
+	 * @return
+	 */
 	public Object getESSettingsBody(Integer totalRecords) {
 		Map<String, Map<String, Long>> settingsBody = new HashMap<>();
 		Map<String, Long> innerBody = new HashMap<>();
@@ -342,6 +443,11 @@ public class IndexerUtils {
 		return settingsBody;
 	}
 
+	/**
+	 * Modifies dynamic mapping property of an index on es.
+	 * @param index
+	 * @return
+	 */
 	public String setDynamicMapping(Index index) {
 		String requestTwo = "{ \"settings\": {\"index.mapping.ignore_malformed\": true}}";
 		StringBuilder uriForUpdateMapping = new StringBuilder();
@@ -357,12 +463,19 @@ public class IndexerUtils {
 
 	}
 
+	/**
+	 * Helper method in transforming data to es readable form.
+	 * 
+	 * @param index
+	 * @param kafkaJsonArray
+	 * @return
+	 */
 	public JSONArray transformData(Index index, JSONArray kafkaJsonArray) {
 		JSONArray tranformedArray = new JSONArray();
 		for (int i = 0; i < kafkaJsonArray.length(); i++) {
 			try {
 				if (null != kafkaJsonArray.get(i)) {
-					if(!kafkaJsonArray.get(i).toString().equals("null")) {
+					if (!kafkaJsonArray.get(i).toString().equals("null")) {
 						DocumentContext context = null;
 						try {
 							context = JsonPath.parse(kafkaJsonArray.get(i).toString());
@@ -374,7 +487,7 @@ public class IndexerUtils {
 							log.info("Data: " + kafkaJsonArray.get(i));
 							continue;
 						}
-					}else {
+					} else {
 						log.info("null json in kafkaJsonArray, index: " + i);
 						continue;
 					}
@@ -393,6 +506,13 @@ public class IndexerUtils {
 		return tranformedArray;
 	}
 
+	/**
+	 * Method to mask fields as mentioned in the config
+	 * 
+	 * @param index
+	 * @param context
+	 * @return
+	 */
 	public DocumentContext maskFields(Index index, DocumentContext context) {
 		if (!CollectionUtils.isEmpty(index.getFieldsToBeMasked())) {
 			for (String fieldJsonPath : index.getFieldsToBeMasked()) {
@@ -400,9 +520,9 @@ public class IndexerUtils {
 					String[] expressionArray = (fieldJsonPath).split("[.]");
 					String expression = getProcessedJsonPath(fieldJsonPath);
 					context.put(expression, expressionArray[expressionArray.length - 1], "XXXXXXXX");
-				}catch(Exception e) {
-					log.info("Exception while masking field: ",e);
-					log.info("Data: "+context.jsonString());
+				} catch (Exception e) {
+					log.info("Exception while masking field: ", e);
+					log.info("Data: " + context.jsonString());
 				}
 			}
 			return context;
@@ -410,7 +530,14 @@ public class IndexerUtils {
 			return context;
 		}
 	}
-	
+
+	/**
+	 * Method to add timestamp at the root level as mentioned in the config.
+	 * 
+	 * @param index
+	 * @param context
+	 * @return
+	 */
 	public DocumentContext addTimeStamp(Index index, DocumentContext context) {
 		try {
 			ObjectMapper mapper = getObjectMapper();
@@ -420,11 +547,11 @@ public class IndexerUtils {
 			SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US);
 			formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
 			context.put("$", "@timestamp", formatter.format(date));
-		}catch(Exception e) {
-			log.info("Exception while adding timestamp: ",e);
-			log.info("Data: "+context.jsonString());
+		} catch (Exception e) {
+			log.info("Exception while adding timestamp: ", e);
+			log.info("Data: " + context.jsonString());
 		}
-		
+
 		return context;
 
 	}
@@ -459,6 +586,12 @@ public class IndexerUtils {
 			return AuditDetails.builder().lastModifiedBy(by).lastModifiedTime(dt).build();
 	}
 
+	/**
+	 * Method to fetch estimated time for the indexing to finish
+	 * 
+	 * @param totalRecords
+	 * @return
+	 */
 	public String fetchEstimatedTime(Integer totalRecords) {
 		StringBuilder estimatedTime = new StringBuilder();
 		Double actualTime = totalRecords * 0.000250; // on an avg one record gets reindexed in 0.000125s.
@@ -474,6 +607,14 @@ public class IndexerUtils {
 		return estimatedTime.toString();
 	}
 
+	/**
+	 * Helper method to build uri for paged search
+	 * 
+	 * @param apiDetails
+	 * @param offset
+	 * @param size
+	 * @return
+	 */
 	public String buildPagedUriForLegacyIndex(APIDetails apiDetails, Integer offset, Integer size) {
 		StringBuilder url = new StringBuilder();
 		if (apiDetails.getUri().contains("http://") || apiDetails.getUri().contains("https://"))
@@ -498,6 +639,12 @@ public class IndexerUtils {
 		return url.toString();
 	}
 
+	/**
+	 * Helper method in transformation
+	 * 
+	 * @param s
+	 * @return
+	 */
 	public String splitCamelCase(String s) {
 		return s.replaceAll(String.format("%s|%s|%s", "(?<=[A-Z])(?=[A-Z][a-z])", "(?<=[^A-Z])(?=[A-Z])",
 				"(?<=[A-Za-z])(?=[^A-Za-z])"), " ");

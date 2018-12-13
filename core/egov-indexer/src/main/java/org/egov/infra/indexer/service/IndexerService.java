@@ -76,7 +76,14 @@ public class IndexerService {
 	@Value("${egov.infra.indexer.host}")
 	private String esHostUrl;
 
-	public void elasticIndexer(String topic, String kafkaJson) throws Exception {
+	/**
+	 * Method that processes data according to the config and posts them to es.
+	 * 
+	 * @param topic
+	 * @param kafkaJson
+	 * @throws Exception
+	 */
+	public void esIndexer(String topic, String kafkaJson) throws Exception {
 		log.debug("kafka Data: " + kafkaJson);
 		Map<String, Mapping> mappingsMap = runner.getMappingMaps();
 		if (null != mappingsMap.get(topic)) {
@@ -94,6 +101,18 @@ public class IndexerService {
 		}
 	}
 
+	/**
+	 * This method deals with 3 types of uses cases that indexer supports: 1. Index
+	 * the entire object that you receive from the queue 2. Take just a part of the
+	 * record you receive on the queue and index only that 3. Build an entirely
+	 * different object and index it Data transformation as mentioned above is
+	 * performed and the passed on to a method that posts it to es.
+	 * 
+	 * @param index
+	 * @param kafkaJson
+	 * @param isBulk
+	 * @throws Exception
+	 */
 	public void indexProccessor(Index index, String kafkaJson, boolean isBulk) throws Exception {
 		Long startTime = null;
 		log.debug("index: " + index.getCustomJsonMapping());
@@ -124,6 +143,15 @@ public class IndexerService {
 		log.info("Total time taken: " + ((new Date().getTime()) - startTime) + "ms");
 	}
 
+	/**
+	 * Prepares es readable data for the use-case where a part of the record received on the queue is to be indexed.
+	 * 
+	 * @param index
+	 * @param kafkaJson
+	 * @param isBulk
+	 * @return
+	 * @throws Exception
+	 */
 	public String buildIndexJsonWithJsonpath(Index index, String kafkaJson, boolean isBulk) throws Exception {
 		StringBuilder jsonTobeIndexed = new StringBuilder();
 		String result = null;
@@ -158,6 +186,16 @@ public class IndexerService {
 		return result;
 	}
 
+	/**
+	 * Prepares es readable data for the use-case where an entirely different object than the record received on the queue is to be indexed.
+	 * 
+	 * @param index
+	 * @param kafkaJson
+	 * @param urlForMap
+	 * @param isBulk
+	 * @return
+	 * @throws Exception
+	 */
 	public String buildCustomJsonForBulk(Index index, String kafkaJson, String urlForMap, boolean isBulk)
 			throws Exception {
 		StringBuilder jsonTobeIndexed = new StringBuilder();
@@ -191,6 +229,17 @@ public class IndexerService {
 		return result;
 	}
 
+	/**
+	 * Helper method that builds the custom object for index. It performs following actions:
+	 * 1. Takes fields from the record received on the queue and maps it to the object to be newly created.
+	 * 2. Performs denormalization of data and attaching new data by making external API calls as mentioned in the config.
+	 * 3. Performs denormalization of data by making MDMS called as mentioned in the config.
+	 * 
+	 * @param customJsonMappings
+	 * @param kafkaJson
+	 * @param urlForMap
+	 * @return
+	 */
 	public String buildCustomJsonForIndex(CustomJsonMapping customJsonMappings, String kafkaJson, String urlForMap) {
 		Object indexMap = null;
 		ObjectMapper mapper = new ObjectMapper();
@@ -292,6 +341,15 @@ public class IndexerService {
 		return documentContext.jsonString().toString(); // jsonString has to be converted to string
 	}
 
+	/**
+	 * Prepares es readable data for the use-case where entire record received on the queue is to be indexed.
+	 * 
+	 * @param index
+	 * @param kafkaJson
+	 * @param isBulk
+	 * @return
+	 * @throws Exception
+	 */
 	public String buildIndexJsonWithoutJsonpath(Index index, String kafkaJson, boolean isBulk) throws Exception {
 		StringBuilder jsonTobeIndexed = new StringBuilder();
 		String result = null;

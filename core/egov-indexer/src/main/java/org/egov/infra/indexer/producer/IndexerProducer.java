@@ -14,6 +14,12 @@ public class IndexerProducer {
 	@Autowired
     private KafkaTemplate<String, Object> kafkaTemplate;
 	
+	/**
+	 * Kafka Producer
+	 * 
+	 * @param topicName
+	 * @param value
+	 */
     public void producer(String topicName, Object value) {
     	kafkaTemplate.send(topicName, value);
     }

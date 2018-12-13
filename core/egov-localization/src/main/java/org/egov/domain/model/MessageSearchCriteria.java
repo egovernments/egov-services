@@ -10,11 +10,11 @@ import static org.apache.commons.lang3.StringUtils.isEmpty;
 @Builder
 @EqualsAndHashCode
 public class MessageSearchCriteria {
-    private Tenant tenantId;
-    private String locale;
-    private String module;
+	private Tenant tenantId;
+	private String locale;
+	private String module;
 
-    public boolean isModuleAbsent() {
-        return isEmpty(module);
-    }
+	public boolean isModuleAbsent() {
+		return isEmpty(module);
+	}
 }

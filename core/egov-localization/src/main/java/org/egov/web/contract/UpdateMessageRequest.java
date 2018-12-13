@@ -18,44 +18,36 @@ import java.util.stream.Collectors;
 @Getter
 @AllArgsConstructor
 public class UpdateMessageRequest {
-    @JsonProperty("RequestInfo")
-    private RequestInfo requestInfo;
-    @NotEmpty
-    private String tenantId;
-    @NotEmpty
-    private String locale;
-    @NotEmpty
-    private String module;
-    @Size(min = 1)
-    @Valid
-    private List<UpdateMessage> messages;
+	@JsonProperty("RequestInfo")
+	private RequestInfo requestInfo;
+	@NotEmpty
+	private String tenantId;
+	@NotEmpty
+	private String locale;
+	@NotEmpty
+	private String module;
+	@Size(min = 1)
+	@Valid
+	private List<UpdateMessage> messages;
 
-    public List<org.egov.domain.model.Message> toDomainMessages() {
-        return messages.stream()
-            .map(message -> {
-                final MessageIdentity messageIdentity = MessageIdentity.builder()
-                    .code(message.getCode())
-                    .module(module)
-                    .locale(locale)
-                    .tenant(getTenant())
-                    .build();
-                return org.egov.domain.model.Message.builder()
-                    .message(message.getMessage())
-                    .messageIdentity(messageIdentity)
-                    .build();
-            })
-            .collect(Collectors.toList());
-    }
+	public List<org.egov.domain.model.Message> toDomainMessages() {
+		return messages.stream().map(message -> {
+			final MessageIdentity messageIdentity = MessageIdentity.builder().code(message.getCode()).module(module)
+					.locale(locale).tenant(getTenant()).build();
+			return org.egov.domain.model.Message.builder().message(message.getMessage())
+					.messageIdentity(messageIdentity).build();
+		}).collect(Collectors.toList());
+	}
 
-    public Tenant getTenant() {
-        return new Tenant(tenantId);
-    }
+	public Tenant getTenant() {
+		return new Tenant(tenantId);
+	}
 
-    public AuthenticatedUser getAuthenticatedUser() {
-        if(requestInfo == null || requestInfo.getUserInfo() == null || requestInfo.getUserInfo().getId() == null) {
-            throw new NotAuthenticatedException();
-        }
-        return new AuthenticatedUser(requestInfo.getUserInfo().getId());
-    }
+	public AuthenticatedUser getAuthenticatedUser() {
+		if (requestInfo == null || requestInfo.getUserInfo() == null || requestInfo.getUserInfo().getId() == null) {
+			throw new NotAuthenticatedException();
+		}
+		return new AuthenticatedUser(requestInfo.getUserInfo().getId());
+	}
 
 }

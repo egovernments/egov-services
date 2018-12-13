@@ -17,29 +17,24 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class DeleteMessagesRequest {
 
-    @JsonProperty("RequestInfo")
-    private RequestInfo requestInfo;
+	@JsonProperty("RequestInfo")
+	private RequestInfo requestInfo;
 
-    @NotNull
-    private String tenantId;
+	@NotNull
+	private String tenantId;
 
-    @Valid
-    @Size(min = 1)
-    private List<DeleteMessage> messages;
+	@Valid
+	@Size(min = 1)
+	private List<DeleteMessage> messages;
 
-    public List<MessageIdentity> getMessageIdentities() {
-        return messages.stream()
-            .map(message -> MessageIdentity.builder()
-                .code(message.getCode())
-                .module(message.getModule())
-                .locale(message.getLocale())
-                .tenant(getTenant())
-                .build())
-            .collect(Collectors.toList());
-    }
+	public List<MessageIdentity> getMessageIdentities() {
+		return messages.stream().map(message -> MessageIdentity.builder().code(message.getCode())
+				.module(message.getModule()).locale(message.getLocale()).tenant(getTenant()).build())
+				.collect(Collectors.toList());
+	}
 
-    public Tenant getTenant() {
-        return new Tenant(tenantId);
-    }
+	public Tenant getTenant() {
+		return new Tenant(tenantId);
+	}
 
 }

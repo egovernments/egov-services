@@ -17,36 +17,33 @@ import java.util.stream.Collectors;
 @Getter
 @AllArgsConstructor
 public class CreateMessagesRequest {
-    @JsonProperty("RequestInfo")
-    private RequestInfo requestInfo;
-    @NotEmpty
-    private String tenantId;
-    @Size(min = 1)
-    @Valid
-    private List<Message> messages;
+	@JsonProperty("RequestInfo")
+	private RequestInfo requestInfo;
 
-    public List<org.egov.domain.model.Message> toDomainMessages() {
-        return messages.stream()
-                .map(this::toDomainMessage)
-                .collect(Collectors.toList());
-    }
+	@NotEmpty
+	private String tenantId;
 
-    private org.egov.domain.model.Message toDomainMessage(Message contractMessage) {
-        return org.egov.domain.model.Message.builder()
-                .message(contractMessage.getMessage())
-                .messageIdentity(contractMessage.getMessageIdentity(getTenant()))
-                .build();
-    }
+	@Size(min = 1)
+	@Valid
+	private List<Message> messages;
 
-    public Tenant getTenant() {
-        return new Tenant(tenantId);
-    }
+	public List<org.egov.domain.model.Message> toDomainMessages() {
+		return messages.stream().map(this::toDomainMessage).collect(Collectors.toList());
+	}
 
-    public AuthenticatedUser getAuthenticatedUser() {
-        if(requestInfo == null || requestInfo.getUserInfo() == null || requestInfo.getUserInfo().getId() == null) {
-            throw new NotAuthenticatedException();
-        }
-        return new AuthenticatedUser(requestInfo.getUserInfo().getId());
-    }
+	private org.egov.domain.model.Message toDomainMessage(Message contractMessage) {
+		return org.egov.domain.model.Message.builder().message(contractMessage.getMessage())
+				.messageIdentity(contractMessage.getMessageIdentity(getTenant())).build();
+	}
+
+	public Tenant getTenant() {
+		return new Tenant(tenantId);
+	}
+
+	public AuthenticatedUser getAuthenticatedUser() {
+		if (requestInfo == null || requestInfo.getUserInfo() == null || requestInfo.getUserInfo().getId() == null) {
+			throw new NotAuthenticatedException();
+		}
+		return new AuthenticatedUser(requestInfo.getUserInfo().getId());
+	}
 }
-

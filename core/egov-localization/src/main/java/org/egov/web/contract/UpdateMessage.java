@@ -9,8 +9,8 @@ import org.hibernate.validator.constraints.NotEmpty;
 @Getter
 @AllArgsConstructor
 public class UpdateMessage {
-    @NotEmpty
-    private String code;
-    @NotEmpty
-    private String message;
+	@NotEmpty
+	private String code;
+	@NotEmpty
+	private String message;
 }

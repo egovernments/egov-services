@@ -105,6 +105,12 @@ public class LegacyIndexService {
 	private ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(5);
 	private final ScheduledExecutorService schedulerofChildThreads = Executors.newScheduledThreadPool(1);
 
+	/**
+	 * Creates a legacy index job by making an entry into the eg_indexer_job and returns response with job identifiers.
+	 * 
+	 * @param legacyindexRequest
+	 * @return
+	 */
 	public LegacyIndexResponse createLegacyindexJob(LegacyIndexRequest legacyindexRequest) {
 		Map<String, Mapping> mappingsMap = runner.getMappingMaps();
 		LegacyIndexResponse legacyindexResponse = null;
@@ -135,11 +141,28 @@ public class LegacyIndexService {
 		return legacyindexResponse;
 	}
 
+	/**
+	 * Method to start the index thread for indexing activity
+	 * 
+	 * @param reindexRequest
+	 * @return
+	 */
 	public Boolean beginLegacyIndex(LegacyIndexRequest legacyIndexRequest) {
 		indexThread(legacyIndexRequest);
 		return true;
 	}
 
+	/**
+	 * Index thread which performs the indexing job. It operates as follows: 1.
+	 * Based on the Request, it makes API calls in batches to the external service
+	 * 2. With every batch fetched, data is sent to child threads for processing 3.
+	 * Child threads perform primary data transformation if required and then hand
+	 * it over to another esIndexer method 4. The esIndexer method performs checks
+	 * and transformations pas per the config and then posts the data to es in bulk
+	 * 5. The process repeats until all the records are indexed.
+	 * 
+	 * @param reindexRequest
+	 */
 	private void indexThread(LegacyIndexRequest legacyIndexRequest) {
 		final Runnable legacyIndexer = new Runnable() {
 			boolean threadRun = true;
@@ -258,6 +281,15 @@ public class LegacyIndexService {
 		scheduler.schedule(legacyIndexer, indexThreadPollInterval, TimeUnit.MILLISECONDS);
 	}
 
+	/**
+	 * Child threads which perform the primary data transformation and pass it on to
+	 * the esIndexer method
+	 * 
+	 * @param reindexRequest
+	 * @param mapper
+	 * @param requestToReindex
+	 * @param resultSize
+	 */
 	public void childThreadExecutor(LegacyIndexRequest legacyIndexRequest, ObjectMapper mapper, Object response) {
 		final Runnable childThreadJob = new Runnable() {
 			boolean threadRun = true;
@@ -268,14 +300,14 @@ public class LegacyIndexService {
 						ServiceResponse serviceResponse = mapper.readValue(mapper.writeValueAsString(response),
 								ServiceResponse.class);
 						PGRIndexObject indexObject = pgrCustomDecorator.dataTransformationForPGR(serviceResponse);
-						indexerService.elasticIndexer(legacyIndexRequest.getLegacyIndexTopic(), mapper.writeValueAsString(indexObject));
+						indexerService.esIndexer(legacyIndexRequest.getLegacyIndexTopic(), mapper.writeValueAsString(indexObject));
 					} else {
 						if(legacyIndexRequest.getLegacyIndexTopic().equals(ptLegacyTopic)) {
 							PropertyResponse propertyResponse = mapper.readValue(mapper.writeValueAsString(response), PropertyResponse.class);
 							propertyResponse.setProperties(ptCustomDecorator.transformData(propertyResponse.getProperties()));
-							indexerService.elasticIndexer(legacyIndexRequest.getLegacyIndexTopic(), mapper.writeValueAsString(propertyResponse));
+							indexerService.esIndexer(legacyIndexRequest.getLegacyIndexTopic(), mapper.writeValueAsString(propertyResponse));
 						}else {
-							indexerService.elasticIndexer(legacyIndexRequest.getLegacyIndexTopic(), mapper.writeValueAsString(response));
+							indexerService.esIndexer(legacyIndexRequest.getLegacyIndexTopic(), mapper.writeValueAsString(response));
 						}
 					}
 				} catch (Exception e) {

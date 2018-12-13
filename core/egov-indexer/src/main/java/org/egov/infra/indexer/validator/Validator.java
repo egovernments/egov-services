@@ -33,6 +33,12 @@ public class Validator {
 	@Autowired
 	private BulkIndexer bulkIndexer;
 	
+	/**
+	 * Validates reindex request as follows:
+	 * 1. Checks if required data like RI, userInfo is mentioned
+	 * 2. Checks if the configs are availble of which reindex is requested.
+	 * @param reindexRequest
+	 */
 	public void validaterReindexRequest(ReindexRequest reindexRequest) {
 		Map<String, String> errorMap = new HashMap<>();
 		validateUserRBACProxy(errorMap, reindexRequest.getRequestInfo());
@@ -56,6 +62,11 @@ public class Validator {
 		}
 	}
 	
+	/**
+	 * Validates the request for legacy index
+	 * 
+	 * @param legacyIndexRequest
+	 */
 	public void validaterLegacyindexRequest(LegacyIndexRequest legacyIndexRequest) {
 		Map<String, String> errorMap = new HashMap<>();
 		validateUserRBACProxy(errorMap, legacyIndexRequest.getRequestInfo());

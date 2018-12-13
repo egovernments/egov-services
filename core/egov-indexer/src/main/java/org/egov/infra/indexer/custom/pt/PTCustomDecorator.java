@@ -27,6 +27,12 @@ public class PTCustomDecorator {
 	@Autowired
 	private RestTemplate restTemplate;
 	
+	/**
+	 * Transforms data by adding consumer codes at the root level, this is needed for denormalization later on.
+	 * 
+	 * @param properties
+	 * @return
+	 */
 	public List<Property> transformData(List<Property> properties){
 		for(Property property: properties) {
 			List<String> consumerCodes = new ArrayList<String>();
@@ -40,6 +46,12 @@ public class PTCustomDecorator {
 		return properties;
 	}
 	
+	/**
+	 * Incase of update, this method fetched all previous assessments of that particular record and hands it over to indexer.
+	 * 
+	 * @param request
+	 * @return
+	 */
 	public PropertyRequest dataTransformForPTUpdate(PropertyRequest request) {
 		for(Property property: request.getProperties()) {
 			StringBuilder uri = new StringBuilder();

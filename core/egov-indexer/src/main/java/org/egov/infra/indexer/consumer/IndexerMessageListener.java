@@ -63,6 +63,15 @@ public class IndexerMessageListener implements MessageListener<String, String> {
 
 
 	@Override
+	/**
+	 * Messages listener which acts as consumer. This message listener is injected inside a kafkaContainer.
+	 * This consumer is a start point to the following index jobs:
+	 * 1. Re-index
+	 * 2. Legacy Index
+	 * 3. PGR custom index
+	 * 4. PT custom index
+	 * 5. Core indexing
+	 */
 	public void onMessage(ConsumerRecord<String, String> data) {
 		log.info("Topic: " + data.topic());		
 		ObjectMapper mapper = indexerUtils.getObjectMapper();
@@ -85,7 +94,7 @@ public class IndexerMessageListener implements MessageListener<String, String> {
 			try {
 				ServiceResponse serviceResponse = mapper.readValue(data.value(), ServiceResponse.class);
 				PGRIndexObject indexObject = pgrCustomDecorator.dataTransformationForPGR(serviceResponse);
-				indexerService.elasticIndexer(data.topic(), mapper.writeValueAsString(indexObject));
+				indexerService.esIndexer(data.topic(), mapper.writeValueAsString(indexObject));
 			} catch (Exception e) {
 				log.error("Couldn't parse pgrindex request: ", e);
 			}
@@ -95,13 +104,13 @@ public class IndexerMessageListener implements MessageListener<String, String> {
 				if(data.topic().equals(ptUpdateTopic))
 					propertyRequest = ptCustomDecorator.dataTransformForPTUpdate(propertyRequest);
 				propertyRequest.setProperties(ptCustomDecorator.transformData(propertyRequest.getProperties()));
-				indexerService.elasticIndexer(data.topic(), mapper.writeValueAsString(propertyRequest));
+				indexerService.esIndexer(data.topic(), mapper.writeValueAsString(propertyRequest));
 			} catch (Exception e) {
 				log.error("Couldn't parse pgrindex request: ", e);
 			}
 		}else {
 			try {
-				indexerService.elasticIndexer(data.topic(), data.value());
+				indexerService.esIndexer(data.topic(), data.value());
 			} catch (Exception e) {
 				log.error("error while indexing: ", e);
 			}

@@ -26,7 +26,16 @@ public class BulkIndexer {
 	
 	@Autowired
 	private IndexerUtils indexerUtils;
-			
+	
+	/**
+	 * Methods that makes a REST API call to /_bulk API of the ES. 
+	 * This method triggers the listener orchestration method in case the ES cluster is down.
+	 * 
+	 * @param url
+	 * @param indexJson
+	 * @param index
+	 * @throws Exception
+	 */
 	public void indexJsonOntoES(String url, String indexJson, Index index) throws Exception{
 		ObjectMapper mapper = new ObjectMapper();
 		try{
@@ -53,7 +62,12 @@ public class BulkIndexer {
 		}
 	}
 	
-	
+	/**
+	 * Fetches mapping from es for a given index and type.
+	 * 
+	 * @param url
+	 * @return
+	 */
 	public Object getIndexMappingfromES(String url){
 		Object response = null;
 		try{
@@ -71,6 +85,14 @@ public class BulkIndexer {
 
 	}
 	
+	/**
+	 * A common method to make API called ES for data retrieval, it can be used to get data from ES, modify settings of an index etc
+	 * 
+	 * @param url
+	 * @param body
+	 * @param httpMethod
+	 * @return
+	 */
 	public Object getESResponse(String url, Object body, String httpMethod) {
 		Object response = null;
 		if(null != body) {

@@ -38,6 +38,12 @@ public class PGRCustomDecorator {
 	@Autowired
 	private RestTemplate restTemplate;
 	
+	/**
+	 * Builds a custom object for PGR that is common for core index and legacy index,
+	 * 
+	 * @param serviceResponse
+	 * @return
+	 */
 	public PGRIndexObject dataTransformationForPGR(ServiceResponse serviceResponse) {
 		PGRIndexObject indexObject = new PGRIndexObject();
 		ObjectMapper mapper = indexerUtils.getObjectMapper();
@@ -68,6 +74,12 @@ public class PGRCustomDecorator {
 		return indexObject;
 	}
 	
+	/**
+	 * Department is fetched from MDMS
+	 * 
+	 * @param service
+	 * @return
+	 */
 	public String getDepartment(Service service) {
 		StringBuilder uri = new StringBuilder();
 		MdmsCriteriaReq request = prepareMdMsRequestForDept(uri, "pb", service.getServiceCode(), new RequestInfo());
@@ -84,6 +96,15 @@ public class PGRCustomDecorator {
 		}
 	}
 	
+	/**
+	 * Prepares MDMS request for the service category search
+	 * 
+	 * @param uri
+	 * @param tenantId
+	 * @param category
+	 * @param requestInfo
+	 * @return
+	 */
 	public MdmsCriteriaReq prepareMdMsRequestForDept(StringBuilder uri, String tenantId, String category, RequestInfo requestInfo) {
 		uri.append(mdmsHost).append(mdmsEndpoint);
 		MasterDetail masterDetail = org.egov.mdms.model.MasterDetail.builder()

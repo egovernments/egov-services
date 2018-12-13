@@ -55,8 +55,7 @@ public class ReindexService {
 
 	@Autowired
 	private IndexerService indexerService;
-	
-	
+
 	@Value("${egov.core.reindex.topic.name}")
 	private String reindexTopic;
 
@@ -89,9 +88,15 @@ public class ReindexService {
 
 	private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(5);
 	private final ScheduledExecutorService schedulerofChildThreads = Executors.newScheduledThreadPool(5);
-	
-	private static Long recordsIndexed = 0L;
 
+	private static Long recordsIndexed = 0L;
+	
+	/**
+	 * Creates a reindex job by creating its entry into the eg_indexer_job table and on success returns response with estimated time for job, total records etc
+	 * 
+	 * @param reindexRequest
+	 * @return
+	 */
 	public ReindexResponse createReindexJob(ReindexRequest reindexRequest) {
 		Map<String, Mapping> mappingsMap = runner.getMappingMaps();
 		ReindexResponse reindexResponse = null;
@@ -126,11 +131,28 @@ public class ReindexService {
 		return reindexResponse;
 	}
 
+	/**
+	 * Method to start the index thread for indexing activity
+	 * 
+	 * @param reindexRequest
+	 * @return
+	 */
 	public Boolean beginReindex(ReindexRequest reindexRequest) {
 		indexThread(reindexRequest);
 		return true;
 	}
 
+	/**
+	 * Index thread which performs the indexing job. It operates as follows: 1.
+	 * Based on the Request, it makes API calls in batches to the external service
+	 * 2. With every batch fetched, data is sent to child threads for processing 3.
+	 * Child threads perform primary data transformation if required and then hand
+	 * it over to another esIndexer method 4. The esIndexer method performs checks
+	 * and transformations pas per the config and then posts the data to es in bulk
+	 * 5. The process repeats until all the records are indexed.
+	 * 
+	 * @param reindexRequest
+	 */
 	private void indexThread(ReindexRequest reindexRequest) {
 		final Runnable legacyIndexer = new Runnable() {
 			boolean threadRun = true;
@@ -142,7 +164,8 @@ public class ReindexService {
 					String uri = indexerUtils.getESSearchURL(reindexRequest);
 					ObjectMapper mapper = indexerUtils.getObjectMapper();
 					Integer from = 0;
-					Integer size = null == reindexRequest.getBatchSize() ? defaultPageSizeForReindex : reindexRequest.getBatchSize();
+					Integer size = null == reindexRequest.getBatchSize() ? defaultPageSizeForReindex
+							: reindexRequest.getBatchSize();
 					while (!isProccessDone) {
 						Object request = indexerUtils.getESSearchBody(from, size);
 						Object response = bulkIndexer.getESResponse(uri, request, "POST");
@@ -184,7 +207,7 @@ public class ReindexService {
 						IndexJobWrapper wrapper = IndexJobWrapper.builder().requestInfo(reindexRequest.getRequestInfo())
 								.job(job).build();
 						indexerProducer.producer(persisterUpdate, wrapper);
-						
+
 						from += size;
 					}
 					if (isProccessDone) {
@@ -205,16 +228,27 @@ public class ReindexService {
 		scheduler.schedule(legacyIndexer, indexThreadPollInterval, TimeUnit.MILLISECONDS);
 	}
 
-	public void childThreadExecutor(ReindexRequest reindexRequest, ObjectMapper mapper, Object requestToReindex, Integer resultSize) {
+	/**
+	 * Child threads which perform the primary data transformation and pass it on to
+	 * the esIndexer method
+	 * 
+	 * @param reindexRequest
+	 * @param mapper
+	 * @param requestToReindex
+	 * @param resultSize
+	 */
+	public void childThreadExecutor(ReindexRequest reindexRequest, ObjectMapper mapper, Object requestToReindex,
+			Integer resultSize) {
 		final Runnable childThreadJob = new Runnable() {
 			boolean threadRun = true;
+
 			public void run() {
 				if (threadRun) {
-					try {						
-						indexerService.elasticIndexer(reindexRequest.getReindexTopic(),
+					try {
+						indexerService.esIndexer(reindexRequest.getReindexTopic(),
 								mapper.writeValueAsString(requestToReindex));
-						recordsIndexed+=resultSize;						
-						log.info("Records indexed: "+recordsIndexed);
+						recordsIndexed += resultSize;
+						log.info("Records indexed: " + recordsIndexed);
 					} catch (Exception e) {
 						threadRun = false;
 					}
@@ -224,18 +258,26 @@ public class ReindexService {
 				return;
 			}
 		};
-		schedulerofChildThreads.scheduleAtFixedRate(childThreadJob, 0, indexThreadPollInterval + 50, TimeUnit.MILLISECONDS);
+		schedulerofChildThreads.scheduleAtFixedRate(childThreadJob, 0, indexThreadPollInterval + 50,
+				TimeUnit.MILLISECONDS);
 
 	}
 
+	/**
+	 * Utility method to check if the list of records fetched contains any invalid
+	 * record
+	 * 
+	 * @param hit
+	 * @return
+	 */
 	public boolean isHitAnInvalidRecord(Object hit) {
 		ObjectMapper mapper = indexerUtils.getObjectMapper();
 		boolean isInvalidRecord = false;
-		if(null == hit) {
+		if (null == hit) {
 			isInvalidRecord = true;
 			return isInvalidRecord;
-		}else {
-			if(hit.toString().equalsIgnoreCase("null")) {
+		} else {
+			if (hit.toString().equalsIgnoreCase("null")) {
 				isInvalidRecord = true;
 				return isInvalidRecord;
 			}
@@ -254,6 +296,12 @@ public class ReindexService {
 		return isInvalidRecord;
 	}
 
+	/**
+	 * Method to increase max_result_window property of the index so that es starts returning records more than 10000.
+	 * 
+	 * @param reindexRequest
+	 * @param totalRecords
+	 */
 	public void increaseMaxResultWindow(ReindexRequest reindexRequest, Integer totalRecords) {
 		String uri = indexerUtils.getESSettingsURL(reindexRequest);
 		Object body = indexerUtils.getESSettingsBody(totalRecords);

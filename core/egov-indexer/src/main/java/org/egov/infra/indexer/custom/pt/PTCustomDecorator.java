@@ -85,6 +85,7 @@ public class PTCustomDecorator {
 			}
 			
 		}
+		log.info("Record updated with previous assessments");
 		return request;
 		
 	}

@@ -89,7 +89,6 @@ public class IndexerMessageListener implements MessageListener<String, String> {
 			}catch(Exception e) {
 				log.error("Couldn't parse legacyindex request: ", e);
 			}
-			
 		}else if(data.topic().equals(pgrCreateTopic) || data.topic().equals(pgrUpdateTopic)) {
 			try {
 				ServiceResponse serviceResponse = mapper.readValue(data.value(), ServiceResponse.class);
@@ -106,7 +105,7 @@ public class IndexerMessageListener implements MessageListener<String, String> {
 				propertyRequest.setProperties(ptCustomDecorator.transformData(propertyRequest.getProperties()));
 				indexerService.esIndexer(data.topic(), mapper.writeValueAsString(propertyRequest));
 			} catch (Exception e) {
-				log.error("Couldn't parse pgrindex request: ", e);
+				log.error("Couldn't parse ptindex request: ", e);
 			}
 		}else {
 			try {

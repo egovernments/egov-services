@@ -329,53 +329,6 @@ public class IndexerUtils {
 		return transformData(index, kafkaJsonArray);
 	}
 
-	/**
-	 * Method to index
-	 * 
-	 * @param finalJson
-	 * @param url
-	 * @param index
-	 * @throws Exception
-	 */
-	public void validateAndIndex(String finalJson, String url, Index index) throws Exception {
-		if (!StringUtils.isEmpty(finalJson)) {
-			doIndexing(finalJson, url.toString(), index);
-		} else {
-			log.info("Indexing will not be done, please modify the data and retry.");
-			log.error("Object: " + finalJson);
-		}
-	}
-
-	/**
-	 * Method to index
-	 * 
-	 * @param finalJson
-	 * @param url
-	 * @param index
-	 * @throws Exception
-	 */
-	public void doIndexing(String finalJson, String url, Index index) throws Exception {
-		if (finalJson.startsWith("{ \"index\""))
-			bulkIndexer.indexJsonOntoES(url.toString(), finalJson, index);
-		else {
-			indexWithESId(index, finalJson);
-		}
-	}
-
-	/**
-	 * Method to index
-	 * 
-	 * @param finalJson
-	 * @param url
-	 * @param index
-	 * @throws Exception
-	 */
-	public void indexWithESId(Index index, String finalJson) throws Exception {
-		StringBuilder urlForNonBulk = new StringBuilder();
-		urlForNonBulk.append(esHostUrl).append(index.getName()).append("/").append(index.getType()).append("/")
-				.append("_index");
-		bulkIndexer.indexJsonOntoES(urlForNonBulk.toString(), finalJson, index);
-	}
 
 	/**
 	 * Helper method that returns jsonpath and key from a given jsonpath string. This reqd while using DocumentContext

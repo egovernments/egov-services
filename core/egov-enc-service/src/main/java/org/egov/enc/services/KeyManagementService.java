@@ -1,15 +1,21 @@
-package org.egov.enc;
+package org.egov.enc.services;
 
+import lombok.extern.slf4j.Slf4j;
 import org.egov.enc.keymanagement.KeyGenerator;
 import org.egov.enc.keymanagement.KeyIdGenerator;
 import org.egov.enc.keymanagement.KeyStore;
 import org.egov.enc.models.AsymmetricKey;
+import org.egov.enc.models.MethodEnum;
 import org.egov.enc.models.SymmetricKey;
 import org.egov.enc.repository.KeyRepository;
+import org.egov.enc.web.models.RotateKeyRequest;
+import org.egov.enc.web.models.RotateKeyResponse;
+import org.egov.tracer.model.CustomException;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.http.HttpEntity;
@@ -17,6 +23,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import javax.crypto.BadPaddingException;
@@ -25,18 +32,23 @@ import javax.crypto.NoSuchPaddingException;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
-import java.security.spec.InvalidKeySpecException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-@Component
-public class KeyManagementApplication implements ApplicationRunner {
+@Slf4j
+@Service
+public class KeyManagementService implements ApplicationRunner {
+
+    @Value("${egov.mdms.host}")
+    private String mdmsHost;
+
+    @Value("${egov.mdms.search.endpoint}")
+    private String mdmsEndpoint;
 
     @Autowired
     private KeyRepository keyRepository;
-
     @Autowired
     private KeyGenerator keyGenerator;
     @Autowired
@@ -68,21 +80,28 @@ public class KeyManagementApplication implements ApplicationRunner {
     //Generate Symmetric and Asymmetric Keys for each of the TenantId in the given input list
     public void generateKeys(ArrayList<String> tenantIds) throws BadPaddingException, InvalidKeyException, NoSuchAlgorithmException, IllegalBlockSizeException, NoSuchPaddingException, InvalidAlgorithmParameterException {
 
+        Integer status = 1000;
         ArrayList<SymmetricKey> symmetricKeys = keyGenerator.generateSymmetricKeys(tenantIds);
         for(SymmetricKey symmetricKey : symmetricKeys) {
-            keyRepository.insertSymmetricKey(symmetricKey);
+            status = keyRepository.insertSymmetricKey(symmetricKey);
+            if(status != 1) {
+                throw new CustomException("DB Insert Exception", "DB Insert Exception");
+            }
         }
 
         ArrayList<AsymmetricKey> asymmetricKeys = keyGenerator.generateAsymmetricKeys(tenantIds);
         for(AsymmetricKey asymmetricKey : asymmetricKeys) {
-            keyRepository.insertAsymmetricKey(asymmetricKey);
+            status = keyRepository.insertAsymmetricKey(asymmetricKey);
+            if(status != 1) {
+                throw new CustomException("DB Insert Exception", "DB Insert Exception");
+            }
         }
     }
 
     //Generate keys if there are any new tenants
     //Returns the number of tenants for which the keys have been generated
     public int generateKeyForNewTenants() throws JSONException, BadPaddingException, InvalidAlgorithmParameterException, NoSuchAlgorithmException, IllegalBlockSizeException, NoSuchPaddingException, InvalidKeyException {
-        Collection<String> tenantIds = getComprehensiveListOfTenantIds();
+        Collection<String> tenantIds = makeComprehensiveListOfTenantIds();
         Collection<String> tenantIdsFromDB = keyRepository.fetchDistinctTenantIds();
 
         tenantIds.removeAll(tenantIdsFromDB);
@@ -95,7 +114,7 @@ public class KeyManagementApplication implements ApplicationRunner {
         return tenantIds.size();
     }
 
-    private Set<String> getComprehensiveListOfTenantIds() {
+    private Set<String> makeComprehensiveListOfTenantIds() {
         ArrayList<String> tenantIds = getTenantIds();
         Set<String> comprehensiveTenantIdsSet = new HashSet<>(tenantIds);
 
@@ -117,10 +136,34 @@ public class KeyManagementApplication implements ApplicationRunner {
     }
 
     //Deactivate old keys and generate new keys for every tenantId
-    public void rotateKeys() throws JSONException, BadPaddingException, InvalidKeyException, NoSuchAlgorithmException, IllegalBlockSizeException, NoSuchPaddingException, InvalidAlgorithmParameterException, InvalidKeySpecException {
+    public RotateKeyResponse rotateAllKeys() throws JSONException, BadPaddingException, InvalidKeyException,
+            NoSuchAlgorithmException, IllegalBlockSizeException, NoSuchPaddingException, InvalidAlgorithmParameterException {
         deactivateOldKeys();
-        generateKeys(getTenantIds());
+        generateKeyForNewTenants();
+        return new RotateKeyResponse(true);
     }
+
+    public RotateKeyResponse rotateKey(RotateKeyRequest rotateKeyRequest) throws BadPaddingException,
+            InvalidKeyException, NoSuchAlgorithmException, IllegalBlockSizeException, NoSuchPaddingException,
+            InvalidAlgorithmParameterException {
+        Integer status = 1000;
+        status = keyRepository.deactivateSymmetricKeyForGivenTenant(rotateKeyRequest.getTenantId());
+        log.info("Key Rotate SYM Return Status: " + status);
+        if(status != 1) {
+            throw new CustomException("DB Exception", "DB Exception");
+        }
+        status = keyRepository.deactivateAsymmetricKeyForGivenTenant(rotateKeyRequest.getTenantId());
+        log.info("Key Rotate ASY Return Status: " + status);
+        if(status != 1) {
+            throw new CustomException("DB Exception", "DB Exception");
+        }
+
+        generateKeyForNewTenants();
+
+        return new RotateKeyResponse(true);
+    }
+
+
 
     private ArrayList<String> getTenantIds() throws JSONException {
         RestTemplate restTemplate = new RestTemplate();
@@ -155,7 +198,7 @@ public class KeyManagementApplication implements ApplicationRunner {
                 " }\n" +
                 "}";
 
-        String url = "https://egov-micro-dev.egovernments.org/egov-mdms-service/v1/_search";
+        String url = mdmsHost + mdmsEndpoint;
 
         HttpEntity<String> entity = new HttpEntity<String>(requestJson, headers);
         ResponseEntity<String> response = restTemplate.postForEntity(url, entity, String.class);

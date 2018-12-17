@@ -25,6 +25,11 @@ public class KeyRepository {
     private static final String deactivateSymmetricKeyQuery = "UPDATE eg_enc_symmetric_keys SET active='false'";
     private static final String deactivateAsymmetricKeyQuery = "UPDATE eg_enc_asymmetric_keys SET active='false'";
 
+    private static final String deactivateSymmetricKeyForGivenTenantQuery = "UPDATE eg_enc_symmetric_keys SET " +
+            "active='false' WHERE active='true' AND tenant_id=?";
+    private static final String deactivateAsymmetricKeyForGivenTenantQuery = "UPDATE eg_enc_asymmetric_keys SET " +
+            "active='false' WHERE active='true' AND tenant_id=?";
+
     private static final String distinctTenantIdsQuery = "SELECT DISTINCT tenant_id FROM eg_enc_symmetric_keys WHERE active='true'";
 
 
@@ -51,6 +56,14 @@ public class KeyRepository {
                 asymmetricKey.isActive(),
                 asymmetricKey.getTenantId()
         );
+    }
+
+    public int deactivateSymmetricKeyForGivenTenant(String tenantId) {
+        return jdbcTemplate.update(deactivateSymmetricKeyForGivenTenantQuery, tenantId);
+    }
+
+    public int deactivateAsymmetricKeyForGivenTenant(String tenantId) {
+        return jdbcTemplate.update(deactivateAsymmetricKeyForGivenTenantQuery, tenantId);
     }
 
     public int deactivateSymmetricKeys() {

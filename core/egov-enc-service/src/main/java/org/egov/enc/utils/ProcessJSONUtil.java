@@ -70,7 +70,7 @@ public class ProcessJSONUtil {
 
     //Navigate through JSON Array
     private List processJSONList(List jsonList, ModeEnum mode, MethodEnum method, String tenantId) throws Exception {
-        LinkedList outputJSONList = new LinkedList();
+        ArrayList outputJSONList = new ArrayList();
         for(int i = 0; i < jsonList.size(); i++) {
             if(jsonList.get(i) instanceof List) {
                 outputJSONList.add(i, processJSONList((List) jsonList.get(i), mode, method, tenantId));

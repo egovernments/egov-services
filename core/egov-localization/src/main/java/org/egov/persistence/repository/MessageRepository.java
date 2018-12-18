@@ -74,32 +74,6 @@ public class MessageRepository {
 
 	}
 
-	@SuppressWarnings("unused")
-	private void saveOrUpdate(List<Message> saveMsgList, List<Message> updateMsgList,
-			List<org.egov.persistence.entity.Message> entityMessages, AuthenticatedUser authenticatedUser) {
-
-		if (!CollectionUtils.isEmpty(updateMsgList)) {
-			final Map<String, Message> codeToMessageMap = getCodeToMessageMap(updateMsgList);
-			entityMessages.stream().forEach(entityMessage -> {
-				final Message matchingMessage = codeToMessageMap.get(entityMessage.getCode());
-				entityMessage.update(matchingMessage);
-				setAuditFieldsForUpdate(authenticatedUser, entityMessage);
-
-			});
-			messageJpaRepository.save(entityMessages);
-		}
-		if (!CollectionUtils.isEmpty(saveMsgList)) {
-			final List<org.egov.persistence.entity.Message> message = saveMsgList.stream()
-					.map(org.egov.persistence.entity.Message::new).collect(Collectors.toList());
-			setAuditFieldsForCreate(authenticatedUser, message);
-
-			try {
-				messageJpaRepository.save(message);
-			} catch (DataIntegrityViolationException ex) {
-				new DataIntegrityViolationExceptionTransformer(ex).transform();
-			}
-		}
-	}
 
 	private void setAuditFieldsForCreate(AuthenticatedUser authenticatedUser,
 			List<org.egov.persistence.entity.Message> entityMessages) {

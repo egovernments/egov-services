@@ -3,8 +3,6 @@ package org.egov.wf.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang.StringUtils;
-import org.egov.tracer.model.CustomException;
 import org.egov.wf.repository.WorKflowRepository;
 import org.egov.wf.web.models.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,69 +19,42 @@ public class TransitionService {
 
     private WorKflowRepository repository;
 
+    private BusinessUtilService businessUtilService;
+
 
     @Autowired
-    public TransitionService(ObjectMapper mapper, WorKflowRepository repository) {
+    public TransitionService(ObjectMapper mapper, WorKflowRepository repository, BusinessUtilService businessUtilService) {
         this.mapper = mapper;
         this.repository = repository;
+        this.businessUtilService = businessUtilService;
     }
 
 
     /**
      * Creates list of ProcessStateAndAction from the list of the processInstances
      * @param request The incoming ProcessInstanceRequest
-     * @param businessService The BusinessService object for the given businessService and tenantId
+     * @param isTransition Flag if the search or transition api is calling the method
      * @return List of ProcessStateAndAction containing the State object for status before the action and after the action and
      * the Action object for the given action
      */
-    public List<ProcessStateAndAction> getProcessStateAndActions(ProcessInstanceRequest request, BusinessService businessService){
+    public List<ProcessStateAndAction> getProcessStateAndActions(ProcessInstanceRequest request,Boolean isTransition){
         List<ProcessStateAndAction> processStateAndActions = new LinkedList<>();
         getStatus(request.getProcessInstances());
-        for(ProcessInstance processInstance: request.getProcessInstances()){
+        for(ProcessInstance processInstance: request.getProcessInstances()) {
+
+            BusinessService businessService = businessUtilService.getCurrentStateAndAction(processInstance,isTransition);
             ProcessStateAndAction processStateAndAction = new ProcessStateAndAction();
             processStateAndAction.setProcessInstance(processInstance);
+            processStateAndAction.setCurrentState(businessService.getStates().get(0));
+            if(!CollectionUtils.isEmpty(businessService.getStates().get(0).getActions()))
+                processStateAndAction.setAction(businessService.getStates().get(0).getActions().get(0));
 
-            for(State state : businessService.getStates()){
-                if(!StringUtils.isEmpty(state.getState()) && state.getUuid().equalsIgnoreCase(processInstance.getStatus())){
-                    processStateAndAction.setCurrentState(state);
-                    break;
-                }
-                 if(StringUtils.isEmpty(state.getState()) && StringUtils.isEmpty(processInstance.getStatus())){
-                    processStateAndAction.setCurrentState(state);
-                    break;
-                }
-            }
-
-           /* if(processStateAndAction.getCurrentState()==null)
-                throw new CustomException("INVALID STATUS","No state found in config for the businessId: "
-                        +processStateAndAction.getProcessInstance().getBusinessId() + " and status: "+
-                        processStateAndAction.getProcessInstance().getStatus());*/
-
-            for (Action action : processStateAndAction.getCurrentState().getActions()){
-                if(action.getAction().equalsIgnoreCase(processInstance.getAction())){
-                    processStateAndAction.setAction(action);
-                    break;
-                }
-            }
-
-            if(processStateAndAction.getAction()==null)
-                throw new CustomException("INVALID ACTION","Action "+processStateAndAction.getProcessInstance().getAction()
-                        + " not found in config for the businessId: "
-                        +processStateAndAction.getProcessInstance().getBusinessId());
-
-            for(State state : businessService.getStates()){
-                if(state.getUuid().equalsIgnoreCase(processStateAndAction.getAction().getNextStateId())){
-                    processStateAndAction.setPostActionState(state);
-                    break;
-                }
-            }
-
+            BusinessService businessServiceForNextState = businessUtilService.getResultantState(processStateAndAction.getAction());
+            processStateAndAction.setResultantState(businessServiceForNextState.getStates().get(0));
             processStateAndActions.add(processStateAndAction);
-
         }
         return processStateAndActions;
     }
-
 
 
 

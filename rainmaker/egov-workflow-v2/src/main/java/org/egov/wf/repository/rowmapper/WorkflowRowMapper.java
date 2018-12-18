@@ -1,6 +1,7 @@
 package org.egov.wf.repository.rowmapper;
 
 
+import org.egov.common.contract.request.User;
 import org.egov.wf.web.models.AuditDetails;
 import org.egov.wf.web.models.Document;
 import org.egov.wf.web.models.ProcessInstance;
@@ -48,6 +49,14 @@ public class WorkflowRowMapper implements ResultSetExtractor<List<ProcessInstanc
                         .lastModifiedTime(lastModifiedTime)
                         .build();
 
+                String assigneeUuid = rs.getString("assignee");
+                String assignerUuid = rs.getString("assigner");
+                User assignee=null,assigner;
+                assigner = User.builder().uuid(assignerUuid).build();
+                if(assigneeUuid!=null)
+                     assignee = User.builder().uuid(assigneeUuid).build();
+
+
                 processInstance = ProcessInstance.builder()
                         .id(rs.getString("id"))
                         .tenantId(rs.getString("tenantid"))
@@ -56,8 +65,8 @@ public class WorkflowRowMapper implements ResultSetExtractor<List<ProcessInstanc
                         .action(rs.getString("action"))
                         .status(rs.getString("status"))
                         .comment(rs.getString("comment"))
-                        .assignee(rs.getString("assignee"))
-                        .assigner(rs.getString("assigner"))
+                        .assignee(assignee)
+                        .assigner(assigner)
                         .sla(sla)
                         .previousStatus(rs.getString("previousStatus"))
                         .auditDetails(auditdetails)

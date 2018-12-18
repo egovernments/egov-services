@@ -3,6 +3,7 @@ package org.egov.wf.web.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
+import org.egov.common.contract.request.User;
 
 import java.util.List;
 
@@ -19,7 +20,7 @@ public class ProcessInstanceSearchCriteria {
     private String businessId;
 
     @JsonProperty("assignee")
-    private String assignee;
+    private String  assignee;
 
     @JsonProperty("ids")
     private List<String> ids;

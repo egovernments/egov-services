@@ -52,9 +52,11 @@ public class WorkflowConfig {
     @Value("${egov.wf.max.limit}")
     private Integer maxSearchLimit;
 
-    @Value("${persister.save.wf.topic}")
-    private String saveTopic;
+    @Value("${persister.save.transition.wf.topic}")
+    private String saveTransitionTopic;
 
+    @Value("${persister.save.businessservice.wf.topic}")
+    private String saveBusinessServiceTopic;
 
     //MDMS
     @Value("${egov.mdms.host}")
@@ -62,6 +64,17 @@ public class WorkflowConfig {
 
     @Value("${egov.mdms.search.endpoint}")
     private String mdmsEndPoint;
+
+
+    //User
+    @Value("${egov.user.host}")
+    private String userHost;
+
+    @Value("${egov.user.search.path}")
+    private String userSearchEndpoint;
+
+
+
 
 
 

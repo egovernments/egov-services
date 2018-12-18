@@ -9,16 +9,13 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.util.ArrayList;
 import java.util.List;
+
+import lombok.*;
 import org.egov.wf.web.models.AuditDetails;
 import org.egov.wf.web.models.State;
 import org.springframework.validation.annotation.Validated;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.Builder;
 
 /**
  * A Object holds the
@@ -32,6 +29,7 @@ import lombok.Builder;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@EqualsAndHashCode(of = {"uuid"})
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class BusinessService   {
         @JsonProperty("tenantId")
@@ -42,6 +40,9 @@ public class BusinessService   {
 
         @JsonProperty("businessService")
         private String businessService = null;
+
+        @JsonProperty("business")
+        private String business = null;
 
         @JsonProperty("getUri")
         private String getUri = null;
@@ -64,6 +65,27 @@ public class BusinessService   {
         this.states.add(statesItem);
         return this;
         }
+
+
+        /**
+         * Returns the currentState with the given uuid if not present returns null
+         * @param uuid the uuid of the currentState to be returned
+         * @return
+         */
+        public State getStateFromUuid(String uuid) {
+               State state = null;
+               if(this.states!=null){
+                       for(State s : this.states){
+                               if(s.getUuid().equalsIgnoreCase(uuid)){
+                                       state = s;
+                                       break;
+                               }
+                       }
+               }
+               return state;
+        }
+
+
 
 }
 

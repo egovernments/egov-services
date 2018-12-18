@@ -1,13 +1,14 @@
 package org.egov.wf.service;
 
 import org.egov.common.contract.request.RequestInfo;
-import org.egov.common.contract.request.Role;
+import org.egov.wf.repository.BusinessServiceRepository;
 import org.egov.wf.repository.WorKflowRepository;
 import org.egov.wf.util.WorkflowUtil;
 import org.egov.wf.validator.WorkflowValidator;
 import org.egov.wf.web.models.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.util.*;
 
@@ -29,12 +30,14 @@ public class WorkflowService {
 
     private WorkflowUtil util;
 
+    private BusinessServiceRepository businessServiceRepository;
+
 
     @Autowired
     public WorkflowService(MDMSService mdmsService, TransitionService transitionService,
                            EnrichmentService enrichmentService, WorkflowValidator workflowValidator,
                            StatusUpdateService statusUpdateService, WorKflowRepository workflowRepository,
-                           WorkflowUtil util) {
+                           WorkflowUtil util,BusinessServiceRepository businessServiceRepository) {
         this.mdmsService = mdmsService;
         this.transitionService = transitionService;
         this.enrichmentService = enrichmentService;
@@ -42,6 +45,7 @@ public class WorkflowService {
         this.statusUpdateService = statusUpdateService;
         this.workflowRepository = workflowRepository;
         this.util = util;
+        this.businessServiceRepository = businessServiceRepository;
     }
 
 
@@ -52,11 +56,13 @@ public class WorkflowService {
      */
     public List<ProcessInstance> transition(ProcessInstanceRequest request){
         RequestInfo requestInfo = request.getRequestInfo();
-        Object mdmsData = mdmsService.mdmsCall(request);
-        String businessServiceName = request.getProcessInstances().get(0).getBusinessService();
+
+      /*  String businessServiceName = request.getProcessInstances().get(0).getBusinessService();
         BusinessService businessService = util.getBusinessService(mdmsData,businessServiceName);
         List<ProcessStateAndAction> processStateAndActions = transitionService.getProcessStateAndActions(request,businessService);
-        workflowValidator.validateRequst(requestInfo,processStateAndActions,mdmsData);
+*/
+        List<ProcessStateAndAction> processStateAndActions = transitionService.getProcessStateAndActions(request,true);
+        workflowValidator.validateRequest(requestInfo,processStateAndActions);
         enrichmentService.enrichProcessRequest(requestInfo,processStateAndActions);
         statusUpdateService.updateStatus(requestInfo,processStateAndActions);
         return request.getProcessInstances();
@@ -70,12 +76,15 @@ public class WorkflowService {
      * @return List of processInstances based on search criteria
      */
     public List<ProcessInstance> search(RequestInfo requestInfo,ProcessInstanceSearchCriteria criteria){
-        Set<ProcessInstance> processInstances = new HashSet<>();
-        Object mdmsData = mdmsService.mdmsCall(requestInfo,criteria.getTenantId());
+        List<ProcessInstance> processInstances;
         if(criteria.isNull())
-            processInstances = getUserBasedProcessInstances(requestInfo,criteria,mdmsData);
-
-        return new LinkedList<>(processInstances);
+            processInstances = getUserBasedProcessInstances(requestInfo,criteria);
+        else processInstances = workflowRepository.getProcessInstances(criteria);
+        if(CollectionUtils.isEmpty(processInstances))
+            return processInstances;
+        enrichmentService.enrichUsersFromSearch(processInstances);
+        enrichmentService.enrichNextActionForSearch(requestInfo,processInstances);
+        return processInstances;
     }
 
 
@@ -83,11 +92,13 @@ public class WorkflowService {
      * Searches the processInstances based on user and its roles
      * @param requestInfo The RequestInfo of the search request
      * @param criteria The object containing Search params
-     * @param mdmsData The data fetched from MDMS search
      * @return List of processInstances based on search criteria
      */
-    private Set<ProcessInstance> getUserBasedProcessInstances(RequestInfo requestInfo,ProcessInstanceSearchCriteria criteria,Object mdmsData){
-        List<BusinessService> businessServices = util.getAllBusinessServices(mdmsData);
+    private List<ProcessInstance> getUserBasedProcessInstances(RequestInfo requestInfo,
+                                       ProcessInstanceSearchCriteria criteria){
+        BusinessServiceSearchCriteria businessServiceSearchCriteria = new BusinessServiceSearchCriteria();
+        businessServiceSearchCriteria.setTenantId(criteria.getTenantId());
+        List<BusinessService> businessServices = businessServiceRepository.getBusinessServices(businessServiceSearchCriteria);
         List<String> actionableStatuses = util.getActionableStatusesForRole(requestInfo,businessServices);
         criteria.setAssignee(requestInfo.getUserInfo().getUuid());
         criteria.setStatus(actionableStatuses);
@@ -95,7 +106,7 @@ public class WorkflowService {
         List<ProcessInstance> processInstancesForStatus = workflowRepository.getProcessInstancesForStatus(criteria);
         Set<ProcessInstance> processInstanceSet = new LinkedHashSet<>(processInstancesForStatus);
         processInstanceSet.addAll(processInstancesForAssignee);
-        return processInstanceSet;
+        return new LinkedList<>(processInstanceSet);
     }
 
 

@@ -10,6 +10,7 @@ import org.egov.wf.web.models.*;
 import org.json.JSONArray;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 
 import java.util.*;
 
@@ -29,7 +30,6 @@ public class WorkflowUtil {
 
     /**
      * Method to return auditDetails for create/update flows
-     *
      * @param by The uuid of the user sending the request
      * @param isCreate Flag to determine if the call is for create or update
      * @return AuditDetails The auditdetails of the request
@@ -51,9 +51,9 @@ public class WorkflowUtil {
      */
     public Boolean isRoleAvailable(List<Role> userRoles, List<String> actionRoles){
         Boolean flag = false;
-        List<String> allowedRoles = Arrays.asList(actionRoles.get(0).split(","));
+ //       List<String> allowedRoles = Arrays.asList(actionRoles.get(0).split(","));
         for(Role role : userRoles) {
-            if (allowedRoles.contains(role.getCode())) {
+            if (actionRoles.contains(role.getCode())) {
                 flag = true;
                 break;
             }
@@ -66,60 +66,16 @@ public class WorkflowUtil {
      * @param mdmsData The mdms data from MDMS search
      * @return All roles in the business service
      */
-    public List<String> rolesAllowedInService(Object mdmsData,String jsonPath){
-        List<String> roles;
-        try {
-          roles = JsonPath.read(mdmsData,jsonPath);
-        }
-        catch (Exception e){
-            throw new CustomException("PARSING ERROR","Failed to fetch allowed roles of the service");
-        }
+    public List<String> rolesAllowedInService(BusinessService businessService){
+        List<String> roles = new LinkedList<>();
+        businessService.getStates().forEach(state -> {
+            state.getActions().forEach(action -> {
+                roles.addAll(action.getRoles());
+            });
+        });
         return roles;
     }
 
-
-
-    /**
-     * Fetches the appropriate BusinessService object from MDMS data
-     * @param mdmsData MDMS data from MDMS search
-     * @param businessServiceName The businessService of the request
-     * @return BusinessService object for the given business service
-     */
-    public BusinessService getBusinessService(Object mdmsData,String businessServiceName){
-        BusinessService businessService;
-        try {
-            String jsonpath = WF_JSONPATH_CODE.replace("{name}",businessServiceName);
-            List<Object> objects  = JsonPath.read(mdmsData,jsonpath);
-            String jsonString = new JSONArray(objects).toString();
-            List<BusinessService> businessServices =
-                    mapper.readValue(jsonString, new TypeReference<List<BusinessService>>(){});
-            businessService = businessServices.get(0);
-        }
-        catch (Exception e){
-            throw new CustomException("BUSINESSSERVICE ERROR","Failed to get applicable Business Service object");
-        }
-        return businessService;
-    }
-
-
-    /**
-     * Fetches all BusinessService object from MDMS data
-     * @param mdmsData MDMS data from MDMS search
-     * @return BusinessService object for the given business service
-     */
-    public List<BusinessService> getAllBusinessServices(Object mdmsData){
-        List<BusinessService> businessServices;
-        try {
-            List<Object> objects  = JsonPath.read(mdmsData,ALL_WF_JSONPATH_CODE);
-            String jsonString = new JSONArray(objects).toString();
-            businessServices =
-                    mapper.readValue(jsonString, new TypeReference<List<BusinessService>>(){});
-        }
-        catch (Exception e){
-            throw new CustomException("BUSINESSSERVICE ERROR","Failed to get applicable Business Service object");
-        }
-        return businessServices;
-    }
 
 
     /**
@@ -150,9 +106,11 @@ public class WorkflowUtil {
         businessServices.forEach(businessService -> {
             for(State state : businessService.getStates()){
                 HashSet<String> roles = new HashSet<>();
-                state.getActions().forEach(action -> {
-                    roles.addAll(Arrays.asList(action.getRoles().get(0).split(",")));
-                });
+                if(!CollectionUtils.isEmpty(state.getActions())){
+                    state.getActions().forEach(action -> {
+                        roles.addAll(action.getRoles());
+                    });
+                }
                 stateToRolesMap.put(state.getUuid(),roles);
             }
         });
@@ -188,10 +146,13 @@ public class WorkflowUtil {
             if(!Collections.disjoint(userRoleCodes,entry.getValue())){
                 actionableStatuses.add(entry.getKey());
             }
-
         }
         return actionableStatuses;
     }
+
+
+
+
 
 
 

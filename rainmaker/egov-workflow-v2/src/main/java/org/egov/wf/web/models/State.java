@@ -43,6 +43,9 @@ public class State   {
         @JsonProperty("state")
         private String state = null;
 
+        @JsonProperty("applicationStatus")
+        private String applicationStatus = null;
+
         @JsonProperty("docUploadRequired")
         private Boolean docUploadRequired = null;
 

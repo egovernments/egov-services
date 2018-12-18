@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import lombok.*;
+import org.egov.common.contract.request.User;
 import org.egov.wf.web.models.AuditDetails;
 import org.egov.wf.web.models.Document;
 import org.springframework.validation.annotation.Validated;
@@ -59,10 +60,10 @@ public class ProcessInstance   {
         private List<Document> documents = null;
 
         @JsonProperty("assigner")
-        private String assigner = null;
+        private User assigner = null;
 
         @JsonProperty("assignee")
-        private String assignee = null;
+        private User assignee = null;
 
         @JsonProperty("nextActions")
         @Valid

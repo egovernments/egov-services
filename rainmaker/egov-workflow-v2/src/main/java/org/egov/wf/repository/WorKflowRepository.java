@@ -39,7 +39,7 @@ public class WorKflowRepository {
      */
     public List<ProcessInstance> getProcessInstances(ProcessInstanceSearchCriteria criteria){
         List<Object> preparedStmtList = new ArrayList<>();
-        String query = queryBuilder.getTLSearchQuery(criteria, preparedStmtList);
+        String query = queryBuilder.getProcessInstanceSearchQuery(criteria, preparedStmtList);
         log.info("Query: "+query);
         log.info("preparedStmtList: : "+preparedStmtList);
         return jdbcTemplate.query(query, preparedStmtList.toArray(), rowMapper);

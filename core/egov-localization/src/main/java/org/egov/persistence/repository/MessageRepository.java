@@ -3,6 +3,7 @@ package org.egov.persistence.repository;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.egov.domain.model.AuthenticatedUser;
@@ -13,7 +14,10 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
+import lombok.extern.slf4j.Slf4j;
+
 @Service
+@Slf4j
 public class MessageRepository {
 
 	private MessageJpaRepository messageJpaRepository;
@@ -32,10 +36,20 @@ public class MessageRepository {
 				.map(org.egov.persistence.entity.Message::toDomain).collect(Collectors.toList());
 	}
 
+	
+	public void setUUID(List<org.egov.persistence.entity.Message> entityMessages){
+		for(org.egov.persistence.entity.Message message : entityMessages){
+			message.setId(UUID.randomUUID().toString());
+		}
+	}
+	
 	public void save(List<Message> messages, AuthenticatedUser authenticatedUser) {
 		final List<org.egov.persistence.entity.Message> entityMessages = messages.stream()
 				.map(org.egov.persistence.entity.Message::new).collect(Collectors.toList());
 		setAuditFieldsForCreate(authenticatedUser, entityMessages);
+		//Setting ID in UUID
+		setUUID(entityMessages);
+		log.info("entityMessages: "+entityMessages);
 		try {
 			messageJpaRepository.save(entityMessages);
 		} catch (DataIntegrityViolationException ex) {

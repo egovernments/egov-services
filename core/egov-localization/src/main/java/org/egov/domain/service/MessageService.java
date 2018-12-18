@@ -1,6 +1,5 @@
 package org.egov.domain.service;
 
-//import lombok.extern.slf4j.Slf4j;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
@@ -48,7 +47,7 @@ import org.springframework.util.CollectionUtils;
  * messages with key <locale>:default
  */
 @Service
-// @Slf4j
+//@Slf4j
 public class MessageService {
 	private static final String ENGLISH_INDIA = "en_IN";
 	private MessageRepository messageRepository;

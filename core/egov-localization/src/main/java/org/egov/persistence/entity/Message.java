@@ -25,13 +25,7 @@ public class Message {
 	static final String SEQ_MESSAGE = "SEQ_MESSAGE";
 
 	@Id
-	//@GeneratedValue(generator = SEQ_MESSAGE, strategy = GenerationType.SEQUENCE)
 	private String id;
-	
-	//@Id
-	//@GeneratedValue(generator = SEQ_MESSAGE, strategy = GenerationType.SEQUENCE)
-	@Column(name = "uuid")
-	private String uuid;
 
 	@Column(name = "locale")
 	private String locale;

@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
+
 import org.egov.domain.model.MessageIdentity;
 import org.egov.domain.model.Tenant;
 
@@ -16,14 +18,20 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@ToString
 @SequenceGenerator(name = Message.SEQ_MESSAGE, sequenceName = Message.SEQ_MESSAGE, allocationSize = 1)
 public class Message {
 
 	static final String SEQ_MESSAGE = "SEQ_MESSAGE";
 
 	@Id
-	@GeneratedValue(generator = SEQ_MESSAGE, strategy = GenerationType.SEQUENCE)
-	private Long id;
+	//@GeneratedValue(generator = SEQ_MESSAGE, strategy = GenerationType.SEQUENCE)
+	private String id;
+	
+	//@Id
+	//@GeneratedValue(generator = SEQ_MESSAGE, strategy = GenerationType.SEQUENCE)
+	@Column(name = "uuid")
+	private String uuid;
 
 	@Column(name = "locale")
 	private String locale;

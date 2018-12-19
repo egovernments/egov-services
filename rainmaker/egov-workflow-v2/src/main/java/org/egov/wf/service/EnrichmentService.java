@@ -53,6 +53,7 @@ public class EnrichmentService {
                     document.setId(UUID.randomUUID().toString());
                 });
             }
+            processStateAndAction.getProcessInstance().setSla(processStateAndAction.getResultantState().getSla());
             setNextActions(requestInfo,processStateAndActions,true);
         });
         enrichUsers(processStateAndActions);

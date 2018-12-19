@@ -40,6 +40,9 @@ public class State   {
         @JsonProperty("businessServiceId")
         private String businessServiceId = null;
 
+        @JsonProperty("sla")
+        private Long sla = null;
+
         @JsonProperty("state")
         private String state = null;
 

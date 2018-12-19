@@ -45,9 +45,7 @@ public class BusinessServiceRepository {
         String query = queryBuilder.getStateAndActionSearchQuery(criteria, preparedStmtList);
         log.info("Query CurrentStateAndAction: "+query);
         log.info("preparedStmtList : "+preparedStmtList);
-        List<BusinessService> businessServices = jdbcTemplate.query(query, preparedStmtList.toArray(), rowMapper);
-        setAllRoles(businessServices);
-        return businessServices;
+        return jdbcTemplate.query(query, preparedStmtList.toArray(), rowMapper);
     }
 
 
@@ -62,9 +60,7 @@ public class BusinessServiceRepository {
         String query = queryBuilder.getResultantState(criteria, preparedStmtList);
         log.info("Query ResultantState : "+query);
         log.info("preparedStmtList: : "+preparedStmtList);
-        List<BusinessService> businessServices = jdbcTemplate.query(query, preparedStmtList.toArray(), rowMapper);
-        setAllRoles(businessServices);
-        return businessServices;
+        return jdbcTemplate.query(query, preparedStmtList.toArray(), rowMapper);
     }
 
 
@@ -101,9 +97,7 @@ public class BusinessServiceRepository {
         String query = queryBuilder.getBusinessServices(criteria, preparedStmtList);
         log.info("Query BusinessServices: "+query);
         log.info("preparedStmtList: : "+preparedStmtList);
-        List<BusinessService> businessServices = jdbcTemplate.query(query, preparedStmtList.toArray(), rowMapper);
-        setAllRoles(businessServices);
-        return businessServices;
+        return jdbcTemplate.query(query, preparedStmtList.toArray(), rowMapper);
     }
 
 
@@ -127,7 +121,6 @@ public class BusinessServiceRepository {
                     });
             });
         });
-
         // Replacing * with all roles available
         businessServices.forEach(businessService -> {
             businessService.getStates().forEach(state -> {

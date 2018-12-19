@@ -3,6 +3,8 @@ package org.egov.wf.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
+import org.egov.tracer.model.CustomException;
 import org.egov.wf.repository.WorKflowRepository;
 import org.egov.wf.web.models.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,17 +41,17 @@ public class TransitionService {
      */
     public List<ProcessStateAndAction> getProcessStateAndActions(ProcessInstanceRequest request,Boolean isTransition){
         List<ProcessStateAndAction> processStateAndActions = new LinkedList<>();
+        List<String> rolesAllowed = businessUtilService.getAllowedRoles(request);
         getStatus(request.getProcessInstances());
         for(ProcessInstance processInstance: request.getProcessInstances()) {
-
-            BusinessService businessService = businessUtilService.getCurrentStateAndAction(processInstance,isTransition);
+            BusinessService businessService = businessUtilService.getCurrentStateAndAction(processInstance,isTransition,rolesAllowed);
             ProcessStateAndAction processStateAndAction = new ProcessStateAndAction();
             processStateAndAction.setProcessInstance(processInstance);
             processStateAndAction.setCurrentState(businessService.getStates().get(0));
             if(!CollectionUtils.isEmpty(businessService.getStates().get(0).getActions()))
                 processStateAndAction.setAction(businessService.getStates().get(0).getActions().get(0));
 
-            BusinessService businessServiceForNextState = businessUtilService.getResultantState(processStateAndAction.getAction());
+            BusinessService businessServiceForNextState = businessUtilService.getResultantState(processStateAndAction.getAction(),rolesAllowed);
             processStateAndAction.setResultantState(businessServiceForNextState.getStates().get(0));
             processStateAndActions.add(processStateAndAction);
         }
@@ -73,10 +75,6 @@ public class TransitionService {
             }
         });
     }
-
-
-
-
 
 
 

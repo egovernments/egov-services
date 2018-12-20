@@ -86,7 +86,7 @@ public class WorkflowValidator {
             if(action!=null && !isStateChanging && !util.isRoleAvailable(roles,util.rolesAllowedInService(businessService)))
                 errorMap.put("INVALID ROLE","User is not authorized to perform action");
 
-            if(processStateAndAction.getProcessInstance().getStatus().equalsIgnoreCase(processStateAndAction.getResultantState().getState())){
+            if(processStateAndAction.getResultantState().getUuid().equalsIgnoreCase(processStateAndAction.getProcessInstance().getStatus())){
                 if(processStateAndAction.getProcessInstance().getAssignee()==null)
                     errorMap.put("INVALID PROCESSINSTANCE","Assignee cannot be null for no state change for BusinessId: "
                             +processStateAndAction.getProcessInstance().getBusinessId());

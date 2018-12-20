@@ -57,10 +57,6 @@ public class WorkflowService {
     public List<ProcessInstance> transition(ProcessInstanceRequest request){
         RequestInfo requestInfo = request.getRequestInfo();
 
-      /*  String businessServiceName = request.getProcessInstances().get(0).getBusinessService();
-        BusinessService businessService = util.getBusinessService(mdmsData,businessServiceName);
-        List<ProcessStateAndAction> processStateAndActions = transitionService.getProcessStateAndActions(request,businessService);
-*/
         List<ProcessStateAndAction> processStateAndActions = transitionService.getProcessStateAndActions(request,true);
         workflowValidator.validateRequest(requestInfo,processStateAndActions);
         enrichmentService.enrichProcessRequest(requestInfo,processStateAndActions);

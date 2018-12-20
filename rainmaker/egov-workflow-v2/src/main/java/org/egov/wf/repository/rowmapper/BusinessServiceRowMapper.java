@@ -72,10 +72,16 @@ public class BusinessServiceRowMapper implements ResultSetExtractor<List<Busines
                     .lastModifiedTime(lastModifiedTime)
                     .build();
 
+            Long sla = rs.getLong("sla");
+            if (rs.wasNull()) {
+                sla = null;
+            }
+
             state = State.builder()
                 .tenantId(rs.getString("st_tenantId"))
                 .uuid(stateUuid)
-                .state(rs.getString("currentState"))
+                .state(rs.getString("state"))
+                .sla(sla)
                 .applicationStatus(rs.getString("applicationStatus"))
                 .isStartState(rs.getBoolean("isStartState"))
                 .isTerminateState(rs.getBoolean("isTerminateState"))

@@ -69,6 +69,7 @@ CREATE TABLE eg_wf_state_v2
   businessserviceid character varying(256) NOT NULL, --Foreign key uuid of eg_wf_businessservice_v2
   state character varying(256),
   applicationStatus character varying(256),
+  sla bigint,
   docuploadrequired boolean,
   isstartstate boolean,
   isterminatestate boolean,

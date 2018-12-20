@@ -63,15 +63,16 @@ public class WorkflowUtil {
 
     /**
      *  Fetches roles of all the actions in the businessService
-     * @param mdmsData The mdms data from MDMS search
      * @return All roles in the business service
      */
     public List<String> rolesAllowedInService(BusinessService businessService){
         List<String> roles = new LinkedList<>();
         businessService.getStates().forEach(state -> {
-            state.getActions().forEach(action -> {
-                roles.addAll(action.getRoles());
-            });
+            if(!CollectionUtils.isEmpty(state.getActions())){
+                state.getActions().forEach(action -> {
+                    roles.addAll(action.getRoles());
+                });
+            }
         });
         return roles;
     }

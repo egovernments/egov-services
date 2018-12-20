@@ -28,39 +28,6 @@ public class BusinessServiceQueryBuilder {
 
 
 
-    public String getStateAndActionSearchQuery(BusinessServiceSearchCriteria criteria, List<Object> preparedStmtList) {
-
-        StringBuilder builder = new StringBuilder(BASE_QUERY);
-
-        builder.append(" bs.tenantid=? ");
-        preparedStmtList.add(criteria.getTenantId());
-
-        builder.append(" AND bs.businessService=? ");
-        preparedStmtList.add(criteria.getBusinessService());
-
-        if(criteria.getStateUuid()!=null){
-            builder.append(" AND st.uuid=? ");
-            preparedStmtList.add(criteria.getStateUuid());
-        }
-        else {
-            builder.append(" AND st.state IS NULL ");
-        }
-
-        if(criteria.getAction()!=null){
-            builder.append(" AND ac.action=? ");
-            preparedStmtList.add(criteria.getAction());
-        }
-
-        return builder.toString();
-    }
-
-
-    public String getResultantState(BusinessServiceSearchCriteria criteria, List<Object> preparedStmtList){
-        StringBuilder builder = new StringBuilder(BASE_QUERY);
-        builder.append(" st.uuid=? ");
-        preparedStmtList.add(criteria.getStateUuid());
-        return builder.toString();
-    }
 
     public String getBusinessServices(BusinessServiceSearchCriteria criteria, List<Object> preparedStmtList){
         StringBuilder builder = new StringBuilder(BASE_QUERY);

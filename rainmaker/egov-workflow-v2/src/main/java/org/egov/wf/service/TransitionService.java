@@ -5,7 +5,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.egov.tracer.model.CustomException;
+import org.egov.wf.repository.BusinessServiceRepository;
 import org.egov.wf.repository.WorKflowRepository;
+import org.egov.wf.util.WorkflowUtil;
 import org.egov.wf.web.models.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,39 +23,79 @@ public class TransitionService {
 
     private WorKflowRepository repository;
 
-    private BusinessUtilService businessUtilService;
+
+    private BusinessServiceRepository businessServiceRepository;
+
+    private WorkflowUtil workflowUtil;
+
 
 
     @Autowired
-    public TransitionService(ObjectMapper mapper, WorKflowRepository repository, BusinessUtilService businessUtilService) {
+    public TransitionService(ObjectMapper mapper, WorKflowRepository repository,
+                             BusinessServiceRepository businessServiceRepository,
+                             WorkflowUtil workflowUtil) {
         this.mapper = mapper;
         this.repository = repository;
-        this.businessUtilService = businessUtilService;
+        this.businessServiceRepository = businessServiceRepository;
+        this.workflowUtil = workflowUtil;
     }
+
+
 
 
     /**
      * Creates list of ProcessStateAndAction from the list of the processInstances
      * @param request The incoming ProcessInstanceRequest
-     * @param isTransition Flag if the search or transition api is calling the method
      * @return List of ProcessStateAndAction containing the State object for status before the action and after the action and
      * the Action object for the given action
      */
     public List<ProcessStateAndAction> getProcessStateAndActions(ProcessInstanceRequest request,Boolean isTransition){
         List<ProcessStateAndAction> processStateAndActions = new LinkedList<>();
-        List<String> rolesAllowed = businessUtilService.getAllowedRoles(request);
         getStatus(request.getProcessInstances());
-        for(ProcessInstance processInstance: request.getProcessInstances()) {
-            BusinessService businessService = businessUtilService.getCurrentStateAndAction(processInstance,isTransition,rolesAllowed);
+        BusinessService businessService = getBusinessService(request);
+        List<String> allowedRoles = workflowUtil.rolesAllowedInService(businessService);
+        for(ProcessInstance processInstance: request.getProcessInstances()){
             ProcessStateAndAction processStateAndAction = new ProcessStateAndAction();
             processStateAndAction.setProcessInstance(processInstance);
-            processStateAndAction.setCurrentState(businessService.getStates().get(0));
-            if(!CollectionUtils.isEmpty(businessService.getStates().get(0).getActions()))
-                processStateAndAction.setAction(businessService.getStates().get(0).getActions().get(0));
 
-            BusinessService businessServiceForNextState = businessUtilService.getResultantState(processStateAndAction.getAction(),rolesAllowed);
-            processStateAndAction.setResultantState(businessServiceForNextState.getStates().get(0));
+            for(State state : businessService.getStates()){
+                if(!StringUtils.isEmpty(state.getState()) && state.getUuid().equalsIgnoreCase(processInstance.getStatus())){
+                    processStateAndAction.setCurrentState(state);
+                    break;
+                }
+                if(StringUtils.isEmpty(state.getState()) && StringUtils.isEmpty(processInstance.getStatus())){
+                    processStateAndAction.setCurrentState(state);
+                    break;
+                }
+            }
+
+            if(!CollectionUtils.isEmpty(processStateAndAction.getCurrentState().getActions())){
+                for (Action action : processStateAndAction.getCurrentState().getActions()){
+                    if(action.getAction().equalsIgnoreCase(processInstance.getAction())){
+                        if(action.getRoles().contains("*"))
+                            action.setRoles(allowedRoles);
+                        processStateAndAction.setAction(action);
+                        break;
+                    }
+                }
+            }
+
+            if(isTransition){
+                if(processStateAndAction.getAction()==null)
+                    throw new CustomException("INVALID ACTION","Action "+processStateAndAction.getProcessInstance().getAction()
+                            + " not found in config for the businessId: "
+                            +processStateAndAction.getProcessInstance().getBusinessId());
+
+                for(State state : businessService.getStates()){
+                    if(state.getUuid().equalsIgnoreCase(processStateAndAction.getAction().getNextState())){
+                        processStateAndAction.setResultantState(state);
+                        break;
+                    }
+                }
+            }
+
             processStateAndActions.add(processStateAndAction);
+
         }
         return processStateAndActions;
     }
@@ -76,6 +118,23 @@ public class TransitionService {
         });
     }
 
+
+
+    private BusinessService getBusinessService(ProcessInstanceRequest request){
+        BusinessServiceSearchCriteria criteria = new BusinessServiceSearchCriteria();
+        String tenantId = request.getProcessInstances().get(0).getTenantId();
+        String businessService = request.getProcessInstances().get(0).getBusinessService();
+        criteria.setTenantId(tenantId);
+        criteria.setBusinessService(businessService);
+        List<BusinessService> businessServices = businessServiceRepository.getBusinessServices(criteria);
+        if(CollectionUtils.isEmpty(businessServices))
+            throw new CustomException("BUSINESSSERVICE ERROR","No bussinessService object found for businessSerice: "+
+                    businessService + " and tenantId: "+tenantId);
+        if(businessServices.size()!=1)
+            throw new CustomException("BUSINESSSERVICE ERROR","Multiple bussinessService object found for businessSerice: "+
+                    businessService + " and tenantId: "+tenantId);
+        return businessServices.get(0);
+    }
 
 
 

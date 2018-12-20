@@ -5,6 +5,7 @@ import org.egov.common.contract.request.User;
 import org.egov.wf.web.models.AuditDetails;
 import org.egov.wf.web.models.Document;
 import org.egov.wf.web.models.ProcessInstance;
+import org.egov.wf.web.models.State;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.stereotype.Component;
@@ -56,6 +57,8 @@ public class WorkflowRowMapper implements ResultSetExtractor<List<ProcessInstanc
                 if(assigneeUuid!=null)
                      assignee = User.builder().uuid(assigneeUuid).build();
 
+                State status = State.builder().uuid(rs.getString("status")).build();
+
 
                 processInstance = ProcessInstance.builder()
                         .id(rs.getString("id"))
@@ -63,7 +66,7 @@ public class WorkflowRowMapper implements ResultSetExtractor<List<ProcessInstanc
                         .businessService(rs.getString("businessService"))
                         .businessId(rs.getString("businessId"))
                         .action(rs.getString("action"))
-                        .status(rs.getString("status"))
+                        .status(status)
                         .comment(rs.getString("comment"))
                         .assignee(assignee)
                         .assigner(assigner)

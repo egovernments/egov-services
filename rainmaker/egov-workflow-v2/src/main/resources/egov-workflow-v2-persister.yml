@@ -20,7 +20,7 @@ serviceMaps:
 
           - jsonPath: $.ProcessInstances.*.action
 
-          - jsonPath: $.ProcessInstances.*.status
+          - jsonPath: $.ProcessInstances.*.status.uuid
 
           - jsonPath: $.ProcessInstances.*.comment
 
@@ -103,7 +103,7 @@ serviceMaps:
 
 
 
-       - query: INSERT INTO eg_wf_state_v2(uuid, tenantid, businessserviceid, state,applicationStatus, docuploadrequired, isstartstate, isterminatestate, createdby, createdtime, lastmodifiedby, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+       - query: INSERT INTO eg_wf_state_v2(uuid, tenantid, businessserviceid, state,applicationStatus,sla,docuploadrequired, isstartstate, isterminatestate, createdby, createdtime, lastmodifiedby, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
          basePath: BusinessServices.*.states.*
          jsonMaps:
           - jsonPath: $.BusinessServices.*.states.*.uuid
@@ -115,6 +115,8 @@ serviceMaps:
           - jsonPath: $.BusinessServices.*.states.*.state
 
           - jsonPath: $.BusinessServices.*.states.*.applicationStatus
+
+          - jsonPath: $.BusinessServices.*.states.*.sla
 
           - jsonPath: $.BusinessServices.*.states.*.docUploadRequired
 

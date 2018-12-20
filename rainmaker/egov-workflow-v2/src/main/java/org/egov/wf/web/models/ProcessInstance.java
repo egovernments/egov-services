@@ -50,7 +50,7 @@ public class ProcessInstance   {
         private String action = null;
 
         @JsonProperty("status")
-        private String status = null;
+        private State status = null;
 
         @JsonProperty("comment")
         private String comment = null;

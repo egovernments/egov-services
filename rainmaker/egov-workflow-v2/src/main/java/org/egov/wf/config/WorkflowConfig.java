@@ -70,7 +70,7 @@ public class WorkflowConfig {
     @Value("${egov.user.host}")
     private String userHost;
 
-    @Value("${egov.user.search.path}")
+    @Value("${egov.user.search.endpoint}")
     private String userSearchEndpoint;
 
 

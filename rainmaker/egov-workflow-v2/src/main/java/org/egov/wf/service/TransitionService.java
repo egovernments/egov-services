@@ -59,11 +59,12 @@ public class TransitionService {
             processStateAndAction.setProcessInstance(processInstance);
 
             for(State state : businessService.getStates()){
-                if(!StringUtils.isEmpty(state.getState()) && state.getUuid().equalsIgnoreCase(processInstance.getStatus())){
+                if(StringUtils.isEmpty(state.getState()) && processInstance.getStatus()==null){
                     processStateAndAction.setCurrentState(state);
                     break;
                 }
-                if(StringUtils.isEmpty(state.getState()) && StringUtils.isEmpty(processInstance.getStatus())){
+                if(processInstance.getStatus()!=null &&
+                        !StringUtils.isEmpty(state.getState()) && state.getUuid().equalsIgnoreCase(processInstance.getStatus().getUuid())){
                     processStateAndAction.setCurrentState(state);
                     break;
                 }

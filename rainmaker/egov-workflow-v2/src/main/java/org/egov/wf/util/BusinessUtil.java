@@ -4,11 +4,11 @@ import org.egov.tracer.model.CustomException;
 import org.egov.wf.repository.BusinessServiceRepository;
 import org.egov.wf.web.models.BusinessService;
 import org.egov.wf.web.models.BusinessServiceSearchCriteria;
-import org.egov.wf.web.models.ProcessStateAndAction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
+import java.util.Collections;
 import java.util.List;
 
 @Component
@@ -30,10 +30,10 @@ public class BusinessUtil {
     public BusinessService getBusinessService(String tenantId,String businessService){
         BusinessServiceSearchCriteria criteria = new BusinessServiceSearchCriteria();
         criteria.setTenantId(tenantId);
-        criteria.setBusinessService(businessService);
+        criteria.setBusinessServices(Collections.singletonList(businessService));
         List<BusinessService> businessServices = businessServiceRepository.getBusinessServices(criteria);
         if(CollectionUtils.isEmpty(businessServices))
-            throw new CustomException("INVALID REQUEST","No BusinessService found for businessService: "+criteria.getBusinessService());
+            throw new CustomException("INVALID REQUEST","No BusinessService found for businessService: "+criteria.getBusinessServices());
         return businessServices.get(0);
     }
 

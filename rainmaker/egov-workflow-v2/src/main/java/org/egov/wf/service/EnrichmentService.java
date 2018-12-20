@@ -157,7 +157,7 @@ public class EnrichmentService {
      * Enriches the incoming list of businessServices
      * @param request The BusinessService request to be enriched
      */
-    public void enrichBusinessService(BusinessServiceRequest request){
+    public void enrichCreateBusinessService(BusinessServiceRequest request){
         RequestInfo requestInfo = request.getRequestInfo();
         List<BusinessService> businessServices = request.getBusinessServices();
         AuditDetails auditDetails = util.getAuditDetails(requestInfo.getUserInfo().getUuid(),true);
@@ -178,6 +178,37 @@ public class EnrichmentService {
         });
     }
 
+    /**
+     * Enriches update request
+     * @param request The update request
+     */
+    public void enrichUpdateBusinessService(BusinessServiceRequest request){
+        RequestInfo requestInfo = request.getRequestInfo();
+        List<BusinessService> businessServices = request.getBusinessServices();
+        AuditDetails updateAuditDetails = util.getAuditDetails(requestInfo.getUserInfo().getUuid(),false);
+        AuditDetails createAuditDetails = util.getAuditDetails(requestInfo.getUserInfo().getUuid(),false);
+        businessServices.forEach(businessService -> {
+            businessService.setUuid(UUID.randomUUID().toString());
+            businessService.setAuditDetails(updateAuditDetails);
+            businessService.getStates().forEach(state -> {
+                if(state.getUuid()==null){
+                    state.setAuditDetails(createAuditDetails);
+                    state.setUuid(UUID.randomUUID().toString());
+                }
+                else state.setAuditDetails(updateAuditDetails);
+                if(!CollectionUtils.isEmpty(state.getActions()))
+                    state.getActions().forEach(action -> {
+                        if(action.getUuid()==null){
+                            action.setAuditDetails(createAuditDetails);
+                            action.setUuid(UUID.randomUUID().toString());
+                            action.setCurrentState(state.getUuid());
+                        }
+                        else action.setAuditDetails(updateAuditDetails);
+                    });
+            });
+            enrichNextState(businessService);
+        });
+    }
 
     /**
      * Enriches the nextState varibale in BusinessService

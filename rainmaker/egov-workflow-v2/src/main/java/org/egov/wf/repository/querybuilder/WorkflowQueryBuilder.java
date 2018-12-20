@@ -40,6 +40,7 @@ public class WorkflowQueryBuilder {
             " result) result_offset " +
             "WHERE offset_ > ? AND offset_ <= ?";
 
+    private final String LATEST_RECORD = " LIMIT 1";
 
     /**
      * Creates the query according to the search params
@@ -67,6 +68,9 @@ public class WorkflowQueryBuilder {
 
         String query = addPaginationWrapper(builder.toString(),preparedStmtList,criteria);
         query = addOrderByCreatedTime(query);
+        if(!criteria.getHistory())
+            query = query + LATEST_RECORD;
+
 
         return query;
 
@@ -136,9 +140,11 @@ public class WorkflowQueryBuilder {
      */
     private String addOrderByCreatedTime(String query){
         StringBuilder builder = new StringBuilder(query);
-        builder.append(" ORDER BY result_offset.wf_lastModifiedTime DESC LIMIT 1");
+        builder.append(" ORDER BY result_offset.wf_lastModifiedTime DESC ");
         return builder.toString();
     }
+
+
 
     /**
      * Creates query to search processInstance assigned to user

@@ -126,7 +126,7 @@ public class TransitionService {
         String tenantId = request.getProcessInstances().get(0).getTenantId();
         String businessService = request.getProcessInstances().get(0).getBusinessService();
         criteria.setTenantId(tenantId);
-        criteria.setBusinessService(businessService);
+        criteria.setBusinessServices(Collections.singletonList(businessService));
         List<BusinessService> businessServices = businessServiceRepository.getBusinessServices(criteria);
         if(CollectionUtils.isEmpty(businessServices))
             throw new CustomException("BUSINESSSERVICE ERROR","No bussinessService object found for businessSerice: "+

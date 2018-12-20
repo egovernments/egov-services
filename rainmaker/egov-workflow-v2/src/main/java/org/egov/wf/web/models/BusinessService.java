@@ -29,7 +29,7 @@ import javax.validation.constraints.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@EqualsAndHashCode(of = {"uuid"})
+@EqualsAndHashCode(of = {"tenantId","businessService"})
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class BusinessService   {
         @JsonProperty("tenantId")
@@ -50,8 +50,9 @@ public class BusinessService   {
         @JsonProperty("postUri")
         private String postUri = null;
 
-        @JsonProperty("states")
+        @NotNull
         @Valid
+        @JsonProperty("states")
         private List<State> states = null;
 
         @JsonProperty("auditDetails")

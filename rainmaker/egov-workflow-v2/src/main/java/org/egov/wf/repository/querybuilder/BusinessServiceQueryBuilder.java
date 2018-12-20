@@ -2,7 +2,10 @@ package org.egov.wf.repository.querybuilder;
 
 import org.egov.wf.web.models.BusinessServiceSearchCriteria;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
+
 import java.util.List;
+import java.util.Set;
 
 @Component
 public class BusinessServiceQueryBuilder {
@@ -34,12 +37,56 @@ public class BusinessServiceQueryBuilder {
         builder.append(" bs.tenantId=? ");
         preparedStmtList.add(criteria.getTenantId());
 
-        if(criteria.getBusinessService()!=null){
-            builder.append(" AND bs.businessService=? ");
-            preparedStmtList.add(criteria.getBusinessService());
+        List<String> businessServices = criteria.getBusinessServices();
+        if (!CollectionUtils.isEmpty(businessServices)) {
+
+            builder.append(" AND bs.businessService IN (").append(createQuery(businessServices)).append(")");
+            addToPreparedStatement(preparedStmtList, businessServices);
+        }
+
+        List<String> stateUuids = criteria.getStateUuids();
+        if (!CollectionUtils.isEmpty(stateUuids)) {
+
+            builder.append(" AND st.uuid IN (").append(createQuery(stateUuids)).append(")");
+            addToPreparedStatement(preparedStmtList, stateUuids);
+        }
+
+        List<String> actionUuids = criteria.getActionUuids();
+        if (!CollectionUtils.isEmpty(actionUuids)) {
+
+            builder.append(" AND ac.uuid IN (").append(createQuery(actionUuids)).append(")");
+            addToPreparedStatement(preparedStmtList, actionUuids);
         }
 
         return builder.toString();
+    }
+
+
+    /*
+     * private String createQuery(Set<String> ids) {
+     *
+     * final String quotes = "'"; final String comma = ","; StringBuilder builder =
+     * new StringBuilder(); Iterator<String> iterator = ids.iterator();
+     * while(iterator.hasNext()) {
+     * builder.append(quotes).append(iterator.next()).append(quotes);
+     * if(iterator.hasNext()) builder.append(comma); } return builder.toString(); }
+     */
+
+    private String createQuery(List<String> ids) {
+        StringBuilder builder = new StringBuilder();
+        int length = ids.size();
+        for (int i = 0; i < length; i++) {
+            builder.append(" ?");
+            if (i != length - 1)
+                builder.append(",");
+        }
+        return builder.toString();
+    }
+
+    private void addToPreparedStatement(List<Object> preparedStmtList, List<String> ids) {
+        ids.forEach(id -> {
+            preparedStmtList.add(id);
+        });
     }
 
 

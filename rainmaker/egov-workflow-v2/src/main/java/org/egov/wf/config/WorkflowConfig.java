@@ -58,6 +58,11 @@ public class WorkflowConfig {
     @Value("${persister.save.businessservice.wf.topic}")
     private String saveBusinessServiceTopic;
 
+    @Value("${persister.update.businessservice.wf.topic}")
+    private String updateBusinessServiceTopic;
+
+
+
     //MDMS
     @Value("${egov.mdms.host}")
     private String mdmsHost;
@@ -72,21 +77,6 @@ public class WorkflowConfig {
 
     @Value("${egov.user.search.endpoint}")
     private String userSearchEndpoint;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

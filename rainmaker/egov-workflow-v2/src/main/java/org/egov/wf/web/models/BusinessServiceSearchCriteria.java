@@ -1,28 +1,31 @@
 package org.egov.wf.web.models;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import org.egov.common.contract.request.User;
 
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Data
 public class BusinessServiceSearchCriteria {
 
 
-
+    @NotNull
     @JsonProperty("tenantId")
     private String tenantId;
 
-    @JsonProperty("businessService")
-    private String businessService;
+    @JsonProperty("businessServices")
+    private List<String> businessServices;
 
-    @JsonProperty("stateUuid")
-    private String stateUuid;
+    @JsonIgnore
+    private List<String> stateUuids;
 
-    @JsonProperty("action")
-    private String action;
+    @JsonIgnore
+    private List<String> actionUuids;
+
 
 
 }

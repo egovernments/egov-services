@@ -8,6 +8,7 @@ import org.egov.wf.util.WorkflowUtil;
 import org.egov.wf.web.models.Action;
 import org.egov.wf.web.models.BusinessService;
 import org.egov.wf.web.models.ProcessStateAndAction;
+import org.egov.wf.web.models.State;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
@@ -79,7 +80,14 @@ public class WorkflowValidator {
                         processStateAndAction.getCurrentState().getBusinessServiceId());
 
             Boolean isRoleAvailable = util.isRoleAvailable(roles,action.getRoles());
-            Boolean isStateChanging = (action.getCurrentState() == action.getNextState()) ? false : true;
+            Boolean isStateChanging = (action.getCurrentState().equalsIgnoreCase( action.getNextState())) ? false : true;
+            List<String> transitionRoles = getRolesForTransition(processStateAndAction.getCurrentState());
+            Boolean isRoleAvailableForTransition = util.isRoleAvailable(roles,transitionRoles);
+            Boolean isAssigneeUserInfo = false;
+            if(processStateAndAction.getProcessInstance().getAssignee()!=null)
+                isAssigneeUserInfo = processStateAndAction.getProcessInstance().getAssignee().getUuid().equalsIgnoreCase(requestInfo.getUserInfo().getUuid());
+            if(!isStateChanging && !isAssigneeUserInfo && !isRoleAvailableForTransition)
+                throw new CustomException("INVALID MARK ACTION","The processInstance cannot be marked by the user");
 
             if(action!=null && isStateChanging && !isRoleAvailable)
                 errorMap.put("INVALID ROLE","User is not authorized to perform action");
@@ -95,6 +103,18 @@ public class WorkflowValidator {
         }
         if(!errorMap.isEmpty())
             throw new CustomException(errorMap);
+    }
+
+
+    private List<String> getRolesForTransition(State state){
+        List<String> transitionRoles = new LinkedList<>();
+        if(!CollectionUtils.isEmpty(state.getActions())){
+            state.getActions().forEach(action -> {
+                if(!action.getCurrentState().equalsIgnoreCase(action.getNextState()))
+                    transitionRoles.addAll(action.getRoles());
+            });
+        }
+        return transitionRoles;
     }
 
 

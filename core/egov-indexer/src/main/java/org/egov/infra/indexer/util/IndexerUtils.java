@@ -33,6 +33,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.client.RestTemplate;
 
+import com.fasterxml.jackson.core.JsonGenerator.Feature;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -425,6 +426,8 @@ public class IndexerUtils {
 	 */
 	public JSONArray transformData(Index index, JSONArray kafkaJsonArray) {
 		JSONArray tranformedArray = new JSONArray();
+		ObjectMapper mapper = new ObjectMapper();
+		mapper.getFactory().configure(Feature.ESCAPE_NON_ASCII, true);
 		for (int i = 0; i < kafkaJsonArray.length(); i++) {
 			try {
 				if (null != kafkaJsonArray.get(i)) {
@@ -434,7 +437,7 @@ public class IndexerUtils {
 							context = JsonPath.parse(kafkaJsonArray.get(i).toString());
 							context = maskFields(index, context);
 							context = addTimeStamp(index, context);
-							String encodedString = new String(context.jsonString().getBytes(), "UTF-8");
+							String encodedString = mapper.writeValueAsString(context.jsonString());
 							tranformedArray.put(encodedString);
 						} catch (Exception e) {
 							log.error("Exception while transforiming data: ", e);

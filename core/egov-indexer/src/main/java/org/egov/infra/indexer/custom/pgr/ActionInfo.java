@@ -15,6 +15,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 /**
  * Capture the details of action on service request.
@@ -24,6 +25,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@ToString
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ActionInfo   {
 	

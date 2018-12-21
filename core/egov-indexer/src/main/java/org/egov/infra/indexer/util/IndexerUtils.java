@@ -38,6 +38,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.google.gson.Gson;
 import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
 
@@ -427,6 +428,7 @@ public class IndexerUtils {
 	public JSONArray transformData(Index index, JSONArray kafkaJsonArray) {
 		JSONArray tranformedArray = new JSONArray();
 		ObjectMapper mapper = new ObjectMapper();
+		Gson gson = new Gson();
 		mapper.getFactory().configure(Feature.ESCAPE_NON_ASCII, true);
 		for (int i = 0; i < kafkaJsonArray.length(); i++) {
 			try {
@@ -437,7 +439,7 @@ public class IndexerUtils {
 							context = JsonPath.parse(kafkaJsonArray.get(i).toString());
 							context = maskFields(index, context);
 							context = addTimeStamp(index, context);
-							String encodedString = mapper.writeValueAsString(context.jsonString());
+							String encodedString = gson.toJson(mapper.writeValueAsString(context.jsonString()));
 							tranformedArray.put(encodedString);
 						} catch (Exception e) {
 							log.error("Exception while transforiming data: ", e);

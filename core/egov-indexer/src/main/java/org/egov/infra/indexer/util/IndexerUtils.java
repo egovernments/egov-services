@@ -438,7 +438,7 @@ public class IndexerUtils {
 							context = JsonPath.parse(kafkaJsonArray.get(i).toString());
 							context = maskFields(index, context);
 							context = addTimeStamp(index, context);
-							context = encode(index, context);
+						//	context = encode(index, context);
 							tranformedArray.put(context.jsonString());
 						} catch (Exception e) {
 							log.error("Exception while transforiming data: ", e);

@@ -25,6 +25,9 @@ public class APIDetails {
 	@JsonProperty("tenantIdForOpenSearch")
 	public String tenantIdForOpenSearch;
 
+	@JsonProperty("customQueryParam")
+	public String customQueryParam;
+	
 	@NotNull
 	@JsonProperty("paginationDetails")
 	public PaginationDetails paginationDetails;

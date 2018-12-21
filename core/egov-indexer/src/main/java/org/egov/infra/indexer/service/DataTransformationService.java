@@ -79,10 +79,8 @@ public class DataTransformationService {
 				if (null != kafkaJsonArray.get(i)) {
 					String stringifiedObject = indexerUtils.buildString(kafkaJsonArray.get(i));
 					if (isCustom) {
-						String customIndexJson = buildCustomJsonForIndex(index.getCustomJsonMapping(),
-								stringifiedObject);
-						StringBuilder builder = appendIdToJson(index, jsonTobeIndexed, stringifiedObject,
-								customIndexJson);
+						String customIndexJson = buildCustomJsonForIndex(index.getCustomJsonMapping(), stringifiedObject);
+						StringBuilder builder = appendIdToJson(index, jsonTobeIndexed, stringifiedObject, customIndexJson);
 						if (null != builder)
 							jsonTobeIndexed = builder;
 					} else {
@@ -178,8 +176,7 @@ public class DataTransformationService {
 	 * @param kafkaJson
 	 * @return
 	 */
-	public DocumentContext enrichDataUsingExternalServices(DocumentContext documentContext,
-			CustomJsonMapping customJsonMappings, String kafkaJson) {
+	public DocumentContext enrichDataUsingExternalServices(DocumentContext documentContext, CustomJsonMapping customJsonMappings, String kafkaJson) {
 		ObjectMapper mapper = new ObjectMapper();
 		if (!CollectionUtils.isEmpty(customJsonMappings.getExternalUriMapping())) {
 			for (UriMapping uriMapping : customJsonMappings.getExternalUriMapping()) {
@@ -223,8 +220,7 @@ public class DataTransformationService {
 	 * @param kafkaJson
 	 * @return
 	 */
-	public DocumentContext denormalizeDataFromMDMS(DocumentContext documentContext,
-			CustomJsonMapping customJsonMappings, String kafkaJson) {
+	public DocumentContext denormalizeDataFromMDMS(DocumentContext documentContext, CustomJsonMapping customJsonMappings, String kafkaJson) {
 		ObjectMapper mapper = new ObjectMapper();
 		if (!CollectionUtils.isEmpty(customJsonMappings.getMdmsMapping())) {
 			for (UriMapping uriMapping : customJsonMappings.getMdmsMapping()) {

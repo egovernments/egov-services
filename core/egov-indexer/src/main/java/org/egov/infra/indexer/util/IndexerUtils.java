@@ -583,11 +583,15 @@ public class IndexerUtils {
 		sizeKey = null != apiDetails.getPaginationDetails().getSizeKey()
 				? apiDetails.getPaginationDetails().getSizeKey()
 				: "size";
-		if (null != apiDetails.getTenantIdForOpenSearch())
+		if (!StringUtils.isEmpty(apiDetails.getTenantIdForOpenSearch()))
 			url.append("?tenantId=").append(apiDetails.getTenantIdForOpenSearch())
 					.append("&" + offsetKey + "=" + offset).append("&" + sizeKey + "=" + size);
 		else
 			url.append("?" + offsetKey + "=" + offset).append("&" + sizeKey + "=" + size);
+		
+		if(!StringUtils.isEmpty(apiDetails.getCustomQueryParam())) {
+			url.append("&").append(apiDetails.getCustomQueryParam());
+		}
 
 		return url.toString();
 	}

@@ -45,7 +45,6 @@ public class PGRCustomDecorator {
 	 * @return
 	 */
 	public PGRIndexObject dataTransformationForPGR(ServiceResponse serviceResponse) {
-		log.info("Recieved: "+serviceResponse.toString());
 		PGRIndexObject indexObject = new PGRIndexObject();
 		ObjectMapper mapper = indexerUtils.getObjectMapper();
 		List<ServiceIndexObject> indexObjects = new ArrayList<>();
@@ -53,7 +52,6 @@ public class PGRCustomDecorator {
 			ServiceIndexObject object = new ServiceIndexObject();
 			object = mapper.convertValue(serviceResponse.getServices().get(i), ServiceIndexObject.class);
 			object.setActionHistory(serviceResponse.getActionHistory().get(i));
-			log.info("Converted: "+serviceResponse.toString());
 			for(ActionInfo action: serviceResponse.getActionHistory().get(i).getActions()) {
 				if(!StringUtils.isEmpty(action.getBy())) {
 					if(action.getBy().contains("Grievance Routing Officer") || action.getBy().contains("Department Grievance Routing Officer")) {
@@ -69,7 +67,6 @@ public class PGRCustomDecorator {
 			}
 			object.setDepartment(getDepartment(serviceResponse.getServices().get(i)));
 			object.setComplaintCategory(indexerUtils.splitCamelCase(serviceResponse.getServices().get(i).getServiceCode()));
-			log.info("Transformed record: "+object);
 			indexObjects.add(object);
 		}
 		indexObject.setServiceRequests(indexObjects);

@@ -303,6 +303,11 @@ public class GrievanceService {
 				actions.add(request.getActionInfo().get(i));
 				actions.addAll(actionHistory.getActions());
 				actionHistory.setActions(actions);
+				AuditDetails auditDetails = AuditDetails.builder().createdBy(serviceResponse.getServices().get(0).getAuditDetails().getCreatedBy())
+						.createdTime(serviceResponse.getServices().get(0).getAuditDetails().getCreatedTime())
+						.lastModifiedBy(request.getServices().get(0).getAuditDetails().getLastModifiedBy())
+						.lastModifiedTime(request.getServices().get(0).getAuditDetails().getLastModifiedTime()).build();
+				request.getServices().get(0).setAuditDetails(auditDetails);
 				services.add(request.getServices().get(0));
 				actionHistoryList.add(actionHistory);
 

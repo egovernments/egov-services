@@ -70,7 +70,7 @@ public class PGRCustomDecorator {
 			indexObjects.add(object);
 		}
 		indexObject.setServiceRequests(indexObjects);
-		
+		log.info("Transformed record: "+indexObject);
 		return indexObject;
 	}
 	

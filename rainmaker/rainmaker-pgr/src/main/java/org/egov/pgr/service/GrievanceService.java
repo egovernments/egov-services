@@ -300,11 +300,10 @@ public class GrievanceService {
 						.tenantId(request.getServices().get(i).getTenantId()).serviceRequestId(serviceRequestIds).build();
 				ServiceResponse serviceResponse = mapper.convertValue(getServiceRequestDetails(request.getRequestInfo(), serviceReqSearchCriteria), ServiceResponse.class);
 				actionHistory = serviceResponse.getActionHistory().get(0);
-				actions.addAll(actionHistory.getActions());
 				actions.add(request.getActionInfo().get(i));
+				actions.addAll(actionHistory.getActions());
 				actionHistory.setActions(actions);
-				
-				services.add(serviceResponse.getServices().get(0));
+				services.add(request.getServices().get(0));
 				actionHistoryList.add(actionHistory);
 
 			}

@@ -427,9 +427,6 @@ public class IndexerUtils {
 	 */
 	public JSONArray transformData(Index index, JSONArray kafkaJsonArray) {
 		JSONArray tranformedArray = new JSONArray();
-		ObjectMapper mapper = new ObjectMapper();
-		Gson gson = new Gson();
-		mapper.getFactory().configure(Feature.ESCAPE_NON_ASCII, true);
 		for (int i = 0; i < kafkaJsonArray.length(); i++) {
 			try {
 				if (null != kafkaJsonArray.get(i)) {
@@ -439,8 +436,8 @@ public class IndexerUtils {
 							context = JsonPath.parse(kafkaJsonArray.get(i).toString());
 							context = maskFields(index, context);
 							context = addTimeStamp(index, context);
-							String encodedString = gson.toJson(mapper.writeValueAsString(context.jsonString()));
-							tranformedArray.put(encodedString);
+							context = encode(index, context);
+							tranformedArray.put(context.jsonString());
 						} catch (Exception e) {
 							log.error("Exception while transforiming data: ", e);
 							log.info("Data: " + kafkaJsonArray.get(i));
@@ -508,6 +505,29 @@ public class IndexerUtils {
 			context.put("$", "@timestamp", formatter.format(date));
 		} catch (Exception e) {
 			log.info("Exception while adding timestamp: ", e);
+			log.info("Data: " + context.jsonString());
+		}
+
+		return context;
+
+	}
+	
+	/**
+	 * Method to encode non ascii characters.
+	 * 
+	 * @param index
+	 * @param context
+	 * @return
+	 */
+	public DocumentContext encode(Index index, DocumentContext context) {
+		try {
+			ObjectMapper mapper = new ObjectMapper();
+			Gson gson = new Gson();
+			mapper.getFactory().configure(Feature.ESCAPE_NON_ASCII, true);
+			String encodedString = gson.toJson(mapper.writeValueAsString(context.jsonString()));
+			context = JsonPath.parse(encodedString);
+		} catch (Exception e) {
+			log.info("Exception while encoding non ascii characters ", e);
 			log.info("Data: " + context.jsonString());
 		}
 

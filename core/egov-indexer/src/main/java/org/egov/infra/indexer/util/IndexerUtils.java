@@ -27,6 +27,7 @@ import org.egov.mdms.model.MdmsCriteria;
 import org.egov.mdms.model.MdmsCriteriaReq;
 import org.egov.mdms.model.ModuleDetail;
 import org.json.JSONArray;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -43,6 +44,7 @@ import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
 
 import lombok.extern.slf4j.Slf4j;
+import net.minidev.json.parser.JSONParser;
 
 @Service
 @Slf4j
@@ -522,10 +524,11 @@ public class IndexerUtils {
 	public DocumentContext encode(Index index, DocumentContext context) {
 		try {
 			ObjectMapper mapper = new ObjectMapper();
-			Gson gson = new Gson();
+			@SuppressWarnings("deprecation")
+			JSONParser parser = new JSONParser(); 
+			JSONObject json = (JSONObject) parser.parse(mapper.writeValueAsString(context.jsonString()));
 			mapper.getFactory().configure(Feature.ESCAPE_NON_ASCII, true);
-			String encodedString = gson.toJson(mapper.writeValueAsString(context.jsonString()));
-			context = JsonPath.parse(encodedString);
+			context = JsonPath.parse(json);
 		} catch (Exception e) {
 			log.info("Exception while encoding non ascii characters ", e);
 			log.info("Data: " + context.jsonString());

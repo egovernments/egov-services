@@ -120,8 +120,9 @@ public class AuthPreCheckFilter extends ZuulFilter {
             logger.info(NO_REQUEST_INFO_FIELD_MESSAGE, getRequestURI());
             return null;
         }
+        String authToken = (String) requestInfo.get(AUTH_TOKEN_REQUEST_BODY_FIELD_NAME);
         sanitizeAndSetRequest(requestBodyInspector, requestWrapper);
-        return (String) requestInfo.get(AUTH_TOKEN_REQUEST_BODY_FIELD_NAME);
+        return authToken;
     }
 
     private HashMap<String, Object> getRequestBody(CustomRequestWrapper requestWrapper) throws IOException {
@@ -132,6 +133,7 @@ public class AuthPreCheckFilter extends ZuulFilter {
     private void sanitizeAndSetRequest(RequestBodyInspector requestBodyInspector, CustomRequestWrapper requestWrapper) {
         HashMap<String, Object> requestInfo = requestBodyInspector.getRequestInfo();
         requestInfo.remove(USER_INFO_FIELD_NAME);
+        requestInfo.remove(AUTH_TOKEN_REQUEST_BODY_FIELD_NAME);
         requestBodyInspector.updateRequestInfo(requestInfo);
         try {
             requestWrapper.setPayload(objectMapper.writeValueAsString(requestBodyInspector.getRequestBody()));

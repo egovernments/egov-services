@@ -2,7 +2,6 @@ package org.egov.filters.pre;
 
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.netflix.zuul.context.RequestContext;
-import com.netflix.zuul.monitoring.CounterFactory;
 import com.netflix.zuul.monitoring.MonitoringHelper;
 import org.apache.commons.io.IOUtils;
 import org.egov.exceptions.CustomException;
@@ -339,7 +338,7 @@ public class AuthPreCheckFilterTest {
 
         authPreCheckFilter.run();
 
-        String expectedBody = "{\"RequestInfo\":{\"fu\":\"bar\",\"authToken\":\"authtoken\"}}";
+        String expectedBody = "{\"RequestInfo\":{\"fu\":\"bar\"}}";
         assertEquals(expectedBody, IOUtils.toString(ctx.getRequest().getInputStream()));
     }
 }

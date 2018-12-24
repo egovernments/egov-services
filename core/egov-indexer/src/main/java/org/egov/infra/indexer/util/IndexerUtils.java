@@ -526,15 +526,11 @@ public class IndexerUtils {
 			ObjectMapper mapper = new ObjectMapper();
 			mapper.getFactory().configure(Feature.ESCAPE_NON_ASCII, true);
 			encodedString = mapper.writeValueAsString(stringToBeEncoded);
-			log.info("stringToBeEncoded: "+stringToBeEncoded);
-			log.info("encodedString: "+encodedString);
-			encodedString = String.format(IndexerConstants.ES_INDEX_WRAPPER_FORMAT, encodedString);
 		} catch (Exception e) {
 			log.info("Exception while encoding non ascii characters ", e);
 			log.info("Data: " + stringToBeEncoded);
 			encodedString = stringToBeEncoded;
 		}
-		log.info("wrapper: "+encodedString);
 		return encodedString;
 	}
 

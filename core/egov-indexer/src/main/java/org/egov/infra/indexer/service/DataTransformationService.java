@@ -117,11 +117,9 @@ public class DataTransformationService {
 		} else {
 			final String actionMetaData = String.format(IndexerConstants.ES_INDEX_HEADER_FORMAT, "" + id);
 			if (null != customIndexJson) {
-				String encodedString = indexerUtils.encode(customIndexJson);
-				jsonTobeIndexed.append(actionMetaData).append(encodedString).append("\n");
+				jsonTobeIndexed.append(actionMetaData).append(customIndexJson).append("\n");
 			}else {
-				String encodedString = indexerUtils.encode(stringifiedObject);
-				jsonTobeIndexed.append(actionMetaData).append(encodedString).append("\n");
+				jsonTobeIndexed.append(actionMetaData).append(stringifiedObject).append("\n");
 			}
 		}
 

@@ -25,6 +25,7 @@ import org.egov.dataupload.model.UploadJob;
 import org.egov.dataupload.model.UploadJob.StatusEnum;
 import org.egov.dataupload.model.UploaderRequest;
 import org.egov.dataupload.producer.DataUploadProducer;
+import org.egov.dataupload.property.models.AuditDetails;
 import org.egov.dataupload.repository.DataUploadRepository;
 import org.egov.dataupload.repository.UploadRegistryRepository;
 import org.egov.dataupload.utils.DataUploadUtils;
@@ -74,6 +75,12 @@ public class DataUploadService {
     @Value("${filestore.host}")
     private String fileStoreHost;
 
+    @Value("${egov.uploadJob.save.topic}")
+    private String uploadJobSaveTopic;
+
+    @Value("${egov.uploadJob.update.topic}")
+    private String uploadJobUpdateTopic;
+
     @Value("${filestore.get.endpoint}")
     private String getFileEndpoint;
 
@@ -103,16 +110,23 @@ public class DataUploadService {
 
             uploadJob.setCode(dataUploadUtils.mockIdGen(uploadJob.getModuleName(), uploadJob.getDefName()));
             uploadJob.setRequesterName(uploaderRequest.getRequestInfo().getUserInfo().getUserName());
-            uploadRegistryRepository.createJob(uploaderRequest);
+            AuditDetails auditDetails = AuditDetails.builder().createdBy(uploaderRequest.getRequestInfo().getUserInfo().getId().toString())
+                    .createdTime(new Date().getTime())
+                    .lastModifiedBy(uploaderRequest.getRequestInfo().getUserInfo().getId().toString())
+                    .lastModifiedTime(new Date().getTime()).build();
+            uploadJob.setStatus(StatusEnum.NEW);
+
+            updateJobsWithPersister(auditDetails,uploadJob,true);
+//            uploadRegistryRepository.createJob(uploaderRequest);
 
             uploadJob.setLocalFilePath(filePath);
             dataUploadProducer.producer(uploaderRequest);
 
             return uploaderRequest.getUploadJobs();
-        } catch (IOException ioe) {
+        }/* catch (IOException ioe) {
             logger.error("Failed to create file", ioe);
             throw new CustomException("400", "Unable to create or write file");
-        } catch (RestClientException re) {
+        } */catch (RestClientException re) {
             logger.error("No .xls/.xlsx file found for: fileStoreId = " + uploadJob.getRequestFilePath()
                     + " AND tenantId = " + uploadJob.getTenantId());
             throw new CustomException("400", "Unable to fetch file from filestore");
@@ -177,6 +191,9 @@ public class DataUploadService {
 
         Definition uploadDefinition = definitionOptional.get();
         logger.info("Definition to be used: " + uploadDefinition);
+        AuditDetails auditDetails = uploadJob.getAuditDetails();
+        auditDetails.setLastModifiedBy(uploaderRequest.getRequestInfo().getUserInfo().getId().toString());
+        auditDetails.setLastModifiedTime(new Date().getTime());
 
         try (InputStream file = new FileInputStream(uploadJob.getLocalFilePath())) {
             Document document = excelIO.read(file);
@@ -188,7 +205,9 @@ public class DataUploadService {
             uploadJob.setStatus(StatusEnum.INPROGRESS);
             uploadJob.setResponseFilePath(null);
             uploadJob.setTotalRows(document.getRows().size());
-            uploadRegistryRepository.updateJob(uploadJob);
+
+            updateJobsWithPersister(auditDetails,uploadJob,false);
+//            uploadRegistryRepository.updateJob(uploadJob);
 
             if (null != uploadDefinition.getIsParentChild() && uploadDefinition.getIsParentChild()) {
                 uploadParentChildData(document, uploadDefinition, uploaderRequest);
@@ -202,7 +221,9 @@ public class DataUploadService {
             uploadJob.setSuccessfulRows(0);
             uploadJob.setStatus(StatusEnum.fromValue("failed"));
             uploadJob.setReasonForFailure(e.getMessage());
-            uploadRegistryRepository.updateJob(uploadJob);
+
+            updateJobsWithPersister(auditDetails,uploadJob,false);
+//            uploadRegistryRepository.updateJob(uploadJob);
             throw new CustomException(HttpStatus.BAD_REQUEST.toString(),
                     "Unable to open file provided.");
         } catch(Exception e){
@@ -217,34 +238,19 @@ public class DataUploadService {
     private void uploadFlatData(Document document, Definition uploadDefinition, UploaderRequest
             uploaderRequest) {
         List<Object> outputHeaders = new ArrayList<>(document.getHeaders());
-        outputHeaders.add("status");
-        outputHeaders.add("message");
-
         UploadJob uploadJob = uploaderRequest.uploadJobs.get(0);
         List<Request> requests = uploadDefinition.getRequests();
-
         List<DocumentContext> documentContexts = new ArrayList<>();
-        List<List<Object>> responseJsonPathLists = new ArrayList<>();
-
-        for (Request request : requests) {
-            documentContexts.add(JsonPath.parse(request.getApiRequest()));
-            if (null != request.getAdditionalResFields()) {
-                List<Object> resJsonPathList = new ArrayList<>();
-                for (Entry<String, String> entry : request.getAdditionalResFields().entrySet()) {
-                    outputHeaders.add(entry.getValue());
-                    resJsonPathList.add(entry.getKey());
-                }
-                responseJsonPathLists.add(resJsonPathList);
-            } else
-                responseJsonPathLists.add(Collections.emptyList());
-        }
-
+        AuditDetails auditDetails = uploadJob.getAuditDetails();
+        List<List<Object>> responseJsonPathLists=initialiseUploadProcess(document, uploadDefinition, uploaderRequest,outputHeaders,uploadJob
+                ,requests,documentContexts,auditDetails);
 
         try {
             String resultFilePath = dataUploadUtils.createANewFile(resFilePrefix + uploadJob.getRequestFileName());
             dataUploadUtils.writeToexcelSheet(outputHeaders, resultFilePath);
             int successCount = 0;
             int failureCount = 0;
+            int recordCount=1;
             for (List<Object> row : document.getRows()) {
                 Object previousResponse = null;
                 String failureMessage = "";
@@ -280,7 +286,18 @@ public class DataUploadService {
                     successCount++;
                     writeResultToExcel(failureMessage, row, responseFields, resultFilePath);
                 }
+                if((recordCount%10)==0)
+                {   // update progress after every 10 records
+                    uploadJob.setSuccessfulRows(successCount);
+                    uploadJob.setFailedRows(failureCount);
+                    uploadJob.setStatus(StatusEnum.INPROGRESS);
 
+                    auditDetails.setLastModifiedBy(uploaderRequest.getRequestInfo().getUserInfo().getId().toString());
+                    auditDetails.setLastModifiedTime(new Date().getTime());
+
+                    updateJobsWithPersister(auditDetails,uploadJob,false);
+                }
+                recordCount++;
             }
             String responseFilePath = getFileStoreId(uploadJob.getTenantId(), uploadJob.getModuleName(), resultFilePath);
 
@@ -289,42 +306,47 @@ public class DataUploadService {
             uploadJob.setEndTime(new Date().getTime());
             uploadJob.setResponseFilePath(responseFilePath);
             uploadJob.setStatus(StatusEnum.COMPLETED);
-            uploadRegistryRepository.updateJob(uploadJob);
+
+
+            updateJobsWithPersister(auditDetails,uploadJob,false);
+
+//            uploadRegistryRepository.updateJob(uploadJob);
 
         } catch (IOException e) {
             logger.error("Unable to write to output file.", e);
             uploadJob.setEndTime(new Date().getTime());
             uploadJob.setStatus(StatusEnum.FAILED);
             uploadJob.setReasonForFailure("IO_Exception, unable to write to output file");
-            uploadRegistryRepository.updateJob(uploadJob);
+
+
+            updateJobsWithPersister(auditDetails,uploadJob,false);
+
+//            uploadRegistryRepository.updateJob(uploadJob);
             throw new CustomException("IO_EXCEPTION", "Unable to write to output file");
         }
     }
 
+    private void updateJobsWithPersister(AuditDetails auditDetails,UploadJob uploadJob,boolean save){
+        uploadJob.setAuditDetails(auditDetails);
+        HashMap<String,Object> hashMap=new HashMap<>();
+        hashMap.put("UploadJob", uploadJob);
+        if(save)
+        {
+            dataUploadProducer.push(uploadJobSaveTopic, hashMap);
+        }
+        else {
+            dataUploadProducer.push(uploadJobUpdateTopic, hashMap);
+        }
+    }
 
     private void uploadParentChildData(Document document, Definition uploadDefinition, UploaderRequest uploaderRequest) {
         List<Object> outputHeaders = new ArrayList<>(document.getHeaders());
-        outputHeaders.add("status");
-        outputHeaders.add("message");
-
         UploadJob uploadJob = uploaderRequest.uploadJobs.get(0);
         List<Request> requests = uploadDefinition.getRequests();
-
         List<DocumentContext> documentContexts = new ArrayList<>();
-        List<List<Object>> responseJsonPathLists = new ArrayList<>();
-
-        for (Request request : requests) {
-            documentContexts.add(JsonPath.parse(request.getApiRequest()));
-            if (null != request.getAdditionalResFields()) {
-                List<Object> resJsonPathList = new ArrayList<>();
-                for (Entry<String, String> entry : request.getAdditionalResFields().entrySet()) {
-                    outputHeaders.add(entry.getValue());
-                    resJsonPathList.add(entry.getKey());
-                }
-                responseJsonPathLists.add(resJsonPathList);
-            } else
-                responseJsonPathLists.add(Collections.emptyList());
-        }
+        AuditDetails auditDetails = uploadJob.getAuditDetails();
+        List<List<Object>> responseJsonPathLists=initialiseUploadProcess(document, uploadDefinition, uploaderRequest,outputHeaders,uploadJob
+                                                                         ,requests,documentContexts,auditDetails);
 
         try {
             String resultFilePath = dataUploadUtils.createANewFile(resFilePrefix + uploadJob.getRequestFileName());
@@ -333,6 +355,7 @@ public class DataUploadService {
 
             int successCount = 0;
             int failureCount = 0;
+            int recordCount  = 0;
             List<Integer> indexes = dataUploadUtils.getIndexes(uploadDefinition, document.getHeaders());
             List<List<Object>> excelData = document.getRows();
 
@@ -380,6 +403,19 @@ public class DataUploadService {
                     writeResultToExcelParentChild(failureMessage, entry.getValue(), responseFields, resultFilePath);
                 }
 
+                if((recordCount%10)==0)
+                {   // update progress after every 10 records
+                    uploadJob.setSuccessfulRows(successCount);
+                    uploadJob.setFailedRows(failureCount);
+                    uploadJob.setStatus(StatusEnum.INPROGRESS);
+
+                    auditDetails.setLastModifiedBy(uploaderRequest.getRequestInfo().getUserInfo().getId().toString());
+                    auditDetails.setLastModifiedTime(new Date().getTime());
+
+                    updateJobsWithPersister(auditDetails,uploadJob,false);
+
+                }
+                recordCount++;
             }
 
             String responseFilePath = getFileStoreId(uploadJob.getTenantId(), uploadJob.getModuleName(), resultFilePath);
@@ -389,18 +425,46 @@ public class DataUploadService {
             uploadJob.setEndTime(new Date().getTime());
             uploadJob.setResponseFilePath(responseFilePath);
             uploadJob.setStatus(StatusEnum.fromValue("completed"));
-            uploadRegistryRepository.updateJob(uploadJob);
+
+
+            updateJobsWithPersister(auditDetails,uploadJob,false);
+//            uploadRegistryRepository.updateJob(uploadJob);
 
         } catch (IOException e) {
             logger.error("Unable to write to output file.", e);
             uploadJob.setEndTime(new Date().getTime());
             uploadJob.setStatus(StatusEnum.FAILED);
             uploadJob.setReasonForFailure("IO_Exception, unable to write to output file");
-            uploadRegistryRepository.updateJob(uploadJob);
+
+            updateJobsWithPersister(auditDetails,uploadJob,false);
+//            uploadRegistryRepository.updateJob(uploadJob);
             throw new CustomException("IO_EXCEPTION", "Unable to write to output file");
         }
     }
 
+
+    private  List<List<Object>> initialiseUploadProcess(Document document, Definition uploadDefinition, UploaderRequest uploaderRequest,List<Object> outputHeaders,
+                                       UploadJob uploadJob,List<Request> requests,List<DocumentContext> documentContexts,AuditDetails auditDetails){
+
+        outputHeaders.add("status");
+        outputHeaders.add("message");
+        auditDetails.setLastModifiedBy(uploaderRequest.getRequestInfo().getUserInfo().getId().toString());
+        auditDetails.setLastModifiedTime(new Date().getTime());
+        List<List<Object>> responseJsonPathLists = new ArrayList<>();
+        for (Request request : requests) {
+            documentContexts.add(JsonPath.parse(request.getApiRequest()));
+            if (null != request.getAdditionalResFields()) {
+                List<Object> resJsonPathList = new ArrayList<>();
+                for (Entry<String, String> entry : request.getAdditionalResFields().entrySet()) {
+                    outputHeaders.add(entry.getValue());
+                    resJsonPathList.add(entry.getKey());
+                }
+                responseJsonPathLists.add(resJsonPathList);
+            } else
+                responseJsonPathLists.add(Collections.emptyList());
+        }
+        return responseJsonPathLists;
+    }
 
     private String buildRequest(List<String> columnHeaders, Request request, DocumentContext
             documentContext, UploaderRequest uploaderRequest, List<Object> row, Object previousResponse) {

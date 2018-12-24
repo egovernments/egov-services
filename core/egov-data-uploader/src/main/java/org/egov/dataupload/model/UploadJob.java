@@ -11,6 +11,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.egov.dataupload.property.models.AuditDetails;
 
 @Getter
 @Setter
@@ -98,6 +99,8 @@ public class UploadJob   {
   
   @JsonProperty("reasonForFailure")
   private String reasonForFailure;
+
+  private AuditDetails auditDetails;
 
 
 }

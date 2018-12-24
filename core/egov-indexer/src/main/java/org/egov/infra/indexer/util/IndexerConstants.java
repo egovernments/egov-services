@@ -6,4 +6,5 @@ import org.springframework.stereotype.Component;
 public class IndexerConstants {
 
 	public static final String ES_INDEX_HEADER_FORMAT = "{ \"index\" : {\"_id\" : \"%s\" } }%n ";
+	public static final String ES_INDEX_WRAPPER_FORMAT = "{ \"root\" : \"%s\" }";
 }

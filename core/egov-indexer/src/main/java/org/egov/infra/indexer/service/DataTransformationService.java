@@ -110,17 +110,19 @@ public class DataTransformationService {
 	 * @param customIndexJson
 	 * @return
 	 */
-	public StringBuilder appendIdToJson(Index index, StringBuilder jsonTobeIndexed, String stringifiedObject,
-			String customIndexJson) {
+	public StringBuilder appendIdToJson(Index index, StringBuilder jsonTobeIndexed, String stringifiedObject, String customIndexJson) {
 		String id = indexerUtils.buildIndexId(index, stringifiedObject);
 		if (StringUtils.isEmpty(id)) {
 			return null;
 		} else {
 			final String actionMetaData = String.format(IndexerConstants.ES_INDEX_HEADER_FORMAT, "" + id);
-			if (null != customIndexJson)
-				jsonTobeIndexed.append(actionMetaData).append(customIndexJson).append("\n");
-			else
-				jsonTobeIndexed.append(actionMetaData).append(stringifiedObject).append("\n");
+			if (null != customIndexJson) {
+				String encodedString = indexerUtils.encode(customIndexJson);
+				jsonTobeIndexed.append(actionMetaData).append(encodedString).append("\n");
+			}else {
+				String encodedString = indexerUtils.encode(stringifiedObject);
+				jsonTobeIndexed.append(actionMetaData).append(encodedString).append("\n");
+			}
 		}
 
 		return jsonTobeIndexed;

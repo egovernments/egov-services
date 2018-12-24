@@ -438,7 +438,6 @@ public class IndexerUtils {
 							context = JsonPath.parse(kafkaJsonArray.get(i).toString());
 							context = maskFields(index, context);
 							context = addTimeStamp(index, context);
-						//	context = encode(index, context);
 							tranformedArray.put(context.jsonString());
 						} catch (Exception e) {
 							log.error("Exception while transforiming data: ", e);
@@ -521,21 +520,18 @@ public class IndexerUtils {
 	 * @param context
 	 * @return
 	 */
-	public DocumentContext encode(Index index, DocumentContext context) {
+	public String encode(String stringToBeEncoded) {
+		String encodedString = null;
 		try {
 			ObjectMapper mapper = new ObjectMapper();
-			@SuppressWarnings("deprecation")
-			JSONParser parser = new JSONParser(); 
-			JSONObject json = (JSONObject) parser.parse(mapper.writeValueAsString(context.jsonString()));
 			mapper.getFactory().configure(Feature.ESCAPE_NON_ASCII, true);
-			context = JsonPath.parse(json);
+			encodedString = mapper.writeValueAsString(stringToBeEncoded);
 		} catch (Exception e) {
 			log.info("Exception while encoding non ascii characters ", e);
-			log.info("Data: " + context.jsonString());
+			log.info("Data: " + stringToBeEncoded);
+			encodedString = stringToBeEncoded;
 		}
-
-		return context;
-
+		return encodedString;
 	}
 
 	/**

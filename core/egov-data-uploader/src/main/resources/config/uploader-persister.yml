@@ -8,33 +8,33 @@ serviceMaps:
     isTransaction: true
     queryMaps:
     - query: Insert into EGDU_UPLOADREGISTRY(CODE, TENANTID, REQUESTFILE_PATH, MODULE_NAME, DEF_NAME, REQUESTER_NAME, STATUS,FILE_NAME,CREATEDBY,CREATEDDATE,LASTMODIFIEDBY,LASTMODIFIEDDATE) VALUES(?,?,?,?,?,?,?,?,?,?,?,?);
-      basePath: UploadJobs
+      basePath: UploadJob
       jsonMaps:
 
 
-      - jsonPath: $.UploadJobs.*.code
+      - jsonPath: $.UploadJob.code
 
-      - jsonPath: $.UploadJobs.*.tenantId
+      - jsonPath: $.UploadJob.tenantId
 
-      - jsonPath: $.UploadJobs.*.requestFilePath
+      - jsonPath: $.UploadJob.requestFilePath
 
-      - jsonPath: $.UploadJobs.*.moduleName
+      - jsonPath: $.UploadJob.moduleName
 
-      - jsonPath: $.UploadJobs.*.defName
+      - jsonPath: $.UploadJob.defName
 
-      - jsonPath: $.UploadJobs.*.requesterName
+      - jsonPath: $.UploadJob.requesterName
 
-      - jsonPath: $.UploadJobs.*.status
+      - jsonPath: $.UploadJob.status
 
-      - jsonPath: $.UploadJobs.*.requestFileName
+      - jsonPath: $.UploadJob.requestFileName
 
-      - jsonPath: $.UploadJobs.*.auditDetails.createdBy
+      - jsonPath: $.UploadJob.auditDetails.createdBy
 
-      - jsonPath: $.UploadJobs.*.auditDetails.createdTime
+      - jsonPath: $.UploadJob.auditDetails.createdTime
 
-      - jsonPath: $.UploadJobs.*.auditDetails.lastModifiedBy
+      - jsonPath: $.UploadJob.auditDetails.lastModifiedBy
 
-      - jsonPath: $.UploadJobs.*.auditDetails.lastModifiedTime
+      - jsonPath: $.UploadJob.auditDetails.lastModifiedTime
 
 
 
@@ -44,29 +44,33 @@ serviceMaps:
     fromTopic: update-upload-jobs
     isTransaction: true
     queryMaps:
-    - query: Update EGDU_UPLOADREGISTRY set START_TIME=?, END_TIME=?, TOTAL_ROWS=?, SUCCESS_ROWS=?, FAILED_ROWS=?, RESPONSEFILE_PATH=?, STATUS=?, REASON_FOR_FAILURE = ? where CODE=? AND TENANTID=?
+    - query: Update EGDU_UPLOADREGISTRY set START_TIME=?, END_TIME=?, TOTAL_ROWS=?, SUCCESS_ROWS=?, FAILED_ROWS=?, RESPONSEFILE_PATH=?, STATUS=?, REASON_FOR_FAILURE = ?, LASTMODIFIEDBY=?, LASTMODIFIEDDATE=? where CODE=? AND TENANTID=?
       basePath: UploadJobs
       jsonMaps:
 
 
-      - jsonPath: $.UploadJobs.*.startTime
+      - jsonPath: $.UploadJob.startTime
 
-      - jsonPath: $.UploadJobs.*.endTime
+      - jsonPath: $.UploadJob.endTime
 
-      - jsonPath: $.UploadJobs.*.totalRows
+      - jsonPath: $.UploadJob.totalRows
 
-      - jsonPath: $.UploadJobs.*.successfulRows
+      - jsonPath: $.UploadJob.successfulRows
 
-      - jsonPath: $.UploadJobs.*.failedRows
+      - jsonPath: $.UploadJob.failedRows
 
-      - jsonPath: $.UploadJobs.*.responseFilePath
+      - jsonPath: $.UploadJob.responseFilePath
 
-      - jsonPath: $.UploadJobs.*.status
+      - jsonPath: $.UploadJob.status
 
-      - jsonPath: $.UploadJobs.*.reasonForFailure
+      - jsonPath: $.UploadJob.reasonForFailure
 
-      - jsonPath: $.UploadJobs.*.code
+      - jsonPath: $.UploadJob.auditDetails.lastModifiedBy
 
-      - jsonPath: $.UploadJobs.*.tenantId
+      - jsonPath: $.UploadJob.auditDetails.lastModifiedTime
+
+      - jsonPath: $.UploadJob.code
+
+      - jsonPath: $.UploadJob.tenantId
 
 

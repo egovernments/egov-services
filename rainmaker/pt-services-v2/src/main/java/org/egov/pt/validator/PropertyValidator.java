@@ -503,8 +503,8 @@ public class PropertyValidator {
                 if(!propertyDetail.getOwnershipCategory().contains("INSTITUTIONAL"))
                 {
                     propertyDetail.getOwners().forEach(owner -> {
-                        if(owner.getMobileNumber()==null)
-                            errorMap.put("INVALID OWNER","MobileNumber cannot be null");
+                        if(owner.getMobileNumber()==null || !isMobileNumberValid(owner.getMobileNumber()))
+                            errorMap.put("INVALID OWNER","MobileNumber is not valid");
                     });
                 }
                 if(propertyDetail.getOwnershipCategory().contains("INSTITUTIONAL"))
@@ -598,6 +598,19 @@ public class PropertyValidator {
 
 
 
+    }
+
+    /**
+     * Validates if the mobileNumber is 10 digit and starts with 5 or greater
+     * @param mobileNumber The mobileNumber to be validated
+     * @return True if valid mobileNumber else false
+     */
+    private Boolean isMobileNumberValid(String mobileNumber){
+        if(mobileNumber.length()!=10)
+            return false;
+        if(Character.getNumericValue(mobileNumber.charAt(0))<5)
+            return false;
+        return true;
     }
 
 

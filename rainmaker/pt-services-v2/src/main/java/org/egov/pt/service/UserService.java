@@ -55,7 +55,6 @@ public class UserService {
                 Set<String> listOfMobileNumbers = getMobileNumbers(propertyDetail,requestInfo,property.getTenantId());
                 log.info("Unique MobileNumbers: "+listOfMobileNumbers);
                 propertyDetail.getOwners().forEach(owner -> {
-                    if(owner.getUuid()==null){
                         addUserDefaultFields(property.getTenantId(),role,owner);
                         // Checks if the user is already present based on name of the owner and mobileNumber
                         UserDetailResponse userDetailResponse = userExists(owner,requestInfo);
@@ -88,7 +87,6 @@ public class UserService {
                         }
                         // Assigns value of fields from user got from userDetailResponse to owner object
                         setOwnerFields(owner,userDetailResponse,requestInfo);
-                    }
                 });
             });
         });
@@ -106,6 +104,10 @@ public class UserService {
         owner.setTenantId(tenantId);
         owner.setRoles(Collections.singletonList(role));
         owner.setType("CITIZEN");
+        owner.setCreatedDate(null);
+        owner.setCreatedBy(null );
+        owner.setLastModifiedDate(null);
+        owner.setLastModifiedBy(null );
     }
 
     private Role getCitizenRole(){
@@ -129,8 +131,8 @@ public class UserService {
         userSearchRequest.setRequestInfo(requestInfo);
         userSearchRequest.setActive(true);
         userSearchRequest.setUserType(owner.getType());
-        if(owner.getUuid()!=null)
-            userSearchRequest.setUuid(Arrays.asList(owner.getUuid()));
+        /*if(owner.getUuid()!=null)
+            userSearchRequest.setUuid(Collections.singletonList(owner.getUuid()));*/
         StringBuilder uri = new StringBuilder(userHost).append(userSearchEndpoint);
         return userCall(userSearchRequest,uri);
     }

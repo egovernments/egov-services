@@ -345,7 +345,15 @@ public class UserService {
                 property.getPropertyDetails().forEach(propertyDetail -> {
                     addUserDefaultFields(property.getTenantId(),role,propertyDetail.getCitizenInfo());
                     // Send MobileNumber as the userName in search
-                    UserDetailResponse userDetailResponse = searchByUserName(propertyDetail.getCitizenInfo().getMobileNumber(),propertyDetail.getCitizenInfo().getTenantId());
+                    String userName = null;
+                    if(propertyDetail.getCitizenInfo().getMobileNumber()!=null)
+                        userName = propertyDetail.getCitizenInfo().getMobileNumber();
+                    else if(propertyDetail.getCitizenInfo().getAltContactNumber()!=null &&
+                               propertyDetail.getOwnershipCategory().contains("INSTITUTIONAL"))
+                        userName = propertyDetail.getCitizenInfo().getAltContactNumber();
+                    else throw new CustomException("INVALID CITIZENINFO","Both mobileNumber and altContactNumber cannot be null");
+
+                    UserDetailResponse userDetailResponse = searchByUserName(userName,propertyDetail.getCitizenInfo().getTenantId());
                     // If user not present new user is created
                     if(CollectionUtils.isEmpty(userDetailResponse.getUser()))
                     {

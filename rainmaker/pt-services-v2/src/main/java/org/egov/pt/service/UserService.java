@@ -2,6 +2,7 @@ package org.egov.pt.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang.StringUtils;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.request.User;
 import org.egov.pt.repository.ServiceRequestRepository;
@@ -346,11 +347,11 @@ public class UserService {
                     addUserDefaultFields(property.getTenantId(),role,propertyDetail.getCitizenInfo());
                     // Send MobileNumber as the userName in search
                     String userName = null;
-                    if(propertyDetail.getCitizenInfo().getMobileNumber()!=null)
+                    if(!StringUtils.isEmpty(propertyDetail.getCitizenInfo().getMobileNumber()))
                         userName = propertyDetail.getCitizenInfo().getMobileNumber();
-                    else if(propertyDetail.getCitizenInfo().getAltContactNumber()!=null &&
+                    else if(propertyDetail.getCitizenInfo().getUserName()!=null &&
                                propertyDetail.getOwnershipCategory().contains("INSTITUTIONAL"))
-                        userName = propertyDetail.getCitizenInfo().getAltContactNumber();
+                        userName = propertyDetail.getCitizenInfo().getUserName();
                     else throw new CustomException("INVALID CITIZENINFO","Both mobileNumber and altContactNumber cannot be null");
 
                     UserDetailResponse userDetailResponse = searchByUserName(userName,propertyDetail.getCitizenInfo().getTenantId());

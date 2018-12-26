@@ -7,7 +7,9 @@ public class ProcessStateAndAction {
 /*Contains the action object to be performed, the currentState and resultantState
    to avoid multiple iterations*/
 
-    private ProcessInstance processInstance = null;
+    private ProcessInstance processInstanceFromRequest = null;
+
+    private ProcessInstance processInstanceFromDb;
 
     private Action action = null;
 

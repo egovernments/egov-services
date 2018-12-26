@@ -19,20 +19,26 @@ public class WorkflowQueryBuilder {
         this.config = config;
     }
 
-    private static final String INNER_JOIN_STRING = " INNER JOIN ";
-    private static final String LEFT_OUTER_JOIN_STRING = " LEFT OUTER JOIN ";
+    private static final String INNER_JOIN = " INNER JOIN ";
+    private static final String LEFT_OUTER_JOIN = " LEFT OUTER JOIN ";
 
 
     private static final String QUERY = "SELECT pi.*,doc.*,pi.id as wf_id," +
             "pi.lastModifiedTime as wf_lastModifiedTime,pi.createdTime as wf_createdTime," +
-            "pi.createdBy as wf_createdBy,pi.lastModifiedBy as wf_lastModifiedBy," +
+            "pi.createdBy as wf_createdBy,pi.lastModifiedBy as wf_lastModifiedBy,pi.status as pi_status," +
             "doc.lastModifiedTime as doc_lastModifiedTime,doc.createdTime as doc_createdTime," +
             "doc.createdBy as doc_createdBy,doc.lastModifiedBy as doc_lastModifiedBy," +
             "doc.tenantid as doc_tenantid,doc.id as doc_id " +
             " FROM eg_wf_processinstance_v2 pi " +
-            LEFT_OUTER_JOIN_STRING +
+            LEFT_OUTER_JOIN+
             " eg_wf_document_v2 doc " +
             " ON doc.processinstanceid = pi.id WHERE ";
+
+    private static final String STATE_JOIN_QUERY  = INNER_JOIN + " eg_wf_state_v2 st ON st.uuid = fp.pi_status " +
+            LEFT_OUTER_JOIN  + " eg_wf_action_v2 ac ON ac.currentState = st.uuid ";
+
+    private static final String OUTER_QUERY = "SELECT fp.*,st.*,ac.*, st.uuid as st_uuid,st.tenantId as st_tenantId,"+
+            " ac.uuid as ac_uuid,ac.tenantId as ac_tenantId,ac.action as ac_action FROM ( ";
 
     private final String paginationWrapper = "SELECT * FROM " +
             "(SELECT *, DENSE_RANK() OVER (ORDER BY wf_id) offset_ FROM " +
@@ -61,10 +67,13 @@ public class WorkflowQueryBuilder {
             addToPreparedStatement(preparedStmtList,ids);
         }
 
-        if(criteria.getBusinessId()!=null){
-            builder.append(" and pi.businessId = ? ");
-            preparedStmtList.add(criteria.getBusinessId());
+
+        List<String> businessIds = criteria.getBusinessIds();
+        if(!CollectionUtils.isEmpty(businessIds)) {
+            builder.append(" and pi.businessId IN (").append(createQuery(businessIds)).append(")");
+            addToPreparedStatement(preparedStmtList,businessIds);
         }
+
 
         String query = addPaginationWrapper(builder.toString(),preparedStmtList,criteria);
         query = addOrderByCreatedTime(query);
@@ -76,12 +85,19 @@ public class WorkflowQueryBuilder {
 
     }
 
+    public String getProcessInstanceSearchQueryWithState(ProcessInstanceSearchCriteria criteria, List<Object> preparedStmtList) {
+       String query = getProcessInstanceSearchQuery(criteria,preparedStmtList);
+       String finalQuery = OUTER_QUERY+query+")" + " fp "+STATE_JOIN_QUERY;
+       return finalQuery;
+    }
 
-    /**
-     * Creates preparedStatement
-     * @param ids The ids to search on
-     * @return Query with prepares statement
-     */
+
+
+        /**
+         * Creates preparedStatement
+         * @param ids The ids to search on
+         * @return Query with prepares statement
+         */
     private String createQuery(List<String> ids) {
         StringBuilder builder = new StringBuilder();
         int length = ids.size();
@@ -147,7 +163,7 @@ public class WorkflowQueryBuilder {
 
 
     /**
-     * Creates query to search processInstance assigned to user
+     * Creates query to search processInstanceFromRequest assigned to user
      * @return search query based on assignee
      */
     public String getAssigneeSearchQuery(ProcessInstanceSearchCriteria criteria, List<Object> preparedStmtList){
@@ -156,12 +172,13 @@ public class WorkflowQueryBuilder {
                 " AND pi.lastmodifiedTime IN  (SELECT max(lastmodifiedTime) from eg_wf_processinstance_v2 GROUP BY businessid)";
         preparedStmtList.add(criteria.getAssignee());
         preparedStmtList.add(criteria.getTenantId());
+        query = OUTER_QUERY+query+")" + " fp "+STATE_JOIN_QUERY;
         return query;
     }
 
 
     /**
-     * Creates query to search processInstance based on user roles
+     * Creates query to search processInstanceFromRequest based on user roles
      * @return search query based on assignee
      */
     public String getStatusBasedProcessInstance(ProcessInstanceSearchCriteria criteria, List<Object> preparedStmtList){
@@ -175,9 +192,10 @@ public class WorkflowQueryBuilder {
             builder.append(" and status IN (").append(createQuery(statuses)).append(")");
             addToPreparedStatement(preparedStmtList,statuses);
         }
-
-        return builder.toString();
+        return OUTER_QUERY+builder.toString()+")" + " fp "+STATE_JOIN_QUERY;
     }
+
+
 
 
 

@@ -2,7 +2,7 @@ serviceMaps:
  serviceName: egov-workflow-v2
  mappings:
  - version: 1.0
-   description: Persists workflow processInstance details in eg_workflow_v2  table
+   description: Persists workflow processInstanceFromRequest details in eg_workflow_v2  table
    fromTopic: save-wf-transitions
    isTransaction: true
    queryMaps:
@@ -20,7 +20,7 @@ serviceMaps:
 
           - jsonPath: $.ProcessInstances.*.action
 
-          - jsonPath: $.ProcessInstances.*.status.uuid
+          - jsonPath: $.ProcessInstances.*.state.uuid
 
           - jsonPath: $.ProcessInstances.*.comment
 

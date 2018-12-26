@@ -36,15 +36,15 @@ public class StatusUpdateService {
     public void updateStatus(RequestInfo requestInfo,List<ProcessStateAndAction> processStateAndActions){
 
         for(ProcessStateAndAction processStateAndAction : processStateAndActions){
-            if(processStateAndAction.getProcessInstance().getStatus()!=null){
-                String prevStatus = processStateAndAction.getProcessInstance().getStatus().getUuid();
-                processStateAndAction.getProcessInstance().setPreviousStatus(prevStatus);
+            if(processStateAndAction.getProcessInstanceFromRequest().getState()!=null){
+                String prevStatus = processStateAndAction.getProcessInstanceFromRequest().getState().getUuid();
+                processStateAndAction.getProcessInstanceFromRequest().setPreviousStatus(prevStatus);
             }
-            processStateAndAction.getProcessInstance().setStatus(processStateAndAction.getResultantState());
+            processStateAndAction.getProcessInstanceFromRequest().setState(processStateAndAction.getResultantState());
         }
         List<ProcessInstance> processInstances = new LinkedList<>();
         processStateAndActions.forEach(processStateAndAction -> {
-            processInstances.add(processStateAndAction.getProcessInstance());
+            processInstances.add(processStateAndAction.getProcessInstanceFromRequest());
         });
         ProcessInstanceRequest processInstanceRequest = new ProcessInstanceRequest(requestInfo,processInstances);
         producer.push(config.getSaveTransitionTopic(),processInstanceRequest);

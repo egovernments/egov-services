@@ -35,6 +35,7 @@ public class BusinessServiceRowMapper implements ResultSetExtractor<List<Busines
                         .postUri(rs.getString("posturi"))
                         .businessService(rs.getString("businessService"))
                         .business(rs.getString("business"))
+                        .uuid(uuid)
                         .auditDetails(auditdetails)
                         .build();
                 businessServiceMap.put(uuid,businessService);

@@ -42,18 +42,22 @@ public class EnrichmentService {
     public void enrichProcessRequest(RequestInfo requestInfo,List<ProcessStateAndAction> processStateAndActions){
         AuditDetails auditDetails = util.getAuditDetails(requestInfo.getUserInfo().getUuid(),true);
         processStateAndActions.forEach(processStateAndAction -> {
-            String tenantId = processStateAndAction.getProcessInstance().getTenantId();
-            processStateAndAction.getProcessInstance().setId(UUID.randomUUID().toString());
-            processStateAndAction.getProcessInstance().setAuditDetails(auditDetails);
-            processStateAndAction.getProcessInstance().setAssigner(requestInfo.getUserInfo());
-            if(!CollectionUtils.isEmpty(processStateAndAction.getProcessInstance().getDocuments())){
-                processStateAndAction.getProcessInstance().getDocuments().forEach(document -> {
+            String tenantId = processStateAndAction.getProcessInstanceFromRequest().getTenantId();
+            processStateAndAction.getProcessInstanceFromRequest().setId(UUID.randomUUID().toString());
+            if(processStateAndAction.getAction().getNextState().equalsIgnoreCase(processStateAndAction.getAction().getCurrentState())){
+                auditDetails.setCreatedBy(processStateAndAction.getProcessInstanceFromDb().getAuditDetails().getCreatedBy());
+                auditDetails.setCreatedTime(processStateAndAction.getProcessInstanceFromDb().getAuditDetails().getCreatedTime());
+            }
+            processStateAndAction.getProcessInstanceFromRequest().setAuditDetails(auditDetails);
+            processStateAndAction.getProcessInstanceFromRequest().setAssigner(requestInfo.getUserInfo());
+            if(!CollectionUtils.isEmpty(processStateAndAction.getProcessInstanceFromRequest().getDocuments())){
+                processStateAndAction.getProcessInstanceFromRequest().getDocuments().forEach(document -> {
                     document.setAuditDetails(auditDetails);
                     document.setTenantId(tenantId);
                     document.setId(UUID.randomUUID().toString());
                 });
             }
-            processStateAndAction.getProcessInstance().setSla(processStateAndAction.getResultantState().getSla());
+            processStateAndAction.getProcessInstanceFromRequest().setSla(processStateAndAction.getResultantState().getSla());
             setNextActions(requestInfo,processStateAndActions,true);
         });
         enrichUsers(processStateAndActions);
@@ -64,7 +68,7 @@ public class EnrichmentService {
 
 
     /**
-     * Enriches the processInstance with next possible action depending on current currentState
+     * Enriches the processInstanceFromRequest with next possible action depending on current currentState
      * @param requestInfo The RequestInfo of the request
      * @param processStateAndActions
      */
@@ -77,39 +81,41 @@ public class EnrichmentService {
              state = processStateAndAction.getResultantState();
             else state = processStateAndAction.getCurrentState();
             List<String> nextAction = new LinkedList<>();
-            state.getActions().forEach(action -> {
-                if(util.isRoleAvailable(roles,action.getRoles()))
-                    nextAction.add(action.getAction());
-            });
-            processStateAndAction.getProcessInstance().setNextActions(nextAction);
+            if(!CollectionUtils.isEmpty( state.getActions())){
+                state.getActions().forEach(action -> {
+                    if(util.isRoleAvailable(roles,action.getRoles()))
+                        nextAction.add(action.getAction());
+                });
+            }
+            processStateAndAction.getProcessInstanceFromRequest().setNextActions(nextAction);
         });
     }
 
     /**
      * Enriches the assignee and assigner user object from user search response
-     * @param processStateAndActions The List of ProcessStateAndAction containing processInstance to be enriched
+     * @param processStateAndActions The List of ProcessStateAndAction containing processInstanceFromRequest to be enriched
      */
     public void enrichUsers(List<ProcessStateAndAction> processStateAndActions){
         List<String> uuids = new LinkedList<>();
         processStateAndActions.forEach(processStateAndAction -> {
-            if(processStateAndAction.getProcessInstance().getAssignee()!=null)
-                uuids.add(processStateAndAction.getProcessInstance().getAssignee().getUuid());
-            uuids.add(processStateAndAction.getProcessInstance().getAssigner().getUuid());
+            if(processStateAndAction.getProcessInstanceFromRequest().getAssignee()!=null)
+                uuids.add(processStateAndAction.getProcessInstanceFromRequest().getAssignee().getUuid());
+            uuids.add(processStateAndAction.getProcessInstanceFromRequest().getAssigner().getUuid());
         });
 
         Map<String,User> idToUserMap = userService.searchUser(uuids);
         Map<String,String> errorMap = new HashMap<>();
         processStateAndActions.forEach(processStateAndAction -> {
             User assignee=null,assigner;
-            if(processStateAndAction.getProcessInstance().getAssignee()!=null)
-                 assignee = idToUserMap.get(processStateAndAction.getProcessInstance().getAssignee().getUuid());
-            assigner = idToUserMap.get(processStateAndAction.getProcessInstance().getAssigner().getUuid());
-            if(processStateAndAction.getProcessInstance().getAssignee()!=null && assignee==null)
-                errorMap.put("INVALID UUID","User not found for uuid: "+processStateAndAction.getProcessInstance().getAssignee().getUuid());
+            if(processStateAndAction.getProcessInstanceFromRequest().getAssignee()!=null)
+                 assignee = idToUserMap.get(processStateAndAction.getProcessInstanceFromRequest().getAssignee().getUuid());
+            assigner = idToUserMap.get(processStateAndAction.getProcessInstanceFromRequest().getAssigner().getUuid());
+            if(processStateAndAction.getProcessInstanceFromRequest().getAssignee()!=null && assignee==null)
+                errorMap.put("INVALID UUID","User not found for uuid: "+processStateAndAction.getProcessInstanceFromRequest().getAssignee().getUuid());
             if(assigner==null)
-                errorMap.put("INVALID UUID","User not found for uuid: "+processStateAndAction.getProcessInstance().getAssigner().getUuid());
-            processStateAndAction.getProcessInstance().setAssignee(assignee);
-            processStateAndAction.getProcessInstance().setAssigner(assigner);
+                errorMap.put("INVALID UUID","User not found for uuid: "+processStateAndAction.getProcessInstanceFromRequest().getAssigner().getUuid());
+            processStateAndAction.getProcessInstanceFromRequest().setAssignee(assignee);
+            processStateAndAction.getProcessInstanceFromRequest().setAssigner(assigner);
         });
         if(!errorMap.isEmpty())
             throw new CustomException(errorMap);
@@ -117,7 +123,7 @@ public class EnrichmentService {
 
 
     /**
-     * Enriches processInstance from the search response
+     * Enriches processInstanceFromRequest from the search response
      * @param processInstances The list of processInstances from search
      */
     public void enrichUsersFromSearch(List<ProcessInstance> processInstances){

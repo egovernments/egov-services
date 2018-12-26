@@ -13,6 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -51,24 +53,26 @@ public class TransitionService {
      */
     public List<ProcessStateAndAction> getProcessStateAndActions(ProcessInstanceRequest request,Boolean isTransition){
         List<ProcessStateAndAction> processStateAndActions = new LinkedList<>();
-        getStatus(request.getProcessInstances());
+
         BusinessService businessService = getBusinessService(request);
+        Map<String,ProcessInstance> idToProcessInstanceFromDbMap = prepareProcessStateAndAction(request.getProcessInstances(),businessService);
         List<String> allowedRoles = workflowUtil.rolesAllowedInService(businessService);
         for(ProcessInstance processInstance: request.getProcessInstances()){
             ProcessStateAndAction processStateAndAction = new ProcessStateAndAction();
-            processStateAndAction.setProcessInstance(processInstance);
-
-            for(State state : businessService.getStates()){
-                if(StringUtils.isEmpty(state.getState()) && processInstance.getStatus()==null){
-                    processStateAndAction.setCurrentState(state);
-                    break;
-                }
-                if(processInstance.getStatus()!=null &&
-                        !StringUtils.isEmpty(state.getState()) && state.getUuid().equalsIgnoreCase(processInstance.getStatus().getUuid())){
-                    processStateAndAction.setCurrentState(state);
-                    break;
-                }
+            processStateAndAction.setProcessInstanceFromRequest(processInstance);
+            processStateAndAction.setProcessInstanceFromDb(idToProcessInstanceFromDbMap.get(processInstance.getBusinessId()));
+            State currentState = null;
+            if(processStateAndAction.getProcessInstanceFromDb()!=null)
+                currentState = processStateAndAction.getProcessInstanceFromDb().getState();
+            if(currentState==null){
+                    for(State state : businessService.getStates()){
+                        if(StringUtils.isEmpty(state.getState())){
+                            processStateAndAction.setCurrentState(state);
+                            break;
+                        }
+                    }
             }
+            else processStateAndAction.setCurrentState(currentState);
 
             if(!CollectionUtils.isEmpty(processStateAndAction.getCurrentState().getActions())){
                 for (Action action : processStateAndAction.getCurrentState().getActions()){
@@ -83,9 +87,9 @@ public class TransitionService {
 
             if(isTransition){
                 if(processStateAndAction.getAction()==null)
-                    throw new CustomException("INVALID ACTION","Action "+processStateAndAction.getProcessInstance().getAction()
+                    throw new CustomException("INVALID ACTION","Action "+processStateAndAction.getProcessInstanceFromRequest().getAction()
                             + " not found in config for the businessId: "
-                            +processStateAndAction.getProcessInstance().getBusinessId());
+                            +processStateAndAction.getProcessInstanceFromRequest().getBusinessId());
 
                 for(State state : businessService.getStates()){
                     if(state.getUuid().equalsIgnoreCase(processStateAndAction.getAction().getNextState())){
@@ -103,20 +107,36 @@ public class TransitionService {
 
 
 
+
     /**
-     * Searches the db and sets the status of the processInstance based on businessId
+     * Current status of the incoming request is fetched from the DB and set
+     *
+     * If the request object is being created for the first time
+     *
+     * then state will remain null
+     *
      * @param processInstances The list of ProcessInstance to be created
      */
-    private void getStatus(List<ProcessInstance> processInstances){
+    private Map<String,ProcessInstance> prepareProcessStateAndAction(List<ProcessInstance> processInstances,BusinessService businessService) {
+
+        /*
+         * preparing the criteria to search the process instances from DB
+         */
         ProcessInstanceSearchCriteria criteria = new ProcessInstanceSearchCriteria();
-        processInstances.forEach(processInstance -> {
-            criteria.setTenantId(processInstance.getTenantId());
-            criteria.setBusinessId(processInstance.getBusinessId());
-            List<ProcessInstance> processInstancesFromDB = repository.getProcessInstances(criteria);
-            if(!CollectionUtils.isEmpty(processInstancesFromDB)){
-                processInstance.setStatus(processInstancesFromDB.get(0).getStatus());
-            }
-        });
+        List<String> businessIds = processInstances.stream().map(ProcessInstance::getBusinessId)
+                .collect(Collectors.toList());
+        criteria.setTenantId(processInstances.get(0).getTenantId());
+        criteria.setBusinessIds(businessIds);
+        /*
+         * fetching the result from repository
+         *
+         * converting the list of process instances to map of businessId and state
+         * object
+         */
+        Map<String, ProcessInstance> businessStateMap = repository.getProcessInstances(criteria).stream()
+                .collect(Collectors.toMap(ProcessInstance::getBusinessId, Function.identity()));
+
+        return businessStateMap;
     }
 
 

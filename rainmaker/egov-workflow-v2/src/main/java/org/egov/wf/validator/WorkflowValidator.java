@@ -39,8 +39,8 @@ public class WorkflowValidator {
      * @param processStateAndActions The processStateAndActions containing processInstances to be validated
      */
     public void validateRequest(RequestInfo requestInfo, List<ProcessStateAndAction> processStateAndActions){
-        String tenantId = processStateAndActions.get(0).getProcessInstance().getTenantId();
-        String businessServiceCode = processStateAndActions.get(0).getProcessInstance().getBusinessService();
+        String tenantId = processStateAndActions.get(0).getProcessInstanceFromRequest().getTenantId();
+        String businessServiceCode = processStateAndActions.get(0).getProcessInstanceFromRequest().getBusinessService();
         BusinessService businessService = businessUtil.getBusinessService(tenantId,businessServiceCode);
         validateAction(requestInfo,processStateAndActions,businessService);
         validateDocuments(processStateAndActions);
@@ -55,7 +55,7 @@ public class WorkflowValidator {
         Map<String,String> errorMap = new HashMap<>();
         for (ProcessStateAndAction processStateAndAction : processStateAndActions){
             if(processStateAndAction.getResultantState().getDocUploadRequired()){
-                if(CollectionUtils.isEmpty(processStateAndAction.getProcessInstance().getDocuments()))
+                if(CollectionUtils.isEmpty(processStateAndAction.getProcessInstanceFromRequest().getDocuments()))
                     errorMap.put("INVALID DOCUMENT","Documents cannot be null for status: "+processStateAndAction.getResultantState().getState());
             }
         }
@@ -76,7 +76,7 @@ public class WorkflowValidator {
         for(ProcessStateAndAction processStateAndAction : processStateAndActions){
             Action action = processStateAndAction.getAction();
             if(action==null && !processStateAndAction.getCurrentState().getIsTerminateState())
-                errorMap.put("INVALID ACTION","Action not found for businessId: "+
+                errorMap.put("INVALID ACTION","Action not found for businessIds: "+
                         processStateAndAction.getCurrentState().getBusinessServiceId());
 
             Boolean isRoleAvailable = util.isRoleAvailable(roles,action.getRoles());
@@ -84,21 +84,21 @@ public class WorkflowValidator {
             List<String> transitionRoles = getRolesForTransition(processStateAndAction.getCurrentState());
             Boolean isRoleAvailableForTransition = util.isRoleAvailable(roles,transitionRoles);
             Boolean isAssigneeUserInfo = false;
-            if(processStateAndAction.getProcessInstance().getAssignee()!=null)
-                isAssigneeUserInfo = processStateAndAction.getProcessInstance().getAssignee().getUuid().equalsIgnoreCase(requestInfo.getUserInfo().getUuid());
+            if(processStateAndAction.getProcessInstanceFromDb()!=null && processStateAndAction.getProcessInstanceFromDb().getAssignee()!=null)
+                isAssigneeUserInfo = processStateAndAction.getProcessInstanceFromDb().getAssignee().getUuid().equalsIgnoreCase(requestInfo.getUserInfo().getUuid());
             if(!isStateChanging && !isAssigneeUserInfo && !isRoleAvailableForTransition)
-                throw new CustomException("INVALID MARK ACTION","The processInstance cannot be marked by the user");
+                throw new CustomException("INVALID MARK ACTION","The processInstanceFromRequest cannot be marked by the user");
 
             if(action!=null && isStateChanging && !isRoleAvailable)
                 errorMap.put("INVALID ROLE","User is not authorized to perform action");
             if(action!=null && !isStateChanging && !util.isRoleAvailable(roles,util.rolesAllowedInService(businessService)))
                 errorMap.put("INVALID ROLE","User is not authorized to perform action");
 
-            if(processStateAndAction.getProcessInstance().getStatus()!=null &&
-                    processStateAndAction.getResultantState().getUuid().equalsIgnoreCase(processStateAndAction.getProcessInstance().getStatus().getUuid())){
-                if(processStateAndAction.getProcessInstance().getAssignee()==null)
+            if(processStateAndAction.getProcessInstanceFromRequest().getState()!=null &&
+                    processStateAndAction.getResultantState().getUuid().equalsIgnoreCase(processStateAndAction.getProcessInstanceFromRequest().getState().getUuid())){
+                if(processStateAndAction.getProcessInstanceFromRequest().getAssignee()==null)
                     errorMap.put("INVALID PROCESSINSTANCE","Assignee cannot be null for no state change for BusinessId: "
-                            +processStateAndAction.getProcessInstance().getBusinessId());
+                            +processStateAndAction.getProcessInstanceFromRequest().getBusinessId());
             }
         }
         if(!errorMap.isEmpty())

@@ -41,6 +41,9 @@ public class ProcessInstance   {
         @JsonProperty("businessService")
         private String businessService = null;
 
+        @JsonProperty("module")
+        private String module;
+
         @NotNull
         @JsonProperty("businessId")
         private String businessId = null;
@@ -49,8 +52,8 @@ public class ProcessInstance   {
         @JsonProperty("action")
         private String action = null;
 
-        @JsonProperty("status")
-        private State status = null;
+        @JsonProperty("state")
+        private State state = null;
 
         @JsonProperty("comment")
         private String comment = null;

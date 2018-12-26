@@ -3,7 +3,6 @@ package org.egov.wf.web.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
-import org.egov.common.contract.request.User;
 
 import java.util.List;
 
@@ -16,8 +15,8 @@ public class ProcessInstanceSearchCriteria {
     @JsonProperty("status")
     private List<String> status;
 
-    @JsonProperty("businessId")
-    private String businessId;
+    @JsonProperty("businessIds")
+    private List<String> businessIds;
 
     @JsonProperty("assignee")
     private String  assignee;
@@ -43,7 +42,7 @@ public class ProcessInstanceSearchCriteria {
 
 
     public Boolean isNull(){
-        if(this.getBusinessId()==null && this.getIds()==null && this.getAssignee()==null &&
+        if(this.getBusinessIds()==null && this.getIds()==null && this.getAssignee()==null &&
                 this.getStatus()==null)
             return true;
         else return false;

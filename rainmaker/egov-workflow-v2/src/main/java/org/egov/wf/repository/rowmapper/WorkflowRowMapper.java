@@ -2,10 +2,7 @@ package org.egov.wf.repository.rowmapper;
 
 
 import org.egov.common.contract.request.User;
-import org.egov.wf.web.models.AuditDetails;
-import org.egov.wf.web.models.Document;
-import org.egov.wf.web.models.ProcessInstance;
-import org.egov.wf.web.models.State;
+import org.egov.wf.web.models.*;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.stereotype.Component;
@@ -57,7 +54,17 @@ public class WorkflowRowMapper implements ResultSetExtractor<List<ProcessInstanc
                 if(assigneeUuid!=null)
                      assignee = User.builder().uuid(assigneeUuid).build();
 
-                State status = State.builder().uuid(rs.getString("status")).build();
+                State state = State.builder()
+                        .tenantId(rs.getString("st_tenantId"))
+                        .uuid(rs.getString("st_uuid"))
+                        .state(rs.getString("state"))
+                        .sla(sla)
+                        .applicationStatus(rs.getString("applicationStatus"))
+                        .isStartState(rs.getBoolean("isStartState"))
+                        .isTerminateState(rs.getBoolean("isTerminateState"))
+                        .docUploadRequired(rs.getBoolean("docuploadrequired"))
+                        .businessServiceId(rs.getString("businessserviceid"))
+                        .build();
 
 
                 processInstance = ProcessInstance.builder()
@@ -66,7 +73,7 @@ public class WorkflowRowMapper implements ResultSetExtractor<List<ProcessInstanc
                         .businessService(rs.getString("businessService"))
                         .businessId(rs.getString("businessId"))
                         .action(rs.getString("action"))
-                        .status(status)
+                        .state(state)
                         .comment(rs.getString("comment"))
                         .assignee(assignee)
                         .assigner(assigner)
@@ -114,9 +121,19 @@ public class WorkflowRowMapper implements ResultSetExtractor<List<ProcessInstanc
                     .fileStoreId(rs.getString("fileStoreId"))
                     .auditDetails(auditdetails)
                     .build();
-
             processInstance.addDocumentsItem(document);
         }
+
+        String actionUuid = rs.getString("ac_uuid");
+        Action action = Action.builder()
+                .tenantId(rs.getString("ac_tenantId"))
+                .action(rs.getString("ac_action"))
+                .nextState(rs.getString("nextState"))
+                .uuid(actionUuid)
+                .currentState(rs.getString("currentState"))
+                .roles(Arrays.asList(rs.getString("roles").split(",")))
+                .build();
+        processInstance.getState().addActionsItem(action);
     }
 
 

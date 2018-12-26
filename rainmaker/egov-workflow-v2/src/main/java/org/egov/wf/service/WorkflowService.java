@@ -50,9 +50,9 @@ public class WorkflowService {
 
 
     /**
-     * Creates or updates the processInstance
+     * Creates or updates the processInstanceFromRequest
      * @param request The incoming request for workflow transition
-     * @return The list of processInstance objects after taking action
+     * @return The list of processInstanceFromRequest objects after taking action
      */
     public List<ProcessInstance> transition(ProcessInstanceRequest request){
         RequestInfo requestInfo = request.getRequestInfo();

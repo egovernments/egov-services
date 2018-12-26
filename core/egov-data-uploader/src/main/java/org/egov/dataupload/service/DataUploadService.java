@@ -93,6 +93,8 @@ public class DataUploadService {
 	@Value("${property.module.name}")
 	private String propertyModuleName;
 
+    @Value("${uploadjob.update.progress.size}")
+    private int updateProgressSize;
 
     private static final Logger logger = LoggerFactory.getLogger(DataUploadService.class);
 
@@ -286,8 +288,8 @@ public class DataUploadService {
                     successCount++;
                     writeResultToExcel(failureMessage, row, responseFields, resultFilePath);
                 }
-                if((recordCount%10)==0)
-                {   // update progress after every 10 records
+                if((recordCount%updateProgressSize)==0)
+                {   // update progress after every 'updateProgressSize' records
                     uploadJob.setSuccessfulRows(successCount);
                     uploadJob.setFailedRows(failureCount);
                     uploadJob.setStatus(StatusEnum.INPROGRESS);
@@ -403,8 +405,8 @@ public class DataUploadService {
                     writeResultToExcelParentChild(failureMessage, entry.getValue(), responseFields, resultFilePath);
                 }
 
-                if((recordCount%10)==0)
-                {   // update progress after every 10 records
+                if((recordCount%updateProgressSize)==0)
+                {   // update progress after every 'updateProgressSize' records
                     uploadJob.setSuccessfulRows(successCount);
                     uploadJob.setFailedRows(failureCount);
                     uploadJob.setStatus(StatusEnum.INPROGRESS);

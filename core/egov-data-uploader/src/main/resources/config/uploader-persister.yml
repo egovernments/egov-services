@@ -1,0 +1,72 @@
+serviceMaps:
+  serviceName: Uploader
+  mappings:
+  - version: 1.0
+    name: Uploader
+    description: Persists upload jobs to table
+    fromTopic: save-upload-jobs
+    isTransaction: true
+    queryMaps:
+    - query: Insert into EGDU_UPLOADREGISTRY(CODE, TENANTID, REQUESTFILE_PATH, MODULE_NAME, DEF_NAME, REQUESTER_NAME, STATUS,FILE_NAME,CREATEDBY,CREATEDDATE,LASTMODIFIEDBY,LASTMODIFIEDDATE) VALUES(?,?,?,?,?,?,?,?,?,?,?,?);
+      basePath: UploadJobs
+      jsonMaps:
+
+
+      - jsonPath: $.UploadJobs.*.code
+
+      - jsonPath: $.UploadJobs.*.tenantId
+
+      - jsonPath: $.UploadJobs.*.requestFilePath
+
+      - jsonPath: $.UploadJobs.*.moduleName
+
+      - jsonPath: $.UploadJobs.*.defName
+
+      - jsonPath: $.UploadJobs.*.requesterName
+
+      - jsonPath: $.UploadJobs.*.status
+
+      - jsonPath: $.UploadJobs.*.requestFileName
+
+      - jsonPath: $.UploadJobs.*.auditDetails.createdBy
+
+      - jsonPath: $.UploadJobs.*.auditDetails.createdTime
+
+      - jsonPath: $.UploadJobs.*.auditDetails.lastModifiedBy
+
+      - jsonPath: $.UploadJobs.*.auditDetails.lastModifiedTime
+
+
+
+  - version: 1.0
+    name: Uploader
+    description: Updates upload jobs in the table
+    fromTopic: update-upload-jobs
+    isTransaction: true
+    queryMaps:
+    - query: Update EGDU_UPLOADREGISTRY set START_TIME=?, END_TIME=?, TOTAL_ROWS=?, SUCCESS_ROWS=?, FAILED_ROWS=?, RESPONSEFILE_PATH=?, STATUS=?, REASON_FOR_FAILURE = ? where CODE=? AND TENANTID=?
+      basePath: UploadJobs
+      jsonMaps:
+
+
+      - jsonPath: $.UploadJobs.*.startTime
+
+      - jsonPath: $.UploadJobs.*.endTime
+
+      - jsonPath: $.UploadJobs.*.totalRows
+
+      - jsonPath: $.UploadJobs.*.successfulRows
+
+      - jsonPath: $.UploadJobs.*.failedRows
+
+      - jsonPath: $.UploadJobs.*.responseFilePath
+
+      - jsonPath: $.UploadJobs.*.status
+
+      - jsonPath: $.UploadJobs.*.reasonForFailure
+
+      - jsonPath: $.UploadJobs.*.code
+
+      - jsonPath: $.UploadJobs.*.tenantId
+
+

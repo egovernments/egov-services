@@ -166,7 +166,7 @@ public class PropertyFileReader {
 			break;
 
 		default:
-			System.out.print("");
+			break;
 		}
 
 		System.out.print("\t");
@@ -243,7 +243,7 @@ public class PropertyFileReader {
 				unit.setUsageCategoryDetail(cell.getStringCellValue());
 			break;
 		default:
-			log.info("In default case of unit switch : " + cell.getStringCellValue());
+			break;
 		}
 
 		System.out.print("\t");
@@ -341,7 +341,7 @@ public class PropertyFileReader {
 			break;
 		
 		default:
-			log.info(" default case in owner details setter");
+			break;
 		}
 
 		System.out.print("\t");

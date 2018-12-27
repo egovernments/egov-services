@@ -96,13 +96,13 @@ public class PropertyCustomUploader {
 		 */
 		try {
 			map = propFileReader.parseExcel(loc);
-		} catch (EncryptedDocumentException | InvalidFormatException | IOException e) {
+		} catch (Exception e) {
 
 			log.error(" exception occured while parsing the excel : ", e);
 
 			job.setEndTime(System.currentTimeMillis());
 			job.setStatus(StatusEnum.FAILED);
-			job.setReasonForFailure("parsing of the excel failed");
+			job.setReasonForFailure("Parsing of the excel failed:");
 
 			dataUploadService.updateJobsWithPersister(auditDetails,job,false);
 //			uploadRegistryRepository.updateJob(job);

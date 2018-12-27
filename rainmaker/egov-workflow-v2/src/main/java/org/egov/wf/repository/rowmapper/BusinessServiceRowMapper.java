@@ -36,6 +36,7 @@ public class BusinessServiceRowMapper implements ResultSetExtractor<List<Busines
                         .businessService(rs.getString("businessService"))
                         .business(rs.getString("business"))
                         .uuid(uuid)
+                        .businessServiceSla(rs.getLong("businessservicesla"))
                         .auditDetails(auditdetails)
                         .build();
                 businessServiceMap.put(uuid,businessService);

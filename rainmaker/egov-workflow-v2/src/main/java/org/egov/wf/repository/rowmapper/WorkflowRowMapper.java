@@ -40,6 +40,11 @@ public class WorkflowRowMapper implements ResultSetExtractor<List<ProcessInstanc
                     sla = null;
                 }
 
+                Long businessServiceSla = rs.getLong("businessservicesla");
+                if (rs.wasNull()) {
+                    businessServiceSla = null;
+                }
+
                 AuditDetails auditdetails = AuditDetails.builder()
                         .createdBy(rs.getString("wf_createdBy"))
                         .createdTime(rs.getLong("wf_createdTime"))
@@ -77,7 +82,8 @@ public class WorkflowRowMapper implements ResultSetExtractor<List<ProcessInstanc
                         .comment(rs.getString("comment"))
                         .assignee(assignee)
                         .assigner(assigner)
-                        .sla(sla)
+                        .stateSla(sla)
+                        .businesssServiceSla(businessServiceSla)
                         .previousStatus(rs.getString("previousStatus"))
                         .auditDetails(auditdetails)
                         .build();

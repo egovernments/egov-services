@@ -52,6 +52,10 @@ public class ProcessInstance   {
         @JsonProperty("action")
         private String action = null;
 
+        @NotNull
+        @JsonProperty("moduleName")
+        private String moduleName = null;
+
         @JsonProperty("state")
         private State state = null;
 
@@ -72,8 +76,11 @@ public class ProcessInstance   {
         @Valid
         private List<String> nextActions = null;
 
-        @JsonProperty("sla")
-        private Long sla = null;
+        @JsonProperty("stateSla")
+        private Long stateSla = null;
+
+        @JsonProperty("businesssServiceSla")
+        private Long businesssServiceSla = null;
 
         @JsonProperty("previousStatus")
         private String previousStatus = null;

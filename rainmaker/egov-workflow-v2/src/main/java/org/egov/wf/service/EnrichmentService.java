@@ -57,7 +57,8 @@ public class EnrichmentService {
                     document.setId(UUID.randomUUID().toString());
                 });
             }
-            processStateAndAction.getProcessInstanceFromRequest().setSla(processStateAndAction.getResultantState().getSla());
+            enrichBusinessServiceSlaForTransition(processStateAndAction);
+            processStateAndAction.getProcessInstanceFromRequest().setStateSla(processStateAndAction.getResultantState().getSla());
             setNextActions(requestInfo,processStateAndActions,true);
         });
         enrichUsers(processStateAndActions);
@@ -231,6 +232,33 @@ public class EnrichmentService {
                     action.setNextState(statusToUuidMap.get(action.getNextState()));
                 });
             }
+        });
+    }
+
+
+    /**
+     * Sets the businessServiceSla when the _transition api is called
+     * @param processStateAndAction The processStateAndAction object of the transition request
+     */
+    private void enrichBusinessServiceSlaForTransition(ProcessStateAndAction processStateAndAction){
+        if(processStateAndAction.getProcessInstanceFromDb()!=null){
+            Long slaOfPreviousState = processStateAndAction.getProcessInstanceFromDb().getBusinesssServiceSla();
+            Long timeSpent = processStateAndAction.getProcessInstanceFromRequest().getAuditDetails().getLastModifiedTime()
+                           - processStateAndAction.getProcessInstanceFromDb().getAuditDetails().getLastModifiedTime();
+            processStateAndAction.getProcessInstanceFromRequest().setBusinesssServiceSla(slaOfPreviousState-timeSpent);
+        }
+    }
+
+
+    /**
+     * Sets the businessServiceSla for search output
+     * @param processInstances The list of processInstance
+     */
+    public void enrichBusinessServiceSlaForSearch(List<ProcessInstance> processInstances){
+        processInstances.forEach(processInstance -> {
+            Long businessServiceSlaInDb = processInstance.getBusinesssServiceSla();
+            Long timeSinceLastAction = System.currentTimeMillis() - processInstance.getAuditDetails().getLastModifiedTime();
+            processInstance.setBusinesssServiceSla(businessServiceSlaInDb-timeSinceLastAction);
         });
     }
 

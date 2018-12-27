@@ -64,6 +64,11 @@ public class TransitionService {
             State currentState = null;
             if(processStateAndAction.getProcessInstanceFromDb()!=null)
                 currentState = processStateAndAction.getProcessInstanceFromDb().getState();
+
+            //Assign businessSla when creating processInstance
+            if(processStateAndAction.getProcessInstanceFromDb()==null)
+                processInstance.setBusinesssServiceSla(businessService.getBusinessServiceSla());
+
             if(currentState==null){
                     for(State state : businessService.getStates()){
                         if(StringUtils.isEmpty(state.getState())){

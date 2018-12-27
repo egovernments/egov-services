@@ -7,7 +7,7 @@ serviceMaps:
    isTransaction: true
    queryMaps:
 
-       - query: INSERT INTO eg_wf_processinstance_v2( id,tenantid,businessService,businessId,action,status,comment, assigner, assignee, sla, previousStatus, createdby, lastmodifiedby, createdtime, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+       - query: INSERT INTO eg_wf_processinstance_v2( id,tenantid,businessService,businessId,moduleName,action,status,comment, assigner, assignee, stateSla,businessServiceSla, previousStatus, createdby, lastmodifiedby, createdtime, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
          basePath: ProcessInstances.*
          jsonMaps:
           - jsonPath: $.ProcessInstances.*.id
@@ -17,6 +17,8 @@ serviceMaps:
           - jsonPath: $.ProcessInstances.*.businessService
 
           - jsonPath: $.ProcessInstances.*.businessId
+
+          - jsonPath: $.ProcessInstances.*.moduleName
 
           - jsonPath: $.ProcessInstances.*.action
 
@@ -28,7 +30,9 @@ serviceMaps:
 
           - jsonPath: $.ProcessInstances.*.assignee.uuid
 
-          - jsonPath: $.ProcessInstances.*.sla
+          - jsonPath: $.ProcessInstances.*.stateSla
+
+          - jsonPath: $.ProcessInstances.*.businesssServiceSla
 
           - jsonPath: $.ProcessInstances.*.previousStatus
 
@@ -77,9 +81,11 @@ serviceMaps:
    isTransaction: true
    queryMaps:
 
-       - query: INSERT INTO eg_wf_businessservice_v2( businessservice, business, tenantid, uuid, geturi, posturi, createdby, createdtime, lastmodifiedby, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+       - query: INSERT INTO eg_wf_businessservice_v2(businessServiceSla, businessservice, business, tenantid, uuid, geturi, posturi, createdby, createdtime, lastmodifiedby, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
          basePath: BusinessServices.*
          jsonMaps:
+          - jsonPath: $.BusinessServices.*.businessServiceSla
+
           - jsonPath: $.BusinessServices.*.businessService
 
           - jsonPath: $.BusinessServices.*.business

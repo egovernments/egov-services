@@ -50,6 +50,9 @@ public class BusinessService   {
         @JsonProperty("postUri")
         private String postUri = null;
 
+        @JsonProperty("businessServiceSla")
+        private Long businessServiceSla = null;
+
         @NotNull
         @Valid
         @JsonProperty("states")

@@ -574,7 +574,7 @@ public class DataUploadService {
                             logger.debug("Unable to parse error object");
                         }
                         failureMessage.append(JsonPath.read(errorObject, "$.code").toString());
-                        failureMessage.append("--");
+                        failureMessage.append(":");
                         failureMessage.append(JsonPath.read(errorObject, "$.message").toString());
                         failureMessage.append(", ");
                     }

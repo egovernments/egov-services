@@ -4,11 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
 
 import org.apache.poi.EncryptedDocumentException;
@@ -22,6 +18,7 @@ import org.egov.dataupload.model.UploadJob;
 import org.egov.dataupload.model.UploadJob.StatusEnum;
 import org.egov.dataupload.model.UploaderRequest;
 import org.egov.dataupload.property.PropertyFileReader;
+import org.egov.dataupload.property.models.AuditDetails;
 import org.egov.dataupload.property.models.Property;
 import org.egov.dataupload.repository.UploadRegistryRepository;
 import org.egov.dataupload.utils.DataUploadUtils;
@@ -65,7 +62,10 @@ public class PropertyCustomUploader {
 
 	@Value("${internal.file.folder.path}")
 	private String internalFolderPath;
-	
+
+	@Value("${uploadjob.update.progress.size}")
+	private int updateProgressSize;
+
 	private String responseString = "Response";
 	
 	public static final String SUCCESSSTRING = "SUCCESS";
@@ -80,9 +80,14 @@ public class PropertyCustomUploader {
 		String loc = job.getLocalFilePath();
 		Map<String, Property> map = null;
 
+		AuditDetails auditDetails = job.getAuditDetails();
+		auditDetails.setLastModifiedTime(new Date().getTime());
+
 		job.setStartTime(System.currentTimeMillis());
 		job.setStatus(StatusEnum.INPROGRESS);
-		uploadRegistryRepository.updateJob(job);
+
+		dataUploadService.updateJobsWithPersister(auditDetails,job,false);
+//		uploadRegistryRepository.updateJob(job);
 
 		/*
 		 * Resulting map from 'propFileReader.parseExcel' is a linkedhashmap to preserve
@@ -98,7 +103,9 @@ public class PropertyCustomUploader {
 			job.setEndTime(System.currentTimeMillis());
 			job.setStatus(StatusEnum.FAILED);
 			job.setReasonForFailure("parsing of the excel failed");
-			uploadRegistryRepository.updateJob(job);
+
+			dataUploadService.updateJobsWithPersister(auditDetails,job,false);
+//			uploadRegistryRepository.updateJob(job);
 			uploadUtils.clearInternalDirectory();
 			throw new CustomException("Exception Occured while parsing the excel", e.getMessage());
 		}
@@ -106,7 +113,7 @@ public class PropertyCustomUploader {
 		List<String> responses = new ArrayList<>();
 		int failCnt = 0;
 		int sucCnt = 0;
-
+		int recordCount=1;
 		for (Entry<String, Property> entry : map.entrySet()) {
 
 			String failureMessage = null;
@@ -127,11 +134,23 @@ public class PropertyCustomUploader {
 				}
 			}
 			responses.add(failureMessage);
+
+			if((recordCount%updateProgressSize)==0)
+			{   // update progress after every 'updateProgressSize' records
+				job.setSuccessfulRows(sucCnt);
+				job.setFailedRows(failCnt);
+				job.setStatus(StatusEnum.INPROGRESS);
+
+				auditDetails.setLastModifiedTime(new Date().getTime());
+
+				dataUploadService.updateJobsWithPersister(auditDetails,job,false);
+			}
+			recordCount++;
 		}
 
 		// the responses will be taken in the same order as written in excel
 		writeToExcel(job, responses);
-
+		auditDetails.setLastModifiedTime(new Date().getTime());
 		// Upload to s3 and set result file path to job
 		String s3Id = null;
 		try {
@@ -143,7 +162,9 @@ public class PropertyCustomUploader {
 			job.setEndTime(System.currentTimeMillis());
 			job.setStatus(StatusEnum.FAILED);
 			job.setReasonForFailure("upload of the excel sheet failed");
-			uploadRegistryRepository.updateJob(job);
+
+			dataUploadService.updateJobsWithPersister(auditDetails,job,false);
+//			uploadRegistryRepository.updateJob(job);
 			uploadUtils.clearInternalDirectory();
 			throw new CustomException("upload of the excel sheet failed", e.getMessage());
 		}
@@ -155,7 +176,8 @@ public class PropertyCustomUploader {
 		job.setStatus(StatusEnum.COMPLETED);
 		job.setTotalRows(map.size());
 
-		uploadRegistryRepository.updateJob(job);
+		dataUploadService.updateJobsWithPersister(auditDetails,job,false);
+//		uploadRegistryRepository.updateJob(job);
 		uploadUtils.clearInternalDirectory();
 
 		log.info(" the id of s3 data : " + s3Id);
@@ -241,7 +263,9 @@ public class PropertyCustomUploader {
 			job.setEndTime(System.currentTimeMillis());
 			job.setStatus(StatusEnum.FAILED);
 			job.setReasonForFailure(" writing response in excel failed");
-			uploadRegistryRepository.updateJob(job);
+
+			dataUploadService.updateJobsWithPersister(job.getAuditDetails(),job,false);
+//			uploadRegistryRepository.updateJob(job);
 			uploadUtils.clearInternalDirectory();
 			throw new CustomException("Exception occured while writing in sheet", e.getMessage());
 		} finally {

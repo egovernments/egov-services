@@ -194,7 +194,6 @@ public class DataUploadService {
         Definition uploadDefinition = definitionOptional.get();
         logger.info("Definition to be used: " + uploadDefinition);
         AuditDetails auditDetails = uploadJob.getAuditDetails();
-        auditDetails.setLastModifiedBy(uploaderRequest.getRequestInfo().getUserInfo().getId().toString());
         auditDetails.setLastModifiedTime(new Date().getTime());
 
         try (InputStream file = new FileInputStream(uploadJob.getLocalFilePath())) {
@@ -294,13 +293,13 @@ public class DataUploadService {
                     uploadJob.setFailedRows(failureCount);
                     uploadJob.setStatus(StatusEnum.INPROGRESS);
 
-                    auditDetails.setLastModifiedBy(uploaderRequest.getRequestInfo().getUserInfo().getId().toString());
                     auditDetails.setLastModifiedTime(new Date().getTime());
 
                     updateJobsWithPersister(auditDetails,uploadJob,false);
                 }
                 recordCount++;
             }
+            auditDetails.setLastModifiedTime(new Date().getTime());
             String responseFilePath = getFileStoreId(uploadJob.getTenantId(), uploadJob.getModuleName(), resultFilePath);
 
             uploadJob.setSuccessfulRows(successCount);
@@ -328,7 +327,7 @@ public class DataUploadService {
         }
     }
 
-    private void updateJobsWithPersister(AuditDetails auditDetails,UploadJob uploadJob,boolean save){
+    public void updateJobsWithPersister(AuditDetails auditDetails,UploadJob uploadJob,boolean save){
         uploadJob.setAuditDetails(auditDetails);
         HashMap<String,Object> hashMap=new HashMap<>();
         hashMap.put("UploadJob", uploadJob);
@@ -411,7 +410,6 @@ public class DataUploadService {
                     uploadJob.setFailedRows(failureCount);
                     uploadJob.setStatus(StatusEnum.INPROGRESS);
 
-                    auditDetails.setLastModifiedBy(uploaderRequest.getRequestInfo().getUserInfo().getId().toString());
                     auditDetails.setLastModifiedTime(new Date().getTime());
 
                     updateJobsWithPersister(auditDetails,uploadJob,false);
@@ -420,6 +418,7 @@ public class DataUploadService {
                 recordCount++;
             }
 
+            auditDetails.setLastModifiedTime(new Date().getTime());
             String responseFilePath = getFileStoreId(uploadJob.getTenantId(), uploadJob.getModuleName(), resultFilePath);
 
             uploadJob.setSuccessfulRows(successCount);
@@ -450,7 +449,6 @@ public class DataUploadService {
 
         outputHeaders.add("status");
         outputHeaders.add("message");
-        auditDetails.setLastModifiedBy(uploaderRequest.getRequestInfo().getUserInfo().getId().toString());
         auditDetails.setLastModifiedTime(new Date().getTime());
         List<List<Object>> responseJsonPathLists = new ArrayList<>();
         for (Request request : requests) {

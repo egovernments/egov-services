@@ -70,6 +70,8 @@ public class PropertyCustomUploader {
 	
 	public static final String SUCCESSSTRING = "SUCCESS";
 
+	public static final String FAILEDSTRING = "FAILED";
+
 	public void uploadPropertyData(UploaderRequest uploaderRequest) {
 
 		RequestInfo requestInfo = uploaderRequest.getRequestInfo();
@@ -113,18 +115,18 @@ public class PropertyCustomUploader {
 					getUrlForPost());
 
 			if (null == response) {
-				failureMessage = "Module API failed with empty body in response";
+				failureMessage = FAILEDSTRING + "--" + "Module API failed with empty body in response";
 				failCnt++;
 			} else {
 				if (response instanceof String) {
-					failureMessage = response.toString();
+					failureMessage = FAILEDSTRING + "--" +response.toString();
 					failCnt++;
 				} else {
 					sucCnt++;
 					failureMessage = SUCCESSSTRING + "--" + getPropertyId(response);
 				}
-				responses.add(failureMessage);
 			}
+			responses.add(failureMessage);
 		}
 
 		// the responses will be taken in the same order as written in excel

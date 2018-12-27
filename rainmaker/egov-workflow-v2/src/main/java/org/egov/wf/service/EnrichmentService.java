@@ -154,8 +154,11 @@ public class EnrichmentService {
 
 
     public void enrichNextActionForSearch(RequestInfo requestInfo,List<ProcessInstance> processInstances){
-        List<ProcessStateAndAction> processStateAndActions =
-                transitionService.getProcessStateAndActions(new ProcessInstanceRequest(requestInfo,processInstances),false);
+        List<ProcessStateAndAction> processStateAndActions = new LinkedList<>();
+        List<ProcessInstanceRequest> requests = getRequestByBusinessService(new ProcessInstanceRequest(requestInfo,processInstances));
+        requests.forEach(request -> {
+            processStateAndActions.addAll(transitionService.getProcessStateAndActions(new ProcessInstanceRequest(requestInfo,processInstances),false));
+        });
         setNextActions(requestInfo,processStateAndActions,false);
     }
 
@@ -261,6 +264,37 @@ public class EnrichmentService {
             processInstance.setBusinesssServiceSla(businessServiceSlaInDb-timeSinceLastAction);
         });
     }
+
+
+    /**
+     * Groups request by businessServices and creates a list of ProcessInstanceRequest one for each businessService
+     * @param request The ProcessInstanceRequest containing processInstances across multiple BusinessServices
+     * @return List of ProcessInstanceRequest
+     */
+    private List<ProcessInstanceRequest> getRequestByBusinessService(ProcessInstanceRequest request){
+        List<ProcessInstance> processInstances = request.getProcessInstances();
+        RequestInfo requestInfo = request.getRequestInfo();
+
+        Map<String,List<ProcessInstance>> tenantIdToProperties = new HashMap<>();
+        if(!CollectionUtils.isEmpty(processInstances)){
+            processInstances.forEach(processInstance -> {
+                if(tenantIdToProperties.containsKey(processInstance.getBusinessService()))
+                    tenantIdToProperties.get(processInstance.getBusinessService()).add(processInstance);
+                else{
+                    List<ProcessInstance> list = new ArrayList<>();
+                    list.add(processInstance);
+                    tenantIdToProperties.put(processInstance.getBusinessService(),list);
+                }
+            });
+        }
+        List<ProcessInstanceRequest> requests = new LinkedList<>();
+
+        tenantIdToProperties.forEach((key,value)-> {
+            requests.add(new ProcessInstanceRequest(requestInfo,value));
+        });
+        return requests;
+    }
+
 
 
 }

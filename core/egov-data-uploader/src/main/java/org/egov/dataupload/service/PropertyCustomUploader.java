@@ -204,7 +204,7 @@ public class PropertyCustomUploader {
 			if (null != lastCell)
 				lastCell.setCellValue(responseString);
 			else
-				firstRow.createCell(fixedResNum).setCellValue("Code");
+				firstRow.createCell(fixedResNum).setCellValue("Status");
 
 			firstRow.createCell(fixedResNum + 1).setCellValue("Message");
 			

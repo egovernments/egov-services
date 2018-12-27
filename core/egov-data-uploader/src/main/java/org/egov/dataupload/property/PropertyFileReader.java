@@ -184,8 +184,9 @@ public class PropertyFileReader {
 			if (rowNumber++ == 0)
 				continue;
 
-			if (row.getCell(0).getStringCellValue() == null || row.getCell(0).getStringCellValue().isEmpty())
+			if(StringUtils.isEmpty(row.getCell(0))){
 				break;
+			}
 
 			String propertyId = row.getCell(1).getStringCellValue();
 			Property property = propertyIdMap.get(propertyId);
@@ -260,8 +261,9 @@ public class PropertyFileReader {
 			if (rowNumber++ == 0)
 				continue;
 
-			if (row.getCell(0).getStringCellValue() == null || row.getCell(0).getStringCellValue().isEmpty())
+			if(StringUtils.isEmpty(row.getCell(0))){
 				break;
+			}
 
 			String propertyId = row.getCell(1).getStringCellValue();
 			Property property = propertyIdMap.get(propertyId);

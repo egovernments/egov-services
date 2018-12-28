@@ -240,7 +240,7 @@ public class PropertyCustomUploader {
 				Cell msgCell = currRow.createCell(fixedResNum+1);
 				String value = resopnses.get(i);
 				if (value.contains("--")) {
-
+					
 					String[] valueArr = value.split("--");
 					resCell.setCellValue(valueArr[0]);
 					msgCell.setCellValue(valueArr[1]);

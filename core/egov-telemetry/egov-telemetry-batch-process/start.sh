@@ -5,6 +5,6 @@ fi
 
 DATE=`cat /opt/datefile`
 for i in $DATE; do
- java ${JAVA_OPTS} -jar /opt/egov/egov-telemetry-batch-process.jar $DATE
+ java ${JAVA_OPTS} -jar /opt/egov/egov-telemetry-batch-process.jar $i
  sleep 30;
 done

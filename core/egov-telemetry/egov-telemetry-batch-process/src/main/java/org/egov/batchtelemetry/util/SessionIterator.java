@@ -1,8 +1,7 @@
-package util;
+package org.egov.batchtelemetry.util;
 
-import com.fasterxml.jackson.databind.util.JSONPObject;
-import config.AppProperties;
-import constants.TelemetryConstants;
+import org.egov.batchtelemetry.config.AppProperties;
+import org.egov.batchtelemetry.constants.TelemetryConstants;
 import lombok.extern.slf4j.Slf4j;
 import scala.Tuple2;
 

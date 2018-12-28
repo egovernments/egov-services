@@ -1,8 +1,8 @@
-package connector;
+package org.egov.batchtelemetry.connector;
 
 import com.jayway.jsonpath.JsonPath;
-import config.AppProperties;
 import lombok.extern.slf4j.Slf4j;
+import org.egov.batchtelemetry.config.AppProperties;
 import org.apache.spark.SparkConf;
 import org.apache.spark.SparkContext;
 import org.apache.spark.api.java.JavaPairRDD;
@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+@Slf4j
 public class ElasticsearchConnector {
 
     private AppProperties appProperties;
@@ -58,7 +59,7 @@ public class ElasticsearchConnector {
                     "_search/");
             HttpURLConnection connection = (HttpURLConnection) esURL.openConnection();
             connection.setRequestMethod("POST");
-            connection.setRequestProperty("Content-Type", "application/json");
+            connection.setRequestProperty("Content-Type", "org/egov/batchtelemetry/application/json");
 
             connection.setDoOutput(true);
             OutputStream connectionOutputStream =  connection.getOutputStream();
@@ -76,11 +77,11 @@ public class ElasticsearchConnector {
 
                 userIds = JsonPath.read(new JSONObject(response.toString()).toString(), "$.aggregations.distinct_uid.buckets.[*].key");
             } else {
-                System.out.println("Error in Elasticsearch Query get unique UserIds");
+                log.info("Error in Elasticsearch Query get unique UserIds");
             }
 
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            log.info(e.getMessage());
         }
 
         return userIds;

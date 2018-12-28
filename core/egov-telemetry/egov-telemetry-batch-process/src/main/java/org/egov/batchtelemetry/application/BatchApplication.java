@@ -1,15 +1,11 @@
-package application;
+package org.egov.batchtelemetry.application;
 
-import connector.ElasticsearchConnector;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.spark.SparkConf;
-import org.apache.spark.SparkContext;
 import org.apache.spark.api.java.JavaPairRDD;
-import org.apache.spark.api.java.JavaSparkContext;
 import org.apache.spark.api.java.function.Function;
 import org.apache.spark.api.java.function.VoidFunction;
-import org.elasticsearch.spark.rdd.api.java.JavaEsSpark;
-import processor.SessionProcessor;
+import org.egov.batchtelemetry.connector.ElasticsearchConnector;
+import org.egov.batchtelemetry.processor.SessionProcessor;
 import scala.Tuple2;
 
 import java.util.Map;
@@ -22,7 +18,7 @@ public class BatchApplication {
 
         JavaPairRDD<String, Map<String, Object>> esRDD = elasticsearchConnector.getTelemetryRecords(startTime, endTime);
 
-        System.out.println("Total Records read from ES: " + esRDD.count());
+        log.info("Total Records read from ES: " + esRDD.count());
 
         SessionProcessor.init();
 
@@ -33,7 +29,7 @@ public class BatchApplication {
             }
         });
 
-        System.out.println("Unique Devices: " + deviceGroup.count());
+        log.info("Unique Devices: " + deviceGroup.count());
 
         deviceGroup.foreach(new VoidFunction<Tuple2<Object, Iterable<Tuple2<String, Map<String, Object>>>>>() {
             @Override
@@ -43,7 +39,7 @@ public class BatchApplication {
             }
         });
 
-        System.out.println("Total Sessions: " + SessionProcessor.totalSessionCounter);
+        log.info("Total Sessions: " + SessionProcessor.totalSessionCounter);
 
     }
 

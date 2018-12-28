@@ -1,4 +1,4 @@
-package models;
+package org.egov.batchtelemetry.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
@@ -26,5 +26,8 @@ public class Session {
     private Long endTime;
 
     private SessionDetails sessionDetails;
+
+    private Edata edata;
+
 
 }

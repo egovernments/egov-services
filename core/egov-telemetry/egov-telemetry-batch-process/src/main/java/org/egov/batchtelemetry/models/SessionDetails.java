@@ -1,4 +1,4 @@
-package models;
+package org.egov.batchtelemetry.models;
 
 import lombok.*;
 

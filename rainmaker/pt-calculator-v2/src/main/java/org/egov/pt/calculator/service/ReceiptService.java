@@ -12,8 +12,8 @@ import org.egov.pt.calculator.web.models.collections.ReceiptRes;
 import org.egov.pt.calculator.web.models.demand.BillDetail;
 import org.egov.pt.calculator.web.models.demand.Demand;
 import org.egov.pt.calculator.web.models.property.RequestInfoWrapper;
-import org.flywaydb.core.internal.dbsupport.JdbcTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
@@ -68,13 +68,7 @@ public class ReceiptService {
 	private List<String> getCosumerCodesForDemandFromCurrentFinancialYear(String assessmentYear, String propertyId) {
 
 		String[] pstmtList = new String[] { assessmentYear, propertyId };
-		List<String> codes = new ArrayList<>();
-		try {
-			codes = jdbcTemplate.queryForStringList(CONSUMERCODEQUERYFORCURRENTFINANCIALYEAR, pstmtList);
-		} catch (SQLException e) {
-			log.error(" SQL exception occured while fecthing consumer codes from assessment table");
-		}
-		return codes;
+		return jdbcTemplate.queryForList(CONSUMERCODEQUERYFORCURRENTFINANCIALYEAR, pstmtList, String.class);
 	}
 
 	/**

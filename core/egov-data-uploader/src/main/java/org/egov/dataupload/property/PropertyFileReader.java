@@ -131,12 +131,14 @@ public class PropertyFileReader {
 			break;
 			// in case of shared property value should go to built up area else land area
 		case 10:
-			if ("SHAREDPROPERTY".equalsIgnoreCase(property.getPropertyDetails().get(0).getPropertySubType()))
+			if(cell.getNumericCellValue()==0) break;
+			else if ("SHAREDPROPERTY".equalsIgnoreCase(property.getPropertyDetails().get(0).getPropertySubType()))
 				property.getPropertyDetails().get(0).setBuildUpArea((float) cell.getNumericCellValue());
 			else
 				property.getPropertyDetails().get(0).setLandArea((float) cell.getNumericCellValue());
 			break;
 		case 11:
+			if(cell.getNumericCellValue()==0) break;
 			property.getPropertyDetails().get(0).setNoOfFloors((long) cell.getNumericCellValue());
 			break;
 		case 12:
@@ -149,8 +151,9 @@ public class PropertyFileReader {
 			property.getAddress().getLocality().setCode(cell.getStringCellValue());
 			break;
 		case 15:
-			if (!StringUtils.isEmpty(cell.getStringCellValue()))
-				property.getAddress().setDoorNo(cell.getStringCellValue());
+			if(cell.getNumericCellValue()==0) break;
+			if (!StringUtils.isEmpty((int)cell.getNumericCellValue()))
+				property.getAddress().setDoorNo(String.valueOf((int)cell.getNumericCellValue()));
 			break;
 		case 16:
 			if (!StringUtils.isEmpty(cell.getStringCellValue()))
@@ -161,8 +164,9 @@ public class PropertyFileReader {
 				property.getAddress().setStreet(cell.getStringCellValue());
 			break;
 		case 18:
-			if (!StringUtils.isEmpty(cell.getStringCellValue()))
-				property.getAddress().setPincode(cell.getStringCellValue());
+			if(cell.getNumericCellValue()==0) break;
+			if (!StringUtils.isEmpty((int)cell.getNumericCellValue()))
+				property.getAddress().setPincode(String.valueOf((int)cell.getNumericCellValue()));
 			break;
 
 		default:
@@ -214,6 +218,7 @@ public class PropertyFileReader {
 		case 1:
 			break;
 		case 2:
+			if(cell.getNumericCellValue()==0) break;
 			unit.setFloorNo(String.valueOf((int)cell.getNumericCellValue()));
 			break;
 		case 3: 
@@ -229,9 +234,11 @@ public class PropertyFileReader {
 			unit.setOccupancyType(cell.getStringCellValue());
 			break;
 		case 7:
+			if(cell.getNumericCellValue()==0) break;
 			unit.setUnitArea((float) cell.getNumericCellValue());
 			break;
 		case 8:
+			if(cell.getNumericCellValue()==0) break;
 			unit.setArv(new BigDecimal(cell.getNumericCellValue(), MathContext.DECIMAL64));
 			break;
 		case 9:

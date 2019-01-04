@@ -218,7 +218,6 @@ public class PropertyFileReader {
 		case 1:
 			break;
 		case 2:
-			if(cell.getNumericCellValue()==0) break;
 			unit.setFloorNo(String.valueOf((int)cell.getNumericCellValue()));
 			break;
 		case 3: 

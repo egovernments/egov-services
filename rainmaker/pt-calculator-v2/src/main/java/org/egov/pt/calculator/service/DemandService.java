@@ -360,8 +360,20 @@ public class DemandService {
 		boolean isCurrentDemand = false;
 		String tenantId = demand.getTenantId();
 		String demandId = demand.getId();
-		Long lastCollectedTime = rcptService.getInterestLatestCollectedTime(demand, requestInfoWrapper);
 		
+		TaxPeriod taxPeriod = mstrDataService.getTaxPeriodList(requestInfoWrapper, tenantId).stream()
+				.filter(t -> demand.getTaxPeriodFrom().compareTo(t.getFromDate()) >= 0
+				&& demand.getTaxPeriodTo().compareTo(t.getToDate()) <= 0)
+		.findAny().orElse(null);
+		
+		if(!(taxPeriod.getFromDate()<= System.currentTimeMillis() && taxPeriod.getToDate() >= System.currentTimeMillis()))
+			isCurrentDemand = true;
+		/*
+		 * method to get the latest collected time from the receipt service
+		 */
+		Long lastCollectedTime = rcptService.getInterestLatestCollectedTime(taxPeriod.getFinancialYear(), demand,
+				requestInfoWrapper);
+
 		BigDecimal taxAmtForApplicableGeneration = utils.getTaxAmtFromDemandForApplicablesGeneration(demand);
 		BigDecimal collectedApplicableAmount = BigDecimal.ZERO;
 		BigDecimal totalCollectedAmount = BigDecimal.ZERO;
@@ -381,14 +393,6 @@ public class DemandService {
 		boolean isInterestUpdated = false;
 		
 		List<DemandDetail> details = demand.getDemandDetails();
-		
-		TaxPeriod taxPeriod = mstrDataService.getTaxPeriodList(requestInfoWrapper, tenantId).stream()
-				.filter(t -> demand.getTaxPeriodFrom().compareTo(t.getFromDate()) >= 0
-				&& demand.getTaxPeriodTo().compareTo(t.getToDate()) <= 0)
-		.findAny().orElse(null);
-		
-		if(!(taxPeriod.getFromDate()<= System.currentTimeMillis() && taxPeriod.getToDate() >= System.currentTimeMillis()))
-			isCurrentDemand = true;
 		
 		Map<String, BigDecimal> rebatePenaltyEstimates = payService.applyPenaltyRebateAndInterest(taxAmtForApplicableGeneration,
 				collectedApplicableAmount, lastCollectedTime, taxPeriod.getFinancialYear(), timeBasedExmeptionMasterMap);

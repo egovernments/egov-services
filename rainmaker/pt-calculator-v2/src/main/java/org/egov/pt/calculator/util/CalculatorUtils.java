@@ -136,13 +136,13 @@ public class CalculatorUtils {
 	 * @param tenantId
 	 * @return
 	 */
-	public StringBuilder getReceiptSearchUrl(String tenantId, String consumerCode) {
+	public StringBuilder getReceiptSearchUrl(String tenantId, List<String> consumerCodes) {
 
 		return new StringBuilder().append(configurations.getCollectionServiceHost())
 				.append(configurations.getReceiptSearchEndpoint()).append(CalculatorConstants.URL_PARAMS_SEPARATER)
 				.append(CalculatorConstants.TENANT_ID_FIELD_FOR_SEARCH_URL).append(tenantId)
 				.append(CalculatorConstants.SEPARATER).append(CalculatorConstants.CONSUMER_CODE_SEARCH_FIELD_NAME)
-				.append(consumerCode);
+				.append(consumerCodes.toString().replace("[", "").replace("]", ""));
 	}
 
 	/**

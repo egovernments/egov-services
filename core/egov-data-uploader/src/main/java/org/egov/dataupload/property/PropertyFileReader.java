@@ -18,6 +18,7 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
+import org.apache.poi.util.StringUtil;
 import org.egov.dataupload.property.models.Document;
 import org.egov.dataupload.property.models.OwnerInfo;
 import org.egov.dataupload.property.models.OwnerInfo.RelationshipEnum;
@@ -97,7 +98,8 @@ public class PropertyFileReader {
 			break;
 		case 1:
 			cell.setCellType(CellType.STRING);
-			property.getAddress().setCity(cell.getStringCellValue());
+			if (!StringUtils.isEmpty(cell.getStringCellValue()))
+				property.getAddress().setCity(cell.getStringCellValue());
 			break;
 		case 2:
 			property.setOldPropertyId(cell.getStringCellValue());

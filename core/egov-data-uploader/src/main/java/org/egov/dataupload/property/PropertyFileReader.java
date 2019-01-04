@@ -84,7 +84,20 @@ public class PropertyFileReader {
 				if (null != cell)
 					setPropertyDetails(cell, property);
 			}
-			propertyIdMap.put(property.getOldPropertyId(), property);
+			if(!StringUtils.isEmpty(property.getOldPropertyId())){
+				if(null != propertyIdMap.get(property.getOldPropertyId())) {
+					StringBuilder id = new StringBuilder();
+					id.append("duplicate_").append(property.getOldPropertyId()).append("_").append(rowNumber);
+					propertyIdMap.put(id.toString(), property);
+				}
+				else
+				{
+					propertyIdMap.put(property.getOldPropertyId(), property);
+				}
+			}
+			else
+				continue;
+
 		}
 		
 		return propertyIdMap;

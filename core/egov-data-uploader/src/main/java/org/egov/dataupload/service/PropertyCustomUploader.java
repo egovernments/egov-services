@@ -115,22 +115,27 @@ public class PropertyCustomUploader {
 		int sucCnt = 0;
 		int recordCount=1;
 		for (Entry<String, Property> entry : map.entrySet()) {
-
 			String failureMessage = null;
-
-			Object response = dataUploadService.hitApi(getRequestForPost(entry.getValue(), requestInfo),
-					getUrlForPost());
-
-			if (null == response) {
-				failureMessage = FAILEDSTRING + "--" + "Module API failed with empty body in response";
+			if(entry.getKey().contains("duplicate"))
+			{
 				failCnt++;
-			} else {
-				if (response instanceof String) {
-					failureMessage = FAILEDSTRING + "--" +response.toString();
+				failureMessage = FAILEDSTRING + "--" +"Duplicate property found";
+			}
+			else{
+				Object response = dataUploadService.hitApi(getRequestForPost(entry.getValue(), requestInfo),
+						getUrlForPost());
+
+				if (null == response) {
+					failureMessage = FAILEDSTRING + "--" + "Module API failed with empty body in response";
 					failCnt++;
 				} else {
-					sucCnt++;
-					failureMessage = SUCCESSSTRING + "--" + getPropertyId(response);
+					if (response instanceof String) {
+						failureMessage = FAILEDSTRING + "--" +response.toString();
+						failCnt++;
+					} else {
+						sucCnt++;
+						failureMessage = SUCCESSSTRING + "--" + getPropertyId(response);
+					}
 				}
 			}
 			responses.add(failureMessage);

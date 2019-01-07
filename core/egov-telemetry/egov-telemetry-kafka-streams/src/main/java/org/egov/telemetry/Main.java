@@ -4,8 +4,10 @@ import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.streams.StreamsConfig;
 import org.egov.telemetry.config.AppProperties;
 import org.egov.telemetry.deduplicator.TelemetryDeduplicator;
+import org.egov.telemetry.enrich.TelemetryEnrichMessages;
 import org.egov.telemetry.formatchecker.TelemetryFormatChecker;
 import org.egov.telemetry.sink.TelemetryFinalStream;
+import org.egov.telemetry.unbundle.TelemetryUnbundleBatches;
 
 import java.util.Properties;
 
@@ -27,9 +29,17 @@ public class Main {
         TelemetryDeduplicator telemetryDeduplicator = new TelemetryDeduplicator();
         telemetryDeduplicator.shouldRemoveDuplicatesFromTheInput(streamsConfiguration, appProperties.getTelemetryValidatedMessages(), appProperties.getTelemetryDedupedMessages(), appProperties.getDeDupStorageTime());
 
-        TelemetryFinalStream telemetryFinalStream = new TelemetryFinalStream();
-        telemetryFinalStream.pushFinalMessages(streamsConfiguration, appProperties.getTelemetryDedupedMessages(), appProperties.getTelemetryFinalMessages());
+        TelemetryUnbundleBatches telemetryUnbundleBatches = new TelemetryUnbundleBatches();
+        telemetryUnbundleBatches.unbundleBatches(streamsConfiguration, appProperties.getTelemetryDedupedMessages(),
+                appProperties.getTelemetryUnbundledMessages());
 
+        TelemetryEnrichMessages telemetryEnrichMessages = new TelemetryEnrichMessages();
+        telemetryEnrichMessages.enrichMessages(streamsConfiguration, appProperties.getTelemetryUnbundledMessages(),
+                appProperties.getTelemetryEnrichedMessages());
+
+        TelemetryFinalStream telemetryFinalStream = new TelemetryFinalStream();
+        telemetryFinalStream.pushFinalMessages(streamsConfiguration, appProperties.getTelemetryEnrichedMessages(),
+                appProperties.getTelemetryFinalMessages());
     }
 
     private static void checkIfFilesExists() throws Exception {

@@ -19,6 +19,10 @@ public class AppProperties {
     @Getter
     private String telemetryDedupedMessages;
     @Getter
+    private String telemetryUnbundledMessages;
+    @Getter
+    private String telemetryEnrichedMessages;
+    @Getter
     private String telemetryFinalMessages;
     @Getter
     private Integer deDupStorageTime; //In Minutes
@@ -29,36 +33,44 @@ public class AppProperties {
         telemetryRawInput = System.getenv("TELEMETRY_RAW_INPUT");
         telemetryValidatedMessages = System.getenv("TELEMETRY_VALIDATED_MESSAGES");
         telemetryDedupedMessages = System.getenv("TELEMETRY_DEDUPED_MESSAGES");
+        telemetryUnbundledMessages = System.getenv("TELEMETRY_UNBUNDLED_MESSAGES");
+        telemetryEnrichedMessages = System.getenv("TELEMETRY_ENRICHED_MESSAGES");
         telemetryFinalMessages = System.getenv("TELEMETRY_FINAL_MESSAGES");
 
         if(System.getenv("DEDUP_STORAGE_TIME") != null)
             deDupStorageTime = Integer.parseInt(System.getenv("DEDUP_STORAGE_TIME"));
 
-//        Properties properties = new Properties();
-//        try {
-//            properties.load(getClass().getClassLoader().getResourceAsStream("application.properties"));
-//        } catch (IOException e) {
-//            log.error("application.properties not found");
-//        }
-//
-//        if(kafkaBootstrapServerConfig == null)
-//          kafkaBootstrapServerConfig = properties.getProperty("BOOTSTRAP_SERVER_CONFIG");
-//
-//        if(telemetryRawInput == null)
-//            telemetryRawInput = properties.getProperty("TELEMETRY_RAW_INPUT");
-//
-//        if(telemetryValidatedMessages == null)
-//            telemetryValidatedMessages = properties.getProperty("TELEMETRY_VALIDATED_MESSAGES");
-//
-//        if(telemetryDedupedMessages == null)
-//            telemetryDedupedMessages = properties.getProperty("TELEMETRY_DEDUPED_MESSAGES");
-//
-//        if(telemetryFinalMessages == null)
-//            telemetryFinalMessages = properties.getProperty("TELEMETRY_FINAL_MESSAGES");
-//
-//        if(deDupStorageTime == null)
-//            if(properties.getProperty("DEDUP_STORAGE_TIME") != null)
-//                deDupStorageTime = Integer.parseInt(properties.getProperty("DEDUP_STORAGE_TIME"));
+        Properties properties = new Properties();
+        try {
+            properties.load(getClass().getClassLoader().getResourceAsStream("application.properties"));
+        } catch (IOException e) {
+            log.error("application.properties not found");
+        }
+
+        if(kafkaBootstrapServerConfig == null)
+          kafkaBootstrapServerConfig = properties.getProperty("BOOTSTRAP_SERVER_CONFIG");
+
+        if(telemetryRawInput == null)
+            telemetryRawInput = properties.getProperty("TELEMETRY_RAW_INPUT");
+
+        if(telemetryValidatedMessages == null)
+            telemetryValidatedMessages = properties.getProperty("TELEMETRY_VALIDATED_MESSAGES");
+
+        if(telemetryDedupedMessages == null)
+            telemetryDedupedMessages = properties.getProperty("TELEMETRY_DEDUPED_MESSAGES");
+
+        if(telemetryUnbundledMessages == null)
+            telemetryUnbundledMessages = properties.getProperty("TELEMETRY_UNBUNDLED_MESSAGES");
+
+        if(telemetryEnrichedMessages == null)
+            telemetryEnrichedMessages = properties.getProperty("TELEMETRY_ENRICHED_MESSAGES");
+
+        if(telemetryFinalMessages == null)
+            telemetryFinalMessages = properties.getProperty("TELEMETRY_FINAL_MESSAGES");
+
+        if(deDupStorageTime == null)
+            if(properties.getProperty("DEDUP_STORAGE_TIME") != null)
+                deDupStorageTime = Integer.parseInt(properties.getProperty("DEDUP_STORAGE_TIME"));
 
     }
 

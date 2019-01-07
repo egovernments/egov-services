@@ -170,5 +170,10 @@ public class SessionProcessor {
     public static void pushSession(Session session) {
         JsonNode jsonNode = mapper.valueToTree(session);
         producer.push(kafkaTopic, session.getSessionId(), session.getStartTime(), jsonNode);
+
+    }
+
+    public static void closeKafka() {
+        producer.close();
     }
 }

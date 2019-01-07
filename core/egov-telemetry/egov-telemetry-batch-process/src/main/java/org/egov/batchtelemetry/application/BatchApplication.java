@@ -41,6 +41,8 @@ public class BatchApplication {
 
         log.info("Total Sessions: " + SessionProcessor.totalSessionCounter);
 
+        SessionProcessor.closeKafka();
+
     }
 
 }

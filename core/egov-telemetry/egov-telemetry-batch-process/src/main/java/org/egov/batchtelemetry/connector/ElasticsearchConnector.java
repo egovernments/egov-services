@@ -59,7 +59,7 @@ public class ElasticsearchConnector {
                     "_search/");
             HttpURLConnection connection = (HttpURLConnection) esURL.openConnection();
             connection.setRequestMethod("POST");
-            connection.setRequestProperty("Content-Type", "org/egov/batchtelemetry/application/json");
+            connection.setRequestProperty("Content-Type", "application/json");
 
             connection.setDoOutput(true);
             OutputStream connectionOutputStream =  connection.getOutputStream();
@@ -86,7 +86,5 @@ public class ElasticsearchConnector {
 
         return userIds;
     }
-
-
 
 }

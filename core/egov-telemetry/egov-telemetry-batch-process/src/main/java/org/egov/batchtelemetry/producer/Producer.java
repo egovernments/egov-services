@@ -31,4 +31,9 @@ public class Producer {
         kafkaProducer.send(record);
     }
 
+    public void close() {
+        kafkaProducer.flush();
+        kafkaProducer.close();
+    }
+
 }

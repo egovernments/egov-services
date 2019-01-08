@@ -12,7 +12,7 @@ ServiceMaps:
 #      jsonPath: $.events.*
 #      timeStampField: $.ets
       
-  - topic: telemetry-unbundled-messages
+  - topic: telemetry-unbundled-messages-test
     configKey: REINDEX
     indexes:
     - name: telemetryindex-v1.1

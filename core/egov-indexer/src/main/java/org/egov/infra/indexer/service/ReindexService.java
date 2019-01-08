@@ -245,8 +245,9 @@ public class ReindexService {
 			public void run() {
 				if (threadRun) {
 					try {
-						indexerService.esIndexer(reindexRequest.getReindexTopic(),
-								mapper.writeValueAsString(requestToReindex));
+//						indexerService.esIndexer(reindexRequest.getReindexTopic(),
+//								mapper.writeValueAsString(requestToReindex));
+                        indexerProducer.producer(reindexRequest.getReindexTopic(), mapper.writeValueAsString(requestToReindex));
 						recordsIndexed += resultSize;
 						log.info("Records indexed: " + recordsIndexed);
 					} catch (Exception e) {

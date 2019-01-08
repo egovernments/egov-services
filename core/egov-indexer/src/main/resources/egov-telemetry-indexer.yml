@@ -12,7 +12,7 @@ ServiceMaps:
       jsonPath: $.events.*
       timeStampField: $.ets
       
-  - topic: telemetry-reindex
+  - topic: telemetry-unbundled-messages
     configKey: REINDEX
     indexes:
     - name: telemetryindex-v1.1
@@ -20,7 +20,6 @@ ServiceMaps:
       id: $.mid
       isBulk: true
       jsonPath: $.hits
-      timeStampField: $.ets
       
   - topic: batch-telemetry
     configKey: INDEX

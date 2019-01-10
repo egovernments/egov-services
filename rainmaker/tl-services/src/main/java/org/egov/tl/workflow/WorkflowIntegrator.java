@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.egov.tl.web.models.TradeLicense;
 import org.egov.tl.web.models.TradeLicense.StatusEnum;
 import org.egov.tl.web.models.TradeLicenseRequest;
 import org.egov.tracer.model.CustomException;
@@ -72,9 +73,12 @@ public class WorkflowIntegrator {
 	 */
 	public void callWorkFlow(TradeLicenseRequest tradeLicenseRequest) {
 
-		String wfTenantId = tradeLicenseRequest.getLicenses().get(0).getTenantId().split(".")[0];
+		String wfTenantId = tradeLicenseRequest.getLicenses().get(0).getTenantId();
+		if(wfTenantId.contains("."))
+			wfTenantId = wfTenantId.split("\\.")[0];
+		
 		JSONArray array = new JSONArray();
-		tradeLicenseRequest.getLicenses().forEach(license -> {
+		for (TradeLicense license : tradeLicenseRequest.getLicenses()) {
 
 			JSONObject obj = new JSONObject();
 			obj.put(BUSINESSIDKEY, license.getApplicationNumber());
@@ -84,8 +88,7 @@ public class WorkflowIntegrator {
 			obj.put(ACTIONKEY, license.getAction());
 			obj.put(COMMENTKEY, null);
 			array.add(obj);
-
-		});
+		}
 
 		JSONObject workFlowRequest = new JSONObject();
 		workFlowRequest.put(REQUESTINFOKEY, tradeLicenseRequest.getRequestInfo());

@@ -72,12 +72,13 @@ public class WorkflowIntegrator {
 	 */
 	public void callWorkFlow(TradeLicenseRequest tradeLicenseRequest) {
 
+		String wfTenantId = tradeLicenseRequest.getLicenses().get(0).getTenantId().split(".")[0];
 		JSONArray array = new JSONArray();
 		tradeLicenseRequest.getLicenses().forEach(license -> {
 
 			JSONObject obj = new JSONObject();
 			obj.put(BUSINESSIDKEY, license.getApplicationNumber());
-			obj.put(TENANTIDKEY, license.getTenantId());
+			obj.put(TENANTIDKEY, wfTenantId);
 			obj.put(BUSINESSSERVICEKEY, businessServiceValue);
 			obj.put(MODULENAMEKEY, MODULENAMEVALUE);
 			obj.put(ACTIONKEY, license.getAction());

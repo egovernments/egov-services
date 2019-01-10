@@ -3,6 +3,9 @@ package org.egov.tl.service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
+
+import lombok.extern.slf4j.Slf4j;
+
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.request.Role;
 import org.egov.tl.config.TLConfiguration;
@@ -23,6 +26,7 @@ import java.util.List;
 import java.util.Map;
 
 @Service
+@Slf4j
 public class PaymentUpdateService {
 
 	private TradeLicenseService tradeLicenseService;
@@ -92,6 +96,8 @@ public class PaymentUpdateService {
 				 */
 				wfIntegrator.callWorkFlow(updateRequest);
 
+				updateRequest.getLicenses()
+						.forEach(obj -> log.info(" the status of the application is : " + obj.getStatus()));
 				/*
 				 * calling repository to update the object in TL tables
 				 */

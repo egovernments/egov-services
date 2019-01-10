@@ -1,8 +1,9 @@
 package org.egov.tl.service;
 
+import java.util.Collections;
+import java.util.List;
+
 import org.egov.common.contract.request.RequestInfo;
-import org.egov.tl.config.TLConfiguration;
-import org.egov.tl.producer.Producer;
 import org.egov.tl.repository.TLRepository;
 import org.egov.tl.util.TradeUtil;
 import org.egov.tl.validator.TLValidator;
@@ -12,14 +13,18 @@ import org.egov.tl.web.models.TradeLicenseSearchCriteria;
 import org.egov.tl.web.models.user.UserDetailResponse;
 import org.egov.tl.workflow.ActionValidator;
 import org.egov.tl.workflow.TLWorkflowService;
+import org.egov.tl.workflow.WorkflowIntegrator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-
-import java.util.Collections;
-import java.util.List;
 
 @Service
 public class TradeLicenseService {
+	
+	@Value("${is.external.workflow.enabled}")
+	private Boolean isExternalWorkFlowEnabled;
+	
+	private WorkflowIntegrator wfIntegrator;
 
     private EnrichmentService enrichmentService;
 
@@ -38,20 +43,21 @@ public class TradeLicenseService {
     private TradeUtil util;
 
 
-    @Autowired
-    public TradeLicenseService(EnrichmentService enrichmentService, UserService userService,
-                               TLRepository repository, ActionValidator actionValidator,
-                               TLValidator tlValidator, TLWorkflowService workflowService,
-                               CalculationService calculationService,TradeUtil util) {
-        this.enrichmentService = enrichmentService;
-        this.userService = userService;
-        this.repository = repository;
-        this.actionValidator = actionValidator;
-        this.tlValidator = tlValidator;
-        this.workflowService = workflowService;
-        this.calculationService = calculationService;
-        this.util = util;
-    }
+	@Autowired
+	public TradeLicenseService(WorkflowIntegrator wfIntegrator, EnrichmentService enrichmentService,
+			UserService userService, TLRepository repository, ActionValidator actionValidator, TLValidator tlValidator,
+			TLWorkflowService workflowService, CalculationService calculationService, TradeUtil util) {
+		
+		this.wfIntegrator = wfIntegrator;
+		this.enrichmentService = enrichmentService;
+		this.userService = userService;
+		this.repository = repository;
+		this.actionValidator = actionValidator;
+		this.tlValidator = tlValidator;
+		this.workflowService = workflowService;
+		this.calculationService = calculationService;
+		this.util = util;
+	}
 
 
     /**
@@ -66,9 +72,15 @@ public class TradeLicenseService {
         enrichmentService.enrichTLCreateRequest(tradeLicenseRequest,mdmsData);
         userService.createUser(tradeLicenseRequest);
         calculationService.addCalculation(tradeLicenseRequest);
-        repository.save(tradeLicenseRequest);
-        return tradeLicenseRequest.getLicenses();
-    }
+		
+        /*
+		 * call workflow service if it's enable else uses internal workflow process
+		 */
+		if (isExternalWorkFlowEnabled)
+			wfIntegrator.callWorkFlow(tradeLicenseRequest);
+		repository.save(tradeLicenseRequest);
+		return tradeLicenseRequest.getLicenses();
+	}
 
 
     /**
@@ -132,7 +144,14 @@ public class TradeLicenseService {
         tlValidator.validateUpdate(tradeLicenseRequest,mdmsData);
         actionValidator.validateUpdateRequest(tradeLicenseRequest);
         enrichmentService.enrichTLUpdateRequest(tradeLicenseRequest);
-        workflowService.updateStatus(tradeLicenseRequest);
+	/*
+	 * call workflow service if it's enable else uses internal workflow process
+	 */
+		if (isExternalWorkFlowEnabled)
+			wfIntegrator.callWorkFlow(tradeLicenseRequest);
+		else
+			workflowService.updateStatus(tradeLicenseRequest);
+
         userService.createUser(tradeLicenseRequest);
         calculationService.addCalculation(tradeLicenseRequest);
         repository.update(tradeLicenseRequest);

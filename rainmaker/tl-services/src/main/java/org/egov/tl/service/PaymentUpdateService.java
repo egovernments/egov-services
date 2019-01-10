@@ -3,11 +3,14 @@ package org.egov.tl.service;
 import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
 import org.egov.common.contract.request.RequestInfo;
+import org.egov.common.contract.request.Role;
 import org.egov.tl.config.TLConfiguration;
 import org.egov.tl.repository.TLRepository;
 import org.egov.tl.web.models.TradeLicense;
+import org.egov.tl.web.models.TradeLicense.ActionEnum;
 import org.egov.tl.web.models.TradeLicenseRequest;
 import org.egov.tl.web.models.TradeLicenseSearchCriteria;
+import org.egov.tl.workflow.WorkflowIntegrator;
 import org.egov.tracer.model.CustomException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,14 +30,18 @@ public class PaymentUpdateService {
     private TLConfiguration config;
 
     private TLRepository repository;
+    
+    private WorkflowIntegrator wfIntegrator;
 
 
-    @Autowired
-    public PaymentUpdateService(TradeLicenseService tradeLicenseService, TLConfiguration config, TLRepository repository) {
-        this.tradeLicenseService = tradeLicenseService;
-        this.config = config;
-        this.repository = repository;
-    }
+	@Autowired
+	public PaymentUpdateService(TradeLicenseService tradeLicenseService, TLConfiguration config,
+			TLRepository repository, WorkflowIntegrator wfIntegrator) {
+		this.tradeLicenseService = tradeLicenseService;
+		this.config = config;
+		this.repository = repository;
+		this.wfIntegrator = wfIntegrator;
+	}
 
 
 
@@ -66,13 +73,27 @@ public class PaymentUpdateService {
                 if(CollectionUtils.isEmpty(licenses))
                     throw new CustomException("INVALID RECEIPT","No tradeLicense found for the comsumerCode "+searchCriteria.getApplicationNumber());
 
-                licenses.forEach(license -> {
-                    license.setStatus(TradeLicense.StatusEnum.PAID);
-                });
+                
+                licenses.forEach(license -> license.setAction(ActionEnum.PAY));
 
-                TradeLicenseRequest updateRequest = new TradeLicenseRequest();
-                updateRequest.setLicenses(licenses);
-                updateRequest.setRequestInfo(requestInfo);
+                // FIXME check if the update call to repository can be avoided
+                // FIXME check why aniket is not using request info from consumer 
+                // REMOVE SYSTEM HARDCODING AFTER ALTERING THE CONFIG IN WF FOR TL 
+                
+                RequestInfo info = documentContext.read("$.RequestInfo");
+                Role role = Role.builder().code("SYSTEM_PAYMENT").build();
+                info.getUserInfo().getRoles().add(role);
+                TradeLicenseRequest updateRequest = TradeLicenseRequest.builder().requestInfo(info)
+                .licenses(licenses).build();
+               
+                /*
+                 * calling workflow to update status
+                 */
+                wfIntegrator.callWorkFlow(updateRequest);
+                
+                /*
+                 * calling repository to update the object in TL tables
+                 */
                 repository.update(updateRequest);
             }
         }

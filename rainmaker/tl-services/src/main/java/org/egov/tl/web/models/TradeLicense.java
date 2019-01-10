@@ -1,18 +1,21 @@
 package org.egov.tl.web.models;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonValue;
-import io.swagger.annotations.ApiModel;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+
 import org.egov.tl.web.models.calculation.Calculation;
 import org.springframework.validation.annotation.Validated;
-import javax.validation.Valid;
-import javax.validation.constraints.*;
+
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonValue;
+
+import io.swagger.annotations.ApiModel;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.Builder;
 
 /**
  * A Object holds the basic data for a Trade License
@@ -120,7 +123,9 @@ public class  TradeLicense   {
 
     REJECT("REJECT"),
 
-    CANCEL("CANCEL");
+    CANCEL("CANCEL"),
+	  
+	PAY("PAY");
 
     private String value;
 
@@ -137,7 +142,7 @@ public class  TradeLicense   {
     @JsonCreator
     public static ActionEnum fromValue(String text) {
       for (ActionEnum b : ActionEnum.values()) {
-        if (String.valueOf(b.value).equals(text)) {
+        if (String.valueOf(b.value).equalsIgnoreCase(text)) {
           return b;
         }
       }
@@ -180,7 +185,7 @@ public class  TradeLicense   {
     @JsonCreator
     public static StatusEnum fromValue(String text) {
       for (StatusEnum b : StatusEnum.values()) {
-        if (String.valueOf(b.value).equals(text)) {
+        if (String.valueOf(b.value).equalsIgnoreCase(text)) {
           return b;
         }
       }

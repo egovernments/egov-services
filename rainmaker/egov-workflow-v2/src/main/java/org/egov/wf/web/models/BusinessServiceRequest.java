@@ -2,6 +2,8 @@ package org.egov.wf.web.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
+import lombok.ToString;
+
 import org.egov.common.contract.request.RequestInfo;
 
 import javax.validation.Valid;
@@ -10,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Data
+@ToString
 public class BusinessServiceRequest {
 
     @JsonProperty("RequestInfo")

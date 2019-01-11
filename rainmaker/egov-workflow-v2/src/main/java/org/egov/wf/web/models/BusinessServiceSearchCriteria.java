@@ -1,13 +1,14 @@
 package org.egov.wf.web.models;
 
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Data;
-import org.egov.common.contract.request.User;
+import java.util.List;
 
 import javax.validation.constraints.NotNull;
-import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import lombok.Data;
 
 @Data
 public class BusinessServiceSearchCriteria {

@@ -29,6 +29,7 @@ import javax.validation.constraints.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@ToString
 @EqualsAndHashCode(of = {"tenantId","businessService"})
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class BusinessService   {

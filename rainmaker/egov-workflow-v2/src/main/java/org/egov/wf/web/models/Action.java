@@ -26,6 +26,7 @@ import javax.validation.constraints.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@ToString
 @EqualsAndHashCode(of = {"tenantId","currentState","action"})
 public class Action   {
         @JsonProperty("uuid")

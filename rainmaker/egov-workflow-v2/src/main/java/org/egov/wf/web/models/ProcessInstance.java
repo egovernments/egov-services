@@ -1,20 +1,24 @@
 package org.egov.wf.web.models;
 
-import java.util.Objects;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 import java.util.ArrayList;
 import java.util.List;
 
-import lombok.*;
-import org.egov.common.contract.request.User;
-import org.egov.wf.web.models.AuditDetails;
-import org.egov.wf.web.models.Document;
-import org.springframework.validation.annotation.Validated;
 import javax.validation.Valid;
-import javax.validation.constraints.*;
+import javax.validation.constraints.NotNull;
+
+import org.egov.common.contract.request.User;
+import org.springframework.validation.annotation.Validated;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import io.swagger.annotations.ApiModel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 /**
  * A Object holds the basic data for a Trade License
@@ -29,6 +33,7 @@ import javax.validation.constraints.*;
 @NoArgsConstructor
 @Builder
 @EqualsAndHashCode(of = {"id"})
+@ToString
 public class ProcessInstance   {
         @JsonProperty("id")
         private String id = null;

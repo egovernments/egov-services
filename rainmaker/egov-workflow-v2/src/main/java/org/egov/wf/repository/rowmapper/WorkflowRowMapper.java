@@ -6,6 +6,7 @@ import org.egov.wf.web.models.*;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -131,15 +132,23 @@ public class WorkflowRowMapper implements ResultSetExtractor<List<ProcessInstanc
         }
 
         String actionUuid = rs.getString("ac_uuid");
+        /*
+         * null check added for action id to avoid adding empty action object in end state
+         * 
+         * also avoiding action related errors on end state
+         */
+        if(null != actionUuid) {
+        String roles = rs.getString("roles");
         Action action = Action.builder()
                 .tenantId(rs.getString("ac_tenantId"))
                 .action(rs.getString("ac_action"))
                 .nextState(rs.getString("nextState"))
                 .uuid(actionUuid)
                 .currentState(rs.getString("currentState"))
-                .roles(Arrays.asList(rs.getString("roles").split(",")))
+                .roles(StringUtils.isEmpty(roles) ? Arrays.asList() : Arrays.asList(roles.split(","))) 
                 .build();
         processInstance.getState().addActionsItem(action);
+        }
     }
 
 

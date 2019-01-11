@@ -14,6 +14,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 import lombok.Builder;
 
 /**
@@ -28,6 +29,7 @@ import lombok.Builder;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@ToString
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class AuditDetails   {
         @JsonProperty("createdBy")

@@ -40,9 +40,9 @@ ServiceMaps:
             outJsonPath: $.Data.tenantData
 
   - topic: egov.collection.receipt-create-reindex
-    configKey: INDEX
+    configKey: REINDEX
     indexes:
-    - name: collectionsreindex-v1
+    - name: collectionsreindex-v1.1
       type: receipts
       id: $.Bill[0].billDetails[0].id
       isBulk: true
@@ -50,7 +50,7 @@ ServiceMaps:
       jsonPath: $.hits
  
   - topic: egov.collection.receipt-create-legacyindex
-    configKey: INDEX
+    configKey: LEGACYINDEX
     indexes:
     - name: collectionsindex-v1
       type: receipts

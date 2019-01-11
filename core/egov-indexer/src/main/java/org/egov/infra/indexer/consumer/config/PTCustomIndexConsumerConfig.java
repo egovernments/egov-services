@@ -1,4 +1,4 @@
-package org.egov.infra.indexer.consumer;
+package org.egov.infra.indexer.consumer.config;
 
 
 import java.util.HashMap;
@@ -7,7 +7,7 @@ import java.util.Map;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.egov.IndexerApplicationRunnerImpl;
-import org.egov.infra.indexer.web.contract.Mapping;
+import org.egov.infra.indexer.consumer.PTCustomIndexMessageListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.ApplicationArguments;
@@ -31,29 +31,32 @@ import lombok.extern.slf4j.Slf4j;
 @Configuration
 @EnableKafka
 @PropertySource("classpath:application.properties")
-@Order(2)
+@Order(5)
 @Slf4j
-public class KafkaConsumerConfig implements ApplicationRunner {
+public class PTCustomIndexConsumerConfig implements ApplicationRunner {
 
 	public static KafkaMessageListenerContainer<String, String> kafkContainer;
 	
 	@Value("${spring.kafka.bootstrap.servers}")
     private String brokerAddress;
 	
-	@Value("${spring.kafka.consumer.group}")
+	@Value("${indexer.pt.customindex.consumer.group}")
     private String consumerGroup;
 	
-	@Value("${egov.core.reindex.topic.name}")
-	private String reindexTopic;
+	@Value("${egov.indexer.pt.create.topic.name}")
+	private String ptCreateTopic;
 	
-	@Value("${egov.core.legacyindex.topic.name}")
-	private String legacyIndexTopic;
+	@Value("${egov.indexer.pt.update.topic.name}")
+	private String ptUpdateTopic;
+	
+	@Value("${egov.indexer.pt.legacyindex.topic.name}")
+	private String ptLegacyTopic;
         
     @Autowired
     private StoppingErrorHandler stoppingErrorHandler;
     
     @Autowired
-    private IndexerMessageListener indexerMessageListener;
+    private PTCustomIndexMessageListener indexerMessageListener;
     
 	@Autowired
 	private IndexerApplicationRunnerImpl runner;
@@ -72,18 +75,14 @@ public class KafkaConsumerConfig implements ApplicationRunner {
     }
     
     public String setTopics(){
-    	Map<String, Mapping> mappings = runner.getMappingMaps();
-    	String[] topics = new String[mappings.size() + 2];
-    	int i = 0;
-    	for(Map.Entry<String, Mapping> map: mappings.entrySet()){
-    		topics[i] = map.getKey();
-    		i++;
-    	}
-    	topics[i] = reindexTopic;
-    	topics[i + 1] = legacyIndexTopic;
+    	String[] topics = new String[3];
+    	topics[0] = ptCreateTopic;
+    	topics[1] = ptUpdateTopic;
+    	topics[2] = ptLegacyTopic;
+
     	this.topics = topics;  
     	
-    	log.info("Topics intialized..");
+    	log.info("PT: Topics intialized..");
     	return topics.toString();
     }
     
@@ -125,7 +124,7 @@ public class KafkaConsumerConfig implements ApplicationRunner {
     	 properties.setPauseAfter(0);
     	 properties.setMessageListener(indexerMessageListener);
     	 
-         log.info("Custom KafkaListenerContainer built...");
+         log.info("PT KafkaListenerContainer built...");
 
          return new KafkaMessageListenerContainer<>(consumerFactory(), properties); 
     }

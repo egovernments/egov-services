@@ -14,8 +14,7 @@ import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.lang3.StringUtils;
 import org.egov.common.contract.request.RequestInfo;
-import org.egov.infra.indexer.bulkindexer.BulkIndexer;
-import org.egov.infra.indexer.consumer.KafkaConsumerConfig;
+import org.egov.infra.indexer.consumer.config.ReindexConsumerConfig;
 import org.egov.infra.indexer.models.AuditDetails;
 import org.egov.infra.indexer.web.contract.APIDetails;
 import org.egov.infra.indexer.web.contract.FilterMapping;
@@ -27,7 +26,6 @@ import org.egov.mdms.model.MdmsCriteria;
 import org.egov.mdms.model.MdmsCriteriaReq;
 import org.egov.mdms.model.ModuleDetail;
 import org.json.JSONArray;
-import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -39,12 +37,10 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import com.google.gson.Gson;
 import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
 
 import lombok.extern.slf4j.Slf4j;
-import net.minidev.json.parser.JSONParser;
 
 @Service
 @Slf4j
@@ -54,16 +50,13 @@ public class IndexerUtils {
 	private RestTemplate restTemplate;
 
 	@Autowired
-	private KafkaConsumerConfig kafkaConsumerConfig;
+	private ReindexConsumerConfig kafkaConsumerConfig;
 
 	@Value("${egov.infra.indexer.host}")
 	private String esHostUrl;
 
 	@Value("${elasticsearch.poll.interval.seconds}")
 	private String pollInterval;
-
-	@Autowired
-	private BulkIndexer bulkIndexer;
 
 	@Value("${egov.mdms.host}")
 	private String mdmsHost;

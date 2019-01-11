@@ -16,12 +16,12 @@ public class Mapping   {
 	
   @JsonProperty("topic")
   private String topic;
-
-  @JsonProperty("indexes")
-  private List<Index> indexes;
   
   @JsonProperty("configKey")
   public ConfigKeyEnum configKey;
+
+  @JsonProperty("indexes")
+  private List<Index> indexes;
   
   public enum ConfigKeyEnum {
 	  

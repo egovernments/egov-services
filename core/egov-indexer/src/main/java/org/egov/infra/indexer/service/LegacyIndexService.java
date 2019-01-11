@@ -135,7 +135,6 @@ public class LegacyIndexService {
 				.build();
 		indexerProducer.producer(legacyIndexTopic, legacyindexRequest);
 		indexerProducer.producer(persisterCreate, wrapper);
-		log.info("Job created!");
 		legacyindexResponse.setJobId(job.getJobId());
 
 		return legacyindexResponse;
@@ -302,14 +301,14 @@ public class LegacyIndexService {
 						ServiceResponse serviceResponse = mapper.readValue(mapper.writeValueAsString(response),
 								ServiceResponse.class);
 						PGRIndexObject indexObject = pgrCustomDecorator.dataTransformationForPGR(serviceResponse);
-						indexerService.esIndexer(legacyIndexRequest.getLegacyIndexTopic(), mapper.writeValueAsString(indexObject));
+						indexerProducer.producer(legacyIndexRequest.getLegacyIndexTopic(), indexObject);
 					} else {
 						if(legacyIndexRequest.getLegacyIndexTopic().equals(ptLegacyTopic)) {
 							PropertyResponse propertyResponse = mapper.readValue(mapper.writeValueAsString(response), PropertyResponse.class);
 							propertyResponse.setProperties(ptCustomDecorator.transformData(propertyResponse.getProperties()));
-							indexerService.esIndexer(legacyIndexRequest.getLegacyIndexTopic(), mapper.writeValueAsString(propertyResponse));
+							indexerProducer.producer(legacyIndexRequest.getLegacyIndexTopic(), propertyResponse);
 						}else {
-							indexerService.esIndexer(legacyIndexRequest.getLegacyIndexTopic(), mapper.writeValueAsString(response));
+							indexerProducer.producer(legacyIndexRequest.getLegacyIndexTopic(), response);
 						}
 					}
 				} catch (Exception e) {

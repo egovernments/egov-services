@@ -87,7 +87,7 @@ public class ReindexService {
 	private Long indexThreadPollInterval;
 
 	private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(5);
-	private final ScheduledExecutorService schedulerofChildThreads = Executors.newScheduledThreadPool(5);
+	private final ScheduledExecutorService schedulerofChildThreads = Executors.newScheduledThreadPool(1);
 
 	private static Long recordsIndexed = 0L;
 	
@@ -245,8 +245,7 @@ public class ReindexService {
 			public void run() {
 				if (threadRun) {
 					try {
-						indexerService.esIndexer(reindexRequest.getReindexTopic(),
-								mapper.writeValueAsString(requestToReindex));
+						indexerProducer.producer(reindexRequest.getReindexTopic(), requestToReindex);
 						recordsIndexed += resultSize;
 						log.info("Records indexed: " + recordsIndexed);
 					} catch (Exception e) {

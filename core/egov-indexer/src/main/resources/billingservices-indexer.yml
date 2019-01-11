@@ -3,6 +3,7 @@ ServiceMaps:
  version: 1.0.0
  mappings:
   - topic: create-demand-index
+    configKey: INDEX
     indexes:
     - name: billingservice
       type: demand

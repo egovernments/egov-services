@@ -1,4 +1,4 @@
-package org.egov.infra.indexer.consumer;
+package org.egov.infra.indexer.consumer.config;
 
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -2,7 +2,7 @@ package org.egov.collection.producer;
 
 
 import org.egov.collection.config.CollectionServiceConstants;
-import org.egov.tracer.kafka.LogAwareKafkaTemplate;
+import org.egov.tracer.kafka.CustomKafkaTemplate;
 import org.egov.tracer.model.CustomException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,7 +15,7 @@ public class CollectionProducer {
 	public static final Logger logger = LoggerFactory.getLogger(CollectionProducer.class);
 
 	@Autowired
-    private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
+    private CustomKafkaTemplate<String, Object> kafkaTemplate;
 
     public void producer(String topicName, String key, Object value) {
         try {

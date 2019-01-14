@@ -1,5 +1,6 @@
 package org.egov.tlcalculator.kafka.broker;
 
+import org.egov.tracer.kafka.CustomKafkaTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
@@ -8,7 +9,7 @@ import org.springframework.stereotype.Component;
 public class TLCalculatorProducer {
 	
 	@Autowired
-	private KafkaTemplate kafkaTemplate;
+	private CustomKafkaTemplate kafkaTemplate;
 	
 	/**
 	 * Listener method to push records to kafka queue.

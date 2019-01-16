@@ -42,6 +42,8 @@ public class WorkflowIntegrator {
 	private static final String BUSINESSIDKEY = "businessId";
 	
 	private static final String DOCUMENTSKEY = "documents";
+	
+	private static final String ASSIGNEEKEY = "assignee";
 
 	private static final String MODULENAMEVALUE = "TL";
 
@@ -99,6 +101,7 @@ public class WorkflowIntegrator {
 			obj.put(MODULENAMEKEY, MODULENAMEVALUE);
 			obj.put(ACTIONKEY, license.getAction());
 			obj.put(COMMENTKEY, license.getComment());
+			obj.put(ASSIGNEEKEY, license.getAssignee());
 			obj.put(DOCUMENTSKEY, documents);
 			array.add(obj);
 		}

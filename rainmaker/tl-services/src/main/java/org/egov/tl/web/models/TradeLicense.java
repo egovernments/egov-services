@@ -153,6 +153,10 @@ public class  TradeLicense   {
         @NotNull
         @JsonProperty("action")
         private ActionEnum action = null;
+        
+        @NotNull
+        @JsonProperty("assignee")
+        private String assignee = null;
 
               /**
    * Unique identifier (code) of the Trade license Status

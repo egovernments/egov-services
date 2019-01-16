@@ -37,7 +37,7 @@ public class ReceiptService {
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
 	
-	private static final String CONSUMERCODEQUERYFORCURRENTFINANCIALYEAR = "SELECT CONCAT(propertyid,'-',assessmentnumber) "
+	private static final String CONSUMERCODEQUERYFORCURRENTFINANCIALYEAR = "SELECT CONCAT(propertyid,':',assessmentnumber) "
 			+ "FROM eg_pt_assessment where assessmentyear=? AND propertyId=?";
 
 	/**
@@ -49,7 +49,7 @@ public class ReceiptService {
 	 */
 	public Long getInterestLatestCollectedTime(String assessmentYear, Demand demand, RequestInfoWrapper requestInfoWrapper) {
 
-		List<String> consumercodes =  getCosumerCodesForDemandFromCurrentFinancialYear (assessmentYear, demand.getConsumerCode().split("-")[0]);
+		List<String> consumercodes =  getCosumerCodesForDemandFromCurrentFinancialYear (assessmentYear, demand.getConsumerCode().split(":")[0]);
 		List<Receipt> receipts = getReceipts(demand.getTenantId(), consumercodes, requestInfoWrapper);
 		long latestCollectedDate = 0l;
 

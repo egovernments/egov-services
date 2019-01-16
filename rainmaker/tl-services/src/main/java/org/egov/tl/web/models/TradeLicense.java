@@ -206,7 +206,8 @@ public class  TradeLicense   {
 
         @JsonProperty("auditDetails")
         private AuditDetails auditDetails = null;
-
+        
+        private String comment;
 
 }
 

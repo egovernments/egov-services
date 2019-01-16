@@ -1,9 +1,11 @@
 package org.egov.tl.workflow;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.egov.tl.web.models.Document;
 import org.egov.tl.web.models.TradeLicense;
 import org.egov.tl.web.models.TradeLicense.StatusEnum;
 import org.egov.tl.web.models.TradeLicenseRequest;
@@ -11,6 +13,7 @@ import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
@@ -37,6 +40,8 @@ public class WorkflowIntegrator {
 	private static final String MODULENAMEKEY = "moduleName";
 
 	private static final String BUSINESSIDKEY = "businessId";
+	
+	private static final String DOCUMENTSKEY = "documents";
 
 	private static final String MODULENAMEVALUE = "TL";
 
@@ -74,6 +79,7 @@ public class WorkflowIntegrator {
 	public void callWorkFlow(TradeLicenseRequest tradeLicenseRequest) {
 
 		String wfTenantId = tradeLicenseRequest.getLicenses().get(0).getTenantId();
+		// REMOVE IT ONCE CONFIG IS CHANGED 
 		if(wfTenantId.contains("."))
 			wfTenantId = wfTenantId.split("\\.")[0];
 		
@@ -81,12 +87,19 @@ public class WorkflowIntegrator {
 		for (TradeLicense license : tradeLicenseRequest.getLicenses()) {
 
 			JSONObject obj = new JSONObject();
+			List<Document> documents = new ArrayList<>();
+			if (!CollectionUtils.isEmpty(license.getTradeLicenseDetail().getApplicationDocuments()))
+				documents.addAll(license.getTradeLicenseDetail().getApplicationDocuments());
+			if (!CollectionUtils.isEmpty(license.getTradeLicenseDetail().getVerificationDocuments()))
+				documents.addAll(license.getTradeLicenseDetail().getVerificationDocuments());
+
 			obj.put(BUSINESSIDKEY, license.getApplicationNumber());
 			obj.put(TENANTIDKEY, wfTenantId);
 			obj.put(BUSINESSSERVICEKEY, businessServiceValue);
 			obj.put(MODULENAMEKEY, MODULENAMEVALUE);
 			obj.put(ACTIONKEY, license.getAction());
-			obj.put(COMMENTKEY, null);
+			obj.put(COMMENTKEY, license.getComment());
+			obj.put(DOCUMENTSKEY, documents);
 			array.add(obj);
 		}
 

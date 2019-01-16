@@ -43,7 +43,7 @@ public class LegacyIndexConsumerConfig implements ApplicationRunner {
 	@Value("${spring.kafka.bootstrap.servers}")
     private String brokerAddress;
 	
-	@Value("${indexer.legacyindex.consumer.group}")
+	@Value("${spring.kafka.consumer.group}")
     private String consumerGroup;
 	
 	@Value("${egov.core.legacyindex.topic.name}")
@@ -85,7 +85,6 @@ public class LegacyIndexConsumerConfig implements ApplicationRunner {
     	for(String excludeTopic: excludeArray) {
     		if(topicsList.contains(excludeTopic)) noOfExculdedTopics++;
     	}
-    	log.info("topicsList: "+topicsList);
     	String[] topicsArray = new String[topicsList.size() - noOfExculdedTopics];
     	int i = 0;
     	for(String topic : topicsList){

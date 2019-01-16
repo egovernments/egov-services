@@ -43,7 +43,7 @@ public class ReindexConsumerConfig implements ApplicationRunner {
 	@Value("${spring.kafka.bootstrap.servers}")
     private String brokerAddress;
 	
-	@Value("${indexer.reindex.consumer.group}")
+	@Value("${spring.kafka.consumer.group}")
     private String consumerGroup;
 	
 	@Value("${egov.core.reindex.topic.name}")

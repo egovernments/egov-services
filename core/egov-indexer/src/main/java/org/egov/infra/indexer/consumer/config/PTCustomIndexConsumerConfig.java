@@ -40,7 +40,7 @@ public class PTCustomIndexConsumerConfig implements ApplicationRunner {
 	@Value("${spring.kafka.bootstrap.servers}")
     private String brokerAddress;
 	
-	@Value("${indexer.pt.customindex.consumer.group}")
+	@Value("${spring.kafka.consumer.group}")
     private String consumerGroup;
 	
 	@Value("${egov.indexer.pt.create.topic.name}")

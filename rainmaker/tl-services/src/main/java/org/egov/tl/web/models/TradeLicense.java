@@ -125,7 +125,11 @@ public class  TradeLicense   {
 
     CANCEL("CANCEL"),
 	  
-	PAY("PAY");
+    PAY("PAY"),
+	  
+    FORWARD("FORWARD"),
+     
+    MARK("MARK");
 
     private String value;
 

@@ -1,16 +1,24 @@
 package org.egov.wf.repository.rowmapper;
 
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.egov.common.contract.request.User;
-import org.egov.wf.web.models.*;
+import org.egov.wf.web.models.Action;
+import org.egov.wf.web.models.AuditDetails;
+import org.egov.wf.web.models.Document;
+import org.egov.wf.web.models.ProcessInstance;
+import org.egov.wf.web.models.State;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
-
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.*;
 
 @Component
 public class WorkflowRowMapper implements ResultSetExtractor<List<ProcessInstance>> {
@@ -24,7 +32,7 @@ public class WorkflowRowMapper implements ResultSetExtractor<List<ProcessInstanc
      * @throws DataAccessException
      */
     public List<ProcessInstance> extractData(ResultSet rs) throws SQLException, DataAccessException {
-        Map<String,ProcessInstance> processInstanceMap = new HashMap<>();
+        Map<String,ProcessInstance> processInstanceMap = new LinkedHashMap<>();
 
         while (rs.next()){
             String id = rs.getString("wf_id");

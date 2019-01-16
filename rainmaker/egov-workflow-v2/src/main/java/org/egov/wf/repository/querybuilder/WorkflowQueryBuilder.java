@@ -38,7 +38,7 @@ public class WorkflowQueryBuilder {
      * ORDER BY class for wf last modified time added to make search result in desc order 
      */
     private static final String STATE_JOIN_QUERY  = INNER_JOIN + " eg_wf_state_v2 st ON st.uuid = fp.pi_status " +
-            LEFT_OUTER_JOIN  + " eg_wf_action_v2 ac ON ac.currentState = st.uuid ORDER BY fp.wf_lastModifiedTime DESC";
+            LEFT_OUTER_JOIN  + " eg_wf_action_v2 ac ON ac.currentState = st.uuid";
 
     private static final String OUTER_QUERY = "SELECT fp.*,st.*,ac.*, st.uuid as st_uuid,st.tenantId as st_tenantId,"+
             " ac.uuid as ac_uuid,ac.tenantId as ac_tenantId,ac.action as ac_action FROM ( ";

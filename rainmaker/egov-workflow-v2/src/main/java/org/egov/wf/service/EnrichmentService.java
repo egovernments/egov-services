@@ -1,17 +1,28 @@
 package org.egov.wf.service;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.request.Role;
 import org.egov.common.contract.request.User;
 import org.egov.tracer.model.CustomException;
 import org.egov.wf.util.WorkflowUtil;
+import org.egov.wf.web.models.Action;
 import org.egov.wf.web.models.AuditDetails;
-import org.egov.wf.web.models.*;
+import org.egov.wf.web.models.BusinessService;
+import org.egov.wf.web.models.BusinessServiceRequest;
+import org.egov.wf.web.models.ProcessInstance;
+import org.egov.wf.web.models.ProcessInstanceRequest;
+import org.egov.wf.web.models.ProcessStateAndAction;
+import org.egov.wf.web.models.State;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
-
-import java.util.*;
 
 
 @Service
@@ -81,11 +92,11 @@ public class EnrichmentService {
             if(isTransition)
              state = processStateAndAction.getResultantState();
             else state = processStateAndAction.getCurrentState();
-            List<String> nextAction = new LinkedList<>();
+            List<Action> nextAction = new ArrayList<>();
             if(!CollectionUtils.isEmpty( state.getActions())){
                 state.getActions().forEach(action -> {
                     if(util.isRoleAvailable(roles,action.getRoles()))
-                        nextAction.add(action.getAction());
+                        nextAction.add(action);
                 });
             }
             processStateAndAction.getProcessInstanceFromRequest().setNextActions(nextAction);

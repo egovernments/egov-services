@@ -79,7 +79,7 @@ public class ProcessInstance   {
 
         @JsonProperty("nextActions")
         @Valid
-        private List<String> nextActions = null;
+        private List<Action> nextActions = null;
 
         @JsonProperty("stateSla")
         private Long stateSla = null;
@@ -105,7 +105,7 @@ public class ProcessInstance   {
         return this;
         }
 
-        public ProcessInstance addNextActionsItem(String nextActionsItem) {
+        public ProcessInstance addNextActionsItem(Action nextActionsItem) {
             if (this.nextActions == null) {
             this.nextActions = new ArrayList<>();
             }

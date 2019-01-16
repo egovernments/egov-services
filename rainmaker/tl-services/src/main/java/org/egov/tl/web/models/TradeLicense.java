@@ -154,7 +154,6 @@ public class  TradeLicense   {
         @JsonProperty("action")
         private ActionEnum action = null;
         
-        @NotNull
         @JsonProperty("assignee")
         private String assignee = null;
 

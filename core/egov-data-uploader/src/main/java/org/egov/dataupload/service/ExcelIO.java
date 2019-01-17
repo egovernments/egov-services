@@ -8,6 +8,7 @@ import org.egov.dataupload.model.Document;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
+import org.thymeleaf.util.StringUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -26,6 +27,22 @@ public class ExcelIO implements FileIO {
     private static final DataFormatter dataFormatter = new DataFormatter();
     private DateFormat format = new SimpleDateFormat("dd/MM/YYYY");
 
+
+
+    public boolean checkIfRowisEmpty(Row row, int lastColumn){
+        for (int colNum = 0; colNum < lastColumn; colNum++)
+        {
+            Cell cell = row.getCell(colNum, Row.MissingCellPolicy.RETURN_BLANK_AS_NULL);
+            if ((null == cell)|| StringUtils.isEmpty(cell.getStringCellValue())) {
+                continue;
+            }
+            else{
+                return false;
+            }
+        }
+        return true;
+    }
+
     @Override
     public Document read(InputStream stream) throws IOException {
         try (Workbook wb = WorkbookFactory.create(stream)) {
@@ -43,8 +60,8 @@ public class ExcelIO implements FileIO {
             for (int rowNum = rowStart; rowNum < (rowEnd + 1); rowNum++) {
                 List<Object> dataList = new ArrayList<>();
                 Row row = sheet.getRow(rowNum);
-                if (null == row) {
-                    continue;
+                if ((null == row)) {
+                    break;
                 }
                 int lastColumn;
                 if (rowNum == 0) {
@@ -52,6 +69,10 @@ public class ExcelIO implements FileIO {
                     lastColumn = totalRows;
                 } else {
                     lastColumn = Math.max(totalRows, row.getLastCellNum());
+                }
+                // end when empty row found
+                if(checkIfRowisEmpty(row,lastColumn)){
+                    break;
                 }
                 for (int colNum = 0; colNum < lastColumn; colNum++) {
                     Cell cell = row.getCell(colNum, Row.MissingCellPolicy.RETURN_BLANK_AS_NULL);

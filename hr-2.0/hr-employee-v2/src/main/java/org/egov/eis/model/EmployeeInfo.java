@@ -67,6 +67,8 @@ public class EmployeeInfo {
 
     @Size(min = 1, max = 256)
     private String code;
+    
+    private String uuid;
 
     @Size(max = 5)
     private String salutation;

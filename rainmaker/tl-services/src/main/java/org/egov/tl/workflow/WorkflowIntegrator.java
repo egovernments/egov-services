@@ -11,6 +11,7 @@ import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
@@ -93,7 +94,8 @@ public class WorkflowIntegrator {
 			obj.put(MODULENAMEKEY, MODULENAMEVALUE);
 			obj.put(ACTIONKEY, license.getAction());
 			obj.put(COMMENTKEY, license.getComment());
-			obj.put(ASSIGNEEKEY, uuidmap);
+			if (!StringUtils.isEmpty(license.getAssignee()))
+				obj.put(ASSIGNEEKEY, uuidmap);
 			obj.put(DOCUMENTSKEY, license.getWfDocumnets());
 			array.add(obj);
 		}

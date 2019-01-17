@@ -1,5 +1,7 @@
 package org.egov.tl.web.models;
 
+import java.util.List;
+
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
@@ -160,6 +162,9 @@ public class  TradeLicense   {
         
         @JsonProperty("assignee")
         private String assignee = null;
+        
+        @JsonProperty("wfDocumnets")
+        private List<Document> wfDocumnets;
 
               /**
    * Unique identifier (code) of the Trade license Status

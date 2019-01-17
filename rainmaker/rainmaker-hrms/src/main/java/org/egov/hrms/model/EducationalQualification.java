@@ -40,14 +40,9 @@
 
 package org.egov.hrms.model;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.NotNull;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 
 @Builder
 @AllArgsConstructor
@@ -56,33 +51,29 @@ import java.util.List;
 @Setter
 @ToString
 public class EducationalQualification {
-	private Long id;
+	private String id;
 
 	@NotNull
 	private String qualification;
 
-	private String majorSubject;
+	private String stream;
 
 	@NotNull
 	private Integer yearOfPassing;
 
 	private String university;
 
-	private List<String> documents = new ArrayList<String>();
+	@NonNull
+	private  String remarks;
 
-	private Long createdBy;
+	private String createdBy;
 
-	@DateTimeFormat(pattern = "dd/MM/yyyy")
-	@JsonFormat(pattern = "dd/MM/yyyy")
-	private Date createdDate;
+	private Long createdDate;
 
-	private Long lastModifiedBy;
+	private String lastModifiedBy;
 
-	@DateTimeFormat(pattern = "dd/MM/yyyy")
-	@JsonFormat(pattern = "dd/MM/yyyy")
-	private Date lastModifiedDate;
+	private Long lastModifiedDate;
 
-	private String tenantId;
 
 	@Override
 	public boolean equals(Object obj) {
@@ -103,10 +94,10 @@ public class EducationalQualification {
 				return false;
 		} else if (!id.equals(other.id))
 			return false;
-		if (majorSubject == null) {
-			if (other.majorSubject != null)
+		if (stream == null) {
+			if (other.stream != null)
 				return false;
-		} else if (!majorSubject.equals(other.majorSubject))
+		} else if (!stream.equals(other.stream))
 			return false;
 		if (qualification == null) {
 			if (other.qualification != null)

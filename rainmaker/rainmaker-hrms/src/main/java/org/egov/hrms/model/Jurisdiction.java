@@ -42,61 +42,31 @@ package org.egov.hrms.model;
 
 import lombok.*;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
+@Builder
 @AllArgsConstructor
+@EqualsAndHashCode
 @Getter
 @NoArgsConstructor
 @Setter
 @ToString
-@Builder
-public class EmployeeDocument {
+public class Jurisdiction {
 
-	private Long id;
+    private String id;
 
-	@NonNull
-	private Long employeeId;
+    @NotNull
+    @Size(min=2, max=100)
+    private String hierarchy;
 
-	@NonNull
-	private String document;
+    @NotNull
+    @Size(min=2, max=100)
+    private String boundary;
 
-	private String referenceType;
+    @NotNull
+    @Size(max=256)
+    private String boundaryType;
 
-	private Long referenceId;
-
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		EmployeeDocument other = (EmployeeDocument) obj;
-		if (document == null) {
-			if (other.document != null)
-				return false;
-		} else if (!document.equals(other.document))
-			return false;
-		if (employeeId == null) {
-			if (other.employeeId != null)
-				return false;
-		} else if (!employeeId.equals(other.employeeId))
-			return false;
-		if (referenceId == null) {
-			if (other.referenceId != null)
-				return false;
-		} else if (!referenceId.equals(other.referenceId))
-			return false;
-		if (referenceType == null) {
-			if (other.referenceType != null)
-				return false;
-		} else if (!referenceType.equals(other.referenceType)) {
-			return false;
-		}
-
-		return true;
-    }
-	
-	
 
 }

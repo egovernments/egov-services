@@ -40,14 +40,9 @@
 
 package org.egov.hrms.model;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.NotNull;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 
 @Builder
 @AllArgsConstructor
@@ -57,7 +52,7 @@ import java.util.List;
 @ToString
 public class DepartmentalTest {
 
-	private Long id;
+	private String id;
 
 	@NotNull
 	private String test;
@@ -67,21 +62,15 @@ public class DepartmentalTest {
 
 	private String remarks;
 
-	private List<String> documents = new ArrayList<String>();
 
-	private Long createdBy;
+	private String createdBy;
 
-	@DateTimeFormat(pattern = "dd/MM/yyyy")
-	@JsonFormat(pattern = "dd/MM/yyyy")
-	private Date createdDate;
+	private Long createdDate;
 
-	private Long lastModifiedBy;
+	private String lastModifiedBy;
 
-	@DateTimeFormat(pattern = "dd/MM/yyyy")
-	@JsonFormat(pattern = "dd/MM/yyyy")
-	private Date lastModifiedDate;
+	private Long lastModifiedDate;
 
-	private String tenantId;
 
 	@Override
 	public boolean equals(Object obj) {

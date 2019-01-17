@@ -40,16 +40,9 @@
 
 package org.egov.hrms.model;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.NotNull;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
-import static org.egov.hrms.utils.DateUtils.areDatesEqualWithoutTimePart;
 
 @Builder
 @AllArgsConstructor
@@ -59,52 +52,30 @@ import static org.egov.hrms.utils.DateUtils.areDatesEqualWithoutTimePart;
 @ToString
 public class ServiceHistory {
 
-	private Long id;
+	private String id;
 
 	@NotNull
 	private String serviceInfo;
 
 	@NotNull
-	@DateTimeFormat(pattern = "dd/MM/yyyy")
-	@JsonFormat(pattern = "dd/MM/yyyy")
-	private Date serviceFrom;
+	private Long serviceFrom;
 
 	@NotNull
-	@DateTimeFormat(pattern = "dd/MM/yyyy")
-	@JsonFormat(pattern = "dd/MM/yyyy")
-	private Date serviceTo;
+	private Long serviceTo;
 
-	private String department;
-
-	private String designation;
-
-	private Long position;
-
-	private String remarks;
-
+	@NonNull
 	private String orderNo;
 
-	private Boolean isAssignmentBased;
+	private  boolean isCurrentPosition;
 
-	private Long assignmentId;
+	private String createdBy;
 
-	private String city;
+	private Long createdDate;
 
-	private List<String> documents = new ArrayList<String>();
+	private String lastModifiedBy;
 
-	private Long createdBy;
+	private Long lastModifiedDate;
 
-	@DateTimeFormat(pattern = "dd/MM/yyyy")
-	@JsonFormat(pattern = "dd/MM/yyyy")
-	private Date createdDate;
-
-	private Long lastModifiedBy;
-
-	@DateTimeFormat(pattern = "dd/MM/yyyy")
-	@JsonFormat(pattern = "dd/MM/yyyy")
-	private Date lastModifiedDate;
-
-	private String tenantId;
 
 	@Override
 	public boolean equals(Object obj) {
@@ -130,18 +101,14 @@ public class ServiceHistory {
 				return false;
 		} else if (!orderNo.equals(other.orderNo))
 			return false;
-		if (remarks == null) {
-			if (other.remarks != null)
-				return false;
-		} else if (!remarks.equals(other.remarks))
-			return false;
 		if (serviceFrom == null) {
 			if (other.serviceFrom != null)
 				return false;
-		} else if (!areDatesEqualWithoutTimePart(serviceFrom, other.serviceFrom))
+		} else if (serviceFrom!= other.serviceFrom)
 			return false;
 		if (serviceInfo == null) {
             return other.serviceInfo == null;
 		} else return serviceInfo.equals(other.serviceInfo);
+
     }
 }

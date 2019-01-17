@@ -40,17 +40,14 @@
 
 package org.egov.hrms.model;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 import org.egov.hrms.model.enums.Gender;
 import org.egov.hrms.model.enums.UserType;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @Builder
@@ -68,101 +65,31 @@ public class User {
 	@Size(min=1, max=100)
 	private String userName;
 
-	@Size(max=64)
-	private String password;
-
-	@Size(max=5)
-	private String salutation;
 
 	@NotNull
 	@Size(min=3, max=100)
 	private String name;
 
+	@Size(max=10)
+	private String mobileNumber;
+
 	@Valid
 	@NotNull
 	private Gender gender;
 
-	@Size(max=10)
-	private String mobileNumber;
 
 	@Size(max=128)
 	private String emailId;
 
-	@Size(max=10)
-	private String altContactNumber;
-
-	@Size(max=10)
-	private String pan;
-
-	@Size(max=12)
-	private String aadhaarNumber;
-
-	@Size(max=300)
-	private String permanentAddress;
-
-	@Size(max=50)
-	private String permanentCity;
-
-	@Size(max=6)
-	private String permanentPinCode;
-
-	@Size(max=50)
-	private String correspondenceCity;
-
-	@Size(max=6)
-	private String correspondencePinCode;
-
-	@Size(max=300)
-	private String correspondenceAddress;
-
-	@NotNull
-	private Boolean active;
-
-	// FIXME : User service is expecting & sending dates in multiple formats. Fix a common standard for date formats.
-	@NotNull
-	private String dob;
-
-	// FIXME : User service is expecting & sending dates in multiple formats. Fix a common standard for date formats.
-	private String pwdExpiryDate;
-
-	@Size(max=5)
-	private String locale = "en_IN";
 
 	@Valid
 	@NotNull
 	private UserType type = UserType.EMPLOYEE;
 
-	private Boolean accountLocked;
 
 	@Valid
 	@NotNull
 	private List<Role> roles = new ArrayList<Role>();
-
-	@Size(max=100)
-	private String fatherOrHusbandName;
-
-	private String bloodGroup;
-
-	@Size(max=36)
-	private String photo;
-
-	@Size(max=36)
-	private String signature;
-
-	@Size(max=300)
-	private String identificationMark;
-
-	private Long createdBy;
-
-	@DateTimeFormat(pattern = "dd/MM/yyyy")
-	@JsonFormat(pattern = "dd-MM-yyyy hh:mm:ss")
-	private Date createdDate;
-
-	private Long lastModifiedBy;
-
-	@DateTimeFormat(pattern = "dd/MM/yyyy")
-	@JsonFormat(pattern = "dd-MM-yyyy hh:mm:ss")
-	private Date lastModifiedDate;
 
 	@Size(max=256)
 	private String tenantId;

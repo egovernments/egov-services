@@ -40,17 +40,9 @@
 
 package org.egov.hrms.model;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
-import org.springframework.format.annotation.DateTimeFormat;
 
-import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
-import static org.egov.hrms.utils.DateUtils.areDatesEqualWithoutTimePart;
 
 @AllArgsConstructor
 @Builder
@@ -60,58 +52,38 @@ import static org.egov.hrms.utils.DateUtils.areDatesEqualWithoutTimePart;
 @ToString
 public class Assignment {
 
-	private Long id;
+	private String id;
 
 	@NotNull
 	private Long position;
 
-	private Long fund;
-
-	private Long functionary;
-
-	private Long function;
+	@NotNull
+	private String designation;
 
 	@NotNull
 	private String department;
 
 	@NotNull
-	private String designation;
-
-	@Valid
-	private List<HODDepartment> hod = new ArrayList<HODDepartment>();
+	private Long fromDate;
 
 	@NotNull
-	private Boolean isPrimary;
-
-	@NotNull
-	@DateTimeFormat(pattern = "dd/MM/yyyy")
-	@JsonFormat(pattern = "dd/MM/yyyy")
-	private Date fromDate;
-
-	@NotNull
-	@DateTimeFormat(pattern = "dd/MM/yyyy")
-	@JsonFormat(pattern = "dd/MM/yyyy")
-	private Date toDate;
-
-	private Long grade;
+	private Long toDate;
 
 	private String govtOrderNumber;
 
-	private List<String> documents = new ArrayList<String>();
+	private  String reportingTo;
 
-	private Long createdBy;
+	private boolean isHOD;
 
-	@DateTimeFormat(pattern = "dd/MM/yyyy")
-	@JsonFormat(pattern = "dd/MM/yyyy")
-	private Date createdDate;
 
-	private Long lastModifiedBy;
+	private String createdBy;
 
-	@DateTimeFormat(pattern = "dd/MM/yyyy")
-	@JsonFormat(pattern = "dd/MM/yyyy")
-	private Date lastModifiedDate;
+	private Long createdDate;
 
-	private String tenantId;
+	private String lastModifiedBy;
+
+	private Long lastModifiedDate;
+
 
 	@Override
 	public boolean equals(Object obj) {
@@ -132,51 +104,21 @@ public class Assignment {
 				return false;
 		} else if (!designation.equals(other.designation))
 			return false;
-		if (documents == null) {
-			if (other.documents != null)
-				return false;
-		} else if (!documents.equals(other.documents))
-			return false;
 		if (fromDate == null) {
 			if (other.fromDate != null)
 				return false;
 		} 
-		else if (!areDatesEqualWithoutTimePart(fromDate, other.fromDate))
-			return false;
-		if (function == null) {
-			if (other.function != null)
-				return false;
-		} else if (!function.equals(other.function))
-			return false;
-		if (functionary == null) {
-			if (other.functionary != null)
-				return false;
-		} else if (!functionary.equals(other.functionary))
-			return false;
-		if (fund == null) {
-			if (other.fund != null)
-				return false;
-		} else if (!fund.equals(other.fund))
+		else if (fromDate != other.fromDate)
 			return false;
 		if (govtOrderNumber == null) {
 			if (other.govtOrderNumber != null)
 				return false;
 		} else if (!govtOrderNumber.equals(other.govtOrderNumber))
 			return false;
-		if (grade == null) {
-			if (other.grade != null)
-				return false;
-		} else if (!grade.equals(other.grade))
-			return false;
 		if (id == null) {
 			if (other.id != null)
 				return false;
 		} else if (!id.equals(other.id))
-			return false;
-		if (isPrimary == null) {
-			if (other.isPrimary != null)
-				return false;
-		} else if (!isPrimary.equals(other.isPrimary))
 			return false;
 		if (position == null) {
 			if (other.position != null)
@@ -185,7 +127,7 @@ public class Assignment {
 			return false;
 		if (toDate == null) {
 			return other.toDate == null;
-		} else return areDatesEqualWithoutTimePart(toDate, other.fromDate);
+		} else return (toDate== other.fromDate);
 	}
 	
   /*@Override

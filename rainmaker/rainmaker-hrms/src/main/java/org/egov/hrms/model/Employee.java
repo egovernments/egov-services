@@ -40,18 +40,12 @@
 
 package org.egov.hrms.model;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
-import org.egov.hrms.model.enums.MaritalStatus;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.Valid;
-import javax.validation.constraints.Max;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @AllArgsConstructor
@@ -65,133 +59,64 @@ public class Employee {
 
     private Long id;
 
+    private String uuid;
+
     @Size(min = 1, max = 256)
     private String code;
 
     @NotNull
-    @DateTimeFormat(pattern = "dd/MM/yyyy")
-    @JsonFormat(pattern = "dd/MM/yyyy")
-    private Date dateOfAppointment;
+    private String employeeStatus;
 
-    @DateTimeFormat(pattern = "dd/MM/yyyy")
-    @JsonFormat(pattern = "dd/MM/yyyy")
-    private Date dateOfJoining;
-
-    @DateTimeFormat(pattern = "dd/MM/yyyy")
-    @JsonFormat(pattern = "dd/MM/yyyy")
-    private Date dateOfRetirement;
+    @NonNull
+    private String employeeType;
 
     @NotNull
-    private Long employeeStatus;
+    private Long dateOfAppointment;
 
-    private Long recruitmentMode;
+    @NonNull
+    @Size(min = 1,max = 50)
+    private List<Jurisdiction> jurisdictions = new ArrayList<>();
 
-    private Long recruitmentType;
-
-    private Long recruitmentQuota;
-
-    @Max(100)
-    private Short retirementAge;
-
-    @DateTimeFormat(pattern = "dd/MM/yyyy")
-    @JsonFormat(pattern = "dd/MM/yyyy")
-    private Date dateOfResignation;
-
-    @DateTimeFormat(pattern = "dd/MM/yyyy")
-    @JsonFormat(pattern = "dd/MM/yyyy")
-    private Date dateOfTermination;
-
-    @NotNull
-    private Long employeeType;
 
     @Valid
     @NotNull
     @Size(min = 1)
     private List<Assignment> assignments = new ArrayList<>();
 
-    private List<Long> jurisdictions = new ArrayList<>();
-
-    private Long motherTongue;
-
-    private Long religion;
-
-    private Long community;
-
-    private Long category;
-
-    private Boolean physicallyDisabled;
-
-    private Boolean medicalReportProduced;
-
-    private Boolean transferredEmployee = false;
-
-    private List<Long> languagesKnown = new ArrayList<>();
-
     @Valid
-    @NotNull
-    private MaritalStatus maritalStatus;
-
-    private String passportNo;
-
-    private String gpfNo;
-
-    private Long bank;
-
-    private Long bankBranch;
-
-    @Size(max = 20)
-    private String bankAccount;
-
-    @Size(max = 20)
-    private String ifscCode;
-
-    private Long group;
-
-    @Size(max = 200)
-    private String placeOfBirth;
-
-    @Valid
+    @Size(max=25)
     private List<ServiceHistory> serviceHistory = new ArrayList<>();
 
-    @Valid
-    private List<Probation> probation = new ArrayList<>();
+
+    private boolean active;
 
     @Valid
-    private List<Regularisation> regularisation = new ArrayList<>();
-
-    @Valid
-    private List<TechnicalQualification> technical = new ArrayList<>();
-
-    @Valid
+    @Size(max=25)
     private List<EducationalQualification> education = new ArrayList<>();
 
     @Valid
+    @Size(max=25)
     private List<DepartmentalTest> test = new ArrayList<>();
 
+    @NotNull
+    @Size(max = 256)
+    private String tenantId;
+
     @Valid
-    @JsonProperty("APRDetails")
-    private List<APRDetail> aprDetails = new ArrayList<>();
+    @Size(max=50)
+    private List<EmployeeDocument> documents = new ArrayList<>();
 
-    private List<String> documents = new ArrayList<>();
+    private String createdBy;
 
-    private Long createdBy;
+    private Long createdDate;
 
-    @DateTimeFormat(pattern = "dd/MM/yyyy")
-    @JsonFormat(pattern = "dd/MM/yyyy")
-    private Date createdDate;
+    private String lastModifiedBy;
 
-    private Long lastModifiedBy;
-
-    @DateTimeFormat(pattern = "dd/MM/yyyy")
-    @JsonFormat(pattern = "dd/MM/yyyy")
-    private Date lastModifiedDate;
+    private Long lastModifiedDate;
 
     @Valid
     @NotNull
     private User user;
 
-    @NotNull
-    @Size(max = 256)
-    private String tenantId;
 
 }

@@ -40,13 +40,10 @@
 
 package org.egov.hrms.model;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.util.Date;
 
 @Builder
 @AllArgsConstructor
@@ -57,31 +54,16 @@ import java.util.Date;
 @ToString
 public class Role {
 
-	private Long id;
 
 	@NotNull
 	@Size(min=2, max=100)
     private String name;
 	
-	@NotNull
 	@Size(min=2, max=100)
     private String code;
 
 	@Size(max=256)
     private String description;
 
-	private Long createdBy;
-
-	@DateTimeFormat(pattern = "dd/MM/yyyy")
-	@JsonFormat(pattern = "dd/MM/yyyy")
-	private Date createdDate;
-
-	private Long lastModifiedBy;
-
-	@DateTimeFormat(pattern = "dd/MM/yyyy")
-	@JsonFormat(pattern = "dd/MM/yyyy")
-	private Date lastModifiedDate;
-
-	private String tenantId;
 
 }

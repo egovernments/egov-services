@@ -30,7 +30,7 @@ public class ActionValidator {
      * Validates create request
      * @param request The tradeLicense Create request
      */
-    public void validateCreateRequest(TradeLicenseRequest request){
+	public void validateCreateRequest(TradeLicenseRequest request){
         Map<String,String> errorMap = new HashMap<>();
 
         request.getLicenses().forEach(license -> {
@@ -60,8 +60,8 @@ public class ActionValidator {
      */
     public void validateUpdateRequest(TradeLicenseRequest request){
         validateDocumentsForUpdate(request);
-        validateRole(request);
-        validateAction(request);
+       // validateRole(request);
+       // validateAction(request);
         validateIds(request);
     }
 

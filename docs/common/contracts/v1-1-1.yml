@@ -143,6 +143,10 @@ definitions:
         type: string
         description: Unique name of the role
         maxLength: 64
+      code: 
+        type: string
+        description: Unique code of the role
+        maxLength: 64
       description:
         type: string
         description: brief description of the role

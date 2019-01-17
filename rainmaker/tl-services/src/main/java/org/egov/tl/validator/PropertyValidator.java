@@ -2,6 +2,7 @@ package org.egov.tl.validator;
 
 import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
+import com.jayway.jsonpath.PathNotFoundException;
 import org.apache.commons.lang3.StringUtils;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.tl.repository.ServiceRequestRepository;
@@ -55,7 +56,11 @@ public class PropertyValidator {
                     String propertyIdFromSearch = documentContext.read(PROPERTY_JSONPATH);
                     if (propertyIdFromSearch == null)
                         throw new CustomException("INVALID PROPERTY", " The propertyId " + license.getPropertyId() + " does not exist");
-                } catch (Exception e) {
+                }
+                catch (PathNotFoundException e){
+                    throw new CustomException("INVALID PROPERTY", " The propertyId " + license.getPropertyId() + " does not exist");
+                }
+                catch (Exception e) {
                     throw new CustomException("INVALID PROPERTY", " Failed to parse the response from property search on id " + license.getPropertyId());
                 }
             }

@@ -41,6 +41,8 @@ public class WorkflowIntegrator {
 	private static final String DOCUMENTSKEY = "documents";
 	
 	private static final String ASSIGNEEKEY = "assignee";
+	
+	private static final String UUIDKEY = "uuid";
 
 	private static final String MODULENAMEVALUE = "TL";
 
@@ -83,14 +85,15 @@ public class WorkflowIntegrator {
 		for (TradeLicense license : tradeLicenseRequest.getLicenses()) {
 
 			JSONObject obj = new JSONObject();
-			
+			Map<String, String> uuidmap = new HashMap<>();
+			uuidmap.put(UUIDKEY, license.getAssignee());
 			obj.put(BUSINESSIDKEY, license.getApplicationNumber());
 			obj.put(TENANTIDKEY, wfTenantId);
 			obj.put(BUSINESSSERVICEKEY, businessServiceValue);
 			obj.put(MODULENAMEKEY, MODULENAMEVALUE);
 			obj.put(ACTIONKEY, license.getAction());
 			obj.put(COMMENTKEY, license.getComment());
-			obj.put(ASSIGNEEKEY, license.getAssignee());
+			obj.put(ASSIGNEEKEY, uuidmap);
 			obj.put(DOCUMENTSKEY, license.getWfDocumnets());
 			array.add(obj);
 		}

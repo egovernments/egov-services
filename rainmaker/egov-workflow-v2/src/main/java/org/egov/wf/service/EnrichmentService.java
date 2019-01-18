@@ -264,7 +264,7 @@ public class EnrichmentService {
             Long timeSpent = processStateAndAction.getProcessInstanceFromRequest().getAuditDetails().getLastModifiedTime()
                            - processStateAndAction.getProcessInstanceFromDb().getAuditDetails().getLastModifiedTime();
             processStateAndAction.getProcessInstanceFromRequest().setBusinesssServiceSla(businesssServiceSlaRemaining-timeSpent);
-            if(!isStateChanging)
+            if(!isStateChanging && stateSlaRemaining!=null)
                 processStateAndAction.getProcessInstanceFromRequest().setStateSla(stateSlaRemaining-timeSpent);
         }
     }
@@ -274,11 +274,14 @@ public class EnrichmentService {
      * Sets the businessServiceSla for search output
      * @param processInstances The list of processInstance
      */
-    public void enrichBusinessServiceSlaForSearch(List<ProcessInstance> processInstances){
+    public void enrichAndUpdateSlaForSearch(List<ProcessInstance> processInstances){
         processInstances.forEach(processInstance -> {
             Long businessServiceSlaInDb = processInstance.getBusinesssServiceSla();
+            Long stateSlaInDB = processInstance.getStateSla();
             Long timeSinceLastAction = System.currentTimeMillis() - processInstance.getAuditDetails().getLastModifiedTime();
             processInstance.setBusinesssServiceSla(businessServiceSlaInDb-timeSinceLastAction);
+            if(stateSlaInDB!=null)
+                processInstance.setStateSla(stateSlaInDB-timeSinceLastAction);
         });
     }
 

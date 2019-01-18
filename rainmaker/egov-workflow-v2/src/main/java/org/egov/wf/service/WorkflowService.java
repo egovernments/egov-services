@@ -80,7 +80,7 @@ public class WorkflowService {
             return processInstances;
         enrichmentService.enrichUsersFromSearch(processInstances);
         enrichmentService.enrichNextActionForSearch(requestInfo,processInstances);
-        enrichmentService.enrichBusinessServiceSlaForSearch(processInstances);
+        enrichmentService.enrichAndUpdateSlaForSearch(processInstances);
         return processInstances;
     }
 

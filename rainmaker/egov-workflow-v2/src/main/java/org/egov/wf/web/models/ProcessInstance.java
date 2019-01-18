@@ -101,7 +101,9 @@ public class ProcessInstance   {
             if (this.documents == null) {
             this.documents = new ArrayList<>();
             }
-        this.documents.add(documentsItem);
+            if(!this.documents.contains(documentsItem))
+                this.documents.add(documentsItem);
+
         return this;
         }
 

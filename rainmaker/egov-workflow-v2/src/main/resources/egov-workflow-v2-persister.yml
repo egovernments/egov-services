@@ -187,6 +187,8 @@ serviceMaps:
           - jsonPath: $.BusinessServices.*.auditDetails.lastModifiedBy
 
           - jsonPath: $.BusinessServices.*.auditDetails.lastModifiedTime
+          
+          - jsonPath: $.BusinessServices.*.uuid
 
 
 

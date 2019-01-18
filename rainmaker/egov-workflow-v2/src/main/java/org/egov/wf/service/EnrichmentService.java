@@ -68,8 +68,11 @@ public class EnrichmentService {
                     document.setId(UUID.randomUUID().toString());
                 });
             }
-            enrichBusinessServiceSlaForTransition(processStateAndAction);
-            processStateAndAction.getProcessInstanceFromRequest().setStateSla(processStateAndAction.getResultantState().getSla());
+            Action action = processStateAndAction.getAction();
+            Boolean isStateChanging = (action.getCurrentState().equalsIgnoreCase( action.getNextState())) ? false : true;
+            if(isStateChanging)
+                processStateAndAction.getProcessInstanceFromRequest().setStateSla(processStateAndAction.getResultantState().getSla());
+            enrichAndUpdateSlaForTransition(processStateAndAction,isStateChanging);
             setNextActions(requestInfo,processStateAndActions,true);
         });
         enrichUsers(processStateAndActions);
@@ -254,12 +257,15 @@ public class EnrichmentService {
      * Sets the businessServiceSla when the _transition api is called
      * @param processStateAndAction The processStateAndAction object of the transition request
      */
-    private void enrichBusinessServiceSlaForTransition(ProcessStateAndAction processStateAndAction){
+    private void enrichAndUpdateSlaForTransition(ProcessStateAndAction processStateAndAction,Boolean isStateChanging){
         if(processStateAndAction.getProcessInstanceFromDb()!=null){
-            Long slaOfPreviousState = processStateAndAction.getProcessInstanceFromDb().getBusinesssServiceSla();
+            Long businesssServiceSlaRemaining = processStateAndAction.getProcessInstanceFromDb().getBusinesssServiceSla();
+            Long stateSlaRemaining = processStateAndAction.getProcessInstanceFromDb().getStateSla();
             Long timeSpent = processStateAndAction.getProcessInstanceFromRequest().getAuditDetails().getLastModifiedTime()
                            - processStateAndAction.getProcessInstanceFromDb().getAuditDetails().getLastModifiedTime();
-            processStateAndAction.getProcessInstanceFromRequest().setBusinesssServiceSla(slaOfPreviousState-timeSpent);
+            processStateAndAction.getProcessInstanceFromRequest().setBusinesssServiceSla(businesssServiceSlaRemaining-timeSpent);
+            if(!isStateChanging)
+                processStateAndAction.getProcessInstanceFromRequest().setStateSla(stateSlaRemaining-timeSpent);
         }
     }
 

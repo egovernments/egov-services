@@ -186,16 +186,20 @@ public class EnrichmentService {
         List<BusinessService> businessServices = request.getBusinessServices();
         AuditDetails auditDetails = util.getAuditDetails(requestInfo.getUserInfo().getUuid(),true);
         businessServices.forEach(businessService -> {
+        	
+        	String tenantId = businessService.getTenantId();
             businessService.setUuid(UUID.randomUUID().toString());
             businessService.setAuditDetails(auditDetails);
             businessService.getStates().forEach(state -> {
                 state.setAuditDetails(auditDetails);
                 state.setUuid(UUID.randomUUID().toString());
+                state.setTenantId(tenantId);
                 if(!CollectionUtils.isEmpty(state.getActions()))
                     state.getActions().forEach(action -> {
                         action.setAuditDetails(auditDetails);
                         action.setUuid(UUID.randomUUID().toString());
                         action.setCurrentState(state.getUuid());
+                        action.setTenantId(tenantId);
                     });
             });
             enrichNextState(businessService);

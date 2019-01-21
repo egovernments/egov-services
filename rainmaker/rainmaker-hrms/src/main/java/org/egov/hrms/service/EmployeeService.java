@@ -65,6 +65,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
+import java.time.Instant;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -81,14 +82,10 @@ public class EmployeeService {
 	@Autowired
 	private ServiceHistoryService serviceHistoryService;
 
-	@Autowired
-	private ProbationService probationService;
 
 	@Autowired
 	private RegularisationService regularisationService;
 
-	@Autowired
-	private TechnicalQualificationService technicalQualificationService;
 
 	@Autowired
 	private EducationalQualificationService educationalQualificationService;
@@ -96,14 +93,9 @@ public class EmployeeService {
 	@Autowired
 	private DepartmentalTestService departmentalTestService;
 
-	@Autowired
-	private APRDetailService aprDetailService;
 
 	@Autowired
 	private EmployeeJurisdictionService employeeJurisdictionService;
-
-	@Autowired
-	private EmployeeLanguageService employeeLanguageService;
 
 	@Autowired
 	private EmployeeDocumentsService employeeDocumentsService;
@@ -114,20 +106,14 @@ public class EmployeeService {
 	@Autowired
 	private AssignmentRepository assignmentRepository;
 
-	@Autowired
-	private HODDepartmentRepository hodDepartmentRepository;
 
 	@Autowired
 	private ServiceHistoryRepository serviceHistoryRepository;
 
-	@Autowired
-	private ProbationRepository probationRepository;
 
 	@Autowired
 	private RegularisationRepository regularisationRepository;
 
-	@Autowired
-	private TechnicalQualificationRepository technicalQualificationRepository;
 
 	@Autowired
 	private EducationalQualificationRepository educationalQualificationRepository;
@@ -135,14 +121,10 @@ public class EmployeeService {
 	@Autowired
 	private DepartmentalTestRepository departmentalTestRepository;
 
-	@Autowired
-	private APRDetailRepository aprDetailRepository;
 
 	@Autowired
 	private EmployeeJurisdictionRepository employeeJurisdictionRepository;
 
-	@Autowired
-	private EmployeeLanguageRepository employeeLanguageRepository;
 
 	@Autowired
 	private UserService userService;
@@ -216,7 +198,7 @@ public class EmployeeService {
 			List<EmployeeDocument> employeeDocuments = employeeRepository.getDocumentsForListOfEmployeeIds(ids,
 					empCriteria.getTenantId());
 			employeeHelper.mapDocumentsWithEmployees(empInfoList, employeeDocuments);
-		}
+ 		}
 
 		empCriteria.setId(idSearchCriteria);
 		return empInfoList;
@@ -272,25 +254,13 @@ public class EmployeeService {
 			throw new EmployeeIdNotFoundException(employeeId);
 
 		EmployeeCriteria employeeCriteria = EmployeeCriteria.builder().id(ids).tenantId(tenantId).build();
-		User user = userService.getUsers(employeeCriteria, requestInfo).get(0);
 
-		user.setBloodGroup(
-				isEmpty(user.getBloodGroup()) ? null : BloodGroup.fromValue(user.getBloodGroup()).toString());
-		employee.setUser(user);
 
-		employee.setLanguagesKnown(employeeLanguageRepository.findByEmployeeId(employeeId, tenantId));
 		employee.setAssignments(assignmentRepository.findByEmployeeId(employeeId, tenantId));
-		employee.getAssignments().forEach(assignment -> {
-			assignment.setHod(hodDepartmentRepository.findByAssignmentId(assignment.getId(), tenantId));
-		});
 		employee.setServiceHistory(serviceHistoryRepository.findByEmployeeId(employeeId, tenantId));
-		employee.setProbation(probationRepository.findByEmployeeId(employeeId, tenantId));
 		employee.setJurisdictions(employeeJurisdictionRepository.findByEmployeeId(employeeId, tenantId));
-		employee.setRegularisation(regularisationRepository.findByEmployeeId(employeeId, tenantId));
-		employee.setTechnical(technicalQualificationRepository.findByEmployeeId(employeeId, tenantId));
 		employee.setEducation(educationalQualificationRepository.findByEmployeeId(employeeId, tenantId));
 		employee.setTest(departmentalTestRepository.findByEmployeeId(employeeId, tenantId));
-		employee.setAprDetails(aprDetailRepository.findByEmployeeId(employeeId, tenantId));
 		employeeDocumentsService.populateDocumentsInRespectiveObjects(employee);
 
 		log.debug("After Employee Search: " + employee);
@@ -306,81 +276,93 @@ public class EmployeeService {
 
 	public Employee createAsync(EmployeeRequest employeeRequest)
 			throws UserException, IdGenerationException {
-		Employee employee = employeeRequest.getEmployee();
-		RequestInfo requestInfo = employeeRequest.getRequestInfo();
 		// FIXME : Setting ts as null in RequestInfo as hr is following
 		// common-contracts with ts as Date
 		// & ID Generation Service is following ts as epoch
-		requestInfo.setTs(null);
-		RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper(requestInfo);
-		System.err.println("createAsync  requestInfoWrapper" + requestInfoWrapper);
+
+//		System.err.println("createAsync  requestInfoWrapper" + requestInfoWrapper);
 		// RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
 
-		Map<String, List<String>> hrConfigurations = hrMastersService.getHRConfigurations(employee.getTenantId(),
-				requestInfoWrapper);
-
-		if (hrConfigurations.get("Autogenerate_employeecode").get(0).equalsIgnoreCase("Y")) {
-			employee.setCode(getEmployeeCode(employee.getTenantId(), requestInfo));
-		}
-
-		UserRequest userRequest = employeeHelper.getUserRequest(employeeRequest);
-		userRequest.getUser().setBloodGroup(
-				isEmpty(userRequest.getUser().getBloodGroup()) ? null : userRequest.getUser().getBloodGroup());
-		if (hrConfigurations.get("Autogenerate_username").get(0).equalsIgnoreCase("Y")) {
-			userRequest.getUser().setUserName(employee.getCode());
-		}
+//		Map<String, List<String>> hrConfigurations = hrMastersService.getHRConfigurations(employee.getTenantId(),
+//				requestInfoWrapper);
+//
+//		if (hrConfigurations.get("Autogenerate_employeecode").get(0).equalsIgnoreCase("Y")) {
+//			employee.setCode(getEmployeeCode(employee.getTenantId(), requestInfo));
+//		}
+//
+//		if (hrConfigurations.get("Autogenerate_username").get(0).equalsIgnoreCase("Y")) {
+//			userRequest.getUser().setUserName(employee.getCode());
+//		}
 
 		// FIXME : Fix a common standard for date formats in User Service.
+
+//		SMSUtils smsUtils = new SMSUtils();
+//		smsUtils.processSMS(user);
+		enrichCreateRequest(employeeRequest);
+//pushToTopic
+		return employeeRequest.getEmployee();
+	}
+
+	private void enrichCreateRequest(EmployeeRequest employeeRequest) {
+		Employee employee = employeeRequest.getEmployee();
+		RequestInfo requestInfo = employeeRequest.getRequestInfo();
+		requestInfo.setTs(null);
+		RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper(requestInfo);
+
+		employee.getJurisdictions().forEach(jurisdiction -> {
+			jurisdiction.setId(UUID.randomUUID().toString());
+		});
+		employee.getAssignments().forEach(assignment -> {
+			assignment.setId(UUID.randomUUID().toString());
+		});
+		employee.getServiceHistory().forEach(serviceHistory -> {
+			serviceHistory.setId(UUID.randomUUID().toString());
+		});
+		employee.getEducation().forEach(educationalQualification -> {
+			educationalQualification.setId(UUID.randomUUID().toString());
+		});
+		employee.getTest().forEach(departmentalTest -> {
+			departmentalTest.setId(UUID.randomUUID().toString());
+		});
+		employee.setCreatedBy(requestInfo.getUserInfo().getUserName());
+		Instant instant = Instant.now()
+		employee.setCreatedDate(instant.getEpochSecond());
+
+
+
+
+		UserRequest userRequest = employeeHelper.getUserRequest(employeeRequest);
 		UserResponse userResponse = userService.createUser(userRequest);
 		User user = userResponse.getUser().get(0);
 
 		employee.setId(user.getId());
+		employee.setUuid(user.getUuid());
 		employee.setUser(user);
 
 		employeeHelper.populateDefaultDataForCreate(employeeRequest);
 
-		create(employeeRequest);
-//		SMSUtils smsUtils = new SMSUtils();
-//		smsUtils.processSMS(user);
-		return employee;
+//		create(employeeRequest);
+
 	}
 
 	@Transactional
 	public void create(EmployeeRequest employeeRequest) {
 		Employee employee = employeeRequest.getEmployee();
+
+
 		employeeRepository.save(employee);
 		if(!CollectionUtils.isEmpty(employeeRequest.getEmployee().getJurisdictions())) {
 			employeeJurisdictionRepository.save(employee);
 		}
-		if (!isEmpty(employee.getLanguagesKnown())) {
-			employeeLanguageRepository.save(employee);
-		}
 		assignmentRepository.save(employeeRequest);
-		employee.getAssignments().forEach((assignment) -> {
-			if (!isEmpty(assignment.getHod())) {
-				hodDepartmentRepository.save(assignment, employee.getTenantId());
-			}
-		});
 		if (!isEmpty(employee.getServiceHistory())) {
 			serviceHistoryRepository.save(employeeRequest);
-		}
-		if (!isEmpty(employee.getProbation())) {
-			probationRepository.save(employeeRequest);
-		}
-		if (!isEmpty(employee.getRegularisation())) {
-			regularisationRepository.save(employeeRequest);
-		}
-		if (!isEmpty(employee.getTechnical())) {
-			technicalQualificationRepository.save(employeeRequest);
 		}
 		if (!isEmpty(employee.getEducation())) {
 			educationalQualificationRepository.save(employeeRequest);
 		}
 		if (!isEmpty(employee.getTest())) {
 			departmentalTestRepository.save(employeeRequest);
-		}
-		if (!isEmpty(employee.getAprDetails())) {
-			aprDetailRepository.save(employeeRequest);
 		}
 		kafkaTemplate.send(propertiesManager.getFinanceEmployeeTopic(),
 				propertiesManager.getFinanceEmployeeKey(), employeeRequest);
@@ -398,11 +380,11 @@ public class EmployeeService {
 
 	public Employee updateAsync(EmployeeRequest employeeRequest) throws UserException {
 
+		enrichUpdateRequest(employeeRequest)
+
 		Employee employee = employeeRequest.getEmployee();
 
 		UserRequest userRequest = employeeHelper.getUserRequest(employeeRequest);
-		userRequest.getUser().setBloodGroup(
-				isEmpty(userRequest.getUser().getBloodGroup()) ? null : userRequest.getUser().getBloodGroup());
 
 		UserResponse userResponse = userService.updateUser(userRequest.getUser().getId(), userRequest);
 		User user = userResponse.getUser().get(0);
@@ -442,6 +424,9 @@ public class EmployeeService {
 		return employee;
 	}
 
+	private void enrichUpdateRequest(EmployeeRequest employeeRequest) {
+	}
+
 	public Employee updateEmployee(EmployeeRequest employeeRequest) throws UserException {
 		Employee employee = getEmployee(employeeRequest.getEmployee().getId(),
 				employeeRequest.getEmployee().getTenantId(), employeeRequest.getRequestInfo());
@@ -468,16 +453,12 @@ public class EmployeeService {
 	public void update(EmployeeRequest employeeRequest) {
 		Employee employee = employeeRequest.getEmployee();
 		employeeRepository.update(employee);
-		employeeLanguageService.update(employee);
 		employeeJurisdictionService.update(employee);
 		assignmentService.update(employee);
 		departmentalTestService.update(employee);
 		serviceHistoryService.update(employee);
-		probationService.update(employee);
 		regularisationService.update(employee);
-		technicalQualificationService.update(employee);
 		educationalQualificationService.update(employee);
-		aprDetailService.update(employee);
 		employeeDocumentsService.update(employee);
 
 		/*

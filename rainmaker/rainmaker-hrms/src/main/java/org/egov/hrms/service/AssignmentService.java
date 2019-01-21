@@ -46,7 +46,6 @@ import org.egov.hrms.model.HODDepartment;
 import org.egov.hrms.model.enums.EntityType;
 import org.egov.hrms.repository.AssignmentRepository;
 import org.egov.hrms.repository.EmployeeDocumentsRepository;
-import org.egov.hrms.repository.HODDepartmentRepository;
 import org.egov.hrms.web.contract.AssignmentGetRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -64,9 +63,6 @@ public class AssignmentService {
 	private AssignmentRepository assignmentRepository;
 
 	@Autowired
-	private HODDepartmentRepository hodDepartmentRepository;
-
-	@Autowired
 	private EmployeeDocumentsRepository employeeDocumentsRepository;
 
 	public List<Assignment> getAssignments(Long employeeId, AssignmentGetRequest assignmentGetRequest) {
@@ -78,42 +74,13 @@ public class AssignmentService {
 		employee.getAssignments().forEach((assignment) -> {
 			if (needsInsert(assignment, assignments)) {
 				assignmentRepository.insert(assignment, employee.getId());
-				if (assignment.getHod() != null) {
-					hodDepartmentRepository.save(assignment, employee.getTenantId());
-				}
 			} else if (needsUpdate(assignment, assignments)) {
 				assignment.setTenantId(employee.getTenantId());
 				assignmentRepository.update(assignment);
-				if (!isEmpty(assignment.getHod())) {
-					updateHod(assignment, employee.getTenantId());
-				}
 			}
 		});
 		deleteAssignmentsInDBThatAreNotInInput(employee.getAssignments(), assignments, employee.getId(),
 				employee.getTenantId());
-	}
-
-	private void updateHod(Assignment assignment, String tenantId) {
-		List<HODDepartment> hodDepartments = hodDepartmentRepository.findByAssignmentId(assignment.getId(), tenantId);
-		List<String> hodsFromDb = hodDepartments.stream().map(hod -> hod.getDepartment()).collect(Collectors.toList());
-		insertHodIfNotExistsInDb(assignment.getHod(), hodsFromDb, assignment.getId(), tenantId);
-		deleteHodsInDbThatAreNotInInput(assignment.getHod(), hodsFromDb, assignment.getId(), tenantId);
-	}
-
-	private void insertHodIfNotExistsInDb(List<HODDepartment> hods, List<String> hodsFromDb, Long assignmentId,
-			String tenantId) {
-		for (HODDepartment hod : hods) {
-			if (isEmpty(hodsFromDb) || !hodsFromDb.contains(hod.getDepartment())) {
-				hodDepartmentRepository.insert(assignmentId, hod.getDepartment(), tenantId);
-			}
-		}
-	}
-
-	private void deleteHodsInDbThatAreNotInInput(List<HODDepartment> hods, List<String> hodsFromDb, Long assignmentId,
-			String tenantId) {
-		List<String> hodIdsToDelete = getListOfHodIdsToDelete(hods, hodsFromDb);
-		if (!isEmpty(hodIdsToDelete))
-			hodDepartmentRepository.delete(hodIdsToDelete, assignmentId, tenantId);
 	}
 
 	private List<String> getListOfHodIdsToDelete(List<HODDepartment> hods, List<String> hodsFromDb) {
@@ -137,7 +104,6 @@ public class AssignmentService {
 		List<Long> assignmentsIdsToDelete = assignmentsToDelete.stream().map(Assignment::getId)
 				.collect(Collectors.toList());
 		if (!assignmentsIdsToDelete.isEmpty()) {
-			hodDepartmentRepository.delete(assignmentsIdsToDelete, tenantId);
 			employeeDocumentsRepository.deleteForReferenceIds(employeeId, EntityType.ASSIGNMENT, assignmentsIdsToDelete, tenantId);
 			assignmentRepository.delete(assignmentsIdsToDelete, employeeId, tenantId);
 		}

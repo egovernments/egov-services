@@ -35,38 +35,37 @@ import lombok.ToString;
 @EqualsAndHashCode(of = {"tenantId","businessServiceId","state"})
 public class State   {
         @JsonProperty("uuid")
-        private String uuid = null;
+        private String uuid;
 
         @JsonProperty("tenantId")
-        private String tenantId = null;
+        private String tenantId;
 
         @JsonProperty("businessServiceId")
-        private String businessServiceId = null;
+        private String businessServiceId;
 
         @JsonProperty("sla")
-        private Long sla = null;
+        private Long sla;
 
         @JsonProperty("state")
-        private String state = null;
+        private String state;
 
         @JsonProperty("applicationStatus")
-        private String applicationStatus = null;
+        private String applicationStatus;
 
         @JsonProperty("docUploadRequired")
-        private Boolean docUploadRequired = null;
+        private Boolean docUploadRequired;
 
         @JsonProperty("isStartState")
-        private Boolean isStartState = null;
+        private Boolean isStartState;
 
         @JsonProperty("isTerminateState")
-        private Boolean isTerminateState = null;
+        private Boolean isTerminateState;
 
         @JsonProperty("actions")
         @Valid
-        private List<Action> actions = null;
+        private List<Action> actions;
 
-        @JsonIgnore
-        private AuditDetails auditDetails = null;
+        private AuditDetails auditDetails;
 
 
         public State addActionsItem(Action actionsItem) {

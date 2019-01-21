@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -64,7 +65,7 @@ public class State   {
         @Valid
         private List<Action> actions = null;
 
-        @JsonProperty("auditDetails")
+        @JsonIgnore
         private AuditDetails auditDetails = null;
 
 

@@ -1,6 +1,8 @@
 package org.egov.wf.web.models;
 
 import java.util.Objects;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import io.swagger.annotations.ApiModel;
@@ -48,7 +50,7 @@ public class Action   {
         @Valid
         private List<String> roles = null;
 
-        @JsonProperty("auditDetails")
+        @JsonIgnore
         private AuditDetails auditDetails = null;
 
 

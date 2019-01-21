@@ -60,6 +60,7 @@ public class TransitionService {
         for(ProcessInstance processInstance: request.getProcessInstances()){
             ProcessStateAndAction processStateAndAction = new ProcessStateAndAction();
             processStateAndAction.setProcessInstanceFromRequest(processInstance);
+            processStateAndAction.getProcessInstanceFromRequest().setModuleName(businessService.getBusiness());
             processStateAndAction.setProcessInstanceFromDb(idToProcessInstanceFromDbMap.get(processInstance.getBusinessId()));
             State currentState = null;
             if(processStateAndAction.getProcessInstanceFromDb()!=null)

@@ -46,9 +46,6 @@ public class ProcessInstance   {
         @JsonProperty("businessService")
         private String businessService = null;
 
-        @JsonProperty("module")
-        private String module;
-
         @NotNull
         @JsonProperty("businessId")
         private String businessId = null;

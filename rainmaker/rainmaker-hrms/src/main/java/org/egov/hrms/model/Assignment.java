@@ -75,14 +75,7 @@ public class Assignment {
 
 	private boolean isHOD;
 
-
-	private String createdBy;
-
-	private Long createdDate;
-
-	private String lastModifiedBy;
-
-	private Long lastModifiedDate;
+	private AuditDetails auditDetails;
 
 
 	@Override

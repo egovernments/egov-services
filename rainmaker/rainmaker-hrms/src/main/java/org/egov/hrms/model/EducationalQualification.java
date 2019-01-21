@@ -66,14 +66,7 @@ public class EducationalQualification {
 	@NonNull
 	private  String remarks;
 
-	private String createdBy;
-
-	private Long createdDate;
-
-	private String lastModifiedBy;
-
-	private Long lastModifiedDate;
-
+	private AuditDetails auditDetails;
 
 	@Override
 	public boolean equals(Object obj) {

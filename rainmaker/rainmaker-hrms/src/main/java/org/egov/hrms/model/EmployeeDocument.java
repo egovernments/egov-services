@@ -41,6 +41,7 @@
 package org.egov.hrms.model;
 
 import lombok.*;
+import org.apache.kafka.common.protocol.types.Field;
 
 @AllArgsConstructor
 @Getter
@@ -50,7 +51,7 @@ import lombok.*;
 @Builder
 public class EmployeeDocument {
 
-	private Long id;
+	private String id;
 
 	@NonNull
 	private Long employeeId;

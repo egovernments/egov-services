@@ -58,7 +58,7 @@ public class EmployeeResponse {
 	@JsonProperty("ResponseInfo")
 	private ResponseInfo responseInfo;
 
-	@JsonProperty("Employee")
-	private List<Employee> employee;
+	@JsonProperty("Employees")
+	private List<Employee> employees;
 
 }

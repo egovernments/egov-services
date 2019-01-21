@@ -78,7 +78,7 @@ public class WorkflowConfig {
     @Value("${egov.user.search.endpoint}")
     private String userSearchEndpoint;
 
-    @Value("{egov.wf.inbox.assignedonly}")
+    @Value("${egov.wf.inbox.assignedonly}")
     private Boolean assignedOnly;
 
 

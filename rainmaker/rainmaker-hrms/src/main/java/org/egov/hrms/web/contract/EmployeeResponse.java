@@ -46,7 +46,7 @@ import org.egov.common.contract.response.ResponseInfo;
 import org.egov.hrms.model.Employee;
 
 import java.util.List;
-
+@Builder
 @AllArgsConstructor
 @EqualsAndHashCode
 @Getter

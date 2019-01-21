@@ -47,10 +47,8 @@ import org.egov.hrms.config.ApplicationProperties;
 import org.egov.hrms.config.PropertiesManager;
 import org.egov.hrms.model.Employee;
 import org.egov.hrms.model.User;
-import org.egov.hrms.web.contract.EmployeeRequest;
-import org.egov.hrms.web.contract.RequestInfoWrapper;
-import org.egov.hrms.web.contract.UserRequest;
-import org.egov.hrms.web.contract.UserResponse;
+import org.egov.hrms.utils.ResponseInfoFactory;
+import org.egov.hrms.web.contract.*;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -72,6 +70,8 @@ public class EmployeeService {
 	@Autowired
 	private IdGenService idGenService;
 
+	@Autowired
+    private ResponseInfoFactory factory;
 
 	@Autowired
 	private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
@@ -84,7 +84,7 @@ public class EmployeeService {
 
 
 
-	public List<Employee> createAsync(EmployeeRequest employeeRequest)		{
+	public EmployeeResponse create(EmployeeRequest employeeRequest)		{
 		log.info("Service: Create Employee");
 		RequestInfo requestInfo = employeeRequest.getRequestInfo();
 
@@ -95,8 +95,9 @@ public class EmployeeService {
 
 		});
 
-		return employeeRequest.getEmployee();
+		return generateResponse(employeeRequest);
 	}
+
 
 	private void createUser(Employee employee,RequestInfo requestInfo) {
 
@@ -137,7 +138,7 @@ public class EmployeeService {
 	}
 
 
-	public List<Employee> updateAsync(EmployeeRequest employeeRequest)  {
+	public EmployeeResponse update(EmployeeRequest employeeRequest)  {
 		log.info("Service: Update Employee");
 		RequestInfo requestInfo = employeeRequest.getRequestInfo();
 
@@ -147,7 +148,7 @@ public class EmployeeService {
 			//pushToTopic
 
 		});
-		return employeeRequest.getEmployee();
+		return generateResponse(employeeRequest);
 	}
 
 	private void updateUser(Employee employee, RequestInfo requestInfo) {
@@ -160,4 +161,12 @@ public class EmployeeService {
 
 	private void enrichUpdateRequest(Employee employee, RequestInfo requestInfo) {
 	}
+
+	private EmployeeResponse generateResponse(EmployeeRequest employeeRequest) {
+		return  EmployeeResponse.builder()
+				.responseInfo(factory.createResponseInfoFromRequestInfo(employeeRequest.getRequestInfo(),true))
+				.employee(employeeRequest.getEmployee())
+				.build();
+	}
+
 }

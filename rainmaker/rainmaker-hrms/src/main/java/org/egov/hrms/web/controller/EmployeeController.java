@@ -41,14 +41,9 @@
 package org.egov.hrms.web.controller;
 
 import lombok.extern.slf4j.Slf4j;
-import org.egov.common.contract.request.RequestInfo;
-import org.egov.common.contract.response.ResponseInfo;
-import org.egov.hrms.model.Employee;
 import org.egov.hrms.service.EmployeeService;
 import org.egov.hrms.web.contract.EmployeeRequest;
 import org.egov.hrms.web.contract.EmployeeResponse;
-import org.egov.hrms.web.contract.factory.ResponseEntityFactory;
-import org.egov.hrms.web.contract.factory.ResponseInfoFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -66,11 +61,6 @@ public class EmployeeController {
 	private EmployeeService employeeService;
 
 
-	@Autowired
-	private ResponseInfoFactory responseInfoFactory;
-
-	@Autowired
-	private ResponseEntityFactory responseEntityFactory;
 
 
 	/**
@@ -121,9 +111,8 @@ public class EmployeeController {
 	@ResponseBody
 	public ResponseEntity<?> create(@RequestBody @Valid EmployeeRequest employeeRequest, BindingResult bindingResult) {
 		log.debug("employeeRequest::" + employeeRequest);
-
-		Employee employee = employeeService.createAsync(employeeRequest);
-		return getSuccessResponseForCreate(employee, employeeRequest.getRequestInfo());
+		EmployeeResponse employeeResponse = employeeService.create(employeeRequest);
+        return new ResponseEntity<>(employeeResponse,HttpStatus.OK);
 	}
 
 
@@ -139,34 +128,9 @@ public class EmployeeController {
 	@ResponseBody
 	public ResponseEntity<?> update(@RequestBody @Valid EmployeeRequest employeeRequest, BindingResult bindingResult) {
 		log.debug("employeeRequest::" + employeeRequest);
-		Employee employee = employeeService.updateAsync(employeeRequest);
-		return getSuccessResponseForUpdate(employee, employeeRequest.getRequestInfo());
+		EmployeeResponse employeeResponse = employeeService.update(employeeRequest);
+		return new ResponseEntity<>(employeeResponse,HttpStatus.OK);
 	}
 
 
-	/**
-	 * Populate EmployeeResponse object & returns ResponseEntity of type
-	 * EmployeeResponse containing ResponseInfo & Employee objects
-	 *
-	 * @param employee
-	 * @param requestInfo
-	 * @return ResponseEntity<?>
-	 */
-	public ResponseEntity<?> getSuccessResponseForCreate(Employee employee, RequestInfo requestInfo) {
-		EmployeeResponse employeeResponse = new EmployeeResponse();
-		employeeResponse.setEmployee(employee);
-
-		ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
-		responseInfo.setStatus(HttpStatus.OK.toString());
-		employeeResponse.setResponseInfo(responseInfo);
-		return new ResponseEntity<EmployeeResponse>(employeeResponse, HttpStatus.OK);
-	}
-
-	public ResponseEntity<?> getSuccessResponseForGet(Employee employee, RequestInfo requestInfo) {
-		return getSuccessResponseForCreate(employee, requestInfo);
-	}
-
-	public ResponseEntity<?> getSuccessResponseForUpdate(Employee employee, RequestInfo requestInfo) {
-		return getSuccessResponseForCreate(employee, requestInfo);
-	}
 }

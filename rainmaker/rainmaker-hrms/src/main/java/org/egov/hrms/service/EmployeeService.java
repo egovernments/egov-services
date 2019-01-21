@@ -42,20 +42,23 @@ package org.egov.hrms.service;
 
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang.ArrayUtils;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.hrms.config.ApplicationProperties;
 import org.egov.hrms.config.PropertiesManager;
-import org.egov.hrms.model.Employee;
-import org.egov.hrms.model.User;
-import org.egov.hrms.utils.ResponseInfoFactory;
+import org.egov.hrms.model.*;
 import org.egov.hrms.web.contract.*;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import java.time.Instant;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
+
+import static org.springframework.util.ObjectUtils.isEmpty;
 
 @Data
 @Slf4j
@@ -70,8 +73,6 @@ public class EmployeeService {
 	@Autowired
 	private IdGenService idGenService;
 
-	@Autowired
-    private ResponseInfoFactory factory;
 
 	@Autowired
 	private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
@@ -84,33 +85,30 @@ public class EmployeeService {
 
 
 
-	public EmployeeResponse create(EmployeeRequest employeeRequest)		{
-		log.info("Service: Create Employee");
-		RequestInfo requestInfo = employeeRequest.getRequestInfo();
-
-		employeeRequest.getEmployee().stream().forEach(employee -> {
-			createUser(employee,requestInfo);
-			enrichCreateRequest(employee,requestInfo);
-			//pushToTopic
-
-		});
-
-		return generateResponse(employeeRequest);
+	public Employee createAsync(EmployeeRequest employeeRequest)		{
+		createUser(employeeRequest);
+		enrichCreateRequest(employeeRequest);
+//pushToTopic
+		return employeeRequest.getEmployee();
 	}
 
+	private void createUser(EmployeeRequest employeeRequest) {
+		Employee employee = employeeRequest.getEmployee();
 
-	private void createUser(Employee employee,RequestInfo requestInfo) {
+		UserRequest userRequest = employeeHelper.getUserRequest(employeeRequest);
+		UserResponse userResponse = userService.createUser(userRequest);
+		User user = userResponse.getUser().get(0);
+		employeeHelper.populateDefaultDataForCreate(employeeRequest);
 
-		UserRequest request = UserRequest.builder().requestInfo(requestInfo).user(employee.getUser()).build();
-		UserResponse response = userService.createUser(request);
-		User user = response.getUser().get(0);
 		employee.setId(user.getId());
 		employee.setUuid(user.getUuid());
 		employee.setUser(user);
 
 	}
 
-	private void enrichCreateRequest(Employee employee, RequestInfo requestInfo) {
+	private void enrichCreateRequest(EmployeeRequest employeeRequest) {
+		Employee employee = employeeRequest.getEmployee();
+		RequestInfo requestInfo = employeeRequest.getRequestInfo();
 		requestInfo.setTs(null);
 		RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper(requestInfo);
 
@@ -126,7 +124,7 @@ public class EmployeeService {
 		employee.getEducation().forEach(educationalQualification -> {
 			educationalQualification.setId(UUID.randomUUID().toString());
 		});
-		employee.getTests().forEach(departmentalTest -> {
+		employee.getTest().forEach(departmentalTest -> {
 			departmentalTest.setId(UUID.randomUUID().toString());
 		});
 		employee.setCreatedBy(requestInfo.getUserInfo().getUserName());
@@ -134,39 +132,60 @@ public class EmployeeService {
 		employee.setCreatedDate(instant.getEpochSecond());
 
 
+//		create(employeeRequest);
 
 	}
 
 
-	public EmployeeResponse update(EmployeeRequest employeeRequest)  {
-		log.info("Service: Update Employee");
-		RequestInfo requestInfo = employeeRequest.getRequestInfo();
+	public Employee updateAsync(EmployeeRequest employeeRequest)  {
 
-		employeeRequest.getEmployee().stream().forEach(employee -> {
-			enrichUpdateRequest(employee,requestInfo);
-			updateUser(employee,requestInfo);
-			//pushToTopic
+		enrichUpdateRequest(employeeRequest)
 
-		});
-		return generateResponse(employeeRequest);
+		Employee employee = employeeRequest.getEmployee();
+
+//		UserRequest userRequest = employeeHelper.getUserRequest(employeeRequest);
+//
+//		UserResponse userResponse = userService.updateUser(userRequest.getUser().getId(), userRequest);
+//		User user = userResponse.getUser().get(0);
+//		employee.setUser(user);
+//
+//		employeeHelper.populateDefaultDataForUpdate(employeeRequest);
+//
+//		AssignmentGetRequest assignmentGetRequest = AssignmentGetRequest.builder().tenantId(employee.getTenantId())
+//				.build();
+//		List<Assignment> assignments = assignmentService.getAssignments(employee.getId(), assignmentGetRequest);
+//
+//		List<Long> positionfromDB = assignments.stream().map(assignment -> assignment.getPosition())
+//				.collect(Collectors.toList());
+//		List<Long> positionFromRequest = employeeRequest.getEmployee().getAssignments().stream()
+//				.map(assignment -> assignment.getPosition()).collect(Collectors.toList());
+//		boolean isPositionModified = !(ArrayUtils.isEquals(positionfromDB, positionFromRequest));
+//
+//		List<Date> fromDateFromDB = assignments.stream().map(assignment -> assignment.getFromDate())
+//				.collect(Collectors.toList());
+//		List<Date> fromDateFromRequest = employeeRequest.getEmployee().getAssignments().stream()
+//				.map(assignment -> assignment.getFromDate()).collect(Collectors.toList());
+//		boolean isFromDateModified = !(ArrayUtils.isEquals(fromDateFromDB, fromDateFromRequest));
+//
+//		List<Date> toDateFromDB = assignments.stream().map(assignment -> assignment.getToDate())
+//				.collect(Collectors.toList());
+//		List<Date> toDateFromRequest = employeeRequest.getEmployee().getAssignments().stream()
+//				.map(assignment -> assignment.getToDate()).collect(Collectors.toList());
+//		boolean isToDateModified = !(ArrayUtils.isEquals(toDateFromDB, toDateFromRequest));
+//
+//		boolean isAssignmentDeleted = assignments.size() != employeeRequest.getEmployee().getAssignments().size();
+//
+//		if (isPositionModified || isFromDateModified || isToDateModified || isAssignmentDeleted) {
+//			update(employeeRequest);
+//		}
+//
+//		update(employeeRequest);
+		return employee;
 	}
 
-	private void updateUser(Employee employee, RequestInfo requestInfo) {
-		UserRequest request = UserRequest.builder().requestInfo(requestInfo).user(employee.getUser()).build();
-		UserResponse response = userService.createUser(request);
-		User user = response.getUser().get(0);
-		employee.setUser(user);
-
+	private void enrichUpdateRequest(EmployeeRequest employeeRequest) {
 	}
 
-	private void enrichUpdateRequest(Employee employee, RequestInfo requestInfo) {
-	}
 
-	private EmployeeResponse generateResponse(EmployeeRequest employeeRequest) {
-		return  EmployeeResponse.builder()
-				.responseInfo(factory.createResponseInfoFromRequestInfo(employeeRequest.getRequestInfo(),true))
-				.employee(employeeRequest.getEmployee())
-				.build();
-	}
 
 }

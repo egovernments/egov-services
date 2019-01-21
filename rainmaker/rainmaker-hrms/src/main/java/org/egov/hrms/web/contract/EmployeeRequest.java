@@ -62,9 +62,7 @@ public class EmployeeRequest {
 	@JsonProperty("RequestInfo")
 	private RequestInfo requestInfo;
 
-	@Valid
-	@NotNull
-	@JsonProperty("Employee")
-	private List<Employee> employee;
+	@JsonProperty("Employees")
+	private Employee employee;
 
 }

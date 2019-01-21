@@ -77,19 +77,19 @@ public class TransitionService {
                             break;
                         }
                     }
-			} else
-				processStateAndAction.setCurrentState(currentState);
+            }
+            else processStateAndAction.setCurrentState(currentState);
 
-			if (!CollectionUtils.isEmpty(processStateAndAction.getCurrentState().getActions())) {
-				for (Action action : processStateAndAction.getCurrentState().getActions()) {
-					if (action.getRoles().contains("*"))
-						action.setRoles(allowedRoles);
-					if (action.getAction().equalsIgnoreCase(processInstance.getAction())) {
-						processStateAndAction.setAction(action);
-						break;
-					}
-				}
-			}
+            if(!CollectionUtils.isEmpty(processStateAndAction.getCurrentState().getActions())){
+                for (Action action : processStateAndAction.getCurrentState().getActions()){
+                    if(action.getAction().equalsIgnoreCase(processInstance.getAction())){
+                        if(action.getRoles().contains("*"))
+                            action.setRoles(allowedRoles);
+                        processStateAndAction.setAction(action);
+                        break;
+                    }
+                }
+            }
 
             if(isTransition){
                 if(processStateAndAction.getAction()==null)

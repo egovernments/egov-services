@@ -53,7 +53,7 @@ public class WorkflowUtil {
         Boolean flag = false;
  //       List<String> allowedRoles = Arrays.asList(actionRoles.get(0).split(","));
         for(Role role : userRoles) {
-            if (actionRoles.contains(role.getCode())) {
+            if (actionRoles.contains(role.getCode()) || actionRoles.contains("*")) {
                 flag = true;
                 break;
             }

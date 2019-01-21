@@ -53,6 +53,7 @@ import javax.validation.constraints.NotNull;
 @NoArgsConstructor
 @Setter
 @ToString
+@Builder
 public class UserRequest {
 
 	@NotNull

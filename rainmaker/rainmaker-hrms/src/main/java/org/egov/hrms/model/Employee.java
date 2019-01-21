@@ -96,7 +96,7 @@ public class Employee {
 
     @Valid
     @Size(max=25)
-    private List<DepartmentalTest> test = new ArrayList<>();
+    private List<DepartmentalTest> tests = new ArrayList<>();
 
     @NotNull
     @Size(max = 256)

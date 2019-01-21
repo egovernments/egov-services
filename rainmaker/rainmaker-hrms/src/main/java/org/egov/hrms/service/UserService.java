@@ -40,43 +40,24 @@
 
 package org.egov.hrms.service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.egov.common.contract.request.RequestInfo;
+import lombok.extern.slf4j.Slf4j;
 import org.egov.hrms.config.PropertiesManager;
-import org.egov.hrms.model.User;
-import org.egov.hrms.service.exception.UserException;
-import org.egov.hrms.service.helper.UserSearchURLHelper;
-import org.egov.hrms.web.contract.EmployeeCriteria;
-import org.egov.hrms.web.contract.UserGetRequest;
 import org.egov.hrms.web.contract.UserRequest;
 import org.egov.hrms.web.contract.UserResponse;
-import org.egov.hrms.web.controller.EmployeeController;
-import org.egov.hrms.web.errorhandler.UserErrorResponse;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
-import java.io.IOException;
 import java.text.MessageFormat;
-import java.util.List;
-
-import static org.springframework.util.ObjectUtils.isEmpty;
-
+@Slf4j
 @Service
 public class UserService {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(EmployeeController.class);
 
 	@Autowired
 	private RestTemplate restTemplate;
 
-	@Autowired
-	private UserSearchURLHelper userSearchURLHelper;
 
 	@Autowired
 	private PropertiesManager propertiesManager;
@@ -84,105 +65,49 @@ public class UserService {
 	@Autowired
 	private ObjectMapper objectMapper;
 
-	public List<User> getUsers(EmployeeCriteria employeeCriteria, RequestInfo requestInfo) {
-		String url = userSearchURLHelper.searchURL(employeeCriteria.getId(), employeeCriteria.getTenantId());
-		LOGGER.debug("\n\n\n\n\n" + "User search url : " + url);
+//	public List<User> getUsers(EmployeeCriteria employeeCriteria, RequestInfo requestInfo) {
+//		String url = userSearchURLHelper.searchURL(employeeCriteria.getId(), employeeCriteria.getTenantId());
+//		LOGGER.debug("\n\n\n\n\n" + "User search url : " + url);
+//
+//		UserGetRequest userGetRequest = getUserGetRequest(employeeCriteria, requestInfo);
+//		LOGGER.debug("\nUserGetRequest : " + userGetRequest);
+//
+//		UserResponse userResponse = null;
+//		List<User> users = null;
+//		try {
+//			userResponse = restTemplate.postForObject(url, userGetRequest, UserResponse.class);
+//			users = userResponse.getUser();
+//		} catch (Exception e) {
+//			LOGGER.debug("\n\nFollowing Exception Occurred While Calling User Service : " + e.getMessage());
+//			e.printStackTrace();
+//		}
+//
+//		LOGGER.debug("\n\nUserResponse : " + users);
+//
+//		return users;
+//	}
+//
 
-		UserGetRequest userGetRequest = getUserGetRequest(employeeCriteria, requestInfo);
-		LOGGER.debug("\nUserGetRequest : " + userGetRequest);
+	public UserResponse createUser(UserRequest userRequest) {
+		log.info("Service: Create USer");
 
-		UserResponse userResponse = null;
-		List<User> users = null;
-		try {
-			userResponse = restTemplate.postForObject(url, userGetRequest, UserResponse.class);
-			users = userResponse.getUser();
-		} catch (Exception e) {
-			LOGGER.debug("\n\nFollowing Exception Occurred While Calling User Service : " + e.getMessage());
-			e.printStackTrace();
-		}
-		
-		LOGGER.debug("\n\nUserResponse : " + users);
-
-		return users;
-	}
-
-	// FIXME : Fix a common standard for date formats in User Service.
-	public UserResponse createUser(UserRequest userRequest) throws UserException {
 		String url = propertiesManager.getUsersServiceHostName() + propertiesManager.getUsersServiceUsersBasePath()
 				+ propertiesManager.getUsersServiceUsersCreatePath();
 
-		LOGGER.debug("\n\n\n\n\n" + "User create url : " + url);
-		LOGGER.debug("\nUserRequest : " + userRequest);
-
-		UserResponse userResponse = null;
-		try {
-			userResponse = restTemplate.postForObject(url, userRequest, UserResponse.class);
-		} catch (HttpClientErrorException e) {
-			String errorResponseBody = e.getResponseBodyAsString();
-			LOGGER.debug("\n\n" + "Following exception occurred while creating user: " + errorResponseBody);
-			UserErrorResponse userErrorResponse = null;
-			try {
-				userErrorResponse = objectMapper.readValue(errorResponseBody, UserErrorResponse.class);
-			} catch (JsonMappingException jme) {
-				LOGGER.debug("\nFollowing Exception Occurred While Mapping JSON Response From User Service : "
-						+ jme.getMessage());
-				jme.printStackTrace();
-			} catch (JsonProcessingException jpe) {
-				LOGGER.debug("\nFollowing Exception Occurred While Processing JSON Response From User Service : "
-						+ jpe.getMessage());
-				jpe.printStackTrace();
-			} catch (IOException ioe) {
-				LOGGER.debug("\nFollowing Exception Occurred Calling User Service : " + ioe.getMessage());
-				ioe.printStackTrace();
-			}
-			throw new UserException(userErrorResponse, userRequest.getRequestInfo());
-		} catch (Exception e) {
-			LOGGER.debug("\nFollowing Exception Occurred While Calling User Service : " + e.getMessage());
-			e.printStackTrace();
-			throw new UserException(null, userRequest.getRequestInfo());
-		}
-
-		LOGGER.debug("\n\nUserResponse : " + userResponse);
+		UserResponse userResponse = restTemplate.postForObject(url,userRequest,UserResponse.class);
 
 		return userResponse;
 	}
 
-	public UserResponse updateUser(Long userId, UserRequest userRequest) throws UserException {
+	public UserResponse updateUser(Long userId, UserRequest userRequest)  {
+		log.info("Update");
+
 		String url = propertiesManager.getUsersServiceHostName() + propertiesManager.getUsersServiceUsersBasePath()
 				+ getUserUpdatePath(userId);
 
-		LOGGER.debug("\n\n\n\n\n" + "User update url : " + url);
-		LOGGER.debug("\nUserRequest : " + userRequest);
 
-		UserResponse userResponse = null;
-		try {
-			userResponse = restTemplate.postForObject(url, userRequest, UserResponse.class);
-		} catch (HttpClientErrorException e) {
-			String errorResponseBody = e.getResponseBodyAsString();
-			LOGGER.debug("\n\n" + "Following exception occurred while updating user: " + errorResponseBody);
-			UserErrorResponse userErrorResponse = null;
-			try {
-				userErrorResponse = objectMapper.readValue(errorResponseBody, UserErrorResponse.class);
-			} catch (JsonMappingException jme) {
-				LOGGER.debug("\nFollowing Exception Occurred While Mapping JSON Response From User Service : "
-						+ jme.getMessage());
-				jme.printStackTrace();
-			} catch (JsonProcessingException jpe) {
-				LOGGER.debug("\nFollowing Exception Occurred While Processing JSON Response From User Service : "
-						+ jpe.getMessage());
-				jpe.printStackTrace();
-			} catch (IOException ioe) {
-				LOGGER.debug("\nFollowing Exception Occurred Calling User Service : " + ioe.getMessage());
-				ioe.printStackTrace();
-			}
-			throw new UserException(userErrorResponse, userRequest.getRequestInfo());
-		} catch (Exception e) {
-			LOGGER.debug("\nFollowing Exception Occurred While Calling User Service : " + e.getMessage());
-			e.printStackTrace();
-			throw new UserException(null, userRequest.getRequestInfo());
-		}
+		UserResponse userResponse = restTemplate.postForObject(url,userRequest,UserResponse.class);
 
-		LOGGER.debug("\n\nUserResponse : " + userResponse);
 
 		return userResponse;
 	}
@@ -192,30 +117,4 @@ public class UserService {
 		return path;
 	}
 
-    public UserGetRequest getUserGetRequest(EmployeeCriteria employeeCriteria, RequestInfo requestInfo) {
-		UserGetRequest userGetRequest = new UserGetRequest();
-
-		userGetRequest.setId(employeeCriteria.getId());
-		userGetRequest.setRoleCodes(employeeCriteria.getRoleCodes());
-		userGetRequest.setTenantId(employeeCriteria.getTenantId());
-		userGetRequest.setRequestInfo(requestInfo);
-		if(null == employeeCriteria.getActive()) {
-			userGetRequest.setActive(true);
-		}else {
-			userGetRequest.setActive(employeeCriteria.getActive());
-		}
-
-		if(!isEmpty(employeeCriteria.getUserName())) {
-			userGetRequest.setUserName(employeeCriteria.getUserName());
-		}
-		if(!isEmpty(employeeCriteria.getId())) {
-			userGetRequest.setPageSize(employeeCriteria.getId().size());
-		}
-		if (!isEmpty(userGetRequest.getRoleCodes())) {
-			userGetRequest.setUserType("EMPLOYEE");
-			userGetRequest.setPageSize(500);
-		}
-
-		return userGetRequest;
-    }
 }

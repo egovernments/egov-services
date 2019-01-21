@@ -45,6 +45,8 @@ import lombok.*;
 import org.egov.common.contract.response.ResponseInfo;
 import org.egov.hrms.model.Employee;
 
+import java.util.List;
+
 @AllArgsConstructor
 @EqualsAndHashCode
 @Getter
@@ -57,6 +59,6 @@ public class EmployeeResponse {
 	private ResponseInfo responseInfo;
 
 	@JsonProperty("Employee")
-	private Employee employee;
+	private List<Employee> employee;
 
 }

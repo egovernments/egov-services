@@ -50,6 +50,7 @@ import org.egov.hrms.model.Employee;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 @Data
 @Builder
@@ -64,6 +65,6 @@ public class EmployeeRequest {
 	@Valid
 	@NotNull
 	@JsonProperty("Employee")
-	private Employee employee;
+	private List<Employee> employee;
 
 }

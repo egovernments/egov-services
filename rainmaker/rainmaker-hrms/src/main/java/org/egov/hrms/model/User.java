@@ -70,6 +70,7 @@ public class User {
 	@Size(min=3, max=100)
 	private String name;
 
+	@NonNull
 	@Size(max=10)
 	private String mobileNumber;
 
@@ -91,6 +92,7 @@ public class User {
 	@NotNull
 	private List<Role> roles = new ArrayList<Role>();
 
+	@NonNull
 	@Size(max=256)
 	private String tenantId;
 

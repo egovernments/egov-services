@@ -10,6 +10,8 @@ import lombok.*;
 @NoArgsConstructor
 public class Session {
 
+    private String type;
+
     private String sessionId;
 
     @JsonProperty("@timestamp")

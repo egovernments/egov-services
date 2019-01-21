@@ -30,7 +30,8 @@ public class AppProperties {
 
     public AppProperties() {
 
-        sessionTimeout = TimeUnit.MINUTES.toMillis(Long.valueOf(System.getenv("SESSION_TIMEOUT")));
+        if(System.getenv("SESSION_TIMEOUT") != null)
+            sessionTimeout = TimeUnit.MINUTES.toMillis(Long.valueOf(System.getenv("SESSION_TIMEOUT")));
 
         kafkaBootstrapServer = System.getenv("KAFKA_BOOTSTRAP_SERVER_CONFIG");
         outputKafkaTopic = System.getenv("KAFKA_OUTPUT_TOPIC");
@@ -43,29 +44,35 @@ public class AppProperties {
         inputTelemetryIndex = System.getenv("ES_INPUT_TELEMETRY_INDEX");
         outputTelemetrySessionsIndex = System.getenv("ES_OUTPUT_TELEMETRY_BATCH_INDEX");
 
+        Properties properties = new Properties();
 
+        try {
+            properties.load(getClass().getClassLoader().getResourceAsStream("application.properties"));
+        } catch (IOException e) {
+            log.error("Error reading application.properties");
+        }
 
-//        Properties properties = new Properties();
-//
-//        try {
-//            properties.load(getClass().getClassLoader().getResourceAsStream("application.properties"));
-//        } catch (IOException e) {
-//            log.error("Error reading application.properties");
-//        }
-//
-//        sessionTimeout = TimeUnit.MINUTES.toMillis(Long.valueOf(properties.getProperty("SESSION_TIMEOUT")));
-//
-//        kafkaBootstrapServer = properties.getProperty("KAFKA_BOOTSTRAP_SERVER_CONFIG");
-//        outputKafkaTopic = properties.getProperty("KAFKA_OUTPUT_TOPIC");
-//
-//        esURL = properties.getProperty("ES_URL");
-//        esHost = properties.getProperty("ES_HOST");
-//        esPort = properties.getProperty("ES_PORT");
-//        esNodesWANOnly = properties.getProperty("ES_NODE_WAN_ONLY");
-//
-//        inputTelemetryIndex = properties.getProperty("ES_INPUT_TELEMETRY_INDEX");
-//        outputTelemetrySessionsIndex = properties.getProperty("ES_OUTPUT_TELEMETRY_BATCH_INDEX");
+        if(sessionTimeout == null)
+            sessionTimeout = TimeUnit.MINUTES.toMillis(Long.valueOf(properties.getProperty("SESSION_TIMEOUT")));
 
+        if(kafkaBootstrapServer == null)
+            kafkaBootstrapServer = properties.getProperty("KAFKA_BOOTSTRAP_SERVER_CONFIG");
+        if(outputKafkaTopic == null)
+            outputKafkaTopic = properties.getProperty("KAFKA_OUTPUT_TOPIC");
+
+        if(esURL == null)
+            esURL = properties.getProperty("ES_URL");
+        if(esHost == null)
+            esHost = properties.getProperty("ES_HOST");
+        if(esPort == null)
+            esPort = properties.getProperty("ES_PORT");
+        if(esNodesWANOnly == null)
+            esNodesWANOnly = properties.getProperty("ES_NODE_WAN_ONLY");
+
+        if(inputTelemetryIndex == null)
+            inputTelemetryIndex = properties.getProperty("ES_INPUT_TELEMETRY_INDEX");
+        if(outputTelemetrySessionsIndex == null)
+            outputTelemetrySessionsIndex = properties.getProperty("ES_OUTPUT_TELEMETRY_BATCH_INDEX");
 
     }
 

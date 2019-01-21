@@ -43,8 +43,6 @@ package org.egov.hrms.repository.rowmapper;
 import lombok.Getter;
 import lombok.Setter;
 import org.egov.hrms.model.Assignment;
-import org.egov.hrms.model.EmployeeInfo;
-import org.egov.hrms.model.HODDepartment;
 import org.egov.hrms.model.enums.MaritalStatus;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.ResultSetExtractor;

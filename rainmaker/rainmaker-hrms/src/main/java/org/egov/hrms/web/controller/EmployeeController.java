@@ -44,26 +44,18 @@ import lombok.extern.slf4j.Slf4j;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ResponseInfo;
 import org.egov.hrms.model.Employee;
-import org.egov.hrms.model.EmployeeInfo;
 import org.egov.hrms.service.EmployeeService;
-import org.egov.hrms.service.exception.IdGenerationException;
-import org.egov.hrms.service.exception.UserException;
-import org.egov.hrms.web.contract.*;
+import org.egov.hrms.web.contract.EmployeeRequest;
+import org.egov.hrms.web.contract.EmployeeResponse;
 import org.egov.hrms.web.contract.factory.ResponseEntityFactory;
 import org.egov.hrms.web.contract.factory.ResponseInfoFactory;
-import org.egov.hrms.web.errorhandler.ErrorHandler;
-import org.egov.hrms.web.errorhandler.InvalidDataException;
-import org.egov.hrms.web.validator.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.ValidationUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.List;
-import java.util.Map;
 
 @Slf4j
 @RestController
@@ -73,11 +65,6 @@ public class EmployeeController {
 	@Autowired
 	private EmployeeService employeeService;
 
-	@Autowired
-	private RequestValidator requestValidator;
-
-	@Autowired
-	private ErrorHandler errorHandler;
 
 	@Autowired
 	private ResponseInfoFactory responseInfoFactory;
@@ -85,17 +72,6 @@ public class EmployeeController {
 	@Autowired
 	private ResponseEntityFactory responseEntityFactory;
 
-	@Autowired
-	private EmployeeAssignmentValidator employeeAssignmentValidator;
-
-	@Autowired
-	private ServiceHistoryValidator serviceHistoryValidator;
-
-	@Autowired
-	private DataIntegrityValidatorForCreateEmployee dataIntegrityValidatorForCreate;
-
-	@Autowired
-	private DataIntegrityValidatorForUpdateEmployee dataIntegrityValidatorForUpdate;
 
 	/**
 	 * Maps Post Requests for _search & returns ResponseEntity of either
@@ -107,30 +83,30 @@ public class EmployeeController {
 	 * @param requestBodyBindingResult
 	 * @return ResponseEntity<?>
 	 */
-	@PostMapping("_search")
-	@ResponseBody
-	public ResponseEntity<?> search(@ModelAttribute @Valid EmployeeCriteria employeeCriteria,
-			BindingResult modelAttributeBindingResult, @RequestBody @Valid RequestInfoWrapper requestInfoWrapper,
-			BindingResult requestBodyBindingResult) {
-		RequestInfo requestInfo = requestInfoWrapper.getRequestInfo();
-
-		ResponseEntity<?> errorResponseEntity = requestValidator.validateSearchRequest(requestInfo,
-				modelAttributeBindingResult, requestBodyBindingResult);
-
-		if (errorResponseEntity != null)
-			return errorResponseEntity;
-
-		// Call service
-		Map<String, Object> employeeMap = null;
-		try {
-			employeeMap = employeeService.getPaginatedEmployees(employeeCriteria, requestInfo);
-		} catch (Exception exception) {
-			log.error("Error while processing request " + employeeCriteria, exception);
-			return errorHandler.getResponseEntityForUnexpectedErrors(requestInfo);
-		}
-
-		return responseEntityFactory.getSuccessResponse(employeeMap, requestInfo);
-	}
+//	@PostMapping("_search")
+//	@ResponseBody
+//	public ResponseEntity<?> search(@ModelAttribute @Valid EmployeeCriteria employeeCriteria,
+//			BindingResult modelAttributeBindingResult, @RequestBody @Valid RequestInfoWrapper requestInfoWrapper,
+//			BindingResult requestBodyBindingResult) {
+//		RequestInfo requestInfo = requestInfoWrapper.getRequestInfo();
+//
+//		ResponseEntity<?> errorResponseEntity = requestValidator.validateSearchRequest(requestInfo,
+//				modelAttributeBindingResult, requestBodyBindingResult);
+//
+//		if (errorResponseEntity != null)
+//			return errorResponseEntity;
+//
+//		// Call service
+//		Map<String, Object> employeeMap = null;
+//		try {
+//			employeeMap = employeeService.getPaginatedEmployees(employeeCriteria, requestInfo);
+//		} catch (Exception exception) {
+//			log.error("Error while processing request " + employeeCriteria, exception);
+//			return errorHandler.getResponseEntityForUnexpectedErrors(requestInfo);
+//		}
+//
+//		return responseEntityFactory.getSuccessResponse(employeeMap, requestInfo);
+//	}
 
 
 	/**
@@ -146,28 +122,7 @@ public class EmployeeController {
 	public ResponseEntity<?> create(@RequestBody @Valid EmployeeRequest employeeRequest, BindingResult bindingResult) {
 		log.debug("employeeRequest::" + employeeRequest);
 
-		Employee employee = null;
-		try {
-			ResponseEntity<?> errorResponseEntity = validateEmployeeRequest(employeeRequest, bindingResult, false);
-			if (errorResponseEntity != null)
-				return errorResponseEntity;
-			
-//			if (!employeeRequest.getEmployee().getTransferredEmployee()) {
-//				employeeService.setServiceHistoryDetails(employeeRequest, false);
-//			}
-			employee = employeeService.createAsync(employeeRequest);
-		} catch (UserException ue) {
-			log.error("Error while processing request ", ue);
-			return errorHandler.getResponseEntityForUserErrors(ue);
-		} catch (IdGenerationException ie) {
-			log.error("Error while processing request ", ie);
-			return errorHandler.getResponseEntityForIdGenerationErrors(ie);
-		} catch (InvalidDataException ex) {
-			return errorHandler.getErrorInvalidData(ex, employeeRequest.getRequestInfo());
-		} catch (Exception exception) {
-			log.error("Error while processing request ", exception);
-			return errorHandler.getResponseEntityForUnexpectedErrors(employeeRequest.getRequestInfo());
-		}
+		Employee employee = employeeService.createAsync(employeeRequest);
 		return getSuccessResponseForCreate(employee, employeeRequest.getRequestInfo());
 	}
 
@@ -184,75 +139,10 @@ public class EmployeeController {
 	@ResponseBody
 	public ResponseEntity<?> update(@RequestBody @Valid EmployeeRequest employeeRequest, BindingResult bindingResult) {
 		log.debug("employeeRequest::" + employeeRequest);
-		employeeService.setServiceHistoryDetails(employeeRequest, true);
-		Employee employee = null;
-		try {
-			ResponseEntity<?> errorResponseEntity = validateEmployeeRequest(employeeRequest, bindingResult, true);
-			if (errorResponseEntity != null)
-				return errorResponseEntity;
-
-			employee = employeeService.updateAsync(employeeRequest);
-		} catch (UserException ue) {
-			log.error("Error while processing request ", ue);
-			return errorHandler.getResponseEntityForUserErrors(ue);
-		} catch (Exception exception) {
-			log.error("Error while processing request ", exception);
-			return errorHandler.getResponseEntityForUnexpectedErrors(employeeRequest.getRequestInfo());
-		}
+		Employee employee = employeeService.updateAsync(employeeRequest);
 		return getSuccessResponseForUpdate(employee, employeeRequest.getRequestInfo());
 	}
 
-
-	/**
-	 * Validate EmployeeRequest object & returns ErrorResponseEntity if there
-	 * are any errors or else returns null
-	 *
-	 * @param employeeRequest
-	 * @param bindingResult
-	 * @param isUpdate
-	 * @return ResponseEntity<?>
-	 */
-	private ResponseEntity<?> validateEmployeeRequest(EmployeeRequest employeeRequest, BindingResult bindingResult,
-			boolean isUpdate) {
-		// validate input params that can be handled by annotations
-		if (bindingResult.hasErrors()) {
-			return errorHandler.getErrorResponseEntityForInvalidRequest(bindingResult,
-					employeeRequest.getRequestInfo());
-		}
-		// validate input params that can't be handled by annotations
-		ValidationUtils.invokeValidator(employeeAssignmentValidator, employeeRequest.getEmployee(), bindingResult);
-//		if (!employeeRequest.getEmployee().getTransferredEmployee()) {
-//			ValidationUtils.invokeValidator(serviceHistoryValidator, employeeRequest.getEmployee(), bindingResult);
-//		}
-
-		if (isUpdate)
-			ValidationUtils.invokeValidator(dataIntegrityValidatorForUpdate, employeeRequest, bindingResult);
-		else
-			ValidationUtils.invokeValidator(dataIntegrityValidatorForCreate, employeeRequest, bindingResult);
-
-		if (bindingResult.hasErrors()) {
-			return errorHandler.getErrorResponseEntityForInvalidRequest(bindingResult,
-					employeeRequest.getRequestInfo());
-		}
-		return null;
-	}
-
-	/**
-	 * Populate EmployeeInfoResponse object & returns ResponseEntity of type
-	 * EmployeeInfoResponse containing ResponseInfo & List of EmployeeInfo
-	 *
-	 * @param employeesList
-	 * @param requestInfo
-	 * @return ResponseEntity<?>
-	 */
-	private ResponseEntity<?> getSuccessResponseForSearch(List<EmployeeInfo> employeesList, RequestInfo requestInfo) {
-		EmployeeInfoResponse employeeInfoResponse = new EmployeeInfoResponse();
-		employeeInfoResponse.setEmployees(employeesList);
-		ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
-		responseInfo.setStatus(HttpStatus.OK.toString());
-		employeeInfoResponse.setResponseInfo(responseInfo);
-		return new ResponseEntity<>(employeeInfoResponse, HttpStatus.OK);
-	}
 
 	/**
 	 * Populate EmployeeResponse object & returns ResponseEntity of type

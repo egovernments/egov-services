@@ -213,25 +213,24 @@ public class EnrichmentService {
     public void enrichUpdateBusinessService(BusinessServiceRequest request){
         RequestInfo requestInfo = request.getRequestInfo();
         List<BusinessService> businessServices = request.getBusinessServices();
-        AuditDetails updateAuditDetails = util.getAuditDetails(requestInfo.getUserInfo().getUuid(),false);
-        AuditDetails createAuditDetails = util.getAuditDetails(requestInfo.getUserInfo().getUuid(),false);
+        AuditDetails audit = util.getAuditDetails(requestInfo.getUserInfo().getUuid(),true);
         businessServices.forEach(businessService -> {
             businessService.setUuid(UUID.randomUUID().toString());
-            businessService.setAuditDetails(updateAuditDetails);
+            businessService.setAuditDetails(audit);
             businessService.getStates().forEach(state -> {
                 if(state.getUuid()==null){
-                    state.setAuditDetails(createAuditDetails);
+                    state.setAuditDetails(audit);
                     state.setUuid(UUID.randomUUID().toString());
                 }
-                else state.setAuditDetails(updateAuditDetails);
+                else state.setAuditDetails(audit);
                 if(!CollectionUtils.isEmpty(state.getActions()))
                     state.getActions().forEach(action -> {
                         if(action.getUuid()==null){
-                            action.setAuditDetails(createAuditDetails);
+                            action.setAuditDetails(audit);
                             action.setUuid(UUID.randomUUID().toString());
                             action.setCurrentState(state.getUuid());
                         }
-                        else action.setAuditDetails(updateAuditDetails);
+                        else action.setAuditDetails(audit);
                     });
             });
             enrichNextState(businessService);

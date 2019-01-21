@@ -173,7 +173,7 @@ serviceMaps:
    isTransaction: true
    queryMaps:
 
-       - query: UPDATE TABLE eg_wf_businessservice_v2 SET businessservice=?, business=?, geturi=?, posturi=?, lastmodifiedby=?, lastmodifiedtime=? WHERE uuid=?;
+       - query: UPDATE eg_wf_businessservice_v2 SET businessservice=?, business=?, geturi=?, posturi=?, lastmodifiedby=?, lastmodifiedtime=? WHERE uuid=?;
          basePath: BusinessServices.*
          jsonMaps:
           - jsonPath: $.BusinessServices.*.businessService
@@ -193,35 +193,57 @@ serviceMaps:
 
 
 
-       - query: UPDATE TABLE eg_wf_state_v2 SET currentState=?, docuploadrequired=?, isstartstate=?, isterminatestate=?, lastmodifiedby=?, lastmodifiedtime=? WHERE uuid=?
+       - query: INSERT INTO eg_wf_state_v2(uuid, tenantid, businessserviceid, state,applicationStatus,sla,docuploadrequired, isstartstate, isterminatestate, createdby, createdtime, lastmodifiedby, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ON CONFLICT (uuid) DO UPDATE SET state=EXCLUDED.state, docuploadrequired=EXCLUDED.docuploadrequired, isstartstate=EXCLUDED.isstartstate, isterminatestate=EXCLUDED.isterminatestate, lastmodifiedby=EXCLUDED.lastmodifiedby, lastmodifiedtime=EXCLUDED.lastmodifiedtime;
          basePath: BusinessServices.*.states.*
          jsonMaps:
 
-          - jsonPath: $.BusinessServices.*.states.*.currentState
+          - jsonPath: $.BusinessServices.*.states.*.uuid
 
-          - jsonPath: $.BusinessServices.*.states.*.docuploadrequired
+          - jsonPath: $.BusinessServices.*.states.*.tenantId
 
-          - jsonPath: $.BusinessServices.*.states.*.isstartstate
+          - jsonPath: $.BusinessServices[*][?({uuid} in @.states[*].uuid)].uuid
 
-          - jsonPath: $.BusinessServices.*.states.*.isterminatestate
+          - jsonPath: $.BusinessServices.*.states.*.state
+
+          - jsonPath: $.BusinessServices.*.states.*.applicationStatus
+
+          - jsonPath: $.BusinessServices.*.states.*.sla
+
+          - jsonPath: $.BusinessServices.*.states.*.docUploadRequired
+
+          - jsonPath: $.BusinessServices.*.states.*.isStartState
+
+          - jsonPath: $.BusinessServices.*.states.*.isTerminateState
+
+          - jsonPath: $.BusinessServices.*.states.*.auditDetails.createdBy
+
+          - jsonPath: $.BusinessServices.*.states.*.auditDetails.createdTime
 
           - jsonPath: $.BusinessServices.*.states.*.auditDetails.lastModifiedBy
 
           - jsonPath: $.BusinessServices.*.states.*.auditDetails.lastModifiedTime
 
-
-
-       - query: UPDATE TABLE eg_wf_action_v2 action=?, nextstateid=?, roles=?, lastmodifiedby=?, lastmodifiedtime=? WHERE uuid=?;
+       - query: INSERT INTO eg_wf_action_v2( uuid,tenantId, currentState, action, nextstate, roles, createdby, createdtime, lastmodifiedby, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ON CONFLICT (uuid) DO UPDATE SET action=EXCLUDED.action, nextstate=EXCLUDED.nextstate, roles=EXCLUDED.roles, lastmodifiedby=EXCLUDED.lastmodifiedby, lastmodifiedtime=EXCLUDED.lastmodifiedtime;
          basePath: BusinessServices.*.states.*.actions.*
          jsonMaps:
 
+          - jsonPath: $.BusinessServices.*.states.*.actions.*.uuid
+
+          - jsonPath: $.BusinessServices.*.states.*.actions.*.tenantId
+
+          - jsonPath: $.BusinessServices.*.states[*][?({uuid} in @.actions[*].uuid)].uuid
+
           - jsonPath: $.BusinessServices.*.states.*.actions.*.action
 
-          - jsonPath: $.BusinessServices.*.states.*.actions.*.nextStateId
+          - jsonPath: $.BusinessServices.*.states.*.actions.*.nextState
 
           - jsonPath: $.BusinessServices.*.states.*.actions.*.roles
             type: ARRAY
             dbType: STRING
+
+          - jsonPath: $.BusinessServices.*.states.*.actions.*.auditDetails.createdBy
+
+          - jsonPath: $.BusinessServices.*.states.*.actions.*.auditDetails.createdTime
 
           - jsonPath: $.BusinessServices.*.states.*.actions.*.auditDetails.lastModifiedBy
 

@@ -20,7 +20,7 @@ public class Main {
 
         Properties streamsConfiguration = new Properties();
         streamsConfiguration.put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, appProperties.getKafkaBootstrapServerConfig());
-        streamsConfiguration.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
+        streamsConfiguration.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "latest");
 
 
         TelemetryFormatChecker telemetryFormatChecker = new TelemetryFormatChecker();
@@ -28,6 +28,10 @@ public class Main {
 
         TelemetryDeduplicator telemetryDeduplicator = new TelemetryDeduplicator();
         telemetryDeduplicator.shouldRemoveDuplicatesFromTheInput(streamsConfiguration, appProperties.getTelemetryValidatedMessages(), appProperties.getTelemetryDedupedMessages(), appProperties.getDeDupStorageTime());
+
+        TelemetryFinalStream telemetryFinalStream = new TelemetryFinalStream();
+        telemetryFinalStream.pushFinalMessages(streamsConfiguration, appProperties.getTelemetryDedupedMessages(),
+                appProperties.getTelemetrySecorFinalMessages());
 
         TelemetryUnbundleBatches telemetryUnbundleBatches = new TelemetryUnbundleBatches();
         telemetryUnbundleBatches.unbundleBatches(streamsConfiguration, appProperties.getTelemetryDedupedMessages(),
@@ -37,9 +41,9 @@ public class Main {
         telemetryEnrichMessages.enrichMessages(streamsConfiguration, appProperties.getTelemetryUnbundledMessages(),
                 appProperties.getTelemetryEnrichedMessages());
 
-        TelemetryFinalStream telemetryFinalStream = new TelemetryFinalStream();
         telemetryFinalStream.pushFinalMessages(streamsConfiguration, appProperties.getTelemetryEnrichedMessages(),
-                appProperties.getTelemetryFinalMessages());
+                appProperties.getTelemetryElasticsearchFinalMessages());
+
     }
 
     private static void checkIfFilesExists() throws Exception {

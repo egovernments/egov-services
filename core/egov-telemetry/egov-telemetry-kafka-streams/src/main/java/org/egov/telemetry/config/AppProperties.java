@@ -23,7 +23,9 @@ public class AppProperties {
     @Getter
     private String telemetryEnrichedMessages;
     @Getter
-    private String telemetryFinalMessages;
+    private String telemetrySecorFinalMessages;
+    @Getter
+    private String telemetryElasticsearchFinalMessages;
     @Getter
     private Integer deDupStorageTime; //In Minutes
 
@@ -35,7 +37,8 @@ public class AppProperties {
         telemetryDedupedMessages = System.getenv("TELEMETRY_DEDUPED_MESSAGES");
         telemetryUnbundledMessages = System.getenv("TELEMETRY_UNBUNDLED_MESSAGES");
         telemetryEnrichedMessages = System.getenv("TELEMETRY_ENRICHED_MESSAGES");
-        telemetryFinalMessages = System.getenv("TELEMETRY_FINAL_MESSAGES");
+        telemetrySecorFinalMessages = System.getenv("TELEMETRY_SECOR_FINAL_MESSAGES");
+        telemetryElasticsearchFinalMessages = System.getenv("TELEMETRY_ELASTICSEARCH_FINAL_MESSAGES");
 
         if(System.getenv("DEDUP_STORAGE_TIME") != null)
             deDupStorageTime = Integer.parseInt(System.getenv("DEDUP_STORAGE_TIME"));
@@ -65,8 +68,11 @@ public class AppProperties {
         if(telemetryEnrichedMessages == null)
             telemetryEnrichedMessages = properties.getProperty("TELEMETRY_ENRICHED_MESSAGES");
 
-        if(telemetryFinalMessages == null)
-            telemetryFinalMessages = properties.getProperty("TELEMETRY_FINAL_MESSAGES");
+        if(telemetrySecorFinalMessages == null)
+            telemetrySecorFinalMessages = properties.getProperty("TELEMETRY_SECOR_FINAL_MESSAGES");
+
+        if(telemetryElasticsearchFinalMessages == null)
+            telemetryElasticsearchFinalMessages = properties.getProperty("TELEMETRY_ELASTICSEARCH_FINAL_MESSAGES");
 
         if(deDupStorageTime == null)
             if(properties.getProperty("DEDUP_STORAGE_TIME") != null)

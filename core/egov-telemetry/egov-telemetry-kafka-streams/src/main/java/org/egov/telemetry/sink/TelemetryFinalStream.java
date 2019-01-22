@@ -15,7 +15,7 @@ import java.util.Properties;
 public class TelemetryFinalStream {
 
     public void pushFinalMessages(Properties streamsConfiguration, String inputTopic, String outputTopic) {
-        streamsConfiguration.put(StreamsConfig.APPLICATION_ID_CONFIG, "push-final-messages");
+        streamsConfiguration.put(StreamsConfig.APPLICATION_ID_CONFIG, "push-" + outputTopic);
         streamsConfiguration.put(StreamsConfig.DEFAULT_KEY_SERDE_CLASS_CONFIG, Serdes.String().getClass().getName());
         streamsConfiguration.put(StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG, Serdes.String().getClass().getName());
 
@@ -26,7 +26,7 @@ public class TelemetryFinalStream {
         inputStream.mapValues(new ValueMapper<String, String>() {
             @Override
             public String apply(String value) {
-                log.info("Message pushed to telemetry-final-messages");
+                log.info("Message pushed to " + outputTopic);
                 return value;
             }
         }).to(outputTopic);

@@ -68,5 +68,8 @@ public class Jurisdiction {
     @Size(max=256)
     private String boundaryType;
 
+    private AuditDetails auditDetails;
+
+
 
 }

@@ -44,8 +44,10 @@ import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.hrms.config.PropertiesManager;
+import org.egov.hrms.model.AuditDetails;
 import org.egov.hrms.model.Employee;
 import org.egov.hrms.model.User;
+import org.egov.hrms.model.enums.UserType;
 import org.egov.hrms.producer.HRMSProducer;
 import org.egov.hrms.utils.ResponseInfoFactory;
 import org.egov.hrms.web.contract.*;
@@ -90,7 +92,7 @@ public class EmployeeService {
 		RequestInfo requestInfo = employeeRequest.getRequestInfo();
 
 		employeeRequest.getEmployees().stream().forEach(employee -> {
-			createUser(employee, requestInfo);
+//			createUser(employee, requestInfo);
 			enrichCreateRequest(employee, requestInfo);
 
 		});
@@ -114,28 +116,43 @@ public class EmployeeService {
 		requestInfo.setTs(null);
 		RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper(requestInfo);
 
+		Instant instant = Instant.now();
+		AuditDetails auditDetails = AuditDetails.builder()
+				.createdBy(requestInfo.getUserInfo().getUserName())
+				.createdDate(instant.getEpochSecond())
+				.build();
+
+
+		employee.setCode(idGenService.getId());
+
 		employee.getJurisdictions().stream().forEach(jurisdiction -> {
 			jurisdiction.setId(UUID.randomUUID().toString());
+			jurisdiction.setAuditDetails(auditDetails);
 		});
 		employee.getAssignments().stream().forEach(assignment -> {
 			assignment.setId(UUID.randomUUID().toString());
+			assignment.setAuditDetails(auditDetails);
 		});
 		employee.getServiceHistory().stream().forEach(serviceHistory -> {
 			serviceHistory.setId(UUID.randomUUID().toString());
+			serviceHistory.setAuditDetails(auditDetails);
 		});
 		employee.getEducation().stream().forEach(educationalQualification -> {
 			educationalQualification.setId(UUID.randomUUID().toString());
+			educationalQualification.setAuditDetails(auditDetails);
 		});
 		employee.getTests().stream().forEach(departmentalTest -> {
 			departmentalTest.setId(UUID.randomUUID().toString());
+			departmentalTest.setAuditDetails(auditDetails);
 		});
 		employee.getDocuments().stream().forEach(document -> {
 			document.setId(UUID.randomUUID().toString());
+			document.setAuditDetails(auditDetails);
 		});
 
-		employee.getAuditDetails().setCreatedBy(requestInfo.getUserInfo().getUserName());
-		Instant instant = Instant.now();
-		employee.getAuditDetails().setCreatedDate(instant.getEpochSecond());
+		employee.setAuditDetails(auditDetails);
+		employee.setActive(true);
+		employee.getUser().setType(UserType.EMPLOYEE);
 
 	}
 

@@ -25,7 +25,7 @@ CREATE TABLE eg_hrms_assignment (
 	employeeid CHARACTER VARYING(1024) NOT NULL,
 	position BIGINT,
 	department CHARACTER VARYING(250),
-	designation CHARACTER VARYING(250)
+	designation CHARACTER VARYING(250),
     fromdate BIGINT,
     todate BIGINT,
 	govtordernumber CHARACTER VARYING(250),
@@ -48,7 +48,7 @@ CREATE TABLE eg_hrms_educationaldetails (
 	uuid CHARACTER VARYING(1024) NOT NULL,
 	employeeid CHARACTER VARYING(1024) NOT NULL,
 	qualification CHARACTER VARYING(250),
-	stream CHARACTER VARYING(250)
+	stream CHARACTER VARYING(250),
     yearofpassing BIGINT,
     university CHARACTER VARYING(250),
 	remarks CHARACTER VARYING(250),
@@ -58,8 +58,8 @@ CREATE TABLE eg_hrms_educationaldetails (
 	lastmodifiedby CHARACTER VARYING(250),
 	lastModifiedDate BIGINT,
 	
-	CONSTRAINT pk_eghrms_assignment PRIMARY KEY (uuid),
-	CONSTRAINT fk_eghrms_assignment_employeeid FOREIGN KEY (employeeid) REFERENCES eg_hrms_employee (uuid)
+	CONSTRAINT pk_eghrms_educationaldetails PRIMARY KEY (uuid),
+	CONSTRAINT fk_eghrms_educationaldetails_employeeid FOREIGN KEY (employeeid) REFERENCES eg_hrms_employee (uuid)
 
 );
 
@@ -76,8 +76,8 @@ CREATE TABLE eg_hrms_departmentaltests (
 	lastmodifiedby CHARACTER VARYING(250),
 	lastModifiedDate BIGINT,
 	
-	CONSTRAINT pk_eghrms_assignment PRIMARY KEY (uuid),
-	CONSTRAINT fk_eghrms_assignment_employeeid FOREIGN KEY (employeeid) REFERENCES eg_hrms_employee (uuid)
+	CONSTRAINT pk_eghrms_departmentaltests PRIMARY KEY (uuid),
+	CONSTRAINT fk_eghrms_departmentaltests_employeeid FOREIGN KEY (employeeid) REFERENCES eg_hrms_employee (uuid)
 
 );
 
@@ -95,8 +95,8 @@ CREATE TABLE eg_hrms_empdocuments (
 	lastmodifiedby CHARACTER VARYING(250),
 	lastModifiedDate BIGINT,
 	
-	CONSTRAINT pk_eghrms_assignment PRIMARY KEY (uuid),
-	CONSTRAINT fk_eghrms_assignment_employeeid FOREIGN KEY (employeeid) REFERENCES eg_hrms_employee (uuid)
+	CONSTRAINT pk_eghrms_empdocuments PRIMARY KEY (uuid),
+	CONSTRAINT fk_eghrms_empdocuments_employeeid FOREIGN KEY (employeeid) REFERENCES eg_hrms_employee (uuid)
 
 );
 
@@ -116,8 +116,8 @@ CREATE TABLE eg_hrms_servicehistory (
 	lastmodifiedby CHARACTER VARYING(250),
 	lastModifiedDate BIGINT,
 	
-	CONSTRAINT pk_eghrms_assignment PRIMARY KEY (uuid),
-	CONSTRAINT fk_eghrms_assignment_employeeid FOREIGN KEY (employeeid) REFERENCES eg_hrms_employee (uuid)
+	CONSTRAINT pk_eghrms_servicehistory  PRIMARY KEY (uuid),
+	CONSTRAINT fk_eghrms_servicehistory_employeeid FOREIGN KEY (employeeid) REFERENCES eg_hrms_employee (uuid)
 
 );
 

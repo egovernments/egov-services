@@ -13,6 +13,7 @@ import org.egov.mdms.model.MdmsCriteria;
 import org.egov.mdms.model.MdmsCriteriaReq;
 import org.egov.mdms.model.MdmsResponse;
 import org.egov.mdms.model.ModuleDetail;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -23,7 +24,8 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 @Slf4j
 public class MDMSService {
-	
+
+	@Autowired
 	private RestTemplate restTemplate;
 	
 	@Value("${egov.mdms.host}")
@@ -65,6 +67,8 @@ public class MDMSService {
 		MdmsCriteriaReq request = prepareMDMSRequest(uri, requestInfo, tenantId);
 		MdmsResponse response = null;
 		try {
+			log.info("uri:"+uri);
+			log.info("Request: "+request.toString());
 			response = restTemplate.postForObject(uri.toString(), request, MdmsResponse.class);
 		}catch(Exception e) {
 			log.info("Exception while fetching from MDMS: ",e);

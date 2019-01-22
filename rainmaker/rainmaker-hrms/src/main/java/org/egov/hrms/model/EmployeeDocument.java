@@ -41,7 +41,6 @@
 package org.egov.hrms.model;
 
 import lombok.*;
-import org.apache.kafka.common.protocol.types.Field;
 
 @AllArgsConstructor
 @Getter
@@ -59,10 +58,13 @@ public class EmployeeDocument {
 	@NonNull
 	private String documentName;
 
+	private  String documentId;
+
 	private String referenceType;
 
 	private String referenceId;
 
+	private AuditDetails auditDetails;
 
 	@Override
 	public boolean equals(Object obj) {

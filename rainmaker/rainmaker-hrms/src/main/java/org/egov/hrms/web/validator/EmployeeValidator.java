@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import lombok.extern.slf4j.Slf4j;
 import org.egov.hrms.model.Assignment;
 import org.egov.hrms.model.DepartmentalTest;
 import org.egov.hrms.model.EducationalQualification;
@@ -20,6 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 @Service
+@Slf4j
 public class EmployeeValidator {
 	
 	@Autowired
@@ -28,13 +30,17 @@ public class EmployeeValidator {
 	public void validateCreateEmployee(EmployeeRequest request) {
 		Map<String, String> errorMap = new HashMap<>();
 		Map<String, List<String>> mdmsData = mdmsService.getMDMSData(request.getRequestInfo(), request.getEmployees().get(0).getTenantId());
-		for(Employee employee: request.getEmployees()) {
-			validateEmployee(employee, errorMap, mdmsData);
-			validateAssignments(employee, errorMap, mdmsData);
-			validateJurisdiction(employee, errorMap, mdmsData);
-			validateServiceHistory(employee, errorMap, mdmsData);
-			validateEducationalDetails(employee, errorMap, mdmsData);
-			validateDepartmentalTest(employee, errorMap, mdmsData);
+		if(!CollectionUtils.isEmpty(mdmsData.keySet())){
+			for(Employee employee: request.getEmployees()) {
+				validateEmployee(employee, errorMap, mdmsData);
+				validateAssignments(employee, errorMap, mdmsData);
+				validateJurisdiction(employee, errorMap, mdmsData);
+				validateServiceHistory(employee, errorMap, mdmsData);
+				validateEducationalDetails(employee, errorMap, mdmsData);
+				validateDepartmentalTest(employee, errorMap, mdmsData);
+			}
+		}else{
+			log.info("MDMS data couldn't be fetched so skipping validaion!");
 		}
 		if(!CollectionUtils.isEmpty(errorMap.keySet())) {
 			throw new CustomException(errorMap);

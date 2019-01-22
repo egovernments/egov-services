@@ -65,42 +65,21 @@ public class UserService {
 	@Autowired
 	private ObjectMapper objectMapper;
 
-//	public List<User> getUsers(EmployeeCriteria employeeCriteria, RequestInfo requestInfo) {
-//		String url = userSearchURLHelper.searchURL(employeeCriteria.getId(), employeeCriteria.getTenantId());
-//		LOGGER.debug("\n\n\n\n\n" + "User search url : " + url);
-//
-//		UserGetRequest userGetRequest = getUserGetRequest(employeeCriteria, requestInfo);
-//		LOGGER.debug("\nUserGetRequest : " + userGetRequest);
-//
-//		UserResponse userResponse = null;
-//		List<User> users = null;
-//		try {
-//			userResponse = restTemplate.postForObject(url, userGetRequest, UserResponse.class);
-//			users = userResponse.getUser();
-//		} catch (Exception e) {
-//			LOGGER.debug("\n\nFollowing Exception Occurred While Calling User Service : " + e.getMessage());
-//			e.printStackTrace();
-//		}
-//
-//		LOGGER.debug("\n\nUserResponse : " + users);
-//
-//		return users;
-//	}
-//
-
 	public UserResponse createUser(UserRequest userRequest) {
 		log.info("Service: Create USer");
-
-		String url = propertiesManager.getUsersServiceHostName() + propertiesManager.getUsersServiceUsersBasePath()
-				+ propertiesManager.getUsersServiceUsersCreatePath();
-		log.info(url);
-
-		UserResponse userResponse = restTemplate.postForObject(url,userRequest,UserResponse.class);
+		StringBuilder uri = new StringBuilder();
+		uri.append(propertiesManager.getUserHost()).append(propertiesManager.getUserCreateEndpoint());
+		UserResponse userResponse = null;
+		try {
+			userResponse = restTemplate.postForObject(uri.toString(),userRequest,UserResponse.class);
+		}catch(Exception e) {
+			log.error("User created failed: ",e);
+		}
 
 		return userResponse;
 	}
 
-	public UserResponse updateUser(Long userId, UserRequest userRequest)  {
+/*	public UserResponse updateUser(Long userId, UserRequest userRequest)  {
 		log.info("Update");
 
 		String url = propertiesManager.getUsersServiceHostName() + propertiesManager.getUsersServiceUsersBasePath()
@@ -116,6 +95,6 @@ public class UserService {
 	private String getUserUpdatePath(long id) {
 		String path = MessageFormat.format(propertiesManager.getUsersServiceUsersUpdatePath(), Long.toString(id));
 		return path;
-	}
+	}*/
 
 }

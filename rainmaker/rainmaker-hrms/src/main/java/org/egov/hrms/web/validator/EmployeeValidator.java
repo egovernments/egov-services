@@ -16,8 +16,10 @@ import org.egov.hrms.utils.HRMSConstants;
 import org.egov.hrms.web.contract.EmployeeRequest;
 import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
+@Service
 public class EmployeeValidator {
 	
 	@Autowired

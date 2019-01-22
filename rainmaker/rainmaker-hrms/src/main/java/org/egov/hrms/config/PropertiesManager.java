@@ -51,129 +51,40 @@ import org.springframework.stereotype.Component;
 @AllArgsConstructor
 @ToString
 public class PropertiesManager {
+	
+	@Value("${egov.mdms.host}")
+	public String mdmsHost;
+	
+	@Value("${egov.mdms.search.endpoint}")
+	public String mdmsSearchEndpoint;
+	
+	@Value("${egov.user.host}")
+	public String userHost;
+	
+	@Value("${egov.user.search.endpoint}")
+	public String userSearchEndpoint;
+	
+	@Value("${egov.user.create.endpoint}")
+	public String userCreateEndpoint;
+	
+	@Value("${egov.user.create.endpoint}")
+	public String userUpdateEndpoint;
 
-    @Value("${kafka.topics.employee.savedb.name}")
-    private String saveEmployeeTopic;
-    
-    @Value("${kafka.topics.employee.finance.name}")
-    private String financeEmployeeTopic;
-
-    @Value("${kafka.topics.employee.updatedb.name}")
-    private String updateEmployeeTopic;
-
-    @Value("${kafka.topics.employee.savedb.key}")
-    private String employeeSaveKey;
-
-    @Value("${kafka.topics.employee.finance.key}")
-    private String financeEmployeeKey;
-    
-    @Value("${kafka.topics.nominee.savedb.name}")
-    private String saveNomineeTopic;
-
-    @Value("${kafka.topics.nominee.savedb.key}")
-    private String nomineeSaveKey;
-
-    @Value("${kafka.topics.nominee.updatedb.name}")
-    private String updateNomineeTopic;
-
-    @Value("${kafka.topics.nominee.updatedb.key}")
-    private String nomineeUpdateKey;
-
-    @Value("${egov.services.hr_employee_service.hostname}")
-    private String hrEmployeeServiceHostName;
-
-    @Value("${egov.services.hr_employee_service.basepath}")
-    private String hrEmployeeServiceBasePath;
-
-    @Value("${egov.services.hr_employee_service.employee.createpath}")
-    private String hrEmployeeServiceEmployeeCreatePath;
-
-    @Value("${egov.services.users_service.hostname}")
-    private String usersServiceHostName;
-
-    @Value("${egov.services.users_service.users.basepath}")
-    private String usersServiceUsersBasePath;
-
-    @Value("${egov.services.users_service.users.searchpath}")
-    private String usersServiceUsersSearchPath;
-
-    @Value("${egov.services.users_service.users.createpath}")
-    private String usersServiceUsersCreatePath;
-
-    @Value("${egov.services.users_service.users.updatepath}")
-    private String usersServiceUsersUpdatePath;
-
-    @Value("${egov.services.egov_common_masters_service.hostname}")
-    private String commonMastersServiceHostName;
-
-    @Value("${egov.services.egov_common_masters_service.basepath}")
-    private String commonMastersServiceBasePath;
-
-    @Value("${egov.services.egov_common_masters_service.departments.searchpath}")
-    private String commonMastersServiceDepartmentsSearchPath;
-
-    @Value("${egov.services.hr_masters_service.hostname}")
-    private String hrMastersServiceHostName;
-
-    @Value("${egov.services.hr_masters_service.basepath}")
-    private String hrMastersServiceBasePath;
-
-    @Value("${egov.services.hr_masters_service.positions.searchpath}")
-    private String hrMastersServicePositionsSearchPath;
-
-    @Value("${egov.services.hr_masters_service.vacantpositions.searchpath}")
-    private String hrMastersServiceVacantPositionsSearchPath;
-
-    @Value("${egov.services.hr_masters_service.designations.searchpath}")
-    private String hrMastersServiceDesignationsSearchPath;
-
-    @Value("${egov.services.hr_masters_service.hr_configurations.searchpath}")
-    private String hrMastersServiceHRConfigurationsSearchPath;
-
-    @Value("${egov.services.hr_masters_service.empstatus.searchpath}")
-    private String hrMastersEmployeeStatusSearchPath;
-
-    @Value("${egov.services.hr_masters_service.emptype.searchpath}")
-    private String hrMastersEmployeeTypeSearchPath;
-    
-    @Value("${kafka.topics.assignment.update.name}")
-    private String updateAssignmentTopic;
-
-    @Value("${kafka.topics.assignment.update.key}")
-    private String updateAssignmentKey;
-
-    @Value("${egov.services.data_sync_employee_service.hostname}")
-    private String hybridDataSyncServiceHostName;
-
-    @Value("${egov.services.data_sync_employee_service.basepath}")
-    private String hybridDataSyncServiceBasePath;
-
-    @Value("${egov.services.data_sync_employee_service.createpath}")
-    private String hybridDataSyncServiceCreatePath;
-
-    @Value("${egov.services.data_sync_employee.required}")
-    private Boolean dataSyncEmployeeRequired;
-
-    @Value("${egov.services.egov_idgen.hostname}")
-    private String idGenServiceHostName;
-
-    @Value("${egov.services.egov_idgen.createpath}")
-    private String idGenServiceCreatePath;
-
-    @Value("${egov.services.egov_idgen.emp.code.name}")
-    private String idGenServiceEmpCodeName;
-
-    @Value("${egov.services.egov_idgen.emp.code.format}")
-    private String idGenServiceEmpCodeFormat;
-    
-    
-    @Value("${egov.services.egov_mdms.hostname}")
-    private String mdmsServiceHostname;
-
-    @Value("${egov.services.egov_mdms.searchpath}")
-    private String mdmsBySearchCriteriaUrl;
-
-    @Value("${egov.services.hr_employee_service.default.password}")
-    private String employeeDefaultPassword;
-
+	@Value("${egov.localization.host}")
+	public String localizationHost;
+	
+	@Value("${egov.localization.search.endpoint}")
+	public String localizationSearcEndpoint;
+	
+	
+	//Kafka Topics
+	@Value("${kafka.topics.save.service}")
+	public String saveEmployeeTopic;
+	
+	@Value("${kafka.topics.update.service}")
+	public String UpdateEmployeeTopic;
+	
+	@Value("${kafka.topics.notification.sms}")
+	public String coreNotificationTopic;
+	
 }

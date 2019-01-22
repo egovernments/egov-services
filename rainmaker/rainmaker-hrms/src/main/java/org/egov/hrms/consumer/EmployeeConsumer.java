@@ -40,43 +40,12 @@
 
 package org.egov.hrms.consumer;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.extern.slf4j.Slf4j;
-import org.egov.hrms.config.PropertiesManager;
-import org.egov.hrms.service.EmployeeService;
-import org.egov.hrms.web.contract.EmployeeRequest;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.kafka.annotation.KafkaListener;
-import org.springframework.kafka.support.KafkaHeaders;
-import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.stereotype.Service;
 
-import java.util.Map;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Service
 public class EmployeeConsumer {
-
-    @Autowired
-    PropertiesManager propertiesManager;
-
-    @Autowired
-    private EmployeeService employeeService;
-
-
-    @Autowired
-    private ObjectMapper objectMapper;
-
-    @KafkaListener(topics = {"${kafka.topics.employee.savedb.name}", "${kafka.topics.employee.updatedb.name}",
-                    "${kafka.topics.nominee.savedb.name}", "${kafka.topics.nominee.updatedb.name}"})
-    public void listen(Map<String, Object> record, @Header(KafkaHeaders.RECEIVED_TOPIC) String topic) {
-        log.info("topic :: " + topic);
-        log.info("record :: " + record);
-
-        if (topic.equals(propertiesManager.getSaveEmployeeTopic())) {
-                employeeService.create(objectMapper.convertValue(record, EmployeeRequest.class));
-        } else if (topic.equals(propertiesManager.getUpdateEmployeeTopic())) {
-                employeeService.update(objectMapper.convertValue(record, EmployeeRequest.class));
-        }
-    }
+	
 }

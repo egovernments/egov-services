@@ -43,7 +43,6 @@ package org.egov.hrms.service;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.egov.common.contract.request.RequestInfo;
-import org.egov.hrms.config.ApplicationProperties;
 import org.egov.hrms.config.PropertiesManager;
 import org.egov.hrms.model.Employee;
 import org.egov.hrms.model.User;
@@ -67,11 +66,8 @@ public class EmployeeService {
 	@Value("${kafka.topics.save.service}")
 	private String saveTopic;
 
-
-
 	@Autowired
 	private UserService userService;
-
 
 	@Autowired
 	private IdGenService idGenService;
@@ -86,29 +82,24 @@ public class EmployeeService {
 	private PropertiesManager propertiesManager;
 
 	@Autowired
-	private ApplicationProperties applicationProperties;
-
-	@Autowired
 	private HRMSProducer hrmsProducer;
 
-
-	public EmployeeResponse create(EmployeeRequest employeeRequest)		{
+	public EmployeeResponse create(EmployeeRequest employeeRequest) {
 		log.info("Service: Create Employee");
 		log.info(employeeRequest.toString());
 		RequestInfo requestInfo = employeeRequest.getRequestInfo();
 
 		employeeRequest.getEmployees().stream().forEach(employee -> {
-			createUser(employee,requestInfo);
-			enrichCreateRequest(employee,requestInfo);
+			createUser(employee, requestInfo);
+			enrichCreateRequest(employee, requestInfo);
 
 		});
-		hrmsProducer.push(saveTopic,employeeRequest);
+		hrmsProducer.push(saveTopic, employeeRequest);
 
 		return generateResponse(employeeRequest);
 	}
 
-
-	private void createUser(Employee employee,RequestInfo requestInfo) {
+	private void createUser(Employee employee, RequestInfo requestInfo) {
 
 		UserRequest request = UserRequest.builder().requestInfo(requestInfo).user(employee.getUser()).build();
 		UserResponse response = userService.createUser(request);
@@ -138,7 +129,7 @@ public class EmployeeService {
 		employee.getTests().stream().forEach(departmentalTest -> {
 			departmentalTest.setId(UUID.randomUUID().toString());
 		});
-		employee.getDocuments().stream().forEach(document->{
+		employee.getDocuments().stream().forEach(document -> {
 			document.setId(UUID.randomUUID().toString());
 		});
 
@@ -146,20 +137,17 @@ public class EmployeeService {
 		Instant instant = Instant.now();
 		employee.getAuditDetails().setCreatedDate(instant.getEpochSecond());
 
-
-
 	}
 
-
-	public EmployeeResponse update(EmployeeRequest employeeRequest)  {
+	public EmployeeResponse update(EmployeeRequest employeeRequest) {
 		log.info("Service: Update Employee");
 		RequestInfo requestInfo = employeeRequest.getRequestInfo();
 
 		employeeRequest.getEmployees().stream().forEach(employee -> {
-			enrichUpdateRequest(employee,requestInfo);
-			updateUser(employee,requestInfo);
+			enrichUpdateRequest(employee, requestInfo);
+			updateUser(employee, requestInfo);
 
-			//pushToTopic
+			// pushToTopic
 
 		});
 		return generateResponse(employeeRequest);
@@ -177,10 +165,9 @@ public class EmployeeService {
 	}
 
 	private EmployeeResponse generateResponse(EmployeeRequest employeeRequest) {
-		return  EmployeeResponse.builder()
-				.responseInfo(factory.createResponseInfoFromRequestInfo(employeeRequest.getRequestInfo(),true))
-				.employees(employeeRequest.getEmployees())
-				.build();
+		return EmployeeResponse.builder()
+				.responseInfo(factory.createResponseInfoFromRequestInfo(employeeRequest.getRequestInfo(), true))
+				.employees(employeeRequest.getEmployees()).build();
 	}
 
 }

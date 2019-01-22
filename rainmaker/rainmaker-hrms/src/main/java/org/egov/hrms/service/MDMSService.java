@@ -2,7 +2,6 @@ package org.egov.hrms.service;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,11 +14,13 @@ import org.egov.mdms.model.MdmsCriteriaReq;
 import org.egov.mdms.model.MdmsResponse;
 import org.egov.mdms.model.ModuleDetail;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.client.RestTemplate;
 
 import lombok.extern.slf4j.Slf4j;
 
+@Service
 @Slf4j
 public class MDMSService {
 	

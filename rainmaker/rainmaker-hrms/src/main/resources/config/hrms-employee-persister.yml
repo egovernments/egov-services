@@ -35,11 +35,11 @@ serviceMaps:
 
       - jsonPath: $.Employees.*.auditDetails.createdBy
 
-      - jsonPath: $.Employees.*.auditDetails.createdTime
+      - jsonPath: $.Employees.*.auditDetails.createdDate
 
       - jsonPath: $.Employees.*.auditDetails.lastModifiedBy
 
-      - jsonPath: $.Employees.*.auditDetails.lastModifiedTime
+      - jsonPath: $.Employees.*.auditDetails.lastModifiedDate
 
 
 
@@ -49,7 +49,7 @@ serviceMaps:
       jsonMaps:
 
 
-      - jsonPath: $.Employees.*.assignments.*.tenantId
+      - jsonPath: $.Employees[*][?({id} in @.assignments[*].id)].tenantId
 
       - jsonPath: $.Employees.*.assignments.*.id
 
@@ -69,15 +69,15 @@ serviceMaps:
 
       - jsonPath: $.Employees.*.assignments.*.isHOD
 
-      - jsonPath: $.Employees[*][?({uuid} in @.assignments[*].uuid)].uuid
+      - jsonPath: $.Employees[*][?({id} in @.assignments[*].id)].uuid
 
       - jsonPath: $.Employees.*.assignments.*.auditDetails.createdBy
 
-      - jsonPath: $.Employees.*.assignments.*.auditDetails.createdTime
+      - jsonPath: $.Employees.*.assignments.*.auditDetails.createdDate
 
       - jsonPath: $.Employees.*.assignments.*.auditDetails.lastModifiedBy
 
-      - jsonPath: $.Employees.*.assignments.*.auditDetails.lastModifiedTime
+      - jsonPath: $.Employees.*.assignments.*.auditDetails.lastModifiedDate
 
 
     - query: INSERT INTO eg_hrms_educationaldetails(tenantid, uuid, employeeid, qualification, stream, yearofpassing, university, remarks, createdby, createddate, lastmodifiedby, lastModifiedDate) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
@@ -86,11 +86,11 @@ serviceMaps:
       jsonMaps:
 
 
-      - jsonPath: $.Employees.*.education.*.tenantId
+      - jsonPath: $.Employees[*][?({id} in @.education[*].id)].tenantId
 
       - jsonPath: $.Employees.*.education.*.id
 
-      - jsonPath: $.Employees[*][?({uuid} in @.education[*].uuid)].uuid
+      - jsonPath: $.Employees[*][?({id} in @.education[*].id)].uuid
 
       - jsonPath: $.Employees.*.education.*.qualification
 
@@ -104,38 +104,38 @@ serviceMaps:
 
       - jsonPath: $.Employees.*.education.*.auditDetails.createdBy
 
-      - jsonPath: $.Employees.*.education.*.auditDetails.createdTime
+      - jsonPath: $.Employees.*.education.*.auditDetails.createdDate
 
       - jsonPath: $.Employees.*.education.*.auditDetails.lastModifiedBy
 
-      - jsonPath: $.Employees.*.education.*.auditDetails.lastModifiedTime
+      - jsonPath: $.Employees.*.education.*.auditDetails.lastModifiedDate
 
 
-    - query: INSERT INTO eg_hrms_departmentaltests(tenantid, uuid, employeeid, test, yearofpassing, yearofpassing, remarks, createdby, createddate, lastmodifiedby, lastModifiedDate) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+    - query: INSERT INTO eg_hrms_departmentaltests(tenantid, uuid, employeeid, test, yearofpassing, remarks, createdby, createddate, lastmodifiedby, lastModifiedDate) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
 
-      basePath: Employees.*.test.*
+      basePath: Employees.*.tests.*
       jsonMaps:
 
 
-      - jsonPath: $.Employees.*.test.*.tenantId
+      - jsonPath: $.Employees[*][?({id} in @.tests[*].id)].tenantId
 
-      - jsonPath: $.Employees.*.test.*.id
+      - jsonPath: $.Employees.*.tests.*.id
 
-      - jsonPath: $.Employees[*][?({uuid} in @.test[*].uuid)].uuid
+      - jsonPath: $.Employees[*][?({id} in @.tests[*].id)].uuid
 
-      - jsonPath: $.Employees.*.test.*.test
+      - jsonPath: $.Employees.*.tests.*.test
 
-      - jsonPath: $.Employees.*.test.*.yearOfPassing
+      - jsonPath: $.Employees.*.tests.*.yearOfPassing
 
-      - jsonPath: $.Employees.*.test.*.remarks
+      - jsonPath: $.Employees.*.tests.*.remarks
 
-      - jsonPath: $.Employees.*.education.*.auditDetails.createdBy
+      - jsonPath: $.Employees.*.tests.*.auditDetails.createdBy
 
-      - jsonPath: $.Employees.*.education.*.auditDetails.createdTime
+      - jsonPath: $.Employees.*.tests.*.auditDetails.createdDate
 
-      - jsonPath: $.Employees.*.education.*.auditDetails.lastModifiedBy
+      - jsonPath: $.Employees.*.tests.*.auditDetails.lastModifiedBy
 
-      - jsonPath: $.Employees.*.education.*.auditDetails.lastModifiedTime
+      - jsonPath: $.Employees.*.tests.*.auditDetails.lastModifiedDate
 
 
     - query: INSERT INTO eg_hrms_empdocuments(tenantid, uuid, employeeid, documentid, documentname, referencetype, referenceid, createdby, createddate, lastmodifiedby, lastModifiedDate) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
@@ -144,15 +144,15 @@ serviceMaps:
       jsonMaps:
 
 
-      - jsonPath: $.Employees.*.documents.*.tenantId
+      - jsonPath: $.Employees[*][?({id} in @.documents[*].id)].tenantId
 
       - jsonPath: $.Employees.*.documents.*.id
 
-      - jsonPath: $.Employees[*][?({uuid} in @.documents[*].uuid)].uuid
+      - jsonPath: $.Employees[*][?({id} in @.documents[*].id)].uuid
 
-      - jsonPath: $.Employees.*.documents.*.documentid
+      - jsonPath: $.Employees.*.documents.*.documentId
 
-      - jsonPath: $.Employees.*.documents.*.documentname
+      - jsonPath: $.Employees.*.documents.*.documentName
 
       - jsonPath: $.Employees.*.documents.*.referenceType
 
@@ -160,11 +160,11 @@ serviceMaps:
 
       - jsonPath: $.Employees.*.documents.*.auditDetails.createdBy
 
-      - jsonPath: $.Employees.*.documents.*.auditDetails.createdTime
+      - jsonPath: $.Employees.*.documents.*.auditDetails.createdDate
 
       - jsonPath: $.Employees.*.documents.*.auditDetails.lastModifiedBy
 
-      - jsonPath: $.Employees.*.documents.*.auditDetails.lastModifiedTime
+      - jsonPath: $.Employees.*.documents.*.auditDetails.lastModifiedDate
 
 
     - query: INSERT INTO eg_hrms_servicehistory(tenantid, uuid, employeeid, servicestatus, servicefrom, serviceto, ordernumber, isCurrentPosition, location, createdby, createddate, lastmodifiedby, lastModifiedDate) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
@@ -173,11 +173,11 @@ serviceMaps:
       jsonMaps:
 
 
-      - jsonPath: $.Employees.*.serviceHistory.*.tenantId
+      - jsonPath: $.Employees[*][?({id} in @.serviceHistory[*].id)].tenantId
 
       - jsonPath: $.Employees.*.serviceHistory.*.id
 
-      - jsonPath: $.Employees[*][?({uuid} in @.serviceHistory[*].uuid)].uuid
+      - jsonPath: $.Employees[*][?({id} in @.serviceHistory[*].id)].uuid
 
       - jsonPath: $.Employees.*.serviceHistory.*.serviceStatus
 
@@ -193,10 +193,10 @@ serviceMaps:
 
       - jsonPath: $.Employees.*.serviceHistory.*.auditDetails.createdBy
 
-      - jsonPath: $.Employees.*.serviceHistory.*.auditDetails.createdTime
+      - jsonPath: $.Employees.*.serviceHistory.*.auditDetails.createdDate
 
       - jsonPath: $.Employees.*.serviceHistory.*.auditDetails.lastModifiedBy
 
-      - jsonPath: $.Employees.*.serviceHistory.*.auditDetails.lastModifiedTime
+      - jsonPath: $.Employees.*.serviceHistory.*.auditDetails.lastModifiedDate
        
        

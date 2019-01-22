@@ -2,17 +2,17 @@ ServiceMaps:
  serviceName: Telemetry
  version: 1.0.0
  mappings:
-#  - topic: telemetry-final-messages
-#    configKey: INDEX
-#    indexes:
-#    - name: telemetryindex-v1
-#      type: general
-#      id: $.mid
-#      isBulk: true
-#      jsonPath: $.events.*
-#      timeStampField: $.ets
+  - topic: telemetry-final-messages
+    configKey: INDEX
+    indexes:
+    - name: telemetryindex-v1
+      type: general
+      id: $.mid
+      isBulk: true
+      jsonPath: $.events.*
+      timeStampField: $.ets
       
-  - topic: telemetry-unbundled-messages-test
+  - topic: telemetry-reindex
     configKey: REINDEX
     indexes:
     - name: telemetryindex-v1.1
@@ -20,7 +20,8 @@ ServiceMaps:
       id: $.mid
       isBulk: true
       jsonPath: $.hits
-      
+      timeStampField: $.ets
+
   - topic: batch-telemetry
     configKey: INDEX
     indexes:

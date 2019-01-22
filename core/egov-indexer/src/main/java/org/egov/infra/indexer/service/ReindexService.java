@@ -24,8 +24,6 @@ import org.egov.infra.indexer.web.contract.Mapping;
 import org.egov.infra.indexer.web.contract.Mapping.ConfigKeyEnum;
 import org.egov.infra.indexer.web.contract.ReindexRequest;
 import org.egov.infra.indexer.web.contract.ReindexResponse;
-import org.json.JSONArray;
-import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -247,14 +245,8 @@ public class ReindexService {
 			public void run() {
 				if (threadRun) {
 					try {
-
-//						indexerService.esIndexer(reindexRequest.getReindexTopic(),
-//								mapper.writeValueAsString(requestToReindex));
-                        List<Object> hits = (List<Object>) ( (Map<String, Object>) requestToReindex).get("hits");
-                        for(Object hit: hits) {
-                            log.info(hit.toString());
-                            indexerProducer.producer("telemetry-unbundled-messages", hit);
-                        }
+						indexerService.esIndexer(reindexRequest.getReindexTopic(),
+								mapper.writeValueAsString(requestToReindex));
 						recordsIndexed += resultSize;
 						log.info("Records indexed: " + recordsIndexed);
 					} catch (Exception e) {

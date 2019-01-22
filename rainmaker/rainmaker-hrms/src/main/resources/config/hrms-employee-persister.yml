@@ -45,7 +45,7 @@ serviceMaps:
 
     - query: INSERT INTO eg_hrms_assignment(tenantid, uuid, position, department, designation, fromdate, todate, govtordernumber, reportingto, isHOD, employeeid, createdby, createddate, lastmodifiedby, lastModifiedDate) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
 
-      basePath: Employees.*
+      basePath: Employees.*.assignments.*
       jsonMaps:
 
 
@@ -69,7 +69,7 @@ serviceMaps:
 
       - jsonPath: $.Employees.*.assignments.*.isHOD
 
-      - jsonPath: $.Employees.*.uuid
+      - jsonPath: $.Employees[*][?({uuid} in @.assignments[*].uuid)].uuid
 
       - jsonPath: $.Employees.*.assignments.*.auditDetails.createdBy
 
@@ -82,7 +82,7 @@ serviceMaps:
 
     - query: INSERT INTO eg_hrms_educationaldetails(tenantid, uuid, employeeid, qualification, stream, yearofpassing, university, remarks, createdby, createddate, lastmodifiedby, lastModifiedDate) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
 
-      basePath: Employees.*
+      basePath: Employees.*.education.*
       jsonMaps:
 
 
@@ -90,7 +90,7 @@ serviceMaps:
 
       - jsonPath: $.Employees.*.education.*.id
 
-      - jsonPath: $.Employees.*.uuid
+      - jsonPath: $.Employees[*][?({uuid} in @.education[*].uuid)].uuid
 
       - jsonPath: $.Employees.*.education.*.qualification
 
@@ -113,7 +113,7 @@ serviceMaps:
 
     - query: INSERT INTO eg_hrms_departmentaltests(tenantid, uuid, employeeid, test, yearofpassing, yearofpassing, remarks, createdby, createddate, lastmodifiedby, lastModifiedDate) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
 
-      basePath: Employees.*
+      basePath: Employees.*.test.*
       jsonMaps:
 
 
@@ -121,7 +121,7 @@ serviceMaps:
 
       - jsonPath: $.Employees.*.test.*.id
 
-      - jsonPath: $.Employees.*.uuid
+      - jsonPath: $.Employees[*][?({uuid} in @.test[*].uuid)].uuid
 
       - jsonPath: $.Employees.*.test.*.test
 
@@ -140,7 +140,7 @@ serviceMaps:
 
     - query: INSERT INTO eg_hrms_empdocuments(tenantid, uuid, employeeid, documentid, documentname, referencetype, referenceid, createdby, createddate, lastmodifiedby, lastModifiedDate) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
 
-      basePath: Employees.*
+      basePath: Employees.*.documents.*
       jsonMaps:
 
 
@@ -148,7 +148,7 @@ serviceMaps:
 
       - jsonPath: $.Employees.*.documents.*.id
 
-      - jsonPath: $.Employees.*.uuid
+      - jsonPath: $.Employees[*][?({uuid} in @.documents[*].uuid)].uuid
 
       - jsonPath: $.Employees.*.documents.*.documentid
 
@@ -169,7 +169,7 @@ serviceMaps:
 
     - query: INSERT INTO eg_hrms_servicehistory(tenantid, uuid, employeeid, servicestatus, servicefrom, serviceto, ordernumber, isCurrentPosition, location, createdby, createddate, lastmodifiedby, lastModifiedDate) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
 
-      basePath: Employees.*
+      basePath: Employees.*.serviceHistory.*
       jsonMaps:
 
 
@@ -177,7 +177,7 @@ serviceMaps:
 
       - jsonPath: $.Employees.*.serviceHistory.*.id
 
-      - jsonPath: $.Employees.*.uuid
+      - jsonPath: $.Employees[*][?({uuid} in @.serviceHistory[*].uuid)].uuid
 
       - jsonPath: $.Employees.*.serviceHistory.*.serviceStatus
 

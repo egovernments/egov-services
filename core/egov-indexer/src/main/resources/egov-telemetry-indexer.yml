@@ -21,7 +21,7 @@ ServiceMaps:
       isBulk: true
       jsonPath: $.hits
       timeStampField: $.ets
-      
+
   - topic: batch-telemetry
     configKey: INDEX
     indexes:

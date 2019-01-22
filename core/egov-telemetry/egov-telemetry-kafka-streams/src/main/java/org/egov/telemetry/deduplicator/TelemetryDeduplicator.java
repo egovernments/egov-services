@@ -163,7 +163,9 @@ public class TelemetryDeduplicator {
         deduplicated.to(outputTopic);
 
         KafkaStreams streams = new KafkaStreams(builder.build(), streamsConfiguration);
+        streams.cleanUp();
         streams.start();
+        Runtime.getRuntime().addShutdownHook(new Thread(streams::close));
 
     }
 

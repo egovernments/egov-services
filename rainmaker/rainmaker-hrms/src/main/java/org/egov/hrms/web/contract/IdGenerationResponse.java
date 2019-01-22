@@ -53,6 +53,5 @@ public class IdGenerationResponse {
 
     private ResponseInfo responseInfo;
 
-    private List<IdResponse> idResponses;
 
 }

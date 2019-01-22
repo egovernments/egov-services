@@ -57,6 +57,5 @@ public class IdGenerationRequest {
     @JsonProperty("RequestInfo")
     private RequestInfo requestInfo;
 
-    private List<IdRequest> idRequests;
 
 }

@@ -93,6 +93,7 @@ public class UserService {
 
 		String url = propertiesManager.getUsersServiceHostName() + propertiesManager.getUsersServiceUsersBasePath()
 				+ propertiesManager.getUsersServiceUsersCreatePath();
+		log.info(url);
 
 		UserResponse userResponse = restTemplate.postForObject(url,userRequest,UserResponse.class);
 

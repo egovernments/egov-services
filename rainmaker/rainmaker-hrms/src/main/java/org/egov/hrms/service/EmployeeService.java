@@ -47,10 +47,12 @@ import org.egov.hrms.config.ApplicationProperties;
 import org.egov.hrms.config.PropertiesManager;
 import org.egov.hrms.model.Employee;
 import org.egov.hrms.model.User;
+import org.egov.hrms.producer.HRMSProducer;
 import org.egov.hrms.utils.ResponseInfoFactory;
 import org.egov.hrms.web.contract.*;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
@@ -61,6 +63,10 @@ import java.util.UUID;
 @Slf4j
 @Service
 public class EmployeeService {
+
+	@Value("${kafka.topics.save.service}")
+	private String saveTopic;
+
 
 
 	@Autowired
@@ -82,18 +88,21 @@ public class EmployeeService {
 	@Autowired
 	private ApplicationProperties applicationProperties;
 
+	@Autowired
+	private HRMSProducer hrmsProducer;
 
 
 	public EmployeeResponse create(EmployeeRequest employeeRequest)		{
 		log.info("Service: Create Employee");
+		log.info(employeeRequest.toString());
 		RequestInfo requestInfo = employeeRequest.getRequestInfo();
 
 		employeeRequest.getEmployees().stream().forEach(employee -> {
 			createUser(employee,requestInfo);
 			enrichCreateRequest(employee,requestInfo);
-			//pushToTopic
 
 		});
+		hrmsProducer.push(saveTopic,employeeRequest);
 
 		return generateResponse(employeeRequest);
 	}
@@ -149,6 +158,7 @@ public class EmployeeService {
 		employeeRequest.getEmployees().stream().forEach(employee -> {
 			enrichUpdateRequest(employee,requestInfo);
 			updateUser(employee,requestInfo);
+
 			//pushToTopic
 
 		});

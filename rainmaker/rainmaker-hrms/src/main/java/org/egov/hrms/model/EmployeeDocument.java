@@ -57,11 +57,11 @@ public class EmployeeDocument {
 	private Long employeeId;
 
 	@NonNull
-	private String document;
+	private String documentName;
 
 	private String referenceType;
 
-	private Long referenceId;
+	private String referenceId;
 
 
 	@Override
@@ -73,10 +73,10 @@ public class EmployeeDocument {
 		if (getClass() != obj.getClass())
 			return false;
 		EmployeeDocument other = (EmployeeDocument) obj;
-		if (document == null) {
-			if (other.document != null)
+		if (documentName == null) {
+			if (other.documentName != null)
 				return false;
-		} else if (!document.equals(other.document))
+		} else if (!documentName.equals(other.documentName))
 			return false;
 		if (employeeId == null) {
 			if (other.employeeId != null)

@@ -54,8 +54,7 @@ public class ServiceHistory {
 
 	private String id;
 
-	@NotNull
-	private String serviceInfo;
+	private String serviceStatus;
 
 	@NotNull
 	private Long serviceFrom;
@@ -65,44 +64,11 @@ public class ServiceHistory {
 
 	@NonNull
 	private String orderNo;
+	
+	private String location;	
 
 	private  boolean isCurrentPosition;
 
 	private AuditDetails auditDetails;
 
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		ServiceHistory other = (ServiceHistory) obj;
-		/*if (documents == null) {
-			if (other.documents != null)
-				return false;
-		} else if (!documents.equals(other.documents))
-			return false;*/
-		if (id == null) {
-			if (other.id != null)
-				return false;
-		} else if (!id.equals(other.id))
-			return false;
-		if (orderNo == null) {
-			if (other.orderNo != null)
-				return false;
-		} else if (!orderNo.equals(other.orderNo))
-			return false;
-		if (serviceFrom == null) {
-			if (other.serviceFrom != null)
-				return false;
-		} else if (serviceFrom!= other.serviceFrom)
-			return false;
-		if (serviceInfo == null) {
-            return other.serviceInfo == null;
-		} else return serviceInfo.equals(other.serviceInfo);
-
-    }
 }

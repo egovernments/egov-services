@@ -46,6 +46,7 @@ import org.egov.hrms.model.enums.UserType;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.util.ArrayList;
 import java.util.List;
@@ -66,8 +67,9 @@ public class User {
 	private String userName;
 
 
-	@NotNull
-	@Size(min=3, max=100)
+    @NotNull
+    @Size(max=100)
+    @Pattern(regexp = "^[a-zA-Z0-9 \\-'`\\.]*$", message = "Invalid name. Only alphabets and special characters -, ',`, .")
 	private String name;
 
 	@NonNull

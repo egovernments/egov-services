@@ -44,6 +44,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.egov.hrms.service.EmployeeService;
 import org.egov.hrms.web.contract.EmployeeRequest;
 import org.egov.hrms.web.contract.EmployeeResponse;
+import org.egov.hrms.web.validator.EmployeeValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -59,44 +60,9 @@ public class EmployeeController {
 
 	@Autowired
 	private EmployeeService employeeService;
-
-
-
-
-	/**
-	 * Maps Post Requests for _search & returns ResponseEntity of either
-	 * EmployeeResponse type or ErrorResponse type
-	 *
-	 * @param employeeCriteria,
-	 * @param modelAttributeBindingResult
-	 * @param requestInfoWrapper
-	 * @param requestBodyBindingResult
-	 * @return ResponseEntity<?>
-	 */
-//	@PostMapping("_search")
-//	@ResponseBody
-//	public ResponseEntity<?> search(@ModelAttribute @Valid EmployeeCriteria employeeCriteria,
-//			BindingResult modelAttributeBindingResult, @RequestBody @Valid RequestInfoWrapper requestInfoWrapper,
-//			BindingResult requestBodyBindingResult) {
-//		RequestInfo requestInfo = requestInfoWrapper.getRequestInfo();
-//
-//		ResponseEntity<?> errorResponseEntity = requestValidator.validateSearchRequest(requestInfo,
-//				modelAttributeBindingResult, requestBodyBindingResult);
-//
-//		if (errorResponseEntity != null)
-//			return errorResponseEntity;
-//
-//		// Call service
-//		Map<String, Object> employeeMap = null;
-//		try {
-//			employeeMap = employeeService.getPaginatedEmployees(employeeCriteria, requestInfo);
-//		} catch (Exception exception) {
-//			log.error("Error while processing request " + employeeCriteria, exception);
-//			return errorHandler.getResponseEntityForUnexpectedErrors(requestInfo);
-//		}
-//
-//		return responseEntityFactory.getSuccessResponse(employeeMap, requestInfo);
-//	}
+	
+	@Autowired
+	private EmployeeValidator validator;
 
 
 	/**
@@ -111,6 +77,7 @@ public class EmployeeController {
 	@ResponseBody
 	public ResponseEntity<?> create(@RequestBody @Valid EmployeeRequest employeeRequest, BindingResult bindingResult) {
 		log.debug("employeeRequest::" + employeeRequest);
+		validator.validateCreateEmployee(employeeRequest);
 		EmployeeResponse employeeResponse = employeeService.create(employeeRequest);
         return new ResponseEntity<>(employeeResponse,HttpStatus.OK);
 	}

@@ -56,6 +56,7 @@ public class EducationalQualification {
 	@NotNull
 	private String qualification;
 
+	@NotNull
 	private String stream;
 
 	@NotNull
@@ -63,47 +64,8 @@ public class EducationalQualification {
 
 	private String university;
 
-	@NonNull
 	private  String remarks;
 
 	private AuditDetails auditDetails;
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		EducationalQualification other = (EducationalQualification) obj;
-	/*	if (documents == null) {
-			if (other.documents != null)
-				return false;
-		} else if (!documents.equals(other.documents))
-			return false;*/
-		if (id == null) {
-			if (other.id != null)
-				return false;
-		} else if (!id.equals(other.id))
-			return false;
-		if (stream == null) {
-			if (other.stream != null)
-				return false;
-		} else if (!stream.equals(other.stream))
-			return false;
-		if (qualification == null) {
-			if (other.qualification != null)
-				return false;
-		} else if (!qualification.equals(other.qualification))
-			return false;
-		if (university == null) {
-			if (other.university != null)
-				return false;
-		} else if (!university.equals(other.university))
-			return false;
-		if (yearOfPassing == null) {
-            return other.yearOfPassing == null;
-		} else return yearOfPassing.equals(other.yearOfPassing);
-    }
 }

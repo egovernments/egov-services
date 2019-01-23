@@ -40,6 +40,8 @@
 
 package org.egov.hrms.model;
 
+import org.egov.hrms.model.enums.ReferenceType;
+
 import lombok.*;
 
 @AllArgsConstructor
@@ -60,46 +62,10 @@ public class EmployeeDocument {
 
 	private  String documentId;
 
-	private String referenceType;
+	private ReferenceType referenceType;
 
 	private String referenceId;
 
 	private AuditDetails auditDetails;
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		EmployeeDocument other = (EmployeeDocument) obj;
-		if (documentName == null) {
-			if (other.documentName != null)
-				return false;
-		} else if (!documentName.equals(other.documentName))
-			return false;
-		if (employeeId == null) {
-			if (other.employeeId != null)
-				return false;
-		} else if (!employeeId.equals(other.employeeId))
-			return false;
-		if (referenceId == null) {
-			if (other.referenceId != null)
-				return false;
-		} else if (!referenceId.equals(other.referenceId))
-			return false;
-		if (referenceType == null) {
-			if (other.referenceType != null)
-				return false;
-		} else if (!referenceType.equals(other.referenceType)) {
-			return false;
-		}
-
-		return true;
-    }
-	
-	
 
 }

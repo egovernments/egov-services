@@ -44,6 +44,8 @@ import lombok.*;
 import org.egov.hrms.model.enums.Gender;
 import org.egov.hrms.model.enums.UserType;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
@@ -83,7 +85,12 @@ public class User {
 
 	@Size(max=128)
 	private String emailId;
-
+	
+	
+    private Long dob;
+    
+    @Size(max=300)
+    private String correspondenceAddress;
 
 	@Valid
 	@NotNull

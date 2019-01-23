@@ -44,6 +44,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.egov.hrms.service.EmployeeService;
 import org.egov.hrms.web.contract.EmployeeRequest;
 import org.egov.hrms.web.contract.EmployeeResponse;
+import org.egov.hrms.web.contract.EmployeeSearchCriteria;
+import org.egov.hrms.web.contract.RequestInfoWrapper;
 import org.egov.hrms.web.validator.EmployeeValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -96,6 +98,24 @@ public class EmployeeController {
 	public ResponseEntity<?> update(@RequestBody @Valid EmployeeRequest employeeRequest, BindingResult bindingResult) {
 		log.debug("employeeRequest::" + employeeRequest);
 		EmployeeResponse employeeResponse = employeeService.update(employeeRequest);
+		return new ResponseEntity<>(employeeResponse,HttpStatus.OK);
+	}
+	
+	
+	/**
+	 * Maps Post Requests for _search & returns ResponseEntity of either
+	 * EmployeeResponse type or ErrorResponse type
+	 *
+	 * @param criteria
+	 * @param bindingResult
+	 * @return ResponseEntity<?>
+	 */
+	@PostMapping(value = "/_search")
+	@ResponseBody
+	public ResponseEntity<?> search(@RequestBody @Valid RequestInfoWrapper requestInfoWrapper, 
+									@ModelAttribute EmployeeSearchCriteria criteria, BindingResult bindingResult) {
+		log.debug("employeeSearchCriteria::" + criteria);
+		EmployeeResponse employeeResponse = null;
 		return new ResponseEntity<>(employeeResponse,HttpStatus.OK);
 	}
 

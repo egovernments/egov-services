@@ -121,4 +121,22 @@ CREATE TABLE eg_hrms_servicehistory (
 
 );
 
+CREATE TABLE eg_hrms_deactivationdetails (
+	uuid CHARACTER VARYING(1024) NOT NULL,
+	employeeid CHARACTER VARYING(1024) NOT NULL,
+	reasonfordeactivation CHARACTER VARYING(250),
+	effectivefrom BIGINT,
+	ordernumber CHARACTER VARYING(250),
+	typeOfDeactivation CHARACTER VARYING(250),
+	tenantid CHARACTER VARYING(250) NOT NULL,
+	createdby CHARACTER VARYING(250) NOT NULL,
+	createddate BIGINT NOT NULL,
+	lastmodifiedby CHARACTER VARYING(250),
+	lastModifiedDate BIGINT,
+	
+	CONSTRAINT pk_eghrms_deactivationdetails  PRIMARY KEY (uuid),
+	CONSTRAINT fk_eghrms_deactivationdetails_employeeid FOREIGN KEY (employeeid) REFERENCES eg_hrms_employee (uuid)
+
+);
+
 

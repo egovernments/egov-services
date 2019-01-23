@@ -71,5 +71,37 @@ public class Jurisdiction {
     private AuditDetails auditDetails;
 
 
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        Jurisdiction other = (Jurisdiction) obj;
+        if (id == null) {
+            if (other.id != null)
+                return false;
+        } else if (!id.equals(other.id))
+            return false;
+        if (hierarchy == null) {
+            if (other.hierarchy != null)
+                return false;
+        } else if (!hierarchy.equals(other.hierarchy))
+            return false;
+        if (boundary == null) {
+            if (other.boundary != null)
+                return false;
+        } else if (!boundary.equals(other.boundary))
+            return false;
+        if (boundaryType == null) {
+            return other.boundaryType == null;
+        } else return boundaryType.equals(other.boundaryType);
+    }
+
+
+
+
 
 }

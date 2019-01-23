@@ -33,4 +33,45 @@ public class DeactivationDetails {
 	private DeactivationType typeOfDeactivation;
 
 	private AuditDetails auditDetails;
+
+
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		DeactivationDetails other = (DeactivationDetails) obj;
+		if (id == null) {
+			if (other.id != null)
+				return false;
+		} else if (!id.equals(other.id))
+			return false;
+		if (reasonForDeactivation == null) {
+			if (other.reasonForDeactivation != null)
+				return false;
+		} else if (!reasonForDeactivation.equals(other.reasonForDeactivation))
+			return false;
+		if (orderNo == null) {
+			if (other.orderNo != null)
+				return false;
+		}
+		else if (orderNo != other.orderNo)
+			return false;
+		if (effectiveFrom == null) {
+			if (other.effectiveFrom != null)
+				return false;
+		} else if (!effectiveFrom.equals(other.effectiveFrom))
+			return false;
+		if (typeOfDeactivation == null) {
+			return other.typeOfDeactivation == null;
+		} else return (typeOfDeactivation== other.typeOfDeactivation);
+	}
+
+
 }
+
+

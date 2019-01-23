@@ -113,6 +113,14 @@ public class Assignment {
 				return false;
 		} else if (!id.equals(other.id))
 			return false;
+		if (reportingTo == null) {
+			if (other.reportingTo != null)
+				return false;
+		} else if (!reportingTo.equals(other.reportingTo))
+			return false;
+		if (isHOD != other.isHOD) {
+			return false;
+		}
 		if (position == null) {
 			if (other.position != null)
 				return false;

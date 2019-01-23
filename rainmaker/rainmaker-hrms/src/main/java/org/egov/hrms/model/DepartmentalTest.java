@@ -74,11 +74,6 @@ public class DepartmentalTest {
 		if (getClass() != obj.getClass())
 			return false;
 		DepartmentalTest other = (DepartmentalTest) obj;
-		/*if (documents == null) {
-			if (other.documents != null)
-				return false;
-		} else if (!documents.equals(other.documents))
-			return false;*/
 		if (id == null) {
 			if (other.id != null)
 				return false;

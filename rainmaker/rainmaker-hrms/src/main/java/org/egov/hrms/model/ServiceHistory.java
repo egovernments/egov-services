@@ -71,4 +71,52 @@ public class ServiceHistory {
 
 	private AuditDetails auditDetails;
 
+
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		ServiceHistory other = (ServiceHistory) obj;
+		if (id == null) {
+			if (other.id != null)
+				return false;
+		} else if (!id.equals(other.id))
+			return false;
+		if (serviceFrom == null) {
+			if (other.serviceFrom != null)
+				return false;
+		} else if (!serviceFrom.equals(other.serviceFrom))
+			return false;
+		if (serviceStatus == null) {
+			if (other.serviceStatus != null)
+				return false;
+		} else if (serviceStatus != other.serviceStatus)
+			return false;
+		if (serviceTo == null) {
+			if (other.serviceTo != null)
+				return false;
+		} else if (!serviceTo.equals(other.serviceTo))
+			return false;
+		if (orderNo == null) {
+			if (other.orderNo != null)
+				return false;
+		} else if (!orderNo.equals(other.orderNo))
+			return false;
+		if (location == null) {
+			if (other.location != null)
+				return false;
+		} else if (!location.equals(other.location))
+			return false;
+		if (isCurrentPosition != other.isCurrentPosition) {
+			return false;
+		}
+		else return true;
+
+	}
+
 }

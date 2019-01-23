@@ -199,4 +199,30 @@ serviceMaps:
 
       - jsonPath: $.Employees.*.serviceHistory.*.auditDetails.lastModifiedDate
        
-       
+
+    -query: INSERT INTO eg_hrms_jurisdiction (uuid, employeeid, hierarchy, boundarytype, boundary, tenantid, createdby, createddate, lastmodifiedby, lastModifiedDate) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+
+      basePath: Employees.*.jurisdictions.*
+      jsonMaps:
+
+      - jsonPath: $.Employees.*.jurisdictions.*.id
+
+      - jsonPath: $.Employees[*][?({id} in @.jurisdictions[*].id)].uuid
+
+      - jsonPath: $.Employees.*.jurisdictions.*.hierarchy
+
+      - jsonPath: $.Employees.*.jurisdictions.*.boundaryType
+
+      - jsonPath: $.Employees.*.jurisdictions.*.boundary
+
+      - jsonPath: $.Employees[*][?({id} in @.jurisdictions[*].id)].tenantId
+
+      - jsonPath: $.Employees.*.jurisdictions.*.auditDetails.createdBy
+
+      - jsonPath: $.Employees.*.jurisdictions.*.auditDetails.createdDate
+
+      - jsonPath: $.Employees.*.jurisdictions.*.auditDetails.lastModifiedBy
+
+      - jsonPath: $.Employees.*.jurisdictions.*.auditDetails.lastModifiedDate
+
+

@@ -49,6 +49,7 @@ import org.egov.hrms.model.Employee;
 import org.egov.hrms.model.User;
 import org.egov.hrms.model.enums.UserType;
 import org.egov.hrms.producer.HRMSProducer;
+import org.egov.hrms.repository.EmployeeRepository;
 import org.egov.hrms.utils.ResponseInfoFactory;
 import org.egov.hrms.web.contract.*;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
@@ -59,6 +60,7 @@ import org.springframework.stereotype.Service;
 import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Data
 @Slf4j
@@ -85,6 +87,9 @@ public class EmployeeService {
 
 	@Autowired
 	private HRMSProducer hrmsProducer;
+	
+	@Autowired
+	private EmployeeRepository repository;
 
 	public EmployeeResponse create(EmployeeRequest employeeRequest) {
 		log.info("Service: Create Employee");
@@ -92,7 +97,7 @@ public class EmployeeService {
 		RequestInfo requestInfo = employeeRequest.getRequestInfo();
 
 		employeeRequest.getEmployees().stream().forEach(employee -> {
-//			createUser(employee, requestInfo);
+			createUser(employee, requestInfo);
 			enrichCreateRequest(employee, requestInfo);
 
 		});
@@ -100,6 +105,18 @@ public class EmployeeService {
 
 		return generateResponse(employeeRequest);
 	}
+	
+	public EmployeeResponse search(EmployeeSearchCriteria criteria, RequestInfo requestInfo) {
+		List<Employee> employees = repository.fetchEmployees(criteria, requestInfo);
+		List<String> uuids = employees.stream().map(Employee :: getUuid).collect(Collectors.toList());
+		UserResponse userResponse = userService.getUser(requestInfo, uuids);
+		EmployeeResponse response = EmployeeResponse.builder().responseInfo(factory.createResponseInfoFromRequestInfo(requestInfo, true))
+				.employees(employees).build();
+
+		return response;
+	}
+	
+	
 
 	private void createUser(Employee employee, RequestInfo requestInfo) {
 
@@ -162,20 +179,12 @@ public class EmployeeService {
 
 		employeeRequest.getEmployees().stream().forEach(employee -> {
 			enrichUpdateRequest(employee, requestInfo);
-			updateUser(employee, requestInfo);
+			//updateUser(employee, requestInfo);
 
 			// pushToTopic
 
 		});
 		return generateResponse(employeeRequest);
-	}
-
-	private void updateUser(Employee employee, RequestInfo requestInfo) {
-		UserRequest request = UserRequest.builder().requestInfo(requestInfo).user(employee.getUser()).build();
-		UserResponse response = userService.createUser(request);
-		User user = response.getUser().get(0);
-		employee.setUser(user);
-
 	}
 
 	private void enrichUpdateRequest(Employee employee, RequestInfo requestInfo) {

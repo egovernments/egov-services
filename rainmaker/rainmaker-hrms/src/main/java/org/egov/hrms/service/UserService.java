@@ -42,7 +42,10 @@ package org.egov.hrms.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
+
+import org.egov.common.contract.request.RequestInfo;
 import org.egov.hrms.config.PropertiesManager;
+import org.egov.hrms.web.contract.EmployeeSearchCriteria;
 import org.egov.hrms.web.contract.UserRequest;
 import org.egov.hrms.web.contract.UserResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,6 +53,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.text.MessageFormat;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 @Slf4j
 @Service
 public class UserService {
@@ -78,23 +84,22 @@ public class UserService {
 
 		return userResponse;
 	}
-
-/*	public UserResponse updateUser(Long userId, UserRequest userRequest)  {
-		log.info("Update");
-
-		String url = propertiesManager.getUsersServiceHostName() + propertiesManager.getUsersServiceUsersBasePath()
-				+ getUserUpdatePath(userId);
-
-
-		UserResponse userResponse = restTemplate.postForObject(url,userRequest,UserResponse.class);
-
+	
+	public UserResponse getUser(RequestInfo requestInfo, List<String> uuids) {
+		log.info("Service: Create USer");
+		StringBuilder uri = new StringBuilder();
+		Map<String, Object> userSearchReq = new HashMap<>();
+		userSearchReq.put("RequestInfo", requestInfo);
+		userSearchReq.put("uuid", uuids);
+		uri.append(propertiesManager.getUserHost()).append(propertiesManager.getUserSearchEndpoint());
+		UserResponse userResponse = null;
+		try {
+			userResponse = restTemplate.postForObject(uri.toString(), userSearchReq, UserResponse.class);
+		}catch(Exception e) {
+			log.error("User search failed: ",e);
+		}
 
 		return userResponse;
 	}
-
-	private String getUserUpdatePath(long id) {
-		String path = MessageFormat.format(propertiesManager.getUsersServiceUsersUpdatePath(), Long.toString(id));
-		return path;
-	}*/
 
 }

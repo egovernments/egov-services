@@ -106,6 +106,8 @@ public class Employee {
     @Size(max=50)
     private List<EmployeeDocument> documents = new ArrayList<>();
 
+    private List<DeactivationDetails> deactivationDetails = new ArrayList<>();
+
     private AuditDetails auditDetails;
     @Valid
     @NotNull

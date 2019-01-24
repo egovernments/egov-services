@@ -58,10 +58,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import java.time.Instant;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -139,8 +136,6 @@ public class EmployeeService {
 	}
 
 	private void enrichCreateRequest(Employee employee, RequestInfo requestInfo) {
-		requestInfo.setTs(null);
-		RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper(requestInfo);
 
 		Instant instant = Instant.now();
 		AuditDetails auditDetails = AuditDetails.builder()
@@ -186,8 +181,18 @@ public class EmployeeService {
 		log.info("Service: Update Employee");
 		RequestInfo requestInfo = employeeRequest.getRequestInfo();
 
+		List <String> uuidList= new ArrayList<>();
+		for(Employee employee: employeeRequest.getEmployees()) {
+			uuidList.add(employee.getUuid());
+		}
+
+		//search emploee  call to get existing employee data for uuid list
+
+		List <Employee> existingEmployees = employeeRequest.getEmployees();
+
+
 		employeeRequest.getEmployees().stream().forEach(employee -> {
-			enrichUpdateRequest(employee, requestInfo);
+			enrichUpdateRequest(employee, requestInfo, existingEmployees);
 			//updateUser(employee, requestInfo);
 
 			// pushToTopic
@@ -196,7 +201,117 @@ public class EmployeeService {
 		return generateResponse(employeeRequest);
 	}
 
-	private void enrichUpdateRequest(Employee employee, RequestInfo requestInfo) {
+	private void enrichUpdateRequest(Employee employee, RequestInfo requestInfo, List<Employee> existingEmployeesData) {
+		Instant instant = Instant.now();
+		AuditDetails auditDetails = AuditDetails.builder()
+				.createdBy(requestInfo.getUserInfo().getUserName())
+				.createdDate(instant.getEpochSecond())
+				.build();
+		Employee existingEmpData = existingEmployeesData.stream().filter(existingEmployee -> existingEmployee.getUuid()==employee.getUuid()).findFirst().get();
+
+		employee.getJurisdictions().stream().forEach(jurisdiction -> {
+
+			if(jurisdiction.getId()==null) {
+				jurisdiction.setId(UUID.randomUUID().toString());
+				jurisdiction.setAuditDetails(auditDetails);
+			}else{
+				if(!existingEmpData.getJurisdictions().stream()
+						.filter(jurisdictionData ->jurisdictionData.getId()==jurisdiction.getId() )
+						.findFirst()
+						.equals(jurisdiction)){
+					jurisdiction.getAuditDetails().setLastModifiedBy(requestInfo.getUserInfo().getUserName());
+					jurisdiction.getAuditDetails().setLastModifiedDate(instant.getEpochSecond());
+				}
+			}
+		});
+		employee.getAssignments().stream().forEach(assignment -> {
+			if(assignment.getId()==null) {
+				assignment.setId(UUID.randomUUID().toString());
+				assignment.setAuditDetails(auditDetails);
+			}else {
+				if(!existingEmpData.getAssignments().stream()
+						.filter(assignmentData -> assignmentData.getId()==assignment.getId())
+						.findFirst()
+						.equals(assignment)){
+					assignment.getAuditDetails().setLastModifiedBy(requestInfo.getUserInfo().getUserName());
+					assignment.getAuditDetails().setLastModifiedDate(instant.getEpochSecond());
+				}
+			}
+		});
+		employee.getServiceHistory().stream().forEach(serviceHistory -> {
+			if(serviceHistory.getId()==null) {
+				serviceHistory.setId(UUID.randomUUID().toString());
+				serviceHistory.setAuditDetails(auditDetails);
+			}else {
+				if(!existingEmpData.getAssignments().stream()
+						.filter(serviceHistoryData -> serviceHistoryData.getId()==serviceHistory.getId())
+						.findFirst()
+						.equals(serviceHistory)){
+					serviceHistory.getAuditDetails().setLastModifiedBy(requestInfo.getUserInfo().getUserName());
+					serviceHistory.getAuditDetails().setLastModifiedDate(instant.getEpochSecond());
+				}
+			}
+		});
+		employee.getEducation().stream().forEach(educationalQualification -> {
+			if(educationalQualification.getId()==null) {
+				educationalQualification.setId(UUID.randomUUID().toString());
+				educationalQualification.setAuditDetails(auditDetails);
+			}else {
+				if(!existingEmpData.getAssignments().stream()
+						.filter(educationalQualificationData -> educationalQualificationData.getId()==educationalQualification.getId())
+						.findFirst()
+						.equals(educationalQualification)){
+					educationalQualification.getAuditDetails().setLastModifiedBy(requestInfo.getUserInfo().getUserName());
+					educationalQualification.getAuditDetails().setLastModifiedDate(instant.getEpochSecond());
+				}
+			}
+		});
+		employee.getTests().stream().forEach(departmentalTest -> {
+			if(departmentalTest.getId()==null) {
+				departmentalTest.setId(UUID.randomUUID().toString());
+				departmentalTest.setAuditDetails(auditDetails);
+			}else {
+				if(!existingEmpData.getAssignments().stream()
+						.filter(departmentalTestData -> departmentalTestData.getId()==departmentalTest.getId())
+						.findFirst()
+						.equals(departmentalTest)){
+					departmentalTest.getAuditDetails().setLastModifiedBy(requestInfo.getUserInfo().getUserName());
+					departmentalTest.getAuditDetails().setLastModifiedDate(instant.getEpochSecond());
+				}
+			}
+		});
+		employee.getDocuments().stream().forEach(document -> {
+			if(document.getId()==null) {
+				document.setId(UUID.randomUUID().toString());
+				document.setAuditDetails(auditDetails);
+			}else {
+				if(!existingEmpData.getAssignments().stream()
+						.filter(documentData -> documentData.getId()==document.getId())
+						.findFirst()
+						.equals(document)){
+					document.getAuditDetails().setLastModifiedBy(requestInfo.getUserInfo().getUserName());
+					document.getAuditDetails().setLastModifiedDate(instant.getEpochSecond());
+				}
+			}
+		});
+		employee.getDeactivationDetails().stream().forEach(deactivationDetails -> {
+			if(deactivationDetails.getId()==null) {
+				deactivationDetails.setId(UUID.randomUUID().toString());
+				deactivationDetails.setAuditDetails(auditDetails);
+			}else {
+				if(!existingEmpData.getAssignments().stream()
+						.filter(deactivationDetailsData -> deactivationDetailsData.getId()==deactivationDetails.getId())
+						.findFirst()
+						.equals(deactivationDetails)){
+					deactivationDetails.getAuditDetails().setLastModifiedBy(requestInfo.getUserInfo().getUserName());
+					deactivationDetails.getAuditDetails().setLastModifiedDate(instant.getEpochSecond());
+				}
+			}
+		});
+
+
+
+
 	}
 
 	private EmployeeResponse generateResponse(EmployeeRequest employeeRequest) {

@@ -97,6 +97,7 @@ public class EmployeeController {
 	@ResponseBody
 	public ResponseEntity<?> update(@RequestBody @Valid EmployeeRequest employeeRequest, BindingResult bindingResult) {
 		log.debug("employeeRequest::" + employeeRequest);
+		validator.validateUpdateEmployee(employeeRequest);
 		EmployeeResponse employeeResponse = employeeService.update(employeeRequest);
 		return new ResponseEntity<>(employeeResponse,HttpStatus.OK);
 	}

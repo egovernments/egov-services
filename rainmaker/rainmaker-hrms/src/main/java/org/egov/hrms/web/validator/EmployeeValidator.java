@@ -1,9 +1,7 @@
 package org.egov.hrms.web.validator;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import lombok.extern.slf4j.Slf4j;
 import org.egov.hrms.model.Assignment;
@@ -26,7 +24,8 @@ public class EmployeeValidator {
 	
 	@Autowired
 	private MDMSService mdmsService;
-	
+
+
 	public void validateCreateEmployee(EmployeeRequest request) {
 		Map<String, String> errorMap = new HashMap<>();
 		Map<String, List<String>> mdmsData = mdmsService.getMDMSData(request.getRequestInfo(), request.getEmployees().get(0).getTenantId());
@@ -114,4 +113,129 @@ public class EmployeeValidator {
 	}
 
 
+	public void validateUpdateEmployee(EmployeeRequest request) {
+		Map<String, String> errorMap = new HashMap<>();
+		Map<String, List<String>> mdmsData = mdmsService.getMDMSData(request.getRequestInfo(), request.getEmployees().get(0).getTenantId());
+		if(!CollectionUtils.isEmpty(mdmsData.keySet())){
+			for(Employee employee: request.getEmployees()) {
+				validateEmployee(employee, errorMap, mdmsData);
+				validateAssignments(employee, errorMap, mdmsData);
+				validateJurisdiction(employee, errorMap, mdmsData);
+				validateServiceHistory(employee, errorMap, mdmsData);
+				validateEducationalDetails(employee, errorMap, mdmsData);
+				validateDepartmentalTest(employee, errorMap, mdmsData);
+			}
+		}else{
+			log.info("MDMS data couldn't be fetched so skipping validaion!");
+		}
+		if(!CollectionUtils.isEmpty(errorMap.keySet())) {
+			throw new CustomException(errorMap);
+		}
+
+		List <String> uuidList= new ArrayList<>();
+		for(Employee employee: request.getEmployees()) {
+			uuidList.add(employee.getUuid());
+		}
+
+		//search emploee  call to get existing employee data for uuid list
+		List <Employee> existingEmployees = request.getEmployees();
+
+		for(Employee employee: request.getEmployees()){
+			Employee existingEmp = existingEmployees.stream().filter(existingEmployee -> existingEmployee.getUuid()==employee.getUuid()).findFirst().get();
+			validateConsistencyAssignment(existingEmp,employee,errorMap);
+			validateConsistencyJurisdiction(existingEmp,employee,errorMap);
+			validateConsistencyDepartmentalTest(existingEmp,employee,errorMap);
+			validateConsistencyEducationalDetails(existingEmp,employee,errorMap);
+			validateConsistencyServiceHistory(existingEmp,employee,errorMap);
+			validateConsistencyEmployeeDocument(existingEmp,employee,errorMap);
+		}
+
+
+
+
+
+	}
+
+	private void validateConsistencyJurisdiction(Employee existingEmp, Employee updatedEmployeeData, Map<String, String> errorMap) {
+		boolean check =
+				updatedEmployeeData.getJurisdictions().stream()
+						.map(jurisdiction -> jurisdiction.getId())
+						.collect(Collectors.toList())
+						.containsAll(existingEmp.getJurisdictions().stream()
+								.map(jurisdiction -> jurisdiction.getId())
+								.collect(Collectors.toList()));
+		if(!check){
+			errorMap.put("UPDATE_JURISDICTION_INCOSISTENT","Jurisdiction data in update request should contain all previous assginment data ");
+		}
+
+	}
+
+	private void validateConsistencyAssignment(Employee existingEmp, Employee updatedEmployeeData, Map<String, String> errorMap) {
+		boolean check =
+				updatedEmployeeData.getAssignments().stream()
+						.map(assignment -> assignment.getId())
+						.collect(Collectors.toList())
+						.containsAll(existingEmp.getAssignments().stream()
+								.map(assignment -> assignment.getId())
+								.collect(Collectors.toList()));
+		if(!check){
+			errorMap.put("UPDATE_ASSIGNEMENT_INCOSISTENT","Assignment data in update request should contain all previous assginment data ");
+		}
+	}
+
+	private void validateConsistencyDepartmentalTest(Employee existingEmp, Employee updatedEmployeeData, Map<String, String> errorMap){
+		boolean check =
+				updatedEmployeeData.getTests().stream()
+						.map(test -> test.getId())
+						.collect(Collectors.toList())
+						.containsAll(existingEmp.getTests().stream()
+								.map(test -> test.getId())
+								.collect(Collectors.toList()));
+		if(!check){
+			errorMap.put("UPDATE_TESTS_INCOSISTENT","Tests data in update request should contain all previous assginment data ");
+		}
+
+	}
+
+	private void validateConsistencyEducationalDetails(Employee existingEmp, Employee updatedEmployeeData, Map<String, String> errorMap){
+		boolean check =
+				updatedEmployeeData.getEducation().stream()
+						.map(educationalQualification -> educationalQualification.getId())
+						.collect(Collectors.toList())
+						.containsAll(existingEmp.getEducation().stream()
+								.map(educationalQualification -> educationalQualification.getId())
+								.collect(Collectors.toList()));
+		if(!check){
+			errorMap.put("UPDATE_EDUCATION_INCOSISTENT","Education data in update request should contain all previous assginment data ");
+		}
+
+	}
+
+	private void validateConsistencyServiceHistory(Employee existingEmp, Employee updatedEmployeeData, Map<String, String> errorMap){
+		boolean check =
+				updatedEmployeeData.getServiceHistory().stream()
+						.map(serviceHistory -> serviceHistory.getId())
+						.collect(Collectors.toList())
+						.containsAll(existingEmp.getServiceHistory().stream()
+								.map(serviceHistory -> serviceHistory.getId())
+								.collect(Collectors.toList()));
+		if(!check){
+			errorMap.put("UPDATE_SERVICE_HISTORY_INCOSISTENT","Service History data in update request should contain all previous assginment data ");
+		}
+
+	}
+
+	private void validateConsistencyEmployeeDocument(Employee existingEmp, Employee updatedEmployeeData, Map<String, String> errorMap) {
+		boolean check =
+				updatedEmployeeData.getDocuments().stream()
+						.map(employeeDocument -> employeeDocument.getId())
+						.collect(Collectors.toList())
+						.containsAll(existingEmp.getDocuments().stream()
+								.map(employeeDocument -> employeeDocument.getId())
+								.collect(Collectors.toList()));
+		if (!check) {
+			errorMap.put("UPDATE_DOCUMENT_INCOSISTENT", "Employee Document data in update request should contain all previous assginment data ");
+		}
+
+	}
 }

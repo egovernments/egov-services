@@ -41,9 +41,8 @@
 package org.egov.hrms.model;
 
 import lombok.*;
-
 import javax.validation.constraints.NotNull;
-
+@EqualsAndHashCode(exclude = {"auditDetails"})
 @AllArgsConstructor
 @Builder
 @Getter
@@ -79,137 +78,6 @@ public class Assignment {
 
 	private AuditDetails auditDetails;
 
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Assignment other = (Assignment) obj;
-		if (department == null) {
-			if (other.department != null)
-				return false;
-		} else if (!department.equals(other.department))
-			return false;
-		if (designation == null) {
-			if (other.designation != null)
-				return false;
-		} else if (!designation.equals(other.designation))
-			return false;
-		if (fromDate == null) {
-			if (other.fromDate != null)
-				return false;
-		} 
-		else if (fromDate != other.fromDate)
-			return false;
-		if (govtOrderNumber == null) {
-			if (other.govtOrderNumber != null)
-				return false;
-		} else if (!govtOrderNumber.equals(other.govtOrderNumber))
-			return false;
-		if (id == null) {
-			if (other.id != null)
-				return false;
-		} else if (!id.equals(other.id))
-			return false;
-		if (reportingTo == null) {
-			if (other.reportingTo != null)
-				return false;
-		} else if (!reportingTo.equals(other.reportingTo))
-			return false;
-		if (isHOD != other.isHOD) {
-			return false;
-		}
-		if (position == null) {
-			if (other.position != null)
-				return false;
-		} else if (!position.equals(other.position))
-			return false;
-		if (toDate == null) {
-			return other.toDate == null;
-		} else return (toDate== other.fromDate);
-	}
-	
-  /*@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Assignment other = (Assignment) obj;
-		if (department == null) {
-			if (other.department != null)
-				return false;
-		} else if (!department.equals(other.department))
-			return false;
-		if (designation == null) {
-			if (other.designation != null)
-				return false;
-		} else if (!designation.equals(other.designation))
-			return false;
-		if (documents == null) {
-			if (other.documents != null)
-				return false;
-		} else if (!documents.equals(other.documents))
-			return false;
-		if (fromDate == null) {
-			if (other.fromDate != null)
-				return false;
-		} else if (!areDatesEqualWithoutTimePart(fromDate, other.fromDate))
-			return false;
-		if (function == null) {
-			if (other.function != null)
-				return false;
-		} else if (!function.equals(other.function))
-			return false;
-		if (functionary == null) {
-			if (other.functionary != null)
-				return false;
-		} else if (!functionary.equals(other.functionary))
-			return false;
-		if (fund == null) {
-			if (other.fund != null)
-				return false;
-		} else if (!fund.equals(other.fund))
-			return false;
-		if (govtOrderNumber == null) {
-			if (other.govtOrderNumber != null)
-				return false;
-		} else if (!govtOrderNumber.equals(other.govtOrderNumber))
-			return false;
-		if (grade == null) {
-			if (other.grade != null)
-				return false;
-		} else if (!grade.equals(other.grade))
-			return false;
-		if (id == null) {
-			if (other.id != null)
-				return false;
-		} else if (!id.equals(other.id))
-			return false;
-		if (isPrimary == null) {
-			if (other.isPrimary != null)
-				return false;
-		} else if (!isPrimary.equals(other.isPrimary))
-			return false;
-		if (position == null) {
-			if (other.position != null)
-				return false;
-		} else if (!position.equals(other.position))
-			return false;
-		if (toDate == null) {
-			if (other.toDate != null)
-				return false;
-		} else if (!areDatesEqualWithoutTimePart(toDate, other.toDate))
-			return false;
-		return true;
-	}*/
-	
 
 
 }

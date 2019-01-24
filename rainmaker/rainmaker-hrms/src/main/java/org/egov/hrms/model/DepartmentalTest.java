@@ -44,6 +44,7 @@ import lombok.*;
 
 import javax.validation.constraints.NotNull;
 
+@EqualsAndHashCode(exclude = {"auditDetails"})
 @Builder
 @AllArgsConstructor
 @Getter
@@ -66,76 +67,4 @@ public class DepartmentalTest {
 	
 	private AuditDetails auditDetails;
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		DepartmentalTest other = (DepartmentalTest) obj;
-		if (id == null) {
-			if (other.id != null)
-				return false;
-		} else if (!id.equals(other.id))
-			return false;
-		if (remarks == null) {
-			if (other.remarks != null)
-				return false;
-		} else if (!remarks.equals(other.remarks))
-			return false;
-		if (test == null) {
-			if (other.test != null)
-				return false;
-		} else if (!test.equals(other.test))
-			return false;
-		if (yearOfPassing == null) {
-            return other.yearOfPassing == null;
-		} else return yearOfPassing.equals(other.yearOfPassing);
-    }
-
-
-	/*@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		DepartmentalTest other = (DepartmentalTest) obj;
-		if (documents == null) {
-			if (other.documents != null)
-				return false;
-		} else if (!documents.equals(other.documents))
-			return false;
-		if (id == null) {
-			if (other.id != null)
-				return false;
-		} else if (!id.equals(other.id))
-			return false;
-		if (remarks == null) {
-			if (other.remarks != null)
-				return false;
-		} else if (!remarks.equals(other.remarks))
-			return false;
-		if (tenantId == null) {
-			if (other.tenantId != null)
-				return false;
-		} else if (!tenantId.equals(other.tenantId))
-			return false;
-		if (test == null) {
-			if (other.test != null)
-				return false;
-		} else if (!test.equals(other.test))
-			return false;
-		if (yearOfPassing == null) {
-			if (other.yearOfPassing != null)
-				return false;
-		} else if (!yearOfPassing.equals(other.yearOfPassing))
-			return false;
-		return true;
-	}
-*/
 }

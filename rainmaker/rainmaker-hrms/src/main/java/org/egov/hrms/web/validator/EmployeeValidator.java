@@ -10,9 +10,12 @@ import org.egov.hrms.model.EducationalQualification;
 import org.egov.hrms.model.Employee;
 import org.egov.hrms.model.Role;
 import org.egov.hrms.model.ServiceHistory;
+import org.egov.hrms.service.EmployeeService;
 import org.egov.hrms.service.MDMSService;
 import org.egov.hrms.utils.HRMSConstants;
 import org.egov.hrms.web.contract.EmployeeRequest;
+import org.egov.hrms.web.contract.EmployeeResponse;
+import org.egov.hrms.web.contract.EmployeeSearchCriteria;
 import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,6 +27,9 @@ public class EmployeeValidator {
 	
 	@Autowired
 	private MDMSService mdmsService;
+
+	@Autowired
+	private EmployeeService employeeService;
 
 
 	public void validateCreateEmployee(EmployeeRequest request) {
@@ -137,8 +143,8 @@ public class EmployeeValidator {
 			uuidList.add(employee.getUuid());
 		}
 
-		//search emploee  call to get existing employee data for uuid list
-		List <Employee> existingEmployees = request.getEmployees();
+		EmployeeResponse existingEmployeeResponse = employeeService.search(EmployeeSearchCriteria.builder().uuids(uuidList).build(),request.getRequestInfo());
+		List <Employee> existingEmployees = existingEmployeeResponse.getEmployees();
 
 		for(Employee employee: request.getEmployees()){
 			Employee existingEmp = existingEmployees.stream().filter(existingEmployee -> existingEmployee.getUuid()==employee.getUuid()).findFirst().get();

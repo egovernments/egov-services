@@ -44,6 +44,7 @@ import lombok.*;
 
 import javax.validation.constraints.NotNull;
 
+@EqualsAndHashCode(exclude = {"auditDetails"})
 @Builder
 @AllArgsConstructor
 @Getter
@@ -69,46 +70,5 @@ public class EducationalQualification {
 	private  String tenantId;
 
 	private AuditDetails auditDetails;
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		EducationalQualification other = (EducationalQualification) obj;
-		if (id == null) {
-			if (other.id != null)
-				return false;
-		} else if (!id.equals(other.id))
-			return false;
-		if (remarks == null) {
-			if (other.remarks != null)
-				return false;
-		} else if (!remarks.equals(other.remarks))
-			return false;
-		if (qualification == null) {
-			if (other.qualification != null)
-				return false;
-		} else if (!qualification.equals(other.qualification))
-			return false;
-		if (stream == null) {
-			if (other.stream != null)
-				return false;
-		} else if (!stream.equals(other.stream))
-			return false;
-		if (university == null) {
-			if (other.university != null)
-				return false;
-		} else if (!university.equals(other.university))
-			return false;
-		if (yearOfPassing == null) {
-			return other.yearOfPassing == null;
-		} else return yearOfPassing.equals(other.yearOfPassing);
-	}
-
-
 
 }

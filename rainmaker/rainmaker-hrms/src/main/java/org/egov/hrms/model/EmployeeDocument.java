@@ -44,6 +44,7 @@ import org.egov.hrms.model.enums.ReferenceType;
 
 import lombok.*;
 
+@EqualsAndHashCode(exclude = {"auditDetails"})
 @AllArgsConstructor
 @Getter
 @NoArgsConstructor
@@ -69,46 +70,6 @@ public class EmployeeDocument {
 	private String tenantId;
 
 	private AuditDetails auditDetails;
-
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		EmployeeDocument other = (EmployeeDocument) obj;
-		if (id == null) {
-			if (other.id != null)
-				return false;
-		} else if (!id.equals(other.id))
-			return false;
-		if (employeeId == null) {
-			if (other.employeeId != null)
-				return false;
-		} else if (!employeeId.equals(other.employeeId))
-			return false;
-		if (documentName == null) {
-			if (other.documentName != null)
-				return false;
-		} else if (!documentName.equals(other.documentName))
-			return false;
-		if (documentId == null) {
-			if (other.documentId != null)
-				return false;
-		} else if (!documentId.equals(other.documentId))
-			return false;
-		if (referenceType == null) {
-			if (other.referenceType != null)
-				return false;
-		} else if (!referenceType.equals(other.referenceType))
-			return false;
-		if (referenceId == null) {
-			return other.referenceId == null;
-		} else return referenceId.equals(other.referenceId);
-	}
 
 
 }

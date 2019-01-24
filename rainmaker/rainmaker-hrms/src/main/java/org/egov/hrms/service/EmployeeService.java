@@ -67,8 +67,6 @@ import java.util.stream.Collectors;
 @Service
 public class EmployeeService {
 
-	@Value("${kafka.topics.save.service}")
-	private String saveTopic;
 
 	@Autowired
 	private UserService userService;
@@ -101,7 +99,7 @@ public class EmployeeService {
 			enrichCreateRequest(employee, requestInfo);
 
 		});
-		hrmsProducer.push(saveTopic, employeeRequest);
+		hrmsProducer.push(propertiesManager.getSaveEmployeeTopic(), employeeRequest);
 
 		return generateResponse(employeeRequest);
 	}
@@ -186,18 +184,20 @@ public class EmployeeService {
 			uuidList.add(employee.getUuid());
 		}
 
+		EmployeeResponse existingEmployeeResponse =search(EmployeeSearchCriteria.builder().uuids(uuidList).build(),requestInfo);
 		//search emploee  call to get existing employee data for uuid list
 
-		List <Employee> existingEmployees = employeeRequest.getEmployees();
+		List <Employee> existingEmployees = existingEmployeeResponse.getEmployees();
 
 
 		employeeRequest.getEmployees().stream().forEach(employee -> {
 			enrichUpdateRequest(employee, requestInfo, existingEmployees);
 			//updateUser(employee, requestInfo);
 
-			// pushToTopic
 
 		});
+		hrmsProducer.push(propertiesManager.getUpdateEmployeeTopic(), employeeRequest);
+
 		return generateResponse(employeeRequest);
 	}
 

@@ -65,6 +65,8 @@ public class EducationalQualification {
 	private String university;
 
 	private  String remarks;
+	
+	private  String tenantId;
 
 	private AuditDetails auditDetails;
 

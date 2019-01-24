@@ -70,6 +70,8 @@ public class Assignment {
 	private Long toDate;
 
 	private String govtOrderNumber;
+	
+	private String tenantid;
 
 	private  String reportingTo;
 

@@ -61,8 +61,9 @@ public class DepartmentalTest {
 	private Integer yearOfPassing;
 
 	private String remarks;
-
-
+	
+	private String tenantId;
+	
 	private AuditDetails auditDetails;
 
 	@Override

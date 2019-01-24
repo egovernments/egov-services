@@ -65,7 +65,9 @@ public class ServiceHistory {
 	@NonNull
 	private String orderNo;
 	
-	private String location;	
+	private String location;
+	
+	private String tenantId;	
 
 	private  boolean isCurrentPosition;
 

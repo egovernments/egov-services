@@ -31,6 +31,8 @@ public class DeactivationDetails {
 
 	@NotNull
 	private DeactivationType typeOfDeactivation;
+	
+	private String tenantId;
 
 	private AuditDetails auditDetails;
 

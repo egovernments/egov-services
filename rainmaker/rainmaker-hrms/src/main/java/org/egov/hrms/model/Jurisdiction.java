@@ -67,6 +67,8 @@ public class Jurisdiction {
     @NotNull
     @Size(max=256)
     private String boundaryType;
+    
+    private String tenantId;
 
     private AuditDetails auditDetails;
 

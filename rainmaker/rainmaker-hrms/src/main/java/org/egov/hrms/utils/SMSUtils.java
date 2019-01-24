@@ -1,8 +1,8 @@
 package org.egov.hrms.utils;
 
 import org.egov.hrms.model.SMSRequest;
-import org.egov.hrms.model.User;
 import org.egov.hrms.producer.HRMSProducer;
+import org.egov.hrms.web.contract.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.util.CollectionUtils;

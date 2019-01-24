@@ -36,7 +36,7 @@ public class EmployeeQueries {
 			+ "FROM eg_hrms_employee employee JOIN eg_hrms_assignment assignment ON employee.uuid = assignment.employeeid JOIN eg_hrms_educationaldetails education "
 			+ "ON employee.uuid = assignment.employeeid JOIN eg_hrms_departmentaltests depttest ON employee.uuid = depttest.employeeid JOIN eg_hrms_empdocuments docs "
 			+ "ON employee.uuid = docs.employeeid JOIN eg_hrms_servicehistory history ON employee.uuid = history.employeeid JOIN eg_hrms_jurisdiction jurisdiction "
-			+ "ON employee.uuid = jurisdiction.employeeid JOIN eg_hrms_deactivationdetails deact ON employee.uuid = deact.employeeid";
+			+ "ON employee.uuid = jurisdiction.employeeid JOIN eg_hrms_deactivationdetails deact ON employee.uuid = deact.employeeid WHERE ";
 
 	public static final String HRMS_PAGINATION_WRAPPER = "SELECT * FROM "
 			+ "(SELECT *, DENSE_RANK() OVER (ORDER BY employee_uuid) offset_ FROM " + "({})" + " result) result_offset "

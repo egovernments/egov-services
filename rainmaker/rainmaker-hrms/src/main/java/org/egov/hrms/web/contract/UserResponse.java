@@ -42,7 +42,6 @@ package org.egov.hrms.web.contract;
 
 import lombok.*;
 import org.egov.common.contract.response.ResponseInfo;
-import org.egov.hrms.model.User;
 
 import java.util.ArrayList;
 import java.util.List;

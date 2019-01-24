@@ -115,7 +115,7 @@ public class EmployeeController {
 	public ResponseEntity<?> search(@RequestBody @Valid RequestInfoWrapper requestInfoWrapper, 
 									@ModelAttribute EmployeeSearchCriteria criteria, BindingResult bindingResult) {
 		log.debug("employeeSearchCriteria::" + criteria);
-		EmployeeResponse employeeResponse = null;
+		EmployeeResponse employeeResponse = employeeService.search(criteria, requestInfoWrapper.getRequestInfo());
 		return new ResponseEntity<>(employeeResponse,HttpStatus.OK);
 	}
 

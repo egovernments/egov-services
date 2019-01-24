@@ -43,7 +43,6 @@ package org.egov.hrms.web.contract;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 import org.egov.common.contract.request.RequestInfo;
-import org.egov.hrms.model.User;
 
 import javax.validation.constraints.NotNull;
 

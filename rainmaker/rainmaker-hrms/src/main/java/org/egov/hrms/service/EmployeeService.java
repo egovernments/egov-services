@@ -46,7 +46,6 @@ import org.egov.common.contract.request.RequestInfo;
 import org.egov.hrms.config.PropertiesManager;
 import org.egov.hrms.model.AuditDetails;
 import org.egov.hrms.model.Employee;
-import org.egov.hrms.model.User;
 import org.egov.hrms.model.enums.UserType;
 import org.egov.hrms.producer.HRMSProducer;
 import org.egov.hrms.repository.EmployeeRepository;
@@ -56,10 +55,14 @@ import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.time.Instant;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Data
@@ -110,10 +113,16 @@ public class EmployeeService {
 		List<Employee> employees = repository.fetchEmployees(criteria, requestInfo);
 		List<String> uuids = employees.stream().map(Employee :: getUuid).collect(Collectors.toList());
 		UserResponse userResponse = userService.getUser(requestInfo, uuids);
-		EmployeeResponse response = EmployeeResponse.builder().responseInfo(factory.createResponseInfoFromRequestInfo(requestInfo, true))
-				.employees(employees).build();
+		if(!CollectionUtils.isEmpty(userResponse.getUser())) {
+			Map<String, User> mapOfUsers = userResponse.getUser().parallelStream()
+					.collect(Collectors.toMap(User :: getUuid, Function.identity()));
+			employees.parallelStream().forEach(employee -> employee.setUser(mapOfUsers.get(employee.getUuid())));
+		}else{
+			log.info("Users couldn't be fetched!");
+		}
 
-		return response;
+		return EmployeeResponse.builder().responseInfo(factory.createResponseInfoFromRequestInfo(requestInfo, true))
+				.employees(employees).build();
 	}
 	
 	
@@ -169,7 +178,7 @@ public class EmployeeService {
 
 		employee.setAuditDetails(auditDetails);
 		employee.setActive(true);
-		employee.getUser().setType(UserType.EMPLOYEE);
+		employee.getUser().setType(UserType.EMPLOYEE.toString());
 
 	}
 

@@ -65,6 +65,8 @@ public class EmployeeDocument {
 	private ReferenceType referenceType;
 
 	private String referenceId;
+	
+	private String tenantId;
 
 	private AuditDetails auditDetails;
 

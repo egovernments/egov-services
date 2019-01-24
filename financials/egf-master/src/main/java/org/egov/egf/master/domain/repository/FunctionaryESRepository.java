@@ -77,7 +77,7 @@ public class FunctionaryESRepository extends ESRepository {
 
             ObjectMapper mapper = new ObjectMapper();
             try {
-                functionary = mapper.readValue(hit.sourceAsString(), Functionary.class);
+                functionary = mapper.readValue(hit.getSourceAsString(), Functionary.class);
             } catch (Exception e1) {
                 e1.printStackTrace();
             }

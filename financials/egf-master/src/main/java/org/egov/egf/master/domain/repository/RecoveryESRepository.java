@@ -50,7 +50,7 @@ public class RecoveryESRepository extends ESRepository {
             ObjectMapper mapper = new ObjectMapper();
             // JSON from file to Object
             try {
-                recovery = mapper.readValue(hit.sourceAsString(), Recovery.class);
+                recovery = mapper.readValue(hit.getSourceAsString(), Recovery.class);
             } catch (JsonParseException e1) {
                 // TODO Auto-generated catch block
                 e1.printStackTrace();

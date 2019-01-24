@@ -51,7 +51,7 @@ public class SupplierESRepository extends ESRepository {
             ObjectMapper mapper = new ObjectMapper();
             // JSON from file to Object
             try {
-                supplier = mapper.readValue(hit.sourceAsString(), Supplier.class);
+                supplier = mapper.readValue(hit.getSourceAsString(), Supplier.class);
             } catch (JsonParseException e1) {
                 // TODO Auto-generated catch block
                 e1.printStackTrace();

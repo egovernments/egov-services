@@ -52,7 +52,7 @@ public class FinancialYearESRepository extends ESRepository {
             ObjectMapper mapper = new ObjectMapper();
             // JSON from file to Object
             try {
-                financialYear = mapper.readValue(hit.sourceAsString(), FinancialYear.class);
+                financialYear = mapper.readValue(hit.getSourceAsString(), FinancialYear.class);
             } catch (JsonParseException e1) {
                 // TODO Auto-generated catch block
                 e1.printStackTrace();

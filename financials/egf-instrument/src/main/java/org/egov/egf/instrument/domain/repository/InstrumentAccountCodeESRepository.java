@@ -50,7 +50,7 @@ public class InstrumentAccountCodeESRepository extends ESRepository {
             ObjectMapper mapper = new ObjectMapper();
             // JSON from file to Object
             try {
-                instrumentAccountCode = mapper.readValue(hit.sourceAsString(), InstrumentAccountCode.class);
+                instrumentAccountCode = mapper.readValue(hit.getSourceAsString(), InstrumentAccountCode.class);
             } catch (JsonParseException e1) {
                 // TODO Auto-generated catch block
                 e1.printStackTrace();

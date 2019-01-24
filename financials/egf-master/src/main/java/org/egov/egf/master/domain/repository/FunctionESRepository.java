@@ -51,7 +51,7 @@ public class FunctionESRepository extends ESRepository {
             ObjectMapper mapper = new ObjectMapper();
             // JSON from file to Object
             try {
-                function = mapper.readValue(hit.sourceAsString(), Function.class);
+                function = mapper.readValue(hit.getSourceAsString(), Function.class);
             } catch (JsonParseException e1) {
                 // TODO Auto-generated catch block
                 e1.printStackTrace();

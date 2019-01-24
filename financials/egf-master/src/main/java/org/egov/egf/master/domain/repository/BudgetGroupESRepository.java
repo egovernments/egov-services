@@ -52,7 +52,7 @@ public class BudgetGroupESRepository extends ESRepository {
             ObjectMapper mapper = new ObjectMapper();
             // JSON from file to Object
             try {
-                budgetGroup = mapper.readValue(hit.sourceAsString(), BudgetGroup.class);
+                budgetGroup = mapper.readValue(hit.getSourceAsString(), BudgetGroup.class);
             } catch (JsonParseException e1) {
                 // TODO Auto-generated catch block
                 e1.printStackTrace();

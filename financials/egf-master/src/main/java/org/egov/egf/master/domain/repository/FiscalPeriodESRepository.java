@@ -52,7 +52,7 @@ public class FiscalPeriodESRepository extends ESRepository {
             ObjectMapper mapper = new ObjectMapper();
             // JSON from file to Object
             try {
-                fiscalPeriod = mapper.readValue(hit.sourceAsString(), FiscalPeriod.class);
+                fiscalPeriod = mapper.readValue(hit.getSourceAsString(), FiscalPeriod.class);
             } catch (JsonParseException e1) {
                 // TODO Auto-generated catch block
                 e1.printStackTrace();

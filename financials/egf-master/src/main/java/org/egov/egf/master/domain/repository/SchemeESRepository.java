@@ -51,7 +51,7 @@ public class SchemeESRepository extends ESRepository {
             ObjectMapper mapper = new ObjectMapper();
             // JSON from file to Object
             try {
-                scheme = mapper.readValue(hit.sourceAsString(), Scheme.class);
+                scheme = mapper.readValue(hit.getSourceAsString(), Scheme.class);
             } catch (JsonParseException e1) {
                 // TODO Auto-generated catch block
                 e1.printStackTrace();

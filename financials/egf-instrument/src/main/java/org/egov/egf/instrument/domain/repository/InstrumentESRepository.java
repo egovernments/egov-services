@@ -50,7 +50,7 @@ public class InstrumentESRepository extends ESRepository {
             ObjectMapper mapper = new ObjectMapper();
             // JSON from file to Object
             try {
-                instrument = mapper.readValue(hit.sourceAsString(), Instrument.class);
+                instrument = mapper.readValue(hit.getSourceAsString(), Instrument.class);
             } catch (JsonParseException e1) {
                 // TODO Auto-generated catch block
                 e1.printStackTrace();

@@ -90,6 +90,7 @@ public class UserService {
 		UserResponse userResponse = null;
 		try {
 			userResponse = restTemplate.postForObject(uri.toString(),userRequest,UserResponse.class);
+
 		}catch(Exception e) {
 			log.error("User created failed: ",e);
 		}
@@ -100,13 +101,18 @@ public class UserService {
 	public UserResponse getUser(RequestInfo requestInfo, List<String> uuids) {
 		log.info("Service: Search User");
 		StringBuilder uri = new StringBuilder();
+		ObjectMapper mapper = new ObjectMapper();
 		Map<String, Object> userSearchReq = new HashMap<>();
 		userSearchReq.put("RequestInfo", requestInfo);
 		userSearchReq.put("uuid", uuids);
 		uri.append(propertiesManager.getUserHost()).append(propertiesManager.getUserSearchEndpoint());
-		UserResponse userResponse = null;
+		UserResponse userResponse = new UserResponse();
 		try {
+			log.info("uri: "+ uri);
+			log.info("user req: "+mapper.writeValueAsString(userSearchReq));
 			userResponse = restTemplate.postForObject(uri.toString(), userSearchReq, UserResponse.class);
+			log.info("user res: "+ userResponse);
+
 		}catch(Exception e) {
 			log.error("User search failed: ",e);
 		}

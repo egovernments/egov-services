@@ -29,6 +29,7 @@ public class EmployeeRepository {
 	public List<Employee> fetchEmployees(EmployeeSearchCriteria criteria, RequestInfo requestInfo){
 		List<Employee> employees = new ArrayList<>();
 		String query = queryBuilder.getEmployeeSearchQuery(criteria);
+		log.info("query; "+query);
 		try {
 			employees = jdbcTemplate.query(query, rowMapper);
 		}catch(Exception e) {

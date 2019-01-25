@@ -111,15 +111,16 @@ public class EmployeeService {
 	public EmployeeResponse search(EmployeeSearchCriteria criteria, RequestInfo requestInfo) {
 		List<Employee> employees = repository.fetchEmployees(criteria, requestInfo);
 		List<String> uuids = employees.stream().map(Employee :: getUuid).collect(Collectors.toList());
-		UserResponse userResponse = userService.getUser(requestInfo, uuids);
-		if(!CollectionUtils.isEmpty(userResponse.getUser())) {
-			Map<String, User> mapOfUsers = userResponse.getUser().parallelStream()
-					.collect(Collectors.toMap(User :: getUuid, Function.identity()));
-			employees.parallelStream().forEach(employee -> employee.setUser(mapOfUsers.get(employee.getUuid())));
-		}else{
-			log.info("Users couldn't be fetched!");
+		if(!CollectionUtils.isEmpty(uuids)){
+			UserResponse userResponse = userService.getUser(requestInfo, uuids);
+			if(!CollectionUtils.isEmpty(userResponse.getUser())) {
+				Map<String, User> mapOfUsers = userResponse.getUser().parallelStream()
+						.collect(Collectors.toMap(User :: getUuid, Function.identity()));
+				employees.parallelStream().forEach(employee -> employee.setUser(mapOfUsers.get(employee.getUuid())));
+			}else{
+				log.info("Users couldn't be fetched!");
+			}
 		}
-
 		return EmployeeResponse.builder().responseInfo(factory.createResponseInfoFromRequestInfo(requestInfo, true))
 				.employees(employees).build();
 	}

@@ -46,8 +46,8 @@ public class EmployeeRowMapper implements ResultSetExtractor<List<Employee>> {
 				AuditDetails auditDetails = AuditDetails.builder().createdBy(rs.getString("employee_createdby")).createdDate(rs.getLong("employee_createddate"))
 						.lastModifiedBy(rs.getString("employee_lastmodifiedby")).lastModifiedDate(rs.getLong("employee_lastmodifieddate")).build();
 				currentEmployee = Employee.builder().id(rs.getLong("employee_id")).uuid(rs.getString("employee_uuid")).tenantId(rs.getString("employee_tenantid"))
-						.code(rs.getString("code")).dateOfAppointment(rs.getLong("employee_doa")).active(rs.getBoolean("employee_active"))
-						.employeeStatus(rs.getString("employee_employeestatus")).employeeType(rs.getString("employeetype")).auditDetails(auditDetails)
+						.code(rs.getString("employee_code")).dateOfAppointment(rs.getLong("employee_doa")).active(rs.getBoolean("employee_active"))
+						.employeeStatus(rs.getString("employee_status")).employeeType(rs.getString("employee_type")).auditDetails(auditDetails)
 						.build();
 			}
 			addChildrenToEmployee(rs, currentEmployee);

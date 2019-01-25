@@ -22,40 +22,40 @@ public class EmployeeQueryBuilder {
 	
 	public void addWhereClause(EmployeeSearchCriteria criteria, StringBuilder builder) {
 		if(!StringUtils.isEmpty(criteria.getTenantId()))
-			builder.append(" employee.tenantid = "+criteria.getTenantId());
+			builder.append(" employee.tenantid = '"+criteria.getTenantId()+"'");
 		else
-			builder.append(" employee.tenantid NOT NULL");
+			builder.append(" employee.tenantid NOTNULL");
 		
 		if(!CollectionUtils.isEmpty(criteria.getCodes()))
-			builder.append(" employee.code IN ("+createINClauseForList(criteria.getCodes())+")");
+			builder.append(" and  employee.code IN ("+createINClauseForList(criteria.getCodes())+")");
 		if(!CollectionUtils.isEmpty(criteria.getIds()))
-			builder.append(" employee.id IN ("+createINClauseForIntList(criteria.getIds())+")");
+			builder.append(" and employee.id IN ("+createINClauseForIntList(criteria.getIds())+")");
 		if(!CollectionUtils.isEmpty(criteria.getUuids()))
-			builder.append(" employee.uuid IN ("+createINClauseForList(criteria.getUuids())+")");
+			builder.append(" and employee.uuid IN ("+createINClauseForList(criteria.getUuids())+")");
 		if(!CollectionUtils.isEmpty(criteria.getDepartments()))
-			builder.append(" employee.department IN ("+createINClauseForList(criteria.getDepartments())+")");
+			builder.append(" and assignment.department IN ("+createINClauseForList(criteria.getDepartments())+")");
 		if(!CollectionUtils.isEmpty(criteria.getDesignations()))
-			builder.append(" employee.designation IN ("+createINClauseForList(criteria.getDesignations())+")");
+			builder.append(" and assignment.designation IN ("+createINClauseForList(criteria.getDesignations())+")");
 		if(!CollectionUtils.isEmpty(criteria.getEmployeestatuses()))
-			builder.append(" employee.employeestatus IN ("+createINClauseForList(criteria.getEmployeestatuses())+")");
+			builder.append(" and employee.employeestatus IN ("+createINClauseForList(criteria.getEmployeestatuses())+")");
 		if(!CollectionUtils.isEmpty(criteria.getEmployeetypes()))
-			builder.append(" employee.employeetype IN ("+createINClauseForList(criteria.getEmployeetypes())+")");
+			builder.append(" and employee.employeetype IN ("+createINClauseForList(criteria.getEmployeetypes())+")");
 		if(!CollectionUtils.isEmpty(criteria.getPositions()))
-			builder.append(" assignment.position IN ("+createINClauseForIntList(criteria.getPositions())+")");
+			builder.append(" and assignment.position IN ("+createINClauseForIntList(criteria.getPositions())+")");
 	}
 	
 	public String paginationClause(EmployeeSearchCriteria criteria, StringBuilder builder) {
 		String pagination = EmployeeQueries.HRMS_PAGINATION_WRAPPER;
-		pagination.replace("{}", builder.toString());
+		pagination = pagination.replace("{}", builder.toString());
 		if(null != criteria.getOffset())
-			pagination.replace("$offset", criteria.getOffset().toString());
+			pagination = pagination.replace("$offset", criteria.getOffset().toString());
 		else
-			pagination.replace("$offset", "0");
+			pagination = pagination.replace("$offset", "0");
 		
 		if(null != criteria.getLimit())
-			pagination.replace("$limit", criteria.getLimit().toString());
+			pagination = pagination.replace("$limit", criteria.getLimit().toString());
 		else
-			pagination.replace("$limit", defaultLimit.toString());
+			pagination = pagination.replace("$limit", defaultLimit.toString());
 		
 		return pagination;
 	}

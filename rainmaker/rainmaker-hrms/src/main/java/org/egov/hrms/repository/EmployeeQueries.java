@@ -33,10 +33,10 @@ public class EmployeeQueries {
 			+ "deact.reasonfordeactivation as deact_reasonfordeactivation, deact.effectivefrom as deact_effectivefrom, deact.ordernumber as deact_ordernumber, "
 			+ "deact.typeofdeactivation as deact_typeofdeactivation, deact.tenantid as deact_tenantid, deact.createdby as deact_createdby, "
 			+ "deact.createddate as deact_createddate, deact.lastmodifiedby as deact_lastmodifiedby, deact.lastmodifieddate as deact_lastmodifieddate "
-			+ "FROM eg_hrms_employee employee JOIN eg_hrms_assignment assignment ON employee.uuid = assignment.employeeid JOIN eg_hrms_educationaldetails education "
-			+ "ON employee.uuid = assignment.employeeid JOIN eg_hrms_departmentaltests depttest ON employee.uuid = depttest.employeeid JOIN eg_hrms_empdocuments docs "
-			+ "ON employee.uuid = docs.employeeid JOIN eg_hrms_servicehistory history ON employee.uuid = history.employeeid JOIN eg_hrms_jurisdiction jurisdiction "
-			+ "ON employee.uuid = jurisdiction.employeeid JOIN eg_hrms_deactivationdetails deact ON employee.uuid = deact.employeeid WHERE ";
+			+ "FROM eg_hrms_employee employee LEFT JOIN eg_hrms_assignment assignment ON employee.uuid = assignment.employeeid LEFT JOIN eg_hrms_educationaldetails education "
+			+ "ON employee.uuid = assignment.employeeid LEFT JOIN eg_hrms_departmentaltests depttest ON employee.uuid = depttest.employeeid LEFT JOIN eg_hrms_empdocuments docs "
+			+ "ON employee.uuid = docs.employeeid LEFT JOIN eg_hrms_servicehistory history ON employee.uuid = history.employeeid LEFT JOIN eg_hrms_jurisdiction jurisdiction "
+			+ "ON employee.uuid = jurisdiction.employeeid LEFT JOIN eg_hrms_deactivationdetails deact ON employee.uuid = deact.employeeid WHERE ";
 
 	public static final String HRMS_PAGINATION_WRAPPER = "SELECT * FROM "
 			+ "(SELECT *, DENSE_RANK() OVER (ORDER BY employee_uuid) offset_ FROM " + "({})" + " result) result_offset "

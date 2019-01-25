@@ -52,6 +52,7 @@ import org.egov.hrms.repository.EmployeeRepository;
 import org.egov.hrms.utils.ResponseInfoFactory;
 import org.egov.hrms.web.contract.*;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
+import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -93,11 +94,9 @@ public class EmployeeService {
 		log.info("Service: Create Employee");
 		log.info(employeeRequest.toString());
 		RequestInfo requestInfo = employeeRequest.getRequestInfo();
-
 		employeeRequest.getEmployees().stream().forEach(employee -> {
 			createUser(employee, requestInfo);
 			enrichCreateRequest(employee, requestInfo);
-
 		});
 		hrmsProducer.push(propertiesManager.getSaveEmployeeTopic(), employeeRequest);
 
@@ -123,13 +122,17 @@ public class EmployeeService {
 	
 
 	private void createUser(Employee employee, RequestInfo requestInfo) {
-
 		UserRequest request = UserRequest.builder().requestInfo(requestInfo).user(employee.getUser()).build();
-		UserResponse response = userService.createUser(request);
-		User user = response.getUser().get(0);
-		employee.setId(user.getId());
-		employee.setUuid(user.getUuid());
-		employee.setUser(user);
+		try {
+			UserResponse response = userService.createUser(request);
+			User user = response.getUser().get(0);
+			employee.setId(user.getId());
+			employee.setUuid(user.getUuid());
+			employee.setUser(user);
+		}catch(Exception e) {
+			log.error("Exception while creating user: ",e);
+			throw new CustomException("HRMS_USER_CREATION_FAILED", "User creation failed due to error: "+e.getMessage());
+		}
 
 	}
 
@@ -178,23 +181,15 @@ public class EmployeeService {
 	public EmployeeResponse update(EmployeeRequest employeeRequest) {
 		log.info("Service: Update Employee");
 		RequestInfo requestInfo = employeeRequest.getRequestInfo();
-
 		List <String> uuidList= new ArrayList<>();
 		for(Employee employee: employeeRequest.getEmployees()) {
 			uuidList.add(employee.getUuid());
 		}
-
-		EmployeeResponse existingEmployeeResponse =search(EmployeeSearchCriteria.builder().uuids(uuidList).build(),requestInfo);
-		//search emploee  call to get existing employee data for uuid list
-
+		EmployeeResponse existingEmployeeResponse = search(EmployeeSearchCriteria.builder().uuids(uuidList).build(),requestInfo);
 		List <Employee> existingEmployees = existingEmployeeResponse.getEmployees();
-
-
 		employeeRequest.getEmployees().stream().forEach(employee -> {
 			enrichUpdateRequest(employee, requestInfo, existingEmployees);
 			//updateUser(employee, requestInfo);
-
-
 		});
 		hrmsProducer.push(propertiesManager.getUpdateEmployeeTopic(), employeeRequest);
 
@@ -308,10 +303,6 @@ public class EmployeeService {
 				}
 			}
 		});
-
-
-
-
 	}
 
 	private EmployeeResponse generateResponse(EmployeeRequest employeeRequest) {

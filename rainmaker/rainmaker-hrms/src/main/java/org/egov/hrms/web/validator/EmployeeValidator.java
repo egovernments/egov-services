@@ -134,18 +134,12 @@ public class EmployeeValidator {
 		}else{
 			log.info("MDMS data couldn't be fetched so skipping validaion!");
 		}
-		if(!CollectionUtils.isEmpty(errorMap.keySet())) {
-			throw new CustomException(errorMap);
-		}
-
 		List <String> uuidList= new ArrayList<>();
 		for(Employee employee: request.getEmployees()) {
 			uuidList.add(employee.getUuid());
 		}
-
 		EmployeeResponse existingEmployeeResponse = employeeService.search(EmployeeSearchCriteria.builder().uuids(uuidList).build(),request.getRequestInfo());
 		List <Employee> existingEmployees = existingEmployeeResponse.getEmployees();
-
 		for(Employee employee: request.getEmployees()){
 			Employee existingEmp = existingEmployees.stream().filter(existingEmployee -> existingEmployee.getUuid()==employee.getUuid()).findFirst().get();
 			validateConsistencyAssignment(existingEmp,employee,errorMap);
@@ -155,9 +149,10 @@ public class EmployeeValidator {
 			validateConsistencyServiceHistory(existingEmp,employee,errorMap);
 			validateConsistencyEmployeeDocument(existingEmp,employee,errorMap);
 		}
-
-
-
+		
+		if(!CollectionUtils.isEmpty(errorMap.keySet())) {
+			throw new CustomException(errorMap);
+		}
 
 
 	}
@@ -171,7 +166,7 @@ public class EmployeeValidator {
 								.map(jurisdiction -> jurisdiction.getId())
 								.collect(Collectors.toList()));
 		if(!check){
-			errorMap.put("UPDATE_JURISDICTION_INCOSISTENT","Jurisdiction data in update request should contain all previous assginment data ");
+			errorMap.put("HRMS_UPDATE_JURISDICTION_INCOSISTENT","Jurisdiction data in update request should contain all previous assginment data ");
 		}
 
 	}
@@ -185,7 +180,7 @@ public class EmployeeValidator {
 								.map(assignment -> assignment.getId())
 								.collect(Collectors.toList()));
 		if(!check){
-			errorMap.put("UPDATE_ASSIGNEMENT_INCOSISTENT","Assignment data in update request should contain all previous assginment data ");
+			errorMap.put("HRMS_cUPDATE_ASSIGNEMENT_INCOSISTENT","Assignment data in update request should contain all previous assginment data ");
 		}
 	}
 
@@ -198,7 +193,7 @@ public class EmployeeValidator {
 								.map(test -> test.getId())
 								.collect(Collectors.toList()));
 		if(!check){
-			errorMap.put("UPDATE_TESTS_INCOSISTENT","Tests data in update request should contain all previous assginment data ");
+			errorMap.put("HRMS_UPDATE_TESTS_INCOSISTENT","Tests data in update request should contain all previous assginment data ");
 		}
 
 	}
@@ -212,7 +207,7 @@ public class EmployeeValidator {
 								.map(educationalQualification -> educationalQualification.getId())
 								.collect(Collectors.toList()));
 		if(!check){
-			errorMap.put("UPDATE_EDUCATION_INCOSISTENT","Education data in update request should contain all previous assginment data ");
+			errorMap.put("HRMS_UPDATE_EDUCATION_INCOSISTENT","Education data in update request should contain all previous assginment data ");
 		}
 
 	}
@@ -226,7 +221,7 @@ public class EmployeeValidator {
 								.map(serviceHistory -> serviceHistory.getId())
 								.collect(Collectors.toList()));
 		if(!check){
-			errorMap.put("UPDATE_SERVICE_HISTORY_INCOSISTENT","Service History data in update request should contain all previous assginment data ");
+			errorMap.put("HRMS_UPDATE_SERVICE_HISTORY_INCOSISTENT","Service History data in update request should contain all previous assginment data ");
 		}
 
 	}
@@ -240,7 +235,7 @@ public class EmployeeValidator {
 								.map(employeeDocument -> employeeDocument.getId())
 								.collect(Collectors.toList()));
 		if (!check) {
-			errorMap.put("UPDATE_DOCUMENT_INCOSISTENT", "Employee Document data in update request should contain all previous assginment data ");
+			errorMap.put("HRMS_UPDATE_DOCUMENT_INCOSISTENT", "Employee Document data in update request should contain all previous assginment data ");
 		}
 
 	}

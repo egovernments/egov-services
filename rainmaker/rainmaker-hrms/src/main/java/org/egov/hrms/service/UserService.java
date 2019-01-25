@@ -45,14 +45,12 @@ import lombok.extern.slf4j.Slf4j;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.hrms.config.PropertiesManager;
-import org.egov.hrms.web.contract.EmployeeSearchCriteria;
 import org.egov.hrms.web.contract.UserRequest;
 import org.egov.hrms.web.contract.UserResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -85,8 +83,22 @@ public class UserService {
 		return userResponse;
 	}
 	
+	public UserResponse updateUser(UserRequest userRequest) {
+		log.info("Service: Update User");
+		StringBuilder uri = new StringBuilder();
+		uri.append(propertiesManager.getUserHost()).append(propertiesManager.getUserUpdateEndpoint());
+		UserResponse userResponse = null;
+		try {
+			userResponse = restTemplate.postForObject(uri.toString(),userRequest,UserResponse.class);
+		}catch(Exception e) {
+			log.error("User created failed: ",e);
+		}
+
+		return userResponse;
+	}
+	
 	public UserResponse getUser(RequestInfo requestInfo, List<String> uuids) {
-		log.info("Service: Create USer");
+		log.info("Service: Search User");
 		StringBuilder uri = new StringBuilder();
 		Map<String, Object> userSearchReq = new HashMap<>();
 		userSearchReq.put("RequestInfo", requestInfo);

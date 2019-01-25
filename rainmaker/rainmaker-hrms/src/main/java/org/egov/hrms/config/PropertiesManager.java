@@ -67,7 +67,7 @@ public class PropertiesManager {
 	@Value("${egov.user.create.endpoint}")
 	public String userCreateEndpoint;
 	
-	@Value("${egov.user.create.endpoint}")
+	@Value("${egov.user.update.endpoint}")
 	public String userUpdateEndpoint;
 
 	@Value("${egov.localization.host}")

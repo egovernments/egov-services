@@ -49,6 +49,7 @@ import org.egov.hrms.model.Employee;
 import org.egov.hrms.model.enums.UserType;
 import org.egov.hrms.producer.HRMSProducer;
 import org.egov.hrms.repository.EmployeeRepository;
+import org.egov.hrms.utils.HRMSUtils;
 import org.egov.hrms.utils.ResponseInfoFactory;
 import org.egov.hrms.web.contract.*;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
@@ -90,13 +91,16 @@ public class EmployeeService {
 	
 	@Autowired
 	private EmployeeRepository repository;
+	
+	@Autowired
+	private HRMSUtils hrmsUtils;
 
 	public EmployeeResponse create(EmployeeRequest employeeRequest) {
 		log.info("Service: Create Employee");
 		log.info(employeeRequest.toString());
 		RequestInfo requestInfo = employeeRequest.getRequestInfo();
 		employeeRequest.getEmployees().stream().forEach(employee -> {
-//			createUser(employee, requestInfo);
+			createUser(employee, requestInfo);
 			enrichCreateRequest(employee, requestInfo);
 		});
 		hrmsProducer.push(propertiesManager.getSaveEmployeeTopic(), employeeRequest);
@@ -123,6 +127,11 @@ public class EmployeeService {
 	
 
 	private void createUser(Employee employee, RequestInfo requestInfo) {
+		List<String> pwdParams = new ArrayList<>();
+		pwdParams.add(employee.getCode()); pwdParams.add(employee.getUser().getMobileNumber());
+		pwdParams.add(employee.getTenantId()); pwdParams.add(employee.getUser().getName()); pwdParams.add(employee.getUser().getDob().toString());
+		employee.getUser().setPassword(hrmsUtils.generatePassword(pwdParams));
+		employee.getUser().setUserName(employee.getCode());
 		UserRequest request = UserRequest.builder().requestInfo(requestInfo).user(employee.getUser()).build();
 		try {
 			UserResponse response = userService.createUser(request);

@@ -19,6 +19,7 @@ import org.egov.hrms.model.Jurisdiction;
 import org.egov.hrms.model.ServiceHistory;
 import org.egov.hrms.model.enums.DeactivationType;
 import org.egov.hrms.model.enums.ReferenceType;
+import org.egov.hrms.web.contract.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.ResultSetExtractor;
@@ -48,6 +49,7 @@ public class EmployeeRowMapper implements ResultSetExtractor<List<Employee>> {
 				currentEmployee = Employee.builder().id(rs.getLong("employee_id")).uuid(rs.getString("employee_uuid")).tenantId(rs.getString("employee_tenantid"))
 						.code(rs.getString("employee_code")).dateOfAppointment(rs.getLong("employee_doa")).active(rs.getBoolean("employee_active"))
 						.employeeStatus(rs.getString("employee_status")).employeeType(rs.getString("employee_type")).auditDetails(auditDetails)
+						.jurisdictions(new ArrayList<Jurisdiction>()).assignments(new ArrayList<Assignment>()).user(new User())
 						.build();
 			}
 			addChildrenToEmployee(rs, currentEmployee);

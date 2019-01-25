@@ -112,6 +112,7 @@ public class Employee {
     private List<DeactivationDetails> deactivationDetails = new ArrayList<>();
 
     private AuditDetails auditDetails;
+    
     @Valid
     @NotNull
     private User user;

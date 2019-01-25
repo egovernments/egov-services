@@ -54,12 +54,13 @@ import org.egov.hrms.web.contract.*;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
-
 import java.time.Instant;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -95,7 +96,7 @@ public class EmployeeService {
 		log.info(employeeRequest.toString());
 		RequestInfo requestInfo = employeeRequest.getRequestInfo();
 		employeeRequest.getEmployees().stream().forEach(employee -> {
-			createUser(employee, requestInfo);
+//			createUser(employee, requestInfo);
 			enrichCreateRequest(employee, requestInfo);
 		});
 		hrmsProducer.push(propertiesManager.getSaveEmployeeTopic(), employeeRequest);
@@ -155,22 +156,30 @@ public class EmployeeService {
 			assignment.setId(UUID.randomUUID().toString());
 			assignment.setAuditDetails(auditDetails);
 		});
-		employee.getServiceHistory().stream().forEach(serviceHistory -> {
-			serviceHistory.setId(UUID.randomUUID().toString());
-			serviceHistory.setAuditDetails(auditDetails);
-		});
-		employee.getEducation().stream().forEach(educationalQualification -> {
-			educationalQualification.setId(UUID.randomUUID().toString());
-			educationalQualification.setAuditDetails(auditDetails);
-		});
-		employee.getTests().stream().forEach(departmentalTest -> {
-			departmentalTest.setId(UUID.randomUUID().toString());
-			departmentalTest.setAuditDetails(auditDetails);
-		});
-		employee.getDocuments().stream().forEach(document -> {
-			document.setId(UUID.randomUUID().toString());
-			document.setAuditDetails(auditDetails);
-		});
+		if(!CollectionUtils.isEmpty(employee.getServiceHistory())) {
+			employee.getServiceHistory().stream().forEach(serviceHistory -> {
+				serviceHistory.setId(UUID.randomUUID().toString());
+				serviceHistory.setAuditDetails(auditDetails);
+			});
+		}
+		if(!CollectionUtils.isEmpty(employee.getEducation())) {
+			employee.getEducation().stream().forEach(educationalQualification -> {
+				educationalQualification.setId(UUID.randomUUID().toString());
+				educationalQualification.setAuditDetails(auditDetails);
+			});
+		}
+		if(!CollectionUtils.isEmpty(employee.getTests())) {
+			employee.getTests().stream().forEach(departmentalTest -> {
+				departmentalTest.setId(UUID.randomUUID().toString());
+				departmentalTest.setAuditDetails(auditDetails);
+			});
+		}
+		if(!CollectionUtils.isEmpty(employee.getDocuments())) {
+			employee.getDocuments().stream().forEach(document -> {
+				document.setId(UUID.randomUUID().toString());
+				document.setAuditDetails(auditDetails);
+			});
+		}
 
 		employee.setAuditDetails(auditDetails);
 		employee.setActive(true);

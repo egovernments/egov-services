@@ -1,7 +1,7 @@
 #!/bin/sh
 
 if [[ -z "${JAVA_OPTS}" ]];then
-    export JAVA_OPTS="-Xmx64m -Xms64m"
+    export JAVA_OPTS="-Xmx256m -Xms256m"
 fi
 
-java ${JAVA_OPTS} -jar /opt/egov/egov-data-uploader.jar
+java ${JAVA_OPTS} -jar /opt/egov/egov-hrms.jar

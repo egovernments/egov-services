@@ -37,12 +37,7 @@ public class EmployeeValidator {
 		Map<String, List<String>> mdmsData = mdmsService.getMDMSData(request.getRequestInfo(), request.getEmployees().get(0).getTenantId());
 		if(!CollectionUtils.isEmpty(mdmsData.keySet())){
 			for(Employee employee: request.getEmployees()) {
-				validateEmployee(employee, errorMap, mdmsData);
-				validateAssignments(employee, errorMap, mdmsData);
-				validateJurisdiction(employee, errorMap, mdmsData);
-				validateServiceHistory(employee, errorMap, mdmsData);
-				validateEducationalDetails(employee, errorMap, mdmsData);
-				validateDepartmentalTest(employee, errorMap, mdmsData);
+				validateMdmsData(employee, errorMap, mdmsData);
 			}
 		}else{
 			log.info("MDMS data couldn't be fetched so skipping validaion!");
@@ -51,6 +46,26 @@ public class EmployeeValidator {
 			throw new CustomException(errorMap);
 		}
 
+	}
+	
+	private void validateMdmsData(Employee employee, Map<String, String> errorMap, Map<String, List<String>> mdmsData) {
+		validateEmployee(employee, errorMap, mdmsData);
+		validateAssignments(employee, errorMap, mdmsData);
+		validateJurisdiction(employee, errorMap, mdmsData);
+		validateServiceHistory(employee, errorMap, mdmsData);
+		validateEducationalDetails(employee, errorMap, mdmsData);
+		validateDepartmentalTest(employee, errorMap, mdmsData);
+	}
+	
+	public void validateDataConsistency(Employee employee, Map<String, String> errorMap, Map<String, List<String>> mdmsData, Employee existingEmp) {
+		validateMdmsData(employee, errorMap, mdmsData);
+		validateConsistencyAssignment(existingEmp,employee,errorMap);
+		validateConsistencyJurisdiction(existingEmp,employee,errorMap);
+		validateConsistencyDepartmentalTest(existingEmp,employee,errorMap);
+		validateConsistencyEducationalDetails(existingEmp,employee,errorMap);
+		validateConsistencyServiceHistory(existingEmp,employee,errorMap);
+		validateConsistencyEmployeeDocument(existingEmp,employee,errorMap);
+		
 	}
 	
 	private void validateEmployee(Employee employee, Map<String, String> errorMap, Map<String, List<String>> mdmsData) {
@@ -65,7 +80,6 @@ public class EmployeeValidator {
 					errorMap.put("HRMS_INVALID_ROLE", "Employee contains an invalid role: " + role.getCode());
 			}
 		}
-		
 		if(!mdmsData.get(HRMSConstants.HRMS_MDMS_EMP_STATUS_CODE).contains(employee.getEmployeeStatus()))
 			errorMap.put("HRMS_INVALID_EMP_STATUS", "Employee status is invalid!");
 		if(!mdmsData.get(HRMSConstants.HRMS_MDMS_EMP_TYPE_CODE).contains(employee.getEmployeeType()))
@@ -122,35 +136,15 @@ public class EmployeeValidator {
 	public void validateUpdateEmployee(EmployeeRequest request) {
 		Map<String, String> errorMap = new HashMap<>();
 		Map<String, List<String>> mdmsData = mdmsService.getMDMSData(request.getRequestInfo(), request.getEmployees().get(0).getTenantId());
-		if(!CollectionUtils.isEmpty(mdmsData.keySet())){
-			for(Employee employee: request.getEmployees()) {
-				validateEmployee(employee, errorMap, mdmsData);
-				validateAssignments(employee, errorMap, mdmsData);
-				validateJurisdiction(employee, errorMap, mdmsData);
-				validateServiceHistory(employee, errorMap, mdmsData);
-				validateEducationalDetails(employee, errorMap, mdmsData);
-				validateDepartmentalTest(employee, errorMap, mdmsData);
-			}
-		}else{
-			log.info("MDMS data couldn't be fetched so skipping validaion!");
-		}
-		List <String> uuidList= new ArrayList<>();
-		for(Employee employee: request.getEmployees()) {
-			uuidList.add(employee.getUuid());
-		}
+		List <String> uuidList = request.getEmployees().stream().map(Employee :: getUuid).collect(Collectors.toList()); 
 		EmployeeResponse existingEmployeeResponse = employeeService.search(EmployeeSearchCriteria.builder().uuids(uuidList).build(),request.getRequestInfo());
 		List <Employee> existingEmployees = existingEmployeeResponse.getEmployees();
 		for(Employee employee: request.getEmployees()){
 			Employee existingEmp = existingEmployees.stream().filter(existingEmployee -> existingEmployee.getUuid()==employee.getUuid()).findFirst().get();
-			validateConsistencyAssignment(existingEmp,employee,errorMap);
-			validateConsistencyJurisdiction(existingEmp,employee,errorMap);
-			validateConsistencyDepartmentalTest(existingEmp,employee,errorMap);
-			validateConsistencyEducationalDetails(existingEmp,employee,errorMap);
-			validateConsistencyServiceHistory(existingEmp,employee,errorMap);
-			validateConsistencyEmployeeDocument(existingEmp,employee,errorMap);
+			validateDataConsistency(employee, errorMap, mdmsData, existingEmp);
 		}
 		
-		if(!CollectionUtils.isEmpty(errorMap.keySet())) {
+		if(!CollectionUtils.isEmpty(errorMap.keySet())) {	
 			throw new CustomException(errorMap);
 		}
 

@@ -94,6 +94,9 @@ public class EmployeeService {
 	
 	@Autowired
 	private HRMSUtils hrmsUtils;
+	
+	@Autowired
+	private NotificationService notificationService;
 
 	public EmployeeResponse create(EmployeeRequest employeeRequest) {
 		log.info("Service: Create Employee");
@@ -104,7 +107,7 @@ public class EmployeeService {
 			enrichCreateRequest(employee, requestInfo);
 		});
 		hrmsProducer.push(propertiesManager.getSaveEmployeeTopic(), employeeRequest);
-
+		notificationService.sendNotification(employeeRequest);
 		return generateResponse(employeeRequest);
 	}
 	

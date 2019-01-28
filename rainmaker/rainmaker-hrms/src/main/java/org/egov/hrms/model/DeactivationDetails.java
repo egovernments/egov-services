@@ -18,13 +18,10 @@ public class DeactivationDetails {
 
 	private String reasonForDeactivation;
 	
-	@NotNull
 	private String orderNo;
 
-	@NotNull
 	private Long effectiveFrom;
 
-	@NotNull
 	private DeactivationType typeOfDeactivation;
 	
 	private String tenantId;

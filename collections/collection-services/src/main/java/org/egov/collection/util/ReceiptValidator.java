@@ -4,9 +4,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.egov.collection.model.Instrument;
 import org.egov.collection.model.LegacyReceiptHeader;
 import org.egov.collection.model.ReceiptSearchCriteria;
+import org.egov.collection.model.enums.InstrumentStatusEnum;
 import org.egov.collection.model.enums.InstrumentTypesEnum;
+import org.egov.collection.model.enums.ReceiptStatus;
 import org.egov.collection.repository.BusinessDetailsRepository;
 import org.egov.collection.repository.CollectionRepository;
+import org.egov.collection.service.WorkflowService;
 import org.egov.collection.web.contract.*;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.Error;
@@ -19,17 +22,18 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import static java.util.Collections.singletonList;
 import static java.util.Objects.isNull;
-import static org.apache.commons.lang3.StringUtils.*;
+import static org.apache.commons.lang3.StringUtils.isBlank;
+import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 import static org.egov.collection.config.CollectionServiceConstants.*;
 import static org.egov.collection.model.enums.ReceiptStatus.APPROVALPENDING;
 import static org.egov.collection.model.enums.ReceiptStatus.APPROVED;
+import static org.egov.collection.util.Utils.jsonMerge;
+import static org.springframework.util.StringUtils.isEmpty;
 
 @Slf4j
 @Component
@@ -45,16 +49,16 @@ public class ReceiptValidator {
 
     /**
      * Validate to ensure,
-     *  - Instrument type provided is valid
-     *  - Amount Paid & total amount are not null and are integer values, no fractions allowed!
-     *  - Allow zero amount ONLY IF the total bill amount is also equal to zero
-     *  - Sum of amount paid on all bill details should be equal to the instrument amount
-     *  - The bill is not being repaid, if a receipt is already created and is in completed / pending
-     *      state do not allow creation of another receipt.
-     *  - Business service code provided is valid, call is being made in a loop as the tenant id could be different for
-     *      each bill detail
-     *  - Bill account details are valid, checks for purpose and GL Codes
-     *  - Cheque and DD dates are correct
+     * - Instrument type provided is valid
+     * - Amount Paid & total amount are not null and are integer values, no fractions allowed!
+     * - Allow zero amount ONLY IF the total bill amount is also equal to zero
+     * - Sum of amount paid on all bill details should be equal to the instrument amount
+     * - The bill is not being repaid, if a receipt is already created and is in completed / pending
+     * state do not allow creation of another receipt.
+     * - Business service code provided is valid, call is being made in a loop as the tenant id could be different for
+     * each bill detail
+     * - Bill account details are valid, checks for purpose and GL Codes
+     * - Cheque and DD dates are correct
      *
      * @param receiptRequest Receipt request to be validated
      */
@@ -66,7 +70,7 @@ public class ReceiptValidator {
         if (receipt.getBill().isEmpty())
             return;
 
-        if (isEmpty(receipt.getBill().get(0).getPaidBy()))
+        if (org.apache.commons.lang3.StringUtils.isEmpty(receipt.getBill().get(0).getPaidBy()))
             errorMap.put(PAID_BY_MISSING_CODE, PAID_BY_MISSING_MESSAGE);
 
         validateInstrument(receipt.getInstrument(), errorMap);
@@ -83,7 +87,7 @@ public class ReceiptValidator {
             BigDecimal amountPaid = billDetails.getAmountPaid();
             BigDecimal totalAmount = billDetails.getTotalAmount();
 
-            if (isNull(amountPaid) || !isPositiveInteger(amountPaid) ) {
+            if (isNull(amountPaid) || !isPositiveInteger(amountPaid)) {
                 errorMap.put("INVALID_AMOUNT_PAID", "Invalid amount entered in amountPaid field. Amount should be greater than 0 and without fractions");
             }
 
@@ -122,7 +126,7 @@ public class ReceiptValidator {
             if (isBlank(billDetails.getBillDescription()))
                 errorMap.put("INVALID_BILL_DESC", "Bill description cannot be empty");
 
-            if (isEmpty(billDetails.getBusinessService())) {
+            if (org.apache.commons.lang3.StringUtils.isEmpty(billDetails.getBusinessService())) {
                 errorMap.put("INVALID_BUSINESS_DETAILS", "Business details code cannot be empty");
             }
 
@@ -145,50 +149,132 @@ public class ReceiptValidator {
             throw new CustomException(errorMap);
     }
 
-    public void validateReceiptsForCancellation(List<Receipt> receipts){
-        for(Receipt receipt : receipts){
-            BillDetail currentBillDetail = receipt.getBill().get(0).getBillDetails().get(0);
-            String consumerCode = currentBillDetail.getConsumerCode();
-            Receipt latestReceipt = collectionRepository.fetchReceipts(ReceiptSearchCriteria.builder()
-                    .consumerCode(singletonList(consumerCode)).build()).get(0);
+    public List<Receipt> validateAndEnrichReceiptsForUpdate(List<Receipt> receipts, RequestInfo requestInfo) {
 
-            if(! currentBillDetail.getReceiptNumber().equalsIgnoreCase(latestReceipt.getBill().get(0).getBillDetails()
-                    .get(0).getReceiptNumber())) {
-                log.error("Cancellation of receipts only allowed for the latest receipt. Latest receipt for consumer " +
-                        "code {} is {}", consumerCode, latestReceipt.getBill().get(0).getBillDetails()
-                        .get(0).getReceiptNumber());
-                throw new CustomException("RECEIPT_CANCELLATION_FAILED", "Cancellation of receipts only allowed for " +
-                        "the latest receipt");
+        Map<String, String> errorMap = new HashMap<>();
+
+        Set<String> receiptNumbers = receipts.stream()
+                                            .map(Receipt::getReceiptNumber)
+                                            .collect(Collectors.toSet());
+
+        List<Receipt> receiptsFromDb = collectionRepository.fetchReceipts(ReceiptSearchCriteria.builder()
+                        .receiptNumbers(receiptNumbers)
+                        .status(ReceiptStatus.statusesByCategory(ReceiptStatus.Category.OPEN))
+                        .build());
+
+        Map<String, List<Receipt>> receiptsByReceiptNumber = receiptsFromDb.stream()
+                .collect(Collectors.groupingBy(Receipt::getReceiptNumber));
+
+
+        for (Receipt receipt : receipts) {
+
+            if(receiptsByReceiptNumber.containsKey(receipt.getReceiptNumber())){
+                Bill bill = receipt.getBill().get(0);
+                BillDetail billDetail = bill.getBillDetails().get(0);
+
+                Receipt receiptFromDb = receiptsByReceiptNumber.get(receipt.getReceiptNumber()).get(0);
+                Bill billFromDb = receiptFromDb.getBill().get(0);
+                BillDetail billDetailFromDb = billFromDb.getBillDetails().get(0);
+
+
+                if( ! isEmpty(bill.getPaidBy()))
+                    billFromDb.setPaidBy(bill.getPaidBy());
+
+                if( ! isEmpty(bill.getPayeeAddress()))
+                    billFromDb.setPayeeAddress(bill.getPayeeAddress());
+
+                if( ! isEmpty(bill.getPayeeEmail()))
+                    billFromDb.setPayeeEmail(bill.getPayeeEmail());
+
+                if( ! isEmpty(bill.getPayeeName())) {
+                    billFromDb.setPayeeName(bill.getPayeeName());
+                    receiptFromDb.getInstrument().setPayee(bill.getPayeeName());
+                }
+
+                billDetailFromDb.setAdditionalDetails(jsonMerge(billDetailFromDb.getAdditionalDetails(),
+                        billDetail.getAdditionalDetails()));
+
+                receiptFromDb.getInstrument().setAdditionalDetails(jsonMerge(receiptFromDb.getInstrument().getAdditionalDetails(),
+                        receipt.getInstrument().getAdditionalDetails()));
+
+
+                // If change to manual receipt date or manual receipt number, and instrument is Cheque / DD revalidate
+
+                if( ! isEmpty(billDetail.getManualReceiptNumber()) || (! isNull(billDetail.getManualReceiptDate())
+                        && billDetail.getManualReceiptDate() != 0L)) {
+
+                    if (!isEmpty(billDetail.getManualReceiptNumber()))
+                        billDetailFromDb.setManualReceiptNumber(billDetail.getManualReceiptNumber());
+
+                    if (!isNull(billDetail.getManualReceiptDate()) && billDetail.getManualReceiptDate() != 0L)
+                        billDetailFromDb.setManualReceiptDate(billDetail.getManualReceiptDate());
+
+                    if(receiptFromDb.getInstrument().getInstrumentType().getName().equalsIgnoreCase(InstrumentTypesEnum.CHEQUE.toString())
+                        || receiptFromDb.getInstrument().getInstrumentType().getName().equalsIgnoreCase(InstrumentTypesEnum.DD.toString()))
+                        validateChequeDD(billDetailFromDb, receiptFromDb.getInstrument(), errorMap);
+                }
+
+                // Temporary code block below, to enable backward compatibility with previous API
+
+                if(! isEmpty(billDetail.getStatus()) && billDetail.getStatus().equalsIgnoreCase(ReceiptStatus.REMITTED.toString())) {
+                    ReceiptStatus receiptStatusInDb = ReceiptStatus.fromValue(billDetailFromDb.getStatus());
+                    if( ! isNull(receiptStatusInDb) && !receiptStatusInDb.equals(ReceiptStatus.REMITTED)) {
+                        if(receiptStatusInDb.isCategory(ReceiptStatus.Category.OPEN)) {
+                            billDetailFromDb.setStatus(ReceiptStatus.REMITTED.toString());
+                            billDetailFromDb.setVoucherHeader(billDetail.getVoucherHeader());
+                            receiptFromDb.getInstrument().setInstrumentStatus(InstrumentStatusEnum.DEPOSITED);
+                        }
+                        else{
+                            log.error("Receipt not found with receipt number {} & consumer code {} or not in editable" +
+                                            " status ", receipt.getReceiptNumber(),
+                                    receipt.getConsumerCode());
+                            errorMap.put("RECEIPT_WORKFLOW_INVALID_RECEIPT",
+                                    "Receipt not found in the system or not in editable state, "+receipt.getReceiptNumber());
+                        }
+                    }
+                }
+
+                WorkflowService.updateAuditDetails(receiptFromDb, requestInfo);
+
+            }
+            else{
+                log.error("Receipt not found with receipt number {} or not in editable status ", receipt.getReceiptNumber());
+                errorMap.put("RECEIPT_UPDATE_NOT_FOUND",
+                        "Receipt not found in the system or not in editable state, "+receipt.getReceiptNumber());
             }
         }
+
+        if( ! errorMap.isEmpty())
+            throw new CustomException(errorMap);
+        else
+            return receiptsFromDb;
 
     }
 
 
-
-    private void validateInstrument(Instrument instrument, Map<String, String> errorMap){
+    private void validateInstrument(Instrument instrument, Map<String, String> errorMap) {
 
         String instrumentType = instrument.getInstrumentType().getName();
-        if(!InstrumentTypesEnum.contains(instrumentType)){
+        if (!InstrumentTypesEnum.contains(instrumentType)) {
             throw new CustomException("INVALID_INSTRUMENT_TYPE", "Invalid instrument type provided");
         }
 
         if (instrumentType.equalsIgnoreCase(InstrumentTypesEnum.CHEQUE.name()) || instrumentType.equalsIgnoreCase
                 (InstrumentTypesEnum.DD.name())) {
 
-            if(isNull(instrument.getTransactionDateInput()))
+            if (isNull(instrument.getTransactionDateInput()))
                 errorMap.put("INVALID_TXN_DATE", "Transaction Date Input is mandatory for cheque and DD");
 
-            if(isNull(instrument.getTransactionNumber()) || instrument.getTransactionNumber().isEmpty())
+            if (isNull(instrument.getTransactionNumber()) || instrument.getTransactionNumber().isEmpty())
                 errorMap.put("INVALID_TXN_NUMBER", "Transaction Number is mandatory for Cheque, DD, Card");
 
         }
 
-        if(instrumentType.equalsIgnoreCase(InstrumentTypesEnum.CARD.name())){
-            if(isEmpty(instrument.getTransactionNumber()) )
+        if (instrumentType.equalsIgnoreCase(InstrumentTypesEnum.CARD.name())) {
+            if (org.apache.commons.lang3.StringUtils.isEmpty(instrument.getTransactionNumber()))
                 errorMap.put("INVALID_TXN_NUMBER", "Transaction Number is mandatory for Cheque, DD, Card");
 
-            if(isEmpty(instrument.getInstrumentNumber()) )
+            if (org.apache.commons.lang3.StringUtils.isEmpty(instrument.getInstrumentNumber()))
                 errorMap.put("INVALID_INSTRUMENT_NUMBER", "Instrument Number is mandatory for Card");
 
         }
@@ -208,7 +294,7 @@ public class ReceiptValidator {
 
             Days daysDiff = Days.daysBetween(instrumentDate, new DateTime(billDetails.getReceiptDate()));
             if (daysDiff.getDays() > Integer.valueOf(INSTRUMENT_DATE_DAYS)) {
-                errorMap.put("CHEQUE_DD_DATE_WITH_MANUAL_RECEIPT_DATE",CHEQUE_DD_DATE_WITH_MANUAL_RECEIPT_DATE_MESSAGE);
+                errorMap.put("CHEQUE_DD_DATE_WITH_MANUAL_RECEIPT_DATE", CHEQUE_DD_DATE_WITH_MANUAL_RECEIPT_DATE_MESSAGE);
             }
 
         } else {
@@ -217,7 +303,7 @@ public class ReceiptValidator {
                 errorMap.put("CHEQUE_DD_DATE_WITH_RECEIPT_DATE", CHEQUE_DD_DATE_WITH_RECEIPT_DATE_MESSAGE);
             }
             if (instrumentDate.isAfter(new DateTime().getMillis())) {
-                errorMap.put("CHEQUE_DD_DATE_WITH_FUTURE_DATE",CHEQUE_DD_DATE_WITH_FUTURE_DATE_MESSAGE);
+                errorMap.put("CHEQUE_DD_DATE_WITH_FUTURE_DATE", CHEQUE_DD_DATE_WITH_FUTURE_DATE_MESSAGE);
             }
         }
 
@@ -229,7 +315,7 @@ public class ReceiptValidator {
                 throw new CustomException("PURPOSE_MISSING", PURPOSE_MISSING_MESSAGE);
             }
 
-            if (isEmpty(billAccountDetail.getGlcode())) {
+            if (org.apache.commons.lang3.StringUtils.isEmpty(billAccountDetail.getGlcode())) {
                 throw new CustomException("COA_MISSING", COA_MISSING_MESSAGE);
             }
         }
@@ -239,11 +325,11 @@ public class ReceiptValidator {
     /**
      * Validations if no receipts exists for this bill
      * - If part payment is allowed,
-     *   - Amount being paid should not be lower than minimum payable amount
-     *   - Amount being paid should not be greater than bill value
+     * - Amount being paid should not be lower than minimum payable amount
+     * - Amount being paid should not be greater than bill value
      * <p>
      * - If part payment is not allowed,
-     *   - Amount being paid should be equal to bill value
+     * - Amount being paid should be equal to bill value
      *
      * @param errorMap   Map of errors occurred during validations
      * @param billDetail Bill detail for which payment is being made
@@ -286,9 +372,9 @@ public class ReceiptValidator {
      * If not, proceed with validateIfReceiptForBillAbsent validations
      * *
      *
-     * @param errorMap       Map of errors occurred during validations
-     * @param receipts List of receipt headers
-     * @param billDetail     Bill detail for which payment is being made
+     * @param errorMap   Map of errors occurred during validations
+     * @param receipts   List of receipt headers
+     * @param billDetail Bill detail for which payment is being made
      */
     private void validateIfReceiptForBillPresent(Map<String, String> errorMap, List<Receipt> receipts,
                                                  BillDetail billDetail) {
@@ -312,7 +398,7 @@ public class ReceiptValidator {
     private void validateBusinessServiceCode(RequestInfo requestInfo, BillDetail billDetail, Map<String, String>
             errorMap) {
         BusinessDetailsResponse businessDetailsResponse = businessDetailsRepository.getBusinessDetails(singletonList(billDetail.getBusinessService()),
-                        billDetail.getTenantId(), requestInfo);
+                billDetail.getTenantId(), requestInfo);
 
         if (isNull(businessDetailsResponse.getBusinessDetails()) || businessDetailsResponse
                 .getBusinessDetails().isEmpty()) {

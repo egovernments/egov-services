@@ -40,16 +40,14 @@
 
 package org.egov.collection.web.controller;
 
-import java.util.Collections;
-import java.util.List;
-
-import javax.validation.Valid;
-
+import lombok.extern.slf4j.Slf4j;
 import org.egov.collection.model.ReceiptSearchCriteria;
 import org.egov.collection.service.CollectionService;
+import org.egov.collection.service.WorkflowService;
 import org.egov.collection.web.contract.Receipt;
 import org.egov.collection.web.contract.ReceiptReq;
 import org.egov.collection.web.contract.ReceiptRes;
+import org.egov.collection.web.contract.ReceiptWorkflowRequest;
 import org.egov.collection.web.contract.factory.RequestInfoWrapper;
 import org.egov.collection.web.contract.factory.ResponseInfoFactory;
 import org.egov.common.contract.request.RequestInfo;
@@ -57,14 +55,11 @@ import org.egov.common.contract.response.ResponseInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import lombok.extern.slf4j.Slf4j;
+import javax.validation.Valid;
+import java.util.Collections;
+import java.util.List;
 
 @RestController
 @RequestMapping("/receipts")
@@ -73,6 +68,9 @@ public class ReceiptController {
 
     @Autowired
     private CollectionService collectionService;
+
+    @Autowired
+    private WorkflowService workflowService;
 
     @RequestMapping(value = "/_search", method = RequestMethod.POST)
     @ResponseBody
@@ -93,11 +91,12 @@ public class ReceiptController {
 
     }
 
-    @RequestMapping(value = "/_cancel", method = RequestMethod.POST)
+    @RequestMapping(value = "/_workflow", method = RequestMethod.POST)
     @ResponseBody
-    public ResponseEntity<?> cancelReceipt(@RequestBody ReceiptReq receiptRequest) {
+    public ResponseEntity<?> workflow(@RequestBody @Valid ReceiptWorkflowRequest receiptWorkflowRequest) {
 
-        return getSuccessResponse(receiptRequest.getReceipt(), receiptRequest.getRequestInfo());
+        List<Receipt> receipts = workflowService.performWorkflow(receiptWorkflowRequest);
+        return getSuccessResponse(receipts, receiptWorkflowRequest.getRequestInfo());
     }
 
     @RequestMapping(value = "/_update", method = RequestMethod.POST)

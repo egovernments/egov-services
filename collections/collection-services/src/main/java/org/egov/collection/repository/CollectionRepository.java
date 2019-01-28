@@ -62,21 +62,46 @@ public class CollectionRepository {
         }
     }
     
-    public void updateReceipt(Receipt receipt){
-        Bill bill = receipt.getBill().get(0);
+    public void updateReceipt(List<Receipt> receipts){
+        List<MapSqlParameterSource> receiptHeaderSource = new ArrayList<>();
+        List<MapSqlParameterSource> instrumentHeaderSource = new ArrayList<>();
         try {
 
-            List<MapSqlParameterSource> receiptHeaderSource = new ArrayList<>();
 
-            for (BillDetail billDetail : bill.getBillDetails()) {
+            for (Receipt receipt : receipts) {
+                BillDetail billDetail = receipt.getBill().get(0).getBillDetails().get(0);
                 receiptHeaderSource.add(getParametersForReceiptHeaderUpdate(receipt, billDetail));
+                instrumentHeaderSource.add(getParametersForInstrumentHeaderUpdate(receipt.getInstrument(),
+                        receipt.getAuditDetails()));
             }
 
             namedParameterJdbcTemplate.batchUpdate(UPDATE_RECEIPT_HEADER_SQL, receiptHeaderSource.toArray(new MapSqlParameterSource[0]));
+            namedParameterJdbcTemplate.batchUpdate(UPDATE_INSTRUMENT_HEADER_SQL, instrumentHeaderSource.toArray(new MapSqlParameterSource[0]));
 
         }catch (Exception e){
             log.error("Failed to update receipt to database", e);
             throw new CustomException("RECEIPT_UPDATION_FAILED", "Unable to update receipt");
+        }
+    }
+
+    public void updateStatus(List<Receipt> receipts){
+        List<MapSqlParameterSource> receiptHeaderSource = new ArrayList<>();
+        List<MapSqlParameterSource> instrumentHeaderSource = new ArrayList<>();
+        try {
+
+            for(Receipt receipt : receipts){
+                BillDetail billDetail = receipt.getBill().get(0).getBillDetails().get(0);
+                receiptHeaderSource.add(getParametersForReceiptStatusUpdate(billDetail, receipt.getAuditDetails()));
+                instrumentHeaderSource.add(getParametersForInstrumentStatusUpdate(receipt.getInstrument(), receipt.getAuditDetails
+                        ()));
+            }
+
+            namedParameterJdbcTemplate.batchUpdate(UPDATE_RECEIPT_STATUS_SQL, receiptHeaderSource.toArray(new MapSqlParameterSource[0]));
+            namedParameterJdbcTemplate.batchUpdate(UPDATE_INSTRUMENT_STATUS_SQL, instrumentHeaderSource.toArray(new MapSqlParameterSource[0]));
+        }
+        catch(Exception e){
+            log.error("Failed to persist cancel Receipt to database", e);
+            throw new CustomException("CANCEL_RECEIPT_FAILED", "Unable to cancel Receipt");
         }
     }
 

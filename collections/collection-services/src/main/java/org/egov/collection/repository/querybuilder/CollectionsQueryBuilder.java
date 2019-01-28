@@ -20,6 +20,7 @@ import java.util.Map;
 import java.util.Objects;
 
 import static java.util.Objects.isNull;
+import static java.util.stream.Collectors.toSet;
 
 public class CollectionsQueryBuilder {
 
@@ -55,6 +56,15 @@ public class CollectionsQueryBuilder {
 
     public static final String INSERT_INSTRUMENT_SQL = "insert into egcl_receiptinstrument(instrumentheader, " +
             "receiptheader) values (:instrumentheader, :receiptheader)";
+
+    public static final String UPDATE_INSTRUMENT_STATUS_SQL = "UPDATE egcl_instrumentheader SET instrumentstatus = :instrumentstatus" +
+            " , additionalDetails = :additionalDetails ,lastmodifiedby = :lastmodifiedby , lastmodifieddate =  " +
+            ":lastmodifieddate WHERE id = :id " ;
+
+    public static final String UPDATE_RECEIPT_STATUS_SQL = "UPDATE egcl_receiptheader SET status = :status , " +
+            "reasonforcancellation = :reasonforcancellation , voucherheader = :voucherheader, additionalDetails = " +
+            ":additionalDetails ," +
+            "lastmodifiedby = :lastmodifiedby , lastmodifieddate =  :lastmodifieddate WHERE id = :id " ;
 
     private static final String SELECT_RECEIPTS_SQL = "Select rh.id as rh_id,rh.payeename as rh_payeename,rh" +
             ".payeeAddress as rh_payeeAddress, rh.payeeEmail as rh_payeeEmail, rh.payeemobile as rh_payeemobile, rh" +
@@ -101,7 +111,16 @@ public class CollectionsQueryBuilder {
             " result) result_offset " +
             "WHERE offset_ > :offset AND offset_ <= :limit";
 
-    public static final String UPDATE_RECEIPT_HEADER_SQL = "UPDATE egcl_receiptheader set voucherheader=:voucherheader,status=:status where id=:id";
+    public static final String UPDATE_RECEIPT_HEADER_SQL = "UPDATE egcl_receiptheader SET paidby = :paidby, " +
+            "payeeaddress = :payeeaddress, payeeemail = :payeeemail, payeename = :payeename, manualreceiptnumber = :manualreceiptnumber," +
+            " manualreceiptdate = :manualreceiptdate, status = :status, voucherheader = :voucherheader, additionalDetails = :additionalDetails," +
+            " lastmodifiedby = :lastmodifiedby, lastmodifieddate = :lastmodifieddate" +
+            " where id=:id";
+
+    public static final String UPDATE_INSTRUMENT_HEADER_SQL = "UPDATE egcl_instrumentheader SET instrumentstatus = :instrumentstatus, " +
+            " payee = :payee, lastmodifiedby = :lastmodifiedby, lastmodifieddate = :lastmodifieddate, additionalDetails = :additionalDetails"+
+            " where id=:id";
+
 
     public static MapSqlParameterSource getParametersForReceiptHeader(Receipt receipt, BillDetail billDetail) {
         MapSqlParameterSource sqlParameterSource = new MapSqlParameterSource();
@@ -158,13 +177,41 @@ public class CollectionsQueryBuilder {
 
     public static MapSqlParameterSource getParametersForReceiptHeaderUpdate(Receipt receipt, BillDetail billDetail) {
         MapSqlParameterSource sqlParameterSource = new MapSqlParameterSource();
+        Bill bill = receipt.getBill().get(0);
 
         sqlParameterSource.addValue("id", billDetail.getId());
+        sqlParameterSource.addValue("paidby", bill.getPaidBy());
+        sqlParameterSource.addValue("payeeaddress", bill.getPayeeAddress());
+        sqlParameterSource.addValue("payeeemail", bill.getPayeeEmail());
+        sqlParameterSource.addValue("payeename", bill.getPayeeName());
+        sqlParameterSource.addValue("manualreceiptnumber", billDetail.getManualReceiptNumber());
+        sqlParameterSource.addValue("manualreceiptdate", billDetail.getManualReceiptDate());
+        sqlParameterSource.addValue("additionalDetails", getJsonb(billDetail.getAdditionalDetails()));
+        sqlParameterSource.addValue("lastmodifiedby", receipt.getAuditDetails().getLastModifiedBy());
+        sqlParameterSource.addValue("lastmodifieddate", receipt.getAuditDetails().getLastModifiedDate());
+
+        // Temporary code below, to enable backward compatibility with previous API
         sqlParameterSource.addValue("voucherheader", billDetail.getVoucherHeader());
         sqlParameterSource.addValue("status", billDetail.getStatus());
 
+
         return sqlParameterSource;
 
+    }
+
+    public static MapSqlParameterSource getParametersForInstrumentHeaderUpdate(Instrument instrument,
+                                                                          AuditDetails auditDetails) {
+        MapSqlParameterSource sqlParameterSource = new MapSqlParameterSource();
+        sqlParameterSource.addValue("id", instrument.getId());
+        sqlParameterSource.addValue("payee", instrument.getPayee());
+        sqlParameterSource.addValue("lastmodifiedby", auditDetails.getLastModifiedBy());
+        sqlParameterSource.addValue("lastmodifieddate", auditDetails.getLastModifiedDate());
+        sqlParameterSource.addValue("additionalDetails", getJsonb(instrument.getAdditionalDetails()));
+
+        // Temporary code below, to enable backward compatibility with previous API
+        sqlParameterSource.addValue("instrumentstatus", instrument.getInstrumentStatus().toString());
+
+        return sqlParameterSource;
     }
 
     public static MapSqlParameterSource getParametersForReceiptDetails(BillAccountDetail billAccountDetails,
@@ -220,6 +267,32 @@ public class CollectionsQueryBuilder {
 
     }
 
+    public static MapSqlParameterSource getParametersForReceiptStatusUpdate(BillDetail billDetail, AuditDetails
+            auditDetails){
+        MapSqlParameterSource sqlParameterSource = new MapSqlParameterSource();
+        sqlParameterSource.addValue("id", billDetail.getId());
+        sqlParameterSource.addValue("status", billDetail.getStatus());
+        sqlParameterSource.addValue("voucherheader", billDetail.getVoucherHeader());
+        sqlParameterSource.addValue("reasonforcancellation", billDetail.getReasonForCancellation());
+        sqlParameterSource.addValue("additionalDetails", getJsonb(billDetail.getAdditionalDetails()));
+        sqlParameterSource.addValue("lastmodifiedby", auditDetails.getLastModifiedBy());
+        sqlParameterSource.addValue("lastmodifieddate", auditDetails.getLastModifiedDate());
+
+        return sqlParameterSource;
+    }
+
+    public static MapSqlParameterSource getParametersForInstrumentStatusUpdate(Instrument instrument, AuditDetails
+            auditDetails){
+        MapSqlParameterSource sqlParameterSource = new MapSqlParameterSource();
+        sqlParameterSource.addValue("instrumentstatus", instrument.getInstrumentStatus().toString());
+        sqlParameterSource.addValue("id", instrument.getId());
+        sqlParameterSource.addValue("additionalDetails", getJsonb(instrument.getAdditionalDetails()));
+        sqlParameterSource.addValue("lastmodifiedby", auditDetails.getLastModifiedBy());
+        sqlParameterSource.addValue("lastmodifieddate", auditDetails.getLastModifiedDate());
+
+        return sqlParameterSource;
+    }
+
     public static MapSqlParameterSource getParametersForInstrument(Instrument instrument, String receiptHeaderId) {
         MapSqlParameterSource sqlParameterSource = new MapSqlParameterSource();
         sqlParameterSource.addValue("instrumentheader", instrument.getId());
@@ -261,11 +334,28 @@ public class CollectionsQueryBuilder {
             preparedStatementValues.put("consumerCodes", searchCriteria.getConsumerCode());
         }
 
-        if (StringUtils.isNotBlank(searchCriteria.getStatus())) {
+        if (!isNull(searchCriteria.getStatus()) && !searchCriteria.getStatus().isEmpty()) {
 
             addClauseIfRequired(preparedStatementValues, selectQuery);
-            selectQuery.append(" rh.status = :status");
-            preparedStatementValues.put("status", searchCriteria.getStatus());
+            selectQuery.append(" UPPER(rh.status) in (:status)");
+            preparedStatementValues.put("status",
+                    searchCriteria.getStatus()
+                        .stream()
+                        .map(String::toUpperCase)
+                        .collect(toSet())
+            );
+        }
+
+        if (!isNull(searchCriteria.getInstrumentType()) && !searchCriteria.getInstrumentType().isEmpty()) {
+
+            addClauseIfRequired(preparedStatementValues, selectQuery);
+            selectQuery.append(" UPPER(ins.instrumenttype) in (:instrumenttype)");
+            preparedStatementValues.put("instrumenttype",
+                    searchCriteria.getInstrumentType()
+                            .stream()
+                            .map(String::toUpperCase)
+                            .collect(toSet())
+            );
         }
 
         if (StringUtils.isNotBlank(searchCriteria.getFund())) {

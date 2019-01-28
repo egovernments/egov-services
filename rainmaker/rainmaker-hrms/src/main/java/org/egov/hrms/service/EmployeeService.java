@@ -211,11 +211,22 @@ public class EmployeeService {
 		List <Employee> existingEmployees = existingEmployeeResponse.getEmployees();
 		employeeRequest.getEmployees().stream().forEach(employee -> {
 			enrichUpdateRequest(employee, requestInfo, existingEmployees);
-			//updateUser(employee, requestInfo);
+			updateUser(employee, requestInfo);
 		});
 		hrmsProducer.push(propertiesManager.getUpdateEmployeeTopic(), employeeRequest);
 
 		return generateResponse(employeeRequest);
+	}
+	
+	private void updateUser(Employee employee, RequestInfo requestInfo) {
+		UserRequest request = UserRequest.builder().requestInfo(requestInfo).user(employee.getUser()).build();
+		try {
+			userService.updateUser(request);
+		}catch(Exception e) {
+			log.error("Exception while updating user: ",e);
+			throw new CustomException("HRMS_USER_UPDATION_FAILED", "User update failed due to error: "+e.getMessage());
+		}
+
 	}
 
 	private void enrichUpdateRequest(Employee employee, RequestInfo requestInfo, List<Employee> existingEmployeesData) {

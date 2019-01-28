@@ -21,10 +21,7 @@ import java.util.stream.Collectors;
 public class TransitionService {
 
 
-    private ObjectMapper mapper;
-
     private WorKflowRepository repository;
-
 
     private BusinessServiceRepository businessServiceRepository;
 
@@ -33,10 +30,9 @@ public class TransitionService {
 
 
     @Autowired
-    public TransitionService(ObjectMapper mapper, WorKflowRepository repository,
+    public TransitionService(WorKflowRepository repository,
                              BusinessServiceRepository businessServiceRepository,
                              WorkflowUtil workflowUtil) {
-        this.mapper = mapper;
         this.repository = repository;
         this.businessServiceRepository = businessServiceRepository;
         this.workflowUtil = workflowUtil;

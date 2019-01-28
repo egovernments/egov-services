@@ -103,7 +103,7 @@ public class EmployeeService {
 		log.info(employeeRequest.toString());
 		RequestInfo requestInfo = employeeRequest.getRequestInfo();
 		employeeRequest.getEmployees().stream().forEach(employee -> {
-			createUser(employee, requestInfo);
+//			createUser(employee, requestInfo);
 			enrichCreateRequest(employee, requestInfo);
 		});
 		hrmsProducer.push(propertiesManager.getSaveEmployeeTopic(), employeeRequest);
@@ -132,8 +132,11 @@ public class EmployeeService {
 
 	private void createUser(Employee employee, RequestInfo requestInfo) {
 		List<String> pwdParams = new ArrayList<>();
-		pwdParams.add(employee.getCode()); pwdParams.add(employee.getUser().getMobileNumber());
-		pwdParams.add(employee.getTenantId()); pwdParams.add(employee.getUser().getName()); pwdParams.add(employee.getUser().getDob().toString());
+		pwdParams.add(employee.getCode());
+		pwdParams.add(employee.getUser().getMobileNumber());
+		pwdParams.add(employee.getTenantId());
+		pwdParams.add(employee.getUser().getName());
+		pwdParams.add(employee.getUser().getDob().toString());
 		employee.getUser().setPassword(hrmsUtils.generatePassword(pwdParams));
 		employee.getUser().setUserName(employee.getCode());
 		UserRequest request = UserRequest.builder().requestInfo(requestInfo).user(employee.getUser()).build();
@@ -235,7 +238,7 @@ public class EmployeeService {
 				.createdBy(requestInfo.getUserInfo().getUserName())
 				.createdDate(instant.getEpochSecond())
 				.build();
-		Employee existingEmpData = existingEmployeesData.stream().filter(existingEmployee -> existingEmployee.getUuid()==employee.getUuid()).findFirst().get();
+		Employee existingEmpData = existingEmployeesData.stream().filter(existingEmployee -> existingEmployee.getUuid().equals(employee.getUuid())).findFirst().get();
 
 		employee.getJurisdictions().stream().forEach(jurisdiction -> {
 

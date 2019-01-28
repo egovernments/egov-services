@@ -79,7 +79,7 @@ public class EmployeeRowMapper implements ResultSetExtractor<List<Employee>> {
 				assignments = currentEmployee.getAssignments();
 			
 			List<String> ids = assignments.stream().map(Assignment::getId).collect(Collectors.toList());
-			if(!ids.contains(rs.getString(rs.getString("assignment_uuid")))) {
+			if(!ids.contains(rs.getString("assignment_uuid"))) {
 				AuditDetails auditDetails = AuditDetails.builder().createdBy(rs.getString("assignment_createdby")).createdDate(rs.getLong("assignment_createddate"))
 						.lastModifiedBy(rs.getString("assignment_lastmodifiedby")).lastModifiedDate(rs.getLong("assignment_lastmodifieddate")).build();
 				
@@ -129,12 +129,12 @@ public class EmployeeRowMapper implements ResultSetExtractor<List<Employee>> {
 			else
 				educationDetails = currentEmployee.getEducation();
 			List<String> ids = educationDetails.stream().map(EducationalQualification::getId).collect(Collectors.toList());
-			if(!ids.contains(rs.getString("education_qualification"))) {
+			if(!ids.contains(rs.getString("education_uuid"))) {
 
 				AuditDetails auditDetails = AuditDetails.builder().createdBy(rs.getString("education_createdby")).createdDate(rs.getLong("education_createddate"))
 						.lastModifiedBy(rs.getString("education_lastmodifiedby")).lastModifiedDate(rs.getLong("education_lastmodifieddate")).build();
 				
-				EducationalQualification education = EducationalQualification.builder().qualification(rs.getString("education_qualification")).stream(rs.getString("education_stream"))
+				EducationalQualification education = EducationalQualification.builder().id(rs.getString("education_uuid")).qualification(rs.getString("education_qualification")).stream(rs.getString("education_stream"))
 						.yearOfPassing(rs.getInt("education_yearofpassing")).university(rs.getString("education_university")).remarks(rs.getString("education_remarks"))
 						.tenantId(rs.getString("education_tenantid")).auditDetails(auditDetails).build();
 				
@@ -160,7 +160,7 @@ public class EmployeeRowMapper implements ResultSetExtractor<List<Employee>> {
 						.lastModifiedBy(rs.getString("depttest_lastmodifiedby")).lastModifiedDate(rs.getLong("depttest_lastmodifieddate")).build();
 				
 				DepartmentalTest test = DepartmentalTest.builder().id(rs.getString("depttest_uuid")).test(rs.getString("depttest_test")).yearOfPassing(rs.getInt("depttest_yearofpassing"))
-						.remarks(rs.getString("depttest_remarks")).tenantId("depttest_tenantid").auditDetails(auditDetails).build();
+						.remarks(rs.getString("depttest_remarks")).tenantId(rs.getString("depttest_tenantid")).auditDetails(auditDetails).build();
 				
 				tests.add(test);
 				currentEmployee.setTests(tests);
@@ -205,12 +205,11 @@ public class EmployeeRowMapper implements ResultSetExtractor<List<Employee>> {
 				documents = currentEmployee.getDocuments();
 			
 			List<String> ids = documents.stream().map(EmployeeDocument::getId).collect(Collectors.toList());
-			if(!ids.contains(rs.getString("docs_uuid"))) {
+			if(!ids.contains(rs.getString("docs_uuid")) ) {
 				AuditDetails auditDetails = AuditDetails.builder().createdBy(rs.getString("docs_createdby")).createdDate(rs.getLong("docs_createddate"))
 						.lastModifiedBy(rs.getString("docs_lastmodifiedby")).lastModifiedDate(rs.getLong("docs_lastmodifieddate")).build();
-				
 				EmployeeDocument document = EmployeeDocument.builder().id(rs.getString("docs_uuid")).documentId(rs.getString("docs_documentid"))
-						.documentName(rs.getString("docs_documentname")).referenceType(ReferenceType.valueOf(rs.getString("docs_referencetype")))
+						.documentName(rs.getString("docs_documentname")).referenceType(rs.getString("docs_referencetype") != null ? ReferenceType.valueOf(rs.getString("docs_referencetype")): null)
 						.referenceId(rs.getString("docs_referenceid")).tenantId(rs.getString("docs_tenantid")).auditDetails(auditDetails).build();
 				
 				documents.add(document);
@@ -230,15 +229,17 @@ public class EmployeeRowMapper implements ResultSetExtractor<List<Employee>> {
 				deactDetails = currentEmployee.getDeactivationDetails();
 			
 			List<String> ids = deactDetails.stream().map(DeactivationDetails::getId).collect(Collectors.toList());
-			if(!ids.contains(rs.getString("deact_uuid"))) {
-				AuditDetails auditDetails = AuditDetails.builder().createdBy(rs.getString("deact_createdby")).createdDate(rs.getLong("deact_createddate"))
-						.lastModifiedBy(rs.getString("deact_lastmodifiedby")).lastModifiedDate(rs.getLong("deact_lastmodifieddate")).build();
-				
-				DeactivationDetails deactDetail = DeactivationDetails.builder().id(rs.getString("deact_uuid")).reasonForDeactivation(rs.getString("deact_reasonfordeactivation"))
-						.effectiveFrom(rs.getLong("deact_effectivefrom")).orderNo(rs.getString("deact_ordernumber")).typeOfDeactivation(DeactivationType.valueOf(rs.getString("deact_typeofdeactivation")))
-						.tenantId(rs.getString("deact_tenantid")).auditDetails(auditDetails).build();
-				
-				deactDetails.add(deactDetail);
+			if(!ids.contains(rs.getString("deact_uuid")) ) {
+				if(rs.getString("deact_uuid")!=null){
+					AuditDetails auditDetails = AuditDetails.builder().createdBy(rs.getString("deact_createdby")).createdDate(rs.getLong("deact_createddate"))
+							.lastModifiedBy(rs.getString("deact_lastmodifiedby")).lastModifiedDate(rs.getLong("deact_lastmodifieddate")).build();
+
+					DeactivationDetails deactDetail = DeactivationDetails.builder().id(rs.getString("deact_uuid")).reasonForDeactivation(rs.getString("deact_reasonfordeactivation"))
+							.effectiveFrom(rs.getLong("deact_effectivefrom")).orderNo(rs.getString("deact_ordernumber")).typeOfDeactivation(rs.getString("deact_typeofdeactivation")!= null ? DeactivationType.valueOf(rs.getString("deact_typeofdeactivation")) : null)
+							.tenantId(rs.getString("deact_tenantid")).auditDetails(auditDetails).build();
+
+					deactDetails.add(deactDetail);
+				}
 				currentEmployee.setDeactivationDetails(deactDetails);
 			}
 		}catch(Exception e) {

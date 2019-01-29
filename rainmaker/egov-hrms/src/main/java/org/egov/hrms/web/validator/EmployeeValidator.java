@@ -58,7 +58,6 @@ public class EmployeeValidator {
 	}
 	
 	public void validateDataConsistency(Employee employee, Map<String, String> errorMap, Map<String, List<String>> mdmsData, Employee existingEmp) {
-		validateMdmsData(employee, errorMap, mdmsData);
 		validateConsistencyAssignment(existingEmp,employee,errorMap);
 		validateConsistencyJurisdiction(existingEmp,employee,errorMap);
 		validateConsistencyDepartmentalTest(existingEmp,employee,errorMap);
@@ -140,8 +139,10 @@ public class EmployeeValidator {
 		EmployeeResponse existingEmployeeResponse = employeeService.search(EmployeeSearchCriteria.builder().uuids(uuidList).build(),request.getRequestInfo());
 		List <Employee> existingEmployees = existingEmployeeResponse.getEmployees();
 		for(Employee employee: request.getEmployees()){
-			Employee existingEmp = existingEmployees.stream().filter(existingEmployee -> existingEmployee.getUuid()==employee.getUuid()).findFirst().get();
+			Employee existingEmp = existingEmployees.stream().filter(existingEmployee -> existingEmployee.getUuid().equals(employee.getUuid())).findFirst().get();
 			validateDataConsistency(employee, errorMap, mdmsData, existingEmp);
+			//		validateMdmsData(employee, errorMap, mdmsData);
+
 		}
 		
 		if(!CollectionUtils.isEmpty(errorMap.keySet())) {	
@@ -174,7 +175,7 @@ public class EmployeeValidator {
 								.map(assignment -> assignment.getId())
 								.collect(Collectors.toList()));
 		if(!check){
-			errorMap.put("HRMS_cUPDATE_ASSIGNEMENT_INCOSISTENT","Assignment data in update request should contain all previous assginment data ");
+			errorMap.put("HRMS_UPDATE_ASSIGNEMENT_INCOSISTENT","Assignment data in update request should contain all previous assginment data ");
 		}
 	}
 

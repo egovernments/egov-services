@@ -40,6 +40,7 @@
 
 package org.egov.hrms.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.egov.common.contract.request.RequestInfo;
@@ -103,8 +104,8 @@ public class EmployeeService {
 		log.info(employeeRequest.toString());
 		RequestInfo requestInfo = employeeRequest.getRequestInfo();
 		employeeRequest.getEmployees().stream().forEach(employee -> {
-			createUser(employee, requestInfo);
 			enrichCreateRequest(employee, requestInfo);
+			createUser(employee, requestInfo);
 		});
 		hrmsProducer.push(propertiesManager.getSaveEmployeeTopic(), employeeRequest);
 		notificationService.sendNotification(employeeRequest);
@@ -131,13 +132,11 @@ public class EmployeeService {
 	
 
 	private void createUser(Employee employee, RequestInfo requestInfo) {
-		List<String> pwdParams = new ArrayList<>();
-		pwdParams.add(employee.getCode()); pwdParams.add(employee.getUser().getMobileNumber());
-		pwdParams.add(employee.getTenantId()); pwdParams.add(employee.getUser().getName()); pwdParams.add(employee.getUser().getDob().toString());
-		employee.getUser().setPassword(hrmsUtils.generatePassword(pwdParams));
-		employee.getUser().setUserName(employee.getCode());
+		enrichUser(employee);
 		UserRequest request = UserRequest.builder().requestInfo(requestInfo).user(employee.getUser()).build();
 		try {
+			ObjectMapper objectMapper=new ObjectMapper();
+			log.info("req= "+objectMapper.writeValueAsString(request));
 			UserResponse response = userService.createUser(request);
 			User user = response.getUser().get(0);
 			employee.setId(user.getId());
@@ -148,6 +147,19 @@ public class EmployeeService {
 			throw new CustomException("HRMS_USER_CREATION_FAILED", "User creation failed due to error: "+e.getMessage());
 		}
 
+	}
+
+	private void enrichUser(Employee employee) {
+		List<String> pwdParams = new ArrayList<>();
+		pwdParams.add(employee.getCode());
+		pwdParams.add(employee.getUser().getMobileNumber());
+		pwdParams.add(employee.getTenantId());
+		pwdParams.add(employee.getUser().getName());
+		pwdParams.add(employee.getUser().getDob().toString());
+		employee.getUser().setPassword(hrmsUtils.generatePassword(pwdParams));
+		employee.getUser().setUserName(employee.getCode());
+		employee.getUser().setActive(true);
+		employee.getUser().setType(UserType.EMPLOYEE.toString());
 	}
 
 	private void enrichCreateRequest(Employee employee, RequestInfo requestInfo) {
@@ -196,8 +208,6 @@ public class EmployeeService {
 
 		employee.setAuditDetails(auditDetails);
 		employee.setActive(true);
-		employee.getUser().setType(UserType.EMPLOYEE.toString());
-
 	}
 
 	public EmployeeResponse update(EmployeeRequest employeeRequest) {
@@ -235,7 +245,7 @@ public class EmployeeService {
 				.createdBy(requestInfo.getUserInfo().getUserName())
 				.createdDate(instant.getEpochSecond())
 				.build();
-		Employee existingEmpData = existingEmployeesData.stream().filter(existingEmployee -> existingEmployee.getUuid()==employee.getUuid()).findFirst().get();
+		Employee existingEmpData = existingEmployeesData.stream().filter(existingEmployee -> existingEmployee.getUuid().equals(employee.getUuid())).findFirst().get();
 
 		employee.getJurisdictions().stream().forEach(jurisdiction -> {
 

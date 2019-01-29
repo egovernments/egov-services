@@ -45,15 +45,19 @@ import lombok.extern.slf4j.Slf4j;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.hrms.config.PropertiesManager;
+import org.egov.hrms.repository.RestCallRepository;
 import org.egov.hrms.web.contract.UserRequest;
 import org.egov.hrms.web.contract.UserResponse;
+import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
+
 @Slf4j
 @Service
 public class UserService {
@@ -69,13 +73,26 @@ public class UserService {
 	@Autowired
 	private ObjectMapper objectMapper;
 
+	@Autowired
+	private RestCallRepository restCallRepository;
+
+	@Value("${egov.user.create.endpoint}")
+	private String userCreateEndpoint;
+
+	@Value("${egov.user.search.endpoint}")
+	private String userSearchEndpoint;
+
+	@Value("${egov.user.update.endpoint}")
+	private String userUpdateEndpoint;
+
 	public UserResponse createUser(UserRequest userRequest) {
-		log.info("Service: Create USer");
+		log.info("Service: Create User");
 		StringBuilder uri = new StringBuilder();
 		uri.append(propertiesManager.getUserHost()).append(propertiesManager.getUserCreateEndpoint());
+		log.info("URI: "+uri);
 		UserResponse userResponse = null;
 		try {
-			userResponse = restTemplate.postForObject(uri.toString(),userRequest,UserResponse.class);
+			userResponse = userCall(userRequest,uri);
 		}catch(Exception e) {
 			log.error("User created failed: ",e);
 		}
@@ -89,7 +106,7 @@ public class UserService {
 		uri.append(propertiesManager.getUserHost()).append(propertiesManager.getUserUpdateEndpoint());
 		UserResponse userResponse = null;
 		try {
-			userResponse = restTemplate.postForObject(uri.toString(),userRequest,UserResponse.class);
+			userResponse = userCall(userRequest,uri);
 
 		}catch(Exception e) {
 			log.error("User created failed: ",e);
@@ -110,7 +127,7 @@ public class UserService {
 		try {
 			log.info("uri: "+ uri);
 			log.info("user req: "+mapper.writeValueAsString(userSearchReq));
-			userResponse = restTemplate.postForObject(uri.toString(), userSearchReq, UserResponse.class);
+			userResponse = userCall(userSearchReq,uri);
 			log.info("user res: "+ userResponse);
 
 		}catch(Exception e) {
@@ -119,5 +136,75 @@ public class UserService {
 
 		return userResponse;
 	}
+
+
+
+
+
+	/**
+	 * Returns UserDetailResponse by calling user service with given uri and object
+	 * @param userRequest Request object for user service
+	 * @param uri The address of the endpoint
+	 * @return Response from user service as parsed as userDetailResponse
+	 */
+	private UserResponse userCall(Object userRequest, StringBuilder uri) {
+		String dobFormat = null;
+		if(uri.toString().contains(userSearchEndpoint) || uri.toString().contains(userUpdateEndpoint))
+			dobFormat="yyyy-MM-dd";
+		else if(uri.toString().contains(userCreateEndpoint))
+			dobFormat = "dd/MM/yyyy";
+		try{
+			LinkedHashMap responseMap = (LinkedHashMap)restCallRepository.fetchResult(uri, userRequest);
+			parseResponse(responseMap,dobFormat);
+			UserResponse userDetailResponse = objectMapper.convertValue(responseMap,UserResponse.class);
+			return userDetailResponse;
+		}
+		// Which Exception to throw?
+		catch(IllegalArgumentException  e)
+		{
+			throw new CustomException("IllegalArgumentException","ObjectMapper not able to convertValue in userCall");
+		}
+	}
+
+
+	/**
+	 * Parses date formats to long for all users in responseMap
+	 * @param responeMap LinkedHashMap got from user api response
+	 * @param dobFormat dob format (required because dob is returned in different format's in search and create response in user service)
+	 */
+	private void parseResponse(LinkedHashMap responeMap,String dobFormat){
+		List<LinkedHashMap> users = (List<LinkedHashMap>)responeMap.get("user");
+		String format1 = "dd-MM-yyyy HH:mm:ss";
+		if(users!=null){
+			users.forEach( map -> {
+						map.put("createdDate",dateTolong((String)map.get("createdDate"),format1));
+						if((String)map.get("lastModifiedDate")!=null)
+							map.put("lastModifiedDate",dateTolong((String)map.get("lastModifiedDate"),format1));
+						if((String)map.get("dob")!=null)
+							map.put("dob",dateTolong((String)map.get("dob"),dobFormat));
+						if((String)map.get("pwdExpiryDate")!=null)
+							map.put("pwdExpiryDate",dateTolong((String)map.get("pwdExpiryDate"),format1));
+					}
+			);
+		}
+	}
+
+	/**
+	 * Converts date to long
+	 * @param date date to be parsed
+	 * @param format Format of the date
+	 * @return Long value of date
+	 */
+	private Long dateTolong(String date,String format){
+		SimpleDateFormat f = new SimpleDateFormat(format);
+		Date d = null;
+		try {
+			d = f.parse(date);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		return  d.getTime();
+	}
+
 
 }

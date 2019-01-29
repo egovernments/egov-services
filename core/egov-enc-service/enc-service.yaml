@@ -22,18 +22,21 @@ paths:
               {
                 "encryptionRequests": [
                   {
-                    "tenantId": "pb.amritsar",
-                    "method": "RSA",
+                    "tenantId": "pb",
+                    "type": "Important",
                     "value": "My email"
                   },
                   {
                     "tenantId": "pb.jalandhar",
-                    "method": "AES",
-                    "value": ["Personal", "Private"]
+                    "type": "Normal",
+                    "value": [
+                      "Personal",
+                      "Private"
+                    ]
                   },
                   {
                     "tenantId": "pb.mohali",
-                    "method": "AES",
+                    "type": "Normal",
                     "value": {
                       "userObject1": {
                         "name": "John Doe",
@@ -55,16 +58,16 @@ paths:
                   type: object
               example:
                   [
-                    "RSA|3|BHLPVVOVOc7riJW4Gs4gLKUaqXIqNkvUKy30rWeEkMbukF8SfaFGJ9YaYSHv0a1lVv2iwRr26kN0QxKZsJJ3YEU+k/jlkWca+u+2T8M4MOvIRbpsrnYYw4hVE20WT4+8WbH39aAPGkMFXTwU7M+LNpCiAl+NxJPUiq7i8QJhIsc=",
+                    "437506|A5ag4DfbhHAHiqXRKFcAedFKtNOelHX+8+jB0ckNG/tihwimx7xu6akEoa+kaQPcIhSnYeveloIhdPBCOgrXWvkWGZfShx1i2bE2vAcWB+r0YIDdwZLKJbQGBHDqcEOn8mfO+LnmpJ5P4zPETtE+2EHhta+vKcE5OQj8ZQawHS4=",
                     [
-                      "AES|1|xOWbq7hJ2wFxy+oM3O3/dQ==",
-                      "AES|1|w7xMbg4NjAiFMHwGODkjUQ=="
+                        "896077|I/8Xwqr5MwB6UucEP8/Q5wiCHpbaNqGE",
+                        "896077|I+gMx6TjN0BcLxudEiYQKIDKtSlmpJY="
                     ],
                     {
-                      "userObject1": {
-                          "mobileNumber": "AES|5|AUKQyq2zI8zRs5XBNItmqA==",
-                          "name": "AES|5|BYUUZld7gXDYvfSIKCHbSw=="
-                      }
+                        "userObject1": {
+                            "mobileNumber": "395551|eSfiPrQ1UK07d0SupYQYqbr2QFNOWSuYJYcU",
+                            "name": "395551|CnCzaK1ADfnx+4FINXIQ9zjnUs1ieAtz"
+                        }
                     }
                   ]
 
@@ -85,17 +88,17 @@ paths:
                 type: object
             example:
                [
-                    {
-                      "userObject1": {
-                          "mobileNumber": "AES|5|AUKQyq2zI8zRs5XBNItmqA==",
-                          "name": "AES|5|BYUUZld7gXDYvfSIKCHbSw=="
-                      }
-                    },
-                    [
-                      "AES|1|xOWbq7hJ2wFxy+oM3O3/dQ==",
-                      "AES|1|w7xMbg4NjAiFMHwGODkjUQ=="
-                    ]
-                  ]
+                [
+                    "896077|I/8Xwqr5MwB6UucEP8/Q5wiCHpbaNqGE",
+                    "896077|I+gMx6TjN0BcLxudEiYQKIDKtSlmpJY="
+                ],
+                {
+                    "userObject1": {
+                        "mobileNumber": "395551|eSfiPrQ1UK07d0SupYQYqbr2QFNOWSuYJYcU",
+                        "name": "395551|CnCzaK1ADfnx+4FINXIQ9zjnUs1ieAtz"
+                    }
+                }
+              ]
 
       responses:
         '200':
@@ -108,16 +111,16 @@ paths:
                   type: object
               example:
                 [
+                  [
+                      "Personal",
+                      "Private"
+                  ],
                   {
                       "userObject1": {
                           "mobileNumber": "98989121234",
                           "name": "John Doe"
                       }
-                  },
-                  [
-                      "Personal",
-                      "Private"
-                  ]
+                  }
                 ]
 
 
@@ -135,12 +138,12 @@ components:
         tenantId:
           type: string
           description: Encryption Key will be decided based on tenant id.
-        method:
+        type:
           type: string
           description: Method to be used for encryption ( AES / RSA )
           enum:
-          - AES
-          - RSA
+          - Important
+          - Normal
         value:
           type: array
           description: Value/s to be encrypted. Can be a string or object or array
@@ -149,7 +152,7 @@ components:
 
       example:
           tenantId: "pb.jalandhar"
-          method: "AES"
+          type: "Important"
           value: {
             "key": "secret"
           }
@@ -169,7 +172,7 @@ components:
           "encryptionRequests": [
               {
                 "tenantId": "pb.amritsar",
-                "method": "RSA",
+                "type": "Important",
                 "value": {
                   "key": "secret"
                 }

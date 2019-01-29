@@ -1,4 +1,4 @@
-FROM egovio/apline-jre:8u121-uploader
+FROM egovio/apline-jre:8u121
 
 MAINTAINER Senthil<senthil.kalimuthu@tarento.com>
 
@@ -6,9 +6,7 @@ MAINTAINER Senthil<senthil.kalimuthu@tarento.com>
 # INSTRUCTIONS ON HOW TO BUILD JAR:
 # Move to the location where pom.xml is exist in project and build project using below command
 # "mvn clean package"
-RUN cd /data && git pull origin master
-
-COPY /target/egov-data-uploader-0.0.1-SNAPSHOT.jar /opt/egov/egov-data-uploader.jar
+COPY /target/egov-hrms-0.0.1-SNAPSHOT.jar /opt/egov/egov-hrms.jar
 
 COPY start.sh /usr/bin/start.sh
 

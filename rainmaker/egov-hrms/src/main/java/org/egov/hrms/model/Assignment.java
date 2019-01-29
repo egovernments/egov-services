@@ -53,7 +53,6 @@ public class Assignment {
 
 	private String id;
 
-	@NotNull
 	private Long position;
 
 	@NotNull

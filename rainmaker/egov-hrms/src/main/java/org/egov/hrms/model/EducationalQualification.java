@@ -54,10 +54,13 @@ import javax.validation.constraints.NotNull;
 public class EducationalQualification {
 	private String id;
 
+	@NotNull
 	private String qualification;
 
+	@NotNull
 	private String stream;
 
+	@NotNull
 	private Integer yearOfPassing;
 
 	private String university;

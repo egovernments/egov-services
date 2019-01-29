@@ -10,7 +10,7 @@ import java.util.Date;
 @Getter
 @Builder
 @AllArgsConstructor
-@EqualsAndHashCode(of = "code")
+@EqualsAndHashCode(of = {"code", "tenantId"})
 public class Role {
 	private static final String CITIZEN = "CITIZEN";
 	private Long id;

@@ -97,7 +97,7 @@ public class UserRepositoryTest {
 	public void test_should_save_entity_user() {
 		final Set<Role> roles = new HashSet<>();
 		final String roleCode = "EMP";
-		roles.add(Role.builder().code(roleCode).build());
+		roles.add(Role.builder().code(roleCode).tenantId("ap.public").build());
 		User domainUser = User.builder().roles(roles).name("test1").username("TestUserName").password("password")
 				.emailId("Test@gmail.com").aadhaarNumber("AadharNumber").mobileNumber("1234567890").active(true)
 				.gender(Gender.FEMALE).bloodGroup(BloodGroup.A_NEGATIVE).accountLocked(true).loggedInUserId(10l)
@@ -125,7 +125,7 @@ public class UserRepositoryTest {
 				.addressType("CORRESPONDENCE").city("city").pinCode("123").build();
 		final Set<Role> roles = new HashSet<>();
 		final String roleCode = "EMP";
-		roles.add(Role.builder().code(roleCode).build());
+		roles.add(Role.builder().code(roleCode).tenantId("ap.public").build());
 		User domainUser = User.builder().roles(roles)
 				.username("TestUserName").password("password").tenantId("ap.public")
 				.correspondenceAddress(correspondenceAddress).build();
@@ -151,7 +151,7 @@ public class UserRepositoryTest {
 				.addressType("PERMANENT").city("city").pinCode("123").build();
 		final Set<Role> roles = new HashSet<>();
 		final String roleCode = "EMP";
-		roles.add(Role.builder().code(roleCode).build());
+		roles.add(Role.builder().code(roleCode).tenantId("ap.public").build());
 		User domainUser = User.builder().roles(roles)
 				.username("TestUserName").password("password").tenantId("ap.public").permanentAddress(permanentAddress)
 				.build();
@@ -185,7 +185,7 @@ public class UserRepositoryTest {
 	public void test_should_set_encrypted_password_to_new_user() {
 		final Set<Role> roles = new HashSet<>();
 		final String roleCode = "EMP";
-		roles.add(org.egov.user.domain.model.Role.builder().code(roleCode).build());
+		roles.add(org.egov.user.domain.model.Role.builder().code(roleCode).tenantId("ap.public").build());
 		final String rawPassword = "rawPassword";
 		User domainUser = User.builder().roles(roles)
 				.username("Test UserName").password(rawPassword).tenantId("ap.public").build();

@@ -43,11 +43,11 @@ public class NotificationService {
 	private String localizationSearchEndpoint;
     
 	
-	public void sendNotification(EmployeeRequest request) {
+	public void sendNotification(EmployeeRequest request, Map<String, String> pwdMap) {
 		//String message = getMessage(request);
 		String message = "Profile is successfully set up - Username: $username, Password: $password. Reset your pwd at $applink";
 		for(Employee employee: request.getEmployees()) {
-			message = buildMessage(employee, message);
+			message = buildMessage(employee, message, pwdMap);
 			SMSRequest smsRequest = SMSRequest.builder().mobileNumber(employee.getUser().getMobileNumber()).message(message).build();
 			producer.push(smsTopic, smsRequest);
 		}
@@ -60,9 +60,9 @@ public class NotificationService {
 				HRMSConstants.HRMS_LOCALIZATION_ENG_LOCALE_CODE, HRMSConstants.HRMS_LOCALIZATION_MODULE_CODE);
 		return localizedMessageMap.get(HRMSConstants.HRMS_LOCALIZATION_ENG_LOCALE_CODE +"|"+tenantId).get(HRMSConstants.HRMS_EMP_CREATE_LOCLZN_CODE);
 	}
-	public String buildMessage(Employee employee, String message) {
-		message = message.replace("$username", employee.getCode()).replaceAll("$password", employee.getUser().getPassword());
-		message = message.replaceAll("$applink", appLink);
+	public String buildMessage(Employee employee, String message, Map<String, String> pwdMap) {
+		message = message.replace("$username", employee.getCode()).replace("$password", pwdMap.get(employee.getUuid()));
+		message = message.replace("$applink", appLink);
 		return message;
 	}
 	

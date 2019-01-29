@@ -21,7 +21,7 @@ public class RestCallRepository {
 	private RestTemplate restTemplate;
 		
 	/**
-	 * Fetches results from searcher framework based on the uri and request that define what is to be searched.
+	 * Fetches results from the given API and request and handles errors.
 	 * 
 	 * @param requestInfo
 	 * @param serviceReqSearchCriteria

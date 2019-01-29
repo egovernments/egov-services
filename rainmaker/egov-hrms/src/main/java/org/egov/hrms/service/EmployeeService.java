@@ -111,6 +111,7 @@ public class EmployeeService {
 			pwdMap.put(employee.getUuid(), employee.getUser().getPassword());
 			employee.getUser().setPassword(null);
 		});
+		idGenService.setIds(employeeRequest);
 		hrmsProducer.push(propertiesManager.getSaveEmployeeTopic(), employeeRequest);
 		notificationService.sendNotification(employeeRequest, pwdMap);
 		return generateResponse(employeeRequest);
@@ -171,14 +172,9 @@ public class EmployeeService {
 
 		Instant instant = Instant.now();
 		AuditDetails auditDetails = AuditDetails.builder()
-				.createdBy(requestInfo.getUserInfo().getUserName())
+				.createdBy(requestInfo.getUserInfo().getUuid())
 				.createdDate(instant.getEpochSecond())
 				.build();
-
-		if( employee.getCode()==null) {
-		employee.setCode(idGenService.getId());
-		}
-
 		employee.getJurisdictions().stream().forEach(jurisdiction -> {
 			jurisdiction.setId(UUID.randomUUID().toString());
 			jurisdiction.setAuditDetails(auditDetails);

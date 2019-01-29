@@ -39,6 +39,8 @@
  */
 package org.egov.hrms.web.contract;
 
+import java.util.List;
+
 import org.egov.common.contract.request.RequestInfo;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -56,6 +58,7 @@ public class IdGenerationRequest {
 
     @JsonProperty("RequestInfo")
     private RequestInfo requestInfo;
-
+    
+	private List<IdRequest> idRequests;
 
 }

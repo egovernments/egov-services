@@ -58,19 +58,30 @@ public class EmployeeValidator {
 	private void validateExistingDuplicates(EmployeeRequest request, Map<String, String> errorMap) {
 		List<Employee> employees = request.getEmployees();
 		validateEmployeeCode(employees,errorMap,request.getRequestInfo());
-		validateUserMobile(employees,errorMap,request.getRequestInfo());
+        validateUserMobile(employees,errorMap,request.getRequestInfo());
+        validateUserName(employees,errorMap,request.getRequestInfo());
 
 	}
 
-	private void validateUserMobile(List<Employee> employees, Map<String, String> errorMap, RequestInfo requestInfo) {
-		employees.forEach(employee -> {
-			UserResponse userResponse = userService.getSingleUser(requestInfo,employee,"MobileNumber");
-			if(!CollectionUtils.isEmpty(userResponse.getUser())){
-				errorMap.put("HRMS_USER_EXIST_MOB","User already present for Mobile Number "+userResponse.getUser().get(0).getMobileNumber());
-			}
+    private void validateUserMobile(List<Employee> employees, Map<String, String> errorMap, RequestInfo requestInfo) {
+        employees.forEach(employee -> {
+            UserResponse userResponse = userService.getSingleUser(requestInfo,employee,"MobileNumber");
+            if(!CollectionUtils.isEmpty(userResponse.getUser())){
+                errorMap.put("HRMS_USER_EXIST_MOB","User already present for Mobile Number "+userResponse.getUser().get(0).getMobileNumber());
+            }
 
-		});
-	}
+        });
+    }
+
+    private void validateUserName(List<Employee> employees, Map<String, String> errorMap, RequestInfo requestInfo) {
+        employees.forEach(employee -> {
+            UserResponse userResponse = userService.getSingleUser(requestInfo,employee,"UserName");
+            if(!CollectionUtils.isEmpty(userResponse.getUser())){
+                errorMap.put("HRMS_USER_EXIST_USERNAME","User already present for UserName "+userResponse.getUser().get(0).getUserName());
+            }
+
+        });
+    }
 
 	private void validateEmployeeCode(List<Employee> employees, Map<String, String> errorMap, RequestInfo requestInfo) {
         List < String> emoCodes = employees.stream().map(employee -> employee.getCode())

@@ -146,7 +146,7 @@ public class UserService {
 			case "MobileNumber":
 				userSearchReq.put("mobileNumber", employee.getUser().getMobileNumber());
 				break;
-			case "Code":
+			case "UserName":
 				userSearchReq.put("userName",employee.getCode());
 				break;
 		}

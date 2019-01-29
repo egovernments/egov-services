@@ -34,6 +34,7 @@ public class IdGenService {
 				properties.getHrmsIdGenKey(), properties.getHrmsIdGenFormat());
 		if(null != response) {
 			for(int i = 0; i < employeeRequest.getEmployees().size(); i++) {
+				
 				employeeRequest.getEmployees().get(i).setCode(response.getIdResponses().get(i).getId());
 			}
 		}

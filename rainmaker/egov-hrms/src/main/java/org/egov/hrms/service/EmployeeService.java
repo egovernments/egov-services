@@ -105,13 +105,13 @@ public class EmployeeService {
 		log.info(employeeRequest.toString());
 		RequestInfo requestInfo = employeeRequest.getRequestInfo();
 		Map<String, String> pwdMap = new HashMap<>();
+		idGenService.setIds(employeeRequest);
 		employeeRequest.getEmployees().stream().forEach(employee -> {
 			enrichCreateRequest(employee, requestInfo);
 			createUser(employee, requestInfo);
 			pwdMap.put(employee.getUuid(), employee.getUser().getPassword());
 			employee.getUser().setPassword(null);
 		});
-		idGenService.setIds(employeeRequest);
 		hrmsProducer.push(propertiesManager.getSaveEmployeeTopic(), employeeRequest);
 		notificationService.sendNotification(employeeRequest, pwdMap);
 		return generateResponse(employeeRequest);
@@ -150,7 +150,7 @@ public class EmployeeService {
 			employee.getUser().setUuid(user.getUuid());
 		}catch(Exception e) {
 			log.error("Exception while creating user: ",e);
-			throw new CustomException("HRMS_USER_CREATION_FAILED", "User creation failed due to error: "+e.getMessage());
+			throw new CustomException("HRMS_USER_CREATION_FAILED", "User creation failed due to error: "+e);
 		}
 
 	}

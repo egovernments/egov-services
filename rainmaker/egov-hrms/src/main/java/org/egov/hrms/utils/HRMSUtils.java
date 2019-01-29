@@ -3,6 +3,7 @@ package org.egov.hrms.utils;
 import java.util.List;
 import java.util.Random;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -17,11 +18,15 @@ public class HRMSUtils {
 		Random random = new Random();
 		for(int i = 0; i < params.size(); i++) {
 			String param = params.get(i);
-			password.append(param.split("")[random.nextInt(param.length() - 1)]);
+			String val = param.split("")[random.nextInt(param.length() - 1)];
+			if(StringUtils.isEmpty(val))
+				password.append("x");
+			else
+				password.append(val);
 			if(password.length() > pwdLength)
 				break;
 			else {
-				if(i == params.size())
+				if(i == params.size() - 1)
 					i = 0;
 			}
 		}

@@ -60,6 +60,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -170,11 +171,11 @@ public class EmployeeService {
 
 	private void enrichCreateRequest(Employee employee, RequestInfo requestInfo) {
 
-		Instant instant = Instant.now();
 		AuditDetails auditDetails = AuditDetails.builder()
 				.createdBy(requestInfo.getUserInfo().getUuid())
-				.createdDate(instant.getEpochSecond())
+				.createdDate(new Date().getTime())
 				.build();
+		
 		employee.getJurisdictions().stream().forEach(jurisdiction -> {
 			jurisdiction.setId(UUID.randomUUID().toString());
 			jurisdiction.setAuditDetails(auditDetails);

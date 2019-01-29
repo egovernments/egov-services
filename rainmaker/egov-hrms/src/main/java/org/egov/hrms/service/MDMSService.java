@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.hrms.utils.HRMSConstants;
 import org.egov.mdms.model.MasterDetail;
@@ -70,7 +71,7 @@ public class MDMSService {
 		MdmsResponse response = null;
 		try {
 			log.info("uri:"+uri);
-			log.info("Request: "+request.toString());
+			log.info("Request: "+ new ObjectMapper().writeValueAsString( request));
 			response = restTemplate.postForObject(uri.toString(), request, MdmsResponse.class);
 		}catch(Exception e) {
 			log.info("Exception while fetching from MDMS: ",e);

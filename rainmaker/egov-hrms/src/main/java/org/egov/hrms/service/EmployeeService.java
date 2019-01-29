@@ -175,8 +175,9 @@ public class EmployeeService {
 				.createdDate(instant.getEpochSecond())
 				.build();
 
-
+		if( employee.getCode()==null) {
 		employee.setCode(idGenService.getId());
+		}
 
 		employee.getJurisdictions().stream().forEach(jurisdiction -> {
 			jurisdiction.setId(UUID.randomUUID().toString());

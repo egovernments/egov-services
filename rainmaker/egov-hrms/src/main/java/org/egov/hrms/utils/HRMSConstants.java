@@ -10,8 +10,8 @@ public class HRMSConstants {
 	public static final String HRMS_AC_ROLES_MASTERS_CODE = "ACCESSCONTROL-ROLES";
 
 	
-	public static final String HRMS_MDMS_DEPT_CODE = "Departments";
-	public static final String HRMS_MDMS_DESG_CODE = "Designations";
+	public static final String HRMS_MDMS_DEPT_CODE = "Department";
+	public static final String HRMS_MDMS_DESG_CODE = "Designation";
 	public static final String HRMS_MDMS_EMP_STATUS_CODE = "EmployeeStatuses";
 	public static final String HRMS_MDMS_EMP_TYPE_CODE = "EmployeeTypes";
 	public static final String HRMS_MDMS_SERVICE_STATUS_CODE = "ServiceStatuses";

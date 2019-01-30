@@ -52,6 +52,7 @@ import org.springframework.stereotype.Component;
 @ToString
 public class PropertiesManager {
 	
+	//Hosts and Endpoints
 	@Value("${egov.mdms.host}")
 	public String mdmsHost;
 	
@@ -76,6 +77,12 @@ public class PropertiesManager {
 	@Value("${egov.localization.search.endpoint}")
 	public String localizationSearcEndpoint;
 	
+	@Value("${egov.idgen.host}")
+	public String idGenHost;
+	
+	@Value("${egov.idgen.path}")
+	public String idGenEndpoint;
+	
 	
 	//Kafka Topics
 	@Value("${kafka.topics.save.service}")
@@ -87,4 +94,11 @@ public class PropertiesManager {
 	@Value("${kafka.topics.notification.sms}")
 	public String coreNotificationTopic;
 	
+	
+	//Variables
+	@Value("${egov.idgen.ack.name}")
+	public String hrmsIdGenKey;
+	
+	@Value("${egov.idgen.ack.format}")
+	public String hrmsIdGenFormat;
 }

@@ -60,6 +60,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -103,12 +105,16 @@ public class EmployeeService {
 		log.info("Service: Create Employee");
 		log.info(employeeRequest.toString());
 		RequestInfo requestInfo = employeeRequest.getRequestInfo();
+		Map<String, String> pwdMap = new HashMap<>();
+		idGenService.setIds(employeeRequest);
 		employeeRequest.getEmployees().stream().forEach(employee -> {
 			enrichCreateRequest(employee, requestInfo);
 			createUser(employee, requestInfo);
+			pwdMap.put(employee.getUuid(), employee.getUser().getPassword());
+			employee.getUser().setPassword(null);
 		});
 		hrmsProducer.push(propertiesManager.getSaveEmployeeTopic(), employeeRequest);
-		notificationService.sendNotification(employeeRequest);
+		notificationService.sendNotification(employeeRequest, pwdMap);
 		return generateResponse(employeeRequest);
 	}
 	
@@ -141,10 +147,11 @@ public class EmployeeService {
 			User user = response.getUser().get(0);
 			employee.setId(user.getId());
 			employee.setUuid(user.getUuid());
-			employee.setUser(user);
+			employee.getUser().setId(user.getId());
+			employee.getUser().setUuid(user.getUuid());
 		}catch(Exception e) {
 			log.error("Exception while creating user: ",e);
-			throw new CustomException("HRMS_USER_CREATION_FAILED", "User creation failed due to error: "+e.getMessage());
+			throw new CustomException("HRMS_USER_CREATION_FAILED", "User creation failed due to error: "+e);
 		}
 
 	}
@@ -164,15 +171,11 @@ public class EmployeeService {
 
 	private void enrichCreateRequest(Employee employee, RequestInfo requestInfo) {
 
-		Instant instant = Instant.now();
 		AuditDetails auditDetails = AuditDetails.builder()
-				.createdBy(requestInfo.getUserInfo().getUserName())
-				.createdDate(instant.getEpochSecond())
+				.createdBy(requestInfo.getUserInfo().getUuid())
+				.createdDate(new Date().getTime())
 				.build();
-
-
-		employee.setCode(idGenService.getId());
-
+		
 		employee.getJurisdictions().stream().forEach(jurisdiction -> {
 			jurisdiction.setId(UUID.randomUUID().toString());
 			jurisdiction.setAuditDetails(auditDetails);

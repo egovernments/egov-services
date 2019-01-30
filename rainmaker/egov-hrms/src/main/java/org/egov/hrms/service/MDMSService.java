@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.hrms.utils.HRMSConstants;
 import org.egov.mdms.model.MasterDetail;
@@ -45,7 +46,6 @@ public class MDMSService {
 					eachMasterMap = (Map) response.getMdmsRes().get(HRMSConstants.HRMS_MDMS_COMMON_MASTERS_CODE);
 					masterData.put(HRMSConstants.HRMS_MDMS_DEPT_CODE, eachMasterMap.get(HRMSConstants.HRMS_MDMS_DEPT_CODE));
 					masterData.put(HRMSConstants.HRMS_MDMS_DESG_CODE, eachMasterMap.get(HRMSConstants.HRMS_MDMS_DESG_CODE));
-					masterData.put(HRMSConstants.HRMS_MDMS_ROLES_CODE, eachMasterMap.get(HRMSConstants.HRMS_MDMS_ROLES_CODE));
 					masterData.put(HRMSConstants.HRMS_MDMS_YEAR_CODE, eachMasterMap.get(HRMSConstants.HRMS_MDMS_YEAR_CODE));
 				}else if(null != response.getMdmsRes().get(HRMSConstants.HRMS_MDMS_HR_MASTERS_CODE)) {
 					eachMasterMap = (Map) response.getMdmsRes().get(HRMSConstants.HRMS_MDMS_HR_MASTERS_CODE);
@@ -54,6 +54,9 @@ public class MDMSService {
 					masterData.put(HRMSConstants.HRMS_MDMS_QUALIFICATION_CODE, eachMasterMap.get(HRMSConstants.HRMS_MDMS_QUALIFICATION_CODE));
 					masterData.put(HRMSConstants.HRMS_MDMS_SERVICE_STATUS_CODE, eachMasterMap.get(HRMSConstants.HRMS_MDMS_SERVICE_STATUS_CODE));
 					masterData.put(HRMSConstants.HRMS_MDMS_STREAMS_CODE, eachMasterMap.get(HRMSConstants.HRMS_MDMS_STREAMS_CODE));
+				}else if(null != response.getMdmsRes().get(HRMSConstants.HRMS_AC_ROLES_MASTERS_CODE)) {
+					eachMasterMap = (Map) response.getMdmsRes().get(HRMSConstants.HRMS_AC_ROLES_MASTERS_CODE);
+					masterData.put(HRMSConstants.HRMS_MDMS_ROLES_CODE, eachMasterMap.get(HRMSConstants.HRMS_MDMS_ROLES_CODE));
 				}
 			}
 		}
@@ -68,7 +71,7 @@ public class MDMSService {
 		MdmsResponse response = null;
 		try {
 			log.info("uri:"+uri);
-			log.info("Request: "+request.toString());
+			log.info("Request: "+ new ObjectMapper().writeValueAsString( request));
 			response = restTemplate.postForObject(uri.toString(), request, MdmsResponse.class);
 		}catch(Exception e) {
 			log.info("Exception while fetching from MDMS: ",e);
@@ -80,9 +83,11 @@ public class MDMSService {
 		Map<String, List<String>> mapOfModulesAndMasters = new HashMap<>();
 		String[] hrMasters = {HRMSConstants.HRMS_MDMS_EMP_STATUS_CODE, HRMSConstants.HRMS_MDMS_EMP_TYPE_CODE, HRMSConstants.HRMS_MDMS_QUALIFICATION_CODE,
 				HRMSConstants.HRMS_MDMS_SERVICE_STATUS_CODE, HRMSConstants.HRMS_MDMS_STREAMS_CODE};
-		String[] commonMasters = {HRMSConstants.HRMS_MDMS_DEPT_CODE, HRMSConstants.HRMS_MDMS_DESG_CODE, HRMSConstants.HRMS_MDMS_ROLES_CODE, HRMSConstants.HRMS_MDMS_YEAR_CODE};
+		String[] commonMasters = {HRMSConstants.HRMS_MDMS_DEPT_CODE, HRMSConstants.HRMS_MDMS_DESG_CODE, HRMSConstants.HRMS_MDMS_YEAR_CODE};
+		String[] accessControlRoles = {HRMSConstants.HRMS_MDMS_ROLES_CODE};
 		mapOfModulesAndMasters.put(HRMSConstants.HRMS_MDMS_COMMON_MASTERS_CODE, Arrays.asList(commonMasters));
 		mapOfModulesAndMasters.put(HRMSConstants.HRMS_MDMS_HR_MASTERS_CODE, Arrays.asList(hrMasters));
+		mapOfModulesAndMasters.put(HRMSConstants.HRMS_AC_ROLES_MASTERS_CODE, Arrays.asList(accessControlRoles));
 		List<ModuleDetail> moduleDetails = new ArrayList<>();
 		for(String module: mapOfModulesAndMasters.keySet()) {
 			ModuleDetail moduleDetail = new ModuleDetail();

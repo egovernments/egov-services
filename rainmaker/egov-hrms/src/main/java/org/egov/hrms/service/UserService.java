@@ -45,6 +45,8 @@ import lombok.extern.slf4j.Slf4j;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.hrms.config.PropertiesManager;
+import org.egov.hrms.model.Employee;
+import org.egov.hrms.model.enums.UserType;
 import org.egov.hrms.repository.RestCallRepository;
 import org.egov.hrms.web.contract.UserRequest;
 import org.egov.hrms.web.contract.UserResponse;
@@ -125,10 +127,35 @@ public class UserService {
 		uri.append(propertiesManager.getUserHost()).append(propertiesManager.getUserSearchEndpoint());
 		UserResponse userResponse = new UserResponse();
 		try {
-			log.info("uri: "+ uri);
-			log.info("user req: "+mapper.writeValueAsString(userSearchReq));
 			userResponse = userCall(userSearchReq,uri);
-			log.info("user res: "+ userResponse);
+		}catch(Exception e) {
+			log.error("User search failed: ",e);
+		}
+
+		return userResponse;
+	}
+
+
+	public UserResponse getSingleUser(RequestInfo requestInfo, Employee employee, String type) {
+		log.info("Service: Search User");
+		StringBuilder uri = new StringBuilder();
+		ObjectMapper mapper = new ObjectMapper();
+		Map<String, Object> userSearchReq = new HashMap<>();
+		userSearchReq.put("RequestInfo", requestInfo);
+		switch (type){
+			case "MobileNumber":
+				userSearchReq.put("mobileNumber", employee.getUser().getMobileNumber());
+				break;
+			case "UserName":
+				userSearchReq.put("userName",employee.getCode());
+				break;
+		}
+		userSearchReq.put("userType", UserType.EMPLOYEE);
+		userSearchReq.put("tenantID",employee.getTenantId());
+		uri.append(propertiesManager.getUserHost()).append(propertiesManager.getUserSearchEndpoint());
+		UserResponse userResponse = new UserResponse();
+		try {
+			userResponse = userCall(userSearchReq,uri);
 
 		}catch(Exception e) {
 			log.error("User search failed: ",e);

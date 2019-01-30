@@ -96,12 +96,12 @@ public class WorkflowValidator {
              *  Validates if action is not causing transition then it must have atleast one of the field
              *  either documents or comment or assignee to be not null
              */
-            if(!isStateChanging && (processStateAndAction.getProcessInstanceFromRequest().getAssignee()==null
+            /*if(!isStateChanging && (processStateAndAction.getProcessInstanceFromRequest().getAssignee()==null
                     && CollectionUtils.isEmpty(processStateAndAction.getProcessInstanceFromRequest().getDocuments())
                     && StringUtils.isEmpty(processStateAndAction.getProcessInstanceFromRequest().getComment()))){
                 throw new CustomException("INVALID PROCESSINSTANCE","For non-transition actions atleast one of comment,assignee or document should be not null.The BusinessId: "
                         +processStateAndAction.getProcessInstanceFromRequest().getBusinessId());
-            }
+            }*/
 
             /*
              * Checks in case of non-transition action the assigner is one having transition role in current state

@@ -21,7 +21,7 @@ public class RestCallRepository {
 	private RestTemplate restTemplate;
 		
 	/**
-	 * Fetches results from searcher framework based on the uri and request that define what is to be searched.
+	 * Fetches results from the given API and request and handles errors.
 	 * 
 	 * @param requestInfo
 	 * @param serviceReqSearchCriteria
@@ -33,6 +33,8 @@ public class RestCallRepository {
         mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
 		Object response = null;
 		try {
+			log.info("URI: "+ uri);
+			log.info("req: "+new ObjectMapper().writeValueAsString(request));
 			response = restTemplate.postForObject(uri.toString(), request, Map.class);
 		}catch(HttpClientErrorException e) {
 			log.error("External Service threw an Exception: ",e);

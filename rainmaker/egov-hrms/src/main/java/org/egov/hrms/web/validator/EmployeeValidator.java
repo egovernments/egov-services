@@ -4,6 +4,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import lombok.extern.slf4j.Slf4j;
+import org.egov.common.contract.request.RequestInfo;
 import org.egov.hrms.model.Assignment;
 import org.egov.hrms.model.DepartmentalTest;
 import org.egov.hrms.model.EducationalQualification;
@@ -12,10 +13,12 @@ import org.egov.hrms.model.Role;
 import org.egov.hrms.model.ServiceHistory;
 import org.egov.hrms.service.EmployeeService;
 import org.egov.hrms.service.MDMSService;
+import org.egov.hrms.service.UserService;
 import org.egov.hrms.utils.HRMSConstants;
 import org.egov.hrms.web.contract.EmployeeRequest;
 import org.egov.hrms.web.contract.EmployeeResponse;
 import org.egov.hrms.web.contract.EmployeeSearchCriteria;
+import org.egov.hrms.web.contract.UserResponse;
 import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -31,13 +34,17 @@ public class EmployeeValidator {
 	@Autowired
 	private EmployeeService employeeService;
 
+	@Autowired
+	private UserService userService;
+
 
 	public void validateCreateEmployee(EmployeeRequest request) {
 		Map<String, String> errorMap = new HashMap<>();
+		validateExistingDuplicates(request ,errorMap);
 		Map<String, List<String>> mdmsData = mdmsService.getMDMSData(request.getRequestInfo(), request.getEmployees().get(0).getTenantId());
 		if(!CollectionUtils.isEmpty(mdmsData.keySet())){
 			for(Employee employee: request.getEmployees()) {
-				validateMdmsData(employee, errorMap, mdmsData);
+//				validateMdmsData(employee, errorMap, mdmsData);
 			}
 		}else{
 			log.info("MDMS data couldn't be fetched so skipping validaion!");
@@ -47,7 +54,44 @@ public class EmployeeValidator {
 		}
 
 	}
-	
+
+	private void validateExistingDuplicates(EmployeeRequest request, Map<String, String> errorMap) {
+		List<Employee> employees = request.getEmployees();
+		validateEmployeeCode(employees,errorMap,request.getRequestInfo());
+        validateUserMobile(employees,errorMap,request.getRequestInfo());
+        validateUserName(employees,errorMap,request.getRequestInfo());
+
+	}
+
+    private void validateUserMobile(List<Employee> employees, Map<String, String> errorMap, RequestInfo requestInfo) {
+        employees.forEach(employee -> {
+            UserResponse userResponse = userService.getSingleUser(requestInfo,employee,"MobileNumber");
+            if(!CollectionUtils.isEmpty(userResponse.getUser())){
+                errorMap.put("HRMS_USER_EXIST_MOB","User already present for Mobile Number "+userResponse.getUser().get(0).getMobileNumber());
+            }
+
+        });
+    }
+
+    private void validateUserName(List<Employee> employees, Map<String, String> errorMap, RequestInfo requestInfo) {
+        employees.forEach(employee -> {
+            UserResponse userResponse = userService.getSingleUser(requestInfo,employee,"UserName");
+            if(!CollectionUtils.isEmpty(userResponse.getUser())){
+                errorMap.put("HRMS_USER_EXIST_USERNAME","User already present for UserName "+userResponse.getUser().get(0).getUserName());
+            }
+
+        });
+    }
+
+	private void validateEmployeeCode(List<Employee> employees, Map<String, String> errorMap, RequestInfo requestInfo) {
+        List < String> emoCodes = employees.stream().map(employee -> employee.getCode())
+                                                    .collect(Collectors.toList());
+
+        EmployeeResponse employeeResponse= employeeService.search(EmployeeSearchCriteria.builder().codes(emoCodes).build(),requestInfo);
+			if(!CollectionUtils.isEmpty(employeeResponse.getEmployees()))
+				errorMap.put("HRMS_INVALID_CODE","Employee Code already used for another employee");
+	}
+
 	private void validateMdmsData(Employee employee, Map<String, String> errorMap, Map<String, List<String>> mdmsData) {
 		validateEmployee(employee, errorMap, mdmsData);
 		validateAssignments(employee, errorMap, mdmsData);
@@ -68,6 +112,7 @@ public class EmployeeValidator {
 	}
 	
 	private void validateEmployee(Employee employee, Map<String, String> errorMap, Map<String, List<String>> mdmsData) {
+
 		if(employee.getUser().getMobileNumber().length() != 10)
 			errorMap.put("HRMS_INVALID_MOB_NO", "Mobile number of the employee is invalid!");
 		

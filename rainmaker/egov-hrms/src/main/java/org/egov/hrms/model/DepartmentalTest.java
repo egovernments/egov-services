@@ -55,8 +55,10 @@ public class DepartmentalTest {
 
 	private String id;
 
+	@NotNull
 	private String test;
 
+	@NotNull
 	private Integer yearOfPassing;
 
 	private String remarks;

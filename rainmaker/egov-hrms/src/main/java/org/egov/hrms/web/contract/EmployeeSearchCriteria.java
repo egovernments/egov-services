@@ -20,6 +20,8 @@ public class EmployeeSearchCriteria {
 	
 	public List<String> codes;
 	
+	public List<String> names;
+	
 	public List<String> departments;
 	
 	public List<String> designations;

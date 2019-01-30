@@ -22,9 +22,7 @@ import java.security.spec.InvalidKeySpecException;
 import java.security.spec.KeySpec;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
-import java.util.ArrayList;
-import java.util.Base64;
-import java.util.HashMap;
+import java.util.*;
 
 
 
@@ -227,8 +225,8 @@ public class KeyStore implements ApplicationRunner {
         refreshKeys();
     }
 
-    public ArrayList<Integer> getKeyIds() {
-        ArrayList<Integer> keyIds = new ArrayList<>();
+    public Set<Integer> getKeyIds() {
+        Set<Integer> keyIds = new HashSet<>();
         keyIds.addAll(symmetricKeyHashMap.keySet());
         keyIds.addAll(asymmetricKeyHashMap.keySet());
         return keyIds;

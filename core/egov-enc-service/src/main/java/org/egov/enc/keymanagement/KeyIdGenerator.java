@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 
 import java.security.SecureRandom;
 import java.security.Security;
-import java.util.ArrayList;
+import java.util.Set;
 
 @Component
 @Order(2)
@@ -18,7 +18,7 @@ public class KeyIdGenerator implements ApplicationRunner {
 
     private SecureRandom secureRandom;
 
-    private static ArrayList<Integer> presentKeyIds;
+    private static Set<Integer> presentKeyIds;
 
     @Autowired
     private KeyStore keyStore;
@@ -41,6 +41,7 @@ public class KeyIdGenerator implements ApplicationRunner {
         while(presentKeyIds.contains(keyId)) {
             keyId = getRandomNumber(appProperties.getKeyIdLength());
         }
+        presentKeyIds.add(keyId);
         return keyId;
     }
 
@@ -52,7 +53,7 @@ public class KeyIdGenerator implements ApplicationRunner {
     }
 
     @Override
-    public void run(ApplicationArguments args) throws Exception {
+    public void run(ApplicationArguments args) {
         refreshKeyIds();
     }
 }

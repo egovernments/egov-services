@@ -5,7 +5,6 @@ import org.egov.enc.keymanagement.KeyGenerator;
 import org.egov.enc.keymanagement.KeyIdGenerator;
 import org.egov.enc.keymanagement.KeyStore;
 import org.egov.enc.models.AsymmetricKey;
-import org.egov.enc.models.MethodEnum;
 import org.egov.enc.models.SymmetricKey;
 import org.egov.enc.repository.KeyRepository;
 import org.egov.enc.web.models.RotateKeyRequest;
@@ -22,7 +21,6 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -68,7 +66,8 @@ public class KeyManagementService implements ApplicationRunner {
         if(tenantIdsFromDB.contains(tenant)) {
             return true;
         }
-        if(generateKeyForNewTenants() != 0) {
+        int numberOfNewTenants = generateKeyForNewTenants();
+        if(numberOfNewTenants != 0) {
             keyStore.refreshKeys();
             keyIdGenerator.refreshKeyIds();
             tenantIdsFromDB = (ArrayList<String>) keyRepository.fetchDistinctTenantIds();
@@ -80,7 +79,7 @@ public class KeyManagementService implements ApplicationRunner {
     //Generate Symmetric and Asymmetric Keys for each of the TenantId in the given input list
     public void generateKeys(ArrayList<String> tenantIds) throws BadPaddingException, InvalidKeyException, NoSuchAlgorithmException, IllegalBlockSizeException, NoSuchPaddingException, InvalidAlgorithmParameterException {
 
-        Integer status = 1000;
+        Integer status;
         ArrayList<SymmetricKey> symmetricKeys = keyGenerator.generateSymmetricKeys(tenantIds);
         for(SymmetricKey symmetricKey : symmetricKeys) {
             status = keyRepository.insertSymmetricKey(symmetricKey);
@@ -106,8 +105,7 @@ public class KeyManagementService implements ApplicationRunner {
 
         tenantIds.removeAll(tenantIdsFromDB);
 
-        ArrayList<String> tenantIdList = new ArrayList<String>();
-        tenantIdList.addAll(tenantIds);
+        ArrayList<String> tenantIdList = new ArrayList<>(tenantIds);
 
         generateKeys(tenantIdList);
 
@@ -130,7 +128,7 @@ public class KeyManagementService implements ApplicationRunner {
     }
 
     //Used to deactivate old keys at the time of key rotation
-    public void deactivateOldKeys() {
+    private void deactivateOldKeys() {
         keyRepository.deactivateSymmetricKeys();
         keyRepository.deactivateAsymmetricKeys();
     }
@@ -146,7 +144,7 @@ public class KeyManagementService implements ApplicationRunner {
     public RotateKeyResponse rotateKey(RotateKeyRequest rotateKeyRequest) throws BadPaddingException,
             InvalidKeyException, NoSuchAlgorithmException, IllegalBlockSizeException, NoSuchPaddingException,
             InvalidAlgorithmParameterException {
-        Integer status = 1000;
+        Integer status;
         status = keyRepository.deactivateSymmetricKeyForGivenTenant(rotateKeyRequest.getTenantId());
         log.info("Key Rotate SYM Return Status: " + status);
         if(status != 1) {
@@ -200,7 +198,7 @@ public class KeyManagementService implements ApplicationRunner {
 
         String url = mdmsHost + mdmsEndpoint;
 
-        HttpEntity<String> entity = new HttpEntity<String>(requestJson, headers);
+        HttpEntity<String> entity = new HttpEntity<>(requestJson, headers);
         ResponseEntity<String> response = restTemplate.postForEntity(url, entity, String.class);
 
         JSONObject jsonObject = new JSONObject(response.getBody());

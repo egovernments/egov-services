@@ -80,24 +80,6 @@ public class WorkflowUtil {
 
 
     /**
-     * Creates a map of status to roles who can take actions on it for particular businessService
-     * @param businessService The businessService for which map is to be created
-     * @return Map of status to roles which can take action on it
-     */
-    public Map<String,Set<String>> getStateToRoleMap(BusinessService businessService){
-        Map<String,Set<String>> stateToRolesMap = new HashMap<>();
-        for(State state : businessService.getStates()){
-            HashSet<String> roles = new HashSet<>();
-            state.getActions().forEach(action -> {
-                roles.addAll(Arrays.asList(action.getRoles().get(0).split(",")));
-            });
-            stateToRolesMap.put(state.getUuid(),roles);
-        }
-        return stateToRolesMap;
-    }
-
-
-    /**
      * Creates a map of status to roles who can take actions on it for all businessService
      * @param businessServices The list of businessServices
      * @return Map of status to roles which can take action on it for all businessService
@@ -149,6 +131,23 @@ public class WorkflowUtil {
             }
         }
         return actionableStatuses;
+    }
+
+
+    /**
+     * Extracts all the roles from the state
+     * @param state The state whose roles has to be extracted
+     * @return Roles availaable in the states which can take action
+     */
+    public List<String> getAllRolesFromState(State state){
+        List<Action> actions = state.getActions();
+        List<String> rolesInState = new LinkedList<>();
+        if(!CollectionUtils.isEmpty(actions)){
+            actions.forEach(action -> {
+                rolesInState.addAll(action.getRoles());
+            });
+        }
+        return rolesInState;
     }
 
 

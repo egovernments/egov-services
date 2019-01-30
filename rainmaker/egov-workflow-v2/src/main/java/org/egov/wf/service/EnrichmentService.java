@@ -167,13 +167,14 @@ public class EnrichmentService {
     }
 
 
-    public void enrichNextActionForSearch(RequestInfo requestInfo,List<ProcessInstance> processInstances){
+    public List<ProcessStateAndAction> enrichNextActionForSearch(RequestInfo requestInfo,List<ProcessInstance> processInstances){
         List<ProcessStateAndAction> processStateAndActions = new LinkedList<>();
         List<ProcessInstanceRequest> requests = getRequestByBusinessService(new ProcessInstanceRequest(requestInfo,processInstances));
         requests.forEach(request -> {
             processStateAndActions.addAll(transitionService.getProcessStateAndActions(new ProcessInstanceRequest(requestInfo,processInstances),false));
         });
         setNextActions(requestInfo,processStateAndActions,false);
+        return processStateAndActions;
     }
 
 

@@ -6,10 +6,7 @@ import org.egov.common.contract.request.Role;
 import org.egov.tracer.model.CustomException;
 import org.egov.wf.util.BusinessUtil;
 import org.egov.wf.util.WorkflowUtil;
-import org.egov.wf.web.models.Action;
-import org.egov.wf.web.models.BusinessService;
-import org.egov.wf.web.models.ProcessStateAndAction;
-import org.egov.wf.web.models.State;
+import org.egov.wf.web.models.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
@@ -46,6 +43,24 @@ public class WorkflowValidator {
         validateAction(requestInfo,processStateAndActions,businessService);
         validateDocuments(processStateAndActions);
     }
+
+
+    /**
+     * Validates if the search functionality is available for the role of the user
+     * @param requestInfo The RequestInfo of the search request
+     * @param processStateAndActions The ProcessStateAndAction object of the search result
+     */
+    public void validateSearch(RequestInfo requestInfo, List<ProcessStateAndAction> processStateAndActions){
+        Map<String,String> errorMap = new HashMap<>();
+        processStateAndActions.forEach(processStateAndAction -> {
+            List<String> rolesInState = util.getAllRolesFromState(processStateAndAction.getCurrentState());
+            if(!util.isRoleAvailable(requestInfo.getUserInfo().getRoles(),rolesInState))
+                errorMap.put("INVALID SEARCH","Access denied for processInstance: "+processStateAndAction.getProcessInstanceFromRequest().getId());
+        });
+        if(!errorMap.isEmpty())
+            throw new CustomException(errorMap);
+    }
+
 
 
     /**

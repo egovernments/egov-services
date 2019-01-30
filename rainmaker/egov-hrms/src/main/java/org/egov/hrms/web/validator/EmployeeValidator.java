@@ -39,7 +39,7 @@ public class EmployeeValidator {
 		Map<String, List<String>> mdmsData = mdmsService.getMDMSData(request.getRequestInfo(), request.getEmployees().get(0).getTenantId());
 		if(!CollectionUtils.isEmpty(mdmsData.keySet())){
 			for(Employee employee: request.getEmployees()) {
-				validateMdmsData(employee, errorMap, mdmsData);
+//				validateMdmsData(employee, errorMap, mdmsData);
 			}
 		}else{
 			log.info("MDMS data couldn't be fetched so skipping validaion!");
@@ -200,7 +200,7 @@ public class EmployeeValidator {
 		for(Employee employee: request.getEmployees()){
 			Employee existingEmp = existingEmployees.stream().filter(existingEmployee -> existingEmployee.getUuid().equals(employee.getUuid())).findFirst().get();
 			validateDataConsistency(employee, errorMap, mdmsData, existingEmp);
-			validateMdmsData(employee, errorMap, mdmsData);
+//			validateMdmsData(employee, errorMap, mdmsData);
 
 		}
 		
@@ -220,7 +220,7 @@ public class EmployeeValidator {
 								.map(jurisdiction -> jurisdiction.getId())
 								.collect(Collectors.toList()));
 		if(!check){
-			errorMap.put("HRMS_UPDATE_JURISDICTION_INCOSISTENT","Jurisdiction data in update request should contain all previous assginment data ");
+			errorMap.put("HRMS_UPDATE_JURISDICTION_INCOSISTENT","Jurisdiction data in update request should contain all previous jurisdiction data ");
 		}
 
 	}
@@ -239,57 +239,67 @@ public class EmployeeValidator {
 	}
 
 	private void validateConsistencyDepartmentalTest(Employee existingEmp, Employee updatedEmployeeData, Map<String, String> errorMap){
-		boolean check =
-				updatedEmployeeData.getTests().stream()
-						.map(test -> test.getId())
-						.collect(Collectors.toList())
-						.containsAll(existingEmp.getTests().stream()
-								.map(test -> test.getId())
-								.collect(Collectors.toList()));
-		if(!check){
-			errorMap.put("HRMS_UPDATE_TESTS_INCOSISTENT","Tests data in update request should contain all previous assginment data ");
+		if(updatedEmployeeData.getTests() != null ){
+			boolean check =
+					updatedEmployeeData.getTests().stream()
+							.map(test -> test.getId())
+							.collect(Collectors.toList())
+							.containsAll(existingEmp.getTests().stream()
+									.map(test -> test.getId())
+									.collect(Collectors.toList()));
+			if(!check){
+				errorMap.put("HRMS_UPDATE_TESTS_INCOSISTENT","Tests data in update request should contain all previous Tests data ");
+			}
+
 		}
 
 	}
 
 	private void validateConsistencyEducationalDetails(Employee existingEmp, Employee updatedEmployeeData, Map<String, String> errorMap){
-		boolean check =
-				updatedEmployeeData.getEducation().stream()
-						.map(educationalQualification -> educationalQualification.getId())
-						.collect(Collectors.toList())
-						.containsAll(existingEmp.getEducation().stream()
-								.map(educationalQualification -> educationalQualification.getId())
-								.collect(Collectors.toList()));
-		if(!check){
-			errorMap.put("HRMS_UPDATE_EDUCATION_INCOSISTENT","Education data in update request should contain all previous assginment data ");
-		}
+		if(updatedEmployeeData.getEducation() != null){
+			boolean check =
+					updatedEmployeeData.getEducation().stream()
+							.map(educationalQualification -> educationalQualification.getId())
+							.collect(Collectors.toList())
+							.containsAll(existingEmp.getEducation().stream()
+									.map(educationalQualification -> educationalQualification.getId())
+									.collect(Collectors.toList()));
+			if(!check){
+				errorMap.put("HRMS_UPDATE_EDUCATION_INCOSISTENT","Education data in update request should contain all previous education data ");
+			}
 
+		}
 	}
 
 	private void validateConsistencyServiceHistory(Employee existingEmp, Employee updatedEmployeeData, Map<String, String> errorMap){
-		boolean check =
-				updatedEmployeeData.getServiceHistory().stream()
-						.map(serviceHistory -> serviceHistory.getId())
-						.collect(Collectors.toList())
-						.containsAll(existingEmp.getServiceHistory().stream()
-								.map(serviceHistory -> serviceHistory.getId())
-								.collect(Collectors.toList()));
-		if(!check){
-			errorMap.put("HRMS_UPDATE_SERVICE_HISTORY_INCOSISTENT","Service History data in update request should contain all previous assginment data ");
+		if(updatedEmployeeData.getServiceHistory()!=null){
+			boolean check =
+					updatedEmployeeData.getServiceHistory().stream()
+							.map(serviceHistory -> serviceHistory.getId())
+							.collect(Collectors.toList())
+							.containsAll(existingEmp.getServiceHistory().stream()
+									.map(serviceHistory -> serviceHistory.getId())
+									.collect(Collectors.toList()));
+			if(!check){
+				errorMap.put("HRMS_UPDATE_SERVICE_HISTORY_INCOSISTENT","Service History data in update request should contain all previous service history data ");
+			}
+
 		}
 
 	}
 
 	private void validateConsistencyEmployeeDocument(Employee existingEmp, Employee updatedEmployeeData, Map<String, String> errorMap) {
-		boolean check =
-				updatedEmployeeData.getDocuments().stream()
-						.map(employeeDocument -> employeeDocument.getId())
-						.collect(Collectors.toList())
-						.containsAll(existingEmp.getDocuments().stream()
-								.map(employeeDocument -> employeeDocument.getId())
-								.collect(Collectors.toList()));
-		if (!check) {
-			errorMap.put("HRMS_UPDATE_DOCUMENT_INCOSISTENT", "Employee Document data in update request should contain all previous assginment data ");
+		if(updatedEmployeeData.getDocuments() != null){
+			boolean check =
+					updatedEmployeeData.getDocuments().stream()
+							.map(employeeDocument -> employeeDocument.getId())
+							.collect(Collectors.toList())
+							.containsAll(existingEmp.getDocuments().stream()
+									.map(employeeDocument -> employeeDocument.getId())
+									.collect(Collectors.toList()));
+			if (!check) {
+				errorMap.put("HRMS_UPDATE_DOCUMENT_INCOSISTENT", "Employee Document data in update request should contain all previous employee document data ");
+			}
 		}
 
 	}

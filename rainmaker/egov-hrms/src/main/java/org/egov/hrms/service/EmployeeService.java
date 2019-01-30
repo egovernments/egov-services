@@ -279,76 +279,96 @@ public class EmployeeService {
 				}
 			}
 		});
-		employee.getServiceHistory().stream().forEach(serviceHistory -> {
-			if(serviceHistory.getId()==null) {
-				serviceHistory.setId(UUID.randomUUID().toString());
-				serviceHistory.setAuditDetails(auditDetails);
-			}else {
-				if(!existingEmpData.getAssignments().stream()
-						.filter(serviceHistoryData -> serviceHistoryData.getId()==serviceHistory.getId())
-						.findFirst()
-						.equals(serviceHistory)){
-					serviceHistory.getAuditDetails().setLastModifiedBy(requestInfo.getUserInfo().getUserName());
-					serviceHistory.getAuditDetails().setLastModifiedDate(instant.getEpochSecond());
+
+		if(employee.getServiceHistory()!=null){
+			employee.getServiceHistory().stream().forEach(serviceHistory -> {
+				if(serviceHistory.getId()==null) {
+					serviceHistory.setId(UUID.randomUUID().toString());
+					serviceHistory.setAuditDetails(auditDetails);
+				}else {
+					if(!existingEmpData.getAssignments().stream()
+							.filter(serviceHistoryData -> serviceHistoryData.getId()==serviceHistory.getId())
+							.findFirst()
+							.equals(serviceHistory)){
+						serviceHistory.getAuditDetails().setLastModifiedBy(requestInfo.getUserInfo().getUserName());
+						serviceHistory.getAuditDetails().setLastModifiedDate(instant.getEpochSecond());
+					}
 				}
-			}
-		});
-		employee.getEducation().stream().forEach(educationalQualification -> {
-			if(educationalQualification.getId()==null) {
-				educationalQualification.setId(UUID.randomUUID().toString());
-				educationalQualification.setAuditDetails(auditDetails);
-			}else {
-				if(!existingEmpData.getAssignments().stream()
-						.filter(educationalQualificationData -> educationalQualificationData.getId()==educationalQualification.getId())
-						.findFirst()
-						.equals(educationalQualification)){
-					educationalQualification.getAuditDetails().setLastModifiedBy(requestInfo.getUserInfo().getUserName());
-					educationalQualification.getAuditDetails().setLastModifiedDate(instant.getEpochSecond());
+			});
+
+		}
+
+		if(employee.getEducation() != null){
+			employee.getEducation().stream().forEach(educationalQualification -> {
+				if(educationalQualification.getId()==null) {
+					educationalQualification.setId(UUID.randomUUID().toString());
+					educationalQualification.setAuditDetails(auditDetails);
+				}else {
+					if(!existingEmpData.getAssignments().stream()
+							.filter(educationalQualificationData -> educationalQualificationData.getId()==educationalQualification.getId())
+							.findFirst()
+							.equals(educationalQualification)){
+						educationalQualification.getAuditDetails().setLastModifiedBy(requestInfo.getUserInfo().getUserName());
+						educationalQualification.getAuditDetails().setLastModifiedDate(instant.getEpochSecond());
+					}
 				}
-			}
-		});
-		employee.getTests().stream().forEach(departmentalTest -> {
-			if(departmentalTest.getId()==null) {
-				departmentalTest.setId(UUID.randomUUID().toString());
-				departmentalTest.setAuditDetails(auditDetails);
-			}else {
-				if(!existingEmpData.getAssignments().stream()
-						.filter(departmentalTestData -> departmentalTestData.getId()==departmentalTest.getId())
-						.findFirst()
-						.equals(departmentalTest)){
-					departmentalTest.getAuditDetails().setLastModifiedBy(requestInfo.getUserInfo().getUserName());
-					departmentalTest.getAuditDetails().setLastModifiedDate(instant.getEpochSecond());
+			});
+
+		}
+
+		if(employee.getTests() != null){
+			employee.getTests().stream().forEach(departmentalTest -> {
+				if(departmentalTest.getId()==null) {
+					departmentalTest.setId(UUID.randomUUID().toString());
+					departmentalTest.setAuditDetails(auditDetails);
+				}else {
+					if(!existingEmpData.getAssignments().stream()
+							.filter(departmentalTestData -> departmentalTestData.getId()==departmentalTest.getId())
+							.findFirst()
+							.equals(departmentalTest)){
+						departmentalTest.getAuditDetails().setLastModifiedBy(requestInfo.getUserInfo().getUserName());
+						departmentalTest.getAuditDetails().setLastModifiedDate(instant.getEpochSecond());
+					}
 				}
-			}
-		});
-		employee.getDocuments().stream().forEach(document -> {
-			if(document.getId()==null) {
-				document.setId(UUID.randomUUID().toString());
-				document.setAuditDetails(auditDetails);
-			}else {
-				if(!existingEmpData.getAssignments().stream()
-						.filter(documentData -> documentData.getId()==document.getId())
-						.findFirst()
-						.equals(document)){
-					document.getAuditDetails().setLastModifiedBy(requestInfo.getUserInfo().getUserName());
-					document.getAuditDetails().setLastModifiedDate(instant.getEpochSecond());
+			});
+
+		}
+
+		if(employee.getDocuments() != null){
+			employee.getDocuments().stream().forEach(document -> {
+				if(document.getId()==null) {
+					document.setId(UUID.randomUUID().toString());
+					document.setAuditDetails(auditDetails);
+				}else {
+					if(!existingEmpData.getAssignments().stream()
+							.filter(documentData -> documentData.getId()==document.getId())
+							.findFirst()
+							.equals(document)){
+						document.getAuditDetails().setLastModifiedBy(requestInfo.getUserInfo().getUserName());
+						document.getAuditDetails().setLastModifiedDate(instant.getEpochSecond());
+					}
 				}
-			}
-		});
-		employee.getDeactivationDetails().stream().forEach(deactivationDetails -> {
-			if(deactivationDetails.getId()==null) {
-				deactivationDetails.setId(UUID.randomUUID().toString());
-				deactivationDetails.setAuditDetails(auditDetails);
-			}else {
-				if(!existingEmpData.getAssignments().stream()
-						.filter(deactivationDetailsData -> deactivationDetailsData.getId()==deactivationDetails.getId())
-						.findFirst()
-						.equals(deactivationDetails)){
-					deactivationDetails.getAuditDetails().setLastModifiedBy(requestInfo.getUserInfo().getUserName());
-					deactivationDetails.getAuditDetails().setLastModifiedDate(instant.getEpochSecond());
+			});
+
+		}
+
+		if(employee.getDeactivationDetails() != null){
+			employee.getDeactivationDetails().stream().forEach(deactivationDetails -> {
+				if(deactivationDetails.getId()==null) {
+					deactivationDetails.setId(UUID.randomUUID().toString());
+					deactivationDetails.setAuditDetails(auditDetails);
+				}else {
+					if(!existingEmpData.getAssignments().stream()
+							.filter(deactivationDetailsData -> deactivationDetailsData.getId()==deactivationDetails.getId())
+							.findFirst()
+							.equals(deactivationDetails)){
+						deactivationDetails.getAuditDetails().setLastModifiedBy(requestInfo.getUserInfo().getUserName());
+						deactivationDetails.getAuditDetails().setLastModifiedDate(instant.getEpochSecond());
+					}
 				}
-			}
-		});
+			});
+
+		}
 	}
 
 	private EmployeeResponse generateResponse(EmployeeRequest employeeRequest) {

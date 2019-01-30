@@ -6,19 +6,18 @@ import org.springframework.stereotype.Component;
 public class HRMSConstants {
 	
 	public static final String HRMS_MDMS_COMMON_MASTERS_CODE = "common-masters";
-	public static final String HRMS_MDMS_HR_MASTERS_CODE = "hr-masters";
+	public static final String HRMS_MDMS_HR_MASTERS_CODE = "egov-hrms";
 	public static final String HRMS_AC_ROLES_MASTERS_CODE = "ACCESSCONTROL-ROLES";
 
 	
 	public static final String HRMS_MDMS_DEPT_CODE = "Department";
 	public static final String HRMS_MDMS_DESG_CODE = "Designation";
 	public static final String HRMS_MDMS_EMP_STATUS_CODE = "EmployeeStatus";
-	public static final String HRMS_MDMS_EMP_TYPE_CODE = "EmployeeTyp";
+	public static final String HRMS_MDMS_EMP_TYPE_CODE = "EmployeeType";
 	public static final String HRMS_MDMS_SERVICE_STATUS_CODE = "ServiceStatus";
 	public static final String HRMS_MDMS_ROLES_CODE = "roles";
-	public static final String HRMS_MDMS_QUALIFICATION_CODE = "Qualification";
-	public static final String HRMS_MDMS_STREAMS_CODE = "Stream";
-	public static final String HRMS_MDMS_UNIVERSITY_CODE = "University";
+	public static final String HRMS_MDMS_QUALIFICATION_CODE = "Degree";
+	public static final String HRMS_MDMS_STREAMS_CODE = "Specialization";
 	public static final String HRMS_MDMS_YEAR_CODE = "Year";
 	public static final String HRMS_MDMS_DEPT_TEST_CODE = "DepartmentalTest";
 	

@@ -46,13 +46,11 @@ public class MDMSService {
 					eachMasterMap = (Map) response.getMdmsRes().get(HRMSConstants.HRMS_MDMS_COMMON_MASTERS_CODE);
 					masterData.put(HRMSConstants.HRMS_MDMS_DEPT_CODE, eachMasterMap.get(HRMSConstants.HRMS_MDMS_DEPT_CODE));
 					masterData.put(HRMSConstants.HRMS_MDMS_DESG_CODE, eachMasterMap.get(HRMSConstants.HRMS_MDMS_DESG_CODE));
-					masterData.put(HRMSConstants.HRMS_MDMS_YEAR_CODE, eachMasterMap.get(HRMSConstants.HRMS_MDMS_YEAR_CODE));
 				}else if(null != response.getMdmsRes().get(HRMSConstants.HRMS_MDMS_HR_MASTERS_CODE)) {
 					eachMasterMap = (Map) response.getMdmsRes().get(HRMSConstants.HRMS_MDMS_HR_MASTERS_CODE);
 					masterData.put(HRMSConstants.HRMS_MDMS_EMP_STATUS_CODE, eachMasterMap.get(HRMSConstants.HRMS_MDMS_EMP_STATUS_CODE));
 					masterData.put(HRMSConstants.HRMS_MDMS_EMP_TYPE_CODE, eachMasterMap.get(HRMSConstants.HRMS_MDMS_EMP_TYPE_CODE));
 					masterData.put(HRMSConstants.HRMS_MDMS_QUALIFICATION_CODE, eachMasterMap.get(HRMSConstants.HRMS_MDMS_QUALIFICATION_CODE));
-					masterData.put(HRMSConstants.HRMS_MDMS_SERVICE_STATUS_CODE, eachMasterMap.get(HRMSConstants.HRMS_MDMS_SERVICE_STATUS_CODE));
 					masterData.put(HRMSConstants.HRMS_MDMS_STREAMS_CODE, eachMasterMap.get(HRMSConstants.HRMS_MDMS_STREAMS_CODE));
 				}else if(null != response.getMdmsRes().get(HRMSConstants.HRMS_AC_ROLES_MASTERS_CODE)) {
 					eachMasterMap = (Map) response.getMdmsRes().get(HRMSConstants.HRMS_AC_ROLES_MASTERS_CODE);

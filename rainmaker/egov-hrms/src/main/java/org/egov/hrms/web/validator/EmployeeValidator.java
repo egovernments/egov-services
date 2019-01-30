@@ -44,7 +44,7 @@ public class EmployeeValidator {
 		Map<String, List<String>> mdmsData = mdmsService.getMDMSData(request.getRequestInfo(), request.getEmployees().get(0).getTenantId());
 		if(!CollectionUtils.isEmpty(mdmsData.keySet())){
 			for(Employee employee: request.getEmployees()) {
-//				validateMdmsData(employee, errorMap, mdmsData);
+				validateMdmsData(employee, errorMap, mdmsData);
 			}
 		}else{
 			log.info("MDMS data couldn't be fetched so skipping validaion!");
@@ -97,8 +97,8 @@ public class EmployeeValidator {
 		validateAssignments(employee, errorMap, mdmsData);
 		validateJurisdiction(employee, errorMap, mdmsData);
 		validateServiceHistory(employee, errorMap, mdmsData);
-		validateEducationalDetails(employee, errorMap, mdmsData);
-		validateDepartmentalTest(employee, errorMap, mdmsData);
+		//validateEducationalDetails(employee, errorMap, mdmsData);
+		//validateDepartmentalTest(employee, errorMap, mdmsData);
 	}
 	
 	public void validateDataConsistency(Employee employee, Map<String, String> errorMap, Map<String, List<String>> mdmsData, Employee existingEmp) {
@@ -151,7 +151,7 @@ public class EmployeeValidator {
 	
 	private void validateServiceHistory(Employee employee, Map<String, String> errorMap, Map<String, List<String>> mdmsData) {
 		for(ServiceHistory history: employee.getServiceHistory()) {
-			if(!mdmsData.get(HRMSConstants.HRMS_MDMS_SERVICE_STATUS_CODE).contains(history.getServiceStatus()))
+			if(!mdmsData.get(HRMSConstants.HRMS_MDMS_EMP_STATUS_CODE).contains(history.getServiceStatus()))
 				errorMap.put("HRMS_INVALID_SERVICE_STATUS", "Service status of the employee is invalid!: "+history.getServiceStatus());	
 			if(history.getServiceFrom() > new Date().getTime() || history.getServiceTo() > new Date().getTime() 
 					|| history.getServiceFrom() > history.getServiceTo())
@@ -186,7 +186,7 @@ public class EmployeeValidator {
 		for(Employee employee: request.getEmployees()){
 			Employee existingEmp = existingEmployees.stream().filter(existingEmployee -> existingEmployee.getUuid().equals(employee.getUuid())).findFirst().get();
 			validateDataConsistency(employee, errorMap, mdmsData, existingEmp);
-			//		validateMdmsData(employee, errorMap, mdmsData);
+			validateMdmsData(employee, errorMap, mdmsData);
 
 		}
 		

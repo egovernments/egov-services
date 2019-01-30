@@ -72,6 +72,4 @@ public class Jurisdiction {
 
     private AuditDetails auditDetails;
 
-
-
 }

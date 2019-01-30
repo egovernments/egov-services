@@ -59,8 +59,8 @@ public class WorkflowService {
         RequestInfo requestInfo = request.getRequestInfo();
 
         List<ProcessStateAndAction> processStateAndActions = transitionService.getProcessStateAndActions(request,true);
-        workflowValidator.validateRequest(requestInfo,processStateAndActions);
         enrichmentService.enrichProcessRequest(requestInfo,processStateAndActions);
+        workflowValidator.validateRequest(requestInfo,processStateAndActions);
         statusUpdateService.updateStatus(requestInfo,processStateAndActions);
         return request.getProcessInstances();
     }

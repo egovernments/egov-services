@@ -87,7 +87,7 @@ public class EmployeeRowMapper implements ResultSetExtractor<List<Employee>> {
 				Assignment assignment = Assignment.builder().id(rs.getString("assignment_uuid")).position(rs.getLong("assignment_position")).department(rs.getString("assignment_department"))
 				.designation(rs.getString("assignment_designation")).fromDate(rs.getLong("assignment_fromdate")).toDate(rs.getLong("assignment_todate"))
 			    .govtOrderNumber(rs.getString("assignment_govtordernumber")).reportingTo(rs.getString("assignment_reportingto")).isHOD(rs.getBoolean("assignment_ishod"))
-				.tenantid(rs.getString("assignment_tenantid")).auditDetails(auditDetails).build();
+				.isCurrentAssignment(rs.getBoolean("assignment_iscurrentassignment")).tenantid(rs.getString("assignment_tenantid")).auditDetails(auditDetails).build();
 				
 				assignments.add(assignment);
 				currentEmployee.setAssignments(assignments);

@@ -74,6 +74,9 @@ public class Assignment {
 	private  String reportingTo;
 
 	private boolean isHOD;
+	
+	@NotNull
+	private boolean isCurrentAssignment;
 
 	private AuditDetails auditDetails;
 

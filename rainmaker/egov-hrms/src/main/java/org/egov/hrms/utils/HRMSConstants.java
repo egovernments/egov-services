@@ -12,15 +12,15 @@ public class HRMSConstants {
 	
 	public static final String HRMS_MDMS_DEPT_CODE = "Department";
 	public static final String HRMS_MDMS_DESG_CODE = "Designation";
-	public static final String HRMS_MDMS_EMP_STATUS_CODE = "EmployeeStatuses";
-	public static final String HRMS_MDMS_EMP_TYPE_CODE = "EmployeeTypes";
-	public static final String HRMS_MDMS_SERVICE_STATUS_CODE = "ServiceStatuses";
+	public static final String HRMS_MDMS_EMP_STATUS_CODE = "EmployeeStatus";
+	public static final String HRMS_MDMS_EMP_TYPE_CODE = "EmployeeTyp";
+	public static final String HRMS_MDMS_SERVICE_STATUS_CODE = "ServiceStatus";
 	public static final String HRMS_MDMS_ROLES_CODE = "roles";
-	public static final String HRMS_MDMS_QUALIFICATION_CODE = "Qualifications";
-	public static final String HRMS_MDMS_STREAMS_CODE = "Streams";
-	public static final String HRMS_MDMS_UNIVERSITY_CODE = "Universities";
-	public static final String HRMS_MDMS_YEAR_CODE = "Years";
-	public static final String HRMS_MDMS_DEPT_TEST_CODE = "DepartmentalTests";
+	public static final String HRMS_MDMS_QUALIFICATION_CODE = "Qualification";
+	public static final String HRMS_MDMS_STREAMS_CODE = "Stream";
+	public static final String HRMS_MDMS_UNIVERSITY_CODE = "University";
+	public static final String HRMS_MDMS_YEAR_CODE = "Year";
+	public static final String HRMS_MDMS_DEPT_TEST_CODE = "DepartmentalTest";
 	
 	
 	public static final String HRMS_LOCALIZATION_CODES_JSONPATH = "$.messages.*.code";

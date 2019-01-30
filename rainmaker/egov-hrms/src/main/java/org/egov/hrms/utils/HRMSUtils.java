@@ -19,7 +19,7 @@ public class HRMSUtils {
 		for(int i = 0; i < params.size(); i++) {
 			String param = params.get(i);
 			String val = param.split("")[random.nextInt(param.length() - 1)];
-			if(StringUtils.isEmpty(val))
+			if(StringUtils.isEmpty(val) || val.equals("."))
 				password.append("x");
 			else
 				password.append(val);
@@ -30,7 +30,7 @@ public class HRMSUtils {
 					i = 0;
 			}
 		}
-		return password.toString();
+		return password.toString().replaceAll("\\s+", "");
 	}
 
 }

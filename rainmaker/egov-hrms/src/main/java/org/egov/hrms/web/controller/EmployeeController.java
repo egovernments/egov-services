@@ -79,7 +79,7 @@ public class EmployeeController {
 	@ResponseBody
 	public ResponseEntity<?> create(@RequestBody @Valid EmployeeRequest employeeRequest, BindingResult bindingResult) {
 		log.debug("employeeRequest::" + employeeRequest);
-		//validator.validateCreateEmployee(employeeRequest);
+		validator.validateCreateEmployee(employeeRequest);
 		EmployeeResponse employeeResponse = employeeService.create(employeeRequest);
         return new ResponseEntity<>(employeeResponse,HttpStatus.OK);
 	}

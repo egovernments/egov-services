@@ -150,6 +150,7 @@ public class UserService {
 				userSearchReq.put("userName",employee.getCode());
 				break;
 		}
+		log.info("req: "+(userSearchReq));
 		userSearchReq.put("userType", UserType.EMPLOYEE);
 		userSearchReq.put("tenantID",employee.getTenantId());
 		uri.append(propertiesManager.getUserHost()).append(propertiesManager.getUserSearchEndpoint());

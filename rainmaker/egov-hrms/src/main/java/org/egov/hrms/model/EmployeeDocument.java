@@ -44,6 +44,8 @@ import org.egov.hrms.model.enums.ReferenceType;
 
 import lombok.*;
 
+import javax.validation.constraints.NotNull;
+
 @EqualsAndHashCode(exclude = {"auditDetails"})
 @AllArgsConstructor
 @Getter
@@ -55,7 +57,7 @@ public class EmployeeDocument {
 
 	private String id;
 
-
+	@NotNull
 	private Long employeeId;
 
 	private String documentName;

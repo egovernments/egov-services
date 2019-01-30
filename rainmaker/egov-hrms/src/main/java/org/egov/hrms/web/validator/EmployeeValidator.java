@@ -1,16 +1,8 @@
 package org.egov.hrms.web.validator;
 
-import java.util.*;
-import java.util.stream.Collectors;
-
 import lombok.extern.slf4j.Slf4j;
 import org.egov.common.contract.request.RequestInfo;
-import org.egov.hrms.model.Assignment;
-import org.egov.hrms.model.DepartmentalTest;
-import org.egov.hrms.model.EducationalQualification;
-import org.egov.hrms.model.Employee;
-import org.egov.hrms.model.Role;
-import org.egov.hrms.model.ServiceHistory;
+import org.egov.hrms.model.*;
 import org.egov.hrms.service.EmployeeService;
 import org.egov.hrms.service.MDMSService;
 import org.egov.hrms.service.UserService;
@@ -23,6 +15,9 @@ import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
+
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -75,11 +70,14 @@ public class EmployeeValidator {
 
     private void validateUserName(List<Employee> employees, Map<String, String> errorMap, RequestInfo requestInfo) {
         employees.forEach(employee -> {
-            UserResponse userResponse = userService.getSingleUser(requestInfo,employee,"UserName");
-            if(!CollectionUtils.isEmpty(userResponse.getUser())){
-                errorMap.put("HRMS_USER_EXIST_USERNAME","User already present for UserName "+userResponse.getUser().get(0).getUserName());
-            }
+            if(employee.getCode()!=null){
+                UserResponse userResponse = userService.getSingleUser(requestInfo,employee,"UserName");
+                if(!CollectionUtils.isEmpty(userResponse.getUser())){
+                    log.info("User: "+ (userResponse.getUser().get(0)));
 
+                    errorMap.put("HRMS_USER_EXIST_USERNAME","User already present for UserName "+userResponse.getUser().get(0).getUserName());
+                }
+            }
         });
     }
 
@@ -138,10 +136,13 @@ public class EmployeeValidator {
 				errorMap.put("HRMS_INVALID_DEPT", "Department of the employee is invalid!");
 			if(!mdmsData.get(HRMSConstants.HRMS_MDMS_DESG_CODE).contains(assignment.getDesignation()))
 				errorMap.put("HRMS_INVALID_DESG", "Designation of the employee is invalid!");
-			if(assignment.getFromDate() > new Date().getTime() || assignment.getToDate() > new Date().getTime() 
-					|| assignment.getFromDate() > assignment.getToDate())
-				errorMap.put("HRMS_INVALID_ASSIGNMENT_PERIOD", "Period of assignemnt (fromDate to toDate) is invalid!");
-		}
+            if(assignment.getFromDate() > new Date().getTime() || assignment.getToDate() > new Date().getTime()
+                    || assignment.getFromDate() > assignment.getToDate())
+                errorMap.put("HRMS_INVALID_ASSIGNMENT_PERIOD", "Period of assignemnt (fromDate to toDate) is invalid!");
+            if(assignment.getFromDate() < employee.getUser().getDob() || assignment.getToDate() < employee.getUser().getDob())
+                errorMap.put("HRMS_INVALID_ASSIGNMENT_DATES", "Period of assignemnt (fromDate to toDate) is before DOB!");
+
+        }
 		
 	}
 	
@@ -151,12 +152,14 @@ public class EmployeeValidator {
 	
 	private void validateServiceHistory(Employee employee, Map<String, String> errorMap, Map<String, List<String>> mdmsData) {
 		for(ServiceHistory history: employee.getServiceHistory()) {
-			if(!mdmsData.get(HRMSConstants.HRMS_MDMS_EMP_STATUS_CODE).contains(history.getServiceStatus()))
-				errorMap.put("HRMS_INVALID_SERVICE_STATUS", "Service status of the employee is invalid!: "+history.getServiceStatus());	
-			if(history.getServiceFrom() > new Date().getTime() || history.getServiceTo() > new Date().getTime() 
-					|| history.getServiceFrom() > history.getServiceTo())
-				errorMap.put("HRMS_INVALID_SERVICE_PERIOD", "Service period (serviceFrom to serviceTo) of the employee is invalid!");	
-		}
+			if(!mdmsData.get(HRMSConstants.HRMS_MDMS_SERVICE_STATUS_CODE).contains(history.getServiceStatus()))
+				errorMap.put("HRMS_INVALID_SERVICE_STATUS", "Service status of the employee is invalid!: "+history.getServiceStatus());
+            if(history.getServiceFrom() > new Date().getTime() || history.getServiceTo() > new Date().getTime()
+                    || history.getServiceFrom() > history.getServiceTo())
+                errorMap.put("HRMS_INVALID_SERVICE_PERIOD", "Service period (serviceFrom to serviceTo) of the employee is invalid!");
+            if(history.getServiceFrom() < employee.getUser().getDob() || history.getServiceTo() < employee.getUser().getDob())
+                errorMap.put("HRMS_INVALID_SERVICE_DATES", "Service period (serviceFrom to serviceTo) of the employee is before DOB!");
+        }
 	}
 	
 	private void validateEducationalDetails(Employee employee, Map<String, String> errorMap, Map<String, List<String>> mdmsData) {
@@ -165,6 +168,11 @@ public class EmployeeValidator {
 				errorMap.put("HRMS_INVALID_QUALIFICATION", "Qualification of the employee is invalid!: "+education.getQualification());	
 			if(!mdmsData.get(HRMSConstants.HRMS_MDMS_STREAMS_CODE).contains(education.getStream()))
 				errorMap.put("HRMS_INVALID_EDUCATIONAL_STREAM", "Education stream of the employee is invalid!: "+education.getStream());
+            Calendar cal = Calendar.getInstance();
+            cal.setTimeInMillis(employee.getUser().getDob());
+			if( education.getYearOfPassing() < cal.get(Calendar.YEAR)){
+                errorMap.put("HRMS_INVALID_EDUCATIONAL_PASSING_YEAR", "Education year of passing of the employee is before DOB!");
+            }
 		}
 	}
 	
@@ -172,6 +180,12 @@ public class EmployeeValidator {
 		for(DepartmentalTest test: employee.getTests()) {
 			if(!mdmsData.get(HRMSConstants.HRMS_MDMS_DEPT_TEST_CODE).contains(test.getTest()))
 				errorMap.put("HRMS_INVALID_DEPARTMENTAL_TEST", "Departmental test of the employee is invalid!: "+test.getTest());
+            Calendar cal = Calendar.getInstance();
+            cal.setTimeInMillis(employee.getUser().getDob());
+            if( test.getYearOfPassing() < cal.get(Calendar.YEAR)){
+                errorMap.put("HRMS_INVALID_DEPARTMENTAL_TEST_PASSING_YEAR", "Departmental test passing year of the employee is before DOB!");
+            }
+
 		}
 		
 	}

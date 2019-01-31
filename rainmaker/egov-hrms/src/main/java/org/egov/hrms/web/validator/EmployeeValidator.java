@@ -106,9 +106,10 @@ public class EmployeeValidator {
 		validateConsistencyEducationalDetails(existingEmp,employee,errorMap);
 		validateConsistencyServiceHistory(existingEmp,employee,errorMap);
 		validateConsistencyEmployeeDocument(existingEmp,employee,errorMap);
-		
+		validateConsistencyDeactivationDetails(existingEmp,employee,errorMap);
 	}
-	
+
+
 	private void validateEmployee(Employee employee, Map<String, String> errorMap, Map<String, List<String>> mdmsData) {
 
 		if(employee.getUser().getMobileNumber().length() != 10)
@@ -131,6 +132,25 @@ public class EmployeeValidator {
 	}
 	
 	private void validateAssignments(Employee employee, Map<String, String> errorMap, Map<String, List<String>> mdmsData) {
+		List<Assignment> currentAssignments =employee.getAssignments().stream().filter(assignment -> assignment.isCurrentAssignment()).collect(Collectors.toList());
+		if(currentAssignments.size() != 1){
+			errorMap.put("HRMS_INVALID_CURRENT_ASSGN", "There should be exactly 1 current assignement!");
+		}
+		employee.getAssignments().sort(new Comparator<Assignment>() {
+			@Override
+			public int compare(Assignment assignment1, Assignment assignment2) {
+				return assignment1.getToDate().compareTo(assignment2.getToDate());
+			}
+		});
+		int length = employee.getAssignments().size();
+		boolean overlappingCheck =false;
+		for(int i=0;i<length-1;i++){
+			if(employee.getAssignments().get(i).getFromDate() > employee.getAssignments().get(i+1).getToDate())
+				overlappingCheck=true;
+		}
+		if(overlappingCheck)
+			errorMap.put("HRMS_OVERLAPPING_ASSGN", "Period of assignements of employee should not overlap!");
+
 		for(Assignment assignment: employee.getAssignments()) {
 			if(!mdmsData.get(HRMSConstants.HRMS_MDMS_DEPT_CODE).contains(assignment.getDepartment()))
 				errorMap.put("HRMS_INVALID_DEPT", "Department of the employee is invalid!");
@@ -288,7 +308,7 @@ public class EmployeeValidator {
 
 	}
 
-	private void validateConsistencyEmployeeDocument(Employee existingEmp, Employee updatedEmployeeData, Map<String, String> errorMap) {
+	private void validateConsistencyEmployeeDocument(Employee existingEmp, Employee updatedEmployeeData, Map<String, String> errorMap){
 		if(updatedEmployeeData.getDocuments() != null){
 			boolean check =
 					updatedEmployeeData.getDocuments().stream()
@@ -303,4 +323,21 @@ public class EmployeeValidator {
 		}
 
 	}
+
+	private void validateConsistencyDeactivationDetails(Employee existingEmp, Employee updatedEmployeeData, Map<String, String> errorMap){
+		if(updatedEmployeeData.getDeactivationDetails() != null){
+			boolean check =
+					updatedEmployeeData.getDeactivationDetails().stream()
+							.map(deactivationDetails -> deactivationDetails.getId())
+							.collect(Collectors.toList())
+							.containsAll(existingEmp.getDocuments().stream()
+									.map(employeeDocument -> employeeDocument.getId())
+									.collect(Collectors.toList()));
+			if (!check) {
+				errorMap.put("HRMS_UPDATE_DEACT_DETAILS_INCOSISTENT", "Employee Deactivation details data in update request should contain all previous employee deactivation data ");
+			}
+		}
+
+	}
+
 }

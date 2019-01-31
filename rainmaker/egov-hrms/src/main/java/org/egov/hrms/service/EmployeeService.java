@@ -243,12 +243,14 @@ public class EmployeeService {
 	}
 
 	private void enrichUpdateRequest(Employee employee, RequestInfo requestInfo, List<Employee> existingEmployeesData) {
-		Instant instant = Instant.now();
 		AuditDetails auditDetails = AuditDetails.builder()
 				.createdBy(requestInfo.getUserInfo().getUserName())
-				.createdDate(instant.getEpochSecond())
+				.createdDate(new Date().getTime())
 				.build();
 		Employee existingEmpData = existingEmployeesData.stream().filter(existingEmployee -> existingEmployee.getUuid().equals(employee.getUuid())).findFirst().get();
+
+		employee.getUser().setUserName(employee.getCode());
+		employee.getUser().setActive(true);
 
 		employee.getJurisdictions().stream().forEach(jurisdiction -> {
 
@@ -261,7 +263,7 @@ public class EmployeeService {
 						.findFirst()
 						.equals(jurisdiction)){
 					jurisdiction.getAuditDetails().setLastModifiedBy(requestInfo.getUserInfo().getUserName());
-					jurisdiction.getAuditDetails().setLastModifiedDate(instant.getEpochSecond());
+					jurisdiction.getAuditDetails().setLastModifiedDate(new Date().getTime());
 				}
 			}
 		});
@@ -275,7 +277,7 @@ public class EmployeeService {
 						.findFirst()
 						.equals(assignment)){
 					assignment.getAuditDetails().setLastModifiedBy(requestInfo.getUserInfo().getUserName());
-					assignment.getAuditDetails().setLastModifiedDate(instant.getEpochSecond());
+					assignment.getAuditDetails().setLastModifiedDate(new Date().getTime());
 				}
 			}
 		});
@@ -291,7 +293,7 @@ public class EmployeeService {
 							.findFirst()
 							.equals(serviceHistory)){
 						serviceHistory.getAuditDetails().setLastModifiedBy(requestInfo.getUserInfo().getUserName());
-						serviceHistory.getAuditDetails().setLastModifiedDate(instant.getEpochSecond());
+						serviceHistory.getAuditDetails().setLastModifiedDate(new Date().getTime());
 					}
 				}
 			});
@@ -309,7 +311,7 @@ public class EmployeeService {
 							.findFirst()
 							.equals(educationalQualification)){
 						educationalQualification.getAuditDetails().setLastModifiedBy(requestInfo.getUserInfo().getUserName());
-						educationalQualification.getAuditDetails().setLastModifiedDate(instant.getEpochSecond());
+						educationalQualification.getAuditDetails().setLastModifiedDate(new Date().getTime());
 					}
 				}
 			});
@@ -327,7 +329,7 @@ public class EmployeeService {
 							.findFirst()
 							.equals(departmentalTest)){
 						departmentalTest.getAuditDetails().setLastModifiedBy(requestInfo.getUserInfo().getUserName());
-						departmentalTest.getAuditDetails().setLastModifiedDate(instant.getEpochSecond());
+						departmentalTest.getAuditDetails().setLastModifiedDate(new Date().getTime());
 					}
 				}
 			});
@@ -345,7 +347,7 @@ public class EmployeeService {
 							.findFirst()
 							.equals(document)){
 						document.getAuditDetails().setLastModifiedBy(requestInfo.getUserInfo().getUserName());
-						document.getAuditDetails().setLastModifiedDate(instant.getEpochSecond());
+						document.getAuditDetails().setLastModifiedDate(new Date().getTime());
 					}
 				}
 			});
@@ -363,7 +365,7 @@ public class EmployeeService {
 							.findFirst()
 							.equals(deactivationDetails)){
 						deactivationDetails.getAuditDetails().setLastModifiedBy(requestInfo.getUserInfo().getUserName());
-						deactivationDetails.getAuditDetails().setLastModifiedDate(instant.getEpochSecond());
+						deactivationDetails.getAuditDetails().setLastModifiedDate(new Date().getTime());
 					}
 				}
 			});

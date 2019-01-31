@@ -52,13 +52,16 @@ public class WorkflowValidator {
      */
     public void validateSearch(RequestInfo requestInfo, List<ProcessStateAndAction> processStateAndActions){
         Map<String,String> errorMap = new HashMap<>();
+        Set<String> businessIds = new HashSet<>();
         processStateAndActions.forEach(processStateAndAction -> {
             List<String> rolesInState = util.getAllRolesFromState(processStateAndAction.getCurrentState());
+            String businessId = processStateAndAction.getProcessInstanceFromRequest().getBusinessId();
             Boolean isAssignedToMe = false;
             if(processStateAndAction.getProcessInstanceFromRequest().getAssignee()!=null)
                 isAssignedToMe = (processStateAndAction.getProcessInstanceFromRequest().getAssignee().getUuid().equalsIgnoreCase(requestInfo.getUserInfo().getUuid())) ? true : false;
-            if(!util.isRoleAvailable(requestInfo.getUserInfo().getRoles(),rolesInState) && !isAssignedToMe)
+            if(!util.isRoleAvailable(requestInfo.getUserInfo().getRoles(),rolesInState) && !isAssignedToMe && !businessIds.contains(businessId))
                 errorMap.put("INVALID SEARCH","Access denied for processInstance: "+processStateAndAction.getProcessInstanceFromRequest().getId());
+            else businessIds.add(businessId);
         });
         if(!errorMap.isEmpty())
             throw new CustomException(errorMap);

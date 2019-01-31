@@ -91,6 +91,7 @@ public class EmployeeValidator {
 		validateConsistencyServiceHistory(existingEmp,employee,errorMap);
 		validateConsistencyEmployeeDocument(existingEmp,employee,errorMap);
 		validateConsistencyDeactivationDetails(existingEmp,employee,errorMap);
+		validateDeactivationDetails(existingEmp,employee,errorMap);
 	}
 
 
@@ -195,12 +196,12 @@ public class EmployeeValidator {
 	}
 
 
-	private void validateDeactivationDetails(Employee employee, Map<String,String> errormap, Map<String, List<String>> mdmsData ){
-		if(employee.getDeactivationDetails() != null) {
-			for (DeactivationDetails deactivationDetails : employee.getDeactivationDetails()) {
+	private void validateDeactivationDetails(Employee existingEmp, Employee updatedEmployeeData, Map<String, String> errorMap){
+		if(updatedEmployeeData.getDeactivationDetails() != null) {
+			for (DeactivationDetails deactivationDetails : updatedEmployeeData.getDeactivationDetails()) {
 				if (deactivationDetails.getId()==null){
-					if(employee.isActive()){
-						errormap.put("HRMS_INVALID_DEACT_REQUEST","Employee is active should be set to false while deactivation!");
+					if(updatedEmployeeData.isActive()){
+						errorMap.put("HRMS_INVALID_DEACT_REQUEST","Employee is active should be set to false while deactivation!");
 					}
 				}
 			}
@@ -329,10 +330,6 @@ public class EmployeeValidator {
 									.collect(Collectors.toList()));
 			if (!check) {
 				errorMap.put("HRMS_UPDATE_DEACT_DETAILS_INCOSISTENT", "Employee Deactivation details data in update request should contain all previous employee deactivation data ");
-			}
-		}else {
-			if(!updatedEmployeeData.isActive() && CollectionUtils.isEmpty(updatedEmployeeData.getDeactivationDetails())) {
-				errorMap.put("HRMS_UPDATE_DEACT_DETAILS_MISSING", "Employee Deactivation details are mandatory while marking an employee inactive.");
 			}
 		}
 

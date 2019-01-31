@@ -356,7 +356,6 @@ public class EmployeeService {
 				if(deactivationDetails.getId()==null) {
 					deactivationDetails.setId(UUID.randomUUID().toString());
 					deactivationDetails.setAuditDetails(auditDetails);
-					employee.getUser().setActive(false);
 				}else {
 					if(!existingEmpData.getAssignments().stream()
 							.filter(deactivationDetailsData -> deactivationDetailsData.getId()==deactivationDetails.getId())

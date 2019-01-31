@@ -611,5 +611,28 @@
         "$.businessService"
       ]
     }
+  },
+  "egov-hrms": {
+    "EmployeeStatus": {
+      "masterName": "EmployeeStatus",
+      "isStateLevel": true,
+      "uniqueKeys": [
+        "$.code"
+      ]
+    },
+    "EmployeeType": {
+      "masterName": "EmployeeType",
+      "isStateLevel": true,
+      "uniqueKeys": [
+        "$.code"
+      ]
+    },
+    "Degree": {
+      "masterName": "Degree",
+      "isStateLevel": true,
+      "uniqueKeys": [
+        "$.code"
+      ]
+    }
   }
 }

@@ -217,9 +217,7 @@ public class EmployeeValidator {
 			Employee existingEmp = existingEmployees.stream().filter(existingEmployee -> existingEmployee.getUuid().equals(employee.getUuid())).findFirst().get();
 			validateDataConsistency(employee, errorMap, mdmsData, existingEmp);
 			validateMdmsData(employee, errorMap, mdmsData);
-
 		}
-		
 		if(!CollectionUtils.isEmpty(errorMap.keySet())) {	
 			throw new CustomException(errorMap);
 		}
@@ -255,7 +253,7 @@ public class EmployeeValidator {
 	}
 
 	private void validateConsistencyDepartmentalTest(Employee existingEmp, Employee updatedEmployeeData, Map<String, String> errorMap){
-		if(updatedEmployeeData.getTests() != null ){
+		if(!CollectionUtils.isEmpty(updatedEmployeeData.getTests())){
 			boolean check =
 					updatedEmployeeData.getTests().stream()
 							.map(test -> test.getId())
@@ -272,7 +270,7 @@ public class EmployeeValidator {
 	}
 
 	private void validateConsistencyEducationalDetails(Employee existingEmp, Employee updatedEmployeeData, Map<String, String> errorMap){
-		if(updatedEmployeeData.getEducation() != null){
+		if(!CollectionUtils.isEmpty(updatedEmployeeData.getEducation())){
 			boolean check =
 					updatedEmployeeData.getEducation().stream()
 							.map(educationalQualification -> educationalQualification.getId())
@@ -288,7 +286,7 @@ public class EmployeeValidator {
 	}
 
 	private void validateConsistencyServiceHistory(Employee existingEmp, Employee updatedEmployeeData, Map<String, String> errorMap){
-		if(updatedEmployeeData.getServiceHistory()!=null){
+		if(!CollectionUtils.isEmpty(updatedEmployeeData.getServiceHistory())){
 			boolean check =
 					updatedEmployeeData.getServiceHistory().stream()
 							.map(serviceHistory -> serviceHistory.getId())
@@ -305,7 +303,7 @@ public class EmployeeValidator {
 	}
 
 	private void validateConsistencyEmployeeDocument(Employee existingEmp, Employee updatedEmployeeData, Map<String, String> errorMap){
-		if(updatedEmployeeData.getDocuments() != null){
+		if(!CollectionUtils.isEmpty(updatedEmployeeData.getDocuments())){
 			boolean check =
 					updatedEmployeeData.getDocuments().stream()
 							.map(employeeDocument -> employeeDocument.getId())
@@ -321,7 +319,7 @@ public class EmployeeValidator {
 	}
 
 	private void validateConsistencyDeactivationDetails(Employee existingEmp, Employee updatedEmployeeData, Map<String, String> errorMap){
-		if(updatedEmployeeData.getDeactivationDetails() != null){
+		if(!CollectionUtils.isEmpty(updatedEmployeeData.getDeactivationDetails())){
 			boolean check =
 					updatedEmployeeData.getDeactivationDetails().stream()
 							.map(deactivationDetails -> deactivationDetails.getId())
@@ -331,6 +329,10 @@ public class EmployeeValidator {
 									.collect(Collectors.toList()));
 			if (!check) {
 				errorMap.put("HRMS_UPDATE_DEACT_DETAILS_INCOSISTENT", "Employee Deactivation details data in update request should contain all previous employee deactivation data ");
+			}
+		}else {
+			if(!updatedEmployeeData.isActive() && CollectionUtils.isEmpty(updatedEmployeeData.getDeactivationDetails())) {
+				errorMap.put("HRMS_UPDATE_DEACT_DETAILS_MISSING", "Employee Deactivation details are mandatory while marking an employee inactive.");
 			}
 		}
 

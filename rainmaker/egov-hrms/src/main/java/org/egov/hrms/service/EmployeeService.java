@@ -244,7 +244,10 @@ public class EmployeeService {
 		Employee existingEmpData = existingEmployeesData.stream().filter(existingEmployee -> existingEmployee.getUuid().equals(employee.getUuid())).findFirst().get();
 
 		employee.getUser().setUserName(employee.getCode());
-		employee.getUser().setActive(true);
+		if(!employee.isActive())
+			employee.getUser().setActive(false);
+		else
+			employee.getUser().setActive(true);
 
 		employee.getJurisdictions().stream().forEach(jurisdiction -> {
 

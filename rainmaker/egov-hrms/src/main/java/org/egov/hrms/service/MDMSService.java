@@ -85,7 +85,7 @@ public class MDMSService {
 			moduleDetail.setModuleName(module);
 			List<MasterDetail> masterDetails = new ArrayList<>();
 			for(String master: mapOfModulesAndMasters.get(module)) {
-				MasterDetail masterDetail = MasterDetail.builder().name(master).build();
+				MasterDetail masterDetail = MasterDetail.builder().name(master).filter("[?(@.active == true)].code").build();
 				masterDetails.add(masterDetail);
 			}
 			moduleDetail.setMasterDetails(masterDetails);

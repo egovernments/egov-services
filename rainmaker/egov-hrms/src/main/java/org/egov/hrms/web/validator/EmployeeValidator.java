@@ -36,26 +36,20 @@ public class EmployeeValidator {
 	public void validateCreateEmployee(EmployeeRequest request) {
 		Map<String, String> errorMap = new HashMap<>();
 		validateExistingDuplicates(request ,errorMap);
+		if(!CollectionUtils.isEmpty(errorMap.keySet()))
+			throw new CustomException(errorMap);
 		Map<String, List<String>> mdmsData = mdmsService.getMDMSData(request.getRequestInfo(), request.getEmployees().get(0).getTenantId());
 		if(!CollectionUtils.isEmpty(mdmsData.keySet())){
-			for(Employee employee: request.getEmployees()) {
-//				validateMdmsData(employee, errorMap, mdmsData);
-			}
-		}else{
-			log.info("MDMS data couldn't be fetched so skipping validaion!");
+			request.getEmployees().stream().forEach(employee -> validateMdmsData(employee, errorMap, mdmsData));
 		}
-		if(!CollectionUtils.isEmpty(errorMap.keySet())) {
+		if(!CollectionUtils.isEmpty(errorMap.keySet()))
 			throw new CustomException(errorMap);
-		}
-
 	}
 
 	private void validateExistingDuplicates(EmployeeRequest request, Map<String, String> errorMap) {
 		List<Employee> employees = request.getEmployees();
-		validateEmployeeCode(employees,errorMap,request.getRequestInfo());
         validateUserMobile(employees,errorMap,request.getRequestInfo());
         validateUserName(employees,errorMap,request.getRequestInfo());
-
 	}
 
     private void validateUserMobile(List<Employee> employees, Map<String, String> errorMap, RequestInfo requestInfo) {
@@ -74,21 +68,11 @@ public class EmployeeValidator {
                 UserResponse userResponse = userService.getSingleUser(requestInfo,employee,"UserName");
                 if(!CollectionUtils.isEmpty(userResponse.getUser())){
                     log.info("User: "+ (userResponse.getUser().get(0)));
-
                     errorMap.put("HRMS_USER_EXIST_USERNAME","User already present for UserName "+userResponse.getUser().get(0).getUserName());
                 }
             }
         });
     }
-
-	private void validateEmployeeCode(List<Employee> employees, Map<String, String> errorMap, RequestInfo requestInfo) {
-        List < String> emoCodes = employees.stream().map(employee -> employee.getCode())
-                                                    .collect(Collectors.toList());
-
-        EmployeeResponse employeeResponse= employeeService.search(EmployeeSearchCriteria.builder().codes(emoCodes).build(),requestInfo);
-			if(!CollectionUtils.isEmpty(employeeResponse.getEmployees()))
-				errorMap.put("HRMS_INVALID_CODE","Employee Code already used for another employee");
-	}
 
 	private void validateMdmsData(Employee employee, Map<String, String> errorMap, Map<String, List<String>> mdmsData) {
 		validateEmployee(employee, errorMap, mdmsData);
@@ -220,7 +204,7 @@ public class EmployeeValidator {
 		for(Employee employee: request.getEmployees()){
 			Employee existingEmp = existingEmployees.stream().filter(existingEmployee -> existingEmployee.getUuid().equals(employee.getUuid())).findFirst().get();
 			validateDataConsistency(employee, errorMap, mdmsData, existingEmp);
-//			validateMdmsData(employee, errorMap, mdmsData);
+			validateMdmsData(employee, errorMap, mdmsData);
 
 		}
 		

@@ -98,7 +98,7 @@ public class EnrichmentService {
             List<Action> nextAction = new ArrayList<>();
             if(!CollectionUtils.isEmpty( state.getActions())){
                 state.getActions().forEach(action -> {
-                    if(util.isRoleAvailable(roles,action.getRoles()))
+                    if(util.isRoleAvailable(roles,action.getRoles()) && !nextAction.contains(action))
                         nextAction.add(action);
                 });
             }

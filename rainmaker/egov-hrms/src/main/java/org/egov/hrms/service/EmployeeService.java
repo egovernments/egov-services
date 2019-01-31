@@ -58,13 +58,7 @@ import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
-import java.time.Instant;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -359,6 +353,7 @@ public class EmployeeService {
 				if(deactivationDetails.getId()==null) {
 					deactivationDetails.setId(UUID.randomUUID().toString());
 					deactivationDetails.setAuditDetails(auditDetails);
+					employee.getUser().setActive(false);
 				}else {
 					if(!existingEmpData.getAssignments().stream()
 							.filter(deactivationDetailsData -> deactivationDetailsData.getId()==deactivationDetails.getId())

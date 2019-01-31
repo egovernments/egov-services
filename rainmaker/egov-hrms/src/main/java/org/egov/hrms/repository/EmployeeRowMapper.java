@@ -1,23 +1,9 @@
 package org.egov.hrms.repository;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
+import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.egov.hrms.model.Assignment;
-import org.egov.hrms.model.AuditDetails;
-import org.egov.hrms.model.DeactivationDetails;
-import org.egov.hrms.model.DepartmentalTest;
-import org.egov.hrms.model.EducationalQualification;
-import org.egov.hrms.model.Employee;
-import org.egov.hrms.model.EmployeeDocument;
-import org.egov.hrms.model.Jurisdiction;
-import org.egov.hrms.model.ServiceHistory;
+import org.egov.hrms.model.*;
 import org.egov.hrms.model.enums.DeactivationType;
 import org.egov.hrms.model.enums.ReferenceType;
 import org.egov.hrms.web.contract.User;
@@ -27,9 +13,13 @@ import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import lombok.extern.slf4j.Slf4j;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Component
 @Slf4j

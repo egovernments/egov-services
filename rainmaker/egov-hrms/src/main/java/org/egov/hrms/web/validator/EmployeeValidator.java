@@ -195,6 +195,18 @@ public class EmployeeValidator {
 	}
 
 
+	private void validateDeactivationDetails(Employee employee, Map<String,String> errormap, Map<String, List<String>> mdmsData ){
+		if(employee.getDeactivationDetails() != null) {
+			for (DeactivationDetails deactivationDetails : employee.getDeactivationDetails()) {
+				if (deactivationDetails.getId()==null){
+					if(employee.isActive()){
+						errormap.put("HRMS_INVALID_DEACT_REQUEST","Employee is active should be set to false while deactivation!");
+					}
+				}
+			}
+		}
+	}
+
 	public void validateUpdateEmployee(EmployeeRequest request) {
 		Map<String, String> errorMap = new HashMap<>();
 		Map<String, List<String>> mdmsData = mdmsService.getMDMSData(request.getRequestInfo(), request.getEmployees().get(0).getTenantId());

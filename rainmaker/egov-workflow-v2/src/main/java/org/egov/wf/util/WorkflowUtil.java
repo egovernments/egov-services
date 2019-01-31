@@ -151,6 +151,41 @@ public class WorkflowUtil {
     }
 
 
+    /**
+     * Extracts unique businessIds from list of ProcessStateAndAction
+     * @param processStateAndActions List of ProcessStateAndAction whose businessIds are to be fetched
+     * @return list of businessId
+     */
+    public Set<String> getBusinessIds(List<ProcessStateAndAction> processStateAndActions){
+        Set<String> businessIds = new HashSet<>();
+        if(CollectionUtils.isEmpty(processStateAndActions))
+            return businessIds;
+        processStateAndActions.forEach(processStateAndAction -> {
+            businessIds.add(processStateAndAction.getProcessInstanceFromRequest().getBusinessId());
+        });
+        return businessIds;
+    }
+
+    /**
+     * Fetches the latest processStateAndAction for the given businessId
+     * @param businessId The businessId whose latest record has to be fetched
+     * @param processStateAndActions The list of processStateAndAction
+     * @return The lastest processStateAndAction for the given businessId
+     */
+    public ProcessStateAndAction getLatestProcessStateAndAction(String businessId,List<ProcessStateAndAction> processStateAndActions){
+        Long maxTime = 0l;
+        ProcessStateAndAction latestProcessStateAndAction = null;
+        for(ProcessStateAndAction processStateAndAction:processStateAndActions) {
+            if(processStateAndAction.getProcessInstanceFromRequest().getBusinessId().equalsIgnoreCase(businessId)
+                    && maxTime<processStateAndAction.getProcessInstanceFromRequest().getAuditDetails().getLastModifiedTime()){
+                latestProcessStateAndAction = processStateAndAction;
+                maxTime = processStateAndAction.getProcessInstanceFromRequest().getAuditDetails().getLastModifiedTime();
+            }
+        }
+        return latestProcessStateAndAction;
+    }
+
+
 
 
 

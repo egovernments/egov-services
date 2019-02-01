@@ -204,7 +204,7 @@ public class EmployeeValidator {
 
 
 	private void validateDeactivationDetails(Employee existingEmp, Employee updatedEmployeeData, Map<String, String> errorMap){
-		if(CollectionUtils.isEmpty(updatedEmployeeData.getDeactivationDetails())) {
+		if(!CollectionUtils.isEmpty(updatedEmployeeData.getDeactivationDetails())) {
 			for (DeactivationDetails deactivationDetails : updatedEmployeeData.getDeactivationDetails()) {
 				if (deactivationDetails.getId()==null){
 					if(updatedEmployeeData.isActive()){

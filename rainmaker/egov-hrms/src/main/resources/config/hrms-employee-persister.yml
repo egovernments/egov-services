@@ -82,6 +82,8 @@ serviceMaps:
       - jsonPath: $.Employees.*.assignments.*.auditDetails.lastModifiedDate
 
 
+
+
     - query: INSERT INTO eg_hrms_educationaldetails(tenantid, uuid, employeeid, qualification, stream, yearofpassing, university, remarks, createdby, createddate, lastmodifiedby, lastModifiedDate) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
 
       basePath: Employees.*.education.*
@@ -314,6 +316,7 @@ serviceMaps:
       - jsonPath: $.Employees.*.assignments.*.auditDetails.lastModifiedBy
 
       - jsonPath: $.Employees.*.assignments.*.auditDetails.lastModifiedDate
+
 
 
     - query: INSERT INTO eg_hrms_educationaldetails(tenantid, uuid, employeeid, qualification, stream, yearofpassing, university, remarks, createdby, createddate, lastmodifiedby, lastModifiedDate) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);

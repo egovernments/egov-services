@@ -156,28 +156,32 @@ public class EmployeeValidator {
 	}
 	
 	private void validateServiceHistory(Employee employee, Map<String, String> errorMap, Map<String, List<String>> mdmsData) {
-		for(ServiceHistory history: employee.getServiceHistory()) {
-			if(!mdmsData.get(HRMSConstants.HRMS_MDMS_SERVICE_STATUS_CODE).contains(history.getServiceStatus()))
-				errorMap.put("HRMS_INVALID_SERVICE_STATUS", "Service status of the employee is invalid!: "+history.getServiceStatus());
-            if(history.getServiceFrom() > new Date().getTime() || history.getServiceTo() > new Date().getTime()
-                    || history.getServiceFrom() > history.getServiceTo())
-                errorMap.put("HRMS_INVALID_SERVICE_PERIOD", "Service period (serviceFrom to serviceTo) of the employee is invalid!");
-            if(history.getServiceFrom() < employee.getUser().getDob() || history.getServiceTo() < employee.getUser().getDob())
-                errorMap.put("HRMS_INVALID_SERVICE_DATES", "Service period (serviceFrom to serviceTo) of the employee is before DOB!");
-        }
+		if(!CollectionUtils.isEmpty(employee.getServiceHistory())){
+			for(ServiceHistory history: employee.getServiceHistory()) {
+				if(!mdmsData.get(HRMSConstants.HRMS_MDMS_EMP_STATUS_CODE).contains(history.getServiceStatus()))
+					errorMap.put("HRMS_INVALID_SERVICE_STATUS", "Service status of the employee is invalid!: "+history.getServiceStatus());
+				if(history.getServiceFrom() > new Date().getTime() || history.getServiceTo() > new Date().getTime()
+						|| history.getServiceFrom() > history.getServiceTo())
+					errorMap.put("HRMS_INVALID_SERVICE_PERIOD", "Service period (serviceFrom to serviceTo) of the employee is invalid!");
+				if(history.getServiceFrom() < employee.getUser().getDob() || history.getServiceTo() < employee.getUser().getDob())
+					errorMap.put("HRMS_INVALID_SERVICE_DATES", "Service period (serviceFrom to serviceTo) of the employee is before DOB!");
+			}
+		}
 	}
 	
 	private void validateEducationalDetails(Employee employee, Map<String, String> errorMap, Map<String, List<String>> mdmsData) {
-		for(EducationalQualification education : employee.getEducation()) {
-			if(!mdmsData.get(HRMSConstants.HRMS_MDMS_QUALIFICATION_CODE).contains(education.getQualification()))
-				errorMap.put("HRMS_INVALID_QUALIFICATION", "Qualification of the employee is invalid!: "+education.getQualification());	
-			if(!mdmsData.get(HRMSConstants.HRMS_MDMS_STREAMS_CODE).contains(education.getStream()))
-				errorMap.put("HRMS_INVALID_EDUCATIONAL_STREAM", "Education stream of the employee is invalid!: "+education.getStream());
-            Calendar cal = Calendar.getInstance();
-            cal.setTimeInMillis(employee.getUser().getDob());
-			if( education.getYearOfPassing() < cal.get(Calendar.YEAR)){
-                errorMap.put("HRMS_INVALID_EDUCATIONAL_PASSING_YEAR", "Education year of passing of the employee is before DOB!");
-            }
+		if(!CollectionUtils.isEmpty(employee.getEducation())){
+			for(EducationalQualification education : employee.getEducation()) {
+				if(!mdmsData.get(HRMSConstants.HRMS_MDMS_QUALIFICATION_CODE).contains(education.getQualification()))
+					errorMap.put("HRMS_INVALID_QUALIFICATION", "Qualification of the employee is invalid!: "+education.getQualification());
+				if(!mdmsData.get(HRMSConstants.HRMS_MDMS_STREAMS_CODE).contains(education.getStream()))
+					errorMap.put("HRMS_INVALID_EDUCATIONAL_STREAM", "Education stream of the employee is invalid!: "+education.getStream());
+				Calendar cal = Calendar.getInstance();
+				cal.setTimeInMillis(employee.getUser().getDob());
+				if( education.getYearOfPassing() < cal.get(Calendar.YEAR)){
+					errorMap.put("HRMS_INVALID_EDUCATIONAL_PASSING_YEAR", "Education year of passing of the employee is before DOB!");
+				}
+			}
 		}
 	}
 	

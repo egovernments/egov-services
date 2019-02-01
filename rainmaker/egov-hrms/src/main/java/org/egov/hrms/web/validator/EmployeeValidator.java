@@ -129,13 +129,13 @@ public class EmployeeValidator {
 		employee.getAssignments().sort(new Comparator<Assignment>() {
 			@Override
 			public int compare(Assignment assignment1, Assignment assignment2) {
-				return assignment1.getToDate().compareTo(assignment2.getToDate());
+				return assignment1.getFromDate().compareTo(assignment2.getFromDate());
 			}
 		});
 		int length = employee.getAssignments().size();
 		boolean overlappingCheck =false;
 		for(int i=0;i<length-1;i++){
-			if(employee.getAssignments().get(i).getFromDate() > employee.getAssignments().get(i+1).getToDate())
+			if(employee.getAssignments().get(i).getToDate() > employee.getAssignments().get(i+1).getFromDate())
 				overlappingCheck=true;
 		}
 		if(overlappingCheck)

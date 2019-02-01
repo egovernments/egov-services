@@ -45,7 +45,6 @@ public class NotificationService {
 	
 	public void sendNotification(EmployeeRequest request, Map<String, String> pwdMap) {
 		String message = getMessage(request);
-		//String message = "Profile is successfully set up - Username: $username, Password: $password. Reset your pwd at $applink";
 		for(Employee employee: request.getEmployees()) {
 			message = buildMessage(employee, message, pwdMap);
 			SMSRequest smsRequest = SMSRequest.builder().mobileNumber(employee.getUser().getMobileNumber()).message(message).build();

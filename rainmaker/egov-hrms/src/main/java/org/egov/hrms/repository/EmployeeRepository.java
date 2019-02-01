@@ -29,11 +29,11 @@ public class EmployeeRepository {
 	public List<Employee> fetchEmployees(EmployeeSearchCriteria criteria, RequestInfo requestInfo){
 		List<Employee> employees = new ArrayList<>();
 		String query = queryBuilder.getEmployeeSearchQuery(criteria);
-		log.info("query; "+query);
 		try {
 			employees = jdbcTemplate.query(query, rowMapper);
 		}catch(Exception e) {
 			log.error("Exception while making the db call: ",e);
+			log.error("query; "+query);
 		}
 		return employees;
 	}

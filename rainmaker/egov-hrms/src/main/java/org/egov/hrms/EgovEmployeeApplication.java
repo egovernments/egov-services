@@ -80,9 +80,7 @@ public class EgovEmployeeApplication {
     @Bean
     public MappingJackson2HttpMessageConverter jacksonConverter(ObjectMapper objectMapper) {
         MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter();
-        objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
-        objectMapper.setTimeZone(TimeZone.getTimeZone(timeZone));
-        converter.setObjectMapper(objectMapper);
+        converter.setObjectMapper(getObjectMapper());
         return converter;
     }
 }

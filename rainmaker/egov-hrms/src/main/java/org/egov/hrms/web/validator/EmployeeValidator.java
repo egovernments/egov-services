@@ -6,6 +6,7 @@ import org.egov.hrms.model.*;
 import org.egov.hrms.service.EmployeeService;
 import org.egov.hrms.service.MDMSService;
 import org.egov.hrms.service.UserService;
+import org.egov.hrms.utils.ErrorConstants;
 import org.egov.hrms.utils.HRMSConstants;
 import org.egov.hrms.web.contract.EmployeeRequest;
 import org.egov.hrms.web.contract.EmployeeResponse;
@@ -15,6 +16,7 @@ import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
+
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -56,9 +58,9 @@ public class EmployeeValidator {
         employees.forEach(employee -> {
             UserResponse userResponse = userService.getSingleUser(requestInfo,employee,"MobileNumber");
             if(!CollectionUtils.isEmpty(userResponse.getUser())){
-                errorMap.put("HRMS_USER_EXIST_MOB","User already present for Mobile Number "+userResponse.getUser().get(0).getMobileNumber());
+                errorMap.put(ErrorConstants.HRMS_USER_EXIST_MOB_CODE,
+                		ErrorConstants.HRMS_USER_EXIST_MOB_MSG+userResponse.getUser().get(0).getMobileNumber());
             }
-
         });
     }
 
@@ -68,7 +70,8 @@ public class EmployeeValidator {
                 UserResponse userResponse = userService.getSingleUser(requestInfo,employee,"UserName");
                 if(!CollectionUtils.isEmpty(userResponse.getUser())){
                     log.info("User: "+ (userResponse.getUser().get(0)));
-                    errorMap.put("HRMS_USER_EXIST_USERNAME","User already present for UserName "+userResponse.getUser().get(0).getUserName());
+                    errorMap.put(ErrorConstants.HRMS_USER_EXIST_USERNAME_CODE,
+                    		ErrorConstants.HRMS_USER_EXIST_USERNAME_MSG+userResponse.getUser().get(0).getUserName());
                 }
             }
         });
@@ -77,7 +80,6 @@ public class EmployeeValidator {
 	private void validateMdmsData(Employee employee, Map<String, String> errorMap, Map<String, List<String>> mdmsData) {
 		validateEmployee(employee, errorMap, mdmsData);
 		validateAssignments(employee, errorMap, mdmsData);
-		validateJurisdiction(employee, errorMap, mdmsData);
 		validateServiceHistory(employee, errorMap, mdmsData);
 		//validateEducationalDetails(employee, errorMap, mdmsData);
 		//validateDepartmentalTest(employee, errorMap, mdmsData);
@@ -99,30 +101,30 @@ public class EmployeeValidator {
 	private void validateEmployee(Employee employee, Map<String, String> errorMap, Map<String, List<String>> mdmsData) {
 
 		if(employee.getUser().getMobileNumber().length() != 10)
-			errorMap.put("HRMS_INVALID_MOB_NO", "Mobile number of the employee is invalid!");
+			errorMap.put(ErrorConstants.HRMS_INVALID_MOB_NO_CODE, ErrorConstants.HRMS_INVALID_MOB_NO_MSG);
 		
 		if(CollectionUtils.isEmpty(employee.getUser().getRoles()))
-			errorMap.put("HRMS_INVALID_ROLES", "An employee must have atleast one role!");
+			errorMap.put(ErrorConstants.HRMS_MISSING_ROLES_CODE, ErrorConstants.HRMS_INVALID_ROLES_MSG);
 		else {
 			for(Role role: employee.getUser().getRoles()) {
 				if(!mdmsData.get(HRMSConstants.HRMS_MDMS_ROLES_CODE).contains(role.getCode()))
-					errorMap.put("HRMS_INVALID_ROLE", "Employee contains an invalid role: " + role.getCode());
+					errorMap.put(ErrorConstants.HRMS_INVALID_ROLE_CODE, ErrorConstants.HRMS_INVALID_ROLE_MSG + role.getCode());
 			}
 		}
 		if(!mdmsData.get(HRMSConstants.HRMS_MDMS_EMP_STATUS_CODE).contains(employee.getEmployeeStatus()))
-			errorMap.put("HRMS_INVALID_EMP_STATUS", "Employee status is invalid!");
+			errorMap.put(ErrorConstants.HRMS_INVALID_EMP_STATUS_CODE, ErrorConstants.HRMS_INVALID_EMP_STATUS_MSG);
 		if(!mdmsData.get(HRMSConstants.HRMS_MDMS_EMP_TYPE_CODE).contains(employee.getEmployeeType()))
-			errorMap.put("HRMS_INVALID_EMP_TYPE", "Employee type is invalid!");
+			errorMap.put(ErrorConstants.HRMS_INVALID_EMP_TYPE_CODE, ErrorConstants.HRMS_INVALID_EMP_TYPE_CODE);
 		if(employee.getDateOfAppointment() > new Date().getTime())
-			errorMap.put("HRMS_INVALID_DATE_OF_APPOINTMENT", "Employee date of appointment is invalid!");
+			errorMap.put(ErrorConstants.HRMS_INVALID_DATE_OF_APPOINTMENT_CODE, ErrorConstants.HRMS_INVALID_DATE_OF_APPOINTMENT_MSG);
 		if(employee.getDateOfAppointment() < employee.getUser().getDob())
-			errorMap.put("HRMS_INVALID_DATE_OF_APPOINTMENT_DOB", "Employee date of appointment is before DOB!");
+			errorMap.put(ErrorConstants.HRMS_INVALID_DATE_OF_APPOINTMENT_DOB_CODE, ErrorConstants.HRMS_INVALID_DATE_OF_APPOINTMENT_DOB_MSG);
 	}
 	
 	private void validateAssignments(Employee employee, Map<String, String> errorMap, Map<String, List<String>> mdmsData) {
 		List<Assignment> currentAssignments =employee.getAssignments().stream().filter(assignment -> assignment.isCurrentAssignment()).collect(Collectors.toList());
 		if(currentAssignments.size() != 1){
-			errorMap.put("HRMS_INVALID_CURRENT_ASSGN", "There should be exactly 1 current assignement!");
+			errorMap.put(ErrorConstants.HRMS_INVALID_CURRENT_ASSGN_CODE, ErrorConstants.HRMS_INVALID_CURRENT_ASSGN_MSG);
 		}
 		employee.getAssignments().sort(new Comparator<Assignment>() {
 			@Override
@@ -137,37 +139,34 @@ public class EmployeeValidator {
 				overlappingCheck=true;
 		}
 		if(overlappingCheck)
-			errorMap.put("HRMS_OVERLAPPING_ASSGN", "Period of assignements of employee should not overlap!");
+			errorMap.put(ErrorConstants.HRMS_OVERLAPPING_ASSGN_CODE, ErrorConstants.HRMS_OVERLAPPING_ASSGN_MSG);
 
 		for(Assignment assignment: employee.getAssignments()) {
 			if(!mdmsData.get(HRMSConstants.HRMS_MDMS_DEPT_CODE).contains(assignment.getDepartment()))
-				errorMap.put("HRMS_INVALID_DEPT", "Department of the employee is invalid!");
+				errorMap.put(ErrorConstants.HRMS_INVALID_DEPT_CODE, ErrorConstants.HRMS_INVALID_DEPT_MSG);
 			if(!mdmsData.get(HRMSConstants.HRMS_MDMS_DESG_CODE).contains(assignment.getDesignation()))
-				errorMap.put("HRMS_INVALID_DESG", "Designation of the employee is invalid!");
+				errorMap.put(ErrorConstants.HRMS_INVALID_DESG_CODE, ErrorConstants.HRMS_INVALID_DESG_MSG);
             if(assignment.getFromDate() > new Date().getTime() || assignment.getToDate() > new Date().getTime()
                     || assignment.getFromDate() > assignment.getToDate())
-                errorMap.put("HRMS_INVALID_ASSIGNMENT_PERIOD", "Period of assignemnt (fromDate to toDate) is invalid!");
+                errorMap.put(ErrorConstants.HRMS_INVALID_ASSIGNMENT_PERIOD_CODE, ErrorConstants.HRMS_INVALID_ASSIGNMENT_PERIOD_MSG);
             if(assignment.getFromDate() < employee.getUser().getDob() || assignment.getToDate() < employee.getUser().getDob())
-                errorMap.put("HRMS_INVALID_ASSIGNMENT_DATES", "Period of assignemnt (fromDate to toDate) is before DOB!");
+                errorMap.put(ErrorConstants.HRMS_INVALID_ASSIGNMENT_DATES_CODE, ErrorConstants.HRMS_INVALID_ASSIGNMENT_DATES_MSG);
 
         }
 		
 	}
-	
-	private void validateJurisdiction(Employee employee, Map<String, String> errorMap, Map<String, List<String>> mdmsData) {
-		//add validation for jurisdictions.
-	}
+
 	
 	private void validateServiceHistory(Employee employee, Map<String, String> errorMap, Map<String, List<String>> mdmsData) {
 		if(!CollectionUtils.isEmpty(employee.getServiceHistory())){
 			for(ServiceHistory history: employee.getServiceHistory()) {
 				if(!mdmsData.get(HRMSConstants.HRMS_MDMS_EMP_STATUS_CODE).contains(history.getServiceStatus()))
-					errorMap.put("HRMS_INVALID_SERVICE_STATUS", "Service status of the employee is invalid!: "+history.getServiceStatus());
+					errorMap.put(ErrorConstants.HRMS_INVALID_SERVICE_STATUS_CODE, ErrorConstants.HRMS_INVALID_SERVICE_STATUS_MSG+history.getServiceStatus());
 				if(history.getServiceFrom() > new Date().getTime() || history.getServiceTo() > new Date().getTime()
 						|| history.getServiceFrom() > history.getServiceTo())
-					errorMap.put("HRMS_INVALID_SERVICE_PERIOD", "Service period (serviceFrom to serviceTo) of the employee is invalid!");
+					errorMap.put(ErrorConstants.HRMS_INVALID_SERVICE_PERIOD_CODE, ErrorConstants.HRMS_INVALID_SERVICE_PERIOD_MSG);
 				if(history.getServiceFrom() < employee.getUser().getDob() || history.getServiceTo() < employee.getUser().getDob())
-					errorMap.put("HRMS_INVALID_SERVICE_DATES", "Service period (serviceFrom to serviceTo) of the employee is before DOB!");
+					errorMap.put(ErrorConstants.HRMS_INVALID_SERVICE_DATES_CODE, ErrorConstants.HRMS_INVALID_SERVICE_DATES_MSG);
 			}
 		}
 	}
@@ -176,13 +175,13 @@ public class EmployeeValidator {
 		if(!CollectionUtils.isEmpty(employee.getEducation())){
 			for(EducationalQualification education : employee.getEducation()) {
 				if(!mdmsData.get(HRMSConstants.HRMS_MDMS_QUALIFICATION_CODE).contains(education.getQualification()))
-					errorMap.put("HRMS_INVALID_QUALIFICATION", "Qualification of the employee is invalid!: "+education.getQualification());
+					errorMap.put(ErrorConstants.HRMS_INVALID_QUALIFICATION_CODE, ErrorConstants.HRMS_INVALID_QUALIFICATION_MSG+education.getQualification());
 				if(!mdmsData.get(HRMSConstants.HRMS_MDMS_STREAMS_CODE).contains(education.getStream()))
-					errorMap.put("HRMS_INVALID_EDUCATIONAL_STREAM", "Education stream of the employee is invalid!: "+education.getStream());
+					errorMap.put(ErrorConstants.HRMS_INVALID_EDUCATIONAL_STREAM_CODE, ErrorConstants.HRMS_INVALID_EDUCATIONAL_STREAM_MSG+education.getStream());
 				Calendar cal = Calendar.getInstance();
 				cal.setTimeInMillis(employee.getUser().getDob());
 				if( education.getYearOfPassing() < cal.get(Calendar.YEAR)){
-					errorMap.put("HRMS_INVALID_EDUCATIONAL_PASSING_YEAR", "Education year of passing of the employee is before DOB!");
+					errorMap.put(ErrorConstants.HRMS_INVALID_EDUCATIONAL_PASSING_YEAR_CODE, ErrorConstants.HRMS_INVALID_EDUCATIONAL_PASSING_YEAR_MSG);
 				}
 			}
 		}
@@ -191,11 +190,11 @@ public class EmployeeValidator {
 	private void validateDepartmentalTest(Employee employee, Map<String, String> errorMap, Map<String, List<String>> mdmsData) {
 		for(DepartmentalTest test: employee.getTests()) {
 			if(!mdmsData.get(HRMSConstants.HRMS_MDMS_DEPT_TEST_CODE).contains(test.getTest()))
-				errorMap.put("HRMS_INVALID_DEPARTMENTAL_TEST", "Departmental test of the employee is invalid!: "+test.getTest());
+				errorMap.put(ErrorConstants.HRMS_INVALID_DEPARTMENTAL_TEST_CODE, ErrorConstants.HRMS_INVALID_DEPARTMENTAL_TEST_MSG+test.getTest());
             Calendar cal = Calendar.getInstance();
             cal.setTimeInMillis(employee.getUser().getDob());
             if( test.getYearOfPassing() < cal.get(Calendar.YEAR)){
-                errorMap.put("HRMS_INVALID_DEPARTMENTAL_TEST_PASSING_YEAR", "Departmental test passing year of the employee is before DOB!");
+                errorMap.put(ErrorConstants.HRMS_INVALID_DEPARTMENTAL_TEST_PASSING_YEAR_CODE, ErrorConstants.HRMS_INVALID_DEPARTMENTAL_TEST_PASSING_YEAR_MSG);
             }
 
 		}
@@ -208,7 +207,7 @@ public class EmployeeValidator {
 			for (DeactivationDetails deactivationDetails : updatedEmployeeData.getDeactivationDetails()) {
 				if (deactivationDetails.getId()==null){
 					if(updatedEmployeeData.isActive()){
-						errorMap.put("HRMS_INVALID_DEACT_REQUEST","Employee is active should be set to false while deactivation!");
+						errorMap.put(ErrorConstants.HRMS_INVALID_DEACT_REQUEST_CODE, ErrorConstants.HRMS_INVALID_DEACT_REQUEST_MSG);
 					}
 				}
 			}
@@ -263,7 +262,7 @@ public class EmployeeValidator {
 								.map(jurisdiction -> jurisdiction.getId())
 								.collect(Collectors.toList()));
 		if(!check){
-			errorMap.put("HRMS_UPDATE_JURISDICTION_INCOSISTENT","Jurisdiction data in update request should contain all previous jurisdiction data ");
+			errorMap.put(ErrorConstants.HRMS_UPDATE_JURISDICTION_INCOSISTENT_CODE, ErrorConstants.HRMS_UPDATE_JURISDICTION_INCOSISTENT_MSG);
 		}
 
 	}
@@ -277,7 +276,7 @@ public class EmployeeValidator {
 								.map(assignment -> assignment.getId())
 								.collect(Collectors.toList()));
 		if(!check){
-			errorMap.put("HRMS_UPDATE_ASSIGNEMENT_INCOSISTENT","Assignment data in update request should contain all previous assginment data ");
+			errorMap.put(ErrorConstants.HRMS_UPDATE_ASSIGNEMENT_INCOSISTENT_CODE, ErrorConstants.HRMS_UPDATE_ASSIGNEMENT_INCOSISTENT_MSG);
 		}
 	}
 
@@ -291,9 +290,8 @@ public class EmployeeValidator {
 									.map(test -> test.getId())
 									.collect(Collectors.toList()));
 			if(!check){
-				errorMap.put("HRMS_UPDATE_TESTS_INCOSISTENT","Tests data in update request should contain all previous Tests data ");
+				errorMap.put(ErrorConstants.HRMS_UPDATE_TESTS_INCOSISTENT_CODE, ErrorConstants.HRMS_UPDATE_TESTS_INCOSISTENT_MSG);
 			}
-
 		}
 
 	}
@@ -308,9 +306,8 @@ public class EmployeeValidator {
 									.map(educationalQualification -> educationalQualification.getId())
 									.collect(Collectors.toList()));
 			if(!check){
-				errorMap.put("HRMS_UPDATE_EDUCATION_INCOSISTENT","Education data in update request should contain all previous education data ");
+				errorMap.put(ErrorConstants.HRMS_UPDATE_EDUCATION_INCOSISTENT_CODE, ErrorConstants.HRMS_UPDATE_EDUCATION_INCOSISTENT_MSG);
 			}
-
 		}
 	}
 
@@ -324,7 +321,7 @@ public class EmployeeValidator {
 									.map(serviceHistory -> serviceHistory.getId())
 									.collect(Collectors.toList()));
 			if(!check){
-				errorMap.put("HRMS_UPDATE_SERVICE_HISTORY_INCOSISTENT","Service History data in update request should contain all previous service history data ");
+				errorMap.put(ErrorConstants.HRMS_UPDATE_SERVICE_HISTORY_INCOSISTENT_CODE, ErrorConstants.HRMS_UPDATE_SERVICE_HISTORY_INCOSISTENT_MSG);
 			}
 
 		}
@@ -341,7 +338,7 @@ public class EmployeeValidator {
 									.map(employeeDocument -> employeeDocument.getId())
 									.collect(Collectors.toList()));
 			if (!check) {
-				errorMap.put("HRMS_UPDATE_DOCUMENT_INCOSISTENT", "Employee Document data in update request should contain all previous employee document data ");
+				errorMap.put(ErrorConstants.HRMS_UPDATE_DOCUMENT_INCOSISTENT_CODE, ErrorConstants.HRMS_UPDATE_DOCUMENT_INCOSISTENT_MSG);
 			}
 		}
 
@@ -357,7 +354,7 @@ public class EmployeeValidator {
 									.map(employeeDocument -> employeeDocument.getId())
 									.collect(Collectors.toList()));
 			if (!check) {
-				errorMap.put("HRMS_UPDATE_DEACT_DETAILS_INCOSISTENT", "Employee Deactivation details data in update request should contain all previous employee deactivation data ");
+				errorMap.put(ErrorConstants.HRMS_UPDATE_DEACT_DETAILS_INCOSISTENT_CODE, ErrorConstants.HRMS_UPDATE_DEACT_DETAILS_INCOSISTENT_MSG);
 			}
 		}
 

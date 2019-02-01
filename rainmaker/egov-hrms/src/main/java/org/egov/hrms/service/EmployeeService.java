@@ -94,10 +94,11 @@ public class EmployeeService {
 	
 	@Autowired
 	private NotificationService notificationService;
+	
+	@Autowired
+	private ObjectMapper objectMapper;
 
 	public EmployeeResponse create(EmployeeRequest employeeRequest) {
-		log.info("Service: Create Employee");
-		log.info(employeeRequest.toString());
 		RequestInfo requestInfo = employeeRequest.getRequestInfo();
 		Map<String, String> pwdMap = new HashMap<>();
 		idGenService.setIds(employeeRequest);
@@ -121,8 +122,6 @@ public class EmployeeService {
 				Map<String, User> mapOfUsers = userResponse.getUser().parallelStream()
 						.collect(Collectors.toMap(User :: getUuid, Function.identity()));
 				employees.parallelStream().forEach(employee -> employee.setUser(mapOfUsers.get(employee.getUuid())));
-			}else{
-				log.info("Users couldn't be fetched!");
 			}
 		}
 		return EmployeeResponse.builder().responseInfo(factory.createResponseInfoFromRequestInfo(requestInfo, true))
@@ -135,8 +134,6 @@ public class EmployeeService {
 		enrichUser(employee);
 		UserRequest request = UserRequest.builder().requestInfo(requestInfo).user(employee.getUser()).build();
 		try {
-			ObjectMapper objectMapper=new ObjectMapper();
-			log.info("req= "+objectMapper.writeValueAsString(request));
 			UserResponse response = userService.createUser(request);
 			User user = response.getUser().get(0);
 			employee.setId(user.getId());
@@ -145,6 +142,7 @@ public class EmployeeService {
 			employee.getUser().setUuid(user.getUuid());
 		}catch(Exception e) {
 			log.error("Exception while creating user: ",e);
+			log.error("request: "+request);
 			throw new CustomException("HRMS_USER_CREATION_FAILED", "User creation failed due to error: "+e);
 		}
 

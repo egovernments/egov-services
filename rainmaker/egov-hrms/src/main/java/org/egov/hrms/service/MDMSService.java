@@ -1,17 +1,25 @@
 package org.egov.hrms.service;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.extern.slf4j.Slf4j;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.hrms.utils.HRMSConstants;
-import org.egov.mdms.model.*;
+import org.egov.mdms.model.MasterDetail;
+import org.egov.mdms.model.MdmsCriteria;
+import org.egov.mdms.model.MdmsCriteriaReq;
+import org.egov.mdms.model.MdmsResponse;
+import org.egov.mdms.model.ModuleDetail;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.*;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Slf4j
@@ -61,11 +69,10 @@ public class MDMSService {
 		MdmsCriteriaReq request = prepareMDMSRequest(uri, requestInfo, tenantId);
 		MdmsResponse response = null;
 		try {
-			log.info("uri:"+uri);
-			log.info("Request: "+ new ObjectMapper().writeValueAsString( request));
 			response = restTemplate.postForObject(uri.toString(), request, MdmsResponse.class);
 		}catch(Exception e) {
 			log.info("Exception while fetching from MDMS: ",e);
+			log.info("Request: "+ request);
 		}
 		return response;
 	}

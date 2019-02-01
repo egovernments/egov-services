@@ -33,14 +33,13 @@ public class RestCallRepository {
         mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
 		Object response = null;
 		try {
-			log.info("URI: "+ uri);
-			log.info("req: "+new ObjectMapper().writeValueAsString(request));
 			response = restTemplate.postForObject(uri.toString(), request, Map.class);
 		}catch(HttpClientErrorException e) {
 			log.error("External Service threw an Exception: ",e);
 			throw new ServiceCallException(e.getResponseBodyAsString());
 		}catch(Exception e) {
 			log.error("Exception while fetching from searcher: ",e);
+			log.info("req: "+(request));
 		}
 		
 		return response;

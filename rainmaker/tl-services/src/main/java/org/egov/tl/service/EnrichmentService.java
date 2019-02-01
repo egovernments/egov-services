@@ -15,6 +15,8 @@ import org.springframework.util.CollectionUtils;
 
 import java.util.*;
 import java.util.stream.Collectors;
+import static org.egov.tl.util.TLConstants.*;
+
 
 @Service
 public class EnrichmentService {
@@ -69,7 +71,7 @@ public class EnrichmentService {
                 tradeUnit.setActive(true);
             });
 
-            if(tradeLicense.getAction().equals(TradeLicense.ActionEnum.APPLY))
+            if(tradeLicense.getAction().equalsIgnoreCase(ACTION_APPLY))
             {
                 tradeLicense.getTradeLicenseDetail().getApplicationDocuments().forEach(document -> {
                     document.setId(UUID.randomUUID().toString());
@@ -278,9 +280,9 @@ public class EnrichmentService {
      */
     private void setStatusForCreate(TradeLicenseRequest tradeLicenseRequest){
         tradeLicenseRequest.getLicenses().forEach(license -> {
-            if(license.getAction().equals(TradeLicense.ActionEnum.INITIATE))
+            if(license.getAction().equalsIgnoreCase(ACTION_INITIATE))
                 license.setStatus(TradeLicense.StatusEnum.INITIATED);
-            if(license.getAction().equals(TradeLicense.ActionEnum.APPLY))
+            if(license.getAction().equalsIgnoreCase(ACTION_APPLY))
                 license.setStatus(TradeLicense.StatusEnum.APPLIED);
         });
     }
@@ -295,8 +297,8 @@ public class EnrichmentService {
         AuditDetails auditDetails = tradeUtil.getAuditDetails(requestInfo.getUserInfo().getUuid(), false);
         tradeLicenseRequest.getLicenses().forEach(tradeLicense -> {
             tradeLicense.setAuditDetails(auditDetails);
-            if(tradeLicense.getAction().equals(TradeLicense.ActionEnum.APPLY)
-                    || tradeLicense.getAction().equals(TradeLicense.ActionEnum.INITIATE)) {
+            if(tradeLicense.getAction().equalsIgnoreCase(ACTION_APPLY)
+                    || tradeLicense.getAction().equalsIgnoreCase(ACTION_INITIATE)) {
                 tradeLicense.getTradeLicenseDetail().setAuditDetails(auditDetails);
 
                 if(!CollectionUtils.isEmpty(tradeLicense.getTradeLicenseDetail().getAccessories())){
@@ -317,7 +319,7 @@ public class EnrichmentService {
                     }
                 });
 
-                if (tradeLicense.getAction().equals(TradeLicense.ActionEnum.APPLY)) {
+                if (tradeLicense.getAction().equalsIgnoreCase(ACTION_APPLY)) {
                     tradeLicense.getTradeLicenseDetail().getApplicationDocuments().forEach(document -> {
                         if (document.getId() == null)
                         {document.setId(UUID.randomUUID().toString());
@@ -371,7 +373,7 @@ public class EnrichmentService {
         List<TradeLicense> licenses = request.getLicenses();
         int count=0;
         for(TradeLicense license : licenses){
-           if(license.getAction().equals(TradeLicense.ActionEnum.APPROVE))
+           if(license.getAction().equalsIgnoreCase(ACTION_APPROVE))
                count++;
         }
         if(count!=0) {
@@ -387,7 +389,7 @@ public class EnrichmentService {
                 throw new CustomException(errorMap);
 
             licenses.forEach(license -> {
-                if (license.getAction().equals(TradeLicense.ActionEnum.APPROVE))
+                if (license.getAction().equalsIgnoreCase(ACTION_APPROVE))
                     license.setLicenseNumber(itr.next());
             });
         }

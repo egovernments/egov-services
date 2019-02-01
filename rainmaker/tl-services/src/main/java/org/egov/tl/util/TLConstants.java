@@ -89,6 +89,21 @@ public class TLConstants {
 
 
 
+    // TL actions
+
+    public static final String ACTION_INITIATE = "INITIATE";
+
+    public static final String ACTION_APPLY  = "APPLY";
+
+    public static final String ACTION_APPROVE  = "APPROVE";
+
+    public static final String ACTION_REJECT  = "REJECT";
+
+    public static final String ACTION_CANCEL  = "CANCEL";
+
+    public static final String ACTION_PAY  = "PAY";
+
+
 
 
 

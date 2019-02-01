@@ -1,17 +1,15 @@
 package org.egov.tl.workflow;
 
-import org.egov.tl.config.TLConfiguration;
-import org.egov.tl.web.models.TradeLicense;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
-import org.springframework.stereotype.Component;
 
 import java.util.Collections;
 import java.util.*;
 
-import static org.egov.tl.web.models.TradeLicense.ActionEnum.*;
+import static org.egov.tl.util.TLConstants.*;
 import static org.egov.tl.web.models.TradeLicense.StatusEnum.*;
 
 
@@ -48,11 +46,11 @@ public class WorkflowConfig {
 
         Map<String, String> map = new HashMap<>();
 
-        map.put(INITIATE.toString(), INITIATED.toString());
-        map.put(APPLY.toString(), APPLIED.toString());
-        map.put(APPROVE.toString(), APPROVED.toString());
-        map.put(REJECT.toString(), REJECTED.toString());
-        map.put(CANCEL.toString(), CANCELLED.toString());
+        map.put(ACTION_INITIATE, INITIATED.toString());
+        map.put(ACTION_APPLY, APPLIED.toString());
+        map.put(ACTION_APPROVE, APPROVED.toString());
+        map.put(ACTION_REJECT, REJECTED.toString());
+        map.put(ACTION_CANCEL, CANCELLED.toString());
 
         actionStatusMap = Collections.unmodifiableMap(map);
     }
@@ -87,11 +85,11 @@ public class WorkflowConfig {
 
         Map<String, List<String>> map = new HashMap<>();
 
-        map.put(null, Arrays.asList(APPLY.toString(),INITIATE.toString()));
-        map.put(INITIATED.toString(), Arrays.asList(APPLY.toString(),INITIATE.toString()));
-        map.put(APPLIED.toString(), Arrays.asList(APPLY.toString())); // FIXME PUT THE ACTIONS IN PLACE
-        map.put(PAID.toString(), Arrays.asList(APPROVE.toString(), REJECT.toString()));
-        map.put(APPROVED.toString(), Arrays.asList(CANCEL.toString()));
+        map.put(null, Arrays.asList(ACTION_APPLY,ACTION_INITIATE));
+        map.put(INITIATED.toString(), Arrays.asList(ACTION_APPLY,ACTION_INITIATE));
+        map.put(APPLIED.toString(), Arrays.asList(ACTION_APPLY)); // FIXME PUT THE ACTIONS IN PLACE
+        map.put(PAID.toString(), Arrays.asList(ACTION_APPROVE, ACTION_REJECT));
+        map.put(APPROVED.toString(), Arrays.asList(ACTION_CANCEL));
         map.put(REJECTED.toString(), Arrays.asList()); // FIXME PUT THE ACTIONS IN PLACE
         map.put(CANCELLED.toString(), Arrays.asList()); // FIXME PUT THE ACTIONS IN PLACE
 

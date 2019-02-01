@@ -18,6 +18,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static org.egov.tl.util.TLConstants.*;
+
+
 @Component
 public class TLRowMapper  implements ResultSetExtractor<List<TradeLicense>> {
 
@@ -65,7 +68,7 @@ public class TLRowMapper  implements ResultSetExtractor<List<TradeLicense>> {
                         .financialYear(rs.getString("financialyear"))
                         .validFrom(validFrom)
                         .validTo(validTo)
-                        .action(TradeLicense.ActionEnum.fromValue(rs.getString("action")))
+                        .action(rs.getString("action"))
                         .status(TradeLicense.StatusEnum.fromValue(rs.getString("status")))
                         .tenantId(tenantId)
                         .tradeName(rs.getString("tradeName"))

@@ -74,9 +74,11 @@ public class Assignment {
 
 	private  String reportingTo;
 
+	@JsonProperty("isHOD")
 	private Boolean isHOD;
 	
 	@NotNull
+	@JsonProperty("isCurrentAssignment")
 	private Boolean isCurrentAssignment;
 
 	private AuditDetails auditDetails;

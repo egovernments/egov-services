@@ -74,6 +74,7 @@ public class Employee {
     @NotNull
     private Long dateOfAppointment;
 
+    @Valid
     @NonNull
     @Size(min = 1,max = 50)
     private List<Jurisdiction> jurisdictions = new ArrayList<>();
@@ -107,6 +108,7 @@ public class Employee {
     @Size(max=50)
     private List<EmployeeDocument> documents = new ArrayList<>();
 
+    @Valid
     private List<DeactivationDetails> deactivationDetails = new ArrayList<>();
 
     private AuditDetails auditDetails;

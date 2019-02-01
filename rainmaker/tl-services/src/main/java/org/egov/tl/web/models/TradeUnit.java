@@ -27,21 +27,26 @@ import javax.validation.constraints.*;
 public class TradeUnit   {
 
         @JsonProperty("id")
+        @Size(max=64)
         private String id;
 
         @JsonProperty("tenantId")
+        @Size(max=64)
         private String tenantId = null;
 
         @JsonProperty("active")
         private Boolean active;
 
+        @Size(max=64)
         @JsonProperty("tradeType")
         private String tradeType = null;
 
         @JsonProperty("uom")
+        @Size(max=64)
         private String uom = null;
 
         @JsonProperty("uomValue")
+        @Size(max=64)
         private String uomValue = null;
 
         @JsonProperty("auditDetails")

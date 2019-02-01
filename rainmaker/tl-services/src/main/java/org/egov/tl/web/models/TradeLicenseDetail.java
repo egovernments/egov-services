@@ -39,17 +39,21 @@ import lombok.Builder;
 @Builder
 public class TradeLicenseDetail   {
 
+        @Size(max=64)
         @JsonProperty("id")
         private String id;
 
+        @Size(max=64)
         @JsonProperty("surveyNo")
         private String surveyNo = null;
 
         @NotNull
+        @Size(max=64)
         @JsonProperty("subOwnerShipCategory")
         private String subOwnerShipCategory = null;
 
         @NotNull
+        @Size(max=64)
         @JsonProperty("structureType")
         private String structureType;
 

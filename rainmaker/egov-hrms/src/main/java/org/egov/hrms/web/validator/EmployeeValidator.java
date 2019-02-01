@@ -222,14 +222,35 @@ public class EmployeeValidator {
 		EmployeeResponse existingEmployeeResponse = employeeService.search(EmployeeSearchCriteria.builder().uuids(uuidList).build(),request.getRequestInfo());
 		List <Employee> existingEmployees = existingEmployeeResponse.getEmployees();
 		for(Employee employee: request.getEmployees()){
-			Employee existingEmp = existingEmployees.stream().filter(existingEmployee -> existingEmployee.getUuid().equals(employee.getUuid())).findFirst().get();
-			validateDataConsistency(employee, errorMap, mdmsData, existingEmp);
+			if(validateEmployeeForUpdate(employee,errorMap)){
+				Employee existingEmp = existingEmployees.stream().filter(existingEmployee -> existingEmployee.getUuid().equals(employee.getUuid())).findFirst().get();
+				validateDataConsistency(employee, errorMap, mdmsData, existingEmp);
+			}
 			validateMdmsData(employee, errorMap, mdmsData);
 		}
 		if(!CollectionUtils.isEmpty(errorMap.keySet())) {	
 			throw new CustomException(errorMap);
 		}
 
+
+	}
+
+	private boolean validateEmployeeForUpdate(Employee employee, Map<String, String> errorMap) {
+		boolean isvalid = true;
+		if(employee.getId()==null){
+			errorMap.put("HRMS_UPDATE_NULL_ID", "Employee ID in update request should not be Null!");
+			isvalid=false;
+		}
+		if(employee.getCode()==null){
+			errorMap.put("HRMS_UPDATE_NULL_CODE", "Employee Code in update request should not be Null!");
+			isvalid=false;
+		}
+		if(employee.getUuid()==null){
+			errorMap.put("HRMS_UPDATE_NULL_UUID", "Employee UUID in update request should not be Null!");
+			isvalid=false;
+		}
+
+		return isvalid;
 
 	}
 

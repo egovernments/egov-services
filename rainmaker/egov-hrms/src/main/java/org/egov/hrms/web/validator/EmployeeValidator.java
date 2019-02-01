@@ -84,6 +84,7 @@ public class EmployeeValidator {
 	}
 	
 	public void validateDataConsistency(Employee employee, Map<String, String> errorMap, Map<String, List<String>> mdmsData, Employee existingEmp) {
+
 		validateConsistencyAssignment(existingEmp,employee,errorMap);
 		validateConsistencyJurisdiction(existingEmp,employee,errorMap);
 		validateConsistencyDepartmentalTest(existingEmp,employee,errorMap);
@@ -114,6 +115,8 @@ public class EmployeeValidator {
 			errorMap.put("HRMS_INVALID_EMP_TYPE", "Employee type is invalid!");
 		if(employee.getDateOfAppointment() > new Date().getTime())
 			errorMap.put("HRMS_INVALID_DATE_OF_APPOINTMENT", "Employee date of appointment is invalid!");
+		if(employee.getDateOfAppointment() < employee.getUser().getDob())
+			errorMap.put("HRMS_INVALID_DATE_OF_APPOINTMENT_DOB", "Employee date of appointment is before DOB!");
 	}
 	
 	private void validateAssignments(Employee employee, Map<String, String> errorMap, Map<String, List<String>> mdmsData) {
@@ -201,7 +204,7 @@ public class EmployeeValidator {
 
 
 	private void validateDeactivationDetails(Employee existingEmp, Employee updatedEmployeeData, Map<String, String> errorMap){
-		if(updatedEmployeeData.getDeactivationDetails() != null) {
+		if(CollectionUtils.isEmpty(updatedEmployeeData.getDeactivationDetails())) {
 			for (DeactivationDetails deactivationDetails : updatedEmployeeData.getDeactivationDetails()) {
 				if (deactivationDetails.getId()==null){
 					if(updatedEmployeeData.isActive()){

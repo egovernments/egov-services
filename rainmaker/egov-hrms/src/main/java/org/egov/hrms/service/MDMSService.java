@@ -85,7 +85,11 @@ public class MDMSService {
 			moduleDetail.setModuleName(module);
 			List<MasterDetail> masterDetails = new ArrayList<>();
 			for(String master: mapOfModulesAndMasters.get(module)) {
-				MasterDetail masterDetail = MasterDetail.builder().name(master).filter("[?(@.active == true)].code").build();
+				MasterDetail masterDetail=null;
+				if(module.equals(HRMSConstants.HRMS_AC_ROLES_MASTERS_CODE))
+					masterDetail = MasterDetail.builder().name(master).filter("*.code").build();
+				else
+					masterDetail = MasterDetail.builder().name(master).filter("[?(@.active == true)].code").build();
 				masterDetails.add(masterDetail);
 			}
 			moduleDetail.setMasterDetails(masterDetails);

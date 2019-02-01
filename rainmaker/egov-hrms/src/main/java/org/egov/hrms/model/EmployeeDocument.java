@@ -57,9 +57,6 @@ public class EmployeeDocument {
 
 	private String id;
 
-	@NotNull
-	private Long employeeId;
-
 	private String documentName;
 
 	private  String documentId;

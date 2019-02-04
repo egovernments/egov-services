@@ -31,7 +31,7 @@ serviceMaps:
 
       - jsonPath: $.Employees.*.employeeType
 
-      - jsonPath: $.Employees.*.IsActive
+      - jsonPath: $.Employees.*.isActive
 
       - jsonPath: $.Employees.*.auditDetails.createdBy
 
@@ -269,7 +269,7 @@ serviceMaps:
 
       - jsonPath: $.Employees.*.employeeType
 
-      - jsonPath: $.Employees.*.IsActive
+      - jsonPath: $.Employees.*.isActive
 
       - jsonPath: $.Employees.*.auditDetails.createdBy
 

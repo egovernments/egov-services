@@ -131,6 +131,10 @@ public class EmployeeService {
 	 * @return
 	 */
 	public EmployeeResponse search(EmployeeSearchCriteria criteria, RequestInfo requestInfo) {
+		if(null == criteria.getIsActive() || criteria.getIsActive())
+			criteria.setIsActive(true);
+		else
+			criteria.setIsActive(false);
 		List<Employee> employees = repository.fetchEmployees(criteria, requestInfo);
 		List<String> uuids = employees.stream().map(Employee :: getUuid).collect(Collectors.toList());
 		if(!CollectionUtils.isEmpty(uuids)){

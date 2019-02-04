@@ -36,6 +36,8 @@ public class EmployeeSearchCriteria {
 	
 	public List<Integer> positions;
 	
+	public Boolean isActive;
+	
 	public String tenantId;
 	
 	public Integer offset;

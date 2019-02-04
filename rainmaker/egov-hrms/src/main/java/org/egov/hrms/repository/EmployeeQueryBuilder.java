@@ -60,6 +60,8 @@ public class EmployeeQueryBuilder {
 			builder.append(" and employee.name IN ("+createINClauseForList(criteria.getNames())+")");
 		if(!CollectionUtils.isEmpty(criteria.getPositions()))
 			builder.append(" and assignment.position IN ("+createINClauseForIntList(criteria.getPositions())+")");
+		
+		builder.append("and employee.active = "+criteria.getIsActive());
 	}
 	
 	public String paginationClause(EmployeeSearchCriteria criteria, StringBuilder builder) {

@@ -26,6 +26,13 @@ public class EmployeeRepository {
 	@Autowired
 	private EmployeeRowMapper rowMapper;
 	
+	/**
+	 * DB Repository that makes jdbc calls to the db and fetches employees.
+	 * 
+	 * @param criteria
+	 * @param requestInfo
+	 * @return
+	 */
 	public List<Employee> fetchEmployees(EmployeeSearchCriteria criteria, RequestInfo requestInfo){
 		List<Employee> employees = new ArrayList<>();
 		String query = queryBuilder.getEmployeeSearchQuery(criteria);

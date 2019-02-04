@@ -42,7 +42,12 @@ public class NotificationService {
 	@Value("${egov.localization.search.endpoint}")
 	private String localizationSearchEndpoint;
     
-	
+	/**
+	 * Sends notification by putting the sms content onto the core-sms topic
+	 * 
+	 * @param request
+	 * @param pwdMap
+	 */
 	public void sendNotification(EmployeeRequest request, Map<String, String> pwdMap) {
 		String message = getMessage(request);
 		for(Employee employee: request.getEmployees()) {
@@ -52,19 +57,42 @@ public class NotificationService {
 		}
 	}
 	
-	
+	/**
+	 * Gets the message from localization
+	 * 
+	 * @param request
+	 * @return
+	 */
 	public String getMessage(EmployeeRequest request) {
 		String tenantId = request.getEmployees().get(0).getTenantId();
 		Map<String, Map<String, String>> localizedMessageMap = getLocalisedMessages(request.getRequestInfo(), tenantId, 
 				HRMSConstants.HRMS_LOCALIZATION_ENG_LOCALE_CODE, HRMSConstants.HRMS_LOCALIZATION_MODULE_CODE);
 		return localizedMessageMap.get(HRMSConstants.HRMS_LOCALIZATION_ENG_LOCALE_CODE +"|"+tenantId).get(HRMSConstants.HRMS_EMP_CREATE_LOCLZN_CODE);
 	}
+	
+	/**
+	 * Builds msg based on the format
+	 * 
+	 * @param employee
+	 * @param message
+	 * @param pwdMap
+	 * @return
+	 */
 	public String buildMessage(Employee employee, String message, Map<String, String> pwdMap) {
 		message = message.replace("$username", employee.getCode()).replace("$password", pwdMap.get(employee.getUuid()));
 		message = message.replace("$applink", appLink);
 		return message;
 	}
 	
+	/**
+	 * Creates a cache for localization that gets refreshed at every call.
+	 * 
+	 * @param requestInfo
+	 * @param tenantId
+	 * @param locale
+	 * @param module
+	 * @return
+	 */
 	public Map<String, Map<String, String>> getLocalisedMessages(RequestInfo requestInfo, String tenantId, String locale, String module) {
 		Map<String, Map<String, String>> localizedMessageMap = new HashMap<>();
 		Map<String, String> mapOfCodesAndMessages = new HashMap<>();

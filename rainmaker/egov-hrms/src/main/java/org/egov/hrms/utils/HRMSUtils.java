@@ -12,6 +12,15 @@ public class HRMSUtils {
 	@Value("${egov.hrms.default.pwd.length}")
 	private Integer pwdLength;
 	
+	/**
+	 * Generates random password for the user to login. Process:
+	 * 1. Takes a list of parameters for password
+	 * 2. Applies a random select logic and generates a password of constant length.
+	 * 3. The length of the password is configurable.
+	 * 
+	 * @param params
+	 * @return
+	 */
 	public String generatePassword(List<String> params) {
 		StringBuilder password = new StringBuilder();
 		Random random = new Random();

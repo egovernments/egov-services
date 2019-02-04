@@ -98,6 +98,16 @@ public class EmployeeService {
 	@Autowired
 	private ObjectMapper objectMapper;
 
+	/**
+	 * Service method for create employee. Does following:
+	 * 1. Sets ids to all the objects using idgen service.
+	 * 2. Enriches the employee object with required parameters
+	 * 3. Creates user in the egov-user service.
+	 * 4. Sends notification upon successful creation
+	 * 
+	 * @param employeeRequest
+	 * @return
+	 */
 	public EmployeeResponse create(EmployeeRequest employeeRequest) {
 		RequestInfo requestInfo = employeeRequest.getRequestInfo();
 		Map<String, String> pwdMap = new HashMap<>();
@@ -113,6 +123,13 @@ public class EmployeeService {
 		return generateResponse(employeeRequest);
 	}
 	
+	/**
+	 * Searches employees on a given criteria.
+	 * 
+	 * @param criteria
+	 * @param requestInfo
+	 * @return
+	 */
 	public EmployeeResponse search(EmployeeSearchCriteria criteria, RequestInfo requestInfo) {
 		List<Employee> employees = repository.fetchEmployees(criteria, requestInfo);
 		List<String> uuids = employees.stream().map(Employee :: getUuid).collect(Collectors.toList());
@@ -129,7 +146,12 @@ public class EmployeeService {
 	}
 	
 	
-
+	/**
+	 * Creates user by making call to egov-user.
+	 * 
+	 * @param employee
+	 * @param requestInfo
+	 */
 	private void createUser(Employee employee, RequestInfo requestInfo) {
 		enrichUser(employee);
 		UserRequest request = UserRequest.builder().requestInfo(requestInfo).user(employee.getUser()).build();
@@ -148,6 +170,11 @@ public class EmployeeService {
 
 	}
 
+	/**
+	 * Enriches the user object.
+	 * 
+	 * @param employee
+	 */
 	private void enrichUser(Employee employee) {
 		List<String> pwdParams = new ArrayList<>();
 		pwdParams.add(employee.getCode());
@@ -161,6 +188,12 @@ public class EmployeeService {
 		employee.getUser().setType(UserType.EMPLOYEE.toString());
 	}
 
+	/**
+	 * Enriches employee object by setting parent ids to all the child objects
+	 * 
+	 * @param employee
+	 * @param requestInfo
+	 */
 	private void enrichCreateRequest(Employee employee, RequestInfo requestInfo) {
 
 		AuditDetails auditDetails = AuditDetails.builder()
@@ -205,6 +238,14 @@ public class EmployeeService {
 		employee.setActive(true);
 	}
 
+	/**
+	 * Service method to update user. Performs the following:
+	 * 1. Enriches the employee object with required parameters.
+	 * 2. Updates user by making call to the user service.
+	 * 
+	 * @param employeeRequest
+	 * @return
+	 */
 	public EmployeeResponse update(EmployeeRequest employeeRequest) {
 		log.info("Service: Update Employee");
 		RequestInfo requestInfo = employeeRequest.getRequestInfo();
@@ -223,6 +264,12 @@ public class EmployeeService {
 		return generateResponse(employeeRequest);
 	}
 	
+	/**
+	 * Updates the user by making call to the user service.
+	 * 
+	 * @param employee
+	 * @param requestInfo
+	 */
 	private void updateUser(Employee employee, RequestInfo requestInfo) {
 		UserRequest request = UserRequest.builder().requestInfo(requestInfo).user(employee.getUser()).build();
 		try {
@@ -234,6 +281,13 @@ public class EmployeeService {
 
 	}
 
+	/**
+	 * Enriches update request with required parameters.
+	 * 
+	 * @param employee
+	 * @param requestInfo
+	 * @param existingEmployeesData
+	 */
 	private void enrichUpdateRequest(Employee employee, RequestInfo requestInfo, List<Employee> existingEmployeesData) {
 		AuditDetails auditDetails = AuditDetails.builder()
 				.createdBy(requestInfo.getUserInfo().getUserName())

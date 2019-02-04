@@ -29,6 +29,9 @@ public class EmployeeRowMapper implements ResultSetExtractor<List<Employee>> {
 	private ObjectMapper mapper;
 
 	@Override
+	/**
+	 * Maps ResultSet to Employee POJO.
+	 */
 	public List<Employee> extractData(ResultSet rs) throws SQLException, DataAccessException {
 		Map<String, Employee> employeeMap = new HashMap<>();
 		while(rs.next()) {
@@ -51,6 +54,12 @@ public class EmployeeRowMapper implements ResultSetExtractor<List<Employee>> {
 
 	}
 	
+	/**
+	 * Adds all the children data to a employee object.
+	 * 
+	 * @param rs
+	 * @param currentEmployee
+	 */
 	public void addChildrenToEmployee(ResultSet rs, Employee currentEmployee) {
 		setAssignments(rs, currentEmployee);
 		setJurisdictions(rs, currentEmployee);
@@ -61,6 +70,12 @@ public class EmployeeRowMapper implements ResultSetExtractor<List<Employee>> {
 		setDeactivationDetails(rs, currentEmployee);
 	}
 	
+	/**
+	 * Maps Assignments inside a ResultSet to the Assignment POJO inside employee object.
+	 * 
+	 * @param rs
+	 * @param currentEmployee
+	 */
 	public void setAssignments(ResultSet rs, Employee currentEmployee) {
 		try {
 			List<Assignment> assignments = new ArrayList<>();
@@ -87,6 +102,12 @@ public class EmployeeRowMapper implements ResultSetExtractor<List<Employee>> {
 		}
 	}
 	
+	/**
+	 * Maps Jurisdictions inside a ResultSet to the Jurisdiction POJO inside employee object.
+	 * 
+	 * @param rs
+	 * @param currentEmployee
+	 */
 	public void setJurisdictions(ResultSet rs, Employee currentEmployee) {
 		try {
 			List<Jurisdiction> jurisdictions = new ArrayList<>();
@@ -112,6 +133,12 @@ public class EmployeeRowMapper implements ResultSetExtractor<List<Employee>> {
 		}
 	}
 	
+	/**
+	 * Maps EducationDetails inside a ResultSet to the EducationDetails POJO inside employee object.
+	 * 
+	 * @param rs
+	 * @param currentEmployee
+	 */
 	public void setEducationDetails(ResultSet rs, Employee currentEmployee) {
 		try {
 			List<EducationalQualification> educationDetails = new ArrayList<>();
@@ -135,6 +162,12 @@ public class EmployeeRowMapper implements ResultSetExtractor<List<Employee>> {
 		}
 	}
 	
+	/**
+	 * Maps Dept Tests inside a ResultSet to the DeptTest POJO inside employee object.
+	 * 
+	 * @param rs
+	 * @param currentEmployee
+	 */
 	public void setDeptTests(ResultSet rs, Employee currentEmployee) {
 		try {
 			List<DepartmentalTest> tests = new ArrayList<>();
@@ -159,6 +192,12 @@ public class EmployeeRowMapper implements ResultSetExtractor<List<Employee>> {
 		}
 	}
 	
+	/**
+	 * Maps ServiceHistory inside a ResultSet to the ServiceHistory POJO inside employee object.
+	 * 
+	 * @param rs
+	 * @param currentEmployee
+	 */
 	public void setServiceHistory(ResultSet rs, Employee currentEmployee) {
 		try {
 			List<ServiceHistory> history = new ArrayList<>();
@@ -185,6 +224,12 @@ public class EmployeeRowMapper implements ResultSetExtractor<List<Employee>> {
 	
 	}
 	
+	/**
+	 * Maps Documents inside a ResultSet to the Document POJO inside employee object.
+	 * 
+	 * @param rs
+	 * @param currentEmployee
+	 */
 	public void setDocuments(ResultSet rs, Employee currentEmployee) {
 		try {
 			List<EmployeeDocument> documents = new ArrayList<>();
@@ -209,6 +254,12 @@ public class EmployeeRowMapper implements ResultSetExtractor<List<Employee>> {
 		}
 	}
 	
+	/**
+	 * Maps DeactivationDetails inside a ResultSet to the DeactivationDetail POJO inside employee object.
+	 * 
+	 * @param rs
+	 * @param currentEmployee
+	 */
 	public void setDeactivationDetails(ResultSet rs, Employee currentEmployee) {
 		try {
 			List<DeactivationDetails> deactDetails = new ArrayList<>();

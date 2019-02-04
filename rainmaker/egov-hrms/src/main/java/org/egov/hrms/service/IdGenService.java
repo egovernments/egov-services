@@ -27,19 +27,32 @@ public class IdGenService {
 	@Autowired
 	private PropertiesManager properties;
 
-	
+	/**
+	 * Sets ids to all the employee objects
+	 * 
+	 * @param employeeRequest
+	 */
 	public void setIds(EmployeeRequest employeeRequest) {
 		String tenantId = employeeRequest.getEmployees().get(0).getTenantId();
 		IdGenerationResponse response = getId(employeeRequest.getRequestInfo(), tenantId, employeeRequest.getEmployees().size(),
 				properties.getHrmsIdGenKey(), properties.getHrmsIdGenFormat());
 		if(null != response) {
 			for(int i = 0; i < employeeRequest.getEmployees().size(); i++) {
-				
 				employeeRequest.getEmployees().get(i).setCode(response.getIdResponses().get(i).getId());
 			}
 		}
 	}
 	
+	/**
+	 * Makes call to the idgen service to fetch ids for the employee object. Format of the id configurable.
+	 * 
+	 * @param requestInfo
+	 * @param tenantId
+	 * @param count
+	 * @param name
+	 * @param format
+	 * @return
+	 */
 	public IdGenerationResponse getId(RequestInfo requestInfo, String tenantId, Integer count, String name, String format) {
 		StringBuilder uri = new StringBuilder();
 		ObjectMapper mapper = new ObjectMapper();
@@ -54,6 +67,7 @@ public class IdGenService {
 			response = mapper.convertValue(repository.fetchResult(uri, request), IdGenerationResponse.class);
 		}catch(Exception e) {
 			log.error("Exception while generating ids: ",e);
+			log.error("Request: "+request);
 		}
 		return response;
 	}

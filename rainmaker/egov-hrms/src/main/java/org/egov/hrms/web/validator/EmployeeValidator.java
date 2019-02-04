@@ -1,6 +1,8 @@
 package org.egov.hrms.web.validator;
 
 import lombok.extern.slf4j.Slf4j;
+
+import org.apache.commons.lang3.StringUtils;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.hrms.model.*;
 import org.egov.hrms.service.EmployeeService;
@@ -35,6 +37,13 @@ public class EmployeeValidator {
 	private UserService userService;
 
 
+	/**
+	 * Validates employee request for create. Validations include:
+	 * 1. Validating MDMS codes
+	 * 2. Performing data sanity checks
+	 * 
+	 * @param request
+	 */
 	public void validateCreateEmployee(EmployeeRequest request) {
 		Map<String, String> errorMap = new HashMap<>();
 		validateExistingDuplicates(request ,errorMap);
@@ -48,12 +57,27 @@ public class EmployeeValidator {
 			throw new CustomException(errorMap);
 	}
 
+	/**
+	 * Checks if the employee being created is duplicate with the following:
+	 * 1. Validating mobile number
+	 * 2. Validating username
+	 * 
+	 * @param request
+	 * @param errorMap
+	 */
 	private void validateExistingDuplicates(EmployeeRequest request, Map<String, String> errorMap) {
 		List<Employee> employees = request.getEmployees();
         validateUserMobile(employees,errorMap,request.getRequestInfo());
         validateUserName(employees,errorMap,request.getRequestInfo());
 	}
 
+	/**
+	 * Checks if the mobile number is duplicate.
+	 * 
+	 * @param employees
+	 * @param errorMap
+	 * @param requestInfo
+	 */
     private void validateUserMobile(List<Employee> employees, Map<String, String> errorMap, RequestInfo requestInfo) {
         employees.forEach(employee -> {
             UserResponse userResponse = userService.getSingleUser(requestInfo,employee,"MobileNumber");
@@ -64,6 +88,13 @@ public class EmployeeValidator {
         });
     }
 
+    /**
+     * Checks if the username is duplicate
+     * 
+     * @param employees
+     * @param errorMap
+     * @param requestInfo
+     */
     private void validateUserName(List<Employee> employees, Map<String, String> errorMap, RequestInfo requestInfo) {
         employees.forEach(employee -> {
             if(employee.getCode()!=null){
@@ -77,6 +108,13 @@ public class EmployeeValidator {
         });
     }
 
+    /**
+     * Validates MDMS codes of the request.
+     * 
+     * @param employee
+     * @param errorMap
+     * @param mdmsData
+     */
 	private void validateMdmsData(Employee employee, Map<String, String> errorMap, Map<String, List<String>> mdmsData) {
 		validateEmployee(employee, errorMap, mdmsData);
 		validateAssignments(employee, errorMap, mdmsData);
@@ -85,6 +123,14 @@ public class EmployeeValidator {
 		//validateDepartmentalTest(employee, errorMap, mdmsData);
 	}
 	
+	/**
+	 * Performs checks for maintaining data consistency
+	 * 
+	 * @param employee
+	 * @param errorMap
+	 * @param mdmsData
+	 * @param existingEmp
+	 */
 	public void validateDataConsistency(Employee employee, Map<String, String> errorMap, Map<String, List<String>> mdmsData, Employee existingEmp) {
 
 		validateConsistencyAssignment(existingEmp,employee,errorMap);
@@ -97,7 +143,18 @@ public class EmployeeValidator {
 		validateDeactivationDetails(existingEmp,employee,errorMap);
 	}
 
-
+	/**
+	 * Checks the following:
+	 * 1. Whether the mobile number is valid
+	 * 2. Whether the roles are valid
+	 * 3. Whether the employee status mentioned is valid.
+	 * 4. Whether the employee type mentioned is valid
+	 * 5. Whether the date of appointment of the employee is valid.
+	 * 
+	 * @param employee
+	 * @param errorMap
+	 * @param mdmsData
+	 */
 	private void validateEmployee(Employee employee, Map<String, String> errorMap, Map<String, List<String>> mdmsData) {
 
 		if(employee.getUser().getMobileNumber().length() != 10)
@@ -121,6 +178,18 @@ public class EmployeeValidator {
 			errorMap.put(ErrorConstants.HRMS_INVALID_DATE_OF_APPOINTMENT_DOB_CODE, ErrorConstants.HRMS_INVALID_DATE_OF_APPOINTMENT_DOB_MSG);
 	}
 	
+	/**
+	 * Checks the following:
+	 * 1. If there is more than one current assignment.
+	 * 2. if period of assignment of any of the assignments overlap with that of others.
+	 * 3. if the Department code is valid
+	 * 4. If the Designation code is valid
+	 * 5. If the assignment dates are valid
+	 * 
+	 * @param employee
+	 * @param errorMap
+	 * @param mdmsData
+	 */
 	private void validateAssignments(Employee employee, Map<String, String> errorMap, Map<String, List<String>> mdmsData) {
 		List<Assignment> currentAssignments = employee.getAssignments().stream().filter(assignment -> assignment.getIsCurrentAssignment()).collect(Collectors.toList());
 		if(currentAssignments.size() != 1){
@@ -156,7 +225,16 @@ public class EmployeeValidator {
 		
 	}
 
-	
+	/**
+	 * Checks the follwing:
+	 * 1. If the status of service is valid.
+	 * 2. If the service period is valid.
+	 * 3. If the service dates is valid.
+	 * 
+	 * @param employee
+	 * @param errorMap
+	 * @param mdmsData
+	 */
 	private void validateServiceHistory(Employee employee, Map<String, String> errorMap, Map<String, List<String>> mdmsData) {
 		if(!CollectionUtils.isEmpty(employee.getServiceHistory())){
 			for(ServiceHistory history: employee.getServiceHistory()) {
@@ -171,6 +249,16 @@ public class EmployeeValidator {
 		}
 	}
 	
+	/**
+	 * Checks the following:
+	 * 1. If the qualification is valid.
+	 * 2. If the specialization provided is valid.
+	 * 3. If the year of passing is valid.
+	 * 
+	 * @param employee
+	 * @param errorMap
+	 * @param mdmsData
+	 */
 	private void validateEducationalDetails(Employee employee, Map<String, String> errorMap, Map<String, List<String>> mdmsData) {
 		if(!CollectionUtils.isEmpty(employee.getEducation())){
 			for(EducationalQualification education : employee.getEducation()) {
@@ -187,6 +275,15 @@ public class EmployeeValidator {
 		}
 	}
 	
+	/**
+	 * Checks the follwing:
+	 * 1. If the dept test is valid.
+	 * 2. If the year of passing is valid.
+	 * 
+	 * @param employee
+	 * @param errorMap
+	 * @param mdmsData
+	 */
 	private void validateDepartmentalTest(Employee employee, Map<String, String> errorMap, Map<String, List<String>> mdmsData) {
 		for(DepartmentalTest test: employee.getTests()) {
 			if(!mdmsData.get(HRMSConstants.HRMS_MDMS_DEPT_TEST_CODE).contains(test.getTest()))
@@ -201,7 +298,13 @@ public class EmployeeValidator {
 		
 	}
 
-
+	/**
+	 * Validates if the deactivation details are provided every time an employee is deactivated.
+	 * 
+	 * @param existingEmp
+	 * @param updatedEmployeeData
+	 * @param errorMap
+	 */
 	private void validateDeactivationDetails(Employee existingEmp, Employee updatedEmployeeData, Map<String, String> errorMap){
 		if(!CollectionUtils.isEmpty(updatedEmployeeData.getDeactivationDetails())) {
 			for (DeactivationDetails deactivationDetails : updatedEmployeeData.getDeactivationDetails()) {
@@ -213,7 +316,14 @@ public class EmployeeValidator {
 			}
 		}
 	}
-
+	
+	/**
+	 * Validates the employee request for update. Validates the following:
+	 * 1. MDMS codes in the request
+	 * 2. Performs data consistency checks.
+	 * 
+	 * @param request
+	 */
 	public void validateUpdateEmployee(EmployeeRequest request) {
 		Map<String, String> errorMap = new HashMap<>();
 		Map<String, List<String>> mdmsData = mdmsService.getMDMSData(request.getRequestInfo(), request.getEmployees().get(0).getTenantId());
@@ -234,18 +344,25 @@ public class EmployeeValidator {
 
 	}
 
+	/**
+	 * Checks if the ID, UUID and Code are present in the update request
+	 * 
+	 * @param employee
+	 * @param errorMap
+	 * @return
+	 */
 	private boolean validateEmployeeForUpdate(Employee employee, Map<String, String> errorMap) {
 		boolean isvalid = true;
-		if(employee.getId()==null){
-			errorMap.put("HRMS_UPDATE_NULL_ID", "Employee ID in update request should not be Null!");
+		if(employee.getId() == null){
+			errorMap.put(ErrorConstants.HRMS_UPDATE_NULL_ID_CODE, ErrorConstants.HRMS_UPDATE_NULL_ID_MSG);
 			isvalid=false;
 		}
-		if(employee.getCode()==null){
-			errorMap.put("HRMS_UPDATE_NULL_CODE", "Employee Code in update request should not be Null!");
+		if(StringUtils.isEmpty(employee.getCode())){
+			errorMap.put(ErrorConstants.HRMS_UPDATE_NULL_CODE_CODE, ErrorConstants.HRMS_UPDATE_NULL_CODE_MSG);
 			isvalid=false;
 		}
-		if(employee.getUuid()==null){
-			errorMap.put("HRMS_UPDATE_NULL_UUID", "Employee UUID in update request should not be Null!");
+		if(StringUtils.isEmpty(employee.getUuid())){
+			errorMap.put(ErrorConstants.HRMS_UPDATE_NULL_UUID_CODE, ErrorConstants.HRMS_UPDATE_NULL_UUID_MSG);
 			isvalid=false;
 		}
 
@@ -253,6 +370,13 @@ public class EmployeeValidator {
 
 	}
 
+	/**
+	 * Juridictions once created in the system cannot be deleted, they can however be changed. Validates that condition
+	 * 
+	 * @param existingEmp
+	 * @param updatedEmployeeData
+	 * @param errorMap
+	 */
 	private void validateConsistencyJurisdiction(Employee existingEmp, Employee updatedEmployeeData, Map<String, String> errorMap) {
 		boolean check =
 				updatedEmployeeData.getJurisdictions().stream()
@@ -266,7 +390,14 @@ public class EmployeeValidator {
 		}
 
 	}
-
+	
+	/**
+	 * Assignments once created in the system cannot be deleted, they can however be changed. Validates that condition
+	 * 
+	 * @param existingEmp
+	 * @param updatedEmployeeData
+	 * @param errorMap
+	 */
 	private void validateConsistencyAssignment(Employee existingEmp, Employee updatedEmployeeData, Map<String, String> errorMap) {
 		boolean check =
 				updatedEmployeeData.getAssignments().stream()
@@ -280,6 +411,12 @@ public class EmployeeValidator {
 		}
 	}
 
+	/**
+	 * Dept Test details once created in the system cannot be deleted, they can however be changed. Validates that condition
+	 * @param existingEmp
+	 * @param updatedEmployeeData
+	 * @param errorMap
+	 */
 	private void validateConsistencyDepartmentalTest(Employee existingEmp, Employee updatedEmployeeData, Map<String, String> errorMap){
 		if(!CollectionUtils.isEmpty(updatedEmployeeData.getTests())){
 			boolean check =
@@ -296,6 +433,13 @@ public class EmployeeValidator {
 
 	}
 
+	/**
+	 * Education Details once created in the system cannot be deleted, they can however be changed. Validates that condition
+	 * 
+	 * @param existingEmp
+	 * @param updatedEmployeeData
+	 * @param errorMap
+	 */
 	private void validateConsistencyEducationalDetails(Employee existingEmp, Employee updatedEmployeeData, Map<String, String> errorMap){
 		if(!CollectionUtils.isEmpty(updatedEmployeeData.getEducation())){
 			boolean check =
@@ -311,6 +455,13 @@ public class EmployeeValidator {
 		}
 	}
 
+	/**
+	 * Service History once created in the system cannot be deleted, they can however be changed. Validates that condition
+	 * 
+	 * @param existingEmp
+	 * @param updatedEmployeeData
+	 * @param errorMap
+	 */
 	private void validateConsistencyServiceHistory(Employee existingEmp, Employee updatedEmployeeData, Map<String, String> errorMap){
 		if(!CollectionUtils.isEmpty(updatedEmployeeData.getServiceHistory())){
 			boolean check =
@@ -328,6 +479,13 @@ public class EmployeeValidator {
 
 	}
 
+	/**
+	 * Documents once created in the system cannot be deleted, they can however be changed. Validates that condition
+	 * 
+	 * @param existingEmp
+	 * @param updatedEmployeeData
+	 * @param errorMap
+	 */
 	private void validateConsistencyEmployeeDocument(Employee existingEmp, Employee updatedEmployeeData, Map<String, String> errorMap){
 		if(!CollectionUtils.isEmpty(updatedEmployeeData.getDocuments())){
 			boolean check =
@@ -344,6 +502,13 @@ public class EmployeeValidator {
 
 	}
 
+	/**
+	 * Deactivation Details once created in the system cannot be deleted, they can however be changed. Validates that condition
+	 * 
+	 * @param existingEmp
+	 * @param updatedEmployeeData
+	 * @param errorMap
+	 */
 	private void validateConsistencyDeactivationDetails(Employee existingEmp, Employee updatedEmployeeData, Map<String, String> errorMap){
 		if(!CollectionUtils.isEmpty(updatedEmployeeData.getDeactivationDetails())){
 			boolean check =

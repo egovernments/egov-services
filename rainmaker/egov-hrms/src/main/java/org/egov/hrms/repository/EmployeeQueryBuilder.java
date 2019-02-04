@@ -14,12 +14,24 @@ public class EmployeeQueryBuilder {
 	@Value("${egov.hrms.default.pagination.limit}")
 	private Integer defaultLimit;
 	
+	/**
+	 * Returns query for searching employees
+	 * 
+	 * @param criteria
+	 * @return
+	 */
 	public String getEmployeeSearchQuery(EmployeeSearchCriteria criteria) {
 		StringBuilder builder = new StringBuilder(EmployeeQueries.HRMS_GET_EMPLOYEES);
 		addWhereClause(criteria, builder);
 		return paginationClause(criteria, builder);
 	}
 	
+	/**
+	 * Adds where clause to the query based on the requirement.
+	 * 
+	 * @param criteria
+	 * @param builder
+	 */
 	public void addWhereClause(EmployeeSearchCriteria criteria, StringBuilder builder) {
 		if(!StringUtils.isEmpty(criteria.getTenantId()))
 			builder.append(" employee.tenantid = '"+criteria.getTenantId()+"'");

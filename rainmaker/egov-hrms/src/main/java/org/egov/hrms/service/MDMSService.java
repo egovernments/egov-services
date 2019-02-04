@@ -35,6 +35,13 @@ public class MDMSService {
 	private String mdmsEndpoint;
 	
 	
+	/**
+	 * Builds cache for MDMS data, this gets refreshed for every call.
+	 * 
+	 * @param requestInfo
+	 * @param tenantId
+	 * @return
+	 */
 	public Map<String, List<String>> getMDMSData(RequestInfo requestInfo, String tenantId){
 		MdmsResponse response = fetchMDMSData(requestInfo, tenantId);
 		Map<String, List<String>> masterData = new HashMap<>();
@@ -64,6 +71,13 @@ public class MDMSService {
 	}
 	
 	
+	/**
+	 * Makes call to the MDMS service to fetch the MDMS data.
+	 * 
+	 * @param requestInfo
+	 * @param tenantId
+	 * @return
+	 */
 	public MdmsResponse fetchMDMSData(RequestInfo requestInfo, String tenantId) {
 		StringBuilder uri = new StringBuilder();
 		MdmsCriteriaReq request = prepareMDMSRequest(uri, requestInfo, tenantId);
@@ -77,6 +91,14 @@ public class MDMSService {
 		return response;
 	}
 	
+	/**
+	 * Prepares request for MDMS in order to fetch all the required masters for HRMS.
+	 * 
+	 * @param uri
+	 * @param requestInfo
+	 * @param tenantId
+	 * @return
+	 */
 	public MdmsCriteriaReq prepareMDMSRequest(StringBuilder uri, RequestInfo requestInfo, String tenantId) {
 		Map<String, List<String>> mapOfModulesAndMasters = new HashMap<>();
 		String[] hrMasters = {HRMSConstants.HRMS_MDMS_EMP_STATUS_CODE, HRMSConstants.HRMS_MDMS_EMP_TYPE_CODE, HRMSConstants.HRMS_MDMS_QUALIFICATION_CODE,

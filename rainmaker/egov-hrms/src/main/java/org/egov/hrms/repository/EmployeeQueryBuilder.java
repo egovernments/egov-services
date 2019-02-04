@@ -26,6 +26,10 @@ public class EmployeeQueryBuilder {
 		return paginationClause(criteria, builder);
 	}
 	
+	public String getPositionSeqQuery() {
+		return EmployeeQueries.HRMS_POSITION_SEQ;
+	}
+	
 	/**
 	 * Adds where clause to the query based on the requirement.
 	 * 

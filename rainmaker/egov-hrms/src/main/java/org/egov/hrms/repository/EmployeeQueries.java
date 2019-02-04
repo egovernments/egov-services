@@ -42,4 +42,6 @@ public class EmployeeQueries {
 	public static final String HRMS_PAGINATION_WRAPPER = "SELECT * FROM "
 			+ "(SELECT *, DENSE_RANK() OVER (ORDER BY employee_uuid) offset_ FROM " + "({})" + " result) result_offset "
 			+ "WHERE offset_ > $offset AND offset_ <= $limit";
+	
+	public static final String HRMS_POSITION_SEQ = "SELECT NEXTVAL('EG_HRMS_POSITION')";
 }

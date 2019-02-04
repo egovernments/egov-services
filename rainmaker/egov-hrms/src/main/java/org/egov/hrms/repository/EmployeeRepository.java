@@ -44,5 +44,22 @@ public class EmployeeRepository {
 		}
 		return employees;
 	}
+	
+	/**
+	 * Fetches next value in the position seq table
+	 * 
+	 * @return
+	 */
+	public Long fetchPosition(){
+		String query = queryBuilder.getPositionSeqQuery();
+		Long id = null;
+		try {
+			id = jdbcTemplate.queryForObject(query, Long.class);
+		}catch(Exception e) {
+			log.error("Exception while making the db call: ",e);
+			log.error("query; "+query);
+		}
+		return id;
+	}
 
 }

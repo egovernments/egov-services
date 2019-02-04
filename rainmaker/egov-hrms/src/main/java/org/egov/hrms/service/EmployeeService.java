@@ -208,6 +208,7 @@ public class EmployeeService {
 		employee.getAssignments().stream().forEach(assignment -> {
 			assignment.setId(UUID.randomUUID().toString());
 			assignment.setAuditDetails(auditDetails);
+			assignment.setPosition(getPosition());
 		});
 		if(!CollectionUtils.isEmpty(employee.getServiceHistory())) {
 			employee.getServiceHistory().stream().forEach(serviceHistory -> {
@@ -233,9 +234,16 @@ public class EmployeeService {
 				document.setAuditDetails(auditDetails);
 			});
 		}
-
 		employee.setAuditDetails(auditDetails);
 		employee.setActive(true);
+	}
+	
+	/**
+	 * Fetches next value from the position sequence table
+	 * @return
+	 */
+	public Long getPosition() {
+		return repository.fetchPosition();
 	}
 
 	/**

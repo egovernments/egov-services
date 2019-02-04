@@ -308,7 +308,7 @@ public class EmployeeValidator {
 		if(!CollectionUtils.isEmpty(updatedEmployeeData.getDeactivationDetails())) {
 			for (DeactivationDetails deactivationDetails : updatedEmployeeData.getDeactivationDetails()) {
 				if (deactivationDetails.getId()==null){
-					if(updatedEmployeeData.isActive()){
+					if(updatedEmployeeData.getIsActive()){
 						errorMap.put(ErrorConstants.HRMS_INVALID_DEACT_REQUEST_CODE, ErrorConstants.HRMS_INVALID_DEACT_REQUEST_MSG);
 					}
 				}

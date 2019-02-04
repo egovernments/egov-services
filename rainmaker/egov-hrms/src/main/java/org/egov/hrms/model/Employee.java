@@ -90,7 +90,7 @@ public class Employee {
     private List<ServiceHistory> serviceHistory = new ArrayList<>();
 
 
-    private boolean active;
+    private Boolean IsActive;
 
     @Valid
     @Size(max=25)

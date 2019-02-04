@@ -31,7 +31,7 @@ serviceMaps:
 
       - jsonPath: $.Employees.*.employeeType
 
-      - jsonPath: $.Employees.*.active
+      - jsonPath: $.Employees.*.IsActive
 
       - jsonPath: $.Employees.*.auditDetails.createdBy
 
@@ -269,7 +269,7 @@ serviceMaps:
 
       - jsonPath: $.Employees.*.employeeType
 
-      - jsonPath: $.Employees.*.active
+      - jsonPath: $.Employees.*.IsActive
 
       - jsonPath: $.Employees.*.auditDetails.createdBy
 
@@ -468,7 +468,7 @@ serviceMaps:
 
 
 
-    - query: INSERT INTO eg_hrms_deactivationdetails(uuid, employeeid, reasonfordeactivation, effectivefrom, ordernumber, typeOfDeactivation, tenantid, createdby, createddate, lastmodifiedby, lastModifiedDate) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+    - query: INSERT INTO eg_hrms_deactivationdetails(uuid, employeeid, reasonfordeactivation, effectivefrom, ordernumber, remarks, tenantid, createdby, createddate, lastmodifiedby, lastModifiedDate) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
 
       basePath: Employees.*.deactivationDetails.*
       jsonMaps:
@@ -483,7 +483,7 @@ serviceMaps:
 
       - jsonPath: $.Employees.*.deactivationDetails.*.orderNo
 
-      - jsonPath: $.Employees.*.deactivationDetails.*.typeOfDeactivation
+      - jsonPath: $.Employees.*.deactivationDetails.*.remarks
 
       - jsonPath: $.Employees[*][?({id} in @.deactivationDetails[*].id)].tenantId
 

@@ -235,7 +235,7 @@ public class EmployeeService {
 			});
 		}
 		employee.setAuditDetails(auditDetails);
-		employee.setActive(true);
+		employee.setIsActive(true);
 	}
 	
 	/**
@@ -304,7 +304,7 @@ public class EmployeeService {
 		Employee existingEmpData = existingEmployeesData.stream().filter(existingEmployee -> existingEmployee.getUuid().equals(employee.getUuid())).findFirst().get();
 
 		employee.getUser().setUserName(employee.getCode());
-		if(!employee.isActive())
+		if(!employee.getIsActive())
 			employee.getUser().setActive(false);
 		else
 			employee.getUser().setActive(true);

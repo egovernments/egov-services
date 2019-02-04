@@ -191,7 +191,11 @@ public class EmployeeValidator {
 	 * @param mdmsData
 	 */
 	private void validateAssignments(Employee employee, Map<String, String> errorMap, Map<String, List<String>> mdmsData) {
+<<<<<<< Updated upstream
 		List<Assignment> currentAssignments = employee.getAssignments().stream().filter(assignment -> assignment.getIsCurrentAssignment()).collect(Collectors.toList());
+=======
+		List<Assignment> currentAssignments = employee.getAssignments().stream().filter(assignment -> assignment.isCurrentAssignment()).collect(Collectors.toList());
+>>>>>>> Stashed changes
 		if(currentAssignments.size() != 1){
 			errorMap.put(ErrorConstants.HRMS_INVALID_CURRENT_ASSGN_CODE, ErrorConstants.HRMS_INVALID_CURRENT_ASSGN_MSG);
 		}

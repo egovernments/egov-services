@@ -275,7 +275,7 @@ public class EmployeeRowMapper implements ResultSetExtractor<List<Employee>> {
 							.lastModifiedBy(rs.getString("deact_lastmodifiedby")).lastModifiedDate(rs.getLong("deact_lastmodifieddate")).build();
 
 					DeactivationDetails deactDetail = DeactivationDetails.builder().id(rs.getString("deact_uuid")).reasonForDeactivation(rs.getString("deact_reasonfordeactivation"))
-							.effectiveFrom(rs.getLong("deact_effectivefrom")).orderNo(rs.getString("deact_ordernumber")).typeOfDeactivation(rs.getString("deact_typeofdeactivation")!= null ? DeactivationType.valueOf(rs.getString("deact_typeofdeactivation")) : null)
+							.effectiveFrom(rs.getLong("deact_effectivefrom")).orderNo(rs.getString("deact_ordernumber")).remarks(rs.getString("deact_remarks")!= null ? (rs.getString("deact_remarks")) : null)
 							.tenantId(rs.getString("deact_tenantid")).auditDetails(auditDetails).build();
 
 					deactDetails.add(deactDetail);

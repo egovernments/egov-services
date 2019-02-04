@@ -20,10 +20,10 @@ public class DeactivationDetails {
 	
 	private String orderNo;
 
+	private String remarks;
+
 	private Long effectiveFrom;
 
-	private DeactivationType typeOfDeactivation;
-	
 	private String tenantId;
 
 	private AuditDetails auditDetails;

@@ -32,7 +32,7 @@ public class EmployeeQueries {
 			+ "history.tenantid as history_tenantid, history.createdby as history_createdby, history.createddate as history_createddate, "
 			+ "history.lastmodifiedby as history_lastmodifiedby, history.lastmodifieddate as history_lastmodifieddate, deact.uuid as deact_uuid, "
 			+ "deact.reasonfordeactivation as deact_reasonfordeactivation, deact.effectivefrom as deact_effectivefrom, deact.ordernumber as deact_ordernumber, "
-			+ "deact.typeofdeactivation as deact_typeofdeactivation, deact.tenantid as deact_tenantid, deact.createdby as deact_createdby, "
+			+ "deact.remarks as deact_remarks, deact.tenantid as deact_tenantid, deact.createdby as deact_createdby, "
 			+ "deact.createddate as deact_createddate, deact.lastmodifiedby as deact_lastmodifiedby, deact.lastmodifieddate as deact_lastmodifieddate "
 			+ "FROM eg_hrms_employee employee LEFT JOIN eg_hrms_assignment assignment ON employee.uuid = assignment.employeeid LEFT JOIN eg_hrms_educationaldetails education "
 			+ "ON employee.uuid = education.employeeid LEFT JOIN eg_hrms_departmentaltests depttest ON employee.uuid = depttest.employeeid LEFT JOIN eg_hrms_empdocuments docs "

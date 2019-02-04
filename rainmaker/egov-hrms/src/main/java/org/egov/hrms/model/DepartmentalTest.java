@@ -59,7 +59,7 @@ public class DepartmentalTest {
 	private String test;
 
 	@NotNull
-	private Integer yearOfPassing;
+	private Long yearOfPassing;
 
 	private String remarks;
 	

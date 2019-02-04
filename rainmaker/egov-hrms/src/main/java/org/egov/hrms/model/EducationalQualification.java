@@ -61,7 +61,7 @@ public class EducationalQualification {
 	private String stream;
 
 	@NotNull
-	private Integer yearOfPassing;
+	private Long yearOfPassing;
 
 	private String university;
 

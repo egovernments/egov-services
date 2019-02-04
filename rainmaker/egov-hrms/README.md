@@ -34,7 +34,7 @@ a) Assignments: Every employee is assigned a list of assignments, every assignme
    Constraints:
    1. For a given period of time an employee shouldn't have more than one assignments.
    2. The department and designation part of the employee must be configured in the system.
-   3. Details of assignment once entered in the system cannot be changed. Any alteration to the information will have to come as part of a new assignment only.
+   3. Details of assignment once entered in the system cannot be deleted.
    4. An employee cannot have more than one 2 active assignments.
 
 b) Jurisdictions: A jurisdiction is a area of power for any employee. It can be a zone, ward, block, city, state or the country. Currently a jurisdiction is defined as combination of Hierarchy type, Boundary Type and the actual Boundary. However, in the current system we are not validating these jurisdictions. This is being collected only for the sake of data.

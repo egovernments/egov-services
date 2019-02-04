@@ -95,8 +95,8 @@ public class EmployeeRowMapper implements ResultSetExtractor<List<Employee>> {
 				.isCurrentAssignment(rs.getBoolean("assignment_iscurrentassignment")).tenantid(rs.getString("assignment_tenantid")).auditDetails(auditDetails).build();
 				
 				assignments.add(assignment);
-				currentEmployee.setAssignments(assignments);
 			}
+			currentEmployee.setAssignments(assignments);
 		}catch(Exception e) {
 			log.error("Error in row mapper while mapping Assignments: ",e);
 		}
@@ -126,8 +126,8 @@ public class EmployeeRowMapper implements ResultSetExtractor<List<Employee>> {
 						.tenantId(rs.getString("jurisdiction_tenantid")).auditDetails(auditDetails).build();
 				
 				jurisdictions.add(jurisdiction);
-				currentEmployee.setJurisdictions(jurisdictions);
 			}
+			currentEmployee.setJurisdictions(jurisdictions);
 		}catch(Exception e) {
 			log.error("Error in row mapper while mapping Jurisdictions: ",e);
 		}
@@ -155,8 +155,8 @@ public class EmployeeRowMapper implements ResultSetExtractor<List<Employee>> {
 						.tenantId(rs.getString("education_tenantid")).auditDetails(auditDetails).build();
 				
 				educationDetails.add(education);
-				currentEmployee.setEducation(educationDetails);
 			}
+			currentEmployee.setEducation(educationDetails);
 		}catch(Exception e) {
 			log.error("Error in row mapper while mapping Educational Details: ",e);
 		}
@@ -185,8 +185,8 @@ public class EmployeeRowMapper implements ResultSetExtractor<List<Employee>> {
 						.remarks(rs.getString("depttest_remarks")).tenantId(rs.getString("depttest_tenantid")).auditDetails(auditDetails).build();
 				
 				tests.add(test);
-				currentEmployee.setTests(tests);
 			}
+			currentEmployee.setTests(tests);
 		}catch(Exception e) {
 			log.error("Error in row mapper while mapping Departmental Tests: ",e);
 		}
@@ -216,8 +216,8 @@ public class EmployeeRowMapper implements ResultSetExtractor<List<Employee>> {
 						.location(rs.getString("history_location")).tenantId(rs.getString("history_tenantid")).auditDetails(auditDetails).build();
 				
 				history.add(service);
-				currentEmployee.setServiceHistory(history);
 			}
+			currentEmployee.setServiceHistory(history);
 		}catch(Exception e) {
 			log.error("Error in row mapper while mapping Service History: ",e);
 		}
@@ -247,8 +247,8 @@ public class EmployeeRowMapper implements ResultSetExtractor<List<Employee>> {
 						.referenceId(rs.getString("docs_referenceid")).tenantId(rs.getString("docs_tenantid")).auditDetails(auditDetails).build();
 				
 				documents.add(document);
-				currentEmployee.setDocuments(documents);
 			}
+			currentEmployee.setDocuments(documents);
 		}catch(Exception e) {
 			log.error("Error in row mapper while mapping Service History: ",e);
 		}

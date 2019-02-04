@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 import org.egov.tl.web.models.calculation.Calculation;
 import org.springframework.validation.annotation.Validated;
@@ -32,10 +33,12 @@ import lombok.Setter;
 @NoArgsConstructor
 @Builder
 public class  TradeLicense   {
+        @Size(max=64)
         @JsonProperty("id")
         private String id = null;
 
         @NotNull
+        @Size(max=64)
         @JsonProperty("tenantId")
         private String tenantId = null;
 
@@ -73,24 +76,32 @@ public class  TradeLicense   {
         @JsonProperty("licenseType")
         private LicenseTypeEnum licenseType = null;
 
+        @Size(max=64)
         @JsonProperty("licenseNumber")
         private String licenseNumber = null;
 
+        @Size(max=64)
         @JsonProperty("applicationNumber")
         private String applicationNumber;
 
+        @Size(max=64)
         @JsonProperty("oldLicenseNumber")
         private String oldLicenseNumber = null;
 
+
+        @Size(max=256)
         @JsonProperty("propertyId")
         private String propertyId = null;
 
+        @Size(max=64)
         @JsonProperty("oldPropertyId")
         private String oldPropertyId = null;
 
+        @Size(max=64)
         @JsonProperty("accountId")
         private String accountId = null;
 
+        @Size(max=256)
         @JsonProperty("tradeName")
         private String tradeName = null;
 
@@ -104,6 +115,7 @@ public class  TradeLicense   {
         private Long issuedDate = null;
 
         @NotNull
+        @Size(max=64)
         @JsonProperty("financialYear")
         private String financialYear = null;
 

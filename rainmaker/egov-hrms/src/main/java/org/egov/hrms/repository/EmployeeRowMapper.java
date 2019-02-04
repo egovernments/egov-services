@@ -124,7 +124,7 @@ public class EmployeeRowMapper implements ResultSetExtractor<List<Employee>> {
 				AuditDetails auditDetails = AuditDetails.builder().createdBy(rs.getString("education_createdby")).createdDate(rs.getLong("education_createddate"))
 						.lastModifiedBy(rs.getString("education_lastmodifiedby")).lastModifiedDate(rs.getLong("education_lastmodifieddate")).build();
 				EducationalQualification education = EducationalQualification.builder().id(rs.getString("education_uuid")).qualification(rs.getString("education_qualification")).stream(rs.getString("education_stream"))
-						.yearOfPassing(rs.getInt("education_yearofpassing")).university(rs.getString("education_university")).remarks(rs.getString("education_remarks"))
+						.yearOfPassing(rs.getLong("education_yearofpassing")).university(rs.getString("education_university")).remarks(rs.getString("education_remarks"))
 						.tenantId(rs.getString("education_tenantid")).auditDetails(auditDetails).build();
 				
 				educationDetails.add(education);
@@ -148,7 +148,7 @@ public class EmployeeRowMapper implements ResultSetExtractor<List<Employee>> {
 				AuditDetails auditDetails = AuditDetails.builder().createdBy(rs.getString("depttest_createdby")).createdDate(rs.getLong("depttest_createddate"))
 						.lastModifiedBy(rs.getString("depttest_lastmodifiedby")).lastModifiedDate(rs.getLong("depttest_lastmodifieddate")).build();
 				
-				DepartmentalTest test = DepartmentalTest.builder().id(rs.getString("depttest_uuid")).test(rs.getString("depttest_test")).yearOfPassing(rs.getInt("depttest_yearofpassing"))
+				DepartmentalTest test = DepartmentalTest.builder().id(rs.getString("depttest_uuid")).test(rs.getString("depttest_test")).yearOfPassing(rs.getLong("depttest_yearofpassing"))
 						.remarks(rs.getString("depttest_remarks")).tenantId(rs.getString("depttest_tenantid")).auditDetails(auditDetails).build();
 				
 				tests.add(test);

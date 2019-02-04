@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Size;
 
 import org.springframework.validation.annotation.Validated;
 
@@ -33,21 +34,28 @@ import lombok.ToString;
 @ToString
 @EqualsAndHashCode(of = {"tenantId","currentState","action"})
 public class Action   {
+
+        @Size(max=256)
         @JsonProperty("uuid")
         private String uuid;
 
+        @Size(max=256)
         @JsonProperty("tenantId")
         private String tenantId;
 
+        @Size(max=256)
         @JsonProperty("currentState")
         private String currentState;
 
+        @Size(max=256)
         @JsonProperty("action")
         private String action;
 
+        @Size(max=256)
         @JsonProperty("nextState")
         private String nextState;
 
+        @Size(max=1024)
         @JsonProperty("roles")
         @Valid
         private List<String> roles;

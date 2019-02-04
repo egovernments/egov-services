@@ -280,8 +280,9 @@ public class EmployeeRowMapper implements ResultSetExtractor<List<Employee>> {
 
 					deactDetails.add(deactDetail);
 				}
-				currentEmployee.setDeactivationDetails(deactDetails);
 			}
+			currentEmployee.setDeactivationDetails(deactDetails);
+
 		}catch(Exception e) {
 			log.error("Error in row mapper while mapping Service History: ",e);
 		}

@@ -53,6 +53,7 @@ public class UserRequest {
 	private String otpReference;
 	private Long lastModifiedBy;
 	private String tenantId;
+
 	private Set<RoleRequest> roles;
 	
 	private String uuid;

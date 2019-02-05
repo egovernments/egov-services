@@ -270,7 +270,7 @@ public class UserService {
         user.validateUserModification();
         user.setPassword(encryptPwd(user.getPassword()));
         userRepository.update(user, existingUser);
-        return getUserByUuid(user.getUuid());
+        return user;
     }
 
     /**

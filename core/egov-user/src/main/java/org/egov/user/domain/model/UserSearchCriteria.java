@@ -21,8 +21,6 @@ public class UserSearchCriteria {
     private String userName;
     private String name;
     private String mobileNumber;
-    private String aadhaarNumber;
-    private String pan;
     private String emailId;
     private boolean fuzzyLogic;
     private Boolean active;
@@ -34,8 +32,17 @@ public class UserSearchCriteria {
     private List<String> roleCodes;
 
     public void validate() {
-        if (CollectionUtils.isEmpty(uuid) && CollectionUtils.isEmpty(id) && isEmpty(tenantId)) {
+        if (validateIfEmptySearch() || validateIfTenantIdExists()) {
             throw new InvalidUserSearchCriteriaException(this);
         }
+    }
+
+    private boolean validateIfEmptySearch(){
+        return isEmpty(userName) && isEmpty(name) && isEmpty(mobileNumber) && isEmpty(emailId) &&
+                CollectionUtils.isEmpty(uuid) && CollectionUtils.isEmpty(id);
+    }
+
+    private boolean validateIfTenantIdExists(){
+        return (!isEmpty(userName) || !isEmpty(name) || !isEmpty(mobileNumber)) && isEmpty(tenantId);
     }
 }

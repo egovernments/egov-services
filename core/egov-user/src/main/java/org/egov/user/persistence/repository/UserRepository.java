@@ -1,12 +1,15 @@
 package org.egov.user.persistence.repository;
 
 import lombok.extern.slf4j.Slf4j;
-import org.egov.user.domain.exception.InvalidRoleCodeException;
+import org.egov.tracer.model.CustomException;
 import org.egov.user.domain.model.Address;
 import org.egov.user.domain.model.Role;
 import org.egov.user.domain.model.User;
 import org.egov.user.domain.model.UserSearchCriteria;
-import org.egov.user.domain.model.enums.*;
+import org.egov.user.domain.model.enums.BloodGroup;
+import org.egov.user.domain.model.enums.Gender;
+import org.egov.user.domain.model.enums.GuardianRelation;
+import org.egov.user.domain.model.enums.UserType;
 import org.egov.user.repository.builder.RoleQueryBuilder;
 import org.egov.user.repository.builder.UserTypeQueryBuilder;
 import org.egov.user.repository.rowmapper.UserResultSetExtractor;
@@ -18,7 +21,6 @@ import org.springframework.stereotype.Repository;
 import org.springframework.util.CollectionUtils;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static java.util.Objects.isNull;
 import static org.egov.user.repository.builder.UserTypeQueryBuilder.SELECT_NEXT_SEQUENCE_USER;
@@ -60,48 +62,94 @@ public class UserRepository {
         String queryStr = userTypeQueryBuilder.getQuery(userSearch, preparedStatementValues);
         log.debug(queryStr);
 
-        return jdbcTemplate.query(queryStr, preparedStatementValues.toArray(), userResultSetExtractor);
+        List<User> users = jdbcTemplate.query(queryStr, preparedStatementValues.toArray(), userResultSetExtractor);
+        enrichRoles(users);
+
+        return users;
     }
 
 
-    /**
-     * Get the list of roles by user role code.
-     *
-     * @param user
-     * @return
-     */
-    private Set<Role> fetchRolesByCode(User user) {
-        return user.getRoles().stream().map((role) -> fetchRole(user, role)).collect(Collectors.toSet());
+	/**
+	 * Fetch roles by role codes
+	 *
+	 * @param roleCodes role code for which roles need to be retrieved
+	 * @param tenantId tenant id of the roles
+	 * @return enriched roles
+	 */
+    private Set<Role> fetchRolesByCode(Set<String> roleCodes, String tenantId) {
+
+
+    	Set<Role> validatedRoles = roleRepository.findRolesByCode(roleCodes, tenantId);
+
+    	return validatedRoles;
     }
 
-    /**
-     * Get the role based on user role code and tenantId.
-     *
-     * @param user
-     * @param role
-     * @return
-     */
-    private Role fetchRole(User user, Role role) {
-        //Backward compatibility
-        final Role enrichedRole = roleRepository.findByTenantIdAndCode(
-        		!isNull(role.getTenantId()) ? role.getTenantId() : user.getTenantId(),
-				role.getCode());
-        if (enrichedRole == null) {
-            throw new InvalidRoleCodeException(role.getCode());
-        }
-        return enrichedRole;
-    }
+    private void validateAndEnrichRoles(List<User> users){
 
-    /**
-     * api will get the roles by user role codes and roles set it back to user
-     * object.
-     *
-     * @param user
-     */
-    private void setEnrichedRolesToUser(User user) {
-        user.setRoles(fetchRolesByCode(user));
-    }
+		if(users.isEmpty())
+			return;
 
+		Map<String, Role> roleCodeMap = fetchRolesFromMdms(users);
+
+		for (User user : users) {
+			if(!isNull(user.getRoles())) {
+				for (Role role : user.getRoles()) {
+					if (roleCodeMap.containsKey(role.getCode())) {
+						role.setDescription(roleCodeMap.get(role.getCode()).getDescription());
+						role.setName(roleCodeMap.get(role.getCode()).getName());
+						if (isNull(role.getTenantId()))
+							role.setTenantId(user.getTenantId());
+					} else {
+						log.error("Role : {} is invalid", role);
+						throw new CustomException("INVALID_ROLE", "Unable to validate role from MDMS");
+					}
+				}
+			}
+		}
+	}
+
+	private void enrichRoles(List<User> users){
+
+		if(users.isEmpty())
+			return;
+
+		Map<String, Role> roleCodeMap = fetchRolesFromMdms(users);
+
+		for (User user : users) {
+			if(!isNull(user.getRoles())) {
+				for (Role role : user.getRoles()) {
+					if (roleCodeMap.containsKey(role.getCode())) {
+						role.setDescription(roleCodeMap.get(role.getCode()).getDescription());
+						role.setName(roleCodeMap.get(role.getCode()).getName());
+					}
+				}
+			}
+		}
+	}
+
+	private Map<String, Role> fetchRolesFromMdms(List<User> users) {
+
+		Set<String> roleCodes = new HashSet<>();
+
+		for(User user : users){
+			if( ! isNull(user.getRoles()) && ! user.getRoles().isEmpty()) {
+				for (Role role : user.getRoles())
+					roleCodes.add(role.getCode());
+			}
+		}
+
+		if(roleCodes.isEmpty())
+			return Collections.emptyMap();
+
+			Set<Role> validatedRoles = fetchRolesByCode(roleCodes, getStateLevelTenant(users.get(0).getTenantId()));
+
+			Map<String, Role> roleCodeMap = new HashMap<>();
+
+			for (Role validatedRole : validatedRoles)
+				roleCodeMap.put(validatedRole.getCode(), validatedRole);
+
+			return roleCodeMap;
+	}
 
 
     /**
@@ -132,7 +180,7 @@ public class UserRepository {
 	 * @return
 	 */
 	public User create(User user) {
-		setEnrichedRolesToUser(user);
+		validateAndEnrichRoles(Collections.singletonList(user));
 		final Long newId = getNextSequence();
 		user.setId(newId);
 	        user.setUuid(UUID.randomUUID().toString());
@@ -163,9 +211,12 @@ public class UserRepository {
 
 		for (Role role : entityUser.getRoles()) {
 			batchValues.add(
-					new MapSqlParameterSource("roleid", role.getId()).addValue("roleidtenantid", role.getTenantId())
-							.addValue("userid", entityUser.getId()).addValue("tenantid", entityUser.getTenantId())
-							.addValue("lastmodifieddate", new Date()).getValues());
+					new MapSqlParameterSource("role_code", role.getCode())
+							.addValue("role_tenantid", role.getTenantId())
+							.addValue("user_id", entityUser.getId())
+							.addValue("user_tenantid", entityUser.getTenantId())
+							.addValue("lastmodifieddate", new Date())
+							.getValues());
 		}
 		namedParameterJdbcTemplate.batchUpdate(RoleQueryBuilder.INSERT_USER_ROLES,
 				batchValues.toArray(new Map[entityUser.getRoles().size()]));
@@ -431,8 +482,8 @@ public class UserRepository {
 		updateuserInputs.put("LastModifiedBy", 1);
 
 		namedParameterJdbcTemplate.update(userTypeQueryBuilder.getUpdateUserQuery(), updateuserInputs);
-		if (user.getRoles() != null && !CollectionUtils.isEmpty(user.getRoles())) {
-			setEnrichedRolesToUser(user);
+		if (user.getRoles() != null && !CollectionUtils.isEmpty(user.getRoles()) && !oldUser.getRoles().equals(user.getRoles())) {
+			validateAndEnrichRoles(Collections.singletonList(user));
 			updateRoles(user);
 		}
 		if (user.getPermanentAndCorrespondenceAddresses() != null) {
@@ -447,10 +498,14 @@ public class UserRepository {
 	 */
 	private void updateRoles(User user) {
 		Map<String, Object> roleInputs = new HashMap<String, Object>();
-		roleInputs.put("userId", user.getId());
-		roleInputs.put("tenantId", user.getTenantId());
+		roleInputs.put("user_id", user.getId());
+		roleInputs.put("user_tenantid", user.getTenantId());
 		namedParameterJdbcTemplate.update(RoleQueryBuilder.DELETE_USER_ROLES, roleInputs);
 		saveUserRoles(user);
+	}
+
+	private String getStateLevelTenant(String tenantId){
+		return tenantId.split("\\.")[0];
 	}
 
 }

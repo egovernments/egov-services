@@ -264,8 +264,8 @@ public class UserControllerTest {
 				.userName("userName")
 				.name("name")
 				.mobileNumber("mobileNumber")
-				.aadhaarNumber("aadhaarNumber")
-				.pan("pan")
+//				.aadhaarNumber("aadhaarNumber")
+//				.pan("pan")
 				.emailId("emailId")
 				.fuzzyLogic(true)
 				.active(true)
@@ -343,7 +343,6 @@ public class UserControllerTest {
 		calendar.set(1990, Calendar.JULY, 1, 16, 41, 11);
 
 		org.egov.user.domain.model.Role role1 = org.egov.user.domain.model.Role.builder()
-				.id(1L)
 				.name("name of the role 1")
 				.code("roleCode")
 				.description("description")
@@ -379,8 +378,8 @@ public class UserControllerTest {
 					userSearch.getUserName().equals(expectedUserSearch.getUserName()) &&
 					userSearch.getName().equals(expectedUserSearch.getName()) &&
 					userSearch.getMobileNumber().equals(expectedUserSearch.getMobileNumber()) &&
-					userSearch.getAadhaarNumber().equals(expectedUserSearch.getAadhaarNumber()) &&
-					userSearch.getPan().equals(expectedUserSearch.getPan()) &&
+//					userSearch.getAadhaarNumber().equals(expectedUserSearch.getAadhaarNumber()) &&
+//					userSearch.getPan().equals(expectedUserSearch.getPan()) &&
 					userSearch.getEmailId().equals(expectedUserSearch.getEmailId()) &&
 					userSearch.isFuzzyLogic() == expectedUserSearch.isFuzzyLogic() &&
 					userSearch.getActive() == expectedUserSearch.getActive() &&
@@ -425,7 +424,6 @@ public class UserControllerTest {
 	private Set<Role> getRoles() {
 		Set<Role> roles = new HashSet<>();
 		org.egov.user.domain.model.Role roleModel = org.egov.user.domain.model.Role.builder()
-				.id(15L)
 				.name("Employee")
 				.build();
 

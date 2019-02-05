@@ -16,6 +16,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -57,7 +58,7 @@ public class UserController {
 	 * @return
 	 */
 	@PostMapping("/citizen/_create")
-	public Object createCitizen(@RequestBody CreateUserRequest createUserRequest) {
+	public Object createCitizen(@RequestBody @Valid  CreateUserRequest createUserRequest) {
 		log.info("Received Citizen Registration Request  " + createUserRequest);
 		User user = createUserRequest.toDomain(true);
 		user.setOtpValidationMandatory(IsValidationMandatory);
@@ -136,7 +137,8 @@ public class UserController {
 	 * @return
 	 */
 	@PostMapping("/users/_updatenovalidate")
-	public UserDetailResponse updateUserWithoutValidation(@RequestBody final CreateUserRequest createUserRequest, @RequestHeader HttpHeaders headers) {
+	public UserDetailResponse updateUserWithoutValidation(@RequestBody @Valid final CreateUserRequest createUserRequest,
+														  @RequestHeader HttpHeaders headers) {
 		User user = createUserRequest.toDomain(false);
 		user.setMobileValidationMandatory(isMobileValidationRequired(headers));
 		final User updatedUser = userService.updateWithoutOtpValidation( user);
@@ -150,7 +152,7 @@ public class UserController {
 	 * @return
 	 */
 	@PostMapping("/profile/_update")
-	public UserDetailResponse patch(@RequestBody final CreateUserRequest createUserRequest) {
+	public UserDetailResponse patch(@RequestBody @Valid final CreateUserRequest createUserRequest) {
 		log.info("Received Profile Update Request  " + createUserRequest);
 		User user = createUserRequest.toDomain(false);
 		final User updatedUser = userService.partialUpdate(user);

@@ -64,11 +64,9 @@ public class UserTypeQueryBuilder {
             ".type,  u.version, u.guardian, u.guardianrelation, u.signature, u.accountlocked, u.bloodgroup, u.photo, " +
             "u.identificationmark,  u.tenantid, u.id, u.uuid, addr.id as addr_id, addr.type as addr_type, addr" +
             ".address as addr_address,  addr.city as addr_city, addr.pincode as addr_pincode, addr.tenantid as " +
-            "addr_tenantid, addr.userid as addr_userid, r.code as role_code, r.name as role_name,  r.description as role_description " +
-            ", r.id as role_id, r.tenantid as role_tenantid \n" +
+            "addr_tenantid, addr.userid as addr_userid, ur.role_code as role_code, ur.role_tenantid as role_tenantid \n" +
             "\tFROM eg_user u LEFT OUTER JOIN eg_user_address addr ON u.id = addr.userid AND u.tenantid = addr" +
-            ".tenantid LEFT OUTER JOIN eg_userrole ur ON u.id = ur.userid AND u.tenantid = ur.tenantid LEFT OUTER " +
-            "JOIN eg_role r ON ur.roleid = r.id AND ur.roleidtenantid = r.tenantid ";
+            ".tenantid LEFT OUTER JOIN eg_userrole_v1 ur ON u.id = ur.user_id AND u.tenantid = ur.user_tenantid  ";
 
     private static final String PAGINATION_WRAPPER = "SELECT * FROM " +
             "(SELECT *, DENSE_RANK() OVER (ORDER BY id) offset_ FROM " +
@@ -100,8 +98,6 @@ public class UserTypeQueryBuilder {
         if (userSearchCriteria.getId() == null && userSearchCriteria.getUserName() == null
                 && userSearchCriteria.getName() == null && userSearchCriteria.getEmailId() == null
                 && userSearchCriteria.getActive() == null && userSearchCriteria.getTenantId() == null
-                && userSearchCriteria.getAadhaarNumber() == null && userSearchCriteria.getMobileNumber() == null
-                && userSearchCriteria.getPan() == null && userSearchCriteria.getRoleCodes() == null
                 && userSearchCriteria.getType() == null && userSearchCriteria.getUuid() == null)
             return;
 
@@ -143,12 +139,12 @@ public class UserTypeQueryBuilder {
             selectQuery.append(" u.emailid = ?");
             preparedStatementValues.add(userSearchCriteria.getEmailId().trim());
         }
-
-        if (userSearchCriteria.getAadhaarNumber() != null) {
-            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-            selectQuery.append(" u.aadhaarnumber = ?");
-            preparedStatementValues.add(userSearchCriteria.getAadhaarNumber().trim());
-        }
+//
+//        if (userSearchCriteria.getAadhaarNumber() != null) {
+//            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+//            selectQuery.append(" u.aadhaarnumber = ?");
+//            preparedStatementValues.add(userSearchCriteria.getAadhaarNumber().trim());
+//        }
 
         if (userSearchCriteria.getMobileNumber() != null) {
             isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
@@ -156,11 +152,11 @@ public class UserTypeQueryBuilder {
             preparedStatementValues.add(userSearchCriteria.getMobileNumber().trim());
         }
 
-        if (userSearchCriteria.getPan() != null) {
-            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-            selectQuery.append(" u.pan = ?");
-            preparedStatementValues.add(userSearchCriteria.getPan().trim());
-        }
+//        if (userSearchCriteria.getPan() != null) {
+//            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+//            selectQuery.append(" u.pan = ?");
+//            preparedStatementValues.add(userSearchCriteria.getPan().trim());
+//        }
 
         if (userSearchCriteria.getType() != null) {
             isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);

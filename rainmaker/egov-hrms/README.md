@@ -35,7 +35,7 @@ a) Assignments: Every employee is assigned a list of assignments, every assignme
    1. For a given period of time an employee shouldn't have more than one assignments.
    2. The department and designation part of the employee must be configured in the system.
    3. Details of assignment once entered in the system cannot be deleted.
-   4. An employee cannot have more than one 2 active assignments.
+   4. An employee cannot have more than one active assignment.
 
 b) Jurisdictions: A jurisdiction is a area of power for any employee. It can be a zone, ward, block, city, state or the country. Currently a jurisdiction is defined as combination of Hierarchy type, Boundary Type and the actual Boundary. However, in the current system we are not validating these jurisdictions. This is being collected only for the sake of data.
    Constraints:
@@ -59,3 +59,17 @@ e) Departmental Tests: Captures details of the tests undertaken by the employee.
    1. Test details must be configures in the system.  
 
 f) Deactivation Details: Details of deactivation of the employee, which captures reason for deactivation, period of deactivation and other necessary details. 
+   1. Deactivation details are compulsory while deactivating an employee.
+   
+
+
+**Uniqueness Constraints:**
+
+a) Employee code has to be unique and will be used as username for login.
+b) Phone number has to be unique, which means no 2 employees can have the same phone number. 
+
+
+
+**Notification:**
+
+a) Notification is sent to the phone number of the employee who has been created in the system. This is an SMS notification.

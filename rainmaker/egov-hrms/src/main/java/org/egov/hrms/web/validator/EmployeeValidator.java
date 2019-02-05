@@ -172,8 +172,9 @@ public class EmployeeValidator {
 			errorMap.put(ErrorConstants.HRMS_INVALID_EMP_TYPE_CODE, ErrorConstants.HRMS_INVALID_EMP_TYPE_CODE);
 		if(employee.getDateOfAppointment() > new Date().getTime())
 			errorMap.put(ErrorConstants.HRMS_INVALID_DATE_OF_APPOINTMENT_CODE, ErrorConstants.HRMS_INVALID_DATE_OF_APPOINTMENT_MSG);
-		if(employee.getDateOfAppointment() < employee.getUser().getDob())
-			errorMap.put(ErrorConstants.HRMS_INVALID_DATE_OF_APPOINTMENT_DOB_CODE, ErrorConstants.HRMS_INVALID_DATE_OF_APPOINTMENT_DOB_MSG);
+		if(employee.getUser().getDob()!=null )
+			if(employee.getDateOfAppointment() < employee.getUser().getDob())
+				errorMap.put(ErrorConstants.HRMS_INVALID_DATE_OF_APPOINTMENT_DOB_CODE, ErrorConstants.HRMS_INVALID_DATE_OF_APPOINTMENT_DOB_MSG);
 	}
 	
 	/**
@@ -215,9 +216,10 @@ public class EmployeeValidator {
 				errorMap.put(ErrorConstants.HRMS_INVALID_DESG_CODE, ErrorConstants.HRMS_INVALID_DESG_MSG);
             if( assignment.getFromDate() > assignment.getToDate())
                 errorMap.put(ErrorConstants.HRMS_INVALID_ASSIGNMENT_PERIOD_CODE, ErrorConstants.HRMS_INVALID_ASSIGNMENT_PERIOD_MSG);
-            if(assignment.getFromDate() < employee.getUser().getDob() || assignment.getToDate() < employee.getUser().getDob())
-                errorMap.put(ErrorConstants.HRMS_INVALID_ASSIGNMENT_DATES_CODE, ErrorConstants.HRMS_INVALID_ASSIGNMENT_DATES_MSG);
-			if(assignment.getFromDate() > employee.getDateOfAppointment())
+			if(employee.getUser().getDob()!=null )
+				if(assignment.getFromDate() < employee.getUser().getDob() || assignment.getToDate() < employee.getUser().getDob())
+                	errorMap.put(ErrorConstants.HRMS_INVALID_ASSIGNMENT_DATES_CODE, ErrorConstants.HRMS_INVALID_ASSIGNMENT_DATES_MSG);
+			if((assignment.getFromDate() <	 employee.getDateOfAppointment()))
 				errorMap.put(ErrorConstants.HRMS_INVALID_ASSIGNMENT_DATES_APPOINTMENT_CODE, ErrorConstants.HRMS_INVALID_ASSIGNMENT_DATES_APPOINTMENT_MSG);
 
         }
@@ -242,8 +244,9 @@ public class EmployeeValidator {
 				if(history.getServiceFrom() > new Date().getTime() || history.getServiceTo() > new Date().getTime()
 						|| history.getServiceFrom() > history.getServiceTo())
 					errorMap.put(ErrorConstants.HRMS_INVALID_SERVICE_PERIOD_CODE, ErrorConstants.HRMS_INVALID_SERVICE_PERIOD_MSG);
-				if(history.getServiceFrom() < employee.getUser().getDob() || history.getServiceTo() < employee.getUser().getDob())
-					errorMap.put(ErrorConstants.HRMS_INVALID_SERVICE_DATES_CODE, ErrorConstants.HRMS_INVALID_SERVICE_DATES_MSG);
+				if(employee.getUser().getDob()!=null )
+					if(history.getServiceFrom() < employee.getUser().getDob() || history.getServiceTo() < employee.getUser().getDob())
+						errorMap.put(ErrorConstants.HRMS_INVALID_SERVICE_DATES_CODE, ErrorConstants.HRMS_INVALID_SERVICE_DATES_MSG);
 			}
 		}
 	}

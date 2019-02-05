@@ -2,7 +2,10 @@ package org.egov.hrms.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.StringUtils;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.hrms.config.PropertiesManager;
 import org.egov.hrms.repository.RestCallRepository;
@@ -34,7 +37,11 @@ public class IdGenService {
 	 */
 	public void setIds(EmployeeRequest employeeRequest) {
 		String tenantId = employeeRequest.getEmployees().get(0).getTenantId();
-		IdGenerationResponse response = getId(employeeRequest.getRequestInfo(), tenantId, employeeRequest.getEmployees().size(),
+		Integer employeesWithCode = employeeRequest.getEmployees().parallelStream()
+				.filter(employee -> !StringUtils.isEmpty(employee.getCode())).collect(Collectors.toList()).size();
+		if(employeesWithCode == employeeRequest.getEmployees().size())
+			return;
+		IdGenerationResponse response = getId(employeeRequest.getRequestInfo(), tenantId, employeeRequest.getEmployees().size() - employeesWithCode,
 				properties.getHrmsIdGenKey(), properties.getHrmsIdGenFormat());
 		if(null != response) {
 			for(int i = 0; i < employeeRequest.getEmployees().size(); i++) {

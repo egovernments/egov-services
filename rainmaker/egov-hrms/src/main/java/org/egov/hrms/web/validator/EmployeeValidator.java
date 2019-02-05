@@ -95,7 +95,7 @@ public class EmployeeValidator {
      */
     private void validateUserName(List<Employee> employees, Map<String, String> errorMap, RequestInfo requestInfo) {
         employees.forEach(employee -> {
-            if(employee.getCode()!=null){
+            if(!StringUtils.isEmpty(employee.getCode())){
                 UserResponse userResponse = userService.getSingleUser(requestInfo,employee,"UserName");
                 if(!CollectionUtils.isEmpty(userResponse.getUser())){
                     log.info("User: "+ (userResponse.getUser().get(0)));

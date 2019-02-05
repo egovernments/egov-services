@@ -1,10 +1,16 @@
 package org.egov.hrms.model;
 
-import javax.validation.constraints.NotNull;
+import org.springframework.validation.annotation.Validated;
 
-import lombok.*;
-import org.egov.hrms.model.enums.DeactivationType;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
+@Validated
 @EqualsAndHashCode(exclude = {"auditDetails"})
 @AllArgsConstructor
 @Getter

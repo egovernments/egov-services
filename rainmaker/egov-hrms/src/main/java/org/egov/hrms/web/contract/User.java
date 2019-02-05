@@ -1,6 +1,5 @@
 package org.egov.hrms.web.contract;
 
-import java.util.Date;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -9,6 +8,7 @@ import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 import org.egov.hrms.model.Role;
+import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -19,8 +19,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import org.springframework.boot.actuate.endpoint.jmx.DataEndpointMBean;
 
+@Validated
 @AllArgsConstructor
 @EqualsAndHashCode
 @Getter

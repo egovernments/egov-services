@@ -77,7 +77,7 @@ public class EmployeeController {
 	 */
 	@PostMapping(value = "/_create")
 	@ResponseBody
-	public ResponseEntity<?> create(@RequestBody @Valid EmployeeRequest employeeRequest, BindingResult bindingResult) {
+	public ResponseEntity<?> create(@RequestBody @Valid EmployeeRequest employeeRequest) {
 		validator.validateCreateEmployee(employeeRequest);
 		EmployeeResponse employeeResponse = employeeService.create(employeeRequest);
         return new ResponseEntity<>(employeeResponse,HttpStatus.OK);
@@ -94,7 +94,7 @@ public class EmployeeController {
 	 */
 	@PostMapping(value = "/_update")
 	@ResponseBody
-	public ResponseEntity<?> update(@RequestBody @Valid EmployeeRequest employeeRequest, BindingResult bindingResult) {
+	public ResponseEntity<?> update(@RequestBody @Valid EmployeeRequest employeeRequest) {
 		validator.validateUpdateEmployee(employeeRequest);
 		EmployeeResponse employeeResponse = employeeService.update(employeeRequest);
 		return new ResponseEntity<>(employeeResponse,HttpStatus.OK);
@@ -111,8 +111,7 @@ public class EmployeeController {
 	 */
 	@PostMapping(value = "/_search")
 	@ResponseBody
-	public ResponseEntity<?> search(@RequestBody @Valid RequestInfoWrapper requestInfoWrapper, 
-									@ModelAttribute EmployeeSearchCriteria criteria, BindingResult bindingResult) {
+	public ResponseEntity<?> search(@RequestBody @Valid RequestInfoWrapper requestInfoWrapper, @ModelAttribute EmployeeSearchCriteria criteria) {
 		EmployeeResponse employeeResponse = employeeService.search(criteria, requestInfoWrapper.getRequestInfo());
 		return new ResponseEntity<>(employeeResponse,HttpStatus.OK);
 	}

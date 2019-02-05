@@ -43,6 +43,10 @@ package org.egov.hrms.model;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 import javax.validation.constraints.NotNull;
+
+import org.springframework.validation.annotation.Validated;
+
+@Validated
 @EqualsAndHashCode(exclude = {"auditDetails"})
 @AllArgsConstructor
 @Builder
@@ -82,7 +86,5 @@ public class Assignment {
 	private Boolean isCurrentAssignment;
 
 	private AuditDetails auditDetails;
-
-
 
 }

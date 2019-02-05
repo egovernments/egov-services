@@ -106,4 +106,10 @@ public class ErrorConstants {
 	
 	public static final String HRMS_UPDATE_NULL_UUID_CODE = "HRMS_UPDATE_NULL_UUID";
 	public static final String HRMS_UPDATE_NULL_UUID_MSG = "Employee UUID in update request should not be Null!";
+	
+	public static final String HRMS_USER_CREATION_FAILED_CODE = "HRMS_USER_CREATION_FAILED";
+	public static final String HRMS_USER_CREATION_FAILED_MSG = "User creation failed at the user service";
+	
+	public static final String HRMS_USER_UPDATION_FAILED_CODE = "HRMS_USER_UPDATION_FAILED";
+	public static final String HRMS_USER_UPDATION_FAILED_MSG = "User update failed at the user service";
 }

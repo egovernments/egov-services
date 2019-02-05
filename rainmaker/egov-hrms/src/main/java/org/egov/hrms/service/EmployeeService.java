@@ -50,6 +50,7 @@ import org.egov.hrms.model.Employee;
 import org.egov.hrms.model.enums.UserType;
 import org.egov.hrms.producer.HRMSProducer;
 import org.egov.hrms.repository.EmployeeRepository;
+import org.egov.hrms.utils.ErrorConstants;
 import org.egov.hrms.utils.HRMSUtils;
 import org.egov.hrms.utils.ResponseInfoFactory;
 import org.egov.hrms.web.contract.*;
@@ -169,7 +170,7 @@ public class EmployeeService {
 		}catch(Exception e) {
 			log.error("Exception while creating user: ",e);
 			log.error("request: "+request);
-			throw new CustomException("HRMS_USER_CREATION_FAILED", "User creation failed due to error: "+e);
+			throw new CustomException(ErrorConstants.HRMS_USER_CREATION_FAILED_CODE, ErrorConstants.HRMS_USER_CREATION_FAILED_MSG);
 		}
 
 	}
@@ -259,7 +260,6 @@ public class EmployeeService {
 	 * @return
 	 */
 	public EmployeeResponse update(EmployeeRequest employeeRequest) {
-		log.info("Service: Update Employee");
 		RequestInfo requestInfo = employeeRequest.getRequestInfo();
 		List <String> uuidList= new ArrayList<>();
 		for(Employee employee: employeeRequest.getEmployees()) {
@@ -288,7 +288,8 @@ public class EmployeeService {
 			userService.updateUser(request);
 		}catch(Exception e) {
 			log.error("Exception while updating user: ",e);
-			throw new CustomException("HRMS_USER_UPDATION_FAILED", "User update failed due to error: "+e.getMessage());
+			log.error("request: "+request);
+			throw new CustomException(ErrorConstants.HRMS_USER_UPDATION_FAILED_CODE, ErrorConstants.HRMS_USER_UPDATION_FAILED_MSG);
 		}
 
 	}

@@ -9,6 +9,9 @@
 4. Deactivate Employee.
 
 
+*API Contract:* https://raw.githubusercontent.com/egovernments/egov-services/master/docs/rainmaker/egov-hrms/v1-0-0.yml
+
+
 
 **Create Employee: (Bulk API)**
 API to create an employee with the following details: Assignments, Jurisdictions, Service History, Educational Details, Departmental Tests

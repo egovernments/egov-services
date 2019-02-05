@@ -3,8 +3,7 @@ info:
   version: 1.0.0
   title: Employee Information System APIs - Employee
   description: >-
-    All APIs available from Employee Information System  for employee services are listed here.
-    1. To create statewide standardized database of the employee in order to streamline processes related to personnel management.
+    1. To create statewide standardized database of the employee in order to streamline processes related to personnel management. (APIs available)
     2. To increase transparency for higher management for efficient resource planning
     3. Integration with rainmaker modules for  security, authentication and workflow handling 
     4. Setting KPIs for employees and timely report generation

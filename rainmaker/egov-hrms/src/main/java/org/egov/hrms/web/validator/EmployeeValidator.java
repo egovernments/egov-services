@@ -508,7 +508,7 @@ public class EmployeeValidator {
 					updatedEmployeeData.getDeactivationDetails().stream()
 							.map(deactivationDetails -> deactivationDetails.getId())
 							.collect(Collectors.toList())
-							.containsAll(existingEmp.getDocuments().stream()
+							.containsAll(existingEmp.getDeactivationDetails().stream()
 									.map(employeeDocument -> employeeDocument.getId())
 									.collect(Collectors.toList()));
 			if (!check) {

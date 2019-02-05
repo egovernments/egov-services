@@ -64,7 +64,7 @@ public class UserServiceTest {
 		UserSearchCriteria userSearch = mock(UserSearchCriteria.class);
 		List<org.egov.user.domain.model.User> expectedListOfUsers = new ArrayList<org.egov.user.domain.model.User>();
 		when(userRepository.findAll(userSearch)).thenReturn(expectedListOfUsers);
-		List<org.egov.user.domain.model.User> actualResult = userService.searchUsers(userSearch);
+		List<org.egov.user.domain.model.User> actualResult = userService.searchUsers(userSearch, true);
 
 		assertThat(expectedListOfUsers).isEqualTo(actualResult);
 	}
@@ -75,9 +75,9 @@ public class UserServiceTest {
 		List<org.egov.user.domain.model.User> expectedListOfUsers = new ArrayList<org.egov.user.domain.model.User>();
 		when(userRepository.findAll(userSearch)).thenReturn(expectedListOfUsers);
 
-		userService.searchUsers(userSearch);
+		userService.searchUsers(userSearch, true);
 
-		verify(userSearch).validate();
+		verify(userSearch).validate(true);
 	}
 
 	@Test

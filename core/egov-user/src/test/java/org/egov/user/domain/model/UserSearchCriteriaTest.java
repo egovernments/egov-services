@@ -12,7 +12,7 @@ public class UserSearchCriteriaTest {
 				.userName("greenfish424")
 				.build();
 		
-		searchCriteria.validate();
+		searchCriteria.validate(true);
 	}
 
 	@Test(expected = InvalidUserSearchCriteriaException.class)
@@ -21,7 +21,7 @@ public class UserSearchCriteriaTest {
 				.tenantId(null)
 				.build();
 
-		searchCriteria.validate();
+		searchCriteria.validate(true);
 	}
 
 

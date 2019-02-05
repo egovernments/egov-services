@@ -177,7 +177,7 @@ public class UserTypeQueryBuilder {
 
         if(!isEmpty(userSearchCriteria.getRoleCodes())){
             isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-            selectQuery.append(" r.code IN (").append(getQueryForCollection(userSearchCriteria.getRoleCodes(),
+            selectQuery.append(" ur.role_code IN (").append(getQueryForCollection(userSearchCriteria.getRoleCodes(),
                     preparedStatementValues)).append(" )");
         }
     }

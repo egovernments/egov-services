@@ -36,8 +36,7 @@ import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static org.apache.commons.lang3.ArrayUtils.isEquals;
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.argThat;
+import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -64,7 +63,7 @@ public class UserControllerTest {
 	@Test
 	@WithMockUser
 	public void test_should_search_users() throws Exception {
-		when(userService.searchUsers(argThat(new UserSearchMatcher(getUserSearch())))).thenReturn(getUserModels());
+		when(userService.searchUsers(argThat(new UserSearchMatcher(getUserSearch())), anyBoolean())).thenReturn(getUserModels());
 
 		mockMvc.perform(post("/_search/").contentType(MediaType.APPLICATION_JSON_UTF8)
 				.content(getFileContents("getUserByIdRequest.json"))).andExpect(status().isOk())
@@ -78,7 +77,7 @@ public class UserControllerTest {
 		final UserSearchCriteria expectedSearchCriteria = UserSearchCriteria.builder()
 				.active(true)
 				.build();
-		when(userService.searchUsers(argThat(new UserSearchActiveFlagMatcher(expectedSearchCriteria))))
+		when(userService.searchUsers(argThat(new UserSearchActiveFlagMatcher(expectedSearchCriteria)), anyBoolean()))
 				.thenReturn(getUserModels());
 
 		mockMvc.perform(post("/_search/").contentType(MediaType.APPLICATION_JSON_UTF8)
@@ -93,7 +92,7 @@ public class UserControllerTest {
 		final UserSearchCriteria expectedSearchCriteria = UserSearchCriteria.builder()
 				.active(false)
 				.build();
-		when(userService.searchUsers(argThat(new UserSearchActiveFlagMatcher(expectedSearchCriteria))))
+		when(userService.searchUsers(argThat(new UserSearchActiveFlagMatcher(expectedSearchCriteria)), anyBoolean()))
 				.thenReturn(getUserModels());
 
 		mockMvc.perform(post("/_search/").contentType(MediaType.APPLICATION_JSON_UTF8)
@@ -109,7 +108,7 @@ public class UserControllerTest {
 		final UserSearchCriteria expectedSearchCriteria = UserSearchCriteria.builder()
 				.active(null)
 				.build();
-		when(userService.searchUsers(argThat(new UserSearchActiveFlagMatcher(expectedSearchCriteria))))
+		when(userService.searchUsers(argThat(new UserSearchActiveFlagMatcher(expectedSearchCriteria)), anyBoolean()))
 				.thenReturn(getUserModels());
 
 		mockMvc.perform(post("/v1/_search/").contentType(MediaType.APPLICATION_JSON_UTF8)
@@ -125,7 +124,7 @@ public class UserControllerTest {
 		final UserSearchCriteria expectedSearchCriteria = UserSearchCriteria.builder()
 				.active(false)
 				.build();
-		when(userService.searchUsers(argThat(new UserSearchActiveFlagMatcher(expectedSearchCriteria))))
+		when(userService.searchUsers(argThat(new UserSearchActiveFlagMatcher(expectedSearchCriteria)), anyBoolean()))
 				.thenReturn(getUserModels());
 
 		mockMvc.perform(post("/v1/_search/").contentType(MediaType.APPLICATION_JSON_UTF8)
@@ -141,7 +140,7 @@ public class UserControllerTest {
 		final UserSearchCriteria expectedSearchCriteria = UserSearchCriteria.builder()
 				.active(true)
 				.build();
-		when(userService.searchUsers(argThat(new UserSearchActiveFlagMatcher(expectedSearchCriteria))))
+		when(userService.searchUsers(argThat(new UserSearchActiveFlagMatcher(expectedSearchCriteria)), anyBoolean()))
 				.thenReturn(getUserModels());
 
 		mockMvc.perform(post("/v1/_search/").contentType(MediaType.APPLICATION_JSON_UTF8)
@@ -157,7 +156,7 @@ public class UserControllerTest {
 	@Ignore
 	public void test_should_return_error_response_when_user_search_is_invalid() throws Exception {
 		final UserSearchCriteria invalidSearchCriteria = UserSearchCriteria.builder().build();
-		when(userService.searchUsers(any())).thenThrow(new InvalidUserSearchCriteriaException(invalidSearchCriteria));
+		when(userService.searchUsers(any(), true)).thenThrow(new InvalidUserSearchCriteriaException(invalidSearchCriteria));
 
 		ResultActions test = mockMvc.perform(post("/_search").contentType(MediaType.APPLICATION_JSON_UTF8)
 				.content(getFileContents("getUserByIdRequest.json")));//				.andExpect(status().isBadRequest())

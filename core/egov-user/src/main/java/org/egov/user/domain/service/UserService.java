@@ -30,6 +30,7 @@ import java.util.stream.Collectors;
 
 import static java.util.Objects.isNull;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
+import static org.egov.tracer.http.HttpUtils.isInterServiceCall;
 import static org.springframework.util.CollectionUtils.isEmpty;
 
 @Service
@@ -120,8 +121,10 @@ public class UserService {
      * @param searchCriteria
      * @return
      */
-    public List<org.egov.user.domain.model.User> searchUsers(UserSearchCriteria searchCriteria) {
-        searchCriteria.validate();
+    public List<org.egov.user.domain.model.User> searchUsers(UserSearchCriteria searchCriteria,
+                                                             boolean isInterServiceCall) {
+
+        searchCriteria.validate(isInterServiceCall);
 
         searchCriteria.setTenantId(getStateLevelTenantForCitizen(searchCriteria.getTenantId(), searchCriteria.getType()));
         List<org.egov.user.domain.model.User> list = userRepository.findAll(searchCriteria);

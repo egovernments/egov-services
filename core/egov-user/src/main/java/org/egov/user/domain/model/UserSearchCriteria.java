@@ -31,18 +31,29 @@ public class UserSearchCriteria {
     private String tenantId;
     private List<String> roleCodes;
 
-    public void validate() {
-        if (validateIfEmptySearch() || validateIfTenantIdExists()) {
+    public void validate(boolean isInterServiceCall) {
+        if (validateIfEmptySearch(isInterServiceCall) || validateIfTenantIdExists(isInterServiceCall)) {
             throw new InvalidUserSearchCriteriaException(this);
         }
     }
 
-    private boolean validateIfEmptySearch(){
-        return isEmpty(userName) && isEmpty(name) && isEmpty(mobileNumber) && isEmpty(emailId) &&
+    private boolean validateIfEmptySearch(boolean isInterServiceCall){
+        if(isInterServiceCall)
+            return isEmpty(userName) && isEmpty(name) && isEmpty(mobileNumber) && isEmpty(emailId) &&
                 CollectionUtils.isEmpty(uuid) && CollectionUtils.isEmpty(id);
+        else
+            return isEmpty(userName) && isEmpty(name) && isEmpty(mobileNumber) && isEmpty(emailId) &&
+                    CollectionUtils.isEmpty(uuid) && CollectionUtils.isEmpty(id) && CollectionUtils.isEmpty(roleCodes);
     }
 
-    private boolean validateIfTenantIdExists(){
-        return (!isEmpty(userName) || !isEmpty(name) || !isEmpty(mobileNumber)) && isEmpty(tenantId);
+    private boolean validateIfTenantIdExists(boolean isInterServiceCall){
+        if(isInterServiceCall)
+            return (!isEmpty(userName) || !isEmpty(name) || !isEmpty(mobileNumber))
+                && isEmpty(tenantId);
+        else
+            return (!isEmpty(userName) || !isEmpty(name) || !isEmpty(mobileNumber) ||
+                    !CollectionUtils.isEmpty(roleCodes))
+                    && isEmpty(tenantId);
+
     }
 }

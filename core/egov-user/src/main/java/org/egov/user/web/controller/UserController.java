@@ -175,7 +175,9 @@ public class UserController {
                 searchCriteria.setLimit(defaultSearchSize);
         }
 
-		List<User> userModels = userService.searchUsers(searchCriteria);
+
+
+		List<User> userModels = userService.searchUsers(searchCriteria, isInterServiceCall(headers));
 
 
 		List<UserSearchResponseContent> userContracts = userModels.stream().map(UserSearchResponseContent::new)

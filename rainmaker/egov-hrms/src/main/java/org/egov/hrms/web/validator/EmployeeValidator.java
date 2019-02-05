@@ -217,6 +217,8 @@ public class EmployeeValidator {
                 errorMap.put(ErrorConstants.HRMS_INVALID_ASSIGNMENT_PERIOD_CODE, ErrorConstants.HRMS_INVALID_ASSIGNMENT_PERIOD_MSG);
             if(assignment.getFromDate() < employee.getUser().getDob() || assignment.getToDate() < employee.getUser().getDob())
                 errorMap.put(ErrorConstants.HRMS_INVALID_ASSIGNMENT_DATES_CODE, ErrorConstants.HRMS_INVALID_ASSIGNMENT_DATES_MSG);
+			if(assignment.getFromDate() > employee.getDateOfAppointment())
+				errorMap.put(ErrorConstants.HRMS_INVALID_ASSIGNMENT_DATES_APPOINTMENT_CODE, ErrorConstants.HRMS_INVALID_ASSIGNMENT_DATES_APPOINTMENT_MSG);
 
         }
 		

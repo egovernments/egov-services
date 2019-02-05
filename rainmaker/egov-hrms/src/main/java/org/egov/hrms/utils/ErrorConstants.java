@@ -49,7 +49,10 @@ public class ErrorConstants {
 	
 	public static final String HRMS_INVALID_ASSIGNMENT_DATES_CODE = "HRMS_INVALID_ASSIGNMENT_DATES";
 	public static final String HRMS_INVALID_ASSIGNMENT_DATES_MSG = "Period of assignemnt (fromDate to toDate) is before DOB!";
-	
+
+	public static final String HRMS_INVALID_ASSIGNMENT_DATES_APPOINTMENT_CODE = "HRMS_INVALID_ASSIGNMENT_DATES_APPOINTMENT";
+	public static final String HRMS_INVALID_ASSIGNMENT_DATES_APPOINTMENT_MSG = "Period of assignemnt (fromDate to toDate) is before date of appointment!";
+
 	public static final String HRMS_INVALID_SERVICE_STATUS_CODE = "HRMS_INVALID_SERVICE_STATUS";
 	public static final String HRMS_INVALID_SERVICE_STATUS_MSG = "Service status of the employee is invalid!: ";
 	

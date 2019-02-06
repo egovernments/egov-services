@@ -3,6 +3,7 @@ package org.egov.hrms.web.validator;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.egov.common.contract.request.RequestInfo;
+import org.egov.common.contract.request.Role;
 import org.egov.hrms.model.*;
 import org.egov.hrms.service.EmployeeService;
 import org.egov.hrms.service.MDMSService;
@@ -15,6 +16,7 @@ import org.egov.hrms.web.contract.EmployeeSearchCriteria;
 import org.egov.hrms.web.contract.UserResponse;
 import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
@@ -34,6 +36,8 @@ public class EmployeeValidator {
 	@Autowired
 	private UserService userService;
 
+	@Value("${open.search.enabled.roles}")
+	private String openSearchEnabledRoles;
 
 	/**
 	 * Validates employee request for create. Validations include:
@@ -50,6 +54,33 @@ public class EmployeeValidator {
 		Map<String, List<String>> mdmsData = mdmsService.getMDMSData(request.getRequestInfo(), request.getEmployees().get(0).getTenantId());
 		if(!CollectionUtils.isEmpty(mdmsData.keySet())){
 			request.getEmployees().stream().forEach(employee -> validateMdmsData(employee, errorMap, mdmsData));
+		}
+		if(!CollectionUtils.isEmpty(errorMap.keySet()))
+			throw new CustomException(errorMap);
+	}
+	
+	/**
+	 * Validates search request. Checks the following:
+	 * 1. If a user who doesn't have access to open search is making an open search call.
+	 * 
+	 * @param requestInfo
+	 * @param criteria
+	 */
+	public void validateSearchRequest(RequestInfo requestInfo, EmployeeSearchCriteria criteria) {
+		Map<String, String> errorMap = new HashMap<>();
+		if(criteria.isCriteriaEmpty(criteria)) {
+			String[] roles = openSearchEnabledRoles.split(",");
+			List<String> reqroles = requestInfo.getUserInfo().getRoles().parallelStream().map(Role::getCode).collect(Collectors.toList());
+			boolean check = false;
+			for(String role : reqroles) {
+				if(Arrays.asList(roles).contains(role)) {
+					check = true;
+					break;
+				}
+			}
+			if(!check) {
+				errorMap.put(ErrorConstants.HRMS_INVALID_SEARCH_REQ_CODE, ErrorConstants.HRMS_INVALID_SEARCH_REQ_MSG);
+			}
 		}
 		if(!CollectionUtils.isEmpty(errorMap.keySet()))
 			throw new CustomException(errorMap);
@@ -161,7 +192,7 @@ public class EmployeeValidator {
 		if(CollectionUtils.isEmpty(employee.getUser().getRoles()))
 			errorMap.put(ErrorConstants.HRMS_MISSING_ROLES_CODE, ErrorConstants.HRMS_INVALID_ROLES_MSG);
 		else {
-			for(Role role: employee.getUser().getRoles()) {
+			for(org.egov.hrms.model.Role role: employee.getUser().getRoles()) {
 				if(!mdmsData.get(HRMSConstants.HRMS_MDMS_ROLES_CODE).contains(role.getCode()))
 					errorMap.put(ErrorConstants.HRMS_INVALID_ROLE_CODE, ErrorConstants.HRMS_INVALID_ROLE_MSG + role.getCode());
 			}
@@ -172,9 +203,12 @@ public class EmployeeValidator {
 			errorMap.put(ErrorConstants.HRMS_INVALID_EMP_TYPE_CODE, ErrorConstants.HRMS_INVALID_EMP_TYPE_CODE);
 		if(employee.getDateOfAppointment() > new Date().getTime())
 			errorMap.put(ErrorConstants.HRMS_INVALID_DATE_OF_APPOINTMENT_CODE, ErrorConstants.HRMS_INVALID_DATE_OF_APPOINTMENT_MSG);
-		if(employee.getUser().getDob()!=null )
+		if(null != employee.getUser().getDob()) {
+			if(employee.getUser().getDob() < new Date().getTime())
+				errorMap.put(ErrorConstants.HRMS_INVALID_DOB_CODE, ErrorConstants.HRMS_INVALID_DOB_MSG);
 			if(employee.getDateOfAppointment() < employee.getUser().getDob())
 				errorMap.put(ErrorConstants.HRMS_INVALID_DATE_OF_APPOINTMENT_DOB_CODE, ErrorConstants.HRMS_INVALID_DATE_OF_APPOINTMENT_DOB_MSG);
+		}
 	}
 	
 	/**

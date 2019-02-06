@@ -32,6 +32,9 @@ public class ErrorConstants {
 	public static final String HRMS_INVALID_DATE_OF_APPOINTMENT_DOB_CODE = "HRMS_INVALID_DATE_OF_APPOINTMENT_DOB";
 	public static final String HRMS_INVALID_DATE_OF_APPOINTMENT_DOB_MSG = "Employee date of appointment is before DOB!";
 	
+	public static final String HRMS_INVALID_DOB_CODE = "HRMS_INVALID_DOB";
+	public static final String HRMS_INVALID_DOB_MSG = "DOB is invalid!";
+	
 	public static final String HRMS_INVALID_CURRENT_ASSGN_CODE = "HRMS_INVALID_CURRENT_ASSGN";
 	public static final String HRMS_INVALID_CURRENT_ASSGN_MSG = "There should be exactly 1 current assignement!";
 	
@@ -115,4 +118,7 @@ public class ErrorConstants {
 	
 	public static final String HRMS_USER_UPDATION_FAILED_CODE = "HRMS_USER_UPDATION_FAILED";
 	public static final String HRMS_USER_UPDATION_FAILED_MSG = "User update failed at the user service";
+	
+	public static final String HRMS_INVALID_SEARCH_REQ_CODE = "HRMS_INVALID_SEARCH_REQ";
+	public static final String HRMS_INVALID_SEARCH_REQ_MSG = "Open search is disabled for this user!";
 }

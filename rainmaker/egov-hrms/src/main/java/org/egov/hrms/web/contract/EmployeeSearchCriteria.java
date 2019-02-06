@@ -2,6 +2,9 @@ package org.egov.hrms.web.contract;
 
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.util.CollectionUtils;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -43,5 +46,18 @@ public class EmployeeSearchCriteria {
 	public Integer offset;
 	
 	public Integer limit;
+	
+	
+	public boolean isCriteriaEmpty(EmployeeSearchCriteria criteria) {
+		if(CollectionUtils.isEmpty(criteria.getCodes()) && CollectionUtils.isEmpty(criteria.getNames()) 
+				&& CollectionUtils.isEmpty(criteria.getDepartments()) && CollectionUtils.isEmpty(criteria.getDesignations())
+				&& CollectionUtils.isEmpty(criteria.getIds()) && CollectionUtils.isEmpty(criteria.getEmployeestatuses())
+				&& CollectionUtils.isEmpty(criteria.getEmployeetypes()) && CollectionUtils.isEmpty(criteria.getUuids())
+				&& CollectionUtils.isEmpty(criteria.getPositions()) && StringUtils.isEmpty(criteria.getTenantId())) {
+			return true;
+		}else {
+			return false;
+		}
+	}
 
 }

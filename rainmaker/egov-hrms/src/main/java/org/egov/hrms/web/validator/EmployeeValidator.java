@@ -205,7 +205,7 @@ public class EmployeeValidator {
 		if(employee.getDateOfAppointment() > new Date().getTime())
 			errorMap.put(ErrorConstants.HRMS_INVALID_DATE_OF_APPOINTMENT_CODE, ErrorConstants.HRMS_INVALID_DATE_OF_APPOINTMENT_MSG);
 		if(null != employee.getUser().getDob()) {
-			if(employee.getUser().getDob() < new Date().getTime())
+			if(employee.getUser().getDob() > new Date().getTime())
 				errorMap.put(ErrorConstants.HRMS_INVALID_DOB_CODE, ErrorConstants.HRMS_INVALID_DOB_MSG);
 			if(employee.getDateOfAppointment() < employee.getUser().getDob())
 				errorMap.put(ErrorConstants.HRMS_INVALID_DATE_OF_APPOINTMENT_DOB_CODE, ErrorConstants.HRMS_INVALID_DATE_OF_APPOINTMENT_DOB_MSG);

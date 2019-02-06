@@ -23,6 +23,8 @@ API to update the details of an employee with the following details: Assignments
 
 **Search Employee:** 
 API to search the employee in the system on the following criteria: Id, UUID, Name, Code, Status, Type, Department, Designation, Position. All of them being arrays, at a time more than one employees can be fetched.  
+Constraints:
+a. Open Search is enabled only for a set of users. Currently it is enabled only for SUPERUSER, if it has to be enabled for other roles, add those roles to the parameter 'open.search.enabled.roles' in app.properties with values(role codes) separated by comma. 
 
 
 **Deactivate Employee:**

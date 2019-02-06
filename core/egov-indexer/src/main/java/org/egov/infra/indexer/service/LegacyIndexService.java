@@ -171,7 +171,7 @@ public class LegacyIndexService {
 				if (threadRun) {
 					log.info("JobStarted: " + legacyIndexRequest.getJobId());
 					ObjectMapper mapper = indexerUtils.getObjectMapper();
-					Integer offset = 0;
+					Integer offset = legacyIndexRequest.getApiDetails().getPaginationDetails().getStartingOffset();
 					Integer count = 0;
 					Integer presentCount = 0;
 					Integer size = null != legacyIndexRequest.getApiDetails().getPaginationDetails().getMaxPageSize()
@@ -239,7 +239,7 @@ public class LegacyIndexService {
 							log.info("JOBFAILED!!! Offset: "+offset+" Size: "+size);
 							log.info("Request: " + request);
 							log.info("URI: " + uri);
-							log.error("Exception: ", e);
+							log.error("Re-index Exception: ", e);
 							IndexJob job = IndexJob.builder().jobId(legacyIndexRequest.getJobId())
 									.auditDetails(indexerUtils.getAuditDetails(
 											legacyIndexRequest.getRequestInfo().getUserInfo().getUuid(), false))

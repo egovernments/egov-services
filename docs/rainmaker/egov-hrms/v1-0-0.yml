@@ -1,19 +1,20 @@
  swagger: '2.0'
-info:
+ info:
   version: 1.0.0
   title: Employee Information System APIs - Employee
   description: >-
-    1. To create statewide standardized database of the employee in order to streamline processes related to personnel management. (APIs available)
+    All APIs available from Employee Information System  for employee services are listed here.
+    1. To create statewide standardized database of the employee in order to streamline processes related to personnel management.
     2. To increase transparency for higher management for efficient resource planning
     3. Integration with rainmaker modules for  security, authentication and workflow handling 
     4. Setting KPIs for employees and timely report generation
 
   contact:
     name: Vishal Mahuli
-schemes:
+ schemes:
   - https
-basePath: '/rainmaker-hrms/[API endpoint]'
-paths:
+ basePath: '/rainmaker-hrms/[API endpoint]'
+ paths:
   /employees/_search:
     post:
       summary: Get the list of employees defined in the system.
@@ -171,7 +172,7 @@ paths:
             $ref: >-
               https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-1-1.yml#/definitions/ErrorRes
 
-definitions:
+ definitions:
   Employee:
     description: >-
       An employee is by default User of the system. User will be created from
@@ -560,7 +561,6 @@ definitions:
         description: Epoch Date on which the user master data was last modified.
 
 #Masters from MDMS - Department, Designation, Employee Status, Employee Type, Service Status, Roles, Qualification (?), Stream (?), University (?), Year, Departmental Test.
-
 
 
 

@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.request.Role;
+import org.egov.hrms.config.PropertiesManager;
 import org.egov.hrms.model.*;
 import org.egov.hrms.service.EmployeeService;
 import org.egov.hrms.service.MDMSService;
@@ -35,9 +36,9 @@ public class EmployeeValidator {
 
 	@Autowired
 	private UserService userService;
-
-	@Value("${open.search.enabled.roles}")
-	private String openSearchEnabledRoles;
+	
+	@Autowired
+	private PropertiesManager propertiesManager;
 
 	/**
 	 * Validates employee request for create. Validations include:
@@ -69,7 +70,7 @@ public class EmployeeValidator {
 	public void validateSearchRequest(RequestInfo requestInfo, EmployeeSearchCriteria criteria) {
 		Map<String, String> errorMap = new HashMap<>();
 		if(criteria.isCriteriaEmpty(criteria)) {
-			String[] roles = openSearchEnabledRoles.split(",");
+			String[] roles = propertiesManager.getOpenSearchEnabledRoles().split(",");
 			List<String> reqroles = requestInfo.getUserInfo().getRoles().parallelStream().map(Role::getCode).collect(Collectors.toList());
 			boolean check = false;
 			for(String role : reqroles) {

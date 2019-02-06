@@ -101,4 +101,7 @@ public class PropertiesManager {
 	
 	@Value("${egov.idgen.ack.format}")
 	public String hrmsIdGenFormat;
+	
+	@Value("${open.search.enabled.roles}")
+	public String openSearchEnabledRoles;
 }

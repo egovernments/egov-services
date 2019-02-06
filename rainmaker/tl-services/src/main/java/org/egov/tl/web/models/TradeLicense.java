@@ -67,7 +67,6 @@ public class  TradeLicense   {
       return null;
     }
   }
-        @Size(max=64)
         @JsonProperty("licenseType")
         private LicenseTypeEnum licenseType = null;
 

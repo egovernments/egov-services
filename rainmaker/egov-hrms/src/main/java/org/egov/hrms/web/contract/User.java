@@ -57,6 +57,7 @@ public class User {
     @JsonProperty("gender")
     private String gender;
 
+    @NotNull
     @JsonProperty("mobileNumber")
     private String mobileNumber;
 

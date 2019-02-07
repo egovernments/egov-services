@@ -1,11 +1,23 @@
 package org.egov.hrms.web.validator;
 
-import lombok.extern.slf4j.Slf4j;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 import org.apache.commons.lang3.StringUtils;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.request.Role;
 import org.egov.hrms.config.PropertiesManager;
-import org.egov.hrms.model.*;
+import org.egov.hrms.model.Assignment;
+import org.egov.hrms.model.DeactivationDetails;
+import org.egov.hrms.model.DepartmentalTest;
+import org.egov.hrms.model.EducationalQualification;
+import org.egov.hrms.model.Employee;
+import org.egov.hrms.model.ServiceHistory;
 import org.egov.hrms.service.EmployeeService;
 import org.egov.hrms.service.MDMSService;
 import org.egov.hrms.service.UserService;
@@ -17,12 +29,10 @@ import org.egov.hrms.web.contract.EmployeeSearchCriteria;
 import org.egov.hrms.web.contract.UserResponse;
 import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
-import java.util.*;
-import java.util.stream.Collectors;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Slf4j

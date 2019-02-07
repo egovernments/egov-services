@@ -407,7 +407,7 @@ public class GrievanceService {
 	public Object getServiceRequestDetailsForPlainSearch(RequestInfo requestInfo, ServiceReqSearchCriteria serviceReqSearchCriteria) {
 		StringBuilder uri = new StringBuilder();
 		SearcherRequest searcherRequest = null;
-		searcherRequest = pGRUtils.prepareSearchRequestWithDetails(uri, serviceReqSearchCriteria, requestInfo);
+		searcherRequest = pGRUtils.preparePlainSearchReq(uri, serviceReqSearchCriteria, requestInfo);
 		Object response = serviceRequestRepository.fetchResult(uri, searcherRequest);
 		log.debug(PGRConstants.SEARCHER_RESPONSE_TEXT + response);
 		if (null == response)

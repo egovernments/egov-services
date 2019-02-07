@@ -279,6 +279,27 @@ public class PGRUtils {
 			return SearcherRequest.builder().requestInfo(requestInfo).searchCriteria(serviceReqSearchCriteria).build();
 		}
 	}
+	
+	
+	/**
+	 * Prepares request and uri for service request search
+	 * 
+	 * @param uri
+	 * @param serviceReqSearchCriteria
+	 * @param requestInfo
+	 * @return SearcherRequest
+	 * @author vishal
+	 * @throws JsonProcessingException 
+	 */
+	public SearcherRequest preparePlainSearchReq(StringBuilder uri, ServiceReqSearchCriteria serviceReqSearchCriteria, RequestInfo requestInfo){
+		uri.append(searcherHost);
+		String endPoint = searcherEndpoint.replace(MODULE_NAME, PGRConstants.SEARCHER_PGR_MOD_NAME).replace(SEARCH_NAME,
+				PGRConstants.SEARCHER_PLAINSEARCH_DEF_NAME);
+		uri.append(endPoint);
+		serviceReqSearchCriteria.setNoOfRecords(null == serviceReqSearchCriteria.getNoOfRecords() ? 200L : serviceReqSearchCriteria.getNoOfRecords()); //be default we retrieve 200 records.
+		serviceReqSearchCriteria.setOffset(null == serviceReqSearchCriteria.getOffset() ? 0L : serviceReqSearchCriteria.getOffset());
+		return SearcherRequest.builder().requestInfo(requestInfo).searchCriteria(serviceReqSearchCriteria).build();
+	}
 
 	/**
 	 * Prepares request and uri for service request search

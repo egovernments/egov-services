@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.hrms.model.Employee;
 import org.egov.hrms.model.SMSRequest;
@@ -50,6 +51,10 @@ public class NotificationService {
 	 */
 	public void sendNotification(EmployeeRequest request, Map<String, String> pwdMap) {
 		String message = getMessage(request);
+		if(StringUtils.isEmpty(message)) {
+			log.info("SMS content has not been configured for this case");
+			return;
+		}
 		for(Employee employee: request.getEmployees()) {
 			message = buildMessage(employee, message, pwdMap);
 			SMSRequest smsRequest = SMSRequest.builder().mobileNumber(employee.getUser().getMobileNumber()).message(message).build();

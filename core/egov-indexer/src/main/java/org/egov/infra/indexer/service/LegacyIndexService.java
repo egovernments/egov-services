@@ -172,6 +172,7 @@ public class LegacyIndexService {
 					log.info("JobStarted: " + legacyIndexRequest.getJobId());
 					ObjectMapper mapper = indexerUtils.getObjectMapper();
 					Integer offset = legacyIndexRequest.getApiDetails().getPaginationDetails().getStartingOffset();
+					offset = offset == null ? 0: offset;
 					Integer count = offset;
 					Integer presentCount = 0;
 					Integer size = null != legacyIndexRequest.getApiDetails().getPaginationDetails().getMaxPageSize()

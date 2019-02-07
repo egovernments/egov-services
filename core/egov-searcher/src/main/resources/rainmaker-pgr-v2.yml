@@ -181,6 +181,11 @@ SearchDefinitions:
       noOfRecords: $.searchCriteria.noOfRecords
       offset: $.searchCriteria.offset
       
+   output:
+    jsonFormat: {"ResponseInfo": {}}
+    outJsonPath: $.services
+    responseInfoPath: $.ResponseInfo
+      
 
 
 

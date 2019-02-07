@@ -30,7 +30,6 @@ import java.util.stream.Collectors;
 
 import static java.util.Objects.isNull;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
-import static org.egov.tracer.http.HttpUtils.isInterServiceCall;
 import static org.springframework.util.CollectionUtils.isEmpty;
 
 @Service
@@ -159,8 +158,6 @@ public class UserService {
                     .getType()).tenantId(user.getTenantId()).build());
     }
 
-    // Temporary validation to remove backward compatibility
-    @Deprecated
     private String getStateLevelTenantForCitizen(String tenantId, UserType userType){
         if (!isNull(userType) && userType.equals(UserType.CITIZEN) && !isEmpty(tenantId) && tenantId.contains("."))
             return tenantId.split("\\.")[0];
@@ -266,6 +263,7 @@ public class UserService {
      * @param user
      * @return
      */
+    // TODO Fix date formats
     public User updateWithoutOtpValidation(final User user) {
         final User existingUser = getUserByUuid(user.getUuid());
         user.setTenantId(getStateLevelTenantForCitizen(user.getTenantId(), user.getType()));
@@ -273,7 +271,7 @@ public class UserService {
         user.validateUserModification();
         user.setPassword(encryptPwd(user.getPassword()));
         userRepository.update(user, existingUser);
-        return user;
+        return  getUserByUuid(user.getUuid());
     }
 
     /**

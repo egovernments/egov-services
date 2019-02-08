@@ -424,6 +424,7 @@ public class UserControllerTest {
 		Set<Role> roles = new HashSet<>();
 		org.egov.user.domain.model.Role roleModel = org.egov.user.domain.model.Role.builder()
 				.name("Employee")
+				.code("EMPLOYEE")
 				.build();
 
 		Role role = new Role(roleModel);

@@ -374,7 +374,7 @@ public class EmployeeValidator {
 		EmployeeResponse existingEmployeeResponse = employeeService.search(EmployeeSearchCriteria.builder().uuids(uuidList).build(),request.getRequestInfo());
 		List <Employee> existingEmployees = existingEmployeeResponse.getEmployees();
 		for(Employee employee: request.getEmployees()){
-			if(validateEmployeeForUpdate(employee,errorMap)){
+			if(validateEmployeeForUpdate(employee, errorMap)){
 				Employee existingEmp = existingEmployees.stream().filter(existingEmployee -> existingEmployee.getUuid().equals(employee.getUuid())).findFirst().get();
 				validateDataConsistency(employee, errorMap, mdmsData, existingEmp);
 			}

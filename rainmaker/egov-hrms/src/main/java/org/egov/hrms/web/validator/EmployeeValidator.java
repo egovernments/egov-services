@@ -140,7 +140,6 @@ public class EmployeeValidator {
             if(!StringUtils.isEmpty(employee.getCode())){
                 UserResponse userResponse = userService.getSingleUser(requestInfo,employee,"UserName");
                 if(!CollectionUtils.isEmpty(userResponse.getUser())){
-                    log.info("User: "+ (userResponse.getUser().get(0)));
                     errorMap.put(ErrorConstants.HRMS_USER_EXIST_USERNAME_CODE,
                     		ErrorConstants.HRMS_USER_EXIST_USERNAME_MSG+userResponse.getUser().get(0).getUserName());
                 }
@@ -162,6 +161,7 @@ public class EmployeeValidator {
 		//validateEducationalDetails(employee, errorMap, mdmsData);
 		//validateDepartmentalTest(employee, errorMap, mdmsData);
 	}
+	
 	
 	/**
 	 * Performs checks for maintaining data consistency

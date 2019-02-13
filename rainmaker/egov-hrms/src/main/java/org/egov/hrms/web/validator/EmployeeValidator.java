@@ -112,7 +112,7 @@ public class EmployeeValidator {
 	}
 
 	/**
-	 * Checks if the mobile number is duplicate.
+	 * Checks if the mobile number used in the request is duplicate.
 	 * 
 	 * @param employees
 	 * @param errorMap

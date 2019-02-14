@@ -121,4 +121,14 @@ public class ErrorConstants {
 	
 	public static final String HRMS_INVALID_SEARCH_REQ_CODE = "HRMS_INVALID_SEARCH_REQ";
 	public static final String HRMS_INVALID_SEARCH_REQ_MSG = "Open search is disabled for this user!";
+
+	public static final String HRMS_INVALID_JURISDICTION_HEIRARCHY_CODE = "HRMS_INVALID_JURISDICTION_HEIRARCHY_CODE";
+	public static final String HRMS_INVALID_JURISDICTION_HEIRARCHY_MSG = "Jurisiction hierarchy value is invalid";
+
+	public static final String HRMS_INVALID_JURISDICTION_BOUNDARY_TYPE_CODE = "HRMS_INVALID_BOUNDARY_TYPE_HEIRARCHY_CODE";
+	public static final String HRMS_INVALID_JURISDICTION_BOUNDARY_TYPE_MSG = "Jurisiction boundary type value is invalid";
+
+	public static final String HRMS_INVALID_JURISDICTION_BOUNDARY_CODE = "HRMS_INVALID_JURISDICTION_BOUNDARY_CODE";
+	public static final String HRMS_INVALID_JURISDICTION_BOUNDARY_MSG = "Jurisiction boundary value is invalid";
+
 }

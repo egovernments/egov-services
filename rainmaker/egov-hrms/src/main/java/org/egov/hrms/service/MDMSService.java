@@ -44,6 +44,7 @@ public class MDMSService {
 	 */
 	public Map<String, List<String>> getMDMSData(RequestInfo requestInfo, String tenantId){
 		MdmsResponse response = fetchMDMSData(requestInfo, tenantId);
+		MdmsResponse responseLoc = fetchMDMSDataLoc(requestInfo, tenantId);
 		Map<String, List<String>> masterData = new HashMap<>();
 		Map<String, List<String>> eachMasterMap = new HashMap<>();
 		if(null != response) {
@@ -66,14 +67,24 @@ public class MDMSService {
 				}
 			}
 		}
+		if(null != responseLoc){
+			if(!CollectionUtils.isEmpty(responseLoc.getMdmsRes().keySet())) {
+				if(null != responseLoc.getMdmsRes().get(HRMSConstants.HRMS_MDMS_EGOV_LOCATION_MASTERS_CODE)) {
+					eachMasterMap = (Map) responseLoc.getMdmsRes().get(HRMSConstants.HRMS_MDMS_EGOV_LOCATION_MASTERS_CODE);
+					masterData.put(HRMSConstants.HRMS_MDMS_TENANT_BOUNDARY_CODE,eachMasterMap.get(HRMSConstants.HRMS_MDMS_TENANT_BOUNDARY_CODE));
+				}
+
+			}
+		}
 		return masterData;
 		
 	}
-	
-	
+
+
+
 	/**
 	 * Makes call to the MDMS service to fetch the MDMS data.
-	 * 
+	 *
 	 * @param requestInfo
 	 * @param tenantId
 	 * @return
@@ -90,7 +101,27 @@ public class MDMSService {
 		}
 		return response;
 	}
-	
+
+	/**
+	 * Makes call to the MDMS service to fetch the MDMS Boundary data.
+	 *
+	 * @param requestInfo
+	 * @param tenantId
+	 * @return
+	 */
+	public MdmsResponse fetchMDMSDataLoc(RequestInfo requestInfo, String tenantId) {
+		StringBuilder uri = new StringBuilder();
+		MdmsCriteriaReq request = prepareMDMSRequestLoc(uri, requestInfo, tenantId);
+		MdmsResponse response = null;
+		try {
+			response = restTemplate.postForObject(uri.toString(), request, MdmsResponse.class);
+		}catch(Exception e) {
+			log.info("Exception while fetching from MDMS: ",e);
+			log.info("Request: "+ request);
+		}
+		return response;
+	}
+
 	/**
 	 * Prepares request for MDMS in order to fetch all the required masters for HRMS.
 	 * 
@@ -117,6 +148,8 @@ public class MDMSService {
 				MasterDetail masterDetail=null;
 				if(module.equals(HRMSConstants.HRMS_AC_ROLES_MASTERS_CODE))
 					masterDetail = MasterDetail.builder().name(master).filter("*.code").build();
+				else if(module.equals(HRMSConstants.HRMS_MDMS_EGOV_LOCATION_MASTERS_CODE))
+					masterDetail = MasterDetail.builder().name(master).build();
 				else
 					masterDetail = MasterDetail.builder().name(master).filter("[?(@.active == true)].code").build();
 				masterDetails.add(masterDetail);
@@ -128,6 +161,38 @@ public class MDMSService {
 		MdmsCriteria mdmsCriteria = MdmsCriteria.builder().tenantId(tenantId).moduleDetails(moduleDetails).build();
 		return MdmsCriteriaReq.builder().requestInfo(requestInfo).mdmsCriteria(mdmsCriteria).build();
 	
+	}
+
+
+	/**
+	 * Prepares request for MDMS in order to fetch all the required masters for Boundary Data.
+	 *
+	 * @param uri
+	 * @param requestInfo
+	 * @param tenantId
+	 * @return
+	 */
+	public MdmsCriteriaReq prepareMDMSRequestLoc(StringBuilder uri, RequestInfo requestInfo, String tenantId) {
+		Map<String, List<String>> mapOfModulesAndMasters = new HashMap<>();
+		String[] egovLoccation = {HRMSConstants.HRMS_MDMS_TENANT_BOUNDARY_CODE};
+		mapOfModulesAndMasters.put(HRMSConstants.HRMS_MDMS_EGOV_LOCATION_MASTERS_CODE, Arrays.asList(egovLoccation));
+		List<ModuleDetail> moduleDetails = new ArrayList<>();
+		for(String module: mapOfModulesAndMasters.keySet()) {
+			ModuleDetail moduleDetail = new ModuleDetail();
+			moduleDetail.setModuleName(module);
+			List<MasterDetail> masterDetails = new ArrayList<>();
+			for(String master: mapOfModulesAndMasters.get(module)) {
+				MasterDetail masterDetail=null;
+				masterDetail = MasterDetail.builder().name(master).build();
+				masterDetails.add(masterDetail);
+			}
+			moduleDetail.setMasterDetails(masterDetails);
+			moduleDetails.add(moduleDetail);
+		}
+		uri.append(mdmsHost).append(mdmsEndpoint);
+		MdmsCriteria mdmsCriteria = MdmsCriteria.builder().tenantId(tenantId).moduleDetails(moduleDetails).build();
+		return MdmsCriteriaReq.builder().requestInfo(requestInfo).mdmsCriteria(mdmsCriteria).build();
+
 	}
 
 }

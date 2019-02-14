@@ -8,16 +8,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import com.jayway.jsonpath.JsonPath;
 import org.apache.commons.lang3.StringUtils;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.request.Role;
 import org.egov.hrms.config.PropertiesManager;
-import org.egov.hrms.model.Assignment;
-import org.egov.hrms.model.DeactivationDetails;
-import org.egov.hrms.model.DepartmentalTest;
-import org.egov.hrms.model.EducationalQualification;
-import org.egov.hrms.model.Employee;
-import org.egov.hrms.model.ServiceHistory;
+import org.egov.hrms.model.*;
 import org.egov.hrms.service.EmployeeService;
 import org.egov.hrms.service.MDMSService;
 import org.egov.hrms.service.UserService;
@@ -158,11 +154,12 @@ public class EmployeeValidator {
 		validateEmployee(employee, errorMap, mdmsData);
 		validateAssignments(employee, errorMap, mdmsData);
 		validateServiceHistory(employee, errorMap, mdmsData);
+		validateJurisdicton(employee, errorMap, mdmsData);
 		//validateEducationalDetails(employee, errorMap, mdmsData);
 		//validateDepartmentalTest(employee, errorMap, mdmsData);
 	}
-	
-	
+
+
 	/**
 	 * Performs checks for maintaining data consistency
 	 * 
@@ -211,7 +208,7 @@ public class EmployeeValidator {
 		if(!mdmsData.get(HRMSConstants.HRMS_MDMS_EMP_STATUS_CODE).contains(employee.getEmployeeStatus()))
 			errorMap.put(ErrorConstants.HRMS_INVALID_EMP_STATUS_CODE, ErrorConstants.HRMS_INVALID_EMP_STATUS_MSG);
 		if(!mdmsData.get(HRMSConstants.HRMS_MDMS_EMP_TYPE_CODE).contains(employee.getEmployeeType()))
-			errorMap.put(ErrorConstants.HRMS_INVALID_EMP_TYPE_CODE, ErrorConstants.HRMS_INVALID_EMP_TYPE_CODE);
+			errorMap.put(ErrorConstants.HRMS_INVALID_EMP_TYPE_CODE, ErrorConstants.HRMS_INVALID_EMP_TYPE_MSG);
 		if(employee.getDateOfAppointment() > new Date().getTime())
 			errorMap.put(ErrorConstants.HRMS_INVALID_DATE_OF_APPOINTMENT_CODE, ErrorConstants.HRMS_INVALID_DATE_OF_APPOINTMENT_MSG);
 		if(null != employee.getUser().getDob()) {
@@ -319,7 +316,27 @@ public class EmployeeValidator {
 			}
 		}
 	}
-	
+
+	private void validateJurisdicton(Employee employee, Map<String, String> errorMap, Map<String, List<String>> mdmsData) {
+		if(!CollectionUtils.isEmpty(employee.getJurisdictions())){
+			for(Jurisdiction jurisdiction: employee.getJurisdictions()) {
+				List<String>  hierarchyTypes = JsonPath.read(mdmsData,HRMSConstants.HRMS_TENANTBOUNDARY_HIERARCHY_JSONPATH);
+				String boundary_type_path = String.format(HRMSConstants.HRMS_TENANTBOUNDARY_BOUNDARY_TYPE_JSONPATH,jurisdiction.getHierarchy());
+				String boundary_value_path = String.format(HRMSConstants.HRMS_TENANTBOUNDARY_BOUNDARY_VALUE_JSONPATH,jurisdiction.getHierarchy());
+				List <String> boundaryTypes = JsonPath.read(mdmsData,boundary_type_path);
+				List <String> boundaryValues = JsonPath.read(mdmsData,boundary_value_path);
+				if(!hierarchyTypes.contains(jurisdiction.getHierarchy()))
+					errorMap.put(ErrorConstants.HRMS_INVALID_JURISDICTION_HEIRARCHY_CODE, ErrorConstants.HRMS_INVALID_JURISDICTION_HEIRARCHY_MSG);
+				if(!boundaryTypes.contains(jurisdiction.getBoundaryType()))
+					errorMap.put(ErrorConstants.HRMS_INVALID_JURISDICTION_BOUNDARY_TYPE_CODE, ErrorConstants.HRMS_INVALID_JURISDICTION_BOUNDARY_TYPE_MSG);
+				if(!boundaryValues.contains(jurisdiction.getBoundary()))
+					errorMap.put(ErrorConstants.HRMS_INVALID_JURISDICTION_BOUNDARY_CODE, ErrorConstants.HRMS_INVALID_JURISDICTION_BOUNDARY_MSG);
+			}
+		}
+
+	}
+
+
 	/**
 	 * Checks the follwing:
 	 * 1. If the dept test is valid.

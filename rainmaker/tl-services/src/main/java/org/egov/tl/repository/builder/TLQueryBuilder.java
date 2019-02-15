@@ -83,6 +83,13 @@ public class TLQueryBuilder {
         if(criteria.getAccountId()!=null){
             builder.append(" tl.accountid = ? ");
             preparedStmtList.add(criteria.getAccountId());
+
+            List<String> ownerIds = criteria.getOwnerIds();
+            if(!CollectionUtils.isEmpty(ownerIds)) {
+                builder.append(" OR tlowner.id IN (").append(createQuery(ownerIds)).append(")");
+                addToPreparedStatement(preparedStmtList,ownerIds);
+            }
+
             return builder.toString();
         }
 

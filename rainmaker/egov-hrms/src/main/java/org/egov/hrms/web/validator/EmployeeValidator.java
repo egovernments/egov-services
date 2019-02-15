@@ -173,7 +173,7 @@ public class EmployeeValidator {
 	 * @param existingEmp
 	 */
 	public void validateDataConsistency(Employee employee, Map<String, String> errorMap, Map<String, List<String>> mdmsData, Employee existingEmp) {
-
+		validateUserNameChange(existingEmp,employee,errorMap);
 		validateConsistencyAssignment(existingEmp,employee,errorMap);
 		validateConsistencyJurisdiction(existingEmp,employee,errorMap);
 		validateConsistencyDepartmentalTest(existingEmp,employee,errorMap);
@@ -182,6 +182,17 @@ public class EmployeeValidator {
 		validateConsistencyEmployeeDocument(existingEmp,employee,errorMap);
 		validateConsistencyDeactivationDetails(existingEmp,employee,errorMap);
 		validateDeactivationDetails(existingEmp,employee,errorMap);
+	}
+
+	/**
+	 * Check whether employee code has changed
+	 * @param existingEmp
+	 * @param employee
+	 * @param errorMap
+	 */
+	private void validateUserNameChange(Employee existingEmp, Employee employee, Map<String, String> errorMap) {
+		if(!employee.getCode().equals(existingEmp.getCode()))
+			errorMap.put(ErrorConstants.HRMS_UPDATE_EMPLOYEE_CODE_CHANGE_MSG,ErrorConstants.HRMS_UPDATE_EMPLOYEE_CODE_CHANGE_MSG);
 	}
 
 	/**

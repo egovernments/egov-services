@@ -29,6 +29,8 @@ public class EmployeeSearchCriteria {
 	
 	public List<String> designations;
 	
+	public Long asOnDate;
+	
 	public List<Integer> ids;
 	
 	public List<String> employeestatuses;

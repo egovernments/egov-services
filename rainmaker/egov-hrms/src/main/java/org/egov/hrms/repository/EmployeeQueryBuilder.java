@@ -60,6 +60,9 @@ public class EmployeeQueryBuilder {
 			builder.append(" and employee.name IN ("+createINClauseForList(criteria.getNames())+")");
 		if(!CollectionUtils.isEmpty(criteria.getPositions()))
 			builder.append(" and assignment.position IN ("+createINClauseForIntList(criteria.getPositions())+")");
+		if(null != criteria.getAsOnDate()) {
+			builder.append(" and assignment.fromdate <= "+criteria.getAsOnDate()+" and assignment.todate >= "+criteria.getAsOnDate());
+		}
 		
 		builder.append(" and employee.active = "+criteria.getIsActive());
 	}

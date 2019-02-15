@@ -25,13 +25,16 @@ public class EnrichmentService {
     private TLConfiguration config;
     private TradeUtil tradeUtil;
     private BoundaryService boundaryService;
+    private UserService userService;
 
     @Autowired
-    public EnrichmentService(IdGenRepository idGenRepository, TLConfiguration config, TradeUtil tradeUtil, BoundaryService boundaryService) {
+    public EnrichmentService(IdGenRepository idGenRepository, TLConfiguration config, TradeUtil tradeUtil,
+                             BoundaryService boundaryService,UserService userService) {
         this.idGenRepository = idGenRepository;
         this.config = config;
         this.tradeUtil = tradeUtil;
         this.boundaryService = boundaryService;
+        this.userService = userService;
     }
 
 
@@ -408,6 +411,21 @@ public class EnrichmentService {
             criteria.setTenantId(requestInfo.getUserInfo().getTenantId());
         }
 
+    }
+
+    /**
+     * Enriches the tradeLicenses with ownerInfo and Boundary data
+     * @param licenses The licenses to be enriched
+     * @param criteria The search criteria of licenses containing the ownerIds
+     * @param requestInfo The requestInfo of search
+     * @return enriched tradeLicenses
+     */
+    public List<TradeLicense> enrichTradeLicenseSearch(List<TradeLicense> licenses, TradeLicenseSearchCriteria criteria, RequestInfo requestInfo){
+        enrichTLSearchCriteriaWithOwnerids(criteria,licenses);
+        enrichBoundary(new TradeLicenseRequest(requestInfo,licenses));
+        UserDetailResponse userDetailResponse = userService.getUser(criteria,requestInfo);
+        enrichOwner(userDetailResponse,licenses);
+        return licenses;
     }
 
 

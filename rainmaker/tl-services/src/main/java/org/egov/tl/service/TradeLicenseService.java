@@ -118,8 +118,8 @@ public class TradeLicenseService {
         if(licenses.size()==0){
             return Collections.emptyList();
         }
-        criteria = enrichmentService.getTLSearchCriteriaFromTLIds(licenses);
-        licenses = getLicensesWithOwnerInfo(criteria,requestInfo);
+        TradeLicenseSearchCriteria criteriaFromTLIds = enrichmentService.getTLSearchCriteriaFromTLIds(licenses);
+        licenses = getLicensesWithOwnerInfo(criteriaFromTLIds,requestInfo);
 
         return licenses;
     }

@@ -192,6 +192,10 @@ public class TLConfiguration {
     @Value("${egov.tl.min.period}")
     private Long minPeriod;
 
+    @Value("${egov.tl.property.validate}")
+    private Boolean validateProperty;
+
+
 
 
 

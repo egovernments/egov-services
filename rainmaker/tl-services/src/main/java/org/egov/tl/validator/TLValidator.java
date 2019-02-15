@@ -52,7 +52,8 @@ public class TLValidator {
         valideDates(request,mdmsData);
         validateInstitution(request);
         validateDuplicateDocuments(request);
-        propertyValidator.validateProperty(request);
+        if(config.getValidateProperty())
+            propertyValidator.validateProperty(request);
         mdmsValidator.validateMdmsData(request,mdmsData);
     }
 
@@ -141,6 +142,9 @@ public class TLValidator {
 
       if(searchResult.size()!=licenses.size())
           throw new CustomException("INVALID UPDATE","The license to be updated is not in database");
+
+      if(config.getValidateProperty())
+          propertyValidator.validateProperty(request);
 
       validateAllIds(searchResult,licenses);
       mdmsValidator.validateMdmsData(request,mdmsData);

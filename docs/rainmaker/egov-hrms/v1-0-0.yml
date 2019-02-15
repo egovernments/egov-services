@@ -41,7 +41,7 @@
         - name: names
           in: query
           required: false
-          description: List of employee codes
+          description: List of employee names
           type: array
           items:
             type: string
@@ -61,6 +61,11 @@
           type: array
           items:
             type: string
+        - name: asOnDate
+          in: query
+          description: Epoch Date of assignment
+          required: false
+          type: number
         - name: id
           in: query
           description: List of Unique Id of employee
@@ -135,8 +140,8 @@
       tags:
         - Employee
       responses:
-        '201':
-          description: Employee created sucessfully.
+        '202':
+          description: Employee request accepted for creation.
           schema:
             $ref: '#/definitions/EmployeeRes'
         '400':
@@ -162,8 +167,8 @@
       tags:
         - Employee
       responses:
-        '200':
-          description: Employee updated.
+        '202':
+          description: Employee request accepted for update.
           schema:
             $ref: '#/definitions/EmployeeRes'
         '400':
@@ -316,9 +321,6 @@
       isCurrentAssignment:
         type: boolean
         description: Value true means, This is the guy's current assignment.
-      active:
-        type: boolean
-        description: Value true means, this the current assignment of the employee.
       auditDetails:
         type: object
         $ref:  '#/definitions/AuditDetails'

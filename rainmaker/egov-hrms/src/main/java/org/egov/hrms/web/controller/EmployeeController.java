@@ -80,7 +80,7 @@ public class EmployeeController {
 	public ResponseEntity<?> create(@RequestBody @Valid EmployeeRequest employeeRequest) {
 		validator.validateCreateEmployee(employeeRequest);
 		EmployeeResponse employeeResponse = employeeService.create(employeeRequest);
-        return new ResponseEntity<>(employeeResponse,HttpStatus.OK);
+        return new ResponseEntity<>(employeeResponse, HttpStatus.ACCEPTED);
 	}
 
 
@@ -97,7 +97,7 @@ public class EmployeeController {
 	public ResponseEntity<?> update(@RequestBody @Valid EmployeeRequest employeeRequest) {
 		validator.validateUpdateEmployee(employeeRequest);
 		EmployeeResponse employeeResponse = employeeService.update(employeeRequest);
-		return new ResponseEntity<>(employeeResponse,HttpStatus.OK);
+		return new ResponseEntity<>(employeeResponse, HttpStatus.ACCEPTED);
 	}
 	
 	

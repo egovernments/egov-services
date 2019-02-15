@@ -89,6 +89,10 @@ public class EmployeeValidator {
 				errorMap.put(ErrorConstants.HRMS_INVALID_SEARCH_REQ_CODE, ErrorConstants.HRMS_INVALID_SEARCH_REQ_MSG);
 			}
 		}
+		if(null != criteria.getAsOnDate()) {
+			if(CollectionUtils.isEmpty(criteria.getDepartments()) || CollectionUtils.isEmpty(criteria.getDesignations()))
+				errorMap.put(ErrorConstants.HRMS_INVALID_SEARCH_AOD_CODE, ErrorConstants.HRMS_INVALID_SEARCH_AOD_MSG);
+		}
 		if(!CollectionUtils.isEmpty(errorMap.keySet()))
 			throw new CustomException(errorMap);
 	}

@@ -170,14 +170,14 @@ public class KeyStore implements ApplicationRunner {
 
 
     //Generate Secret Key to be used by AES from custom object SymmetricKey
-    public SecretKey generateSecretKey(SymmetricKey symmetricKey) {
+    public SecretKey getSecretKey(SymmetricKey symmetricKey) {
         String encodedKey = symmetricKey.getSecretKey();
         byte[] decodedKey = Base64.getDecoder().decode(encodedKey);
         return new SecretKeySpec(decodedKey, "AES");
     }
 
     //Generate PublicKey to be used by RSA from custom object AsymmetricKey
-    public PublicKey generatePublicKey(AsymmetricKey asymmetricKey) throws NoSuchAlgorithmException, InvalidKeySpecException {
+    public PublicKey getPublicKey(AsymmetricKey asymmetricKey) throws NoSuchAlgorithmException, InvalidKeySpecException {
         String encodedPublicKey = asymmetricKey.getPublicKey();
         byte[] decodedPublicKey = Base64.getDecoder().decode(encodedPublicKey);
 
@@ -187,7 +187,7 @@ public class KeyStore implements ApplicationRunner {
     }
 
     //Generate PrivateKey to be used by RSA from custom object AsymmetricKey
-    public PrivateKey generatePrivateKey(AsymmetricKey asymmetricKey) throws NoSuchAlgorithmException, InvalidKeySpecException {
+    public PrivateKey getPrivateKey(AsymmetricKey asymmetricKey) throws NoSuchAlgorithmException, InvalidKeySpecException {
         String encodedPrivateKey = asymmetricKey.getPrivateKey();
         byte[] decodedPrivateKey = Base64.getDecoder().decode(encodedPrivateKey);
 
@@ -197,7 +197,7 @@ public class KeyStore implements ApplicationRunner {
     }
 
     //Generate Initial Vecctor to be used by AES from custom object SymmetricKey
-    public byte[] generateInitialVector(SymmetricKey symmetricKey) {
+    public byte[] getInitialVector(SymmetricKey symmetricKey) {
         return Base64.getDecoder().decode(symmetricKey.getInitialVector());
     }
 

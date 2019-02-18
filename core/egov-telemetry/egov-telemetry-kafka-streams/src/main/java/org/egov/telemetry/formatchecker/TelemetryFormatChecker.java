@@ -28,8 +28,9 @@ public class TelemetryFormatChecker {
         return false;
     }
 
-    public void validateInputMessages(Properties streamsConfiguration, String inputTopic, String outputTopicSuccess) {
-        streamsConfiguration.put(StreamsConfig.APPLICATION_ID_CONFIG, "message-validation");
+    public void validateInputMessages(Properties streamsConfiguration, String inputTopic, String outputTopicSuccess,
+                                      String streamName) {
+        streamsConfiguration.put(StreamsConfig.APPLICATION_ID_CONFIG, streamName);
         streamsConfiguration.put(StreamsConfig.DEFAULT_KEY_SERDE_CLASS_CONFIG, Serdes.String().getClass().getName());
         streamsConfiguration.put(StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG, Serdes.String().getClass().getName());
 
@@ -46,6 +47,8 @@ public class TelemetryFormatChecker {
         streams.cleanUp();
         streams.start();
         Runtime.getRuntime().addShutdownHook(new Thread(streams::close));
+
+        log.info("Stream : " + streamName + " started. From : " + inputTopic + ", To : " + outputTopicSuccess);
 
     }
 

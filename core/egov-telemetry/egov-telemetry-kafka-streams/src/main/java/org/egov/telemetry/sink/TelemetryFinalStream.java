@@ -14,8 +14,9 @@ import java.util.Properties;
 @Slf4j
 public class TelemetryFinalStream {
 
-    public void pushFinalMessages(Properties streamsConfiguration, String inputTopic, String outputTopic) {
-        streamsConfiguration.put(StreamsConfig.APPLICATION_ID_CONFIG, "push-" + outputTopic);
+    public void pushFinalMessages(Properties streamsConfiguration, String inputTopic, String outputTopic,
+                                  String streamName) {
+        streamsConfiguration.put(StreamsConfig.APPLICATION_ID_CONFIG, streamName);
         streamsConfiguration.put(StreamsConfig.DEFAULT_KEY_SERDE_CLASS_CONFIG, Serdes.String().getClass().getName());
         streamsConfiguration.put(StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG, Serdes.String().getClass().getName());
 
@@ -35,6 +36,8 @@ public class TelemetryFinalStream {
         streams.cleanUp();
         streams.start();
         Runtime.getRuntime().addShutdownHook(new Thread(streams::close));
+
+        log.info("Stream : " + streamName + " started. From : " + inputTopic + ", To : " + outputTopic);
 
     }
 

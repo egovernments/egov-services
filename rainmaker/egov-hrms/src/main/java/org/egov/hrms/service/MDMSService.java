@@ -147,7 +147,7 @@ public class MDMSService {
 			for(String master: mapOfModulesAndMasters.get(module)) {
 				MasterDetail masterDetail=null;
 				if(module.equals(HRMSConstants.HRMS_AC_ROLES_MASTERS_CODE))
-					masterDetail = MasterDetail.builder().name(master).filter("*.code").build();
+					masterDetail = MasterDetail.builder().name(master).filter("[?(@.code != \"CITIZEN\")].code").build();
 				else if(module.equals(HRMSConstants.HRMS_MDMS_EGOV_LOCATION_MASTERS_CODE))
 					masterDetail = MasterDetail.builder().name(master).build();
 				else

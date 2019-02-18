@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import javax.annotation.PostConstruct;
 import java.util.*;
 
 @Service
@@ -31,7 +32,7 @@ public class EncryptionService {
     @Value("egov.enc.path.decryption")
     private String egovEncDecryptPath;
 
-    @Value("#{${field.type.map}}")
+    @Value("#{${egov.enc.field.type.map}}")
     private Map<String, String> fieldsAndTheirType;
 
     private Map<String, List<String>> typesAndFieldsToEncrypt;
@@ -41,6 +42,10 @@ public class EncryptionService {
 
     public EncryptionService() {
         mapper = new ObjectMapper(new JsonFactory());
+    }
+
+    @PostConstruct
+    public void initializeTypesAndFieldsToEncrypt() {
         typesAndFieldsToEncrypt = new HashMap<>();
         Iterator<String> iterator = fieldsAndTheirType.keySet().iterator();
         while (iterator.hasNext()) {

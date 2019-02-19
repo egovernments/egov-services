@@ -441,6 +441,9 @@ public class EmployeeService {
 				if(deactivationDetails.getId()==null) {
 					deactivationDetails.setId(UUID.randomUUID().toString());
 					deactivationDetails.setAuditDetails(auditDetails);
+					employee.getDocuments().forEach(employeeDocument -> {
+						employeeDocument.setReferenceId( deactivationDetails.getId());
+					});
 				}else {
 					if(!existingEmpData.getAssignments().stream()
 							.filter(deactivationDetailsData -> deactivationDetailsData.getId()==deactivationDetails.getId())

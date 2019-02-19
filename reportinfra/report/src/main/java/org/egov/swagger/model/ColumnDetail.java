@@ -76,6 +76,8 @@ public ColumnDetail(String label, TypeEnum type, String name) {
     EPOCH("epoch"),
     
     URL("url"),
+
+    CURRENCY("currency"),
     
     SINGLEVALUELIST("singlevaluelist"),
     SINGLEVALUELISTAC("singlevaluelistac"),

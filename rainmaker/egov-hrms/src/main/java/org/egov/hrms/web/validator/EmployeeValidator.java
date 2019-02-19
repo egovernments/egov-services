@@ -192,7 +192,7 @@ public class EmployeeValidator {
 	 */
 	private void validateUserNameChange(Employee existingEmp, Employee employee, Map<String, String> errorMap) {
 		if(!employee.getCode().equals(existingEmp.getCode()))
-			errorMap.put(ErrorConstants.HRMS_UPDATE_EMPLOYEE_CODE_CHANGE_MSG,ErrorConstants.HRMS_UPDATE_EMPLOYEE_CODE_CHANGE_MSG);
+			errorMap.put(ErrorConstants.HRMS_UPDATE_EMPLOYEE_CODE_CHANGE_CODE,ErrorConstants.HRMS_UPDATE_EMPLOYEE_CODE_CHANGE_MSG);
 	}
 
 	/**
@@ -407,8 +407,12 @@ public class EmployeeValidator {
 		List <Employee> existingEmployees = existingEmployeeResponse.getEmployees();
 		for(Employee employee: request.getEmployees()){
 			if(validateEmployeeForUpdate(employee, errorMap)){
+				if(!existingEmployees.isEmpty()){
 				Employee existingEmp = existingEmployees.stream().filter(existingEmployee -> existingEmployee.getUuid().equals(employee.getUuid())).findFirst().get();
 				validateDataConsistency(employee, errorMap, mdmsData, existingEmp);
+				}
+				else
+					errorMap.put(ErrorConstants.HRMS_UPDATE_EMPLOYEE_NOT_EXIST_CODE, ErrorConstants.HRMS_UPDATE_EMPLOYEE_NOT_EXIST_MSG);
 			}
 			validateMdmsData(employee, errorMap, mdmsData);
 		}

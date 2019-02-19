@@ -133,6 +133,9 @@ public class ErrorConstants {
 
 	public static final String HRMS_INVALID_SEARCH_AOD_CODE = "HRMS_INVALID_SEARCH_AOD_CODE";
 	public static final String HRMS_INVALID_SEARCH_AOD_MSG = "With asOnDate, atleast one Dept and one Desgination are to be passed.";
+	
+	public static final String HRMS_INVALID_SEARCH_USER_CODE = "HRMS_INVALID_SEARCH_USER_CODE";
+	public static final String HRMS_INVALID_SEARCH_USER_MSG = "With search on phone and name, tenantid is mandatory!";
 
 	public static final String HRMS_UPDATE_EMPLOYEE_CODE_CHANGE_CODE = "HRMS_UPDATE_EMPLOYEE_CODE_CHANGE_CODE";
 	public static final String HRMS_UPDATE_EMPLOYEE_CODE_CHANGE_MSG = "Employee code can not be changed in update request";

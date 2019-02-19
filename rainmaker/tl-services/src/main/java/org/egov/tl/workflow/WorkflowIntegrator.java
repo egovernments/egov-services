@@ -66,7 +66,7 @@ public class WorkflowIntegrator {
 
 	private static final String BUSINESSIDJOSNKEY = "$.businessId";
 
-	private static final String STATUSJSONKEY = "$.state.state";
+	private static final String STATUSJSONKEY = "$.state.applicationStatus";
 
 	/**
 	 * Method to integrate with workflow

@@ -81,10 +81,7 @@ public class TLRepository {
                     || license.getAction().equalsIgnoreCase(ACTION_INITIATE)){
                 licensesForUpdate.add(license);
             }
-            if(license.getAction().equalsIgnoreCase(ACTION_APPROVE)
-                    || license.getAction().equalsIgnoreCase(ACTION_REJECT)
-                     || license.getAction().equalsIgnoreCase(ACTION_CANCEL)
-                    || license.getAction().equalsIgnoreCase(ACTION_PAY)){
+            else{
                 licesnsesForStatusUpdate.add(license);
             }
         });

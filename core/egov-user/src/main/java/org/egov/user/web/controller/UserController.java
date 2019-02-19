@@ -7,6 +7,7 @@ import org.egov.user.domain.model.UserDetail;
 import org.egov.user.domain.model.UserSearchCriteria;
 import org.egov.user.domain.service.TokenService;
 import org.egov.user.domain.service.UserService;
+import org.egov.user.encryption.EncryptionService;
 import org.egov.user.web.contract.*;
 import org.egov.user.web.contract.auth.CustomUserDetails;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -29,6 +32,7 @@ public class UserController {
 
 	private UserService userService;
 	private TokenService tokenService;
+	private EncryptionService encryptionService;
 
 	@Value("${mobile.number.validation.workaround.enabled}")
 	private String mobileValidationWorkaroundEnabled;
@@ -42,11 +46,24 @@ public class UserController {
     @Value("${egov.user.search.default.size}")
     private Integer defaultSearchSize;
 
-
 	@Autowired
-	public UserController(UserService userService, TokenService tokenService) {
+	public UserController(UserService userService, TokenService tokenService, EncryptionService encryptionService) {
 		this.userService = userService;
 		this.tokenService = tokenService;
+		this.encryptionService = encryptionService;
+	}
+
+	@PostMapping("/_citizen/encrypt")
+	public Object encryptUserObject(@RequestBody CreateUserRequest createUserRequest) {
+		Object encryptedObject = encryptionService.encryptJson(createUserRequest, "pb");
+		return encryptedObject;
+	}
+
+	@PostMapping("/_citizen/decrypt")
+	public Object decryptUserObject(@RequestBody CreateUserRequest createUserRequest) {
+		Object decryptedObject = encryptionService.decryptJson(createUserRequest,
+				Arrays.asList(new String[] {"mobileNumber", "emailId"}));
+		return decryptedObject;
 	}
 
 	/**

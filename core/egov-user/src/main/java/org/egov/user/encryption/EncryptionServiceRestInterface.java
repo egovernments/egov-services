@@ -21,10 +21,10 @@ public class EncryptionServiceRestInterface {
     @Value("${egov.enc.host}")
     private String egovEncHost;
 
-    @Value("egov.enc.path.encryption")
+    @Value("${egov.enc.path.encryption}")
     private String egovEncEncryptPath;
 
-    @Value("egov.enc.path.decryption")
+    @Value("${egov.enc.path.decryption}")
     private String egovEncDecryptPath;
 
 
@@ -41,7 +41,7 @@ public class EncryptionServiceRestInterface {
     }
 
     Object callDecrypt(Object ciphertext) {
-        ResponseEntity<Object> response =  restTemplate.postForEntity(egovEncHost + egovEncEncryptPath,
+        ResponseEntity<Object> response =  restTemplate.postForEntity(egovEncHost + egovEncDecryptPath,
                 ciphertext, Object.class);
 
         return response.getBody();

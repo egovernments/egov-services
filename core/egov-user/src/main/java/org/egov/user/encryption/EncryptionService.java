@@ -20,18 +20,6 @@ public class EncryptionService {
     @Autowired
     private EncryptionServiceRestInterface encryptionServiceRestInterface;
 
-    @Autowired
-    private RestTemplate restTemplate;
-
-    @Value("${egov.enc.host}")
-    private String egovEncHost;
-
-    @Value("egov.enc.path.encryption")
-    private String egovEncEncryptPath;
-
-    @Value("egov.enc.path.decryption")
-    private String egovEncDecryptPath;
-
     @Value("#{${egov.enc.field.type.map}}")
     private Map<String, String> fieldsAndTheirType;
 
@@ -79,7 +67,8 @@ public class EncryptionService {
             List<String> fields = typesAndFieldsToEncrypt.get(type);
 
             JsonNode jsonNode = JacksonUtils.filterJsonNode(plaintextNode, fields);
-            JsonNode returnedEncryptedNode = (JsonNode) encryptionServiceRestInterface.callEncrypt(tenantId, type, jsonNode);
+            JsonNode returnedEncryptedNode = mapper.valueToTree(encryptionServiceRestInterface.callEncrypt(tenantId, type,
+                    jsonNode));
 
             encryptedNode = JacksonUtils.merge(returnedEncryptedNode, encryptedNode);
         }
@@ -96,7 +85,7 @@ public class EncryptionService {
         JsonNode decryptedNode = ciphertextNode.deepCopy();
 
         JsonNode jsonNode = JacksonUtils.filterJsonNode(ciphertextNode, fields);
-        JsonNode returnedDecryptedNode = (JsonNode) encryptionServiceRestInterface.callDecrypt(ciphertextNode);
+        JsonNode returnedDecryptedNode = mapper.valueToTree(encryptionServiceRestInterface.callDecrypt(jsonNode));
 
         decryptedNode = JacksonUtils.merge(returnedDecryptedNode, decryptedNode);
 

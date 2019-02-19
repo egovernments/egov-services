@@ -67,7 +67,6 @@ public class ServiceHistory {
 	@NotNull
 	private Long serviceTo;
 
-	@NotNull
 	private String orderNo;
 	
 	private String location;

@@ -16,7 +16,7 @@ ReportDefinitions:
         total: false
       - name: amount
         label: reports.pt.amount
-        type: string
+        type: currency
         source: pt
         total: true
       - name: propertytax

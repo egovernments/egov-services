@@ -296,13 +296,13 @@ public class EmployeeValidator {
 	private void validateServiceHistory(Employee employee, Map<String, String> errorMap, Map<String, List<String>> mdmsData) {
 		if(!CollectionUtils.isEmpty(employee.getServiceHistory())){
 			for(ServiceHistory history: employee.getServiceHistory()) {
-				if(!mdmsData.get(HRMSConstants.HRMS_MDMS_EMP_STATUS_CODE).contains(history.getServiceStatus()))
+				if(!StringUtils.isEmpty(history.getServiceStatus()) && !mdmsData.get(HRMSConstants.HRMS_MDMS_EMP_STATUS_CODE).contains(history.getServiceStatus()))
 					errorMap.put(ErrorConstants.HRMS_INVALID_SERVICE_STATUS_CODE, ErrorConstants.HRMS_INVALID_SERVICE_STATUS_MSG+history.getServiceStatus());
-				if(history.getServiceFrom() > new Date().getTime() || history.getServiceTo() > new Date().getTime()
-						|| history.getServiceFrom() > history.getServiceTo())
+				if( (null != history.getServiceFrom() &&  history.getServiceFrom() > new Date().getTime()) || (null != history.getServiceTo() && history.getServiceTo() > new Date().getTime())
+						|| (null != history.getServiceFrom() && null != history.getServiceTo() && history.getServiceFrom() > history.getServiceTo()))
 					errorMap.put(ErrorConstants.HRMS_INVALID_SERVICE_PERIOD_CODE, ErrorConstants.HRMS_INVALID_SERVICE_PERIOD_MSG);
 				if(employee.getUser().getDob()!=null )
-					if(history.getServiceFrom() < employee.getUser().getDob() || history.getServiceTo() < employee.getUser().getDob())
+					if((null != history.getServiceFrom() && history.getServiceFrom() < employee.getUser().getDob()) || (null != history.getServiceTo() && history.getServiceTo() < employee.getUser().getDob()))
 						errorMap.put(ErrorConstants.HRMS_INVALID_SERVICE_DATES_CODE, ErrorConstants.HRMS_INVALID_SERVICE_DATES_MSG);
 			}
 		}

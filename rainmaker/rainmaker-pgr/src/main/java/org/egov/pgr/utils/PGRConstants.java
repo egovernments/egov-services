@@ -120,7 +120,7 @@ public class PGRConstants {
 	public static final String ROLE_NAME_EMPLOYEE = "Employee";
 	public static final String ROLE_NAME_GRO = "Grievance Routing Officer";
 	public static final String ROLE_NAME_DGRO = "Department Grievance Routing Officer";
-	public static final String ROLE_NAME_CSR = "Citizen Service Representative";
+	public static final String ROLE_NAME_CSR = "Customer Support Representative";
 	
 
 	

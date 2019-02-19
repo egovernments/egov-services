@@ -43,6 +43,8 @@ package org.egov.hrms.service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+
+import org.apache.commons.lang3.StringUtils;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.hrms.config.PropertiesManager;
 import org.egov.hrms.model.AuditDetails;
@@ -61,6 +63,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import java.util.*;
 import java.util.function.Function;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 @Data
@@ -136,6 +139,24 @@ public class EmployeeService {
 			criteria.setIsActive(true);
 		else
 			criteria.setIsActive(false);
+		if(!StringUtils.isEmpty(criteria.getPhone())) {
+			User user = User.builder().mobileNumber(criteria.getPhone()).build();
+			Employee employee = Employee.builder().user(user).tenantId(criteria.getTenantId()).build();
+			UserResponse userResponse = userService.getSingleUser(requestInfo, employee, "MobileNumber");
+			List<String> userUUIDs = userResponse.getUser().parallelStream().map(User :: getUuid).collect(Collectors.toList());
+			criteria.setUuids(userUUIDs);
+		}
+		if(!CollectionUtils.isEmpty(criteria.getNames())) {
+			List<String> userUUIDs = new ArrayList<>();
+			for(String name: criteria.getNames()) {
+				User user = User.builder().name(name).build();
+				Employee employee = Employee.builder().user(user).tenantId(criteria.getTenantId()).build();
+				UserResponse userResponse = userService.getSingleUser(requestInfo, employee, "Name");
+				List<String> uuids = userResponse.getUser().parallelStream().map(User :: getUuid).collect(Collectors.toList());
+				userUUIDs.addAll(uuids);
+			}
+			criteria.setUuids(userUUIDs);
+		}
 		List<Employee> employees = repository.fetchEmployees(criteria, requestInfo);
 		List<String> uuids = employees.stream().map(Employee :: getUuid).collect(Collectors.toList());
 		if(!CollectionUtils.isEmpty(uuids)){

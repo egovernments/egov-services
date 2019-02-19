@@ -330,12 +330,15 @@ public class DemandService {
 			if (estimate.getTaxHeadCode().equalsIgnoreCase(CalculatorConstants.PT_ADVANCE_CARRYFORWARD))
 				continue;
 
+			BigDecimal collectionAmount = BigDecimal.ZERO;
+			if (!estimate.getTaxHeadCode().equalsIgnoreCase(CalculatorConstants.PT_DECIMAL_CEILING_CREDIT)
+					&& detailCollectionMap.get(estimate.getTaxHeadCode()) != null) {
+				collectionAmount = detailCollectionMap.get(estimate.getTaxHeadCode());
+			}
+
 			details.add(DemandDetail.builder().taxHeadMasterCode(estimate.getTaxHeadCode())
-					.taxAmount(estimate.getEstimateAmount())
-					.collectionAmount(detailCollectionMap.get(estimate.getTaxHeadCode()) != null
-							? detailCollectionMap.get(estimate.getTaxHeadCode())
-							: BigDecimal.ZERO)
-					.tenantId(tenantId).build());
+					.taxAmount(estimate.getEstimateAmount()).collectionAmount(collectionAmount).tenantId(tenantId)
+					.build());
 		}
 
 		return Demand.builder().tenantId(tenantId).businessService(configs.getPtModuleCode()).consumerType(propertyType)
@@ -457,7 +460,7 @@ public class DemandService {
 		 * 
 		 * given that only debit or credit can exist at a time with value greater than zero
 		 */
-		boolean isDecimalMathcing = false;
+		boolean isDecimalMatching = false;
 
 		BigDecimal creditAmt = BigDecimal.ZERO;
 		BigDecimal debitAmt = BigDecimal.ZERO;
@@ -513,18 +516,18 @@ public class DemandService {
 		for (DemandDetail detail : demand.getDemandDetails()) {
 
 			if (detail.getTaxHeadMasterCode().equalsIgnoreCase(CalculatorConstants.PT_DECIMAL_CEILING_CREDIT)) {
-				if (detail.getCollectionAmount().compareTo(BigDecimal.ZERO) == 0)
 					detail.setTaxAmount(decimalCredit);
+					detail.setCollectionAmount(BigDecimal.ZERO);
 				if (null != estimate
 						&& CalculatorConstants.PT_DECIMAL_CEILING_CREDIT.equalsIgnoreCase(estimate.getTaxHeadCode()))
-					isDecimalMathcing = true;
+					isDecimalMatching = true;
 			}
 
 			if (detail.getTaxHeadMasterCode().equalsIgnoreCase(CalculatorConstants.PT_DECIMAL_CEILING_DEBIT)) {
 				detail.setTaxAmount(decimalDebit);
 				if (null != estimate
 						&& CalculatorConstants.PT_DECIMAL_CEILING_DEBIT.equalsIgnoreCase(estimate.getTaxHeadCode()))
-				isDecimalMathcing = true;
+				isDecimalMatching = true;
 			}
 		}
 
@@ -533,7 +536,7 @@ public class DemandService {
 		 *  
 		 *   then a new demandDetail will be created and added to the Demand. 
 		 */
-		if (!isDecimalMathcing && null != estimate && BigDecimal.ZERO.compareTo(estimate.getEstimateAmount()) <= 0)
+		if (!isDecimalMatching && null != estimate && BigDecimal.ZERO.compareTo(estimate.getEstimateAmount()) <= 0)
 			details.add(DemandDetail.builder().taxAmount(estimate.getEstimateAmount())
 					.taxHeadMasterCode(estimate.getTaxHeadCode()).demandId(demandId).tenantId(tenantId).build());
 	}

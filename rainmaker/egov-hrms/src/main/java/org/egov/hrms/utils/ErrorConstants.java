@@ -136,4 +136,6 @@ public class ErrorConstants {
 
 	public static final String HRMS_UPDATE_EMPLOYEE_CODE_CHANGE_CODE = "HRMS_UPDATE_EMPLOYEE_CODE_CHANGE_CODE";
 	public static final String HRMS_UPDATE_EMPLOYEE_CODE_CHANGE_MSG = "Employee code can not be changed in update request";
+	public static final String HRMS_UPDATE_EMPLOYEE_NOT_EXIST_CODE = "HRMS_UPDATE_EMPLOYEE_NOT_EXIST_CODE";
+	public static final String HRMS_UPDATE_EMPLOYEE_NOT_EXIST_MSG = "No employee found for given UUID!";
 }

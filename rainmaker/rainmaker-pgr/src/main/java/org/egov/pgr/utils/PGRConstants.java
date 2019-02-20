@@ -65,12 +65,12 @@ public class PGRConstants {
 
 	public static final String SERVICE_NAME = "serviceName";
 	public static final String DEFAULT_COMPLAINT_TYPE = "resolution";
-	public static final String EMPLOYEE_DEPTCODES_JSONPATH = "$.Employee[0].assignments.*.department";
-	public static final String EMPLOYEE_DEPTCODE_JSONPATH = "$.Employee[0].assignments[0].department";
-	public static final String EMPLOYEE_DESGCODE_JSONPATH = "$.Employee[0].assignments[0].designation";
-	public static final String EMPLOYEE_NAME_JSONPATH = "$.Employee[0].user.name";
-	public static final String EMPLOYEE_PHNO_JSONPATH = "$.Employee[0].user.mobileNumber";
-	public static final String EMPLOYEE_TENANTID_JSONPATH = "$.Employee[0].tenantId";
+	public static final String EMPLOYEE_DEPTCODES_JSONPATH = "$.Employees[0].assignments.*.department";
+	public static final String EMPLOYEE_DEPTCODE_JSONPATH = "$.Employees[0].assignments[0].department";
+	public static final String EMPLOYEE_DESGCODE_JSONPATH = "$.Employees[0].assignments[0].designation";
+	public static final String EMPLOYEE_NAME_JSONPATH = "$.Employees[0].user.name";
+	public static final String EMPLOYEE_PHNO_JSONPATH = "$.Employees[0].user.mobileNumber";
+	public static final String EMPLOYEE_TENANTID_JSONPATH = "$.Employees[0].tenantId";
 	public static final String DEPARTMENTNAME_EMPLOYEE_JSONPATH = "$.Department[0].name";
 	
 	public static final String LOCALIZATION_CODES_JSONPATH = "$.messages.*.code";

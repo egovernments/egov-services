@@ -470,18 +470,19 @@ public class DemandService {
 				.collect(Collectors.toMap(TaxHeadMaster::getCode, TaxHeadMaster::getIsDebit));
 
 		/*
-		 * Summing the credit amount and Debit amount in to separate variables(based on the taxhead:isdebit map) to send to roundoffDecimal method
+		 * Summing the credit amount and Debit amount in to separate variables(based on
+		 * the taxhead:isdebit map) to send to roundoffDecimal method
 		 */
 		for (DemandDetail detail : demand.getDemandDetails()) {
 
-			totalCollectedAmount = totalCollectedAmount.add(detail.getCollectionAmount());
-
 			if (!isTaxHeadDebitMap.get(detail.getTaxHeadMasterCode())
-					&& !detail.getTaxHeadMasterCode().equalsIgnoreCase(CalculatorConstants.PT_DECIMAL_CEILING_CREDIT))
+					&& !detail.getTaxHeadMasterCode().equalsIgnoreCase(CalculatorConstants.PT_DECIMAL_CEILING_CREDIT)) {
 				creditAmt = creditAmt.add(detail.getTaxAmount());
-			else if (isTaxHeadDebitMap.get(detail.getTaxHeadMasterCode())
-					&& !detail.getTaxHeadMasterCode().equalsIgnoreCase(CalculatorConstants.PT_DECIMAL_CEILING_DEBIT))
+				totalCollectedAmount = totalCollectedAmount.add(detail.getCollectionAmount());
+			} else if (isTaxHeadDebitMap.get(detail.getTaxHeadMasterCode())
+					&& !detail.getTaxHeadMasterCode().equalsIgnoreCase(CalculatorConstants.PT_DECIMAL_CEILING_DEBIT)) {
 				debitAmt = debitAmt.add(detail.getTaxAmount());
+			}
 		}
 
 		/*

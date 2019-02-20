@@ -60,7 +60,7 @@ public class JacksonUtilsTest {
                 "\"auth_token\":null},\"User\":{\"userName\":\"ajay\",\"name\":\"ajay\",\"gender\":\"male\"," +
                 "\"mobileNumber\":\"12312312\",\"active\":true,\"type\":\"CITIZEN\",\"password\":\"password\"}}");
 
-        List fieldsToBeEncrypted = Arrays.asList(new String[] {"userName", "name", "mobileNumber"});
+        List fieldsToBeEncrypted = Arrays.asList("userName", "name", "mobileNumber");
 
         JsonNode outputNode = JacksonUtils.filterJsonNode(originalNode, fieldsToBeEncrypted);
 
@@ -77,7 +77,7 @@ public class JacksonUtilsTest {
                 "\"auth_token\":null},\"User\":{\"userName\":\"ajay\",\"name\":\"ajay\",\"gender\":\"male\"," +
                 "\"mobileNumber\":\"12312312\",\"active\":true,\"type\":\"CITIZEN\",\"password\":\"password\"}}");
 
-        List fieldsToBeEncrypted = Arrays.asList(new String[] {});
+        List fieldsToBeEncrypted = Arrays.asList();
 
         JsonNode outputNode = JacksonUtils.filterJsonNode(originalNode, fieldsToBeEncrypted);
 
@@ -91,7 +91,7 @@ public class JacksonUtilsTest {
     public void checkIfAnyFieldExistsInJsonNode() throws IOException {
         JsonNode originalNode = mapper.readTree("{\"tenantDetails\":{\"tenantId\":\"pb.amritsar\"}," +
                 "\"name\":{\"firstName\":\"Customer Name\"}}");
-        List<String> fields = Arrays.asList(new String[] {"firstName"});
+        List<String> fields = Arrays.asList("firstName");
         assertEquals(false, JacksonUtils.checkIfNoFieldExistsInJsonNode(originalNode, fields));
     }
 
@@ -99,7 +99,7 @@ public class JacksonUtilsTest {
     public void checkIfNoFieldExistsInJsonNode() throws IOException {
         JsonNode originalNode = mapper.readTree("{\"tenantDetails\":{\"tenantId\":\"pb.amritsar\"}," +
                 "\"name\":{\"firstName\":\"Customer Name\"}}");
-        List<String> fields = Arrays.asList(new String[] {"asd"});
+        List<String> fields = Arrays.asList("asd");
         assertEquals(true, JacksonUtils.checkIfNoFieldExistsInJsonNode(originalNode, fields));
     }
 

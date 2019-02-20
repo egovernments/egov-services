@@ -1,5 +1,6 @@
 package org.egov.user.encryption;
 
+import lombok.extern.slf4j.Slf4j;
 import org.egov.user.web.contract.EncReqObject;
 import org.egov.user.web.contract.EncryptionRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+@Slf4j
 @Component
 public class EncryptionServiceRestInterface {
 

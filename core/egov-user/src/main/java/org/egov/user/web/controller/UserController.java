@@ -1,5 +1,9 @@
 package org.egov.user.web.controller;
 
+import com.fasterxml.jackson.core.JsonFactory;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.extern.slf4j.Slf4j;
 import org.egov.common.contract.response.ResponseInfo;
 import org.egov.user.domain.model.User;
@@ -46,23 +50,34 @@ public class UserController {
     @Value("${egov.user.search.default.size}")
     private Integer defaultSearchSize;
 
+    private ObjectMapper objectMapper;
+	@Value(("${egov.state.level.tenant.id}"))
+	private String stateLevelTenantId;
+
+
 	@Autowired
 	public UserController(UserService userService, TokenService tokenService, EncryptionService encryptionService) {
 		this.userService = userService;
 		this.tokenService = tokenService;
 		this.encryptionService = encryptionService;
+		objectMapper = new ObjectMapper(new JsonFactory());
 	}
 
 	@PostMapping("/_citizen/encrypt")
 	public Object encryptUserObject(@RequestBody CreateUserRequest createUserRequest) {
-		Object encryptedObject = encryptionService.encryptJson(createUserRequest, "pb");
-		return encryptedObject;
+
+		try {
+			ObjectNode encryptedObject = encryptionService.encryptJson(createUserRequest, stateLevelTenantId);
+			createUserRequest = objectMapper.treeToValue(encryptedObject, CreateUserRequest.class);
+		} catch (JsonProcessingException e) { log.info(e.getMessage());	}
+
+		return createUserRequest;
 	}
 
 	@PostMapping("/_citizen/decrypt")
 	public Object decryptUserObject(@RequestBody CreateUserRequest createUserRequest) {
-		Object decryptedObject = encryptionService.decryptJson(createUserRequest,
-				Arrays.asList(new String[] {"mobileNumber", "emailId"}));
+		ObjectNode decryptedObject = encryptionService.decryptJson(createUserRequest,
+				Arrays.asList("mobileNumber", "emailId"));
 		return decryptedObject;
 	}
 

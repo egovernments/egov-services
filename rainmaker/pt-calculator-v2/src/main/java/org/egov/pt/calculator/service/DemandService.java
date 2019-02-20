@@ -453,14 +453,13 @@ public class DemandService {
 		String tenantId = demand.getTenantId();
 		String demandId = demand.getId();
 		
+
 		/*
-		 * isDecimalMatching 
+		 * list used to add the decimal tax head codes present in existing demand
 		 * 
-		 * This boolean variable will be set to true in case of the decimal tax-heads already being present in the demand
-		 * 
-		 * given that only debit or credit can exist at a time with value greater than zero
+		 * so that new demand detail can be added to the demand if it's not present already
 		 */
-		boolean isDecimalMatching = false;
+		List<String> decimalTaxHeadsPresentInDemand = new ArrayList<>(2);
 
 		BigDecimal creditAmt = BigDecimal.ZERO;
 		BigDecimal debitAmt = BigDecimal.ZERO;
@@ -518,16 +517,12 @@ public class DemandService {
 			if (detail.getTaxHeadMasterCode().equalsIgnoreCase(CalculatorConstants.PT_DECIMAL_CEILING_CREDIT)) {
 					detail.setTaxAmount(decimalCredit);
 					detail.setCollectionAmount(BigDecimal.ZERO);
-				if (null != estimate
-						&& CalculatorConstants.PT_DECIMAL_CEILING_CREDIT.equalsIgnoreCase(estimate.getTaxHeadCode()))
-					isDecimalMatching = true;
+					decimalTaxHeadsPresentInDemand.add(detail.getTaxHeadMasterCode());
 			}
 
 			if (detail.getTaxHeadMasterCode().equalsIgnoreCase(CalculatorConstants.PT_DECIMAL_CEILING_DEBIT)) {
 				detail.setTaxAmount(decimalDebit);
-				if (null != estimate
-						&& CalculatorConstants.PT_DECIMAL_CEILING_DEBIT.equalsIgnoreCase(estimate.getTaxHeadCode()))
-				isDecimalMatching = true;
+				decimalTaxHeadsPresentInDemand.add(detail.getTaxHeadMasterCode());
 			}
 		}
 
@@ -536,7 +531,7 @@ public class DemandService {
 		 *  
 		 *   then a new demandDetail will be created and added to the Demand. 
 		 */
-		if (!isDecimalMatching && null != estimate && BigDecimal.ZERO.compareTo(estimate.getEstimateAmount()) <= 0)
+		if (null != estimate && !decimalTaxHeadsPresentInDemand.contains(estimate.getTaxHeadCode()) && BigDecimal.ZERO.compareTo(estimate.getEstimateAmount()) <= 0)
 			details.add(DemandDetail.builder().taxAmount(estimate.getEstimateAmount())
 					.taxHeadMasterCode(estimate.getTaxHeadCode()).demandId(demandId).tenantId(tenantId).build());
 	}

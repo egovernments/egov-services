@@ -71,6 +71,7 @@ public class PGRConstants {
 	public static final String EMPLOYEE_NAME_JSONPATH = "$.Employees[0].user.name";
 	public static final String EMPLOYEE_PHNO_JSONPATH = "$.Employees[0].user.mobileNumber";
 	public static final String EMPLOYEE_TENANTID_JSONPATH = "$.Employees[0].tenantId";
+	public static final String EMPLOYEE_BASE_JSONPATH = "$.Employees";
 	public static final String DEPARTMENTNAME_EMPLOYEE_JSONPATH = "$.Department[0].name";
 	
 	public static final String LOCALIZATION_CODES_JSONPATH = "$.messages.*.code";

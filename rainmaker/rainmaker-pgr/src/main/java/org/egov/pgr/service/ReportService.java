@@ -14,6 +14,7 @@ import org.egov.pgr.contract.ReportRequest;
 import org.egov.pgr.contract.ReportResponse;
 import org.egov.pgr.repository.ReportRepository;
 import org.egov.pgr.repository.ServiceRequestRepository;
+import org.egov.pgr.utils.PGRConstants;
 import org.egov.pgr.utils.PGRUtils;
 import org.egov.pgr.utils.ReportConstants;
 import org.egov.pgr.utils.ReportUtils;
@@ -191,7 +192,7 @@ public class ReportService {
 		Object request = reportUtils.getGROSearchRequest(uri, employeeIds, reportRequest);
 		Object response = serviceRequestRepository.fetchResult(uri, request);
 		if (null != response) {
-			List<Map<String, Object>> resultCast = mapper.convertValue(JsonPath.read(response, "$.Employee"), List.class);
+			List<Map<String, Object>> resultCast = mapper.convertValue(JsonPath.read(response, PGRConstants.EMPLOYEE_BASE_JSONPATH), List.class);
 			for (Map<String, Object> employee : resultCast) {
 				mapOfIdAndName.put(Long.parseLong(employee.get("id").toString()), employee.get("name").toString());
 			}

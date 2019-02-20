@@ -59,8 +59,8 @@ public class KeyManagementService implements ApplicationRunner {
 
     //Initialize active tenant id list and Check for any new tenants
     private void init() throws Exception {
-        tenantIdsFromDB = (ArrayList<String>) keyRepository.fetchDistinctTenantIds();
         generateKeyForNewTenants();
+        tenantIdsFromDB = (ArrayList<String>) keyRepository.fetchDistinctTenantIds();
     }
 
     //Check if a given tenantId exists
@@ -68,14 +68,8 @@ public class KeyManagementService implements ApplicationRunner {
         if(tenantIdsFromDB.contains(tenant)) {
             return true;
         }
-        int numberOfNewTenants = generateKeyForNewTenants();
-        if(numberOfNewTenants != 0) {
-            keyStore.refreshKeys();
-            keyIdGenerator.refreshKeyIds();
-            tenantIdsFromDB = (ArrayList<String>) keyRepository.fetchDistinctTenantIds();
-            return tenantIdsFromDB.contains(tenant);
-        }
-        return false;
+        generateKeyForNewTenants();
+        return tenantIdsFromDB.contains(tenant);
     }
 
     //Generate Symmetric and Asymmetric Keys for each of the TenantId in the given input list
@@ -103,14 +97,17 @@ public class KeyManagementService implements ApplicationRunner {
     //Returns the number of tenants for which the keys have been generated
     private int generateKeyForNewTenants() throws JSONException, BadPaddingException, InvalidAlgorithmParameterException, NoSuchAlgorithmException, IllegalBlockSizeException, NoSuchPaddingException, InvalidKeyException {
         Collection<String> tenantIds = makeComprehensiveListOfTenantIds();
-        Collection<String> tenantIdsFromDB = keyRepository.fetchDistinctTenantIds();
+        Collection<String> tenantIdsFromDBCollection = keyRepository.fetchDistinctTenantIds();
+        tenantIds.removeAll(tenantIdsFromDBCollection);
 
-        tenantIds.removeAll(tenantIdsFromDB);
+        if(tenantIds.size() != 0) {
+            ArrayList<String> tenantIdList = new ArrayList<>(tenantIds);
+            generateKeys(tenantIdList);
 
-        ArrayList<String> tenantIdList = new ArrayList<>(tenantIds);
-
-        generateKeys(tenantIdList);
-
+            keyStore.refreshKeys();
+            keyIdGenerator.refreshKeyIds();
+            tenantIdsFromDB = (ArrayList<String>) keyRepository.fetchDistinctTenantIds();
+        }
         return tenantIds.size();
     }
 

@@ -80,10 +80,11 @@ public class TransitionService {
 
             if(!CollectionUtils.isEmpty(processStateAndAction.getCurrentState().getActions())){
                 for (Action action : processStateAndAction.getCurrentState().getActions()){
-                    if(action.getAction().equalsIgnoreCase(processInstance.getAction())){
+                    if(action.getAction().equalsIgnoreCase(processInstance.getAction().getAction())){
                         if(action.getRoles().contains("*"))
                             action.setRoles(allowedRoles);
                         processStateAndAction.setAction(action);
+                        processStateAndAction.getProcessInstanceFromRequest().setAction(action);
                         break;
                     }
                 }

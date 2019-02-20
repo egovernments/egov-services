@@ -16,6 +16,7 @@ import org.springframework.stereotype.Repository;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import static org.egov.tl.util.TLConstants.*;
 
@@ -69,22 +70,33 @@ public class TLRepository {
      * Pushes the update request to update topic or on workflow topic depending on the status
      * @param tradeLicenseRequest The update requuest
      */
-    public void update(TradeLicenseRequest tradeLicenseRequest){
+    public void update(TradeLicenseRequest tradeLicenseRequest,Map<String,Boolean> idToEditable){
         RequestInfo requestInfo = new RequestInfo();
         List<TradeLicense> licenses = tradeLicenseRequest.getLicenses();
 
         List<TradeLicense> licesnsesForStatusUpdate = new LinkedList<>();
         List<TradeLicense> licensesForUpdate = new LinkedList<>();
 
-        licenses.forEach(license -> {
-            if(license.getAction().equalsIgnoreCase(ACTION_APPLY)
-                    || license.getAction().equalsIgnoreCase(ACTION_INITIATE)){
+        if(!config.getIsExternalWorkflowEnabled())
+            licenses.forEach(license -> {
+                if(license.getAction().equalsIgnoreCase(ACTION_APPLY)
+                        || license.getAction().equalsIgnoreCase(ACTION_INITIATE)){
+                    licensesForUpdate.add(license);
+                }
+                else{
+                    licesnsesForStatusUpdate.add(license);
+                }
+            });
+
+        else licenses.forEach(license -> {
+            if(idToEditable.get(license.getApplicationNumber())){
                 licensesForUpdate.add(license);
             }
             else{
                 licesnsesForStatusUpdate.add(license);
             }
         });
+
 
         if(!licensesForUpdate.isEmpty())
             producer.push(config.getUpdateTopic(),new TradeLicenseRequest(requestInfo,licensesForUpdate));

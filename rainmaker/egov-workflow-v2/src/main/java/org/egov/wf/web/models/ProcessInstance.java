@@ -57,9 +57,8 @@ public class ProcessInstance   {
         private String businessId = null;
 
         @NotNull
-        @Size(max=128)
         @JsonProperty("action")
-        private String action = null;
+        private Action action = null;
 
         @NotNull
         @Size(max=64)

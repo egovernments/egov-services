@@ -68,6 +68,8 @@ public class WorkflowIntegrator {
 
 	private static final String STATUSJSONKEY = "$.state.applicationStatus";
 
+	private static final String EDITABLEJSONKEY = "$.action.isEditable";
+
 	/**
 	 * Method to integrate with workflow
 	 * 
@@ -77,7 +79,7 @@ public class WorkflowIntegrator {
 	 * 
 	 * @param tradeLicenseRequest
 	 */
-	public void callWorkFlow(TradeLicenseRequest tradeLicenseRequest) {
+	public Map<String,Boolean> callWorkFlow(TradeLicenseRequest tradeLicenseRequest) {
 
 		String wfTenantId = tradeLicenseRequest.getLicenses().get(0).getTenantId();
 		
@@ -85,13 +87,17 @@ public class WorkflowIntegrator {
 		for (TradeLicense license : tradeLicenseRequest.getLicenses()) {
 
 			JSONObject obj = new JSONObject();
+
+			Map<String,String> actionMap = new HashMap<>();
+			actionMap.put("action",license.getAction());
+
 			Map<String, String> uuidmap = new HashMap<>();
 			uuidmap.put(UUIDKEY, license.getAssignee());
 			obj.put(BUSINESSIDKEY, license.getApplicationNumber());
 			obj.put(TENANTIDKEY, wfTenantId);
 			obj.put(BUSINESSSERVICEKEY, businessServiceValue);
 			obj.put(MODULENAMEKEY, MODULENAMEVALUE);
-			obj.put(ACTIONKEY, license.getAction());
+			obj.put(ACTIONKEY,actionMap);
 			obj.put(COMMENTKEY, license.getComment());
 			if (!StringUtils.isEmpty(license.getAssignee()))
 				obj.put(ASSIGNEEKEY, uuidmap);
@@ -133,15 +139,19 @@ public class WorkflowIntegrator {
 		DocumentContext responseContext = JsonPath.parse(response);
 		List<Map<String, Object>> responseArray = responseContext.read(PROCESSINSTANCESJOSNKEY);
 		Map<String, String> idStatusMap = new HashMap<>();
+		Map<String,Boolean> idToEditable = new HashMap<>();
 		responseArray.forEach(
 				object -> {
 					
 					DocumentContext instanceContext = JsonPath.parse(object);
 					idStatusMap.put(instanceContext.read(BUSINESSIDJOSNKEY), instanceContext.read(STATUSJSONKEY));
+					idToEditable.put(instanceContext.read(BUSINESSIDJOSNKEY), instanceContext.read(EDITABLEJSONKEY));
 				});
 
 		// setting the status back to TL object from wf response
 		tradeLicenseRequest.getLicenses()
 				.forEach(tlObj -> tlObj.setStatus(idStatusMap.get(tlObj.getApplicationNumber())));
+
+		return idToEditable;
 	}
 }

@@ -96,14 +96,14 @@ public class PaymentUpdateService {
 				/*
 				 * calling workflow to update status
 				 */
-				wfIntegrator.callWorkFlow(updateRequest);
+				Map<String,Boolean> idToEditable = wfIntegrator.callWorkFlow(updateRequest);
 
 				updateRequest.getLicenses()
 						.forEach(obj -> log.info(" the status of the application is : " + obj.getStatus()));
 				/*
 				 * calling repository to update the object in TL tables
 				 */
-				repository.update(updateRequest);
+				repository.update(updateRequest,idToEditable);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

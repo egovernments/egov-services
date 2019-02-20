@@ -118,6 +118,7 @@ public class BusinessServiceRowMapper implements ResultSetExtractor<List<Busines
                     .uuid(actionUuid)
                     .currentState(rs.getString("currentState"))
                     .roles(Arrays.asList(rs.getString("roles").split(",")))
+                    .isEditable(rs.getBoolean("isEditable"))
                     .auditDetails(actionAuditdetails)
                     .build();
             state.addActionsItem(action);

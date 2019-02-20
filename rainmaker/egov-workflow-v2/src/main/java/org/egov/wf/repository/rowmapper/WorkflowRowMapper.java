@@ -80,13 +80,14 @@ public class WorkflowRowMapper implements ResultSetExtractor<List<ProcessInstanc
                         .businessServiceId(rs.getString("businessserviceid"))
                         .build();
 
+                Action action = Action.builder().action(rs.getString("action")).build();
 
                 processInstance = ProcessInstance.builder()
                         .id(rs.getString("id"))
                         .tenantId(rs.getString("tenantid"))
                         .businessService(rs.getString("businessService"))
                         .businessId(rs.getString("businessId"))
-                        .action(rs.getString("action"))
+                        .action(action)
                         .state(state)
                         .comment(rs.getString("comment"))
                         .assignee(assignee)

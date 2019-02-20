@@ -193,6 +193,10 @@ public class TLConfiguration {
     private Long minPeriod;
 
 
+    @Value("${is.external.workflow.enabled}")
+    private Boolean isExternalWorkflowEnabled;
+
+
 
 
 }

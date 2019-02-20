@@ -60,6 +60,8 @@ public class Action   {
         @Valid
         private List<String> roles;
 
+        private boolean isEditable;
+
         private AuditDetails auditDetails;
 
 

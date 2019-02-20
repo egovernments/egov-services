@@ -65,6 +65,9 @@ ReportDefinitions:
         type: epoch
         source: pt
         isMandatory: false
+        initialValue: 2019-01-01
+        minValue: 2018-01-01
+        maxValue: 2019-02-01
         searchClause: AND rh.receiptdate >= $fromDate
       - name: toDate
         label: reports.pt.toDate
@@ -78,6 +81,7 @@ ReportDefinitions:
         pattern: "list://Cash:Cash,Online:Online,Card:Card,DD:DD,Cheque:Cheque"
         source: pt
         isMandatory: false
+        initialValue: Cash
         searchClause: AND instrumenttype = $paymentMode
       - name: financialyear
         label: Financial Year
@@ -86,6 +90,7 @@ ReportDefinitions:
         source: pt
         wrapper: true
         isMandatory: false
+        initialValue: 2018-19
         searchClause: AND financialyear = $financialyear
       - name: localityArray
         label: reports.pt.zoneList

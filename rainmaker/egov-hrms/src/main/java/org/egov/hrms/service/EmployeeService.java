@@ -143,7 +143,7 @@ public class EmployeeService {
 			User user = User.builder().mobileNumber(criteria.getPhone()).build();
 			Employee employee = Employee.builder().user(user).tenantId(criteria.getTenantId()).build();
 			UserResponse userResponse = userService.getSingleUser(requestInfo, employee, "MobileNumber");
-			List<String> userUUIDs = userResponse.getUser().parallelStream().map(User :: getUuid).collect(Collectors.toList());
+			List<String> userUUIDs = userResponse.getUser().stream().map(User :: getUuid).collect(Collectors.toList());
 			criteria.setUuids(userUUIDs);
 		}
 		if(!CollectionUtils.isEmpty(criteria.getNames())) {
@@ -152,7 +152,7 @@ public class EmployeeService {
 				User user = User.builder().name(name).build();
 				Employee employee = Employee.builder().user(user).tenantId(criteria.getTenantId()).build();
 				UserResponse userResponse = userService.getSingleUser(requestInfo, employee, "Name");
-				List<String> uuids = userResponse.getUser().parallelStream().map(User :: getUuid).collect(Collectors.toList());
+				List<String> uuids = userResponse.getUser().stream().map(User :: getUuid).collect(Collectors.toList());
 				userUUIDs.addAll(uuids);
 			}
 			criteria.setUuids(userUUIDs);
@@ -162,9 +162,9 @@ public class EmployeeService {
 		if(!CollectionUtils.isEmpty(uuids)){
 			UserResponse userResponse = userService.getUser(requestInfo, uuids);
 			if(!CollectionUtils.isEmpty(userResponse.getUser())) {
-				Map<String, User> mapOfUsers = userResponse.getUser().parallelStream()
+				Map<String, User> mapOfUsers = userResponse.getUser().stream()
 						.collect(Collectors.toMap(User :: getUuid, Function.identity()));
-				employees.parallelStream().forEach(employee -> employee.setUser(mapOfUsers.get(employee.getUuid())));
+				employees.stream().forEach(employee -> employee.setUser(mapOfUsers.get(employee.getUuid())));
 			}
 		}
 		return EmployeeResponse.builder().responseInfo(factory.createResponseInfoFromRequestInfo(requestInfo, true))

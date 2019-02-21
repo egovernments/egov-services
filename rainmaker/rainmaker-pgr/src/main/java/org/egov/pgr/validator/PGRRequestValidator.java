@@ -8,7 +8,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import org.apache.commons.collections.CollectionUtils;
@@ -131,12 +130,12 @@ public class PGRRequestValidator {
 	 * @param errorMap
 	 */
 	public void validateDataSanity(ServiceRequest serviceRequest, Map<String, String> errorMap, Boolean isCreate) {
-		Set<String> tenants = serviceRequest.getServices().parallelStream().map(Service::getTenantId).collect(Collectors.toSet());
+		Set<String> tenants = serviceRequest.getServices().stream().map(Service::getTenantId).collect(Collectors.toSet());
 		if(tenants.size() > 1) {
 			errorMap.put(ErrorConstants.INVALID_REQUESTS_ON_TENANT_CODE, ErrorConstants.INVALID_REQUESTS_ON_TENANT_MSG);
 		}
 		if(!isCreate) {
-			Set<Boolean> activeComplaints = serviceRequest.getServices().parallelStream().map(Service::getActive).collect(Collectors.toSet());
+			Set<Boolean> activeComplaints = serviceRequest.getServices().stream().map(Service::getActive).collect(Collectors.toSet());
 			if(activeComplaints.isEmpty() || activeComplaints.contains(false)) {
 				errorMap.put(ErrorConstants.INACTIVE_COMPLAINTS_FOR_UPDATE_CODE, ErrorConstants.INACTIVE_COMPLAINTS_FOR_UPDATE_MSG);
 			}
@@ -179,7 +178,7 @@ public class PGRRequestValidator {
 	private void vaidateServiceCodes(ServiceRequest serviceRequest, Map<String, String> errorMap) {
 		String tenantId = serviceRequest.getServices().get(0).getTenantId();
 		List<String> serviceCodes = pgrUtils.getServiceCodes(tenantId,
-				serviceRequest.getServices().parallelStream().map(Service::getServiceCode).collect(Collectors.toSet()),
+				serviceRequest.getServices().stream().map(Service::getServiceCode).collect(Collectors.toSet()),
 				serviceRequest.getRequestInfo());
 		List<String> errorList = new ArrayList<>();
 		serviceRequest.getServices().forEach(a -> {
@@ -292,10 +291,10 @@ public class PGRRequestValidator {
 				return;
 			}else {
 				String role = pgrUtils.getPrecedentRole(requestInfo.getUserInfo()
-						.getRoles().parallelStream().map(Role::getName).collect(Collectors.toList()));
+						.getRoles().stream().map(Role::getName).collect(Collectors.toList()));
 				if(StringUtils.isEmpty(role)) {
 					errorMap.put(ErrorConstants.INVALID_ROLE_CODE, ErrorConstants.INVALID_ROLE_MSG+ requestInfo.getUserInfo()
-							.getRoles().parallelStream().map(Role::getName).collect(Collectors.toList()));
+							.getRoles().stream().map(Role::getName).collect(Collectors.toList()));
 				}
 			}
 		} else {
@@ -318,11 +317,11 @@ public class PGRRequestValidator {
 	 */
 	public void validateAction(ServiceRequest serviceRequest, Map<String, String> errorMap) {
 		Map<String, List<String>> roleActionMap = WorkFlowConfigs.getRoleActionMap();
-		List<String> roles = serviceRequest.getRequestInfo().getUserInfo().getRoles().parallelStream()
+		List<String> roles = serviceRequest.getRequestInfo().getUserInfo().getRoles().stream()
 				.map(Role::getName).collect(Collectors.toList());
 		List<String> actions = null;
 		actions = roleActionMap.get(pgrUtils.getPrecedentRole(serviceRequest.getRequestInfo().getUserInfo()
-				.getRoles().parallelStream().map(Role::getName).collect(Collectors.toList())));
+				.getRoles().stream().map(Role::getName).collect(Collectors.toList())));
 		final List<String> actionsAllowedForTheRole = actions;
 		String role = pgrUtils.getPrecedentRole(roles);
 		List<String> serviceCodes = new ArrayList<>();
@@ -361,7 +360,7 @@ public class PGRRequestValidator {
 		if (!CollectionUtils.isEmpty(actions)) {
 			List<ActionInfo> infos = serviceRequest.getActionInfo();
 			if (!CollectionUtils.isEmpty(infos)) {
-				infos.parallelStream().forEach(action -> {
+				infos.stream().forEach(action -> {
 					if(!StringUtils.isEmpty(action.getAction())) {
 						if(!actionsAllowedForTheRole.contains(action.getAction())) {
 							String errorMsg = ErrorConstants.INVALID_ACTION_FOR_ROLE_MSG;

@@ -77,7 +77,7 @@ public class EmployeeValidator {
 		Map<String, String> errorMap = new HashMap<>();
 		if(criteria.isCriteriaEmpty(criteria)) {
 			String[] roles = propertiesManager.getOpenSearchEnabledRoles().split(",");
-			List<String> reqroles = requestInfo.getUserInfo().getRoles().parallelStream().map(Role::getCode).collect(Collectors.toList());
+			List<String> reqroles = requestInfo.getUserInfo().getRoles().stream().map(Role::getCode).collect(Collectors.toList());
 			boolean check = false;
 			for(String role : reqroles) {
 				if(Arrays.asList(roles).contains(role)) {

@@ -113,6 +113,7 @@ public class NotificationService {
 		} catch (Exception e) {
 			log.error("Exception: " + e);
 		}
+		log.info("employeeDetails: "+employeeDetails);
 		return employeeDetails;
 	}
 

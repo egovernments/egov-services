@@ -107,7 +107,7 @@ public class ErrorConstants {
 	public static final String HRMS_UPDATE_NULL_ID_CODE = "HRMS_UPDATE_NULL_ID";
 	public static final String HRMS_UPDATE_NULL_ID_MSG = "Employee ID in update request should not be Null!";
 	
-	public static final String HRMS_UPDATE_NULL_CODE_CODE = "HRMS_UPDATE_NULL_CODE";
+	public static final String HRMS_UPDATE_NULL_CODE_CODE = "HRMS_UPDATE_NULL";
 	public static final String HRMS_UPDATE_NULL_CODE_MSG = "Employee Code in update request should not be Null!";
 	
 	public static final String HRMS_UPDATE_NULL_UUID_CODE = "HRMS_UPDATE_NULL_UUID";
@@ -122,13 +122,23 @@ public class ErrorConstants {
 	public static final String HRMS_INVALID_SEARCH_REQ_CODE = "HRMS_INVALID_SEARCH_REQ";
 	public static final String HRMS_INVALID_SEARCH_REQ_MSG = "Open search is disabled for this user!";
 
-	public static final String HRMS_INVALID_JURISDICTION_HEIRARCHY_CODE = "HRMS_INVALID_JURISDICTION_HEIRARCHY_CODE";
+	public static final String HRMS_INVALID_JURISDICTION_HEIRARCHY_CODE = "HRMS_INVALID_JURISDICTION_HEIRARCHY";
 	public static final String HRMS_INVALID_JURISDICTION_HEIRARCHY_MSG = "Jurisiction hierarchy value is invalid";
 
-	public static final String HRMS_INVALID_JURISDICTION_BOUNDARY_TYPE_CODE = "HRMS_INVALID_BOUNDARY_TYPE_HEIRARCHY_CODE";
+	public static final String HRMS_INVALID_JURISDICTION_BOUNDARY_TYPE_CODE = "HRMS_INVALID_BOUNDARY_TYPE_HEIRARCHY";
 	public static final String HRMS_INVALID_JURISDICTION_BOUNDARY_TYPE_MSG = "Jurisiction boundary type value is invalid";
 
-	public static final String HRMS_INVALID_JURISDICTION_BOUNDARY_CODE = "HRMS_INVALID_JURISDICTION_BOUNDARY_CODE";
+	public static final String HRMS_INVALID_JURISDICTION_BOUNDARY_CODE = "HRMS_INVALID_JURISDICTION_BOUNDARY";
 	public static final String HRMS_INVALID_JURISDICTION_BOUNDARY_MSG = "Jurisiction boundary value is invalid";
 
+	public static final String HRMS_INVALID_SEARCH_AOD_CODE = "HRMS_INVALID_SEARCH_AOD";
+	public static final String HRMS_INVALID_SEARCH_AOD_MSG = "With asOnDate, atleast one Dept and one Desgination are to be passed.";
+	
+	public static final String HRMS_INVALID_SEARCH_USER_CODE = "HRMS_INVALID_SEARCH_USER";
+	public static final String HRMS_INVALID_SEARCH_USER_MSG = "With search on phone and name, tenantid is mandatory!";
+
+	public static final String HRMS_UPDATE_EMPLOYEE_CODE_CHANGE_CODE = "HRMS_UPDATE_EMPLOYEE_CODE_CHANGE";
+	public static final String HRMS_UPDATE_EMPLOYEE_CODE_CHANGE_MSG = "Employee code can not be changed in update request";
+	public static final String HRMS_UPDATE_EMPLOYEE_NOT_EXIST_CODE = "HRMS_UPDATE_EMPLOYEE_NOT_EXIST_CODE";
+	public static final String HRMS_UPDATE_EMPLOYEE_NOT_EXIST_MSG = "No employee found for given UUID!";
 }

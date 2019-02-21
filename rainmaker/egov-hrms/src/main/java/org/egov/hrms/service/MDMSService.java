@@ -147,9 +147,7 @@ public class MDMSService {
 			for(String master: mapOfModulesAndMasters.get(module)) {
 				MasterDetail masterDetail=null;
 				if(module.equals(HRMSConstants.HRMS_AC_ROLES_MASTERS_CODE))
-					masterDetail = MasterDetail.builder().name(master).filter("*.code").build();
-				else if(module.equals(HRMSConstants.HRMS_MDMS_EGOV_LOCATION_MASTERS_CODE))
-					masterDetail = MasterDetail.builder().name(master).build();
+					masterDetail = MasterDetail.builder().name(master).filter(HRMSConstants.HRMS_MDMS_AC_ROLES_FILTER).build();
 				else
 					masterDetail = MasterDetail.builder().name(master).filter("[?(@.active == true)].code").build();
 				masterDetails.add(masterDetail);

@@ -91,6 +91,12 @@ public class PGRUtils {
 	@Value("${egov.location.search.endpoint}")
 	private String locationSearchEndpoint;
 	
+	@Value("${egov.hrms.host}")
+	private String egovHRMShost;
+
+	@Value("${egov.hrms.search.endpoint}")
+	private String egovHRMSSearchEndpoint;
+	
 	@Value("${are.inactive.complaintcategories.enabled}")
 	private Boolean areInactiveComplaintCategoriesEnabled;	
 
@@ -359,7 +365,7 @@ public class PGRUtils {
 			ServiceReqSearchCriteria serviceReqSearchCriteria) {
 		RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
 		requestInfoWrapper.setRequestInfo(requestInfo);
-		uri.append(hrEmployeeV2Host).append(hrEmployeeSearchEndpoint).append("?id=" + requestInfo.getUserInfo().getId())
+		uri.append(egovHRMShost).append(egovHRMSSearchEndpoint).append("?id=" + requestInfo.getUserInfo().getId())
 				.append("&tenantId=" + serviceReqSearchCriteria.getTenantId());
 
 		return requestInfoWrapper;

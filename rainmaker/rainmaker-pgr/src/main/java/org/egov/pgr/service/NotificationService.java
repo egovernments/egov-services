@@ -38,6 +38,12 @@ public class NotificationService {
 	@Value("${egov.hr.employee.v2.search.endpoint}")
 	private String hrEmployeeV2SearchEndpoint;
 	
+	@Value("${egov.hrms.host}")
+	private String egovHRMShost;
+
+	@Value("${egov.hrms.search.endpoint}")
+	private String egovHRMSSearchEndpoint;
+	
 	@Value("${egov.user.host}")
 	private String egovUserHost;
 
@@ -90,7 +96,7 @@ public class NotificationService {
 		StringBuilder uri = new StringBuilder();
 		RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
 		requestInfoWrapper.setRequestInfo(requestInfo);
-		uri.append(hrEmployeeV2Host).append(hrEmployeeV2SearchEndpoint).append("?id=" + id)
+		uri.append(egovHRMShost).append(egovHRMSSearchEndpoint).append("?id=" + id)
 				.append("&tenantId=" + tenantId);
 		Object response = null;
 		Map<String, String> employeeDetails = new HashMap<>();
@@ -107,6 +113,7 @@ public class NotificationService {
 		} catch (Exception e) {
 			log.error("Exception: " + e);
 		}
+		log.info("employeeDetails: "+employeeDetails);
 		return employeeDetails;
 	}
 

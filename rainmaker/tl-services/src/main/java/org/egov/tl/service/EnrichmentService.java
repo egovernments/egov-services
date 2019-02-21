@@ -25,13 +25,16 @@ public class EnrichmentService {
     private TLConfiguration config;
     private TradeUtil tradeUtil;
     private BoundaryService boundaryService;
+    private UserService userService;
 
     @Autowired
-    public EnrichmentService(IdGenRepository idGenRepository, TLConfiguration config, TradeUtil tradeUtil, BoundaryService boundaryService) {
+    public EnrichmentService(IdGenRepository idGenRepository, TLConfiguration config, TradeUtil tradeUtil,
+                             BoundaryService boundaryService,UserService userService) {
         this.idGenRepository = idGenRepository;
         this.config = config;
         this.tradeUtil = tradeUtil;
         this.boundaryService = boundaryService;
+        this.userService = userService;
     }
 
 
@@ -163,9 +166,9 @@ public class EnrichmentService {
      */
     public void enrichTLCriteriaWithOwnerids(TradeLicenseSearchCriteria criteria, UserDetailResponse userDetailResponse){
         if(CollectionUtils.isEmpty(criteria.getOwnerIds())){
-            List<String> ownerids = new ArrayList<>();
+            Set<String> ownerids = new HashSet<>();
             userDetailResponse.getUser().forEach(owner -> ownerids.add(owner.getUuid()));
-            criteria.setOwnerIds(ownerids);
+            criteria.setOwnerIds(new ArrayList<>(ownerids));
         }
     }
 
@@ -190,8 +193,10 @@ public class EnrichmentService {
      * @param criteria TradeLicense search criteria
      * @param licenses The tradeLicense whose owners are to be enriched
      */
-    public void enrichTLSearchCriteriaWithOwnerids(TradeLicenseSearchCriteria criteria, List<TradeLicense> licenses){
-        List<String> ownerids = new ArrayList<>();
+    public TradeLicenseSearchCriteria enrichTLSearchCriteriaWithOwnerids(TradeLicenseSearchCriteria criteria, List<TradeLicense> licenses){
+        TradeLicenseSearchCriteria searchCriteria = new TradeLicenseSearchCriteria();
+        searchCriteria.setTenantId(criteria.getTenantId());
+        Set<String> ownerids = new HashSet<>();
         licenses.forEach(license -> {
             license.getTradeLicenseDetail().getOwners().forEach(owner -> ownerids.add(owner.getUuid()));
         });
@@ -200,7 +205,8 @@ public class EnrichmentService {
             ownerids.add(tradeLicense.getCitizenInfo().getUuid());
             });*/
 
-        criteria.setOwnerIds(ownerids);
+        searchCriteria.setOwnerIds(new ArrayList<>(ownerids));
+        return searchCriteria;
     }
 
 
@@ -402,9 +408,27 @@ public class EnrichmentService {
      * @param criteria The tradeLicenseSearch criteria
      */
     public void enrichSearchCriteriaWithAccountId(RequestInfo requestInfo,TradeLicenseSearchCriteria criteria){
-        if(criteria.isEmpty() && requestInfo.getUserInfo().getType().equalsIgnoreCase("CITIZEN"))
+        if(criteria.isEmpty() && requestInfo.getUserInfo().getType().equalsIgnoreCase("CITIZEN")){
             criteria.setAccountId(requestInfo.getUserInfo().getUuid());
+            criteria.setMobileNumber(requestInfo.getUserInfo().getUserName());
+            criteria.setTenantId(requestInfo.getUserInfo().getTenantId());
+        }
 
+    }
+
+    /**
+     * Enriches the tradeLicenses with ownerInfo and Boundary data
+     * @param licenses The licenses to be enriched
+     * @param criteria The search criteria of licenses containing the ownerIds
+     * @param requestInfo The requestInfo of search
+     * @return enriched tradeLicenses
+     */
+    public List<TradeLicense> enrichTradeLicenseSearch(List<TradeLicense> licenses, TradeLicenseSearchCriteria criteria, RequestInfo requestInfo){
+        TradeLicenseSearchCriteria searchCriteria = enrichTLSearchCriteriaWithOwnerids(criteria,licenses);
+        enrichBoundary(new TradeLicenseRequest(requestInfo,licenses));
+        UserDetailResponse userDetailResponse = userService.getUser(searchCriteria,requestInfo);
+        enrichOwner(userDetailResponse,licenses);
+        return licenses;
     }
 
 

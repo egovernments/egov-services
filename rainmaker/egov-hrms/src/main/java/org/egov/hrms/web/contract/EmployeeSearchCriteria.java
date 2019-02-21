@@ -29,6 +29,8 @@ public class EmployeeSearchCriteria {
 	
 	public List<String> designations;
 	
+	public Long asOnDate;
+	
 	public List<Integer> ids;
 	
 	public List<String> employeestatuses;
@@ -43,6 +45,8 @@ public class EmployeeSearchCriteria {
 	
 	public String tenantId;
 	
+	public String phone;
+
 	public Integer offset;
 	
 	public Integer limit;

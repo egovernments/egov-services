@@ -33,5 +33,6 @@ public class HRMSConstants {
 	public static final String HRMS_TENANTBOUNDARY_BOUNDARY_TYPE_JSONPATH  ="$.TenantBoundary[?(@.hierarchyType.name==\"%s\")]..label";
 	public static final String HRMS_TENANTBOUNDARY_BOUNDARY_VALUE_JSONPATH ="$.TenantBoundary[?(@.hierarchyType.name==\"%s\")]..code";
 
-
+	public static final String HRMS_MDMS_AC_ROLES_FILTER = "[?(@.code != \"CITIZEN\")].code";
+	public static final String HRMS_MDMS_CODE_FLITER = "[?(@.active == true)].code";
 }

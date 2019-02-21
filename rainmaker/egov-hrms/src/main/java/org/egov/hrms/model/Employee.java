@@ -74,7 +74,6 @@ public class Employee {
     @NotNull
     private String employeeType;
 
-    @NotNull
     private Long dateOfAppointment;
 
     @Valid

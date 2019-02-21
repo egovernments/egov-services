@@ -58,16 +58,12 @@ public class ServiceHistory {
 
 	private String id;
 
-	@NotNull
 	private String serviceStatus;
 
-	@NotNull
 	private Long serviceFrom;
 
-	@NotNull
 	private Long serviceTo;
 
-	@NotNull
 	private String orderNo;
 	
 	private String location;

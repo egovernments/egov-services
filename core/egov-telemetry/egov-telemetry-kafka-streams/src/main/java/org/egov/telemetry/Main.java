@@ -24,25 +24,28 @@ public class Main {
 
 
         TelemetryFormatChecker telemetryFormatChecker = new TelemetryFormatChecker();
-        telemetryFormatChecker.validateInputMessages(streamsConfiguration, appProperties.getTelemetryRawInput(), appProperties.getTelemetryValidatedMessages());
+        telemetryFormatChecker.validateInputMessages(streamsConfiguration, appProperties.getTelemetryRawInput(),
+                appProperties.getTelemetryValidatedMessages(), appProperties.getStreamNameTelemetryValidator());
 
         TelemetryDeduplicator telemetryDeduplicator = new TelemetryDeduplicator();
-        telemetryDeduplicator.shouldRemoveDuplicatesFromTheInput(streamsConfiguration, appProperties.getTelemetryValidatedMessages(), appProperties.getTelemetryDedupedMessages(), appProperties.getDeDupStorageTime());
+        telemetryDeduplicator.shouldRemoveDuplicatesFromTheInput(streamsConfiguration,
+                appProperties.getTelemetryValidatedMessages(), appProperties.getTelemetryDedupedMessages(),
+                appProperties.getDeDupStorageTime(), appProperties.getStreamNameTelemetryDeduplicator());
 
         TelemetryFinalStream telemetryFinalStream = new TelemetryFinalStream();
         telemetryFinalStream.pushFinalMessages(streamsConfiguration, appProperties.getTelemetryDedupedMessages(),
-                appProperties.getTelemetrySecorFinalMessages());
+                appProperties.getTelemetrySecorFinalMessages(), appProperties.getStreamNameTelemetrySecorFinalPush());
 
         TelemetryUnbundleBatches telemetryUnbundleBatches = new TelemetryUnbundleBatches();
         telemetryUnbundleBatches.unbundleBatches(streamsConfiguration, appProperties.getTelemetryDedupedMessages(),
-                appProperties.getTelemetryUnbundledMessages());
+                appProperties.getTelemetryUnbundledMessages(), appProperties.getStreamNameTelemetryUnbundling());
 
         TelemetryEnrichMessages telemetryEnrichMessages = new TelemetryEnrichMessages();
         telemetryEnrichMessages.enrichMessages(streamsConfiguration, appProperties.getTelemetryUnbundledMessages(),
-                appProperties.getTelemetryEnrichedMessages());
+                appProperties.getTelemetryEnrichedMessages(), appProperties.getStreamNameTelemetryEnrichment());
 
         telemetryFinalStream.pushFinalMessages(streamsConfiguration, appProperties.getTelemetryEnrichedMessages(),
-                appProperties.getTelemetryElasticsearchFinalMessages());
+                appProperties.getTelemetryElasticsearchFinalMessages(), appProperties.getStreamNameTelemetryElasticsearchFinalPush());
 
     }
 

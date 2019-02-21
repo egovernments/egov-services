@@ -56,10 +56,11 @@ public class EmployeeQueryBuilder {
 			builder.append(" and employee.employeestatus IN ("+createINClauseForList(criteria.getEmployeestatuses())+")");
 		if(!CollectionUtils.isEmpty(criteria.getEmployeetypes()))
 			builder.append(" and employee.employeetype IN ("+createINClauseForList(criteria.getEmployeetypes())+")");
-		if(!CollectionUtils.isEmpty(criteria.getNames()))
-			builder.append(" and employee.name IN ("+createINClauseForList(criteria.getNames())+")");
 		if(!CollectionUtils.isEmpty(criteria.getPositions()))
 			builder.append(" and assignment.position IN ("+createINClauseForIntList(criteria.getPositions())+")");
+		if(null != criteria.getAsOnDate()) {
+			builder.append(" and assignment.fromdate <= "+criteria.getAsOnDate()+" and assignment.todate >= "+criteria.getAsOnDate());
+		}
 		
 		builder.append(" and employee.active = "+criteria.getIsActive());
 	}

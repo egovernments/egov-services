@@ -233,7 +233,7 @@ public class PGRNotificationConsumer {
 				ServiceReqSearchCriteria serviceReqSearchCriteria = ServiceReqSearchCriteria.builder().tenantId(serviceReq.getTenantId())
 						.serviceRequestId(Arrays.asList(serviceReq.getServiceRequestId())).build();
 				ServiceResponse response = (ServiceResponse) requestService.getServiceRequestDetails(requestInfo, serviceReqSearchCriteria);
-				List<ActionInfo> actions = response.getActionHistory().get(0).getActions().parallelStream()
+				List<ActionInfo> actions = response.getActionHistory().get(0).getActions().stream()
 						.filter(obj -> !StringUtils.isEmpty(obj.getAssignee())).collect(Collectors.toList());
 				employeeDetails = notificationService.getEmployeeDetails(serviceReq.getTenantId(), actions.get(0).getAssignee(), requestInfo);
 				text = 	text.replaceAll(PGRConstants.SMS_NOTIFICATION_RATING_KEY, 

@@ -38,7 +38,7 @@ public class IdGenService {
 	 */
 	public void setIds(EmployeeRequest employeeRequest) {
 		String tenantId = employeeRequest.getEmployees().get(0).getTenantId();
-		Integer employeesWithCode = employeeRequest.getEmployees().parallelStream()
+		Integer employeesWithCode = employeeRequest.getEmployees().stream()
 				.filter(employee -> !StringUtils.isEmpty(employee.getCode())).collect(Collectors.toList()).size();
 		if(employeesWithCode == employeeRequest.getEmployees().size())
 			return;

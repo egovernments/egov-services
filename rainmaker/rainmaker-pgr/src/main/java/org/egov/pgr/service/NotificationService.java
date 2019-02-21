@@ -106,12 +106,12 @@ public class NotificationService {
 				return employeeDetails;
 			}
 			employeeDetails.put("name", JsonPath.read(response, PGRConstants.EMPLOYEE_NAME_JSONPATH));
+			employeeDetails.put("phone", JsonPath.read(response, PGRConstants.EMPLOYEE_PHNO_JSONPATH));
 			employeeDetails.put("department", JsonPath.read(response, PGRConstants.EMPLOYEE_DEPTCODE_JSONPATH));
 			employeeDetails.put("designation", JsonPath.read(response, PGRConstants.EMPLOYEE_DESGCODE_JSONPATH));
-			employeeDetails.put("phone", JsonPath.read(response, PGRConstants.EMPLOYEE_PHNO_JSONPATH));
 
 		} catch (Exception e) {
-			log.error("Exception: " + e);
+			log.error("Exception: ", e);
 		}
 		log.info("employeeDetails: "+employeeDetails);
 		return employeeDetails;

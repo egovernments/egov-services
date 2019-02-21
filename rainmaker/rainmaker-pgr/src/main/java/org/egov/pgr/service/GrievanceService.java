@@ -596,8 +596,8 @@ public class GrievanceService {
 		List<ActionHistory> actionHistory = new ArrayList<>();
 		List<ServiceRequestDetails> result = new ArrayList<>();
 		List<Object> list = JsonPath.read(response, "$.services");
-		list.parallelStream().forEach(entry -> result.add(mapper.convertValue(entry, ServiceRequestDetails.class)));
-		result.parallelStream().forEach(obj -> {
+		list.forEach(entry -> result.add(mapper.convertValue(entry, ServiceRequestDetails.class)));
+		result.forEach(obj -> {
 			if(null != obj) {
 				ActionHistory actionHis = new ActionHistory();
 				actionHis.setActions(obj.getActionhistory());

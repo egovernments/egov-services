@@ -21,6 +21,6 @@ proxy_pass $pmidc$request_uri;\nproxy_pass_request_headers on;\nproxy_read_timeo
 }\n' /etc/nginx/conf.d/default_ssl.conf
 fi
 #sed "s#ULB_JS_URL#$ULB_JS_URL#g";"s#TELEMETRY_JS_URL#$ULB_JS_URL#g" /tmp/sub_filter.conf > /etc/nginx/conf.d/sub_filter.conf
-echo "$KIBANA_CREDENTIALS" > /etc/nginx/.htpasswd
+printf "$KIBANA_CREDENTIALS" > /etc/nginx/.htpasswd
 echo "$JAEGER_CREDENTIALS" > /etc/nginx/.jaegerhtpasswd
 nginx -g "daemon off;"

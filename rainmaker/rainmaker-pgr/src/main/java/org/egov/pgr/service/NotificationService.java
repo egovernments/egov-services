@@ -109,7 +109,6 @@ public class NotificationService {
 			employeeDetails.put("phone", JsonPath.read(response, PGRConstants.EMPLOYEE_PHNO_JSONPATH));
 			employeeDetails.put("department", ((List<String>) JsonPath.read(response, PGRConstants.EMPLOYEE_DEPTCODE_JSONPATH)).get(0));
 			employeeDetails.put("designation", ((List<String>)JsonPath.read(response, PGRConstants.EMPLOYEE_DESGCODE_JSONPATH)).get(0));
-
 		} catch (Exception e) {
 			log.error("Exception: ", e);
 		}

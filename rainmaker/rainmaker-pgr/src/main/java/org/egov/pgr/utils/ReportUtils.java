@@ -150,7 +150,7 @@ public class ReportUtils {
 		RequestInfoWrapper requestInfoWrapper = RequestInfoWrapper.builder().requestInfo(reportRequest.getRequestInfo()).build();
 		uri.append(egovHRMShost).append(egovHRMSSearchEndpoint)
 		.append("?tenantId=").append(reportRequest.getTenantId())
-		.append("&id=").append(GROids.toString().substring(1, GROids.toString().length() - 1));
+		.append("&ids=").append(GROids.toString().substring(1, GROids.toString().length() - 1));
 		
 		return requestInfoWrapper;
 	}

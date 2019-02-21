@@ -96,7 +96,7 @@ public class NotificationService {
 		StringBuilder uri = new StringBuilder();
 		RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
 		requestInfoWrapper.setRequestInfo(requestInfo);
-		uri.append(egovHRMShost).append(egovHRMSSearchEndpoint).append("?id=" + id)
+		uri.append(egovHRMShost).append(egovHRMSSearchEndpoint).append("?ids=" + id)
 				.append("&tenantId=" + tenantId);
 		Object response = null;
 		Map<String, String> employeeDetails = new HashMap<>();

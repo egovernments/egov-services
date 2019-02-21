@@ -365,7 +365,7 @@ public class PGRUtils {
 			ServiceReqSearchCriteria serviceReqSearchCriteria) {
 		RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
 		requestInfoWrapper.setRequestInfo(requestInfo);
-		uri.append(egovHRMShost).append(egovHRMSSearchEndpoint).append("?id=" + requestInfo.getUserInfo().getId())
+		uri.append(egovHRMShost).append(egovHRMSSearchEndpoint).append("?ids=" + requestInfo.getUserInfo().getId())
 				.append("&tenantId=" + serviceReqSearchCriteria.getTenantId());
 
 		return requestInfoWrapper;

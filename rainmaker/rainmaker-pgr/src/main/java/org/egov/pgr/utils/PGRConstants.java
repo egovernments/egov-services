@@ -66,8 +66,8 @@ public class PGRConstants {
 	public static final String SERVICE_NAME = "serviceName";
 	public static final String DEFAULT_COMPLAINT_TYPE = "resolution";
 	public static final String EMPLOYEE_DEPTCODES_JSONPATH = "$.Employees[0].assignments.*.department";
-	public static final String EMPLOYEE_DEPTCODE_JSONPATH = "$.Employees[0].assignments[0].department";
-	public static final String EMPLOYEE_DESGCODE_JSONPATH = "$.Employees[0].assignments[0].designation";
+	public static final String EMPLOYEE_DEPTCODE_JSONPATH = "$.Employees[0].assignments[?(@.iscurrentassignment = true)].department";
+	public static final String EMPLOYEE_DESGCODE_JSONPATH = "$.Employees[0].assignments[?(@.iscurrentassignment = true)].designation";
 	public static final String EMPLOYEE_NAME_JSONPATH = "$.Employees[0].user.name";
 	public static final String EMPLOYEE_PHNO_JSONPATH = "$.Employees[0].user.mobileNumber";
 	public static final String EMPLOYEE_TENANTID_JSONPATH = "$.Employees[0].tenantId";

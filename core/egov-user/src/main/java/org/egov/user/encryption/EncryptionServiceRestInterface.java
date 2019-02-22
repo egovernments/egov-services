@@ -31,6 +31,7 @@ public class EncryptionServiceRestInterface {
 
 
     Object callEncrypt(String tenantId, String type, Object value) {
+        log.info("value : " + value);
 
         EncReqObject encReqObject = new EncReqObject(tenantId, type, value);
         EncryptionRequest encryptionRequest = new EncryptionRequest();

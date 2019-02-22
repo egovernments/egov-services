@@ -21,6 +21,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -69,15 +70,20 @@ public class UserController {
 		try {
 			ObjectNode encryptedObject = encryptionService.encryptJson(createUserRequest, stateLevelTenantId);
 			createUserRequest = objectMapper.treeToValue(encryptedObject, CreateUserRequest.class);
-		} catch (JsonProcessingException e) { log.info(e.getMessage());	}
+		} catch (Exception e) { log.info(e.getMessage());	}
 
 		return createUserRequest;
 	}
 
 	@PostMapping("/_citizen/decrypt")
 	public Object decryptUserObject(@RequestBody CreateUserRequest createUserRequest) {
-		ObjectNode decryptedObject = encryptionService.decryptJson(createUserRequest,
-				Arrays.asList("mobileNumber", "emailId"));
+		ObjectNode decryptedObject = null;
+		try {
+			decryptedObject = encryptionService.decryptJson(createUserRequest,
+					Arrays.asList("$.user.mobileNumber", "$.user.emailId"));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		return decryptedObject;
 	}
 

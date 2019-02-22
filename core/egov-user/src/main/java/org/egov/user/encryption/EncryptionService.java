@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
+import java.io.IOException;
 import java.util.*;
 
 @Slf4j
@@ -36,11 +37,9 @@ public class EncryptionService {
     @PostConstruct
     public void initializeTypesAndFieldsToEncrypt() {
         typesAndFieldsToEncrypt = new HashMap<>();
-        Iterator<String> iterator = fieldsAndTheirType.keySet().iterator();
-        while (iterator.hasNext()) {
-            String field = iterator.next();
+        for (String field : fieldsAndTheirType.keySet()) {
             String type = fieldsAndTheirType.get(field);
-            if(! typesAndFieldsToEncrypt.containsKey(type)) {
+            if (!typesAndFieldsToEncrypt.containsKey(type)) {
                 List<String> fieldsToEncrypt = new ArrayList<>();
                 typesAndFieldsToEncrypt.put(type, fieldsToEncrypt);
             }
@@ -48,16 +47,7 @@ public class EncryptionService {
         }
     }
 
-    public String encryptValue(String plaintext, String tenantId, String type) {
-        return encryptValue(new ArrayList<String>(Collections.singleton(plaintext)), tenantId, type).get(0);
-    }
-
-    public List<String> encryptValue(List<String> plaintext, String tenantId, String type) {
-        Object encryptionResponse = encryptionServiceRestInterface.callEncrypt(tenantId, type, plaintext);
-        return (List<String>) encryptionResponse;
-    }
-
-    public ObjectNode encryptJson(Object plaintextJson, String tenantId) {
+    public ObjectNode encryptJson(Object plaintextJson, String tenantId) throws IOException {
 
         JsonNode plaintextNode = createObjectNode(plaintextJson);
         JsonNode encryptedNode = plaintextNode.deepCopy();
@@ -67,30 +57,26 @@ public class EncryptionService {
             String type = iterator.next();
             List<String> fields = typesAndFieldsToEncrypt.get(type);
 
-            JsonNode jsonNode = JacksonUtils.filterJsonNodeWithFields(plaintextNode, fields);
+            JsonNode jsonNode = JacksonUtils.filterJsonNodeWithPaths(plaintextNode, fields);
             if(jsonNode == null)
                 continue;
             JsonNode returnedEncryptedNode = mapper.valueToTree(encryptionServiceRestInterface.callEncrypt(tenantId, type,
                     jsonNode));
 
-            encryptedNode = JacksonUtils.merge(returnedEncryptedNode, encryptedNode);
+            encryptedNode = JacksonUtils.mergeNodesForGivenPaths(returnedEncryptedNode, encryptedNode, fields);
         }
 
         return (ObjectNode) encryptedNode;
     }
 
-    public Object decryptValue(Object ciphertext) {
-        return encryptionServiceRestInterface.callDecrypt(ciphertext);
-    }
-
-    public ObjectNode decryptJson(Object ciphertextJson, List<String> fields) {
+    public ObjectNode decryptJson(Object ciphertextJson, List<String> fields) throws IOException {
         JsonNode ciphertextNode = createObjectNode(ciphertextJson);
         JsonNode decryptedNode = ciphertextNode.deepCopy();
 
-        JsonNode jsonNode = JacksonUtils.filterJsonNodeWithFields(ciphertextNode, fields);
+        JsonNode jsonNode = JacksonUtils.filterJsonNodeWithPaths(ciphertextNode, fields);
         if(jsonNode != null) {
             JsonNode returnedDecryptedNode = mapper.valueToTree(encryptionServiceRestInterface.callDecrypt(jsonNode));
-            decryptedNode = JacksonUtils.merge(returnedDecryptedNode, decryptedNode);
+            decryptedNode = JacksonUtils.mergeNodesForGivenPaths(returnedDecryptedNode, decryptedNode, fields);
         }
 
         return (ObjectNode) decryptedNode;
@@ -110,5 +96,20 @@ public class EncryptionService {
         }
         return jsonNode;
     }
+
+
+    public String encryptValue(String plaintext, String tenantId, String type) {
+        return encryptValue(new ArrayList<String>(Collections.singleton(plaintext)), tenantId, type).get(0);
+    }
+
+    public List<String> encryptValue(List<String> plaintext, String tenantId, String type) {
+        Object encryptionResponse = encryptionServiceRestInterface.callEncrypt(tenantId, type, plaintext);
+        return (List<String>) encryptionResponse;
+    }
+
+    public Object decryptValue(Object ciphertext) {
+        return encryptionServiceRestInterface.callDecrypt(ciphertext);
+    }
+
 
 }

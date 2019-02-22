@@ -4,10 +4,17 @@ import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.NullNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.jayway.jsonpath.Configuration;
+import com.jayway.jsonpath.DocumentContext;
+import com.jayway.jsonpath.JsonPath;
+import com.jayway.jsonpath.Option;
 import lombok.extern.slf4j.Slf4j;
+import org.egov.tracer.model.CustomException;
 
+import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
 
@@ -87,6 +94,53 @@ public class JacksonUtils {
         }
 
         return null;
+    }
+
+    public static JsonNode filterJsonNodeWithPaths(JsonNode jsonNode, List<String> filterPaths) {
+        Configuration configuration = Configuration.defaultConfiguration().addOptions(Option.DEFAULT_PATH_LEAF_TO_NULL,
+                Option.SUPPRESS_EXCEPTIONS);
+        ObjectMapper mapper = new ObjectMapper(new JsonFactory());
+        DocumentContext jsonDocument = JsonPath.using(configuration).parse(jsonNode.toString());
+        ArrayNode filteredNode = mapper.createArrayNode();
+
+        for(String path : filterPaths) {
+            Object value = jsonDocument.read(path);
+            filteredNode.add(mapper.convertValue(value, JsonNode.class));
+        }
+        return filteredNode;
+    }
+
+    public static JsonNode mergeNodesForGivenPaths(JsonNode newNode, JsonNode originalNode, List<String> filterPaths) throws IOException {
+        Configuration configuration = Configuration.defaultConfiguration().addOptions(Option.DEFAULT_PATH_LEAF_TO_NULL,
+                Option.SUPPRESS_EXCEPTIONS);
+        ObjectMapper mapper = new ObjectMapper(new JsonFactory());
+
+        JsonNode mergedNode = originalNode.deepCopy();
+        DocumentContext mergedNodeDocumentContext = JsonPath.using(configuration).parse(mergedNode.toString());
+
+        ArrayNode newArrayNode = (ArrayNode) newNode;
+
+        if(newArrayNode.size() != filterPaths.size())
+            throw new CustomException("", "");
+
+        for(int i = 0; i < filterPaths.size(); i++) {
+            String path = filterPaths.get(i);
+            if(mergedNodeDocumentContext.read(path) == null)
+                continue;
+            if(path.contains("*")) {
+                ArrayNode values = (ArrayNode) newArrayNode.get(i);
+
+                for(int j = 0; j < values.size(); j++) {
+                    String absolutePath = path.replace("*", String.valueOf(j));
+                    mergedNodeDocumentContext.set(absolutePath, values.get(j).textValue());
+                }
+
+            } else {
+                mergedNodeDocumentContext.set(path, newArrayNode.get(i).textValue());
+            }
+        }
+
+        return mapper.readTree(mergedNodeDocumentContext.jsonString());
     }
 
 

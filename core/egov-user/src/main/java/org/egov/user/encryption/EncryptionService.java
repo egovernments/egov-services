@@ -4,16 +4,17 @@ import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import lombok.extern.slf4j.Slf4j;
 import org.egov.tracer.model.CustomException;
 import org.egov.user.encryption.util.JacksonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.PostConstruct;
 import java.util.*;
 
+@Slf4j
 @Service
 public class EncryptionService {
 
@@ -66,7 +67,9 @@ public class EncryptionService {
             String type = iterator.next();
             List<String> fields = typesAndFieldsToEncrypt.get(type);
 
-            JsonNode jsonNode = JacksonUtils.filterJsonNode(plaintextNode, fields);
+            JsonNode jsonNode = JacksonUtils.filterJsonNodeWithFields(plaintextNode, fields);
+            if(jsonNode == null)
+                continue;
             JsonNode returnedEncryptedNode = mapper.valueToTree(encryptionServiceRestInterface.callEncrypt(tenantId, type,
                     jsonNode));
 
@@ -84,10 +87,11 @@ public class EncryptionService {
         JsonNode ciphertextNode = createObjectNode(ciphertextJson);
         JsonNode decryptedNode = ciphertextNode.deepCopy();
 
-        JsonNode jsonNode = JacksonUtils.filterJsonNode(ciphertextNode, fields);
-        JsonNode returnedDecryptedNode = mapper.valueToTree(encryptionServiceRestInterface.callDecrypt(jsonNode));
-
-        decryptedNode = JacksonUtils.merge(returnedDecryptedNode, decryptedNode);
+        JsonNode jsonNode = JacksonUtils.filterJsonNodeWithFields(ciphertextNode, fields);
+        if(jsonNode != null) {
+            JsonNode returnedDecryptedNode = mapper.valueToTree(encryptionServiceRestInterface.callDecrypt(jsonNode));
+            decryptedNode = JacksonUtils.merge(returnedDecryptedNode, decryptedNode);
+        }
 
         return (ObjectNode) decryptedNode;
     }
@@ -95,12 +99,12 @@ public class EncryptionService {
     private ObjectNode createObjectNode(Object plaintextJson) {
         ObjectNode jsonNode = null;
         try {
-            if(plaintextJson instanceof JsonNode)
+            if(plaintextJson instanceof ObjectNode)
                 jsonNode = (ObjectNode) plaintextJson;
             else if(plaintextJson instanceof String)
                 jsonNode = (ObjectNode) mapper.readTree((String) plaintextJson);           //JsonNode from JSON String
             else
-                jsonNode = mapper.valueToTree(plaintextJson);                               //JsonNode from POJO
+                jsonNode = mapper.valueToTree(plaintextJson);                               //JsonNode from POJO or Map
         } catch (Exception e) {
             throw new CustomException("Cannot convert to JsonNode : " + plaintextJson, "Cannot convert to JsonNode");
         }

@@ -14,8 +14,8 @@ import java.util.List;
 @Slf4j
 public class JacksonUtils {
 
-    public static JsonNode merge(JsonNode newNode, JsonNode mainNode) {
-        Iterator<String> fieldNames = mainNode.fieldNames();
+    public static JsonNode merge(JsonNode newNode, JsonNode originalNode) {
+        Iterator<String> fieldNames = originalNode.fieldNames();
 
         while (fieldNames.hasNext()) {
 
@@ -24,16 +24,16 @@ public class JacksonUtils {
 
             if (jsonNode != null) {
                 if (jsonNode.isObject()) {
-                    merge(jsonNode, mainNode.get(fieldName));
+                    merge(jsonNode, originalNode.get(fieldName));
                 } else if (jsonNode.isArray()) {
                     for (int i = 0; i < jsonNode.size(); i++) {
-                        merge(jsonNode.get(i), mainNode.get(fieldName).get(i));
+                        merge(jsonNode.get(i), originalNode.get(fieldName).get(i));
                     }
                 }
             } else {
                 if (newNode instanceof ObjectNode) {
                     // Overwrite field
-                    JsonNode value = mainNode.get(fieldName);
+                    JsonNode value = originalNode.get(fieldName);
 
                     ((ObjectNode) newNode).set(fieldName, value);
                 }
@@ -43,7 +43,7 @@ public class JacksonUtils {
         return newNode;
     }
 
-    public static JsonNode filterJsonNode(JsonNode jsonNode, List<String> filterFields) {
+    public static JsonNode filterJsonNodeWithFields(JsonNode jsonNode, List<String> filterFields) {
         if(checkIfNoFieldExistsInJsonNode(jsonNode, filterFields))
             return null;
 
@@ -56,21 +56,23 @@ public class JacksonUtils {
             Iterator<String> fieldIterator = objectNode.fieldNames();
             while (fieldIterator.hasNext()) {
                 String field = fieldIterator.next();
-                if(filterFields.contains(field)) {
+                if(filterFields.contains(field) && !objectNode.get(field).isNull()) {
                     filteredObjectNode.set(field, objectNode.get(field));
                 } else {
-                    JsonNode filteredJsonNode = filterJsonNode(objectNode.get(field), filterFields);
+                    JsonNode filteredJsonNode = filterJsonNodeWithFields(objectNode.get(field), filterFields);
                     if(filteredJsonNode != null) {
                         filteredObjectNode.set(field, filteredJsonNode);
                     }
                 }
             }
+            if(filteredObjectNode.isEmpty(mapper.getSerializerProvider()))
+                return null;
             return filteredObjectNode;
         } else if(jsonNode.isArray()) {
             ArrayNode arrayNode = (ArrayNode) jsonNode;
             ArrayNode filteredArrayNode = mapper.createArrayNode();
             for(int i = 0; i < arrayNode.size(); i++) {
-                JsonNode filteredJsonNode = filterJsonNode(arrayNode.get(i), filterFields);
+                JsonNode filteredJsonNode = filterJsonNodeWithFields(arrayNode.get(i), filterFields);
                 if(filteredJsonNode == null) {
                     if(arrayNode.get(i).isArray())
                         filteredJsonNode = mapper.createArrayNode();

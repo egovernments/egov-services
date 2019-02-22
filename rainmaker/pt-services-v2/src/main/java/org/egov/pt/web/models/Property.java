@@ -78,6 +78,9 @@ public class Property extends PropertyInfo{
 	@JsonProperty("propertyDetails")
 	private List<PropertyDetail> propertyDetails;
 
+	@JsonProperty("additionalDetails")
+	private Object additionalDetails;
+
 
 	public Property addpropertyDetailsItem(PropertyDetail propertyDetailsItem) {
 		if (this.propertyDetails == null) {
@@ -88,12 +91,13 @@ public class Property extends PropertyInfo{
 	}
 
 	@Builder
-	public Property(String propertyId, String tenantId, String acknowldgementNumber, String oldPropertyId, StatusEnum status, Address address, AuditDetails auditDetails, CreationReasonEnum creationReason, Long occupancyDate, List<PropertyDetail> propertyDetails) {
+	public Property(String propertyId, String tenantId, String acknowldgementNumber, String oldPropertyId, StatusEnum status, Address address, AuditDetails auditDetails, CreationReasonEnum creationReason, Long occupancyDate, List<PropertyDetail> propertyDetails,Object additionalDetails) {
 		super(propertyId, tenantId, acknowldgementNumber, oldPropertyId, status, address);
 		this.auditDetails = auditDetails;
 		this.creationReason = creationReason;
 		this.occupancyDate = occupancyDate;
 		this.propertyDetails = propertyDetails;
+		this.additionalDetails = additionalDetails;
 	}
 
 }

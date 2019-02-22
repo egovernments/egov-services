@@ -1,6 +1,7 @@
 package org.egov.pt.repository.rowmapper;
 
 
+import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -81,17 +82,24 @@ public class PropertyRowMapper implements ResultSetExtractor<List<Property>> {
 						.lastModifiedTime(lastModifiedTime)
 						.build();
 
-				Long occupancyDate = rs.getLong("occupancyDate");
-				if(rs.wasNull()){occupancyDate = null;}
-				currentProperty = Property.builder().address(address)
-						.acknowldgementNumber(rs.getString("acknowldgementNumber"))
-						.creationReason(CreationReasonEnum.fromValue(rs.getString("creationReason")))
-						.occupancyDate(occupancyDate).propertyId(currentId)
-						.oldPropertyId(rs.getString("oldPropertyId"))
-						.status(PropertyInfo.StatusEnum.fromValue(rs.getString("status")))
-						.tenantId(tenanId).auditDetails(auditdetails).build();
+				try {
+					PGobject obj = (PGobject) rs.getObject("pt_additionalDetails");
+					JsonNode propertyAdditionalDetails = mapper.readTree( obj.getValue());
+					Long occupancyDate = rs.getLong("occupancyDate");
+					if(rs.wasNull()){occupancyDate = null;}
+					currentProperty = Property.builder().address(address)
+							.acknowldgementNumber(rs.getString("acknowldgementNumber"))
+							.creationReason(CreationReasonEnum.fromValue(rs.getString("creationReason")))
+							.occupancyDate(occupancyDate).propertyId(currentId)
+							.oldPropertyId(rs.getString("oldPropertyId"))
+							.status(PropertyInfo.StatusEnum.fromValue(rs.getString("status")))
+							.tenantId(tenanId).auditDetails(auditdetails)
+							.additionalDetails(propertyAdditionalDetails).build();
 
-				propertyMap.put(currentId, currentProperty);
+					propertyMap.put(currentId, currentProperty);
+				} catch (IOException e) {
+					throw new CustomException("PARSING ERROR","The propertyAdditionalDetail json cannot be parsed");
+				}
 			}
 
 			addChildrenToProperty(rs, currentProperty);
@@ -144,7 +152,7 @@ public class PropertyRowMapper implements ResultSetExtractor<List<Property>> {
 			if(rs.wasNull()){noOfFloors = null;}
 
 			try{
-				PGobject obj = (PGobject) rs.getObject("additionalDetails");
+				PGobject obj = (PGobject) rs.getObject("ptdl_additionalDetails");
 				JsonNode additionalDetails = mapper.readTree( obj.getValue());
 				detail = PropertyDetail.builder()
 						.additionalDetails(additionalDetails)

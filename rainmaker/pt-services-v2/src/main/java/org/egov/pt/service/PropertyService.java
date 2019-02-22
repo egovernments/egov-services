@@ -130,7 +130,6 @@ public class PropertyService {
 		enrichmentService.enrichCreateRequest(request,true);
 		userService.createUser(request);
 		calculationService.calculateTax(request);
-	//	enrichmentService.enrichAssessmentNumber(request);
 		producer.push(config.getUpdatePropertyTopic(), request);
 		return request.getProperties();
 	}

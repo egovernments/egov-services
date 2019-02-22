@@ -140,6 +140,10 @@ public class UserService {
 			case "UserName":
 				userSearchReq.put("userName",employee.getCode());
 				break;
+			case "Name":
+				userSearchReq.put("name",employee.getUser().getName());
+				break;
+			
 		}
 		userSearchReq.put("userType", UserType.EMPLOYEE);
 		userSearchReq.put("tenantID",employee.getTenantId());

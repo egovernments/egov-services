@@ -194,7 +194,7 @@ public class GrievanceService {
 	 */
 	private void overRideCitizenAccountId(ServiceRequest serviceRequest) {
 		User user = serviceRequest.getRequestInfo().getUserInfo();
-		List<String> codes = user.getRoles().parallelStream().map(Role::getName).collect(Collectors.toList());
+		List<String> codes = user.getRoles().stream().map(Role::getName).collect(Collectors.toList());
 		if (codes.contains(PGRConstants.ROLE_CITIZEN) || codes.contains(PGRConstants.ROLE_NAME_CITIZEN))
 			serviceRequest.getServices().forEach(service -> service.setAccountId(String.valueOf(user.getId())));
 	}
@@ -230,7 +230,7 @@ public class GrievanceService {
 		List<String> roleNames = requestInfo.getUserInfo().getRoles().parallelStream().map(Role::getName)
 				.collect(Collectors.toList());
 		if(roleNames.contains(PGRConstants.ROLE_NAME_CSR) || roleNames.contains(PGRConstants.ROLE_CSR)) {
-			serviceRequest.getServices().parallelStream().forEach(request -> {
+			serviceRequest.getServices().stream().forEach(request -> {
 				String accId = null;
 				if (null != request.getCitizen()) {
 					accId = isUserPresent(request.getCitizen(),requestInfo,request.getTenantId());
@@ -300,7 +300,7 @@ public class GrievanceService {
 			if(!StringUtils.isEmpty(actionInfo.getAction())) {
 				service.setStatus(StatusEnum.fromValue(actionStatusMap.get(actionInfo.getAction())));
 			}
-			String role = pGRUtils.getPrecedentRole(requestInfo.getUserInfo().getRoles().parallelStream().map(Role::getName)
+			String role = pGRUtils.getPrecedentRole(requestInfo.getUserInfo().getRoles().stream().map(Role::getName)
 					.collect(Collectors.toList()));
 			actionInfo.setUuid(UUID.randomUUID().toString()); actionInfo.setBusinessKey(service.getServiceRequestId()); 
 			actionInfo.setBy(auditDetails.getLastModifiedBy() + ":" + role); actionInfo.setWhen(auditDetails.getLastModifiedTime());
@@ -428,7 +428,7 @@ public class GrievanceService {
 	 */
 	public void enrichRequest(RequestInfo requestInfo, ServiceReqSearchCriteria serviceReqSearchCriteria) {
 		log.info("Enriching request for search");
-		String precedentRole = pGRUtils.getPrecedentRole(requestInfo.getUserInfo().getRoles().parallelStream().map(Role::getName)
+		String precedentRole = pGRUtils.getPrecedentRole(requestInfo.getUserInfo().getRoles().stream().map(Role::getName)
 				.collect(Collectors.toList()));
 		if (requestInfo.getUserInfo().getType().equalsIgnoreCase(PGRConstants.ROLE_CITIZEN)) {
 			serviceReqSearchCriteria.setAccountId(requestInfo.getUserInfo().getId().toString());
@@ -596,8 +596,8 @@ public class GrievanceService {
 		List<ActionHistory> actionHistory = new ArrayList<>();
 		List<ServiceRequestDetails> result = new ArrayList<>();
 		List<Object> list = JsonPath.read(response, "$.services");
-		list.parallelStream().forEach(entry -> result.add(mapper.convertValue(entry, ServiceRequestDetails.class)));
-		result.parallelStream().forEach(obj -> {
+		list.stream().forEach(entry -> result.add(mapper.convertValue(entry, ServiceRequestDetails.class)));
+		result.stream().forEach(obj -> {
 			if(null != obj) {
 				ActionHistory actionHis = new ActionHistory();
 				actionHis.setActions(obj.getActionhistory());
@@ -651,11 +651,11 @@ public class GrievanceService {
 		try {
 			String tenantId = historyList.get(0).getActions().get(0).getTenantId();
 			List<String> fileStoreIds = new ArrayList<>();
-			historyList.parallelStream().forEach(history -> {
+			historyList.stream().forEach(history -> {
 			if(null != history) {
 				List<ActionInfo> actions = history.getActions();
 				if(!CollectionUtils.isEmpty(actions)) {
-					actions.parallelStream().forEach(action -> {
+					actions.stream().forEach(action -> {
 						if(null != action) {
 							List<String> media = action.getMedia();
 							if (!CollectionUtils.isEmpty(media))
@@ -672,11 +672,11 @@ public class GrievanceService {
 			}
 			final Map<String, String> urlIdMap = computeUriIdMap;
 			if(!CollectionUtils.isEmpty(urlIdMap.keySet())) {
-				historyList.parallelStream().forEach(history -> {
+				historyList.stream().forEach(history -> {
 					if(null != history) {
 						List<ActionInfo> actions = history.getActions();
 						if(!CollectionUtils.isEmpty(actions)) {
-							actions.parallelStream().forEach(action -> {
+							actions.stream().forEach(action -> {
 								if(null != action) {
 									List<String> media = action.getMedia();
 									if(!CollectionUtils.isEmpty(media)) {
@@ -740,7 +740,7 @@ public class GrievanceService {
 					}
 				}
 			}
-			Set<String> tenantIds = addresses.parallelStream().map(obj -> {
+			Set<String> tenantIds = addresses.stream().map(obj -> {
 				if(null != obj)  return obj.getTenantId(); else return null;
 			}).collect(Collectors.toSet());
 			for(String tenantId: tenantIds) {
@@ -772,7 +772,7 @@ public class GrievanceService {
 		String tenantId = response.getServices().get(0).getTenantId().split("[.]")[0]; //citizen is state-level no point in sending ulb level tenant.
 		UserResponse userResponse = getUsers(requestInfo, tenantId, userIds);
 		if(null != userResponse) {
-			Map<Long, Citizen> userResponseMap = userResponse.getUser().parallelStream()
+			Map<Long, Citizen> userResponseMap = userResponse.getUser().stream()
 					.collect(Collectors.toMap(Citizen :: getId, Function.identity()));
 			for(Service service: response.getServices()) {
 				if(null != service) {

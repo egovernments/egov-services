@@ -45,6 +45,8 @@ public class EmployeeSearchCriteria {
 	
 	public String tenantId;
 	
+	public String phone;
+
 	public Integer offset;
 	
 	public Integer limit;

@@ -9,6 +9,7 @@ import org.egov.user.domain.model.NonLoggedInUserUpdatePasswordRequest;
 import org.egov.user.domain.model.User;
 import org.egov.user.domain.model.UserSearchCriteria;
 import org.egov.user.domain.model.enums.UserType;
+import org.egov.user.persistence.dto.FailedLoginAttempt;
 import org.egov.user.persistence.repository.FileStoreRepository;
 import org.egov.user.persistence.repository.OtpRepository;
 import org.egov.user.persistence.repository.UserRepository;
@@ -26,6 +27,7 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import static java.util.Objects.isNull;
@@ -46,6 +48,16 @@ public class UserService {
 
     @Value("${egov.user.host}")
     private String userHost;
+
+    @Value("${account.unlock.cool.down.period.minutes}")
+    private Long accountUnlockCoolDownPeriod;
+
+    @Value("${max.invalid.login.attempts.period.minutes}")
+    private Long maxInvalidLoginAttemptsPeriod;
+
+    @Value("${max.invalid.login.attempts}")
+    private Long maxInvalidLoginAttempts;
+
 
     @Autowired
     private RestTemplate restTemplate;
@@ -271,6 +283,11 @@ public class UserService {
         user.validateUserModification();
         user.setPassword(encryptPwd(user.getPassword()));
         userRepository.update(user, existingUser);
+
+        // If user is being unlocked via update, reset failed login attempts
+        if(user.getAccountLocked() && !existingUser.getAccountLocked())
+            resetFailedLoginAttempts(user);
+
         return  getUserByUuid(user.getUuid());
     }
 
@@ -343,6 +360,70 @@ public class UserService {
         validateOtp(user);
         user.updatePassword(encryptPwd(request.getNewPassword()));
         userRepository.update(user, user);
+    }
+
+
+    /**
+     * Deactivate failed login attempts for provided user
+     *
+     * @param user whose failed login attempts are to be reset
+     */
+    public void resetFailedLoginAttempts(User user){
+        userRepository.resetFailedLoginAttemptsForUser(user.getUuid());
+    }
+
+    /**
+     * Checks if user is eligible for unlock
+     *  returns true,
+     *      - If configured cool down period has passed since last lock
+     *  else false
+     *
+     * @param user to be checked for eligibility for unlock
+     * @return if unlock able
+     */
+    public boolean isAccountUnlockAble(User user) {
+        if (user.getAccountLocked()){
+            boolean unlockAble =
+                    System.currentTimeMillis() - user.getAccountLockedDate() > TimeUnit.MINUTES.toMillis(accountUnlockCoolDownPeriod);
+
+            log.info("Account eligible for unlock - "+ unlockAble);
+            log.info("Current time {}, last lock time {} , cool down period {} ", System.currentTimeMillis(),
+                    user.getAccountLockedDate(), TimeUnit.MINUTES.toMillis(accountUnlockCoolDownPeriod));
+            return unlockAble;
+        }
+        else
+            return true;
+    }
+
+    /**
+     * Perform actions where a user login fails
+     *  - Fetch existing failed login attempts within configured time
+     *  period{@link UserService#maxInvalidLoginAttemptsPeriod}
+     *  - If failed login attempts exceeds configured {@link UserService#maxInvalidLoginAttempts}
+     *     - then lock account
+     *  - Add failed login attempt entry to repository
+     *
+     * @param user user whose failed login attempt to be handled
+     * @param ipAddress IP address of remote
+     */
+    public void handleFailedLogin(User user, String ipAddress){
+        if(!Objects.isNull(user.getUuid())) {
+        List<FailedLoginAttempt> failedLoginAttempts =
+                userRepository.fetchFailedAttemptsByUserAndTime(user.getUuid(),
+                        System.currentTimeMillis() - TimeUnit.MINUTES.toMillis(maxInvalidLoginAttemptsPeriod));
+
+        if(failedLoginAttempts.size() + 1 >= maxInvalidLoginAttempts){
+            user.setAccountLocked(true);
+            user.setAccountLockedDate(System.currentTimeMillis());
+            user = updateWithoutOtpValidation(user);
+            log.info("Locked account with uuid {} for {} minutes as exceeded max allowed attempts of {} within {} " +
+                            "minutes",
+                    user.getUuid(), accountUnlockCoolDownPeriod, maxInvalidLoginAttempts, maxInvalidLoginAttemptsPeriod);
+        }
+
+        userRepository.insertFailedLoginAttempt(new FailedLoginAttempt(user.getUuid(), ipAddress,
+                System.currentTimeMillis(), true));
+        }
     }
 
 

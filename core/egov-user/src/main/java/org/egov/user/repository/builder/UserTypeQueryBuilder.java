@@ -61,9 +61,10 @@ public class UserTypeQueryBuilder {
     private static final String SELECT_USER_QUERY = "SELECT u.title, u.salutation, u.dob, u.locale, u.username, u" +
             ".password, u.pwdexpirydate,  u.mobilenumber, u.altcontactnumber, u.emailid, u.createddate, u" +
             ".lastmodifieddate,  u.createdby, u.lastmodifiedby, u.active, u.name, u.gender, u.pan, u.aadhaarnumber, u" +
-            ".type,  u.version, u.guardian, u.guardianrelation, u.signature, u.accountlocked, u.bloodgroup, u.photo, " +
-            "u.identificationmark,  u.tenantid, u.id, u.uuid, addr.id as addr_id, addr.type as addr_type, addr" +
-            ".address as addr_address,  addr.city as addr_city, addr.pincode as addr_pincode, addr.tenantid as " +
+            ".type,  u.version, u.guardian, u.guardianrelation, u.signature, u.accountlocked, u.accountlockeddate, u" +
+            ".bloodgroup, u.photo, u.identificationmark,  u.tenantid, u.id, u.uuid, addr.id as addr_id, addr.type as " +
+            "addr_type, addr .address as addr_address,  addr.city as addr_city, addr.pincode as addr_pincode, addr" +
+            ".tenantid as " +
             "addr_tenantid, addr.userid as addr_userid, ur.role_code as role_code, ur.role_tenantid as role_tenantid \n" +
             "\tFROM eg_user u LEFT OUTER JOIN eg_user_address addr ON u.id = addr.userid AND u.tenantid = addr" +
             ".tenantid LEFT OUTER JOIN eg_userrole_v1 ur ON u.id = ur.user_id AND u.tenantid = ur.user_tenantid  ";
@@ -74,9 +75,17 @@ public class UserTypeQueryBuilder {
             " result) result_offset " +
             "WHERE offset_ > ? AND offset_ <= ?";
 
-    private static final String BASE_QUERY = "SELECT * from eg_user u ";
-
     public static final String SELECT_NEXT_SEQUENCE_USER = "select nextval('seq_eg_user')";
+
+    public static final String SELECT_FAILED_ATTEMPTS_BY_USER_SQL = "select user_uuid, ip, attempt_date, active from " +
+            "eg_user_login_failed_attempts WHERE user_uuid = :user_uuid AND attempt_date >= :attempt_date AND active " +
+            "= 'true' " ;
+
+    public static final String INSERT_FAILED_ATTEMPTS_SQL = " INSERT INTO eg_user_login_failed_attempts (user_uuid, " +
+            "ip, attempt_date, active) VALUES ( :user_uuid, :ip , :attempt_date, :active ) ";
+
+    public static final String UPDATE_FAILED_ATTEMPTS_SQL = " UPDATE eg_user_login_failed_attempts SET active = " +
+            "'false' WHERE user_uuid = :user_uuid";
 
     @SuppressWarnings("rawtypes")
     public String getQuery(final UserSearchCriteria userSearchCriteria, final List preparedStatementValues) {
@@ -84,7 +93,6 @@ public class UserTypeQueryBuilder {
 
         addWhereClause(selectQuery, preparedStatementValues, userSearchCriteria);
 
-//        selectQuery.append("And ur.roleid IN").append(getIdQuery(roleIds)).append(" And ur.userid = u.id");
 
         addOrderByClause(selectQuery, userSearchCriteria);
         return addPagingClause(selectQuery, preparedStatementValues, userSearchCriteria);
@@ -206,26 +214,6 @@ public class UserTypeQueryBuilder {
 
     }
 
-//    private static String getIdQuery(final List<Long> idList) {
-//        final StringBuilder query = new StringBuilder("(");
-//        if (idList.size() >= 1) {
-//            query.append(idList.get(0).toString());
-//            for (int i = 1; i < idList.size(); i++)
-//                query.append(", ").append(idList.get(i));
-//        }
-//        return query.append(")").toString();
-//    }
-//
-//    private static String getUUIDQuery(final List<String> idList) {
-//        final StringBuilder query = new StringBuilder("(");
-//        if (idList.size() >= 1) {
-//            query.append("'").append(idList.get(0)).append("'");
-//            for (int i = 1; i < idList.size(); i++)
-//                query.append(", '").append(idList.get(i)).append("'");
-//        }
-//        return query.append(")").toString();
-//    }
-
     private String getQueryForCollection(List<?> ids, List<Object> preparedStmtList) {
         StringBuilder builder = new StringBuilder();
         Iterator<?> iterator = ids.iterator();
@@ -264,8 +252,8 @@ public class UserTypeQueryBuilder {
     public String getUpdateUserQuery() {
         return "update eg_user set salutation=:Salutation,dob=:Dob,locale=:Locale,password=:Password,pwdexpirydate=:PasswordExpiryDate,mobilenumber=:MobileNumber,altcontactnumber=:AltContactNumber,emailid=:EmailId,active=:Active,name=:Name,gender=:Gender,pan=:Pan,aadhaarnumber=:AadhaarNumber,"
                 + "type=:Type,guardian=:Guardian,guardianrelation=:GuardianRelation,signature=:Signature," +
-                "accountlocked=:AccountLocked,bloodgroup=:BloodGroup,photo=:Photo," +
-                "identificationmark=:IdentificationMark,lastmodifieddate=:LastModifiedDate," +
+                "accountlocked=:AccountLocked, accountlockeddate=:AccountLockedDate, bloodgroup=:BloodGroup," +
+                "photo=:Photo, identificationmark=:IdentificationMark,lastmodifieddate=:LastModifiedDate," +
                 "lastmodifiedby=:LastModifiedBy where username=:username and tenantid=:tenantid and type=:type";
     }
 

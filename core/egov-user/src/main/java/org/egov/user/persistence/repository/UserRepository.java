@@ -10,10 +10,12 @@ import org.egov.user.domain.model.enums.BloodGroup;
 import org.egov.user.domain.model.enums.Gender;
 import org.egov.user.domain.model.enums.GuardianRelation;
 import org.egov.user.domain.model.enums.UserType;
+import org.egov.user.persistence.dto.FailedLoginAttempt;
 import org.egov.user.repository.builder.RoleQueryBuilder;
 import org.egov.user.repository.builder.UserTypeQueryBuilder;
 import org.egov.user.repository.rowmapper.UserResultSetExtractor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -23,6 +25,7 @@ import org.springframework.util.CollectionUtils;
 import java.util.*;
 
 import static java.util.Objects.isNull;
+import static org.egov.user.repository.builder.UserTypeQueryBuilder.SELECT_FAILED_ATTEMPTS_BY_USER_SQL;
 import static org.egov.user.repository.builder.UserTypeQueryBuilder.SELECT_NEXT_SEQUENCE_USER;
 import static org.springframework.util.StringUtils.isEmpty;
 
@@ -67,6 +70,262 @@ public class UserRepository {
 
         return users;
     }
+
+
+
+	/**
+	 * Api will check user is present or not with userName And tenantId
+	 *
+	 * @param userName
+	 * @param tenantId
+	 * @return
+	 */
+	public boolean isUserPresent(String userName, String tenantId, UserType userType) {
+
+		String query = userTypeQueryBuilder.getUserPresentByUserNameAndTenant();
+
+		final Map<String, Object> parametersMap = new HashMap<String, Object>();
+		parametersMap.put("userName", userName);
+		parametersMap.put("tenantId", tenantId);
+		parametersMap.put("userType", userType.toString());
+
+		int count = namedParameterJdbcTemplate.queryForObject(query, parametersMap, Integer.class);
+
+		return count > 0;
+	}
+
+	/**
+	 * this api will create the user.
+	 *
+	 * @param user
+	 * @return
+	 */
+	public User create(User user) {
+		validateAndEnrichRoles(Collections.singletonList(user));
+		final Long newId = getNextSequence();
+		user.setId(newId);
+		user.setUuid(UUID.randomUUID().toString());
+		user.setCreatedDate(new Date());
+		user.setLastModifiedDate(new Date());
+		user.setCreatedBy(user.getLoggedInUserId());
+		user.setLastModifiedBy(user.getLoggedInUserId());
+		final User savedUser = save(user);
+		if (user.getRoles().size() > 0) {
+			saveUserRoles(user);
+		}
+		final Address savedCorrespondenceAddress = saveAddress(user.getCorrespondenceAddress(), savedUser.getId(),
+				savedUser.getTenantId());
+		final Address savedPermanentAddress = saveAddress(user.getPermanentAddress(), savedUser.getId(),
+				savedUser.getTenantId());
+		savedUser.setPermanentAddress(savedPermanentAddress);
+		savedUser.setCorrespondenceAddress(savedCorrespondenceAddress);
+		return savedUser;
+	}
+
+	/**
+	 * api will update the user details.
+	 *
+	 * @param user
+	 * @return
+	 */
+	public void update(final User user, User oldUser) {
+
+
+		Map<String, Object> updateuserInputs = new HashMap<>();
+
+		updateuserInputs.put("username", oldUser.getUsername());
+		updateuserInputs.put("type", oldUser.getType().toString());
+		updateuserInputs.put("tenantid", oldUser.getTenantId());
+		updateuserInputs.put("AadhaarNumber", user.getAadhaarNumber());
+
+		if(isNull(user.getAccountLocked()))
+			updateuserInputs.put("AccountLocked", oldUser.getAccountLocked());
+		else
+			updateuserInputs.put("AccountLocked", user.getAccountLocked());
+
+		if(isNull(user.getAccountLockedDate()))
+			updateuserInputs.put("AccountLockedDate", oldUser.getAccountLockedDate());
+		else
+			updateuserInputs.put("AccountLockedDate", user.getAccountLockedDate());
+
+		updateuserInputs.put("Active", user.getActive());
+		updateuserInputs.put("AltContactNumber", user.getAltContactNumber());
+
+		if (user.getBloodGroup() != null) {
+			if (BloodGroup.A_NEGATIVE.toString().equals(user.getBloodGroup().toString())) {
+				updateuserInputs.put("BloodGroup", user.getBloodGroup().toString());
+			} else if (BloodGroup.A_POSITIVE.toString().equals(user.getBloodGroup().toString())) {
+				updateuserInputs.put("BloodGroup", user.getBloodGroup().toString());
+			} else if (BloodGroup.AB_NEGATIVE.toString().equals(user.getBloodGroup().toString())) {
+				updateuserInputs.put("BloodGroup", user.getBloodGroup().toString());
+			} else if (BloodGroup.AB_POSITIVE.toString().equals(user.getBloodGroup().toString())) {
+				updateuserInputs.put("BloodGroup", user.getBloodGroup().toString());
+			} else if (BloodGroup.O_NEGATIVE.toString().equals(user.getBloodGroup().toString())) {
+				updateuserInputs.put("BloodGroup", user.getBloodGroup().toString());
+			} else if (BloodGroup.O_POSITIVE.toString().equals(user.getBloodGroup().toString())) {
+				updateuserInputs.put("BloodGroup", user.getBloodGroup().toString());
+			} else if (BloodGroup.B_POSITIVE.toString().equals(user.getBloodGroup().toString())) {
+				updateuserInputs.put("BloodGroup", user.getBloodGroup().toString());
+			} else if (BloodGroup.B_NEGATIVE.toString().equals(user.getBloodGroup().toString())) {
+				updateuserInputs.put("BloodGroup", user.getBloodGroup().toString());
+			} else {
+				updateuserInputs.put("BloodGroup", "");
+			}
+		} else if (oldUser!=null && oldUser.getBloodGroup() != null) {
+			if (BloodGroup.A_NEGATIVE.toString().equals(oldUser.getBloodGroup().toString())) {
+				updateuserInputs.put("BloodGroup", oldUser.getBloodGroup().toString());
+			} else if (BloodGroup.A_POSITIVE.toString().equals(oldUser.getBloodGroup().toString())) {
+				updateuserInputs.put("BloodGroup", oldUser.getBloodGroup().toString());
+			} else if (BloodGroup.AB_NEGATIVE.toString().equals(oldUser.getBloodGroup().toString())) {
+				updateuserInputs.put("BloodGroup", oldUser.getBloodGroup().toString());
+			} else if (BloodGroup.AB_POSITIVE.toString().equals(oldUser.getBloodGroup().toString())) {
+				updateuserInputs.put("BloodGroup", oldUser.getBloodGroup().toString());
+			} else if (BloodGroup.O_NEGATIVE.toString().equals(oldUser.getBloodGroup().toString())) {
+				updateuserInputs.put("BloodGroup", oldUser.getBloodGroup().toString());
+			} else if (BloodGroup.O_POSITIVE.toString().equals(oldUser.getBloodGroup().toString())) {
+				updateuserInputs.put("BloodGroup", oldUser.getBloodGroup().toString());
+			} else if (BloodGroup.B_POSITIVE.toString().equals(oldUser.getBloodGroup().toString())) {
+				updateuserInputs.put("BloodGroup", oldUser.getBloodGroup().toString());
+			} else if (BloodGroup.B_NEGATIVE.toString().equals(oldUser.getBloodGroup().toString())) {
+				updateuserInputs.put("BloodGroup", oldUser.getBloodGroup().toString());
+			} else {
+				updateuserInputs.put("BloodGroup", "");
+			}
+		} else {
+			updateuserInputs.put("BloodGroup", "");
+		}
+
+		if (user.getDob() != null) {
+			updateuserInputs.put("Dob", user.getDob());
+		} else {
+			updateuserInputs.put("Dob", oldUser.getDob());
+		}
+		updateuserInputs.put("EmailId", user.getEmailId());
+
+		if (user.getGender() != null) {
+			if (Gender.FEMALE.toString().equals(user.getGender().toString())) {
+				updateuserInputs.put("Gender", 1);
+			} else if (Gender.MALE.toString().equals(user.getGender().toString())) {
+				updateuserInputs.put("Gender", 2);
+			} else if (Gender.OTHERS.toString().equals(user.getGender().toString())) {
+				updateuserInputs.put("Gender", 3);
+			} else {
+				updateuserInputs.put("Gender", 0);
+			}
+		} else {
+			updateuserInputs.put("Gender", 0);
+		}
+		updateuserInputs.put("Guardian", user.getGuardian());
+
+		if (user.getGuardianRelation() != null) {
+			if (GuardianRelation.Father.toString().equals(user.getGuardianRelation().toString())) {
+				updateuserInputs.put("GuardianRelation", user.getGuardianRelation().toString());
+			} else if (GuardianRelation.Mother.toString().equals(user.getGuardianRelation().toString())) {
+				updateuserInputs.put("GuardianRelation", user.getGuardianRelation().toString());
+			} else if (GuardianRelation.Husband.toString().equals(user.getGuardianRelation().toString())) {
+				updateuserInputs.put("GuardianRelation", user.getGuardianRelation().toString());
+			} else if (GuardianRelation.Other.toString().equals(user.getGuardianRelation().toString())) {
+				updateuserInputs.put("GuardianRelation", user.getGuardianRelation().toString());
+			} else {
+				updateuserInputs.put("GuardianRelation", "");
+			}
+		} else {
+			updateuserInputs.put("GuardianRelation", "");
+		}
+		updateuserInputs.put("IdentificationMark", user.getIdentificationMark());
+		updateuserInputs.put("Locale", user.getLocale());
+		if (null != user.getMobileNumber())
+			updateuserInputs.put("MobileNumber", user.getMobileNumber());
+		else
+			updateuserInputs.put("MobileNumber", oldUser.getMobileNumber());
+		updateuserInputs.put("Name", user.getName());
+		updateuserInputs.put("Pan", user.getPan());
+
+		if (!isEmpty(user.getPassword()))
+			updateuserInputs.put("Password", user.getPassword());
+		else
+			updateuserInputs.put("Password", oldUser.getPassword());
+
+		if(oldUser!=null && user.getPhoto()!=null && user.getPhoto().contains("http"))
+			updateuserInputs.put("Photo", oldUser.getPhoto());
+		else
+			updateuserInputs.put("Photo", user.getPhoto());
+
+		if (null != user.getPasswordExpiryDate())
+			updateuserInputs.put("PasswordExpiryDate", user.getPasswordExpiryDate());
+		else
+			updateuserInputs.put("PasswordExpiryDate", oldUser.getPasswordExpiryDate());
+		updateuserInputs.put("Salutation", user.getSalutation());
+		updateuserInputs.put("Signature", user.getSignature());
+		updateuserInputs.put("Title", user.getTitle());
+
+		if (user.getType() != null) {
+			if (UserType.BUSINESS.toString().equals(user.getType().toString())) {
+				updateuserInputs.put("Type", user.getType().toString());
+			} else if (UserType.CITIZEN.toString().equals(user.getType().toString())) {
+				updateuserInputs.put("Type", user.getType().toString());
+			} else if (UserType.EMPLOYEE.toString().equals(user.getType().toString())) {
+				updateuserInputs.put("Type", user.getType().toString());
+			} else if (UserType.SYSTEM.toString().equals(user.getType().toString())) {
+				updateuserInputs.put("Type", user.getType().toString());
+			} else {
+				updateuserInputs.put("Type", "");
+			}
+		} else {
+			updateuserInputs.put("Type", oldUser.getType().toString());
+		}
+		updateuserInputs.put("LastModifiedDate", new Date());
+		updateuserInputs.put("LastModifiedBy", 1);
+
+		namedParameterJdbcTemplate.update(userTypeQueryBuilder.getUpdateUserQuery(), updateuserInputs);
+		if (user.getRoles() != null && !CollectionUtils.isEmpty(user.getRoles()) && !oldUser.getRoles().equals(user.getRoles())) {
+			validateAndEnrichRoles(Collections.singletonList(user));
+			updateRoles(user);
+		}
+		if (user.getPermanentAndCorrespondenceAddresses() != null) {
+			addressRepository.update(user.getPermanentAndCorrespondenceAddresses(), user.getId(), user.getTenantId());
+		}
+	}
+
+	public void fetchFailedLoginAttemptsByUser(String uuid){
+		fetchFailedAttemptsByUserAndTime(uuid, 0L);
+	}
+
+	public List<FailedLoginAttempt> fetchFailedAttemptsByUserAndTime(String uuid, long attemptStartDate) {
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("user_uuid", uuid);
+		params.put("attempt_date", attemptStartDate);
+
+//		RowMapper<FailedLoginAttempt> rowMapper = (rs, rowNum) -> {
+//			FailedLoginAttempt failedLoginAttempt = new FailedLoginAttempt();
+//			failedLoginAttempt.setUserUuid(rs.getString("user_uuid"));
+//			failedLoginAttempt.setIp(rs.getString("ip"));
+//			failedLoginAttempt.setAttemptDate(rs.getLong("attempt_date"));
+//			return failedLoginAttempt;
+//		};
+
+		return namedParameterJdbcTemplate.query(SELECT_FAILED_ATTEMPTS_BY_USER_SQL, params,
+		new BeanPropertyRowMapper<>(FailedLoginAttempt.class));
+
+	}
+
+	public FailedLoginAttempt insertFailedLoginAttempt(FailedLoginAttempt failedLoginAttempt){
+		Map<String, Object> inputs = new HashMap<>();
+		inputs.put("user_uuid", failedLoginAttempt.getUserUuid());
+		inputs.put("ip", failedLoginAttempt.getIp());
+		inputs.put("attempt_date", failedLoginAttempt.getAttemptDate());
+		inputs.put("active", failedLoginAttempt.isActive());
+
+		namedParameterJdbcTemplate.update(UserTypeQueryBuilder.INSERT_FAILED_ATTEMPTS_SQL, inputs);
+
+		return failedLoginAttempt;
+	}
+
+	public void resetFailedLoginAttemptsForUser(String uuid){
+
+		namedParameterJdbcTemplate.update(UserTypeQueryBuilder.UPDATE_FAILED_ATTEMPTS_SQL,
+                Collections.singletonMap("user_uuid", uuid));
+	}
 
 
 	/**
@@ -151,55 +410,6 @@ public class UserRepository {
 			return roleCodeMap;
 	}
 
-
-    /**
-	 * Api will check user is present or not with userName And tenantId
-	 * 
-	 * @param userName
-	 * @param tenantId
-	 * @return
-	 */
-	public boolean isUserPresent(String userName, String tenantId, UserType userType) {
-
-		String query = userTypeQueryBuilder.getUserPresentByUserNameAndTenant();
-
-		final Map<String, Object> parametersMap = new HashMap<String, Object>();
-		parametersMap.put("userName", userName);
-		parametersMap.put("tenantId", tenantId);
-		parametersMap.put("userType", userType.toString());
-
-		int count = namedParameterJdbcTemplate.queryForObject(query, parametersMap, Integer.class);
-
-		return count > 0;
-	}
-
-	/**
-	 * this api will create the user.
-	 * 
-	 * @param user
-	 * @return
-	 */
-	public User create(User user) {
-		validateAndEnrichRoles(Collections.singletonList(user));
-		final Long newId = getNextSequence();
-		user.setId(newId);
-	        user.setUuid(UUID.randomUUID().toString());
-		user.setCreatedDate(new Date());
-		user.setLastModifiedDate(new Date());
-		user.setCreatedBy(user.getLoggedInUserId());
-		user.setLastModifiedBy(user.getLoggedInUserId());
-		final User savedUser = save(user);
-		if (user.getRoles().size() > 0) {
-			saveUserRoles(user);
-		}
-		final Address savedCorrespondenceAddress = saveAddress(user.getCorrespondenceAddress(), savedUser.getId(),
-				savedUser.getTenantId());
-		final Address savedPermanentAddress = saveAddress(user.getPermanentAddress(), savedUser.getId(),
-				savedUser.getTenantId());
-		savedUser.setPermanentAddress(savedPermanentAddress);
-		savedUser.setCorrespondenceAddress(savedCorrespondenceAddress);
-		return savedUser;
-	}
 
 	/**
 	 * api will do the mapping between user and role.
@@ -335,161 +545,6 @@ public class UserRepository {
 		return null;
 	}
 
-
-	/**
-	 * api will update the user details.
-	 * 
-	 * @param user
-	 * @return
-	 */
-	public void update(final User user, User oldUser) {
-
-
-		Map<String, Object> updateuserInputs = new HashMap<String, Object>();
-
-		updateuserInputs.put("username", oldUser.getUsername());
-		updateuserInputs.put("type", oldUser.getType().toString());
-		updateuserInputs.put("tenantid", oldUser.getTenantId());
-		updateuserInputs.put("AadhaarNumber", user.getAadhaarNumber());
-		updateuserInputs.put("AccountLocked", user.getAccountLocked());
-		updateuserInputs.put("Active", user.getActive());
-		updateuserInputs.put("AltContactNumber", user.getAltContactNumber());
-
-		if (user.getBloodGroup() != null) {
-			if (BloodGroup.A_NEGATIVE.toString().equals(user.getBloodGroup().toString())) {
-				updateuserInputs.put("BloodGroup", user.getBloodGroup().toString());
-			} else if (BloodGroup.A_POSITIVE.toString().equals(user.getBloodGroup().toString())) {
-				updateuserInputs.put("BloodGroup", user.getBloodGroup().toString());
-			} else if (BloodGroup.AB_NEGATIVE.toString().equals(user.getBloodGroup().toString())) {
-				updateuserInputs.put("BloodGroup", user.getBloodGroup().toString());
-			} else if (BloodGroup.AB_POSITIVE.toString().equals(user.getBloodGroup().toString())) {
-				updateuserInputs.put("BloodGroup", user.getBloodGroup().toString());
-			} else if (BloodGroup.O_NEGATIVE.toString().equals(user.getBloodGroup().toString())) {
-				updateuserInputs.put("BloodGroup", user.getBloodGroup().toString());
-			} else if (BloodGroup.O_POSITIVE.toString().equals(user.getBloodGroup().toString())) {
-				updateuserInputs.put("BloodGroup", user.getBloodGroup().toString());
-			} else if (BloodGroup.B_POSITIVE.toString().equals(user.getBloodGroup().toString())) {
-				updateuserInputs.put("BloodGroup", user.getBloodGroup().toString());
-			} else if (BloodGroup.B_NEGATIVE.toString().equals(user.getBloodGroup().toString())) {
-				updateuserInputs.put("BloodGroup", user.getBloodGroup().toString());
-			} else {
-				updateuserInputs.put("BloodGroup", "");
-			}
-		} else if (oldUser!=null && oldUser.getBloodGroup() != null) {
-			if (BloodGroup.A_NEGATIVE.toString().equals(oldUser.getBloodGroup().toString())) {
-				updateuserInputs.put("BloodGroup", oldUser.getBloodGroup().toString());
-			} else if (BloodGroup.A_POSITIVE.toString().equals(oldUser.getBloodGroup().toString())) {
-				updateuserInputs.put("BloodGroup", oldUser.getBloodGroup().toString());
-			} else if (BloodGroup.AB_NEGATIVE.toString().equals(oldUser.getBloodGroup().toString())) {
-				updateuserInputs.put("BloodGroup", oldUser.getBloodGroup().toString());
-			} else if (BloodGroup.AB_POSITIVE.toString().equals(oldUser.getBloodGroup().toString())) {
-				updateuserInputs.put("BloodGroup", oldUser.getBloodGroup().toString());
-			} else if (BloodGroup.O_NEGATIVE.toString().equals(oldUser.getBloodGroup().toString())) {
-				updateuserInputs.put("BloodGroup", oldUser.getBloodGroup().toString());
-			} else if (BloodGroup.O_POSITIVE.toString().equals(oldUser.getBloodGroup().toString())) {
-				updateuserInputs.put("BloodGroup", oldUser.getBloodGroup().toString());
-			} else if (BloodGroup.B_POSITIVE.toString().equals(oldUser.getBloodGroup().toString())) {
-				updateuserInputs.put("BloodGroup", oldUser.getBloodGroup().toString());
-			} else if (BloodGroup.B_NEGATIVE.toString().equals(oldUser.getBloodGroup().toString())) {
-				updateuserInputs.put("BloodGroup", oldUser.getBloodGroup().toString());
-			} else {
-				updateuserInputs.put("BloodGroup", "");
-			}
-		} else {
-			updateuserInputs.put("BloodGroup", "");
-		}
-
-		if (user.getDob() != null) {
-			updateuserInputs.put("Dob", user.getDob());
-		} else {
-			updateuserInputs.put("Dob", oldUser.getDob());
-		}
-		updateuserInputs.put("EmailId", user.getEmailId());
-
-		if (user.getGender() != null) {
-			if (Gender.FEMALE.toString().equals(user.getGender().toString())) {
-				updateuserInputs.put("Gender", 1);
-			} else if (Gender.MALE.toString().equals(user.getGender().toString())) {
-				updateuserInputs.put("Gender", 2);
-			} else if (Gender.OTHERS.toString().equals(user.getGender().toString())) {
-				updateuserInputs.put("Gender", 3);
-			} else {
-				updateuserInputs.put("Gender", 0);
-			}
-		} else {
-			updateuserInputs.put("Gender", 0);
-		}
-		updateuserInputs.put("Guardian", user.getGuardian());
-
-		if (user.getGuardianRelation() != null) {
-			if (GuardianRelation.Father.toString().equals(user.getGuardianRelation().toString())) {
-				updateuserInputs.put("GuardianRelation", user.getGuardianRelation().toString());
-			} else if (GuardianRelation.Mother.toString().equals(user.getGuardianRelation().toString())) {
-				updateuserInputs.put("GuardianRelation", user.getGuardianRelation().toString());
-			} else if (GuardianRelation.Husband.toString().equals(user.getGuardianRelation().toString())) {
-				updateuserInputs.put("GuardianRelation", user.getGuardianRelation().toString());
-			} else if (GuardianRelation.Other.toString().equals(user.getGuardianRelation().toString())) {
-				updateuserInputs.put("GuardianRelation", user.getGuardianRelation().toString());
-			} else {
-				updateuserInputs.put("GuardianRelation", "");
-			}
-		} else {
-			updateuserInputs.put("GuardianRelation", "");
-		}
-		updateuserInputs.put("IdentificationMark", user.getIdentificationMark());
-		updateuserInputs.put("Locale", user.getLocale());
-		if (null != user.getMobileNumber())
-			updateuserInputs.put("MobileNumber", user.getMobileNumber());
-		else
-			updateuserInputs.put("MobileNumber", oldUser.getMobileNumber());
-		updateuserInputs.put("Name", user.getName());
-		updateuserInputs.put("Pan", user.getPan());
-
-		if (!isEmpty(user.getPassword()))
-			updateuserInputs.put("Password", user.getPassword());
-		else
-			updateuserInputs.put("Password", oldUser.getPassword());
-		
-       if(oldUser!=null && user.getPhoto()!=null && user.getPhoto().contains("http"))
-    	   updateuserInputs.put("Photo", oldUser.getPhoto());
-       else
-    	   updateuserInputs.put("Photo", user.getPhoto());
-		
-		if (null != user.getPasswordExpiryDate())
-			updateuserInputs.put("PasswordExpiryDate", user.getPasswordExpiryDate());
-		else
-			updateuserInputs.put("PasswordExpiryDate", oldUser.getPasswordExpiryDate());
-		updateuserInputs.put("Salutation", user.getSalutation());
-		updateuserInputs.put("Signature", user.getSignature());
-		updateuserInputs.put("Title", user.getTitle());
-
-		if (user.getType() != null) {
-			if (UserType.BUSINESS.toString().equals(user.getType().toString())) {
-				updateuserInputs.put("Type", user.getType().toString());
-			} else if (UserType.CITIZEN.toString().equals(user.getType().toString())) {
-				updateuserInputs.put("Type", user.getType().toString());
-			} else if (UserType.EMPLOYEE.toString().equals(user.getType().toString())) {
-				updateuserInputs.put("Type", user.getType().toString());
-			} else if (UserType.SYSTEM.toString().equals(user.getType().toString())) {
-				updateuserInputs.put("Type", user.getType().toString());
-			} else {
-				updateuserInputs.put("Type", "");
-			}
-		} else {
-			updateuserInputs.put("Type", oldUser.getType().toString());
-		}
-		updateuserInputs.put("LastModifiedDate", new Date());
-		updateuserInputs.put("LastModifiedBy", 1);
-
-		namedParameterJdbcTemplate.update(userTypeQueryBuilder.getUpdateUserQuery(), updateuserInputs);
-		if (user.getRoles() != null && !CollectionUtils.isEmpty(user.getRoles()) && !oldUser.getRoles().equals(user.getRoles())) {
-			validateAndEnrichRoles(Collections.singletonList(user));
-			updateRoles(user);
-		}
-		if (user.getPermanentAndCorrespondenceAddresses() != null) {
-			addressRepository.update(user.getPermanentAndCorrespondenceAddresses(), user.getId(), user.getTenantId());
-		}
-	}
 
 	/**
 	 * api will update the user Roles.

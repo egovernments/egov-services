@@ -9,6 +9,7 @@ import org.egov.user.domain.model.User;
 import org.egov.user.domain.model.enums.UserType;
 import org.egov.user.domain.service.UserService;
 import org.egov.user.web.contract.auth.Role;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -19,6 +20,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.oauth2.common.exceptions.OAuth2Exception;
 import org.springframework.stereotype.Component;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -49,6 +51,10 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 
 	@Value("${citizen.login.password.otp.fixed.enabled}")
 	private boolean fixedOTPEnabled;
+
+	@Autowired
+	private HttpServletRequest request;
+
 
 	public CustomAuthenticationProvider(UserService userService) {
 		this.userService = userService;
@@ -88,11 +94,23 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 			throw new OAuth2Exception("Please activate your account");
 		}
 
+		// If account is locked, perform lazy unlock if eligible
+
+		if (user.getAccountLocked() != null && user.getAccountLocked()) {
+
+			if(userService.isAccountUnlockAble(user)){
+				user = unlockAccount(user);
+			}
+			else
+				throw new OAuth2Exception("Account locked");
+		}
+
+
 		boolean isCitizen = false;
 		if (user.getType() != null && user.getType().equals(UserType.CITIZEN))
 			isCitizen = true;
 
-		Boolean isPasswordMatched;
+		boolean isPasswordMatched;
 		if (isCitizen) {
 			if (fixedOTPEnabled && !fixedOTPPassword.equals("") && fixedOTPPassword.equals(password))
 			{
@@ -107,10 +125,10 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 
 		if (isPasswordMatched) {
 
-			/**
-			 * We assume that there will be only one type. If it is multiple
-			 * then we have change below code Separate by comma or other and
-			 * iterate
+			/*
+			  We assume that there will be only one type. If it is multiple
+			  then we have change below code Separate by comma or other and
+			  iterate
 			 */
 			List<GrantedAuthority> grantedAuths = new ArrayList<>();
 			grantedAuths.add(new SimpleGrantedAuthority("ROLE_" + user.getType()));
@@ -118,8 +136,13 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
             return new UsernamePasswordAuthenticationToken(secureUser,
                     password, grantedAuths);
 		} else {
+			// Handle failed login attempt
+
+			userService.handleFailedLogin(user, request.getRemoteAddr());
+
 			throw new OAuth2Exception("Invalid login credentials");
 		}
+
 	}
 
 	private boolean isPasswordMatch(Boolean isOtpBased, String password, User user, Authentication authentication) {
@@ -179,5 +202,18 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
         return UsernamePasswordAuthenticationToken.class.isAssignableFrom(authentication);
 
     }
+
+	/**
+	 * Unlock account and disable existing failed login attempts for the user
+	 *
+	 * @param user to be unlocked
+	 * @return Updated user
+	 */
+	private User unlockAccount(User user){
+		user.setAccountLocked(false);
+		User updatedUser = userService.updateWithoutOtpValidation(user);
+		userService.resetFailedLoginAttempts(updatedUser);
+		return updatedUser;
+	}
 
 }

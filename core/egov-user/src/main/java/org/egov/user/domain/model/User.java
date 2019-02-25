@@ -53,6 +53,7 @@ public class User {
 	private String signature;
 	private String photo;
 	private Boolean accountLocked;
+	private Long accountLockedDate;
 	private Date lastModifiedDate;
 	private Date createdDate;
 	private String otpReference;
@@ -157,6 +158,8 @@ public class User {
 		password = null;
 		passwordExpiryDate = null;
 		roles = null;
+		accountLocked = null;
+		accountLockedDate = null;
 	}
 
 	public boolean isLoggedInUserDifferentFromUpdatedUser() {

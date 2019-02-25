@@ -49,7 +49,14 @@ public class ErrorConstants {
 	
 	public static final String HRMS_INVALID_ASSIGNMENT_PERIOD_CODE = "HRMS_INVALID_ASSIGNMENT_PERIOD";
 	public static final String HRMS_INVALID_ASSIGNMENT_PERIOD_MSG = "Period of assignemnt (fromDate to toDate) is invalid!";
-	
+
+	public static final String HRMS_INVALID_ASSIGNMENT_CURRENT_TO_DATE_CODE = "HRMS_INVALID_ASSIGNMENT_CURRENT_TO_DATE";
+	public static final String HRMS_INVALID_ASSIGNMENT_CURRENT_TO_DATE_MSG = "ToDate should be empty for current assignment!";
+
+
+	public static final String HRMS_INVALID_ASSIGNMENT_NON_CURRENT_TO_DATE_CODE = "HRMS_INVALID_ASSIGNMENT_NOT_CURRENT_TO_DATE";
+	public static final String HRMS_INVALID_ASSIGNMENT_NON_CURRENT_TO_DATE_MSG = "ToDate should not be empty for non current assignment!";
+
 	public static final String HRMS_INVALID_ASSIGNMENT_DATES_CODE = "HRMS_INVALID_ASSIGNMENT_DATES";
 	public static final String HRMS_INVALID_ASSIGNMENT_DATES_MSG = "Period of assignemnt (fromDate to toDate) is before DOB!";
 

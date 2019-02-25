@@ -272,14 +272,18 @@ public class EmployeeValidator {
 			errorMap.put(ErrorConstants.HRMS_OVERLAPPING_ASSGN_CODE, ErrorConstants.HRMS_OVERLAPPING_ASSGN_MSG);
 
 		for(Assignment assignment: employee.getAssignments()) {
-			if(!mdmsData.get(HRMSConstants.HRMS_MDMS_DEPT_CODE).contains(assignment.getDepartment()))
+		    if(!mdmsData.get(HRMSConstants.HRMS_MDMS_DEPT_CODE).contains(assignment.getDepartment()))
 				errorMap.put(ErrorConstants.HRMS_INVALID_DEPT_CODE, ErrorConstants.HRMS_INVALID_DEPT_MSG);
 			if(!mdmsData.get(HRMSConstants.HRMS_MDMS_DESG_CODE).contains(assignment.getDesignation()))
 				errorMap.put(ErrorConstants.HRMS_INVALID_DESG_CODE, ErrorConstants.HRMS_INVALID_DESG_MSG);
-            if( assignment.getFromDate() > assignment.getToDate())
+            if( assignment.getIsCurrentAssignment() && null != assignment.getToDate())
+                errorMap.put(ErrorConstants.HRMS_INVALID_ASSIGNMENT_CURRENT_TO_DATE_CODE,ErrorConstants.HRMS_INVALID_ASSIGNMENT_CURRENT_TO_DATE_MSG);
+            if(!assignment.getIsCurrentAssignment() && null == assignment.getToDate())
+                errorMap.put(ErrorConstants.HRMS_INVALID_ASSIGNMENT_NON_CURRENT_TO_DATE_CODE,ErrorConstants.HRMS_INVALID_ASSIGNMENT_NON_CURRENT_TO_DATE_MSG);
+			if(null != assignment.getToDate() && assignment.getFromDate() > assignment.getToDate())
                 errorMap.put(ErrorConstants.HRMS_INVALID_ASSIGNMENT_PERIOD_CODE, ErrorConstants.HRMS_INVALID_ASSIGNMENT_PERIOD_MSG);
 			if(employee.getUser().getDob()!=null )
-				if(assignment.getFromDate() < employee.getUser().getDob() || assignment.getToDate() < employee.getUser().getDob())
+				if(assignment.getFromDate() < employee.getUser().getDob() || (null != assignment.getToDate() && assignment.getToDate() < employee.getUser().getDob()))
                 	errorMap.put(ErrorConstants.HRMS_INVALID_ASSIGNMENT_DATES_CODE, ErrorConstants.HRMS_INVALID_ASSIGNMENT_DATES_MSG);
 			if(null != employee.getDateOfAppointment() && assignment.getFromDate() <	 employee.getDateOfAppointment())
 				errorMap.put(ErrorConstants.HRMS_INVALID_ASSIGNMENT_DATES_APPOINTMENT_CODE, ErrorConstants.HRMS_INVALID_ASSIGNMENT_DATES_APPOINTMENT_MSG);

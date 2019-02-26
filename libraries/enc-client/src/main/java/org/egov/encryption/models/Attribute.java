@@ -15,4 +15,8 @@ public class Attribute {
     private String jsonPath;
     private String maskingTechnique;
 
+    @Override
+    public String toString() {
+        return "Id : " + id + ", Name : " + name + ", JsonPath : " + jsonPath + ", MaskingTechnique : " + maskingTechnique;
+    }
 }

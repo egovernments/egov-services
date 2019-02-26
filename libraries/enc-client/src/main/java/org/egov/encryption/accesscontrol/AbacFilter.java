@@ -12,6 +12,10 @@ public class AbacFilter {
 
     private List<RoleAttribute> roleAttributesMapping;
 
+    public AbacFilter(List<RoleAttribute> roleAttributesMapping) {
+        this.roleAttributesMapping = roleAttributesMapping;
+    }
+
     public Map<Attribute, AccessType> getAttributeAccessForRole(List<Role> roles) {
 
         Map<Attribute, AccessType> attributeAccessTypeMap = new HashMap<Attribute, AccessType>();

@@ -265,7 +265,7 @@ public class EmployeeValidator {
 		int length = employee.getAssignments().size();
 		boolean overlappingCheck =false;
 		for(int i=0;i<length-1;i++){
-			if(employee.getAssignments().get(i).getToDate() > employee.getAssignments().get(i+1).getFromDate())
+			if(null != employee.getAssignments().get(i).getToDate() && employee.getAssignments().get(i).getToDate() > employee.getAssignments().get(i+1).getFromDate())
 				overlappingCheck=true;
 		}
 		if(overlappingCheck)

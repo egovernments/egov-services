@@ -2,6 +2,7 @@ package org.egov.pt.validator;
 
 import com.jayway.jsonpath.JsonPath;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang.StringUtils;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.mdms.model.MdmsCriteriaReq;
 import org.egov.pt.config.PropertyConfiguration;
@@ -44,6 +45,10 @@ public class PropertyValidator {
     @Value("${egov.mdms.search.endpoint}")
     private String mdmsEndpoint;
 
+    @Value("${pt.oldpropertyid.validation}")
+    private Boolean oldPropertyIdValidationFlag;
+
+
 
 
     /**
@@ -55,6 +60,8 @@ public class PropertyValidator {
         validateCitizenInfo(request);
         validateUnits(request);
         validateMobileNumber(request);
+        if(oldPropertyIdValidationFlag)
+            validateOldPropertyId(request,true);
     }
 
     /**
@@ -74,6 +81,8 @@ public class PropertyValidator {
         validateCitizenInfo(request);
         if(request.getRequestInfo().getUserInfo().getType().equalsIgnoreCase("CITIZEN"))
             validateAssessees(request);
+        if(oldPropertyIdValidationFlag)
+            validateOldPropertyId(request,false);
     }
 
     /**
@@ -611,6 +620,73 @@ public class PropertyValidator {
         if(Character.getNumericValue(mobileNumber.charAt(0))<5)
             return false;
         return true;
+    }
+
+
+    /**
+     * Validates if the oldPropertyId is used by existing property
+     * @param request The create or update request for properties
+     */
+    private void validateOldPropertyId(PropertyRequest request,Boolean isCreate){
+        Set<String> oldPropertyIds = new HashSet<>();
+        String tenantId = request.getProperties().get(0).getTenantId();
+
+        //Collect all OldPropertyId in list
+        request.getProperties().forEach(property -> {
+            if(!StringUtils.isEmpty(property.getOldPropertyId()))
+                oldPropertyIds.add(property.getOldPropertyId());
+        });
+
+
+        if(!CollectionUtils.isEmpty(oldPropertyIds)){
+
+            // Search on the collected OldPropertyIds
+            PropertyCriteria searchCriteria = new PropertyCriteria();
+            searchCriteria.setTenantId(tenantId);
+            searchCriteria.setOldpropertyids(oldPropertyIds);
+            List<Property> properties = propertyRepository.getProperties(searchCriteria);
+
+            HashMap<String,String> errorMap = new HashMap<>();
+
+            /*
+            * If the request is for create if any property exists in DB with
+            * the given oldpropertyId throw error
+            * */
+            if(!CollectionUtils.isEmpty(properties) && isCreate){
+                properties.forEach(property -> {
+                    errorMap.put("INVALID OLDPROPERTYID","The oldPropertyId: "+property.getOldPropertyId()+" is already associated " +
+                            "with the property: "+property.getPropertyId());
+                });
+            }
+
+            /*
+            * For update check if the oldPropertyId from search is for the same propertyId
+            * */
+            else if(!CollectionUtils.isEmpty(properties) && !isCreate){
+                Map<String,String> oldPropertyIdToPropertyIdFromDB = new HashMap<>();
+
+                // Create a map of oldPropertyId to propertyId from properties in the DB
+                properties.forEach(property -> {
+                    oldPropertyIdToPropertyIdFromDB.put(property.getOldPropertyId(),property.getPropertyId());
+                });
+                request.getProperties().forEach(property -> {
+                    //If the OldPropertyId is null in the update request no need for validation
+                    if(!StringUtils.isEmpty(property.getOldPropertyId())){
+                        // Fetch the PropertyId from DB corresponding to the oldPropertyId of the request
+                        String propertyIdFromDB = oldPropertyIdToPropertyIdFromDB.get(property.getOldPropertyId());
+                        /*
+                        * If the oldPropertyId is not in DB i.e propertyIdFromDB=null no need for validation
+                        * else validate if the propertyId from DB and request are same
+                        * */
+                        if(!StringUtils.isEmpty(propertyIdFromDB) && !property.getPropertyId().equalsIgnoreCase(propertyIdFromDB) )
+                            errorMap.put("INVALID OLDPROPERTYID","The oldPropertyId: "+property.getOldPropertyId()+" is already associated " +
+                                    "with the property: "+propertyIdFromDB);
+                    }
+                });
+            }
+            if(!errorMap.isEmpty())
+                throw new CustomException(errorMap);
+        }
     }
 
 

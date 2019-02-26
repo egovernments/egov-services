@@ -43,7 +43,6 @@ package org.egov.hrms.service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
-
 import org.apache.commons.lang3.StringUtils;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.hrms.config.PropertiesManager;
@@ -61,9 +60,9 @@ import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
+
 import java.util.*;
 import java.util.function.Function;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 @Data
@@ -341,8 +340,8 @@ public class EmployeeService {
 				jurisdiction.setAuditDetails(auditDetails);
 			}else{
 				if(!existingEmpData.getJurisdictions().stream()
-						.filter(jurisdictionData ->jurisdictionData.getId()==jurisdiction.getId() )
-						.findFirst()
+						.filter(jurisdictionData ->jurisdictionData.getId().equals(jurisdiction.getId() ))
+						.findFirst().orElse(null)
 						.equals(jurisdiction)){
 					jurisdiction.getAuditDetails().setLastModifiedBy(requestInfo.getUserInfo().getUserName());
 					jurisdiction.getAuditDetails().setLastModifiedDate(new Date().getTime());
@@ -355,8 +354,8 @@ public class EmployeeService {
 				assignment.setAuditDetails(auditDetails);
 			}else {
 				if(!existingEmpData.getAssignments().stream()
-						.filter(assignmentData -> assignmentData.getId()==assignment.getId())
-						.findFirst()
+						.filter(assignmentData -> assignmentData.getId().equals(assignment.getId()))
+						.findFirst().orElse(null)
 						.equals(assignment)){
 					assignment.getAuditDetails().setLastModifiedBy(requestInfo.getUserInfo().getUserName());
 					assignment.getAuditDetails().setLastModifiedDate(new Date().getTime());
@@ -370,9 +369,9 @@ public class EmployeeService {
 					serviceHistory.setId(UUID.randomUUID().toString());
 					serviceHistory.setAuditDetails(auditDetails);
 				}else {
-					if(!existingEmpData.getAssignments().stream()
-							.filter(serviceHistoryData -> serviceHistoryData.getId()==serviceHistory.getId())
-							.findFirst()
+					if(!existingEmpData.getServiceHistory().stream()
+							.filter(serviceHistoryData -> serviceHistoryData.getId().equals(serviceHistory.getId()))
+							.findFirst().orElse(null)
 							.equals(serviceHistory)){
 						serviceHistory.getAuditDetails().setLastModifiedBy(requestInfo.getUserInfo().getUserName());
 						serviceHistory.getAuditDetails().setLastModifiedDate(new Date().getTime());
@@ -388,9 +387,10 @@ public class EmployeeService {
 					educationalQualification.setId(UUID.randomUUID().toString());
 					educationalQualification.setAuditDetails(auditDetails);
 				}else {
-					if(!existingEmpData.getAssignments().stream()
-							.filter(educationalQualificationData -> educationalQualificationData.getId()==educationalQualification.getId())
-							.findFirst()
+
+					if(!existingEmpData.getEducation().stream()
+							.filter(educationalQualificationData -> educationalQualificationData.getId().equals(educationalQualification.getId()))
+							.findFirst().orElse(null)
 							.equals(educationalQualification)){
 						educationalQualification.getAuditDetails().setLastModifiedBy(requestInfo.getUserInfo().getUserName());
 						educationalQualification.getAuditDetails().setLastModifiedDate(new Date().getTime());
@@ -406,9 +406,9 @@ public class EmployeeService {
 					departmentalTest.setId(UUID.randomUUID().toString());
 					departmentalTest.setAuditDetails(auditDetails);
 				}else {
-					if(!existingEmpData.getAssignments().stream()
-							.filter(departmentalTestData -> departmentalTestData.getId()==departmentalTest.getId())
-							.findFirst()
+					if(!existingEmpData.getTests().stream()
+							.filter(departmentalTestData -> departmentalTestData.getId().equals(departmentalTest.getId()))
+							.findFirst().orElse(null)
 							.equals(departmentalTest)){
 						departmentalTest.getAuditDetails().setLastModifiedBy(requestInfo.getUserInfo().getUserName());
 						departmentalTest.getAuditDetails().setLastModifiedDate(new Date().getTime());
@@ -424,9 +424,9 @@ public class EmployeeService {
 					document.setId(UUID.randomUUID().toString());
 					document.setAuditDetails(auditDetails);
 				}else {
-					if(!existingEmpData.getAssignments().stream()
-							.filter(documentData -> documentData.getId()==document.getId())
-							.findFirst()
+					if(!existingEmpData.getDocuments().stream()
+							.filter(documentData -> documentData.getId().equals(document.getId()))
+							.findFirst().orElse(null)
 							.equals(document)){
 						document.getAuditDetails().setLastModifiedBy(requestInfo.getUserInfo().getUserName());
 						document.getAuditDetails().setLastModifiedDate(new Date().getTime());
@@ -445,9 +445,9 @@ public class EmployeeService {
 						employeeDocument.setReferenceId( deactivationDetails.getId());
 					});
 				}else {
-					if(!existingEmpData.getAssignments().stream()
-							.filter(deactivationDetailsData -> deactivationDetailsData.getId()==deactivationDetails.getId())
-							.findFirst()
+					if(!existingEmpData.getDeactivationDetails().stream()
+							.filter(deactivationDetailsData -> deactivationDetailsData.getId().equals(deactivationDetails.getId()))
+							.findFirst().orElse(null)
 							.equals(deactivationDetails)){
 						deactivationDetails.getAuditDetails().setLastModifiedBy(requestInfo.getUserInfo().getUserName());
 						deactivationDetails.getAuditDetails().setLastModifiedDate(new Date().getTime());

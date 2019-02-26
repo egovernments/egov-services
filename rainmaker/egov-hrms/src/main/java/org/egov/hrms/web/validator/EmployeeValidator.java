@@ -180,9 +180,9 @@ public class EmployeeValidator {
 	public void validateDataConsistency(Employee employee, Map<String, String> errorMap, Map<String, List<String>> mdmsData, Employee existingEmp) {
 		validateUserNameChange(existingEmp,employee,errorMap);
 		validateConsistencyAssignment(existingEmp,employee,errorMap);
-		validateConsistencyJurisdiction(existingEmp,employee,errorMap);
-		validateConsistencyDepartmentalTest(existingEmp,employee,errorMap);
-		validateConsistencyEducationalDetails(existingEmp,employee,errorMap);
+//		validateConsistencyJurisdiction(existingEmp,employee,errorMap);
+//		validateConsistencyDepartmentalTest(existingEmp,employee,errorMap);
+//		validateConsistencyEducationalDetails(existingEmp,employee,errorMap);
 		validateConsistencyServiceHistory(existingEmp,employee,errorMap);
 		validateConsistencyEmployeeDocument(existingEmp,employee,errorMap);
 		validateConsistencyDeactivationDetails(existingEmp,employee,errorMap);

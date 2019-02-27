@@ -17,9 +17,10 @@ public class HRMSConstants {
 	public static final String HRMS_MDMS_SERVICE_STATUS_CODE = "ServiceStatus";
 	public static final String HRMS_MDMS_ROLES_CODE = "roles";
 	public static final String HRMS_MDMS_QUALIFICATION_CODE = "Degree";
-	public static final String HRMS_MDMS_STREAMS_CODE = "Specialization";
+	public static final String HRMS_MDMS_STREAMS_CODE = "Specalization";
 	public static final String HRMS_MDMS_YEAR_CODE = "Year";
-	public static final String HRMS_MDMS_DEPT_TEST_CODE = "DepartmentalTest";
+	public static final String HRMS_MDMS_DEPT_TEST_CODE = "EmploymentTest";
+	public static final String HRMS_MDMS_DEACT_REASON_CODE = "DeactivationReason";
 	public static final String HRMS_MDMS_TENANT_BOUNDARY_CODE = "TenantBoundary";
 	
 	public static final String HRMS_LOCALIZATION_CODES_JSONPATH = "$.messages.*.code";

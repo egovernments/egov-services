@@ -89,7 +89,10 @@ public class ErrorConstants {
 	
 	public static final String HRMS_INVALID_DEACT_REQUEST_CODE = "HRMS_INVALID_DEACT_REQUEST";
 	public static final String HRMS_INVALID_DEACT_REQUEST_MSG = "Employee is active should be set to false while deactivation!";
-	
+
+	public static final String HRMS_INVALID_DEACT_REASON_CODE = "HRMS_INVALID_DEACT_REASON";
+	public static final String HRMS_INVALID_DEACT_REASON_MSG = "Employee deactivation reason is Invalid!";
+
 	public static final String HRMS_UPDATE_JURISDICTION_INCOSISTENT_CODE = "HRMS_UPDATE_JURISDICTION_INCOSISTENT";
 	public static final String HRMS_UPDATE_JURISDICTION_INCOSISTENT_MSG = "Jurisdiction data in update request should contain all previous jurisdiction data";
 	

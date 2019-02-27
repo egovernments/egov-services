@@ -24,11 +24,11 @@
 
     <dependencies>
 
-        <dependency>
-            <groupId>org.egov.services</groupId>
-            <artifactId>tracer</artifactId>
-            <version>1.1.5-SNAPSHOT</version>
-        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>org.egov.services</groupId>-->
+            <!--<artifactId>tracer</artifactId>-->
+            <!--<version>1.1.5-SNAPSHOT</version>-->
+        <!--</dependency>-->
 
         <dependency>
             <groupId>org.egov.services</groupId>
@@ -62,11 +62,11 @@
             <version>4.12</version>
             <scope>test</scope>
         </dependency>
-        <dependency>
-            <groupId>io.swagger</groupId>
-            <artifactId>swagger-annotations</artifactId>
-            <version>1.5.6</version>
-        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>io.swagger</groupId>-->
+            <!--<artifactId>swagger-annotations</artifactId>-->
+            <!--<version>1.5.6</version>-->
+        <!--</dependency>-->
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-all</artifactId>

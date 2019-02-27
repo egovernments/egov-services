@@ -11,7 +11,6 @@ import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
 import com.jayway.jsonpath.Option;
 import lombok.extern.slf4j.Slf4j;
-import org.egov.tracer.model.CustomException;
 
 import java.io.IOException;
 import java.util.Iterator;
@@ -95,7 +94,7 @@ public class JSONUtils {
         return null;
     }
 
-    public static JsonNode filterJsonNodeWithPaths(JsonNode jsonNode, List<String> filterPaths) {
+    public static ArrayNode filterJsonNodeWithPaths(JsonNode jsonNode, List<String> filterPaths) {
         Configuration configuration = Configuration.defaultConfiguration().addOptions(Option.DEFAULT_PATH_LEAF_TO_NULL,
                 Option.SUPPRESS_EXCEPTIONS);
         ObjectMapper mapper = new ObjectMapper(new JsonFactory());
@@ -118,9 +117,6 @@ public class JSONUtils {
         DocumentContext mergedNodeDocumentContext = JsonPath.using(configuration).parse(mergedNode.toString());
 
         ArrayNode newArrayNode = (ArrayNode) newNode;
-
-        if(newArrayNode.size() != filterPaths.size())
-            throw new CustomException("", "");
 
         for(int i = 0; i < filterPaths.size(); i++) {
             String path = filterPaths.get(i);

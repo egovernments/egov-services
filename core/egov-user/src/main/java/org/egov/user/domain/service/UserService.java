@@ -285,7 +285,7 @@ public class UserService {
         userRepository.update(user, existingUser);
 
         // If user is being unlocked via update, reset failed login attempts
-        if(user.getAccountLocked() && !existingUser.getAccountLocked())
+        if(!user.getAccountLocked() && existingUser.getAccountLocked())
             resetFailedLoginAttempts(user);
 
         return  getUserByUuid(user.getUuid());

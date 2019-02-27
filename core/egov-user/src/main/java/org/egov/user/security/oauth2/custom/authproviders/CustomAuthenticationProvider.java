@@ -211,6 +211,7 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 	 */
 	private User unlockAccount(User user){
 		user.setAccountLocked(false);
+		user.setPassword(null);
 		User updatedUser = userService.updateWithoutOtpValidation(user);
 		userService.resetFailedLoginAttempts(updatedUser);
 		return updatedUser;

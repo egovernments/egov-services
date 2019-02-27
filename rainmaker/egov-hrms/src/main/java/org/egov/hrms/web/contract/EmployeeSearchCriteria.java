@@ -39,7 +39,7 @@ public class EmployeeSearchCriteria {
 	
 	public List<String> uuids;
 	
-	public List<Integer> positions;
+	public List<Long> positions;
 	
 	public Boolean isActive;
 	

@@ -45,7 +45,7 @@ public class EmployeeQueryBuilder {
 		if(!CollectionUtils.isEmpty(criteria.getCodes()))
 			builder.append(" and  employee.code IN ("+createINClauseForList(criteria.getCodes())+")");
 		if(!CollectionUtils.isEmpty(criteria.getIds()))
-			builder.append(" and employee.id IN ("+createINClauseForIntList(criteria.getIds())+")");
+			builder.append(" and employee.id IN ("+createINClauseForLongList(criteria.getIds())+")");
 		if(!CollectionUtils.isEmpty(criteria.getUuids()))
 			builder.append(" and employee.uuid IN ("+createINClauseForList(criteria.getUuids())+")");
 		if(!CollectionUtils.isEmpty(criteria.getDepartments()))
@@ -57,7 +57,7 @@ public class EmployeeQueryBuilder {
 		if(!CollectionUtils.isEmpty(criteria.getEmployeetypes()))
 			builder.append(" and employee.employeetype IN ("+createINClauseForList(criteria.getEmployeetypes())+")");
 		if(!CollectionUtils.isEmpty(criteria.getPositions()))
-			builder.append(" and assignment.position IN ("+createINClauseForIntList(criteria.getPositions())+")");
+			builder.append(" and assignment.position IN ("+createINClauseForLongList(criteria.getPositions())+")");
 		if(null != criteria.getAsOnDate()) {
 			builder.append(" and assignment.fromdate <= "+criteria.getAsOnDate()+" and assignment.todate >= "+criteria.getAsOnDate());
 		}
@@ -91,8 +91,8 @@ public class EmployeeQueryBuilder {
 		}
 		return builder.toString();
 	}
-	
-	private String createINClauseForIntList(List<Integer> ids) {
+
+	private String createINClauseForLongList(List<Long> ids) {
 		StringBuilder builder = new StringBuilder();
 		int length = ids.size();
 		for (int i = 0; i < length; i++) {

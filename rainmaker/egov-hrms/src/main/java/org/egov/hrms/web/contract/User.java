@@ -104,6 +104,7 @@ public class User {
     @JsonProperty("active")
     private Boolean active;
 
+    @NotNull
     @JsonProperty("dob")
     private Long dob;
 

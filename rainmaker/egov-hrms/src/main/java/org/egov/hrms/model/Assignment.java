@@ -69,7 +69,6 @@ public class Assignment {
 	@NotNull
 	private Long fromDate;
 
-	@NotNull
 	private Long toDate;
 
 	private String govtOrderNumber;

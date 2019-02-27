@@ -38,7 +38,7 @@ public class EncryptionService {
         initializeTypesAndFieldsToEncrypt();
     }
 
-    public void initializeTypesAndFieldsToEncrypt() {
+    void initializeTypesAndFieldsToEncrypt() {
         typesAndFieldsToEncrypt = new HashMap<>();
         for (String field : fieldsAndTheirType.keySet()) {
             String type = fieldsAndTheirType.get(field);
@@ -50,9 +50,9 @@ public class EncryptionService {
         }
     }
 
-    public ObjectNode encryptJson(Object plaintextJson, String tenantId) throws IOException {
+    public JsonNode encryptJson(Object plaintextJson, String tenantId) throws IOException {
 
-        JsonNode plaintextNode = createObjectNode(plaintextJson);
+        JsonNode plaintextNode = createJsonNode(plaintextJson);
         JsonNode encryptedNode = plaintextNode.deepCopy();
 
         for (String type : typesAndFieldsToEncrypt.keySet()) {
@@ -67,11 +67,11 @@ public class EncryptionService {
             encryptedNode = JSONUtils.mergeNodesForGivenPaths(returnedEncryptedNode, encryptedNode, fields);
         }
 
-        return (ObjectNode) encryptedNode;
+        return encryptedNode;
     }
 
-    public ObjectNode decryptJson(Object ciphertextJson, List<String> paths, User user) throws IOException {
-        JsonNode ciphertextNode = createObjectNode(ciphertextJson);
+    public JsonNode decryptJson(Object ciphertextJson, List<String> paths, User user) throws IOException {
+        JsonNode ciphertextNode = createJsonNode(ciphertextJson);
         JsonNode decryptedNode = ciphertextNode.deepCopy();
 
         ArrayNode arrayNode = JSONUtils.filterJsonNodeWithPaths(ciphertextNode, paths);
@@ -80,33 +80,33 @@ public class EncryptionService {
             decryptedNode = JSONUtils.mergeNodesForGivenPaths(returnedDecryptedNode, decryptedNode, paths);
         }
 
-        return (ObjectNode) decryptedNode;
+        return decryptedNode;
     }
 
 
-    public ObjectNode decryptJson(Object ciphertextJson, User user) throws IOException {
+    public JsonNode decryptJson(Object ciphertextJson, User user) throws IOException {
 
         Map<Attribute, AccessType> attributeAccessTypeMap = abacFilter.getAttributeAccessForRole(user.getRoles());
         List<String> paths = attributeAccessTypeMap.keySet().stream()
                 .map(Attribute::getJsonPath).collect(Collectors.toList());
 
-        ObjectNode decryptedNode = decryptJson(ciphertextJson, paths, user);
+        JsonNode decryptedNode = decryptJson(ciphertextJson, paths, user);
 
         return decryptedNode;
     }
 
-    private ObjectNode createObjectNode(Object plaintextJson) {
-        ObjectNode jsonNode = null;
+    JsonNode createJsonNode(Object json) {
+        JsonNode jsonNode = null;
         try {
-            if(plaintextJson instanceof ObjectNode)
-                jsonNode = (ObjectNode) plaintextJson;
-            else if(plaintextJson instanceof String)
-                jsonNode = (ObjectNode) mapper.readTree((String) plaintextJson);           //JsonNode from JSON String
+            if(json instanceof JsonNode)
+                jsonNode = (JsonNode) json;
+            else if(json instanceof String)
+                jsonNode = mapper.readTree((String) json);           //JsonNode from JSON String
             else
-                jsonNode = mapper.valueToTree(plaintextJson);                               //JsonNode from POJO or Map
+                jsonNode = mapper.valueToTree(json);                 //JsonNode from POJO or Map
         } catch (Exception e) {
             log.error(e.getMessage());
-//            throw new CustomException("Cannot convert to JsonNode : " + plaintextJson, "Cannot convert to JsonNode");
+//            throw new CustomException("Cannot convert to JsonNode : " + json, "Cannot convert to JsonNode");
         }
         return jsonNode;
     }

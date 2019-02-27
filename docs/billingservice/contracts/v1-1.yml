@@ -11,7 +11,7 @@ info:
     name: eGovernments Foundation
 schemes:
   - https
-basePath: /billingservice/v1
+basePath: /billingservice/
 x-common-path: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml'
 paths:
 
@@ -470,13 +470,13 @@ definitions:
       mobileNumber:
         type: string
         description: MobileNumber of the payer.
-      payeerName:
+      payerName:
         type: string
         description: name of the payer.        
-      payeerAddress:
+      payerAddress:
         type: string
         description: Address details from the payer.
-      payeerEmail:
+      payerEmail:
         type: string
         description: email address of the payer.
       isActive:
@@ -541,13 +541,6 @@ definitions:
       consumerType:
         type: string
         description: Type of the entity for which the bill is being created.
-      receiptDate:
-        type: integer
-        format: int64
-        description: Date of receipt.
-      receiptNumber:
-        type: string
-        description: readable value of the receipt.
       minimumAmount:
         type: number
         format: double
@@ -660,46 +653,6 @@ definitions:
         description: 'true if part payment allowed, false if part payment is not allowed.'
       auditDetails:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails'
-  CollectedReceipts:
-    type: object
-    description: A object holds a payment information against a demand.
-    properties:
-      businessService:
-        type: string
-        description: BusinessService code.
-      consumerCode:
-        type: string
-        description: Consumer code of the entity for which the bill is being created.
-      receiptNumber:
-        type: string
-        description: receipt number.
-      receiptAmount:
-        type: number
-        format: double
-        description: receipt amount.
-      receiptDate:
-        type: string
-        format: date
-        description: discount against taxAmount.
-      status:
-        type: string
-        description: receipt status
-        enum:
-          - CREATED
-          - CANCELLED
-          - INSTRUMENT_BOUNCED
-      auditDetails:
-        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails'
-      tenantId:
-        type: string
-        description: Unique Identifier of the tenant
-        maxLength: 128
-        minLength: 4
-    required:
-      - receiptNumber
-      - receiptAmount
-      - receiptDate
-      - tenantId
   DemandRequest:
     properties:
       RequestInfo:

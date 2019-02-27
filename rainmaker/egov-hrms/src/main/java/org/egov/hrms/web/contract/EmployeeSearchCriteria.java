@@ -31,7 +31,7 @@ public class EmployeeSearchCriteria {
 	
 	public Long asOnDate;
 	
-	public List<Integer> ids;
+	public List<Long> ids;
 	
 	public List<String> employeestatuses;
 	

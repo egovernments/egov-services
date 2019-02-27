@@ -164,8 +164,8 @@ public class EmployeeValidator {
 		validateAssignments(employee, errorMap, mdmsData);
 		validateServiceHistory(employee, errorMap, mdmsData);
 		validateJurisdicton(employee, errorMap, mdmsData);
-		//validateEducationalDetails(employee, errorMap, mdmsData);
-		//validateDepartmentalTest(employee, errorMap, mdmsData);
+		validateEducationalDetails(employee, errorMap, mdmsData);
+		validateDepartmentalTest(employee, errorMap, mdmsData);
 	}
 
 
@@ -183,10 +183,10 @@ public class EmployeeValidator {
 //		validateConsistencyJurisdiction(existingEmp,employee,errorMap);
 //		validateConsistencyDepartmentalTest(existingEmp,employee,errorMap);
 //		validateConsistencyEducationalDetails(existingEmp,employee,errorMap);
-		validateConsistencyServiceHistory(existingEmp,employee,errorMap);
-		validateConsistencyEmployeeDocument(existingEmp,employee,errorMap);
-		validateConsistencyDeactivationDetails(existingEmp,employee,errorMap);
-		validateDeactivationDetails(existingEmp,employee,errorMap);
+		validateConsistencyServiceHistory(existingEmp, employee, errorMap);
+		validateConsistencyEmployeeDocument(existingEmp, employee, errorMap);
+		validateConsistencyDeactivationDetails(existingEmp, employee, errorMap);
+		validateDeactivationDetails(existingEmp, employee, errorMap, mdmsData);
 	}
 
 	/**
@@ -384,12 +384,12 @@ public class EmployeeValidator {
 
 	/**
 	 * Validates if the deactivation details are provided every time an employee is deactivated.
-	 * 
-	 * @param existingEmp
+	 *  @param existingEmp
 	 * @param updatedEmployeeData
 	 * @param errorMap
+	 * @param mdmsData
 	 */
-	private void validateDeactivationDetails(Employee existingEmp, Employee updatedEmployeeData, Map<String, String> errorMap){
+	private void validateDeactivationDetails(Employee existingEmp, Employee updatedEmployeeData, Map<String, String> errorMap, Map<String, List<String>> mdmsData){
 		if(!CollectionUtils.isEmpty(updatedEmployeeData.getDeactivationDetails())) {
 			for (DeactivationDetails deactivationDetails : updatedEmployeeData.getDeactivationDetails()) {
 				if (deactivationDetails.getId()==null){
@@ -397,6 +397,8 @@ public class EmployeeValidator {
 						errorMap.put(ErrorConstants.HRMS_INVALID_DEACT_REQUEST_CODE, ErrorConstants.HRMS_INVALID_DEACT_REQUEST_MSG);
 					}
 				}
+				if (! mdmsData.get(HRMSConstants.HRMS_MDMS_DEACT_REASON_CODE).contains(deactivationDetails.getReasonForDeactivation()))
+					errorMap.put(ErrorConstants.HRMS_INVALID_DEACT_REASON_CODE, ErrorConstants.HRMS_INVALID_DEACT_REASON_MSG);
 			}
 		}
 	}

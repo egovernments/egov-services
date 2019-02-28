@@ -85,7 +85,6 @@ public class ApportionService {
 
                 /*
                 * Apportion the paid amount among the given list of billDetail
-                * based on fromPeriod
                 * */
                 apportion.apportionPaidAmount(billDetails,entry.getValue(),masterData);
             }

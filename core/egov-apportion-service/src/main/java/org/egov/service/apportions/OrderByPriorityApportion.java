@@ -23,12 +23,10 @@ public class OrderByPriorityApportion implements Apportion {
 
 
     private TaxHeadMasterService taxHeadMasterService;
-    private MDMSService mdmsService;
 
     @Autowired
-    public OrderByPriorityApportion(TaxHeadMasterService taxHeadMasterService, MDMSService mdmsService) {
+    public OrderByPriorityApportion(TaxHeadMasterService taxHeadMasterService) {
         this.taxHeadMasterService = taxHeadMasterService;
-        this.mdmsService = mdmsService;
     }
 
 
@@ -85,16 +83,14 @@ public class OrderByPriorityApportion implements Apportion {
                     remainingAmount = remainingAmount.subtract(amount);
                 }
             }
-
-            if(remainingAmount.compareTo(BigDecimal.ZERO)>0){
-                String taxHead = taxHeadMasterService.getAdvanceTaxHead(billDetail.getBusinessService(),masterData);
-                BillAccountDetail billAccountDetailForAdvance = new BillAccountDetail();
-                billAccountDetailForAdvance.setAmount(remainingAmount.negate());
-                billAccountDetailForAdvance.setPurpose(Purpose.ADVANCE_AMOUNT);
-                billAccountDetailForAdvance.setTaxHeadCode(taxHead);
-                billDetails.get(billDetails.size()-1).getBillAccountDetails().add(billAccountDetailForAdvance);
-            }
         }
+
+        //If advance amount is available
+        if(remainingAmount.compareTo(BigDecimal.ZERO)>0){
+            addAdvanceBillAccountDetail(remainingAmount,billDetails,masterData);
+        }
+
+
         return billDetails;
     }
 
@@ -113,6 +109,22 @@ public class OrderByPriorityApportion implements Apportion {
         });
         if(!errorMap.isEmpty())
             throw new CustomException(errorMap);
+    }
+
+
+    /**
+     * Creates a advance BillAccountDetail and adds it to the latest billDetail
+     * @param advanceAmount The advance amount paid
+     * @param billDetails The list of BillDetatils for which apportioning is done
+     * @param masterData The required masterData for the TaxHeads
+     */
+    private void addAdvanceBillAccountDetail(BigDecimal advanceAmount,List<BillDetail> billDetails,Object masterData){
+        String taxHead = taxHeadMasterService.getAdvanceTaxHead(billDetails.get(0).getBusinessService(),masterData);
+        BillAccountDetail billAccountDetailForAdvance = new BillAccountDetail();
+        billAccountDetailForAdvance.setAmount(advanceAmount.negate());
+        billAccountDetailForAdvance.setPurpose(Purpose.ADVANCE_AMOUNT);
+        billAccountDetailForAdvance.setTaxHeadCode(taxHead);
+        billDetails.get(billDetails.size()-1).getBillAccountDetails().add(billAccountDetailForAdvance);
     }
 
 

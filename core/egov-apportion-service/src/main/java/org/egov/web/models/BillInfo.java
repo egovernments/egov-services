@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.validation.annotation.Validated;
 import javax.validation.Valid;
 
@@ -63,8 +64,8 @@ public class BillInfo   {
         @Valid
         private List<BillDetail> billDetails = null;
 
+        @NotEmpty
         @JsonProperty("collectionMap")
-        @Valid
         private Map<String, BigDecimal> collectionMap = null;
 
         @JsonProperty("additionalDetails")

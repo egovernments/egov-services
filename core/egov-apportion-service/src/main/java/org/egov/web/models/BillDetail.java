@@ -118,10 +118,10 @@ public class BillDetail {
         private List<BillAccountDetail> billAccountDetails = null;
 
         @JsonProperty("fromPeriod")
-        private BigDecimal fromPeriod = null;
+        private Long fromPeriod = null;
 
         @JsonProperty("toPeriod")
-        private BigDecimal toPeriod = null;
+        private Long toPeriod = null;
 
         @JsonProperty("additionalDetails")
         private Object additionalDetails = null;

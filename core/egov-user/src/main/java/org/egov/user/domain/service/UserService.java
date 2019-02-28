@@ -1,14 +1,23 @@
 package org.egov.user.domain.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectReader;
+import com.fasterxml.jackson.databind.ObjectWriter;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.egov.common.contract.request.RequestInfo;
+import org.egov.tracer.model.CustomException;
 import org.egov.user.domain.exception.*;
 import org.egov.user.domain.model.LoggedInUserUpdatePasswordRequest;
 import org.egov.user.domain.model.NonLoggedInUserUpdatePasswordRequest;
 import org.egov.user.domain.model.User;
 import org.egov.user.domain.model.UserSearchCriteria;
 import org.egov.user.domain.model.enums.UserType;
+import org.egov.user.encryption.EncryptionService;
 import org.egov.user.persistence.repository.FileStoreRepository;
 import org.egov.user.persistence.repository.OtpRepository;
 import org.egov.user.persistence.repository.UserRepository;
@@ -25,6 +34,7 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
+import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -47,8 +57,20 @@ public class UserService {
     @Value("${egov.user.host}")
     private String userHost;
 
+    @Value(("${egov.state.level.tenant.id}"))
+    private String stateLevelTenantId;
     @Autowired
     private RestTemplate restTemplate;
+    @Autowired
+    ObjectMapper objectMapper;
+    @Autowired
+    private EncryptionService encryptionService;
+
+    @Value("#{${egov.enc.field.type.map}}")
+    private HashMap<String,String> enc_fields_map;
+
+    @Value("#{${egov.dec.field.type.map}}")
+    private HashMap<String,String> dec_fields_map;
 
     public UserService(UserRepository userRepository, OtpRepository otpRepository, FileStoreRepository fileRepository,
                        PasswordEncoder passwordEncoder,
@@ -84,6 +106,18 @@ public class UserService {
             throw new UserNotFoundException(userSearchCriteria);
         }
 
+        /* encrypt here */
+        try {
+            JsonNode encryptedObject = encryptionService.encryptJson(userSearchCriteria, stateLevelTenantId);
+            userSearchCriteria = objectMapper.treeToValue(encryptedObject, UserSearchCriteria.class);
+        }
+        catch (JsonProcessingException e)
+        {
+            log.error("JsonProcessing error occurred while enrypting",e);
+            throw new CustomException(e.getMessage(),e.toString());
+        } catch (IOException e) {
+            throw new CustomException(e.getMessage(),e.toString());
+        }
         List<User> users = userRepository.findAll(userSearchCriteria);
 
         if(users.isEmpty())
@@ -126,7 +160,30 @@ public class UserService {
         searchCriteria.validate(isInterServiceCall);
 
         searchCriteria.setTenantId(getStateLevelTenantForCitizen(searchCriteria.getTenantId(), searchCriteria.getType()));
+
+        /* encrypt here */
+        try {
+            JsonNode encryptedObject = encryptionService.encryptJson(searchCriteria, stateLevelTenantId);
+            searchCriteria = objectMapper.treeToValue(encryptedObject, UserSearchCriteria.class);
+        }
+        catch (JsonProcessingException e)
+        {
+            log.error("JsonProcessing error occurred while enrypting",e);
+            throw new CustomException(e.getMessage(),e.toString());
+        } catch (IOException e) {
+            throw new CustomException(e.getMessage(),e.toString());
+        }
+
+
         List<org.egov.user.domain.model.User> list = userRepository.findAll(searchCriteria);
+        /* decrypt here */
+        try {
+            JsonNode  decryptedObject = encryptionService.decryptJson(list,new ArrayList<>(dec_fields_map.keySet()));
+            ObjectReader reader = objectMapper.readerFor(new TypeReference<List<org.egov.user.domain.model.User>>() {});
+            list = reader.readValue(decryptedObject);
+        } catch (IOException e) {
+            throw new CustomException(e.getMessage(),e.toString());
+        }
         setFileStoreUrlsByFileStoreIds(list);
         return list;
     }
@@ -141,6 +198,22 @@ public class UserService {
         user.setUuid(UUID.randomUUID().toString());
         user.validateNewUser();
         conditionallyValidateOtp(user);
+
+        /* encrypt here */
+
+
+        try {
+            JsonNode encryptedObject = encryptionService.encryptJson(user, stateLevelTenantId);
+            user = objectMapper.treeToValue(encryptedObject, User.class);
+        }
+        catch (JsonProcessingException e)
+        {
+            log.error("JsonProcessing error occurred while enrypting",e);
+            throw new CustomException(e.getMessage(),e.toString());
+        } catch (IOException e) {
+            throw new CustomException(e.getMessage(),e.toString());
+        }
+
         validateUserUniqueness(user);
         if (isEmpty(user.getPassword())) {
             user.setPassword(UUID.randomUUID().toString());
@@ -148,7 +221,20 @@ public class UserService {
         user.setPassword(encryptPwd(user.getPassword()));
         user.setDefaultPasswordExpiry(defaultPasswordExpiryInDays);
         user.setTenantId(getStateLevelTenantForCitizen(user.getTenantId(), user.getType()));
-        return persistNewUser(user);
+
+
+        User persistedNewUser=persistNewUser(user);
+
+        try {
+            JsonNode  decryptedObject = encryptionService.decryptJson(persistedNewUser,new ArrayList<>(enc_fields_map.keySet()));
+            User decryptedpersistedNewUser=objectMapper.treeToValue(decryptedObject, User.class);
+            return decryptedpersistedNewUser;
+        } catch (IOException e) {
+            throw new CustomException(e.getMessage(),e.toString());
+        }
+
+        /* decrypt here */
+
     }
 
     private void validateUserUniqueness(User user) {
@@ -264,14 +350,35 @@ public class UserService {
      * @return
      */
     // TODO Fix date formats
-    public User updateWithoutOtpValidation(final User user) {
+    public User updateWithoutOtpValidation(User user) {
         final User existingUser = getUserByUuid(user.getUuid());
         user.setTenantId(getStateLevelTenantForCitizen(user.getTenantId(), user.getType()));
         validateUserRoles(user);
         user.validateUserModification();
         user.setPassword(encryptPwd(user.getPassword()));
+        /* encrypt */
+        try {
+            JsonNode encryptedObject = encryptionService.encryptJson(user, stateLevelTenantId);
+            user = objectMapper.treeToValue(encryptedObject, User.class);
+        }
+        catch (JsonProcessingException e)
+        {
+            log.error("JsonProcessing error occurred while enrypting",e);
+            throw new CustomException(e.getMessage(),e.toString());
+        } catch (IOException e) {
+            throw new CustomException(e.getMessage(),e.toString());
+        }
         userRepository.update(user, existingUser);
-        return  getUserByUuid(user.getUuid());
+
+        /* decrypt here */
+        User updatedUserfromDB=getUserByUuid(user.getUuid());
+        try {
+            JsonNode  decryptedObject = encryptionService.decryptJson(updatedUserfromDB,new ArrayList<>(enc_fields_map.keySet()));
+            updatedUserfromDB=objectMapper.treeToValue(decryptedObject, User.class);
+        } catch (IOException e) {
+            throw new CustomException(e.getMessage(),e.toString());
+        }
+        return updatedUserfromDB;
     }
 
     /**
@@ -292,12 +399,31 @@ public class UserService {
      * @param user
      * @return
      */
-    public User partialUpdate(final User user) {
+    public User partialUpdate(User user) {
+        /* encrypt here */
+        try {
+            JsonNode encryptedObject = encryptionService.encryptJson(user, stateLevelTenantId);
+            user = objectMapper.treeToValue(encryptedObject, User.class);
+        }
+        catch (JsonProcessingException e)
+        {
+            log.error("JsonProcessing error occurred while enrypting",e);
+            throw new CustomException(e.getMessage(),e.toString());
+        } catch (IOException e) {
+            throw new CustomException(e.getMessage(),e.toString());
+        }
         final User existingUser = getUserByUuid(user.getUuid());
         validateProfileUpdateIsDoneByTheSameLoggedInUser(user);
         user.nullifySensitiveFields();
         userRepository.update(user, existingUser);
         User updatedUser = getUserByUuid(user.getUuid());
+        /* decrypt here */
+        try {
+            JsonNode  decryptedObject = encryptionService.decryptJson(updatedUser,new ArrayList<>(enc_fields_map.keySet()));
+            updatedUser=objectMapper.treeToValue(decryptedObject, User.class);
+        } catch (IOException e) {
+            throw new CustomException(e.getMessage(),e.toString());
+        }
         setFileStoreUrlsByFileStoreIds(Collections.singletonList(updatedUser));
         return updatedUser;
     }
@@ -330,7 +456,7 @@ public class UserService {
     public void updatePasswordForNonLoggedInUser(NonLoggedInUserUpdatePasswordRequest request) {
         request.validate();
         // validateOtp(request.getOtpValidationRequest());
-        final User user = getUniqueUser(request.getUserName(), request.getTenantId(), request.getType());
+        User user = getUniqueUser(request.getUserName(), request.getTenantId(), request.getType());
         if (user.getType().toString().equals(UserType.CITIZEN.toString()) && isCitizenLoginOtpBased) {
         	log.info("CITIZEN forgot password flow is disabled");
             throw new InvalidUpdatePasswordRequestException();
@@ -339,9 +465,28 @@ public class UserService {
         	log.info("EMPLOYEE forgot password flow is disabled");
             throw new InvalidUpdatePasswordRequestException();
         }
+        /* decrypt here */
+        try {
+            JsonNode  decryptedObject = encryptionService.decryptJson(user,new ArrayList<>(enc_fields_map.keySet()));
+            user=objectMapper.treeToValue(decryptedObject, User.class);
+        } catch (IOException e) {
+            throw new CustomException(e.getMessage(),e.toString());
+        }
         user.setOtpReference(request.getOtpReference());
         validateOtp(user);
         user.updatePassword(encryptPwd(request.getNewPassword()));
+        /* encrypt here */
+        try {
+            JsonNode encryptedObject = encryptionService.encryptJson(user, stateLevelTenantId);
+            user = objectMapper.treeToValue(encryptedObject, User.class);
+        }
+        catch (JsonProcessingException e)
+        {
+            log.error("JsonProcessing error occurred while enrypting",e);
+            throw new CustomException(e.getMessage(),e.toString());
+        } catch (IOException e) {
+            throw new CustomException(e.getMessage(),e.toString());
+        }
         userRepository.update(user, user);
     }
 
@@ -427,6 +572,4 @@ public class UserService {
             }
         }
     }
-
-
 }

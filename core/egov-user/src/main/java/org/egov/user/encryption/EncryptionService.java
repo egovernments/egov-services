@@ -47,7 +47,7 @@ public class EncryptionService {
         }
     }
 
-    public ObjectNode encryptJson(Object plaintextJson, String tenantId) throws IOException {
+    public JsonNode encryptJson(Object plaintextJson, String tenantId) throws IOException {
 
         JsonNode plaintextNode = createObjectNode(plaintextJson);
         JsonNode encryptedNode = plaintextNode.deepCopy();
@@ -66,10 +66,10 @@ public class EncryptionService {
             encryptedNode = JacksonUtils.mergeNodesForGivenPaths(returnedEncryptedNode, encryptedNode, fields);
         }
 
-        return (ObjectNode) encryptedNode;
+        return encryptedNode;
     }
 
-    public ObjectNode decryptJson(Object ciphertextJson, List<String> fields) throws IOException {
+    public JsonNode decryptJson(Object ciphertextJson, List<String> fields) throws IOException {
         JsonNode ciphertextNode = createObjectNode(ciphertextJson);
         JsonNode decryptedNode = ciphertextNode.deepCopy();
 
@@ -79,20 +79,21 @@ public class EncryptionService {
             decryptedNode = JacksonUtils.mergeNodesForGivenPaths(returnedDecryptedNode, decryptedNode, fields);
         }
 
-        return (ObjectNode) decryptedNode;
+        return decryptedNode;
     }
 
-    private ObjectNode createObjectNode(Object plaintextJson) {
-        ObjectNode jsonNode = null;
+    private JsonNode createObjectNode(Object plaintextJson) {
+        JsonNode jsonNode = null;
         try {
-            if(plaintextJson instanceof ObjectNode)
-                jsonNode = (ObjectNode) plaintextJson;
+            if(plaintextJson instanceof JsonNode)
+                jsonNode = (JsonNode) plaintextJson;
             else if(plaintextJson instanceof String)
-                jsonNode = (ObjectNode) mapper.readTree((String) plaintextJson);           //JsonNode from JSON String
+                jsonNode = mapper.readTree((String) plaintextJson); //JsonNode from JSON String
             else
-                jsonNode = mapper.valueToTree(plaintextJson);                               //JsonNode from POJO or Map
+                jsonNode = mapper.valueToTree(plaintextJson); //JsonNode from POJO or Map
         } catch (Exception e) {
-            throw new CustomException("Cannot convert to JsonNode : " + plaintextJson, "Cannot convert to JsonNode");
+            log.error(e.getMessage());
+            // throw new CustomException("Cannot convert to JsonNode : " + plaintextJson, "Cannot convert to JsonNode");
         }
         return jsonNode;
     }

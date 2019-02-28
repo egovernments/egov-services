@@ -1,6 +1,11 @@
 package org.egov.user.security.oauth2.custom.authproviders;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectReader;
 import lombok.extern.slf4j.Slf4j;
+import org.egov.tracer.model.CustomException;
 import org.egov.tracer.model.ServiceCallException;
 import org.egov.user.domain.exception.DuplicateUserNameException;
 import org.egov.user.domain.exception.UserNotFoundException;
@@ -8,7 +13,9 @@ import org.egov.user.domain.model.SecureUser;
 import org.egov.user.domain.model.User;
 import org.egov.user.domain.model.enums.UserType;
 import org.egov.user.domain.service.UserService;
+import org.egov.user.encryption.EncryptionService;
 import org.egov.user.web.contract.auth.Role;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -19,6 +26,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.oauth2.common.exceptions.OAuth2Exception;
 import org.springframework.stereotype.Component;
 
+import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -37,6 +45,14 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
     // TODO Remove default error handling provided by TokenEndpoint.class
 
 	private UserService userService;
+	@Autowired
+	private ObjectMapper objectMapper;
+	@Autowired
+	private EncryptionService encryptionService;
+
+
+	@Value("#{${egov.enc.field.type.map}}")
+	private HashMap<String,String> enc_fields_map;
 
 	@Value("${citizen.login.password.otp.enabled}")
 	private boolean citizenLoginPasswordOtpEnabled;
@@ -75,14 +91,20 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 		User user;
         try {
             user = userService.getUniqueUser(userName, tenantId, UserType.fromValue(userType));
+            /* decrypt here */
+
+			JsonNode  decryptedObject = encryptionService.decryptJson(user,new ArrayList<>(enc_fields_map.keySet()));
+			user=objectMapper.treeToValue(decryptedObject, User.class);
+
         } catch (UserNotFoundException e){
             log.error("User not found", e);
             throw new OAuth2Exception("Invalid login credentials");
         } catch (DuplicateUserNameException e){
             log.error("Fatal error, user conflict, more than one user found", e);
             throw new OAuth2Exception("Invalid login credentials");
-
-        }
+        }catch (IOException e) {
+			throw new CustomException(e.getMessage(),e.toString());
+		}
 
 		if (user.getActive() == null || !user.getActive()) {
 			throw new OAuth2Exception("Please activate your account");

@@ -2,10 +2,12 @@ package org.egov.user.web.controller;
 
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.extern.slf4j.Slf4j;
 import org.egov.common.contract.response.ResponseInfo;
+import org.egov.tracer.model.CustomException;
 import org.egov.user.domain.model.User;
 import org.egov.user.domain.model.UserDetail;
 import org.egov.user.domain.model.UserSearchCriteria;
@@ -22,10 +24,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static org.egov.tracer.http.HttpUtils.isInterServiceCall;
@@ -56,6 +55,9 @@ public class UserController {
 	private String stateLevelTenantId;
 
 
+	@Value("#{${egov.enc.field.type.map}}")
+	private HashMap<String,String> enc_fields_map;
+
 	@Autowired
 	public UserController(UserService userService, TokenService tokenService, EncryptionService encryptionService) {
 		this.userService = userService;
@@ -68,7 +70,8 @@ public class UserController {
 	public Object encryptUserObject(@RequestBody CreateUserRequest createUserRequest) {
 
 		try {
-			ObjectNode encryptedObject = encryptionService.encryptJson(createUserRequest, stateLevelTenantId);
+			JsonNode encryptedObject = encryptionService.encryptJson(createUserRequest, stateLevelTenantId);
+			encryptionService.encryptValue("plainText","tenantId","Normal");// Normal--type
 			createUserRequest = objectMapper.treeToValue(encryptedObject, CreateUserRequest.class);
 		} catch (Exception e) { log.info(e.getMessage());	}
 
@@ -77,10 +80,10 @@ public class UserController {
 
 	@PostMapping("/_citizen/decrypt")
 	public Object decryptUserObject(@RequestBody CreateUserRequest createUserRequest) {
-		ObjectNode decryptedObject = null;
+		JsonNode decryptedObject = null;
 		try {
 			decryptedObject = encryptionService.decryptJson(createUserRequest,
-					Arrays.asList("$.user.mobileNumber", "$.user.emailId"));
+					Arrays.asList("$.mobileNumber", "$.emailId"));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -117,6 +120,7 @@ public class UserController {
 	@PostMapping("/users/_createnovalidate")
 	public UserDetailResponse createUserWithoutValidation(@RequestBody CreateUserRequest createUserRequest,
 			@RequestHeader HttpHeaders headers) {
+
 		User user = createUserRequest.toDomain(true);
 		user.setMobileValidationMandatory(isMobileValidationRequired(headers));
 		user.setOtpValidationMandatory(false);
@@ -164,6 +168,7 @@ public class UserController {
 	public CustomUserDetails getUser(@RequestParam(value = "access_token") String accessToken) {
 		final UserDetail userDetail = tokenService.getUser(accessToken);
 		return new CustomUserDetails(userDetail);
+		//  no encrypt/decrypt
 	}
 
 	/**
@@ -212,10 +217,7 @@ public class UserController {
                 searchCriteria.setLimit(defaultSearchSize);
         }
 
-
 		List<User> userModels = userService.searchUsers(searchCriteria, isInterServiceCall(headers));
-
-
 		List<UserSearchResponseContent> userContracts = userModels.stream().map(UserSearchResponseContent::new)
 				.collect(Collectors.toList());
 		ResponseInfo responseInfo = ResponseInfo.builder().status(String.valueOf(HttpStatus.OK.value())).build();

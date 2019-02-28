@@ -33,7 +33,7 @@ import java.util.*;
 @javax.annotation.Generated(value = "org.egov.codegen.SpringBootCodegen", date = "2019-02-25T15:07:36.183+05:30")
 
 @Controller
-    @RequestMapping("/apportion")
+    @RequestMapping("/v1")
     public class ApportionController {
 
         private final ObjectMapper objectMapper;

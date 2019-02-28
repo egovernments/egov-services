@@ -55,8 +55,8 @@ public class OrderByPriorityApportion implements Apportion {
         Boolean isAmountPositive;
 
         for (BillDetail billDetail : billDetails){
-            billDetail.getBillAccountDetails().sort(Comparator.comparing(BillAccountDetail::getOrder));
             validateOrder(billDetails);
+            billDetail.getBillAccountDetails().sort(Comparator.comparing(BillAccountDetail::getOrder));
             for(BillAccountDetail billAccountDetail : billDetail.getBillAccountDetails()) {
                 amount = billAccountDetail.getAmount();
                 isAmountPositive = amount.compareTo(BigDecimal.ZERO) >= 0;
@@ -97,15 +97,36 @@ public class OrderByPriorityApportion implements Apportion {
 
     /**
      * Validates if order is not null in each BillAccountDetail in the given list of billDetails
+     *  and all positive taxHeadOrder come after negative taxHeadOrder
      * @param billDetails List of billDetails to be validated
      */
     private void validateOrder(List<BillDetail> billDetails){
         Map<String,String> errorMap = new HashMap<>();
         billDetails.forEach(billDetail -> {
-            billDetail.getBillAccountDetails().forEach(billAccountDetail -> {
-                if(billAccountDetail.getOrder()==null)
-                    errorMap.put("INVALID ORDER","Order is null for: "+billAccountDetail.getId());
-            });
+            Boolean positiveTaxHeadStarted = false;
+
+            List<BillAccountDetail> billAccountDetails = billDetail.getBillAccountDetails();
+
+            int maxOrderOfNegativeTaxHead = Integer.MIN_VALUE;
+            int minOrderOfPositiveTaxHead = Integer.MAX_VALUE;
+
+            for(int i=0;i<billAccountDetails.size();i++){
+                if(billAccountDetails.get(i).getOrder()==null){
+                    errorMap.put("INVALID ORDER","Order is null for: "+billAccountDetails.get(i).getId());
+                    continue;
+                }
+
+                 if(billAccountDetails.get(i).getAmount().compareTo(BigDecimal.ZERO)>0 &&
+                         minOrderOfPositiveTaxHead > billAccountDetails.get(i).getOrder()){
+                     minOrderOfPositiveTaxHead = billAccountDetails.get(i).getOrder();
+                }
+                else if(billAccountDetails.get(i).getAmount().compareTo(BigDecimal.ZERO)<0 &&
+                         maxOrderOfNegativeTaxHead < billAccountDetails.get(i).getOrder()){
+                     maxOrderOfNegativeTaxHead = billAccountDetails.get(i).getOrder();
+                 }
+            }
+            if(minOrderOfPositiveTaxHead < maxOrderOfNegativeTaxHead)
+                throw new CustomException("INVALID ORDER","Positive TaxHeads should be after Negative TaxHeads");
         });
         if(!errorMap.isEmpty())
             throw new CustomException(errorMap);

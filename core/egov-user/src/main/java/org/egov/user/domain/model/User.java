@@ -20,7 +20,7 @@ import static org.springframework.util.ObjectUtils.isEmpty;
 @AllArgsConstructor
 @Getter
 @Setter
-@Builder
+@Builder(toBuilder = true)
 public class User {
 	
 	private Long id;

@@ -62,7 +62,6 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 
 	@Override
 	public Authentication authenticate(Authentication authentication) {
-
 		String userName = authentication.getName();
 		String password = authentication.getCredentials().toString();
 
@@ -133,6 +132,7 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 			List<GrantedAuthority> grantedAuths = new ArrayList<>();
 			grantedAuths.add(new SimpleGrantedAuthority("ROLE_" + user.getType()));
 			final SecureUser secureUser = new SecureUser(getUser(user));
+			userService.resetFailedLoginAttempts(user);
             return new UsernamePasswordAuthenticationToken(secureUser,
                     password, grantedAuths);
 		} else {
@@ -210,10 +210,14 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 	 * @return Updated user
 	 */
 	private User unlockAccount(User user){
-		user.setAccountLocked(false);
-		user.setPassword(null);
-		User updatedUser = userService.updateWithoutOtpValidation(user);
-		userService.resetFailedLoginAttempts(updatedUser);
+		User userToBeUpdated = user.toBuilder()
+				.accountLocked(false)
+				.password(null)
+				.build();
+
+		User updatedUser = userService.updateWithoutOtpValidation(userToBeUpdated);
+		userService.resetFailedLoginAttempts(userToBeUpdated);
+
 		return updatedUser;
 	}
 

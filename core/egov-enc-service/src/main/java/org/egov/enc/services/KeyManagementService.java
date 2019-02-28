@@ -30,10 +30,7 @@ import javax.crypto.NoSuchPaddingException;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 @Slf4j
 @Service
@@ -44,6 +41,9 @@ public class KeyManagementService implements ApplicationRunner {
 
     @Value("${egov.mdms.search.endpoint}")
     private String mdmsEndpoint;
+
+    @Value(("${egov.state.level.tenant.id}"))
+    private String stateLevelTenantId;
 
     @Autowired
     private KeyRepository keyRepository;
@@ -56,9 +56,11 @@ public class KeyManagementService implements ApplicationRunner {
 
     private ArrayList<String> tenantIdsFromDB;
 
-    //Initialize active tenant id list
-    private void init() {
-        tenantIdsFromDB = (ArrayList<String>) this.keyRepository.fetchDistinctTenantIds();
+
+    //Initialize active tenant id list and Check for any new tenants
+    private void init() throws Exception {
+        generateKeyForNewTenants();
+        tenantIdsFromDB = (ArrayList<String>) keyRepository.fetchDistinctTenantIds();
     }
 
     //Check if a given tenantId exists
@@ -66,20 +68,14 @@ public class KeyManagementService implements ApplicationRunner {
         if(tenantIdsFromDB.contains(tenant)) {
             return true;
         }
-        int numberOfNewTenants = generateKeyForNewTenants();
-        if(numberOfNewTenants != 0) {
-            keyStore.refreshKeys();
-            keyIdGenerator.refreshKeyIds();
-            tenantIdsFromDB = (ArrayList<String>) keyRepository.fetchDistinctTenantIds();
-            return tenantIdsFromDB.contains(tenant);
-        }
-        return false;
+        generateKeyForNewTenants();
+        return tenantIdsFromDB.contains(tenant);
     }
 
     //Generate Symmetric and Asymmetric Keys for each of the TenantId in the given input list
-    public void generateKeys(ArrayList<String> tenantIds) throws BadPaddingException, InvalidKeyException, NoSuchAlgorithmException, IllegalBlockSizeException, NoSuchPaddingException, InvalidAlgorithmParameterException {
+    private void generateKeys(ArrayList<String> tenantIds) throws BadPaddingException, InvalidKeyException, NoSuchAlgorithmException, IllegalBlockSizeException, NoSuchPaddingException, InvalidAlgorithmParameterException {
 
-        Integer status;
+        int status;
         ArrayList<SymmetricKey> symmetricKeys = keyGenerator.generateSymmetricKeys(tenantIds);
         for(SymmetricKey symmetricKey : symmetricKeys) {
             status = keyRepository.insertSymmetricKey(symmetricKey);
@@ -99,16 +95,19 @@ public class KeyManagementService implements ApplicationRunner {
 
     //Generate keys if there are any new tenants
     //Returns the number of tenants for which the keys have been generated
-    public int generateKeyForNewTenants() throws JSONException, BadPaddingException, InvalidAlgorithmParameterException, NoSuchAlgorithmException, IllegalBlockSizeException, NoSuchPaddingException, InvalidKeyException {
+    private int generateKeyForNewTenants() throws JSONException, BadPaddingException, InvalidAlgorithmParameterException, NoSuchAlgorithmException, IllegalBlockSizeException, NoSuchPaddingException, InvalidKeyException {
         Collection<String> tenantIds = makeComprehensiveListOfTenantIds();
-        Collection<String> tenantIdsFromDB = keyRepository.fetchDistinctTenantIds();
+        Collection<String> tenantIdsFromDBCollection = keyRepository.fetchDistinctTenantIds();
+        tenantIds.removeAll(tenantIdsFromDBCollection);
 
-        tenantIds.removeAll(tenantIdsFromDB);
+        if(tenantIds.size() != 0) {
+            ArrayList<String> tenantIdList = new ArrayList<>(tenantIds);
+            generateKeys(tenantIdList);
 
-        ArrayList<String> tenantIdList = new ArrayList<>(tenantIds);
-
-        generateKeys(tenantIdList);
-
+            keyStore.refreshKeys();
+            keyIdGenerator.refreshKeyIds();
+            tenantIdsFromDB = (ArrayList<String>) keyRepository.fetchDistinctTenantIds();
+        }
         return tenantIds.size();
     }
 
@@ -169,32 +168,9 @@ public class KeyManagementService implements ApplicationRunner {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
 
-        String requestJson = "{\n" +
-                " \"RequestInfo\": {\n" +
-                "   \"apiId\": \"asset-services\",\n" +
-                "   \"ver\": null,\n" +
-                "   \"ts\": null,\n" +
-                "   \"action\": null,\n" +
-                "   \"did\": null,\n" +
-                "   \"key\": null,\n" +
-                "   \"msgId\": \"search with from and to values\",\n" +
-                "   \"authToken\": \"59854f79-7031-4157-9cb5-21c51cb61981\"\n" +
-                " },\n" +
-                " \"MdmsCriteria\": {\n" +
-                "   \"tenantId\": \"pb\",\n" +
-                "   \"moduleDetails\": [\n" +
-                "     {\n" +
-                "       \"moduleName\": \"tenant\",\n" +
-                "       \"masterDetails\": [\n" +
-                "         {\n" +
-                "           \"name\": \"tenants\",\n" +
-                "           \"filter\":\"$.*.code\"\n" +
-                "         }\n" +
-                "       ]\n" +
-                "     }\n" +
-                "   ]\n" +
-                " }\n" +
-                "}";
+        String requestJson = "{\"RequestInfo\":{},\"MdmsCriteria\":{\"tenantId\":\"" + stateLevelTenantId + "\"," +
+                "\"moduleDetails\":[{\"moduleName\":\"tenant\",\"masterDetails\":[{\"name\":\"tenants\"," +
+                "\"filter\":\"$.*.code\"}]}]}}";
 
         String url = mdmsHost + mdmsEndpoint;
 
@@ -213,7 +189,7 @@ public class KeyManagementService implements ApplicationRunner {
     }
 
     @Override
-    public void run(ApplicationArguments applicationArguments) {
+    public void run(ApplicationArguments applicationArguments) throws Exception {
         init();
     }
 }

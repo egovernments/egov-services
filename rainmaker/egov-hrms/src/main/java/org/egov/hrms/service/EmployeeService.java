@@ -52,6 +52,7 @@ import org.egov.hrms.model.enums.UserType;
 import org.egov.hrms.producer.HRMSProducer;
 import org.egov.hrms.repository.EmployeeRepository;
 import org.egov.hrms.utils.ErrorConstants;
+import org.egov.hrms.utils.HRMSConstants;
 import org.egov.hrms.utils.HRMSUtils;
 import org.egov.hrms.utils.ResponseInfoFactory;
 import org.egov.hrms.web.contract.*;
@@ -156,10 +157,22 @@ public class EmployeeService {
 			}
 			criteria.setUuids(userUUIDs);
 		}
-		List<Employee> employees = repository.fetchEmployees(criteria, requestInfo);
-		List<String> uuids = employees.stream().map(Employee :: getUuid).collect(Collectors.toList());
+		if(!CollectionUtils.isEmpty(criteria.getRoles())){
+            Map<String, Object> userSearchCriteria = new HashMap<>();
+            userSearchCriteria.put(HRMSConstants.HRMS_USER_SEARCH_CRITERA_ROLECODES,criteria.getRoles());
+            userSearchCriteria.put(HRMSConstants.HRMS_USER_SEARCH_CRITERA_TENANTID,criteria.getTenantId());
+            UserResponse userResponse = userService.getUser(requestInfo, userSearchCriteria);
+            List<String> userUUIDs = userResponse.getUser().stream().map(User :: getUuid).collect(Collectors.toList());
+            criteria.setUuids(userUUIDs);
+        }
+        List <Employee> employees = new ArrayList<>();
+        if(!((!CollectionUtils.isEmpty(criteria.getRoles()) || !CollectionUtils.isEmpty(criteria.getNames()) || !StringUtils.isEmpty(criteria.getPhone())) && CollectionUtils.isEmpty(criteria.getUuids())))
+            employees = repository.fetchEmployees(criteria, requestInfo);
+        List<String> uuids = employees.stream().map(Employee :: getUuid).collect(Collectors.toList());
 		if(!CollectionUtils.isEmpty(uuids)){
-			UserResponse userResponse = userService.getUser(requestInfo, uuids);
+            Map<String, Object> UserSearchCriteria = new HashMap<>();
+            UserSearchCriteria.put(HRMSConstants.HRMS_USER_SEARCH_CRITERA_UUID,uuids);
+            UserResponse userResponse = userService.getUser(requestInfo, UserSearchCriteria);
 			if(!CollectionUtils.isEmpty(userResponse.getUser())) {
 				Map<String, User> mapOfUsers = userResponse.getUser().stream()
 						.collect(Collectors.toMap(User :: getUuid, Function.identity()));

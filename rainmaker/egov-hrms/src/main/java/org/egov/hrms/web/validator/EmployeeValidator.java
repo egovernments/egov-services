@@ -94,9 +94,8 @@ public class EmployeeValidator {
 				errorMap.put(ErrorConstants.HRMS_INVALID_SEARCH_AOD_CODE, ErrorConstants.HRMS_INVALID_SEARCH_AOD_MSG);
 		}
 
-        if(!CollectionUtils.isEmpty( criteria.getRoles())) {
-            if(StringUtils.isEmpty(criteria.getTenantId()))
-                errorMap.put(ErrorConstants.HRMS_INVALID_SEARCH_ROLES_CODE, ErrorConstants.HRMS_INVALID_SEARCH_ROLES_MSG);
+        if(!CollectionUtils.isEmpty( criteria.getRoles()) && StringUtils.isEmpty(criteria.getTenantId())) {
+            errorMap.put(ErrorConstants.HRMS_INVALID_SEARCH_ROLES_CODE, ErrorConstants.HRMS_INVALID_SEARCH_ROLES_MSG);
         }
 
         if((!StringUtils.isEmpty(criteria.getPhone()) || !CollectionUtils.isEmpty(criteria.getNames())) &&

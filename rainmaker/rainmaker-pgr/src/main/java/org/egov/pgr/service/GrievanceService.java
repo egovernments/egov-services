@@ -113,9 +113,8 @@ public class GrievanceService {
 	public ServiceResponse create(ServiceRequest request) {
 		log.info("Service layer for createss");
 		enrichserviceRequestForcreate(request);
+		pGRProducer.push(saveIndexTopic, dataTranformationForIndexer(request, true));
 		pGRProducer.push(saveTopic, request);
-		for(long i = 0; i < 100000000; i++) { i+=1; i-=1; } //delay loop to ensure data is persisted happens before we push to index.
-		pGRProducer.push(saveIndexTopic, dataTranformationForIndexer(request));
 		return getServiceResponse(request);
 	}
 
@@ -129,9 +128,8 @@ public class GrievanceService {
 		enrichServiceRequestForUpdate(request);
 		if (null == request.getActionInfo())
 			request.setActionInfo(new ArrayList<ActionInfo>());
+		pGRProducer.push(updateIndexTopic, dataTranformationForIndexer(request, false));
 		pGRProducer.push(updateTopic, request);
-		for(long i = 0; i < 10000000; i++) { i+=1; i-=1; } //delay loop to ensure data is persisted happens before we push to index.
-		pGRProducer.push(updateIndexTopic, dataTranformationForIndexer(request));
 		return getServiceResponse(request);
 	}
 	
@@ -270,14 +268,49 @@ public class GrievanceService {
 	 * 2. Data during update, takes the entire actionhistory alongwith the currently performed action.
 	 * 
 	 * @param request
+	 * @param isCreate
 	 * @return
 	 */
-	private ServiceResponse dataTranformationForIndexer(ServiceRequest request) {
-		ObjectMapper mapper = pGRUtils.getObjectMapper();
-		List<String> serviceReqIds = request.getServices().stream().map(Service :: getServiceRequestId).collect(Collectors.toList()); 
-		ServiceReqSearchCriteria serviceReqSearchCriteria = ServiceReqSearchCriteria.builder()
-				.tenantId(request.getServices().get(0).getTenantId()).serviceRequestId(serviceReqIds).build();
-		return mapper.convertValue(getServiceRequestDetails(request.getRequestInfo(), serviceReqSearchCriteria), ServiceResponse.class);
+	private ServiceResponse dataTranformationForIndexer(ServiceRequest request, boolean isCreate) {
+		/**
+		 * This might seem inefficient but in our use-case, create and update happen for just one compliant 95% of the times, so loop runs just once.
+		 */
+		List<Service> services = new ArrayList<Service>();
+		List<ActionHistory> actionHistoryList = new ArrayList<ActionHistory>();
+		if(isCreate) {
+			for(int i = 0; i < request.getServices().size(); i++) {
+				ActionHistory actionHistory = new ActionHistory();
+				List<ActionInfo> actions = new ArrayList<>();
+				actions.add(request.getActionInfo().get(i));
+				actionHistory.setActions(actions);
+				actionHistoryList.add(actionHistory);
+				services.add(request.getServices().get(i));
+			}
+		}else {
+			for(int i = 0; i < request.getServices().size(); i++) {
+				ObjectMapper mapper = pGRUtils.getObjectMapper();
+				ActionHistory actionHistory = new ActionHistory();
+				List<ActionInfo> actions = new ArrayList<>();
+				List<String> serviceRequestIds = new ArrayList<String>();
+				serviceRequestIds.add(request.getServices().get(i).getServiceRequestId());
+				ServiceReqSearchCriteria serviceReqSearchCriteria = ServiceReqSearchCriteria.builder()
+						.tenantId(request.getServices().get(i).getTenantId()).serviceRequestId(serviceRequestIds).build();
+				ServiceResponse serviceResponse = mapper.convertValue(getServiceRequestDetails(request.getRequestInfo(), serviceReqSearchCriteria), ServiceResponse.class);
+				actionHistory = serviceResponse.getActionHistory().get(0);
+				actions.add(request.getActionInfo().get(i));
+				actions.addAll(actionHistory.getActions());
+				actionHistory.setActions(actions);
+				AuditDetails auditDetails = AuditDetails.builder().createdBy(serviceResponse.getServices().get(0).getAuditDetails().getCreatedBy())
+						.createdTime(serviceResponse.getServices().get(0).getAuditDetails().getCreatedTime())
+						.lastModifiedBy(request.getServices().get(0).getAuditDetails().getLastModifiedBy())
+						.lastModifiedTime(request.getServices().get(0).getAuditDetails().getLastModifiedTime()).build();
+				request.getServices().get(0).setAuditDetails(auditDetails);
+				services.add(request.getServices().get(0));
+				actionHistoryList.add(actionHistory);
+
+			}
+		}
+		return ServiceResponse.builder().services(services).actionHistory(actionHistoryList).build();
 	}
 
 	/**

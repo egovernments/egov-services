@@ -32,6 +32,11 @@ public class MDMSService {
         this.config = config;
     }
 
+    /**
+     * Fetches MDMS data based on the apportion request
+     * @param request The apportion request for which master data is required
+     * @return MasterData from MDMS
+     */
     public Object mDMSCall(ApportionRequest request){
         RequestInfo requestInfo = request.getRequestInfo();
         String tenantId = request.getTenantId();
@@ -40,6 +45,12 @@ public class MDMSService {
         return result;
     }
 
+    /**
+     * Creates MDMS search criteria object MdmsCriteriaReq
+     * @param requestInfo The requestInfo of the apportion request
+     * @param tenantId TenantId of the request
+     * @return MDMS search criteria
+     */
     private MdmsCriteriaReq getMDMSRequest(RequestInfo requestInfo, String tenantId){
         ModuleDetail taxHeadMasterRequest = getTaxHeadMasterRequest();
 

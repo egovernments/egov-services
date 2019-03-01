@@ -29,6 +29,7 @@ public enum Purpose {
 		this.value = value;
 	}
 
+	
 	@Override
 	@JsonValue
 	public String toString() {

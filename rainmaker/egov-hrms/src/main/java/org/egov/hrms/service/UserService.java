@@ -40,14 +40,8 @@
 
 package org.egov.hrms.service;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-
+import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.extern.slf4j.Slf4j;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.hrms.config.PropertiesManager;
 import org.egov.hrms.model.Employee;
@@ -60,9 +54,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import lombok.extern.slf4j.Slf4j;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 @Slf4j
 @Service
@@ -112,11 +106,12 @@ public class UserService {
 		return userResponse;
 	}
 	
-	public UserResponse getUser(RequestInfo requestInfo, List<String> uuids) {
+	public UserResponse getUser(RequestInfo requestInfo, Map<String, Object> UserSearchCriteria ) {
 		StringBuilder uri = new StringBuilder();
 		Map<String, Object> userSearchReq = new HashMap<>();
 		userSearchReq.put("RequestInfo", requestInfo);
-		userSearchReq.put("uuid", uuids);
+		for( String key: UserSearchCriteria.keySet())
+			userSearchReq.put(key, UserSearchCriteria.get(key));
 		uri.append(propertiesManager.getUserHost()).append(propertiesManager.getUserSearchEndpoint());
 		UserResponse userResponse = new UserResponse();
 		try {

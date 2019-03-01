@@ -143,7 +143,10 @@ public class ErrorConstants {
 
 	public static final String HRMS_INVALID_SEARCH_AOD_CODE = "HRMS_INVALID_SEARCH_AOD";
 	public static final String HRMS_INVALID_SEARCH_AOD_MSG = "With asOnDate, atleast one Dept and one Desgination are to be passed.";
-	
+
+	public static final String HRMS_INVALID_SEARCH_ROLES_CODE = "HRMS_INVALID_SEARCH_ROLES";
+	public static final String HRMS_INVALID_SEARCH_ROLES_MSG = "With search on Roles tenantid is mandatory!.";
+
 	public static final String HRMS_INVALID_SEARCH_USER_CODE = "HRMS_INVALID_SEARCH_USER";
 	public static final String HRMS_INVALID_SEARCH_USER_MSG = "With search on phone and name, tenantid is mandatory!";
 

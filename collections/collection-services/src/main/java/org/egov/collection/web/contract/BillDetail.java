@@ -43,9 +43,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.JsonNode;
 import lombok.*;
 import org.egov.collection.model.enums.CollectionType;
+import java.math.BigDecimal;
+import java.util.List;
 
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -60,80 +60,118 @@ import java.util.List;
 @EqualsAndHashCode
 public class BillDetail {
 
-    private String id;
+	@JsonProperty("id")
+	private String id = null;
 
-    private String bill;
+	@JsonProperty("tenantId")
+	private String tenantId = null;
 
-    private Long billDate;
+	@JsonProperty("demandId")
+	private String demandId = null;
 
-    private String billDescription;
+	@JsonProperty("bill")
+	private String bill = null;
 
-    private String billNumber; // refNo
+	@JsonProperty("businessService")
+	private String businessService = null;
 
-    private String consumerCode;
+	@JsonProperty("billNumber")
+	private String billNumber = null;
 
-    private String consumerType;
+	@JsonProperty("billDate")
+	private Long billDate = null;
 
-    private Long expiryDate;
+	@JsonProperty("consumerCode")
+	private String consumerCode = null;
 
-    private BigDecimal minimumAmount;
+	@JsonProperty("consumerType")
+	private String consumerType = null;
 
-    private BigDecimal totalAmount;
+	@JsonProperty("minimumAmount")
+	private BigDecimal minimumAmount = null;
 
-    private BigDecimal collectedAmount;
+	@JsonProperty("totalAmount")
+	@NotNull
+	private BigDecimal totalAmount = null;
 
-    private List<String> collectionModesNotAllowed = new ArrayList<>();
+	@JsonProperty("amountPaid")
+	@NotNull
+	private BigDecimal amountPaid = null;
 
-    private String tenantId;
+	@JsonProperty("fromPeriod")
+	private BigDecimal fromPeriod = null;
 
-    private String businessService; // buisnessDetailsCode
+	@JsonProperty("toPeriod")
+	private BigDecimal toPeriod = null;
 
-    private String displayMessage;
+	@JsonProperty("collectedAmount")
+	private BigDecimal collectedAmount = null;
 
-    private Boolean callBackForApportioning;
+	@JsonProperty("collectionModesNotAllowed")
+	private List<String> collectionModesNotAllowed = null;
 
-    private String receiptNumber;
+	@JsonProperty("partPaymentAllowed")
+	private Boolean partPaymentAllowed = null;
 
-    private Long receiptDate;
+	@JsonProperty("additionalDetails")
+	private JsonNode additionalDetails = null;
 
-    private String receiptType;
+	@JsonProperty("receiptNumber")
+	private String receiptNumber = null;
 
-    private String channel;
+	@JsonProperty("receiptDate")
+	private Long receiptDate = null;
 
-    private String fund;
+	@JsonProperty("receiptType")
+	private String receiptType = null;
 
-    private String department;
+	@JsonProperty("channel")
+	private String channel = null;
 
-    private String function;
+	@JsonProperty("voucherHeader")
+	private String voucherHeader = null;
 
-    private String voucherHeader;
+	@JsonProperty("boundary")
+	private String boundary = null;
 
-    private CollectionType collectionType;
+	@JsonProperty("reasonForCancellation")
+	private String reasonForCancellation = null;
 
-    private String boundary;
+	@JsonProperty("manualReceiptNumber")
+	private String manualReceiptNumber = null;
 
-    private String reasonForCancellation;
+	@JsonProperty("manualReceiptDate")
+	private Long manualReceiptDate = null;
 
-    @NotNull
-    @Min(value = 0)
-    @Max(value = 999999999)
-    private BigDecimal amountPaid;
+	@JsonProperty("stateId")
+	private String stateId = null;
 
-    private String cancellationRemarks;
+	@JsonProperty("fund")
+	private String fund = null;
 
-    private String status;
+	@JsonProperty("function")
+	private String function = null;
 
-    @JsonProperty("billAccountDetails")
-    private List<BillAccountDetail> billAccountDetails = new ArrayList<>();
+	@JsonProperty("department")
+	private String department = null;
 
-    private String manualReceiptNumber;
+	@JsonProperty("billAccountDetails")
+	private List<BillAccountDetail> billAccountDetails = null;
 
-    private Long manualReceiptDate;
+	@JsonProperty("status")
+	private String status = null;
 
-    private Long stateId;
+	@JsonProperty("collectionType")
+	private CollectionType collectionType = null;
 
-    private Boolean partPaymentAllowed;
+	private String billDescription;
 
-    private JsonNode additionalDetails;
+	private Long expiryDate;
+
+	private String displayMessage;
+
+	private Boolean callBackForApportioning;
+
+	private String cancellationRemarks;
 
 }

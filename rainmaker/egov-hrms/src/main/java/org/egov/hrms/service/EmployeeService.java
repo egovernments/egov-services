@@ -258,6 +258,8 @@ public class EmployeeService {
 		employee.getJurisdictions().stream().forEach(jurisdiction -> {
 			jurisdiction.setId(UUID.randomUUID().toString());
 			jurisdiction.setAuditDetails(auditDetails);
+			if(null == jurisdiction.getIsActive())
+				jurisdiction.setIsActive(true);
 		});
 		employee.getAssignments().stream().forEach(assignment -> {
 			assignment.setId(UUID.randomUUID().toString());
@@ -274,12 +276,16 @@ public class EmployeeService {
 			employee.getEducation().stream().forEach(educationalQualification -> {
 				educationalQualification.setId(UUID.randomUUID().toString());
 				educationalQualification.setAuditDetails(auditDetails);
+				if(null == educationalQualification.getIsActive())
+					educationalQualification.setIsActive(true);
 			});
 		}
 		if(!CollectionUtils.isEmpty(employee.getTests())) {
 			employee.getTests().stream().forEach(departmentalTest -> {
 				departmentalTest.setId(UUID.randomUUID().toString());
 				departmentalTest.setAuditDetails(auditDetails);
+				if(null == departmentalTest.getIsActive())
+					departmentalTest.setIsActive(true);
 			});
 		}
 		if(!CollectionUtils.isEmpty(employee.getDocuments())) {
@@ -365,6 +371,8 @@ public class EmployeeService {
 
 		employee.getJurisdictions().stream().forEach(jurisdiction -> {
 
+			if(null == jurisdiction.getIsActive())
+				jurisdiction.setIsActive(true);
 			if(jurisdiction.getId()==null) {
 				jurisdiction.setId(UUID.randomUUID().toString());
 				jurisdiction.setAuditDetails(auditDetails);
@@ -413,6 +421,8 @@ public class EmployeeService {
 
 		if(employee.getEducation() != null){
 			employee.getEducation().stream().forEach(educationalQualification -> {
+				if(null == educationalQualification.getIsActive())
+					educationalQualification.setIsActive(true);
 				if(educationalQualification.getId()==null) {
 					educationalQualification.setId(UUID.randomUUID().toString());
 					educationalQualification.setAuditDetails(auditDetails);
@@ -432,6 +442,9 @@ public class EmployeeService {
 
 		if(employee.getTests() != null){
 			employee.getTests().stream().forEach(departmentalTest -> {
+
+				if(null == departmentalTest.getIsActive())
+					departmentalTest.setIsActive(true);
 				if(departmentalTest.getId()==null) {
 					departmentalTest.setId(UUID.randomUUID().toString());
 					departmentalTest.setAuditDetails(auditDetails);

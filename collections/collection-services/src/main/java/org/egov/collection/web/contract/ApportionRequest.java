@@ -1,10 +1,7 @@
 package org.egov.collection.web.contract;
 
-import java.math.BigDecimal;
 import java.util.List;
-import java.util.Map;
 
-import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
 import org.egov.common.contract.request.RequestInfo;
@@ -33,12 +30,6 @@ public class ApportionRequest {
 
 	private String tenantId;
 
-	private String businessService;
-
 	private List<Bill> bills;
-
-	@JsonProperty("collectionMap")
-	@Valid
-	private Map<String, BigDecimal> collectionMap;
 
 }

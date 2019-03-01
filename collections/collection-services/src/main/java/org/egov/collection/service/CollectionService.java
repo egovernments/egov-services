@@ -1,30 +1,28 @@
 package org.egov.collection.service;
 
-import lombok.extern.slf4j.Slf4j;
+import static java.util.Objects.isNull;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 import org.egov.collection.config.ApplicationProperties;
-import org.egov.collection.model.Instrument;
 import org.egov.collection.model.ReceiptSearchCriteria;
-import org.egov.collection.model.enums.Purpose;
 import org.egov.collection.producer.CollectionProducer;
 import org.egov.collection.repository.BillingServiceRepository;
 import org.egov.collection.repository.CollectionRepository;
 import org.egov.collection.repository.InstrumentRepository;
 import org.egov.collection.util.ReceiptEnricher;
 import org.egov.collection.util.ReceiptValidator;
-import org.egov.collection.web.contract.*;
+import org.egov.collection.web.contract.Bill;
+import org.egov.collection.web.contract.Receipt;
+import org.egov.collection.web.contract.ReceiptReq;
 import org.egov.common.contract.request.RequestInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-import java.util.stream.Collectors;
-
-import static java.util.Objects.isNull;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Slf4j

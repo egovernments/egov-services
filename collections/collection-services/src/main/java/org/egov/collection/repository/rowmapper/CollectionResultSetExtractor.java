@@ -160,8 +160,8 @@ public class CollectionResultSetExtractor implements ResultSetExtractor<List<Rec
                     .glcode(resultSet.getString("rd_chartOfAccount"))
                     .purpose(Purpose.valueOf(resultSet.getString("rd_purpose")))
                     .additionalDetails(getJsonValue((PGobject) resultSet.getObject("rd_additionalDetails")))
-                    .amount(resultSet.getBigDecimal("rd_amount"))
-                    .adjustedAmount(resultSet.getBigDecimal("rd_adjustedamount"))
+                    .amount(getBigDecimalValue(resultSet.getBigDecimal("rd_amount")))
+                    .adjustedAmount(getBigDecimalValue(resultSet.getBigDecimal("rd_adjustedamount")))
                     .build();
     }
 

@@ -63,6 +63,9 @@ public class EmployeeQueryBuilder {
 		}
 		
 		builder.append(" and employee.active = "+criteria.getIsActive());
+		builder.append(" and jurisdiction.isactive is not false");
+		builder.append(" and depttest.isactive is not false");
+		builder.append(" and education.isactive is not false");
 	}
 	
 	public String paginationClause(EmployeeSearchCriteria criteria, StringBuilder builder) {

@@ -93,8 +93,12 @@ public class EmployeeValidator {
 			if(CollectionUtils.isEmpty(criteria.getDepartments()) || CollectionUtils.isEmpty(criteria.getDesignations()))
 				errorMap.put(ErrorConstants.HRMS_INVALID_SEARCH_AOD_CODE, ErrorConstants.HRMS_INVALID_SEARCH_AOD_MSG);
 		}
-		
-		if((!StringUtils.isEmpty(criteria.getPhone()) || !CollectionUtils.isEmpty(criteria.getNames())) && 
+
+        if(!CollectionUtils.isEmpty( criteria.getRoles()) && StringUtils.isEmpty(criteria.getTenantId())) {
+            errorMap.put(ErrorConstants.HRMS_INVALID_SEARCH_ROLES_CODE, ErrorConstants.HRMS_INVALID_SEARCH_ROLES_MSG);
+        }
+
+        if((!StringUtils.isEmpty(criteria.getPhone()) || !CollectionUtils.isEmpty(criteria.getNames())) &&
 				StringUtils.isEmpty(criteria.getTenantId())) {
 			errorMap.put(ErrorConstants.HRMS_INVALID_SEARCH_USER_CODE, ErrorConstants.HRMS_INVALID_SEARCH_USER_MSG);
 		}
@@ -483,7 +487,7 @@ public class EmployeeValidator {
 	
 	/**
 	 * Assignments once created in the system cannot be deleted, they can however be changed. Validates that condition
-	 * 
+	 *
 	 * @param existingEmp
 	 * @param updatedEmployeeData
 	 * @param errorMap

@@ -3,13 +3,12 @@ package org.egov.encryption;
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ArrayNode;
 import lombok.extern.slf4j.Slf4j;
 import org.egov.common.contract.request.User;
 import org.egov.encryption.accesscontrol.AbacFilter;
 import org.egov.encryption.models.AccessType;
 import org.egov.encryption.models.Attribute;
-import org.egov.encryption.util.JSONUtils;
+import org.egov.encryption.util.JacksonUtils;
 
 import java.io.IOException;
 import java.util.*;
@@ -29,8 +28,8 @@ public class EncryptionService {
     private ObjectMapper mapper;
 
 
-    public EncryptionService(AbacFilter abacFilter, Map<String, String> fieldsAndTheirType) {
-        this.abacFilter = abacFilter;
+    public EncryptionService(Map<String, String> fieldsAndTheirType) {
+//        this.abacFilter = abacFilter;
         this.fieldsAndTheirType = fieldsAndTheirType;
         encryptionServiceRestInterface = new EncryptionServiceRestInterface();
         mapper = new ObjectMapper(new JsonFactory());
@@ -57,13 +56,13 @@ public class EncryptionService {
         for (String type : typesAndFieldsToEncrypt.keySet()) {
             List<String> fields = typesAndFieldsToEncrypt.get(type);
 
-            ArrayNode arrayNode = JSONUtils.filterJsonNodeWithPaths(plaintextNode, fields);
-            if (arrayNode.isEmpty(mapper.getSerializerProvider()))
-                continue;
-            JsonNode returnedEncryptedNode = mapper.valueToTree(encryptionServiceRestInterface.callEncrypt(tenantId,
-                    type, arrayNode));
+            JsonNode jsonNode = JacksonUtils.filterJsonNodeWithPaths(plaintextNode, fields);
 
-            encryptedNode = JSONUtils.mergeNodesForGivenPaths(returnedEncryptedNode, encryptedNode, fields);
+            if(! jsonNode.isEmpty(mapper.getSerializerProvider())) {
+                JsonNode returnedEncryptedNode = mapper.valueToTree(encryptionServiceRestInterface.callEncrypt(tenantId,
+                        type, jsonNode));
+                encryptedNode = JacksonUtils.merge(returnedEncryptedNode, encryptedNode);
+            }
         }
 
         return encryptedNode;
@@ -73,10 +72,10 @@ public class EncryptionService {
         JsonNode ciphertextNode = createJsonNode(ciphertextJson);
         JsonNode decryptedNode = ciphertextNode.deepCopy();
 
-        ArrayNode arrayNode = JSONUtils.filterJsonNodeWithPaths(ciphertextNode, paths);
-        if(! arrayNode.isEmpty(mapper.getSerializerProvider())) {
-            JsonNode returnedDecryptedNode = mapper.valueToTree(encryptionServiceRestInterface.callDecrypt(arrayNode));
-            decryptedNode = JSONUtils.mergeNodesForGivenPaths(returnedDecryptedNode, decryptedNode, paths);
+        JsonNode jsonNode = JacksonUtils.filterJsonNodeWithPaths(ciphertextNode, paths);
+        if(! jsonNode.isEmpty(mapper.getSerializerProvider())) {
+            JsonNode returnedDecryptedNode = mapper.valueToTree(encryptionServiceRestInterface.callDecrypt(jsonNode));
+            decryptedNode = JacksonUtils.merge(returnedDecryptedNode, decryptedNode);
         }
 
         return decryptedNode;

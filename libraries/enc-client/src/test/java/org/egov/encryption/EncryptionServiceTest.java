@@ -31,7 +31,7 @@ public class EncryptionServiceTest {
         fieldsAndTheirType.put("$.User.name", "Normal");
         fieldsAndTheirType.put("$.User.userName", "Normal");
 
-        encryptionService = new EncryptionService(new AbacFilter(Collections.EMPTY_LIST), fieldsAndTheirType);
+        encryptionService = new EncryptionService(fieldsAndTheirType);
 
     }
 

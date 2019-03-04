@@ -19,7 +19,7 @@ import java.util.List;
 @Slf4j
 public class JSONUtils {
 
-    static JsonNode merge(JsonNode newNode, JsonNode originalNode) {
+    public static JsonNode merge(JsonNode newNode, JsonNode originalNode) {
         Iterator<String> fieldNames = originalNode.fieldNames();
 
         while (fieldNames.hasNext()) {
@@ -48,7 +48,7 @@ public class JSONUtils {
         return newNode;
     }
 
-    static JsonNode filterJsonNodeWithFields(JsonNode jsonNode, List<String> filterFields) {
+    public static JsonNode filterJsonNodeWithFields(JsonNode jsonNode, List<String> filterFields) {
         if(checkIfNoFieldExistsInJsonNode(jsonNode, filterFields))
             return null;
 

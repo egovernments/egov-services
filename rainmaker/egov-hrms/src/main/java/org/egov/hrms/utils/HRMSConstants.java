@@ -42,5 +42,5 @@ public class HRMSConstants {
 	public static final String HRMS_USER_SEARCH_CRITERA_TENANTID = "tenantId";
 	public static final String HRMS_USER_SEARCH_CRITERA_MOBILENO = "mobileNumber";
 	public static final String HRMS_USER_SEARCH_CRITERA_NAME = "name";
-
+	public static final String HRMS_USER_SEARCH_CRITERA_USERNAME = "UserName";
 }

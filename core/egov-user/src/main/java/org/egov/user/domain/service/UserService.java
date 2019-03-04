@@ -17,6 +17,7 @@ import org.egov.user.domain.model.NonLoggedInUserUpdatePasswordRequest;
 import org.egov.user.domain.model.User;
 import org.egov.user.domain.model.UserSearchCriteria;
 import org.egov.user.domain.model.enums.UserType;
+import org.egov.user.domain.service.utils.EncryptionDecryptionUtil;
 import org.egov.user.encryption.EncryptionService;
 import org.egov.user.persistence.repository.FileStoreRepository;
 import org.egov.user.persistence.repository.OtpRepository;
@@ -53,6 +54,7 @@ public class UserService {
     private boolean isCitizenLoginOtpBased;
     private boolean isEmployeeLoginOtpBased;
     private FileStoreRepository fileRepository;
+    private EncryptionDecryptionUtil encryptionDecryptionUtil;
 
     @Value("${egov.user.host}")
     private String userHost;
@@ -63,8 +65,6 @@ public class UserService {
     private RestTemplate restTemplate;
     @Autowired
     ObjectMapper objectMapper;
-    @Autowired
-    private EncryptionService encryptionService;
 
     @Value("#{${egov.enc.field.type.map}}")
     private HashMap<String,String> enc_fields_map;
@@ -73,7 +73,7 @@ public class UserService {
     private HashMap<String,String> dec_fields_map;
 
     public UserService(UserRepository userRepository, OtpRepository otpRepository, FileStoreRepository fileRepository,
-                       PasswordEncoder passwordEncoder,
+                       PasswordEncoder passwordEncoder,EncryptionDecryptionUtil encryptionDecryptionUtil,
                        @Value("${default.password.expiry.in.days}") int defaultPasswordExpiryInDays,
                        @Value("${citizen.login.password.otp.enabled}") boolean isCitizenLoginOtpBased,
                        @Value("${employee.login.password.otp.enabled}") boolean isEmployeeLoginOtpBased) {
@@ -84,6 +84,7 @@ public class UserService {
         this.isCitizenLoginOtpBased = isCitizenLoginOtpBased;
         this.isEmployeeLoginOtpBased = isEmployeeLoginOtpBased;
         this.fileRepository = fileRepository;
+        this.encryptionDecryptionUtil=encryptionDecryptionUtil;
     }
 
     /**
@@ -107,17 +108,8 @@ public class UserService {
         }
 
         /* encrypt here */
-        try {
-            JsonNode encryptedObject = encryptionService.encryptJson(userSearchCriteria, stateLevelTenantId);
-            userSearchCriteria = objectMapper.treeToValue(encryptedObject, UserSearchCriteria.class);
-        }
-        catch (JsonProcessingException e)
-        {
-            log.error("JsonProcessing error occurred while enrypting",e);
-            throw new CustomException(e.getMessage(),e.toString());
-        } catch (IOException e) {
-            throw new CustomException(e.getMessage(),e.toString());
-        }
+
+         userSearchCriteria=  encryptionDecryptionUtil.encryptObject(userSearchCriteria,UserSearchCriteria.class);
         List<User> users = userRepository.findAll(userSearchCriteria);
 
         if(users.isEmpty())
@@ -161,29 +153,16 @@ public class UserService {
 
         searchCriteria.setTenantId(getStateLevelTenantForCitizen(searchCriteria.getTenantId(), searchCriteria.getType()));
 
-        /* encrypt here */
-        try {
-            JsonNode encryptedObject = encryptionService.encryptJson(searchCriteria, stateLevelTenantId);
-            searchCriteria = objectMapper.treeToValue(encryptedObject, UserSearchCriteria.class);
-        }
-        catch (JsonProcessingException e)
-        {
-            log.error("JsonProcessing error occurred while enrypting",e);
-            throw new CustomException(e.getMessage(),e.toString());
-        } catch (IOException e) {
-            throw new CustomException(e.getMessage(),e.toString());
-        }
+        /* encrypt here / encrypted searchcriteria will be used for search*/
+
+
+        searchCriteria= encryptionDecryptionUtil.encryptObject(searchCriteria,UserSearchCriteria.class);
 
 
         List<org.egov.user.domain.model.User> list = userRepository.findAll(searchCriteria);
-        /* decrypt here */
-        try {
-            JsonNode  decryptedObject = encryptionService.decryptJson(list,new ArrayList<>(dec_fields_map.keySet()));
-            ObjectReader reader = objectMapper.readerFor(new TypeReference<List<org.egov.user.domain.model.User>>() {});
-            list = reader.readValue(decryptedObject);
-        } catch (IOException e) {
-            throw new CustomException(e.getMessage(),e.toString());
-        }
+        /* decrypt here / final reponse decrypted*/
+
+        list= encryptionDecryptionUtil.decryptObject(list,User.class);
         setFileStoreUrlsByFileStoreIds(list);
         return list;
     }
@@ -201,18 +180,7 @@ public class UserService {
 
         /* encrypt here */
 
-
-        try {
-            JsonNode encryptedObject = encryptionService.encryptJson(user, stateLevelTenantId);
-            user = objectMapper.treeToValue(encryptedObject, User.class);
-        }
-        catch (JsonProcessingException e)
-        {
-            log.error("JsonProcessing error occurred while enrypting",e);
-            throw new CustomException(e.getMessage(),e.toString());
-        } catch (IOException e) {
-            throw new CustomException(e.getMessage(),e.toString());
-        }
+        user= encryptionDecryptionUtil.encryptObject(user,User.class);
 
         validateUserUniqueness(user);
         if (isEmpty(user.getPassword())) {
@@ -224,16 +192,9 @@ public class UserService {
 
 
         User persistedNewUser=persistNewUser(user);
+        return  encryptionDecryptionUtil.decryptObject(persistedNewUser,User.class);
 
-        try {
-            JsonNode  decryptedObject = encryptionService.decryptJson(persistedNewUser,new ArrayList<>(enc_fields_map.keySet()));
-            User decryptedpersistedNewUser=objectMapper.treeToValue(decryptedObject, User.class);
-            return decryptedpersistedNewUser;
-        } catch (IOException e) {
-            throw new CustomException(e.getMessage(),e.toString());
-        }
-
-        /* decrypt here */
+        /* decrypt here  because encrypted data coming from DB*/
 
     }
 
@@ -357,28 +318,13 @@ public class UserService {
         user.validateUserModification();
         user.setPassword(encryptPwd(user.getPassword()));
         /* encrypt */
-        try {
-            JsonNode encryptedObject = encryptionService.encryptJson(user, stateLevelTenantId);
-            user = objectMapper.treeToValue(encryptedObject, User.class);
-        }
-        catch (JsonProcessingException e)
-        {
-            log.error("JsonProcessing error occurred while enrypting",e);
-            throw new CustomException(e.getMessage(),e.toString());
-        } catch (IOException e) {
-            throw new CustomException(e.getMessage(),e.toString());
-        }
+        user= encryptionDecryptionUtil.encryptObject(user,User.class);
         userRepository.update(user, existingUser);
 
         /* decrypt here */
-        User updatedUserfromDB=getUserByUuid(user.getUuid());
-        try {
-            JsonNode  decryptedObject = encryptionService.decryptJson(updatedUserfromDB,new ArrayList<>(enc_fields_map.keySet()));
-            updatedUserfromDB=objectMapper.treeToValue(decryptedObject, User.class);
-        } catch (IOException e) {
-            throw new CustomException(e.getMessage(),e.toString());
-        }
-        return updatedUserfromDB;
+        User encryptedUpdatedUserfromDB=getUserByUuid(user.getUuid());
+        User decryptedupdatedUserfromDB= encryptionDecryptionUtil.decryptObject(encryptedUpdatedUserfromDB,User.class);
+        return decryptedupdatedUserfromDB;
     }
 
     /**
@@ -401,29 +347,17 @@ public class UserService {
      */
     public User partialUpdate(User user) {
         /* encrypt here */
-        try {
-            JsonNode encryptedObject = encryptionService.encryptJson(user, stateLevelTenantId);
-            user = objectMapper.treeToValue(encryptedObject, User.class);
-        }
-        catch (JsonProcessingException e)
-        {
-            log.error("JsonProcessing error occurred while enrypting",e);
-            throw new CustomException(e.getMessage(),e.toString());
-        } catch (IOException e) {
-            throw new CustomException(e.getMessage(),e.toString());
-        }
+        user= encryptionDecryptionUtil.encryptObject(user,User.class);
+
         final User existingUser = getUserByUuid(user.getUuid());
         validateProfileUpdateIsDoneByTheSameLoggedInUser(user);
         user.nullifySensitiveFields();
         userRepository.update(user, existingUser);
         User updatedUser = getUserByUuid(user.getUuid());
         /* decrypt here */
-        try {
-            JsonNode  decryptedObject = encryptionService.decryptJson(updatedUser,new ArrayList<>(enc_fields_map.keySet()));
-            updatedUser=objectMapper.treeToValue(decryptedObject, User.class);
-        } catch (IOException e) {
-            throw new CustomException(e.getMessage(),e.toString());
-        }
+
+        updatedUser= encryptionDecryptionUtil.decryptObject(updatedUser,User.class);
+
         setFileStoreUrlsByFileStoreIds(Collections.singletonList(updatedUser));
         return updatedUser;
     }
@@ -466,27 +400,15 @@ public class UserService {
             throw new InvalidUpdatePasswordRequestException();
         }
         /* decrypt here */
-        try {
-            JsonNode  decryptedObject = encryptionService.decryptJson(user,new ArrayList<>(enc_fields_map.keySet()));
-            user=objectMapper.treeToValue(decryptedObject, User.class);
-        } catch (IOException e) {
-            throw new CustomException(e.getMessage(),e.toString());
-        }
+        /* the reason for decryption here is the otp service requires decrypted username */
+        user= encryptionDecryptionUtil.decryptObject(user,User.class);
         user.setOtpReference(request.getOtpReference());
         validateOtp(user);
         user.updatePassword(encryptPwd(request.getNewPassword()));
         /* encrypt here */
-        try {
-            JsonNode encryptedObject = encryptionService.encryptJson(user, stateLevelTenantId);
-            user = objectMapper.treeToValue(encryptedObject, User.class);
-        }
-        catch (JsonProcessingException e)
-        {
-            log.error("JsonProcessing error occurred while enrypting",e);
-            throw new CustomException(e.getMessage(),e.toString());
-        } catch (IOException e) {
-            throw new CustomException(e.getMessage(),e.toString());
-        }
+        /* encrypted value is stored in DB*/
+        user= encryptionDecryptionUtil.encryptObject(user,User.class);
+
         userRepository.update(user, user);
     }
 

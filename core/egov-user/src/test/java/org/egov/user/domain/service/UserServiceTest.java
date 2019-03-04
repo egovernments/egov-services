@@ -1,10 +1,14 @@
 package org.egov.user.domain.service;
 
+import com.fasterxml.jackson.core.JsonFactory;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.user.domain.exception.*;
 import org.egov.user.domain.model.*;
 import org.egov.user.domain.model.enums.Gender;
 import org.egov.user.domain.model.enums.UserType;
+import org.egov.user.domain.service.utils.EncryptionDecryptionUtil;
+import org.egov.user.encryption.EncryptionService;
 import org.egov.user.persistence.repository.FileStoreRepository;
 import org.egov.user.persistence.repository.OtpRepository;
 import org.egov.user.persistence.repository.UserRepository;
@@ -17,8 +21,11 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import javax.annotation.PostConstruct;
 import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -26,6 +33,7 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.spy;
 
 @RunWith(MockitoJUnitRunner.class)
 public class UserServiceTest {
@@ -43,6 +51,9 @@ public class UserServiceTest {
 	@Mock
 	private PasswordEncoder passwordEncoder;
 
+	@Mock
+	private EncryptionDecryptionUtil encryptionDecryptionUtil;
+
 	private UserService userService;
 
 	private final List<Long> ID = Arrays.asList(1L, 2L);
@@ -54,7 +65,8 @@ public class UserServiceTest {
 
 	@Before
 	public void before() {
-		userService = new UserService(userRepository, otpRepository,fileRepository, passwordEncoder, DEFAULT_PASSWORD_EXPIRY_IN_DAYS,
+		userService = new UserService(userRepository, otpRepository,fileRepository, passwordEncoder,encryptionDecryptionUtil,
+				DEFAULT_PASSWORD_EXPIRY_IN_DAYS,
 				isCitizenLoginOtpBased,isEmployeeLoginOtpBased);
 	}
 
@@ -64,6 +76,8 @@ public class UserServiceTest {
 		UserSearchCriteria userSearch = mock(UserSearchCriteria.class);
 		List<org.egov.user.domain.model.User> expectedListOfUsers = new ArrayList<org.egov.user.domain.model.User>();
 		when(userRepository.findAll(userSearch)).thenReturn(expectedListOfUsers);
+		when(encryptionDecryptionUtil.encryptObject(userSearch, UserSearchCriteria.class)).thenReturn(userSearch);
+		when(encryptionDecryptionUtil.decryptObject(expectedListOfUsers,User.class)).thenReturn(expectedListOfUsers);
 		List<org.egov.user.domain.model.User> actualResult = userService.searchUsers(userSearch, true);
 
 		assertThat(expectedListOfUsers).isEqualTo(actualResult);
@@ -74,7 +88,7 @@ public class UserServiceTest {
 		UserSearchCriteria userSearch = mock(UserSearchCriteria.class);
 		List<org.egov.user.domain.model.User> expectedListOfUsers = new ArrayList<org.egov.user.domain.model.User>();
 		when(userRepository.findAll(userSearch)).thenReturn(expectedListOfUsers);
-
+		when(encryptionDecryptionUtil.decryptObject(expectedListOfUsers,User.class)).thenReturn(expectedListOfUsers);
 		userService.searchUsers(userSearch, true);
 
 		verify(userSearch).validate(true);
@@ -87,6 +101,8 @@ public class UserServiceTest {
 		final User expectedEntityUser = User.builder().build();
 		when(userRepository.create(domainUser)).thenReturn(expectedEntityUser);
 
+		when(encryptionDecryptionUtil.encryptObject(domainUser, User.class)).thenReturn(domainUser);
+		when(encryptionDecryptionUtil.decryptObject(expectedEntityUser,User.class)).thenReturn(expectedEntityUser);
 		User returnedUser = userService.createUser(domainUser);
 
 		assertEquals(expectedEntityUser, returnedUser);
@@ -98,7 +114,7 @@ public class UserServiceTest {
 		when(otpRepository.isOtpValidationComplete(getExpectedRequest())).thenReturn(true);
 		final User expectedEntityUser = User.builder().build();
 		when(userRepository.create(domainUser)).thenReturn(expectedEntityUser);
-
+		when(encryptionDecryptionUtil.encryptObject(domainUser, User.class)).thenReturn(domainUser);
 		userService.createUser(domainUser);
 
 		verify(domainUser).setDefaultPasswordExpiry(DEFAULT_PASSWORD_EXPIRY_IN_DAYS);
@@ -113,7 +129,8 @@ public class UserServiceTest {
 		when(domainUser.getTenantId()).thenReturn("default");
 		when(domainUser.getPassword()).thenReturn("demo");
 		when(userRepository.create(domainUser)).thenReturn(expectedUser);
-
+		when(encryptionDecryptionUtil.encryptObject(domainUser, User.class)).thenReturn(domainUser);
+		when(encryptionDecryptionUtil.decryptObject(expectedUser,User.class)).thenReturn(expectedUser);
 		User returnedUser = userService.createCitizen(domainUser);
 
 		assertEquals(expectedUser, returnedUser);
@@ -121,7 +138,8 @@ public class UserServiceTest {
 
 	@Test(expected = UserNameNotValidException.class)
 	public void test_should_not_create_citizenWithWrongUserName() {
-		userService = new UserService(userRepository, otpRepository,fileRepository, passwordEncoder, DEFAULT_PASSWORD_EXPIRY_IN_DAYS,
+		userService = new UserService(userRepository, otpRepository,fileRepository, passwordEncoder, encryptionDecryptionUtil,
+				DEFAULT_PASSWORD_EXPIRY_IN_DAYS,
 				true,false);
 		org.egov.user.domain.model.User domainUser = User.builder().username("TestUser").name("Test").active(true)
 				.tenantId("default").mobileNumber("123456789").type(UserType.CITIZEN).build();
@@ -163,6 +181,8 @@ public class UserServiceTest {
 		final User expectedUser = User.builder().build();
 		when(userRepository.create(domainUser)).thenReturn(expectedUser);
 
+		when(encryptionDecryptionUtil.encryptObject(domainUser, User.class)).thenReturn(domainUser);
+		when(encryptionDecryptionUtil.decryptObject(expectedUser,User.class)).thenReturn(expectedUser);
 		userService.createCitizen(domainUser);
 
 		verify(domainUser).setDefaultPasswordExpiry(DEFAULT_PASSWORD_EXPIRY_IN_DAYS);
@@ -177,7 +197,7 @@ public class UserServiceTest {
 		when(otpRepository.isOtpValidationComplete(getExpectedRequest())).thenReturn(true);
 		final User expectedEntityUser = User.builder().build();
 		when(userRepository.create(domainUser)).thenReturn(expectedEntityUser);
-
+		when(encryptionDecryptionUtil.encryptObject(domainUser, User.class)).thenReturn(domainUser);
 		userService.createCitizen(domainUser);
 
 		verify(domainUser).setRoleToCitizen();
@@ -188,7 +208,7 @@ public class UserServiceTest {
 		org.egov.user.domain.model.User domainUser = validDomainUser(false);
 		when(otpRepository.isOtpValidationComplete(getExpectedRequest())).thenReturn(true);
 		when(userRepository.isUserPresent("supandi_rocks", "tenantId", UserType.CITIZEN)).thenReturn(true);
-
+		when(encryptionDecryptionUtil.encryptObject(domainUser, User.class)).thenReturn(domainUser);
 		userService.createUser(domainUser);
 	}
 
@@ -205,7 +225,7 @@ public class UserServiceTest {
 	public void test_otp_is_not_validated_when_validation_flag_is_false() throws Exception {
 		org.egov.user.domain.model.User domainUser = validDomainUser(false);
 		when(otpRepository.isOtpValidationComplete(getExpectedRequest())).thenReturn(false);
-
+		when(encryptionDecryptionUtil.encryptObject(domainUser, User.class)).thenReturn(domainUser);
 		userService.createUser(domainUser);
 
 		verify(otpRepository, never()).isOtpValidationComplete(getExpectedRequest());
@@ -268,7 +288,7 @@ public class UserServiceTest {
 	@Test(expected = UserNotFoundException.class)
 	public void test_should_throw_exception_on_partial_update_when_id_is_not_present() {
 		final User user = User.builder().uuid(null).build();
-
+		when(encryptionDecryptionUtil.encryptObject(user, User.class)).thenReturn(user);
 		userService.partialUpdate(user);
 	}
 
@@ -299,6 +319,7 @@ public class UserServiceTest {
 		final User user = User.builder().id(12L).username("xyz").uuid("zyz").type(UserType.CITIZEN).loggedInUserId(11L)
                 .tenantId
                 ("default").build();
+		when(encryptionDecryptionUtil.encryptObject(user, User.class)).thenReturn(user);
         when(userRepository.findAll(any(UserSearchCriteria.class))).thenReturn(Collections.singletonList(user));
 
 		userService.partialUpdate(user);
@@ -325,7 +346,8 @@ public class UserServiceTest {
 	
 	@Test(expected = InvalidUpdatePasswordRequestException.class)
 	public void test_should_throwexception_incaseofloginotpenabledastrue_forcitizen_update_password_request() {
-		userService = new UserService(userRepository, otpRepository,fileRepository, passwordEncoder, DEFAULT_PASSWORD_EXPIRY_IN_DAYS,
+		userService = new UserService(userRepository, otpRepository,fileRepository, passwordEncoder, encryptionDecryptionUtil,
+				DEFAULT_PASSWORD_EXPIRY_IN_DAYS,
 				true,isEmployeeLoginOtpBased);
 		User user = User.builder().username("xyz").tenantId("default").type(UserType.CITIZEN).build();
 		when(userRepository.findAll(any(UserSearchCriteria.class))).thenReturn(Collections.singletonList(user));
@@ -342,7 +364,8 @@ public class UserServiceTest {
 	
 	@Test(expected = InvalidUpdatePasswordRequestException.class)
 	public void test_should_throwexception_incaseofloginotpenabledastrue_foremployee_update_password_request() {
-		userService = new UserService(userRepository, otpRepository,fileRepository, passwordEncoder, DEFAULT_PASSWORD_EXPIRY_IN_DAYS,
+		userService = new UserService(userRepository, otpRepository,fileRepository, passwordEncoder,encryptionDecryptionUtil,
+				DEFAULT_PASSWORD_EXPIRY_IN_DAYS,
 				false,true);
         User user = User.builder().username("xyz").tenantId("default").type(UserType.EMPLOYEE).build();
 		when(userRepository.findAll(any(UserSearchCriteria.class))).thenReturn(Collections.singletonList(user));
@@ -413,7 +436,8 @@ public class UserServiceTest {
 		when(otpRepository.isOtpValidationComplete(any())).thenReturn(true);
 		final User domainUser = User.builder().type(UserType.SYSTEM).build();
 		when(userRepository.findAll(any(UserSearchCriteria.class))).thenReturn(Collections.singletonList(domainUser));
-
+		when(encryptionDecryptionUtil.encryptObject(domainUser, User.class)).thenReturn(domainUser);
+		when(encryptionDecryptionUtil.decryptObject(domainUser, User.class)).thenReturn(domainUser);
 		userService.updatePasswordForNonLoggedInUser(request);
 
 	}
@@ -441,6 +465,7 @@ public class UserServiceTest {
 		when(domainUser.getPassword()).thenReturn("newPassword");
 		when(domainUser.getType()).thenReturn(UserType.SYSTEM);
 		when(userRepository.findAll(any(UserSearchCriteria.class))).thenReturn(Collections.singletonList(domainUser));
+		when(encryptionDecryptionUtil.decryptObject(domainUser,User.class)).thenReturn(domainUser);
         when(userService.encryptPwd(anyString())).thenReturn("newPassword");
 		userService.updatePasswordForNonLoggedInUser(request);
 
@@ -469,7 +494,8 @@ public class UserServiceTest {
 	@SuppressWarnings("unchecked")
 	@Test(expected = InvalidUpdatePasswordRequestException.class)
 	public void test_notshould_update_password_whenCitizenotpconfigured_istrue() throws Exception {
-		userService = new UserService(userRepository, otpRepository,fileRepository, passwordEncoder, DEFAULT_PASSWORD_EXPIRY_IN_DAYS,
+		userService = new UserService(userRepository, otpRepository,fileRepository, passwordEncoder, encryptionDecryptionUtil,
+				DEFAULT_PASSWORD_EXPIRY_IN_DAYS,
 				true,false);
         final NonLoggedInUserUpdatePasswordRequest request = NonLoggedInUserUpdatePasswordRequest.builder()
                 .otpReference("123456")
@@ -488,7 +514,8 @@ public class UserServiceTest {
 	@SuppressWarnings("unchecked")
 	@Test(expected = InvalidNonLoggedInUserUpdatePasswordRequestException.class)
 	public void test_notshould_update_password_whenEmployeeotpconfigured_istrue() throws Exception {
-		userService = new UserService(userRepository, otpRepository,fileRepository, passwordEncoder, DEFAULT_PASSWORD_EXPIRY_IN_DAYS,
+		userService = new UserService(userRepository, otpRepository,fileRepository, passwordEncoder,encryptionDecryptionUtil,
+				DEFAULT_PASSWORD_EXPIRY_IN_DAYS,
 				false,true);
         final NonLoggedInUserUpdatePasswordRequest request = NonLoggedInUserUpdatePasswordRequest.builder()
                 .userName("xyz")
@@ -540,7 +567,8 @@ public class UserServiceTest {
 		when(otpRepository.isOtpValidationComplete(expectedRequest)).thenReturn(true);
 		final User domainUser =User.builder().type(UserType.SYSTEM).build();
 		when(userRepository.findAll(any(UserSearchCriteria.class))).thenReturn(Collections.singletonList(domainUser));
-
+		when(encryptionDecryptionUtil.decryptObject(domainUser,User.class)).thenReturn(domainUser);
+		when(encryptionDecryptionUtil.encryptObject(domainUser,User.class)).thenReturn(domainUser);
 		userService.updatePasswordForNonLoggedInUser(request);
 
 		verify(userRepository).update(domainUser, domainUser);

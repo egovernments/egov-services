@@ -10,6 +10,7 @@ import org.egov.user.domain.model.SecureUser;
 import org.egov.user.domain.model.User;
 import org.egov.user.domain.model.enums.UserType;
 import org.egov.user.domain.service.UserService;
+import org.egov.user.domain.service.utils.EncryptionDecryptionUtil;
 import org.egov.user.encryption.EncryptionService;
 import org.egov.user.web.contract.auth.Role;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,6 +48,9 @@ public class CustomPreAuthenticatedProvider implements AuthenticationProvider {
     @Value("#{${egov.enc.field.type.map}}")
     private HashMap<String,String> enc_fields_map;
 
+    @Autowired
+    private EncryptionDecryptionUtil encryptionDecryptionUtil;
+
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
 
@@ -71,16 +75,13 @@ public class CustomPreAuthenticatedProvider implements AuthenticationProvider {
         try {
             user = userService.getUniqueUser(userName, tenantId, UserType.fromValue(userType));
             /* decrypt here */
-            JsonNode decryptedObject = encryptionService.decryptJson(user,new ArrayList<>(enc_fields_map.keySet()));
-            user=objectMapper.treeToValue(decryptedObject, User.class);
+            user= encryptionDecryptionUtil.decryptObject(user,User.class);
         } catch (UserNotFoundException e) {
             log.error("User not found", e);
             throw new OAuth2Exception("Invalid login credentials");
         } catch (DuplicateUserNameException e) {
             log.error("Fatal error, user conflict, more than one user found", e);
             throw new OAuth2Exception("Invalid login credentials");
-        }catch (IOException e) {
-            throw new CustomException(e.getMessage(),e.toString());
         }
 
         if (user.getAccountLocked() == null || user.getAccountLocked()) {

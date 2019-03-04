@@ -13,6 +13,7 @@ import org.egov.user.domain.model.enums.Gender;
 import org.egov.user.domain.model.enums.UserType;
 import org.egov.user.domain.service.TokenService;
 import org.egov.user.domain.service.UserService;
+import org.egov.user.encryption.EncryptionService;
 import org.egov.user.security.CustomAuthenticationKeyGenerator;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -58,6 +59,9 @@ public class UserRequestControllerTest {
     
     @MockBean
     private CustomAuthenticationKeyGenerator authenticationKeyGenerator;
+
+    @MockBean
+    private EncryptionService encryptionService;
 
 /*
     @Test

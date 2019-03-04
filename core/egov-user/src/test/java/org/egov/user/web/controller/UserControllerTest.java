@@ -7,6 +7,8 @@ import org.egov.user.domain.model.*;
 import org.egov.user.domain.model.enums.*;
 import org.egov.user.domain.service.TokenService;
 import org.egov.user.domain.service.UserService;
+import org.egov.user.domain.service.utils.EncryptionDecryptionUtil;
+import org.egov.user.encryption.EncryptionService;
 import org.egov.user.security.CustomAuthenticationKeyGenerator;
 import org.egov.user.web.contract.auth.Role;
 import org.egov.user.web.contract.auth.User;
@@ -15,6 +17,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.ArgumentMatcher;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -59,6 +62,9 @@ public class UserControllerTest {
 	
 	@MockBean
     private CustomAuthenticationKeyGenerator authenticationKeyGenerator;
+
+	@MockBean
+	private EncryptionService encryptionService;
 
 	@Test
 	@WithMockUser

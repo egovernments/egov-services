@@ -314,7 +314,15 @@ public class EmployeeValidator {
 	 */
 	private void validateServiceHistory(Employee employee, Map<String, String> errorMap, Map<String, List<String>> mdmsData) {
 		if(!CollectionUtils.isEmpty(employee.getServiceHistory())){
+			List<ServiceHistory> currentService = employee.getServiceHistory().stream().filter(serviceHistory -> serviceHistory.getIsCurrentPosition()).collect(Collectors.toList());
+			if(currentService.size() > 1){
+				errorMap.put(ErrorConstants.HRMS_INVALID_CURRENT_SERVICE_CODE, ErrorConstants.HRMS_INVALID_CURRENT_SERVICE_MSG);
+			}
 			for(ServiceHistory history: employee.getServiceHistory()) {
+				if( history.getIsCurrentPosition() && null != history.getServiceTo())
+					errorMap.put(ErrorConstants.HRMS_INVALID_SERVICE_CURRENT_TO_DATE_CODE,ErrorConstants.HRMS_INVALID_SERVICE_CURRENT_TO_DATE_MSG);
+				if(!history.getIsCurrentPosition() && null == history.getServiceTo())
+					errorMap.put(ErrorConstants.HRMS_INVALID_SERVICE_NON_CURRENT_TO_DATE_CODE,ErrorConstants.HRMS_INVALID_SERVICE_NON_CURRENT_TO_DATE_MSG);
 				if(!StringUtils.isEmpty(history.getServiceStatus()) && !mdmsData.get(HRMSConstants.HRMS_MDMS_EMP_STATUS_CODE).contains(history.getServiceStatus()))
 					errorMap.put(ErrorConstants.HRMS_INVALID_SERVICE_STATUS_CODE, ErrorConstants.HRMS_INVALID_SERVICE_STATUS_MSG+history.getServiceStatus());
 				if( (null != history.getServiceFrom() &&  history.getServiceFrom() > new Date().getTime()) || (null != history.getServiceTo() && history.getServiceTo() > new Date().getTime())

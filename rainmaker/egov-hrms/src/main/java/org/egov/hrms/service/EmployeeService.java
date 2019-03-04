@@ -158,26 +158,27 @@ public class EmployeeService {
             else
                 criteria.setUuids(userUUIDs);
 		}
-		if(!CollectionUtils.isEmpty(criteria.getNames())) {
-			List<String> userUUIDs = new ArrayList<>();
-			for(String name: criteria.getNames()) {
-                Map<String, Object> userSearchCriteria = new HashMap<>();
-                userSearchCriteria.put(HRMSConstants.HRMS_USER_SEARCH_CRITERA_TENANTID,criteria.getTenantId());
-                userSearchCriteria.put(HRMSConstants.HRMS_USER_SEARCH_CRITERA_NAME,name);
-                UserResponse userResponse = userService.getUser(requestInfo, userSearchCriteria);
-                if(!CollectionUtils.isEmpty(userResponse.getUser())) {
-                    mapOfUsers.putAll(userResponse.getUser().stream()
-                            .collect(Collectors.toMap(User::getUuid, Function.identity())));
-                }
-				List<String> uuids = userResponse.getUser().stream().map(User :: getUuid).collect(Collectors.toList());
-				userUUIDs.addAll(uuids);
+		if(!((!CollectionUtils.isEmpty(criteria.getRoles()) || !StringUtils.isEmpty(criteria.getPhone())) && CollectionUtils.isEmpty(criteria.getUuids()))){
+			if(!CollectionUtils.isEmpty(criteria.getNames())) {
+				List<String> userUUIDs = new ArrayList<>();
+				for(String name: criteria.getNames()) {
+					Map<String, Object> userSearchCriteria = new HashMap<>();
+					userSearchCriteria.put(HRMSConstants.HRMS_USER_SEARCH_CRITERA_TENANTID,criteria.getTenantId());
+					userSearchCriteria.put(HRMSConstants.HRMS_USER_SEARCH_CRITERA_NAME,name);
+					UserResponse userResponse = userService.getUser(requestInfo, userSearchCriteria);
+					if(!CollectionUtils.isEmpty(userResponse.getUser())) {
+						mapOfUsers.putAll(userResponse.getUser().stream()
+								.collect(Collectors.toMap(User::getUuid, Function.identity())));
+					}
+					List<String> uuids = userResponse.getUser().stream().map(User :: getUuid).collect(Collectors.toList());
+					userUUIDs.addAll(uuids);
+				}
+				if(!CollectionUtils.isEmpty(criteria.getUuids()))
+					criteria.setUuids(criteria.getUuids().stream().filter(userUUIDs::contains).collect(Collectors.toList()));
+				else
+					criteria.setUuids(userUUIDs);
 			}
-            if(!CollectionUtils.isEmpty(criteria.getUuids()))
-                criteria.setUuids(criteria.getUuids().stream().filter(userUUIDs::contains).collect(Collectors.toList()));
-            else
-                criteria.setUuids(userUUIDs);
 		}
-
         List <Employee> employees = new ArrayList<>();
         if(!((!CollectionUtils.isEmpty(criteria.getRoles()) || !CollectionUtils.isEmpty(criteria.getNames()) || !StringUtils.isEmpty(criteria.getPhone())) && CollectionUtils.isEmpty(criteria.getUuids())))
             employees = repository.fetchEmployees(criteria, requestInfo);

@@ -129,7 +129,10 @@ public class EmployeeValidator {
 	 */
     private void validateUserMobile(List<Employee> employees, Map<String, String> errorMap, RequestInfo requestInfo) {
         employees.forEach(employee -> {
-            UserResponse userResponse = userService.getSingleUser(requestInfo,employee,"MobileNumber");
+			Map<String, Object> userSearchCriteria = new HashMap<>();
+			userSearchCriteria.put(HRMSConstants.HRMS_USER_SEARCH_CRITERA_TENANTID,employee.getTenantId());
+			userSearchCriteria.put(HRMSConstants.HRMS_USER_SEARCH_CRITERA_MOBILENO,employee.getUser().getMobileNumber());
+			UserResponse userResponse = userService.getUser(requestInfo, userSearchCriteria);
             if(!CollectionUtils.isEmpty(userResponse.getUser())){
                 errorMap.put(ErrorConstants.HRMS_USER_EXIST_MOB_CODE,
                 		ErrorConstants.HRMS_USER_EXIST_MOB_MSG+userResponse.getUser().get(0).getMobileNumber());
@@ -147,8 +150,11 @@ public class EmployeeValidator {
     private void validateUserName(List<Employee> employees, Map<String, String> errorMap, RequestInfo requestInfo) {
         employees.forEach(employee -> {
             if(!StringUtils.isEmpty(employee.getCode())){
-                UserResponse userResponse = userService.getSingleUser(requestInfo,employee,"UserName");
-                if(!CollectionUtils.isEmpty(userResponse.getUser())){
+				Map<String, Object> userSearchCriteria = new HashMap<>();
+				userSearchCriteria.put(HRMSConstants.HRMS_USER_SEARCH_CRITERA_TENANTID,employee.getTenantId());
+				userSearchCriteria.put(HRMSConstants.HRMS_USER_SEARCH_CRITERA_USERNAME,employee.getCode());
+				UserResponse userResponse = userService.getUser(requestInfo, userSearchCriteria);
+				if(!CollectionUtils.isEmpty(userResponse.getUser())){
                     errorMap.put(ErrorConstants.HRMS_USER_EXIST_USERNAME_CODE,
                     		ErrorConstants.HRMS_USER_EXIST_USERNAME_MSG+userResponse.getUser().get(0).getUserName());
                 }
@@ -184,9 +190,9 @@ public class EmployeeValidator {
 	public void validateDataConsistency(Employee employee, Map<String, String> errorMap, Map<String, List<String>> mdmsData, Employee existingEmp) {
 		validateUserNameChange(existingEmp,employee,errorMap);
 		validateConsistencyAssignment(existingEmp,employee,errorMap);
-//		validateConsistencyJurisdiction(existingEmp,employee,errorMap);
-//		validateConsistencyDepartmentalTest(existingEmp,employee,errorMap);
-//		validateConsistencyEducationalDetails(existingEmp,employee,errorMap);
+		validateConsistencyJurisdiction(existingEmp,employee,errorMap);
+		validateConsistencyDepartmentalTest(existingEmp,employee,errorMap);
+		validateConsistencyEducationalDetails(existingEmp,employee,errorMap);
 		validateConsistencyServiceHistory(existingEmp, employee, errorMap);
 		validateConsistencyEmployeeDocument(existingEmp, employee, errorMap);
 		validateConsistencyDeactivationDetails(existingEmp, employee, errorMap);
@@ -375,15 +381,16 @@ public class EmployeeValidator {
 	 * @param mdmsData
 	 */
 	private void validateDepartmentalTest(Employee employee, Map<String, String> errorMap, Map<String, List<String>> mdmsData) {
-		for(DepartmentalTest test: employee.getTests()) {
-			if(!mdmsData.get(HRMSConstants.HRMS_MDMS_DEPT_TEST_CODE).contains(test.getTest()))
-				errorMap.put(ErrorConstants.HRMS_INVALID_DEPARTMENTAL_TEST_CODE, ErrorConstants.HRMS_INVALID_DEPARTMENTAL_TEST_MSG+test.getTest());
-            if( test.getYearOfPassing() > new Date().getTime()){
-                errorMap.put(ErrorConstants.HRMS_INVALID_DEPARTMENTAL_TEST_PASSING_YEAR_CODE, ErrorConstants.HRMS_INVALID_DEPARTMENTAL_TEST_PASSING_YEAR_MSG);
-            }
+		if(!CollectionUtils.isEmpty(employee.getTests())) {
+			for (DepartmentalTest test : employee.getTests()) {
+				if (!mdmsData.get(HRMSConstants.HRMS_MDMS_DEPT_TEST_CODE).contains(test.getTest()))
+					errorMap.put(ErrorConstants.HRMS_INVALID_DEPARTMENTAL_TEST_CODE, ErrorConstants.HRMS_INVALID_DEPARTMENTAL_TEST_MSG + test.getTest());
+				if (test.getYearOfPassing() > new Date().getTime()) {
+					errorMap.put(ErrorConstants.HRMS_INVALID_DEPARTMENTAL_TEST_PASSING_YEAR_CODE, ErrorConstants.HRMS_INVALID_DEPARTMENTAL_TEST_PASSING_YEAR_MSG);
+				}
 
+			}
 		}
-		
 	}
 
 	/**

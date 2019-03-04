@@ -124,36 +124,6 @@ public class UserService {
 	}
 
 
-	public UserResponse getSingleUser(RequestInfo requestInfo, Employee employee, String type) {
-		StringBuilder uri = new StringBuilder();
-		Map<String, Object> userSearchReq = new HashMap<>();
-		userSearchReq.put("RequestInfo", requestInfo);
-		switch (type){
-			case "MobileNumber":
-				userSearchReq.put("mobileNumber", employee.getUser().getMobileNumber());
-				break;
-			case "UserName":
-				userSearchReq.put("userName",employee.getCode());
-				break;
-			case "Name":
-				userSearchReq.put("name",employee.getUser().getName());
-				break;
-			
-		}
-		userSearchReq.put("userType", UserType.EMPLOYEE);
-		userSearchReq.put("tenantID",employee.getTenantId());
-		uri.append(propertiesManager.getUserHost()).append(propertiesManager.getUserSearchEndpoint());
-		UserResponse userResponse = new UserResponse();
-		try {
-			userResponse = userCall(userSearchReq,uri);
-		}catch(Exception e) {
-			log.error("User search failed: ",e);
-			log.info("req: "+(userSearchReq));
-		}
-		return userResponse;
-	}
-
-
 	/**
 	 * Returns UserDetailResponse by calling user service with given uri and object
 	 * @param userRequest Request object for user service

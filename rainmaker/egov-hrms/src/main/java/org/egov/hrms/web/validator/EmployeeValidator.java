@@ -307,6 +307,8 @@ public class EmployeeValidator {
 	 * 1. If the status of service is valid.
 	 * 2. If the service period is valid.
 	 * 3. If the service dates is valid.
+	 * 4. If there is more than 1 current Positions.
+	 * 5. If service end date is null for current position
 	 * 
 	 * @param employee
 	 * @param errorMap
@@ -314,14 +316,14 @@ public class EmployeeValidator {
 	 */
 	private void validateServiceHistory(Employee employee, Map<String, String> errorMap, Map<String, List<String>> mdmsData) {
 		if(!CollectionUtils.isEmpty(employee.getServiceHistory())){
-			List<ServiceHistory> currentService = employee.getServiceHistory().stream().filter(serviceHistory -> serviceHistory.getIsCurrentPosition()).collect(Collectors.toList());
+			List<ServiceHistory> currentService = employee.getServiceHistory().stream().filter(serviceHistory -> null!= serviceHistory.getIsCurrentPosition() && serviceHistory.getIsCurrentPosition()).collect(Collectors.toList());
 			if(currentService.size() > 1){
 				errorMap.put(ErrorConstants.HRMS_INVALID_CURRENT_SERVICE_CODE, ErrorConstants.HRMS_INVALID_CURRENT_SERVICE_MSG);
 			}
 			for(ServiceHistory history: employee.getServiceHistory()) {
-				if( history.getIsCurrentPosition() && null != history.getServiceTo())
+				if( null!= history.getIsCurrentPosition() && history.getIsCurrentPosition() && null != history.getServiceTo())
 					errorMap.put(ErrorConstants.HRMS_INVALID_SERVICE_CURRENT_TO_DATE_CODE,ErrorConstants.HRMS_INVALID_SERVICE_CURRENT_TO_DATE_MSG);
-				if(!history.getIsCurrentPosition() && null == history.getServiceTo())
+				if((null == history.getIsCurrentPosition() || !history.getIsCurrentPosition()) && null == history.getServiceTo())
 					errorMap.put(ErrorConstants.HRMS_INVALID_SERVICE_NON_CURRENT_TO_DATE_CODE,ErrorConstants.HRMS_INVALID_SERVICE_NON_CURRENT_TO_DATE_MSG);
 				if(!StringUtils.isEmpty(history.getServiceStatus()) && !mdmsData.get(HRMSConstants.HRMS_MDMS_EMP_STATUS_CODE).contains(history.getServiceStatus()))
 					errorMap.put(ErrorConstants.HRMS_INVALID_SERVICE_STATUS_CODE, ErrorConstants.HRMS_INVALID_SERVICE_STATUS_MSG+history.getServiceStatus());

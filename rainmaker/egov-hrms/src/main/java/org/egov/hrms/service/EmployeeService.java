@@ -271,6 +271,8 @@ public class EmployeeService {
 			employee.getServiceHistory().stream().forEach(serviceHistory -> {
 				serviceHistory.setId(UUID.randomUUID().toString());
 				serviceHistory.setAuditDetails(auditDetails);
+				if(null == serviceHistory.getIsCurrentPosition())
+					serviceHistory.setIsCurrentPosition(false);
 			});
 		}
 		if(!CollectionUtils.isEmpty(employee.getEducation())) {
@@ -404,6 +406,8 @@ public class EmployeeService {
 
 		if(employee.getServiceHistory()!=null){
 			employee.getServiceHistory().stream().forEach(serviceHistory -> {
+				if(null == serviceHistory.getIsCurrentPosition())
+					serviceHistory.setIsCurrentPosition(false);
 				if(serviceHistory.getId()==null) {
 					serviceHistory.setId(UUID.randomUUID().toString());
 					serviceHistory.setAuditDetails(auditDetails);

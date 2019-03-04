@@ -70,7 +70,6 @@ public class ServiceHistory {
 	
 	private String tenantId;	
 
-	@NotNull
 	private  Boolean isCurrentPosition;
 
 	private AuditDetails auditDetails;

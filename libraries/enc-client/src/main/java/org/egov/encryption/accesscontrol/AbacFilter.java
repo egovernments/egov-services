@@ -1,9 +1,10 @@
 package org.egov.encryption.accesscontrol;
 
 import org.egov.common.contract.request.Role;
-import org.egov.encryption.models.*;
+import org.egov.encryption.models.AccessType;
+import org.egov.encryption.models.Attribute;
+import org.egov.encryption.models.RoleAttribute;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

@@ -152,5 +152,16 @@ public class JSONUtilsTest {
         assertEquals(expectedNode, finalNode);
     }
 
+    @Test
+    public void test() {
+        String path = "asd/*/qwe";
+        String[] keys = path.split("/", 2);
+        log.info("First Key : " + keys[0]);
+    }
+
+    @Test
+    public void filterJsonNodeForPathTest() {
+
+    }
 
 }

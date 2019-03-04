@@ -94,6 +94,65 @@ public class JSONUtils {
         return null;
     }
 
+    public static JsonNode filterJsonNodeWithPaths2(JsonNode jsonNode, List<String> filterPaths) {
+        ObjectMapper mapper = new ObjectMapper(new JsonFactory());
+
+        JsonNode filteredNode = null;
+        if(jsonNode instanceof ArrayNode)
+            filteredNode = mapper.createArrayNode();
+        else if(jsonNode instanceof ObjectNode)
+            filteredNode = mapper.createObjectNode();
+        else
+            return null;
+
+        for(String path : filterPaths) {
+            JsonNode singlePathFilterNode = filterJsonNodeForPath(jsonNode, path);
+            filteredNode = merge(singlePathFilterNode, filteredNode);
+        }
+
+        return filteredNode;
+    }
+
+    public static JsonNode filterJsonNodeForPath(JsonNode jsonNode, String filterPath) {
+        ObjectMapper objectMapper = new ObjectMapper(new JsonFactory());
+
+        if(filterPath == null)
+            return jsonNode;
+        else if(jsonNode == null)
+            return null;
+
+        String key = getFirstJsonKeyForPath(filterPath);
+        JsonNode newNode = null;
+
+        if(key.contains("*")) {                                                         //ArrayNode
+            newNode = objectMapper.createArrayNode();
+            ArrayNode arrayNode = (ArrayNode) jsonNode;
+            for(JsonNode value : arrayNode) {
+                ((ArrayNode) newNode).add(filterJsonNodeForPath(value, getRemainingJsonKeyForPath(filterPath)));
+            }
+        } else {                                                                        //ObjectNode
+            newNode = objectMapper.createObjectNode();
+            ObjectNode objectNode = (ObjectNode) jsonNode;
+            JsonNode value = objectNode.get(key);
+            ((ObjectNode) newNode).set(key, filterJsonNodeForPath(value, getRemainingJsonKeyForPath(filterPath)));
+        }
+
+        return newNode;
+    }
+
+    static String getFirstJsonKeyForPath(String path) {
+        String keys[] = path.split("/", 2);
+        return keys[0];
+    }
+
+    static String getRemainingJsonKeyForPath(String path) {
+        String keys[] = path.split("/", 2);
+        if(keys.length == 1)
+            return null;
+        return keys[1];
+    }
+
+
     public static ArrayNode filterJsonNodeWithPaths(JsonNode jsonNode, List<String> filterPaths) {
         Configuration configuration = Configuration.defaultConfiguration().addOptions(Option.DEFAULT_PATH_LEAF_TO_NULL,
                 Option.SUPPRESS_EXCEPTIONS);

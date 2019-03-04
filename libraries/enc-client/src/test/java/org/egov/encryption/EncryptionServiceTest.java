@@ -41,8 +41,8 @@ public class EncryptionServiceTest {
         String tenantId = "pb";
         String type = "Normal";
 
-        String ciphertext = encryptionService.encryptValue(value, tenantId, type);
-        log.info(ciphertext);
+//        String ciphertext = encryptionService.encryptValue(value, tenantId, type);
+//        log.info(ciphertext);
     }
 
     @Test

@@ -160,8 +160,19 @@ public class JSONUtilsTest {
     }
 
     @Test
-    public void filterJsonNodeForPathTest() {
+    public void filterJsonNodeForPathTest() throws IOException {
+        JsonNode jsonNode = mapper.readTree("{\"RequestInfo\":{\"api_id\":\"1\",\"ver\":\"1\",\"ts\":null," +
+                "\"action\":\"create\",\"did\":\"\",\"key\":\"\",\"msg_id\":\"\",\"requester_id\":\"\"," +
+                "\"auth_token\":null},\"User\":[{\"userName\":\"ajay\",\"gender\":\"male\"," +
+                "\"mobileNumber\":\"12312312\",\"active\":true,\"type\":\"CITIZEN\",\"password\":\"password\"}," +
+                "{\"userName\":\"ajay\",\"name\":\"ajay\",\"gender\":\"male\",\"mobileNumber\":\"12312312\"," +
+                "\"active\":true,\"type\":\"CITIZEN\",\"password\":\"password\"}]}");
 
+        JsonNode newNode = JSONUtils.filterJsonNodeForPath(jsonNode, "User/*/name");
+
+        newNode = JSONUtils.filterJsonNodeWithPaths2(jsonNode, Arrays.asList("User/*/name", "RequestInfo/api_id"));
+
+        log.info(String.valueOf(newNode));
     }
 
 }

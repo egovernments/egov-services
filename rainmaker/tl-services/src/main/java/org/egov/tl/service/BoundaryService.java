@@ -85,7 +85,6 @@ public class BoundaryService {
                 throw new CustomException("BOUNDARY MDMS DATA ERROR","The boundary data was not found");
 
             ArrayList boundaryResponse = context.read(propertyIdToJsonPath.get(license.getId()));
-            log.info("boundaryResponse: "+boundaryResponse);
             Boundary boundary = mapper.convertValue(boundaryResponse.get(0),Boundary.class);
             if(boundary.getName()==null)
                 throw new CustomException("INVALID BOUNDARY DATA","The boundary data for the code "+license.getTradeLicenseDetail().getAddress().getLocality().getCode()+ " is not available");

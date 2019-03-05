@@ -26,16 +26,40 @@ public class EmployeeRepository {
 	@Autowired
 	private EmployeeRowMapper rowMapper;
 	
+	/**
+	 * DB Repository that makes jdbc calls to the db and fetches employees.
+	 * 
+	 * @param criteria
+	 * @param requestInfo
+	 * @return
+	 */
 	public List<Employee> fetchEmployees(EmployeeSearchCriteria criteria, RequestInfo requestInfo){
 		List<Employee> employees = new ArrayList<>();
 		String query = queryBuilder.getEmployeeSearchQuery(criteria);
-		log.info("query; "+query);
 		try {
 			employees = jdbcTemplate.query(query, rowMapper);
 		}catch(Exception e) {
 			log.error("Exception while making the db call: ",e);
+			log.error("query; "+query);
 		}
 		return employees;
+	}
+	
+	/**
+	 * Fetches next value in the position seq table
+	 * 
+	 * @return
+	 */
+	public Long fetchPosition(){
+		String query = queryBuilder.getPositionSeqQuery();
+		Long id = null;
+		try {
+			id = jdbcTemplate.queryForObject(query, Long.class);
+		}catch(Exception e) {
+			log.error("Exception while making the db call: ",e);
+			log.error("query; "+query);
+		}
+		return id;
 	}
 
 }

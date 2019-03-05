@@ -44,6 +44,9 @@ import lombok.*;
 
 import javax.validation.constraints.NotNull;
 
+import org.springframework.validation.annotation.Validated;
+
+@Validated
 @EqualsAndHashCode(exclude = {"auditDetails"})
 @Builder
 @AllArgsConstructor
@@ -54,11 +57,14 @@ import javax.validation.constraints.NotNull;
 public class EducationalQualification {
 	private String id;
 
+	@NotNull
 	private String qualification;
 
+	@NotNull
 	private String stream;
 
-	private Integer yearOfPassing;
+	@NotNull
+	private Long yearOfPassing;
 
 	private String university;
 
@@ -67,5 +73,8 @@ public class EducationalQualification {
 	private  String tenantId;
 
 	private AuditDetails auditDetails;
+
+	private Boolean isActive;
+
 
 }

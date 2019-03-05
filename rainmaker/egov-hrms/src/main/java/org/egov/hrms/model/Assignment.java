@@ -40,8 +40,13 @@
 
 package org.egov.hrms.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 import javax.validation.constraints.NotNull;
+
+import org.springframework.validation.annotation.Validated;
+
+@Validated
 @EqualsAndHashCode(exclude = {"auditDetails"})
 @AllArgsConstructor
 @Builder
@@ -53,7 +58,6 @@ public class Assignment {
 
 	private String id;
 
-	@NotNull
 	private Long position;
 
 	@NotNull
@@ -65,7 +69,6 @@ public class Assignment {
 	@NotNull
 	private Long fromDate;
 
-	@NotNull
 	private Long toDate;
 
 	private String govtOrderNumber;
@@ -74,10 +77,13 @@ public class Assignment {
 
 	private  String reportingTo;
 
-	private boolean isHOD;
+	@JsonProperty("isHOD")
+	private Boolean isHOD;
+	
+	@NotNull
+	@JsonProperty("isCurrentAssignment")
+	private Boolean isCurrentAssignment;
 
 	private AuditDetails auditDetails;
-
-
 
 }

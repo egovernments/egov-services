@@ -1,12 +1,12 @@
 package org.egov.hrms.repository;
 
-import java.util.List;
-
 import org.apache.commons.lang3.StringUtils;
 import org.egov.hrms.web.contract.EmployeeSearchCriteria;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
+
+import java.util.List;
 
 @Service
 public class EmployeeQueryBuilder {
@@ -14,12 +14,28 @@ public class EmployeeQueryBuilder {
 	@Value("${egov.hrms.default.pagination.limit}")
 	private Integer defaultLimit;
 	
+	/**
+	 * Returns query for searching employees
+	 * 
+	 * @param criteria
+	 * @return
+	 */
 	public String getEmployeeSearchQuery(EmployeeSearchCriteria criteria) {
 		StringBuilder builder = new StringBuilder(EmployeeQueries.HRMS_GET_EMPLOYEES);
 		addWhereClause(criteria, builder);
 		return paginationClause(criteria, builder);
 	}
 	
+	public String getPositionSeqQuery() {
+		return EmployeeQueries.HRMS_POSITION_SEQ;
+	}
+	
+	/**
+	 * Adds where clause to the query based on the requirement.
+	 * 
+	 * @param criteria
+	 * @param builder
+	 */
 	public void addWhereClause(EmployeeSearchCriteria criteria, StringBuilder builder) {
 		if(!StringUtils.isEmpty(criteria.getTenantId()))
 			builder.append(" employee.tenantid = '"+criteria.getTenantId()+"'");
@@ -29,7 +45,7 @@ public class EmployeeQueryBuilder {
 		if(!CollectionUtils.isEmpty(criteria.getCodes()))
 			builder.append(" and  employee.code IN ("+createINClauseForList(criteria.getCodes())+")");
 		if(!CollectionUtils.isEmpty(criteria.getIds()))
-			builder.append(" and employee.id IN ("+createINClauseForIntList(criteria.getIds())+")");
+			builder.append(" and employee.id IN ("+createINClauseForLongList(criteria.getIds())+")");
 		if(!CollectionUtils.isEmpty(criteria.getUuids()))
 			builder.append(" and employee.uuid IN ("+createINClauseForList(criteria.getUuids())+")");
 		if(!CollectionUtils.isEmpty(criteria.getDepartments()))
@@ -41,7 +57,15 @@ public class EmployeeQueryBuilder {
 		if(!CollectionUtils.isEmpty(criteria.getEmployeetypes()))
 			builder.append(" and employee.employeetype IN ("+createINClauseForList(criteria.getEmployeetypes())+")");
 		if(!CollectionUtils.isEmpty(criteria.getPositions()))
-			builder.append(" and assignment.position IN ("+createINClauseForIntList(criteria.getPositions())+")");
+			builder.append(" and assignment.position IN ("+createINClauseForLongList(criteria.getPositions())+")");
+		if(null != criteria.getAsOnDate()) {
+			builder.append(" and assignment.fromdate <= "+criteria.getAsOnDate()+" and assignment.todate >= "+criteria.getAsOnDate());
+		}
+		
+		builder.append(" and employee.active = "+criteria.getIsActive());
+		builder.append(" and jurisdiction.isactive is not false");
+		builder.append(" and depttest.isactive is not false");
+		builder.append(" and education.isactive is not false");
 	}
 	
 	public String paginationClause(EmployeeSearchCriteria criteria, StringBuilder builder) {
@@ -70,12 +94,12 @@ public class EmployeeQueryBuilder {
 		}
 		return builder.toString();
 	}
-	
-	private String createINClauseForIntList(List<Integer> ids) {
+
+	private String createINClauseForLongList(List<Long> ids) {
 		StringBuilder builder = new StringBuilder();
 		int length = ids.size();
 		for (int i = 0; i < length; i++) {
-			builder.append(i);
+			builder.append(ids.get(i));
 			if (i != length - 1)
 				builder.append(",");
 		}

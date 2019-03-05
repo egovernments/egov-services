@@ -42,9 +42,10 @@ package org.egov.hrms.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
-
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.hrms.config.PropertiesManager;
+import org.egov.hrms.model.Employee;
+import org.egov.hrms.model.enums.UserType;
 import org.egov.hrms.repository.RestCallRepository;
 import org.egov.hrms.web.contract.UserRequest;
 import org.egov.hrms.web.contract.UserResponse;
@@ -52,7 +53,6 @@ import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -61,11 +61,6 @@ import java.util.*;
 @Slf4j
 @Service
 public class UserService {
-
-
-	@Autowired
-	private RestTemplate restTemplate;
-
 
 	@Autowired
 	private PropertiesManager propertiesManager;
@@ -84,12 +79,10 @@ public class UserService {
 
 	@Value("${egov.user.update.endpoint}")
 	private String userUpdateEndpoint;
-
+	
 	public UserResponse createUser(UserRequest userRequest) {
-		log.info("Service: Create User");
 		StringBuilder uri = new StringBuilder();
 		uri.append(propertiesManager.getUserHost()).append(propertiesManager.getUserCreateEndpoint());
-		log.info("URI: "+uri);
 		UserResponse userResponse = null;
 		try {
 			userResponse = userCall(userRequest,uri);
@@ -101,13 +94,11 @@ public class UserService {
 	}
 	
 	public UserResponse updateUser(UserRequest userRequest) {
-		log.info("Service: Update User");
 		StringBuilder uri = new StringBuilder();
 		uri.append(propertiesManager.getUserHost()).append(propertiesManager.getUserUpdateEndpoint());
 		UserResponse userResponse = null;
 		try {
 			userResponse = userCall(userRequest,uri);
-
 		}catch(Exception e) {
 			log.error("User created failed: ",e);
 		}
@@ -115,21 +106,16 @@ public class UserService {
 		return userResponse;
 	}
 	
-	public UserResponse getUser(RequestInfo requestInfo, List<String> uuids) {
-		log.info("Service: Search User");
+	public UserResponse getUser(RequestInfo requestInfo, Map<String, Object> UserSearchCriteria ) {
 		StringBuilder uri = new StringBuilder();
-		ObjectMapper mapper = new ObjectMapper();
 		Map<String, Object> userSearchReq = new HashMap<>();
 		userSearchReq.put("RequestInfo", requestInfo);
-		userSearchReq.put("uuid", uuids);
+		for( String key: UserSearchCriteria.keySet())
+			userSearchReq.put(key, UserSearchCriteria.get(key));
 		uri.append(propertiesManager.getUserHost()).append(propertiesManager.getUserSearchEndpoint());
 		UserResponse userResponse = new UserResponse();
 		try {
-			log.info("uri: "+ uri);
-			log.info("user req: "+mapper.writeValueAsString(userSearchReq));
 			userResponse = userCall(userSearchReq,uri);
-			log.info("user res: "+ userResponse);
-
 		}catch(Exception e) {
 			log.error("User search failed: ",e);
 		}
@@ -138,15 +124,13 @@ public class UserService {
 	}
 
 
-
-
-
 	/**
 	 * Returns UserDetailResponse by calling user service with given uri and object
 	 * @param userRequest Request object for user service
 	 * @param uri The address of the endpoint
 	 * @return Response from user service as parsed as userDetailResponse
 	 */
+	@SuppressWarnings("all")
 	private UserResponse userCall(Object userRequest, StringBuilder uri) {
 		String dobFormat = null;
 		if(uri.toString().contains(userSearchEndpoint) || uri.toString().contains(userUpdateEndpoint))
@@ -154,14 +138,12 @@ public class UserService {
 		else if(uri.toString().contains(userCreateEndpoint))
 			dobFormat = "dd/MM/yyyy";
 		try{
-			LinkedHashMap responseMap = (LinkedHashMap)restCallRepository.fetchResult(uri, userRequest);
+			LinkedHashMap responseMap = (LinkedHashMap) restCallRepository.fetchResult(uri, userRequest);
 			parseResponse(responseMap,dobFormat);
 			UserResponse userDetailResponse = objectMapper.convertValue(responseMap,UserResponse.class);
 			return userDetailResponse;
 		}
-		// Which Exception to throw?
-		catch(IllegalArgumentException  e)
-		{
+		catch(IllegalArgumentException  e) {
 			throw new CustomException("IllegalArgumentException","ObjectMapper not able to convertValue in userCall");
 		}
 	}
@@ -172,6 +154,7 @@ public class UserService {
 	 * @param responeMap LinkedHashMap got from user api response
 	 * @param dobFormat dob format (required because dob is returned in different format's in search and create response in user service)
 	 */
+	@SuppressWarnings("all")
 	private void parseResponse(LinkedHashMap responeMap,String dobFormat){
 		List<LinkedHashMap> users = (List<LinkedHashMap>)responeMap.get("user");
 		String format1 = "dd-MM-yyyy HH:mm:ss";

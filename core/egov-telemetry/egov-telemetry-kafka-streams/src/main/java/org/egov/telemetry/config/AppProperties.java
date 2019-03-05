@@ -8,30 +8,31 @@ import java.util.Properties;
 
 
 @Slf4j
+@Getter
 public class AppProperties {
 
-    @Getter
     private String kafkaBootstrapServerConfig;
-    @Getter
-    private String telemetryRawInput;
-    @Getter
-    private String telemetryValidatedMessages;
-    @Getter
-    private String telemetryDedupedMessages;
-    @Getter
-    private String telemetryUnbundledMessages;
-    @Getter
-    private String telemetryEnrichedMessages;
-    @Getter
-    private String telemetrySecorFinalMessages;
-    @Getter
-    private String telemetryElasticsearchFinalMessages;
-    @Getter
-    private Integer deDupStorageTime; //In Minutes
 
+    private String telemetryRawInput;
+    private String telemetryValidatedMessages;
+    private String telemetryDedupedMessages;
+    private String telemetryUnbundledMessages;
+    private String telemetryEnrichedMessages;
+    private String telemetrySecorFinalMessages;
+    private String telemetryElasticsearchFinalMessages;
+
+    private String streamNameTelemetryValidator;
+    private String streamNameTelemetryDeduplicator;
+    private String streamNameTelemetryUnbundling;
+    private String streamNameTelemetryEnrichment;
+    private String streamNameTelemetrySecorFinalPush;
+    private String streamNameTelemetryElasticsearchFinalPush;
+
+    private Integer deDupStorageTime; //In Minutes
 
     public AppProperties() {
         kafkaBootstrapServerConfig = System.getenv("BOOTSTRAP_SERVER_CONFIG");
+
         telemetryRawInput = System.getenv("TELEMETRY_RAW_INPUT");
         telemetryValidatedMessages = System.getenv("TELEMETRY_VALIDATED_MESSAGES");
         telemetryDedupedMessages = System.getenv("TELEMETRY_DEDUPED_MESSAGES");
@@ -39,6 +40,13 @@ public class AppProperties {
         telemetryEnrichedMessages = System.getenv("TELEMETRY_ENRICHED_MESSAGES");
         telemetrySecorFinalMessages = System.getenv("TELEMETRY_SECOR_FINAL_MESSAGES");
         telemetryElasticsearchFinalMessages = System.getenv("TELEMETRY_ELASTICSEARCH_FINAL_MESSAGES");
+
+        streamNameTelemetryValidator = System.getenv("STREAM_NAME_TELEMETRY_VALIDATOR");
+        streamNameTelemetryDeduplicator = System.getenv("STREAM_NAME_TELEMETRY_DEDUPLICATOR");
+        streamNameTelemetryUnbundling = System.getenv("STREAM_NAME_TELEMETRY_UNBUNDLING");
+        streamNameTelemetryEnrichment = System.getenv("STREAM_NAME_TELEMETRY_ENRICHMENT");
+        streamNameTelemetrySecorFinalPush = System.getenv("STREAM_NAME_TELEMETRY_SECOR_FINAL_PUSH");
+        streamNameTelemetryElasticsearchFinalPush = System.getenv("STREAM_NAME_TELEMETRY_ELASTICSEARCH_FINAL_PUSH");
 
         if(System.getenv("DEDUP_STORAGE_TIME") != null)
             deDupStorageTime = Integer.parseInt(System.getenv("DEDUP_STORAGE_TIME"));
@@ -73,6 +81,26 @@ public class AppProperties {
 
         if(telemetryElasticsearchFinalMessages == null)
             telemetryElasticsearchFinalMessages = properties.getProperty("TELEMETRY_ELASTICSEARCH_FINAL_MESSAGES");
+
+
+        if(streamNameTelemetryValidator == null)
+            streamNameTelemetryValidator = properties.getProperty("STREAM_NAME_TELEMETRY_VALIDATOR");
+
+        if(streamNameTelemetryDeduplicator == null)
+            streamNameTelemetryDeduplicator = properties.getProperty("STREAM_NAME_TELEMETRY_DEDUPLICATOR");
+
+        if(streamNameTelemetryUnbundling == null)
+            streamNameTelemetryUnbundling = properties.getProperty("STREAM_NAME_TELEMETRY_UNBUNDLING");
+
+        if(streamNameTelemetryEnrichment == null)
+            streamNameTelemetryEnrichment = properties.getProperty("STREAM_NAME_TELEMETRY_ENRICHMENT");
+
+        if(streamNameTelemetrySecorFinalPush == null)
+            streamNameTelemetrySecorFinalPush = properties.getProperty("STREAM_NAME_TELEMETRY_SECOR_FINAL_PUSH");
+
+        if(streamNameTelemetryElasticsearchFinalPush == null)
+            streamNameTelemetryElasticsearchFinalPush = properties.getProperty("STREAM_NAME_TELEMETRY_ELASTICSEARCH_FINAL_PUSH");
+
 
         if(deDupStorageTime == null)
             if(properties.getProperty("DEDUP_STORAGE_TIME") != null)

@@ -9,7 +9,6 @@ import org.egov.tl.repository.rowmapper.TLRowMapper;
 import org.egov.tl.web.models.TradeLicense;
 import org.egov.tl.web.models.TradeLicenseRequest;
 import org.egov.tl.web.models.TradeLicenseSearchCriteria;
-import org.egov.tl.workflow.TLWorkflowService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -17,6 +16,9 @@ import org.springframework.stereotype.Repository;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+
+import static org.egov.tl.util.TLConstants.*;
+
 
 @Slf4j
 @Repository
@@ -75,14 +77,11 @@ public class TLRepository {
         List<TradeLicense> licensesForUpdate = new LinkedList<>();
 
         licenses.forEach(license -> {
-            if(license.getAction().equals(TradeLicense.ActionEnum.APPLY)
-                    || license.getAction().equals(TradeLicense.ActionEnum.INITIATE)){
+            if(license.getAction().equalsIgnoreCase(ACTION_APPLY)
+                    || license.getAction().equalsIgnoreCase(ACTION_INITIATE)){
                 licensesForUpdate.add(license);
             }
-            if(license.getAction().equals(TradeLicense.ActionEnum.APPROVE)
-                    || license.getAction().equals(TradeLicense.ActionEnum.REJECT)
-                     || license.getAction().equals(TradeLicense.ActionEnum.CANCEL)
-                    || license.getAction().equals(TradeLicense.ActionEnum.PAY)){
+            else{
                 licesnsesForStatusUpdate.add(license);
             }
         });

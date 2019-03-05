@@ -89,7 +89,7 @@ public class BillingslabQueryBuilder {
 		}
 
 		if (null != billingSlabSearcCriteria.getUomValue()) {
-			queryBuilder.append(" AND toUom >= ?");
+			queryBuilder.append(" AND toUom > ?");
 			preparedStmtList.add(billingSlabSearcCriteria.getUomValue());
 		}
 	}

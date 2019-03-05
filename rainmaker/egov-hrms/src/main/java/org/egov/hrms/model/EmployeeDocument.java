@@ -41,9 +41,17 @@
 package org.egov.hrms.model;
 
 import org.egov.hrms.model.enums.ReferenceType;
+import org.springframework.validation.annotation.Validated;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
+@Validated
 @EqualsAndHashCode(exclude = {"auditDetails"})
 @AllArgsConstructor
 @Getter
@@ -54,8 +62,6 @@ import lombok.*;
 public class EmployeeDocument {
 
 	private String id;
-
-	private Long employeeId;
 
 	private String documentName;
 

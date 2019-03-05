@@ -47,6 +47,8 @@ import javax.validation.constraints.NotNull;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.hrms.model.Employee;
+import org.hibernate.validator.constraints.NotEmpty;
+import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -55,6 +57,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+@Validated
 @Data
 @Builder
 @NoArgsConstructor
@@ -66,7 +69,7 @@ public class EmployeeRequest {
 	private RequestInfo requestInfo;
 
 	@Valid
-	@NotNull
+	@NotEmpty
 	@JsonProperty("Employees")
 	private List<Employee> employees;
 

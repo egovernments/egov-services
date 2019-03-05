@@ -36,7 +36,7 @@ public class EncryptionServiceRestInterface {
         egovEncDecryptPath = "/egov-enc-service/crypto/v1/_decrypt";
     }
 
-    Object callEncrypt(String tenantId, String type, Object value) {
+    Object callEncrypt(String tenantId, String type, Object value) throws IOException {
 
         EncReqObject encReqObject = new EncReqObject(tenantId, type, value);
         EncryptionRequest encryptionRequest = new EncryptionRequest();
@@ -46,25 +46,14 @@ public class EncryptionServiceRestInterface {
 
         String response =  executeQuery(egovEncHost + egovEncEncryptPath, encryptionRequestString);
 
-        try {
-            return mapper.readValue(response, List.class).get(0);
-        } catch (IOException e) {
-            log.error(e.getMessage());
-        }
-        return null;
+        return mapper.readTree(response).get(0);
     }
 
-    Object callDecrypt(Object ciphertext) {
-        log.info(ciphertext.toString());
+    Object callDecrypt(Object ciphertext) throws IOException {
         String decryptionRequestString = mapper.valueToTree(ciphertext).toString();
         String response =  executeQuery(egovEncHost + egovEncDecryptPath, decryptionRequestString);
 
-        try {
-            return mapper.readValue(response, List.class);
-        } catch (Exception e) {
-            log.error(e.getMessage());
-        }
-        return null;
+        return mapper.readTree(response);
     }
 
 
@@ -74,6 +63,7 @@ public class EncryptionServiceRestInterface {
             url = new URL(urlString);
         } catch (MalformedURLException e) {
             log.error(e.getMessage());
+            return null;
         }
         String response = null;
 

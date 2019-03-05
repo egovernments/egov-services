@@ -93,7 +93,7 @@ public class EncryptionService {
 
     public JsonNode decryptJson(Object ciphertextJson, User user) throws IOException {
 
-        Map<Attribute, AccessType> attributeAccessTypeMap = abacFilter.getAttributeAccessForRole(user.getRoles());
+        Map<Attribute, AccessType> attributeAccessTypeMap = abacFilter.getAttributeAccessForRoles(user.getRoles());
         List<String> paths = attributeAccessTypeMap.keySet().stream()
                 .map(Attribute::getJsonPath).collect(Collectors.toList());
 
@@ -106,33 +106,28 @@ public class EncryptionService {
         return ConvertClass.convertTo(decryptJson(ciphertextJson, user), valueType);
     }
 
-    JsonNode createJsonNode(Object json) {
-        JsonNode jsonNode = null;
-        try {
-            if(json instanceof JsonNode)
-                jsonNode = (JsonNode) json;
-            else if(json instanceof String)
-                jsonNode = mapper.readTree((String) json);           //JsonNode from JSON String
-            else
-                jsonNode = mapper.valueToTree(json);                 //JsonNode from POJO or Map
-        } catch (Exception e) {
-            log.error(e.getMessage());
-//            throw new CustomException("Cannot convert to JsonNode : " + json, "Cannot convert to JsonNode");
-        }
+    JsonNode createJsonNode(Object json) throws IOException {
+        JsonNode jsonNode;
+        if(json instanceof JsonNode)
+            jsonNode = (JsonNode) json;
+        else if(json instanceof String)
+            jsonNode = mapper.readTree((String) json);           //JsonNode from JSON String
+        else
+            jsonNode = mapper.valueToTree(json);                 //JsonNode from POJO or Map
         return jsonNode;
     }
 
 
-    String encryptValue(String plaintext, String tenantId, String type) {
+    String encryptValue(String plaintext, String tenantId, String type) throws IOException {
         return encryptValue(new ArrayList<String>(Collections.singleton(plaintext)), tenantId, type).get(0);
     }
 
-    List<String> encryptValue(List<String> plaintext, String tenantId, String type) {
+    List<String> encryptValue(List<String> plaintext, String tenantId, String type) throws IOException {
         Object encryptionResponse = encryptionServiceRestInterface.callEncrypt(tenantId, type, plaintext);
         return (List<String>) encryptionResponse;
     }
 
-    Object decryptValue(Object ciphertext) {
+    Object decryptValue(Object ciphertext) throws IOException {
         return encryptionServiceRestInterface.callDecrypt(ciphertext);
     }
 

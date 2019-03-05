@@ -20,6 +20,22 @@ public class JacksonUtils {
         else if(originalNode == null)
             return newNode;
 
+        if(newNode.isObject())
+            newNode = mergeObjectNodes( (ObjectNode) newNode, (ObjectNode) originalNode);
+        else if(newNode.isArray())
+            newNode = mergeArrayNode( (ArrayNode) newNode, (ArrayNode) originalNode);
+
+        return newNode;
+    }
+
+    static ArrayNode mergeArrayNode(ArrayNode newNode, ArrayNode originalNode) {
+        for (int i = 0; i < newNode.size(); i++) {
+            merge(newNode.get(i), originalNode.get(i));
+        }
+        return newNode;
+    }
+
+    static ObjectNode mergeObjectNodes(ObjectNode newNode, ObjectNode originalNode) {
         Iterator<String> fieldNames = originalNode.fieldNames();
 
         while (fieldNames.hasNext()) {
@@ -28,19 +44,13 @@ public class JacksonUtils {
             JsonNode jsonNode = newNode.get(fieldName);
 
             if (jsonNode != null) {
-                if (jsonNode.isObject()) {
-                    merge(jsonNode, originalNode.get(fieldName));
-                } else if (jsonNode.isArray()) {
-                    for (int i = 0; i < jsonNode.size(); i++) {
-                        merge(jsonNode.get(i), originalNode.get(fieldName).get(i));
-                    }
-                }
+                merge(jsonNode, originalNode.get(fieldName));
             } else {
                 if (newNode instanceof ObjectNode) {
                     // Overwrite field
                     JsonNode value = originalNode.get(fieldName);
 
-                    ((ObjectNode) newNode).set(fieldName, value);
+                    newNode.set(fieldName, value);
                 }
             }
         }
@@ -67,7 +77,7 @@ public class JacksonUtils {
         return filteredNode;
     }
 
-    public static JsonNode filterJsonNodeForPath(JsonNode jsonNode, String filterPath) {
+    static JsonNode filterJsonNodeForPath(JsonNode jsonNode, String filterPath) {
         ObjectMapper objectMapper = new ObjectMapper(new JsonFactory());
 
         if(filterPath == null)
@@ -84,7 +94,7 @@ public class JacksonUtils {
                 newNode = objectMapper.createArrayNode();
                 for (JsonNode value : arrayNode) {
                     JsonNode filteredNode = filterJsonNodeForPath(value, getRemainingJsonKeyForPath(filterPath));
-                    if(filteredNode != null)
+                    if(filteredNode != null && ! filteredNode.isNull())
                         ((ArrayNode) newNode).add(filteredNode);
                 }
             } else {                                                                        //ObjectNode
@@ -92,7 +102,7 @@ public class JacksonUtils {
                 newNode = objectMapper.createObjectNode();
                 JsonNode value = objectNode.get(key);
                 JsonNode filteredNode = filterJsonNodeForPath(value, getRemainingJsonKeyForPath(filterPath));
-                if(filteredNode != null)
+                if(filteredNode != null && ! filteredNode.isNull())
                     ((ObjectNode) newNode).set(key, filteredNode);
             }
         } catch (ClassCastException e) {

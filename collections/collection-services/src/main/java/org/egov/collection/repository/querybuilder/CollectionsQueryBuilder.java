@@ -37,10 +37,9 @@ public class CollectionsQueryBuilder {
             + " :manualreceiptdate, :manualreceiptnumber, :reference_ch_id, :stateid, :location, :isreconciled, "
             + ":status, :transactionid, :fund, :function, :department, :additionalDetails )";
 
-    public static final String INSERT_RECEIPT_DETAILS_SQL = "INSERT INTO egcl_receiptdetails(id, chartofaccount, dramount, cramount, ordernumber, receiptheader, actualcramounttobepaid, "
+    public static final String INSERT_RECEIPT_DETAILS_SQL = "INSERT INTO egcl_receiptdetails(id, chartofaccount, amount, adjustedamount, ordernumber, receiptheader, "
             + "description, financialyear, isactualdemand, purpose, tenantid, additionalDetails) "
-            + "VALUES (:id, :chartofaccount, :dramount, :cramount, :ordernumber, :receiptheader, " +
-            ":actualcramounttobepaid, "
+            + "VALUES (:id, :chartofaccount, :amount, :adjustedamount, :ordernumber, :receiptheader, "
             + ":description, :financialyear, :isactualdemand, :purpose, :tenantid, :additionalDetails)";
 
     public static final String INSERT_INSTRUMENT_HEADER_SQL = "INSERT INTO egcl_instrumentheader(id, transactionnumber, transactiondate, amount, instrumenttype, "
@@ -116,12 +115,37 @@ public class CollectionsQueryBuilder {
             " manualreceiptdate = :manualreceiptdate, status = :status, voucherheader = :voucherheader, additionalDetails = :additionalDetails," +
             " lastmodifiedby = :lastmodifiedby, lastmodifieddate = :lastmodifieddate" +
             " where id=:id";
-
+    
     public static final String UPDATE_INSTRUMENT_HEADER_SQL = "UPDATE egcl_instrumentheader SET instrumentstatus = :instrumentstatus, " +
             " payee = :payee, lastmodifiedby = :lastmodifiedby, lastmodifieddate = :lastmodifieddate, additionalDetails = :additionalDetails"+
             " where id=:id";
 
-
+    public static final String COPY_RCPT_HEADER_SQL = "INSERT INTO egcl_receiptheader_history "
+    		+ "(uuid, id, payeename, payeeaddress, payeeemail, payeemobile, paidby, referencenumber, receipttype, receiptnumber, receiptdate, businessdetails, "
+    		+ "collectiontype, reasonforcancellation, minimumamount, totalamount, collectedamount, collmodesnotallwd, consumercode, channel, "
+    		+ "boundary, voucherheader, depositedbranch, createdby, createddate, lastmodifiedby, lastmodifieddate, tenantid, referencedate, referencedesc, "
+    		+ "manualreceiptdate, manualreceiptnumber, reference_ch_id, stateid, location, isreconciled, status, transactionid, fund, function, "
+    		+ "department, additionalDetails) " 
+    		+ "SELECT uuid_generate_v4() as uuid, id, payeename, payeeaddress, payeeemail, payeemobile, paidby, referencenumber, receipttype, receiptnumber, receiptdate, "
+    		+ "businessdetails, collectiontype, reasonforcancellation, minimumamount, totalamount, collectedamount, collmodesnotallwd, consumercode, "
+    		+ "channel,boundary, voucherheader, depositedbranch, createdby, createddate, lastmodifiedby, lastmodifieddate, tenantid, referencedate, "
+    		+ "referencedesc, manualreceiptdate, manualreceiptnumber, reference_ch_id, stateid, location, isreconciled, status, transactionid, fund, "
+    		+ "function, department, additionalDetails FROM egcl_receiptheader WHERE id=:id";
+    
+    
+    public static final String COPY_RCPT_DETALS_SQL = "INSERT INTO egcl_receiptdetails_history (uuid, id, chartofaccount, amount, adjustedamount, ordernumber, receiptheader, "
+    		+ "description, financialyear, isactualdemand, purpose, tenantid, additionalDetails) " 
+    		+ "SELECT uuid_generate_v4() as uuid, id, chartofaccount, amount, adjustedamount, ordernumber, receiptheader, description, financialyear, isactualdemand, "
+    		+ "purpose, tenantid, additionalDetails FROM egcl_receiptdetails WHERE id=:id";
+    
+    public static final String COPY_INSTRUMENT_HEADER_SQL = "INSERT INTO egcl_instrumentheader_history (uuid, id, transactionnumber, transactiondate, amount, instrumenttype, instrumentstatus, "
+    		+ "bankid, branchname, bankaccountid, ifsccode, financialstatus, transactiontype, payee, drawer, surrenderreason, serialno, createdby, "
+    		+ "createddate, lastmodifiedby, lastmodifieddate, tenantid, additionalDetails, instrumentDate, instrumentNumber) " 
+    		+ "SELECT uuid_generate_v4() as uuid, id, transactionnumber, transactiondate, amount, instrumenttype, instrumentstatus, bankid, branchname, "
+    		+ "bankaccountid, ifsccode, financialstatus, transactiontype, payee, drawer, surrenderreason, serialno, createdby, createddate, "
+    		+ "lastmodifiedby, lastmodifieddate, tenantid, additionalDetails, instrumentDate, instrumentNumber FROM egcl_instrumentheader WHERE id=:id";
+    
+    
     public static MapSqlParameterSource getParametersForReceiptHeader(Receipt receipt, BillDetail billDetail) {
         MapSqlParameterSource sqlParameterSource = new MapSqlParameterSource();
         AuditDetails auditDetails = receipt.getAuditDetails();

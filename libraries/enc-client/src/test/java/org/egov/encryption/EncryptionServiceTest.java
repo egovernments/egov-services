@@ -6,13 +6,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.Configuration;
 import com.jayway.jsonpath.Option;
 import lombok.extern.slf4j.Slf4j;
-import org.egov.common.contract.request.User;
-import org.egov.encryption.accesscontrol.AbacFilter;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
 @Slf4j
 public class EncryptionServiceTest {

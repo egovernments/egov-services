@@ -51,7 +51,7 @@ public class JacksonUtils {
     public static JsonNode filterJsonNodeWithPaths(JsonNode jsonNode, List<String> filterPaths) {
         ObjectMapper mapper = new ObjectMapper(new JsonFactory());
 
-        JsonNode filteredNode = null;
+        JsonNode filteredNode;
         if(jsonNode instanceof ArrayNode)
             filteredNode = mapper.createArrayNode();
         else if(jsonNode instanceof ObjectNode)
@@ -83,13 +83,17 @@ public class JacksonUtils {
                 ArrayNode arrayNode = (ArrayNode) jsonNode;
                 newNode = objectMapper.createArrayNode();
                 for (JsonNode value : arrayNode) {
-                    ((ArrayNode) newNode).add(filterJsonNodeForPath(value, getRemainingJsonKeyForPath(filterPath)));
+                    JsonNode filteredNode = filterJsonNodeForPath(value, getRemainingJsonKeyForPath(filterPath));
+                    if(filteredNode != null)
+                        ((ArrayNode) newNode).add(filteredNode);
                 }
             } else {                                                                        //ObjectNode
                 ObjectNode objectNode = (ObjectNode) jsonNode;
                 newNode = objectMapper.createObjectNode();
                 JsonNode value = objectNode.get(key);
-                ((ObjectNode) newNode).set(key, filterJsonNodeForPath(value, getRemainingJsonKeyForPath(filterPath)));
+                JsonNode filteredNode = filterJsonNodeForPath(value, getRemainingJsonKeyForPath(filterPath));
+                if(filteredNode != null)
+                    ((ObjectNode) newNode).set(key, filteredNode);
             }
         } catch (ClassCastException e) {
             log.error("Cannot find value for path : " + filterPath);

@@ -106,10 +106,8 @@ public class JacksonUtilsTest {
                 "\"active\":true,\"type\":\"CITIZEN\",\"password\":\"password\"}]}");
 
 
-//        JsonNode newNode = JacksonUtils.filterJsonNodeWithPaths(jsonNode, Arrays.asList("User/*/name", "RequestInfo" +
-//                "/api_id", "*/User"));
-
-        JsonNode newNode = JacksonUtils.filterJsonNodeWithPaths(jsonNode, Arrays.asList("*/ads"));
+        JsonNode newNode = JacksonUtils.filterJsonNodeWithPaths(jsonNode, Arrays.asList("User/*/name", "RequestInfo" +
+                "/api_id", "asd/qwe"));
 
         log.info(String.valueOf(newNode));
 

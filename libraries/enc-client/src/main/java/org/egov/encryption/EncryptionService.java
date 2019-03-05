@@ -8,6 +8,7 @@ import org.egov.common.contract.request.User;
 import org.egov.encryption.accesscontrol.AbacFilter;
 import org.egov.encryption.models.AccessType;
 import org.egov.encryption.models.Attribute;
+import org.egov.encryption.util.ConvertClass;
 import org.egov.encryption.util.JacksonUtils;
 
 import java.io.IOException;
@@ -68,6 +69,10 @@ public class EncryptionService {
         return encryptedNode;
     }
 
+    public <T> T encryptJson(Object plaintextJson, String tenantId, Class<T> valueType) throws IOException {
+        return ConvertClass.convertTo(encryptJson(plaintextJson, tenantId), valueType);
+    }
+
     public JsonNode decryptJson(Object ciphertextJson, List<String> paths, User user) throws IOException {
         JsonNode ciphertextNode = createJsonNode(ciphertextJson);
         JsonNode decryptedNode = ciphertextNode.deepCopy();
@@ -81,6 +86,10 @@ public class EncryptionService {
         return decryptedNode;
     }
 
+    public <T> T decryptJson(Object ciphertextJson, List<String> paths, User user, Class<T> valueType) throws IOException {
+        return ConvertClass.convertTo(decryptJson(ciphertextJson, paths, user), valueType);
+    }
+
 
     public JsonNode decryptJson(Object ciphertextJson, User user) throws IOException {
 
@@ -91,6 +100,10 @@ public class EncryptionService {
         JsonNode decryptedNode = decryptJson(ciphertextJson, paths, user);
 
         return decryptedNode;
+    }
+
+    public <T> T decryptJson(Object ciphertextJson, User user, Class<T> valueType) throws IOException {
+        return ConvertClass.convertTo(decryptJson(ciphertextJson, user), valueType);
     }
 
     JsonNode createJsonNode(Object json) {

@@ -48,20 +48,11 @@ public class EmployeeQueryBuilder {
 			builder.append(" and employee.id IN ("+createINClauseForLongList(criteria.getIds())+")");
 		if(!CollectionUtils.isEmpty(criteria.getUuids()))
 			builder.append(" and employee.uuid IN ("+createINClauseForList(criteria.getUuids())+")");
-		if(!CollectionUtils.isEmpty(criteria.getDepartments()))
-			builder.append(" and assignment.department IN ("+createINClauseForList(criteria.getDepartments())+")");
-		if(!CollectionUtils.isEmpty(criteria.getDesignations()))
-			builder.append(" and assignment.designation IN ("+createINClauseForList(criteria.getDesignations())+")");
 		if(!CollectionUtils.isEmpty(criteria.getEmployeestatuses()))
 			builder.append(" and employee.employeestatus IN ("+createINClauseForList(criteria.getEmployeestatuses())+")");
 		if(!CollectionUtils.isEmpty(criteria.getEmployeetypes()))
 			builder.append(" and employee.employeetype IN ("+createINClauseForList(criteria.getEmployeetypes())+")");
-		if(!CollectionUtils.isEmpty(criteria.getPositions()))
-			builder.append(" and assignment.position IN ("+createINClauseForLongList(criteria.getPositions())+")");
-		if(null != criteria.getAsOnDate()) {
-			builder.append(" and assignment.fromdate <= "+criteria.getAsOnDate()+" and assignment.todate >= "+criteria.getAsOnDate());
-		}
-		
+
 		builder.append(" and employee.active = "+criteria.getIsActive());
 		builder.append(" and jurisdiction.isactive is not false");
 		builder.append(" and depttest.isactive is not false");
@@ -104,5 +95,25 @@ public class EmployeeQueryBuilder {
 				builder.append(",");
 		}
 		return builder.toString();
+	}
+
+	public String getAssignmentSearchQuery(EmployeeSearchCriteria criteria) {
+		StringBuilder builder = new StringBuilder(EmployeeQueries.HRMS_GET_ASSIGNMENT);
+		addWhereClauseAssignment(criteria, builder);
+		return builder.toString();
+	}
+
+	private void addWhereClauseAssignment(EmployeeSearchCriteria criteria, StringBuilder builder) {
+		if(!CollectionUtils.isEmpty(criteria.getDepartments()))
+			builder.append(" and assignment.department IN ("+createINClauseForList(criteria.getDepartments())+")");
+		if(!CollectionUtils.isEmpty(criteria.getDesignations()))
+			builder.append(" and assignment.designation IN ("+createINClauseForList(criteria.getDesignations())+")");
+		if(!CollectionUtils.isEmpty(criteria.getPositions()))
+			builder.append(" and assignment.position IN ("+createINClauseForLongList(criteria.getPositions())+")");
+		if(null != criteria.getAsOnDate()) {
+			builder.append( " and case when assignment.todate is null then assignment.fromdate <= "+criteria.getAsOnDate()+ " else assignment.fromdate <= " +criteria.getAsOnDate()+ " and assignment.todate > "+criteria.getAsOnDate()+ " end");
+		}
+
+
 	}
 }

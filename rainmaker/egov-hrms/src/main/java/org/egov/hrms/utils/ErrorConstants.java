@@ -65,13 +65,22 @@ public class ErrorConstants {
 
 	public static final String HRMS_INVALID_SERVICE_STATUS_CODE = "HRMS_INVALID_SERVICE_STATUS";
 	public static final String HRMS_INVALID_SERVICE_STATUS_MSG = "Service status of the employee is invalid!: ";
-	
+
 	public static final String HRMS_INVALID_SERVICE_PERIOD_CODE = "HRMS_INVALID_SERVICE_PERIOD";
 	public static final String HRMS_INVALID_SERVICE_PERIOD_MSG = "Service period (serviceFrom to serviceTo) of the employee is invalid!";
 	
 	public static final String HRMS_INVALID_SERVICE_DATES_CODE = "HRMS_INVALID_SERVICE_DATES";
 	public static final String HRMS_INVALID_SERVICE_DATES_MSG = "Service period (serviceFrom to serviceTo) of the employee is before DOB!";
-	
+
+	public static final String HRMS_INVALID_SERVICE_CURRENT_TO_DATE_CODE = "HRMS_INVALID_SERVICE_CURRENT_TO_DATE";
+	public static final String HRMS_INVALID_SERVICE_CURRENT_TO_DATE_MSG = "serviceTo should be empty for currently working service!";
+
+	public static final String HRMS_INVALID_SERVICE_NON_CURRENT_TO_DATE_CODE = "HRMS_INVALID_SERVICE_NOT_CURRENT_TO_DATE";
+	public static final String HRMS_INVALID_SERVICE_NON_CURRENT_TO_DATE_MSG = "serviceTo should not be empty for non currently working service!";
+
+	public static final String HRMS_INVALID_CURRENT_SERVICE_CODE = "HRMS_INVALID_SERVICE_ASSGN";
+	public static final String HRMS_INVALID_CURRENT_SERVICE_MSG = "There should be max 1 currently working service!";
+
 	public static final String HRMS_INVALID_QUALIFICATION_CODE = "HRMS_INVALID_QUALIFICATION";
 	public static final String HRMS_INVALID_QUALIFICATION_MSG = "Qualification of the employee is invalid!: ";
 	

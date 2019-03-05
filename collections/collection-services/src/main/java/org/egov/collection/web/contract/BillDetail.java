@@ -47,9 +47,6 @@ import java.math.BigDecimal;
 import java.util.List;
 
 import javax.validation.constraints.NotNull;
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
 
 @Setter
 @Getter
@@ -99,10 +96,10 @@ public class BillDetail {
 	private BigDecimal amountPaid = null;
 
 	@JsonProperty("fromPeriod")
-	private BigDecimal fromPeriod = null;
+	private Long fromPeriod = null;
 
 	@JsonProperty("toPeriod")
-	private BigDecimal toPeriod = null;
+	private Long toPeriod = null;
 
 	@JsonProperty("collectedAmount")
 	private BigDecimal collectedAmount = null;

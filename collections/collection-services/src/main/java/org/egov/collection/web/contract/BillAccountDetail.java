@@ -50,6 +50,9 @@ public class BillAccountDetail {
 
 	@JsonProperty("glcode")
 	private String glcode = null;
+	
+	@JsonProperty("taxHeadCode")
+	private String taxHeadCode = null;
 
 	@JsonProperty("additionalDetails")
 	private JsonNode additionalDetails = null;

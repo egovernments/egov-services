@@ -55,9 +55,9 @@ public class Bill {
 	  @JsonProperty("additionalDetails")
 	  private Object additionalDetails = null;
 
-	  @JsonProperty("collectionMap")
+	  @JsonProperty("taxAndPayments")
 	  @Valid
-	  private Map<String, BigDecimal> collectionMap = null;
+	  private List<TaxAndPayment> taxAndPayments = null;
 
 	  @JsonProperty("billDetails")
 	  @Valid

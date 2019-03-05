@@ -64,6 +64,9 @@ public class CollectionResultSetExtractor implements ResultSetExtractor<List<Rec
                         .fund(resultSet.getString("rh_fund"))
                         .function(resultSet.getString("rh_function"))
                         .department(resultSet.getString("rh_department"))
+                        .demandId(resultSet.getString("rh_demandid"))
+                        .fromPeriod(resultSet.getLong("rh_demandfromdate"))
+                        .toPeriod(resultSet.getLong("rh_demandtodate"))
                         .amountPaid(BigDecimal.ZERO)
                         .totalAmount(getBigDecimalValue(resultSet.getBigDecimal("rh_totalAmount")))
                         .collectedAmount(getBigDecimalValue(resultSet.getBigDecimal("rh_collectedamount")))
@@ -73,10 +76,10 @@ public class CollectionResultSetExtractor implements ResultSetExtractor<List<Rec
                         .build();
 
                 Bill billInfo = Bill.builder()
-                        .payerName(resultSet.getString("rh_payeename"))
-                        .payerAddress(resultSet.getString("rh_payeeAddress"))
-                        .payerEmail(resultSet.getString("rh_payeeEmail"))
-                        .mobileNumber(resultSet.getString("rh_payeemobile"))
+                        .payerName(resultSet.getString("rh_payername"))
+                        .payerAddress(resultSet.getString("rh_payerAddress"))
+                        .payerEmail(resultSet.getString("rh_payerEmail"))
+                        .mobileNumber(resultSet.getString("rh_payermobile"))
                         .paidBy(resultSet.getString("rh_paidBy"))
                         .tenantId(resultSet.getString("rh_tenantId"))
                         .billDetails(Collections.singletonList(billDetail))
@@ -162,6 +165,8 @@ public class CollectionResultSetExtractor implements ResultSetExtractor<List<Rec
                     .additionalDetails(getJsonValue((PGobject) resultSet.getObject("rd_additionalDetails")))
                     .amount(getBigDecimalValue(resultSet.getBigDecimal("rd_amount")))
                     .adjustedAmount(getBigDecimalValue(resultSet.getBigDecimal("rd_adjustedamount")))
+                    .taxHeadCode(resultSet.getString("rd_taxheadcode"))
+                    .demandDetailId(resultSet.getString("rd_demanddetailid"))
                     .build();
     }
 

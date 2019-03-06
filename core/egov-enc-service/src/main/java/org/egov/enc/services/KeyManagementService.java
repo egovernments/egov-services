@@ -30,7 +30,10 @@ import javax.crypto.NoSuchPaddingException;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 @Slf4j
 @Service
@@ -54,22 +57,19 @@ public class KeyManagementService implements ApplicationRunner {
     @Autowired
     private KeyIdGenerator keyIdGenerator;
 
-    private ArrayList<String> tenantIdsFromDB;
-
 
     //Initialize active tenant id list and Check for any new tenants
     private void init() throws Exception {
         generateKeyForNewTenants();
-        tenantIdsFromDB = (ArrayList<String>) keyRepository.fetchDistinctTenantIds();
     }
 
     //Check if a given tenantId exists
     public boolean checkIfTenantExists(String tenant) throws BadPaddingException, InvalidKeyException, NoSuchAlgorithmException, IllegalBlockSizeException, NoSuchPaddingException, InvalidAlgorithmParameterException {
-        if(tenantIdsFromDB.contains(tenant)) {
+        if(keyStore.getTenantIds().contains(tenant)) {
             return true;
         }
         generateKeyForNewTenants();
-        return tenantIdsFromDB.contains(tenant);
+        return keyStore.getTenantIds().contains(tenant);
     }
 
     //Generate Symmetric and Asymmetric Keys for each of the TenantId in the given input list
@@ -96,19 +96,17 @@ public class KeyManagementService implements ApplicationRunner {
     //Generate keys if there are any new tenants
     //Returns the number of tenants for which the keys have been generated
     private int generateKeyForNewTenants() throws JSONException, BadPaddingException, InvalidAlgorithmParameterException, NoSuchAlgorithmException, IllegalBlockSizeException, NoSuchPaddingException, InvalidKeyException {
-        Collection<String> tenantIds = makeComprehensiveListOfTenantIds();
-        Collection<String> tenantIdsFromDBCollection = keyRepository.fetchDistinctTenantIds();
-        tenantIds.removeAll(tenantIdsFromDBCollection);
+        Collection<String> tenantIdsFromMdms = makeComprehensiveListOfTenantIds();
+        tenantIdsFromMdms.removeAll(keyStore.getTenantIds());
 
-        if(tenantIds.size() != 0) {
-            ArrayList<String> tenantIdList = new ArrayList<>(tenantIds);
+        if(tenantIdsFromMdms.size() != 0) {
+            ArrayList<String> tenantIdList = new ArrayList<>(tenantIdsFromMdms);
             generateKeys(tenantIdList);
 
             keyStore.refreshKeys();
             keyIdGenerator.refreshKeyIds();
-            tenantIdsFromDB = (ArrayList<String>) keyRepository.fetchDistinctTenantIds();
         }
-        return tenantIds.size();
+        return tenantIdsFromMdms.size();
     }
 
     private Set<String> makeComprehensiveListOfTenantIds() {
@@ -143,7 +141,7 @@ public class KeyManagementService implements ApplicationRunner {
     public RotateKeyResponse rotateKey(RotateKeyRequest rotateKeyRequest) throws BadPaddingException,
             InvalidKeyException, NoSuchAlgorithmException, IllegalBlockSizeException, NoSuchPaddingException,
             InvalidAlgorithmParameterException {
-        Integer status;
+        int status;
         status = keyRepository.deactivateSymmetricKeyForGivenTenant(rotateKeyRequest.getTenantId());
         log.info("Key Rotate SYM Return Status: " + status);
         if(status != 1) {

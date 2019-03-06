@@ -1,5 +1,6 @@
 package org.egov.enc.keymanagement;
 
+import lombok.Getter;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.egov.enc.config.AppProperties;
 import org.egov.enc.models.AsymmetricKey;
@@ -44,7 +45,7 @@ public class KeyStore implements ApplicationRunner {
     private AppProperties appProperties;
     @Autowired
     private KeyRepository keyRepository;
-
+    @Getter
     private ArrayList<String> tenantIds;
 
     private static ArrayList<SymmetricKey> symmetricKeys;

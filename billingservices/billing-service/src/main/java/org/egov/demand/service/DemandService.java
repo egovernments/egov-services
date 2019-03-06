@@ -275,7 +275,7 @@ public class DemandService {
 	public DemandResponse getDemands(DemandCriteria demandCriteria, RequestInfo requestInfo) {
 		
 		UserSearchRequest userSearchRequest = null;
-		List<User> owners = null;
+		List<User> payers = null;
 		List<Demand> demands = null;
 		List<CollectedReceipt> receipts=null;
 		
@@ -296,9 +296,9 @@ public class DemandService {
 					.tenantId(citizenTenantId).emailId(demandCriteria.getEmail())
 					.mobileNumber(demandCriteria.getMobileNumber()).build();
 			
-			owners = mapper.convertValue(serviceRequestRepository.fetchResult(userUri, userSearchRequest), UserResponse.class).getUser();
+			payers = mapper.convertValue(serviceRequestRepository.fetchResult(userUri, userSearchRequest), UserResponse.class).getUser();
 			
-			Set<String> ownerIds = owners.stream().map(User::getUuid).collect(Collectors.toSet());
+			Set<String> ownerIds = payers.stream().map(User::getUuid).collect(Collectors.toSet());
 			demands = demandRepository.getDemands(demandCriteria, ownerIds);
 			
 			/*
@@ -320,13 +320,14 @@ public class DemandService {
 
 					userSearchRequest = UserSearchRequest.builder().requestInfo(requestInfo).uuid(payerUuids).build();
 
-					owners = mapper.convertValue(serviceRequestRepository.fetchResult(userUri, userSearchRequest),
+					payers = mapper.convertValue(serviceRequestRepository.fetchResult(userUri, userSearchRequest),
 							UserResponse.class).getUser();
 				}
 			}
 		}
-		if (!CollectionUtils.isEmpty(demands) && !CollectionUtils.isEmpty(owners))
-			demands = demandEnrichmentUtil.enrichPayer(demands, owners);
+		
+		if (!CollectionUtils.isEmpty(demands) && !CollectionUtils.isEmpty(payers))
+			demands = demandEnrichmentUtil.enrichPayer(demands, payers);
 		
 		/*
 		 * sorting the demand details in demand based on taxheadcode

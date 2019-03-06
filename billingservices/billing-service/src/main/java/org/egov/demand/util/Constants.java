@@ -7,6 +7,8 @@ import java.util.List;
 public class Constants {
 	
 	private Constants() {}
+	
+	public static final String DB_TYPE_JSONB = "jsonb";
 
 	public static final String MODULE_NAME = "BillingService";
 	
@@ -29,6 +31,9 @@ public class Constants {
     
     
     // ERROR CONSTANTS
+    
+    public static final String EG_BS_JSON_EXCEPTION_KEY = "EG_BS_JSON_EXCEPTION";
+    public static final String EG_BS_JSON_EXCEPTION_MSG = "Exception occured while parsing additional details";
     
     
 	public static final String INVALID_BUSINESS_FOR_TAXPERIOD_KEY = "EG_BS_TAXPERIODS_BUINESSSERVICE";
@@ -60,7 +65,7 @@ public class Constants {
 	public static final String INVALID_DEMAND_DETAIL_COLLECTION_TEXT = "{collection}";
 	public static final String INVALID_DEMAND_DETAIL_TAX_TEXT = "{tax}";
 	
-	public static final String INVALID_NEGATIVE_DEMAND_DETAIL_ERROR_MSG = "collection amount : {collection}, should not be equal to 'ZERO' or tax amount : {tax} in case negative Tax demand detail";
+	public static final String INVALID_NEGATIVE_DEMAND_DETAIL_ERROR_MSG = "collection amount : {collection}, should be equal to 'ZERO' or tax amount : {tax} in case of negative Tax demand detail";
 	
 	public static final String DEMAND_NOT_FOUND_KEY = "EG_BS_DEMANDS_NOT_FOUND";
 	public static final String DEMAND_NOT_FOUND_MSG = "No Demands not found in db for following ids : {resplaceValues}";

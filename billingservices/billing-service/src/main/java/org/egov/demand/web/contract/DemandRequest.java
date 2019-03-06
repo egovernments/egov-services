@@ -54,6 +54,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.Builder.Default;
 
 @Data
 @NoArgsConstructor
@@ -67,6 +68,7 @@ public class DemandRequest {
 	
 	@Valid
 	@NotNull
+	@Default
 	@JsonProperty("Demands")
 	private List<Demand> demands = new ArrayList<>();
 }

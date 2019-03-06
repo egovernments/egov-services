@@ -94,7 +94,7 @@ public class DemandController {
 
 	@PostMapping("_create")
 	@ResponseBody
-	public ResponseEntity<?> create(@RequestBody DemandRequest demandRequest) {
+	public ResponseEntity<?> create(@RequestBody @Valid DemandRequest demandRequest) {
 
 		log.info("the demand request object : " + demandRequest);
 		/*

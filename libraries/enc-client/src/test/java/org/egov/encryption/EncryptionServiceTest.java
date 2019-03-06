@@ -8,6 +8,7 @@ import com.jayway.jsonpath.Option;
 import lombok.extern.slf4j.Slf4j;
 import org.egov.common.contract.request.User;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -47,6 +48,7 @@ public class EncryptionServiceTest {
 //        log.info(ciphertext);
     }
 
+    @Ignore
     @Test
     public void encryptJsonObject() throws IOException {
         JsonNode plaintext = mapper.readTree("{\"RequestInfo\":{\"api_id\":\"1\",\"ver\":\"1\",\"ts\":null," +
@@ -58,6 +60,7 @@ public class EncryptionServiceTest {
         log.info(ciphertext.toString());
     }
 
+    @Ignore
     @Test
     public void decryptJsonObject() throws IOException {
         JsonNode ciphertext = mapper.readTree("{\"User\":{\"mobileNumber\":\"341642|WfYfJPRug15R2wFh17PlQr5d9YhNkFk1" +
@@ -72,6 +75,7 @@ public class EncryptionServiceTest {
         log.info(plaintext.toString());
     }
 
+    @Ignore
     @Test
     public void decryptJsonArray() throws IOException {
         JsonNode ciphertext = mapper.readTree("[{\"User\":{\"mobileNumber\":\"341642|WfYfJPRug15R2wFh17PlQr5d9YhNkFk1" +

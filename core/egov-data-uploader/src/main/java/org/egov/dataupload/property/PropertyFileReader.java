@@ -76,7 +76,8 @@ public class PropertyFileReader {
 			
 			if (rowNumber++ == 0)
 				continue;
-			log.info("Property_Detail, processing row number", rowNumber);
+			
+			log.info("Property_Detail, processing row number" + rowNumber);
 			// Check the existing property id column (which is 2)
 			if(StringUtils.isEmpty(row.getCell(2).getStringCellValue())){
 				break;
@@ -205,7 +206,7 @@ public class PropertyFileReader {
 			if (rowNumber++ == 0)
 				continue;
 
-			log.info("Unit_Detail, processing row number", rowNumber);
+			log.info("Unit_Detail, processing row number" + rowNumber);
 			// Break if now value in existing property ID
 			if(StringUtils.isEmpty(row.getCell(1).getStringCellValue())){
 				break;
@@ -286,7 +287,7 @@ public class PropertyFileReader {
 			if (rowNumber++ == 0)
 				continue;
 
-			log.info("Owner_Detail, processing row number", rowNumber);
+			log.info("Owner_Detail, processing row number" + rowNumber);
 
 			// Checking if existing property id is blank, then break
 			if(StringUtils.isEmpty(row.getCell(1).getStringCellValue())){

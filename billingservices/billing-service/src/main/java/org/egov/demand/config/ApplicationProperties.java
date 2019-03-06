@@ -213,5 +213,4 @@ public class ApplicationProperties {
 	public String commonsSearchPageSizeDefault() {
 		return environment.getProperty(SEARCH_PAGESIZE_DEFAULT);
 	}
-	
 }

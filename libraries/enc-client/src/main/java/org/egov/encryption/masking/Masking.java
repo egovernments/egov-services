@@ -1,9 +1,9 @@
 package org.egov.encryption.masking;
 
-public abstract class Masking {
+public interface Masking {
 
-    public String maskingTechnique;
+    public String getMaskingTechnique();
 
-    public abstract String maskData(String data);
+    public <T> T maskData(T data);
 
 }

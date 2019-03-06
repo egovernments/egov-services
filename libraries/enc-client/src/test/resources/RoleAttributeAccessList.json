@@ -1,8 +1,6 @@
 [
   {
-    "role": {
-      "code": "LME"
-    },
+    "roleCode": "LME",
     "attributeAccessList": [
       {
         "attribute": {
@@ -20,20 +18,17 @@
     ]
   },
   {
-    "role": {
-      "code": "GRO"
-    },
+    "roleCode": "GRO",
     "attributeAccessList": [
       {
         "attribute": {
-          "jsonPath": "*/name",
-          "maskingTechnique": ""
+          "jsonPath": "*/User/name"
         },
         "accessType": "PLAIN"
       },
       {
         "attribute": {
-          "jsonPath": "*/mobileNumber",
+          "jsonPath": "*/User/mobileNumber",
           "maskingTechnique": "mobile"
         },
         "accessType": "MASK"

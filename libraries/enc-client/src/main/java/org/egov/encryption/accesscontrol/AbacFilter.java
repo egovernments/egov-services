@@ -9,24 +9,34 @@ import java.util.Map;
 
 public class AbacFilter {
 
-    private Map<Role, List<AttributeAccess>> roleAttributeAccessMapping;
+    private Map<String, List<AttributeAccess>> roleAttributeAccessMapping;
 
     private void initializeRoleAttributeAccessMapping(List<RoleAttributeAccess> roleAttributeAccessList) {
         roleAttributeAccessMapping = new HashMap<>();
         for(RoleAttributeAccess roleAttributeAccess : roleAttributeAccessList) {
-            roleAttributeAccessMapping.put(roleAttributeAccess.getRole(), roleAttributeAccess.getAttributeAccessList());
+            roleAttributeAccessMapping.put(roleAttributeAccess.getRoleCode(),
+                    roleAttributeAccess.getAttributeAccessList());
         }
+    }
+
+    public AbacFilter() {
+        List<RoleAttributeAccess> roleAttributeAccessList = getRoleAttributeAccessList();
+        initializeRoleAttributeAccessMapping(roleAttributeAccessList);
     }
 
     public AbacFilter(List<RoleAttributeAccess> roleAttributeAccessList) {
         initializeRoleAttributeAccessMapping(roleAttributeAccessList);
     }
 
-    public Map<Attribute, AccessType> getAttributeAccessForRoles(List<Role> roles) {
+    private List<RoleAttributeAccess> getRoleAttributeAccessList() {
+        return null;
+    }
+
+    public Map<Attribute, AccessType> getAttributeAccessForRoles(List<String> roles) {
 
         Map<Attribute, AccessType> attributeAccessTypeMap = new HashMap<>();
 
-        for(Role role : roles) {
+        for(String role : roles) {
             List<AttributeAccess> attributeAccessList = roleAttributeAccessMapping.get(role);
             for(AttributeAccess attributeAccess : attributeAccessList) {
                 Attribute attribute = attributeAccess.getAttribute();

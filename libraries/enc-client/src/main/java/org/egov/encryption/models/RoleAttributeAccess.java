@@ -13,7 +13,7 @@ import java.util.List;
 @NoArgsConstructor
 public class RoleAttributeAccess {
 
-    private Role role;
+    private String roleCode;
     private List<AttributeAccess> attributeAccessList;
 
 }

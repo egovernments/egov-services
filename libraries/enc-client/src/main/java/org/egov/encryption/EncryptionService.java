@@ -4,11 +4,13 @@ import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
+import org.egov.common.contract.request.Role;
 import org.egov.common.contract.request.User;
 import org.egov.encryption.accesscontrol.AbacFilter;
+import org.egov.encryption.masking.MaskingService;
 import org.egov.encryption.models.AccessType;
 import org.egov.encryption.models.Attribute;
-import org.egov.encryption.models.Role;
+import org.egov.encryption.models.RoleAttributeAccess;
 import org.egov.encryption.util.ConvertClass;
 import org.egov.encryption.util.JacksonUtils;
 
@@ -22,20 +24,29 @@ public class EncryptionService {
     private EncryptionServiceRestInterface encryptionServiceRestInterface;
 
     private AbacFilter abacFilter;
+    private MaskingService maskingService;
 
     private Map<String, String> fieldsAndTheirType;
-
     private Map<String, List<String>> typesAndFieldsToEncrypt;
 
-    private ObjectMapper mapper;
+    private ObjectMapper objectMapper;
 
-
-    public EncryptionService(Map<String, String> fieldsAndTheirType) {
-//        this.abacFilter = abacFilter;
-        this.fieldsAndTheirType = fieldsAndTheirType;
+    public EncryptionService(Map<String, String> fieldsAndTheirType) throws IllegalAccessException,
+            InstantiationException {
+//        this.abacFilter = new AbacFilter();
+        maskingService = new MaskingService();
         encryptionServiceRestInterface = new EncryptionServiceRestInterface();
-        mapper = new ObjectMapper(new JsonFactory());
+        objectMapper = new ObjectMapper(new JsonFactory());
+
+        this.fieldsAndTheirType = fieldsAndTheirType;
         initializeTypesAndFieldsToEncrypt();
+    }
+
+    EncryptionService(Map<String, String> fieldsAndTheirType, List<RoleAttributeAccess> roleAttributeAccessList)
+            throws IllegalAccessException,
+            InstantiationException {
+        this(fieldsAndTheirType);
+        this.abacFilter = new AbacFilter(roleAttributeAccessList);
     }
 
     void initializeTypesAndFieldsToEncrypt() {
@@ -56,12 +67,12 @@ public class EncryptionService {
         JsonNode encryptedNode = plaintextNode.deepCopy();
 
         for (String type : typesAndFieldsToEncrypt.keySet()) {
-            List<String> fields = typesAndFieldsToEncrypt.get(type);
+            List<String> paths = typesAndFieldsToEncrypt.get(type);
 
-            JsonNode jsonNode = JacksonUtils.filterJsonNodeWithPaths(plaintextNode, fields);
+            JsonNode jsonNode = JacksonUtils.filterJsonNodeWithPaths(plaintextNode, paths);
 
-            if(! jsonNode.isEmpty(mapper.getSerializerProvider())) {
-                JsonNode returnedEncryptedNode = mapper.valueToTree(encryptionServiceRestInterface.callEncrypt(tenantId,
+            if(! jsonNode.isEmpty(objectMapper.getSerializerProvider())) {
+                JsonNode returnedEncryptedNode = objectMapper.valueToTree(encryptionServiceRestInterface.callEncrypt(tenantId,
                         type, jsonNode));
                 encryptedNode = JacksonUtils.merge(returnedEncryptedNode, encryptedNode);
             }
@@ -74,17 +85,46 @@ public class EncryptionService {
         return ConvertClass.convertTo(encryptJson(plaintextJson, tenantId), valueType);
     }
 
-    public JsonNode decryptJson(Object ciphertextJson, List<String> paths, User user) throws IOException {
+
+    public JsonNode decryptJson(Object ciphertextJson, Map<Attribute, AccessType> attributeAccessTypeMap, User user)
+            throws IOException {
         JsonNode ciphertextNode = createJsonNode(ciphertextJson);
         JsonNode decryptedNode = ciphertextNode.deepCopy();
 
+        List<String> paths = attributeAccessTypeMap.keySet().stream()
+                .map(Attribute::getJsonPath).collect(Collectors.toList());
+
         JsonNode jsonNode = JacksonUtils.filterJsonNodeWithPaths(ciphertextNode, paths);
-        if(! jsonNode.isEmpty(mapper.getSerializerProvider())) {
-            JsonNode returnedDecryptedNode = mapper.valueToTree(encryptionServiceRestInterface.callDecrypt(jsonNode));
+        if(! jsonNode.isEmpty(objectMapper.getSerializerProvider())) {
+            JsonNode returnedDecryptedNode = objectMapper.valueToTree(encryptionServiceRestInterface.callDecrypt(jsonNode));
+
+            if(attributeAccessTypeMap.containsValue(AccessType.MASK)) {
+                List<Attribute> attributesToBeMasked = getKeysForValue(attributeAccessTypeMap, AccessType.MASK);
+                returnedDecryptedNode = maskingService.maskData(returnedDecryptedNode, attributesToBeMasked);
+            }
+
             decryptedNode = JacksonUtils.merge(returnedDecryptedNode, decryptedNode);
         }
 
+
         return decryptedNode;
+    }
+
+    <K, V> List<K> getKeysForValue(Map<K, V> map, V findValue) {
+        List<K> foundKeys = new ArrayList<>();
+        map.forEach( (key, value) -> {
+            if(value.equals(findValue))
+                foundKeys.add(key);
+        });
+        return foundKeys;
+    }
+
+    public JsonNode decryptJson(Object ciphertextJson, List<String> paths, User user) throws IOException {
+
+        Map<Attribute, AccessType> attributeAccessTypeMap =
+                paths.stream().collect(Collectors.toMap(Attribute::new, __ -> AccessType.PLAIN));
+
+        return decryptJson(ciphertextJson, attributeAccessTypeMap, user);
     }
 
     public <T> T decryptJson(Object ciphertextJson, List<String> paths, User user, Class<T> valueType) throws IOException {
@@ -94,13 +134,11 @@ public class EncryptionService {
 
     public JsonNode decryptJson(Object ciphertextJson, User user) throws IOException {
 
-        List<Role> roles = user.getRoles().stream().map(Role::new).collect(Collectors.toList());
+        List<String> roles = user.getRoles().stream().map(Role::getCode).collect(Collectors.toList());
 
         Map<Attribute, AccessType> attributeAccessTypeMap = abacFilter.getAttributeAccessForRoles(roles);
-        List<String> paths = attributeAccessTypeMap.keySet().stream()
-                .map(Attribute::getJsonPath).collect(Collectors.toList());
 
-        JsonNode decryptedNode = decryptJson(ciphertextJson, paths, user);
+        JsonNode decryptedNode = decryptJson(ciphertextJson, attributeAccessTypeMap, user);
 
         return decryptedNode;
     }
@@ -114,9 +152,9 @@ public class EncryptionService {
         if(json instanceof JsonNode)
             jsonNode = (JsonNode) json;
         else if(json instanceof String)
-            jsonNode = mapper.readTree((String) json);           //JsonNode from JSON String
+            jsonNode = objectMapper.readTree((String) json);           //JsonNode from JSON String
         else
-            jsonNode = mapper.valueToTree(json);                 //JsonNode from POJO or Map
+            jsonNode = objectMapper.valueToTree(json);                 //JsonNode from POJO or Map
         return jsonNode;
     }
 

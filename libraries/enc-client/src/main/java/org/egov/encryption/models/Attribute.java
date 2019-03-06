@@ -15,4 +15,8 @@ public class Attribute {
     private String jsonPath;
     private String maskingTechnique;
 
+    public Attribute(String jsonPath) {
+        this.jsonPath = jsonPath;
+    }
+
 }

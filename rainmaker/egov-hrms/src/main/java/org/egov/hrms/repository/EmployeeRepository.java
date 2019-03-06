@@ -41,7 +41,7 @@ public class EmployeeRepository {
 	 */
 	public List<Employee> fetchEmployees(EmployeeSearchCriteria criteria, RequestInfo requestInfo){
 		List<Employee> employees = new ArrayList<>();
-
+		List<Object> preparedStmtList = new ArrayList<>();
 		if(hrmsUtils.isAssignmentSearchReqd(criteria)) {
 			List<String> empUuids = fetchEmployeesforAssignment(criteria, requestInfo);
 			if (CollectionUtils.isEmpty(empUuids))
@@ -53,9 +53,9 @@ public class EmployeeRepository {
 					criteria.setUuids(empUuids);
 			}
 		}
-		String query = queryBuilder.getEmployeeSearchQuery(criteria);
+		String query = queryBuilder.getEmployeeSearchQuery(criteria, preparedStmtList);
 		try {
-			employees = jdbcTemplate.query(query, rowMapper);
+			employees = jdbcTemplate.query(query, preparedStmtList.toArray(),rowMapper);
 		}catch(Exception e) {
 			log.error("Exception while making the db call: ",e);
 			log.error("query; "+query);
@@ -65,10 +65,11 @@ public class EmployeeRepository {
 
 	private List<String> fetchEmployeesforAssignment(EmployeeSearchCriteria criteria, RequestInfo requestInfo) {
 		List<String> employeesIds = new ArrayList<>();
-		String query = queryBuilder.getAssignmentSearchQuery(criteria);
+		List <Object> preparedStmtList = new ArrayList<>();
+		String query = queryBuilder.getAssignmentSearchQuery(criteria, preparedStmtList);
 		try {
 
-			employeesIds = jdbcTemplate.queryForList(query, String.class);
+			employeesIds = jdbcTemplate.queryForList(query, preparedStmtList.toArray(),String.class);
 		}catch(Exception e) {
 			log.error("Exception while making the db call: ",e);
 			log.error("query; "+query);

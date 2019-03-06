@@ -2,8 +2,10 @@ package org.egov.hrms.repository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.egov.common.contract.request.RequestInfo;
+import org.egov.hrms.utils.HRMSUtils;
 import org.egov.hrms.web.contract.EmployeeSearchCriteria;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -12,6 +14,7 @@ import org.springframework.stereotype.Repository;
 import lombok.extern.slf4j.Slf4j;
 
 import org.egov.hrms.model.Employee;
+import org.springframework.util.CollectionUtils;
 
 @Repository
 @Slf4j
@@ -25,6 +28,9 @@ public class EmployeeRepository {
 	
 	@Autowired
 	private EmployeeRowMapper rowMapper;
+
+	@Autowired
+	private HRMSUtils hrmsUtils;
 	
 	/**
 	 * DB Repository that makes jdbc calls to the db and fetches employees.
@@ -35,6 +41,18 @@ public class EmployeeRepository {
 	 */
 	public List<Employee> fetchEmployees(EmployeeSearchCriteria criteria, RequestInfo requestInfo){
 		List<Employee> employees = new ArrayList<>();
+
+		if(hrmsUtils.isAssignmentSearchReqd(criteria)) {
+			List<String> empUuids = fetchEmployeesforAssignment(criteria, requestInfo);
+			if (CollectionUtils.isEmpty(empUuids))
+				return employees;
+			else {
+				if(!CollectionUtils.isEmpty(criteria.getUuids()))
+					criteria.setUuids(criteria.getUuids().stream().filter(empUuids::contains).collect(Collectors.toList()));
+				else
+					criteria.setUuids(empUuids);
+			}
+		}
 		String query = queryBuilder.getEmployeeSearchQuery(criteria);
 		try {
 			employees = jdbcTemplate.query(query, rowMapper);
@@ -44,7 +62,21 @@ public class EmployeeRepository {
 		}
 		return employees;
 	}
-	
+
+	private List<String> fetchEmployeesforAssignment(EmployeeSearchCriteria criteria, RequestInfo requestInfo) {
+		List<String> employeesIds = new ArrayList<>();
+		String query = queryBuilder.getAssignmentSearchQuery(criteria);
+		try {
+
+			employeesIds = jdbcTemplate.queryForList(query, String.class);
+		}catch(Exception e) {
+			log.error("Exception while making the db call: ",e);
+			log.error("query; "+query);
+		}
+		return employeesIds;
+
+	}
+
 	/**
 	 * Fetches next value in the position seq table
 	 * 

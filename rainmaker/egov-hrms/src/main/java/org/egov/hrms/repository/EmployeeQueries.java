@@ -44,4 +44,6 @@ public class EmployeeQueries {
 			+ "WHERE offset_ > $offset AND offset_ <= $limit";
 	
 	public static final String HRMS_POSITION_SEQ = "SELECT NEXTVAL('EG_HRMS_POSITION')";
+
+	public static final String HRMS_GET_ASSIGNMENT = "select distinct(employeeid)  from eg_hrms_assignment assignment where assignment.tenantid notnull  ";
 }

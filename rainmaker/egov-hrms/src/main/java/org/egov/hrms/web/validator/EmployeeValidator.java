@@ -1,11 +1,6 @@
 package org.egov.hrms.web.validator;
 
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import com.jayway.jsonpath.JsonPath;
@@ -116,8 +111,32 @@ public class EmployeeValidator {
 	 */
 	private void validateExistingDuplicates(EmployeeRequest request, Map<String, String> errorMap) {
 		List<Employee> employees = request.getEmployees();
+		validateDataUniqueness(employees,errorMap);
         validateUserMobile(employees,errorMap,request.getRequestInfo());
         validateUserName(employees,errorMap,request.getRequestInfo());
+	}
+
+	/**
+	 * Checks duplicate occurance of mobileNumber and code for bulk request
+	 *
+	 * @param employees
+	 * @param errorMap
+	 */
+	private void validateDataUniqueness(List<Employee> employees, Map<String, String> errorMap) {
+		HashSet < String> mobileNos = new HashSet<>();
+		HashSet < String> codes = new HashSet<>();
+		employees.forEach(employee -> {
+			if(mobileNos.contains(employee.getUser().getMobileNumber()))
+				errorMap.put(ErrorConstants.HRMS_BULK_CREATE_DUPLICATE_MOBILE_CODE, ErrorConstants.HRMS_BULK_CREATE_DUPLICATE_MOBILE_MSG + employee.getUser().getMobileNumber());
+			else
+				mobileNos.add(employee.getUser().getMobileNumber());
+			if(null != employee.getCode()){
+				if (codes.contains(employee.getCode()))
+					errorMap.put(ErrorConstants.HRMS_BULK_CREATE_DUPLICATE_EMPCODE_CODE,ErrorConstants.HRMS_BULK_CREATE_DUPLICATE_EMPCODE_MSG+ employee.getCode());
+				else
+					codes.add(employee.getCode());
+			}
+		});
 	}
 
 	/**
@@ -282,6 +301,8 @@ public class EmployeeValidator {
 			errorMap.put(ErrorConstants.HRMS_OVERLAPPING_ASSGN_CODE, ErrorConstants.HRMS_OVERLAPPING_ASSGN_MSG);
 
 		for(Assignment assignment: employee.getAssignments()) {
+			if(!assignment.getIsCurrentAssignment() && !CollectionUtils.isEmpty(currentAssignments) && currentAssignments.get(0).getFromDate() < assignment.getToDate() )
+				errorMap.put(ErrorConstants.HRMS_OVERLAPPING_ASSGN_CURRENT_CODE,ErrorConstants.HRMS_OVERLAPPING_ASSGN_CURRENT_MSG);
 		    if(!mdmsData.get(HRMSConstants.HRMS_MDMS_DEPT_CODE).contains(assignment.getDepartment()))
 				errorMap.put(ErrorConstants.HRMS_INVALID_DEPT_CODE, ErrorConstants.HRMS_INVALID_DEPT_MSG);
 			if(!mdmsData.get(HRMSConstants.HRMS_MDMS_DESG_CODE).contains(assignment.getDesignation()))

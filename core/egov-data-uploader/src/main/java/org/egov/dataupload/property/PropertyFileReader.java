@@ -76,7 +76,7 @@ public class PropertyFileReader {
 			
 			if (rowNumber++ == 0)
 				continue;
-			
+
 			log.info("Property_Detail, processing row number" + rowNumber);
 			// Check the existing property id column (which is 2)
 			if(StringUtils.isEmpty(row.getCell(2).getStringCellValue())){

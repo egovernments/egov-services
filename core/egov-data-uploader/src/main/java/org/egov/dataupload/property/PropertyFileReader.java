@@ -76,7 +76,8 @@ public class PropertyFileReader {
 			
 			if (rowNumber++ == 0)
 				continue;
-			if(StringUtils.isEmpty(row.getCell(0))){
+			// Check the existing property id column (which is 2)
+			if(StringUtils.isEmpty(row.getCell(2).getStringCellValue())){
 				break;
 			}
 			for (int i = 0; i < row.getLastCellNum(); i++) {
@@ -203,7 +204,8 @@ public class PropertyFileReader {
 			if (rowNumber++ == 0)
 				continue;
 
-			if(StringUtils.isEmpty(row.getCell(0))){
+			// Break if now value in existing property ID
+			if(StringUtils.isEmpty(row.getCell(1).getStringCellValue())){
 				break;
 			}
 
@@ -282,7 +284,8 @@ public class PropertyFileReader {
 			if (rowNumber++ == 0)
 				continue;
 
-			if(StringUtils.isEmpty(row.getCell(0))){
+			// Checking if existing property id is blank, then break
+			if(StringUtils.isEmpty(row.getCell(1).getStringCellValue())){
 				break;
 			}
 
@@ -290,6 +293,7 @@ public class PropertyFileReader {
 			Property property = propertyIdMap.get(propertyId);
 			if (null == property)
 				continue;
+			
 			PropertyDetail dtl = property.getPropertyDetails().get(0);
 			OwnerInfo owner = new OwnerInfo();
 			Document ownerDoc = new Document();

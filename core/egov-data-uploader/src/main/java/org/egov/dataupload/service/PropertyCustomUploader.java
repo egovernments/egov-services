@@ -98,7 +98,7 @@ public class PropertyCustomUploader {
 			map = propFileReader.parseExcel(loc);
 		} catch (Exception e) {
 
-			log.error(" exception occured while parsing the excel : ", e);
+			log.error("exception occurred while parsing the excel : ", e);
 
 			job.setEndTime(System.currentTimeMillis());
 			job.setStatus(StatusEnum.FAILED);
@@ -107,7 +107,7 @@ public class PropertyCustomUploader {
 			dataUploadService.updateJobsWithPersister(auditDetails,job,false);
 //			uploadRegistryRepository.updateJob(job);
 			uploadUtils.clearInternalDirectory();
-			throw new CustomException("Exception Occured while parsing the excel", e.getMessage());
+			throw new CustomException("Exception Occurred while parsing the excel", e.getMessage());
 		}
 
 		List<String> responses = new ArrayList<>();

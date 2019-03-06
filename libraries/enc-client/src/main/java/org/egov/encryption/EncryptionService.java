@@ -8,6 +8,7 @@ import org.egov.common.contract.request.User;
 import org.egov.encryption.accesscontrol.AbacFilter;
 import org.egov.encryption.models.AccessType;
 import org.egov.encryption.models.Attribute;
+import org.egov.encryption.models.Role;
 import org.egov.encryption.util.ConvertClass;
 import org.egov.encryption.util.JacksonUtils;
 
@@ -93,7 +94,9 @@ public class EncryptionService {
 
     public JsonNode decryptJson(Object ciphertextJson, User user) throws IOException {
 
-        Map<Attribute, AccessType> attributeAccessTypeMap = abacFilter.getAttributeAccessForRoles(user.getRoles());
+        List<Role> roles = user.getRoles().stream().map(Role::new).collect(Collectors.toList());
+
+        Map<Attribute, AccessType> attributeAccessTypeMap = abacFilter.getAttributeAccessForRoles(roles);
         List<String> paths = attributeAccessTypeMap.keySet().stream()
                 .map(Attribute::getJsonPath).collect(Collectors.toList());
 

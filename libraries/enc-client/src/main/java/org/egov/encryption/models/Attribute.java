@@ -8,13 +8,11 @@ import lombok.*;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@EqualsAndHashCode
+@ToString
 public class Attribute {
 
     private String jsonPath;
     private String maskingTechnique;
 
-    @Override
-    public String toString() {
-        return "JsonPath : " + jsonPath + ", MaskingTechnique : " + maskingTechnique;
-    }
 }

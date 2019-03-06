@@ -7,15 +7,16 @@ import com.jayway.jsonpath.Configuration;
 import com.jayway.jsonpath.Option;
 import lombok.extern.slf4j.Slf4j;
 import org.egov.common.contract.request.User;
+
+import org.egov.encryption.models.Role;
+import org.egov.encryption.models.RoleAttributeAccess;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Slf4j
 public class EncryptionServiceTest {

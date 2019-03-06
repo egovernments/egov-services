@@ -1,10 +1,11 @@
 package org.egov.encryption.models;
 
 import lombok.*;
-import org.egov.common.contract.request.Role;
 
 import java.util.List;
 
+@EqualsAndHashCode
+@ToString
 @Getter
 @Setter
 @Builder

@@ -1,0 +1,43 @@
+[
+  {
+    "role": {
+      "code": "LME"
+    },
+    "attributeAccessList": [
+      {
+        "attribute": {
+          "jsonPath": "*/name"
+        },
+        "accessType": "PLAIN"
+      },
+      {
+        "attribute": {
+          "jsonPath": "*/mobileNumber",
+          "maskingTechnique": "mobile"
+        },
+        "accessType": "MASK"
+      }
+    ]
+  },
+  {
+    "role": {
+      "code": "GRO"
+    },
+    "attributeAccessList": [
+      {
+        "attribute": {
+          "jsonPath": "*/name",
+          "maskingTechnique": ""
+        },
+        "accessType": "PLAIN"
+      },
+      {
+        "attribute": {
+          "jsonPath": "*/mobileNumber",
+          "maskingTechnique": "mobile"
+        },
+        "accessType": "MASK"
+      }
+    ]
+  }
+]

@@ -1,42 +1,48 @@
 package org.egov.encryption.accesscontrol;
 
-import org.egov.common.contract.request.Role;
-import org.egov.encryption.models.AccessType;
-import org.egov.encryption.models.Attribute;
-import org.egov.encryption.models.RoleAttributeAccess;
+import org.egov.encryption.models.*;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class AbacFilter {
 
-    private List<RoleAttributeAccess> roleAttributeAccessMapping;
+    private Map<Role, List<AttributeAccess>> roleAttributeAccessMapping;
 
-    public AbacFilter(List<RoleAttributeAccess> roleAttributeAccessMapping) {
-        this.roleAttributeAccessMapping = roleAttributeAccessMapping;
+    private void initializeRoleAttributeAccessMapping(List<RoleAttributeAccess> roleAttributeAccessList) {
+        roleAttributeAccessMapping = new HashMap<>();
+        for(RoleAttributeAccess roleAttributeAccess : roleAttributeAccessList) {
+            roleAttributeAccessMapping.put(roleAttributeAccess.getRole(), roleAttributeAccess.getAttributeAccessList());
+        }
+    }
+
+    public AbacFilter(List<RoleAttributeAccess> roleAttributeAccessList) {
+        initializeRoleAttributeAccessMapping(roleAttributeAccessList);
     }
 
     public Map<Attribute, AccessType> getAttributeAccessForRoles(List<Role> roles) {
 
-//        Map<Attribute, AccessType> attributeAccessTypeMap = new HashMap<Attribute, AccessType>();
-//
-//        for(RoleAttributeAccess roleAttribute : roleAttributeAccessMapping) {
-//            if(roles.contains(roleAttribute.getRole())) {
-//                List<Attribute> attributes = roleAttribute.getAttributes();
-//                for(Attribute attribute : attributes) {
-//                    if(attributeAccessTypeMap.containsKey(attribute)) {
-//                        if(roleAttribute.getAccessType().compareTo(attributeAccessTypeMap.get(attribute)) < 0) {
-//                            attributeAccessTypeMap.put(attribute, roleAttribute.getAccessType());
-//                        }
-//                    } else {
-//                        attributeAccessTypeMap.put(attribute, roleAttribute.getAccessType());
-//                    }
-//                }
-//            }
-//        }
-//
-//        return attributeAccessTypeMap;
-        return null;
+        Map<Attribute, AccessType> attributeAccessTypeMap = new HashMap<>();
+
+        for(Role role : roles) {
+            List<AttributeAccess> attributeAccessList = roleAttributeAccessMapping.get(role);
+            for(AttributeAccess attributeAccess : attributeAccessList) {
+                Attribute attribute = attributeAccess.getAttribute();
+                AccessType accessType = attributeAccess.getAccessType();
+                if(attributeAccessTypeMap.containsKey(attribute)) {
+                    if(attributeAccessTypeMap.get(attribute).ordinal() > accessType.ordinal()) {
+                        attributeAccessTypeMap.put(attribute, accessType);
+                    }
+                } else {
+                    attributeAccessTypeMap.put(attribute, accessType);
+                }
+            }
+        }
+
+        return attributeAccessTypeMap;
+
     }
 
 }

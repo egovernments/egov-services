@@ -47,7 +47,7 @@ public class EmployeeQueryBuilder {
 			builder.append(" employee.tenantid NOTNULL");
 		
 		if(!CollectionUtils.isEmpty(criteria.getCodes())){
-			builder.append("and employee.code IN (").append(createQuery(criteria.getCodes())).append(")");
+			builder.append(" and employee.code IN (").append(createQuery(criteria.getCodes())).append(")");
 			addToPreparedStatement(preparedStmtList, criteria.getCodes());
 
 		}
@@ -69,9 +69,6 @@ public class EmployeeQueryBuilder {
 		}
 
 		builder.append(" and employee.active = "+criteria.getIsActive());
-		builder.append(" and jurisdiction.isactive is not false");
-		builder.append(" and depttest.isactive is not false");
-		builder.append(" and education.isactive is not false");
 	}
 	
 	public String paginationClause(EmployeeSearchCriteria criteria, StringBuilder builder) {

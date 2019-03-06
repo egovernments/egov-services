@@ -174,4 +174,7 @@ public class ErrorConstants {
 	public static final String HRMS_BULK_CREATE_DUPLICATE_EMPCODE_CODE = "HRMS_BULK_CREATE_DUPLICATE_EMPCODE";
 	public static final String HRMS_BULK_CREATE_DUPLICATE_EMPCODE_MSG = "Bulk request has duplicate employee code ";
 
+	public static final String HRMS_UPDATE_DEACT_DETAILS_INCORRECT_EFFECTIVEFROM_CODE = "HRMS_UPDATE_DEACT_DETAILS_INCORRECT_EFFECTIVEFROM";
+	public static final String HRMS_UPDATE_DEACT_DETAILS_INCORRECT_EFFECTIVEFROM_MSG = "Employee deactivation effective date should not be future date.";
+
 }

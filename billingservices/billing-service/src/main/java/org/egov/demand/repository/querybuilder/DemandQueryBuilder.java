@@ -39,7 +39,6 @@
  */
 package org.egov.demand.repository.querybuilder;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -48,7 +47,6 @@ import java.util.Set;
 import org.egov.demand.model.DemandCriteria;
 import org.egov.demand.model.DemandDetailCriteria;
 import org.egov.demand.model.DemandUpdateMisRequest;
-import org.egov.demand.model.enums.Type;
 import org.springframework.stereotype.Component;
 
 import lombok.extern.slf4j.Slf4j;
@@ -80,12 +78,12 @@ public class DemandQueryBuilder {
 					+ "INNER JOIN egbs_demand demand ON demanddetail.demandid=demand.id AND "
 					+ "demanddetail.tenantid=demand.tenantid WHERE ";
 
-	public static final String DEMAND_QUERY_ORDER_BY_CLAUSE = "demand.taxperiodfrom";
+	public static final String DEMAND_QUERY_ORDER_BY_CLAUSE = "dmd.taxperiodfrom";
 
-	public static final String BASE_DEMAND_DETAIL_QUERY_ORDER_BY_CLAUSE = "demanddetail.id";
+	public static final String BASE_DEMAND_DETAIL_QUERY_ORDER_BY_CLAUSE = "dmdl.id";
 
 	public static final String DEMAND_INSERT_QUERY = "INSERT INTO egbs_demand "
-			+ "(id,consumerCode,consumerType,businessService,owner,taxPeriodFrom,taxPeriodTo,"
+			+ "(id,consumerCode,consumerType,businessService,payer,taxPeriodFrom,taxPeriodTo,"
 			+ "minimumAmountPayable,createdby,lastModifiedby,createdtime,lastModifiedtime,tenantid, status, additionaldetails) "
 			+ "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);";
 
@@ -94,11 +92,10 @@ public class DemandQueryBuilder {
 			+ "createdby,lastModifiedby,createdtime,lastModifiedtime,tenantid,additionaldetails)" 
 			+ " VALUES (?,?,?,?,?,?,?,?,?,?,?);";
 
-	// FIX ME REMOVE CREATED BY FROM UPDATE
 	public static final String DEMAND_UPDATE_QUERY = "UPDATE egbs_demand SET "
-			+ "id=?,consumerCode=?,consumerType=?,businessService=?,owner=?,taxPeriodFrom=?,"
-			+ "taxPeriodTo=?,minimumAmountPayable=?,lastModifiedby=?," + "lastModifiedtime=?,tenantid=?, status=?"
-			+ ", additionaldetails=? WHERE id=? AND tenantid=?;";
+			+ "id=?,consumerCode=?,consumerType=?,businessService=?,payer=?,taxPeriodFrom=?,"
+			+ "taxPeriodTo=?,minimumAmountPayable=?,lastModifiedby=?," + "lastModifiedtime=?,tenantid=?,"
+			+ " status=?,additionaldetails=? WHERE id=? AND tenantid=?;";
 
 	public static final String DEMAND_DETAIL_UPDATE_QUERY = "UPDATE egbs_demanddetail SET "
 			+ "id=?,demandid=?,taxHeadCode=?,taxamount=?,collectionamount=?,"
@@ -125,7 +122,7 @@ public class DemandQueryBuilder {
 		
 		StringBuilder query = new StringBuilder(BASE_DEMAND_QUERY);
 		
-		query.append("demand.tenantid=? ");
+		query.append("dmd.tenantid=? ");
 		preparedStmtList.add(tenantId);
 		boolean orFlag = false;
 		for (Entry<String, Set<String>> consumerCode : businessConsumercodeMap.entrySet()) {
@@ -140,7 +137,7 @@ public class DemandQueryBuilder {
 				else
 					query.append("AND");
 				
-				query.append(" demand.businessservice='"+businessService+"' AND demand.consumercode IN ("
+				query.append(" dmd.businessservice='"+businessService+"' AND dmd.consumercode IN ("
 						+getIdQueryForStrings(consumerCodes));
 				orFlag=true;
 			}
@@ -153,54 +150,28 @@ public class DemandQueryBuilder {
 
 		StringBuilder demandQuery = new StringBuilder(BASE_DEMAND_QUERY);
 
-		demandQuery.append("demand.tenantid=?");
+		demandQuery.append("dmd.tenantid=?");
 		preparedStatementValues.add(demandCriteria.getTenantId());
 
 		if (demandCriteria.getDemandId() != null && !demandCriteria.getDemandId().isEmpty()) {
 			addAndClause(demandQuery);
-			demandQuery.append("demand.id IN (" + getIdQueryForStrings(demandCriteria.getDemandId()));
+			demandQuery.append("dmd.id IN (" + getIdQueryForStrings(demandCriteria.getDemandId()));
 		}
 		if (ownerIds != null && !ownerIds.isEmpty()) {
 			addAndClause(demandQuery);
-			demandQuery.append("demand.owner IN (" + getIdQueryForStrings(ownerIds));
+			demandQuery.append("dmd.payer IN (" + getIdQueryForStrings(ownerIds));
 		}
 		if (demandCriteria.getBusinessService() != null) {
 			addAndClause(demandQuery);
-			demandQuery.append("demand.businessservice=?");
+			demandQuery.append("dmd.businessservice=?");
 			preparedStatementValues.add(demandCriteria.getBusinessService());
 		}
 		if (demandCriteria.getConsumerCode() != null && !demandCriteria.getConsumerCode().isEmpty()) {
 			addAndClause(demandQuery);
-			demandQuery.append("demand.consumercode IN ("
+			demandQuery.append("dmd.consumercode IN ("
 			+ getIdQueryForStrings(demandCriteria.getConsumerCode()));
 		}
-		if (demandCriteria.getDemandFrom() != null) {
-			addAndClause(demandQuery);
-			demandQuery.append("demanddetail.taxamount>=?");
-			preparedStatementValues.add(demandCriteria.getDemandFrom());
-		}
-		if (demandCriteria.getDemandTo() != null) {
-			addAndClause(demandQuery);
-			demandQuery.append("demanddetail.taxamount<=?");
-			preparedStatementValues.add(demandCriteria.getDemandTo());
-		}
-		if (demandCriteria.getType() != null) {
-			if (demandCriteria.getType().equals(Type.CURRENT)) {
-				addAndClause(demandQuery);
-				Long currDate = new Date().getTime();
-				demandQuery.append("demand.taxperiodfrom<=?");
-				preparedStatementValues.add(currDate);
-				addAndClause(demandQuery);
-				demandQuery.append("demand.taxperiodto>=?");
-				preparedStatementValues.add(currDate);
-				
-			} else if (demandCriteria.getType().equals(Type.ARREARS)) {
-				addAndClause(demandQuery);
-				demandQuery.append("demand.taxperiodto<?");
-				Long currDate = new Date().getTime();
-				preparedStatementValues.add(currDate);
-			}
-		}
+
 		addOrderByClause(demandQuery, DEMAND_QUERY_ORDER_BY_CLAUSE);
 		addPagingClause(demandQuery, preparedStatementValues);
 

@@ -63,14 +63,20 @@ import org.egov.demand.repository.querybuilder.DemandQueryBuilder;
 import org.egov.demand.repository.rowmapper.CollectedReceiptsRowMapper;
 import org.egov.demand.repository.rowmapper.DemandDetailRowMapper;
 import org.egov.demand.repository.rowmapper.DemandRowMapper;
+import org.egov.demand.util.Constants;
 import org.egov.demand.util.SequenceGenService;
 import org.egov.demand.web.contract.DemandRequest;
+import org.egov.tracer.model.CustomException;
+import org.postgresql.util.PGobject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementSetter;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -92,6 +98,9 @@ public class DemandRepository {
 	
 	@Autowired
 	private DemandRowMapper demandRowMapper;
+	
+	@Autowired
+	private ObjectMapper mapper;
 	
 	public List<Demand> getDemands(DemandCriteria demandCriteria, Set<String> ownerIds) {
 
@@ -124,7 +133,7 @@ public class DemandRepository {
 
 	public void save(DemandRequest demandRequest) {
 
-		log.info("DemandRepository save, the request object : " + demandRequest);
+		log.debug("DemandRepository save, the request object : " + demandRequest);
 		List<Demand> demands = demandRequest.getDemands();
 		List<DemandDetail> demandDetails = new ArrayList<>();
 		for (Demand demand : demands) {
@@ -199,7 +208,7 @@ public class DemandRepository {
 				ps.setLong(12, auditDetail.getLastModifiedTime());
 				ps.setString(13, demand.getTenantId());
 				ps.setString(14, status);
-				ps.setObject(15, demand.getAdditionalDetails());
+				ps.setObject(15, getPGObject(demand.getAdditionalDetails()));
 			}
 
 			@Override
@@ -224,7 +233,7 @@ public class DemandRepository {
 				ps.setLong(8, auditDetail.getCreatedTime());
 				ps.setLong(9, auditDetail.getLastModifiedTime());
 				ps.setString(10, demandDetail.getTenantId());
-				ps.setObject(11, demandDetail.getAdditionalDetails());
+				ps.setObject(11, getPGObject(demandDetail.getAdditionalDetails()));
 			}
 
 			@Override
@@ -235,7 +244,7 @@ public class DemandRepository {
 	}
 	
 	@Transactional
-	private void updateBatch(List<Demand> oldDemands, List<DemandDetail> oldDemandDetails) {
+	public void updateBatch(List<Demand> oldDemands, List<DemandDetail> oldDemandDetails) {
 
 		jdbcTemplate.batchUpdate(DemandQueryBuilder.DEMAND_UPDATE_QUERY, new BatchPreparedStatementSetter() {
 
@@ -258,9 +267,9 @@ public class DemandRepository {
 				ps.setLong(10, auditDetail.getLastModifiedTime());
 				ps.setString(11, demand.getTenantId());
 				ps.setString(12, status);
-				ps.setObject(15, demand.getAdditionalDetails());
-				ps.setString(13, demand.getId());
-				ps.setString(14, demand.getTenantId());
+				ps.setObject(13, getPGObject(demand.getAdditionalDetails()));
+				ps.setString(14, demand.getId());
+				ps.setString(15, demand.getTenantId());
 				
 			}
 
@@ -283,7 +292,7 @@ public class DemandRepository {
 				ps.setBigDecimal(5, demandDetail.getCollectionAmount());
 				ps.setString(6, auditDetail.getLastModifiedBy());
 				ps.setLong(7, auditDetail.getLastModifiedTime());
-				ps.setObject(11, demandDetail.getAdditionalDetails());
+				ps.setObject(8, getPGObject(demandDetail.getAdditionalDetails()));
 				ps.setString(9, demandDetail.getId());
 				ps.setString(10, demandDetail.getTenantId());
 				
@@ -340,5 +349,30 @@ public class DemandRepository {
 	
 	public List<CollectedReceipt> getCollectedReceipts(DemandCriteria demandCriteria){
 		return jdbcTemplate.query(demandQueryBuilder.getCollectedReceiptsQuery(demandCriteria), new CollectedReceiptsRowMapper());
+	}
+	
+	/**
+	 * converts the object to a pgObject for persistence
+	 * 
+	 * @param additionalDetails
+	 * @return
+	 */
+	private PGobject getPGObject(Object additionalDetails) {
+
+		String value = null;
+		try {
+			value = mapper.writeValueAsString(additionalDetails);
+		} catch (JsonProcessingException e) {
+			throw new CustomException(Constants.EG_BS_JSON_EXCEPTION_KEY, Constants.EG_BS_JSON_EXCEPTION_MSG);
+		}
+
+		PGobject json = new PGobject();
+		json.setType(Constants.DB_TYPE_JSONB);
+		try {
+			json.setValue(value);
+		} catch (SQLException e) {
+			throw new CustomException(Constants.EG_BS_JSON_EXCEPTION_KEY, Constants.EG_BS_JSON_EXCEPTION_MSG);
+		}
+		return json;
 	}
 }

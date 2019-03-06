@@ -1,18 +1,17 @@
 package org.egov.demand.repository;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.jayway.jsonpath.DocumentContext;
-import com.jayway.jsonpath.JsonPath;
+import java.util.Map;
 
-import lombok.extern.slf4j.Slf4j;
 import org.egov.tracer.model.ServiceCallException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.Map;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * 
@@ -38,22 +37,23 @@ public class ServiceRequestRepository {
 	 * @param request
 	 * @return
 	 */
-	public DocumentContext fetchResult(String uri, Object request) {
+	@SuppressWarnings("rawtypes")
+	public Map fetchResult(String uri, Object request) {
 		
 		mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
 		Map response = null;
-		log.info("URI: "+uri.toString());
+		log.info("URI: "+ uri);
 		
 		try {
 			log.info("Request: "+mapper.writeValueAsString(request));
-			response = restTemplate.postForObject(uri.toString(), request, Map.class);
+			response = restTemplate.postForObject(uri, request, Map.class);
 		}catch(HttpClientErrorException e) {
-			log.error("External Service threw an Exception: ",e);
+			log.error("External Service threw an Exception: ",e.getResponseBodyAsString());
 			throw new ServiceCallException(e.getResponseBodyAsString());
 		}catch(Exception e) {
-			log.error("Exception while fetching from searcher: ",e);
+			log.error("Exception while searching user data : ",e);
 		}
 
-		return JsonPath.parse(response);
+		return response;
 	}
 }

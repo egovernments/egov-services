@@ -31,9 +31,11 @@ import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.DocumentContext;
+import com.jayway.jsonpath.JsonPath;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -110,10 +112,15 @@ public class DemandValidatorV1 {
 		for (Demand demand : demands) {
 
 			List<DemandDetail> details = demand.getDemandDetails();
-			if (isCreate)
-				detailsForValidation.addAll(details);
 			
-			if(null != demand.getPayer())
+			detailsForValidation.addAll(details);
+			
+			if (isCreate) {
+				/* passing the businessConsumerValidator map to be enriched for validation */
+				enrichConsumerCodesWithBusinessMap(businessConsumerValidatorMap, demand);
+			}
+			
+			if (null != demand.getPayer() && !StringUtils.isEmpty(demand.getPayer().getUuid()))
 				payerIds.add(demand.getPayer().getUuid());
 			
 			if (!businessServiceCodes.contains(demand.getBusinessService()))
@@ -127,24 +134,25 @@ public class DemandValidatorV1 {
 
 			validateTaxPeriod(taxPeriodBusinessMap, demand, errorMap, businessServicesWithNoTaxPeriods);
 			
-			/* passing the businessConsumerValidator map to be enriched for validation */
-			enrichConsumerCodesWithBusinessMap(businessConsumerValidatorMap, demand);
 		}
 		
 		/*
 		 * Validating payer(Citizen) data
 		 */
 		validatePayer(payerIds, requestInfo, errorMap);
+		
 		/*
 		 * Validating demand details for tax and collection amount
 		 * 
 		 * if called from update no need to call detail validation 
 		 */
-		if (isCreate)
-			validateDemandDetails(detailsForValidation, errorMap);
+		validateDemandDetails(detailsForValidation, errorMap);
 		
-		validateConsumerCodes(demands, businessConsumerValidatorMap, errorMap);
-
+		if (isCreate) {
+			/* validating consumer codes for create demands*/
+			validateConsumerCodes(demands, businessConsumerValidatorMap, errorMap);
+		}
+			
 		if (!CollectionUtils.isEmpty(taxHeadsNotFound))
 			errorMap.put(TAXHEADS_NOT_FOUND_KEY,
 					TAXHEADS_NOT_FOUND_MSG.replace(TAXHEADS_NOT_FOUND_REPLACETEXT, taxHeadsNotFound.toString()));
@@ -268,7 +276,7 @@ public class DemandValidatorV1 {
         StringBuilder uri = new StringBuilder(properties.getMdmsHost()).append(properties.getMdmsEndpoint());
         
         try {
-            return serviceRequestRepository.fetchResult(uri.toString(), mdmsReq);
+            return JsonPath.parse(serviceRequestRepository.fetchResult(uri.toString(), mdmsReq));
         } catch (Exception e) {
             log.error("Error while fetvhing MDMS data",e);
             throw new CustomException(INVALID_TENANT_ID_MDMS_KEY, INVALID_TENANT_ID_MDMS_MSG);
@@ -283,6 +291,9 @@ public class DemandValidatorV1 {
      * @param errorMap
      */
 	private void validatePayer(Set<String> payerIds, RequestInfo requestInfo, Map<String, String> errorMap) {
+
+		if (CollectionUtils.isEmpty(payerIds))
+			return;
 
 		String url = applicationProperties.getUserServiceHostName()
 				.concat(applicationProperties.getUserServiceSearchPath());

@@ -10,10 +10,9 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class RoleAttribute {
+public class RoleAttributeAccess {
 
     private Role role;
-    private List<Attribute> attributes;
-    private AccessType accessType;
+    private List<AttributeAccess> attributeAccessList;
 
 }

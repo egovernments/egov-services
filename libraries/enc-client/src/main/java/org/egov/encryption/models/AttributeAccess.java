@@ -12,4 +12,8 @@ public class AttributeAccess {
     private Attribute attribute;
     private AccessType accessType;
 
+    @Override
+    public String toString() {
+        return attribute + ", AccessType : " + accessType;
+    }
 }

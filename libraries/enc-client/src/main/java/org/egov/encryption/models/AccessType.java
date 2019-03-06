@@ -5,13 +5,9 @@ import lombok.Getter;
 @Getter
 public enum AccessType {
 
-    PLAIN(1),
+    PLAIN,
 
-    MASK(2),
+    MASK;
 
-    NONE(3);
-
-    AccessType(int i) {
-    }
 
 }

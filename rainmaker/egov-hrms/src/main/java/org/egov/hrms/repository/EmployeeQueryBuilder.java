@@ -89,28 +89,6 @@ public class EmployeeQueryBuilder {
 		
 		return pagination;
 	}
-	
-	private String createINClauseForList(List<String> ids) {
-		StringBuilder builder = new StringBuilder();
-		int length = ids.size();
-		for (int i = 0; i < length; i++) {
-			builder.append("'"+ids.get(i)+"'");
-			if (i != length - 1)
-				builder.append(",");
-		}
-		return builder.toString();
-	}
-
-	private String createINClauseForLongList(List<Long> ids) {
-		StringBuilder builder = new StringBuilder();
-		int length = ids.size();
-		for (int i = 0; i < length; i++) {
-			builder.append(ids.get(i));
-			if (i != length - 1)
-				builder.append(",");
-		}
-		return builder.toString();
-	}
 
 	public String getAssignmentSearchQuery(EmployeeSearchCriteria criteria, List<Object> preparedStmtList) {
 		StringBuilder builder = new StringBuilder(EmployeeQueries.HRMS_GET_ASSIGNMENT);

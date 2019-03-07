@@ -152,10 +152,11 @@ public class CollectionResultSetExtractor implements ResultSetExtractor<List<Rec
     private BillAccountDetail populateAccountDetail(ResultSet resultSet, BillDetail billDetail) throws SQLException,
             DataAccessException{
 
-        BigDecimal crAmount = getBigDecimalValue(resultSet.getBigDecimal("rd_cramount"));
-        billDetail.setAmountPaid(billDetail.getAmountPaid().add(crAmount));
+        BigDecimal adjustedAmount = getBigDecimalValue(getBigDecimalValue(resultSet.getBigDecimal("rd_adjustedamount")));
+        billDetail.setAmountPaid(billDetail.getAmountPaid().add(adjustedAmount));
 
         return BillAccountDetail.builder()
+        		    .id(resultSet.getString("rd_id"))
                     .isActualDemand((Boolean) resultSet.getObject("rd_isActualDemand"))
                     .tenantId(resultSet.getString("rd_tenantId"))
                     .billDetail(resultSet.getString("rh_id"))

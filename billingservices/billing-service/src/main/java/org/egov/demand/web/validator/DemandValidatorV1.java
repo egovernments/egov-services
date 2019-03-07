@@ -1,6 +1,43 @@
 package org.egov.demand.web.validator;
 
-import static org.egov.demand.util.Constants.*;
+import static org.egov.demand.util.Constants.BUSINESSSERVICE_NOT_FOUND_KEY;
+import static org.egov.demand.util.Constants.BUSINESSSERVICE_NOT_FOUND_MSG;
+import static org.egov.demand.util.Constants.BUSINESSSERVICE_NOT_FOUND_REPLACETEXT;
+import static org.egov.demand.util.Constants.BUSINESSSERVICE_PATH_CODE;
+import static org.egov.demand.util.Constants.CONSUMER_CODE_DUPLICATE_CONSUMERCODE_TEXT;
+import static org.egov.demand.util.Constants.CONSUMER_CODE_DUPLICATE_KEY;
+import static org.egov.demand.util.Constants.CONSUMER_CODE_DUPLICATE_MSG;
+import static org.egov.demand.util.Constants.DEMAND_DETAIL_NOT_FOUND_KEY;
+import static org.egov.demand.util.Constants.DEMAND_DETAIL_NOT_FOUND_MSG;
+import static org.egov.demand.util.Constants.DEMAND_DETAIL_NOT_FOUND_REPLACETEXT;
+import static org.egov.demand.util.Constants.DEMAND_NOT_FOUND_KEY;
+import static org.egov.demand.util.Constants.DEMAND_NOT_FOUND_MSG;
+import static org.egov.demand.util.Constants.DEMAND_NOT_FOUND_REPLACETEXT;
+import static org.egov.demand.util.Constants.INVALID_BUSINESS_FOR_TAXPERIOD_KEY;
+import static org.egov.demand.util.Constants.INVALID_BUSINESS_FOR_TAXPERIOD_MSG;
+import static org.egov.demand.util.Constants.INVALID_BUSINESS_FOR_TAXPERIOD_REPLACE_TEXT;
+import static org.egov.demand.util.Constants.INVALID_DEMAND_DETAIL_COLLECTION_TEXT;
+import static org.egov.demand.util.Constants.INVALID_DEMAND_DETAIL_ERROR_MSG;
+import static org.egov.demand.util.Constants.INVALID_DEMAND_DETAIL_KEY;
+import static org.egov.demand.util.Constants.INVALID_DEMAND_DETAIL_MSG;
+import static org.egov.demand.util.Constants.INVALID_DEMAND_DETAIL_REPLACETEXT;
+import static org.egov.demand.util.Constants.INVALID_DEMAND_DETAIL_TAX_TEXT;
+import static org.egov.demand.util.Constants.INVALID_NEGATIVE_DEMAND_DETAIL_ERROR_MSG;
+import static org.egov.demand.util.Constants.MDMS_CODE_FILTER;
+import static org.egov.demand.util.Constants.MDMS_MASTER_NAMES;
+import static org.egov.demand.util.Constants.MODULE_NAME;
+import static org.egov.demand.util.Constants.TAXHEADMASTER_PATH_CODE;
+import static org.egov.demand.util.Constants.TAXHEADS_NOT_FOUND_KEY;
+import static org.egov.demand.util.Constants.TAXHEADS_NOT_FOUND_MSG;
+import static org.egov.demand.util.Constants.TAXHEADS_NOT_FOUND_REPLACETEXT;
+import static org.egov.demand.util.Constants.TAXPERIOD_NOT_FOUND_FROMDATE;
+import static org.egov.demand.util.Constants.TAXPERIOD_NOT_FOUND_KEY;
+import static org.egov.demand.util.Constants.TAXPERIOD_NOT_FOUND_MSG;
+import static org.egov.demand.util.Constants.TAXPERIOD_NOT_FOUND_TODATE;
+import static org.egov.demand.util.Constants.TAXPERIOD_PATH_CODE;
+import static org.egov.demand.util.Constants.USER_UUID_NOT_FOUND_KEY;
+import static org.egov.demand.util.Constants.USER_UUID_NOT_FOUND_MSG;
+import static org.egov.demand.util.Constants.USER_UUID_NOT_FOUND_REPLACETEXT;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -35,7 +72,6 @@ import org.springframework.util.StringUtils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.DocumentContext;
-import com.jayway.jsonpath.JsonPath;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -43,9 +79,6 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class DemandValidatorV1 {
 
-	@Autowired
-	private ApplicationProperties properties;
-	
 	@Autowired
 	private ServiceRequestRepository serviceRequestRepository;
 	
@@ -77,7 +110,7 @@ public class DemandValidatorV1 {
 		 */
 		MdmsCriteriaReq mdmsReq = util.prepareMdMsRequest(tenantId, MODULE_NAME, MDMS_MASTER_NAMES, MDMS_CODE_FILTER,
 				requestInfo);
-		DocumentContext mdmsData = getAttributeValues(mdmsReq);
+		DocumentContext mdmsData = util.getAttributeValues(mdmsReq);
 
 		/*
 		 * Extracting the respective masters from DocumentContext 
@@ -86,7 +119,7 @@ public class DemandValidatorV1 {
 		List<String> taxHeadCodes = mdmsData.read(TAXHEADMASTER_PATH_CODE);
 		
 		/*
-		 * mdmsdata read returns a list of hashmap which is converted to array of taxperiod and then to list
+		 * mdmsdata read returns a list of hashmap which is converted to array of tax-period and then to list
 		 */
 		List<TaxPeriod> taxPeriods = Arrays.asList(mapper.convertValue(mdmsData.read(TAXPERIOD_PATH_CODE), TaxPeriod[].class));
 
@@ -153,6 +186,24 @@ public class DemandValidatorV1 {
 			validateConsumerCodes(demands, businessConsumerValidatorMap, errorMap);
 		}
 			
+		/* passing collected values to throw errors
+		 * 
+		 * method separated to increase readability
+		 * */
+		throwErrorForCreate(businessServicesWithNoTaxPeriods, businessServicesNotFound, taxHeadsNotFound, errorMap);
+	}
+
+	/**
+	 * Private method to throw errors for create validation
+	 * 
+	 * @param businessServicesWithNoTaxPeriods
+	 * @param businessServicesNotFound
+	 * @param taxHeadsNotFound
+	 * @param errorMap
+	 */
+	private void throwErrorForCreate(Set<String> businessServicesWithNoTaxPeriods,
+			Set<String> businessServicesNotFound, Set<String> taxHeadsNotFound, Map<String, String> errorMap) {
+
 		if (!CollectionUtils.isEmpty(taxHeadsNotFound))
 			errorMap.put(TAXHEADS_NOT_FOUND_KEY,
 					TAXHEADS_NOT_FOUND_MSG.replace(TAXHEADS_NOT_FOUND_REPLACETEXT, taxHeadsNotFound.toString()));
@@ -263,26 +314,6 @@ public class DemandValidatorV1 {
 					CONSUMER_CODE_DUPLICATE_MSG.replace(CONSUMER_CODE_DUPLICATE_CONSUMERCODE_TEXT, errors.toString()));
 	}
 	
-    /**
-     * Fetches all the values of particular attribute as documentContext
-     *
-     * @param tenantId tenantId of properties in PropertyRequest
-     * @param names List of String containing the names of all masterdata whose code has to be extracted
-     * @param requestInfo RequestInfo of the received PropertyRequest
-     * @return Map of MasterData name to the list of code in the MasterData
-     *
-     */
-    private DocumentContext getAttributeValues(MdmsCriteriaReq mdmsReq){
-        StringBuilder uri = new StringBuilder(properties.getMdmsHost()).append(properties.getMdmsEndpoint());
-        
-        try {
-            return JsonPath.parse(serviceRequestRepository.fetchResult(uri.toString(), mdmsReq));
-        } catch (Exception e) {
-            log.error("Error while fetvhing MDMS data",e);
-            throw new CustomException(INVALID_TENANT_ID_MDMS_KEY, INVALID_TENANT_ID_MDMS_MSG);
-        }
-    }
-    
     /**
      * Method to validate payer(user/citizen) data in demand
      * 

@@ -1,15 +1,9 @@
 package org.egov.demand.web.controller;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.validation.Valid;
 
 import org.egov.common.contract.request.RequestInfo;
-import org.egov.common.contract.response.Error;
-import org.egov.common.contract.response.ErrorField;
 import org.egov.common.contract.response.ErrorResponse;
-import org.egov.common.contract.response.ResponseInfo;
 import org.egov.demand.model.BillSearchCriteria;
 import org.egov.demand.model.GenerateBillCriteria;
 import org.egov.demand.service.BillService;
@@ -60,61 +54,29 @@ public class BillController {
 		return new ResponseEntity<>(billService.searchBill(billCriteria,requestInfo), HttpStatus.OK);
 	}
 
-	@PostMapping("_create")
-	@ResponseBody
-	public ResponseEntity<?> create(@RequestBody BillRequest billRequest, BindingResult bindingResult){
-
-		log.debug("create billRequest:"+billRequest);
-		
-		if (bindingResult.hasErrors()) {
-			return new ResponseEntity<>(responseFactory.
-					getErrorResponse(bindingResult, billRequest.getRequestInfo()), HttpStatus.BAD_REQUEST);
-		}
-		billValidator.validateBillRequest(billRequest);
-		BillResponse billResponse = billService.createAsync(billRequest);
-		
-		return new ResponseEntity<>(billResponse,HttpStatus.CREATED);
-	}
 	
 	@PostMapping("_generate")
 	@ResponseBody
-	public ResponseEntity<?> genrateBill(@RequestBody RequestInfoWrapper requestInfoWrapper, 
-			@ModelAttribute @Valid GenerateBillCriteria generateBillCriteria, BindingResult bindingResult){
-		log.debug("genrateBill generateBillCriteria : "+generateBillCriteria);
-		log.debug("genrateBill requestInfoWrapper : "+requestInfoWrapper);
-		
-		if (bindingResult.hasErrors()) {
-			return new ResponseEntity<>(responseFactory.
-					getErrorResponse(bindingResult, requestInfoWrapper.getRequestInfo()), HttpStatus.BAD_REQUEST);
-		}
-		billValidator.validateBillGenRequest(generateBillCriteria,bindingResult);
-		if (bindingResult.hasErrors()) {
-			return new ResponseEntity<>(responseFactory.
-					getErrorResponse(bindingResult, requestInfoWrapper.getRequestInfo()), HttpStatus.BAD_REQUEST);
-		}
-		BillResponse billResponse = billService.generateBill(generateBillCriteria, requestInfoWrapper.getRequestInfo());
-		
-		if (billResponse.getBill() != null) {
-			return new ResponseEntity<>(billResponse, HttpStatus.CREATED);
-		} else {
-			Error error = new Error();
-			error.setCode(400);
-			error.setMessage("The due to be paid is zero");
-			error.setDescription(
-					"bill Cannot be generated because the amount to be collected on the respective bill is zero");
-			List<ErrorField> errorFields = new ArrayList<>();
-			error.setFields(errorFields);
+	public ResponseEntity<?> genrateBill(@RequestBody RequestInfoWrapper requestInfoWrapper,
+			@ModelAttribute @Valid GenerateBillCriteria generateBillCriteria) {
 
-			ErrorField errorField = new ErrorField(HttpStatus.BAD_REQUEST.toString(), error.getMessage(), "");
-			error.getFields().add(errorField);
-			errorFields.add(errorField);
-			ResponseInfo responseInfo = responseFactory.getResponseInfo(requestInfoWrapper.getRequestInfo(),
-					HttpStatus.BAD_REQUEST);
-			return new ResponseEntity<>(new ErrorResponse(responseInfo, error), HttpStatus.BAD_REQUEST);
-		}
+		log.debug("genrateBill generateBillCriteria : " + generateBillCriteria);
+
+		billValidator.validateBillGenRequest(generateBillCriteria);
+		BillResponse billResponse = billService.generateBill(generateBillCriteria, requestInfoWrapper.getRequestInfo());
+		return new ResponseEntity<>(billResponse, HttpStatus.CREATED);
 	}
 
+	@PostMapping("_fetchBill")
+	@ResponseBody
+	public ResponseEntity<?> fetchBill(@RequestBody RequestInfoWrapper requestInfoWrapper, 
+			@ModelAttribute @Valid GenerateBillCriteria generateBillCriteria){
+		
+		BillResponse billResponse = billService.generateBill(generateBillCriteria, requestInfoWrapper.getRequestInfo());
+		return new ResponseEntity<>(billResponse, HttpStatus.CREATED);
+	}
 	
+	@Deprecated
 	@PostMapping("_apportion")
 	@ResponseBody
 	public ResponseEntity<?> apportion(@RequestBody BillRequest billRequest, BindingResult bindingResult) {
@@ -130,13 +92,20 @@ public class BillController {
 		return new ResponseEntity<>(billResponse, HttpStatus.CREATED);
 	}
 	
-	@PostMapping("_fetchBill")
+	@Deprecated
+	@PostMapping("_create")
 	@ResponseBody
-	public ResponseEntity<?> fetchBill(@RequestBody RequestInfoWrapper requestInfoWrapper, 
-			@ModelAttribute @Valid GenerateBillCriteria generateBillCriteria){
+	public ResponseEntity<?> create(@RequestBody BillRequest billRequest, BindingResult bindingResult){
+
+		log.debug("create billRequest:"+billRequest);
 		
-		BillResponse billResponse = billService.generateBill(generateBillCriteria, requestInfoWrapper.getRequestInfo());
-		return new ResponseEntity<>(billResponse, HttpStatus.CREATED);
+		if (bindingResult.hasErrors()) {
+			return new ResponseEntity<>(responseFactory.
+					getErrorResponse(bindingResult, billRequest.getRequestInfo()), HttpStatus.BAD_REQUEST);
+		}
+		//billValidator.validateBillRequest(billRequest);
+		BillResponse billResponse = billService.createAsync(billRequest);
+		
+		return new ResponseEntity<>(billResponse,HttpStatus.CREATED);
 	}
-	
 }

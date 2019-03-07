@@ -35,6 +35,9 @@ public class Constants {
     public static final String EG_BS_JSON_EXCEPTION_KEY = "EG_BS_JSON_EXCEPTION";
     public static final String EG_BS_JSON_EXCEPTION_MSG = "Exception occured while parsing additional details";
     
+    public static final String EG_BS_BILL_NO_DEMANDS_FOUND_KEY = "EG_BS_BILL_NO_DEMANDS_FOUND";
+    public static final String EG_BS_BILL_NO_DEMANDS_FOUND_MSG = "No Demands Found for the given bill generate criteria";
+    
     
 	public static final String INVALID_BUSINESS_FOR_TAXPERIOD_KEY = "EG_BS_TAXPERIODS_BUINESSSERVICE";
 	public static final String INVALID_BUSINESS_FOR_TAXPERIOD_MSG = "No Tax Periods Found for the given BusinessServices value of {resplaceValues}";

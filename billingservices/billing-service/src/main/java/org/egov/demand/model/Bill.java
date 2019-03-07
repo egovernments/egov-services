@@ -22,6 +22,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Builder
 public class Bill {
+	
 	@JsonProperty("id")
 	private String id;
 

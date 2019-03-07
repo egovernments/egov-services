@@ -108,7 +108,7 @@ public class DataUploadService {
                 .getRequestFilePath()).append("&tenantId=").append(uploadJob.getTenantId());
         try {
             String filePath = dataUploadRepository.getFileContents(uri.toString(), uploaderRequest.getUploadJobs()
-                    .get(0).getRequestFileName());
+                    .get(0).getRequestFileName()+"-"+uploadJob.getCode());
 
             uploadJob.setCode(dataUploadUtils.mockIdGen(uploadJob.getModuleName(), uploadJob.getDefName()));
             uploadJob.setRequesterName(uploaderRequest.getRequestInfo().getUserInfo().getUserName());

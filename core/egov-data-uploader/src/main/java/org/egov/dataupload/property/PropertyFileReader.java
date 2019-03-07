@@ -18,13 +18,15 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
-import org.apache.poi.util.StringUtil;
 import org.egov.dataupload.property.models.Document;
 import org.egov.dataupload.property.models.OwnerInfo;
 import org.egov.dataupload.property.models.OwnerInfo.RelationshipEnum;
 import org.egov.dataupload.property.models.Property;
 import org.egov.dataupload.property.models.PropertyDetail;
 import org.egov.dataupload.property.models.Unit;
+import org.egov.dataupload.utils.Constants.PTOwnerDetails;
+import org.egov.dataupload.utils.Constants.PTTemplateDetail;
+import org.egov.dataupload.utils.Constants.PTUnitDetail;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
@@ -79,7 +81,8 @@ public class PropertyFileReader {
 
 			log.info("Property_Detail, processing row number" + rowNumber);
 			// Check the existing property id column (which is 2)
-			if(StringUtils.isEmpty(row.getCell(2).getStringCellValue())){
+			int existPropertyId_cellIndex= PTTemplateDetail.Existing_Property_Id.ordinal();
+			if((row.getCell(existPropertyId_cellIndex)!=null)&&StringUtils.isEmpty(row.getCell(existPropertyId_cellIndex).getStringCellValue())){
 				break;
 			}
 			for (int i = 0; i < row.getLastCellNum(); i++) {
@@ -108,87 +111,89 @@ public class PropertyFileReader {
 
 	@SuppressWarnings("unchecked")
 	private void setPropertyDetails(Cell cell, Property property) {
-		switch (cell.getColumnIndex()) {
-		case 0:
-			property.setTenantId(cell.getStringCellValue());
-			break;
-		case 1:
-			cell.setCellType(CellType.STRING);
-			if (!StringUtils.isEmpty(cell.getStringCellValue()))
-				property.getAddress().setCity(cell.getStringCellValue());
-			break;
-		case 2:
-			property.setOldPropertyId(cell.getStringCellValue());
-			break;
-		case 3:
-			property.getPropertyDetails().get(0).setFinancialYear(cell.getStringCellValue());
-			break;
-		case 4:
-			property.getPropertyDetails().get(0).setPropertyType(cell.getStringCellValue());
-			break;
-		case 5:
-			if (!StringUtils.isEmpty(cell.getStringCellValue()))
-				property.getPropertyDetails().get(0).setPropertySubType(cell.getStringCellValue());
-			break;
-		case 6:
-			Map<String, Object> addDetails = (Map<String, Object>) property.getPropertyDetails().get(0)
-					.getAdditionalDetails();
-			addDetails.put("heightAbove36Feet", cell.getBooleanCellValue());
-			break;
-		case 7:
-			Map<String, Object> addDetailsMap = (Map<String, Object>) property.getPropertyDetails().get(0)
-					.getAdditionalDetails();
-			addDetailsMap.put("inflammable", cell.getBooleanCellValue());
-			break;
-		case 8:
-			property.getPropertyDetails().get(0).setUsageCategoryMajor(cell.getStringCellValue());
-			break;
-		case 9:
-			if (!StringUtils.isEmpty(cell.getStringCellValue()))
-				property.getPropertyDetails().get(0).setUsageCategoryMinor(cell.getStringCellValue());
-			break;
+		switch (PTTemplateDetail.from(cell.getColumnIndex())) {
+			case Tenant:
+				property.setTenantId(cell.getStringCellValue());
+				break;
+			case City:
+				cell.setCellType(CellType.STRING);
+				if (!StringUtils.isEmpty(cell.getStringCellValue()))
+					property.getAddress().setCity(cell.getStringCellValue());
+					break;
+			case Existing_Property_Id:
+				property.setOldPropertyId(cell.getStringCellValue());
+				break;
+			case Financial_Year:
+				property.getPropertyDetails().get(0).setFinancialYear(cell.getStringCellValue());
+				break;
+			case PropertyType:
+				property.getPropertyDetails().get(0).setPropertyType(cell.getStringCellValue());
+				break;
+			case Property_Sub_Type:
+				if (!StringUtils.isEmpty(cell.getStringCellValue()))
+					property.getPropertyDetails().get(0).setPropertySubType(cell.getStringCellValue());
+					break;
+			case Is_your_property_height_above_36:
+				Map<String, Object> addDetails = (Map<String, Object>) property.getPropertyDetails().get(0)
+						.getAdditionalDetails();
+				addDetails.put("heightAbove36Feet", cell.getBooleanCellValue());
+				break;
+			case Do_you_Store_Inflammable_material:
+				Map<String, Object> addDetailsMap = (Map<String, Object>) property.getPropertyDetails().get(0)
+						.getAdditionalDetails();
+				addDetailsMap.put("inflammable", cell.getBooleanCellValue());
+				break;
+			case Usage_Category_Major:
+				property.getPropertyDetails().get(0).setUsageCategoryMajor(cell.getStringCellValue());
+				break;
+			case Usage_Category_Minor:
+				if (!StringUtils.isEmpty(cell.getStringCellValue()))
+					property.getPropertyDetails().get(0).setUsageCategoryMinor(cell.getStringCellValue());
+				else
+					property.getPropertyDetails().get(0).setUsageCategoryMinor(null);
+				break;
 			// in case of shared property value should go to built up area else land area
-		case 10:
-			if(cell.getNumericCellValue()==0) break;
-			else if ("SHAREDPROPERTY".equalsIgnoreCase(property.getPropertyDetails().get(0).getPropertySubType()))
-				property.getPropertyDetails().get(0).setBuildUpArea((float) cell.getNumericCellValue());
-			else
-				property.getPropertyDetails().get(0).setLandArea((float) cell.getNumericCellValue());
-			break;
-		case 11:
-			if(cell.getNumericCellValue()==0) break;
-			property.getPropertyDetails().get(0).setNoOfFloors((long) cell.getNumericCellValue());
-			break;
-		case 12:
-			property.getPropertyDetails().get(0).setOwnershipCategory(cell.getStringCellValue());
-			break;
-		case 13:
-			property.getPropertyDetails().get(0).setSubOwnershipCategory(cell.getStringCellValue());
-			break;
-		case 14:
-			property.getAddress().getLocality().setCode(cell.getStringCellValue());
-			break;
-		case 15:
-			if(cell.getNumericCellValue()==0) break;
-			if (!StringUtils.isEmpty((int)cell.getNumericCellValue()))
-				property.getAddress().setDoorNo(String.valueOf((int)cell.getNumericCellValue()));
-			break;
-		case 16:
-			if (!StringUtils.isEmpty(cell.getStringCellValue()))
-				property.getAddress().setBuildingName(cell.getStringCellValue());
-			break;
-		case 17:
-			if (!StringUtils.isEmpty(cell.getStringCellValue()))
-				property.getAddress().setStreet(cell.getStringCellValue());
-			break;
-		case 18:
-			if(cell.getNumericCellValue()==0) break;
-			if (!StringUtils.isEmpty((int)cell.getNumericCellValue()))
-				property.getAddress().setPincode(String.valueOf((int)cell.getNumericCellValue()));
-			break;
+			case Land_Area_Buildup_Area:
+				if(cell.getNumericCellValue()==0) break;
+				else if ("SHAREDPROPERTY".equalsIgnoreCase(property.getPropertyDetails().get(0).getPropertySubType()))
+					property.getPropertyDetails().get(0).setBuildUpArea((float) cell.getNumericCellValue());
+				else
+					property.getPropertyDetails().get(0).setLandArea((float) cell.getNumericCellValue());
+				break;
+			case No_of_Floors:
+				if(cell.getNumericCellValue()==0) break;
+				property.getPropertyDetails().get(0).setNoOfFloors((long) cell.getNumericCellValue());
+				break;
+			case Ownership_Category:
+				property.getPropertyDetails().get(0).setOwnershipCategory(cell.getStringCellValue());
+				break;
+			case Sub_Ownership_Category:
+				property.getPropertyDetails().get(0).setSubOwnershipCategory(cell.getStringCellValue());
+				break;
+			case Locality:
+				property.getAddress().getLocality().setCode(cell.getStringCellValue());
+				break;
+			case Door_No:
+				if(cell.getNumericCellValue()==0) break;
+				if (!StringUtils.isEmpty((int)cell.getNumericCellValue()))
+					property.getAddress().setDoorNo(String.valueOf((int)cell.getNumericCellValue()));
+				break;
+			case Building_Name:
+				if (!StringUtils.isEmpty(cell.getStringCellValue()))
+					property.getAddress().setBuildingName(cell.getStringCellValue());
+				break;
+			case Street_Name:
+				if (!StringUtils.isEmpty(cell.getStringCellValue()))
+					property.getAddress().setStreet(cell.getStringCellValue());
+				break;
+			case Pincode:
+				if(cell.getNumericCellValue()==0) break;
+				if (!StringUtils.isEmpty((int)cell.getNumericCellValue()))
+					property.getAddress().setPincode(String.valueOf((int)cell.getNumericCellValue()));
+				break;
 
-		default:
-			break;
+			default:
+				break;
 		}
 
 		System.out.print("\t");
@@ -208,11 +213,12 @@ public class PropertyFileReader {
 
 			log.info("Unit_Detail, processing row number" + rowNumber);
 			// Break if now value in existing property ID
-			if(StringUtils.isEmpty(row.getCell(1).getStringCellValue())){
+			int existingPTId_cellIndex=PTUnitDetail.Existing_Property_Id.ordinal();
+			if((row.getCell(existingPTId_cellIndex)!=null)&&StringUtils.isEmpty(row.getCell(existingPTId_cellIndex).getStringCellValue())){
 				break;
 			}
 
-			String propertyId = row.getCell(1).getStringCellValue();
+			String propertyId = row.getCell(existingPTId_cellIndex).getStringCellValue();
 			Property property = propertyIdMap.get(propertyId);
 
 			if (null == property)
@@ -231,45 +237,45 @@ public class PropertyFileReader {
 
 	private void setUnitDetails(Cell cell, Unit unit) {
 
-		switch (cell.getColumnIndex()) {
-		case 0:
-			unit.setTenantId(cell.getStringCellValue());
-			break;
-		case 1:
-			break;
-		case 2:
-			unit.setFloorNo(String.valueOf((int)cell.getNumericCellValue()));
-			break;
-		case 3: 
-			break;
-		case 4:
-			unit.setUsageCategoryMajor(cell.getStringCellValue());
-			break;
-		case 5:
-			if (!StringUtils.isEmpty(cell.getStringCellValue()))
-				unit.setUsageCategoryMinor(cell.getStringCellValue());
-			break;
-		case 6:
-			unit.setOccupancyType(cell.getStringCellValue());
-			break;
-		case 7:
-			if(cell.getNumericCellValue()==0) break;
-			unit.setUnitArea((float) cell.getNumericCellValue());
-			break;
-		case 8:
-			if(cell.getNumericCellValue()==0) break;
-			unit.setArv(new BigDecimal(cell.getNumericCellValue(), MathContext.DECIMAL64));
-			break;
-		case 9:
-			if (!StringUtils.isEmpty(cell.getStringCellValue()))
-				unit.setUsageCategorySubMinor(cell.getStringCellValue());
-			break;
-		case 10:
-			if (!StringUtils.isEmpty(cell.getStringCellValue()))
-				unit.setUsageCategoryDetail(cell.getStringCellValue());
-			break;
-		default:
-			break;
+		switch (PTUnitDetail.from(cell.getColumnIndex())) {
+			case Tenant:
+				unit.setTenantId(cell.getStringCellValue());
+				break;
+			case Existing_Property_Id:
+				break;
+			case Floor_No:
+				unit.setFloorNo(String.valueOf((int)cell.getNumericCellValue()));
+				break;
+			case Unit_No:
+				break;
+			case Unit_Usage:
+				unit.setUsageCategoryMajor(cell.getStringCellValue());
+				break;
+			case Unit_Sub_usage:
+				if (!StringUtils.isEmpty(cell.getStringCellValue()))
+					unit.setUsageCategoryMinor(cell.getStringCellValue());
+				break;
+			case Occupancy:
+				unit.setOccupancyType(cell.getStringCellValue());
+				break;
+			case Built_up_area:
+				if(cell.getNumericCellValue()==0) break;
+				unit.setUnitArea((float) cell.getNumericCellValue());
+				break;
+			case Annual_rent:
+				if(cell.getNumericCellValue()==0) break;
+				unit.setArv(new BigDecimal(cell.getNumericCellValue(), MathContext.DECIMAL64));
+				break;
+			case UsageCategorySubMinor:
+				if (!StringUtils.isEmpty(cell.getStringCellValue()))
+					unit.setUsageCategorySubMinor(cell.getStringCellValue());
+				break;
+			case UsageCategoryDetail:
+				if (!StringUtils.isEmpty(cell.getStringCellValue()))
+					unit.setUsageCategoryDetail(cell.getStringCellValue());
+				break;
+			default:
+				break;
 		}
 
 		System.out.print("\t");
@@ -290,12 +296,14 @@ public class PropertyFileReader {
 			log.info("Owner_Detail, processing row number" + rowNumber);
 
 			// Checking if existing property id is blank, then break
-			if(StringUtils.isEmpty(row.getCell(1).getStringCellValue())){
+			int existingPTId_cellIndex= PTOwnerDetails.Existing_Property_ID.ordinal();
+			if((row.getCell(existingPTId_cellIndex)!=null)&&StringUtils.isEmpty(row.getCell(existingPTId_cellIndex).getStringCellValue())){
 				break;
 			}
 
-			String propertyId = row.getCell(1).getStringCellValue();
+			String propertyId = row.getCell(existingPTId_cellIndex).getStringCellValue();
 			Property property = propertyIdMap.get(propertyId);
+			String ownershipCategory=property.getPropertyDetails().get(0).getOwnershipCategory();
 			if (null == property)
 				continue;
 			
@@ -305,7 +313,7 @@ public class PropertyFileReader {
 			for (int i = 0; i < row.getLastCellNum(); i++) {
 				Cell cell = row.getCell(i);
 				if (null != cell)
-					setOwnerDetails(cell, owner, ownerDoc);
+					setOwnerDetails(cell, owner, ownerDoc,ownershipCategory);
 			}
 			
 			// setting documents to owner
@@ -323,55 +331,58 @@ public class PropertyFileReader {
 		}
 	}
 
-	private void setOwnerDetails(Cell cell, OwnerInfo ownerInfo, Document document) {
+	private void setOwnerDetails(Cell cell, OwnerInfo ownerInfo, Document document,String ownershipCategory) {
 
-		switch (cell.getColumnIndex()) {
-		case 0:
-			ownerInfo.setTenantId(cell.getStringCellValue());
-			break;
-		case 1:
-			break;
-		case 2:
-			ownerInfo.setName(cell.getStringCellValue());
-			break;
-		case 3:
-			cell.setCellType(CellType.STRING);
-			ownerInfo.setMobileNumber(cell.getStringCellValue());
-			break;
-		case 4:
-			ownerInfo.setFatherOrHusbandName(cell.getStringCellValue());
-			break;
-		case 5:
-			ownerInfo.setRelationship(RelationshipEnum.fromValue(cell.getStringCellValue()));
-			break;
-		case 6:
-			if (!StringUtils.isEmpty(cell.getStringCellValue()))
-				ownerInfo.setPermanentAddress(cell.getStringCellValue());
-			break;
-
-		case 7:
-			if (!StringUtils.isEmpty(cell.getStringCellValue()))
-				ownerInfo.setOwnerType(cell.getStringCellValue());
-			break;
-		case 8:
-			if (!StringUtils.isEmpty(cell.getStringCellValue()))
-				document.setDocumentType(cell.getStringCellValue());
-			break;
-		case 9:
-			if (!StringUtils.isEmpty(cell.getStringCellValue()))
-				document.setDocumentUid(cell.getStringCellValue());
-			break;
-		case 10:
-			if (!StringUtils.isEmpty(cell.getStringCellValue()))
-				ownerInfo.setEmailId(cell.getStringCellValue());
-			break;
-		case 11:
-			if (!StringUtils.isEmpty(cell.getStringCellValue()))
-				ownerInfo.setGender(cell.getStringCellValue());
-			break;
+		switch (PTOwnerDetails.from(cell.getColumnIndex())) {
+			case Tenant:
+				ownerInfo.setTenantId(cell.getStringCellValue());
+				break;
+			case Existing_Property_ID:
+				break;
+			case Name:
+				ownerInfo.setName(cell.getStringCellValue());
+				break;
+			case MobileNumber:
+				cell.setCellType(CellType.STRING);
+				ownerInfo.setMobileNumber(cell.getStringCellValue());
+				if(ownershipCategory.equals("INSTITUTIONALPRIVATE")||ownershipCategory.equals("INSTITUTIONALGOVERNMENT"))
+				{
+					ownerInfo.setAltContactNumber(cell.getStringCellValue());
+				}
+				break;
+			case Father_Or_Husband_Name:
+				ownerInfo.setFatherOrHusbandName(cell.getStringCellValue());
+				break;
+			case Relationship:
+				ownerInfo.setRelationship(RelationshipEnum.fromValue(cell.getStringCellValue()));
+				break;
+			case PermanentAddress:
+				if (!StringUtils.isEmpty(cell.getStringCellValue()))
+					ownerInfo.setPermanentAddress(cell.getStringCellValue());
+				break;
+			case Owner_Type:
+				if (!StringUtils.isEmpty(cell.getStringCellValue()))
+					ownerInfo.setOwnerType(cell.getStringCellValue());
+				break;
+			case Id_Type:
+				if (!StringUtils.isEmpty(cell.getStringCellValue()))
+					document.setDocumentType(cell.getStringCellValue());
+				break;
+			case Document_No:
+				if (!StringUtils.isEmpty(cell.getStringCellValue()))
+					document.setDocumentUid(cell.getStringCellValue());
+				break;
+			case Email:
+				if (!StringUtils.isEmpty(cell.getStringCellValue()))
+					ownerInfo.setEmailId(cell.getStringCellValue());
+				break;
+			case Gender:
+				if (!StringUtils.isEmpty(cell.getStringCellValue()))
+					ownerInfo.setGender(cell.getStringCellValue());
+				break;
 		
-		default:
-			break;
+			default:
+				break;
 		}
 
 		System.out.print("\t");

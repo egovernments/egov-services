@@ -7,7 +7,7 @@ serviceMaps:
    isTransaction: true
    queryMaps:
 
-       - query: INSERT INTO eg_appr_bills_request(billId,tenantid,mobileNumber,payerName,payerAddress,payerEmail,paidBy,collectionMap,isActive,isCancelled,billDetails,createdBy,createdTime) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)
+       - query: INSERT INTO eg_appr_bills_request(billId,tenantid,mobileNumber,payerName,payerAddress,payerEmail,paidBy,taxAndPayments,isActive,isCancelled,billDetails,createdBy,createdTime) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)
          basePath: Bills.*
          jsonMaps:
           - jsonPath: $.Bills.*.id
@@ -24,7 +24,7 @@ serviceMaps:
 
           - jsonPath: $.Bills.*.paidBy
 
-          - jsonPath: $.Bills.*.collectionMap
+          - jsonPath: $.Bills.*.taxAndPayments
             type: JSON
             dbType: JSONB
 
@@ -36,10 +36,9 @@ serviceMaps:
             type: JSON
             dbType: JSONB
 
-          - jsonPath: $.Bills.*.createdBy
+          - jsonPath: $.Bills.*.auditDetails.createdBy
 
-          - jsonPath: $.Bills.*.createdTime
-
+          - jsonPath: $.Bills.*.auditDetails.createdTime
 
 
  - version: 1.0
@@ -48,7 +47,7 @@ serviceMaps:
    isTransaction: true
    queryMaps:
 
-       - query: INSERT INTO eg_appr_bills_response(billId,tenantid,mobileNumber,payerName,payerAddress,payerEmail,paidBy,collectionMap,isActive,isCancelled,billDetails,createdBy,createdTime) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)
+       - query: INSERT INTO eg_appr_bills_response(billId,tenantid,mobileNumber,payerName,payerAddress,payerEmail,paidBy,taxAndPayments,isActive,isCancelled,billDetails,createdBy,createdTime) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)
          basePath: Bills.*
          jsonMaps:
           - jsonPath: $.Bills.*.id
@@ -65,7 +64,7 @@ serviceMaps:
 
           - jsonPath: $.Bills.*.paidBy
 
-          - jsonPath: $.Bills.*.collectionMap
+          - jsonPath: $.Bills.*.taxAndPayments
             type: JSON
             dbType: JSONB
 
@@ -77,6 +76,6 @@ serviceMaps:
             type: JSON
             dbType: JSONB
 
-          - jsonPath: $.Bills.*.createdBy
+          - jsonPath: $.Bills.*.auditDetails.createdBy
 
-          - jsonPath: $.Bills.*.createdTime
+          - jsonPath: $.Bills.*.auditDetails.createdTime

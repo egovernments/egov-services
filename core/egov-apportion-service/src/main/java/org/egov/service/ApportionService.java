@@ -3,10 +3,7 @@ package org.egov.service;
 import org.egov.config.ApportionConfig;
 import org.egov.producer.Producer;
 import org.egov.util.ApportionUtil;
-import org.egov.web.models.ApportionRequest;
-import org.egov.web.models.BillDetail;
-import org.egov.web.models.BillInfo;
-import org.egov.web.models.TaxAndPayment;
+import org.egov.web.models.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -69,6 +66,9 @@ public class ApportionService {
         //Fetch the required MDMS data
         Object masterData = mdmsService.mDMSCall(request);
 
+        AuditDetails auditDetails = AuditDetails.builder().createdBy(request.getRequestInfo().getUserInfo()
+                .getUuid()).createdTime(System.currentTimeMillis()).build();
+
         for (BillInfo billInfo : billInfos) {
             // Create a map of businessService to list of billDetails belonging to that businessService
             Map<String, List<BillDetail>> businessServiceToBillDetails = util.groupByBusinessService(billInfo.getBillDetails());
@@ -95,8 +95,11 @@ public class ApportionService {
                  * Apportion the paid amount among the given list of billDetail
                  * */
                 apportion.apportionPaidAmount(billDetails, entry.getValue(), masterData);
+                billInfo.setAuditDetails(auditDetails);
             }
         }
+
+
 
         //Save the response through persister
         producer.push(config.getResponseTopic(), request);

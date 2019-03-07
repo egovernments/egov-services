@@ -59,11 +59,9 @@ import java.util.*;
     @RequestMapping(value="/_apportion", method = RequestMethod.POST)
         public ResponseEntity<ApportionResponse> apportionPost(@Valid @RequestBody ApportionRequest apportionRequest){
             List<BillInfo> billInfos = apportionService.apportionBills(apportionRequest);
-            AuditDetails auditDetails = AuditDetails.builder().createdBy(apportionRequest.getRequestInfo().getUserInfo()
-                    .getUuid()).createdTime(System.currentTimeMillis()).build();
             ApportionResponse response = ApportionResponse.builder().bills(billInfos)
                     .responseInfo(responseInfoFactory.createResponseInfoFromRequestInfo(apportionRequest.getRequestInfo(),
-                            true)).auditDetails(auditDetails).build();
+                            true)).build();
         return new ResponseEntity<>(response,HttpStatus.OK);
         }
 

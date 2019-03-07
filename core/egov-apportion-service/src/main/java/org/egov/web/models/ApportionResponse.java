@@ -40,10 +40,6 @@ public class ApportionResponse   {
         @Valid
         private List<BillInfo> bills = null;
 
-        @JsonProperty("auditDetails")
-        @Valid
-        private AuditDetails auditDetails;
-
 
         public ApportionResponse addBillsItem(BillInfo billsItem) {
             if (this.bills == null) {

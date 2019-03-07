@@ -9,6 +9,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Builder.Default;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -53,7 +54,8 @@ public class Bill {
 
 	@JsonProperty("billDetails")
 	@Valid
-	private List<BillDetail> billDetails;
+	@Default
+	private List<BillDetail> billDetails = new ArrayList<>();
 
 	@JsonProperty("tenantId")
 	private String tenantId;

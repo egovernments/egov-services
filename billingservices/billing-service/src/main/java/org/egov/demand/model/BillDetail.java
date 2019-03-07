@@ -12,6 +12,7 @@ import com.fasterxml.jackson.annotation.JsonValue;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Builder.Default;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -80,7 +81,8 @@ public class BillDetail   {
 
         @JsonProperty("billAccountDetails")
         @Valid
-        private List<BillAccountDetail> billAccountDetails;
+        @Default
+        private List<BillAccountDetail> billAccountDetails = new ArrayList<>();
 
               /**
    * status if the bill detail

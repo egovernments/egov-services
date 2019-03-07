@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.egov.common.contract.request.Role;
 import org.egov.common.contract.request.User;
 import org.egov.encryption.accesscontrol.AbacFilter;
+import org.egov.encryption.models.KeyRoleAttributeAccess;
 import org.egov.encryption.models.RoleAttributeAccess;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -47,14 +48,14 @@ public class EncryptionServiceTest {
         fieldsAndTheirType.put("User/userName", "Normal");
 
         ObjectMapper objectMapper = new ObjectMapper(new JsonFactory());
+
+        URL url = getClass().getClassLoader().getResource("RoleAttributeAccessList2.json");
+        String keyRoleAttributeAccessListString = new String(Files.readAllBytes(Paths.get(url.getPath())));
         ObjectReader reader = objectMapper.readerFor(objectMapper.getTypeFactory().constructCollectionType(List.class,
-                RoleAttributeAccess.class));
+                KeyRoleAttributeAccess.class));
+        List<KeyRoleAttributeAccess> keyRoleAttributeAccessList = reader.readValue(keyRoleAttributeAccessListString);
 
-        URL url = getClass().getClassLoader().getResource("RoleAttributeAccessList.json");
-        String roleAttributeAccessListString = new String(Files.readAllBytes(Paths.get(url.getPath())));
-        List<RoleAttributeAccess> roleAttributeAccessList = reader.readValue(roleAttributeAccessListString);
-
-        encryptionService = new EncryptionService(fieldsAndTheirType, roleAttributeAccessList);
+        encryptionService = new EncryptionService(fieldsAndTheirType, keyRoleAttributeAccessList);
     }
 
     @Ignore
@@ -101,18 +102,31 @@ public class EncryptionServiceTest {
 
     @Ignore
     @Test
-    public void decryptJsonUsingRoles() throws IOException {
+    public void decryptJsonArrayUsingRoles() throws IOException {
         JsonNode ciphertext = mapper.readTree("[{\"User\":{\"mobileNumber\":\"341642|WfYfJPRug15R2wFh17PlQr5d9YhNkFk1" +
                 "\",\"name\":\"341642|Ca5NbGHu3aB2ufjrNfZarW1VGBA=\"," +
                 "\"userName\":\"341642|Ca5NbGHu3aB2ufjrNfZarW1VGBA=\",\"gender\":\"male\",\"active\":true," +
                 "\"type\":\"CITIZEN\",\"password\":\"password\"},\"RequestInfo\":{\"api_id\":\"1\",\"ver\":\"1\"," +
                 "\"ts\":null,\"action\":\"create\",\"did\":\"\",\"key\":\"\",\"msg_id\":\"\",\"requester_id\":\"\"," +
                 "\"auth_token\":null}}]");
-
-        JsonNode plaintext = encryptionService.decryptJson(ciphertext, user);
+        User user = User.builder().roles(Arrays.asList(Role.builder().code("GRO").build())).build();
+        JsonNode plaintext = encryptionService.decryptJson(ciphertext, user, "PGR-Complaints-Report");
         log.info(plaintext.toString());
     }
 
+    @Ignore
+    @Test
+    public void decryptJsonObjectUsingRoles() throws IOException {
+        JsonNode ciphertext = mapper.readTree("{\"User\":{\"mobileNumber\":\"341642|WfYfJPRug15R2wFh17PlQr5d9YhNkFk1" +
+                "\",\"name\":\"341642|Ca5NbGHu3aB2ufjrNfZarW1VGBA=\"," +
+                "\"userName\":\"341642|Ca5NbGHu3aB2ufjrNfZarW1VGBA=\",\"gender\":\"male\",\"active\":true," +
+                "\"type\":\"CITIZEN\",\"password\":\"password\"},\"RequestInfo\":{\"api_id\":\"1\",\"ver\":\"1\"," +
+                "\"ts\":null,\"action\":\"create\",\"did\":\"\",\"key\":\"\",\"msg_id\":\"\",\"requester_id\":\"\"," +
+                "\"auth_token\":null}}");
+        User user = User.builder().roles(Arrays.asList(Role.builder().code("GRO").build())).build();
+        JsonNode plaintext = encryptionService.decryptJson(ciphertext, user, "PGR-Complaints-Report");
+        log.info(plaintext.toString());
+    }
 
     @Test
     public void test() throws IOException {

@@ -7,9 +7,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.egov.common.contract.request.Role;
 import org.egov.common.contract.request.User;
 import org.egov.encryption.accesscontrol.AbacFilter;
+import org.egov.encryption.config.KeyRoleAttributeAccessConfiguration;
 import org.egov.encryption.masking.MaskingService;
 import org.egov.encryption.models.AccessType;
 import org.egov.encryption.models.Attribute;
+import org.egov.encryption.models.KeyRoleAttributeAccess;
 import org.egov.encryption.models.RoleAttributeAccess;
 import org.egov.encryption.util.ConvertClass;
 import org.egov.encryption.util.JacksonUtils;
@@ -23,6 +25,7 @@ public class EncryptionService {
 
     private EncryptionServiceRestInterface encryptionServiceRestInterface;
 
+    private KeyRoleAttributeAccessConfiguration keyRoleAttributeAccessConfiguration;
     private AbacFilter abacFilter;
     private MaskingService maskingService;
 
@@ -33,7 +36,8 @@ public class EncryptionService {
 
     public EncryptionService(Map<String, String> fieldsAndTheirType) throws IllegalAccessException,
             InstantiationException {
-//        this.abacFilter = new AbacFilter();
+        this.keyRoleAttributeAccessConfiguration = new KeyRoleAttributeAccessConfiguration();
+        this.abacFilter = new AbacFilter();
         maskingService = new MaskingService();
         encryptionServiceRestInterface = new EncryptionServiceRestInterface();
         objectMapper = new ObjectMapper(new JsonFactory());
@@ -42,11 +46,11 @@ public class EncryptionService {
         initializeTypesAndFieldsToEncrypt();
     }
 
-    EncryptionService(Map<String, String> fieldsAndTheirType, List<RoleAttributeAccess> roleAttributeAccessList)
+    EncryptionService(Map<String, String> fieldsAndTheirType, List<KeyRoleAttributeAccess> keyRoleAttributeAccessList)
             throws IllegalAccessException,
             InstantiationException {
         this(fieldsAndTheirType);
-        this.abacFilter = new AbacFilter(roleAttributeAccessList);
+        this.keyRoleAttributeAccessConfiguration = new KeyRoleAttributeAccessConfiguration(keyRoleAttributeAccessList);
     }
 
     void initializeTypesAndFieldsToEncrypt() {
@@ -132,19 +136,20 @@ public class EncryptionService {
     }
 
 
-    public JsonNode decryptJson(Object ciphertextJson, User user) throws IOException {
+    public JsonNode decryptJson(Object ciphertextJson, User user, String keyId) throws IOException {
 
         List<String> roles = user.getRoles().stream().map(Role::getCode).collect(Collectors.toList());
 
-        Map<Attribute, AccessType> attributeAccessTypeMap = abacFilter.getAttributeAccessForRoles(roles);
+        Map<Attribute, AccessType> attributeAccessTypeMap = abacFilter.getAttributeAccessForRoles(roles,
+                keyRoleAttributeAccessConfiguration.getRoleAttributeAccessListForKey(keyId));
 
         JsonNode decryptedNode = decryptJson(ciphertextJson, attributeAccessTypeMap, user);
 
         return decryptedNode;
     }
 
-    public <T> T decryptJson(Object ciphertextJson, User user, Class<T> valueType) throws IOException {
-        return ConvertClass.convertTo(decryptJson(ciphertextJson, user), valueType);
+    public <T> T decryptJson(Object ciphertextJson, User user, String keyId, Class<T> valueType) throws IOException {
+        return ConvertClass.convertTo(decryptJson(ciphertextJson, user, keyId), valueType);
     }
 
     JsonNode createJsonNode(Object json) throws IOException {

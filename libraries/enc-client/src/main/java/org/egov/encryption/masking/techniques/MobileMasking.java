@@ -1,4 +1,6 @@
-package org.egov.encryption.masking;
+package org.egov.encryption.masking.techniques;
+
+import org.egov.encryption.masking.Masking;
 
 public class MobileMasking implements Masking {
 

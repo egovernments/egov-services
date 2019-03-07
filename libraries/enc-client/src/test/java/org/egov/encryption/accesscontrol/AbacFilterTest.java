@@ -30,22 +30,20 @@ public class AbacFilterTest {
         ObjectReader reader = objectMapper.readerFor(objectMapper.getTypeFactory().constructCollectionType(List.class,
                         RoleAttributeAccess.class));
 
-        URL url = getClass().getClassLoader().getResource("RoleAttributeAccessList.json");
-        String roleAttributeAccessListString = new String(Files.readAllBytes(Paths.get(url.getPath())));
-        roleAttributeAccessList = reader.readValue(roleAttributeAccessListString);
-
-        abacFilter = new AbacFilter(roleAttributeAccessList);
+//        URL url = getClass().getClassLoader().getResource("RoleAttributeAccessList.json");
+//        String roleAttributeAccessListString = new String(Files.readAllBytes(Paths.get(url.getPath())));
+//        roleAttributeAccessList = reader.readValue(roleAttributeAccessListString);
+//
+//        abacFilter = new AbacFilter(roleAttributeAccessList);
     }
 
     @Test
     public void test() {
-        Map<String, List<AttributeAccess>> roleAttributeMap = new HashMap<>();
-
         role1 = "GRO";
         role2 = "LME";
-        Map<Attribute, AccessType> attributeAccessTypeMap = abacFilter
-                .getAttributeAccessForRoles(Arrays.asList(role1, role2));
-        log.info(String.valueOf(attributeAccessTypeMap));
+//        Map<Attribute, AccessType> attributeAccessTypeMap = abacFilter
+//                .getAttributeAccessForRoles(Arrays.asList(role1, role2));
+//        log.info(String.valueOf(attributeAccessTypeMap));
     }
 
 }

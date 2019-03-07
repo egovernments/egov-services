@@ -9,9 +9,9 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class RoleAttributeAccess {
+public class KeyRoleAttributeAccess {
 
-    private String roleCode;
-    private List<AttributeAccess> attributeAccessList;
+    private String keyId;
+    private List<RoleAttributeAccess> roleAttributeAccessList;
 
 }

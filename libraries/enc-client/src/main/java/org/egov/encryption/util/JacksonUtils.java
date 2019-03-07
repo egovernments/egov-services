@@ -47,9 +47,7 @@ public class JacksonUtils {
                 merge(jsonNode, originalNode.get(fieldName));
             } else {
                 if (newNode instanceof ObjectNode) {
-                    // Overwrite field
                     JsonNode value = originalNode.get(fieldName);
-
                     newNode.set(fieldName, value);
                 }
             }

@@ -1,11 +1,15 @@
 package org.egov.encryption.accesscontrol;
 
-import org.egov.encryption.models.*;
+import org.egov.encryption.models.AccessType;
+import org.egov.encryption.models.Attribute;
+import org.egov.encryption.models.AttributeAccess;
+import org.egov.encryption.models.RoleAttributeAccess;
+import org.egov.tracer.model.CustomException;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class AbacFilter {
 
@@ -13,30 +17,25 @@ public class AbacFilter {
 
     private void initializeRoleAttributeAccessMapping(List<RoleAttributeAccess> roleAttributeAccessList) {
         roleAttributeAccessMapping = new HashMap<>();
-        for(RoleAttributeAccess roleAttributeAccess : roleAttributeAccessList) {
-            roleAttributeAccessMapping.put(roleAttributeAccess.getRoleCode(),
-                    roleAttributeAccess.getAttributeAccessList());
-        }
+        roleAttributeAccessMapping = roleAttributeAccessList.stream().collect(Collectors
+                .toMap(RoleAttributeAccess::getRoleCode, RoleAttributeAccess::getAttributeAccessList));
     }
 
     public AbacFilter() {
-        List<RoleAttributeAccess> roleAttributeAccessList = getRoleAttributeAccessList();
-        initializeRoleAttributeAccessMapping(roleAttributeAccessList);
+
     }
 
     public AbacFilter(List<RoleAttributeAccess> roleAttributeAccessList) {
         initializeRoleAttributeAccessMapping(roleAttributeAccessList);
     }
 
-    private List<RoleAttributeAccess> getRoleAttributeAccessList() {
-        return null;
-    }
-
-    public Map<Attribute, AccessType> getAttributeAccessForRoles(List<String> roles) {
-
+    public Map<Attribute, AccessType> getAttributeAccessForRoles(
+            List<String> roles, Map<String, List<AttributeAccess>> roleAttributeAccessMapping) {
         Map<Attribute, AccessType> attributeAccessTypeMap = new HashMap<>();
 
         for(String role : roles) {
+            if(! roleAttributeAccessMapping.containsKey(role))
+                continue;
             List<AttributeAccess> attributeAccessList = roleAttributeAccessMapping.get(role);
             for(AttributeAccess attributeAccess : attributeAccessList) {
                 Attribute attribute = attributeAccess.getAttribute();
@@ -52,7 +51,23 @@ public class AbacFilter {
         }
 
         return attributeAccessTypeMap;
+    }
 
+    public Map<Attribute, AccessType> getAttributeAccessForRoles(List<String> roles) {
+        if(this.roleAttributeAccessMapping != null)
+            return getAttributeAccessForRoles(roles, this.roleAttributeAccessMapping);
+        else
+            throw new CustomException("roleAttributeAccessMapping not defined", "roleAttributeAccessMapping not defined");
+    }
+
+    public Map<Attribute, AccessType> getAttributeAccessForRoles(List<String> roles, List<RoleAttributeAccess> roleAttributeAccessList) {
+        Map<String, List<AttributeAccess>> roleAttributeAccessMapping = makeRoleAttributeAccessMapping(roleAttributeAccessList);
+        return getAttributeAccessForRoles(roles, roleAttributeAccessMapping);
+    }
+
+    private Map<String, List<AttributeAccess>> makeRoleAttributeAccessMapping(List<RoleAttributeAccess> roleAttributeAccessList) {
+        return roleAttributeAccessList.stream().collect(Collectors.toMap(RoleAttributeAccess::getRoleCode,
+                RoleAttributeAccess::getAttributeAccessList));
     }
 
 }

@@ -27,20 +27,20 @@ public class CollectionsQueryBuilder {
     public static final String INSERT_RECEIPT_HEADER_SQL = "INSERT INTO egcl_receiptheader(id, payername, payeraddress, payeremail, payermobile, paidby, referencenumber, "
             + " receipttype, receiptnumber, receiptdate, businessdetails, collectiontype, reasonforcancellation, minimumamount, totalamount, "
             + " collectedamount, collmodesnotallwd, consumercode, channel,boundary, voucherheader, "
-            + "depositedbranch, createdby, createddate, lastmodifiedby, lastmodifieddate, tenantid, referencedate, referencedesc, "
+            + "depositedbranch, createdby, createddate, lastmodifiedby, lastmodifieddate, tenantid, referencedate, "
             + " manualreceiptdate, manualreceiptnumber, reference_ch_id, stateid, location, isreconciled, "
             + "status, transactionid, fund, function, department, additionalDetails, demandid, demandFromDate, demandToDate) "
             + "VALUES (:id, :payername, :payeraddress, :payeremail, :payermobile , :paidby, :referencenumber, :receipttype, "
             + ":receiptnumber, :receiptdate, :businessdetails, :collectiontype, :reasonforcancellation, :minimumamount, :totalamount, "
             + " :collectedamount, :collmodesnotallwd, :consumercode, :channel, :boundary, :voucherheader, "
-            + ":depositedbranch, :createdby, :createddate, :lastmodifiedby, :lastmodifieddate, :tenantid, :referencedate, :referencedesc, "
+            + ":depositedbranch, :createdby, :createddate, :lastmodifiedby, :lastmodifieddate, :tenantid, :referencedate, "
             + " :manualreceiptdate, :manualreceiptnumber, :reference_ch_id, :stateid, :location, :isreconciled, "
             + ":status, :transactionid, :fund, :function, :department, :additionalDetails, :demandid, :demandFromDate, :demandToDate)";
 
     public static final String INSERT_RECEIPT_DETAILS_SQL = "INSERT INTO egcl_receiptdetails(id, chartofaccount, amount, adjustedamount, ordernumber, receiptheader, "
-            + "description, financialyear, isactualdemand, purpose, tenantid, additionalDetails, demanddetailid, taxheadcode) "
+            + "financialyear, isactualdemand, purpose, tenantid, additionalDetails, demanddetailid, taxheadcode) "
             + "VALUES (:id, :chartofaccount, :amount, :adjustedamount, :ordernumber, :receiptheader, "
-            + ":description, :financialyear, :isactualdemand, :purpose, :tenantid, :additionalDetails, :demanddetailid, :taxheadcode)";
+            + ":financialyear, :isactualdemand, :purpose, :tenantid, :additionalDetails, :demanddetailid, :taxheadcode)";
 
     public static final String INSERT_INSTRUMENT_HEADER_SQL = "INSERT INTO egcl_instrumentheader(id, transactionnumber, transactiondate, amount, instrumenttype, "
             +
@@ -255,7 +255,7 @@ public class CollectionsQueryBuilder {
         sqlParameterSource.addValue("tenantid", billAccountDetails.getTenantId());
         sqlParameterSource.addValue("receiptheader", receiptHeaderId);
         sqlParameterSource.addValue("amount", billAccountDetails.getAmount());
-        sqlParameterSource.addValue("adjustedAmount", billAccountDetails.getAdjustedAmount());
+        sqlParameterSource.addValue("adjustedamount", billAccountDetails.getAdjustedAmount());
         sqlParameterSource.addValue("additionalDetails", getJsonb(billAccountDetails.getAdditionalDetails()));
         sqlParameterSource.addValue("demanddetailid", billAccountDetails.getDemandDetailId());
         sqlParameterSource.addValue("taxheadcode", billAccountDetails.getTaxHeadCode());

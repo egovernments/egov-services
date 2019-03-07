@@ -69,6 +69,7 @@ import org.egov.demand.repository.DemandRepository;
 import org.egov.demand.repository.ServiceRequestRepository;
 import org.egov.demand.util.DemandEnrichmentUtil;
 import org.egov.demand.util.SequenceGenService;
+import org.egov.demand.util.Util;
 import org.egov.demand.web.contract.BillRequest;
 import org.egov.demand.web.contract.DemandDetailResponse;
 import org.egov.demand.web.contract.DemandDueResponse;
@@ -124,6 +125,9 @@ public class DemandService {
 	@Autowired
 	private Producer producer;
 	
+	@Autowired
+	private Util util;
+	
 	/**
 	 * Method to create new demand 
 	 * 
@@ -138,7 +142,7 @@ public class DemandService {
 
 		RequestInfo requestInfo = demandRequest.getRequestInfo();
 		List<Demand> demands = demandRequest.getDemands();
-		AuditDetails auditDetail = getAuditDetail(requestInfo);
+		AuditDetails auditDetail = util.getAuditDetail(requestInfo);
 
 		generateAndSetIdsForNewDemands(demands, auditDetail);
 		save(demandRequest);
@@ -216,7 +220,7 @@ public class DemandService {
 
 		RequestInfo requestInfo = demandRequest.getRequestInfo();
 		List<Demand> demands = demandRequest.getDemands();
-		AuditDetails auditDetail = getAuditDetail(requestInfo);
+		AuditDetails auditDetail = util.getAuditDetail(requestInfo);
 
 		List<Demand> newDemands = new ArrayList<>();
 		List<DemandDetail> newDemandDetails = new ArrayList<>();
@@ -345,22 +349,6 @@ public class DemandService {
 		demandRepository.update(demandRequest);
 	}
 
-	/**
-	 * Generates the Audit details object for the requested user and current time
-	 * 
-	 * @param requestInfo
-	 * @return
-	 */
-	private AuditDetails getAuditDetail(RequestInfo requestInfo) {
-
-		String userId = requestInfo.getUserInfo().getId().toString();
-		Long currEpochDate = System.currentTimeMillis();
-
-		return AuditDetails.builder().createdBy(userId).createdTime(currEpochDate).lastModifiedBy(userId)
-				.lastModifiedTime(currEpochDate).build();
-	}
-	
-	
 	/*
 	 * 
 	 * 
@@ -519,7 +507,7 @@ public class DemandService {
 		log.debug("the demand service : " + demandRequest);
 		RequestInfo requestInfo = demandRequest.getRequestInfo();
 		List<Demand> demands = demandRequest.getDemands();
-		AuditDetails auditDetail = getAuditDetail(requestInfo);
+		AuditDetails auditDetail = util.getAuditDetail(requestInfo);
 
 		Map<String, Demand> demandMap = demands.stream().collect(Collectors.toMap(Demand::getId, Function.identity()));
 		Map<String, DemandDetail> demandDetailMap = new HashMap<>();

@@ -8,6 +8,7 @@ import java.util.List;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.demand.config.ApplicationProperties;
+import org.egov.demand.model.AuditDetails;
 import org.egov.demand.repository.ServiceRequestRepository;
 import org.egov.mdms.model.MasterDetail;
 import org.egov.mdms.model.MdmsCriteria;
@@ -80,5 +81,21 @@ public class Util {
 			log.error("Error while fetvhing MDMS data", e);
 			throw new CustomException(INVALID_TENANT_ID_MDMS_KEY, INVALID_TENANT_ID_MDMS_MSG);
 		}
+	}
+	
+	
+	/**
+	 * Generates the Audit details object for the requested user and current time
+	 * 
+	 * @param requestInfo
+	 * @return
+	 */
+	public AuditDetails getAuditDetail(RequestInfo requestInfo) {
+
+		String userId = requestInfo.getUserInfo().getUuid();
+		Long currEpochDate = System.currentTimeMillis();
+
+		return AuditDetails.builder().createdBy(userId).createdTime(currEpochDate).lastModifiedBy(userId)
+				.lastModifiedTime(currEpochDate).build();
 	}
 }

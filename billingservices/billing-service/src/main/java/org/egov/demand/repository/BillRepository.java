@@ -3,7 +3,6 @@ package org.egov.demand.repository;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -12,13 +11,14 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.egov.common.contract.request.RequestInfo;
+import org.egov.demand.model.AuditDetails;
 import org.egov.demand.model.Bill;
 import org.egov.demand.model.BillAccountDetail;
 import org.egov.demand.model.BillDetail;
 import org.egov.demand.model.BillSearchCriteria;
 import org.egov.demand.model.BusinessServiceDetail;
 import org.egov.demand.repository.querybuilder.BillQueryBuilder;
-import org.egov.demand.repository.rowmapper.SearchBillRowMapper;
+import org.egov.demand.repository.rowmapper.BillRowMapper;
 import org.egov.demand.web.contract.BillRequest;
 import org.egov.demand.web.contract.BillResponse;
 import org.egov.demand.web.contract.BusinessServiceDetailCriteria;
@@ -45,7 +45,7 @@ public class BillRepository {
 	private RestTemplate restTemplate;
 	
 	@Autowired
-	private SearchBillRowMapper searchBillRowMapper;
+	private BillRowMapper searchBillRowMapper;
 	
 	@Autowired
 	private BusinessServiceDetailRepository businessServiceDetailRepository;
@@ -73,17 +73,20 @@ public class BillRepository {
 			public void setValues(PreparedStatement ps, int index) throws SQLException {
 				Bill bill = bills.get(index);
 
+				AuditDetails auditDetails = bill.getAuditDetails();
+				
 				ps.setString(1, bill.getId());
 				ps.setString(2, bill.getTenantId());
 				ps.setString(3, bill.getPayerName());
 				ps.setString(4, bill.getPayerAddress());
 				ps.setString(5, bill.getPayerEmail());
-				ps.setBoolean(6, bill.getIsActive());
-				ps.setBoolean(7, bill.getIsCancelled());
-				ps.setString(8, requestInfo.getUserInfo().getId().toString());
-				ps.setLong(9, new Date().getTime());
-				ps.setString(10, requestInfo.getUserInfo().getId().toString());
-				ps.setLong(11, new Date().getTime());
+				ps.setObject(6, bill.getIsActive());
+				ps.setObject(7, bill.getIsCancelled());
+				ps.setString(8, auditDetails.getCreatedBy());
+				ps.setLong(9, auditDetails.getCreatedTime());
+				ps.setString(10, auditDetails.getLastModifiedBy());
+				ps.setLong(11, auditDetails.getLastModifiedTime());
+				ps.setString(12, bill.getMobileNumber());
 			}
 			
 			@Override
@@ -100,6 +103,8 @@ public class BillRepository {
 		List<Bill> bills = billRequest.getBills();
 		List<BillDetail> billDetails = new ArrayList<>();
 		List<BillAccountDetail> billAccountDetails = new ArrayList<>();
+		AuditDetails auditDetails = bills.get(0).getAuditDetails();
+		
 		for(Bill bill:bills){
 			List<BillDetail> tempBillDetails  = bill.getBillDetails();
 			billDetails.addAll(tempBillDetails);
@@ -109,7 +114,7 @@ public class BillRepository {
 			}
 		}
 		log.debug("saveBillDeails tempBillDetails:"+billDetails);
-		jdbcTemplate.batchUpdate(billQueryBuilder.INSERT_BILLDETAILS_QUERY, new BatchPreparedStatementSetter() {
+		jdbcTemplate.batchUpdate(BillQueryBuilder.INSERT_BILLDETAILS_QUERY, new BatchPreparedStatementSetter() {
 				
 			
 			@Override
@@ -119,27 +124,32 @@ public class BillRepository {
 				ps.setString(1, billDetail.getId());
 				ps.setString(2, billDetail.getTenantId());
 				ps.setString(3, billDetail.getBill());
-				ps.setString(4, billDetail.getBusinessService());
-				ps.setString(5, billDetail.getBillNumber());
-				ps.setLong(6, billDetail.getBillDate());
-				ps.setString(7, billDetail.getConsumerCode());
-				ps.setString(8, billDetail.getConsumerType());
-				ps.setString(9, null);
-				ps.setString(10, null);
-				ps.setObject(11, billDetail.getMinimumAmount());
-				ps.setObject(12, billDetail.getTotalAmount());
+				ps.setString(4, billDetail.getDemandId());
+				ps.setLong(5, billDetail.getFromPeriod());
+				ps.setLong(6, billDetail.getToPeriod());
+				ps.setString(7, billDetail.getBusinessService());
+				ps.setString(8, billDetail.getBillNumber());
+				ps.setLong(9, billDetail.getBillDate());
+				ps.setString(10, billDetail.getConsumerCode());
+				ps.setString(11, billDetail.getConsumerType());
+				ps.setString(12, null);
+				ps.setString(13, null);
+				ps.setObject(14, billDetail.getMinimumAmount());
+				ps.setObject(15, billDetail.getTotalAmount());
 				// apportioning logic does not reside in billing service anymore 
-				ps.setBoolean(13, false);
-				ps.setBoolean(14, billDetail.getPartPaymentAllowed());
-				List<String> collectionModesNotAllowed = billDetail.getCollectionModesNotAllowed();
-				if (collectionModesNotAllowed.isEmpty())
-					ps.setString(15, null);
-				else
-					ps.setString(15, StringUtils.join(billDetail.getCollectionModesNotAllowed(), ","));
-				ps.setString(16, requestInfo.getUserInfo().getId().toString());
-				ps.setLong(17, new Date().getTime());
-				ps.setString(18, requestInfo.getUserInfo().getId().toString());
-				ps.setLong(19, new Date().getTime());
+				ps.setBoolean(16, false);
+				ps.setObject(17, billDetail.getPartPaymentAllowed());
+				
+				String collectionModesNotAllowed = null != billDetail.getCollectionModesNotAllowed()
+						? StringUtils.join(billDetail.getCollectionModesNotAllowed(), ",")
+						: null;
+				ps.setString(18, collectionModesNotAllowed);
+				
+				ps.setString(19, auditDetails.getCreatedBy());
+				ps.setLong(20, auditDetails.getCreatedTime());
+				ps.setString(21, auditDetails.getLastModifiedBy());
+				ps.setLong(22, auditDetails.getLastModifiedTime());
+				
 			}
 				
 			@Override
@@ -147,13 +157,13 @@ public class BillRepository {
 				return billDetails.size();
 			}
 		});
-		saveBillAccountDetail(billAccountDetails, requestInfo);
+		saveBillAccountDetail(billAccountDetails, auditDetails);
 	}
 	
-	public void saveBillAccountDetail(List<BillAccountDetail> billAccountDetails, RequestInfo requestInfo){
+	public void saveBillAccountDetail(List<BillAccountDetail> billAccountDetails, AuditDetails auditDetails){
 		log.debug("saveBillAccountDetail billAccountDetails:"+billAccountDetails);
-		//final List<BillDetail> billDetails = tempBillDetails;	
-		jdbcTemplate.batchUpdate(billQueryBuilder.INSERT_BILLACCOUNTDETAILS_QUERY, new BatchPreparedStatementSetter() {
+
+		jdbcTemplate.batchUpdate(BillQueryBuilder.INSERT_BILLACCOUNTDETAILS_QUERY, new BatchPreparedStatementSetter() {
 				
 			@Override
 			public void setValues(PreparedStatement ps, int index) throws SQLException {
@@ -166,18 +176,17 @@ public class BillRepository {
 				ps.setString(1, billAccountDetail.getId());
 				ps.setString(2, billAccountDetail.getTenantId());
 				ps.setString(3, billAccountDetail.getBillDetail());
-				ps.setString(4, billAccountDetail.getGlcode());
+				ps.setString(4, billAccountDetail.getDemandDetailId());
 				ps.setObject(5, billAccountDetail.getOrder());
-				ps.setString(6, null);
-				ps.setBigDecimal(7,billAccountDetail.getAmount());
-				ps.setObject(8, billAccountDetail.getAdjustedAmount());
-				ps.setObject(9, null);
-				ps.setObject(10, billAccountDetail.getIsActualDemand());
-				ps.setString(11, purpose);
-				ps.setString(12, requestInfo.getUserInfo().getId().toString());
-				ps.setLong(13, new Date().getTime());
-				ps.setString(14, requestInfo.getUserInfo().getId().toString());
-				ps.setLong(15, new Date().getTime());
+				ps.setBigDecimal(6, billAccountDetail.getAmount());
+				ps.setObject(7, billAccountDetail.getAdjustedAmount());
+				ps.setObject(8, billAccountDetail.getIsActualDemand());
+				ps.setString(9, purpose);
+				ps.setString(10, auditDetails.getCreatedBy());
+				ps.setLong(11, auditDetails.getCreatedTime());
+				ps.setString(12, auditDetails.getLastModifiedBy());
+				ps.setLong(13, auditDetails.getLastModifiedTime());
+				ps.setString(14, billAccountDetail.getTaxHeadCode());
 			}
 				
 			@Override

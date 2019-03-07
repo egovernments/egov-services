@@ -55,7 +55,7 @@ public class BillAccountDetail   {
         
         @JsonProperty("additionalDetails")
         private Object additionalDetails;
-
+        
               /**
    * Purpose of Account head.
    */

@@ -107,10 +107,11 @@ public class DataUploadService {
         uri.append(fileStoreHost).append(getFileEndpoint).append("?fileStoreId=").append(uploadJob
                 .getRequestFilePath()).append("&tenantId=").append(uploadJob.getTenantId());
         try {
-            String filePath = dataUploadRepository.getFileContents(uri.toString(), uploaderRequest.getUploadJobs()
-                    .get(0).getRequestFileName()+"-"+uploadJob.getCode());
 
             uploadJob.setCode(dataUploadUtils.mockIdGen(uploadJob.getModuleName(), uploadJob.getDefName()));
+            String filePath = dataUploadRepository.getFileContents(uri.toString(), uploadJob.getCode()+"-"+uploaderRequest.getUploadJobs()
+                    .get(0).getRequestFileName());
+
             uploadJob.setRequesterName(uploaderRequest.getRequestInfo().getUserInfo().getUserName());
             AuditDetails auditDetails = AuditDetails.builder().createdBy(uploaderRequest.getRequestInfo().getUserInfo().getId().toString())
                     .createdTime(new Date().getTime())

@@ -1,11 +1,6 @@
 package org.egov.hrms.web.validator;
 
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import com.jayway.jsonpath.JsonPath;
@@ -116,8 +111,32 @@ public class EmployeeValidator {
 	 */
 	private void validateExistingDuplicates(EmployeeRequest request, Map<String, String> errorMap) {
 		List<Employee> employees = request.getEmployees();
+		validateDataUniqueness(employees,errorMap);
         validateUserMobile(employees,errorMap,request.getRequestInfo());
         validateUserName(employees,errorMap,request.getRequestInfo());
+	}
+
+	/**
+	 * Checks duplicate occurance of mobileNumber and code for bulk request
+	 *
+	 * @param employees
+	 * @param errorMap
+	 */
+	private void validateDataUniqueness(List<Employee> employees, Map<String, String> errorMap) {
+		HashSet < String> mobileNos = new HashSet<>();
+		HashSet < String> codes = new HashSet<>();
+		employees.forEach(employee -> {
+			if(mobileNos.contains(employee.getUser().getMobileNumber()))
+				errorMap.put(ErrorConstants.HRMS_BULK_CREATE_DUPLICATE_MOBILE_CODE, ErrorConstants.HRMS_BULK_CREATE_DUPLICATE_MOBILE_MSG + employee.getUser().getMobileNumber());
+			else
+				mobileNos.add(employee.getUser().getMobileNumber());
+			if(null != employee.getCode()){
+				if (codes.contains(employee.getCode()))
+					errorMap.put(ErrorConstants.HRMS_BULK_CREATE_DUPLICATE_EMPCODE_CODE,ErrorConstants.HRMS_BULK_CREATE_DUPLICATE_EMPCODE_MSG+ employee.getCode());
+				else
+					codes.add(employee.getCode());
+			}
+		});
 	}
 
 	/**
@@ -282,6 +301,8 @@ public class EmployeeValidator {
 			errorMap.put(ErrorConstants.HRMS_OVERLAPPING_ASSGN_CODE, ErrorConstants.HRMS_OVERLAPPING_ASSGN_MSG);
 
 		for(Assignment assignment: employee.getAssignments()) {
+			if(!assignment.getIsCurrentAssignment() && !CollectionUtils.isEmpty(currentAssignments) && currentAssignments.get(0).getFromDate() < assignment.getToDate() )
+				errorMap.put(ErrorConstants.HRMS_OVERLAPPING_ASSGN_CURRENT_CODE,ErrorConstants.HRMS_OVERLAPPING_ASSGN_CURRENT_MSG);
 		    if(!mdmsData.get(HRMSConstants.HRMS_MDMS_DEPT_CODE).contains(assignment.getDepartment()))
 				errorMap.put(ErrorConstants.HRMS_INVALID_DEPT_CODE, ErrorConstants.HRMS_INVALID_DEPT_MSG);
 			if(!mdmsData.get(HRMSConstants.HRMS_MDMS_DESG_CODE).contains(assignment.getDesignation()))
@@ -350,11 +371,11 @@ public class EmployeeValidator {
 	private void validateEducationalDetails(Employee employee, Map<String, String> errorMap, Map<String, List<String>> mdmsData) {
 		if(!CollectionUtils.isEmpty(employee.getEducation())){
 			for(EducationalQualification education : employee.getEducation()) {
-				if(!mdmsData.get(HRMSConstants.HRMS_MDMS_QUALIFICATION_CODE).contains(education.getQualification()))
+				if(null!= education.getQualification() && !mdmsData.get(HRMSConstants.HRMS_MDMS_QUALIFICATION_CODE).contains(education.getQualification()))
 					errorMap.put(ErrorConstants.HRMS_INVALID_QUALIFICATION_CODE, ErrorConstants.HRMS_INVALID_QUALIFICATION_MSG+education.getQualification());
-				if(!mdmsData.get(HRMSConstants.HRMS_MDMS_STREAMS_CODE).contains(education.getStream()))
+				if(null != education.getStream() && !mdmsData.get(HRMSConstants.HRMS_MDMS_STREAMS_CODE).contains(education.getStream()))
 					errorMap.put(ErrorConstants.HRMS_INVALID_EDUCATIONAL_STREAM_CODE, ErrorConstants.HRMS_INVALID_EDUCATIONAL_STREAM_MSG+education.getStream());
-				if( education.getYearOfPassing() > new Date().getTime()){
+				if(null != education.getYearOfPassing() && education.getYearOfPassing() > new Date().getTime()){
 					errorMap.put(ErrorConstants.HRMS_INVALID_EDUCATIONAL_PASSING_YEAR_CODE, ErrorConstants.HRMS_INVALID_EDUCATIONAL_PASSING_YEAR_MSG);
 				}
 			}
@@ -393,9 +414,9 @@ public class EmployeeValidator {
 	private void validateDepartmentalTest(Employee employee, Map<String, String> errorMap, Map<String, List<String>> mdmsData) {
 		if(!CollectionUtils.isEmpty(employee.getTests())) {
 			for (DepartmentalTest test : employee.getTests()) {
-				if (!mdmsData.get(HRMSConstants.HRMS_MDMS_DEPT_TEST_CODE).contains(test.getTest()))
+				if (null!=test.getTest() && !mdmsData.get(HRMSConstants.HRMS_MDMS_DEPT_TEST_CODE).contains(test.getTest()))
 					errorMap.put(ErrorConstants.HRMS_INVALID_DEPARTMENTAL_TEST_CODE, ErrorConstants.HRMS_INVALID_DEPARTMENTAL_TEST_MSG + test.getTest());
-				if (test.getYearOfPassing() > new Date().getTime()) {
+				if (null!= test.getYearOfPassing() && test.getYearOfPassing() > new Date().getTime()) {
 					errorMap.put(ErrorConstants.HRMS_INVALID_DEPARTMENTAL_TEST_PASSING_YEAR_CODE, ErrorConstants.HRMS_INVALID_DEPARTMENTAL_TEST_PASSING_YEAR_MSG);
 				}
 
@@ -418,6 +439,8 @@ public class EmployeeValidator {
 						errorMap.put(ErrorConstants.HRMS_INVALID_DEACT_REQUEST_CODE, ErrorConstants.HRMS_INVALID_DEACT_REQUEST_MSG);
 					}
 				}
+				if(deactivationDetails.getEffectiveFrom() > new Date().getTime())
+					errorMap.put(ErrorConstants.HRMS_UPDATE_DEACT_DETAILS_INCORRECT_EFFECTIVEFROM_CODE, ErrorConstants.HRMS_UPDATE_DEACT_DETAILS_INCORRECT_EFFECTIVEFROM_MSG);
 				if (! mdmsData.get(HRMSConstants.HRMS_MDMS_DEACT_REASON_CODE).contains(deactivationDetails.getReasonForDeactivation()))
 					errorMap.put(ErrorConstants.HRMS_INVALID_DEACT_REASON_CODE, ErrorConstants.HRMS_INVALID_DEACT_REASON_MSG);
 			}

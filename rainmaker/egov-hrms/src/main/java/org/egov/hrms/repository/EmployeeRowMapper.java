@@ -117,7 +117,7 @@ public class EmployeeRowMapper implements ResultSetExtractor<List<Employee>> {
 				jurisdictions = currentEmployee.getJurisdictions();
 			
 			List<String> ids = jurisdictions.stream().map(Jurisdiction::getId).collect(Collectors.toList());
-			if(!StringUtils.isEmpty(rs.getString("jurisdiction_uuid")) && !ids.contains(rs.getString("jurisdiction_uuid"))) {
+			if(rs.getBoolean("jurisdiction_isactive") !=false && !StringUtils.isEmpty(rs.getString("hasdiction_uuid")) && !ids.contains(rs.getString("jurisdiction_uuid"))) {
 				AuditDetails auditDetails = AuditDetails.builder().createdBy(rs.getString("jurisdiction_createdby")).createdDate(rs.getLong("jurisdiction_createddate"))
 						.lastModifiedBy(rs.getString("jurisdiction_lastmodifiedby")).lastModifiedDate(rs.getLong("jurisdiction_lastmodifieddate")).build();
 				
@@ -149,7 +149,7 @@ public class EmployeeRowMapper implements ResultSetExtractor<List<Employee>> {
 			else
 				educationDetails = currentEmployee.getEducation();
 			List<String> ids = educationDetails.stream().map(EducationalQualification::getId).collect(Collectors.toList());
-			if(!StringUtils.isEmpty(rs.getString("education_uuid")) && !ids.contains(rs.getString("education_uuid"))) {
+			if( rs.getBoolean("education_isactive") !=false &&!StringUtils.isEmpty( rs.getString("education_uuid")) && !ids.contains(rs.getString("education_uuid"))) {
 				AuditDetails auditDetails = AuditDetails.builder().createdBy(rs.getString("education_createdby")).createdDate(rs.getLong("education_createddate"))
 						.lastModifiedBy(rs.getString("education_lastmodifiedby")).lastModifiedDate(rs.getLong("education_lastmodifieddate")).build();
 				EducationalQualification education = EducationalQualification.builder().id(rs.getString("education_uuid")).qualification(rs.getString("education_qualification")).stream(rs.getString("education_stream"))
@@ -181,7 +181,7 @@ public class EmployeeRowMapper implements ResultSetExtractor<List<Employee>> {
 				tests = currentEmployee.getTests();
 			
 			List<String> ids = tests.stream().map(DepartmentalTest::getId).collect(Collectors.toList());
-			if(!StringUtils.isEmpty(rs.getString("depttest_uuid")) && !ids.contains(rs.getString("depttest_uuid"))) {
+			if( rs.getBoolean("depttest_isactive") !=false && !StringUtils.isEmpty(rs.getString("depttest_uuid")) && !ids.contains(rs.getString("depttest_uuid"))) {
 				AuditDetails auditDetails = AuditDetails.builder().createdBy(rs.getString("depttest_createdby")).createdDate(rs.getLong("depttest_createddate"))
 						.lastModifiedBy(rs.getString("depttest_lastmodifiedby")).lastModifiedDate(rs.getLong("depttest_lastmodifieddate")).build();
 				

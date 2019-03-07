@@ -40,7 +40,10 @@ public class ErrorConstants {
 	
 	public static final String HRMS_OVERLAPPING_ASSGN_CODE = "HRMS_OVERLAPPING_ASSGN";
 	public static final String HRMS_OVERLAPPING_ASSGN_MSG = "Period of assignements of employee should not overlap!";
-	
+
+	public static final String HRMS_OVERLAPPING_ASSGN_CURRENT_CODE = "HRMS_OVERLAPPING_ASSGN_CURRENT";
+	public static final String HRMS_OVERLAPPING_ASSGN_CURRENT_MSG = "Period of assignements of employee should not be after  current assignment!";
+
 	public static final String HRMS_INVALID_DEPT_CODE = "HRMS_INVALID_DEPT";
 	public static final String HRMS_INVALID_DEPT_MSG = "Department of the employee is invalid!";
 	
@@ -52,6 +55,7 @@ public class ErrorConstants {
 
 	public static final String HRMS_INVALID_ASSIGNMENT_CURRENT_TO_DATE_CODE = "HRMS_INVALID_ASSIGNMENT_CURRENT_TO_DATE";
 	public static final String HRMS_INVALID_ASSIGNMENT_CURRENT_TO_DATE_MSG = "ToDate should be empty for current assignment!";
+
 
 
 	public static final String HRMS_INVALID_ASSIGNMENT_NON_CURRENT_TO_DATE_CODE = "HRMS_INVALID_ASSIGNMENT_NOT_CURRENT_TO_DATE";
@@ -163,4 +167,14 @@ public class ErrorConstants {
 	public static final String HRMS_UPDATE_EMPLOYEE_CODE_CHANGE_MSG = "Employee code can not be changed in update request";
 	public static final String HRMS_UPDATE_EMPLOYEE_NOT_EXIST_CODE = "HRMS_UPDATE_EMPLOYEE_NOT_EXIST_CODE";
 	public static final String HRMS_UPDATE_EMPLOYEE_NOT_EXIST_MSG = "No employee found for given UUID!";
+
+	public static final String HRMS_BULK_CREATE_DUPLICATE_MOBILE_CODE = "HRMS_BULK_CREATE_DUPLICATE_MOBILE";
+	public static final String HRMS_BULK_CREATE_DUPLICATE_MOBILE_MSG = "Bulk request has duplicate mobile number ";
+
+	public static final String HRMS_BULK_CREATE_DUPLICATE_EMPCODE_CODE = "HRMS_BULK_CREATE_DUPLICATE_EMPCODE";
+	public static final String HRMS_BULK_CREATE_DUPLICATE_EMPCODE_MSG = "Bulk request has duplicate employee code ";
+
+	public static final String HRMS_UPDATE_DEACT_DETAILS_INCORRECT_EFFECTIVEFROM_CODE = "HRMS_UPDATE_DEACT_DETAILS_INCORRECT_EFFECTIVEFROM";
+	public static final String HRMS_UPDATE_DEACT_DETAILS_INCORRECT_EFFECTIVEFROM_MSG = "Employee deactivation effective date should not be future date.";
+
 }

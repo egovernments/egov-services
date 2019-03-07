@@ -5,6 +5,7 @@ import static org.egov.demand.util.Constants.INVALID_TENANT_ID_MDMS_MSG;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.demand.config.ApplicationProperties;
@@ -82,8 +83,7 @@ public class Util {
 			throw new CustomException(INVALID_TENANT_ID_MDMS_KEY, INVALID_TENANT_ID_MDMS_MSG);
 		}
 	}
-	
-	
+
 	/**
 	 * Generates the Audit details object for the requested user and current time
 	 * 
@@ -98,4 +98,17 @@ public class Util {
 		return AuditDetails.builder().createdBy(userId).createdTime(currEpochDate).lastModifiedBy(userId)
 				.lastModifiedTime(currEpochDate).build();
 	}
+
+	public String getStringVal(Set<String> set) {
+		StringBuilder builder = new StringBuilder();
+		int i = 0;
+		for (String val : set) {
+			builder.append(val);
+			i++;
+			if (i != set.size())
+				builder.append(",");
+		}
+		return builder.toString();
+	}
+
 }

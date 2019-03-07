@@ -301,7 +301,7 @@ public class EmployeeValidator {
 			errorMap.put(ErrorConstants.HRMS_OVERLAPPING_ASSGN_CODE, ErrorConstants.HRMS_OVERLAPPING_ASSGN_MSG);
 
 		for(Assignment assignment: employee.getAssignments()) {
-			if(!assignment.getIsCurrentAssignment() && !CollectionUtils.isEmpty(currentAssignments) && currentAssignments.get(0).getFromDate() < assignment.getToDate() )
+			if(!assignment.getIsCurrentAssignment() && !CollectionUtils.isEmpty(currentAssignments) && null != assignment.getToDate()&& currentAssignments.get(0).getFromDate() < assignment.getToDate() )
 				errorMap.put(ErrorConstants.HRMS_OVERLAPPING_ASSGN_CURRENT_CODE,ErrorConstants.HRMS_OVERLAPPING_ASSGN_CURRENT_MSG);
 		    if(!mdmsData.get(HRMSConstants.HRMS_MDMS_DEPT_CODE).contains(assignment.getDepartment()))
 				errorMap.put(ErrorConstants.HRMS_INVALID_DEPT_CODE, ErrorConstants.HRMS_INVALID_DEPT_MSG);
@@ -342,6 +342,8 @@ public class EmployeeValidator {
 				errorMap.put(ErrorConstants.HRMS_INVALID_CURRENT_SERVICE_CODE, ErrorConstants.HRMS_INVALID_CURRENT_SERVICE_MSG);
 			}
 			for(ServiceHistory history: employee.getServiceHistory()) {
+				if( (null== history.getIsCurrentPosition() || !history.getIsCurrentPosition()) && !CollectionUtils.isEmpty(currentService) && null != currentService.get(0).getServiceFrom() && null != history.getServiceTo() && currentService.get(0).getServiceFrom()<history.getServiceTo() )
+					errorMap.put(ErrorConstants.HRMS_OVERLAPPING_SERVICEHISTORY_CURRENT_CODE, ErrorConstants.HRMS_OVERLAPPING_SERVICEHISTORY_CURRENT_MSG);
 				if( null!= history.getIsCurrentPosition() && history.getIsCurrentPosition() && null != history.getServiceTo())
 					errorMap.put(ErrorConstants.HRMS_INVALID_SERVICE_CURRENT_TO_DATE_CODE,ErrorConstants.HRMS_INVALID_SERVICE_CURRENT_TO_DATE_MSG);
 				if((null == history.getIsCurrentPosition() || !history.getIsCurrentPosition()) && null == history.getServiceTo())
@@ -382,9 +384,21 @@ public class EmployeeValidator {
 		}
 	}
 
+	/**
+	 * 1. Checks if there is atleast 1 active jurisdiction
+	 * 2. If hierarchy is valid
+	 * 3. If boundaryType is valid
+	 * 4. If boundary is valid
+	 *
+	 * @param employee
+	 * @param errorMap
+	 * @param mdmsData
+	 */
 	private void validateJurisdicton(Employee employee, Map<String, String> errorMap, Map<String, List<String>> mdmsData) {
-		if(!CollectionUtils.isEmpty(employee.getJurisdictions())){
-			for(Jurisdiction jurisdiction: employee.getJurisdictions()) {
+		if(CollectionUtils.isEmpty(employee.getJurisdictions().stream().filter(jurisdiction -> null == jurisdiction.getIsActive() || jurisdiction.getIsActive() &&  jurisdiction.getIsActive() ).collect(Collectors.toList()))){
+			errorMap.put(ErrorConstants.HRMS_INVALID_JURISDICTION_ACTIIEV_NULL_CODE,ErrorConstants.HRMS_INVALID_JURISDICTION_ACTIIEV_NULL_MSG);
+		}
+		for(Jurisdiction jurisdiction: employee.getJurisdictions()) {
 				List<String>  hierarchyTypes = JsonPath.read(mdmsData,HRMSConstants.HRMS_TENANTBOUNDARY_HIERARCHY_JSONPATH);
 				String boundary_type_path = String.format(HRMSConstants.HRMS_TENANTBOUNDARY_BOUNDARY_TYPE_JSONPATH,jurisdiction.getHierarchy());
 				String boundary_value_path = String.format(HRMSConstants.HRMS_TENANTBOUNDARY_BOUNDARY_VALUE_JSONPATH,jurisdiction.getHierarchy());
@@ -397,7 +411,7 @@ public class EmployeeValidator {
 				if(!boundaryValues.contains(jurisdiction.getBoundary()))
 					errorMap.put(ErrorConstants.HRMS_INVALID_JURISDICTION_BOUNDARY_CODE, ErrorConstants.HRMS_INVALID_JURISDICTION_BOUNDARY_MSG);
 			}
-		}
+
 
 	}
 

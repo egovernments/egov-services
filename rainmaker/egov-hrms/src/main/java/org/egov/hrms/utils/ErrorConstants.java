@@ -56,6 +56,8 @@ public class ErrorConstants {
 	public static final String HRMS_INVALID_ASSIGNMENT_CURRENT_TO_DATE_CODE = "HRMS_INVALID_ASSIGNMENT_CURRENT_TO_DATE";
 	public static final String HRMS_INVALID_ASSIGNMENT_CURRENT_TO_DATE_MSG = "ToDate should be empty for current assignment!";
 
+	public static final String HRMS_OVERLAPPING_SERVICEHISTORY_CURRENT_CODE = "HRMS_OVERLAPPING_SERVICEHISTORY_CURRENT";
+	public static final String HRMS_OVERLAPPING_SERVICEHISTORY_CURRENT_MSG = "Period of service details of employee should not be after  current assignment!";
 
 
 	public static final String HRMS_INVALID_ASSIGNMENT_NON_CURRENT_TO_DATE_CODE = "HRMS_INVALID_ASSIGNMENT_NOT_CURRENT_TO_DATE";
@@ -153,6 +155,9 @@ public class ErrorConstants {
 
 	public static final String HRMS_INVALID_JURISDICTION_BOUNDARY_CODE = "HRMS_INVALID_JURISDICTION_BOUNDARY";
 	public static final String HRMS_INVALID_JURISDICTION_BOUNDARY_MSG = "Jurisiction boundary value is invalid";
+
+	public static final String HRMS_INVALID_JURISDICTION_ACTIIEV_NULL_CODE = "HRMS_INVALID_JURISDICTION_ACTIIEV_NULL";
+	public static final String HRMS_INVALID_JURISDICTION_ACTIIEV_NULL_MSG = "Jurisiction should have atleast 1 active data";
 
 	public static final String HRMS_INVALID_SEARCH_AOD_CODE = "HRMS_INVALID_SEARCH_AOD";
 	public static final String HRMS_INVALID_SEARCH_AOD_MSG = "With asOnDate, atleast one Dept and one Desgination are to be passed.";

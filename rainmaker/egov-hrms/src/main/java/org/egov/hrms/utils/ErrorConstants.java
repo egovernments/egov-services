@@ -173,6 +173,9 @@ public class ErrorConstants {
 	public static final String HRMS_UPDATE_EMPLOYEE_NOT_EXIST_CODE = "HRMS_UPDATE_EMPLOYEE_NOT_EXIST_CODE";
 	public static final String HRMS_UPDATE_EMPLOYEE_NOT_EXIST_MSG = "No employee found for given UUID!";
 
+	public static final String HRMS_UPDATE_EXISTING_MOBNO_CODE = "HRMS_UPDATE_EXISTING_MOBNO";
+	public static final String HRMS_UPDATE_EXISTING_MOBNO_MSG = "User exist for given mobile no";
+
 	public static final String HRMS_BULK_CREATE_DUPLICATE_MOBILE_CODE = "HRMS_BULK_CREATE_DUPLICATE_MOBILE";
 	public static final String HRMS_BULK_CREATE_DUPLICATE_MOBILE_MSG = "Bulk request has duplicate mobile number ";
 

@@ -133,6 +133,9 @@ public class ExcelIO implements FileIO {
         } catch (IOException e) {
             logger.error("Unable to open stream.", e);
             throw e;
+        } catch (InvalidFormatException e) {
+            logger.error("Invalid format found, not an excel file. ", e);
+            throw new IOException("Invalid file format provided, not an excel file");
         }
 
     }

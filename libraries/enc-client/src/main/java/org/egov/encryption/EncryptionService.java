@@ -12,8 +12,8 @@ import org.egov.encryption.masking.MaskingService;
 import org.egov.encryption.models.AccessType;
 import org.egov.encryption.models.Attribute;
 import org.egov.encryption.models.KeyRoleAttributeAccess;
-import org.egov.encryption.models.RoleAttributeAccess;
 import org.egov.encryption.util.ConvertClass;
+import org.egov.encryption.util.JSONBrowseUtil;
 import org.egov.encryption.util.JacksonUtils;
 
 import java.io.IOException;
@@ -47,8 +47,7 @@ public class EncryptionService {
     }
 
     EncryptionService(Map<String, String> fieldsAndTheirType, List<KeyRoleAttributeAccess> keyRoleAttributeAccessList)
-            throws IllegalAccessException,
-            InstantiationException {
+            throws IllegalAccessException, InstantiationException {
         this(fieldsAndTheirType);
         this.keyRoleAttributeAccessConfiguration = new KeyRoleAttributeAccessConfiguration(keyRoleAttributeAccessList);
     }
@@ -68,7 +67,7 @@ public class EncryptionService {
     public JsonNode encryptJson(Object plaintextJson, String tenantId) throws IOException {
 
         JsonNode plaintextNode = createJsonNode(plaintextJson);
-        JsonNode encryptedNode = plaintextNode.deepCopy();
+        JsonNode encryptNode = plaintextNode.deepCopy();
 
         for (String type : typesAndFieldsToEncrypt.keySet()) {
             List<String> paths = typesAndFieldsToEncrypt.get(type);
@@ -78,11 +77,11 @@ public class EncryptionService {
             if(! jsonNode.isEmpty(objectMapper.getSerializerProvider())) {
                 JsonNode returnedEncryptedNode = objectMapper.valueToTree(encryptionServiceRestInterface.callEncrypt(tenantId,
                         type, jsonNode));
-                encryptedNode = JacksonUtils.merge(returnedEncryptedNode, encryptedNode);
+                encryptNode = JacksonUtils.merge(returnedEncryptedNode, encryptNode);
             }
         }
 
-        return encryptedNode;
+        return encryptNode;
     }
 
     public <T> T encryptJson(Object plaintextJson, String tenantId, Class<T> valueType) throws IOException {
@@ -93,34 +92,36 @@ public class EncryptionService {
     public JsonNode decryptJson(Object ciphertextJson, Map<Attribute, AccessType> attributeAccessTypeMap, User user)
             throws IOException {
         JsonNode ciphertextNode = createJsonNode(ciphertextJson);
-        JsonNode decryptedNode = ciphertextNode.deepCopy();
+        JsonNode decryptNode = ciphertextNode.deepCopy();
 
-        List<String> paths = attributeAccessTypeMap.keySet().stream()
-                .map(Attribute::getJsonPath).collect(Collectors.toList());
-
-        JsonNode jsonNode = JacksonUtils.filterJsonNodeWithPaths(ciphertextNode, paths);
-        if(! jsonNode.isEmpty(objectMapper.getSerializerProvider())) {
-            JsonNode returnedDecryptedNode = objectMapper.valueToTree(encryptionServiceRestInterface.callDecrypt(jsonNode));
-
-            if(attributeAccessTypeMap.containsValue(AccessType.MASK)) {
-                List<Attribute> attributesToBeMasked = getKeysForValue(attributeAccessTypeMap, AccessType.MASK);
-                returnedDecryptedNode = maskingService.maskData(returnedDecryptedNode, attributesToBeMasked);
-            }
-
-            decryptedNode = JacksonUtils.merge(returnedDecryptedNode, decryptedNode);
+        if(attributeAccessTypeMap.containsValue(AccessType.NONE)) {
+            List<Attribute> attributesToBeRemoved = getKeysForValue(attributeAccessTypeMap, AccessType.NONE);
+            List<String> pathsToBeRemoved = attributesToBeRemoved.stream().map(Attribute::getJsonPath).collect(Collectors.toList());
+            JsonNode nodeToBeEmptied = JacksonUtils.filterJsonNodeWithPaths(decryptNode, pathsToBeRemoved);
+            JsonNode emptyNode = JSONBrowseUtil.mapValues(nodeToBeEmptied, __ -> "");          //Empty String value
+            decryptNode = JacksonUtils.merge(emptyNode, decryptNode);
         }
 
+        List<Attribute> attributesToBeDecrypted = new ArrayList<>();
+        for(Attribute attribute : attributeAccessTypeMap.keySet()) {
+            AccessType accessType = attributeAccessTypeMap.get(attribute);
+            if(accessType != AccessType.NONE)
+                attributesToBeDecrypted.add(attribute);
+        }
+        List<String> pathsToBeDecrypted = attributesToBeDecrypted.stream().map(Attribute::getJsonPath).collect(Collectors.toList());
 
-        return decryptedNode;
-    }
+        JsonNode jsonNode = JacksonUtils.filterJsonNodeWithPaths(ciphertextNode, pathsToBeDecrypted);
+        if(! jsonNode.isEmpty(objectMapper.getSerializerProvider())) {
+            JsonNode returnedDecryptedNode = objectMapper.valueToTree(encryptionServiceRestInterface.callDecrypt(jsonNode));
+            decryptNode = JacksonUtils.merge(returnedDecryptedNode, decryptNode);
+        }
 
-    <K, V> List<K> getKeysForValue(Map<K, V> map, V findValue) {
-        List<K> foundKeys = new ArrayList<>();
-        map.forEach( (key, value) -> {
-            if(value.equals(findValue))
-                foundKeys.add(key);
-        });
-        return foundKeys;
+        if(attributeAccessTypeMap.containsValue(AccessType.MASK)) {
+            List<Attribute> attributesToBeMasked = getKeysForValue(attributeAccessTypeMap, AccessType.MASK);
+            decryptNode = maskingService.maskData(decryptNode, attributesToBeMasked);
+        }
+
+        return decryptNode;
     }
 
     public JsonNode decryptJson(Object ciphertextJson, List<String> paths, User user) throws IOException {
@@ -151,6 +152,16 @@ public class EncryptionService {
     public <T> T decryptJson(Object ciphertextJson, User user, String keyId, Class<T> valueType) throws IOException {
         return ConvertClass.convertTo(decryptJson(ciphertextJson, user, keyId), valueType);
     }
+
+    <K, V> List<K> getKeysForValue(Map<K, V> map, V findValue) {
+        List<K> foundKeys = new ArrayList<>();
+        map.forEach( (key, value) -> {
+            if(value.equals(findValue))
+                foundKeys.add(key);
+        });
+        return foundKeys;
+    }
+
 
     JsonNode createJsonNode(Object json) throws IOException {
         JsonNode jsonNode;

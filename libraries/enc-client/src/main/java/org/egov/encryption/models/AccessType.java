@@ -7,7 +7,9 @@ public enum AccessType {
 
     PLAIN,
 
-    MASK;
+    MASK,
+
+    NONE;
 
 
 }

@@ -34,6 +34,12 @@
               "maskingTechnique": "mobile"
             },
             "accessType": "MASK"
+          },
+          {
+            "attribute" : {
+              "jsonPath" : "User/userName"
+            },
+            "accessType": "NONE"
           }
         ]
       }

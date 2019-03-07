@@ -117,7 +117,8 @@ public class EmployeeRowMapper implements ResultSetExtractor<List<Employee>> {
 				jurisdictions = currentEmployee.getJurisdictions();
 			
 			List<String> ids = jurisdictions.stream().map(Jurisdiction::getId).collect(Collectors.toList());
-			if(rs.getBoolean("jurisdiction_isactive") !=false && !StringUtils.isEmpty(rs.getString("hasdiction_uuid")) && !ids.contains(rs.getString("jurisdiction_uuid"))) {
+			Boolean isActive =  rs.getBoolean("jurisdiction_isactive") !=false;
+			if(isActive && !StringUtils.isEmpty(rs.getString("jurisdiction_uuid")) && !ids.contains(rs.getString("jurisdiction_uuid"))) {
 				AuditDetails auditDetails = AuditDetails.builder().createdBy(rs.getString("jurisdiction_createdby")).createdDate(rs.getLong("jurisdiction_createddate"))
 						.lastModifiedBy(rs.getString("jurisdiction_lastmodifiedby")).lastModifiedDate(rs.getLong("jurisdiction_lastmodifieddate")).build();
 				
@@ -149,7 +150,8 @@ public class EmployeeRowMapper implements ResultSetExtractor<List<Employee>> {
 			else
 				educationDetails = currentEmployee.getEducation();
 			List<String> ids = educationDetails.stream().map(EducationalQualification::getId).collect(Collectors.toList());
-			if( rs.getBoolean("education_isactive") !=false &&!StringUtils.isEmpty( rs.getString("education_uuid")) && !ids.contains(rs.getString("education_uuid"))) {
+			Boolean isActive =rs.getBoolean("education_isactive") !=false;
+			if( isActive &&!StringUtils.isEmpty( rs.getString("education_uuid")) && !ids.contains(rs.getString("education_uuid"))) {
 				AuditDetails auditDetails = AuditDetails.builder().createdBy(rs.getString("education_createdby")).createdDate(rs.getLong("education_createddate"))
 						.lastModifiedBy(rs.getString("education_lastmodifiedby")).lastModifiedDate(rs.getLong("education_lastmodifieddate")).build();
 				EducationalQualification education = EducationalQualification.builder().id(rs.getString("education_uuid")).qualification(rs.getString("education_qualification")).stream(rs.getString("education_stream"))
@@ -181,7 +183,8 @@ public class EmployeeRowMapper implements ResultSetExtractor<List<Employee>> {
 				tests = currentEmployee.getTests();
 			
 			List<String> ids = tests.stream().map(DepartmentalTest::getId).collect(Collectors.toList());
-			if( rs.getBoolean("depttest_isactive") !=false && !StringUtils.isEmpty(rs.getString("depttest_uuid")) && !ids.contains(rs.getString("depttest_uuid"))) {
+			Boolean isActive = rs.getBoolean("depttest_isactive") !=false;
+			if(isActive  && !StringUtils.isEmpty(rs.getString("depttest_uuid")) && !ids.contains(rs.getString("depttest_uuid"))) {
 				AuditDetails auditDetails = AuditDetails.builder().createdBy(rs.getString("depttest_createdby")).createdDate(rs.getLong("depttest_createddate"))
 						.lastModifiedBy(rs.getString("depttest_lastmodifiedby")).lastModifiedDate(rs.getLong("depttest_lastmodifieddate")).build();
 				
@@ -218,7 +221,7 @@ public class EmployeeRowMapper implements ResultSetExtractor<List<Employee>> {
 						.lastModifiedBy(rs.getString("history_lastmodifiedby")).lastModifiedDate(rs.getLong("history_lastmodifieddate")).build();
 				
 				ServiceHistory service = ServiceHistory.builder().id(rs.getString("history_uuid")).serviceStatus(rs.getString("history_servicestatus")).serviceFrom(rs.getLong("history_servicefrom"))
-						.serviceTo(rs.getLong("history_serviceto")).orderNo(rs.getString("history_ordernumber")).isCurrentPosition(rs.getBoolean("history_iscurrentposition"))
+						.serviceTo(null == rs.getObject("history_serviceto")? null :rs.getLong("history_serviceto")).orderNo(rs.getString("history_ordernumber")).isCurrentPosition(rs.getBoolean("history_iscurrentposition"))
 						.location(rs.getString("history_location")).tenantId(rs.getString("history_tenantid")).auditDetails(auditDetails).build();
 				
 				history.add(service);

@@ -1,10 +1,11 @@
 package org.egov.demand.web.validator;
 
-import java.util.HashMap;
-import java.util.Map;
+import static org.egov.demand.util.Constants.BILL_GEN_MANDATORY_FIELDS_MISSING_KEY;
+import static org.egov.demand.util.Constants.BILL_GEN_MANDATORY_FIELDS_MISSING_MSG;
 
 import org.egov.demand.model.BillSearchCriteria;
 import org.egov.demand.model.GenerateBillCriteria;
+import org.egov.tracer.model.CustomException;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 
@@ -18,22 +19,14 @@ public class BillValidator {
 	 */
 	public void validateBillGenRequest(GenerateBillCriteria generateBillCriteria) {
 
-		Map<String, String> errorMap = new HashMap<>();
+		boolean payerDataNotProvided = (generateBillCriteria.getMobileNumber() == null
+				&& generateBillCriteria.getEmail() == null);
+		
+		boolean isCombinationOfBusinessOrCosnumerCodeMissing = generateBillCriteria.getBusinessService() == null
+				|| generateBillCriteria.getConsumerCode() == null;
 
-		if (generateBillCriteria.getMobileNumber() == null && generateBillCriteria.getEmail() == null
-				&& generateBillCriteria.getBusinessService() == null
-				&& generateBillCriteria.getConsumerCode() == null) {
-
-			errorMap.put("BILL_GEN_MANDATORY_FIELDS_MISSING",
-					"all the criteria fields missing, please give some valid criteria like "
-							+ "mobileNumber,email,businessService,consumerCode");
-
-		} else if ((generateBillCriteria.getMobileNumber() == null && generateBillCriteria.getEmail() == null)
-				&& ((generateBillCriteria.getConsumerCode() != null && generateBillCriteria.getBusinessService() == null)
-				|| (generateBillCriteria.getBusinessService() != null && generateBillCriteria.getConsumerCode() == null))) {
-			errorMap.put("BILL_GEN_CONSUMERCODE_BUSINESSSERVICE",
-					"the consumerCode & BusinessService values should be given together");
-		}
+		if (payerDataNotProvided && isCombinationOfBusinessOrCosnumerCodeMissing)
+			throw new CustomException(BILL_GEN_MANDATORY_FIELDS_MISSING_KEY, BILL_GEN_MANDATORY_FIELDS_MISSING_MSG);
 
 	}
 	

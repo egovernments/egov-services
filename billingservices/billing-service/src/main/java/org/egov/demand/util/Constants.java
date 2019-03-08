@@ -30,7 +30,9 @@ public class Constants {
     public static final String INVALID_TENANT_ID_MDMS_MSG = "No data found for this tenentID";
     
     
-    // ERROR CONSTANTS
+    /* 
+     * ERROR CONSTANTS 
+     */
     
     public static final String EG_BS_JSON_EXCEPTION_KEY = "EG_BS_JSON_EXCEPTION";
     public static final String EG_BS_JSON_EXCEPTION_MSG = "Exception occured while parsing additional details";
@@ -82,6 +84,12 @@ public class Constants {
 	public static final String CONSUMER_CODE_DUPLICATE_MSG = "Demand already exists in the same period with the same businessService for the given consumercodes : {consumercodes}";
 	public static final String CONSUMER_CODE_DUPLICATE_CONSUMERCODE_TEXT = "{consumercodes}";
 
+	public static final String BILL_GEN_MANDATORY_FIELDS_MISSING_KEY = "BILL_GEN_MANDATORY_FIELDS_MISSING";
+	public static final String BILL_GEN_MANDATORY_FIELDS_MISSING_MSG = "Valid search criteria fields missing, please give some valid criteria like mobileNumber/email OR 'businessService & consumerCode'";
+	
+	/*
+	 * Mdms master data 
+	 */
 
 	public static final String TAXHEADMASTER_SERVICE_FILTER = "$.[?(@.service== \"{}\")]";
 	public static final String TAXHEADMASTER_EXPRESSION = "$.MdmsRes.BillingService.TaxHeadMaster[?(EXPRESSION)]";

@@ -92,11 +92,16 @@ public class ReportService {
             sc.setColumnTotal(cd.getColumnTotal());
             sc.setRowTotal(cd.getRowTotal());
 
+            sc.setInitialValue(cd.getInitialValue());
+            sc.setMinValue(cd.getMinValue());
+            sc.setMaxValue(cd.getMaxValue());
+
 			searchParams.add(sc);
 
 		}
 		rmt.setReportHeader(reportHeaders);
 		rmt.setSearchParams(searchParams);
+		rmt.setAdditionalConfig(reportDefinition.getAdditionalConfig());
 		metadataResponse.setReportDetails(rmt);
 		metadataResponse.setTenantId(metaDataRequest.getTenantId());
 		try {
@@ -247,7 +252,7 @@ public class ReportService {
 				}
 				List<ColumnDetail> columnDetails = columns.stream()
 
-						.map(p -> new ColumnDetail(p.getShowColumn(),p.getLabel(), p.getType(),p.getDefaultValue(),p.getTotal(),p.getName(),p.getIsMandatory(),p.getRowTotal(),p.getColumnTotal()))
+						.map(p -> new ColumnDetail(p.getShowColumn(),p.getLabel(), p.getType(),p.getDefaultValue(),p.getTotal(),p.getName(),p.getIsMandatory(),p.getRowTotal(),p.getColumnTotal(),p.getInitialValue(),p.getMinValue(),p.getMaxValue()))
 						.collect(Collectors.toList());
 				
 

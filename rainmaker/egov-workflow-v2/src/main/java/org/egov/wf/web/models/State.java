@@ -4,7 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Size;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -33,39 +35,44 @@ import lombok.ToString;
 @ToString
 @EqualsAndHashCode(of = {"tenantId","businessServiceId","state"})
 public class State   {
+
+        @Size(max=256)
         @JsonProperty("uuid")
-        private String uuid = null;
+        private String uuid;
 
+        @Size(max=256)
         @JsonProperty("tenantId")
-        private String tenantId = null;
+        private String tenantId;
 
+        @Size(max=256)
         @JsonProperty("businessServiceId")
-        private String businessServiceId = null;
+        private String businessServiceId;
 
         @JsonProperty("sla")
-        private Long sla = null;
+        private Long sla;
 
+        @Size(max=256)
         @JsonProperty("state")
-        private String state = null;
+        private String state;
 
+        @Size(max=256)
         @JsonProperty("applicationStatus")
-        private String applicationStatus = null;
+        private String applicationStatus;
 
         @JsonProperty("docUploadRequired")
-        private Boolean docUploadRequired = null;
+        private Boolean docUploadRequired;
 
         @JsonProperty("isStartState")
-        private Boolean isStartState = null;
+        private Boolean isStartState;
 
         @JsonProperty("isTerminateState")
-        private Boolean isTerminateState = null;
+        private Boolean isTerminateState;
 
         @JsonProperty("actions")
         @Valid
-        private List<Action> actions = null;
+        private List<Action> actions;
 
-        @JsonProperty("auditDetails")
-        private AuditDetails auditDetails = null;
+        private AuditDetails auditDetails;
 
 
         public State addActionsItem(Action actionsItem) {

@@ -33,21 +33,28 @@ import javax.validation.constraints.*;
 @EqualsAndHashCode(of = {"tenantId","businessService"})
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class BusinessService   {
+
+        @Size(max=256)
         @JsonProperty("tenantId")
         private String tenantId = null;
 
+        @Size(max=256)
         @JsonProperty("uuid")
         private String uuid = null;
 
+        @Size(max=256)
         @JsonProperty("businessService")
         private String businessService = null;
 
+        @Size(max=256)
         @JsonProperty("business")
         private String business = null;
 
+        @Size(max=1024)
         @JsonProperty("getUri")
         private String getUri = null;
 
+        @Size(max=1024)
         @JsonProperty("postUri")
         private String postUri = null;
 

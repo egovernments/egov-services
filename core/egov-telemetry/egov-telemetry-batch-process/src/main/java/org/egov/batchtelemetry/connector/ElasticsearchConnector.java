@@ -11,6 +11,7 @@ import org.elasticsearch.spark.rdd.api.java.JavaEsSpark;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
@@ -24,12 +25,8 @@ public class ElasticsearchConnector {
 
     private AppProperties appProperties;
 
-    private String distinctUserQuery;
-
     public ElasticsearchConnector() {
         appProperties = new AppProperties();
-        distinctUserQuery = "{\"size\":0,\"aggs\":{\"distinct_uid\":{\"terms\":{\"field\":\"userId.keyword\"," +
-                "\"size\":10000}}}}";
     }
 
     public JavaPairRDD<String, Map<String, Object>> getTelemetryRecords(Long startTime, Long endTime) {
@@ -54,17 +51,53 @@ public class ElasticsearchConnector {
     public List<String> getExistingUserIds()  {
         List<String> userIds = new ArrayList<>();
 
+        Integer numberOfUsers = getNumberOfExistingUsers();
+        String distinctUserQuery = "{\"size\":0,\"aggs\":{\"distinct_uid\":{\"terms\":{\"field\":\"userId.keyword\"," +
+                "\"size\":" + numberOfUsers + "}}}}";
+
+        log.info("Number of Existing users : " + numberOfUsers);
+
         try {
             URL esURL = new URL(appProperties.getEsURL() + appProperties.getOutputTelemetrySessionsIndex() +
                     "_search/");
-            HttpURLConnection connection = (HttpURLConnection) esURL.openConnection();
+            String response = executeQuery(esURL, distinctUserQuery);
+            userIds = JsonPath.read(response, "$.aggregations.distinct_uid.buckets.[*].key");
+
+        } catch (Exception e) {
+            log.info(e.getMessage());
+        }
+
+        return userIds;
+    }
+
+    public Integer getNumberOfExistingUsers() {
+        String distinctUserQuery = "{\"size\":0,\"aggs\":{\"numberOfUsers\":{\"cardinality\":{\"field\":\"userId" +
+                ".keyword\"}}}}";
+
+        try {
+            URL esURL = new URL(appProperties.getEsURL() + appProperties.getOutputTelemetrySessionsIndex() +
+                    "_search/");
+            String response = executeQuery(esURL, distinctUserQuery);
+            return JsonPath.read(response, "$.aggregations.numberOfUsers.value");
+        } catch (Exception e) {
+            log.info(e.getMessage());
+        }
+        return 10000;
+    }
+
+
+    private String executeQuery(URL url, String queryContent) {
+        String esResponse = null;
+
+        try {
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("POST");
             connection.setRequestProperty("Content-Type", "application/json");
 
             connection.setDoOutput(true);
             OutputStream connectionOutputStream =  connection.getOutputStream();
 
-            connectionOutputStream.write(distinctUserQuery.getBytes());
+            connectionOutputStream.write(queryContent.getBytes());
 
             if(connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
                 BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
@@ -74,17 +107,16 @@ public class ElasticsearchConnector {
                     response.append(inputLine);
                 }
                 in .close();
-
-                userIds = JsonPath.read(new JSONObject(response.toString()).toString(), "$.aggregations.distinct_uid.buckets.[*].key");
+                esResponse = response.toString();
             } else {
-                log.info("Error in Elasticsearch Query get unique UserIds");
+                log.info("Error in Elasticsearch Query");
             }
 
-        } catch (Exception e) {
-            log.info(e.getMessage());
+        } catch (IOException e) {
+            log.error(e.getMessage());
         }
 
-        return userIds;
-    }
 
+        return esResponse;
+    }
 }

@@ -1,6 +1,7 @@
 package org.egov.wf.service;
 
 import org.egov.common.contract.request.RequestInfo;
+import org.egov.wf.config.WorkflowConfig;
 import org.egov.wf.repository.BusinessServiceRepository;
 import org.egov.wf.repository.WorKflowRepository;
 import org.egov.wf.util.WorkflowUtil;
@@ -16,7 +17,7 @@ import java.util.*;
 @Service
 public class WorkflowService {
 
-    private MDMSService mdmsService;
+    private WorkflowConfig config;
 
     private TransitionService transitionService;
 
@@ -34,11 +35,11 @@ public class WorkflowService {
 
 
     @Autowired
-    public WorkflowService(MDMSService mdmsService, TransitionService transitionService,
+    public WorkflowService(WorkflowConfig config, TransitionService transitionService,
                            EnrichmentService enrichmentService, WorkflowValidator workflowValidator,
                            StatusUpdateService statusUpdateService, WorKflowRepository workflowRepository,
                            WorkflowUtil util,BusinessServiceRepository businessServiceRepository) {
-        this.mdmsService = mdmsService;
+        this.config = config;
         this.transitionService = transitionService;
         this.enrichmentService = enrichmentService;
         this.workflowValidator = workflowValidator;
@@ -58,8 +59,8 @@ public class WorkflowService {
         RequestInfo requestInfo = request.getRequestInfo();
 
         List<ProcessStateAndAction> processStateAndActions = transitionService.getProcessStateAndActions(request,true);
-        workflowValidator.validateRequest(requestInfo,processStateAndActions);
         enrichmentService.enrichProcessRequest(requestInfo,processStateAndActions);
+        workflowValidator.validateRequest(requestInfo,processStateAndActions);
         statusUpdateService.updateStatus(requestInfo,processStateAndActions);
         return request.getProcessInstances();
     }
@@ -79,8 +80,9 @@ public class WorkflowService {
         if(CollectionUtils.isEmpty(processInstances))
             return processInstances;
         enrichmentService.enrichUsersFromSearch(processInstances);
-        enrichmentService.enrichNextActionForSearch(requestInfo,processInstances);
-        enrichmentService.enrichBusinessServiceSlaForSearch(processInstances);
+        List<ProcessStateAndAction> processStateAndActions = enrichmentService.enrichNextActionForSearch(requestInfo,processInstances);
+    //    workflowValidator.validateSearch(requestInfo,processStateAndActions);
+        enrichmentService.enrichAndUpdateSlaForSearch(processInstances);
         return processInstances;
     }
 
@@ -100,7 +102,9 @@ public class WorkflowService {
         criteria.setAssignee(requestInfo.getUserInfo().getUuid());
         criteria.setStatus(actionableStatuses);
         List<ProcessInstance> processInstancesForAssignee = workflowRepository.getProcessInstancesForAssignee(criteria);
-        List<ProcessInstance> processInstancesForStatus = workflowRepository.getProcessInstancesForStatus(criteria);
+        List<ProcessInstance> processInstancesForStatus = new LinkedList<>();
+        if(!config.getAssignedOnly())
+            processInstancesForStatus = workflowRepository.getProcessInstancesForStatus(criteria);
         Set<ProcessInstance> processInstanceSet = new LinkedHashSet<>(processInstancesForStatus);
         processInstanceSet.addAll(processInstancesForAssignee);
         return new LinkedList<>(processInstanceSet);

@@ -26,21 +26,26 @@ import javax.validation.constraints.*;
 @EqualsAndHashCode
 public class Accessory   {
 
+        @Size(max=64)
         @JsonProperty("id")
         private String id;
 
+        @Size(max=64)
         @JsonProperty("tenantId")
         private String tenantId = null;
 
         @JsonProperty("active")
         private Boolean active;
 
+        @Size(max=64)
         @JsonProperty("accessoryCategory")
         private String accessoryCategory = null;
 
+        @Size(max=64)
         @JsonProperty("uom")
         private String uom = null;
 
+        @Size(max=64)
         @JsonProperty("uomValue")
         private String uomValue = null;
 

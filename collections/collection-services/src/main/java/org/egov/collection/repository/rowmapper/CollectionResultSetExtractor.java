@@ -112,6 +112,7 @@ public class CollectionResultSetExtractor implements ResultSetExtractor<List<Rec
                         .auditDetails(auditDetailsIns)
                         .instrumentDate(resultSet.getLong("ins_instrumentDate"))
                         .instrumentNumber(resultSet.getString("ins_instrumentNumber"))
+                        .tenantId(resultSet.getString("ins_tenantid"))
                         .build();
 
                 AuditDetails auditDetails = AuditDetails.builder()
@@ -124,6 +125,9 @@ public class CollectionResultSetExtractor implements ResultSetExtractor<List<Rec
                 receipt = Receipt.builder()
                         .tenantId(resultSet.getString("rh_tenantId"))
                         .bill(Collections.singletonList(billInfo))
+                        .receiptNumber(billDetail.getReceiptNumber())
+                        .consumerCode(billDetail.getConsumerCode())
+                        .receiptDate(billDetail.getReceiptDate())
                         .transactionId(resultSet.getString("rh_transactionid"))
                         .instrument(instrument)
                         .auditDetails(auditDetails)

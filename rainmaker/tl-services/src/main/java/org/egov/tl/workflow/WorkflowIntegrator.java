@@ -1,19 +1,16 @@
 package org.egov.tl.workflow;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.egov.tl.web.models.Document;
 import org.egov.tl.web.models.TradeLicense;
-import org.egov.tl.web.models.TradeLicense.StatusEnum;
 import org.egov.tl.web.models.TradeLicenseRequest;
 import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
@@ -44,6 +41,8 @@ public class WorkflowIntegrator {
 	private static final String DOCUMENTSKEY = "documents";
 	
 	private static final String ASSIGNEEKEY = "assignee";
+	
+	private static final String UUIDKEY = "uuid";
 
 	private static final String MODULENAMEVALUE = "TL";
 
@@ -67,7 +66,7 @@ public class WorkflowIntegrator {
 
 	private static final String BUSINESSIDJOSNKEY = "$.businessId";
 
-	private static final String STATUSJSONKEY = "$.state.state";
+	private static final String STATUSJSONKEY = "$.state.applicationStatus";
 
 	/**
 	 * Method to integrate with workflow
@@ -81,28 +80,22 @@ public class WorkflowIntegrator {
 	public void callWorkFlow(TradeLicenseRequest tradeLicenseRequest) {
 
 		String wfTenantId = tradeLicenseRequest.getLicenses().get(0).getTenantId();
-		// REMOVE IT ONCE CONFIG IS CHANGED 
-		if(wfTenantId.contains("."))
-			wfTenantId = wfTenantId.split("\\.")[0];
 		
 		JSONArray array = new JSONArray();
 		for (TradeLicense license : tradeLicenseRequest.getLicenses()) {
 
 			JSONObject obj = new JSONObject();
-			List<Document> documents = new ArrayList<>();
-			if (!CollectionUtils.isEmpty(license.getTradeLicenseDetail().getApplicationDocuments()))
-				documents.addAll(license.getTradeLicenseDetail().getApplicationDocuments());
-			if (!CollectionUtils.isEmpty(license.getTradeLicenseDetail().getVerificationDocuments()))
-				documents.addAll(license.getTradeLicenseDetail().getVerificationDocuments());
-
+			Map<String, String> uuidmap = new HashMap<>();
+			uuidmap.put(UUIDKEY, license.getAssignee());
 			obj.put(BUSINESSIDKEY, license.getApplicationNumber());
 			obj.put(TENANTIDKEY, wfTenantId);
 			obj.put(BUSINESSSERVICEKEY, businessServiceValue);
 			obj.put(MODULENAMEKEY, MODULENAMEVALUE);
 			obj.put(ACTIONKEY, license.getAction());
 			obj.put(COMMENTKEY, license.getComment());
-			obj.put(ASSIGNEEKEY, license.getAssignee());
-			obj.put(DOCUMENTSKEY, documents);
+			if (!StringUtils.isEmpty(license.getAssignee()))
+				obj.put(ASSIGNEEKEY, uuidmap);
+			obj.put(DOCUMENTSKEY, license.getWfDocumnets());
 			array.add(obj);
 		}
 
@@ -149,6 +142,6 @@ public class WorkflowIntegrator {
 
 		// setting the status back to TL object from wf response
 		tradeLicenseRequest.getLicenses()
-				.forEach(tlObj -> tlObj.setStatus(StatusEnum.fromValue(idStatusMap.get(tlObj.getApplicationNumber()))));
+				.forEach(tlObj -> tlObj.setStatus(idStatusMap.get(tlObj.getApplicationNumber())));
 	}
 }

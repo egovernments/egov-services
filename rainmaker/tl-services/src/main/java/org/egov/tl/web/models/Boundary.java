@@ -31,6 +31,7 @@ import lombok.Builder;
 public class Boundary   {
 
         @NotNull
+        @Size(max=64)
         @JsonProperty("code")
         private String code = null;
 

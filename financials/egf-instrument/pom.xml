@@ -61,13 +61,13 @@
 		<dependency>
 			<groupId>org.elasticsearch.client</groupId>
 			<artifactId>transport</artifactId>
-			<version>5.4.0</version>
+			<version>6.4.2</version>
 		</dependency>
 
 		<dependency>
 			<groupId>org.elasticsearch</groupId>
 			<artifactId>elasticsearch</artifactId>
-			<version>5.4.0</version>
+			<version>6.4.2</version>
 		</dependency>
 
 		<dependency>

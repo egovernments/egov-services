@@ -73,6 +73,7 @@ public class EmployeeUserMapper {
                     employeeInfo.setType(userInfo.getType());
                     employeeInfo.setActive(userInfo.getActive());
                     employeeInfo.setPhoto(userInfo.getPhoto());
+                    employeeInfo.setUuid(userInfo.getUuid());
                     finalEmployeeList.add(employeeInfo);
                 }
             }

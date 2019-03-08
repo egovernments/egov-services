@@ -12,6 +12,7 @@ import org.egov.pt.web.models.*;
 import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 @Service
 public class PropertyService {
@@ -102,6 +103,8 @@ public class PropertyService {
 	 */
 	 List<Property> getPropertiesWithOwnerInfo(PropertyCriteria criteria,RequestInfo requestInfo){
 		List<Property> properties = repository.getProperties(criteria);
+		if(CollectionUtils.isEmpty(properties))
+			return  Collections.emptyList();
 		enrichmentService.enrichPropertyCriteriaWithOwnerids(criteria,properties);
 		UserDetailResponse userDetailResponse = userService.getUser(criteria,requestInfo);
 		enrichmentService.enrichOwner(userDetailResponse,properties);
@@ -127,7 +130,6 @@ public class PropertyService {
 		enrichmentService.enrichCreateRequest(request,true);
 		userService.createUser(request);
 		calculationService.calculateTax(request);
-	//	enrichmentService.enrichAssessmentNumber(request);
 		producer.push(config.getUpdatePropertyTopic(), request);
 		return request.getProperties();
 	}

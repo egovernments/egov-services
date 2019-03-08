@@ -101,14 +101,13 @@ public class PGRNotificationConsumer {
 		ObjectMapper mapper = new ObjectMapper();
 		ServiceRequest serviceReqRequest = new ServiceRequest();
 		try {
-			log.info("Consuming record: " + record);
 			serviceReqRequest = mapper.convertValue(record, ServiceRequest.class);
 		} catch (final Exception e) {
 			log.error("Error while listening to value: " + record + " on topic: " + topic + ": " + e);
 		}
 		process(serviceReqRequest);
 	}
-
+	
 	public void process(ServiceRequest serviceReqRequest) {
 		if (!CollectionUtils.isEmpty(serviceReqRequest.getActionInfo())) {
 			for (ActionInfo actionInfo : serviceReqRequest.getActionInfo()) {
@@ -223,10 +222,8 @@ public class PGRNotificationConsumer {
 				reasonForRejection = actionInfo.getComment().split(";");
 				if(reasonForRejection.length < 2)
 					return getDefaultMessage(messageMap, actionInfo.getStatus(), actionInfo.getAction(), actionInfo.getComment());	
-				log.info("text before: "+text);
 				text = text.replaceAll(PGRConstants.SMS_NOTIFICATION_REASON_FOR_REOPEN_KEY, reasonForRejection[0])
 						.replaceAll(PGRConstants.SMS_NOTIFICATION_ADDITIONAL_COMMENT_KEY, reasonForRejection[1]);
-				log.info("text after: "+text);
 			}else if(actionInfo.getStatus().equals(WorkFlowConfigs.STATUS_RESOLVED)) {
 				String assignee = notificationService.getCurrentAssigneeForTheServiceRequest(serviceReq, requestInfo);
 				employeeDetails = notificationService.getEmployeeDetails(serviceReq.getTenantId(), assignee, requestInfo);
@@ -236,7 +233,7 @@ public class PGRNotificationConsumer {
 				ServiceReqSearchCriteria serviceReqSearchCriteria = ServiceReqSearchCriteria.builder().tenantId(serviceReq.getTenantId())
 						.serviceRequestId(Arrays.asList(serviceReq.getServiceRequestId())).build();
 				ServiceResponse response = (ServiceResponse) requestService.getServiceRequestDetails(requestInfo, serviceReqSearchCriteria);
-				List<ActionInfo> actions = response.getActionHistory().get(0).getActions().parallelStream()
+				List<ActionInfo> actions = response.getActionHistory().get(0).getActions().stream()
 						.filter(obj -> !StringUtils.isEmpty(obj.getAssignee())).collect(Collectors.toList());
 				employeeDetails = notificationService.getEmployeeDetails(serviceReq.getTenantId(), actions.get(0).getAssignee(), requestInfo);
 				text = 	text.replaceAll(PGRConstants.SMS_NOTIFICATION_RATING_KEY, 

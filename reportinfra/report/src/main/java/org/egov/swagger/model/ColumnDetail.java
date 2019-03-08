@@ -17,7 +17,7 @@ public ColumnDetail() {
 		
 	}
 
-  public ColumnDetail(Boolean showColumn,String label, TypeEnum type,Object defaultValue,Boolean total,String name,Boolean isMandatory,String rowTotal,String columnTotal) {
+  public ColumnDetail(Boolean showColumn,String label, TypeEnum type,Object defaultValue,Boolean total,String name,Boolean isMandatory,String rowTotal,String columnTotal, String initialValue, String minValue, String maxValue) {
 
 		super();
 		this.showColumn = showColumn;
@@ -29,6 +29,9 @@ public ColumnDetail() {
 		this.isMandatory = isMandatory;
 		this.rowTotal = rowTotal;
 		this.columnTotal = columnTotal;
+		this.initialValue = initialValue;
+        this.maxValue = maxValue;
+        this.minValue = minValue;
 
   }	
 
@@ -76,6 +79,8 @@ public ColumnDetail(String label, TypeEnum type, String name) {
     EPOCH("epoch"),
     
     URL("url"),
+
+    CURRENCY("currency"),
     
     SINGLEVALUELIST("singlevaluelist"),
     SINGLEVALUELISTAC("singlevaluelistac"),
@@ -126,6 +131,15 @@ public ColumnDetail(String label, TypeEnum type, String name) {
   
   @JsonProperty("columnTotal")
   private String columnTotal = null;
+
+  @JsonProperty("initialValue")
+  private String initialValue = null;
+
+  @JsonProperty("minValue")
+  private String minValue = null;
+
+  @JsonProperty("maxValue")
+  private String maxValue = null;
 
 
   public Boolean getTotal() {
@@ -272,4 +286,24 @@ public ColumnDetail label(String label) {
     }
     return o.toString().replace("\n", "\n    ");
   }
+
+  public String getInitialValue() {
+    return initialValue;
+  }
+  public void setInitialValue(String initialValue) {
+    this.initialValue = initialValue;
+  }
+  public String getMinValue() {
+    return minValue;
+  }
+  public void setMinValue(String minValue) {
+    this.minValue = minValue;
+  }
+  public String getMaxValue() {
+    return maxValue;
+  }
+  public void setMaxValue(String maxValue) {
+    this.maxValue = maxValue;
+  }
+
 }

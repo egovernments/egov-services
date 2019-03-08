@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 import org.egov.common.contract.request.User;
 import org.springframework.validation.annotation.Validated;
@@ -35,29 +36,33 @@ import lombok.ToString;
 @EqualsAndHashCode(of = {"id"})
 @ToString
 public class ProcessInstance   {
+
+        @Size(max=64)
         @JsonProperty("id")
         private String id = null;
 
         @NotNull
+        @Size(max=128)
         @JsonProperty("tenantId")
         private String tenantId = null;
 
         @NotNull
+        @Size(max=128)
         @JsonProperty("businessService")
         private String businessService = null;
 
-        @JsonProperty("module")
-        private String module;
-
         @NotNull
+        @Size(max=128)
         @JsonProperty("businessId")
         private String businessId = null;
 
         @NotNull
+        @Size(max=128)
         @JsonProperty("action")
         private String action = null;
 
         @NotNull
+        @Size(max=64)
         @JsonProperty("moduleName")
         private String moduleName = null;
 
@@ -88,6 +93,7 @@ public class ProcessInstance   {
         private Long businesssServiceSla = null;
 
         @JsonProperty("previousStatus")
+        @Size(max=128)
         private String previousStatus = null;
 
         @JsonProperty("entity")
@@ -101,7 +107,9 @@ public class ProcessInstance   {
             if (this.documents == null) {
             this.documents = new ArrayList<>();
             }
-        this.documents.add(documentsItem);
+            if(!this.documents.contains(documentsItem))
+                this.documents.add(documentsItem);
+
         return this;
         }
 

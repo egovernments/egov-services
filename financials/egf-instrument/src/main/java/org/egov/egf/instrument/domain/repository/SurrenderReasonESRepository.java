@@ -50,7 +50,7 @@ public class SurrenderReasonESRepository extends ESRepository {
             ObjectMapper mapper = new ObjectMapper();
             // JSON from file to Object
             try {
-                surrenderReason = mapper.readValue(hit.sourceAsString(), SurrenderReason.class);
+                surrenderReason = mapper.readValue(hit.getSourceAsString(), SurrenderReason.class);
             } catch (JsonParseException e1) {
                 // TODO Auto-generated catch block
                 e1.printStackTrace();

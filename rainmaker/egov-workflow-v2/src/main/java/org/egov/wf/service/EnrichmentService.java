@@ -68,8 +68,11 @@ public class EnrichmentService {
                     document.setId(UUID.randomUUID().toString());
                 });
             }
-            enrichBusinessServiceSlaForTransition(processStateAndAction);
-            processStateAndAction.getProcessInstanceFromRequest().setStateSla(processStateAndAction.getResultantState().getSla());
+            Action action = processStateAndAction.getAction();
+            Boolean isStateChanging = (action.getCurrentState().equalsIgnoreCase( action.getNextState())) ? false : true;
+            if(isStateChanging)
+                processStateAndAction.getProcessInstanceFromRequest().setStateSla(processStateAndAction.getResultantState().getSla());
+            enrichAndUpdateSlaForTransition(processStateAndAction,isStateChanging);
             setNextActions(requestInfo,processStateAndActions,true);
         });
         enrichUsers(processStateAndActions);
@@ -95,7 +98,7 @@ public class EnrichmentService {
             List<Action> nextAction = new ArrayList<>();
             if(!CollectionUtils.isEmpty( state.getActions())){
                 state.getActions().forEach(action -> {
-                    if(util.isRoleAvailable(roles,action.getRoles()))
+                    if(util.isRoleAvailable(roles,action.getRoles()) && !nextAction.contains(action))
                         nextAction.add(action);
                 });
             }
@@ -164,13 +167,14 @@ public class EnrichmentService {
     }
 
 
-    public void enrichNextActionForSearch(RequestInfo requestInfo,List<ProcessInstance> processInstances){
+    public List<ProcessStateAndAction> enrichNextActionForSearch(RequestInfo requestInfo,List<ProcessInstance> processInstances){
         List<ProcessStateAndAction> processStateAndActions = new LinkedList<>();
         List<ProcessInstanceRequest> requests = getRequestByBusinessService(new ProcessInstanceRequest(requestInfo,processInstances));
         requests.forEach(request -> {
             processStateAndActions.addAll(transitionService.getProcessStateAndActions(new ProcessInstanceRequest(requestInfo,processInstances),false));
         });
         setNextActions(requestInfo,processStateAndActions,false);
+        return processStateAndActions;
     }
 
 
@@ -183,16 +187,20 @@ public class EnrichmentService {
         List<BusinessService> businessServices = request.getBusinessServices();
         AuditDetails auditDetails = util.getAuditDetails(requestInfo.getUserInfo().getUuid(),true);
         businessServices.forEach(businessService -> {
+        	
+        	String tenantId = businessService.getTenantId();
             businessService.setUuid(UUID.randomUUID().toString());
             businessService.setAuditDetails(auditDetails);
             businessService.getStates().forEach(state -> {
                 state.setAuditDetails(auditDetails);
                 state.setUuid(UUID.randomUUID().toString());
+                state.setTenantId(tenantId);
                 if(!CollectionUtils.isEmpty(state.getActions()))
                     state.getActions().forEach(action -> {
                         action.setAuditDetails(auditDetails);
                         action.setUuid(UUID.randomUUID().toString());
                         action.setCurrentState(state.getUuid());
+                        action.setTenantId(tenantId);
                     });
             });
             enrichNextState(businessService);
@@ -206,25 +214,24 @@ public class EnrichmentService {
     public void enrichUpdateBusinessService(BusinessServiceRequest request){
         RequestInfo requestInfo = request.getRequestInfo();
         List<BusinessService> businessServices = request.getBusinessServices();
-        AuditDetails updateAuditDetails = util.getAuditDetails(requestInfo.getUserInfo().getUuid(),false);
-        AuditDetails createAuditDetails = util.getAuditDetails(requestInfo.getUserInfo().getUuid(),false);
+        AuditDetails audit = util.getAuditDetails(requestInfo.getUserInfo().getUuid(),true);
         businessServices.forEach(businessService -> {
             businessService.setUuid(UUID.randomUUID().toString());
-            businessService.setAuditDetails(updateAuditDetails);
+            businessService.setAuditDetails(audit);
             businessService.getStates().forEach(state -> {
                 if(state.getUuid()==null){
-                    state.setAuditDetails(createAuditDetails);
+                    state.setAuditDetails(audit);
                     state.setUuid(UUID.randomUUID().toString());
                 }
-                else state.setAuditDetails(updateAuditDetails);
+                else state.setAuditDetails(audit);
                 if(!CollectionUtils.isEmpty(state.getActions()))
                     state.getActions().forEach(action -> {
                         if(action.getUuid()==null){
-                            action.setAuditDetails(createAuditDetails);
+                            action.setAuditDetails(audit);
                             action.setUuid(UUID.randomUUID().toString());
                             action.setCurrentState(state.getUuid());
                         }
-                        else action.setAuditDetails(updateAuditDetails);
+                        else action.setAuditDetails(audit);
                     });
             });
             enrichNextState(businessService);
@@ -254,12 +261,15 @@ public class EnrichmentService {
      * Sets the businessServiceSla when the _transition api is called
      * @param processStateAndAction The processStateAndAction object of the transition request
      */
-    private void enrichBusinessServiceSlaForTransition(ProcessStateAndAction processStateAndAction){
+    private void enrichAndUpdateSlaForTransition(ProcessStateAndAction processStateAndAction,Boolean isStateChanging){
         if(processStateAndAction.getProcessInstanceFromDb()!=null){
-            Long slaOfPreviousState = processStateAndAction.getProcessInstanceFromDb().getBusinesssServiceSla();
+            Long businesssServiceSlaRemaining = processStateAndAction.getProcessInstanceFromDb().getBusinesssServiceSla();
+            Long stateSlaRemaining = processStateAndAction.getProcessInstanceFromDb().getStateSla();
             Long timeSpent = processStateAndAction.getProcessInstanceFromRequest().getAuditDetails().getLastModifiedTime()
                            - processStateAndAction.getProcessInstanceFromDb().getAuditDetails().getLastModifiedTime();
-            processStateAndAction.getProcessInstanceFromRequest().setBusinesssServiceSla(slaOfPreviousState-timeSpent);
+            processStateAndAction.getProcessInstanceFromRequest().setBusinesssServiceSla(businesssServiceSlaRemaining-timeSpent);
+            if(!isStateChanging && stateSlaRemaining!=null)
+                processStateAndAction.getProcessInstanceFromRequest().setStateSla(stateSlaRemaining-timeSpent);
         }
     }
 
@@ -268,11 +278,14 @@ public class EnrichmentService {
      * Sets the businessServiceSla for search output
      * @param processInstances The list of processInstance
      */
-    public void enrichBusinessServiceSlaForSearch(List<ProcessInstance> processInstances){
+    public void enrichAndUpdateSlaForSearch(List<ProcessInstance> processInstances){
         processInstances.forEach(processInstance -> {
             Long businessServiceSlaInDb = processInstance.getBusinesssServiceSla();
+            Long stateSlaInDB = processInstance.getStateSla();
             Long timeSinceLastAction = System.currentTimeMillis() - processInstance.getAuditDetails().getLastModifiedTime();
             processInstance.setBusinesssServiceSla(businessServiceSlaInDb-timeSinceLastAction);
+            if(stateSlaInDB!=null)
+                processInstance.setStateSla(stateSlaInDB-timeSinceLastAction);
         });
     }
 

@@ -52,7 +52,7 @@ public class SubSchemeESRepository extends ESRepository {
             ObjectMapper mapper = new ObjectMapper();
             // JSON from file to Object
             try {
-                subScheme = mapper.readValue(hit.sourceAsString(), SubScheme.class);
+                subScheme = mapper.readValue(hit.getSourceAsString(), SubScheme.class);
             } catch (JsonParseException e1) {
                 // TODO Auto-generated catch block
                 e1.printStackTrace();

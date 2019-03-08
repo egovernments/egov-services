@@ -112,8 +112,6 @@ public class DemandService {
         criteria.setAplicationNumber(billCriteria.getConsumerCode());
 
         String query = calculationQueryBuilder.getSearchQuery(criteria,preparedStmtList);
-        System.out.println("query: "+query);
-        System.out.println("preparedStatement: "+preparedStmtList);
         BillingSlabIds billingSlabIds = calculationRepository.getDataFromDB(query,preparedStmtList);
         return billingSlabIds;
     }

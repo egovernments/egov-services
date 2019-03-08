@@ -441,14 +441,14 @@ public class TLValidator {
      * @param request The tradeLcienseRequest
      */
     private void validateDuplicateDocuments(TradeLicenseRequest request){
-        List<String> documentTypes = new LinkedList();
+        List<String> documentFileStoreIds = new LinkedList();
         request.getLicenses().forEach(license -> {
             if(license.getTradeLicenseDetail().getApplicationDocuments()!=null){
                 license.getTradeLicenseDetail().getApplicationDocuments().forEach(
                     document -> {
-                        if(documentTypes.contains(document.getDocumentType()))
+                        if(documentFileStoreIds.contains(document.getFileStoreId()))
                             throw new CustomException("DUPLICATE_DOCUMENT ERROR","Same document cannot be used multiple times");
-                        else documentTypes.add(document.getDocumentType());
+                        else documentFileStoreIds.add(document.getFileStoreId());
                     }
                 );
             }

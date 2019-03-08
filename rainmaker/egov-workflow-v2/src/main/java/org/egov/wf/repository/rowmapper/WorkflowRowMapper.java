@@ -94,6 +94,7 @@ public class WorkflowRowMapper implements ResultSetExtractor<List<ProcessInstanc
                         .stateSla(sla)
                         .businesssServiceSla(businessServiceSla)
                         .previousStatus(rs.getString("previousStatus"))
+                        .moduleName(rs.getString("moduleName"))
                         .auditDetails(auditdetails)
                         .build();
             }

@@ -24,7 +24,7 @@ public class SessionIterator implements Iterator<List<Map<String, Object>>> {
         sortedRecords = sortRecords(getRecords());
     }
 
-    protected static List<Map<String, Object>> sortRecords(List<Map<String, Object>> jsonArray) {
+    private static List<Map<String, Object>> sortRecords(List<Map<String, Object>> jsonArray) {
 
         Collections.sort(jsonArray, new Comparator<Map<String, Object>>() {
             @Override
@@ -50,7 +50,7 @@ public class SessionIterator implements Iterator<List<Map<String, Object>>> {
         return jsonArray;
     }
 
-    protected List<Map<String, Object>> getRecords() {
+    private List<Map<String, Object>> getRecords() {
         List<Map<String, Object>> jsonArray = new ArrayList<>();
 
         while (deviceReocrds.hasNext()) {
@@ -88,6 +88,8 @@ public class SessionIterator implements Iterator<List<Map<String, Object>>> {
         return sessionContent;
     }
 
+    //Multiple users in same session
+    //Needs revisit here
     private boolean checkForUserChange(Map<String, Object> record, Map<String, Object> nextRecord) {
         String user1 = (String) ( (Map<String, Object>) record.get("actor")).get("id");
         String user2 = (String) ( (Map<String, Object>) nextRecord.get("actor")).get("id");
@@ -95,9 +97,11 @@ public class SessionIterator implements Iterator<List<Map<String, Object>>> {
         if(user1.equalsIgnoreCase(TelemetryConstants.userNotFoundIdentifier) ||
                 user2.equalsIgnoreCase(TelemetryConstants.userNotFoundIdentifier)) {
             return false;
+        } else if(user1.equalsIgnoreCase(user2)) {
+            return false;
         }
 
-        return false;
+        return true;
     }
 
     private boolean checkForTimeout(Map<String, Object> record, Map<String, Object> nextRecord) {

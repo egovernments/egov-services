@@ -1,0 +1,53 @@
+{
+  "PGR-Complaints-Report": {
+    "LME": [
+      {
+        "attribute": {
+          "jsonPath": "User/name"
+        },
+        "accessType": "PLAIN"
+      },
+      {
+        "attribute": {
+          "jsonPath": "User/mobileNumber",
+          "maskingTechnique": "mobile"
+        },
+        "accessType": "MASK"
+      }
+    ],
+    "GRO": [
+      {
+        "attribute": {
+          "jsonPath": "User/name"
+        },
+        "accessType": "PLAIN"
+      },
+      {
+        "attribute": {
+          "jsonPath": "User/mobileNumber",
+          "maskingTechnique": "mobile"
+        },
+        "accessType": "PLAIN"
+      }
+    ]
+  },
+
+  "PT-Report": {
+    "PTCOLL": [
+      {
+        "attribute": {
+          "jsonPath": "*/owner/name"
+        },
+        "accessType": "PLAIN"
+      },
+      {
+        "attribute": {
+          "jsonPath": "*/owner/mobileNumber",
+          "maskingTechnique": "mobile"
+        },
+        "accessType": "MASK"
+      }
+    ]
+  }
+}
+

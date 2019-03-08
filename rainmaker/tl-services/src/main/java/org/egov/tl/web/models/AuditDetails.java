@@ -27,9 +27,12 @@ import lombok.Builder;
 @NoArgsConstructor
 @Builder
 public class AuditDetails   {
+
+        @Size(max=64)
         @JsonProperty("createdBy")
         private String createdBy = null;
 
+        @Size(max=64)
         @JsonProperty("lastModifiedBy")
         private String lastModifiedBy = null;
 

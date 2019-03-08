@@ -52,7 +52,7 @@ public class AccountCodePurposeESRepository extends ESRepository {
             ObjectMapper mapper = new ObjectMapper();
             // JSON from file to Object
             try {
-                accountCodePurpose = mapper.readValue(hit.sourceAsString(), AccountCodePurpose.class);
+                accountCodePurpose = mapper.readValue(hit.getSourceAsString(), AccountCodePurpose.class);
             } catch (JsonParseException e1) {
                 // TODO Auto-generated catch block
                 e1.printStackTrace();

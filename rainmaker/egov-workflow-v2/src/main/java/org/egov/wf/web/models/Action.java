@@ -1,18 +1,23 @@
 package org.egov.wf.web.models;
 
-import java.util.Objects;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 import java.util.ArrayList;
 import java.util.List;
 
-import lombok.*;
-import org.egov.wf.web.models.AuditDetails;
-import org.springframework.validation.annotation.Validated;
 import javax.validation.Valid;
-import javax.validation.constraints.*;
+import javax.validation.constraints.Size;
+
+import org.springframework.validation.annotation.Validated;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import io.swagger.annotations.ApiModel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 /**
  * A Object holds the basic data for a Trade License
@@ -29,27 +34,33 @@ import javax.validation.constraints.*;
 @ToString
 @EqualsAndHashCode(of = {"tenantId","currentState","action"})
 public class Action   {
+
+        @Size(max=256)
         @JsonProperty("uuid")
-        private String uuid = null;
+        private String uuid;
 
+        @Size(max=256)
         @JsonProperty("tenantId")
-        private String tenantId = null;
+        private String tenantId;
 
+        @Size(max=256)
         @JsonProperty("currentState")
-        private String currentState = null;
+        private String currentState;
 
+        @Size(max=256)
         @JsonProperty("action")
-        private String action = null;
+        private String action;
 
+        @Size(max=256)
         @JsonProperty("nextState")
-        private String nextState = null;
+        private String nextState;
 
+        @Size(max=1024)
         @JsonProperty("roles")
         @Valid
-        private List<String> roles = null;
+        private List<String> roles;
 
-        @JsonProperty("auditDetails")
-        private AuditDetails auditDetails = null;
+        private AuditDetails auditDetails;
 
 
         public Action addRolesItem(String rolesItem) {

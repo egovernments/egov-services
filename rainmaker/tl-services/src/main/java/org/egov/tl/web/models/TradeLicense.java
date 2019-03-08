@@ -1,8 +1,12 @@
 package org.egov.tl.web.models;
 
+import java.util.List;
+
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
+import lombok.*;
 import org.egov.tl.web.models.calculation.Calculation;
 import org.springframework.validation.annotation.Validated;
 
@@ -11,11 +15,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
 
 import io.swagger.annotations.ApiModel;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 /**
  * A Object holds the basic data for a Trade License
@@ -30,10 +29,12 @@ import lombok.Setter;
 @NoArgsConstructor
 @Builder
 public class  TradeLicense   {
+        @Size(max=64)
         @JsonProperty("id")
         private String id = null;
 
         @NotNull
+        @Size(max=64)
         @JsonProperty("tenantId")
         private String tenantId = null;
 
@@ -71,24 +72,32 @@ public class  TradeLicense   {
         @JsonProperty("licenseType")
         private LicenseTypeEnum licenseType = null;
 
+        @Size(max=64)
         @JsonProperty("licenseNumber")
         private String licenseNumber = null;
 
+        @Size(max=64)
         @JsonProperty("applicationNumber")
         private String applicationNumber;
 
+        @Size(max=64)
         @JsonProperty("oldLicenseNumber")
         private String oldLicenseNumber = null;
 
+
+        @Size(max=256)
         @JsonProperty("propertyId")
         private String propertyId = null;
 
+        @Size(max=64)
         @JsonProperty("oldPropertyId")
         private String oldPropertyId = null;
 
+        @Size(max=64)
         @JsonProperty("accountId")
         private String accountId = null;
 
+        @Size(max=256)
         @JsonProperty("tradeName")
         private String tradeName = null;
 
@@ -102,6 +111,7 @@ public class  TradeLicense   {
         private Long issuedDate = null;
 
         @NotNull
+        @Size(max=64)
         @JsonProperty("financialYear")
         private String financialYear = null;
 
@@ -114,94 +124,19 @@ public class  TradeLicense   {
               /**
    * 1. Perform action to change the state of the trade license. 2. INITIATE, if application is getting submitted without required document. 3. APPLY, if application is getting submitted with application documents, in that case api will validate all the required application document. 4. APPROVE action is only applicable for specific role, that role has to be configurable at service level. Employee can approve a application only if application is in APPLIED state and Licesance fees is paid.
    */
-  public enum ActionEnum {
-    INITIATE("INITIATE"),
-    
-    APPLY("APPLY"),
-    
-    APPROVE("APPROVE"),
-
-    REJECT("REJECT"),
-
-    CANCEL("CANCEL"),
-	  
-    PAY("PAY"),
-	  
-    FORWARD("FORWARD"),
-     
-    MARK("MARK");
-
-    private String value;
-
-    ActionEnum(String value) {
-      this.value = value;
-    }
-
-    @Override
-    @JsonValue
-    public String toString() {
-      return String.valueOf(value);
-    }
-
-    @JsonCreator
-    public static ActionEnum fromValue(String text) {
-      for (ActionEnum b : ActionEnum.values()) {
-        if (String.valueOf(b.value).equalsIgnoreCase(text)) {
-          return b;
-        }
-      }
-      return null;
-    }
-  }
 
         @NotNull
         @JsonProperty("action")
-        private ActionEnum action = null;
+        private String action = null;
         
         @JsonProperty("assignee")
         private String assignee = null;
-
-              /**
-   * Unique identifier (code) of the Trade license Status
-   */
-  public enum StatusEnum {
-    INITIATED("INITIATED"),
-    
-    APPLIED("APPLIED"),
-    
-    PAID("PAID"),
-    
-    APPROVED("APPROVED"),
-    
-    REJECTED("REJECTED"),
-
-    CANCELLED("CANCELLED");
-
-    private String value;
-
-    StatusEnum(String value) {
-      this.value = value;
-    }
-
-    @Override
-    @JsonValue
-    public String toString() {
-      return String.valueOf(value);
-    }
-
-    @JsonCreator
-    public static StatusEnum fromValue(String text) {
-      for (StatusEnum b : StatusEnum.values()) {
-        if (String.valueOf(b.value).equalsIgnoreCase(text)) {
-          return b;
-        }
-      }
-      return null;
-    }
-  }
+        
+        @JsonProperty("wfDocumnets")
+        private List<Document> wfDocumnets;
 
         @JsonProperty("status")
-        private StatusEnum status = null;
+        private String status = null;
 
         @Valid
         @NotNull

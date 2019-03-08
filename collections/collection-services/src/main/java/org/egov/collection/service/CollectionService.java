@@ -110,24 +110,27 @@ public class CollectionService {
         return receipt;
     }
 
+    /**
+     * Performs update of eligible receipts
+     * Allows update of payee details, manual receipt number & date, additionalDetails
+     *
+     *  - If validated, update receipts as per the request
+     *      else, throws exception and exit
+     *
+     * @param receiptReq receipts to be updated
+     * @return updated receipts
+     */
     @Transactional
     public List<Receipt> updateReceipt(ReceiptReq receiptReq) {
 
-        for (Receipt receipt : receiptReq.getReceipt()) {
-            collectionRepository.updateReceipt(receipt);
-        }
+        List<Receipt> validatedReceipts = receiptValidator.validateAndEnrichReceiptsForUpdate(receiptReq.getReceipt(),
+                receiptReq.getRequestInfo());
+
+        collectionRepository.updateReceipt(validatedReceipts);
         collectionProducer.producer(applicationProperties.getUpdateReceiptTopicName(), applicationProperties
-                .getUpdateReceiptTopicKey(), receiptReq);
+                .getUpdateReceiptTopicKey(), new ReceiptReq(receiptReq.getRequestInfo(), validatedReceipts));
 
-        return receiptReq.getReceipt();
-    }
-
-    public List<Receipt> cancelReceipt(RequestInfo requestInfo, String transactionNumber) {
-        ReceiptSearchCriteria receiptSearchCriteria = ReceiptSearchCriteria.builder().transactionId(transactionNumber).build();
-        List<Receipt> receipts = getReceipts(requestInfo, receiptSearchCriteria);
-        receiptValidator.validateReceiptsForCancellation(receipts);
-
-        return receipts;
+        return validatedReceipts;
     }
 
     /**

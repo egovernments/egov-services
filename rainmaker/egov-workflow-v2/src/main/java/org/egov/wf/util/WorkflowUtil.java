@@ -53,7 +53,7 @@ public class WorkflowUtil {
         Boolean flag = false;
  //       List<String> allowedRoles = Arrays.asList(actionRoles.get(0).split(","));
         for(Role role : userRoles) {
-            if (actionRoles.contains(role.getCode())) {
+            if (actionRoles.contains(role.getCode()) || actionRoles.contains("*")) {
                 flag = true;
                 break;
             }
@@ -77,24 +77,6 @@ public class WorkflowUtil {
         return roles;
     }
 
-
-
-    /**
-     * Creates a map of status to roles who can take actions on it for particular businessService
-     * @param businessService The businessService for which map is to be created
-     * @return Map of status to roles which can take action on it
-     */
-    public Map<String,Set<String>> getStateToRoleMap(BusinessService businessService){
-        Map<String,Set<String>> stateToRolesMap = new HashMap<>();
-        for(State state : businessService.getStates()){
-            HashSet<String> roles = new HashSet<>();
-            state.getActions().forEach(action -> {
-                roles.addAll(Arrays.asList(action.getRoles().get(0).split(",")));
-            });
-            stateToRolesMap.put(state.getUuid(),roles);
-        }
-        return stateToRolesMap;
-    }
 
 
     /**
@@ -149,6 +131,58 @@ public class WorkflowUtil {
             }
         }
         return actionableStatuses;
+    }
+
+
+    /**
+     * Extracts all the roles from the state
+     * @param state The state whose roles has to be extracted
+     * @return Roles availaable in the states which can take action
+     */
+    public List<String> getAllRolesFromState(State state){
+        List<Action> actions = state.getActions();
+        List<String> rolesInState = new LinkedList<>();
+        if(!CollectionUtils.isEmpty(actions)){
+            actions.forEach(action -> {
+                rolesInState.addAll(action.getRoles());
+            });
+        }
+        return rolesInState;
+    }
+
+
+    /**
+     * Extracts unique businessIds from list of ProcessStateAndAction
+     * @param processStateAndActions List of ProcessStateAndAction whose businessIds are to be fetched
+     * @return list of businessId
+     */
+    public Set<String> getBusinessIds(List<ProcessStateAndAction> processStateAndActions){
+        Set<String> businessIds = new HashSet<>();
+        if(CollectionUtils.isEmpty(processStateAndActions))
+            return businessIds;
+        processStateAndActions.forEach(processStateAndAction -> {
+            businessIds.add(processStateAndAction.getProcessInstanceFromRequest().getBusinessId());
+        });
+        return businessIds;
+    }
+
+    /**
+     * Fetches the latest processStateAndAction for the given businessId
+     * @param businessId The businessId whose latest record has to be fetched
+     * @param processStateAndActions The list of processStateAndAction
+     * @return The lastest processStateAndAction for the given businessId
+     */
+    public ProcessStateAndAction getLatestProcessStateAndAction(String businessId,List<ProcessStateAndAction> processStateAndActions){
+        Long maxTime = 0l;
+        ProcessStateAndAction latestProcessStateAndAction = null;
+        for(ProcessStateAndAction processStateAndAction:processStateAndActions) {
+            if(processStateAndAction.getProcessInstanceFromRequest().getBusinessId().equalsIgnoreCase(businessId)
+                    && maxTime<processStateAndAction.getProcessInstanceFromRequest().getAuditDetails().getLastModifiedTime()){
+                latestProcessStateAndAction = processStateAndAction;
+                maxTime = processStateAndAction.getProcessInstanceFromRequest().getAuditDetails().getLastModifiedTime();
+            }
+        }
+        return latestProcessStateAndAction;
     }
 
 

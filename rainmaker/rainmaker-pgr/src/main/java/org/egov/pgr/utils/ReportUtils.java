@@ -39,6 +39,12 @@ public class ReportUtils {
 	@Value("${egov.hr.employee.v2.search.endpoint}")
 	private String hrEmployeeV2SearchEndpoint;
 	
+	@Value("${egov.hrms.host}")
+	private String egovHRMShost;
+
+	@Value("${egov.hrms.search.endpoint}")
+	private String egovHRMSSearchEndpoint;
+	
 	@Value("${egov.mdms.host}")
 	private String mdmsHost;
 
@@ -142,9 +148,9 @@ public class ReportUtils {
 	 */
 	public RequestInfoWrapper getGROSearchRequest(StringBuilder uri, List<Long> GROids, ReportRequest reportRequest) {
 		RequestInfoWrapper requestInfoWrapper = RequestInfoWrapper.builder().requestInfo(reportRequest.getRequestInfo()).build();
-		uri.append(hrEmployeeV2Host).append(hrEmployeeV2SearchEndpoint)
+		uri.append(egovHRMShost).append(egovHRMSSearchEndpoint)
 		.append("?tenantId=").append(reportRequest.getTenantId())
-		.append("&id=").append(GROids.toString().substring(1, GROids.toString().length() - 1));
+		.append("&ids=").append(GROids.toString().substring(1, GROids.toString().length() - 1));
 		
 		return requestInfoWrapper;
 	}

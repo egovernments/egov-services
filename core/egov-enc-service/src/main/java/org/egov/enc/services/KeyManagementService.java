@@ -5,7 +5,6 @@ import org.egov.enc.keymanagement.KeyGenerator;
 import org.egov.enc.keymanagement.KeyIdGenerator;
 import org.egov.enc.keymanagement.KeyStore;
 import org.egov.enc.models.AsymmetricKey;
-import org.egov.enc.models.MethodEnum;
 import org.egov.enc.models.SymmetricKey;
 import org.egov.enc.repository.KeyRepository;
 import org.egov.enc.web.models.RotateKeyRequest;
@@ -22,7 +21,6 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -47,6 +45,9 @@ public class KeyManagementService implements ApplicationRunner {
     @Value("${egov.mdms.search.endpoint}")
     private String mdmsEndpoint;
 
+    @Value(("${egov.state.level.tenant.id}"))
+    private String stateLevelTenantId;
+
     @Autowired
     private KeyRepository keyRepository;
     @Autowired
@@ -56,31 +57,25 @@ public class KeyManagementService implements ApplicationRunner {
     @Autowired
     private KeyIdGenerator keyIdGenerator;
 
-    private ArrayList<String> tenantIdsFromDB;
 
-    //Initialize active tenant id list
-    private void init() {
-        tenantIdsFromDB = (ArrayList<String>) this.keyRepository.fetchDistinctTenantIds();
+    //Initialize active tenant id list and Check for any new tenants
+    private void init() throws Exception {
+        generateKeyForNewTenants();
     }
 
     //Check if a given tenantId exists
     public boolean checkIfTenantExists(String tenant) throws BadPaddingException, InvalidKeyException, NoSuchAlgorithmException, IllegalBlockSizeException, NoSuchPaddingException, InvalidAlgorithmParameterException {
-        if(tenantIdsFromDB.contains(tenant)) {
+        if(keyStore.getTenantIds().contains(tenant)) {
             return true;
         }
-        if(generateKeyForNewTenants() != 0) {
-            keyStore.refreshKeys();
-            keyIdGenerator.refreshKeyIds();
-            tenantIdsFromDB = (ArrayList<String>) keyRepository.fetchDistinctTenantIds();
-            return tenantIdsFromDB.contains(tenant);
-        }
-        return false;
+        generateKeyForNewTenants();
+        return keyStore.getTenantIds().contains(tenant);
     }
 
     //Generate Symmetric and Asymmetric Keys for each of the TenantId in the given input list
-    public void generateKeys(ArrayList<String> tenantIds) throws BadPaddingException, InvalidKeyException, NoSuchAlgorithmException, IllegalBlockSizeException, NoSuchPaddingException, InvalidAlgorithmParameterException {
+    private void generateKeys(ArrayList<String> tenantIds) throws BadPaddingException, InvalidKeyException, NoSuchAlgorithmException, IllegalBlockSizeException, NoSuchPaddingException, InvalidAlgorithmParameterException {
 
-        Integer status = 1000;
+        int status;
         ArrayList<SymmetricKey> symmetricKeys = keyGenerator.generateSymmetricKeys(tenantIds);
         for(SymmetricKey symmetricKey : symmetricKeys) {
             status = keyRepository.insertSymmetricKey(symmetricKey);
@@ -100,18 +95,18 @@ public class KeyManagementService implements ApplicationRunner {
 
     //Generate keys if there are any new tenants
     //Returns the number of tenants for which the keys have been generated
-    public int generateKeyForNewTenants() throws JSONException, BadPaddingException, InvalidAlgorithmParameterException, NoSuchAlgorithmException, IllegalBlockSizeException, NoSuchPaddingException, InvalidKeyException {
-        Collection<String> tenantIds = makeComprehensiveListOfTenantIds();
-        Collection<String> tenantIdsFromDB = keyRepository.fetchDistinctTenantIds();
+    private int generateKeyForNewTenants() throws JSONException, BadPaddingException, InvalidAlgorithmParameterException, NoSuchAlgorithmException, IllegalBlockSizeException, NoSuchPaddingException, InvalidKeyException {
+        Collection<String> tenantIdsFromMdms = makeComprehensiveListOfTenantIds();
+        tenantIdsFromMdms.removeAll(keyStore.getTenantIds());
 
-        tenantIds.removeAll(tenantIdsFromDB);
+        if(tenantIdsFromMdms.size() != 0) {
+            ArrayList<String> tenantIdList = new ArrayList<>(tenantIdsFromMdms);
+            generateKeys(tenantIdList);
 
-        ArrayList<String> tenantIdList = new ArrayList<String>();
-        tenantIdList.addAll(tenantIds);
-
-        generateKeys(tenantIdList);
-
-        return tenantIds.size();
+            keyStore.refreshKeys();
+            keyIdGenerator.refreshKeyIds();
+        }
+        return tenantIdsFromMdms.size();
     }
 
     private Set<String> makeComprehensiveListOfTenantIds() {
@@ -130,7 +125,7 @@ public class KeyManagementService implements ApplicationRunner {
     }
 
     //Used to deactivate old keys at the time of key rotation
-    public void deactivateOldKeys() {
+    private void deactivateOldKeys() {
         keyRepository.deactivateSymmetricKeys();
         keyRepository.deactivateAsymmetricKeys();
     }
@@ -146,7 +141,7 @@ public class KeyManagementService implements ApplicationRunner {
     public RotateKeyResponse rotateKey(RotateKeyRequest rotateKeyRequest) throws BadPaddingException,
             InvalidKeyException, NoSuchAlgorithmException, IllegalBlockSizeException, NoSuchPaddingException,
             InvalidAlgorithmParameterException {
-        Integer status = 1000;
+        int status;
         status = keyRepository.deactivateSymmetricKeyForGivenTenant(rotateKeyRequest.getTenantId());
         log.info("Key Rotate SYM Return Status: " + status);
         if(status != 1) {
@@ -171,36 +166,13 @@ public class KeyManagementService implements ApplicationRunner {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
 
-        String requestJson = "{\n" +
-                " \"RequestInfo\": {\n" +
-                "   \"apiId\": \"asset-services\",\n" +
-                "   \"ver\": null,\n" +
-                "   \"ts\": null,\n" +
-                "   \"action\": null,\n" +
-                "   \"did\": null,\n" +
-                "   \"key\": null,\n" +
-                "   \"msgId\": \"search with from and to values\",\n" +
-                "   \"authToken\": \"59854f79-7031-4157-9cb5-21c51cb61981\"\n" +
-                " },\n" +
-                " \"MdmsCriteria\": {\n" +
-                "   \"tenantId\": \"pb\",\n" +
-                "   \"moduleDetails\": [\n" +
-                "     {\n" +
-                "       \"moduleName\": \"tenant\",\n" +
-                "       \"masterDetails\": [\n" +
-                "         {\n" +
-                "           \"name\": \"tenants\",\n" +
-                "           \"filter\":\"$.*.code\"\n" +
-                "         }\n" +
-                "       ]\n" +
-                "     }\n" +
-                "   ]\n" +
-                " }\n" +
-                "}";
+        String requestJson = "{\"RequestInfo\":{},\"MdmsCriteria\":{\"tenantId\":\"" + stateLevelTenantId + "\"," +
+                "\"moduleDetails\":[{\"moduleName\":\"tenant\",\"masterDetails\":[{\"name\":\"tenants\"," +
+                "\"filter\":\"$.*.code\"}]}]}}";
 
         String url = mdmsHost + mdmsEndpoint;
 
-        HttpEntity<String> entity = new HttpEntity<String>(requestJson, headers);
+        HttpEntity<String> entity = new HttpEntity<>(requestJson, headers);
         ResponseEntity<String> response = restTemplate.postForEntity(url, entity, String.class);
 
         JSONObject jsonObject = new JSONObject(response.getBody());
@@ -215,7 +187,7 @@ public class KeyManagementService implements ApplicationRunner {
     }
 
     @Override
-    public void run(ApplicationArguments applicationArguments) {
+    public void run(ApplicationArguments applicationArguments) throws Exception {
         init();
     }
 }

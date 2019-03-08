@@ -29,12 +29,15 @@ import lombok.Builder;
 @Builder
 public class Address   {
 
+        @Size(max=64)
         @JsonProperty("id")
         private String id;
 
+        @Size(max=64)
         @JsonProperty("tenantId")
         private String tenantId = null;
 
+        @Size(max=64)
         @JsonProperty("doorNo")
         private String doorNo = null;
 
@@ -44,36 +47,47 @@ public class Address   {
         @JsonProperty("longitude")
         private Double longitude = null;
 
+        @Size(max=64)
         @JsonProperty("addressId")
         private String addressId = null;
 
+        @Size(max=64)
         @JsonProperty("addressNumber")
         private String addressNumber = null;
 
+        @Size(max=64)
         @JsonProperty("type")
         private String type = null;
 
+        @Size(max=256)
         @JsonProperty("addressLine1")
         private String addressLine1 = null;
 
+        @Size(max=256)
         @JsonProperty("addressLine2")
         private String addressLine2 = null;
 
+        @Size(max=64)
         @JsonProperty("landmark")
         private String landmark = null;
 
+        @Size(max=64)
         @JsonProperty("city")
         private String city = null;
 
+        @Size(max=64)
         @JsonProperty("pincode")
         private String pincode = null;
 
+        @Size(max=64)
         @JsonProperty("detail")
         private String detail = null;
 
+        @Size(max=64)
         @JsonProperty("buildingName")
         private String buildingName = null;
 
+        @Size(max=64)
         @JsonProperty("street")
         private String street = null;
 

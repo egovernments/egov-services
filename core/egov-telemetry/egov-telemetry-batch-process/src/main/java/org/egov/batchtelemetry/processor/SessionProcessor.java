@@ -6,17 +6,17 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.Configuration;
 import com.jayway.jsonpath.JsonPath;
 import com.jayway.jsonpath.Option;
+import lombok.extern.slf4j.Slf4j;
 import org.egov.batchtelemetry.config.AppProperties;
 import org.egov.batchtelemetry.connector.ElasticsearchConnector;
 import org.egov.batchtelemetry.constants.TelemetryConstants;
-import lombok.extern.slf4j.Slf4j;
 import org.egov.batchtelemetry.models.Edata;
 import org.egov.batchtelemetry.models.Session;
 import org.egov.batchtelemetry.models.SessionDetails;
-import org.json.JSONObject;
 import org.egov.batchtelemetry.producer.Producer;
-import scala.Tuple2;
 import org.egov.batchtelemetry.util.SessionIterator;
+import org.json.JSONObject;
+import scala.Tuple2;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -36,6 +36,8 @@ public class SessionProcessor {
 
     private static ElasticsearchConnector elasticsearchConnector;
 
+    private static PathProcessor pathProcessor;
+
     public SessionProcessor() {
         init();
     }
@@ -51,6 +53,8 @@ public class SessionProcessor {
         elasticsearchConnector = new ElasticsearchConnector();
         existingUserIds = elasticsearchConnector.getExistingUserIds();
 
+        pathProcessor = new PathProcessor(appProperties);
+
         totalSessionCounter = 0;
     }
 
@@ -59,7 +63,9 @@ public class SessionProcessor {
         SessionIterator sessionIterator = new SessionIterator(deviceReocrds);
         Session session;
         while (sessionIterator.hasNext()) {
-            session = buildSession(sessionIterator.next());
+            List<Map<String, Object>> sessionContent = sessionIterator.next();
+            session = buildSession(sessionContent);
+            pathProcessor.findAndPushPaths(sessionContent, session.getSessionId());
             pushSession(session);
             totalSessionCounter++;
         }
@@ -89,7 +95,7 @@ public class SessionProcessor {
         Edata edata = buildEdata(sessionContent);
         Session session = Session.builder().sessionId(sessionIid).timestamp(timestamp).deviceId(deviceId).userId(userId)
                 .isNewUser(isNewUser).startTime(startTime).endTime(endTime).sessionDetails(sessionDetails).edata(edata)
-                .build();
+                .type(TelemetryConstants.sessionTypeName).build();
 
         return session;
     }
@@ -167,13 +173,12 @@ public class SessionProcessor {
         return TelemetryConstants.userNotFoundIdentifier;
     }
 
-    public static void pushSession(Session session) {
+    private static void pushSession(Session session) {
         JsonNode jsonNode = mapper.valueToTree(session);
         producer.push(kafkaTopic, session.getSessionId(), session.getStartTime(), jsonNode);
-
     }
 
-    public static void closeKafka() {
+    public static void closeSessionProcessor() {
         producer.close();
     }
 }

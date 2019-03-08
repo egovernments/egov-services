@@ -1,14 +1,27 @@
 package org.egov.pt.repository.rowmapper;
 
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.extern.slf4j.Slf4j;
-import org.egov.common.contract.request.User;
-import org.egov.pt.web.models.*;
+import java.io.IOException;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.egov.pt.web.models.Address;
+import org.egov.pt.web.models.AuditDetails;
+import org.egov.pt.web.models.Boundary;
+import org.egov.pt.web.models.Document;
+import org.egov.pt.web.models.Institution;
+import org.egov.pt.web.models.OwnerInfo;
+import org.egov.pt.web.models.Property;
 import org.egov.pt.web.models.Property.CreationReasonEnum;
+import org.egov.pt.web.models.PropertyDetail;
 import org.egov.pt.web.models.PropertyDetail.ChannelEnum;
 import org.egov.pt.web.models.PropertyDetail.SourceEnum;
+import org.egov.pt.web.models.PropertyInfo;
+import org.egov.pt.web.models.Unit;
 import org.egov.tracer.model.CustomException;
 import org.postgresql.util.PGobject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,12 +30,10 @@ import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Component
 public class PropertyRowMapper implements ResultSetExtractor<List<Property>> {
@@ -71,17 +82,28 @@ public class PropertyRowMapper implements ResultSetExtractor<List<Property>> {
 						.lastModifiedTime(lastModifiedTime)
 						.build();
 
-				Long occupancyDate = rs.getLong("occupancyDate");
-				if(rs.wasNull()){occupancyDate = null;}
-				currentProperty = Property.builder().address(address)
-						.acknowldgementNumber(rs.getString("acknowldgementNumber"))
-						.creationReason(CreationReasonEnum.fromValue(rs.getString("creationReason")))
-						.occupancyDate(occupancyDate).propertyId(currentId)
-						.oldPropertyId(rs.getString("oldPropertyId"))
-						.status(PropertyInfo.StatusEnum.fromValue(rs.getString("status")))
-						.tenantId(tenanId).auditDetails(auditdetails).build();
+				try {
+					Long occupancyDate = rs.getLong("occupancyDate");
+					if(rs.wasNull()){occupancyDate = null;}
+					currentProperty = Property.builder().address(address)
+							.acknowldgementNumber(rs.getString("acknowldgementNumber"))
+							.creationReason(CreationReasonEnum.fromValue(rs.getString("creationReason")))
+							.occupancyDate(occupancyDate).propertyId(currentId)
+							.oldPropertyId(rs.getString("oldPropertyId"))
+							.status(PropertyInfo.StatusEnum.fromValue(rs.getString("status")))
+							.tenantId(tenanId).auditDetails(auditdetails)
+							.build();
+					PGobject obj = (PGobject) rs.getObject("pt_additionalDetails");
+					if(obj!=null){
+						JsonNode propertyAdditionalDetails = mapper.readTree(obj.getValue());
+                        currentProperty.setAdditionalDetails(propertyAdditionalDetails);
+					}
 
-				propertyMap.put(currentId, currentProperty);
+
+					propertyMap.put(currentId, currentProperty);
+				} catch (IOException e) {
+					throw new CustomException("PARSING ERROR","The propertyAdditionalDetail json cannot be parsed");
+				}
 			}
 
 			addChildrenToProperty(rs, currentProperty);
@@ -134,10 +156,7 @@ public class PropertyRowMapper implements ResultSetExtractor<List<Property>> {
 			if(rs.wasNull()){noOfFloors = null;}
 
 			try{
-				PGobject obj = (PGobject) rs.getObject("additionalDetails");
-				JsonNode additionalDetails = mapper.readTree( obj.getValue());
 				detail = PropertyDetail.builder()
-						.additionalDetails(additionalDetails)
 						.buildUpArea(buildUpArea)
 						.landArea(landArea)
 						.channel(ChannelEnum.fromValue(rs.getString("channel")))
@@ -158,6 +177,13 @@ public class PropertyRowMapper implements ResultSetExtractor<List<Property>> {
 						.citizenInfo(citizenInfo)
 						.auditDetails(assessAuditdetails)
 						.build();
+
+				PGobject obj = (PGobject) rs.getObject("ptdl_additionalDetails");
+				if(obj!=null){
+					JsonNode additionalDetails = mapper.readTree( obj.getValue());
+					detail.setAdditionalDetails(additionalDetails);
+				}
+
 				property.addpropertyDetailsItem(detail);
 			   }
 			catch (Exception e){

@@ -91,6 +91,12 @@ public class PGRUtils {
 	@Value("${egov.location.search.endpoint}")
 	private String locationSearchEndpoint;
 	
+	@Value("${egov.hrms.host}")
+	private String egovHRMShost;
+
+	@Value("${egov.hrms.search.endpoint}")
+	private String egovHRMSSearchEndpoint;
+	
 	@Value("${are.inactive.complaintcategories.enabled}")
 	private Boolean areInactiveComplaintCategoriesEnabled;	
 
@@ -279,6 +285,27 @@ public class PGRUtils {
 			return SearcherRequest.builder().requestInfo(requestInfo).searchCriteria(serviceReqSearchCriteria).build();
 		}
 	}
+	
+	
+	/**
+	 * Prepares request and uri for service request search
+	 * 
+	 * @param uri
+	 * @param serviceReqSearchCriteria
+	 * @param requestInfo
+	 * @return SearcherRequest
+	 * @author vishal
+	 * @throws JsonProcessingException 
+	 */
+	public SearcherRequest preparePlainSearchReq(StringBuilder uri, ServiceReqSearchCriteria serviceReqSearchCriteria, RequestInfo requestInfo){
+		uri.append(searcherHost);
+		String endPoint = searcherEndpoint.replace(MODULE_NAME, PGRConstants.SEARCHER_PGR_MOD_NAME).replace(SEARCH_NAME,
+				PGRConstants.SEARCHER_PLAINSEARCH_DEF_NAME);
+		uri.append(endPoint);
+		serviceReqSearchCriteria.setNoOfRecords(null == serviceReqSearchCriteria.getNoOfRecords() ? 200L : serviceReqSearchCriteria.getNoOfRecords()); //be default we retrieve 200 records.
+		serviceReqSearchCriteria.setOffset(null == serviceReqSearchCriteria.getOffset() ? 0L : serviceReqSearchCriteria.getOffset());
+		return SearcherRequest.builder().requestInfo(requestInfo).searchCriteria(serviceReqSearchCriteria).build();
+	}
 
 	/**
 	 * Prepares request and uri for service request search
@@ -338,7 +365,7 @@ public class PGRUtils {
 			ServiceReqSearchCriteria serviceReqSearchCriteria) {
 		RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
 		requestInfoWrapper.setRequestInfo(requestInfo);
-		uri.append(hrEmployeeV2Host).append(hrEmployeeSearchEndpoint).append("?id=" + requestInfo.getUserInfo().getId())
+		uri.append(egovHRMShost).append(egovHRMSSearchEndpoint).append("?ids=" + requestInfo.getUserInfo().getId())
 				.append("&tenantId=" + serviceReqSearchCriteria.getTenantId());
 
 		return requestInfoWrapper;
@@ -424,10 +451,10 @@ public class PGRUtils {
 
 		Map<Integer, String> map = new TreeMap<>();
 
-		map.put(3, PGRConstants.ROLE_NAME_EMPLOYEE);
-		map.put(2, PGRConstants.ROLE_NAME_DGRO);
-		map.put(1, PGRConstants.ROLE_NAME_GRO);
-		map.put(0, PGRConstants.ROLE_NAME_CSR);
+		map.put(3, PGRConstants.ROLE_EMPLOYEE);
+		map.put(2, PGRConstants.ROLE_DGRO);
+		map.put(1, PGRConstants.ROLE_GRO);
+		map.put(0, PGRConstants.ROLE_CSR);
 
 		return map;
 	}
@@ -452,8 +479,8 @@ public class PGRUtils {
 	 * the method will return null
 	 */
 	public String getPrecedentRole(List<String> roles) {
-		if(roles.contains(PGRConstants.ROLE_NAME_CITIZEN)) {
-			return PGRConstants.ROLE_NAME_CITIZEN;
+		if(roles.contains(PGRConstants.ROLE_CITIZEN)) {
+			return PGRConstants.ROLE_CITIZEN;
 		}
 		for (Entry<Integer, String> entry : PGRUtils.getEmployeeRolesPrecedenceMap().entrySet()) {
 			String currentValue = entry.getValue();

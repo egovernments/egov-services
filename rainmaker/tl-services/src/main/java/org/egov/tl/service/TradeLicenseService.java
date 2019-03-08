@@ -1,6 +1,7 @@
 package org.egov.tl.service;
 
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.egov.common.contract.request.RequestInfo;
@@ -95,24 +96,30 @@ public class TradeLicenseService {
         tlValidator.validateSearch(requestInfo,criteria);
         enrichmentService.enrichSearchCriteriaWithAccountId(requestInfo,criteria);
          if(criteria.getMobileNumber()!=null){
-             UserDetailResponse userDetailResponse = userService.getUser(criteria,requestInfo);
-             // If user not found with given user fields return empty list
-             if(userDetailResponse.getUser().size()==0){
-                 return Collections.emptyList();
-             }
-             enrichmentService.enrichTLCriteriaWithOwnerids(criteria,userDetailResponse);
-             licenses = repository.getLicenses(criteria);
-             // If property not found with given propertyId or oldPropertyId or address fields return empty list
-             if(licenses.size()==0){
-                 return Collections.emptyList();
-             }
-             criteria = enrichmentService.getTLSearchCriteriaFromTLIds(licenses);
-             licenses = getLicensesWithOwnerInfo(criteria,requestInfo);
+             licenses = getLicensesFromMobileNumber(criteria,requestInfo);
          }
          else {
              licenses = getLicensesWithOwnerInfo(criteria,requestInfo);
          }
        return licenses;
+    }
+
+
+    private List<TradeLicense> getLicensesFromMobileNumber(TradeLicenseSearchCriteria criteria, RequestInfo requestInfo){
+        List<TradeLicense> licenses = new LinkedList<>();
+        UserDetailResponse userDetailResponse = userService.getUser(criteria,requestInfo);
+        // If user not found with given user fields return empty list
+        if(userDetailResponse.getUser().size()==0){
+            return Collections.emptyList();
+        }
+        enrichmentService.enrichTLCriteriaWithOwnerids(criteria,userDetailResponse);
+        licenses = repository.getLicenses(criteria);
+        // If property not found with given propertyId or oldPropertyId or address fields return empty list
+        if(licenses.size()==0){
+            return Collections.emptyList();
+        }
+        licenses = enrichmentService.enrichTradeLicenseSearch(licenses,criteria,requestInfo);
+        return licenses;
     }
 
 
@@ -126,10 +133,7 @@ public class TradeLicenseService {
         List<TradeLicense> licenses = repository.getLicenses(criteria);
         if(licenses.isEmpty())
             return Collections.emptyList();
-        enrichmentService.enrichTLSearchCriteriaWithOwnerids(criteria,licenses);
-        enrichmentService.enrichBoundary(new TradeLicenseRequest(requestInfo,licenses));
-        UserDetailResponse userDetailResponse = userService.getUser(criteria,requestInfo);
-        enrichmentService.enrichOwner(userDetailResponse,licenses);
+        licenses = enrichmentService.enrichTradeLicenseSearch(licenses,criteria,requestInfo);
         return licenses;
     }
 

@@ -21,10 +21,7 @@ import java.util.stream.Collectors;
 public class TransitionService {
 
 
-    private ObjectMapper mapper;
-
     private WorKflowRepository repository;
-
 
     private BusinessServiceRepository businessServiceRepository;
 
@@ -33,10 +30,9 @@ public class TransitionService {
 
 
     @Autowired
-    public TransitionService(ObjectMapper mapper, WorKflowRepository repository,
+    public TransitionService(WorKflowRepository repository,
                              BusinessServiceRepository businessServiceRepository,
                              WorkflowUtil workflowUtil) {
-        this.mapper = mapper;
         this.repository = repository;
         this.businessServiceRepository = businessServiceRepository;
         this.workflowUtil = workflowUtil;
@@ -51,7 +47,7 @@ public class TransitionService {
      * @return List of ProcessStateAndAction containing the State object for status before the action and after the action and
      * the Action object for the given action
      */
-    public List<ProcessStateAndAction> getProcessStateAndActions(ProcessInstanceRequest request,Boolean isTransition){
+    public List<ProcessStateAndAction> getProcessStateAndActions(ProcessInstanceRequest request,Boolean isTransitionCall){
         List<ProcessStateAndAction> processStateAndActions = new LinkedList<>();
 
         BusinessService businessService = getBusinessService(request);
@@ -60,10 +56,13 @@ public class TransitionService {
         for(ProcessInstance processInstance: request.getProcessInstances()){
             ProcessStateAndAction processStateAndAction = new ProcessStateAndAction();
             processStateAndAction.setProcessInstanceFromRequest(processInstance);
+            processStateAndAction.getProcessInstanceFromRequest().setModuleName(businessService.getBusiness());
             processStateAndAction.setProcessInstanceFromDb(idToProcessInstanceFromDbMap.get(processInstance.getBusinessId()));
             State currentState = null;
-            if(processStateAndAction.getProcessInstanceFromDb()!=null)
+            if(processStateAndAction.getProcessInstanceFromDb()!=null && isTransitionCall)
                 currentState = processStateAndAction.getProcessInstanceFromDb().getState();
+            else if(!isTransitionCall)
+                currentState = processStateAndAction.getProcessInstanceFromRequest().getState();
 
             //Assign businessSla when creating processInstance
             if(processStateAndAction.getProcessInstanceFromDb()==null)
@@ -90,7 +89,7 @@ public class TransitionService {
                 }
             }
 
-            if(isTransition){
+            if(isTransitionCall){
                 if(processStateAndAction.getAction()==null)
                     throw new CustomException("INVALID ACTION","Action "+processStateAndAction.getProcessInstanceFromRequest().getAction()
                             + " not found in config for the businessId: "

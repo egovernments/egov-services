@@ -52,7 +52,7 @@ public class AccountDetailTypeESRepository extends ESRepository {
             ObjectMapper mapper = new ObjectMapper();
             // JSON from file to Object
             try {
-                accountDetailKey = mapper.readValue(hit.sourceAsString(), AccountDetailType.class);
+                accountDetailKey = mapper.readValue(hit.getSourceAsString(), AccountDetailType.class);
             } catch (JsonParseException e1) {
                 // TODO Auto-generated catch block
                 e1.printStackTrace();

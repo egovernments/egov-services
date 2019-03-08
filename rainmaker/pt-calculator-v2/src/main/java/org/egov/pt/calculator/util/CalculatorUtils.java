@@ -304,6 +304,8 @@ public class CalculatorUtils {
 			query.append(" AND a1.assessmentyear=?");
 			preparedStmtList.add(assessment.getAssessmentYear());
 		}
+		
+		query.append(" AND a1.active IS TRUE");
 
 		return query.toString();
 	}

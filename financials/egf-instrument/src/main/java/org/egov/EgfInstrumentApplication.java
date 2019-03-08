@@ -1,16 +1,11 @@
 package org.egov;
 
-import java.net.InetAddress;
-import java.net.UnknownHostException;
-import java.text.SimpleDateFormat;
-import java.util.TimeZone;
-
-import javax.annotation.PostConstruct;
-
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.egov.tracer.config.TracerConfiguration;
 import org.elasticsearch.client.transport.TransportClient;
 import org.elasticsearch.common.settings.Settings;
-import org.elasticsearch.common.transport.InetSocketTransportAddress;
+import org.elasticsearch.common.transport.TransportAddress;
 import org.elasticsearch.transport.client.PreBuiltTransportClient;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
@@ -23,8 +18,11 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.config.annotation.ContentNegotiationConfigurer;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import javax.annotation.PostConstruct;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.text.SimpleDateFormat;
+import java.util.TimeZone;
 
 @Import({ TracerConfiguration.class })
 @SpringBootApplication
@@ -55,8 +53,7 @@ public class EgfInstrumentApplication {
         TimeZone.setDefault(TimeZone.getTimeZone(timeZone));
         Settings settings = Settings.builder().put(CLUSTER_NAME, elasticSearchClusterName).build();
         final InetAddress esAddress = InetAddress.getByName(elasticSearchHost);
-        final InetSocketTransportAddress transportAddress = new InetSocketTransportAddress(esAddress,
-                elasticSearchTransportPort);
+        final TransportAddress transportAddress = new TransportAddress(esAddress, elasticSearchTransportPort);
         client = new PreBuiltTransportClient(settings).addTransportAddress(transportAddress);
     }
 

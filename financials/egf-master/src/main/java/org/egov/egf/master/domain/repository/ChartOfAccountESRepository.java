@@ -52,7 +52,7 @@ public class ChartOfAccountESRepository extends ESRepository {
             ObjectMapper mapper = new ObjectMapper();
             // JSON from file to Object
             try {
-                chartOfAccount = mapper.readValue(hit.sourceAsString(), ChartOfAccount.class);
+                chartOfAccount = mapper.readValue(hit.getSourceAsString(), ChartOfAccount.class);
             } catch (JsonParseException e1) {
                 // TODO Auto-generated catch block
                 e1.printStackTrace();

@@ -10,4 +10,8 @@ public class TelemetryConstants {
 
     public final static String commonUserType = "Common";
 
+    public final static String sessionTypeName = "session";
+
+    public final static String pathTypeName = "path";
+
 }

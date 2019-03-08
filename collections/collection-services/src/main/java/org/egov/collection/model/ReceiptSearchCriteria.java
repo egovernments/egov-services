@@ -43,6 +43,8 @@ package org.egov.collection.model;
 import lombok.*;
 
 import java.util.List;
+import java.util.Set;
+
 @Setter
 @Getter
 @Builder
@@ -52,9 +54,9 @@ import java.util.List;
 public class ReceiptSearchCriteria {
     private List<String> ids;
 	
-    private List<String> receiptNumbers;
+    private Set<String> receiptNumbers;
 
-    private List<String> consumerCode;
+    private Set<String> consumerCode;
 
     private Long fromDate;
 
@@ -62,7 +64,9 @@ public class ReceiptSearchCriteria {
 
     private String collectedBy;
 
-    private String status;
+    private Set<String> status;
+
+    private Set<String> instrumentType;
     
     private String fund;
     

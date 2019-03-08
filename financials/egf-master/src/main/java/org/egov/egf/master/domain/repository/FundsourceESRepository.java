@@ -52,7 +52,7 @@ public class FundsourceESRepository extends ESRepository {
 			ObjectMapper mapper = new ObjectMapper();
 			//JSON from file to Object
 			try {
-			    fundsource = mapper.readValue(hit.sourceAsString(), Fundsource.class);
+			    fundsource = mapper.readValue(hit.getSourceAsString(), Fundsource.class);
 			} catch (JsonParseException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();

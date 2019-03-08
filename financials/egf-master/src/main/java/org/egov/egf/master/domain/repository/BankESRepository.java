@@ -51,7 +51,7 @@ public class BankESRepository extends ESRepository {
             ObjectMapper mapper = new ObjectMapper();
             // JSON from file to Object
             try {
-                bank = mapper.readValue(hit.sourceAsString(), Bank.class);
+                bank = mapper.readValue(hit.getSourceAsString(), Bank.class);
             } catch (JsonParseException e1) {
                 // TODO Auto-generated catch block
                 e1.printStackTrace();

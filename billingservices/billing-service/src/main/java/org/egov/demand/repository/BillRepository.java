@@ -67,7 +67,7 @@ public class BillRepository {
 		
 		log.debug("saveBill requestInfo:"+requestInfo);
 		log.debug("saveBill bills:"+bills);
-		jdbcTemplate.batchUpdate(billQueryBuilder.INSERT_BILL_QUERY, new BatchPreparedStatementSetter() {
+		jdbcTemplate.batchUpdate(BillQueryBuilder.INSERT_BILL_QUERY, new BatchPreparedStatementSetter() {
 			
 			@Override
 			public void setValues(PreparedStatement ps, int index) throws SQLException {
@@ -99,7 +99,6 @@ public class BillRepository {
 	
 	public void saveBillDetails(BillRequest billRequest){
 		
-		RequestInfo requestInfo = billRequest.getRequestInfo();
 		List<Bill> bills = billRequest.getBills();
 		List<BillDetail> billDetails = new ArrayList<>();
 		List<BillAccountDetail> billAccountDetails = new ArrayList<>();

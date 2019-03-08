@@ -276,6 +276,13 @@ public class DemandService {
 		}
 	}
 	
+	/**
+	 * Search method to fetch demands from DB
+	 * 
+	 * @param demandCriteria
+	 * @param requestInfo
+	 * @return
+	 */
 	public DemandResponse getDemands(DemandCriteria demandCriteria, RequestInfo requestInfo) {
 		
 		UserSearchRequest userSearchRequest = null;
@@ -305,18 +312,14 @@ public class DemandService {
 			Set<String> ownerIds = payers.stream().map(User::getUuid).collect(Collectors.toSet());
 			demands = demandRepository.getDemands(demandCriteria, ownerIds);
 			
-			/*
-			 * sorting demand based on from period
-			 */
-			demands.sort(Comparator.comparing(Demand::getTaxPeriodFrom));
 		} else {
+			
 			/*
 			 * If no payer related data given then search demand first then enrich payer(user) data
 			 */
 			demands = demandRepository.getDemands(demandCriteria, null);
 			if (!demands.isEmpty()) {
-				
-				demands.sort(Comparator.comparing(Demand::getTaxPeriodFrom));
+
 				Set<String> payerUuids = demands.stream().filter(demand -> null != demand.getPayer())
 						.map(demand -> demand.getPayer().getUuid()).collect(Collectors.toSet());
 

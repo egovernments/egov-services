@@ -132,13 +132,20 @@ public class DataUploadService {
         } */catch (RestClientException re) {
             logger.error("No .xls/.xlsx file found for: fileStoreId = " + uploadJob.getRequestFilePath()
                     + " AND tenantId = " + uploadJob.getTenantId());
-            throw new CustomException("400", "Unable to fetch file from filestore");
+            CustomException ex = new CustomException("400", "Unable to fetch file from filestore");
+            ex.initCause(e);
+            throw ex;
         } catch (DataAccessException de) {
             logger.error("Unable to persist job details onto DB", de);
-            throw new CustomException("400", "Unable to persist job details onto DB");
+
+            CustomException ex = new CustomException("400", "Unable to persist job details onto DB");
+            ex.initCause(e);
+            throw ex;
         } catch (Exception e) {
             logger.error("Error occurred while attempting to create job", e);
-            throw new CustomException("UNKNOWN_ERROR_OCCURRED", "UNKNOWN Error Occured");
+            CustomException ex = new CustomException("UNKNOWN_ERROR_OCCURRED", "UNKNOWN Error Occured");
+            ex.initCause(e);
+            throw ex;
         }
     }
 

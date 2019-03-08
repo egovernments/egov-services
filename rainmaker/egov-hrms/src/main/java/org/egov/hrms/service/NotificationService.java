@@ -42,7 +42,7 @@ public class NotificationService {
 
 	@Value("${egov.localization.search.endpoint}")
 	private String localizationSearchEndpoint;
-    
+
 	/**
 	 * Sends notification by putting the sms content onto the core-sms topic
 	 * 
@@ -84,7 +84,8 @@ public class NotificationService {
 	 * @return
 	 */
 	public String buildMessage(Employee employee, String message, Map<String, String> pwdMap) {
-		message = message.replace("$username", employee.getCode()).replace("$password", pwdMap.get(employee.getUuid()));
+		message = message.replace("$username", employee.getCode()).replace("$password", pwdMap.get(employee.getUuid()))
+				.replace("$employeename", employee.getUser().getName());
 		message = message.replace("$applink", appLink);
 		return message;
 	}

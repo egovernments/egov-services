@@ -633,6 +633,27 @@
       "uniqueKeys": [
         "$.code"
       ]
+    },
+    "Specalization": {
+      "masterName": "Specalization",
+      "isStateLevel": true,
+      "uniqueKeys": [
+        "$.code"
+      ]
+    },
+    "DeactivationReason": {
+      "masterName": "DeactivationReason",
+      "isStateLevel": true,
+      "uniqueKeys": [
+        "$.code"
+      ]
+    },
+    "EmploymentTest": {
+      "masterName": "EmploymentTest",
+      "isStateLevel": true,
+      "uniqueKeys": [
+        "$.code"
+      ]
     }
   }
 }

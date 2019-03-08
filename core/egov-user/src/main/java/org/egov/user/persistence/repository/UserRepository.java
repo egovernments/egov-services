@@ -20,6 +20,7 @@ import org.springframework.util.CollectionUtils;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static java.util.Objects.isNull;
 import static org.egov.user.repository.builder.UserTypeQueryBuilder.SELECT_NEXT_SEQUENCE_USER;
 import static org.springframework.util.StringUtils.isEmpty;
 
@@ -81,7 +82,10 @@ public class UserRepository {
      * @return
      */
     private Role fetchRole(User user, Role role) {
-        final Role enrichedRole = roleRepository.findByTenantIdAndCode(user.getTenantId(), role.getCode());
+        //Backward compatibility
+        final Role enrichedRole = roleRepository.findByTenantIdAndCode(
+        		!isNull(role.getTenantId()) ? role.getTenantId() : user.getTenantId(),
+				role.getCode());
         if (enrichedRole == null) {
             throw new InvalidRoleCodeException(role.getCode());
         }

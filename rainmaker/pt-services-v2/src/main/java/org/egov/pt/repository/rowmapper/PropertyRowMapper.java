@@ -83,8 +83,6 @@ public class PropertyRowMapper implements ResultSetExtractor<List<Property>> {
 						.build();
 
 				try {
-					PGobject obj = (PGobject) rs.getObject("pt_additionalDetails");
-					JsonNode propertyAdditionalDetails = mapper.readTree( obj.getValue());
 					Long occupancyDate = rs.getLong("occupancyDate");
 					if(rs.wasNull()){occupancyDate = null;}
 					currentProperty = Property.builder().address(address)
@@ -94,7 +92,13 @@ public class PropertyRowMapper implements ResultSetExtractor<List<Property>> {
 							.oldPropertyId(rs.getString("oldPropertyId"))
 							.status(PropertyInfo.StatusEnum.fromValue(rs.getString("status")))
 							.tenantId(tenanId).auditDetails(auditdetails)
-							.additionalDetails(propertyAdditionalDetails).build();
+							.build();
+					PGobject obj = (PGobject) rs.getObject("pt_additionalDetails");
+					if(obj!=null){
+						JsonNode propertyAdditionalDetails = mapper.readTree(obj.getValue());
+                        currentProperty.setAdditionalDetails(propertyAdditionalDetails);
+					}
+
 
 					propertyMap.put(currentId, currentProperty);
 				} catch (IOException e) {
@@ -152,10 +156,7 @@ public class PropertyRowMapper implements ResultSetExtractor<List<Property>> {
 			if(rs.wasNull()){noOfFloors = null;}
 
 			try{
-				PGobject obj = (PGobject) rs.getObject("ptdl_additionalDetails");
-				JsonNode additionalDetails = mapper.readTree( obj.getValue());
 				detail = PropertyDetail.builder()
-						.additionalDetails(additionalDetails)
 						.buildUpArea(buildUpArea)
 						.landArea(landArea)
 						.channel(ChannelEnum.fromValue(rs.getString("channel")))
@@ -176,6 +177,13 @@ public class PropertyRowMapper implements ResultSetExtractor<List<Property>> {
 						.citizenInfo(citizenInfo)
 						.auditDetails(assessAuditdetails)
 						.build();
+
+				PGobject obj = (PGobject) rs.getObject("ptdl_additionalDetails");
+				if(obj!=null){
+					JsonNode additionalDetails = mapper.readTree( obj.getValue());
+					detail.setAdditionalDetails(additionalDetails);
+				}
+
 				property.addpropertyDetailsItem(detail);
 			   }
 			catch (Exception e){

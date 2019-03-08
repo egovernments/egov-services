@@ -30,8 +30,10 @@ public class EmployeeSearchCriteria {
 	public List<String> designations;
 	
 	public Long asOnDate;
+
+	public List<String> roles;
 	
-	public List<Integer> ids;
+	public List<Long> ids;
 	
 	public List<String> employeestatuses;
 	
@@ -39,7 +41,7 @@ public class EmployeeSearchCriteria {
 	
 	public List<String> uuids;
 	
-	public List<Integer> positions;
+	public List<Long> positions;
 	
 	public Boolean isActive;
 	
@@ -57,7 +59,8 @@ public class EmployeeSearchCriteria {
 				&& CollectionUtils.isEmpty(criteria.getDepartments()) && CollectionUtils.isEmpty(criteria.getDesignations())
 				&& CollectionUtils.isEmpty(criteria.getIds()) && CollectionUtils.isEmpty(criteria.getEmployeestatuses())
 				&& CollectionUtils.isEmpty(criteria.getEmployeetypes()) && CollectionUtils.isEmpty(criteria.getUuids())
-				&& CollectionUtils.isEmpty(criteria.getPositions()) && StringUtils.isEmpty(criteria.getTenantId())) {
+				&& CollectionUtils.isEmpty(criteria.getPositions()) && StringUtils.isEmpty(criteria.getTenantId())
+				&& CollectionUtils.isEmpty(criteria.getRoles()) && null == criteria.getAsOnDate()) {
 			return true;
 		}else {
 			return false;

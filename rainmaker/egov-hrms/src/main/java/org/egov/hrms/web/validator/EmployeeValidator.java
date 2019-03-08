@@ -200,14 +200,14 @@ public class EmployeeValidator {
 
 	/**
 	 * Performs checks for maintaining data consistency
-	 * 
-	 * @param employee
+	 *  @param employee
 	 * @param errorMap
 	 * @param mdmsData
 	 * @param existingEmp
+	 * @param requestInfo
 	 */
-	public void validateDataConsistency(Employee employee, Map<String, String> errorMap, Map<String, List<String>> mdmsData, Employee existingEmp) {
-		validateUserNameChange(existingEmp,employee,errorMap);
+	public void validateDataConsistency(Employee employee, Map<String, String> errorMap, Map<String, List<String>> mdmsData, Employee existingEmp, RequestInfo requestInfo) {
+		validateUserData(existingEmp,employee,errorMap, requestInfo);
 		validateConsistencyAssignment(existingEmp,employee,errorMap);
 		validateConsistencyJurisdiction(existingEmp,employee,errorMap);
 		validateConsistencyDepartmentalTest(existingEmp,employee,errorMap);
@@ -223,10 +223,25 @@ public class EmployeeValidator {
 	 * @param existingEmp
 	 * @param employee
 	 * @param errorMap
+	 * @param requestInfo
 	 */
-	private void validateUserNameChange(Employee existingEmp, Employee employee, Map<String, String> errorMap) {
+	private void validateUserData(Employee existingEmp, Employee employee, Map<String, String> errorMap, RequestInfo requestInfo) {
 		if(!employee.getCode().equals(existingEmp.getCode()))
 			errorMap.put(ErrorConstants.HRMS_UPDATE_EMPLOYEE_CODE_CHANGE_CODE,ErrorConstants.HRMS_UPDATE_EMPLOYEE_CODE_CHANGE_MSG);
+		if(!employee.getUser().getMobileNumber().equals(existingEmp.getUser().getMobileNumber())){
+			Map<String, Object> userSearchCriteria = new HashMap<>();
+			userSearchCriteria.put(HRMSConstants.HRMS_USER_SEARCH_CRITERA_TENANTID,employee.getTenantId());
+			userSearchCriteria.put(HRMSConstants.HRMS_USER_SEARCH_CRITERA_MOBILENO,employee.getUser().getMobileNumber());
+			UserResponse userResponse = userService.getUser(requestInfo, userSearchCriteria);
+			if(!CollectionUtils.isEmpty(userResponse.getUser())){
+				if(!employee.getUser().getUuid().equals(userResponse.getUser().get(0).getUuid())){
+					errorMap.put(ErrorConstants.HRMS_UPDATE_EXISTING_MOBNO_CODE,ErrorConstants.HRMS_UPDATE_EXISTING_MOBNO_MSG);
+				}
+			}
+
+
+		}
+
 	}
 
 	/**
@@ -478,7 +493,7 @@ public class EmployeeValidator {
 			if(validateEmployeeForUpdate(employee, errorMap)){
 				if(!existingEmployees.isEmpty()){
 				Employee existingEmp = existingEmployees.stream().filter(existingEmployee -> existingEmployee.getUuid().equals(employee.getUuid())).findFirst().get();
-				validateDataConsistency(employee, errorMap, mdmsData, existingEmp);
+				validateDataConsistency(employee, errorMap, mdmsData, existingEmp, request.getRequestInfo());
 				}
 				else
 					errorMap.put(ErrorConstants.HRMS_UPDATE_EMPLOYEE_NOT_EXIST_CODE, ErrorConstants.HRMS_UPDATE_EMPLOYEE_NOT_EXIST_MSG);

@@ -168,7 +168,7 @@ public class DemandValidator implements Validator {
 
 		Set<String> demandIds = oldDemands.stream().map(demand -> demand.getId()).collect(Collectors.toSet());
 		DemandCriteria demandCriteria = DemandCriteria.builder().tenantId(tenantId).demandId(demandIds).build();
-		Map<String, Demand> demandMap = demandRepository.getDemands(demandCriteria, null).stream()
+		Map<String, Demand> demandMap = demandRepository.getDemands(demandCriteria).stream()
 				.collect(Collectors.toMap(Demand::getId, Function.identity()));
 		Map<String, DemandDetail> dbDemandDetailMap = new HashMap<>();
 		int index = 0;

@@ -48,6 +48,7 @@ import org.egov.demand.model.DemandCriteria;
 import org.egov.demand.model.DemandDetailCriteria;
 import org.egov.demand.model.DemandUpdateMisRequest;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -146,7 +147,7 @@ public class DemandQueryBuilder {
 		return query.toString();
 				}
 
-	public String getDemandQuery(DemandCriteria demandCriteria,Set<String> ownerIds, List<Object> preparedStatementValues) {
+	public String getDemandQuery(DemandCriteria demandCriteria, List<Object> preparedStatementValues) {
 
 		StringBuilder demandQuery = new StringBuilder(BASE_DEMAND_QUERY);
 
@@ -157,9 +158,9 @@ public class DemandQueryBuilder {
 			addAndClause(demandQuery);
 			demandQuery.append("dmd.id IN (" + getIdQueryForStrings(demandCriteria.getDemandId()));
 		}
-		if (ownerIds != null && !ownerIds.isEmpty()) {
+		if (!CollectionUtils.isEmpty(demandCriteria.getPayer())) {
 			addAndClause(demandQuery);
-			demandQuery.append("dmd.payer IN (" + getIdQueryForStrings(ownerIds));
+			demandQuery.append("dmd.payer IN (" + getIdQueryForStrings(demandCriteria.getPayer()));
 		}
 		if (demandCriteria.getBusinessService() != null) {
 			addAndClause(demandQuery);

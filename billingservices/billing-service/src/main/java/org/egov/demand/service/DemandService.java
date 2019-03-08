@@ -44,6 +44,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -306,14 +307,15 @@ public class DemandService {
 			payers = mapper.convertValue(serviceRequestRepository.fetchResult(userUri, userSearchRequest), UserResponse.class).getUser();
 			
 			Set<String> ownerIds = payers.stream().map(User::getUuid).collect(Collectors.toSet());
-			demands = demandRepository.getDemands(demandCriteria, ownerIds);
+			demandCriteria.setPayer(ownerIds);
+			demands = demandRepository.getDemands(demandCriteria);
 			
 		} else {
 			
 			/*
 			 * If no payer related data given then search demand first then enrich payer(user) data
 			 */
-			demands = demandRepository.getDemands(demandCriteria, null);
+			demands = demandRepository.getDemands(demandCriteria);
 			if (!demands.isEmpty()) {
 
 				Set<String> payerUuids = demands.stream().filter(demand -> null != demand.getPayer())
@@ -347,133 +349,6 @@ public class DemandService {
 	public void update(DemandRequest demandRequest) {
 		demandRepository.update(demandRequest);
 	}
-
-	/*
-	 * 
-	 * 
-	 * 
-	 * Reciept based methods
-	 * 
-	 * 
-	 * 
-	 */
-	
-	
-	public DemandResponse  updateDemandFromReceipt(ReceiptRequest receiptRequest, org.egov.demand.model.BillDetail.StatusEnum status)
-	{
-	    BillRequest billRequest=new BillRequest();
-	    if(receiptRequest !=null && receiptRequest.getReceipt() !=null && !receiptRequest.getReceipt().isEmpty()){
-	    billRequest.setRequestInfo(receiptRequest.getRequestInfo());
-	    List<Bill> bills=receiptRequest.getReceipt().get(0).getBill();
-	    for(Bill bill:bills){
-	    	for(BillDetail billDetail: bill.getBillDetails())
-	    		billDetail.setStatus(status);
-	    }
-	    billRequest.setBills(bills);
-	    }
-	    return null; //updateDemandFromBill(billRequest, false);
-	    
-	    
-	}
-	
-/*	public DemandResponse updateDemandFromBill(BillRequest billRequest, Boolean isReceiptCancellation) {
-	    
-		log.info("THE recieved bill request object------"+billRequest);
-	    if(billRequest !=null && billRequest.getBills()!=null){
-
-		List<Bill> bills = billRequest.getBills();
-		RequestInfo requestInfo = billRequest.getRequestInfo();
-		String tenantId = bills.get(0).getTenantId();
-		Set<String> consumerCodes = new HashSet<>();
-		for (Bill bill : bills) {
-			for (BillDetail billDetail : bill.getBillDetails())
-				consumerCodes.add(billDetail.getConsumerCode());
-		}
-		DemandCriteria demandCriteria = DemandCriteria.builder().consumerCode(consumerCodes).receiptRequired(false).tenantId(tenantId).build();
-		List<Demand> demands = getDemands(demandCriteria, requestInfo).getDemands();
-		log.info("THE DEMAND FETCHED FROM DB FOR THE GIVEN RECIEPT--------"+demands);
-		Map<String, Demand> demandIdMap = demands.stream()
-				.collect(Collectors.toMap(Demand::getId, Function.identity()));
-		Map<String, List<Demand>> demandListMap = new HashMap<>();
-		for (Demand demand : demands) {
-
-			if (demandListMap.get(demand.getConsumerCode()) == null) {
-				List<Demand> demands2 = new ArrayList<>();
-				demands2.add(demand);
-				demandListMap.put(demand.getConsumerCode(), demands2);
-			} else
-				demandListMap.get(demand.getConsumerCode()).add(demand);
-		}
-
-		for (Bill bill : bills) {
-			for (BillDetail billDetail : bill.getBillDetails()) {
-
-				List<Demand> demands2 = demandListMap.get(billDetail.getConsumerCode());
-				Map<String, List<DemandDetail>> detailsMap = new HashMap<>();
-				for (Demand demand : demands2) {
-					for (DemandDetail demandDetail : demand.getDemandDetails()) {
-						if (detailsMap.get(demandDetail.getTaxHeadMasterCode()) == null) {
-							List<DemandDetail> demandDetails = new ArrayList<>();
-							demandDetails.add(demandDetail);
-							detailsMap.put(demandDetail.getTaxHeadMasterCode(), demandDetails);
-						} else
-							detailsMap.get(demandDetail.getTaxHeadMasterCode()).add(demandDetail);
-					}
-				}
-					for (BillAccountDetail accountDetail : billDetail.getBillAccountDetails()) {
-
-						if (accountDetail.getAccountDescription() != null && accountDetail.getAdjustedAmount() != null) {
-							String[] array = accountDetail.getAccountDescription().split("-");
-							log.info("the string array of values--------" + array.toString());
-
-							List<String> accDescription = Arrays.asList(array);
-							String taxHeadCode = accDescription.get(0);
-							Long fromDate = Long.valueOf(accDescription.get(1));
-							Long toDate = Long.valueOf(accDescription.get(2));
-
-							for (DemandDetail demandDetail : detailsMap.get(taxHeadCode)) {
-								log.info("the current demand detail : " + demandDetail);
-								Demand demand = demandIdMap.get(demandDetail.getDemandId());
-								log.info("the respective deman" + demand);
-
-								if (fromDate.equals(demand.getTaxPeriodFrom())
-										&& toDate.equals(demand.getTaxPeriodTo())) {
-
-									BigDecimal collectedAmount = accountDetail.getCreditAmount();
-									log.info("the credit amt :" + collectedAmount);
-									//demandDetail.setTaxAmount(demandDetail.getTaxAmount().subtract(collectedAmount));
-									
-									 * If receipt cancellation is true, it will subtract the creditAmount from the collectionAmount
-									 
-									if(isReceiptCancellation) {
-										demandDetail.setCollectionAmount(
-												demandDetail.getCollectionAmount().subtract(collectedAmount));
-									}else {
-										demandDetail.setCollectionAmount(
-												demandDetail.getCollectionAmount().add(collectedAmount));
-									}
-									log.info("the setTaxAmount ::: " + demandDetail.getTaxAmount());
-									log.info("the setCollectionAmount ::: " + demandDetail.getCollectionAmount());
-								}
-							}
-						}
-					}
-				}
-		}
-		
-		demandRepository.update(new DemandRequest(requestInfo,demands));
-	        DemandResponse demandResponse=new DemandResponse(responseInfoFactory.getResponseInfo(requestInfo, HttpStatus.OK),demands);
-                kafkaTemplate.send(applicationProperties.getUpdateDemandBillTopicName(), demandResponse);
-                
-                kafkaTemplate.send(applicationProperties.getSaveCollectedReceipts(), billRequest);
-                
-		return demandResponse;
-	    }
-            return null;
-	}
-*/	
-	
-	
 	
 	/*
 	 * 
@@ -516,7 +391,7 @@ public class DemandService {
 		}
 		DemandCriteria demandCriteria = DemandCriteria.builder().demandId(demandMap.keySet())
 				.tenantId(demands.get(0).getTenantId()).build();
-		List<Demand> existingDemands = demandRepository.getDemands(demandCriteria, null);
+		List<Demand> existingDemands = demandRepository.getDemands(demandCriteria);
 		 
 		for (Demand demand : existingDemands) {
 

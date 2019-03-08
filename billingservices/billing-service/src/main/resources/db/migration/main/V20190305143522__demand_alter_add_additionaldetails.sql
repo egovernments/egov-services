@@ -19,8 +19,7 @@ ALTER TABLE egbs_bill RENAME COLUMN payeeemail TO payeremail;
 
 --> bill detail
 
-ALTER TABLE egbs_billdetail ALTER COLUMN billno drop NOT NULL,
-							ALTER COLUMN glcode DROP NOT NULL;
+ALTER TABLE egbs_billdetail ALTER COLUMN billno drop NOT NULL;
 							
 ALTER TABLE egbs_billdetail ADD COLUMN fromperiod bigint,
 							ADD COLUMN toperiod bigint,

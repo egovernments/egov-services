@@ -102,10 +102,10 @@ public class DemandRepository {
 	@Autowired
 	private ObjectMapper mapper;
 	
-	public List<Demand> getDemands(DemandCriteria demandCriteria, Set<String> ownerIds) {
+	public List<Demand> getDemands(DemandCriteria demandCriteria) {
 
 		List<Object> preparedStatementValues = new ArrayList<>();
-		String searchDemandQuery = demandQueryBuilder.getDemandQuery(demandCriteria, ownerIds, preparedStatementValues);
+		String searchDemandQuery = demandQueryBuilder.getDemandQuery(demandCriteria, preparedStatementValues);
 		return jdbcTemplate.query(searchDemandQuery, preparedStatementValues.toArray(), new DemandRowMapper());
 	}
 	
@@ -152,10 +152,10 @@ public class DemandRepository {
 		List<Demand> newDemands = new ArrayList<>();
 		List<DemandDetail> newDemandDetails = new ArrayList<>();
 
-		DemandCriteria demandCriteria = DemandCriteria.builder().demandId(demands
-						.stream().map(demand -> demand.getId()).collect(Collectors.toSet()))
-						.tenantId(demands.get(0).getTenantId()).build();
-		List<Demand> existingDemands = getDemands(demandCriteria, null);
+		DemandCriteria demandCriteria = DemandCriteria.builder()
+				.demandId(demands.stream().map(Demand::getId).collect(Collectors.toSet()))
+				.tenantId(demands.get(0).getTenantId()).build();
+		List<Demand> existingDemands = getDemands(demandCriteria);
 		
 		log.debug("repository demands "+existingDemands);
 		Map<String, String> existingDemandMap = existingDemands.stream().collect(

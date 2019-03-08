@@ -40,7 +40,10 @@ public class ErrorConstants {
 	
 	public static final String HRMS_OVERLAPPING_ASSGN_CODE = "HRMS_OVERLAPPING_ASSGN";
 	public static final String HRMS_OVERLAPPING_ASSGN_MSG = "Period of assignements of employee should not overlap!";
-	
+
+	public static final String HRMS_OVERLAPPING_ASSGN_CURRENT_CODE = "HRMS_OVERLAPPING_ASSGN_CURRENT";
+	public static final String HRMS_OVERLAPPING_ASSGN_CURRENT_MSG = "Period of assignements of employee should not be after  current assignment!";
+
 	public static final String HRMS_INVALID_DEPT_CODE = "HRMS_INVALID_DEPT";
 	public static final String HRMS_INVALID_DEPT_MSG = "Department of the employee is invalid!";
 	
@@ -52,6 +55,9 @@ public class ErrorConstants {
 
 	public static final String HRMS_INVALID_ASSIGNMENT_CURRENT_TO_DATE_CODE = "HRMS_INVALID_ASSIGNMENT_CURRENT_TO_DATE";
 	public static final String HRMS_INVALID_ASSIGNMENT_CURRENT_TO_DATE_MSG = "ToDate should be empty for current assignment!";
+
+	public static final String HRMS_OVERLAPPING_SERVICEHISTORY_CURRENT_CODE = "HRMS_OVERLAPPING_SERVICEHISTORY_CURRENT";
+	public static final String HRMS_OVERLAPPING_SERVICEHISTORY_CURRENT_MSG = "Period of service details of employee should not be after  current assignment!";
 
 
 	public static final String HRMS_INVALID_ASSIGNMENT_NON_CURRENT_TO_DATE_CODE = "HRMS_INVALID_ASSIGNMENT_NOT_CURRENT_TO_DATE";
@@ -65,13 +71,22 @@ public class ErrorConstants {
 
 	public static final String HRMS_INVALID_SERVICE_STATUS_CODE = "HRMS_INVALID_SERVICE_STATUS";
 	public static final String HRMS_INVALID_SERVICE_STATUS_MSG = "Service status of the employee is invalid!: ";
-	
+
 	public static final String HRMS_INVALID_SERVICE_PERIOD_CODE = "HRMS_INVALID_SERVICE_PERIOD";
 	public static final String HRMS_INVALID_SERVICE_PERIOD_MSG = "Service period (serviceFrom to serviceTo) of the employee is invalid!";
 	
 	public static final String HRMS_INVALID_SERVICE_DATES_CODE = "HRMS_INVALID_SERVICE_DATES";
 	public static final String HRMS_INVALID_SERVICE_DATES_MSG = "Service period (serviceFrom to serviceTo) of the employee is before DOB!";
-	
+
+	public static final String HRMS_INVALID_SERVICE_CURRENT_TO_DATE_CODE = "HRMS_INVALID_SERVICE_CURRENT_TO_DATE";
+	public static final String HRMS_INVALID_SERVICE_CURRENT_TO_DATE_MSG = "serviceTo should be empty for currently working service!";
+
+	public static final String HRMS_INVALID_SERVICE_NON_CURRENT_TO_DATE_CODE = "HRMS_INVALID_SERVICE_NOT_CURRENT_TO_DATE";
+	public static final String HRMS_INVALID_SERVICE_NON_CURRENT_TO_DATE_MSG = "serviceTo should not be empty for non currently working service!";
+
+	public static final String HRMS_INVALID_CURRENT_SERVICE_CODE = "HRMS_INVALID_SERVICE_ASSGN";
+	public static final String HRMS_INVALID_CURRENT_SERVICE_MSG = "There should be max 1 currently working service!";
+
 	public static final String HRMS_INVALID_QUALIFICATION_CODE = "HRMS_INVALID_QUALIFICATION";
 	public static final String HRMS_INVALID_QUALIFICATION_MSG = "Qualification of the employee is invalid!: ";
 	
@@ -89,7 +104,10 @@ public class ErrorConstants {
 	
 	public static final String HRMS_INVALID_DEACT_REQUEST_CODE = "HRMS_INVALID_DEACT_REQUEST";
 	public static final String HRMS_INVALID_DEACT_REQUEST_MSG = "Employee is active should be set to false while deactivation!";
-	
+
+	public static final String HRMS_INVALID_DEACT_REASON_CODE = "HRMS_INVALID_DEACT_REASON";
+	public static final String HRMS_INVALID_DEACT_REASON_MSG = "Employee deactivation reason is Invalid!";
+
 	public static final String HRMS_UPDATE_JURISDICTION_INCOSISTENT_CODE = "HRMS_UPDATE_JURISDICTION_INCOSISTENT";
 	public static final String HRMS_UPDATE_JURISDICTION_INCOSISTENT_MSG = "Jurisdiction data in update request should contain all previous jurisdiction data";
 	
@@ -138,9 +156,15 @@ public class ErrorConstants {
 	public static final String HRMS_INVALID_JURISDICTION_BOUNDARY_CODE = "HRMS_INVALID_JURISDICTION_BOUNDARY";
 	public static final String HRMS_INVALID_JURISDICTION_BOUNDARY_MSG = "Jurisiction boundary value is invalid";
 
+	public static final String HRMS_INVALID_JURISDICTION_ACTIIEV_NULL_CODE = "HRMS_INVALID_JURISDICTION_ACTIIEV_NULL";
+	public static final String HRMS_INVALID_JURISDICTION_ACTIIEV_NULL_MSG = "Jurisiction should have atleast 1 active data";
+
 	public static final String HRMS_INVALID_SEARCH_AOD_CODE = "HRMS_INVALID_SEARCH_AOD";
 	public static final String HRMS_INVALID_SEARCH_AOD_MSG = "With asOnDate, atleast one Dept and one Desgination are to be passed.";
-	
+
+	public static final String HRMS_INVALID_SEARCH_ROLES_CODE = "HRMS_INVALID_SEARCH_ROLES";
+	public static final String HRMS_INVALID_SEARCH_ROLES_MSG = "With search on Roles tenantid is mandatory!.";
+
 	public static final String HRMS_INVALID_SEARCH_USER_CODE = "HRMS_INVALID_SEARCH_USER";
 	public static final String HRMS_INVALID_SEARCH_USER_MSG = "With search on phone and name, tenantid is mandatory!";
 
@@ -148,4 +172,17 @@ public class ErrorConstants {
 	public static final String HRMS_UPDATE_EMPLOYEE_CODE_CHANGE_MSG = "Employee code can not be changed in update request";
 	public static final String HRMS_UPDATE_EMPLOYEE_NOT_EXIST_CODE = "HRMS_UPDATE_EMPLOYEE_NOT_EXIST_CODE";
 	public static final String HRMS_UPDATE_EMPLOYEE_NOT_EXIST_MSG = "No employee found for given UUID!";
+
+	public static final String HRMS_UPDATE_EXISTING_MOBNO_CODE = "HRMS_UPDATE_EXISTING_MOBNO";
+	public static final String HRMS_UPDATE_EXISTING_MOBNO_MSG = "User exist for given mobile no";
+
+	public static final String HRMS_BULK_CREATE_DUPLICATE_MOBILE_CODE = "HRMS_BULK_CREATE_DUPLICATE_MOBILE";
+	public static final String HRMS_BULK_CREATE_DUPLICATE_MOBILE_MSG = "Bulk request has duplicate mobile number ";
+
+	public static final String HRMS_BULK_CREATE_DUPLICATE_EMPCODE_CODE = "HRMS_BULK_CREATE_DUPLICATE_EMPCODE";
+	public static final String HRMS_BULK_CREATE_DUPLICATE_EMPCODE_MSG = "Bulk request has duplicate employee code ";
+
+	public static final String HRMS_UPDATE_DEACT_DETAILS_INCORRECT_EFFECTIVEFROM_CODE = "HRMS_UPDATE_DEACT_DETAILS_INCORRECT_EFFECTIVEFROM";
+	public static final String HRMS_UPDATE_DEACT_DETAILS_INCORRECT_EFFECTIVEFROM_MSG = "Employee deactivation effective date should not be future date.";
+
 }

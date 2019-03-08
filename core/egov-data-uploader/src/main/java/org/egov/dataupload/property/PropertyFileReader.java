@@ -175,7 +175,6 @@ public class PropertyFileReader {
 				break;
 			case Door_No:
 				if (!StringUtils.isEmpty(cell.getStringCellValue()))
-					if(Integer.valueOf(cell.getStringCellValue())==0) break;
 					property.getAddress().setDoorNo(cell.getStringCellValue());
 				break;
 			case Building_Name:
@@ -188,7 +187,6 @@ public class PropertyFileReader {
 				break;
 			case Pincode:
 				if (!StringUtils.isEmpty(cell.getStringCellValue()))
-					if(Integer.valueOf(cell.getStringCellValue())==0) break;
 					property.getAddress().setPincode(cell.getStringCellValue());
 				break;
 

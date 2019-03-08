@@ -137,7 +137,7 @@ public class BusinessServiceDetailRepository {
         String jsonPath;
         if(filterExpression.length()!=0)
             jsonPath = BUSINESSSERVICE_EXPRESSION.replace("EXPRESSION",filterExpression.toString());
-        else jsonPath = MDMS_NO_FILTER;
+        else jsonPath = MDMS_NO_FILTER_BUSINESSSERVICE;
 
         return  mapper.convertValue(documentContext.read(jsonPath), new TypeReference<List<BusinessServiceDetail>>() {});
     }

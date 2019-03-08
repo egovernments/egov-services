@@ -39,7 +39,7 @@
  */
 package org.egov.demand.repository;
 
-import static org.egov.demand.util.Constants.MDMS_NO_FILTER;
+import static org.egov.demand.util.Constants.MDMS_NO_FILTER_TAXPERIOD;
 import static org.egov.demand.util.Constants.MODULE_NAME;
 import static org.egov.demand.util.Constants.TAXPERIOD_CODE_SEARCH_FILTER;
 import static org.egov.demand.util.Constants.TAXPERIOD_DATE_FILTER;
@@ -175,7 +175,7 @@ public class TaxPeriodRepository {
 		if (filterExpression.length() != 0)
 			jsonPath = TAXPERIOD_EXPRESSION.replace("EXPRESSION", filterExpression.toString());
 		else
-			jsonPath = MDMS_NO_FILTER;
+			jsonPath = MDMS_NO_FILTER_TAXPERIOD;
 
 		return mapper.convertValue(documentContext.read(jsonPath), new TypeReference<List<TaxPeriod>>() {
 		});

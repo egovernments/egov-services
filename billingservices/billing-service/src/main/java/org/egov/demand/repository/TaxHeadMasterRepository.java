@@ -1,6 +1,6 @@
 package org.egov.demand.repository;
 
-import static org.egov.demand.util.Constants.MDMS_NO_FILTER;
+import static org.egov.demand.util.Constants.MDMS_NO_FILTER_TAXHEADMASTER;
 import static org.egov.demand.util.Constants.MODULE_NAME;
 import static org.egov.demand.util.Constants.TAXHEADMASTER_CATEGORY_FILTER;
 import static org.egov.demand.util.Constants.TAXHEADMASTER_CODES_FILTER;
@@ -128,7 +128,7 @@ public class TaxHeadMasterRepository {
 		if (filterExpression.length() != 0)
 			jsonPath = TAXHEADMASTER_EXPRESSION.replace("EXPRESSION", filterExpression.toString());
 		else
-			jsonPath = MDMS_NO_FILTER;
+			jsonPath = MDMS_NO_FILTER_TAXHEADMASTER;
 
 		return mapper.convertValue(documentContext.read(jsonPath), new TypeReference<List<TaxHeadMaster>>() {});
 	}

@@ -81,8 +81,6 @@ import org.egov.demand.web.contract.UserResponse;
 import org.egov.demand.web.contract.UserSearchRequest;
 import org.egov.demand.web.contract.factory.ResponseFactory;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -95,8 +93,6 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 @Slf4j
 public class DemandService {
-
-	private static final Logger logger = LoggerFactory.getLogger(DemandService.class);
 
 	@Autowired
 	private SequenceGenService sequenceGenService;
@@ -138,7 +134,7 @@ public class DemandService {
 	 */
 	public DemandResponse create(DemandRequest demandRequest) {
 
-		logger.info("the demand request in create async : {}", demandRequest);
+		log.info("the demand request in create async : {}", demandRequest);
 
 		RequestInfo requestInfo = demandRequest.getRequestInfo();
 		List<Demand> demands = demandRequest.getDemands();

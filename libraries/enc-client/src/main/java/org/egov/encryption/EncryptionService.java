@@ -3,11 +3,13 @@ package org.egov.encryption;
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import lombok.extern.slf4j.Slf4j;
 import org.egov.common.contract.request.Role;
 import org.egov.common.contract.request.User;
 import org.egov.encryption.accesscontrol.AbacFilter;
-import org.egov.encryption.config.KeyRoleAttributeAccessConfiguration;
+import org.egov.encryption.config.AbacConfiguration;
+import org.egov.encryption.config.EncryptionPolicyConfiguration;
 import org.egov.encryption.masking.MaskingService;
 import org.egov.encryption.models.AccessType;
 import org.egov.encryption.models.Attribute;
@@ -25,7 +27,8 @@ public class EncryptionService {
 
     private EncryptionServiceRestInterface encryptionServiceRestInterface;
 
-    private KeyRoleAttributeAccessConfiguration keyRoleAttributeAccessConfiguration;
+    private EncryptionPolicyConfiguration encryptionPolicyConfiguration;
+    private AbacConfiguration abacConfiguration;
     private AbacFilter abacFilter;
     private MaskingService maskingService;
 
@@ -34,14 +37,19 @@ public class EncryptionService {
 
     private ObjectMapper objectMapper;
 
-    public EncryptionService(Map<String, String> fieldsAndTheirType) throws IllegalAccessException,
-            InstantiationException {
-        this.keyRoleAttributeAccessConfiguration = new KeyRoleAttributeAccessConfiguration();
+    public EncryptionService() throws IllegalAccessException, InstantiationException {
+        this.encryptionPolicyConfiguration = new EncryptionPolicyConfiguration();
+        this.abacConfiguration = new AbacConfiguration();
         this.abacFilter = new AbacFilter();
         maskingService = new MaskingService();
         encryptionServiceRestInterface = new EncryptionServiceRestInterface();
         objectMapper = new ObjectMapper(new JsonFactory());
 
+    }
+
+    public EncryptionService(Map<String, String> fieldsAndTheirType) throws IllegalAccessException,
+            InstantiationException {
+        this();
         this.fieldsAndTheirType = fieldsAndTheirType;
         initializeTypesAndFieldsToEncrypt();
     }
@@ -49,7 +57,7 @@ public class EncryptionService {
     EncryptionService(Map<String, String> fieldsAndTheirType, List<KeyRoleAttributeAccess> keyRoleAttributeAccessList)
             throws IllegalAccessException, InstantiationException {
         this(fieldsAndTheirType);
-        this.keyRoleAttributeAccessConfiguration = new KeyRoleAttributeAccessConfiguration(keyRoleAttributeAccessList);
+        this.abacConfiguration = new AbacConfiguration(keyRoleAttributeAccessList);
     }
 
     void initializeTypesAndFieldsToEncrypt() {
@@ -63,6 +71,35 @@ public class EncryptionService {
             typesAndFieldsToEncrypt.get(type).add(field);
         }
     }
+
+    public JsonNode encryptJson(Object plaintextJson, String key, String tenantId) throws IOException {
+
+        JsonNode plaintextNode = createJsonNode(plaintextJson);
+        JsonNode encryptNode = plaintextNode.deepCopy();
+
+        List<Attribute> attributesToEncrypt = encryptionPolicyConfiguration.getAttributesForKey(key);
+        Map<String, List<Attribute>> typeAttributeMap = encryptionPolicyConfiguration.getTypeAttributeMap(attributesToEncrypt);
+
+        for (String type : typeAttributeMap.keySet()) {
+            List<Attribute> attributes = typeAttributeMap.get(type);
+            List<String> paths = attributes.stream().map(Attribute::getJsonPath).collect(Collectors.toList());
+
+            JsonNode jsonNode = JacksonUtils.filterJsonNodeWithPaths(plaintextNode, paths);
+
+            if(! jsonNode.isEmpty(objectMapper.getSerializerProvider())) {
+                JsonNode returnedEncryptedNode = objectMapper.valueToTree(encryptionServiceRestInterface.callEncrypt(tenantId,
+                        type, jsonNode));
+                encryptNode = JacksonUtils.merge(returnedEncryptedNode, encryptNode);
+            }
+        }
+
+        return encryptNode;
+    }
+
+    public <T> T encryptJson(Object plaintextJson, String key, String tenantId, Class<T> valueType) throws IOException {
+        return ConvertClass.convertTo(encryptJson(plaintextJson, key, tenantId), valueType);
+    }
+
 
     public JsonNode encryptJson(Object plaintextJson, String tenantId) throws IOException {
 
@@ -137,20 +174,20 @@ public class EncryptionService {
     }
 
 
-    public JsonNode decryptJson(Object ciphertextJson, User user, String keyId) throws IOException {
+    public JsonNode decryptJson(Object ciphertextJson, User user, String key) throws IOException {
 
         List<String> roles = user.getRoles().stream().map(Role::getCode).collect(Collectors.toList());
 
         Map<Attribute, AccessType> attributeAccessTypeMap = abacFilter.getAttributeAccessForRoles(roles,
-                keyRoleAttributeAccessConfiguration.getRoleAttributeAccessListForKey(keyId));
+                abacConfiguration.getRoleAttributeAccessListForKey(key));
 
         JsonNode decryptedNode = decryptJson(ciphertextJson, attributeAccessTypeMap, user);
 
         return decryptedNode;
     }
 
-    public <T> T decryptJson(Object ciphertextJson, User user, String keyId, Class<T> valueType) throws IOException {
-        return ConvertClass.convertTo(decryptJson(ciphertextJson, user, keyId), valueType);
+    public <T> T decryptJson(Object ciphertextJson, User user, String key, Class<T> valueType) throws IOException {
+        return ConvertClass.convertTo(decryptJson(ciphertextJson, user, key), valueType);
     }
 
     <K, V> List<K> getKeysForValue(Map<K, V> map, V findValue) {
@@ -175,17 +212,13 @@ public class EncryptionService {
     }
 
 
-    String encryptValue(String plaintext, String tenantId, String type) throws IOException {
-        return encryptValue(new ArrayList<String>(Collections.singleton(plaintext)), tenantId, type).get(0);
+    String encryptValue(Object plaintext, String tenantId, String type) throws IOException {
+        return encryptValue(new ArrayList<>(Collections.singleton(plaintext)), tenantId, type).get(0).toString();
     }
 
-    List<String> encryptValue(List<String> plaintext, String tenantId, String type) throws IOException {
+    ArrayNode encryptValue(List<Object> plaintext, String tenantId, String type) throws IOException {
         Object encryptionResponse = encryptionServiceRestInterface.callEncrypt(tenantId, type, plaintext);
-        return (List<String>) encryptionResponse;
-    }
-
-    Object decryptValue(Object ciphertext) throws IOException {
-        return encryptionServiceRestInterface.callDecrypt(ciphertext);
+        return objectMapper.valueToTree(encryptionResponse);
     }
 
 

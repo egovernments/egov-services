@@ -9,9 +9,7 @@ import com.jayway.jsonpath.Option;
 import lombok.extern.slf4j.Slf4j;
 import org.egov.common.contract.request.Role;
 import org.egov.common.contract.request.User;
-import org.egov.encryption.accesscontrol.AbacFilter;
 import org.egov.encryption.models.KeyRoleAttributeAccess;
-import org.egov.encryption.models.RoleAttributeAccess;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -40,22 +38,21 @@ public class EncryptionServiceTest {
         user = User.builder().roles(Arrays.asList(role1, role2)).build();
 
         mapper = new ObjectMapper(new JsonFactory());
-        configuration = Configuration.defaultConfiguration().addOptions(Option.DEFAULT_PATH_LEAF_TO_NULL, Option.SUPPRESS_EXCEPTIONS);
 
-        Map<String, String> fieldsAndTheirType = new HashMap<>();
-        fieldsAndTheirType.put("User/mobileNumber", "Normal");
-        fieldsAndTheirType.put("User/name", "Normal");
-        fieldsAndTheirType.put("User/userName", "Normal");
+//        Map<String, String> fieldsAndTheirType = new HashMap<>();
+//        fieldsAndTheirType.put("User/mobileNumber", "Normal");
+//        fieldsAndTheirType.put("User/name", "Normal");
+//        fieldsAndTheirType.put("User/userName", "Normal");
+//
+//        ObjectMapper objectMapper = new ObjectMapper(new JsonFactory());
+//
+//        URL url = getClass().getClassLoader().getResource("DecryptionABAC.json");
+//        String keyRoleAttributeAccessListString = new String(Files.readAllBytes(Paths.get(url.getPath())));
+//        ObjectReader reader = objectMapper.readerFor(objectMapper.getTypeFactory().constructCollectionType(List.class,
+//                KeyRoleAttributeAccess.class));
+//        List<KeyRoleAttributeAccess> structureRoleAttributeAccessList = reader.readValue(keyRoleAttributeAccessListString);
 
-        ObjectMapper objectMapper = new ObjectMapper(new JsonFactory());
-
-        URL url = getClass().getClassLoader().getResource("RoleAttributeAccessList2.json");
-        String keyRoleAttributeAccessListString = new String(Files.readAllBytes(Paths.get(url.getPath())));
-        ObjectReader reader = objectMapper.readerFor(objectMapper.getTypeFactory().constructCollectionType(List.class,
-                KeyRoleAttributeAccess.class));
-        List<KeyRoleAttributeAccess> keyRoleAttributeAccessList = reader.readValue(keyRoleAttributeAccessListString);
-
-        encryptionService = new EncryptionService(fieldsAndTheirType, keyRoleAttributeAccessList);
+        encryptionService = new EncryptionService();
     }
 
     @Ignore
@@ -67,6 +64,24 @@ public class EncryptionServiceTest {
                 "\"mobileNumber\":\"12312312\",\"active\":true,\"type\":\"CITIZEN\",\"password\":\"password\"}}");
 
         JsonNode ciphertext = encryptionService.encryptJson(plaintext, "pb");
+        log.info(ciphertext.toString());
+    }
+
+    @Ignore
+    @Test
+    public void encryptValueTest() throws IOException {
+        log.info( encryptionService.encryptValue(1, "pb", "Normal") );
+    }
+
+    @Ignore
+    @Test
+    public void encryptJsonUsingKey() throws IOException {
+        JsonNode plaintext = mapper.readTree("{\"RequestInfo\":{\"api_id\":\"1\",\"ver\":\"1\",\"ts\":null," +
+                "\"action\":\"create\",\"did\":\"\",\"key\":\"\",\"msg_id\":\"\",\"requester_id\":\"\"," +
+                "\"auth_token\":null},\"User\":{\"userName\":\"ajay\",\"name\":\"ajay\",\"gender\":\"male\"," +
+                "\"mobileNumber\":\"12312312\",\"active\":true,\"type\":\"CITIZEN\",\"password\":\"password\"}}");
+
+        JsonNode ciphertext = encryptionService.encryptJson(plaintext, "User", "pb");
         log.info(ciphertext.toString());
     }
 
@@ -128,11 +143,17 @@ public class EncryptionServiceTest {
         log.info(plaintext.toString());
     }
 
+    @Ignore
     @Test
     public void test() throws IOException {
-
+        Map<String, Object> map = new HashMap<>();
+        Map<String, Object> user = new HashMap<>();
+        user.put("name", "Rushang");
+        user.put("mobileNumber", "187238917239");
+        map.put("User", user);
+        map = encryptionService.encryptJson(map, "pb", Map.class);
+        log.info(String.valueOf(map));
     }
-
 
 
 }

@@ -39,6 +39,9 @@
  */
 package org.egov.demand.service;
 
+import java.util.Date;
+import java.util.List;
+
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.demand.config.ApplicationProperties;
 import org.egov.demand.model.AuditDetail;
@@ -55,9 +58,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-
-import java.util.Date;
-import java.util.List;
 
 @Service
 public class BusinessServDetailService {
@@ -82,7 +82,6 @@ public class BusinessServDetailService {
 	public BusinessServiceDetailResponse searchBusinessServiceDetails(
 			final BusinessServiceDetailCriteria businessServiceDetailCriteria, final RequestInfo requestInfo) {
 		
-		LOGGER.info("-- BusinessServDetailsService searchBusinessServiceDetails -- ");
 		final List<BusinessServiceDetail> businessServiceDetails = businessServiceDetailRepository
 				.getBussinessServiceDetail(requestInfo,businessServiceDetailCriteria);
 		return getBusinessServiceDetailResponse(businessServiceDetails, requestInfo);

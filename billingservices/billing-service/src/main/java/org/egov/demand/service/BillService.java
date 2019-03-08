@@ -447,7 +447,7 @@ public class BillService {
 	private Map<String, BusinessServiceDetail> getBusinessService(Set<String> businessService, String tenantId, RequestInfo requestInfo) {
 		List<BusinessServiceDetail> businessServiceDetails = businessServDetailService.searchBusinessServiceDetails(BusinessServiceDetailCriteria.builder().businessService(businessService).tenantId(tenantId).build(), requestInfo)
 				.getBusinessServiceDetails();
-		return businessServiceDetails.stream().collect(Collectors.toMap(BusinessServiceDetail::getBusinessService, Function.identity()));
+		return businessServiceDetails.stream().collect(Collectors.toMap(BusinessServiceDetail::getCode, Function.identity()));
 	}
 	
 	public BillResponse getBillResponse(List<Bill> bills) {

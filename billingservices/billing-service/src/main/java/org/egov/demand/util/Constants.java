@@ -103,8 +103,8 @@ public class Constants {
 	public static final String TAXPERIOD_IDS_FILTER = "@.id in [VAL]";
 	public static final String TAXPERIOD_SERVICES_FILTER = "@.service in [VAL]";
 
-	public static final String BUSINESSSERVICE_EXPRESSION = "$.MdmsRes.BillingService.TaxPeriod[?(EXPRESSION)]";
+	public static final String BUSINESSSERVICE_EXPRESSION = "$.MdmsRes.BillingService.BusinessService[?(EXPRESSION)]";
 	public static final String BUSINESSSERVICE_IDS_FILTER = "@.id in [VAL]";
-	public static final String BUSINESSSERVICE_SERVICES_FILTER = "@.businessService in [VAL]";
+	public static final String BUSINESSSERVICE_SERVICES_FILTER = "@.code in [VAL]";
 
 }

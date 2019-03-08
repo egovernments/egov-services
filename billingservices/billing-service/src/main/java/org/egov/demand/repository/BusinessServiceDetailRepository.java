@@ -39,17 +39,21 @@
  */
 package org.egov.demand.repository;
 
-import com.jayway.jsonpath.DocumentContext;
+import static org.egov.demand.util.Constants.*;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
+
 import org.apache.commons.lang3.StringUtils;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.demand.model.BusinessServiceDetail;
-import org.egov.demand.model.TaxPeriod;
 import org.egov.demand.repository.querybuilder.BusinessServDetailQueryBuilder;
 import org.egov.demand.repository.rowmapper.BusinessServDetailRowMapper;
 import org.egov.demand.util.Util;
 import org.egov.demand.web.contract.BusinessServiceDetailCriteria;
 import org.egov.demand.web.contract.BusinessServiceDetailRequest;
-import org.egov.demand.web.contract.TaxPeriodCriteria;
 import org.egov.mdms.model.MdmsCriteriaReq;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -59,12 +63,9 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.CollectionUtils;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-
-import static org.egov.demand.util.Constants.*;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.jayway.jsonpath.DocumentContext;
 
 @Repository
 public class BusinessServiceDetailRepository {
@@ -76,6 +77,9 @@ public class BusinessServiceDetailRepository {
     
     @Autowired
     private JdbcTemplate jdbcTemplate;
+    
+    @Autowired
+    private ObjectMapper mapper;
 
     @Autowired
     private BusinessServDetailRowMapper businessServDetailRowMapper;
@@ -109,37 +113,33 @@ public class BusinessServiceDetailRepository {
     public List<BusinessServiceDetail> getBussinessServiceDetail(RequestInfo requestInfo,BusinessServiceDetailCriteria BusinessServiceDetailsCriteria){
 
         MdmsCriteriaReq mdmsCriteriaReq = util.prepareMdMsRequest(BusinessServiceDetailsCriteria.getTenantId(),
-                MODULE_NAME, Collections.singletonList(TAXPERIOD_MASTERNAME), null,
+                MODULE_NAME, Collections.singletonList(BUSINESSSERVICE_MASTERNAME), null,
                 requestInfo);
-
-        List<BusinessServiceDetail> result = new ArrayList<>();
 
         DocumentContext documentContext = util.getAttributeValues(mdmsCriteriaReq);
 
         StringBuilder filterExpression = new StringBuilder();
 
-
-        if (BusinessServiceDetailsCriteria.getId() != null && !BusinessServiceDetailsCriteria.getId().isEmpty()) {
-            if(filterExpression.length()!=0)
-                filterExpression.append(" && ");
-            filterExpression.append(TAXPERIOD_IDS_FILTER.replace("VAL",util.getStringVal(BusinessServiceDetailsCriteria.getId())));
-        }
-        if(!CollectionUtils.isEmpty(BusinessServiceDetailsCriteria.getBusinessService())) {
-            if(filterExpression.length()!=0)
-                filterExpression.append(" && ");
-            filterExpression.append(TAXPERIOD_SERVICES_FILTER.replace("VAL",util.getStringVal(BusinessServiceDetailsCriteria.getBusinessService())));
-        }
-
+		if (BusinessServiceDetailsCriteria.getId() != null && !BusinessServiceDetailsCriteria.getId().isEmpty()) {
+			if (filterExpression.length() != 0)
+				filterExpression.append(" && ");
+			filterExpression.append(
+					BUSINESSSERVICE_IDS_FILTER.replace("VAL", util.getStringVal(BusinessServiceDetailsCriteria.getId())));
+		}
+		
+		if (!CollectionUtils.isEmpty(BusinessServiceDetailsCriteria.getBusinessService())) {
+			if (filterExpression.length() != 0)
+				filterExpression.append(" && ");
+			filterExpression.append(BUSINESSSERVICE_SERVICES_FILTER.replace("VAL",
+					util.getStringVal(BusinessServiceDetailsCriteria.getBusinessService())));
+		}
 
         String jsonPath;
         if(filterExpression.length()!=0)
-            jsonPath = TAXPERIOD_EXPRESSION.replace("EXPRESSION",filterExpression.toString());
+            jsonPath = BUSINESSSERVICE_EXPRESSION.replace("EXPRESSION",filterExpression.toString());
         else jsonPath = MDMS_NO_FILTER;
 
-        result = documentContext.read(jsonPath);
-
-        return result;
-
+        return  mapper.convertValue(documentContext.read(jsonPath), new TypeReference<List<BusinessServiceDetail>>() {});
     }
 
 

@@ -107,7 +107,9 @@ public class PropertyCustomUploader {
 			dataUploadService.updateJobsWithPersister(auditDetails,job,false);
 //			uploadRegistryRepository.updateJob(job);
 			uploadUtils.clearInternalDirectory();
-			throw new CustomException("Exception Occurred while parsing the excel", e.getMessage());
+			CustomException exception = new CustomException("Exception Occurred while parsing the excel", e.getMessage());
+			exception.initCause(e);
+			throw exception;
 		}
 
 		List<String> responses = new ArrayList<>();

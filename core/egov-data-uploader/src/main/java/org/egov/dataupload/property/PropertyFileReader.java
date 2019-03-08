@@ -174,9 +174,9 @@ public class PropertyFileReader {
 				property.getAddress().getLocality().setCode(cell.getStringCellValue());
 				break;
 			case Door_No:
-				if(cell.getNumericCellValue()==0) break;
-				if (!StringUtils.isEmpty((int)cell.getNumericCellValue()))
-					property.getAddress().setDoorNo(String.valueOf((int)cell.getNumericCellValue()));
+				if (!StringUtils.isEmpty(cell.getStringCellValue()))
+					if(Integer.valueOf(cell.getStringCellValue())==0) break;
+					property.getAddress().setDoorNo(cell.getStringCellValue());
 				break;
 			case Building_Name:
 				if (!StringUtils.isEmpty(cell.getStringCellValue()))
@@ -187,9 +187,9 @@ public class PropertyFileReader {
 					property.getAddress().setStreet(cell.getStringCellValue());
 				break;
 			case Pincode:
-				if(cell.getNumericCellValue()==0) break;
-				if (!StringUtils.isEmpty((int)cell.getNumericCellValue()))
-					property.getAddress().setPincode(String.valueOf((int)cell.getNumericCellValue()));
+				if (!StringUtils.isEmpty(cell.getStringCellValue()))
+					if(Integer.valueOf(cell.getStringCellValue())==0) break;
+					property.getAddress().setPincode(cell.getStringCellValue());
 				break;
 
 			default:
@@ -244,7 +244,7 @@ public class PropertyFileReader {
 			case Existing_Property_Id:
 				break;
 			case Floor_No:
-				unit.setFloorNo(String.valueOf((int)cell.getNumericCellValue()));
+				unit.setFloorNo(cell.getStringCellValue());
 				break;
 			case Unit_No:
 				break;

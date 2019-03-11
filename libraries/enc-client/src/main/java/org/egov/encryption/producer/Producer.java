@@ -11,7 +11,7 @@ public class Producer {
     @Autowired
     private CustomKafkaTemplate<String, Object> kafkaTemplate;
 
-    public void push(String topic, String key, JsonNode data) {
+    public void push(String topic, String key, Object data) {
         kafkaTemplate.send(topic, key, data);
     }
 

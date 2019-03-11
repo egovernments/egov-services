@@ -32,11 +32,6 @@ public class EncryptionServiceRestConnection {
     public EncryptionServiceRestConnection() {
         mapper = new ObjectMapper(new JsonFactory());
         restTemplate = new RestTemplate();
-
-        // TODO Remove hard-coded urls
-        egovEncHost = "http://localhost:1234";
-        egovEncEncryptPath = "/egov-enc-service/crypto/v1/_encrypt";
-        egovEncDecryptPath = "/egov-enc-service/crypto/v1/_decrypt";
     }
 
     Object callEncrypt(String tenantId, String type, Object value) throws IOException {

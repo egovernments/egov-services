@@ -1,17 +1,16 @@
 package org.egov.encryption.config;
 
 import com.fasterxml.jackson.core.JsonFactory;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectReader;
 import org.egov.encryption.models.Attribute;
 import org.egov.encryption.models.EncryptionPolicy;
-import org.egov.encryption.models.KeyRoleAttributeAccess;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
-import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -39,11 +38,19 @@ public class EncryptionPolicyConfiguration {
         List<EncryptionPolicy> encryptionPolicyList = null;
         try {
             ObjectMapper objectMapper = new ObjectMapper(new JsonFactory());
-            URL url = getClass().getClassLoader().getResource("EncryptionPolicy.json");
-            String keyRoleAttributeAccessListString = new String(Files.readAllBytes(Paths.get(url.getPath())));
+            String mdmsRequest = "{\"RequestInfo\":{},\"MdmsCriteria\":{\"tenantId\":\"pb\"," +
+                    "\"moduleDetails\":[{\"moduleName\":\"DataSecurity\"," +
+                    "\"masterDetails\":[{\"name\":\"EncryptionPolicy\"}]}]}}";
+
+            RestTemplate restTemplate = new RestTemplate();
+            ResponseEntity<JsonNode> response = restTemplate.postForEntity(egovMdmsHost + egovMdmsSearchEndpoint,
+                    objectMapper.readTree(mdmsRequest), JsonNode.class);
+
+            String policyListString = String.valueOf(response.getBody().get("MdmsRes").get(
+                    "DataSecurity").get("EncryptionPolicy"));
             ObjectReader reader = objectMapper.readerFor(objectMapper.getTypeFactory().constructCollectionType(List.class,
                     EncryptionPolicy.class));
-            encryptionPolicyList = reader.readValue(keyRoleAttributeAccessListString);
+            encryptionPolicyList = reader.readValue(policyListString);
         } catch (IOException e) {}
 
         initializeKeyAttributeMap(encryptionPolicyList);

@@ -16,7 +16,7 @@ import java.util.Collections;
 
 @Slf4j
 @AllArgsConstructor
-public class EncryptionServiceRestInterface {
+public class EncryptionServiceRestConnection {
 
     @Value("${egov.enc.host}")
     private String egovEncHost;
@@ -29,7 +29,7 @@ public class EncryptionServiceRestInterface {
 
     private ObjectMapper mapper;
 
-    public EncryptionServiceRestInterface() {
+    public EncryptionServiceRestConnection() {
         mapper = new ObjectMapper(new JsonFactory());
         restTemplate = new RestTemplate();
 

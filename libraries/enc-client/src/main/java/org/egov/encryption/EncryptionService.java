@@ -3,7 +3,6 @@ package org.egov.encryption;
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ArrayNode;
 import lombok.extern.slf4j.Slf4j;
 import org.egov.common.contract.request.Role;
 import org.egov.common.contract.request.User;
@@ -25,7 +24,7 @@ import java.util.stream.Collectors;
 @Slf4j
 public class EncryptionService {
 
-    private EncryptionServiceRestInterface encryptionServiceRestInterface;
+    private EncryptionServiceRestConnection encryptionServiceRestConnection;
 
     private EncryptionPolicyConfiguration encryptionPolicyConfiguration;
     private AbacConfiguration abacConfiguration;
@@ -42,7 +41,7 @@ public class EncryptionService {
         this.abacConfiguration = new AbacConfiguration();
         this.abacFilter = new AbacFilter();
         maskingService = new MaskingService();
-        encryptionServiceRestInterface = new EncryptionServiceRestInterface();
+        encryptionServiceRestConnection = new EncryptionServiceRestConnection();
         objectMapper = new ObjectMapper(new JsonFactory());
 
     }
@@ -87,7 +86,7 @@ public class EncryptionService {
             JsonNode jsonNode = JacksonUtils.filterJsonNodeWithPaths(plaintextNode, paths);
 
             if(! jsonNode.isEmpty(objectMapper.getSerializerProvider())) {
-                JsonNode returnedEncryptedNode = objectMapper.valueToTree(encryptionServiceRestInterface.callEncrypt(tenantId,
+                JsonNode returnedEncryptedNode = objectMapper.valueToTree(encryptionServiceRestConnection.callEncrypt(tenantId,
                         type, jsonNode));
                 encryptNode = JacksonUtils.merge(returnedEncryptedNode, encryptNode);
             }
@@ -100,7 +99,7 @@ public class EncryptionService {
         return ConvertClass.convertTo(encryptJson(plaintextJson, key, tenantId), valueType);
     }
 
-
+    @Deprecated
     public JsonNode encryptJson(Object plaintextJson, String tenantId) throws IOException {
 
         JsonNode plaintextNode = createJsonNode(plaintextJson);
@@ -112,7 +111,7 @@ public class EncryptionService {
             JsonNode jsonNode = JacksonUtils.filterJsonNodeWithPaths(plaintextNode, paths);
 
             if(! jsonNode.isEmpty(objectMapper.getSerializerProvider())) {
-                JsonNode returnedEncryptedNode = objectMapper.valueToTree(encryptionServiceRestInterface.callEncrypt(tenantId,
+                JsonNode returnedEncryptedNode = objectMapper.valueToTree(encryptionServiceRestConnection.callEncrypt(tenantId,
                         type, jsonNode));
                 encryptNode = JacksonUtils.merge(returnedEncryptedNode, encryptNode);
             }
@@ -121,6 +120,7 @@ public class EncryptionService {
         return encryptNode;
     }
 
+    @Deprecated
     public <T> T encryptJson(Object plaintextJson, String tenantId, Class<T> valueType) throws IOException {
         return ConvertClass.convertTo(encryptJson(plaintextJson, tenantId), valueType);
     }
@@ -149,7 +149,7 @@ public class EncryptionService {
 
         JsonNode jsonNode = JacksonUtils.filterJsonNodeWithPaths(ciphertextNode, pathsToBeDecrypted);
         if(! jsonNode.isEmpty(objectMapper.getSerializerProvider())) {
-            JsonNode returnedDecryptedNode = objectMapper.valueToTree(encryptionServiceRestInterface.callDecrypt(jsonNode));
+            JsonNode returnedDecryptedNode = objectMapper.valueToTree(encryptionServiceRestConnection.callDecrypt(jsonNode));
             decryptNode = JacksonUtils.merge(returnedDecryptedNode, decryptNode);
         }
 
@@ -161,6 +161,7 @@ public class EncryptionService {
         return decryptNode;
     }
 
+    @Deprecated
     public JsonNode decryptJson(Object ciphertextJson, List<String> paths, User user) throws IOException {
 
         Map<Attribute, AccessType> attributeAccessTypeMap =
@@ -169,12 +170,13 @@ public class EncryptionService {
         return decryptJson(ciphertextJson, attributeAccessTypeMap, user);
     }
 
+    @Deprecated
     public <T> T decryptJson(Object ciphertextJson, List<String> paths, User user, Class<T> valueType) throws IOException {
         return ConvertClass.convertTo(decryptJson(ciphertextJson, paths, user), valueType);
     }
 
 
-    public JsonNode decryptJson(Object ciphertextJson, User user, String key) throws IOException {
+    public JsonNode decryptJson(Object ciphertextJson, String key, User user) throws IOException {
 
         List<String> roles = user.getRoles().stream().map(Role::getCode).collect(Collectors.toList());
 
@@ -186,8 +188,8 @@ public class EncryptionService {
         return decryptedNode;
     }
 
-    public <T> T decryptJson(Object ciphertextJson, User user, String key, Class<T> valueType) throws IOException {
-        return ConvertClass.convertTo(decryptJson(ciphertextJson, user, key), valueType);
+    public <T> T decryptJson(Object ciphertextJson, String key, User user, Class<T> valueType) throws IOException {
+        return ConvertClass.convertTo(decryptJson(ciphertextJson, key, user), valueType);
     }
 
     <K, V> List<K> getKeysForValue(Map<K, V> map, V findValue) {
@@ -212,13 +214,13 @@ public class EncryptionService {
     }
 
 
-    String encryptValue(Object plaintext, String tenantId, String type) throws IOException {
-        return encryptValue(new ArrayList<>(Collections.singleton(plaintext)), tenantId, type).get(0).toString();
+    public String encryptValue(Object plaintext, String tenantId, String type) throws IOException {
+        return encryptValue(new ArrayList<>(Collections.singleton(plaintext)), tenantId, type).get(0);
     }
 
-    ArrayNode encryptValue(List<Object> plaintext, String tenantId, String type) throws IOException {
-        Object encryptionResponse = encryptionServiceRestInterface.callEncrypt(tenantId, type, plaintext);
-        return objectMapper.valueToTree(encryptionResponse);
+    public List<String> encryptValue(List<Object> plaintext, String tenantId, String type) throws IOException {
+        Object encryptionResponse = encryptionServiceRestConnection.callEncrypt(tenantId, type, plaintext);
+        return ConvertClass.convertTo(objectMapper.valueToTree(encryptionResponse), List.class);
     }
 
 

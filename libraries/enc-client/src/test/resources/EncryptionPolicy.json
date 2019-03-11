@@ -35,10 +35,6 @@
         "type" : "Normal"
       },
       {
-        "jsonPath" : "guardianRelation",
-        "type" : "Normal"
-      },
-      {
         "jsonPath" : "permanentAddress/address",
         "type" : "Normal"
       },

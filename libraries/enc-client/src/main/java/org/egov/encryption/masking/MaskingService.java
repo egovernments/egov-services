@@ -27,7 +27,7 @@ public class MaskingService {
         init();
     }
 
-    public String maskData(String data, Attribute attribute) {
+    public <T> T maskData(T data, Attribute attribute) {
         Masking masking = maskingTechniqueMap.get(attribute.getMaskingTechnique());
 
         return masking.maskData(data);
@@ -37,11 +37,9 @@ public class MaskingService {
         JsonNode maskedNode = decryptedNode.deepCopy();
 
         for(Attribute attribute : attributes) {
-            Masking masking = maskingTechniqueMap.get(attribute.getMaskingTechnique());
-
             JsonNode jsonNode = JacksonUtils.filterJsonNodeWithPaths(maskedNode, Arrays.asList(attribute.getJsonPath()));
 
-            jsonNode = JSONBrowseUtil.mapValues(jsonNode, value -> masking.maskData(value));
+            jsonNode = JSONBrowseUtil.mapValues(jsonNode, value -> maskData(value, attribute));
 
             maskedNode = JacksonUtils.merge(jsonNode, maskedNode);
         }

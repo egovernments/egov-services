@@ -124,12 +124,6 @@
           },
           {
             "attribute" : {
-              "jsonPath" : "guardianRelation"
-            },
-            "accessType" : "PLAIN"
-          },
-          {
-            "attribute" : {
               "jsonPath" : "permanentAddress/address"
             },
             "accessType" : "PLAIN"
@@ -196,12 +190,6 @@
           {
             "attribute" : {
               "jsonPath" : "guardian"
-            },
-            "accessType" : "PLAIN"
-          },
-          {
-            "attribute" : {
-              "jsonPath" : "guardianRelation"
             },
             "accessType" : "PLAIN"
           },
@@ -283,12 +271,6 @@
           },
           {
             "attribute" : {
-              "jsonPath" : "*/guardianRelation"
-            },
-            "accessType" : "PLAIN"
-          },
-          {
-            "attribute" : {
               "jsonPath" : "*/permanentAddress/address"
             },
             "accessType" : "PLAIN"
@@ -355,12 +337,6 @@
           {
             "attribute" : {
               "jsonPath" : "*/guardian"
-            },
-            "accessType" : "PLAIN"
-          },
-          {
-            "attribute" : {
-              "jsonPath" : "*/guardianRelation"
             },
             "accessType" : "PLAIN"
           },

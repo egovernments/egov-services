@@ -42,6 +42,7 @@ public class AbacFilter {
                 AccessType accessType = attributeAccess.getAccessType();
                 if(attributeAccessTypeMap.containsKey(attribute)) {
                     if(attributeAccessTypeMap.get(attribute).ordinal() > accessType.ordinal()) {
+                        attributeAccessTypeMap.remove(attribute);
                         attributeAccessTypeMap.put(attribute, accessType);
                     }
                 } else {

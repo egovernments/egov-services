@@ -82,7 +82,7 @@ public class BillRowMapper implements ResultSetExtractor<List<Bill>>{
 				billDetailMap.put(billDetail.getId(), billDetail);
 
 				if (bill.getId().equals(billDetail.getBill()))
-					bill.getBillDetails().add(billDetail);
+					bill.addBillDetailsItem(billDetail);
 			}
 
 			BillAccountDetail billAccDetail = new BillAccountDetail();
@@ -100,7 +100,7 @@ public class BillRowMapper implements ResultSetExtractor<List<Bill>>{
 			billAccDetail.setDemandDetailId(rs.getString("demanddetailid"));
 
 			if (billDetail.getId().equals(billAccDetail.getBillDetail()))
-				billDetail.getBillAccountDetails().add(billAccDetail);
+				billDetail.addBillAccountDetailsItem(billAccDetail);
 
 		}
 		log.debug("converting map to list object ::: " + billMap.values());

@@ -102,6 +102,9 @@ public class ReceiptService {
 			DemandDetail currentDetail = demandDetailIdMap.get(billAccDetail.getDemandDetailId());
 			BigDecimal oldCollectedAmount = currentDetail.getCollectionAmount();
 			BigDecimal newAmount = billAccDetail.getAdjustedAmount();
+			/*I
+			 * FIXME TODO multiple bad should be mapped to dd
+			 */
 
 			if (isRecieptCancellation)
 				currentDetail.setCollectionAmount(oldCollectedAmount.subtract(newAmount));

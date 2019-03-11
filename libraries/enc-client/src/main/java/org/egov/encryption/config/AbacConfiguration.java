@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectReader;
 import org.egov.encryption.models.KeyRoleAttributeAccess;
 import org.egov.encryption.models.RoleAttributeAccess;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
@@ -22,10 +23,8 @@ import java.util.stream.Collectors;
 @Component
 public class AbacConfiguration {
 
-    @Value("${egov.mdms.host}")
-    private String egovMdmsHost;
-    @Value("${egov.mdms.search.endpoint}")
-    private String egovMdmsSearchEndpoint;
+    @Autowired
+    private AppProperties appProperties;
 
     private Map<String, List<RoleAttributeAccess>> keyRoleAttributeAccessMap;
 
@@ -33,10 +32,6 @@ public class AbacConfiguration {
         initializeKeyRoleAttributeAccessMapFromMdms();
     }
 
-
-    public AbacConfiguration(List<KeyRoleAttributeAccess> keyRoleAttributeAccessList) {
-        initializeKeyRoleAttributeAccessMap(keyRoleAttributeAccessList);
-    }
 
     private void initializeKeyRoleAttributeAccessMap(List<KeyRoleAttributeAccess> keyRoleAttributeAccessList) {
         keyRoleAttributeAccessMap = keyRoleAttributeAccessList.stream()
@@ -50,12 +45,13 @@ public class AbacConfiguration {
         try {
             ObjectMapper objectMapper = new ObjectMapper(new JsonFactory());
 
-            String mdmsRequest = "{\"RequestInfo\":{},\"MdmsCriteria\":{\"tenantId\":\"pb\"," +
+            String mdmsRequest = "{\"RequestInfo\":{},\"MdmsCriteria\":{\"tenantId\":\"" + appProperties.getStateLevelTenantId() + "\"," +
                     "\"moduleDetails\":[{\"moduleName\":\"DataSecurity\"," +
                     "\"masterDetails\":[{\"name\":\"DecryptionABAC\"}]}]}}";
 
             RestTemplate restTemplate = new RestTemplate();
-            ResponseEntity<JsonNode> response = restTemplate.postForEntity(egovMdmsHost + egovMdmsSearchEndpoint,
+            ResponseEntity<JsonNode> response =
+                    restTemplate.postForEntity(appProperties.getEgovMdmsHost() + appProperties.getEgovMdmsSearchEndpoint(),
                     objectMapper.readTree(mdmsRequest), JsonNode.class);
 
             String keyRoleAttributeAccessListString = String.valueOf(response.getBody().get("MdmsRes").get(

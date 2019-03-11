@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectReader;
 import org.egov.encryption.models.Attribute;
 import org.egov.encryption.models.EncryptionPolicy;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
@@ -21,10 +22,8 @@ import java.util.stream.Collectors;
 @Component
 public class EncryptionPolicyConfiguration {
 
-    @Value("${egov.mdms.host}")
-    private String egovMdmsHost;
-    @Value("${egov.mdms.search.endpoint}")
-    private String egovMdmsSearchEndpoint;
+    @Autowired
+    private AppProperties appProperties;
 
     private Map<String, List<Attribute>> keyAttributeMap;
 
@@ -32,21 +31,18 @@ public class EncryptionPolicyConfiguration {
         initializeKeyAttributeMapFromMdms();
     }
 
-    public EncryptionPolicyConfiguration(List<EncryptionPolicy> encryptionPolicyList) {
-        initializeKeyAttributeMap(encryptionPolicyList);
-    }
-
     private void initializeKeyAttributeMapFromMdms() {
         List<EncryptionPolicy> encryptionPolicyList = null;
         try {
             ObjectMapper objectMapper = new ObjectMapper(new JsonFactory());
-            String mdmsRequest = "{\"RequestInfo\":{},\"MdmsCriteria\":{\"tenantId\":\"pb\"," +
+            String mdmsRequest = "{\"RequestInfo\":{},\"MdmsCriteria\":{\"tenantId\":\"" + appProperties.getStateLevelTenantId() + "\"," +
                     "\"moduleDetails\":[{\"moduleName\":\"DataSecurity\"," +
                     "\"masterDetails\":[{\"name\":\"EncryptionPolicy\"}]}]}}";
 
             RestTemplate restTemplate = new RestTemplate();
-            ResponseEntity<JsonNode> response = restTemplate.postForEntity(egovMdmsHost + egovMdmsSearchEndpoint,
-                    objectMapper.readTree(mdmsRequest), JsonNode.class);
+            ResponseEntity<JsonNode> response =
+                    restTemplate.postForEntity(appProperties.getEgovMdmsHost() + appProperties.getEgovMdmsSearchEndpoint(),
+                            objectMapper.readTree(mdmsRequest), JsonNode.class);
 
             String policyListString = String.valueOf(response.getBody().get("MdmsRes").get(
                     "DataSecurity").get("EncryptionPolicy"));

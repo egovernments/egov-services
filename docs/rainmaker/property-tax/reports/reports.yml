@@ -1,7 +1,7 @@
 ReportDefinitions:
   - reportName: ReceiptRegister
     summary: Receipt Register
-    decrKey: pt-receipt
+    decrPathId: pt-receipt
     version: 1.0.0
     moduleName: rainmaker-pt
     sourceColumns:

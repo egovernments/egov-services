@@ -46,7 +46,7 @@ public class EncryptionDecryptionTest {
     public void test_should_encrypt() throws JsonProcessingException {
 
         User user=getUser();
-        String encUserfromSetvice=objectMapper.writeValueAsString(encryptionDecryptionUtil.encryptObject(user,User.class));
+        String encUserfromSetvice=objectMapper.writeValueAsString(encryptionDecryptionUtil.encryptObject(user,"User",User.class));
         String expectedUser=resources.getFileContents("encryptedUser.json");
         assertEquals(expectedUser,encUserfromSetvice);
     }
@@ -55,7 +55,7 @@ public class EncryptionDecryptionTest {
     public void test_should_decrypt() throws IOException {
 
         User user=objectMapper.readValue(resources.getFileContents("encryptedUser.json"),User.class);
-        String decUserfromSetvice=objectMapper.writeValueAsString(encryptionDecryptionUtil.decryptObject(user,User.class,null));
+        String decUserfromSetvice=objectMapper.writeValueAsString(encryptionDecryptionUtil.decryptObject(user,"User",User.class,null));
         String expectedUser=objectMapper.writeValueAsString(getUser());
         assertEquals(expectedUser,decUserfromSetvice);
     }
@@ -113,7 +113,6 @@ public class EncryptionDecryptionTest {
     private Set<Role> getListOfRoles() {
 
         Role role1 = Role.builder()
-                .id(1L)
                 .name("nameoftherole1")
                 .description("description")
                 .createdBy(1L)
@@ -121,7 +120,6 @@ public class EncryptionDecryptionTest {
                 .build();
 
         Role role2 = Role.builder()
-                .id(2L)
                 .name("nameoftherole2")
                 .description("description")
                 .createdBy(1L)

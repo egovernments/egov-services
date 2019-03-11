@@ -49,16 +49,7 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 	private EncryptionService encryptionService;
 
 	@Autowired
-	EncryptionDecryptionUtil encryptionDecryptionUtil;
-
-	@Value("#{${egov.enc.field.type.map}}")
-	private HashMap<String,String> enc_fields_map;
-
-	@Autowired
 	private EncryptionDecryptionUtil encryptionDecryptionUtil;
-
-	@Value("#{${egov.enc.field.type.map}}")
-	private HashMap<String,String> enc_fields_map;
 
 	@Value("${citizen.login.password.otp.enabled}")
 	private boolean citizenLoginPasswordOtpEnabled;
@@ -104,7 +95,7 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 		}
 
 		org.egov.common.contract.request.User userInfo=org.egov.common.contract.request.User.builder().uuid(user.getUuid()).roles(contract_roles).build();
-		user= encryptionDecryptionUtil.decryptObject(user,User.class,userInfo);
+		user= encryptionDecryptionUtil.decryptObject(user,"User",User.class,userInfo);
 
         } catch (UserNotFoundException e){
             log.error("User not found", e);

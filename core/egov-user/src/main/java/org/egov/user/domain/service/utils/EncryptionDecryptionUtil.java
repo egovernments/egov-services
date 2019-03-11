@@ -27,12 +27,6 @@ public class EncryptionDecryptionUtil
     @Autowired
     private ObjectMapper objectMapper;
 
-    @Value("#{${egov.enc.field.type.map}}")
-    private HashMap<String,String> dec_fields_mapForObjects;
-
-    @Value("#{${egov.dec.field.type.map}}")
-    private HashMap<String,String> dec_fields_map_ForList;
-
     @Value(("${egov.state.level.tenant.id}"))
     private String stateLevelTenantId;
 
@@ -40,36 +34,23 @@ public class EncryptionDecryptionUtil
         this.encryptionService = encryptionService;
     }
 
-    public <T>T encryptObject(Object objectToEncrypt, Class<T> classType)
+    public <T>T encryptObject(Object objectToEncrypt, String key,Class<T> classType)
     {
         try {
-            JsonNode encryptedObject = encryptionService.encryptJson(objectToEncrypt, stateLevelTenantId);
-            return objectMapper.treeToValue(encryptedObject, classType);
-        }
-        catch (JsonProcessingException e)
-        {
-            log.error("JsonProcessing error occurred while enrypting",e);
-            throw new CustomException("ENCRYPTION_ERROR","JsonProcessing error occurred while enrypting");
+            return encryptionService.encryptJson(objectToEncrypt,key,stateLevelTenantId,classType);
         } catch (IOException e) {
-            throw new CustomException("ENCRYPTION_ERROR","IO error occurred while encrypting");
+            log.error("IO error occurred while decrypting",e);
+            throw new CustomException("DECRYPTION_ERROR","IO error occurred while decrypting");
         }
     }
 
-    public <E,P>P decryptObject(Object objectToDecrypt, Class<E> classType, User userInfo)
+    public <E,P>P decryptObject(Object objectToDecrypt, String key, Class<E> classType, User userInfo)
     {
-        try {
-            if(objectToDecrypt instanceof List)
-            {
-                JsonNode  decryptedObject = encryptionService.decryptJson(objectToDecrypt,new ArrayList<>(dec_fields_map_ForList.keySet()),userInfo);
-                ObjectReader reader = objectMapper.readerFor(objectMapper.getTypeFactory().constructCollectionType(List.class,classType));
-                return reader.readValue(decryptedObject);
-            }
-            else {
 
-                JsonNode  decryptedObject = encryptionService.decryptJson(objectToDecrypt,new ArrayList<>(dec_fields_mapForObjects.keySet()),userInfo);
-                return (P)objectMapper.treeToValue(decryptedObject, classType);
-            }
+        try {
+            return  (P)encryptionService.decryptJson(objectToDecrypt,key,userInfo,classType);
         } catch (IOException e) {
+            log.error("IO error occurred while decrypting",e);
             throw new CustomException("DECRYPTION_ERROR","IO error occurred while decrypting");
         }
     }

@@ -13,7 +13,6 @@ import org.egov.user.domain.model.UserDetail;
 import org.egov.user.domain.model.UserSearchCriteria;
 import org.egov.user.domain.service.TokenService;
 import org.egov.user.domain.service.UserService;
-import org.egov.user.encryption.EncryptionService;
 import org.egov.user.web.contract.*;
 import org.egov.user.web.contract.auth.CustomUserDetails;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,40 +51,11 @@ public class UserController {
 	@Value(("${egov.state.level.tenant.id}"))
 	private String stateLevelTenantId;
 
-
-	@Value("#{${egov.enc.field.type.map}}")
-	private HashMap<String,String> enc_fields_map;
-
 	@Autowired
-	public UserController(UserService userService, TokenService tokenService, EncryptionService encryptionService) {
+	public UserController(UserService userService, TokenService tokenService) {
 		this.userService = userService;
 		this.tokenService = tokenService;
-		this.encryptionService = encryptionService;
 		objectMapper = new ObjectMapper(new JsonFactory());
-	}
-
-	@PostMapping("/_citizen/encrypt")
-	public Object encryptUserObject(@RequestBody CreateUserRequest createUserRequest) {
-
-		try {
-			JsonNode encryptedObject = encryptionService.encryptJson(createUserRequest, stateLevelTenantId);
-			encryptionService.encryptValue("plainText","tenantId","Normal");// Normal--type
-			createUserRequest = objectMapper.treeToValue(encryptedObject, CreateUserRequest.class);
-		} catch (Exception e) { log.info(e.getMessage());	}
-
-		return createUserRequest;
-	}
-
-	@PostMapping("/_citizen/decrypt")
-	public Object decryptUserObject(@RequestBody CreateUserRequest createUserRequest) {
-		JsonNode decryptedObject = null;
-		try {
-			decryptedObject = encryptionService.decryptJson(createUserRequest,
-					Arrays.asList("$.mobileNumber", "$.emailId"));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return decryptedObject;
 	}
 
 	/**

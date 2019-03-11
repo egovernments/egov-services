@@ -65,12 +65,6 @@ public class UserService {
     @Autowired
     ObjectMapper objectMapper;
 
-    @Value("#{${egov.enc.field.type.map}}")
-    private HashMap<String,String> enc_fields_map;
-
-    @Value("#{${egov.dec.field.type.map}}")
-    private HashMap<String,String> dec_fields_map;
-
     public UserService(UserRepository userRepository, OtpRepository otpRepository, FileStoreRepository fileRepository,
                        PasswordEncoder passwordEncoder,EncryptionDecryptionUtil encryptionDecryptionUtil,
                        @Value("${default.password.expiry.in.days}") int defaultPasswordExpiryInDays,
@@ -108,7 +102,7 @@ public class UserService {
 
         /* encrypt here */
 
-        userSearchCriteria=  encryptionDecryptionUtil.encryptObject(userSearchCriteria,UserSearchCriteria.class);
+        userSearchCriteria=  encryptionDecryptionUtil.encryptObject(userSearchCriteria,"UserSearchCriteria",UserSearchCriteria.class);
         List<User> users = userRepository.findAll(userSearchCriteria);
 
         if(users.isEmpty())
@@ -149,17 +143,17 @@ public class UserService {
     public List<org.egov.user.domain.model.User> searchUsers(UserSearchCriteria searchCriteria,
                                                              boolean isInterServiceCall,org.egov.common.contract.request.User userInfo) {
 
-        searchCriteria.validate();
+        searchCriteria.validate(isInterServiceCall);
         searchCriteria.setTenantId(getStateLevelTenantForCitizen(searchCriteria.getTenantId(), searchCriteria.getType()));
         /* encrypt here / encrypted searchcriteria will be used for search*/
 
 
-        searchCriteria= encryptionDecryptionUtil.encryptObject(searchCriteria,UserSearchCriteria.class);
+        searchCriteria= encryptionDecryptionUtil.encryptObject(searchCriteria,"UserSearchCriteria",UserSearchCriteria.class);
         List<org.egov.user.domain.model.User> list = userRepository.findAll(searchCriteria);
 
         /* decrypt here / final reponse decrypted*/
 
-        list= encryptionDecryptionUtil.decryptObject(list,User.class,userInfo);
+        list= encryptionDecryptionUtil.decryptObject(list,"UserList",User.class,userInfo);
 
         setFileStoreUrlsByFileStoreIds(list);
         return list;
@@ -176,7 +170,7 @@ public class UserService {
         user.validateNewUser();
         conditionallyValidateOtp(user);
         /* encrypt here */
-        user= encryptionDecryptionUtil.encryptObject(user,User.class);
+        user= encryptionDecryptionUtil.encryptObject(user,"User",User.class);
         validateUserUniqueness(user);
         if (isEmpty(user.getPassword())) {
             user.setPassword(UUID.randomUUID().toString());
@@ -185,7 +179,7 @@ public class UserService {
         user.setDefaultPasswordExpiry(defaultPasswordExpiryInDays);
         user.setTenantId(getStateLevelTenantForCitizen(user.getTenantId(), user.getType()));
         User persistedNewUser=persistNewUser(user);
-        return  encryptionDecryptionUtil.decryptObject(persistedNewUser,User.class,userInfo);
+        return  encryptionDecryptionUtil.decryptObject(persistedNewUser,"User",User.class,userInfo);
 
         /* decrypt here  because encrypted data coming from DB*/
 
@@ -311,12 +305,12 @@ public class UserService {
         user.validateUserModification();
         user.setPassword(encryptPwd(user.getPassword()));
         /* encrypt */
-        user= encryptionDecryptionUtil.encryptObject(user,User.class);
+        user= encryptionDecryptionUtil.encryptObject(user,"User",User.class);
         userRepository.update(user, existingUser);
 
         /* decrypt here */
         User encryptedUpdatedUserfromDB=getUserByUuid(user.getUuid());
-        User decryptedupdatedUserfromDB= encryptionDecryptionUtil.decryptObject(encryptedUpdatedUserfromDB,User.class,userInfo);
+        User decryptedupdatedUserfromDB= encryptionDecryptionUtil.decryptObject(encryptedUpdatedUserfromDB,"User",User.class,userInfo);
         return decryptedupdatedUserfromDB;
     }
 
@@ -340,7 +334,7 @@ public class UserService {
      */
     public User partialUpdate(User user, org.egov.common.contract.request.User userInfo) {
         /* encrypt here */
-        user= encryptionDecryptionUtil.encryptObject(user,User.class);
+        user= encryptionDecryptionUtil.encryptObject(user,"User",User.class);
 
         final User existingUser = getUserByUuid(user.getUuid());
         validateProfileUpdateIsDoneByTheSameLoggedInUser(user);
@@ -349,7 +343,7 @@ public class UserService {
         User updatedUser = getUserByUuid(user.getUuid());
         /* decrypt here */
 
-        updatedUser= encryptionDecryptionUtil.decryptObject(updatedUser,User.class,userInfo);
+        updatedUser= encryptionDecryptionUtil.decryptObject(updatedUser,"User",User.class,userInfo);
 
         setFileStoreUrlsByFileStoreIds(Collections.singletonList(updatedUser));
         return updatedUser;
@@ -394,13 +388,13 @@ public class UserService {
         }
         /* decrypt here */
         /* the reason for decryption here is the otp service requires decrypted username */
-        user= encryptionDecryptionUtil.decryptObject(user,User.class,userInfo);
+        user= encryptionDecryptionUtil.decryptObject(user,"User",User.class,userInfo);
         user.setOtpReference(request.getOtpReference());
         validateOtp(user);
         user.updatePassword(encryptPwd(request.getNewPassword()));
         /* encrypt here */
         /* encrypted value is stored in DB*/
-        user= encryptionDecryptionUtil.encryptObject(user,User.class);
+        user= encryptionDecryptionUtil.encryptObject(user,"User",User.class);
         userRepository.update(user, user);
     }
 

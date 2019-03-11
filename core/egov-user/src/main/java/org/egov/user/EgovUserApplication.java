@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.egov.encryption.EncryptionService;
+import org.egov.encryption.config.EncryptionConfiguration;
 import org.egov.tracer.config.TracerConfiguration;
 import org.egov.tracer.model.CustomException;
 import org.egov.user.domain.model.Address;
@@ -38,7 +39,7 @@ import java.util.*;
 
 @SpringBootApplication
 @Slf4j
-@Import(TracerConfiguration.class)
+@Import({TracerConfiguration.class,EncryptionConfiguration.class})
 public class EgovUserApplication {
 
 
@@ -50,9 +51,6 @@ public class EgovUserApplication {
 
 	@Value("${spring.redis.host}")
 	private String host;
-
-	@Value("#{${egov.enc.field.type.map}}")
-	private HashMap<String,String> enc_fields_map;
 	
 	@Autowired
 	private CustomAuthenticationKeyGenerator customAuthenticationKeyGenerator;
@@ -72,17 +70,6 @@ public class EgovUserApplication {
 				configurer.defaultContentType(MediaType.APPLICATION_JSON_UTF8);
 			}
 		};
-	}
-
-	@Bean
-	public EncryptionService findEncryptionservice(){
-		try {
-			return new EncryptionService(enc_fields_map);
-		}catch (Exception e)
-		{
-			log.error("error occurred while initialising encryption service",e);
-			throw new CustomException("ERROR_ENCRYPTION_INITIALISATION","error occurred while initialising encryption service");
-		}
 	}
 
 	@Bean

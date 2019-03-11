@@ -38,9 +38,6 @@ public class CustomPreAuthenticatedProvider implements AuthenticationProvider {
     @Autowired
     private UserService userService;
 
-    @Value("#{${egov.enc.field.type.map}}")
-    private HashMap<String,String> enc_fields_map;
-
     @Autowired
     private EncryptionDecryptionUtil encryptionDecryptionUtil;
 
@@ -76,7 +73,7 @@ public class CustomPreAuthenticatedProvider implements AuthenticationProvider {
             }
 
             org.egov.common.contract.request.User userInfo=org.egov.common.contract.request.User.builder().uuid(user.getUuid()).roles(contract_roles).build();
-            user= encryptionDecryptionUtil.decryptObject(user,User.class,userInfo);
+            user= encryptionDecryptionUtil.decryptObject(user,"User",User.class,userInfo);
         } catch (UserNotFoundException e) {
             log.error("User not found", e);
             throw new OAuth2Exception("Invalid login credentials");

@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
+import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
@@ -24,10 +25,6 @@ public class AbacConfiguration {
 
     private Map<String, List<RoleAttributeAccess>> keyRoleAttributeAccessMap;
 
-    public AbacConfiguration() {
-        initializeKeyRoleAttributeAccessMapFromMdms();
-    }
-
 
     private void initializeKeyRoleAttributeAccessMap(List<KeyRoleAttributeAccess> keyRoleAttributeAccessList) {
         keyRoleAttributeAccessMap = keyRoleAttributeAccessList.stream()
@@ -35,6 +32,7 @@ public class AbacConfiguration {
                         KeyRoleAttributeAccess::getRoleAttributeAccessList));
     }
 
+    @PostConstruct
     private void initializeKeyRoleAttributeAccessMapFromMdms() {
         List<KeyRoleAttributeAccess> keyRoleAttributeAccessList = null;
 

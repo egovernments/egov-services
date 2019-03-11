@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
+import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -26,10 +27,7 @@ public class EncryptionPolicyConfiguration {
 
     private Map<String, List<Attribute>> keyAttributeMap;
 
-    public EncryptionPolicyConfiguration() {
-        initializeKeyAttributeMapFromMdms();
-    }
-
+    @PostConstruct
     private void initializeKeyAttributeMapFromMdms() {
         List<EncryptionPolicy> encryptionPolicyList = null;
         try {

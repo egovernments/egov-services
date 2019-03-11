@@ -7,6 +7,7 @@ import org.egov.encryption.util.JacksonUtils;
 import org.reflections.Reflections;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
 import java.util.*;
 
 @Service
@@ -14,6 +15,7 @@ public class MaskingService {
 
     Map<String, Masking> maskingTechniqueMap;
 
+    @PostConstruct
     private void init() throws IllegalAccessException, InstantiationException {
         maskingTechniqueMap = new HashMap<>();
 
@@ -23,10 +25,6 @@ public class MaskingService {
             Masking masking = maskingTechnique.newInstance();
             maskingTechniqueMap.put(masking.getMaskingTechnique(), masking);
         }
-    }
-
-    public MaskingService() throws InstantiationException, IllegalAccessException {
-        init();
     }
 
     public <T> T maskData(T data, Attribute attribute) {

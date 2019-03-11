@@ -7,15 +7,11 @@ import com.fasterxml.jackson.databind.ObjectReader;
 import org.egov.encryption.models.KeyRoleAttributeAccess;
 import org.egov.encryption.models.RoleAttributeAccess;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
-import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -24,7 +20,7 @@ import java.util.stream.Collectors;
 public class AbacConfiguration {
 
     @Autowired
-    private AppProperties appProperties;
+    private EncProperties encProperties;
 
     private Map<String, List<RoleAttributeAccess>> keyRoleAttributeAccessMap;
 
@@ -45,13 +41,13 @@ public class AbacConfiguration {
         try {
             ObjectMapper objectMapper = new ObjectMapper(new JsonFactory());
 
-            String mdmsRequest = "{\"RequestInfo\":{},\"MdmsCriteria\":{\"tenantId\":\"" + appProperties.getStateLevelTenantId() + "\"," +
+            String mdmsRequest = "{\"RequestInfo\":{},\"MdmsCriteria\":{\"tenantId\":\"" + encProperties.getStateLevelTenantId() + "\"," +
                     "\"moduleDetails\":[{\"moduleName\":\"DataSecurity\"," +
                     "\"masterDetails\":[{\"name\":\"DecryptionABAC\"}]}]}}";
 
             RestTemplate restTemplate = new RestTemplate();
             ResponseEntity<JsonNode> response =
-                    restTemplate.postForEntity(appProperties.getEgovMdmsHost() + appProperties.getEgovMdmsSearchEndpoint(),
+                    restTemplate.postForEntity(encProperties.getEgovMdmsHost() + encProperties.getEgovMdmsSearchEndpoint(),
                     objectMapper.readTree(mdmsRequest), JsonNode.class);
 
             String keyRoleAttributeAccessListString = String.valueOf(response.getBody().get("MdmsRes").get(

@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.clients.producer.ProducerRecord;
-import org.egov.encryption.config.AppProperties;
+import org.egov.encryption.config.EncProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -14,13 +14,13 @@ import java.util.Properties;
 public class Producer {
 
     @Autowired
-    private AppProperties appProperties;
+    private EncProperties encProperties;
 
     private KafkaProducer kafkaProducer;
 
     public Producer() {
         Properties configProperties = new Properties();
-        configProperties.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, appProperties.getKafkaBootstrapServerConfig());
+        configProperties.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, encProperties.getKafkaBootstrapServerConfig());
 
         configProperties.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG,"org.apache.kafka.common.serialization.StringSerializer");
         configProperties.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG,"org.apache.kafka.connect.json.JsonSerializer");

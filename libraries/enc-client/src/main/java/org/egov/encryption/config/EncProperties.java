@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 
 @Getter
 @Component
-public class AppProperties {
+public class EncProperties {
 
     @Value("${kafka.config.bootstrap_server_config}")
     private String kafkaBootstrapServerConfig;

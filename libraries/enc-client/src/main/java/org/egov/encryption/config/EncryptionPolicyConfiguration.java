@@ -7,7 +7,6 @@ import com.fasterxml.jackson.databind.ObjectReader;
 import org.egov.encryption.models.Attribute;
 import org.egov.encryption.models.EncryptionPolicy;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
@@ -23,7 +22,7 @@ import java.util.stream.Collectors;
 public class EncryptionPolicyConfiguration {
 
     @Autowired
-    private AppProperties appProperties;
+    private EncProperties encProperties;
 
     private Map<String, List<Attribute>> keyAttributeMap;
 
@@ -35,13 +34,13 @@ public class EncryptionPolicyConfiguration {
         List<EncryptionPolicy> encryptionPolicyList = null;
         try {
             ObjectMapper objectMapper = new ObjectMapper(new JsonFactory());
-            String mdmsRequest = "{\"RequestInfo\":{},\"MdmsCriteria\":{\"tenantId\":\"" + appProperties.getStateLevelTenantId() + "\"," +
+            String mdmsRequest = "{\"RequestInfo\":{},\"MdmsCriteria\":{\"tenantId\":\"" + encProperties.getStateLevelTenantId() + "\"," +
                     "\"moduleDetails\":[{\"moduleName\":\"DataSecurity\"," +
                     "\"masterDetails\":[{\"name\":\"EncryptionPolicy\"}]}]}}";
 
             RestTemplate restTemplate = new RestTemplate();
             ResponseEntity<JsonNode> response =
-                    restTemplate.postForEntity(appProperties.getEgovMdmsHost() + appProperties.getEgovMdmsSearchEndpoint(),
+                    restTemplate.postForEntity(encProperties.getEgovMdmsHost() + encProperties.getEgovMdmsSearchEndpoint(),
                             objectMapper.readTree(mdmsRequest), JsonNode.class);
 
             String policyListString = String.valueOf(response.getBody().get("MdmsRes").get(

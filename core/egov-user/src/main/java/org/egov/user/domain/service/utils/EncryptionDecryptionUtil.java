@@ -6,12 +6,13 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectReader;
 import lombok.extern.slf4j.Slf4j;
+import org.egov.common.contract.request.User;
+import org.egov.encryption.EncryptionService;
 import org.egov.tracer.model.CustomException;
-import org.egov.user.domain.model.User;
 import org.egov.user.domain.model.UserSearchCriteria;
-import org.egov.user.encryption.EncryptionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -21,10 +22,10 @@ import java.util.*;
 @Component
 public class EncryptionDecryptionUtil
 {
-    EncryptionService encryptionService;
+    private EncryptionService encryptionService;
 
     @Autowired
-    ObjectMapper objectMapper;
+    private ObjectMapper objectMapper;
 
     @Value("#{${egov.enc.field.type.map}}")
     private HashMap<String,String> dec_fields_mapForObjects;
@@ -54,18 +55,18 @@ public class EncryptionDecryptionUtil
         }
     }
 
-    public <E,P>P decryptObject(Object objectToDecrypt,Class<E> classType)
+    public <E,P>P decryptObject(Object objectToDecrypt, Class<E> classType, User userInfo)
     {
         try {
             if(objectToDecrypt instanceof List)
             {
-                JsonNode  decryptedObject = encryptionService.decryptJson(objectToDecrypt,new ArrayList<>(dec_fields_map_ForList.keySet()));
+                JsonNode  decryptedObject = encryptionService.decryptJson(objectToDecrypt,new ArrayList<>(dec_fields_map_ForList.keySet()),userInfo);
                 ObjectReader reader = objectMapper.readerFor(objectMapper.getTypeFactory().constructCollectionType(List.class,classType));
                 return reader.readValue(decryptedObject);
             }
             else {
 
-                JsonNode  decryptedObject = encryptionService.decryptJson(objectToDecrypt,new ArrayList<>(dec_fields_mapForObjects.keySet()));
+                JsonNode  decryptedObject = encryptionService.decryptJson(objectToDecrypt,new ArrayList<>(dec_fields_mapForObjects.keySet()),userInfo);
                 return (P)objectMapper.treeToValue(decryptedObject, classType);
             }
         } catch (IOException e) {

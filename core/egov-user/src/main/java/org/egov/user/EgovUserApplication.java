@@ -1,10 +1,19 @@
 package org.egov.user;
 
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.extern.slf4j.Slf4j;
+import org.egov.encryption.EncryptionService;
 import org.egov.tracer.config.TracerConfiguration;
+import org.egov.tracer.model.CustomException;
+import org.egov.user.domain.model.Address;
+import org.egov.user.domain.model.Role;
+import org.egov.user.domain.model.User;
+import org.egov.user.domain.model.enums.*;
+import org.egov.user.domain.service.utils.EncryptionDecryptionUtil;
 import org.egov.user.security.CustomAuthenticationKeyGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -25,10 +34,10 @@ import redis.clients.jedis.JedisShardInfo;
 
 import javax.annotation.PostConstruct;
 import java.text.SimpleDateFormat;
-import java.util.Locale;
-import java.util.TimeZone;
+import java.util.*;
 
 @SpringBootApplication
+@Slf4j
 @Import(TracerConfiguration.class)
 public class EgovUserApplication {
 
@@ -41,6 +50,9 @@ public class EgovUserApplication {
 
 	@Value("${spring.redis.host}")
 	private String host;
+
+	@Value("#{${egov.enc.field.type.map}}")
+	private HashMap<String,String> enc_fields_map;
 	
 	@Autowired
 	private CustomAuthenticationKeyGenerator customAuthenticationKeyGenerator;
@@ -60,6 +72,17 @@ public class EgovUserApplication {
 				configurer.defaultContentType(MediaType.APPLICATION_JSON_UTF8);
 			}
 		};
+	}
+
+	@Bean
+	public EncryptionService findEncryptionservice(){
+		try {
+			return new EncryptionService(enc_fields_map);
+		}catch (Exception e)
+		{
+			log.error("error occurred while initialising encryption service",e);
+			throw new CustomException("ERROR_ENCRYPTION_INITIALISATION","error occurred while initialising encryption service");
+		}
 	}
 
 	@Bean

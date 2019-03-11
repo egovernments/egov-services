@@ -1,10 +1,8 @@
 package org.egov.user.security.oauth2.custom.authproviders;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectReader;
 import lombok.extern.slf4j.Slf4j;
+import org.egov.encryption.EncryptionService;
 import org.egov.tracer.model.CustomException;
 import org.egov.tracer.model.ServiceCallException;
 import org.egov.user.domain.exception.DuplicateUserNameException;
@@ -14,7 +12,6 @@ import org.egov.user.domain.model.User;
 import org.egov.user.domain.model.enums.UserType;
 import org.egov.user.domain.service.UserService;
 import org.egov.user.domain.service.utils.EncryptionDecryptionUtil;
-import org.egov.user.encryption.EncryptionService;
 import org.egov.user.web.contract.auth.Role;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -57,6 +54,12 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 	@Value("#{${egov.enc.field.type.map}}")
 	private HashMap<String,String> enc_fields_map;
 
+	@Autowired
+	private EncryptionDecryptionUtil encryptionDecryptionUtil;
+
+	@Value("#{${egov.enc.field.type.map}}")
+	private HashMap<String,String> enc_fields_map;
+
 	@Value("${citizen.login.password.otp.enabled}")
 	private boolean citizenLoginPasswordOtpEnabled;
 
@@ -75,10 +78,8 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 
 	@Override
 	public Authentication authenticate(Authentication authentication) {
-
 		String userName = authentication.getName();
 		String password = authentication.getCredentials().toString();
-
         final LinkedHashMap<String, String> details = (LinkedHashMap<String, String>) authentication.getDetails();
 
         String tenantId = details.get("tenantId");
@@ -94,9 +95,16 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 		User user;
         try {
 		user = userService.getUniqueUser(userName, tenantId, UserType.fromValue(userType));
-            /* decrypt here otp service and final response need decrypted data*/
+		/* decrypt here otp service and final response need decrypted data*/
+		Set<org.egov.user.domain.model.Role> domain_roles=user.getRoles();
+		List<org.egov.common.contract.request.Role> contract_roles=new ArrayList<>();
+		for(org.egov.user.domain.model.Role role:domain_roles)
+		{
+			contract_roles.add(org.egov.common.contract.request.Role.builder().code(role.getCode()).name(role.getName()).build());
+		}
 
-		user= encryptionDecryptionUtil.decryptObject(user,User.class);
+		org.egov.common.contract.request.User userInfo=org.egov.common.contract.request.User.builder().uuid(user.getUuid()).roles(contract_roles).build();
+		user= encryptionDecryptionUtil.decryptObject(user,User.class,userInfo);
 
         } catch (UserNotFoundException e){
             log.error("User not found", e);

@@ -1,6 +1,5 @@
 package org.egov.user.security.oauth2.custom.authproviders;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.egov.tracer.model.CustomException;
@@ -11,8 +10,8 @@ import org.egov.user.domain.model.User;
 import org.egov.user.domain.model.enums.UserType;
 import org.egov.user.domain.service.UserService;
 import org.egov.user.domain.service.utils.EncryptionDecryptionUtil;
-import org.egov.user.encryption.EncryptionService;
 import org.egov.user.web.contract.auth.Role;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -38,12 +37,6 @@ public class CustomPreAuthenticatedProvider implements AuthenticationProvider {
 
     @Autowired
     private UserService userService;
-
-    @Autowired
-    private ObjectMapper objectMapper;
-
-    @Autowired
-    private EncryptionService encryptionService;
 
     @Value("#{${egov.enc.field.type.map}}")
     private HashMap<String,String> enc_fields_map;
@@ -75,7 +68,15 @@ public class CustomPreAuthenticatedProvider implements AuthenticationProvider {
         try {
             user = userService.getUniqueUser(userName, tenantId, UserType.fromValue(userType));
             /* decrypt here */
-            user= encryptionDecryptionUtil.decryptObject(user,User.class);
+            Set<org.egov.user.domain.model.Role> domain_roles=user.getRoles();
+            List<org.egov.common.contract.request.Role> contract_roles=new ArrayList<>();
+            for(org.egov.user.domain.model.Role role:domain_roles)
+            {
+                contract_roles.add(org.egov.common.contract.request.Role.builder().code(role.getCode()).name(role.getName()).build());
+            }
+
+            org.egov.common.contract.request.User userInfo=org.egov.common.contract.request.User.builder().uuid(user.getUuid()).roles(contract_roles).build();
+            user= encryptionDecryptionUtil.decryptObject(user,User.class,userInfo);
         } catch (UserNotFoundException e) {
             log.error("User not found", e);
             throw new OAuth2Exception("Invalid login credentials");

@@ -20,7 +20,7 @@ import static org.springframework.util.ObjectUtils.isEmpty;
 @Setter
 @Builder
 public class User {
-	
+
 	private Long id;
 	private String uuid;
 	private String tenantId;
@@ -95,7 +95,7 @@ public class User {
 		if (isPermanentAddressInvalid()
 				|| isCorrespondenceAddressInvalid()
 				|| isTenantIdAbsent()
-				) {
+		) {
 			throw new InvalidUserUpdateException(this);
 		}
 	}
@@ -199,5 +199,4 @@ public class User {
 		active = isActive;
 	}
 }
-
 

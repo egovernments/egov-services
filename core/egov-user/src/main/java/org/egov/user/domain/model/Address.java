@@ -9,7 +9,6 @@ import java.util.Date;
 @Getter
 @Setter
 @Builder
-
 @AllArgsConstructor
 @EqualsAndHashCode(of = {"id"})
 public class Address {

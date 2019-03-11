@@ -1,6 +1,7 @@
 package org.egov.user.web.controller;
 
 import org.apache.commons.io.IOUtils;
+import org.egov.encryption.EncryptionService;
 import org.egov.user.TestConfiguration;
 import org.egov.user.domain.exception.InvalidUserSearchCriteriaException;
 import org.egov.user.domain.model.*;
@@ -8,7 +9,6 @@ import org.egov.user.domain.model.enums.*;
 import org.egov.user.domain.service.TokenService;
 import org.egov.user.domain.service.UserService;
 import org.egov.user.domain.service.utils.EncryptionDecryptionUtil;
-import org.egov.user.encryption.EncryptionService;
 import org.egov.user.security.CustomAuthenticationKeyGenerator;
 import org.egov.user.web.contract.auth.Role;
 import org.egov.user.web.contract.auth.User;
@@ -39,7 +39,9 @@ import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static org.apache.commons.lang3.ArrayUtils.isEquals;
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.*;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyBoolean;
+import static org.mockito.Matchers.argThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -69,7 +71,7 @@ public class UserControllerTest {
 	@Test
 	@WithMockUser
 	public void test_should_search_users() throws Exception {
-		when(userService.searchUsers(argThat(new UserSearchMatcher(getUserSearch())), anyBoolean())).thenReturn(getUserModels());
+		when(userService.searchUsers(argThat(new UserSearchMatcher(getUserSearch())), anyBoolean(),any())).thenReturn(getUserModels());
 
 		mockMvc.perform(post("/_search/").contentType(MediaType.APPLICATION_JSON_UTF8)
 				.content(getFileContents("getUserByIdRequest.json"))).andExpect(status().isOk())
@@ -83,7 +85,7 @@ public class UserControllerTest {
 		final UserSearchCriteria expectedSearchCriteria = UserSearchCriteria.builder()
 				.active(true)
 				.build();
-		when(userService.searchUsers(argThat(new UserSearchActiveFlagMatcher(expectedSearchCriteria)), anyBoolean()))
+		when(userService.searchUsers(argThat(new UserSearchActiveFlagMatcher(expectedSearchCriteria)), anyBoolean(),any()))
 				.thenReturn(getUserModels());
 
 		mockMvc.perform(post("/_search/").contentType(MediaType.APPLICATION_JSON_UTF8)
@@ -98,7 +100,7 @@ public class UserControllerTest {
 		final UserSearchCriteria expectedSearchCriteria = UserSearchCriteria.builder()
 				.active(false)
 				.build();
-		when(userService.searchUsers(argThat(new UserSearchActiveFlagMatcher(expectedSearchCriteria)), anyBoolean()))
+		when(userService.searchUsers(argThat(new UserSearchActiveFlagMatcher(expectedSearchCriteria)), anyBoolean(),any()))
 				.thenReturn(getUserModels());
 
 		mockMvc.perform(post("/_search/").contentType(MediaType.APPLICATION_JSON_UTF8)
@@ -114,7 +116,7 @@ public class UserControllerTest {
 		final UserSearchCriteria expectedSearchCriteria = UserSearchCriteria.builder()
 				.active(null)
 				.build();
-		when(userService.searchUsers(argThat(new UserSearchActiveFlagMatcher(expectedSearchCriteria)), anyBoolean()))
+		when(userService.searchUsers(argThat(new UserSearchActiveFlagMatcher(expectedSearchCriteria)), anyBoolean(),any()))
 				.thenReturn(getUserModels());
 
 		mockMvc.perform(post("/v1/_search/").contentType(MediaType.APPLICATION_JSON_UTF8)
@@ -130,7 +132,7 @@ public class UserControllerTest {
 		final UserSearchCriteria expectedSearchCriteria = UserSearchCriteria.builder()
 				.active(false)
 				.build();
-		when(userService.searchUsers(argThat(new UserSearchActiveFlagMatcher(expectedSearchCriteria)), anyBoolean()))
+		when(userService.searchUsers(argThat(new UserSearchActiveFlagMatcher(expectedSearchCriteria)), anyBoolean(),any()))
 				.thenReturn(getUserModels());
 
 		mockMvc.perform(post("/v1/_search/").contentType(MediaType.APPLICATION_JSON_UTF8)
@@ -144,9 +146,8 @@ public class UserControllerTest {
 	@WithMockUser
 	public void test_should_search_for_active_users_via_v1_endpoint() throws Exception {
 		final UserSearchCriteria expectedSearchCriteria = UserSearchCriteria.builder()
-				.active(true)
-				.build();
-		when(userService.searchUsers(argThat(new UserSearchActiveFlagMatcher(expectedSearchCriteria)), anyBoolean()))
+				.active(true).build();
+		when(userService.searchUsers(argThat(new UserSearchActiveFlagMatcher(expectedSearchCriteria)), anyBoolean(),any()))
 				.thenReturn(getUserModels());
 
 		mockMvc.perform(post("/v1/_search/").contentType(MediaType.APPLICATION_JSON_UTF8)
@@ -162,7 +163,7 @@ public class UserControllerTest {
 	@Ignore
 	public void test_should_return_error_response_when_user_search_is_invalid() throws Exception {
 		final UserSearchCriteria invalidSearchCriteria = UserSearchCriteria.builder().build();
-		when(userService.searchUsers(any(), true)).thenThrow(new InvalidUserSearchCriteriaException(invalidSearchCriteria));
+		when(userService.searchUsers(any(), true,any())).thenThrow(new InvalidUserSearchCriteriaException(invalidSearchCriteria));
 
 		ResultActions test = mockMvc.perform(post("/_search").contentType(MediaType.APPLICATION_JSON_UTF8)
 				.content(getFileContents("getUserByIdRequest.json")));//				.andExpect(status().isBadRequest())
@@ -175,7 +176,7 @@ public class UserControllerTest {
 	@WithMockUser
 	@Ignore
 	public void test_should_update_user_profile() throws Exception {
-		when(userService.partialUpdate(any())).thenReturn(org.egov.user.domain.model.User.builder().build());
+		when(userService.partialUpdate(any(),any())).thenReturn(org.egov.user.domain.model.User.builder().build());
 
 		mockMvc.perform(post("/profile/_update")
 				.contentType(MediaType.APPLICATION_JSON_UTF8)
@@ -191,7 +192,7 @@ public class UserControllerTest {
 	public void test_should_update_user_details() throws Exception {
 
 		org.egov.user.domain.model.User userRequest = org.egov.user.domain.model.User.builder().name("foo").username("userName").dob(new Date("04/08/1986")).guardian("name of relative").build();
-		when(userService.updateWithoutOtpValidation(any(org.egov.user.domain.model.User.class))).thenReturn
+		when(userService.updateWithoutOtpValidation(any(org.egov.user.domain.model.User.class),any())).thenReturn
 				(userRequest);
 		mockMvc.perform(post("/users/112/_updatenovalidate")
 				.contentType(MediaType.APPLICATION_JSON_UTF8)
@@ -212,7 +213,7 @@ public class UserControllerTest {
 				.dob(expectedDate)
 				.guardian("name of relative")
 				.build();
-		when(userService.createCitizen(any())).thenReturn(user);
+		when(userService.createCitizen(any(),any())).thenReturn(user);
 
 		mockMvc.perform(post("/citizen/_create")
 				.contentType(MediaType.APPLICATION_JSON_UTF8)
@@ -234,7 +235,7 @@ public class UserControllerTest {
 				.build();
 		final ArgumentCaptor<org.egov.user.domain.model.User> argumentCaptor =
 				ArgumentCaptor.forClass(org.egov.user.domain.model.User.class);
-		when(userService.createUser(argumentCaptor.capture())).thenReturn(expectedUser);
+		when(userService.createUser(argumentCaptor.capture(),any())).thenReturn(expectedUser);
 
 		mockMvc.perform(post("/users/_createnovalidate")
 				.contentType(MediaType.APPLICATION_JSON_UTF8)
@@ -408,6 +409,21 @@ public class UserControllerTest {
 		public boolean matches(Object o) {
 			UserSearchCriteria userSearch = (UserSearchCriteria) o;
 			return userSearch.getActive() == expectedUserSearch.getActive();
+		}
+	}
+
+	class UserInfoMatcher extends ArgumentMatcher<org.egov.common.contract.request.User> {
+
+		private org.egov.common.contract.request.User expectedUser;
+
+		public UserInfoMatcher(org.egov.common.contract.request.User expectedUser) {
+			this.expectedUser = expectedUser;
+		}
+
+		@Override
+		public boolean matches(Object o) {
+			org.egov.common.contract.request.User user = (org.egov.common.contract.request.User) o;
+			return user.getRoles().equals(expectedUser.getRoles());
 		}
 	}
 

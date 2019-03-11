@@ -36,8 +36,6 @@ public class UserController {
 
 	private UserService userService;
 	private TokenService tokenService;
-	private EncryptionService encryptionService;
-
 	@Value("${mobile.number.validation.workaround.enabled}")
 	private String mobileValidationWorkaroundEnabled;
 	
@@ -103,10 +101,10 @@ public class UserController {
 		User user = createUserRequest.toDomain(true);
 		user.setOtpValidationMandatory(IsValidationMandatory);
 		if(isRegWithLoginEnabled) {
-			Object object = userService.registerWithLogin(user);
+			Object object = userService.registerWithLogin(user,createUserRequest.getRequestInfo().getUserInfo());
 			return new ResponseEntity<>(object, HttpStatus.OK);
 		}
-		User createdUser = userService.createCitizen(user);
+		User createdUser = userService.createCitizen(user,createUserRequest.getRequestInfo().getUserInfo());
 		return createResponse(createdUser);
 	}
 
@@ -124,7 +122,7 @@ public class UserController {
 		User user = createUserRequest.toDomain(true);
 		user.setMobileValidationMandatory(isMobileValidationRequired(headers));
 		user.setOtpValidationMandatory(false);
-		final User newUser = userService.createUser(user);
+		final User newUser = userService.createUser(user,createUserRequest.getRequestInfo().getUserInfo());
 		return createResponse(newUser);
 	}
 
@@ -142,7 +140,7 @@ public class UserController {
 		if (request.getActive() == null) {
 			request.setActive(true);
 		}
-		return searchUsers(request, headers);
+		return searchUsers(request, headers,request.getRequestInfo().getUserInfo());
 	}
 
 	/**
@@ -155,7 +153,7 @@ public class UserController {
 	 */
 	@PostMapping("/v1/_search")
 	public UserSearchResponse getV1(@RequestBody UserSearchRequest request, @RequestHeader HttpHeaders headers) {
-		return searchUsers(request, headers);
+		return searchUsers(request, headers,request.getRequestInfo().getUserInfo());
 	}
 
 	/**
@@ -183,7 +181,7 @@ public class UserController {
 														  @RequestHeader HttpHeaders headers) {
 		User user = createUserRequest.toDomain(false);
 		user.setMobileValidationMandatory(isMobileValidationRequired(headers));
-		final User updatedUser = userService.updateWithoutOtpValidation( user);
+		final User updatedUser = userService.updateWithoutOtpValidation( user,createUserRequest.getRequestInfo().getUserInfo());
 		return createResponse(updatedUser);
 	}
 
@@ -197,7 +195,7 @@ public class UserController {
 	public UserDetailResponse patch(@RequestBody final CreateUserRequest createUserRequest) {
 		log.info("Received Profile Update Request  " + createUserRequest);
 		User user = createUserRequest.toDomain(false);
-		final User updatedUser = userService.partialUpdate(user);
+		final User updatedUser = userService.partialUpdate(user,createUserRequest.getRequestInfo().getUserInfo());
 		return createResponse(updatedUser);
 	}
 
@@ -207,7 +205,7 @@ public class UserController {
 		return new UserDetailResponse(responseInfo, Collections.singletonList(userRequest));
 	}
 
-	private UserSearchResponse searchUsers(@RequestBody UserSearchRequest request, HttpHeaders headers) {
+	private UserSearchResponse searchUsers(@RequestBody UserSearchRequest request, HttpHeaders headers, org.egov.common.contract.request.User userInfo) {
 
         UserSearchCriteria searchCriteria = request.toDomain();
 
@@ -217,7 +215,7 @@ public class UserController {
                 searchCriteria.setLimit(defaultSearchSize);
         }
 
-		List<User> userModels = userService.searchUsers(searchCriteria, isInterServiceCall(headers));
+		List<User> userModels = userService.searchUsers(searchCriteria, isInterServiceCall(headers),userInfo);
 		List<UserSearchResponseContent> userContracts = userModels.stream().map(UserSearchResponseContent::new)
 				.collect(Collectors.toList());
 		ResponseInfo responseInfo = ResponseInfo.builder().status(String.valueOf(HttpStatus.OK.value())).build();

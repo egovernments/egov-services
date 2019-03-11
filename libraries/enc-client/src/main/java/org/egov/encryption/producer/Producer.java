@@ -29,8 +29,8 @@ public class Producer {
 
     }
 
-    public void push(String topic, String key, Long timestamp, JsonNode jsonNode) {
-        ProducerRecord<String, JsonNode> record = new ProducerRecord<>(topic, null, timestamp, key, jsonNode);
+    public void push(String topic, String key, Long timestamp, JsonNode data) {
+        ProducerRecord<String, JsonNode> record = new ProducerRecord<>(topic, null, timestamp, key, data);
         kafkaProducer.send(record);
     }
 

@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.egov.common.contract.request.Role;
 import org.egov.common.contract.request.User;
 import org.egov.encryption.accesscontrol.AbacFilter;
+import org.egov.encryption.audit.AuditService;
 import org.egov.encryption.config.AbacConfiguration;
 import org.egov.encryption.config.EncryptionPolicyConfiguration;
 import org.egov.encryption.masking.MaskingService;
@@ -37,6 +38,8 @@ public class EncryptionService {
     private AbacFilter abacFilter;
     @Autowired
     private MaskingService maskingService;
+    @Autowired
+    private AuditService auditService;
 
     private ObjectMapper objectMapper;
 
@@ -95,6 +98,9 @@ public class EncryptionService {
         List<String> pathsToBeDecrypted = attributesToBeDecrypted.stream().map(Attribute::getJsonPath).collect(Collectors.toList());
 
         JsonNode jsonNode = JacksonUtils.filterJsonNodeWithPaths(ciphertextNode, pathsToBeDecrypted);
+
+        auditService.audit(jsonNode, user);
+
         if(! jsonNode.isEmpty(objectMapper.getSerializerProvider())) {
             JsonNode returnedDecryptedNode = objectMapper.valueToTree(encryptionServiceRestConnection.callDecrypt(jsonNode));
             decryptNode = JacksonUtils.merge(returnedDecryptedNode, decryptNode);

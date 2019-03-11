@@ -8,6 +8,7 @@ import org.egov.encryption.web.contract.EncReqObject;
 import org.egov.encryption.web.contract.EncryptionRequest;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
@@ -15,7 +16,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 @Slf4j
-@AllArgsConstructor
+@Component
 public class EncryptionServiceRestConnection {
 
     @Value("${egov.enc.host}")

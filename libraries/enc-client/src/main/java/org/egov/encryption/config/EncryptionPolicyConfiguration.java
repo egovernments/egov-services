@@ -8,6 +8,7 @@ import org.egov.encryption.models.Attribute;
 import org.egov.encryption.models.EncryptionPolicy;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
@@ -17,6 +18,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+@Component
 public class EncryptionPolicyConfiguration {
 
     @Value("${egov.mdms.host}")

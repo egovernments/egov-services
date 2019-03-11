@@ -5,9 +5,11 @@ import org.egov.encryption.models.Attribute;
 import org.egov.encryption.util.JSONBrowseUtil;
 import org.egov.encryption.util.JacksonUtils;
 import org.reflections.Reflections;
+import org.springframework.stereotype.Service;
 
 import java.util.*;
 
+@Service
 public class MaskingService {
 
     Map<String, Masking> maskingTechniqueMap;

@@ -16,59 +16,32 @@ import org.egov.encryption.models.KeyRoleAttributeAccess;
 import org.egov.encryption.util.ConvertClass;
 import org.egov.encryption.util.JSONBrowseUtil;
 import org.egov.encryption.util.JacksonUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
 @Slf4j
+@Service
 public class EncryptionService {
 
+    @Autowired
     private EncryptionServiceRestConnection encryptionServiceRestConnection;
-
+    @Autowired
     private EncryptionPolicyConfiguration encryptionPolicyConfiguration;
+    @Autowired
     private AbacConfiguration abacConfiguration;
+    @Autowired
     private AbacFilter abacFilter;
+    @Autowired
     private MaskingService maskingService;
-
-    private Map<String, String> fieldsAndTheirType;
-    private Map<String, List<String>> typesAndFieldsToEncrypt;
 
     private ObjectMapper objectMapper;
 
     public EncryptionService() throws IllegalAccessException, InstantiationException {
-        this.encryptionPolicyConfiguration = new EncryptionPolicyConfiguration();
-        this.abacConfiguration = new AbacConfiguration();
-        this.abacFilter = new AbacFilter();
-        maskingService = new MaskingService();
-        encryptionServiceRestConnection = new EncryptionServiceRestConnection();
         objectMapper = new ObjectMapper(new JsonFactory());
-
-    }
-
-    public EncryptionService(Map<String, String> fieldsAndTheirType) throws IllegalAccessException,
-            InstantiationException {
-        this();
-        this.fieldsAndTheirType = fieldsAndTheirType;
-        initializeTypesAndFieldsToEncrypt();
-    }
-
-    EncryptionService(Map<String, String> fieldsAndTheirType, List<KeyRoleAttributeAccess> keyRoleAttributeAccessList)
-            throws IllegalAccessException, InstantiationException {
-        this(fieldsAndTheirType);
-        this.abacConfiguration = new AbacConfiguration(keyRoleAttributeAccessList);
-    }
-
-    void initializeTypesAndFieldsToEncrypt() {
-        typesAndFieldsToEncrypt = new HashMap<>();
-        for (String field : fieldsAndTheirType.keySet()) {
-            String type = fieldsAndTheirType.get(field);
-            if (!typesAndFieldsToEncrypt.containsKey(type)) {
-                List<String> fieldsToEncrypt = new ArrayList<String>();
-                typesAndFieldsToEncrypt.put(type, fieldsToEncrypt);
-            }
-            typesAndFieldsToEncrypt.get(type).add(field);
-        }
     }
 
     public JsonNode encryptJson(Object plaintextJson, String key, String tenantId) throws IOException {
@@ -97,32 +70,6 @@ public class EncryptionService {
 
     public <T> T encryptJson(Object plaintextJson, String key, String tenantId, Class<T> valueType) throws IOException {
         return ConvertClass.convertTo(encryptJson(plaintextJson, key, tenantId), valueType);
-    }
-
-    @Deprecated
-    public JsonNode encryptJson(Object plaintextJson, String tenantId) throws IOException {
-
-        JsonNode plaintextNode = createJsonNode(plaintextJson);
-        JsonNode encryptNode = plaintextNode.deepCopy();
-
-        for (String type : typesAndFieldsToEncrypt.keySet()) {
-            List<String> paths = typesAndFieldsToEncrypt.get(type);
-
-            JsonNode jsonNode = JacksonUtils.filterJsonNodeWithPaths(plaintextNode, paths);
-
-            if(! jsonNode.isEmpty(objectMapper.getSerializerProvider())) {
-                JsonNode returnedEncryptedNode = objectMapper.valueToTree(encryptionServiceRestConnection.callEncrypt(tenantId,
-                        type, jsonNode));
-                encryptNode = JacksonUtils.merge(returnedEncryptedNode, encryptNode);
-            }
-        }
-
-        return encryptNode;
-    }
-
-    @Deprecated
-    public <T> T encryptJson(Object plaintextJson, String tenantId, Class<T> valueType) throws IOException {
-        return ConvertClass.convertTo(encryptJson(plaintextJson, tenantId), valueType);
     }
 
 
@@ -159,20 +106,6 @@ public class EncryptionService {
         }
 
         return decryptNode;
-    }
-
-    @Deprecated
-    public JsonNode decryptJson(Object ciphertextJson, List<String> paths, User user) throws IOException {
-
-        Map<Attribute, AccessType> attributeAccessTypeMap =
-                paths.stream().collect(Collectors.toMap(Attribute::new, __ -> AccessType.PLAIN));
-
-        return decryptJson(ciphertextJson, attributeAccessTypeMap, user);
-    }
-
-    @Deprecated
-    public <T> T decryptJson(Object ciphertextJson, List<String> paths, User user, Class<T> valueType) throws IOException {
-        return ConvertClass.convertTo(decryptJson(ciphertextJson, paths, user), valueType);
     }
 
 

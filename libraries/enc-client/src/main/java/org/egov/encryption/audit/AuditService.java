@@ -33,8 +33,7 @@ public class AuditService {
         auditObject.setUserId(user.getUuid());
         auditObject.setId(UUID.randomUUID().toString());
 
-        producer.push(encProperties.getAuditTopicName(), auditObject.getId(), auditObject.getTimestamp(),
-                objectMapper.valueToTree(auditObject));
+        producer.push(encProperties.getAuditTopicName(), auditObject.getId(), objectMapper.valueToTree(auditObject));
     }
 
 }

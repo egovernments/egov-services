@@ -43,7 +43,7 @@ public class EncryptionService {
 
     private ObjectMapper objectMapper;
 
-    public EncryptionService() throws IllegalAccessException, InstantiationException {
+    public EncryptionService() {
         objectMapper = new ObjectMapper(new JsonFactory());
     }
 

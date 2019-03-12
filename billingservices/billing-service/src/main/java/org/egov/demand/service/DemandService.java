@@ -41,10 +41,8 @@ package org.egov.demand.service;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -56,7 +54,6 @@ import org.egov.demand.config.ApplicationProperties;
 import org.egov.demand.model.AuditDetails;
 import org.egov.demand.model.Bill;
 import org.egov.demand.model.BillDetail;
-import org.egov.demand.model.CollectedReceipt;
 import org.egov.demand.model.ConsolidatedTax;
 import org.egov.demand.model.Demand;
 import org.egov.demand.model.DemandCriteria;
@@ -76,7 +73,6 @@ import org.egov.demand.web.contract.DemandDetailResponse;
 import org.egov.demand.web.contract.DemandDueResponse;
 import org.egov.demand.web.contract.DemandRequest;
 import org.egov.demand.web.contract.DemandResponse;
-import org.egov.demand.web.contract.ReceiptRequest;
 import org.egov.demand.web.contract.User;
 import org.egov.demand.web.contract.UserResponse;
 import org.egov.demand.web.contract.UserSearchRequest;
@@ -280,12 +276,11 @@ public class DemandService {
 	 * @param requestInfo
 	 * @return
 	 */
-	public DemandResponse getDemands(DemandCriteria demandCriteria, RequestInfo requestInfo) {
+	public List<Demand> getDemands(DemandCriteria demandCriteria, RequestInfo requestInfo) {
 		
 		UserSearchRequest userSearchRequest = null;
 		List<User> payers = null;
 		List<Demand> demands = null;
-		List<CollectedReceipt> receipts=null;
 		
 		String userUri = applicationProperties.getUserServiceHostName()
 				.concat(applicationProperties.getUserServiceSearchPath());
@@ -333,13 +328,8 @@ public class DemandService {
 		
 		if (!CollectionUtils.isEmpty(demands) && !CollectionUtils.isEmpty(payers))
 			demands = demandEnrichmentUtil.enrichPayer(demands, payers);
-		
-		/*
-		 * sorting the demand details in demand based on taxheadcode
-		 */
-		demands.forEach(demand -> demand.getDemandDetails().sort(Comparator.comparing(DemandDetail::getTaxHeadMasterCode)));
-		
-		return new DemandResponse(responseInfoFactory.getResponseInfo(requestInfo, HttpStatus.OK), demands, receipts);
+
+		return demands;
 	}
 
 	public void save(DemandRequest demandRequest) {
@@ -460,7 +450,7 @@ public class DemandService {
 				.businessService(demandDueCriteria.getBusinessService())
 				.consumerCode(demandDueCriteria.getConsumerCode()).receiptRequired(false).build();
 		
-		List<Demand> demands = getDemands(demandCriteria, requestInfo).getDemands();
+		List<Demand> demands = getDemands(demandCriteria, requestInfo);
 		for (Demand demand : demands) {
 			if (demand.getTaxPeriodFrom() <= currDate && currDate <= demand.getTaxPeriodTo()) {
 				for (DemandDetail detail : demand.getDemandDetails()) {

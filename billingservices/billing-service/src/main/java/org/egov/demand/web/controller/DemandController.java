@@ -39,9 +39,12 @@
  */
 package org.egov.demand.web.controller;
 
+import java.util.List;
+
 import javax.validation.Valid;
 
 import org.egov.common.contract.request.RequestInfo;
+import org.egov.demand.model.Demand;
 import org.egov.demand.model.DemandCriteria;
 import org.egov.demand.model.DemandDetailCriteria;
 import org.egov.demand.model.DemandDueCriteria;
@@ -120,9 +123,14 @@ public class DemandController {
 	public ResponseEntity<?> search(@RequestBody RequestInfoWrapper requestInfoWrapper,
 			@ModelAttribute @Valid DemandCriteria demandCriteria) {
 
-		demandValidatorV1.validateDemandCriteria(demandCriteria);
 		RequestInfo requestInfo = requestInfoWrapper.getRequestInfo();
-		return new ResponseEntity<>(demandService.getDemands(demandCriteria, requestInfo), HttpStatus.OK);
+		
+		demandValidatorV1.validateDemandCriteria(demandCriteria);
+		
+		List<Demand> demands = demandService.getDemands(demandCriteria, requestInfo);
+		DemandResponse response = DemandResponse.builder().demands(demands)
+				.responseInfo(responseFactory.getResponseInfo(requestInfo, HttpStatus.OK)).build();
+		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 	
 	

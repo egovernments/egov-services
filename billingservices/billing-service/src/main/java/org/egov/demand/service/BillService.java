@@ -76,7 +76,6 @@ import org.egov.demand.util.Util;
 import org.egov.demand.web.contract.BillRequest;
 import org.egov.demand.web.contract.BillResponse;
 import org.egov.demand.web.contract.BusinessServiceDetailCriteria;
-import org.egov.demand.web.contract.DemandResponse;
 import org.egov.demand.web.contract.User;
 import org.egov.demand.web.contract.factory.ResponseFactory;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
@@ -153,9 +152,7 @@ public class BillService {
 				.mobileNumber(billCriteria.getMobileNumber()).tenantId(billCriteria.getTenantId()).build();
 
 		/* Fetching demands for the given bill search criteria */
-		DemandResponse demandResponse = demandService.getDemands(demandCriteria, requestInfo);
-
-		List<Demand> demands = demandResponse.getDemands();
+		List<Demand> demands = demandService.getDemands(demandCriteria, requestInfo);
 
 		List<Bill> bills;
 

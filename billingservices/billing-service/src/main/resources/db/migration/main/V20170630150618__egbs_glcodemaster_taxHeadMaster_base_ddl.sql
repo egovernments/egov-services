@@ -26,7 +26,7 @@ CREATE TABLE egbs_taxheadmaster
 
 CREATE SEQUENCE seq_egbs_glcodemaster;
 
-CREATE TABLE public.egbs_glcodemaster
+CREATE TABLE egbs_glcodemaster
 (
   id character varying(64) NOT NULL,
   tenantid character varying(128) NOT NULL,

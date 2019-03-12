@@ -38,9 +38,9 @@ public class RemittanceResultSetExtractor implements ResultSetExtractor<List<Rem
             if (!remittances.containsKey(id)) {
 
                 AuditDetails auditDetails = AuditDetails.builder()
-                        .createdBy(resultSet.getLong("rem_createdBy"))
+                        .createdBy(resultSet.getString("rem_createdBy"))
                         .createdDate(resultSet.getLong("rem_createdDate"))
-                        .lastModifiedBy(resultSet.getLong("rem_lastModifiedBy"))
+                        .lastModifiedBy(resultSet.getString("rem_lastModifiedBy"))
                         .lastModifiedDate(resultSet.getLong("rem_lastModifiedDate"))
                         .build();
 

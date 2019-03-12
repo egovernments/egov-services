@@ -86,9 +86,9 @@ public class CollectionResultSetExtractor implements ResultSetExtractor<List<Rec
                         .build();
 
                 AuditDetails auditDetailsIns = AuditDetails.builder()
-                        .createdBy(resultSet.getLong("rh_createdBy"))
+                        .createdBy(resultSet.getString("rh_createdBy"))
                         .createdDate(resultSet.getLong("rh_createdDate"))
-                        .lastModifiedBy(resultSet.getLong("rh_lastModifiedBy"))
+                        .lastModifiedBy(resultSet.getString("rh_lastModifiedBy"))
                         .lastModifiedDate(resultSet.getLong("rh_lastModifiedDate"))
                         .build();
 
@@ -117,9 +117,9 @@ public class CollectionResultSetExtractor implements ResultSetExtractor<List<Rec
                         .build();
 
                 AuditDetails auditDetails = AuditDetails.builder()
-                        .createdBy(resultSet.getLong("rh_createdBy"))
+                        .createdBy(resultSet.getString("rh_createdBy"))
                         .createdDate(resultSet.getLong("rh_createdDate"))
-                        .lastModifiedBy(resultSet.getLong("rh_lastModifiedBy"))
+                        .lastModifiedBy(resultSet.getString("rh_lastModifiedBy"))
                         .lastModifiedDate(resultSet.getLong("rh_lastModifiedDate"))
                         .build();
 

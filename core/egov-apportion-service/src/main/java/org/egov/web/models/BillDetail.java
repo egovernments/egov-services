@@ -75,7 +75,7 @@ public class BillDetail {
         private String receiptNumber = null;
 
         @JsonProperty("receiptDate")
-        private LocalDate receiptDate = null;
+        private Long receiptDate = null;
 
         @JsonProperty("channel")
         private String channel = null;

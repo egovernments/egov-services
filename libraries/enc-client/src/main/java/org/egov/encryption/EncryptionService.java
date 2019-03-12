@@ -67,7 +67,7 @@ public class EncryptionService {
         return encryptNode;
     }
 
-    public <T> T encryptJson(Object plaintextJson, String key, String tenantId, Class<T> valueType) throws IOException {
+    public <E,P> P encryptJson(Object plaintextJson, String key, String tenantId, Class<E> valueType) throws IOException {
         return ConvertClass.convertTo(encryptJson(plaintextJson, key, tenantId), valueType);
     }
 
@@ -120,7 +120,7 @@ public class EncryptionService {
         return decryptedNode;
     }
 
-    public <T> T decryptJson(Object ciphertextJson, String key, User user, Class<T> valueType) throws IOException {
+    public <E,P> P decryptJson(Object ciphertextJson, String key, User user, Class<E> valueType) throws IOException {
         return ConvertClass.convertTo(decryptJson(ciphertextJson, key, user), valueType);
     }
 

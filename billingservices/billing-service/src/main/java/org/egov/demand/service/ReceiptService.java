@@ -1,6 +1,7 @@
 package org.egov.demand.service;
 
 import java.math.BigDecimal;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -94,22 +95,41 @@ public class ReceiptService {
 	 */
 	private void updateDemandFromBillDetail(BillDetail billDetail, Demand demand, Boolean isRecieptCancellation) {
 
-		Map<String, DemandDetail> demandDetailIdMap = demand.getDemandDetails().stream()
-				.collect(Collectors.toMap(DemandDetail::getId, Function.identity()));
+		Map<String, List<DemandDetail>> taxHeadCodeDemandDetailgroup = demand.getDemandDetails().stream()
+				.collect(Collectors.groupingBy(DemandDetail::getTaxHeadMasterCode));
 
 		for (BillAccountDetail billAccDetail : billDetail.getBillAccountDetails()) {
 
-			DemandDetail currentDetail = demandDetailIdMap.get(billAccDetail.getDemandDetailId());
-			BigDecimal oldCollectedAmount = currentDetail.getCollectionAmount();
-			BigDecimal newAmount = billAccDetail.getAdjustedAmount();
-			/*I
-			 * FIXME TODO multiple bad should be mapped to dd
-			 */
+			List<DemandDetail> currentDetails = taxHeadCodeDemandDetailgroup.get(billAccDetail.getTaxHeadCode());
+			if (!CollectionUtils.isEmpty(currentDetails) && currentDetails.size() == 1) {
+				
+				updateSingleDemandDetail(currentDetails.get(0), billAccDetail, isRecieptCancellation);
+			} else if (currentDetails.size() > 1) {
+				
+				updateMultipleDemandDetails(currentDetails, billAccDetail, isRecieptCancellation);
+			} else {
 
-			if (isRecieptCancellation)
-				currentDetail.setCollectionAmount(oldCollectedAmount.subtract(newAmount));
-			else
-				currentDetail.setCollectionAmount(oldCollectedAmount.add(newAmount));
+			}
 		}
+	}
+
+	private void updateMultipleDemandDetails (List<DemandDetail> demandDetails, BillAccountDetail billAccDetail, Boolean isRecieptCancellation) {
+
+		BigDecimal incomingAmount = billAccDetail.getAdjustedAmount();
+		
+		demandDetails.sort(Comparator.comparing(DemandDetail::getTaxAmount));		
+		
+	}
+
+	private void updateSingleDemandDetail(DemandDetail currentDetail, BillAccountDetail billAccDetail,
+			Boolean isRecieptCancellation) {
+
+		BigDecimal oldCollectedAmount = currentDetail.getCollectionAmount();
+		BigDecimal newAmount = billAccDetail.getAdjustedAmount();
+
+		if (isRecieptCancellation)
+			currentDetail.setCollectionAmount(oldCollectedAmount.subtract(newAmount));
+		else
+			currentDetail.setCollectionAmount(oldCollectedAmount.add(newAmount));
 	}
 }

@@ -1,4 +1,4 @@
-DROP TABLE public.egbs_taxheadmaster;
+DROP TABLE egbs_taxheadmaster;
 
 CREATE TABLE egbs_taxheadmaster
 (
@@ -21,7 +21,7 @@ CREATE TABLE egbs_taxheadmaster
 );
 
 
-DROP TABLE public.egbs_glcodemaster;
+DROP TABLE egbs_glcodemaster;
 
 CREATE TABLE egbs_glcodemaster
 (

@@ -15,6 +15,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import lombok.extern.slf4j.Slf4j;
 
 @Service
@@ -42,8 +44,11 @@ public class ApportionerService {
 			ApportionRequest apportionRequest = ApportionRequest.builder().bills(bills).tenantId(tenantId)
 					.requestInfo(requestInfo).build();
 			try {
+				ObjectMapper mapper = new ObjectMapper();
+				log.info("apportionRequest: "+mapper.writeValueAsString(apportionRequest));
 				ApportionResponse responseForEachReq = restTemplate.postForObject(uri.toString(), apportionRequest,
 						ApportionResponse.class);
+				log.info("responseForEachReq: "+mapper.writeValueAsString(responseForEachReq));
 				if (null != responseForEachReq) {
 					apportionedBills.put(tenantId, responseForEachReq.getBills());
 				}

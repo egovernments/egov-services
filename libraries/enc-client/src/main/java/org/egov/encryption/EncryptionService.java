@@ -38,8 +38,6 @@ public class EncryptionService {
     private AbacFilter abacFilter;
     @Autowired
     private MaskingService maskingService;
-    @Autowired
-    private AuditService auditService;
 
     private ObjectMapper objectMapper;
 
@@ -98,8 +96,6 @@ public class EncryptionService {
         List<String> pathsToBeDecrypted = attributesToBeDecrypted.stream().map(Attribute::getJsonPath).collect(Collectors.toList());
 
         JsonNode jsonNode = JacksonUtils.filterJsonNodeWithPaths(ciphertextNode, pathsToBeDecrypted);
-
-        auditService.audit(jsonNode, user);
 
         if(! jsonNode.isEmpty(objectMapper.getSerializerProvider())) {
             JsonNode returnedDecryptedNode = objectMapper.valueToTree(encryptionServiceRestConnection.callDecrypt(jsonNode));

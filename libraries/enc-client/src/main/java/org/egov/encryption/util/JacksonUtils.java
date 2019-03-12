@@ -15,9 +15,9 @@ import java.util.List;
 public class JacksonUtils {
 
     public static JsonNode merge(JsonNode newNode, JsonNode originalNode) {
-        if(newNode == null)
+        if(newNode == null || newNode.isNull())
             return originalNode;
-        else if(originalNode == null)
+        else if(originalNode == null || originalNode.isNull())
             return newNode;
 
         if(newNode.isObject())

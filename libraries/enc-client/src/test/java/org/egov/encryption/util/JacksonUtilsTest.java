@@ -3,11 +3,7 @@ package org.egov.encryption.util;
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.IntNode;
-import com.fasterxml.jackson.databind.node.NullNode;
 import lombok.extern.slf4j.Slf4j;
-import org.egov.common.contract.request.User;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -110,7 +106,7 @@ public class JacksonUtilsTest {
                 "\"active\":true,\"type\":\"CITIZEN\",\"password\":\"password\"}]}");
 
 
-        JsonNode newNode = JacksonUtils.filterJsonNodeWithPaths(jsonNode, Arrays.asList("User/*/name", "RequestInfo" +
+        JsonNode newNode = JacksonUtils.filterJsonNodeForPaths(jsonNode, Arrays.asList("User/*/name", "RequestInfo" +
                 "/api_id", "asd/qwe"));
 
         JsonNode expectedNode = mapper.readTree("{\"RequestInfo\":{\"api_id\":\"1\"},\"User\":[{},{\"name\":\"ajay\"}]}");
@@ -161,7 +157,7 @@ public class JacksonUtilsTest {
 
         paths = Arrays.asList("*/name", "*/mobileNumber", "*/guardianRelation");
 
-        JsonNode outputNode = JacksonUtils.filterJsonNodeWithPaths(jsonNode, paths);
+        JsonNode outputNode = JacksonUtils.filterJsonNodeForPaths(jsonNode, paths);
 
         log.info(String.valueOf(outputNode));
 
@@ -211,7 +207,7 @@ public class JacksonUtilsTest {
 
         paths = Arrays.asList("name", "mobileNumber", "guardianRelation");
 
-        JsonNode outputNode = JacksonUtils.filterJsonNodeWithPaths(jsonNode, paths);
+        JsonNode outputNode = JacksonUtils.filterJsonNodeForPaths(jsonNode, paths);
 
         log.info(String.valueOf(outputNode));
 

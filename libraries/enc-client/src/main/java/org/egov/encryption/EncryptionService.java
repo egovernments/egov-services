@@ -7,13 +7,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.egov.common.contract.request.Role;
 import org.egov.common.contract.request.User;
 import org.egov.encryption.accesscontrol.AbacFilter;
-import org.egov.encryption.audit.AuditService;
 import org.egov.encryption.config.AbacConfiguration;
 import org.egov.encryption.config.EncryptionPolicyConfiguration;
 import org.egov.encryption.masking.MaskingService;
 import org.egov.encryption.models.AccessType;
 import org.egov.encryption.models.Attribute;
-import org.egov.encryption.models.KeyRoleAttributeAccess;
 import org.egov.encryption.util.ConvertClass;
 import org.egov.encryption.util.JSONBrowseUtil;
 import org.egov.encryption.util.JacksonUtils;
@@ -57,7 +55,7 @@ public class EncryptionService {
             List<Attribute> attributes = typeAttributeMap.get(type);
             List<String> paths = attributes.stream().map(Attribute::getJsonPath).collect(Collectors.toList());
 
-            JsonNode jsonNode = JacksonUtils.filterJsonNodeWithPaths(plaintextNode, paths);
+            JsonNode jsonNode = JacksonUtils.filterJsonNodeForPaths(plaintextNode, paths);
 
             if(! jsonNode.isEmpty(objectMapper.getSerializerProvider())) {
                 JsonNode returnedEncryptedNode = objectMapper.valueToTree(encryptionServiceRestConnection.callEncrypt(tenantId,
@@ -80,22 +78,20 @@ public class EncryptionService {
         JsonNode decryptNode = ciphertextNode.deepCopy();
 
         if(attributeAccessTypeMap.containsValue(AccessType.NONE)) {
-            List<Attribute> attributesToBeRemoved = getKeysForValue(attributeAccessTypeMap, AccessType.NONE);
+            List<Attribute> attributesToBeRemoved = attributeAccessTypeMap.keySet().stream()
+                    .filter(attribute -> attributeAccessTypeMap.get(attribute) == AccessType.NONE).collect(Collectors.toList());
             List<String> pathsToBeRemoved = attributesToBeRemoved.stream().map(Attribute::getJsonPath).collect(Collectors.toList());
-            JsonNode nodeToBeEmptied = JacksonUtils.filterJsonNodeWithPaths(decryptNode, pathsToBeRemoved);
+            JsonNode nodeToBeEmptied = JacksonUtils.filterJsonNodeForPaths(decryptNode, pathsToBeRemoved);
             JsonNode emptyNode = JSONBrowseUtil.mapValues(nodeToBeEmptied, __ -> "");          //Empty String value
             decryptNode = JacksonUtils.merge(emptyNode, decryptNode);
         }
 
-        List<Attribute> attributesToBeDecrypted = new ArrayList<>();
-        for(Attribute attribute : attributeAccessTypeMap.keySet()) {
-            AccessType accessType = attributeAccessTypeMap.get(attribute);
-            if(accessType != AccessType.NONE)
-                attributesToBeDecrypted.add(attribute);
-        }
+        List<Attribute> attributesToBeDecrypted = attributeAccessTypeMap.keySet().stream()
+                .filter(attribute -> attributeAccessTypeMap.get(attribute) != AccessType.NONE).collect(Collectors.toList());
+
         List<String> pathsToBeDecrypted = attributesToBeDecrypted.stream().map(Attribute::getJsonPath).collect(Collectors.toList());
 
-        JsonNode jsonNode = JacksonUtils.filterJsonNodeWithPaths(ciphertextNode, pathsToBeDecrypted);
+        JsonNode jsonNode = JacksonUtils.filterJsonNodeForPaths(ciphertextNode, pathsToBeDecrypted);
 
         if(! jsonNode.isEmpty(objectMapper.getSerializerProvider())) {
             JsonNode returnedDecryptedNode = objectMapper.valueToTree(encryptionServiceRestConnection.callDecrypt(jsonNode));
@@ -103,7 +99,8 @@ public class EncryptionService {
         }
 
         if(attributeAccessTypeMap.containsValue(AccessType.MASK)) {
-            List<Attribute> attributesToBeMasked = getKeysForValue(attributeAccessTypeMap, AccessType.MASK);
+            List<Attribute> attributesToBeMasked = attributeAccessTypeMap.keySet().stream()
+                    .filter(attribute -> attributeAccessTypeMap.get(attribute) == AccessType.MASK).collect(Collectors.toList());
             decryptNode = maskingService.maskData(decryptNode, attributesToBeMasked);
         }
 
@@ -126,16 +123,6 @@ public class EncryptionService {
     public <T> T decryptJson(Object ciphertextJson, String key, User user, Class<T> valueType) throws IOException {
         return ConvertClass.convertTo(decryptJson(ciphertextJson, key, user), valueType);
     }
-
-    <K, V> List<K> getKeysForValue(Map<K, V> map, V findValue) {
-        List<K> foundKeys = new ArrayList<>();
-        map.forEach( (key, value) -> {
-            if(value.equals(findValue))
-                foundKeys.add(key);
-        });
-        return foundKeys;
-    }
-
 
     JsonNode createJsonNode(Object json) throws IOException {
         JsonNode jsonNode;

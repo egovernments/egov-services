@@ -63,7 +63,7 @@ public class JacksonUtils {
         return newNode;
     }
 
-    public static JsonNode filterJsonNodeWithPaths(JsonNode jsonNode, List<String> filterPaths) {
+    public static JsonNode filterJsonNodeForPaths(JsonNode jsonNode, List<String> filterPaths) {
         ObjectMapper mapper = new ObjectMapper(new JsonFactory());
 
         JsonNode filteredNode;

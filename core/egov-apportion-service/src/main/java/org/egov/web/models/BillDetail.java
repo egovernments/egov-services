@@ -29,7 +29,7 @@ import lombok.Builder;
 @Builder
 public class BillDetail {
         @JsonProperty("id")
-        private BigDecimal id = null;
+        private String id = null;
 
         @JsonProperty("bill")
         private String bill = null;

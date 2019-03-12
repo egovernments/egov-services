@@ -25,7 +25,7 @@ import lombok.Builder;
 @Builder
 public class BillAccountDetail {
         @JsonProperty("id")
-        private BigDecimal id = null;
+        private String id = null;
 
         @JsonProperty("glcode")
         private String glcode = null;

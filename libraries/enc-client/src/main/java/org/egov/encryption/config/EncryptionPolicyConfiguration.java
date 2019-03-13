@@ -23,18 +23,17 @@ public class EncryptionPolicyConfiguration {
 
     @Autowired
     private EncProperties encProperties;
+    @Autowired
+    private RestTemplate restTemplate;
+    @Autowired
+    private ObjectMapper objectMapper;
 
     private Map<String, List<Attribute>> keyAttributeMap;
 
     @PostConstruct
-    private void initializeKeyAttributeMapFromMdms() {
+    void initializeKeyAttributeMapFromMdms() {
         List<EncryptionPolicy> encryptionPolicyList = null;
         try {
-            ObjectMapper objectMapper = new ObjectMapper(new JsonFactory());
-            String mdmsRequest = "{\"RequestInfo\":{},\"MdmsCriteria\":{\"tenantId\":\"" + encProperties.getStateLevelTenantId() + "\"," +
-                    "\"moduleDetails\":[{\"moduleName\":\"DataSecurity\"," +
-                    "\"masterDetails\":[{\"name\":\"EncryptionPolicy\"}]}]}}";
-
             MasterDetail masterDetail = MasterDetail.builder().name(EncClientConstants.MDMS_ENCRYPTION_MASTER_NAME).build();
             ModuleDetail moduleDetail = ModuleDetail.builder().moduleName(EncClientConstants.MDMS_MODULE_NAME)
                     .masterDetails(Arrays.asList(masterDetail)) .build();
@@ -45,7 +44,6 @@ public class EncryptionPolicyConfiguration {
             MdmsCriteriaReq mdmsCriteriaReq = MdmsCriteriaReq.builder().requestInfo(RequestInfo.builder().build())
                     .mdmsCriteria(mdmsCriteria).build();
 
-            RestTemplate restTemplate = new RestTemplate();
             ResponseEntity<MdmsResponse> response =
                     restTemplate.postForEntity(encProperties.getEgovMdmsHost() + encProperties.getEgovMdmsSearchEndpoint(),
                             mdmsCriteriaReq, MdmsResponse.class);
@@ -61,7 +59,7 @@ public class EncryptionPolicyConfiguration {
         initializeKeyAttributeMap(encryptionPolicyList);
     }
 
-    private void initializeKeyAttributeMap(List<EncryptionPolicy> encryptionPolicyList) {
+    void initializeKeyAttributeMap(List<EncryptionPolicy> encryptionPolicyList) {
         keyAttributeMap = encryptionPolicyList.stream().collect(Collectors
                         .toMap(EncryptionPolicy::getKey, EncryptionPolicy::getAttributeList));
     }

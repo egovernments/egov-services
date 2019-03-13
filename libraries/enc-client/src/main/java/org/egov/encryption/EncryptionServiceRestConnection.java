@@ -21,15 +21,11 @@ class EncryptionServiceRestConnection {
 
     @Autowired
     private EncProperties encProperties;
-
+    @Autowired
     private RestTemplate restTemplate;
+    @Autowired
+    private ObjectMapper objectMapper;
 
-    private ObjectMapper mapper;
-
-    public EncryptionServiceRestConnection() {
-        mapper = new ObjectMapper(new JsonFactory());
-        restTemplate = new RestTemplate();
-    }
 
     Object callEncrypt(String tenantId, String type, Object value) throws IOException {
 
@@ -39,13 +35,13 @@ class EncryptionServiceRestConnection {
 
         ResponseEntity<String> response = restTemplate.postForEntity(encProperties.getEgovEncHost() + encProperties.getEgovEncEncryptPath() ,
                 encryptionRequest, String.class);
-        return mapper.readTree(response.getBody()).get(0);
+        return objectMapper.readTree(response.getBody()).get(0);
     }
 
     Object callDecrypt(Object ciphertext) throws IOException {
         ResponseEntity<String> response = restTemplate.postForEntity(encProperties.getEgovEncHost() + encProperties.getEgovEncDecryptPath(),
                 ciphertext, String.class);
-        return mapper.readTree(response.getBody());
+        return objectMapper.readTree(response.getBody());
     }
 
 }

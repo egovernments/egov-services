@@ -19,12 +19,8 @@ public class AuditService {
     private Producer producer;
     @Autowired
     private EncProperties encProperties;
-
+    @Autowired
     private ObjectMapper objectMapper;
-
-    public AuditService() {
-        objectMapper = new ObjectMapper(new JsonFactory());
-    }
 
     public void audit(JsonNode data, User user) {
         AuditObject auditObject = AuditObject.builder().build();

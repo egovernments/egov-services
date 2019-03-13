@@ -1,6 +1,5 @@
 package org.egov.encryption;
 
-import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
@@ -19,7 +18,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -36,12 +38,8 @@ public class EncryptionService {
     private AbacFilter abacFilter;
     @Autowired
     private MaskingService maskingService;
-
+    @Autowired
     private ObjectMapper objectMapper;
-
-    public EncryptionService() {
-        objectMapper = new ObjectMapper(new JsonFactory());
-    }
 
     public JsonNode encryptJson(Object plaintextJson, String key, String tenantId) throws IOException {
 

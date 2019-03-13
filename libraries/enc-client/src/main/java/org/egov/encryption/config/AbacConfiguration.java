@@ -25,23 +25,25 @@ public class AbacConfiguration {
 
     @Autowired
     private EncProperties encProperties;
+    @Autowired
+    private RestTemplate restTemplate;
+    @Autowired
+    private ObjectMapper objectMapper;
 
     private Map<String, List<RoleAttributeAccess>> keyRoleAttributeAccessMap;
 
 
-    private void initializeKeyRoleAttributeAccessMap(List<KeyRoleAttributeAccess> keyRoleAttributeAccessList) {
+    void initializeKeyRoleAttributeAccessMap(List<KeyRoleAttributeAccess> keyRoleAttributeAccessList) {
         keyRoleAttributeAccessMap = keyRoleAttributeAccessList.stream()
                 .collect(Collectors.toMap(KeyRoleAttributeAccess::getKey,
                         KeyRoleAttributeAccess::getRoleAttributeAccessList));
     }
 
     @PostConstruct
-    private void initializeKeyRoleAttributeAccessMapFromMdms() {
+    void initializeKeyRoleAttributeAccessMapFromMdms() {
         List<KeyRoleAttributeAccess> keyRoleAttributeAccessList = null;
 
         try {
-            ObjectMapper objectMapper = new ObjectMapper(new JsonFactory());
-
             MasterDetail masterDetail = MasterDetail.builder().name(EncClientConstants.MDMS_DECRYPTION_MASTER_NAME).build();
             ModuleDetail moduleDetail = ModuleDetail.builder().moduleName(EncClientConstants.MDMS_MODULE_NAME)
                     .masterDetails(Arrays.asList(masterDetail)) .build();
@@ -52,7 +54,6 @@ public class AbacConfiguration {
             MdmsCriteriaReq mdmsCriteriaReq = MdmsCriteriaReq.builder().requestInfo(RequestInfo.builder().build())
                     .mdmsCriteria(mdmsCriteria).build();
 
-            RestTemplate restTemplate = new RestTemplate();
             ResponseEntity<MdmsResponse> response =
                     restTemplate.postForEntity(encProperties.getEgovMdmsHost() + encProperties.getEgovMdmsSearchEndpoint(),
                     mdmsCriteriaReq, MdmsResponse.class);

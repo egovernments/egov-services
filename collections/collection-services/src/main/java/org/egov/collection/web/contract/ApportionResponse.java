@@ -25,7 +25,9 @@ public class ApportionResponse {
 	@JsonProperty("ResponseInfo")
 	private ResponseInfo responseInfo;
 
+	@JsonProperty("tenantId")
 	private String tenantId;
 
+	@JsonProperty("Bills")
 	private List<Bill> bills;
 }

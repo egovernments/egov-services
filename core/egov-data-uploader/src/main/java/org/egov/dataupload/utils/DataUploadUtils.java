@@ -61,7 +61,58 @@ public class DataUploadUtils {
 
 	@Autowired
 	private ObjectMapper objectMapper;
-		
+
+    public double getCellValueAsDouble(Cell cell) throws InvalidFormatException {
+
+        if (cell.getCellTypeEnum() == CellType.NUMERIC)
+        {
+            return cell.getNumericCellValue();
+        } else if (cell.getCellTypeEnum() == CellType.STRING) {
+            return Double.parseDouble(cell.getStringCellValue());
+        } else if (cell.getCellTypeEnum() == CellType.BLANK || cell.getCellTypeEnum() == CellType._NONE) {
+            return 0;
+        } else {
+            throw new InvalidFormatException("Cannot read int from a " + cell.getCellTypeEnum().toString() + " field type");
+        }
+    }
+
+    public String getCellValueAsString(Cell cell) throws InvalidFormatException {
+        if (cell.getCellTypeEnum() == CellType.NUMERIC)
+        {
+            return Double.toString(cell.getNumericCellValue());
+        } else if (cell.getCellTypeEnum() == CellType.STRING || cell.getCellTypeEnum() == CellType.FORMULA) {
+            return cell.getStringCellValue();
+        } else if (cell.getCellTypeEnum() == CellType.BOOLEAN) {
+            return Boolean.toString(cell.getBooleanCellValue());
+        } else if (cell.getCellTypeEnum() == CellType.BLANK || cell.getCellTypeEnum() == CellType._NONE) {
+            return "";
+        }
+        else {
+            throw new InvalidFormatException("Cannot read string from a " + cell.getCellTypeEnum().toString() + " field type");
+        }
+    }
+
+    public Boolean getCellValueAsBoolean(Cell cell) throws InvalidFormatException {
+        if (cell.getCellTypeEnum() == CellType.NUMERIC)
+        {
+            return cell.getNumericCellValue() != 0;
+        } else if (cell.getCellTypeEnum() == CellType.STRING) {
+            String val = cell.getStringCellValue().toLowerCase().trim();
+            if (val == "true" || val =="yes" || val == "on") {
+                return true;
+            } else if (val == "false" || val =="no" || val == "off" || val.isEmpty()) {
+                return false;
+            } else {
+                throw new InvalidFormatException("Unsupported boolean value " + cell.getStringCellValue() + " field type");
+            }
+        } else if (cell.getCellTypeEnum() == CellType.BOOLEAN) {
+            return cell.getBooleanCellValue();
+        } else if (cell.getCellTypeEnum() == CellType.BLANK || cell.getCellTypeEnum() == CellType._NONE) {
+            return false;
+        } else {
+            throw new InvalidFormatException("Cannot read bool from a " + cell.getCellTypeEnum().toString() + " field type");
+        }
+    }
 
 	public Document readExcelFile(InputStream stream) throws IOException, InvalidFormatException {
 		try(Workbook wb = WorkbookFactory.create(stream)) {

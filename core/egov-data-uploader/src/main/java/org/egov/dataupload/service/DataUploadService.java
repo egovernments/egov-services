@@ -133,13 +133,13 @@ public class DataUploadService {
             logger.error("No .xls/.xlsx file found for: fileStoreId = " + uploadJob.getRequestFilePath()
                     + " AND tenantId = " + uploadJob.getTenantId());
             CustomException ex = new CustomException("400", "Unable to fetch file from filestore");
-            ex.initCause(e);
+            ex.initCause(re);
             throw ex;
         } catch (DataAccessException de) {
             logger.error("Unable to persist job details onto DB", de);
 
             CustomException ex = new CustomException("400", "Unable to persist job details onto DB");
-            ex.initCause(e);
+            ex.initCause(de);
             throw ex;
         } catch (Exception e) {
             logger.error("Error occurred while attempting to create job", e);

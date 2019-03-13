@@ -10,6 +10,7 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import org.apache.poi.EncryptedDocumentException;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Cell;
@@ -27,6 +28,8 @@ import org.egov.dataupload.property.models.Unit;
 import org.egov.dataupload.utils.Constants.PTOwnerDetails;
 import org.egov.dataupload.utils.Constants.PTTemplateDetail;
 import org.egov.dataupload.utils.Constants.PTUnitDetail;
+import org.egov.dataupload.utils.DataUploadUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
@@ -36,6 +39,9 @@ import lombok.extern.slf4j.Slf4j;
 @Component
 @Slf4j
 public class PropertyFileReader {
+
+	@Autowired
+	private DataUploadUtils dataUploadUtils;
 
 	public Map<String, Sheet> readFile(String location) throws InvalidFormatException, IOException {
 		Map<String, Sheet> sheetMap = new HashMap<>();
@@ -64,7 +70,7 @@ public class PropertyFileReader {
 		return propertyIdMap;
 		
 	}
-	public Map<String, Property>  parsePropertyExcel(Map<String, Sheet> sheetMap) {
+	public Map<String, Property>  parsePropertyExcel(Map<String, Sheet> sheetMap) throws InvalidFormatException {
 
 		Sheet propertySheet = sheetMap.get("Property_Detail");
 
@@ -110,84 +116,85 @@ public class PropertyFileReader {
 	}
 
 	@SuppressWarnings("unchecked")
-	private void setPropertyDetails(Cell cell, Property property) {
+	private void setPropertyDetails(Cell cell, Property property) throws InvalidFormatException {
 		switch (PTTemplateDetail.from(cell.getColumnIndex())) {
 			case Tenant:
-				property.setTenantId(cell.getStringCellValue());
+				property.setTenantId(dataUploadUtils.getCellValueAsString(cell));
 				break;
 			case City:
-				cell.setCellType(CellType.STRING);
-				if (!StringUtils.isEmpty(cell.getStringCellValue()))
-					property.getAddress().setCity(cell.getStringCellValue());
+				if (!StringUtils.isEmpty(dataUploadUtils.getCellValueAsString(cell)))
+					property.getAddress().setCity(dataUploadUtils.getCellValueAsString(cell));
 					break;
 			case Existing_Property_Id:
-				property.setOldPropertyId(cell.getStringCellValue());
+				property.setOldPropertyId(dataUploadUtils.getCellValueAsString(cell));
 				break;
 			case Financial_Year:
-				property.getPropertyDetails().get(0).setFinancialYear(cell.getStringCellValue());
+				property.getPropertyDetails().get(0).setFinancialYear(dataUploadUtils.getCellValueAsString(cell));
 				break;
 			case PropertyType:
-				property.getPropertyDetails().get(0).setPropertyType(cell.getStringCellValue());
+				property.getPropertyDetails().get(0).setPropertyType(dataUploadUtils.getCellValueAsString(cell));
 				break;
 			case Property_Sub_Type:
-				if (!StringUtils.isEmpty(cell.getStringCellValue()))
-					property.getPropertyDetails().get(0).setPropertySubType(cell.getStringCellValue());
+				if (!StringUtils.isEmpty(dataUploadUtils.getCellValueAsString(cell)))
+					property.getPropertyDetails().get(0).setPropertySubType(dataUploadUtils.getCellValueAsString(cell));
 					break;
 			case Is_your_property_height_above_36:
 				Map<String, Object> addDetails = (Map<String, Object>) property.getPropertyDetails().get(0)
 						.getAdditionalDetails();
-				addDetails.put("heightAbove36Feet", cell.getBooleanCellValue());
+				addDetails.put("heightAbove36Feet", dataUploadUtils.getCellValueAsBoolean(cell));
 				break;
 			case Do_you_Store_Inflammable_material:
 				Map<String, Object> addDetailsMap = (Map<String, Object>) property.getPropertyDetails().get(0)
 						.getAdditionalDetails();
-				addDetailsMap.put("inflammable", cell.getBooleanCellValue());
+				addDetailsMap.put("inflammable", dataUploadUtils.getCellValueAsBoolean(cell));
 				break;
 			case Usage_Category_Major:
-				property.getPropertyDetails().get(0).setUsageCategoryMajor(cell.getStringCellValue());
+				property.getPropertyDetails().get(0).setUsageCategoryMajor(dataUploadUtils.getCellValueAsString(cell));
 				break;
 			case Usage_Category_Minor:
-				if (!StringUtils.isEmpty(cell.getStringCellValue()))
-					property.getPropertyDetails().get(0).setUsageCategoryMinor(cell.getStringCellValue());
+				if (!StringUtils.isEmpty(dataUploadUtils.getCellValueAsString(cell)))
+					property.getPropertyDetails().get(0).setUsageCategoryMinor(dataUploadUtils.getCellValueAsString(cell));
 				else
 					property.getPropertyDetails().get(0).setUsageCategoryMinor(null);
 				break;
 			// in case of shared property value should go to built up area else land area
 			case Land_Area_Buildup_Area:
-				if(cell.getNumericCellValue()==0) break;
+				float fval = (float)dataUploadUtils.getCellValueAsDouble(cell);
+				if(fval == 0) break;
 				else if ("SHAREDPROPERTY".equalsIgnoreCase(property.getPropertyDetails().get(0).getPropertySubType()))
-					property.getPropertyDetails().get(0).setBuildUpArea((float) cell.getNumericCellValue());
+					property.getPropertyDetails().get(0).setBuildUpArea(fval);
 				else
-					property.getPropertyDetails().get(0).setLandArea((float) cell.getNumericCellValue());
+					property.getPropertyDetails().get(0).setLandArea(fval);
 				break;
 			case No_of_Floors:
-				if(cell.getNumericCellValue()==0) break;
-				property.getPropertyDetails().get(0).setNoOfFloors((long) cell.getNumericCellValue());
+				long dval = (long)dataUploadUtils.getCellValueAsDouble(cell);
+				if(dval == 0) break;
+				property.getPropertyDetails().get(0).setNoOfFloors(dval);
 				break;
 			case Ownership_Category:
-				property.getPropertyDetails().get(0).setOwnershipCategory(cell.getStringCellValue());
+				property.getPropertyDetails().get(0).setOwnershipCategory(dataUploadUtils.getCellValueAsString(cell));
 				break;
 			case Sub_Ownership_Category:
-				property.getPropertyDetails().get(0).setSubOwnershipCategory(cell.getStringCellValue());
+				property.getPropertyDetails().get(0).setSubOwnershipCategory(dataUploadUtils.getCellValueAsString(cell));
 				break;
 			case Locality:
-				property.getAddress().getLocality().setCode(cell.getStringCellValue());
+				property.getAddress().getLocality().setCode(dataUploadUtils.getCellValueAsString(cell));
 				break;
 			case Door_No:
-				if (!StringUtils.isEmpty(cell.getStringCellValue()))
-					property.getAddress().setDoorNo(cell.getStringCellValue());
+				if (!StringUtils.isEmpty(dataUploadUtils.getCellValueAsString(cell)))
+					property.getAddress().setDoorNo(dataUploadUtils.getCellValueAsString(cell));
 				break;
 			case Building_Name:
-				if (!StringUtils.isEmpty(cell.getStringCellValue()))
-					property.getAddress().setBuildingName(cell.getStringCellValue());
+				if (!StringUtils.isEmpty(dataUploadUtils.getCellValueAsString(cell)))
+					property.getAddress().setBuildingName(dataUploadUtils.getCellValueAsString(cell));
 				break;
 			case Street_Name:
-				if (!StringUtils.isEmpty(cell.getStringCellValue()))
-					property.getAddress().setStreet(cell.getStringCellValue());
+				if (!StringUtils.isEmpty(dataUploadUtils.getCellValueAsString(cell)))
+					property.getAddress().setStreet(dataUploadUtils.getCellValueAsString(cell));
 				break;
 			case Pincode:
-				if (!StringUtils.isEmpty(cell.getStringCellValue()))
-					property.getAddress().setPincode(cell.getStringCellValue());
+				if (!StringUtils.isEmpty(dataUploadUtils.getCellValueAsString(cell)))
+					property.getAddress().setPincode(dataUploadUtils.getCellValueAsString(cell));
 				break;
 
 			default:
@@ -197,7 +204,7 @@ public class PropertyFileReader {
 		System.out.print("\t");
 	}
 
-	private void parseUnitDetail(Map<String, Sheet> sheetMap, Map<String, Property> propertyIdMap) {
+	private void parseUnitDetail(Map<String, Sheet> sheetMap, Map<String, Property> propertyIdMap) throws InvalidFormatException {
 
 		Sheet propertyUnitSheet = sheetMap.get("Unit_Detail");
 		Iterator<Row> rowIterator = propertyUnitSheet.rowIterator();
@@ -216,7 +223,7 @@ public class PropertyFileReader {
 				break;
 			}
 
-			String propertyId = row.getCell(existingPTId_cellIndex).getStringCellValue();
+			String propertyId = dataUploadUtils.getCellValueAsString(row.getCell(existingPTId_cellIndex));
 			Property property = propertyIdMap.get(propertyId);
 
 			if (null == property)
@@ -233,44 +240,44 @@ public class PropertyFileReader {
 		}
 	}
 
-	private void setUnitDetails(Cell cell, Unit unit) {
+	private void setUnitDetails(Cell cell, Unit unit) throws InvalidFormatException {
 
 		switch (PTUnitDetail.from(cell.getColumnIndex())) {
 			case Tenant:
-				unit.setTenantId(cell.getStringCellValue());
+				unit.setTenantId(dataUploadUtils.getCellValueAsString(cell));
 				break;
 			case Existing_Property_Id:
 				break;
 			case Floor_No:
-				unit.setFloorNo(cell.getStringCellValue());
+				unit.setFloorNo(dataUploadUtils.getCellValueAsString(cell));
 				break;
 			case Unit_No:
 				break;
 			case Unit_Usage:
-				unit.setUsageCategoryMajor(cell.getStringCellValue());
+				unit.setUsageCategoryMajor(dataUploadUtils.getCellValueAsString(cell));
 				break;
 			case Unit_Sub_usage:
-				if (!StringUtils.isEmpty(cell.getStringCellValue()))
-					unit.setUsageCategoryMinor(cell.getStringCellValue());
+				if (!StringUtils.isEmpty(dataUploadUtils.getCellValueAsString(cell)))
+					unit.setUsageCategoryMinor(dataUploadUtils.getCellValueAsString(cell));
 				break;
 			case Occupancy:
-				unit.setOccupancyType(cell.getStringCellValue());
+				unit.setOccupancyType(dataUploadUtils.getCellValueAsString(cell));
 				break;
 			case Built_up_area:
-				if(cell.getNumericCellValue()==0) break;
-				unit.setUnitArea((float) cell.getNumericCellValue());
+				if(dataUploadUtils.getCellValueAsDouble(cell) == 0) break;
+				unit.setUnitArea((float) dataUploadUtils.getCellValueAsDouble(cell));
 				break;
 			case Annual_rent:
-				if(cell.getNumericCellValue()==0) break;
-				unit.setArv(new BigDecimal(cell.getNumericCellValue(), MathContext.DECIMAL64));
+				if(dataUploadUtils.getCellValueAsDouble(cell)==0) break;
+				unit.setArv(new BigDecimal(dataUploadUtils.getCellValueAsDouble(cell), MathContext.DECIMAL64));
 				break;
 			case UsageCategorySubMinor:
-				if (!StringUtils.isEmpty(cell.getStringCellValue()))
-					unit.setUsageCategorySubMinor(cell.getStringCellValue());
+				if (!StringUtils.isEmpty(dataUploadUtils.getCellValueAsString(cell)))
+					unit.setUsageCategorySubMinor(dataUploadUtils.getCellValueAsString(cell));
 				break;
 			case UsageCategoryDetail:
-				if (!StringUtils.isEmpty(cell.getStringCellValue()))
-					unit.setUsageCategoryDetail(cell.getStringCellValue());
+				if (!StringUtils.isEmpty(dataUploadUtils.getCellValueAsString(cell)))
+					unit.setUsageCategoryDetail(dataUploadUtils.getCellValueAsString(cell));
 				break;
 			default:
 				break;
@@ -279,7 +286,7 @@ public class PropertyFileReader {
 		System.out.print("\t");
 	}
 
-	private void parseOwnerDetail(Map<String, Sheet> sheetMap, Map<String, Property> propertyIdMap) {
+	private void parseOwnerDetail(Map<String, Sheet> sheetMap, Map<String, Property> propertyIdMap) throws InvalidFormatException {
 
 		Sheet propertyUnitSheet = sheetMap.get("Owner_Detail");
 		Iterator<Row> rowIterator = propertyUnitSheet.rowIterator();
@@ -329,54 +336,54 @@ public class PropertyFileReader {
 		}
 	}
 
-	private void setOwnerDetails(Cell cell, OwnerInfo ownerInfo, Document document,String ownershipCategory) {
+	private void setOwnerDetails(Cell cell, OwnerInfo ownerInfo, Document document,String ownershipCategory) throws InvalidFormatException {
 
 		switch (PTOwnerDetails.from(cell.getColumnIndex())) {
 			case Tenant:
-				ownerInfo.setTenantId(cell.getStringCellValue());
+				ownerInfo.setTenantId(dataUploadUtils.getCellValueAsString(cell));
 				break;
 			case Existing_Property_ID:
 				break;
 			case Name:
-				ownerInfo.setName(cell.getStringCellValue());
+				ownerInfo.setName(dataUploadUtils.getCellValueAsString(cell));
 				break;
 			case MobileNumber:
 				cell.setCellType(CellType.STRING);
-				ownerInfo.setMobileNumber(cell.getStringCellValue());
+				ownerInfo.setMobileNumber(dataUploadUtils.getCellValueAsString(cell));
 				if(ownershipCategory.equals("INSTITUTIONALPRIVATE")||ownershipCategory.equals("INSTITUTIONALGOVERNMENT"))
 				{
-					ownerInfo.setAltContactNumber(cell.getStringCellValue());
+					ownerInfo.setAltContactNumber(dataUploadUtils.getCellValueAsString(cell));
 				}
 				break;
 			case Father_Or_Husband_Name:
-				ownerInfo.setFatherOrHusbandName(cell.getStringCellValue());
+				ownerInfo.setFatherOrHusbandName(dataUploadUtils.getCellValueAsString(cell));
 				break;
 			case Relationship:
-				ownerInfo.setRelationship(RelationshipEnum.fromValue(cell.getStringCellValue()));
+				ownerInfo.setRelationship(RelationshipEnum.fromValue(dataUploadUtils.getCellValueAsString(cell)));
 				break;
 			case PermanentAddress:
-				if (!StringUtils.isEmpty(cell.getStringCellValue()))
-					ownerInfo.setPermanentAddress(cell.getStringCellValue());
+				if (!StringUtils.isEmpty(dataUploadUtils.getCellValueAsString(cell)))
+					ownerInfo.setPermanentAddress(dataUploadUtils.getCellValueAsString(cell));
 				break;
 			case Owner_Type:
-				if (!StringUtils.isEmpty(cell.getStringCellValue()))
-					ownerInfo.setOwnerType(cell.getStringCellValue());
+				if (!StringUtils.isEmpty(dataUploadUtils.getCellValueAsString(cell)))
+					ownerInfo.setOwnerType(dataUploadUtils.getCellValueAsString(cell));
 				break;
 			case Id_Type:
-				if (!StringUtils.isEmpty(cell.getStringCellValue()))
-					document.setDocumentType(cell.getStringCellValue());
+				if (!StringUtils.isEmpty(dataUploadUtils.getCellValueAsString(cell)))
+					document.setDocumentType(dataUploadUtils.getCellValueAsString(cell));
 				break;
 			case Document_No:
-				if (!StringUtils.isEmpty(cell.getStringCellValue()))
-					document.setDocumentUid(cell.getStringCellValue());
+				if (!StringUtils.isEmpty(dataUploadUtils.getCellValueAsString(cell)))
+					document.setDocumentUid(dataUploadUtils.getCellValueAsString(cell));
 				break;
 			case Email:
-				if (!StringUtils.isEmpty(cell.getStringCellValue()))
-					ownerInfo.setEmailId(cell.getStringCellValue());
+				if (!StringUtils.isEmpty(dataUploadUtils.getCellValueAsString(cell)))
+					ownerInfo.setEmailId(dataUploadUtils.getCellValueAsString(cell));
 				break;
 			case Gender:
-				if (!StringUtils.isEmpty(cell.getStringCellValue()))
-					ownerInfo.setGender(cell.getStringCellValue());
+				if (!StringUtils.isEmpty(dataUploadUtils.getCellValueAsString(cell)))
+					ownerInfo.setGender(dataUploadUtils.getCellValueAsString(cell));
 				break;
 		
 			default:

@@ -23,6 +23,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.provider.token.TokenStore;
 
 import javax.annotation.PostConstruct;
 import java.util.*;
@@ -52,6 +53,7 @@ public class UserServiceTest {
 
 	@Mock
 	private EncryptionDecryptionUtil encryptionDecryptionUtil;
+	private TokenStore tokenStore;
 
 	private UserService userService;
 
@@ -64,7 +66,8 @@ public class UserServiceTest {
 
 	@Before
 	public void before() {
-		userService = new UserService(userRepository, otpRepository,fileRepository, passwordEncoder,encryptionDecryptionUtil, DEFAULT_PASSWORD_EXPIRY_IN_DAYS,
+		userService = new UserService(userRepository, otpRepository,fileRepository, passwordEncoder,encryptionDecryptionUtil,
+                tokenStore,DEFAULT_PASSWORD_EXPIRY_IN_DAYS,
 				isCitizenLoginOtpBased,isEmployeeLoginOtpBased);
 	}
 
@@ -136,7 +139,8 @@ public class UserServiceTest {
 
 	@Test(expected = UserNameNotValidException.class)
 	public void test_should_not_create_citizenWithWrongUserName() {
-		userService = new UserService(userRepository, otpRepository,fileRepository, passwordEncoder,encryptionDecryptionUtil, DEFAULT_PASSWORD_EXPIRY_IN_DAYS,
+		userService = new UserService(userRepository, otpRepository,fileRepository, passwordEncoder,
+			encryptionDecryptionUtil,tokenStore,DEFAULT_PASSWORD_EXPIRY_IN_DAYS,
 				true,false);
 		org.egov.user.domain.model.User domainUser = User.builder().username("TestUser").name("Test").active(true)
 				.tenantId("default").mobileNumber("123456789").type(UserType.CITIZEN).build();
@@ -344,7 +348,8 @@ public class UserServiceTest {
 	
 	@Test(expected = InvalidUpdatePasswordRequestException.class)
 	public void test_should_throwexception_incaseofloginotpenabledastrue_forcitizen_update_password_request() {
-		userService = new UserService(userRepository, otpRepository,fileRepository, passwordEncoder,encryptionDecryptionUtil, DEFAULT_PASSWORD_EXPIRY_IN_DAYS,
+		userService = new UserService(userRepository, otpRepository,fileRepository, passwordEncoder,
+			encryptionDecryptionUtil,tokenStore,DEFAULT_PASSWORD_EXPIRY_IN_DAYS,
 				true,isEmployeeLoginOtpBased);
 		User user = User.builder().username("xyz").tenantId("default").type(UserType.CITIZEN).build();
 		when(userRepository.findAll(any(UserSearchCriteria.class))).thenReturn(Collections.singletonList(user));
@@ -361,7 +366,8 @@ public class UserServiceTest {
 	
 	@Test(expected = InvalidUpdatePasswordRequestException.class)
 	public void test_should_throwexception_incaseofloginotpenabledastrue_foremployee_update_password_request() {
-		userService = new UserService(userRepository, otpRepository,fileRepository, passwordEncoder,encryptionDecryptionUtil, DEFAULT_PASSWORD_EXPIRY_IN_DAYS,
+		userService = new UserService(userRepository, otpRepository,fileRepository, passwordEncoder,
+			encryptionDecryptionUtil,tokenStore,DEFAULT_PASSWORD_EXPIRY_IN_DAYS,
 				false,true);
         User user = User.builder().username("xyz").tenantId("default").type(UserType.EMPLOYEE).build();
 		when(userRepository.findAll(any(UserSearchCriteria.class))).thenReturn(Collections.singletonList(user));
@@ -490,7 +496,8 @@ public class UserServiceTest {
 	@SuppressWarnings("unchecked")
 	@Test(expected = InvalidUpdatePasswordRequestException.class)
 	public void test_notshould_update_password_whenCitizenotpconfigured_istrue() throws Exception {
-		userService = new UserService(userRepository, otpRepository,fileRepository, passwordEncoder,encryptionDecryptionUtil, DEFAULT_PASSWORD_EXPIRY_IN_DAYS,
+		userService = new UserService(userRepository, otpRepository,fileRepository, passwordEncoder,
+			encryptionDecryptionUtil,tokenStore,DEFAULT_PASSWORD_EXPIRY_IN_DAYS,
 				true,false);
         final NonLoggedInUserUpdatePasswordRequest request = NonLoggedInUserUpdatePasswordRequest.builder()
                 .otpReference("123456")
@@ -509,7 +516,8 @@ public class UserServiceTest {
 	@SuppressWarnings("unchecked")
 	@Test(expected = InvalidNonLoggedInUserUpdatePasswordRequestException.class)
 	public void test_notshould_update_password_whenEmployeeotpconfigured_istrue() throws Exception {
-		userService = new UserService(userRepository, otpRepository,fileRepository, passwordEncoder,encryptionDecryptionUtil, DEFAULT_PASSWORD_EXPIRY_IN_DAYS,
+		userService = new UserService(userRepository, otpRepository,fileRepository, passwordEncoder,
+			encryptionDecryptionUtil,tokenStore,DEFAULT_PASSWORD_EXPIRY_IN_DAYS,
 				false,true);
         final NonLoggedInUserUpdatePasswordRequest request = NonLoggedInUserUpdatePasswordRequest.builder()
                 .userName("xyz")

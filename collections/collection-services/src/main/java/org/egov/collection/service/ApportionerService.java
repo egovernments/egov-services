@@ -13,6 +13,7 @@ import org.egov.common.contract.request.RequestInfo;
 import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -44,17 +45,18 @@ public class ApportionerService {
 			ApportionRequest apportionRequest = ApportionRequest.builder().bills(bills).tenantId(tenantId)
 					.requestInfo(requestInfo).build();
 			try {
-				ObjectMapper mapper = new ObjectMapper();
-				log.info("apportionRequest: "+mapper.writeValueAsString(apportionRequest));
 				ApportionResponse responseForEachReq = restTemplate.postForObject(uri.toString(), apportionRequest,
 						ApportionResponse.class);
-				log.info("responseForEachReq: "+mapper.writeValueAsString(responseForEachReq));
 				if (null != responseForEachReq) {
-					apportionedBills.put(tenantId, responseForEachReq.getBills());
-				}
+					if(!CollectionUtils.isEmpty(responseForEachReq.getBills()))
+						apportionedBills.put(tenantId, responseForEachReq.getBills());
+					else
+						throw new CustomException("APPORTIONING_FAILED_CODE", "Apportioning of the bill Failed");
+				}else
+					throw new CustomException("APPORTIONING_FAILED_CODE", "Apportioning of the bill Failed");
 			} catch (Exception e) {
 				log.error("Error while apportioning the bill: ", e);
-				throw new CustomException("APPORTIONING_FAILED_CODE", "Apportioning of the bill couldn't be done");
+				throw new CustomException("APPORTIONING_FAILED_CODE", "Apportioning of the bill Failed");
 			}
 		}
 

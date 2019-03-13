@@ -77,10 +77,8 @@ public class ReceiptEnricher {
             throw new CustomException("USER_INFO_INVALID", "Invalid user info in request info, user id is mandatory");
         }
 
-/*        List<Bill> validatedBills = billingRepository.fetchBill(receiptReq.getRequestInfo(), receipt.getTenantId(), billFromRequest.getId
-                ());*/
-
-        List<Bill> validatedBills = receipt.getBill();
+        List<Bill> validatedBills = billingRepository.fetchBill(receiptReq.getRequestInfo(), receipt.getTenantId(), billFromRequest.getId
+                ());
         
         if (validatedBills.isEmpty() || Objects.isNull(validatedBills.get(0).getBillDetails()) || validatedBills.get(0)
                 .getBillDetails().isEmpty()) {

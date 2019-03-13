@@ -25,6 +25,7 @@ public class BillRowMapper implements ResultSetExtractor<List<Bill>>{
 
 	@Override
 	public List<Bill> extractData(ResultSet rs) throws SQLException, DataAccessException {
+		
 		Map<String, Bill> billMap = new HashMap<>();
 		Map<String, BillDetail> billDetailMap = new HashMap<>();
 

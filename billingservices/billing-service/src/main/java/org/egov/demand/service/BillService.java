@@ -120,9 +120,28 @@ public class BillService {
 	@Autowired
 	private Util util;
 
-	public BillResponse searchBill(BillSearchCriteria billCriteria, RequestInfo requestInfo){
-		
-		return getBillResponse(billRepository.findBill(billCriteria));
+	/**
+	 * Searches the bills from db for given criteria and enriches them with TaxAndPayments array
+	 * 
+	 * @param billCriteria
+	 * @param requestInfo
+	 * @return
+	 */
+	public BillResponse searchBill(BillSearchCriteria billCriteria, RequestInfo requestInfo) {
+
+		List<Bill> bills = billRepository.findBill(billCriteria);
+		Map<String, TaxAndPayment> serviceCodeAndTaxAmountMap = new HashMap<>();
+
+		bills.forEach(bill -> {
+
+			serviceCodeAndTaxAmountMap.clear();
+			bill.getBillDetails()
+					.forEach(billDetail -> updateServiceCodeAndTaxAmountMap(serviceCodeAndTaxAmountMap, billDetail));
+			bill.setTaxAndPayments(new ArrayList<>(serviceCodeAndTaxAmountMap.values()));
+		});
+
+		return BillResponse.builder().resposneInfo(responseFactory.getResponseInfo(requestInfo, HttpStatus.OK))
+				.bill(bills).build();
 	}
 	
 	public void create(BillRequest billRequest){

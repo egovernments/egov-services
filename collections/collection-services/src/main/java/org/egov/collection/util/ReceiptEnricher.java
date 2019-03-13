@@ -105,7 +105,9 @@ public class ReceiptEnricher {
 
         validatedBill.getBillDetails().sort(Comparator.comparing(BillDetail::getId));
         billFromRequest.getBillDetails().sort(Comparator.comparing(BillDetail::getId));
-
+        
+        validateTaxAndPayment(billFromRequest, validatedBill);
+        
         for(int i = 0; i < validatedBill.getBillDetails().size(); i++){
             validatedBill.getBillDetails().get(i).setAmountPaid(billFromRequest.getBillDetails().get(i).getAmountPaid());
 
@@ -128,9 +130,7 @@ public class ReceiptEnricher {
             validatedBill.getBillDetails().get(i).setAdditionalDetails(billFromRequest.getBillDetails().get(i).getAdditionalDetails());
 
             enrichBillAccountDetails(validatedBill.getBillDetails().get(i), billFromRequest.getBillDetails().get(i));
-            
-            validateTaxAndPayment(billFromRequest, validatedBill);
-
+          
         }
 
         AuditDetails auditDetails = AuditDetails.builder().createdBy(receiptReq.getRequestInfo().getUserInfo().getId
@@ -146,6 +146,7 @@ public class ReceiptEnricher {
      * 1. If part payment is allowed, amountPaid can be less than or equal to taxAmount.
      * 2. If the part payment is not allowed, amountPaid should be equal to taxAmount.
      * 3. Other sanity checks like if the businessservices sent in the request are valid etc.
+     * 4. Also, enriches the validatedBill with the amountPaid value from the request.
      * 
      * 
      * @param billFromRequest
@@ -188,7 +189,11 @@ public class ReceiptEnricher {
     	if(!CollectionUtils.isEmpty(errorMap.keySet())) {
     		throw new CustomException(errorMap);
     	}
-
+    	validatedBill.getTaxAndPayments().forEach(taxAndPayment -> {
+    		BigDecimal amount = mapOfBusinessSvcAndAmtPaid.get(taxAndPayment.getBusinessService());
+    		if(null != amount)
+    			taxAndPayment.setAmountPaid(amount);
+    	});
     }
 
 

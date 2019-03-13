@@ -6,7 +6,6 @@ import org.springframework.context.annotation.PropertySource;
 
 @Configuration
 @ComponentScan(basePackages = {"org.egov.encryption"})
-@PropertySource("classpath:enc.properties")
 public class EncryptionConfiguration {
 
 

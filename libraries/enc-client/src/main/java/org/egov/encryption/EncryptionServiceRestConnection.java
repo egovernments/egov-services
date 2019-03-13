@@ -17,7 +17,7 @@ import java.util.Collections;
 
 @Slf4j
 @Component
-public class EncryptionServiceRestConnection {
+class EncryptionServiceRestConnection {
 
     @Autowired
     private EncProperties encProperties;

@@ -4,7 +4,6 @@ import org.egov.encryption.models.AccessType;
 import org.egov.encryption.models.Attribute;
 import org.egov.encryption.models.AttributeAccess;
 import org.egov.encryption.models.RoleAttributeAccess;
-import org.egov.tracer.model.CustomException;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;

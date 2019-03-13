@@ -87,6 +87,10 @@ public class Constants {
 	public static final String BILL_GEN_MANDATORY_FIELDS_MISSING_KEY = "BILL_GEN_MANDATORY_FIELDS_MISSING";
 	public static final String BILL_GEN_MANDATORY_FIELDS_MISSING_MSG = "Valid search criteria fields missing, please give some valid criteria like mobileNumber/email OR 'businessService & consumerCode'";
 	
+	
+	public static final String DEMAND_WITH_NO_ID_KEY = "EG_BS_DEMANDS_UNDIDENTIFIABLE";
+	public static final String DEMAND_WITH_NO_ID_MSG = "Demands, must contain ids in the update payload";
+
 	/*
 	 * Mdms master data 
 	 */

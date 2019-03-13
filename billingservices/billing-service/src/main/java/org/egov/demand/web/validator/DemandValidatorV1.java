@@ -1,43 +1,6 @@
 package org.egov.demand.web.validator;
 
-import static org.egov.demand.util.Constants.BUSINESSSERVICE_NOT_FOUND_KEY;
-import static org.egov.demand.util.Constants.BUSINESSSERVICE_NOT_FOUND_MSG;
-import static org.egov.demand.util.Constants.BUSINESSSERVICE_NOT_FOUND_REPLACETEXT;
-import static org.egov.demand.util.Constants.BUSINESSSERVICE_PATH_CODE;
-import static org.egov.demand.util.Constants.CONSUMER_CODE_DUPLICATE_CONSUMERCODE_TEXT;
-import static org.egov.demand.util.Constants.CONSUMER_CODE_DUPLICATE_KEY;
-import static org.egov.demand.util.Constants.CONSUMER_CODE_DUPLICATE_MSG;
-import static org.egov.demand.util.Constants.DEMAND_DETAIL_NOT_FOUND_KEY;
-import static org.egov.demand.util.Constants.DEMAND_DETAIL_NOT_FOUND_MSG;
-import static org.egov.demand.util.Constants.DEMAND_DETAIL_NOT_FOUND_REPLACETEXT;
-import static org.egov.demand.util.Constants.DEMAND_NOT_FOUND_KEY;
-import static org.egov.demand.util.Constants.DEMAND_NOT_FOUND_MSG;
-import static org.egov.demand.util.Constants.DEMAND_NOT_FOUND_REPLACETEXT;
-import static org.egov.demand.util.Constants.INVALID_BUSINESS_FOR_TAXPERIOD_KEY;
-import static org.egov.demand.util.Constants.INVALID_BUSINESS_FOR_TAXPERIOD_MSG;
-import static org.egov.demand.util.Constants.INVALID_BUSINESS_FOR_TAXPERIOD_REPLACE_TEXT;
-import static org.egov.demand.util.Constants.INVALID_DEMAND_DETAIL_COLLECTION_TEXT;
-import static org.egov.demand.util.Constants.INVALID_DEMAND_DETAIL_ERROR_MSG;
-import static org.egov.demand.util.Constants.INVALID_DEMAND_DETAIL_KEY;
-import static org.egov.demand.util.Constants.INVALID_DEMAND_DETAIL_MSG;
-import static org.egov.demand.util.Constants.INVALID_DEMAND_DETAIL_REPLACETEXT;
-import static org.egov.demand.util.Constants.INVALID_DEMAND_DETAIL_TAX_TEXT;
-import static org.egov.demand.util.Constants.INVALID_NEGATIVE_DEMAND_DETAIL_ERROR_MSG;
-import static org.egov.demand.util.Constants.MDMS_CODE_FILTER;
-import static org.egov.demand.util.Constants.MDMS_MASTER_NAMES;
-import static org.egov.demand.util.Constants.MODULE_NAME;
-import static org.egov.demand.util.Constants.TAXHEADMASTER_PATH_CODE;
-import static org.egov.demand.util.Constants.TAXHEADS_NOT_FOUND_KEY;
-import static org.egov.demand.util.Constants.TAXHEADS_NOT_FOUND_MSG;
-import static org.egov.demand.util.Constants.TAXHEADS_NOT_FOUND_REPLACETEXT;
-import static org.egov.demand.util.Constants.TAXPERIOD_NOT_FOUND_FROMDATE;
-import static org.egov.demand.util.Constants.TAXPERIOD_NOT_FOUND_KEY;
-import static org.egov.demand.util.Constants.TAXPERIOD_NOT_FOUND_MSG;
-import static org.egov.demand.util.Constants.TAXPERIOD_NOT_FOUND_TODATE;
-import static org.egov.demand.util.Constants.TAXPERIOD_PATH_CODE;
-import static org.egov.demand.util.Constants.USER_UUID_NOT_FOUND_KEY;
-import static org.egov.demand.util.Constants.USER_UUID_NOT_FOUND_MSG;
-import static org.egov.demand.util.Constants.USER_UUID_NOT_FOUND_REPLACETEXT;
+import static org.egov.demand.util.Constants.*;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -433,7 +396,7 @@ public class DemandValidatorV1 {
 		validateDemandDetails(olddemandDetails, errorMap);
 
 		/*
-		 * validate demand for Create is called to validate the new demands which is part of update
+		 * validate demand for Create is called to validate the new demand details which is part of update
 		 * 
 		 * error map will be thrown in the create method itself
 		 */
@@ -463,6 +426,12 @@ public class DemandValidatorV1 {
 		 * 
 		 */
 		Set<String> demandIds = oldDemands.stream().map(Demand::getId).collect(Collectors.toSet());
+		
+		if (CollectionUtils.isEmpty(demandIds)) {
+			errorMap.put(DEMAND_WITH_NO_ID_KEY, DEMAND_WITH_NO_ID_MSG);
+			throw new CustomException(errorMap);
+		}
+		
 		DemandCriteria demandCriteria = DemandCriteria.builder().tenantId(tenantId).demandId(demandIds).build();
 		Map<String, Demand> demandMap = demandRepository.getDemands(demandCriteria).stream()
 				.collect(Collectors.toMap(Demand::getId, Function.identity()));

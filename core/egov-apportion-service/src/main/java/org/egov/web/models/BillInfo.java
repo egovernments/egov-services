@@ -9,6 +9,7 @@ import java.util.List;
 import org.springframework.validation.annotation.Validated;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import lombok.AllArgsConstructor;
@@ -64,6 +65,7 @@ public class BillInfo {
     private List<BillDetail> billDetails = null;
 
     @Size(min=1)
+    @NotNull
     @JsonProperty("taxAndPayments")
     private List<TaxAndPayment> taxAndPayments = null;
 

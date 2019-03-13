@@ -116,9 +116,8 @@ public class ReceiptValidator {
                 validateIfReceiptForBillPresent(errorMap, receipts, billDetails);
             }
 
-            validateBusinessServiceCode(receiptRequest.getRequestInfo(), billDetails, errorMap);
-
-            validateBillAccountDetails(billDetails.getBillAccountDetails(), errorMap);
+/*            validateBusinessServiceCode(receiptRequest.getRequestInfo(), billDetails, errorMap);
+            validateBillAccountDetails(billDetails.getBillAccountDetails(), errorMap);*/
 
             totalAmountPaid = totalAmountPaid.add(amountPaid);
 
@@ -310,7 +309,6 @@ public class ReceiptValidator {
             if (isNull(billAccountDetail.getPurpose())) {
                 throw new CustomException("PURPOSE_MISSING", PURPOSE_MISSING_MESSAGE);
             }
-
             if (org.apache.commons.lang3.StringUtils.isEmpty(billAccountDetail.getGlcode())) {
                 throw new CustomException("COA_MISSING", COA_MISSING_MESSAGE);
             }

@@ -63,7 +63,6 @@ public class EncryptionDecryptionTest {
     private User getUser() {
 
         return User.builder()
-                .id(1L)
                 .username("userName")
                 .salutation("salutation")
                 .name("name")

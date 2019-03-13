@@ -15,7 +15,9 @@ import org.egov.common.contract.request.RequestInfo;
 import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -126,6 +128,8 @@ public class ReceiptEnricher {
             validatedBill.getBillDetails().get(i).setAdditionalDetails(billFromRequest.getBillDetails().get(i).getAdditionalDetails());
 
             enrichBillAccountDetails(validatedBill.getBillDetails().get(i), billFromRequest.getBillDetails().get(i));
+            
+            validateTaxAndPayment(billFromRequest, validatedBill);
 
         }
 
@@ -134,6 +138,56 @@ public class ReceiptEnricher {
                 ().toString()).lastModifiedDate(System.currentTimeMillis()).build();
         receipt.setBill(validatedBills);
         receipt.setAuditDetails(auditDetails);
+
+    }
+    
+    /**
+     * Validates taxAndPayment array as follows:
+     * 1. If part payment is allowed, amountPaid can be less than or equal to taxAmount.
+     * 2. If the part payment is not allowed, amountPaid should be equal to taxAmount.
+     * 3. Other sanity checks like if the businessservices sent in the request are valid etc.
+     * 
+     * 
+     * @param billFromRequest
+     * @param validatedBill
+     */
+    public void validateTaxAndPayment(Bill billFromRequest, Bill validatedBill) {
+    	Map<String, String> errorMap = new HashMap<>();
+    	Map<String, BigDecimal> mapOfBusinessSvcAndAmtPaid = billFromRequest.getTaxAndPayments().stream()
+    			.collect(Collectors.toMap(TaxAndPayment :: getBusinessService, TaxAndPayment :: getAmountPaid));
+    	Map<String, BigDecimal> mapOfBusinessSvcAndTaxAmt = validatedBill.getTaxAndPayments().stream()
+    			.collect(Collectors.toMap(TaxAndPayment :: getBusinessService, TaxAndPayment :: getTaxAmount));
+    	billFromRequest.getTaxAndPayments().forEach(taxAndPayment -> {
+    		if(!validatedBill.getBillDetails().get(0).getPartPaymentAllowed()) {
+    			if(mapOfBusinessSvcAndAmtPaid.keySet().size() != mapOfBusinessSvcAndTaxAmt.keySet().size()) {
+        			errorMap.put("INVALID_TAXANDPAYMENT_DATA_CODE", "taxAndPayment should have all the businessCodes as part payment is not allowed.");
+    			}else {
+    				if(!new HashSet<>(mapOfBusinessSvcAndAmtPaid.keySet()).equals(new HashSet<>(mapOfBusinessSvcAndTaxAmt.keySet()))) {
+            			errorMap.put("INVALID_TAXANDPAYMENT_DATA_CODE", "taxAndPayment should have all the businessCodes as part payment is not allowed.");
+    				}
+    			}
+    	    	if(!CollectionUtils.isEmpty(errorMap.keySet())) {
+    	    		throw new CustomException(errorMap);
+    	    	}
+        		if(taxAndPayment.getAmountPaid().compareTo(BigDecimal.ZERO) <= 0) {
+        			errorMap.put("INVALID_AMT_PAID_ZERO_NEG_CODE", "Amount paid in the taxAndPayment array cannot be less than or equal to zero");
+        		}
+        		if(mapOfBusinessSvcAndAmtPaid.get(taxAndPayment.getBusinessService())
+        				.compareTo(mapOfBusinessSvcAndTaxAmt.get(taxAndPayment.getBusinessService())) != 0) {
+        			errorMap.put("INVALID_AMT_PAID_CODE", "Amount paid in the taxAndPayment array should be equal to Tax Amount!");
+        		}
+    		}else {
+        		if(taxAndPayment.getAmountPaid().compareTo(BigDecimal.ZERO) < 0) {
+        			errorMap.put("INVALID_AMT_PAID_NEG_CODE", "Amount paid in the taxAndPayment array cannot be less than zero");
+        		}
+        		if(null == mapOfBusinessSvcAndTaxAmt.get(taxAndPayment.getBusinessService())) {
+        			errorMap.put("INVALID_BUSINESSERVICE_CODE", "taxAndPayment should have payments against only valid businesservices.");
+        		}
+    		}
+    	});
+    	if(!CollectionUtils.isEmpty(errorMap.keySet())) {
+    		throw new CustomException(errorMap);
+    	}
 
     }
 

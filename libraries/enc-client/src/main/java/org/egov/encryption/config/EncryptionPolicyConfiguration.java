@@ -1,11 +1,13 @@
 package org.egov.encryption.config;
 
 import com.fasterxml.jackson.core.JsonFactory;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectReader;
+import net.minidev.json.JSONArray;
+import org.egov.common.contract.request.RequestInfo;
 import org.egov.encryption.models.Attribute;
 import org.egov.encryption.models.EncryptionPolicy;
+import org.egov.mdms.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
@@ -13,10 +15,7 @@ import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.PostConstruct;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Component
@@ -36,16 +35,27 @@ public class EncryptionPolicyConfiguration {
                     "\"moduleDetails\":[{\"moduleName\":\"DataSecurity\"," +
                     "\"masterDetails\":[{\"name\":\"EncryptionPolicy\"}]}]}}";
 
-            RestTemplate restTemplate = new RestTemplate();
-            ResponseEntity<JsonNode> response =
-                    restTemplate.postForEntity(encProperties.getEgovMdmsHost() + encProperties.getEgovMdmsSearchEndpoint(),
-                            objectMapper.readTree(mdmsRequest), JsonNode.class);
+            MasterDetail masterDetail = MasterDetail.builder().name(EncClientConstants.MDMS_ENCRYPTION_MASTER_NAME).build();
+            ModuleDetail moduleDetail = ModuleDetail.builder().moduleName(EncClientConstants.MDMS_MODULE_NAME)
+                    .masterDetails(Arrays.asList(masterDetail)) .build();
 
-            String policyListString = String.valueOf(response.getBody().get("MdmsRes").get(
-                    "DataSecurity").get("EncryptionPolicy"));
+            MdmsCriteria mdmsCriteria = MdmsCriteria.builder().tenantId(encProperties.getStateLevelTenantId())
+                    .moduleDetails(Arrays.asList(moduleDetail)).build();
+
+            MdmsCriteriaReq mdmsCriteriaReq = MdmsCriteriaReq.builder().requestInfo(RequestInfo.builder().build())
+                    .mdmsCriteria(mdmsCriteria).build();
+
+            RestTemplate restTemplate = new RestTemplate();
+            ResponseEntity<MdmsResponse> response =
+                    restTemplate.postForEntity(encProperties.getEgovMdmsHost() + encProperties.getEgovMdmsSearchEndpoint(),
+                            mdmsCriteriaReq, MdmsResponse.class);
+
+            JSONArray policyListJSON = response.getBody().getMdmsRes().get(EncClientConstants.MDMS_MODULE_NAME)
+                    .get(EncClientConstants.MDMS_DECRYPTION_MASTER_NAME);
+
             ObjectReader reader = objectMapper.readerFor(objectMapper.getTypeFactory().constructCollectionType(List.class,
                     EncryptionPolicy.class));
-            encryptionPolicyList = reader.readValue(policyListString);
+            encryptionPolicyList = reader.readValue(policyListJSON.toString());
         } catch (IOException e) {}
 
         initializeKeyAttributeMap(encryptionPolicyList);

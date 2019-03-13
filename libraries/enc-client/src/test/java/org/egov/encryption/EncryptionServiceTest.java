@@ -6,12 +6,17 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.egov.common.contract.request.Role;
 import org.egov.common.contract.request.User;
-import org.egov.encryption.config.EncryptionConfiguration;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Import;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.junit4.SpringRunner;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -19,11 +24,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Slf4j
-@Import(EncryptionConfiguration.class)
+//@RunWith(SpringJUnit4ClassRunner.class)
+//@EnableConfigurationProperties
+//@SpringBootTest(classes = TestConfiguration.class)
 public class EncryptionServiceTest {
 
     @Autowired
-    EncryptionService encryptionService;
+    private EncryptionService encryptionService;
+
     ObjectMapper mapper;
     User user;
 

@@ -48,22 +48,23 @@ import org.egov.demand.web.contract.BusinessServiceDetailResponse;
 import org.egov.demand.web.contract.RequestInfoWrapper;
 import org.egov.demand.web.contract.factory.ResponseFactory;
 import org.egov.demand.web.validator.BusinessServiceDetailValidator;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
-import javax.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
 
 @RestController
+@Slf4j
 @RequestMapping("/businessservices")
-@Deprecated
 public class BusinessServiceDetailController {
-
-    private static final Logger logger = LoggerFactory.getLogger(BusinessServiceDetailController.class);
 
     @Autowired
     private BusinessServDetailService businessServDetailService;
@@ -78,7 +79,7 @@ public class BusinessServiceDetailController {
     @ResponseBody
     public ResponseEntity<?> search(@RequestBody @Valid final RequestInfoWrapper requestInfoWrapper,
                                     @ModelAttribute @Valid final BusinessServiceDetailCriteria BusinessServiceDetailsCriteria, final BindingResult bindingResult) {
-        logger.info("BusinessServiceDetailsCriteria -> " + BusinessServiceDetailsCriteria + "requestInfoWrapper -> " + requestInfoWrapper);
+        log.info("BusinessServiceDetailsCriteria -> " + BusinessServiceDetailsCriteria + "requestInfoWrapper -> " + requestInfoWrapper);
 
         if (bindingResult.hasErrors()) {
             final ErrorResponse errorResponse = responseFactory.getErrorResponse(bindingResult, requestInfoWrapper.getRequestInfo());
@@ -90,6 +91,7 @@ public class BusinessServiceDetailController {
 
     @PostMapping("_create")
     @ResponseBody
+    @Deprecated
     public ResponseEntity<?> create(@RequestBody @Valid final BusinessServiceDetailRequest businessServiceDetailRequest, final BindingResult bindingResult) {
         RequestInfo requestInfo = businessServiceDetailRequest.getRequestInfo();
         if (bindingResult.hasErrors()) {
@@ -103,6 +105,7 @@ public class BusinessServiceDetailController {
 
     @PostMapping("_update")
     @ResponseBody
+    @Deprecated
     public ResponseEntity<?> update(@RequestBody @Valid final BusinessServiceDetailRequest businessServiceDetailRequest, final BindingResult bindingResult) {
         RequestInfo requestInfo = businessServiceDetailRequest.getRequestInfo();
         if (bindingResult.hasErrors()) {

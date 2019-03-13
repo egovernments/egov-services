@@ -11,8 +11,6 @@ import org.egov.demand.web.contract.TaxHeadMasterRequest;
 import org.egov.demand.web.contract.TaxHeadMasterResponse;
 import org.egov.demand.web.contract.factory.ResponseFactory;
 import org.egov.demand.web.validator.TaxHeadMasterValidator;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,12 +22,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-@RestController
-@RequestMapping("/taxheads")
-@Deprecated
-public class TaxHeadMasterController {
+import lombok.extern.slf4j.Slf4j;
 
-	private static final Logger logger = LoggerFactory.getLogger(TaxHeadMasterController.class);
+@RestController
+@Slf4j
+@RequestMapping("/taxheads")
+public class TaxHeadMasterController {
 
 	@Autowired
 	private TaxHeadMasterService taxHeadMasterService;
@@ -46,7 +44,7 @@ public class TaxHeadMasterController {
 			@ModelAttribute @Valid final TaxHeadMasterCriteria taxHeadMasterCriteria,
 			final BindingResult bindingResult) {
 		
-		logger.info("taxHeadMasterCriteria::" + taxHeadMasterCriteria + "requestInfoWrapper::" + requestInfoWrapper);
+		log.info("taxHeadMasterCriteria::" + taxHeadMasterCriteria + "requestInfoWrapper::" + requestInfoWrapper);
 		RequestInfo requestInfo = requestInfoWrapper.getRequestInfo();
 		if (bindingResult.hasErrors()) {
 			final ErrorResponse errorResponse = responseFactory.getErrorResponse(bindingResult, requestInfo);
@@ -59,11 +57,12 @@ public class TaxHeadMasterController {
 
 	@PostMapping("_create")
 	@ResponseBody
+	@Deprecated
 	public ResponseEntity<?> create(@RequestBody @Valid final TaxHeadMasterRequest taxHeadMasterRequest,
 			final BindingResult bindingResult) {
 		RequestInfo requestInfo = taxHeadMasterRequest.getRequestInfo();
 		System.out.println("inside controller tax head master create");
-		logger.info("create tax Head Master:" + taxHeadMasterRequest);
+		log.info("create tax Head Master:" + taxHeadMasterRequest);
 		if (bindingResult.hasErrors()) {
 			final ErrorResponse errorResponse = responseFactory.getErrorResponse(bindingResult, requestInfo);
 			return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
@@ -78,10 +77,11 @@ public class TaxHeadMasterController {
 
 	@PostMapping("_update")
 	@ResponseBody
+	@Deprecated
 	public ResponseEntity<?> update(@RequestBody @Valid final TaxHeadMasterRequest taxHeadMasterRequest,
 			final BindingResult bindingResult) {
 		RequestInfo requestInfo = taxHeadMasterRequest.getRequestInfo();
-		logger.info("update tax Head Master:" + taxHeadMasterRequest);
+		log.info("update tax Head Master:" + taxHeadMasterRequest);
 		if (bindingResult.hasErrors()) {
 			final ErrorResponse errorResponse = responseFactory.getErrorResponse(bindingResult, requestInfo);
 			return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);

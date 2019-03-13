@@ -50,8 +50,6 @@ import org.egov.demand.web.contract.TaxPeriodRequest;
 import org.egov.demand.web.contract.TaxPeriodResponse;
 import org.egov.demand.web.contract.factory.ResponseFactory;
 import org.egov.demand.web.validator.TaxPeriodValidator;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -63,12 +61,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import lombok.extern.slf4j.Slf4j;
+
 @RestController
 @RequestMapping("/taxperiods")
-@Deprecated
+@Slf4j
 public class TaxPeriodController {
-
-    private static final Logger logger = LoggerFactory.getLogger(TaxPeriodController.class);
 
     @Autowired
     private TaxPeriodService taxPeriodService;
@@ -83,7 +81,7 @@ public class TaxPeriodController {
     @ResponseBody
     public ResponseEntity<?> search(@RequestBody @Valid final RequestInfoWrapper requestInfoWrapper,
                                     @ModelAttribute @Valid final TaxPeriodCriteria taxPeriodCriteria, final BindingResult bindingResult) {
-        logger.info("taxPeriodCriteria -> " + taxPeriodCriteria + "requestInfoWrapper -> " + requestInfoWrapper);
+        log.info("taxPeriodCriteria -> " + taxPeriodCriteria + "requestInfoWrapper -> " + requestInfoWrapper);
 
         if (bindingResult.hasErrors()) {
             final ErrorResponse errorResponse = responseFactory.getErrorResponse(bindingResult, requestInfoWrapper.getRequestInfo());
@@ -95,6 +93,7 @@ public class TaxPeriodController {
 
     @PostMapping("_create")
     @ResponseBody
+    @Deprecated
     public ResponseEntity<?> create(@RequestBody @Valid final TaxPeriodRequest taxPeriodRequest, final BindingResult bindingResult){
         RequestInfo requestInfo = taxPeriodRequest.getRequestInfo();
         if(bindingResult.hasErrors()){
@@ -108,6 +107,7 @@ public class TaxPeriodController {
 
     @PostMapping("_update")
     @ResponseBody
+    @Deprecated
     public ResponseEntity<?> update(@RequestBody @Valid final TaxPeriodRequest taxPeriodRequest, final BindingResult bindingResult){
         RequestInfo requestInfo = taxPeriodRequest.getRequestInfo();
         if(bindingResult.hasErrors()){

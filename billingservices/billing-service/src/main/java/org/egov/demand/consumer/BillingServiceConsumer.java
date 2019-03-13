@@ -60,7 +60,6 @@ public class BillingServiceConsumer {
 		
 		log.debug("key:" + topic + ":" + "value:" + consumerRecord);
 
-		try {
 
 			if (applicationProperties.getCreateDemandTopic().equals(topic))
 				demandService.save(objectMapper.convertValue(consumerRecord, DemandRequest.class));
@@ -87,9 +86,6 @@ public class BillingServiceConsumer {
 						objectMapper.convertValue(consumerRecord, ReceiptRequest.class));
 			}
 
-		} catch (Exception exception) {
-			log.error("processMessage:" + exception);
-			throw new CustomException("EG_BS_CONSUMER_EXCEPTION", exception.getMessage());
-		}
+		
 	}
 }

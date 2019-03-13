@@ -169,7 +169,7 @@ public class ReceiptService {
 		BigDecimal incomingAmount = billAccDetail.getAdjustedAmount();
 		Boolean isNegativeDetail = incomingAmount.compareTo(BigDecimal.ZERO) < 0;
 		
-		BigDecimal negatedIncomingAmout = incomingAmount.negate();
+		BigDecimal negatedIncomingAmout = isNegativeDetail ? incomingAmount.negate() : incomingAmount;
 		
 		if (!isRecieptCancellation)
 			updateDetailsForPayment(demandDetails, isNegativeDetail, negatedIncomingAmout);

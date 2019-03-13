@@ -55,8 +55,9 @@ public class OrderByPriorityApportion implements Apportion {
         BigDecimal amount;
         Boolean isAmountPositive;
 
+        validateOrder(billDetails);
+
         for (BillDetail billDetail : billDetails){
-            validateOrder(billDetails);
             billDetail.getBillAccountDetails().sort(Comparator.comparing(BillAccountDetail::getOrder));
             for(BillAccountDetail billAccountDetail : billDetail.getBillAccountDetails()) {
                 amount = billAccountDetail.getAmount();
@@ -70,17 +71,17 @@ public class OrderByPriorityApportion implements Apportion {
                     }
 
                     if (remainingAmount.compareTo(amount) <= 0) {
-                        billAccountDetail.setAdjustedAmount(remainingAmount.negate());
+                        billAccountDetail.setAdjustedAmount(remainingAmount);
                         remainingAmount = BigDecimal.ZERO;
                     }
 
                     if (remainingAmount.compareTo(amount) > 0) {
-                        billAccountDetail.setAdjustedAmount(amount.negate());
+                        billAccountDetail.setAdjustedAmount(amount);
                         remainingAmount = remainingAmount.subtract(amount);
                     }
                 }
                 else {
-                    billAccountDetail.setAdjustedAmount(amount.negate());
+                    billAccountDetail.setAdjustedAmount(amount);
                     remainingAmount = remainingAmount.subtract(amount);
                 }
             }
@@ -104,7 +105,9 @@ public class OrderByPriorityApportion implements Apportion {
     private void validateOrder(List<BillDetail> billDetails){
         Map<String,String> errorMap = new HashMap<>();
         billDetails.forEach(billDetail -> {
-            Boolean positiveTaxHeadStarted = false;
+
+            if(billDetail.getFromPeriod()==null || billDetail.getToPeriod()==null)
+                errorMap.put("INVALID PERIOD","The fromPeriod and toPeriod in BillDetail cannot be null");
 
             List<BillAccountDetail> billAccountDetails = billDetail.getBillAccountDetails();
 

@@ -11,7 +11,6 @@ import org.egov.common.contract.request.Role;
 import org.egov.tl.config.TLConfiguration;
 import org.egov.tl.repository.TLRepository;
 import org.egov.tl.web.models.TradeLicense;
-import org.egov.tl.web.models.TradeLicense.ActionEnum;
 import org.egov.tl.web.models.TradeLicenseRequest;
 import org.egov.tl.web.models.TradeLicenseSearchCriteria;
 import org.egov.tl.workflow.WorkflowIntegrator;
@@ -24,6 +23,9 @@ import org.springframework.util.CollectionUtils;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static org.egov.tl.util.TLConstants.*;
+
 
 @Service
 @Slf4j
@@ -80,7 +82,7 @@ public class PaymentUpdateService {
 					throw new CustomException("INVALID RECEIPT",
 							"No tradeLicense found for the comsumerCode " + searchCriteria.getApplicationNumber());
 
-				licenses.forEach(license -> license.setAction(ActionEnum.PAY));
+				licenses.forEach(license -> license.setAction(ACTION_PAY));
 
 				// FIXME check if the update call to repository can be avoided
 				// FIXME check why aniket is not using request info from consumer

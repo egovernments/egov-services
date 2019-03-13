@@ -601,6 +601,13 @@
       "uniqueKeys": [
         "$.code"
       ]
+    },
+    "ApplicationType": {
+      "masterName": "ApplicationType",
+      "isStateLevel": true,
+      "uniqueKeys": [
+        "$.code"
+      ]
     }
   },
   "Workflow": {
@@ -609,6 +616,50 @@
       "isStateLevel": true,
       "uniqueKeys": [
         "$.businessService"
+      ]
+    }
+  },
+  "egov-hrms": {
+    "EmployeeStatus": {
+      "masterName": "EmployeeStatus",
+      "isStateLevel": true,
+      "uniqueKeys": [
+        "$.code"
+      ]
+    },
+    "EmployeeType": {
+      "masterName": "EmployeeType",
+      "isStateLevel": true,
+      "uniqueKeys": [
+        "$.code"
+      ]
+    },
+    "Degree": {
+      "masterName": "Degree",
+      "isStateLevel": true,
+      "uniqueKeys": [
+        "$.code"
+      ]
+    },
+    "Specalization": {
+      "masterName": "Specalization",
+      "isStateLevel": true,
+      "uniqueKeys": [
+        "$.code"
+      ]
+    },
+    "DeactivationReason": {
+      "masterName": "DeactivationReason",
+      "isStateLevel": true,
+      "uniqueKeys": [
+        "$.code"
+      ]
+    },
+    "EmploymentTest": {
+      "masterName": "EmploymentTest",
+      "isStateLevel": true,
+      "uniqueKeys": [
+        "$.code"
       ]
     }
   }

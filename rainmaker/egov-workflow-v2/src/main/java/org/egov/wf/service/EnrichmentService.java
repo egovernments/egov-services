@@ -98,7 +98,7 @@ public class EnrichmentService {
             List<Action> nextAction = new ArrayList<>();
             if(!CollectionUtils.isEmpty( state.getActions())){
                 state.getActions().forEach(action -> {
-                    if(util.isRoleAvailable(roles,action.getRoles()))
+                    if(util.isRoleAvailable(roles,action.getRoles()) && !nextAction.contains(action))
                         nextAction.add(action);
                 });
             }
@@ -167,13 +167,14 @@ public class EnrichmentService {
     }
 
 
-    public void enrichNextActionForSearch(RequestInfo requestInfo,List<ProcessInstance> processInstances){
+    public List<ProcessStateAndAction> enrichNextActionForSearch(RequestInfo requestInfo,List<ProcessInstance> processInstances){
         List<ProcessStateAndAction> processStateAndActions = new LinkedList<>();
         List<ProcessInstanceRequest> requests = getRequestByBusinessService(new ProcessInstanceRequest(requestInfo,processInstances));
         requests.forEach(request -> {
             processStateAndActions.addAll(transitionService.getProcessStateAndActions(new ProcessInstanceRequest(requestInfo,processInstances),false));
         });
         setNextActions(requestInfo,processStateAndActions,false);
+        return processStateAndActions;
     }
 
 

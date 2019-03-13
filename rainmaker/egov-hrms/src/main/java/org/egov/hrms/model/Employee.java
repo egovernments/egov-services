@@ -41,16 +41,17 @@
 package org.egov.hrms.model;
 
 import lombok.*;
+import org.egov.hrms.web.contract.User;
+import org.hibernate.validator.constraints.NotEmpty;
+import org.springframework.validation.annotation.Validated;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-
-import org.egov.hrms.web.contract.User;
-
 import java.util.ArrayList;
 import java.util.List;
 
+@Validated
 @AllArgsConstructor
 @EqualsAndHashCode
 @Getter
@@ -70,19 +71,19 @@ public class Employee {
     @NotNull
     private String employeeStatus;
 
-    @NonNull
+    @NotNull
     private String employeeType;
 
-    @NotNull
     private Long dateOfAppointment;
 
-    @NonNull
+    @Valid
+    @NotEmpty
     @Size(min = 1,max = 50)
     private List<Jurisdiction> jurisdictions = new ArrayList<>();
 
 
     @Valid
-    @NotNull
+    @NotEmpty
     @Size(min = 1)
     private List<Assignment> assignments = new ArrayList<>();
 
@@ -91,7 +92,7 @@ public class Employee {
     private List<ServiceHistory> serviceHistory = new ArrayList<>();
 
 
-    private boolean active;
+    private Boolean IsActive;
 
     @Valid
     @Size(max=25)
@@ -109,6 +110,7 @@ public class Employee {
     @Size(max=50)
     private List<EmployeeDocument> documents = new ArrayList<>();
 
+    @Valid
     private List<DeactivationDetails> deactivationDetails = new ArrayList<>();
 
     private AuditDetails auditDetails;

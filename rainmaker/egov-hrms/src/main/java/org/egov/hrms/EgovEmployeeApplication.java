@@ -40,20 +40,23 @@
 
 package org.egov.hrms;
 
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.TimeZone;
+
+import javax.annotation.PostConstruct;
+
 import org.egov.tracer.config.TracerConfiguration;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Import;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 
-import javax.annotation.PostConstruct;
-import java.util.TimeZone;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @SpringBootApplication
+@ComponentScan(basePackages = { "org.egov.hrms", "org.egov.hrms.web.controllers" , "org.egov.hrms.config"})
 @Import(TracerConfiguration.class)
 public class EgovEmployeeApplication {
 
@@ -75,14 +78,5 @@ public class EgovEmployeeApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(EgovEmployeeApplication.class, args);
-    }
-
-    @Bean
-    public MappingJackson2HttpMessageConverter jacksonConverter(ObjectMapper objectMapper) {
-        MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter();
-        objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
-        objectMapper.setTimeZone(TimeZone.getTimeZone(timeZone));
-        converter.setObjectMapper(objectMapper);
-        return converter;
     }
 }

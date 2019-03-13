@@ -6,10 +6,7 @@ import org.egov.common.contract.request.Role;
 import org.egov.tracer.model.CustomException;
 import org.egov.wf.util.BusinessUtil;
 import org.egov.wf.util.WorkflowUtil;
-import org.egov.wf.web.models.Action;
-import org.egov.wf.web.models.BusinessService;
-import org.egov.wf.web.models.ProcessStateAndAction;
-import org.egov.wf.web.models.State;
+import org.egov.wf.web.models.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
@@ -46,6 +43,29 @@ public class WorkflowValidator {
         validateAction(requestInfo,processStateAndActions,businessService);
         validateDocuments(processStateAndActions);
     }
+
+
+    /**
+     * Validates if the search functionality is available for the role of the user
+     * @param requestInfo The RequestInfo of the search request
+     * @param processStateAndActions The ProcessStateAndAction object of the search result
+     */
+    public void validateSearch(RequestInfo requestInfo, List<ProcessStateAndAction> processStateAndActions){
+        Map<String,String> errorMap = new HashMap<>();
+        Set<String> businessIds = util.getBusinessIds(processStateAndActions);
+        businessIds.forEach(businessId -> {
+            ProcessStateAndAction processStateAndAction = util.getLatestProcessStateAndAction(businessId,processStateAndActions);
+            List<String> rolesInState = util.getAllRolesFromState(processStateAndAction.getCurrentState());
+            Boolean isAssignedToMe = false;
+            if(processStateAndAction.getProcessInstanceFromRequest().getAssignee()!=null)
+                isAssignedToMe = (processStateAndAction.getProcessInstanceFromRequest().getAssignee().getUuid().equalsIgnoreCase(requestInfo.getUserInfo().getUuid())) ? true : false;
+            if(!util.isRoleAvailable(requestInfo.getUserInfo().getRoles(),rolesInState) && !isAssignedToMe)
+                errorMap.put("INVALID SEARCH","Access denied for processInstance: "+processStateAndAction.getProcessInstanceFromRequest().getId());
+        });
+        if(!errorMap.isEmpty())
+            throw new CustomException(errorMap);
+    }
+
 
 
     /**
@@ -96,12 +116,12 @@ public class WorkflowValidator {
              *  Validates if action is not causing transition then it must have atleast one of the field
              *  either documents or comment or assignee to be not null
              */
-            if(!isStateChanging && (processStateAndAction.getProcessInstanceFromRequest().getAssignee()==null
+            /*if(!isStateChanging && (processStateAndAction.getProcessInstanceFromRequest().getAssignee()==null
                     && CollectionUtils.isEmpty(processStateAndAction.getProcessInstanceFromRequest().getDocuments())
                     && StringUtils.isEmpty(processStateAndAction.getProcessInstanceFromRequest().getComment()))){
                 throw new CustomException("INVALID PROCESSINSTANCE","For non-transition actions atleast one of comment,assignee or document should be not null.The BusinessId: "
                         +processStateAndAction.getProcessInstanceFromRequest().getBusinessId());
-            }
+            }*/
 
             /*
              * Checks in case of non-transition action the assigner is one having transition role in current state

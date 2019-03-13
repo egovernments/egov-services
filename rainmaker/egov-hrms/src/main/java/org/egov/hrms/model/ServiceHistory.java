@@ -44,6 +44,9 @@ import lombok.*;
 
 import javax.validation.constraints.NotNull;
 
+import org.springframework.validation.annotation.Validated;
+
+@Validated
 @EqualsAndHashCode(exclude = {"auditDetails"})
 @Builder
 @AllArgsConstructor
@@ -67,7 +70,7 @@ public class ServiceHistory {
 	
 	private String tenantId;	
 
-	private  boolean isCurrentPosition;
+	private  Boolean isCurrentPosition;
 
 	private AuditDetails auditDetails;
 

@@ -7,7 +7,7 @@ serviceMaps:
    isTransaction: true
    queryMaps:
 
-       - query: INSERT INTO eg_pt_property_v2(tenantId,propertyId, status,acknowldgementNumber, oldPropertyId, creationReason, occupancyDate ,createdBy,createdTime,lastModifiedBy,lastModifiedTime ) VALUES (?,?,?,?,?,?,?,?,?,?,?);
+       - query: INSERT INTO eg_pt_property_v2(tenantId,propertyId, status,acknowldgementNumber, oldPropertyId, creationReason, occupancyDate,additionalDetails ,createdBy,createdTime,lastModifiedBy,lastModifiedTime ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?);
          basePath: Properties.*
          jsonMaps:
           - jsonPath: $.Properties.*.tenantId
@@ -23,6 +23,10 @@ serviceMaps:
           - jsonPath: $.Properties.*.creationReason
 
           - jsonPath: $.Properties.*.occupancyDate
+
+          - jsonPath: $.Properties.*.additionalDetails
+            type: JSON
+            dbType: JSONB
 
           - jsonPath: $.Properties.*.auditDetails.createdBy
 
@@ -319,9 +323,13 @@ serviceMaps:
 
 
 
-        - query: UPDATE eg_pt_property_v2 SET status=?,acknowldgementNumber=?,oldPropertyId=?,creationReason=?, occupancyDate=?,lastModifiedBy=?, lastModifiedTime=? where propertyId=? AND tenantId=?;
+        - query: UPDATE eg_pt_property_v2 SET additionalDetails=?,status=?,acknowldgementNumber=?,oldPropertyId=?,creationReason=?, occupancyDate=?,lastModifiedBy=?, lastModifiedTime=? where propertyId=? AND tenantId=?;
           basePath: Properties.*
           jsonMaps:
+
+           - jsonPath: $.Properties.*.additionalDetails
+             type: JSON
+             dbType: JSONB
 
            - jsonPath: $.Properties.*.status
 

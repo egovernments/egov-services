@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.hrms.model.Employee;
 import org.egov.hrms.model.SMSRequest;
@@ -41,31 +42,63 @@ public class NotificationService {
 
 	@Value("${egov.localization.search.endpoint}")
 	private String localizationSearchEndpoint;
-    
-	
-	public void sendNotification(EmployeeRequest request) {
-		//String message = getMessage(request);
-		String message = "Profile is successfully set up - Username: $username, Password: $password. Reset your pwd at $applink";
+
+	/**
+	 * Sends notification by putting the sms content onto the core-sms topic
+	 * 
+	 * @param request
+	 * @param pwdMap
+	 */
+	public void sendNotification(EmployeeRequest request, Map<String, String> pwdMap) {
+		String message = getMessage(request);
+		if(StringUtils.isEmpty(message)) {
+			log.info("SMS content has not been configured for this case");
+			return;
+		}
 		for(Employee employee: request.getEmployees()) {
-			message = buildMessage(employee, message);
+			message = buildMessage(employee, message, pwdMap);
 			SMSRequest smsRequest = SMSRequest.builder().mobileNumber(employee.getUser().getMobileNumber()).message(message).build();
 			producer.push(smsTopic, smsRequest);
 		}
 	}
 	
-	
+	/**
+	 * Gets the message from localization
+	 * 
+	 * @param request
+	 * @return
+	 */
 	public String getMessage(EmployeeRequest request) {
 		String tenantId = request.getEmployees().get(0).getTenantId();
 		Map<String, Map<String, String>> localizedMessageMap = getLocalisedMessages(request.getRequestInfo(), tenantId, 
 				HRMSConstants.HRMS_LOCALIZATION_ENG_LOCALE_CODE, HRMSConstants.HRMS_LOCALIZATION_MODULE_CODE);
 		return localizedMessageMap.get(HRMSConstants.HRMS_LOCALIZATION_ENG_LOCALE_CODE +"|"+tenantId).get(HRMSConstants.HRMS_EMP_CREATE_LOCLZN_CODE);
 	}
-	public String buildMessage(Employee employee, String message) {
-		message = message.replace("$username", employee.getCode()).replaceAll("$password", employee.getUser().getPassword());
-		message = message.replaceAll("$applink", appLink);
+	
+	/**
+	 * Builds msg based on the format
+	 * 
+	 * @param employee
+	 * @param message
+	 * @param pwdMap
+	 * @return
+	 */
+	public String buildMessage(Employee employee, String message, Map<String, String> pwdMap) {
+		message = message.replace("$username", employee.getCode()).replace("$password", pwdMap.get(employee.getUuid()))
+				.replace("$employeename", employee.getUser().getName());
+		message = message.replace("$applink", appLink);
 		return message;
 	}
 	
+	/**
+	 * Creates a cache for localization that gets refreshed at every call.
+	 * 
+	 * @param requestInfo
+	 * @param tenantId
+	 * @param locale
+	 * @param module
+	 * @return
+	 */
 	public Map<String, Map<String, String>> getLocalisedMessages(RequestInfo requestInfo, String tenantId, String locale, String module) {
 		Map<String, Map<String, String>> localizedMessageMap = new HashMap<>();
 		Map<String, String> mapOfCodesAndMessages = new HashMap<>();

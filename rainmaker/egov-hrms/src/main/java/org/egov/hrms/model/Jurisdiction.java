@@ -45,6 +45,9 @@ import lombok.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import org.springframework.validation.annotation.Validated;
+
+@Validated
 @EqualsAndHashCode(exclude = {"auditDetails"})
 @Builder
 @AllArgsConstructor
@@ -72,6 +75,6 @@ public class Jurisdiction {
 
     private AuditDetails auditDetails;
 
-
+    private Boolean isActive;
 
 }

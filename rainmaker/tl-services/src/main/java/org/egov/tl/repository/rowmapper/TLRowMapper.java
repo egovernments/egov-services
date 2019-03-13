@@ -18,6 +18,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static org.egov.tl.util.TLConstants.*;
+
+
 @Component
 public class TLRowMapper  implements ResultSetExtractor<List<TradeLicense>> {
 
@@ -65,8 +68,8 @@ public class TLRowMapper  implements ResultSetExtractor<List<TradeLicense>> {
                         .financialYear(rs.getString("financialyear"))
                         .validFrom(validFrom)
                         .validTo(validTo)
-                        .action(TradeLicense.ActionEnum.fromValue(rs.getString("action")))
-                        .status(TradeLicense.StatusEnum.fromValue(rs.getString("status")))
+                        .action(rs.getString("action"))
+                        .status(rs.getString("status"))
                         .tenantId(tenantId)
                         .tradeName(rs.getString("tradeName"))
                         .propertyId(rs.getString("propertyid"))
@@ -139,16 +142,13 @@ public class TLRowMapper  implements ResultSetExtractor<List<TradeLicense>> {
 
             Double operationalArea = (Double) rs.getObject("operationalArea");
             Integer noOfEmployees = (Integer) rs.getObject("noOfEmployees");
-            Object obj = rs.getObject("additionaldetail");
             PGobject pgObj = (PGobject) rs.getObject("additionaldetail");
             try {
-                JsonNode additionalDetail = mapper.readTree(pgObj.getValue());
                 TradeLicenseDetail tradeLicenseDetail = TradeLicenseDetail.builder()
                         .surveyNo(rs.getString("surveyno"))
                         .channel(TradeLicenseDetail.ChannelEnum.fromValue(rs.getString("channel")))
                         .subOwnerShipCategory(rs.getString("subownershipcategory"))
                         .id(tradeLicenseDetailId)
-                        .additionalDetail(additionalDetail)
                         .address(address)
                         .auditDetails(auditdetails)
                         .structureType(rs.getString("structureType"))
@@ -160,6 +160,12 @@ public class TLRowMapper  implements ResultSetExtractor<List<TradeLicense>> {
                         .adhocPenaltyReason(rs.getString("adhocPenaltyReason"))
                         .institution(institution)
                         .build();
+
+                if(pgObj!=null){
+                    JsonNode additionalDetail = mapper.readTree(pgObj.getValue());
+                    tradeLicenseDetail.setAdditionalDetail(additionalDetail);
+                }
+
                 tradeLicense.setTradeLicenseDetail(tradeLicenseDetail);
             }
             catch (IOException e){

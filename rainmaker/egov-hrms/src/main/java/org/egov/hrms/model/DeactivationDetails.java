@@ -1,10 +1,11 @@
 package org.egov.hrms.model;
 
+import lombok.*;
+import org.springframework.validation.annotation.Validated;
+
 import javax.validation.constraints.NotNull;
 
-import lombok.*;
-import org.egov.hrms.model.enums.DeactivationType;
-
+@Validated
 @EqualsAndHashCode(exclude = {"auditDetails"})
 @AllArgsConstructor
 @Getter
@@ -16,14 +17,16 @@ public class DeactivationDetails {
 	
 	private String id;
 
+	@NotNull
 	private String reasonForDeactivation;
 	
 	private String orderNo;
 
+	private String remarks;
+
+	@NotNull
 	private Long effectiveFrom;
 
-	private DeactivationType typeOfDeactivation;
-	
 	private String tenantId;
 
 	private AuditDetails auditDetails;

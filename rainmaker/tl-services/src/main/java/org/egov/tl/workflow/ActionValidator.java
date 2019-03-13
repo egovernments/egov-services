@@ -14,6 +14,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import static org.egov.tl.util.TLConstants.*;
+
+
 @Component
 public class ActionValidator {
 
@@ -34,20 +37,20 @@ public class ActionValidator {
         Map<String,String> errorMap = new HashMap<>();
 
         request.getLicenses().forEach(license -> {
-            if(TradeLicense.ActionEnum.INITIATE.equals(license.getAction())){
+            if(ACTION_INITIATE.equalsIgnoreCase(license.getAction())){
                 if(license.getTradeLicenseDetail().getApplicationDocuments()!=null)
                     errorMap.put("INVALID ACTION","Action should be APPLY when application document are provided");
             }
-            if(TradeLicense.ActionEnum.APPLY.equals(license.getAction())){
+            if(ACTION_APPLY.equalsIgnoreCase(license.getAction())){
                 if(license.getTradeLicenseDetail().getApplicationDocuments()==null)
                     errorMap.put("INVALID ACTION","Action cannot be changed to APPLY. Application document are not provided");
             }
-            if(!TradeLicense.ActionEnum.APPLY.equals(license.getAction()) &&
-                    !TradeLicense.ActionEnum.INITIATE.equals(license.getAction())){
+            if(!ACTION_APPLY.equalsIgnoreCase(license.getAction()) &&
+                    !ACTION_INITIATE.equalsIgnoreCase(license.getAction())){
                 errorMap.put("INVALID ACTION","Action can only be APPLY or INITIATE during create");
             }
         });
-        validateRole(request);
+    //    validateRole(request);
 
         if(!errorMap.isEmpty())
             throw new CustomException(errorMap);
@@ -73,11 +76,11 @@ public class ActionValidator {
     private void validateDocumentsForUpdate(TradeLicenseRequest request){
         Map<String,String> errorMap = new HashMap<>();
         request.getLicenses().forEach(license -> {
-            if(TradeLicense.ActionEnum.INITIATE.equals(license.getAction())){
+            if(ACTION_INITIATE.equalsIgnoreCase(license.getAction())){
                 if(license.getTradeLicenseDetail().getApplicationDocuments()!=null)
                     errorMap.put("INVALID STATUS","Status cannot be INITIATE when application document are provided");
             }
-            if(TradeLicense.ActionEnum.APPLY.equals(license.getAction())){
+            if(ACTION_APPLY.equalsIgnoreCase(license.getAction())){
                 if(license.getTradeLicenseDetail().getApplicationDocuments()==null)
                     errorMap.put("INVALID STATUS","Status cannot be APPLY when application document are not provided");
             }
@@ -141,8 +144,8 @@ public class ActionValidator {
     private void validateIds(TradeLicenseRequest request){
         Map<String,String> errorMap = new HashMap<>();
         request.getLicenses().forEach(license -> {
-            if(!license.getStatus().equals(TradeLicense.StatusEnum.APPLIED)
-                    && !license.getStatus().equals(TradeLicense.StatusEnum.INITIATED)) {
+            if(!license.getStatus().equalsIgnoreCase(STATUS_APPLIED)
+                    && !license.getStatus().equalsIgnoreCase(STATUS_INITIATED)) {
                 if (license.getId() == null)
                     errorMap.put("INVALID UPDATE", "Id of tradeLicense cannot be null");
                 if(license.getTradeLicenseDetail().getId()==null)

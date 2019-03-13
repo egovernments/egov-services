@@ -59,8 +59,8 @@ public class WorkflowService {
         RequestInfo requestInfo = request.getRequestInfo();
 
         List<ProcessStateAndAction> processStateAndActions = transitionService.getProcessStateAndActions(request,true);
-        workflowValidator.validateRequest(requestInfo,processStateAndActions);
         enrichmentService.enrichProcessRequest(requestInfo,processStateAndActions);
+        workflowValidator.validateRequest(requestInfo,processStateAndActions);
         statusUpdateService.updateStatus(requestInfo,processStateAndActions);
         return request.getProcessInstances();
     }
@@ -80,7 +80,8 @@ public class WorkflowService {
         if(CollectionUtils.isEmpty(processInstances))
             return processInstances;
         enrichmentService.enrichUsersFromSearch(processInstances);
-        enrichmentService.enrichNextActionForSearch(requestInfo,processInstances);
+        List<ProcessStateAndAction> processStateAndActions = enrichmentService.enrichNextActionForSearch(requestInfo,processInstances);
+    //    workflowValidator.validateSearch(requestInfo,processStateAndActions);
         enrichmentService.enrichAndUpdateSlaForSearch(processInstances);
         return processInstances;
     }

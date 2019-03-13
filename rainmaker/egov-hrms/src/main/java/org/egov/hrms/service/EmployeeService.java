@@ -43,6 +43,7 @@ package org.egov.hrms.service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.hrms.config.PropertiesManager;
 import org.egov.hrms.model.AuditDetails;
@@ -50,6 +51,8 @@ import org.egov.hrms.model.Employee;
 import org.egov.hrms.model.enums.UserType;
 import org.egov.hrms.producer.HRMSProducer;
 import org.egov.hrms.repository.EmployeeRepository;
+import org.egov.hrms.utils.ErrorConstants;
+import org.egov.hrms.utils.HRMSConstants;
 import org.egov.hrms.utils.HRMSUtils;
 import org.egov.hrms.utils.ResponseInfoFactory;
 import org.egov.hrms.web.contract.*;
@@ -58,11 +61,8 @@ import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
-import java.time.Instant;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -98,105 +98,197 @@ public class EmployeeService {
 	
 	@Autowired
 	private NotificationService notificationService;
+	
+	@Autowired
+	private ObjectMapper objectMapper;
 
+	/**
+	 * Service method for create employee. Does following:
+	 * 1. Sets ids to all the objects using idgen service.
+	 * 2. Enriches the employee object with required parameters
+	 * 3. Creates user in the egov-user service.
+	 * 4. Sends notification upon successful creation
+	 * 
+	 * @param employeeRequest
+	 * @return
+	 */
 	public EmployeeResponse create(EmployeeRequest employeeRequest) {
-		log.info("Service: Create Employee");
-		log.info(employeeRequest.toString());
 		RequestInfo requestInfo = employeeRequest.getRequestInfo();
+		Map<String, String> pwdMap = new HashMap<>();
+		idGenService.setIds(employeeRequest);
 		employeeRequest.getEmployees().stream().forEach(employee -> {
 			enrichCreateRequest(employee, requestInfo);
 			createUser(employee, requestInfo);
+			pwdMap.put(employee.getUuid(), employee.getUser().getPassword());
+			employee.getUser().setPassword(null);
 		});
 		hrmsProducer.push(propertiesManager.getSaveEmployeeTopic(), employeeRequest);
-		notificationService.sendNotification(employeeRequest);
+		notificationService.sendNotification(employeeRequest, pwdMap);
 		return generateResponse(employeeRequest);
 	}
 	
+	/**
+	 * Searches employees on a given criteria.
+	 * 
+	 * @param criteria
+	 * @param requestInfo
+	 * @return
+	 */
 	public EmployeeResponse search(EmployeeSearchCriteria criteria, RequestInfo requestInfo) {
-		List<Employee> employees = repository.fetchEmployees(criteria, requestInfo);
-		List<String> uuids = employees.stream().map(Employee :: getUuid).collect(Collectors.toList());
-		if(!CollectionUtils.isEmpty(uuids)){
-			UserResponse userResponse = userService.getUser(requestInfo, uuids);
-			if(!CollectionUtils.isEmpty(userResponse.getUser())) {
-				Map<String, User> mapOfUsers = userResponse.getUser().parallelStream()
-						.collect(Collectors.toMap(User :: getUuid, Function.identity()));
-				employees.parallelStream().forEach(employee -> employee.setUser(mapOfUsers.get(employee.getUuid())));
-			}else{
-				log.info("Users couldn't be fetched!");
+		if(null == criteria.getIsActive() || criteria.getIsActive())
+			criteria.setIsActive(true);
+		else
+			criteria.setIsActive(false);
+        Map<String, User> mapOfUsers = new HashMap<String, User>();
+		if(!StringUtils.isEmpty(criteria.getPhone()) || !CollectionUtils.isEmpty(criteria.getRoles())) {
+            Map<String, Object> userSearchCriteria = new HashMap<>();
+            userSearchCriteria.put(HRMSConstants.HRMS_USER_SEARCH_CRITERA_TENANTID,criteria.getTenantId());
+            if(!StringUtils.isEmpty(criteria.getPhone()))
+                userSearchCriteria.put(HRMSConstants.HRMS_USER_SEARCH_CRITERA_MOBILENO,criteria.getPhone());
+            if( !CollectionUtils.isEmpty(criteria.getRoles()) )
+                userSearchCriteria.put(HRMSConstants.HRMS_USER_SEARCH_CRITERA_ROLECODES,criteria.getRoles());
+            UserResponse userResponse = userService.getUser(requestInfo, userSearchCriteria);
+            if(!CollectionUtils.isEmpty(userResponse.getUser())) {
+                 mapOfUsers.putAll(userResponse.getUser().stream()
+                        .collect(Collectors.toMap(User::getUuid, Function.identity())));
+            }
+			List<String> userUUIDs = userResponse.getUser().stream().map(User :: getUuid).collect(Collectors.toList());
+            if(!CollectionUtils.isEmpty(criteria.getUuids()))
+                criteria.setUuids(criteria.getUuids().stream().filter(userUUIDs::contains).collect(Collectors.toList()));
+            else
+                criteria.setUuids(userUUIDs);
+		}
+		if(!((!CollectionUtils.isEmpty(criteria.getRoles()) || !StringUtils.isEmpty(criteria.getPhone())) && CollectionUtils.isEmpty(criteria.getUuids()))){
+			if(!CollectionUtils.isEmpty(criteria.getNames())) {
+				List<String> userUUIDs = new ArrayList<>();
+				for(String name: criteria.getNames()) {
+					Map<String, Object> userSearchCriteria = new HashMap<>();
+					userSearchCriteria.put(HRMSConstants.HRMS_USER_SEARCH_CRITERA_TENANTID,criteria.getTenantId());
+					userSearchCriteria.put(HRMSConstants.HRMS_USER_SEARCH_CRITERA_NAME,name);
+					UserResponse userResponse = userService.getUser(requestInfo, userSearchCriteria);
+					if(!CollectionUtils.isEmpty(userResponse.getUser())) {
+						mapOfUsers.putAll(userResponse.getUser().stream()
+								.collect(Collectors.toMap(User::getUuid, Function.identity())));
+					}
+					List<String> uuids = userResponse.getUser().stream().map(User :: getUuid).collect(Collectors.toList());
+					userUUIDs.addAll(uuids);
+				}
+				if(!CollectionUtils.isEmpty(criteria.getUuids()))
+					criteria.setUuids(criteria.getUuids().stream().filter(userUUIDs::contains).collect(Collectors.toList()));
+				else
+					criteria.setUuids(userUUIDs);
 			}
+		}
+        List <Employee> employees = new ArrayList<>();
+        if(!((!CollectionUtils.isEmpty(criteria.getRoles()) || !CollectionUtils.isEmpty(criteria.getNames()) || !StringUtils.isEmpty(criteria.getPhone())) && CollectionUtils.isEmpty(criteria.getUuids())))
+            employees = repository.fetchEmployees(criteria, requestInfo);
+        List<String> uuids = employees.stream().map(Employee :: getUuid).collect(Collectors.toList());
+		if(!CollectionUtils.isEmpty(uuids)){
+            Map<String, Object> UserSearchCriteria = new HashMap<>();
+            UserSearchCriteria.put(HRMSConstants.HRMS_USER_SEARCH_CRITERA_UUID,uuids);
+            if(mapOfUsers.isEmpty()){
+            UserResponse userResponse = userService.getUser(requestInfo, UserSearchCriteria);
+			if(!CollectionUtils.isEmpty(userResponse.getUser())) {
+				mapOfUsers = userResponse.getUser().stream()
+						.collect(Collectors.toMap(User :: getUuid, Function.identity()));
+            }
+            }
+            for(Employee employee: employees){
+                employee.setUser(mapOfUsers.get(employee.getUuid()));
+            }
 		}
 		return EmployeeResponse.builder().responseInfo(factory.createResponseInfoFromRequestInfo(requestInfo, true))
 				.employees(employees).build();
 	}
 	
 	
-
+	/**
+	 * Creates user by making call to egov-user.
+	 * 
+	 * @param employee
+	 * @param requestInfo
+	 */
 	private void createUser(Employee employee, RequestInfo requestInfo) {
 		enrichUser(employee);
 		UserRequest request = UserRequest.builder().requestInfo(requestInfo).user(employee.getUser()).build();
 		try {
-			ObjectMapper objectMapper=new ObjectMapper();
-			log.info("req= "+objectMapper.writeValueAsString(request));
 			UserResponse response = userService.createUser(request);
 			User user = response.getUser().get(0);
 			employee.setId(user.getId());
 			employee.setUuid(user.getUuid());
-			employee.setUser(user);
+			employee.getUser().setId(user.getId());
+			employee.getUser().setUuid(user.getUuid());
 		}catch(Exception e) {
 			log.error("Exception while creating user: ",e);
-			throw new CustomException("HRMS_USER_CREATION_FAILED", "User creation failed due to error: "+e.getMessage());
+			log.error("request: "+request);
+			throw new CustomException(ErrorConstants.HRMS_USER_CREATION_FAILED_CODE, ErrorConstants.HRMS_USER_CREATION_FAILED_MSG);
 		}
 
 	}
 
+	/**
+	 * Enriches the user object.
+	 * 
+	 * @param employee
+	 */
 	private void enrichUser(Employee employee) {
 		List<String> pwdParams = new ArrayList<>();
 		pwdParams.add(employee.getCode());
 		pwdParams.add(employee.getUser().getMobileNumber());
 		pwdParams.add(employee.getTenantId());
 		pwdParams.add(employee.getUser().getName());
-		pwdParams.add(employee.getUser().getDob().toString());
 		employee.getUser().setPassword(hrmsUtils.generatePassword(pwdParams));
 		employee.getUser().setUserName(employee.getCode());
 		employee.getUser().setActive(true);
 		employee.getUser().setType(UserType.EMPLOYEE.toString());
 	}
 
+	/**
+	 * Enriches employee object by setting parent ids to all the child objects
+	 * 
+	 * @param employee
+	 * @param requestInfo
+	 */
 	private void enrichCreateRequest(Employee employee, RequestInfo requestInfo) {
 
-		Instant instant = Instant.now();
 		AuditDetails auditDetails = AuditDetails.builder()
-				.createdBy(requestInfo.getUserInfo().getUserName())
-				.createdDate(instant.getEpochSecond())
+				.createdBy(requestInfo.getUserInfo().getUuid())
+				.createdDate(new Date().getTime())
 				.build();
-
-
-		employee.setCode(idGenService.getId());
-
+		
 		employee.getJurisdictions().stream().forEach(jurisdiction -> {
 			jurisdiction.setId(UUID.randomUUID().toString());
 			jurisdiction.setAuditDetails(auditDetails);
+			if(null == jurisdiction.getIsActive())
+				jurisdiction.setIsActive(true);
 		});
 		employee.getAssignments().stream().forEach(assignment -> {
 			assignment.setId(UUID.randomUUID().toString());
 			assignment.setAuditDetails(auditDetails);
+			assignment.setPosition(getPosition());
 		});
 		if(!CollectionUtils.isEmpty(employee.getServiceHistory())) {
 			employee.getServiceHistory().stream().forEach(serviceHistory -> {
 				serviceHistory.setId(UUID.randomUUID().toString());
 				serviceHistory.setAuditDetails(auditDetails);
+				if(null == serviceHistory.getIsCurrentPosition())
+					serviceHistory.setIsCurrentPosition(false);
 			});
 		}
 		if(!CollectionUtils.isEmpty(employee.getEducation())) {
 			employee.getEducation().stream().forEach(educationalQualification -> {
 				educationalQualification.setId(UUID.randomUUID().toString());
 				educationalQualification.setAuditDetails(auditDetails);
+				if(null == educationalQualification.getIsActive())
+					educationalQualification.setIsActive(true);
 			});
 		}
 		if(!CollectionUtils.isEmpty(employee.getTests())) {
 			employee.getTests().stream().forEach(departmentalTest -> {
 				departmentalTest.setId(UUID.randomUUID().toString());
 				departmentalTest.setAuditDetails(auditDetails);
+				if(null == departmentalTest.getIsActive())
+					departmentalTest.setIsActive(true);
 			});
 		}
 		if(!CollectionUtils.isEmpty(employee.getDocuments())) {
@@ -205,13 +297,27 @@ public class EmployeeService {
 				document.setAuditDetails(auditDetails);
 			});
 		}
-
 		employee.setAuditDetails(auditDetails);
-		employee.setActive(true);
+		employee.setIsActive(true);
+	}
+	
+	/**
+	 * Fetches next value from the position sequence table
+	 * @return
+	 */
+	public Long getPosition() {
+		return repository.fetchPosition();
 	}
 
+	/**
+	 * Service method to update user. Performs the following:
+	 * 1. Enriches the employee object with required parameters.
+	 * 2. Updates user by making call to the user service.
+	 * 
+	 * @param employeeRequest
+	 * @return
+	 */
 	public EmployeeResponse update(EmployeeRequest employeeRequest) {
-		log.info("Service: Update Employee");
 		RequestInfo requestInfo = employeeRequest.getRequestInfo();
 		List <String> uuidList= new ArrayList<>();
 		for(Employee employee: employeeRequest.getEmployees()) {
@@ -228,37 +334,58 @@ public class EmployeeService {
 		return generateResponse(employeeRequest);
 	}
 	
+	/**
+	 * Updates the user by making call to the user service.
+	 * 
+	 * @param employee
+	 * @param requestInfo
+	 */
 	private void updateUser(Employee employee, RequestInfo requestInfo) {
 		UserRequest request = UserRequest.builder().requestInfo(requestInfo).user(employee.getUser()).build();
 		try {
 			userService.updateUser(request);
 		}catch(Exception e) {
 			log.error("Exception while updating user: ",e);
-			throw new CustomException("HRMS_USER_UPDATION_FAILED", "User update failed due to error: "+e.getMessage());
+			log.error("request: "+request);
+			throw new CustomException(ErrorConstants.HRMS_USER_UPDATION_FAILED_CODE, ErrorConstants.HRMS_USER_UPDATION_FAILED_MSG);
 		}
 
 	}
 
+	/**
+	 * Enriches update request with required parameters.
+	 * 
+	 * @param employee
+	 * @param requestInfo
+	 * @param existingEmployeesData
+	 */
 	private void enrichUpdateRequest(Employee employee, RequestInfo requestInfo, List<Employee> existingEmployeesData) {
-		Instant instant = Instant.now();
 		AuditDetails auditDetails = AuditDetails.builder()
 				.createdBy(requestInfo.getUserInfo().getUserName())
-				.createdDate(instant.getEpochSecond())
+				.createdDate(new Date().getTime())
 				.build();
 		Employee existingEmpData = existingEmployeesData.stream().filter(existingEmployee -> existingEmployee.getUuid().equals(employee.getUuid())).findFirst().get();
 
+		employee.getUser().setUserName(employee.getCode());
+		if(!employee.getIsActive())
+			employee.getUser().setActive(false);
+		else
+			employee.getUser().setActive(true);
+
 		employee.getJurisdictions().stream().forEach(jurisdiction -> {
 
+			if(null == jurisdiction.getIsActive())
+				jurisdiction.setIsActive(true);
 			if(jurisdiction.getId()==null) {
 				jurisdiction.setId(UUID.randomUUID().toString());
 				jurisdiction.setAuditDetails(auditDetails);
 			}else{
 				if(!existingEmpData.getJurisdictions().stream()
-						.filter(jurisdictionData ->jurisdictionData.getId()==jurisdiction.getId() )
-						.findFirst()
+						.filter(jurisdictionData ->jurisdictionData.getId().equals(jurisdiction.getId() ))
+						.findFirst().orElse(null)
 						.equals(jurisdiction)){
 					jurisdiction.getAuditDetails().setLastModifiedBy(requestInfo.getUserInfo().getUserName());
-					jurisdiction.getAuditDetails().setLastModifiedDate(instant.getEpochSecond());
+					jurisdiction.getAuditDetails().setLastModifiedDate(new Date().getTime());
 				}
 			}
 		});
@@ -268,84 +395,115 @@ public class EmployeeService {
 				assignment.setAuditDetails(auditDetails);
 			}else {
 				if(!existingEmpData.getAssignments().stream()
-						.filter(assignmentData -> assignmentData.getId()==assignment.getId())
-						.findFirst()
+						.filter(assignmentData -> assignmentData.getId().equals(assignment.getId()))
+						.findFirst().orElse(null)
 						.equals(assignment)){
 					assignment.getAuditDetails().setLastModifiedBy(requestInfo.getUserInfo().getUserName());
-					assignment.getAuditDetails().setLastModifiedDate(instant.getEpochSecond());
+					assignment.getAuditDetails().setLastModifiedDate(new Date().getTime());
 				}
 			}
 		});
-		employee.getServiceHistory().stream().forEach(serviceHistory -> {
-			if(serviceHistory.getId()==null) {
-				serviceHistory.setId(UUID.randomUUID().toString());
-				serviceHistory.setAuditDetails(auditDetails);
-			}else {
-				if(!existingEmpData.getAssignments().stream()
-						.filter(serviceHistoryData -> serviceHistoryData.getId()==serviceHistory.getId())
-						.findFirst()
-						.equals(serviceHistory)){
-					serviceHistory.getAuditDetails().setLastModifiedBy(requestInfo.getUserInfo().getUserName());
-					serviceHistory.getAuditDetails().setLastModifiedDate(instant.getEpochSecond());
+
+		if(employee.getServiceHistory()!=null){
+			employee.getServiceHistory().stream().forEach(serviceHistory -> {
+				if(null == serviceHistory.getIsCurrentPosition())
+					serviceHistory.setIsCurrentPosition(false);
+				if(serviceHistory.getId()==null) {
+					serviceHistory.setId(UUID.randomUUID().toString());
+					serviceHistory.setAuditDetails(auditDetails);
+				}else {
+					if(!existingEmpData.getServiceHistory().stream()
+							.filter(serviceHistoryData -> serviceHistoryData.getId().equals(serviceHistory.getId()))
+							.findFirst().orElse(null)
+							.equals(serviceHistory)){
+						serviceHistory.getAuditDetails().setLastModifiedBy(requestInfo.getUserInfo().getUserName());
+						serviceHistory.getAuditDetails().setLastModifiedDate(new Date().getTime());
+					}
 				}
-			}
-		});
-		employee.getEducation().stream().forEach(educationalQualification -> {
-			if(educationalQualification.getId()==null) {
-				educationalQualification.setId(UUID.randomUUID().toString());
-				educationalQualification.setAuditDetails(auditDetails);
-			}else {
-				if(!existingEmpData.getAssignments().stream()
-						.filter(educationalQualificationData -> educationalQualificationData.getId()==educationalQualification.getId())
-						.findFirst()
-						.equals(educationalQualification)){
-					educationalQualification.getAuditDetails().setLastModifiedBy(requestInfo.getUserInfo().getUserName());
-					educationalQualification.getAuditDetails().setLastModifiedDate(instant.getEpochSecond());
+			});
+
+		}
+
+		if(employee.getEducation() != null){
+			employee.getEducation().stream().forEach(educationalQualification -> {
+				if(null == educationalQualification.getIsActive())
+					educationalQualification.setIsActive(true);
+				if(educationalQualification.getId()==null) {
+					educationalQualification.setId(UUID.randomUUID().toString());
+					educationalQualification.setAuditDetails(auditDetails);
+				}else {
+
+					if(!existingEmpData.getEducation().stream()
+							.filter(educationalQualificationData -> educationalQualificationData.getId().equals(educationalQualification.getId()))
+							.findFirst().orElse(null)
+							.equals(educationalQualification)){
+						educationalQualification.getAuditDetails().setLastModifiedBy(requestInfo.getUserInfo().getUserName());
+						educationalQualification.getAuditDetails().setLastModifiedDate(new Date().getTime());
+					}
 				}
-			}
-		});
-		employee.getTests().stream().forEach(departmentalTest -> {
-			if(departmentalTest.getId()==null) {
-				departmentalTest.setId(UUID.randomUUID().toString());
-				departmentalTest.setAuditDetails(auditDetails);
-			}else {
-				if(!existingEmpData.getAssignments().stream()
-						.filter(departmentalTestData -> departmentalTestData.getId()==departmentalTest.getId())
-						.findFirst()
-						.equals(departmentalTest)){
-					departmentalTest.getAuditDetails().setLastModifiedBy(requestInfo.getUserInfo().getUserName());
-					departmentalTest.getAuditDetails().setLastModifiedDate(instant.getEpochSecond());
+			});
+
+		}
+
+		if(employee.getTests() != null){
+			employee.getTests().stream().forEach(departmentalTest -> {
+
+				if(null == departmentalTest.getIsActive())
+					departmentalTest.setIsActive(true);
+				if(departmentalTest.getId()==null) {
+					departmentalTest.setId(UUID.randomUUID().toString());
+					departmentalTest.setAuditDetails(auditDetails);
+				}else {
+					if(!existingEmpData.getTests().stream()
+							.filter(departmentalTestData -> departmentalTestData.getId().equals(departmentalTest.getId()))
+							.findFirst().orElse(null)
+							.equals(departmentalTest)){
+						departmentalTest.getAuditDetails().setLastModifiedBy(requestInfo.getUserInfo().getUserName());
+						departmentalTest.getAuditDetails().setLastModifiedDate(new Date().getTime());
+					}
 				}
-			}
-		});
-		employee.getDocuments().stream().forEach(document -> {
-			if(document.getId()==null) {
-				document.setId(UUID.randomUUID().toString());
-				document.setAuditDetails(auditDetails);
-			}else {
-				if(!existingEmpData.getAssignments().stream()
-						.filter(documentData -> documentData.getId()==document.getId())
-						.findFirst()
-						.equals(document)){
-					document.getAuditDetails().setLastModifiedBy(requestInfo.getUserInfo().getUserName());
-					document.getAuditDetails().setLastModifiedDate(instant.getEpochSecond());
+			});
+
+		}
+
+		if(employee.getDocuments() != null){
+			employee.getDocuments().stream().forEach(document -> {
+				if(document.getId()==null) {
+					document.setId(UUID.randomUUID().toString());
+					document.setAuditDetails(auditDetails);
+				}else {
+					if(!existingEmpData.getDocuments().stream()
+							.filter(documentData -> documentData.getId().equals(document.getId()))
+							.findFirst().orElse(null)
+							.equals(document)){
+						document.getAuditDetails().setLastModifiedBy(requestInfo.getUserInfo().getUserName());
+						document.getAuditDetails().setLastModifiedDate(new Date().getTime());
+					}
 				}
-			}
-		});
-		employee.getDeactivationDetails().stream().forEach(deactivationDetails -> {
-			if(deactivationDetails.getId()==null) {
-				deactivationDetails.setId(UUID.randomUUID().toString());
-				deactivationDetails.setAuditDetails(auditDetails);
-			}else {
-				if(!existingEmpData.getAssignments().stream()
-						.filter(deactivationDetailsData -> deactivationDetailsData.getId()==deactivationDetails.getId())
-						.findFirst()
-						.equals(deactivationDetails)){
-					deactivationDetails.getAuditDetails().setLastModifiedBy(requestInfo.getUserInfo().getUserName());
-					deactivationDetails.getAuditDetails().setLastModifiedDate(instant.getEpochSecond());
+			});
+
+		}
+
+		if(employee.getDeactivationDetails() != null){
+			employee.getDeactivationDetails().stream().forEach(deactivationDetails -> {
+				if(deactivationDetails.getId()==null) {
+					deactivationDetails.setId(UUID.randomUUID().toString());
+					deactivationDetails.setAuditDetails(auditDetails);
+					employee.getDocuments().forEach(employeeDocument -> {
+						employeeDocument.setReferenceId( deactivationDetails.getId());
+					});
+				}else {
+					if(!existingEmpData.getDeactivationDetails().stream()
+							.filter(deactivationDetailsData -> deactivationDetailsData.getId().equals(deactivationDetails.getId()))
+							.findFirst().orElse(null)
+							.equals(deactivationDetails)){
+						deactivationDetails.getAuditDetails().setLastModifiedBy(requestInfo.getUserInfo().getUserName());
+						deactivationDetails.getAuditDetails().setLastModifiedDate(new Date().getTime());
+					}
 				}
-			}
-		});
+			});
+
+		}
 	}
 
 	private EmployeeResponse generateResponse(EmployeeRequest employeeRequest) {

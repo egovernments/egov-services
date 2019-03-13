@@ -25,6 +25,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static java.util.Objects.isNull;
+import static org.egov.user.config.UserServiceConstants.IP_HEADER_NAME;
 import static org.springframework.util.StringUtils.isEmpty;
 
 @Component("customAuthProvider")
@@ -137,8 +138,8 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
                     password, grantedAuths);
 		} else {
 			// Handle failed login attempt
-
-			userService.handleFailedLogin(user, request.getRemoteAddr());
+			// Fetch Real IP after being forwarded by reverse proxy
+			userService.handleFailedLogin(user, request.getHeader(IP_HEADER_NAME));
 
 			throw new OAuth2Exception("Invalid login credentials");
 		}

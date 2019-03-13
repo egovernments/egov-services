@@ -312,7 +312,7 @@ public class BillService {
 				.billAccountDetails(new ArrayList<>(taxCodeAccountdetailMap.values()))
 				.collectionModesNotAllowed(business.getCollectionModesNotAllowed())
 				.minimumAmount(demand.getMinimumAmountPayable())
-				.businessService(business.getBusinessService())
+				.businessService(business.getCode())
 				.collectedAmount(collectedAmountForDemand)
 				.consumerCode(demand.getConsumerCode())
 				.consumerType(demand.getConsumerType())

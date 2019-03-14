@@ -167,6 +167,7 @@ public class BillDetail {
 	  @JsonProperty("status")
 	  private String status = null;
 	  
+	  @NotNull
 	  @JsonProperty("collectionType")
 	  private CollectionType collectionType = null;
 

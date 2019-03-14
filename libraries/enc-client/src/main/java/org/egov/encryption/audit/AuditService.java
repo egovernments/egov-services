@@ -34,13 +34,13 @@ public class AuditService {
         producer.push(encProperties.getAuditTopicName(), auditObject.getId(), objectMapper.valueToTree(auditObject).toString());
     }
 
-    public void audit(String userId, Long timestamp, String reason, JsonNode abacParams, JsonNode data) {
+    public void audit(String userId, Long timestamp, String purpose, JsonNode abacParams, JsonNode data) {
         ObjectNode auditObject = objectMapper.createObjectNode();
 
         auditObject.set("id", TextNode.valueOf(UUID.randomUUID().toString()));
         auditObject.set("userId", TextNode.valueOf(userId));
         auditObject.set("timestamp", LongNode.valueOf(timestamp));
-        auditObject.set("reason", TextNode.valueOf(reason));
+        auditObject.set("purpose", TextNode.valueOf(purpose));
         auditObject.set("abacParams", abacParams);
         auditObject.set("data", data);
 

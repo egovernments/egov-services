@@ -1,7 +1,12 @@
 package org.egov.user.web.controller;
 
+import com.fasterxml.jackson.core.JsonFactory;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.extern.slf4j.Slf4j;
 import org.egov.common.contract.response.ResponseInfo;
+import org.egov.tracer.model.CustomException;
 import org.egov.user.domain.model.User;
 import org.egov.user.domain.model.UserDetail;
 import org.egov.user.domain.model.UserSearchCriteria;
@@ -18,6 +23,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Collections;
 import java.util.List;
+import java.io.IOException;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static org.egov.tracer.http.HttpUtils.isInterServiceCall;
@@ -41,7 +48,7 @@ public class UserController {
 
     @Value("${egov.user.search.default.size}")
     private Integer defaultSearchSize;
-
+	
 
 	@Autowired
 	public UserController(UserService userService, TokenService tokenService) {
@@ -62,10 +69,10 @@ public class UserController {
 		User user = createUserRequest.toDomain(true);
 		user.setOtpValidationMandatory(IsValidationMandatory);
 		if(isRegWithLoginEnabled) {
-			Object object = userService.registerWithLogin(user);
+			Object object = userService.registerWithLogin(user,createUserRequest.getRequestInfo().getUserInfo());
 			return new ResponseEntity<>(object, HttpStatus.OK);
 		}
-		User createdUser = userService.createCitizen(user);
+		User createdUser = userService.createCitizen(user,createUserRequest.getRequestInfo().getUserInfo());
 		return createResponse(createdUser);
 	}
 
@@ -79,10 +86,11 @@ public class UserController {
 	@PostMapping("/users/_createnovalidate")
 	public UserDetailResponse createUserWithoutValidation(@RequestBody CreateUserRequest createUserRequest,
 			@RequestHeader HttpHeaders headers) {
+
 		User user = createUserRequest.toDomain(true);
 		user.setMobileValidationMandatory(isMobileValidationRequired(headers));
 		user.setOtpValidationMandatory(false);
-		final User newUser = userService.createUser(user);
+		final User newUser = userService.createUser(user,createUserRequest.getRequestInfo().getUserInfo());
 		return createResponse(newUser);
 	}
 
@@ -100,7 +108,7 @@ public class UserController {
 		if (request.getActive() == null) {
 			request.setActive(true);
 		}
-		return searchUsers(request, headers);
+		return searchUsers(request, headers,request.getRequestInfo().getUserInfo());
 	}
 
 	/**
@@ -113,7 +121,7 @@ public class UserController {
 	 */
 	@PostMapping("/v1/_search")
 	public UserSearchResponse getV1(@RequestBody UserSearchRequest request, @RequestHeader HttpHeaders headers) {
-		return searchUsers(request, headers);
+		return searchUsers(request, headers,request.getRequestInfo().getUserInfo());
 	}
 
 	/**
@@ -126,6 +134,7 @@ public class UserController {
 	public CustomUserDetails getUser(@RequestParam(value = "access_token") String accessToken) {
 		final UserDetail userDetail = tokenService.getUser(accessToken);
 		return new CustomUserDetails(userDetail);
+		//  no encrypt/decrypt
 	}
 
 	/**
@@ -140,7 +149,7 @@ public class UserController {
 														  @RequestHeader HttpHeaders headers) {
 		User user = createUserRequest.toDomain(false);
 		user.setMobileValidationMandatory(isMobileValidationRequired(headers));
-		final User updatedUser = userService.updateWithoutOtpValidation( user);
+		final User updatedUser = userService.updateWithoutOtpValidation( user,createUserRequest.getRequestInfo().getUserInfo());
 		return createResponse(updatedUser);
 	}
 
@@ -154,7 +163,7 @@ public class UserController {
 	public UserDetailResponse patch(@RequestBody final CreateUserRequest createUserRequest) {
 		log.info("Received Profile Update Request  " + createUserRequest);
 		User user = createUserRequest.toDomain(false);
-		final User updatedUser = userService.partialUpdate(user);
+		final User updatedUser = userService.partialUpdate(user,createUserRequest.getRequestInfo().getUserInfo());
 		return createResponse(updatedUser);
 	}
 
@@ -164,7 +173,7 @@ public class UserController {
 		return new UserDetailResponse(responseInfo, Collections.singletonList(userRequest));
 	}
 
-	private UserSearchResponse searchUsers(@RequestBody UserSearchRequest request, HttpHeaders headers) {
+	private UserSearchResponse searchUsers(@RequestBody UserSearchRequest request, HttpHeaders headers, org.egov.common.contract.request.User userInfo) {
 
         UserSearchCriteria searchCriteria = request.toDomain();
 
@@ -174,10 +183,7 @@ public class UserController {
                 searchCriteria.setLimit(defaultSearchSize);
         }
 
-
-		List<User> userModels = userService.searchUsers(searchCriteria, isInterServiceCall(headers));
-
-
+		List<User> userModels = userService.searchUsers(searchCriteria, isInterServiceCall(headers),userInfo);
 		List<UserSearchResponseContent> userContracts = userModels.stream().map(UserSearchResponseContent::new)
 				.collect(Collectors.toList());
 		ResponseInfo responseInfo = ResponseInfo.builder().status(String.valueOf(HttpStatus.OK.value())).build();

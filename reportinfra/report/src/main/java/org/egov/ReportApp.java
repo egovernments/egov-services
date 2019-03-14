@@ -5,7 +5,9 @@ import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import org.egov.domain.model.ReportDefinitions;
+import org.egov.encryption.config.EncryptionConfiguration;
 import org.egov.swagger.model.ReportDefinition;
+import org.egov.tracer.config.TracerConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +17,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.EnvironmentAware;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.core.io.Resource;
@@ -31,6 +34,7 @@ import java.util.List;
 @Configuration
 @PropertySource("classpath:application.properties")
 @SpringBootApplication
+@Import({EncryptionConfiguration.class})
 public class ReportApp implements EnvironmentAware {
 
 	public static final Logger LOGGER = LoggerFactory.getLogger(ReportApp.class);

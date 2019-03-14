@@ -25,7 +25,11 @@ public class ReportDefinition   {
 	
 	@JsonProperty("searchFilter")
 	private boolean searchFilter = false;
-	
+
+
+    @JsonProperty("decryptionPathId")
+    private String decryptionPathId = null;
+
 	@JsonProperty("sorting")
 	private boolean sorting = true;
 	
@@ -325,6 +329,10 @@ public void setLinkedReport(LinkedReport linkedReport) {
    * Convert the given object to string with each line indented by 4 spaces
    * (except the first line).
    */
+  public String getdecryptionPathId(){
+      return decryptionPathId;
+  }
+
   private String toIndentedString(java.lang.Object o) {
     if (o == null) {
       return "null";

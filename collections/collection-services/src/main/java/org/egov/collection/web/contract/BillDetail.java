@@ -158,6 +158,7 @@ public class BillDetail {
 	@JsonProperty("status")
 	private String status = null;
 
+	@NotNull
 	@JsonProperty("collectionType")
 	private CollectionType collectionType = null;
 
@@ -168,7 +169,6 @@ public class BillDetail {
 	private String displayMessage;
 
 	private Boolean callBackForApportioning;
-
 	private String cancellationRemarks;
 
 }

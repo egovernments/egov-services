@@ -37,9 +37,9 @@ public class CollectionsQueryBuilder {
             + " :manualreceiptdate, :manualreceiptnumber, :reference_ch_id, :stateid, :location, :isreconciled, "
             + ":status, :transactionid, :fund, :function, :department, :additionalDetails, :demandid, :demandFromDate, :demandToDate)";
 
-    public static final String INSERT_RECEIPT_DETAILS_SQL = "INSERT INTO egcl_receiptdetails(id, chartofaccount, amount, adjustedamount, ordernumber, receiptheader, "
+    public static final String INSERT_RECEIPT_DETAILS_SQL = "INSERT INTO egcl_receiptdetails(id, amount, adjustedamount, ordernumber, receiptheader, "
             + "financialyear, isactualdemand, purpose, tenantid, additionalDetails, demanddetailid, taxheadcode) "
-            + "VALUES (:id, :chartofaccount, :amount, :adjustedamount, :ordernumber, :receiptheader, "
+            + "VALUES (:id, :amount, :adjustedamount, :ordernumber, :receiptheader, "
             + ":financialyear, :isactualdemand, :purpose, :tenantid, :additionalDetails, :demanddetailid, :taxheadcode)";
 
     public static final String INSERT_INSTRUMENT_HEADER_SQL = "INSERT INTO egcl_instrumentheader(id, transactionnumber, transactiondate, amount, instrumenttype, "
@@ -88,7 +88,7 @@ public class CollectionsQueryBuilder {
             "rh_lastModifiedDate, rh.demandid as rh_demandid, rh.demandFromDate as rh_demandfromdate, " + 
             "rh.demandToDate as rh_demandtodate, rh.transactionid as rh_transactionid, rd.id as rd_id,  rd.amount as rd_amount, " +
             "rd.adjustedamount as rd_adjustedamount, rd.ordernumber as " +
-            "rd_ordernumber,  rd.description as rd_description,rd.chartOfAccount as rd_chartOfAccount,rd" +
+            "rd_ordernumber,  rd.description as rd_description,rd" +
             ".isActualDemand  as rd_isActualDemand,  rd.financialYear as rd_financialYear,rd.purpose as rd_purpose, " +
             "rd.additionalDetails as rd_additionalDetails, rd.tenantId as rd_tenantId, rd.taxheadcode as rd_taxheadcode, "+
             "rd.demanddetailid as rd_demanddetailid, ins.id as ins_instrumentheader, " +
@@ -135,9 +135,9 @@ public class CollectionsQueryBuilder {
     		+ "function, department, additionalDetails, demandid, demandFromDate, demandToDate FROM egcl_receiptheader WHERE id=:id";
     
     
-    public static final String COPY_RCPT_DETALS_SQL = "INSERT INTO egcl_receiptdetails_history (uuid, id, chartofaccount, amount, adjustedamount, ordernumber, receiptheader, "
+    public static final String COPY_RCPT_DETALS_SQL = "INSERT INTO egcl_receiptdetails_history (uuid, id, amount, adjustedamount, ordernumber, receiptheader, "
     		+ "description, financialyear, isactualdemand, purpose, tenantid, additionalDetails, demanddetailid, taxheadcode) " 
-    		+ "SELECT uuid_generate_v4() as uuid, id, chartofaccount, amount, adjustedamount, ordernumber, receiptheader, description, financialyear, isactualdemand, "
+    		+ "SELECT uuid_generate_v4() as uuid, id, amount, adjustedamount, ordernumber, receiptheader, description, financialyear, isactualdemand, "
     		+ "purpose, tenantid, additionalDetails, demanddetailid, taxheadcode FROM egcl_receiptdetails WHERE id=:id";
     
     public static final String COPY_INSTRUMENT_HEADER_SQL = "INSERT INTO egcl_instrumentheader_history (uuid, id, transactionnumber, transactiondate, amount, instrumenttype, instrumentstatus, "
@@ -162,11 +162,10 @@ public class CollectionsQueryBuilder {
         sqlParameterSource.addValue("payermobile", bill.getMobileNumber());
         sqlParameterSource.addValue("paidby", bill.getPaidBy());
         sqlParameterSource.addValue("referencenumber", billDetail.getBillNumber());
-        sqlParameterSource.addValue("receipttype", billDetail.getReceiptType());
+        sqlParameterSource.addValue("receipttype", billDetail.getReceiptType().toString());
         sqlParameterSource.addValue("receiptnumber", billDetail.getReceiptNumber());
         sqlParameterSource.addValue("receiptdate", billDetail.getReceiptDate());
         sqlParameterSource.addValue("businessdetails", billDetail.getBusinessService());
-        System.out.println("billDetail.getCollectionType(): "+billDetail.getCollectionType());
         sqlParameterSource.addValue("collectiontype", billDetail.getCollectionType().toString());
         sqlParameterSource.addValue("reasonforcancellation", billDetail.getReasonForCancellation());
         sqlParameterSource.addValue("minimumamount", billDetail.getMinimumAmount());
@@ -248,7 +247,6 @@ public class CollectionsQueryBuilder {
             String receiptHeaderId) {
         MapSqlParameterSource sqlParameterSource = new MapSqlParameterSource();
         sqlParameterSource.addValue("id", billAccountDetails.getId());
-        sqlParameterSource.addValue("chartofaccount", billAccountDetails.getGlcode());
         sqlParameterSource.addValue("ordernumber", billAccountDetails.getOrder());
         sqlParameterSource.addValue("financialyear", null);
         sqlParameterSource.addValue("isactualdemand", billAccountDetails.getIsActualDemand());

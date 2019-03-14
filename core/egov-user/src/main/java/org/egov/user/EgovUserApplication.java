@@ -1,10 +1,20 @@
 package org.egov.user;
 
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.extern.slf4j.Slf4j;
+import org.egov.encryption.EncryptionService;
+import org.egov.encryption.config.EncryptionConfiguration;
 import org.egov.tracer.config.TracerConfiguration;
+import org.egov.tracer.model.CustomException;
+import org.egov.user.domain.model.Address;
+import org.egov.user.domain.model.Role;
+import org.egov.user.domain.model.User;
+import org.egov.user.domain.model.enums.*;
+import org.egov.user.domain.service.utils.EncryptionDecryptionUtil;
 import org.egov.user.security.CustomAuthenticationKeyGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -25,11 +35,11 @@ import redis.clients.jedis.JedisShardInfo;
 
 import javax.annotation.PostConstruct;
 import java.text.SimpleDateFormat;
-import java.util.Locale;
-import java.util.TimeZone;
+import java.util.*;
 
 @SpringBootApplication
-@Import(TracerConfiguration.class)
+@Slf4j
+@Import({TracerConfiguration.class,EncryptionConfiguration.class})
 public class EgovUserApplication {
 
 

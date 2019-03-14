@@ -5,13 +5,17 @@ import org.egov.encryption.models.Attribute;
 import org.egov.encryption.util.JSONBrowseUtil;
 import org.egov.encryption.util.JacksonUtils;
 import org.reflections.Reflections;
+import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
 import java.util.*;
 
+@Service
 public class MaskingService {
 
     Map<String, Masking> maskingTechniqueMap;
 
+    @PostConstruct
     private void init() throws IllegalAccessException, InstantiationException {
         maskingTechniqueMap = new HashMap<>();
 
@@ -23,11 +27,7 @@ public class MaskingService {
         }
     }
 
-    public MaskingService() throws InstantiationException, IllegalAccessException {
-        init();
-    }
-
-    public String maskData(String data, Attribute attribute) {
+    public <T> T maskData(T data, Attribute attribute) {
         Masking masking = maskingTechniqueMap.get(attribute.getMaskingTechnique());
 
         return masking.maskData(data);
@@ -37,11 +37,9 @@ public class MaskingService {
         JsonNode maskedNode = decryptedNode.deepCopy();
 
         for(Attribute attribute : attributes) {
-            Masking masking = maskingTechniqueMap.get(attribute.getMaskingTechnique());
+            JsonNode jsonNode = JacksonUtils.filterJsonNodeForPaths(maskedNode, Arrays.asList(attribute.getJsonPath()));
 
-            JsonNode jsonNode = JacksonUtils.filterJsonNodeWithPaths(maskedNode, Arrays.asList(attribute.getJsonPath()));
-
-            jsonNode = JSONBrowseUtil.mapValues(jsonNode, value -> masking.maskData(value));
+            jsonNode = JSONBrowseUtil.mapValues(jsonNode, value -> maskData(value, attribute));
 
             maskedNode = JacksonUtils.merge(jsonNode, maskedNode);
         }

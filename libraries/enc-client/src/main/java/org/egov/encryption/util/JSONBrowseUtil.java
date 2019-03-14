@@ -40,7 +40,7 @@ public class JSONBrowseUtil {
     }
 
     private static <T, R> ValueNode mapValuesForValueNode(ValueNode valueNode, Function<T, R> valueMapper) {
-        return new TextNode(String.valueOf(valueMapper.apply( (T) valueNode.textValue())));
+        return new TextNode(String.valueOf(valueMapper.apply( (T) valueNode.asText())));
     }
 
 }

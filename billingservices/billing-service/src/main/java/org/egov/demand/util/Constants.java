@@ -62,6 +62,9 @@ public class Constants {
 	public static final String USER_UUID_NOT_FOUND_MSG = "No users found for following uuids  {resplaceValues}";
 	public static final String USER_UUID_NOT_FOUND_REPLACETEXT = "{resplaceValues}";
 	
+	public static final String EMPLOYEE_UUID_FOUND_KEY = "EG_BS_EMPLOYEE_UUID_NOTALLOWED";
+	public static final String EMPLOYEE_UUID_FOUND_MSG = "Employees cannot own a demand in system. The following uuids belonging to employees are rejected : {resplaceValues}";
+
 	public static final String INVALID_DEMAND_DETAIL_KEY = "EG_DEMAND_DEATIL_INVALID";
 	public static final String INVALID_DEMAND_DETAIL_MSG = "Invalid demand details found with following Values : {resplaceValues}";
 	public static final String INVALID_DEMAND_DETAIL_REPLACETEXT = "{resplaceValues}";

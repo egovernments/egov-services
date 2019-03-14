@@ -19,6 +19,7 @@ public class User {
 	private String uuid;
 	private Long id;
 	private String userName;
+	private String type;
 	private String salutation;
 	private String name;
 	private String gender;

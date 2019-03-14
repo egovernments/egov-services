@@ -15,6 +15,8 @@ import static org.egov.demand.util.Constants.DEMAND_NOT_FOUND_MSG;
 import static org.egov.demand.util.Constants.DEMAND_NOT_FOUND_REPLACETEXT;
 import static org.egov.demand.util.Constants.DEMAND_WITH_NO_ID_KEY;
 import static org.egov.demand.util.Constants.DEMAND_WITH_NO_ID_MSG;
+import static org.egov.demand.util.Constants.EMPLOYEE_UUID_FOUND_KEY;
+import static org.egov.demand.util.Constants.EMPLOYEE_UUID_FOUND_MSG;
 import static org.egov.demand.util.Constants.INVALID_BUSINESS_FOR_TAXPERIOD_KEY;
 import static org.egov.demand.util.Constants.INVALID_BUSINESS_FOR_TAXPERIOD_MSG;
 import static org.egov.demand.util.Constants.INVALID_BUSINESS_FOR_TAXPERIOD_REPLACE_TEXT;
@@ -332,6 +334,7 @@ public class DemandValidatorV1 {
 
 		List<User> owners = null;
 		Set<String> missingIds = new HashSet<>();
+		Set<String> employeeIds = new HashSet<>();
 
 		UserSearchRequest userSearchRequest = UserSearchRequest.builder().requestInfo(requestInfo).uuid(payerIds)
 				.pageSize(500).build();
@@ -353,11 +356,17 @@ public class DemandValidatorV1 {
 			String uuid = demand.getPayer().getUuid();
 			User payer = ownerMap.get(uuid);
 
-			if (ownerMap.get(uuid) == null)
+			if (payer == null)
 				missingIds.add(uuid);
+			else if ("EMPLOYEE".equalsIgnoreCase(payer.getType()))
+				employeeIds.add(uuid);
 			else
 				demand.setPayer(payer);
 		}
+
+		if (!CollectionUtils.isEmpty(employeeIds))
+			errorMap.put(EMPLOYEE_UUID_FOUND_KEY,
+					EMPLOYEE_UUID_FOUND_MSG.replace(USER_UUID_NOT_FOUND_REPLACETEXT, employeeIds.toString()));
 
 		if (!CollectionUtils.isEmpty(missingIds))
 			errorMap.put(USER_UUID_NOT_FOUND_KEY,

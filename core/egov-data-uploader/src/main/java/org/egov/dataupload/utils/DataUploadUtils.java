@@ -7,13 +7,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 import org.apache.commons.io.FileUtils;
@@ -114,7 +109,26 @@ public class DataUploadUtils {
         }
     }
 
-	public Document readExcelFile(InputStream stream) throws IOException, InvalidFormatException {
+    public String getCleanedName(String name) {
+        return name.replaceAll("[^a-zA-Z0-9]","").toUpperCase();
+    }
+
+    public Map<String, Integer> getColumnIndexMap(Row firstRow) throws InvalidFormatException {
+        Map<String, Integer> columnToIndex = new HashMap<>();
+
+        for (int i=0; i < firstRow.getLastCellNum(); i++) {
+            String columnName = getCellValueAsString(firstRow.getCell(i));
+            if (columnName == null || columnName.isEmpty()) {
+                continue;
+            }
+            columnName = getCleanedName(columnName);
+
+            columnToIndex.put(columnName, i);
+        }
+        return columnToIndex;
+    }
+
+    public Document readExcelFile(InputStream stream) throws IOException, InvalidFormatException {
 		try(Workbook wb = WorkbookFactory.create(stream)) {
             Sheet sheet = wb.getSheetAt(0);
 

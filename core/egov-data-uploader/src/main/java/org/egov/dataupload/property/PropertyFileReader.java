@@ -70,7 +70,7 @@ public class PropertyFileReader {
 		return propertyIdMap;
 		
 	}
-	public Map<String, Property>  parsePropertyExcel(Map<String, Sheet> sheetMap) throws InvalidFormatException {
+	public Map<String, Property> parsePropertyExcel(Map<String, Sheet> sheetMap) throws InvalidFormatException {
 
 		Sheet propertySheet = sheetMap.get("Property_Detail");
 
@@ -88,9 +88,15 @@ public class PropertyFileReader {
 			log.info("Property_Detail, processing row number" + rowNumber);
 			// Check the existing property id column (which is 2)
 			int existPropertyId_cellIndex= PTTemplateDetail.Existing_Property_Id.ordinal();
-			if((row.getCell(existPropertyId_cellIndex)!=null)&&StringUtils.isEmpty(row.getCell(existPropertyId_cellIndex).getStringCellValue())){
+
+			if((row.getCell(existPropertyId_cellIndex) != null) && StringUtils.isEmpty(row.getCell(existPropertyId_cellIndex).getStringCellValue())){
 				break;
 			}
+
+			if (!dataUploadUtils.getCellValueAsBoolean(row.getCell(PTTemplateDetail.Process.ordinal()))) {
+				continue;
+			}
+
 			for (int i = 0; i < row.getLastCellNum(); i++) {
 				Cell cell = row.getCell(i);
 				if (null != cell)

@@ -5,6 +5,7 @@ import java.util.Map;
 
 
 public enum PTTemplateDetail {
+    Process,
     Tenant,
     City,
     Existing_Property_Id,

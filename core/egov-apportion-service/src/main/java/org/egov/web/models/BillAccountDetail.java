@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.math.BigDecimal;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import org.egov.web.models.enums.Purpose;
 import org.springframework.validation.annotation.Validated;
 import lombok.AllArgsConstructor;
@@ -24,23 +25,9 @@ import lombok.Builder;
 @NoArgsConstructor
 @Builder
 public class BillAccountDetail {
+
         @JsonProperty("id")
         private String id = null;
-
-        @JsonProperty("glcode")
-        private String glcode = null;
-
-        @JsonProperty("order")
-        private Integer order = null;
-
-        @JsonProperty("amount")
-        private BigDecimal amount = null;
-
-        @JsonProperty("adjustedAmount")
-        private BigDecimal adjustedAmount;
-
-        @JsonProperty("isActualDemand")
-        private Boolean isActualDemand = null;
 
         @JsonProperty("tenantId")
         private String tenantId = null;
@@ -51,16 +38,27 @@ public class BillAccountDetail {
         @JsonProperty("demandDetailId")
         private String demandDetailId = null;
 
+        @JsonProperty("order")
+        private Integer order = null;
+
+        @JsonProperty("amount")
+        private BigDecimal amount = null;
+
+        @JsonProperty("adjustedAmount")
+        private BigDecimal adjustedAmount = null;
+
+        @JsonProperty("isActualDemand")
+        private Boolean isActualDemand = null;
+
+        @JsonProperty("glcode")
+        private String glcode = null;
+
         @JsonProperty("taxHeadCode")
         private String taxHeadCode = null;
 
-        @JsonProperty("purpose")
-        private Purpose purpose;
-
         @JsonProperty("additionalDetails")
-        private Object additionalDetails = null;
+        private JsonNode additionalDetails = null;
 
-
-
+        @JsonProperty("purpose")
+        private Purpose purpose = null;
 }
-

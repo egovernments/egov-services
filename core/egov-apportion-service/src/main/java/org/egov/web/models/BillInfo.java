@@ -30,8 +30,16 @@ import lombok.Builder;
 @NoArgsConstructor
 @Builder
 public class BillInfo {
+    // TODO some of the fields are mandatory in yml, lets discuss billdetail and billaccountdetail also for more clarity
+
     @JsonProperty("id")
-    private BigDecimal id = null;
+    private String id = null;
+
+    @JsonProperty("mobileNumber")
+    private String mobileNumber = null;
+
+    @JsonProperty("paidBy")
+    private String paidBy = null;
 
     @JsonProperty("payerName")
     private String payerName = null;
@@ -42,54 +50,28 @@ public class BillInfo {
     @JsonProperty("payerEmail")
     private String payerEmail = null;
 
-    @JsonProperty("paidBy")
-    private String paidBy = null;
-
     @JsonProperty("isActive")
     private Boolean isActive = null;
 
     @JsonProperty("isCancelled")
     private Boolean isCancelled = null;
 
-    @JsonProperty("tenantId")
-    private String tenantId = null;
+    @JsonProperty("additionalDetails")
+    private Object additionalDetails = null;
 
-    @JsonProperty("mobileNumber")
-    private String mobileNumber = null;
-
-    @JsonProperty("auditDetails")
-    private AuditDetails auditDetails = null;
+    @JsonProperty("taxAndPayments")
+    @Valid
+    @NotNull
+    private List<TaxAndPayment> taxAndPayments = null;
 
     @JsonProperty("billDetails")
     @Valid
     private List<BillDetail> billDetails = null;
 
-    @Size(min=1)
-    @NotNull
-    @JsonProperty("taxAndPayments")
-    private List<TaxAndPayment> taxAndPayments = null;
+    @JsonProperty("tenantId")
+    private String tenantId = null;
 
-    @JsonProperty("additionalDetails")
-    private Object additionalDetails = null;
-
-
-    public BillInfo addBillDetailsItem(BillDetail billDetailsItem) {
-        if (this.billDetails == null) {
-            this.billDetails = new ArrayList<>();
-        }
-        this.billDetails.add(billDetailsItem);
-        return this;
-    }
-
-
-    public BillInfo addTaxAndPayment(TaxAndPayment taxAndPaymentItem) {
-        if (this.taxAndPayments == null) {
-            this.taxAndPayments = new ArrayList<>();
-        }
-        this.taxAndPayments.add(taxAndPaymentItem);
-        return this;
-    }
-
+    @JsonProperty("auditDetails")
+    private AuditDetails auditDetails = null;
 
 }
-

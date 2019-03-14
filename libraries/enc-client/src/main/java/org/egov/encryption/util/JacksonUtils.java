@@ -15,9 +15,9 @@ import java.util.List;
 public class JacksonUtils {
 
     public static JsonNode merge(JsonNode newNode, JsonNode originalNode) {
-        if(newNode == null)
+        if(newNode == null || newNode.isNull())
             return originalNode;
-        else if(originalNode == null)
+        else if(originalNode == null || originalNode.isNull())
             return newNode;
 
         if(newNode.isObject())
@@ -29,8 +29,15 @@ public class JacksonUtils {
     }
 
     static ArrayNode mergeArrayNode(ArrayNode newNode, ArrayNode originalNode) {
-        for (int i = 0; i < newNode.size(); i++) {
-            merge(newNode.get(i), originalNode.get(i));
+        int size = newNode.size();
+        if(newNode.size() < originalNode.size())
+            size = originalNode.size();
+        for (int i = 0; i < size; i++) {
+            JsonNode jsonNode = merge(newNode.get(i), originalNode.get(i));
+            if(i < newNode.size())
+                newNode.set(i, jsonNode);
+            else
+                newNode.add(jsonNode);
         }
         return newNode;
     }
@@ -56,7 +63,7 @@ public class JacksonUtils {
         return newNode;
     }
 
-    public static JsonNode filterJsonNodeWithPaths(JsonNode jsonNode, List<String> filterPaths) {
+    public static JsonNode filterJsonNodeForPaths(JsonNode jsonNode, List<String> filterPaths) {
         ObjectMapper mapper = new ObjectMapper(new JsonFactory());
 
         JsonNode filteredNode;

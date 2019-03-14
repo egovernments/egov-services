@@ -9,9 +9,9 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class KeyRoleAttributeAccess {
+public class EncryptionPolicy {
 
     private String key;
-    private List<RoleAttributeAccess> roleAttributeAccessList;
+    private List<Attribute> attributeList;
 
 }

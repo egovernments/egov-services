@@ -1,6 +1,45 @@
 package org.egov.demand.web.validator;
 
-import static org.egov.demand.util.Constants.*;
+import static org.egov.demand.util.Constants.BUSINESSSERVICE_NOT_FOUND_KEY;
+import static org.egov.demand.util.Constants.BUSINESSSERVICE_NOT_FOUND_MSG;
+import static org.egov.demand.util.Constants.BUSINESSSERVICE_NOT_FOUND_REPLACETEXT;
+import static org.egov.demand.util.Constants.BUSINESSSERVICE_PATH_CODE;
+import static org.egov.demand.util.Constants.CONSUMER_CODE_DUPLICATE_CONSUMERCODE_TEXT;
+import static org.egov.demand.util.Constants.CONSUMER_CODE_DUPLICATE_KEY;
+import static org.egov.demand.util.Constants.CONSUMER_CODE_DUPLICATE_MSG;
+import static org.egov.demand.util.Constants.DEMAND_DETAIL_NOT_FOUND_KEY;
+import static org.egov.demand.util.Constants.DEMAND_DETAIL_NOT_FOUND_MSG;
+import static org.egov.demand.util.Constants.DEMAND_DETAIL_NOT_FOUND_REPLACETEXT;
+import static org.egov.demand.util.Constants.DEMAND_NOT_FOUND_KEY;
+import static org.egov.demand.util.Constants.DEMAND_NOT_FOUND_MSG;
+import static org.egov.demand.util.Constants.DEMAND_NOT_FOUND_REPLACETEXT;
+import static org.egov.demand.util.Constants.DEMAND_WITH_NO_ID_KEY;
+import static org.egov.demand.util.Constants.DEMAND_WITH_NO_ID_MSG;
+import static org.egov.demand.util.Constants.INVALID_BUSINESS_FOR_TAXPERIOD_KEY;
+import static org.egov.demand.util.Constants.INVALID_BUSINESS_FOR_TAXPERIOD_MSG;
+import static org.egov.demand.util.Constants.INVALID_BUSINESS_FOR_TAXPERIOD_REPLACE_TEXT;
+import static org.egov.demand.util.Constants.INVALID_DEMAND_DETAIL_COLLECTION_TEXT;
+import static org.egov.demand.util.Constants.INVALID_DEMAND_DETAIL_ERROR_MSG;
+import static org.egov.demand.util.Constants.INVALID_DEMAND_DETAIL_KEY;
+import static org.egov.demand.util.Constants.INVALID_DEMAND_DETAIL_MSG;
+import static org.egov.demand.util.Constants.INVALID_DEMAND_DETAIL_REPLACETEXT;
+import static org.egov.demand.util.Constants.INVALID_DEMAND_DETAIL_TAX_TEXT;
+import static org.egov.demand.util.Constants.INVALID_NEGATIVE_DEMAND_DETAIL_ERROR_MSG;
+import static org.egov.demand.util.Constants.MDMS_CODE_FILTER;
+import static org.egov.demand.util.Constants.MDMS_MASTER_NAMES;
+import static org.egov.demand.util.Constants.MODULE_NAME;
+import static org.egov.demand.util.Constants.TAXHEADMASTER_PATH_CODE;
+import static org.egov.demand.util.Constants.TAXHEADS_NOT_FOUND_KEY;
+import static org.egov.demand.util.Constants.TAXHEADS_NOT_FOUND_MSG;
+import static org.egov.demand.util.Constants.TAXHEADS_NOT_FOUND_REPLACETEXT;
+import static org.egov.demand.util.Constants.TAXPERIOD_NOT_FOUND_FROMDATE;
+import static org.egov.demand.util.Constants.TAXPERIOD_NOT_FOUND_KEY;
+import static org.egov.demand.util.Constants.TAXPERIOD_NOT_FOUND_MSG;
+import static org.egov.demand.util.Constants.TAXPERIOD_NOT_FOUND_TODATE;
+import static org.egov.demand.util.Constants.TAXPERIOD_PATH_CODE;
+import static org.egov.demand.util.Constants.USER_UUID_NOT_FOUND_KEY;
+import static org.egov.demand.util.Constants.USER_UUID_NOT_FOUND_MSG;
+import static org.egov.demand.util.Constants.USER_UUID_NOT_FOUND_REPLACETEXT;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -135,8 +174,7 @@ public class DemandValidatorV1 {
 		/*
 		 * Validating payer(Citizen) data
 		 */
-		validatePayer(payerIds, requestInfo, errorMap);
-		
+		validatePayer(demands, payerIds, requestInfo, errorMap);
 		/*
 		 * Validating demand details for tax and collection amount
 		 * 
@@ -284,7 +322,7 @@ public class DemandValidatorV1 {
      * @param requestInfo
      * @param errorMap
      */
-	private void validatePayer(Set<String> payerIds, RequestInfo requestInfo, Map<String, String> errorMap) {
+	private void validatePayer(List<Demand> demands, Set<String> payerIds, RequestInfo requestInfo, Map<String, String> errorMap) {
 
 		if (CollectionUtils.isEmpty(payerIds))
 			return;
@@ -298,25 +336,34 @@ public class DemandValidatorV1 {
 		UserSearchRequest userSearchRequest = UserSearchRequest.builder().requestInfo(requestInfo).uuid(payerIds)
 				.pageSize(500).build();
 
-		owners = mapper.convertValue(serviceRequestRepository.fetchResult(url, userSearchRequest), UserResponse.class).getUser();
+		owners = mapper.convertValue(serviceRequestRepository.fetchResult(url, userSearchRequest), UserResponse.class)
+				.getUser();
 
-		if (!CollectionUtils.isEmpty(owners)) {
+		if (CollectionUtils.isEmpty(owners))
+			errorMap.put(USER_UUID_NOT_FOUND_KEY,
+					USER_UUID_NOT_FOUND_MSG.replace(USER_UUID_NOT_FOUND_REPLACETEXT, payerIds.toString()));
 
-			Map<String, String> ownerMap = owners.stream().collect(Collectors.toMap(User::getUuid, User::getUuid));
+		Map<String, User> ownerMap = owners.stream().collect(Collectors.toMap(User::getUuid, Function.identity()));
 
-			/*
-			 * Adding the missing ids to the list to be added to error map
-			 */
-			for (String uuid : payerIds)
-				if (ownerMap.get(uuid) == null)
-					missingIds.add(uuid);
-			
-			if(!CollectionUtils.isEmpty(missingIds))
-				errorMap.put(USER_UUID_NOT_FOUND_KEY,
-						USER_UUID_NOT_FOUND_MSG.replace(USER_UUID_NOT_FOUND_REPLACETEXT, missingIds.toString()));
+		/*
+		 * Adding the missing ids to the list to be added to error map
+		 */
+		for (Demand demand : demands) {
+
+			String uuid = demand.getPayer().getUuid();
+			User payer = ownerMap.get(uuid);
+
+			if (ownerMap.get(uuid) == null)
+				missingIds.add(uuid);
+			else
+				demand.setPayer(payer);
 		}
+
+		if (!CollectionUtils.isEmpty(missingIds))
+			errorMap.put(USER_UUID_NOT_FOUND_KEY,
+					USER_UUID_NOT_FOUND_MSG.replace(USER_UUID_NOT_FOUND_REPLACETEXT, missingIds.toString()));
 	}
-	
+
 	/**
 	 * Method to validate demand details based on tax and collection amount
 	 * 

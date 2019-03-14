@@ -301,6 +301,9 @@ public class DemandService {
 			
 			payers = mapper.convertValue(serviceRequestRepository.fetchResult(userUri, userSearchRequest), UserResponse.class).getUser();
 			
+			if(CollectionUtils.isEmpty(payers))
+				return new ArrayList<>();
+			
 			Set<String> ownerIds = payers.stream().map(User::getUuid).collect(Collectors.toSet());
 			demandCriteria.setPayer(ownerIds);
 			demands = demandRepository.getDemands(demandCriteria);

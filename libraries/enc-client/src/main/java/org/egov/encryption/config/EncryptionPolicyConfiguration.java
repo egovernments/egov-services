@@ -49,7 +49,7 @@ public class EncryptionPolicyConfiguration {
                             mdmsCriteriaReq, MdmsResponse.class);
 
             JSONArray policyListJSON = response.getBody().getMdmsRes().get(EncClientConstants.MDMS_MODULE_NAME)
-                    .get(EncClientConstants.MDMS_DECRYPTION_MASTER_NAME);
+                    .get(EncClientConstants.MDMS_ENCRYPTION_MASTER_NAME);
 
             ObjectReader reader = objectMapper.readerFor(objectMapper.getTypeFactory().constructCollectionType(List.class,
                     EncryptionPolicy.class));

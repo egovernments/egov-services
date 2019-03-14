@@ -1,8 +1,10 @@
 package org.egov.encryption.audit;
 
-import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.LongNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.fasterxml.jackson.databind.node.TextNode;
 import org.egov.common.contract.request.User;
 import org.egov.encryption.config.EncProperties;
 import org.egov.encryption.models.AuditObject;
@@ -30,6 +32,19 @@ public class AuditService {
         auditObject.setId(UUID.randomUUID().toString());
 
         producer.push(encProperties.getAuditTopicName(), auditObject.getId(), objectMapper.valueToTree(auditObject).toString());
+    }
+
+    public void audit(String userId, Long timestamp, String reason, JsonNode abacParams, JsonNode data) {
+        ObjectNode auditObject = objectMapper.createObjectNode();
+
+        auditObject.set("id", TextNode.valueOf(UUID.randomUUID().toString()));
+        auditObject.set("userId", TextNode.valueOf(userId));
+        auditObject.set("timestamp", LongNode.valueOf(timestamp));
+        auditObject.set("reason", TextNode.valueOf(reason));
+        auditObject.set("abacParams", abacParams);
+        auditObject.set("data", data);
+
+        producer.push(encProperties.getAuditTopicName(), auditObject.get("id").asText(), auditObject);
     }
 
 }

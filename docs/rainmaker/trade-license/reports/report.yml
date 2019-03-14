@@ -1,6 +1,7 @@
 ---
 ReportDefinitions:
 - reportName: TradeLicenseRegistryReport
+  decryptionPathId: TradeLicenseRegistryReport
   summary: TL Basic Report
   version: 1.0.0
   moduleName: rainmaker-tl
@@ -245,6 +246,7 @@ ReportDefinitions:
 
 
 - reportName: StateLevelTradeLicenseRegistryReport
+  decryptionPathId: StateLevelTradeLicenseRegistryReport
   summary: TL Basic Report State Level
   version: 1.0.0
   moduleName: rainmaker-tl

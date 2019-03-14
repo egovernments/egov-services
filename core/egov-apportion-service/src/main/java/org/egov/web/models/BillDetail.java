@@ -7,7 +7,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.fasterxml.jackson.databind.type.CollectionType;
+import org.egov.web.enums.CollectionType;
 import org.springframework.validation.annotation.Validated;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;

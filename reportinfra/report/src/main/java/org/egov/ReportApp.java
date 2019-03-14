@@ -1,5 +1,6 @@
 package org.egov;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -189,6 +190,14 @@ public class ReportApp implements EnvironmentAware {
 		mapper.setSerializationInclusion(Include.NON_NULL);
 		return mapper;
 	}
+
+	@Bean
+	public ObjectMapper objectMapper(){
+        ObjectMapper mapper = new ObjectMapper(new JsonFactory());
+        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        mapper.configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true);
+        return mapper;
+    }
 	
 	
 

@@ -162,7 +162,6 @@ public class CollectionResultSetExtractor implements ResultSetExtractor<List<Rec
                     .tenantId(resultSet.getString("rd_tenantId"))
                     .billDetail(resultSet.getString("rh_id"))
                     .order(resultSet.getInt("rd_ordernumber"))
-                    .glcode(resultSet.getString("rd_chartOfAccount"))
                     .purpose(Purpose.valueOf(resultSet.getString("rd_purpose")))
                     .additionalDetails(getJsonValue((PGobject) resultSet.getObject("rd_additionalDetails")))
                     .amount(getBigDecimalValue(resultSet.getBigDecimal("rd_amount")))

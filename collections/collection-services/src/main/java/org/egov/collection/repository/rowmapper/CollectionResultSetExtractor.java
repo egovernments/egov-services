@@ -6,6 +6,7 @@ import org.egov.collection.model.*;
 import org.egov.collection.model.enums.CollectionType;
 import org.egov.collection.model.enums.InstrumentStatusEnum;
 import org.egov.collection.model.enums.Purpose;
+import org.egov.collection.model.enums.ReceiptType;
 import org.egov.collection.web.contract.*;
 import org.egov.tracer.model.CustomException;
 import org.postgresql.util.PGobject;
@@ -51,7 +52,7 @@ public class CollectionResultSetExtractor implements ResultSetExtractor<List<Rec
                         .tenantId(resultSet.getString("rh_tenantId"))
                         .businessService(resultSet.getString("rh_businessDetails"))
                         .receiptNumber(resultSet.getString("rh_receiptNumber"))
-                        .receiptType(resultSet.getString("rh_receiptType"))
+                        .receiptType(ReceiptType.valueOf(resultSet.getString("rh_receiptType")))
                         .channel(resultSet.getString("rh_channel"))
                         .voucherHeader(resultSet.getString("rh_voucherheader"))
                         .collectionType(CollectionType.valueOf(resultSet.getString("rh_collectionType")))

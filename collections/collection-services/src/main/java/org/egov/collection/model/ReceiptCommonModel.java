@@ -42,6 +42,7 @@ package org.egov.collection.model;
 import lombok.*;
 import org.egov.collection.model.enums.CollectionType;
 import org.egov.collection.model.enums.Purpose;
+import org.egov.collection.model.enums.ReceiptType;
 import org.egov.collection.web.contract.*;
 
 import java.math.BigDecimal;
@@ -92,7 +93,7 @@ public class ReceiptCommonModel {
 					.collectionModesNotAllowed(Collections.singletonList(receiptHeader.getCollModesNotAllwd()))
 					.tenantId(receiptHeader.getTenantId())
 					.billAccountDetails(billAccountDetails).businessService(receiptHeader.getBusinessDetails())
-					.receiptNumber(receiptHeader.getReceiptNumber()).receiptType(receiptHeader.getReceiptType())
+					.receiptNumber(receiptHeader.getReceiptNumber()).receiptType(ReceiptType.valueOf(receiptHeader.getReceiptType()))
 					.channel(receiptHeader.getChannel()).voucherHeader(receiptHeader.getVoucherheader())
 					.collectionType(collectnType).boundary(receiptHeader.getBoundary())
 					.reasonForCancellation(receiptHeader.getReasonForCancellation())

@@ -45,6 +45,7 @@ import java.util.List;
 import javax.validation.constraints.NotNull;
 
 import org.egov.collection.model.enums.CollectionType;
+import org.egov.collection.model.enums.ReceiptType;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -129,7 +130,7 @@ public class BillDetail {
 	  private Long receiptDate = null;
 	  
 	  @JsonProperty("receiptType")
-	  private String receiptType = null;
+	  private ReceiptType receiptType = null;
 	  
 	  @JsonProperty("channel")
 	  private String channel = null;

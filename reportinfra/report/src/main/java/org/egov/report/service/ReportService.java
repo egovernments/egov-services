@@ -1,9 +1,7 @@
 package org.egov.report.service;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+import java.io.IOException;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import org.egov.ReportApp;
@@ -12,6 +10,7 @@ import org.egov.common.contract.response.ResponseInfo;
 import org.egov.domain.model.MetaDataRequest;
 import org.egov.domain.model.ReportDefinitions;
 import org.egov.domain.model.Response;
+import org.egov.encryption.EncryptionService;
 import org.egov.report.repository.ReportRepository;
 import org.egov.swagger.model.ColumnDetail;
 import org.egov.swagger.model.ColumnDetail.TypeEnum;
@@ -24,6 +23,7 @@ import org.egov.swagger.model.ReportResponse;
 import org.egov.swagger.model.SearchColumn;
 import org.egov.swagger.model.SourceColumn;
 
+import org.egov.tracer.model.CustomException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,8 +43,9 @@ public class ReportService {
 	
 	@Autowired
 	private IntegrationService integrationService;
-	
-	
+
+	@Autowired
+	private EncryptionService encryptionService;
 
 	public static final Logger LOGGER = LoggerFactory.getLogger(ReportService.class);
 
@@ -206,6 +207,16 @@ public class ReportService {
 		ReportDefinitions rds = ReportApp.getReportDefs();
 		ReportDefinition reportDefinition = rds.getReportDefinition(moduleName+ " "+reportName);
 		List<Map<String, Object>> maps = reportRepository.getData(reportRequest, reportDefinition,authToken);
+		// Call decryption service if decryption is required for the report
+		if (reportDefinition.getdecryptionPathId()!= null)
+		{
+			try {
+				maps=(List<Map<String,Object>>)encryptionService.decryptJson(maps,reportDefinition.getdecryptionPathId(),reportRequest.getRequestInfo().getUserInfo(),Map.class);
+			} catch (IOException e) {
+				e.printStackTrace();
+				throw new CustomException("REPORT_DECRYPTION_ERROR", "Error while decrypting report data");
+			}
+		}
 		List<SourceColumn> columns = reportDefinition.getSourceColumns();
 		ReportResponse reportResponse = new ReportResponse();
 		populateData(columns, maps, reportResponse);
@@ -222,9 +233,11 @@ public class ReportService {
 		for (int i = 0; i < maps.size(); i++) {
 			List<Object> objects = new ArrayList<>();
 			Map<String, Object> map = maps.get(i);
+			Map<String, Object> newMap = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+			newMap.putAll(map);
 			for (SourceColumn sourceColm : columns) {
-				
-				objects.add(map.get(sourceColm.getName()));
+
+				objects.add(newMap.get(sourceColm.getName()));
 			}
 			lists.add(objects);
 		}

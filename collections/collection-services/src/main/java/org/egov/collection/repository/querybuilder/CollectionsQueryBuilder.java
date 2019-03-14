@@ -166,6 +166,7 @@ public class CollectionsQueryBuilder {
         sqlParameterSource.addValue("receiptnumber", billDetail.getReceiptNumber());
         sqlParameterSource.addValue("receiptdate", billDetail.getReceiptDate());
         sqlParameterSource.addValue("businessdetails", billDetail.getBusinessService());
+        System.out.println("billDetail.getCollectionType(): "+billDetail.getCollectionType());
         sqlParameterSource.addValue("collectiontype", billDetail.getCollectionType().toString());
         sqlParameterSource.addValue("reasonforcancellation", billDetail.getReasonForCancellation());
         sqlParameterSource.addValue("minimumamount", billDetail.getMinimumAmount());
@@ -251,7 +252,7 @@ public class CollectionsQueryBuilder {
         sqlParameterSource.addValue("ordernumber", billAccountDetails.getOrder());
         sqlParameterSource.addValue("financialyear", null);
         sqlParameterSource.addValue("isactualdemand", billAccountDetails.getIsActualDemand());
-        sqlParameterSource.addValue("purpose", billAccountDetails.getPurpose().toString());
+        sqlParameterSource.addValue("purpose", null == billAccountDetails.getPurpose() ? null : billAccountDetails.getPurpose().toString());
         sqlParameterSource.addValue("tenantid", billAccountDetails.getTenantId());
         sqlParameterSource.addValue("receiptheader", receiptHeaderId);
         sqlParameterSource.addValue("amount", billAccountDetails.getAmount());

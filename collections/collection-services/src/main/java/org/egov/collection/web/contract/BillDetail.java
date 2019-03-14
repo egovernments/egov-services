@@ -48,6 +48,20 @@ import java.util.List;
 
 import javax.validation.constraints.NotNull;
 
+import org.egov.collection.model.enums.CollectionType;
+import org.egov.collection.model.enums.ReceiptType;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.JsonNode;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+
 @Setter
 @Getter
 @ToString
@@ -120,7 +134,7 @@ public class BillDetail {
 	private Long receiptDate = null;
 
 	@JsonProperty("receiptType")
-	private String receiptType = null;
+	private ReceiptType receiptType = null;
 
 	@JsonProperty("channel")
 	private String channel = null;
@@ -167,7 +181,6 @@ public class BillDetail {
 	private Long expiryDate;
 
 	private String displayMessage;
-
 	private Boolean callBackForApportioning;
 	private String cancellationRemarks;
 

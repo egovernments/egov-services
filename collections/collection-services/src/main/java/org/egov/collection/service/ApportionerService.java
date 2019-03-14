@@ -45,8 +45,11 @@ public class ApportionerService {
 			ApportionRequest apportionRequest = ApportionRequest.builder().bills(bills).tenantId(tenantId)
 					.requestInfo(requestInfo).build();
 			try {
+				ObjectMapper mapper = new ObjectMapper();
+				log.info("apportionRequest: "+mapper.writeValueAsString(apportionRequest));
 				ApportionResponse responseForEachReq = restTemplate.postForObject(uri.toString(), apportionRequest,
 						ApportionResponse.class);
+				log.info("responseForEachReq: "+mapper.writeValueAsString(responseForEachReq));
 				if (null != responseForEachReq) {
 					if(!CollectionUtils.isEmpty(responseForEachReq.getBills()))
 						apportionedBills.put(tenantId, responseForEachReq.getBills());

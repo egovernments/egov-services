@@ -6,6 +6,7 @@ import org.egov.collection.model.Instrument;
 import org.egov.collection.model.TransactionType;
 import org.egov.collection.model.enums.CollectionType;
 import org.egov.collection.model.enums.InstrumentStatusEnum;
+import org.egov.collection.model.enums.ReceiptType;
 import org.egov.collection.repository.BillingServiceRepository;
 import org.egov.collection.repository.BusinessDetailsRepository;
 import org.egov.collection.repository.IdGenRepository;
@@ -125,7 +126,8 @@ public class ReceiptEnricher {
                 validatedBill.getBillDetails().get(i).setReceiptDate(new Date().getTime());
 
             // Business service enrichment called in loop as they're always unique for a bill
-            enrichBusinessService(receiptReq.getRequestInfo(), validatedBill.getBillDetails().get(i));
+            //enrichBusinessService(receiptReq.getRequestInfo(), validatedBill.getBillDetails().get(i));
+            validatedBill.getBillDetails().get(i).setReceiptType(ReceiptType.BILLBASED);
 
             validatedBill.getBillDetails().get(i).setAdditionalDetails(billFromRequest.getBillDetails().get(i).getAdditionalDetails());
 
@@ -214,7 +216,7 @@ public class ReceiptEnricher {
             throw new CustomException("BUSINESS_DETAILS_INVALID", "fetch buisness details, common masters failed to return fund, function, department and fundsource");
         }
         else {
-            billDetail.setReceiptType(businessDetailsResponse.getBusinessDetails().get(0).getBusinessType());
+          //  billDetail.setReceiptType(businessDetailsResponse.getBusinessDetails().get(0).getBusinessType());
             billDetail.setFund(businessDetailsResponse.getBusinessDetails().get(0).getFund());
             billDetail.setFunction(businessDetailsResponse.getBusinessDetails().get(0).getFunction());
             billDetail.setDepartment(businessDetailsResponse.getBusinessDetails().get(0).getDepartment());

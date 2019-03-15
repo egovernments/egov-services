@@ -24,6 +24,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
+import static org.egov.wf.util.WorkflowConstants.UUID_REGEX;
+
 
 @Service
 public class EnrichmentService {
@@ -215,21 +217,37 @@ public class EnrichmentService {
         RequestInfo requestInfo = request.getRequestInfo();
         List<BusinessService> businessServices = request.getBusinessServices();
         AuditDetails audit = util.getAuditDetails(requestInfo.getUserInfo().getUuid(),true);
+        /*
+        * Loop over all states and if any new state is encountered enrich it
+        * */
+
         businessServices.forEach(businessService -> {
             businessService.setUuid(UUID.randomUUID().toString());
             businessService.setAuditDetails(audit);
             businessService.getStates().forEach(state -> {
-                if(state.getUuid()==null){
+                if (state.getUuid() == null) {
                     state.setAuditDetails(audit);
                     state.setUuid(UUID.randomUUID().toString());
+                    state.setTenantId(businessService.getTenantId());
                 }
                 else state.setAuditDetails(audit);
+                });
+            });
+
+       /*
+       * Extra loop is used as top loop needs to be completed first so that all new
+       * states are assigned uuid which are required in the nextState map to assign
+       * state uuid in the field nextState
+       * */
+        businessServices.forEach(businessService -> {
+            businessService.getStates().forEach(state -> {
                 if(!CollectionUtils.isEmpty(state.getActions()))
                     state.getActions().forEach(action -> {
                         if(action.getUuid()==null){
                             action.setAuditDetails(audit);
                             action.setUuid(UUID.randomUUID().toString());
                             action.setCurrentState(state.getUuid());
+                            action.setTenantId(state.getTenantId());
                         }
                         else action.setAuditDetails(audit);
                     });
@@ -247,13 +265,19 @@ public class EnrichmentService {
         businessService.getStates().forEach(state -> {
             statusToUuidMap.put(state.getState(),state.getUuid());
         });
+        HashMap<String,String> errorMap = new HashMap<>();
         businessService.getStates().forEach(state -> {
             if(!CollectionUtils.isEmpty(state.getActions())){
                 state.getActions().forEach(action -> {
-                    action.setNextState(statusToUuidMap.get(action.getNextState()));
+                    if (!action.getNextState().matches(UUID_REGEX) && statusToUuidMap.containsKey(action.getNextState()))
+                        action.setNextState(statusToUuidMap.get(action.getNextState()));
+                    else if (!action.getNextState().matches(UUID_REGEX) && !statusToUuidMap.containsKey(action.getNextState()))
+                        errorMap.put("INVALID NEXTSTATE","The state with name: "+action.getNextState()+ " does not exist in config");
                 });
             }
         });
+        if(!errorMap.isEmpty())
+            throw new CustomException(errorMap);
     }
 
 

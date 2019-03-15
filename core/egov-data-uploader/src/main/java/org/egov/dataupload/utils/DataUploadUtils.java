@@ -93,9 +93,9 @@ public class DataUploadUtils {
             return cell.getNumericCellValue() != 0;
         } else if (cell.getCellTypeEnum() == CellType.STRING) {
             String val = cell.getStringCellValue().toLowerCase().trim();
-            if (val == "true" || val =="yes" || val == "on") {
+            if (val.equals("true") || val.equals("yes") || val.equals("on")) {
                 return true;
-            } else if (val == "false" || val =="no" || val == "off" || val.isEmpty()) {
+            } else if (val.equals("false") || val.equals("no") || val.equals("off") || val.isEmpty()) {
                 return false;
             } else {
                 throw new InvalidFormatException("Unsupported boolean value " + cell.getStringCellValue() + " field type");

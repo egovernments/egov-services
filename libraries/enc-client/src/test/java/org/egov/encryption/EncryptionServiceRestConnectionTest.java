@@ -5,16 +5,16 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Before;
 import org.mockito.Mock;
 
-public class EncryptionServiceRestInterfaceTest {
+public class EncryptionServiceRestConnectionTest {
 
     @Mock
-    private EncryptionServiceRestInterface encryptionServiceRestInterface;
+    private EncryptionServiceRestConnection encryptionServiceRestConnection;
 
     private ObjectMapper mapper;
 
     @Before
     public void initialize() {
-        encryptionServiceRestInterface = new EncryptionServiceRestInterface();
+        encryptionServiceRestConnection = new EncryptionServiceRestConnection();
         mapper = new ObjectMapper(new JsonFactory());
     }
 

@@ -11,7 +11,7 @@ import java.util.List;
 @NoArgsConstructor
 public class KeyRoleAttributeAccess {
 
-    private String keyId;
+    private String key;
     private List<RoleAttributeAccess> roleAttributeAccessList;
 
 }

@@ -82,7 +82,7 @@ public class PropertyCustomUploader {
 		requestInfo.setTs(null);
 		UploadJob job = uploaderRequest.getUploadJobs().get(0);
 		String loc = job.getLocalFilePath();
-		Map<String, Property> map = null;
+		Map<String, Map<String, Object>> map = null;
 
 		AuditDetails auditDetails = job.getAuditDetails();
 		auditDetails.setLastModifiedTime(new Date().getTime());
@@ -120,7 +120,7 @@ public class PropertyCustomUploader {
 		int sucCnt = 0;
 		int recordCount = 1;
 
-		for (Entry<String, Property> entry : map.entrySet()) {
+		for (Entry<String, Map<String, Object>> entry : map.entrySet()) {
 			String failureMessage;
 			Map<String, String> resp = new HashMap<>();
 
@@ -131,7 +131,7 @@ public class PropertyCustomUploader {
 				resp.put("Message", "Duplicate property found");
 			}
 			else{
-				Object response = dataUploadService.hitApi(getRequestForPost(entry.getValue(), requestInfo),
+				Object response = dataUploadService.hitApi(getRequestForPost((Property) entry.getValue().get("Property"), requestInfo),
 						getUrlForPost());
 
 				if (null == response) {
@@ -151,6 +151,7 @@ public class PropertyCustomUploader {
 						resp.put("Assessment Number", getPropertyAssessmentNumber(response));
 					}
 				}
+				resp.put("_rowindex", entry.getValue().get("_rowindex").toString());
 			}
 			responses.add(resp);
 
@@ -226,7 +227,7 @@ public class PropertyCustomUploader {
 	 *
 	 * 5. save the response excel and close the resources
 	 *
-	 * @param fileLoc
+	 * @param job
 	 * @param responses
 	 */
 	private void writeToExcel(UploadJob job, List<Map<String, String>> responses) {
@@ -257,11 +258,11 @@ public class PropertyCustomUploader {
 				}
 			}
 
-
 			for (int i = 0; i < responses.size(); i++) {
 
-				Row currRow = propertySheet.getRow(i + 1);
 				Map<String, String> resp = responses.get(i);
+
+				Row currRow = propertySheet.getRow(Integer.parseInt(resp.get("_rowindex")));
 
 				for (String respCol : responseColumns) {
 					String colName = dataUploadUtils.getCleanedName(respCol);

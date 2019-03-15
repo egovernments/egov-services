@@ -61,23 +61,24 @@ public class PropertyFileReader {
 		return sheetMap;
 	}
 
-	public Map<String, Property> parseExcel(String location) throws EncryptedDocumentException, InvalidFormatException, IOException {
+	public Map<String, Map<String, Object>> parseExcel(String location) throws EncryptedDocumentException, InvalidFormatException, IOException {
 		Map<String, Sheet> sheetMap = readFile(location);
-		Map<String, Property> propertyIdMap = parsePropertyExcel(sheetMap);
+		Map<String, Map<String, Object>> propertyIdMap = parsePropertyExcel(sheetMap);
 		parseUnitDetail(sheetMap, propertyIdMap);
 		parseOwnerDetail(sheetMap, propertyIdMap);
 		
 		return propertyIdMap;
 		
 	}
-	public Map<String, Property> parsePropertyExcel(Map<String, Sheet> sheetMap) throws InvalidFormatException {
+	public Map<String, Map<String, Object>> parsePropertyExcel(Map<String, Sheet> sheetMap) throws InvalidFormatException {
 
 		Sheet propertySheet = sheetMap.get("Property_Detail");
 
-		Map<String, Property> propertyIdMap = new LinkedHashMap<>();
+		Map<String, Map<String, Object>> propertyIdMap = new LinkedHashMap<>();
 		Iterator<Row> rowIterator = propertySheet.rowIterator();
 		int rowNumber = 0;
 		while (rowIterator.hasNext()) {
+			Map<String, Object> rowData = new HashMap<>();
 			Property property = new Property();
 			property.getPropertyDetails().get(0).setAdditionalDetails(new HashMap<String, Object>());
 			Row row = rowIterator.next();
@@ -106,11 +107,15 @@ public class PropertyFileReader {
 				if(null != propertyIdMap.get(property.getOldPropertyId())) {
 					StringBuilder id = new StringBuilder();
 					id.append("duplicate_").append(property.getOldPropertyId()).append("_").append(rowNumber);
-					propertyIdMap.put(id.toString(), property);
+					rowData.put("Property", property);
+					rowData.put("_rowindex", row.getRowNum());
+					propertyIdMap.put(id.toString(), rowData);
 				}
 				else
 				{
-					propertyIdMap.put(property.getOldPropertyId(), property);
+					rowData.put("Property", property);
+					rowData.put("_rowindex", row.getRowNum());
+					propertyIdMap.put(property.getOldPropertyId(), rowData);
 				}
 			}
 			else
@@ -210,7 +215,7 @@ public class PropertyFileReader {
 		System.out.print("\t");
 	}
 
-	private void parseUnitDetail(Map<String, Sheet> sheetMap, Map<String, Property> propertyIdMap) throws InvalidFormatException {
+	private void parseUnitDetail(Map<String, Sheet> sheetMap, Map<String, Map<String, Object>> propertyIdMap) throws InvalidFormatException {
 
 		Sheet propertyUnitSheet = sheetMap.get("Unit_Detail");
 		Iterator<Row> rowIterator = propertyUnitSheet.rowIterator();
@@ -230,7 +235,7 @@ public class PropertyFileReader {
 			}
 
 			String propertyId = dataUploadUtils.getCellValueAsString(row.getCell(existingPTId_cellIndex));
-			Property property = propertyIdMap.get(propertyId);
+			Property property = (Property) propertyIdMap.get(propertyId).get("Property");
 
 			if (null == property)
 				continue;
@@ -292,7 +297,7 @@ public class PropertyFileReader {
 		System.out.print("\t");
 	}
 
-	private void parseOwnerDetail(Map<String, Sheet> sheetMap, Map<String, Property> propertyIdMap) throws InvalidFormatException {
+	private void parseOwnerDetail(Map<String, Sheet> sheetMap, Map<String, Map<String, Object>> propertyIdMap) throws InvalidFormatException {
 
 		Sheet propertyUnitSheet = sheetMap.get("Owner_Detail");
 		Iterator<Row> rowIterator = propertyUnitSheet.rowIterator();
@@ -313,7 +318,7 @@ public class PropertyFileReader {
 			}
 
 			String propertyId = row.getCell(existingPTId_cellIndex).getStringCellValue();
-			Property property = propertyIdMap.get(propertyId);
+			Property property = (Property) propertyIdMap.get(propertyId).get("Property");
 			String ownershipCategory=property.getPropertyDetails().get(0).getOwnershipCategory();
 			if (null == property)
 				continue;

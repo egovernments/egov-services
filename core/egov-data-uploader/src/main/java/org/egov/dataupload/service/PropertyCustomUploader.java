@@ -266,8 +266,8 @@ public class PropertyCustomUploader {
 				for (String respCol : responseColumns) {
 					String colName = dataUploadUtils.getCleanedName(respCol);
 					int colIndex = columnToIndex.get(colName);
-					if (resp.containsKey(colName)) {
-						currRow.createCell(colIndex).setCellValue(resp.get(colName));
+					if (resp.containsKey(respCol)) {
+						currRow.createCell(colIndex).setCellValue(resp.get(respCol));
 					}
 				}
 

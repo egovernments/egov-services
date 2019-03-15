@@ -235,11 +235,12 @@ public class PropertyFileReader {
 			}
 
 			String propertyId = dataUploadUtils.getCellValueAsString(row.getCell(existingPTId_cellIndex));
+
+			if (propertyIdMap.get(propertyId) == null)
+				continue;
+
 			Property property = (Property) propertyIdMap.get(propertyId).get("Property");
 
-			if (null == property)
-				continue;
-			
 			Unit unit = new Unit();
 
 			for (int i = 0; i < row.getLastCellNum(); i++) {
@@ -318,8 +319,14 @@ public class PropertyFileReader {
 			}
 
 			String propertyId = row.getCell(existingPTId_cellIndex).getStringCellValue();
+
+			if (propertyIdMap.get(propertyId) == null) {
+				continue;
+			}
+
 			Property property = (Property) propertyIdMap.get(propertyId).get("Property");
 			String ownershipCategory=property.getPropertyDetails().get(0).getOwnershipCategory();
+
 			if (null == property)
 				continue;
 			

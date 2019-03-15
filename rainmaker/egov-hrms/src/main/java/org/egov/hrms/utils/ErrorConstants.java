@@ -185,4 +185,7 @@ public class ErrorConstants {
 	public static final String HRMS_UPDATE_DEACT_DETAILS_INCORRECT_EFFECTIVEFROM_CODE = "HRMS_UPDATE_DEACT_DETAILS_INCORRECT_EFFECTIVEFROM";
 	public static final String HRMS_UPDATE_DEACT_DETAILS_INCORRECT_EFFECTIVEFROM_MSG = "Employee deactivation effective date should not be future date.";
 
+	public static final String HRMS_GENERATE_ID_ERROR_CODE = "HRMS_GENERATE_ID_ERROR";
+	public static final String HRMS_GENERATE_ID_ERROR_MSG = "Unable to create ids " ;
+
 }

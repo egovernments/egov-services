@@ -2,6 +2,8 @@ package org.egov.collection.repository.rowmapper;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import org.apache.commons.lang3.StringUtils;
 import org.egov.collection.model.*;
 import org.egov.collection.model.enums.CollectionType;
 import org.egov.collection.model.enums.InstrumentStatusEnum;
@@ -55,7 +57,8 @@ public class CollectionResultSetExtractor implements ResultSetExtractor<List<Rec
                         .receiptType(ReceiptType.valueOf(resultSet.getString("rh_receiptType")))
                         .channel(resultSet.getString("rh_channel"))
                         .voucherHeader(resultSet.getString("rh_voucherheader"))
-                        .collectionType(CollectionType.valueOf(resultSet.getString("rh_collectionType")))
+                        .collectionType(!StringUtils.isEmpty(resultSet.getString("rh_collectionType"))
+                        		? CollectionType.valueOf(resultSet.getString("rh_collectionType")) : null)
                         .boundary(resultSet.getString("rh_boundary"))
                         .reasonForCancellation(resultSet.getString("rh_reasonForCancellation"))
                         .status(resultSet.getString("rh_status"))
@@ -162,7 +165,8 @@ public class CollectionResultSetExtractor implements ResultSetExtractor<List<Rec
                     .tenantId(resultSet.getString("rd_tenantId"))
                     .billDetail(resultSet.getString("rh_id"))
                     .order(resultSet.getInt("rd_ordernumber"))
-                    .purpose(Purpose.valueOf(resultSet.getString("rd_purpose")))
+                    .purpose(!StringUtils.isEmpty(resultSet.getString("rd_purpose")) ? 
+                    		Purpose.valueOf(resultSet.getString("rd_purpose")) : null)
                     .additionalDetails(getJsonValue((PGobject) resultSet.getObject("rd_additionalDetails")))
                     .amount(getBigDecimalValue(resultSet.getBigDecimal("rd_amount")))
                     .adjustedAmount(getBigDecimalValue(resultSet.getBigDecimal("rd_adjustedamount")))

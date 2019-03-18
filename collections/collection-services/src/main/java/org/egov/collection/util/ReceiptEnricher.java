@@ -161,7 +161,8 @@ public class ReceiptEnricher {
     	Map<String, BigDecimal> mapOfBusinessSvcAndTaxAmt = validatedBill.getTaxAndPayments().stream()
     			.collect(Collectors.toMap(TaxAndPayment :: getBusinessService, TaxAndPayment :: getTaxAmount));
     	billFromRequest.getTaxAndPayments().forEach(taxAndPayment -> {
-    		if(!validatedBill.getBillDetails().get(0).getPartPaymentAllowed()) {
+    		if(null == validatedBill.getBillDetails().get(0).getPartPaymentAllowed() || 
+    				!validatedBill.getBillDetails().get(0).getPartPaymentAllowed()) {
     			if(mapOfBusinessSvcAndAmtPaid.keySet().size() != mapOfBusinessSvcAndTaxAmt.keySet().size()) {
         			errorMap.put("INVALID_TAXANDPAYMENT_DATA_CODE", "taxAndPayment should have all the businessCodes as part payment is not allowed.");
     			}else {

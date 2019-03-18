@@ -273,7 +273,9 @@ public class PropertyCustomUploader {
 				}
 
 				if (resp.containsKey("Status"))
-					currRow.getCell(PTTemplateDetail.Process.ordinal()).setCellValue(resp.get("Status") == SUCCESSSTRING ? "No": "Yes");
+					// In case we processed the row, set the Process column value to blank
+					// this will be later treated as false only for process
+					currRow.getCell(PTTemplateDetail.Process.ordinal()).setCellValue("");
 			}
 
 			myxls.close();

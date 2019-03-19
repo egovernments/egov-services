@@ -11,8 +11,6 @@ import org.springframework.context.annotation.PropertySource;
 @PropertySource("classpath:enc.properties")
 public class EncProperties {
 
-    @Value("${kafka.config.bootstrap_server_config}")
-    private String kafkaBootstrapServerConfig;
     @Value("${kafka.topic.audit}")
     private String auditTopicName;
 

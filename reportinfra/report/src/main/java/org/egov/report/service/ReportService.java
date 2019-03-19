@@ -1,28 +1,20 @@
 package org.egov.report.service;
 
-import java.io.IOException;
-import java.util.*;
-import java.util.stream.Collectors;
-
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.fasterxml.jackson.databind.node.TextNode;
 import org.egov.ReportApp;
 import org.egov.common.contract.request.RequestInfo;
+import org.egov.common.contract.request.User;
 import org.egov.common.contract.response.ResponseInfo;
 import org.egov.domain.model.MetaDataRequest;
 import org.egov.domain.model.ReportDefinitions;
 import org.egov.domain.model.Response;
 import org.egov.encryption.EncryptionService;
+import org.egov.encryption.audit.AuditService;
 import org.egov.report.repository.ReportRepository;
-import org.egov.swagger.model.ColumnDetail;
+import org.egov.swagger.model.*;
 import org.egov.swagger.model.ColumnDetail.TypeEnum;
-import org.egov.swagger.model.MetadataResponse;
-import org.egov.swagger.model.ReportDataResponse;
-import org.egov.swagger.model.ReportDefinition;
-import org.egov.swagger.model.ReportMetadata;
-import org.egov.swagger.model.ReportRequest;
-import org.egov.swagger.model.ReportResponse;
-import org.egov.swagger.model.SearchColumn;
-import org.egov.swagger.model.SourceColumn;
-
 import org.egov.tracer.model.CustomException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,7 +22,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.servlet.mvc.annotation.ResponseStatusExceptionResolver;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
+import java.util.stream.Collectors;
 
 @Service
 public class ReportService {
@@ -45,7 +43,12 @@ public class ReportService {
 	private IntegrationService integrationService;
 
 	@Autowired
+	private ObjectMapper objectMapper;
+
+	@Autowired
 	private EncryptionService encryptionService;
+	@Autowired
+	private AuditService auditService;
 
 	public static final Logger LOGGER = LoggerFactory.getLogger(ReportService.class);
 
@@ -211,7 +214,10 @@ public class ReportService {
 		if (reportDefinition.getdecryptionPathId()!= null)
 		{
 			try {
-				maps=(List<Map<String,Object>>)encryptionService.decryptJson(maps,reportDefinition.getdecryptionPathId(),reportRequest.getRequestInfo().getUserInfo(),Map.class);
+				maps = encryptionService.decryptJson(maps,reportDefinition.getdecryptionPathId(),
+						reportRequest.getRequestInfo().getUserInfo(),Map.class);
+				auditDecryptRequest(maps, reportDefinition.getdecryptionPathId(),
+						reportRequest.getRequestInfo().getUserInfo());
 			} catch (IOException e) {
 				e.printStackTrace();
 				throw new CustomException("REPORT_DECRYPTION_ERROR", "Error while decrypting report data");
@@ -223,6 +229,26 @@ public class ReportService {
 		populateReportHeader(reportDefinition, reportResponse);
 
 		return reportResponse;
+	}
+
+	private void auditDecryptRequest(List<Map<String, Object>> maps, String decryptionPathId, User userInfo) {
+		String purpose = "";
+
+		ObjectNode abacParams = objectMapper.createObjectNode();
+		abacParams.set("key", TextNode.valueOf(decryptionPathId));
+
+		List<String> decryptedEntityUuid = new ArrayList<>();
+
+		for (Map map : maps) {
+			if(map.containsKey("uuid")) {
+				decryptedEntityUuid.add((String) map.get("uuid"));
+			}
+		}
+
+		ObjectNode auditData = objectMapper.createObjectNode();
+		auditData.set("entityType", TextNode.valueOf(User.class.getName()));
+		auditData.set("decryptedEntityIds", objectMapper.valueToTree(decryptedEntityUuid));
+		auditService.audit(userInfo.getUuid(), System.currentTimeMillis(), purpose, abacParams, auditData);
 	}
 
 	private void populateData(List<SourceColumn> columns, List<Map<String, Object>> maps,

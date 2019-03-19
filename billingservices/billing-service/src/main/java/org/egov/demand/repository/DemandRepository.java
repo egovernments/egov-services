@@ -47,6 +47,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.egov.common.contract.request.RequestInfo;
@@ -131,19 +132,23 @@ public class DemandRepository {
 		return jdbcTemplate.query(searchDemandDetailQuery, preparedStatementValues.toArray(),new DemandDetailRowMapper());
 	}
 
+	@Transactional
 	public void save(DemandRequest demandRequest) {
 
 		log.debug("DemandRepository save, the request object : " + demandRequest);
 		List<Demand> demands = demandRequest.getDemands();
 		List<DemandDetail> demandDetails = new ArrayList<>();
+		
 		for (Demand demand : demands) {
 			demandDetails.addAll(demand.getDemandDetails());
 		}
-		log.debug("DemandRepository save, demands ---->> "+demands+" \n demanddetails ---->> "+demandDetails);
+		
 		insertBatch(demands, demandDetails);
 		log.debug("Demands saved >>>> ");
+		insertBatchForAudit(demands, demandDetails);
 	}
 	
+	@Transactional
 	public void update(DemandRequest demandRequest) {
 
 		List<Demand> demands = demandRequest.getDemands();
@@ -178,13 +183,18 @@ public class DemandRepository {
 					oldDemandDetails.add(demandDetail);
 			}
 		}
+		
 		updateBatch(oldDemands, oldDemandDetails);
-		if (!newDemands.isEmpty() || !newDemandDetails.isEmpty())
+		insertBatchForAudit(oldDemands, oldDemandDetails);
+		
+		if (!newDemands.isEmpty() || !newDemandDetails.isEmpty()) {
+			
 			insertBatch(newDemands, newDemandDetails);
+			insertBatchForAudit(newDemands, newDemandDetails);
+		}
 	}
 
-	@Transactional
-	private void insertBatch(List<Demand> newDemands, List<DemandDetail> newDemandDetails) {
+	public void insertBatch(List<Demand> newDemands, List<DemandDetail> newDemandDetails) {
 
 		jdbcTemplate.batchUpdate(DemandQueryBuilder.DEMAND_INSERT_QUERY, new BatchPreparedStatementSetter() {
 			@Override
@@ -243,7 +253,6 @@ public class DemandRepository {
 		});
 	}
 	
-	@Transactional
 	public void updateBatch(List<Demand> oldDemands, List<DemandDetail> oldDemandDetails) {
 
 		jdbcTemplate.batchUpdate(DemandQueryBuilder.DEMAND_UPDATE_QUERY, new BatchPreparedStatementSetter() {
@@ -304,7 +313,74 @@ public class DemandRepository {
 			}
 		});
 	}
+	
+	
+	/*
+	 * Audit 
+	 */
+	
+	@Transactional
+	public void insertBatchForAudit(List<Demand> demands, List<DemandDetail> demandDetails) {
+
+		jdbcTemplate.batchUpdate(DemandQueryBuilder.DEMAND_AUDIT_INSERT_QUERY, new BatchPreparedStatementSetter() {
+			
+			@Override
+			public void setValues(PreparedStatement ps, int rowNum) throws SQLException {
+
+				Demand demand = demands.get(rowNum);
+				String status = demand.getStatus() != null ? demand.getStatus().toString() : null;
+				AuditDetails auditDetail = demand.getAuditDetails();
+				String payerUuid = null != demand.getPayer() ? demand.getPayer().getUuid() : null;
+				ps.setString(1, demand.getId());
+				ps.setString(2, demand.getConsumerCode());
+				ps.setString(3, demand.getConsumerType());
+				ps.setString(4, demand.getBusinessService());
+				ps.setString(5, payerUuid);
+				ps.setLong(6, demand.getTaxPeriodFrom());
+				ps.setLong(7, demand.getTaxPeriodTo());
+				ps.setBigDecimal(8, demand.getMinimumAmountPayable());
+				ps.setString(9, auditDetail.getLastModifiedBy());
+				ps.setLong(10, auditDetail.getLastModifiedTime());
+				ps.setString(11, demand.getTenantId());
+				ps.setString(12, status);
+				ps.setObject(13, getPGObject(demand.getAdditionalDetails()));
+				ps.setString(14, UUID.randomUUID().toString());
+			}
+
+			@Override
+			public int getBatchSize() {
+				return demands.size();
+			}
+		});
+
+		jdbcTemplate.batchUpdate(DemandQueryBuilder.DEMAND_DETAIL_AUDIT_INSERT_QUERY,
+				new BatchPreparedStatementSetter() {
+					@Override
+					public void setValues(PreparedStatement ps, int rowNum) throws SQLException {
+
+						DemandDetail demandDetail = demandDetails.get(rowNum);
+						AuditDetails auditDetail = demandDetail.getAuditDetails();
+						ps.setString(1, demandDetail.getId());
+						ps.setString(2, demandDetail.getDemandId());
+						ps.setString(3, demandDetail.getTaxHeadMasterCode());
+						ps.setBigDecimal(4, demandDetail.getTaxAmount());
+						ps.setBigDecimal(5, demandDetail.getCollectionAmount());
+						ps.setString(6, auditDetail.getLastModifiedBy());
+						ps.setLong(7, auditDetail.getLastModifiedTime());
+						ps.setString(8, demandDetail.getTenantId());
+						ps.setObject(9, getPGObject(demandDetail.getAdditionalDetails()));
+						ps.setString(10, UUID.randomUUID().toString());
+					}
+
+					@Override
+					public int getBatchSize() {
+						return demandDetails.size();
+					}
+				});
+	}
+	
 	//update mis method for updating consumer code
+	@Deprecated
 	public void updateMIS(DemandUpdateMisRequest demandRequest) {
 
 		jdbcTemplate.update(demandQueryBuilder.getDemandUpdateMisQuery(demandRequest), new PreparedStatementSetter() {
@@ -318,6 +394,7 @@ public class DemandRepository {
 		});
 	}
 	
+	@Deprecated
 	public void saveCollectedReceipts(List<BillDetail> billDetails,RequestInfo requestInfo) {
 		List<String> ids=sequenceGenService.getIds(billDetails.size(), applicationProperties.getCollectedReceiptSequence());
 		
@@ -347,10 +424,14 @@ public class DemandRepository {
 		});
 	}
 	
+	@Deprecated
 	public List<CollectedReceipt> getCollectedReceipts(DemandCriteria demandCriteria){
 		return jdbcTemplate.query(demandQueryBuilder.getCollectedReceiptsQuery(demandCriteria), new CollectedReceiptsRowMapper());
 	}
-	
+
+	/*
+	 * Utility methods
+	 */
 	/**
 	 * converts the object to a pgObject for persistence
 	 * 

@@ -102,7 +102,17 @@ public class DemandQueryBuilder {
 			+ "id=?,demandid=?,taxHeadCode=?,taxamount=?,collectionamount=?,"
 			+ "lastModifiedby=?,lastModifiedtime=?, additionaldetails=? WHERE id=? AND tenantid=?;";
 	
-	public final String DEMAND_UPDATE_CONSUMERCODE_QUERY="UPDATE egbs_demand SET consumercode=?, lastmodifiedby=?, lastmodifiedtime=? "
+	public static final String DEMAND_AUDIT_INSERT_QUERY = "INSERT INTO egbs_demand_audit "
+			+ "(demandid,consumerCode,consumerType,businessService,payer,taxPeriodFrom,taxPeriodTo,"
+			+ "minimumAmountPayable,createdby,createdtime,tenantid, status, additionaldetails,id) "
+			+ "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?);";
+
+	public static final String DEMAND_DETAIL_AUDIT_INSERT_QUERY = "INSERT INTO egbs_demanddetail_audit "
+			+ "(demanddetailid,demandid,taxHeadCode,taxamount,collectionamount,"
+			+ "createdby,createdtime,tenantid,additionaldetails,id)" 
+			+ " VALUES (?,?,?,?,?,?,?,?,?,?);";
+	
+	public static final String DEMAND_UPDATE_CONSUMERCODE_QUERY="UPDATE egbs_demand SET consumercode=?, lastmodifiedby=?, lastmodifiedtime=? "
 			+ " WHERE tenantid=? AND id IN (";
 	
 	public static final String COLLECTED_RECEIPT_INSERT_QUERY="INSERT INTO egbs_collectedreceipts(id, businessservice, consumercode, receiptnumber,"

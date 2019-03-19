@@ -45,7 +45,9 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
+import java.util.UUID;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -66,7 +68,6 @@ import org.egov.demand.producer.Producer;
 import org.egov.demand.repository.DemandRepository;
 import org.egov.demand.repository.ServiceRequestRepository;
 import org.egov.demand.util.DemandEnrichmentUtil;
-import org.egov.demand.util.SequenceGenService;
 import org.egov.demand.util.Util;
 import org.egov.demand.web.contract.BillRequest;
 import org.egov.demand.web.contract.DemandDetailResponse;
@@ -82,6 +83,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -90,9 +92,6 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 @Slf4j
 public class DemandService {
-
-	@Autowired
-	private SequenceGenService sequenceGenService;
 
 	@Autowired
 	private DemandRepository demandRepository;
@@ -144,60 +143,35 @@ public class DemandService {
 	}
 
 	/**
-	 * Method to generate and set ids, Audit details to the demand and demand
-	 * details object
+	 * Method to generate and set ids, Audit details to the demand 
+	 * and demand-detail object
 	 * 
-	 * @param demandRequest
-	 * @return
+	 * @param demandRequest Demand request from the create/update flow
 	 */
 	private void generateAndSetIdsForNewDemands(List<Demand> demands, AuditDetails auditDetail) {
-
-		List<DemandDetail> demandDetails = new ArrayList<>();
-
-		int currentDemandId = 0;
-		int demandsSize = demands.size();
-		List<String> demandIds = sequenceGenService.getIds(demandsSize, applicationProperties.getDemandSeqName());
 
 		/*
 		 * looping demands to set ids and collect demand details in another list
 		 */
 		for (Demand demand : demands) {
 
-			String demandId = demandIds.get(currentDemandId++);
-			demand.setId(demandId);
-			demand.setAuditDetails(auditDetail);
+			String demandId = UUID.randomUUID().toString();
 			String tenantId = demand.getTenantId();
+			demand.setAuditDetails(auditDetail);
+			demand.setId(demandId);
 
 			for (DemandDetail demandDetail : demand.getDemandDetails()) {
-				demandDetail.setDemandId(demandId);
-				demandDetail.setTenantId(tenantId);
+
+				if (Objects.isNull(demandDetail.getCollectionAmount()))
+					demandDetail.setCollectionAmount(BigDecimal.ZERO);
+				demandDetail.setId(UUID.randomUUID().toString());
 				demandDetail.setAuditDetails(auditDetail);
-				demandDetails.add(demandDetail);
+				demandDetail.setTenantId(tenantId);
+				demandDetail.setDemandId(demandId);
 			}
 		}
-
-		generateAndsetIdsForDemandDetails(demandDetails);
 	}
 
-	/**
-	 * Generates and sets ids for the demand details
-	 * 
-	 * @param demandDetails
-	 */
-	private void generateAndsetIdsForDemandDetails(List<DemandDetail> demandDetails) {
-		
-		int demandDetailsSize = demandDetails.size();
-		List<String> demandDetailIds = sequenceGenService.getIds(demandDetailsSize,
-				applicationProperties.getDemandDetailSeqName());
-
-		int currentDetailId = 0;
-		for (DemandDetail demandDetail : demandDetails) {
-			if (demandDetail.getCollectionAmount() == null)
-				demandDetail.setCollectionAmount(BigDecimal.ZERO);
-			demandDetail.setId(demandDetailIds.get(currentDetailId++));
-		}
-	}
-	
 	
 	/**
 	 * Update method for demand flow 
@@ -216,59 +190,41 @@ public class DemandService {
 		AuditDetails auditDetail = util.getAuditDetail(requestInfo);
 
 		List<Demand> newDemands = new ArrayList<>();
-		List<DemandDetail> newDemandDetails = new ArrayList<>();
 
 		for (Demand demand : demands) {
 
-			if (demand.getId() == null) {
+			String demandId = demand.getId();
 
+			if (StringUtils.isEmpty(demandId)) {
+				/*
+				 * If demand id is empty then gen new demand Id
+				 */
 				newDemands.add(demand);
 			} else {
 
-				updateoldDemandandCollectNewDemandDetails(auditDetail, newDemandDetails, demand);
+				for (DemandDetail detail : demand.getDemandDetails()) {
+
+					if (StringUtils.isEmpty(detail.getId())) {
+						/*
+						 * If id is empty for demand detail treat it as new
+						 */
+						detail.setId(UUID.randomUUID().toString());
+						detail.setDemandId(demandId);
+						detail.setCollectionAmount(BigDecimal.ZERO);
+					}
+					detail.setAuditDetails(auditDetail);
+				}
 			}
 		}
 
 		generateAndSetIdsForNewDemands(newDemands, auditDetail);
-		generateAndsetIdsForDemandDetails(newDemandDetails);
 
 		update(demandRequest);
 		producer.push(applicationProperties.getDemandIndexTopic(), demandRequest);
 		return new DemandResponse(responseInfoFactory.getResponseInfo(requestInfo, HttpStatus.CREATED), demands);
 	}
 
-	/**
-	 * Collects the new demand details in a list and updates the audit modified
-	 * fields for old details
-	 * 
-	 * @param auditDetail
-	 * @param newDmdDetails
-	 * @param demand
-	 */
-	private void updateoldDemandandCollectNewDemandDetails(AuditDetails auditDetail, List<DemandDetail> newDmdDetails,
-			Demand demand) {
 
-		demand.setAuditDetails(auditDetail);
-
-		for (DemandDetail demandDetail : demand.getDemandDetails()) {
-
-			/*
-			 * if demand detail is new set audit and collect to set ids
-			 */
-			if (demandDetail.getId() == null) {
-				
-				demandDetail.setDemandId(demand.getId());
-				demandDetail.setAuditDetails(auditDetail);
-				newDmdDetails.add(demandDetail);
-			} else {
-				/*
-				 * update audit in case of update only
-				 */
-				demandDetail.setAuditDetails(auditDetail);
-			}
-		}
-	}
-	
 	/**
 	 * Search method to fetch demands from DB
 	 * 

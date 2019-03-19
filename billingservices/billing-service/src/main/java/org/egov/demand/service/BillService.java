@@ -48,6 +48,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -115,9 +116,6 @@ public class BillService {
 	private GlCodeMasterService glCodeMasterService;
 	
 	@Autowired
-	private SequenceGenService idGenService;
-	
-	@Autowired
 	private Util util;
 
 	/**
@@ -144,10 +142,6 @@ public class BillService {
 				.bill(bills).build();
 	}
 	
-	public void create(BillRequest billRequest){
-		billRepository.saveBill(billRequest);
-	}
-
 	/**
 	 * Generate bill based on the given criteria
 	 * 
@@ -181,7 +175,7 @@ public class BillService {
 			throw new CustomException(Constants.EG_BS_BILL_NO_DEMANDS_FOUND_KEY,
 					Constants.EG_BS_BILL_NO_DEMANDS_FOUND_MSG);
 
-		return createAsync(BillRequest.builder().bills(bills).requestInfo(requestInfo).build());
+		return sendBillToKafka(BillRequest.builder().bills(bills).requestInfo(requestInfo).build());
 	}
 
 	/**
@@ -200,48 +194,46 @@ public class BillService {
 		
 		
 		List<BillDetail> billDetails = new ArrayList<>();
-		int demandDetailsCount = 0;
-		int demandCount = demands.size();
 		/*
 		 * Fetching Required master data
 		 */
 		String tenantId = demands.get(0).getTenantId();
 		Set<String> businessCodes = new HashSet<>();
 		Set<String> taxHeadCodes = new HashSet<>();
-		
+
 		for (Demand demand : demands) {
 
 			businessCodes.add(demand.getBusinessService());
-			demandDetailsCount = demandDetailsCount + demand.getDemandDetails().size();
 			demand.getDemandDetails().forEach(detail -> taxHeadCodes.add(detail.getTaxHeadMasterCode()));
 		}
 		
 		Map<String, TaxHeadMaster> taxHeadMap = getTaxHeadMaster(taxHeadCodes, tenantId, requestInfo);
 		Map<String, BusinessServiceDetail> businessMap = getBusinessService(businessCodes, tenantId, requestInfo);
 
-		/* Generating ids for bill */
-		List<String> billDetailIds = idGenService.getIds(demandCount, appProps.getBillDetailSeqName());
-		List<String> billAccDetailIds = idGenService.getIds(demandDetailsCount, appProps.getBillAccDetailSeqName());
-		String billId = idGenService.getIds(demandDetailsCount, appProps.getBillSeqName()).get(0);
-
-		/* looping demand to create bill-detail and account-details object 
+		/*
+		 * looping demand to create bill-detail and account-details object
 		 * 
 		 * setting ids to the same
 		 */
-		int billIndex = 0;
-		int billAccDetailIndex = 0;
+		String billId = UUID.randomUUID().toString();
+
 		for (Demand demand : demands) {
 
+			/* bill detail Gen */
 			BillDetail billDetail = getBillDetailForDemand(demand, taxHeadMap, businessMap);
-			
-			String billDetailId = billDetailIds.get(billIndex++);
+
+			/* setting ids for billDetail and billAccountDetails*/
+			String billDetailId = UUID.randomUUID().toString();
 			billDetail.setId(billDetailId);
 			billDetail.setBill(billId);
+
 			for (BillAccountDetail accDetail : billDetail.getBillAccountDetails()) {
-				accDetail.setId(billAccDetailIds.get(billAccDetailIndex++));
+
+				accDetail.setId(UUID.randomUUID().toString());
 				accDetail.setBillDetail(billDetailId);
 			}
-			
+
+			/* updating total amount in map for  business-code per bill detail*/
 			updateServiceCodeAndTaxAmountMap(serviceCodeAndTaxAmountMap, billDetail);
 			billDetails.add(billDetail);
 		}
@@ -473,25 +465,33 @@ public class BillService {
 		return billResponse;
 	}
 
-	/*
-	 * @deprecated methods 
+	/**
+	 * Publishes the bill request to kafka topic and returns bill response
 	 * 
+	 * @param billRequest
+	 * @return billResponse object containing bills from the request
 	 */
-
-	public BillResponse createAsync(BillRequest billRequest) {
-
-		//billHelper.getBillRequestWithIds(billRequest);
+	public BillResponse sendBillToKafka(BillRequest billRequest) {
 
 		try {
-			kafkaTemplate.send(appProps.getCreateBillTopic(),appProps.getCreateBillTopicKey(),billRequest);
+			kafkaTemplate.send(appProps.getCreateBillTopic(), appProps.getCreateBillTopicKey(), billRequest);
 		} catch (Exception e) {
-			log.debug("BillService createAsync:"+e);
-			throw new RuntimeException(e);
+			log.debug("BillService createAsync:" + e);
+			throw new CustomException("EGBS_BILL_SAVE_ERROR", e.getMessage());
 
 		}
 		return getBillResponse(billRequest.getBills());
 	}
 	
+	public void create(BillRequest billRequest){
+		billRepository.saveBill(billRequest);
+	}
+	
+	/*
+	 * @deprecated methods 
+	 * 
+	 */
+
 	@Deprecated
 	private Map<String, List<GlCodeMaster>> getGlCodes(List<Demand> demands, String service,String tenantId, RequestInfo requestInfo) {
 

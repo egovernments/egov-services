@@ -205,4 +205,9 @@ public class ApplicationProperties {
 	@Value("${user.service.searchpath}")
 	private String userServiceSearchPath;
 
+	@Value("${bs.demand.audit.seq.name}")
+	private String demandAuditSeqName;
+
+	@Value("${bs.demanddetail.audit.seq.name}")
+	private String demandDetailAuditSeqName;
 }

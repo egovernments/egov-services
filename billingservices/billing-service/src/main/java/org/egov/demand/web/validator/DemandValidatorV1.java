@@ -298,6 +298,9 @@ public class DemandValidatorV1 {
 		String tenantId = demands.get(0).getTenantId();
 		List<String> errors = new ArrayList<>();
 
+		/*
+		 * Collecting the demands from DB for the consumer codes in to a map 
+		 */
 		List<Demand> dbDemands = demandRepository.getDemandsForConsumerCodes(businessConsumerValidatorMap, tenantId);
 		Map<String, List<Demand>> dbDemandMap = dbDemands.stream()
 				.collect(Collectors.groupingBy(Demand::getConsumerCode, Collectors.toList()));

@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 import org.egov.demand.web.contract.User;
 
@@ -56,6 +58,8 @@ public class Demand   {
         @Default
         @JsonProperty("demandDetails")
         @Valid
+        @NotNull
+        @Size(min=1)
         private List<DemandDetail> demandDetails = new ArrayList<>();
 
         @JsonProperty("auditDetails")

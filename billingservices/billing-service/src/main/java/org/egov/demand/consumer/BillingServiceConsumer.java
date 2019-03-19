@@ -54,38 +54,53 @@ public class BillingServiceConsumer {
 	private DemandAdjustmentService demandAdjustmentService;
 
 	@KafkaListener(topics = { "${kafka.topics.receipt.update.collecteReceipt}", "${kafka.topics.save.bill}",
-			"${kafka.topics.update.bill}", "${kafka.topics.save.demand}", "${kafka.topics.update.demand}",
-			"${kafka.topics.receipt.update.demand}", "${kafka.topics.receipt.cancel.name}" })
+			"${kafka.topics.save.demand}", "${kafka.topics.update.demand}", "${kafka.topics.receipt.update.demand}",
+			"${kafka.topics.receipt.cancel.name}" })
 	public void processMessage(Map<String, Object> consumerRecord, @Header(KafkaHeaders.RECEIVED_TOPIC) String topic) {
-		
+
 		log.debug("key:" + topic + ":" + "value:" + consumerRecord);
 
-
-			if (applicationProperties.getCreateDemandTopic().equals(topic))
-				demandService.save(objectMapper.convertValue(consumerRecord, DemandRequest.class));
-			else if (applicationProperties.getUpdateDemandTopic().equals(topic))
-				demandService.update(objectMapper.convertValue(consumerRecord, DemandRequest.class));
-			else if (topic.equals(applicationProperties.getCreateBillTopic()))
-				billRepository.saveBill(objectMapper.convertValue(consumerRecord, BillRequest.class));
-			else if (applicationProperties.getUpdateDemandFromReceipt().equals(topic)) {
-
-				CollectionReceiptRequest collectionReceiptRequest = objectMapper.convertValue(consumerRecord,
-						CollectionReceiptRequest.class);
-				RequestInfo requestInfo = collectionReceiptRequest.getRequestInfo();
-				List<Receipt> receipts = collectionReceiptRequest.getReceipt();
-
-				ReceiptRequest receiptRequest = ReceiptRequest.builder().receipt(receipts).requestInfo(requestInfo)
-						.tenantId(collectionReceiptRequest.getTenantId()).build();
-				log.debug("the receipt request is -------------------" + receiptRequest);
-
-				receiptService.updateDemandFromReceipt(receiptRequest, StatusEnum.CREATED);
-			}
-
-			else if (applicationProperties.getReceiptCancellationTopic().equals(topic)) {
-				demandAdjustmentService.adjustDemandOnReceiptCancellation(
-						objectMapper.convertValue(consumerRecord, ReceiptRequest.class));
-			}
-
+		/*
+		 * save demand topic
+		 */
+		if (applicationProperties.getCreateDemandTopic().equals(topic))
+			demandService.save(objectMapper.convertValue(consumerRecord, DemandRequest.class));
 		
+		/*
+		 * update demand topic
+		 */
+		else if (applicationProperties.getUpdateDemandTopic().equals(topic))
+			demandService.update(objectMapper.convertValue(consumerRecord, DemandRequest.class));
+		
+		/*
+		 * save bill
+		 */
+		else if (topic.equals(applicationProperties.getCreateBillTopic()))
+			billRepository.saveBill(objectMapper.convertValue(consumerRecord, BillRequest.class));
+
+		/*
+		 * update demand from receipt
+		 */
+		else if (applicationProperties.getUpdateDemandFromReceipt().equals(topic)) {
+
+			CollectionReceiptRequest collectionReceiptRequest = objectMapper.convertValue(consumerRecord,
+					CollectionReceiptRequest.class);
+			RequestInfo requestInfo = collectionReceiptRequest.getRequestInfo();
+			List<Receipt> receipts = collectionReceiptRequest.getReceipt();
+
+			ReceiptRequest receiptRequest = ReceiptRequest.builder().receipt(receipts).requestInfo(requestInfo)
+					.tenantId(collectionReceiptRequest.getTenantId()).build();
+			log.debug("the receipt request is -------------------" + receiptRequest);
+
+			receiptService.updateDemandFromReceipt(receiptRequest, StatusEnum.CREATED);
+		}
+
+		/*
+		 * update demand for receipt cancellation
+		 */
+		else if (applicationProperties.getReceiptCancellationTopic().equals(topic)) {
+			demandAdjustmentService
+					.adjustDemandOnReceiptCancellation(objectMapper.convertValue(consumerRecord, ReceiptRequest.class));
+		}
 	}
 }

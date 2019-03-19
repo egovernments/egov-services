@@ -104,7 +104,7 @@ public class BillController {
 					getErrorResponse(bindingResult, billRequest.getRequestInfo()), HttpStatus.BAD_REQUEST);
 		}
 		//billValidator.validateBillRequest(billRequest);
-		BillResponse billResponse = billService.createAsync(billRequest);
+		BillResponse billResponse = billService.sendBillToKafka(billRequest);
 		
 		return new ResponseEntity<>(billResponse,HttpStatus.CREATED);
 	}

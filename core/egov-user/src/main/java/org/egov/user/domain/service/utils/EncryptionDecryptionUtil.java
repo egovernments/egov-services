@@ -12,6 +12,9 @@ import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.HttpServerErrorException;
+import org.springframework.web.client.ResourceAccessException;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -40,9 +43,12 @@ public class EncryptionDecryptionUtil
     {
         try {
             return encryptionService.encryptJson(objectToEncrypt,key,stateLevelTenantId,classType);
-        } catch (IOException e) {
-            log.error("IO error occurred while decrypting",e);
-            throw new CustomException("DECRYPTION_ERROR","IO error occurred while decrypting");
+        } catch (IOException | HttpClientErrorException | HttpServerErrorException | ResourceAccessException e) {
+            log.error("Error occurred while encrypting",e);
+            throw new CustomException("ENCRYPTION_ERROR","Error occurred in encryption process");
+        }catch (Exception e){
+            log.error("Unknown Error occurred while encrypting",e);
+            throw new CustomException("UNKNOWN_ERROR","Unknown error occurred in encryption process");
         }
     }
 
@@ -55,9 +61,12 @@ public class EncryptionDecryptionUtil
             P decryptedObject =  (P)encryptionService.decryptJson(objectToDecrypt,key,encrichedUserInfo,classType);
             auditTheDecryptRequest(objectToDecrypt, key, encrichedUserInfo);
             return decryptedObject;
-        } catch (IOException e) {
-            log.error("IO error occurred while decrypting",e);
-            throw new CustomException("DECRYPTION_ERROR","IO error occurred while decrypting");
+        } catch (IOException | HttpClientErrorException | HttpServerErrorException | ResourceAccessException e) {
+            log.error("Error occurred while decrypting",e);
+            throw new CustomException("DECRYPTION_SERVICE_ERROR","Error occurred in decryption process");
+        } catch (Exception e){
+            log.error("Unknown Error occurred while decrypting",e);
+            throw new CustomException("UNKNOWN_ERROR","Unknown error occurred in decryption process");
         }
     }
 

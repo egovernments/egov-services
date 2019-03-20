@@ -18,6 +18,7 @@ import org.springframework.web.client.ResourceAccessException;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -56,6 +57,11 @@ public class EncryptionDecryptionUtil
     {
 
         try {
+            if(userInfo==null)
+            {
+                return (E)objectToDecrypt;
+//                getUserInfoIfNullUserInfo();
+            }
             final User encrichedUserInfo=getEncrichedandCopiedUserInfo(userInfo);
             key = getKeyToDecrypt(objectToDecrypt, encrichedUserInfo);
             P decryptedObject =  (P)encryptionService.decryptJson(objectToDecrypt,key,encrichedUserInfo,classType);
@@ -91,6 +97,10 @@ public class EncryptionDecryptionUtil
     }
 
     public String getKeyToDecrypt(Object objectToDecrypt, User userInfo) {
+//        if(userInfo.getUuid().equals("no uuid"))
+//        {
+//            return "UserNull";
+//        }
         boolean isSelf = isUserDecryptingForSelf(objectToDecrypt, userInfo);
         if(objectToDecrypt instanceof List) {
             if(isSelf)
@@ -152,4 +162,8 @@ public class EncryptionDecryptionUtil
                         .roles(newRoleList).tenantId(userInfo.getTenantId()).uuid(userInfo.getUuid()).build();
         return  newuserInfo;
     }
+
+//    private User getUserInfoIfNullUserInfo(){
+//        return User.builder().uuid("no uuid").roles(Collections.singletonList(Role.builder().code("DUMMY").build())).build();
+//    }
 }

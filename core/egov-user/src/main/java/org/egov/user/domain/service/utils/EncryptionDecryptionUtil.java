@@ -59,7 +59,7 @@ public class EncryptionDecryptionUtil
         try {
             if(userInfo==null)
             {
-                return (E)objectToDecrypt;
+                return (P)objectToDecrypt;
 //                getUserInfoIfNullUserInfo();
             }
             final User encrichedUserInfo=getEncrichedandCopiedUserInfo(userInfo);

@@ -154,7 +154,7 @@ public class UserService {
      */
 
     public List<org.egov.user.domain.model.User> searchUsers(UserSearchCriteria searchCriteria,
-                                                             boolean isInterServiceCall,org.egov.common.contract.request.User userInfo) {
+                                                             boolean isInterServiceCall,RequestInfo requestInfo) {
 
         searchCriteria.validate(isInterServiceCall);
  
@@ -167,7 +167,7 @@ public class UserService {
 
         /* decrypt here / final reponse decrypted*/
 
-        list= encryptionDecryptionUtil.decryptObject(list,"UserList",User.class,userInfo);
+        list= encryptionDecryptionUtil.decryptObject(list,"UserList",User.class,requestInfo);
 
         setFileStoreUrlsByFileStoreIds(list);
         return list;
@@ -179,7 +179,7 @@ public class UserService {
      * @param user
      * @return
      */
-    public User createUser(User user, org.egov.common.contract.request.User userInfo) {
+    public User createUser(User user, RequestInfo requestInfo) {
         user.setUuid(UUID.randomUUID().toString());
         user.validateNewUser();
         conditionallyValidateOtp(user);
@@ -193,7 +193,7 @@ public class UserService {
         user.setDefaultPasswordExpiry(defaultPasswordExpiryInDays);
         user.setTenantId(getStateLevelTenantForCitizen(user.getTenantId(), user.getType()));
         User persistedNewUser=persistNewUser(user);
-        return  encryptionDecryptionUtil.decryptObject(persistedNewUser,"User",User.class,userInfo);
+        return  encryptionDecryptionUtil.decryptObject(persistedNewUser,"User",User.class,requestInfo);
 
         /* decrypt here  because encrypted data coming from DB*/
 
@@ -219,9 +219,9 @@ public class UserService {
      * @param user
      * @return
      */
-    public User createCitizen(User user, org.egov.common.contract.request.User userInfo) {
+    public User createCitizen(User user, RequestInfo requestInfo) {
         validateAndEnrichCitizen(user);
-        return createUser(user,userInfo);
+        return createUser(user,requestInfo);
     }
 
 
@@ -242,9 +242,9 @@ public class UserService {
      * @param user
      * @return
      */
-    public Object registerWithLogin(User user, org.egov.common.contract.request.User userInfo) {
+    public Object registerWithLogin(User user, RequestInfo requestInfo) {
         user.setActive(true);
-        createCitizen(user,userInfo);
+        createCitizen(user,requestInfo);
         return getAccess(user, user.getOtpReference());
     }
 
@@ -312,7 +312,7 @@ public class UserService {
      * @return
      */
     // TODO Fix date formats
-    public User updateWithoutOtpValidation(User user, org.egov.common.contract.request.User userInfo) {
+    public User updateWithoutOtpValidation(User user, RequestInfo requestInfo) {
         final User existingUser = getUserByUuid(user.getUuid());
         user.setTenantId(getStateLevelTenantForCitizen(user.getTenantId(), user.getType()));
         validateUserRoles(user);
@@ -328,7 +328,7 @@ public class UserService {
             resetFailedLoginAttempts(user);
 
         User encryptedUpdatedUserfromDB=getUserByUuid(user.getUuid());
-        User decryptedupdatedUserfromDB= encryptionDecryptionUtil.decryptObject(encryptedUpdatedUserfromDB,"User",User.class,userInfo);
+        User decryptedupdatedUserfromDB= encryptionDecryptionUtil.decryptObject(encryptedUpdatedUserfromDB,"User",User.class,requestInfo);
         return decryptedupdatedUserfromDB;
     }
 
@@ -369,7 +369,7 @@ public class UserService {
      * @param user
      * @return
      */
-    public User partialUpdate(User user, org.egov.common.contract.request.User userInfo) {
+    public User partialUpdate(User user, RequestInfo requestInfo) {
         /* encrypt here */
         user= encryptionDecryptionUtil.encryptObject(user,"User",User.class);
 
@@ -380,7 +380,7 @@ public class UserService {
         User updatedUser = getUserByUuid(user.getUuid());
         /* decrypt here */
 
-        updatedUser= encryptionDecryptionUtil.decryptObject(updatedUser,"User",User.class,userInfo);
+        updatedUser= encryptionDecryptionUtil.decryptObject(updatedUser,"User",User.class,requestInfo);
 
         setFileStoreUrlsByFileStoreIds(Collections.singletonList(updatedUser));
         return updatedUser;
@@ -411,7 +411,7 @@ public class UserService {
      *
      * @param request
      */
-    public void updatePasswordForNonLoggedInUser(NonLoggedInUserUpdatePasswordRequest request, org.egov.common.contract.request.User userInfo) {
+    public void updatePasswordForNonLoggedInUser(NonLoggedInUserUpdatePasswordRequest request,RequestInfo requestInfo) {
         request.validate();
         // validateOtp(request.getOtpValidationRequest());
         User user = getUniqueUser(request.getUserName(), request.getTenantId(), request.getType());
@@ -425,7 +425,7 @@ public class UserService {
         }
         /* decrypt here */
         /* the reason for decryption here is the otp service requires decrypted username */
-        user= encryptionDecryptionUtil.decryptObject(user,"User",User.class,userInfo);
+        user= encryptionDecryptionUtil.decryptObject(user,"User",User.class,requestInfo);
         user.setOtpReference(request.getOtpReference());
         validateOtp(user);
         user.updatePassword(encryptPwd(request.getNewPassword()));
@@ -480,7 +480,7 @@ public class UserService {
      * @param user user whose failed login attempt to be handled
      * @param ipAddress IP address of remote
      */
-    public void handleFailedLogin(User user, String ipAddress,org.egov.common.contract.request.User userInfo){
+    public void handleFailedLogin(User user, String ipAddress,RequestInfo requestInfo){
         if(!Objects.isNull(user.getUuid())) {
         List<FailedLoginAttempt> failedLoginAttempts =
                 userRepository.fetchFailedAttemptsByUserAndTime(user.getUuid(),
@@ -493,7 +493,7 @@ public class UserService {
                     .accountLockedDate(System.currentTimeMillis())
                     .build();
 
-            user = updateWithoutOtpValidation(userToBeUpdated,userInfo);
+            user = updateWithoutOtpValidation(userToBeUpdated,requestInfo);
             removeTokensByUser(user);
             log.info("Locked account with uuid {} for {} minutes as exceeded max allowed attempts of {} within {} " +
                             "minutes",

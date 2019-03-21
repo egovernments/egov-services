@@ -1,6 +1,7 @@
 package org.egov.user.security.oauth2.custom.authproviders;
 
 import lombok.extern.slf4j.Slf4j;
+import org.egov.common.contract.request.RequestInfo;
 import org.egov.tracer.model.CustomException;
 import org.egov.tracer.model.ServiceCallException;
 import org.egov.user.domain.exception.DuplicateUserNameException;
@@ -85,7 +86,7 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
         }
 
 		User user;
-		org.egov.common.contract.request.User userInfo;
+		RequestInfo requestInfo;
         try {
 		user = userService.getUniqueUser(userName, tenantId, UserType.fromValue(userType));
 		/* decrypt here otp service and final response need decrypted data*/
@@ -96,8 +97,9 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 			contract_roles.add(org.egov.common.contract.request.Role.builder().code(role.getCode()).name(role.getName()).build());
 		}
 
-		userInfo=org.egov.common.contract.request.User.builder().uuid(user.getUuid()).roles(contract_roles).build();
-		user= encryptionDecryptionUtil.decryptObject(user,"User",User.class,userInfo);
+			org.egov.common.contract.request.User userInfo=org.egov.common.contract.request.User.builder().uuid(user.getUuid()).roles(contract_roles).build();
+			requestInfo=RequestInfo.builder().userInfo(userInfo).build();
+		user= encryptionDecryptionUtil.decryptObject(user,"User",User.class,requestInfo);
 
         } catch (UserNotFoundException e){
             log.error("User not found", e);
@@ -117,7 +119,7 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 		if (user.getAccountLocked() != null && user.getAccountLocked()) {
 
 			if(userService.isAccountUnlockAble(user)){
-				user = unlockAccount(user,userInfo);
+				user = unlockAccount(user,requestInfo);
 			}
 			else
 				throw new OAuth2Exception("Account locked");
@@ -157,7 +159,7 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 		} else {
 			// Handle failed login attempt
 			// Fetch Real IP after being forwarded by reverse proxy
-			userService.handleFailedLogin(user, request.getHeader(IP_HEADER_NAME),userInfo);
+			userService.handleFailedLogin(user, request.getHeader(IP_HEADER_NAME),requestInfo);
 
 			throw new OAuth2Exception("Invalid login credentials");
 		}
@@ -228,13 +230,13 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 	 * @param user to be unlocked
 	 * @return Updated user
 	 */
-	private User unlockAccount(User user,org.egov.common.contract.request.User userInfo){
+	private User unlockAccount(User user,RequestInfo requestInfo){
 		User userToBeUpdated = user.toBuilder()
 				.accountLocked(false)
 				.password(null)
 				.build();
 
-		User updatedUser = userService.updateWithoutOtpValidation(userToBeUpdated,userInfo);
+		User updatedUser = userService.updateWithoutOtpValidation(userToBeUpdated,requestInfo);
 		userService.resetFailedLoginAttempts(userToBeUpdated);
 
 		return updatedUser;

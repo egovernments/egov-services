@@ -62,10 +62,10 @@ public class UserController {
 		User user = createUserRequest.toDomain(true);
 		user.setOtpValidationMandatory(IsValidationMandatory);
 		if(isRegWithLoginEnabled) {
-			Object object = userService.registerWithLogin(user,createUserRequest.getRequestInfo().getUserInfo());
+			Object object = userService.registerWithLogin(user,createUserRequest.getRequestInfo());
 			return new ResponseEntity<>(object, HttpStatus.OK);
 		}
-		User createdUser = userService.createCitizen(user,createUserRequest.getRequestInfo().getUserInfo());
+		User createdUser = userService.createCitizen(user,createUserRequest.getRequestInfo());
 		return createResponse(createdUser);
 	}
 
@@ -83,7 +83,7 @@ public class UserController {
 		User user = createUserRequest.toDomain(true);
 		user.setMobileValidationMandatory(isMobileValidationRequired(headers));
 		user.setOtpValidationMandatory(false);
-		final User newUser = userService.createUser(user,createUserRequest.getRequestInfo().getUserInfo());
+		final User newUser = userService.createUser(user,createUserRequest.getRequestInfo());
 		return createResponse(newUser);
 	}
 
@@ -101,10 +101,7 @@ public class UserController {
 		if (request.getActive() == null) {
 			request.setActive(true);
 		}
-		if(request.getRequestInfo() != null)
-			return searchUsers(request, headers,request.getRequestInfo().getUserInfo());
-		else
-			return searchUsers(request, headers, null);
+		return searchUsers(request, headers);
 	}
 
 	/**
@@ -117,7 +114,7 @@ public class UserController {
 	 */
 	@PostMapping("/v1/_search")
 	public UserSearchResponse getV1(@RequestBody UserSearchRequest request, @RequestHeader HttpHeaders headers) {
-		return searchUsers(request, headers,request.getRequestInfo().getUserInfo());
+		return searchUsers(request, headers);
 	}
 
 	/**
@@ -145,7 +142,7 @@ public class UserController {
 														  @RequestHeader HttpHeaders headers) {
 		User user = createUserRequest.toDomain(false);
 		user.setMobileValidationMandatory(isMobileValidationRequired(headers));
-		final User updatedUser = userService.updateWithoutOtpValidation( user,createUserRequest.getRequestInfo().getUserInfo());
+		final User updatedUser = userService.updateWithoutOtpValidation( user,createUserRequest.getRequestInfo());
 		return createResponse(updatedUser);
 	}
 
@@ -159,7 +156,7 @@ public class UserController {
 	public UserDetailResponse patch(@RequestBody final CreateUserRequest createUserRequest) {
 		log.info("Received Profile Update Request  " + createUserRequest);
 		User user = createUserRequest.toDomain(false);
-		final User updatedUser = userService.partialUpdate(user,createUserRequest.getRequestInfo().getUserInfo());
+		final User updatedUser = userService.partialUpdate(user,createUserRequest.getRequestInfo());
 		return createResponse(updatedUser);
 	}
 
@@ -169,7 +166,7 @@ public class UserController {
 		return new UserDetailResponse(responseInfo, Collections.singletonList(userRequest));
 	}
 
-	private UserSearchResponse searchUsers(@RequestBody UserSearchRequest request, HttpHeaders headers, org.egov.common.contract.request.User userInfo) {
+	private UserSearchResponse searchUsers(@RequestBody UserSearchRequest request, HttpHeaders headers) {
 
         UserSearchCriteria searchCriteria = request.toDomain();
 
@@ -179,7 +176,7 @@ public class UserController {
                 searchCriteria.setLimit(defaultSearchSize);
         }
 
-		List<User> userModels = userService.searchUsers(searchCriteria, isInterServiceCall(headers),userInfo);
+		List<User> userModels = userService.searchUsers(searchCriteria, isInterServiceCall(headers),request.getRequestInfo());
 		List<UserSearchResponseContent> userContracts = userModels.stream().map(UserSearchResponseContent::new)
 				.collect(Collectors.toList());
 		ResponseInfo responseInfo = ResponseInfo.builder().status(String.valueOf(HttpStatus.OK.value())).build();

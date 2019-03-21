@@ -1,5 +1,6 @@
 package org.egov.user.web.controller;
 
+import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.request.Role;
 import org.egov.common.contract.request.User;
 import org.egov.user.Resources;
@@ -89,7 +90,7 @@ public class PasswordControllerTest {
 				.userName("userName")
 				.build();
 
-		verify(userService).updatePasswordForNonLoggedInUser(eq(expectedRequest),any(User.class));
+		verify(userService).updatePasswordForNonLoggedInUser(eq(expectedRequest),any(RequestInfo.class));
 	}
 
 }

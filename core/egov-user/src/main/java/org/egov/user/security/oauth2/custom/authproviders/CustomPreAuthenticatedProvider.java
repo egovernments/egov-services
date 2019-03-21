@@ -2,6 +2,7 @@ package org.egov.user.security.oauth2.custom.authproviders;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
+import org.egov.common.contract.request.RequestInfo;
 import org.egov.tracer.model.CustomException;
 import org.egov.user.domain.exception.DuplicateUserNameException;
 import org.egov.user.domain.exception.UserNotFoundException;
@@ -71,9 +72,9 @@ public class CustomPreAuthenticatedProvider implements AuthenticationProvider {
             {
                 contract_roles.add(org.egov.common.contract.request.Role.builder().code(role.getCode()).name(role.getName()).build());
             }
-
             org.egov.common.contract.request.User userInfo=org.egov.common.contract.request.User.builder().uuid(user.getUuid()).roles(contract_roles).build();
-            user= encryptionDecryptionUtil.decryptObject(user,"User",User.class,userInfo);
+            RequestInfo requestInfo=RequestInfo.builder().userInfo(userInfo).build();
+            user= encryptionDecryptionUtil.decryptObject(user,"User",User.class,requestInfo);
         } catch (UserNotFoundException e) {
             log.error("User not found", e);
             throw new OAuth2Exception("Invalid login credentials");

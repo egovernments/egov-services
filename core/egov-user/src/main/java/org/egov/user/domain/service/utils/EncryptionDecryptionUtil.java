@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.databind.node.TextNode;
 import lombok.extern.slf4j.Slf4j;
+import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.request.Role;
 import org.egov.common.contract.request.User;
 import org.egov.encryption.EncryptionService;
@@ -52,14 +53,14 @@ public class EncryptionDecryptionUtil
         }
     }
 
-    public <E,P>P decryptObject(Object objectToDecrypt, String key, Class<E> classType, User userInfo)
+    public <E,P>P decryptObject(Object objectToDecrypt, String key, Class<E> classType, RequestInfo requestInfo)
     {
 
         try {
-            if(userInfo==null) {
+            if(requestInfo==null || requestInfo.getUserInfo()==null) {
                 return (P) objectToDecrypt;
             }
-            final User encrichedUserInfo=getEncrichedandCopiedUserInfo(userInfo);
+            final User encrichedUserInfo=getEncrichedandCopiedUserInfo(requestInfo.getUserInfo());
             key = getKeyToDecrypt(objectToDecrypt, encrichedUserInfo);
             P decryptedObject =  (P)encryptionService.decryptJson(objectToDecrypt,key,encrichedUserInfo,classType);
             auditTheDecryptRequest(objectToDecrypt, key, encrichedUserInfo);

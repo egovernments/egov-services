@@ -78,8 +78,8 @@ public class UserServiceTest {
 		List<org.egov.user.domain.model.User> expectedListOfUsers = new ArrayList<org.egov.user.domain.model.User>();
 		when(userRepository.findAll(userSearch)).thenReturn(expectedListOfUsers);
 		when(encryptionDecryptionUtil.encryptObject(userSearch,"UserSearchCriteria", UserSearchCriteria.class)).thenReturn(userSearch);
-		when(encryptionDecryptionUtil.decryptObject(expectedListOfUsers,"UserList",User.class,getValidUserInfo())).thenReturn(expectedListOfUsers);
-		List<org.egov.user.domain.model.User> actualResult = userService.searchUsers(userSearch, true,getValidUserInfo());
+		when(encryptionDecryptionUtil.decryptObject(expectedListOfUsers,"UserList",User.class,getValidRequestInfo())).thenReturn(expectedListOfUsers);
+		List<org.egov.user.domain.model.User> actualResult = userService.searchUsers(userSearch, true,getValidRequestInfo());
 
 		assertThat(expectedListOfUsers).isEqualTo(actualResult);
 	}
@@ -89,8 +89,8 @@ public class UserServiceTest {
 		UserSearchCriteria userSearch = mock(UserSearchCriteria.class);
 		List<org.egov.user.domain.model.User> expectedListOfUsers = new ArrayList<org.egov.user.domain.model.User>();
 		when(userRepository.findAll(userSearch)).thenReturn(expectedListOfUsers);
-		when(encryptionDecryptionUtil.decryptObject(expectedListOfUsers,"UserList",User.class,getValidUserInfo())).thenReturn(expectedListOfUsers);
-		userService.searchUsers(userSearch, true,getValidUserInfo());
+		when(encryptionDecryptionUtil.decryptObject(expectedListOfUsers,"UserList",User.class,getValidRequestInfo())).thenReturn(expectedListOfUsers);
+		userService.searchUsers(userSearch, true,getValidRequestInfo());
 
 		verify(userSearch).validate(true);
 	}
@@ -103,8 +103,8 @@ public class UserServiceTest {
 		when(userRepository.create(domainUser)).thenReturn(expectedEntityUser);
 
 		when(encryptionDecryptionUtil.encryptObject(domainUser,"User", User.class)).thenReturn(domainUser);
-		when(encryptionDecryptionUtil.decryptObject(expectedEntityUser,"User",User.class,getValidUserInfo())).thenReturn(expectedEntityUser);
-		User returnedUser = userService.createUser(domainUser,getValidUserInfo());
+		when(encryptionDecryptionUtil.decryptObject(expectedEntityUser,"User",User.class,getValidRequestInfo())).thenReturn(expectedEntityUser);
+		User returnedUser = userService.createUser(domainUser,getValidRequestInfo());
 
 		assertEquals(expectedEntityUser, returnedUser);
 	}
@@ -131,8 +131,8 @@ public class UserServiceTest {
 		when(domainUser.getPassword()).thenReturn("demo");
 		when(userRepository.create(domainUser)).thenReturn(expectedUser);
 		when(encryptionDecryptionUtil.encryptObject(domainUser,"User", User.class)).thenReturn(domainUser);
-		when(encryptionDecryptionUtil.decryptObject(expectedUser,"User",User.class,getValidUserInfo())).thenReturn(expectedUser);
-		User returnedUser = userService.createCitizen(domainUser,getValidUserInfo());
+		when(encryptionDecryptionUtil.decryptObject(expectedUser,"User",User.class,getValidRequestInfo())).thenReturn(expectedUser);
+		User returnedUser = userService.createCitizen(domainUser,getValidRequestInfo());
 
 		assertEquals(expectedUser, returnedUser);
 	}
@@ -144,7 +144,7 @@ public class UserServiceTest {
 				true,false);
 		org.egov.user.domain.model.User domainUser = User.builder().username("TestUser").name("Test").active(true)
 				.tenantId("default").mobileNumber("123456789").type(UserType.CITIZEN).build();
-		userService.createCitizen(domainUser,getValidUserInfo());
+		userService.createCitizen(domainUser,getValidRequestInfo());
 	}
 
 	
@@ -183,8 +183,8 @@ public class UserServiceTest {
 		when(userRepository.create(domainUser)).thenReturn(expectedUser);
 
 		when(encryptionDecryptionUtil.encryptObject(domainUser,"User", User.class)).thenReturn(domainUser);
-		when(encryptionDecryptionUtil.decryptObject(expectedUser,"User",User.class,getValidUserInfo())).thenReturn(expectedUser);
-		userService.createCitizen(domainUser,getValidUserInfo());
+		when(encryptionDecryptionUtil.decryptObject(expectedUser,"User",User.class,getValidRequestInfo())).thenReturn(expectedUser);
+		userService.createCitizen(domainUser,getValidRequestInfo());
 
 		verify(domainUser).setDefaultPasswordExpiry(DEFAULT_PASSWORD_EXPIRY_IN_DAYS);
 	}
@@ -199,7 +199,7 @@ public class UserServiceTest {
 		final User expectedEntityUser = User.builder().build();
 		when(userRepository.create(domainUser)).thenReturn(expectedEntityUser);
 		when(encryptionDecryptionUtil.encryptObject(domainUser,"User", User.class)).thenReturn(domainUser);
-		userService.createCitizen(domainUser,getValidUserInfo());
+		userService.createCitizen(domainUser,getValidRequestInfo());
 
 		verify(domainUser).setRoleToCitizen();
 	}
@@ -210,7 +210,7 @@ public class UserServiceTest {
 		when(otpRepository.isOtpValidationComplete(getExpectedRequest())).thenReturn(true);
 		when(userRepository.isUserPresent("supandi_rocks", "tenantId", UserType.CITIZEN)).thenReturn(true);
 		when(encryptionDecryptionUtil.encryptObject(domainUser,"User", User.class)).thenReturn(domainUser);
-		userService.createUser(domainUser,getValidUserInfo());
+		userService.createUser(domainUser,getValidRequestInfo());
 	}
 
 	@Test(expected = OtpValidationPendingException.class)
@@ -227,7 +227,7 @@ public class UserServiceTest {
 		org.egov.user.domain.model.User domainUser = validDomainUser(false);
 		when(otpRepository.isOtpValidationComplete(getExpectedRequest())).thenReturn(false);
 		when(encryptionDecryptionUtil.encryptObject(domainUser,"User", User.class)).thenReturn(domainUser);
-		userService.createUser(domainUser,getValidUserInfo());
+		userService.createUser(domainUser,getValidRequestInfo());
 
 		verify(otpRepository, never()).isOtpValidationComplete(getExpectedRequest());
 	}
@@ -236,7 +236,7 @@ public class UserServiceTest {
 	public void test_should_raise_exception_when_user_is_invalid() throws Exception {
 		org.egov.user.domain.model.User domainUser = org.egov.user.domain.model.User.builder().build();
 
-		userService.createUser(domainUser,getValidUserInfo());
+		userService.createUser(domainUser,getValidRequestInfo());
 		verify(userRepository, never()).create(any(org.egov.user.domain.model.User.class));
 	}
 
@@ -283,14 +283,14 @@ public class UserServiceTest {
 		User domainUser = validDomainUser(false);
 		when(userRepository.findAll(any(UserSearchCriteria.class))).thenReturn(Collections.emptyList());
 
-		userService.updateWithoutOtpValidation( domainUser,getValidUserInfo());
+		userService.updateWithoutOtpValidation( domainUser,getValidRequestInfo());
 	}
 
 	@Test(expected = UserNotFoundException.class)
 	public void test_should_throw_exception_on_partial_update_when_id_is_not_present() {
 		final User user = User.builder().uuid(null).build();
 		when(encryptionDecryptionUtil.encryptObject(user,"User", User.class)).thenReturn(user);
-		userService.partialUpdate(user,getValidUserInfo());
+		userService.partialUpdate(user,getValidRequestInfo());
 	}
 
 	@Ignore
@@ -323,8 +323,8 @@ public class UserServiceTest {
 		when(encryptionDecryptionUtil.encryptObject(user,"User",User.class)).thenReturn(user);
         when(userRepository.findAll(any(UserSearchCriteria.class))).thenReturn(Collections.singletonList(user));
 		when(encryptionDecryptionUtil.encryptObject(user,"User",User.class)).thenReturn(user);
-		when(encryptionDecryptionUtil.decryptObject(user, "User",User.class,getValidUserInfo())).thenReturn(user);
-		userService.partialUpdate(user,getValidUserInfo());
+		when(encryptionDecryptionUtil.decryptObject(user, "User",User.class,getValidRequestInfo())).thenReturn(user);
+		userService.partialUpdate(user,getValidRequestInfo());
 	}
 
 	@Test
@@ -439,8 +439,8 @@ public class UserServiceTest {
 		final User domainUser = User.builder().type(UserType.SYSTEM).build();
 		when(userRepository.findAll(any(UserSearchCriteria.class))).thenReturn(Collections.singletonList(domainUser));
 		when(encryptionDecryptionUtil.encryptObject(domainUser,"User", User.class)).thenReturn(domainUser);
-		when(encryptionDecryptionUtil.decryptObject(domainUser, "User",User.class,getValidUserInfo())).thenReturn(domainUser);
-		userService.updatePasswordForNonLoggedInUser(request,getValidUserInfo());
+		when(encryptionDecryptionUtil.decryptObject(domainUser, "User",User.class,getValidRequestInfo())).thenReturn(domainUser);
+		userService.updatePasswordForNonLoggedInUser(request,getValidRequestInfo());
 
 	}
 
@@ -450,7 +450,7 @@ public class UserServiceTest {
 		when(otpRepository.isOtpValidationComplete(any())).thenReturn(true);
 		when(userRepository.findAll(any(UserSearchCriteria.class))).thenReturn(Collections.emptyList());
 
-		userService.updatePasswordForNonLoggedInUser(request,getValidUserInfo());
+		userService.updatePasswordForNonLoggedInUser(request,getValidRequestInfo());
 	}
 
 	@Test
@@ -467,9 +467,9 @@ public class UserServiceTest {
 		when(domainUser.getPassword()).thenReturn("newPassword");
 		when(domainUser.getType()).thenReturn(UserType.SYSTEM);
 		when(userRepository.findAll(any(UserSearchCriteria.class))).thenReturn(Collections.singletonList(domainUser));
-		when(encryptionDecryptionUtil.decryptObject(domainUser,"User",User.class,getValidUserInfo())).thenReturn(domainUser);
+		when(encryptionDecryptionUtil.decryptObject(domainUser,"User",User.class,getValidRequestInfo())).thenReturn(domainUser);
         when(userService.encryptPwd(anyString())).thenReturn("newPassword");
-		userService.updatePasswordForNonLoggedInUser(request,getValidUserInfo());
+		userService.updatePasswordForNonLoggedInUser(request,getValidRequestInfo());
 
 		verify(domainUser).updatePassword("newPassword");
 	}
@@ -510,7 +510,7 @@ public class UserServiceTest {
 		final User domainUser = mock(User.class);
 		when(domainUser.getType()).thenReturn(UserType.CITIZEN);
 		when(userRepository.findAll(any(UserSearchCriteria.class))).thenReturn(Collections.singletonList(domainUser));
-		userService.updatePasswordForNonLoggedInUser(request,getValidUserInfo());
+		userService.updatePasswordForNonLoggedInUser(request,getValidRequestInfo());
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -529,7 +529,7 @@ public class UserServiceTest {
 		final User domainUser = mock(User.class);
 		when(domainUser.getType()).thenReturn(UserType.EMPLOYEE);
 		when(userRepository.findAll(any(UserSearchCriteria.class))).thenReturn(Collections.singletonList(domainUser));
-		userService.updatePasswordForNonLoggedInUser(request,getValidUserInfo());
+		userService.updatePasswordForNonLoggedInUser(request,getValidRequestInfo());
 	}
 	
 	@Ignore
@@ -569,9 +569,9 @@ public class UserServiceTest {
 		when(otpRepository.isOtpValidationComplete(expectedRequest)).thenReturn(true);
 		final User domainUser =User.builder().type(UserType.SYSTEM).build();
 		when(userRepository.findAll(any(UserSearchCriteria.class))).thenReturn(Collections.singletonList(domainUser));
-		when(encryptionDecryptionUtil.decryptObject(domainUser,"User",User.class,getValidUserInfo())).thenReturn(domainUser);
+		when(encryptionDecryptionUtil.decryptObject(domainUser,"User",User.class,getValidRequestInfo())).thenReturn(domainUser);
 		when(encryptionDecryptionUtil.encryptObject(domainUser,"User",User.class)).thenReturn(domainUser);
-		userService.updatePasswordForNonLoggedInUser(request,getValidUserInfo());
+		userService.updatePasswordForNonLoggedInUser(request,getValidRequestInfo());
 
 		verify(userRepository).update(domainUser, domainUser);
 	}
@@ -588,9 +588,10 @@ public class UserServiceTest {
 				.build();
 	}
 
-	private org.egov.common.contract.request.User getValidUserInfo() {
+	private RequestInfo getValidRequestInfo() {
 		List <org.egov.common.contract.request.Role>roles=Collections.singletonList(org.egov.common.contract.request.Role.builder().code("roleCode1").build());
-		return org.egov.common.contract.request.User.builder().roles(roles).build();
+		org.egov.common.contract.request.User userInfo=org.egov.common.contract.request.User.builder().roles(roles).build();
+		return RequestInfo.builder().userInfo(userInfo).build();
 	}
 
 	private User getUserObject() {

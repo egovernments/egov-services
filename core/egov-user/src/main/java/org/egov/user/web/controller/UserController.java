@@ -1,12 +1,7 @@
 package org.egov.user.web.controller;
 
-import com.fasterxml.jackson.core.JsonFactory;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.extern.slf4j.Slf4j;
 import org.egov.common.contract.response.ResponseInfo;
-import org.egov.tracer.model.CustomException;
 import org.egov.user.domain.model.User;
 import org.egov.user.domain.model.UserDetail;
 import org.egov.user.domain.model.UserSearchCriteria;
@@ -23,8 +18,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Collections;
 import java.util.List;
-import java.io.IOException;
-import java.util.*;
 import java.util.stream.Collectors;
 
 import static org.egov.tracer.http.HttpUtils.isInterServiceCall;
@@ -108,7 +101,10 @@ public class UserController {
 		if (request.getActive() == null) {
 			request.setActive(true);
 		}
-		return searchUsers(request, headers,request.getRequestInfo().getUserInfo());
+		if(request.getRequestInfo() != null)
+			return searchUsers(request, headers,request.getRequestInfo().getUserInfo());
+		else
+			return searchUsers(request, headers, null);
 	}
 
 	/**

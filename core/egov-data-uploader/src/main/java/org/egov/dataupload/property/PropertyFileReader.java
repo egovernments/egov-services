@@ -180,7 +180,12 @@ public class PropertyFileReader {
 			case No_of_Floors:
 				long dval = (long)dataUploadUtils.getCellValueAsDouble(cell);
 				if(dval == 0) break;
-				property.getPropertyDetails().get(0).setNoOfFloors(dval);
+				if ("SHAREDPROPERTY".equalsIgnoreCase(property.getPropertyDetails().get(0).getPropertySubType()))
+					// In case of SharedProperty set the no of floors as 2 as currently done by UI
+					// This will make sure 
+					property.getPropertyDetails().get(0).setNoOfFloors(2L);
+				else
+					property.getPropertyDetails().get(0).setNoOfFloors(dval);
 				break;
 			case Ownership_Category:
 				property.getPropertyDetails().get(0).setOwnershipCategory(dataUploadUtils.getCellValueAsString(cell));

@@ -19,6 +19,7 @@ import org.springframework.web.client.ResourceAccessException;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -60,13 +61,23 @@ public class EncryptionDecryptionUtil
     {
 
         try {
+            boolean objectToDecryptNotList=false;
             if(requestInfo==null || requestInfo.getUserInfo()==null) {
                 return (P) objectToDecrypt;
+            }
+            if(!(objectToDecrypt instanceof List))
+            {
+                objectToDecryptNotList=true;
+                objectToDecrypt= Collections.singletonList(objectToDecrypt);
             }
             final User encrichedUserInfo=getEncrichedandCopiedUserInfo(requestInfo.getUserInfo());
             key = getKeyToDecrypt(objectToDecrypt, encrichedUserInfo);
             P decryptedObject =  (P)encryptionService.decryptJson(objectToDecrypt,key,encrichedUserInfo,classType);
             auditTheDecryptRequest(objectToDecrypt, key, encrichedUserInfo);
+            if(objectToDecryptNotList)
+            {
+                decryptedObject=(P)((List<E>)decryptedObject).get(0);
+            }
             return decryptedObject;
         } catch (IOException | HttpClientErrorException | HttpServerErrorException | ResourceAccessException e) {
             log.error("Error occurred while decrypting",e);
@@ -85,10 +96,8 @@ public class EncryptionDecryptionUtil
             if(((List) objectToDecrypt).size() > 1)
                 return false;
             userToDecrypt = (org.egov.user.domain.model.User) ((List) objectToDecrypt).get(0);
-        } else if(objectToDecrypt instanceof org.egov.user.domain.model.User) {
-            userToDecrypt = (org.egov.user.domain.model.User) objectToDecrypt;
         } else {
-            throw new CustomException(objectToDecrypt + " is not of type User", objectToDecrypt + " is not of type User");
+            throw new CustomException("DECRYPTION_NOTLIST_ERROR", objectToDecrypt + " is not of type List of User");
         }
 
         if(userToDecrypt.getUuid().equalsIgnoreCase(userInfo.getUuid()))
@@ -100,17 +109,10 @@ public class EncryptionDecryptionUtil
     public String getKeyToDecrypt(Object objectToDecrypt, User userInfo) {
         // if abac disabled then treat data as if its user's own data and allow full decryption
         boolean isSelf = isUserDecryptingForSelf(objectToDecrypt, userInfo) || !abacEnabled;
-        if(objectToDecrypt instanceof List) {
-            if(isSelf)
-                return "UserListSelf";
-            else
-                return "UserListOther";
-        } else {
-            if(isSelf)
-                return "UserSelf";
-            else
-                return "UserOther";
-        }
+        if(isSelf)
+            return "UserListSelf";
+        else
+            return "UserListOther";
     }
 
     public void auditTheDecryptRequest(Object objectToDecrypt, String key, User userInfo) {

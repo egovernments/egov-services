@@ -7,6 +7,7 @@ import org.egov.common.contract.request.Role;
 import org.egov.common.contract.request.User;
 import org.egov.encryption.accesscontrol.AbacFilter;
 import org.egov.encryption.config.AbacConfiguration;
+import org.egov.encryption.config.EncClientConstants;
 import org.egov.encryption.config.EncryptionPolicyConfiguration;
 import org.egov.encryption.masking.MaskingService;
 import org.egov.encryption.models.AccessType;
@@ -80,7 +81,7 @@ public class EncryptionServiceImpl implements EncryptionService {
                     .filter(attribute -> attributeAccessTypeMap.get(attribute) == AccessType.NONE).collect(Collectors.toList());
             List<String> pathsToBeRemoved = attributesToBeRemoved.stream().map(Attribute::getJsonPath).collect(Collectors.toList());
             JsonNode nodeToBeEmptied = JacksonUtils.filterJsonNodeForPaths(decryptNode, pathsToBeRemoved);
-            JsonNode emptyNode = JSONBrowseUtil.mapValues(nodeToBeEmptied, __ -> "");          //Empty String value
+            JsonNode emptyNode = JSONBrowseUtil.mapValues(nodeToBeEmptied, __ -> EncClientConstants.STRING_FOR_NONE_ACCESS);
             decryptNode = JacksonUtils.merge(emptyNode, decryptNode);
         }
 

@@ -36,6 +36,9 @@ public class EncryptionDecryptionUtil
     @Value(("${egov.state.level.tenant.id}"))
     private String stateLevelTenantId;
 
+    @Value(("${decryption.abac.enabled}"))
+    private boolean abacEnabled;
+
     public EncryptionDecryptionUtil(EncryptionService encryptionService) {
         this.encryptionService = encryptionService;
     }
@@ -95,7 +98,8 @@ public class EncryptionDecryptionUtil
     }
 
     public String getKeyToDecrypt(Object objectToDecrypt, User userInfo) {
-        boolean isSelf = isUserDecryptingForSelf(objectToDecrypt, userInfo);
+        // if abac disabled then treat data as if its user's own data and allow full decryption
+        boolean isSelf = isUserDecryptingForSelf(objectToDecrypt, userInfo) || !abacEnabled;
         if(objectToDecrypt instanceof List) {
             if(isSelf)
                 return "UserListSelf";

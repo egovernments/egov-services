@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.databind.node.TextNode;
 import org.egov.ReportApp;
 import org.egov.common.contract.request.RequestInfo;
+import org.egov.common.contract.request.Role;
 import org.egov.common.contract.request.User;
 import org.egov.common.contract.response.ResponseInfo;
 import org.egov.domain.model.MetaDataRequest;
@@ -19,6 +20,7 @@ import org.egov.tracer.model.CustomException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -211,11 +213,13 @@ public class ReportService {
 		ReportDefinition reportDefinition = rds.getReportDefinition(moduleName+ " "+reportName);
 		List<Map<String, Object>> maps = reportRepository.getData(reportRequest, reportDefinition,authToken);
 		// Call decryption service if decryption is required for the report
-		if (reportDefinition.getdecryptionPathId()!= null)
+		if ((reportDefinition.getdecryptionPathId()!= null)&&(reportRequest.getRequestInfo()!=null)&&(reportRequest.getRequestInfo().getUserInfo()!=null))
 		{
 			try {
+				// handle if userInfo or requestInfo is null
+				User userInfo=getEncrichedandCopiedUserInfo(reportRequest.getRequestInfo().getUserInfo());
 				maps = encryptionService.decryptJson(maps,reportDefinition.getdecryptionPathId(),
-						reportRequest.getRequestInfo().getUserInfo(),Map.class);
+						userInfo,Map.class);
 				auditDecryptRequest(maps, reportDefinition.getdecryptionPathId(),
 						reportRequest.getRequestInfo().getUserInfo());
 			} catch (IOException e) {
@@ -298,5 +302,29 @@ public class ReportService {
 		reportResponse.setViewPath(reportDefinition.getViewPath());	
 		reportResponse.setSelectiveDownload(reportDefinition.isSelectiveDownload());
 		reportResponse.setReportHeader(columnDetails);
+	}
+
+	private User getEncrichedandCopiedUserInfo(User userInfo)
+	{
+		List<org.egov.common.contract.request.Role>newRoleList=new ArrayList<>();
+		if(userInfo.getRoles()!=null)
+		{
+			for(org.egov.common.contract.request.Role role:userInfo.getRoles())
+			{
+				org.egov.common.contract.request.Role newRole= org.egov.common.contract.request.Role.builder().code(role.getCode()).name(role.getName()).id(role.getId()).build();
+				newRoleList.add(newRole);
+			}
+		}
+
+		if(newRoleList.stream().filter(role -> role.getCode().equals(userInfo.getType())).count()==0)
+		{
+			org.egov.common.contract.request.Role roleFromtype= Role.builder().code(userInfo.getType()).name(userInfo.getType()).build();
+			newRoleList.add(roleFromtype);
+		}
+
+		User newuserInfo=User.builder().id(userInfo.getId()).userName(userInfo.getUserName()).name(userInfo.getName())
+				.type(userInfo.getType()).mobileNumber(userInfo.getMobileNumber()).emailId(userInfo.getEmailId())
+				.roles(newRoleList).tenantId(userInfo.getTenantId()).uuid(userInfo.getUuid()).build();
+		return  newuserInfo;
 	}
 }

@@ -106,13 +106,22 @@ public class EncryptionDecryptionUtil
             return false;
     }
 
+    private boolean isDecryptionForIndividualUser(Object objectToDecrypt) {
+        if(((List) objectToDecrypt).size() == 1)
+            return true;
+        else
+            return false;
+    }
+
     public String getKeyToDecrypt(Object objectToDecrypt, User userInfo) {
         // if abac disabled then treat data as if its user's own data and allow full decryption
         boolean isSelf = isUserDecryptingForSelf(objectToDecrypt, userInfo) || !abacEnabled;
         if(isSelf)
             return "UserListSelf";
+        else if(isDecryptionForIndividualUser(objectToDecrypt))
+            return "UserListOtherIndividual";
         else
-            return "UserListOther";
+            return "UserListOtherBulk";
     }
 
     public void auditTheDecryptRequest(Object objectToDecrypt, String key, User userInfo) {
@@ -125,14 +134,9 @@ public class EncryptionDecryptionUtil
         ObjectNode abacParams = objectMapper.createObjectNode();
         abacParams.set("key", TextNode.valueOf(key));
 
-        List<String> decryptedUserUuid = new ArrayList<>();
+        List<String> decryptedUserUuid =  (List<String>) ((List) objectToDecrypt).stream()
+                .map(user -> ((org.egov.user.domain.model.User) user).getUuid()).collect(Collectors.toList());
 
-        if(objectToDecrypt instanceof List) {
-            decryptedUserUuid = (List<String>) ((List) objectToDecrypt).stream()
-                            .map(user -> ((org.egov.user.domain.model.User) user).getUuid()).collect(Collectors.toList());
-        } else if(objectToDecrypt instanceof org.egov.user.domain.model.User) {
-            decryptedUserUuid.add(((org.egov.user.domain.model.User) objectToDecrypt).getUuid());
-        }
         ObjectNode auditData = objectMapper.createObjectNode();
         auditData.set("entityType", TextNode.valueOf(User.class.getName()));
         auditData.set("decryptedEntityIds", objectMapper.valueToTree(decryptedUserUuid));

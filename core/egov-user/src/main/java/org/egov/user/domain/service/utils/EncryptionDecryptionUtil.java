@@ -114,9 +114,9 @@ public class EncryptionDecryptionUtil
     }
 
     public String getKeyToDecrypt(Object objectToDecrypt, User userInfo) {
-        // if abac disabled then treat data as if its user's own data and allow full decryption
-        boolean isSelf = isUserDecryptingForSelf(objectToDecrypt, userInfo) || !abacEnabled;
-        if(isSelf)
+        if(!abacEnabled)
+            return "ALL_ACCESS";
+        else if(isUserDecryptingForSelf(objectToDecrypt, userInfo))
             return "UserListSelf";
         else if(isDecryptionForIndividualUser(objectToDecrypt))
             return "UserListOtherIndividual";
@@ -126,7 +126,9 @@ public class EncryptionDecryptionUtil
 
     public void auditTheDecryptRequest(Object objectToDecrypt, String key, User userInfo) {
         String purpose;
-        if(isUserDecryptingForSelf(objectToDecrypt, userInfo))
+        if(!abacEnabled)
+            purpose="AbacDisabled";
+        else if(isUserDecryptingForSelf(objectToDecrypt, userInfo))
             purpose = "Self";
         else if(isDecryptionForIndividualUser(objectToDecrypt))
             purpose = "SingleSearchResult";

@@ -157,7 +157,7 @@ public class EncryptionDecryptionUtil
             }
         }
 
-        if(newRoleList.stream().filter(role -> role.getCode().equals(userInfo.getType())).count()==0)
+        if(newRoleList.stream().filter(role -> role.getCode().equalsIgnoreCase(userInfo.getType())).count()==0)
         {
             Role roleFromtype=Role.builder().code(userInfo.getType()).name(userInfo.getType()).build();
             newRoleList.add(roleFromtype);

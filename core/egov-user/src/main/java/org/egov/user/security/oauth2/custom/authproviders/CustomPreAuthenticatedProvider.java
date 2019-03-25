@@ -72,7 +72,8 @@ public class CustomPreAuthenticatedProvider implements AuthenticationProvider {
             {
                 contract_roles.add(org.egov.common.contract.request.Role.builder().code(role.getCode()).name(role.getName()).build());
             }
-            org.egov.common.contract.request.User userInfo=org.egov.common.contract.request.User.builder().uuid(user.getUuid()).roles(contract_roles).build();
+            org.egov.common.contract.request.User userInfo=org.egov.common.contract.request.User.builder().uuid(user.getUuid())
+                    .type(user.getType().name()).roles(contract_roles).build();
             RequestInfo requestInfo=RequestInfo.builder().userInfo(userInfo).build();
             user= encryptionDecryptionUtil.decryptObject(user,"User",User.class,requestInfo);
         } catch (UserNotFoundException e) {

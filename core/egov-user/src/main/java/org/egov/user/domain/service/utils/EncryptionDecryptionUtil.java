@@ -125,11 +125,13 @@ public class EncryptionDecryptionUtil
     }
 
     public void auditTheDecryptRequest(Object objectToDecrypt, String key, User userInfo) {
-        String purpose = null;
+        String purpose;
         if(isUserDecryptingForSelf(objectToDecrypt, userInfo))
             purpose = "Self";
+        else if(isDecryptionForIndividualUser(objectToDecrypt))
+            purpose = "SingleSearchResult";
         else
-            purpose = "";
+            purpose = "BulkSearchResult";
 
         ObjectNode abacParams = objectMapper.createObjectNode();
         abacParams.set("key", TextNode.valueOf(key));

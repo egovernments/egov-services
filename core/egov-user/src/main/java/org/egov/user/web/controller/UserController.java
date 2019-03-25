@@ -1,10 +1,9 @@
 package org.egov.user.web.controller;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang.time.DateFormatUtils;
 import org.egov.common.contract.response.ResponseInfo;
-import org.egov.user.domain.model.User;
-import org.egov.user.domain.model.UserDetail;
-import org.egov.user.domain.model.UserSearchCriteria;
+import org.egov.user.domain.model.*;
 import org.egov.user.domain.service.TokenService;
 import org.egov.user.domain.service.UserService;
 import org.egov.user.web.contract.*;
@@ -16,7 +15,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -138,12 +141,12 @@ public class UserController {
 	 * @return
 	 */
 	@PostMapping("/users/_updatenovalidate")
-	public UserDetailResponse updateUserWithoutValidation(@RequestBody final CreateUserRequest createUserRequest,
-														  @RequestHeader HttpHeaders headers) {
+	public UpdateResponse updateUserWithoutValidation(@RequestBody final CreateUserRequest createUserRequest,
+													  @RequestHeader HttpHeaders headers) {
 		User user = createUserRequest.toDomain(false);
 		user.setMobileValidationMandatory(isMobileValidationRequired(headers));
 		final User updatedUser = userService.updateWithoutOtpValidation( user,createUserRequest.getRequestInfo());
-		return createResponse(updatedUser);
+		return createResponseforUpdate(updatedUser);
 	}
 
 	/**
@@ -153,17 +156,23 @@ public class UserController {
 	 * @return
 	 */
 	@PostMapping("/profile/_update")
-	public UserDetailResponse patch(@RequestBody final CreateUserRequest createUserRequest) {
+	public UpdateResponse patch(@RequestBody final CreateUserRequest createUserRequest) {
 		log.info("Received Profile Update Request  " + createUserRequest);
 		User user = createUserRequest.toDomain(false);
 		final User updatedUser = userService.partialUpdate(user,createUserRequest.getRequestInfo());
-		return createResponse(updatedUser);
+		return createResponseforUpdate(updatedUser);
 	}
 
 	private UserDetailResponse createResponse(User newUser) {
 		UserRequest userRequest = new UserRequest(newUser);
 		ResponseInfo responseInfo = ResponseInfo.builder().status(String.valueOf(HttpStatus.OK.value())).build();
 		return new UserDetailResponse(responseInfo, Collections.singletonList(userRequest));
+	}
+
+	private UpdateResponse createResponseforUpdate(User newUser) {
+		UpdateRequest updateRequest = new UpdateRequest(newUser);
+		ResponseInfo responseInfo = ResponseInfo.builder().status(String.valueOf(HttpStatus.OK.value())).build();
+		return new UpdateResponse(responseInfo, Collections.singletonList(updateRequest));
 	}
 
 	private UserSearchResponse searchUsers(@RequestBody UserSearchRequest request, HttpHeaders headers) {

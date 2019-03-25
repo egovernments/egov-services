@@ -60,9 +60,6 @@ public class CloudFileMgrUtils {
 
 	public Map<String, BufferedImage> createVersionsOfImage(MultipartFile file, String fileName) {
 		try {
-			log.info(" the file name " + file.getName());
-			log.info(" the file size " + file.getSize());
-			log.info(" the file content " + file.getContentType());
 			BufferedImage originalImage = ImageIO.read(file.getInputStream());
 			if (null == originalImage) {
 				Map<String, String> map = new HashMap<>();
@@ -83,6 +80,8 @@ public class CloudFileMgrUtils {
 			mapOfImagesAndPaths.put(fileName.replace(replaceString, _large + replaceString), largeImage);
 			mapOfImagesAndPaths.put(fileName.replace(replaceString, _medium + replaceString), mediumImg);
 			mapOfImagesAndPaths.put(fileName.replace(replaceString, _small + replaceString), smallImg);
+			
+			log.info("Different versions of the image created!");
 		} catch (Exception e) {
 			log.error("Error while creating different versions of the image: ", e);
 		}

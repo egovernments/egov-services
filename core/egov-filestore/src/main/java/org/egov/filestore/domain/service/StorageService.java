@@ -129,7 +129,6 @@ public class StorageService {
 						.toMap(org.egov.filestore.persistence.entity.Artifact::getFileStoreId, 
 								org.egov.filestore.persistence.entity.Artifact::getFileName));
 		return cloudFilesManager.getFiles(mapOfIdAndFile);
-		
 		//return awsS3Repository.getUrlMap(fileMap);
 	}
 

@@ -126,6 +126,8 @@ public class AzureBlobStorageImpl implements CloudFilesManager {
 	 */
 	@Override
 	public Map<String, String> getFiles(Map<String, String> mapOfIdAndFilePath) {
+		if(null == azureBlobClient)
+			azureBlobClient = azureFacade.getAzureClient();
 		Map<String, String> mapOfIdAndSASUrls = new HashMap<>();
 		mapOfIdAndFilePath.keySet().forEach(id -> {
 			if(util.isFileAnImage(mapOfIdAndFilePath.get(id))) {

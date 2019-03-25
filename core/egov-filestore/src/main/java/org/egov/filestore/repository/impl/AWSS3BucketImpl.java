@@ -5,6 +5,8 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,9 +18,6 @@ import org.egov.filestore.domain.model.Artifact;
 import org.egov.filestore.repository.AWSClientFacade;
 import org.egov.filestore.repository.CloudFilesManager;
 import org.egov.tracer.model.CustomException;
-import org.imgscalr.Scalr;
-import org.imgscalr.Scalr.Method;
-import org.imgscalr.Scalr.Mode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -26,6 +25,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.model.GeneratePresignedUrlRequest;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 
@@ -54,25 +54,19 @@ public class AWSS3BucketImpl implements CloudFilesManager {
 	@Value("${image.large}")
 	private String _large;
 
-	@Value("${image.small.width}")
-	private Integer smallWidth;
-
-	@Value("${image.medium.width}")
-	private Integer mediumWidth;
-
-	@Value("${image.large.width}")
-	private Integer largeWidth;
-
 	@Value("${is.bucket.fixed}")
 	private Boolean isBucketFixed;
 
-	@Value("${presigned.url.expiry.time}")
+	@Value("${presigned.url.expiry.time.in.secs}")
 	private Long presignedUrlExpirytime;
 
 	private AmazonS3 s3Client;
 	
 	@Autowired
 	private AWSClientFacade awsFacade;
+	
+	@Autowired
+	private CloudFileMgrUtils util;
 	
 	private static final String TEMP_FILE_PATH_NAME = "TempFolder/localFile";
 
@@ -90,20 +84,85 @@ public class AWSS3BucketImpl implements CloudFilesManager {
 			if (!isBucketFixed && !s3Client.doesBucketExistV2(bucketName))
 				s3Client.createBucket(bucketName);
 			if (artifact.getMultipartFile().getContentType().startsWith("image/")) {
-				writeImage(artifact.getMultipartFile(), bucketName, fileNameWithPath);
+				String extension = FilenameUtils.getExtension(artifact.getMultipartFile().getOriginalFilename());
+				Map<String, BufferedImage> mapOfImagesAndPaths = util.createVersionsOfImage(artifact.getMultipartFile(), fileNameWithPath);
+				writeImage(mapOfImagesAndPaths, bucketName, extension);
 			} else {
 				writeFile(artifact.getMultipartFile(), bucketName, fileNameWithPath);
 			}
 		});
 	}
 	
+	/**
+	 * There's a problem with this implementation: In case of images, we are trying to retrieve 4 different versions of the same file namely - 
+	 * small, medium, large and the original. The path stored in the db is the path of the original file only, we are making suitable changes
+	 * to that file path by appending some extensions to obtain file paths of the different versions. 
+	 * TODO: This has to be fixed, we need to keep track of all these versions by storing their paths in the db separately instead of deriving them.
+	 * 
+	 * Secondly, once these paths are obtained, their Signed urls are being returned as comma separated values in a single string, this has to change to
+	 * list of strings. We aren't taking this up because this will cause high impact on UI.
+	 * TODO: Change comma separated string to list of strings and test it with UI once their changes are done.
+	 */
 	@Override
 	public Map<String, String> getFiles(Map<String, String> mspOfIdAndFilePath) {
-		// TODO Auto-generated method stub
-		return null;
+
+		Map<String, String> urlMap = new HashMap<>();
+		if (null == s3Client)
+			s3Client = awsFacade.getS3Client();
+
+		mspOfIdAndFilePath.keySet().forEach(fileStoreId -> {
+			String completeName = mspOfIdAndFilePath.get(fileStoreId);
+			int index = completeName.indexOf('/');
+			String bucketName = completeName.substring(0, index);
+			String fileNameWithPath = completeName.substring(index + 1, completeName.length());
+			String replaceString = fileNameWithPath.substring(fileNameWithPath.lastIndexOf('.'),
+					fileNameWithPath.length());
+
+			if (util.isFileAnImage(mspOfIdAndFilePath.get(fileStoreId))) {
+				String[] imageFormats = {_small, _medium, _large};
+				StringBuilder url = new StringBuilder();
+				for(String format: Arrays.asList(imageFormats)) {
+					String path = fileNameWithPath;
+					path = path.replaceAll(replaceString, format + replaceString);
+					url.append(generateSignedURL(bucketName, path));
+					url.append(",");
+				}
+				url.append(generateSignedURL(bucketName, fileNameWithPath));
+				urlMap.put(fileStoreId, url.toString());
+			} else {
+				urlMap.put(fileStoreId, generateSignedURL(bucketName, fileNameWithPath));
+			}
+		});
+		return urlMap;
 	}
 	
 	
+	/**
+	 * Generates signed url for the resource stored in AWS
+	 * 
+	 * @param bucketName
+	 * @param fileName
+	 * @return
+	 */
+	private String generateSignedURL(String bucketName, String fileName) {
+		Date time = new Date();
+		long sec = new Date().getTime()/1000L; //expiry in seconds.
+		sec += presignedUrlExpirytime;
+		time.setTime(sec);
+		
+		GeneratePresignedUrlRequest generatePresignedUrlRequest = new GeneratePresignedUrlRequest(bucketName,
+				fileName);
+		generatePresignedUrlRequest.setExpiration(time);
+		return s3Client.generatePresignedUrl(generatePresignedUrlRequest).toString();
+	}
+	
+	/**
+	 * Writes files to s3 bucket
+	 * 
+	 * @param file
+	 * @param bucketName
+	 * @param fileName
+	 */
 	private void writeFile(MultipartFile file, String bucketName, String fileName) {
 		InputStream is = null;
 		long contentLength = file.getSize();
@@ -119,52 +178,35 @@ public class AWSS3BucketImpl implements CloudFilesManager {
 		s3Client.putObject(bucketName, fileName, is, objMd);
 	}
 
-	private void writeImage(MultipartFile file, String bucketName, String fileName) {
-
+	/**
+	 * Uploads images to the s3 bucket
+	 * 
+	 * @param mapOfImagesAndPaths
+	 * @param bucketName
+	 * @param extension
+	 */
+	private void writeImage(Map<String, BufferedImage> mapOfImagesAndPaths, String bucketName, String extension) {
 		try {
-			log.info(" the file name " + file.getName());
-			log.info(" the file size " + file.getSize());
-			log.info(" the file content " + file.getContentType());
-
-			BufferedImage originalImage = ImageIO.read(file.getInputStream());
-
-			if (null == originalImage) {
-				Map<String, String> map = new HashMap<>();
-				map.put("Image Source Unavailable", "Image File present in upload request is Invalid/Not Readable");
-				throw new CustomException(map);
+			for(String key: mapOfImagesAndPaths.keySet()) {
+				s3Client.putObject(getPutObjectRequest(bucketName, key, mapOfImagesAndPaths.get(key), extension));
+				mapOfImagesAndPaths.get(key).flush();
 			}
-
-			BufferedImage largeImage = Scalr.resize(originalImage, Method.QUALITY, Mode.AUTOMATIC, mediumWidth, null,
-					Scalr.OP_ANTIALIAS);
-			BufferedImage mediumImg = Scalr.resize(originalImage, Method.QUALITY, Mode.AUTOMATIC, mediumWidth, null,
-					Scalr.OP_ANTIALIAS);
-			BufferedImage smallImg = Scalr.resize(originalImage, Method.QUALITY, Mode.AUTOMATIC, smallWidth, null,
-					Scalr.OP_ANTIALIAS);
-
-			int lastIndex = fileName.length();
-			String replaceString = fileName.substring(fileName.lastIndexOf('.'), lastIndex);
-			String extension = FilenameUtils.getExtension(file.getOriginalFilename());
-			String largePath = fileName.replace(replaceString, _large + replaceString);
-			String mediumPath = fileName.replace(replaceString, _medium + replaceString);
-			String smallPath = fileName.replace(replaceString, _small + replaceString);
-
-			s3Client.putObject(getPutObjectRequest(bucketName, fileName, originalImage, extension));
-			s3Client.putObject(getPutObjectRequest(bucketName, largePath, largeImage, extension));
-			s3Client.putObject(getPutObjectRequest(bucketName, mediumPath, mediumImg, extension));
-			s3Client.putObject(getPutObjectRequest(bucketName, smallPath, smallImg, extension));
-
-			smallImg.flush();
-			mediumImg.flush();
-			originalImage.flush();
-
-		} catch (Exception ioe) {
-
+		}catch (Exception ioe) {
 			Map<String, String> map = new HashMap<>();
 			map.put("Image Source Invalid", "Image File present in upload request is Invalid/Not Readable");
 			throw new CustomException(map);
 		}
 	}
 	
+	/**
+	 * Prepares put request as per s3Client's contract.
+	 * 
+	 * @param bucketName
+	 * @param key
+	 * @param originalImage
+	 * @param extension
+	 * @return
+	 */
 	private PutObjectRequest getPutObjectRequest(String bucketName, String key, BufferedImage originalImage,
 			String extension) {
 

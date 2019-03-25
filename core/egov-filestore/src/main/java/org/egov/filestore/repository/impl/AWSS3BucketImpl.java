@@ -14,7 +14,7 @@ import javax.imageio.ImageIO;
 import org.apache.commons.io.FilenameUtils;
 import org.egov.filestore.domain.model.Artifact;
 import org.egov.filestore.repository.AWSClientFacade;
-import org.egov.filestore.repository.SaveFiles;
+import org.egov.filestore.repository.CloudFilesManager;
 import org.egov.tracer.model.CustomException;
 import org.imgscalr.Scalr;
 import org.imgscalr.Scalr.Method;
@@ -34,7 +34,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Service
 @ConditionalOnProperty(value = "isS3Enabled", havingValue = "true", matchIfMissing = true)
-public class SaveToAWSS3Bucket implements SaveFiles {
+public class AWSS3BucketImpl implements CloudFilesManager {
 
 	@Value("${aws.key}")
 	private String key;
@@ -78,7 +78,7 @@ public class SaveToAWSS3Bucket implements SaveFiles {
 
 	
 	@Override
-	public void save(List<Artifact> artifacts) {
+	public void saveFiles(List<Artifact> artifacts) {
 		if (null == s3Client)
 			s3Client = awsFacade.getS3Client();
 		
@@ -96,6 +96,13 @@ public class SaveToAWSS3Bucket implements SaveFiles {
 			}
 		});
 	}
+	
+	@Override
+	public Map<String, String> getFiles(Map<String, String> mspOfIdAndFilePath) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
 	
 	private void writeFile(MultipartFile file, String bucketName, String fileName) {
 		InputStream is = null;
@@ -172,5 +179,4 @@ public class SaveToAWSS3Bucket implements SaveFiles {
 		metadata.setContentLength(os.size());
 		return new PutObjectRequest(bucketName, key, new ByteArrayInputStream(os.toByteArray()), metadata);
 	}
-
 }

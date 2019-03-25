@@ -15,6 +15,7 @@ import org.egov.filestore.domain.model.FileLocation;
 import org.egov.filestore.domain.model.Resource;
 import org.egov.filestore.persistence.repository.ArtifactRepository;
 import org.egov.filestore.persistence.repository.AwsS3Repository;
+import org.egov.filestore.repository.CloudFilesManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -39,11 +40,23 @@ public class StorageService {
 	@Value("${fixed.bucketname}")
 	private String fixedBucketName;
 	
+	@Value("${isS3Enabled}")
+	private Boolean isS3Enabled;
+	
+	@Value("${isAzureStorageEnabled}")
+	private Boolean isAzureStorageEnabled;
+	
 	@Value("${source.s3}")
 	private String awsS3Source;
 	
+	@Value("${source.azure.blob}")
+	private String azureBlobSource;
+	
 	@Autowired
 	private AwsS3Repository awsS3Repository;
+	
+	@Autowired
+	private CloudFilesManager cloudFilesManager;
 	
 	private static final String UPLOAD_MESSAGE = "Received upload request for "
 			+ "jurisdiction: %s, module: %s, tag: %s with file count: %s";
@@ -100,11 +113,24 @@ public class StorageService {
 	}
 
 	private Map<String, String> getUrlMap(List<org.egov.filestore.persistence.entity.Artifact> artifactList) {
+		String src = null;
+		if(isAzureStorageEnabled)
+			src = azureBlobSource;
+		if(isS3Enabled)
+			src = awsS3Source;
+		final String source = src;
 		
-		Map<String, org.egov.filestore.persistence.entity.Artifact> fileMap = artifactList.parallelStream()
-				.filter(a -> (null != a.getFileSource() && a.getFileSource().equals(awsS3Source))).collect(Collectors
-						.toMap(org.egov.filestore.persistence.entity.Artifact::getFileStoreId, Function.identity()));
-		return awsS3Repository.getUrlMap(fileMap);
+/*		Map<String, org.egov.filestore.persistence.entity.Artifact> fileMap = artifactList.stream()
+				.filter(a -> (null != a.getFileSource() && a.getFileSource().equals(source))).collect(Collectors
+						.toMap(org.egov.filestore.persistence.entity.Artifact::getFileStoreId, Function.identity()));*/
+		
+		Map<String, String> mapOfIdAndFile = artifactList.stream()
+				.filter(a -> (null != a.getFileSource() && a.getFileSource().equals(source))).collect(Collectors
+						.toMap(org.egov.filestore.persistence.entity.Artifact::getFileStoreId, 
+								org.egov.filestore.persistence.entity.Artifact::getFileName));
+		return cloudFilesManager.getFiles(mapOfIdAndFile);
+		
+		//return awsS3Repository.getUrlMap(fileMap);
 	}
 
 	private String getUrlFromName(String completeName) {

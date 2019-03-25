@@ -1,10 +1,10 @@
 package org.egov.pg.models;
 
-
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 import org.egov.common.contract.request.RequestInfo;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
@@ -16,8 +16,6 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ReceiptReq {
-    @JsonProperty("tenantId")
-    private String tenantId = null;
 
     @NotNull
     @JsonProperty("RequestInfo")
@@ -25,10 +23,8 @@ public class ReceiptReq {
 
     @NotNull
     @JsonProperty("Receipt")
+    @Valid
     private List<Receipt> receipt = null;
-
-    @JsonProperty("WorkflowDetails")
-    private WorkflowDetailsRequest workflowDetails;
 
 
 }

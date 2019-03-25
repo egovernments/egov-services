@@ -1,25 +1,24 @@
 package org.egov.pg.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.egov.common.contract.response.ResponseInfo;
 
 import java.util.List;
 
 @Setter
 @Getter
 @ToString
-public class ReceiptRes {
+@AllArgsConstructor
+public class ReceiptRes   {
 
-    private String tenantId;
-
-    @JsonProperty("ResponseInfo")
-    private CollectionsResponseInfo responseInfo;
-
-    @JsonProperty("Receipt")
-    private List<Receipt> receipts;
-
-    private PaginationContract page;
-
+  @JsonProperty("ResponseInfo")
+  private ResponseInfo responseInfo;
+  
+  @JsonProperty("Receipt")
+  private List<Receipt> receipts;
+  
 }

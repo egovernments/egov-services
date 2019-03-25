@@ -33,7 +33,7 @@ public class CollectionService {
                 .build();
 
         Bill bill = Bill.builder()
-                .payeeName(transaction.getUser().getName())
+                .payerName(transaction.getUser().getName())
                 .tenantId(transaction.getTenantId())
                 .mobileNumber(transaction.getUser().getMobileNumber())
                 .paidBy(transaction.getUser().getName())
@@ -59,7 +59,6 @@ public class CollectionService {
 
             ReceiptReq receiptReq = ReceiptReq.builder()
                     .receipt(Collections.singletonList(receipt))
-                    .tenantId(transaction.getTenantId())
                     .requestInfo(requestInfo)
                     .build();
 
@@ -81,7 +80,7 @@ public class CollectionService {
                 .build();
 
         Bill bill = Bill.builder()
-                .payeeName(transactionRequest.getRequestInfo().getUserInfo().getName())
+                .payerName(transactionRequest.getRequestInfo().getUserInfo().getName())
                 .tenantId(transaction.getTenantId())
                 .mobileNumber(transactionRequest.getRequestInfo().getUserInfo().getMobileNumber())
                 .paidBy(transactionRequest.getRequestInfo().getUserInfo().getName())
@@ -108,7 +107,6 @@ public class CollectionService {
 
         ReceiptReq receiptReq = ReceiptReq.builder()
                 .receipt(Collections.singletonList(receipt))
-                .tenantId(transaction.getTenantId())
                 .requestInfo(transactionRequest.getRequestInfo())
                 .build();
 

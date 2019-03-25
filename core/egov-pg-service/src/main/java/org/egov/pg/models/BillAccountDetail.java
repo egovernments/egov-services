@@ -1,10 +1,10 @@
 package org.egov.pg.models;
 
-
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.JsonNode;
 import lombok.*;
 
 import java.math.BigDecimal;
-
 
 @Setter
 @Getter
@@ -14,28 +14,40 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 @EqualsAndHashCode
 public class BillAccountDetail {
+	
+	@JsonProperty("id")
+	private String id = null;
 
-    private String glcode;
+	@JsonProperty("tenantId")
+	private String tenantId = null;
 
-    private Integer order;
+	@JsonProperty("billDetail")
+	private String billDetail = null;
 
-    private String accountDescription;
+	@JsonProperty("demandDetailId")
+	private String demandDetailId = null;
 
-    private Boolean isActualDemand;
+	@JsonProperty("order")
+	private Integer order = null;
 
-    private String id;
+	@JsonProperty("amount")
+	private BigDecimal amount = null;
 
-    private String tenantId;
+	@JsonProperty("adjustedAmount")
+	private BigDecimal adjustedAmount = null;
 
-    private String billDetail;
+	@JsonProperty("isActualDemand")
+	private Boolean isActualDemand = null;
 
-    private BigDecimal crAmountToBePaid = BigDecimal.ZERO;
+	@JsonProperty("glcode")
+	private String glcode = null;
+	
+	@JsonProperty("taxHeadCode")
+	private String taxHeadCode = null;
 
-    private BigDecimal creditAmount = BigDecimal.ZERO;
+	@JsonProperty("additionalDetails")
+	private JsonNode additionalDetails = null;
 
-    private BigDecimal debitAmount = BigDecimal.ZERO;
-
-    private Purpose purpose;
-
+	@JsonProperty("purpose")
+	private Purpose purpose = null;
 }
-

@@ -305,19 +305,19 @@ public class ReportService {
 
 	private User getEncrichedandCopiedUserInfo(User userInfo)
 	{
-		List<org.egov.common.contract.request.Role>newRoleList=new ArrayList<>();
+		List<Role>newRoleList=new ArrayList<>();
 		if(userInfo.getRoles()!=null)
 		{
-			for(org.egov.common.contract.request.Role role:userInfo.getRoles())
+			for(Role role:userInfo.getRoles())
 			{
-				org.egov.common.contract.request.Role newRole= org.egov.common.contract.request.Role.builder().code(role.getCode()).name(role.getName()).id(role.getId()).build();
+				Role newRole=Role.builder().code(role.getCode()).name(role.getName()).id(role.getId()).build();
 				newRoleList.add(newRole);
 			}
 		}
 
-		if(newRoleList.stream().filter(role -> role.getCode().equals(userInfo.getType())).count()==0)
+		if(newRoleList.stream().filter(role -> (role.getCode()!=null)&&(userInfo.getType()!=null) && role.getCode().equalsIgnoreCase(userInfo.getType())).count()==0)
 		{
-			org.egov.common.contract.request.Role roleFromtype= Role.builder().code(userInfo.getType()).name(userInfo.getType()).build();
+			Role roleFromtype=Role.builder().code(userInfo.getType()).name(userInfo.getType()).build();
 			newRoleList.add(roleFromtype);
 		}
 

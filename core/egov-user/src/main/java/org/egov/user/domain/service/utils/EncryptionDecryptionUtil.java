@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.databind.node.TextNode;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.request.Role;
 import org.egov.common.contract.request.User;
@@ -47,7 +48,16 @@ public class EncryptionDecryptionUtil
     public <T>T encryptObject(Object objectToEncrypt, String key,Class<T> classType)
     {
         try {
-            return encryptionService.encryptJson(objectToEncrypt,key,stateLevelTenantId,classType);
+            if(objectToEncrypt==null)
+            {
+                return null;
+            }
+            T encryptedObject= encryptionService.encryptJson(objectToEncrypt,key,stateLevelTenantId,classType);
+            if(encryptedObject==null)
+            {
+                throw new CustomException("ENCRYPTION_NULL_ERROR","Null object found on performing encryption");
+            }
+            return encryptedObject;
         } catch (IOException | HttpClientErrorException | HttpServerErrorException | ResourceAccessException e) {
             log.error("Error occurred while encrypting",e);
             throw new CustomException("ENCRYPTION_ERROR","Error occurred in encryption process");
@@ -62,7 +72,11 @@ public class EncryptionDecryptionUtil
 
         try {
             boolean objectToDecryptNotList=false;
-            if(requestInfo==null || requestInfo.getUserInfo()==null) {
+            if(objectToDecrypt==null)
+            {
+                return null;
+            }
+            else if(requestInfo==null || requestInfo.getUserInfo()==null) {
                 return (P) objectToDecrypt;
             }
             if(!(objectToDecrypt instanceof List))
@@ -73,6 +87,10 @@ public class EncryptionDecryptionUtil
             final User encrichedUserInfo=getEncrichedandCopiedUserInfo(requestInfo.getUserInfo());
             key = getKeyToDecrypt(objectToDecrypt, encrichedUserInfo);
             P decryptedObject =  (P)encryptionService.decryptJson(objectToDecrypt,key,encrichedUserInfo,classType);
+            if(decryptedObject==null)
+            {
+                throw new CustomException("DECRYPTION_NULL_ERROR","Null object found on performing decryption");
+            }
             auditTheDecryptRequest(objectToDecrypt, key, encrichedUserInfo);
             if(objectToDecryptNotList)
             {
@@ -100,7 +118,7 @@ public class EncryptionDecryptionUtil
             throw new CustomException("DECRYPTION_NOTLIST_ERROR", objectToDecrypt + " is not of type List of User");
         }
 
-        if(userToDecrypt.getUuid().equalsIgnoreCase(userInfo.getUuid()))
+        if((userToDecrypt.getUuid()!=null) && userToDecrypt.getUuid().equalsIgnoreCase(userInfo.getUuid()))
             return true;
         else
             return false;

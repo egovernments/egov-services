@@ -57,7 +57,7 @@ public class TLNotificationService {
         String tenantId = request.getLicenses().get(0).getTenantId();
         String localizationMessages = util.getLocalizationMessages(tenantId,request.getRequestInfo());
         request.getLicenses().forEach(license -> {
-            String message = util.getCustomizedMsg(license,localizationMessages);
+            String message = util.getCustomizedMsg(request.getRequestInfo(),license,localizationMessages);
 
             Map<String,String > mobileNumberToOwner = new HashMap<>();
 

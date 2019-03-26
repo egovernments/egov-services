@@ -79,7 +79,7 @@ public class AwsS3Repository {
 	@Value("${is.bucket.fixed}")
 	private Boolean isBucketFixed;
 
-	@Value("${presigned.url.expiry.time}")
+	@Value("${presigned.url.expiry.time.in.secs}")	
 	private Long presignedUrlExpirytime;
 
 	private AmazonS3 s3Client;

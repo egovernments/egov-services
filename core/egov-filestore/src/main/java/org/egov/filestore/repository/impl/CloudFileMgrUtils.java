@@ -1,10 +1,10 @@
 package org.egov.filestore.repository.impl;
 
 import java.awt.image.BufferedImage;
-import java.net.URLEncoder;
 import java.util.Arrays;
 import java.util.Base64;
 import java.util.Base64.Encoder;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -19,6 +19,11 @@ import org.imgscalr.Scalr.Mode;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+
+import com.microsoft.azure.storage.blob.CloudBlobClient;
+import com.microsoft.azure.storage.blob.CloudBlobContainer;
+import com.microsoft.azure.storage.blob.CloudBlockBlob;
+import com.microsoft.azure.storage.blob.SharedAccessBlobPolicy;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -80,7 +85,7 @@ public class CloudFileMgrUtils {
 			mapOfImagesAndPaths.put(fileName.replace(replaceString, _large + replaceString), largeImage);
 			mapOfImagesAndPaths.put(fileName.replace(replaceString, _medium + replaceString), mediumImg);
 			mapOfImagesAndPaths.put(fileName.replace(replaceString, _small + replaceString), smallImg);
-			
+
 			log.info("Different versions of the image created!");
 		} catch (Exception e) {
 			log.error("Error while creating different versions of the image: ", e);
@@ -91,38 +96,44 @@ public class CloudFileMgrUtils {
 
 	/**
 	 * Generates SAS tokens for the given URI, this token is used to access files
-	 * from Azure 
+	 * from Azure:
 	 * sr = resource to be accessed 
 	 * sig = HMAC hash used as signature 
 	 * se = expiry time of the token 
 	 * sp = permission granted to the client
 	 * 
 	 * Check -
-	 * https://docs.microsoft.com/en-us/azure/storage/common/storage-dotnet-shared-access-signature-part-1
+	 * https://docs.microsoft.com/en-us/azure/storage/blobs/storage-dotnet-shared-access-signature-part-2
 	 * 
 	 * @param resourceUri
 	 * @param keyName
 	 * @param key
 	 * @return
 	 */
-	public String generateSASToken(String resourceUri, String key) {
-		long epoch = System.currentTimeMillis() / 1000L; // current time in secs
-		String expiry = Long.toString(epoch + azureSASExpiryinSecs);
-		String sasToken = null;
+	public String generateSASToken(CloudBlobClient azureBlobClient, String absolutePath) {
+		String sasUrl = null;
 		try {
-			String stringToSign = URLEncoder.encode(resourceUri, "UTF-8") + "\n" + expiry;
-			String signature = getHMAC256(key, stringToSign);
-			sasToken = "sr=" + URLEncoder.encode(resourceUri, "UTF-8") + "&sig=" + URLEncoder.encode(signature, "UTF-8")
-					+ "&se=" + expiry + "&sp=r";
+			int index = absolutePath.indexOf('/');
+			String containerName = absolutePath.substring(0, index);
+			String fileNameWithPath = absolutePath.substring(index + 1, absolutePath.length());
+			CloudBlobContainer container = azureBlobClient.getContainerReference(containerName);
+			CloudBlockBlob blob = (CloudBlockBlob) container.getBlobReferenceFromServer(fileNameWithPath);
+			SharedAccessBlobPolicy sasConstraints = new SharedAccessBlobPolicy();
+			sasConstraints.setSharedAccessStartTime(new Date(System.currentTimeMillis()));
+			sasConstraints
+					.setSharedAccessExpiryTime(new Date(System.currentTimeMillis() + (azureSASExpiryinSecs * 1000)));
+			sasConstraints.setPermissionsFromString("r");
+			String sasBlobToken = blob.generateSharedAccessSignature(sasConstraints, null);
+			sasUrl = sasBlobToken;
 		} catch (Exception e) {
+			log.error("Error while generating sas token: ", e);
 			log.error("Exception while generating SAS token: ", e);
 		}
-
-		return sasToken;
+		return sasUrl;
 	}
 
 	/**
-	 * HMAC encoding algorithm.
+	 * HMAC hash generation using SHA256 and a secret key.
 	 * 
 	 * @param key
 	 * @param input
@@ -143,19 +154,20 @@ public class CloudFileMgrUtils {
 
 		return hash;
 	}
-	
+
 	/**
-	 * Checks if the file is an image belonging to one of the mentioned imageFormats.
+	 * Checks if the file is an image belonging to one of the mentioned
+	 * imageFormats.
 	 * 
 	 * @param filePath
 	 * @return
 	 */
 	public Boolean isFileAnImage(String filePath) {
 		Boolean isFileAnImage = false;
-		String[] imageFormats = {"png", "jpeg", "jpg"};
-		if(filePath.split("[\\.]").length > 1) {
+		String[] imageFormats = { "png", "jpeg", "jpg" };
+		if (filePath.split("[\\.]").length > 1) {
 			String extension = filePath.substring(filePath.lastIndexOf('.') + 1, filePath.length());
-			if(Arrays.asList(imageFormats).contains(extension))
+			if (Arrays.asList(imageFormats).contains(extension))
 				isFileAnImage = true;
 		}
 		return isFileAnImage;

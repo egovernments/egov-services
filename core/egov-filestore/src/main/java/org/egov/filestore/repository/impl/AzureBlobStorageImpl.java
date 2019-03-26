@@ -1,5 +1,8 @@
 package org.egov.filestore.repository.impl;
 
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -7,19 +10,10 @@ import java.util.Map;
 
 import javax.imageio.ImageIO;
 
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.InputStream;
-
 import org.apache.commons.io.FilenameUtils;
 import org.egov.filestore.domain.model.Artifact;
 import org.egov.filestore.repository.AzureClientFacade;
 import org.egov.filestore.repository.CloudFilesManager;
-import org.egov.tracer.model.CustomException;
-import org.imgscalr.Scalr;
-import org.imgscalr.Scalr.Method;
-import org.imgscalr.Scalr.Mode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -138,14 +132,13 @@ public class AzureBlobStorageImpl implements CloudFilesManager {
 				for(String format: Arrays.asList(imageFormats)) {
 					String path = mapOfIdAndFilePath.get(id);
 					path = path.replaceAll(replaceString, format + replaceString);
-					url.append(getSASURL(path, util.generateSASToken(path, azureAccountKey)));
+					url.append(getSASURL(path, util.generateSASToken(azureBlobClient, path)));
 					url.append(",");
 				}
-				url.append(getSASURL(mapOfIdAndFilePath.get(id), util.generateSASToken(mapOfIdAndFilePath.get(id), azureAccountKey)));
+				url.append(getSASURL(mapOfIdAndFilePath.get(id), util.generateSASToken(azureBlobClient, mapOfIdAndFilePath.get(id))));
 				mapOfIdAndSASUrls.put(id, url.toString());
 			}else {
-				mapOfIdAndSASUrls.put(id, 
-						getSASURL(mapOfIdAndFilePath.get(id), util.generateSASToken(mapOfIdAndFilePath.get(id), azureAccountKey)));
+				mapOfIdAndSASUrls.put(id, getSASURL(mapOfIdAndFilePath.get(id), util.generateSASToken(azureBlobClient, mapOfIdAndFilePath.get(id))));
 			}
 		});
 		return null;
@@ -161,7 +154,7 @@ public class AzureBlobStorageImpl implements CloudFilesManager {
 	 */
 	private String getSASURL(String path, String sasToken) {
 		StringBuilder sasURL = new StringBuilder();
-		String host = azureBlobStorageHost.replaceAll("$accountName", azureAccountName);
+		String host = azureBlobStorageHost.replace("$accountName", azureAccountName);		
 		sasURL.append(host).append("/").append(path).append("?").append(sasToken);
 		return sasURL.toString();
 	}

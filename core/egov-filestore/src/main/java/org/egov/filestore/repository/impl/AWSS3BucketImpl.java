@@ -22,6 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.amazonaws.services.s3.AmazonS3;
@@ -61,21 +62,20 @@ public class AWSS3BucketImpl implements CloudFilesManager {
 	private Long presignedUrlExpirytime;
 
 	private AmazonS3 s3Client;
-	
+
 	@Autowired
 	private AWSClientFacade awsFacade;
-	
+
 	@Autowired
 	private CloudFileMgrUtils util;
-	
+
 	private static final String TEMP_FILE_PATH_NAME = "TempFolder/localFile";
 
-	
 	@Override
 	public void saveFiles(List<Artifact> artifacts) {
 		if (null == s3Client)
 			s3Client = awsFacade.getS3Client();
-		
+
 		artifacts.forEach(artifact -> {
 			String completeName = artifact.getFileLocation().getFileName();
 			int index = completeName.indexOf('/');
@@ -85,23 +85,29 @@ public class AWSS3BucketImpl implements CloudFilesManager {
 				s3Client.createBucket(bucketName);
 			if (artifact.getMultipartFile().getContentType().startsWith("image/")) {
 				String extension = FilenameUtils.getExtension(artifact.getMultipartFile().getOriginalFilename());
-				Map<String, BufferedImage> mapOfImagesAndPaths = util.createVersionsOfImage(artifact.getMultipartFile(), fileNameWithPath);
+				Map<String, BufferedImage> mapOfImagesAndPaths = util.createVersionsOfImage(artifact.getMultipartFile(),
+						fileNameWithPath);
 				writeImage(mapOfImagesAndPaths, bucketName, extension);
 			} else {
 				writeFile(artifact.getMultipartFile(), bucketName, fileNameWithPath);
 			}
 		});
 	}
-	
+
 	/**
-	 * There's a problem with this implementation: In case of images, we are trying to retrieve 4 different versions of the same file namely - 
-	 * small, medium, large and the original. The path stored in the db is the path of the original file only, we are making suitable changes
-	 * to that file path by appending some extensions to obtain file paths of the different versions. 
-	 * TODO: This has to be fixed, we need to keep track of all these versions by storing their paths in the db separately instead of deriving them.
+	 * There's a problem with this implementation: In case of images, we are trying
+	 * to retrieve 4 different versions of the same file namely - small, medium,
+	 * large and the original. The path stored in the db is the path of the original
+	 * file only, we are making suitable changes to that file path by appending some
+	 * extensions to obtain file paths of the different versions. TODO: This has to
+	 * be fixed, we need to keep track of all these versions by storing their paths
+	 * in the db separately instead of deriving them.
 	 * 
-	 * Secondly, once these paths are obtained, their Signed urls are being returned as comma separated values in a single string, this has to change to
-	 * list of strings. We aren't taking this up because this will cause high impact on UI.
-	 * TODO: Change comma separated string to list of strings and test it with UI once their changes are done.
+	 * Secondly, once these paths are obtained, their Signed urls are being returned
+	 * as comma separated values in a single string, this has to change to list of
+	 * strings. We aren't taking this up because this will cause high impact on UI.
+	 * TODO: Change comma separated string to list of strings and test it with UI
+	 * once their changes are done.
 	 */
 	@Override
 	public Map<String, String> getFiles(Map<String, String> mspOfIdAndFilePath) {
@@ -119,9 +125,9 @@ public class AWSS3BucketImpl implements CloudFilesManager {
 					fileNameWithPath.length());
 
 			if (util.isFileAnImage(mspOfIdAndFilePath.get(fileStoreId))) {
-				String[] imageFormats = {_small, _medium, _large};
+				String[] imageFormats = { _small, _medium, _large };
 				StringBuilder url = new StringBuilder();
-				for(String format: Arrays.asList(imageFormats)) {
+				for (String format : Arrays.asList(imageFormats)) {
 					String path = fileNameWithPath;
 					path = path.replaceAll(replaceString, format + replaceString);
 					url.append(generateSignedURL(bucketName, path));
@@ -135,8 +141,7 @@ public class AWSS3BucketImpl implements CloudFilesManager {
 		});
 		return urlMap;
 	}
-	
-	
+
 	/**
 	 * Generates signed url for the resource stored in AWS
 	 * 
@@ -145,17 +150,12 @@ public class AWSS3BucketImpl implements CloudFilesManager {
 	 * @return
 	 */
 	private String generateSignedURL(String bucketName, String fileName) {
-		Date time = new Date();
-		long sec = new Date().getTime()/1000L; //expiry in seconds.
-		sec += presignedUrlExpirytime;
-		time.setTime(sec);
-		
-		GeneratePresignedUrlRequest generatePresignedUrlRequest = new GeneratePresignedUrlRequest(bucketName,
-				fileName);
+		Date time = new Date(System.currentTimeMillis() + (presignedUrlExpirytime * 1000));
+		GeneratePresignedUrlRequest generatePresignedUrlRequest = new GeneratePresignedUrlRequest(bucketName, fileName);
 		generatePresignedUrlRequest.setExpiration(time);
 		return s3Client.generatePresignedUrl(generatePresignedUrlRequest).toString();
 	}
-	
+
 	/**
 	 * Writes files to s3 bucket
 	 * 
@@ -186,18 +186,19 @@ public class AWSS3BucketImpl implements CloudFilesManager {
 	 * @param extension
 	 */
 	private void writeImage(Map<String, BufferedImage> mapOfImagesAndPaths, String bucketName, String extension) {
-		try {
-			for(String key: mapOfImagesAndPaths.keySet()) {
+		Map<String, String> errorMap = new HashMap<>();
+		for (String key : mapOfImagesAndPaths.keySet()) {
+			try {
 				s3Client.putObject(getPutObjectRequest(bucketName, key, mapOfImagesAndPaths.get(key), extension));
 				mapOfImagesAndPaths.get(key).flush();
+			} catch (Exception e) {
+				errorMap.put("AWS_UPLOAD_FAILED", e.getMessage());
 			}
-		}catch (Exception ioe) {
-			Map<String, String> map = new HashMap<>();
-			map.put("Image Source Invalid", "Image File present in upload request is Invalid/Not Readable");
-			throw new CustomException(map);
 		}
+		if(!CollectionUtils.isEmpty(errorMap.keySet()))
+			throw new CustomException(errorMap);
 	}
-	
+
 	/**
 	 * Prepares put request as per s3Client's contract.
 	 * 

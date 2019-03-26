@@ -141,7 +141,7 @@ public class AzureBlobStorageImpl implements CloudFilesManager {
 				mapOfIdAndSASUrls.put(id, getSASURL(mapOfIdAndFilePath.get(id), util.generateSASToken(azureBlobClient, mapOfIdAndFilePath.get(id))));
 			}
 		});
-		return null;
+		return mapOfIdAndSASUrls;
 	}
 	
 	

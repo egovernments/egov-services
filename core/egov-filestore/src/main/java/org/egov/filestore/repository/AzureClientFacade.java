@@ -1,6 +1,9 @@
 package org.egov.filestore.repository;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.ApplicationArguments;
+import org.springframework.boot.ApplicationRunner;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 import com.microsoft.azure.storage.CloudStorageAccount;
@@ -10,7 +13,8 @@ import lombok.extern.slf4j.Slf4j;
 
 @Component
 @Slf4j
-public class AzureClientFacade {
+@Order(2)
+public class AzureClientFacade implements ApplicationRunner{
 	
 	@Value("${azure.defaultEndpointsProtocol}")
 	private String defaultEndpointsProtocol;
@@ -21,7 +25,22 @@ public class AzureClientFacade {
 	@Value("${azure.accountKey}")
 	private String accountKey;
 	
-	public CloudBlobClient getAzureClient() {
+	@Value("${isAzureStorageEnabled}")
+	private Boolean isAzureEnabled;
+	
+	private static CloudBlobClient cloudBlobClient;
+	
+	@Override
+	public void run(ApplicationArguments arg0) throws Exception {
+		if(isAzureEnabled)
+			initializeAzureClient();		
+	}
+	
+	/**
+	 * Intializes the azure client
+	 * 
+	 */
+	public void initializeAzureClient() {
 		StringBuilder storageConnectionString = new StringBuilder();
 		storageConnectionString.append("DefaultEndpointsProtocol=").append(defaultEndpointsProtocol).append(";")
 		.append("AccountName=").append(accountName).append(";").append("AccountKey=").append(accountKey);
@@ -35,7 +54,11 @@ public class AzureClientFacade {
 		}catch(Exception e) {
 			log.error("Exception while intializing client: ", e);
 		}	
-		return blobClient;
+		cloudBlobClient = blobClient;
+	}
+	
+	public CloudBlobClient getAzureClient() {
+		return cloudBlobClient;
 	}
 	
 	

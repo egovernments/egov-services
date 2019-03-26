@@ -69,8 +69,6 @@ public class AWSS3BucketImpl implements CloudFilesManager {
 	@Autowired
 	private CloudFileMgrUtils util;
 
-	private static final String TEMP_FILE_PATH_NAME = "TempFolder/localFile";
-
 	@Override
 	public void saveFiles(List<Artifact> artifacts) {
 		if (null == s3Client)
@@ -210,13 +208,12 @@ public class AWSS3BucketImpl implements CloudFilesManager {
 	 */
 	private PutObjectRequest getPutObjectRequest(String bucketName, String key, BufferedImage originalImage,
 			String extension) {
-
 		ByteArrayOutputStream os = new ByteArrayOutputStream();
 		try {
 			ImageIO.write(originalImage, extension, os);
 		} catch (IOException e) {
 			log.error(" error while writing image to stream : {}", e);
-			throw new RuntimeException(e);
+			throw new CustomException("IMAGE_PROCESSING_FAILED", "Failed to process the image to be uploaded");
 		}
 		ObjectMetadata metadata = new ObjectMetadata();
 		metadata.setContentLength(os.size());

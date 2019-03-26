@@ -87,7 +87,6 @@ public class AwsS3Repository {
 	private static final String TEMP_FILE_PATH_NAME = "TempFolder/localFile";
 
 	public void writeToS3(MultipartFile file, FileLocation fileLocation) {
-
 		if (null == s3Client)
 			getS3Client();
 		String completeName = fileLocation.getFileName();

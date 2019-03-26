@@ -61,9 +61,8 @@ public class CloudFileMgrUtils {
 	 * @param fileName
 	 * @return
 	 */
-	Map<String, BufferedImage> mapOfImagesAndPaths = new HashMap<>();
-
 	public Map<String, BufferedImage> createVersionsOfImage(MultipartFile file, String fileName) {
+		Map<String, BufferedImage> mapOfImagesAndPaths = new HashMap<>();
 		try {
 			BufferedImage originalImage = ImageIO.read(file.getInputStream());
 			if (null == originalImage) {

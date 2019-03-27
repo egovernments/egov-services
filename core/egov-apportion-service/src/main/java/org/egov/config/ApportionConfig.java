@@ -53,6 +53,11 @@ public class ApportionConfig {
     @Value("${egov.mdms.search.endpoint}")
     private String mdmsEndPoint;
 
+    //Default implementation switch
+    @Value("${egov.apportion.default.value.order}")
+    private Boolean apportionByValueAndOrder;
+
+
 
 
 }

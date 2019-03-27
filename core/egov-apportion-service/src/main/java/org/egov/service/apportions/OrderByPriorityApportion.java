@@ -1,8 +1,8 @@
 package org.egov.service.apportions;
 
 
+import org.egov.config.ApportionConfig;
 import org.egov.service.Apportion;
-import org.egov.service.MDMSService;
 import org.egov.service.TaxHeadMasterService;
 import org.egov.tracer.model.CustomException;
 import org.egov.web.models.enums.Purpose;
@@ -25,10 +25,15 @@ public class OrderByPriorityApportion implements Apportion {
 
     private TaxHeadMasterService taxHeadMasterService;
 
+    private ApportionConfig config;
+
+
     @Autowired
-    public OrderByPriorityApportion(TaxHeadMasterService taxHeadMasterService) {
+    public OrderByPriorityApportion(TaxHeadMasterService taxHeadMasterService, ApportionConfig config) {
         this.taxHeadMasterService = taxHeadMasterService;
+        this.config = config;
     }
+
 
 
     @Override
@@ -55,10 +60,17 @@ public class OrderByPriorityApportion implements Apportion {
         BigDecimal amount;
         Boolean isAmountPositive;
 
-        validateOrder(billDetails);
+        if(!config.getApportionByValueAndOrder())
+            validateOrder(billDetails);
+
 
         for (BillDetail billDetail : billDetails){
-            billDetail.getBillAccountDetails().sort(Comparator.comparing(BillAccountDetail::getOrder));
+            if(!config.getApportionByValueAndOrder())
+                billDetail.getBillAccountDetails().sort(Comparator.comparing(BillAccountDetail::getAmount));
+            else
+                billDetail.getBillAccountDetails().sort(Comparator.comparing(BillAccountDetail::getAmount).thenComparing(BillAccountDetail::getOrder));
+
+
             for(BillAccountDetail billAccountDetail : billDetail.getBillAccountDetails()) {
                 amount = billAccountDetail.getAmount();
                 isAmountPositive = amount.compareTo(BigDecimal.ZERO) >= 0;

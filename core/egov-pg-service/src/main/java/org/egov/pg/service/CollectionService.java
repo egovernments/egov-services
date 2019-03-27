@@ -10,6 +10,7 @@ import org.egov.tracer.model.CustomException;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -26,11 +27,19 @@ public class CollectionService {
     public List<Receipt> generateReceipt(RequestInfo requestInfo, Transaction transaction) {
 
 
-        BillDetail billDetail = BillDetail.builder()
-                .amountPaid(new BigDecimal(transaction.getTxnAmount()))
-                .collectionType(CollectionType.ONLINE)
-                .billAccountDetails(Collections.singletonList(new BillAccountDetail()))
-                .build();
+        List<BillDetail> billDetails = new ArrayList<>();
+
+        for(TaxAndPayment taxAndPayment : transaction.getTaxAndPayments()){
+            BillDetail billDetail = BillDetail.builder()
+                    .amountPaid(taxAndPayment.getAmountPaid())
+                    .totalAmount(taxAndPayment.getTaxAmount())
+                    .businessService(taxAndPayment.getBusinessService())
+                    .collectionType(CollectionType.ONLINE)
+                    .billAccountDetails(Collections.singletonList(new BillAccountDetail()))
+                    .build();
+
+            billDetails.add(billDetail);
+        }
 
         Bill bill = Bill.builder()
                 .payerName(transaction.getUser().getName())
@@ -38,7 +47,8 @@ public class CollectionService {
                 .mobileNumber(transaction.getUser().getMobileNumber())
                 .paidBy(transaction.getUser().getName())
                 .id(transaction.getBillId())
-                .billDetails(Collections.singletonList(billDetail))
+                .taxAndPayments(transaction.getTaxAndPayments())
+                .billDetails(billDetails)
                 .build();
 
             Instrument instrument = Instrument.builder()
@@ -73,11 +83,19 @@ public class CollectionService {
     public List<Receipt> validateProvisionalReceipt(TransactionRequest transactionRequest){
         Transaction transaction = transactionRequest.getTransaction();
 
-        BillDetail billDetail = BillDetail.builder()
-                .amountPaid(new BigDecimal(transaction.getTxnAmount()))
-                .collectionType(CollectionType.ONLINE)
-                .billAccountDetails(Collections.singletonList(new BillAccountDetail()))
-                .build();
+        List<BillDetail> billDetails = new ArrayList<>();
+
+        for(TaxAndPayment taxAndPayment : transaction.getTaxAndPayments()){
+            BillDetail billDetail = BillDetail.builder()
+                    .amountPaid(taxAndPayment.getAmountPaid())
+                    .totalAmount(taxAndPayment.getTaxAmount())
+                    .businessService(taxAndPayment.getBusinessService())
+                    .collectionType(CollectionType.ONLINE)
+                    .billAccountDetails(Collections.singletonList(new BillAccountDetail()))
+                    .build();
+
+            billDetails.add(billDetail);
+        }
 
         Bill bill = Bill.builder()
                 .payerName(transactionRequest.getRequestInfo().getUserInfo().getName())
@@ -85,7 +103,8 @@ public class CollectionService {
                 .mobileNumber(transactionRequest.getRequestInfo().getUserInfo().getMobileNumber())
                 .paidBy(transactionRequest.getRequestInfo().getUserInfo().getName())
                 .id(transaction.getBillId())
-                .billDetails(Collections.singletonList(billDetail))
+                .taxAndPayments(transaction.getTaxAndPayments())
+                .billDetails(billDetails)
                 .build();
 
 

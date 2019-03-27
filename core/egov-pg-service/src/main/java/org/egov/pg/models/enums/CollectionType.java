@@ -22,10 +22,7 @@ public enum CollectionType {
             if (0 == b.value.compareTo(text)) {
                 return b;
             }
-            System.out.println("Mismatch: " + String.valueOf(b.value).compareTo(text.trim()));
         }
-        System.out.println(CollectionType.FIELD.toString().equals("FIELD"));
-        System.out.println("textLength:" + text.length());
         return null;
     }
 

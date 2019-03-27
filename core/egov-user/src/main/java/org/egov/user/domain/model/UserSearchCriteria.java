@@ -43,7 +43,7 @@ public class UserSearchCriteria {
                 CollectionUtils.isEmpty(uuid) && CollectionUtils.isEmpty(id)  && CollectionUtils.isEmpty(roleCodes);
         else
             return isEmpty(userName) && isEmpty(name) && isEmpty(mobileNumber) && isEmpty(emailId) &&
-                    CollectionUtils.isEmpty(uuid) && CollectionUtils.isEmpty(id);
+                    CollectionUtils.isEmpty(uuid);
     }
 
     private boolean validateIfTenantIdExists(boolean isInterServiceCall){

@@ -10,6 +10,7 @@ import org.egov.pg.web.models.User;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -47,21 +48,28 @@ public class Transaction {
 
 
     /**
-     * Module business code for which the transaction is being initiated
-     * ex, PT, WS, PGR etc
+     * Backward compatibility
      */
     @JsonProperty("module")
-    @NotNull
-    @Size(min = 2)
+    @Size(min = 1)
     private String module;
 
     /**
-     * Unique identifier in the module for which the transaction is being initiated
-     * ex, PT, WS, PGR etc
+     * Backward compatibility
      */
-    @JsonProperty("moduleId")
+    @JsonProperty("consumerCode")
     @NotNull
-    private String moduleId;
+    @Size(min = 1, max = 128)
+    private String consumerCode;
+
+
+    /**
+     * Unique bill ID associated with the transaction
+     */
+    @JsonProperty("taxAndPayments")
+    @NotNull
+    @Size(min = 1)
+    private List<TaxAndPayment> taxAndPayments;
 
 
     /**
@@ -70,6 +78,7 @@ public class Transaction {
      */
     @JsonProperty("productInfo")
     @NotNull
+    @Size(min = 1, max = 512)
     private String productInfo;
 
     /**
@@ -147,6 +156,9 @@ public class Transaction {
 
     @JsonProperty("auditDetails")
     private AuditDetails auditDetails;
+
+    @JsonProperty("additionalDetails")
+    private Object additionalDetails;
 
     /**
      * Entire RAW payment gateway response

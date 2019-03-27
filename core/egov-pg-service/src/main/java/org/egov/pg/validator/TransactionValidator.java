@@ -3,6 +3,7 @@ package org.egov.pg.validator;
 import lombok.extern.slf4j.Slf4j;
 import org.egov.common.contract.request.User;
 import org.egov.pg.constants.PgConstants;
+import org.egov.pg.models.TaxAndPayment;
 import org.egov.pg.models.Transaction;
 import org.egov.pg.repository.TransactionRepository;
 import org.egov.pg.service.CollectionService;
@@ -43,19 +44,20 @@ public class TransactionValidator {
      * Check if gateway is available and active
      * Check if module specific order id is unique
      *
-     * @param transaction txn object to be validated
+     * @param transactionRequest txn object to be validated
      */
-    public void validateCreateTxn(TransactionRequest transaction) {
+    public void validateCreateTxn(TransactionRequest transactionRequest) {
         Map<String, String> errorMap = new HashMap<>();
-        isUserDetailPresent(transaction, errorMap);
-        isGatewayActive(transaction.getTransaction(), errorMap);
-        validateIfTxnExistsForBill(transaction, errorMap);
+        isUserDetailPresent(transactionRequest, errorMap);
+        isGatewayActive(transactionRequest.getTransaction(), errorMap);
+        validateIfTxnExistsForBill(transactionRequest, errorMap);
+        validateTxnAmount(transactionRequest, errorMap);
 
 
         if (!errorMap.isEmpty())
             throw new CustomException(errorMap);
         else
-            collectionService.validateProvisionalReceipt(transaction);
+            collectionService.validateProvisionalReceipt(transactionRequest);
 
     }
 
@@ -127,7 +129,6 @@ public class TransactionValidator {
         Transaction txn = transactionRequest.getTransaction();
         TransactionCriteria criteria = TransactionCriteria.builder()
                 .billId(txn.getBillId())
-                .module(txn.getModule())
                 .build();
 
         List<Transaction> existingTxnsForBill = transactionRepository.fetchTransactions(criteria);
@@ -147,6 +148,19 @@ public class TransactionValidator {
                 isNull(user.getTenantId()) || isNull(user.getMobileNumber()))
             errorMap.put("INVALID_USER_DETAILS", "User UUID, Name, Username, Mobile Number and Tenant Id are " +
                     "mandatory");
+    }
+
+    private void validateTxnAmount(TransactionRequest transactionRequest, Map<String, String> errorMap){
+        Transaction txn = transactionRequest.getTransaction();
+        BigDecimal totalPaid = BigDecimal.ZERO;
+
+        for(TaxAndPayment taxAndPayment : txn.getTaxAndPayments()){
+            totalPaid = totalPaid.add(taxAndPayment.getAmountPaid());
+        }
+        if(totalPaid.compareTo(new BigDecimal(txn.getTxnAmount())) != 0)
+            errorMap.put("TXN_CREATE_INVALID_TXN_AMT", "Transaction amount should be equal to sum of all " +
+                    " amountPaids in taxAndPayments");
+
     }
 
     private void isGatewayActive(Transaction transaction, Map<String, String> errorMap) {

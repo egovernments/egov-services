@@ -7,10 +7,10 @@ import java.util.*;
 
 class TransactionQueryBuilder {
     private static final String SEARCH_TXN_SQL = "SELECT pg.txn_id, pg.txn_amount, pg.txn_status, pg.txn_status_msg, " +
-            "pg.gateway, pg.module, pg.module_id, pg.bill_id, pg.product_info, pg.user_uuid, pg.user_name, pg" +
+            "pg.gateway, pg.module, pg.consumer_code, pg.bill_id, pg.product_info, pg.user_uuid, pg.user_name, pg" +
             ".mobile_number, pg.email_id, pg.name, pg.user_tenant_id, pg.tenant_id, pg.gateway_txn_id, pg.gateway_payment_mode, " +
-            "pg.gateway_status_code, pg.gateway_status_msg, pg.receipt,  pg.created_by, pg.created_time, pg" +
-            ".last_modified_by, pg.last_modified_time " +
+            "pg.gateway_status_code, pg.gateway_status_msg, pg.receipt, pg.additional_details,  pg.created_by, pg" +
+            ".created_time, pg.last_modified_by, pg.last_modified_time " +
             "FROM eg_pg_transactions pg ";
 
     private TransactionQueryBuilder() {
@@ -71,12 +71,8 @@ class TransactionQueryBuilder {
             queryParams.put("pg.txn_status", transactionCriteria.getTxnStatus().toString());
         }
 
-        if (!Objects.isNull(transactionCriteria.getModule())) {
-            queryParams.put("pg.module", transactionCriteria.getModule());
-        }
-
-        if (!Objects.isNull(transactionCriteria.getModuleId())) {
-            queryParams.put("pg.module_id", transactionCriteria.getModuleId());
+        if (!Objects.isNull(transactionCriteria.getConsumerCode())) {
+            queryParams.put("pg.consumer_code", transactionCriteria.getConsumerCode());
         }
 
         if (!Objects.isNull(transactionCriteria.getReceipt())) {

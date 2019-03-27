@@ -20,11 +20,9 @@ public class TransactionCriteria {
 
     private String userUuid;
 
-    private String module;
-
-    private String moduleId;
-
     private String receipt;
+
+    private String consumerCode;
 
     @JsonIgnore
     private Long createdTime;

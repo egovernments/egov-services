@@ -43,6 +43,11 @@ public class TransactionValidatorTest {
     @Before
     public void setUp() {
         validator = new TransactionValidator(gatewayService, transactionRepository, collectionService);
+        TaxAndPayment taxAndPayment = TaxAndPayment.builder()
+                .amountPaid(new BigDecimal("100"))
+                .businessService("PT")
+                .taxAmount(new BigDecimal("100"))
+                .build();
         txn = Transaction.builder().txnAmount("100")
                 .txnStatus(Transaction.TxnStatusEnum.PENDING)
                 .billId("ORDER0012")
@@ -50,6 +55,8 @@ public class TransactionValidatorTest {
                 .txnAmount("100")
                 .productInfo("Property Tax Payment")
                 .gateway("ABCD123")
+                .consumerCode("PT-21055")
+                .taxAndPayments(Collections.singletonList(taxAndPayment))
                 .build();
         BillDetail billDetail = BillDetail.builder().partPaymentAllowed(false).totalAmount(new BigDecimal(100)).build();
         bills = Collections.singletonList(Bill.builder().billDetails(Collections.singletonList(billDetail))

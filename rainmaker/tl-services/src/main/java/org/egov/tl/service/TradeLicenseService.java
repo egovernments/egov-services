@@ -61,9 +61,9 @@ public class TradeLicenseService {
      */
     public List<TradeLicense> create(TradeLicenseRequest tradeLicenseRequest){
         Object mdmsData = util.mDMSCall(tradeLicenseRequest);
-        tlValidator.validateCreate(tradeLicenseRequest,mdmsData);
         actionValidator.validateCreateRequest(tradeLicenseRequest);
         enrichmentService.enrichTLCreateRequest(tradeLicenseRequest,mdmsData);
+        tlValidator.validateCreate(tradeLicenseRequest,mdmsData);
         userService.createUser(tradeLicenseRequest);
         calculationService.addCalculation(tradeLicenseRequest);
         repository.save(tradeLicenseRequest);

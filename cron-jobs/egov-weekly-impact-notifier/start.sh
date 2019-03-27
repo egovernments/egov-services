@@ -5,3 +5,4 @@ if [[ -z "${JAVA_OPTS}" ]];then
 fi
 
 java ${JAVA_OPTS} -jar /opt/egov/egov-cron-weekly-impact-notifier.jar
+

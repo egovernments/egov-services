@@ -18,10 +18,10 @@ import lombok.ToString;
 @EqualsAndHashCode
 public class PGRChannelBreakup {
 	
-	private List<Map<String, Object>> ivr; //unit - %
+	private List<Map<String, String>> ivr; //unit - %
 	
-	private List<Map<String, Object>> mobileApp; //unit - %
+	private List<Map<String, String>> mobileApp; //unit - %
 
-	private List<Map<String, Object>> webApp; //unit - %
+	private List<Map<String, String>> webApp; //unit - %
 
 }

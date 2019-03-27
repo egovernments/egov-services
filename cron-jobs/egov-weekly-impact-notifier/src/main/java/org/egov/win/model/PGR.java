@@ -18,11 +18,11 @@ import lombok.ToString;
 @EqualsAndHashCode
 public class PGR {
 	
-	private List<Map<String, Object>> ulbCovered;
+	private List<Map<String, String>> ulbCovered;
 	
-	private List<Map<String, Object>> totalComplaints;
+	private List<Map<String, String>> totalComplaints;
 
-	private List<Map<String, Object>> redressal; //unit - %
+	private List<Map<String, String>> redressal; //unit - %
 	
 	private PGRChannelBreakup channelBreakup;
 

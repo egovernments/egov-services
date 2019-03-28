@@ -326,6 +326,9 @@ public class TLValidator {
         Map<String,String> errorMap = new HashMap<>();
         licenses.forEach(license -> {
             TradeLicense searchedLicense = idToTradeLicenseFromSearch.get(license.getId());
+            if(!searchedLicense.getApplicationNumber().equalsIgnoreCase(license.getApplicationNumber()))
+                errorMap.put("INVALID UPDATE","The application number from search: "+searchedLicense.getApplicationNumber()
+                        +" and from update: "+license.getApplicationNumber()+" does not match");
             if(!searchedLicense.getTradeLicenseDetail().getId().
                     equalsIgnoreCase(license.getTradeLicenseDetail().getId()))
                 errorMap.put("INVALID UPDATE","The id "+license.getTradeLicenseDetail().getId()+" does not exist");
@@ -354,10 +357,11 @@ public class TLValidator {
      * @param errorMap The map for collecting errors
      */
     private void compareIdList(List<String> searchIds,List<String> updateIds,Map<String,String> errorMap){
+
         if(!CollectionUtils.isEmpty(searchIds))
-            updateIds.forEach(id -> {
-                if(id!=null && !searchIds.contains(id))
-                    errorMap.put("INVALID UPDATE","The id "+id+" does not exist in database");
+            searchIds.forEach(searchId -> {
+                if(!updateIds.contains(searchId))
+                    errorMap.put("INVALID UPDATE","The id: "+searchId+" was not present in update request");
             });
     }
 

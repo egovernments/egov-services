@@ -59,6 +59,7 @@ import org.egov.demand.config.ApplicationProperties;
 import org.egov.demand.model.Demand;
 import org.egov.demand.model.DemandCriteria;
 import org.egov.demand.model.DemandDetail;
+import org.egov.demand.model.TaxHeadMaster;
 import org.egov.demand.model.TaxPeriod;
 import org.egov.demand.repository.DemandRepository;
 import org.egov.demand.repository.ServiceRequestRepository;
@@ -120,10 +121,16 @@ public class DemandValidatorV1 {
 		 * Extracting the respective masters from DocumentContext 
 		 */
 		List<String> businessServiceCodes = mdmsData.read(BUSINESSSERVICE_PATH_CODE);
-		List<String> taxHeadCodes = mdmsData.read(TAXHEADMASTER_PATH_CODE);
+		List<TaxHeadMaster> taxHeads = Arrays.asList(mapper.convertValue(mdmsData.read(TAXHEADMASTER_PATH_CODE), TaxHeadMaster[].class));
 		
 		/*
-		 * mdmsdata read returns a list of hashmap which is converted to array of tax-period and then to list
+		 * grouping by the list of taxHeads to a map of businessService and List of taxHead codes
+		 */
+		Map<String, List<String>> businessTaxCodeMap = taxHeads.stream().collect(Collectors.groupingBy(
+				TaxHeadMaster::getService, Collectors.mapping(TaxHeadMaster::getCode, Collectors.toList())));
+		
+		/*
+		 * mdms-data read returns a list of hashMap which is converted to array of tax-period and then to list
 		 */
 		List<TaxPeriod> taxPeriods = Arrays.asList(mapper.convertValue(mdmsData.read(TAXPERIOD_PATH_CODE), TaxPeriod[].class));
 
@@ -149,30 +156,29 @@ public class DemandValidatorV1 {
 		for (Demand demand : demands) {
 
 			List<DemandDetail> details = demand.getDemandDetails();
-			
+			List<String> taxHeadCodes = businessTaxCodeMap.get(demand.getBusinessService());
 			detailsForValidation.addAll(details);
-			
+
 			if (isCreate) {
 				/* passing the businessConsumerValidator map to be enriched for validation */
 				enrichConsumerCodesWithBusinessMap(businessConsumerValidatorMap, demand);
 			}
-			
+
 			if (null != demand.getPayer() && !StringUtils.isEmpty(demand.getPayer().getUuid()))
 				payerIds.add(demand.getPayer().getUuid());
-			
+
 			if (!businessServiceCodes.contains(demand.getBusinessService()))
 				businessServicesNotFound.add(demand.getBusinessService());
 
-			
 			details.forEach(detail -> {
+
 				if (!taxHeadCodes.contains(detail.getTaxHeadMasterCode()))
 					taxHeadsNotFound.add(detail.getTaxHeadMasterCode());
 			});
 
 			validateTaxPeriod(taxPeriodBusinessMap, demand, errorMap, businessServicesWithNoTaxPeriods);
-			
 		}
-		
+
 		/*
 		 * Validating payer(Citizen) data
 		 */

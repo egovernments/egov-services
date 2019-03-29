@@ -53,7 +53,7 @@ public class Util {
 		List<MasterDetail> masterDetails = new ArrayList<>();
 		names.forEach(name -> {
 
-			if (name.equalsIgnoreCase(Constants.TAXHEAD_MASTERNAME))
+			if (name.equalsIgnoreCase(Constants.BUSINESSSERVICE_MASTERNAME))
 				masterDetails.add(MasterDetail.builder().name(name).filter(filter).build());
 			else
 				masterDetails.add(MasterDetail.builder().name(name).build());

@@ -77,7 +77,8 @@ public class EncryptionDecryptionUtil
                 return null;
             }
             else if(requestInfo==null || requestInfo.getUserInfo()==null) {
-                return (P) objectToDecrypt;
+                User userInfo=User.builder().uuid("no uuid").type("EMPLOYEE").build();
+                requestInfo=RequestInfo.builder().userInfo(userInfo).build();
             }
             if(!(objectToDecrypt instanceof List))
             {

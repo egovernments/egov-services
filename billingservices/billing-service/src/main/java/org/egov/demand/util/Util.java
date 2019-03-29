@@ -53,10 +53,10 @@ public class Util {
 		List<MasterDetail> masterDetails = new ArrayList<>();
 		names.forEach(name -> {
 
-			if (name.equalsIgnoreCase(Constants.TAXPERIOD_MASTERNAME))
-				masterDetails.add(MasterDetail.builder().name(name).build());
-			else
+			if (name.equalsIgnoreCase(Constants.TAXHEAD_MASTERNAME))
 				masterDetails.add(MasterDetail.builder().name(name).filter(filter).build());
+			else
+				masterDetails.add(MasterDetail.builder().name(name).build());
 		});
 
 		ModuleDetail moduleDetail = ModuleDetail.builder().moduleName(moduleName).masterDetails(masterDetails).build();

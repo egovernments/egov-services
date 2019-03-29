@@ -208,6 +208,7 @@ public class MasterDataService {
 			startTime = date.getTime();
 		}
 		catch (ParseException e) {
+			e.printStackTrace();
 			throw new CustomException("INVALID STARTDAY","The startDate of the penalty cannot be parsed");
 		}
 

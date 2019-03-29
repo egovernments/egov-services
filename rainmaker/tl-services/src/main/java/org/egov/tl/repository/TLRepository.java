@@ -75,12 +75,15 @@ public class TLRepository {
 
         List<TradeLicense> licesnsesForStatusUpdate = new LinkedList<>();
         List<TradeLicense> licensesForUpdate = new LinkedList<>();
+        List<TradeLicense> licensesForAdhocChargeUpdate = new LinkedList<>();
 
         licenses.forEach(license -> {
             if(license.getAction().equalsIgnoreCase(ACTION_APPLY)
                     || license.getAction().equalsIgnoreCase(ACTION_INITIATE)){
                 licensesForUpdate.add(license);
             }
+            else if(license.getAction().equalsIgnoreCase(ACTION_ADHOC))
+                licensesForAdhocChargeUpdate.add(license);
             else{
                 licesnsesForStatusUpdate.add(license);
             }
@@ -91,6 +94,9 @@ public class TLRepository {
 
         if(!licesnsesForStatusUpdate.isEmpty())
             producer.push(config.getUpdateWorkflowTopic(),new TradeLicenseRequest(requestInfo,licesnsesForStatusUpdate));
+
+        if(!licensesForAdhocChargeUpdate.isEmpty())
+            producer.push(config.getUpdateAdhocTopic(),new TradeLicenseRequest(requestInfo,licensesForAdhocChargeUpdate));
 
     }
 

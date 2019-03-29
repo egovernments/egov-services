@@ -92,6 +92,9 @@ public class TLConfiguration {
     @Value("${persister.update.tradelicense.workflow.topic}")
     private String updateWorkflowTopic;
 
+    @Value("${persister.update.tradelicense.workflow.topic}")
+    private String updateAdhocTopic;
+
 
     //Location Config
     @Value("${egov.location.host}")

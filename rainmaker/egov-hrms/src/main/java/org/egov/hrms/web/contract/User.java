@@ -104,6 +104,7 @@ public class User {
     @JsonProperty("active")
     private Boolean active;
 
+    @NotNull
     @JsonProperty("dob")
     private Long dob;
 
@@ -129,6 +130,7 @@ public class User {
     @Valid
     private List<Role> roles;
 
+    @NotNull
     @Size(max=100)
     @JsonProperty("fatherOrHusbandName")
     private String fatherOrHusbandName;

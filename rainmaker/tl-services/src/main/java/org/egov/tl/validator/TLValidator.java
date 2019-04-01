@@ -63,6 +63,8 @@ public class TLValidator {
      */
     private void valideDates(TradeLicenseRequest request,Object mdmsData){
         request.getLicenses().forEach(license -> {
+            if(license.getValidTo()==null)
+                throw new CustomException("INVALID VALIDTO DATE"," Validto cannot be null");
             Map<String,Long> taxPeriods = tradeUtil.getTaxPeriods(license,mdmsData);
             if(license.getValidTo()!=null && license.getValidTo()>taxPeriods.get(TLConstants.MDMS_ENDDATE)){
                 Date expiry = new Date(license.getValidTo());
@@ -320,6 +322,11 @@ public class TLValidator {
         Map<String,String> errorMap = new HashMap<>();
         licenses.forEach(license -> {
             TradeLicense searchedLicense = idToTradeLicenseFromSearch.get(license.getId());
+
+            if(!searchedLicense.getApplicationNumber().equalsIgnoreCase(license.getApplicationNumber()))
+                errorMap.put("INVALID UPDATE","The application number from search: "+searchedLicense.getApplicationNumber()
+                        +" and from update: "+license.getApplicationNumber()+" does not match");
+
             if(!searchedLicense.getTradeLicenseDetail().getId().
                     equalsIgnoreCase(license.getTradeLicenseDetail().getId()))
                 errorMap.put("INVALID UPDATE","The id "+license.getTradeLicenseDetail().getId()+" does not exist");
@@ -349,9 +356,9 @@ public class TLValidator {
      */
     private void compareIdList(List<String> searchIds,List<String> updateIds,Map<String,String> errorMap){
         if(!CollectionUtils.isEmpty(searchIds))
-            updateIds.forEach(id -> {
-                if(id!=null && !searchIds.contains(id))
-                    errorMap.put("INVALID UPDATE","The id "+id+" does not exist in database");
+            searchIds.forEach(searchId -> {
+                if(!updateIds.contains(searchId))
+                    errorMap.put("INVALID UPDATE","The id: "+searchId+" was not present in update request");
             });
     }
 

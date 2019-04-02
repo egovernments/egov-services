@@ -499,7 +499,8 @@ public class IndexerUtils {
 			context.put("$", "@timestamp", formatter.format(date));
 		} catch (Exception e) {
 			log.info("Exception while adding timestamp!");
-			log.debug("Data: " + context.jsonString());
+			log.info("Data: " + context.jsonString());
+			log.info("Time stamp field: "+index.getTimeStampField());
 		}
 
 		return context;
